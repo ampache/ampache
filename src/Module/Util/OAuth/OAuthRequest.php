@@ -34,6 +34,7 @@ use Stringable;
  */
 class OAuthRequest implements Stringable
 {
+    /** @var array<string, string|string[]> $parameters */
     protected array $parameters = [];
 
     protected ?string $http_url = null;
@@ -131,11 +132,7 @@ class OAuthRequest implements Stringable
         return new OAuthRequest($http_method, $http_url, $parameters);
     }
 
-    /**
-     * @param string $name
-     * @param bool $allow_duplicates
-     */
-    public function set_parameter($name, $value, $allow_duplicates = true): void
+    public function set_parameter(string $name, string $value, bool $allow_duplicates = true): void
     {
         if ($allow_duplicates && isset($this->parameters[$name])) {
             // We have already added parameter(s) with this name, so add to the list
@@ -308,7 +305,7 @@ class OAuthRequest implements Stringable
         $this->set_parameter("oauth_signature", $signature, false);
     }
 
-    public function build_signature($signature_method, $consumer, $token)
+    public function build_signature($signature_method, $consumer, $token): string
     {
         return $signature_method->build_signature($this, $consumer, $token);
     }
