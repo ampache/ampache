@@ -60,7 +60,7 @@ class OAuthServer
      * returns the request token on success
      * @throws OAuthException
      */
-    public function fetch_request_token(&$request)
+    public function fetch_request_token($request)
     {
         $this->get_version($request);
 
@@ -82,7 +82,7 @@ class OAuthServer
      * returns the access token on success
      * @throws OAuthException
      */
-    public function fetch_access_token(&$request)
+    public function fetch_access_token($request)
     {
         $this->get_version($request);
 
@@ -103,7 +103,7 @@ class OAuthServer
      * verify an api call, checks all the parameters
      * @throws OAuthException
      */
-    public function verify_request(&$request): array
+    public function verify_request($request): array
     {
         $this->get_version($request);
         $consumer = $this->get_consumer($request);
