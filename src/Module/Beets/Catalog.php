@@ -59,7 +59,7 @@ abstract class Catalog extends \Ampache\Repository\Model\Catalog
      * Array of all songs
      * @var string[]
      */
-    protected $songs = [];
+    protected array $songs = [];
 
     /** command which provides the list of all songs */
     protected string $listCommand;
@@ -110,7 +110,7 @@ abstract class Catalog extends \Ampache\Repository\Model\Catalog
     /**
      * @param string $prefix Prefix like add, updated, verify and clean
      * @param int $count song count
-     * @param array $song Song array
+     * @param array|null $song Song array
      * @param bool $ignoreTicker ignoring the ticker for the last update
      */
     protected function updateUi($prefix, $count, $song = null, $ignoreTicker = false): void

@@ -728,12 +728,7 @@ class Video extends database_object implements
         return true;
     }
 
-    /**
-     * @param int $user
-     * @param string $agent
-     * @param int $date
-     */
-    public function check_play_history($user, $agent, $date): bool
+    public function check_play_history(int $user, string $agent, int $date): bool
     {
         return Stats::has_played_history('video', $this, $user, $agent, $date);
     }

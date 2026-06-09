@@ -1112,7 +1112,7 @@ final class VaInfo implements VaInfoInterface
      * @return array<string, mixed>
      * @throws Exception
      */
-    private function _cleanup_generic($tags): array
+    private function _cleanup_generic(array $tags): array
     {
         $parsed = [];
         foreach ($tags as $tagname => $data) {
@@ -1194,7 +1194,7 @@ final class VaInfo implements VaInfoInterface
      * @param array<string, mixed> $tags
      * @return array<string, mixed>
      */
-    private function _cleanup_lyrics($tags): array
+    private function _cleanup_lyrics(array $tags): array
     {
         $parsed = [];
 
@@ -1217,7 +1217,7 @@ final class VaInfo implements VaInfoInterface
      * @return array<string, mixed>
      * @throws Exception
      */
-    private function _cleanup_vorbiscomment($tags): array
+    private function _cleanup_vorbiscomment(array $tags): array
     {
         $parsed = [];
 
@@ -1371,7 +1371,7 @@ final class VaInfo implements VaInfoInterface
      * @param array<string, mixed> $tags
      * @return array<string, mixed>
      */
-    private function _cleanup_id3v1($tags): array
+    private function _cleanup_id3v1(array $tags): array
     {
         $parsed = [];
 
@@ -1392,7 +1392,7 @@ final class VaInfo implements VaInfoInterface
      * @return array<string, mixed>
      * @throws Exception
      */
-    private function _cleanup_id3v2($tags): array
+    private function _cleanup_id3v2(array $tags): array
     {
         $parsed = [];
 
@@ -1647,7 +1647,7 @@ final class VaInfo implements VaInfoInterface
      * @return array<string, mixed>
      * @throws Exception
      */
-    private function _cleanup_quicktime($tags): array
+    private function _cleanup_quicktime(array $tags): array
     {
         $parsed = [];
 
@@ -1762,7 +1762,7 @@ final class VaInfo implements VaInfoInterface
      * @return array<string, mixed>
      * @throws Exception
      */
-    private function _cleanup_asf($tags): array
+    private function _cleanup_asf(array $tags): array
     {
         $parsed = [];
         foreach ($tags as $tagname => $data) {

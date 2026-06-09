@@ -28,7 +28,6 @@ namespace Ampache\Config\Init;
 use Ampache\Config\Init\Exception\DatabaseOutdatedException;
 use Ampache\Config\Init\Exception\EnvironmentNotSuitableException;
 use Ampache\Module\System\Dba;
-use Ampache\Module\System\Update;
 use Ampache\Module\System\Update\UpdaterInterface;
 
 final readonly class InitializationHandlerDatabaseUpdate implements InitializationHandlerInterface

@@ -39,28 +39,29 @@ use Ampache\Repository\Model\Share;
 use Ampache\Repository\Model\Song;
 use Ampache\Repository\Model\User;
 use Ampache\Repository\Model\Userflag;
+use Override;
 
 class AmpacheCatalogFavorites extends AmpachePlugin implements PluginDisplayHomeInterface
 {
-    #[\Override]
+    #[Override]
     public string $name = 'Catalog Favorites';
 
-    #[\Override]
+    #[Override]
     public string $categories = 'home';
 
-    #[\Override]
+    #[Override]
     public string $description = 'Catalog favorites on homepage';
 
-    #[\Override]
+    #[Override]
     public string $url = '';
 
-    #[\Override]
+    #[Override]
     public string $version = '000004';
 
-    #[\Override]
+    #[Override]
     public string $min_ampache = '370021';
 
-    #[\Override]
+    #[Override]
     public string $max_ampache = '999999';
 
     // These are internal settings used by this class, run this->load to fill them out

@@ -230,7 +230,7 @@ class Song_Preview extends database_object implements Media, playable_item
     public function get_artist_fullname(): string
     {
         if ($this->artist) {
-            return (string) (new Artist($this->artist))->get_fullname();
+            return (string)(new Artist($this->artist)->get_fullname());
         }
         $wartist = $this->getMissingArtistRetriever()->retrieve((string) $this->artist_mbid);
 
@@ -434,12 +434,7 @@ class Song_Preview extends database_object implements Media, playable_item
         return false;
     }
 
-    /**
-     * @param int $user
-     * @param string $agent
-     * @param int $date
-     */
-    public function check_play_history($user, $agent, $date): bool
+    public function check_play_history(int $user, string $agent, int $date): bool
     {
         // Do nothing
         unset($user, $agent, $date);

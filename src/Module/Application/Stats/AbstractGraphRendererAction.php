@@ -98,6 +98,7 @@ abstract readonly class AbstractGraphRendererAction implements ApplicationAction
 
         if (!$user_id && !$object_id) {
             $gtypes[] = 'catalog_files';
+            // used within the template
             $gtypes[] = 'catalog_size';
         }
 
