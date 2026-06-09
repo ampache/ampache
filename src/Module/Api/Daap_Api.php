@@ -277,7 +277,7 @@ class Daap_Api
         if (!empty($pass)) {
             $headers = apache_request_headers();
             $auth    = $headers['Authorization'];
-            if (strpos(strtolower((string)$auth), 'basic') === 0) {
+            if (str_starts_with(strtolower((string)$auth), 'basic')) {
                 $decauth  = base64_decode(substr($auth, 6));
                 $userpass = explode(':', (string)$decauth);
                 if (count($userpass) == 2) {

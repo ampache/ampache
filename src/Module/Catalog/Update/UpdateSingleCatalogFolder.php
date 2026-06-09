@@ -69,7 +69,7 @@ final class UpdateSingleCatalogFolder extends AbstractCatalogUpdater implements 
                 return;
             }
 
-            if (property_exists($catalog, 'path') && $catalog->path !== null && !Core::is_readable($catalog->path)) {
+            if (property_exists($catalog, 'path') && $catalog->path && !Core::is_readable($catalog->path)) {
                 $interactor->error(
                     T_('Catalog root unreadable, stopping check'),
                     true

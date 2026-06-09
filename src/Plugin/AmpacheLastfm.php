@@ -220,9 +220,8 @@ class AmpacheLastfm extends AmpachePlugin implements PluginSaveMediaplayInterfac
      * get_session
      * This call the getSession method and properly updates the preferences as needed.
      * This requires a userid so it knows whose crap to update.
-     * @param string $token
      */
-    public function get_session($token): bool
+    public function get_session(?string $token = null): bool
     {
         if (!$this->api_key) {
             return false;

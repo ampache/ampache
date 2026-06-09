@@ -139,14 +139,11 @@ final readonly class AccessListManager implements AccessListManagerInterface
     /**
      * Verifies the entered ip addresses
      *
-     * @param string|bool $startIp
-     * @param string|bool $endIp
-     *
      * @throws InvalidEndIpException
      * @throws InvalidIpRangeException
      * @throws InvalidStartIpException
      */
-    private function verifyRange($startIp, $endIp): void
+    private function verifyRange(string $startIp, string $endIp): void
     {
         if (!$startIp) {
             throw new InvalidStartIpException();

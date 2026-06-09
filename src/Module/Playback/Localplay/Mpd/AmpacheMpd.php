@@ -435,9 +435,8 @@ class AmpacheMpd extends localplay_controller
     /**
      * move
      * This tells MPD to move a song
-     * @return bool|string
      */
-    public function move($source, $destination)
+    public function move($source, $destination): bool|string
     {
         return $this->_mpd->PLMoveTrack($source, $destination);
     }

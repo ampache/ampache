@@ -48,7 +48,7 @@ class OAuthServer
     {
     }
 
-    public function add_signature_method($signature_method)
+    public function add_signature_method($signature_method): void
     {
         $this->signature_methods[$signature_method->get_name()] = $signature_method;
     }
@@ -101,10 +101,9 @@ class OAuthServer
 
     /**
      * verify an api call, checks all the parameters
-     * @return array
      * @throws OAuthException
      */
-    public function verify_request(&$request)
+    public function verify_request(&$request): array
     {
         $this->get_version($request);
         $consumer = $this->get_consumer($request);
@@ -123,7 +122,7 @@ class OAuthServer
      * version 1
      * @throws OAuthException
      */
-    private function get_version(&$request): string
+    private function get_version($request): void
     {
         $version = $request->get_parameter("oauth_version");
         if (!$version) {
@@ -135,8 +134,6 @@ class OAuthServer
         if ($version !== $this->version) {
             throw new OAuthException(sprintf("OAuth version '%s' not supported", $version));
         }
-
-        return $version;
     }
 
     /**
@@ -201,7 +198,7 @@ class OAuthServer
      * should guess the signature method appropriately
      * @throws OAuthException
      */
-    private function check_signature($request, $consumer, $token)
+    private function check_signature($request, $consumer, $token): void
     {
         // this should probably be in a different method
         $timestamp = ($request instanceof OAuthRequest) ? $request->get_parameter('oauth_timestamp') : null;
@@ -224,7 +221,7 @@ class OAuthServer
      * check that the timestamp is new enough
      * @throws OAuthException
      */
-    private function check_timestamp($timestamp)
+    private function check_timestamp($timestamp): void
     {
         if (!$timestamp) {
             throw new OAuthException('Missing timestamp parameter. The parameter is required');
@@ -241,7 +238,7 @@ class OAuthServer
      * check that the nonce is not repeated
      * @throws OAuthException
      */
-    private function check_nonce($consumer, $token, $nonce, $timestamp)
+    private function check_nonce($consumer, $token, $nonce, $timestamp): void
     {
         if (!$nonce) {
             throw new OAuthException('Missing nonce parameter. The parameter is required');

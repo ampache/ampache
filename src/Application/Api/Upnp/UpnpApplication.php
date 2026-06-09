@@ -61,7 +61,7 @@ final class UpnpApplication implements ApplicationInterface
                 body {
                     color:black;
                     background-color:white;
-                    background-image:url(images/upnp.jpg);
+                    background-image:url(/upnp/images/upnp.jpg);
                     background-repeat:no-repeat;
                     background-position:50% 50%;
                     height: 400px;

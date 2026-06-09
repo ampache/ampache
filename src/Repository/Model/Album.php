@@ -881,8 +881,6 @@ class Album extends database_object implements library_item, CatalogItemInterfac
 
         $current_id = $this->id;
         $updated    = false;
-        $ndata      = [];
-        $changed    = [];
         $songs      = $this->getSongRepository()->getByAlbum($this->id);
         // run an album check on the current object READONLY means that it won't insert a new album
         $album_id = self::check(
@@ -922,8 +920,6 @@ class Album extends database_object implements library_item, CatalogItemInterfac
                 $trimmed          = Catalog::trim_prefix(trim((string) $name));
                 $new_name         = $trimmed['string'];
                 $aPrefix          = $trimmed['prefix'];
-                $ndata['album']   = $name;
-                $changed['album'] = 'album';
 
                 self::update_field('name', $new_name, $this->id);
                 self::update_field('prefix', $aPrefix, $this->id);

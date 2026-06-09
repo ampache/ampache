@@ -161,7 +161,7 @@ final class DefaultAction implements ApplicationActionInterface
         $action = $_REQUEST['action'] ?? '';
         switch ($action) {
             case 'create_db':
-                /** @noinspection PhpMissingBreakStatementInspection */
+                // Intentional break fall-through
                 $new_user = '';
                 $new_pass = '';
                 if (Core::get_post('db_user') === 'create_db_user') {
@@ -187,7 +187,7 @@ final class DefaultAction implements ApplicationActionInterface
                 require_once __DIR__ . '/../../../../templates/show_install_config.inc.php';
                 break;
             case 'create_config':
-                /** @noinspection PhpMissingBreakStatementInspection */
+                // Intentional break fall-through
                 $all  = (isset($_POST['create_all']));
                 $skip = (isset($_POST['skip_config']));
                 if (!$skip) {
