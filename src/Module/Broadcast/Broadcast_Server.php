@@ -66,7 +66,7 @@ class Broadcast_Server implements MessageComponentInterface
     /** @var string[] $sids */
     protected $sids = [];
 
-    /** @var ConnectionInterface[] $listeners */
+    /** @var array<int, array<int, ConnectionInterface>> $listeners */
     protected $listeners = [];
 
     /** @var Broadcast[] $broadcasters */
@@ -338,7 +338,7 @@ class Broadcast_Server implements MessageComponentInterface
 
     /**
      *
-     * @return ConnectionInterface[]
+     * @return array<int, ConnectionInterface>
      */
     protected function getListeners(Broadcast $broadcast): array
     {
@@ -356,10 +356,8 @@ class Broadcast_Server implements MessageComponentInterface
     /**
      *
      * @param ConnectionInterface[] $clients
-     * @param string $cmd
-     * @param string $value
      */
-    protected function broadcastMessage($clients, $cmd, $value = ''): void
+    protected function broadcastMessage(array $clients, string $cmd, string $value = ''): void
     {
         $msg = $cmd . ':' . $value . ';';
         foreach ($clients as $client) {

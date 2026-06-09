@@ -773,7 +773,7 @@ class Catalog_dropbox extends Catalog
 
         $app     = new DropboxApp($this->apikey, $this->secret, $this->authtoken);
         $dropbox = new Dropbox($app);
-        $songs   = $this->get_songs() ?? [];
+        $songs   = $this->get_songs();
 
         // Prevent the script from timing out
         set_time_limit(0);
