@@ -45,6 +45,7 @@ final readonly class FileNameConverter implements FileNameConverterInterface
         $sql        = "SELECT `id` FROM `catalog` WHERE `catalog_type`='local'";
         $db_results = Dba::read($sql);
 
+        $result = false;
         while ($row = Dba::fetch_assoc($db_results)) {
             $catalog = Catalog::create_from_id($row['id']);
             if ($catalog === null) {
@@ -56,13 +57,21 @@ final readonly class FileNameConverter implements FileNameConverterInterface
                 sprintf(T_('Checking %1$s (%2$s)'), $catalog->name, $catalog->get_path()),
                 true
             );
-            $this->charset_directory_correct($interactor, $catalog->get_path(), $force);
+
+            $result = $this->charset_directory_correct($interactor, $catalog->get_path(), $force);
         }
 
-        $interactor->ok(
-            T_('Finished checking file names for valid characters'),
-            true
-        );
+        if ($result) {
+            $interactor->ok(
+                T_('Finished checking file names for valid characters'),
+                true
+            );
+        } else {
+            $interactor->error(
+                T_('There was an error trying to check the file names for valid characters'),
+                true
+            );
+        }
     }
 
     /**
@@ -81,7 +90,7 @@ final readonly class FileNameConverter implements FileNameConverterInterface
         }
 
         // Correctly detect the slash we need to use here
-        $slash_type = strstr($path, "/") ? '/' : '\\';
+        $slash_type = str_contains($path, "/") ? '/' : '\\';
 
         /* Open up the directory */
         $handle = opendir($path);
@@ -113,8 +122,10 @@ final readonly class FileNameConverter implements FileNameConverterInterface
 
             $full_file = $path . $slash_type . $file;
 
-            if (is_dir($full_file)) {
-                $this->charset_directory_correct($interactor, $full_file, $force);
+            if (
+                is_dir($full_file) &&
+                $this->charset_directory_correct($interactor, $full_file, $force)
+            ) {
                 continue;
             }
 

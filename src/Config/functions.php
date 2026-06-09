@@ -167,7 +167,7 @@ function get_languages(): array
         // Check to see if it's a directory
         if (
             is_dir($full_file) &&
-            substr($file, 0, 1) != '.' &&
+            !str_starts_with($file, '.') &&
             $file != 'base'
         ) {
             $name = match ($file) {
@@ -260,7 +260,7 @@ if (!function_exists('apache_request_headers')) {
     {
         $headers = [];
         foreach ($_SERVER as $name => $value) {
-            if (substr($name, 0, 5) == 'HTTP_') {
+            if (str_starts_with($name, 'HTTP_')) {
                 $name           = str_replace(' ', '-', ucwords(strtolower(str_replace('_', ' ', substr($name, 5)))));
                 $headers[$name] = $value;
             } elseif ($name == "CONTENT_TYPE") {
@@ -301,7 +301,7 @@ function check_http_referer(): bool
         return true;
     }
 
-    return strpos($referer, $web_path) !== false;
+    return str_contains($referer, $web_path);
 }
 
 /**
@@ -522,7 +522,7 @@ function ampache_error_handler(int $errno, string $errstr, string $errfile, int 
     ];
 
     foreach ($ignores as $ignore) {
-        if (strpos($errstr, $ignore) !== false) {
+        if (str_contains($errstr, $ignore)) {
             $error_name = 'Ignored ' . $error_name;
             $level      = 7;
         }
@@ -533,7 +533,7 @@ function ampache_error_handler(int $errno, string $errstr, string $errfile, int 
         $level = 7;
     }
 
-    if (strpos($errstr, 'date.timezone') !== false) {
+    if (str_contains($errstr, 'date.timezone')) {
         $error_name = 'Warning';
         $errstr     = 'You have not set a valid timezone (date.timezone) in your php.ini file. This may cause display issues with dates. This warning is non-critical and not caused by Ampache.';
     }
@@ -613,7 +613,7 @@ function catalog_worker(string $action, ?array $catalogs = null, ?array $options
 function return_referer(): string
 {
     $referer = Core::get_server('HTTP_REFERER');
-    if (substr($referer, -1) == '/') {
+    if (str_ends_with($referer, '/')) {
         $file = 'index.php';
     } else {
         $file = basename($referer);

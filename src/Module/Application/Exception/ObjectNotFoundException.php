@@ -36,17 +36,11 @@ final class ObjectNotFoundException extends ApplicationException
     #[Override]
     protected $message = 'Object not found';
 
-    /**
-     * @param int|string $objectId The requested objectId
-     */
-    public function __construct(private $objectId = 0)
+    public function __construct(private int|string $objectId = 0)
     {
     }
 
-    /**
-     * @return int|string
-     */
-    public function getObjectId()
+    public function getObjectId(): int|string
     {
         return $this->objectId;
     }

@@ -27,7 +27,6 @@ namespace Ampache\Module\Art\Export;
 
 use Ahc\Cli\IO\Interactor;
 use Ampache\Config\ConfigContainerInterface;
-use Ampache\Module\Art\Export;
 use Ampache\Module\Art\Export\Exception\ArtExportException;
 use Ampache\Module\Art\Export\Writer\MetadataWriterInterface;
 use Ampache\Module\System\LegacyLogger;

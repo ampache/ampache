@@ -1249,8 +1249,8 @@ class Art extends database_object
             $art_id = $row['id'] ?? null;
         }
 
+        $sql = "SELECT `id`, `object_type`, `object_id`, `mime`, `size` FROM `image` WHERE `object_type` = ? AND `object_id` = ? AND `size` = ?;";
         if (empty($mime)) {
-            $sql        = "SELECT `id`, `object_type`, `object_id`, `mime`, `size` FROM `image` WHERE `object_type` = ? AND `object_id` = ? AND `size` = ?;";
             $db_results = Dba::read($sql, [$type, $uid, $size]);
 
             if ($row = Dba::fetch_assoc($db_results)) {
@@ -1258,7 +1258,6 @@ class Art extends database_object
                 $mime   = $row['mime'];
                 $art_id = $row['id'];
             } else {
-                $sql        = "SELECT `id`, `object_type`, `object_id`, `mime`, `size` FROM `image` WHERE `object_type` = ? AND `object_id` = ? AND `size` = ?;";
                 $db_results = Dba::read($sql, [$type, $uid, 'original']);
 
                 if ($row = Dba::fetch_assoc($db_results)) {

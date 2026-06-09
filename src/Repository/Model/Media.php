@@ -83,12 +83,7 @@ interface Media
      */
     public function set_played(int $user_id, string $agent, array $location, int $date): bool;
 
-    /**
-     * @param int $user
-     * @param string $agent
-     * @param int $date
-     */
-    public function check_play_history($user, $agent, $date): bool;
+    public function check_play_history(int $user, string $agent, int $date): bool;
 
     /**
      * remove
