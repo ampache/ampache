@@ -311,7 +311,7 @@ class FileSystem
 
         if (is_dir($dir)) {
             mkdir($new, 0775);
-            foreach (array_diff(scandir($dir), [".", ".."]) as $file) {
+            foreach (array_diff(scandir($dir) ?: [], [".", ".."]) as $file) {
                 $this->copy($this->id($dir . DIRECTORY_SEPARATOR . $file), $this->id($new));
             }
         }
