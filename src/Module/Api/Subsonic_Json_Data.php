@@ -1870,18 +1870,6 @@ class Subsonic_Json_Data
                 $error['subsonic-response']['error']['code']    = Subsonic_Api::SSERROR_DATA_NOTFOUND;
                 $error['subsonic-response']['error']['message'] = 'The requested data was not found.';
                 break;
-            case Subsonic_Api::SSERROR_AUTHMETHODNOTSUPPORTED:
-                $error['subsonic-response']['error']['code']    = Subsonic_Api::SSERROR_AUTHMETHODNOTSUPPORTED;
-                $error['subsonic-response']['error']['message'] = 'Provided authentication mechanism not supported.';
-                break;
-            case Subsonic_Api::SSERROR_AUTHMETHODCONFLICT:
-                $error['subsonic-response']['error']['code']    = Subsonic_Api::SSERROR_AUTHMETHODCONFLICT;
-                $error['subsonic-response']['error']['message'] = 'Multiple conflicting authentication mechanisms provided.';
-                break;
-            case Subsonic_Api::SSERROR_BADAPIKEY:
-                $error['subsonic-response']['error']['code']    = Subsonic_Api::SSERROR_BADAPIKEY;
-                $error['subsonic-response']['error']['message'] = 'Invalid API key.';
-                break;
         }
 
         return $error;
