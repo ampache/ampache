@@ -313,7 +313,7 @@ class Stream_Playlist
 
         // Don't add disabled media objects to the stream playlist
         // Playing a disabled media return a 404 error that could make failed the player (mpd ...)
-        if (!property_exists($object, 'enabled') || $object->enabled === null || make_bool($object->enabled)) {
+        if (!property_exists($object, 'enabled') || $object->enabled) {
             if (
                 $urltype === 'file' &&
                 (property_exists($object, 'file') && $object->file !== null)

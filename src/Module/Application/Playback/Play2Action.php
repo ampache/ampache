@@ -736,7 +736,7 @@ final readonly class Play2Action implements ApplicationActionInterface
             }
         } else {
             // No catalog, must be song preview or something like that => just redirect to file
-            if ($type == "song_preview" && $media instanceof Song_Preview) {
+            if ($type == "song_preview") {
                 $media->stream(); // header redirect using preview plugin ($plugin->_plugin->stream_song_preview())
             } else {
                 header('Location: ' . $media->file, true, 303);

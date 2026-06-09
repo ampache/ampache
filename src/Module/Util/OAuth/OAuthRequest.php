@@ -69,7 +69,6 @@ class OAuthRequest implements Stringable
      * @param string $http_method
      * @param string $http_url
      * @param array $parameters
-     * @return OAuthRequest
      */
     public static function from_request($http_method = null, $http_url = null, $parameters = null): OAuthRequest
     {
@@ -113,7 +112,6 @@ class OAuthRequest implements Stringable
      * @param string $http_method
      * @param string $http_url
      * @param array $parameters
-     * @return OAuthRequest
      */
     public static function from_consumer_and_token($consumer, $token, $http_method, $http_url, $parameters = null): OAuthRequest
     {

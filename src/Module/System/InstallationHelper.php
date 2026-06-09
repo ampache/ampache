@@ -347,7 +347,7 @@ final class InstallationHelper implements InstallationHelperInterface
             $errors  = [];
             for ($count = 0; $count < $p_count; $count++) {
                 $pieces[$count] = trim((string) $pieces[$count]);
-                if (isset($pieces[$count]) && ($pieces[$count] !== '' && $pieces[$count] !== '0') && $pieces[$count] != '#' && !Dba::write($pieces[$count])) {
+                if (($pieces[$count] !== '' && $pieces[$count] !== '0') && $pieces[$count] != '#' && !Dba::write($pieces[$count])) {
                     $errors[] = [Dba::error(), $pieces[$count]];
                 }
             }
