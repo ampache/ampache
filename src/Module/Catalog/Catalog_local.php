@@ -790,13 +790,8 @@ class Catalog_local extends Catalog
      * _verify_chunk
      * This verifies a chunk of the catalog, done to save
      * memory
-     * @param string $tableName ('album', 'podcast_episode', 'song', 'video')
-     * @param int $chunk
-     * @param int $chunk_size
-     * @param bool $verify_by_time
-     * @param bool $last_update
      */
-    private function _verify_chunk($tableName, $chunk, $chunk_size, $verify_by_time, $last_update): int
+    private function _verify_chunk(string $tableName, int $chunk, int $chunk_size, bool $verify_by_time, bool $last_update): int
     {
         $count = $chunk * $chunk_size;
         $sql   = match ($tableName) {
@@ -1257,11 +1252,8 @@ class Catalog_local extends Catalog
      *
      * Clean up a single file checking that it's missing or just unreadable.
      * Return true on delete. false on failures
-     *
-     * @param string $file
-     * @param string $media_type
      */
-    public function clean_file($file, $media_type = 'song'): bool
+    public function clean_file(string $file, string $media_type = 'song'): bool
     {
         $file_info = Core::get_filesize(Core::conv_lc_file($file));
         if ($file_info < 1) {
@@ -1304,7 +1296,7 @@ class Catalog_local extends Catalog
      * @throws Exception
      * @throws Exception
      */
-    private function _insert_local_song(string $file, $options = []): ?int
+    private function _insert_local_song(string $file, array $options = []): ?int
     {
         $vainfo = $this->getUtilityFactory()->createVaInfo(
             $file,
@@ -1463,7 +1455,7 @@ class Catalog_local extends Catalog
      * @throws Exception
      * @throws Exception
      */
-    private function _insert_local_video($file, $options = []): int
+    private function _insert_local_video($file, array $options = []): int
     {
         /* Create the vainfo object and get info */
         $gtypes = $this->get_gather_types('video');
@@ -1538,9 +1530,8 @@ class Catalog_local extends Catalog
     /**
      * check_path
      * Checks the path to see if it's there or conflicting with an existing catalog
-     * @param string $path
      */
-    public static function check_path($path): bool
+    public static function check_path(string $path): bool
     {
         if ((string) $path === '') {
             debug_event('local.catalog', 'Path was not specified', 1);

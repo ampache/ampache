@@ -48,10 +48,8 @@ class VlcPlayer
     /**
      * add
      * append a song to the playlist
-     * @param string $name // Name to be shown in the playlist
-     * @param string $url // URL of the song
      */
-    public function add($name, $url): bool
+    public function add(string $name, string $url): bool
     {
         $aurl = urlencode($url);
         $aurl .= "&";
@@ -372,11 +370,9 @@ class VlcPlayer
      * xmltoarray
      * this function parses the xml page into an array thx to bin-co
      * warning VLC returns it's complete media lib if asked for playlist
-     * @param int $get_attributes
-     * @param string $priority
      * @return array<string, mixed>
      */
-    private function xmltoarray($contents, $get_attributes = 1, $priority = 'attribute'): array
+    private function xmltoarray(string $contents, int $get_attributes = 1, string $priority = 'attribute'): array
     {
         if (!$contents) {
             return [];

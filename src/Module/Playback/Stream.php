@@ -475,9 +475,8 @@ class Stream
 
     /**
      * get_image_preview
-     * @param Video $media
      */
-    public static function get_image_preview($media): ?string
+    public static function get_image_preview(Video $media): ?string
     {
         $image = null;
         $sec   = mt_rand((int)($media->time * 0.2), (int)($media->time * 0.8));

@@ -123,7 +123,7 @@ class OAuthServer
      * version 1
      * @throws OAuthException
      */
-    private function get_version(&$request): string
+    private function get_version($request): void
     {
         $version = $request->get_parameter("oauth_version");
         if (!$version) {
@@ -135,8 +135,6 @@ class OAuthServer
         if ($version !== $this->version) {
             throw new OAuthException(sprintf("OAuth version '%s' not supported", $version));
         }
-
-        return $version;
     }
 
     /**

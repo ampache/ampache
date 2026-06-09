@@ -1017,11 +1017,8 @@ class Song extends database_object implements
      * check_play_history
      * this checks to see if the current object has been played
      * if not then it sets it to played. In any case it updates stats.
-     * @param int $user
-     * @param string $agent
-     * @param int $date
      */
-    public function check_play_history($user, $agent, $date): bool
+    public function check_play_history(int $user, string $agent, int $date): bool
     {
         return Stats::has_played_history('song', $this, $user, $agent, $date);
     }

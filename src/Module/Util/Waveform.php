@@ -304,7 +304,7 @@ class Waveform
 
         // wav bitrate
         $peek = hexdec(substr($heading[10], 0, 2));
-        $byte = $peek / 8;
+        $byte = (int)($peek / 8);
 
         // checking whether a mono or stereo wav
         $channel = hexdec(substr($heading[6], 0, 2));

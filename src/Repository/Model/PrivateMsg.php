@@ -73,7 +73,7 @@ class PrivateMsg extends database_object implements PrivateMessageInterface
 
     public function getSenderUserLink(): string
     {
-        return (new User($this->from_user))->get_f_link();
+        return new User($this->from_user)->get_f_link();
     }
 
     public function getRecipientUserLink(): string

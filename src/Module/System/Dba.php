@@ -209,10 +209,8 @@ class Dba
      * We force it to always return an array, albeit an empty one
      * The optional finish parameter affects whether we automatically clean
      * up the result set after the last row is read.
-     * @param PDOStatement|null $resource
-     * @param bool $finish
      */
-    public static function fetch_assoc($resource, $finish = true): array
+    public static function fetch_assoc(?PDOStatement $resource, bool $finish = true): array
     {
         if (!$resource) {
             return [];
@@ -238,10 +236,8 @@ class Dba
      * we force it to always return an array, albeit an empty one
      * The optional finish parameter affects whether we automatically clean
      * up the result set after the last row is read.
-     * @param PDOStatement|null $resource
-     * @param bool $finish
      */
-    public static function fetch_row($resource, $finish = true): array
+    public static function fetch_row(?PDOStatement $resource, bool $finish = true): array
     {
         if (!$resource) {
             return [];
@@ -296,11 +292,9 @@ class Dba
     }
 
     /**
-     * @param PDOStatement|null $resource
      * @param class-string<object> $class
-     * @param bool $finish
      */
-    public static function fetch_object($resource, $class = 'stdClass', $finish = true): ?object
+    public static function fetch_object(?PDOStatement $resource, string $class = 'stdClass', bool $finish = true): ?object
     {
         if (!$resource) {
             return null;
@@ -325,9 +319,8 @@ class Dba
      * This emulates the mysql_num_rows function which is really
      * just a count of rows returned by our select statement, this
      * doesn't work for updates or inserts.
-     * @param PDOStatement|null $resource
      */
-    public static function num_rows($resource): int
+    public static function num_rows(?PDOStatement $resource): int
     {
         if ($resource) {
             $result = $resource->rowCount();
@@ -343,22 +336,18 @@ class Dba
      * finish
      *
      * This closes a result handle and clears the memory associated with it
-     * @param PDOStatement|null $resource
      */
-    public static function finish($resource): void
+    public static function finish(?PDOStatement $resource): void
     {
-        if ($resource) {
-            $resource->closeCursor();
-        }
+        $resource?->closeCursor();
     }
 
     /**
      * affected_rows
      *
      * This emulates the mysql_affected_rows function
-     * @param PDOStatement|null $resource
      */
-    public static function affected_rows($resource): int
+    public static function affected_rows(?PDOStatement $resource): int
     {
         if ($resource) {
             $result = $resource->rowCount();

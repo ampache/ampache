@@ -313,10 +313,9 @@ class AmpacheTheaudiodb extends AmpachePlugin implements PluginGatherArtsInterfa
     }
 
     /**
-     * @param string $func
      * @return mixed|null
      */
-    private function api_call($func): mixed
+    private function api_call(string $func): mixed
     {
         $url = 'http://www.theaudiodb.com/api/v1/json/' . $this->api_key . '/' . $func;
         //debug_event('theaudiodb.plugin', 'API call: ' . $url, 5);
@@ -329,45 +328,29 @@ class AmpacheTheaudiodb extends AmpachePlugin implements PluginGatherArtsInterfa
         return json_decode((string) $request->body);
     }
 
-    /**
-     * @param null|string $name
-     */
-    private function search_artists($name): mixed
+    private function search_artists(?string $name = null): mixed
     {
         return ($name)
             ? $this->api_call('search.php?s=' . rawurlencode($name))
             : null;
     }
 
-    /**
-     * @param string $mbid
-     */
-    private function get_artist($mbid): mixed
+    private function get_artist(string $mbid): mixed
     {
         return $this->api_call('artist-mb.php?i=' . $mbid);
     }
 
-    /**
-     * @param string $artist
-     * @param string $album
-     */
-    private function search_album($artist, $album): mixed
+    private function search_album(string $artist, string $album): mixed
     {
         return $this->api_call('searchalbum.php?s=' . rawurlencode($artist) . '&a=' . rawurlencode($album));
     }
 
-    /**
-     * @param string $mbid
-     */
-    private function get_album($mbid): mixed
+    private function get_album(string $mbid): mixed
     {
         return $this->api_call('album-mb.php?i=' . $mbid);
     }
 
-    /**
-     * @param string $mbid
-     */
-    private function get_track($mbid): mixed
+    private function get_track(string $mbid): mixed
     {
         return $this->api_call('track-mb.php?i=' . $mbid);
     }

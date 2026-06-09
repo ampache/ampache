@@ -43,10 +43,7 @@ class MemoryObject
         }
     }
 
-    /**
-     * @param string $name
-     */
-    public function __set($name, $value)
+    public function __set(string $name, $value)
     {
         if (in_array($name, $this->properties)) {
             $this->_data[$name] = $value;
@@ -54,10 +51,9 @@ class MemoryObject
     }
 
     /**
-     * @param string $name
      * @return bool|mixed|null
      */
-    public function __get($name)
+    public function __get(string $name)
     {
         if (!in_array($name, $this->properties)) {
             return false;

@@ -418,12 +418,7 @@ class Live_Stream extends database_object implements Media, library_item, Catalo
         return false;
     }
 
-    /**
-     * @param int $user
-     * @param string $agent
-     * @param int $date
-     */
-    public function check_play_history($user, $agent, $date): bool
+    public function check_play_history(int $user, string $agent, int $date): bool
     {
         // Do nothing
         unset($user, $agent, $date);

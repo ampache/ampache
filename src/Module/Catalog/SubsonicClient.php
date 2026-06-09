@@ -209,10 +209,7 @@ class SubsonicClient
         ];
     }
 
-    /**
-     * @param bool|string $response
-     */
-    protected function parseResponse($response): object|array
+    protected function parseResponse(bool|string $response): object|array
     {
         $arr = (is_string($response))
             ? json_decode($response, true)
@@ -238,11 +235,10 @@ class SubsonicClient
     }
 
     /**
-     * @param string $action
      * @param array<string, int|string>|null $object
      * @return array|bool|object|string
      */
-    public function __call($action, $object)
+    public function __call(string $action, ?array $object = null)
     {
         return $this->_querySubsonic($action, $object ?? []);
     }

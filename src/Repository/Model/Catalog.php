@@ -172,24 +172,24 @@ abstract class Catalog extends database_object
      * This is a private var that's used during catalog builds
      * @var string[] $_playlists
      */
-    protected $_playlists = [];
+    protected array $_playlists = [];
 
     /**
      * Cache all files in catalog for quick lookup during add
      * @var array<string, int|string> $_filecache
      */
-    protected $_filecache = [];
+    protected array $_filecache = [];
 
     /* Used in functions */
 
     /** @var array $albums */
-    protected static $albums = [];
+    protected static array $albums = [];
 
     /** @var array $artists */
-    protected static $artists = [];
+    protected static array $artists = [];
 
     /** @var array $tags */
-    protected static $tags = [];
+    protected static array $tags = [];
 
     /**
      * get_path
@@ -1142,7 +1142,7 @@ abstract class Catalog extends database_object
 
                         if (
                             $extension &&
-                            (bool)AmpConfig::get('cache_' . $extension, false) == false
+                            !((bool)AmpConfig::get('cache_' . $extension, false))
                         ) {
                             unlink($file);
                             debug_event(self::class, 'cache_catalogs: removed (cache_' . $extension . ' ' . $song->file . ') {' . $file . '}', 4);
@@ -2699,13 +2699,11 @@ abstract class Catalog extends database_object
             }
         }
 
-        $update = match (true) {
+        return match (true) {
             $media instanceof Song => self::update_song_from_tags($results, $media),
             $media instanceof Video => self::update_video_from_tags($results, $media),
             $media instanceof Podcast_Episode => self::update_podcast_episode_from_tags($results, $media),
         };
-
-        return $update;
     }
 
     /**
@@ -2993,7 +2991,7 @@ abstract class Catalog extends database_object
             $new_song->albumartist = $song->albumartist;
         }
 
-        $is_upload_artist = ($song->artist) ? Artist::is_upload($song->artist) : false;
+        $is_upload_artist = $song->artist && Artist::is_upload($song->artist);
         if ($is_upload_artist) {
             debug_event(self::class, $song->artist . ' : is an uploaded song artist', 4);
             $artist_mbid_array = [];
@@ -3831,9 +3829,8 @@ abstract class Catalog extends database_object
 
     /**
      * get_table_from_type
-     * @param null|string $gather_type
      */
-    public static function get_table_from_type($gather_type): string
+    public static function get_table_from_type(?string $gather_type): string
     {
         return match ($gather_type) {
             'video' => 'video',
@@ -4010,10 +4007,7 @@ abstract class Catalog extends database_object
         ];
     }
 
-    /**
-     * @param int|string|null $year
-     */
-    public static function normalize_year($year): int
+    public static function normalize_year(int|string|null $year): int
     {
         if (empty($year)) {
             return 0;
@@ -4816,10 +4810,13 @@ abstract class Catalog extends database_object
         $home .= '/' . $sort_pattern;
 
         // don't send a mismatched file!
-        foreach ($replace_array as $replace_string) {
-            if (str_contains($sort_pattern, $replace_string)) {
-                return null;
-            }
+        if (
+            array_any(
+                $replace_array,
+                fn ($replace_string) => str_contains($sort_pattern, $replace_string)
+            )
+        ) {
+            return null;
         }
 
         return $home;
