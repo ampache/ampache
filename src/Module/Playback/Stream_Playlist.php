@@ -45,6 +45,7 @@ use Ampache\Repository\Model\Song;
 use Ampache\Repository\Model\Song_Preview;
 use Ampache\Repository\Model\User;
 use Ampache\Repository\Model\Video;
+use Ampache\Repository\Model\Broadcast;
 
 /**
  * Stream_Playlist Class
@@ -284,9 +285,37 @@ class Stream_Playlist
 
         if ($object instanceof Media) {
             return self::media_object_to_url($object, $additional_params, $urltype, $user);
+        } elseif ($object instanceof Broadcast) {
+            return self::broadcast_object_to_url($object, $additional_params, $urltype, $user);
         }
 
         return null;
+    }
+
+    private static function broadcast_object_to_url(Broadcast $object, string $additional_params = '', string $urltype = 'web', ?User $user = null): ?Stream_Url
+    {
+        $surl = null;
+        $url  = self::STREAM_PLAYLIST_ROW;
+        if (!$user) {
+            $user = Core::get_global('user');
+        }
+
+        $type = $object->getMediaType();
+
+        $url['type'] = $type->value;
+
+        if (!isset($object->enabled) || make_bool($object->enabled)) {
+            $url['url'] = $object->play_url($additional_params);
+            $api_session = (AmpConfig::get('require_session')) ? Stream::get_session() : null;
+
+            $url['author'] = 'Ampache';
+            $url['info_url']  = $object->get_f_link();
+            $url['title'] = Stream_Url::get_title($url['url']);
+            $url['time']  = -1;
+            $surl = new Stream_Url($url);
+        }
+
+        return $surl;
     }
 
     private static function media_object_to_url(Media $object, string $additional_params = '', string $urltype = 'web', ?User $user = null): ?Stream_Url
