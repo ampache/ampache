@@ -45,7 +45,7 @@ final class Migration800002 extends AbstractMigration
         Dba::write("DROP TABLE IF EXISTS `folder`;");
 
         // create the table
-        $this->updateDatabase("CREATE TABLE IF NOT EXISTS `folder` (`id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT, `name` varchar(255) DEFAULT NULL, `catalog` int(11) NOT NULL DEFAULT 0, `parent` int(11) NOT NULL DEFAULT 0, `user` int(11) DEFAULT NULL, `update_time` int(11) UNSIGNED DEFAULT 0, `addition_time` int(11) UNSIGNED DEFAULT 0, `object_count` int(11) UNSIGNED DEFAULT 0, `total_count` int(11) UNSIGNED NOT NULL DEFAULT 0, `total_skip` int(11) UNSIGNED NOT NULL DEFAULT 0, `path` varchar(255) DEFAULT NULL, `path_name` varchar(4096) DEFAULT NULL, PRIMARY KEY (`id`), KEY `name` (`name`), KEY `catalog` (`catalog`), KEY `user` (`user`)) ENGINE=$engine DEFAULT CHARSET=$charset COLLATE=$collation;");
+        $this->updateDatabase("CREATE TABLE `folder` (`id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT, `name` varchar(255) DEFAULT NULL, `catalog` int(11) NOT NULL DEFAULT 0, `parent` int(11) NOT NULL DEFAULT 0, `user` int(11) DEFAULT NULL, `update_time` int(11) UNSIGNED DEFAULT 0, `addition_time` int(11) UNSIGNED DEFAULT 0, `object_count` int(11) UNSIGNED DEFAULT 0, `total_count` int(11) UNSIGNED NOT NULL DEFAULT 0, `total_skip` int(11) UNSIGNED NOT NULL DEFAULT 0, `path` varchar(255) DEFAULT NULL, `path_name` varchar(4096) DEFAULT NULL, PRIMARY KEY (`id`), KEY `name` (`name`), KEY `catalog` (`catalog`), KEY `user` (`user`)) ENGINE=$engine DEFAULT CHARSET=$charset COLLATE=$collation;");
     }
 
     public function getTableMigrations(
