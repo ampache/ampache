@@ -386,7 +386,7 @@ class Folder extends database_object implements
     /**
      * get_objects
      * @return array<int, array{
-     *     object_type: LibraryItemEnum,
+     *     object_type: LibraryItemEnum|null,
      *     object_id: int
      * }>
      */
