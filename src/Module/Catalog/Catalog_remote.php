@@ -672,9 +672,9 @@ class Catalog_remote extends Catalog
                                 }
 
                                 continue;
-                            } else {
-                                $data = $this->_gather_tags($song->song) ?? [];
                             }
+                            $data = $this->_gather_tags($song) ?? [];
+
                         }
 
                         if (
@@ -700,7 +700,7 @@ class Catalog_remote extends Catalog
                                 // don't overwtrite the database path
                                 $data['file'] = $db_file;
                             } else {
-                                $data = $this->_gather_tags($song->song) ?? [];
+                                $data = $this->_gather_tags($song) ?? [];
                             }
                         }
 
