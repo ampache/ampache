@@ -102,7 +102,15 @@ class Folder extends database_object implements
             return;
         }
 
-        $info = $this->get_info($folder_id, static::DB_TABLENAME);
+        if ($folder_id === -1) {
+            $info = [
+                'id' => -1,
+                'name' => T_('root'),
+                'path_name' => DIRECTORY_SEPARATOR
+            ];
+        } else {
+            $info = $this->get_info($folder_id, static::DB_TABLENAME);
+        }
         foreach ($info as $key => $value) {
             $this->$key = $value;
         }
@@ -143,20 +151,12 @@ class Folder extends database_object implements
     }
 
     /**
-     * @return array{artist: array<int, array{object_type: LibraryItemEnum, object_id: int}>}
+     * @see WebDavDirectory::getChildren
+     * @return array{string?: array<int, array{object_type: LibraryItemEnum, object_id: int}>}
      */
     public function get_childrens(): array
     {
-        $medias  = [];
-        $artists = $this->get_artists();
-        foreach ($artists as $artist_id) {
-            $medias[] = [
-                'object_type' => LibraryItemEnum::ARTIST,
-                'object_id' => $artist_id
-            ];
-        }
-
-        return ['artist' => $medias];
+        return [];
     }
 
     public function get_default_art_kind(): string
@@ -307,21 +307,17 @@ class Folder extends database_object implements
      */
     public function get_children(string $name): array
     {
-        if (empty($this->children)) {
-            $sql        = "SELECT `object_id`, `object_type` FROM `folder_map` WHERE `folder` = ?;";
-            $db_results = Dba::read($sql, [$this->id]);
-            $results    = [];
-            while ($row = Dba::fetch_assoc($db_results)) {
-                $results[] = [
-                    'object_type' => LibraryItemEnum::tryFrom($row['object_type']),
-                    'object_id' => (int)$row['object_id']
-                ];
-            }
-
-            $this->children = $results;
+        $sql        = "SELECT `object_id`, `object_type` FROM `folder_map` WHERE `folder_id` = ?;";
+        $db_results = Dba::read($sql, [$this->id]);
+        $results    = [];
+        while ($row = Dba::fetch_assoc($db_results)) {
+            $results[] = [
+                'object_type' => LibraryItemEnum::tryFrom($row['object_type']),
+                'object_id' => (int)$row['object_id']
+            ];
         }
 
-        return $this->children;
+        return $results;
     }
 
     /**
@@ -388,23 +384,26 @@ class Folder extends database_object implements
     }
 
     /**
-     * get_artists
-     * @return int[]
+     * get_objects
+     * @return array<int, array{LibraryItemEnum, int}>
      */
-    public function get_artists(): array
+    public function get_objects(): array
     {
-        if (empty($this->artists)) {
-            $sql        = "SELECT `object_id` FROM `folder_map` WHERE `folder` = ? AND `object_type` = 'artist';";
+        if (empty($this->children)) {
+            $sql        = "SELECT `object_id`, `object_type` FROM `folder_map` WHERE `folder_id` = ?;";
             $db_results = Dba::read($sql, [$this->id]);
             $results    = [];
             while ($row = Dba::fetch_assoc($db_results)) {
-                $results[] = (int)$row['artist'];
+                $results[] = [
+                    'object_type' => LibraryItemEnum::tryFrom($row['object_type']),
+                    'object_id' => (int)$row['object_id']
+                ];
             }
 
-            $this->artists = $results;
+            $this->children = $results;
         }
 
-        return $this->artists;
+        return $this->children;
     }
 
     /**

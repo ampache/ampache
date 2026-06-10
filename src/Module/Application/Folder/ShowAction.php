@@ -49,7 +49,6 @@ final readonly class ShowAction implements ApplicationActionInterface
         private ConfigContainerInterface $configContainer,
         private UiInterface $ui,
         private LoggerInterface $logger,
-        private PrivilegeCheckerInterface $privilegeChecker,
         private FolderRepositoryInterface $folderRepository,
     ) {
     }
@@ -65,10 +64,10 @@ final readonly class ShowAction implements ApplicationActionInterface
         $input = $request->getQueryParams();
 
         // lookup by ID
-        $folder_id = (isset($input['folder'])) ? (int)$input['folder'] : null;
-        $folder    = (is_int($folder_id))
+        $folder_id = (isset($input['folder'])) ? (int)$input['folder'] : -1;
+        $folder    = ($folder_id > 0)
             ? $this->folderRepository->findById($folder_id)
-            : null;
+            : new Folder(-1);
         // lookup by name if ID didn't work
         $folder_name = (isset($input['name'])) ? urldecode((string)$input['name']) : null;
         if (!$folder && $folder_name !== null) {
@@ -78,7 +77,7 @@ final readonly class ShowAction implements ApplicationActionInterface
                 : null;
         }
 
-        if ($folder_id !== null && $folder === null) {
+        if (!$folder_id && $folder === null) {
             $this->logger->warning(
                 'Requested a folder that does not exist',
                 [LegacyLogger::CONTEXT_TYPE => self::class]
@@ -92,22 +91,13 @@ final readonly class ShowAction implements ApplicationActionInterface
                 'show_folder.inc.php',
                 [
                     'folder' => $folder,
-                    'object_ids' => $folder->get_children(),
+                    'objects' => $folder->get_objects(),
                 ]
             );
 
             $this->ui->showFooter();
 
             return null;
-        }
-
-        // if you didn't set a folder_id or name, show the add folder form
-        if ($gatekeeper->mayAccess(AccessTypeEnum::INTERFACE, AccessLevelEnum::CONTENT_MANAGER)) {
-            $this->ui->show(
-                'show_add_folder.inc.php'
-            );
-        } else {
-            throw new AccessDeniedException();
         }
 
         $this->ui->showQueryStats();

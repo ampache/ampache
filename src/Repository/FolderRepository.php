@@ -54,7 +54,7 @@ final readonly class FolderRepository implements FolderRepositoryInterface
         $folders = [];
 
         $result = $this->connection->query(
-            'SELECT `folder`.`id`, `folder`.`name` FROM `folder` LEFT JOIN `folder_map` ON `folder_map`.`folder` = `folder`.`id` WHERE `folder_map`.`artist` = ?',
+            'SELECT `folder`.`id`, `folder`.`name` FROM `folder` LEFT JOIN `folder_map` ON `folder_map`.`folder_id` = `folder`.`id` WHERE `folder_map`.`object_id` = ?',
             [$artistId]
         );
 
@@ -144,7 +144,7 @@ final readonly class FolderRepository implements FolderRepositoryInterface
             $this->connection->query('DELETE FROM `folder_map` WHERE `folder_map`.`object_type` = \'podcast\' AND `folder_map`.`object_id` NOT IN (SELECT `podcast`.`id` FROM `podcast`)');
             $this->connection->query('DELETE FROM `folder_map` WHERE `folder_map`.`object_type` = \'podcast_episode\' AND `folder_map`.`object_id` NOT IN (SELECT `podcast_episode`.`id` FROM `podcast_episode`)');
             $this->connection->query('DELETE FROM `folder_map` WHERE `folder_map`.`object_type` = \'song\' AND `folder_map`.`object_id` NOT IN (SELECT `song`.`id` FROM `song`)');
-            $this->connection->query('DELETE FROM `folder` WHERE `id` NOT IN (SELECT `folder` FROM `folder_map`) AND `user` IS NULL');
+            $this->connection->query('DELETE FROM `folder` WHERE `id` NOT IN (SELECT `folder_id` FROM `folder_map`) AND `user` IS NULL');
         } catch (DatabaseException) {
             debug_event(self::class, 'collectGarbage error', 5);
         }
