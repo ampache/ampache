@@ -301,8 +301,7 @@ class Stream_Playlist
 
     private static function media_object_to_url(Media $object, string $additional_params = '', string $urltype = 'web', ?User $user = null): ?Stream_Url
     {
-        $surl = null;
-        $url  = self::STREAM_PLAYLIST_ROW;
+        $url = self::STREAM_PLAYLIST_ROW;
         if (!$user instanceof User) {
             $user = Core::get_global('user');
         }
@@ -314,7 +313,7 @@ class Stream_Playlist
         // Don't add disabled media objects to the stream playlist
         // Playing a disabled media return a 404 error that could make failed the player (mpd ...)
         if (property_exists($object, 'enabled') && !$object->enabled) {
-            debug_event(self::class, 'media_object_to_url: SKIP {' . $object->id . '} of type {' . $type->value . '} is disabled', 5);
+            debug_event(self::class, 'media_object_to_url: SKIP {' . $object->getId() . '} of type {' . $type->value . '} is disabled', 5);
 
             return null;
         }
