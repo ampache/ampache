@@ -278,7 +278,7 @@ class Catalog_remote extends Catalog
                     'debug_callback' => 'debug_event',
                     'api_secure' => (str_starts_with($this->uri, 'https://')),
                     'api_format' => 'xml',
-                    'server_version' => Api::DEFAULT_VERSION
+                    'server_version' => 6 // TODO Api::DEFAULT_VERSION after 8 is stable
                 ]
             );
         } catch (Exception $exception) {
