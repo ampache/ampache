@@ -58,6 +58,15 @@ interface SongRepositoryInterface
     ): array;
 
     /**
+     * gets the songs for a label, based on label name
+     *
+     * @return list<int>
+     */
+    public function getByFolder(
+        string $folderName,
+    ): array;
+
+    /**
      * Gets the songs from the artist in a random order
      *
      * @return list<int>

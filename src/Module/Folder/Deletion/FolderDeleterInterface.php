@@ -23,25 +23,11 @@ declare(strict_types=1);
  *
  */
 
-namespace Ampache\Repository\Model;
+namespace Ampache\Module\Folder\Deletion;
 
-enum LibraryItemEnum: string
+use Ampache\Repository\Model\Folder;
+
+interface FolderDeleterInterface
 {
-    case ALBUM           = 'album';
-    case ALBUM_DISK      = 'album_disk';
-    case ART             = 'art';
-    case ARTIST          = 'artist';
-    case BROADCAST       = 'broadcast';
-    case FOLDER          = 'folder';
-    case LABEL           = 'label';
-    case LIVE_STREAM     = 'live_stream';
-    case PLAYLIST        = 'playlist';
-    case PODCAST         = 'podcast';
-    case PODCAST_EPISODE = 'podcast_episode';
-    case SEARCH          = 'search';
-    case SONG            = 'song';
-    case SONG_PREVIEW    = 'song_preview';
-    case TAG_HIDDEN      = 'tag_hidden';
-    case TAG             = 'tag';
-    case VIDEO           = 'video';
+    public function delete(Folder $folder): void;
 }
