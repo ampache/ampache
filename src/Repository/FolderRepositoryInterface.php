@@ -23,25 +23,32 @@ declare(strict_types=1);
  *
  */
 
-namespace Ampache\Repository\Model;
+namespace Ampache\Repository;
 
-enum LibraryItemEnum: string
+use Ampache\Repository\Model\Folder;
+
+interface FolderRepositoryInterface
 {
-    case ALBUM           = 'album';
-    case ALBUM_DISK      = 'album_disk';
-    case ART             = 'art';
-    case ARTIST          = 'artist';
-    case BROADCAST       = 'broadcast';
-    case FOLDER          = 'folder';
-    case LABEL           = 'label';
-    case LIVE_STREAM     = 'live_stream';
-    case PLAYLIST        = 'playlist';
-    case PODCAST         = 'podcast';
-    case PODCAST_EPISODE = 'podcast_episode';
-    case SEARCH          = 'search';
-    case SONG            = 'song';
-    case SONG_PREVIEW    = 'song_preview';
-    case TAG_HIDDEN      = 'tag_hidden';
-    case TAG             = 'tag';
-    case VIDEO           = 'video';
+    public function findById(int $folderId): ?Folder;
+
+    /**
+     * @return string[]
+     */
+    public function getByArtist(int $artistId): array;
+
+    /**
+     * Return the list of all available folders
+     *
+     * @return string[]
+     */
+    public function getAll(): array;
+
+    public function lookup(string $folderName, int $folderId = 0): int;
+
+    public function delete(int $folderId): void;
+
+    /**
+     * This cleans out unused folders
+     */
+    public function collectGarbage(): void;
 }

@@ -120,6 +120,28 @@ final readonly class SongRepository implements SongRepositoryInterface
     }
 
     /**
+     * gets the songs for a folder, based on folder name
+     *
+     * @return int[]
+     */
+    public function getByFolder(
+        string $folderName,
+    ): array {
+        $user_id = Core::get_global('user')?->getId() ?? -1;
+        $sql     = (AmpConfig::get('catalog_disable') || AmpConfig::get('catalog_filter'))
+            ? "SELECT `song`.`id` FROM `song` LEFT JOIN `folder` ON `folder`.`id` = `song`.`folder` WHERE `folder`.`name` = ? AND `folder`.`catalog` IN (" . implode(',', Catalog::get_catalogs('', $user_id, true)) . ") ORDER BY `song`.`album`, `song`.`disk`, `song`.`track`"
+            : "SELECT `song`.`id` FROM `song` LEFT JOIN `folder` ON `folder`.`id` = `song`.`folder` WHERE `folder`.`name` = ? ORDER BY `song`.`album`, `song`.`disk`, `song`.`track`";
+
+        $db_results = Dba::read($sql, [$folderName]);
+        $results    = [];
+        while ($row = Dba::fetch_assoc($db_results)) {
+            $results[] = (int) $row['id'];
+        }
+
+        return $results;
+    }
+
+    /**
      * Gets the songs from the artist in a random order
      *
      * @return int[]

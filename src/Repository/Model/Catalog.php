@@ -4360,7 +4360,7 @@ abstract class Catalog extends database_object
     }
 
     public static function can_remove(
-        Podcast_Episode|AlbumDisk|Video|Song|Album|Artist|Label $libitem,
+        Podcast_Episode|AlbumDisk|Video|Song|Album|Artist|Label|Folder $libitem,
         ?int $user_id = 0,
     ): bool {
         if (!$user_id) {

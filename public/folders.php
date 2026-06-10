@@ -23,25 +23,22 @@ declare(strict_types=1);
  *
  */
 
-namespace Ampache\Repository\Model;
+use Ampache\Module\Application\ApplicationRunner;
+use Ampache\Module\Application\Folder\ConfirmDeleteAction;
+use Ampache\Module\Application\Folder\DeleteAction;
+use Ampache\Module\Application\Folder\ShowAction;
+use Nyholm\Psr7Server\ServerRequestCreatorInterface;
+use Psr\Container\ContainerInterface;
 
-enum LibraryItemEnum: string
-{
-    case ALBUM           = 'album';
-    case ALBUM_DISK      = 'album_disk';
-    case ART             = 'art';
-    case ARTIST          = 'artist';
-    case BROADCAST       = 'broadcast';
-    case FOLDER          = 'folder';
-    case LABEL           = 'label';
-    case LIVE_STREAM     = 'live_stream';
-    case PLAYLIST        = 'playlist';
-    case PODCAST         = 'podcast';
-    case PODCAST_EPISODE = 'podcast_episode';
-    case SEARCH          = 'search';
-    case SONG            = 'song';
-    case SONG_PREVIEW    = 'song_preview';
-    case TAG_HIDDEN      = 'tag_hidden';
-    case TAG             = 'tag';
-    case VIDEO           = 'video';
-}
+/** @var ContainerInterface $dic */
+$dic = require __DIR__ . '/../src/Config/Init.php';
+
+$dic->get(ApplicationRunner::class)->run(
+    $dic->get(ServerRequestCreatorInterface::class)->fromGlobals(),
+    [
+        DeleteAction::REQUEST_KEY => DeleteAction::class,
+        ConfirmDeleteAction::REQUEST_KEY => ConfirmDeleteAction::class,
+        ShowAction::REQUEST_KEY => ShowAction::class,
+    ],
+    ShowAction::REQUEST_KEY
+);
