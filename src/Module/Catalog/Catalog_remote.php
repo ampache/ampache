@@ -363,9 +363,12 @@ class Catalog_remote extends Catalog
             return null;
         }
 
-        $data      = null;
-        $remote_id = (int)$song->attributes()->id;
-        $tags      = ($this->song_tags)
+        $remote_id = (int)($song->attributes()->id ?? 0);
+        if (!$remote_id) {
+            return null;
+        }
+
+        $tags = ($this->song_tags)
             ? $this->remote_handle->send_command(self::CMD_SONG_TAGS, ['filter' => $remote_id])
             : null;
 
@@ -684,19 +687,20 @@ class Catalog_remote extends Catalog
                             ? Catalog::get_cache_path($song_id_check, $this->catalog_id, $cache_path, $cache_target)
                             : null;
 
-                        if (
-                            $action === 'verify' &&
-                            $file_target !== null &&
-                            is_file($file_target) &&
-                            filemtime($file_target) > ($date - (60 * 60 * 24 * 30)) // 30 day
-                        ) {
-                            // get file tags directly from the cached file
-                            $media = new Song($song_id_check);
-                            $data  = $this->get_media_tags($media, ['music'], $this->sort_pattern ?? '', $this->rename_pattern ?? '', $file_target);
-                            // don't overwtrite the database path
-                            $data['file'] = $db_file;
-                        } else {
-                            $data = $this->_gather_tags($song->song);
+                        if ($action === 'verify') {
+                            if (
+                                $file_target !== null &&
+                                is_file($file_target) &&
+                                filemtime($file_target) > ($date - (60 * 60 * 24 * 30)) // 30 day
+                            ) {
+                                // get file tags directly from the cached file
+                                $media = new Song($song_id_check);
+                                $data  = $this->get_media_tags($media, ['music'], $this->sort_pattern ?? '', $this->rename_pattern ?? '', $file_target);
+                                // don't overwtrite the database path
+                                $data['file'] = $db_file;
+                            } else {
+                                $data = $this->_gather_tags($song->song) ?? [];
+                            }
                         }
 
                         //debug_event('remote.catalog', 'DATA ' . print_r($data, true), 1);
