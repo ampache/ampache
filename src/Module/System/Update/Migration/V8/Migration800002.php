@@ -25,7 +25,6 @@ declare(strict_types=1);
 namespace Ampache\Module\System\Update\Migration\V8;
 
 use Ampache\Config\AmpConfig;
-use Ampache\Module\System\Dba;
 use Ampache\Module\System\Update\Migration\AbstractMigration;
 use Generator;
 
@@ -42,7 +41,7 @@ final class Migration800002 extends AbstractMigration
         $charset   = (AmpConfig::get('database_charset', 'utf8mb4'));
         $engine    = (AmpConfig::get('database_engine', 'InnoDB'));
 
-        Dba::write("DROP TABLE IF EXISTS `folder`;");
+        $this->updateDatabase("DROP TABLE IF EXISTS `folder`;");
 
         // create the table
         $this->updateDatabase("CREATE TABLE `folder` (`id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT, `name` varchar(255) DEFAULT NULL, `catalog` int(11) NOT NULL DEFAULT 0, `parent` int(11) NOT NULL DEFAULT 0, `user` int(11) DEFAULT NULL, `update_time` int(11) UNSIGNED DEFAULT 0, `addition_time` int(11) UNSIGNED DEFAULT 0, `object_count` int(11) UNSIGNED DEFAULT 0, `total_count` int(11) UNSIGNED NOT NULL DEFAULT 0, `total_skip` int(11) UNSIGNED NOT NULL DEFAULT 0, `path` varchar(255) DEFAULT NULL, `path_name` varchar(4096) DEFAULT NULL, PRIMARY KEY (`id`), KEY `name` (`name`), KEY `catalog` (`catalog`), KEY `user` (`user`)) ENGINE=$engine DEFAULT CHARSET=$charset COLLATE=$collation;");
