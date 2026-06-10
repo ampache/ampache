@@ -42,7 +42,7 @@ final class Migration800003 extends AbstractMigration
         $charset   = (AmpConfig::get('database_charset', 'utf8mb4'));
         $engine    = (AmpConfig::get('database_engine', 'InnoDB'));
 
-        Dba::write("DROP TABLE IF EXISTS `folder`;");
+        Dba::write("DROP TABLE IF EXISTS `folder_map`;");
 
         // create the table
         $this->updateDatabase("CREATE TABLE `folder_map` (`folder_id` int(11) UNSIGNED NOT NULL, `object_id` int(11) UNSIGNED NOT NULL, `object_type` varchar(16) DEFAULT NULL, UNIQUE KEY `unique_folder_map` (`object_id`,`object_type`,`folder_id`), KEY `object_id_index` (`object_id`), KEY `folder_id_type_index` (`folder_id`,`object_type`), KEY `object_id_type_index` (`object_id`,`object_type`), KEY `object_type_IDX` (`object_type`) USING BTREE, KEY `object_type_id_IDX` (`object_type`,`object_id`) USING BTREE) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_unicode_ci;ENGINE=$engine DEFAULT CHARSET=$charset COLLATE=$collation;");
