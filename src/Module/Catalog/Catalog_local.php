@@ -355,7 +355,9 @@ class Catalog_local extends Catalog
     {
         $folder = self::getFolderRepository()->getByPathName($folderPath, $this->getId(), $parentPath);
         if (!$folder || $folder->isNew()) {
-            $parent = self::getFolderRepository()->lookup($parentPath, $this->getId());
+            $parent = ($parentPath === $this->path)
+                ? self::getFolderRepository()->lookup((string)$this->get_fullname(), $this->getId())
+                : self::getFolderRepository()->lookup($parentPath, $this->getId());
             $folder = self::getFolderRepository()->create($folderName, $this->getId(), $folderPath, $parent);
         }
 
@@ -1043,7 +1045,6 @@ class Catalog_local extends Catalog
             $folderId = Folder::create([
                 'name' => $this->get_fullname(),
                 'catalog' => $this->getId(),
-                'path' => $this->path,
                 'path_name' => $this->path,
             ]);
 
@@ -1097,10 +1098,10 @@ class Catalog_local extends Catalog
             return 0;
         }
 
-        $counter    = 0;
-        $songsadded = 0;
+        $counter      = 0;
+        $foldersadded = 0;
         /* Recurse through this dir and create the files array */
-        while (false !== ($file = readdir($handle))) {
+        while (false !== ($file = readdir())) {
             if ('.' === $file || '..' === $file) {
                 continue;
             }
@@ -1125,7 +1126,7 @@ class Catalog_local extends Catalog
                     is_dir($full_file) &&
                     $this->add_folder($file, $full_file, $path)
                 ) {
-                    $songsadded++;
+                    $foldersadded++;
                 }
             } catch (Exception $error) {
                 $interactor?->info(
@@ -1150,7 +1151,7 @@ class Catalog_local extends Catalog
         /* Close the dir handle */
         closedir($handle);
 
-        return $songsadded;
+        return $foldersadded;
     }
 
     /**
