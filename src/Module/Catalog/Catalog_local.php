@@ -1272,6 +1272,20 @@ class Catalog_local extends Catalog
                     }
                     $this->_scan_folder($full_file, $interactor);
                 }
+                if (is_file($full_file)) {
+                    if ($this->gather_types == 'podcast') {
+                        $object_type = 'podcast_episode';
+                    } elseif ($this->gather_types == 'video') {
+                        $object_type = 'video';
+                    } else {
+                        $object_type = 'song';
+                    }
+
+                    $object_id = Catalog::get_id_from_file($full_file, $object_type);
+                    if ($object_id > 0) {
+                        self::getFolderRepository()->add_folder_map($object_id, $object_type, $path, $this->getId());
+                    }
+                }
             } catch (Exception $error) {
                 $interactor?->info(
                     T_('Error') . ' ' . $error->getMessage(),

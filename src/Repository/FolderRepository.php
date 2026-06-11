@@ -187,12 +187,31 @@ final readonly class FolderRepository implements FolderRepositoryInterface
             : null;
     }
 
+    public function create_map(int $object_id, string $object_type, int $folderId): void
+    {
+        $this->connection->query(
+            "INSERT IGNORE INTO `folder_map` (`folder_id`, `object_type`, `object_id`) VALUES (?, ?, ?);",
+            [$folderId, $object_type, $object_id]
+        );
+    }
+
     public function delete(int $folderId): void
     {
         $this->connection->query(
             'DELETE FROM `folder` WHERE `id` = ?',
             [$folderId]
         );
+    }
+
+    /**
+     * Create a link to media in the folder_map table
+     */
+    public function add_folder_map(int $object_id, string $object_type, string $dir_path, int $catalog_id): void
+    {
+        $folderId = $this->lookupByPathName($dir_path, $catalog_id);
+        if ($folderId) {
+            $this->create_map($object_id, $object_type, $folderId);
+        }
     }
 
     /**
@@ -210,13 +229,5 @@ final readonly class FolderRepository implements FolderRepositoryInterface
         } catch (DatabaseException) {
             debug_event(self::class, 'collectGarbage error', 5);
         }
-    }
-
-    /**
-     * Returns a new folder item
-     */
-    public function prototype(): Folder
-    {
-        return new Folder();
     }
 }
