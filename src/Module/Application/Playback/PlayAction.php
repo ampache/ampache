@@ -664,6 +664,7 @@ final readonly class PlayAction implements ApplicationActionInterface
                 }
             }
 
+            $streamConfiguration = null;
             if (
                 $transcode_cfg != 'never' &&
                 $transcode_to &&
@@ -704,7 +705,7 @@ final readonly class PlayAction implements ApplicationActionInterface
                 return null;
             }
 
-            $streamConfiguration = $streamConfiguration ?? $catalog->prepare_media($media);
+            $streamConfiguration = $streamConfiguration ?? $catalog?->prepare_media($media);
             if ($streamConfiguration === null) {
                 return null;
             }
