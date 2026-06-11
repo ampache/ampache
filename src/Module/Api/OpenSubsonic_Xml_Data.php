@@ -1673,9 +1673,9 @@ class OpenSubsonic_Xml_Data
         $xartist->addChild('notes', htmlspecialchars(trim((string)$info['summary'])));
         $xartist->addChild('musicBrainzId', $album->mbid);
         //$xartist->addChild('lastFmUrl', "");
-        $xartist->addChild('smallImageUrl', htmlentities((string)$info['smallphoto']));
-        $xartist->addChild('mediumImageUrl', htmlentities((string)$info['mediumphoto']));
-        $xartist->addChild('largeImageUrl', htmlentities((string)$info['largephoto']));
+        $xartist->addChild('smallImageUrl', html_entity_decode((string)$info['smallphoto']));
+        $xartist->addChild('mediumImageUrl', html_entity_decode((string)$info['mediumphoto']));
+        $xartist->addChild('largeImageUrl', html_entity_decode((string)$info['largephoto']));
 
         return $xml;
     }
@@ -1710,9 +1710,9 @@ class OpenSubsonic_Xml_Data
         }
         $xartist->addChild('musicBrainzId', (string)$artist->mbid);
         //$xartist->addChild('lastFmUrl', "");
-        $xartist->addChild('smallImageUrl', htmlentities((string)$info['smallphoto']));
-        $xartist->addChild('mediumImageUrl', htmlentities((string)$info['mediumphoto']));
-        $xartist->addChild('largeImageUrl', htmlentities((string)$info['largephoto']));
+        $xartist->addChild('smallImageUrl', html_entity_decode((string)$info['smallphoto']));
+        $xartist->addChild('mediumImageUrl', html_entity_decode((string)$info['mediumphoto']));
+        $xartist->addChild('largeImageUrl', html_entity_decode((string)$info['largephoto']));
 
         $unknownCount = 0;
         foreach ($similars as $similar) {
