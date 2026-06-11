@@ -624,18 +624,12 @@ final readonly class Play2Action implements ApplicationActionInterface
             );
         }
 
-        $transcode      = false;
-        $transcode_cfg  = AmpConfig::get('transcode', 'default');
-        $cache_file     = false;
-        if ($media instanceof Song_Preview) {
-            $mediaOwnerId   = null;
-            $mediaCatalogId = null;
-        } else {
+        $transcode     = false;
+        $transcode_cfg = AmpConfig::get('transcode', 'default');
+        $cache_file    = false;
+        if (!$media instanceof Song_Preview && $media->catalog) {
             $mediaOwnerId   = $media->get_user_owner();
-            $mediaCatalogId = $media->getCatalogId();
-        }
-
-        if ($mediaCatalogId) {
+            $mediaCatalogId = $media->catalog;
             /** @var Song|Podcast_Episode|Video $media */
             // The media catalog is restricted
             $catalogs = $user->catalogs['music'] ?? User::get_user_catalogs($user->id);
