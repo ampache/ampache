@@ -27,7 +27,9 @@ namespace Ampache\Repository;
 
 use Ampache\Module\Database\DatabaseConnectionInterface;
 use Ampache\Module\Database\Exception\DatabaseException;
+use Ampache\Repository\Model\Catalog;
 use Ampache\Repository\Model\Folder;
+use Ampache\Repository\Model\Podcast;
 use PDO;
 
 final readonly class FolderRepository implements FolderRepositoryInterface
@@ -47,22 +49,39 @@ final readonly class FolderRepository implements FolderRepositoryInterface
     }
 
     /**
-     * @return string[]
+     * @return list<mixed>
      */
-    public function getByArtist(int $artistId): array
+    protected function getPrototypeParameters(): array
     {
-        $folders = [];
+        return [$this];
+    }
 
-        $result = $this->connection->query(
-            'SELECT `folder`.`id`, `folder`.`name` FROM `folder` LEFT JOIN `folder_map` ON `folder_map`.`folder_id` = `folder`.`id` WHERE `folder_map`.`object_id` = ?',
-            [$artistId]
+    public function getByName(string $folderName, int $catalogId = 0, ?int $parent = null): ?Folder
+    {
+        $result = $this->connection->fetchOne(
+            'SELECT `folder`.`id` FROM `folder` WHERE `folder`.`name` = ? AND `folder`.`catalog` = ? AND `folder`.`parent` = ?;',
+            [$folderName, $catalogId, $parent]
         );
 
         while ($row = $result->fetch(PDO::FETCH_ASSOC)) {
-            $folders[(int) $row['id']] = $row['name'];
+            return new Folder((int)$row['id']);
         }
 
-        return $folders;
+        return null;
+    }
+
+    public function getByPath(string $folderPath, int $catalogId = 0, ?int $parent = null): ?Folder
+    {
+        $result = $this->connection->fetchOne(
+            'SELECT `folder`.`id` FROM `folder` WHERE `folder`.`path` = ? AND `folder`.`catalog` = ? AND `folder`.`parent` = ?;',
+            [$folderPath, $catalogId, $parent]
+        );
+
+        while ($row = $result->fetch(PDO::FETCH_ASSOC)) {
+            return new Folder((int)$row['id']);
+        }
+
+        return null;
     }
 
     /**
@@ -101,18 +120,18 @@ final readonly class FolderRepository implements FolderRepositoryInterface
         return $result ?: '';
     }
 
-    public function lookup(string $folderName, int $folderId = 0): int
+    public function lookup(string $folderName = '', int $catalogId = 0, ?int $parent = null): int
     {
         $ret  = -1;
         $name = trim($folderName);
 
         if ($name !== '') {
             $ret    = 0;
-            $sql    = 'SELECT `id` FROM `folder` WHERE `name` = ?';
-            $params = [$name];
-            if ($folderId > 0) {
-                $sql .= ' AND `id` != ?';
-                $params[] = $folderId;
+            $sql    = 'SELECT `id` FROM `folder` WHERE `name` = ? AND `catalog` = ?';
+            $params = [$name, $catalogId];
+            if ($parent) {
+                $sql .= ' AND `parent` = ?';
+                $params[] = $parent;
             }
 
             $result = $this->connection->fetchOne($sql, $params);
@@ -123,6 +142,23 @@ final readonly class FolderRepository implements FolderRepositoryInterface
         }
 
         return $ret;
+    }
+
+    public function create(string $folderName, int $catalogId, string $folderPath = '', ?int $parent = null): ?Folder
+    {
+        // don't allow duplicate podcasts
+        $folderId = $this->lookup($folderPath, $catalogId);
+        if (!$folderId) {
+            $folderId = Folder::create([
+                'name' => $folderName,
+                'catalog' => $catalogId,
+                'path_name' => $folderPath,
+            ]);
+        }
+
+        return ($folderId)
+            ? new Folder($folderId)
+            : null;
     }
 
     public function delete(int $folderId): void
@@ -148,5 +184,13 @@ final readonly class FolderRepository implements FolderRepositoryInterface
         } catch (DatabaseException) {
             debug_event(self::class, 'collectGarbage error', 5);
         }
+    }
+
+    /**
+     * Returns a new folder item
+     */
+    public function prototype(): Folder
+    {
+        return new Folder();
     }
 }

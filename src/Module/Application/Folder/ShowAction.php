@@ -65,14 +65,6 @@ final readonly class ShowAction implements ApplicationActionInterface
         $folder    = ($folder_id > 0)
             ? $this->folderRepository->findById($folder_id)
             : new Folder(-1);
-        // lookup by name if ID didn't work
-        $folder_name = (isset($input['name'])) ? urldecode((string)$input['name']) : null;
-        if (!$folder && $folder_name !== null) {
-            $folder_id = $this->folderRepository->lookup($folder_name);
-            $folder    = ($folder_id > 0)
-                ? $this->folderRepository->findById($folder_id)
-                : null;
-        }
 
         if (!$folder_id && $folder === null) {
             $this->logger->warning(
@@ -85,7 +77,7 @@ final readonly class ShowAction implements ApplicationActionInterface
             return null;
         } elseif ($folder instanceof Folder) {
             $this->ui->show(
-                'show_folder.inc.php',
+                'show_folders.inc.php',
                 [
                     'folder' => $folder,
                     'objects' => $folder->get_objects(),

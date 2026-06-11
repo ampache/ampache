@@ -52,6 +52,7 @@ final class UpdateCatalog extends AbstractCatalogUpdater implements UpdateCatalo
         bool $updateInfo,
         bool $optimizeDatabase,
         bool $collectGarbage,
+        bool $scanFolders,
         string $catalogType,
         ?string $catalogName,
         ?int $limit,
@@ -193,6 +194,30 @@ final class UpdateCatalog extends AbstractCatalogUpdater implements UpdateCatalo
                         true
                     );
                     $changed += $catalog->verify_catalog_proc($limit, $interactor);
+
+                    $buffer = ob_get_contents();
+
+                    ob_end_clean();
+
+                    $interactor->info(
+                        $this->cleanBuffer((string)$buffer),
+                        true
+                    );
+                    $interactor->info(
+                        '------------------',
+                        true
+                    );
+                }
+
+                if ($scanFolders) {
+                    ob_start();
+
+                    // Look for new files
+                    $interactor->info(
+                        T_('Start scanning folders'),
+                        true
+                    );
+                    $changed += $catalog->scan_catalog_folders($interactor);
 
                     $buffer = ob_get_contents();
 

@@ -25,16 +25,16 @@ declare(strict_types=1);
 
 namespace Ampache\Repository;
 
+use Ampache\Repository\Model\Catalog;
 use Ampache\Repository\Model\Folder;
 
 interface FolderRepositoryInterface
 {
     public function findById(int $folderId): ?Folder;
 
-    /**
-     * @return string[]
-     */
-    public function getByArtist(int $artistId): array;
+    public function getByName(string $folderName, int $catalogId = 0, ?int $parent = null): ?Folder;
+
+    public function getByPath(string $folderPath, int $catalogId = 0, ?int $parent = null): ?Folder;
 
     /**
      * Return the list of all available folders
@@ -43,7 +43,9 @@ interface FolderRepositoryInterface
      */
     public function getAll(): array;
 
-    public function lookup(string $folderName, int $folderId = 0): int;
+    public function lookup(string $folderName, int $catalogId = 0, ?int $parent = null): int;
+
+    public function create(string $folderName, int $catalogId, string $folderPath = '', ?int $parent = null): ?Folder;
 
     public function delete(int $folderId): void;
 
