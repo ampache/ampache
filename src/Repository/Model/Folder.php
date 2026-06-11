@@ -181,6 +181,14 @@ class Folder extends database_object implements
     }
 
     /**
+     * get_fullpathname
+     */
+    public function get_fullpathname(): ?string
+    {
+        return $this->path_name;
+    }
+
+    /**
      * Get item link.
      */
     public function get_link(): string
@@ -326,12 +334,12 @@ class Folder extends database_object implements
     public function update(array $data): ?int
     {
         // duplicate name check
-        if (self::getFolderRepository()->lookup($data['name'], $this->id) !== 0) {
+        if (self::getFolderRepository()->lookup($data['name'], ($data['catalog'] ?? $this->catalog)) !== 0) {
             return null;
         }
 
         $name         = $data['name'] ?? $this->name;
-        $catalog      = $data['catalog'] ?? null;
+        $catalog      = $data['catalog'] ?? $this->catalog;
         $parent       = $data['parent'] ?? null;
         $update_time  = time();
         $object_count = $data['object_count'] ?? null;
@@ -344,32 +352,45 @@ class Folder extends database_object implements
 
     /**
      * create
-     * @param array<string, mixed> $data
+     * @param array<int, array{
+     *     name: string,
+     *     catalog: int,
+     *     parent?: int,
+     *     user?: int|null,
+     *     addition_time?: int,
+     *     path?: string,
+     *     path_name?: string
+     * }> $data
      */
     public static function create(array $data): ?int
     {
-        if (self::getFolderRepository()->lookup($data['name']) !== 0) {
+        if (self::getFolderRepository()->lookup($data['name'], $data['catalog']) !== 0) {
             return null;
         }
 
         $name          = $data['name'];
-        $catalog       = $data['catalog'];
-        $parent        = $data['parent'] ?? null;
-        $user          = $data['user'];
+        $catalog       = (int)$data['catalog'];
+        $parent        = (is_numeric($data['parent'])) ? (int)$data['parent'] : null;
+        $user          = $data['user'] ?? null;
         $addition_time = $data['addition_time'] ?? time();
 
         // Build the folder paths
-        $path      = '';
-        $path_name = '';
-        if ($parent) {
+        $path      = $data['path'] ?? '';
+        $path_name = $data['path_name'] ?? '';
+        if ($parent && (!$path || !$path_name)) {
+            // identify full path when missing based on history
             $parentFolder = self::getFolderRepository()->findById((int)$parent);
             while ($parentFolder) {
-                $path_name    = $parentFolder->get_fullname() . DIRECTORY_SEPARATOR . $path_name;
+                $path_name    = $parentFolder->get_fullpathname() . DIRECTORY_SEPARATOR . $path_name;
                 $path         = $parentFolder->id . ($path ? ',' : '') . $path;
                 $parentFolder = ($parentFolder->parent)
                     ? self::getFolderRepository()->findById($parentFolder->parent)
                     : null;
             }
+        }
+
+        if (!$parent && $path && $path_name) {
+            $parent = self::getFolderRepository()->lookup(str_replace(DIRECTORY_SEPARATOR . $path, '', $path_name), $catalog);
         }
 
         $sql = "INSERT INTO `folder` (`name`, `catalog`, `parent`, `user`, `addition_time`, `path`, `path_name`) VALUES (?, ?, ?, ?, ?, ?, ?)";

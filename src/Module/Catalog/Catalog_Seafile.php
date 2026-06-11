@@ -452,6 +452,14 @@ class Catalog_Seafile extends Catalog
     }
 
     /**
+     * scan_catalog_folders
+     */
+    public function scan_catalog_folders(?Interactor $interactor = null): int
+    {
+        return 0;
+    }
+
+    /**
      * @throws ReflectionException
      */
     public function verify_catalog_proc(?int $limit = 0, ?Interactor $interactor = null): int

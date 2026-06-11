@@ -56,6 +56,7 @@ final class UpdateCatalogCommand extends Command
             ->option('-i|--import', T_('Adds new media files and imports playlist files'), 'boolval', false)
             ->option('-o|--optimize', T_('Optimizes database tables'), 'boolval', false)
             ->option('-t|--garbage', T_('Update table mapping, counts and delete garbage data'), 'boolval', false)
+            ->option('-s|--scan', T_('Scan Local Catalog folders for folder browsing'), 'boolval', false)
             ->option('-l|--limit', T_('Item Limit') . ' (' . T_('Verify') . ')', 'intval', 0)
             ->option('-m|--memorylimit', T_('Temporarily deactivates PHP memory limit'), 'boolval', false)
             ->argument('[catalogName]', T_('Name of Catalog (optional)'))
@@ -79,6 +80,7 @@ final class UpdateCatalogCommand extends Command
             empty($values['import']) &&
             empty($values['optimize']) &&
             empty($values['garbage']) &&
+            empty($values['scan']) &&
             empty($values['memorylimit']) &&
             empty($values['catalogName']) &&
             $values['catalogType'] === 'local'
@@ -102,6 +104,7 @@ final class UpdateCatalogCommand extends Command
             $values['update'],
             $values['optimize'],
             $values['garbage'],
+            $values['scan'],
             $catalogType,
             $catalogName,
             $values['limit']

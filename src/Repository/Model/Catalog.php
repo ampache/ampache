@@ -62,6 +62,7 @@ use Ampache\Plugin\AmpacheTheaudiodb;
 use Ampache\Repository\AlbumRepositoryInterface;
 use Ampache\Repository\ArtistRepositoryInterface;
 use Ampache\Repository\BookmarkRepositoryInterface;
+use Ampache\Repository\FolderRepositoryInterface;
 use Ampache\Repository\LabelRepositoryInterface;
 use Ampache\Repository\LicenseRepositoryInterface;
 use Ampache\Repository\MetadataRepositoryInterface;
@@ -231,6 +232,11 @@ abstract class Catalog extends database_object
      * @param null|array<string, string|bool> $options
      */
     abstract public function add_to_catalog(?array $options = null, ?Interactor $interactor = null): int;
+
+    /**
+     * scan_catalog_folders
+     */
+    abstract public function scan_catalog_folders(?Interactor $interactor = null): int;
 
     /**
      * verify_catalog_proc
@@ -4692,6 +4698,22 @@ abstract class Catalog extends database_object
                     self::garbage_collect_filters();
                     self::update_counts();
                 }
+            case 'scan_all_catalog_folders':
+                $catalogs = self::get_catalogs();
+            // Intentional break fall-through
+            case 'scan_catalog_folders':
+                if ($catalogs) {
+                    foreach ($catalogs as $catalog_id) {
+                        $catalog = self::create_from_id($catalog_id);
+                        if ($catalog !== null) {
+                            $catalog->scan_catalog_folders();
+                        }
+                    }
+
+                    if (!defined('SSE_OUTPUT') && !defined('CLI') && !defined('API')) {
+                        echo AmpError::display('catalog_scan');
+                    }
+                }
         }
     }
 
@@ -5038,6 +5060,16 @@ abstract class Catalog extends database_object
         global $dic;
 
         return $dic->get(BookmarkRepositoryInterface::class);
+    }
+
+    /**
+     * @deprecated inject dependency
+     */
+    protected static function getFolderRepository(): FolderRepositoryInterface
+    {
+        global $dic;
+
+        return $dic->get(FolderRepositoryInterface::class);
     }
 
     /**
