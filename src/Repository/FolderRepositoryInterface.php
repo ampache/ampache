@@ -29,11 +29,11 @@ use Ampache\Repository\Model\Folder;
 
 interface FolderRepositoryInterface
 {
-    public function findById(int $folderId): ?Folder;
+    public function findById(?int $folderId = null): ?Folder;
 
     public function getByName(string $folderName, int $catalogId = 0, ?int $parent = null): ?Folder;
 
-    public function getByPath(string $folderPath, int $catalogId = 0, ?int $parent = null): ?Folder;
+    public function getByPathName(string $folderPath, int $catalogId = 0, ?int $parent = null): ?Folder;
 
     /**
      * Return the list of all available folders
