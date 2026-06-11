@@ -35,6 +35,7 @@ use Ampache\Module\System\Session;
 use Ampache\Module\Util\ObjectTypeToClassNameMapper;
 use Ampache\Module\Util\Ui;
 use Ampache\Repository\Model\Art;
+use Ampache\Repository\Model\Broadcast;
 use Ampache\Repository\Model\Democratic;
 use Ampache\Repository\Model\library_item;
 use Ampache\Repository\Model\LibraryItemEnum;
@@ -45,7 +46,6 @@ use Ampache\Repository\Model\Song;
 use Ampache\Repository\Model\Song_Preview;
 use Ampache\Repository\Model\User;
 use Ampache\Repository\Model\Video;
-use Ampache\Repository\Model\Broadcast;
 
 /**
  * Stream_Playlist Class
@@ -305,14 +305,14 @@ class Stream_Playlist
         $url['type'] = $type->value;
 
         if (!isset($object->enabled) || make_bool($object->enabled)) {
-            $url['url'] = $object->play_url($additional_params);
+            $url['url']  = $object->play_url($additional_params);
             $api_session = (AmpConfig::get('require_session')) ? Stream::get_session() : null;
 
-            $url['author'] = 'Ampache';
+            $url['author']    = 'Ampache';
             $url['info_url']  = $object->get_f_link();
-            $url['title'] = Stream_Url::get_title($url['url']);
-            $url['time']  = -1;
-            $surl = new Stream_Url($url);
+            $url['title']     = Stream_Url::get_title($url['url']);
+            $url['time']      = -1;
+            $surl             = new Stream_Url($url);
         }
 
         return $surl;
