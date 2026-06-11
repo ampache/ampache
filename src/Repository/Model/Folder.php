@@ -380,7 +380,7 @@ class Folder extends database_object implements
             // identify full path when missing based on history
             $parentFolder = self::getFolderRepository()->findById((int)$parent);
             while ($parentFolder) {
-                $path_name    = $parentFolder->get_fullpathname() . DIRECTORY_SEPARATOR . $path_name;
+                $path_name    = $path_name ?: $parentFolder->get_fullpathname() . DIRECTORY_SEPARATOR . $path_name;
                 $path         = $parentFolder->id . ($path ? ',' : '') . $path;
                 $parentFolder = ($parentFolder->parent)
                     ? self::getFolderRepository()->findById($parentFolder->parent)
