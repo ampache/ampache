@@ -1033,6 +1033,10 @@ class Catalog_local extends Catalog
         );
         debug_event('local.catalog', 'Scanning check on: ' . $this->path, 5);
 
+        if (!$this->get_fullname()) {
+            return 0;
+        }
+
         $folder = self::add_folder($this->get_fullname(), $this->path);
         if (!$folder) {
             return 0;

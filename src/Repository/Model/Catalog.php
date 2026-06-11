@@ -4700,7 +4700,7 @@ abstract class Catalog extends database_object
                 }
             case 'scan_all_catalog_folders':
                 $catalogs = self::get_catalogs();
-            // Intentional break fall-through
+                // Intentional break fall-through
             case 'scan_catalog_folders':
                 if ($catalogs) {
                     foreach ($catalogs as $catalog_id) {

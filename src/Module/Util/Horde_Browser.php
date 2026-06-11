@@ -426,7 +426,6 @@ class Horde_Browser
                         }
                     }
 
-
                     break;
                 case 4:
                     $this->setFeature('javascript', 1.3);
