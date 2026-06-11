@@ -1008,9 +1008,9 @@ class OpenSubsonic_Json_Data
         }
 
         $json['musicBrainzId']  = (string)$artist->mbid;
-        $json['smallImageUrl']  = htmlentities((string)$info['smallphoto']);
-        $json['mediumImageUrl'] = htmlentities((string)$info['mediumphoto']);
-        $json['largeImageUrl']  = htmlentities((string)$info['largephoto']);
+        $json['smallImageUrl']  = html_entity_decode((string)$info['smallphoto']);
+        $json['mediumImageUrl'] = html_entity_decode((string)$info['mediumphoto']);
+        $json['largeImageUrl']  = html_entity_decode((string)$info['largephoto']);
         $json['similarArtist']  = [];
 
         $unknownCount = 0;
@@ -2002,9 +2002,9 @@ class OpenSubsonic_Json_Data
         $response['subsonic-response']['albumInfo'] = [
             'notes' => htmlspecialchars(trim((string)$info['summary'])),
             'musicBrainzId' => $album->mbid,
-            'smallImageUrl' => htmlentities((string)$info['smallphoto']),
-            'mediumImageUrl' => htmlentities((string)$info['mediumphoto']),
-            'largeImageUrl' => htmlentities((string)$info['largephoto']),
+            'smallImageUrl' => html_entity_decode((string)$info['smallphoto']),
+            'mediumImageUrl' => html_entity_decode((string)$info['mediumphoto']),
+            'largeImageUrl' => html_entity_decode((string)$info['largephoto']),
         ];
 
         return $response;
