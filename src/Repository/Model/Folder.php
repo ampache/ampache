@@ -46,7 +46,7 @@ class Folder extends database_object implements
 
     public int $catalog = 0;
 
-    public int $parent = 0;
+    public ?int $parent = null;
 
     public ?int $user = null;
 
@@ -376,7 +376,7 @@ class Folder extends database_object implements
         // Build the folder paths
         $path      = $data['path'] ?? '';
         $path_name = $data['path_name'] ?? '';
-        if ($parent && (!$path || !$path_name)) {
+        if ($parent && (!$path_name)) {
             // identify full path when missing based on history
             $parentFolder = self::getFolderRepository()->findById((int)$parent);
             while ($parentFolder) {
@@ -388,8 +388,8 @@ class Folder extends database_object implements
             }
         }
 
-        if (!$parent && $path && $path_name) {
-            $parent = self::getFolderRepository()->lookup(str_replace(DIRECTORY_SEPARATOR . $path, '', $path_name), $catalog);
+        if (!$parent && $path_name) {
+            $parent = self::getFolderRepository()->lookup(str_replace(DIRECTORY_SEPARATOR . $name, '', $path_name), $catalog) ?: null;
         }
 
         $sql = "INSERT INTO `folder` (`name`, `catalog`, `parent`, `user`, `addition_time`, `path`, `path_name`) VALUES (?, ?, ?, ?, ?, ?, ?)";

@@ -353,7 +353,7 @@ class Catalog_local extends Catalog
 
     public function add_folder(string $folderName, string $folderPath = '', ?int $parent = null): ?Folder
     {
-        $folder = self::getFolderRepository()->getByName($folderPath, $this->getId(), $parent);
+        $folder = self::getFolderRepository()->getByPathName($folderPath, $this->getId(), $parent);
         if (!$folder || $folder->isNew()) {
             $folder = self::getFolderRepository()->create($folderName, $this->getId(), $folderPath, $parent);
         }
@@ -1037,8 +1037,27 @@ class Catalog_local extends Catalog
             return 0;
         }
 
-        $folder = self::add_folder($this->get_fullname(), $this->path);
+        $folder = self::getFolderRepository()->getByPathName($this->path, $this->getId());
+        if (!$folder || $folder->isNew()) {
+                $folderId = Folder::create([
+                    'name' => $this->get_fullname(),
+                    'catalog' => $this->getId(),
+                    'path' => $this->path,
+                    'path_name' => $this->path,
+                ]);
+
+            $folder = ($folderId)
+                ? new Folder($folderId)
+                : null;
+        }
+
         if (!$folder) {
+            $interactor?->info(
+                'Failed to open folder: ' . $this->path,
+                true
+            );
+            debug_event('local.catalog', 'Failed to open folder: ' . $this->path, 5);
+
             return 0;
         }
 
