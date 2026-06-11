@@ -481,7 +481,7 @@ CREATE TABLE IF NOT EXISTS `folder` (
   `id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT,
   `name` varchar(255) DEFAULT NULL,
   `catalog` int(11) NOT NULL DEFAULT 0,
-  `parent` int(11) NOT NULL DEFAULT 0,
+  `parent` int(11) DEFAULT NULL NULL,
   `user` int(11) DEFAULT NULL,
   `update_time` int(11) UNSIGNED DEFAULT 0,
   `addition_time` int(11) UNSIGNED DEFAULT 0,
