@@ -352,7 +352,7 @@ class Folder extends database_object implements
 
     /**
      * create
-     * @param array<int, array{
+     * @param array{
      *     name: string,
      *     catalog: int,
      *     parent?: int,
@@ -360,7 +360,7 @@ class Folder extends database_object implements
      *     addition_time?: int,
      *     path?: string,
      *     path_name?: string
-     * }> $data
+     * } $data
      */
     public static function create(array $data): ?int
     {

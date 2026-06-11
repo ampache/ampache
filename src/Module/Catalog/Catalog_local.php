@@ -351,12 +351,13 @@ class Catalog_local extends Catalog
         return $songsadded;
     }
 
-    public function add_folder($folderName, $folderPath = '', ?int $parent = null): ?Folder
+    public function add_folder(string $folderName, string $folderPath = '', ?int $parent = null): ?Folder
     {
         $folder = self::getFolderRepository()->getByName($folderPath, $this->getId(), $parent);
-        if ($folder->isNew()) {
+        if (!$folder || $folder->isNew()) {
             $folder = self::getFolderRepository()->create($folderName, $this->getId(), $folderPath, $parent);
         }
+
         if (!$folder || $folder->isNew()) {
             return null;
         }
