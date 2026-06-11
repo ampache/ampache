@@ -369,7 +369,7 @@ class Folder extends database_object implements
 
         $name          = $data['name'];
         $catalog       = $data['catalog'];
-        $parent        = ($data['parent'] && is_numeric($data['parent'])) ? (int)$data['parent'] : null;
+        $parent        = (isset($data['parent']) && is_numeric($data['parent'])) ? (int)$data['parent'] : null;
         $user          = $data['user'] ?? null;
         $addition_time = $data['addition_time'] ?? time();
 

@@ -77,7 +77,8 @@ final class UpdateCatalog extends AbstractCatalogUpdater implements UpdateCatalo
             !$importPlaylists &&
             !$cleanup &&
             !$missing &&
-            !$verification
+            !$verification &&
+            !$scanFolders
         ) {
             $catalogType = '';
             $catalogName = '';
