@@ -670,7 +670,29 @@ final readonly class PlayAction implements ApplicationActionInterface
                 }
             }
 
-            if (
+
+            if (($catalog instanceof Catalog_remote || $catalog instanceof Catalog_subsonic)) {
+                // Some catalogs redirect you to the remote url so stop here
+                $remoteStreamingUrl = $catalog->getRemoteStreamingUrl($media, $action);
+                if ($remoteStreamingUrl !== null) {
+                    $this->logger->debug(
+                        'Started remote stream - ' . $remoteStreamingUrl,
+                        [
+                            LegacyLogger::CONTEXT_TYPE => self::class,
+                            'catalog_type' => $catalog->get_type()
+                        ]
+                    );
+
+                    header('Location: ' . $remoteStreamingUrl);
+
+                    return null;
+                }
+
+                $streamConfiguration = $catalog->prepare_media($media);
+                if ($streamConfiguration === null) {
+                    return null;
+                }
+            } elseif (
                 $transcode_cfg != 'never' &&
                 $transcode_to &&
                 ($bitrate === 0 || $bitrate === (int)AmpConfig::get('transcode_bitrate', 128) * 1000) &&
@@ -692,27 +714,6 @@ final readonly class PlayAction implements ApplicationActionInterface
                 ];
             } elseif ($catalog === null) {
                 return null;
-            } else {
-                // Some catalogs redirect you to the remote url so stop here
-                $remoteStreamingUrl = $catalog->getRemoteStreamingUrl($media, $action);
-                if ($remoteStreamingUrl !== null) {
-                    $this->logger->debug(
-                        'Started remote stream - ' . $remoteStreamingUrl,
-                        [
-                            LegacyLogger::CONTEXT_TYPE => self::class,
-                            'catalog_type' => $catalog->get_type()
-                        ]
-                    );
-
-                    header('Location: ' . $remoteStreamingUrl);
-
-                    return null;
-                }
-
-                $streamConfiguration = $catalog->prepare_media($media);
-                if ($streamConfiguration === null) {
-                    return null;
-                }
             }
         } else {
             // No catalog, must be song preview or something like that => just redirect to file
