@@ -354,7 +354,7 @@ class Folder extends database_object implements
      * @param array{
      *     name: string,
      *     catalog: int,
-     *     parent?: int,
+     *     parent?: int|null,
      *     user?: int|null,
      *     addition_time?: int,
      *     path?: string,
@@ -376,7 +376,7 @@ class Folder extends database_object implements
         // Build the folder paths
         $path      = $data['path'] ?? '';
         $path_name = $data['path_name'] ?? '';
-        if ($parent && (!$path_name)) {
+        if ($parent) {
             // identify full path when missing based on history
             $parentFolder = self::getFolderRepository()->findById((int)$parent);
             while ($parentFolder) {
