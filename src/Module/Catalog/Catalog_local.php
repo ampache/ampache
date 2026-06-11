@@ -1101,7 +1101,7 @@ class Catalog_local extends Catalog
         $counter      = 0;
         $foldersadded = 0;
         /* Recurse through this dir and create the files array */
-        while (false !== ($file = readdir())) {
+        while (false !== ($file = readdir($handle))) {
             if ('.' === $file || '..' === $file) {
                 continue;
             }
