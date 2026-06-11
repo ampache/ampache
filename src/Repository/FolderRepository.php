@@ -145,6 +145,30 @@ final readonly class FolderRepository implements FolderRepositoryInterface
         return $ret;
     }
 
+    public function lookupByPathName(string $folderPath = '', int $catalogId = 0, ?int $parent = null): int
+    {
+        $ret  = -1;
+        $name = trim($folderPath);
+
+        if ($name !== '') {
+            $ret    = 0;
+            $sql    = 'SELECT `id` FROM `folder` WHERE `path_name` = ? AND `catalog` = ?';
+            $params = [$name, $catalogId];
+            if ($parent) {
+                $sql .= ' AND `parent` = ?';
+                $params[] = $parent;
+            }
+
+            $result = $this->connection->fetchOne($sql, $params);
+
+            if ($result !== false) {
+                $ret = (int) $result;
+            }
+        }
+
+        return $ret;
+    }
+
     public function create(string $folderName, int $catalogId, string $folderPath = '', ?int $parent = null): ?Folder
     {
         // don't allow duplicate podcasts
