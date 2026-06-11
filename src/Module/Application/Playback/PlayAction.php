@@ -707,12 +707,12 @@ final readonly class PlayAction implements ApplicationActionInterface
 
                     return null;
                 }
-
-                $streamConfiguration = $catalog->prepare_media($media);
-                if ($streamConfiguration === null) {
-                    return null;
-                }
             } elseif ($catalog === null) {
+                return null;
+            }
+
+            $streamConfiguration = $streamConfiguration ?? $catalog->prepare_media($media);
+            if ($streamConfiguration === null) {
                 return null;
             }
         } else {
