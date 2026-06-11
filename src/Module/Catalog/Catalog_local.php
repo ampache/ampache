@@ -357,7 +357,7 @@ class Catalog_local extends Catalog
         if (!$folder || $folder->isNew()) {
             $parent = ($parentPath === $this->path)
                 ? self::getFolderRepository()->lookup((string)$this->get_fullname(), $this->getId())
-                : self::getFolderRepository()->lookup($parentPath, $this->getId());
+                : self::getFolderRepository()->lookupByPathName($parentPath, $this->getId());
             $folder = self::getFolderRepository()->create($folderName, $this->getId(), $folderPath, $parent);
         }
 
@@ -705,7 +705,7 @@ class Catalog_local extends Catalog
         debug_event('local.catalog', 'Scan starting on ' . $this->name . ' (' . time() . ')', 5);
         sleep(1);
 
-        $this->count = $this->_scan_catalog_folder($interactor);
+        $this->count = $this->scan_catalog_folder($interactor);
 
         $interactor?->info(
             sprintf('Scan finished, %d updated in ', $this->count) . $this->name,
@@ -1025,10 +1025,10 @@ class Catalog_local extends Catalog
     }
 
     /**
-     * _scan_catalog_folder
+     * scan_catalog_folder
      * This is the clean function and is broken into chunks to try to save a little memory
      */
-    private function _scan_catalog_folder(?Interactor $interactor = null): int
+    public function scan_catalog_folder(?Interactor $interactor = null): int
     {
         $interactor?->info(
             'Scanning check on: ' . $this->path,
@@ -1063,95 +1063,7 @@ class Catalog_local extends Catalog
             return 0;
         }
 
-        // Make sure the path doesn't end in a / or \
-        $path = rtrim($this->path, '/');
-        $path = rtrim($path, '\\');
-
-        // Correctly detect the slash we need to use here
-        $slash_type = str_contains($path, '/') ? '/' : '\\';
-
-        /* Open up the directory */
-        $handle = opendir($path);
-
-        if (!is_resource($handle)) {
-            $interactor?->info(
-                'Unable to open ' . $path,
-                true
-            );
-            debug_event('local.catalog', 'Unable to open ' . $path, 3);
-            /* HINT: directory (file path) */
-            AmpError::add('catalog_scan', sprintf(T_('Unable to open: %s'), $path));
-
-            return 0;
-        }
-
-        /* Change the dir so is_dir works correctly */
-        if (!chdir($path)) {
-            $interactor?->info(
-                'Unable to chdir to ' . $path,
-                true
-            );
-            debug_event('local.catalog', 'Unable to chdir to ' . $path, 2);
-            /* HINT: directory (file path) */
-            AmpError::add('catalog_scan', sprintf(T_('Unable to change to directory: %s'), $path));
-
-            return 0;
-        }
-
-        $counter      = 0;
-        $foldersadded = 0;
-        /* Recurse through this dir and create the files array */
-        while (false !== ($file = readdir($handle))) {
-            if ('.' === $file || '..' === $file) {
-                continue;
-            }
-
-            // reduce the crazy log info
-            if ($counter % 1000 === 0) {
-                $interactor?->info(
-                    sprintf('Reading %s inside %s', $file, $path),
-                    true
-                );
-                debug_event('local.catalog', sprintf('Reading %s inside %s', $file, $path), 5);
-                debug_event('local.catalog', "Memory usage: " . Ui::format_bytes(memory_get_usage(true)), 5);
-            }
-
-            $counter++;
-
-            /* Create the new path */
-            $full_file = $path . $slash_type . $file;
-
-            try {
-                if (
-                    is_dir($full_file) &&
-                    $this->add_folder($file, $full_file, $path)
-                ) {
-                    $foldersadded++;
-                }
-            } catch (Exception $error) {
-                $interactor?->info(
-                    T_('Error') . ' ' . $error->getMessage(),
-                    true
-                );
-                debug_event('local.catalog', 'add_file error: ' . $error->getMessage(), 1);
-            }
-        } // end while reading directory
-
-        $interactor?->info(
-            sprintf('Finished reading %s, closing handle', $path),
-            true
-        );
-        debug_event('local.catalog', sprintf('Finished reading %s, closing handle', $path), 5);
-
-        // This should only happen on the last run
-        if ($path === $this->path) {
-            Ui::update_text('scan_count_' . $this->catalog_id, $this->count);
-        }
-
-        /* Close the dir handle */
-        closedir($handle);
-
-        return $foldersadded;
+        return $this->_scan_folder($this->path, $interactor);
     }
 
     /**
@@ -1300,6 +1212,90 @@ class Catalog_local extends Catalog
         $sql = "UPDATE `song` SET `file` = ?, catalog = ? WHERE `id` = ?;";
 
         return (Dba::write($sql, [$new_file, $newCatalogId, $media->id]) !== null);
+    }
+
+    /**
+     * _scan_folder
+     * This is the clean function and is broken into chunks to try to save a little memory
+     */
+    private function _scan_folder(string $path, ?Interactor $interactor = null): int
+    {
+        // Make sure the path doesn't end in a / or \
+        $path = rtrim($path, '/');
+        $path = rtrim($path, '\\');
+
+        // Correctly detect the slash we need to use here
+        $slash_type = str_contains($path, '/') ? '/' : '\\';
+
+        /* Open up the directory */
+        $handle = opendir($path);
+
+        if (!is_resource($handle)) {
+            $interactor?->info(
+                'Unable to open ' . $path,
+                true
+            );
+            debug_event('local.catalog', 'Unable to open ' . $path, 3);
+            /* HINT: directory (file path) */
+            AmpError::add('catalog_scan', sprintf(T_('Unable to open: %s'), $path));
+
+            return 0;
+        }
+
+        $counter      = 0;
+        $foldersadded = 0;
+        /* Recurse through this dir and create the files array */
+        while (false !== ($file = readdir($handle))) {
+            if ('.' === $file || '..' === $file) {
+                continue;
+            }
+
+            // reduce the crazy log info
+            if ($counter % 1000 === 0) {
+                $interactor?->info(
+                    sprintf('Reading %s inside %s', $file, $path),
+                    true
+                );
+                debug_event('local.catalog', sprintf('Reading %s inside %s', $file, $path), 5);
+                debug_event('local.catalog', "Memory usage: " . Ui::format_bytes(memory_get_usage(true)), 5);
+            }
+
+            $counter++;
+
+            /* Create the new path */
+            $full_file = $path . $slash_type . $file;
+
+            try {
+                if (is_dir($full_file)) {
+                    if ($this->add_folder($file, $full_file, $path) !== null) {
+                        $foldersadded++;
+                    }
+                    $this->_scan_folder($full_file, $interactor);
+                }
+            } catch (Exception $error) {
+                $interactor?->info(
+                    T_('Error') . ' ' . $error->getMessage(),
+                    true
+                );
+                debug_event('local.catalog', 'add_file error: ' . $error->getMessage(), 1);
+            }
+        } // end while reading directory
+
+        $interactor?->info(
+            sprintf('Finished reading %s, closing handle', $path),
+            true
+        );
+        debug_event('local.catalog', sprintf('Finished reading %s, closing handle', $path), 5);
+
+        // This should only happen on the last run
+        if ($path === $this->path) {
+            Ui::update_text('scan_count_' . $this->catalog_id, $this->count);
+        }
+
+        /* Close the dir handle */
+        closedir($handle);
+
+        return $foldersadded;
     }
 
     /**

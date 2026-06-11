@@ -44,6 +44,8 @@ interface FolderRepositoryInterface
 
     public function lookup(string $folderName, int $catalogId = 0, ?int $parent = null): int;
 
+    public function lookupByPathName(string $folderPath, int $catalogId = 0, ?int $parent = null): int;
+
     public function create(string $folderName, int $catalogId, string $folderPath = '', ?int $parent = null): ?Folder;
 
     public function delete(int $folderId): void;
