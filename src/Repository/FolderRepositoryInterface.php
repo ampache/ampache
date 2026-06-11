@@ -25,7 +25,6 @@ declare(strict_types=1);
 
 namespace Ampache\Repository;
 
-use Ampache\Repository\Model\Catalog;
 use Ampache\Repository\Model\Folder;
 
 interface FolderRepositoryInterface

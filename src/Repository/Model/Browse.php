@@ -339,7 +339,6 @@ class Browse extends Query
             }
         }
 
-
         // Update the session value only if it's allowed on the current browser
         if ($this->is_update_session()) {
             $_SESSION['browse_current_' . $type]['start'] = $browse->get_start();

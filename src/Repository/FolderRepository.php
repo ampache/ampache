@@ -27,9 +27,7 @@ namespace Ampache\Repository;
 
 use Ampache\Module\Database\DatabaseConnectionInterface;
 use Ampache\Module\Database\Exception\DatabaseException;
-use Ampache\Repository\Model\Catalog;
 use Ampache\Repository\Model\Folder;
-use Ampache\Repository\Model\Podcast;
 use PDO;
 
 final readonly class FolderRepository implements FolderRepositoryInterface

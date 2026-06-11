@@ -216,7 +216,6 @@ class Folder extends database_object implements
         return $this->f_link;
     }
 
-
     /**
      * Get item link.
      */
@@ -369,8 +368,8 @@ class Folder extends database_object implements
         }
 
         $name          = $data['name'];
-        $catalog       = (int)$data['catalog'];
-        $parent        = (is_numeric($data['parent'])) ? (int)$data['parent'] : null;
+        $catalog       = $data['catalog'];
+        $parent        = ($data['parent'] && is_numeric($data['parent'])) ? (int)$data['parent'] : null;
         $user          = $data['user'] ?? null;
         $addition_time = $data['addition_time'] ?? time();
 
