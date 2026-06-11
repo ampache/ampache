@@ -690,7 +690,27 @@ final readonly class Play2Action implements ApplicationActionInterface
                 }
             }
 
-            if (($catalog instanceof Catalog_remote || $catalog instanceof Catalog_subsonic)) {
+            if (
+                $transcode_cfg != 'never' &&
+                $transcode_to &&
+                ($bitrate === 0 || $bitrate === (int)AmpConfig::get('transcode_bitrate', 128) * 1000) &&
+                $has_cache
+            ) {
+                $this->logger->debug(
+                    'Found pre-cached file {' . $file_target . '}',
+                    [LegacyLogger::CONTEXT_TYPE => self::class]
+                );
+                $cache_file   = true;
+                $original     = true;
+                $transcode_to = null;
+
+                $streamConfiguration = [
+                    'file_path' => $file_target,
+                    'file_name' => $media->getFileName(),
+                    'file_size' => ($media->file && preg_match('/^https?:\/\//i', $media->file)) ? $media->size : Core::get_filesize($file_target),
+                    'file_type' => $cache_target,
+                ];
+            } elseif (($catalog instanceof Catalog_remote || $catalog instanceof Catalog_subsonic)) {
                 // Some catalogs redirect you to the remote url so stop here
                 $remoteStreamingUrl = $catalog->getRemoteStreamingUrl($media, $action);
                 if ($remoteStreamingUrl !== null) {
@@ -711,26 +731,6 @@ final readonly class Play2Action implements ApplicationActionInterface
                 if ($streamConfiguration === null) {
                     return null;
                 }
-            } elseif (
-                $transcode_cfg != 'never' &&
-                $transcode_to &&
-                ($bitrate === 0 || $bitrate === (int)AmpConfig::get('transcode_bitrate', 128) * 1000) &&
-                $has_cache
-            ) {
-                $this->logger->debug(
-                    'Found pre-cached file {' . $file_target . '}',
-                    [LegacyLogger::CONTEXT_TYPE => self::class]
-                );
-                $cache_file   = true;
-                $original     = true;
-                $transcode_to = null;
-
-                $streamConfiguration = [
-                    'file_path' => $file_target,
-                    'file_name' => $media->getFileName(),
-                    'file_size' => ($media->file && preg_match('/^https?:\/\//i', $media->file)) ? $media->size : Core::get_filesize($file_target),
-                    'file_type' => $cache_target,
-                ];
             } elseif ($catalog === null) {
                 return null;
             }
