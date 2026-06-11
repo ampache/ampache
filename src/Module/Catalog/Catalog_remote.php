@@ -78,7 +78,9 @@ class Catalog_remote extends Catalog
     private ?AmpacheApi $remote_handle = null;
 
     public string $uri = '';
+
     public string $username;
+
     public string $password;
 
     /**
@@ -1118,8 +1120,13 @@ class Catalog_remote extends Catalog
             return null;
         }
 
+        $options = [
+            'filter' => $remote_id,
+            'type' => 'song'
+        ];
+
         return ($action === 'download')
-            ? $this->remote_handle->get_command_url(self::CMD_DOWNLOAD, ['filter' => $remote_id])
-            : $this->remote_handle->get_command_url(self::CMD_STREAM, ['filter' => $remote_id]);
+            ? $this->remote_handle->get_command_url(self::CMD_DOWNLOAD, $options)
+            : $this->remote_handle->get_command_url(self::CMD_STREAM, $options);
     }
 }
