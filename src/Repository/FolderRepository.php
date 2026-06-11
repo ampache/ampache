@@ -56,30 +56,30 @@ final readonly class FolderRepository implements FolderRepositoryInterface
 
     public function getByName(string $folderName, int $catalogId = 0, ?int $parent = null): ?Folder
     {
-        $result = $this->connection->fetchOne(
-            'SELECT `folder`.`id` FROM `folder` WHERE `folder`.`name` = ? AND `folder`.`catalog` = ? AND `folder`.`parent` = ?;',
+        $rowId = $this->connection->fetchOne(
+            'SELECT `folder`.`id` FROM `folder` WHERE `folder`.`name` = ? AND `folder`.`catalog` = ? AND `folder`.`parent` = ? LIMIT 1;',
             [$folderName, $catalogId, $parent]
         );
 
-        while ($row = $result->fetch(PDO::FETCH_ASSOC)) {
-            return new Folder((int)$row['id']);
+        if ($rowId === false) {
+            return null;
         }
 
-        return null;
+        return new Folder((int)$rowId);
     }
 
     public function getByPath(string $folderPath, int $catalogId = 0, ?int $parent = null): ?Folder
     {
-        $result = $this->connection->fetchOne(
+        $rowId = $this->connection->fetchOne(
             'SELECT `folder`.`id` FROM `folder` WHERE `folder`.`path` = ? AND `folder`.`catalog` = ? AND `folder`.`parent` = ?;',
             [$folderPath, $catalogId, $parent]
         );
 
-        while ($row = $result->fetch(PDO::FETCH_ASSOC)) {
-            return new Folder((int)$row['id']);
+        if ($rowId === false) {
+            return null;
         }
 
-        return null;
+        return new Folder((int)$rowId);
     }
 
     /**
