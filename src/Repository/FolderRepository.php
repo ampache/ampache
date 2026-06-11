@@ -72,12 +72,11 @@ final readonly class FolderRepository implements FolderRepositoryInterface
         return new Folder((int)$rowId);
     }
 
-    public function getByPathName(string $folderPath, int $catalogId = 0, ?int $parent = null): ?Folder
+    public function getByPathName(string $folderPath, int $catalogId = 0, ?string $parentPath = null): ?Folder
     {
-        $rowId = $this->connection->fetchOne(
-            'SELECT `folder`.`id` FROM `folder` WHERE `folder`.`path_name` = ? AND `folder`.`catalog` = ? AND `folder`.`parent` = ?;',
-            [$folderPath, $catalogId, $parent]
-        );
+        $rowId = ($parentPath)
+            ? $this->connection->fetchOne('SELECT `folder`.`id` FROM `folder` WHERE `folder`.`path_name` = ? AND `folder`.`catalog` = ? AND `folder`.`parent` = ?;', [$folderPath, $catalogId, $parentPath])
+            : $this->connection->fetchOne('SELECT `folder`.`id` FROM `folder` WHERE `folder`.`path_name` = ? AND `folder`.`catalog` = ? AND `folder`.`parent` IS NULL;', [$folderPath, $catalogId]);
 
         if ($rowId === false) {
             return null;
@@ -154,7 +153,8 @@ final readonly class FolderRepository implements FolderRepositoryInterface
             $folderId = Folder::create([
                 'name' => $folderName,
                 'catalog' => $catalogId,
-                'path' => $folderPath,
+                'path_name' => $folderPath,
+                'parent' => $parent,
             ]);
         }
 

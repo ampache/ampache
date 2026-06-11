@@ -351,10 +351,11 @@ class Catalog_local extends Catalog
         return $songsadded;
     }
 
-    public function add_folder(string $folderName, string $folderPath = '', ?int $parent = null): ?Folder
+    public function add_folder(string $folderName, string $folderPath, string $parentPath): ?Folder
     {
-        $folder = self::getFolderRepository()->getByPathName($folderPath, $this->getId(), $parent);
+        $folder = self::getFolderRepository()->getByPathName($folderPath, $this->getId(), $parentPath);
         if (!$folder || $folder->isNew()) {
+            $parent = self::getFolderRepository()->lookup($parentPath, $this->getId());
             $folder = self::getFolderRepository()->create($folderName, $this->getId(), $folderPath, $parent);
         }
 
@@ -1039,12 +1040,12 @@ class Catalog_local extends Catalog
 
         $folder = self::getFolderRepository()->getByPathName($this->path, $this->getId());
         if (!$folder || $folder->isNew()) {
-                $folderId = Folder::create([
-                    'name' => $this->get_fullname(),
-                    'catalog' => $this->getId(),
-                    'path' => $this->path,
-                    'path_name' => $this->path,
-                ]);
+            $folderId = Folder::create([
+                'name' => $this->get_fullname(),
+                'catalog' => $this->getId(),
+                'path' => $this->path,
+                'path_name' => $this->path,
+            ]);
 
             $folder = ($folderId)
                 ? new Folder($folderId)
@@ -1052,7 +1053,7 @@ class Catalog_local extends Catalog
         }
 
         if (!$folder) {
-            $interactor?->info(
+            $interactor?->error(
                 'Failed to open folder: ' . $this->path,
                 true
             );
@@ -1122,7 +1123,7 @@ class Catalog_local extends Catalog
             try {
                 if (
                     is_dir($full_file) &&
-                    $this->add_folder($file, $full_file)
+                    $this->add_folder($file, $full_file, $path)
                 ) {
                     $songsadded++;
                 }
