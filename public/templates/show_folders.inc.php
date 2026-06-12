@@ -45,7 +45,6 @@ use Ampache\Repository\Model\Video;
 /** @var Ampache\Repository\Model\Folder $folder */
 /** @var array<int, array{object_type: LibraryItemEnum|null, object_id: int}> $objects */
 
-
 $web_path = AmpConfig::get_web_path();
 
 $access25          = Access::check(AccessTypeEnum::INTERFACE, AccessLevelEnum::USER);
@@ -153,14 +152,14 @@ foreach ($objects as $object) {
         continue;
     }
 
-    if ($directplay_limit > 0) {
+    if (property_exists($libitem, 'song_count') &&$directplay_limit > 0) {
         $show_playlist_add = $access25 && ($libitem->song_count <= $directplay_limit);
     } ?>
-        <tr id="album_<?php echo $libitem->id; ?>" class="libitem_menu">
+        <tr id="<?php echo $object_type . '_' . $libitem->getId(); ?>" class="libitem_menu">
             <?php $content = $talFactory->createTalView()
             ->setContext('USER_IS_REGISTERED', User::is_registered())
             ->setContext('USING_RATINGS', User::is_registered() && (AmpConfig::get('ratings')))
-            ->setContext('FOLDER', $guiFactory->createFolderViewAdapter($gatekeeper, $folder, $libitem))
+            ->setContext('FOLDER', $guiFactory->createFolderViewAdapter($gatekeeper, $folder, $libitem, $object_type))
             ->setContext('CONFIG', $guiFactory->createConfigViewAdapter())
             ->setContext('IS_HIDE_GENRE', $hide_genres)
             ->setContext('IS_SHOW_PLAYED_TIMES', $show_played_times)

@@ -37,14 +37,22 @@ use Ampache\Module\Authorization\GuiGatekeeperInterface;
 use Ampache\Module\Playback\Stream_Playlist;
 use Ampache\Module\Util\Ui;
 use Ampache\Module\Util\ZipHandlerInterface;
+use Ampache\Repository\Model\Album;
+use Ampache\Repository\Model\AlbumDisk;
+use Ampache\Repository\Model\Artist;
 use Ampache\Repository\Model\Folder;
 use Ampache\Repository\Model\Art;
-use Ampache\Repository\Model\Browse;
 use Ampache\Repository\Model\Catalog;
+use Ampache\Repository\Model\Label;
+use Ampache\Repository\Model\library_item;
+use Ampache\Repository\Model\Media;
 use Ampache\Repository\Model\ModelFactoryInterface;
+use Ampache\Repository\Model\Podcast_Episode;
 use Ampache\Repository\Model\Rating;
 use Ampache\Repository\Model\Share;
+use Ampache\Repository\Model\Song;
 use Ampache\Repository\Model\Userflag;
+use Ampache\Repository\Model\Video;
 
 final readonly class FolderViewAdapter implements FolderViewAdapterInterface
 {
@@ -54,26 +62,27 @@ final readonly class FolderViewAdapter implements FolderViewAdapterInterface
         private ZipHandlerInterface $zipHandler,
         private FunctionCheckerInterface $functionChecker,
         private GuiGatekeeperInterface $gatekeeper,
-        private Browse $browse,
         private Folder $folder,
+        private Podcast_Episode|AlbumDisk|Video|Song|Album|Artist|Label|Folder $object,
+        private string $object_type,
     ) {
     }
 
     public function getId(): int
     {
-        return $this->folder->getId();
+        return $this->object->getId();
     }
 
     public function getRating(): string
     {
-        return Rating::show($this->folder->getId(), 'folder');
+        return Rating::show($this->object->getId(), $this->object_type);
     }
 
     public function getAverageRating(): string
     {
         $rating = $this->modelFactory->createRating(
-            $this->folder->getId(),
-            'folder'
+            $this->object->getId(),
+            $this->object_type
         );
 
         return (string) $rating->get_average_rating();
@@ -81,24 +90,22 @@ final readonly class FolderViewAdapter implements FolderViewAdapterInterface
 
     public function getUserFlags(): string
     {
-        return Userflag::show($this->folder->getId(), 'folder');
+        return Userflag::show($this->object->getId(), $this->object_type);
     }
 
     public function getArt(): string
     {
-        $folderId = $this->folder->getId();
-        $name    = scrub_out($this->folder->get_fullname());
-
-        $size = ($this->browse->is_grid_view())
-            ? ['width' => 150, 'height' => 150]
-            : ['width' => 100, 'height' => 100];
+        $object_id   = $this->object->getId();
+        $object_type = $this->object_type;
+        $name        = scrub_out($this->object->get_fullname());
+        $size        = ['width' => 100, 'height' => 100];
 
         Art::display(
-            'folder',
-            $folderId,
+            $object_type,
+            $object_id,
             $name,
             $size,
-            $this->configContainer->getWebPath() . '/folders.php?action=show&folder=' . $folderId
+            $this->configContainer->getWebPath() . '/' . $object_type . 's.php?action=show&' . ($object_type === 'song' ? 'song_id' : $object_type) . '=' . $object_id
         );
 
         return '';
@@ -116,61 +123,66 @@ final readonly class FolderViewAdapter implements FolderViewAdapterInterface
 
     public function getDirectplayButton(): string
     {
-        $folderId = $this->folder->getId();
+        $object_id   = $this->object->getId();
+        $object_type = $this->object_type;
 
         return Ajax::button(
-            '?page=stream&action=directplay&object_type=folder&object_id=' . $folderId,
+            '?page=stream&action=directplay&object_type=' . $object_type . '&object_id=' . $object_id,
             'play_circle',
             T_('Play'),
-            'play_folder_' . $folderId
+            'play_' . $object_type . '_' . $object_id
         );
     }
 
     public function getAutoplayNextButton(): string
     {
-        $folderId = $this->folder->getId();
+        $object_id   = $this->object->getId();
+        $object_type = $this->object_type;
 
         return Ajax::button(
-            '?page=stream&action=directplay&object_type=folder&object_id=' . $folderId . '&playnext=true',
+            '?page=stream&action=directplay&object_type=' . $object_type . '&object_id=' . $object_id . '&playnext=true',
             'menu_open',
             T_('Play next'),
-            'nextplay_folder_' . $folderId
+            'nextplay_' . $object_type . '_' . $object_id
         );
     }
 
     public function getAppendNextButton(): string
     {
-        $folderId = $this->folder->getId();
+        $object_id   = $this->object->getId();
+        $object_type = $this->object_type;
 
         return Ajax::button(
-            '?page=stream&action=directplay&object_type=folder&object_id=' . $folderId . '&append=true',
+            '?page=stream&action=directplay&object_type=' . $object_type . '&object_id=' . $object_id . '&append=true',
             'low_priority',
             T_('Play last'),
-            'addplay_folder_' . $folderId
+            'addplay_' . $object_type . '_' . $object_id
         );
     }
 
     public function getAddToTemporaryPlaylistButton(): string
     {
-        $folderId = $this->folder->getId();
+        $object_id   = $this->object->getId();
+        $object_type = $this->object_type;
 
         return Ajax::button(
-            '?action=basket&type=folder&id=' . $folderId,
+            '?action=basket&type=' . $object_type . '&id=' . $object_id,
             'new_window',
             T_('Add to Temporary Playlist'),
-            'add_folder_' . $folderId
+            'add_' . $object_type . '_' . $object_id
         );
     }
 
     public function getRandomToTemporaryPlaylistButton(): string
     {
-        $folderId = $this->folder->getId();
+        $object_id   = $this->object->getId();
+        $object_type = $this->object_type;
 
         return Ajax::button(
-            '?action=basket&type=folder_random&id=' . $folderId,
+            '?action=basket&type=' . $object_type . '_random&id=' . $object_id,
             'shuffle',
             T_('Random to Temporary Playlist'),
-            'random_folder_' . $folderId
+            'random_' . $object_type . '_' . $object_id
         );
     }
 
@@ -186,9 +198,9 @@ final readonly class FolderViewAdapter implements FolderViewAdapterInterface
     public function getPostShoutUrl(): string
     {
         return sprintf(
-            '%s/shout.php?action=show_add_shout&type=folder&id=%d',
+            '%s/shout.php?action=show_add_shout&type=' . $this->object_type . '&id=%d',
             $this->configContainer->getWebPath(),
-            $this->folder->getId()
+            $this->object->getId()
         );
     }
 
@@ -205,22 +217,22 @@ final readonly class FolderViewAdapter implements FolderViewAdapterInterface
 
     public function getShareUi(): string
     {
-        return Share::display_ui('folder', $this->folder->getId(), false);
+        return Share::display_ui($this->object_type, $this->object->getId(), false);
     }
 
     public function canBatchDownload(): bool
     {
         return $this->functionChecker->check(AccessFunctionEnum::FUNCTION_BATCH_DOWNLOAD) &&
             $this->configContainer->isFeatureEnabled(ConfigurationKeyEnum::ALLOW_ZIP_DOWNLOAD) &&
-            $this->zipHandler->isZipable('folder');
+            $this->zipHandler->isZipable($this->object_type);
     }
 
     public function getBatchDownloadUrl(): string
     {
         return sprintf(
-            '%s/batch.php?action=folder&id=%s',
+            '%s/batch.php?action=' . $this->object_type . '&id=%s',
             $this->configContainer->getWebPath(),
-            $this->folder->id
+            $this->object->getId()
         );
     }
 
@@ -233,7 +245,7 @@ final readonly class FolderViewAdapter implements FolderViewAdapterInterface
     {
         return (
             $this->gatekeeper->mayAccess(AccessTypeEnum::INTERFACE, AccessLevelEnum::CONTENT_MANAGER) ||
-            $this->gatekeeper->getUserId() == $this->folder->get_user_owner()
+            $this->gatekeeper->getUserId() == $this->object->get_user_owner()
         );
     }
 
@@ -250,10 +262,10 @@ final readonly class FolderViewAdapter implements FolderViewAdapterInterface
     public function getDeletionUrl(): string
     {
         return sprintf(
-            '%s/folders.php?action=%s&folder_id=%d',
+            '%s/' . $this->object_type . 's.php?action=%s&' . ($object_type === 'song' ? 'song_id' : $object_type) . '=%d',
             $this->configContainer->getWebPath(),
             DeleteAction::REQUEST_KEY,
-            $this->folder->getId()
+            $this->object->getId()
         );
     }
 
@@ -264,7 +276,7 @@ final readonly class FolderViewAdapter implements FolderViewAdapterInterface
 
     public function canBeDeleted(): bool
     {
-        return Catalog::can_remove($this->folder);
+        return Catalog::can_remove($this->object);
     }
 
     public function getAddToPlaylistIcon(): string
@@ -274,22 +286,22 @@ final readonly class FolderViewAdapter implements FolderViewAdapterInterface
 
     public function getPlayedTimes(): int
     {
-        return $this->folder->total_count;
+        return $this->object->total_count;
     }
 
     public function getFolderUrl(): string
     {
-        return $this->folder->get_link();
+        return $this->object->get_link();
     }
 
     public function getFolderLink(): string
     {
-        return $this->folder->get_f_link();
+        return $this->object->get_f_link();
     }
 
     public function getArtistLink(): string
     {
-        return (string)$this->folder->get_f_parent_link();
+        return (string)$this->folder->get_link();
     }
 
     public function canShowYear(): bool
@@ -299,18 +311,18 @@ final readonly class FolderViewAdapter implements FolderViewAdapterInterface
 
     public function getDisplayYear(): int
     {
-        return ($this->configContainer->get('use_original_year') && $this->folder->original_year)
-            ? $this->folder->original_year
-            : $this->folder->year;
+        return ($this->configContainer->get('use_original_year') && $this->object->original_year)
+            ? $this->object->original_year
+            : $this->object->year;
     }
 
     public function getGenre(): string
     {
-        return $this->folder->get_f_tags();
+        return $this->object->get_f_tags();
     }
 
     public function getSongCount(): int
     {
-        return $this->folder->song_count;
+        return $this->object->song_count;
     }
 }
