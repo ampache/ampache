@@ -64,7 +64,7 @@ final class LabelSearch implements SearchInterface
                 continue;
             }
 
-            foreach ($search->basetypes[$type] as $baseOperator) {
+            foreach ($search->get_basetypes()[$type] as $baseOperator) {
                 if ($baseOperator['name'] == $rule[1]) {
                     $operator = $baseOperator;
                     break;
