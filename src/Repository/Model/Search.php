@@ -927,6 +927,7 @@ class Search extends playlist_object
 
         $t_playlist  = T_('Playlist');
         $rule_type[] = $this->_get_rule_text('title', T_('Name'), $t_playlist);
+
         $playlist_types = [
             0 => T_('public'),
             1 => T_('private'),
@@ -1028,7 +1029,7 @@ class Search extends playlist_object
             1 => T_('pending'),
             2 => T_('completed'),
         ];
-        $rule_type[] = $this->_get_rule_select('state',T_('Status'), 'boolean_numeric', $episode_states, $t_podcast_episodes);
+        $rule_type[] = $this->_get_rule_select('state', T_('Status'), 'boolean_numeric', $episode_states, $t_podcast_episodes);
         $rule_type[] = $this->_get_rule_numeric('time', T_('Length (in minutes)'), 'numeric', $t_podcast_episodes);
         $rule_type[] = $this->_get_rule_numeric('id', T_('Database ID'), 'numeric', $t_podcast_episodes);
 
