@@ -30,7 +30,6 @@ use Ampache\Module\Api\Ajax;
 use Ampache\Module\Shout\ShoutObjectLoaderInterface;
 use Ampache\Module\System\Core;
 use Ampache\Module\Util\AjaxUriRetrieverInterface;
-use Ampache\Module\Util\ObjectTypeToClassNameMapper;
 use Ampache\Module\Util\Ui;
 use Ampache\Repository\PodcastRepositoryInterface;
 use Ampache\Repository\ShoutRepositoryInterface;
