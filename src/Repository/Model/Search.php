@@ -313,14 +313,10 @@ class Search extends playlist_object
     public function get_basetypes(bool $translate = false): array
     {
         $basetypes = self::BASE_TYPES;
-        if ($translate) {
-            // translate for display
-            foreach ($basetypes as $typeGroup) {
-                foreach ($typeGroup as $type) {
-                    if (isset($type['description'])) {
-                        $type['description'] = T_($type['description']);
-                    }
-                }
+        foreach ($basetypes as $key => $group) {
+            foreach ($group as $typeKey => $typeValue) {
+                $basetypes[$key][$typeKey]['description'] =
+                    T_($typeValue['description']);
             }
         }
 
