@@ -152,7 +152,7 @@ foreach ($objects as $object) {
         continue;
     }
 
-    if (property_exists($libitem, 'song_count') &&$directplay_limit > 0) {
+    if (property_exists($libitem, 'song_count') && $directplay_limit > 0) {
         $show_playlist_add = $access25 && ($libitem->song_count <= $directplay_limit);
     } ?>
         <tr id="<?php echo $object_type . '_' . $libitem->getId(); ?>" class="libitem_menu">
