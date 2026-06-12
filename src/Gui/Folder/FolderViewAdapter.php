@@ -323,6 +323,6 @@ final readonly class FolderViewAdapter implements FolderViewAdapterInterface
     {
         return (property_exists($this->object, 'object_count'))
             ? $this->object->object_count
-            : ((property_exists($this->object, 'song_count')) ? $this->object?->song_count : 0);
+            : ((property_exists($this->object, 'song_count')) ? $this->object->song_count : 0);
     }
 }
