@@ -60,7 +60,7 @@ final class VideoSearch implements SearchInterface
         $parameters = [];
 
         foreach ($search->rules as $rule) {
-            $type     = $search->get_rule_type($rule[0]);
+            $type     = $search->get_rule_type_by_name($rule[0]);
             $operator = [];
             if ($type === null) {
                 continue;
