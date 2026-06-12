@@ -309,9 +309,9 @@ final readonly class FolderViewAdapter implements FolderViewAdapterInterface
 
     public function getDisplayYear(): int
     {
-        return ($this->configContainer->get('use_original_year') && $this->object->original_year)
+        return ((property_exists($this->object, 'original_year')) && $this->configContainer->get('use_original_year') && $this->object->original_year)
             ? $this->object->original_year ?? 0
-            : $this->object->year ?? 0;
+            : (property_exists($this->object, 'year') ? $this->object->year : 0);
     }
 
     public function getGenre(): string
