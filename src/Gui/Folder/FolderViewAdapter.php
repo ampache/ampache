@@ -284,7 +284,7 @@ final readonly class FolderViewAdapter implements FolderViewAdapterInterface
 
     public function getPlayedTimes(): int
     {
-        return $this->object->total_count;
+        return (property_exists($this->object, 'total_count')) ? $this->object->total_count : 0;
     }
 
     public function getFolderUrl(): string
