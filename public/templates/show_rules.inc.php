@@ -89,5 +89,6 @@ $logic_operator = strtolower((string)$logic_operator); ?>
 if ($out) {
     echo $out;
 } else {
+    // @see search.js SearchRow.add(ruleType, operator, input, subtype)
     echo '<script>SearchRow.add();</script>';
 } ?>

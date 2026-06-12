@@ -55,6 +55,90 @@ class Search extends playlist_object
 {
     protected const string DB_TABLENAME = 'search';
 
+    private const array BASE_TYPES = [
+        'numeric' => [
+            ['name' => 'gte', 'description' => 'is greater than or equal to', 'sql' => '>='],
+            ['name' => 'lte', 'description' => 'is less than or equal to', 'sql' => '<='],
+            ['name' => 'equal', 'description' => 'equals', 'sql' => '<=>'],
+            ['name' => 'ne', 'description' => 'does not equal', 'sql' => '<>'],
+            ['name' => 'gt', 'description' => 'is greater than', 'sql' => '>'],
+            ['name' => 'lt', 'description' => 'is less than', 'sql' => '<'],
+        ],
+
+        'is_true' => [
+            ['name' => 'true', 'description' => 'is true', 'sql' => '1'],
+        ],
+
+        'boolean' => [
+            ['name' => 'true', 'description' => 'is true', 'sql' => '1'],
+            ['name' => 'false', 'description' => 'is false', 'sql' => '0'],
+        ],
+
+        'text' => [
+            ['name' => 'contain', 'description' => 'contains', 'sql' => 'LIKE', 'preg_match' => ['/^/', '/$/'], 'preg_replace' => ['%', '%']],
+            ['name' => 'notcontain', 'description' => 'does not contain', 'sql' => 'NOT LIKE', 'preg_match' => ['/^/', '/$/'], 'preg_replace' => ['%', '%']],
+            ['name' => 'start', 'description' => 'starts with', 'sql' => 'LIKE', 'preg_match' => '/$/', 'preg_replace' => '%'],
+            ['name' => 'end', 'description' => 'ends with', 'sql' => 'LIKE', 'preg_match' => '/^/', 'preg_replace' => '%'],
+            ['name' => 'equal', 'description' => 'is', 'sql' => '='],
+            ['name' => 'not equal', 'description' => 'is not', 'sql' => '!='],
+            ['name' => 'sounds', 'description' => 'sounds like', 'sql' => 'SOUNDS LIKE'],
+            ['name' => 'notsounds', 'description' => 'does not sound like', 'sql' => 'NOT SOUNDS LIKE'],
+            ['name' => 'regexp', 'description' => 'matches regular expression', 'sql' => 'REGEXP'],
+            ['name' => 'notregexp', 'description' => 'does not match regular expression', 'sql' => 'NOT REGEXP'],
+        ],
+
+        'tags' => [
+            ['name' => 'contain', 'description' => 'contains', 'sql' => 'LIKE', 'preg_match' => ['/^/', '/$/'], 'preg_replace' => ['%', '%']],
+            ['name' => 'notcontain', 'description' => 'does not contain', 'sql' => 'NOT LIKE', 'preg_match' => ['/^/', '/$/'], 'preg_replace' => ['%', '%']],
+            ['name' => 'start', 'description' => 'starts with', 'sql' => 'LIKE', 'preg_match' => '/$/', 'preg_replace' => '%'],
+            ['name' => 'end', 'description' => 'ends with', 'sql' => 'LIKE', 'preg_match' => '/^/', 'preg_replace' => '%'],
+            ['name' => 'equal', 'description' => 'is', 'sql' => '>'],
+            ['name' => 'not equal', 'description' => 'is not', 'sql' => '='],
+        ],
+
+        'boolean_numeric' => [
+            ['name' => 'equal', 'description' => 'is', 'sql' => '<=>'],
+            ['name' => 'ne', 'description' => 'is not', 'sql' => '<>'],
+        ],
+
+        'boolean_subsearch' => [
+            ['name' => 'equal', 'description' => 'is', 'sql' => ''],
+            ['name' => 'ne', 'description' => 'is not', 'sql' => 'NOT'],
+        ],
+
+        'date' => [
+            ['name' => 'lt', 'description' => 'before', 'sql' => '<'],
+            ['name' => 'gt', 'description' => 'after', 'sql' => '>'],
+        ],
+
+        'days' => [
+            ['name' => 'lt', 'description' => 'before (x) days ago', 'sql' => '<'],
+            ['name' => 'gt', 'description' => 'after (x) days ago', 'sql' => '>'],
+        ],
+
+        'recent_played' => [
+            ['name' => 'ply', 'description' => 'Limit', 'sql' => '`date`'],
+        ],
+
+        'recent_added' => [
+            ['name' => 'add', 'description' => 'Limit', 'sql' => '`addition_time`'],
+        ],
+
+        'recent_updated' => [
+            ['name' => 'upd', 'description' => 'Limit', 'sql' => '`update_time`'],
+        ],
+
+        'user_numeric' => [
+            ['name' => 'love', 'description' => 'has loved', 'sql' => 'userflag'],
+            ['name' => '5star', 'description' => 'has rated 5 stars', 'sql' => '`rating` = 5'],
+            ['name' => '4star', 'description' => 'has rated 4 stars', 'sql' => '`rating` = 4'],
+            ['name' => '3star', 'description' => 'has rated 3 stars', 'sql' => '`rating` = 3'],
+            ['name' => '2star', 'description' => 'has rated 2 stars', 'sql' => '`rating` = 2'],
+            ['name' => '1star', 'description' => 'has rated 1 star', 'sql' => '`rating` = 1'],
+            ['name' => 'unrated', 'description' => 'has not rated', 'sql' => 'unrated'],
+        ],
+    ];
+
     public const array VALID_TYPES = [
         'album_artist',
         'album_disk',
@@ -157,9 +241,6 @@ class Search extends playlist_object
             T_('5 Stars'),
         ];
 
-        // Define our basetypes
-        $this->_set_basetypes();
-
         switch ($this->objectType) {
             case 'album':
                 $this->_set_types_album();
@@ -227,283 +308,25 @@ class Search extends playlist_object
      * _set_basetypes
      *
      * Function called during construction to set the different types and rules for search
+     * @return array<string, array<int, array{name: string, description: string, sql: string, preg_match?: string|array{string, string}, preg_replace?:string|array{string, string}}>>
      */
-    private function _set_basetypes(): void
+    public function get_basetypes(bool $translate = false): array
     {
-        $this->basetypes['numeric'][] = [
-            'name' => 'gte',
-            'description' => T_('is greater than or equal to'),
-            'sql' => '>=',
-        ];
+        $basetypes = self::BASE_TYPES;
+        if ($translate) {
+            // translate for display
+            foreach ($basetypes as $typeGroup) {
+                foreach ($typeGroup as $type) {
+                    if (isset($type['description'])) {
+                        $type['description'] = T_($type['description']);
+                    }
+                }
+            }
+        }
 
-        $this->basetypes['numeric'][] = [
-            'name' => 'lte',
-            'description' => T_('is less than or equal to'),
-            'sql' => '<=',
-        ];
+        $basetypes['multiple'] = array_merge($basetypes['text'], $basetypes['numeric']);
 
-        $this->basetypes['numeric'][] = [
-            'name' => 'equal',
-            'description' => T_('equals'),
-            'sql' => '<=>',
-        ];
-
-        $this->basetypes['numeric'][] = [
-            'name' => 'ne',
-            'description' => T_('does not equal'),
-            'sql' => '<>',
-        ];
-
-        $this->basetypes['numeric'][] = [
-            'name' => 'gt',
-            'description' => T_('is greater than'),
-            'sql' => '>',
-        ];
-
-        $this->basetypes['numeric'][] = [
-            'name' => 'lt',
-            'description' => T_('is less than'),
-            'sql' => '<',
-        ];
-
-        $this->basetypes['is_true'][] = [
-            'name' => 'true',
-            'description' => T_('is true'),
-            'sql' => '1',
-        ];
-
-        $this->basetypes['boolean'][] = [
-            'name' => 'true',
-            'description' => T_('is true'),
-            'sql' => '1',
-        ];
-
-        $this->basetypes['boolean'][] = [
-            'name' => 'false',
-            'description' => T_('is false'),
-            'sql' => '0',
-        ];
-
-        $this->basetypes['text'][] = [
-            'name' => 'contain',
-            'description' => T_('contains'),
-            'sql' => 'LIKE',
-            'preg_match' => ['/^/', '/$/'],
-            'preg_replace' => ['%', '%'],
-        ];
-
-        $this->basetypes['text'][] = [
-            'name' => 'notcontain',
-            'description' => T_('does not contain'),
-            'sql' => 'NOT LIKE',
-            'preg_match' => ['/^/', '/$/'],
-            'preg_replace' => ['%', '%'],
-        ];
-
-        $this->basetypes['text'][] = [
-            'name' => 'start',
-            'description' => T_('starts with'),
-            'sql' => 'LIKE',
-            'preg_match' => '/$/',
-            'preg_replace' => '%',
-        ];
-
-        $this->basetypes['text'][] = [
-            'name' => 'end',
-            'description' => T_('ends with'),
-            'sql' => 'LIKE',
-            'preg_match' => '/^/',
-            'preg_replace' => '%',
-        ];
-
-        $this->basetypes['text'][] = [
-            'name' => 'equal',
-            'description' => T_('is'),
-            'sql' => '=',
-        ];
-
-        $this->basetypes['text'][] = [
-            'name' => 'not equal',
-            'description' => T_('is not'),
-            'sql' => '!=',
-        ];
-
-        $this->basetypes['text'][] = [
-            'name' => 'sounds',
-            'description' => T_('sounds like'),
-            'sql' => 'SOUNDS LIKE',
-        ];
-
-        $this->basetypes['text'][] = [
-            'name' => 'notsounds',
-            'description' => T_('does not sound like'),
-            'sql' => 'NOT SOUNDS LIKE',
-        ];
-
-        $this->basetypes['text'][] = [
-            'name' => 'regexp',
-            'description' => T_('matches regular expression'),
-            'sql' => 'REGEXP',
-        ];
-
-        $this->basetypes['text'][] = [
-            'name' => 'notregexp',
-            'description' => T_('does not match regular expression'),
-            'sql' => 'NOT REGEXP',
-        ];
-
-        $this->basetypes['tags'][] = [
-            'name' => 'contain',
-            'description' => T_('contains'),
-            'sql' => 'LIKE',
-            'preg_match' => ['/^/', '/$/'],
-            'preg_replace' => ['%', '%'],
-        ];
-
-        $this->basetypes['tags'][] = [
-            'name' => 'notcontain',
-            'description' => T_('does not contain'),
-            'sql' => 'NOT LIKE',
-            'preg_match' => ['/^/', '/$/'],
-            'preg_replace' => ['%', '%'],
-        ];
-
-        $this->basetypes['tags'][] = [
-            'name' => 'start',
-            'description' => T_('starts with'),
-            'sql' => 'LIKE',
-            'preg_match' => '/$/',
-            'preg_replace' => '%',
-        ];
-
-        $this->basetypes['tags'][] = [
-            'name' => 'end',
-            'description' => T_('ends with'),
-            'sql' => 'LIKE',
-            'preg_match' => '/^/',
-            'preg_replace' => '%',
-        ];
-
-        $this->basetypes['tags'][] = [
-            'name' => 'equal',
-            'description' => T_('is'),
-            'sql' => '>',
-        ];
-
-        $this->basetypes['tags'][] = [
-            'name' => 'not equal',
-            'description' => T_('is not'),
-            'sql' => '=',
-        ];
-
-        $this->basetypes['boolean_numeric'][] = [
-            'name' => 'equal',
-            'description' => T_('is'),
-            'sql' => '<=>',
-        ];
-
-        $this->basetypes['boolean_numeric'][] = [
-            'name' => 'ne',
-            'description' => T_('is not'),
-            'sql' => '<>',
-        ];
-
-        $this->basetypes['boolean_subsearch'][] = [
-            'name' => 'equal',
-            'description' => T_('is'),
-            'sql' => '',
-        ];
-
-        $this->basetypes['boolean_subsearch'][] = [
-            'name' => 'ne',
-            'description' => T_('is not'),
-            'sql' => 'NOT',
-        ];
-
-        $this->basetypes['date'][] = [
-            'name' => 'lt',
-            'description' => T_('before'),
-            'sql' => '<',
-        ];
-
-        $this->basetypes['date'][] = [
-            'name' => 'gt',
-            'description' => T_('after'),
-            'sql' => '>',
-        ];
-
-        $this->basetypes['days'][] = [
-            'name' => 'lt',
-            'description' => T_('before (x) days ago'),
-            'sql' => '<',
-        ];
-
-        $this->basetypes['days'][] = [
-            'name' => 'gt',
-            'description' => T_('after (x) days ago'),
-            'sql' => '>',
-        ];
-
-        $this->basetypes['recent_played'][] = [
-            'name' => 'ply',
-            'description' => T_('Limit'),
-            'sql' => '`date`',
-        ];
-        $this->basetypes['recent_added'][] = [
-            'name' => 'add',
-            'description' => T_('Limit'),
-            'sql' => '`addition_time`',
-        ];
-
-        $this->basetypes['recent_updated'][] = [
-            'name' => 'upd',
-            'description' => T_('Limit'),
-            'sql' => '`update_time`',
-        ];
-
-        $this->basetypes['user_numeric'][] = [
-            'name' => 'love',
-            'description' => T_('has loved'),
-            'sql' => 'userflag',
-        ];
-
-        $this->basetypes['user_numeric'][] = [
-            'name' => '5star',
-            'description' => T_('has rated 5 stars'),
-            'sql' => '`rating` = 5',
-        ];
-
-        $this->basetypes['user_numeric'][] = [
-            'name' => '4star',
-            'description' => T_('has rated 4 stars'),
-            'sql' => '`rating` = 4',
-        ];
-
-        $this->basetypes['user_numeric'][] = [
-            'name' => '3star',
-            'description' => T_('has rated 3 stars'),
-            'sql' => '`rating` = 3',
-        ];
-
-        $this->basetypes['user_numeric'][] = [
-            'name' => '2star',
-            'description' => T_('has rated 2 stars'),
-            'sql' => '`rating` = 2',
-        ];
-
-        $this->basetypes['user_numeric'][] = [
-            'name' => '1star',
-            'description' => T_('has rated 1 star'),
-            'sql' => '`rating` = 1',
-        ];
-
-        $this->basetypes['user_numeric'][] = [
-            'name' => 'unrated',
-            'description' => T_('has not rated'),
-            'sql' => 'unrated',
-        ];
-
-        $this->basetypes['multiple'] = array_merge($this->basetypes['text'], $this->basetypes['numeric']);
+        return $basetypes;
     }
 
     /**
@@ -2009,7 +1832,7 @@ class Search extends playlist_object
             }
 
             $rule_input    = (string)($data['rule_' . $ruleID . '_input'] ?? '');
-            $rule_operator = $this->basetypes[$rule_type][$data['rule_' . $ruleID . '_operator']]['name'] ?? '';
+            $rule_operator = $this->get_basetypes()[$rule_type][$data['rule_' . $ruleID . '_operator']]['name'] ?? '';
             // keep vertical bar in regular expression
             $is_regex = in_array($rule_operator, ['regexp', 'notregexp']);
             if ($is_regex) {
@@ -2087,7 +1910,7 @@ class Search extends playlist_object
         $javascript = "";
         foreach ($this->rules as $rule) {
             // @see search.js SearchRow.add(ruleType, operator, input, subtype)
-            $javascript .= '<script>SearchRow.add("' . scrub_out($rule[0]) . '","' . scrub_out($rule[1]) . '","' . scrub_out($rule[2]) . '", "' . scrub_out($rule[3] ?? '') . '"); </script>';
+            $javascript .= '<script>SearchRow.add("' . scrub_out($rule[0]) . '","' . scrub_out(T_($rule[1])) . '","' . scrub_out($rule[2]) . '", "' . scrub_out($rule[3] ?? '') . '"); </script>';
         }
 
         return $javascript;
