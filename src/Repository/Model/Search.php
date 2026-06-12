@@ -202,6 +202,9 @@ class Search extends playlist_object
         if ($search_id > 0) {
             $info = $this->get_info($search_id, static::DB_TABLENAME);
             foreach ($info as $key => $value) {
+                if ($key == 'basetypes' || $key == 'types') {
+                    continue;
+                }
                 if ($key == 'rules') {
                     try {
                         $this->rules = json_decode((string) $value, true, 512, JSON_THROW_ON_ERROR);
