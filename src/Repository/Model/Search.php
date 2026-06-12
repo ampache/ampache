@@ -55,6 +55,7 @@ class Search extends playlist_object
 {
     protected const string DB_TABLENAME = 'search';
 
+    /** @var array<string, array<int, array{name: string, description: string, sql: string, preg_match?: string|array{string, string}, preg_replace?:string|array{string, string}}>> BASE_TYPES */
     private const array BASE_TYPES = [
         'numeric' => [
             ['name' => 'gte', 'description' => 'is greater than or equal to', 'sql' => '>='],
@@ -173,12 +174,6 @@ class Search extends playlist_object
 
     public User $search_user; // user running the search
 
-    /** @var array<int, array<string, mixed>> $types */
-    public array $types = []; // rules that are available to the objectType (title, year, rating, etc)
-
-    /** @var array<string, array<int, array{name: string, description: string, sql: string, preg_match?: string|array{string, string}, preg_replace?:string|array{string, string}}>> $basetypes */
-    public array $basetypes = []; // rule operator subtypes (numeric, text, boolean, etc)
-
     private SearchInterface $searchType;
 
     /** @var string[] $stars */
@@ -222,7 +217,7 @@ class Search extends playlist_object
             // make sure saved rules match the correct names
             $rule_count = 0;
             foreach ($this->rules as $rule) {
-                $this->rules[$rule_count][0] = $this->_get_rule_name($rule[0]);
+                $this->rules[$rule_count][0] = $this->_set_rule_name($rule[0]);
                 ++$rule_count;
             }
 
@@ -243,61 +238,50 @@ class Search extends playlist_object
 
         switch ($this->objectType) {
             case 'album':
-                $this->_set_types_album();
                 $this->searchType = new AlbumSearch();
                 $this->order_by   = '`album`.`name`';
                 break;
             case 'album_disk':
-                $this->_set_types_album();
                 $this->searchType = new AlbumDiskSearch();
                 $this->order_by   = '`album`.`name`';
                 break;
             case 'artist':
             case 'album_artist':
             case 'song_artist':
-                $this->_set_types_artist();
                 $this->searchType = new ArtistSearch($this->objectType);
                 $this->order_by   = '`artist`.`name`';
                 $this->objectType = 'artist';
                 break;
             case 'label':
-                $this->_set_types_label();
                 $this->searchType = new LabelSearch();
                 $this->order_by   = '`label`.`name`';
                 break;
             case 'playlist':
-                $this->_set_types_playlist();
                 $this->searchType = new PlaylistSearch();
                 $this->order_by   = '`playlist`.`name`';
                 break;
             case 'podcast':
-                $this->_set_types_podcast();
                 $this->searchType = new PodcastSearch();
                 $this->order_by   = '`podcast`.`title`';
                 break;
             case 'podcast_episode':
-                $this->_set_types_podcast_episode();
                 $this->searchType = new PodcastEpisodeSearch();
                 $this->order_by   = '`podcast_episode`.`pubdate` DESC';
                 break;
             case 'song':
-                $this->_set_types_song();
                 $this->searchType = new SongSearch();
                 $this->order_by   = '`song`.`file`';
                 break;
             case 'tag':
             case 'genre':
-                $this->_set_types_tag();
                 $this->searchType = new TagSearch();
                 $this->order_by   = '`tag`.`name`';
                 break;
             case 'user':
-                $this->_set_types_user();
                 $this->searchType = new UserSearch();
                 $this->order_by   = '`user`.`username`';
                 break;
             case 'video':
-                $this->_set_types_video();
                 $this->searchType = new VideoSearch();
                 $this->order_by   = '`video`.`file`';
                 break;
@@ -328,13 +312,69 @@ class Search extends playlist_object
     }
 
     /**
-     * _add_type_numeric
+     * get_rule_types
+     *
+     * Return rule list for the current search type, This is used for display purposes only so it's still translated
+     * @return array<int, array<string, mixed>>
+     */
+    public function get_rule_types(): array
+    {
+        $ruleTypes = [];
+        switch ($this->objectType) {
+            case 'album':
+            case 'album_disk':
+                $ruleTypes = $this->_get_types_album();
+                break;
+            case 'artist':
+            case 'album_artist':
+            case 'song_artist':
+                $ruleTypes = $this->_get_types_artist();
+                break;
+            case 'label':
+                $ruleTypes = $this->_get_types_label();
+                break;
+            case 'playlist':
+                $ruleTypes = $this->_get_types_playlist();
+                break;
+            case 'podcast':
+                $ruleTypes = $this->_get_types_podcast();
+                break;
+            case 'podcast_episode':
+                $ruleTypes = $this->_get_types_podcast_episode();
+                break;
+            case 'song':
+                $ruleTypes = $this->_get_types_song();
+                break;
+            case 'tag':
+            case 'genre':
+                $ruleTypes = $this->_get_types_tag();
+                break;
+            case 'user':
+                $ruleTypes = $this->_get_types_user();
+                break;
+            case 'video':
+                $ruleTypes = $this->_get_types_video();
+                break;
+        }
+
+        return $ruleTypes;
+    }
+
+    /**
+     * _get_rule_numeric
      *
      * Generic integer searches rules
+     * @return array{
+     *     name: string,
+     *     label: string,
+     *     type: string,
+     *     widget: string[],
+     *     title:string
+     * }
      */
-    private function _add_type_numeric(string $name, string $label, string $type = 'numeric', string $group = ''): void
+    private function _get_rule_numeric(string $name, string $label, string $type = 'numeric', string $group = ''): array
     {
-        $this->types[] = [
+        return [
             'name' => $name,
             'label' => $label,
             'type' => $type,
@@ -347,13 +387,20 @@ class Search extends playlist_object
     }
 
     /**
-     * _add_type_date
+     * _get_rule_date
      *
      * Generic date searches rules
+     * @return array{
+     *     name: string,
+     *     label: string,
+     *     type: string,
+     *     widget: string[],
+     *     title:string
+     * }
      */
-    private function _add_type_date(string $name, string $label, string $group = ''): void
+    private function _get_rule_date(string $name, string $label, string $group = ''): array
     {
-        $this->types[] = [
+        return [
             'name' => $name,
             'label' => $label,
             'type' => 'date',
@@ -366,13 +413,20 @@ class Search extends playlist_object
     }
 
     /**
-     * _add_type_text
+     * _get_rule_text
      *
      * Generic text rules
+     * @return array{
+     *     name: string,
+     *     label: string,
+     *     type: string,
+     *     widget: string[],
+     *     title:string
+     * }
      */
-    private function _add_type_text(string $name, string $label, string $group = ''): void
+    private function _get_rule_text(string $name, string $label, string $group = ''): array
     {
-        $this->types[] = [
+        return [
             'name' => $name,
             'label' => $label,
             'type' => 'text',
@@ -385,13 +439,24 @@ class Search extends playlist_object
     }
 
     /**
-     * _add_type_select
+     * _get_rule_select
      *
      * Generic rule to select from a list
+     * @param string[] $array
+     * @return array{
+     *     name: string,
+     *     label: string,
+     *     type: string,
+     *     widget: array{
+     *         string,
+     *         string[]
+     *     },
+     *     title:string
+     * }
      */
-    private function _add_type_select(string $name, string $label, string $type, array $array, string $group = ''): void
+    private function _get_rule_select(string $name, string $label, string $type, array $array, string $group = ''): array
     {
-        $this->types[] = [
+        return [
             'name' => $name,
             'label' => $label,
             'type' => $type,
@@ -404,13 +469,20 @@ class Search extends playlist_object
     }
 
     /**
-     * _add_type_boolean
+     * _get_rule_boolean
      *
      * True or false generic searches
+     * @return array{
+     *     name: string,
+     *     label: string,
+     *     type: string,
+     *     widget: string[],
+     *     title:string
+     * }
      */
-    private function _add_type_boolean(string $name, string $label, string $type = 'boolean', string $group = ''): void
+    private function _get_rule_boolean(string $name, string $label, string $type = 'boolean', string $group = ''): array
     {
-        $this->types[] = [
+        return [
             'name' => $name,
             'label' => $label,
             'type' => $type,
@@ -423,99 +495,102 @@ class Search extends playlist_object
     }
 
     /**
-     * _set_types_song
+     * _get_types_song
      *
      * this is where all the available rules for songs are defined
+     * @return array<int, array<string, mixed>>
      */
-    private function _set_types_song(): void
+    private function _get_types_song(): array
     {
-        $this->_add_type_text('anywhere', T_('Any searchable text'));
+        $rule_type = [];
+        
+        $rule_type[] = $this->_get_rule_text('anywhere', T_('Any searchable text'));
 
-        $this->_add_type_boolean('none', T_('None'), 'is_true');
+        $rule_type[] = $this->_get_rule_boolean('none', T_('None'), 'is_true');
 
         $t_song_data = T_('Song Data');
-        $this->_add_type_text('title', T_('Title'), $t_song_data);
-        $this->_add_type_text('album', T_('Album Title'), $t_song_data);
-        $this->_add_type_text('song_artist', T_('Song Artist'), $t_song_data);
-        $this->_add_type_text('album_artist', T_('Album Artist'), $t_song_data);
-        $this->_add_type_text('composer', T_('Composer'), $t_song_data);
-        $this->_add_type_numeric('track', T_('Track'), 'numeric', $t_song_data);
-        $this->_add_type_numeric('year', T_('Year'), 'numeric', $t_song_data);
-        $this->_add_type_numeric('time', T_('Length (in minutes)'), 'numeric', $t_song_data);
-        $this->_add_type_text('label', T_('Label'), $t_song_data);
-        $this->_add_type_text('comment', T_('Comment'), $t_song_data);
-        $this->_add_type_text('lyrics', T_('Lyrics'), $t_song_data);
-        $this->_add_type_numeric('id', T_('Database ID'), 'numeric', $t_song_data);
+        $rule_type[] = $this->_get_rule_text('title', T_('Title'), $t_song_data);
+        $rule_type[] = $this->_get_rule_text('album', T_('Album Title'), $t_song_data);
+        $rule_type[] = $this->_get_rule_text('song_artist', T_('Song Artist'), $t_song_data);
+        $rule_type[] = $this->_get_rule_text('album_artist', T_('Album Artist'), $t_song_data);
+        $rule_type[] = $this->_get_rule_text('composer', T_('Composer'), $t_song_data);
+        $rule_type[] = $this->_get_rule_numeric('track', T_('Track'), 'numeric', $t_song_data);
+        $rule_type[] = $this->_get_rule_numeric('year', T_('Year'), 'numeric', $t_song_data);
+        $rule_type[] = $this->_get_rule_numeric('time', T_('Length (in minutes)'), 'numeric', $t_song_data);
+        $rule_type[] = $this->_get_rule_text('label', T_('Label'), $t_song_data);
+        $rule_type[] = $this->_get_rule_text('comment', T_('Comment'), $t_song_data);
+        $rule_type[] = $this->_get_rule_text('lyrics', T_('Lyrics'), $t_song_data);
+        $rule_type[] = $this->_get_rule_numeric('id', T_('Database ID'), 'numeric', $t_song_data);
 
-        $t_ratings = T_('Ratings');
         if (AmpConfig::get('ratings')) {
-            $this->_add_type_select('myrating', T_('My Rating'), 'numeric', $this->stars, $t_ratings);
-            $this->_add_type_select('rating', T_('Rating (Average)'), 'numeric', $this->stars, $t_ratings);
-            $this->_add_type_select('albumrating', T_('My Rating (Album)'), 'numeric', $this->stars, $t_ratings);
-            $this->_add_type_select('artistrating', T_('My Rating (Artist)'), 'numeric', $this->stars, $t_ratings);
-            $this->_add_type_boolean('my_flagged_song', T_('My Favorite Songs'), 'boolean', $t_ratings);
-            $this->_add_type_boolean('my_flagged_album', T_('My Favorite Albums'), 'boolean', $t_ratings);
-            $this->_add_type_boolean('my_flagged_artist', T_('My Favorite Artists'), 'boolean', $t_ratings);
-            $this->_add_type_text('favorite', T_('Favorites'), $t_ratings);
-            $this->_add_type_text('favorite_album', T_('Favorites (Album)'), $t_ratings);
-            $this->_add_type_text('favorite_artist', T_('Favorites (Artist)'), $t_ratings);
-            $this->_add_type_numeric('weight_song', T_('Song popularity score'), 'numeric', $t_ratings);
-            $this->_add_type_numeric('weight_album', T_('Album popularity score'), 'numeric', $t_ratings);
-            $this->_add_type_numeric('weight_artist', T_('Artist popularity score'), 'numeric', $t_ratings);
+            $t_ratings = T_('Ratings');
+            $rule_type[] = $this->_get_rule_select('myrating', T_('My Rating'), 'numeric', $this->stars, $t_ratings);
+            $rule_type[] = $this->_get_rule_select('rating', T_('Rating (Average)'), 'numeric', $this->stars, $t_ratings);
+            $rule_type[] = $this->_get_rule_select('albumrating', T_('My Rating (Album)'), 'numeric', $this->stars, $t_ratings);
+            $rule_type[] = $this->_get_rule_select('artistrating', T_('My Rating (Artist)'), 'numeric', $this->stars, $t_ratings);
+            $rule_type[] = $this->_get_rule_boolean('my_flagged_song', T_('My Favorite Songs'), 'boolean', $t_ratings);
+            $rule_type[] = $this->_get_rule_boolean('my_flagged_album', T_('My Favorite Albums'), 'boolean', $t_ratings);
+            $rule_type[] = $this->_get_rule_boolean('my_flagged_artist', T_('My Favorite Artists'), 'boolean', $t_ratings);
+            $rule_type[] = $this->_get_rule_text('favorite', T_('Favorites'), $t_ratings);
+            $rule_type[] = $this->_get_rule_text('favorite_album', T_('Favorites (Album)'), $t_ratings);
+            $rule_type[] = $this->_get_rule_text('favorite_artist', T_('Favorites (Artist)'), $t_ratings);
+            $rule_type[] = $this->_get_rule_numeric('weight_song', T_('Song popularity score'), 'numeric', $t_ratings);
+            $rule_type[] = $this->_get_rule_numeric('weight_album', T_('Album popularity score'), 'numeric', $t_ratings);
+            $rule_type[] = $this->_get_rule_numeric('weight_artist', T_('Artist popularity score'), 'numeric', $t_ratings);
             $users = $this->getUserRepository()->getValidArray();
-            $this->_add_type_select('other_user', T_('Another User'), 'user_numeric', $users, $t_ratings);
-            $this->_add_type_select('other_user_album', T_('Another User (Album)'), 'user_numeric', $users, $t_ratings);
-            $this->_add_type_select('other_user_artist', T_('Another User (Artist)'), 'user_numeric', $users, $t_ratings);
+            $rule_type[] = $this->_get_rule_select('other_user', T_('Another User'), 'user_numeric', $users, $t_ratings);
+            $rule_type[] = $this->_get_rule_select('other_user_album', T_('Another User (Album)'), 'user_numeric', $users, $t_ratings);
+            $rule_type[] = $this->_get_rule_select('other_user_artist', T_('Another User (Artist)'), 'user_numeric', $users, $t_ratings);
         }
 
         $t_play_data = T_('Play History');
         /* HINT: Number of times object has been played */
-        $this->_add_type_numeric('played_times', T_('# Played'), 'numeric', $t_play_data);
+        $rule_type[] = $this->_get_rule_numeric('played_times', T_('# Played'), 'numeric', $t_play_data);
         /* HINT: Number of times object has been skipped */
-        $this->_add_type_numeric('skipped_times', T_('# Skipped'), 'numeric', $t_play_data);
+        $rule_type[] = $this->_get_rule_numeric('skipped_times', T_('# Skipped'), 'numeric', $t_play_data);
         /* HINT: Number of times object has been played OR skipped */
-        $this->_add_type_numeric('played_or_skipped_times', T_('# Played or Skipped'), 'numeric', $t_play_data);
+        $rule_type[] = $this->_get_rule_numeric('played_or_skipped_times', T_('# Played or Skipped'), 'numeric', $t_play_data);
         /* HINT: Percentage of (Times Played / Times skipped) * 100 */
-        $this->_add_type_numeric('play_skip_ratio', T_('Played/Skipped ratio'), 'numeric', $t_play_data);
-        $this->_add_type_numeric('last_play', T_('My Last Play'), 'days', $t_play_data);
-        $this->_add_type_numeric('last_skip', T_('My Last Skip'), 'days', $t_play_data);
-        $this->_add_type_numeric('last_play_or_skip', T_('My Last Play or Skip'), 'days', $t_play_data);
-        $this->_add_type_boolean('played', T_('Played'), 'boolean', $t_play_data);
-        $this->_add_type_boolean('myplayed', T_('Played by Me'), 'boolean', $t_play_data);
-        $this->_add_type_boolean('myplayedalbum', T_('Played by Me (Album)'), 'boolean', $t_play_data);
-        $this->_add_type_boolean('myplayedartist', T_('Played by Me (Artist)'), 'boolean', $t_play_data);
+        $rule_type[] = $this->_get_rule_numeric('play_skip_ratio', T_('Played/Skipped ratio'), 'numeric', $t_play_data);
+        $rule_type[] = $this->_get_rule_numeric('last_play', T_('My Last Play'), 'days', $t_play_data);
+        $rule_type[] = $this->_get_rule_numeric('last_skip', T_('My Last Skip'), 'days', $t_play_data);
+        $rule_type[] = $this->_get_rule_numeric('last_play_or_skip', T_('My Last Play or Skip'), 'days', $t_play_data);
+        $rule_type[] = $this->_get_rule_boolean('played', T_('Played'), 'boolean', $t_play_data);
+        $rule_type[] = $this->_get_rule_boolean('myplayed', T_('Played by Me'), 'boolean', $t_play_data);
+        $rule_type[] = $this->_get_rule_boolean('myplayedalbum', T_('Played by Me (Album)'), 'boolean', $t_play_data);
+        $rule_type[] = $this->_get_rule_boolean('myplayedartist', T_('Played by Me (Artist)'), 'boolean', $t_play_data);
         /* HINT: Number of times object has been played */
-        $this->_add_type_numeric('myplayed_times', T_('# Played by Me'), 'numeric', $t_play_data);
+        $rule_type[] = $this->_get_rule_numeric('myplayed_times', T_('# Played by Me'), 'numeric', $t_play_data);
         /* HINT: Number of times object has been skipped */
-        $this->_add_type_numeric('myskipped_times', T_('# Skipped by Me'), 'numeric', $t_play_data);
+        $rule_type[] = $this->_get_rule_numeric('myskipped_times', T_('# Skipped by Me'), 'numeric', $t_play_data);
         /* HINT: Number of times object has been played OR skipped */
-        $this->_add_type_numeric('myplayed_or_skipped_times', T_('# Played or Skipped by Me'), 'numeric', $t_play_data);
-        $this->_add_type_numeric('recent_played', T_('Recently Played'), 'recent_played', $t_play_data);
+        $rule_type[] = $this->_get_rule_numeric('myplayed_or_skipped_times', T_('# Played or Skipped by Me'), 'numeric', $t_play_data);
+        $rule_type[] = $this->_get_rule_numeric('recent_played', T_('Recently Played'), 'recent_played', $t_play_data);
 
         $t_genre = T_('Genre');
-        $this->_add_type_text('genre', $t_genre, $t_genre);
-        $this->_add_type_text('album_genre', T_('Album Genre'), $t_genre);
-        $this->_add_type_text('artist_genre', T_('Artist Genre'), $t_genre);
-        $this->_add_type_boolean('no_genre', T_('No Genre'), 'is_true', $t_genre);
-        $this->_add_type_numeric('genre_count_song', T_('Song Count'), 'numeric', $t_genre);
-        $this->_add_type_numeric('genre_count_album', T_('Album Count'), 'numeric', $t_genre);
-        $this->_add_type_numeric('genre_count_artist', T_('Artist Count'), 'numeric', $t_genre);
+        $rule_type[] = $this->_get_rule_text('genre', $t_genre, $t_genre);
+        $rule_type[] = $this->_get_rule_text('album_genre', T_('Album Genre'), $t_genre);
+        $rule_type[] = $this->_get_rule_text('artist_genre', T_('Artist Genre'), $t_genre);
+        $rule_type[] = $this->_get_rule_boolean('no_genre', T_('No Genre'), 'is_true', $t_genre);
+        $rule_type[] = $this->_get_rule_numeric('genre_count_song', T_('Song Count'), 'numeric', $t_genre);
+        $rule_type[] = $this->_get_rule_numeric('genre_count_album', T_('Album Count'), 'numeric', $t_genre);
+        $rule_type[] = $this->_get_rule_numeric('genre_count_artist', T_('Artist Count'), 'numeric', $t_genre);
 
         $t_playlists = T_('Playlists');
         $playlists   = Playlist::get_playlist_array($this->user);
         if ($playlists !== []) {
-            $this->_add_type_select('playlist', T_('Playlist'), 'boolean_subsearch', $playlists, $t_playlists);
+            $rule_type[] = $this->_get_rule_select('playlist', T_('Playlist'), 'boolean_subsearch', $playlists, $t_playlists);
         }
 
         $playlists = self::get_search_array($this->user);
         if ($playlists !== []) {
-            $this->_add_type_select('smartplaylist', T_('Smart Playlist'), 'boolean_subsearch', $playlists, $t_playlists);
+            $rule_type[] = $this->_get_rule_select('smartplaylist', T_('Smart Playlist'), 'boolean_subsearch', $playlists, $t_playlists);
         }
 
-        $this->_add_type_text('playlist_name', T_('Playlist Name'), $t_playlists);
+        $rule_type[] = $this->_get_rule_text('playlist_name', T_('Playlist Name'), $t_playlists);
 
         $t_file_data = T_('File Data');
-        $this->_add_type_text('file', T_('Filename'), $t_file_data);
+        $rule_type[] = $this->_get_rule_text('file', T_('Filename'), $t_file_data);
         $bitrate_array = [
             '32' => '32',
             '40' => '40',
@@ -534,25 +609,25 @@ class Search extends playlist_object
             '640' => '640',
             '1280' => '1280',
         ];
-        $this->_add_type_select('bitrate', T_('Bitrate'), 'numeric', $bitrate_array, $t_file_data);
-        $this->_add_type_date('added', T_('Date Added'), $t_file_data);
-        $this->_add_type_date('updated', T_('Date Updated'), $t_file_data);
+        $rule_type[] = $this->_get_rule_select('bitrate', T_('Bitrate'), 'numeric', $bitrate_array, $t_file_data);
+        $rule_type[] = $this->_get_rule_date('added', T_('Date Added'), $t_file_data);
+        $rule_type[] = $this->_get_rule_date('updated', T_('Date Updated'), $t_file_data);
         if (AmpConfig::get('licensing')) {
             $licenses = iterator_to_array(
                 $this->getLicenseRepository()->getList(false)
             );
-            $this->_add_type_select('license', T_('Music License'), 'boolean_numeric', $licenses, $t_file_data);
-            $this->_add_type_boolean('no_license', T_('No Music License'), 'is_true', $t_file_data);
+            $rule_type[] = $this->_get_rule_select('license', T_('Music License'), 'boolean_numeric', $licenses, $t_file_data);
+            $rule_type[] = $this->_get_rule_boolean('no_license', T_('No Music License'), 'is_true', $t_file_data);
         }
 
-        $this->_add_type_numeric('recent_added', T_('Recently Added'), 'recent_added', $t_file_data);
-        $this->_add_type_numeric('recent_updated', T_('Recently Updated'), 'recent_updated', $t_file_data);
-        $this->_add_type_numeric('days_added', T_('Added'), 'days', $t_file_data);
-        $this->_add_type_numeric('days_updated', T_('Updated'), 'days', $t_file_data);
-        $this->_add_type_boolean('possible_duplicate', T_('Possible Duplicate'), 'is_true', $t_file_data);
-        $this->_add_type_boolean('duplicate_tracks', T_('Duplicate Album Tracks'), 'is_true', $t_file_data);
-        $this->_add_type_boolean('possible_duplicate_album', T_('Possible Duplicate Albums'), 'is_true', $t_file_data);
-        $this->_add_type_boolean('orphaned_album', T_('Orphaned Album'), 'is_true', $t_file_data);
+        $rule_type[] = $this->_get_rule_numeric('recent_added', T_('Recently Added'), 'recent_added', $t_file_data);
+        $rule_type[] = $this->_get_rule_numeric('recent_updated', T_('Recently Updated'), 'recent_updated', $t_file_data);
+        $rule_type[] = $this->_get_rule_numeric('days_added', T_('Added'), 'days', $t_file_data);
+        $rule_type[] = $this->_get_rule_numeric('days_updated', T_('Updated'), 'days', $t_file_data);
+        $rule_type[] = $this->_get_rule_boolean('possible_duplicate', T_('Possible Duplicate'), 'is_true', $t_file_data);
+        $rule_type[] = $this->_get_rule_boolean('duplicate_tracks', T_('Duplicate Album Tracks'), 'is_true', $t_file_data);
+        $rule_type[] = $this->_get_rule_boolean('possible_duplicate_album', T_('Possible Duplicate Albums'), 'is_true', $t_file_data);
+        $rule_type[] = $this->_get_rule_boolean('orphaned_album', T_('Orphaned Album'), 'is_true', $t_file_data);
         $catalogs = [];
         foreach (Catalog::get_catalogs('music', $this->user) as $catid) {
             $catalog = Catalog::create_from_id($catid);
@@ -564,24 +639,23 @@ class Search extends playlist_object
         }
 
         if ($catalogs !== []) {
-            $this->_add_type_select('catalog', T_('Catalog'), 'boolean_numeric', $catalogs, $t_file_data);
+            $rule_type[] = $this->_get_rule_select('catalog', T_('Catalog'), 'boolean_numeric', $catalogs, $t_file_data);
         }
 
         // can't read the file from the db if it's stored on the disk
         if (!AmpConfig::get('album_art_store_disk')) {
-            $this->_add_type_boolean('waveform', T_('Waveform'), 'boolean', $t_file_data);
+            $rule_type[] = $this->_get_rule_boolean('waveform', T_('Waveform'), 'boolean', $t_file_data);
         }
 
-        $t_musicbrainz = T_('MusicBrainz');
-        $this->_add_type_text('mbid', T_('MusicBrainz ID'), $t_musicbrainz);
-        $this->_add_type_text('mbid_album', T_('MusicBrainz ID (Album)'), $t_musicbrainz);
-        $this->_add_type_text('mbid_artist', T_('MusicBrainz ID (Artist)'), $t_musicbrainz);
+        $t_musicbrainz = T_('Musicbrainz');
+        $rule_type[] = $this->_get_rule_text('mbid', T_('MusicBrainz ID'), $t_musicbrainz);
+        $rule_type[] = $this->_get_rule_text('mbid_album', T_('MusicBrainz ID (Album)'), $t_musicbrainz);
+        $rule_type[] = $this->_get_rule_text('mbid_artist', T_('MusicBrainz ID (Artist)'), $t_musicbrainz);
 
-        $t_metadata = T_('Metadata');
         if (AmpConfig::get('enable_custom_metadata')) {
-            $this->types[] = [
+            $rule_type[] = [
                 'name' => 'metadata',
-                'label' => $t_metadata,
+                'label' => 'Metadata',
                 'type' => 'multiple',
                 'subtypes' => iterator_to_array($this->getMetadataFieldRepository()->getPropertyList()),
                 'widget' => [
@@ -591,90 +665,95 @@ class Search extends playlist_object
                         'text',
                     ],
                 ],
-                'title' => $t_metadata];
+                'title' => 'Metadata'];
         }
+
+        return $rule_type;
     }
 
     /**
-     * _set_types_artist
+     * _get_types_artist
      *
      * this is where all the available rules for artists are defined
+     * @return array<int, array<string, mixed>>
      */
-    private function _set_types_artist(): void
+    private function _get_types_artist(): array
     {
-        $t_artist_data = T_('Artist Data');
-        $this->_add_type_text('title', T_('Name'), $t_artist_data);
-        $this->_add_type_text('album', T_('Album Title'), $t_artist_data);
-        $this->_add_type_text('song', T_('Song Title'), $t_artist_data);
-        $this->_add_type_text('summary', T_('Summary'), $t_artist_data);
-        $this->_add_type_numeric('yearformed', T_('Year Formed'), 'numeric', $t_artist_data);
-        $this->_add_type_text('placeformed', T_('Place Formed'), $t_artist_data);
-        $this->_add_type_numeric('time', T_('Length (in minutes)'), 'numeric', $t_artist_data);
-        $this->_add_type_numeric('album_count', T_('Album Count'), 'numeric', $t_artist_data);
-        $this->_add_type_numeric('song_count', T_('Song Count'), 'numeric', $t_artist_data);
-        $this->_add_type_numeric('id', T_('Database ID'), 'numeric', $t_artist_data);
+        $rule_type = [];
 
-        $t_ratings = T_('Ratings');
+        $t_artist_data = T_('Artist Data'); 
+        $rule_type[] = $this->_get_rule_text('title', T_('Name'), $t_artist_data);
+        $rule_type[] = $this->_get_rule_text('album', T_('Album Title'), $t_artist_data);
+        $rule_type[] = $this->_get_rule_text('song', T_('Song Title'), $t_artist_data);
+        $rule_type[] = $this->_get_rule_text('summary', T_('Summary'), $t_artist_data);
+        $rule_type[] = $this->_get_rule_numeric('yearformed', T_('Year Formed'), 'numeric', $t_artist_data);
+        $rule_type[] = $this->_get_rule_text('placeformed', T_('Place Formed'), $t_artist_data);
+        $rule_type[] = $this->_get_rule_numeric('time', T_('Length (in minutes)'), 'numeric', $t_artist_data);
+        $rule_type[] = $this->_get_rule_numeric('album_count', T_('Album Count'), 'numeric', $t_artist_data);
+        $rule_type[] = $this->_get_rule_numeric('song_count', T_('Song Count'), 'numeric', $t_artist_data);
+        $rule_type[] = $this->_get_rule_numeric('id', T_('Database ID'), 'numeric', $t_artist_data);
+
         if (AmpConfig::get('ratings')) {
-            $this->_add_type_select('myrating', T_('My Rating'), 'numeric', $this->stars, $t_ratings);
-            $this->_add_type_select('rating', T_('Rating (Average)'), 'numeric', $this->stars, $t_ratings);
-            $this->_add_type_select('songrating', T_('My Rating (Song)'), 'numeric', $this->stars, $t_ratings);
-            $this->_add_type_select('albumrating', T_('My Rating (Album)'), 'numeric', $this->stars, $t_ratings);
-            $this->_add_type_boolean('my_flagged_song', T_('My Favorite Songs'), 'boolean', $t_ratings);
-            $this->_add_type_boolean('my_flagged_album', T_('My Favorite Albums'), 'boolean', $t_ratings);
-            $this->_add_type_boolean('my_flagged_artist', T_('My Favorite Artists'), 'boolean', $t_ratings);
-            $this->_add_type_numeric('weight_song', T_('Song popularity score'), 'numeric', $t_ratings);
-            $this->_add_type_numeric('weight_album', T_('Album popularity score'), 'numeric', $t_ratings);
-            $this->_add_type_numeric('weight_artist', T_('Artist popularity score'), 'numeric', $t_ratings);
-            $this->_add_type_text('favorite', T_('Favorites'), $t_ratings);
+            $t_ratings = T_('Ratings');
+            $rule_type[] = $this->_get_rule_select('myrating', T_('My Rating'), 'numeric', $this->stars, $t_ratings);
+            $rule_type[] = $this->_get_rule_select('rating', T_('Rating (Average)'), 'numeric', $this->stars, $t_ratings);
+            $rule_type[] = $this->_get_rule_select('songrating', T_('My Rating (Song)'), 'numeric', $this->stars, $t_ratings);
+            $rule_type[] = $this->_get_rule_select('albumrating', T_('My Rating (Album)'), 'numeric', $this->stars, $t_ratings);
+            $rule_type[] = $this->_get_rule_boolean('my_flagged_song', T_('My Favorite Songs'), 'boolean', $t_ratings);
+            $rule_type[] = $this->_get_rule_boolean('my_flagged_album', T_('My Favorite Albums'), 'boolean', $t_ratings);
+            $rule_type[] = $this->_get_rule_boolean('my_flagged_artist', T_('My Favorite Artists'), 'boolean', $t_ratings);
+            $rule_type[] = $this->_get_rule_numeric('weight_song', T_('Song popularity score'), 'numeric', $t_ratings);
+            $rule_type[] = $this->_get_rule_numeric('weight_album', T_('Album popularity score'), 'numeric', $t_ratings);
+            $rule_type[] = $this->_get_rule_numeric('weight_artist', T_('Artist popularity score'), 'numeric', $t_ratings);
+            $rule_type[] = $this->_get_rule_text('favorite', T_('Favorites'), $t_ratings);
             $users = $this->getUserRepository()->getValidArray();
-            $this->_add_type_select('other_user', T_('Another User'), 'user_numeric', $users, $t_ratings);
+            $rule_type[] = $this->_get_rule_select('other_user', T_('Another User'), 'user_numeric', $users, $t_ratings);
         }
 
         $t_play_data = T_('Play History');
         /* HINT: Number of times object has been played */
-        $this->_add_type_numeric('played_times', T_('# Played'), 'numeric', $t_play_data);
+        $rule_type[] = $this->_get_rule_numeric('played_times', T_('# Played'), 'numeric', $t_play_data);
         /* HINT: Number of times object has been skipped */
-        $this->_add_type_numeric('skipped_times', T_('# Skipped'), 'numeric', $t_play_data);
+        $rule_type[] = $this->_get_rule_numeric('skipped_times', T_('# Skipped'), 'numeric', $t_play_data);
         /* HINT: Number of times object has been played OR skipped */
-        $this->_add_type_numeric('played_or_skipped_times', T_('# Played or Skipped'), 'numeric', $t_play_data);
-        $this->_add_type_numeric('last_play', T_('My Last Play'), 'days', $t_play_data);
-        $this->_add_type_numeric('last_skip', T_('My Last Skip'), 'days', $t_play_data);
-        $this->_add_type_numeric('last_play_or_skip', T_('My Last Play or Skip'), 'days', $t_play_data);
-        $this->_add_type_boolean('played', T_('Played'), 'boolean', $t_play_data);
-        $this->_add_type_boolean('myplayed', T_('Played by Me'), 'boolean', $t_play_data);
+        $rule_type[] = $this->_get_rule_numeric('played_or_skipped_times', T_('# Played or Skipped'), 'numeric', $t_play_data);
+        $rule_type[] = $this->_get_rule_numeric('last_play', T_('My Last Play'), 'days', $t_play_data);
+        $rule_type[] = $this->_get_rule_numeric('last_skip', T_('My Last Skip'), 'days', $t_play_data);
+        $rule_type[] = $this->_get_rule_numeric('last_play_or_skip', T_('My Last Play or Skip'), 'days', $t_play_data);
+        $rule_type[] = $this->_get_rule_boolean('played', T_('Played'), 'boolean', $t_play_data);
+        $rule_type[] = $this->_get_rule_boolean('myplayed', T_('Played by Me'), 'boolean', $t_play_data);
         /* HINT: Number of times object has been played */
-        $this->_add_type_numeric('myplayed_times', T_('# Played by Me'), 'numeric', $t_play_data);
+        $rule_type[] = $this->_get_rule_numeric('myplayed_times', T_('# Played by Me'), 'numeric', $t_play_data);
         /* HINT: Number of times object has been skipped */
-        $this->_add_type_numeric('myskipped_times', T_('# Skipped by Me'), 'numeric', $t_play_data);
+        $rule_type[] = $this->_get_rule_numeric('myskipped_times', T_('# Skipped by Me'), 'numeric', $t_play_data);
         /* HINT: Number of times object has been played OR skipped */
-        $this->_add_type_numeric('myplayed_or_skipped_times', T_('# Played or Skipped by Me'), 'numeric', $t_play_data);
-        $this->_add_type_numeric('recent_played', T_('Recently Played'), 'recent_played', $t_play_data);
+        $rule_type[] = $this->_get_rule_numeric('myplayed_or_skipped_times', T_('# Played or Skipped by Me'), 'numeric', $t_play_data);
+        $rule_type[] = $this->_get_rule_numeric('recent_played', T_('Recently Played'), 'recent_played', $t_play_data);
 
         $t_genre = T_('Genre');
-        $this->_add_type_text('genre', $t_genre, $t_genre);
-        $this->_add_type_text('song_genre', T_('Song Genre'), $t_genre);
-        $this->_add_type_boolean('no_genre', T_('No Genre'), 'is_true', $t_genre);
-        $this->_add_type_numeric('genre_count_song', T_('Song Count'), 'numeric', $t_genre);
-        $this->_add_type_numeric('genre_count_album', T_('Album Count'), 'numeric', $t_genre);
-        $this->_add_type_numeric('genre_count_artist', T_('Artist Count'), 'numeric', $t_genre);
+        $rule_type[] = $this->_get_rule_text('genre', $t_genre, $t_genre);
+        $rule_type[] = $this->_get_rule_text('song_genre', T_('Song Genre'), $t_genre);
+        $rule_type[] = $this->_get_rule_boolean('no_genre', T_('No Genre'), 'is_true', $t_genre);
+        $rule_type[] = $this->_get_rule_numeric('genre_count_song', T_('Song Count'), 'numeric', $t_genre);
+        $rule_type[] = $this->_get_rule_numeric('genre_count_album', T_('Album Count'), 'numeric', $t_genre);
+        $rule_type[] = $this->_get_rule_numeric('genre_count_artist', T_('Artist Count'), 'numeric', $t_genre);
 
         $t_playlists = T_('Playlists');
         $playlists   = Playlist::get_playlist_array($this->user);
         if ($playlists !== []) {
-            $this->_add_type_select('playlist', T_('Playlist'), 'boolean_subsearch', $playlists, $t_playlists);
+            $rule_type[] = $this->_get_rule_select('playlist', T_('Playlist'), 'boolean_subsearch', $playlists, $t_playlists);
         }
 
-        $this->_add_type_text('playlist_name', T_('Playlist Name'), $t_playlists);
+        $rule_type[] = $this->_get_rule_text('playlist_name', T_('Playlist Name'), $t_playlists);
 
         $t_file_data = T_('File Data');
-        $this->_add_type_text('file', T_('Filename'), $t_file_data);
-        $this->_add_type_boolean('has_image', T_('Local Image'), 'boolean', $t_file_data);
-        $this->_add_type_numeric('image_width', T_('Image Width'), 'numeric', $t_file_data);
-        $this->_add_type_numeric('image_height', T_('Image Height'), 'numeric', $t_file_data);
-        $this->_add_type_numeric('days_added', T_('Added'), 'days', $t_file_data);
-        $this->_add_type_boolean('possible_duplicate', T_('Possible Duplicate'), 'is_true', $t_file_data);
-        $this->_add_type_boolean('possible_duplicate_album', T_('Possible Duplicate Albums'), 'is_true', $t_file_data);
+        $rule_type[] = $this->_get_rule_text('file', T_('Filename'), $t_file_data);
+        $rule_type[] = $this->_get_rule_boolean('has_image', T_('Local Image'), 'boolean', $t_file_data);
+        $rule_type[] = $this->_get_rule_numeric('image_width', T_('Image Width'), 'numeric', $t_file_data);
+        $rule_type[] = $this->_get_rule_numeric('image_height', T_('Image Height'), 'numeric', $t_file_data);
+        $rule_type[] = $this->_get_rule_numeric('days_added', T_('Added'), 'days', $t_file_data);
+        $rule_type[] = $this->_get_rule_boolean('possible_duplicate', T_('Possible Duplicate'), 'is_true', $t_file_data);
+        $rule_type[] = $this->_get_rule_boolean('possible_duplicate_album', T_('Possible Duplicate Albums'), 'is_true', $t_file_data);
         $catalogs = [];
         foreach (Catalog::get_catalogs('music', $this->user) as $catid) {
             $catalog = Catalog::create_from_id($catid);
@@ -686,110 +765,115 @@ class Search extends playlist_object
         }
 
         if ($catalogs !== []) {
-            $this->_add_type_select('catalog', T_('Catalog'), 'boolean_numeric', $catalogs, $t_file_data);
+            $rule_type[] = $this->_get_rule_select('catalog', T_('Catalog'), 'boolean_numeric', $catalogs, $t_file_data);
         }
 
-        $t_musicbrainz = T_('MusicBrainz');
-        $this->_add_type_text('mbid', T_('MusicBrainz ID'), $t_musicbrainz);
-        $this->_add_type_text('mbid_album', T_('MusicBrainz ID (Album)'), $t_musicbrainz);
-        $this->_add_type_text('mbid_song', T_('MusicBrainz ID (Song)'), $t_musicbrainz);
+        $t_musicbrainz = T_('Musicbrainz');
+        $rule_type[] = $this->_get_rule_text('mbid', T_('MusicBrainz ID'), $t_musicbrainz);
+        $rule_type[] = $this->_get_rule_text('mbid_album', T_('MusicBrainz ID (Album)'), $t_musicbrainz);
+        $rule_type[] = $this->_get_rule_text('mbid_song', T_('MusicBrainz ID (Song)'), $t_musicbrainz);
+
+        return $rule_type;
     }
 
     /**
-     * _set_types_album
+     * _get_types_album
      *
      * this is where all the available rules for albums are defined
+     * @return array<int, array<string, mixed>>
      */
-    private function _set_types_album(): void
+    private function _get_types_album(): array
     {
-        $t_album_data = T_('Album Data');
-        $this->_add_type_text('title', T_('Title'), $t_album_data);
-        $this->_add_type_text('album_artist', T_('Album Artist'), $t_album_data);
-        $this->_add_type_text('song_artist', T_('Song Artist'), $t_album_data);
-        $this->_add_type_text('song', T_('Song Title'), $t_album_data);
-        $this->_add_type_numeric('year', T_('Year'), 'numeric', $t_album_data);
-        $this->_add_type_numeric('original_year', T_('Original Year'), 'numeric', $t_album_data);
-        $this->_add_type_numeric('time', T_('Length (in minutes)'), 'numeric', $t_album_data);
-        $this->_add_type_text('release_type', T_('Release Type'), $t_album_data);
-        $this->_add_type_text('release_status', T_('Release Status'), $t_album_data);
-        $this->_add_type_text('version', T_('Release Comment'), $t_album_data);
-        $this->_add_type_text('barcode', T_('Barcode'), $t_album_data);
-        $this->_add_type_text('catalog_number', T_('Catalog Number'), $t_album_data);
-        $this->_add_type_numeric('disk_count', T_('Disk Count'), 'numeric', $t_album_data);
-        $this->_add_type_numeric('song_count', T_('Song Count'), 'numeric', $t_album_data);
-        $this->_add_type_numeric('id', T_('Database ID'), 'numeric', $t_album_data);
+        $rule_type = [];
 
-        $t_ratings = T_('Ratings');
+        $t_album_data = T_('Album Data');
+        $rule_type[] = $this->_get_rule_text('title', T_('Title'), $t_album_data);
+        $rule_type[] = $this->_get_rule_text('album_artist', T_('Album Artist'), $t_album_data);
+        $rule_type[] = $this->_get_rule_text('song_artist', T_('Song Artist'), $t_album_data);
+        $rule_type[] = $this->_get_rule_text('song', T_('Song Title'), $t_album_data);
+        $rule_type[] = $this->_get_rule_numeric('year', T_('Year'), 'numeric', $t_album_data);
+        $rule_type[] = $this->_get_rule_numeric('original_year', T_('Original Year'), 'numeric', $t_album_data);
+        $rule_type[] = $this->_get_rule_numeric('time', T_('Length (in minutes)'), 'numeric', $t_album_data);
+        $rule_type[] = $this->_get_rule_text('release_type', T_('Release Type'), $t_album_data);
+        $rule_type[] = $this->_get_rule_text('release_status', T_('Release Status'), $t_album_data);
+        $rule_type[] = $this->_get_rule_text('version', T_('Release Comment'), $t_album_data);
+        $rule_type[] = $this->_get_rule_text('barcode', T_('Barcode'), $t_album_data);
+        $rule_type[] = $this->_get_rule_text('catalog_number', T_('Catalog Number'), $t_album_data);
+        $rule_type[] = $this->_get_rule_numeric('disk_count', T_('Disk Count'), 'numeric', $t_album_data);
+        $rule_type[] = $this->_get_rule_numeric('song_count', T_('Song Count'), 'numeric', $t_album_data);
+        $rule_type[] = $this->_get_rule_numeric('id', T_('Database ID'), 'numeric', $t_album_data);
+
         if (AmpConfig::get('ratings')) {
-            $this->_add_type_select('myrating', T_('My Rating'), 'numeric', $this->stars, $t_ratings);
-            $this->_add_type_select('rating', T_('Rating (Average)'), 'numeric', $this->stars, $t_ratings);
-            $this->_add_type_select('songrating', T_('My Rating (Song)'), 'numeric', $this->stars, $t_ratings);
-            $this->_add_type_select('artistrating', T_('My Rating (Artist)'), 'numeric', $this->stars, $t_ratings);
-            $this->_add_type_boolean('my_flagged_song', T_('My Favorite Songs'), 'boolean', $t_ratings);
-            $this->_add_type_boolean('my_flagged_album', T_('My Favorite Albums'), 'boolean', $t_ratings);
-            $this->_add_type_boolean('my_flagged_artist', T_('My Favorite Artists'), 'boolean', $t_ratings);
-            $this->_add_type_numeric('weight_song', T_('Song popularity score'), 'numeric', $t_ratings);
-            $this->_add_type_numeric('weight_album', T_('Album popularity score'), 'numeric', $t_ratings);
-            $this->_add_type_numeric('weight_artist', T_('Artist popularity score'), 'numeric', $t_ratings);
-            $this->_add_type_text('favorite', T_('Favorites'), $t_ratings);
+            $t_ratings = T_('Ratings');
+            $rule_type[] = $this->_get_rule_select('myrating', T_('My Rating'), 'numeric', $this->stars, $t_ratings);
+            $rule_type[] = $this->_get_rule_select('rating', T_('Rating (Average)'), 'numeric', $this->stars, $t_ratings);
+            $rule_type[] = $this->_get_rule_select('songrating', T_('My Rating (Song)'), 'numeric', $this->stars, $t_ratings);
+            $rule_type[] = $this->_get_rule_select('artistrating', T_('My Rating (Artist)'), 'numeric', $this->stars, $t_ratings);
+            $rule_type[] = $this->_get_rule_boolean('my_flagged_song', T_('My Favorite Songs'), 'boolean', $t_ratings);
+            $rule_type[] = $this->_get_rule_boolean('my_flagged_album', T_('My Favorite Albums'), 'boolean', $t_ratings);
+            $rule_type[] = $this->_get_rule_boolean('my_flagged_artist', T_('My Favorite Artists'), 'boolean', $t_ratings);
+            $rule_type[] = $this->_get_rule_numeric('weight_song', T_('Song popularity score'), 'numeric', $t_ratings);
+            $rule_type[] = $this->_get_rule_numeric('weight_album', T_('Album popularity score'), 'numeric', $t_ratings);
+            $rule_type[] = $this->_get_rule_numeric('weight_artist', T_('Artist popularity score'), 'numeric', $t_ratings);
+            $rule_type[] = $this->_get_rule_text('favorite', T_('Favorites'), $t_ratings);
             $users = $this->getUserRepository()->getValidArray();
-            $this->_add_type_select('other_user', T_('Another User'), 'user_numeric', $users, $t_ratings);
+            $rule_type[] = $this->_get_rule_select('other_user', T_('Another User'), 'user_numeric', $users, $t_ratings);
         }
 
         $t_play_data = T_('Play History');
         /* HINT: Number of times object has been played */
-        $this->_add_type_numeric('played_times', T_('# Played'), 'numeric', $t_play_data);
+        $rule_type[] = $this->_get_rule_numeric('played_times', T_('# Played'), 'numeric', $t_play_data);
         /* HINT: Number of times object has been skipped */
-        $this->_add_type_numeric('skipped_times', T_('# Skipped'), 'numeric', $t_play_data);
+        $rule_type[] = $this->_get_rule_numeric('skipped_times', T_('# Skipped'), 'numeric', $t_play_data);
         /* HINT: Number of times object has been played OR skipped */
-        $this->_add_type_numeric('played_or_skipped_times', T_('# Played or Skipped'), 'numeric', $t_play_data);
-        $this->_add_type_numeric('last_play', T_('My Last Play'), 'days', $t_play_data);
-        $this->_add_type_numeric('last_skip', T_('My Last Skip'), 'days', $t_play_data);
-        $this->_add_type_numeric('last_play_or_skip', T_('My Last Play or Skip'), 'days', $t_play_data);
-        $this->_add_type_boolean('played', T_('Played'), 'boolean', $t_play_data);
-        $this->_add_type_boolean('myplayed', T_('Played by Me'), 'boolean', $t_play_data);
-        $this->_add_type_boolean('myplayedartist', T_('Played by Me (Artist)'), 'boolean', $t_play_data);
+        $rule_type[] = $this->_get_rule_numeric('played_or_skipped_times', T_('# Played or Skipped'), 'numeric', $t_play_data);
+        $rule_type[] = $this->_get_rule_numeric('last_play', T_('My Last Play'), 'days', $t_play_data);
+        $rule_type[] = $this->_get_rule_numeric('last_skip', T_('My Last Skip'), 'days', $t_play_data);
+        $rule_type[] = $this->_get_rule_numeric('last_play_or_skip', T_('My Last Play or Skip'), 'days', $t_play_data);
+        $rule_type[] = $this->_get_rule_boolean('played', T_('Played'), 'boolean', $t_play_data);
+        $rule_type[] = $this->_get_rule_boolean('myplayed', T_('Played by Me'), 'boolean', $t_play_data);
+        $rule_type[] = $this->_get_rule_boolean('myplayedartist', T_('Played by Me (Artist)'), 'boolean', $t_play_data);
         /* HINT: Number of times object has been played */
-        $this->_add_type_numeric('myplayed_times', T_('# Played by Me'), 'numeric', $t_play_data);
+        $rule_type[] = $this->_get_rule_numeric('myplayed_times', T_('# Played by Me'), 'numeric', $t_play_data);
         /* HINT: Number of times object has been skipped */
-        $this->_add_type_numeric('myskipped_times', T_('# Skipped by Me'), 'numeric', $t_play_data);
+        $rule_type[] = $this->_get_rule_numeric('myskipped_times', T_('# Skipped by Me'), 'numeric', $t_play_data);
         /* HINT: Number of times object has been played OR skipped */
-        $this->_add_type_numeric('myplayed_or_skipped_times', T_('# Played or Skipped by Me'), 'numeric', $t_play_data);
-        $this->_add_type_numeric('recent_played', T_('Recently Played'), 'recent_played', $t_play_data);
+        $rule_type[] = $this->_get_rule_numeric('myplayed_or_skipped_times', T_('# Played or Skipped by Me'), 'numeric', $t_play_data);
+        $rule_type[] = $this->_get_rule_numeric('recent_played', T_('Recently Played'), 'recent_played', $t_play_data);
 
         $t_genre = T_('Genre');
-        $this->_add_type_text('genre', $t_genre, $t_genre);
-        $this->_add_type_text('song_genre', T_('Song Genre'), $t_genre);
-        $this->_add_type_boolean('no_genre', T_('No Genre'), 'is_true', $t_genre);
-        $this->_add_type_numeric('genre_count_song', T_('Song Count'), 'numeric', $t_genre);
-        $this->_add_type_numeric('genre_count_album', T_('Album Count'), 'numeric', $t_genre);
-        $this->_add_type_numeric('genre_count_artist', T_('Artist Count'), 'numeric', $t_genre);
+        $rule_type[] = $this->_get_rule_text('genre', $t_genre, $t_genre);
+        $rule_type[] = $this->_get_rule_text('song_genre', T_('Song Genre'), $t_genre);
+        $rule_type[] = $this->_get_rule_boolean('no_genre', T_('No Genre'), 'is_true', $t_genre);
+        $rule_type[] = $this->_get_rule_numeric('genre_count_song', T_('Song Count'), 'numeric', $t_genre);
+        $rule_type[] = $this->_get_rule_numeric('genre_count_album', T_('Album Count'), 'numeric', $t_genre);
+        $rule_type[] = $this->_get_rule_numeric('genre_count_artist', T_('Artist Count'), 'numeric', $t_genre);
 
         $t_playlists = T_('Playlists');
         $playlists   = Playlist::get_playlist_array($this->user);
         if ($playlists !== []) {
-            $this->_add_type_select('playlist', T_('Playlist'), 'boolean_subsearch', $playlists, $t_playlists);
+            $rule_type[] = $this->_get_rule_select('playlist', T_('Playlist'), 'boolean_subsearch', $playlists, $t_playlists);
         }
 
         $playlists = self::get_search_array($this->user);
         if ($playlists !== []) {
-            $this->_add_type_select('smartplaylist', T_('Smart Playlist'), 'boolean_subsearch', $playlists, $t_playlists);
+        $t_file_data = T_('File Data');
+            $rule_type[] = $this->_get_rule_select('smartplaylist', T_('Smart Playlist'), 'boolean_subsearch', $playlists, $t_playlists);
         }
 
-        $this->_add_type_text('playlist_name', T_('Playlist Name'), $t_playlists);
+        $rule_type[] = $this->_get_rule_text('playlist_name', T_('Playlist Name'), $t_playlists);
 
-        $t_file_data = T_('File Data');
-        $this->_add_type_text('file', T_('Filename'), $t_file_data);
-        $this->_add_type_date('added', T_('Date Added'), $t_file_data);
-        $this->_add_type_date('updated', T_('Date Updated'), $t_file_data);
-        $this->_add_type_boolean('has_image', T_('Local Image'), 'boolean', $t_file_data);
-        $this->_add_type_numeric('image_width', T_('Image Width'), 'numeric', $t_file_data);
-        $this->_add_type_numeric('image_height', T_('Image Height'), 'numeric', $t_file_data);
-        $this->_add_type_numeric('recent_added', T_('Recently Added'), 'recent_added', $t_file_data);
-        $this->_add_type_numeric('days_added', T_('Added'), 'days', $t_file_data);
-        $this->_add_type_boolean('possible_duplicate', T_('Possible Duplicate'), 'is_true', $t_file_data);
-        $this->_add_type_boolean('duplicate_tracks', T_('Duplicate Album Tracks'), 'is_true', $t_file_data);
-        $this->_add_type_boolean('duplicate_mbid_group', T_('Duplicate MusicBrainz Release Group'), 'is_true', $t_file_data);
+        $rule_type[] = $this->_get_rule_text('file', T_('Filename'), $t_file_data);
+        $rule_type[] = $this->_get_rule_date('added', T_('Date Added'), $t_file_data);
+        $rule_type[] = $this->_get_rule_date('updated', T_('Date Updated'), $t_file_data);
+        $rule_type[] = $this->_get_rule_boolean('has_image', T_('Local Image'), 'boolean', $t_file_data);
+        $rule_type[] = $this->_get_rule_numeric('image_width', T_('Image Width'), 'numeric', $t_file_data);
+        $rule_type[] = $this->_get_rule_numeric('image_height', T_('Image Height'), 'numeric', $t_file_data);
+        $rule_type[] = $this->_get_rule_numeric('recent_added', T_('Recently Added'), 'recent_added', $t_file_data);
+        $rule_type[] = $this->_get_rule_numeric('days_added', T_('Added'), 'days', $t_file_data);
+        $rule_type[] = $this->_get_rule_boolean('possible_duplicate', T_('Possible Duplicate'), 'is_true', $t_file_data);
+        $rule_type[] = $this->_get_rule_boolean('duplicate_tracks', T_('Duplicate Album Tracks'), 'is_true', $t_file_data);
+        $rule_type[] = $this->_get_rule_boolean('duplicate_mbid_group', T_('Duplicate MusicBrainz Release Group'), 'is_true', $t_file_data);
         $catalogs = [];
         foreach (Catalog::get_catalogs('music', $this->user) as $catid) {
             $catalog = Catalog::create_from_id($catid);
@@ -801,210 +885,247 @@ class Search extends playlist_object
         }
 
         if ($catalogs !== []) {
-            $this->_add_type_select('catalog', T_('Catalog'), 'boolean_numeric', $catalogs, $t_file_data);
+            $rule_type[] = $this->_get_rule_select('catalog', T_('Catalog'), 'boolean_numeric', $catalogs, $t_file_data);
         }
 
         $t_musicbrainz = T_('MusicBrainz');
-        $this->_add_type_text('mbid', T_('MusicBrainz ID'), $t_musicbrainz);
-        $this->_add_type_text('mbid_artist', T_('MusicBrainz ID (Artist)'), $t_musicbrainz);
-        $this->_add_type_text('mbid_song', T_('MusicBrainz ID (Song)'), $t_musicbrainz);
+        $rule_type[] = $this->_get_rule_text('mbid', T_('MusicBrainz ID'), $t_musicbrainz);
+        $rule_type[] = $this->_get_rule_text('mbid_artist', T_('MusicBrainz ID (Artist)'), $t_musicbrainz);
+        $rule_type[] = $this->_get_rule_text('mbid_song', T_('MusicBrainz ID (Song)'), $t_musicbrainz);
+
+        return $rule_type;
     }
 
     /**
-     * _set_types_video
+     * _get_types_video
      *
      * this is where all the available rules for videos are defined
+     * @return array<int, array<string, mixed>>
      */
-    private function _set_types_video(): void
+    private function _get_types_video(): array
     {
-        $this->_add_type_text('file', T_('Filename'));
+        $rule_type = [];
+
+        $rule_type[] = $this->_get_rule_text('file', T_('Filename'));
+
+        return $rule_type;
     }
 
     /**
-     * _set_types_playlist
+     * _get_types_playlist
      *
      * this is where all the available rules for playlists are defined
+     * @return array<int, array<string, mixed>>
      */
-    private function _set_types_playlist(): void
+    private function _get_types_playlist(): array
     {
+        $rule_type = [];
+
         $t_playlist = T_('Playlist');
-        $this->_add_type_text('title', T_('Name'), $t_playlist);
+        $rule_type[] = $this->_get_rule_text('title', T_('Name'), $t_playlist);
         $playlist_types = [
             0 => T_('public'),
             1 => T_('private'),
         ];
-        $this->_add_type_select('type', T_('Type'), 'boolean_numeric', $playlist_types, $t_playlist);
+        $rule_type[] = $this->_get_rule_select('type', T_('Type'), 'boolean_numeric', $playlist_types, $t_playlist);
         $users = $this->getUserRepository()->getValidArray();
-        $this->_add_type_select('owner', T_('Owner'), 'user_numeric', $users, $t_playlist);
-        $this->_add_type_numeric('id', T_('Database ID'), 'numeric', $t_playlist);
+        $rule_type[] = $this->_get_rule_select('owner', T_('Owner'), 'user_numeric', $users, $t_playlist);
+        $rule_type[] = $this->_get_rule_numeric('id', T_('Database ID'), 'numeric', $t_playlist);
+
+        return $rule_type;
     }
 
     /**
-     * _set_types_podcast
+     * _get_types_podcast
      *
      * this is where all the available rules for podcasts are defined
+     * @return array<int, array<string, mixed>>
      */
-    private function _set_types_podcast(): void
+    private function _get_types_podcast(): array
     {
+        $rule_type = [];
+
         $t_podcasts = T_('Podcast');
-        $this->_add_type_text('title', T_('Name'), $t_podcasts);
-        $this->_add_type_numeric('episode_count', T_('Episode Count'), 'numeric', $t_podcasts);
-        $this->_add_type_numeric('id', T_('Database ID'), 'numeric', $t_podcasts);
+        $rule_type[] = $this->_get_rule_text('title', T_('Name'), $t_podcasts);
+        $rule_type[] = $this->_get_rule_numeric('episode_count', T_('Episode Count'), 'numeric', $t_podcasts);
+        $rule_type[] = $this->_get_rule_numeric('id', T_('Database ID'), 'numeric', $t_podcasts);
 
         $t_podcast_episodes = T_('Podcast Episodes');
-        $this->_add_type_text('podcast_episode', T_('Podcast Episode'), $t_podcast_episodes);
+        $rule_type[] = $this->_get_rule_text('podcast_episode', T_('Podcast Episode'), $t_podcast_episodes);
         $episode_states = [
             0 => T_('skipped'),
             1 => T_('pending'),
             2 => T_('completed'),
         ];
-        $this->_add_type_select('state', T_('Status'), 'boolean_numeric', $episode_states, $t_podcast_episodes);
-        $this->_add_type_numeric('time', T_('Length (in minutes)'), 'numeric', $t_podcast_episodes);
+        $rule_type[] = $this->_get_rule_select('state', T_('Status'), 'boolean_numeric', $episode_states, $t_podcast_episodes);
+        $rule_type[] = $this->_get_rule_numeric('time', T_('Length (in minutes)'), 'numeric', $t_podcast_episodes);
 
-        $t_ratings = T_('Ratings');
         if (AmpConfig::get('ratings')) {
-            $this->_add_type_select('myrating', T_('My Rating'), 'numeric', $this->stars, $t_ratings);
-            $this->_add_type_select('rating', T_('Rating (Average)'), 'numeric', $this->stars, $t_ratings);
-            $this->_add_type_select('podcastrating', T_('My Rating (Podcast)'), 'numeric', $this->stars, $t_ratings);
-            $this->_add_type_select('podcast_episoderating', T_('My Rating (Podcast Episode)'), 'numeric', $this->stars, $t_ratings);
-            $this->_add_type_boolean('my_flagged_podcast', T_('My Favorite Podcasts'), 'boolean', $t_ratings);
-            $this->_add_type_boolean('my_flagged_podcast_episode', T_('My Favorite Podcast Episodes'), 'boolean', $t_ratings);
-            $this->_add_type_numeric('weight_podcast', T_('Podcast popularity score'), 'numeric', $t_ratings);
-            $this->_add_type_numeric('weight_podcast_episode', T_('Podcast Episode popularity score'), 'numeric', $t_ratings);
-            $this->_add_type_text('favorite', T_('Favorites'), $t_ratings);
+            $t_ratings = T_('Ratings');
+            $rule_type[] = $this->_get_rule_select('myrating', T_('My Rating'), 'numeric', $this->stars, $t_ratings);
+            $rule_type[] = $this->_get_rule_select('rating', T_('Rating (Average)'), 'numeric', $this->stars, $t_ratings);
+            $rule_type[] = $this->_get_rule_select('podcastrating', T_('My Rating (Podcast)'), 'numeric', $this->stars, $t_ratings);
+            $rule_type[] = $this->_get_rule_select('podcast_episoderating', T_('My Rating (Podcast Episode)'), 'numeric', $this->stars, $t_ratings);
+            $rule_type[] = $this->_get_rule_boolean('my_flagged_podcast', T_('My Favorite Podcasts'), 'boolean', $t_ratings);
+            $rule_type[] = $this->_get_rule_boolean('my_flagged_podcast_episode', T_('My Favorite Podcast Episodes'), 'boolean', $t_ratings);
+            $rule_type[] = $this->_get_rule_numeric('weight_podcast', T_('Podcast popularity score'), 'numeric', $t_ratings);
+            $rule_type[] = $this->_get_rule_numeric('weight_podcast_episode', T_('Podcast Episode popularity score'), 'numeric', $t_ratings);
+            $rule_type[] = $this->_get_rule_text('favorite', T_('Favorites'), $t_ratings);
             $users = $this->getUserRepository()->getValidArray();
-            $this->_add_type_select('other_user', T_('Another User'), 'user_numeric', $users, $t_ratings);
+            $rule_type[] = $this->_get_rule_select('other_user', T_('Another User'), 'user_numeric', $users, $t_ratings);
         }
 
         $t_play_data = T_('Play History');
         /* HINT: Number of times object has been played */
-        $this->_add_type_numeric('played_times', T_('# Played'), 'numeric', $t_play_data);
+        $rule_type[] = $this->_get_rule_numeric('played_times', T_('# Played'), 'numeric', $t_play_data);
         /* HINT: Number of times object has been skipped */
-        $this->_add_type_numeric('skipped_times', T_('# Skipped'), 'numeric', $t_play_data);
+        $rule_type[] = $this->_get_rule_numeric('skipped_times', T_('# Skipped'), 'numeric', $t_play_data);
         /* HINT: Number of times object has been played OR skipped */
-        $this->_add_type_numeric('played_or_skipped_times', T_('# Played or Skipped'), 'numeric', $t_play_data);
-        $this->_add_type_numeric('last_play', T_('My Last Play'), 'days', $t_play_data);
-        $this->_add_type_numeric('last_skip', T_('My Last Skip'), 'days', $t_play_data);
-        $this->_add_type_numeric('last_play_or_skip', T_('My Last Play or Skip'), 'days', $t_play_data);
-        $this->_add_type_boolean('played', T_('Played'), 'boolean', $t_play_data);
-        $this->_add_type_boolean('myplayed', T_('Played by Me'), 'boolean', $t_play_data);
+        $rule_type[] = $this->_get_rule_numeric('played_or_skipped_times', T_('# Played or Skipped'), 'numeric', $t_play_data);
+        $rule_type[] = $this->_get_rule_numeric('last_play', T_('My Last Play'), 'days', $t_play_data);
+        $rule_type[] = $this->_get_rule_numeric('last_skip', T_('My Last Skip'), 'days', $t_play_data);
+        $rule_type[] = $this->_get_rule_numeric('last_play_or_skip', T_('My Last Play or Skip'), 'days', $t_play_data);
+        $rule_type[] = $this->_get_rule_boolean('played', T_('Played'), 'boolean', $t_play_data);
+        $rule_type[] = $this->_get_rule_boolean('myplayed', T_('Played by Me'), 'boolean', $t_play_data);
         /* HINT: Number of times object has been played */
-        $this->_add_type_numeric('myplayed_times', T_('# Played by Me'), 'numeric', $t_play_data);
+        $rule_type[] = $this->_get_rule_numeric('myplayed_times', T_('# Played by Me'), 'numeric', $t_play_data);
         /* HINT: Number of times object has been skipped */
-        $this->_add_type_numeric('myskipped_times', T_('# Skipped by Me'), 'numeric', $t_play_data);
+        $rule_type[] = $this->_get_rule_numeric('myskipped_times', T_('# Skipped by Me'), 'numeric', $t_play_data);
         /* HINT: Number of times object has been played OR skipped */
-        $this->_add_type_numeric('myplayed_or_skipped_times', T_('# Played or Skipped by Me'), 'numeric', $t_play_data);
-        $this->_add_type_numeric('recent_played', T_('Recently Played'), 'recent_played', $t_play_data);
+        $rule_type[] = $this->_get_rule_numeric('myplayed_or_skipped_times', T_('# Played or Skipped by Me'), 'numeric', $t_play_data);
+        $rule_type[] = $this->_get_rule_numeric('recent_played', T_('Recently Played'), 'recent_played', $t_play_data);
 
         $t_file_data = T_('File Data');
-        $this->_add_type_text('file', T_('Filename'), $t_file_data);
-        $this->_add_type_date('pubdate', T_('Publication Date'), $t_file_data);
-        $this->_add_type_date('added', T_('Date Added'), $t_file_data);
-        $this->_add_type_date('updated', T_('Date Updated'), $t_file_data);
-        $this->_add_type_numeric('days_added', T_('Added'), 'days', $t_file_data);
-        $this->_add_type_numeric('days_updated', T_('Updated'), 'days', $t_file_data);
+        $rule_type[] = $this->_get_rule_text('file', T_('Filename'), $t_file_data);
+        $rule_type[] = $this->_get_rule_date('pubdate', T_('Publication Date'), $t_file_data);
+        $rule_type[] = $this->_get_rule_date('added', T_('Date Added'), $t_file_data);
+        $rule_type[] = $this->_get_rule_date('updated', T_('Date Updated'), $t_file_data);
+        $rule_type[] = $this->_get_rule_numeric('days_added', T_('Added'), 'days', $t_file_data);
+        $rule_type[] = $this->_get_rule_numeric('days_updated', T_('Updated'), 'days', $t_file_data);
+
+        return $rule_type;
     }
 
     /**
-     * _set_types_podcast_episode
+     * _get_types_podcast_episode
      *
      * this is where all the available rules for podcast_episodes are defined
+     * @return array<int, array<string, mixed>>
      */
-    private function _set_types_podcast_episode(): void
+    private function _get_types_podcast_episode(): array
     {
         $t_podcast_episodes = T_('Podcast Episode');
-        $this->_add_type_text('title', T_('Name'), $t_podcast_episodes);
-        $this->_add_type_text('podcast', T_('Podcast'), $t_podcast_episodes);
+        $rule_type = [];
+
+        $rule_type[] = $this->_get_rule_text('title', T_('Name'), $t_podcast_episodes);
+        $rule_type[] = $this->_get_rule_text('podcast', T_('Podcast'), $t_podcast_episodes);
         $episode_states = [
             0 => T_('skipped'),
             1 => T_('pending'),
             2 => T_('completed'),
         ];
-        $this->_add_type_select('state', T_('Status'), 'boolean_numeric', $episode_states, $t_podcast_episodes);
-        $this->_add_type_numeric('time', T_('Length (in minutes)'), 'numeric', $t_podcast_episodes);
-        $this->_add_type_numeric('id', T_('Database ID'), 'numeric', $t_podcast_episodes);
+        $rule_type[] = $this->_get_rule_select('state',T_('Status'), 'boolean_numeric', $episode_states, $t_podcast_episodes);
+        $rule_type[] = $this->_get_rule_numeric('time', T_('Length (in minutes)'), 'numeric', $t_podcast_episodes);
+        $rule_type[] = $this->_get_rule_numeric('id', T_('Database ID'), 'numeric', $t_podcast_episodes);
 
-        $t_ratings = T_('Ratings');
         if (AmpConfig::get('ratings')) {
-            $this->_add_type_select('myrating', T_('My Rating'), 'numeric', $this->stars, $t_ratings);
-            $this->_add_type_select('rating', T_('Rating (Average)'), 'numeric', $this->stars, $t_ratings);
-            $this->_add_type_select('podcastrating', T_('My Rating (Podcast)'), 'numeric', $this->stars, $t_ratings);
-            $this->_add_type_select('podcast_episoderating', T_('My Rating (Podcast Episode)'), 'numeric', $this->stars, $t_ratings);
-            $this->_add_type_boolean('my_flagged_podcast', T_('My Favorite Podcasts'), 'boolean', $t_ratings);
-            $this->_add_type_boolean('my_flagged_podcast_episode', T_('My Favorite Podcast Episodes'), 'boolean', $t_ratings);
-            $this->_add_type_numeric('weight_podcast', T_('Podcast popularity score'), 'numeric', $t_ratings);
-            $this->_add_type_numeric('weight_podcast_episode', T_('Podcast Episode popularity score'), 'numeric', $t_ratings);
-            $this->_add_type_text('favorite', T_('Favorites'), $t_ratings);
+            $t_ratings = T_('Ratings');
+            $rule_type[] = $this->_get_rule_select('myrating', T_('My Rating'), 'numeric', $this->stars, $t_ratings);
+            $rule_type[] = $this->_get_rule_select('rating', T_('Rating (Average)'), 'numeric', $this->stars, $t_ratings);
+            $rule_type[] = $this->_get_rule_select('podcastrating', T_('My Rating (Podcast)'), 'numeric', $this->stars, $t_ratings);
+            $rule_type[] = $this->_get_rule_select('podcast_episoderating', T_('My Rating (Podcast Episode)'), 'numeric', $this->stars, $t_ratings);
+            $rule_type[] = $this->_get_rule_boolean('my_flagged_podcast', T_('My Favorite Podcasts'), 'boolean', $t_ratings);
+            $rule_type[] = $this->_get_rule_boolean('my_flagged_podcast_episode', T_('My Favorite Podcast Episodes'), 'boolean', $t_ratings);
+            $rule_type[] = $this->_get_rule_numeric('weight_podcast', T_('Podcast popularity score'), 'numeric', $t_ratings);
+            $rule_type[] = $this->_get_rule_numeric('weight_podcast_episode', T_('Podcast Episode popularity score'), 'numeric', $t_ratings);
+            $rule_type[] = $this->_get_rule_text('favorite', T_('Favorites'), $t_ratings);
             $users = $this->getUserRepository()->getValidArray();
-            $this->_add_type_select('other_user', T_('Another User'), 'user_numeric', $users, $t_ratings);
+            $rule_type[] = $this->_get_rule_select('other_user', T_('Another User'), 'user_numeric', $users, $t_ratings);
         }
 
         $t_play_data = T_('Play History');
         /* HINT: Number of times object has been played */
-        $this->_add_type_numeric('played_times', T_('# Played'), 'numeric', $t_play_data);
+        $rule_type[] = $this->_get_rule_numeric('played_times', T_('# Played'), 'numeric', $t_play_data);
         /* HINT: Number of times object has been skipped */
-        $this->_add_type_numeric('skipped_times', T_('# Skipped'), 'numeric', $t_play_data);
+        $rule_type[] = $this->_get_rule_numeric('skipped_times', T_('# Skipped'), 'numeric', $t_play_data);
         /* HINT: Number of times object has been played OR skipped */
-        $this->_add_type_numeric('played_or_skipped_times', T_('# Played or Skipped'), 'numeric', $t_play_data);
-        $this->_add_type_numeric('last_play', T_('My Last Play'), 'days', $t_play_data);
-        $this->_add_type_numeric('last_skip', T_('My Last Skip'), 'days', $t_play_data);
-        $this->_add_type_numeric('last_play_or_skip', T_('My Last Play or Skip'), 'days', $t_play_data);
-        $this->_add_type_boolean('played', T_('Played'), 'boolean', $t_play_data);
-        $this->_add_type_boolean('myplayed', T_('Played by Me'), 'boolean', $t_play_data);
+        $rule_type[] = $this->_get_rule_numeric('played_or_skipped_times', T_('# Played or Skipped'), 'numeric', $t_play_data);
+        $rule_type[] = $this->_get_rule_numeric('last_play', T_('My Last Play'), 'days', $t_play_data);
+        $rule_type[] = $this->_get_rule_numeric('last_skip', T_('My Last Skip'), 'days', $t_play_data);
+        $rule_type[] = $this->_get_rule_numeric('last_play_or_skip', T_('My Last Play or Skip'), 'days', $t_play_data);
+        $rule_type[] = $this->_get_rule_boolean('played', T_('Played'), 'boolean', $t_play_data);
+        $rule_type[] = $this->_get_rule_boolean('myplayed', T_('Played by Me'), 'boolean', $t_play_data);
         /* HINT: Number of times object has been played */
-        $this->_add_type_numeric('myplayed_times', T_('# Played by Me'), 'numeric', $t_play_data);
+        $rule_type[] = $this->_get_rule_numeric('myplayed_times', T_('# Played by Me'), 'numeric', $t_play_data);
         /* HINT: Number of times object has been skipped */
-        $this->_add_type_numeric('myskipped_times', T_('# Skipped by Me'), 'numeric', $t_play_data);
+        $rule_type[] = $this->_get_rule_numeric('myskipped_times', T_('# Skipped by Me'), 'numeric', $t_play_data);
         /* HINT: Number of times object has been played OR skipped */
-        $this->_add_type_numeric('myplayed_or_skipped_times', T_('# Played or Skipped by Me'), 'numeric', $t_play_data);
-        $this->_add_type_numeric('recent_played', T_('Recently Played'), 'recent_played', $t_play_data);
+        $rule_type[] = $this->_get_rule_numeric('myplayed_or_skipped_times', T_('# Played or Skipped by Me'), 'numeric', $t_play_data);
+        $rule_type[] = $this->_get_rule_numeric('recent_played', T_('Recently Played'), 'recent_played', $t_play_data);
 
         $t_file_data = T_('File Data');
-        $this->_add_type_text('file', T_('Filename'), $t_file_data);
-        $this->_add_type_date('pubdate', T_('Publication Date'), $t_file_data);
-        $this->_add_type_date('added', T_('Date Added'), $t_file_data);
-        $this->_add_type_date('updated', T_('Date Updated'), $t_file_data);
-        $this->_add_type_numeric('days_added', T_('Added'), 'days', $t_file_data);
-        $this->_add_type_numeric('days_updated', T_('Updated'), 'days', $t_file_data);
+        $rule_type[] = $this->_get_rule_text('file', T_('Filename'), $t_file_data);
+        $rule_type[] = $this->_get_rule_date('pubdate', T_('Publication Date'), $t_file_data);
+        $rule_type[] = $this->_get_rule_date('added', T_('Date Added'), $t_file_data);
+        $rule_type[] = $this->_get_rule_date('updated', T_('Date Updated'), $t_file_data);
+        $rule_type[] = $this->_get_rule_numeric('days_added', T_('Added'), 'days', $t_file_data);
+        $rule_type[] = $this->_get_rule_numeric('days_updated', T_('Updated'), 'days', $t_file_data);
+
+        return $rule_type;
     }
 
     /**
-     * _set_types_label
+     * _get_types_label
      *
      * this is where all the available rules for labels are defined
+     * @return array<int, array<string, mixed>>
      */
-    private function _set_types_label(): void
+    private function _get_types_label(): array
     {
+        $rule_type = [];
+
         $t_label = T_('Label');
-        $this->_add_type_text('title', T_('Name'), $t_label);
-        $this->_add_type_text('category', T_('Category'), $t_label);
-        $this->_add_type_numeric('id', T_('Database ID'), 'numeric', $t_label);
+        $rule_type[] = $this->_get_rule_text('title', T_('Name'), $t_label);
+        $rule_type[] = $this->_get_rule_text('category', T_('Category'), $t_label);
+        $rule_type[] = $this->_get_rule_numeric('id', T_('Database ID'), 'numeric', $t_label);
+
+        return $rule_type;
     }
 
     /**
-     * _set_types_user
+     * _get_types_user
      *
      * this is where all the available rules for users are defined
+     * @return array<int, array<string, mixed>>
      */
-    private function _set_types_user(): void
+    private function _get_types_user(): array
     {
-        $this->_add_type_text('username', T_('Username'));
+        $rule_type = [];
+
+        $rule_type[] = $this->_get_rule_text('username', T_('Username'));
+
+        return $rule_type;
     }
 
     /**
-     * _set_types_tag
+     * _get_types_tag
      *
      * this is where all the available rules for Genres are defined
+     * @return array<int, array<string, mixed>>
      */
-    private function _set_types_tag(): void
+    private function _get_types_tag(): array
     {
-        $this->_add_type_text('title', T_('Genre'));
-        $this->_add_type_numeric('album_count', T_('Album Count'));
-        $this->_add_type_numeric('artist_count', T_('Album Count'));
-        $this->_add_type_numeric('song_count', T_('Song Count'));
+        $rule_type = [];
+
+        $rule_type[] = $this->_get_rule_text('title', T_('Genre'));
+        $rule_type[] = $this->_get_rule_numeric('album_count', T_('Album Count'));
+        $rule_type[] = $this->_get_rule_numeric('artist_count', T_('Album Count'));
+        $rule_type[] = $this->_get_rule_numeric('song_count', T_('Song Count'));
         if (AmpConfig::get('video')) {
-            $this->_add_type_numeric('video_count', T_('Video Count'));
+            $rule_type[] = $this->_get_rule_numeric('video_count', T_('Video Count'));
         }
+
+        return $rule_type;
     }
 
     /**
@@ -1512,7 +1633,7 @@ class Search extends playlist_object
      * Iterate over $this->types to validate the rule name and return the rule type
      * (text, date, etc)
      */
-    private function _get_rule_name(string $name): string
+    private function _set_rule_name(string $name): string
     {
         // check that the rule you sent is not an alias (needed for pulling details from the rule)
         switch ($this->objectType) {
@@ -1716,27 +1837,25 @@ class Search extends playlist_object
      * Iterate over $this->types to validate the rule name and return the rule type
      * (text, date, etc)
      */
-    public function get_rule_type(string $name): ?string
+    public function get_rule_type_by_name(string $name): ?string
     {
         //debug_event(self::class, 'get_rule_type: ' . $name, 5);
-        foreach ($this->types as $type) {
-            if ($type['name'] == $name) {
-                return $type['type'];
-            }
-        }
-
-        return null;
-    }
-
-    /**
-     * get_rule_types
-     *
-     * Return rule list for the current search type
-     * @return array<int, array<string, mixed>>
-     */
-    public function get_rule_types(): array
-    {
-        return $this->types;
+        return match ($name) {
+            'anywhere', 'title', 'album', 'song', 'song_artist', 'album_artist', 'composer', 'comment', 'lyrics', 'label', 'file', 'playlist_name', 'mbid', 'mbid_album', 'mbid_artist', 'mbid_song', 'genre', 'album_genre', 'artist_genre', 'song_genre', 'podcast', 'podcast_episode', 'category', 'username' => 'text',
+            'id', 'track', 'year', 'original_year', 'time', 'disk_count', 'song_count', 'album_count', 'artist_count', 'episode_count', 'played_times', 'skipped_times', 'played_or_skipped_times', 'myplayed_times', 'myskipped_times', 'myplayed_or_skipped_times', 'play_skip_ratio' => 'numeric',
+            'myrating', 'rating', 'albumrating', 'artistrating', 'songrating', 'podcastrating', 'podcast_episoderating' => 'numeric',
+            'played', 'myplayed', 'myplayedalbum', 'myplayedartist', 'my_flagged_song', 'my_flagged_album', 'my_flagged_artist', 'my_flagged_podcast', 'my_flagged_podcast_episode' => 'boolean',
+            'none', 'no_genre', 'no_license', 'possible_duplicate', 'duplicate_tracks', 'possible_duplicate_album', 'orphaned_album' => 'is_true',
+            'last_play', 'last_skip', 'last_play_or_skip', 'days_added', 'days_updated' => 'days',
+            'recent_played' => 'recent_played',
+            'recent_added' => 'recent_added', 'recent_updated' => 'recent_updated',
+            'playlist', 'smartplaylist' => 'boolean_subsearch',
+            'catalog', 'license', 'state' => 'boolean_numeric',
+            'other_user', 'other_user_album', 'other_user_artist' => 'user_numeric',
+            'metadata' => 'multiple',
+            'added', 'updated', 'pubdate' => 'date',
+            default => null,
+        };
     }
 
     /**
@@ -1823,8 +1942,8 @@ class Search extends playlist_object
 
         // get the data for each rule group the user sent
         foreach ($user_rules as $ruleID) {
-            $rule_name = $this->_get_rule_name($data["rule_" . $ruleID]);
-            $rule_type = $this->get_rule_type($rule_name);
+            $rule_name = $this->_set_rule_name($data["rule_" . $ruleID]);
+            $rule_type = $this->get_rule_type_by_name($rule_name);
             if ($rule_type === null) {
                 continue;
             }

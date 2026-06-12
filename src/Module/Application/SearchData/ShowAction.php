@@ -55,7 +55,7 @@ final readonly class ShowAction implements ApplicationActionInterface
         );
 
         $content = 'var types = ';
-        $content .= $this->arrayToJSON($search->types) . ";\n";
+        $content .= $this->arrayToJSON($search->get_rule_types()) . ";\n";
         $content .= 'var basetypes = ';
         $content .= $this->arrayToJSON($search->get_basetypes(true)) . ";\n";
         $content .= sprintf(
