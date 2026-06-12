@@ -218,17 +218,17 @@ class Browse extends Query
      * add_supplemental_object
      * Legacy function, need to find a better way to do that
      */
-    public function add_supplemental_object(string $class, int $uid): bool
+    public function add_supplemental_object(string $name, Playlist|Search $object): bool
     {
-        $_SESSION['browse']['supplemental'][$this->id][$class] = $uid;
+        $_SESSION['browse']['supplemental'][$this->id][$name] = $object;
 
         return true;
     }
 
     /**
      * get_supplemental_objects
-     * This returns an array of 'class', 'id' for additional objects that
-     * need to be created before we start this whole browsing thing.
+     * This returns an object so we can reuse it again.
+     * @return array<string, Playlist|Search>
      */
     public function get_supplemental_objects(): array
     {
@@ -320,9 +320,8 @@ class Browse extends Query
         $extra_objects = $this->get_supplemental_objects();
         $browse        = $this;
 
-        foreach ($extra_objects as $type => $extra_id) {
-            $className = ObjectTypeToClassNameMapper::map($type);
-            ${$type}   = new $className($extra_id);
+        foreach ($extra_objects as $name => $extra) {
+            ${$name} = $extra;
         }
 
         $match = '';
