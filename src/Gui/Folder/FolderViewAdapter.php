@@ -44,8 +44,6 @@ use Ampache\Repository\Model\Folder;
 use Ampache\Repository\Model\Art;
 use Ampache\Repository\Model\Catalog;
 use Ampache\Repository\Model\Label;
-use Ampache\Repository\Model\library_item;
-use Ampache\Repository\Model\Media;
 use Ampache\Repository\Model\ModelFactoryInterface;
 use Ampache\Repository\Model\Podcast_Episode;
 use Ampache\Repository\Model\Rating;
@@ -262,7 +260,7 @@ final readonly class FolderViewAdapter implements FolderViewAdapterInterface
     public function getDeletionUrl(): string
     {
         return sprintf(
-            '%s/' . $this->object_type . 's.php?action=%s&' . ($object_type === 'song' ? 'song_id' : $object_type) . '=%d',
+            '%s/' . $this->object_type . 's.php?action=%s&' . ($this->object_type === 'song' ? 'song_id' : $this->object_type) . '=%d',
             $this->configContainer->getWebPath(),
             DeleteAction::REQUEST_KEY,
             $this->object->getId()
@@ -312,17 +310,19 @@ final readonly class FolderViewAdapter implements FolderViewAdapterInterface
     public function getDisplayYear(): int
     {
         return ($this->configContainer->get('use_original_year') && $this->object->original_year)
-            ? $this->object->original_year
-            : $this->object->year;
+            ? $this->object->original_year ?? 0
+            : $this->object->year ?? 0;
     }
 
     public function getGenre(): string
     {
-        return $this->object->get_f_tags();
+        return (method_exists($this->object, 'get_f_tags')) ? $this->object->get_f_tags() : '';
     }
 
     public function getSongCount(): int
     {
-        return $this->object->song_count;
+        return (property_exists($this->object, 'object_count'))
+            ? $this->object->object_count
+            : ((property_exists($this->object, 'song_count')) ? $this->object?->song_count : 0);
     }
 }
