@@ -1638,8 +1638,7 @@ class Search extends playlist_object
     /**
      * _get_rule_name
      *
-     * Iterate over $this->types to validate the rule name and return the rule type
-     * (text, date, etc)
+     * Validate the rule name
      */
     private function _set_rule_name(string $name): string
     {
