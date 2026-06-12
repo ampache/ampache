@@ -69,7 +69,7 @@ final readonly class PlaylistAjaxHandler implements AjaxHandlerInterface
                 ob_start();
                 $browse = new Browse($browse_id);
                 $browse->set_type('playlist_media');
-                $browse->add_supplemental_object('playlist', $playlist->id);
+                $browse->add_supplemental_object('playlist', $playlist);
                 $browse->save_objects($object_ids);
                 $browse->show_objects($object_ids);
                 $browse->store();

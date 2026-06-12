@@ -48,7 +48,7 @@ $title  = ob_get_contents();
 $browse = new Browse();
 $browse->set_type('playlist_media');
 $browse->set_use_filters(false);
-$browse->add_supplemental_object('search', $playlist->id);
+$browse->add_supplemental_object('playlist', $playlist);
 $browse->set_static_content(false);
 ob_end_clean();
 Ui::show_box_top('<div id="smartplaylist_row_' . $playlist->id . '">' . $title . '</div>', 'box box_smartplaylist'); ?>
