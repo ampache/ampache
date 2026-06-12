@@ -69,8 +69,8 @@ $rating_text = T_('Rating');
 $action_text = T_('Actions');
 // mashup and grid view need different css
 $cel_cover   = "cel_cover";
-$cel_album   = "cel_album";
-$cel_artist  = "cel_artist";
+$cel_folder  = "cel_folder";
+$cel_parent  = "cel_parent";
 $cel_tags    = "cel_tags";
 $cel_counter = "cel_counter";
 $css_class   = '';
@@ -87,9 +87,9 @@ $rating_link = Ajax::text('?page=browse&action=set_sort&folder_id=' . $folder->i
             <th class="cel_play essential"></th>
             <th class="<?php echo $cel_cover; ?> optional"><?php echo T_('Art'); ?></th>
 </div>
-            <th class="<?php echo $cel_album; ?> essential persist"><?php echo $album_link; ?></th>
+            <th class="<?php echo $cel_folder; ?> essential persist"><?php echo $album_link; ?></th>
             <th class="cel_add essential"></th>
-            <th class="<?php echo $cel_artist; ?> essential"><?php echo $artist_link; ?></th>
+            <th class="<?php echo $cel_parent; ?> essential"><?php echo $artist_link; ?></th>
             <th class="cel_songs optional"><?php echo $songs_link; ?></th>
             <th class="cel_year essential"><?php echo $year_link; ?></th>
             <?php if ($show_played_times) { ?>
@@ -165,8 +165,8 @@ foreach ($objects as $object) {
             ->setContext('IS_SHOW_PLAYED_TIMES', $show_played_times)
             ->setContext('IS_SHOW_PLAYLIST_ADD', $show_playlist_add)
             ->setContext('CLASS_COVER', $cel_cover)
-            ->setContext('CLASS_ALBUM', $cel_album)
-            ->setContext('CLASS_ARTIST', $cel_artist)
+            ->setContext('CLASS_ALBUM', $cel_folder)
+            ->setContext('CLASS_ARTIST', $cel_parent)
             ->setContext('CLASS_TAGS', $cel_tags)
             ->setContext('CLASS_COUNTER', $cel_counter)
             ->setTemplate('folder_row.xhtml')
@@ -186,9 +186,9 @@ foreach ($objects as $object) {
         <tr class="th-bottom">
             <th class="cel_play"></th>
             <th class="<?php echo $cel_cover; ?>"><?php echo T_('Art'); ?></th>
-            <th class="<?php echo $cel_album; ?>"><?php echo $album_text; ?></th>
+            <th class="<?php echo $cel_folder; ?>"><?php echo $album_text; ?></th>
             <th class="cel_add"></th>
-            <th class="<?php echo $cel_artist; ?>"><?php echo $artist_text; ?></th>
+            <th class="<?php echo $cel_parent; ?>"><?php echo $artist_text; ?></th>
             <th class="cel_songs"><?php echo $songs_text; ?></th>
             <th class="cel_year"><?php echo $year_text; ?></th>
             <?php if ($show_played_times) { ?>
