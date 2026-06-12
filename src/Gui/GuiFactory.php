@@ -57,12 +57,16 @@ use Ampache\Module\Util\AjaxUriRetrieverInterface;
 use Ampache\Module\Util\ZipHandlerInterface;
 use Ampache\Repository\Model\Album;
 use Ampache\Repository\Model\AlbumDisk;
+use Ampache\Repository\Model\Artist;
 use Ampache\Repository\Model\Browse;
 use Ampache\Repository\Model\Catalog;
 use Ampache\Repository\Model\Folder;
+use Ampache\Repository\Model\Label;
 use Ampache\Repository\Model\ModelFactoryInterface;
 use Ampache\Repository\Model\Playlist;
+use Ampache\Repository\Model\Podcast_Episode;
 use Ampache\Repository\Model\Song;
+use Ampache\Repository\Model\Video;
 use Ampache\Repository\UpdateInfoRepositoryInterface;
 use Ampache\Repository\VideoRepositoryInterface;
 
@@ -128,8 +132,9 @@ final readonly class GuiFactory implements GuiFactoryInterface
 
     public function createFolderViewAdapter(
         GuiGatekeeperInterface $gatekeeper,
-        Browse $browse,
         Folder $folder,
+        Podcast_Episode|AlbumDisk|Video|Song|Album|Artist|Label|Folder $object,
+        string $object_type,
     ): FolderViewAdapterInterface {
         return new FolderViewAdapter(
             $this->configContainer,
@@ -137,8 +142,9 @@ final readonly class GuiFactory implements GuiFactoryInterface
             $this->zipHandler,
             $this->functionChecker,
             $gatekeeper,
-            $browse,
-            $folder
+            $folder,
+            $object,
+            $object_type,
         );
     }
 
