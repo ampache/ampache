@@ -399,7 +399,7 @@ class OpenSubsonic_Json_Data
      * A Podcast channel.
      * https://opensubsonic.netlify.app/docs/responses/podcastchannel/
      * @return array{
-     *     'id':string,
+     *     'id': string,
      *     'url': string,
      *     'title': string,
      *     'description': string,

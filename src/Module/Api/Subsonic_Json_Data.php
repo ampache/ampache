@@ -342,7 +342,7 @@ class Subsonic_Json_Data
      *
      * A Podcast channel.
      * @return array{
-     *     'id':string,
+     *     'id': string,
      *     'url': string,
      *     'title': string,
      *     'description': string,
