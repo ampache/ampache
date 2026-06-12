@@ -71,11 +71,11 @@ class Folder extends database_object implements
     /** @var array<int, array{object_type: LibraryItemEnum|null, object_id: int}>|null $children */
     public ?array $children = null;
 
-    /** @var int[] $artists */
-    public array $artists = [];
-
     /** @var int[] $albums */
     public array $albums = [];
+
+    /** @var int[] $artists */
+    public array $artists = [];
 
     /** @var int[] $podcasts */
     public array $podcasts = [];
@@ -413,8 +413,14 @@ class Folder extends database_object implements
     public function get_objects(): array
     {
         if (empty($this->children)) {
-            $sql        = "SELECT `object_id`, `object_type` FROM `folder_map` WHERE `folder_id` = ?;";
-            $db_results = Dba::read($sql, [$this->id]);
+            if ($this->getId() === -1) {
+                $sql = "SELECT `id` AS `object_id`, 'folder' AS `object_type` FROM `folder` WHERE `parent` IS NULL;";
+                $db_results = Dba::read($sql, [$this->id]);
+            } else {
+                $sql = "SELECT `object_id`, `object_type` FROM `folder_map` WHERE `folder_id` = ?;";
+                $db_results = Dba::read($sql, [$this->id]);
+            }
+
             $results    = [];
             while ($row = Dba::fetch_assoc($db_results)) {
                 $results[] = [
