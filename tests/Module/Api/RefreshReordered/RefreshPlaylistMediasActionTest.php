@@ -90,16 +90,12 @@ class RefreshPlaylistMediasActionTest extends MockeryTestCase
             ->withNoArgs()
             ->once()
             ->andReturn($playlistObjectIds);
-        $playlist->shouldReceive('getId')
-            ->withNoArgs()
-            ->once()
-            ->andReturn((int) $objectId);
 
         $browse->shouldReceive('set_type')
             ->with('playlist_media')
             ->once();
         $browse->shouldReceive('add_supplemental_object')
-            ->with('playlist', (int) $objectId)
+            ->with('playlist', $playlist)
             ->once();
         $browse->shouldReceive('set_static_content')
             ->with(true)
