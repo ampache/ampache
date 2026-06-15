@@ -230,7 +230,7 @@ if (AmpConfig::get('sociable') && !empty($owner_id)) {
 $browse->set_type('folder');
 $browse->set_simple_browse(true);
 $browse->set_skip_catalog_check(true);
-$browse->add_supplemental_object('folder', $folder->get_parent());
+$browse->add_supplemental_object('folder', $folder);
 $browse->set_limit(0);
 $browse->set_offset(0);
 $browse->set_sort('name', 'ASC', false);
