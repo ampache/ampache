@@ -34,6 +34,7 @@ use Ampache\Module\System\LegacyLogger;
 use Ampache\Module\Util\UiInterface;
 use Ampache\Repository\FolderRepositoryInterface;
 use Ampache\Repository\Model\Folder;
+use Ampache\Repository\Model\ModelFactoryInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Log\LoggerInterface;
@@ -43,6 +44,7 @@ final readonly class ShowAction implements ApplicationActionInterface
     public const string REQUEST_KEY = 'show';
 
     public function __construct(
+        private ModelFactoryInterface $modelFactory,
         private ConfigContainerInterface $configContainer,
         private UiInterface $ui,
         private LoggerInterface $logger,
@@ -61,6 +63,7 @@ final readonly class ShowAction implements ApplicationActionInterface
         $input = $request->getQueryParams();
 
         // lookup by ID
+        $user      = $gatekeeper->getUser() ?? $this->modelFactory->createUser(-1);
         $folder_id = (isset($input['folder'])) ? (int)$input['folder'] : -1;
         $folder    = ($folder_id > 0)
             ? $this->folderRepository->findById($folder_id)
@@ -77,10 +80,10 @@ final readonly class ShowAction implements ApplicationActionInterface
             return null;
         } elseif ($folder instanceof Folder) {
             $this->ui->show(
-                'show_folders.inc.php',
+                'show_folder.inc.php',
                 [
                     'folder' => $folder,
-                    'objects' => $folder->get_objects(),
+                    'user' => $user
                 ]
             );
 

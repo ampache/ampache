@@ -52,6 +52,7 @@ class Browse extends Query
         'broadcast',
         'catalog',
         'democratic',
+        'folder',
         'follower',
         'label',
         'license_hidden',
@@ -217,7 +218,7 @@ class Browse extends Query
      * add_supplemental_object
      * Legacy function, need to find a better way to do that
      */
-    public function add_supplemental_object(string $name, Playlist|Search $object): bool
+    public function add_supplemental_object(string $name, Playlist|Search|Folder $object): bool
     {
         $_SESSION['browse']['supplemental'][$this->id][$name] = $object;
 
@@ -227,7 +228,7 @@ class Browse extends Query
     /**
      * get_supplemental_objects
      * This returns an object so we can reuse it again.
-     * @return array<string, Playlist|Search>
+     * @return array<string, Playlist|Search|Folder>
      */
     public function get_supplemental_objects(): array
     {
@@ -450,6 +451,10 @@ class Browse extends Query
                 $browse->set_grid_view(false);
                 $box_title = $this->get_title(T_('Playlist Items') . $match);
                 $box_req   = Ui::find_template('show_playlist_medias.inc.php');
+                break;
+            case 'folder':
+                $box_title = $this->get_title(T_('Folders'));
+                $box_req   = Ui::find_template('show_folders.inc.php');
                 break;
             case 'playlist_localplay':
                 $browse->set_grid_view(false);

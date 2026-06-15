@@ -32,6 +32,7 @@ use Ampache\Module\Database\Query\ArtistQuery;
 use Ampache\Module\Database\Query\BroadcastQuery;
 use Ampache\Module\Database\Query\CatalogQuery;
 use Ampache\Module\Database\Query\DemocraticQuery;
+use Ampache\Module\Database\Query\FolderQuery;
 use Ampache\Module\Database\Query\FollowerQuery;
 use Ampache\Module\Database\Query\LabelQuery;
 use Ampache\Module\Database\Query\LicenseQuery;
@@ -453,6 +454,8 @@ class Query
                 return CatalogQuery::FILTERS;
             case 'democratic':
                 return DemocraticQuery::FILTERS;
+            case 'folder':
+                return FolderQuery::FILTERS;
             case 'follower':
                 return FollowerQuery::FILTERS;
             case 'label':
@@ -526,6 +529,9 @@ class Query
                 break;
             case 'democratic':
                 $this->queryType = new DemocraticQuery();
+                break;
+            case 'folder':
+                $this->queryType = new FolderQuery();
                 break;
             case 'follower':
                 $this->queryType = new FollowerQuery();
