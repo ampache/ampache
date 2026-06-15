@@ -179,7 +179,6 @@ use Ampache\Module\Application\Share\ExternalShareAction;
 use Ampache\Module\Application\Share\ShowDeleteAction;
 use Ampache\Module\Application\Shout\AddShoutAction;
 use Ampache\Module\Application\Shout\ShowAddShoutAction;
-use Ampache\Module\Application\SmartPlaylist\CreatePlaylistAction;
 use Ampache\Module\Application\SmartPlaylist\DeletePlaylistAction;
 use Ampache\Module\Application\SmartPlaylist\RefreshPlaylistAction;
 use Ampache\Module\Application\SmartPlaylist\UpdatePlaylistAction;
@@ -408,7 +407,6 @@ return [
     RefreshPlaylistAction::class => autowire(RefreshPlaylistAction::class),
     UpdatePlaylistAction::class => autowire(UpdatePlaylistAction::class),
     DeletePlaylistAction::class => autowire(DeletePlaylistAction::class),
-    CreatePlaylistAction::class => autowire(CreatePlaylistAction::class),
     Playlist\ShowAction::class => autowire(Playlist\ShowAction::class),
     SortTrackAction::class => autowire(SortTrackAction::class),
     RemoveDuplicatesAction::class => autowire(RemoveDuplicatesAction::class),
@@ -418,7 +416,6 @@ return [
     ShowImportPlaylistAction::class => autowire(ShowImportPlaylistAction::class),
     Playlist\DeletePlaylistAction::class => autowire(Playlist\DeletePlaylistAction::class),
     Playlist\RefreshPlaylistAction::class => autowire(Playlist\RefreshPlaylistAction::class),
-    Playlist\CreatePlaylistAction::class => autowire(Playlist\CreatePlaylistAction::class),
     Installation\DefaultAction::class => autowire(Installation\DefaultAction::class),
     UpdateUserAction::class => autowire(UpdateUserAction::class),
     UserAction::class => autowire(UserAction::class),
