@@ -33,7 +33,6 @@ use Ampache\Module\Playback\Stream_Playlist;
 use Ampache\Module\System\Core;
 use Ampache\Module\Util\Rss\Type\RssFeedTypeEnum;
 use Ampache\Module\Util\Ui;
-use Ampache\Module\Util\Upload;
 use Ampache\Module\Util\ZipHandlerInterface;
 use Ampache\Repository\Model\Art;
 use Ampache\Repository\Model\Browse;
