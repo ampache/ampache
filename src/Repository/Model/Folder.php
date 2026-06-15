@@ -285,7 +285,7 @@ class Folder extends database_object implements
 
     /**
      * get_parent
-     * @return null|array{object_type: LibraryItemEnum, object_id: int}
+     * @return null|Folder
      */
     public function get_parent(): ?array
     {
@@ -294,10 +294,7 @@ class Folder extends database_object implements
             return null;
         }
 
-        return [
-            'object_type' => LibraryItemEnum::FOLDER,
-            'object_id' => $parent->getId()
-        ];
+        return new Folder($parent->getId());
     }
 
     /**

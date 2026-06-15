@@ -67,7 +67,7 @@ $show_playlist_add = $access25;
 $directplay_limit  = AmpConfig::get('direct_play_limit', 500);
 
 if ($directplay_limit > 0) {
-    $show_playlist_add = ($folder->song_count <= $directplay_limit);
+    $show_playlist_add = ($folder->object_count <= $directplay_limit);
     if ($show_direct_play) {
         $show_direct_play = $show_playlist_add;
     }
