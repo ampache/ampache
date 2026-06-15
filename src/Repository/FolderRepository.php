@@ -108,14 +108,6 @@ final readonly class FolderRepository implements FolderRepositoryInterface
      */
     public function getPathName(int $folderId): string
     {
-        $result = $this->connection->query('SELECT`name` FROM `folder` WHERE `id` = ?', [$folderId]);
-
-        $folders = [];
-
-        while ($row = $result->fetch(PDO::FETCH_ASSOC)) {
-            $folders[(int) $row['id']] = $row['name'];
-        }
-
         $result = $this->connection->fetchOne('SELECT`name` FROM `folder` WHERE `id` = ?', [$folderId]);
 
         return $result ?: '';
