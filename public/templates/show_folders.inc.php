@@ -42,27 +42,25 @@ use Ampache\Repository\Model\Song;
 use Ampache\Repository\Model\User;
 use Ampache\Repository\Model\Video;
 
+/** @var Ampache\Repository\Model\Browse $browse */
 /** @var Ampache\Repository\Model\Folder $folder */
-/** @var array<int, array{object_type: LibraryItemEnum|null, object_id: int}> $objects */
+/** @var array<int, array{object_type: LibraryItemEnum|null, object_id: int}> $object_ids */
 
 $web_path = AmpConfig::get_web_path();
 
 $access25          = Access::check(AccessTypeEnum::INTERFACE, AccessLevelEnum::USER);
 $show_playlist_add = $access25;
 $show_direct_play  = AmpConfig::get('directplay');
-$directplay_limit  = AmpConfig::get('direct_play_limit', 0);
+$directplay_limit  = AmpConfig::get('direct_play_limit', 500);
 // album_row data and options
 $thcount           = 9;
 $show_ratings      = User::is_registered() && (AmpConfig::get('ratings'));
 $original_year     = AmpConfig::get('use_original_year');
 $hide_genres       = AmpConfig::get('hide_genres');
 $show_played_times = AmpConfig::get('show_played_times');
-$year_sort         = ($original_year) ? "&sort=original_year" : "&sort=year";
 // translate once
-$album_text  = T_('Album');
-$artist_text = T_('Album Artist');
+$folder_text = T_('Folder');
 $songs_text  = T_('Songs');
-$year_text   = T_('Year');
 $count_text  = T_('Played');
 $genres_text = T_('Genres');
 $rating_text = T_('Rating');
@@ -70,14 +68,11 @@ $action_text = T_('Actions');
 // mashup and grid view need different css
 $cel_cover   = "cel_cover";
 $cel_folder  = "cel_folder";
-$cel_parent  = "cel_parent";
 $cel_tags    = "cel_tags";
 $cel_counter = "cel_counter";
 $css_class   = '';
-$album_link  = Ajax::text('?page=browse&action=set_sort&folder_id=' . $folder->id . '&sort=name', $album_text, 'folder_sort_name');
-$artist_link = Ajax::text('?page=browse&action=set_sort&folder_id=' . $folder->id . '&sort=album_artist_album_sort', $artist_text, 'folder_sort_artist');
+$folder_link = Ajax::text('?page=browse&action=set_sort&folder_id=' . $folder->id . '&sort=name', $folder_text, 'folder_sort_name');
 $songs_link  = Ajax::text('?page=browse&action=set_sort&folder_id=' . $folder->id . '&sort=song_count', $songs_text, 'folder_sort_song_count');
-$year_link   = Ajax::text('?page=browse&action=set_sort&folder_id=' . $folder->id . $year_sort, $year_text, 'folder_sort_year');
 $count_link  = Ajax::text('?page=browse&action=set_sort&folder_id=' . $folder->id . '&sort=total_count', $count_text, 'folder_sort_total_count');
 $rating_link = Ajax::text('?page=browse&action=set_sort&folder_id=' . $folder->id . '&sort=rating', $rating_text, 'folder_sort_rating'); ?>
 <table class="tabledata striped-rows<?php echo $css_class; ?>" data-objecttype="album">
@@ -87,11 +82,9 @@ $rating_link = Ajax::text('?page=browse&action=set_sort&folder_id=' . $folder->i
             <th class="cel_play essential"></th>
             <th class="<?php echo $cel_cover; ?> optional"><?php echo T_('Art'); ?></th>
 </div>
-            <th class="<?php echo $cel_folder; ?> essential persist"><?php echo $album_link; ?></th>
+            <th class="<?php echo $cel_folder; ?> essential persist"><?php echo $folder_link; ?></th>
             <th class="cel_add essential"></th>
-            <th class="<?php echo $cel_parent; ?> essential"><?php echo $artist_link; ?></th>
             <th class="cel_songs optional"><?php echo $songs_link; ?></th>
-            <th class="cel_year essential"><?php echo $year_link; ?></th>
             <?php if ($show_played_times) { ?>
             <th class="<?php echo $cel_counter; ?> optional"><?php echo $count_link; ?></th>
             <?php } ?>
@@ -115,7 +108,7 @@ $guiFactory = $dic->get(GuiFactoryInterface::class);
 $gatekeeper = $dic->get(GatekeeperFactoryInterface::class)->createGuiGatekeeper();
 
 /* Foreach through the objects */
-foreach ($objects as $object) {
+foreach ($object_ids as $object) {
     $object_type = $object['object_type']?->value;
     $object_id   = $object['object_id'];
     $libitem     = null;
@@ -166,7 +159,6 @@ foreach ($objects as $object) {
             ->setContext('IS_SHOW_PLAYLIST_ADD', $show_playlist_add)
             ->setContext('CLASS_COVER', $cel_cover)
             ->setContext('CLASS_FOLDER', $cel_folder)
-            ->setContext('CLASS_PARENT', $cel_parent)
             ->setContext('CLASS_TAGS', $cel_tags)
             ->setContext('CLASS_COUNTER', $cel_counter)
             ->setTemplate('folder_row.xhtml')
@@ -176,7 +168,7 @@ foreach ($objects as $object) {
         </tr>
         <?php
 } ?>
-        <?php if (!count($objects)) { ?>
+        <?php if (!count($object_ids)) { ?>
         <tr>
             <td colspan="<?php echo $thcount; ?>"><span class="nodata"><?php echo T_('No Folder found'); ?></span></td>
         </tr>
@@ -186,11 +178,9 @@ foreach ($objects as $object) {
         <tr class="th-bottom">
             <th class="cel_play"></th>
             <th class="<?php echo $cel_cover; ?>"><?php echo T_('Art'); ?></th>
-            <th class="<?php echo $cel_folder; ?>"><?php echo $album_text; ?></th>
+            <th class="<?php echo $cel_folder; ?>"><?php echo $folder_text; ?></th>
             <th class="cel_add"></th>
-            <th class="<?php echo $cel_parent; ?>"><?php echo $artist_text; ?></th>
             <th class="cel_songs"><?php echo $songs_text; ?></th>
-            <th class="cel_year"><?php echo $year_text; ?></th>
             <?php if ($show_played_times) { ?>
             <th class="<?php echo $cel_counter; ?> optional"><?php echo $count_text; ?></th>
             <?php } ?>

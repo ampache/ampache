@@ -19,13 +19,12 @@
                 <tal:block tal:replace="structure FOLDER/getRandomToTemporaryPlaylistButton">RANDOM TO TEMPORARY PLAYLIST</tal:block>
                 <a
                         id="add_to_playlist_${FOLDER/getId}"
-                        onclick="showPlaylistDialog(event, 'album', '${FOLDER/getId}')"
+                        onclick="showPlaylistDialog(event, 'folder', '${FOLDER/getId}')"
                         tal:content="structure FOLDER/getAddToPlaylistIcon"
                 >ADD TO PLAYLIST</a>
             </tal:block>
         </span>
     </td>
-    <td class="${CLASS_PARENT}" tal:content="structure FOLDER/getArtistLink">PARENT</td>
     <td class="cel_songs optional" tal:content="structure FOLDER/getSongCount">SONG COUNT</td>
     <td class="cel_year">
         <tal:block tal:condition="FOLDER/canShowYear" tal:content="structure FOLDER/getDisplayYear">
@@ -36,8 +35,8 @@
     <td class="${CLASS_TAGS} optional" tal:condition="not:IS_HIDE_GENRE" tal:content="structure FOLDER/getGenre">TAGS</td>
     <td class="cel_ratings" tal:condition="USING_RATINGS">
         <div class="rating">
-            <span class="cel_rating" id="rating_${FOLDER/getId}_album" tal:content="structure FOLDER/getRating">RATING</span>
-            <span class="cel_userflag" id="userflag_${FOLDER/getId}_album" tal:content="structure FOLDER/getUserFlags">USERFLAGS</span>
+            <span class="cel_rating" id="rating_${FOLDER/getId}_folder" tal:content="structure FOLDER/getRating">RATING</span>
+            <span class="cel_userflag" id="userflag_${FOLDER/getId}_folder" tal:content="structure FOLDER/getUserFlags">USERFLAGS</span>
         </div>
     </td>
     <td class="cel_action">
@@ -58,14 +57,14 @@
 
         <a
                 tal:condition="FOLDER/isEditable"
-                id="edit_album_${FOLDER/getId}"
-                onclick="showEditDialog('album_row', '${FOLDER/getId}', 'edit_album_${FOLDER/getId}', '${FOLDER/getEditButtonTitle}', 'album_')"
+                id="edit_folder_${FOLDER/getId}"
+                onclick="showEditDialog('folder_row', '${FOLDER/getId}', 'edit_folder_${FOLDER/getId}', '${FOLDER/getEditButtonTitle}', 'folder_')"
                 tal:content="structure FOLDER/getEditIcon"
         >EDIT</a>
 
         <a
                 tal:condition="FOLDER/canBeDeleted"
-                id="delete_album_${FOLDER/getId}"
+                id="delete_folder_${FOLDER/getId}"
                 tal:attributes="href FOLDER/getDeletionUrl"
                 tal:content="structure FOLDER/getDeletionIcon"
         >DELETION</a>
