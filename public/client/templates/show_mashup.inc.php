@@ -98,9 +98,7 @@ if (!empty($object_ids)) {
 
 //debug_event('show_mashup.inc', "Popular: Stats::get_top", 5);
 // public users just need to shuffle the hold_ids for a similar result
-$object_ids = ($hold_ids)
-    ? $hold_ids
-    : Stats::get_top($object_type, 100, $threshold, 0, $user);
+$object_ids = $hold_ids ?: Stats::get_top($object_type, 100, $threshold, 0, $user);
 if (!empty($object_ids)) {
     shuffle($object_ids);
     $object_ids = array_slice($object_ids, 0, $limit);

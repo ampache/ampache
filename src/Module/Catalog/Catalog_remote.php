@@ -278,7 +278,7 @@ class Catalog_remote extends Catalog
                     'debug_callback' => 'debug_event',
                     'api_secure' => (str_starts_with($this->uri, 'https://')),
                     'api_format' => 'xml',
-                    'server_version' => Api::DEFAULT_VERSION
+                    'server_version' => 6 // TODO Api::DEFAULT_VERSION after 8 is stable
                 ]
             );
         } catch (Exception $exception) {
@@ -363,9 +363,12 @@ class Catalog_remote extends Catalog
             return null;
         }
 
-        $data      = null;
-        $remote_id = (int)$song->attributes()->id;
-        $tags      = ($this->song_tags)
+        $remote_id = (int)($song->attributes()->id ?? 0);
+        if (!$remote_id) {
+            return null;
+        }
+
+        $tags = ($this->song_tags)
             ? $this->remote_handle->send_command(self::CMD_SONG_TAGS, ['filter' => $remote_id])
             : null;
 
@@ -661,16 +664,17 @@ class Catalog_remote extends Catalog
                         }
 
                         // stop checking everything depending on the action taken
-                        if (
-                            $action === 'add' &&
-                            $existing_song
-                        ) {
-                            debug_event('remote.catalog', 'Skip existing song: ' . $song_id_check, 5);
-                            if (Song::get_song_map_object_id($song_id_check, 'remote_' . $this->catalog_id) !== $remote_id) {
-                                Song::update_song_map([$remote_id], 'remote_' . $this->catalog_id, $song_id_check);
-                            }
+                        if ($action === 'add') {
+                            if ($existing_song) {
+                                debug_event('remote.catalog', 'Skip existing song: ' . $song_id_check, 5);
+                                if (Song::get_song_map_object_id($song_id_check, 'remote_' . $this->catalog_id) !== $remote_id) {
+                                    Song::update_song_map([$remote_id], 'remote_' . $this->catalog_id, $song_id_check);
+                                }
 
-                            continue;
+                                continue;
+                            }
+                            $data = $this->_gather_tags($song) ?? [];
+
                         }
 
                         if (
@@ -684,19 +688,20 @@ class Catalog_remote extends Catalog
                             ? Catalog::get_cache_path($song_id_check, $this->catalog_id, $cache_path, $cache_target)
                             : null;
 
-                        if (
-                            $action === 'verify' &&
-                            $file_target !== null &&
-                            is_file($file_target) &&
-                            filemtime($file_target) > ($date - (60 * 60 * 24 * 30)) // 30 day
-                        ) {
-                            // get file tags directly from the cached file
-                            $media = new Song($song_id_check);
-                            $data  = $this->get_media_tags($media, ['music'], $this->sort_pattern ?? '', $this->rename_pattern ?? '', $file_target);
-                            // don't overwtrite the database path
-                            $data['file'] = $db_file;
-                        } else {
-                            $data = $this->_gather_tags($song->song);
+                        if ($action === 'verify') {
+                            if (
+                                $file_target !== null &&
+                                is_file($file_target) &&
+                                filemtime($file_target) > ($date - (60 * 60 * 24 * 30)) // 30 day
+                            ) {
+                                // get file tags directly from the cached file
+                                $media = new Song($song_id_check);
+                                $data  = $this->get_media_tags($media, ['music'], $this->sort_pattern ?? '', $this->rename_pattern ?? '', $file_target);
+                                // don't overwtrite the database path
+                                $data['file'] = $db_file;
+                            } else {
+                                $data = $this->_gather_tags($song) ?? [];
+                            }
                         }
 
                         //debug_event('remote.catalog', 'DATA ' . print_r($data, true), 1);
@@ -823,6 +828,14 @@ class Catalog_remote extends Catalog
         }
 
         return $songsadded;
+    }
+
+    /**
+     * scan_catalog_folders
+     */
+    public function scan_catalog_folders(?Interactor $interactor = null): int
+    {
+        return 0;
     }
 
     /**
@@ -1113,8 +1126,13 @@ class Catalog_remote extends Catalog
             return null;
         }
 
+        $options = [
+            'filter' => $remote_id,
+            'type' => 'song'
+        ];
+
         return ($action === 'download')
-            ? $this->remote_handle->get_command_url(self::CMD_DOWNLOAD, ['filter' => $remote_id])
-            : $this->remote_handle->get_command_url(self::CMD_STREAM, ['filter' => $remote_id]);
+            ? $this->remote_handle->get_command_url(self::CMD_DOWNLOAD, $options)
+            : $this->remote_handle->get_command_url(self::CMD_STREAM, $options);
     }
 }

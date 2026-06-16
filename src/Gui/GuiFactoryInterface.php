@@ -28,6 +28,7 @@ namespace Ampache\Gui;
 use Ampache\Gui\Album\AlbumViewAdapterInterface;
 use Ampache\Gui\AlbumDisk\AlbumDiskViewAdapterInterface;
 use Ampache\Gui\Catalog\CatalogDetailsInterface;
+use Ampache\Gui\Folder\FolderViewAdapterInterface;
 use Ampache\Gui\Playlist\NewPlaylistDialogAdapterInterface;
 use Ampache\Gui\Playlist\PlaylistViewAdapterInterface;
 use Ampache\Gui\Song\SongViewAdapterInterface;
@@ -38,10 +39,15 @@ use Ampache\Gui\System\UpdateViewAdapterInterface;
 use Ampache\Module\Authorization\GuiGatekeeperInterface;
 use Ampache\Repository\Model\Album;
 use Ampache\Repository\Model\AlbumDisk;
+use Ampache\Repository\Model\Artist;
 use Ampache\Repository\Model\Browse;
 use Ampache\Repository\Model\Catalog;
+use Ampache\Repository\Model\Folder;
+use Ampache\Repository\Model\Label;
 use Ampache\Repository\Model\Playlist;
+use Ampache\Repository\Model\Podcast_Episode;
 use Ampache\Repository\Model\Song;
+use Ampache\Repository\Model\Video;
 
 interface GuiFactoryInterface
 {
@@ -61,6 +67,13 @@ interface GuiFactoryInterface
         Browse $browse,
         AlbumDisk $albumDisk,
     ): AlbumDiskViewAdapterInterface;
+
+    public function createFolderViewAdapter(
+        GuiGatekeeperInterface $gatekeeper,
+        Folder $folder,
+        Podcast_Episode|AlbumDisk|Video|Song|Album|Artist|Label|Folder $object,
+        string $object_type,
+    ): FolderViewAdapterInterface;
 
     public function createPlaylistViewAdapter(
         GuiGatekeeperInterface $gatekeeper,

@@ -29,6 +29,7 @@ use Ampache\Repository\Model\Browse;
 use Ampache\Repository\Model\LibraryItemEnum;
 use Ampache\Repository\Model\LibraryItemLoaderInterface;
 use Ampache\Repository\Model\Playlist;
+use Ampache\Repository\Model\Search;
 use Ampache\Repository\Model\Song_Preview;
 use Ampache\Repository\Model\User;
 
@@ -36,7 +37,7 @@ global $dic;
 $libraryItemLoader = $dic->get(LibraryItemLoaderInterface::class);
 
 /** @var Browse $browse */
-/** @var Playlist $playlist */
+/** @var Playlist|Search $playlist */
 /** @var array<int|string>|array<int, array{object_type: LibraryItemEnum|string, object_id: int, track_id: int, track: int}>|array<Song_Preview>|array<int, array{name?: string|null, id: int, track: int, raw: string, link?: string|null, track: int, oid?: int, vlid?: int}>|null $object_ids */
 /** @var bool $argument */
 

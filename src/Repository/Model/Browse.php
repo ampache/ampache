@@ -30,7 +30,6 @@ use Ampache\Module\Api\Ajax;
 use Ampache\Module\Shout\ShoutObjectLoaderInterface;
 use Ampache\Module\System\Core;
 use Ampache\Module\Util\AjaxUriRetrieverInterface;
-use Ampache\Module\Util\ObjectTypeToClassNameMapper;
 use Ampache\Module\Util\Ui;
 use Ampache\Repository\PodcastRepositoryInterface;
 use Ampache\Repository\ShoutRepositoryInterface;
@@ -53,6 +52,7 @@ class Browse extends Query
         'broadcast',
         'catalog',
         'democratic',
+        'folder',
         'follower',
         'label',
         'license_hidden',
@@ -218,17 +218,17 @@ class Browse extends Query
      * add_supplemental_object
      * Legacy function, need to find a better way to do that
      */
-    public function add_supplemental_object(string $class, int $uid): bool
+    public function add_supplemental_object(string $name, Playlist|Search|Folder $object): bool
     {
-        $_SESSION['browse']['supplemental'][$this->id][$class] = $uid;
+        $_SESSION['browse']['supplemental'][$this->id][$name] = $object;
 
         return true;
     }
 
     /**
      * get_supplemental_objects
-     * This returns an array of 'class', 'id' for additional objects that
-     * need to be created before we start this whole browsing thing.
+     * This returns an object so we can reuse it again.
+     * @return array<string, Playlist|Search|Folder>
      */
     public function get_supplemental_objects(): array
     {
@@ -271,7 +271,7 @@ class Browse extends Query
      * This takes an array of objects
      * and requires the correct template based on the
      * type that we are currently browsing
-     * @param array<int|string>|array<int, array{object_type: LibraryItemEnum, object_id: int, track_id: int, track: int}>|array<Song_Preview>|array<int, array{name?: string|null, id: int, track: int, raw: string, link?: string|null, track: int, oid?: int, vlid?: int}>|null $object_ids
+     * @param array<int|string>|array<int, array{object_type: LibraryItemEnum, object_id: int, track_id: int, track: int}>|array<int, array{object_type: LibraryItemEnum|null, object_id: int}>|array<Song_Preview>|array<int, array{name?: string|null, id: int, track: int, raw: string, link?: string|null, track: int, oid?: int, vlid?: int}>|null $object_ids
      */
     public function show_objects(?array $object_ids = [], bool|array|string $argument = false, ?bool $skip_cookies = false): void
     {
@@ -280,7 +280,7 @@ class Browse extends Query
 
         if ($this->is_simple() || !is_array($object_ids) || $object_ids === []) {
             $object_ids = $this->get_saved();
-        } elseif ($type !== 'song_preview') {
+        } elseif ($type !== 'song_preview' && $type !== 'folder') {
             /** @var array<int|string>|array<int, array{object_type: LibraryItemEnum, object_id: int, track_id: int, track: int}> $object_ids */
             $this->save_objects($object_ids);
 
@@ -310,7 +310,11 @@ class Browse extends Query
 
         // Limit is based on the user's preferences if this is not a
         // simple browse because we've got too much here
-        if ($this->get_start() >= 0 && !$this->is_simple() && (count($object_ids) > $this->get_start())) {
+        if (
+            $this->get_offset() > 0 &&
+            $this->get_start() >= 0 &&
+            !$this->is_simple()
+        ) {
             $object_ids = array_slice($object_ids, $this->get_start(), $this->get_offset(), true);
         } elseif ($object_ids === []) {
             $this->set_total(0);
@@ -320,9 +324,8 @@ class Browse extends Query
         $extra_objects = $this->get_supplemental_objects();
         $browse        = $this;
 
-        foreach ($extra_objects as $type => $extra_id) {
-            $className = ObjectTypeToClassNameMapper::map($type);
-            ${$type}   = new $className($extra_id);
+        foreach ($extra_objects as $name => $extra) {
+            ${$name} = $extra;
         }
 
         $match = '';
@@ -338,7 +341,6 @@ class Browse extends Query
                 $match = ' (' . $catalog->name . ')';
             }
         }
-
 
         // Update the session value only if it's allowed on the current browser
         if ($this->is_update_session()) {
@@ -453,6 +455,10 @@ class Browse extends Query
                 $browse->set_grid_view(false);
                 $box_title = $this->get_title(T_('Playlist Items') . $match);
                 $box_req   = Ui::find_template('show_playlist_medias.inc.php');
+                break;
+            case 'folder':
+                $box_title = $this->get_title(T_('Folders'));
+                $box_req   = Ui::find_template('show_folders.inc.php');
                 break;
             case 'playlist_localplay':
                 $browse->set_grid_view(false);

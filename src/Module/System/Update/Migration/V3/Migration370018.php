@@ -38,7 +38,7 @@ final class Migration370018 extends AbstractMigration
     public function migrate(): void
     {
         $this->updateDatabase("DROP TABLE IF EXISTS `tag_merge`;");
-        $this->updateDatabase("CREATE TABLE IF NOT EXISTS `tag_merge` (`tag_id` int(11) NOT NULL, `merged_to` int(11) NOT NULL, PRIMARY KEY (`tag_id`,`merged_to`), KEY `merged_to` (`merged_to`)) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;");
+        $this->updateDatabase("CREATE TABLE `tag_merge` (`tag_id` int(11) NOT NULL, `merged_to` int(11) NOT NULL, PRIMARY KEY (`tag_id`,`merged_to`), KEY `merged_to` (`merged_to`)) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;");
 
         $sql        = "DESCRIBE `tag`";
         $db_results = Dba::read($sql);

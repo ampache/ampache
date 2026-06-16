@@ -2706,7 +2706,7 @@ class OpenSubsonic_Api
     }
 
     /**
-     * getPodcastEpisode
+     * getPodcastEpisode [OS]
      *
      * Returns details for a podcast episode.
      * https://opensubsonic.netlify.app/docs/endpoints/getpodcastepisode/
@@ -3566,7 +3566,7 @@ class OpenSubsonic_Api
     }
 
     /**
-     * savePlayQueue
+     * savePlayQueue [OS]
      *
      * Saves the state of the play queue for this user.
      * https://opensubsonic.netlify.app/docs/endpoints/saveplayqueue/
@@ -3649,7 +3649,7 @@ class OpenSubsonic_Api
     }
 
     /**
-     * savePlayQueueByIndex
+     * savePlayQueueByIndex [OS]
      *
      * Saves the state of the play queue for this user.
      * https://opensubsonic.netlify.app/docs/endpoints/saveplayqueuebyindex/
@@ -3908,7 +3908,7 @@ class OpenSubsonic_Api
     }
 
     /**
-     * search3
+     * search3 [OS]
      *
      * Returns albums, artists and songs matching the given search criteria. Supports paging through the result.
      * https://opensubsonic.netlify.app/docs/endpoints/search3/
@@ -3996,7 +3996,7 @@ class OpenSubsonic_Api
     }
 
     /**
-     * stream
+     * stream [OS]
      *
      * Streams a given media file.
      * https://opensubsonic.netlify.app/docs/endpoints/stream/
@@ -4043,7 +4043,7 @@ class OpenSubsonic_Api
     }
 
     /**
-     * tokenInfo
+     * tokenInfo [OS]
      *
      * Returns information about an API key.
      * https://opensubsonic.netlify.app/docs/endpoints/tokeninfo/
@@ -4274,6 +4274,42 @@ class OpenSubsonic_Api
         } else {
             self::_errorOutput($input, self::SSERROR_UNAUTHORIZED, __FUNCTION__);
         }
+    }
+
+    /**
+     * findSonicPath [OS] //TODO
+     * https://opensubsonic.netlify.app/docs/endpoints/findsonicpath/
+     * @param array<string, mixed> $input
+     */
+    public static function findSonicPath(array $input, User $user): void
+    {
+        unset($user);
+
+        self::_errorOutput($input, self::SSERROR_APIVERSION_SERVER, __FUNCTION__);
+    }
+
+    /**
+     * getSonicSimilarTracks [OS] //TODO
+     * https://opensubsonic.netlify.app/docs/endpoints/getsonicsimilartracks/
+     * @param array<string, mixed> $input
+     */
+    public static function getSonicSimilarTracks(array $input, User $user): void
+    {
+        unset($user);
+
+        self::_errorOutput($input, self::SSERROR_APIVERSION_SERVER, __FUNCTION__);
+    }
+
+    /**
+     * reportPlayback [OS] //TODO
+     * https://opensubsonic.netlify.app/docs/endpoints/reportplayback/
+     * @param array<string, mixed> $input
+     */
+    public static function reportPlayback(array $input, User $user): void
+    {
+        unset($user);
+
+        self::_errorOutput($input, self::SSERROR_APIVERSION_SERVER, __FUNCTION__);
     }
 
     /**

@@ -56,7 +56,7 @@ $web_path = AmpConfig::get_web_path('/client');
 $show_direct_play  = AmpConfig::get('directplay');
 $show_playlist_add = Access::check(AccessTypeEnum::INTERFACE, AccessLevelEnum::USER);
 $show_similar      = AmpConfig::get('show_similar');
-$directplay_limit  = (int)AmpConfig::get('direct_play_limit', 0);
+$directplay_limit  = (int)AmpConfig::get('direct_play_limit', 500);
 $use_label         = AmpConfig::get('label');
 $use_wanted        = AmpConfig::get('wanted');
 $is_album_type     = $object_type == 'album' || $object_type == 'album_disk';

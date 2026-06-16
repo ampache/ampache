@@ -1,6 +1,6 @@
 <?php
 
-declare(strict_types=0);
+declare(strict_types=1);
 
 /**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
@@ -23,64 +23,60 @@ declare(strict_types=0);
  *
  */
 
-namespace Ampache\Module\Application\Playlist;
+namespace Ampache\Module\Application\Folder;
 
 use Ampache\Config\ConfigContainerInterface;
+use Ampache\Config\ConfigurationKeyEnum;
 use Ampache\Module\Application\ApplicationActionInterface;
 use Ampache\Module\Application\Exception\AccessDeniedException;
 use Ampache\Module\Authorization\AccessLevelEnum;
 use Ampache\Module\Authorization\AccessTypeEnum;
 use Ampache\Module\Authorization\GuiGatekeeperInterface;
-use Ampache\Module\System\Core;
-use Ampache\Module\Util\RequestParserInterface;
 use Ampache\Module\Util\UiInterface;
-use Ampache\Repository\Model\Catalog;
-use Ampache\Repository\Model\Playlist;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 
-final readonly class CreatePlaylistAction implements ApplicationActionInterface
+final readonly class DeleteAction implements ApplicationActionInterface
 {
-    public const string REQUEST_KEY = 'create_playlist';
+    public const string REQUEST_KEY = 'delete';
 
     public function __construct(
-        private RequestParserInterface $requestParser,
-        private UiInterface $ui,
         private ConfigContainerInterface $configContainer,
+        private UiInterface $ui,
     ) {
     }
 
     public function run(ServerRequestInterface $request, GuiGatekeeperInterface $gatekeeper): ?ResponseInterface
     {
-        /* Check rights */
-        if ($gatekeeper->mayAccess(AccessTypeEnum::INTERFACE, AccessLevelEnum::USER) === false) {
-            throw new AccessDeniedException();
+        if ($this->configContainer->isFeatureEnabled(ConfigurationKeyEnum::DEMO_MODE)) {
+            $this->ui->showHeader();
+            $this->ui->showQueryStats();
+            $this->ui->showFooter();
+
+            return null;
         }
+
+        $folderId = (int) ($request->getQueryParams()['folder_id'] ?? 0);
 
         $this->ui->showHeader();
 
-        // Make sure we have a unique name
-        $playlist_name = (isset($_POST['playlist_name']))
-            ? htmlspecialchars_decode($this->requestParser->getFromPost('playlist_name'))
-            : Core::get_global('user')?->username . ' - ' . get_datetime(time());
-        // keep the same public/private type as the search
-        $playlist_type = (isset($_POST['playlist_type']))
-            ? $this->requestParser->getFromPost('playlist_type')
-            : 'public';
-
-        $playlist_id                     = Playlist::create($playlist_name, $playlist_type);
-        $_SESSION['data']['playlist_id'] = $playlist_id;
-
-        Catalog::update_mapping('playlist');
-        $this->ui->showConfirmation(
-            T_('Playlist created'),
-            /* HINT: %1 playlist name, %2 playlist type */
-            sprintf(T_('%1$s (%2$s) has been created'), $playlist_name, $playlist_type),
-            sprintf(
-                '%s/playlist.php',
-                $this->configContainer->getWebPath('/client')
-            )
-        );
+        if (
+            $gatekeeper->mayAccess(AccessTypeEnum::INTERFACE, AccessLevelEnum::CONTENT_MANAGER)
+        ) {
+            $this->ui->showConfirmation(
+                T_('Are You Sure?'),
+                T_('This Folder will be deleted'),
+                sprintf(
+                    '%s/folders.php?action=confirm_delete&folder_id=%s',
+                    $this->configContainer->getWebPath('/client'),
+                    $folderId
+                ),
+                1,
+                'delete_folder'
+            );
+        } else {
+            throw new AccessDeniedException();
+        }
 
         $this->ui->showQueryStats();
         $this->ui->showFooter();

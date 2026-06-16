@@ -46,6 +46,7 @@ class Rating extends database_object
         'album_disk',
         'album',
         'artist',
+        'folder',
         'live_stream',
         'playlist',
         'podcast_episode',

@@ -1068,7 +1068,7 @@ class Preference extends database_object
                     Dba::write($pref_sql, [123, 'ajax_load', '1', 'Ajax page load', AccessLevelEnum::USER->value, 'boolean', 'interface', null]);
                     break;
                 case 'direct_play_limit':
-                    Dba::write($pref_sql, [124, 'direct_play_limit', '0', 'Limit direct play to maximum media count', AccessLevelEnum::USER->value, 'integer', 'interface', 'player']);
+                    Dba::write($pref_sql, [124, 'direct_play_limit', '500', 'Limit direct play to maximum media count', AccessLevelEnum::USER->value, 'integer', 'interface', 'player']);
                     break;
                 case 'home_moment_albums':
                     Dba::write($pref_sql, [125, 'home_moment_albums', '1', 'Show Albums of the Moment', AccessLevelEnum::USER->value, 'integer', 'interface', 'home']);

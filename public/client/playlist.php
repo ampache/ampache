@@ -25,7 +25,6 @@ declare(strict_types=1);
 
 use Ampache\Module\Application\ApplicationRunner;
 use Ampache\Module\Application\Playlist\AddSongAction;
-use Ampache\Module\Application\Playlist\CreatePlaylistAction;
 use Ampache\Module\Application\Playlist\DeletePlaylistAction;
 use Ampache\Module\Application\Playlist\ImportPlaylistAction;
 use Ampache\Module\Application\Playlist\RefreshPlaylistAction;
@@ -52,7 +51,6 @@ $dic->get(ApplicationRunner::class)->run(
         ShowImportPlaylistAction::REQUEST_KEY => ShowImportPlaylistAction::class,
         DeletePlaylistAction::REQUEST_KEY => DeletePlaylistAction::class,
         RefreshPlaylistAction::REQUEST_KEY => RefreshPlaylistAction::class,
-        CreatePlaylistAction::REQUEST_KEY => CreatePlaylistAction::class,
     ],
     ShowAction::REQUEST_KEY
 );

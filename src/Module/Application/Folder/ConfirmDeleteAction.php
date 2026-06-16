@@ -23,53 +23,63 @@ declare(strict_types=0);
  *
  */
 
-namespace Ampache\Module\Application\SmartPlaylist;
+namespace Ampache\Module\Application\Folder;
 
+use Ampache\Config\ConfigContainerInterface;
+use Ampache\Config\ConfigurationKeyEnum;
 use Ampache\Module\Application\ApplicationActionInterface;
 use Ampache\Module\Application\Exception\AccessDeniedException;
-use Ampache\Module\Authorization\AccessLevelEnum;
-use Ampache\Module\Authorization\AccessTypeEnum;
 use Ampache\Module\Authorization\GuiGatekeeperInterface;
-use Ampache\Module\System\Dba;
+use Ampache\Module\Folder\Deletion\FolderDeleterInterface;
 use Ampache\Module\Util\UiInterface;
-use Ampache\Repository\Model\ModelFactoryInterface;
+use Ampache\Repository\FolderRepositoryInterface;
+use Ampache\Repository\Model\Catalog;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 
-final readonly class CreatePlaylistAction implements ApplicationActionInterface
+final readonly class ConfirmDeleteAction implements ApplicationActionInterface
 {
-    public const string REQUEST_KEY = 'create_playlist';
+    public const string REQUEST_KEY = 'confirm_delete';
 
     public function __construct(
+        private ConfigContainerInterface $configContainer,
         private UiInterface $ui,
-        private ModelFactoryInterface $modelFactory,
+        private FolderDeleterInterface $folderDeleter,
+        private FolderRepositoryInterface $folderRepository,
     ) {
     }
 
     public function run(ServerRequestInterface $request, GuiGatekeeperInterface $gatekeeper): ?ResponseInterface
     {
-        if ($gatekeeper->mayAccess(AccessTypeEnum::INTERFACE, AccessLevelEnum::USER) === false) {
-            throw new AccessDeniedException();
+        if ($this->configContainer->isFeatureEnabled(ConfigurationKeyEnum::DEMO_MODE)) {
+            $this->ui->showHeader();
+            $this->ui->showQueryStats();
+            $this->ui->showFooter();
+
+            return null;
         }
+
+        $body     = $request->getQueryParams();
+        $folderId = (int)($body['folder_id'] ?? 0);
+
+        $folder = $this->folderRepository->findById($folderId);
+        if (
+            $folder === null ||
+            !Catalog::can_remove($folder)
+        ) {
+            throw new AccessDeniedException(
+                sprintf('Unauthorized to remove the folder `%s`', $folderId)
+            );
+        }
+
+        $this->folderDeleter->delete($folder);
 
         $this->ui->showHeader();
-
-        foreach ($_REQUEST as $key => $value) {
-            $prefix = substr((string) $key, 0, 4);
-            $value  = trim((string) $value);
-
-            if ($prefix === 'rule' && strlen($value)) {
-                $rules[$key] = Dba::escape($value);
-            }
-        }
-
-        $playlist                 = $this->modelFactory->createSearch(null);
-        $playlist->name           = (isset($_REQUEST['playlist_name'])) ? (string)$_REQUEST['playlist_name'] : '';
-        $playlist->logic_operator = (isset($_REQUEST['operator']) && $_REQUEST['operator'] == 'or')
-            ? 'or'
-            : 'and';
-        $playlist->create();
-
+        $this->ui->showConfirmation(
+            T_('No Problem'),
+            T_('The Folder has been deleted'),
+            $this->configContainer->getWebPath()
+        );
         $this->ui->showQueryStats();
         $this->ui->showFooter();
 

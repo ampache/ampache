@@ -51,7 +51,7 @@ $browse_type = ($currentType == 'video')
     : 'song';
 
 Ui::show_box_top(T_('Play Random Selection'), 'box box_random'); ?>
-<form id="random" method="post" enctype="multipart/form-data" action="<?php echo $web_path; ?>/random.php?action=get_advanced&type=<?php echo (string) scrub_out($currentType); ?>">
+<form id="random" method="post" enctype="multipart/form-data" action="<?php echo $web_path; ?>/random.php?action=get_advanced&type=<?php echo scrub_out($currentType); ?>">
 <input type='hidden' name='random' value=1>
 <div class="category_options">
     <a class="category <?php echo ($currentType == 'song') ? 'current' : ''; ?>" href="<?php echo $web_path; ?>/random.php?action=advanced&type=song">

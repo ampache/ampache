@@ -128,6 +128,7 @@ class Art extends database_object
 
         return (
             InterfaceImplementationChecker::is_library_item($type) ||
+            $type == 'folder' ||
             $type == 'user'
         );
     }
@@ -730,29 +731,30 @@ class Art extends database_object
 
     private function get_blankalbum(?string $size = null): string
     {
+        $defaultimg = ($this->object_type === 'folder') ? 'folder' : 'blankalbum';
         switch ($size) {
             case '128x128':
-                $path         = __DIR__ . '/../../../public/client/images/blankalbum_128x128.png';
+                $path         = __DIR__ . '/../../../public/client/images/' . $defaultimg . '_128x128.png';
                 $this->width  = 128;
                 $this->height = 128;
                 break;
             case '256x256':
-                $path         = __DIR__ . '/../../../public/client/images/blankalbum_256x256.png';
+                $path         = __DIR__ . '/../../../public/client/images/' . $defaultimg . '_256x256.png';
                 $this->width  = 256;
                 $this->height = 256;
                 break;
             case '384x384':
-                $path         = __DIR__ . '/../../../public/client/images/blankalbum_384x384.png';
+                $path         = __DIR__ . '/../../../public/client/images/' . $defaultimg . '_384x384.png';
                 $this->width  = 384;
                 $this->height = 384;
                 break;
             case '768x768':
-                $path         = __DIR__ . '/../../../public/client/images/blankalbum_768x768.png';
+                $path         = __DIR__ . '/../../../public/client/images/' . $defaultimg . '_768x768.png';
                 $this->width  = 768;
                 $this->height = 768;
                 break;
             default:
-                $path         = __DIR__ . '/../../../public/client/images/blankalbum.png';
+                $path         = __DIR__ . '/../../../public/client/images/' . $defaultimg . '.png';
                 $this->width  = 1400;
                 $this->height = 1400;
         }

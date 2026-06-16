@@ -409,7 +409,6 @@ class Waveform
             imagepng($img);
         }
 
-
         $imgdata = ob_get_contents();
         ob_clean();
 

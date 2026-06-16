@@ -55,9 +55,9 @@ final readonly class ShowAction implements ApplicationActionInterface
         );
 
         $content = 'var types = ';
-        $content .= $this->arrayToJSON($search->types) . ";\n";
+        $content .= $this->arrayToJSON($search->get_rule_types()) . ";\n";
         $content .= 'var basetypes = ';
-        $content .= $this->arrayToJSON($search->basetypes) . ";\n";
+        $content .= $this->arrayToJSON($search->get_basetypes(true)) . ";\n";
         $content .= sprintf(
             'removeIcon = \'<a href="javascript:void(0)">%s</a>\';',
             Ui::get_material_symbol('hide_source', T_('Remove'))

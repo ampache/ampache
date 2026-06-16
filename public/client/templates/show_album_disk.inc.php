@@ -67,7 +67,7 @@ $access50          = Access::check(AccessTypeEnum::INTERFACE, AccessLevelEnum::C
 $access25          = ($access50 || Access::check(AccessTypeEnum::INTERFACE, AccessLevelEnum::USER));
 $show_direct_play  = AmpConfig::get('directplay');
 $show_playlist_add = $access25;
-$directplay_limit  = AmpConfig::get('direct_play_limit');
+$directplay_limit  = AmpConfig::get('direct_play_limit', 500);
 $hide_array        = (AmpConfig::get('hide_single_artist') && $albumDisk->get_artist_count() == 1)
     ? ['cel_artist', 'cel_album', 'cel_year', 'cel_drag']
     : ['cel_album', 'cel_year', 'cel_drag'];

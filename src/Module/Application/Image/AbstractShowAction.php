@@ -162,11 +162,12 @@ abstract readonly class AbstractShowAction implements ApplicationActionInterface
                 );
 
                 $mime       = 'image/png';
-                $defaultimg = $this->configContainer->get('custom_blankalbum');
+                $defaultimg = ($type === 'folder') ? '' : $this->configContainer->get('custom_blankalbum');
                 if (empty($defaultimg) || (!str_starts_with((string) $defaultimg, "http://") && !str_starts_with((string) $defaultimg, "https://"))) {
+                    $filename   = ($type === 'folder') ? 'folder' : 'blankalbum';
                     $defaultimg = ($has_size && in_array($size, ['128x128', '256x256', '384x384', '768x768']))
-                        ? $rootimg . "blankalbum_" . $size . ".png"
-                        : $rootimg . "blankalbum.png";
+                        ? $rootimg . $filename . "_" . $size . ".png"
+                        : $rootimg . $filename . ".png";
                 }
 
                 $etag = ($has_size && in_array($size, ['128x128', '256x256', '384x384', '768x768']))

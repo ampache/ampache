@@ -32,6 +32,8 @@ use Ampache\Gui\AlbumDisk\AlbumDiskViewAdapter;
 use Ampache\Gui\AlbumDisk\AlbumDiskViewAdapterInterface;
 use Ampache\Gui\Catalog\CatalogDetails;
 use Ampache\Gui\Catalog\CatalogDetailsInterface;
+use Ampache\Gui\Folder\FolderViewAdapter;
+use Ampache\Gui\Folder\FolderViewAdapterInterface;
 use Ampache\Gui\Playlist\NewPlaylistDialogAdapter;
 use Ampache\Gui\Playlist\NewPlaylistDialogAdapterInterface;
 use Ampache\Gui\Playlist\PlaylistViewAdapter;
@@ -55,11 +57,16 @@ use Ampache\Module\Util\AjaxUriRetrieverInterface;
 use Ampache\Module\Util\ZipHandlerInterface;
 use Ampache\Repository\Model\Album;
 use Ampache\Repository\Model\AlbumDisk;
+use Ampache\Repository\Model\Artist;
 use Ampache\Repository\Model\Browse;
 use Ampache\Repository\Model\Catalog;
+use Ampache\Repository\Model\Folder;
+use Ampache\Repository\Model\Label;
 use Ampache\Repository\Model\ModelFactoryInterface;
 use Ampache\Repository\Model\Playlist;
+use Ampache\Repository\Model\Podcast_Episode;
 use Ampache\Repository\Model\Song;
+use Ampache\Repository\Model\Video;
 use Ampache\Repository\UpdateInfoRepositoryInterface;
 use Ampache\Repository\VideoRepositoryInterface;
 
@@ -120,6 +127,24 @@ final readonly class GuiFactory implements GuiFactoryInterface
             $gatekeeper,
             $browse,
             $albumDisk
+        );
+    }
+
+    public function createFolderViewAdapter(
+        GuiGatekeeperInterface $gatekeeper,
+        Folder $folder,
+        Podcast_Episode|AlbumDisk|Video|Song|Album|Artist|Label|Folder $object,
+        string $object_type,
+    ): FolderViewAdapterInterface {
+        return new FolderViewAdapter(
+            $this->configContainer,
+            $this->modelFactory,
+            $this->zipHandler,
+            $this->functionChecker,
+            $gatekeeper,
+            $folder,
+            $object,
+            $object_type,
         );
     }
 
