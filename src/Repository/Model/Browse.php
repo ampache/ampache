@@ -271,7 +271,7 @@ class Browse extends Query
      * This takes an array of objects
      * and requires the correct template based on the
      * type that we are currently browsing
-     * @param array<int|string>|array<int, array{object_type: LibraryItemEnum, object_id: int, track_id: int, track: int}>|array<Song_Preview>|array<int, array{name?: string|null, id: int, track: int, raw: string, link?: string|null, track: int, oid?: int, vlid?: int}>|null $object_ids
+     * @param array<int|string>|array<int, array{object_type: LibraryItemEnum, object_id: int, track_id: int, track: int}>|array<int, array{object_type: LibraryItemEnum, object_id: int}>|array<Song_Preview>|array<int, array{name?: string|null, id: int, track: int, raw: string, link?: string|null, track: int, oid?: int, vlid?: int}>|null $object_ids
      */
     public function show_objects(?array $object_ids = [], bool|array|string $argument = false, ?bool $skip_cookies = false): void
     {
@@ -281,7 +281,7 @@ class Browse extends Query
         if ($this->is_simple() || !is_array($object_ids) || $object_ids === []) {
             $object_ids = $this->get_saved();
         } elseif ($type !== 'song_preview' && $type !== 'folder') {
-            /** @var array<int|string>|array<int, array{object_type: LibraryItemEnum, object_id: int, track_id?: int, track: int}> $object_ids */
+            /** @var array<int|string>|array<int, array{object_type: LibraryItemEnum, object_id: int, track_id: int, track: int}> $object_ids */
             $this->save_objects($object_ids);
 
             // build cache for new browses
