@@ -226,7 +226,8 @@ if (AmpConfig::get('sociable') && !empty($owner_id)) {
 </div>
 <div id='reordered_list_<?php echo $folder->id; ?>'>
 <?php
-    $browse = new Browse();
+$folder_items = $folder->get_objects();
+$browse       = new Browse();
 $browse->set_type('folder');
 $browse->set_simple_browse(true);
 $browse->set_skip_catalog_check(true);
@@ -235,6 +236,6 @@ $browse->set_limit(0);
 $browse->set_offset(0);
 $browse->set_sort('name', 'ASC', false);
 $browse->set_filter('folder', $folder->id);
-$browse->show_objects();
+$browse->show_objects($folder_items);
 $browse->store(); ?>
 </div>
