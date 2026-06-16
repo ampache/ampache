@@ -263,7 +263,7 @@ class Folder extends database_object implements
         // don't do anything if it's formatted
         if ($this->f_parent_link === null && $this->parent) {
             $parent_name         = scrub_out(self::get_fullname_by_id($this->parent));
-            $this->f_parent_link = "<a href=\"" . $this->get_parent_link() . "\" title=\"" . $parent_name . "\">" . $parent_name;
+            $this->f_parent_link = "<a href=\"" . $this->get_parent_link() . "\" title=\"" . $parent_name . "\">" . $parent_name . "</a>";
         }
 
         return $this->f_parent_link ?? '';
