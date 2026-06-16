@@ -229,7 +229,6 @@ if (AmpConfig::get('sociable') && !empty($owner_id)) {
 $folder_items = $folder->get_objects();
 $browse       = new Browse();
 $browse->set_type('folder');
-$browse->set_simple_browse(true);
 $browse->set_skip_catalog_check(true);
 $browse->add_supplemental_object('folder', $folder);
 $browse->set_limit(0);
