@@ -453,7 +453,7 @@ class Folder extends database_object implements
                 $sql        = "SELECT `id` AS `object_id`, 'folder' AS `object_type` FROM `folder` WHERE `parent` IS NULL;";
                 $db_results = Dba::read($sql);
             } else {
-                $sql        = "SELECT `id` AS `object_id`, 'folder' AS `object_type` FROM `folder` WHERE `parent` = ? UNION ALL SELECT `object_id`, `object_type` FROM `folder_map` WHERE `folder_id` = ?;";
+                $sql        = "SELECT `id` AS `object_id`, 'folder' AS `object_type` FROM `folder` WHERE `parent` = ? UNION SELECT `object_id`, `object_type` FROM `folder_map` WHERE `folder_id` = ?;";
                 $db_results = Dba::read($sql, [$this->getId(), $this->getId()]);
             }
 
