@@ -280,8 +280,8 @@ class Browse extends Query
 
         if ($this->is_simple() || !is_array($object_ids) || $object_ids === []) {
             $object_ids = $this->get_saved();
-        } elseif ($type !== 'song_preview') {
-            /** @var array<int|string>|array<int, array{object_type: LibraryItemEnum, object_id: int, track_id: int, track: int}> $object_ids */
+        } elseif ($type !== 'song_preview' && $type !== 'folder') {
+            /** @var array<int|string>|array<int, array{object_type: LibraryItemEnum, object_id: int, track_id?: int, track: int}> $object_ids */
             $this->save_objects($object_ids);
 
             // build cache for new browses

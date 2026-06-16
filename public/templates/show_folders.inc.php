@@ -52,30 +52,27 @@ $access25          = Access::check(AccessTypeEnum::INTERFACE, AccessLevelEnum::U
 $show_playlist_add = $access25;
 $show_direct_play  = AmpConfig::get('directplay');
 $directplay_limit  = AmpConfig::get('direct_play_limit', 500);
-// album_row data and options
+// folder_row data and options
 $thcount           = 9;
 $show_ratings      = User::is_registered() && (AmpConfig::get('ratings'));
 $original_year     = AmpConfig::get('use_original_year');
-$hide_genres       = AmpConfig::get('hide_genres');
 $show_played_times = AmpConfig::get('show_played_times');
 // translate once
 $folder_text = T_('Folder');
 $songs_text  = T_('Songs');
 $count_text  = T_('Played');
-$genres_text = T_('Genres');
 $rating_text = T_('Rating');
 $action_text = T_('Actions');
 // mashup and grid view need different css
 $cel_cover   = "cel_cover";
 $cel_folder  = "cel_folder";
-$cel_tags    = "cel_tags";
 $cel_counter = "cel_counter";
 $css_class   = '';
 $folder_link = Ajax::text('?page=browse&action=set_sort&folder_id=' . $folder->id . '&sort=name', $folder_text, 'folder_sort_name');
 $songs_link  = Ajax::text('?page=browse&action=set_sort&folder_id=' . $folder->id . '&sort=song_count', $songs_text, 'folder_sort_song_count');
 $count_link  = Ajax::text('?page=browse&action=set_sort&folder_id=' . $folder->id . '&sort=total_count', $count_text, 'folder_sort_total_count');
 $rating_link = Ajax::text('?page=browse&action=set_sort&folder_id=' . $folder->id . '&sort=rating', $rating_text, 'folder_sort_rating'); ?>
-<table class="tabledata striped-rows<?php echo $css_class; ?>" data-objecttype="album">
+<table class="tabledata striped-rows<?php echo $css_class; ?>" data-objecttype="folder">
     <thead>
         <tr class="th-top">
         <div class="libitem_menu">
@@ -88,11 +85,6 @@ $rating_link = Ajax::text('?page=browse&action=set_sort&folder_id=' . $folder->i
             <?php if ($show_played_times) { ?>
             <th class="<?php echo $cel_counter; ?> optional"><?php echo $count_link; ?></th>
             <?php } ?>
-            <?php if (!$hide_genres) {
-                ++$thcount; ?>
-            <th class="<?php echo $cel_tags; ?> optional"><?php echo $genres_text; ?></th>
-            <?php
-            } ?>
             <?php if ($show_ratings) {
                 ++$thcount; ?>
                 <th class="cel_ratings optional"><?php echo $rating_link; ?></th>
@@ -154,12 +146,10 @@ foreach ($object_ids as $object) {
             ->setContext('USING_RATINGS', User::is_registered() && (AmpConfig::get('ratings')))
             ->setContext('FOLDER', $guiFactory->createFolderViewAdapter($gatekeeper, $folder, $libitem, $object_type))
             ->setContext('CONFIG', $guiFactory->createConfigViewAdapter())
-            ->setContext('IS_HIDE_GENRE', $hide_genres)
             ->setContext('IS_SHOW_PLAYED_TIMES', $show_played_times)
             ->setContext('IS_SHOW_PLAYLIST_ADD', $show_playlist_add)
             ->setContext('CLASS_COVER', $cel_cover)
             ->setContext('CLASS_FOLDER', $cel_folder)
-            ->setContext('CLASS_TAGS', $cel_tags)
             ->setContext('CLASS_COUNTER', $cel_counter)
             ->setTemplate('folder_row.xhtml')
             ->render();
@@ -183,9 +173,6 @@ foreach ($object_ids as $object) {
             <th class="cel_songs"><?php echo $songs_text; ?></th>
             <?php if ($show_played_times) { ?>
             <th class="<?php echo $cel_counter; ?> optional"><?php echo $count_text; ?></th>
-            <?php } ?>
-            <?php if (!$hide_genres) { ?>
-            <th class="<?php echo $cel_tags; ?>"><?php echo $genres_text; ?></th>
             <?php } ?>
             <?php if ($show_ratings) { ?>
                 <th class="cel_ratings optional"><?php echo $rating_text; ?></th>

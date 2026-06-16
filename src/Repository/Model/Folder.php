@@ -181,6 +181,30 @@ class Folder extends database_object implements
     }
 
     /**
+     * get_fullname_by_id
+     */
+    public function get_fullname_by_id(?int $folder_id = 0): string
+    {
+        if (empty($folder_id)) {
+            return '';
+        }
+
+        if (database_object::is_cached('folder_fullname_by_id', $folder_id)) {
+            return database_object::get_from_cache('folder_fullname_by_id', $folder_id)[0];
+        }
+
+        $sql        = "SELECT `folder`.`name` AS `f_name` FROM `folder` WHERE `id` = ?;";
+        $db_results = Dba::read($sql, [$folder_id]);
+        if ($row = Dba::fetch_assoc($db_results)) {
+            database_object::add_to_cache('folder_fullname_by_id', $folder_id, [$row['f_name']]);
+
+            return $row['f_name'];
+        }
+
+        return '';
+    }
+
+    /**
      * get_fullpathname
      */
     public function get_fullpathname(): ?string
@@ -238,7 +262,7 @@ class Folder extends database_object implements
     {
         // don't do anything if it's formatted
         if ($this->f_parent_link === null && $this->parent) {
-            $this->f_parent_link = "<a href=\"" . $this->get_parent_link() . "\" title=\"" . scrub_out($this->get_fullname()) . "\">" . scrub_out($this->get_fullname());
+            $this->f_parent_link = "<a href=\"" . $this->get_parent_link() . "\" title=\"" . scrub_out(self::get_fullname_by_id($this->parent)) . "\">" . scrub_out($this->get_fullname());
         }
 
         return $this->f_parent_link ?? '';
