@@ -52,7 +52,7 @@ $simple = $folder->get_fullname();
 $f_name = $folder->get_fullname();
 $title  = ($folder->parent !== null)
         ? $folder->get_f_parent_link() . '&nbsp;' . '\\' . '&nbsp;' . scrub_out($f_name)
-        : scrub_out($f_name);
+        : $folder->get_f_home_link() . '&nbsp;' . '\\' . '&nbsp;' . scrub_out($f_name);
 
 $access50          = Access::check(AccessTypeEnum::INTERFACE, AccessLevelEnum::CONTENT_MANAGER);
 $access25          = ($access50 || Access::check(AccessTypeEnum::INTERFACE, AccessLevelEnum::USER));

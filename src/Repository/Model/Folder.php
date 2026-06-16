@@ -268,6 +268,16 @@ class Folder extends database_object implements
 
         return $this->f_parent_link ?? '';
     }
+    /**
+     * Get root path link.
+     */
+    public function get_f_home_link(): string
+    {
+        $t_home   = T_('Home');
+        $web_path = AmpConfig::get_web_path();
+
+        return "<a href=\"" . $web_path . "/folders.php?action=show&folder=-1\" title=\"" . $t_home . "\">" . $t_home . "</a>";
+    }
 
     /**
      * Get item f_time or f_time_h.
