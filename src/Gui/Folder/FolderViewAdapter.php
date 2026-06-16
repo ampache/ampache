@@ -290,9 +290,9 @@ final readonly class FolderViewAdapter implements FolderViewAdapterInterface
         return Ui::get_material_symbol('playlist_add', T_('Add to playlist'));
     }
 
-    public function getPlayedTimes(): int
+    public function getPlayedTimes(): ?int
     {
-        return (property_exists($this->object, 'total_count')) ? $this->object->total_count : 0;
+        return (property_exists($this->object, 'total_count')) ? $this->object->total_count : null;
     }
 
     public function getFolderUrl(): string
@@ -327,10 +327,10 @@ final readonly class FolderViewAdapter implements FolderViewAdapterInterface
         return (method_exists($this->object, 'get_f_tags')) ? $this->object->get_f_tags() : '';
     }
 
-    public function getSongCount(): int
+    public function getSongCount(): ?int
     {
         return (property_exists($this->object, 'object_count'))
             ? $this->object->object_count
-            : ((property_exists($this->object, 'song_count')) ? $this->object->song_count : 0);
+            : ((property_exists($this->object, 'song_count')) ? $this->object->song_count : null);
     }
 }

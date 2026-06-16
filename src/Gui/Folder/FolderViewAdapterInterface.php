@@ -81,7 +81,7 @@ interface FolderViewAdapterInterface
 
     public function getAddToPlaylistIcon(): string;
 
-    public function getPlayedTimes(): int;
+    public function getPlayedTimes(): ?int;
 
     public function getFolderUrl(): string;
 
@@ -95,5 +95,5 @@ interface FolderViewAdapterInterface
 
     public function getGenre(): string;
 
-    public function getSongCount(): int;
+    public function getSongCount(): ?int;
 }
