@@ -34,6 +34,8 @@ namespace Ampache\Repository\Model;
  */
 interface Media
 {
+    public function getId(): int;
+
     /**
      * get_stream_types
      *

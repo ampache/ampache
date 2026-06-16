@@ -607,15 +607,9 @@ final readonly class PlayAction implements ApplicationActionInterface
         $transcode     = false;
         $transcode_cfg = AmpConfig::get('transcode', 'default');
         $cache_file    = false;
-        if ($media instanceof Song_Preview) {
-            $mediaOwnerId   = null;
-            $mediaCatalogId = null;
-        } else {
+        if (!$media instanceof Song_Preview && $media->catalog) {
             $mediaOwnerId   = $media->get_user_owner();
-            $mediaCatalogId = $media->getCatalogId();
-        }
-
-        if ($mediaCatalogId) {
+            $mediaCatalogId = $media->catalog;
             /** @var Song|Podcast_Episode|Video $media */
             // The media catalog is restricted
             $catalogs = $user->catalogs['music'] ?? User::get_user_catalogs($user->id);
@@ -670,6 +664,7 @@ final readonly class PlayAction implements ApplicationActionInterface
                 }
             }
 
+            $streamConfiguration = null;
             if (
                 $transcode_cfg != 'never' &&
                 $transcode_to &&
@@ -690,9 +685,7 @@ final readonly class PlayAction implements ApplicationActionInterface
                     'file_size' => (($media->file && preg_match('/^https?:\/\//i', $media->file)) || time() - filemtime($file_target) < 30) ? $media->size : Core::get_filesize($file_target),
                     'file_type' => $cache_target,
                 ];
-            } elseif ($catalog === null) {
-                return null;
-            } else {
+            } elseif (($catalog instanceof Catalog_remote || $catalog instanceof Catalog_subsonic)) {
                 // Some catalogs redirect you to the remote url so stop here
                 $remoteStreamingUrl = $catalog->getRemoteStreamingUrl($media, $action);
                 if ($remoteStreamingUrl !== null) {
@@ -708,11 +701,13 @@ final readonly class PlayAction implements ApplicationActionInterface
 
                     return null;
                 }
+            } elseif ($catalog === null) {
+                return null;
+            }
 
-                $streamConfiguration = $catalog->prepare_media($media);
-                if ($streamConfiguration === null) {
-                    return null;
-                }
+            $streamConfiguration = $streamConfiguration ?? $catalog?->prepare_media($media);
+            if ($streamConfiguration === null) {
+                return null;
             }
         } else {
             // No catalog, must be song preview or something like that => just redirect to file

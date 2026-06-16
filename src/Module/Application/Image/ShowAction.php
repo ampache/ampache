@@ -104,7 +104,7 @@ final readonly class ShowAction extends AbstractShowAction
         } elseif ($item instanceof Podcast) {
             $filename = $item->getTitle();
         } else {
-            // Album || Artist || Broadcast || Label || License || Live_Stream || Wanted
+            // Album || Artist || Broadcast || Folder || Label || License || Live_Stream || Wanted
             $filename = $item->name ?? '';
         }
 

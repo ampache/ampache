@@ -101,7 +101,7 @@ if ($browse->is_show_header()) {
                 }
 
 $show_direct_play_cfg = AmpConfig::get('directplay');
-$directplay_limit     = AmpConfig::get('direct_play_limit');
+$directplay_limit     = AmpConfig::get('direct_play_limit', 500);
 
 /* Foreach through every artist that has been passed to us */
 foreach ($object_ids as $artist_id) {

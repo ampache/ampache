@@ -205,6 +205,7 @@ class OpenSubsonic_Json_Data
      *     'coverArt'?: string,
      *     'readonly': bool,
      *     'validUntil'?: non-falsy-string,
+     *     'allowedUser'?: string[],
      *     'entry'?: array<int, array<string, mixed>>
      * } // todo add allowedUser Array of string
      */
@@ -272,6 +273,7 @@ class OpenSubsonic_Json_Data
      *     'coverArt'?: string,
      *     'readonly': bool,
      *     'validUntil'?: non-falsy-string,
+     *     'allowedUser'?: string[],
      *     'entry'?: array<int, array<string, mixed>>
      * } // todo add allowedUser Array of string
      */
@@ -397,7 +399,7 @@ class OpenSubsonic_Json_Data
      * A Podcast channel.
      * https://opensubsonic.netlify.app/docs/responses/podcastchannel/
      * @return array{
-     *     'id':string,
+     *     'id': string,
      *     'url': string,
      *     'title': string,
      *     'description': string,
@@ -827,6 +829,7 @@ class OpenSubsonic_Json_Data
      *     'id': string,
      *     'name': string,
      *     'coverArt'?: string,
+     *     'artistImageUrl'?: string,
      *     'albumCount': int,
      *     'starred'?: string
      * }
@@ -1008,9 +1011,9 @@ class OpenSubsonic_Json_Data
         }
 
         $json['musicBrainzId']  = (string)$artist->mbid;
-        $json['smallImageUrl']  = htmlentities((string)$info['smallphoto']);
-        $json['mediumImageUrl'] = htmlentities((string)$info['mediumphoto']);
-        $json['largeImageUrl']  = htmlentities((string)$info['largephoto']);
+        $json['smallImageUrl']  = html_entity_decode((string)$info['smallphoto']);
+        $json['mediumImageUrl'] = html_entity_decode((string)$info['mediumphoto']);
+        $json['largeImageUrl']  = html_entity_decode((string)$info['largephoto']);
         $json['similarArtist']  = [];
 
         $unknownCount = 0;
@@ -2002,9 +2005,9 @@ class OpenSubsonic_Json_Data
         $response['subsonic-response']['albumInfo'] = [
             'notes' => htmlspecialchars(trim((string)$info['summary'])),
             'musicBrainzId' => $album->mbid,
-            'smallImageUrl' => htmlentities((string)$info['smallphoto']),
-            'mediumImageUrl' => htmlentities((string)$info['mediumphoto']),
-            'largeImageUrl' => htmlentities((string)$info['largephoto']),
+            'smallImageUrl' => html_entity_decode((string)$info['smallphoto']),
+            'mediumImageUrl' => html_entity_decode((string)$info['mediumphoto']),
+            'largeImageUrl' => html_entity_decode((string)$info['largephoto']),
         ];
 
         return $response;

@@ -26,6 +26,7 @@ namespace Ampache\Module\System\Update\Migration\V7;
 
 use Ampache\Config\AmpConfig;
 use Ampache\Module\System\Update\Migration\AbstractMigration;
+use Generator;
 
 /**
  * Add `song_map` table for mapping song id's to external data sources
@@ -42,5 +43,16 @@ final class Migration770001 extends AbstractMigration
 
         // create the table
         $this->updateDatabase("CREATE TABLE IF NOT EXISTS `song_map` (`song_id` int(11) UNSIGNED NOT NULL, `object_id` int(11) UNSIGNED NOT NULL, `object_type` varchar(16) CHARACTER SET utf8 COLLATE utf8_unicode_ci DEFAULT NULL, UNIQUE KEY `unique_song_map` (`object_id`, `object_type`, `song_id`), INDEX `object_id_index` (`object_id`), INDEX `song_id_type_index` (`song_id`, `object_type`), INDEX `object_id_type_index` (`object_id`, `object_type`)) ENGINE=$engine DEFAULT CHARSET=$charset COLLATE=$collation;");
+    }
+
+    public function getTableMigrations(
+        string $collation,
+        string $charset,
+        string $engine,
+        int $build,
+    ): Generator {
+        if ($build > 770001) {
+            yield 'song_map' => "CREATE TABLE IF NOT EXISTS `song_map` (`song_id` int(11) UNSIGNED NOT NULL, `object_id` int(11) UNSIGNED NOT NULL, `object_type` varchar(16) CHARACTER SET utf8 COLLATE utf8_unicode_ci DEFAULT NULL, UNIQUE KEY `unique_song_map` (`object_id`, `object_type`, `song_id`), INDEX `object_id_index` (`object_id`), INDEX `song_id_type_index` (`song_id`, `object_type`), INDEX `object_id_type_index` (`object_id`, `object_type`)) ENGINE=$engine DEFAULT CHARSET=$charset COLLATE=$collation;";
+        }
     }
 }

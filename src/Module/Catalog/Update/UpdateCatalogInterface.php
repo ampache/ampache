@@ -41,6 +41,7 @@ interface UpdateCatalogInterface
         bool $updateInfo,
         bool $optimizeDatabase,
         bool $collectGarbage,
+        bool $scanFolders,
         string $catalogType,
         ?string $catalogName,
         ?int $limit,

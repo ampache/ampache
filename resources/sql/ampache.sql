@@ -473,6 +473,50 @@ CREATE TABLE IF NOT EXISTS `democratic` (
 -- --------------------------------------------------------
 
 --
+-- Table structure for table `folder`
+--
+
+DROP TABLE IF EXISTS `folder`;
+CREATE TABLE IF NOT EXISTS `folder` (
+  `id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT,
+  `name` varchar(255) DEFAULT NULL,
+  `catalog` int(11) NOT NULL DEFAULT 0,
+  `parent` int(11) DEFAULT NULL NULL,
+  `user` int(11) DEFAULT NULL,
+  `update_time` int(11) UNSIGNED DEFAULT 0,
+  `addition_time` int(11) UNSIGNED DEFAULT 0,
+  `object_count` int(11) UNSIGNED DEFAULT 0,
+  `total_count` int(11) UNSIGNED NOT NULL DEFAULT 0,
+  `total_skip` int(11) UNSIGNED NOT NULL DEFAULT 0,
+  `path` varchar(255) DEFAULT NULL,
+  `path_name` varchar(4096) DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  KEY `name` (`name`),
+  KEY `catalog` (`catalog`),
+  KEY `user` (`user`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `folder_map`
+--
+
+DROP TABLE IF EXISTS `folder_map`;
+CREATE TABLE IF NOT EXISTS `folder_map` (
+  `folder_id` int(11) UNSIGNED NOT NULL,
+  `object_id` int(11) UNSIGNED NOT NULL,
+  `object_type` varchar(16) DEFAULT NULL,
+  UNIQUE KEY `unique_folder_map` (`object_id`,`object_type`,`folder_id`),
+  KEY `object_id_index` (`object_id`),
+  KEY `folder_id_type_index` (`folder_id`,`object_type`),
+  KEY `object_id_type_index` (`object_id`,`object_type`),
+  KEY `object_type_IDX` (`object_type`) USING BTREE,
+  KEY `object_type_id_IDX` (`object_type`,`object_id`) USING BTREE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_unicode_ci;
+
+-- --------------------------------------------------------
+--
 -- Table structure for table `image`
 --
 
@@ -954,7 +998,7 @@ INSERT INTO `preference` (`id`, `name`, `value`, `description`, `level`, `type`,
 (121, 'allow_video', '0', 'Allow Video Features', 75, 'boolean', 'options', 'feature'),
 (122, 'album_release_type', '1', 'Album - Group per release type', 25, 'boolean', 'interface', 'library'),
 (123, 'ajax_load', '1', 'Ajax page load', 25, 'boolean', 'interface', NULL),
-(124, 'direct_play_limit', '0', 'Limit direct play to maximum media count', 25, 'integer', 'interface', 'player'),
+(124, 'direct_play_limit', '500', 'Limit direct play to maximum media count', 25, 'integer', 'interface', 'player'),
 (125, 'home_moment_albums', '1', 'Show Albums of the Moment', 25, 'boolean', 'interface', 'home'),
 (126, 'home_moment_videos', '0', 'Show Videos of the Moment', 25, 'boolean', 'interface', 'home'),
 (127, 'home_recently_played', '1', 'Show Recently Played', 25, 'boolean', 'interface', 'home'),
@@ -1721,7 +1765,7 @@ INSERT INTO `user_preference` (`user`, `preference`, `name`, `value`) VALUES
 (-1, 121, 'allow_video', '0'),
 (-1, 122, 'album_release_type', '1'),
 (-1, 123, 'ajax_load', '1'),
-(-1, 124, 'direct_play_limit', '0'),
+(-1, 124, 'direct_play_limit', '500'),
 (-1, 125, 'home_moment_albums', '0'),
 (-1, 126, 'home_moment_videos', '0'),
 (-1, 127, 'home_recently_played', '1'),

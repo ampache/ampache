@@ -41,6 +41,7 @@ use Ampache\Repository\Model\Album;
 use Ampache\Repository\Model\Art;
 use Ampache\Repository\Model\Artist;
 use Ampache\Repository\Model\Catalog;
+use Ampache\Repository\Model\Folder;
 use Ampache\Repository\Model\Podcast_Episode;
 use Ampache\Repository\Model\Rating;
 use Ampache\Repository\Model\Song;
@@ -348,6 +349,26 @@ class Catalog_local extends Catalog
         closedir($handle);
 
         return $songsadded;
+    }
+
+    public function add_folder(string $folderName, string $folderPath, string $parentPath): ?Folder
+    {
+        $folder = self::getFolderRepository()->getByPathName($folderPath, $this->getId(), $parentPath);
+        if (!$folder || $folder->isNew()) {
+            $parent = ($parentPath === $this->path)
+                ? self::getFolderRepository()->lookup((string)$this->get_fullname(), $this->getId())
+                : self::getFolderRepository()->lookupByPathName($parentPath, $this->getId());
+            $folder = self::getFolderRepository()->create($folderName, $this->getId(), $folderPath, $parent);
+        }
+
+        if (!$folder || $folder->isNew()) {
+            return null;
+        }
+
+        // add maps for all folders as child items
+        self::getFolderRepository()->add_folder_map($folder->getId(), 'folder', $parentPath, $this->getId());
+
+        return $folder;
     }
 
     /**
@@ -674,6 +695,32 @@ class Catalog_local extends Catalog
     }
 
     /**
+     * scan_catalog_folders
+     */
+    public function scan_catalog_folders(?Interactor $interactor = null): int
+    {
+        set_time_limit(0);
+
+        $interactor?->info(
+            'Scan starting on ' . $this->name,
+            true
+        );
+        debug_event('local.catalog', 'Scan starting on ' . $this->name . ' (' . time() . ')', 5);
+        sleep(1);
+
+        $this->count = $this->scan_catalog_folder($interactor);
+
+        $interactor?->info(
+            sprintf('Scan finished, %d updated in ', $this->count) . $this->name,
+            true
+        );
+        debug_event('local.catalog', sprintf('Scan finished, %d updated in ', $this->count) . $this->name, 5);
+        sleep(1);
+
+        return $this->count;
+    }
+
+    /**
      * verify_catalog_proc
      */
     public function verify_catalog_proc(?int $limit = 0, ?Interactor $interactor = null): int
@@ -981,6 +1028,48 @@ class Catalog_local extends Catalog
     }
 
     /**
+     * scan_catalog_folder
+     * This is the clean function and is broken into chunks to try to save a little memory
+     */
+    public function scan_catalog_folder(?Interactor $interactor = null): int
+    {
+        $interactor?->info(
+            'Scanning check on: ' . $this->path,
+            true
+        );
+        debug_event('local.catalog', 'Scanning check on: ' . $this->path, 5);
+
+        if (!$this->get_fullname()) {
+            return 0;
+        }
+
+        $folder = self::getFolderRepository()->getByPathName($this->path, $this->getId());
+        if (!$folder || $folder->isNew()) {
+            $folderId = Folder::create([
+                'name' => $this->get_fullname(),
+                'catalog' => $this->getId(),
+                'path_name' => $this->path,
+            ]);
+
+            $folder = ($folderId)
+                ? new Folder($folderId)
+                : null;
+        }
+
+        if (!$folder) {
+            $interactor?->error(
+                'Failed to open folder: ' . $this->path,
+                true
+            );
+            debug_event('local.catalog', 'Failed to open folder: ' . $this->path, 5);
+
+            return 0;
+        }
+
+        return $this->_scan_folder($this->path, $interactor);
+    }
+
+    /**
      * _clean_chunk
      * This is the clean function and is broken into chunks to try to save a little memory
      * @return int[]
@@ -1126,6 +1215,107 @@ class Catalog_local extends Catalog
         $sql = "UPDATE `song` SET `file` = ?, catalog = ? WHERE `id` = ?;";
 
         return (Dba::write($sql, [$new_file, $newCatalogId, $media->id]) !== null);
+    }
+
+    /**
+     * _scan_folder
+     * This is the clean function and is broken into chunks to try to save a little memory
+     */
+    private function _scan_folder(string $path, ?Interactor $interactor = null): int
+    {
+        // Make sure the path doesn't end in a / or \
+        $path = rtrim($path, '/');
+        $path = rtrim($path, '\\');
+
+        // Correctly detect the slash we need to use here
+        $slash_type = str_contains($path, '/') ? '/' : '\\';
+
+        /* Open up the directory */
+        $handle = opendir($path);
+
+        if (!is_resource($handle)) {
+            $interactor?->info(
+                'Unable to open ' . $path,
+                true
+            );
+            debug_event('local.catalog', 'Unable to open ' . $path, 3);
+            /* HINT: directory (file path) */
+            AmpError::add('catalog_scan', sprintf(T_('Unable to open: %s'), $path));
+
+            return 0;
+        }
+
+        $counter      = 0;
+        $foldersadded = 0;
+        /* Recurse through this dir and create the files array */
+        while (false !== ($file = readdir($handle))) {
+            if ('.' === $file || '..' === $file) {
+                continue;
+            }
+
+            // reduce the crazy log info
+            if ($counter % 1000 === 0) {
+                $interactor?->info(
+                    sprintf('Reading %s inside %s', $file, $path),
+                    true
+                );
+                debug_event('local.catalog', sprintf('Reading %s inside %s', $file, $path), 5);
+                debug_event('local.catalog', "Memory usage: " . Ui::format_bytes(memory_get_usage(true)), 5);
+            }
+
+            $counter++;
+
+            /* Create the new path */
+            $full_file = $path . $slash_type . $file;
+
+            try {
+                if (is_dir($full_file)) {
+                    if ($this->add_folder($file, $full_file, $path) !== null) {
+                        $foldersadded++;
+                    }
+                    $this->_scan_folder($full_file, $interactor);
+                }
+                if (is_file($full_file)) {
+                    if ($this->gather_types == 'podcast') {
+                        $object_type = 'podcast_episode';
+                    } elseif ($this->gather_types == 'video') {
+                        $object_type = 'video';
+                    } else {
+                        $object_type = 'song';
+                    }
+
+                    $object_id = Catalog::get_id_from_file($full_file, $object_type);
+                    if ($object_id > 0) {
+                        self::getFolderRepository()->add_folder_map($object_id, $object_type, $path, $this->getId());
+                    }
+                }
+            } catch (Exception $error) {
+                $interactor?->info(
+                    T_('Error') . ' ' . $error->getMessage(),
+                    true
+                );
+                debug_event('local.catalog', 'add_file error: ' . $error->getMessage(), 1);
+            }
+        } // end while reading directory
+
+        $interactor?->info(
+            sprintf('Finished reading %s, closing handle', $path),
+            true
+        );
+        debug_event('local.catalog', sprintf('Finished reading %s, closing handle', $path), 5);
+
+        // update counts after update has finished
+        Dba::write("UPDATE `folder` SET `object_count` = (SELECT COUNT(*) FROM `folder_map` AS `map_count` WHERE `map_count`.`folder_id` = `folder`.`id`);");
+
+        // This should only happen on the last run
+        if ($path === $this->path) {
+            Ui::update_text('scan_count_' . $this->catalog_id, $this->count);
+        }
+
+        /* Close the dir handle */
+        closedir($handle);
+
+        return $foldersadded;
     }
 
     /**

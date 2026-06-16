@@ -50,6 +50,7 @@ final class ObjectCache implements ObjectCacheInterface
             'album_disk',
             'artist',
             'catalog',
+            'folder',
             'genre',
             'live_stream',
             'playlist',

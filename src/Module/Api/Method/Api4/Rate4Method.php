@@ -72,7 +72,7 @@ final class Rate4Method
         $object_id = (int) $input['id'];
         $rating    = (string) $input['rating'];
         // confirm the correct data
-        if (!in_array(strtolower($type), ['song', 'album', 'artist', 'playlist', 'podcast', 'podcast_episode', 'video'])) {
+        if (!Rating::is_valid(strtolower($type))) {
             Api4::message('error', T_('Incorrect object type') . ' ' . $type, '401', $input['api_format']);
 
             return false;

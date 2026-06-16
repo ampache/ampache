@@ -32,6 +32,7 @@ use Ampache\Module\Util\Recommendation;
 use Ampache\Repository\AlbumRepositoryInterface;
 use Ampache\Repository\ArtistRepositoryInterface;
 use Ampache\Repository\BookmarkRepositoryInterface;
+use Ampache\Repository\FolderRepositoryInterface;
 use Ampache\Repository\LabelRepositoryInterface;
 use Ampache\Repository\Model\Catalog;
 use Ampache\Repository\Model\Playlist;
@@ -65,6 +66,7 @@ final readonly class CatalogGarbageCollector implements CatalogGarbageCollectorI
         private LabelRepositoryInterface $labelRepository,
         private ArtCleanupInterface $artCleanup,
         private ArtistRepositoryInterface $artistRepository,
+        private FolderRepositoryInterface $folderRepository,
     ) {
     }
 
@@ -89,6 +91,7 @@ final readonly class CatalogGarbageCollector implements CatalogGarbageCollectorI
         Tag::garbage_collection();
         Catalog::clear_catalog_cache();
         User::garbage_collection();
+        $this->folderRepository->collectGarbage();
 
         $this->metadataManager->collectGarbage();
         $this->podcastEpisodeRepository->collectGarbage();
