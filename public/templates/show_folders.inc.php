@@ -58,8 +58,8 @@ $show_ratings      = User::is_registered() && (AmpConfig::get('ratings'));
 $original_year     = AmpConfig::get('use_original_year');
 $show_played_times = AmpConfig::get('show_played_times');
 // translate once
-$folder_text = T_('Folder');
-$songs_text  = T_('Songs');
+$name_text   = T_('Name');
+$items_text  = T_('# Items');
 $count_text  = T_('Played');
 $rating_text = T_('Rating');
 $action_text = T_('Actions');
@@ -68,8 +68,8 @@ $cel_cover   = "cel_cover";
 $cel_folder  = "cel_folder";
 $cel_counter = "cel_counter";
 $css_class   = '';
-$folder_link = Ajax::text('?page=browse&action=set_sort&folder_id=' . $folder->id . '&sort=name', $folder_text, 'folder_sort_name');
-$songs_link  = Ajax::text('?page=browse&action=set_sort&folder_id=' . $folder->id . '&sort=song_count', $songs_text, 'folder_sort_song_count');
+$folder_link = Ajax::text('?page=browse&action=set_sort&folder_id=' . $folder->id . '&sort=name', $name_text, 'folder_sort_name');
+$songs_link  = Ajax::text('?page=browse&action=set_sort&folder_id=' . $folder->id . '&sort=song_count', $items_text, 'folder_sort_song_count');
 $count_link  = Ajax::text('?page=browse&action=set_sort&folder_id=' . $folder->id . '&sort=total_count', $count_text, 'folder_sort_total_count');
 $rating_link = Ajax::text('?page=browse&action=set_sort&folder_id=' . $folder->id . '&sort=rating', $rating_text, 'folder_sort_rating'); ?>
 <table class="tabledata striped-rows<?php echo $css_class; ?>" data-objecttype="folder">
@@ -173,9 +173,9 @@ foreach ($object_ids as $object) {
         <tr class="th-bottom">
             <th class="cel_play"></th>
             <th class="<?php echo $cel_cover; ?>"><?php echo T_('Art'); ?></th>
-            <th class="<?php echo $cel_folder; ?>"><?php echo $folder_text; ?></th>
+            <th class="<?php echo $cel_folder; ?>"><?php echo $name_text; ?></th>
             <th class="cel_add"></th>
-            <th class="cel_songs"><?php echo $songs_text; ?></th>
+            <th class="cel_songs"><?php echo $items_text; ?></th>
             <?php if ($show_played_times) { ?>
             <th class="<?php echo $cel_counter; ?> optional"><?php echo $count_text; ?></th>
             <?php } ?>
