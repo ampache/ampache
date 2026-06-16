@@ -268,6 +268,7 @@ class Folder extends database_object implements
 
         return $this->f_parent_link ?? '';
     }
+
     /**
      * Get root path link.
      */
