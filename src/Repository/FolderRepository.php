@@ -50,20 +50,13 @@ final readonly class FolderRepository implements FolderRepositoryInterface
         return $folder;
     }
 
-    /**
-     * @return list<mixed>
-     */
-    protected function getPrototypeParameters(): array
-    {
         return [$this];
-    }
-
     public function getByName(string $folderName, int $catalogId = 0, ?int $parent = null): ?Folder
     {
-        $rowId = $this->connection->fetchOne(
-            'SELECT `folder`.`id` FROM `folder` WHERE `folder`.`name` = ? AND `folder`.`catalog` = ? AND `folder`.`parent` = ? LIMIT 1;',
-            [$folderName, $catalogId, $parent]
-        );
+        $sql = 'SELECT `folder`.`id` FROM `folder` WHERE `folder`.`name` = ? AND `folder`.`catalog` = ? AND `folder`.`parent` = ? LIMIT 1;';
+        //debug_event(self::class, 'getByName ' . sprintf('SQL %s', $sql) . print_r([$folderName, $catalogId, $parent], true), 5);
+
+        $rowId = $this->connection->fetchOne($sql, [$folderName, $catalogId, $parent]);
 
         if ($rowId === false) {
             return null;
@@ -75,9 +68,14 @@ final readonly class FolderRepository implements FolderRepositoryInterface
     public function getByPathName(string $folderPath, int $catalogId = 0, ?string $parentPath = null): ?Folder
     {
         $rowId = ($parentPath)
-            ? $this->connection->fetchOne('SELECT `folder`.`id` FROM `folder` WHERE `folder`.`path_name` = ? AND `folder`.`catalog` = ? AND `folder`.`parent` = ?;', [$folderPath, $catalogId, $parentPath])
-            : $this->connection->fetchOne('SELECT `folder`.`id` FROM `folder` WHERE `folder`.`path_name` = ? AND `folder`.`catalog` = ? AND `folder`.`parent` IS NULL;', [$folderPath, $catalogId]);
+        $sql = ($parentPath)
+            ? 'SELECT `folder`.`id` FROM `folder` WHERE `folder`.`path_name` = ? AND `folder`.`catalog` = ? AND `folder`.`parent` = (SELECT `id` FROM `folder` WHERE `path_name` = ?);'
+            : 'SELECT `folder`.`id` FROM `folder` WHERE `folder`.`path_name` = ? AND `folder`.`catalog` = ? AND `folder`.`parent` IS NULL;';
+        $params = ($parentPath)
+            ? [$folderPath, $catalogId, $parentPath]
+            : [$folderPath, $catalogId];
 
+        $rowId = $this->connection->fetchOne($sql, $params);
         if ($rowId === false) {
             return null;
         }
@@ -103,16 +101,6 @@ final readonly class FolderRepository implements FolderRepositoryInterface
         return $folders;
     }
 
-    /**
-     * Return the list of all available folders
-     */
-    public function getPathName(int $folderId): string
-    {
-        $result = $this->connection->fetchOne('SELECT`name` FROM `folder` WHERE `id` = ?', [$folderId]);
-
-        return $result ?: '';
-    }
-
     public function lookup(string $folderName = '', int $catalogId = 0, ?int $parent = null): int
     {
         $ret  = -1;
@@ -126,6 +114,7 @@ final readonly class FolderRepository implements FolderRepositoryInterface
                 $sql .= ' AND `parent` = ?';
                 $params[] = $parent;
             }
+            //debug_event(self::class, 'lookup' . sprintf('SQL %s', $sql) . print_r($params, true), 5);
 
             $result = $this->connection->fetchOne($sql, $params);
 
@@ -150,6 +139,7 @@ final readonly class FolderRepository implements FolderRepositoryInterface
                 $sql .= ' AND `parent` = ?';
                 $params[] = $parent;
             }
+            //debug_event(self::class, 'lookupByPathName ' . sprintf('SQL %s', $sql) . print_r($params, true), 5);
 
             $result = $this->connection->fetchOne($sql, $params);
 
