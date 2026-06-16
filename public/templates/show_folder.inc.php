@@ -33,9 +33,7 @@ use Ampache\Module\Util\Ui;
 use Ampache\Module\Util\ZipHandlerInterface;
 use Ampache\Repository\Model\Browse;
 use Ampache\Repository\Model\Folder;
-use Ampache\Repository\Model\Rating;
 use Ampache\Repository\Model\User;
-use Ampache\Repository\Model\Userflag;
 
 global $dic;
 
@@ -73,22 +71,6 @@ if ($directplay_limit > 0) {
 
 <div class="item_right_info">
 </div>
-<?php if (User::is_registered() && AmpConfig::get('ratings')) { ?>
-    <span id="rating_<?php echo $folder->id; ?>_folder">
-        <?php echo Rating::show($folder->id, 'folder', true); ?>
-    </span>
-    <span id="userflag_<?php echo $folder->id; ?>_folder">
-        <?php echo Userflag::show($folder->id, 'folder'); ?>
-    </span>
-<?php } ?>
-<?php if (AmpConfig::get('show_played_times')) { ?>
-<br />
-<div style="display:inline;">
-    <?php echo T_('Played') . ' ' .
-/* HINT: Number of times an object has been played */
-sprintf(nT_('%d time', '%d times', $folder->total_count), $folder->total_count); ?>
-</div>
-<?php } ?>
 
 <div id="information_actions">
 </div>
