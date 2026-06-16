@@ -26,11 +26,6 @@
         </span>
     </td>
     <td class="cel_songs optional" tal:content="structure FOLDER/getSongCount">SONG COUNT</td>
-    <td class="cel_year">
-        <tal:block tal:condition="FOLDER/canShowYear" tal:content="structure FOLDER/getDisplayYear">
-            YEAR
-        </tal:block>
-    </td>
     <td class="${CLASS_COUNTER} optional" tal:condition="IS_SHOW_PLAYED_TIMES" tal:content="structure FOLDER/getPlayedTimes">PLAYED TIMES</td>
     <td class="cel_ratings" tal:condition="USING_RATINGS">
         <div class="rating">
