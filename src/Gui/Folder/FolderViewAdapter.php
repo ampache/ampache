@@ -95,6 +95,14 @@ final readonly class FolderViewAdapter implements FolderViewAdapterInterface
     {
         $object_id   = $this->object->getId();
         $object_type = $this->object_type;
+        if (
+            $this->object_type === 'song' &&
+            $this->object instanceof Song &&
+            !$this->configContainer->get(ConfigurationKeyEnum::SHOW_SONG_ART)
+        ) {
+            $object_id   = $this->object->album;
+            $object_type = 'album';
+        }
         $name        = scrub_out($this->object->get_fullname());
         $size        = ['width' => 100, 'height' => 100];
 
