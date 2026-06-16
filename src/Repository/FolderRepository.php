@@ -50,7 +50,6 @@ final readonly class FolderRepository implements FolderRepositoryInterface
         return $folder;
     }
 
-        return [$this];
     public function getByName(string $folderName, int $catalogId = 0, ?int $parent = null): ?Folder
     {
         $sql = 'SELECT `folder`.`id` FROM `folder` WHERE `folder`.`name` = ? AND `folder`.`catalog` = ? AND `folder`.`parent` = ? LIMIT 1;';
@@ -67,13 +66,13 @@ final readonly class FolderRepository implements FolderRepositoryInterface
 
     public function getByPathName(string $folderPath, int $catalogId = 0, ?string $parentPath = null): ?Folder
     {
-        $rowId = ($parentPath)
         $sql = ($parentPath)
             ? 'SELECT `folder`.`id` FROM `folder` WHERE `folder`.`path_name` = ? AND `folder`.`catalog` = ? AND `folder`.`parent` = (SELECT `id` FROM `folder` WHERE `path_name` = ?);'
             : 'SELECT `folder`.`id` FROM `folder` WHERE `folder`.`path_name` = ? AND `folder`.`catalog` = ? AND `folder`.`parent` IS NULL;';
         $params = ($parentPath)
             ? [$folderPath, $catalogId, $parentPath]
             : [$folderPath, $catalogId];
+        //debug_event(self::class, 'getByPathName ' . sprintf('SQL %s', $sql) . print_r($params, true), 5);
 
         $rowId = $this->connection->fetchOne($sql, $params);
         if ($rowId === false) {
