@@ -105,7 +105,7 @@ class Folder extends database_object implements
         if ($folder_id === -1) {
             $info = [
                 'id' => -1,
-                'name' => T_('root'),
+                'name' => T_('Home'),
                 'path_name' => DIRECTORY_SEPARATOR
             ];
         } else {

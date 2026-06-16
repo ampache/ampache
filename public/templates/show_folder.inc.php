@@ -50,10 +50,13 @@ $web_path = AmpConfig::get_web_path();
 /** @var Folder $folder */
 $simple = $folder->get_fullname();
 $f_name = $folder->get_fullname();
-$title  = ($folder->parent !== null)
+if ($folder->getId() === -1) {
+    $title = scrub_out($f_name);
+} else {
+    $title = ($folder->parent !== null)
         ? $folder->get_f_parent_link() . '&nbsp;' . '\\' . '&nbsp;' . scrub_out($f_name)
         : $folder->get_f_home_link() . '&nbsp;' . '\\' . '&nbsp;' . scrub_out($f_name);
-
+}
 $access50          = Access::check(AccessTypeEnum::INTERFACE, AccessLevelEnum::CONTENT_MANAGER);
 $access25          = ($access50 || Access::check(AccessTypeEnum::INTERFACE, AccessLevelEnum::USER));
 $show_direct_play  = AmpConfig::get('directplay');
