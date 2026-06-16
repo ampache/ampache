@@ -361,6 +361,9 @@ class Catalog_local extends Catalog
             $folder = self::getFolderRepository()->create($folderName, $this->getId(), $folderPath, $parent);
         }
 
+        // add maps for all folders as child items
+        self::getFolderRepository()->add_folder_map($folder->getId(), 'folder', $parentPath, $this->getId());
+
         if (!$folder || $folder->isNew()) {
             return null;
         }
@@ -1300,6 +1303,9 @@ class Catalog_local extends Catalog
             true
         );
         debug_event('local.catalog', sprintf('Finished reading %s, closing handle', $path), 5);
+
+        // update counts after update has finished
+        Dba::write("UPDATE `folder` SET `object_count` = (SELECT COUNT(*) FROM `folder_map` AS `map_count` WHERE `map_count`.`folder_id` = `folder`.`id`);");
 
         // This should only happen on the last run
         if ($path === $this->path) {

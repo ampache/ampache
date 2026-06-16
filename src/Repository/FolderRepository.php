@@ -212,12 +212,15 @@ final readonly class FolderRepository implements FolderRepositoryInterface
     public function collectGarbage(): void
     {
         try {
-            $this->connection->query('DELETE FROM `folder_map` WHERE `folder_map`.`object_type` = \'album\' AND `folder_map`.`object_id` NOT IN (SELECT `album`.`id` FROM `album`)');
-            $this->connection->query('DELETE FROM `folder_map` WHERE `folder_map`.`object_type` = \'artist\' AND `folder_map`.`object_id` NOT IN (SELECT `artist`.`id` FROM `artist`)');
-            $this->connection->query('DELETE FROM `folder_map` WHERE `folder_map`.`object_type` = \'podcast\' AND `folder_map`.`object_id` NOT IN (SELECT `podcast`.`id` FROM `podcast`)');
-            $this->connection->query('DELETE FROM `folder_map` WHERE `folder_map`.`object_type` = \'podcast_episode\' AND `folder_map`.`object_id` NOT IN (SELECT `podcast_episode`.`id` FROM `podcast_episode`)');
-            $this->connection->query('DELETE FROM `folder_map` WHERE `folder_map`.`object_type` = \'song\' AND `folder_map`.`object_id` NOT IN (SELECT `song`.`id` FROM `song`)');
-            $this->connection->query('DELETE FROM `folder` WHERE `id` NOT IN (SELECT `folder_id` FROM `folder_map`) AND `user` IS NULL');
+            $this->connection->query('DELETE FROM `folder_map` WHERE `folder_map`.`object_type` = \'album\' AND `folder_map`.`object_id` NOT IN (SELECT `album`.`id` FROM `album`);');
+            $this->connection->query('DELETE FROM `folder_map` WHERE `folder_map`.`object_type` = \'artist\' AND `folder_map`.`object_id` NOT IN (SELECT `artist`.`id` FROM `artist`);');
+            $this->connection->query('DELETE FROM `folder_map` WHERE `folder_map`.`object_type` = \'podcast\' AND `folder_map`.`object_id` NOT IN (SELECT `podcast`.`id` FROM `podcast`);');
+            $this->connection->query('DELETE FROM `folder_map` WHERE `folder_map`.`object_type` = \'podcast_episode\' AND `folder_map`.`object_id` NOT IN (SELECT `podcast_episode`.`id` FROM `podcast_episode`);');
+            $this->connection->query('DELETE FROM `folder_map` WHERE `folder_map`.`object_type` = \'song\' AND `folder_map`.`object_id` NOT IN (SELECT `song`.`id` FROM `song`);');
+            $this->connection->query('DELETE FROM `folder_map` WHERE `folder_map`.`object_type` = \'folder\' AND `folder_map`.`object_id` NOT IN (SELECT `folder`.`id` FROM `folder`);');
+            $this->connection->query('DELETE FROM `folder` WHERE `folder`.`catalog` NOT IN (SELECT `catalog`.`id` FROM `catalog`);');
+            $this->connection->query('DELETE FROM `folder` WHERE `id` NOT IN (SELECT `folder_id` FROM `folder_map`) AND `parent` IS NOT NULL AND `user` IS NULL;');
+            $this->connection->query('UPDATE `folder` SET `object_count` = (SELECT COUNT(*) FROM `folder_map` AS `map_count` WHERE `map_count`.`folder_id` = `folder`.`id`);');
         } catch (DatabaseException) {
             debug_event(self::class, 'collectGarbage error', 5);
         }
