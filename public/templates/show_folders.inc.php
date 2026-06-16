@@ -165,7 +165,7 @@ foreach ($object_ids as $object) {
 } ?>
         <?php if (!count($object_ids)) { ?>
         <tr>
-            <td colspan="<?php echo $thcount; ?>"><span class="nodata"><?php echo T_('No Folder found'); ?></span></td>
+            <td colspan="<?php echo $thcount; ?>"><span class="nodata"></span></td>
         </tr>
         <?php } ?>
     </tbody>
