@@ -32,7 +32,6 @@
         </tal:block>
     </td>
     <td class="${CLASS_COUNTER} optional" tal:condition="IS_SHOW_PLAYED_TIMES" tal:content="structure FOLDER/getPlayedTimes">PLAYED TIMES</td>
-    <td class="${CLASS_TAGS} optional" tal:condition="not:IS_HIDE_GENRE" tal:content="structure FOLDER/getGenre">TAGS</td>
     <td class="cel_ratings" tal:condition="USING_RATINGS">
         <div class="rating">
             <span class="cel_rating" id="rating_${FOLDER/getId}_folder" tal:content="structure FOLDER/getRating">RATING</span>
