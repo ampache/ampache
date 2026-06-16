@@ -234,6 +234,7 @@ class Query
             case 'disabled':
             case 'disk':
             case 'enabled':
+            case 'folder':
             case 'label':
             case 'license':
             case 'min_count':
