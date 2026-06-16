@@ -128,6 +128,7 @@ class Art extends database_object
 
         return (
             InterfaceImplementationChecker::is_library_item($type) ||
+            $type == 'folder' ||
             $type == 'user'
         );
     }
