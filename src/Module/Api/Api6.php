@@ -216,9 +216,9 @@ class Api6
 
     public static string $auth_version = '350001';
 
-    public static string $version = '6.9.1'; // AMPACHE_VERSION
+    public static string $version = '6.9.2'; // AMPACHE_VERSION
 
-    public static string $version_numeric = '691015'; // AMPACHE_VERSION
+    public static string $version_numeric = '692002'; // AMPACHE_VERSION
 
     public static ?Browse $browse = null;
 
