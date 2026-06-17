@@ -194,12 +194,13 @@ final readonly class FolderViewAdapter implements FolderViewAdapterInterface
 
     public function canPostShout(): bool
     {
-        return (
-            $this->object_type === 'folder' ||
-            $this->configContainer->isAuthenticationEnabled() === false ||
-            $this->gatekeeper->mayAccess(AccessTypeEnum::INTERFACE, AccessLevelEnum::USER)
-        ) &&
-            $this->configContainer->isFeatureEnabled(ConfigurationKeyEnum::SOCIABLE);
+        return 
+            $this->object_type !== 'folder' &&
+            $this->configContainer->isFeatureEnabled(ConfigurationKeyEnum::SOCIABLE) &&
+            (
+                $this->configContainer->isAuthenticationEnabled() === false ||
+                $this->gatekeeper->mayAccess(AccessTypeEnum::INTERFACE, AccessLevelEnum::USER)
+            );
     }
 
     public function getPostShoutUrl(): string
