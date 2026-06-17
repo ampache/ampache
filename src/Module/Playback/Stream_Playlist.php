@@ -283,15 +283,15 @@ class Stream_Playlist
         }
 
         if ($object instanceof Media) {
-            return self::media_object_to_url($object, $additional_params, $urltype, $user);
+            return self::_media_object_to_url($object, $additional_params, $urltype, $user);
         } elseif ($object instanceof Broadcast) {
-            return self::broadcast_object_to_url($object);
+            return self::_broadcast_object_to_url($object);
         }
 
         return null;
     }
 
-    private static function broadcast_object_to_url(Broadcast $object): ?Stream_Url
+    private static function _broadcast_object_to_url(Broadcast $object): ?Stream_Url
     {
         if (!$object->started) {
             return null;
@@ -311,7 +311,7 @@ class Stream_Playlist
         return $surl;
     }
 
-    private static function media_object_to_url(Media $object, string $additional_params = '', string $urltype = 'web', ?User $user = null): ?Stream_Url
+    private static function _media_object_to_url(Media $object, string $additional_params = '', string $urltype = 'web', ?User $user = null): ?Stream_Url
     {
         $url  = self::STREAM_PLAYLIST_ROW;
         if (!$user) {

@@ -49,7 +49,7 @@ class Video extends database_object implements
 
     public int $id = 0;
 
-    public string $file;
+    public ?string $file = null;
 
     public int $catalog;
 

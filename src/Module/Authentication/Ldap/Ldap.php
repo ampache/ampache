@@ -50,11 +50,11 @@ class Ldap
      * instead of the custom LDAP search results provided by the ldap_* library.
      * @param array $searchresult
      */
-    private static function clean_search_results($searchresult): array
+    private static function _clean_search_results($searchresult): array
     {
         $sr_clean = [];
 
-        foreach (self::array_filter_key($searchresult, 'is_int') as $key => $result) {
+        foreach (self::_array_filter_key($searchresult, 'is_int') as $key => $result) {
             $sr_clean[$key] = [];
 
             foreach ($result as $field => $values) {
@@ -63,7 +63,7 @@ class Ldap
                 } elseif ($field == 'dn') {
                     $sr_clean[$key][$field] = $values;
                 } else {
-                    $sr_clean[$key][$field] = self::array_filter_key($values, 'is_int');
+                    $sr_clean[$key][$field] = self::_array_filter_key($values, 'is_int');
                 }
             }
         }
@@ -77,7 +77,7 @@ class Ldap
      * @param array $array
      * @param callable-string $callback
      */
-    private static function array_filter_key($array, $callback): array
+    private static function _array_filter_key($array, $callback): array
     {
         return array_filter($array, $callback, ARRAY_FILTER_USE_KEY);
     }
@@ -91,7 +91,7 @@ class Ldap
      * connection as soon as one is needed.
      * @throws LdapException
      */
-    private static function connect(): Connection
+    private static function _connect(): Connection
     {
         if (!$url = AmpConfig::get('ldap_url')) {
             throw new LdapException('Required configuration value missing: ldap_url');
@@ -119,7 +119,7 @@ class Ldap
      * @param string $password
      * @throws LdapException
      */
-    private static function bind($link, $username = null, $password = null): void
+    private static function _bind($link, $username = null, $password = null): void
     {
         if ($username === null && $password === null) {
             $username = AmpConfig::get('ldap_username', '');
@@ -136,7 +136,7 @@ class Ldap
     /**
      * Unbinds from the LDAP
      */
-    private static function unbind($link): void
+    private static function _unbind($link): void
     {
         ldap_unbind($link);
     }
@@ -148,7 +148,7 @@ class Ldap
      * @param string $filter
      * @throws LdapException
      */
-    private static function read($link, $base_dn, $attrs = [], $filter = 'objectClass=*')
+    private static function _read($link, $base_dn, $attrs = [], $filter = 'objectClass=*')
     {
         $attrs_json = json_encode($attrs);
         debug_event(self::class, sprintf('reading attributes %s in `%s`', $attrs_json, $base_dn), 5);
@@ -170,7 +170,7 @@ class Ldap
      * @param bool $only_one_result
      * @throws LdapException
      */
-    private static function search($link, $base_dn, $filter, $only_one_result = true): array
+    private static function _search($link, $base_dn, $filter, $only_one_result = true): array
     {
         debug_event(self::class, sprintf('searching in `%s` for `%s`', $base_dn, $filter), 5);
 
@@ -180,7 +180,7 @@ class Ldap
 
         $entries = ldap_get_entries($link, $result) ?: [];
 
-        $entries = self::clean_search_results($entries);
+        $entries = self::_clean_search_results($entries);
 
         if ($only_one_result) {
             if (count($entries) < 1) {
@@ -216,8 +216,8 @@ class Ldap
     public static function auth($username, $password): array
     {
         try {
-            $link = self::connect();
-            self::bind($link);
+            $link = self::_connect();
+            self::_bind($link);
 
             /* Search for the user with given base_dn, filter, objectclass and username */
 
@@ -242,17 +242,17 @@ class Ldap
                 throw new LdapException('Required configuration value missing: ldap_search_dn');
             }
 
-            $user_entry = self::search($link, $base_dn, $search);
+            $user_entry = self::_search($link, $base_dn, $search);
             $user_dn    = $user_entry['dn'];
 
-            self::bind($link, $user_dn, $password);
+            self::_bind($link, $user_dn, $password);
 
             /* Test if the user is in the required group (optional) */
 
             if ($group_dn = AmpConfig::get('ldap_require_group')) {
                 $member_attribute = (string)AmpConfig::get('ldap_member_attribute', 'member');
 
-                $group_infos = self::read($link, $group_dn, [$member_attribute]);
+                $group_infos = self::_read($link, $group_dn, [$member_attribute]);
 
                 // check username and full distinguished name for membership
                 if (!preg_grep(sprintf('/^%s$/i', $username), $group_infos[$member_attribute]) && !preg_grep(sprintf('/^%s$/i', $user_dn), $group_infos[$member_attribute])) {
@@ -301,7 +301,7 @@ class Ldap
         }
 
         if (isset($link)) {
-            self::unbind($link);
+            self::_unbind($link);
         }
 
         debug_event(self::class, 'Return value of authentication: ' . json_encode($return_value), 5);

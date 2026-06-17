@@ -366,7 +366,7 @@ class Stream
             return [];
         }
 
-        $song_file = self::scrub_arg($media->file);
+        $song_file = self::_scrub_arg($media->file);
         $bit_rate  = $options['bitrate'] ?? self::get_max_bitrate($media, $transcode_settings, $options);
         debug_event(self::class, 'Final transcode bitrate is ' . $bit_rate, 4);
 
@@ -397,7 +397,7 @@ class Stream
 
         if (!empty($options['subtitle'])) {
             // This is too specific to ffmpeg/avconv
-            $string_map['%SRTFILE%'] = str_replace(':', '\:', self::scrub_arg($options['subtitle']));
+            $string_map['%SRTFILE%'] = str_replace(':', '\:', self::_scrub_arg($options['subtitle']));
         }
 
         foreach ($string_map as $search => $replace) {
@@ -419,13 +419,13 @@ class Stream
             return [];
         }
 
-        return self::start_process($command, ['format' => $transcode_settings['format']]);
+        return self::_start_process($command, ['format' => $transcode_settings['format']]);
     }
 
     /**
      * This function behaves like escapeshellarg, but isn't broken
      */
-    private static function scrub_arg(?string $arg): string
+    private static function _scrub_arg(?string $arg): string
     {
         if (strtoupper(substr(PHP_OS, 0, 3)) === 'WIN') {
             return '"' . str_replace(['"', '%'], ['', ''], (string)$arg) . '"';
@@ -485,7 +485,7 @@ class Stream
         if (AmpConfig::get('transcode_cmd') && AmpConfig::get('transcode_input') && AmpConfig::get('encode_get_image')) {
             $command    = AmpConfig::get('transcode_cmd') . ' ' . AmpConfig::get('transcode_input') . ' ' . AmpConfig::get('encode_get_image');
             $string_map = [
-                '%FILE%' => self::scrub_arg($media->file),
+                '%FILE%' => self::_scrub_arg($media->file),
                 '%TIME%' => $frame
             ];
             foreach ($string_map as $search => $replace) {
@@ -495,7 +495,7 @@ class Stream
                 }
             }
 
-            $proc = self::start_process($command);
+            $proc = self::_start_process($command);
 
             if (is_resource($proc['handle'])) {
                 $image = '';
@@ -522,7 +522,7 @@ class Stream
      *     format?: string
      * }
      */
-    private static function start_process(string $command, array $settings = []): array
+    private static function _start_process(string $command, array $settings = []): array
     {
         debug_event(self::class, "Transcode command: " . $command, 3);
 

@@ -886,7 +886,7 @@ class Album extends database_object implements library_item, CatalogItemInterfac
         if (array_key_exists('artist_name', $data) && !empty($data['artist_name'])) {
             $album_artist = Artist::check($data['artist_name']);
             if ($album_artist !== null) {
-                self::update_field('album_artist', $album_artist, $this->id);
+                self::_update_field('album_artist', $album_artist, $this->id);
                 $this->album_artist = $album_artist;
             }
         }
@@ -933,15 +933,15 @@ class Album extends database_object implements library_item, CatalogItemInterfac
                 $new_name         = $trimmed['string'];
                 $aPrefix          = $trimmed['prefix'];
 
-                self::update_field('name', $new_name, $this->id);
-                self::update_field('prefix', $aPrefix, $this->id);
+                self::_update_field('name', $new_name, $this->id);
+                self::_update_field('prefix', $aPrefix, $this->id);
 
                 $this->name   = $new_name;
                 $this->prefix = $aPrefix;
             }
 
             if ($year !== $this->year) {
-                self::update_field('year', $year, $this->id);
+                self::_update_field('year', $year, $this->id);
                 foreach ($songs as $song_id) {
                     Song::update_year($year, $song_id);
                 }
@@ -969,41 +969,41 @@ class Album extends database_object implements library_item, CatalogItemInterfac
             }
 
             if ($mbid != $this->mbid) {
-                self::update_field('mbid', $mbid, $this->id);
+                self::_update_field('mbid', $mbid, $this->id);
             }
 
             if ($mbid_group != $this->mbid_group) {
-                self::update_field('mbid_group', $mbid_group, $this->id);
+                self::_update_field('mbid_group', $mbid_group, $this->id);
             }
 
             if ($album_artist !== $this->album_artist) {
-                self::update_field('album_artist', $album_artist, $this->id);
+                self::_update_field('album_artist', $album_artist, $this->id);
                 self::add_album_map($this->id, 'album', (int)$album_artist);
                 self::remove_album_map($this->id, 'album', (int)$this->album_artist);
             }
 
             if ($release_type != $this->release_type) {
-                self::update_field('release_type', $release_type, $this->id);
+                self::_update_field('release_type', $release_type, $this->id);
             }
 
             if ($release_type != $this->release_status) {
-                self::update_field('release_status', $release_status, $this->id);
+                self::_update_field('release_status', $release_status, $this->id);
             }
 
             if ($original_year !== $this->original_year) {
-                self::update_field('original_year', $original_year, $this->id);
+                self::_update_field('original_year', $original_year, $this->id);
             }
 
             if ($barcode != $this->barcode) {
-                self::update_field('barcode', $barcode, $this->id);
+                self::_update_field('barcode', $barcode, $this->id);
             }
 
             if ($catalog_number != $this->catalog_number) {
-                self::update_field('catalog_number', $catalog_number, $this->id);
+                self::_update_field('catalog_number', $catalog_number, $this->id);
             }
 
             if ($version != $this->version) {
-                self::update_field('version', $version, $this->id);
+                self::_update_field('version', $version, $this->id);
             }
         }
 
@@ -1063,7 +1063,7 @@ class Album extends database_object implements library_item, CatalogItemInterfac
     /**
      * Update an album field.
      */
-    private static function update_field(string $field, int|string|null $value, int $album_id): void
+    private static function _update_field(string $field, int|string|null $value, int $album_id): void
     {
         if ($value === null) {
             $sql = "UPDATE `album` SET `" . $field . "` = NULL WHERE `id` = ?";
@@ -1098,7 +1098,7 @@ class Album extends database_object implements library_item, CatalogItemInterfac
             // Update the album
             if ($artist_id > 0) {
                 debug_event(self::class, 'Found album_artist {' . $artist_id . '} for: ' . $album_id, 5);
-                self::update_field('album_artist', $artist_id, $album_id);
+                self::_update_field('album_artist', $artist_id, $album_id);
                 Artist::add_artist_map($artist_id, 'album', $album_id);
                 self::add_album_map($album_id, 'album', $artist_id);
             }

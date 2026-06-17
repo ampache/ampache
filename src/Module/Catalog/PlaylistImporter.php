@@ -46,13 +46,13 @@ final class PlaylistImporter
     {
         $data = (string) file_get_contents($playlist_file);
         if (str_ends_with($playlist_file, 'm3u') || str_ends_with($playlist_file, 'm3u8')) {
-            $files = self::parse_m3u($data);
+            $files = self::_parse_m3u($data);
         } elseif (str_ends_with($playlist_file, 'pls')) {
-            $files = self::parse_pls($data);
+            $files = self::_parse_pls($data);
         } elseif (str_ends_with($playlist_file, 'asx')) {
-            $files = self::parse_asx($data);
+            $files = self::_parse_asx($data);
         } elseif (str_ends_with($playlist_file, 'xspf')) {
-            $files = self::parse_xspf($data);
+            $files = self::_parse_xspf($data);
         }
 
         $web_path = AmpConfig::get_web_path();
@@ -164,7 +164,7 @@ final class PlaylistImporter
      *
      * @return Generator<string>
      */
-    private static function parse_m3u(string $data): Generator
+    private static function _parse_m3u(string $data): Generator
     {
         $results = explode("\n", $data);
 
@@ -181,7 +181,7 @@ final class PlaylistImporter
      *
      * @return Generator<string>
      */
-    private static function parse_pls(string $data): Generator
+    private static function _parse_pls(string $data): Generator
     {
         $results = explode("\n", $data);
 
@@ -201,7 +201,7 @@ final class PlaylistImporter
      *
      * @return Generator<string>
      */
-    private static function parse_asx(string $data): Generator
+    private static function _parse_asx(string $data): Generator
     {
         $xml = simplexml_load_string($data);
 
@@ -221,7 +221,7 @@ final class PlaylistImporter
      *
      * @return Generator<string>
      */
-    private static function parse_xspf(string $data): Generator
+    private static function _parse_xspf(string $data): Generator
     {
         $xml = simplexml_load_string($data);
         if ($xml) {

@@ -1989,7 +1989,7 @@ final class VaInfo implements VaInfoInterface
 
             // Iterate over what we found
             foreach ($matches as $key => $value) {
-                $new_key = self::translate_pattern_code($elements['0'][$key]);
+                $new_key = self::_translate_pattern_code($elements['0'][$key]);
                 if (!in_array($new_key, [null, '', '0'], true)) {
                     if (($new_key === 'multi_artist')) {
                         $results['artist']      = $value;
@@ -2118,7 +2118,7 @@ final class VaInfo implements VaInfoInterface
      * This just contains a keyed array which it checks against to give you the
      * 'tag' name that said pattern code corresponds to. It returns false if nothing is found.
      */
-    private static function translate_pattern_code(string $code): ?string
+    private static function _translate_pattern_code(string $code): ?string
     {
         $code_array = [
             '%A' => 'album',

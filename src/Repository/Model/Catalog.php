@@ -3197,7 +3197,7 @@ abstract class Catalog extends database_object
         $metadataManager = self::getMetadataManager();
 
         if ($metadataManager->isCustomMetadataEnabled()) {
-            $ctags = self::filterMetadata($song, $results);
+            $ctags = self::_filterMetadata($song, $results);
             //debug_event(self::class, "get_clean_metadata " . print_r($ctags, true), 4);
             foreach ($ctags as $tag => $value) {
                 try {
@@ -3430,7 +3430,7 @@ abstract class Catalog extends database_object
      * @param array<string, scalar|scalar[]> $metadata
      * @return array<string, scalar|scalar[]>
      */
-    private static function filterMetadata(MetadataEnabledInterface $libraryItem, array $metadata): array
+    private static function _filterMetadata(MetadataEnabledInterface $libraryItem, array $metadata): array
     {
         $metadataManager = self::getMetadataManager();
 
@@ -3729,7 +3729,7 @@ abstract class Catalog extends database_object
     {
         $metadataManager = self::getMetadataManager();
 
-        $tags = self::filterMetadata($libraryItem, $metadata);
+        $tags = self::_filterMetadata($libraryItem, $metadata);
 
         foreach ($tags as $tag => $value) {
             $value = (is_array($value))
@@ -3746,7 +3746,7 @@ abstract class Catalog extends database_object
     {
         $metadataManager = self::getMetadataManager();
 
-        $tags = self::filterMetadata($item, $tags);
+        $tags = self::_filterMetadata($item, $tags);
 
         foreach ($tags as $tag => $value) {
             $value = (is_array($value))
