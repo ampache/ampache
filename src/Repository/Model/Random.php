@@ -262,8 +262,8 @@ class Random
             $limit_sql = "";
         }
 
-        $search  = self::advanced_sql($data, $type, $limit_sql);
-        $results = self::advanced_results($search['sql'], $search['parameters'], $data);
+        $search  = self::_advanced_sql($data, $type, $limit_sql);
+        $results = self::_advanced_results($search['sql'], $search['parameters'], $data);
         //debug_event(self::class, 'advanced ' . print_r($search, true), 5);
 
         return self::get_songs($type, $results);
@@ -308,7 +308,7 @@ class Random
      * @param array<string, mixed> $data
      * @return int[]
      */
-    private static function advanced_results(string $sql_query, array $sql_params, array $data): array
+    private static function _advanced_results(string $sql_query, array $sql_params, array $data): array
     {
         // Run the query generated above so we can while it
         $db_results = Dba::read($sql_query, $sql_params);
@@ -387,7 +387,7 @@ class Random
      *     parameters: array<int, mixed>
      * }
      */
-    private static function advanced_sql(array $data, string $type, string $limit_sql): array
+    private static function _advanced_sql(array $data, string $type, string $limit_sql): array
     {
         $search = new Search(0, $type);
         $search->set_rules($data);

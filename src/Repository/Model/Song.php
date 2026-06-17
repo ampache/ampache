@@ -1136,8 +1136,8 @@ class Song extends database_object implements
 
             if (in_array($key, $string_array)) {
                 // If it's a string thing
-                $mediaData    = self::clean_string_field_value($mediaData);
-                $newMediaData = self::clean_string_field_value($newMediaData);
+                $mediaData    = self::_clean_string_field_value($mediaData);
+                $newMediaData = self::_clean_string_field_value($newMediaData);
 
                 // tag case isn't important
                 if ($key === 'tags') {
@@ -1168,7 +1168,7 @@ class Song extends database_object implements
     /**
      * clean_string_field_value
      */
-    private static function clean_string_field_value(?string $value = null): string
+    private static function _clean_string_field_value(?string $value = null): string
     {
         if (!$value) {
             return '';

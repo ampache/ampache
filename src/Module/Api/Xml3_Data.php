@@ -170,7 +170,7 @@ class Xml3_Data
      * This returns the formatted 'tags' string for an xml document
      * @param array<int, array{id: int, name: string, is_hidden: int, count: int}> $tags
      */
-    private static function tags_string(array $tags): string
+    private static function _tags_string(array $tags): string
     {
         $string = '';
 
@@ -206,7 +206,7 @@ class Xml3_Data
      *     track: int
      * }> $playlist_data
      */
-    private static function playlist_song_tracks_string(Song $song, ?array $playlist_data = []): string
+    private static function _playlist_song_tracks_string(Song $song, ?array $playlist_data = []): string
     {
         if (empty($playlist_data)) {
             return "";
@@ -320,7 +320,7 @@ class Xml3_Data
 
             $rating      = new Rating($artist->id, 'artist');
             $user_rating = $rating->get_user_rating($user->getId());
-            $tag_string  = self::tags_string($artist->get_tags());
+            $tag_string  = self::_tags_string($artist->get_tags());
 
             // Build the Art URL, include session
             $art_url = Art::url($artist->id, 'artist', $auth);
@@ -391,7 +391,7 @@ class Xml3_Data
                 $songs = $album->song_count;
             }
 
-            $string .= "\t<year>" . $album->year . "</year>\n\t<tracks>" . $songs . "</tracks>\n\t<disk>" . $album->disk_count . "</disk>\n" . self::tags_string($album->get_tags()) . "\t<art><![CDATA[" . $art_url . "]]></art>\n\t<preciserating>" . ($user_rating ?? 0) . "</preciserating>\n\t<rating>" . ($user_rating ?? 0) . "</rating>\n\t<averagerating>" . $rating->get_average_rating() . "</averagerating>\n\t<mbid>" . $album->mbid . "</mbid>\n</album>\n";
+            $string .= "\t<year>" . $album->year . "</year>\n\t<tracks>" . $songs . "</tracks>\n\t<disk>" . $album->disk_count . "</disk>\n" . self::_tags_string($album->get_tags()) . "\t<art><![CDATA[" . $art_url . "]]></art>\n\t<preciserating>" . ($user_rating ?? 0) . "</preciserating>\n\t<rating>" . ($user_rating ?? 0) . "</rating>\n\t<averagerating>" . $rating->get_average_rating() . "</averagerating>\n\t<mbid>" . $album->mbid . "</mbid>\n</album>\n";
         }
 
         return Xml8_Data::output_xml($string, $full_xml);
@@ -469,8 +469,8 @@ class Xml3_Data
             }
 
             $song->fill_ext_info();
-            $playlist_track_string = self::playlist_song_tracks_string($song, $playlist_data);
-            $tag_string            = self::tags_string(Tag::get_top_tags('song', $song->id));
+            $playlist_track_string = self::_playlist_song_tracks_string($song, $playlist_data);
+            $tag_string            = self::_tags_string(Tag::get_top_tags('song', $song->id));
             $rating                = new Rating($song->id, 'song');
             $user_rating           = $rating->get_user_rating($user->getId());
             $art_url               = Art::url($song->album, 'album', $auth);
@@ -522,7 +522,7 @@ class Xml3_Data
                 continue;
             }
 
-            $string .= "<video id=\"" . $video->id . "\">\n\t<title><![CDATA[" . $video->title . "]]></title>\n\t<name><![CDATA[" . $video->title . "]]></name>\n\t<mime><![CDATA[" . $video->mime . "]]></mime>\n\t<resolution>" . $video->get_f_resolution() . "</resolution>\n\t<size>" . $video->size . "</size>\n" . self::tags_string($video->get_tags()) . "\t<url><![CDATA[" . $video->play_url('', 'api') . "]]></url>\n</video>\n";
+            $string .= "<video id=\"" . $video->id . "\">\n\t<title><![CDATA[" . $video->title . "]]></title>\n\t<name><![CDATA[" . $video->title . "]]></name>\n\t<mime><![CDATA[" . $video->mime . "]]></mime>\n\t<resolution>" . $video->get_f_resolution() . "</resolution>\n\t<size>" . $video->size . "</size>\n" . self::_tags_string($video->get_tags()) . "\t<url><![CDATA[" . $video->play_url('', 'api') . "]]></url>\n</video>\n";
         }
 
         return Xml8_Data::output_xml($string);
@@ -557,7 +557,7 @@ class Xml3_Data
 
             //FIXME: This is duplicate code and so wrong, functions need to be improved
             $tag         = new Tag((int)($song->get_tags()[0]['id'] ?? 0));
-            $tag_string  = self::tags_string($song->get_tags());
+            $tag_string  = self::_tags_string($song->get_tags());
             $rating      = new Rating($song->id, 'song');
             $user_rating = $rating->get_user_rating($user->getId());
             $art_url     = Art::url($song->album, 'album', $auth);

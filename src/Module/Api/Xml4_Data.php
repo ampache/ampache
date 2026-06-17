@@ -183,7 +183,7 @@ class Xml4_Data
      * This returns the formatted 'tags' string for an xml document
      * @param array<int, array{id: int, name: string, is_hidden: int, count: int}> $tags
      */
-    private static function tags_string(array $tags): string
+    private static function _tags_string(array $tags): string
     {
         $string = '';
 
@@ -447,7 +447,7 @@ class Xml4_Data
             $rating      = new Rating($artist->id, 'artist');
             $user_rating = $rating->get_user_rating($user->getId());
             $flag        = new Userflag($artist->id, 'artist');
-            $tag_string  = self::tags_string($artist->get_tags());
+            $tag_string  = self::_tags_string($artist->get_tags());
 
             // Build the Art URL, include session
             $art_url = Art::url($artist->id, 'artist', $auth);
@@ -513,7 +513,7 @@ class Xml4_Data
                 $songs = $album->song_count;
             }
 
-            $string .= "\t<time>" . $album->time . "</time>\n\t<year>" . $album->year . "</year>\n\t<tracks>" . $songs . "</tracks>\n\t<songcount>" . $album->song_count . "</songcount>\n\t<type>" . $album->release_type . "</type>\n\t<disk>" . $album->disk_count . "</disk>\n" . self::tags_string($album->get_tags()) . "\t<art><![CDATA[" . $art_url . "]]></art>\n\t<flag>" . (!$flag->get_flag($user->getId()) ? 0 : 1) . "</flag>\n\t<preciserating>" . $user_rating . "</preciserating>\n\t<rating>" . $user_rating . "</rating>\n\t<averagerating>" . ($rating->get_average_rating() ?? null) . "</averagerating>\n\t<mbid><![CDATA[" . $album->mbid . "]]></mbid>\n</album>\n";
+            $string .= "\t<time>" . $album->time . "</time>\n\t<year>" . $album->year . "</year>\n\t<tracks>" . $songs . "</tracks>\n\t<songcount>" . $album->song_count . "</songcount>\n\t<type>" . $album->release_type . "</type>\n\t<disk>" . $album->disk_count . "</disk>\n" . self::_tags_string($album->get_tags()) . "\t<art><![CDATA[" . $art_url . "]]></art>\n\t<flag>" . (!$flag->get_flag($user->getId()) ? 0 : 1) . "</flag>\n\t<preciserating>" . $user_rating . "</preciserating>\n\t<rating>" . $user_rating . "</rating>\n\t<averagerating>" . ($rating->get_average_rating() ?? null) . "</averagerating>\n\t<mbid><![CDATA[" . $album->mbid . "]]></mbid>\n</album>\n";
         }
 
         return Xml8_Data::output_xml($string, $full_xml);
@@ -719,7 +719,7 @@ class Xml4_Data
             }
 
             $song->fill_ext_info();
-            $tag_string  = self::tags_string(Tag::get_top_tags('song', $song->id));
+            $tag_string  = self::_tags_string(Tag::get_top_tags('song', $song->id));
             $rating      = new Rating($song->id, 'song');
             $user_rating = $rating->get_user_rating($user->getId());
             $flag        = new Userflag($song->id, 'song');
@@ -782,7 +782,7 @@ class Xml4_Data
             $flag        = new Userflag($video->id, 'video');
             $art_url     = Art::url($video->id, 'video', $auth);
 
-            $string .= "<video id=\"" . $video->id . "\">\n\t<title><![CDATA[" . $video->title . "]]></title>\n\t<name><![CDATA[" . $video->title . "]]></name>\n\t<mime><![CDATA[" . $video->mime . "]]></mime>\n\t<resolution><![CDATA[" . $video->get_f_resolution() . "]]></resolution>\n\t<size>" . $video->size . "</size>\n" . self::tags_string($video->get_tags()) . "\t<time><![CDATA[" . $video->time . "]]></time>\n\t<url><![CDATA[" . $video->play_url('', 'api', false, $user->getId(), $user->streamtoken) . "]]></url>\n\t<art><![CDATA[" . $art_url . "]]></art>\n\t<flag>" . (!$flag->get_flag($user->getId()) ? 0 : 1) . "</flag>\n\t<preciserating>" . $user_rating . "</preciserating>\n\t<rating>" . $user_rating . "</rating>\n\t<averagerating>" . (string) ($rating->get_average_rating() ?? null) . "</averagerating>\n</video>\n";
+            $string .= "<video id=\"" . $video->id . "\">\n\t<title><![CDATA[" . $video->title . "]]></title>\n\t<name><![CDATA[" . $video->title . "]]></name>\n\t<mime><![CDATA[" . $video->mime . "]]></mime>\n\t<resolution><![CDATA[" . $video->get_f_resolution() . "]]></resolution>\n\t<size>" . $video->size . "</size>\n" . self::_tags_string($video->get_tags()) . "\t<time><![CDATA[" . $video->time . "]]></time>\n\t<url><![CDATA[" . $video->play_url('', 'api', false, $user->getId(), $user->streamtoken) . "]]></url>\n\t<art><![CDATA[" . $art_url . "]]></art>\n\t<flag>" . (!$flag->get_flag($user->getId()) ? 0 : 1) . "</flag>\n\t<preciserating>" . $user_rating . "</preciserating>\n\t<rating>" . $user_rating . "</rating>\n\t<averagerating>" . (string) ($rating->get_average_rating() ?? null) . "</averagerating>\n</video>\n";
         }
 
         return Xml8_Data::output_xml($string, $full_xml);
@@ -817,7 +817,7 @@ class Xml4_Data
 
             // FIXME: This is duplicate code and so wrong, functions need to be improved
             $tag        = new Tag((int)($song->get_tags()[0]['id'] ?? 0));
-            $tag_string = self::tags_string($song->get_tags());
+            $tag_string = self::_tags_string($song->get_tags());
             $rating     = new Rating($song->id, 'song');
             $art_url    = Art::url($song->album, 'album', $auth);
             $songMime   = $song->mime;

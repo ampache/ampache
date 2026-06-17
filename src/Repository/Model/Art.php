@@ -264,7 +264,7 @@ class Art extends database_object
 
         if ($results = Dba::fetch_assoc($db_results)) {
             if (AmpConfig::get('album_art_store_disk')) {
-                $this->raw = (string)self::read_from_dir($results['size'], $this->object_type, $this->object_id, $this->kind, $results['mime']);
+                $this->raw = (string)self::_read_from_dir($results['size'], $this->object_type, $this->object_id, $this->kind, $results['mime']);
             } else {
                 if (empty($results['image'])) {
                     return false;
@@ -335,7 +335,7 @@ class Art extends database_object
             $this->height     = (int)$results['height'];
             $this->thumb_mime = $results['mime'];
             $this->thumb      = (AmpConfig::get('album_art_store_disk'))
-                ? (string)self::read_from_dir($results['size'], $this->object_type, $this->object_id, $this->kind, $results['mime'])
+                ? (string)self::_read_from_dir($results['size'], $this->object_type, $this->object_id, $this->kind, $results['mime'])
                 : $results['image'];
 
             if (!empty($this->thumb)) {
@@ -543,7 +543,7 @@ class Art extends database_object
             } // foreach song
         } // write_id3
 
-        if (AmpConfig::get('album_art_store_disk') && self::write_to_dir($source, $sizetext, $this->object_type, $this->object_id, $this->kind, $mime)) {
+        if (AmpConfig::get('album_art_store_disk') && self::_write_to_dir($source, $sizetext, $this->object_type, $this->object_id, $this->kind, $mime)) {
             $source = null;
         }
 
@@ -685,7 +685,7 @@ class Art extends database_object
     /**
      * write_to_dir
      */
-    private static function write_to_dir(
+    private static function _write_to_dir(
         string $source,
         string $sizetext,
         string $type,
@@ -781,7 +781,7 @@ class Art extends database_object
     /**
      * read_from_dir
      */
-    private static function read_from_dir(string $sizetext, string $type, int $uid, string $kind, string $mime): ?string
+    private static function _read_from_dir(string $sizetext, string $type, int $uid, string $kind, string $mime): ?string
     {
         $path = self::get_dir_on_disk($type, $uid, $sizetext, $kind);
         if (!$path) {
@@ -835,13 +835,13 @@ class Art extends database_object
             if (empty($size)) {
                 $path = self::get_dir_on_disk($type, $uid, 'thumbnail', (string)$kind);
                 if ($path !== null) {
-                    self::delete_rec_dir(rtrim($path, '/'), $size, $mime);
+                    self::_delete_rec_dir(rtrim($path, '/'), $size, $mime);
                 }
                 $size = 'original';
             }
             $path = self::get_dir_on_disk($type, $uid, $size, (string)$kind);
             if ($path !== null) {
-                self::delete_rec_dir(rtrim($path, '/'), $size, $mime);
+                self::_delete_rec_dir(rtrim($path, '/'), $size, $mime);
             }
         }
     }
@@ -849,7 +849,7 @@ class Art extends database_object
     /**
      * delete_rec_dir
      */
-    private static function delete_rec_dir(string $path, ?string $size = '', ?string $mime = ''): void
+    private static function _delete_rec_dir(string $path, ?string $size = '', ?string $mime = ''): void
     {
         $has_size = $size && $mime && preg_match('/^[0-9]+x[0-9]+$/', $size);
 
@@ -865,7 +865,7 @@ class Art extends database_object
                 if ('.' === $file || '..' === $file) {
                     continue;
                 } elseif (is_dir($path . '/' . $file)) {
-                    self::delete_rec_dir(rtrim($path, '/') . '/' . $file, $size);
+                    self::_delete_rec_dir(rtrim($path, '/') . '/' . $file, $size);
                 } elseif ($has_size) {
                     // If we are deleting a specific size, check the file name
                     if (!str_ends_with($file, '-' . $size . '.' . self::extension($mime))) {
@@ -925,7 +925,7 @@ class Art extends database_object
         $sql = "DELETE FROM `image` WHERE `object_id` = ? AND `object_type` = ? AND `size` = ? AND `kind` = ?";
         Dba::write($sql, [$this->object_id, $this->object_type, $sizetext, $this->kind]);
 
-        if (AmpConfig::get('album_art_store_disk') && self::write_to_dir($source, $sizetext, $this->object_type, $this->object_id, $this->kind, $mime)) {
+        if (AmpConfig::get('album_art_store_disk') && self::_write_to_dir($source, $sizetext, $this->object_type, $this->object_id, $this->kind, $mime)) {
             $source = null;
         }
 
@@ -965,14 +965,14 @@ class Art extends database_object
         $results = Dba::fetch_assoc($db_results);
         if ($results !== []) {
             if (AmpConfig::get('album_art_store_disk')) {
-                $image = self::read_from_dir($sizetext, $this->object_type, $this->object_id, $this->kind, $results['mime']);
+                $image = self::_read_from_dir($sizetext, $this->object_type, $this->object_id, $this->kind, $results['mime']);
             } else {
                 $image = $results['image'];
             }
 
             if ($image != null) {
                 return ['thumb' => (AmpConfig::get('album_art_store_disk'))
-                    ? self::read_from_dir($sizetext, $this->object_type, $this->object_id, $this->kind, $results['mime'])
+                    ? self::_read_from_dir($sizetext, $this->object_type, $this->object_id, $this->kind, $results['mime'])
                     : $results['image'], 'thumb_mime' => $results['mime']];
             }
 
@@ -1161,7 +1161,7 @@ class Art extends database_object
             $db_results = Dba::read($sql, [$data['db']]);
             if ($row = Dba::fetch_assoc($db_results)) {
                 if (AmpConfig::get('album_art_store_disk')) {
-                    return (string)self::read_from_dir('original', $type, $row['object_id'], 'default', $row['mime']);
+                    return (string)self::_read_from_dir('original', $type, $row['object_id'], 'default', $row['mime']);
                 }
 
                 return $row['image'];
@@ -1328,9 +1328,9 @@ class Art extends database_object
             $sql        = "SELECT `size`, `kind`, `mime` FROM `image` WHERE `object_type` = ? AND `object_id` = ?";
             $db_results = Dba::read($sql, [$object_type, $old_object_id]);
             while ($row = Dba::fetch_assoc($db_results)) {
-                $image = self::read_from_dir($row['size'], $object_type, $old_object_id, $row['kind'], $row['mime']);
+                $image = self::_read_from_dir($row['size'], $object_type, $old_object_id, $row['kind'], $row['mime']);
                 if ($image !== null) {
-                    self::write_to_dir($image, $row['size'], $write_type, $new_object_id, $row['kind'], $row['mime']);
+                    self::_write_to_dir($image, $row['size'], $write_type, $new_object_id, $row['kind'], $row['mime']);
                 }
             }
         }

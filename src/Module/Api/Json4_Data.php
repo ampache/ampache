@@ -143,7 +143,7 @@ class Json4_Data
      * @param array<int, array{id: int, name: string, is_hidden: int, count: int}> $tags
      * @return array<array{id?: string, name?: string}>
      */
-    private static function tags_array(array $tags, bool $simple = false): array
+    private static function _tags_array(array $tags, bool $simple = false): array
     {
         $JSON = [];
 
@@ -348,7 +348,7 @@ class Json4_Data
                 "albumcount" => $artist->album_count,
                 "songs" => $songs,
                 "songcount" => $artist->song_count,
-                "tag" => self::tags_array($artist->get_tags()),
+                "tag" => self::_tags_array($artist->get_tags()),
                 "art" => $art_url,
                 "flag" => (!$flag->get_flag($user->getId()) ? 0 : 1),
                 "preciserating" => $user_rating,
@@ -424,7 +424,7 @@ class Json4_Data
             $objArray['songcount']     = (int) $album->song_count;
             $objArray['type']          = $album->release_type;
             $objArray['disk']          = (int) $album->disk_count;
-            $objArray['tag']           = self::tags_array($album->get_tags());
+            $objArray['tag']           = self::_tags_array($album->get_tags());
             $objArray['art']           = $art_url;
             $objArray['flag']          = (!$flag->get_flag($user->getId()) ? 0 : 1);
             $objArray['preciserating'] = $user_rating;
@@ -806,7 +806,7 @@ class Json4_Data
             $ourSong['disk']                  = $song->disk;
             $ourSong['track']                 = $song->track;
             $ourSong['filename']              = $song->file;
-            $ourSong['tag']                   = self::tags_array($song->get_tags());
+            $ourSong['tag']                   = self::_tags_array($song->get_tags());
             $ourSong['playlisttrack']         = $playlist_track;
             $ourSong['time']                  = (int) $song->time;
             $ourSong['year']                  = (int) $song->year;
@@ -837,7 +837,7 @@ class Json4_Data
             $ourSong['replaygain_album_peak'] = $song->replaygain_album_peak;
             $ourSong['replaygain_track_gain'] = $song->replaygain_track_gain;
             $ourSong['replaygain_track_peak'] = $song->replaygain_track_peak;
-            $ourSong['genre']                 = self::tags_array($song->get_tags(), true);
+            $ourSong['genre']                 = self::_tags_array($song->get_tags(), true);
 
             /** @var Metadata $metadata */
             foreach ($song->getMetadata() as $metadata) {
@@ -889,7 +889,7 @@ class Json4_Data
                 "mime" => $video->mime,
                 "resolution" => $video->get_f_resolution(),
                 "size" => (int)$video->size,
-                "tag" => self::tags_array($video->get_tags()),
+                "tag" => self::_tags_array($video->get_tags()),
                 "time" => (int)$video->time,
                 "url" => $video->play_url('', 'api', false, $user->getId(), $user->streamtoken),
                 "art" => $art_url,
@@ -947,7 +947,7 @@ class Json4_Data
                     "id" => (string)$song->album,
                     "name" => $song->get_album_fullname()
                 ],
-                "tag" => self::tags_array($song->get_tags()),
+                "tag" => self::_tags_array($song->get_tags()),
                 "track" => (int)$song->track,
                 "time" => (int)$song->time,
                 "mime" => $songMime,
@@ -958,7 +958,7 @@ class Json4_Data
                 "rating" => $user_rating,
                 "averagerating" => ($rating->get_average_rating() ?? null),
                 "vote" => $democratic->get_vote($row_id),
-                "genre" => self::tags_array($song->get_tags(), true)
+                "genre" => self::_tags_array($song->get_tags(), true)
             ];
         }
 

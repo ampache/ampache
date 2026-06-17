@@ -92,7 +92,7 @@ class Upnp_Api
      * @param string $host
      * @param int $port
      */
-    private static function udpSend($buf, $delay = 15, $host = "239.255.255.250", $port = 1900): void
+    private static function _udpSend($buf, $delay = 15, $host = "239.255.255.250", $port = 1900): void
     {
         usleep($delay * 1000); // we are supposed to delay before sending
         $socket = socket_create(AF_INET, SOCK_DGRAM, SOL_UDP);
@@ -132,27 +132,27 @@ class Upnp_Api
         $rootDevice = $prefix . ': upnp:rootdevice' . "\r\n";
         $rootDevice .= 'USN: uuid:' . $uuidStr . '::upnp:rootdevice' . "\r\n" . "\r\n";
         $buf = $strHeader . $rootDevice;
-        self::udpSend($buf, $delay, $host, $port);
+        self::_udpSend($buf, $delay, $host, $port);
 
         $uuid = $prefix . ': uuid:' . $uuidStr . "\r\n";
         $uuid .= 'USN: uuid:' . $uuidStr . "\r\n" . "\r\n";
         $buf = $strHeader . $uuid;
-        self::udpSend($buf, $delay, $host, $port);
+        self::_udpSend($buf, $delay, $host, $port);
 
         $deviceType = $prefix . ': urn:schemas-upnp-org:device:MediaServer:1' . "\r\n";
         $deviceType .= 'USN: uuid:' . $uuidStr . '::urn:schemas-upnp-org:device:MediaServer:1' . "\r\n" . "\r\n";
         $buf = $strHeader . $deviceType;
-        self::udpSend($buf, $delay, $host, $port);
+        self::_udpSend($buf, $delay, $host, $port);
 
         $serviceCM = $prefix . ': urn:schemas-upnp-org:service:ConnectionManager:1' . "\r\n";
         $serviceCM .= 'USN: uuid:' . $uuidStr . '::urn:schemas-upnp-org:service:ConnectionManager:1' . "\r\n" . "\r\n";
         $buf = $strHeader . $serviceCM;
-        self::udpSend($buf, $delay, $host, $port);
+        self::_udpSend($buf, $delay, $host, $port);
 
         $serviceCD = $prefix . ': urn:schemas-upnp-org:service:ContentDirectory:1' . "\r\n";
         $serviceCD .= 'USN: uuid:' . $uuidStr . '::urn:schemas-upnp-org:service:ContentDirectory:1' . "\r\n" . "\r\n";
         $buf = $strHeader . $serviceCD;
-        self::udpSend($buf, $delay, $host, $port);
+        self::_udpSend($buf, $delay, $host, $port);
     }
 
     /**
@@ -183,7 +183,7 @@ class Upnp_Api
         if (self::SSDP_DEBUG) {
             debug_event(self::class, 'Sending response to: ' . $addr[0] . ':' . $addr[1] . PHP_EOL . $response, 5);
         }
-        self::udpSend($response, $delay, $addr[0], (int) $addr[1]);
+        self::_udpSend($response, $delay, $addr[0], (int) $addr[1]);
         if (self::SSDP_DEBUG) {
             // for timing
             debug_event(self::class, '(Sent)', 5);
@@ -1122,7 +1122,7 @@ class Upnp_Api
      * @param string $query
      * @param string $context
      */
-    private static function parse_upnp_search_term($query, $context): array
+    private static function _parse_upnp_search_term($query, $context): array
     {
         //echo "Search term ", $query, "\n";
         $tok = str_getcsv($query, ' ');
@@ -1183,7 +1183,7 @@ class Upnp_Api
     /**
      * Cannot be very precious about this as filtering capability ATM just relates to the kind of search we end up doing
      */
-    private static function parse_upnp_filter($filter): string
+    private static function _parse_upnp_filter($filter): string
     {
         // TODO patched out for now: creates problems in search results
         unset($filter);
@@ -1195,7 +1195,7 @@ class Upnp_Api
         return 'song';
     }
 
-    private static function parse_upnp_searchcriteria($query, $type): array
+    private static function _parse_upnp_searchcriteria($query, $type): array
     {
         // Transforms a upnp search query into an Ampache search query
         $upnp_translations = [
@@ -1290,7 +1290,7 @@ class Upnp_Api
         for ($i = 0; $i < $size; $i++) {
             if ($tokens[$i] != '') {
                 $rule = 'rule_' . $rule_num;
-                $term = self::parse_upnp_search_term($tokens[$i], $data['type']);
+                $term = self::_parse_upnp_search_term($tokens[$i], $data['type']);
                 if (!empty($term)) {
                     $data[$rule]               = $term['ruletype'];
                     $data[$rule . '_operator'] = $term['operator'];
@@ -1313,8 +1313,8 @@ class Upnp_Api
 
     public static function _callSearch($criteria, $filter, $start, $count): array
     {
-        $type = self::parse_upnp_filter($filter);
-        $data = self::parse_upnp_searchcriteria($criteria, $type);
+        $type = self::_parse_upnp_filter($filter);
+        $data = self::_parse_upnp_searchcriteria($criteria, $type);
         debug_event(self::class, 'Dumping search data: ' . var_export($data, true), 5);
         $ids = Search::run($data); // return a list of IDs
         if (count($ids) == 0) {

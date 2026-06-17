@@ -19,7 +19,7 @@ class UPnPFind
      */
     public static function findDevices(): array
     {
-        $discover = self::discover(10);
+        $discover = self::_discover(10);
 
         return($discover); //!!
 
@@ -74,7 +74,7 @@ class UPnPFind
      * @param int $timeout Timeout to wait for responses
      * @return array Response
      */
-    private static function discover(int $timeout = 2): array
+    private static function _discover(int $timeout = 2): array
     {
         $msg = 'M-SEARCH * HTTP/1.1' . "\r\n";
         $msg .= 'HOST: 239.255.255.250:1900' . "\r\n";
@@ -100,7 +100,7 @@ class UPnPFind
             socket_recvfrom($socket, $buf, 1024, MSG_WAITALL, $from, $port);
 
             if ($buf !== null) {
-                $response[] = self::discoveryReponse2Array($buf);
+                $response[] = self::_discoveryReponse2Array($buf);
             }
         } while ($buf !== null);
         //socket_close($socket);
@@ -114,7 +114,7 @@ class UPnPFind
      * @param string $res discovery response
      * @return stdClass
      */
-    private static function discoveryReponse2Array($res)
+    private static function _discoveryReponse2Array($res)
     {
         $result = [];
         $lines  = explode("\n", trim($res));

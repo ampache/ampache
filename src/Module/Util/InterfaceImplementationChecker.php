@@ -38,7 +38,7 @@ final class InterfaceImplementationChecker
      * @param string $instance The subject to search in
      * @param string $interface_name The interface name to search for
      */
-    private static function is_class_typeof(string $instance, string $interface_name): bool
+    private static function _is_class_typeof(string $instance, string $interface_name): bool
     {
         if ($instance === '' || $instance === '0') {
             return false;
@@ -64,7 +64,7 @@ final class InterfaceImplementationChecker
      */
     public static function is_library_item(string $instance): bool
     {
-        return self::is_class_typeof($instance, library_item::class);
+        return self::_is_class_typeof($instance, library_item::class);
     }
 
     /**
@@ -72,6 +72,6 @@ final class InterfaceImplementationChecker
      */
     public static function is_media(string $instance): bool
     {
-        return self::is_class_typeof($instance, Media::class);
+        return self::_is_class_typeof($instance, Media::class);
     }
 }
