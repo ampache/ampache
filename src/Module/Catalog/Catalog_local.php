@@ -359,14 +359,14 @@ class Catalog_local extends Catalog
                 ? self::getFolderRepository()->lookup((string)$this->get_fullname(), $this->getId())
                 : self::getFolderRepository()->lookupByPathName($parentPath, $this->getId());
             $folder = self::getFolderRepository()->create($folderName, $this->getId(), $folderPath, $parent);
+
+            // add maps for all folders as child items
+            self::getFolderRepository()->add_folder_map($folder->getId(), 'folder', $parentPath, $this->getId());
         }
 
         if (!$folder || $folder->isNew()) {
             return null;
         }
-
-        // add maps for all folders as child items
-        self::getFolderRepository()->add_folder_map($folder->getId(), 'folder', $parentPath, $this->getId());
 
         return $folder;
     }
