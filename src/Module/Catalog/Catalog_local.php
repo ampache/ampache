@@ -1262,17 +1262,6 @@ class Catalog_local extends Catalog
                 continue;
             }
 
-            // reduce the crazy log info
-            if ($counter % 1000 === 0) {
-                $interactor?->info(
-                    sprintf('Reading %s inside %s', $file, $path),
-                    true
-                );
-                debug_event('local.catalog', sprintf('Reading %s inside %s', $file, $path), 5);
-                debug_event('local.catalog', "Memory usage: " . Ui::format_bytes(memory_get_usage(true)), 5);
-            }
-
-
             /* Create the new path */
             $full_file = $path . $slash_type . $file;
 
