@@ -118,7 +118,7 @@ final class AddUserAction implements ApplicationActionInterface
             ) {
                 AmpError::add('captcha_user', T_('Captcha failed'));
             }
-        } // end if it's enabled
+        }
 
         if ($this->configContainer->isFeatureEnabled(ConfigurationKeyEnum::USER_AGREEMENT) === true) {
             if (!$_POST['accept_agreement']) {

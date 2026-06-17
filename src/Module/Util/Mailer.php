@@ -162,7 +162,7 @@ final class Mailer implements MailerInterface
             default:
                 $sql = "SELECT * FROM `user` WHERE `email` IS NOT NULL";
                 break;
-        } // end filter switch
+        }
 
         $db_results = Dba::read($sql, $params);
 

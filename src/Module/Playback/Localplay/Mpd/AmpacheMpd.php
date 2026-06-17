@@ -525,7 +525,7 @@ class AmpacheMpd extends localplay_controller
                                 $data['name'] = sprintf('%s %s', $media->name, $site_url);
                                 $data['link'] = (string)$media->site_url;
                                 break;
-                        } // end switch on type
+                        }
                     } else {
                         $title_string = (isset($entry['Title']) && isset($entry['Album']) && isset($entry['Artist']))
                             ? $entry['Title'] . ' - ' . $entry['Album'] . ' - ' . $entry['Artist']
@@ -535,7 +535,7 @@ class AmpacheMpd extends localplay_controller
                     }
 
                     break;
-            } // end switch on primary key type
+            }
 
             /* Optional Elements */
             $data['track'] = $entry['Pos'] + 1;

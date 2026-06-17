@@ -232,7 +232,7 @@ function get_languages(): array
 
             $results[$file] = $name;
         }
-    } // end while
+    }
 
     // Sort the list of languages by country code
     ksort($results);
@@ -506,7 +506,7 @@ function ampache_error_handler(int $errno, string $errstr, string $errfile, int 
             $error_name = "Error";
             $level      = 2;
             break;
-    } // end switch
+    }
 
     // List of things that should only be displayed if they told us to turn
     // on the firehose
@@ -675,7 +675,7 @@ function show_album_select($name, $album_id = 0, $allow_add = false, $song_id = 
         }
 
         echo "\t<option value=\"" . $row['id'] . "\" $selected>" . scrub_out($album_name) . "</option>\n";
-    } // end while
+    }
 
     if ($allow_add) {
         // Append additional option to the end with value=-1
@@ -732,7 +732,7 @@ function show_artist_select($name, $artist_id = 0, $allow_add = false, $song_id 
             : '';
 
         echo "\t<option value=\"" . $row['id'] . "\" $selected>" . scrub_out($row['name']) . "</option>\n";
-    } // end while
+    }
 
     if ($allow_add) {
         // Append additional option to the end with value=-1
@@ -798,7 +798,7 @@ function show_catalog_select($name, $catalog_id, $style = '', $allow_none = fals
         }
 
         echo "\t<option value=\"" . $row['id'] . "\" $selected>" . scrub_out($row['name']) . "</option>\n";
-    } // end while
+    }
 
     echo "</select>\n";
 }
@@ -842,7 +842,7 @@ function show_license_select($name, $license_id = 0, $song_id = 0): void
             echo " data-link=\"" . $row['external_link'] . "\"";
         }
         echo ">" . scrub_out($row['name']) . "</option>\n";
-    } // end while
+    }
 
     echo "</select>\n";
     echo "<a href=\"javascript:show_selected_license_link('" . $key . "');\"><br>" . T_('View License') . " " . Ui::get_material_symbol('exit_to_app') . "</a>";
@@ -873,7 +873,7 @@ function show_user_select($name, $selected = '', $style = ''): void
         $row['fullname'] = $row['fullname'] ?: $row['username'];
 
         echo "\t<option value=\"" . $row['id'] . "\" $select_txt>" . scrub_out($row['fullname']) . "</option>\n";
-    } // end while users
+    }
 
     echo "</select>\n";
 }

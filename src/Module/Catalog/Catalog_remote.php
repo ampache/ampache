@@ -770,7 +770,7 @@ class Catalog_remote extends Catalog
                     flush();
                 }
             }
-        } // end while
+        }
 
         $total_artists = ($remote_catalog_info->artists > 0)
             ? $remote_catalog_info->artists

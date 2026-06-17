@@ -486,7 +486,6 @@ final readonly class PlayAction implements ApplicationActionInterface
                 } // while we've got the 'new' song in old the array
             }
 
-            // end if we've got a cooldown
             $media = new Song($object_id);
             if ($media->id > 0) {
                 // Always remove the play from the list
@@ -1203,7 +1202,6 @@ final readonly class PlayAction implements ApplicationActionInterface
             $bytes_streamed = $stream_size;
         }
 
-        // end output buffering
         ob_end_flush();
 
         // close any leftover handle and processes

@@ -399,7 +399,7 @@ class AmazonSearch
                 }
 
                 break;
-        } // end switch
+        }
     }
 
     /**

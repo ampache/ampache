@@ -232,7 +232,7 @@ final readonly class FileNameConverter implements FileNameConverterInterface
                     return false;
                 }
             } // if the dir doesn't exist
-        } // end foreach
+        }
 
         // Now to copy the file
         $results_copy = copy($full_file, $translated_filename);

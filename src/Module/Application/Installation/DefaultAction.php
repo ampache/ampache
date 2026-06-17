@@ -263,7 +263,7 @@ final class DefaultAction implements ApplicationActionInterface
                 // Show the language options first
                 require_once __DIR__ . '/../../../../public/templates/show_install_lang.inc.php';
                 break;
-        } // end action switch
+        }
 
         return null;
     }

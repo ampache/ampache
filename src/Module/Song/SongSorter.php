@@ -413,7 +413,7 @@ final class SongSorter implements SongSorterInterface
                 );
 
                 return false;
-            } // end if sum's don't match
+            }
 
             if (!unlink($media->file)) {
                 /* HINT: filename (File path) */
@@ -426,7 +426,7 @@ final class SongSorter implements SongSorterInterface
             // Update the catalog
             $sql = "UPDATE `song` SET `file` = ? WHERE `id` = ?;";
             Dba::write($sql, [$fullname, $media->id]);
-        } // end else
+        }
 
         return true;
     }

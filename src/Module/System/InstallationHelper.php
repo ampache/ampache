@@ -323,7 +323,7 @@ final class InstallationHelper implements InstallationHelperInterface
 
                 return false;
             }
-        } // end if we are creating a user
+        }
 
         if ($create_tables) {
             $sql_file   = __DIR__ . '/../../../resources/sql/ampache.sql';

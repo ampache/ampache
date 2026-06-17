@@ -133,7 +133,7 @@ final readonly class LastFmCollectorModule implements CollectorModuleInterface
                         return $images;
                     }
                 }
-            } // end foreach
+            }
         } catch (Exception $exception) {
             $this->logger->error(
                 'LastFM error: ' . $exception->getMessage(),

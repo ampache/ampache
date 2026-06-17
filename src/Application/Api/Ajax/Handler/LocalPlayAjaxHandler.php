@@ -148,7 +148,7 @@ final readonly class LocalPlayAjaxHandler implements AjaxHandlerInterface
                         $results[$browse->get_content_div()] = ob_get_contents();
                         ob_end_clean();
                         break;
-                } // end whitelist
+                }
 
                 break;
             case 'delete_track':

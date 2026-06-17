@@ -543,9 +543,8 @@ class AmpacheVlc extends localplay_controller
                         $data['name'] = htmlspecialchars("(VLC local) " . substr($getlast[$lastis], 0, 50));
                     }
 
-                    // end if loop
                     break;
-            } // end switch on primary key type
+            }
 
             $data['track'] = $key + 1; //track follows localplay api, 'id' + 1
             $counter++;

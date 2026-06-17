@@ -192,7 +192,7 @@ final readonly class BrowseAjaxHandler implements AjaxHandlerInterface
                         break;
                     default:
                         return;
-                } // end switch on type
+                }
 
                 $results[$key] = '';
 

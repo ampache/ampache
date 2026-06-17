@@ -332,7 +332,7 @@ class Catalog_local extends Catalog
                 );
                 debug_event('local.catalog', 'add_file error: ' . $error->getMessage(), 1);
             }
-        } // end while reading directory
+        }
 
         $interactor?->info(
             sprintf('Finished reading %s, closing handle', $path),
@@ -500,7 +500,7 @@ class Catalog_local extends Catalog
                         return false;
                     }
                 }
-            } // end if iconv
+            }
 
             if ($is_playlist) {
                 // if it's a playlist
@@ -638,8 +638,8 @@ class Catalog_local extends Catalog
                             // foreach songs
                             echo "\n";
                         }
-                    } // end if import worked
-                } // end foreach playlist files
+                    }
+                }
             }
 
             // only gather art if you've added new stuff
@@ -1201,7 +1201,7 @@ class Catalog_local extends Catalog
             );
 
             return false;
-        } // end if sum's don't match
+        }
 
         if (!unlink($media->file)) {
             /* HINT: filename (File path) */
@@ -1296,7 +1296,7 @@ class Catalog_local extends Catalog
                 );
                 debug_event('local.catalog', 'add_file error: ' . $error->getMessage(), 1);
             }
-        } // end while reading directory
+        }
 
         $interactor?->info(
             sprintf('Finished reading %s, closing handle', $path),
