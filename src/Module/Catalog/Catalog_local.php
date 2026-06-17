@@ -1254,7 +1254,6 @@ class Catalog_local extends Catalog
             return 0;
         }
 
-        $counter      = 0;
         $foldersadded = 0;
         /* Recurse through this dir and create the files array */
         while (false !== ($file = readdir($handle))) {
@@ -1268,8 +1267,6 @@ class Catalog_local extends Catalog
 
             try {
                 if (is_dir($full_file)) {
-                    $counter++;
-
                     if (
                         !isset($this->_filecache[strtolower($full_file)]) &&
                         $this->add_folder($file, $full_file, $path) !== null
@@ -1283,7 +1280,6 @@ class Catalog_local extends Catalog
                     !isset($this->_filecache[strtolower($full_file)]) &&
                     (Catalog::is_audio_file($full_file) || Catalog::is_video_file($full_file))
                 ) {
-                    $counter++;
                     if ($this->gather_types == 'podcast') {
                         $object_type = 'podcast_episode';
                     } elseif ($this->gather_types == 'video') {
