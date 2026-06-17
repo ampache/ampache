@@ -29,6 +29,7 @@ use Ampache\Config\AmpConfig;
 use Ampache\Module\Api\Api6;
 use Ampache\Module\Api\Exception\ErrorCodeEnum;
 use Ampache\Module\Authorization\AccessLevelEnum;
+use Ampache\Module\System\Core;
 use Ampache\Module\User\Registration;
 use Ampache\Repository\Model\Catalog;
 use Ampache\Repository\Model\User;
@@ -84,7 +85,7 @@ final class Register6Method
         if ($user_id > 0) {
             if (!AmpConfig::get('user_no_email_confirm', false)) {
                 $client     = new User($user_id);
-                $validation = md5(uniqid((string) mt_rand(), true));
+                $validation = Core::generate_random_key();
                 $client->update_validation($validation);
 
                 // Notify user and/or admins

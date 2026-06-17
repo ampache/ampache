@@ -190,7 +190,7 @@ final class AddUserAction implements ApplicationActionInterface
 
         if ($this->configContainer->isFeatureEnabled(ConfigurationKeyEnum::USER_NO_EMAIL_CONFIRM) === false) {
             $client     = $this->modelFactory->createUser($userId);
-            $validation = md5(uniqid((string) mt_rand(), true));
+            $validation = Core::generate_random_key();
             $client->update_validation($validation);
 
             // Notify user and/or admins

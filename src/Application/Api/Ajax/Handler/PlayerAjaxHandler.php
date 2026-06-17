@@ -68,7 +68,7 @@ final readonly class PlayerAjaxHandler implements AjaxHandlerInterface
 
                 $broadcast = new Broadcast((int) $broadcast_id);
                 if ($broadcast->isNew() === false) {
-                    $key = Broadcast::generate_key();
+                    $key = Core::generate_random_key();
                     $broadcast->update_state(1, $key);
                     $results['broadcast'] = Broadcast::get_unbroadcast_link((int) $broadcast_id) . "<script>startBroadcast('" . $key . "');</script>";
                 }

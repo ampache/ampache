@@ -306,10 +306,10 @@ final readonly class Session implements SessionInterface
                 $key  = $data['apikey'] ?? false;
                 break;
             case 'api':
-                $key = (isset($data['apikey'])) ? md5(($data['apikey'] . md5(uniqid((string) mt_rand(), true)))) : md5(uniqid((string) mt_rand(), true));
+                $key = (isset($data['apikey'])) ? md5(($data['apikey'] . Core::generate_random_key())) : Core::generate_random_key();
                 break;
             case 'stream':
-                $key = $data['sid'] ?? md5(uniqid((string)mt_rand(), true));
+                $key = $data['sid'] ?? Core::generate_random_key();
                 break;
             case 'mysql':
             default:
