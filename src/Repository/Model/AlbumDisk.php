@@ -481,9 +481,25 @@ class AlbumDisk extends database_object implements
      */
     public function get_children(string $name): array
     {
-        debug_event(self::class, 'get_children ' . $name, 5);
+        $childrens  = [];
+        $sql        = "SELECT DISTINCT `song`.`id` FROM `song` LEFT JOIN `album_disk` ON `album_disk`.`album_id` = `song`.`album` AND `album_disk`.`disk` = `song`.`disk` WHERE `album_disk`.`album_id` IS NOT NULL AND `album_disk`.`id` = ? AND `song`.`file` LIKE ?;";
+        $db_results = Dba::read($sql, [$this->id, "%" . $name]);
+        while ($row = Dba::fetch_assoc($db_results)) {
+            $childrens[] = [
+                'object_type' => LibraryItemEnum::SONG,
+                'object_id' => (int)$row['id']
+            ];
+        }
 
-        return [];
+        return $childrens;
+    }
+
+    public function has_children(string $name): bool
+    {
+        $sql        = "SELECT DISTINCT `song`.`id` FROM `song` LEFT JOIN `album_disk` ON `album_disk`.`album_id` = `song`.`album` AND `album_disk`.`disk` = `song`.`disk` WHERE `album_disk`.`album_id` IS NOT NULL AND `album_disk`.`id` = ? AND `song`.`file` LIKE ?;";
+        $db_results = Dba::read($sql, [$this->id, "%" . $name]);
+
+        return (Dba::num_rows($db_results) > 0);
     }
 
     /**

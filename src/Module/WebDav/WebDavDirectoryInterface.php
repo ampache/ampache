@@ -48,4 +48,6 @@ interface WebDavDirectoryInterface extends library_item
      * @return array<int, array{object_type: LibraryItemEnum, object_id: int}>
      */
     public function get_children(string $name): array;
+
+    public function has_children(string $name): bool;
 }

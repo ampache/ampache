@@ -35,7 +35,6 @@ use Ampache\Module\Playback\Stream_Url;
 use Ampache\Module\Statistics\Stats;
 use Ampache\Module\System\Core;
 use Ampache\Module\System\Dba;
-use Ampache\Module\WebDav\WebDavDirectoryInterface;
 use Ampache\Repository\ShoutRepositoryInterface;
 use Ampache\Repository\UserActivityRepositoryInterface;
 

@@ -272,6 +272,18 @@ class Label extends database_object implements
         return $childrens;
     }
 
+    public function has_children(string $name): bool
+    {
+        $search                    = [];
+        $search['type']            = "artist";
+        $search['rule_0_input']    = $name;
+        $search['rule_0_operator'] = 4;
+        $search['rule_0']          = "title";
+        $artists                   = Search::run($search);
+
+        return !empty($artists);
+    }
+
     /**
      * update
      */

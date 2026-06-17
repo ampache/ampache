@@ -749,6 +749,14 @@ class Album extends database_object implements
         return $childrens;
     }
 
+    public function has_children(string $name): bool
+    {
+        $sql        = "SELECT DISTINCT `song`.`id` FROM `song` WHERE `song`.`album` = ? AND `song`.`file` LIKE ?;";
+        $db_results = Dba::read($sql, [$this->id, "%" . $name]);
+
+        return (Dba::num_rows($db_results) > 0);
+    }
+
     /**
      * Get all children and sub-childrens media.
      *
