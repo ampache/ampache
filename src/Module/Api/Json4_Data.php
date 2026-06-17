@@ -288,7 +288,7 @@ class Json4_Data
                 "playlists" => 0,
                 "stream" => 0,
             ];
-        } // end foreach
+        }
 
         // return a tag object
         $JSON[] = ["tag" => $TAGS];
@@ -360,7 +360,7 @@ class Json4_Data
                 "yearformed" => (int)$artist->yearformed,
                 "placeformed" => $artist->placeformed
             ];
-        } // end foreach artists
+        }
 
         if ($encode) {
             return json_encode($JSON, JSON_PRETTY_PRINT) ?: '';
@@ -433,7 +433,7 @@ class Json4_Data
             $objArray['mbid']          = $album->mbid;
 
             $JSON[] = $objArray;
-        } // end foreach
+        }
 
         if ($encode) {
             return json_encode($JSON, JSON_PRETTY_PRINT) ?: '';
@@ -514,7 +514,7 @@ class Json4_Data
                 "preciserating" => $user_rating,
                 "rating" => $user_rating,
                 "averagerating" => (string)($rating->get_average_rating() ?? null)];
-        } // end foreach
+        }
 
         return json_encode($JSON, JSON_PRETTY_PRINT) ?: '';
     }
@@ -567,7 +567,7 @@ class Json4_Data
                 "public_url" => $share_public_url,
                 "description" => $share_description
             ];
-        } // end foreach
+        }
 
         return json_encode($allShares, JSON_PRETTY_PRINT) ?: '';
     }
@@ -615,7 +615,7 @@ class Json4_Data
                 "rename_pattern" => $catalog_rename_pattern,
                 "sort_pattern" => $catalog_sort_pattern
             ];
-        } // end foreach
+        }
 
         return json_encode($allCatalogs, JSON_PRETTY_PRINT) ?: '';
     }
@@ -683,7 +683,7 @@ class Json4_Data
                 "averagerating" => (string)($rating->get_average_rating() ?? null),
                 "podcast_episode" => $podcast_episodes
             ];
-        } // end foreach
+        }
 
         return json_encode($allPodcasts, JSON_PRETTY_PRINT) ?: '';
     }
@@ -851,7 +851,7 @@ class Json4_Data
             }
 
             $JSON[] = $ourSong;
-        } // end foreach
+        }
 
         if ($encode) {
             return json_encode($JSON, JSON_PRETTY_PRINT) ?: '';
@@ -898,7 +898,7 @@ class Json4_Data
                 "rating" => $user_rating,
                 "averagerating" => (string)($rating->get_average_rating() ?? null)
             ];
-        } // end foreach
+        }
 
         return json_encode($JSON, JSON_PRETTY_PRINT) ?: '';
     }
@@ -960,7 +960,7 @@ class Json4_Data
                 "vote" => $democratic->get_vote($row_id),
                 "genre" => self::tags_array($song->get_tags(), true)
             ];
-        } // end foreach
+        }
 
         return json_encode($JSON, JSON_PRETTY_PRINT) ?: '';
     }
@@ -1025,7 +1025,7 @@ class Json4_Data
                 "id" => (string)$user_id,
                 "username" => $user->username
             ];
-        } // end foreach
+        }
 
         // return a user object
         $JSON[] = ["user" => $user_array];

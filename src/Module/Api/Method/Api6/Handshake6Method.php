@@ -210,7 +210,7 @@ final class Handshake6Method
 
                 return true;
             } // match
-        } // end while
+        }
 
         debug_event(self::class, 'Login Failed, unable to match passphrase', 1);
         Api6::error('Received Invalid Handshake - Incorrect username or password', ErrorCodeEnum::INVALID_HANDSHAKE, self::ACTION, 'account', $input['api_format']);

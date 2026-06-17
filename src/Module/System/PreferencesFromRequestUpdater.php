@@ -66,7 +66,7 @@ final readonly class PreferencesFromRequestUpdater implements PreferencesFromReq
                 'name' => $row['name'],
                 'type' => $row['type']
             ];
-        } // end collecting keys
+        }
 
         // Foreach through possible keys and assign them
         foreach ($results as $data) {
@@ -122,7 +122,7 @@ final readonly class PreferencesFromRequestUpdater implements PreferencesFromReq
             if ($this->privilegeChecker->check(AccessTypeEnum::INTERFACE, AccessLevelEnum::ADMIN) && array_key_exists($new_level, $_REQUEST)) {
                 Preference::update_level($pref_id, (int)$_REQUEST[$new_level]);
             }
-        } // end foreach preferences
+        }
 
         // Now that we've done that we need to invalidate the cached preferences
         Preference::clear_from_session();

@@ -60,7 +60,7 @@ final class PlaylistSongs3Method
             if ($object['object_type'] === LibraryItemEnum::SONG) {
                 $results[] = $object['object_id'];
             }
-        } // end foreach
+        }
 
         Xml3_Data::set_offset($input['offset'] ?? 0);
         Xml3_Data::set_limit($input['limit'] ?? 0);

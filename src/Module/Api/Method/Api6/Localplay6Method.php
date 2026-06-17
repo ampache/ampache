@@ -166,7 +166,7 @@ final class Localplay6Method
                 Api6::error('Bad Request', ErrorCodeEnum::BAD_REQUEST, self::ACTION, 'command', $input['api_format']);
 
                 return false;
-        } // end switch on command
+        }
 
         if ($command === 'status' && empty($status)) {
             Api6::error('Unable to connect to localplay controller', ErrorCodeEnum::BAD_REQUEST, self::ACTION, 'account', $input['api_format']);

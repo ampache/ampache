@@ -78,9 +78,9 @@ while ($count <= $rows) {
                 </p>
             </td>
 <?php
-        } // end else
+        }
         $j++;
-    } // end while cells
+    }
     if ($count < $rows) {
         echo "</tr>\n<tr>";
     } else {

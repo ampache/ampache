@@ -69,7 +69,7 @@ final readonly class DefaultAjaxHandler implements AjaxHandlerInterface
                 if ($request_type === 'delete') {
                     $user->load_playlist();
                     $user->playlist?->delete_track($request_id);
-                } // end switch
+                }
 
                 $results['rightbar'] = Ui::ajax_include('rightbar.inc.php');
                 break;
@@ -223,7 +223,7 @@ final readonly class DefaultAjaxHandler implements AjaxHandlerInterface
 
                 $results['action_buttons'] = ob_get_contents();
                 ob_end_clean();
-        } // end switch action
+        }
 
         // Go ahead and do the echo
         echo xoutput_from_array($results);

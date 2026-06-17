@@ -1045,7 +1045,6 @@ class Ui implements UiInterface
                     echo sprintf('	<option value="%s" ', $lang) . $selected . ">{$tongue}</option>\n";
                 }
 
-                // end foreach
                 echo "</select>\n";
                 break;
             case 'localplay_controller':
@@ -1065,7 +1064,6 @@ class Ui implements UiInterface
                     echo "\t<option value=\"" . $controller . sprintf('" %s>', $is_selected) . ucfirst($controller) . "</option>\n";
                 }
 
-                // end foreach
                 echo "</select>\n";
                 break;
             case 'api_force_version':

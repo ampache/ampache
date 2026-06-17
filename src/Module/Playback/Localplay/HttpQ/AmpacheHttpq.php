@@ -502,7 +502,7 @@ class AmpacheHttpq extends localplay_controller
                                     $data['name'] = sprintf('%s %s', $media->name, $site_url);
                                     $data['link'] = $media->site_url;
                                     break;
-                            } // end switch on type
+                            }
                         }
                     } else {
                         $data['name'] = basename($data['raw']);
@@ -510,7 +510,7 @@ class AmpacheHttpq extends localplay_controller
                     }
 
                     break;
-            } // end switch on primary key type
+            }
 
             $data['track'] = $key + 1;
 

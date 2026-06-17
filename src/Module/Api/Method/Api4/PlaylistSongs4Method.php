@@ -92,7 +92,7 @@ final class PlaylistSongs4Method
             if ($object['object_type']->value == 'song') {
                 $results[] = $object['object_id'];
             }
-        } // end foreach
+        }
 
         ob_end_clean();
         switch ($input['api_format']) {

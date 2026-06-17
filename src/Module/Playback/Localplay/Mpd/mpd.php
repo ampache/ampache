@@ -368,7 +368,7 @@ class mpd
 
                 return null;
             }
-        } // end while
+        }
         // Generic response
         $this->_error('Connect', "Connection not available");
 

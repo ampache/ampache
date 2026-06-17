@@ -160,8 +160,6 @@ class Core
             debug_event(self::class, sprintf('Registered %s form %s with SID %s and expiration %s (%s seconds from now)', $type, $name, $sid, $expire, $window), 5);
         }
 
-        // end switch on type
-
         return match ($type) {
             'get' => $sid,
             default => '<input type="hidden" name="form_validation" value="' . $sid . '" />',

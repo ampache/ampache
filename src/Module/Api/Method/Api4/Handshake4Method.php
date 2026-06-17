@@ -238,7 +238,7 @@ final class Handshake4Method
 
                 return true;
             } // match
-        } // end while
+        }
 
         debug_event(self::class, 'Login Failed, unable to match passphrase', 1);
         Api4::message('error', T_('Received Invalid Handshake') . ' - ' . T_('Incorrect username or password'), '401', $input['api_format']);

@@ -211,9 +211,8 @@ final readonly class FolderCollectorModule implements CollectorModuleInterface
                 }
             }
 
-            // end while reading dir
             closedir($handle);
-        } // end foreach dirs
+        }
 
         if ($preferred !== []) {
             // We found our favorite filename somewhere, so we need

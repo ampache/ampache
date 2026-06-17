@@ -167,7 +167,7 @@ abstract class localplay_controller
 
                     return $data;
                 }
-            } // end foreach
+            }
         }
 
         return $data;

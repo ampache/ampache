@@ -147,7 +147,7 @@ final class FindArtAction extends AbstractArtAction
                 if (array_key_exists('raw', $image)) {
                     unset($images[$index]['raw']);
                 }
-            } // end foreach
+            }
             // Store the results for further use
             $_SESSION['form']['images'] = $images;
             $this->ui->show(

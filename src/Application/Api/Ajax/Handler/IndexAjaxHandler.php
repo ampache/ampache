@@ -476,7 +476,7 @@ final readonly class IndexAjaxHandler implements AjaxHandlerInterface
                         break;
                     default:
                         return;
-                } // end switch on button
+                }
 
                 Ajax::set_include_override(true);
                 ob_start();

@@ -166,7 +166,7 @@ final class Localplay8Method
                 Api::error('Bad Request', ErrorCodeEnum::BAD_REQUEST, self::ACTION, 'command', $input['api_format']);
 
                 return false;
-        } // end switch on command
+        }
 
         if ($command === 'status' && empty($status)) {
             Api::error('Unable to connect to localplay controller', ErrorCodeEnum::BAD_REQUEST, self::ACTION, 'account', $input['api_format']);

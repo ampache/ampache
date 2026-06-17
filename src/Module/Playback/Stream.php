@@ -700,7 +700,7 @@ class Stream
                     'expire' => (int) $row['expire']
                 ];
             }
-        } // end while
+        }
 
         return $results;
     }
@@ -750,7 +750,7 @@ class Stream
             case 'default':
             default:
                 return true;
-        } // end switch on method
+        }
 
         // Load our javascript
         echo "<script>";

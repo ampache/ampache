@@ -446,7 +446,7 @@ class Json8_Data
                 "prefix" => $prefix,
                 "basename" => $basename,
             ];
-        } // end foreach
+        }
         $output["list"] = $JSON;
 
         return json_encode($output, JSON_PRETTY_PRINT) ?: '';
@@ -487,7 +487,7 @@ class Json8_Data
                 "prefix" => $prefix,
                 "basename" => $basename
             ];
-        } // end foreach
+        }
         $output["browse"] = $JSON;
 
         return json_encode($output, JSON_PRETTY_PRINT) ?: '';
@@ -528,7 +528,7 @@ class Json8_Data
                 "catalog" => (string)$live_stream->catalog,
                 "site_url" => $live_stream->site_url
             ];
-        } // end foreach
+        }
 
         return $JSON;
     }
@@ -597,7 +597,7 @@ class Json8_Data
                     "external_link" => $license->getExternalLink()
                 ];
             }
-        } // end foreach
+        }
         if ($object) {
             $output["license"] = $JSON;
         } else {
@@ -653,7 +653,7 @@ class Json8_Data
                 "website" => $label->website,
                 "user" => (string)$label->user,
             ];
-        } // end foreach
+        }
 
         return $JSON;
     }
@@ -734,7 +734,7 @@ class Json8_Data
                 "is_hidden" => (bool)$tag->is_hidden,
                 "merge" => $merge,
             ];
-        } // end foreach
+        }
 
         return $JSON;
     }
@@ -1018,7 +1018,7 @@ class Json8_Data
                 "yearformed" => (int)$artist->yearformed,
                 "placeformed" => $artist->placeformed
             ];
-        } // end foreach artists
+        }
 
         return $JSON;
     }
@@ -1234,7 +1234,7 @@ class Json8_Data
             $objArray['mbid_group']    = $album->mbid_group;
 
             $JSON[] = $objArray;
-        } // end foreach
+        }
 
         return $JSON;
     }
@@ -1370,7 +1370,7 @@ class Json8_Data
                 "md5" => $md5,
                 "last_update" => $last_update,
             ];
-        } // end foreach
+        }
 
         return $JSON;
     }
@@ -1458,7 +1458,7 @@ class Json8_Data
                 "public_url" => $share_public_url,
                 "description" => $share_description
             ];
-        } // end foreach
+        }
         if ($object) {
             $output["share"] = $JSON;
         } else {
@@ -1536,7 +1536,7 @@ class Json8_Data
                 }
             }
             $count++;
-        } // end foreach
+        }
         if ($object) {
             $output["bookmark"] = $JSON;
         } else {
@@ -1596,7 +1596,7 @@ class Json8_Data
                 "rename_pattern" => $catalog_rename_pattern,
                 "sort_pattern" => $catalog_sort_pattern
             ];
-        } // end foreach
+        }
         if ($object) {
             $output["catalog"] = $JSON;
         } else {
@@ -1721,7 +1721,7 @@ class Json8_Data
                 "averagerating" => $rating->get_average_rating(),
                 "podcast_episode" => $podcast_episodes
             ];
-        } // end foreach
+        }
 
         return $JSON;
     }
@@ -2087,7 +2087,7 @@ class Json8_Data
                 }
             }
             $JSON[] = $objArray;
-        } // end foreach
+        }
 
         return $JSON;
     }
@@ -2212,7 +2212,7 @@ class Json8_Data
             ];
 
             $JSON[] = $objArray;
-        } // end foreach
+        }
 
         if ($object) {
             $output["song_tag"] = $JSON;
@@ -2278,7 +2278,7 @@ class Json8_Data
                 "averagerating" => $rating->get_average_rating(),
                 "playcount" => (int)$video->total_count
             ];
-        } // end foreach
+        }
 
         return $JSON;
     }
@@ -2377,7 +2377,7 @@ class Json8_Data
                 "playcount" => (int)$song->total_count,
                 "vote" => $democratic->get_vote($row_id)
             ];
-        } // end foreach
+        }
         $output = ($object) ? ["song" => $JSON] : $JSON[0] ?? [];
 
         return json_encode($output, JSON_PRETTY_PRINT) ?: '';
@@ -2454,7 +2454,7 @@ class Json8_Data
                 "id" => (string)$user_id,
                 "username" => $user->username
             ];
-        } // end foreach
+        }
 
         return $JSON;
     }

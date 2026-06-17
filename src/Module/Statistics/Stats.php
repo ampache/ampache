@@ -1081,7 +1081,7 @@ class Stats
         $results    = [];
         while ($row = Dba::fetch_row($db_results)) {
             $results[] = (int) $row[0];
-        } // end while results
+        }
 
         return $results;
     }

@@ -69,7 +69,7 @@ final readonly class StreamAjaxHandler implements AjaxHandlerInterface
                         break;
                     default:
                         break 2;
-                } // end switch
+                }
 
                 $current = AmpConfig::get('play_type');
 

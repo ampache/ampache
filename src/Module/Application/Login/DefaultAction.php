@@ -243,7 +243,7 @@ final readonly class DefaultAction implements ApplicationActionInterface
                     );
                     AmpError::add('general', T_('Unable to create a local account'));
                 }
-            } // end if auto_create
+            }
 
             // This allows stealing passwords validated by external means such as LDAP
             if (

@@ -101,7 +101,7 @@ final class PlaylistSongs5Method
             if ($object['object_type'] === LibraryItemEnum::SONG) {
                 $results[] = $object['object_id'];
             }
-        } // end foreach
+        }
 
         ob_end_clean();
         switch ($input['api_format']) {

@@ -318,7 +318,7 @@ final readonly class Session implements SessionInterface
                 // Before refresh we don't have the cookie so we have to use session ID
                 $key = session_id();
                 break;
-        } // end switch on data type
+        }
 
         if (!$key) {
             debug_event(self::class, 'Session creation failed', 1);

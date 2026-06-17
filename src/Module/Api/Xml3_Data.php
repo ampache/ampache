@@ -249,7 +249,7 @@ class Xml3_Data
             } else {
                 $string .= "\t<$key$attribute><![CDATA[" . $value . "]]></$key>\n";
             }
-        } // end foreach
+        }
 
         if (!$callback) {
             $string = Xml8_Data::output_xml($string);
@@ -280,7 +280,7 @@ class Xml3_Data
         foreach ($tags as $tag_id) {
             $tag = new Tag((int)$tag_id);
             $string .= "<tag id=\"$tag_id\">\n\t<name><![CDATA[" . $tag->name . "]]></name>\n\t<albums>" . $tag->album . "</albums>\n\t<artists>" . $tag->artist . "</artists>\n\t<songs>" . $tag->song . "</songs>\n\t<videos>" . $tag->video . "</videos>\n\t<playlists>0</playlists>\n\t<stream>0</stream>\n</tag>\n";
-        } // end foreach
+        }
 
         return Xml8_Data::output_xml($string);
     }
@@ -338,7 +338,7 @@ class Xml3_Data
             }
 
             $string .= "<artist id=\"" . $artist->id . "\">\n\t<name><![CDATA[" . $artist->get_fullname() . "]]></name>\n" . $tag_string . "\t<albums>" . $albums . "</albums>\n\t<songs>" . $songs . "</songs>\n\t<art><![CDATA[" . $art_url . "]]></art>\n\t<preciserating>" . ($user_rating ?? 0) . "</preciserating>\n\t<rating>" . ($user_rating ?? 0) . "</rating>\n\t<averagerating>" . ($rating->get_average_rating() ?? 0) . "</averagerating>\n\t<mbid>" . $artist->mbid . "</mbid>\n\t<summary><![CDATA[" . $artist->summary . "]]></summary>\n\t<yearformed>" . $artist->yearformed . "</yearformed>\n\t<placeformed><![CDATA[" . $artist->placeformed . "]]></placeformed>\n</artist>\n";
-        } // end foreach artists
+        }
 
         return Xml8_Data::output_xml($string, $full_xml);
     }
@@ -392,7 +392,7 @@ class Xml3_Data
             }
 
             $string .= "\t<year>" . $album->year . "</year>\n\t<tracks>" . $songs . "</tracks>\n\t<disk>" . $album->disk_count . "</disk>\n" . self::tags_string($album->get_tags()) . "\t<art><![CDATA[" . $art_url . "]]></art>\n\t<preciserating>" . ($user_rating ?? 0) . "</preciserating>\n\t<rating>" . ($user_rating ?? 0) . "</rating>\n\t<averagerating>" . $rating->get_average_rating() . "</averagerating>\n\t<mbid>" . $album->mbid . "</mbid>\n</album>\n";
-        } // end foreach
+        }
 
         return Xml8_Data::output_xml($string, $full_xml);
     }
@@ -427,7 +427,7 @@ class Xml3_Data
 
             // Build this element
             $string .= "<playlist id=\"" . $playlist->id . "\">\n\t<name><![CDATA[" . $playlist->name . "]]></name>\n\t<owner><![CDATA[" . $playlist->username . "]]></owner>\n\t<items>" . $item_total . "</items>\n\t<type>" . $playlist->type . "</type>\n</playlist>\n";
-        } // end foreach
+        }
 
         return Xml8_Data::output_xml($string);
     }
@@ -492,7 +492,7 @@ class Xml3_Data
             }
 
             $string .= "</song>\n";
-        } // end foreach
+        }
 
         return Xml8_Data::output_xml($string, $full_xml);
     }
@@ -523,7 +523,7 @@ class Xml3_Data
             }
 
             $string .= "<video id=\"" . $video->id . "\">\n\t<title><![CDATA[" . $video->title . "]]></title>\n\t<name><![CDATA[" . $video->title . "]]></name>\n\t<mime><![CDATA[" . $video->mime . "]]></mime>\n\t<resolution>" . $video->get_f_resolution() . "</resolution>\n\t<size>" . $video->size . "</size>\n" . self::tags_string($video->get_tags()) . "\t<url><![CDATA[" . $video->play_url('', 'api') . "]]></url>\n</video>\n";
-        } // end foreach
+        }
 
         return Xml8_Data::output_xml($string);
     }
@@ -568,7 +568,7 @@ class Xml3_Data
                 "\t<artist id=\"" . $song->artist . "\"><![CDATA[" . $song->get_parent_fullname() . "]]></artist>\n" .
                 "\t<album id=\"" . $song->album . "\"><![CDATA[" . $song->get_album_fullname() . "]]></album>\n" .
                 "\t<genre id=\"" . ($tag->id ?: '') . "\"><![CDATA[" . ($tag->name ?: '') . "]]></genre>\n" . $tag_string . "\t<track>" . $song->track . "</track>\n\t<time>" . $song->time . "</time>\n\t<mime>" . $songMime . "</mime>\n\t<url><![CDATA[" . $play_url . "]]></url>\n\t<size>" . $song->size . "</size>\n\t<art><![CDATA[" . $art_url . "]]></art>\n\t<preciserating>" . ($user_rating ?? 0) . "</preciserating>\n\t<rating>" . ($user_rating ?? 0) . "</rating>\n\t<averagerating>" . $rating->get_average_rating() . "</averagerating>\n\t<vote>" . $democratic->get_vote($row_id) . "</vote>\n</song>\n";
-        } // end foreach
+        }
 
         return Xml8_Data::output_xml($string);
     }
@@ -680,7 +680,7 @@ class Xml3_Data
             default:
                 $header = "<?xml version=\"1.0\" encoding=\"" . AmpConfig::get('site_charset', 'UTF-8') . "\" ?>\n<root>\n";
                 break;
-        } // end switch
+        }
 
         return $header;
     }
@@ -705,7 +705,7 @@ class Xml3_Data
             default:
                 $footer = "\n</root>\n";
                 break;
-        } // end switch on type
+        }
 
         return $footer;
     }

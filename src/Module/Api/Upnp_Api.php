@@ -309,47 +309,47 @@ class Upnp_Api
                         $reader->read();
                         if ($reader->nodeType == XMLReader::TEXT) {
                             $retArr['objectid'] = $reader->value;
-                        } // end if
+                        }
                         break;
                     case 'BrowseFlag':
                         $reader->read();
                         if ($reader->nodeType == XMLReader::TEXT) {
                             $retArr['browseflag'] = $reader->value;
-                        } // end if
+                        }
                         break;
                     case 'Filter':
                         $reader->read();
                         if ($reader->nodeType == XMLReader::TEXT) {
                             $retArr['filter'] = $reader->value;
-                        } // end if
+                        }
                         break;
                     case 'StartingIndex':
                         $reader->read();
                         if ($reader->nodeType == XMLReader::TEXT) {
                             $retArr['startingindex'] = $reader->value;
-                        } // end if
+                        }
                         break;
                     case 'RequestedCount':
                         $reader->read();
                         if ($reader->nodeType == XMLReader::TEXT) {
                             $retArr['requestedcount'] = $reader->value;
-                        } // end if
+                        }
                         break;
                     case 'SearchCriteria':
                         $reader->read();
                         if ($reader->nodeType == XMLReader::TEXT) {
                             $retArr['searchcriteria'] = $reader->value;
-                        } // end if
+                        }
                         break;
                     case 'SortCriteria':
                         $reader->read();
                         if ($reader->nodeType == XMLReader::TEXT) {
                             $retArr['sortcriteria'] = $reader->value;
-                        } // end if
+                        }
                         break;
-                } // end switch
-            } // end if
-        } // end while
+                }
+            }
+        }
 
         return $retArr;
     }

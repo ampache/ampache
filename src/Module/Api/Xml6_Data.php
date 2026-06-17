@@ -219,7 +219,7 @@ class Xml6_Data
             } else {
                 $string .= ($object) ? "\t<$object index=\"" . $key . "\"><![CDATA[" . $value . "]]></$object>\n" : "\t<$key$attribute><![CDATA[" . $value . "]]></$key>\n";
             }
-        } // end foreach
+        }
 
         if (!$callback) {
             $string = self::output_xml($string);
@@ -264,7 +264,7 @@ class Xml6_Data
                 $string .= ($name !== 'id') ? "\t\t<$name>$filter</$name>\n" : '';
             }
             $string .= "\t</$item>\n";
-        } // end foreach
+        }
         $string .= ($object_type == '') ? '' : "</$object_type>";
 
         return self::output_xml($string);
@@ -400,7 +400,7 @@ class Xml6_Data
             case 'video':
                 foreach ($objects as $object_id) {
                     $string .= "<$object_type id=\"" . $object_id . "\"/>\n";
-                } // end foreach objects
+                }
                 break;
         }
 
@@ -664,7 +664,7 @@ class Xml6_Data
                 case 'live_stream':
                     $string .= self::live_streams($objects, $user, false);
             }
-        } // end foreach objects
+        }
         $string .= "</search>";
 
         return self::output_xml($string);
@@ -694,7 +694,7 @@ class Xml6_Data
                 "\t<name><![CDATA[" . $object['name'] . "]]></name>\n" .
                 "\t<prefix><![CDATA[" . $prefix . "]]></prefix>\n" .
                 "\t<basename><![CDATA[" . $basename . "]]></basename>\n</list>\n";
-        } // end foreach objects
+        }
 
         return self::output_xml($string);
     }
@@ -727,7 +727,7 @@ class Xml6_Data
                 "\t<name><![CDATA[" . $object['name'] . "]]></name>\n" .
                 "\t<prefix><![CDATA[" . $prefix . "]]></prefix>\n" .
                 "\t<basename><![CDATA[" . $basename . "]]></basename>\n</browse>\n";
-        } // end foreach objects
+        }
 
         return self::output_xml($string);
     }
@@ -786,7 +786,7 @@ class Xml6_Data
             }
 
             $string .= "<license id=\"$label_id\">\n\t<name><![CDATA[" . $label->get_fullname() . "]]></name>\n\t<artists><![CDATA[" . $label->get_artist_count() . "]]></artists>\n\t<summary><![CDATA[" . $label->summary . "]]></summary>\n\t<external_link><![CDATA[" . $label->get_link() . "]]></external_link>\n\t<address><![CDATA[" . $label->address . "]]></address>\n\t<category><![CDATA[" . $label->category . "]]></category>\n\t<email><![CDATA[" . $label->email . "]]></email>\n\t<website><![CDATA[" . $label->website . "]]></website>\n\t<user><![CDATA[" . $label->user . "]]></user>\n</license>\n";
-        } // end foreach
+        }
 
         return self::output_xml($string);
     }
@@ -811,7 +811,7 @@ class Xml6_Data
             $live_stream = new Live_Stream((int)$live_stream_id);
 
             $string .= "<live_stream id=\"" . $live_stream_id . "\">\n\t<name><![CDATA[" . $live_stream->get_fullname() . "]]></name>\n\t<url><![CDATA[" . $live_stream->url . "]]></url>\n\t<codec><![CDATA[" . $live_stream->codec . "]]></codec>\n\t<catalog>" . $live_stream->catalog . "</catalog>\n\t<site_url><![CDATA[" . $live_stream->site_url . "]]></site_url>\n</live_stream>\n";
-        } // end foreach
+        }
 
         return self::output_xml($string, $full_xml);
     }
@@ -845,7 +845,7 @@ class Xml6_Data
                 ? '<merge/>'
                 : $merge;
             $string .= "\n</genre>\n";
-        } // end foreach
+        }
 
         return self::output_xml($string);
     }
@@ -890,7 +890,7 @@ class Xml6_Data
             $songs  = (in_array("songs", $include)) ? self::songs(self::getSongRepository()->getByArtist($artist->id), $user, $auth, false) : '';
 
             $string .= "<artist id=\"" . $artist->id . "\">\n\t<name><![CDATA[" . $artist->get_fullname() . "]]></name>\n\t<prefix><![CDATA[" . $artist->prefix . "]]></prefix>\n\t<basename><![CDATA[" . $artist->name . "]]></basename>\n" . $tag_string . "\t<albums>" . $albums . "</albums>\n\t<albumcount>" . $artist->album_count . "</albumcount>\n\t<songs>" . $songs . "</songs>\n\t<songcount>" . $artist->song_count . "</songcount>\n\t<art><![CDATA[" . $art_url . "]]></art>\n\t<has_art>" . ($artist->has_art() ? 1 : 0) . "</has_art>\n\t<flag>" . (!$flag->get_flag($user->getId()) ? 0 : 1) . "</flag>\n\t<rating>" . $user_rating . "</rating>\n\t<averagerating>" . $rating->get_average_rating() . "</averagerating>\n\t<mbid><![CDATA[" . $artist->mbid . "]]></mbid>\n\t<summary><![CDATA[" . $artist->summary . "]]></summary>\n\t<time><![CDATA[" . $artist->time . "]]></time>\n\t<yearformed>" . (int)$artist->yearformed . "</yearformed>\n\t<placeformed><![CDATA[" . $artist->placeformed . "]]></placeformed>\n</artist>\n";
-        } // end foreach artists
+        }
 
         return self::output_xml($string, $full_xml);
     }
@@ -955,7 +955,7 @@ class Xml6_Data
             // Build the Art URL, include session
             $art_url = Art::url($album->id, 'album', $auth);
             $string .= "\t<time>" . $album->time . "</time>\n\t<year>" . $year . "</year>\n\t<tracks>" . $songs . "</tracks>\n\t<songcount>" . $album->song_count . "</songcount>\n\t<diskcount>" . $album->disk_count . "</diskcount>\n\t<type>" . $album->release_type . "</type>\n" . self::genre_string($album->get_tags()) . "\t<art><![CDATA[" . $art_url . "]]></art>\n\t<has_art>" . ($album->has_art() ? 1 : 0) . "</has_art>\n\t<flag>" . (!$flag->get_flag($user->getId()) ? 0 : 1) . "</flag>\n\t<rating>" . $user_rating . "</rating>\n\t<averagerating>" . $rating->get_average_rating() . "</averagerating>\n\t<mbid><![CDATA[" . $album->mbid . "]]></mbid>\n\t<mbid_group><![CDATA[" . $album->mbid_group . "]]></mbid_group>\n</album>\n";
-        } // end foreach
+        }
 
         return self::output_xml($string, $full_xml);
     }
@@ -1033,7 +1033,7 @@ class Xml6_Data
 
             // Build this element
             $string .= "<playlist id=\"" . $playlist_id . "\">\n\t<name><![CDATA[" . $playlist_name . "]]></name>\n\t<owner><![CDATA[" . $playlist_username . "]]></owner>\n\t<user id=\"" . $playlist_user . "\">\n\t\t<username><![CDATA[" . $playlist_username . "]]></username>\n\t</user>\n\t<items>" . $items . "</items>\n\t<type>" . $playlist_type . "</type>\n\t<art><![CDATA[" . $art_url . "]]></art>\n\t<has_access>" . (($has_access) ? 1 : 0) . "</has_access>\n\t<has_collaborate>" . (($has_collaborate) ? 1 : 0) . "</has_collaborate>\n\t<has_art>" . ($playlist->has_art() ? 1 : 0) . "</has_art>\n\t<flag>" . (!$flag->get_flag($user->getId()) ? 0 : 1) . "</flag>\n\t<rating>" . $user_rating . "</rating>\n\t<averagerating>" . $rating->get_average_rating() . "</averagerating>\n\t<md5>" . $md5 . "</md5>\n\t<last_update>" . $last_update . "</last_update>\n</playlist>\n";
-        } // end foreach
+        }
 
         return self::output_xml($string);
     }
@@ -1058,7 +1058,7 @@ class Xml6_Data
         foreach ($objects as $share_id) {
             $share = new Share((int)$share_id);
             $string .= "<share id=\"$share_id\">\n\t<name><![CDATA[" . $share->getObjectName() . "]]></name>\n\t<user><![CDATA[" . $share->getUserName() . "]]></user>\n\t<allow_stream>" . $share->allow_stream . "</allow_stream>\n\t<allow_download>" . $share->allow_download . "</allow_download>\n\t<creation_date>" . $share->creation_date . "</creation_date>\n\t<lastvisit_date>" . $share->lastvisit_date . "</lastvisit_date>\n\t<object_type><![CDATA[" . $share->object_type . "]]></object_type>\n\t<object_id>" . $share->object_id . "</object_id>\n\t<expire_days>" . $share->expire_days . "</expire_days>\n\t<max_counter>" . $share->max_counter . "</max_counter>\n\t<counter>" . $share->counter . "</counter>\n\t<secret><![CDATA[" . $share->secret . "]]></secret>\n\t<public_url><![CDATA[" . $share->public_url . "]]></public_url>\n\t<description><![CDATA[" . $share->description . "]]></description>\n</share>\n";
-        } // end foreach
+        }
 
         return self::output_xml($string, $full_xml);
     }
@@ -1101,7 +1101,7 @@ class Xml6_Data
                 }
             }
             $string .= "</bookmark>\n";
-        } // end foreach
+        }
 
         return self::output_xml($string);
     }
@@ -1129,7 +1129,7 @@ class Xml6_Data
                 break;
             }
             $string .= "<catalog id=\"$catalog_id\">\n\t<name><![CDATA[" . $catalog->name . "]]></name>\n\t<type><![CDATA[" . $catalog->catalog_type . "]]></type>\n\t<gather_types><![CDATA[" . $catalog->gather_types . "]]></gather_types>\n\t<enabled>" . $catalog->enabled . "</enabled>\n\t<last_add>" . $catalog->last_add . "</last_add>\n\t<last_clean>" . $catalog->last_clean . "</last_clean>\n\t<last_update>" . $catalog->last_update . "</last_update>\n\t<path><![CDATA[" . $catalog->get_f_info() . "]]></path>\n\t<rename_pattern><![CDATA[" . $catalog->rename_pattern . "]]></rename_pattern>\n\t<sort_pattern><![CDATA[" . $catalog->sort_pattern . "]]></sort_pattern>\n</catalog>\n";
-        } // end foreach
+        }
 
         return self::output_xml($string, $full_xml);
     }
@@ -1172,7 +1172,7 @@ class Xml6_Data
                 }
             }
             $string .= "\t</podcast>\n";
-        } // end foreach
+        }
 
         return self::output_xml($string);
     }
@@ -1205,7 +1205,7 @@ class Xml6_Data
             $flag        = new Userflag($episode->id, 'podcast_episode');
             $art_url     = Art::url($episode->podcast, 'podcast', $auth);
             $string .= "\t<podcast_episode id=\"$episode_id\">\n\t\t<title><![CDATA[" . $episode->get_fullname() . "]]></title>\n\t\t<name><![CDATA[" . $episode->get_fullname() . "]]></name>\n\t\t<podcast id=\"$episode->podcast\">\n\t\t\t<name><![CDATA[" . $episode->getPodcastName() . "]]></name></podcast>\n\t\t<description><![CDATA[" . $episode->get_description() . "]]></description>\n\t\t<category><![CDATA[" . $episode->getCategory() . "]]></category>\n\t\t<author><![CDATA[" . $episode->getAuthor() . "]]></author>\n\t\t<author_full><![CDATA[" . $episode->getAuthor() . "]]></author_full>\n\t\t<website><![CDATA[" . $episode->getWebsite() . "]]></website>\n\t\t<pubdate><![CDATA[" . $episode->getPubDate()->format(DATE_ATOM) . "]]></pubdate>\n\t\t<state><![CDATA[" . $episode->getState()->toDescription() . "]]></state>\n\t\t<filelength><![CDATA[" . $episode->get_f_time(true) . "]]></filelength>\n\t\t<filesize><![CDATA[" . $episode->getSizeFormatted() . "]]></filesize>\n\t\t<filename><![CDATA[" . $episode->getFileName() . "]]></filename>\n\t\t<mime><![CDATA[" . ((isset($episode->mime)) ? $episode->mime : '') . "]]></mime>\n\t\t<time>" . (int)$episode->time . "</time>\n\t\t<size>" . (int)$episode->size . "</size>\n\t<bitrate>" . $episode->bitrate . "</bitrate>\n\t<stream_bitrate>" . $episode->bitrate . "</stream_bitrate>\n\t<rate>" . $episode->rate . "</rate>\n\t<mode><![CDATA[" . $episode->mode . "]]></mode>\n\t<channels>" . $episode->channels . "</channels>\n\t\t<public_url><![CDATA[" . $episode->get_link() . "]]></public_url>\n\t\t<url><![CDATA[" . $episode->play_url('', 'api', false, $user->getId(), $user->streamtoken) . "]]></url>\n\t\t<catalog>" . $episode->catalog . "</catalog>\n\t\t<art><![CDATA[" . $art_url . "]]></art>\n\t<has_art>" . ($episode->has_art() ? 1 : 0) . "</has_art>\n\t\t<flag>" . (!$flag->get_flag($user->getId()) ? 0 : 1) . "</flag>\n\t\t\t<rating>" . $user_rating . "</rating>\n\t\t<averagerating>" . $rating->get_average_rating() . "</averagerating>\n\t\t<playcount>" . $episode->total_count . "</playcount>\n\t\t<played>" . $episode->played . "</played>\n\t</podcast_episode>\n";
-        } // end foreach
+        }
 
         return self::output_xml($string, $full_xml);
     }
@@ -1289,7 +1289,7 @@ class Xml6_Data
             }
 
             $string .= "</song>\n";
-        } // end foreach
+        }
 
         return self::output_xml($string, $full_xml);
     }
@@ -1425,7 +1425,7 @@ class Xml6_Data
             $art_url     = Art::url($video->id, 'video', $auth);
 
             $string .= "<video id=\"" . $video->id . "\">\n\t<name><![CDATA[" . $video->title . "]]></name>\n\t<title><![CDATA[" . $video->title . "]]></title>\n\t<mime><![CDATA[" . $video->mime . "]]></mime>\n\t<resolution><![CDATA[" . $video->get_f_resolution() . "]]></resolution>\n\t<size>" . $video->size . "</size>\n" . self::genre_string($video->get_tags()) . "\t<time><![CDATA[" . $video->time . "]]></time>\n\t<url><![CDATA[" . $video->play_url('', 'api', false, $user->getId(), $user->streamtoken) . "]]></url>\n\t<art><![CDATA[" . $art_url . "]]></art>\n\t<has_art>" . ($video->has_art() ? 1 : 0) . "</has_art>\n\t<flag>" . (!$flag->get_flag($user->getId()) ? 0 : 1) . "</flag>\n\t<rating>" . $user_rating . "</rating>\n\t<averagerating>" . $rating->get_average_rating() . "</averagerating>\n\t<playcount>" . $video->total_count . "</playcount>\n</video>\n";
-        } // end foreach
+        }
 
         return self::output_xml($string, $full_xml);
     }
@@ -1475,7 +1475,7 @@ class Xml6_Data
                 "\t<album id=\"" . $song->album . "\"><name><![CDATA[" . $song_album['name'] . "]]></name>\n\t<prefix><![CDATA[" . $song_album['prefix'] . "]]></prefix>\n\t<basename><![CDATA[" . $song_album['basename'] . "]]></basename>\n</album>\n" .
                 "\t<genre id=\"" . ($tag->id ?: '') . "\"><name><![CDATA[" . ($tag->name ?: '') . "]]></name></genre>\n";
             $string .= $tag_string . "\t<track>" . $song->track . "</track>\n\t<time><![CDATA[" . $song->time . "]]></time>\n\t<format>" . $songType . "</format>\n\t<bitrate>" . $songBitrate . "</bitrate>\n\t<mime><![CDATA[" . $songMime . "]]></mime>\n\t<url><![CDATA[" . $play_url . "]]></url>\n\t<size>" . $song->size . "</size>\n\t<art><![CDATA[" . $art_url . "]]></art>\n\t<has_art>" . ($song->has_art() ? 1 : 0) . "</has_art>\n\t<rating>" . $user_rating . "</rating>\n\t<averagerating>" . $rating->get_average_rating() . "</averagerating>\n<playcount>" . $song->total_count . "</playcount>\n\t<vote>" . $democratic->get_vote($row_id) . "</vote>\n</song>\n";
-        } // end foreach
+        }
 
         return self::output_xml($string);
     }
@@ -1674,7 +1674,7 @@ class Xml6_Data
                     // id, addition_time, delete_time, title, file, catalog, total_count, total_skip
                     $string .= "<deleted_video id=\"" . $row['id'] . "\">\n\t<addition_time>" . $row['addition_time'] . "</addition_time>\n\t<delete_time>" . $row['delete_time'] . "</delete_time>\n\t<title><![CDATA[" . $row['title'] . "]]></title>\n\t<file><![CDATA[" . $row['file'] . "]]></file>\n\t<catalog>" . $row['catalog'] . "</catalog>\n\t<total_count>" . $row['total_count'] . "</total_count>\n\t<total_skip>" . $row['total_skip'] . "</total_skip>\n</deleted_video>\n";
             }
-        } // end foreach objects
+        }
 
         return self::output_xml($string);
     }

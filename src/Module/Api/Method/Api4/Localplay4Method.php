@@ -145,7 +145,7 @@ final class Localplay4Method
                 Api4::message('error', T_('Invalid request'), '405', $input['api_format']);
 
                 return false;
-        } // end switch on command
+        }
 
         // bad status calls can happen
         if ($command === 'status' && empty($status)) {
