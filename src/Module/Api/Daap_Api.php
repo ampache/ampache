@@ -513,7 +513,7 @@ class Daap_Api
                         $output .= self::tlv($tag, $song->get_album_fullname());
                         break;
                     case 'daap.songartist':
-                        $output .= self::tlv($tag, $song->get_artist_fullname());
+                        $output .= self::tlv($tag, $song->get_parent_fullname());
                         break;
                     case 'daap.songcomposer':
                         $output .= self::tlv($tag, $song->composer);

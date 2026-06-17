@@ -507,7 +507,7 @@ class AmpacheVlc extends localplay_controller
                 case 'oid':
                     $data['oid']  = $url_data['oid'];
                     $song         = new Song($data['oid']);
-                    $data['name'] = $song->get_fullname() . ' - ' . $song->get_album_fullname($song->album, true) . ' - ' . $song->get_artist_fullname();
+                    $data['name'] = $song->get_fullname() . ' - ' . $song->get_album_fullname($song->album, true) . ' - ' . $song->get_parent_fullname();
                     $data['link'] = $song->get_f_link();
                     break;
                 case 'demo_id':
@@ -627,7 +627,7 @@ class AmpacheVlc extends localplay_controller
                 $array['track_artist'] = htmlspecialchars(substr($arrayholder['root']['information']['meta-information']['artist']['value'], 0, 20));
             } else {
                 $array['track_title']  = $song->title;
-                $array['track_artist'] = $song->get_artist_fullname();
+                $array['track_artist'] = $song->get_parent_fullname();
                 $array['track_album']  = $song->get_album_fullname();
             }
         }

@@ -433,7 +433,7 @@ class Album extends database_object implements library_item, CatalogItemInterfac
             'artist' => [
                 'important' => true,
                 'label' => T_('Artist'),
-                'value' => (string)$this->get_artist_fullname(),
+                'value' => (string)$this->get_parent_fullname(),
             ],
             'album' => [
                 'important' => true,
@@ -648,7 +648,7 @@ class Album extends database_object implements library_item, CatalogItemInterfac
     /**
      * Get the album artist fullname.
      */
-    public function get_artist_fullname(): ?string
+    public function get_parent_fullname(): ?string
     {
         if ($this->f_artist_name === null) {
             $this->findAlbumArtist();
@@ -845,8 +845,8 @@ class Album extends database_object implements library_item, CatalogItemInterfac
         }
 
         if ($album_id !== null && $type !== null) {
-            $title = ($this->get_artist_fullname() != "")
-                ? '[' . $this->get_artist_fullname() . '] ' . $this->get_fullname()
+            $title = ($this->get_parent_fullname() != "")
+                ? '[' . $this->get_parent_fullname() . '] ' . $this->get_fullname()
                 : $this->get_fullname();
             Art::display($type, $album_id, $title, $size, $this->get_link());
         }

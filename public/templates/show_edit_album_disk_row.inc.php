@@ -56,7 +56,7 @@ $is_owner     = $current_user instanceof User && $current_user->getId() == $libi
                     </div>
                     <?php
                         } else {
-                            echo '<input type="hidden" name="album_artist" value="' . (int)$libitem->album_artist . '"/>' . scrub_out($libitem->get_artist_fullname());
+                            echo '<input type="hidden" name="album_artist" value="' . (int)$libitem->album_artist . '"/>' . scrub_out($libitem->get_parent_fullname());
                         } ?>
                 </td>
             </tr>

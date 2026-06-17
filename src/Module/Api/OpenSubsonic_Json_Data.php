@@ -612,7 +612,7 @@ class OpenSubsonic_Json_Data
             'isVideo' => false,
             'type' => 'music',
             'artistId' => $subParent,
-            'artist' => (string)$album->get_artist_fullname(),
+            'artist' => (string)$album->get_parent_fullname(),
         ];
 
         if ($album->has_art()) {
@@ -753,7 +753,7 @@ class OpenSubsonic_Json_Data
         if ($subParent) {
             $json['artistId'] = $subParent;
         }
-        $json['artist'] = (string)$album->get_artist_fullname();
+        $json['artist'] = (string)$album->get_parent_fullname();
         // original year (fall back to regular year)
         $original_year = AmpConfig::get('use_original_year');
         $year          = ($original_year && $album->original_year)
@@ -1355,7 +1355,7 @@ class OpenSubsonic_Json_Data
             'albumId' => $subParent,
             'album' => (string)$song->get_album_fullname(),
             'artistId' => ($song->artist) ? OpenSubsonic_Api::getArtistSubId($song->artist) : '',
-            'artist' => (string)$song->get_artist_fullname(),
+            'artist' => (string)$song->get_parent_fullname(),
         ];
 
         if ($song->has_art()) {
@@ -3321,7 +3321,7 @@ class OpenSubsonic_Json_Data
             $text = str_replace("\r", '', (string)$text);
 
             $json = [
-                'displayArtist' => (string)$song->get_artist_fullname(),
+                'displayArtist' => (string)$song->get_parent_fullname(),
                 'displayTitle' => (string)$song->title,
                 'lang' => 'xxx',
                 'synced' => false,

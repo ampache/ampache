@@ -466,10 +466,10 @@ class Xml6_Data
                     } else {
                         $album = new Album((int)$object_id);
                         $string .= "<$object_type id=\"" . $object_id . "\">\n\t<name><![CDATA[" . $album->get_fullname() . "]]></name>\n\t<prefix><![CDATA[" . $album->prefix . "]]></prefix>\n\t<basename><![CDATA[" . $album->name . "]]></basename>\n";
-                        if ($album->get_artist_fullname() != "") {
+                        if ($album->get_parent_fullname() != "") {
                             $album_artist = [
                                 "id" => $album->findAlbumArtist(),
-                                "name" => $album->get_artist_fullname(),
+                                "name" => $album->get_parent_fullname(),
                                 "prefix" => $album->artist_prefix,
                                 "basename" => $album->artist_name
                             ];
@@ -588,10 +588,10 @@ class Xml6_Data
                     foreach ($objects as $object_id) {
                         $album = new Album((int)$object_id);
                         $string .= "<$object_type id=\"" . $object_id . "\">\n\t<name><![CDATA[" . $album->get_fullname() . "]]></name>\n\t<prefix><![CDATA[" . $album->prefix . "]]></prefix>\n\t<basename><![CDATA[" . $album->name . "]]></basename>\n";
-                        if ($album->get_artist_fullname() != "") {
+                        if ($album->get_parent_fullname() != "") {
                             $album_artist = [
                                 "id" => $album->findAlbumArtist(),
-                                "name" => $album->get_artist_fullname(),
+                                "name" => $album->get_parent_fullname(),
                                 "prefix" => $album->artist_prefix,
                                 "basename" => $album->artist_name
                             ];
@@ -940,7 +940,7 @@ class Xml6_Data
                 : $album->year;
 
             $string .= "<album id=\"" . $album->id . "\">\n\t<name><![CDATA[" . $album->get_fullname() . "]]></name>\n\t<prefix><![CDATA[" . $album->prefix . "]]></prefix>\n\t<basename><![CDATA[" . $album->name . "]]></basename>\n";
-            if ($album->get_artist_fullname() != "") {
+            if ($album->get_parent_fullname() != "") {
                 foreach ($album_artists as $album_artist) {
                     $string .= "\t<artist id=\"" . $album_artist['id'] . "\"><name><![CDATA[" . $album_artist['name'] . "]]></name>\n\t<prefix><![CDATA[" . $album_artist['prefix'] . "]]></prefix>\n\t<basename><![CDATA[" . $album_artist['basename'] . "]]></basename>\n</artist>\n";
                 }

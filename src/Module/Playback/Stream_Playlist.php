@@ -370,7 +370,7 @@ class Stream_Playlist
             case LibraryItemEnum::SONG:
                 /** @var Song $object */
                 $url['title']     = $object->title;
-                $url['author']    = $object->get_artist_fullname();
+                $url['author']    = $object->get_parent_fullname();
                 $url['info_url']  = $object->get_f_link();
                 $show_song_art    = AmpConfig::get('show_song_art', false);
                 $has_art          = Art::has_db($object->id, 'song');
@@ -384,7 +384,7 @@ class Stream_Playlist
             case LibraryItemEnum::VIDEO:
                 /** @var Video $object */
                 $url['title']     = 'Video - ' . $object->title;
-                $url['author']    = $object->get_artist_fullname();
+                $url['author']    = $object->get_parent_fullname();
                 $url['info_url']  = $object->get_f_link();
                 $url['image_url'] = Art::url($object->id, 'video', $api_session, (AmpConfig::get('ajax_load') ? 3 : 4));
                 $url['codec']     = $object->type;
@@ -402,7 +402,7 @@ class Stream_Playlist
             case LibraryItemEnum::SONG_PREVIEW:
                 /** @var Song_Preview $object */
                 $url['title']  = $object->title;
-                $url['author'] = $object->get_artist_fullname();
+                $url['author'] = $object->get_parent_fullname();
                 $url['codec']  = $object->type;
                 break;
             case LibraryItemEnum::PODCAST_EPISODE:

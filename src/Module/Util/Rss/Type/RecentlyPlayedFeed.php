@@ -71,7 +71,7 @@ final readonly class RecentlyPlayedFeed extends AbstractGenericRssFeed
                     'title' => sprintf(
                         '%s - %s - %s',
                         $song->get_fullname(),
-                        $song->get_artist_fullname(),
+                        $song->get_parent_fullname(),
                         $song->get_album_fullname()
                     ),
                     'link' => str_replace('&amp;', '&', $song->get_link()),
@@ -82,7 +82,7 @@ final readonly class RecentlyPlayedFeed extends AbstractGenericRssFeed
                         T_('Title'),
                         $song->get_fullname(),
                         T_('Artist'),
-                        $song->get_artist_fullname(),
+                        $song->get_parent_fullname(),
                         T_('Album'),
                         $song->get_album_fullname(),
                         T_('Play date'),

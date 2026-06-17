@@ -508,10 +508,10 @@ class Json5_Data
             $objArray["id"]   = (string)$album->id;
             $objArray["name"] = $album->get_fullname();
 
-            if ($album->get_artist_fullname() != "") {
+            if ($album->get_parent_fullname() != "") {
                 $objArray['artist'] = [
                     "id" => (string)$album->findAlbumArtist(),
-                    "name" => $album->get_artist_fullname()
+                    "name" => $album->get_parent_fullname()
                 ];
             }
 
@@ -957,7 +957,7 @@ class Json5_Data
                 "name" => $song->get_fullname(),
                 "artist" => [
                     "id" => (string) $song->artist,
-                    "name" => $song->get_artist_fullname()],
+                    "name" => $song->get_parent_fullname()],
                 "album" => [
                     "id" => (string) $song->album,
                     "name" => $song->get_album_fullname()],
@@ -1114,7 +1114,7 @@ class Json5_Data
                 "title" => $song->get_fullname(),
                 "artist" => [
                     "id" => (string)$song->artist,
-                    "name" => $song->get_artist_fullname()
+                    "name" => $song->get_parent_fullname()
                 ],
                 "album" => [
                     "id" => (string)$song->album,

@@ -404,10 +404,10 @@ class Json4_Data
             $objArray["id"]   = (string) $album->id;
             $objArray["name"] = $album->get_fullname();
 
-            if ($album->get_artist_fullname() != "") {
+            if ($album->get_parent_fullname() != "") {
                 $objArray['artist'] = [
                     "id" => (string)$album->findAlbumArtist(),
-                    "name" => $album->get_artist_fullname()
+                    "name" => $album->get_parent_fullname()
                 ];
             }
 
@@ -793,7 +793,7 @@ class Json4_Data
                 "name" => $song->title,
                 "artist" => [
                     "id" => (string) $song->artist,
-                    "name" => $song->get_artist_fullname()],
+                    "name" => $song->get_parent_fullname()],
                 "album" => [
                     "id" => (string) $song->album,
                     "name" => $song->get_album_fullname()],
@@ -940,7 +940,7 @@ class Json4_Data
                 "title" => $song->title,
                 "artist" => [
                     "id" => (string)$song->artist,
-                    "name" => $song->get_artist_fullname()
+                    "name" => $song->get_parent_fullname()
                 ],
                 "album" => [
                     "id" => (string)$song->album,

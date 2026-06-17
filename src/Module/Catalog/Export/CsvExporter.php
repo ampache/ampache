@@ -85,7 +85,7 @@ final class CsvExporter implements CatalogExporterInterface
                 [
                     $song->getId(),
                     $song->title,
-                    $song->get_artist_fullname(),
+                    $song->get_parent_fullname(),
                     $song->get_album_fullname(),
                     $song->get_f_time(),
                     (string)$song->track,
