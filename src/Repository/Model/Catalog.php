@@ -917,6 +917,39 @@ abstract class Catalog extends database_object
     }
 
     /**
+     * _create_filemapcache
+     *
+     * This populates an array which is used to speed up the scan process.
+     */
+    protected function _create_filemapcache(): void
+    {
+        if (count($this->_filecache) == 0) {
+            // Get _EVERYTHING_
+            $sql        = 'SELECT `id`, `file` FROM `song` WHERE `catalog` = ? AND `id` IN (SELECT `object_id` FROM `folder_map` WHERE `object_type` = \'song\');';
+            $db_results = Dba::read($sql, [$this->id]);
+
+            // Populate the filecache
+            while ($results = Dba::fetch_assoc($db_results)) {
+                $this->_filecache[strtolower((string)$results['file'])] = $results['id'];
+            }
+
+            $sql        = 'SELECT `id`, `file` FROM `video` WHERE `catalog` = ? AND `id` IN (SELECT `object_id` FROM `folder_map` WHERE `object_type` = \'song\');';
+            $db_results = Dba::read($sql, [$this->id]);
+
+            while ($results = Dba::fetch_assoc($db_results)) {
+                $this->_filecache[strtolower((string)$results['file'])] = 'v_' . $results['id'];
+            }
+
+            $sql        = 'SELECT `id`, `path_name` FROM `folder` WHERE `catalog` = ?;';
+            $db_results = Dba::read($sql, [$this->id]);
+
+            while ($results = Dba::fetch_assoc($db_results)) {
+                $this->_filecache[strtolower((string)$results['path_name'])] = 'f_' . $results['id'];
+            }
+        }
+    }
+
+    /**
      * get_update_info
      *
      * return the counts from user_data or update_info to speed up responses

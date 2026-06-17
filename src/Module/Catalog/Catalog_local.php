@@ -1227,8 +1227,11 @@ class Catalog_local extends Catalog
      * _scan_folder
      * This is the clean function and is broken into chunks to try to save a little memory
      */
-    private function _scan_folder(string $path, ?Interactor $interactor = null, $primary = true): int
+    private function _scan_folder(string $path, ?Interactor $interactor = null): int
     {
+        // Ensure that we've got our cache
+        $this->_create_filemapcache();
+
         // Make sure the path doesn't end in a / or \
         $path = rtrim($path, '/');
         $path = rtrim($path, '\\');
@@ -1260,7 +1263,7 @@ class Catalog_local extends Catalog
             }
 
             // reduce the crazy log info
-            if ($primary || $counter % 1000 === 0) {
+            if ($counter % 1000 === 0) {
                 $interactor?->info(
                     sprintf('Reading %s inside %s', $file, $path),
                     true
@@ -1269,19 +1272,24 @@ class Catalog_local extends Catalog
                 debug_event('local.catalog', "Memory usage: " . Ui::format_bytes(memory_get_usage(true)), 5);
             }
 
-            $counter++;
 
             /* Create the new path */
             $full_file = $path . $slash_type . $file;
 
+            if (isset($this->_filecache[strtolower($full_file)])) {
+                continue;
+            }
+
             try {
                 if (is_dir($full_file)) {
+                    $counter++;
                     if ($this->add_folder($file, $full_file, $path) !== null) {
                         $foldersadded++;
                     }
                     $this->_scan_folder($full_file, $interactor, false);
                 }
                 if (is_file($full_file) && (Catalog::is_audio_file($full_file) || Catalog::is_video_file($full_file))) {
+                    $counter++;
                     if ($this->gather_types == 'podcast') {
                         $object_type = 'podcast_episode';
                     } elseif ($this->gather_types == 'video') {
@@ -1304,13 +1312,11 @@ class Catalog_local extends Catalog
             }
         }
 
-        if ($primary) {
-            $interactor?->info(
-                sprintf('Finished reading %s, closing handle', $path),
-                true
-            );
-            debug_event('local.catalog', sprintf('Finished reading %s, closing handle', $path), 5);
-        }
+        $interactor?->info(
+            sprintf('Finished reading %s, closing handle', $path),
+            true
+        );
+        debug_event('local.catalog', sprintf('Finished reading %s, closing handle', $path), 5);
 
         // update counts after update has finished
         Dba::write("UPDATE `folder` SET `object_count` = (SELECT COUNT(*) FROM `folder_map` AS `map_count` WHERE `map_count`.`folder_id` = `folder`.`id`);");
