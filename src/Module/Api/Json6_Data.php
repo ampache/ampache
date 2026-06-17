@@ -2105,10 +2105,10 @@ class Json6_Data
      * due to the votes and all of that
      *
      * @param array<int, array{
-     *    object_type: LibraryItemEnum,
-     *    object_id: int,
-     *    track_id: int,
-     *    track: int
+     *     object_type: LibraryItemEnum,
+     *     object_id: int,
+     *     track_id: int,
+     *     track: int
      * }> $object_ids Object IDs
      * @param bool $object (whether to return as a named object array or regular array)
      */
