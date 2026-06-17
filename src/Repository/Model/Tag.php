@@ -36,7 +36,7 @@ use Ampache\Module\Util\InterfaceImplementationChecker;
  * This class handles all of the genre related operations
  *
  */
-class Tag extends database_object implements library_item, GarbageCollectibleInterface
+class Tag extends database_object implements library_item, displayable_item, container_item, GarbageCollectibleInterface
 {
     protected const string DB_TABLENAME = 'tag';
 
@@ -1022,25 +1022,6 @@ class Tag extends database_object implements library_item, GarbageCollectibleInt
     }
 
     /**
-     * @return array{string?: array<int, array{object_type: LibraryItemEnum, object_id: int}>}
-     */
-    public function get_childrens(): array
-    {
-        return [];
-    }
-
-    /**
-     * Search for direct children of an object
-     * @return array<int, array{object_type: LibraryItemEnum, object_id: int}>
-     */
-    public function get_children(string $name): array
-    {
-        debug_event(self::class, 'get_children ' . $name, 5);
-
-        return [];
-    }
-
-    /**
      * @return array<int, array{object_type: LibraryItemEnum, object_id: int}>
      */
     public function get_medias(?string $filter_type = null): array
@@ -1106,5 +1087,10 @@ class Tag extends database_object implements library_item, GarbageCollectibleInt
     public function getMediaType(): LibraryItemEnum
     {
         return LibraryItemEnum::TAG;
+    }
+
+    public function get_parent_fullname(): string
+    {
+        return '';
     }
 }

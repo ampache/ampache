@@ -31,6 +31,7 @@ use Ampache\Module\Authorization\AccessTypeEnum;
 use Ampache\Module\Authorization\GuiGatekeeperInterface;
 use Ampache\Module\System\Core;
 use Ampache\Module\Util\Ui;
+use Ampache\Repository\Model\displayable_item;
 use Ampache\Repository\Model\LibraryItemEnum;
 use Ampache\Repository\Model\LibraryItemLoaderInterface;
 use Ampache\Repository\Model\User;
@@ -103,7 +104,7 @@ abstract readonly class AbstractGraphRendererAction implements ApplicationAction
         }
 
         $blink = '';
-        if ($libitem !== null) {
+        if ($libitem instanceof displayable_item) {
             $f_link = $libitem->get_f_link();
             if ($f_link !== '' && $f_link !== '0') {
                 $blink = $f_link;

@@ -32,6 +32,7 @@ use Ampache\Module\Authorization\AccessTypeEnum;
 use Ampache\Module\Authorization\Check\PrivilegeCheckerInterface;
 use Ampache\Module\Util\Ui;
 use Ampache\Repository\Model\Art;
+use Ampache\Repository\Model\displayable_item;
 use Ampache\Repository\Model\Shoutbox;
 
 /**
@@ -55,7 +56,7 @@ final readonly class ShoutRenderer implements ShoutRendererInterface
         $shoutObjectId   = $shout->getObjectId();
         $shoutObjectType = $shout->getObjectType()->value;
 
-        if ($object === null) {
+        if (!$object instanceof displayable_item) {
             return '';
         }
 

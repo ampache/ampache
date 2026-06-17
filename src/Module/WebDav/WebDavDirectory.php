@@ -26,7 +26,7 @@ declare(strict_types=0);
 namespace Ampache\Module\WebDav;
 
 use Ampache\Module\Util\ObjectTypeToClassNameMapper;
-use Ampache\Repository\Model\library_item;
+use Ampache\Repository\Model\container_item;
 use Ampache\Repository\Model\LibraryItemEnum;
 use Ampache\Repository\Model\Media;
 use Override;
@@ -39,7 +39,7 @@ use Sabre\DAV\Node;
  */
 class WebDavDirectory extends Collection
 {
-    public function __construct(private readonly library_item $libitem)
+    public function __construct(private readonly WebDavDirectoryInterface $libitem)
     {
     }
 
@@ -86,7 +86,7 @@ class WebDavDirectory extends Collection
     public static function getChildFromArray(array $array): Node
     {
         $className = ObjectTypeToClassNameMapper::map($array['object_type']->value);
-        /** @var library_item $libitem */
+        /** @var container_item $libitem */
         $libitem = new $className($array['object_id']);
         if ($libitem->isNew()) {
             throw new NotFound('The library item `' . $array['object_type']->value . '` with id `' . $array['object_id'] . '` could not be found');
@@ -96,7 +96,11 @@ class WebDavDirectory extends Collection
             return new WebDavFile($libitem);
         }
 
-        return new WebDavDirectory($libitem);
+        if ($libitem instanceof WebDavDirectoryInterface) {
+            return new WebDavDirectory($libitem);
+        }
+
+        throw new NotFound('The child with name: ' . $libitem->get_fullname() . ' could not be created');
     }
 
     /**
@@ -112,6 +116,6 @@ class WebDavDirectory extends Collection
 
     public function getName(): string
     {
-        return str_replace('/', '', (string) $this->libitem->get_fullname());
+        return str_replace('/', '', (string)$this->libitem->get_fullname());
     }
 }

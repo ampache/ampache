@@ -34,8 +34,8 @@ use Ampache\Module\Util\Ui;
 use Ampache\Repository\AlbumRepositoryInterface;
 use Ampache\Repository\Model\Artist;
 use Ampache\Repository\Model\Browse;
+use Ampache\Repository\Model\container_item;
 use Ampache\Repository\Model\LibraryItemEnum;
-use Ampache\Repository\Model\playable_item;
 use Ampache\Repository\Model\Playlist;
 use Ampache\Repository\Model\Rating;
 use Ampache\Repository\Model\Tag;
@@ -79,13 +79,13 @@ final readonly class DefaultAjaxHandler implements AjaxHandlerInterface
                     ? $this->requestParser->getFromRequest('object_type')
                     : $request_type;
 
-                if (InterfaceImplementationChecker::is_playable_item($object_type)) {
+                if (InterfaceImplementationChecker::is_library_item($object_type)) {
                     $object_id = ($request_id === 0)
                         ? (int)$this->requestParser->getFromRequest('object_id')
                         : $request_id;
                     if ($object_id > 0) {
                         $className = ObjectTypeToClassNameMapper::map($object_type);
-                        /** @var playable_item $object */
+                        /** @var container_item $object */
                         $object = new $className($object_id);
                         $medias = $object->get_medias();
 

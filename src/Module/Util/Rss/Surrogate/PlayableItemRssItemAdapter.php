@@ -26,9 +26,10 @@ declare(strict_types=1);
 namespace Ampache\Module\Util\Rss\Surrogate;
 
 use Ampache\Repository\Model\Art;
+use Ampache\Repository\Model\container_item;
+use Ampache\Repository\Model\library_item;
 use Ampache\Repository\Model\LibraryItemLoaderInterface;
 use Ampache\Repository\Model\ModelFactoryInterface;
-use Ampache\Repository\Model\playable_item;
 use Ampache\Repository\Model\Podcast_Episode;
 use Ampache\Repository\Model\Song;
 use Ampache\Repository\Model\User;
@@ -42,7 +43,7 @@ final readonly class PlayableItemRssItemAdapter implements RssItemInterface
     public function __construct(
         private LibraryItemLoaderInterface $libraryItemLoader,
         private ModelFactoryInterface $modelFactory,
-        private playable_item $playable,
+        private library_item $playable,
         private ?User $user,
     ) {
     }
@@ -148,6 +149,9 @@ final readonly class PlayableItemRssItemAdapter implements RssItemInterface
      */
     public function getMedias(): Generator
     {
+        if (!$this->playable instanceof container_item) {
+            return;
+        }
         foreach ($this->playable->get_medias() as $media_info) {
             /** @var Song|Podcast_Episode|null $media */
             $media = $this->libraryItemLoader->load(

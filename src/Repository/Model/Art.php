@@ -456,7 +456,7 @@ class Art extends database_object
 
         if (AmpConfig::get('write_tags', false)) {
             $className = ObjectTypeToClassNameMapper::map($this->object_type);
-            /** @var playable_item $object */
+            /** @var library_item $object */
             $object = new $className($this->object_id);
             $songs  = [];
             debug_event(self::class, 'Inserting ' . $this->object_type . ' image' . $object->get_fullname() . ' for song files.', 5);

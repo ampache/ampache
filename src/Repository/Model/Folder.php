@@ -27,6 +27,7 @@ namespace Ampache\Repository\Model;
 
 use Ampache\Config\AmpConfig;
 use Ampache\Module\System\Dba;
+use Ampache\Module\WebDav\WebDavDirectoryInterface;
 use Ampache\Repository\FolderRepositoryInterface;
 use Ampache\Repository\SongRepositoryInterface;
 
@@ -36,7 +37,8 @@ use Ampache\Repository\SongRepositoryInterface;
  */
 class Folder extends database_object implements
     library_item,
-    CatalogItemInterface
+    CatalogItemInterface,
+    WebDavDirectoryInterface
 {
     protected const string DB_TABLENAME = 'folder';
 
@@ -536,5 +538,10 @@ class Folder extends database_object implements
         global $dic;
 
         return $dic->get(SongRepositoryInterface::class);
+    }
+
+    public function get_parent_fullname(): string
+    {
+        return self::get_fullname_by_id($this->parent);
     }
 }

@@ -28,6 +28,7 @@ namespace Ampache\Repository\Model;
 use Ampache\Config\AmpConfig;
 use Ampache\Module\System\Core;
 use Ampache\Module\System\Dba;
+use Ampache\Module\WebDav\WebDavDirectoryInterface;
 use Ampache\Repository\LabelRepositoryInterface;
 use Ampache\Repository\SongRepositoryInterface;
 
@@ -35,7 +36,11 @@ use Ampache\Repository\SongRepositoryInterface;
  * This is the class responsible for handling the Label object
  * it is related to the label table in the database.
  */
-class Label extends database_object implements library_item
+class Label extends database_object implements
+    library_item,
+    container_item,
+    displayable_item,
+    WebDavDirectoryInterface
 {
     protected const string DB_TABLENAME = 'label';
 
@@ -450,5 +455,10 @@ class Label extends database_object implements library_item
         global $dic;
 
         return $dic->get(SongRepositoryInterface::class);
+    }
+
+    public function get_parent_fullname(): string
+    {
+        return '';
     }
 }

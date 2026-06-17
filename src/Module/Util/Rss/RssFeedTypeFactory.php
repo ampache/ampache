@@ -34,9 +34,9 @@ use Ampache\Module\Util\Rss\Type\LatestSongFeed;
 use Ampache\Module\Util\Rss\Type\LibraryItemFeed;
 use Ampache\Module\Util\Rss\Type\NowPlayingFeed;
 use Ampache\Module\Util\Rss\Type\RecentlyPlayedFeed;
+use Ampache\Repository\Model\library_item;
 use Ampache\Repository\Model\LibraryItemLoaderInterface;
 use Ampache\Repository\Model\ModelFactoryInterface;
-use Ampache\Repository\Model\playable_item;
 use Ampache\Repository\Model\User;
 use Ampache\Repository\ShoutRepositoryInterface;
 use Psr\Container\ContainerInterface;
@@ -54,7 +54,7 @@ final readonly class RssFeedTypeFactory implements RssFeedTypeFactoryInterface
      */
     public function createLibraryItemFeed(
         ?User $user,
-        playable_item $libraryItem,
+        library_item $libraryItem,
     ): FeedTypeInterface {
         return new LibraryItemFeed(
             $this->dic->get(ModelFactoryInterface::class),

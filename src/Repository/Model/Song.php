@@ -56,7 +56,8 @@ use Traversable;
 
 class Song extends database_object implements
     Media,
-    library_item,
+    displayable_item,
+    container_item,
     GarbageCollectibleInterface,
     CatalogItemInterface,
     MetadataEnabledInterface
@@ -1922,25 +1923,6 @@ class Song extends database_object implements
         }
 
         return null;
-    }
-
-    /**
-     * @return array{string?: array<int, array{object_type: LibraryItemEnum, object_id: int}>}
-     */
-    public function get_childrens(): array
-    {
-        return [];
-    }
-
-    /**
-     * Search for direct children of an object
-     * @return array<int, array{object_type: LibraryItemEnum, object_id: int}>
-     */
-    public function get_children(string $name): array
-    {
-        debug_event(self::class, 'get_children ' . $name, 5);
-
-        return [];
     }
 
     /**

@@ -30,6 +30,7 @@ use Ampache\Module\Authorization\AccessLevelEnum;
 use Ampache\Module\Authorization\AccessTypeEnum;
 use Ampache\Module\Playback\Stream_Playlist;
 use Ampache\Module\Util\Ui;
+use Ampache\Repository\Model\displayable_item;
 use Ampache\Repository\Model\Playlist;
 use Ampache\Repository\Model\Rating;
 use Ampache\Repository\Model\Share;
@@ -57,7 +58,7 @@ use Ampache\Repository\Model\Userflag;
 /** @var string $t_reorder */
 
 // Don't show disabled medias to normal users
-if (!isset($libitem->enabled) || $libitem->enabled || Access::check(AccessTypeEnum::INTERFACE, AccessLevelEnum::CONTENT_MANAGER)) {
+if ((!isset($libitem->enabled) || $libitem->enabled || Access::check(AccessTypeEnum::INTERFACE, AccessLevelEnum::CONTENT_MANAGER)) && $libitem instanceof displayable_item) {
     $thumb = (isset($browse) && $browse->is_grid_view())
         ? ['width' => 150, 'height' => 150]
         : ['width' => 80, 'height' => 80];

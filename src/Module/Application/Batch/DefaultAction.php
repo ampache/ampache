@@ -35,11 +35,11 @@ use Ampache\Module\System\LegacyLogger;
 use Ampache\Module\Util\ObjectTypeToClassNameMapper;
 use Ampache\Module\Util\RequestParserInterface;
 use Ampache\Module\Util\ZipHandlerInterface;
+use Ampache\Repository\Model\container_item;
 use Ampache\Repository\Model\library_item;
 use Ampache\Repository\Model\LibraryItemEnum;
 use Ampache\Repository\Model\LibraryItemLoaderInterface;
 use Ampache\Repository\Model\ModelFactoryInterface;
-use Ampache\Repository\Model\playable_item;
 use Ampache\Repository\Model\Song;
 use Ampache\Repository\Model\User;
 use Ampache\Repository\SongRepositoryInterface;
@@ -101,7 +101,7 @@ final readonly class DefaultAction implements ApplicationActionInterface
             $object_id,
         );
 
-        if ($libItem instanceof playable_item) {
+        if ($libItem instanceof container_item) {
             if ($libItem instanceof Song) {
                 $libItem->fill_ext_info();
             }
@@ -224,6 +224,7 @@ final readonly class DefaultAction implements ApplicationActionInterface
             }
 
             if (
+                $media instanceof container_item &&
                 property_exists($media, 'enabled') &&
                 $media->enabled &&
                 !empty($media->file)

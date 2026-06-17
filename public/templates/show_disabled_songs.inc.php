@@ -47,7 +47,8 @@ use Ampache\Repository\Model\Song;
                 <td colspan="6" style="text-align: center"><span class="error"><?php echo T_('No records found'); ?></span></td>
             </tr>
         <?php } ?>
-            <?php foreach ($songs as $song) { ?>
+            <?php foreach ($songs as $song) {
+                /** @var Song $song */?>
                 <tr>
                     <td class="cel_select"><input type="checkbox" name="song[]" value="<?php echo $song->getId(); ?>" /></td>
                     <td class="cel_song"><?php echo scrub_out($song->get_fullname()); ?></td>

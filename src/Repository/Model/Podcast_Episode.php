@@ -44,7 +44,8 @@ use DateTimeInterface;
 
 class Podcast_Episode extends database_object implements
     Media,
-    library_item,
+    displayable_item,
+    container_item,
     CatalogItemInterface
 {
     protected const string DB_TABLENAME = 'podcast_episode';
@@ -340,25 +341,6 @@ class Podcast_Episode extends database_object implements
             'object_type' => LibraryItemEnum::PODCAST,
             'object_id' => $this->podcast,
         ];
-    }
-
-    /**
-     * @return array{string?: array<int, array{object_type: LibraryItemEnum, object_id: int}>}
-     */
-    public function get_childrens(): array
-    {
-        return [];
-    }
-
-    /**
-     * Search for direct children of an object
-     * @return array<int, array{object_type: LibraryItemEnum, object_id: int}>
-     */
-    public function get_children(string $name): array
-    {
-        debug_event(self::class, 'get_children ' . $name, 5);
-
-        return [];
     }
 
     /**

@@ -2132,7 +2132,7 @@ abstract class Catalog extends database_object
             $libitem->fill_ext_info();
         }
 
-        if ($libitem->getId() > 0) {
+        if ($libitem->getId() > 0 && $libitem instanceof displayable_item) {
             // Only search on items with default art kind AS `default`.
             if ($libitem->get_default_art_kind() == 'default') {
                 $keywords = $libitem->get_keywords();
@@ -2147,8 +2147,11 @@ abstract class Catalog extends database_object
                 $options['keyword'] = $keyword;
             }
 
-            $parent = $libitem->get_parent();
-            if (!empty($parent) && $type !== 'album') {
+            $parent = ($type !== 'album' && $libitem instanceof container_item)
+                ? $libitem->get_parent()
+                : null;
+
+            if (!empty($parent)) {
                 self::gather_art_item($parent['object_type']->value, $parent['object_id'], $db_art_first, $api);
             }
         }

@@ -26,7 +26,6 @@ namespace Ampache\Module\Util;
 
 use Ampache\Repository\Model\library_item;
 use Ampache\Repository\Model\Media;
-use Ampache\Repository\Model\playable_item;
 
 /**
  * Provides utility methods to check whether an object implements a certain interface
@@ -58,14 +57,6 @@ final class InterfaceImplementationChecker
         }
 
         return false;
-    }
-
-    /**
-     * @param string $instance The subject to search in
-     */
-    public static function is_playable_item(string $instance): bool
-    {
-        return self::is_class_typeof($instance, playable_item::class);
     }
 
     /**

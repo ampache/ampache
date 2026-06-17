@@ -94,7 +94,7 @@ final readonly class StreamAjaxHandler implements AjaxHandlerInterface
 
                 if (
                     $object_type === 'browse' ||
-                    InterfaceImplementationChecker::is_playable_item($object_type)
+                    InterfaceImplementationChecker::is_library_item($object_type)
                 ) {
                     $web_path = AmpConfig::get_web_path();
 
