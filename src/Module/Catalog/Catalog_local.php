@@ -1265,19 +1265,24 @@ class Catalog_local extends Catalog
             /* Create the new path */
             $full_file = $path . $slash_type . $file;
 
-            if (isset($this->_filecache[strtolower($full_file)])) {
-                continue;
-            }
 
             try {
                 if (is_dir($full_file)) {
                     $counter++;
-                    if ($this->add_folder($file, $full_file, $path) !== null) {
+
+                    if (
+                        !isset($this->_filecache[strtolower($full_file)]) &&
+                        $this->add_folder($file, $full_file, $path) !== null
+                    ) {
                         $foldersadded++;
                     }
                     $this->_scan_folder($full_file, $interactor, false);
                 }
-                if (is_file($full_file) && (Catalog::is_audio_file($full_file) || Catalog::is_video_file($full_file))) {
+                if (
+                    is_file($full_file) &&
+                    !isset($this->_filecache[strtolower($full_file)]) &&
+                    (Catalog::is_audio_file($full_file) || Catalog::is_video_file($full_file))
+                ) {
                     $counter++;
                     if ($this->gather_types == 'podcast') {
                         $object_type = 'podcast_episode';
