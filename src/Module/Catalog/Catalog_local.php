@@ -1227,7 +1227,7 @@ class Catalog_local extends Catalog
      * _scan_folder
      * This is the clean function and is broken into chunks to try to save a little memory
      */
-    private function _scan_folder(string $path, ?Interactor $interactor = null): int
+    private function _scan_folder(string $path, ?Interactor $interactor = null, $primary = true): int
     {
         // Make sure the path doesn't end in a / or \
         $path = rtrim($path, '/');
@@ -1260,7 +1260,7 @@ class Catalog_local extends Catalog
             }
 
             // reduce the crazy log info
-            if ($counter % 1000 === 0) {
+            if ($primary || $counter % 1000 === 0) {
                 $interactor?->info(
                     sprintf('Reading %s inside %s', $file, $path),
                     true
@@ -1279,7 +1279,7 @@ class Catalog_local extends Catalog
                     if ($this->add_folder($file, $full_file, $path) !== null) {
                         $foldersadded++;
                     }
-                    $this->_scan_folder($full_file, $interactor);
+                    $this->_scan_folder($full_file, $interactor, false);
                 }
                 if (is_file($full_file) && (Catalog::is_audio_file($full_file) || Catalog::is_video_file($full_file))) {
                     if ($this->gather_types == 'podcast') {
@@ -1304,11 +1304,13 @@ class Catalog_local extends Catalog
             }
         }
 
-        $interactor?->info(
-            sprintf('Finished reading %s, closing handle', $path),
-            true
-        );
-        debug_event('local.catalog', sprintf('Finished reading %s, closing handle', $path), 5);
+        if ($primary) {
+            $interactor?->info(
+                sprintf('Finished reading %s, closing handle', $path),
+                true
+            );
+            debug_event('local.catalog', sprintf('Finished reading %s, closing handle', $path), 5);
+        }
 
         // update counts after update has finished
         Dba::write("UPDATE `folder` SET `object_count` = (SELECT COUNT(*) FROM `folder_map` AS `map_count` WHERE `map_count`.`folder_id` = `folder`.`id`);");
