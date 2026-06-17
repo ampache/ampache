@@ -54,7 +54,7 @@ final readonly class ShowAction implements ApplicationActionInterface
 
     public function run(ServerRequestInterface $request, GuiGatekeeperInterface $gatekeeper): ?ResponseInterface
     {
-        if (!$this->configContainer->isFeatureEnabled(ConfigurationKeyEnum::LABEL)) {
+        if (!$this->configContainer->isFeatureEnabled(ConfigurationKeyEnum::SHOW_FOLDER)) {
             throw new AccessDeniedException('Access Denied: folder features are not enabled.');
         }
 
