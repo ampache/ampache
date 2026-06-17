@@ -903,6 +903,7 @@ class Ui implements UiInterface
             case 'show_artist':
             case 'show_donate':
             case 'show_header_login':
+            case 'show_folder':
             case 'show_license':
             case 'show_lyrics':
             case 'show_original_year':

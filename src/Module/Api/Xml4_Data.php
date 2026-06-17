@@ -73,7 +73,6 @@ class Xml4_Data
      */
     private function __construct()
     {
-        // Rien a faire
     }
 
     /**

@@ -65,7 +65,6 @@ class Xml3_Data
      */
     private function __construct()
     {
-        // Rien a faire
     }
 
     /**

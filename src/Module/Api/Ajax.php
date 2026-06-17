@@ -48,7 +48,6 @@ class Ajax
      */
     public function __construct()
     {
-        // Rien a faire
     }
 
     /**

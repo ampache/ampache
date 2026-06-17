@@ -96,6 +96,5 @@ class Api3
      */
     private function __construct()
     {
-        // Rien a faire
     }
 }

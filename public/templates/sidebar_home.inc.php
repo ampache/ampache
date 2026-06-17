@@ -75,6 +75,7 @@ $videoRepository = $dic->get(VideoRepositoryInterface::class);
 $allowVideo      = AmpConfig::get('allow_video') && $videoRepository->getItemCount();
 $allowDemocratic = AmpConfig::get('allow_democratic_playback');
 $showAlbumArtist = AmpConfig::get('show_album_artist');
+$showFolder      = AmpConfig::get('show_foldert');
 $showArtist      = AmpConfig::get('show_artist');
 $allowLabel      = AmpConfig::get('label');
 $allowPodcast    = AmpConfig::get('podcast');
@@ -135,7 +136,9 @@ if (!AmpConfig::get('sidebar_hide_browse', false)) { ?>
 <?php if ($showAlbumArtist || !$showArtist) { ?>
                 <li id="sb_home_browse_artist"><a href="<?php echo $web_path; ?>/browse.php?action=album_artist"><?php echo $t_a_artists; ?></a></li>
 <?php } ?>
+<?php if ($showFolder) { ?>
             <li id="sb_home_browse_folder"><a href="<?php echo $web_path; ?>/folders.php?action=show&folder=-1"><?php echo $t_folders; ?></a></li>
+<?php } ?>
 <?php if ($allowLabel) { ?>
                 <li id="sb_home_browse_label"><a href="<?php echo $web_path; ?>/browse.php?action=label"><?php echo $t_labels; ?></a></li>
 <?php } ?>
