@@ -710,6 +710,10 @@ class Catalog_local extends Catalog
 
         $this->count = $this->scan_catalog_folder($interactor);
 
+        // missing maps and garbage collection
+        Dba::write('INSERT INTO folder_map (object_id, folder_id, object_type) SELECT `id` AS `object_id`, `parent` AS `folder_id`, \'folder\' AS `object_type` FROM `folder` WHERE `parent` IS NOT NULL AND `id` NOT IN (SELECT `object_id` FROM `folder_map` WHERE `object_type` = \'folder\');');
+        self::getFolderRepository()->collectGarbage();
+
         $interactor?->info(
             sprintf('Scan finished, %d updated in ', $this->count) . $this->name,
             true
