@@ -444,7 +444,7 @@ class Live_Stream extends database_object implements Media, library_item, Catalo
         return true;
     }
 
-    public function get_artist_fullname(): string
+    public function get_parent_fullname(): string
     {
         return '';
     }

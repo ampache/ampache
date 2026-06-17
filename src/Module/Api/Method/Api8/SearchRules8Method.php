@@ -48,7 +48,7 @@ final class SearchRules8Method
      * filter = (string) 'song', 'album', 'song_artist', 'album_artist', 'artist', 'label', 'playlist', 'podcast', 'podcast_episode', 'genre', 'user', 'video'
      *
      * @param array{
-     *     filter:string,
+     *     filter: string,
      *     api_format: string,
      *     auth: string,
      * } $input
@@ -59,7 +59,7 @@ final class SearchRules8Method
             return false;
         }
 
-        $type = $input['filter'];
+        $type = (string)$input['filter'];
         // confirm the correct data
         if (!in_array(strtolower($type), Search::VALID_TYPES)) {
             Api::error(sprintf('Bad Request: %s', $type), ErrorCodeEnum::BAD_REQUEST, self::ACTION, 'type', $input['api_format']);

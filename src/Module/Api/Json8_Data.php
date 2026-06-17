@@ -1194,10 +1194,10 @@ class Json8_Data
             $objArray['name']     = $album->get_fullname();
             $objArray['prefix']   = $album->prefix;
             $objArray['basename'] = $album->name;
-            if ($album->get_artist_fullname() != "") {
+            if ($album->get_parent_fullname() != "") {
                 $objArray['artist'] = [
                     "id" => (string)$album->findAlbumArtist(),
-                    "name" => $album->get_artist_fullname(),
+                    "name" => $album->get_parent_fullname(),
                     "prefix" => $album->artist_prefix,
                     "basename" => $album->artist_name
                 ];
@@ -2319,7 +2319,8 @@ class Json8_Data
      *    object_type: LibraryItemEnum,
      *    object_id: int,
      *    track_id: int,
-     *    track: int}> $object_ids Object IDs
+     *    track: int
+     * }> $object_ids Object IDs
      * @param bool $object (whether to return as a named object array or regular array)
      */
     public static function democratic(array $object_ids, User $user, string $auth, bool $object = true): string

@@ -272,7 +272,7 @@ class AlbumDisk extends database_object implements library_item, CatalogItemInte
             'artist' => [
                 'important' => true,
                 'label' => T_('Artist'),
-                'value' => (string)$this->get_artist_fullname(),
+                'value' => (string)$this->get_parent_fullname(),
             ],
             'album' => [
                 'important' => true,
@@ -436,10 +436,10 @@ class AlbumDisk extends database_object implements library_item, CatalogItemInte
     /**
      * Get item album_artist fullname.
      */
-    public function get_artist_fullname(): string
+    public function get_parent_fullname(): string
     {
         if ($this->f_artist_name === null) {
-            $this->f_artist_name = $this->album->get_artist_fullname();
+            $this->f_artist_name = $this->album->get_parent_fullname();
         }
 
         return $this->f_artist_name ?? '';
@@ -585,8 +585,8 @@ class AlbumDisk extends database_object implements library_item, CatalogItemInte
         }
 
         if ($album_id !== null && $type !== null) {
-            $title = (!empty($this->get_artist_fullname()))
-                ? '[' . $this->get_artist_fullname() . '] ' . $this->get_fullname()
+            $title = (!empty($this->get_parent_fullname()))
+                ? '[' . $this->get_parent_fullname() . '] ' . $this->get_fullname()
                 : $this->get_fullname();
             Art::display($type, $album_id, $title, $size, $this->get_link());
         }

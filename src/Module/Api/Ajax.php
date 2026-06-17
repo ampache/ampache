@@ -206,7 +206,7 @@ class Ajax
         ?string $class = '',
     ): string {
         // Temporary workaround to avoid sorting on custom base requests
-        if (!defined("NO_BROWSE_SORTING") || strpos($source, "sort_") === false) {
+        if (!defined("NO_BROWSE_SORTING") || !str_contains($source, "sort_")) {
             // Avoid duplicate id
             $source .= '_' . time() . '_' . self::$counter++;
 

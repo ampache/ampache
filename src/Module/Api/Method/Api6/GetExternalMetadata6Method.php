@@ -86,7 +86,7 @@ final class GetExternalMetadata6Method
             case 'song':
                 $libitem = new Song($object_id);
                 $data    = [
-                    'artist' => $libitem->get_artist_fullname(),
+                    'artist' => $libitem->get_parent_fullname(),
                     'song' => $libitem->get_fullname(),
                     'mb_trackid' => $libitem->mbid,
                 ];
@@ -94,7 +94,7 @@ final class GetExternalMetadata6Method
             case 'album':
                 $libitem = new Album($object_id);
                 $data    = [
-                    'albumartist' => $libitem->get_artist_fullname(),
+                    'albumartist' => $libitem->get_parent_fullname(),
                     'album' => $libitem->get_fullname(true),
                     'mb_albumid_group' => $libitem->mbid_group,
                 ];

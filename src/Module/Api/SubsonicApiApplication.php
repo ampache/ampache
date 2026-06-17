@@ -397,4 +397,105 @@ final class SubsonicApiApplication implements ApiApplicationInterface
             header("Access-Control-Allow-Origin: *");
         }
     }
+
+    /**
+     * Parse a Subsonic/OpenSubsonic query into search tokens.
+     *
+     * Rules:
+     * - Search only by `name`/`title` for the object type
+     * - Split all words by space (` `) into individual (**OR**) search terms
+     * - Search terms ending with `*`|`%` are prefix (**LIKE**) matched
+     * - Wrap multiple words with quotes (`"`) to group them together
+     * - Join multiple words with plus (`+`) to group them together
+     * - Special characters (`*`|`%`) inside group strings are literal
+     *
+     * @return array<int, array{value: string, operator: int}>
+     */
+    public static function parseSearchQuery(string $query): array
+    {
+        $query = trim(html_entity_decode($query));
+        if ($query === '') {
+            return [];
+        }
+
+        preg_match_all('/"[^"]*"[*%]?|[^\\s"]+/', $query, $matches);
+
+        $tokens = [];
+        foreach ($matches[0] as $parts) {
+            $part = trim($parts);
+            if ($part === '' || $part === '+') {
+                continue;
+            }
+
+            // Quoted literal equals: "foo"
+            // Quoted literal starts with: "foo"*
+            // Quoted literal starts with: "foo"%
+            if (preg_match('/^"([^"]*)"([*%])?$/', $part, $quotedMatch) === 1) {
+                $value = trim(preg_replace('/\\s+/', ' ', $quotedMatch[1]) ?? $quotedMatch[1]);
+
+                if ($value !== '') {
+                    $tokens[] = [
+                        'value' => $value,
+                        'operator' => (isset($quotedMatch[2]))
+                            ? 2 // starts with
+                            : 4 // equals
+                    ];
+                }
+
+                continue;
+            }
+
+            // Outside quotes, plus joins into an exact group
+            // example+search
+            // example+sear*
+            if (str_contains($part, '+')) {
+                $operator = 4; // equals
+                if (str_ends_with($part, '*') || str_ends_with($part, '%')) {
+                    $part     = substr($part, 0, -1);
+                    $operator = 0; // contains
+                }
+
+                $segments = array_values(array_filter(
+                    array_map('trim', explode('+', $part)),
+                    static fn (string $segment): bool => $segment !== ''
+                ));
+
+                if (count($segments) > 1) {
+                    $tokens[] = [
+                        'value' => implode(' ', $segments),
+                        'operator' => $operator,
+                    ];
+                    continue;
+                }
+
+                if (count($segments) === 1) {
+                    $part = $segments[0];
+                } else {
+                    continue;
+                }
+            }
+
+            // Optional legacy suffix star for non-quoted plain tokens
+            if (str_ends_with($part, '*') || str_ends_with($part, '%')) {
+                $part  = substr($part, 0, -1);
+            }
+
+            $value = trim(preg_replace('/\\s+/', ' ', $part) ?? $part);
+            if ($value === '') {
+                continue;
+            }
+
+            $value    = str_replace('*', '%', $value);
+            $operator = (str_contains($value, '%'))
+                ? 0 // contains
+                : 2; // Starts with
+
+            $tokens[] = [
+                'value' => $value,
+                'operator' => $operator,
+            ];
+        }
+
+        return $tokens;
+    }
 }

@@ -541,7 +541,7 @@ class Recommendation
         $album = new Album($album_id);
         $query = ($album->mbid)
             ? 'mbid=' . rawurlencode($album->mbid)
-            : 'artist=' . rawurlencode((string)$album->get_artist_fullname()) . '&album=' . rawurlencode((string)$album->get_fullname());
+            : 'artist=' . rawurlencode((string)$album->get_parent_fullname()) . '&album=' . rawurlencode((string)$album->get_fullname());
 
         $results = [
             'id' => $album_id,

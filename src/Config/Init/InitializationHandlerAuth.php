@@ -25,6 +25,7 @@ declare(strict_types=1);
 
 namespace Ampache\Config\Init;
 
+use Ampache\Config\Init\Exception\RequireAuthException;
 use Ampache\Module\System\SessionInterface;
 use Ampache\Module\Util\EnvironmentInterface;
 use Ampache\Repository\Model\Preference;
@@ -49,7 +50,9 @@ final class InitializationHandlerAuth implements InitializationHandlerInterface
 
         $this->environment->setUp();
 
-        $this->session->auth();
+        if (!$this->session->auth()) {
+            throw new RequireAuthException();
+        }
 
         // Load the Preferences from the database
         Preference::init();

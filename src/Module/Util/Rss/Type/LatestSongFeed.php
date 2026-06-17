@@ -61,7 +61,7 @@ final readonly class LatestSongFeed extends AbstractGenericRssFeed
             yield [
                 'title' => (string) $song->get_fullname(),
                 'link' => $song->get_link(),
-                'description' => $song->get_fullname() . ' - ' . $song->get_album_fullname($song->album, true) . ' - ' . $song->get_artist_fullname(),
+                'description' => $song->get_fullname() . ' - ' . $song->get_album_fullname($song->album, true) . ' - ' . $song->get_parent_fullname(),
                 'comments' => '',
                 'pubDate' => '',
                 'guid' => (isset($song->mbid))
