@@ -179,9 +179,14 @@ final readonly class FolderRepository implements FolderRepositoryInterface
     public function delete(int $folderId): void
     {
         $this->connection->query(
-            'DELETE FROM `folder` WHERE `id` = ?',
+            'DELETE FROM `folder` WHERE `id` = ?;',
             [$folderId]
         );
+        $this->connection->query(
+            'DELETE FROM `folder_map` WHERE `folder_id` = ? OR (`object_id` = ? AND `object_type` = \'folder\');',
+            [$folderId, $folderId]
+        );
+        $this->connection->query('UPDATE `folder` SET `object_count` = (SELECT COUNT(*) FROM `folder_map` AS `map_count` WHERE `map_count`.`folder_id` = `folder`.`id`);');
     }
 
     /**
@@ -201,6 +206,7 @@ final readonly class FolderRepository implements FolderRepositoryInterface
     public function collectGarbage(): void
     {
         try {
+            $this->connection->query('DELETE FROM `folder_map` WHERE `folder_map`.`folder_id` NOT IN (SELECT `folder`.`id` FROM `folder`);');
             $this->connection->query('DELETE FROM `folder_map` WHERE `folder_map`.`object_type` = \'album\' AND `folder_map`.`object_id` NOT IN (SELECT `album`.`id` FROM `album`);');
             $this->connection->query('DELETE FROM `folder_map` WHERE `folder_map`.`object_type` = \'artist\' AND `folder_map`.`object_id` NOT IN (SELECT `artist`.`id` FROM `artist`);');
             $this->connection->query('DELETE FROM `folder_map` WHERE `folder_map`.`object_type` = \'podcast\' AND `folder_map`.`object_id` NOT IN (SELECT `podcast`.`id` FROM `podcast`);');
