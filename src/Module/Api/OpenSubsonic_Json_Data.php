@@ -205,6 +205,7 @@ class OpenSubsonic_Json_Data
      *     'coverArt'?: string,
      *     'readonly': bool,
      *     'validUntil'?: non-falsy-string,
+     *     'allowedUser'?: string[],
      *     'entry'?: array<int, array<string, mixed>>
      * } // todo add allowedUser Array of string
      */
@@ -272,6 +273,7 @@ class OpenSubsonic_Json_Data
      *     'coverArt'?: string,
      *     'readonly': bool,
      *     'validUntil'?: non-falsy-string,
+     *     'allowedUser'?: string[],
      *     'entry'?: array<int, array<string, mixed>>
      * } // todo add allowedUser Array of string
      */
@@ -397,7 +399,7 @@ class OpenSubsonic_Json_Data
      * A Podcast channel.
      * https://opensubsonic.netlify.app/docs/responses/podcastchannel/
      * @return array{
-     *     'id':string,
+     *     'id': string,
      *     'url': string,
      *     'title': string,
      *     'description': string,
@@ -827,6 +829,7 @@ class OpenSubsonic_Json_Data
      *     'id': string,
      *     'name': string,
      *     'coverArt'?: string,
+     *     'artistImageUrl'?: string,
      *     'albumCount': int,
      *     'starred'?: string
      * }

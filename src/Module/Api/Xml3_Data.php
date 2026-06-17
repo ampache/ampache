@@ -538,7 +538,8 @@ class Xml3_Data
      *     object_type: LibraryItemEnum,
      *     object_id: int,
      *     track_id: int,
-     *     track: int}> $object_ids Object IDs
+     *     track: int
+     * }> $object_ids Object IDs
      */
     public static function democratic(array $object_ids, User $user, string $auth): string
     {

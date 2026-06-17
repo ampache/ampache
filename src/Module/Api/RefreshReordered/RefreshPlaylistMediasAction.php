@@ -61,7 +61,7 @@ final class RefreshPlaylistMediasAction implements ApplicationActionInterface
         $object_ids = $playlist->get_items();
 
         $browse->set_type('playlist_media');
-        $browse->add_supplemental_object('playlist', $playlist->getId());
+        $browse->add_supplemental_object('playlist', $playlist);
         $browse->set_static_content(true);
         $browse->show_objects($object_ids);
         $browse->store();
