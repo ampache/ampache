@@ -8,9 +8,11 @@
 
 ## News
 
-**INCREASED CONTRIBUTIONS** I'm starting to get back into things now and will be able to work more on the project again.
+Ampache8 is now a work in progress!
 
-Ampache 8 work will begin soon!
+There are a lot of structural changes happening but not a lot of visible changes so far.
+
+You can check out the changes and progress in the [develop8 branch](https://github.com/ampache/ampache/tree/develop8)
 
 ## Basics
 
@@ -31,7 +33,7 @@ choosing a suitable method for doing so.
 
 ## Recommended Version
 
-The recommended and most stable version is the current stable [release6 branch](https://github.com/ampache/ampache/archive/release6.tar.gz).
+The recommended and most stable version is the current stable [release7 branch](https://github.com/ampache/ampache/archive/release7.tar.gz).
 
 You get the latest version with recent changes and fixes but maybe in an unstable state from our [develop branch](https://github.com/ampache/ampache/archive/develop.tar.gz).
 [![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/ampache/ampache/badges/quality-score.png?b=develop)](https://scrutinizer-ci.com/g/ampache/ampache/?branch=develop)
@@ -54,16 +56,18 @@ Please see [the wiki](https://ampache.org/docs/installation/) and don't forget t
   * IIS
 
 * The correct PHP version for your Ampache release
-  * PHP 7.1-7.4 (Ampache 4.x.x)
-  * PHP 7.4 (Ampache 5.0.x -> Ampache 6.x.x)
-  * PHP 8.0 (Ampache 5.1.x -> Ampache 6.x.x)
-  * PHP 8.1 (Ampache 5.5.0 -> Ampache 6.x.x)
-  * PHP 8.2 (Ampache 6.0.0 and higher)
-  * PHP 8.3 (Ampache 6.2.0 and higher)
-  * PHP 8.4 (Ampache 7.1.0 and higher)
+  * PHP 7.1-7.4 (Ampache4)
+  * PHP 7.4 (Ampache 5.0.x -> Ampache6)
+  * PHP 8.0 (Ampache 5.1.x -> Ampache6)
+  * PHP 8.1 (Ampache 5.5.0 -> Ampache6)
+  * PHP 8.2 (Ampache 6.0.0 -> Ampache7)
+  * PHP 8.3 (Ampache 6.2.0 -> Ampache7)
+  * PHP 8.4 (Ampache 7.1.0 -> Ampache7)
   * PHP 8.5 (Ampache 7.9.0 and higher)
 
-**NOTE** That php7.4 will not be supported for Ampache6 but can still be built.
+**NOTE** That Ampache8 supports php8.5+ only.
+
+**NOTE** That php7.4 is not supported for Ampache6 but can still be built.
 
 * PHP modules:
   * PDO
@@ -71,6 +75,7 @@ Please see [the wiki](https://ampache.org/docs/installation/) and don't forget t
   * hash
   * session
   * json (included in php8+)
+  * fileinfo ([Required](https://ampache.org/docs/help/troubleshooting/ampache8-for-admins#php-fileinfo-extension-is-required) in Ampache 8.0.0 and higher usually included in PHP)
   * intl
   * simplexml
   * curl

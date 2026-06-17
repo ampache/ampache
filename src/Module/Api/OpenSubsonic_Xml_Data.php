@@ -420,7 +420,7 @@ class OpenSubsonic_Xml_Data
         $xsong->addAttribute('albumId', $subParent);
         $xsong->addAttribute('album', (string)$song->get_album_fullname());
         $xsong->addAttribute('artistId', ($song->artist) ? OpenSubsonic_Api::getArtistSubId($song->artist) : '');
-        $xsong->addAttribute('artist', (string)$song->get_artist_fullname());
+        $xsong->addAttribute('artist', (string)$song->get_parent_fullname());
         if ($song->has_art()) {
             $art_id = (AmpConfig::get('show_song_art', false)) ? $sub_id : $subParent;
             $xsong->addAttribute('coverArt', $art_id);
@@ -576,7 +576,7 @@ class OpenSubsonic_Xml_Data
         if ($album_artist) {
             $xalbum->addAttribute('artistId', OpenSubsonic_Api::getArtistSubId($album_artist));
         }
-        $xalbum->addAttribute('artist', (string)$album->get_artist_fullname());
+        $xalbum->addAttribute('artist', (string)$album->get_parent_fullname());
         // original year (fall back to regular year)
         $original_year = AmpConfig::get('use_original_year');
         $year          = ($original_year && $album->original_year)
@@ -655,7 +655,7 @@ class OpenSubsonic_Xml_Data
         if ($album_artist) {
             $xalbum->addAttribute('artistId', OpenSubsonic_Api::getArtistSubId($album_artist));
         }
-        $xalbum->addAttribute('artist', (string)$album->get_artist_fullname());
+        $xalbum->addAttribute('artist', (string)$album->get_parent_fullname());
         // original year (fall back to regular year)
         $original_year = AmpConfig::get('use_original_year');
         $year          = ($original_year && $album->original_year)
@@ -1020,7 +1020,7 @@ class OpenSubsonic_Xml_Data
         $xplaylist->addAttribute('created', date('c', (int)$search->date));
         $xplaylist->addAttribute('changed', date('c', time()));
         $xplaylist->addAttribute('coverArt', $sub_id);
-        $xplaylist->addAttribute('readonly', (string)false);
+        $xplaylist->addAttribute('readonly', '0');
 
         try {
             $date = new DateTime(date("Y-m-d H:i:s", time() + 300));
@@ -1606,7 +1606,7 @@ class OpenSubsonic_Xml_Data
 
         if (!empty($lyrics) && $lyrics['text']) {
             $xlyrics = self::_addChildToResultXml($xlist, 'structuredLyrics');
-            $xlyrics->addAttribute('displayArtist', $song->get_artist_fullname());
+            $xlyrics->addAttribute('displayArtist', $song->get_parent_fullname());
             $xlyrics->addAttribute('displayTitle', (string)$song->title);
             $xlyrics->addAttribute('lang', 'xxx');
 
@@ -1674,9 +1674,9 @@ class OpenSubsonic_Xml_Data
         $xartist->addChild('notes', htmlspecialchars(trim((string)$info['summary'])));
         $xartist->addChild('musicBrainzId', $album->mbid);
         //$xartist->addChild('lastFmUrl', "");
-        $xartist->addChild('smallImageUrl', htmlentities((string)$info['smallphoto']));
-        $xartist->addChild('mediumImageUrl', htmlentities((string)$info['mediumphoto']));
-        $xartist->addChild('largeImageUrl', htmlentities((string)$info['largephoto']));
+        $xartist->addChild('smallImageUrl', html_entity_decode((string)$info['smallphoto']));
+        $xartist->addChild('mediumImageUrl', html_entity_decode((string)$info['mediumphoto']));
+        $xartist->addChild('largeImageUrl', html_entity_decode((string)$info['largephoto']));
 
         return $xml;
     }
@@ -1711,9 +1711,9 @@ class OpenSubsonic_Xml_Data
         }
         $xartist->addChild('musicBrainzId', (string)$artist->mbid);
         //$xartist->addChild('lastFmUrl', "");
-        $xartist->addChild('smallImageUrl', htmlentities((string)$info['smallphoto']));
-        $xartist->addChild('mediumImageUrl', htmlentities((string)$info['mediumphoto']));
-        $xartist->addChild('largeImageUrl', htmlentities((string)$info['largephoto']));
+        $xartist->addChild('smallImageUrl', html_entity_decode((string)$info['smallphoto']));
+        $xartist->addChild('mediumImageUrl', html_entity_decode((string)$info['mediumphoto']));
+        $xartist->addChild('largeImageUrl', html_entity_decode((string)$info['largephoto']));
 
         $unknownCount = 0;
         foreach ($similars as $similar) {

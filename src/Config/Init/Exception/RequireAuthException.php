@@ -1,6 +1,8 @@
 <?php
 
-/*
+declare(strict_types=1);
+
+/**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
@@ -21,26 +23,20 @@
  *
  */
 
-declare(strict_types=0);
+namespace Ampache\Config\Init\Exception;
 
-namespace Ampache\Module\Util\Captcha;
+<<<<<<<< HEAD:captcha/captcha.php
+define('NO_SESSION', 1);
 
-/**
- * Class easy_captcha_spamfree_no_new_urls
- * simply check if no URLs were submitted - that's what most spambots do,
- * and simply grant access then
- */
-class easy_captcha_spamfree_no_new_urls
+$dic = require __DIR__ . '/../src/Config/Init.php';
+
+ini_set('display_errors', '1');
+
+easy_captcha_utility::API();
+========
+final class RequireAuthException extends InitializationException
 {
-    // you have to adapt this, to check for newly added URLs only, in Wikis e.g.
-    #   - for simple comment submission forms, this default however suffices:
-    /**
-     * @param int $input
-     * @return bool
-     */
-    public function solved($input = 0)
-    {
-        // FIXME $uu is undefined
-        return !preg_match("#(https?://\w+[^/,.]+)#ims", serialize($_GET + $_POST), $uu);
-    }
+    /** @var string */
+    protected $message = 'Authentication is required to proceed';
 }
+>>>>>>>> origin/develop:src/Config/Init/Exception/RequireAuthException.php

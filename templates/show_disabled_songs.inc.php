@@ -52,7 +52,7 @@ use Ampache\Repository\Model\Song;
                     <td class="cel_select"><input type="checkbox" name="song[]" value="<?php echo $song->getId(); ?>" /></td>
                     <td class="cel_song"><?php echo scrub_out($song->get_fullname()); ?></td>
                     <td class="cel_album"><?php echo scrub_out($song->get_album_fullname()); ?></td>
-                    <td class="cel_artist"><?php echo scrub_out($song->get_artist_fullname()); ?></td>
+                    <td class="cel_artist"><?php echo scrub_out($song->get_parent_fullname()); ?></td>
                     <td class="cel_filename"><?php echo scrub_out($song->getFile()); ?></td>
                     <td class="cel_additiontime"><?php echo get_datetime($song->getAdditionTime()); ?></td>
                 </tr>

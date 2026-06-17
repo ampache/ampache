@@ -689,7 +689,7 @@ class AmpacheXbmc extends localplay_controller
                     $data['oid'] = $url_data['oid'];
                     $song        = new Song($data['oid']);
                     if ($song->isNew() === false) {
-                        $data['name'] = $song->get_artist_fullname() . ' - ' . $song->title;
+                        $data['name'] = $song->get_parent_fullname() . ' - ' . $song->title;
                     }
                 }
                 if (!isset($data['name'])) {
@@ -781,7 +781,7 @@ class AmpacheXbmc extends localplay_controller
                     $song = new Song($oid);
                     if ($song->isNew() === false) {
                         $array['track_title']  = $song->title;
-                        $array['track_artist'] = $song->get_artist_fullname();
+                        $array['track_artist'] = $song->get_parent_fullname();
                         $array['track_album']  = $song->get_album_fullname();
                     }
                 }

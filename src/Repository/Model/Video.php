@@ -1136,7 +1136,7 @@ class Video extends database_object implements
         return Song::compare_media_information($video, $new_video, $string_array, $skip_array);
     }
 
-    public function get_artist_fullname(): string
+    public function get_parent_fullname(): string
     {
         return '';
     }

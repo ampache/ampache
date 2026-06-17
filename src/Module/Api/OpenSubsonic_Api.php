@@ -567,8 +567,8 @@ class OpenSubsonic_Api
                     : Catalog::get_albums_by_artist($size, $offset, $catalogs);
                 break;
             case 'byYear':
-                $fromYear = (int)min($input['fromYear'], $input['toYear']);
-                $toYear   = (int)max($input['fromYear'], $input['toYear']);
+                $fromYear = (int)min(($input['fromYear'] ?? 0), ($input['toYear'] ?? 0));
+                $toYear   = (int)max(($input['fromYear'] ?? 0), ($input['toYear'] ?? 0));
 
                 if ($fromYear || $toYear) {
                     $data   = Search::year_search($fromYear, $toYear, $size, $offset);
@@ -655,32 +655,9 @@ class OpenSubsonic_Api
      */
     private static function _search(string $query, array $input, User $user): array
     {
-        $operator = 0; // contains
-        $original = unhtmlentities($query);
-        $query    = $original;
-        if (str_starts_with($original, '"') && (str_ends_with($original, '"'))) {
-            $query = substr($original, 1, -1);
-            // query is non-optional, but some clients send empty queries to fetch
-            // all items. Fall back on default contains in such cases.
-            if (strlen($query) > 0) {
-                $operator = 4; // equals
-            }
-        }
-        if (str_starts_with($original, '"') && str_ends_with($original, '"*')) {
-            $query    = substr($original, 1, -2);
-            $operator = 4; // equals
-        }
         $artists = [];
         $albums  = [];
         $songs   = [];
-
-        if (strlen($query) > 1) {
-            // if we didn't catch a "wrapped" query it might just be a starts with
-            if (str_ends_with($original, "*") && $operator == 0) {
-                $query    = substr($query, 0, -1);
-                $operator = 2; // Starts with
-            }
-        }
 
         $artistCount   = $input['artistCount'] ?? 20;
         $artistOffset  = $input['artistOffset'] ?? 0;
@@ -690,50 +667,61 @@ class OpenSubsonic_Api
         $songOffset    = $input['songOffset'] ?? 0;
         $musicFolderId = (isset($input['musicFolderId'])) ? (int)self::getAmpacheId($input['musicFolderId']) : 0;
 
+        $original = unhtmlentities($query);
+        $query    = SubsonicApiApplication::parseSearchQuery($original);
         if ($artistCount > 0) {
-            $data                    = [];
-            $data['limit']           = $artistCount;
-            $data['offset']          = $artistOffset;
-            $data['type']            = 'artist';
-            $data['rule_1_input']    = $query;
-            $data['rule_1_operator'] = $operator;
-            $data['rule_1']          = 'title';
+            $data             = [];
+            $data['limit']    = $artistCount;
+            $data['offset']   = $artistOffset;
+            $data['type']     = 'artist';
+            $data['operator'] = 'or';
+            $ruleCount        = 1;
+            foreach ($query as $token) {
+                $data['rule_' . $ruleCount . '_input']    = $token['value'];
+                $data['rule_' . $ruleCount . '_operator'] = $token['operator'];
+                $data['rule_' . $ruleCount]               = 'title';
+                $ruleCount++;
+            }
             if ($musicFolderId > 0) {
-                $data['rule_2_input']    = $musicFolderId;
-                $data['rule_2_operator'] = 0;
-                $data['rule_2']          = 'catalog';
+                $data['catalog_id'] = $musicFolderId;
             }
             $artists = Search::run($data, $user);
         }
 
         if ($albumCount > 0) {
-            $data                    = [];
-            $data['limit']           = $albumCount;
-            $data['offset']          = $albumOffset;
-            $data['type']            = 'album';
-            $data['rule_1_input']    = $query;
-            $data['rule_1_operator'] = $operator;
-            $data['rule_1']          = 'title';
+            $data             = [];
+            $data['limit']    = $albumCount;
+            $data['offset']   = $albumOffset;
+            $data['type']     = 'album';
+            $data['operator'] = 'or';
+            $ruleCount        = 1;
+            foreach ($query as $token) {
+                $data['rule_' . $ruleCount . '_input']    = $token['value'];
+                $data['rule_' . $ruleCount . '_operator'] = $token['operator'];
+                $data['rule_' . $ruleCount]               = 'title';
+                $ruleCount++;
+            }
             if ($musicFolderId > 0) {
-                $data['rule_2_input']    = $musicFolderId;
-                $data['rule_2_operator'] = 0;
-                $data['rule_2']          = 'catalog';
+                $data['catalog_id'] = $musicFolderId;
             }
             $albums = Search::run($data, $user);
         }
 
         if ($songCount > 0) {
-            $data                    = [];
-            $data['limit']           = $songCount;
-            $data['offset']          = $songOffset;
-            $data['type']            = 'song';
-            $data['rule_1_input']    = $query;
-            $data['rule_1_operator'] = $operator;
-            $data['rule_1']          = 'title';
+            $data             = [];
+            $data['limit']    = $songCount;
+            $data['offset']   = $songOffset;
+            $data['type']     = 'song';
+            $data['operator'] = 'or';
+            $ruleCount        = 1;
+            foreach ($query as $token) {
+                $data['rule_' . $ruleCount . '_input']    = $token['value'];
+                $data['rule_' . $ruleCount . '_operator'] = $token['operator'];
+                $data['rule_' . $ruleCount]               = 'title';
+                $ruleCount++;
+            }
             if ($musicFolderId > 0) {
-                $data['rule_2_input']    = $musicFolderId;
-                $data['rule_2_operator'] = 0;
-                $data['rule_2']          = 'catalog';
+                $data['catalog_id'] = $musicFolderId;
             }
             $songs = Search::run($data, $user);
         }
@@ -2718,7 +2706,7 @@ class OpenSubsonic_Api
     }
 
     /**
-     * getPodcastEpisode
+     * getPodcastEpisode [OS]
      *
      * Returns details for a podcast episode.
      * https://opensubsonic.netlify.app/docs/endpoints/getpodcastepisode/
@@ -3578,7 +3566,7 @@ class OpenSubsonic_Api
     }
 
     /**
-     * savePlayQueue
+     * savePlayQueue [OS]
      *
      * Saves the state of the play queue for this user.
      * https://opensubsonic.netlify.app/docs/endpoints/saveplayqueue/
@@ -3661,7 +3649,7 @@ class OpenSubsonic_Api
     }
 
     /**
-     * savePlayQueueByIndex
+     * savePlayQueueByIndex [OS]
      *
      * Saves the state of the play queue for this user.
      * https://opensubsonic.netlify.app/docs/endpoints/saveplayqueuebyindex/
@@ -3775,7 +3763,7 @@ class OpenSubsonic_Api
         foreach ($sub_ids as $sub_id) {
             $object      = self::getAmpacheObject((string)$sub_id);
             $object_type = self::getAmpacheType($sub_id);
-            if ($object_type === "" || !$object instanceof Media || !method_exists($object, 'isNew') || $object->isNew() || !isset($object->time) || !isset($object->id)) {
+            if ($object_type === "" || !$object instanceof Media || $object->isNew() || !isset($object->time) || !isset($object->id)) {
                 continue;
             }
 
@@ -3920,7 +3908,7 @@ class OpenSubsonic_Api
     }
 
     /**
-     * search3
+     * search3 [OS]
      *
      * Returns albums, artists and songs matching the given search criteria. Supports paging through the result.
      * https://opensubsonic.netlify.app/docs/endpoints/search3/
@@ -4008,7 +3996,7 @@ class OpenSubsonic_Api
     }
 
     /**
-     * stream
+     * stream [OS]
      *
      * Streams a given media file.
      * https://opensubsonic.netlify.app/docs/endpoints/stream/
@@ -4055,7 +4043,7 @@ class OpenSubsonic_Api
     }
 
     /**
-     * tokenInfo
+     * tokenInfo [OS]
      *
      * Returns information about an API key.
      * https://opensubsonic.netlify.app/docs/endpoints/tokeninfo/
@@ -4286,6 +4274,42 @@ class OpenSubsonic_Api
         } else {
             self::_errorOutput($input, self::SSERROR_UNAUTHORIZED, __FUNCTION__);
         }
+    }
+
+    /**
+     * findSonicPath [OS] //TODO
+     * https://opensubsonic.netlify.app/docs/endpoints/findsonicpath/
+     * @param array<string, mixed> $input
+     */
+    public static function findSonicPath(array $input, User $user): void
+    {
+        unset($user);
+
+        self::_errorOutput($input, self::SSERROR_APIVERSION_SERVER, __FUNCTION__);
+    }
+
+    /**
+     * getSonicSimilarTracks [OS] //TODO
+     * https://opensubsonic.netlify.app/docs/endpoints/getsonicsimilartracks/
+     * @param array<string, mixed> $input
+     */
+    public static function getSonicSimilarTracks(array $input, User $user): void
+    {
+        unset($user);
+
+        self::_errorOutput($input, self::SSERROR_APIVERSION_SERVER, __FUNCTION__);
+    }
+
+    /**
+     * reportPlayback [OS] //TODO
+     * https://opensubsonic.netlify.app/docs/endpoints/reportplayback/
+     * @param array<string, mixed> $input
+     */
+    public static function reportPlayback(array $input, User $user): void
+    {
+        unset($user);
+
+        self::_errorOutput($input, self::SSERROR_APIVERSION_SERVER, __FUNCTION__);
     }
 
     /**

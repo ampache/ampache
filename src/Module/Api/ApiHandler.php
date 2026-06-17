@@ -449,10 +449,7 @@ final class ApiHandler implements ApiHandlerInterface
             }
         }
 
-        if (
-            !$is_public &&
-            $user instanceof User
-        ) {
+        if (!$is_public) {
             /**
              * @todo get rid of implicit user registration and pass the user explicitly
              */

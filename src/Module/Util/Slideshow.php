@@ -65,7 +65,7 @@ final class Slideshow implements SlideshowInterface
 
         foreach ($this->pluginRetriever->retrieveByType(PluginTypeEnum::SLIDESHOW, $user) as $plugin) {
             if ($plugin->_plugin instanceof Ampacheflickr) {
-                $images += $plugin->_plugin->get_photos($song->get_artist_fullname());
+                $images += $plugin->_plugin->get_photos($song->get_parent_fullname());
             }
         }
 

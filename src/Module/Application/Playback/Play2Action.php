@@ -637,13 +637,9 @@ final class Play2Action implements ApplicationActionInterface
         $transcode     = false;
         $transcode_cfg = AmpConfig::get('transcode', 'default');
         $cache_file    = false;
-        $mediaOwnerId  = ($media instanceof Song_Preview)
-            ? null
-            : $media->get_user_owner();
-        $mediaCatalogId = ($media instanceof Song_Preview)
-            ? null
-            : $media->catalog;
-        if ($mediaCatalogId) {
+        if (!$media instanceof Song_Preview && $media->catalog) {
+            $mediaOwnerId   = $media->get_user_owner();
+            $mediaCatalogId = $media->catalog;
             /** @var Song|Podcast_Episode|Video $media */
             // The media catalog is restricted
             $catalogs = (isset($user->catalogs['music'])) ? $user->catalogs['music'] : User::get_user_catalogs($user->id);
@@ -699,6 +695,7 @@ final class Play2Action implements ApplicationActionInterface
                 }
             }
 
+            $streamConfiguration = null;
             if (
                 $transcode_cfg != 'never' &&
                 $transcode_to &&
@@ -719,9 +716,7 @@ final class Play2Action implements ApplicationActionInterface
                     'file_size' => ($media->file && preg_match('/^https?:\/\//i', $media->file)) ? $media->size : Core::get_filesize($file_target),
                     'file_type' => $cache_target,
                 ];
-            } elseif ($catalog === null) {
-                return null;
-            } else {
+            } elseif (($catalog instanceof Catalog_remote || $catalog instanceof Catalog_subsonic)) {
                 // Some catalogs redirect you to the remote url so stop here
                 $remoteStreamingUrl = $catalog->getRemoteStreamingUrl($media, $action);
                 if ($remoteStreamingUrl !== null) {
@@ -737,11 +732,13 @@ final class Play2Action implements ApplicationActionInterface
 
                     return null;
                 }
+            } elseif ($catalog === null) {
+                return null;
+            }
 
-                $streamConfiguration = $catalog->prepare_media($media);
-                if ($streamConfiguration === null) {
-                    return null;
-                }
+            $streamConfiguration = $streamConfiguration ?? $catalog?->prepare_media($media);
+            if ($streamConfiguration === null) {
+                return null;
             }
         } else {
             // No catalog, must be song preview or something like that => just redirect to file
@@ -967,7 +964,7 @@ final class Play2Action implements ApplicationActionInterface
 
             $transcoder  = Stream::start_transcode($media, $transcode_settings, $troptions);
             $filepointer = $transcoder['handle'] ?? null;
-            $media_name  = $media->get_artist_fullname() . " - " . $media->title . "." . ($transcoder['format'] ?? '');
+            $media_name  = $media->get_parent_fullname() . " - " . $media->title . "." . ($transcoder['format'] ?? '');
         } elseif ($cpaction && $media instanceof Song) {
             $transcoder  = $media->run_custom_play_action((int)$cpaction, $transcode_to ?? '');
             $filepointer = $transcoder['handle'] ?? null;

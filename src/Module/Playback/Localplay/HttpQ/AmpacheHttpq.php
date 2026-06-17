@@ -460,7 +460,7 @@ class AmpacheHttpq extends localplay_controller
                 case 'oid':
                     $data['oid']  = $url_data['oid'];
                     $song         = new Song($data['oid']);
-                    $data['name'] = $song->get_fullname() . ' - ' . $song->get_album_fullname($song->album, true) . ' - ' . $song->get_artist_fullname();
+                    $data['name'] = $song->get_fullname() . ' - ' . $song->get_album_fullname($song->album, true) . ' - ' . $song->get_parent_fullname();
                     $data['link'] = $song->get_f_link();
                     break;
                 case 'demo_id':
@@ -490,7 +490,7 @@ class AmpacheHttpq extends localplay_controller
                             switch ($row['type']) {
                                 case 'song':
                                     /** @var Song $media */
-                                    $data['name'] = $media->get_fullname() . ' - ' . $media->get_album_fullname() . ' - ' . $media->get_artist_fullname();
+                                    $data['name'] = $media->get_fullname() . ' - ' . $media->get_album_fullname() . ' - ' . $media->get_parent_fullname();
                                     $data['link'] = $media->get_f_link();
                                     break;
                                 case 'live_stream':
@@ -541,7 +541,7 @@ class AmpacheHttpq extends localplay_controller
                 $array['track_album']  = T_('Unknown');
             } else {
                 $array['track_title']  = $song->title;
-                $array['track_artist'] = $song->get_artist_fullname();
+                $array['track_artist'] = $song->get_parent_fullname();
                 $array['track_album']  = $song->get_album_fullname();
             }
         } else {

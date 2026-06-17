@@ -415,16 +415,6 @@ class Broadcast extends database_object implements library_item
         return $broadcasts;
     }
 
-    /**
-     * Get play url.
-     */
-    public function play_url(string $additional_params = '', string $player = '', bool $local = false): string
-    {
-        unset($additional_params, $player, $local);
-
-        return (string)$this->id;
-    }
-
     public function getMediaType(): LibraryItemEnum
     {
         return LibraryItemEnum::BROADCAST;

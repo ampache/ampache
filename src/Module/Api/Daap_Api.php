@@ -277,7 +277,7 @@ class Daap_Api
         if (!empty($pass)) {
             $headers = apache_request_headers();
             $auth    = $headers['Authorization'];
-            if (strpos(strtolower((string)$auth), 'basic') === 0) {
+            if (str_starts_with(strtolower((string)$auth), 'basic')) {
                 $decauth  = base64_decode(substr($auth, 6));
                 $userpass = explode(':', (string)$decauth);
                 if (count($userpass) == 2) {
@@ -513,7 +513,7 @@ class Daap_Api
                         $output .= self::tlv($tag, $song->get_album_fullname());
                         break;
                     case 'daap.songartist':
-                        $output .= self::tlv($tag, $song->get_artist_fullname());
+                        $output .= self::tlv($tag, $song->get_parent_fullname());
                         break;
                     case 'daap.songcomposer':
                         $output .= self::tlv($tag, $song->composer);

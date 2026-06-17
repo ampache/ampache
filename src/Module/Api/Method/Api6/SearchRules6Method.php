@@ -55,7 +55,7 @@ final class SearchRules6Method
             return false;
         }
 
-        $type = $input['filter'];
+        $type = (string)$input['filter'];
         // confirm the correct data
         if (!in_array(strtolower($type), Search::VALID_TYPES)) {
             Api6::error(sprintf('Bad Request: %s', $type), ErrorCodeEnum::BAD_REQUEST, self::ACTION, 'type', $input['api_format']);
