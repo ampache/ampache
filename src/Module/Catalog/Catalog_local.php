@@ -1275,7 +1275,7 @@ class Catalog_local extends Catalog
                     }
                     $this->_scan_folder($full_file, $interactor);
                 }
-                if (is_file($full_file)) {
+                if (is_file($full_file) && (Catalog::is_audio_file($full_file) || Catalog::is_video_file($full_file))) {
                     if ($this->gather_types == 'podcast') {
                         $object_type = 'podcast_episode';
                     } elseif ($this->gather_types == 'video') {
