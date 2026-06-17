@@ -195,6 +195,7 @@ final readonly class FolderViewAdapter implements FolderViewAdapterInterface
     public function canPostShout(): bool
     {
         return (
+            $this->object_type === 'folder' ||
             $this->configContainer->isAuthenticationEnabled() === false ||
             $this->gatekeeper->mayAccess(AccessTypeEnum::INTERFACE, AccessLevelEnum::USER)
         ) &&
@@ -217,8 +218,11 @@ final readonly class FolderViewAdapter implements FolderViewAdapterInterface
 
     public function canShare(): bool
     {
-        return $this->gatekeeper->mayAccess(AccessTypeEnum::INTERFACE, AccessLevelEnum::USER) &&
-            $this->configContainer->isFeatureEnabled(ConfigurationKeyEnum::SHARE);
+        return (
+            $this->object_type !== 'folder' &&
+            $this->gatekeeper->mayAccess(AccessTypeEnum::INTERFACE, AccessLevelEnum::USER) &&
+            $this->configContainer->isFeatureEnabled(ConfigurationKeyEnum::SHARE)
+        );
     }
 
     public function getShareUi(): string
@@ -228,9 +232,11 @@ final readonly class FolderViewAdapter implements FolderViewAdapterInterface
 
     public function canBatchDownload(): bool
     {
-        return $this->functionChecker->check(AccessFunctionEnum::FUNCTION_BATCH_DOWNLOAD) &&
+        return (
+            $this->object_type === 'folder' &&
+            $this->functionChecker->check(AccessFunctionEnum::FUNCTION_BATCH_DOWNLOAD) &&
             $this->configContainer->isFeatureEnabled(ConfigurationKeyEnum::ALLOW_ZIP_DOWNLOAD) &&
-            $this->zipHandler->isZipable($this->object_type);
+            $this->zipHandler->isZipable($this->object_type));
     }
 
     public function getBatchDownloadUrl(): string
@@ -249,9 +255,12 @@ final readonly class FolderViewAdapter implements FolderViewAdapterInterface
 
     public function isEditable(): bool
     {
-        return (
-            $this->gatekeeper->mayAccess(AccessTypeEnum::INTERFACE, AccessLevelEnum::CONTENT_MANAGER) ||
-            $this->gatekeeper->getUserId() == $this->object->get_user_owner()
+        return (    
+            $this->object_type !== 'folder' &&
+            (
+                $this->gatekeeper->mayAccess(AccessTypeEnum::INTERFACE, AccessLevelEnum::CONTENT_MANAGER) ||
+                $this->gatekeeper->getUserId() == $this->object->get_user_owner()
+            )
         );
     }
 
