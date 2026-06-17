@@ -87,9 +87,8 @@ class Broadcast extends database_object implements library_item, displayable_ite
 
     /**
      * Update broadcast state.
-     * @param string $key
      */
-    public function update_state(int $started, $key = ''): void
+    public function update_state(int $started, string $key = ''): void
     {
         $sql = "UPDATE `broadcast` SET `started` = ?, `key` = ?, `song` = '0', `listeners` = '0' WHERE `id` = ?";
         Dba::write($sql, [$started, $key, $this->id]);
@@ -109,9 +108,8 @@ class Broadcast extends database_object implements library_item, displayable_ite
 
     /**
      * Update broadcast current song.
-     * @param int $song_id
      */
-    public function update_song($song_id): void
+    public function update_song(int $song_id): void
     {
         $sql = "UPDATE `broadcast` SET `song` = ? WHERE `id` = ?";
         Dba::write($sql, [$song_id, $this->id]);
@@ -313,19 +311,9 @@ class Broadcast extends database_object implements library_item, displayable_ite
     }
 
     /**
-     * Generate a new broadcast key.
-     */
-    public static function generate_key(): string
-    {
-        // Should be improved for security reasons!
-        return md5(uniqid((string)random_int(0, mt_getrandmax()), true));
-    }
-
-    /**
      * Get broadcast from its key.
-     * @param string $key
      */
-    public static function get_broadcast($key): ?Broadcast
+    public static function get_broadcast(string $key): ?Broadcast
     {
         $sql        = "SELECT `id` FROM `broadcast` WHERE `key` = ?";
         $db_results = Dba::read($sql, [$key]);
@@ -361,9 +349,8 @@ class Broadcast extends database_object implements library_item, displayable_ite
 
     /**
      * Get unbroadcast link.
-     * @param int $broadcast_id
      */
-    public static function get_unbroadcast_link($broadcast_id): string
+    public static function get_unbroadcast_link(int $broadcast_id): string
     {
         $link = "<div class=\"broadcast-action\">";
         $link .= Ajax::button(
@@ -379,10 +366,9 @@ class Broadcast extends database_object implements library_item, displayable_ite
 
     /**
      * Get broadcasts from a user.
-     * @param int $user_id
      * @return int[]
      */
-    public static function get_broadcasts($user_id): array
+    public static function get_broadcasts(int $user_id): array
     {
         $sql        = "SELECT `id` FROM `broadcast` WHERE `user` = ?";
         $db_results = Dba::read($sql, [$user_id]);

@@ -544,7 +544,7 @@ if ($isVideo === false) {
                                     }
 
                                     $broadcast = new Broadcast((int) $broadcast_id);
-                                    $key       = Broadcast::generate_key();
+                                    $key       = Core::generate_random_key();
                                     $broadcast->update_state(1, $key);
                                     echo Broadcast::get_unbroadcast_link($broadcast_id) . '<script>startBroadcast(\'' . $key . '\');</script>';
                                 } else {

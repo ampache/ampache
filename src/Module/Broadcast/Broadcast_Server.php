@@ -207,11 +207,7 @@ class Broadcast_Server implements MessageComponentInterface
         }
     }
 
-    /**
-     *
-     * @param string $broadcast_key
-     */
-    protected function registerBroadcast(ConnectionInterface $from, $broadcast_key): void
+    protected function registerBroadcast(ConnectionInterface $from, string $broadcast_key): void
     {
         $broadcast = Broadcast::get_broadcast($broadcast_key);
         if ($broadcast instanceof Broadcast) {

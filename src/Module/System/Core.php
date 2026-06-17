@@ -138,6 +138,14 @@ class Core
     }
 
     /**
+     * generate a random md5 key using random_int
+     */
+    public static function generate_random_key(): string
+    {
+        return md5(uniqid((string)random_int(0, mt_getrandmax()), true));
+    }
+
+    /**
      * form_register
      * This registers a form with a SID, inserts it into the session
      * variables and then returns a string for use in the HTML form
@@ -145,7 +153,7 @@ class Core
     public static function form_register(string $name, string $type = 'post'): string
     {
         // Make ourselves a nice little sid
-        $sid    = md5(uniqid((string)random_int(0, mt_getrandmax()), true));
+        $sid    = self::generate_random_key();
         $window = AmpConfig::get('session_length', 3600);
         $expire = time() + $window;
 
