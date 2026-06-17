@@ -216,6 +216,11 @@ class Podcast extends database_object implements
         return ['podcast_episode' => $results];
     }
 
+    public function has_children(string $name): bool
+    {
+        return !empty($this->getEpisodeIds());
+    }
+
     /**
      * Search for direct children of an object
      * @return array<int, array{object_type: LibraryItemEnum, object_id: int}>

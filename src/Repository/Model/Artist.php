@@ -576,6 +576,14 @@ class Artist extends database_object implements
         return $childrens;
     }
 
+    public function has_children(string $name): bool
+    {
+        $sql        = "SELECT DISTINCT `album`.`id` FROM `album` LEFT JOIN `album_map` ON `album_map`.`album_id` = `album`.`id` WHERE `album_map`.`object_id` = ? AND `album_map`.`object_type` = 'album' AND (`album`.`name` = ? OR LTRIM(CONCAT(COALESCE(`album`.`prefix`, ''), ' ', `album`.`name`)) = ?);";
+        $db_results = Dba::read($sql, [$this->id, $name . $name]);
+
+        return (Dba::num_rows($db_results) > 0);
+    }
+
     /**
      * Get all childrens and sub-childrens medias.
      *

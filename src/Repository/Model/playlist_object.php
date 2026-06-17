@@ -32,7 +32,6 @@ use Ampache\Module\System\Dba;
 use Ampache\Module\Util\InterfaceImplementationChecker;
 use Ampache\Module\Util\ObjectTypeToClassNameMapper;
 use Ampache\Module\Util\Ui;
-use Ampache\Module\WebDav\WebDavDirectoryInterface;
 
 /**
  * playlist_object
@@ -41,8 +40,7 @@ use Ampache\Module\WebDav\WebDavDirectoryInterface;
 abstract class playlist_object extends database_object implements
     library_item,
     container_item,
-    displayable_item,
-    WebDavDirectoryInterface
+    displayable_item
 {
     // Database variables
     public int $id = 0;
@@ -410,27 +408,6 @@ abstract class playlist_object extends database_object implements
     public function get_parent_fullname(): string
     {
         return '';
-    }
-
-    /**
-     * @return array{
-     *     playlist: array<int, array{object_type: LibraryItemEnum, object_id: int, track: int, track_id: int}>
-     * }
-     */
-    public function get_childrens(): array
-    {
-        return ['playlist' => $this->get_items()];
-    }
-
-    /**
-     * Search for direct children of an object
-     * @return array<int, array{object_type: LibraryItemEnum, object_id: int}>
-     */
-    public function get_children(string $name): array
-    {
-        debug_event('playlist_object.abstract', 'get_children ' . $name, 5);
-
-        return [];
     }
 
     public function get_user_owner(): ?int

@@ -29,7 +29,6 @@ use Ampache\Config\AmpConfig;
 use Ampache\Module\System\Dba;
 use Ampache\Module\WebDav\WebDavDirectoryInterface;
 use Ampache\Repository\FolderRepositoryInterface;
-use Ampache\Repository\SongRepositoryInterface;
 
 /**
  * This is the class responsible for handling the Folder object
@@ -37,6 +36,7 @@ use Ampache\Repository\SongRepositoryInterface;
  */
 class Folder extends database_object implements
     library_item,
+    container_item,
     CatalogItemInterface,
     WebDavDirectoryInterface
 {
@@ -158,7 +158,15 @@ class Folder extends database_object implements
      */
     public function get_childrens(): array
     {
-        return [];
+        $results = [];
+        foreach ($this->get_children((string)$this->get_fullpathname()) as $objects) {
+            $results[] = [
+                'object_type' => $objects['object_type'],
+                'object_id' => $objects['object_id']
+            ];
+        }
+
+        return ['podcast_episode' => $results];
     }
 
     public function get_default_art_kind(): string
@@ -306,19 +314,27 @@ class Folder extends database_object implements
     }
 
     /**
-     * @return array<int, array{object_type: LibraryItemEnum, object_id: int}>
+     * @return array<int, array{object_type: LibraryItemEnum|null, object_id: int}>
      */
     public function get_medias(?string $filter_type = null): array
     {
-        $medias = [];
-        if ($filter_type === null || $filter_type === 'song') {
-            $songs = $this->getSongRepository()->getByFolder((string)$this->name);
-            foreach ($songs as $song_id) {
-                $medias[] = ['object_type' => LibraryItemEnum::SONG, 'object_id' => $song_id];
-            }
+        if ($filter_type === null) {
+            $sql    = "SELECT `object_id`, `object_type` FROM `folder_map` WHERE `folder_id` = ? AND `object_type` != 'folder';";
+            $params = [$this->id];
+        } else {
+            $sql    = "SELECT `object_id`, `object_type` FROM `folder_map` WHERE `folder_id` = ? AND `object_type` = ?;";
+            $params = [$this->id, $filter_type];
+        }
+        $db_results = Dba::read($sql, $params);
+        $results    = [];
+        while ($row = Dba::fetch_assoc($db_results)) {
+            $results[] = [
+                'object_type' => LibraryItemEnum::tryFrom($row['object_type']),
+                'object_id' => (int)$row['object_id']
+            ];
         }
 
-        return $medias;
+        return $results;
     }
 
     /**
@@ -338,6 +354,11 @@ class Folder extends database_object implements
         ];
     }
 
+    public function get_parent_fullname(): string
+    {
+        return self::get_fullname_by_id($this->parent);
+    }
+
     /**
      * get_user_owner
      */
@@ -352,6 +373,7 @@ class Folder extends database_object implements
      */
     public function get_children(string $name): array
     {
+        debug_event(self::class, 'get_children ' . $name, 5);
         $sql        = "SELECT `object_id`, `object_type` FROM `folder_map` WHERE `folder_id` = ?;";
         $db_results = Dba::read($sql, [$this->id]);
         $results    = [];
@@ -363,6 +385,15 @@ class Folder extends database_object implements
         }
 
         return $results;
+    }
+
+    public function has_children(string $name): bool
+    {
+        debug_event(self::class, 'has_children ' . $name, 5);
+        $sql        = "SELECT `object_id`, `object_type` FROM `folder_map` WHERE `folder_id` = ?;";
+        $db_results = Dba::read($sql, [$this->id]);
+
+        return (Dba::num_rows($db_results) > 0);
     }
 
     /**
@@ -528,20 +559,5 @@ class Folder extends database_object implements
         global $dic;
 
         return $dic->get(FolderRepositoryInterface::class);
-    }
-
-    /**
-     * @deprecated inject dependency
-     */
-    private function getSongRepository(): SongRepositoryInterface
-    {
-        global $dic;
-
-        return $dic->get(SongRepositoryInterface::class);
-    }
-
-    public function get_parent_fullname(): string
-    {
-        return self::get_fullname_by_id($this->parent);
     }
 }

@@ -109,9 +109,7 @@ class WebDavDirectory extends Collection
     #[Override]
     public function childExists($name): bool
     {
-        $matches = $this->libitem->get_children($name);
-
-        return $matches !== [];
+        return $this->libitem->has_children($name);
     }
 
     public function getName(): string
