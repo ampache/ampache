@@ -30,8 +30,10 @@ Check out the new library on GitHub at [Gregwar/Captcha](https://github.com/Greg
 * Update Vite for security issues
 * Throw exception to login on missing auth (when required)
 * Possible error on FileSystem scan
+* DB
+  * Database update 794004 - Error with more left over bad data
 * CLI
-  * Table checks column typo
+  * Table checks column typo with DatabaseCharsetUpdater
 * Search
   * Joining by `catalog_id` not set on some searches
 * Ampache Remote Catalogs
