@@ -246,7 +246,7 @@ final readonly class SongTagWriter implements SongTagWriterInterface
                 'data' => $image,
                 'mime' => $art->raw_mime,
                 'picturetypeid' => 8,
-                'description' => $song->get_artist_fullname(),
+                'description' => $song->get_parent_fullname(),
                 'encodingid' => 0
             ];
             if ($file_has_pics) {
@@ -406,7 +406,7 @@ final readonly class SongTagWriter implements SongTagWriterInterface
                 $new_pic = [
                     'data' => $image,
                     'picturetypeid' => 8,
-                    'description' => $song->get_artist_fullname(),
+                    'description' => $song->get_parent_fullname(),
                     'mime' => $art->raw_mime,
                     'encodingid' => 0
                 ];
@@ -490,7 +490,7 @@ final readonly class SongTagWriter implements SongTagWriterInterface
         $meta['title']               = $song->title;
         $meta['comment']             = $song->comment;
         $meta['album']               = $song->get_album_fullname();
-        $meta['artist']              = $song->get_artist_fullname();
+        $meta['artist']              = $song->get_parent_fullname();
         $meta['albumartist']         = $song->get_album_artist_fullname();
         $meta['composer']            = $song->composer;
         $meta['label']               = $song->label ?? null;
@@ -564,7 +564,7 @@ final readonly class SongTagWriter implements SongTagWriterInterface
         $meta['title']         = $song->title;
         $meta['comment']       = $song->comment;
         $meta['album']         = $song->get_album_fullname();
-        $meta['artist']        = $song->get_artist_fullname();
+        $meta['artist']        = $song->get_parent_fullname();
         $meta['band']          = $song->get_album_artist_fullname();
         $meta['composer']      = $song->composer;
         $meta['publisher']     = $song->label ?? null;

@@ -32,7 +32,7 @@ use Ampache\Module\System\Core;
 use Ampache\Module\System\Dba;
 use Ampache\Module\Util\Ui;
 
-class Broadcast extends database_object implements library_item
+class Broadcast extends database_object implements library_item, displayable_item, container_item
 {
     protected const string DB_TABLENAME = 'broadcast';
 
@@ -257,26 +257,6 @@ class Broadcast extends database_object implements library_item
     }
 
     /**
-     * Get item childrens.
-     * @return array{string?: array<int, array{object_type: LibraryItemEnum, object_id: int}>}
-     */
-    public function get_childrens(): array
-    {
-        return [];
-    }
-
-    /**
-     * Search for direct children of an object
-     * @return array<int, array{object_type: LibraryItemEnum, object_id: int}>
-     */
-    public function get_children(string $name): array
-    {
-        debug_event(self::class, 'get_children ' . $name, 5);
-
-        return [];
-    }
-
-    /**
      * Get all childrens and sub-childrens medias.
      *
      * @return array<int, array{object_type: LibraryItemEnum, object_id: int}>
@@ -428,5 +408,10 @@ class Broadcast extends database_object implements library_item
     public function getMediaType(): LibraryItemEnum
     {
         return LibraryItemEnum::BROADCAST;
+    }
+
+    public function get_parent_fullname(): string
+    {
+        return '';
     }
 }

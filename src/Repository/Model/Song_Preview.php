@@ -34,7 +34,7 @@ use Ampache\Module\System\Plugin\PluginTypeEnum;
 use Ampache\Module\Wanted\MissingArtistRetrieverInterface;
 use Ampache\Plugin\PluginSongPreviewInterface;
 
-class Song_Preview extends database_object implements Media, playable_item
+class Song_Preview extends database_object implements Media, displayable_item, container_item
 {
     protected const string DB_TABLENAME = 'song_preview';
 
@@ -224,10 +224,10 @@ class Song_Preview extends database_object implements Media, playable_item
     }
 
     /**
-     * get_artist_fullname
+     * get_parent_fullname
      * gets the name of $this->artist, allows passing of id
      */
-    public function get_artist_fullname(): string
+    public function get_parent_fullname(): string
     {
         if ($this->artist) {
             return (string)(new Artist($this->artist)->get_fullname());
@@ -265,7 +265,7 @@ class Song_Preview extends database_object implements Media, playable_item
     {
         // don't do anything if it's formatted
         if ($this->f_link === null) {
-            $this->f_link = "<a href=\"" . scrub_out($this->get_link()) . "\" title=\"" . scrub_out($this->get_artist_fullname()) . " - " . scrub_out($this->title) . "\"> " . scrub_out($this->title) . "</a>";
+            $this->f_link = "<a href=\"" . scrub_out($this->get_link()) . "\" title=\"" . scrub_out($this->get_parent_fullname()) . " - " . scrub_out($this->title) . "\"> " . scrub_out($this->title) . "</a>";
         }
 
         return $this->f_link;
@@ -277,7 +277,7 @@ class Song_Preview extends database_object implements Media, playable_item
     public function get_f_parent_link(): ?string
     {
         if ($this->artist) {
-            return "<a href=\"" . AmpConfig::get_web_path() . "/artists.php?action=show&artist=" . $this->artist . "\" title=\"" . scrub_out($this->get_artist_fullname()) . "\"> " . scrub_out($this->get_artist_fullname()) . "</a>";
+            return "<a href=\"" . AmpConfig::get_web_path() . "/artists.php?action=show&artist=" . $this->artist . "\" title=\"" . scrub_out($this->get_parent_fullname()) . "\"> " . scrub_out($this->get_parent_fullname()) . "</a>";
         }
         $wartist = $this->getMissingArtistRetriever()->retrieve((string) $this->artist_mbid);
 
@@ -315,25 +315,6 @@ class Song_Preview extends database_object implements Media, playable_item
     }
 
     /**
-     * @return array{string?: array<int, array{object_type: LibraryItemEnum, object_id: int}>}
-     */
-    public function get_childrens(): array
-    {
-        return [];
-    }
-
-    /**
-     * Search for direct children of an object
-     * @return array<int, array{object_type: LibraryItemEnum, object_id: int}>
-     */
-    public function get_children(string $name): array
-    {
-        debug_event(self::class, 'get_children ' . $name, 5);
-
-        return [];
-    }
-
-    /**
      * @return array<int, array{object_type: LibraryItemEnum, object_id: int}>
      */
     public function get_medias(?string $filter_type = null): array
@@ -358,7 +339,7 @@ class Song_Preview extends database_object implements Media, playable_item
             ? (string)Core::get_global('user')->getId()
             : '-1';
         $type      = $this->type;
-        $song_name = rawurlencode($this->get_artist_fullname() . " - " . $this->title . "." . $type);
+        $song_name = rawurlencode($this->get_parent_fullname() . " - " . $this->title . "." . $type);
         $url       = Stream::get_base_url($local) . "type=song_preview&oid=" . $this->id . "&uid=" . $user_id . "&name=" . $song_name;
 
         return Stream_Url::format($url . $additional_params);
@@ -510,5 +491,26 @@ class Song_Preview extends database_object implements Media, playable_item
         global $dic;
 
         return $dic->get(MissingArtistRetrieverInterface::class);
+    }
+
+    public function get_keywords(): array
+    {
+        return [];
+    }
+
+    public function update(array $data): ?int
+    {
+        return null;
+    }
+
+    public function get_default_art_kind(): string
+    {
+        return 'default';
+    }
+
+    public function display_art(array $size, bool $force = false): void
+    {
+        // Do nothing, song previews don't have art}
+        unset($size, $force);
     }
 }

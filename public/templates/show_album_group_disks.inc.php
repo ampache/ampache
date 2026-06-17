@@ -50,7 +50,7 @@ use Ampache\Repository\Model\Userflag;
 $web_path = AmpConfig::get_web_path();
 
 // Title for this album
-$f_album_name     = (string)$album->get_artist_fullname();
+$f_album_name     = (string)$album->get_parent_fullname();
 $simple           = (string)$album->get_fullname(true);
 $f_name           = (string)$album->get_fullname(false, true);
 $url_f_album_name = rawurlencode($f_album_name);

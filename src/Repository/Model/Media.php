@@ -32,10 +32,8 @@ namespace Ampache\Repository\Model;
  * work, this lists all required functions and the expected
  * input
  */
-interface Media
+interface Media extends library_item
 {
-    public function getId(): int;
-
     /**
      * get_stream_types
      *
@@ -94,17 +92,7 @@ interface Media
     public function remove(): bool;
 
     /**
-     * Returns the full/formatted name of the media items artist/author
-     */
-    public function get_artist_fullname(): string;
-
-    /**
      * Returns the filename of the media-item
      */
     public function getFileName(): string;
-
-    /**
-     * Returns the media-type of the library-item
-     */
-    public function getMediaType(): LibraryItemEnum;
 }

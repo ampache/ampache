@@ -35,12 +35,14 @@ use Ampache\Module\Playback\Stream_Url;
 use Ampache\Module\Statistics\Stats;
 use Ampache\Module\System\Core;
 use Ampache\Module\System\Dba;
+use Ampache\Module\WebDav\WebDavDirectoryInterface;
 use Ampache\Repository\ShoutRepositoryInterface;
 use Ampache\Repository\UserActivityRepositoryInterface;
 
 class Video extends database_object implements
     Media,
-    library_item,
+    displayable_item,
+    container_item,
     GarbageCollectibleInterface,
     CatalogItemInterface
 {
@@ -333,25 +335,6 @@ class Video extends database_object implements
     public function get_parent(): ?array
     {
         return null;
-    }
-
-    /**
-     * @return array{string?: array<int, array{object_type: LibraryItemEnum, object_id: int}>}
-     */
-    public function get_childrens(): array
-    {
-        return [];
-    }
-
-    /**
-     * Search for direct children of an object
-     * @return array<int, array{object_type: LibraryItemEnum, object_id: int}>
-     */
-    public function get_children(string $name): array
-    {
-        debug_event(self::class, 'get_children ' . $name, 5);
-
-        return [];
     }
 
     /**
@@ -1131,7 +1114,7 @@ class Video extends database_object implements
         return Song::compare_media_information($video, $new_video, $string_array, $skip_array);
     }
 
-    public function get_artist_fullname(): string
+    public function get_parent_fullname(): string
     {
         return '';
     }

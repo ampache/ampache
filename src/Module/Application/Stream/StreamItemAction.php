@@ -29,6 +29,7 @@ use Ampache\Config\ConfigContainerInterface;
 use Ampache\Module\Authorization\GuiGatekeeperInterface;
 use Ampache\Module\Statistics\Stats;
 use Ampache\Module\System\Core;
+use Ampache\Repository\Model\container_item;
 use Ampache\Repository\Model\LibraryItemEnum;
 use Ampache\Repository\Model\LibraryItemLoaderInterface;
 use Psr\Http\Message\ResponseInterface;
@@ -68,7 +69,7 @@ final class StreamItemAction extends AbstractStreamAction
                 (int) $object_id,
             );
 
-            if ($item !== null) {
+            if ($item instanceof container_item) {
                 $mediaIds = array_merge($mediaIds, $item->get_medias());
 
                 if (array_key_exists('custom_play_action', $_REQUEST)) {

@@ -1529,10 +1529,10 @@ class Upnp_Api
             'restricted' => 'false', // XXX
             'dc:title' => self::_replaceSpecialSymbols($song->get_fullname()),
             'dc:date' => $song->getAdditionTime()->format(DATE_ATOM),
-            'dc:creator' => self::_replaceSpecialSymbols($song->get_artist_fullname()),
+            'dc:creator' => self::_replaceSpecialSymbols($song->get_parent_fullname()),
             'upnp:class' => (isset($arrFileType['class'])) ? $arrFileType['class'] : 'object.item.unknownItem',
             'upnp:albumArtURI' => $art_url,
-            'upnp:artist' => self::_replaceSpecialSymbols($song->get_artist_fullname()),
+            'upnp:artist' => self::_replaceSpecialSymbols($song->get_parent_fullname()),
             'upnp:album' => self::_replaceSpecialSymbols($song->get_album_fullname()),
             'upnp:genre' => Tag::get_display($song->get_tags(), false, 'song'),
             'upnp:originalTrackNumber' => $song->track,

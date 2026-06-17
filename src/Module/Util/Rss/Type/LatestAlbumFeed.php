@@ -58,7 +58,7 @@ final readonly class LatestAlbumFeed extends AbstractGenericRssFeed
             yield [
                 'title' => $album->get_fullname(),
                 'link' => $album->get_link(),
-                'description' => $album->get_artist_fullname() . ' - ' . $album->get_fullname(true),
+                'description' => $album->get_parent_fullname() . ' - ' . $album->get_fullname(true),
                 'comments' => '',
                 'pubDate' => date(DATE_RFC2822, $album->addition_time),
                 'guid' => ($album->mbid !== null) ? 'https://musicbrainz.org/release/' . $album->mbid : ($album->mbid_group !== null ? 'https://musicbrainz.org/release-group/' . $album->mbid_group : 'album-' . $album->id),

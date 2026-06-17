@@ -32,6 +32,7 @@ use Ampache\Module\Statistics\Stats;
 use Ampache\Module\System\Core;
 use Ampache\Module\System\Dba;
 use Ampache\Module\Wanted\WantedManagerInterface;
+use Ampache\Module\WebDav\WebDavDirectoryInterface;
 use Ampache\Repository\AlbumDiskRepositoryInterface;
 use Ampache\Repository\AlbumRepositoryInterface;
 use Ampache\Repository\SongRepositoryInterface;
@@ -42,7 +43,12 @@ use Exception;
  * This is the class responsible for handling the Album object
  * it is related to the album table in the database.
  */
-class Album extends database_object implements library_item, CatalogItemInterface
+class Album extends database_object implements
+    library_item,
+    displayable_item,
+    container_item,
+    CatalogItemInterface,
+    WebDavDirectoryInterface
 {
     protected const string DB_TABLENAME = 'album';
 
@@ -433,7 +439,7 @@ class Album extends database_object implements library_item, CatalogItemInterfac
             'artist' => [
                 'important' => true,
                 'label' => T_('Artist'),
-                'value' => (string)$this->get_artist_fullname(),
+                'value' => (string)$this->get_parent_fullname(),
             ],
             'album' => [
                 'important' => true,
@@ -648,7 +654,7 @@ class Album extends database_object implements library_item, CatalogItemInterfac
     /**
      * Get the album artist fullname.
      */
-    public function get_artist_fullname(): ?string
+    public function get_parent_fullname(): string
     {
         if ($this->f_artist_name === null) {
             $this->findAlbumArtist();
@@ -668,7 +674,7 @@ class Album extends database_object implements library_item, CatalogItemInterfac
             }
         }
 
-        return $this->f_artist_name;
+        return (string)$this->f_artist_name;
     }
 
     /**
@@ -834,14 +840,14 @@ class Album extends database_object implements library_item, CatalogItemInterfac
     public function display_art(array $size, bool $force = false): void
     {
         if (Art::has_db($this->id, 'album')) {
-            $title = ($this->get_artist_fullname() != "")
-                ? '[' . $this->get_artist_fullname() . '] ' . $this->get_fullname()
+            $title = ($this->get_parent_fullname() != "")
+                ? '[' . $this->get_parent_fullname() . '] ' . $this->get_fullname()
                 : $this->get_fullname();
 
             Art::display('album', $this->id, $title, $size, $this->get_link());
         } elseif ($this->album_artist && (Art::has_db($this->album_artist, 'artist') || $force)) {
-            $title = ($this->get_artist_fullname() != "")
-                ? '[' . $this->get_artist_fullname() . '] ' . $this->get_fullname()
+            $title = ($this->get_parent_fullname() != "")
+                ? '[' . $this->get_parent_fullname() . '] ' . $this->get_fullname()
                 : $this->get_fullname();
 
             Art::display('artist', $this->album_artist, $title, $size, $this->get_link());

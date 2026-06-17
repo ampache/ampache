@@ -36,7 +36,7 @@ use Ampache\Module\System\Dba;
  * this can include podcasts or what-have-you
  *
  */
-class Live_Stream extends database_object implements Media, library_item, CatalogItemInterface
+class Live_Stream extends database_object implements Media, displayable_item, container_item, CatalogItemInterface
 {
     protected const string DB_TABLENAME = 'live_stream';
 
@@ -169,25 +169,6 @@ class Live_Stream extends database_object implements Media, library_item, Catalo
     public function get_parent(): ?array
     {
         return null;
-    }
-
-    /**
-     * @return array{string?: array<int, array{object_type: LibraryItemEnum, object_id: int}>}
-     */
-    public function get_childrens(): array
-    {
-        return [];
-    }
-
-    /**
-     * Search for direct children of an object
-     * @return array<int, array{object_type: LibraryItemEnum, object_id: int}>
-     */
-    public function get_children(string $name): array
-    {
-        debug_event(self::class, 'get_children ' . $name, 5);
-
-        return [];
     }
 
     /**
@@ -439,7 +420,7 @@ class Live_Stream extends database_object implements Media, library_item, Catalo
         return true;
     }
 
-    public function get_artist_fullname(): string
+    public function get_parent_fullname(): string
     {
         return '';
     }

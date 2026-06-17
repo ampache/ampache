@@ -91,10 +91,10 @@ final readonly class ShareCreator implements ShareCreatorInterface
                 $description = 'Playlist - ' . $playlist->name;
             } elseif ($object_type === LibraryItemEnum::ALBUM) {
                 $album       = new Album($object_id);
-                $description = $album->get_fullname() . ' (' . $album->get_artist_fullname() . ')';
+                $description = $album->get_fullname() . ' (' . $album->get_parent_fullname() . ')';
             } elseif ($object_type === LibraryItemEnum::ALBUM_DISK) {
                 $albumdisk   = new AlbumDisk($object_id);
-                $description = $albumdisk->get_fullname() . ' (' . $albumdisk->get_artist_fullname() . ')';
+                $description = $albumdisk->get_fullname() . ' (' . $albumdisk->get_parent_fullname() . ')';
             }
         }
 

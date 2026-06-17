@@ -1,7 +1,5 @@
 <?php
 
-declare(strict_types=0);
-
 /**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
@@ -26,56 +24,23 @@ declare(strict_types=0);
 namespace Ampache\Repository\Model;
 
 /**
- * playable_item Interface
+ * library_item Interface
  *
- * This defines how the playable item file classes should
+ * This defines how the media file classes should
  * work, this lists all required functions and the expected
  * input
  */
-interface playable_item
+interface container_item extends library_item
 {
-    /**
-     * get_fullname
-     *
-     * Get the item full name.
-     */
-    public function get_fullname(): ?string;
-
-    /**
-     * get_link
-     *
-     * Get the item link.
-     */
-    public function get_link(): string;
-
-    /**
-     * Get item f_link.
-     */
-    public function get_f_link(): string;
-
-    /**
-     * Return a formatted link to the parent object (if appliccable)
-     */
-    public function get_f_parent_link(): ?string;
-
     /**
      * @return null|array{object_type: LibraryItemEnum, object_id: int}
      */
     public function get_parent(): ?array;
 
     /**
-     * get_childrens
-     *
-     * Get direct childrens. Return an array of `object_type`, `object_id` childrens.
-     * @return array{string?: array<int, array{object_type: LibraryItemEnum, object_id: int}>}
+     * Returns the full/formatted name of the media items artist/author
      */
-    public function get_childrens(): array;
-
-    /**
-     * Search for direct children of an object
-     * @return array<int, array{object_type: LibraryItemEnum, object_id: int}>
-     */
-    public function get_children(string $name): array;
+    public function get_parent_fullname(): string;
 
     /**
      * Get all medias from all childrens. Return an array of `object_type`, `object_id` medias.
@@ -83,12 +48,4 @@ interface playable_item
      * @return array<int, array{object_type: LibraryItemEnum, object_id: int}>
      */
     public function get_medias(?string $filter_type = null): array;
-
-    public function getId(): int;
-
-    public function has_art(): bool;
-
-    public function get_description(): string;
-
-    public function get_user_owner(): ?int;
 }

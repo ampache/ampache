@@ -32,12 +32,17 @@ use Ampache\Module\System\Dba;
 use Ampache\Module\Util\InterfaceImplementationChecker;
 use Ampache\Module\Util\ObjectTypeToClassNameMapper;
 use Ampache\Module\Util\Ui;
+use Ampache\Module\WebDav\WebDavDirectoryInterface;
 
 /**
  * playlist_object
  * Abstracting out functionality needed by both normal and smart playlists
  */
-abstract class playlist_object extends database_object implements library_item
+abstract class playlist_object extends database_object implements
+    library_item,
+    container_item,
+    displayable_item,
+    WebDavDirectoryInterface
 {
     // Database variables
     public int $id = 0;
@@ -402,6 +407,11 @@ abstract class playlist_object extends database_object implements library_item
         return null;
     }
 
+    public function get_parent_fullname(): string
+    {
+        return '';
+    }
+
     /**
      * @return array{
      *     playlist: array<int, array{object_type: LibraryItemEnum, object_id: int, track: int, track_id: int}>
@@ -476,7 +486,7 @@ abstract class playlist_object extends database_object implements library_item
             if (InterfaceImplementationChecker::is_library_item($media['object_type']->value)) {
                 if (!Art::has_db($media['object_id'], $media['object_type']->value)) {
                     $className = ObjectTypeToClassNameMapper::map($media['object_type']->value);
-                    /** @var playable_item $libitem */
+                    /** @var container_item $libitem */
                     $libitem = new $className($media['object_id']);
                     $parent  = $libitem->get_parent();
                     if ($parent !== null) {

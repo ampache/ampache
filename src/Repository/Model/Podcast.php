@@ -27,6 +27,7 @@ namespace Ampache\Repository\Model;
 
 use Ampache\Config\AmpConfig;
 use Ampache\Module\Podcast\PodcastEpisodeStateEnum;
+use Ampache\Module\WebDav\WebDavDirectoryInterface;
 use Ampache\Repository\PodcastEpisodeRepositoryInterface;
 use Ampache\Repository\PodcastRepository;
 use Ampache\Repository\PodcastRepositoryInterface;
@@ -40,7 +41,12 @@ use LogicException;
  *
  * @see PodcastRepository
  */
-class Podcast extends database_object implements library_item, CatalogItemInterface
+class Podcast extends database_object implements
+    library_item,
+    displayable_item,
+    container_item,
+    CatalogItemInterface,
+    WebDavDirectoryInterface
 {
     protected const string DB_TABLENAME = 'podcast';
 
@@ -564,5 +570,10 @@ class Podcast extends database_object implements library_item, CatalogItemInterf
         global $dic;
 
         return $dic->get(PodcastEpisodeRepositoryInterface::class);
+    }
+
+    public function get_parent_fullname(): string
+    {
+        return '';
     }
 }

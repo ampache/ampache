@@ -166,7 +166,7 @@ class Share extends database_object
 
     public function getObjectUrl(): string
     {
-        return ($this->getObject())
+        return ($this->getObject() instanceof displayable_item)
             ? $this->getObject()->get_f_link()
             : '';
     }

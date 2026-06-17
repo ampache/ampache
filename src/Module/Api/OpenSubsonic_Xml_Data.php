@@ -420,7 +420,7 @@ class OpenSubsonic_Xml_Data
         $xsong->addAttribute('albumId', $subParent);
         $xsong->addAttribute('album', (string)$song->get_album_fullname());
         $xsong->addAttribute('artistId', ($song->artist) ? OpenSubsonic_Api::getArtistSubId($song->artist) : '');
-        $xsong->addAttribute('artist', (string)$song->get_artist_fullname());
+        $xsong->addAttribute('artist', (string)$song->get_parent_fullname());
         if ($song->has_art()) {
             $art_id = (AmpConfig::get('show_song_art', false)) ? $sub_id : $subParent;
             $xsong->addAttribute('coverArt', $art_id);
@@ -576,7 +576,7 @@ class OpenSubsonic_Xml_Data
         if ($album_artist) {
             $xalbum->addAttribute('artistId', OpenSubsonic_Api::getArtistSubId($album_artist));
         }
-        $xalbum->addAttribute('artist', (string)$album->get_artist_fullname());
+        $xalbum->addAttribute('artist', (string)$album->get_parent_fullname());
         // original year (fall back to regular year)
         $original_year = AmpConfig::get('use_original_year');
         $year          = ($original_year && $album->original_year)
@@ -655,7 +655,7 @@ class OpenSubsonic_Xml_Data
         if ($album_artist) {
             $xalbum->addAttribute('artistId', OpenSubsonic_Api::getArtistSubId($album_artist));
         }
-        $xalbum->addAttribute('artist', (string)$album->get_artist_fullname());
+        $xalbum->addAttribute('artist', (string)$album->get_parent_fullname());
         // original year (fall back to regular year)
         $original_year = AmpConfig::get('use_original_year');
         $year          = ($original_year && $album->original_year)
@@ -1605,7 +1605,7 @@ class OpenSubsonic_Xml_Data
 
         if (!empty($lyrics) && $lyrics['text']) {
             $xlyrics = self::_addChildToResultXml($xlist, 'structuredLyrics');
-            $xlyrics->addAttribute('displayArtist', $song->get_artist_fullname());
+            $xlyrics->addAttribute('displayArtist', $song->get_parent_fullname());
             $xlyrics->addAttribute('displayTitle', (string)$song->title);
             $xlyrics->addAttribute('lang', 'xxx');
 

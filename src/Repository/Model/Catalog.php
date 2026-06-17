@@ -2132,7 +2132,7 @@ abstract class Catalog extends database_object
             $libitem->fill_ext_info();
         }
 
-        if ($libitem->getId() > 0) {
+        if ($libitem->getId() > 0 && $libitem instanceof displayable_item) {
             // Only search on items with default art kind AS `default`.
             if ($libitem->get_default_art_kind() == 'default') {
                 $keywords = $libitem->get_keywords();
@@ -2147,8 +2147,11 @@ abstract class Catalog extends database_object
                 $options['keyword'] = $keyword;
             }
 
-            $parent = $libitem->get_parent();
-            if (!empty($parent) && $type !== 'album') {
+            $parent = ($type !== 'album' && $libitem instanceof container_item)
+                ? $libitem->get_parent()
+                : null;
+
+            if (!empty($parent)) {
                 self::gather_art_item($parent['object_type']->value, $parent['object_id'], $db_art_first, $api);
             }
         }
@@ -2820,7 +2823,7 @@ abstract class Catalog extends database_object
         if (empty($results['albumartist'])) {
             $results['albumartist_id'] = ($song && $song->get_album_artist() > 0 && T_(($song->get_album_artist_fullname()) ?? T_('Unknown (Orphaned)')) !== T_('Unknown (Orphaned)'))
                 ? $song->get_album_artist()
-                : Artist::check($song?->get_artist_fullname() ?? $results['artist'], $results['albumartist_mbid']);
+                : Artist::check($song?->get_parent_fullname() ?? $results['artist'], $results['albumartist_mbid']);
         }
 
         if (empty($results['albumartist']) && $results['albumartist_id'] > 0) {
@@ -4748,10 +4751,10 @@ abstract class Catalog extends database_object
         // Do the various check
         $album = new Album($song->album);
 
-        $song_artist_name  = self::sort_clean_name($song->get_artist_fullname(), '%a', $windowsCompat);
-        $album_artist_name = (empty($album->get_artist_fullname()))
+        $song_artist_name  = self::sort_clean_name($song->get_parent_fullname(), '%a', $windowsCompat);
+        $album_artist_name = (empty($album->get_parent_fullname()))
             ? $various_artist
-            : self::sort_clean_name($album->get_artist_fullname(), '%a', $windowsCompat);
+            : self::sort_clean_name($album->get_parent_fullname(), '%a', $windowsCompat);
         $disk           = self::sort_clean_name($song->disk, '%d');
         $catalog_number = self::sort_clean_name($album->catalog_number, '%C');
         $barcode        = self::sort_clean_name($album->barcode, '%b');

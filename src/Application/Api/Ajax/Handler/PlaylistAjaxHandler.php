@@ -33,7 +33,7 @@ use Ampache\Module\Util\InterfaceImplementationChecker;
 use Ampache\Module\Util\ObjectTypeToClassNameMapper;
 use Ampache\Module\Util\RequestParserInterface;
 use Ampache\Repository\Model\Browse;
-use Ampache\Repository\Model\library_item;
+use Ampache\Repository\Model\container_item;
 use Ampache\Repository\Model\Playlist;
 use Ampache\Repository\Model\User;
 
@@ -109,12 +109,12 @@ final readonly class PlaylistAjaxHandler implements AjaxHandlerInterface
                 $item_id   = $_REQUEST['item_id'] ?? '';
                 $item_type = $_REQUEST['item_type'] ?? '';
 
-                if (!empty($item_type) && InterfaceImplementationChecker::is_playable_item($item_type)) {
+                if (!empty($item_type) && InterfaceImplementationChecker::is_library_item($item_type)) {
                     debug_event('playlist.ajax', 'Adding all medias of ' . $item_type . '(s) {' . $item_id . '}...', 5);
                     $item_ids = explode(',', (string) $item_id);
                     foreach ($item_ids as $iid) {
                         $className = ObjectTypeToClassNameMapper::map($item_type);
-                        /** @var library_item $libitem */
+                        /** @var container_item $libitem */
                         $libitem = new $className($iid);
                         if ($libitem->isNew() === false) {
                             $medias = array_merge($medias, $libitem->get_medias());

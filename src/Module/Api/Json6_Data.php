@@ -1053,10 +1053,10 @@ class Json6_Data
             $objArray['name']     = $album->get_fullname();
             $objArray['prefix']   = $album->prefix;
             $objArray['basename'] = $album->name;
-            if ($album->get_artist_fullname() != "") {
+            if ($album->get_parent_fullname() != "") {
                 $objArray['artist'] = [
                     "id" => (string)$album->findAlbumArtist(),
-                    "name" => $album->get_artist_fullname(),
+                    "name" => $album->get_parent_fullname(),
                     "prefix" => $album->artist_prefix,
                     "basename" => $album->artist_name
                 ];

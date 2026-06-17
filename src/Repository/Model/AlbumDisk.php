@@ -27,13 +27,19 @@ namespace Ampache\Repository\Model;
 
 use Ampache\Config\AmpConfig;
 use Ampache\Module\System\Dba;
+use Ampache\Module\WebDav\WebDavDirectoryInterface;
 use Ampache\Repository\SongRepositoryInterface;
 
 /**
  * This is the class responsible for handling the Album object
  * it is related to the album table in the database.
  */
-class AlbumDisk extends database_object implements library_item, CatalogItemInterface
+class AlbumDisk extends database_object implements
+    library_item,
+    displayable_item,
+    container_item,
+    CatalogItemInterface,
+    WebDavDirectoryInterface
 {
     protected const string DB_TABLENAME = 'album_disk';
 
@@ -272,7 +278,7 @@ class AlbumDisk extends database_object implements library_item, CatalogItemInte
             'artist' => [
                 'important' => true,
                 'label' => T_('Artist'),
-                'value' => (string)$this->get_artist_fullname(),
+                'value' => (string)$this->get_parent_fullname(),
             ],
             'album' => [
                 'important' => true,
@@ -436,10 +442,10 @@ class AlbumDisk extends database_object implements library_item, CatalogItemInte
     /**
      * Get item album_artist fullname.
      */
-    public function get_artist_fullname(): string
+    public function get_parent_fullname(): string
     {
         if ($this->f_artist_name === null) {
-            $this->f_artist_name = $this->album->get_artist_fullname();
+            $this->f_artist_name = $this->album->get_parent_fullname();
         }
 
         return $this->f_artist_name ?? '';
@@ -568,8 +574,8 @@ class AlbumDisk extends database_object implements library_item, CatalogItemInte
     public function display_art(array $size, bool $force = false): void
     {
         if (Art::has_db($this->album_id, 'album')) {
-            $title = (!empty($this->get_artist_fullname()))
-                ? '[' . $this->get_artist_fullname() . '] ' . $this->get_fullname()
+            $title = (!empty($this->get_parent_fullname()))
+                ? '[' . $this->get_parent_fullname() . '] ' . $this->get_fullname()
                 : $this->get_fullname();
 
             Art::display('album', $this->album_id, $title, $size, $this->get_link());
@@ -580,8 +586,8 @@ class AlbumDisk extends database_object implements library_item, CatalogItemInte
                 $force
             )
         ) {
-            $title = (!empty($this->get_artist_fullname()))
-                ? '[' . $this->get_artist_fullname() . '] ' . $this->get_fullname()
+            $title = (!empty($this->get_parent_fullname()))
+                ? '[' . $this->get_parent_fullname() . '] ' . $this->get_fullname()
                 : $this->get_fullname();
 
             Art::display('artist', $this->album->album_artist, $title, $size, $this->get_link());

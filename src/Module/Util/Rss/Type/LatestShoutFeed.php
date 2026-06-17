@@ -27,6 +27,7 @@ namespace Ampache\Module\Util\Rss\Type;
 
 use Ampache\Module\Shout\ShoutObjectLoaderInterface;
 use Ampache\Repository\Model\Art;
+use Ampache\Repository\Model\displayable_item;
 use Ampache\Repository\Model\Shoutbox;
 use Ampache\Repository\ShoutRepositoryInterface;
 use Generator;
@@ -52,7 +53,7 @@ final readonly class LatestShoutFeed extends AbstractGenericRssFeed
         foreach ($shouts as $shout) {
             $object = $this->shoutObjectLoader->loadByShout($shout);
 
-            if ($object !== null) {
+            if ($object instanceof displayable_item) {
                 $user = $shout->getUser();
                 if ($user === null) {
                     continue;

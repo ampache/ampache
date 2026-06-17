@@ -47,7 +47,7 @@ abstract class database_object
      * get_info
      * retrieves the info from the database and puts it in the cache
      */
-    public function get_info(int $object_id, ?string $table_name = ''): array
+    protected function get_info(int $object_id, ?string $table_name = null): array
     {
         $table     = $this->getTableName($table_name);
         $object_id = (int)$object_id;

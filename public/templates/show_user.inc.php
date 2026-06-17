@@ -37,6 +37,7 @@ use Ampache\Module\Util\Upload;
 use Ampache\Plugin\PluginDisplayUserFieldInterface;
 use Ampache\Repository\Model\Browse;
 use Ampache\Repository\Model\Catalog;
+use Ampache\Repository\Model\displayable_item;
 use Ampache\Repository\Model\LibraryItemLoaderInterface;
 use Ampache\Repository\Model\Plugin;
 use Ampache\Repository\Model\Preference;
@@ -166,7 +167,7 @@ if ($current_list) {
                 $object_data['object_type'],
                 $object_data['object_id'],
             );
-            echo $object?->get_f_link(); ?>
+            echo ($object instanceof displayable_item) ? $object->get_f_link() : ''; ?>
             <br />
             <?php
         } ?>

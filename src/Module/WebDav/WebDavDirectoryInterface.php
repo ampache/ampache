@@ -21,7 +21,10 @@
  *
  */
 
-namespace Ampache\Repository\Model;
+namespace Ampache\Module\WebDav;
+
+use Ampache\Repository\Model\library_item;
+use Ampache\Repository\Model\LibraryItemEnum;
 
 /**
  * library_item Interface
@@ -30,51 +33,19 @@ namespace Ampache\Repository\Model;
  * work, this lists all required functions and the expected
  * input
  */
-interface library_item
+interface WebDavDirectoryInterface extends library_item
 {
-    public function getId(): int;
-
-    public function isNew(): bool;
-
     /**
-     * get_link
+     * get_childrens
      *
-     * Get the item link.
+     * Get direct childrens. Return an array of `object_type`, `object_id` childrens.
+     * @return array{string?: array<int, array{object_type: LibraryItemEnum, object_id: int}>}
      */
-    public function get_link(): string;
+    public function get_childrens(): array;
 
     /**
-     * get_fullname
-     *
-     * Get the item full name.
+     * Search for direct children of an object
+     * @return array<int, array{object_type: LibraryItemEnum, object_id: int}>
      */
-    public function get_fullname(): ?string;
-
-    /**
-     * Get item keywords for metadata searches.
-     * @return array<string, array{important: bool, label: string, value: string}>
-     */
-    public function get_keywords(): array;
-
-    public function get_user_owner(): ?int;
-
-    /**
-     * get_description
-     */
-    public function get_description(): string;
-
-    /**
-     * update
-     * @param array<string, mixed> $data
-     */
-    public function update(array $data): ?int;
-
-    public function has_art(): bool;
-
-    public function get_default_art_kind(): string;
-
-    /**
-     * Returns the media-type of the library-item
-     */
-    public function getMediaType(): LibraryItemEnum;
+    public function get_children(string $name): array;
 }

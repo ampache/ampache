@@ -3763,7 +3763,7 @@ class OpenSubsonic_Api
         foreach ($sub_ids as $sub_id) {
             $object      = self::getAmpacheObject((string)$sub_id);
             $object_type = self::getAmpacheType($sub_id);
-            if ($object_type === "" || !$object instanceof Media || !method_exists($object, 'isNew') || $object->isNew() || !isset($object->time) || !isset($object->id)) {
+            if ($object_type === "" || !$object instanceof Media || $object->isNew() || !isset($object->time) || !isset($object->id)) {
                 continue;
             }
 

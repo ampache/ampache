@@ -31,6 +31,7 @@ use Ampache\Module\Label\LabelListUpdaterInterface;
 use Ampache\Module\Statistics\Stats;
 use Ampache\Module\System\Dba;
 use Ampache\Module\Util\VaInfo;
+use Ampache\Module\WebDav\WebDavDirectoryInterface;
 use Ampache\Plugin\AmpacheMusicBrainz;
 use Ampache\Repository\AlbumRepositoryInterface;
 use Ampache\Repository\ArtistRepositoryInterface;
@@ -38,7 +39,12 @@ use Ampache\Repository\LabelRepositoryInterface;
 use Ampache\Repository\SongRepositoryInterface;
 use Ampache\Repository\UserActivityRepositoryInterface;
 
-class Artist extends database_object implements library_item, CatalogItemInterface
+class Artist extends database_object implements
+    library_item,
+    displayable_item,
+    container_item,
+    CatalogItemInterface,
+    WebDavDirectoryInterface
 {
     protected const string DB_TABLENAME = 'artist';
 
@@ -1213,5 +1219,10 @@ class Artist extends database_object implements library_item, CatalogItemInterfa
         global $dic;
 
         return $dic->get(ArtistRepositoryInterface::class);
+    }
+
+    public function get_parent_fullname(): string
+    {
+        return '';
     }
 }
