@@ -149,6 +149,7 @@ class Preference extends database_object
         'show_album_artist',
         'show_artist',
         'show_donate',
+        'show_folder',
         'show_header_login',
         'show_license',
         'show_lyrics',
@@ -298,7 +299,6 @@ class Preference extends database_object
      */
     private function __construct()
     {
-        // Rien a faire
     }
 
     /**
@@ -343,7 +343,7 @@ class Preference extends database_object
             parent::add_to_cache('get_by_user-' . $key, $user_id, [$value]);
         }
 
-        // Handle if a parameters is missing
+        // Handle if a parameter is missing
         if (
             empty($pref_name) ||
             !array_key_exists($pref_name, $pref)
@@ -879,496 +879,499 @@ class Preference extends database_object
         $db_results = Dba::read($sql);
         while ($row = Dba::fetch_assoc($db_results)) {
             debug_event(self::class, 'Insert preference: ' . $row['item'], 2);
-            $pref_sql = "INSERT IGNORE INTO `preference` (`id`, `name`, `value`, `description`, `level`, `type`, `category`, `subcategory`) VALUES (?, ?, ?, ?, ?, ?, ?, ?);";
+            $pref_sql = "INSERT IGNORE INTO `preference` (`name`, `value`, `description`, `level`, `type`, `category`, `subcategory`) VALUES (?, ?, ?, ?, ?, ?, ?);";
             switch ($row['item']) {
                 case 'download':
-                    Dba::write($pref_sql, [1, 'download', '1', 'Allow Downloads', AccessLevelEnum::ADMIN->value, 'boolean', 'options', 'feature']);
+                    Dba::write($pref_sql, ['download', '1', 'Allow Downloads', AccessLevelEnum::ADMIN->value, 'boolean', 'options', 'feature']);
                     break;
                 case 'popular_threshold':
-                    Dba::write($pref_sql, [4, 'popular_threshold', '10', 'Popular Threshold', AccessLevelEnum::USER->value, 'integer', 'interface', 'query']);
+                    Dba::write($pref_sql, ['popular_threshold', '10', 'Popular Threshold', AccessLevelEnum::USER->value, 'integer', 'interface', 'query']);
                     break;
                 case 'transcode_bitrate':
-                    Dba::write($pref_sql, [19, 'transcode_bitrate', '128', 'Transcode Bitrate', AccessLevelEnum::USER->value, 'string', 'streaming', 'transcoding']);
+                    Dba::write($pref_sql, ['transcode_bitrate', '128', 'Transcode Bitrate', AccessLevelEnum::USER->value, 'string', 'streaming', 'transcoding']);
                     break;
                 case 'site_title':
-                    Dba::write($pref_sql, [22, 'site_title', 'Ampache :: For the Love of Music', 'Website Title', AccessLevelEnum::ADMIN->value, 'string', 'interface', 'custom']);
+                    Dba::write($pref_sql, ['site_title', 'Ampache :: For the Love of Music', 'Website Title', AccessLevelEnum::ADMIN->value, 'string', 'interface', 'custom']);
                     break;
                 case 'lock_songs':
-                    Dba::write($pref_sql, [23, 'lock_songs', '0', 'Lock Songs', AccessLevelEnum::ADMIN->value, 'boolean', 'system', null]);
+                    Dba::write($pref_sql, ['lock_songs', '0', 'Lock Songs', AccessLevelEnum::ADMIN->value, 'boolean', 'system', null]);
                     break;
                 case 'force_http_play':
-                    Dba::write($pref_sql, [24, 'force_http_play', '0', 'Force HTTP playback regardless of port', AccessLevelEnum::ADMIN->value, 'boolean', 'system', null]);
+                    Dba::write($pref_sql, ['force_http_play', '0', 'Force HTTP playback regardless of port', AccessLevelEnum::ADMIN->value, 'boolean', 'system', null]);
                     break;
                 case 'play_type':
-                    Dba::write($pref_sql, [29, 'play_type', 'web_player', 'Playback Type', AccessLevelEnum::USER->value, 'special', 'streaming', null]);
+                    Dba::write($pref_sql, ['play_type', 'web_player', 'Playback Type', AccessLevelEnum::USER->value, 'special', 'streaming', null]);
                     break;
                 case 'lang':
-                    Dba::write($pref_sql, [31, 'lang', 'en_US', 'Language', AccessLevelEnum::ADMIN->value, 'special', 'interface', null]);
+                    Dba::write($pref_sql, ['lang', 'en_US', 'Language', AccessLevelEnum::ADMIN->value, 'special', 'interface', null]);
                     break;
                 case 'playlist_type':
-                    Dba::write($pref_sql, [32, 'playlist_type', 'm3u', 'Playlist Type', AccessLevelEnum::ADMIN->value, 'special', 'playlist', null]);
+                    Dba::write($pref_sql, ['playlist_type', 'm3u', 'Playlist Type', AccessLevelEnum::ADMIN->value, 'special', 'playlist', null]);
                     break;
                 case 'theme_name':
-                    Dba::write($pref_sql, [33, 'theme_name', 'reborn', 'Theme', AccessLevelEnum::DEFAULT->value, 'special', 'interface', 'theme']);
+                    Dba::write($pref_sql, ['theme_name', 'reborn', 'Theme', AccessLevelEnum::DEFAULT->value, 'special', 'interface', 'theme']);
                     break;
                 case 'localplay_level':
-                    Dba::write($pref_sql, [40, 'localplay_level', '0', 'Localplay Access', AccessLevelEnum::ADMIN->value, 'special', 'options', 'localplay']);
+                    Dba::write($pref_sql, ['localplay_level', '0', 'Localplay Access', AccessLevelEnum::ADMIN->value, 'special', 'options', 'localplay']);
                     break;
                 case 'localplay_controller':
-                    Dba::write($pref_sql, [41, 'localplay_controller', '0', 'Localplay Type', AccessLevelEnum::ADMIN->value, 'special', 'options', 'localplay']);
+                    Dba::write($pref_sql, ['localplay_controller', '0', 'Localplay Type', AccessLevelEnum::ADMIN->value, 'special', 'options', 'localplay']);
                     break;
                 case 'allow_stream_playback':
-                    Dba::write($pref_sql, [44, 'allow_stream_playback', '1', 'Allow Streaming', AccessLevelEnum::ADMIN->value, 'boolean', 'options', 'feature']);
+                    Dba::write($pref_sql, ['allow_stream_playback', '1', 'Allow Streaming', AccessLevelEnum::ADMIN->value, 'boolean', 'options', 'feature']);
                     break;
                 case 'allow_democratic_playback':
-                    Dba::write($pref_sql, [45, 'allow_democratic_playback', '0', 'Allow Democratic Play', AccessLevelEnum::ADMIN->value, 'boolean', 'options', 'feature']);
+                    Dba::write($pref_sql, ['allow_democratic_playback', '0', 'Allow Democratic Play', AccessLevelEnum::ADMIN->value, 'boolean', 'options', 'feature']);
                     break;
                 case 'allow_localplay_playback':
-                    Dba::write($pref_sql, [46, 'allow_localplay_playback', '0', 'Allow Localplay Play', AccessLevelEnum::ADMIN->value, 'boolean', 'options', 'localplay']);
+                    Dba::write($pref_sql, ['allow_localplay_playback', '0', 'Allow Localplay Play', AccessLevelEnum::ADMIN->value, 'boolean', 'options', 'localplay']);
                     break;
                 case 'stats_threshold':
-                    Dba::write($pref_sql, [47, 'stats_threshold', '7', 'Statistics Day Threshold', AccessLevelEnum::USER->value, 'integer', 'interface', 'query']);
+                    Dba::write($pref_sql, ['stats_threshold', '7', 'Statistics Day Threshold', AccessLevelEnum::USER->value, 'integer', 'interface', 'query']);
                     break;
                 case 'offset_limit':
-                    Dba::write($pref_sql, [51, 'offset_limit', '50', 'Offset Limit', AccessLevelEnum::DEFAULT->value, 'integer', 'interface', 'query']);
+                    Dba::write($pref_sql, ['offset_limit', '50', 'Offset Limit', AccessLevelEnum::DEFAULT->value, 'integer', 'interface', 'query']);
                     break;
                 case 'rate_limit':
-                    Dba::write($pref_sql, [52, 'rate_limit', '8192', 'Rate Limit', AccessLevelEnum::ADMIN->value, 'integer', 'streaming', 'transcoding']);
+                    Dba::write($pref_sql, ['rate_limit', '8192', 'Rate Limit', AccessLevelEnum::ADMIN->value, 'integer', 'streaming', 'transcoding']);
                     break;
                 case 'playlist_method':
-                    Dba::write($pref_sql, [53, 'playlist_method', 'default', 'Playlist Method', AccessLevelEnum::DEFAULT->value, 'string', 'playlist', null]);
+                    Dba::write($pref_sql, ['playlist_method', 'default', 'Playlist Method', AccessLevelEnum::DEFAULT->value, 'string', 'playlist', null]);
                     break;
                 case 'transcode':
-                    Dba::write($pref_sql, [55, 'transcode', 'default', 'Allow Transcoding', AccessLevelEnum::USER->value, 'string', 'streaming', 'transcoding']);
+                    Dba::write($pref_sql, ['transcode', 'default', 'Allow Transcoding', AccessLevelEnum::USER->value, 'string', 'streaming', 'transcoding']);
                     break;
                 case 'show_lyrics':
-                    Dba::write($pref_sql, [69, 'show_lyrics', '0', 'Show lyrics', AccessLevelEnum::DEFAULT->value, 'boolean', 'interface', 'player']);
+                    Dba::write($pref_sql, ['show_lyrics', '0', 'Show lyrics', AccessLevelEnum::DEFAULT->value, 'boolean', 'interface', 'player']);
                     break;
                 case 'lastfm_grant_link':
-                    Dba::write($pref_sql, [77, 'lastfm_grant_link', '', 'Last.FM Grant URL', AccessLevelEnum::USER->value, 'string', 'internal', 'lastfm']);
+                    Dba::write($pref_sql, ['lastfm_grant_link', '', 'Last.FM Grant URL', AccessLevelEnum::USER->value, 'string', 'internal', 'lastfm']);
                     break;
                 case 'lastfm_challenge':
-                    Dba::write($pref_sql, [78, 'lastfm_challenge', '', 'Last.FM Submit Challenge', AccessLevelEnum::USER->value, 'string', 'internal', 'lastfm']);
+                    Dba::write($pref_sql, ['lastfm_challenge', '', 'Last.FM Submit Challenge', AccessLevelEnum::USER->value, 'string', 'internal', 'lastfm']);
                     break;
                 case 'now_playing_per_user':
-                    Dba::write($pref_sql, [82, 'now_playing_per_user', '1', 'Now Playing filtered per user', AccessLevelEnum::CONTENT_MANAGER->value, 'boolean', 'interface', 'home']);
+                    Dba::write($pref_sql, ['now_playing_per_user', '1', 'Now Playing filtered per user', AccessLevelEnum::CONTENT_MANAGER->value, 'boolean', 'interface', 'home']);
                     break;
                 case 'album_sort':
-                    Dba::write($pref_sql, [83, 'album_sort', 'default', 'Album - Default sort', AccessLevelEnum::USER->value, 'string', 'interface', 'library']);
+                    Dba::write($pref_sql, ['album_sort', 'default', 'Album - Default sort', AccessLevelEnum::USER->value, 'string', 'interface', 'library']);
                     break;
                 case 'show_played_times':
-                    Dba::write($pref_sql, [84, 'show_played_times', '0', 'Show # played', AccessLevelEnum::USER->value, 'string', 'interface', 'browse']);
+                    Dba::write($pref_sql, ['show_played_times', '0', 'Show # played', AccessLevelEnum::USER->value, 'string', 'interface', 'browse']);
                     break;
                 case 'song_page_title':
-                    Dba::write($pref_sql, [85, 'song_page_title', '1', 'Show current song in Web player page title', AccessLevelEnum::USER->value, 'boolean', 'interface', 'player']);
+                    Dba::write($pref_sql, ['song_page_title', '1', 'Show current song in Web player page title', AccessLevelEnum::USER->value, 'boolean', 'interface', 'player']);
                     break;
                 case 'subsonic_backend':
-                    Dba::write($pref_sql, [86, 'subsonic_backend', '1', 'Use Subsonic backend', AccessLevelEnum::ADMIN->value, 'boolean', 'system', 'backend']);
+                    Dba::write($pref_sql, ['subsonic_backend', '1', 'Use Subsonic backend', AccessLevelEnum::ADMIN->value, 'boolean', 'system', 'backend']);
                     break;
                 case 'webplayer_flash':
-                    Dba::write($pref_sql, [88, 'webplayer_flash', '1', 'Authorize Flash Web Player', AccessLevelEnum::USER->value, 'boolean', 'streaming', 'player']);
+                    Dba::write($pref_sql, ['webplayer_flash', '1', 'Authorize Flash Web Player', AccessLevelEnum::USER->value, 'boolean', 'streaming', 'player']);
                     break;
                 case 'webplayer_html5':
-                    Dba::write($pref_sql, [89, 'webplayer_html5', '1', 'Authorize HTML5 Web Player', AccessLevelEnum::USER->value, 'boolean', 'streaming', 'player']);
+                    Dba::write($pref_sql, ['webplayer_html5', '1', 'Authorize HTML5 Web Player', AccessLevelEnum::USER->value, 'boolean', 'streaming', 'player']);
                     break;
                 case 'allow_personal_info_now':
-                    Dba::write($pref_sql, [90, 'allow_personal_info_now', '1', 'Share Now Playing information', AccessLevelEnum::USER->value, 'boolean', 'interface', 'privacy']);
+                    Dba::write($pref_sql, ['allow_personal_info_now', '1', 'Share Now Playing information', AccessLevelEnum::USER->value, 'boolean', 'interface', 'privacy']);
                     break;
                 case 'allow_personal_info_recent':
-                    Dba::write($pref_sql, [91, 'allow_personal_info_recent', '1', 'Share Recently Played information', AccessLevelEnum::USER->value, 'boolean', 'interface', 'privacy']);
+                    Dba::write($pref_sql, ['allow_personal_info_recent', '1', 'Share Recently Played information', AccessLevelEnum::USER->value, 'boolean', 'interface', 'privacy']);
                     break;
                 case 'allow_personal_info_time':
-                    Dba::write($pref_sql, [92, 'allow_personal_info_time', '1', 'Share Recently Played information - Allow access to streaming date/time', AccessLevelEnum::USER->value, 'boolean', 'interface', 'privacy']);
+                    Dba::write($pref_sql, ['allow_personal_info_time', '1', 'Share Recently Played information - Allow access to streaming date/time', AccessLevelEnum::USER->value, 'boolean', 'interface', 'privacy']);
                     break;
                 case 'allow_personal_info_agent':
-                    Dba::write($pref_sql, [93, 'allow_personal_info_agent', '1', 'Share Recently Played information - Allow access to streaming agent', AccessLevelEnum::USER->value, 'boolean', 'interface', 'privacy']);
+                    Dba::write($pref_sql, ['allow_personal_info_agent', '1', 'Share Recently Played information - Allow access to streaming agent', AccessLevelEnum::USER->value, 'boolean', 'interface', 'privacy']);
                     break;
                 case 'ui_fixed':
-                    Dba::write($pref_sql, [94, 'ui_fixed', '0', 'Fix header position on compatible themes', AccessLevelEnum::USER->value, 'boolean', 'interface', 'theme']);
+                    Dba::write($pref_sql, ['ui_fixed', '0', 'Fix header position on compatible themes', AccessLevelEnum::USER->value, 'boolean', 'interface', 'theme']);
                     break;
                 case 'autoupdate':
-                    Dba::write($pref_sql, [95, 'autoupdate', '1', 'Check for Ampache updates automatically', AccessLevelEnum::ADMIN->value, 'boolean', 'system', 'update']);
+                    Dba::write($pref_sql, ['autoupdate', '1', 'Check for Ampache updates automatically', AccessLevelEnum::ADMIN->value, 'boolean', 'system', 'update']);
                     break;
                 case 'autoupdate_lastcheck':
-                    Dba::write($pref_sql, [96, 'autoupdate_lastcheck', '', 'AutoUpdate last check time', AccessLevelEnum::USER->value, 'string', 'internal', 'update']);
+                    Dba::write($pref_sql, ['autoupdate_lastcheck', '', 'AutoUpdate last check time', AccessLevelEnum::USER->value, 'string', 'internal', 'update']);
                     break;
                 case 'autoupdate_lastversion':
-                    Dba::write($pref_sql, [97, 'autoupdate_lastversion', '', 'AutoUpdate last version from last check', AccessLevelEnum::USER->value, 'string', 'internal', 'update']);
+                    Dba::write($pref_sql, ['autoupdate_lastversion', '', 'AutoUpdate last version from last check', AccessLevelEnum::USER->value, 'string', 'internal', 'update']);
                     break;
                 case 'autoupdate_lastversion_new':
-                    Dba::write($pref_sql, [98, 'autoupdate_lastversion_new', '', 'AutoUpdate last version from last check is newer', AccessLevelEnum::USER->value, 'boolean', 'internal', 'update']);
+                    Dba::write($pref_sql, ['autoupdate_lastversion_new', '', 'AutoUpdate last version from last check is newer', AccessLevelEnum::USER->value, 'boolean', 'internal', 'update']);
                     break;
                 case 'webplayer_confirmclose':
-                    Dba::write($pref_sql, [99, 'webplayer_confirmclose', '0', 'Confirmation when closing current playing window', AccessLevelEnum::USER->value, 'boolean', 'interface', 'player']);
+                    Dba::write($pref_sql, ['webplayer_confirmclose', '0', 'Confirmation when closing current playing window', AccessLevelEnum::USER->value, 'boolean', 'interface', 'player']);
                     break;
                 case 'webplayer_pausetabs':
-                    Dba::write($pref_sql, [100, 'webplayer_pausetabs', '1', 'Auto-pause between tabs', AccessLevelEnum::USER->value, 'boolean', 'interface', 'player']);
+                    Dba::write($pref_sql, ['webplayer_pausetabs', '1', 'Auto-pause between tabs', AccessLevelEnum::USER->value, 'boolean', 'interface', 'player']);
                     break;
                 case 'stream_beautiful_url':
-                    Dba::write($pref_sql, [101, 'stream_beautiful_url', '0', 'Enable URL Rewriting', AccessLevelEnum::ADMIN->value, 'boolean', 'streaming', null]);
+                    Dba::write($pref_sql, ['stream_beautiful_url', '0', 'Enable URL Rewriting', AccessLevelEnum::ADMIN->value, 'boolean', 'streaming', null]);
                     break;
                 case 'share':
-                    Dba::write($pref_sql, [102, 'share', '0', 'Allow Share', AccessLevelEnum::ADMIN->value, 'boolean', 'options', 'feature']);
+                    Dba::write($pref_sql, ['share', '0', 'Allow Share', AccessLevelEnum::ADMIN->value, 'boolean', 'options', 'feature']);
                     break;
                 case 'share_expire':
-                    Dba::write($pref_sql, [103, 'share_expire', '7', 'Share links default expiration days (0=never)', AccessLevelEnum::ADMIN->value, 'integer', 'system', 'share']);
+                    Dba::write($pref_sql, ['share_expire', '7', 'Share links default expiration days (0=never)', AccessLevelEnum::ADMIN->value, 'integer', 'system', 'share']);
                     break;
                 case 'slideshow_time':
-                    Dba::write($pref_sql, [104, 'slideshow_time', '0', 'Artist slideshow inactivity time', AccessLevelEnum::USER->value, 'integer', 'interface', 'player']);
+                    Dba::write($pref_sql, ['slideshow_time', '0', 'Artist slideshow inactivity time', AccessLevelEnum::USER->value, 'integer', 'interface', 'player']);
                     break;
                 case 'broadcast_by_default':
-                    Dba::write($pref_sql, [105, 'broadcast_by_default', '0', 'Broadcast web player by default', AccessLevelEnum::USER->value, 'boolean', 'streaming', 'player']);
+                    Dba::write($pref_sql, ['broadcast_by_default', '0', 'Broadcast web player by default', AccessLevelEnum::USER->value, 'boolean', 'streaming', 'player']);
                     break;
                 case 'album_group':
-                    Dba::write($pref_sql, [108, 'album_group', '1', 'Album - Group multiple disks', AccessLevelEnum::USER->value, 'boolean', 'interface', 'library']);
+                    Dba::write($pref_sql, ['album_group', '1', 'Album - Group multiple disks', AccessLevelEnum::USER->value, 'boolean', 'interface', 'library']);
                     break;
                 case 'topmenu':
-                    Dba::write($pref_sql, [109, 'topmenu', '0', 'Top menu', AccessLevelEnum::USER->value, 'boolean', 'interface', 'theme']);
+                    Dba::write($pref_sql, ['topmenu', '0', 'Top menu', AccessLevelEnum::USER->value, 'boolean', 'interface', 'theme']);
                     break;
                 case 'demo_clear_sessions':
-                    Dba::write($pref_sql, [110, 'demo_clear_sessions', '0', 'Democratic - Clear votes for expired user sessions', AccessLevelEnum::USER->value, 'boolean', 'playlist', null]);
+                    Dba::write($pref_sql, ['demo_clear_sessions', '0', 'Democratic - Clear votes for expired user sessions', AccessLevelEnum::USER->value, 'boolean', 'playlist', null]);
                     break;
                 case 'show_donate':
-                    Dba::write($pref_sql, [111, 'show_donate', '1', 'Show donate button in footer', AccessLevelEnum::USER->value, 'boolean', 'interface', null]);
+                    Dba::write($pref_sql, ['show_donate', '1', 'Show donate button in footer', AccessLevelEnum::USER->value, 'boolean', 'interface', null]);
                     break;
                 case 'upload_catalog':
-                    Dba::write($pref_sql, [112, 'upload_catalog', '-1', 'Destination catalog', AccessLevelEnum::ADMIN->value, 'integer', 'options', 'upload']);
+                    Dba::write($pref_sql, ['upload_catalog', '-1', 'Destination catalog', AccessLevelEnum::ADMIN->value, 'integer', 'options', 'upload']);
                     break;
                 case 'allow_upload':
-                    Dba::write($pref_sql, [113, 'allow_upload', '0', 'Allow user uploads', AccessLevelEnum::ADMIN->value, 'boolean', 'system', 'upload']);
+                    Dba::write($pref_sql, ['allow_upload', '0', 'Allow user uploads', AccessLevelEnum::ADMIN->value, 'boolean', 'system', 'upload']);
                     break;
                 case 'upload_subdir':
-                    Dba::write($pref_sql, [114, 'upload_subdir', '1', 'Create a subdirectory per user', AccessLevelEnum::ADMIN->value, 'boolean', 'system', 'upload']);
+                    Dba::write($pref_sql, ['upload_subdir', '1', 'Create a subdirectory per user', AccessLevelEnum::ADMIN->value, 'boolean', 'system', 'upload']);
                     break;
                 case 'upload_user_artist':
-                    Dba::write($pref_sql, [115, 'upload_user_artist', '0', 'Consider the user sender as the track\'s artist', AccessLevelEnum::ADMIN->value, 'boolean', 'system', 'upload']);
+                    Dba::write($pref_sql, ['upload_user_artist', '0', 'Consider the user sender as the track\'s artist', AccessLevelEnum::ADMIN->value, 'boolean', 'system', 'upload']);
                     break;
                 case 'upload_script':
-                    Dba::write($pref_sql, [116, 'upload_script', '', 'Post-upload script (current directory = upload target directory)', AccessLevelEnum::ADMIN->value, 'string', 'system', 'upload']);
+                    Dba::write($pref_sql, ['upload_script', '', 'Post-upload script (current directory = upload target directory)', AccessLevelEnum::ADMIN->value, 'string', 'system', 'upload']);
                     break;
                 case 'upload_allow_edit':
-                    Dba::write($pref_sql, [117, 'upload_allow_edit', '1', 'Allow users to edit uploaded songs', AccessLevelEnum::ADMIN->value, 'boolean', 'system', 'upload']);
+                    Dba::write($pref_sql, ['upload_allow_edit', '1', 'Allow users to edit uploaded songs', AccessLevelEnum::ADMIN->value, 'boolean', 'system', 'upload']);
                     break;
                 case 'daap_backend':
-                    Dba::write($pref_sql, [118, 'daap_backend', '0', 'Use DAAP backend', AccessLevelEnum::ADMIN->value, 'boolean', 'system', 'backend']);
+                    Dba::write($pref_sql, ['daap_backend', '0', 'Use DAAP backend', AccessLevelEnum::ADMIN->value, 'boolean', 'system', 'backend']);
                     break;
                 case 'daap_pass':
-                    Dba::write($pref_sql, [119, 'daap_pass', '', 'DAAP backend password', AccessLevelEnum::ADMIN->value, 'string', 'system', 'backend']);
+                    Dba::write($pref_sql, ['daap_pass', '', 'DAAP backend password', AccessLevelEnum::ADMIN->value, 'string', 'system', 'backend']);
                     break;
                 case 'upnp_backend':
-                    Dba::write($pref_sql, [120, 'upnp_backend', '0', 'Use UPnP backend', AccessLevelEnum::ADMIN->value, 'boolean', 'system', 'backend']);
+                    Dba::write($pref_sql, ['upnp_backend', '0', 'Use UPnP backend', AccessLevelEnum::ADMIN->value, 'boolean', 'system', 'backend']);
                     break;
                 case 'allow_video':
-                    Dba::write($pref_sql, [121, 'allow_video', '0', 'Allow Video Features', AccessLevelEnum::MANAGER->value, 'integer', 'options', 'feature']);
+                    Dba::write($pref_sql, ['allow_video', '0', 'Allow Video Features', AccessLevelEnum::MANAGER->value, 'integer', 'options', 'feature']);
                     break;
                 case 'album_release_type':
-                    Dba::write($pref_sql, [122, 'album_release_type', '1', 'Album - Group per release type', AccessLevelEnum::USER->value, 'boolean', 'interface', 'library']);
+                    Dba::write($pref_sql, ['album_release_type', '1', 'Album - Group per release type', AccessLevelEnum::USER->value, 'boolean', 'interface', 'library']);
                     break;
                 case 'ajax_load':
-                    Dba::write($pref_sql, [123, 'ajax_load', '1', 'Ajax page load', AccessLevelEnum::USER->value, 'boolean', 'interface', null]);
+                    Dba::write($pref_sql, ['ajax_load', '1', 'Ajax page load', AccessLevelEnum::USER->value, 'boolean', 'interface', null]);
                     break;
                 case 'direct_play_limit':
-                    Dba::write($pref_sql, [124, 'direct_play_limit', '500', 'Limit direct play to maximum media count', AccessLevelEnum::USER->value, 'integer', 'interface', 'player']);
+                    Dba::write($pref_sql, ['direct_play_limit', '500', 'Limit direct play to maximum media count', AccessLevelEnum::USER->value, 'integer', 'interface', 'player']);
                     break;
                 case 'home_moment_albums':
-                    Dba::write($pref_sql, [125, 'home_moment_albums', '1', 'Show Albums of the Moment', AccessLevelEnum::USER->value, 'integer', 'interface', 'home']);
+                    Dba::write($pref_sql, ['home_moment_albums', '1', 'Show Albums of the Moment', AccessLevelEnum::USER->value, 'integer', 'interface', 'home']);
                     break;
                 case 'home_moment_videos':
-                    Dba::write($pref_sql, [126, 'home_moment_videos', '0', 'Show Videos of the Moment', AccessLevelEnum::USER->value, 'integer', 'interface', 'home']);
+                    Dba::write($pref_sql, ['home_moment_videos', '0', 'Show Videos of the Moment', AccessLevelEnum::USER->value, 'integer', 'interface', 'home']);
                     break;
                 case 'home_recently_played':
-                    Dba::write($pref_sql, [127, 'home_recently_played', '1', 'Show Recently Played', AccessLevelEnum::USER->value, 'integer', 'interface', 'home']);
+                    Dba::write($pref_sql, ['home_recently_played', '1', 'Show Recently Played', AccessLevelEnum::USER->value, 'integer', 'interface', 'home']);
                     break;
                 case 'home_now_playing':
-                    Dba::write($pref_sql, [128, 'home_now_playing', '1', 'Show Now Playing', AccessLevelEnum::USER->value, 'integer', 'interface', 'home']);
+                    Dba::write($pref_sql, ['home_now_playing', '1', 'Show Now Playing', AccessLevelEnum::USER->value, 'integer', 'interface', 'home']);
                     break;
                 case 'custom_logo':
-                    Dba::write($pref_sql, [129, 'custom_logo', '', 'Custom URL - Logo', AccessLevelEnum::USER->value, 'string', 'interface', 'custom']);
+                    Dba::write($pref_sql, ['custom_logo', '', 'Custom URL - Logo', AccessLevelEnum::USER->value, 'string', 'interface', 'custom']);
                     break;
                 case 'album_release_type_sort':
-                    Dba::write($pref_sql, [130, 'album_release_type_sort', 'album,ep,live,single', 'Album - Group per release type sort', AccessLevelEnum::USER->value, 'string', 'interface', 'library']);
+                    Dba::write($pref_sql, ['album_release_type_sort', 'album,ep,live,single', 'Album - Group per release type sort', AccessLevelEnum::USER->value, 'string', 'interface', 'library']);
                     break;
                 case 'browser_notify':
-                    Dba::write($pref_sql, [131, 'browser_notify', '1', 'Web Player browser notifications', AccessLevelEnum::USER->value, 'integer', 'interface', 'notification']);
+                    Dba::write($pref_sql, ['browser_notify', '1', 'Web Player browser notifications', AccessLevelEnum::USER->value, 'integer', 'interface', 'notification']);
                     break;
                 case 'browser_notify_timeout':
-                    Dba::write($pref_sql, [132, 'browser_notify_timeout', '10', 'Web Player browser notifications timeout (seconds)', AccessLevelEnum::USER->value, 'integer', 'interface', 'notification']);
+                    Dba::write($pref_sql, ['browser_notify_timeout', '10', 'Web Player browser notifications timeout (seconds)', AccessLevelEnum::USER->value, 'integer', 'interface', 'notification']);
                     break;
                 case 'geolocation':
-                    Dba::write($pref_sql, [133, 'geolocation', '0', 'Allow Geolocation', AccessLevelEnum::USER->value, 'integer', 'options', 'feature']);
+                    Dba::write($pref_sql, ['geolocation', '0', 'Allow Geolocation', AccessLevelEnum::USER->value, 'integer', 'options', 'feature']);
                     break;
                 case 'webplayer_aurora':
-                    Dba::write($pref_sql, [134, 'webplayer_aurora', '1', 'Authorize JavaScript decoder (Aurora.js) in Web Player', AccessLevelEnum::USER->value, 'boolean', 'streaming', 'player']);
+                    Dba::write($pref_sql, ['webplayer_aurora', '1', 'Authorize JavaScript decoder (Aurora.js) in Web Player', AccessLevelEnum::USER->value, 'boolean', 'streaming', 'player']);
                     break;
                 case 'upload_allow_remove':
-                    Dba::write($pref_sql, [135, 'upload_allow_remove', '1', 'Allow users to remove uploaded songs', AccessLevelEnum::ADMIN->value, 'boolean', 'system', 'upload']);
+                    Dba::write($pref_sql, ['upload_allow_remove', '1', 'Allow users to remove uploaded songs', AccessLevelEnum::ADMIN->value, 'boolean', 'system', 'upload']);
                     break;
                 case 'custom_login_logo':
-                    Dba::write($pref_sql, [136, 'custom_login_logo', '', 'Custom URL - Login page logo', AccessLevelEnum::ADMIN->value, 'string', 'system', 'interface']);
+                    Dba::write($pref_sql, ['custom_login_logo', '', 'Custom URL - Login page logo', AccessLevelEnum::ADMIN->value, 'string', 'system', 'interface']);
                     break;
                 case 'custom_favicon':
-                    Dba::write($pref_sql, [137, 'custom_favicon', '', 'Custom URL - Favicon', AccessLevelEnum::ADMIN->value, 'string', 'system', 'interface']);
+                    Dba::write($pref_sql, ['custom_favicon', '', 'Custom URL - Favicon', AccessLevelEnum::ADMIN->value, 'string', 'system', 'interface']);
                     break;
                 case 'custom_text_footer':
-                    Dba::write($pref_sql, [138, 'custom_text_footer', '', 'Custom text footer', AccessLevelEnum::ADMIN->value, 'string', 'system', 'interface']);
+                    Dba::write($pref_sql, ['custom_text_footer', '', 'Custom text footer', AccessLevelEnum::ADMIN->value, 'string', 'system', 'interface']);
                     break;
                 case 'webdav_backend':
-                    Dba::write($pref_sql, [139, 'webdav_backend', '0', 'Use WebDAV backend', AccessLevelEnum::ADMIN->value, 'boolean', 'system', 'backend']);
+                    Dba::write($pref_sql, ['webdav_backend', '0', 'Use WebDAV backend', AccessLevelEnum::ADMIN->value, 'boolean', 'system', 'backend']);
                     break;
                 case 'notify_email':
-                    Dba::write($pref_sql, [140, 'notify_email', '0', 'Allow E-mail notifications', AccessLevelEnum::USER->value, 'boolean', 'options', null]);
+                    Dba::write($pref_sql, ['notify_email', '0', 'Allow E-mail notifications', AccessLevelEnum::USER->value, 'boolean', 'options', null]);
                     break;
                 case 'theme_color':
-                    Dba::write($pref_sql, [141, 'theme_color', 'dark', 'Theme color', AccessLevelEnum::DEFAULT->value, 'special', 'interface', 'theme']);
+                    Dba::write($pref_sql, ['theme_color', 'dark', 'Theme color', AccessLevelEnum::DEFAULT->value, 'special', 'interface', 'theme']);
                     break;
                 case 'disabled_custom_metadata_fields':
-                    Dba::write($pref_sql, [142, 'disabled_custom_metadata_fields', '', 'Custom metadata - Disable these fields', AccessLevelEnum::ADMIN->value, 'string', 'system', 'metadata']);
+                    Dba::write($pref_sql, ['disabled_custom_metadata_fields', '', 'Custom metadata - Disable these fields', AccessLevelEnum::ADMIN->value, 'string', 'system', 'metadata']);
                     break;
                 case 'disabled_custom_metadata_fields_input':
-                    Dba::write($pref_sql, [143, 'disabled_custom_metadata_fields_input', '', 'Custom metadata - Define field list', AccessLevelEnum::ADMIN->value, 'string', 'system', 'metadata']);
+                    Dba::write($pref_sql, ['disabled_custom_metadata_fields_input', '', 'Custom metadata - Define field list', AccessLevelEnum::ADMIN->value, 'string', 'system', 'metadata']);
                     break;
                 case 'podcast_keep':
-                    Dba::write($pref_sql, [144, 'podcast_keep', '0', '# latest episodes to keep', AccessLevelEnum::ADMIN->value, 'integer', 'system', 'podcast']);
+                    Dba::write($pref_sql, ['podcast_keep', '0', '# latest episodes to keep', AccessLevelEnum::ADMIN->value, 'integer', 'system', 'podcast']);
                     break;
                 case 'podcast_new_download':
-                    Dba::write($pref_sql, [145, 'podcast_new_download', '0', '# episodes to download when new episodes are available', AccessLevelEnum::ADMIN->value, 'integer', 'system', 'podcast']);
+                    Dba::write($pref_sql, ['podcast_new_download', '0', '# episodes to download when new episodes are available', AccessLevelEnum::ADMIN->value, 'integer', 'system', 'podcast']);
                     break;
                 case 'libitem_contextmenu':
-                    Dba::write($pref_sql, [146, 'libitem_contextmenu', '1', 'Library item context menu', AccessLevelEnum::DEFAULT->value, 'boolean', 'interface', 'library']);
+                    Dba::write($pref_sql, ['libitem_contextmenu', '1', 'Library item context menu', AccessLevelEnum::DEFAULT->value, 'boolean', 'interface', 'library']);
                     break;
                 case 'upload_catalog_pattern':
-                    Dba::write($pref_sql, [147, 'upload_catalog_pattern', '0', 'Rename uploaded file according to catalog pattern', AccessLevelEnum::ADMIN->value, 'boolean', 'system', 'upload']);
+                    Dba::write($pref_sql, ['upload_catalog_pattern', '0', 'Rename uploaded file according to catalog pattern', AccessLevelEnum::ADMIN->value, 'boolean', 'system', 'upload']);
                     break;
                 case 'catalog_check_duplicate':
-                    Dba::write($pref_sql, [148, 'catalog_check_duplicate', '0', 'Check library item at import time and disable duplicates', AccessLevelEnum::ADMIN->value, 'boolean', 'system', 'catalog']);
+                    Dba::write($pref_sql, ['catalog_check_duplicate', '0', 'Check library item at import time and disable duplicates', AccessLevelEnum::ADMIN->value, 'boolean', 'system', 'catalog']);
                     break;
                 case 'browse_filter':
-                    Dba::write($pref_sql, [149, 'browse_filter', '0', 'Show filter box on browse', AccessLevelEnum::USER->value, 'boolean', 'interface', 'browse']);
+                    Dba::write($pref_sql, ['browse_filter', '0', 'Show filter box on browse', AccessLevelEnum::USER->value, 'boolean', 'interface', 'browse']);
                     break;
                 case 'sidebar_light':
-                    Dba::write($pref_sql, [150, 'sidebar_light', '0', 'Light sidebar by default', AccessLevelEnum::USER->value, 'boolean', 'interface', 'theme']);
+                    Dba::write($pref_sql, ['sidebar_light', '0', 'Light sidebar by default', AccessLevelEnum::USER->value, 'boolean', 'interface', 'theme']);
                     break;
                 case 'custom_blankalbum':
-                    Dba::write($pref_sql, [151, 'custom_blankalbum', '', 'Custom blank album default image', AccessLevelEnum::MANAGER->value, 'string', 'interface', 'custom']);
+                    Dba::write($pref_sql, ['custom_blankalbum', '', 'Custom blank album default image', AccessLevelEnum::MANAGER->value, 'string', 'interface', 'custom']);
                     break;
                 case 'libitem_browse_alpha':
-                    Dba::write($pref_sql, [153, 'libitem_browse_alpha', '', 'Alphabet browsing by default for following library items (album,artist,...)', AccessLevelEnum::MANAGER->value, 'string', 'interface', 'browse']);
+                    Dba::write($pref_sql, ['libitem_browse_alpha', '', 'Alphabet browsing by default for following library items (album,artist,...)', AccessLevelEnum::MANAGER->value, 'string', 'interface', 'browse']);
                     break;
                 case 'show_skipped_times':
-                    Dba::write($pref_sql, [154, 'show_skipped_times', '0', 'Show # skipped', AccessLevelEnum::USER->value, 'boolean', 'interface', 'browse']);
+                    Dba::write($pref_sql, ['show_skipped_times', '0', 'Show # skipped', AccessLevelEnum::USER->value, 'boolean', 'interface', 'browse']);
                     break;
                 case 'custom_datetime':
-                    Dba::write($pref_sql, [155, 'custom_datetime', '', 'Custom datetime', AccessLevelEnum::USER->value, 'string', 'interface', 'custom']);
+                    Dba::write($pref_sql, ['custom_datetime', '', 'Custom datetime', AccessLevelEnum::USER->value, 'string', 'interface', 'custom']);
                     break;
                 case 'cron_cache':
-                    Dba::write($pref_sql, [156, 'cron_cache', '0', 'Cache computed SQL data (eg. media hits stats) using a cron', AccessLevelEnum::ADMIN->value, 'boolean', 'system', 'catalog']);
+                    Dba::write($pref_sql, ['cron_cache', '0', 'Cache computed SQL data (eg. media hits stats) using a cron', AccessLevelEnum::ADMIN->value, 'boolean', 'system', 'catalog']);
                     break;
                 case 'unique_playlist':
-                    Dba::write($pref_sql, [157, 'unique_playlist', '0', 'Only add unique items to playlists', AccessLevelEnum::USER->value, 'boolean', 'playlist', null]);
+                    Dba::write($pref_sql, ['unique_playlist', '0', 'Only add unique items to playlists', AccessLevelEnum::USER->value, 'boolean', 'playlist', null]);
                     break;
                 case 'of_the_moment':
-                    Dba::write($pref_sql, [158, 'of_the_moment', '6', 'Set the amount of items Album/Video of the Moment will display', AccessLevelEnum::USER->value, 'integer', 'interface', 'home']);
+                    Dba::write($pref_sql, ['of_the_moment', '6', 'Set the amount of items Album/Video of the Moment will display', AccessLevelEnum::USER->value, 'integer', 'interface', 'home']);
                     break;
                 case 'custom_login_background':
-                    Dba::write($pref_sql, [159, 'custom_login_background', '', 'Custom URL - Login page background', AccessLevelEnum::ADMIN->value, 'string', 'system', 'interface']);
+                    Dba::write($pref_sql, ['custom_login_background', '', 'Custom URL - Login page background', AccessLevelEnum::ADMIN->value, 'string', 'system', 'interface']);
                     break;
                 case 'show_license':
-                    Dba::write($pref_sql, [160, 'show_license', '1', 'Show License', AccessLevelEnum::USER->value, 'boolean', 'interface', 'browse']);
+                    Dba::write($pref_sql, ['show_license', '1', 'Show License', AccessLevelEnum::USER->value, 'boolean', 'interface', 'browse']);
                     break;
                 case 'use_original_year':
-                    Dba::write($pref_sql, [161, 'use_original_year', '0', 'Browse by Original Year for albums (falls back to Year)', AccessLevelEnum::USER->value, 'boolean', 'interface', 'browse']);
+                    Dba::write($pref_sql, ['use_original_year', '0', 'Browse by Original Year for albums (falls back to Year)', AccessLevelEnum::USER->value, 'boolean', 'interface', 'browse']);
                     break;
                 case 'hide_single_artist':
-                    Dba::write($pref_sql, [162, 'hide_single_artist', '0', 'Hide the Song Artist column for Albums with one Artist', AccessLevelEnum::USER->value, 'boolean', 'interface', 'browse']);
+                    Dba::write($pref_sql, ['hide_single_artist', '0', 'Hide the Song Artist column for Albums with one Artist', AccessLevelEnum::USER->value, 'boolean', 'interface', 'browse']);
                     break;
                 case 'hide_genres':
-                    Dba::write($pref_sql, [163, 'hide_genres', '0', 'Hide the Genre column in browse table rows', AccessLevelEnum::USER->value, 'boolean', 'interface', 'browse']);
+                    Dba::write($pref_sql, ['hide_genres', '0', 'Hide the Genre column in browse table rows', AccessLevelEnum::USER->value, 'boolean', 'interface', 'browse']);
                     break;
                 case 'subsonic_always_download':
-                    Dba::write($pref_sql, [164, 'subsonic_always_download', '0', 'Force Subsonic streams to download. (Enable scrobble in your client to record stats)', AccessLevelEnum::USER->value, 'boolean', 'options', 'subsonic']);
+                    Dba::write($pref_sql, ['subsonic_always_download', '0', 'Force Subsonic streams to download. (Enable scrobble in your client to record stats)', AccessLevelEnum::USER->value, 'boolean', 'options', 'subsonic']);
                     break;
                 case 'api_enable_3':
-                    Dba::write($pref_sql, [165, 'api_enable_3', '1', 'Allow Ampache API3 responses', AccessLevelEnum::USER->value, 'boolean', 'options', 'ampache']);
+                    Dba::write($pref_sql, ['api_enable_3', '1', 'Allow Ampache API3 responses', AccessLevelEnum::USER->value, 'boolean', 'options', 'ampache']);
                     break;
                 case 'api_enable_4':
-                    Dba::write($pref_sql, [166, 'api_enable_4', '1', 'Allow Ampache API3 responses', AccessLevelEnum::USER->value, 'boolean', 'options', 'ampache']);
+                    Dba::write($pref_sql, ['api_enable_4', '1', 'Allow Ampache API3 responses', AccessLevelEnum::USER->value, 'boolean', 'options', 'ampache']);
                     break;
                 case 'api_enable_5':
-                    Dba::write($pref_sql, [167, 'api_enable_5', '1', 'Allow Ampache API3 responses', AccessLevelEnum::USER->value, 'boolean', 'options', 'ampache']);
+                    Dba::write($pref_sql, ['api_enable_5', '1', 'Allow Ampache API3 responses', AccessLevelEnum::USER->value, 'boolean', 'options', 'ampache']);
                     break;
                 case 'api_force_version':
-                    Dba::write($pref_sql, [168, 'api_force_version', '0', 'Force a specific API response no matter what version you send', AccessLevelEnum::USER->value, 'special', 'options', 'ampache']);
+                    Dba::write($pref_sql, ['api_force_version', '0', 'Force a specific API response no matter what version you send', AccessLevelEnum::USER->value, 'special', 'options', 'ampache']);
                     break;
                 case 'show_playlist_username':
-                    Dba::write($pref_sql, [169, 'show_playlist_username', '1', 'Show playlist owner username in titles', AccessLevelEnum::USER->value, 'boolean', 'interface', 'browse']);
+                    Dba::write($pref_sql, ['show_playlist_username', '1', 'Show playlist owner username in titles', AccessLevelEnum::USER->value, 'boolean', 'interface', 'browse']);
                     break;
                 case 'api_hidden_playlists':
-                    Dba::write($pref_sql, [170, 'api_hidden_playlists', '', 'Hide playlists in Subsonic and API clients that start with this string', AccessLevelEnum::USER->value, 'string', 'options', null]);
+                    Dba::write($pref_sql, ['api_hidden_playlists', '', 'Hide playlists in Subsonic and API clients that start with this string', AccessLevelEnum::USER->value, 'string', 'options', null]);
                     break;
                 case 'api_hide_dupe_searches':
-                    Dba::write($pref_sql, [171, 'api_hide_dupe_searches', '0', 'Hide smartlists that match playlist names in Subsonic and API clients', AccessLevelEnum::USER->value, 'boolean', 'options', null]);
+                    Dba::write($pref_sql, ['api_hide_dupe_searches', '0', 'Hide smartlists that match playlist names in Subsonic and API clients', AccessLevelEnum::USER->value, 'boolean', 'options', null]);
                     break;
                 case 'show_album_artist':
-                    Dba::write($pref_sql, [172, 'show_album_artist', '1', 'Show \'Album Artists\' link in the main sidebar', AccessLevelEnum::USER->value, 'boolean', 'interface', 'theme']);
+                    Dba::write($pref_sql, ['show_album_artist', '1', 'Show \'Album Artists\' link in the main sidebar', AccessLevelEnum::USER->value, 'boolean', 'interface', 'theme']);
                     break;
                 case 'show_artist':
-                    Dba::write($pref_sql, [173, 'show_artist', '0', 'Show \'Artists\' link in the main sidebar', AccessLevelEnum::USER->value, 'boolean', 'interface', 'theme']);
+                    Dba::write($pref_sql, ['show_artist', '0', 'Show \'Artists\' link in the main sidebar', AccessLevelEnum::USER->value, 'boolean', 'interface', 'theme']);
                     break;
                 case 'demo_use_search':
-                    Dba::write($pref_sql, [175, 'demo_use_search', '0', 'Democratic - Use smartlists for base playlist', AccessLevelEnum::ADMIN->value, 'boolean', 'system', null]);
+                    Dba::write($pref_sql, ['demo_use_search', '0', 'Democratic - Use smartlists for base playlist', AccessLevelEnum::ADMIN->value, 'boolean', 'system', null]);
                     break;
                 case 'webplayer_removeplayed':
-                    Dba::write($pref_sql, [176, 'webplayer_removeplayed', '0', 'Remove tracks before the current playlist item in the webplayer when played', AccessLevelEnum::USER->value, 'special', 'streaming', 'player']);
+                    Dba::write($pref_sql, ['webplayer_removeplayed', '0', 'Remove tracks before the current playlist item in the webplayer when played', AccessLevelEnum::USER->value, 'special', 'streaming', 'player']);
                     break;
                 case 'api_enable_6':
-                    Dba::write($pref_sql, [177, 'api_enable_6', '1', 'Allow Ampache API6 responses', AccessLevelEnum::USER->value, 'boolean', 'options', null]);
+                    Dba::write($pref_sql, ['api_enable_6', '1', 'Allow Ampache API6 responses', AccessLevelEnum::USER->value, 'boolean', 'options', null]);
                     break;
                 case 'upload_access_level':
-                    Dba::write($pref_sql, [178, 'upload_access_level', '25', 'Upload Access Level', AccessLevelEnum::ADMIN->value, 'special', 'system', 'upload']);
+                    Dba::write($pref_sql, ['upload_access_level', '25', 'Upload Access Level', AccessLevelEnum::ADMIN->value, 'special', 'system', 'upload']);
                     break;
                 case 'show_subtitle':
-                    Dba::write($pref_sql, [179, 'show_subtitle', '1', 'Show Album subtitle on links (if available)', AccessLevelEnum::USER->value, 'boolean', 'interface', 'browse']);
+                    Dba::write($pref_sql, ['show_subtitle', '1', 'Show Album subtitle on links (if available)', AccessLevelEnum::USER->value, 'boolean', 'interface', 'browse']);
                     break;
                 case 'show_original_year':
-                    Dba::write($pref_sql, [180, 'show_original_year', '1', 'Show Album original year on links (if available)', AccessLevelEnum::USER->value, 'boolean', 'interface', 'browse']);
+                    Dba::write($pref_sql, ['show_original_year', '1', 'Show Album original year on links (if available)', AccessLevelEnum::USER->value, 'boolean', 'interface', 'browse']);
                     break;
                 case 'show_header_login':
-                    Dba::write($pref_sql, [181, 'show_header_login', '1', 'Show the login / registration links in the site header', AccessLevelEnum::ADMIN->value, 'boolean', 'system', 'interface']);
+                    Dba::write($pref_sql, ['show_header_login', '1', 'Show the login / registration links in the site header', AccessLevelEnum::ADMIN->value, 'boolean', 'system', 'interface']);
                     break;
                 case 'use_play2':
-                    Dba::write($pref_sql, [182, 'use_play2', '0', 'Use an alternative playback action for streaming if you have issues with playing music', AccessLevelEnum::USER->value, 'boolean', 'streaming', 'player']);
+                    Dba::write($pref_sql, ['use_play2', '0', 'Use an alternative playback action for streaming if you have issues with playing music', AccessLevelEnum::USER->value, 'boolean', 'streaming', 'player']);
                     break;
                 case 'custom_timezone':
-                    Dba::write($pref_sql, [183, 'custom_timezone', '', 'Custom timezone (Override PHP date.timezone)', AccessLevelEnum::USER->value, 'string', 'interface', 'custom']);
+                    Dba::write($pref_sql, ['custom_timezone', '', 'Custom timezone (Override PHP date.timezone)', AccessLevelEnum::USER->value, 'string', 'interface', 'custom']);
                     break;
                 case 'bookmark_latest':
-                    Dba::write($pref_sql, [184, 'bookmark_latest', '0', 'Only keep the latest media bookmark', AccessLevelEnum::USER->value, 'boolean', 'options', null]);
+                    Dba::write($pref_sql, ['bookmark_latest', '0', 'Only keep the latest media bookmark', AccessLevelEnum::USER->value, 'boolean', 'options', null]);
                     break;
                 case 'jp_volume':
-                    Dba::write($pref_sql, [185, 'jp_volume', '0.8', 'Default webplayer volume', AccessLevelEnum::USER->value, 'special', 'streaming', 'player']);
+                    Dba::write($pref_sql, ['jp_volume', '0.8', 'Default webplayer volume', AccessLevelEnum::USER->value, 'special', 'streaming', 'player']);
                     break;
                 case 'perpetual_api_session':
-                    Dba::write($pref_sql, [186, 'perpetual_api_session', '0', 'API sessions do not expire', AccessLevelEnum::ADMIN->value, 'boolean', 'system', 'backend']);
+                    Dba::write($pref_sql, ['perpetual_api_session', '0', 'API sessions do not expire', AccessLevelEnum::ADMIN->value, 'boolean', 'system', 'backend']);
                     break;
                 case 'home_recently_played_all':
-                    Dba::write($pref_sql, [187, 'home_recently_played_all', '1', 'Show all media types in Recently Played', AccessLevelEnum::USER->value, 'bool', 'interface', 'home']);
+                    Dba::write($pref_sql, ['home_recently_played_all', '1', 'Show all media types in Recently Played', AccessLevelEnum::USER->value, 'bool', 'interface', 'home']);
                     break;
                 case 'show_wrapped':
-                    Dba::write($pref_sql, [188, 'show_wrapped', '1', 'Enable access to your personal "Spotify Wrapped" from your user page', AccessLevelEnum::USER->value, 'bool', 'interface', 'privacy']);
+                    Dba::write($pref_sql, ['show_wrapped', '1', 'Enable access to your personal "Spotify Wrapped" from your user page', AccessLevelEnum::USER->value, 'bool', 'interface', 'privacy']);
                     break;
                 case 'sidebar_hide_switcher':
-                    Dba::write($pref_sql, [189, 'sidebar_hide_switcher', '0', 'Hide sidebar switcher arrows', AccessLevelEnum::USER->value, 'boolean', 'interface', 'sidebar']);
+                    Dba::write($pref_sql, ['sidebar_hide_switcher', '0', 'Hide sidebar switcher arrows', AccessLevelEnum::USER->value, 'boolean', 'interface', 'sidebar']);
                     break;
                 case 'sidebar_hide_browse':
-                    Dba::write($pref_sql, [190, 'sidebar_hide_browse', '0', 'Hide the Browse menu in the sidebar', AccessLevelEnum::USER->value, 'boolean', 'interface', 'sidebar']);
+                    Dba::write($pref_sql, ['sidebar_hide_browse', '0', 'Hide the Browse menu in the sidebar', AccessLevelEnum::USER->value, 'boolean', 'interface', 'sidebar']);
                     break;
                 case 'sidebar_hide_dashboard':
-                    Dba::write($pref_sql, [191, 'sidebar_hide_dashboard', '0', 'Hide the Dashboard menu in the sidebar', AccessLevelEnum::USER->value, 'boolean', 'interface', 'sidebar']);
+                    Dba::write($pref_sql, ['sidebar_hide_dashboard', '0', 'Hide the Dashboard menu in the sidebar', AccessLevelEnum::USER->value, 'boolean', 'interface', 'sidebar']);
                     break;
                 case 'sidebar_hide_video':
-                    Dba::write($pref_sql, [192, 'sidebar_hide_video', '0', 'Hide the Video menu in the sidebar', AccessLevelEnum::USER->value, 'boolean', 'interface', 'sidebar']);
+                    Dba::write($pref_sql, ['sidebar_hide_video', '0', 'Hide the Video menu in the sidebar', AccessLevelEnum::USER->value, 'boolean', 'interface', 'sidebar']);
                     break;
                 case 'sidebar_hide_search':
-                    Dba::write($pref_sql, [193, 'sidebar_hide_search', '0', 'Hide the Search menu in the sidebar', AccessLevelEnum::USER->value, 'boolean', 'interface', 'sidebar']);
+                    Dba::write($pref_sql, ['sidebar_hide_search', '0', 'Hide the Search menu in the sidebar', AccessLevelEnum::USER->value, 'boolean', 'interface', 'sidebar']);
                     break;
                 case 'sidebar_hide_playlist':
-                    Dba::write($pref_sql, [194, 'sidebar_hide_playlist', '0', 'Hide the Playlist menu in the sidebar', AccessLevelEnum::USER->value, 'boolean', 'interface', 'sidebar']);
+                    Dba::write($pref_sql, ['sidebar_hide_playlist', '0', 'Hide the Playlist menu in the sidebar', AccessLevelEnum::USER->value, 'boolean', 'interface', 'sidebar']);
                     break;
                 case 'sidebar_hide_information':
-                    Dba::write($pref_sql, [195, 'sidebar_hide_information', '0', 'Hide the Information menu in the sidebar', AccessLevelEnum::USER->value, 'boolean', 'interface', 'sidebar']);
+                    Dba::write($pref_sql, ['sidebar_hide_information', '0', 'Hide the Information menu in the sidebar', AccessLevelEnum::USER->value, 'boolean', 'interface', 'sidebar']);
                     break;
                 case 'custom_logo_user':
-                    Dba::write($pref_sql, [197, 'custom_logo_user', '0', 'Custom URL - Use your avatar for header logo', AccessLevelEnum::USER->value, 'boolean', 'interface', 'custom']);
+                    Dba::write($pref_sql, ['custom_logo_user', '0', 'Custom URL - Use your avatar for header logo', AccessLevelEnum::USER->value, 'boolean', 'interface', 'custom']);
                     break;
                 case 'index_dashboard_form':
-                    Dba::write($pref_sql, [198, 'index_dashboard_form', '0', 'Use Dashboard links for the index page header', AccessLevelEnum::USER->value, 'boolean', 'interface', 'home']);
+                    Dba::write($pref_sql, ['index_dashboard_form', '0', 'Use Dashboard links for the index page header', AccessLevelEnum::USER->value, 'boolean', 'interface', 'home']);
                     break;
                 case 'sidebar_order_browse':
-                    Dba::write($pref_sql, [199, 'sidebar_order_browse', '10', 'Custom CSS Order - Browse', AccessLevelEnum::USER->value, 'integer', 'interface', 'sidebar']);
+                    Dba::write($pref_sql, ['sidebar_order_browse', '10', 'Custom CSS Order - Browse', AccessLevelEnum::USER->value, 'integer', 'interface', 'sidebar']);
                     break;
                 case 'sidebar_order_dashboard':
-                    Dba::write($pref_sql, [200, 'sidebar_order_dashboard', '15', 'Custom CSS Order - Dashboard', AccessLevelEnum::USER->value, 'integer', 'interface', 'sidebar']);
+                    Dba::write($pref_sql, ['sidebar_order_dashboard', '15', 'Custom CSS Order - Dashboard', AccessLevelEnum::USER->value, 'integer', 'interface', 'sidebar']);
                     break;
                 case 'sidebar_order_video':
-                    Dba::write($pref_sql, [201, 'sidebar_order_video', '20', 'Custom CSS Order - Video', AccessLevelEnum::USER->value, 'integer', 'interface', 'sidebar']);
+                    Dba::write($pref_sql, ['sidebar_order_video', '20', 'Custom CSS Order - Video', AccessLevelEnum::USER->value, 'integer', 'interface', 'sidebar']);
                     break;
                 case 'sidebar_order_playlist':
-                    Dba::write($pref_sql, [202, 'sidebar_order_playlist', '30', 'Custom CSS Order - Playlist', AccessLevelEnum::USER->value, 'integer', 'interface', 'sidebar']);
+                    Dba::write($pref_sql, ['sidebar_order_playlist', '30', 'Custom CSS Order - Playlist', AccessLevelEnum::USER->value, 'integer', 'interface', 'sidebar']);
                     break;
                 case 'sidebar_order_search':
-                    Dba::write($pref_sql, [203, 'sidebar_order_search', '40', 'Custom CSS Order - Search', AccessLevelEnum::USER->value, 'integer', 'interface', 'sidebar']);
+                    Dba::write($pref_sql, ['sidebar_order_search', '40', 'Custom CSS Order - Search', AccessLevelEnum::USER->value, 'integer', 'interface', 'sidebar']);
                     break;
                 case 'sidebar_order_information':
-                    Dba::write($pref_sql, [204, 'sidebar_order_information', '60', 'Custom CSS Order - Information', AccessLevelEnum::USER->value, 'integer', 'interface', 'sidebar']);
+                    Dba::write($pref_sql, ['sidebar_order_information', '60', 'Custom CSS Order - Information', AccessLevelEnum::USER->value, 'integer', 'interface', 'sidebar']);
                     break;
                 case 'api_always_download':
-                    Dba::write($pref_sql, [189, 'api_always_download', 'Force API streams to download. (Enable scrobble in your client to record stats)', '0', AccessLevelEnum::USER->value, 'boolean', 'options', 'api']);
+                    Dba::write($pref_sql, ['api_always_download', 'Force API streams to download. (Enable scrobble in your client to record stats)', '0', AccessLevelEnum::USER->value, 'boolean', 'options', 'api']);
                     break;
                 case 'external_links_google':
-                    Dba::write($pref_sql, [206, 'external_links_google', '1', 'Show Google search icon on library items', AccessLevelEnum::USER->value, 'boolean', 'interface', 'library']);
+                    Dba::write($pref_sql, ['external_links_google', '1', 'Show Google search icon on library items', AccessLevelEnum::USER->value, 'boolean', 'interface', 'library']);
                     break;
                 case 'external_links_duckduckgo':
-                    Dba::write($pref_sql, [207, 'external_links_duckduckgo', '1', 'Show DuckDuckGo search icon on library items', AccessLevelEnum::USER->value, 'boolean', 'interface', 'library']);
+                    Dba::write($pref_sql, ['external_links_duckduckgo', '1', 'Show DuckDuckGo search icon on library items', AccessLevelEnum::USER->value, 'boolean', 'interface', 'library']);
                     break;
                 case 'external_links_wikipedia':
-                    Dba::write($pref_sql, [208, 'external_links_wikipedia', '1', 'Show Wikipedia search icon on library items', AccessLevelEnum::USER->value, 'boolean', 'interface', 'library']);
+                    Dba::write($pref_sql, ['external_links_wikipedia', '1', 'Show Wikipedia search icon on library items', AccessLevelEnum::USER->value, 'boolean', 'interface', 'library']);
                     break;
                 case 'external_links_lastfm':
-                    Dba::write($pref_sql, [209, 'external_links_lastfm', '1', 'Show Last.fm search icon on library items', AccessLevelEnum::USER->value, 'boolean', 'interface', 'library']);
+                    Dba::write($pref_sql, ['external_links_lastfm', '1', 'Show Last.fm search icon on library items', AccessLevelEnum::USER->value, 'boolean', 'interface', 'library']);
                     break;
                 case 'external_links_bandcamp':
-                    Dba::write($pref_sql, [210, 'external_links_bandcamp', '1', 'Show Bandcamp search icon on library items', AccessLevelEnum::USER->value, 'boolean', 'interface', 'library']);
+                    Dba::write($pref_sql, ['external_links_bandcamp', '1', 'Show Bandcamp search icon on library items', AccessLevelEnum::USER->value, 'boolean', 'interface', 'library']);
                     break;
                 case 'external_links_musicbrainz':
-                    Dba::write($pref_sql, [211, 'external_links_musicbrainz', '1', 'Show MusicBrainz search icon on library items', AccessLevelEnum::USER->value, 'boolean', 'interface', 'library']);
+                    Dba::write($pref_sql, ['external_links_musicbrainz', '1', 'Show MusicBrainz search icon on library items', AccessLevelEnum::USER->value, 'boolean', 'interface', 'library']);
                     break;
                 case 'extended_playlist_links':
-                    Dba::write($pref_sql, [219, 'extended_playlist_links', '0', 'Show extended links for playlist media', AccessLevelEnum::USER->value, 'boolean', 'playlist']);
+                    Dba::write($pref_sql, ['extended_playlist_links', '0', 'Show extended links for playlist media', AccessLevelEnum::USER->value, 'boolean', 'playlist']);
                     break;
                 case 'external_links_discogs':
-                    Dba::write($pref_sql, [220, 'external_links_discogs', '1', 'Show Discogs search icon on library items', AccessLevelEnum::USER->value, 'boolean', 'interface', 'library']);
+                    Dba::write($pref_sql, ['external_links_discogs', '1', 'Show Discogs search icon on library items', AccessLevelEnum::USER->value, 'boolean', 'interface', 'library']);
                     break;
                 case 'browse_song_grid_view':
-                    Dba::write($pref_sql, [221, 'browse_song_grid_view', '0', 'Force Grid View on Song browse', AccessLevelEnum::USER->value, 'boolean', 'interface', 'cookies']);
+                    Dba::write($pref_sql, ['browse_song_grid_view', '0', 'Force Grid View on Song browse', AccessLevelEnum::USER->value, 'boolean', 'interface', 'cookies']);
                     break;
                 case 'browse_album_grid_view':
-                    Dba::write($pref_sql, [222, 'browse_album_grid_view', '0', 'Force Grid View on Album browse', AccessLevelEnum::USER->value, 'boolean', 'interface', 'cookies']);
+                    Dba::write($pref_sql, ['browse_album_grid_view', '0', 'Force Grid View on Album browse', AccessLevelEnum::USER->value, 'boolean', 'interface', 'cookies']);
                     break;
                 case 'browse_album_disk_grid_view':
-                    Dba::write($pref_sql, [223, 'browse_album_disk_grid_view', '0', 'Force Grid View on Album Disk browse', AccessLevelEnum::USER->value, 'boolean', 'interface', 'cookies']);
+                    Dba::write($pref_sql, ['browse_album_disk_grid_view', '0', 'Force Grid View on Album Disk browse', AccessLevelEnum::USER->value, 'boolean', 'interface', 'cookies']);
                     break;
                 case 'browse_artist_grid_view':
-                    Dba::write($pref_sql, [224, 'browse_artist_grid_view', '0', 'Force Grid View on Artist browse', AccessLevelEnum::USER->value, 'boolean', 'interface', 'cookies']);
+                    Dba::write($pref_sql, ['browse_artist_grid_view', '0', 'Force Grid View on Artist browse', AccessLevelEnum::USER->value, 'boolean', 'interface', 'cookies']);
                     break;
                 case 'browse_live_stream_grid_view':
-                    Dba::write($pref_sql, [225, 'browse_live_stream_grid_view', '0', 'Force Grid View on Radio Station browse', AccessLevelEnum::USER->value, 'boolean', 'interface', 'cookies']);
+                    Dba::write($pref_sql, ['browse_live_stream_grid_view', '0', 'Force Grid View on Radio Station browse', AccessLevelEnum::USER->value, 'boolean', 'interface', 'cookies']);
                     break;
                 case 'browse_playlist_grid_view':
-                    Dba::write($pref_sql, [226, 'browse_playlist_grid_view', '0', 'Force Grid View on Playlist browse', AccessLevelEnum::USER->value, 'boolean', 'interface', 'cookies']);
+                    Dba::write($pref_sql, ['browse_playlist_grid_view', '0', 'Force Grid View on Playlist browse', AccessLevelEnum::USER->value, 'boolean', 'interface', 'cookies']);
                     break;
                 case 'browse_video_grid_view':
-                    Dba::write($pref_sql, [227, 'browse_video_grid_view', '0', 'Force Grid View on Video browse', AccessLevelEnum::USER->value, 'boolean', 'interface', 'cookies']);
+                    Dba::write($pref_sql, ['browse_video_grid_view', '0', 'Force Grid View on Video browse', AccessLevelEnum::USER->value, 'boolean', 'interface', 'cookies']);
                     break;
                 case 'browse_podcast_grid_view':
-                    Dba::write($pref_sql, [228, 'browse_podcast_grid_view', '0', 'Force Grid View on Podcast browse', AccessLevelEnum::USER->value, 'boolean', 'interface', 'cookies']);
+                    Dba::write($pref_sql, ['browse_podcast_grid_view', '0', 'Force Grid View on Podcast browse', AccessLevelEnum::USER->value, 'boolean', 'interface', 'cookies']);
                     break;
                 case 'browse_podcast_episode_grid_view':
-                    Dba::write($pref_sql, [229, 'browse_podcast_episode_grid_view', '0', 'Force Grid View on Podcast Episode browse', AccessLevelEnum::USER->value, 'boolean', 'interface', 'cookies']);
+                    Dba::write($pref_sql, ['browse_podcast_episode_grid_view', '0', 'Force Grid View on Podcast Episode browse', AccessLevelEnum::USER->value, 'boolean', 'interface', 'cookies']);
                     break;
                 case 'show_playlist_media_parent':
-                    Dba::write($pref_sql, [230, 'show_playlist_media_parent', '0', 'Show Artist column on playlist media rows', AccessLevelEnum::USER->value, 'boolean', 'playlist', null]);
+                    Dba::write($pref_sql, ['show_playlist_media_parent', '0', 'Show Artist column on playlist media rows', AccessLevelEnum::USER->value, 'boolean', 'playlist', null]);
                     break;
                 case 'subsonic_legacy':
-                    Dba::write($pref_sql, [231, 'subsonic_legacy', '0', 'Enable legacy Subsonic API responses for compatibility issues', AccessLevelEnum::USER->value, 'boolean', 'options', 'api']);
+                    Dba::write($pref_sql, ['subsonic_legacy', '0', 'Enable legacy Subsonic API responses for compatibility issues', AccessLevelEnum::USER->value, 'boolean', 'options', 'api']);
                     break;
                 case 'subsonic_force_album_artist':
-                    Dba::write($pref_sql, [232, 'subsonic_force_album_artist', '0', 'Force Album Artist for Subsonic API responses', AccessLevelEnum::USER->value, 'boolean', 'options', 'api']);
+                    Dba::write($pref_sql, ['subsonic_force_album_artist', '0', 'Force Album Artist for Subsonic API responses', AccessLevelEnum::USER->value, 'boolean', 'options', 'api']);
                     break;
                 case 'subsonic_single_user_data':
-                    Dba::write($pref_sql, [233, 'subsonic_single_user_data', '1', 'Use single user data for Subsonic API responses', AccessLevelEnum::USER->value, 'boolean', 'options', 'api']);
+                    Dba::write($pref_sql, ['subsonic_single_user_data', '1', 'Use single user data for Subsonic API responses', AccessLevelEnum::USER->value, 'boolean', 'options', 'api']);
                     break;
                 case 'api_enable_8':
-                    Dba::write($pref_sql, [234, 'api_enable_8', '1', 'Allow Ampache API8 responses', AccessLevelEnum::USER->value, 'boolean', 'options', null]);
+                    Dba::write($pref_sql, ['api_enable_8', '1', 'Allow Ampache API8 responses', AccessLevelEnum::USER->value, 'boolean', 'options', null]);
+                    break;
+                case 'show_folder':
+                    Dba::write($pref_sql, ['show_folder', '1', 'Show \'Folders\' link in the main sidebar', AccessLevelEnum::USER->value, 'boolean', 'interface', 'theme']);
                     break;
                 default:
                     debug_event(self::class, 'ERROR: missing preference insert code for: ' . $row['item'], 1);
@@ -1691,7 +1694,7 @@ class Preference extends database_object
                         " 'home_now_playing', 'home_recently_played_all', 'home_recently_played', 'httpq_active'" .
                         " 'index_dashboard_form', 'jp_volume', 'lastfm_challenge', 'lastfm_grant_link', 'mpd_active'" .
                         " 'notify_email', 'of_the_moment', 'play_type', 'popular_threshold', 'show_album_artist'" .
-                        " 'show_artist', 'show_donate', 'show_license', 'show_original_year', 'show_played_times'" .
+                        " 'show_artist', 'show_donate', 'show_folder', 'show_license', 'show_original_year', 'show_played_times'" .
                         " 'show_playlist_media_parent', 'show_playlist_username', 'show_skipped_times', 'show_subtitle', 'show_wrapped'" .
                         " 'sidebar_hide_browse', 'sidebar_hide_dashboard', 'sidebar_hide_information'" .
                         " 'sidebar_hide_playlist', 'sidebar_hide_search', 'sidebar_hide_switcher', 'sidebar_hide_video'" .
@@ -1794,7 +1797,7 @@ class Preference extends database_object
                         " 'allow_stream_playback', 'api_enable_3', 'api_enable_4', 'api_enable_5', 'api_enable_6'," .
                         " 'autoupdate', 'browser_notify', 'download', 'home_moment_albums'," .
                         " 'home_now_playing', 'home_recently_played_all', 'home_recently_played', 'libitem_contextmenu', 'now_playing_per_user'," .
-                        " 'podcast_new_download', 'show_artist', 'show_donate', 'show_header_login', 'show_license', 'show_original_year'," .
+                        " 'podcast_new_download', 'show_artist', 'show_donate', 'show_folder', 'show_header_login', 'show_license', 'show_original_year'," .
                         " 'show_subtitle', 'show_wrapped', 'song_page_title', 'subsonic_backend', 'upload_allow_edit', 'upload_allow_remove', 'upload_subdir'," .
                         " 'webplayer_aurora', 'webplayer_flash', 'webplayer_html5', 'webplayer_pausetabs') AND `user` = ?;",
                         [$user->getId()]
@@ -1853,7 +1856,7 @@ class Preference extends database_object
                         " 'allow_personal_info_now', 'allow_personal_info_recent', 'allow_personal_info_time', 'allow_stream_playback', 'api_enable_3'," .
                         " 'api_enable_4', 'api_enable_5', 'api_enable_6', 'autoupdate', 'browser_notify'," .
                         " 'home_moment_albums', 'home_now_playing', 'home_recently_played_all', 'home_recently_played'," .
-                        " 'libitem_contextmenu', 'now_playing_per_user', 'podcast_new_download', 'show_artist', 'show_donate', 'show_header_login'," .
+                        " 'libitem_contextmenu', 'now_playing_per_user', 'podcast_new_download', 'show_artist', 'show_donate', 'show_folder', 'show_header_login'," .
                         " 'show_license', 'show_original_year', 'show_subtitle', 'song_page_title', 'subsonic_backend', 'upload_allow_edit', 'upload_allow_remove'," .
                         " 'upload_subdir', 'webplayer_aurora', 'webplayer_flash', 'webplayer_html5', 'webplayer_pausetabs') AND `user` = ?;",
                         [$user->getId()]
@@ -1910,7 +1913,7 @@ class Preference extends database_object
                         "'ajax_load', 'album_group', 'album_release_type', 'allow_democratic_playback', 'allow_localplay_playback', 'allow_personal_info_agent'," .
                         " 'allow_personal_info_now', 'allow_personal_info_recent', 'allow_personal_info_time', 'allow_stream_playback', 'api_enable_3', 'api_enable_4'," .
                         " 'api_enable_5', 'api_enable_6', 'autoupdate', 'browser_notify', 'home_moment_albums'," .
-                        " 'libitem_contextmenu', 'now_playing_per_user', 'podcast_new_download', 'share', 'show_artist', 'show_donate'," .
+                        " 'libitem_contextmenu', 'now_playing_per_user', 'podcast_new_download', 'share', 'show_artist', 'show_donate', 'show_folder'," .
                         " 'show_header_login', 'show_license', 'show_original_year', 'show_subtitle', 'song_page_title', 'subsonic_backend', 'upload_allow_edit'," .
                         " 'upload_allow_remove', 'upload_subdir', 'webplayer_aurora', 'webplayer_flash', 'webplayer_html5', 'webplayer_pausetabs') AND `user` = ?;",
                         [$user->getId()]
