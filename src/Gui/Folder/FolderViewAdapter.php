@@ -268,7 +268,7 @@ final readonly class FolderViewAdapter implements FolderViewAdapterInterface
     public function getDeletionUrl(): string
     {
         return sprintf(
-            '%s/' . $this->object_type . 's.php?action=%s&' . ($this->object_type === 'song' ? 'song_id' : $this->object_type) . '=%d',
+            '%s/' . $this->object_type . 's.php?action=%s&' . $this->object_type . '_id=%d',
             $this->configContainer->getWebPath(),
             DeleteAction::REQUEST_KEY,
             $this->object->getId()
