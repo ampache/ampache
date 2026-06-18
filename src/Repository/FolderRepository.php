@@ -168,7 +168,7 @@ final readonly class FolderRepository implements FolderRepositoryInterface
             return;
         }
 
-        if (!$folder->path_name || !file_exists($folder->path_name) || unlink($folder->path_name)) {
+        if (!$folder->path_name || !file_exists($folder->path_name) || rmdir($folder->path_name)) {
             $this->connection->query(
                 'DELETE FROM `folder` WHERE `id` = ?;',
                 [$folderId]
