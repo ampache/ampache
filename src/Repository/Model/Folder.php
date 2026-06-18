@@ -210,20 +210,20 @@ class Folder extends database_object implements
     /**
      * get_name_by_id
      */
-    public static function get_name_by_id(string $object_type, ?int $object_id = 0): string
+    public static function get_name_by_id(?int $folder_id = 0): string
     {
-        if (empty($object_id)) {
+        if (empty($folder_id)) {
             return '';
         }
 
-        if (database_object::is_cached('folder_name_by_id', $object_id)) {
-            return database_object::get_from_cache('folder_name_by_id', $object_id)[0];
+        if (database_object::is_cached('folder_name_by_id', $folder_id)) {
+            return database_object::get_from_cache('folder_name_by_id', $folder_id)[0];
         }
 
-        $sql        = "SELECT `folder_map`.`name` AS `f_name` FROM `folder_map` WHERE `object_id` = ? AND `object_type` = ?;";
-        $db_results = Dba::read($sql, [$object_id, $object_type]);
+        $sql        = "SELECT `folder`.`name` AS `f_name` FROM `folder` WHERE `id` = ?;";
+        $db_results = Dba::read($sql, [$folder_id]);
         if ($row = Dba::fetch_assoc($db_results)) {
-            database_object::add_to_cache('folder_name_by_id', $object_id, [$row['f_name']]);
+            database_object::add_to_cache('folder_name_by_id', $folder_id, [$row['f_name']]);
 
             return $row['f_name'];
         }
