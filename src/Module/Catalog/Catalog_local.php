@@ -715,7 +715,7 @@ class Catalog_local extends Catalog
 
         Ui::update_text('scan_count_' . $this->catalog_id, $this->count);
 
-        if (!$skipCounts) {
+        if (!$skipCounts && $this->count > 0) {
             $this->count_scan_folders($interactor);
         }
 
