@@ -336,10 +336,10 @@ class Folder extends database_object implements
     public function get_medias(?string $filter_type = null): array
     {
         if ($filter_type === null) {
-            $sql    = "SELECT `folder_map`.`object_id`, `folder_map`.`object_type` FROM `folder_map` JOIN `folder` ON `folder`.`id` = `folder_map`.`folder_id` WHERE `folder_map`.`object_type` != 'folder' AND (`folder_map`.`folder_id` = ? OR FIND_IN_SET(?, `folder`.`path`) > 0);";
+            $sql    = "SELECT `folder_map`.`object_id`, `folder_map`.`object_type` FROM `folder_map` JOIN `folder` ON `folder`.`id` = `folder_map`.`folder_id` WHERE `folder_map`.`object_type` != 'folder' AND (`folder_map`.`folder_id` = ? OR FIND_IN_SET(?, `folder`.`path`) > 0) ORDER BY `name`;";
             $params = [$this->id, $this->id];
         } else {
-            $sql    = "SELECT `folder_map`.`object_id`, `folder_map`.`object_type` FROM `folder_map` JOIN `folder` ON `folder`.`id` = `folder_map`.`folder_id` WHERE `folder_map`.`object_type` = ? AND (`folder_map`.`folder_id` = ? OR FIND_IN_SET(?, `folder`.`path`) > 0);";
+            $sql    = "SELECT `folder_map`.`object_id`, `folder_map`.`object_type` FROM `folder_map` JOIN `folder` ON `folder`.`id` = `folder_map`.`folder_id` WHERE `folder_map`.`object_type` = ? AND (`folder_map`.`folder_id` = ? OR FIND_IN_SET(?, `folder`.`path`) > 0) ORDER BY `name`;";
             $params = [$filter_type, $this->id, $this->id];
         }
         $db_results = Dba::read($sql, $params);
@@ -391,7 +391,7 @@ class Folder extends database_object implements
     public function get_children(string $name): array
     {
         debug_event(self::class, 'get_children ' . $name, 5);
-        $sql        = "SELECT `object_id`, `object_type` FROM `folder_map` WHERE `folder_id` = ?;";
+        $sql        = "SELECT `object_id`, `object_type` FROM `folder_map` WHERE `folder_id` = ? ORDER BY `name`;";
         $db_results = Dba::read($sql, [$this->id]);
         $results    = [];
         while ($row = Dba::fetch_assoc($db_results)) {
