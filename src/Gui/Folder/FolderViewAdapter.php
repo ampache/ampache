@@ -309,9 +309,7 @@ final readonly class FolderViewAdapter implements FolderViewAdapterInterface
     public function getFolderLink(): string
     {
         if (property_exists($this->object, 'file')) {
-            $pinfo = pathinfo($this->object->file);
-
-            return $this->object->get_f_link($pinfo['filename']);
+            return $this->object->get_f_link(pathinfo($this->object->file, PATHINFO_FILENAME));
         }
 
         return $this->object->get_f_link(
@@ -321,7 +319,7 @@ final readonly class FolderViewAdapter implements FolderViewAdapterInterface
 
     public function getArtistLink(): string
     {
-        return (string)$this->folder->get_link();
+        return $this->folder->get_link();
     }
 
     public function canShowYear(): bool
