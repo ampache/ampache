@@ -67,7 +67,7 @@ final class FolderQuery implements QueryInterface
     protected string $select = "`folder`.`id`";
 
     protected string $base = "SELECT %%SELECT%% FROM (
-            SELECT CONCAT(`object_type`, '-', `object_id`) AS `id`, `object_id` AS `int_id`, `name`, `object_type` FROM `folder_map`
+            SELECT CONCAT(`object_type`, '-', `object_id`) AS `id`, `object_id` AS `int_id`, `name`, `object_type`, `folder_id` FROM `folder_map`
         ) AS `folder` ";
 
     /**
@@ -114,7 +114,9 @@ final class FolderQuery implements QueryInterface
                 $filter_sql = " `folder`.`id` = " . Dba::escape($value) . " AND ";
                 break;
             case 'int_id':
-                $filter_sql = " `folder`.`int_id` = " . (int)$value . " AND ";
+                $filter_sql = ($value === -1)
+                    ? " `folder`.`folder_id` IS NULL AND "
+                    : " `folder`.`int_id` = " . (int)$value . " AND ";
                 break;
             case 'equal':
             case 'exact_match':
