@@ -80,15 +80,14 @@ if ($directplay_limit > 0) {
 </div>
 <div id='reordered_list_<?php echo $folder->id; ?>'>
 <?php
-$folder_items = $folder->get_objects();
-$browse       = new Browse();
+$browse = new Browse();
 $browse->set_type('folder');
 $browse->set_skip_catalog_check(true);
 $browse->add_supplemental_object('folder', $folder);
 $browse->set_limit(0);
 $browse->set_offset(0);
 $browse->set_sort('name', 'ASC', false);
-$browse->set_filter('folder', $folder->id);
-$browse->show_objects($folder_items);
+$browse->set_filter('int_id', $folder->id);
+$browse->show_objects();
 $browse->store(); ?>
 </div>

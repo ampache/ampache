@@ -177,6 +177,7 @@ final class FolderQuery implements QueryInterface
                 break;
             case 'date':
             case 'id':
+            case 'int_id':
             case 'last_count':
             case 'last_update':
             case 'type':

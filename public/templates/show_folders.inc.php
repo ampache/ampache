@@ -41,7 +41,7 @@ use Ampache\Repository\Model\Video;
 
 /** @var Ampache\Repository\Model\Browse $browse */
 /** @var Ampache\Repository\Model\Folder $folder */
-/** @var array<int, array{object_type: LibraryItemEnum|null, object_id: int}> $object_ids */
+/** @var string[] $object_ids */
 
 $web_path = AmpConfig::get_web_path();
 
@@ -100,10 +100,11 @@ $talFactory = $dic->get(TalFactoryInterface::class);
 $guiFactory = $dic->get(GuiFactoryInterface::class);
 $gatekeeper = $dic->get(GatekeeperFactoryInterface::class)->createGuiGatekeeper();
 
-/* Foreach through the objects */
+/* Foreach through the objects e.g. folder-12 song-125 podcast_episode-233 */
 foreach ($object_ids as $object) {
-    $object_type = $object['object_type']?->value;
-    $object_id   = $object['object_id'];
+    preg_match('/([a-z_]+)-([0-9]+)/', $object, $matches);
+    $object_type = $matches[1] ?? null;
+    $object_id   = (int)($matches[2] ?? 0);
     $libitem     = null;
     switch ($object_type) {
         case 'folder':
@@ -118,8 +119,6 @@ foreach ($object_ids as $object) {
         case 'video':
             $libitem = new Video($object_id);
             break;
-        default:
-
     }
 
     if ($libitem === null || $libitem->isNew()) {
