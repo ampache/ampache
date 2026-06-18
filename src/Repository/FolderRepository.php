@@ -148,17 +148,13 @@ final readonly class FolderRepository implements FolderRepositoryInterface
 
     public function create(string $folderName, int $catalogId, string $folderPath = '', ?int $parent_id = null): ?Folder
     {
-        // don't allow duplicate podcasts
-        $folderId = $this->lookup($folderPath, $catalogId, $parent_id);
-        if (!$folderId) {
-            debug_event(self::class, 'CREATE ' . $folderName . ' ' . $folderPath . ' ' . $parent_id, 5);
-            $folderId = Folder::create([
-                'name' => $folderName,
-                'catalog' => $catalogId,
-                'path_name' => $folderPath,
-                'parent' => $parent_id,
-            ]);
-        }
+        //debug_event(self::class, 'CREATE ' . $folderName . ' ' . $folderPath . ' ' . $parent_id, 5);
+        $folderId = Folder::create([
+            'name' => $folderName,
+            'catalog' => $catalogId,
+            'path_name' => $folderPath,
+            'parent' => $parent_id,
+        ]);
 
         return ($folderId)
             ? new Folder($folderId)

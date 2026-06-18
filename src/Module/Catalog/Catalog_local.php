@@ -355,11 +355,18 @@ class Catalog_local extends Catalog
     public function add_folder(string $folderName, string $folderPath, string $parentPath): ?Folder
     {
         $folder = self::getFolderRepository()->getByPathName($folderPath, $this->getId(), $parentPath);
-        if (!$folder || $folder->isNew()) {
-            $parent_id = self::getFolderRepository()->lookupByPathName($parentPath, $this->getId());
-            $folder    = self::getFolderRepository()->create($folderName, $this->getId(), $folderPath, $parent_id);
+        if ($folder) {
+            return null;
         }
 
+        $parent_id = self::getFolderRepository()->lookupByPathName($parentPath, $this->getId());
+
+        // This can happen with upper/lower case and accent duplicates
+        if (self::getFolderRepository()->lookup($folderPath, $this->getId(), $parent_id)) {
+            return null;
+        }
+
+        $folder = self::getFolderRepository()->create($folderName, $this->getId(), $folderPath, $parent_id);
         if (!$folder || $folder->isNew()) {
             throw new Error('ERROR: ' . $this->getId() . ' could not create folder ' . $folderName . ' at ' . $folderPath);
         }
