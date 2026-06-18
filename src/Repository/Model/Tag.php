@@ -991,7 +991,7 @@ class Tag extends database_object implements library_item, displayable_item, con
     /**
      * Get item f_link.
      */
-    public function get_f_link(): string
+    public function get_f_link(?string $title = null): string
     {
         return '';
     }

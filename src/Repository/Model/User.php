@@ -1171,13 +1171,13 @@ class User extends database_object
     /**
      * Get item f_link.
      */
-    public function get_f_link(): string
+    public function get_f_link(?string $title = null): string
     {
         if ($this->f_link === null) {
             if ($this->getId() === 0) {
                 $this->f_link = '';
             } else {
-                $this->f_link = '<a href="' . $this->get_link() . '">' . scrub_out($this->get_fullname()) . '</a>';
+                $this->f_link = '<a href="' . $this->get_link() . '">' . scrub_out($title ?? $this->get_fullname()) . '</a>';
             }
         }
 
