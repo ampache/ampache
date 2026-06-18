@@ -4407,6 +4407,11 @@ abstract class Catalog extends database_object
             return false;
         }
 
+        // don't delete folders with media inside
+        if ($libitem instanceof Folder && $libitem->object_count > 0) {
+            return false;
+        }
+
         return (
             Access::check(AccessTypeEnum::INTERFACE, AccessLevelEnum::MANAGER) ||
             (

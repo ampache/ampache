@@ -163,15 +163,22 @@ final readonly class FolderRepository implements FolderRepositoryInterface
 
     public function delete(int $folderId): void
     {
-        $this->connection->query(
-            'DELETE FROM `folder` WHERE `id` = ?;',
-            [$folderId]
-        );
-        $this->connection->query(
-            'DELETE FROM `folder_map` WHERE `folder_id` = ? OR (`object_id` = ? AND `object_type` = \'folder\');',
-            [$folderId, $folderId]
-        );
-        $this->connection->query('UPDATE `folder` SET `object_count` = (SELECT COUNT(*) FROM `folder_map` AS `map_count` WHERE `map_count`.`folder_id` = `folder`.`id`);');
+        $folder = new Folder($folderId);
+        if ($folder->isNew() || $folder->object_count > 0) {
+            return;
+        }
+
+        if (!$folder->path_name || !file_exists($folder->path_name) || unlink($folder->path_name)) {
+            $this->connection->query(
+                'DELETE FROM `folder` WHERE `id` = ?;',
+                [$folderId]
+            );
+            $this->connection->query(
+                'DELETE FROM `folder_map` WHERE `folder_id` = ? OR (`object_id` = ? AND `object_type` = \'folder\');',
+                [$folderId, $folderId]
+            );
+            $this->connection->query('UPDATE `folder` SET `object_count` = (SELECT COUNT(*) FROM `folder_map` AS `map_count` WHERE `map_count`.`folder_id` = `folder`.`id`);');
+        }
     }
 
     /**
