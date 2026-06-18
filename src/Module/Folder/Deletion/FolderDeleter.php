@@ -54,5 +54,6 @@ final readonly class FolderDeleter implements FolderDeleterInterface
         Rating::garbage_collection('folder', $folderId);
         $this->shoutRepository->collectGarbage('folder', $folderId);
         $this->useractivityRepository->collectGarbage('folder', $folderId);
+        $this->folderRepository->collectGarbage();
     }
 }

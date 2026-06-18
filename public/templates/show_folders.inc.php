@@ -108,18 +108,6 @@ foreach ($object_ids as $object) {
         case 'folder':
             $libitem = new Folder($object_id);
             break;
-        case 'album':
-            $libitem = new Album($object_id);
-            break;
-        case 'album_disk':
-            $libitem = new AlbumDisk($object_id);
-            break;
-        case 'artist':
-            $libitem = new Artist($object_id);
-            break;
-        case 'podcast':
-            $libitem = new Podcast($object_id);
-            break;
         case 'podcast_episode':
             $libitem = new Podcast_Episode($object_id);
             break;

@@ -50,7 +50,15 @@ interface FolderRepositoryInterface
 
     public function delete(int $folderId): void;
 
-    public function add_folder_map(int $object_id, string $object_type, string $dir_path, int $catalog_id): void;
+    /**
+     * Update mapping table after large actions
+     */
+    public function update_folder_map(): void;
+
+    /**
+     * Update folder counts columns after large actions
+     */
+    public function update_folder_counts(): void;
 
     /**
      * This cleans out unused folders

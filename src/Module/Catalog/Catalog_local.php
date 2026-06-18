@@ -359,11 +359,6 @@ class Catalog_local extends Catalog
                 ? self::getFolderRepository()->lookup((string)$this->get_fullname(), $this->getId())
                 : self::getFolderRepository()->lookupByPathName($parentPath, $this->getId());
             $folder = self::getFolderRepository()->create($folderName, $this->getId(), $folderPath, $parent);
-
-            // add maps for all folders as child items
-            if ($folder && $folder->isNew() === false) {
-                self::getFolderRepository()->add_folder_map($folder->getId(), 'folder', $parentPath, $this->getId());
-            }
         }
 
         if (!$folder || $folder->isNew()) {
@@ -713,7 +708,7 @@ class Catalog_local extends Catalog
         $this->count = $this->scan_catalog_folder($interactor);
 
         // missing maps and garbage collection
-        Dba::write('INSERT INTO folder_map (object_id, folder_id, object_type) SELECT `id` AS `object_id`, `parent` AS `folder_id`, \'folder\' AS `object_type` FROM `folder` WHERE `parent` IS NOT NULL AND `id` NOT IN (SELECT `object_id` FROM `folder_map` WHERE `object_type` = \'folder\');');
+        Dba::write('INSERT INTO `folder_map` (`object_id`, `folder_id`, `object_type`, `name`, `catalog`, `path_name`) SELECT `id` AS `object_id`, `parent` AS `folder_id`, \'folder\' AS `object_type`, `name`, `catalog`, `path_name` FROM `folder` WHERE `id` NOT IN (SELECT `object_id` FROM `folder_map` WHERE `object_type` = \'folder\');');
         self::getFolderRepository()->collectGarbage();
 
         $interactor?->info(
@@ -1275,24 +1270,6 @@ class Catalog_local extends Catalog
                     }
                     $this->_scan_folder($full_file, $interactor, false);
                 }
-                if (
-                    is_file($full_file) &&
-                    !isset($this->_filecache[strtolower($full_file)]) &&
-                    (Catalog::is_audio_file($full_file) || Catalog::is_video_file($full_file))
-                ) {
-                    if ($this->gather_types == 'podcast') {
-                        $object_type = 'podcast_episode';
-                    } elseif ($this->gather_types == 'video') {
-                        $object_type = 'video';
-                    } else {
-                        $object_type = 'song';
-                    }
-
-                    $object_id = Catalog::get_id_from_file($full_file, $object_type);
-                    if ($object_id > 0) {
-                        self::getFolderRepository()->add_folder_map($object_id, $object_type, $path, $this->getId());
-                    }
-                }
             } catch (Exception $error) {
                 $interactor?->info(
                     T_('Error') . ' ' . $error->getMessage(),
@@ -1308,8 +1285,11 @@ class Catalog_local extends Catalog
         );
         debug_event('local.catalog', sprintf('Finished reading %s, closing handle', $path), 5);
 
+        // insert object mapping after scanning new folders
+        self::getFolderRepository()->update_folder_map();
+
         // update counts after update has finished
-        Dba::write("UPDATE `folder` SET `object_count` = (SELECT COUNT(*) FROM `folder_map` AS `map_count` WHERE `map_count`.`folder_id` = `folder`.`id`);");
+        self::getFolderRepository()->update_folder_counts();
 
         // This should only happen on the last run
         if ($path === $this->path) {

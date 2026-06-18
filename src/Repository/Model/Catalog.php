@@ -3697,6 +3697,8 @@ abstract class Catalog extends database_object
         Artist::update_table_counts();
         Album::update_table_counts();
 
+        self::getFolderRepository()->update_folder_counts();
+
         // update server total counts
         debug_event(self::class, 'update_counts server total counts', 5);
         $catalog_disable = AmpConfig::get('catalog_disable');

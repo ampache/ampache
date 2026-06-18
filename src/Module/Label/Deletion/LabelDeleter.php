@@ -26,6 +26,7 @@ declare(strict_types=1);
 namespace Ampache\Module\Label\Deletion;
 
 use Ampache\Module\Art\ArtCleanupInterface;
+use Ampache\Repository\FolderRepositoryInterface;
 use Ampache\Repository\LabelRepositoryInterface;
 use Ampache\Repository\Model\Label;
 use Ampache\Repository\Model\Rating;
@@ -40,6 +41,7 @@ final readonly class LabelDeleter implements LabelDeleterInterface
         private LabelRepositoryInterface $labelRepository,
         private UserActivityRepositoryInterface $useractivityRepository,
         private ArtCleanupInterface $artCleanup,
+        private FolderRepositoryInterface $folderRepository,
     ) {
     }
 
@@ -54,5 +56,6 @@ final readonly class LabelDeleter implements LabelDeleterInterface
         Rating::garbage_collection('label', $labelId);
         $this->shoutRepository->collectGarbage('label', $labelId);
         $this->useractivityRepository->collectGarbage('label', $labelId);
+        $this->folderRepository->collectGarbage();
     }
 }
