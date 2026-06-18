@@ -31,6 +31,7 @@ use Ampache\Module\Authorization\Access;
 use Ampache\Module\Authorization\AccessLevelEnum;
 use Ampache\Module\Authorization\AccessTypeEnum;
 use Ampache\Module\Authorization\GatekeeperFactoryInterface;
+use Ampache\Module\Util\Ui;
 use Ampache\Repository\Model\Folder;
 use Ampache\Repository\Model\LibraryItemEnum;
 use Ampache\Repository\Model\Podcast_Episode;
@@ -64,10 +65,14 @@ $cel_cover   = "cel_cover";
 $cel_folder  = "cel_folder";
 $cel_counter = "cel_counter";
 $css_class   = '';
-$folder_link = Ajax::text('?page=browse&action=set_sort&folder_id=' . $folder->id . '&sort=name', $name_text, 'folder_sort_name');
-$songs_link  = Ajax::text('?page=browse&action=set_sort&folder_id=' . $folder->id . '&sort=song_count', $items_text, 'folder_sort_song_count');
-$count_link  = Ajax::text('?page=browse&action=set_sort&folder_id=' . $folder->id . '&sort=total_count', $count_text, 'folder_sort_total_count');
-$rating_link = Ajax::text('?page=browse&action=set_sort&folder_id=' . $folder->id . '&sort=rating', $rating_text, 'folder_sort_rating'); ?>
+$folder_link = Ajax::text('?page=browse&action=set_sort&browse_id=' . $folder->id . '&sort=name', $name_text, 'folder_sort_name');
+$songs_link  = Ajax::text('?page=browse&action=set_sort&browse_id=' . $folder->id . '&sort=song_count', $items_text, 'folder_sort_song_count');
+$count_link  = Ajax::text('?page=browse&action=set_sort&browse_id=' . $folder->id . '&sort=total_count', $count_text, 'folder_sort_total_count');
+$rating_link = Ajax::text('?page=browse&action=set_sort&browse_id=' . $folder->id . '&sort=rating', $rating_text, 'folder_sort_rating');
+
+if ($browse->is_show_header()) {
+    require Ui::find_template('list_header.inc.php');
+} ?>
 <table class="tabledata striped-rows<?php echo $css_class; ?>" data-objecttype="folder">
     <thead>
         <tr class="th-top">
@@ -172,3 +177,6 @@ foreach ($object_ids as $object) {
 </table>
 
 <?php show_table_render(); ?>
+<?php if ($browse->is_show_header()) {
+    require Ui::find_template('list_header.inc.php');
+} ?>
