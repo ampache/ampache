@@ -27,6 +27,7 @@ namespace Ampache\Module\Song\Deletion;
 
 use Ampache\Module\Art\ArtCleanupInterface;
 use Ampache\Module\System\LegacyLogger;
+use Ampache\Repository\FolderRepositoryInterface;
 use Ampache\Repository\Model\Rating;
 use Ampache\Repository\Model\Song;
 use Ampache\Repository\Model\Userflag;
@@ -43,6 +44,7 @@ final readonly class SongDeleter implements SongDeleterInterface
         private SongRepositoryInterface $songRepository,
         private UserActivityRepositoryInterface $useractivityRepository,
         private ArtCleanupInterface $artCleanup,
+        private FolderRepositoryInterface $folderRepository,
     ) {
     }
 
@@ -60,6 +62,7 @@ final readonly class SongDeleter implements SongDeleterInterface
                 $this->shoutRepository->collectGarbage('song', $songId);
                 $this->useractivityRepository->collectGarbage('song', $songId);
                 $this->songRepository->collectGarbage($song);
+                $this->folderRepository->collectGarbage();
             }
         } else {
             $this->logger->critical(

@@ -31,7 +31,7 @@ use Generator;
 /**
  * Add `folder` table for mapping folder's to library items
  */
-final class Migration800002 extends AbstractMigration
+final class Migration800007 extends AbstractMigration
 {
     protected array $changelog = ['Add `folder` table for mapping folder\'s to library items'];
 
@@ -44,7 +44,7 @@ final class Migration800002 extends AbstractMigration
         $this->updateDatabase("DROP TABLE IF EXISTS `folder`;");
 
         // create the table
-        $this->updateDatabase("CREATE TABLE `folder` (`id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT, `name` varchar(255) DEFAULT NULL, `catalog` int(11) NOT NULL DEFAULT 0, `parent` int(11) DEFAULT NULL NULL, `user` int(11) DEFAULT NULL, `update_time` int(11) UNSIGNED DEFAULT 0, `addition_time` int(11) UNSIGNED DEFAULT 0, `object_count` int(11) UNSIGNED DEFAULT 0, `total_count` int(11) UNSIGNED NOT NULL DEFAULT 0, `total_skip` int(11) UNSIGNED NOT NULL DEFAULT 0, `path` varchar(255) DEFAULT NULL, `path_name` varchar(4096) DEFAULT NULL, PRIMARY KEY (`id`), KEY `name` (`name`), KEY `catalog` (`catalog`), KEY `user` (`user`)) ENGINE=$engine DEFAULT CHARSET=$charset COLLATE=$collation;");
+        $this->updateDatabase("CREATE TABLE `folder` (`id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT, `name` varchar(255) DEFAULT NULL, `catalog` int(11) NOT NULL DEFAULT 0, `parent` int(11) DEFAULT NULL NULL, `user` int(11) DEFAULT NULL, `update_time` int(11) UNSIGNED DEFAULT 0, `addition_time` int(11) UNSIGNED DEFAULT 0, `playable` tinyint(1) unsigned DEFAULT 0 NOT NULL, `object_count` int(11) UNSIGNED DEFAULT 0, `total_count` int(11) UNSIGNED NOT NULL DEFAULT 0, `total_skip` int(11) UNSIGNED NOT NULL DEFAULT 0, `path` varchar(255) DEFAULT NULL, `path_name` varchar(512) DEFAULT NULL, PRIMARY KEY (`id`), KEY `name` (`name`), KEY `folder_catalog_IDX` USING BTREE ON `folder` (`catalog`,`path_name`), KEY `catalog` (`catalog`), KEY `user` (`user`)) ENGINE=$engine DEFAULT CHARSET=$charset COLLATE=$collation;");
     }
 
     public function getTableMigrations(
@@ -53,8 +53,8 @@ final class Migration800002 extends AbstractMigration
         string $engine,
         int $build,
     ): Generator {
-        if ($build > 800002) {
-            yield 'folder' => "CREATE TABLE IF NOT EXISTS `folder` (`id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT, `name` varchar(255) DEFAULT NULL, `catalog` int(11) NOT NULL DEFAULT 0, `parent` int(11) DEFAULT NULL NULL, `user` int(11) DEFAULT NULL, `update_time` int(11) UNSIGNED DEFAULT 0, `addition_time` int(11) UNSIGNED DEFAULT 0, `object_count` int(11) UNSIGNED DEFAULT 0, `total_count` int(11) UNSIGNED NOT NULL DEFAULT 0, `total_skip` int(11) UNSIGNED NOT NULL DEFAULT 0, `path` varchar(255) DEFAULT NULL, `path_name` varchar(4096) DEFAULT NULL, PRIMARY KEY (`id`), KEY `name` (`name`), KEY `catalog` (`catalog`), KEY `user` (`user`)) ENGINE=$engine DEFAULT CHARSET=$charset COLLATE=$collation;";
+        if ($build > 800007) {
+            yield 'folder' => "CREATE TABLE IF NOT EXISTS `folder` (`id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT, `name` varchar(255) DEFAULT NULL, `catalog` int(11) NOT NULL DEFAULT 0, `parent` int(11) DEFAULT NULL NULL, `user` int(11) DEFAULT NULL, `update_time` int(11) UNSIGNED DEFAULT 0, `addition_time` int(11) UNSIGNED DEFAULT 0, `playable` tinyint(1) unsigned DEFAULT 0 NOT NULL, `object_count` int(11) UNSIGNED DEFAULT 0, `total_count` int(11) UNSIGNED NOT NULL DEFAULT 0, `total_skip` int(11) UNSIGNED NOT NULL DEFAULT 0, `path` varchar(255) DEFAULT NULL, `path_name` varchar(512) DEFAULT NULL, PRIMARY KEY (`id`), KEY `name` (`name`), KEY `folder_catalog_IDX` USING BTREE ON `folder` (`catalog`,`path_name`), KEY `catalog` (`catalog`), KEY `user` (`user`)) ENGINE=$engine DEFAULT CHARSET=$charset COLLATE=$collation;";
         }
     }
 }

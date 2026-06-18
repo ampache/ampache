@@ -73,15 +73,6 @@ class Folder extends database_object implements
     /** @var array<int, array{object_type: LibraryItemEnum|null, object_id: int}>|null $children */
     public ?array $children = null;
 
-    /** @var int[] $albums */
-    public array $albums = [];
-
-    /** @var int[] $artists */
-    public array $artists = [];
-
-    /** @var int[] $podcasts */
-    public array $podcasts = [];
-
     /** @var int[] $podcast_episodes */
     public array $podcast_episodes = [];
 
