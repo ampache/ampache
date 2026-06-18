@@ -35,6 +35,7 @@ final class FolderQuery implements QueryInterface
         'equal',
         'exact_match',
         'id',
+        'int_id',
         'like',
         'not_like',
         'not_starts_with',
