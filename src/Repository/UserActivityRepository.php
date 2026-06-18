@@ -111,6 +111,7 @@ final class UserActivityRepository implements UserActivityRepositoryInterface
             'album',
             'artist',
             'catalog',
+            'folder',
             'live_stream',
             'playlist',
             'podcast_episode',

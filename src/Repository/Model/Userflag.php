@@ -141,6 +141,7 @@ class Userflag extends database_object
             'album',
             'artist',
             'catalog',
+            'folder',
             'label',
             'live_stream',
             'playlist',
