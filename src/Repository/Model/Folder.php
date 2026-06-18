@@ -448,7 +448,7 @@ class Folder extends database_object implements
     {
         $name          = $data['name'];
         $catalog       = $data['catalog'];
-        $path_name     = $data['path_name'] ?? '';
+        $path_name     = $data['path_name'];
         $parent        = $data['parent'];
         $path          = '';
         $user          = null;

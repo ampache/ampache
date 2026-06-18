@@ -71,7 +71,7 @@ interface GuiFactoryInterface
     public function createFolderViewAdapter(
         GuiGatekeeperInterface $gatekeeper,
         Folder $folder,
-        Podcast_Episode|AlbumDisk|Video|Song|Album|Artist|Label|Folder $object,
+        Podcast_Episode|Video|Song|Folder $object,
         string $object_type,
     ): FolderViewAdapterInterface;
 

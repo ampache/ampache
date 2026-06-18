@@ -90,8 +90,10 @@ final readonly class FolderCollectorModule implements CollectorModuleInterface
                 $dirs[] = Core::conv_lc_file(dirname((string)$song->file));
             }
         } elseif ($art->object_type === 'video') {
-            $media  = new Video($art->object_id);
-            $dirs[] = Core::conv_lc_file(dirname($media->file));
+            $media = new Video($art->object_id);
+            if ($media->file) {
+                $dirs[] = Core::conv_lc_file(dirname($media->file));
+            }
         } elseif ($art->object_type === 'artist') {
             $media              = new Artist($art->object_id);
             $preferred_filename = str_replace(['<', '>', '\\', '/'], '_', (string)$media->get_fullname());

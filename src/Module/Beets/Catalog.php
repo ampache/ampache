@@ -227,6 +227,10 @@ abstract class Catalog extends \Ampache\Repository\Model\Catalog
         return 0;
     }
 
+    public function count_scan_folders(?Interactor $interactor = null): void
+    {
+    }
+
     /**
      * verify_catalog_proc
      */

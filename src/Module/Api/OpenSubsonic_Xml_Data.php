@@ -867,7 +867,7 @@ class OpenSubsonic_Xml_Data
         $xvideo->addAttribute('suffix', (string)$video->type);
         $xvideo->addAttribute('contentType', (string)$video->mime);
         // Create a clean fake path instead of song real file path to have better offline mode storage on Subsonic clients
-        $path = basename($video->file);
+        $path = basename($video->file ?? '');
         $xvideo->addAttribute('path', (string)$path);
 
         self::_setIfStarred($xvideo, 'video', $video->id);

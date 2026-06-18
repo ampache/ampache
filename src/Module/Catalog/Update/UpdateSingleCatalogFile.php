@@ -162,7 +162,6 @@ final class UpdateSingleCatalogFile extends AbstractCatalogUpdater implements Up
                         sprintf(T_('Updated: %s'), sprintf('`%s` -> `%s`', $filePath, $moveFilePath)),
                         true
                     );
-                    $catalog->
 
                     return;
                 }

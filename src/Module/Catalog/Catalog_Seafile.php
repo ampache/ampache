@@ -459,6 +459,10 @@ class Catalog_Seafile extends Catalog
         return 0;
     }
 
+    public function count_scan_folders(?Interactor $interactor = null): void
+    {
+    }
+
     /**
      * @throws ReflectionException
      */

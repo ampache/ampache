@@ -1293,7 +1293,7 @@ class Subsonic_Json_Data
         $json['contentType'] = (string)$video->mime;
 
         // Create a clean fake path instead of real file path to have better offline mode storage on Subsonic clients
-        $json['path'] = basename($video->file);
+        $json['path'] = basename($video->file ?? '');
 
         // Set transcoding information if required
         $transcode_cfg = AmpConfig::get('transcode', 'default');

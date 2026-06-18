@@ -546,6 +546,10 @@ class Catalog_dropbox extends Catalog
         return 0;
     }
 
+    public function count_scan_folders(?Interactor $interactor = null): void
+    {
+    }
+
     /**
      * @throws ReflectionException|DropboxClientException
      */
