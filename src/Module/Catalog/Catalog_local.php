@@ -693,7 +693,7 @@ class Catalog_local extends Catalog
     /**
      * scan_catalog_folders
      */
-    public function scan_catalog_folders(?Interactor $interactor = null): int
+    public function scan_catalog_folders(?Interactor $interactor = null, bool $skipCounts = false): int
     {
         set_time_limit(0);
 
@@ -708,28 +708,9 @@ class Catalog_local extends Catalog
 
         Ui::update_text('scan_count_' . $this->catalog_id, $this->count);
 
-        // insert object mapping after scanning new folders
-        $interactor?->info(
-            'update_folder_map ' . $this->name,
-            true
-        );
-        debug_event('local.catalog', 'update_folder_map ' . $this->name, 5);
-        self::getFolderRepository()->update_folder_map();
-
-        // update counts after update has finished
-        $interactor?->info(
-            'update_folder_counts' . $this->name,
-            true
-        );
-        debug_event('local.catalog', 'update_folder_counts ' . $this->name, 5);
-        self::getFolderRepository()->update_folder_counts();
-
-        $interactor?->info(
-            'collectGarbage' . $this->name,
-            true
-        );
-        debug_event('local.catalog', 'collectGarbage ' . $this->name, 5);
-        self::getFolderRepository()->collectGarbage();
+        if (!$skipCounts) {
+            $this->count_scan_folders($interactor);
+        }
 
         $interactor?->info(
             sprintf('Scan finished, %d updated in ', $this->count) . $this->name,
@@ -739,6 +720,33 @@ class Catalog_local extends Catalog
         sleep(1);
 
         return $this->count;
+    }
+
+    public function count_scan_folders(?Interactor $interactor = null): void
+    {
+
+        // insert object mapping after scanning new folders
+        $interactor?->info(
+            'local.catalog: update_folder_map',
+            true
+        );
+        debug_event('local.catalog', 'update_folder_map', 5);
+        self::getFolderRepository()->update_folder_map();
+
+        // update counts after update has finished
+        $interactor?->info(
+            'local.catalog: update_folder_counts',
+            true
+        );
+        debug_event('local.catalog', 'update_folder_counts', 5);
+        self::getFolderRepository()->update_folder_counts();
+
+        $interactor?->info(
+            'local.catalog: collectGarbage',
+            true
+        );
+        debug_event('local.catalog', 'collectGarbage', 5);
+        self::getFolderRepository()->collectGarbage();
     }
 
     /**

@@ -84,6 +84,7 @@ final class UpdateCatalog extends AbstractCatalogUpdater implements UpdateCatalo
             $catalogName = '';
         }
 
+        $catalog      = null;
         $db_results   = $this->lookupCatalogs($catalogType, $catalogName);
         $external     = false;
         $changed      = 0;
@@ -218,7 +219,7 @@ final class UpdateCatalog extends AbstractCatalogUpdater implements UpdateCatalo
                         T_('Start scanning folders'),
                         true
                     );
-                    $changed += $catalog->scan_catalog_folders($interactor);
+                    $changed += $catalog->scan_catalog_folders($interactor, ($catalogName === ''));
 
                     $buffer = ob_get_contents();
 
@@ -317,7 +318,7 @@ final class UpdateCatalog extends AbstractCatalogUpdater implements UpdateCatalo
             }
         }
 
-        if ($collectGarbage || (($cleanup || $verification) && $changed > 0)) {
+        if ($collectGarbage || (($cleanup || $verification || $scanFolders) && $changed > 0)) {
             $interactor->info(
                 T_('Garbage Collection'),
                 true
@@ -326,6 +327,7 @@ final class UpdateCatalog extends AbstractCatalogUpdater implements UpdateCatalo
             Catalog::clean_empty_albums();
             Album::update_album_artist();
             Catalog::update_counts();
+            $catalog?->count_scan_folders($interactor);
             $interactor->info(
                 '------------------',
                 true

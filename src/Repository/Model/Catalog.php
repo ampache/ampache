@@ -236,7 +236,9 @@ abstract class Catalog extends database_object
     /**
      * scan_catalog_folders
      */
-    abstract public function scan_catalog_folders(?Interactor $interactor = null): int;
+    abstract public function scan_catalog_folders(?Interactor $interactor = null, bool $skipCounts = false): int;
+
+    abstract public function count_scan_folders(?Interactor $interactor = null): void;
 
     /**
      * verify_catalog_proc
@@ -4743,10 +4745,12 @@ abstract class Catalog extends database_object
                 if ($catalogs) {
                     foreach ($catalogs as $catalog_id) {
                         $catalog = self::create_from_id($catalog_id);
-                        if ($catalog !== null) {
-                            $catalog->scan_catalog_folders();
-                        }
+                        $catalog?->scan_catalog_folders(null, true);
                     }
+
+                    self::getFolderRepository()->update_folder_map();
+                    self::getFolderRepository()->update_folder_counts();
+                    self::getFolderRepository()->collectGarbage();
 
                     if (!defined('SSE_OUTPUT') && !defined('CLI') && !defined('API')) {
                         echo AmpError::display('catalog_scan');
