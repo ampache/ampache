@@ -194,7 +194,7 @@ final readonly class FolderViewAdapter implements FolderViewAdapterInterface
 
     public function canPostShout(): bool
     {
-        return 
+        return
             $this->object_type !== 'folder' &&
             $this->configContainer->isFeatureEnabled(ConfigurationKeyEnum::SOCIABLE) &&
             (
@@ -256,7 +256,7 @@ final readonly class FolderViewAdapter implements FolderViewAdapterInterface
 
     public function isEditable(): bool
     {
-        return (    
+        return (
             $this->object_type !== 'folder' &&
             (
                 $this->gatekeeper->mayAccess(AccessTypeEnum::INTERFACE, AccessLevelEnum::CONTENT_MANAGER) ||

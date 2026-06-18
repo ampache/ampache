@@ -47,6 +47,7 @@ use Ampache\Repository\Model\Rating;
 use Ampache\Repository\Model\Song;
 use Ampache\Repository\Model\User;
 use Ampache\Repository\Model\Video;
+use Error;
 use Exception;
 
 /**
@@ -355,14 +356,14 @@ class Catalog_local extends Catalog
     {
         $folder = self::getFolderRepository()->getByPathName($folderPath, $this->getId(), $parentPath);
         if (!$folder || $folder->isNew()) {
-            $parent = ($parentPath === $this->path)
+            $parent_id = ($parentPath === $this->path)
                 ? self::getFolderRepository()->lookup((string)$this->get_fullname(), $this->getId())
                 : self::getFolderRepository()->lookupByPathName($parentPath, $this->getId());
-            $folder = self::getFolderRepository()->create($folderName, $this->getId(), $folderPath, $parent);
+            $folder = self::getFolderRepository()->create($folderName, $this->getId(), $folderPath, $parent_id);
         }
 
         if (!$folder || $folder->isNew()) {
-            return null;
+            throw new Error('could not create folder ' . $folderPath);
         }
 
         return $folder;
@@ -705,7 +706,7 @@ class Catalog_local extends Catalog
         debug_event('local.catalog', 'Scan starting on ' . $this->name . ' (' . time() . ')', 5);
         sleep(1);
 
-        $this->count = $this->scan_catalog_folder($interactor);
+        $this->scan_catalog_folder($interactor);
 
         Ui::update_text('scan_count_' . $this->catalog_id, $this->count);
 
@@ -1053,7 +1054,7 @@ class Catalog_local extends Catalog
      * scan_catalog_folder
      * This is the clean function and is broken into chunks to try to save a little memory
      */
-    public function scan_catalog_folder(?Interactor $interactor = null): int
+    public function scan_catalog_folder(?Interactor $interactor = null): void
     {
         $interactor?->info(
             'Scanning check on: ' . $this->path,
@@ -1062,7 +1063,7 @@ class Catalog_local extends Catalog
         debug_event('local.catalog', 'Scanning check on: ' . $this->path, 5);
 
         if (!$this->get_fullname()) {
-            return 0;
+            return;
         }
 
         $folder = self::getFolderRepository()->getByPathName($this->path, $this->getId());
@@ -1085,10 +1086,10 @@ class Catalog_local extends Catalog
             );
             debug_event('local.catalog', 'Failed to open folder: ' . $this->path, 5);
 
-            return 0;
+            return;
         }
 
-        return $this->_scan_folder($this->path, $interactor);
+        $this->_scan_folder($this->path, $interactor);
     }
 
     /**
@@ -1243,7 +1244,7 @@ class Catalog_local extends Catalog
      * _scan_folder
      * This is the clean function and is broken into chunks to try to save a little memory
      */
-    private function _scan_folder(string $path, ?Interactor $interactor = null): int
+    private function _scan_folder(string $path, ?Interactor $interactor = null): void
     {
         // Ensure that we've got our cache
         $this->_create_filemapcache();
@@ -1267,7 +1268,7 @@ class Catalog_local extends Catalog
             /* HINT: directory (file path) */
             AmpError::add('catalog_scan', sprintf(T_('Unable to open: %s'), $path));
 
-            return 0;
+            return;
         }
 
         /* Recurse through this dir and create the files array */
@@ -1287,10 +1288,10 @@ class Catalog_local extends Catalog
                     ) {
                         $this->count++;
                         $interactor?->info(
-                            sprintf('Added %s, closing handle', $path),
+                            sprintf('Added %s, closing handle', $full_file),
                             true
                         );
-                        debug_event('local.catalog', sprintf('Added %s, closing handle', $path), 5);
+                        debug_event('local.catalog', sprintf('Added %s, closing handle', $full_file), 5);
                     }
                     $this->_scan_folder($full_file, $interactor);
                 }
@@ -1305,8 +1306,6 @@ class Catalog_local extends Catalog
 
         /* Close the dir handle */
         closedir($handle);
-
-        return $this->count;
     }
 
     /**
