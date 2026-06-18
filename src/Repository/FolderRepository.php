@@ -202,12 +202,12 @@ final readonly class FolderRepository implements FolderRepositoryInterface
     public function update_folder_counts(): void
     {
         $this->connection->query('UPDATE `folder` SET `object_count` = (SELECT COUNT(*) FROM `folder_map` AS `map_count` WHERE `map_count`.`folder_id` = `folder`.`id`);');
-        $this->connection->query('UPDATE `folder` SET `total_count` = (SELECT SUM(`song`.`total_count`) FROM `folder_map` AS `map_count` LEFT JOIN `song` ON `object_type` = \'song\' AND `object_id` = `song`.`id` WHERE `map_count`.`folder_id` = `folder`.`id`);');
-        $this->connection->query('UPDATE `folder` SET `total_skip` = (SELECT SUM(`song`.`total_skip`) FROM `folder_map` AS `map_count` LEFT JOIN `song` ON `object_type` = \'song\' AND `object_id` = `song`.`id` WHERE `map_count`.`folder_id` = `folder`.`id`);');
-        $this->connection->query('UPDATE `folder` SET `total_count` = (SELECT SUM(`video`.`total_count`) FROM `folder_map` AS `map_count` LEFT JOIN `video` ON `object_type` = \'video\' AND `object_id` = `video`.`id` WHERE `map_count`.`folder_id` = `folder`.`id`);');
-        $this->connection->query('UPDATE `folder` SET `total_skip` = (SELECT SUM(`video`.`total_skip`) FROM `folder_map` AS `map_count` LEFT JOIN `video` ON `object_type` = \'video\' AND `object_id` = `video`.`id` WHERE `map_count`.`folder_id` = `folder`.`id`);');
-        $this->connection->query('UPDATE `folder` SET `total_count` = (SELECT SUM(`podcast_episode`.`total_count`) FROM `folder_map` AS `map_count` LEFT JOIN `podcast_episode` ON `object_type` = \'podcast_episode\' AND `object_id` = `podcast_episode`.`id` WHERE `map_count`.`folder_id` = `folder`.`id`);');
-        $this->connection->query('UPDATE `folder` SET `total_skip` = (SELECT SUM(`podcast_episode`.`total_skip`) FROM `folder_map` AS `map_count` LEFT JOIN `podcast_episode` ON `object_type` = \'podcast_episode\' AND `object_id` = `podcast_episode`.`id` WHERE `map_count`.`folder_id` = `folder`.`id`);');
+        $this->connection->query('UPDATE `folder` SET `total_count` = (SELECT IFNULL(SUM(`song`.`total_count`), 0) FROM `folder_map` AS `map_count` LEFT JOIN `song` ON `object_type` = \'song\' AND `object_id` = `song`.`id` WHERE `map_count`.`folder_id` = `folder`.`id`);');
+        $this->connection->query('UPDATE `folder` SET `total_skip` = (SELECT IFNULL(SUM(`song`.`total_skip`), 0) FROM `folder_map` AS `map_count` LEFT JOIN `song` ON `object_type` = \'song\' AND `object_id` = `song`.`id` WHERE `map_count`.`folder_id` = `folder`.`id`);');
+        $this->connection->query('UPDATE `folder` SET `total_count` = (SELECT IFNULL(SUM(`video`.`total_count`), 0) FROM `folder_map` AS `map_count` LEFT JOIN `video` ON `object_type` = \'video\' AND `object_id` = `video`.`id` WHERE `map_count`.`folder_id` = `folder`.`id`);');
+        $this->connection->query('UPDATE `folder` SET `total_skip` = (SELECT IFNULL(SUM(`video`.`total_skip`), 0) FROM `folder_map` AS `map_count` LEFT JOIN `video` ON `object_type` = \'video\' AND `object_id` = `video`.`id` WHERE `map_count`.`folder_id` = `folder`.`id`);');
+        $this->connection->query('UPDATE `folder` SET `total_count` = (SELECT IFNULL(SUM(`podcast_episode`.`total_count`), 0) FROM `folder_map` AS `map_count` LEFT JOIN `podcast_episode` ON `object_type` = \'podcast_episode\' AND `object_id` = `podcast_episode`.`id` WHERE `map_count`.`folder_id` = `folder`.`id`);');
+        $this->connection->query('UPDATE `folder` SET `total_skip` = (SELECT IFNULL(SUM(`podcast_episode`.`total_skip`), 0) FROM `folder_map` AS `map_count` LEFT JOIN `podcast_episode` ON `object_type` = \'podcast_episode\' AND `object_id` = `podcast_episode`.`id` WHERE `map_count`.`folder_id` = `folder`.`id`);');
     }
 
     /**
