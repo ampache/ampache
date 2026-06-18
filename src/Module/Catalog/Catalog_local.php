@@ -707,13 +707,29 @@ class Catalog_local extends Catalog
 
         $this->count = $this->scan_catalog_folder($interactor);
 
+        Ui::update_text('scan_count_' . $this->catalog_id, $this->count);
 
         // insert object mapping after scanning new folders
+        $interactor?->info(
+            'update_folder_map' . $this->name,
+            true
+        );
+        debug_event('local.catalog', 'update_folder_map' . $this->name, 5);
         self::getFolderRepository()->update_folder_map();
 
         // update counts after update has finished
+        $interactor?->info(
+            'update_folder_counts' . $this->name,
+            true
+        );
+        debug_event('local.catalog', 'update_folder_counts' . $this->name, 5);
         self::getFolderRepository()->update_folder_counts();
 
+        $interactor?->info(
+            'collectGarbage' . $this->name,
+            true
+        );
+        debug_event('local.catalog', 'collectGarbage' . $this->name, 5);
         self::getFolderRepository()->collectGarbage();
 
         $interactor?->info(
@@ -1254,7 +1270,6 @@ class Catalog_local extends Catalog
             return 0;
         }
 
-        $foldersadded = 0;
         /* Recurse through this dir and create the files array */
         while (false !== ($file = readdir($handle))) {
             if ('.' === $file || '..' === $file) {
@@ -1264,16 +1279,20 @@ class Catalog_local extends Catalog
             /* Create the new path */
             $full_file = $path . $slash_type . $file;
 
-
             try {
                 if (is_dir($full_file)) {
                     if (
                         !isset($this->_filecache[strtolower($full_file)]) &&
                         $this->add_folder($file, $full_file, $path) !== null
                     ) {
-                        $foldersadded++;
+                        $this->count++;
+                        $interactor?->info(
+                            sprintf('Added %s, closing handle', $path),
+                            true
+                        );
+                        debug_event('local.catalog', sprintf('Added %s, closing handle', $path), 5);
                     }
-                    $this->_scan_folder($full_file, $interactor, false);
+                    $this->_scan_folder($full_file, $interactor);
                 }
             } catch (Exception $error) {
                 $interactor?->info(
@@ -1284,21 +1303,10 @@ class Catalog_local extends Catalog
             }
         }
 
-        $interactor?->info(
-            sprintf('Finished reading %s, closing handle', $path),
-            true
-        );
-        debug_event('local.catalog', sprintf('Finished reading %s, closing handle', $path), 5);
-
-        // This should only happen on the last run
-        if ($path === $this->path) {
-            Ui::update_text('scan_count_' . $this->catalog_id, $this->count);
-        }
-
         /* Close the dir handle */
         closedir($handle);
 
-        return $foldersadded;
+        return $this->count;
     }
 
     /**

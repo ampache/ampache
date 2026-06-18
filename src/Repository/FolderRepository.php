@@ -208,6 +208,8 @@ final readonly class FolderRepository implements FolderRepositoryInterface
         $this->connection->query('UPDATE `folder` SET `total_skip` = (SELECT IFNULL(SUM(`video`.`total_skip`), 0) FROM `folder_map` AS `map_count` LEFT JOIN `video` ON `object_type` = \'video\' AND `object_id` = `video`.`id` WHERE `map_count`.`folder_id` = `folder`.`id`);');
         $this->connection->query('UPDATE `folder` SET `total_count` = (SELECT IFNULL(SUM(`podcast_episode`.`total_count`), 0) FROM `folder_map` AS `map_count` LEFT JOIN `podcast_episode` ON `object_type` = \'podcast_episode\' AND `object_id` = `podcast_episode`.`id` WHERE `map_count`.`folder_id` = `folder`.`id`);');
         $this->connection->query('UPDATE `folder` SET `total_skip` = (SELECT IFNULL(SUM(`podcast_episode`.`total_skip`), 0) FROM `folder_map` AS `map_count` LEFT JOIN `podcast_episode` ON `object_type` = \'podcast_episode\' AND `object_id` = `podcast_episode`.`id` WHERE `map_count`.`folder_id` = `folder`.`id`);');
+        $this->connection->query('UPDATE `folder` SET `playable` = 1 WHERE `playable` = 0 AND `id` IN (SELECT `folder_id` FROM `folder_map` WHERE `object_type` != \'folder\');');
+        $this->connection->query('UPDATE `folder` SET `playable` = 0 WHERE `playable` = 1 AND `id` NOT IN (SELECT `folder_id` FROM `folder_map` WHERE `object_type` != \'folder\');');
     }
 
     /**
