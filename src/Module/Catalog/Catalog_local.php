@@ -707,8 +707,13 @@ class Catalog_local extends Catalog
 
         $this->count = $this->scan_catalog_folder($interactor);
 
-        // missing maps and garbage collection
-        Dba::write('INSERT INTO `folder_map` (`object_id`, `folder_id`, `object_type`, `name`, `catalog`, `path_name`) SELECT `id` AS `object_id`, `parent` AS `folder_id`, \'folder\' AS `object_type`, `name`, `catalog`, `path_name` FROM `folder` WHERE `id` NOT IN (SELECT `object_id` FROM `folder_map` WHERE `object_type` = \'folder\');');
+
+        // insert object mapping after scanning new folders
+        self::getFolderRepository()->update_folder_map();
+
+        // update counts after update has finished
+        self::getFolderRepository()->update_folder_counts();
+
         self::getFolderRepository()->collectGarbage();
 
         $interactor?->info(
@@ -1284,12 +1289,6 @@ class Catalog_local extends Catalog
             true
         );
         debug_event('local.catalog', sprintf('Finished reading %s, closing handle', $path), 5);
-
-        // insert object mapping after scanning new folders
-        self::getFolderRepository()->update_folder_map();
-
-        // update counts after update has finished
-        self::getFolderRepository()->update_folder_counts();
 
         // This should only happen on the last run
         if ($path === $this->path) {
