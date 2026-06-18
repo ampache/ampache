@@ -62,6 +62,8 @@ class Folder extends database_object implements
 
     public int $total_skip = 0;
 
+    public bool $playable = false;
+
     public ?string $path = null;
 
     public ?string $path_name = null;
