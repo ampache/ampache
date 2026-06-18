@@ -363,7 +363,7 @@ class Catalog_local extends Catalog
         }
 
         if (!$folder || $folder->isNew()) {
-            throw new Error('could not create folder ' . $folderPath);
+            throw new Error('ERROR: ' . $this->getId() . ' could not create folder ' . $folderName . ' at ' . $folderPath);
         }
 
         return $folder;
