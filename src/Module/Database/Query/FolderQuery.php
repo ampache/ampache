@@ -49,6 +49,7 @@ final class FolderQuery implements QueryInterface
     protected array $sorts = [
         'date',
         'id',
+        'int_id',
         'last_count',
         'last_update',
         'name',
