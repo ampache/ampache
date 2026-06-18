@@ -710,10 +710,10 @@ class Catalog_local extends Catalog
 
         // insert object mapping after scanning new folders
         $interactor?->info(
-            'update_folder_map' . $this->name,
+            'update_folder_map ' . $this->name,
             true
         );
-        debug_event('local.catalog', 'update_folder_map' . $this->name, 5);
+        debug_event('local.catalog', 'update_folder_map ' . $this->name, 5);
         self::getFolderRepository()->update_folder_map();
 
         // update counts after update has finished
@@ -721,14 +721,14 @@ class Catalog_local extends Catalog
             'update_folder_counts' . $this->name,
             true
         );
-        debug_event('local.catalog', 'update_folder_counts' . $this->name, 5);
+        debug_event('local.catalog', 'update_folder_counts ' . $this->name, 5);
         self::getFolderRepository()->update_folder_counts();
 
         $interactor?->info(
             'collectGarbage' . $this->name,
             true
         );
-        debug_event('local.catalog', 'collectGarbage' . $this->name, 5);
+        debug_event('local.catalog', 'collectGarbage ' . $this->name, 5);
         self::getFolderRepository()->collectGarbage();
 
         $interactor?->info(
