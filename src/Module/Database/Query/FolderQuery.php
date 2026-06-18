@@ -111,18 +111,10 @@ final class FolderQuery implements QueryInterface
         $filter_sql = '';
         switch ($filter) {
             case 'id':
-                $filter_sql = " `folder`.`id` IN (";
-                foreach ($value as $uid) {
-                    $filter_sql .= Dba::escape($uid) . ',';
-                }
+                $filter_sql = " `folder`.`id` = " . Dba::escape($value) . " AND ";
                 break;
             case 'int_id':
-                $filter_sql = " `folder`.`int_id` IN (";
-                foreach ($value as $uid) {
-                    $filter_sql .= (int)$uid . ',';
-                }
-
-                $filter_sql = rtrim($filter_sql, ',') . ") AND ";
+                $filter_sql = " `folder`.`int_id` = " . (int)$value . " AND ";
                 break;
             case 'equal':
             case 'exact_match':

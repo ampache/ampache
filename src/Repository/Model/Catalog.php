@@ -758,6 +758,7 @@ abstract class Catalog extends database_object
         switch ($type) {
             case 'album_disk':
             case 'album':
+            case 'folder':
             case 'live_stream':
             case 'podcast_episode':
             case 'podcast':

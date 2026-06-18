@@ -235,6 +235,7 @@ class Query
             case 'disk':
             case 'enabled':
             case 'folder':
+            case 'int_id':
             case 'label':
             case 'license':
             case 'min_count':
@@ -993,6 +994,7 @@ class Query
                 case 'album_disk':
                 case 'album':
                 case 'artist':
+                case 'folder':
                 case 'label':
                 case 'live_stream':
                 case 'playlist':
