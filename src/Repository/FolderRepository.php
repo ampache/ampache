@@ -100,7 +100,7 @@ final readonly class FolderRepository implements FolderRepositoryInterface
         return $folders;
     }
 
-    public function lookup(string $folderName = '', int $catalogId = 0, ?int $parent = null): int
+    public function lookup(string $folderName = '', int $catalogId = 0, ?int $parent_id = null): int
     {
         $ret  = -1;
         $name = trim($folderName);
@@ -109,9 +109,9 @@ final readonly class FolderRepository implements FolderRepositoryInterface
             $ret    = 0;
             $sql    = 'SELECT `id` FROM `folder` WHERE `name` = ? AND `catalog` = ?';
             $params = [$name, $catalogId];
-            if ($parent) {
+            if ($parent_id) {
                 $sql .= ' AND `parent` = ?';
-                $params[] = $parent;
+                $params[] = $parent_id;
             }
             //debug_event(self::class, 'lookup' . sprintf('SQL %s', $sql) . print_r($params, true), 5);
 
@@ -125,7 +125,7 @@ final readonly class FolderRepository implements FolderRepositoryInterface
         return $ret;
     }
 
-    public function lookupByPathName(string $folderPath = '', int $catalogId = 0, ?int $parent = null): int
+    public function lookupByPathName(string $folderPath = '', int $catalogId = 0): int
     {
         $ret  = -1;
         $name = trim($folderPath);
@@ -134,10 +134,6 @@ final readonly class FolderRepository implements FolderRepositoryInterface
             $ret    = 0;
             $sql    = 'SELECT `id` FROM `folder` WHERE `path_name` = ? AND `catalog` = ?';
             $params = [$name, $catalogId];
-            if ($parent) {
-                $sql .= ' AND `parent` = ?';
-                $params[] = $parent;
-            }
             //debug_event(self::class, 'lookupByPathName ' . sprintf('SQL %s', $sql) . print_r($params, true), 5);
 
             $result = $this->connection->fetchOne($sql, $params);
@@ -150,16 +146,17 @@ final readonly class FolderRepository implements FolderRepositoryInterface
         return $ret;
     }
 
-    public function create(string $folderName, int $catalogId, string $folderPath = '', ?int $parent = null): ?Folder
+    public function create(string $folderName, int $catalogId, string $folderPath = '', ?int $parent_id = null): ?Folder
     {
         // don't allow duplicate podcasts
-        $folderId = $this->lookup($folderPath, $catalogId, $parent);
+        $folderId = $this->lookup($folderPath, $catalogId, $parent_id);
         if (!$folderId) {
+            debug_event(self::class, 'CREATE ' . $folderName . ' ' . $folderPath . ' ' . $parent_id, 5);
             $folderId = Folder::create([
                 'name' => $folderName,
                 'catalog' => $catalogId,
                 'path_name' => $folderPath,
-                'parent' => $parent,
+                'parent' => $parent_id,
             ]);
         }
 

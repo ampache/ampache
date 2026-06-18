@@ -356,10 +356,8 @@ class Catalog_local extends Catalog
     {
         $folder = self::getFolderRepository()->getByPathName($folderPath, $this->getId(), $parentPath);
         if (!$folder || $folder->isNew()) {
-            $parent_id = ($parentPath === $this->path)
-                ? self::getFolderRepository()->lookup((string)$this->get_fullname(), $this->getId())
-                : self::getFolderRepository()->lookupByPathName($parentPath, $this->getId());
-            $folder = self::getFolderRepository()->create($folderName, $this->getId(), $folderPath, $parent_id);
+            $parent_id = self::getFolderRepository()->lookupByPathName($parentPath, $this->getId());
+            $folder    = self::getFolderRepository()->create($folderName, $this->getId(), $folderPath, $parent_id);
         }
 
         if (!$folder || $folder->isNew()) {
@@ -1072,6 +1070,7 @@ class Catalog_local extends Catalog
                 'name' => $this->get_fullname(),
                 'catalog' => $this->getId(),
                 'path_name' => $this->path,
+                'parent' => null,
             ]);
 
             $folder = ($folderId)
