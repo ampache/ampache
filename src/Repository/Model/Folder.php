@@ -416,28 +416,21 @@ class Folder extends database_object implements
      * @param array{
      *     name: string,
      *     catalog: int,
-     *     parent?: int|null,
-     *     user?: int|null,
-     *     addition_time?: int,
-     *     path?: string,
-     *     path_name?: string
+     *     path_name: string,
+     *     parent: int|null
      * } $data
      */
     public static function create(array $data): ?int
     {
-        if (self::getFolderRepository()->lookup($data['name'], $data['catalog']) !== 0) {
-            return null;
-        }
-
         $name          = $data['name'];
         $catalog       = $data['catalog'];
-        $parent        = (isset($data['parent'])) ? $data['parent'] : null;
-        $user          = $data['user'] ?? null;
-        $addition_time = $data['addition_time'] ?? time();
+        $path_name     = $data['path_name'] ?? '';
+        $parent        = $data['parent'];
+        $path          = '';
+        $user          = null;
+        $addition_time = time();
 
         // Build the folder paths
-        $path      = $data['path'] ?? '';
-        $path_name = $data['path_name'] ?? '';
         if ($parent) {
             // identify full path when missing based on history
             $parentFolder = self::getFolderRepository()->findById((int)$parent);
