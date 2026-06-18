@@ -49,10 +49,10 @@ final readonly class FolderDeleter implements FolderDeleterInterface
         $folderId = $folder->getId();
 
         $this->folderRepository->delete($folderId);
-        //$this->artCleanup->collectGarbageForObject('folder', $folderId);
+        $this->artCleanup->collectGarbageForObject('folder', $folderId);
         Userflag::garbage_collection('folder', $folderId);
         Rating::garbage_collection('folder', $folderId);
-        //$this->shoutRepository->collectGarbage('folder', $folderId);
+        $this->shoutRepository->collectGarbage('folder', $folderId);
         $this->useractivityRepository->collectGarbage('folder', $folderId);
         $this->folderRepository->collectGarbage();
     }
