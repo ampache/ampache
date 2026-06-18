@@ -61,133 +61,133 @@ parameters:
 			path: src/Module/Api/DaapApiApplication.php
 
 		-
+			message: '#^Method Ampache\\Module\\Api\\Daap_Api\:\:_get_type_id\(\) has parameter \$type with no type specified\.$#'
+			identifier: missingType.parameter
+			count: 1
+			path: src/Module/Api/Daap_Api.php
+
+		-
+			message: '#^Method Ampache\\Module\\Api\\Daap_Api\:\:_tlv\(\) has parameter \$tag with no type specified\.$#'
+			identifier: missingType.parameter
+			count: 1
+			path: src/Module/Api/Daap_Api.php
+
+		-
+			message: '#^Method Ampache\\Module\\Api\\Daap_Api\:\:_tlv\(\) has parameter \$value with no type specified\.$#'
+			identifier: missingType.parameter
+			count: 1
+			path: src/Module/Api/Daap_Api.php
+
+		-
+			message: '#^Method Ampache\\Module\\Api\\Daap_Api\:\:_tlv_byte\(\) has parameter \$tag with no type specified\.$#'
+			identifier: missingType.parameter
+			count: 1
+			path: src/Module/Api/Daap_Api.php
+
+		-
+			message: '#^Method Ampache\\Module\\Api\\Daap_Api\:\:_tlv_byte\(\) has parameter \$value with no type specified\.$#'
+			identifier: missingType.parameter
+			count: 1
+			path: src/Module/Api/Daap_Api.php
+
+		-
+			message: '#^Method Ampache\\Module\\Api\\Daap_Api\:\:_tlv_date\(\) has parameter \$tag with no type specified\.$#'
+			identifier: missingType.parameter
+			count: 1
+			path: src/Module/Api/Daap_Api.php
+
+		-
+			message: '#^Method Ampache\\Module\\Api\\Daap_Api\:\:_tlv_date\(\) has parameter \$value with no type specified\.$#'
+			identifier: missingType.parameter
+			count: 1
+			path: src/Module/Api/Daap_Api.php
+
+		-
+			message: '#^Method Ampache\\Module\\Api\\Daap_Api\:\:_tlv_int\(\) has parameter \$tag with no type specified\.$#'
+			identifier: missingType.parameter
+			count: 1
+			path: src/Module/Api/Daap_Api.php
+
+		-
+			message: '#^Method Ampache\\Module\\Api\\Daap_Api\:\:_tlv_int\(\) has parameter \$value with no type specified\.$#'
+			identifier: missingType.parameter
+			count: 1
+			path: src/Module/Api/Daap_Api.php
+
+		-
+			message: '#^Method Ampache\\Module\\Api\\Daap_Api\:\:_tlv_list\(\) has parameter \$tag with no type specified\.$#'
+			identifier: missingType.parameter
+			count: 1
+			path: src/Module/Api/Daap_Api.php
+
+		-
+			message: '#^Method Ampache\\Module\\Api\\Daap_Api\:\:_tlv_list\(\) has parameter \$value with no type specified\.$#'
+			identifier: missingType.parameter
+			count: 1
+			path: src/Module/Api/Daap_Api.php
+
+		-
+			message: '#^Method Ampache\\Module\\Api\\Daap_Api\:\:_tlv_long\(\) has parameter \$tag with no type specified\.$#'
+			identifier: missingType.parameter
+			count: 1
+			path: src/Module/Api/Daap_Api.php
+
+		-
+			message: '#^Method Ampache\\Module\\Api\\Daap_Api\:\:_tlv_long\(\) has parameter \$value with no type specified\.$#'
+			identifier: missingType.parameter
+			count: 1
+			path: src/Module/Api/Daap_Api.php
+
+		-
+			message: '#^Method Ampache\\Module\\Api\\Daap_Api\:\:_tlv_short\(\) has parameter \$tag with no type specified\.$#'
+			identifier: missingType.parameter
+			count: 1
+			path: src/Module/Api/Daap_Api.php
+
+		-
+			message: '#^Method Ampache\\Module\\Api\\Daap_Api\:\:_tlv_short\(\) has parameter \$value with no type specified\.$#'
+			identifier: missingType.parameter
+			count: 1
+			path: src/Module/Api/Daap_Api.php
+
+		-
+			message: '#^Method Ampache\\Module\\Api\\Daap_Api\:\:_tlv_songs\(\) has parameter \$meta with no type specified\.$#'
+			identifier: missingType.parameter
+			count: 1
+			path: src/Module/Api/Daap_Api.php
+
+		-
+			message: '#^Method Ampache\\Module\\Api\\Daap_Api\:\:_tlv_songs\(\) has parameter \$songs with no type specified\.$#'
+			identifier: missingType.parameter
+			count: 1
+			path: src/Module/Api/Daap_Api.php
+
+		-
+			message: '#^Method Ampache\\Module\\Api\\Daap_Api\:\:_tlv_string\(\) has parameter \$tag with no type specified\.$#'
+			identifier: missingType.parameter
+			count: 1
+			path: src/Module/Api/Daap_Api.php
+
+		-
+			message: '#^Method Ampache\\Module\\Api\\Daap_Api\:\:_tlv_string\(\) has parameter \$value with no type specified\.$#'
+			identifier: missingType.parameter
+			count: 1
+			path: src/Module/Api/Daap_Api.php
+
+		-
+			message: '#^Method Ampache\\Module\\Api\\Daap_Api\:\:_tlv_version\(\) has parameter \$tag with no type specified\.$#'
+			identifier: missingType.parameter
+			count: 1
+			path: src/Module/Api/Daap_Api.php
+
+		-
+			message: '#^Method Ampache\\Module\\Api\\Daap_Api\:\:_tlv_version\(\) has parameter \$value with no type specified\.$#'
+			identifier: missingType.parameter
+			count: 1
+			path: src/Module/Api/Daap_Api.php
+
+		-
 			message: '#^Method Ampache\\Module\\Api\\Daap_Api\:\:createError\(\) has parameter \$code with no type specified\.$#'
-			identifier: missingType.parameter
-			count: 1
-			path: src/Module/Api/Daap_Api.php
-
-		-
-			message: '#^Method Ampache\\Module\\Api\\Daap_Api\:\:get_type_id\(\) has parameter \$type with no type specified\.$#'
-			identifier: missingType.parameter
-			count: 1
-			path: src/Module/Api/Daap_Api.php
-
-		-
-			message: '#^Method Ampache\\Module\\Api\\Daap_Api\:\:tlv\(\) has parameter \$tag with no type specified\.$#'
-			identifier: missingType.parameter
-			count: 1
-			path: src/Module/Api/Daap_Api.php
-
-		-
-			message: '#^Method Ampache\\Module\\Api\\Daap_Api\:\:tlv\(\) has parameter \$value with no type specified\.$#'
-			identifier: missingType.parameter
-			count: 1
-			path: src/Module/Api/Daap_Api.php
-
-		-
-			message: '#^Method Ampache\\Module\\Api\\Daap_Api\:\:tlv_byte\(\) has parameter \$tag with no type specified\.$#'
-			identifier: missingType.parameter
-			count: 1
-			path: src/Module/Api/Daap_Api.php
-
-		-
-			message: '#^Method Ampache\\Module\\Api\\Daap_Api\:\:tlv_byte\(\) has parameter \$value with no type specified\.$#'
-			identifier: missingType.parameter
-			count: 1
-			path: src/Module/Api/Daap_Api.php
-
-		-
-			message: '#^Method Ampache\\Module\\Api\\Daap_Api\:\:tlv_date\(\) has parameter \$tag with no type specified\.$#'
-			identifier: missingType.parameter
-			count: 1
-			path: src/Module/Api/Daap_Api.php
-
-		-
-			message: '#^Method Ampache\\Module\\Api\\Daap_Api\:\:tlv_date\(\) has parameter \$value with no type specified\.$#'
-			identifier: missingType.parameter
-			count: 1
-			path: src/Module/Api/Daap_Api.php
-
-		-
-			message: '#^Method Ampache\\Module\\Api\\Daap_Api\:\:tlv_int\(\) has parameter \$tag with no type specified\.$#'
-			identifier: missingType.parameter
-			count: 1
-			path: src/Module/Api/Daap_Api.php
-
-		-
-			message: '#^Method Ampache\\Module\\Api\\Daap_Api\:\:tlv_int\(\) has parameter \$value with no type specified\.$#'
-			identifier: missingType.parameter
-			count: 1
-			path: src/Module/Api/Daap_Api.php
-
-		-
-			message: '#^Method Ampache\\Module\\Api\\Daap_Api\:\:tlv_list\(\) has parameter \$tag with no type specified\.$#'
-			identifier: missingType.parameter
-			count: 1
-			path: src/Module/Api/Daap_Api.php
-
-		-
-			message: '#^Method Ampache\\Module\\Api\\Daap_Api\:\:tlv_list\(\) has parameter \$value with no type specified\.$#'
-			identifier: missingType.parameter
-			count: 1
-			path: src/Module/Api/Daap_Api.php
-
-		-
-			message: '#^Method Ampache\\Module\\Api\\Daap_Api\:\:tlv_long\(\) has parameter \$tag with no type specified\.$#'
-			identifier: missingType.parameter
-			count: 1
-			path: src/Module/Api/Daap_Api.php
-
-		-
-			message: '#^Method Ampache\\Module\\Api\\Daap_Api\:\:tlv_long\(\) has parameter \$value with no type specified\.$#'
-			identifier: missingType.parameter
-			count: 1
-			path: src/Module/Api/Daap_Api.php
-
-		-
-			message: '#^Method Ampache\\Module\\Api\\Daap_Api\:\:tlv_short\(\) has parameter \$tag with no type specified\.$#'
-			identifier: missingType.parameter
-			count: 1
-			path: src/Module/Api/Daap_Api.php
-
-		-
-			message: '#^Method Ampache\\Module\\Api\\Daap_Api\:\:tlv_short\(\) has parameter \$value with no type specified\.$#'
-			identifier: missingType.parameter
-			count: 1
-			path: src/Module/Api/Daap_Api.php
-
-		-
-			message: '#^Method Ampache\\Module\\Api\\Daap_Api\:\:tlv_songs\(\) has parameter \$meta with no type specified\.$#'
-			identifier: missingType.parameter
-			count: 1
-			path: src/Module/Api/Daap_Api.php
-
-		-
-			message: '#^Method Ampache\\Module\\Api\\Daap_Api\:\:tlv_songs\(\) has parameter \$songs with no type specified\.$#'
-			identifier: missingType.parameter
-			count: 1
-			path: src/Module/Api/Daap_Api.php
-
-		-
-			message: '#^Method Ampache\\Module\\Api\\Daap_Api\:\:tlv_string\(\) has parameter \$tag with no type specified\.$#'
-			identifier: missingType.parameter
-			count: 1
-			path: src/Module/Api/Daap_Api.php
-
-		-
-			message: '#^Method Ampache\\Module\\Api\\Daap_Api\:\:tlv_string\(\) has parameter \$value with no type specified\.$#'
-			identifier: missingType.parameter
-			count: 1
-			path: src/Module/Api/Daap_Api.php
-
-		-
-			message: '#^Method Ampache\\Module\\Api\\Daap_Api\:\:tlv_version\(\) has parameter \$tag with no type specified\.$#'
-			identifier: missingType.parameter
-			count: 1
-			path: src/Module/Api/Daap_Api.php
-
-		-
-			message: '#^Method Ampache\\Module\\Api\\Daap_Api\:\:tlv_version\(\) has parameter \$value with no type specified\.$#'
 			identifier: missingType.parameter
 			count: 1
 			path: src/Module/Api/Daap_Api.php
@@ -805,6 +805,36 @@ parameters:
 			path: src/Module/Api/Upnp_Api.php
 
 		-
+			message: '#^Method Ampache\\Module\\Api\\Upnp_Api\:\:_parse_upnp_filter\(\) has parameter \$filter with no type specified\.$#'
+			identifier: missingType.parameter
+			count: 1
+			path: src/Module/Api/Upnp_Api.php
+
+		-
+			message: '#^Method Ampache\\Module\\Api\\Upnp_Api\:\:_parse_upnp_search_term\(\) return type has no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/Module/Api/Upnp_Api.php
+
+		-
+			message: '#^Method Ampache\\Module\\Api\\Upnp_Api\:\:_parse_upnp_searchcriteria\(\) has parameter \$query with no type specified\.$#'
+			identifier: missingType.parameter
+			count: 1
+			path: src/Module/Api/Upnp_Api.php
+
+		-
+			message: '#^Method Ampache\\Module\\Api\\Upnp_Api\:\:_parse_upnp_searchcriteria\(\) has parameter \$type with no type specified\.$#'
+			identifier: missingType.parameter
+			count: 1
+			path: src/Module/Api/Upnp_Api.php
+
+		-
+			message: '#^Method Ampache\\Module\\Api\\Upnp_Api\:\:_parse_upnp_searchcriteria\(\) return type has no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/Module/Api/Upnp_Api.php
+
+		-
 			message: '#^Method Ampache\\Module\\Api\\Upnp_Api\:\:_slice\(\) has parameter \$count with no type specified\.$#'
 			identifier: missingType.parameter
 			count: 1
@@ -938,36 +968,6 @@ parameters:
 
 		-
 			message: '#^Method Ampache\\Module\\Api\\Upnp_Api\:\:parseUPnPRequest\(\) return type has no value type specified in iterable type array\.$#'
-			identifier: missingType.iterableValue
-			count: 1
-			path: src/Module/Api/Upnp_Api.php
-
-		-
-			message: '#^Method Ampache\\Module\\Api\\Upnp_Api\:\:parse_upnp_filter\(\) has parameter \$filter with no type specified\.$#'
-			identifier: missingType.parameter
-			count: 1
-			path: src/Module/Api/Upnp_Api.php
-
-		-
-			message: '#^Method Ampache\\Module\\Api\\Upnp_Api\:\:parse_upnp_search_term\(\) return type has no value type specified in iterable type array\.$#'
-			identifier: missingType.iterableValue
-			count: 1
-			path: src/Module/Api/Upnp_Api.php
-
-		-
-			message: '#^Method Ampache\\Module\\Api\\Upnp_Api\:\:parse_upnp_searchcriteria\(\) has parameter \$query with no type specified\.$#'
-			identifier: missingType.parameter
-			count: 1
-			path: src/Module/Api/Upnp_Api.php
-
-		-
-			message: '#^Method Ampache\\Module\\Api\\Upnp_Api\:\:parse_upnp_searchcriteria\(\) has parameter \$type with no type specified\.$#'
-			identifier: missingType.parameter
-			count: 1
-			path: src/Module/Api/Upnp_Api.php
-
-		-
-			message: '#^Method Ampache\\Module\\Api\\Upnp_Api\:\:parse_upnp_searchcriteria\(\) return type has no value type specified in iterable type array\.$#'
 			identifier: missingType.iterableValue
 			count: 1
 			path: src/Module/Api/Upnp_Api.php
@@ -1123,73 +1123,73 @@ parameters:
 			path: src/Module/Authentication/Authenticator/PamAuthenticator.php
 
 		-
-			message: '#^Method Ampache\\Module\\Authentication\\Ldap\\Ldap\:\:array_filter_key\(\) has parameter \$array with no value type specified in iterable type array\.$#'
+			message: '#^Method Ampache\\Module\\Authentication\\Ldap\\Ldap\:\:_array_filter_key\(\) has parameter \$array with no value type specified in iterable type array\.$#'
 			identifier: missingType.iterableValue
 			count: 1
 			path: src/Module/Authentication/Ldap/Ldap.php
 
 		-
-			message: '#^Method Ampache\\Module\\Authentication\\Ldap\\Ldap\:\:array_filter_key\(\) return type has no value type specified in iterable type array\.$#'
+			message: '#^Method Ampache\\Module\\Authentication\\Ldap\\Ldap\:\:_array_filter_key\(\) return type has no value type specified in iterable type array\.$#'
 			identifier: missingType.iterableValue
 			count: 1
 			path: src/Module/Authentication/Ldap/Ldap.php
 
 		-
-			message: '#^Method Ampache\\Module\\Authentication\\Ldap\\Ldap\:\:bind\(\) has parameter \$link with no type specified\.$#'
+			message: '#^Method Ampache\\Module\\Authentication\\Ldap\\Ldap\:\:_bind\(\) has parameter \$link with no type specified\.$#'
 			identifier: missingType.parameter
 			count: 1
 			path: src/Module/Authentication/Ldap/Ldap.php
 
 		-
-			message: '#^Method Ampache\\Module\\Authentication\\Ldap\\Ldap\:\:clean_search_results\(\) has parameter \$searchresult with no value type specified in iterable type array\.$#'
+			message: '#^Method Ampache\\Module\\Authentication\\Ldap\\Ldap\:\:_clean_search_results\(\) has parameter \$searchresult with no value type specified in iterable type array\.$#'
 			identifier: missingType.iterableValue
 			count: 1
 			path: src/Module/Authentication/Ldap/Ldap.php
 
 		-
-			message: '#^Method Ampache\\Module\\Authentication\\Ldap\\Ldap\:\:clean_search_results\(\) return type has no value type specified in iterable type array\.$#'
+			message: '#^Method Ampache\\Module\\Authentication\\Ldap\\Ldap\:\:_clean_search_results\(\) return type has no value type specified in iterable type array\.$#'
 			identifier: missingType.iterableValue
 			count: 1
 			path: src/Module/Authentication/Ldap/Ldap.php
 
 		-
-			message: '#^Method Ampache\\Module\\Authentication\\Ldap\\Ldap\:\:read\(\) has no return type specified\.$#'
+			message: '#^Method Ampache\\Module\\Authentication\\Ldap\\Ldap\:\:_read\(\) has no return type specified\.$#'
 			identifier: missingType.return
 			count: 1
 			path: src/Module/Authentication/Ldap/Ldap.php
 
 		-
-			message: '#^Method Ampache\\Module\\Authentication\\Ldap\\Ldap\:\:read\(\) has parameter \$attrs with no value type specified in iterable type array\.$#'
+			message: '#^Method Ampache\\Module\\Authentication\\Ldap\\Ldap\:\:_read\(\) has parameter \$attrs with no value type specified in iterable type array\.$#'
 			identifier: missingType.iterableValue
 			count: 1
 			path: src/Module/Authentication/Ldap/Ldap.php
 
 		-
-			message: '#^Method Ampache\\Module\\Authentication\\Ldap\\Ldap\:\:read\(\) has parameter \$link with no type specified\.$#'
+			message: '#^Method Ampache\\Module\\Authentication\\Ldap\\Ldap\:\:_read\(\) has parameter \$link with no type specified\.$#'
 			identifier: missingType.parameter
 			count: 1
 			path: src/Module/Authentication/Ldap/Ldap.php
 
 		-
-			message: '#^Method Ampache\\Module\\Authentication\\Ldap\\Ldap\:\:search\(\) has parameter \$base_dn with no type specified\.$#'
+			message: '#^Method Ampache\\Module\\Authentication\\Ldap\\Ldap\:\:_search\(\) has parameter \$base_dn with no type specified\.$#'
 			identifier: missingType.parameter
 			count: 1
 			path: src/Module/Authentication/Ldap/Ldap.php
 
 		-
-			message: '#^Method Ampache\\Module\\Authentication\\Ldap\\Ldap\:\:search\(\) has parameter \$link with no type specified\.$#'
+			message: '#^Method Ampache\\Module\\Authentication\\Ldap\\Ldap\:\:_search\(\) has parameter \$link with no type specified\.$#'
 			identifier: missingType.parameter
 			count: 1
 			path: src/Module/Authentication/Ldap/Ldap.php
 
 		-
-			message: '#^Method Ampache\\Module\\Authentication\\Ldap\\Ldap\:\:search\(\) return type has no value type specified in iterable type array\.$#'
+			message: '#^Method Ampache\\Module\\Authentication\\Ldap\\Ldap\:\:_search\(\) return type has no value type specified in iterable type array\.$#'
 			identifier: missingType.iterableValue
 			count: 1
 			path: src/Module/Authentication/Ldap/Ldap.php
 
 		-
-			message: '#^Method Ampache\\Module\\Authentication\\Ldap\\Ldap\:\:unbind\(\) has parameter \$link with no type specified\.$#'
+			message: '#^Method Ampache\\Module\\Authentication\\Ldap\\Ldap\:\:_unbind\(\) has parameter \$link with no type specified\.$#'
 			identifier: missingType.parameter
 			count: 1
 			path: src/Module/Authentication/Ldap/Ldap.php
