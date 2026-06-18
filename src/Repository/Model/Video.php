@@ -730,7 +730,7 @@ class Video extends database_object implements
         $filter    = '';
         if ($this->file) {
             $pinfo  = pathinfo($this->file);
-            $filter = ($pinfo['dirname'] ?? '') . DIRECTORY_SEPARATOR . $pinfo['filename'] . '*.srt';
+            $filter = ($pinfo['dirname']) . DIRECTORY_SEPARATOR . $pinfo['filename'] . '*.srt';
         }
 
         foreach (glob($filter) ?: [] as $srt) {
@@ -957,7 +957,7 @@ class Video extends database_object implements
         $subtitle = '';
         if ($this->file && ($lang_code == '__' || $this->get_language_name($lang_code))) {
             $pinfo    = pathinfo($this->file);
-            $subtitle = ($pinfo['dirname'] ?? '') . DIRECTORY_SEPARATOR . $pinfo['filename'];
+            $subtitle = ($pinfo['dirname']) . DIRECTORY_SEPARATOR . $pinfo['filename'];
             if ($lang_code != '__') {
                 $subtitle .= '.' . $lang_code;
             }
@@ -974,7 +974,7 @@ class Video extends database_object implements
      */
     public function remove(): bool
     {
-        $deleted = !file_exists($this->file) || unlink($this->file);
+        $deleted = !$this->file || !file_exists($this->file) || unlink($this->file);
         if ($deleted) {
             // keep details about deletions
             $params = [$this->id];
