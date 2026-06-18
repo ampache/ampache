@@ -44,6 +44,7 @@ final readonly class ArtCleanup implements ArtCleanupInterface
         'album',
         'artist',
         'catalog',
+        'folder',
         'label',
         'live_stream',
         'playlist',
