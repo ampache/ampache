@@ -70,7 +70,7 @@ final readonly class ApplicationRunner
             /** @var ApplicationActionInterface $handler */
             $handler = $this->dic->get($handler_name);
         } catch (InvalidDefinition) {
-            // something went wrong trying to load this action
+            // something went wrong trying to load this action. check src/Config/DicBuilder.php
             $this->logger->critical(
                 sprintf('Error loading handler for action "%s"', $action_name),
                 [LegacyLogger::CONTEXT_TYPE => self::class]
