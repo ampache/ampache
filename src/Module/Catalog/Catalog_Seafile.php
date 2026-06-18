@@ -454,7 +454,7 @@ class Catalog_Seafile extends Catalog
     /**
      * scan_catalog_folders
      */
-    public function scan_catalog_folders(?Interactor $interactor = null): int
+    public function scan_catalog_folders(?Interactor $interactor = null, bool $skipCounts = false): int
     {
         return 0;
     }
