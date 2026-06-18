@@ -134,7 +134,7 @@ class Video extends database_object implements
             $this->$key = $value;
         }
 
-        $this->type = strtolower(pathinfo($this->file, PATHINFO_EXTENSION));
+        $this->type = ($this->file) ? strtolower(pathinfo($this->file, PATHINFO_EXTENSION)) : '';
     }
 
     public function getId(): int
@@ -727,8 +727,11 @@ class Video extends database_object implements
     public function get_subtitles(): array
     {
         $subtitles = [];
-        $pinfo     = pathinfo($this->file);
-        $filter    = ($pinfo['dirname'] ?? '') . DIRECTORY_SEPARATOR . $pinfo['filename'] . '*.srt';
+        $filter    = '';
+        if ($this->file) {
+            $pinfo  = pathinfo($this->file);
+            $filter = ($pinfo['dirname'] ?? '') . DIRECTORY_SEPARATOR . $pinfo['filename'] . '*.srt';
+        }
 
         foreach (glob($filter) ?: [] as $srt) {
             $psrt      = explode('.', $srt);
@@ -952,7 +955,7 @@ class Video extends database_object implements
     public function get_subtitle_file(string $lang_code): string
     {
         $subtitle = '';
-        if ($lang_code == '__' || $this->get_language_name($lang_code)) {
+        if ($this->file && ($lang_code == '__' || $this->get_language_name($lang_code))) {
             $pinfo    = pathinfo($this->file);
             $subtitle = ($pinfo['dirname'] ?? '') . DIRECTORY_SEPARATOR . $pinfo['filename'];
             if ($lang_code != '__') {
