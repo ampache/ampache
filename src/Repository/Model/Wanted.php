@@ -436,7 +436,7 @@ class Wanted extends database_object
     /**
      * Get item f_link.
      */
-    public function get_f_link(): string
+    public function get_f_link(?string $title = null): string
     {
         // don't do anything if it's formatted
         if ($this->f_link === null) {
@@ -447,7 +447,7 @@ class Wanted extends database_object
                 $this->artist,
                 $this->artist_mbid,
                 $this->name,
-                scrub_out($this->name)
+                scrub_out($title ?? $this->name)
             );
         }
 

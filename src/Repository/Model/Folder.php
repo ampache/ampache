@@ -208,6 +208,30 @@ class Folder extends database_object implements
     }
 
     /**
+     * get_name_by_id
+     */
+    public static function get_name_by_id(string $object_type, ?int $object_id = 0): string
+    {
+        if (empty($object_id)) {
+            return '';
+        }
+
+        if (database_object::is_cached('folder_name_by_id', $object_id)) {
+            return database_object::get_from_cache('folder_name_by_id', $object_id)[0];
+        }
+
+        $sql        = "SELECT `folder_map`.`name` AS `f_name` FROM `folder_map` WHERE `object_id` = ? AND `object_type` = ?;";
+        $db_results = Dba::read($sql, [$object_id, $object_type]);
+        if ($row = Dba::fetch_assoc($db_results)) {
+            database_object::add_to_cache('folder_name_by_id', $object_id, [$row['f_name']]);
+
+            return $row['f_name'];
+        }
+
+        return '';
+    }
+
+    /**
      * get_fullpathname
      */
     public function get_fullpathname(): ?string
@@ -233,11 +257,11 @@ class Folder extends database_object implements
     /**
      * Get item f_link.
      */
-    public function get_f_link(): string
+    public function get_f_link(?string $title = null): string
     {
         // don't do anything if it's formatted
         if ($this->f_link === null) {
-            $this->f_link = "<a href=\"" . $this->get_link() . "\" title=\"" . scrub_out($this->get_fullname()) . "\">" . scrub_out($this->get_fullname());
+            $this->f_link = "<a href=\"" . $this->get_link() . "\" title=\"" . scrub_out($this->get_fullname()) . "\">" . scrub_out($title ?? $this->get_fullname());
         }
 
         return $this->f_link;
@@ -469,11 +493,11 @@ class Folder extends database_object implements
     {
         if (empty($this->children)) {
             if ($this->getId() === -1) {
-                $sql        = "SELECT `id` AS `object_id`, 'folder' AS `object_type` FROM `folder` WHERE `parent` IS NULL;";
+                $sql        = "SELECT `object_id`, `object_type` FROM `folder_map` WHERE `parent` IS NULL;";
                 $db_results = Dba::read($sql);
             } else {
-                $sql        = "SELECT `id` AS `object_id`, 'folder' AS `object_type` FROM `folder` WHERE `parent` = ? UNION SELECT `object_id`, `object_type` FROM `folder_map` WHERE `folder_id` = ?;";
-                $db_results = Dba::read($sql, [$this->getId(), $this->getId()]);
+                $sql        = "SELECT `object_id`, `object_type` FROM `folder_map` WHERE `folder_id` = ?;";
+                $db_results = Dba::read($sql, [$this->getId()]);
             }
 
             $results    = [];

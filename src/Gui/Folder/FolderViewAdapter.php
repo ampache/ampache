@@ -37,13 +37,9 @@ use Ampache\Module\Authorization\GuiGatekeeperInterface;
 use Ampache\Module\Playback\Stream_Playlist;
 use Ampache\Module\Util\Ui;
 use Ampache\Module\Util\ZipHandlerInterface;
-use Ampache\Repository\Model\Album;
-use Ampache\Repository\Model\AlbumDisk;
 use Ampache\Repository\Model\Art;
-use Ampache\Repository\Model\Artist;
 use Ampache\Repository\Model\Catalog;
 use Ampache\Repository\Model\Folder;
-use Ampache\Repository\Model\Label;
 use Ampache\Repository\Model\ModelFactoryInterface;
 use Ampache\Repository\Model\Podcast_Episode;
 use Ampache\Repository\Model\Rating;
@@ -61,7 +57,7 @@ final readonly class FolderViewAdapter implements FolderViewAdapterInterface
         private FunctionCheckerInterface $functionChecker,
         private GuiGatekeeperInterface $gatekeeper,
         private Folder $folder,
-        private Podcast_Episode|AlbumDisk|Video|Song|Album|Artist|Label|Folder $object,
+        private Podcast_Episode|Video|Song|Folder $object,
         private string $object_type,
     ) {
     }
@@ -312,7 +308,9 @@ final readonly class FolderViewAdapter implements FolderViewAdapterInterface
 
     public function getFolderLink(): string
     {
-        return $this->object->get_f_link();
+        return $this->object->get_f_link(
+            Folder::get_name_by_id($this->object_type, $this->object->getId())
+        );
     }
 
     public function getArtistLink(): string
