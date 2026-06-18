@@ -140,7 +140,7 @@ $videoprops[T_('Audio Bitrate')] = scrub_out((int) ($video->bitrate / 1024) . "-
 $videoprops[T_('Video Bitrate')] = scrub_out((string)($video->video_bitrate / 1024));
 $videoprops[T_('Frame Rate')]    = scrub_out(($video->frame_rate) ? $video->frame_rate . ' fps' : '');
 $videoprops[T_('Channels')]      = scrub_out((string)$video->channels);
-if (Access::check(AccessTypeEnum::INTERFACE, AccessLevelEnum::MANAGER)) {
+if ($video->file && Access::check(AccessTypeEnum::INTERFACE, AccessLevelEnum::MANAGER)) {
     $data                       = pathinfo($video->file);
     $videoprops[T_('Path')]     = scrub_out((string)($data['dirname'] ?? ''));
     $videoprops[T_('Filename')] = (isset($data['extension']))
