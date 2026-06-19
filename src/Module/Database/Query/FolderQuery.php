@@ -179,15 +179,9 @@ final class FolderQuery implements QueryInterface
             case 'title':
                 $sql = "`folder`.`is_folder` DESC, `folder`.`name`";
                 break;
-            case 'date':
             case 'id':
             case 'int_id':
-            case 'last_count':
-            case 'last_update':
-            case 'object_count':
-            case 'total_count':
-            case 'type':
-            case 'user':
+            case 'object_type':
                 $sql = sprintf('`folder`.`%s`', $field);
                 break;
             case 'rating':
