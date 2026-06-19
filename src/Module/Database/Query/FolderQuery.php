@@ -175,7 +175,7 @@ final class FolderQuery implements QueryInterface
         switch ($field) {
             case 'name':
             case 'title':
-                $sql = "`folder`.`is_folder` DESC, `folder`.`name`, `folder`.`int_id`";
+                $sql = "`folder`.`is_folder` DESC, `folder`.`name`";
                 break;
             case 'date':
             case 'id':
