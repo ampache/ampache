@@ -27,6 +27,7 @@ namespace Ampache\Repository;
 
 use Ampache\Module\Database\DatabaseConnectionInterface;
 use Ampache\Module\Database\Exception\DatabaseException;
+use Ampache\Module\System\LegacyLogger;
 use Ampache\Repository\Model\LibraryItemEnum;
 use Ampache\Repository\Model\Shoutbox;
 use Generator;
@@ -116,7 +117,11 @@ final class ShoutRepository extends BaseRepository implements ShoutRepositoryInt
                 );
             } else {
                 $this->logger->critical(
-                    sprintf('Garbage collect on type `%s` is not supported.', $objectType)
+                    sprintf(
+                        'Garbage collect on type `%s` is not supported.',
+                        $objectType
+                    ),
+                    [LegacyLogger::CONTEXT_TYPE => self::class]
                 );
             }
         } else {
