@@ -309,7 +309,7 @@ final readonly class FolderViewAdapter implements FolderViewAdapterInterface
     public function getFolderLink(): string
     {
         if (property_exists($this->object, 'file')) {
-            return $this->object->get_f_link(pathinfo($this->object->file, PATHINFO_FILENAME));
+            return $this->object->get_f_link(pathinfo($this->object->file, PATHINFO_BASENAME));
         }
 
         return $this->object->get_f_link(
