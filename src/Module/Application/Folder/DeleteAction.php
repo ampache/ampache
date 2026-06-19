@@ -56,8 +56,8 @@ final readonly class DeleteAction implements ApplicationActionInterface
             return null;
         }
 
-        $folderId = (int) ($request->getQueryParams()['folder_id'] ?? 0);
-        $returnId = $folder->parent ?? -1;
+        $folderId = (int)($request->getQueryParams()['folder_id'] ?? 0);
+        $returnId = (int)($request->getQueryParams()['parent_id'] ?? -1);
         $webPath  = $this->configContainer->getWebPath();
 
         $this->ui->showHeader();

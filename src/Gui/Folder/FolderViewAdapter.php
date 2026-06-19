@@ -286,11 +286,14 @@ final readonly class FolderViewAdapter implements FolderViewAdapterInterface
 
     public function getDeletionUrl(): string
     {
+        $parent_id = ($this->object instanceof Folder && $this->object->parent !== null) ? $this->object->parent : -1;
+
         return sprintf(
-            '%s/' . $this->object_type . 's.php?action=%s&' . $this->object_type . '_id=%d',
+            '%s/' . $this->object_type . 's.php?action=%s&' . $this->object_type . '_id=%d&parent_id=%d',
             $this->configContainer->getWebPath(),
             DeleteAction::REQUEST_KEY,
-            $this->object->getId()
+            $this->object->getId(),
+            $parent_id
         );
     }
 
