@@ -73,7 +73,7 @@ final readonly class DeleteAction implements ApplicationActionInterface
                     $folderId
                 ),
                 sprintf(
-                    '%s/folders.php?action=show&folder_id=%s',
+                    '%s/folders.php?action=show&folder=%s',
                     $webPath,
                     $folderId
                 ),
