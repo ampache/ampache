@@ -116,7 +116,7 @@ final class FolderQuery implements QueryInterface
             case 'int_id':
                 $filter_sql = ($value === -1)
                     ? " `folder`.`folder_id` IS NULL AND "
-                    : " `folder`.`int_id` = " . (int)$value . " AND ";
+                    : " `folder`.`folder_id` = " . (int)$value . " AND ";
                 break;
             case 'equal':
             case 'exact_match':
