@@ -76,6 +76,17 @@ interface UiInterface
     ): void;
 
     /**
+     * shows a confirmation of an action
+     */
+    public function showConfirmationWithReturn(
+        string $title,
+        string $text,
+        string $return_url,
+        string $cancel_url,
+        ?string $form_name = 'confirmation',
+        ?bool $visible = true,
+    ): void;
+    /**
      * shows a simple continue button after an action
      */
     public function showContinue(
