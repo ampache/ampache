@@ -755,6 +755,33 @@ class Ui implements UiInterface
     }
 
     /**
+     * shows a confirmation of an action
+     */
+    public function showConfirmationWithReturn(
+        string $title,
+        string $text,
+        string $return_url,
+        ?string $cancel_url = null,
+        ?string $form_name = 'confirmation',
+        ?bool $visible = true,
+    ): void {
+        $webPath = $this->configContainer->getWebPath();
+        $return  = substr_count($return_url, $webPath) !== 0 ? $return_url : sprintf('%s/%s', $webPath, $return_url);
+        $cancel  = substr_count($cancel_url, $webPath) !== 0 ? $cancel_url : sprintf('%s/%s', $webPath, $cancel_url);
+
+        $this->show(
+            'show_confirmation_with_return.inc.php',
+            [
+                'title' => $title,
+                'text' => $text,
+                'form_name' => $form_name,
+                'return' => $return,
+                'cancel' => $cancel,
+            ]
+        );
+    }
+
+    /**
      * shows a simple continue button after an action
      */
     public function showContinue(
