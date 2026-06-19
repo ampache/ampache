@@ -82,11 +82,10 @@ if ($directplay_limit > 0) {
 <?php
 $browse = new Browse();
 $browse->set_type('folder');
-$browse->set_skip_catalog_check(true);
+$browse->set_use_pages(true);
 $browse->set_simple_browse(true);
+$browse->set_skip_catalog_check($folder->id !== -1);
 $browse->add_supplemental_object('folder', $folder);
-$browse->set_limit(0);
-$browse->set_offset(0);
 $browse->set_sort('name', 'ASC', false);
 $browse->set_filter('int_id', $folder->id);
 $browse->show_objects();
