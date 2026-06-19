@@ -50,7 +50,7 @@ final class DbaDatabaseConnection implements DatabaseConnectionInterface
     public function fetchOne(
         string $sql,
         array $params = [],
-    ) {
+    ): mixed {
         return $this->query($sql, $params)->fetchColumn();
     }
 
