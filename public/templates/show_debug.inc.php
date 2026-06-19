@@ -23,6 +23,8 @@ declare(strict_types=0);
  *
  */
 
+// show_debug.inc.php
+
 use Ampache\Config\AmpConfig;
 use Ampache\Module\System\AutoUpdate;
 use Ampache\Module\Util\EnvironmentInterface;

@@ -23,6 +23,8 @@ declare(strict_types=0);
  *
  */
 
+// show_manage_shoutbox.inc.php
+
 use Ampache\Config\AmpConfig;
 use Ampache\Module\Shout\ShoutObjectLoaderInterface;
 use Ampache\Module\Util\Ui;

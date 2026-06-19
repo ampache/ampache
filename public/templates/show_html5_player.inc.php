@@ -17,6 +17,8 @@ global $dic;
 $environment = $dic->get(EnvironmentInterface::class);
 
 /** @var bool $isVideo  */
+
+// show_html5_player.inc.php
 /** @var bool $isDemocratic */
 /** @var bool $isRandom */
 /** @var bool $isShare */

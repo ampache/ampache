@@ -1,5 +1,8 @@
 <?php
 /** @var string $web_path */
+
+// install_footer.inc.php
+
 ?>
         </div>
     <!-- /container -->

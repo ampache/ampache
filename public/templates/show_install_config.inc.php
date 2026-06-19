@@ -23,6 +23,8 @@ declare(strict_types=0);
  *
  */
 
+// show_install_config.inc.php
+
 // Try to guess the web path
 use Ampache\Module\Application\Installation\DefaultAction;
 use Ampache\Module\System\AmpError;

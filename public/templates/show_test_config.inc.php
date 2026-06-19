@@ -23,6 +23,8 @@ declare(strict_types=0);
  *
  */
 
+// show_test_config.inc.php
+
 use Ampache\Module\Util\Ui;
 
 ?>

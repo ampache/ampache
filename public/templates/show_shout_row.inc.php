@@ -23,6 +23,8 @@ declare(strict_types=0);
  *
  */
 
+// show_shout_row.inc.php
+
 use Ampache\Module\Util\Ui;
 use Ampache\Repository\Model\Shoutbox;
 use Ampache\Repository\Model\User;

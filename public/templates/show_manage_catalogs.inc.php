@@ -23,6 +23,8 @@ declare(strict_types=0);
  *
  */
 
+// show_manage_catalogs.inc.php
+
 use Ampache\Config\AmpConfig;
 
 $web_path = AmpConfig::get_web_path();

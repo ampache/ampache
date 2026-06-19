@@ -23,6 +23,8 @@ declare(strict_types=0);
  *
  */
 
+// show_edit_album_row.inc.php
+
 use Ampache\Module\Api\Ajax;
 use Ampache\Module\Authorization\Access;
 use Ampache\Module\Authorization\AccessLevelEnum;

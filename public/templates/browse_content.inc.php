@@ -23,6 +23,8 @@ declare(strict_types=0);
  *
  */
 
+// browse_content.inc.php
+
 use Ampache\Module\Api\Ajax;
 
 /** @var string $type */ ?>

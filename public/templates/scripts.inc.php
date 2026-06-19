@@ -23,6 +23,8 @@ declare(strict_types=0);
  *
  */
 
+// scripts.inc.php
+
 use Ampache\Config\AmpConfig;
 use Ampache\Module\Util\EnvironmentInterface;
 use Ampache\Module\Util\Ui;
