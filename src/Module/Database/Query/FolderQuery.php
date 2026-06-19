@@ -67,7 +67,7 @@ final class FolderQuery implements QueryInterface
     protected string $select = "`folder`.`id`";
 
     protected string $base = "SELECT %%SELECT%% FROM (
-            SELECT CONCAT(`object_type`, '-', `object_id`) AS `id`, `object_id` AS `int_id`, `name`, `object_type`, `folder_id` FROM `folder_map`
+            SELECT CONCAT(`object_type`, '-', `object_id`) AS `id`, `object_id` AS `int_id`, `name`, `object_type`, `folder_id`, IF(`object_type`='folder', 1, 0) AS `is_folder` FROM `folder_map`
         ) AS `folder` ";
 
     /**
@@ -175,7 +175,7 @@ final class FolderQuery implements QueryInterface
         switch ($field) {
             case 'name':
             case 'title':
-                $sql = "`folder`.`name`, `folder`.`id`";
+                $sql = "`is_folder` DESC, `folder`.`name`, `folder`.`id`";
                 break;
             case 'date':
             case 'id':
