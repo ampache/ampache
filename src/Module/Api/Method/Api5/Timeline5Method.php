@@ -76,21 +76,22 @@ final class Timeline5Method
 
         if (!empty($username)) {
             $user = User::get_from_username($username);
-            if ($user instanceof User) {
-                if (Preference::get_by_user($user->id, 'allow_personal_info_recent')) {
-                    $results = self::getUseractivityRepository()->getActivities(
-                        $user->getId(),
-                        $limit,
-                        $since
-                    );
-                    ob_end_clean();
-                    switch ($input['api_format']) {
-                        case 'json':
-                            echo Json5_Data::timeline($results);
-                            break;
-                        default:
-                            echo Xml5_Data::timeline($results);
-                    }
+            if (
+                $user instanceof User &&
+                Preference::get_by_user($user->id, 'allow_personal_info_recent')
+            ) {
+                $results = self::getUseractivityRepository()->getActivities(
+                    $user->getId(),
+                    $limit,
+                    $since
+                );
+                ob_end_clean();
+                switch ($input['api_format']) {
+                    case 'json':
+                        echo Json5_Data::timeline($results);
+                        break;
+                    default:
+                        echo Xml5_Data::timeline($results);
                 }
             }
         }

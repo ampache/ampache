@@ -60,16 +60,17 @@ final class Timeline3Method
 
             if (!empty($username)) {
                 $user = User::get_from_username($username);
-                if ($user instanceof User) {
-                    if (Preference::get_by_user($user->id, 'allow_personal_info_recent')) {
-                        $results = self::getUseractivityRepository()->getActivities(
-                            $user->id,
-                            $limit,
-                            $since
-                        );
-                        ob_end_clean();
-                        echo Xml3_Data::timeline($results);
-                    }
+                if (
+                    $user instanceof User &&
+                    Preference::get_by_user($user->id, 'allow_personal_info_recent')
+                ) {
+                    $results = self::getUseractivityRepository()->getActivities(
+                        $user->id,
+                        $limit,
+                        $since
+                    );
+                    ob_end_clean();
+                    echo Xml3_Data::timeline($results);
                 }
             } else {
                 debug_event(self::class, 'Username required on timeline function call.', 1);

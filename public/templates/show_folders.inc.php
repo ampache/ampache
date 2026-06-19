@@ -124,10 +124,8 @@ foreach ($object_ids as $object) {
         continue;
     }
 
-    if ($directplay_limit > 0) {
-        if (property_exists($libitem, 'object_count')) {
-            $show_playlist_add = $access25 && ($libitem->object_count > 0 && $libitem->object_count <= $directplay_limit);
-        }
+    if ($directplay_limit > 0 && property_exists($libitem, 'object_count')) {
+        $show_playlist_add = $access25 && ($libitem->object_count > 0 && $libitem->object_count <= $directplay_limit);
     } ?>
             <tr id="<?php echo $object_type . '_' . $libitem->getId(); ?>" class="libitem_menu">
     <?php $content = $talFactory->createTalView()
