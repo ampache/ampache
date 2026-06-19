@@ -64,6 +64,8 @@ class Folder extends database_object implements
 
     public bool $playable = false;
 
+    public int $weight = 0;
+
     public ?string $path = null;
 
     public ?string $path_name = null;
