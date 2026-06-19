@@ -55,7 +55,7 @@ class AmpacheMpd extends localplay_controller
 
     private int $_add_count = 0;
 
-    private $_mpd;
+    private ?mpd $_mpd = null;
 
     /**
      * get_description
