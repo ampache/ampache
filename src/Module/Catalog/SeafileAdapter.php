@@ -31,17 +31,15 @@ use Seafile\Client\Http\Client;
 use Seafile\Client\Resource\Directory;
 use Seafile\Client\Resource\File;
 use Seafile\Client\Resource\Library;
+use Seafile\Client\Type\DirectoryItem;
 
 class SeafileAdapter
 {
     /**
      * request API key from Seafile Server based on username and password
-     * @param string $server_uri
-     * @param string $username
-     * @param string $password
      * @throws Exception
      */
-    public static function request_api_key($server_uri, $username, $password)
+    public static function request_api_key(string $server_uri, string $username, string $password): string
     {
         $options = [
             'http' => [
@@ -62,11 +60,13 @@ class SeafileAdapter
         return $token->token;
     }
 
-    private $client;
+    /** @var array{Libraries: Library, Directories: Directory, Files: File, Client: Client}|null  */
+    private array|null $client = null;
 
-    private $library;
+    private Library|null $library = null;
 
-    private $directory_cache = [];
+    /** @var array<string, DirectoryItem[]> */
+    private array $directory_cache = [];
 
     /**
      * SeafileAdapter constructor.
@@ -128,6 +128,7 @@ class SeafileAdapter
         ];
 
         // Get Library
+        /** @var Library[] $libraries */
         $libraries = $this->throttle_check(fn () => $this->client['Libraries']->getAll());
 
         $matches = array_values(array_filter($libraries, fn ($library) => $library->name == $this->library_name));
@@ -144,14 +145,14 @@ class SeafileAdapter
             return false;
         }
 
-        $this->library = $matches[0];
+        $this->library = ($matches[0] instanceof Library) ? $matches[0] : null;
 
         return true;
     }
 
     // run a function that hits the Seafile API, but catch throttling errors and retry
 
-    private function throttle_check($func)
+    private function throttle_check(callable $func)
     {
         while (true) {
             try {
@@ -201,9 +202,9 @@ class SeafileAdapter
     }
 
     /**
-     * @return mixed|null
+     * @return DirectoryItem[]|null
      */
-    private function get_cached_directory($path)
+    private function get_cached_directory($path): ?array
     {
         if (array_key_exists((string) $path, $this->directory_cache)) {
             $directory = $this->directory_cache[$path];
@@ -216,6 +217,7 @@ class SeafileAdapter
         }
 
         try {
+            /** @var DirectoryItem[] $directory */
             $directory                    = $this->throttle_check(fn () => $this->client['Directories']->getAll($this->library, $path));
             $this->directory_cache[$path] = $directory;
 
@@ -262,10 +264,9 @@ class SeafileAdapter
     }
 
     /**
-     * @param string $name
-     * @return mixed|null
+     * @return DirectoryItem[]|null
      */
-    public function get_file($path, $name)
+    public function get_file(string $path, string $name): ?array
     {
         $directory = $this->get_cached_directory($path);
 

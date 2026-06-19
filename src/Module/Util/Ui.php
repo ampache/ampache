@@ -761,13 +761,13 @@ class Ui implements UiInterface
         string $title,
         string $text,
         string $return_url,
-        ?string $cancel_url = null,
+        string $cancel_url,
         ?string $form_name = 'confirmation',
         ?bool $visible = true,
     ): void {
         $webPath = $this->configContainer->getWebPath();
-        $return  = substr_count($return_url, $webPath) !== 0 ? $return_url : sprintf('%s/%s', $webPath, $return_url);
-        $cancel  = substr_count($cancel_url, $webPath) !== 0 ? $cancel_url : sprintf('%s/%s', $webPath, $cancel_url);
+        $return  = (substr_count($return_url, $webPath) !== 0) ? $return_url : sprintf('%s/%s', $webPath, $return_url);
+        $cancel  = (substr_count($cancel_url, $webPath) !== 0) ? $cancel_url : sprintf('%s/%s', $webPath, $cancel_url);
 
         $this->show(
             'show_confirmation_with_return.inc.php',

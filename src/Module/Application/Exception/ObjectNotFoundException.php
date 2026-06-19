@@ -38,6 +38,7 @@ final class ObjectNotFoundException extends ApplicationException
 
     public function __construct(private int|string $objectId = 0)
     {
+        parent::__construct($this->message);
     }
 
     public function getObjectId(): int|string

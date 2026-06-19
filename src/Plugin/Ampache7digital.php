@@ -118,7 +118,7 @@ class Ampache7digital extends AmpachePlugin implements PluginSongPreviewInterfac
     {
         if (str_contains($file, "7digital")) {
             $consumer = new OAuthConsumer($this->api_key, $this->secret);
-            $request  = OAuthRequest::from_consumer_and_token($consumer, null, 'GET', $file);
+            $request  = OAuthRequest::from_consumer_and_token($file, 'GET', $consumer);
             $request->sign_request(new OAuthSignatureMethod_HMAC_SHA1(), $consumer, null);
             $url = $request->to_url();
 

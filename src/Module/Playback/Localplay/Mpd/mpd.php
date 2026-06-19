@@ -874,19 +874,13 @@ class mpd
     }
 
     /**
-     * SeekTo
+     * SkipTo
      *
      * Skips directly to the <idx> song in the MPD playlist.
-     * @return bool|float|int|string
      */
-    public function SkipTo($idx)
+    public function SkipTo(int $idx): ?int
     {
         $this->_debug('SkipTo', 'start', 5);
-        if (!is_numeric($idx)) {
-            $this->_error('SkipTo', 'argument must be numeric: ' . $idx);
-
-            return false;
-        }
 
         $this->SendCommand(self::COMMAND_PLAY, $idx);
         $this->_debug('SkipTo', 'return: ' . $idx, 5);
@@ -902,12 +896,15 @@ class mpd
      * to locate. The <track> argument, if supplied, is the track number in
      * the playlist. If <track> is not specified, the current track is
      * assumed.
-     * @param int $track
-     * @return bool|float|int|string
      */
-    public function SeekTo($pos, $track = -1)
+    public function SeekTo(float|int|string $pos, int $track = -1): float|int|string|null
     {
         $this->_debug('SeekTo', 'start', 5);
+        if (!is_numeric($pos)) {
+            $this->_error('SeekTo', 'argument must be numeric: ' . $pos);
+
+            return null;
+        }
 
         if ($track == -1) {
             $track = $this->current_track_id;
@@ -1210,10 +1207,10 @@ class mpd
      *
      * Set error state
      */
-    private function _error(string $source, string $message, int $level = 1): void
+    private function _error(string $source, string $message): void
     {
         $this->err_str = sprintf('%s: %s', $source, $message);
-        $this->_debug($source, $message, $level);
+        $this->_debug($source, $message, 1);
     }
 
     /**

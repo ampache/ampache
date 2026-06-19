@@ -108,13 +108,9 @@ class OAuthRequest implements Stringable
 
     /**
      * pretty much a helper function to set up the request
-     * @param OAuthConsumer $consumer
-     * @param string|null $token
-     * @param string $http_method
-     * @param string $http_url
-     * @param array $parameters
+     * @param array<string, int|string>|null $parameters
      */
-    public static function from_consumer_and_token($consumer, $token, $http_method, $http_url, $parameters = null): OAuthRequest
+    public static function from_consumer_and_token(string $http_url, string $http_method, OAuthConsumer $consumer, ?OAuthToken $token = null, ?array $parameters = null): OAuthRequest
     {
         $parameters = $parameters ?: [];
         $defaults   = [
@@ -149,18 +145,17 @@ class OAuthRequest implements Stringable
     }
 
     /**
-     * @param string $name
-     * @return mixed|null
+     * @return string|string[]|null
      */
-    public function get_parameter($name)
+    public function get_parameter(string $name): string|array|null
     {
         return $this->parameters[$name] ?? null;
     }
 
     /**
-     * @return array
+     * @return array<string, string|string[]>
      */
-    public function get_parameters()
+    public function get_parameters(): array
     {
         return $this->parameters;
     }

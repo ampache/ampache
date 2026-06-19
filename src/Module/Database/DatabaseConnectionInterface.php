@@ -54,13 +54,11 @@ interface DatabaseConnectionInterface
      * Useful e.g. for counting-queries
      *
      * @param list<mixed> $params
-     *
-     * @return mixed Will return `false` on empty row
      */
     public function fetchOne(
         string $sql,
         array $params = [],
-    );
+    ): mixed;
 
     /**
      * Fetches a single whole row and returns it as an associative array
@@ -73,7 +71,7 @@ interface DatabaseConnectionInterface
     public function fetchRow(
         string $sql,
         array $params = [],
-    );
+    ): array|bool;
 
     /**
      * Returns the most recent inserted id
