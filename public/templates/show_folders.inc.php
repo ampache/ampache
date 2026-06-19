@@ -80,9 +80,9 @@ if ($browse->is_show_header()) {
                 <th class="<?php echo $cel_cover; ?> optional"><?php echo T_('Art'); ?></th>
                 <th class="<?php echo $cel_folder; ?> essential persist"><?php echo $folder_link; ?></th>
                 <th class="cel_add essential"></th>
-                <th class="cel_songs optional"></th>
+                <th class="cel_songs optional"><?php echo $items_text; ?></th>
 <?php if ($show_played_times) { ?>
-                <th class="<?php echo $cel_counter; ?> optional"></th>
+                <th class="<?php echo $cel_counter; ?> optional"><?php echo $count_text; ?></th>
 <?php } ?>
 <?php if ($show_ratings) {
     ++$thcount; ?>
