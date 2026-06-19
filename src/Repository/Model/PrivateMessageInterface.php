@@ -29,29 +29,29 @@ namespace Ampache\Repository\Model;
  */
 interface PrivateMessageInterface
 {
-    public function getId(): int;
-
-    public function isNew(): bool;
-
-    public function getSenderUserLink(): string;
-
-    public function getRecipientUserLink(): string;
-
     public function getCreationDate(): int;
 
     public function getCreationDateFormatted(): string;
 
+    public function getId(): int;
+
     public function getLinkFormatted(): string;
-
-    public function getSubjectFormatted(): string;
-
-    public function isRead(): bool;
-
-    public function getRecipientUserId(): int;
-
-    public function getSenderUserId(): int;
 
     public function getMessage(): string;
 
+    public function getRecipientUserId(): int;
+
+    public function getRecipientUserLink(): string;
+
+    public function getSenderUserId(): int;
+
+    public function getSenderUserLink(): string;
+
     public function getSubject(): string;
+
+    public function getSubjectFormatted(): string;
+
+    public function isNew(): bool;
+
+    public function isRead(): bool;
 }

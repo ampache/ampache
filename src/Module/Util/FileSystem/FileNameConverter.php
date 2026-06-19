@@ -75,6 +75,21 @@ final readonly class FileNameConverter implements FileNameConverterInterface
     }
 
     /**
+     * We have to have some special rules here
+     * This is run on every individual element of the search
+     * Before it is put together, this removes / and \ and also
+     * once I figure it out, it'll clean other stuff
+     */
+    private function charset_clean_name(string $string): string
+    {
+        /* First remove any / or \ chars */
+        $clean_string = (string)preg_replace('/[\/\\\]/', '-', $string);
+        $clean_string = str_replace(':', ' ', $clean_string);
+
+        return (string)preg_replace('/[\!\:\*]/', '_', $clean_string);
+    }
+
+    /**
      * This function calls its self recursively
      * and corrects all of the non-matching filenames
      * it looks at the i_am_crazy var and if not set prompts for change
@@ -274,20 +289,5 @@ final readonly class FileNameConverter implements FileNameConverterInterface
         $interactor->eol();
 
         return true;
-    }
-
-    /**
-     * We have to have some special rules here
-     * This is run on every individual element of the search
-     * Before it is put together, this removes / and \ and also
-     * once I figure it out, it'll clean other stuff
-     */
-    private function charset_clean_name(string $string): string
-    {
-        /* First remove any / or \ chars */
-        $clean_string = (string)preg_replace('/[\/\\\]/', '-', $string);
-        $clean_string = str_replace(':', ' ', $clean_string);
-
-        return (string)preg_replace('/[\!\:\*]/', '_', $clean_string);
     }
 }

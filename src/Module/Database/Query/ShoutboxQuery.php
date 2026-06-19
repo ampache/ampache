@@ -32,6 +32,9 @@ final class ShoutboxQuery implements QueryInterface
     public const array FILTERS = [
     ];
 
+    protected string $base   = "SELECT %%SELECT%% FROM `user_shout` ";
+    protected string $select = "`user_shout`.`id`";
+
     /** @var string[] $sorts */
     protected array $sorts = [
         'date',
@@ -39,20 +42,6 @@ final class ShoutboxQuery implements QueryInterface
         'sticky',
         'user',
     ];
-
-    protected string $select = "`user_shout`.`id`";
-
-    protected string $base = "SELECT %%SELECT%% FROM `user_shout` ";
-
-    /**
-     * get_select
-     *
-     * This method returns the columns a query will user for SELECT
-     */
-    public function get_select(): string
-    {
-        return $this->select;
-    }
 
     /**
      * get_base_sql
@@ -62,6 +51,16 @@ final class ShoutboxQuery implements QueryInterface
     public function get_base_sql(): string
     {
         return $this->base;
+    }
+
+    /**
+     * get_select
+     *
+     * This method returns the columns a query will user for SELECT
+     */
+    public function get_select(): string
+    {
+        return $this->select;
     }
 
     /**

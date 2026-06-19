@@ -31,16 +31,6 @@ use Override;
 
 final class ConvertFileNamesCommand extends Command
 {
-    #[Override]
-    protected function defaults(): self
-    {
-        $this->option('-h, --help', T_('Help'))->on($this->showHelp(...));
-
-        $this->onExit(static fn ($exitCode = 0) => exit($exitCode));
-
-        return $this;
-    }
-
     public function __construct(
         private readonly FileNameConverterInterface $fileNameCorrector,
     ) {
@@ -75,5 +65,15 @@ final class ConvertFileNamesCommand extends Command
             $values['charset'],
             $values['fire']
         );
+    }
+
+    #[Override]
+    protected function defaults(): self
+    {
+        $this->option('-h, --help', T_('Help'))->on($this->showHelp(...));
+
+        $this->onExit(static fn ($exitCode = 0) => exit($exitCode));
+
+        return $this;
     }
 }

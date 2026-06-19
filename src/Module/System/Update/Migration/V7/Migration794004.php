@@ -34,8 +34,7 @@ use Ampache\Repository\Model\Catalog;
 final class Migration794004 extends AbstractMigration
 {
     protected array $changelog = ['Fix up Orphan Album Disk objects to be unique and update from tags'];
-
-    protected bool $warning = true;
+    protected bool $warning    = true;
 
     public function migrate(): void
     {

@@ -33,17 +33,7 @@ use PHPUnit\Framework\TestCase;
 class DeletedPodcastEpisodeRepositoryTest extends TestCase
 {
     private DatabaseConnectionInterface&MockObject $connection;
-
     private DeletedPodcastEpisodeRepository $subject;
-
-    protected function setUp(): void
-    {
-        $this->connection = $this->createMock(DatabaseConnectionInterface::class);
-
-        $this->subject = new DeletedPodcastEpisodeRepository(
-            $this->connection,
-        );
-    }
 
     public function testFindAllReturnsData(): void
     {
@@ -95,6 +85,15 @@ class DeletedPodcastEpisodeRepositoryTest extends TestCase
                 'podcast' => $podcast,
             ]],
             iterator_to_array($this->subject->findAll())
+        );
+    }
+
+    protected function setUp(): void
+    {
+        $this->connection = $this->createMock(DatabaseConnectionInterface::class);
+
+        $this->subject = new DeletedPodcastEpisodeRepository(
+            $this->connection,
         );
     }
 }

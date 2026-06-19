@@ -34,66 +34,40 @@ use Ampache\Repository\Model\User;
 
 final class XmlOutput implements ApiOutputInterface
 {
-    public function setOffset6(int|string $offset): void
-    {
-        Xml6_Data::set_offset($offset);
-    }
-
-    public function setOffset(int|string $offset): void
-    {
-        Xml8_Data::set_offset($offset);
-    }
-
-    public function setLimit6(int|string $limit): void
-    {
-        Xml6_Data::set_limit($limit);
-    }
-
-    public function setLimit(int|string $limit): void
-    {
-        Xml8_Data::set_limit($limit);
-    }
-
-    public function setCount6(int|string $count): void
-    {
-        Xml6_Data::set_count($count);
-    }
-
-    public function setCount(int|string $count): void
-    {
-        Xml8_Data::set_count($count);
+    /**
+     * At the moment, this method just acts as a proxy
+     *
+     * @param array<int|string> $albums
+     * @param string[] $include
+     *
+     */
+    public function albums(
+        array $albums,
+        array $include,
+        User $user,
+        string $auth,
+        bool $encode = true,
+        bool $asObject = true,
+    ): string {
+        return Xml8_Data::albums($albums, $include, $user, $auth, $encode);
     }
 
     /**
-     * @param array<int|string> $result
+     * At the moment, this method just acts as a proxy
+     *
+     * @param array<int|string> $albums
+     * @param string[] $include
+     *
      */
-    public function podcastEpisodes6(array $result, User $user, string $auth): string
-    {
-        return Xml6_Data::podcast_episodes($result, $user, $auth);
-    }
-
-    /**
-     * @param array<int|string> $result
-     */
-    public function podcastEpisodes(array $result, User $user, string $auth): string
-    {
-        return Xml8_Data::podcast_episodes($result, $user, $auth);
-    }
-
-    /**
-     * Generate an empty api result
-     */
-    public function writeEmpty6(string $emptyType): string
-    {
-        return Xml6_Data::empty();
-    }
-
-    /**
-     * Generate an empty api result
-     */
-    public function writeEmpty(string $emptyType): string
-    {
-        return Xml8_Data::empty();
+    public function albums6(
+        array $albums,
+        array $include,
+        User $user,
+        string $auth,
+        bool $encode = true,
+        bool $asObject = true,
+    ): string {
+        return Xml6_Data::albums($albums, $include, $user, $auth, $encode);
     }
 
     /**
@@ -158,39 +132,61 @@ final class XmlOutput implements ApiOutputInterface
     }
 
     /**
-     * At the moment, this method just acts as a proxy
-     *
-     * @param array<int|string> $albums
-     * @param string[] $include
-     *
+     * @param array<int|string> $result
      */
-    public function albums6(
-        array $albums,
-        array $include,
-        User $user,
-        string $auth,
-        bool $encode = true,
-        bool $asObject = true,
-    ): string {
-        return Xml6_Data::albums($albums, $include, $user, $auth, $encode);
+    public function podcastEpisodes(array $result, User $user, string $auth): string
+    {
+        return Xml8_Data::podcast_episodes($result, $user, $auth);
     }
 
     /**
-     * At the moment, this method just acts as a proxy
-     *
-     * @param array<int|string> $albums
-     * @param string[] $include
-     *
+     * @param array<int|string> $result
      */
-    public function albums(
-        array $albums,
-        array $include,
-        User $user,
-        string $auth,
-        bool $encode = true,
-        bool $asObject = true,
-    ): string {
-        return Xml8_Data::albums($albums, $include, $user, $auth, $encode);
+    public function podcastEpisodes6(array $result, User $user, string $auth): string
+    {
+        return Xml6_Data::podcast_episodes($result, $user, $auth);
+    }
+
+    public function setCount(int|string $count): void
+    {
+        Xml8_Data::set_count($count);
+    }
+
+    public function setCount6(int|string $count): void
+    {
+        Xml6_Data::set_count($count);
+    }
+
+    public function setLimit(int|string $limit): void
+    {
+        Xml8_Data::set_limit($limit);
+    }
+
+    public function setLimit6(int|string $limit): void
+    {
+        Xml6_Data::set_limit($limit);
+    }
+
+    public function setOffset(int|string $offset): void
+    {
+        Xml8_Data::set_offset($offset);
+    }
+
+    public function setOffset6(int|string $offset): void
+    {
+        Xml6_Data::set_offset($offset);
+    }
+
+    /**
+     * This generates a standard XML Success message
+     * nothing fancy here...
+     *
+     * @param string $string success message
+     * @param array<string, string> $return_data
+     */
+    public function success(string $string, array $return_data = []): string
+    {
+        return Xml8_Data::success($string, $return_data);
     }
 
     /**
@@ -206,14 +202,18 @@ final class XmlOutput implements ApiOutputInterface
     }
 
     /**
-     * This generates a standard XML Success message
-     * nothing fancy here...
-     *
-     * @param string $string success message
-     * @param array<string, string> $return_data
+     * Generate an empty api result
      */
-    public function success(string $string, array $return_data = []): string
+    public function writeEmpty(string $emptyType): string
     {
-        return Xml8_Data::success($string, $return_data);
+        return Xml8_Data::empty();
+    }
+
+    /**
+     * Generate an empty api result
+     */
+    public function writeEmpty6(string $emptyType): string
+    {
+        return Xml6_Data::empty();
     }
 }

@@ -41,13 +41,19 @@ use Override;
 class AmpacheRatingMatch extends AmpachePlugin implements PluginSaveMediaplayInterface
 {
     #[Override]
-    public string $name = 'RatingMatch';
-
-    #[Override]
     public string $categories = 'save_rating';
 
     #[Override]
     public string $description = 'Raise the album and artist rating to match the highest song rating';
+
+    #[Override]
+    public string $max_ampache = '999999';
+
+    #[Override]
+    public string $min_ampache = '360003';
+
+    #[Override]
+    public string $name = 'RatingMatch';
 
     #[Override]
     public string $url = '';
@@ -55,18 +61,13 @@ class AmpacheRatingMatch extends AmpachePlugin implements PluginSaveMediaplayInt
     #[Override]
     public string $version = '000004';
 
-    #[Override]
-    public string $min_ampache = '360003';
-
-    #[Override]
-    public string $max_ampache = '999999';
-
-    // These are internal settings used by this class, run this->load to fill them out
-    private int $min_stars;
+    /** @var string[] $flag_rule */
+    private array $flag_rule = [];
 
     private bool $match_flags;
 
-    private User $user;
+    // These are internal settings used by this class, run this->load to fill them out
+    private int $min_stars;
 
     /** @var string[] $star1_rule */
     private array $star1_rule = [];
@@ -83,9 +84,7 @@ class AmpacheRatingMatch extends AmpachePlugin implements PluginSaveMediaplayInt
     /** @var string[] $star5_rule */
     private array $star5_rule = [];
 
-    /** @var string[] $flag_rule */
-    private array $flag_rule = [];
-
+    private User $user;
     private bool $write_tags;
 
     /**
@@ -138,50 +137,135 @@ class AmpacheRatingMatch extends AmpachePlugin implements PluginSaveMediaplayInt
     }
 
     /**
-     * uninstall
-     * Removes our preferences from the database returning it to its original form
+     * load
+     * This loads up the data we need into this object, this stuff comes from the preferences.
      */
-    public function uninstall(): bool
+    public function load(User $user): bool
     {
-        return (
-            Preference::delete('ratingmatch_stars') &&
-            Preference::delete('ratingmatch_flags') &&
-            Preference::delete('ratingmatch_star1_rule') &&
-            Preference::delete('ratingmatch_star2_rule') &&
-            Preference::delete('ratingmatch_star3_rule') &&
-            Preference::delete('ratingmatch_star4_rule') &&
-            Preference::delete('ratingmatch_star5_rule') &&
-            Preference::delete('ratingmatch_flag_rule') &&
-            Preference::delete('ratingmatch_write_tags')
-        );
+        $user->set_preferences();
+        $data              = $user->prefs;
+        $this->user        = $user;
+        $this->min_stars   = (int) $data['ratingmatch_stars'];
+        $this->match_flags = (bool) $data['ratingmatch_flags'];
+        $this->star1_rule  = (isset($data['ratingmatch_star1_rule'])) ? explode(',', (string) $data['ratingmatch_star1_rule']) : [];
+        $this->star2_rule  = (isset($data['ratingmatch_star2_rule'])) ? explode(',', (string) $data['ratingmatch_star2_rule']) : [];
+        $this->star3_rule  = (isset($data['ratingmatch_star3_rule'])) ? explode(',', (string) $data['ratingmatch_star3_rule']) : [];
+        $this->star4_rule  = (isset($data['ratingmatch_star4_rule'])) ? explode(',', (string) $data['ratingmatch_star4_rule']) : [];
+        $this->star5_rule  = (isset($data['ratingmatch_star5_rule'])) ? explode(',', (string) $data['ratingmatch_star5_rule']) : [];
+        $this->flag_rule   = (isset($data['ratingmatch_flag_rule'])) ? explode(',', (string) $data['ratingmatch_flag_rule']) : [];
+        $this->write_tags  = ($data['ratingmatch_write_tags'] == '1');
+
+        return true;
     }
 
     /**
-     * upgrade
-     * This is a recommended plugin function
+     * rule_process
+     * process the rule array and rate/flag depending on the outcome
+     * @param string[] $rule_array
      */
-    public function upgrade(): bool
+    public function rule_process(array $rule_array, int $play_count, int $skip_count): bool
     {
-        $from_version = Plugin::get_plugin_version($this->name);
-        if ($from_version === 0) {
+        switch (count($rule_array)) {
+            case 1:
+                $play = (int) $rule_array[0];
+                // play count only
+                if (
+                    $play > 0 &&
+                    $play_count >= $play
+                ) {
+                    return true;
+                }
+
+                break;
+            case 2:
+                $play = (int) $rule_array[0];
+                $skip = (int) $rule_array[1];
+                // play rule and no skip
+                if (
+                    (
+                        $play > 0 &&
+                        $play_count >= $play &&
+                        $skip === 0
+                    ) ||
+                    (
+                        $skip > 0 &&
+                        $skip_count >= $skip &&
+                        $play === 0
+                    ) ||
+                    (
+                        $play > 0 &&
+                        $play_count >= $play &&
+                        $skip > 0 &&
+                        $skip_count >= $skip
+                    )
+                ) {
+                    return true;
+                }
+
+                break;
+        }
+
+        return false;
+    }
+
+    /**
+     * save_mediaplay
+     * This takes care of queueing and then submitting the tracks.
+     */
+    public function save_mediaplay(Song $song): bool
+    {
+        // Only support songs
+        if ($song::class !== Song::class) {
             return false;
         }
 
-        if ($from_version < 2) {
-            Preference::insert('ratingmatch_flags', T_('When you love a track, flag the album and artist'), 0, AccessLevelEnum::USER->value, 'boolean', 'plugins', $this->name);
+        // Don't double rate something after it's already been rated before
+        $rating = new Rating($song->id, 'song');
+        if (($rating->get_user_rating() ?? 0) > 0) {
+            return false;
         }
 
-        if ($from_version < 3) {
-            Preference::insert('ratingmatch_star1_rule', T_('Match rule for 1 Star ($play,$skip)'), '', AccessLevelEnum::USER->value, 'string', 'plugins', $this->name);
-            Preference::insert('ratingmatch_star2_rule', T_('Match rule for 2 Stars'), '', AccessLevelEnum::USER->value, 'string', 'plugins', $this->name);
-            Preference::insert('ratingmatch_star3_rule', T_('Match rule for 3 Stars'), '', AccessLevelEnum::USER->value, 'string', 'plugins', $this->name);
-            Preference::insert('ratingmatch_star4_rule', T_('Match rule for 4 Stars'), '', AccessLevelEnum::USER->value, 'string', 'plugins', $this->name);
-            Preference::insert('ratingmatch_star5_rule', T_('Match rule for 5 Stars'), '', AccessLevelEnum::USER->value, 'string', 'plugins', $this->name);
-            Preference::insert('ratingmatch_flag_rule', T_('Match rule for Flags'), '', AccessLevelEnum::USER->value, 'string', 'plugins', $this->name);
+        $sql = "SELECT COUNT(*) AS `counting` FROM `object_count` WHERE `object_type` = 'song' AND `count_type` = ? AND `object_id` = ? AND `user` = ?;";
+
+        // get the plays for your user
+        $db_results  = Dba::read($sql, ['stream', $song->id, $this->user->id]);
+        $play_result = Dba::fetch_assoc($db_results);
+        $play_count  = (int) $play_result['counting'];
+
+        // get the skips for your user
+        $db_results  = Dba::read($sql, ['skip', $song->id, $this->user->id]);
+        $skip_result = Dba::fetch_assoc($db_results);
+        $skip_count  = (int) $skip_result['counting'];
+
+        if ($play_count === 0 && $skip_count === 0) {
+            return false;
         }
 
-        if ($from_version < 4) {
-            Preference::insert('ratingmatch_write_tags', T_('Save ratings to file tags when changed'), '0', AccessLevelEnum::USER->value, 'boolean', 'plugins', $this->name);
+        if ($this->star1_rule !== [] && $this->rule_process($this->star1_rule, $play_count, $skip_count)) {
+            $rating->set_rating(1, $this->user->id, false);
+        }
+
+        if ($this->star2_rule !== [] && $this->rule_process($this->star2_rule, $play_count, $skip_count)) {
+            $rating->set_rating(2, $this->user->id, false);
+        }
+
+        if ($this->star3_rule !== [] && $this->rule_process($this->star3_rule, $play_count, $skip_count)) {
+            $rating->set_rating(3, $this->user->id, false);
+        }
+
+        if ($this->star4_rule !== [] && $this->rule_process($this->star4_rule, $play_count, $skip_count)) {
+            $rating->set_rating(4, $this->user->id, false);
+        }
+
+        if ($this->star5_rule !== [] && $this->rule_process($this->star5_rule, $play_count, $skip_count)) {
+            $rating->set_rating(5, $this->user->id, false);
+        }
+
+        if ($this->flag_rule !== [] && $this->rule_process($this->flag_rule, $play_count, $skip_count)) {
+            $flag = new Userflag($song->id, 'song');
+            if (!$flag->get_flag($this->user->id)) {
+                $flag->set_flag(true, $this->user->id);
+            }
         }
 
         return true;
@@ -287,136 +371,51 @@ class AmpacheRatingMatch extends AmpachePlugin implements PluginSaveMediaplayInt
     }
 
     /**
-     * save_mediaplay
-     * This takes care of queueing and then submitting the tracks.
+     * uninstall
+     * Removes our preferences from the database returning it to its original form
      */
-    public function save_mediaplay(Song $song): bool
+    public function uninstall(): bool
     {
-        // Only support songs
-        if ($song::class !== Song::class) {
-            return false;
-        }
-
-        // Don't double rate something after it's already been rated before
-        $rating = new Rating($song->id, 'song');
-        if (($rating->get_user_rating() ?? 0) > 0) {
-            return false;
-        }
-
-        $sql = "SELECT COUNT(*) AS `counting` FROM `object_count` WHERE `object_type` = 'song' AND `count_type` = ? AND `object_id` = ? AND `user` = ?;";
-
-        // get the plays for your user
-        $db_results  = Dba::read($sql, ['stream', $song->id, $this->user->id]);
-        $play_result = Dba::fetch_assoc($db_results);
-        $play_count  = (int) $play_result['counting'];
-
-        // get the skips for your user
-        $db_results  = Dba::read($sql, ['skip', $song->id, $this->user->id]);
-        $skip_result = Dba::fetch_assoc($db_results);
-        $skip_count  = (int) $skip_result['counting'];
-
-        if ($play_count === 0 && $skip_count === 0) {
-            return false;
-        }
-
-        if ($this->star1_rule !== [] && $this->rule_process($this->star1_rule, $play_count, $skip_count)) {
-            $rating->set_rating(1, $this->user->id, false);
-        }
-
-        if ($this->star2_rule !== [] && $this->rule_process($this->star2_rule, $play_count, $skip_count)) {
-            $rating->set_rating(2, $this->user->id, false);
-        }
-
-        if ($this->star3_rule !== [] && $this->rule_process($this->star3_rule, $play_count, $skip_count)) {
-            $rating->set_rating(3, $this->user->id, false);
-        }
-
-        if ($this->star4_rule !== [] && $this->rule_process($this->star4_rule, $play_count, $skip_count)) {
-            $rating->set_rating(4, $this->user->id, false);
-        }
-
-        if ($this->star5_rule !== [] && $this->rule_process($this->star5_rule, $play_count, $skip_count)) {
-            $rating->set_rating(5, $this->user->id, false);
-        }
-
-        if ($this->flag_rule !== [] && $this->rule_process($this->flag_rule, $play_count, $skip_count)) {
-            $flag = new Userflag($song->id, 'song');
-            if (!$flag->get_flag($this->user->id)) {
-                $flag->set_flag(true, $this->user->id);
-            }
-        }
-
-        return true;
+        return (
+            Preference::delete('ratingmatch_stars') &&
+            Preference::delete('ratingmatch_flags') &&
+            Preference::delete('ratingmatch_star1_rule') &&
+            Preference::delete('ratingmatch_star2_rule') &&
+            Preference::delete('ratingmatch_star3_rule') &&
+            Preference::delete('ratingmatch_star4_rule') &&
+            Preference::delete('ratingmatch_star5_rule') &&
+            Preference::delete('ratingmatch_flag_rule') &&
+            Preference::delete('ratingmatch_write_tags')
+        );
     }
 
     /**
-     * rule_process
-     * process the rule array and rate/flag depending on the outcome
-     * @param string[] $rule_array
+     * upgrade
+     * This is a recommended plugin function
      */
-    public function rule_process(array $rule_array, int $play_count, int $skip_count): bool
+    public function upgrade(): bool
     {
-        switch (count($rule_array)) {
-            case 1:
-                $play = (int) $rule_array[0];
-                // play count only
-                if (
-                    $play > 0 &&
-                    $play_count >= $play
-                ) {
-                    return true;
-                }
-
-                break;
-            case 2:
-                $play = (int) $rule_array[0];
-                $skip = (int) $rule_array[1];
-                // play rule and no skip
-                if (
-                    (
-                        $play > 0 &&
-                        $play_count >= $play &&
-                        $skip === 0
-                    ) ||
-                    (
-                        $skip > 0 &&
-                        $skip_count >= $skip &&
-                        $play === 0
-                    ) ||
-                    (
-                        $play > 0 &&
-                        $play_count >= $play &&
-                        $skip > 0 &&
-                        $skip_count >= $skip
-                    )
-                ) {
-                    return true;
-                }
-
-                break;
+        $from_version = Plugin::get_plugin_version($this->name);
+        if ($from_version === 0) {
+            return false;
         }
 
-        return false;
-    }
+        if ($from_version < 2) {
+            Preference::insert('ratingmatch_flags', T_('When you love a track, flag the album and artist'), 0, AccessLevelEnum::USER->value, 'boolean', 'plugins', $this->name);
+        }
 
-    /**
-     * load
-     * This loads up the data we need into this object, this stuff comes from the preferences.
-     */
-    public function load(User $user): bool
-    {
-        $user->set_preferences();
-        $data              = $user->prefs;
-        $this->user        = $user;
-        $this->min_stars   = (int) $data['ratingmatch_stars'];
-        $this->match_flags = (bool) $data['ratingmatch_flags'];
-        $this->star1_rule  = (isset($data['ratingmatch_star1_rule'])) ? explode(',', (string) $data['ratingmatch_star1_rule']) : [];
-        $this->star2_rule  = (isset($data['ratingmatch_star2_rule'])) ? explode(',', (string) $data['ratingmatch_star2_rule']) : [];
-        $this->star3_rule  = (isset($data['ratingmatch_star3_rule'])) ? explode(',', (string) $data['ratingmatch_star3_rule']) : [];
-        $this->star4_rule  = (isset($data['ratingmatch_star4_rule'])) ? explode(',', (string) $data['ratingmatch_star4_rule']) : [];
-        $this->star5_rule  = (isset($data['ratingmatch_star5_rule'])) ? explode(',', (string) $data['ratingmatch_star5_rule']) : [];
-        $this->flag_rule   = (isset($data['ratingmatch_flag_rule'])) ? explode(',', (string) $data['ratingmatch_flag_rule']) : [];
-        $this->write_tags  = ($data['ratingmatch_write_tags'] == '1');
+        if ($from_version < 3) {
+            Preference::insert('ratingmatch_star1_rule', T_('Match rule for 1 Star ($play,$skip)'), '', AccessLevelEnum::USER->value, 'string', 'plugins', $this->name);
+            Preference::insert('ratingmatch_star2_rule', T_('Match rule for 2 Stars'), '', AccessLevelEnum::USER->value, 'string', 'plugins', $this->name);
+            Preference::insert('ratingmatch_star3_rule', T_('Match rule for 3 Stars'), '', AccessLevelEnum::USER->value, 'string', 'plugins', $this->name);
+            Preference::insert('ratingmatch_star4_rule', T_('Match rule for 4 Stars'), '', AccessLevelEnum::USER->value, 'string', 'plugins', $this->name);
+            Preference::insert('ratingmatch_star5_rule', T_('Match rule for 5 Stars'), '', AccessLevelEnum::USER->value, 'string', 'plugins', $this->name);
+            Preference::insert('ratingmatch_flag_rule', T_('Match rule for Flags'), '', AccessLevelEnum::USER->value, 'string', 'plugins', $this->name);
+        }
+
+        if ($from_version < 4) {
+            Preference::insert('ratingmatch_write_tags', T_('Save ratings to file tags when changed'), '0', AccessLevelEnum::USER->value, 'boolean', 'plugins', $this->name);
+        }
 
         return true;
     }

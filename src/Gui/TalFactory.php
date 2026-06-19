@@ -43,6 +43,11 @@ final readonly class TalFactory implements TalFactoryInterface
         return new PHPTAL();
     }
 
+    public function createTalTranslationService(): TranslationServiceInterface
+    {
+        return new TalTranslationService();
+    }
+
     public function createTalView(): TalViewInterface
     {
         return new TalView(
@@ -50,10 +55,5 @@ final readonly class TalFactory implements TalFactoryInterface
             $this->configContainer,
             $this->guiFactory
         );
-    }
-
-    public function createTalTranslationService(): TranslationServiceInterface
-    {
-        return new TalTranslationService();
     }
 }

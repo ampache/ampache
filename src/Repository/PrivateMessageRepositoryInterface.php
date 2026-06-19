@@ -31,27 +31,9 @@ use Ampache\Repository\Model\User;
 interface PrivateMessageRepositoryInterface
 {
     /**
-     * Get the user received private messages.
-     */
-    public function getUnreadCount(
-        User $user,
-    ): int;
-
-    /**
-     * Get the subsonic chat messages.
-     *
-     * @return int[]
-     */
-    public function getChatMessages(int $since = 0): array;
-
-    /**
      * Clear old messages from the subsonic chat message list.
      */
     public function cleanChatMessages(int $days = 30): void;
-
-    public function setIsRead(PrivateMessageInterface $message, int $state): void;
-
-    public function delete(PrivateMessageInterface $message): void;
 
     /**
      * Creates a private message and returns the id of the newly created object
@@ -63,7 +45,25 @@ interface PrivateMessageRepositoryInterface
         string $message,
     ): int;
 
+    public function delete(PrivateMessageInterface $message): void;
+
     public function findById(
         int $privateMessageId,
     ): ?PrivateMessageInterface;
+
+    /**
+     * Get the subsonic chat messages.
+     *
+     * @return int[]
+     */
+    public function getChatMessages(int $since = 0): array;
+
+    /**
+     * Get the user received private messages.
+     */
+    public function getUnreadCount(
+        User $user,
+    ): int;
+
+    public function setIsRead(PrivateMessageInterface $message, int $state): void;
 }

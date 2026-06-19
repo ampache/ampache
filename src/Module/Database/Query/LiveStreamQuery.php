@@ -49,6 +49,9 @@ final class LiveStreamQuery implements QueryInterface
         'user_rating',
     ];
 
+    protected string $base   = "SELECT %%SELECT%% FROM `live_stream` ";
+    protected string $select = "`live_stream`.`id`";
+
     /** @var string[] $sorts */
     protected array $sorts = [
         'catalog',
@@ -66,9 +69,15 @@ final class LiveStreamQuery implements QueryInterface
         'userflag',
     ];
 
-    protected string $select = "`live_stream`.`id`";
-
-    protected string $base = "SELECT %%SELECT%% FROM `live_stream` ";
+    /**
+     * get_base_sql
+     *
+     * Base SELECT query string without filters or joins
+     */
+    public function get_base_sql(): string
+    {
+        return $this->base;
+    }
 
     /**
      * get_select
@@ -78,16 +87,6 @@ final class LiveStreamQuery implements QueryInterface
     public function get_select(): string
     {
         return $this->select;
-    }
-
-    /**
-     * get_base_sql
-     *
-     * Base SELECT query string without filters or joins
-     */
-    public function get_base_sql(): string
-    {
-        return $this->base;
     }
 
     /**

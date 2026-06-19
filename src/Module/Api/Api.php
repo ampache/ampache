@@ -44,6 +44,15 @@ use Ampache\Repository\UserRepositoryInterface;
  */
 class Api
 {
+    public const array API_VERSIONS = [
+        3,
+        4,
+        5,
+        6,
+        8
+    ];
+
+    public const int DEFAULT_VERSION = 8; // AMPACHE_VERSION
     /**
      * This dict contains all known api-methods (key) and their respective handler (value)
      *
@@ -212,21 +221,81 @@ class Api
         Method\Api8\Videos8Method::ACTION => Method\Api8\Videos8Method::class,
     ];
 
-    public const array API_VERSIONS = [
-        3,
-        4,
-        5,
-        6,
-        8
-    ];
-
-    public const int DEFAULT_VERSION = 8; // AMPACHE_VERSION
-
-    public static string $version = '8.0.0'; // AMPACHE_VERSION
-
+    public static ?Browse $browse         = null;
+    public static string $version         = '8.0.0'; // AMPACHE_VERSION
     public static string $version_numeric = '800000'; // AMPACHE_VERSION
 
-    public static ?Browse $browse = null;
+    /**
+     * check_access
+     *
+     * This function checks the user can perform the function requested
+     * 'interface', 100, $user->id
+     */
+    public static function check_access(AccessTypeEnum $type, AccessLevelEnum $level, int $user_id, string $method, string $format = 'xml'): bool
+    {
+        if (!Access::check($type, $level, $user_id)) {
+            debug_event(self::class, $type->value . " '" . $level->value . "' required on " . $method . " function call.", 2);
+            /* HINT: Access level, eg 75, 100 */
+            self::error(sprintf(T_('Require: %s'), $level->value), '4742', $method, 'account', $format);
+
+            return false;
+        }
+
+        return true;
+    }
+
+    /**
+     * check_parameter
+     *
+     * Return an error for missing parameters for API6
+     *
+     * @param array<string, mixed> $input
+     * @param string[] $parameters e.g. array('auth', type')
+     */
+    public static function check_parameter(array $input, array $parameters, string $method): bool
+    {
+        $parameter = self::parameter_exists($input, $parameters);
+        if ($parameter === true) {
+            return true;
+        }
+
+        debug_event(self::class, "'" . $parameter . "' required on " . $method . " function call.", 2);
+
+        /* HINT: Requested object string/id/type ("album", "myusername", "some song title", 1298376) */
+        self::error(sprintf(T_('Bad Request: %s'), $parameter), '4710', $method, 'system', $input['api_format']);
+
+        return false;
+    }
+
+    /**
+     * empty
+     * call the correct empty message depending on format
+     */
+    public static function empty(?string $empty_type, string $format = 'xml'): void
+    {
+        switch ($format) {
+            case 'json':
+                echo Json8_Data::empty($empty_type);
+                break;
+            default:
+                echo Xml8_Data::empty();
+        }
+    }
+
+    /**
+     * error
+     * call the correct error message depending on format
+     */
+    public static function error(string $message, int|string $error_code, string $method, string $error_type, string $format = 'xml'): void
+    {
+        switch ($format) {
+            case 'json':
+                echo Json8_Data::error($error_code, $message, $method, $error_type);
+                break;
+            default:
+                echo Xml8_Data::error($error_code, $message, $method, $error_type);
+        }
+    }
 
     public static function getBrowse(User $user): Browse
     {
@@ -263,36 +332,6 @@ class Api
     }
 
     /**
-     * error
-     * call the correct error message depending on format
-     */
-    public static function error(string $message, int|string $error_code, string $method, string $error_type, string $format = 'xml'): void
-    {
-        switch ($format) {
-            case 'json':
-                echo Json8_Data::error($error_code, $message, $method, $error_type);
-                break;
-            default:
-                echo Xml8_Data::error($error_code, $message, $method, $error_type);
-        }
-    }
-
-    /**
-     * empty
-     * call the correct empty message depending on format
-     */
-    public static function empty(?string $empty_type, string $format = 'xml'): void
-    {
-        switch ($format) {
-            case 'json':
-                echo Json8_Data::empty($empty_type);
-                break;
-            default:
-                echo Xml8_Data::empty();
-        }
-    }
-
-    /**
      * parameter_exists
      *
      * This function checks the $input actually has the parameter.
@@ -309,48 +348,6 @@ class Api
             }
 
             return $parameter;
-        }
-
-        return true;
-    }
-
-    /**
-     * check_parameter
-     *
-     * Return an error for missing parameters for API6
-     *
-     * @param array<string, mixed> $input
-     * @param string[] $parameters e.g. array('auth', type')
-     */
-    public static function check_parameter(array $input, array $parameters, string $method): bool
-    {
-        $parameter = self::parameter_exists($input, $parameters);
-        if ($parameter === true) {
-            return true;
-        }
-
-        debug_event(self::class, "'" . $parameter . "' required on " . $method . " function call.", 2);
-
-        /* HINT: Requested object string/id/type ("album", "myusername", "some song title", 1298376) */
-        self::error(sprintf(T_('Bad Request: %s'), $parameter), '4710', $method, 'system', $input['api_format']);
-
-        return false;
-    }
-
-    /**
-     * check_access
-     *
-     * This function checks the user can perform the function requested
-     * 'interface', 100, $user->id
-     */
-    public static function check_access(AccessTypeEnum $type, AccessLevelEnum $level, int $user_id, string $method, string $format = 'xml'): bool
-    {
-        if (!Access::check($type, $level, $user_id)) {
-            debug_event(self::class, $type->value . " '" . $level->value . "' required on " . $method . " function call.", 2);
-            /* HINT: Access level, eg 75, 100 */
-            self::error(sprintf(T_('Require: %s'), $level->value), '4742', $method, 'account', $format);
-
-            return false;
         }
 
         return true;

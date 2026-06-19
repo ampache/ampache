@@ -40,15 +40,7 @@ use Ratchet\MessageComponentInterface;
 
 class Broadcast_Server implements MessageComponentInterface
 {
-    public const string BROADCAST_SONG               = "SONG";
-
-    public const string BROADCAST_SONG_POSITION      = "SONG_POSITION";
-
-    public const string BROADCAST_PLAYER_PLAY        = "PLAYER_PLAY";
-
-    public const string BROADCAST_REGISTER_BROADCAST = "REGISTER_BROADCAST";
-
-    public const string BROADCAST_REGISTER_LISTENER  = "REGISTER_LISTENER";
+    public const string BROADCAST_AUTH_SID           = "AUTH_SID";
 
     public const string BROADCAST_ENDED              = "ENDED";
 
@@ -56,28 +48,65 @@ class Broadcast_Server implements MessageComponentInterface
 
     public const string BROADCAST_NB_LISTENERS       = "NB_LISTENERS";
 
-    public const string BROADCAST_AUTH_SID           = "AUTH_SID";
+    public const string BROADCAST_PLAYER_PLAY        = "PLAYER_PLAY";
+
+    public const string BROADCAST_REGISTER_BROADCAST = "REGISTER_BROADCAST";
+
+    public const string BROADCAST_REGISTER_LISTENER  = "REGISTER_LISTENER";
+    public const string BROADCAST_SONG               = "SONG";
+
+    public const string BROADCAST_SONG_POSITION      = "SONG_POSITION";
 
     public $verbose = false;
-
-    /** @var ConnectionInterface[] $clients */
-    protected $clients = [];
-
-    /** @var string[] $sids */
-    protected $sids = [];
-
-    /** @var array<int, array<int, ConnectionInterface>> $listeners */
-    protected $listeners = [];
 
     /** @var Broadcast[] $broadcasters */
     protected $broadcasters = [];
 
+    /** @var ConnectionInterface[] $clients */
+    protected $clients = [];
+
+    /** @var array<int, array<int, ConnectionInterface>> $listeners */
+    protected $listeners = [];
+
+    /** @var string[] $sids */
+    protected $sids = [];
+
     /**
-     * onOpen
+     * get_address
      */
-    public function onOpen(ConnectionInterface $conn): void
+    public static function get_address(): string
     {
-        $this->clients[$conn->resourceId] = $conn;
+        $websocket_address = AmpConfig::get('websocket_address');
+        if (empty($websocket_address)) {
+            $websocket_address = 'ws://' . Core::get_server('SERVER_NAME') . ':8100';
+        }
+
+        return $websocket_address . '/broadcast';
+    }
+
+    /**
+     *
+     */
+    public function onClose(ConnectionInterface $conn): void
+    {
+        if ($this->isBroadcaster($conn)) {
+            $this->unregisterBroadcast($conn);
+        } else {
+            $this->unregisterListener($conn);
+        }
+
+        unset($this->clients[$conn->resourceId]);
+        unset($this->sids[$conn->resourceId]);
+    }
+
+    /**
+     * onError
+     * @noinspection PhpParameterNameChangedDuringInheritanceInspection
+     */
+    public function onError(ConnectionInterface $conn, Exception $error): void
+    {
+        debug_event(self::class, 'Broadcast error: ' . $error->getMessage(), 1);
+        $conn->close();
     }
 
     /**
@@ -111,6 +140,70 @@ class Broadcast_Server implements MessageComponentInterface
     }
 
     /**
+     * onOpen
+     */
+    public function onOpen(ConnectionInterface $conn): void
+    {
+        $this->clients[$conn->resourceId] = $conn;
+    }
+
+    /**
+     *
+     * @param string $sid
+     */
+    protected function authSid(ConnectionInterface $conn, $sid): void
+    {
+        if (Session::exists(AccessTypeEnum::STREAM->value, $sid)) {
+            $this->sids[$conn->resourceId] = $sid;
+        } else {
+            $this->echo_message($this->verbose, "Wrong listener session " . $sid . "\r\n");
+        }
+    }
+
+    /**
+     *
+     * @param ConnectionInterface[] $clients
+     */
+    protected function broadcastMessage(array $clients, string $cmd, string $value = ''): void
+    {
+        $msg = $cmd . ':' . $value . ';';
+        foreach ($clients as $client) {
+            $sid = $this->sids[$client->resourceId];
+            if ($sid) {
+                Session::extend($sid, AccessTypeEnum::STREAM->value);
+            }
+
+            $client->send($msg);
+        }
+    }
+
+    /**
+     *
+     * @return array<int, ConnectionInterface>
+     */
+    protected function getListeners(Broadcast $broadcast): array
+    {
+        return $this->listeners[$broadcast->id];
+    }
+
+    /**
+     * getRunningBroadcast
+     * @param int $broadcast_id
+     */
+    protected function getRunningBroadcast($broadcast_id): ?Broadcast
+    {
+        $result = null;
+        foreach ($this->broadcasters as $broadcast) {
+            if ($broadcast->id == $broadcast_id) {
+                $result = $broadcast;
+                break;
+            }
+        }
+
+        return $result;
+    }
+
+    /**
      *
      * @param int $song_id
      */
@@ -125,6 +218,66 @@ class Broadcast_Server implements MessageComponentInterface
         $transcode_cfg = AmpConfig::get('transcode', 'default');
 
         return WebPlayer::get_media_js_param($item[0], (string)$transcode_cfg);
+    }
+
+    /**
+     * isBroadcaster
+     */
+    protected function isBroadcaster(ConnectionInterface $conn): bool
+    {
+        return array_key_exists($conn->resourceId, $this->broadcasters);
+    }
+
+    /**
+     *
+     */
+    protected function notifyEnded(ConnectionInterface $from): void
+    {
+        if ($this->isBroadcaster($from)) {
+            $broadcast = $this->broadcasters[$from->resourceId];
+            $clients   = $this->getListeners($broadcast);
+            $this->broadcastMessage($clients, self::BROADCAST_ENDED);
+
+            $this->echo_message($this->verbose, "[" . time() . "][info]Broadcast " . $broadcast->id . " ended." . "\r\n");
+        } else {
+            debug_event(self::class, 'Action unauthorized.', 3);
+        }
+    }
+
+    /**
+     *
+     */
+    protected function notifyNbListeners(Broadcast $broadcast): void
+    {
+        $broadcaster_id = array_search($broadcast, $this->broadcasters, true);
+        if ($broadcaster_id) {
+            $clients      = $this->listeners[$broadcast->id];
+            $clients[]    = $this->clients[$broadcaster_id];
+            $nb_listeners = count($this->listeners[$broadcast->id]);
+            $broadcast->update_listeners($nb_listeners);
+            $this->broadcastMessage($clients, self::BROADCAST_NB_LISTENERS, (string)$nb_listeners);
+        }
+    }
+
+    /**
+     *
+     * @param bool $play
+     */
+    protected function notifyPlayerPlay(ConnectionInterface $from, $play): void
+    {
+        if ($this->isBroadcaster($from)) {
+            $broadcast = $this->broadcasters[$from->resourceId];
+            $clients   = $this->getListeners($broadcast);
+            $this->broadcastMessage(
+                $clients,
+                self::BROADCAST_PLAYER_PLAY,
+                ($play) ? 'true' : 'false'
+            );
+
+            $this->echo_message($this->verbose, "[" . time() . "][info]Broadcast " . $broadcast->id . " player state: " . $play . "." . "\r\n");
+        } else {
+            debug_event(self::class, 'Action unauthorized.', 3);
+        }
     }
 
     /**
@@ -170,43 +323,6 @@ class Broadcast_Server implements MessageComponentInterface
         }
     }
 
-    /**
-     *
-     * @param bool $play
-     */
-    protected function notifyPlayerPlay(ConnectionInterface $from, $play): void
-    {
-        if ($this->isBroadcaster($from)) {
-            $broadcast = $this->broadcasters[$from->resourceId];
-            $clients   = $this->getListeners($broadcast);
-            $this->broadcastMessage(
-                $clients,
-                self::BROADCAST_PLAYER_PLAY,
-                ($play) ? 'true' : 'false'
-            );
-
-            $this->echo_message($this->verbose, "[" . time() . "][info]Broadcast " . $broadcast->id . " player state: " . $play . "." . "\r\n");
-        } else {
-            debug_event(self::class, 'Action unauthorized.', 3);
-        }
-    }
-
-    /**
-     *
-     */
-    protected function notifyEnded(ConnectionInterface $from): void
-    {
-        if ($this->isBroadcaster($from)) {
-            $broadcast = $this->broadcasters[$from->resourceId];
-            $clients   = $this->getListeners($broadcast);
-            $this->broadcastMessage($clients, self::BROADCAST_ENDED);
-
-            $this->echo_message($this->verbose, "[" . time() . "][info]Broadcast " . $broadcast->id . " ended." . "\r\n");
-        } else {
-            debug_event(self::class, 'Action unauthorized.', 3);
-        }
-    }
-
     protected function registerBroadcast(ConnectionInterface $from, string $broadcast_key): void
     {
         $broadcast = Broadcast::get_broadcast($broadcast_key);
@@ -216,39 +332,6 @@ class Broadcast_Server implements MessageComponentInterface
 
             $this->echo_message($this->verbose, "[info]Broadcast " . $broadcast->id . " registered." . "\r\n");
         }
-    }
-
-    /**
-     *
-     */
-    protected function unregisterBroadcast(ConnectionInterface $conn): void
-    {
-        $broadcast = $this->broadcasters[$conn->resourceId];
-        $clients   = $this->getListeners($broadcast);
-        $this->broadcastMessage($clients, self::BROADCAST_ENDED);
-        $broadcast->update_state(0);
-
-        unset($this->listeners[$broadcast->id]);
-        unset($this->broadcasters[$conn->resourceId]);
-
-        $this->echo_message($this->verbose, "[" . time() . "][info]Broadcast " . $broadcast->id . " unregistered." . "\r\n");
-    }
-
-    /**
-     * getRunningBroadcast
-     * @param int $broadcast_id
-     */
-    protected function getRunningBroadcast($broadcast_id): ?Broadcast
-    {
-        $result = null;
-        foreach ($this->broadcasters as $broadcast) {
-            if ($broadcast->id == $broadcast_id) {
-                $result = $broadcast;
-                break;
-            }
-        }
-
-        return $result;
     }
 
     /**
@@ -279,15 +362,18 @@ class Broadcast_Server implements MessageComponentInterface
 
     /**
      *
-     * @param string $sid
      */
-    protected function authSid(ConnectionInterface $conn, $sid): void
+    protected function unregisterBroadcast(ConnectionInterface $conn): void
     {
-        if (Session::exists(AccessTypeEnum::STREAM->value, $sid)) {
-            $this->sids[$conn->resourceId] = $sid;
-        } else {
-            $this->echo_message($this->verbose, "Wrong listener session " . $sid . "\r\n");
-        }
+        $broadcast = $this->broadcasters[$conn->resourceId];
+        $clients   = $this->getListeners($broadcast);
+        $this->broadcastMessage($clients, self::BROADCAST_ENDED);
+        $broadcast->update_state(0);
+
+        unset($this->listeners[$broadcast->id]);
+        unset($this->broadcasters[$conn->resourceId]);
+
+        $this->echo_message($this->verbose, "[" . time() . "][info]Broadcast " . $broadcast->id . " unregistered." . "\r\n");
     }
 
     /**
@@ -315,93 +401,6 @@ class Broadcast_Server implements MessageComponentInterface
                 break;
             }
         }
-    }
-
-    /**
-     *
-     */
-    protected function notifyNbListeners(Broadcast $broadcast): void
-    {
-        $broadcaster_id = array_search($broadcast, $this->broadcasters, true);
-        if ($broadcaster_id) {
-            $clients      = $this->listeners[$broadcast->id];
-            $clients[]    = $this->clients[$broadcaster_id];
-            $nb_listeners = count($this->listeners[$broadcast->id]);
-            $broadcast->update_listeners($nb_listeners);
-            $this->broadcastMessage($clients, self::BROADCAST_NB_LISTENERS, (string)$nb_listeners);
-        }
-    }
-
-    /**
-     *
-     * @return array<int, ConnectionInterface>
-     */
-    protected function getListeners(Broadcast $broadcast): array
-    {
-        return $this->listeners[$broadcast->id];
-    }
-
-    /**
-     * isBroadcaster
-     */
-    protected function isBroadcaster(ConnectionInterface $conn): bool
-    {
-        return array_key_exists($conn->resourceId, $this->broadcasters);
-    }
-
-    /**
-     *
-     * @param ConnectionInterface[] $clients
-     */
-    protected function broadcastMessage(array $clients, string $cmd, string $value = ''): void
-    {
-        $msg = $cmd . ':' . $value . ';';
-        foreach ($clients as $client) {
-            $sid = $this->sids[$client->resourceId];
-            if ($sid) {
-                Session::extend($sid, AccessTypeEnum::STREAM->value);
-            }
-
-            $client->send($msg);
-        }
-    }
-
-    /**
-     *
-     */
-    public function onClose(ConnectionInterface $conn): void
-    {
-        if ($this->isBroadcaster($conn)) {
-            $this->unregisterBroadcast($conn);
-        } else {
-            $this->unregisterListener($conn);
-        }
-
-        unset($this->clients[$conn->resourceId]);
-        unset($this->sids[$conn->resourceId]);
-    }
-
-    /**
-     * onError
-     * @noinspection PhpParameterNameChangedDuringInheritanceInspection
-     */
-    public function onError(ConnectionInterface $conn, Exception $error): void
-    {
-        debug_event(self::class, 'Broadcast error: ' . $error->getMessage(), 1);
-        $conn->close();
-    }
-
-    /**
-     * get_address
-     */
-    public static function get_address(): string
-    {
-        $websocket_address = AmpConfig::get('websocket_address');
-        if (empty($websocket_address)) {
-            $websocket_address = 'ws://' . Core::get_server('SERVER_NAME') . ':8100';
-        }
-
-        return $websocket_address . '/broadcast';
     }
 
     /**

@@ -32,16 +32,6 @@ use Override;
 
 final class AdminUpdateUserCommand extends Command
 {
-    #[Override]
-    protected function defaults(): self
-    {
-        $this->option('-h, --help', T_('Help'))->on($this->showHelp(...));
-
-        $this->onExit(static fn ($exitCode = 0) => exit($exitCode));
-
-        return $this;
-    }
-
     public function __construct(
         private readonly UserRepositoryInterface $userRepository,
         private readonly UserKeyGeneratorInterface $userKeyGenerator,
@@ -146,5 +136,15 @@ final class AdminUpdateUserCommand extends Command
                 true
             );
         }
+    }
+
+    #[Override]
+    protected function defaults(): self
+    {
+        $this->option('-h, --help', T_('Help'))->on($this->showHelp(...));
+
+        $this->onExit(static fn ($exitCode = 0) => exit($exitCode));
+
+        return $this;
     }
 }

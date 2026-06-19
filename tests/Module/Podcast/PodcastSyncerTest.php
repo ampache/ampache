@@ -34,19 +34,24 @@ use PHPUnit\Framework\TestCase;
 
 class PodcastSyncerTest extends TestCase
 {
-    private PodcastRepositoryInterface&MockObject $podcastRepository;
-
-    private ModelFactoryInterface&MockObject $modelFactory;
-
-    private PodcastEpisodeDownloaderInterface&MockObject $podcastEpisodeDownloader;
-
-    private PodcastDeleterInterface&MockObject $podcastDeleter;
-
-    private PodcastEpisodeRepositoryInterface&MockObject $podcastEpisodeRepository;
-
     private ConfigContainerInterface&MockObject $configContainer;
-
+    private ModelFactoryInterface&MockObject $modelFactory;
+    private PodcastDeleterInterface&MockObject $podcastDeleter;
+    private PodcastEpisodeDownloaderInterface&MockObject $podcastEpisodeDownloader;
+    private PodcastEpisodeRepositoryInterface&MockObject $podcastEpisodeRepository;
+    private PodcastRepositoryInterface&MockObject $podcastRepository;
     private PodcastSyncer $subject;
+
+    public function testSyncEpisodeFetches(): void
+    {
+        $episode = $this->createMock(Podcast_Episode::class);
+
+        $this->podcastEpisodeDownloader->expects(static::once())
+            ->method('fetch')
+            ->with($episode);
+
+        $this->subject->syncEpisode($episode);
+    }
 
     protected function setUp(): void
     {
@@ -65,16 +70,5 @@ class PodcastSyncerTest extends TestCase
             $this->podcastEpisodeRepository,
             $this->configContainer
         );
-    }
-
-    public function testSyncEpisodeFetches(): void
-    {
-        $episode = $this->createMock(Podcast_Episode::class);
-
-        $this->podcastEpisodeDownloader->expects(static::once())
-            ->method('fetch')
-            ->with($episode);
-
-        $this->subject->syncEpisode($episode);
     }
 }

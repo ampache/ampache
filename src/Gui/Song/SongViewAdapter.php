@@ -53,24 +53,9 @@ final readonly class SongViewAdapter implements SongViewAdapterInterface
     ) {
     }
 
-    public function getId(): int
+    public function canAppendNext(): bool
     {
-        return $this->song->getId();
-    }
-
-    public function getRating(): string
-    {
-        return Rating::show($this->song->getId(), 'song');
-    }
-
-    public function getAverageRating(): string
-    {
-        $rating = $this->modelFactory->createRating(
-            $this->song->getId(),
-            'song'
-        );
-
-        return (string) $rating->get_average_rating();
+        return Stream_Playlist::check_autoplay_append();
     }
 
     public function canAutoplayNext(): bool
@@ -78,156 +63,14 @@ final readonly class SongViewAdapter implements SongViewAdapterInterface
         return Stream_Playlist::check_autoplay_next();
     }
 
-    public function canAppendNext(): bool
+    public function canBeDeleted(): bool
     {
-        return Stream_Playlist::check_autoplay_append();
+        return Catalog::can_remove($this->song);
     }
 
-    public function getUserFlags(): string
+    public function canBeReordered(): bool
     {
-        return Userflag::show($this->song->getId(), 'song');
-    }
-
-    public function getWaveformUrl(): string
-    {
-        return sprintf(
-            '%s/waveform.php?song_id=%d',
-            $this->configContainer->getWebPath(),
-            $this->song->getId()
-        );
-    }
-
-    public function getDirectplayButton(): string
-    {
-        $songId = $this->song->getId();
-
-        return Ajax::button(
-            '?page=stream&action=directplay&object_type=song&object_id=' . $songId,
-            'play_circle',
-            T_('Play'),
-            'play_song_' . $songId
-        );
-    }
-
-    public function getAutoplayNextButton(): string
-    {
-        $songId = $this->song->getId();
-
-        return Ajax::button(
-            '?page=stream&action=directplay&object_type=song&object_id=' . $songId . '&playnext=true',
-            'menu_open',
-            T_('Play next'),
-            'nextplay_song_' . $songId
-        );
-    }
-
-    public function getAppendNextButton(): string
-    {
-        $songId = $this->song->getId();
-
-        return Ajax::button(
-            '?page=stream&action=directplay&object_type=song&object_id=' . $songId . '&append=true',
-            'low_priority',
-            T_('Play last'),
-            'addplay_song_' . $songId
-        );
-    }
-
-    public function getCustomPlayActions(): string
-    {
-        $actions = Song::get_custom_play_actions();
-
-        $buttons = '';
-        foreach ($actions as $action) {
-            $buttons .= Ajax::button(
-                '?page=stream&action=directplay&object_type=song&object_id=' . $this->song->getId() . '&custom_play_action=' . $action['index'],
-                $action['icon'],
-                T_($action['title']),
-                $action['icon'] . '_song_' . $this->song->getId()
-            );
-        }
-
-        return $buttons;
-    }
-
-    public function getTemporaryPlaylistButton(): string
-    {
-        $songId = $this->song->getId();
-
-        return Ajax::button(
-            '?action=basket&type=song&id=' . $songId,
-            'new_window',
-            T_('Add to Temporary Playlist'),
-            'add_song_' . $songId
-        );
-    }
-
-    public function canPostShout(): bool
-    {
-        return (
-            $this->configContainer->isAuthenticationEnabled() === false ||
-            $this->gatekeeper->mayAccess(AccessTypeEnum::INTERFACE, AccessLevelEnum::USER)
-        ) &&
-            $this->configContainer->isFeatureEnabled(ConfigurationKeyEnum::SOCIABLE);
-    }
-
-    public function getPostShoutUrl(): string
-    {
-        return sprintf(
-            '%s/shout.php?action=show_add_shout&type=song&id=%d',
-            $this->configContainer->getWebPath(),
-            $this->song->getId()
-        );
-    }
-
-    public function getPostShoutIcon(): string
-    {
-        return Ui::get_material_symbol('comment', T_('Post Shout'));
-    }
-
-    public function canShare(): bool
-    {
-        return $this->gatekeeper->mayAccess(AccessTypeEnum::INTERFACE, AccessLevelEnum::USER) &&
-            $this->configContainer->isFeatureEnabled(ConfigurationKeyEnum::SHARE);
-    }
-
-    public function getShareUi(): string
-    {
-        return Share::display_ui('song', $this->song->getId(), false);
-    }
-
-    public function canDownload(): bool
-    {
-        return $this->configContainer->isFeatureEnabled(ConfigurationKeyEnum::DOWNLOAD);
-    }
-
-    public function getExternalPlayUrl(): string
-    {
-        return $this->song->play_url(
-            '',
-            '',
-            false,
-            Core::get_global('user')?->getId() ?? 0
-        );
-    }
-
-    public function getExternalPlayIcon(): string
-    {
-        return Ui::get_material_symbol('link', T_('Link'));
-    }
-
-    public function getDownloadUrl(): string
-    {
-        return sprintf(
-            '%s/stream.php?action=download&song_id=%d',
-            $this->configContainer->getWebPath(),
-            $this->song->getId()
-        );
-    }
-
-    public function getDownloadIcon(): string
-    {
-        return Ui::get_material_symbol('download', T_('Download'));
+        return $this->gatekeeper->mayAccess(AccessTypeEnum::INTERFACE, AccessLevelEnum::CONTENT_MANAGER);
     }
 
     public function canDisplayStats(): bool
@@ -248,56 +91,29 @@ final readonly class SongViewAdapter implements SongViewAdapterInterface
         );
     }
 
-    public function getDisplayStatsUrl(): string
+    public function canDownload(): bool
     {
-        return sprintf(
-            '%s/stats.php?action=graph&object_type=song&object_id=%d',
-            $this->configContainer->getWebPath(),
-            $this->song->getId()
-        );
+        return $this->configContainer->isFeatureEnabled(ConfigurationKeyEnum::DOWNLOAD);
     }
 
-    public function getUpdateFromTagsUrl(): string
+    public function canEditPlaylist(): bool
     {
-        return sprintf(
-            '%s/song.php?action=update_from_tags&song_id=%d',
-            $this->configContainer->getWebPath(),
-            $this->song->getId()
-        );
+        return $this->gatekeeper->mayAccess(AccessTypeEnum::INTERFACE, AccessLevelEnum::USER);
     }
 
-    public function getDisplayStatsIcon(): string
-    {
-        return Ui::get_material_symbol('bar_chart', T_('Graphs'));
-    }
-
-    public function getRefreshIcon(): string
-    {
-        return Ui::get_material_symbol('sync_alt', T_('Update from tags'));
-    }
-
-    public function isEditable(): bool
+    public function canPostShout(): bool
     {
         return (
-            $this->gatekeeper->mayAccess(AccessTypeEnum::INTERFACE, AccessLevelEnum::CONTENT_MANAGER) ||
-            (
-                (
-                    Core::get_global('user') instanceof User &&
-                    $this->song->get_user_owner() == Core::get_global('user')->id
-                ) &&
-                $this->configContainer->isFeatureEnabled(ConfigurationKeyEnum::UPLOAD_ALLOW_EDIT)
-            )
-        );
+            $this->configContainer->isAuthenticationEnabled() === false ||
+            $this->gatekeeper->mayAccess(AccessTypeEnum::INTERFACE, AccessLevelEnum::USER)
+        ) &&
+            $this->configContainer->isFeatureEnabled(ConfigurationKeyEnum::SOCIABLE);
     }
 
-    public function getEditButtonTitle(): string
+    public function canShare(): bool
     {
-        return T_('Song Edit');
-    }
-
-    public function getEditIcon(): string
-    {
-        return Ui::get_material_symbol('edit', T_('Edit'));
+        return $this->gatekeeper->mayAccess(AccessTypeEnum::INTERFACE, AccessLevelEnum::USER) &&
+            $this->configContainer->isFeatureEnabled(ConfigurationKeyEnum::SHARE);
     }
 
     public function canToggleState(): bool
@@ -314,24 +130,80 @@ final readonly class SongViewAdapter implements SongViewAdapterInterface
         );
     }
 
-    public function getToggleStateButton(): string
+    public function getAddToPlaylistIcon(): string
+    {
+        return Ui::get_material_symbol('playlist_add', T_('Add to playlist'));
+    }
+
+    public function getAlbumDiskLink(): string
+    {
+        return $this->song->get_f_album_disk_link();
+    }
+
+    public function getAlbumLink(): string
+    {
+        return $this->song->get_f_album_link();
+    }
+
+    public function getAppendNextButton(): string
     {
         $songId = $this->song->getId();
 
-        if ($this->song->enabled) {
-            $icon     = 'unpublished';
-            $icontext = T_('Disable');
-        } else {
-            $icon     = 'check_circle';
-            $icontext = T_('Enable');
-        }
+        return Ajax::button(
+            '?page=stream&action=directplay&object_type=song&object_id=' . $songId . '&append=true',
+            'low_priority',
+            T_('Play last'),
+            'addplay_song_' . $songId
+        );
+    }
+
+    public function getArtistLink(): string
+    {
+        return (string)$this->song->get_f_parent_link();
+    }
+
+    public function getAutoplayNextButton(): string
+    {
+        $songId = $this->song->getId();
 
         return Ajax::button(
-            '?page=song&action=flip_state&song_id=' . $songId,
-            $icon,
-            $icontext,
-            'flip_song_' . $songId
+            '?page=stream&action=directplay&object_type=song&object_id=' . $songId . '&playnext=true',
+            'menu_open',
+            T_('Play next'),
+            'nextplay_song_' . $songId
         );
+    }
+
+    public function getAverageRating(): string
+    {
+        $rating = $this->modelFactory->createRating(
+            $this->song->getId(),
+            'song'
+        );
+
+        return (string) $rating->get_average_rating();
+    }
+
+    public function getCustomPlayActions(): string
+    {
+        $actions = Song::get_custom_play_actions();
+
+        $buttons = '';
+        foreach ($actions as $action) {
+            $buttons .= Ajax::button(
+                '?page=stream&action=directplay&object_type=song&object_id=' . $this->song->getId() . '&custom_play_action=' . $action['index'],
+                $action['icon'],
+                T_($action['title']),
+                $action['icon'] . '_song_' . $this->song->getId()
+            );
+        }
+
+        return $buttons;
+    }
+
+    public function getDeletionIcon(): string
+    {
+        return Ui::get_material_symbol('close', T_('Delete'));
     }
 
     public function getDeletionUrl(): string
@@ -344,14 +216,124 @@ final readonly class SongViewAdapter implements SongViewAdapterInterface
         );
     }
 
-    public function getDeletionIcon(): string
+    public function getDirectplayButton(): string
     {
-        return Ui::get_material_symbol('close', T_('Delete'));
+        $songId = $this->song->getId();
+
+        return Ajax::button(
+            '?page=stream&action=directplay&object_type=song&object_id=' . $songId,
+            'play_circle',
+            T_('Play'),
+            'play_song_' . $songId
+        );
     }
 
-    public function canBeDeleted(): bool
+    public function getDisplayStatsIcon(): string
     {
-        return Catalog::can_remove($this->song);
+        return Ui::get_material_symbol('bar_chart', T_('Graphs'));
+    }
+
+    public function getDisplayStatsUrl(): string
+    {
+        return sprintf(
+            '%s/stats.php?action=graph&object_type=song&object_id=%d',
+            $this->configContainer->getWebPath(),
+            $this->song->getId()
+        );
+    }
+
+    public function getDownloadIcon(): string
+    {
+        return Ui::get_material_symbol('download', T_('Download'));
+    }
+
+    public function getDownloadUrl(): string
+    {
+        return sprintf(
+            '%s/stream.php?action=download&song_id=%d',
+            $this->configContainer->getWebPath(),
+            $this->song->getId()
+        );
+    }
+
+    public function getEditButtonTitle(): string
+    {
+        return T_('Song Edit');
+    }
+
+    public function getEditIcon(): string
+    {
+        return Ui::get_material_symbol('edit', T_('Edit'));
+    }
+
+    public function getExternalPlayIcon(): string
+    {
+        return Ui::get_material_symbol('link', T_('Link'));
+    }
+
+    public function getExternalPlayUrl(): string
+    {
+        return $this->song->play_url(
+            '',
+            '',
+            false,
+            Core::get_global('user')?->getId() ?? 0
+        );
+    }
+
+    public function getGenre(): string
+    {
+        return $this->song->get_f_tags();
+    }
+
+    public function getId(): int
+    {
+        return $this->song->getId();
+    }
+
+    public function getLicenseLink(): string
+    {
+        $license = $this->song->getLicense();
+
+        if ($license !== null) {
+            return $license->getLinkFormatted();
+        }
+
+        return '';
+    }
+
+    public function getNumberPlayed(): int
+    {
+        return $this->song->total_count;
+    }
+
+    public function getNumberSkipped(): int
+    {
+        return $this->song->total_skip;
+    }
+
+    public function getPlayDuration(): string
+    {
+        return $this->song->get_f_time();
+    }
+
+    public function getPostShoutIcon(): string
+    {
+        return Ui::get_material_symbol('comment', T_('Post Shout'));
+    }
+
+    public function getPostShoutUrl(): string
+    {
+        return sprintf(
+            '%s/shout.php?action=show_add_shout&type=song&id=%d',
+            $this->configContainer->getWebPath(),
+            $this->song->getId()
+        );
+    }
+
+    public function getPreferencesIcon(): string
+    {
+        return Ui::get_material_symbol('page_info', T_('Song Information'));
     }
 
     /**
@@ -483,19 +465,14 @@ final readonly class SongViewAdapter implements SongViewAdapterInterface
         return $songprops;
     }
 
-    public function canEditPlaylist(): bool
+    public function getRating(): string
     {
-        return $this->gatekeeper->mayAccess(AccessTypeEnum::INTERFACE, AccessLevelEnum::USER);
+        return Rating::show($this->song->getId(), 'song');
     }
 
-    public function getAddToPlaylistIcon(): string
+    public function getRefreshIcon(): string
     {
-        return Ui::get_material_symbol('playlist_add', T_('Add to playlist'));
-    }
-
-    public function canBeReordered(): bool
-    {
-        return $this->gatekeeper->mayAccess(AccessTypeEnum::INTERFACE, AccessLevelEnum::CONTENT_MANAGER);
+        return Ui::get_material_symbol('sync_alt', T_('Update from tags'));
     }
 
     public function getReorderIcon(): string
@@ -503,19 +480,9 @@ final readonly class SongViewAdapter implements SongViewAdapterInterface
         return Ui::get_material_symbol('drag_indicator', T_('Reorder'));
     }
 
-    public function getPreferencesIcon(): string
+    public function getShareUi(): string
     {
-        return Ui::get_material_symbol('page_info', T_('Song Information'));
-    }
-
-    public function getTrackNumber(): string
-    {
-        return (string)$this->song->track;
-    }
-
-    public function getSongUrl(): string
-    {
-        return $this->song->get_link();
+        return Share::display_ui('song', $this->song->getId(), false);
     }
 
     public function getSongLink(): string
@@ -523,19 +490,69 @@ final readonly class SongViewAdapter implements SongViewAdapterInterface
         return $this->song->get_f_link();
     }
 
-    public function getArtistLink(): string
+    public function getSongUrl(): string
     {
-        return (string)$this->song->get_f_parent_link();
+        return $this->song->get_link();
     }
 
-    public function getAlbumLink(): string
+    public function getTemporaryPlaylistButton(): string
     {
-        return $this->song->get_f_album_link();
+        $songId = $this->song->getId();
+
+        return Ajax::button(
+            '?action=basket&type=song&id=' . $songId,
+            'new_window',
+            T_('Add to Temporary Playlist'),
+            'add_song_' . $songId
+        );
     }
 
-    public function getAlbumDiskLink(): string
+    public function getToggleStateButton(): string
     {
-        return $this->song->get_f_album_disk_link();
+        $songId = $this->song->getId();
+
+        if ($this->song->enabled) {
+            $icon     = 'unpublished';
+            $icontext = T_('Disable');
+        } else {
+            $icon     = 'check_circle';
+            $icontext = T_('Enable');
+        }
+
+        return Ajax::button(
+            '?page=song&action=flip_state&song_id=' . $songId,
+            $icon,
+            $icontext,
+            'flip_song_' . $songId
+        );
+    }
+
+    public function getTrackNumber(): string
+    {
+        return (string)$this->song->track;
+    }
+
+    public function getUpdateFromTagsUrl(): string
+    {
+        return sprintf(
+            '%s/song.php?action=update_from_tags&song_id=%d',
+            $this->configContainer->getWebPath(),
+            $this->song->getId()
+        );
+    }
+
+    public function getUserFlags(): string
+    {
+        return Userflag::show($this->song->getId(), 'song');
+    }
+
+    public function getWaveformUrl(): string
+    {
+        return sprintf(
+            '%s/waveform.php?song_id=%d',
+            $this->configContainer->getWebPath(),
+            $this->song->getId()
+        );
     }
 
     public function getYear(): int
@@ -543,34 +560,17 @@ final readonly class SongViewAdapter implements SongViewAdapterInterface
         return $this->song->year;
     }
 
-    public function getGenre(): string
+    public function isEditable(): bool
     {
-        return $this->song->get_f_tags();
-    }
-
-    public function getPlayDuration(): string
-    {
-        return $this->song->get_f_time();
-    }
-
-    public function getLicenseLink(): string
-    {
-        $license = $this->song->getLicense();
-
-        if ($license !== null) {
-            return $license->getLinkFormatted();
-        }
-
-        return '';
-    }
-
-    public function getNumberPlayed(): int
-    {
-        return $this->song->total_count;
-    }
-
-    public function getNumberSkipped(): int
-    {
-        return $this->song->total_skip;
+        return (
+            $this->gatekeeper->mayAccess(AccessTypeEnum::INTERFACE, AccessLevelEnum::CONTENT_MANAGER) ||
+            (
+                (
+                    Core::get_global('user') instanceof User &&
+                    $this->song->get_user_owner() == Core::get_global('user')->id
+                ) &&
+                $this->configContainer->isFeatureEnabled(ConfigurationKeyEnum::UPLOAD_ALLOW_EDIT)
+            )
+        );
     }
 }

@@ -37,6 +37,25 @@ final class TagAlbums3Method
     public const string ACTION = 'tag_albums';
 
     /**
+     * genre_albums
+     * This returns the albums associated with the tag in question
+     *
+     * @param array{
+     *     filter?: string,
+     *     offset?: int,
+     *     limit?: int,
+     *     cond?: string,
+     *     sort?: string,
+     *     api_format: string,
+     *     auth: string,
+     * } $input
+     */
+    public static function genre_albums(array $input, User $user): void
+    {
+        self::tag_albums($input, $user);
+    }
+
+    /**
      * tag_albums
      * This returns the albums associated with the tag in question
      *
@@ -60,24 +79,5 @@ final class TagAlbums3Method
             ob_end_clean();
             echo Xml3_Data::albums($results, [], $user, $input['auth']);
         }
-    }
-
-    /**
-     * genre_albums
-     * This returns the albums associated with the tag in question
-     *
-     * @param array{
-     *     filter?: string,
-     *     offset?: int,
-     *     limit?: int,
-     *     cond?: string,
-     *     sort?: string,
-     *     api_format: string,
-     *     auth: string,
-     * } $input
-     */
-    public static function genre_albums(array $input, User $user): void
-    {
-        self::tag_albums($input, $user);
     }
 }

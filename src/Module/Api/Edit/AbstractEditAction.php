@@ -47,7 +47,6 @@ use Psr\Log\LoggerInterface;
 abstract class AbstractEditAction implements ApplicationActionInterface
 {
     private ConfigContainerInterface $configContainer;
-
     private LoggerInterface $logger;
 
     public function __construct(

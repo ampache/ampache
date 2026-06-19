@@ -35,25 +35,25 @@ use WpOrg\Requests\Requests;
 class Ampacheflickr extends AmpachePlugin implements PluginGatherArtsInterface
 {
     #[Override]
-    public string $name = 'Flickr';
-
-    #[Override]
     public string $categories = 'slideshow';
 
     #[Override]
     public string $description = 'Artist photos from Flickr';
 
     #[Override]
-    public string $url = 'http://www.flickr.com';
-
-    #[Override]
-    public string $version = '000001';
+    public string $max_ampache = '999999';
 
     #[Override]
     public string $min_ampache = '360045';
 
     #[Override]
-    public string $max_ampache = '999999';
+    public string $name = 'Flickr';
+
+    #[Override]
+    public string $url = 'http://www.flickr.com';
+
+    #[Override]
+    public string $version = '000001';
 
     // These are internal settings used by this class, run this->load to fill them out
     private $api_key;
@@ -64,58 +64,6 @@ class Ampacheflickr extends AmpachePlugin implements PluginGatherArtsInterface
     public function __construct()
     {
         $this->description = T_('Artist photos from Flickr');
-    }
-
-    /**
-     * install
-     * Inserts plugin preferences into Ampache
-     */
-    public function install(): bool
-    {
-        return Preference::insert('flickr_api_key', T_('Flickr API key'), '', AccessLevelEnum::MANAGER->value, 'string', 'plugins', $this->name);
-    }
-
-    /**
-     * uninstall
-     * Removes our preferences from the database returning it to its original form
-     */
-    public function uninstall(): bool
-    {
-        return Preference::delete('flickr_api_key');
-    }
-
-    /**
-     * upgrade
-     * This is a recommended plugin function
-     */
-    public function upgrade(): bool
-    {
-        return true;
-    }
-
-    /**
-     * @param string $search
-     * @param string $category
-     */
-    public function get_photos($search, $category = 'concert'): array
-    {
-        $photos = [];
-        $url    = "https://api.flickr.com/services/rest/?&method=flickr.photos.search&api_key=" . $this->api_key . "&per_page=20&content_type=1&text=" . rawurlencode(trim($search . " " . $category));
-        debug_event('flickr.plugin', 'Calling ' . $url, 5);
-        $request = Requests::get($url, [], Core::requests_options());
-        if ($request->status_code == 200) {
-            $xml = simplexml_load_string((string) $request->body);
-            if ($xml && $xml->photos) {
-                foreach ($xml->photos->photo as $photo) {
-                    $photos[] = [
-                        'title' => $photo->title,
-                        'url' => "http://farm" . $photo['farm'] . ".static.flickr.com/" . $photo['server'] . '/' . $photo['id'] . "_" . $photo['secret'] . "_m.jpg",
-                    ];
-                }
-            }
-        }
-
-        return $photos;
     }
 
     /**
@@ -152,6 +100,40 @@ class Ampacheflickr extends AmpachePlugin implements PluginGatherArtsInterface
     }
 
     /**
+     * @param string $search
+     * @param string $category
+     */
+    public function get_photos($search, $category = 'concert'): array
+    {
+        $photos = [];
+        $url    = "https://api.flickr.com/services/rest/?&method=flickr.photos.search&api_key=" . $this->api_key . "&per_page=20&content_type=1&text=" . rawurlencode(trim($search . " " . $category));
+        debug_event('flickr.plugin', 'Calling ' . $url, 5);
+        $request = Requests::get($url, [], Core::requests_options());
+        if ($request->status_code == 200) {
+            $xml = simplexml_load_string((string) $request->body);
+            if ($xml && $xml->photos) {
+                foreach ($xml->photos->photo as $photo) {
+                    $photos[] = [
+                        'title' => $photo->title,
+                        'url' => "http://farm" . $photo['farm'] . ".static.flickr.com/" . $photo['server'] . '/' . $photo['id'] . "_" . $photo['secret'] . "_m.jpg",
+                    ];
+                }
+            }
+        }
+
+        return $photos;
+    }
+
+    /**
+     * install
+     * Inserts plugin preferences into Ampache
+     */
+    public function install(): bool
+    {
+        return Preference::insert('flickr_api_key', T_('Flickr API key'), '', AccessLevelEnum::MANAGER->value, 'string', 'plugins', $this->name);
+    }
+
+    /**
      * load
      * This loads up the data we need into this object, this stuff comes from the preferences.
      */
@@ -173,6 +155,24 @@ class Ampacheflickr extends AmpachePlugin implements PluginGatherArtsInterface
             return false;
         }
 
+        return true;
+    }
+
+    /**
+     * uninstall
+     * Removes our preferences from the database returning it to its original form
+     */
+    public function uninstall(): bool
+    {
+        return Preference::delete('flickr_api_key');
+    }
+
+    /**
+     * upgrade
+     * This is a recommended plugin function
+     */
+    public function upgrade(): bool
+    {
         return true;
     }
 }

@@ -33,11 +33,6 @@ use Traversable;
 interface MetadataEnabledInterface
 {
     /**
-     * Returns the metadata object-type
-     */
-    public function getMetadataItemType(): string;
-
-    /**
      * Returns the linked items id
      */
     public function getId(): int;
@@ -55,4 +50,9 @@ interface MetadataEnabledInterface
      * @return Traversable<Metadata>
      */
     public function getMetadata(): Traversable;
+
+    /**
+     * Returns the metadata object-type
+     */
+    public function getMetadataItemType(): string;
 }

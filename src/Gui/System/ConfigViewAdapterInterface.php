@@ -27,7 +27,7 @@ namespace Ampache\Gui\System;
 
 interface ConfigViewAdapterInterface
 {
-    public function isWaveformEnabled(): bool;
-
     public function isDirectplayEnabled(): bool;
+
+    public function isWaveformEnabled(): bool;
 }

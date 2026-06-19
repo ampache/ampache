@@ -38,129 +38,22 @@ use Ampache\Repository\Model\Video;
 class WebPlayer
 {
     /**
-     * Check if the playlist is a video playlist.
+     * Get add_media javascript.
      */
-    public static function is_playlist_video(Stream_Playlist $playlist): bool
+    public static function add_media_js(Stream_Playlist $playlist, string $callback_container = ''): string
     {
-        return ($playlist->urls !== [] && $playlist->urls[0]->type == "video");
-    }
-
-    /**
-     * Check if the playlist is a random playlist.
-     */
-    public static function is_playlist_random(Stream_Playlist $playlist): bool
-    {
-        return ($playlist->urls !== [] && $playlist->urls[0]->title == "Random");
-    }
-
-    /**
-     * Check if the playlist is a democratic playlist.
-     */
-    public static function is_playlist_democratic(Stream_Playlist $playlist): bool
-    {
-        return ($playlist->urls !== [] && $playlist->urls[0]->title == "Democratic");
-    }
-
-    /**
-     * Get types information for an item.
-     * @param array<string, string> $urlinfo
-     * @return array{
-     *     real: string,
-     *     player: string,
-     * }
-     */
-    protected static function get_types(
-        Stream_Url $item,
-        array $urlinfo,
-        string $transcode_cfg,
-        string $force_type = '',
-    ): array {
-        $types = ['real' => 'mp3', 'player' => ''];
-
-        if ($item->codec && array_key_exists('type', $urlinfo)) {
-            $transcode = self::can_transcode($urlinfo['type'], $item->codec, $types, $urlinfo, $transcode_cfg, $force_type);
-            $types     = self::get_media_types($urlinfo, $types, $item->codec, $transcode);
-        } elseif (($media = self::get_media_object($urlinfo)) instanceof Media) {
-            /** @var Video|Podcast_Episode|Song|Song_Preview $media */
-            $transcode = self::can_transcode(strtolower($media::class), $media->type, $types, $urlinfo, $transcode_cfg, $force_type);
-            $types     = self::get_media_types($urlinfo, $types, $media->type, $transcode);
-        } elseif ($item->type == 'live_stream') {
-            $types['real'] = $item->codec;
-            if ($types['real'] == "ogg" || $types['real'] == "opus") {
-                $types['player'] = "oga";
+        $transcode_cfg = AmpConfig::get('transcode', 'default');
+        $addjs         = "";
+        foreach ($playlist->urls as $item) {
+            if ($item->type == 'broadcast') {
+                $addjs .= $callback_container . "startBroadcastListening('" . $item->url . "');";
+                break;
             }
-        } else {
-            $ext = pathinfo($item->url, PATHINFO_EXTENSION);
-            if (!empty($ext)) {
-                $types['real'] = (string)$ext;
-            }
+
+            $addjs .= $callback_container . "addMedia(" . self::get_media_js_param($item, (string)$transcode_cfg) . ");";
         }
 
-        if (!$types['player']) {
-            $types['player'] = (string)$types['real'];
-        }
-
-        return $types;
-    }
-
-    /**
-     * Check if the playlist is a video playlist.
-     * @param array<string, string> $urlinfo
-     */
-    public static function get_media_object(array $urlinfo): ?Media
-    {
-        if (array_key_exists('id', $urlinfo) && InterfaceImplementationChecker::is_media($urlinfo['type'])) {
-            $className = ObjectTypeToClassNameMapper::map($urlinfo['type']);
-            /** @var Media $media */
-            $media = new $className($urlinfo['id']);
-
-            return $media;
-        }
-
-        if (array_key_exists('id', $urlinfo) && $urlinfo['type'] == 'song_preview') {
-            return new Song_Preview((int)$urlinfo['id']);
-        }
-
-        return null;
-    }
-
-    /**
-     * Check if the playlist is a video playlist.
-     * @param array<string, string> $urlinfo
-     * @param array{
-     *     real: string,
-     *     player: string,
-     * } $types
-     * @return array{
-     *     real: string,
-     *     player: string,
-     * }
-     */
-    public static function get_media_types(array $urlinfo, array $types, string $file_type, bool $transcode): array
-    {
-        $types['real'] = ($transcode)
-            ? Stream::get_transcode_format($file_type, null, 'webplayer', $urlinfo['type']) ?? $file_type
-            : $file_type;
-
-        if ($urlinfo['type'] == 'song' || $urlinfo['type'] == 'podcast_episode') {
-            if ($types['real'] == "ogg" || $types['real'] == "opus") {
-                $types['player'] = "oga";
-            } elseif ($types['real'] == "mp4") {
-                $types['player'] = "m4a";
-            }
-        }
-
-        if ($urlinfo['type'] == 'video') {
-            if ($types['real'] == "ogg") {
-                $types['player'] = "ogv";
-            } elseif ($types['real'] == "webm") {
-                $types['player'] = "webmv";
-            } elseif ($types['real'] == "mp4") {
-                $types['player'] = "m4v";
-            }
-        }
-
-        return $types;
+        return $addjs;
     }
 
     /**
@@ -204,45 +97,6 @@ class WebPlayer
         }
 
         return $transcode;
-    }
-
-    /**
-     * Get add_media javascript.
-     */
-    public static function add_media_js(Stream_Playlist $playlist, string $callback_container = ''): string
-    {
-        $transcode_cfg = AmpConfig::get('transcode', 'default');
-        $addjs         = "";
-        foreach ($playlist->urls as $item) {
-            if ($item->type == 'broadcast') {
-                $addjs .= $callback_container . "startBroadcastListening('" . $item->url . "');";
-                break;
-            }
-
-            $addjs .= $callback_container . "addMedia(" . self::get_media_js_param($item, (string)$transcode_cfg) . ");";
-        }
-
-        return $addjs;
-    }
-
-    /**
-     * Get play_next javascript.
-     */
-    public static function play_next_js(Stream_Playlist $playlist, string $callback_container = ''): string
-    {
-        $transcode_cfg = AmpConfig::get('transcode', 'default');
-        $addjs         = "";
-        // play next for groups of items needs to be reversed to be in correct order
-        foreach (array_reverse($playlist->urls) as $item) {
-            if ($item->type == 'broadcast') {
-                $addjs .= $callback_container . "startBroadcastListening('" . $item->url . "');";
-                break;
-            }
-
-            $addjs .= $callback_container . "playNext(" . self::get_media_js_param($item, (string)$transcode_cfg) . ");";
-        }
-
-        return $addjs;
     }
 
     /**
@@ -336,5 +190,151 @@ class WebPlayer
         //debug_event(self::class, "get_media_js_param: " . print_r($json, true), 3);
 
         return json_encode($json) ?: '';
+    }
+
+    /**
+     * Check if the playlist is a video playlist.
+     * @param array<string, string> $urlinfo
+     */
+    public static function get_media_object(array $urlinfo): ?Media
+    {
+        if (array_key_exists('id', $urlinfo) && InterfaceImplementationChecker::is_media($urlinfo['type'])) {
+            $className = ObjectTypeToClassNameMapper::map($urlinfo['type']);
+            /** @var Media $media */
+            $media = new $className($urlinfo['id']);
+
+            return $media;
+        }
+
+        if (array_key_exists('id', $urlinfo) && $urlinfo['type'] == 'song_preview') {
+            return new Song_Preview((int)$urlinfo['id']);
+        }
+
+        return null;
+    }
+
+    /**
+     * Check if the playlist is a video playlist.
+     * @param array<string, string> $urlinfo
+     * @param array{
+     *     real: string,
+     *     player: string,
+     * } $types
+     * @return array{
+     *     real: string,
+     *     player: string,
+     * }
+     */
+    public static function get_media_types(array $urlinfo, array $types, string $file_type, bool $transcode): array
+    {
+        $types['real'] = ($transcode)
+            ? Stream::get_transcode_format($file_type, null, 'webplayer', $urlinfo['type']) ?? $file_type
+            : $file_type;
+
+        if ($urlinfo['type'] == 'song' || $urlinfo['type'] == 'podcast_episode') {
+            if ($types['real'] == "ogg" || $types['real'] == "opus") {
+                $types['player'] = "oga";
+            } elseif ($types['real'] == "mp4") {
+                $types['player'] = "m4a";
+            }
+        }
+
+        if ($urlinfo['type'] == 'video') {
+            if ($types['real'] == "ogg") {
+                $types['player'] = "ogv";
+            } elseif ($types['real'] == "webm") {
+                $types['player'] = "webmv";
+            } elseif ($types['real'] == "mp4") {
+                $types['player'] = "m4v";
+            }
+        }
+
+        return $types;
+    }
+
+    /**
+     * Check if the playlist is a democratic playlist.
+     */
+    public static function is_playlist_democratic(Stream_Playlist $playlist): bool
+    {
+        return ($playlist->urls !== [] && $playlist->urls[0]->title == "Democratic");
+    }
+
+    /**
+     * Check if the playlist is a random playlist.
+     */
+    public static function is_playlist_random(Stream_Playlist $playlist): bool
+    {
+        return ($playlist->urls !== [] && $playlist->urls[0]->title == "Random");
+    }
+
+    /**
+     * Check if the playlist is a video playlist.
+     */
+    public static function is_playlist_video(Stream_Playlist $playlist): bool
+    {
+        return ($playlist->urls !== [] && $playlist->urls[0]->type == "video");
+    }
+
+    /**
+     * Get play_next javascript.
+     */
+    public static function play_next_js(Stream_Playlist $playlist, string $callback_container = ''): string
+    {
+        $transcode_cfg = AmpConfig::get('transcode', 'default');
+        $addjs         = "";
+        // play next for groups of items needs to be reversed to be in correct order
+        foreach (array_reverse($playlist->urls) as $item) {
+            if ($item->type == 'broadcast') {
+                $addjs .= $callback_container . "startBroadcastListening('" . $item->url . "');";
+                break;
+            }
+
+            $addjs .= $callback_container . "playNext(" . self::get_media_js_param($item, (string)$transcode_cfg) . ");";
+        }
+
+        return $addjs;
+    }
+
+    /**
+     * Get types information for an item.
+     * @param array<string, string> $urlinfo
+     * @return array{
+     *     real: string,
+     *     player: string,
+     * }
+     */
+    protected static function get_types(
+        Stream_Url $item,
+        array $urlinfo,
+        string $transcode_cfg,
+        string $force_type = '',
+    ): array {
+        $types = ['real' => 'mp3', 'player' => ''];
+
+        if ($item->codec && array_key_exists('type', $urlinfo)) {
+            $transcode = self::can_transcode($urlinfo['type'], $item->codec, $types, $urlinfo, $transcode_cfg, $force_type);
+            $types     = self::get_media_types($urlinfo, $types, $item->codec, $transcode);
+        } elseif (($media = self::get_media_object($urlinfo)) instanceof Media) {
+            /** @var Video|Podcast_Episode|Song|Song_Preview $media */
+            $transcode = self::can_transcode(strtolower($media::class), $media->type, $types, $urlinfo, $transcode_cfg, $force_type);
+            $types     = self::get_media_types($urlinfo, $types, $media->type, $transcode);
+        } elseif ($item->type == 'live_stream') {
+            $types['real'] = $item->codec;
+            if ($types['real'] == "ogg" || $types['real'] == "opus") {
+                $types['player'] = "oga";
+            }
+        } else {
+            $ext = pathinfo($item->url, PATHINFO_EXTENSION);
+            if (!empty($ext)) {
+                $types['real'] = (string)$ext;
+            }
+        }
+
+        if (!$types['player']) {
+            $types['player'] = (string)$types['real'];
+        }
+
+        return $types;
     }
 }

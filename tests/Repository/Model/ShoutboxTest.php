@@ -36,46 +36,42 @@ use PHPUnit\Framework\TestCase;
 class ShoutboxTest extends TestCase
 {
     private ShoutRepositoryInterface&MockObject $shoutRepository;
-
+    private Shoutbox $subject;
     private UserRepositoryInterface&MockObject $userRepository;
 
-    private Shoutbox $subject;
-
-    protected function setUp(): void
+    public static function setterGetterDataProvider(): Generator
     {
-        $this->shoutRepository = $this->createMock(ShoutRepositoryInterface::class);
-        $this->userRepository  = $this->createMock(UserRepositoryInterface::class);
-
-        $this->subject = new Shoutbox(
-            $this->shoutRepository,
-            $this->userRepository,
-        );
+        yield ['getOffset', 'setOffset', 0, 666];
+        yield ['getObjectId', 'setObjectId', 0, 666];
+        yield ['isSticky', 'setSticky', false, true];
     }
 
-    public function testIsNewReturnsTrueIfIdIsZero(): void
+    public function testGetDateReturnsSetDate(): void
     {
-        self::assertTrue(
-            $this->subject->isNew()
-        );
-    }
-
-    public function testIsNewReturnsTrueIfIdIsNotZero(): void
-    {
-        $shoutId = 666;
-
-        $this->shoutRepository->expects(static::once())
-            ->method('persist')
-            ->with($this->subject)
-            ->willReturn($shoutId);
-
-        $this->subject->save();
-
-        self::assertFalse(
-            $this->subject->isNew()
-        );
         self::assertSame(
-            $shoutId,
-            $this->subject->getId()
+            0,
+            $this->subject->getDate()->getTimestamp()
+        );
+
+        $date = new DateTime();
+
+        $this->subject->setDate($date);
+
+        self::assertSame(
+            $date->getTimestamp(),
+            $this->subject->getDate()->getTimestamp()
+        );
+    }
+
+    public function testGetObjectTypeReturnsSetValue(): void
+    {
+        $objectType = LibraryItemEnum::SONG;
+
+        $this->subject->setObjectType($objectType);
+
+        self::assertSame(
+            $objectType,
+            $this->subject->getObjectType()
         );
     }
 
@@ -99,22 +95,20 @@ class ShoutboxTest extends TestCase
         );
     }
 
-    public static function setterGetterDataProvider(): Generator
+    public function testGetTextReturnsSetText(): void
     {
-        yield ['getOffset', 'setOffset', 0, 666];
-        yield ['getObjectId', 'setObjectId', 0, 666];
-        yield ['isSticky', 'setSticky', false, true];
-    }
-
-    public function testGetObjectTypeReturnsSetValue(): void
-    {
-        $objectType = LibraryItemEnum::SONG;
-
-        $this->subject->setObjectType($objectType);
+        $text = '<div>AGGI AGGI é«ü%>?&</div>';
 
         self::assertSame(
-            $objectType,
-            $this->subject->getObjectType()
+            '',
+            $this->subject->getText()
+        );
+
+        $this->subject->setText($text);
+
+        self::assertSame(
+            strip_tags(htmlspecialchars($text)),
+            $this->subject->getText()
         );
     }
 
@@ -156,37 +150,41 @@ class ShoutboxTest extends TestCase
         );
     }
 
-    public function testGetTextReturnsSetText(): void
+    public function testIsNewReturnsTrueIfIdIsNotZero(): void
     {
-        $text = '<div>AGGI AGGI é«ü%>?&</div>';
+        $shoutId = 666;
 
-        self::assertSame(
-            '',
-            $this->subject->getText()
+        $this->shoutRepository->expects(static::once())
+            ->method('persist')
+            ->with($this->subject)
+            ->willReturn($shoutId);
+
+        $this->subject->save();
+
+        self::assertFalse(
+            $this->subject->isNew()
         );
-
-        $this->subject->setText($text);
-
         self::assertSame(
-            strip_tags(htmlspecialchars($text)),
-            $this->subject->getText()
+            $shoutId,
+            $this->subject->getId()
         );
     }
 
-    public function testGetDateReturnsSetDate(): void
+    public function testIsNewReturnsTrueIfIdIsZero(): void
     {
-        self::assertSame(
-            0,
-            $this->subject->getDate()->getTimestamp()
+        self::assertTrue(
+            $this->subject->isNew()
         );
+    }
 
-        $date = new DateTime();
+    protected function setUp(): void
+    {
+        $this->shoutRepository = $this->createMock(ShoutRepositoryInterface::class);
+        $this->userRepository  = $this->createMock(UserRepositoryInterface::class);
 
-        $this->subject->setDate($date);
-
-        self::assertSame(
-            $date->getTimestamp(),
-            $this->subject->getDate()->getTimestamp()
+        $this->subject = new Shoutbox(
+            $this->shoutRepository,
+            $this->userRepository,
         );
     }
 }

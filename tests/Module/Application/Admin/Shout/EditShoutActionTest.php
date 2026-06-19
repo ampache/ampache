@@ -42,27 +42,10 @@ use Psr\Http\Message\ServerRequestInterface;
 
 class EditShoutActionTest extends MockeryTestCase
 {
-    private MockInterface&UiInterface $ui;
-
-    private MockObject&ShoutRepositoryInterface $shoutRepository;
-
     private MockObject&ConfigContainerInterface $configContainer;
-
+    private MockObject&ShoutRepositoryInterface $shoutRepository;
     private EditShoutAction $subject;
-
-    #[Override]
-    protected function setUp(): void
-    {
-        $this->ui              = $this->mock(UiInterface::class);
-        $this->shoutRepository = $this->createMock(ShoutRepositoryInterface::class);
-        $this->configContainer = $this->createMock(ConfigContainerInterface::class);
-
-        $this->subject = new EditShoutAction(
-            $this->ui,
-            $this->shoutRepository,
-            $this->configContainer
-        );
-    }
+    private MockInterface&UiInterface $ui;
 
     public function testRunThrowExceptionIfAccessIsDenied(): void
     {
@@ -75,35 +58,6 @@ class EditShoutActionTest extends MockeryTestCase
             ->with(AccessTypeEnum::INTERFACE, AccessLevelEnum::ADMIN)
             ->once()
             ->andReturnFalse();
-
-        $this->subject->run($request, $gatekeeper);
-    }
-
-    public function testRunUpdatesErrorsIfShoutWasNotFound(): void
-    {
-        $request    = $this->mock(ServerRequestInterface::class);
-        $gatekeeper = $this->mock(GuiGatekeeperInterface::class);
-
-        $shoutId = 666;
-
-        static::expectException(ObjectNotFoundException::class);
-
-        $gatekeeper->shouldReceive('mayAccess')
-            ->with(AccessTypeEnum::INTERFACE, AccessLevelEnum::ADMIN)
-            ->once()
-            ->andReturnTrue();
-
-        $this->shoutRepository->expects(static::once())
-            ->method('findById')
-            ->with($shoutId)
-            ->willReturn(null);
-
-        $request->shouldReceive('getParsedBody')
-            ->withNoArgs()
-            ->once()
-            ->andReturn([
-                'shout_id' => (string)$shoutId,
-            ]);
 
         $this->subject->run($request, $gatekeeper);
     }
@@ -166,6 +120,49 @@ class EditShoutActionTest extends MockeryTestCase
 
         $this->assertNull(
             $this->subject->run($request, $gatekeeper)
+        );
+    }
+
+    public function testRunUpdatesErrorsIfShoutWasNotFound(): void
+    {
+        $request    = $this->mock(ServerRequestInterface::class);
+        $gatekeeper = $this->mock(GuiGatekeeperInterface::class);
+
+        $shoutId = 666;
+
+        static::expectException(ObjectNotFoundException::class);
+
+        $gatekeeper->shouldReceive('mayAccess')
+            ->with(AccessTypeEnum::INTERFACE, AccessLevelEnum::ADMIN)
+            ->once()
+            ->andReturnTrue();
+
+        $this->shoutRepository->expects(static::once())
+            ->method('findById')
+            ->with($shoutId)
+            ->willReturn(null);
+
+        $request->shouldReceive('getParsedBody')
+            ->withNoArgs()
+            ->once()
+            ->andReturn([
+                'shout_id' => (string)$shoutId,
+            ]);
+
+        $this->subject->run($request, $gatekeeper);
+    }
+
+    #[Override]
+    protected function setUp(): void
+    {
+        $this->ui              = $this->mock(UiInterface::class);
+        $this->shoutRepository = $this->createMock(ShoutRepositoryInterface::class);
+        $this->configContainer = $this->createMock(ConfigContainerInterface::class);
+
+        $this->subject = new EditShoutAction(
+            $this->ui,
+            $this->shoutRepository,
+            $this->configContainer
         );
     }
 }

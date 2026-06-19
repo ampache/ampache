@@ -41,38 +41,6 @@ final readonly class AccessListManager implements AccessListManagerInterface
     }
 
     /**
-     * Updates an existing acl item
-     *
-     * @throws InvalidEndIpException
-     * @throws InvalidIpRangeException
-     * @throws InvalidStartIpException
-     */
-    public function update(
-        int $accessId,
-        string $startIp,
-        string $endIp,
-        string $name,
-        int $userId,
-        AccessLevelEnum $level,
-        AccessTypeEnum $type,
-    ): void {
-        $startIp = (string)@inet_pton($startIp);
-        $endIp   = (string)@inet_pton($endIp);
-
-        $this->verifyRange($startIp, $endIp);
-
-        $this->accessRepository->update(
-            $accessId,
-            $startIp,
-            $endIp,
-            $name,
-            $userId,
-            $level,
-            in_array($type, AccessTypeEnum::CONFIGURABLE_TYPE_LIST, true) ? $type : AccessTypeEnum::STREAM
-        );
-    }
-
-    /**
      * Creates a new acl item
      * Also creates further items on special type configs
      *
@@ -134,6 +102,38 @@ final readonly class AccessListManager implements AccessListManagerInterface
                 AccessTypeEnum::INTERFACE
             );
         }
+    }
+
+    /**
+     * Updates an existing acl item
+     *
+     * @throws InvalidEndIpException
+     * @throws InvalidIpRangeException
+     * @throws InvalidStartIpException
+     */
+    public function update(
+        int $accessId,
+        string $startIp,
+        string $endIp,
+        string $name,
+        int $userId,
+        AccessLevelEnum $level,
+        AccessTypeEnum $type,
+    ): void {
+        $startIp = (string)@inet_pton($startIp);
+        $endIp   = (string)@inet_pton($endIp);
+
+        $this->verifyRange($startIp, $endIp);
+
+        $this->accessRepository->update(
+            $accessId,
+            $startIp,
+            $endIp,
+            $name,
+            $userId,
+            $level,
+            in_array($type, AccessTypeEnum::CONFIGURABLE_TYPE_LIST, true) ? $type : AccessTypeEnum::STREAM
+        );
     }
 
     /**

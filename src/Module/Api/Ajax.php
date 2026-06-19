@@ -39,8 +39,8 @@ use Ampache\Module\Util\Ui;
  */
 class Ajax
 {
-    private static bool $include_override = false;
     private static int $counter           = 0;
+    private static bool $include_override = false;
 
     /**
      * constructor
@@ -48,50 +48,6 @@ class Ajax
      */
     public function __construct()
     {
-    }
-
-    /**
-     * observe
-     * This returns a string with the correct and full ajax 'observe' stuff
-     * from jQuery
-     */
-    public static function observe(string $source, string $method, string $action, ?string $confirm = ''): string
-    {
-        $non_quoted = ['document', 'window'];
-
-        if (in_array($source, $non_quoted)) {
-            $source_txt = $source;
-        } else {
-            // use id attribute selector as workaround for multiple identical IDs (e.g. rating)
-            $source_txt = "'[id=$source]'";
-        }
-
-        $observe   = "<script>";
-        $methodact = ($method == 'click') ? "update_action();" : "";
-        if (AmpConfig::get('ajax_load') && $method == 'load') {
-            $source_txt = "$( document ).ready(";
-        } else {
-            $source_txt = "$(" . $source_txt . ").on('" . $method . "', ";
-        }
-        if (!empty($confirm)) {
-            $observe .= $source_txt . "function(){ " . $methodact . " if (confirm(\"" . $confirm . "\")) { " . $action . " }});";
-        } else {
-            $observe .= $source_txt . "function(){ " . $methodact . " " . $action . ";});";
-        }
-        $observe .= "</script>";
-
-        return $observe;
-    }
-
-    /**
-     * url
-     * This takes a string and makes an URL
-     */
-    public static function url(string $action): string
-    {
-        global $dic;
-
-        return $dic->get(AjaxUriRetrieverInterface::class)->getAjaxUri() . $action;
     }
 
     /**
@@ -193,38 +149,51 @@ class Ajax
     }
 
     /**
-     * text
-     * This prints out the specified text as a link and sets up the required
-     * ajax for the link so it works correctly=
+     * end_container
+     * This ends the container if we're not doing the AJAX thing
      */
-    public static function text(
-        string $action,
-        string $text,
-        string $source,
-        ?string $post = '',
-        ?string $class = '',
-    ): string {
-        // Temporary workaround to avoid sorting on custom base requests
-        if (!defined("NO_BROWSE_SORTING") || !str_contains($source, "sort_")) {
-            // Avoid duplicate id
-            $source .= '_' . time() . '_' . self::$counter++;
+    public static function end_container(): bool
+    {
+        if (defined('AJAX_INCLUDE') && !self::$include_override) {
+            return true;
+        }
+        echo "</div>";
+        self::$include_override = false;
 
-            // Format the string we wanna use
-            $ajax_string = self::action($action, $source, $post);
+        return false;
+    }
 
-            // If they passed a span class
-            if ($class) {
-                $class = ' class="' . $class . '"';
-            }
+    /**
+     * observe
+     * This returns a string with the correct and full ajax 'observe' stuff
+     * from jQuery
+     */
+    public static function observe(string $source, string $method, string $action, ?string $confirm = ''): string
+    {
+        $non_quoted = ['document', 'window'];
 
-            $string = "<a href=\"javascript:void(0);\" id=\"$source\" $class>$text</a>\n";
-
-            $string .= self::observe($source, 'click', $ajax_string);
+        if (in_array($source, $non_quoted)) {
+            $source_txt = $source;
         } else {
-            $string = $text;
+            // use id attribute selector as workaround for multiple identical IDs (e.g. rating)
+            $source_txt = "'[id=$source]'";
         }
 
-        return $string;
+        $observe   = "<script>";
+        $methodact = ($method == 'click') ? "update_action();" : "";
+        if (AmpConfig::get('ajax_load') && $method == 'load') {
+            $source_txt = "$( document ).ready(";
+        } else {
+            $source_txt = "$(" . $source_txt . ").on('" . $method . "', ";
+        }
+        if (!empty($confirm)) {
+            $observe .= $source_txt . "function(){ " . $methodact . " if (confirm(\"" . $confirm . "\")) { " . $action . " }});";
+        } else {
+            $observe .= $source_txt . "function(){ " . $methodact . " " . $action . ";});";
+        }
+        $observe .= "</script>";
+
+        return $observe;
     }
 
     /**
@@ -267,17 +236,48 @@ class Ajax
     }
 
     /**
-     * end_container
-     * This ends the container if we're not doing the AJAX thing
+     * text
+     * This prints out the specified text as a link and sets up the required
+     * ajax for the link so it works correctly=
      */
-    public static function end_container(): bool
-    {
-        if (defined('AJAX_INCLUDE') && !self::$include_override) {
-            return true;
-        }
-        echo "</div>";
-        self::$include_override = false;
+    public static function text(
+        string $action,
+        string $text,
+        string $source,
+        ?string $post = '',
+        ?string $class = '',
+    ): string {
+        // Temporary workaround to avoid sorting on custom base requests
+        if (!defined("NO_BROWSE_SORTING") || !str_contains($source, "sort_")) {
+            // Avoid duplicate id
+            $source .= '_' . time() . '_' . self::$counter++;
 
-        return false;
+            // Format the string we wanna use
+            $ajax_string = self::action($action, $source, $post);
+
+            // If they passed a span class
+            if ($class) {
+                $class = ' class="' . $class . '"';
+            }
+
+            $string = "<a href=\"javascript:void(0);\" id=\"$source\" $class>$text</a>\n";
+
+            $string .= self::observe($source, 'click', $ajax_string);
+        } else {
+            $string = $text;
+        }
+
+        return $string;
+    }
+
+    /**
+     * url
+     * This takes a string and makes an URL
+     */
+    public static function url(string $action): string
+    {
+        global $dic;
+
+        return $dic->get(AjaxUriRetrieverInterface::class)->getAjaxUri() . $action;
     }
 }

@@ -33,16 +33,6 @@ use Override;
 
 final class HtaccessCommand extends Command
 {
-    #[Override]
-    protected function defaults(): self
-    {
-        $this->option('-h, --help', T_('Help'))->on($this->showHelp(...));
-
-        $this->onExit(static fn ($exitCode = 0) => exit($exitCode));
-
-        return $this;
-    }
-
     public function __construct(
         private readonly ConfigContainerInterface $configContainer,
         private readonly InstallationHelperInterface $installationHelper,
@@ -131,5 +121,15 @@ final class HtaccessCommand extends Command
             T_('Success'),
             true
         );
+    }
+
+    #[Override]
+    protected function defaults(): self
+    {
+        $this->option('-h, --help', T_('Help'))->on($this->showHelp(...));
+
+        $this->onExit(static fn ($exitCode = 0) => exit($exitCode));
+
+        return $this;
     }
 }

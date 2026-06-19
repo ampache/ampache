@@ -35,13 +35,19 @@ use Override;
 class AmpacheStreamHits extends AmpachePlugin implements PluginStreamControlInterface
 {
     #[Override]
-    public string $name = 'Stream Hits';
-
-    #[Override]
     public string $categories = 'stream_control';
 
     #[Override]
     public string $description = 'Control hits per user';
+
+    #[Override]
+    public string $max_ampache = '999999';
+
+    #[Override]
+    public string $min_ampache = '370024';
+
+    #[Override]
+    public string $name = 'Stream Hits';
 
     #[Override]
     public string $url = '';
@@ -49,18 +55,11 @@ class AmpacheStreamHits extends AmpachePlugin implements PluginStreamControlInte
     #[Override]
     public string $version = '000001';
 
-    #[Override]
-    public string $min_ampache = '370024';
-
-    #[Override]
-    public string $max_ampache = '999999';
+    private int $hits_days;
+    private int $hits_max;
 
     // These are internal settings used by this class, run this->load to fill them out
     private int $user_id;
-
-    private int $hits_days;
-
-    private int $hits_max;
 
     /**
      * Constructor
@@ -84,23 +83,20 @@ class AmpacheStreamHits extends AmpachePlugin implements PluginStreamControlInte
     }
 
     /**
-     * uninstall
-     * Removes our preferences from the database returning it to its original form
+     * load
+     * This loads up the data we need into this object, this stuff comes from the preferences.
      */
-    public function uninstall(): bool
+    public function load(User $user): bool
     {
-        return (
-            Preference::delete('stream_control_hits_max') &&
-            Preference::delete('stream_control_hits_days')
-        );
-    }
+        $user->set_preferences();
+        $data = $user->prefs;
 
-    /**
-     * upgrade
-     * This is a recommended plugin function
-     */
-    public function upgrade(): bool
-    {
+        $this->user_id   = $user->id;
+        $this->hits_max  = (int)($data['stream_control_hits_max']) ?: -1;
+        $this->hits_days = ((int)($data['stream_control_hits_days']) > 0)
+            ? (int)($data['stream_control_hits_days'])
+            : 30;
+
         return true;
     }
 
@@ -134,20 +130,23 @@ class AmpacheStreamHits extends AmpachePlugin implements PluginStreamControlInte
     }
 
     /**
-     * load
-     * This loads up the data we need into this object, this stuff comes from the preferences.
+     * uninstall
+     * Removes our preferences from the database returning it to its original form
      */
-    public function load(User $user): bool
+    public function uninstall(): bool
     {
-        $user->set_preferences();
-        $data = $user->prefs;
+        return (
+            Preference::delete('stream_control_hits_max') &&
+            Preference::delete('stream_control_hits_days')
+        );
+    }
 
-        $this->user_id   = $user->id;
-        $this->hits_max  = (int)($data['stream_control_hits_max']) ?: -1;
-        $this->hits_days = ((int)($data['stream_control_hits_days']) > 0)
-            ? (int)($data['stream_control_hits_days'])
-            : 30;
-
+    /**
+     * upgrade
+     * This is a recommended plugin function
+     */
+    public function upgrade(): bool
+    {
         return true;
     }
 }

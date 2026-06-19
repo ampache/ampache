@@ -57,6 +57,9 @@ final class VideoQuery implements QueryInterface
         'user_rating',
     ];
 
+    protected string $base   = "SELECT %%SELECT%% FROM `video` ";
+    protected string $select = "`video`.`id`";
+
     /** @var string[] $sorts */
     protected array $sorts = [
         'addition_time',
@@ -77,9 +80,15 @@ final class VideoQuery implements QueryInterface
         'userflag',
     ];
 
-    protected string $select = "`video`.`id`";
-
-    protected string $base = "SELECT %%SELECT%% FROM `video` ";
+    /**
+     * get_base_sql
+     *
+     * Base SELECT query string without filters or joins
+     */
+    public function get_base_sql(): string
+    {
+        return $this->base;
+    }
 
     /**
      * get_select
@@ -89,16 +98,6 @@ final class VideoQuery implements QueryInterface
     public function get_select(): string
     {
         return $this->select;
-    }
-
-    /**
-     * get_base_sql
-     *
-     * Base SELECT query string without filters or joins
-     */
-    public function get_base_sql(): string
-    {
-        return $this->base;
     }
 
     /**

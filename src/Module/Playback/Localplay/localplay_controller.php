@@ -34,59 +34,6 @@ use Ampache\Module\Playback\Stream_Url;
  */
 abstract class localplay_controller
 {
-    // Required Functions
-    /**
-     * add_url
-     */
-    abstract public function add_url(Stream_Url $url): bool; // Takes an array of song_ids
-
-    /**
-     * Takes a single object_id and removes it from the playlist
-     */
-    abstract public function delete_track(int $object_id): bool;
-
-    abstract public function play(): bool;
-
-    abstract public function stop(): bool;
-
-    abstract public function clear_playlist(): bool;
-
-    abstract public function get_instance(?string $instance = ''): array;
-
-    abstract public function next(): bool;
-
-    abstract public function pause(): bool;
-
-    abstract public function prev(): bool;
-
-    abstract public function random(bool $state): bool;
-
-    abstract public function repeat(bool $state): bool;
-
-    abstract public function skip(int $track_id): bool;
-
-    abstract public function volume(int $volume): bool;
-
-    abstract public function volume_down(): bool;
-
-    abstract public function volume_up(): bool;
-
-    abstract public function get(): array;
-
-    abstract public function connect(): bool;
-
-    abstract public function get_version(): string; // Returns the version of this plugin
-
-    abstract public function get_description(): string; // Returns the description
-
-    abstract public function is_installed(): bool;
-
-    abstract public function install(): bool;
-
-    abstract public function uninstall(): bool;
-
-    abstract public function status(): array;
-
     // For display we need the following 'instance' functions
 
     /**
@@ -94,17 +41,39 @@ abstract class localplay_controller
      */
     abstract public function add_instance(array $data): void;
 
+    // Required Functions
+    /**
+     * add_url
+     */
+    abstract public function add_url(Stream_Url $url): bool; // Takes an array of song_ids
+
+    abstract public function clear_playlist(): bool;
+
+    abstract public function connect(): bool;
+
     abstract public function delete_instance(int $uid): void;
 
     /**
-     * @param array<string, string> $data
+     * Takes a single object_id and removes it from the playlist
      */
-    abstract public function update_instance(int $uid, array $data): void;
+    abstract public function delete_track(int $object_id): bool;
+
+    abstract public function get(): array;
+
+    abstract public function get_active_instance(): ?int;
+
+    abstract public function get_description(): string; // Returns the description
+
+    abstract public function get_instance(?string $instance = ''): array;
 
     /**
      * @return string[]
      */
     abstract public function get_instances(): array;
+
+    abstract public function get_version(): string; // Returns the version of this plugin
+
+    abstract public function install(): bool;
 
     /**
      * @return array<
@@ -114,9 +83,9 @@ abstract class localplay_controller
      */
     abstract public function instance_fields(): array;
 
-    abstract public function set_active_instance(int $uid): bool;
+    abstract public function is_installed(): bool;
 
-    abstract public function get_active_instance(): ?int;
+    abstract public function next(): bool;
 
     /**
      * parse_url
@@ -172,4 +141,35 @@ abstract class localplay_controller
 
         return $data;
     }
+
+    abstract public function pause(): bool;
+
+    abstract public function play(): bool;
+
+    abstract public function prev(): bool;
+
+    abstract public function random(bool $state): bool;
+
+    abstract public function repeat(bool $state): bool;
+
+    abstract public function set_active_instance(int $uid): bool;
+
+    abstract public function skip(int $track_id): bool;
+
+    abstract public function status(): array;
+
+    abstract public function stop(): bool;
+
+    abstract public function uninstall(): bool;
+
+    /**
+     * @param array<string, string> $data
+     */
+    abstract public function update_instance(int $uid, array $data): void;
+
+    abstract public function volume(int $volume): bool;
+
+    abstract public function volume_down(): bool;
+
+    abstract public function volume_up(): bool;
 }

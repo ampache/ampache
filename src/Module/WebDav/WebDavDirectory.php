@@ -44,42 +44,6 @@ class WebDavDirectory extends Collection
     }
 
     /**
-     * @return list<Node>
-     * @throws NotFound
-     */
-    public function getChildren(): array
-    {
-        //debug_event(self::class, 'Directory getChildren', 5);
-        $children = [];
-        $childs   = $this->libitem->get_childrens();
-        foreach ($childs as $child) {
-            foreach ($child as $schild) {
-                $children[] = WebDavDirectory::getChildFromArray($schild);
-            }
-        }
-
-        return $children;
-    }
-
-    /**
-     * @param string $name
-     * @throws NotFound
-     */
-    #[Override]
-    public function getChild($name): Node
-    {
-        //debug_event(self::class, 'Directory getChild: ' . unhtmlentities($name), 5);
-        $matches = $this->libitem->get_children(unhtmlentities($name));
-        // Always return first match
-        // Warning: this means that two items with the same name will not be supported for now
-        if ($matches !== []) {
-            return WebDavDirectory::getChildFromArray($matches[0]);
-        }
-
-        throw new NotFound('The child with name: ' . $name . ' could not be found');
-    }
-
-    /**
      * @param array{object_type: LibraryItemEnum, object_id: int} $array
      * @throws NotFound
      */
@@ -110,6 +74,42 @@ class WebDavDirectory extends Collection
     public function childExists($name): bool
     {
         return $this->libitem->has_children($name);
+    }
+
+    /**
+     * @param string $name
+     * @throws NotFound
+     */
+    #[Override]
+    public function getChild($name): Node
+    {
+        //debug_event(self::class, 'Directory getChild: ' . unhtmlentities($name), 5);
+        $matches = $this->libitem->get_children(unhtmlentities($name));
+        // Always return first match
+        // Warning: this means that two items with the same name will not be supported for now
+        if ($matches !== []) {
+            return WebDavDirectory::getChildFromArray($matches[0]);
+        }
+
+        throw new NotFound('The child with name: ' . $name . ' could not be found');
+    }
+
+    /**
+     * @return list<Node>
+     * @throws NotFound
+     */
+    public function getChildren(): array
+    {
+        //debug_event(self::class, 'Directory getChildren', 5);
+        $children = [];
+        $childs   = $this->libitem->get_childrens();
+        foreach ($childs as $child) {
+            foreach ($child as $schild) {
+                $children[] = WebDavDirectory::getChildFromArray($schild);
+            }
+        }
+
+        return $children;
     }
 
     public function getName(): string

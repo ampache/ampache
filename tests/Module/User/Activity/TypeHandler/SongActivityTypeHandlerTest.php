@@ -32,20 +32,10 @@ use Override;
 
 class SongActivityTypeHandlerTest extends MockeryTestCase
 {
-    /** @var UserActivityRepositoryInterface|MockInterface|null */
-    private MockInterface $useractivityRepository;
-
     private ?SongActivityTypeHandler $subject;
 
-    #[Override]
-    protected function setUp(): void
-    {
-        $this->useractivityRepository = $this->mock(UserActivityRepositoryInterface::class);
-
-        $this->subject = new SongActivityTypeHandler(
-            $this->useractivityRepository
-        );
-    }
+    /** @var UserActivityRepositoryInterface|MockInterface|null */
+    private MockInterface $useractivityRepository;
 
     public function testRegisterActivityRegisterAlbumActivity(): void
     {
@@ -98,6 +88,16 @@ class SongActivityTypeHandlerTest extends MockeryTestCase
             $action,
             $userId,
             $date
+        );
+    }
+
+    #[Override]
+    protected function setUp(): void
+    {
+        $this->useractivityRepository = $this->mock(UserActivityRepositoryInterface::class);
+
+        $this->subject = new SongActivityTypeHandler(
+            $this->useractivityRepository
         );
     }
 }

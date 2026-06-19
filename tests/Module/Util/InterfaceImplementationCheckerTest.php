@@ -33,24 +33,6 @@ use stdClass;
 
 class InterfaceImplementationCheckerTest extends MockeryTestCase
 {
-    public function testIsPlayableItemReturnsTrueIfImplemented(): void
-    {
-        $instance = Mockery::mock(Song_Preview::class, library_item::class);
-
-        self::assertTrue(
-            InterfaceImplementationChecker::is_library_item($instance::class)
-        );
-    }
-
-    public function testIsPlayableItemReturnsFalseIfNotImplemented(): void
-    {
-        $instance = new stdClass();
-
-        self::assertFalse(
-            InterfaceImplementationChecker::is_library_item($instance::class)
-        );
-    }
-
     public function testIsLibraryItemReturnsFalseIfNotImplemented(): void
     {
         $instance = new stdClass();
@@ -66,6 +48,24 @@ class InterfaceImplementationCheckerTest extends MockeryTestCase
 
         self::assertFalse(
             InterfaceImplementationChecker::is_media($instance::class)
+        );
+    }
+
+    public function testIsPlayableItemReturnsFalseIfNotImplemented(): void
+    {
+        $instance = new stdClass();
+
+        self::assertFalse(
+            InterfaceImplementationChecker::is_library_item($instance::class)
+        );
+    }
+
+    public function testIsPlayableItemReturnsTrueIfImplemented(): void
+    {
+        $instance = Mockery::mock(Song_Preview::class, library_item::class);
+
+        self::assertTrue(
+            InterfaceImplementationChecker::is_library_item($instance::class)
         );
     }
 }

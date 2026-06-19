@@ -37,32 +37,31 @@ use Override;
 class AmpacheStreamBandwidth extends AmpachePlugin implements PluginStreamControlInterface
 {
     #[Override]
-    public string $name = 'Stream Bandwidth';
-
-    #[Override]
     public string $categories = 'stream_control';
 
     #[Override]
     public string $description = 'Control bandwidth per user';
 
     #[Override]
-    public string $url = '';
-
-    #[Override]
-    public string $version = '000001';
+    public string $max_ampache = '999999';
 
     #[Override]
     public string $min_ampache = '370024';
 
     #[Override]
-    public string $max_ampache = '999999';
+    public string $name = 'Stream Bandwidth';
+
+    #[Override]
+    public string $url = '';
+
+    #[Override]
+    public string $version      = '000001';
+
+    private int $bandwidth_days = 30;
+    private int $bandwidth_max  = 1024;
 
     // These are internal settings used by this class, run this->load to fill them out
     private int $user_id = 0;
-
-    private int $bandwidth_days = 30;
-
-    private int $bandwidth_max = 1024;
 
     /**
      * Constructor
@@ -86,23 +85,23 @@ class AmpacheStreamBandwidth extends AmpachePlugin implements PluginStreamContro
     }
 
     /**
-     * uninstall
-     * Removes our preferences from the database returning it to its original form
+     * load
+     * This loads up the data we need into this object, this stuff comes from the preferences.
      */
-    public function uninstall(): bool
+    public function load(User $user): bool
     {
-        return (
-            Preference::delete('stream_control_bandwidth_max') &&
-            Preference::delete('stream_control_bandwidth_days')
-        );
-    }
+        $user->set_preferences();
+        $data = $user->prefs;
 
-    /**
-     * upgrade
-     * This is a recommended plugin function
-     */
-    public function upgrade(): bool
-    {
+        $this->user_id       = $user->id;
+        $this->bandwidth_max = (int)($data['stream_control_bandwidth_max']) ?: 1024;
+
+        if ((int)($data['stream_control_bandwidth_days']) > 0) {
+            $this->bandwidth_days = (int)($data['stream_control_bandwidth_days']);
+        } else {
+            $this->bandwidth_days = 30;
+        }
+
         return true;
     }
 
@@ -145,23 +144,23 @@ class AmpacheStreamBandwidth extends AmpachePlugin implements PluginStreamContro
     }
 
     /**
-     * load
-     * This loads up the data we need into this object, this stuff comes from the preferences.
+     * uninstall
+     * Removes our preferences from the database returning it to its original form
      */
-    public function load(User $user): bool
+    public function uninstall(): bool
     {
-        $user->set_preferences();
-        $data = $user->prefs;
+        return (
+            Preference::delete('stream_control_bandwidth_max') &&
+            Preference::delete('stream_control_bandwidth_days')
+        );
+    }
 
-        $this->user_id       = $user->id;
-        $this->bandwidth_max = (int)($data['stream_control_bandwidth_max']) ?: 1024;
-
-        if ((int)($data['stream_control_bandwidth_days']) > 0) {
-            $this->bandwidth_days = (int)($data['stream_control_bandwidth_days']);
-        } else {
-            $this->bandwidth_days = 30;
-        }
-
+    /**
+     * upgrade
+     * This is a recommended plugin function
+     */
+    public function upgrade(): bool
+    {
         return true;
     }
 }

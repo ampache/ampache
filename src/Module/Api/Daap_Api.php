@@ -45,6 +45,7 @@ use Ampache\Repository\Model\Tag;
 class Daap_Api
 {
     public const int AMPACHEID_SMARTPL = 400000000;
+
     public const int BASE_LIBRARY      = 0;
 
     /** @var array<string> */
@@ -88,119 +89,49 @@ class Daap_Api
     public static array $tags = [];
 
     /**
-     * follow_stream
-     * @param string $url
+     * @param Playlist|Search $playlist
+     * @param bool $isSmart
      */
-    public static function follow_stream($url): void
+    public static function _tlv_playlist($playlist, $isSmart = false): string
     {
-        set_time_limit(0);
-        ob_end_clean();
-        if (function_exists('curl_version')) {
-            $headers      = apache_request_headers();
-            $reqheaders   = [];
-            $reqheaders[] = "User-Agent: " . urlencode(preg_replace('/[\s\/]+/', '_', $headers['User-Agent']));
-            if (array_key_exists('Range', $headers)) {
-                $reqheaders[] = "Range: " . $headers['Range'];
-            }
-            // Curl support, we stream transparently to avoid redirect. Redirect can fail on few clients
-            $curl = curl_init($url);
-            if ($curl) {
-                curl_setopt_array(
-                    $curl,
-                    [
-                        CURLOPT_HTTPHEADER => $reqheaders,
-                        CURLOPT_HEADER => false,
-                        CURLOPT_RETURNTRANSFER => false,
-                        CURLOPT_FOLLOWLOCATION => true,
-                        CURLOPT_WRITEFUNCTION => [
-                            'Ampache\Module\Api\Daap_Api',
-                            'output_body'
-                        ],
-                        CURLOPT_HEADERFUNCTION => [
-                            'Ampache\Module\Api\Daap_Api',
-                            'output_header'
-                        ],
-                        // Ignore invalid certificate
-                        // Default trusted chain is crap anyway and currently no custom CA option
-                        CURLOPT_SSL_VERIFYPEER => false,
-                        CURLOPT_SSL_VERIFYHOST => false,
-                        CURLOPT_TIMEOUT => 0
-                    ]
-                );
-                curl_exec($curl);
-            }
+        $pl_id = (($isSmart) ? Daap_Api::AMPACHEID_SMARTPL : 0) + $playlist->id;
+        $plist = self::_tlv('dmap.itemid', $pl_id);
+        $plist .= self::_tlv('dmap.persistentid', $pl_id);
+        $plist .= self::_tlv('dmap.itemname', $playlist->name);
+        $plist .= self::_tlv('dmap.itemcount', count($playlist->get_items()));
+        if ($isSmart) {
+            $plist .= self::_tlv('com.apple.itunes.smart-playlist', 1);
+        }
+
+        return self::_tlv('dmap.listingitem', $plist);
+    }
+
+    public static function apiOutput(string $string): void
+    {
+        self::_setHeaders();
+
+        if (Core::get_server('REQUEST_METHOD') != 'OPTIONS') {
+            header("Content-length: " . strlen((string)$string));
+            echo $string;
         } else {
-            // Stream media using http redirect if no curl support
-            header("Location: " . $url);
+            header("Content-type: text/plain");
+            header("Content-length: 0");
         }
     }
 
     /**
-     * @param resource $curl
-     * @param string $data
+     * base_library
      */
-    public static function output_body($curl, $data): int
+    public static function base_library(): string
     {
-        echo $data;
-        ob_flush();
+        $library = self::_tlv('dmap.itemid', Daap_Api::BASE_LIBRARY);
+        $library .= self::_tlv('dmap.persistentid', Daap_Api::BASE_LIBRARY);
+        $library .= self::_tlv('dmap.itemname', 'Music');
+        $library .= self::_tlv('daap.baseplaylist', 1);
+        $counts = Catalog::get_server_counts(0);
+        $library .= self::_tlv('dmap.itemcount', $counts['song']);
 
-        return strlen((string)$data);
-    }
-
-    /**
-     * @param resource $curl
-     * @param string $header
-     */
-    public static function output_header($curl, $header): int
-    {
-        $rheader = trim((string)$header);
-        $rhpart  = explode(':', $rheader);
-        if (!empty($rheader) && count($rhpart) > 1) {
-            if ($rhpart[0] != "Transfer-Encoding") {
-                header($rheader);
-            }
-        }
-
-        return strlen((string)$header);
-    }
-
-    /**
-     * server_info (Based on the server_info part of the forkedd-daapd project)
-     * @param array<mixed> $input
-     */
-    public static function server_info($input): void
-    {
-        $output = self::_tlv('dmap.status', 200);
-        $output .= self::_tlv('dmap.protocolversion', '0.2.0.0');
-        $output .= self::_tlv('dmap.itemname', 'Ampache');
-        $output .= self::_tlv('daap.protocolversion', '0.3.0.0');
-        $output .= self::_tlv('daap.supportsextradata', 0); // daap.supportsextradata
-        $output .= self::_tlv('daap.supportsgroups', 0);
-        $output .= self::_tlv('daap.aeMQ', 1); // unknown - used by iTunes
-        $output .= self::_tlv('daap.aeTr', 1); // unknown - used by iTunes
-        $output .= self::_tlv('daap.aeSL', 1); // unknown - used by iTunes
-        $output .= self::_tlv('daap.aeSR', 1); // unknown - used by iTunes
-        $output .= self::_tlv('dmap.supportsedit', 0);
-
-        if (AmpConfig::get('daap_pass')) {
-            $output .= self::_tlv('dmap.loginrequired', 1);
-        } else {
-            $output .= self::_tlv('dmap.loginrequired', 0);
-        }
-        $output .= self::_tlv('dmap.timeoutinterval', 1800);
-        $output .= self::_tlv('dmap.supportsautologout', 1);
-
-        $output .= self::_tlv('dmap.authenticationmethod', 2); // FIXME im not shre about this value "2"?
-        $output .= self::_tlv('dmap.supportsupdate', 1);
-        $output .= self::_tlv('dmap.supportspersistentids', 1); // FIXME im not sure if ampache supports it
-        $output .= self::_tlv('dmap.supportsextensions', 0);
-        $output .= self::_tlv('dmap.supportsbrowse', 0);
-        $output .= self::_tlv('dmap.supportsquery', 0);
-        $output .= self::_tlv('dmap.supportsindex', 0);
-        $output .= self::_tlv('dmap.databasescount', 1);
-
-        $output = self::_tlv('dmap.serverinforesponse', $output);
-        self::apiOutput($output);
+        return self::_tlv('dmap.listingitem', $library);
     }
 
     /**
@@ -223,136 +154,141 @@ class Daap_Api
         self::apiOutput($output);
     }
 
-    /**
-     * login
-     * @param array<mixed> $input
-     */
-    public static function login($input): void
+    public static function create_dictionary(): void
     {
-        self::_check_auth('dmap.loginresponse');
+        self::_add_dict('mdcl', 'list', 'dmap.dictionary'); // a dictionary entry
+        self::_add_dict('mstt', 'int', 'dmap.status'); // the response status code, these appear to be http status codes
+        self::_add_dict('miid', 'int', 'dmap.itemid'); // an item's id
+        self::_add_dict('minm', 'string', 'dmap.itemname'); // an items name
+        self::_add_dict(
+            'mikd',
+            'byte',
+            'dmap.itemkind'
+        ); // the kind of item. So far, only '2' has been seen, an audio file?
+        self::_add_dict('mper', 'long', 'dmap.persistentid'); // a persistent id
+        self::_add_dict('mcon', 'list', 'dmap.container'); // an arbitrary container
+        self::_add_dict('mcti', 'int', 'dmap.containeritemid'); // the id of an item in its container
+        self::_add_dict('mpco', 'int', 'dmap.parentcontainerid');
+        self::_add_dict('msts', 'string', 'dmap.statusstring');
+        self::_add_dict('mimc', 'int', 'dmap.itemcount'); // number of items in a container
+        self::_add_dict('mrco', 'int', 'dmap.returnedcount'); // number of items returned in a request
+        self::_add_dict('mtco', 'int', 'dmap.specifiedtotalcount'); // number of items in response to a request
+        self::_add_dict('mctc', 'int', 'dmap.containercount');
+        self::_add_dict('mlcl', 'list', 'dmap.listing'); // a list
+        self::_add_dict('mlit', 'list', 'dmap.listingitem'); // a single item in said list
+        self::_add_dict('mbcl', 'list', 'dmap.bag');
+        self::_add_dict('mdcl', 'list', 'dmap.dictionary');
+        self::_add_dict('msrv', 'list', 'dmap.serverinforesponse'); // response to a /server-info
+        self::_add_dict('msau', 'byte', 'dmap.authenticationmethod');
+        self::_add_dict('mslr', 'byte', 'dmap.loginrequired');
+        self::_add_dict('mpro', 'version', 'dmap.protocolversion');
+        self::_add_dict('apro', 'version', 'daap.protocolversion');
+        self::_add_dict('msal', 'byte', 'dmap.supportsautologout');
+        self::_add_dict('msup', 'byte', 'dmap.supportsupdate');
+        self::_add_dict('mspi', 'byte', 'dmap.supportspersistentids');
+        self::_add_dict('msex', 'byte', 'dmap.supportsextensions');
+        self::_add_dict('msbr', 'byte', 'dmap.supportsbrowse');
+        self::_add_dict('msqy', 'byte', 'dmap.supportsquery');
+        self::_add_dict('msix', 'byte', 'dmap.supportsindex');
+        self::_add_dict('msrs', 'byte', 'dmap.supportsresolve');
+        self::_add_dict('mstm', 'int', 'dmap.timeoutinterval');
+        self::_add_dict('msdc', 'int', 'dmap.databasescount');
+        self::_add_dict('mccr', 'list', 'dmap.contentcodesresponse'); // response to a /content-codes
+        self::_add_dict('mcnm', 'int', 'dmap.contentcodesnumber'); // the four letter code
+        self::_add_dict('mcna', 'string', 'dmap.contentcodesname'); // the full name of the code
+        self::_add_dict('mcty', 'short', 'dmap.contentcodestype'); // the type of the code
+        self::_add_dict('mlog', 'list', 'dmap.loginresponse'); // response to a /login
+        self::_add_dict('mlid', 'int', 'dmap.sessionid'); // the session id for the login session
+        self::_add_dict('mupd', 'list', 'dmap.updateresponse'); // response to a /update
+        self::_add_dict('musr', 'int', 'dmap.serverrevision'); // revision to use for requests
+        self::_add_dict('muty', 'byte', 'dmap.updatetype');
+        self::_add_dict('mudl', 'list', 'dmap.deletedidlisting'); // used in updates?
+        self::_add_dict('avdb', 'list', 'daap.serverdatabases'); // response to a /databases
+        self::_add_dict('abpro', 'list', 'daap.databasebrowse');
+        self::_add_dict('abal', 'list', 'daap.browsealbumlisting');
+        self::_add_dict('abar', 'list', 'daap.browseartistlisting');
+        self::_add_dict('abcp', 'list', 'daap.browsecomposerlisting');
+        self::_add_dict('abgn', 'list', 'daap.browsegenrelisting');
+        self::_add_dict('adbs', 'list', 'daap.databasesongs'); // response to a /databases/id/items
+        self::_add_dict('asal', 'string', 'daap.songalbum');
+        self::_add_dict('asar', 'string', 'daap.songartist');
+        self::_add_dict('ascp', 'string', 'daap.songcomposer');
+        self::_add_dict('asbt', 'short', 'daap.songsbeatsperminute');
+        self::_add_dict('asbr', 'short', 'daap.songbitrate');
+        self::_add_dict('ascm', 'string', 'daap.songcomment');
+        self::_add_dict('asco', 'byte', 'daap.songcompilation');
+        self::_add_dict('asda', 'date', 'daap.songdateadded');
+        self::_add_dict('asdm', 'date', 'daap.songdatemodified');
+        self::_add_dict('asdc', 'short', 'daap.songdiscount');
+        self::_add_dict('asdn', 'short', 'daap.songdiscnumber');
+        self::_add_dict('asdb', 'byte', 'daap.songdisabled');
+        self::_add_dict('aseq', 'string', 'daap.songqpreset');
+        self::_add_dict('asfm', 'string', 'daap.songformat');
+        self::_add_dict('asgn', 'string', 'daap.songgenre');
+        self::_add_dict('asdt', 'string', 'daap.songdescription');
+        self::_add_dict('asrv', 'byte', 'daap.songrelativevolume');
+        self::_add_dict('assr', 'int', 'daap.songsamplerate');
+        self::_add_dict('assz', 'int', 'daap.songsize');
+        self::_add_dict('asst', 'int', 'daap.songstarttime'); // in milliseconds
+        self::_add_dict('assp', 'int', 'daap.songstoptime'); // in milliseconds
+        self::_add_dict('astm', 'int', 'daap.songtime'); // in milliseconds
+        self::_add_dict('astc', 'short', 'daap.songtrackcount');
+        self::_add_dict('astn', 'short', 'daap.songtracknumber');
+        self::_add_dict('asur', 'byte', 'daap.songuserrating');
+        self::_add_dict('asyr', 'short', 'daap.songyear');
+        self::_add_dict('asdk', 'byte', 'daap.songdatakind');
+        self::_add_dict('asul', 'string', 'daap.songdataurl');
+        self::_add_dict('aply', 'list', 'daap.databaseplaylists'); // response to a /databases/id/containers
+        self::_add_dict('abpl', 'byte', 'daap.baseplaylist');
+        self::_add_dict('apso', 'list', 'daap.playlistsongs'); // response to a /databases/id/containers/id/items
+        self::_add_dict('prsv', 'list', 'daap.resolve');
+        self::_add_dict('arif', 'list', 'daap.resolveinfo');
+        self::_add_dict('ated', 'short', 'daap.supportsextradata');
+        self::_add_dict('asgr', 'short', 'daap.supportsgroups');
+        self::_add_dict('aeMQ', 'byte', 'daap.aeMQ');
+        self::_add_dict('aeTr', 'byte', 'daap.aeTr');
+        self::_add_dict('aeSL', 'byte', 'daap.aeSL');
+        self::_add_dict('aeSR', 'byte', 'daap.aeSR');
+        self::_add_dict('msed', 'byte', 'dmap.supportsedit');
+        self::_add_dict('aeNV', 'int', 'com.apple.itunes.norm-volume');
+        self::_add_dict('aeSP', 'byte', 'com.apple.itunes.smart-playlist');
+    }
 
-        // Create a new daap session
-        $sql = "INSERT INTO `daap_session` (`creationdate`) VALUES (?)";
-        Dba::write($sql, [time()]);
-        $sid = Dba::insert_id();
-
-        $output = self::_tlv('dmap.status', 200);
-        $output .= self::_tlv('dmap.sessionid', $sid);
-
-        $output = self::_tlv('dmap.loginresponse', $output);
+    /**
+     * @param string $tag
+     * @param int $code
+     * @param string $msg
+     */
+    public static function createApiError($tag, $code, $msg = ''): bool
+    {
+        $output = self::_tlv('dmap.status', $code);
+        if (!empty($msg)) {
+            $output .= self::_tlv('dmap.statusstring', $msg);
+        }
+        $output = self::_tlv($tag, $output);
         self::apiOutput($output);
+
+        return false;
     }
 
-    /**
-     * @param string $code
-     */
-    private static function _check_session($code): void
+    public static function createError($code): bool
     {
-        // Purge expired sessions
-        $sql = "DELETE FROM `daap_session` WHERE `creationdate` < ?";
-        Dba::write($sql, [time() - 1800]);
-
-        self::_check_auth($code);
-
-        if (!isset($_GET['session-id'])) {
-            debug_event(self::class, 'Missing session id.', 2);
-        } else {
-            $sql        = "SELECT * FROM `daap_session` WHERE `id` = ?;";
-            $db_results = Dba::read($sql, [Core::get_get('session-id')]);
-
-            if (Dba::num_rows($db_results) == 0) {
-                debug_event(self::class, 'Unknown session id `' . Core::get_get('session-id') . '`.', 4);
-            }
-        }
-    }
-
-    /**
-     * @param string $code
-     */
-    private static function _check_auth($code = ''): void
-    {
-        $authenticated = false;
-        $pass          = AmpConfig::get('daap_pass');
-        // DAAP password specified, need to authenticate the client
-        if (!empty($pass)) {
-            $headers = apache_request_headers();
-            $auth    = $headers['Authorization'];
-            if (str_starts_with(strtolower((string)$auth), 'basic')) {
-                $decauth  = base64_decode(substr($auth, 6));
-                $userpass = explode(':', (string)$decauth);
-                if (count($userpass) == 2) {
-                    if ($userpass[1] == $pass) {
-                        $authenticated = true;
-                    }
-                }
-            }
-        } else {
-            $authenticated = true;
-        }
-
-        if (!$authenticated) {
-            debug_event(self::class, 'Authentication failed. Wrong DAAP password?', 3);
-            if (!empty($code)) {
-                self::createApiError($code, 403);
-            }
-        }
-    }
-
-    /**
-     * logout
-     * @param array<mixed> $input
-     */
-    public static function logout($input): void
-    {
-        self::_check_auth();
-
-        $sql = "DELETE FROM `daap_session` WHERE `id` = ?;";
-        Dba::write($sql, [$input['session-id']]);
-
-        self::_setHeaders();
-        header("HTTP/1.0 204 Logout Successful", true, 204);
-    }
-
-    /**
-     * update
-     * @param array<mixed> $input
-     */
-    public static function update($input): void
-    {
-        self::_check_session('dmap.updateresponse');
-
-        $output = self::_tlv('dmap.serverrevision', Catalog::getLastUpdate());
-        $output .= self::_tlv('dmap.status', 200);
-
-        $output = self::_tlv('dmap.updateresponse', $output);
-        self::apiOutput($output);
-    }
-
-    /**
-     * catalog_songs
-     */
-    private static function _catalog_songs(): string
-    {
-        // $type = filter_input(INPUT_GET, 'type', FILTER_SANITIZE_SPECIAL_CHARS);
-        $meta   = explode(',', strtolower(Core::get_get('meta')));
-        $output = self::_tlv('dmap.status', 200);
-        $output .= self::_tlv('dmap.updatetype', 0);
-
-        $songs    = [];
-        $catalogs = Catalog::get_catalogs();
-        foreach ($catalogs as $catalog_id) {
-            $catalog = Catalog::create_from_id($catalog_id);
-            if ($catalog === null) {
+        $error = "";
+        switch ($code) {
+            case 404:
+                $error = "Not Found";
                 break;
-            }
-            $songs = array_merge($songs, $catalog->get_songs());
+            case 401:
+                $error = "Unauthorized";
+                break;
         }
+        header("Content-type: text/html");
+        header("HTTP/1.0 " . $code . " " . $error, true, $code);
 
-        $output .= self::_tlv('dmap.specifiedtotalcount', count($songs));
-        $output .= self::_tlv('dmap.returnedcount', count($songs));
-        $output .= self::_tlv('dmap.listing', self::_tlv_songs($songs, $meta));
+        $html = "<!DOCTYPE html><html><head><title>" . $error . "</title></head><body><h1>" . $code . " " . $error . "</h1></body></html>";
+        self::apiOutput($html);
 
-        return $output;
+        return false;
     }
 
     /**
@@ -490,6 +426,380 @@ class Daap_Api
         return true;
     }
 
+    /**
+     * follow_stream
+     * @param string $url
+     */
+    public static function follow_stream($url): void
+    {
+        set_time_limit(0);
+        ob_end_clean();
+        if (function_exists('curl_version')) {
+            $headers      = apache_request_headers();
+            $reqheaders   = [];
+            $reqheaders[] = "User-Agent: " . urlencode(preg_replace('/[\s\/]+/', '_', $headers['User-Agent']));
+            if (array_key_exists('Range', $headers)) {
+                $reqheaders[] = "Range: " . $headers['Range'];
+            }
+            // Curl support, we stream transparently to avoid redirect. Redirect can fail on few clients
+            $curl = curl_init($url);
+            if ($curl) {
+                curl_setopt_array(
+                    $curl,
+                    [
+                        CURLOPT_HTTPHEADER => $reqheaders,
+                        CURLOPT_HEADER => false,
+                        CURLOPT_RETURNTRANSFER => false,
+                        CURLOPT_FOLLOWLOCATION => true,
+                        CURLOPT_WRITEFUNCTION => [
+                            'Ampache\Module\Api\Daap_Api',
+                            'output_body'
+                        ],
+                        CURLOPT_HEADERFUNCTION => [
+                            'Ampache\Module\Api\Daap_Api',
+                            'output_header'
+                        ],
+                        // Ignore invalid certificate
+                        // Default trusted chain is crap anyway and currently no custom CA option
+                        CURLOPT_SSL_VERIFYPEER => false,
+                        CURLOPT_SSL_VERIFYHOST => false,
+                        CURLOPT_TIMEOUT => 0
+                    ]
+                );
+                curl_exec($curl);
+            }
+        } else {
+            // Stream media using http redirect if no curl support
+            header("Location: " . $url);
+        }
+    }
+
+    /**
+     * login
+     * @param array<mixed> $input
+     */
+    public static function login($input): void
+    {
+        self::_check_auth('dmap.loginresponse');
+
+        // Create a new daap session
+        $sql = "INSERT INTO `daap_session` (`creationdate`) VALUES (?)";
+        Dba::write($sql, [time()]);
+        $sid = Dba::insert_id();
+
+        $output = self::_tlv('dmap.status', 200);
+        $output .= self::_tlv('dmap.sessionid', $sid);
+
+        $output = self::_tlv('dmap.loginresponse', $output);
+        self::apiOutput($output);
+    }
+
+    /**
+     * logout
+     * @param array<mixed> $input
+     */
+    public static function logout($input): void
+    {
+        self::_check_auth();
+
+        $sql = "DELETE FROM `daap_session` WHERE `id` = ?;";
+        Dba::write($sql, [$input['session-id']]);
+
+        self::_setHeaders();
+        header("HTTP/1.0 204 Logout Successful", true, 204);
+    }
+
+    /**
+     * @param resource $curl
+     * @param string $data
+     */
+    public static function output_body($curl, $data): int
+    {
+        echo $data;
+        ob_flush();
+
+        return strlen((string)$data);
+    }
+
+    /**
+     * @param resource $curl
+     * @param string $header
+     */
+    public static function output_header($curl, $header): int
+    {
+        $rheader = trim((string)$header);
+        $rhpart  = explode(':', $rheader);
+        if (!empty($rheader) && count($rhpart) > 1) {
+            if ($rhpart[0] != "Transfer-Encoding") {
+                header($rheader);
+            }
+        }
+
+        return strlen((string)$header);
+    }
+
+    /**
+     * server_info (Based on the server_info part of the forkedd-daapd project)
+     * @param array<mixed> $input
+     */
+    public static function server_info($input): void
+    {
+        $output = self::_tlv('dmap.status', 200);
+        $output .= self::_tlv('dmap.protocolversion', '0.2.0.0');
+        $output .= self::_tlv('dmap.itemname', 'Ampache');
+        $output .= self::_tlv('daap.protocolversion', '0.3.0.0');
+        $output .= self::_tlv('daap.supportsextradata', 0); // daap.supportsextradata
+        $output .= self::_tlv('daap.supportsgroups', 0);
+        $output .= self::_tlv('daap.aeMQ', 1); // unknown - used by iTunes
+        $output .= self::_tlv('daap.aeTr', 1); // unknown - used by iTunes
+        $output .= self::_tlv('daap.aeSL', 1); // unknown - used by iTunes
+        $output .= self::_tlv('daap.aeSR', 1); // unknown - used by iTunes
+        $output .= self::_tlv('dmap.supportsedit', 0);
+
+        if (AmpConfig::get('daap_pass')) {
+            $output .= self::_tlv('dmap.loginrequired', 1);
+        } else {
+            $output .= self::_tlv('dmap.loginrequired', 0);
+        }
+        $output .= self::_tlv('dmap.timeoutinterval', 1800);
+        $output .= self::_tlv('dmap.supportsautologout', 1);
+
+        $output .= self::_tlv('dmap.authenticationmethod', 2); // FIXME im not shre about this value "2"?
+        $output .= self::_tlv('dmap.supportsupdate', 1);
+        $output .= self::_tlv('dmap.supportspersistentids', 1); // FIXME im not sure if ampache supports it
+        $output .= self::_tlv('dmap.supportsextensions', 0);
+        $output .= self::_tlv('dmap.supportsbrowse', 0);
+        $output .= self::_tlv('dmap.supportsquery', 0);
+        $output .= self::_tlv('dmap.supportsindex', 0);
+        $output .= self::_tlv('dmap.databasescount', 1);
+
+        $output = self::_tlv('dmap.serverinforesponse', $output);
+        self::apiOutput($output);
+    }
+
+    /**
+     * update
+     * @param array<mixed> $input
+     */
+    public static function update($input): void
+    {
+        self::_check_session('dmap.updateresponse');
+
+        $output = self::_tlv('dmap.serverrevision', Catalog::getLastUpdate());
+        $output .= self::_tlv('dmap.status', 200);
+
+        $output = self::_tlv('dmap.updateresponse', $output);
+        self::apiOutput($output);
+    }
+
+    /**
+     * @param string $code
+     * @param string $type
+     * @param string $name
+     */
+    private static function _add_dict($code, $type, $name): void
+    {
+        self::$tags[$name] = [
+            'type' => $type,
+            'code' => $code,
+        ];
+    }
+
+    /**
+     * catalog_songs
+     */
+    private static function _catalog_songs(): string
+    {
+        // $type = filter_input(INPUT_GET, 'type', FILTER_SANITIZE_SPECIAL_CHARS);
+        $meta   = explode(',', strtolower(Core::get_get('meta')));
+        $output = self::_tlv('dmap.status', 200);
+        $output .= self::_tlv('dmap.updatetype', 0);
+
+        $songs    = [];
+        $catalogs = Catalog::get_catalogs();
+        foreach ($catalogs as $catalog_id) {
+            $catalog = Catalog::create_from_id($catalog_id);
+            if ($catalog === null) {
+                break;
+            }
+            $songs = array_merge($songs, $catalog->get_songs());
+        }
+
+        $output .= self::_tlv('dmap.specifiedtotalcount', count($songs));
+        $output .= self::_tlv('dmap.returnedcount', count($songs));
+        $output .= self::_tlv('dmap.listing', self::_tlv_songs($songs, $meta));
+
+        return $output;
+    }
+
+    /**
+     * @param string $code
+     */
+    private static function _check_auth($code = ''): void
+    {
+        $authenticated = false;
+        $pass          = AmpConfig::get('daap_pass');
+        // DAAP password specified, need to authenticate the client
+        if (!empty($pass)) {
+            $headers = apache_request_headers();
+            $auth    = $headers['Authorization'];
+            if (str_starts_with(strtolower((string)$auth), 'basic')) {
+                $decauth  = base64_decode(substr($auth, 6));
+                $userpass = explode(':', (string)$decauth);
+                if (count($userpass) == 2) {
+                    if ($userpass[1] == $pass) {
+                        $authenticated = true;
+                    }
+                }
+            }
+        } else {
+            $authenticated = true;
+        }
+
+        if (!$authenticated) {
+            debug_event(self::class, 'Authentication failed. Wrong DAAP password?', 3);
+            if (!empty($code)) {
+                self::createApiError($code, 403);
+            }
+        }
+    }
+
+    /**
+     * @param string $code
+     */
+    private static function _check_session($code): void
+    {
+        // Purge expired sessions
+        $sql = "DELETE FROM `daap_session` WHERE `creationdate` < ?";
+        Dba::write($sql, [time() - 1800]);
+
+        self::_check_auth($code);
+
+        if (!isset($_GET['session-id'])) {
+            debug_event(self::class, 'Missing session id.', 2);
+        } else {
+            $sql        = "SELECT * FROM `daap_session` WHERE `id` = ?;";
+            $db_results = Dba::read($sql, [Core::get_get('session-id')]);
+
+            if (Dba::num_rows($db_results) == 0) {
+                debug_event(self::class, 'Unknown session id `' . Core::get_get('session-id') . '`.', 4);
+            }
+        }
+    }
+
+    private static function _get_type_id($type): int
+    {
+        switch ($type) {
+            case 'byte':
+                return 1;
+            case 'unsigned byte':
+                return 2;
+            case 'short':
+                return 3;
+            case 'unsigned short':
+                return 4;
+            case 'int':
+                return 5;
+            case 'unsigned int':
+                return 6;
+            case 'long':
+                return 7;
+            case 'unsigned long':
+                return 8;
+            case 'string':
+                return 9;
+            case 'date':
+                // represented as a 4 byte integer
+                return 10;
+            case 'version':
+                // represented as a 4 singles bytes, e.g. 0.1.0.0 or as two shorts, e.g. 1.0
+                return 11;
+            case 'list':
+                return 12;
+            default:
+                return 0;
+        }
+    }
+
+    private static function _setHeaders(): void
+    {
+        header("Content-Type: application/x-dmap-tagged");
+        header("DAAP-Server: Ampache");
+        header("Accept-Ranges: bytes");
+        header("Cache-Control: no-cache");
+        header("Expires: -1");
+    }
+
+    private static function _tlv($tag, $value): string
+    {
+        if (array_key_exists($tag, self::$tags)) {
+            $code = self::$tags[$tag]['code'];
+            switch (self::$tags[$tag]['type']) {
+                case 'byte':
+                    return self::_tlv_byte($code, $value);
+                case 'short':
+                    return self::_tlv_short($code, $value);
+                case 'int':
+                    return self::_tlv_int($code, $value);
+                case 'long':
+                    return self::_tlv_long($code, $value);
+                case 'string':
+                    return self::_tlv_string($code, $value);
+                case 'date':
+                    return self::_tlv_date($code, $value);
+                case 'version':
+                    return self::_tlv_version($code, $value);
+                case 'list':
+                    return self::_tlv_list($code, $value);
+                default:
+                    debug_event(self::class, 'Unsupported tag type `' . self::$tags[$tag]['type'] . '`.', 3);
+                    break;
+            }
+
+            return $code . pack("N", strlen((string)$value)) . $value;
+        }
+        debug_event(self::class, 'Unknown DAAP tag `' . $tag . '`.', 3);
+
+        return '';
+    }
+
+    private static function _tlv_byte($tag, $value): string
+    {
+        return $tag . "\x00\x00\x00\x01" . pack("C", $value);
+    }
+
+    private static function _tlv_date($tag, $value): string
+    {
+        return self::_tlv_int($tag, $value);
+    }
+
+    private static function _tlv_int($tag, $value): string
+    {
+        return $tag . "\x00\x00\x00\x04" . pack("N", $value);
+    }
+
+    private static function _tlv_list($tag, $value): string
+    {
+        return self::_tlv_string($tag, $value);
+    }
+
+    private static function _tlv_long($tag, $value): string
+    {
+        // Really?! PHP...
+        // Need to split value into two 32-bit integer because php pack function doesn't support 64-bit integer...
+        $highMap = 0xffffffff00000000;
+        $lowMap  = 0x00000000ffffffff;
+        $higher  = ($value & $highMap) >> 32;
+        $lower   = $value & $lowMap;
+
+        return $tag . "\x00\x00\x00\x08" . pack("NN", $higher, $lower);
+    }
+
+    private static function _tlv_short($tag, $value): string
+    {
+        return $tag . "\x00\x00\x00\x02" . pack("n", $value);
+    }
+
     private static function _tlv_songs($songs, $meta): string
     {
         if (array_search('all', $meta) > -1) {
@@ -569,102 +879,9 @@ class Daap_Api
         return $tlv_out;
     }
 
-    /**
-     * base_library
-     */
-    public static function base_library(): string
-    {
-        $library = self::_tlv('dmap.itemid', Daap_Api::BASE_LIBRARY);
-        $library .= self::_tlv('dmap.persistentid', Daap_Api::BASE_LIBRARY);
-        $library .= self::_tlv('dmap.itemname', 'Music');
-        $library .= self::_tlv('daap.baseplaylist', 1);
-        $counts = Catalog::get_server_counts(0);
-        $library .= self::_tlv('dmap.itemcount', $counts['song']);
-
-        return self::_tlv('dmap.listingitem', $library);
-    }
-
-    /**
-     * @param Playlist|Search $playlist
-     * @param bool $isSmart
-     */
-    public static function _tlv_playlist($playlist, $isSmart = false): string
-    {
-        $pl_id = (($isSmart) ? Daap_Api::AMPACHEID_SMARTPL : 0) + $playlist->id;
-        $plist = self::_tlv('dmap.itemid', $pl_id);
-        $plist .= self::_tlv('dmap.persistentid', $pl_id);
-        $plist .= self::_tlv('dmap.itemname', $playlist->name);
-        $plist .= self::_tlv('dmap.itemcount', count($playlist->get_items()));
-        if ($isSmart) {
-            $plist .= self::_tlv('com.apple.itunes.smart-playlist', 1);
-        }
-
-        return self::_tlv('dmap.listingitem', $plist);
-    }
-
-    private static function _tlv($tag, $value): string
-    {
-        if (array_key_exists($tag, self::$tags)) {
-            $code = self::$tags[$tag]['code'];
-            switch (self::$tags[$tag]['type']) {
-                case 'byte':
-                    return self::_tlv_byte($code, $value);
-                case 'short':
-                    return self::_tlv_short($code, $value);
-                case 'int':
-                    return self::_tlv_int($code, $value);
-                case 'long':
-                    return self::_tlv_long($code, $value);
-                case 'string':
-                    return self::_tlv_string($code, $value);
-                case 'date':
-                    return self::_tlv_date($code, $value);
-                case 'version':
-                    return self::_tlv_version($code, $value);
-                case 'list':
-                    return self::_tlv_list($code, $value);
-                default:
-                    debug_event(self::class, 'Unsupported tag type `' . self::$tags[$tag]['type'] . '`.', 3);
-                    break;
-            }
-
-            return $code . pack("N", strlen((string)$value)) . $value;
-        }
-        debug_event(self::class, 'Unknown DAAP tag `' . $tag . '`.', 3);
-
-        return '';
-    }
-
     private static function _tlv_string($tag, $value): string
     {
         return $tag . pack("N", strlen((string)$value)) . $value;
-    }
-
-    private static function _tlv_long($tag, $value): string
-    {
-        // Really?! PHP...
-        // Need to split value into two 32-bit integer because php pack function doesn't support 64-bit integer...
-        $highMap = 0xffffffff00000000;
-        $lowMap  = 0x00000000ffffffff;
-        $higher  = ($value & $highMap) >> 32;
-        $lower   = $value & $lowMap;
-
-        return $tag . "\x00\x00\x00\x08" . pack("NN", $higher, $lower);
-    }
-
-    private static function _tlv_int($tag, $value): string
-    {
-        return $tag . "\x00\x00\x00\x04" . pack("N", $value);
-    }
-
-    private static function _tlv_short($tag, $value): string
-    {
-        return $tag . "\x00\x00\x00\x02" . pack("n", $value);
-    }
-
-    private static function _tlv_byte($tag, $value): string
-    {
-        return $tag . "\x00\x00\x00\x01" . pack("C", $value);
     }
 
     private static function _tlv_version($tag, $value): string
@@ -676,221 +893,5 @@ class Daap_Api
         debug_event(self::class, 'Malformed `' . $tag . '` version `' . $value . '`.', 3);
 
         return '';
-    }
-
-    private static function _tlv_date($tag, $value): string
-    {
-        return self::_tlv_int($tag, $value);
-    }
-
-    private static function _tlv_list($tag, $value): string
-    {
-        return self::_tlv_string($tag, $value);
-    }
-
-    public static function create_dictionary(): void
-    {
-        self::_add_dict('mdcl', 'list', 'dmap.dictionary'); // a dictionary entry
-        self::_add_dict('mstt', 'int', 'dmap.status'); // the response status code, these appear to be http status codes
-        self::_add_dict('miid', 'int', 'dmap.itemid'); // an item's id
-        self::_add_dict('minm', 'string', 'dmap.itemname'); // an items name
-        self::_add_dict(
-            'mikd',
-            'byte',
-            'dmap.itemkind'
-        ); // the kind of item. So far, only '2' has been seen, an audio file?
-        self::_add_dict('mper', 'long', 'dmap.persistentid'); // a persistent id
-        self::_add_dict('mcon', 'list', 'dmap.container'); // an arbitrary container
-        self::_add_dict('mcti', 'int', 'dmap.containeritemid'); // the id of an item in its container
-        self::_add_dict('mpco', 'int', 'dmap.parentcontainerid');
-        self::_add_dict('msts', 'string', 'dmap.statusstring');
-        self::_add_dict('mimc', 'int', 'dmap.itemcount'); // number of items in a container
-        self::_add_dict('mrco', 'int', 'dmap.returnedcount'); // number of items returned in a request
-        self::_add_dict('mtco', 'int', 'dmap.specifiedtotalcount'); // number of items in response to a request
-        self::_add_dict('mctc', 'int', 'dmap.containercount');
-        self::_add_dict('mlcl', 'list', 'dmap.listing'); // a list
-        self::_add_dict('mlit', 'list', 'dmap.listingitem'); // a single item in said list
-        self::_add_dict('mbcl', 'list', 'dmap.bag');
-        self::_add_dict('mdcl', 'list', 'dmap.dictionary');
-        self::_add_dict('msrv', 'list', 'dmap.serverinforesponse'); // response to a /server-info
-        self::_add_dict('msau', 'byte', 'dmap.authenticationmethod');
-        self::_add_dict('mslr', 'byte', 'dmap.loginrequired');
-        self::_add_dict('mpro', 'version', 'dmap.protocolversion');
-        self::_add_dict('apro', 'version', 'daap.protocolversion');
-        self::_add_dict('msal', 'byte', 'dmap.supportsautologout');
-        self::_add_dict('msup', 'byte', 'dmap.supportsupdate');
-        self::_add_dict('mspi', 'byte', 'dmap.supportspersistentids');
-        self::_add_dict('msex', 'byte', 'dmap.supportsextensions');
-        self::_add_dict('msbr', 'byte', 'dmap.supportsbrowse');
-        self::_add_dict('msqy', 'byte', 'dmap.supportsquery');
-        self::_add_dict('msix', 'byte', 'dmap.supportsindex');
-        self::_add_dict('msrs', 'byte', 'dmap.supportsresolve');
-        self::_add_dict('mstm', 'int', 'dmap.timeoutinterval');
-        self::_add_dict('msdc', 'int', 'dmap.databasescount');
-        self::_add_dict('mccr', 'list', 'dmap.contentcodesresponse'); // response to a /content-codes
-        self::_add_dict('mcnm', 'int', 'dmap.contentcodesnumber'); // the four letter code
-        self::_add_dict('mcna', 'string', 'dmap.contentcodesname'); // the full name of the code
-        self::_add_dict('mcty', 'short', 'dmap.contentcodestype'); // the type of the code
-        self::_add_dict('mlog', 'list', 'dmap.loginresponse'); // response to a /login
-        self::_add_dict('mlid', 'int', 'dmap.sessionid'); // the session id for the login session
-        self::_add_dict('mupd', 'list', 'dmap.updateresponse'); // response to a /update
-        self::_add_dict('musr', 'int', 'dmap.serverrevision'); // revision to use for requests
-        self::_add_dict('muty', 'byte', 'dmap.updatetype');
-        self::_add_dict('mudl', 'list', 'dmap.deletedidlisting'); // used in updates?
-        self::_add_dict('avdb', 'list', 'daap.serverdatabases'); // response to a /databases
-        self::_add_dict('abpro', 'list', 'daap.databasebrowse');
-        self::_add_dict('abal', 'list', 'daap.browsealbumlisting');
-        self::_add_dict('abar', 'list', 'daap.browseartistlisting');
-        self::_add_dict('abcp', 'list', 'daap.browsecomposerlisting');
-        self::_add_dict('abgn', 'list', 'daap.browsegenrelisting');
-        self::_add_dict('adbs', 'list', 'daap.databasesongs'); // response to a /databases/id/items
-        self::_add_dict('asal', 'string', 'daap.songalbum');
-        self::_add_dict('asar', 'string', 'daap.songartist');
-        self::_add_dict('ascp', 'string', 'daap.songcomposer');
-        self::_add_dict('asbt', 'short', 'daap.songsbeatsperminute');
-        self::_add_dict('asbr', 'short', 'daap.songbitrate');
-        self::_add_dict('ascm', 'string', 'daap.songcomment');
-        self::_add_dict('asco', 'byte', 'daap.songcompilation');
-        self::_add_dict('asda', 'date', 'daap.songdateadded');
-        self::_add_dict('asdm', 'date', 'daap.songdatemodified');
-        self::_add_dict('asdc', 'short', 'daap.songdiscount');
-        self::_add_dict('asdn', 'short', 'daap.songdiscnumber');
-        self::_add_dict('asdb', 'byte', 'daap.songdisabled');
-        self::_add_dict('aseq', 'string', 'daap.songqpreset');
-        self::_add_dict('asfm', 'string', 'daap.songformat');
-        self::_add_dict('asgn', 'string', 'daap.songgenre');
-        self::_add_dict('asdt', 'string', 'daap.songdescription');
-        self::_add_dict('asrv', 'byte', 'daap.songrelativevolume');
-        self::_add_dict('assr', 'int', 'daap.songsamplerate');
-        self::_add_dict('assz', 'int', 'daap.songsize');
-        self::_add_dict('asst', 'int', 'daap.songstarttime'); // in milliseconds
-        self::_add_dict('assp', 'int', 'daap.songstoptime'); // in milliseconds
-        self::_add_dict('astm', 'int', 'daap.songtime'); // in milliseconds
-        self::_add_dict('astc', 'short', 'daap.songtrackcount');
-        self::_add_dict('astn', 'short', 'daap.songtracknumber');
-        self::_add_dict('asur', 'byte', 'daap.songuserrating');
-        self::_add_dict('asyr', 'short', 'daap.songyear');
-        self::_add_dict('asdk', 'byte', 'daap.songdatakind');
-        self::_add_dict('asul', 'string', 'daap.songdataurl');
-        self::_add_dict('aply', 'list', 'daap.databaseplaylists'); // response to a /databases/id/containers
-        self::_add_dict('abpl', 'byte', 'daap.baseplaylist');
-        self::_add_dict('apso', 'list', 'daap.playlistsongs'); // response to a /databases/id/containers/id/items
-        self::_add_dict('prsv', 'list', 'daap.resolve');
-        self::_add_dict('arif', 'list', 'daap.resolveinfo');
-        self::_add_dict('ated', 'short', 'daap.supportsextradata');
-        self::_add_dict('asgr', 'short', 'daap.supportsgroups');
-        self::_add_dict('aeMQ', 'byte', 'daap.aeMQ');
-        self::_add_dict('aeTr', 'byte', 'daap.aeTr');
-        self::_add_dict('aeSL', 'byte', 'daap.aeSL');
-        self::_add_dict('aeSR', 'byte', 'daap.aeSR');
-        self::_add_dict('msed', 'byte', 'dmap.supportsedit');
-        self::_add_dict('aeNV', 'int', 'com.apple.itunes.norm-volume');
-        self::_add_dict('aeSP', 'byte', 'com.apple.itunes.smart-playlist');
-    }
-
-    /**
-     * @param string $code
-     * @param string $type
-     * @param string $name
-     */
-    private static function _add_dict($code, $type, $name): void
-    {
-        self::$tags[$name] = [
-            'type' => $type,
-            'code' => $code,
-        ];
-    }
-
-    private static function _get_type_id($type): int
-    {
-        switch ($type) {
-            case 'byte':
-                return 1;
-            case 'unsigned byte':
-                return 2;
-            case 'short':
-                return 3;
-            case 'unsigned short':
-                return 4;
-            case 'int':
-                return 5;
-            case 'unsigned int':
-                return 6;
-            case 'long':
-                return 7;
-            case 'unsigned long':
-                return 8;
-            case 'string':
-                return 9;
-            case 'date':
-                // represented as a 4 byte integer
-                return 10;
-            case 'version':
-                // represented as a 4 singles bytes, e.g. 0.1.0.0 or as two shorts, e.g. 1.0
-                return 11;
-            case 'list':
-                return 12;
-            default:
-                return 0;
-        }
-    }
-
-    private static function _setHeaders(): void
-    {
-        header("Content-Type: application/x-dmap-tagged");
-        header("DAAP-Server: Ampache");
-        header("Accept-Ranges: bytes");
-        header("Cache-Control: no-cache");
-        header("Expires: -1");
-    }
-
-    public static function apiOutput(string $string): void
-    {
-        self::_setHeaders();
-
-        if (Core::get_server('REQUEST_METHOD') != 'OPTIONS') {
-            header("Content-length: " . strlen((string)$string));
-            echo $string;
-        } else {
-            header("Content-type: text/plain");
-            header("Content-length: 0");
-        }
-    }
-
-    public static function createError($code): bool
-    {
-        $error = "";
-        switch ($code) {
-            case 404:
-                $error = "Not Found";
-                break;
-            case 401:
-                $error = "Unauthorized";
-                break;
-        }
-        header("Content-type: text/html");
-        header("HTTP/1.0 " . $code . " " . $error, true, $code);
-
-        $html = "<!DOCTYPE html><html><head><title>" . $error . "</title></head><body><h1>" . $code . " " . $error . "</h1></body></html>";
-        self::apiOutput($html);
-
-        return false;
-    }
-
-    /**
-     * @param string $tag
-     * @param int $code
-     * @param string $msg
-     */
-    public static function createApiError($tag, $code, $msg = ''): bool
-    {
-        $output = self::_tlv('dmap.status', $code);
-        if (!empty($msg)) {
-            $output .= self::_tlv('dmap.statusstring', $msg);
-        }
-        $output = self::_tlv($tag, $output);
-        self::apiOutput($output);
-
-        return false;
     }
 }

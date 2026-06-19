@@ -219,20 +219,20 @@ final class UserEdit8Method
     /**
      * @deprecated Inject by constructor
      */
-    private static function getUserStateToggler(): UserStateTogglerInterface
-    {
-        global $dic;
-
-        return $dic->get(UserStateTogglerInterface::class);
-    }
-
-    /**
-     * @deprecated Inject by constructor
-     */
     private static function getUserKeyGenerator(): UserKeyGeneratorInterface
     {
         global $dic;
 
         return $dic->get(UserKeyGeneratorInterface::class);
+    }
+
+    /**
+     * @deprecated Inject by constructor
+     */
+    private static function getUserStateToggler(): UserStateTogglerInterface
+    {
+        global $dic;
+
+        return $dic->get(UserStateTogglerInterface::class);
     }
 }

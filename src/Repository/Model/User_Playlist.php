@@ -37,9 +37,8 @@ class User_Playlist extends database_object
 {
     protected const string DB_TABLENAME = 'user_playlist';
 
-    public int $user;
-
     public string $client;
+    public int $user;
 
     /**
      * Constructor
@@ -62,6 +61,54 @@ class User_Playlist extends database_object
 
         $this->user   = (int)$user_id;
         $this->client = substr($client, 0, 254);
+    }
+
+    /**
+     * add_items
+     * Add an array of songs to the playlist
+     */
+    public function add_items(array $data, int $time): void
+    {
+        $sql    = 'INSERT INTO `user_playlist` (`playqueue_time`, `playqueue_client`, `user`, `object_type`, `object_id`, `track`) VALUES ';
+        $values = [];
+        foreach ($data as $row) {
+            if (in_array($row['object_type'], ['song','live_stream','video','podcast_episode'])) {
+                $sql .= '(?, ?, ?, ?, ?, ?),';
+                $values[] = $time;
+                $values[] = $this->client;
+                $values[] = $this->user;
+                $values[] = $row['object_type'];
+                $values[] = $row['object_id'];
+                $values[] = $row['track'];
+            }
+        }
+
+        // remove last comma
+        $sql = substr($sql, 0, -1) . ';';
+        Dba::write($sql, $values);
+    }
+
+    /**
+     * clear
+     * This clears all the objects out of a user's playlist for that client
+     */
+    public function clear(): void
+    {
+        $sql = "DELETE FROM `user_playlist` WHERE `user` = ? AND `playqueue_client` = ?";
+        Dba::write($sql, [$this->user, $this->client]);
+    }
+
+    /**
+     * get_count
+     * This returns a count of the total number of tracks that are in this playlist
+     */
+    public function get_count(): int
+    {
+        $sql        = "SELECT MAX(`track`) AS `count` FROM `user_playlist` WHERE `user` = ? AND `playqueue_client` = ?";
+        $db_results = Dba::read($sql, [$this->user, $this->client]);
+        $results    = Dba::fetch_assoc($db_results);
+
+        return (int)$results['count'];
     }
 
     /**
@@ -98,111 +145,6 @@ class User_Playlist extends database_object
     }
 
     /**
-     * set_current_object
-     * set the active object in the user_playlist.
-     */
-    public function set_current_object(string $object_type, int $object_id, int $position): void
-    {
-        // remove the old current
-        $sql = "UPDATE `user_playlist` SET `current_track` = 0, `current_time` = 0 WHERE `user` = ?";
-        Dba::write($sql, [$this->user]);
-        // set the new one
-        $sql = "UPDATE `user_playlist` SET `current_track` = 1, `current_time` = ? WHERE `object_type` = ? AND `object_id` = ? AND `user` = ? LIMIT 1";
-        Dba::write($sql, [$position, $object_type, $object_id, $this->user]);
-    }
-
-    /**
-     * set_current_id
-     * set the active object using the row id in user_playlist.
-     */
-    public function set_current_id(string $object_type, int $track, int $position): void
-    {
-        // remove the old current
-        $sql = "UPDATE `user_playlist` SET `current_track` = 0, `current_time` = 0 WHERE `user` = ?";
-        Dba::write($sql, [$this->user]);
-        // set the new one
-        $sql = "UPDATE `user_playlist` SET `current_track` = 1, `current_time` = ? WHERE `object_type` = ? AND `track` = ? AND `user` = ? LIMIT 1";
-        Dba::write($sql, [$position, $object_type, $track, $this->user]);
-    }
-
-    /**
-     * get_count
-     * This returns a count of the total number of tracks that are in this playlist
-     */
-    public function get_count(): int
-    {
-        $sql        = "SELECT MAX(`track`) AS `count` FROM `user_playlist` WHERE `user` = ? AND `playqueue_client` = ?";
-        $db_results = Dba::read($sql, [$this->user, $this->client]);
-        $results    = Dba::fetch_assoc($db_results);
-
-        return (int)$results['count'];
-    }
-
-    /**
-     * get_time
-     * This returns a count of the total number of tracks that are in this playlist
-     */
-    public function get_time(): int
-    {
-        $sql        = "SELECT DISTINCT(`playqueue_time`) AS `time` FROM `user_playlist` WHERE `user` = ? AND `playqueue_client` = ?";
-        $db_results = Dba::read($sql, [$this->user, $this->client]);
-        $results    = Dba::fetch_assoc($db_results);
-        if ($results === []) {
-            return time();
-        }
-
-        return (int)$results['time'];
-    }
-
-    /**
-     * get_latest
-     * get the most recent playqueue for the user
-     */
-    public function get_latest(): string
-    {
-        $sql        = "SELECT MAX(`playqueue_time`) AS `time`, `playqueue_client`, `user` FROM `user_playlist` WHERE `user` = ? GROUP BY `playqueue_client`, `user`";
-        $db_results = Dba::read($sql, [$this->user]);
-        $results    = Dba::fetch_assoc($db_results);
-
-        return $results['playqueue_client'] ?? '';
-    }
-
-    /**
-     * clear
-     * This clears all the objects out of a user's playlist for that client
-     */
-    public function clear(): void
-    {
-        $sql = "DELETE FROM `user_playlist` WHERE `user` = ? AND `playqueue_client` = ?";
-        Dba::write($sql, [$this->user, $this->client]);
-    }
-
-    /**
-     * add_items
-     * Add an array of songs to the playlist
-     */
-    public function add_items(array $data, int $time): void
-    {
-        $sql    = 'INSERT INTO `user_playlist` (`playqueue_time`, `playqueue_client`, `user`, `object_type`, `object_id`, `track`) VALUES ';
-        $values = [];
-        foreach ($data as $row) {
-            if (in_array($row['object_type'], ['song','live_stream','video','podcast_episode'])) {
-                $sql .= '(?, ?, ?, ?, ?, ?),';
-                $values[] = $time;
-                $values[] = $this->client;
-                $values[] = $this->user;
-                $values[] = $row['object_type'];
-                $values[] = $row['object_id'];
-                $values[] = $row['track'];
-            }
-        }
-
-        // remove last comma
-        $sql = substr($sql, 0, -1) . ';';
-        Dba::write($sql, $values);
-    }
-
-    /**
      * get_items
      * Returns an array of all object_ids currently in this User_Playlist.
      * @return array<int, array{
@@ -233,5 +175,62 @@ class User_Playlist extends database_object
         }
 
         return $items;
+    }
+
+    /**
+     * get_latest
+     * get the most recent playqueue for the user
+     */
+    public function get_latest(): string
+    {
+        $sql        = "SELECT MAX(`playqueue_time`) AS `time`, `playqueue_client`, `user` FROM `user_playlist` WHERE `user` = ? GROUP BY `playqueue_client`, `user`";
+        $db_results = Dba::read($sql, [$this->user]);
+        $results    = Dba::fetch_assoc($db_results);
+
+        return $results['playqueue_client'] ?? '';
+    }
+
+    /**
+     * get_time
+     * This returns a count of the total number of tracks that are in this playlist
+     */
+    public function get_time(): int
+    {
+        $sql        = "SELECT DISTINCT(`playqueue_time`) AS `time` FROM `user_playlist` WHERE `user` = ? AND `playqueue_client` = ?";
+        $db_results = Dba::read($sql, [$this->user, $this->client]);
+        $results    = Dba::fetch_assoc($db_results);
+        if ($results === []) {
+            return time();
+        }
+
+        return (int)$results['time'];
+    }
+
+    /**
+     * set_current_id
+     * set the active object using the row id in user_playlist.
+     */
+    public function set_current_id(string $object_type, int $track, int $position): void
+    {
+        // remove the old current
+        $sql = "UPDATE `user_playlist` SET `current_track` = 0, `current_time` = 0 WHERE `user` = ?";
+        Dba::write($sql, [$this->user]);
+        // set the new one
+        $sql = "UPDATE `user_playlist` SET `current_track` = 1, `current_time` = ? WHERE `object_type` = ? AND `track` = ? AND `user` = ? LIMIT 1";
+        Dba::write($sql, [$position, $object_type, $track, $this->user]);
+    }
+
+    /**
+     * set_current_object
+     * set the active object in the user_playlist.
+     */
+    public function set_current_object(string $object_type, int $object_id, int $position): void
+    {
+        // remove the old current
+        $sql = "UPDATE `user_playlist` SET `current_track` = 0, `current_time` = 0 WHERE `user` = ?";
+        Dba::write($sql, [$this->user]);
+        // set the new one
+        $sql = "UPDATE `user_playlist` SET `current_track` = 1, `current_time` = ? WHERE `object_type` = ? AND `object_id` = ? AND `user` = ? LIMIT 1";
+        Dba::write($sql, [$position, $object_type, $object_id, $this->user]);
     }
 }

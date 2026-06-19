@@ -33,22 +33,6 @@ use PDOStatement;
 interface DatabaseConnectionInterface
 {
     /**
-     * Executes the provided sql query
-     *
-     * If the query fails, a DatabaseException will be thrown
-     *
-     * @param list<mixed> $params
-     *
-     * @throws DatabaseException
-     */
-    public function query(
-        string $sql,
-        array $params = [],
-        bool $silent = false,
-        ?Interactor $interactor = null,
-    ): PDOStatement;
-
-    /**
      * Fetches a single column from the query result
      *
      * Useful e.g. for counting-queries
@@ -79,4 +63,20 @@ interface DatabaseConnectionInterface
      * @return non-negative-int
      */
     public function getLastInsertedId(): int;
+
+    /**
+     * Executes the provided sql query
+     *
+     * If the query fails, a DatabaseException will be thrown
+     *
+     * @param list<mixed> $params
+     *
+     * @throws DatabaseException
+     */
+    public function query(
+        string $sql,
+        array $params = [],
+        bool $silent = false,
+        ?Interactor $interactor = null,
+    ): PDOStatement;
 }

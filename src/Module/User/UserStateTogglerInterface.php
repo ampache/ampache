@@ -29,7 +29,7 @@ use Ampache\Repository\Model\User;
 
 interface UserStateTogglerInterface
 {
-    public function enable(User $user): bool;
-
     public function disable(User $user): bool;
+
+    public function enable(User $user): bool;
 }

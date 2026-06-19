@@ -33,16 +33,11 @@ use Slim\ResponseEmitter;
 
 final class JsonRestApiApplication implements ApiApplicationInterface
 {
-    private ApiOutputFactoryInterface $apiOutputFactory;
-
     private ApiHandlerInterface $apiHandler;
-
+    private ApiOutputFactoryInterface $apiOutputFactory;
     private ConfigContainerInterface $configContainer;
-
     private ResponseFactoryInterface $responseFactory;
-
     private ResponseEmitter $sapiEmitter;
-
     private ServerRequestCreatorInterface $serverRequestCreator;
 
     public function __construct(

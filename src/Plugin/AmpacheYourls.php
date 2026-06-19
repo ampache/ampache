@@ -36,13 +36,19 @@ use WpOrg\Requests\Requests;
 class AmpacheYourls extends AmpachePlugin implements PluginShortenerInterface
 {
     #[Override]
-    public string $name = 'YOURLS';
-
-    #[Override]
     public string $categories = 'shortener';
 
     #[Override]
     public string $description = 'URL shorteners on shared links with YOURLS';
+
+    #[Override]
+    public string $max_ampache = '999999';
+
+    #[Override]
+    public string $min_ampache = '360037';
+
+    #[Override]
+    public string $name = 'YOURLS';
 
     #[Override]
     public string $url = 'http://yourls.org';
@@ -50,18 +56,11 @@ class AmpacheYourls extends AmpachePlugin implements PluginShortenerInterface
     #[Override]
     public string $version = '000002';
 
-    #[Override]
-    public string $min_ampache = '360037';
-
-    #[Override]
-    public string $max_ampache = '999999';
+    private $yourls_api_key;
 
     // These are internal settings used by this class, run this->load to fill them out
     private $yourls_domain;
-
     private $yourls_use_idn;
-
-    private $yourls_api_key;
 
     /**
      * Constructor
@@ -89,24 +88,38 @@ class AmpacheYourls extends AmpachePlugin implements PluginShortenerInterface
     }
 
     /**
-     * uninstall
-     * Removes our preferences from the database returning it to its original form
+     * load
+     * This loads up the data we need into this object, this stuff comes from the preferences.
      */
-    public function uninstall(): bool
+    public function load(User $user): bool
     {
-        return (
-            Preference::delete('yourls_domain') &&
-            Preference::delete('yourls_use_idn') &&
-            Preference::delete('yourls_api_key')
-        );
-    }
+        $user->set_preferences();
+        $data = $user->prefs;
+        // load system when nothing is given
+        if (!strlen(trim((string) $data['yourls_domain'])) || !strlen(trim((string) $data['yourls_api_key']))) {
+            $data                   = [];
+            $data['yourls_domain']  = Preference::get_by_user(-1, 'yourls_domain');
+            $data['yourls_api_key'] = Preference::get_by_user(-1, 'yourls_api_key');
+        }
 
-    /**
-     * upgrade
-     * This is a recommended plugin function
-     */
-    public function upgrade(): bool
-    {
+        if (strlen(trim((string) $data['yourls_domain'])) !== 0) {
+            $this->yourls_domain = trim((string) $data['yourls_domain']);
+        } else {
+            debug_event('yourls.plugin', 'No YOURLS domain, shortener skipped', 3);
+
+            return false;
+        }
+
+        if (strlen(trim((string) $data['yourls_api_key'])) !== 0) {
+            $this->yourls_api_key = trim((string) $data['yourls_api_key']);
+        } else {
+            debug_event('yourls.plugin', 'No YOURLS api key, shortener skipped', 3);
+
+            return false;
+        }
+
+        $this->yourls_use_idn = ((int)($data['yourls_use_idn']) === 1);
+
         return true;
     }
 
@@ -154,38 +167,24 @@ class AmpacheYourls extends AmpachePlugin implements PluginShortenerInterface
     }
 
     /**
-     * load
-     * This loads up the data we need into this object, this stuff comes from the preferences.
+     * uninstall
+     * Removes our preferences from the database returning it to its original form
      */
-    public function load(User $user): bool
+    public function uninstall(): bool
     {
-        $user->set_preferences();
-        $data = $user->prefs;
-        // load system when nothing is given
-        if (!strlen(trim((string) $data['yourls_domain'])) || !strlen(trim((string) $data['yourls_api_key']))) {
-            $data                   = [];
-            $data['yourls_domain']  = Preference::get_by_user(-1, 'yourls_domain');
-            $data['yourls_api_key'] = Preference::get_by_user(-1, 'yourls_api_key');
-        }
+        return (
+            Preference::delete('yourls_domain') &&
+            Preference::delete('yourls_use_idn') &&
+            Preference::delete('yourls_api_key')
+        );
+    }
 
-        if (strlen(trim((string) $data['yourls_domain'])) !== 0) {
-            $this->yourls_domain = trim((string) $data['yourls_domain']);
-        } else {
-            debug_event('yourls.plugin', 'No YOURLS domain, shortener skipped', 3);
-
-            return false;
-        }
-
-        if (strlen(trim((string) $data['yourls_api_key'])) !== 0) {
-            $this->yourls_api_key = trim((string) $data['yourls_api_key']);
-        } else {
-            debug_event('yourls.plugin', 'No YOURLS api key, shortener skipped', 3);
-
-            return false;
-        }
-
-        $this->yourls_use_idn = ((int)($data['yourls_use_idn']) === 1);
-
+    /**
+     * upgrade
+     * This is a recommended plugin function
+     */
+    public function upgrade(): bool
+    {
         return true;
     }
 }

@@ -36,18 +36,18 @@ use Ampache\Repository\Model\LibraryItemEnum;
 interface WebDavDirectoryInterface extends library_item
 {
     /**
+     * Search for direct children of an object
+     * @return array<int, array{object_type: LibraryItemEnum, object_id: int}>
+     */
+    public function get_children(string $name): array;
+
+    /**
      * get_childrens
      *
      * Get direct childrens. Return an array of `object_type`, `object_id` childrens.
      * @return array{string?: array<int, array{object_type: LibraryItemEnum, object_id: int}>}
      */
     public function get_childrens(): array;
-
-    /**
-     * Search for direct children of an object
-     * @return array<int, array{object_type: LibraryItemEnum, object_id: int}>
-     */
-    public function get_children(string $name): array;
 
     public function has_children(string $name): bool;
 }

@@ -53,16 +53,11 @@ final class RefreshUpdatedAction extends AbstractEditAction
 {
     public const string REQUEST_KEY = 'refresh_updated';
 
-    private ResponseFactoryInterface $responseFactory;
-
-    private StreamFactoryInterface $streamFactory;
-
-    private TalFactoryInterface $talFactory;
-
-    private GuiFactoryInterface $guiFactory;
-
     private Browse $browse;
-
+    private GuiFactoryInterface $guiFactory;
+    private ResponseFactoryInterface $responseFactory;
+    private StreamFactoryInterface $streamFactory;
+    private TalFactoryInterface $talFactory;
     private UiInterface $ui;
 
     public function __construct(

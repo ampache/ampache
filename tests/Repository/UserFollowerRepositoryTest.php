@@ -34,16 +34,64 @@ use PHPUnit\Framework\TestCase;
 class UserFollowerRepositoryTest extends TestCase
 {
     private DatabaseConnectionInterface&MockObject $connection;
-
     private UserFollowerRepository $subject;
 
-    protected function setUp(): void
+    public function testAddAddsEntry(): void
     {
-        $this->connection = $this->createMock(DatabaseConnectionInterface::class);
+        $user          = $this->createMock(User::class);
+        $followingUser = $this->createMock(User::class);
 
-        $this->subject = new UserFollowerRepository(
-            $this->connection
-        );
+        $userId          = 666;
+        $followingUserId = 42;
+
+        $user->expects(static::once())
+            ->method('getId')
+            ->willReturn($userId);
+
+        $followingUser->expects(static::once())
+            ->method('getId')
+            ->willReturn($followingUserId);
+
+        $this->connection->expects(static::once())
+            ->method('query')
+            ->with(
+                'INSERT INTO `user_follower` (`user`, `follow_user`, `follow_date`) VALUES (?, ?, UNIX_TIMESTAMP())',
+                [
+                    $followingUserId,
+                    $userId,
+                ]
+            );
+
+        $this->subject->add($user, $followingUser);
+    }
+
+    public function testDeleteDeletesEntry(): void
+    {
+        $user          = $this->createMock(User::class);
+        $followingUser = $this->createMock(User::class);
+
+        $userId          = 666;
+        $followingUserId = 42;
+
+        $user->expects(static::once())
+            ->method('getId')
+            ->willReturn($userId);
+
+        $followingUser->expects(static::once())
+            ->method('getId')
+            ->willReturn($followingUserId);
+
+        $this->connection->expects(static::once())
+            ->method('query')
+            ->with(
+                'DELETE FROM `user_follower` WHERE `user` = ? AND `follow_user` = ?',
+                [
+                    $followingUserId,
+                    $userId,
+                ]
+            );
+
+        $this->subject->delete($user, $followingUser);
     }
 
     public function testGetFollowersReturnsData(): void
@@ -135,61 +183,12 @@ class UserFollowerRepositoryTest extends TestCase
         );
     }
 
-    public function testAddAddsEntry(): void
+    protected function setUp(): void
     {
-        $user          = $this->createMock(User::class);
-        $followingUser = $this->createMock(User::class);
+        $this->connection = $this->createMock(DatabaseConnectionInterface::class);
 
-        $userId          = 666;
-        $followingUserId = 42;
-
-        $user->expects(static::once())
-            ->method('getId')
-            ->willReturn($userId);
-
-        $followingUser->expects(static::once())
-            ->method('getId')
-            ->willReturn($followingUserId);
-
-        $this->connection->expects(static::once())
-            ->method('query')
-            ->with(
-                'INSERT INTO `user_follower` (`user`, `follow_user`, `follow_date`) VALUES (?, ?, UNIX_TIMESTAMP())',
-                [
-                    $followingUserId,
-                    $userId,
-                ]
-            );
-
-        $this->subject->add($user, $followingUser);
-    }
-
-    public function testDeleteDeletesEntry(): void
-    {
-        $user          = $this->createMock(User::class);
-        $followingUser = $this->createMock(User::class);
-
-        $userId          = 666;
-        $followingUserId = 42;
-
-        $user->expects(static::once())
-            ->method('getId')
-            ->willReturn($userId);
-
-        $followingUser->expects(static::once())
-            ->method('getId')
-            ->willReturn($followingUserId);
-
-        $this->connection->expects(static::once())
-            ->method('query')
-            ->with(
-                'DELETE FROM `user_follower` WHERE `user` = ? AND `follow_user` = ?',
-                [
-                    $followingUserId,
-                    $userId,
-                ]
-            );
-
-        $this->subject->delete($user, $followingUser);
+        $this->subject = new UserFollowerRepository(
+            $this->connection
+        );
     }
 }

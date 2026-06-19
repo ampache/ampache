@@ -36,25 +36,25 @@ use WpOrg\Requests\Requests;
 class AmpacheLyristLyrics extends AmpachePlugin implements PluginGetLyricsInterface
 {
     #[Override]
-    public string $name = 'Lyrist Lyrics';
-
-    #[Override]
     public string $categories = 'lyrics';
 
     #[Override]
     public string $description = 'Get lyrics from a public Lyrist instance';
 
     #[Override]
-    public string $url = 'https://github.com/asrvd/lyrist';
-
-    #[Override]
-    public string $version = '000002';
+    public string $max_ampache = '999999';
 
     #[Override]
     public string $min_ampache = '360022';
 
     #[Override]
-    public string $max_ampache = '999999';
+    public string $name = 'Lyrist Lyrics';
+
+    #[Override]
+    public string $url = 'https://github.com/asrvd/lyrist';
+
+    #[Override]
+    public string $version = '000002';
 
     // These are internal settings used by this class, run this->load to fill them out
     private string $api_host;
@@ -65,54 +65,6 @@ class AmpacheLyristLyrics extends AmpachePlugin implements PluginGetLyricsInterf
     public function __construct()
     {
         $this->description = T_('Get lyrics from a public Lyrist instance');
-    }
-
-    /**
-     * install
-     * This is a required plugin function
-     */
-    public function install(): bool
-    {
-        return Preference::insert('lyrist_api_url', T_('Lyrist API URL'), '', AccessLevelEnum::USER->value, 'string', 'plugins', $this->name);
-    }
-
-    /**
-     * uninstall
-     * This is a required plugin function
-     */
-    public function uninstall(): bool
-    {
-        return true;
-    }
-
-    /**
-     * upgrade
-     * This is a recommended plugin function
-     */
-    public function upgrade(): bool
-    {
-        return true;
-    }
-
-    /**
-     * load
-     * This is a required plugin function; here it populates the prefs we
-     * need for this object.
-     */
-    public function load(User $user): bool
-    {
-        $user->set_preferences();
-        $data = $user->prefs;
-        // check if user have a token
-        if (strlen(trim((string) $data['lyrist_api_url'])) !== 0) {
-            $this->api_host = trim((string) $data['lyrist_api_url']);
-        } else {
-            debug_event('lyrist.plugin', 'No url (need to add your Lyrist host to ampache)', 4);
-
-            return false;
-        }
-
-        return true;
     }
 
     /**
@@ -139,5 +91,53 @@ class AmpacheLyristLyrics extends AmpachePlugin implements PluginGetLyricsInterf
         }
 
         return null;
+    }
+
+    /**
+     * install
+     * This is a required plugin function
+     */
+    public function install(): bool
+    {
+        return Preference::insert('lyrist_api_url', T_('Lyrist API URL'), '', AccessLevelEnum::USER->value, 'string', 'plugins', $this->name);
+    }
+
+    /**
+     * load
+     * This is a required plugin function; here it populates the prefs we
+     * need for this object.
+     */
+    public function load(User $user): bool
+    {
+        $user->set_preferences();
+        $data = $user->prefs;
+        // check if user have a token
+        if (strlen(trim((string) $data['lyrist_api_url'])) !== 0) {
+            $this->api_host = trim((string) $data['lyrist_api_url']);
+        } else {
+            debug_event('lyrist.plugin', 'No url (need to add your Lyrist host to ampache)', 4);
+
+            return false;
+        }
+
+        return true;
+    }
+
+    /**
+     * uninstall
+     * This is a required plugin function
+     */
+    public function uninstall(): bool
+    {
+        return true;
+    }
+
+    /**
+     * upgrade
+     * This is a recommended plugin function
+     */
+    public function upgrade(): bool
+    {
+        return true;
     }
 }

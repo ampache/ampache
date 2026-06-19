@@ -45,6 +45,19 @@ final readonly class LiveStreamRepository implements LiveStreamRepositoryInterfa
     }
 
     /**
+     * This deletes the object with the given id from the database
+     */
+    public function delete(Live_Stream $liveStream): void
+    {
+        $this->connection->query(
+            'DELETE FROM `live_stream` WHERE `id` = ?',
+            [$liveStream->getId()]
+        );
+
+        Catalog::count_table('live_stream');
+    }
+
+    /**
      * Returns all items
      *
      * If a user is provided, the result will be limited to catalogs the user has access to
@@ -80,18 +93,5 @@ final readonly class LiveStreamRepository implements LiveStreamRepositoryInterfa
         }
 
         return $result;
-    }
-
-    /**
-     * This deletes the object with the given id from the database
-     */
-    public function delete(Live_Stream $liveStream): void
-    {
-        $this->connection->query(
-            'DELETE FROM `live_stream` WHERE `id` = ?',
-            [$liveStream->getId()]
-        );
-
-        Catalog::count_table('live_stream');
     }
 }

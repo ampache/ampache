@@ -39,22 +39,10 @@ class DeleteActionTest extends MockeryTestCase
     /** @var ConfigContainerInterface|MockInterface|null */
     private MockInterface $configContainer;
 
-    /** @var UiInterface|MockInterface|null */
-    private MockInterface $ui;
-
     private ?DeleteAction $subject;
 
-    #[Override]
-    protected function setUp(): void
-    {
-        $this->configContainer = $this->mock(ConfigContainerInterface::class);
-        $this->ui              = $this->mock(UiInterface::class);
-
-        $this->subject = new DeleteAction(
-            $this->configContainer,
-            $this->ui
-        );
-    }
+    /** @var UiInterface|MockInterface|null */
+    private MockInterface $ui;
 
     public function testRunDoesNothingInDemoMode(): void
     {
@@ -128,6 +116,18 @@ class DeleteActionTest extends MockeryTestCase
 
         $this->assertNull(
             $this->subject->run($request, $gatekeeper)
+        );
+    }
+
+    #[Override]
+    protected function setUp(): void
+    {
+        $this->configContainer = $this->mock(ConfigContainerInterface::class);
+        $this->ui              = $this->mock(UiInterface::class);
+
+        $this->subject = new DeleteAction(
+            $this->configContainer,
+            $this->ui
         );
     }
 }

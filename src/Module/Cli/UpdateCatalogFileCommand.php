@@ -31,16 +31,6 @@ use Override;
 
 final class UpdateCatalogFileCommand extends Command
 {
-    #[Override]
-    protected function defaults(): self
-    {
-        $this->option('-h, --help', T_('Help'))->on($this->showHelp(...));
-
-        $this->onExit(static fn ($exitCode = 0) => exit($exitCode));
-
-        return $this;
-    }
-
     public function __construct(
         private readonly UpdateSingleCatalogFileInterface $updateSingleCatalogFile,
     ) {
@@ -116,5 +106,15 @@ final class UpdateCatalogFileCommand extends Command
             $values['rename'],
             $values['move']
         );
+    }
+
+    #[Override]
+    protected function defaults(): self
+    {
+        $this->option('-h, --help', T_('Help'))->on($this->showHelp(...));
+
+        $this->onExit(static fn ($exitCode = 0) => exit($exitCode));
+
+        return $this;
     }
 }

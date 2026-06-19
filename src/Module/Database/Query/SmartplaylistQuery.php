@@ -50,6 +50,9 @@ final class SmartplaylistQuery implements QueryInterface
         'user_rating',
     ];
 
+    protected string $base   = "SELECT %%SELECT%% FROM `search` ";
+    protected string $select = "`search`.`id`";
+
     /** @var string[] $sorts */
     protected array $sorts = [
         'date',
@@ -70,9 +73,15 @@ final class SmartplaylistQuery implements QueryInterface
         'username',
     ];
 
-    protected string $select = "`search`.`id`";
-
-    protected string $base = "SELECT %%SELECT%% FROM `search` ";
+    /**
+     * get_base_sql
+     *
+     * Base SELECT query string without filters or joins
+     */
+    public function get_base_sql(): string
+    {
+        return $this->base;
+    }
 
     /**
      * get_select
@@ -82,16 +91,6 @@ final class SmartplaylistQuery implements QueryInterface
     public function get_select(): string
     {
         return $this->select;
-    }
-
-    /**
-     * get_base_sql
-     *
-     * Base SELECT query string without filters or joins
-     */
-    public function get_base_sql(): string
-    {
-        return $this->base;
     }
 
     /**

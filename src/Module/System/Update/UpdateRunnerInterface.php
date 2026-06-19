@@ -33,13 +33,6 @@ use Traversable;
 interface UpdateRunnerInterface
 {
     /**
-     * Run the rollback queries on the database
-     *
-     * @throws UpdateFailedException
-     */
-    public function runRollback(int $currentVersion, ?Interactor $interactor = null): void;
-
-    /**
      * Runs the migrations with are determined by the given updates
      *
      * @param Traversable<array{
@@ -51,6 +44,13 @@ interface UpdateRunnerInterface
      * @throws UpdateFailedException
      */
     public function run(Traversable $updates, ?Interactor $interactor = null): void;
+
+    /**
+     * Run the rollback queries on the database
+     *
+     * @throws UpdateFailedException
+     */
+    public function runRollback(int $currentVersion, ?Interactor $interactor = null): void;
 
     /**
      * Checks the db for the existence of tables provided by the given updates

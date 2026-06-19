@@ -49,28 +49,28 @@ use Override;
 class AmpacheMusicBrainz extends AmpachePlugin implements PluginGetMetadataInterface
 {
     #[Override]
-    public string $name = 'MusicBrainz';
-
-    #[Override]
     public string $categories = 'metadata';
 
     #[Override]
     public string $description = 'MusicBrainz metadata integration';
 
     #[Override]
-    public string $url = 'http://www.musicbrainz.org';
-
-    #[Override]
-    public string $version = '000003';
+    public string $max_ampache = '999999';
 
     #[Override]
     public string $min_ampache = '360003';
 
     #[Override]
-    public string $max_ampache = '999999';
+    public string $name = 'MusicBrainz';
 
     // These are internal settings used by this class, run this->load to fill them out
     public bool $overwrite_name = false;
+
+    #[Override]
+    public string $url = 'http://www.musicbrainz.org';
+
+    #[Override]
+    public string $version = '000003';
 
     /**
      * Constructor
@@ -82,12 +82,307 @@ class AmpacheMusicBrainz extends AmpachePlugin implements PluginGetMetadataInter
     }
 
     /**
+     * get_artist
+     * Get an artist from musicbrainz
+     * @return array{
+     *     name?: string,
+     *     mbid?: string
+     * }
+     */
+    public function get_artist(string $mbid): array
+    {
+        //debug_event(self::class, "get_artist: {{$mbid}}", 4);
+        $results = false;
+        $data    = [];
+        if (MusicBrainz::isMBID($mbid)) {
+            try {
+                $brainz = MusicBrainz::newMusicBrainz(
+                    'request',
+                    AmpConfig::get('musicbrainz_username'),
+                    AmpConfig::get('musicbrainz_password')
+                );
+                $brainz->setUserAgent('Ampache', AmpConfig::get('version'), Stream::get_base_url());
+                $lookup = $brainz->lookup(
+                    'artist',
+                    $mbid,
+                    ['genres', 'tags']
+                );
+                /**
+                 * https://musicbrainz.org/ws/2/artist/859a5c63-08df-42da-905c-7307f56db95d?inc=release-groups&fmt=json
+                 * @var \MusicBrainz\Entities\Artist $results
+                 */
+                $results = $brainz->getObject($lookup, 'artist');
+            } catch (Exception $error) {
+                debug_event('MusicBrainz.plugin', 'Lookup error ' . $error->getMessage(), 3);
+
+                return [];
+            }
+        }
+
+        if ($results) {
+            $data = [
+                'name' => $results->getName(),
+                'mbid' => $results->getId(),
+            ];
+        }
+
+        return $data;
+    }
+
+    /**
+     * get_external_metadata
+     * Update an object (label or artist for now) using musicbrainz
+     */
+    public function get_external_metadata(library_item $object, string $object_type): bool
+    {
+        // Artist and label metadata only for now
+        $media_info = [];
+        $fullname   = $object->get_fullname();
+        if ($object_type === 'song' || $object instanceof Song) {
+            debug_event('MusicBrainz.plugin', 'get_external_metadata only supports Labels and Artists (' . $object_type . ')', 5);
+
+            return false;
+        }
+
+        if ($object_type === 'album' || $object instanceof Album) {
+            debug_event('MusicBrainz.plugin', 'get_external_metadata only supports Labels and Artists (' . $object_type . ')', 5);
+
+            return false;
+        }
+
+        if ($object_type === 'artist' && $object instanceof Artist) {
+            $media_info['mb_artistid'] = $object->mbid;
+            $media_info['artist']      = $fullname;
+            $results                   = self::_find($media_info);
+        } elseif ($object_type === 'label' && $object instanceof Label) {
+            $media_info['mb_labelid'] = $object->mbid;
+            $media_info['label']      = $fullname;
+            $results                  = self::_find($media_info);
+        } else {
+            debug_event('MusicBrainz.plugin', 'get_external_metadata only supports Labels and Artists (' . $object_type . ')', 5);
+
+            return false;
+        }
+
+        if ($results instanceof EntityInterface) {
+            try {
+                debug_event('MusicBrainz.plugin', sprintf('Updating %s: ', $object_type) . $fullname, 3);
+                $brainzData = $results->getData();
+                $life_span  = $brainzData['life-span'] ?? null;
+                $active     = 1;
+                $begin      = '';
+                if (is_array($life_span)) {
+                    $active = ($life_span['ended'] == 1) ? 0 : 1;
+                    $begin  = $life_span['begin'] ?? '';
+                } elseif (is_object($life_span)) {
+                    /** @var LifeSpan $life_span */
+                    $active = ($life_span->{'ended'} == 1) ? 0 : 1;
+                    $begin  = $life_span->{'begin'} ?? '';
+                }
+
+                $begin_area = $brainzData['begin-area'] ?? null;
+                $beginName  = null;
+                if (is_array($begin_area)) {
+                    $beginName = $begin_area['name'] ?? null;
+                } elseif (is_object($begin_area)) {
+                    $beginName = $begin_area->{'name'} ?? null;
+                }
+
+                $area     = $brainzData['area'] ?? null;
+                $areaName = null;
+                if (is_array($area)) {
+                    $areaName = ($area['name']) ?? null;
+                } elseif (is_object($area)) {
+                    $areaName = ($area->{'name'}) ?? null;
+                }
+            } catch (Exception) {
+                return false;
+            }
+
+            switch ($object_type) {
+                case 'label':
+                    $data = [
+                        /** @var \MusicBrainz\Entities\Label $results */
+                        'name' => $results->getName(),
+                        'mbid' => $results->getId(),
+                        'category' => $results->type ?? $object->category,
+                        'summary' => $results->getData()['disambiguation'] ?? $object->summary,
+                        'address' => $object->address,
+                        'country' => $results->country ?? $object->country,
+                        'email' => $object->email,
+                        'website' => $object->website,
+                        'active' => $active
+                    ];
+
+                    break;
+                case 'artist':
+                    $data = [
+                        /** @var \MusicBrainz\Entities\Artist $results */
+                        'name' => $results->getName(),
+                        'mbid' => $results->getId(),
+                        'summary' => $object->summary,
+                        'placeformed' => $beginName ?? $areaName ?? null,
+                        'yearformed' => explode('-', ((string) $begin))[0] ?: $object->yearformed
+                    ];
+
+                    if (empty($data['yearformed'])) {
+                        $data['yearformed'] = null;
+                    }
+
+                    break;
+                default:
+                    return false;
+            }
+
+            $object->update($data);
+
+            return true;
+        }
+
+        return false;
+    }
+
+    /**
+     * get_metadata
+     * Returns song metadata for what we're passed in.
+     * @param string[] $gather_types
+     * @param array<string, mixed> $media_info
+     * @return array<string, mixed>
+     */
+    public function get_metadata(array $gather_types, array $media_info): array
+    {
+        // Music metadata only
+        if (!in_array('music', $gather_types)) {
+            return [];
+        }
+
+        try {
+            $brainz = MusicBrainz::newMusicBrainz(
+                'request',
+                AmpConfig::get('musicbrainz_username'),
+                AmpConfig::get('musicbrainz_password')
+            );
+            $brainz->setUserAgent('Ampache', AmpConfig::get('version'), Stream::get_base_url());
+        } catch (Exception) {
+            return [];
+        }
+
+        if (isset($media_info['mb_trackid'])) {
+            $object_type = 'track';
+        } elseif (isset($media_info['mb_albumid_group'])) {
+            $object_type = 'album';
+        } elseif (isset($media_info['mb_artistid'])) {
+            $object_type = 'artist';
+        } elseif (isset($media_info['mb_labelid'])) {
+            $object_type = 'label';
+        } else {
+            return [];
+        }
+
+        // lookup a musicbrainz object
+        $results = self::_find($media_info);
+
+        // couldn't find an object
+        if (!$results instanceof EntityInterface) {
+            debug_event('MusicBrainz.plugin', 'Entity not found ' . $object_type, 3);
+
+            return [];
+        }
+
+        $genres     = [];
+        $brainzData = $results->getData();
+        try {
+            foreach ($brainz->getObjects($brainzData, 'tag') as $tag) {
+                /** @var Tag $tag */
+                $genres[] = $tag->name;
+            }
+        } catch (Exception) {
+            // no tags found;
+        }
+
+        try {
+            foreach ($brainz->getObjects($brainzData, 'genre') as $genre) {
+                /** @var Genre $genre */
+                $genres[] = $genre->getName();
+            }
+        } catch (Exception) {
+            // no genres found;
+        }
+
+        if (
+            isset($brainzData['artist-credit']) ||
+            isset($brainzData['releases'])
+        ) {
+            // pull first artist-credit
+            if (isset($brainzData['artist-credit']) && count($brainzData['artist-credit']) > 0) {
+                $artist = $brainzData['artist-credit'][0];
+                $artist = (is_array($artist))
+                    ? $artist['artist']
+                    : (array)$artist->{'artist'};
+            }
+
+            // pull first release
+            if (isset($brainzData['releases']) && count($brainzData['releases']) === 1) {
+                $release = $brainzData['releases'][0];
+            }
+
+            $results = $results->getProps(true);
+            if (isset($artist)) {
+                $results['mb_artistid'] = $artist['id'];
+                $results['artist']      = $artist['name'];
+            }
+
+            if (isset($release)) {
+                $results['album'] = is_array($release)
+                    ? $release['title']
+                    : $release->title;
+            }
+        } else {
+            $results = $results->getProps(true);
+        }
+
+        if ($genres !== []) {
+            $results['genre'] = array_unique($genres);
+        }
+
+        //debug_event(self::class, "get_metadata(): Results:\n" . print_r($results, true), 5);
+        // unset the MusicBrainz object
+        foreach ($results['data'] as $key => $value) {
+            if ($value instanceof MusicBrainz) {
+                unset($results[$key]);
+            }
+        }
+
+        return $results;
+    }
+
+    /**
      * install
      * This is a required plugin function
      */
     public function install(): bool
     {
         return Preference::insert('mb_overwrite_name', T_('Overwrite Artist names that match an mbid'), '0', AccessLevelEnum::USER->value, 'boolean', 'plugins', $this->name);
+    }
+
+    /**
+     * load
+     * This is a required plugin function; here it populates the prefs we
+     * need for this object.
+     */
+    public function load(User $user): bool
+    {
+        $user->set_preferences();
+        $data = $user->prefs;
+        // load system when nothing is given
+        if (!array_key_exists('mb_overwrite_name', $data)) {
+            $data['mb_overwrite_name'] = Preference::get_by_user(-1, 'mb_overwrite_name');
+        }
+
+        // overwrite matching MBID artist names
+        $this->overwrite_name = (bool)$data['mb_overwrite_name'];
+
+        return true;
     }
 
     /**
@@ -117,26 +412,6 @@ class AmpacheMusicBrainz extends AmpachePlugin implements PluginGetMetadataInter
 
         // did the upgrade work?
         return (bool) Preference::exists('mb_overwrite_name');
-    }
-
-    /**
-     * load
-     * This is a required plugin function; here it populates the prefs we
-     * need for this object.
-     */
-    public function load(User $user): bool
-    {
-        $user->set_preferences();
-        $data = $user->prefs;
-        // load system when nothing is given
-        if (!array_key_exists('mb_overwrite_name', $data)) {
-            $data['mb_overwrite_name'] = Preference::get_by_user(-1, 'mb_overwrite_name');
-        }
-
-        // overwrite matching MBID artist names
-        $this->overwrite_name = (bool)$data['mb_overwrite_name'];
-
-        return true;
     }
 
     /**
@@ -331,280 +606,5 @@ class AmpacheMusicBrainz extends AmpachePlugin implements PluginGetMetadataInter
         }
 
         return $results;
-    }
-
-    /**
-     * get_metadata
-     * Returns song metadata for what we're passed in.
-     * @param string[] $gather_types
-     * @param array<string, mixed> $media_info
-     * @return array<string, mixed>
-     */
-    public function get_metadata(array $gather_types, array $media_info): array
-    {
-        // Music metadata only
-        if (!in_array('music', $gather_types)) {
-            return [];
-        }
-
-        try {
-            $brainz = MusicBrainz::newMusicBrainz(
-                'request',
-                AmpConfig::get('musicbrainz_username'),
-                AmpConfig::get('musicbrainz_password')
-            );
-            $brainz->setUserAgent('Ampache', AmpConfig::get('version'), Stream::get_base_url());
-        } catch (Exception) {
-            return [];
-        }
-
-        if (isset($media_info['mb_trackid'])) {
-            $object_type = 'track';
-        } elseif (isset($media_info['mb_albumid_group'])) {
-            $object_type = 'album';
-        } elseif (isset($media_info['mb_artistid'])) {
-            $object_type = 'artist';
-        } elseif (isset($media_info['mb_labelid'])) {
-            $object_type = 'label';
-        } else {
-            return [];
-        }
-
-        // lookup a musicbrainz object
-        $results = self::_find($media_info);
-
-        // couldn't find an object
-        if (!$results instanceof EntityInterface) {
-            debug_event('MusicBrainz.plugin', 'Entity not found ' . $object_type, 3);
-
-            return [];
-        }
-
-        $genres     = [];
-        $brainzData = $results->getData();
-        try {
-            foreach ($brainz->getObjects($brainzData, 'tag') as $tag) {
-                /** @var Tag $tag */
-                $genres[] = $tag->name;
-            }
-        } catch (Exception) {
-            // no tags found;
-        }
-
-        try {
-            foreach ($brainz->getObjects($brainzData, 'genre') as $genre) {
-                /** @var Genre $genre */
-                $genres[] = $genre->getName();
-            }
-        } catch (Exception) {
-            // no genres found;
-        }
-
-        if (
-            isset($brainzData['artist-credit']) ||
-            isset($brainzData['releases'])
-        ) {
-            // pull first artist-credit
-            if (isset($brainzData['artist-credit']) && count($brainzData['artist-credit']) > 0) {
-                $artist = $brainzData['artist-credit'][0];
-                $artist = (is_array($artist))
-                    ? $artist['artist']
-                    : (array)$artist->{'artist'};
-            }
-
-            // pull first release
-            if (isset($brainzData['releases']) && count($brainzData['releases']) === 1) {
-                $release = $brainzData['releases'][0];
-            }
-
-            $results = $results->getProps(true);
-            if (isset($artist)) {
-                $results['mb_artistid'] = $artist['id'];
-                $results['artist']      = $artist['name'];
-            }
-
-            if (isset($release)) {
-                $results['album'] = is_array($release)
-                    ? $release['title']
-                    : $release->title;
-            }
-        } else {
-            $results = $results->getProps(true);
-        }
-
-        if ($genres !== []) {
-            $results['genre'] = array_unique($genres);
-        }
-
-        //debug_event(self::class, "get_metadata(): Results:\n" . print_r($results, true), 5);
-        // unset the MusicBrainz object
-        foreach ($results['data'] as $key => $value) {
-            if ($value instanceof MusicBrainz) {
-                unset($results[$key]);
-            }
-        }
-
-        return $results;
-    }
-
-    /**
-     * get_external_metadata
-     * Update an object (label or artist for now) using musicbrainz
-     */
-    public function get_external_metadata(library_item $object, string $object_type): bool
-    {
-        // Artist and label metadata only for now
-        $media_info = [];
-        $fullname   = $object->get_fullname();
-        if ($object_type === 'song' || $object instanceof Song) {
-            debug_event('MusicBrainz.plugin', 'get_external_metadata only supports Labels and Artists (' . $object_type . ')', 5);
-
-            return false;
-        }
-
-        if ($object_type === 'album' || $object instanceof Album) {
-            debug_event('MusicBrainz.plugin', 'get_external_metadata only supports Labels and Artists (' . $object_type . ')', 5);
-
-            return false;
-        }
-
-        if ($object_type === 'artist' && $object instanceof Artist) {
-            $media_info['mb_artistid'] = $object->mbid;
-            $media_info['artist']      = $fullname;
-            $results                   = self::_find($media_info);
-        } elseif ($object_type === 'label' && $object instanceof Label) {
-            $media_info['mb_labelid'] = $object->mbid;
-            $media_info['label']      = $fullname;
-            $results                  = self::_find($media_info);
-        } else {
-            debug_event('MusicBrainz.plugin', 'get_external_metadata only supports Labels and Artists (' . $object_type . ')', 5);
-
-            return false;
-        }
-
-        if ($results instanceof EntityInterface) {
-            try {
-                debug_event('MusicBrainz.plugin', sprintf('Updating %s: ', $object_type) . $fullname, 3);
-                $brainzData = $results->getData();
-                $life_span  = $brainzData['life-span'] ?? null;
-                $active     = 1;
-                $begin      = '';
-                if (is_array($life_span)) {
-                    $active = ($life_span['ended'] == 1) ? 0 : 1;
-                    $begin  = $life_span['begin'] ?? '';
-                } elseif (is_object($life_span)) {
-                    /** @var LifeSpan $life_span */
-                    $active = ($life_span->{'ended'} == 1) ? 0 : 1;
-                    $begin  = $life_span->{'begin'} ?? '';
-                }
-
-                $begin_area = $brainzData['begin-area'] ?? null;
-                $beginName  = null;
-                if (is_array($begin_area)) {
-                    $beginName = $begin_area['name'] ?? null;
-                } elseif (is_object($begin_area)) {
-                    $beginName = $begin_area->{'name'} ?? null;
-                }
-
-                $area     = $brainzData['area'] ?? null;
-                $areaName = null;
-                if (is_array($area)) {
-                    $areaName = ($area['name']) ?? null;
-                } elseif (is_object($area)) {
-                    $areaName = ($area->{'name'}) ?? null;
-                }
-            } catch (Exception) {
-                return false;
-            }
-
-            switch ($object_type) {
-                case 'label':
-                    $data = [
-                        /** @var \MusicBrainz\Entities\Label $results */
-                        'name' => $results->getName(),
-                        'mbid' => $results->getId(),
-                        'category' => $results->type ?? $object->category,
-                        'summary' => $results->getData()['disambiguation'] ?? $object->summary,
-                        'address' => $object->address,
-                        'country' => $results->country ?? $object->country,
-                        'email' => $object->email,
-                        'website' => $object->website,
-                        'active' => $active
-                    ];
-
-                    break;
-                case 'artist':
-                    $data = [
-                        /** @var \MusicBrainz\Entities\Artist $results */
-                        'name' => $results->getName(),
-                        'mbid' => $results->getId(),
-                        'summary' => $object->summary,
-                        'placeformed' => $beginName ?? $areaName ?? null,
-                        'yearformed' => explode('-', ((string) $begin))[0] ?: $object->yearformed
-                    ];
-
-                    if (empty($data['yearformed'])) {
-                        $data['yearformed'] = null;
-                    }
-
-                    break;
-                default:
-                    return false;
-            }
-
-            $object->update($data);
-
-            return true;
-        }
-
-        return false;
-    }
-
-    /**
-     * get_artist
-     * Get an artist from musicbrainz
-     * @return array{
-     *     name?: string,
-     *     mbid?: string
-     * }
-     */
-    public function get_artist(string $mbid): array
-    {
-        //debug_event(self::class, "get_artist: {{$mbid}}", 4);
-        $results = false;
-        $data    = [];
-        if (MusicBrainz::isMBID($mbid)) {
-            try {
-                $brainz = MusicBrainz::newMusicBrainz(
-                    'request',
-                    AmpConfig::get('musicbrainz_username'),
-                    AmpConfig::get('musicbrainz_password')
-                );
-                $brainz->setUserAgent('Ampache', AmpConfig::get('version'), Stream::get_base_url());
-                $lookup = $brainz->lookup(
-                    'artist',
-                    $mbid,
-                    ['genres', 'tags']
-                );
-                /**
-                 * https://musicbrainz.org/ws/2/artist/859a5c63-08df-42da-905c-7307f56db95d?inc=release-groups&fmt=json
-                 * @var \MusicBrainz\Entities\Artist $results
-                 */
-                $results = $brainz->getObject($lookup, 'artist');
-            } catch (Exception $error) {
-                debug_event('MusicBrainz.plugin', 'Lookup error ' . $error->getMessage(), 3);
-
-                return [];
-            }
-        }
-
-        if ($results) {
-            $data = [
-                'name' => $results->getName(),
-                'mbid' => $results->getId(),
-            ];
-        }
-
-        return $data;
     }
 }

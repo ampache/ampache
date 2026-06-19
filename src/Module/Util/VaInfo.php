@@ -110,29 +110,20 @@ final class VaInfo implements VaInfoInterface
         'year' => null
     ];
 
-    private const string MBID_REGEX = '/[a-z0-9]{8}-[a-z0-9]{4}-[a-z0-9]{4}-[a-z0-9]{4}-[a-z0-9]{12}/';
-
     private const string ISRC_REGEX = '/[A-Z]{2}-?[A-Z0-9]{3}-?\d{2}-?\d{5}/';
 
-    public string $encoding = '';
+    private const string MBID_REGEX = '/[a-z0-9]{8}-[a-z0-9]{4}-[a-z0-9]{4}-[a-z0-9]{4}-[a-z0-9]{12}/';
 
-    public string $encodingId3v1 = '';
-
-    public string $encodingId3v2 = '';
-
-    public string $type = '';
-
-    public array $tags = [];
-
-    protected array $_raw = [];
-
-    protected ?getID3 $_getID3 = null;
-
-    protected int $_forcedSize = 0;
-
+    public string $encoding          = '';
+    public string $encodingId3v1     = '';
+    public string $encodingId3v2     = '';
+    public array $tags               = [];
+    public string $type              = '';
     protected string $_file_encoding = '';
-
-    private bool $_broken = false;
+    protected int $_forcedSize       = 0;
+    protected ?getID3 $_getID3       = null;
+    protected array $_raw            = [];
+    private bool $_broken            = false;
 
     /** @var array{dirname?: string, basename: string, extension?: string, filename: string}  */
     private array $_pathinfo;
@@ -236,322 +227,6 @@ final class VaInfo implements VaInfoInterface
                 $this->_getID3->encoding = $this->encodingId3v2;
             }
         }
-    }
-
-    /**
-     * get_default_info
-     *
-     * @return array<string, null>
-     */
-    public static function get_default_info(): array
-    {
-        return self::DEFAULT_INFO;
-    }
-
-    /**
-     * forceSize
-     */
-    public function forceSize(int $size): void
-    {
-        $this->_forcedSize = $size;
-    }
-
-    /**
-     * _detect_encoding
-     *
-     * Takes an array of tags and attempts to automatically detect their encoding.
-     */
-    private function _detect_encoding(array|string $tags, string $mb_order): string
-    {
-        if (!function_exists('mb_detect_encoding')) {
-            return 'ISO-8859-1';
-        }
-
-        $encodings = [];
-        if (is_array($tags)) {
-            foreach ($tags as $tag) {
-                if (is_array($tag)) {
-                    $tag = implode(" ", $tag);
-                }
-
-                $enc = mb_detect_encoding((string) $tag, $mb_order, true);
-                if ($enc !== false) {
-                    if (!array_key_exists($enc, $encodings)) {
-                        $encodings[$enc] = 0;
-                    }
-
-                    $encodings[$enc]++;
-                }
-            }
-        } else {
-            $enc = mb_detect_encoding($tags, $mb_order, true);
-            if ($enc !== false) {
-                $encodings[$enc] = 1;
-            }
-        }
-
-        //!!debug_event(self::class, 'encoding detection: ' . json_encode($encodings), 5);
-        $high     = 0;
-        $encoding = 'ISO-8859-1';
-        foreach ($encodings as $key => $value) {
-            if ($value > $high) {
-                $encoding = $key;
-                $high     = $value;
-            }
-        }
-
-        if ($encoding !== 'ASCII') {
-            return $encoding;
-        }
-
-        return 'ISO-8859-1';
-    }
-
-    /**
-     * get_info
-     *
-     * This function runs the various steps to gathering the metadata. Filling $this->tags
-     */
-    public function gather_tags(): void
-    {
-        // If this is broken, don't waste time figuring it out a second time, just return their rotting carcass of a media file.
-        if ($this->_broken) {
-            $this->tags = $this->set_broken();
-
-            return;
-        }
-
-        $enabled_sources = $this->get_metadata_order();
-
-        if (
-            in_array('getid3', $enabled_sources) &&
-            $this->islocal &&
-            $this->_getID3
-        ) {
-            try {
-                $this->_raw = $this->_getID3->analyze(Core::conv_lc_file($this->filename));
-            } catch (Exception $error) {
-                $this->logger->error(
-                    'getID3 Unable to catalog file: ' . $error->getMessage(),
-                    [LegacyLogger::CONTEXT_TYPE => self::class]
-                );
-            }
-        }
-
-        /* Figure out what type of file we are dealing with */
-        $this->type = $this->_get_type() ?? '';
-
-        if (in_array('filename', $enabled_sources)) {
-            $this->tags['filename'] = $this->_parse_filename($this->filename);
-        }
-
-        if (in_array('getid3', $enabled_sources) && $this->islocal) {
-            $this->tags['getid3'] = $this->_get_tags();
-        }
-
-        $this->_get_plugin_tags();
-    }
-
-    /**
-     * check_time
-     * check a cached file is close to the expected time
-     */
-    public function check_time(int $time): bool
-    {
-        $this->gather_tags();
-        foreach ($this->tags as $results) {
-            if (isset($results['time'])) {
-                return ($time >= $results['time'] - 2);
-            }
-        }
-
-        return false;
-    }
-
-    /**
-     * write_id3
-     * This function runs the various steps to gathering the metadata
-     * @throws Exception
-     */
-    public function write_id3(array $tagData): void
-    {
-        $TaggingFormat = 'UTF-8';
-        $tagWriter     = new getid3_writetags();
-        $extension     = pathinfo($this->filename, PATHINFO_EXTENSION);
-        $extensionMap  = [
-            'mp3' => 'id3v2.3',
-            'flac' => 'metaflac',
-            'oga' => 'vorbiscomment',
-            'ogg' => 'vorbiscomment',
-        ];
-        if (!array_key_exists(strtolower($extension), $extensionMap)) {
-            $this->logger->debug(
-                sprintf('Writing Tags: Files with %s extensions are currently ignored.', $extension),
-                [LegacyLogger::CONTEXT_TYPE => self::class]
-            );
-
-            return;
-        }
-
-        $format                       = $extensionMap[$extension];
-        $tagWriter->filename          = $this->filename;
-        $tagWriter->tagformats        = [$format];
-        $tagWriter->overwrite_tags    = true;
-        $tagWriter->remove_other_tags = false;
-        $tagWriter->tag_encoding      = $TaggingFormat;
-        $tagWriter->tag_data          = $tagData;
-
-        /**
-        * Currently getid3 doesn't remove pictures on *nix, only vorbiscomments.
-        * This hasn't been tested on Windows and there is evidence that
-        * metaflac.exe behaves differently.
-        */
-        if ($extension !== 'mp3') {
-            if (php_uname('s') === 'Linux') {
-                /**
-                * First check for installation of metaflac and
-                * vorbiscomment system tools.
-                */
-                exec('which metaflac', $output, $retval);
-                exec('which vorbiscomment', $output, $retval1);
-
-                if ($retval !== 0 || $retval1 !== 0) {
-                    $this->logger->debug(
-                        'Metaflac and vorbiscomments must be installed to write tags to flac and oga files',
-                        [LegacyLogger::CONTEXT_TYPE => self::class]
-                    );
-
-                    return;
-                }
-            }
-
-            if (GETID3_OS_ISWINDOWS) {
-                $command = 'metaflac.exe --remove --block-type=PICTURE ' . escapeshellarg($this->filename);
-            } else {
-                $command = 'metaflac --remove --block-type=PICTURE ' . escapeshellarg($this->filename);
-            }
-
-            $commandError = shell_exec($command);
-        }
-
-        if ($tagWriter->WriteTags()) {
-            foreach ($tagWriter->warnings as $message) {
-                $this->logger->debug(
-                    'Warning Writing Tags: ' . $message,
-                    [LegacyLogger::CONTEXT_TYPE => self::class]
-                );
-            }
-        }
-
-        foreach ($tagWriter->errors as $message) {
-            $this->logger->error(
-                'Error Writing Tags: ' . $message,
-                [LegacyLogger::CONTEXT_TYPE => self::class]
-            );
-        }
-    }
-
-    /**
-     * prepare_metadata_for_writing
-     * Prepares vorbiscomments/id3v2 metadata for writing tag to file
-     */
-    public function prepare_metadata_for_writing(array $frames): array
-    {
-        $ndata = [];
-        foreach ($frames as $key => $text) {
-            switch ($key) {
-                case 'text':
-                    foreach ($text as $tkey => $data) {
-                        $ndata['text'][] = [
-                            'data' => $data,
-                            'description' => $tkey,
-                            'encodingid' => 0
-                        ];
-                    }
-
-                    break;
-                default:
-                    $ndata[$key][] = $text[0];
-                    break;
-            }
-        }
-
-        return $ndata;
-    }
-
-    /**
-     * read_id3
-     *
-     * This function runs the various steps to gathering the metadata
-     */
-    public function read_id3(): array
-    {
-        // Get the Raw file information
-        try {
-            $this->_raw = ($this->_getID3 instanceof getID3)
-                ? $this->_getID3->analyze($this->filename)
-                : [];
-
-            return $this->_raw;
-        } catch (Exception $exception) {
-            $this->logger->error(
-                'Unable to read file:' . $exception->getMessage(),
-                [LegacyLogger::CONTEXT_TYPE => self::class]
-            );
-        }
-
-        return [];
-    }
-
-    /**
-     * get_tag_type
-     *
-     * This takes the result set and the tag_order defined in your config
-     * file and tries to figure out which tag type(s) it should use. If your
-     * tag_order doesn't match anything then it throws up its hands and uses
-     * everything in random order.
-     * @return string[]
-     */
-    public static function get_tag_type(array $results, string $configKey = 'metadata_order'): array
-    {
-        $tagorderMap = [
-            'metadata_order' => self::getConfigContainer()->get(ConfigurationKeyEnum::METADATA_ORDER),
-            'metadata_order_video' => self::getConfigContainer()->get(ConfigurationKeyEnum::METADATA_ORDER_VIDEO),
-            'getid3_tag_order' => self::getConfigContainer()->get(ConfigurationKeyEnum::GETID3_TAG_ORDER),
-        ];
-
-        $order = [];
-        foreach ($tagorderMap[$configKey] ?? [] as $source) {
-            //debug_event(self::class, "source: " . $source, true, 5);
-            $order[] = strtolower((string) $source);
-        }
-
-        // Iterate through the defined key order adding them to an ordered array.
-        $returned_keys = [];
-        foreach ($order as $value) {
-            if (array_key_exists($value, $results)) {
-                $returned_keys[] = $value;
-            }
-        }
-
-        // return a default list of items (if you get here this is probably a bad file)
-        if ($returned_keys === []) {
-            debug_event(self::class, "get_tag_type: Couln't find tags", 5);
-            $returned_keys = [
-                'getid3',
-                'filename',
-                'general'
-            ];
-        }
-
-        // Unless they explicitly set it, add bitrate/mode/mime/etc.
-        if (!in_array('general', $returned_keys)) {
-            $returned_keys[] = 'general';
-        }
-
-        //debug_event(self::class, "get_tag_type: " . $configKey . print_r($returned_keys, true), 5);
-
-        return $returned_keys;
     }
 
     /**
@@ -751,6 +426,90 @@ final class VaInfo implements VaInfoInterface
     }
 
     /**
+     * get_default_info
+     *
+     * @return array<string, null>
+     */
+    public static function get_default_info(): array
+    {
+        return self::DEFAULT_INFO;
+    }
+
+    /**
+     * get_tag_type
+     *
+     * This takes the result set and the tag_order defined in your config
+     * file and tries to figure out which tag type(s) it should use. If your
+     * tag_order doesn't match anything then it throws up its hands and uses
+     * everything in random order.
+     * @return string[]
+     */
+    public static function get_tag_type(array $results, string $configKey = 'metadata_order'): array
+    {
+        $tagorderMap = [
+            'metadata_order' => self::getConfigContainer()->get(ConfigurationKeyEnum::METADATA_ORDER),
+            'metadata_order_video' => self::getConfigContainer()->get(ConfigurationKeyEnum::METADATA_ORDER_VIDEO),
+            'getid3_tag_order' => self::getConfigContainer()->get(ConfigurationKeyEnum::GETID3_TAG_ORDER),
+        ];
+
+        $order = [];
+        foreach ($tagorderMap[$configKey] ?? [] as $source) {
+            //debug_event(self::class, "source: " . $source, true, 5);
+            $order[] = strtolower((string) $source);
+        }
+
+        // Iterate through the defined key order adding them to an ordered array.
+        $returned_keys = [];
+        foreach ($order as $value) {
+            if (array_key_exists($value, $results)) {
+                $returned_keys[] = $value;
+            }
+        }
+
+        // return a default list of items (if you get here this is probably a bad file)
+        if ($returned_keys === []) {
+            debug_event(self::class, "get_tag_type: Couln't find tags", 5);
+            $returned_keys = [
+                'getid3',
+                'filename',
+                'general'
+            ];
+        }
+
+        // Unless they explicitly set it, add bitrate/mode/mime/etc.
+        if (!in_array('general', $returned_keys)) {
+            $returned_keys[] = 'general';
+        }
+
+        //debug_event(self::class, "get_tag_type: " . $configKey . print_r($returned_keys, true), 5);
+
+        return $returned_keys;
+    }
+
+    /**
+     * parse_isrc_array
+     * Return only valid isrc data
+     * @param string[]|string|null $isrc
+     * @return string[]
+     */
+    public static function parse_isrc_array(array|string|null $isrc): array
+    {
+        if (empty($isrc)) {
+            return [];
+        }
+
+        if (is_array($isrc)) {
+            $isrc = implode(";", $isrc);
+        }
+
+        if (preg_match_all(self::ISRC_REGEX, $isrc, $matches)) {
+            return $matches[0];
+        }
+
+        return [];
+    }
+
+    /**
      * parse_mbid
      * Get the first valid mbid. (if it's valid)
      * @param string[]|string|null $mbid
@@ -796,270 +555,391 @@ final class VaInfo implements VaInfoInterface
     }
 
     /**
-     * parse_isrc_array
-     * Return only valid isrc data
-     * @param string[]|string|null $isrc
-     * @return string[]
+     * parse_pattern
+     * @return array<string, mixed>
      */
-    public static function parse_isrc_array(array|string|null $isrc): array
+    public static function parse_pattern(string $filepath, string $dirPattern, string $filePattern): array
     {
-        if (empty($isrc)) {
-            return [];
+        //global $dic;
+        //$logger = $dic->get(LoggerInterface::class);
+        $results         = [];
+        $slash_type_preg = DIRECTORY_SEPARATOR;
+        if ($slash_type_preg === '\\') {
+            $slash_type_preg .= DIRECTORY_SEPARATOR;
         }
 
-        if (is_array($isrc)) {
-            $isrc = implode(";", $isrc);
+        // Combine the patterns
+        $pattern = preg_quote($dirPattern) . $slash_type_preg . preg_quote($filePattern);
+
+        // Remove first left directories from filename to match pattern
+        $cntslash = substr_count($pattern, preg_quote(DIRECTORY_SEPARATOR)) + 1;
+        $filepart = explode(DIRECTORY_SEPARATOR, $filepath);
+        if (count($filepart) > $cntslash) {
+            $filepath = implode(DIRECTORY_SEPARATOR, array_slice($filepart, count($filepart) - $cntslash));
         }
 
-        if (preg_match_all(self::ISRC_REGEX, $isrc, $matches)) {
-            return $matches[0];
+        // Pull out the pattern codes into an array
+        preg_match_all('/\%\w/', $pattern, $elements);
+
+        // Mangle the pattern by turning the codes into regex captures
+        $pattern = preg_replace('/\%d/', '(\d?)', $pattern);
+        $pattern = preg_replace('/\%[TyY]/', '(\d+?)', (string)$pattern);
+        $pattern = preg_replace('/\%\w/', '(.+?)', (string)$pattern);
+        $pattern = str_replace('/', '\/', (string)$pattern);
+        $pattern = str_replace(' ', '\s', (string)$pattern);
+        $pattern = '/' . $pattern . '\..+$/';
+
+        // Pull out our actual matches
+        preg_match($pattern, $filepath, $matches);
+        //$logger->debug('Checking ' . $pattern . ' _ ' . print_r($matches, true) . ' on ' . $filepath, [LegacyLogger::CONTEXT_TYPE => self::class]);
+        if ($matches != null) {
+            // The first element is the full match text
+            $matched = array_shift($matches);
+            //$logger->debug($pattern . ' matched ' . $matched . ' on ' . $filepath, [LegacyLogger::CONTEXT_TYPE => self::class]);
+
+            // Iterate over what we found
+            foreach ($matches as $key => $value) {
+                $new_key = self::_translate_pattern_code($elements['0'][$key]);
+                if (!in_array($new_key, [null, '', '0'], true)) {
+                    if (($new_key === 'multi_artist')) {
+                        $results['artist']      = $value;
+                        $results['albumartist'] = $value;
+                    } else {
+                        $results[$new_key] = $value;
+                    }
+                }
+            }
+
+            $results['title'] ??= basename($filepath);
+        }
+
+        return $results;
+    }
+
+    /**
+     * parse_rating
+     * Convert ratings to 5 stars based on semi standard 255 unit scale
+     */
+    public static function parse_rating(int $value): int
+    {
+        if ($value === 0) {
+            return 0;
+        }
+
+        if (AmpConfig::get('rating_file_tag_compatibility', false)) {
+            if ($value === 255) {
+                return 5;
+            } elseif ($value >= 196) {
+                return 4;
+            } elseif ($value >= 128) {
+                return 3;
+            } elseif ($value >= 64) {
+                return 2;
+            } elseif ($value >= 1) {
+                return 1;
+            }
+        } else {
+            return (int)($value / 255 * 5);
+        }
+
+        return 0;
+    }
+
+    /**
+     * translate_pattern_code
+     * This just contains a keyed array which it checks against to give you the
+     * 'tag' name that said pattern code corresponds to. It returns false if nothing is found.
+     */
+    private static function _translate_pattern_code(string $code): ?string
+    {
+        $code_array = [
+            '%A' => 'album',
+            '%a' => 'artist', // Song Artist
+            '%B' => 'albumartist',
+            '%b' => 'barcode',
+            '%C' => 'catalog_number',
+            '%c' => 'comment',
+            '%d' => 'disk',
+            '%g' => 'genre',
+            '%l' => 'label',
+            '%m' => 'multi_artist',
+            '%o' => 'zz_other',
+            '%R' => 'release_status',
+            '%r' => 'release_type',
+            '%s' => 'version', // Release Comment
+            '%t' => 'title',
+            '%T' => 'track',
+            '%Y' => 'original_year',
+            '%y' => 'year',
+        ];
+
+        return $code_array[$code] ?? null;
+    }
+
+    private static function getConfigContainer(): ConfigContainerInterface
+    {
+        global $dic;
+
+        return $dic->get(ConfigContainerInterface::class);
+    }
+
+    /**
+     * check_time
+     * check a cached file is close to the expected time
+     */
+    public function check_time(int $time): bool
+    {
+        $this->gather_tags();
+        foreach ($this->tags as $results) {
+            if (isset($results['time'])) {
+                return ($time >= $results['time'] - 2);
+            }
+        }
+
+        return false;
+    }
+
+    /**
+     * forceSize
+     */
+    public function forceSize(int $size): void
+    {
+        $this->_forcedSize = $size;
+    }
+
+    /**
+     * get_info
+     *
+     * This function runs the various steps to gathering the metadata. Filling $this->tags
+     */
+    public function gather_tags(): void
+    {
+        // If this is broken, don't waste time figuring it out a second time, just return their rotting carcass of a media file.
+        if ($this->_broken) {
+            $this->tags = $this->set_broken();
+
+            return;
+        }
+
+        $enabled_sources = $this->get_metadata_order();
+
+        if (
+            in_array('getid3', $enabled_sources) &&
+            $this->islocal &&
+            $this->_getID3
+        ) {
+            try {
+                $this->_raw = $this->_getID3->analyze(Core::conv_lc_file($this->filename));
+            } catch (Exception $error) {
+                $this->logger->error(
+                    'getID3 Unable to catalog file: ' . $error->getMessage(),
+                    [LegacyLogger::CONTEXT_TYPE => self::class]
+                );
+            }
+        }
+
+        /* Figure out what type of file we are dealing with */
+        $this->type = $this->_get_type() ?? '';
+
+        if (in_array('filename', $enabled_sources)) {
+            $this->tags['filename'] = $this->_parse_filename($this->filename);
+        }
+
+        if (in_array('getid3', $enabled_sources) && $this->islocal) {
+            $this->tags['getid3'] = $this->_get_tags();
+        }
+
+        $this->_get_plugin_tags();
+    }
+
+    /**
+     * prepare_metadata_for_writing
+     * Prepares vorbiscomments/id3v2 metadata for writing tag to file
+     */
+    public function prepare_metadata_for_writing(array $frames): array
+    {
+        $ndata = [];
+        foreach ($frames as $key => $text) {
+            switch ($key) {
+                case 'text':
+                    foreach ($text as $tkey => $data) {
+                        $ndata['text'][] = [
+                            'data' => $data,
+                            'description' => $tkey,
+                            'encodingid' => 0
+                        ];
+                    }
+
+                    break;
+                default:
+                    $ndata[$key][] = $text[0];
+                    break;
+            }
+        }
+
+        return $ndata;
+    }
+
+    /**
+     * read_id3
+     *
+     * This function runs the various steps to gathering the metadata
+     */
+    public function read_id3(): array
+    {
+        // Get the Raw file information
+        try {
+            $this->_raw = ($this->_getID3 instanceof getID3)
+                ? $this->_getID3->analyze($this->filename)
+                : [];
+
+            return $this->_raw;
+        } catch (Exception $exception) {
+            $this->logger->error(
+                'Unable to read file:' . $exception->getMessage(),
+                [LegacyLogger::CONTEXT_TYPE => self::class]
+            );
         }
 
         return [];
     }
 
     /**
-     * _get_type
+     * set_broken
      *
-     * This function takes the raw information and figures out what type of file we are dealing with.
+     * This fills all tag types with Unknown (Broken)
+     *
+     * @return array<string, array<string, string>> Return broken title, album, artist
      */
-    private function _get_type(): ?string
+    public function set_broken(): array
     {
-        // There are a few places that the file type can come from, in the end we trust the encoding type.
-        if (array_key_exists('video', $this->_raw) && array_key_exists('dataformat', $this->_raw['video'])) {
-            return $this->_clean_type($this->_raw['video']['dataformat']);
+        /* Pull In the config option */
+        $order = $this->configContainer->get(ConfigurationKeyEnum::TAG_ORDER);
+
+        if (!is_array($order)) {
+            $order = [$order];
         }
 
-        if (array_key_exists('audio', $this->_raw)) {
-            if (array_key_exists('streams', $this->_raw['audio']) && array_key_exists('0', $this->_raw['audio']['streams']) && array_key_exists('dataformat', $this->_raw['audio']['streams']['0'])) {
-                return $this->_clean_type($this->_raw['audio']['streams']['0']['dataformat']);
-            }
+        $key = array_shift($order);
 
-            if (array_key_exists('dataformat', $this->_raw['audio'])) {
-                return $this->_clean_type($this->_raw['audio']['dataformat']);
-            }
-        }
+        $broken                 = [];
+        $broken[$key]           = [];
+        $broken[$key]['title']  = '**BROKEN** ' . $this->filename;
+        $broken[$key]['album']  = 'Unknown (Broken)';
+        $broken[$key]['artist'] = 'Unknown (Broken)';
 
-        if (array_key_exists('fileformat', $this->_raw)) {
-            return $this->_clean_type($this->_raw['fileformat']);
-        }
-
-        return null;
+        return $broken;
     }
 
     /**
-     * _get_tags
-     *
-     * This processes the raw getID3 output and bakes it.
-     * @return array<string, mixed>
+     * splitSlashedlist
+     * Split items by configurable delimiter
+     * Return first item as string = default
+     * Return all items as array if doTrim = false passed as optional parameter
+     * @return string[]
      * @throws Exception
      */
-    private function _get_tags(): array
+    public function splitSlashedlist(string $data): array
     {
-        $results = [];
-        //$this->logger->debug('RAW TAGS ' . print_r($this->_raw, true), [LegacyLogger::CONTEXT_TYPE => self::class]);
-        // The tags can come in many different shapes and colors depending on the encoding.
-        if (array_key_exists('tags', $this->_raw) && is_array($this->_raw['tags'])) {
-            foreach ($this->_raw['tags'] as $key => $tag_array) {
-                switch ($key) {
-                    case 'vorbiscomment':
-                        //$this->logger->debug('Cleaning vorbis', [LegacyLogger::CONTEXT_TYPE => self::class]);
-                        $parsed = $this->_cleanup_vorbiscomment($tag_array);
-                        break;
-                    case 'id3v2':
-                        //$this->logger->debug('Cleaning id3v2', [LegacyLogger::CONTEXT_TYPE => self::class]);
-                        $parsed = $this->_cleanup_id3v2($tag_array);
-                        break;
-                    case 'quicktime':
-                        //$this->logger->debug('Cleaning quicktime', [LegacyLogger::CONTEXT_TYPE => self::class]);
-                        $parsed = $this->_cleanup_quicktime($tag_array);
-                        break;
-                    case 'riff':
-                        //$this->logger->debug('Cleaning riff', [LegacyLogger::CONTEXT_TYPE => self::class]);
-                        $parsed = $this->_cleanup_riff($tag_array);
-                        break;
-                    case 'mpg':
-                    case 'mpeg':
-                        $key = 'mpeg';
-                        //$this->logger->debug('Cleaning MPEG', [LegacyLogger::CONTEXT_TYPE => self::class]);
-                        $parsed = $this->_cleanup_generic($tag_array);
-                        break;
-                    case 'asf':
-                    case 'wmv':
-                    case 'wma':
-                        $key = 'asf';
-                        //$this->logger->debug('Cleaning WMV/WMA/ASF', [LegacyLogger::CONTEXT_TYPE => self::class]);
-                        $parsed = $this->_cleanup_asf($tag_array);
-                        break;
-                    case 'lyrics3':
-                        //$this->logger->debug('Cleaning lyrics3', [LegacyLogger::CONTEXT_TYPE => self::class]);
-                        $parsed = $this->_cleanup_lyrics($tag_array);
-                        break;
-                    case 'id3v1':
-                        //$this->logger->debug('Cleaning id3v1', [LegacyLogger::CONTEXT_TYPE => self::class]);
-                        $parsed = $this->_cleanup_id3v1($tag_array);
-                        break;
-                    case 'ape':
-                    case 'avi':
-                    case 'flv':
-                    case 'matroska':
-                    default:
-                        //$this->logger->debug('Cleaning tag type ' . $key . ' for file ' . $this->filename, [LegacyLogger::CONTEXT_TYPE => self::class]);
-                        $parsed = $this->_cleanup_generic($tag_array);
-                        break;
-                }
-
-                $results[$key] = $parsed;
+        //debug_event(self::class, "splitSlashedlist: " . print_r($data, true), 5);
+        $delimiters = $this->configContainer->get(ConfigurationKeyEnum::ADDITIONAL_DELIMITERS);
+        if ($data !== '' && $data !== '0' && !empty($delimiters)) {
+            $pattern = '~\s?(' . $delimiters . ')\s?~';
+            $items   = preg_split($pattern, $data) ?: [];
+            $items   = array_map(trim(...), $items);
+            if ($items === []) {
+                throw new Exception('Pattern given in additional_genre_delimiters is not functional. Please ensure is it a valid regex (delimiter ~)');
             }
+
+            $data = $items;
         }
 
-        $results['general'] = $this->_parse_general($this->_raw);
-
-        $cleaned        = self::clean_tag_info($results, self::get_tag_type($results, 'getid3_tag_order'), $this->filename);
-        $cleaned['raw'] = $results;
-
-        return $cleaned;
+        return is_array($data)
+            ? $data
+            : [$data];
     }
 
     /**
-     * get_metadata_order_key
+     * write_id3
+     * This function runs the various steps to gathering the metadata
+     * @throws Exception
      */
-    private function get_metadata_order_key(): string
+    public function write_id3(array $tagData): void
     {
-        if (!in_array('music', $this->gatherTypes)) {
-            return 'metadata_order_video';
-        }
-
-        return 'metadata_order';
-    }
-
-    /**
-     * get_metadata_order
-     * @return string[]
-     */
-    private function get_metadata_order(): array
-    {
-        $tagorderMap = [
-            'metadata_order' => self::getConfigContainer()->get(ConfigurationKeyEnum::METADATA_ORDER),
-            'metadata_order_video' => self::getConfigContainer()->get(ConfigurationKeyEnum::METADATA_ORDER_VIDEO),
-            'getid3_tag_order' => self::getConfigContainer()->get(ConfigurationKeyEnum::GETID3_TAG_ORDER),
+        $TaggingFormat = 'UTF-8';
+        $tagWriter     = new getid3_writetags();
+        $extension     = pathinfo($this->filename, PATHINFO_EXTENSION);
+        $extensionMap  = [
+            'mp3' => 'id3v2.3',
+            'flac' => 'metaflac',
+            'oga' => 'vorbiscomment',
+            'ogg' => 'vorbiscomment',
         ];
+        if (!array_key_exists(strtolower($extension), $extensionMap)) {
+            $this->logger->debug(
+                sprintf('Writing Tags: Files with %s extensions are currently ignored.', $extension),
+                [LegacyLogger::CONTEXT_TYPE => self::class]
+            );
 
-        // convert to lower case to be sure it matches plugin names in Ampache\Plugin\PluginEnum
-        return array_map(strtolower(...), $tagorderMap[$this->get_metadata_order_key()] ?? []);
-    }
+            return;
+        }
 
-    /**
-     * _get_plugin_tags
-     *
-     * Get additional metadata from plugins
-     */
-    private function _get_plugin_tags(): void
-    {
-        $tag_order    = $this->get_metadata_order();
-        $plugin_names = Plugin::get_plugins(PluginTypeEnum::METADATA_RETRIEVER);
-        $user         = (Core::get_global('user') instanceof User)
-            ? Core::get_global('user')
-            : new User(-1);
-        // don't loop over getid3 and filename
-        $tag_order = array_diff($tag_order, ['getid3', 'filename']);
-        foreach ($tag_order as $tag_source) {
-            if (in_array($tag_source, $plugin_names)) {
-                $plugin = new Plugin($tag_source);
-                if (
-                    $plugin->_plugin instanceof PluginGetMetadataInterface &&
-                    Plugin::get_plugin_version($plugin->_plugin->name) > 0 &&
-                    $plugin->load($user)
-                ) {
-                    $this->tags[$tag_source] = $plugin->_plugin->get_metadata(
-                        $this->gatherTypes,
-                        self::clean_tag_info(
-                            $this->tags,
-                            self::get_tag_type($this->tags, $this->get_metadata_order_key()),
-                            $this->filename
-                        )
+        $format                       = $extensionMap[$extension];
+        $tagWriter->filename          = $this->filename;
+        $tagWriter->tagformats        = [$format];
+        $tagWriter->overwrite_tags    = true;
+        $tagWriter->remove_other_tags = false;
+        $tagWriter->tag_encoding      = $TaggingFormat;
+        $tagWriter->tag_data          = $tagData;
+
+        /**
+        * Currently getid3 doesn't remove pictures on *nix, only vorbiscomments.
+        * This hasn't been tested on Windows and there is evidence that
+        * metaflac.exe behaves differently.
+        */
+        if ($extension !== 'mp3') {
+            if (php_uname('s') === 'Linux') {
+                /**
+                * First check for installation of metaflac and
+                * vorbiscomment system tools.
+                */
+                exec('which metaflac', $output, $retval);
+                exec('which vorbiscomment', $output, $retval1);
+
+                if ($retval !== 0 || $retval1 !== 0) {
+                    $this->logger->debug(
+                        'Metaflac and vorbiscomments must be installed to write tags to flac and oga files',
+                        [LegacyLogger::CONTEXT_TYPE => self::class]
                     );
+
+                    return;
                 }
-            } elseif (!in_array($tag_source, ['filename', 'getid3'])) {
+            }
+
+            if (GETID3_OS_ISWINDOWS) {
+                $command = 'metaflac.exe --remove --block-type=PICTURE ' . escapeshellarg($this->filename);
+            } else {
+                $command = 'metaflac --remove --block-type=PICTURE ' . escapeshellarg($this->filename);
+            }
+
+            $commandError = shell_exec($command);
+        }
+
+        if ($tagWriter->WriteTags()) {
+            foreach ($tagWriter->warnings as $message) {
                 $this->logger->debug(
-                    '_get_plugin_tags: ' . $tag_source . ' is not a valid metadata_order plugin',
+                    'Warning Writing Tags: ' . $message,
                     [LegacyLogger::CONTEXT_TYPE => self::class]
                 );
             }
         }
-    }
 
-    /**
-     * _parse_general
-     *
-     * Gather and return the general information about a file
-     * (vbr/cbr, sample rate, channels, etc.)
-     * @return array<string, mixed>
-     */
-    private function _parse_general(array $tags): array
-    {
-        //$this->logger->debug('_parse_general: ' . print_r($tags, true), [LegacyLogger::CONTEXT_TYPE => self::class]);
-        $parsed          = [];
-        $parsed['title'] = ($this->_pathinfo['filename'])
-            ? urldecode($this->_pathinfo['filename'])
-            : '';
-        if (array_key_exists('audio', $tags)) {
-            $parsed['mode'] = $tags['audio']['bitrate_mode'] ?? 'vbr';
-            if ($parsed['mode'] == 'con') {
-                $parsed['mode'] = 'cbr';
-            }
-
-            $parsed['bitrate']     = $tags['audio']['bitrate'] ?? null;
-            $parsed['channels']    = (empty($tags['audio']['channels'])) ? null : (int)$tags['audio']['channels'];
-            $parsed['rate']        = (empty($tags['audio']['sample_rate'])) ? null : (int)$tags['audio']['sample_rate'];
-            $parsed['audio_codec'] = $tags['audio']['dataformat'] ?? null;
+        foreach ($tagWriter->errors as $message) {
+            $this->logger->error(
+                'Error Writing Tags: ' . $message,
+                [LegacyLogger::CONTEXT_TYPE => self::class]
+            );
         }
-
-        if (array_key_exists('video', $tags)) {
-            $parsed['video_codec']   = $tags['video']['dataformat'] ?? null;
-            $parsed['resolution_x']  = $tags['video']['resolution_x'] ?? null;
-            $parsed['resolution_y']  = $tags['video']['resolution_y'] ?? null;
-            $parsed['display_x']     = $tags['video']['display_x'] ?? null;
-            $parsed['display_y']     = $tags['video']['display_y'] ?? null;
-            $parsed['frame_rate']    = $tags['video']['frame_rate'] ?? null;
-            $parsed['video_bitrate'] = $tags['video']['bitrate'] ?? null;
-        }
-
-        $parsed['size']     = $this->_forcedSize ?: $tags['filesize'] ?? null;
-        $parsed['encoding'] = $tags['encoding'] ?? null;
-        $parsed['mime']     = $tags['mime_type'] ?? null;
-        if (($parsed['size'] && array_key_exists('avdataoffset', $tags) && array_key_exists('bitrate', $tags))) {
-            $parsed['time'] = (($parsed['size'] - $tags['avdataoffset']) * 8) / $tags['bitrate'];
-        } elseif (array_key_exists('playtime_seconds', $tags) && $tags['playtime_seconds'] > 0) {
-            $parsed['time'] = $tags['playtime_seconds'];
-        } else {
-            $this->logger->critical("UNABLE TO READ 'playtime_seconds'. This is probably a bad file " . $parsed['title'], [LegacyLogger::CONTEXT_TYPE => self::class]);
-            $parsed['time'] = 0;
-        }
-
-        if (isset($tags['ape']['items'])) {
-            foreach ($tags['ape']['items'] as $key => $tag) {
-                switch (strtolower((string) $key)) {
-                    case 'replaygain_track_gain':
-                    case 'replaygain_track_peak':
-                    case 'replaygain_album_gain':
-                    case 'replaygain_album_peak':
-                        $parsed[$key] = (is_null($tag['data'][0])) ? null : (float) $tag['data'][0];
-                        break;
-                    case 'r128_track_gain':
-                    case 'r128_album_gain':
-                        $parsed[$key] = (is_null($tag['data'][0])) ? null : (int) $tag['data'][0];
-                        break;
-                }
-            }
-        }
-
-        return $parsed;
-    }
-
-    private function trimAscii(string $string): string
-    {
-        return (string)preg_replace('/[\x00-\x1F\x80-\xFF]/', '', trim($string));
     }
 
     /**
@@ -1102,6 +982,143 @@ final class VaInfo implements VaInfoInterface
 
                 return $type;
         }
+    }
+
+    /**
+     * _cleanup_asf
+     *
+     * This does WMA cleanup.
+     * @param array<string, mixed> $tags
+     * @return array<string, mixed>
+     * @throws Exception
+     */
+    private function _cleanup_asf(array $tags): array
+    {
+        $parsed = [];
+        foreach ($tags as $tagname => $data) {
+            //$this->logger->debug('asf tag: ' . strtolower($tagname) . ' value: ' . print_r($data ?? '', true), [LegacyLogger::CONTEXT_TYPE => self::class]);
+            switch (strtolower($tagname)) {
+                case 'artists':
+                    $parsed['artists'] = $this->parseArtists($data);
+                    break;
+                case 'genre':
+                    $parsed['genre'] = $this->parseGenres($data);
+                    break;
+                case 'partofset':
+                    $elements             = explode('/', (string) $data[0]);
+                    $parsed['disk']       = $elements[0];
+                    $parsed['totaldisks'] = $elements[1] ?? null;
+                    break;
+                case 'track_number':
+                case 'track':
+                    $parsed['track'] = $data[0];
+                    break;
+                case 'musicbrainz_artistid':
+                    $parsed['mb_artistid']       = self::parse_mbid($data[0]);
+                    $parsed['mb_artistid_array'] = (count($data) > 1) ? self::parse_mbid_array($data) : self::parse_mbid_array($data[0]);
+                    break;
+                case 'musicbrainz_albumid':
+                    $parsed['mb_albumid'] = self::parse_mbid($data[0]);
+                    break;
+                case 'musicbrainz_albumartistid':
+                    $parsed['mb_albumartistid']       = self::parse_mbid($data[0]);
+                    $parsed['mb_albumartistid_array'] = (count($data) > 1) ? self::parse_mbid_array($data) : self::parse_mbid_array($data[0]);
+                    break;
+                case 'musicbrainz_releasegroupid':
+                    $parsed['mb_albumid_group'] = self::parse_mbid($data[0]);
+                    break;
+                case 'musicbrainz_trackid':
+                    $parsed['mb_trackid'] = self::parse_mbid($data[0]);
+                    break;
+                case 'musicbrainz_albumtype':
+                    $parsed['release_type'] = (is_array($data) && count($data) > 1)
+                        ? implode(", ", $data)
+                        : implode(', ', array_diff(preg_split("/[^a-zA-Z0-9*]/", (string) $data[0]) ?: [], ['']));
+                    break;
+                case 'musicbrainz_albumstatus':
+                    $parsed['release_status'] = (is_array($data) && count($data) > 1)
+                        ? implode(", ", $data)
+                        : implode(', ', array_diff(preg_split("/[^a-zA-Z0-9*]/", (string) $data[0]) ?: [], ['']));
+                    break;
+                case 'releasecomment':
+                case 'version':
+                    $parsed['version'] = $data[0];
+                    break;
+                case 'originalreleaseyear':
+                    $parsed['original_year'] = str_replace("\x00", '', $data[0]);
+                    break;
+                case 'music_cd_identifier':
+                    // REMOVE_ME get rid of this annoying tag causing only problems with metadata
+                    break;
+                default:
+                    $parsed[$tagname] = $data[0];
+                    break;
+            }
+        }
+
+        // WMA isn't read very well so dig into the raw data
+        if (array_key_exists('asf', $this->_raw) && is_array($this->_raw['asf'])) {
+            $enable_custom_metadata = $this->configContainer->get(ConfigurationKeyEnum::ENABLE_CUSTOM_METADATA);
+            foreach ($this->_raw['asf']['extended_content_description_object']['content_descriptors'] as $wmaTag) {
+                $value = str_replace("\x00", '', $wmaTag['value']);
+                //$this->logger->debug('asf tag: ' . strtolower($wmaTag['name'] ?? '') . ' value: ' . print_r($value ?? '', true), [LegacyLogger::CONTEXT_TYPE => self::class]);
+                switch (strtolower($this->trimAscii($wmaTag['name']))) {
+                    case 'wm/artists':
+                        $parsed['artists'] = $this->parseArtists($value);
+                        break;
+                    case 'author':
+                        $parsed['artist'] = $value;
+                        break;
+                    case 'wm/albumartist':
+                        $parsed['albumartist'] = $value;
+                        break;
+                    case 'wm/setsubtitle':
+                        $parsed['disksubtitle'] = $value;
+                        break;
+                    case 'musicbrainz/artist id':
+                        $parsed['mb_artistid']       = self::parse_mbid($value);
+                        $parsed['mb_artistid_array'] = self::parse_mbid_array($value);
+                        break;
+                    case 'musicbrainz/album artist id':
+                        $parsed['mb_albumartistid']       = self::parse_mbid($value);
+                        $parsed['mb_albumartistid_array'] = self::parse_mbid_array($value);
+                        break;
+                    case 'musicbrainz/album id':
+                        $parsed['mb_albumid'] = self::parse_mbid($value);
+                        break;
+                    case 'musicbrainz/release group id':
+                        $parsed['mb_albumid_group'] = self::parse_mbid($value);
+                        break;
+                    case 'musicbrainz/album type':
+                        $parsed['release_type'] = $value;
+                        break;
+                    case 'musicbrainz/album status':
+                        $parsed['release_status'] = $value;
+                        break;
+                    case 'wm/originalreleaseyear':
+                        $parsed['original_year'] = (int)$value;
+                        break;
+                    case 'wm/barcode':
+                        $parsed['barcode'] = $value;
+                        break;
+                    case 'wm/catalogno':
+                        $parsed['catalog_number'] = $value;
+                        break;
+                    case 'wm/publisher':
+                        $parsed['publisher'] = $value;
+                        break;
+                    default:
+                        $frame = strtolower($this->trimAscii($wmaTag['name']));
+                        if ($enable_custom_metadata && !isset(self::DEFAULT_INFO[$frame]) && !in_array($frame, $parsed)) {
+                            $parsed[strtolower($this->trimAscii($wmaTag['name']))] = $value;
+                        }
+
+                        break;
+                }
+            }
+        }
+
+        return $parsed;
     }
 
     /**
@@ -1181,183 +1198,6 @@ final class VaInfo implements VaInfoInterface
                 default:
                     $parsed[$tagname] = $data[0];
                     break;
-            }
-        }
-
-        return $parsed;
-    }
-
-    /**
-     * _cleanup_lyrics
-     *
-     * This is supposed to handle lyrics3. FIXME: does it?
-     * @param array<string, mixed> $tags
-     * @return array<string, mixed>
-     */
-    private function _cleanup_lyrics(array $tags): array
-    {
-        $parsed = [];
-
-        foreach ($tags as $tag => $data) {
-            if (in_array($tag, ['unsyncedlyrics', 'unsynced lyrics', 'unsynchronised lyric'])) {
-                $tag = 'lyrics';
-            }
-
-            $parsed[strtolower($tag)] = $data[0];
-        }
-
-        return $parsed;
-    }
-
-    /**
-     * _cleanup_vorbiscomment
-     *
-     * Standardizes tag names from vorbis.
-     * @param array<string, mixed> $tags
-     * @return array<string, mixed>
-     * @throws Exception
-     */
-    private function _cleanup_vorbiscomment(array $tags): array
-    {
-        $parsed = [];
-
-        foreach ($tags as $tag => $data) {
-            //$this->logger->debug('Vorbis tag: ' . $tag . ' value: ' . print_r($data ?? '', true), [LegacyLogger::CONTEXT_TYPE => self::class]);
-            switch (strtolower($tag)) {
-                case 'artists':
-                    $parsed['artists'] = $this->parseArtists($data);
-                    break;
-                case 'genre':
-                    $parsed['genre'] = $this->parseGenres($data);
-                    break;
-                case 'tracknumber':
-                case 'track_number':
-                    $parsed['track'] = $data[0];
-                    break;
-                case 'tracktotal':
-                    $parsed['totaltracks'] = $data[0];
-                    break;
-                case 'discnumber':
-                    $parsed['disk'] = $data[0];
-                    break;
-                case 'discsubtitle':
-                    $parsed['disksubtitle'] = $data[0];
-                    break;
-                case 'totaldiscs':
-                case 'disctotal':
-                    $parsed['totaldisks'] = $data[0];
-                    break;
-                case 'albumartist':
-                case 'album artist':
-                    $parsed['albumartist'] = $data[0];
-                    break;
-                case 'isrc':
-                    $parsed['isrc'] = (count($data) > 1) ? self::parse_isrc_array($data) : self::parse_isrc_array($data[0]);
-                    break;
-                case 'date':
-                    $parsed['year'] = $data[0];
-                    break;
-                case 'musicbrainz_artistid':
-                    $parsed['mb_artistid']       = self::parse_mbid($data[0]);
-                    $parsed['mb_artistid_array'] = (count($data) > 1) ? self::parse_mbid_array($data) : self::parse_mbid_array($data[0]);
-                    break;
-                case 'musicbrainz_albumid':
-                    $parsed['mb_albumid'] = self::parse_mbid($data[0]);
-                    break;
-                case 'musicbrainz_albumartistid':
-                    $parsed['mb_albumartistid']       = self::parse_mbid($data[0]);
-                    $parsed['mb_albumartistid_array'] = (count($data) > 1) ? self::parse_mbid_array($data) : self::parse_mbid_array($data[0]);
-                    break;
-                case 'musicbrainz_releasegroupid':
-                    $parsed['mb_albumid_group'] = self::parse_mbid($data[0]);
-                    break;
-                case 'musicbrainz_trackid':
-                    $parsed['mb_trackid'] = self::parse_mbid($data[0]);
-                    break;
-                case 'releasetype':
-                case 'musicbrainz_albumtype':
-                    $parsed['release_type'] = (is_array($data) && count($data) > 1)
-                        ? implode(", ", $data)
-                        : implode(', ', array_diff(preg_split("/[^a-zA-Z0-9*]/", (string) $data[0]) ?: [], ['']));
-                    break;
-                case 'releasestatus':
-                case 'musicbrainz_albumstatus':
-                    $parsed['release_status'] = (is_array($data) && count($data) > 1)
-                        ? implode(", ", $data)
-                        : implode(', ', array_diff(preg_split("/[^a-zA-Z0-9*]/", (string) $data[0]) ?: [], ['']));
-                    break;
-                case 'unsyncedlyrics':
-                case 'unsynced lyrics':
-                case 'lyrics':
-                    $parsed['lyrics'] = $data[0];
-                    break;
-                case 'originaldate':
-                    $parsed['originaldate'] = strtotime(str_replace(" ", "", $data[0]));
-                    if (strlen((string) $data['0']) > 4) {
-                        $data[0] = date('Y', (int)$parsed['originaldate']);
-                    }
-
-                    $parsed['original_year'] ??= $data[0];
-                    break;
-                case 'originalyear':
-                    $parsed['original_year'] = $data[0];
-                    break;
-                case 'barcode':
-                    $parsed['barcode'] = $data[0];
-                    break;
-                case 'catalognumber':
-                case 'catalog_number':
-                    $parsed['catalog_number'] = $data[0];
-                    break;
-                case 'label':
-                case 'organization':
-                    $parsed['publisher'] = $data[0];
-                    break;
-                case 'version':
-                    $parsed['version'] = $data[0];
-                    break;
-                case 'rating':
-                    if (!is_numeric($data[0])) {
-                        break;
-                    }
-
-                    $rating_user = -1;
-                    if ($this->configContainer->get(ConfigurationKeyEnum::RATING_FILE_TAG_USER)) {
-                        $rating_user = (int) $this->configContainer->get(ConfigurationKeyEnum::RATING_FILE_TAG_USER);
-                    }
-
-                    $parsed['rating'][$rating_user] = floor(((int)$data[0]) * 5 / 100);
-                    break;
-                default:
-                    $parsed[strtolower($tag)] = $data[0];
-                    break;
-            }
-
-            // look for set ratings using email address
-            foreach (preg_grep("/^rating:.*@.*/", array_keys($parsed)) ?: [] as $user_rating) {
-                $rating_user = $this->userRepository->findByEmail(ltrim((string) $user_rating, "rating:"));
-                if ($rating_user instanceof User) {
-                    $parsed['rating'][$rating_user->id] = floor(((int)$parsed[$user_rating]) * 5 / 100);
-                }
-            }
-        }
-
-        // Replaygain stored by getID3
-        if (isset($this->_raw['replay_gain'])) {
-            if (isset($this->_raw['replay_gain']['track']['adjustment'])) {
-                $parsed['replaygain_track_gain'] = (float) $this->_raw['replay_gain']['track']['adjustment'];
-            }
-
-            if (isset($this->_raw['replay_gain']['track']['peak'])) {
-                $parsed['replaygain_track_peak'] = (float) $this->_raw['replay_gain']['track']['peak'];
-            }
-
-            if (isset($this->_raw['replay_gain']['album']['adjustment'])) {
-                $parsed['replaygain_album_gain'] = (float) $this->_raw['replay_gain']['album']['adjustment'];
-            }
-
-            if (isset($this->_raw['replay_gain']['album']['peak'])) {
-                $parsed['replaygain_album_peak'] = (float) $this->_raw['replay_gain']['album']['peak'];
             }
         }
 
@@ -1619,23 +1459,22 @@ final class VaInfo implements VaInfoInterface
     }
 
     /**
-     * _cleanup_riff
+     * _cleanup_lyrics
+     *
+     * This is supposed to handle lyrics3. FIXME: does it?
      * @param array<string, mixed> $tags
      * @return array<string, mixed>
      */
-    private function _cleanup_riff(array $tags): array
+    private function _cleanup_lyrics(array $tags): array
     {
         $parsed = [];
 
         foreach ($tags as $tag => $data) {
-            switch ($tag) {
-                case 'product':
-                    $parsed['album'] = $data[0];
-                    break;
-                default:
-                    $parsed[strtolower($tag)] = $data[0];
-                    break;
+            if (in_array($tag, ['unsyncedlyrics', 'unsynced lyrics', 'unsynchronised lyric'])) {
+                $tag = 'lyrics';
             }
+
+            $parsed[strtolower($tag)] = $data[0];
         }
 
         return $parsed;
@@ -1755,33 +1594,75 @@ final class VaInfo implements VaInfoInterface
     }
 
     /**
-     * _cleanup_asf
+     * _cleanup_riff
+     * @param array<string, mixed> $tags
+     * @return array<string, mixed>
+     */
+    private function _cleanup_riff(array $tags): array
+    {
+        $parsed = [];
+
+        foreach ($tags as $tag => $data) {
+            switch ($tag) {
+                case 'product':
+                    $parsed['album'] = $data[0];
+                    break;
+                default:
+                    $parsed[strtolower($tag)] = $data[0];
+                    break;
+            }
+        }
+
+        return $parsed;
+    }
+
+    /**
+     * _cleanup_vorbiscomment
      *
-     * This does WMA cleanup.
+     * Standardizes tag names from vorbis.
      * @param array<string, mixed> $tags
      * @return array<string, mixed>
      * @throws Exception
      */
-    private function _cleanup_asf(array $tags): array
+    private function _cleanup_vorbiscomment(array $tags): array
     {
         $parsed = [];
-        foreach ($tags as $tagname => $data) {
-            //$this->logger->debug('asf tag: ' . strtolower($tagname) . ' value: ' . print_r($data ?? '', true), [LegacyLogger::CONTEXT_TYPE => self::class]);
-            switch (strtolower($tagname)) {
+
+        foreach ($tags as $tag => $data) {
+            //$this->logger->debug('Vorbis tag: ' . $tag . ' value: ' . print_r($data ?? '', true), [LegacyLogger::CONTEXT_TYPE => self::class]);
+            switch (strtolower($tag)) {
                 case 'artists':
                     $parsed['artists'] = $this->parseArtists($data);
                     break;
                 case 'genre':
                     $parsed['genre'] = $this->parseGenres($data);
                     break;
-                case 'partofset':
-                    $elements             = explode('/', (string) $data[0]);
-                    $parsed['disk']       = $elements[0];
-                    $parsed['totaldisks'] = $elements[1] ?? null;
-                    break;
+                case 'tracknumber':
                 case 'track_number':
-                case 'track':
                     $parsed['track'] = $data[0];
+                    break;
+                case 'tracktotal':
+                    $parsed['totaltracks'] = $data[0];
+                    break;
+                case 'discnumber':
+                    $parsed['disk'] = $data[0];
+                    break;
+                case 'discsubtitle':
+                    $parsed['disksubtitle'] = $data[0];
+                    break;
+                case 'totaldiscs':
+                case 'disctotal':
+                    $parsed['totaldisks'] = $data[0];
+                    break;
+                case 'albumartist':
+                case 'album artist':
+                    $parsed['albumartist'] = $data[0];
+                    break;
+                case 'isrc':
+                    $parsed['isrc'] = (count($data) > 1) ? self::parse_isrc_array($data) : self::parse_isrc_array($data[0]);
+                    break;
+                case 'date':
+                    $parsed['year'] = $data[0];
                     break;
                 case 'musicbrainz_artistid':
                     $parsed['mb_artistid']       = self::parse_mbid($data[0]);
@@ -1800,91 +1681,90 @@ final class VaInfo implements VaInfoInterface
                 case 'musicbrainz_trackid':
                     $parsed['mb_trackid'] = self::parse_mbid($data[0]);
                     break;
+                case 'releasetype':
                 case 'musicbrainz_albumtype':
                     $parsed['release_type'] = (is_array($data) && count($data) > 1)
                         ? implode(", ", $data)
                         : implode(', ', array_diff(preg_split("/[^a-zA-Z0-9*]/", (string) $data[0]) ?: [], ['']));
                     break;
+                case 'releasestatus':
                 case 'musicbrainz_albumstatus':
                     $parsed['release_status'] = (is_array($data) && count($data) > 1)
                         ? implode(", ", $data)
                         : implode(', ', array_diff(preg_split("/[^a-zA-Z0-9*]/", (string) $data[0]) ?: [], ['']));
                     break;
-                case 'releasecomment':
+                case 'unsyncedlyrics':
+                case 'unsynced lyrics':
+                case 'lyrics':
+                    $parsed['lyrics'] = $data[0];
+                    break;
+                case 'originaldate':
+                    $parsed['originaldate'] = strtotime(str_replace(" ", "", $data[0]));
+                    if (strlen((string) $data['0']) > 4) {
+                        $data[0] = date('Y', (int)$parsed['originaldate']);
+                    }
+
+                    $parsed['original_year'] ??= $data[0];
+                    break;
+                case 'originalyear':
+                    $parsed['original_year'] = $data[0];
+                    break;
+                case 'barcode':
+                    $parsed['barcode'] = $data[0];
+                    break;
+                case 'catalognumber':
+                case 'catalog_number':
+                    $parsed['catalog_number'] = $data[0];
+                    break;
+                case 'label':
+                case 'organization':
+                    $parsed['publisher'] = $data[0];
+                    break;
                 case 'version':
                     $parsed['version'] = $data[0];
                     break;
-                case 'originalreleaseyear':
-                    $parsed['original_year'] = str_replace("\x00", '', $data[0]);
-                    break;
-                case 'music_cd_identifier':
-                    // REMOVE_ME get rid of this annoying tag causing only problems with metadata
+                case 'rating':
+                    if (!is_numeric($data[0])) {
+                        break;
+                    }
+
+                    $rating_user = -1;
+                    if ($this->configContainer->get(ConfigurationKeyEnum::RATING_FILE_TAG_USER)) {
+                        $rating_user = (int) $this->configContainer->get(ConfigurationKeyEnum::RATING_FILE_TAG_USER);
+                    }
+
+                    $parsed['rating'][$rating_user] = floor(((int)$data[0]) * 5 / 100);
                     break;
                 default:
-                    $parsed[$tagname] = $data[0];
+                    $parsed[strtolower($tag)] = $data[0];
                     break;
+            }
+
+            // look for set ratings using email address
+            foreach (preg_grep("/^rating:.*@.*/", array_keys($parsed)) ?: [] as $user_rating) {
+                $rating_user = $this->userRepository->findByEmail(ltrim((string) $user_rating, "rating:"));
+                if ($rating_user instanceof User) {
+                    $parsed['rating'][$rating_user->id] = floor(((int)$parsed[$user_rating]) * 5 / 100);
+                }
             }
         }
 
-        // WMA isn't read very well so dig into the raw data
-        if (array_key_exists('asf', $this->_raw) && is_array($this->_raw['asf'])) {
-            $enable_custom_metadata = $this->configContainer->get(ConfigurationKeyEnum::ENABLE_CUSTOM_METADATA);
-            foreach ($this->_raw['asf']['extended_content_description_object']['content_descriptors'] as $wmaTag) {
-                $value = str_replace("\x00", '', $wmaTag['value']);
-                //$this->logger->debug('asf tag: ' . strtolower($wmaTag['name'] ?? '') . ' value: ' . print_r($value ?? '', true), [LegacyLogger::CONTEXT_TYPE => self::class]);
-                switch (strtolower($this->trimAscii($wmaTag['name']))) {
-                    case 'wm/artists':
-                        $parsed['artists'] = $this->parseArtists($value);
-                        break;
-                    case 'author':
-                        $parsed['artist'] = $value;
-                        break;
-                    case 'wm/albumartist':
-                        $parsed['albumartist'] = $value;
-                        break;
-                    case 'wm/setsubtitle':
-                        $parsed['disksubtitle'] = $value;
-                        break;
-                    case 'musicbrainz/artist id':
-                        $parsed['mb_artistid']       = self::parse_mbid($value);
-                        $parsed['mb_artistid_array'] = self::parse_mbid_array($value);
-                        break;
-                    case 'musicbrainz/album artist id':
-                        $parsed['mb_albumartistid']       = self::parse_mbid($value);
-                        $parsed['mb_albumartistid_array'] = self::parse_mbid_array($value);
-                        break;
-                    case 'musicbrainz/album id':
-                        $parsed['mb_albumid'] = self::parse_mbid($value);
-                        break;
-                    case 'musicbrainz/release group id':
-                        $parsed['mb_albumid_group'] = self::parse_mbid($value);
-                        break;
-                    case 'musicbrainz/album type':
-                        $parsed['release_type'] = $value;
-                        break;
-                    case 'musicbrainz/album status':
-                        $parsed['release_status'] = $value;
-                        break;
-                    case 'wm/originalreleaseyear':
-                        $parsed['original_year'] = (int)$value;
-                        break;
-                    case 'wm/barcode':
-                        $parsed['barcode'] = $value;
-                        break;
-                    case 'wm/catalogno':
-                        $parsed['catalog_number'] = $value;
-                        break;
-                    case 'wm/publisher':
-                        $parsed['publisher'] = $value;
-                        break;
-                    default:
-                        $frame = strtolower($this->trimAscii($wmaTag['name']));
-                        if ($enable_custom_metadata && !isset(self::DEFAULT_INFO[$frame]) && !in_array($frame, $parsed)) {
-                            $parsed[strtolower($this->trimAscii($wmaTag['name']))] = $value;
-                        }
+        // Replaygain stored by getID3
+        if (isset($this->_raw['replay_gain'])) {
+            if (isset($this->_raw['replay_gain']['track']['adjustment'])) {
+                $parsed['replaygain_track_gain'] = (float) $this->_raw['replay_gain']['track']['adjustment'];
+            }
 
-                        break;
-                }
+            if (isset($this->_raw['replay_gain']['track']['peak'])) {
+                $parsed['replaygain_track_peak'] = (float) $this->_raw['replay_gain']['track']['peak'];
+            }
+
+            if (isset($this->_raw['replay_gain']['album']['adjustment'])) {
+                $parsed['replaygain_album_gain'] = (float) $this->_raw['replay_gain']['album']['adjustment'];
+            }
+
+            if (isset($this->_raw['replay_gain']['album']['peak'])) {
+                $parsed['replaygain_album_peak'] = (float) $this->_raw['replay_gain']['album']['peak'];
             }
         }
 
@@ -1892,32 +1772,197 @@ final class VaInfo implements VaInfoInterface
     }
 
     /**
-     * parse_rating
-     * Convert ratings to 5 stars based on semi standard 255 unit scale
+     * _detect_encoding
+     *
+     * Takes an array of tags and attempts to automatically detect their encoding.
      */
-    public static function parse_rating(int $value): int
+    private function _detect_encoding(array|string $tags, string $mb_order): string
     {
-        if ($value === 0) {
-            return 0;
+        if (!function_exists('mb_detect_encoding')) {
+            return 'ISO-8859-1';
         }
 
-        if (AmpConfig::get('rating_file_tag_compatibility', false)) {
-            if ($value === 255) {
-                return 5;
-            } elseif ($value >= 196) {
-                return 4;
-            } elseif ($value >= 128) {
-                return 3;
-            } elseif ($value >= 64) {
-                return 2;
-            } elseif ($value >= 1) {
-                return 1;
+        $encodings = [];
+        if (is_array($tags)) {
+            foreach ($tags as $tag) {
+                if (is_array($tag)) {
+                    $tag = implode(" ", $tag);
+                }
+
+                $enc = mb_detect_encoding((string) $tag, $mb_order, true);
+                if ($enc !== false) {
+                    if (!array_key_exists($enc, $encodings)) {
+                        $encodings[$enc] = 0;
+                    }
+
+                    $encodings[$enc]++;
+                }
             }
         } else {
-            return (int)($value / 255 * 5);
+            $enc = mb_detect_encoding($tags, $mb_order, true);
+            if ($enc !== false) {
+                $encodings[$enc] = 1;
+            }
         }
 
-        return 0;
+        //!!debug_event(self::class, 'encoding detection: ' . json_encode($encodings), 5);
+        $high     = 0;
+        $encoding = 'ISO-8859-1';
+        foreach ($encodings as $key => $value) {
+            if ($value > $high) {
+                $encoding = $key;
+                $high     = $value;
+            }
+        }
+
+        if ($encoding !== 'ASCII') {
+            return $encoding;
+        }
+
+        return 'ISO-8859-1';
+    }
+
+    /**
+     * _get_plugin_tags
+     *
+     * Get additional metadata from plugins
+     */
+    private function _get_plugin_tags(): void
+    {
+        $tag_order    = $this->get_metadata_order();
+        $plugin_names = Plugin::get_plugins(PluginTypeEnum::METADATA_RETRIEVER);
+        $user         = (Core::get_global('user') instanceof User)
+            ? Core::get_global('user')
+            : new User(-1);
+        // don't loop over getid3 and filename
+        $tag_order = array_diff($tag_order, ['getid3', 'filename']);
+        foreach ($tag_order as $tag_source) {
+            if (in_array($tag_source, $plugin_names)) {
+                $plugin = new Plugin($tag_source);
+                if (
+                    $plugin->_plugin instanceof PluginGetMetadataInterface &&
+                    Plugin::get_plugin_version($plugin->_plugin->name) > 0 &&
+                    $plugin->load($user)
+                ) {
+                    $this->tags[$tag_source] = $plugin->_plugin->get_metadata(
+                        $this->gatherTypes,
+                        self::clean_tag_info(
+                            $this->tags,
+                            self::get_tag_type($this->tags, $this->get_metadata_order_key()),
+                            $this->filename
+                        )
+                    );
+                }
+            } elseif (!in_array($tag_source, ['filename', 'getid3'])) {
+                $this->logger->debug(
+                    '_get_plugin_tags: ' . $tag_source . ' is not a valid metadata_order plugin',
+                    [LegacyLogger::CONTEXT_TYPE => self::class]
+                );
+            }
+        }
+    }
+
+    /**
+     * _get_tags
+     *
+     * This processes the raw getID3 output and bakes it.
+     * @return array<string, mixed>
+     * @throws Exception
+     */
+    private function _get_tags(): array
+    {
+        $results = [];
+        //$this->logger->debug('RAW TAGS ' . print_r($this->_raw, true), [LegacyLogger::CONTEXT_TYPE => self::class]);
+        // The tags can come in many different shapes and colors depending on the encoding.
+        if (array_key_exists('tags', $this->_raw) && is_array($this->_raw['tags'])) {
+            foreach ($this->_raw['tags'] as $key => $tag_array) {
+                switch ($key) {
+                    case 'vorbiscomment':
+                        //$this->logger->debug('Cleaning vorbis', [LegacyLogger::CONTEXT_TYPE => self::class]);
+                        $parsed = $this->_cleanup_vorbiscomment($tag_array);
+                        break;
+                    case 'id3v2':
+                        //$this->logger->debug('Cleaning id3v2', [LegacyLogger::CONTEXT_TYPE => self::class]);
+                        $parsed = $this->_cleanup_id3v2($tag_array);
+                        break;
+                    case 'quicktime':
+                        //$this->logger->debug('Cleaning quicktime', [LegacyLogger::CONTEXT_TYPE => self::class]);
+                        $parsed = $this->_cleanup_quicktime($tag_array);
+                        break;
+                    case 'riff':
+                        //$this->logger->debug('Cleaning riff', [LegacyLogger::CONTEXT_TYPE => self::class]);
+                        $parsed = $this->_cleanup_riff($tag_array);
+                        break;
+                    case 'mpg':
+                    case 'mpeg':
+                        $key = 'mpeg';
+                        //$this->logger->debug('Cleaning MPEG', [LegacyLogger::CONTEXT_TYPE => self::class]);
+                        $parsed = $this->_cleanup_generic($tag_array);
+                        break;
+                    case 'asf':
+                    case 'wmv':
+                    case 'wma':
+                        $key = 'asf';
+                        //$this->logger->debug('Cleaning WMV/WMA/ASF', [LegacyLogger::CONTEXT_TYPE => self::class]);
+                        $parsed = $this->_cleanup_asf($tag_array);
+                        break;
+                    case 'lyrics3':
+                        //$this->logger->debug('Cleaning lyrics3', [LegacyLogger::CONTEXT_TYPE => self::class]);
+                        $parsed = $this->_cleanup_lyrics($tag_array);
+                        break;
+                    case 'id3v1':
+                        //$this->logger->debug('Cleaning id3v1', [LegacyLogger::CONTEXT_TYPE => self::class]);
+                        $parsed = $this->_cleanup_id3v1($tag_array);
+                        break;
+                    case 'ape':
+                    case 'avi':
+                    case 'flv':
+                    case 'matroska':
+                    default:
+                        //$this->logger->debug('Cleaning tag type ' . $key . ' for file ' . $this->filename, [LegacyLogger::CONTEXT_TYPE => self::class]);
+                        $parsed = $this->_cleanup_generic($tag_array);
+                        break;
+                }
+
+                $results[$key] = $parsed;
+            }
+        }
+
+        $results['general'] = $this->_parse_general($this->_raw);
+
+        $cleaned        = self::clean_tag_info($results, self::get_tag_type($results, 'getid3_tag_order'), $this->filename);
+        $cleaned['raw'] = $results;
+
+        return $cleaned;
+    }
+
+    /**
+     * _get_type
+     *
+     * This function takes the raw information and figures out what type of file we are dealing with.
+     */
+    private function _get_type(): ?string
+    {
+        // There are a few places that the file type can come from, in the end we trust the encoding type.
+        if (array_key_exists('video', $this->_raw) && array_key_exists('dataformat', $this->_raw['video'])) {
+            return $this->_clean_type($this->_raw['video']['dataformat']);
+        }
+
+        if (array_key_exists('audio', $this->_raw)) {
+            if (array_key_exists('streams', $this->_raw['audio']) && array_key_exists('0', $this->_raw['audio']['streams']) && array_key_exists('dataformat', $this->_raw['audio']['streams']['0'])) {
+                return $this->_clean_type($this->_raw['audio']['streams']['0']['dataformat']);
+            }
+
+            if (array_key_exists('dataformat', $this->_raw['audio'])) {
+                return $this->_clean_type($this->_raw['audio']['dataformat']);
+            }
+        }
+
+        if (array_key_exists('fileformat', $this->_raw)) {
+            return $this->_clean_type($this->_raw['fileformat']);
+        }
+
+        return null;
     }
 
     /**
@@ -1945,92 +1990,124 @@ final class VaInfo implements VaInfoInterface
     }
 
     /**
-     * parse_pattern
+     * _parse_general
+     *
+     * Gather and return the general information about a file
+     * (vbr/cbr, sample rate, channels, etc.)
      * @return array<string, mixed>
      */
-    public static function parse_pattern(string $filepath, string $dirPattern, string $filePattern): array
+    private function _parse_general(array $tags): array
     {
-        //global $dic;
-        //$logger = $dic->get(LoggerInterface::class);
-        $results         = [];
-        $slash_type_preg = DIRECTORY_SEPARATOR;
-        if ($slash_type_preg === '\\') {
-            $slash_type_preg .= DIRECTORY_SEPARATOR;
-        }
-
-        // Combine the patterns
-        $pattern = preg_quote($dirPattern) . $slash_type_preg . preg_quote($filePattern);
-
-        // Remove first left directories from filename to match pattern
-        $cntslash = substr_count($pattern, preg_quote(DIRECTORY_SEPARATOR)) + 1;
-        $filepart = explode(DIRECTORY_SEPARATOR, $filepath);
-        if (count($filepart) > $cntslash) {
-            $filepath = implode(DIRECTORY_SEPARATOR, array_slice($filepart, count($filepart) - $cntslash));
-        }
-
-        // Pull out the pattern codes into an array
-        preg_match_all('/\%\w/', $pattern, $elements);
-
-        // Mangle the pattern by turning the codes into regex captures
-        $pattern = preg_replace('/\%d/', '(\d?)', $pattern);
-        $pattern = preg_replace('/\%[TyY]/', '(\d+?)', (string)$pattern);
-        $pattern = preg_replace('/\%\w/', '(.+?)', (string)$pattern);
-        $pattern = str_replace('/', '\/', (string)$pattern);
-        $pattern = str_replace(' ', '\s', (string)$pattern);
-        $pattern = '/' . $pattern . '\..+$/';
-
-        // Pull out our actual matches
-        preg_match($pattern, $filepath, $matches);
-        //$logger->debug('Checking ' . $pattern . ' _ ' . print_r($matches, true) . ' on ' . $filepath, [LegacyLogger::CONTEXT_TYPE => self::class]);
-        if ($matches != null) {
-            // The first element is the full match text
-            $matched = array_shift($matches);
-            //$logger->debug($pattern . ' matched ' . $matched . ' on ' . $filepath, [LegacyLogger::CONTEXT_TYPE => self::class]);
-
-            // Iterate over what we found
-            foreach ($matches as $key => $value) {
-                $new_key = self::_translate_pattern_code($elements['0'][$key]);
-                if (!in_array($new_key, [null, '', '0'], true)) {
-                    if (($new_key === 'multi_artist')) {
-                        $results['artist']      = $value;
-                        $results['albumartist'] = $value;
-                    } else {
-                        $results[$new_key] = $value;
-                    }
-                }
+        //$this->logger->debug('_parse_general: ' . print_r($tags, true), [LegacyLogger::CONTEXT_TYPE => self::class]);
+        $parsed          = [];
+        $parsed['title'] = ($this->_pathinfo['filename'])
+            ? urldecode($this->_pathinfo['filename'])
+            : '';
+        if (array_key_exists('audio', $tags)) {
+            $parsed['mode'] = $tags['audio']['bitrate_mode'] ?? 'vbr';
+            if ($parsed['mode'] == 'con') {
+                $parsed['mode'] = 'cbr';
             }
 
-            $results['title'] ??= basename($filepath);
+            $parsed['bitrate']     = $tags['audio']['bitrate'] ?? null;
+            $parsed['channels']    = (empty($tags['audio']['channels'])) ? null : (int)$tags['audio']['channels'];
+            $parsed['rate']        = (empty($tags['audio']['sample_rate'])) ? null : (int)$tags['audio']['sample_rate'];
+            $parsed['audio_codec'] = $tags['audio']['dataformat'] ?? null;
         }
 
-        return $results;
+        if (array_key_exists('video', $tags)) {
+            $parsed['video_codec']   = $tags['video']['dataformat'] ?? null;
+            $parsed['resolution_x']  = $tags['video']['resolution_x'] ?? null;
+            $parsed['resolution_y']  = $tags['video']['resolution_y'] ?? null;
+            $parsed['display_x']     = $tags['video']['display_x'] ?? null;
+            $parsed['display_y']     = $tags['video']['display_y'] ?? null;
+            $parsed['frame_rate']    = $tags['video']['frame_rate'] ?? null;
+            $parsed['video_bitrate'] = $tags['video']['bitrate'] ?? null;
+        }
+
+        $parsed['size']     = $this->_forcedSize ?: $tags['filesize'] ?? null;
+        $parsed['encoding'] = $tags['encoding'] ?? null;
+        $parsed['mime']     = $tags['mime_type'] ?? null;
+        if (($parsed['size'] && array_key_exists('avdataoffset', $tags) && array_key_exists('bitrate', $tags))) {
+            $parsed['time'] = (($parsed['size'] - $tags['avdataoffset']) * 8) / $tags['bitrate'];
+        } elseif (array_key_exists('playtime_seconds', $tags) && $tags['playtime_seconds'] > 0) {
+            $parsed['time'] = $tags['playtime_seconds'];
+        } else {
+            $this->logger->critical("UNABLE TO READ 'playtime_seconds'. This is probably a bad file " . $parsed['title'], [LegacyLogger::CONTEXT_TYPE => self::class]);
+            $parsed['time'] = 0;
+        }
+
+        if (isset($tags['ape']['items'])) {
+            foreach ($tags['ape']['items'] as $key => $tag) {
+                switch (strtolower((string) $key)) {
+                    case 'replaygain_track_gain':
+                    case 'replaygain_track_peak':
+                    case 'replaygain_album_gain':
+                    case 'replaygain_album_peak':
+                        $parsed[$key] = (is_null($tag['data'][0])) ? null : (float) $tag['data'][0];
+                        break;
+                    case 'r128_track_gain':
+                    case 'r128_album_gain':
+                        $parsed[$key] = (is_null($tag['data'][0])) ? null : (int) $tag['data'][0];
+                        break;
+                }
+            }
+        }
+
+        return $parsed;
     }
 
     /**
-     * set_broken
-     *
-     * This fills all tag types with Unknown (Broken)
-     *
-     * @return array<string, array<string, string>> Return broken title, album, artist
+     * get_metadata_order
+     * @return string[]
      */
-    public function set_broken(): array
+    private function get_metadata_order(): array
     {
-        /* Pull In the config option */
-        $order = $this->configContainer->get(ConfigurationKeyEnum::TAG_ORDER);
+        $tagorderMap = [
+            'metadata_order' => self::getConfigContainer()->get(ConfigurationKeyEnum::METADATA_ORDER),
+            'metadata_order_video' => self::getConfigContainer()->get(ConfigurationKeyEnum::METADATA_ORDER_VIDEO),
+            'getid3_tag_order' => self::getConfigContainer()->get(ConfigurationKeyEnum::GETID3_TAG_ORDER),
+        ];
 
-        if (!is_array($order)) {
-            $order = [$order];
+        // convert to lower case to be sure it matches plugin names in Ampache\Plugin\PluginEnum
+        return array_map(strtolower(...), $tagorderMap[$this->get_metadata_order_key()] ?? []);
+    }
+
+    /**
+     * get_metadata_order_key
+     */
+    private function get_metadata_order_key(): string
+    {
+        if (!in_array('music', $this->gatherTypes)) {
+            return 'metadata_order_video';
         }
 
-        $key = array_shift($order);
+        return 'metadata_order';
+    }
 
-        $broken                 = [];
-        $broken[$key]           = [];
-        $broken[$key]['title']  = '**BROKEN** ' . $this->filename;
-        $broken[$key]['album']  = 'Unknown (Broken)';
-        $broken[$key]['artist'] = 'Unknown (Broken)';
+    /**
+     * parseArtists
+     */
+    private function parseArtists(array|string $data): array
+    {
+        //debug_event(self::class, "parseArtists: " . print_r($data, true), 5);
+        $result = null;
+        if (is_array($data)) {
+            $result = [];
+            foreach ($data as $row) {
+                if (!empty($row)) {
+                    foreach (explode(';', str_replace("\x00", ';', $row)) as $artist) {
+                        $result[] = trim($artist);
+                    }
+                }
+            }
+        }
 
-        return $broken;
+        if (is_string($data) && ($data !== '' && $data !== '0')) {
+            $result = explode(';', str_replace("\x00", ';', $data));
+        }
+
+        return $result ?? [];
     }
 
     /**
@@ -2060,94 +2137,8 @@ final class VaInfo implements VaInfoInterface
         return $result;
     }
 
-    /**
-     * parseArtists
-     */
-    private function parseArtists(array|string $data): array
+    private function trimAscii(string $string): string
     {
-        //debug_event(self::class, "parseArtists: " . print_r($data, true), 5);
-        $result = null;
-        if (is_array($data)) {
-            $result = [];
-            foreach ($data as $row) {
-                if (!empty($row)) {
-                    foreach (explode(';', str_replace("\x00", ';', $row)) as $artist) {
-                        $result[] = trim($artist);
-                    }
-                }
-            }
-        }
-
-        if (is_string($data) && ($data !== '' && $data !== '0')) {
-            $result = explode(';', str_replace("\x00", ';', $data));
-        }
-
-        return $result ?? [];
-    }
-
-    /**
-     * splitSlashedlist
-     * Split items by configurable delimiter
-     * Return first item as string = default
-     * Return all items as array if doTrim = false passed as optional parameter
-     * @return string[]
-     * @throws Exception
-     */
-    public function splitSlashedlist(string $data): array
-    {
-        //debug_event(self::class, "splitSlashedlist: " . print_r($data, true), 5);
-        $delimiters = $this->configContainer->get(ConfigurationKeyEnum::ADDITIONAL_DELIMITERS);
-        if ($data !== '' && $data !== '0' && !empty($delimiters)) {
-            $pattern = '~\s?(' . $delimiters . ')\s?~';
-            $items   = preg_split($pattern, $data) ?: [];
-            $items   = array_map(trim(...), $items);
-            if ($items === []) {
-                throw new Exception('Pattern given in additional_genre_delimiters is not functional. Please ensure is it a valid regex (delimiter ~)');
-            }
-
-            $data = $items;
-        }
-
-        return is_array($data)
-            ? $data
-            : [$data];
-    }
-
-    /**
-     * translate_pattern_code
-     * This just contains a keyed array which it checks against to give you the
-     * 'tag' name that said pattern code corresponds to. It returns false if nothing is found.
-     */
-    private static function _translate_pattern_code(string $code): ?string
-    {
-        $code_array = [
-            '%A' => 'album',
-            '%a' => 'artist', // Song Artist
-            '%B' => 'albumartist',
-            '%b' => 'barcode',
-            '%C' => 'catalog_number',
-            '%c' => 'comment',
-            '%d' => 'disk',
-            '%g' => 'genre',
-            '%l' => 'label',
-            '%m' => 'multi_artist',
-            '%o' => 'zz_other',
-            '%R' => 'release_status',
-            '%r' => 'release_type',
-            '%s' => 'version', // Release Comment
-            '%t' => 'title',
-            '%T' => 'track',
-            '%Y' => 'original_year',
-            '%y' => 'year',
-        ];
-
-        return $code_array[$code] ?? null;
-    }
-
-    private static function getConfigContainer(): ConfigContainerInterface
-    {
-        global $dic;
-
-        return $dic->get(ConfigContainerInterface::class);
+        return (string)preg_replace('/[\x00-\x1F\x80-\xFF]/', '', trim($string));
     }
 }

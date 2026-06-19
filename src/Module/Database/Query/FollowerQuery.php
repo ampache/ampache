@@ -34,26 +34,15 @@ final class FollowerQuery implements QueryInterface
         'user',
     ];
 
+    protected string $base   = "SELECT %%SELECT%% FROM `user_follower` ";
+    protected string $select = "`user_follower`.`id`";
+
     /** @var string[] $sorts */
     protected array $sorts = [
         'follow_date',
         'follow_user',
         'user',
     ];
-
-    protected string $select = "`user_follower`.`id`";
-
-    protected string $base = "SELECT %%SELECT%% FROM `user_follower` ";
-
-    /**
-     * get_select
-     *
-     * This method returns the columns a query will user for SELECT
-     */
-    public function get_select(): string
-    {
-        return $this->select;
-    }
 
     /**
      * get_base_sql
@@ -63,6 +52,16 @@ final class FollowerQuery implements QueryInterface
     public function get_base_sql(): string
     {
         return $this->base;
+    }
+
+    /**
+     * get_select
+     *
+     * This method returns the columns a query will user for SELECT
+     */
+    public function get_select(): string
+    {
+        return $this->select;
     }
 
     /**

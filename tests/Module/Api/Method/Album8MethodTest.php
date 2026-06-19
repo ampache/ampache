@@ -49,63 +49,6 @@ class Album8MethodTest extends MockeryTestCase
 
     private ?Album8Method $subject;
 
-    #[Override]
-    protected function setUp(): void
-    {
-        $this->modelFactory  = $this->mock(ModelFactoryInterface::class);
-        $this->streamFactory = $this->mock(StreamFactoryInterface::class);
-
-        $this->subject = new Album8Method(
-            $this->modelFactory,
-            $this->streamFactory
-        );
-    }
-
-    public function testHandleThrowsExceptionIfFilterIsMissing(): void
-    {
-        $gatekeeper = $this->mock(GatekeeperInterface::class);
-        $response   = $this->mock(ResponseInterface::class);
-        $output     = $this->mock(ApiOutputInterface::class);
-        $user       = $this->mock(User::class);
-
-        $this->expectException(RequestParamMissingException::class);
-        $this->expectExceptionMessage(sprintf(T_('Bad Request: %s'), 'filter'));
-
-        $this->subject->handle($gatekeeper, $response, $output, [], $user);
-    }
-
-    public function testHandleThrowsExceptionIfAlbumDoesNotExist(): void
-    {
-        $gatekeeper = $this->mock(GatekeeperInterface::class);
-        $response   = $this->mock(ResponseInterface::class);
-        $output     = $this->mock(ApiOutputInterface::class);
-        $album      = $this->mock(Album::class);
-        $user       = $this->mock(User::class);
-
-        $albumId = 666;
-
-        $this->modelFactory->shouldReceive('createAlbum')
-            ->with($albumId)
-            ->once()
-            ->andReturn($album);
-
-        $album->shouldReceive('isNew')
-            ->withNoArgs()
-            ->once()
-            ->andReturnTrue();
-
-        $this->expectException(ResultEmptyException::class);
-        $this->expectExceptionMessage((string) $albumId);
-
-        $this->subject->handle(
-            $gatekeeper,
-            $response,
-            $output,
-            ['filter' => (string) $albumId],
-            $user
-        );
-    }
-
     public function testHandleReturnsOutput(): void
     {
         $gatekeeper = $this->mock(GatekeeperInterface::class);
@@ -168,6 +111,63 @@ class Album8MethodTest extends MockeryTestCase
                 ],
                 $user
             )
+        );
+    }
+
+    public function testHandleThrowsExceptionIfAlbumDoesNotExist(): void
+    {
+        $gatekeeper = $this->mock(GatekeeperInterface::class);
+        $response   = $this->mock(ResponseInterface::class);
+        $output     = $this->mock(ApiOutputInterface::class);
+        $album      = $this->mock(Album::class);
+        $user       = $this->mock(User::class);
+
+        $albumId = 666;
+
+        $this->modelFactory->shouldReceive('createAlbum')
+            ->with($albumId)
+            ->once()
+            ->andReturn($album);
+
+        $album->shouldReceive('isNew')
+            ->withNoArgs()
+            ->once()
+            ->andReturnTrue();
+
+        $this->expectException(ResultEmptyException::class);
+        $this->expectExceptionMessage((string) $albumId);
+
+        $this->subject->handle(
+            $gatekeeper,
+            $response,
+            $output,
+            ['filter' => (string) $albumId],
+            $user
+        );
+    }
+
+    public function testHandleThrowsExceptionIfFilterIsMissing(): void
+    {
+        $gatekeeper = $this->mock(GatekeeperInterface::class);
+        $response   = $this->mock(ResponseInterface::class);
+        $output     = $this->mock(ApiOutputInterface::class);
+        $user       = $this->mock(User::class);
+
+        $this->expectException(RequestParamMissingException::class);
+        $this->expectExceptionMessage(sprintf(T_('Bad Request: %s'), 'filter'));
+
+        $this->subject->handle($gatekeeper, $response, $output, [], $user);
+    }
+
+    #[Override]
+    protected function setUp(): void
+    {
+        $this->modelFactory  = $this->mock(ModelFactoryInterface::class);
+        $this->streamFactory = $this->mock(StreamFactoryInterface::class);
+
+        $this->subject = new Album8Method(
+            $this->modelFactory,
+            $this->streamFactory
         );
     }
 }

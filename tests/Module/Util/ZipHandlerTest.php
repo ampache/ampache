@@ -36,24 +36,21 @@ use Psr\Log\LoggerInterface;
 class ZipHandlerTest extends MockeryTestCase
 {
     private MockInterface&ConfigContainerInterface $configContainer;
-
     private MockInterface&LoggerInterface $logger;
-
     private StreamFactoryInterface&MockObject $streamFactory;
-
     private ZipHandler $subject;
 
-    #[Override]
-    protected function setUp(): void
+    public function testIsZipableReturnsFalseIfNotSupported(): void
     {
-        $this->configContainer = $this->mock(ConfigContainerInterface::class);
-        $this->streamFactory   = $this->createMock(StreamFactoryInterface::class);
-        $this->logger          = $this->mock(LoggerInterface::class);
+        $type = 'foobar';
 
-        $this->subject = new ZipHandler(
-            $this->configContainer,
-            $this->streamFactory,
-            $this->logger
+        $this->configContainer->shouldReceive('getTypesAllowedForZip')
+            ->withNoArgs()
+            ->once()
+            ->andReturn(['snoosnoo']);
+
+        self::assertFalse(
+            $this->subject->isZipable($type)
         );
     }
 
@@ -71,17 +68,17 @@ class ZipHandlerTest extends MockeryTestCase
         );
     }
 
-    public function testIsZipableReturnsFalseIfNotSupported(): void
+    #[Override]
+    protected function setUp(): void
     {
-        $type = 'foobar';
+        $this->configContainer = $this->mock(ConfigContainerInterface::class);
+        $this->streamFactory   = $this->createMock(StreamFactoryInterface::class);
+        $this->logger          = $this->mock(LoggerInterface::class);
 
-        $this->configContainer->shouldReceive('getTypesAllowedForZip')
-            ->withNoArgs()
-            ->once()
-            ->andReturn(['snoosnoo']);
-
-        self::assertFalse(
-            $this->subject->isZipable($type)
+        $this->subject = new ZipHandler(
+            $this->configContainer,
+            $this->streamFactory,
+            $this->logger
         );
     }
 }

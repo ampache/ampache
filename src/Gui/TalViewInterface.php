@@ -29,7 +29,7 @@ interface TalViewInterface
 {
     public function render(): string;
 
-    public function setTemplate(string $templateFilePath): TalViewInterface;
-
     public function setContext(string $key, mixed $context): TalViewInterface;
+
+    public function setTemplate(string $templateFilePath): TalViewInterface;
 }

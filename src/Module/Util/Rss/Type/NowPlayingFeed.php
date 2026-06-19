@@ -35,24 +35,6 @@ use Generator;
 
 final readonly class NowPlayingFeed extends AbstractGenericRssFeed
 {
-    protected function getTitle(): string
-    {
-        return T_('Now Playing');
-    }
-
-    /**
-     * this is the pub date we should use for the Now Playing information,
-     * this is a little specific as it uses the 'newest' expire we can find
-     */
-    protected function getPubDate(): ?int
-    {
-        // Little redundant, should be fixed by an improvement in the get_now_playing stuff
-        $data    = Stream::get_now_playing();
-        $element = array_shift($data);
-
-        return $element['expire'] ?? null;
-    }
-
     /**
      * Feed image link
      */
@@ -120,5 +102,23 @@ final readonly class NowPlayingFeed extends AbstractGenericRssFeed
                     : 'false',
             ];
         }
+    }
+
+    /**
+     * this is the pub date we should use for the Now Playing information,
+     * this is a little specific as it uses the 'newest' expire we can find
+     */
+    protected function getPubDate(): ?int
+    {
+        // Little redundant, should be fixed by an improvement in the get_now_playing stuff
+        $data    = Stream::get_now_playing();
+        $element = array_shift($data);
+
+        return $element['expire'] ?? null;
+    }
+
+    protected function getTitle(): string
+    {
+        return T_('Now Playing');
     }
 }

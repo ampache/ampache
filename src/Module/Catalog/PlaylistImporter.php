@@ -160,6 +160,25 @@ final class PlaylistImporter
     }
 
     /**
+     * this takes asx filename and then attempts to found song filenames listed in the asx
+     *
+     * @return Generator<string>
+     */
+    private static function _parse_asx(string $data): Generator
+    {
+        $xml = simplexml_load_string($data);
+
+        if ($xml) {
+            foreach ($xml->entry as $entry) {
+                $file = trim((string)$entry->ref['href']);
+                if ($file !== '' && $file !== '0') {
+                    yield $file;
+                }
+            }
+        }
+    }
+
+    /**
      * this takes m3u filename and then attempts to found song filenames listed in the m3u
      *
      * @return Generator<string>
@@ -189,25 +208,6 @@ final class PlaylistImporter
             $value = trim($value);
             if (preg_match("/file[0-9]+[\s]*\=(.*)/i", $value, $matches)) {
                 $file = trim($matches[1]);
-                if ($file !== '' && $file !== '0') {
-                    yield $file;
-                }
-            }
-        }
-    }
-
-    /**
-     * this takes asx filename and then attempts to found song filenames listed in the asx
-     *
-     * @return Generator<string>
-     */
-    private static function _parse_asx(string $data): Generator
-    {
-        $xml = simplexml_load_string($data);
-
-        if ($xml) {
-            foreach ($xml->entry as $entry) {
-                $file = trim((string)$entry->ref['href']);
                 if ($file !== '' && $file !== '0') {
                     yield $file;
                 }

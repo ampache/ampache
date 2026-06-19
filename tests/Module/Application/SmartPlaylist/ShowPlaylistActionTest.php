@@ -38,27 +38,10 @@ use Psr\Log\LoggerInterface;
 
 class ShowPlaylistActionTest extends MockeryTestCase
 {
-    private UiInterface&MockInterface $ui;
-
-    private ModelFactoryInterface&MockInterface $modelFactory;
-
     private LoggerInterface&MockObject $logger;
-
+    private ModelFactoryInterface&MockInterface $modelFactory;
     private ?ShowAction $subject;
-
-    #[Override]
-    protected function setUp(): void
-    {
-        $this->ui           = $this->mock(UiInterface::class);
-        $this->logger       = $this->createMock(LoggerInterface::class);
-        $this->modelFactory = $this->mock(ModelFactoryInterface::class);
-
-        $this->subject = new ShowAction(
-            $this->ui,
-            $this->logger,
-            $this->modelFactory
-        );
-    }
+    private UiInterface&MockInterface $ui;
 
     public function testRunDisplaysPlaylistSearchView(): void
     {
@@ -109,6 +92,20 @@ class ShowPlaylistActionTest extends MockeryTestCase
 
         $this->assertNull(
             $this->subject->run($request, $gatekeeper)
+        );
+    }
+
+    #[Override]
+    protected function setUp(): void
+    {
+        $this->ui           = $this->mock(UiInterface::class);
+        $this->logger       = $this->createMock(LoggerInterface::class);
+        $this->modelFactory = $this->mock(ModelFactoryInterface::class);
+
+        $this->subject = new ShowAction(
+            $this->ui,
+            $this->logger,
+            $this->modelFactory
         );
     }
 }

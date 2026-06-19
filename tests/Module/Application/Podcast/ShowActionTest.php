@@ -41,34 +41,68 @@ use Psr\Log\LoggerInterface;
 class ShowActionTest extends TestCase
 {
     private ConfigContainerInterface&MockObject $configContainer;
-
+    private GuiGatekeeperInterface&MockObject $gatekeeper;
+    private LoggerInterface&MockObject $logger;
+    private PodcastRepositoryInterface&MockObject $podcastRepository;
+    private ServerRequestInterface&MockObject $request;
+    private ShowAction $subject;
     private UiInterface&MockObject $ui;
 
-    private LoggerInterface&MockObject $logger;
-
-    private ServerRequestInterface&MockObject $request;
-
-    private GuiGatekeeperInterface&MockObject $gatekeeper;
-
-    private PodcastRepositoryInterface&MockObject $podcastRepository;
-
-    private ShowAction $subject;
-
-    protected function setUp(): void
+    public function testRunRenders(): void
     {
-        $this->configContainer   = $this->createMock(ConfigContainerInterface::class);
-        $this->ui                = $this->createMock(UiInterface::class);
-        $this->logger            = $this->createMock(LoggerInterface::class);
-        $this->podcastRepository = $this->createMock(PodcastRepositoryInterface::class);
+        $podcast = $this->createMock(Podcast::class);
+        $user    = $this->createMock(User::class);
 
-        $this->request    = $this->createMock(ServerRequestInterface::class);
-        $this->gatekeeper = $this->createMock(GuiGatekeeperInterface::class);
+        $user->catalogs['podcast'] = [1];
 
-        $this->subject = new ShowAction(
-            $this->configContainer,
-            $this->ui,
-            $this->logger,
-            $this->podcastRepository,
+        $this->gatekeeper->expects(static::once())
+            ->method('getUser')
+            ->willReturn($user);
+
+        $episodeList = [123, 456];
+
+        $this->request->expects(static::once())
+            ->method('getQueryParams')
+            ->willReturn([]);
+
+        $this->podcastRepository->expects(static::once())
+            ->method('findById')
+            ->with(0)
+            ->willReturn($podcast);
+
+        $podcast->expects(static::once())
+            ->method('getCatalogId')
+            ->willReturn(1);
+
+        $podcast->expects(static::once())
+            ->method('getEpisodeIds')
+            ->willReturn($episodeList);
+
+        $this->ui->expects(static::once())
+            ->method('showHeader');
+        $this->ui->expects(static::once())
+            ->method('show')
+            ->with(
+                'show_podcast.inc.php',
+                [
+                    'podcast' => $podcast,
+                    'object_ids' => $episodeList,
+                    'object_type' => 'podcast_episode',
+                    'current_user' => $user,
+                ]
+            );
+        $this->ui->expects(static::once())
+            ->method('showQueryStats');
+        $this->ui->expects(static::once())
+            ->method('showFooter');
+
+        $this->configContainer->expects(static::once())
+            ->method('isFeatureEnabled')
+            ->with(ConfigurationKeyEnum::PODCAST)
+            ->willReturn(true);
+
+        self::assertNull(
+            $this->subject->run($this->request, $this->gatekeeper)
         );
     }
 
@@ -129,61 +163,21 @@ class ShowActionTest extends TestCase
         );
     }
 
-    public function testRunRenders(): void
+    protected function setUp(): void
     {
-        $podcast = $this->createMock(Podcast::class);
-        $user    = $this->createMock(User::class);
+        $this->configContainer   = $this->createMock(ConfigContainerInterface::class);
+        $this->ui                = $this->createMock(UiInterface::class);
+        $this->logger            = $this->createMock(LoggerInterface::class);
+        $this->podcastRepository = $this->createMock(PodcastRepositoryInterface::class);
 
-        $user->catalogs['podcast'] = [1];
+        $this->request    = $this->createMock(ServerRequestInterface::class);
+        $this->gatekeeper = $this->createMock(GuiGatekeeperInterface::class);
 
-        $this->gatekeeper->expects(static::once())
-            ->method('getUser')
-            ->willReturn($user);
-
-        $episodeList = [123, 456];
-
-        $this->request->expects(static::once())
-            ->method('getQueryParams')
-            ->willReturn([]);
-
-        $this->podcastRepository->expects(static::once())
-            ->method('findById')
-            ->with(0)
-            ->willReturn($podcast);
-
-        $podcast->expects(static::once())
-            ->method('getCatalogId')
-            ->willReturn(1);
-
-        $podcast->expects(static::once())
-            ->method('getEpisodeIds')
-            ->willReturn($episodeList);
-
-        $this->ui->expects(static::once())
-            ->method('showHeader');
-        $this->ui->expects(static::once())
-            ->method('show')
-            ->with(
-                'show_podcast.inc.php',
-                [
-                    'podcast' => $podcast,
-                    'object_ids' => $episodeList,
-                    'object_type' => 'podcast_episode',
-                    'current_user' => $user,
-                ]
-            );
-        $this->ui->expects(static::once())
-            ->method('showQueryStats');
-        $this->ui->expects(static::once())
-            ->method('showFooter');
-
-        $this->configContainer->expects(static::once())
-            ->method('isFeatureEnabled')
-            ->with(ConfigurationKeyEnum::PODCAST)
-            ->willReturn(true);
-
-        self::assertNull(
-            $this->subject->run($this->request, $this->gatekeeper)
+        $this->subject = new ShowAction(
+            $this->configContainer,
+            $this->ui,
+            $this->logger,
+            $this->podcastRepository,
         );
     }
 }

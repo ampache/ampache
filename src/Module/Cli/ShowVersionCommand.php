@@ -31,16 +31,6 @@ use Override;
 
 final class ShowVersionCommand extends Command
 {
-    #[Override]
-    protected function defaults(): self
-    {
-        $this->option('-h, --help', T_('Help'))->on($this->showHelp(...));
-
-        $this->onExit(static fn ($exitCode = 0) => exit($exitCode));
-
-        return $this;
-    }
-
     public function __construct(
         private readonly ConfigContainerInterface $configContainer,
     ) {
@@ -61,5 +51,15 @@ final class ShowVersionCommand extends Command
             $this->configContainer->get('version'),
             true
         );
+    }
+
+    #[Override]
+    protected function defaults(): self
+    {
+        $this->option('-h, --help', T_('Help'))->on($this->showHelp(...));
+
+        $this->onExit(static fn ($exitCode = 0) => exit($exitCode));
+
+        return $this;
     }
 }

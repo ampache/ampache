@@ -61,6 +61,9 @@ final class ArtistQuery implements QueryInterface
         'user_rating',
     ];
 
+    protected string $base   = "SELECT %%SELECT%% FROM `artist` ";
+    protected string $select = "`artist`.`id`";
+
     /** @var string[] $sorts */
     protected array $sorts = [
         'album_count',
@@ -79,9 +82,15 @@ final class ArtistQuery implements QueryInterface
         'yearformed',
     ];
 
-    protected string $select = "`artist`.`id`";
-
-    protected string $base = "SELECT %%SELECT%% FROM `artist` ";
+    /**
+     * get_base_sql
+     *
+     * Base SELECT query string without filters or joins
+     */
+    public function get_base_sql(): string
+    {
+        return $this->base;
+    }
 
     /**
      * get_select
@@ -91,16 +100,6 @@ final class ArtistQuery implements QueryInterface
     public function get_select(): string
     {
         return $this->select;
-    }
-
-    /**
-     * get_base_sql
-     *
-     * Base SELECT query string without filters or joins
-     */
-    public function get_base_sql(): string
-    {
-        return $this->base;
     }
 
     /**

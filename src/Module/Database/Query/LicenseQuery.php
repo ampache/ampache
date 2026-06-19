@@ -44,6 +44,9 @@ final class LicenseQuery implements QueryInterface
         'starts_with',
     ];
 
+    protected string $base   = "SELECT %%SELECT%% FROM `license` ";
+    protected string $select = "`license`.`id`";
+
     /** @var string[] $sorts */
     protected array $sorts = [
         'external_link',
@@ -53,9 +56,15 @@ final class LicenseQuery implements QueryInterface
         'title',
     ];
 
-    protected string $select = "`license`.`id`";
-
-    protected string $base = "SELECT %%SELECT%% FROM `license` ";
+    /**
+     * get_base_sql
+     *
+     * Base SELECT query string without filters or joins
+     */
+    public function get_base_sql(): string
+    {
+        return $this->base;
+    }
 
     /**
      * get_select
@@ -65,16 +74,6 @@ final class LicenseQuery implements QueryInterface
     public function get_select(): string
     {
         return $this->select;
-    }
-
-    /**
-     * get_base_sql
-     *
-     * Base SELECT query string without filters or joins
-     */
-    public function get_base_sql(): string
-    {
-        return $this->base;
     }
 
     /**

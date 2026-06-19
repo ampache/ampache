@@ -32,20 +32,10 @@ use Override;
 
 class GenericActivityTypeHandlerTest extends MockeryTestCase
 {
-    /** @var MockInterface|UserActivityRepositoryInterface|null */
-    private MockInterface $userActivityRepository;
-
     private ?GenericActivityTypeHandler $subject;
 
-    #[Override]
-    protected function setUp(): void
-    {
-        $this->userActivityRepository = $this->mock(UserActivityRepositoryInterface::class);
-
-        $this->subject = new GenericActivityTypeHandler(
-            $this->userActivityRepository
-        );
-    }
+    /** @var MockInterface|UserActivityRepositoryInterface|null */
+    private MockInterface $userActivityRepository;
 
     public function testRegisterActivityRegistersGenericEntry(): void
     {
@@ -71,6 +61,16 @@ class GenericActivityTypeHandlerTest extends MockeryTestCase
             $action,
             $userId,
             $date
+        );
+    }
+
+    #[Override]
+    protected function setUp(): void
+    {
+        $this->userActivityRepository = $this->mock(UserActivityRepositoryInterface::class);
+
+        $this->subject = new GenericActivityTypeHandler(
+            $this->userActivityRepository
         );
     }
 }

@@ -44,16 +44,9 @@ use Ampache\Repository\Model\Wanted;
 interface WantedRepositoryInterface
 {
     /**
-     * Get wanted list.
-     *
-     * @return int[]
+     * This cleans out unused wanted items
      */
-    public function findAll(?User $user = null): array;
-
-    /**
-     * Check if a release mbid is already marked as wanted
-     */
-    public function find(string $musicbrainzId, User $user): ?int;
+    public function collectGarbage(): void;
 
     /**
      * Delete wanted release.
@@ -62,6 +55,33 @@ interface WantedRepositoryInterface
         string $musicbrainzId,
         ?User $user = null,
     ): void;
+
+    /**
+     * Check if a release mbid is already marked as wanted
+     */
+    public function find(string $musicbrainzId, User $user): ?int;
+
+    /**
+     * Get wanted list.
+     *
+     * @return int[]
+     */
+    public function findAll(?User $user = null): array;
+
+    /**
+     * Find a single item by its id
+     */
+    public function findById(int $itemId): ?Wanted;
+
+    /**
+     * Find wanted release by mbid.
+     */
+    public function findByMusicBrainzId(string $mbid): ?Wanted;
+
+    /**
+     * Find wanted release by name.
+     */
+    public function findByName(string $name): ?Wanted;
 
     /**
      * Get accepted wanted release count.
@@ -76,29 +96,9 @@ interface WantedRepositoryInterface
     public function getById(int $wantedId): ?array;
 
     /**
-     * Find a single item by its id
-     */
-    public function findById(int $itemId): ?Wanted;
-
-    /**
-     * Find wanted release by name.
-     */
-    public function findByName(string $name): ?Wanted;
-
-    /**
-     * Find wanted release by mbid.
-     */
-    public function findByMusicBrainzId(string $mbid): ?Wanted;
-
-    public function prototype(): Wanted;
-
-    /**
-     * This cleans out unused wanted items
-     */
-    public function collectGarbage(): void;
-
-    /**
      * Migrate an object associate stats to a new object
      */
     public function migrateArtist(int $oldObjectId, int $newObjectId): void;
+
+    public function prototype(): Wanted;
 }

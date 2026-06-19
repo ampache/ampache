@@ -70,16 +70,14 @@ class Stream_Playlist
         'track_num' => 0,
     ];
 
-    private ?string $streamtoken = null;
-
-    public ?string $id = null;
+    public ?string $id    = null;
+    public ?string $title = null;
 
     /** @var list<Stream_Url> */
     public array $urls = [];
 
     public int $user;
-
-    public ?string $title = null;
+    private ?string $streamtoken = null;
 
     /**
      * Stream_Playlist constructor
@@ -118,75 +116,22 @@ class Stream_Playlist
         }
     }
 
-    private function _add_url(Stream_Url $url): void
+    /**
+     * check_autoplay_append
+     */
+    public static function check_autoplay_append(): bool
     {
-        debug_event(self::class, "Adding url {" . json_encode($url) . "}...", 5);
-
-        $this->urls[] = $url;
-        $fields       = [];
-        $fields[]     = '`sid`';
-        $values       = [];
-        $values[]     = $this->id;
-        $holders      = [];
-        $holders[]    = '?';
-
-        foreach ($url->properties as $field) {
-            if ($url->$field) {
-                $fields[]  = '`' . $field . '`';
-                $values[]  = $url->$field;
-                $holders[] = '?';
-            }
-        }
-
-        $sql = 'INSERT INTO `stream_playlist` (' . implode(',', $fields) . ') VALUES (' . implode(',', $holders) . ')';
-
-        Dba::write($sql, $values);
+        // For now, only iframed web player support media append in the currently played playlist
+        return ((AmpConfig::get('ajax_load') && AmpConfig::get('play_type') == 'web_player') || AmpConfig::get('play_type') == 'localplay');
     }
 
     /**
-     * @param list<Stream_Url> $urls
+     * check_autoplay_next
      */
-    private function _add_urls(array $urls): void
+    public static function check_autoplay_next(): bool
     {
-        debug_event(self::class, "Adding urls to {" . $this->id . "}...", 5);
-        $sql         = '';
-        $fields      = [];
-        $values      = [];
-        $holders_arr = [];
-
-        foreach ($urls as $url) {
-            $this->urls[] = $url;
-            $fields       = [];
-            $fields[]     = '`sid`';
-            $values[]     = $this->id;
-            $holders      = [];
-            $holders[]    = '?';
-
-            foreach ($url->properties as $field) {
-                if ($url->$field !== null) {
-                    $fields[]  = '`' . $field . '`';
-                    $values[]  = $url->$field;
-                    $holders[] = '?';
-                }
-            }
-
-            $holders_arr[] = $holders;
-        }
-
-        $holders_chunks = array_chunk($holders_arr, 500);
-        foreach ($holders_chunks as $holders_arr_temp) {
-            $sql .= 'INSERT INTO `stream_playlist` (' . implode(',', $fields) . ') VALUES ';
-
-            foreach ($holders_arr_temp as $placeholder) {
-                $sql .= '(' . implode(',', $placeholder) . '),';
-            }
-
-            // remove last comma
-            $sql = substr($sql, 0, -1);
-            $sql .= ';';
-        }
-
-        Dba::write($sql, $values);
+        // Currently only supported for web player
+        return (AmpConfig::get('ajax_load') && AmpConfig::get('play_type') == 'web_player');
     }
 
     /**
@@ -196,35 +141,6 @@ class Stream_Playlist
     {
         $sql = 'DELETE FROM `stream_playlist` USING `stream_playlist` LEFT JOIN `session` ON `session`.`id`=`stream_playlist`.`sid` WHERE `session`.`id` IS NULL';
         Dba::write($sql);
-    }
-
-    /**
-     * media_to_urlarray
-     * Formats the URL and media information and adds it to the object
-     * @param array<int, array{
-     *     object_type: LibraryItemEnum,
-     *     object_id: int,
-     *     client?: string,
-     *     action?: string,
-     *     cache?: string,
-     *     player?: string,
-     *     format?: string,
-     *     transcode_to?: string,
-     *     custom_play_action?: string
-     * }> $media
-     * @return list<Stream_Url>
-     */
-    public static function media_to_urlarray(array $media, string $additional_params = ''): array
-    {
-        $urls = [];
-        foreach ($media as $medium) {
-            $surl = self::media_to_url($medium, $additional_params);
-            if ($surl != null) {
-                $urls[] = $surl;
-            }
-        }
-
-        return $urls;
     }
 
     /**
@@ -300,6 +216,35 @@ class Stream_Playlist
         }
 
         return null;
+    }
+
+    /**
+     * media_to_urlarray
+     * Formats the URL and media information and adds it to the object
+     * @param array<int, array{
+     *     object_type: LibraryItemEnum,
+     *     object_id: int,
+     *     client?: string,
+     *     action?: string,
+     *     cache?: string,
+     *     player?: string,
+     *     format?: string,
+     *     transcode_to?: string,
+     *     custom_play_action?: string
+     * }> $media
+     * @return list<Stream_Url>
+     */
+    public static function media_to_urlarray(array $media, string $additional_params = ''): array
+    {
+        $urls = [];
+        foreach ($media as $medium) {
+            $surl = self::media_to_url($medium, $additional_params);
+            if ($surl != null) {
+                $urls[] = $surl;
+            }
+        }
+
+        return $urls;
     }
 
     private static function _broadcast_object_to_url(Broadcast $object): ?Stream_Url
@@ -428,21 +373,321 @@ class Stream_Playlist
     }
 
     /**
-     * check_autoplay_append
+     * add
+     * Adds an array of media
+     * @param array<int, array{
+     *     object_type: LibraryItemEnum,
+     *     object_id: int,
+     *     client?: string,
+     *     action?: string,
+     *     cache?: string,
+     *     player?: string,
+     *     format?: string,
+     *     transcode_to?: string,
+     *     custom_play_action?: string
+     * }> $media
      */
-    public static function check_autoplay_append(): bool
+    public function add(array $media = [], string $additional_params = ''): void
     {
-        // For now, only iframed web player support media append in the currently played playlist
-        return ((AmpConfig::get('ajax_load') && AmpConfig::get('play_type') == 'web_player') || AmpConfig::get('play_type') == 'localplay');
+        $urls = self::media_to_urlarray($media, $additional_params);
+        $this->_add_urls($urls);
     }
 
     /**
-     * check_autoplay_next
+     * add_urls
+     * Add an array of urls. This is used for things that aren't coming
+     * from media objects like democratic playlists
+     * @param list<string> $urls
      */
-    public static function check_autoplay_next(): bool
+    public function add_urls(array $urls = []): bool
     {
-        // Currently only supported for web player
-        return (AmpConfig::get('ajax_load') && AmpConfig::get('play_type') == 'web_player');
+        foreach ($urls as $url) {
+            $this->_add_url(
+                new Stream_Url(
+                    [
+                        'url' => $url,
+                        'title' => Stream_Url::get_title($url),
+                        'author' => T_('Ampache'),
+                        'time' => '-1'
+                    ]
+                )
+            );
+        }
+
+        return true;
+    }
+
+    /**
+     * This should really only be used if all of the content is ASF files.
+     */
+    public function create_asx(): void
+    {
+        $ret = '<ASX VERSION="3.0" BANNERBAR="auto">' . "\n";
+        $ret .= "<TITLE>" . ($this->title ?? T_("Ampache ASX Playlist")) . "</TITLE>\n";
+        $ret .= '<PARAM NAME="Encoding" VALUE="utf-8"' . "></PARAM>\n";
+
+        foreach ($this->urls as $url) {
+            $ret .= "<ENTRY>\n";
+            $ret .= '<TITLE>' . scrub_out($url->title) . "</TITLE>\n";
+            $ret .= '<AUTHOR>' . scrub_out($url->author) . "</AUTHOR>\n";
+            // FIXME: duration looks hacky and wrong
+            $ret .= '		<DURATION VALUE="00:00:' . $url->time . '" />' . "\n";
+            $ret .= '		<PARAM NAME="Album" Value="' . scrub_out($url->album) . '" />' . "\n";
+            $ret .= '		<PARAM NAME="Composer" Value="' . scrub_out($url->author) . '" />' . "\n";
+            $ret .= '		<PARAM NAME="Prebuffer" Value="false" />' . "\n";
+            $ret .= '<REF HREF="' . $url->url . '" />' . "\n";
+            $ret .= "</ENTRY>\n";
+        }
+
+        $ret .= "</ASX>\n";
+
+        echo $ret;
+    }
+
+    /**
+     * create_democratic
+     *
+     * This 'votes' on the songs; it inserts them into a tmp_playlist with user
+     * set to -1.
+     */
+    public function create_democratic(): void
+    {
+        $democratic = Democratic::get_current_playlist();
+        $democratic->set_parent();
+
+        $items = [];
+
+        foreach ($this->urls as $url) {
+            $url_data = Stream_Url::parse($url->url);
+            $items[]  = [
+                $url_data['type'],
+                $url_data['id']
+            ];
+        }
+
+        if ($items !== []) {
+            $democratic->add_vote($items);
+            display_notification(T_('Vote added'));
+        }
+    }
+
+    /**
+     * create_download
+     * This prompts for a download of the song
+     */
+    public function create_download(): bool
+    {
+        // There should only be one here...
+        if (count($this->urls) !== 1) {
+            debug_event(self::class, 'Download called, but $urls contains ' . json_encode($this->urls), 2);
+        }
+
+        // Header redirect baby!
+        $url = current($this->urls);
+        if ($url === false) {
+            return false;
+        }
+
+        $url = Stream_Url::add_options($url->url, '&action=download&cache=1');
+        header('Location: ' . $url);
+
+        return false;
+    }
+
+    public function create_hls(): void
+    {
+        $ssize = 10;
+        $ret   = "#EXTM3U\n";
+        $ret .= "#EXT-X-TARGETDURATION:" . $ssize . "\n";
+        $ret .= "#EXT-X-VERSION:1\n";
+        $ret .= "#EXT-X-ALLOW-CACHE:NO\n";
+        $ret .= "#EXT-X-MEDIA-SEQUENCE:0\n";
+        $ret .= "#EXT-X-PLAYLIST-TYPE:VOD\n"; // Static list of segments
+
+        foreach ($this->urls as $url) {
+            $soffset = 0;
+            $segment = 0;
+            while ($soffset < $url->time) {
+                $type              = $url->type;
+                $size              = (($soffset + $ssize) <= $url->time) ? $ssize : ((int) $url->time - $soffset);
+                $additional_params = '&transcode_to=ts&segment=' . $segment;
+                $ret .= "#EXTINF:" . $size . ",\n";
+                $url_data = Stream_Url::parse($url->url);
+                $url_id   = $url_data['id'];
+
+                unset($url_data['id']);
+                unset($url_data['ssid']);
+                unset($url_data['type']);
+                unset($url_data['base_url']);
+                unset($url_data['uid']);
+                unset($url_data['name']);
+
+                foreach ($url_data as $key => $value) {
+                    $additional_params .= '&' . $key . '=' . $value;
+                }
+
+                $className = ObjectTypeToClassNameMapper::map($type);
+                /** @var Media $item */
+                $item = new $className($url_id);
+                $hu   = $item->play_url($additional_params);
+                $ret .= $hu . "\n";
+                $soffset += $size;
+                $segment++;
+            }
+        }
+
+        $ret .= "#EXT-X-ENDLIST\n\n";
+
+        echo $ret;
+    }
+
+    /**
+     * create_localplay
+     * This calls the Localplay API to add the URLs and then start playback
+     */
+    public function create_localplay(): void
+    {
+        $localplay = new LocalPlay(AmpConfig::get('localplay_controller', ''));
+        $localplay->connect();
+
+        $append = (bool)($_REQUEST['append'] ?? 0);
+        if (!$append) {
+            $localplay->delete_all();
+        }
+
+        foreach ($this->urls as $url) {
+            $localplay->add_url($url);
+        }
+
+        if (!$append) {
+            // We don't have metadata on Stream_Url to know its kind
+            // so we check the content to know if it is democratic
+            if (count($this->urls) === 1) {
+                $furl = $this->urls[0];
+                if (str_contains($furl->url, "&demo_id=1") && $furl->time == -1) {
+                    // If democratic, repeat the song to get the next voted one.
+                    debug_event(self::class, 'Playing democratic on Localplay, enabling repeat...', 5);
+                    $localplay->repeat(true);
+                }
+            }
+
+            $localplay->play();
+        }
+    }
+
+    /**
+     * creates the content of an m3u file, this includes the EXTINFO and as such can be
+     * large with very long playlists
+     */
+    public function create_m3u(): string
+    {
+        $ret = "#EXTM3U\n";
+
+        foreach ($this->urls as $url) {
+            $ret .= '#EXTINF:' . $url->time . ', ' . $url->author . ' - ' . $url->title . "\n";
+            $ret .= $url->url . "\n";
+        }
+
+        return $ret;
+    }
+
+    public function create_pls(): void
+    {
+        $ret = "[playlist]\n";
+        $ret .= 'NumberOfEntries=' . count($this->urls) . "\n";
+        $count = 0;
+        foreach ($this->urls as $url) {
+            $count++;
+            $ret .= 'File' . $count . '=' . $url->url . "\n";
+            $ret .= 'Title' . $count . '=' . $url->author . ' - ' . $url->title . "\n";
+            $ret .= 'Length' . $count . '=' . $url->time . "\n";
+        }
+
+        $ret .= "Version=2\n";
+
+        echo $ret;
+    }
+
+    /**
+     * create_ram
+     * this functions creates a RAM file for use by Real Player
+     */
+    public function create_ram(): void
+    {
+        foreach ($this->urls as $url) {
+            echo $url->url . "\n";
+        }
+    }
+
+    /**
+     * create_simplem3u
+     * this creates a simple m3u without any of the extended information
+     */
+    public function create_simple_m3u(): void
+    {
+        foreach ($this->urls as $url) {
+            echo $url->url . "\n";
+        }
+    }
+
+    /**
+     * create_web_player
+     *
+     * Creates an web player.
+     */
+    public function create_web_player(): void
+    {
+        if (AmpConfig::get('ajax_load')) {
+            require Ui::find_template('create_web_player_embedded.inc.php');
+        } else {
+            require Ui::find_template('create_web_player.inc.php');
+        }
+    }
+
+    public function create_xspf(): void
+    {
+        $result = "";
+        foreach ($this->urls as $url) {
+            $xml = [];
+
+            $xml['track'] = [
+                'title' => $url->title,
+                'creator' => $url->author,
+                'duration' => (int) $url->time * 1000,
+                'location' => $url->url,
+                'identifier' => $url->url
+            ];
+            if ($url->type == 'video') {
+                $xml['track']['meta'] = [
+                    'attribute' => 'rel="provider"',
+                    'value' => 'video'
+                ];
+            }
+
+            if ($url->info_url) {
+                $xml['track']['info'] = $url->info_url;
+            }
+
+            if ($url->image_url) {
+                $xml['track']['image'] = $url->image_url;
+            }
+
+            if ($url->album) {
+                $xml['track']['album'] = $url->album;
+            }
+
+            if ($url->track_num) {
+                $xml['track']['trackNum'] = $url->track_num;
+            }
+
+            $result .= Xml8_Data::keyed_array($xml, true);
+        }
+
+        $ret = "<?xml version=\"1.0\" encoding=\"utf-8\" ?>\n<playlist version = \"1\" xmlns=\"http://xspf.org/ns/0/\">\n<title>" . $this->title . "</title>\n<creator>" . scrub_out(AmpConfig::get('site_title')) . "</creator>\n<annotation>" . scrub_out(AmpConfig::get('site_title')) . "</annotation>\n<info>" . AmpConfig::get_web_path() . "</info>\n<trackList>\n";
+        $ret .= $result;
+        $ret .= "</trackList>\n</playlist>\n";
+
+        echo $ret;
     }
 
     public function generate_playlist(string $type, bool $redirect = false, ?string $name = ''): bool
@@ -561,62 +806,6 @@ class Stream_Playlist
     }
 
     /**
-     * add
-     * Adds an array of media
-     * @param array<int, array{
-     *     object_type: LibraryItemEnum,
-     *     object_id: int,
-     *     client?: string,
-     *     action?: string,
-     *     cache?: string,
-     *     player?: string,
-     *     format?: string,
-     *     transcode_to?: string,
-     *     custom_play_action?: string
-     * }> $media
-     */
-    public function add(array $media = [], string $additional_params = ''): void
-    {
-        $urls = self::media_to_urlarray($media, $additional_params);
-        $this->_add_urls($urls);
-    }
-
-    /**
-     * add_urls
-     * Add an array of urls. This is used for things that aren't coming
-     * from media objects like democratic playlists
-     * @param list<string> $urls
-     */
-    public function add_urls(array $urls = []): bool
-    {
-        foreach ($urls as $url) {
-            $this->_add_url(
-                new Stream_Url(
-                    [
-                        'url' => $url,
-                        'title' => Stream_Url::get_title($url),
-                        'author' => T_('Ampache'),
-                        'time' => '-1'
-                    ]
-                )
-            );
-        }
-
-        return true;
-    }
-
-    /**
-     * create_simplem3u
-     * this creates a simple m3u without any of the extended information
-     */
-    public function create_simple_m3u(): void
-    {
-        foreach ($this->urls as $url) {
-            echo $url->url . "\n";
-        }
-    }
-
-    /**
      * for compatibility, the get_m3u_string function name is generated in the ExportPlaylist console export
      */
     public function get_m3u_string(): string
@@ -624,265 +813,74 @@ class Stream_Playlist
         return $this->create_m3u();
     }
 
-    /**
-     * creates the content of an m3u file, this includes the EXTINFO and as such can be
-     * large with very long playlists
-     */
-    public function create_m3u(): string
+    private function _add_url(Stream_Url $url): void
     {
-        $ret = "#EXTM3U\n";
+        debug_event(self::class, "Adding url {" . json_encode($url) . "}...", 5);
 
-        foreach ($this->urls as $url) {
-            $ret .= '#EXTINF:' . $url->time . ', ' . $url->author . ' - ' . $url->title . "\n";
-            $ret .= $url->url . "\n";
+        $this->urls[] = $url;
+        $fields       = [];
+        $fields[]     = '`sid`';
+        $values       = [];
+        $values[]     = $this->id;
+        $holders      = [];
+        $holders[]    = '?';
+
+        foreach ($url->properties as $field) {
+            if ($url->$field) {
+                $fields[]  = '`' . $field . '`';
+                $values[]  = $url->$field;
+                $holders[] = '?';
+            }
         }
 
-        return $ret;
-    }
+        $sql = 'INSERT INTO `stream_playlist` (' . implode(',', $fields) . ') VALUES (' . implode(',', $holders) . ')';
 
-    public function create_pls(): void
-    {
-        $ret = "[playlist]\n";
-        $ret .= 'NumberOfEntries=' . count($this->urls) . "\n";
-        $count = 0;
-        foreach ($this->urls as $url) {
-            $count++;
-            $ret .= 'File' . $count . '=' . $url->url . "\n";
-            $ret .= 'Title' . $count . '=' . $url->author . ' - ' . $url->title . "\n";
-            $ret .= 'Length' . $count . '=' . $url->time . "\n";
-        }
-
-        $ret .= "Version=2\n";
-
-        echo $ret;
+        Dba::write($sql, $values);
     }
 
     /**
-     * This should really only be used if all of the content is ASF files.
+     * @param list<Stream_Url> $urls
      */
-    public function create_asx(): void
+    private function _add_urls(array $urls): void
     {
-        $ret = '<ASX VERSION="3.0" BANNERBAR="auto">' . "\n";
-        $ret .= "<TITLE>" . ($this->title ?? T_("Ampache ASX Playlist")) . "</TITLE>\n";
-        $ret .= '<PARAM NAME="Encoding" VALUE="utf-8"' . "></PARAM>\n";
+        debug_event(self::class, "Adding urls to {" . $this->id . "}...", 5);
+        $sql         = '';
+        $fields      = [];
+        $values      = [];
+        $holders_arr = [];
 
-        foreach ($this->urls as $url) {
-            $ret .= "<ENTRY>\n";
-            $ret .= '<TITLE>' . scrub_out($url->title) . "</TITLE>\n";
-            $ret .= '<AUTHOR>' . scrub_out($url->author) . "</AUTHOR>\n";
-            // FIXME: duration looks hacky and wrong
-            $ret .= '		<DURATION VALUE="00:00:' . $url->time . '" />' . "\n";
-            $ret .= '		<PARAM NAME="Album" Value="' . scrub_out($url->album) . '" />' . "\n";
-            $ret .= '		<PARAM NAME="Composer" Value="' . scrub_out($url->author) . '" />' . "\n";
-            $ret .= '		<PARAM NAME="Prebuffer" Value="false" />' . "\n";
-            $ret .= '<REF HREF="' . $url->url . '" />' . "\n";
-            $ret .= "</ENTRY>\n";
-        }
+        foreach ($urls as $url) {
+            $this->urls[] = $url;
+            $fields       = [];
+            $fields[]     = '`sid`';
+            $values[]     = $this->id;
+            $holders      = [];
+            $holders[]    = '?';
 
-        $ret .= "</ASX>\n";
-
-        echo $ret;
-    }
-
-    public function create_xspf(): void
-    {
-        $result = "";
-        foreach ($this->urls as $url) {
-            $xml = [];
-
-            $xml['track'] = [
-                'title' => $url->title,
-                'creator' => $url->author,
-                'duration' => (int) $url->time * 1000,
-                'location' => $url->url,
-                'identifier' => $url->url
-            ];
-            if ($url->type == 'video') {
-                $xml['track']['meta'] = [
-                    'attribute' => 'rel="provider"',
-                    'value' => 'video'
-                ];
-            }
-
-            if ($url->info_url) {
-                $xml['track']['info'] = $url->info_url;
-            }
-
-            if ($url->image_url) {
-                $xml['track']['image'] = $url->image_url;
-            }
-
-            if ($url->album) {
-                $xml['track']['album'] = $url->album;
-            }
-
-            if ($url->track_num) {
-                $xml['track']['trackNum'] = $url->track_num;
-            }
-
-            $result .= Xml8_Data::keyed_array($xml, true);
-        }
-
-        $ret = "<?xml version=\"1.0\" encoding=\"utf-8\" ?>\n<playlist version = \"1\" xmlns=\"http://xspf.org/ns/0/\">\n<title>" . $this->title . "</title>\n<creator>" . scrub_out(AmpConfig::get('site_title')) . "</creator>\n<annotation>" . scrub_out(AmpConfig::get('site_title')) . "</annotation>\n<info>" . AmpConfig::get_web_path() . "</info>\n<trackList>\n";
-        $ret .= $result;
-        $ret .= "</trackList>\n</playlist>\n";
-
-        echo $ret;
-    }
-
-    public function create_hls(): void
-    {
-        $ssize = 10;
-        $ret   = "#EXTM3U\n";
-        $ret .= "#EXT-X-TARGETDURATION:" . $ssize . "\n";
-        $ret .= "#EXT-X-VERSION:1\n";
-        $ret .= "#EXT-X-ALLOW-CACHE:NO\n";
-        $ret .= "#EXT-X-MEDIA-SEQUENCE:0\n";
-        $ret .= "#EXT-X-PLAYLIST-TYPE:VOD\n"; // Static list of segments
-
-        foreach ($this->urls as $url) {
-            $soffset = 0;
-            $segment = 0;
-            while ($soffset < $url->time) {
-                $type              = $url->type;
-                $size              = (($soffset + $ssize) <= $url->time) ? $ssize : ((int) $url->time - $soffset);
-                $additional_params = '&transcode_to=ts&segment=' . $segment;
-                $ret .= "#EXTINF:" . $size . ",\n";
-                $url_data = Stream_Url::parse($url->url);
-                $url_id   = $url_data['id'];
-
-                unset($url_data['id']);
-                unset($url_data['ssid']);
-                unset($url_data['type']);
-                unset($url_data['base_url']);
-                unset($url_data['uid']);
-                unset($url_data['name']);
-
-                foreach ($url_data as $key => $value) {
-                    $additional_params .= '&' . $key . '=' . $value;
-                }
-
-                $className = ObjectTypeToClassNameMapper::map($type);
-                /** @var Media $item */
-                $item = new $className($url_id);
-                $hu   = $item->play_url($additional_params);
-                $ret .= $hu . "\n";
-                $soffset += $size;
-                $segment++;
-            }
-        }
-
-        $ret .= "#EXT-X-ENDLIST\n\n";
-
-        echo $ret;
-    }
-
-    /**
-     * create_web_player
-     *
-     * Creates an web player.
-     */
-    public function create_web_player(): void
-    {
-        if (AmpConfig::get('ajax_load')) {
-            require Ui::find_template('create_web_player_embedded.inc.php');
-        } else {
-            require Ui::find_template('create_web_player.inc.php');
-        }
-    }
-
-    /**
-     * create_localplay
-     * This calls the Localplay API to add the URLs and then start playback
-     */
-    public function create_localplay(): void
-    {
-        $localplay = new LocalPlay(AmpConfig::get('localplay_controller', ''));
-        $localplay->connect();
-
-        $append = (bool)($_REQUEST['append'] ?? 0);
-        if (!$append) {
-            $localplay->delete_all();
-        }
-
-        foreach ($this->urls as $url) {
-            $localplay->add_url($url);
-        }
-
-        if (!$append) {
-            // We don't have metadata on Stream_Url to know its kind
-            // so we check the content to know if it is democratic
-            if (count($this->urls) === 1) {
-                $furl = $this->urls[0];
-                if (str_contains($furl->url, "&demo_id=1") && $furl->time == -1) {
-                    // If democratic, repeat the song to get the next voted one.
-                    debug_event(self::class, 'Playing democratic on Localplay, enabling repeat...', 5);
-                    $localplay->repeat(true);
+            foreach ($url->properties as $field) {
+                if ($url->$field !== null) {
+                    $fields[]  = '`' . $field . '`';
+                    $values[]  = $url->$field;
+                    $holders[] = '?';
                 }
             }
 
-            $localplay->play();
-        }
-    }
-
-    /**
-     * create_democratic
-     *
-     * This 'votes' on the songs; it inserts them into a tmp_playlist with user
-     * set to -1.
-     */
-    public function create_democratic(): void
-    {
-        $democratic = Democratic::get_current_playlist();
-        $democratic->set_parent();
-
-        $items = [];
-
-        foreach ($this->urls as $url) {
-            $url_data = Stream_Url::parse($url->url);
-            $items[]  = [
-                $url_data['type'],
-                $url_data['id']
-            ];
+            $holders_arr[] = $holders;
         }
 
-        if ($items !== []) {
-            $democratic->add_vote($items);
-            display_notification(T_('Vote added'));
-        }
-    }
+        $holders_chunks = array_chunk($holders_arr, 500);
+        foreach ($holders_chunks as $holders_arr_temp) {
+            $sql .= 'INSERT INTO `stream_playlist` (' . implode(',', $fields) . ') VALUES ';
 
-    /**
-     * create_download
-     * This prompts for a download of the song
-     */
-    public function create_download(): bool
-    {
-        // There should only be one here...
-        if (count($this->urls) !== 1) {
-            debug_event(self::class, 'Download called, but $urls contains ' . json_encode($this->urls), 2);
+            foreach ($holders_arr_temp as $placeholder) {
+                $sql .= '(' . implode(',', $placeholder) . '),';
+            }
+
+            // remove last comma
+            $sql = substr($sql, 0, -1);
+            $sql .= ';';
         }
 
-        // Header redirect baby!
-        $url = current($this->urls);
-        if ($url === false) {
-            return false;
-        }
-
-        $url = Stream_Url::add_options($url->url, '&action=download&cache=1');
-        header('Location: ' . $url);
-
-        return false;
-    }
-
-    /**
-     * create_ram
-     * this functions creates a RAM file for use by Real Player
-     */
-    public function create_ram(): void
-    {
-        foreach ($this->urls as $url) {
-            echo $url->url . "\n";
-        }
+        Dba::write($sql, $values);
     }
 }

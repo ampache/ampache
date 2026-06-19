@@ -50,6 +50,9 @@ final class PlaylistQuery implements QueryInterface
         'user_rating',
     ];
 
+    protected string $base   = "SELECT %%SELECT%% FROM `playlist` ";
+    protected string $select = "`playlist`.`id`";
+
     /** @var string[] $sorts */
     protected array $sorts = [
         'date',
@@ -68,9 +71,15 @@ final class PlaylistQuery implements QueryInterface
         'username',
     ];
 
-    protected string $select = "`playlist`.`id`";
-
-    protected string $base = "SELECT %%SELECT%% FROM `playlist` ";
+    /**
+     * get_base_sql
+     *
+     * Base SELECT query string without filters or joins
+     */
+    public function get_base_sql(): string
+    {
+        return $this->base;
+    }
 
     /**
      * get_select
@@ -80,16 +89,6 @@ final class PlaylistQuery implements QueryInterface
     public function get_select(): string
     {
         return $this->select;
-    }
-
-    /**
-     * get_base_sql
-     *
-     * Base SELECT query string without filters or joins
-     */
-    public function get_base_sql(): string
-    {
-        return $this->base;
     }
 
     /**

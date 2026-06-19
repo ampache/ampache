@@ -30,14 +30,14 @@ use Ampache\Repository\Model\Catalog;
 interface CatalogExporterInterface
 {
     /**
-     * Sends the necessary http headers
-     */
-    public function sendHeaders(): void;
-
-    /**
      * Exports all songs
      *
      * This echoes the build output directly to the browser
      */
     public function export(?Catalog $catalog): void;
+
+    /**
+     * Sends the necessary http headers
+     */
+    public function sendHeaders(): void;
 }

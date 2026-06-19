@@ -15,16 +15,25 @@ use Psr\Http\Message\ServerRequestInterface;
 trait UserAdminAccessTestTrait
 {
     private GuiGatekeeperInterface&MockObject $gatekeeper;
-
     private ServerRequestInterface&MockObject $request;
 
-    public function testHandleThrowsIfAccessIsDenied(): void
+    public function testFormValidationErrorsIfInvalid(): void
     {
         static::expectException(AccessDeniedException::class);
 
         $this->gatekeeper->expects(static::once())
             ->method('mayAccess')
             ->with(AccessTypeEnum::INTERFACE, AccessLevelEnum::ADMIN)
+            ->willReturn(true);
+
+        $this->configContainer->expects(static::once())
+            ->method('isFeatureEnabled')
+            ->with(ConfigurationKeyEnum::DEMO_MODE)
+            ->willReturn(false);
+
+        $this->requestParser->expects(static::once())
+            ->method('verifyForm')
+            ->with($this->getValidationFormName())
             ->willReturn(false);
 
         $this->subject->run($this->request, $this->gatekeeper);
@@ -47,23 +56,13 @@ trait UserAdminAccessTestTrait
         );
     }
 
-    public function testFormValidationErrorsIfInvalid(): void
+    public function testHandleThrowsIfAccessIsDenied(): void
     {
         static::expectException(AccessDeniedException::class);
 
         $this->gatekeeper->expects(static::once())
             ->method('mayAccess')
             ->with(AccessTypeEnum::INTERFACE, AccessLevelEnum::ADMIN)
-            ->willReturn(true);
-
-        $this->configContainer->expects(static::once())
-            ->method('isFeatureEnabled')
-            ->with(ConfigurationKeyEnum::DEMO_MODE)
-            ->willReturn(false);
-
-        $this->requestParser->expects(static::once())
-            ->method('verifyForm')
-            ->with($this->getValidationFormName())
             ->willReturn(false);
 
         $this->subject->run($this->request, $this->gatekeeper);

@@ -41,162 +41,6 @@ class Ldap
         debug_event(self::class, '__construct has been called. This should not happen', 2);
     }
 
-    /** Utility functions */
-
-    /**
-     * clean_search_results
-     *
-     * This function is here to return a real array {number} => {field} => {value array}
-     * instead of the custom LDAP search results provided by the ldap_* library.
-     * @param array $searchresult
-     */
-    private static function _clean_search_results($searchresult): array
-    {
-        $sr_clean = [];
-
-        foreach (self::_array_filter_key($searchresult, 'is_int') as $key => $result) {
-            $sr_clean[$key] = [];
-
-            foreach ($result as $field => $values) {
-                if ($field == 'count' || is_int($field)) {
-                    continue;
-                } elseif ($field == 'dn') {
-                    $sr_clean[$key][$field] = $values;
-                } else {
-                    $sr_clean[$key][$field] = self::_array_filter_key($values, 'is_int');
-                }
-            }
-        }
-
-        return $sr_clean;
-    }
-
-    /**
-     * array_filter_key
-     *
-     * @param array $array
-     * @param callable-string $callback
-     */
-    private static function _array_filter_key($array, $callback): array
-    {
-        return array_filter($array, $callback, ARRAY_FILTER_USE_KEY);
-    }
-
-    /** Actual LDAP functions */
-
-    /**
-     * Connect to the LDAP
-     * Note: This does not open a connection. It checks whether
-     * the given parameters are plausible and can be used to open a
-     * connection as soon as one is needed.
-     * @throws LdapException
-     */
-    private static function _connect(): Connection
-    {
-        if (!$url = AmpConfig::get('ldap_url')) {
-            throw new LdapException('Required configuration value missing: ldap_url');
-        }
-
-        if (!$link = ldap_connect($url)) {
-            throw new LdapException('Could not connect to ' . $url);
-        }
-
-        $protocol_version = AmpConfig::get('ldap_protocol_version', 3);
-        if (!ldap_set_option($link, LDAP_OPT_PROTOCOL_VERSION, $protocol_version)) {
-            throw new LdapException('Could not set option PROTOCOL_VERSION to ' . $protocol_version);
-        }
-
-        if (AmpConfig::get('ldap_start_tls', "false") != "false" && !ldap_start_tls($link)) {
-            throw new LdapException('Could not use StartTLS');
-        }
-
-        return $link;
-    }
-
-    /**
-     * Binds to the LDAP
-     * @param string $username
-     * @param string $password
-     * @throws LdapException
-     */
-    private static function _bind($link, $username = null, $password = null): void
-    {
-        if ($username === null && $password === null) {
-            $username = AmpConfig::get('ldap_username', '');
-            $password = AmpConfig::get('ldap_password', '');
-        }
-
-        debug_event(self::class, sprintf('binding with username `%s`', $username), 5);
-
-        if (!ldap_bind($link, $username, $password)) {
-            throw new LdapException(sprintf('Could not bind to server using username `%s`', $username));
-        }
-    }
-
-    /**
-     * Unbinds from the LDAP
-     */
-    private static function _unbind($link): void
-    {
-        ldap_unbind($link);
-    }
-
-    /**
-     * Read attributes for a DN from the LDAP
-     * @param string $base_dn
-     * @param array $attrs
-     * @param string $filter
-     * @throws LdapException
-     */
-    private static function _read($link, $base_dn, $attrs = [], $filter = 'objectClass=*')
-    {
-        $attrs_json = json_encode($attrs);
-        debug_event(self::class, sprintf('reading attributes %s in `%s`', $attrs_json, $base_dn), 5);
-
-        if (!$result = ldap_read($link, $base_dn, $filter, $attrs)) {
-            throw new LdapException(sprintf('Could not read attributes `%s` for dn `%s`', $attrs_json, $base_dn));
-        }
-
-        if (!$infos = ldap_get_entries($link, $result)) {
-            throw new LdapException(sprintf('Empty search result for dn `%s`', $base_dn));
-        }
-
-        return $infos[0];
-    }
-
-    /**
-     * Search for a DN in the LDAP
-     * @param string $filter
-     * @param bool $only_one_result
-     * @throws LdapException
-     */
-    private static function _search($link, $base_dn, $filter, $only_one_result = true): array
-    {
-        debug_event(self::class, sprintf('searching in `%s` for `%s`', $base_dn, $filter), 5);
-
-        if (!$result = ldap_search($link, $base_dn, $filter)) {
-            throw new LdapException(ldap_errno($link));
-        }
-
-        $entries = ldap_get_entries($link, $result) ?: [];
-
-        $entries = self::_clean_search_results($entries);
-
-        if ($only_one_result) {
-            if (count($entries) < 1) {
-                throw new LdapException(sprintf('Empty search results for filter `%s`', $filter));
-            }
-
-            if (count($entries) > 1) {
-                throw new LdapException(sprintf('Too many search results for filter `%s`', $filter));
-            }
-
-            return $entries[0];
-        }
-
-        return $entries;
-    }
-
     /**
      * ldap_auth
      *
@@ -307,5 +151,161 @@ class Ldap
         debug_event(self::class, 'Return value of authentication: ' . json_encode($return_value), 5);
 
         return $return_value;
+    }
+
+    /**
+     * array_filter_key
+     *
+     * @param array $array
+     * @param callable-string $callback
+     */
+    private static function _array_filter_key($array, $callback): array
+    {
+        return array_filter($array, $callback, ARRAY_FILTER_USE_KEY);
+    }
+
+    /**
+     * Binds to the LDAP
+     * @param string $username
+     * @param string $password
+     * @throws LdapException
+     */
+    private static function _bind($link, $username = null, $password = null): void
+    {
+        if ($username === null && $password === null) {
+            $username = AmpConfig::get('ldap_username', '');
+            $password = AmpConfig::get('ldap_password', '');
+        }
+
+        debug_event(self::class, sprintf('binding with username `%s`', $username), 5);
+
+        if (!ldap_bind($link, $username, $password)) {
+            throw new LdapException(sprintf('Could not bind to server using username `%s`', $username));
+        }
+    }
+
+    /** Utility functions */
+
+    /**
+     * clean_search_results
+     *
+     * This function is here to return a real array {number} => {field} => {value array}
+     * instead of the custom LDAP search results provided by the ldap_* library.
+     * @param array $searchresult
+     */
+    private static function _clean_search_results($searchresult): array
+    {
+        $sr_clean = [];
+
+        foreach (self::_array_filter_key($searchresult, 'is_int') as $key => $result) {
+            $sr_clean[$key] = [];
+
+            foreach ($result as $field => $values) {
+                if ($field == 'count' || is_int($field)) {
+                    continue;
+                } elseif ($field == 'dn') {
+                    $sr_clean[$key][$field] = $values;
+                } else {
+                    $sr_clean[$key][$field] = self::_array_filter_key($values, 'is_int');
+                }
+            }
+        }
+
+        return $sr_clean;
+    }
+
+    /** Actual LDAP functions */
+
+    /**
+     * Connect to the LDAP
+     * Note: This does not open a connection. It checks whether
+     * the given parameters are plausible and can be used to open a
+     * connection as soon as one is needed.
+     * @throws LdapException
+     */
+    private static function _connect(): Connection
+    {
+        if (!$url = AmpConfig::get('ldap_url')) {
+            throw new LdapException('Required configuration value missing: ldap_url');
+        }
+
+        if (!$link = ldap_connect($url)) {
+            throw new LdapException('Could not connect to ' . $url);
+        }
+
+        $protocol_version = AmpConfig::get('ldap_protocol_version', 3);
+        if (!ldap_set_option($link, LDAP_OPT_PROTOCOL_VERSION, $protocol_version)) {
+            throw new LdapException('Could not set option PROTOCOL_VERSION to ' . $protocol_version);
+        }
+
+        if (AmpConfig::get('ldap_start_tls', "false") != "false" && !ldap_start_tls($link)) {
+            throw new LdapException('Could not use StartTLS');
+        }
+
+        return $link;
+    }
+
+    /**
+     * Read attributes for a DN from the LDAP
+     * @param string $base_dn
+     * @param array $attrs
+     * @param string $filter
+     * @throws LdapException
+     */
+    private static function _read($link, $base_dn, $attrs = [], $filter = 'objectClass=*')
+    {
+        $attrs_json = json_encode($attrs);
+        debug_event(self::class, sprintf('reading attributes %s in `%s`', $attrs_json, $base_dn), 5);
+
+        if (!$result = ldap_read($link, $base_dn, $filter, $attrs)) {
+            throw new LdapException(sprintf('Could not read attributes `%s` for dn `%s`', $attrs_json, $base_dn));
+        }
+
+        if (!$infos = ldap_get_entries($link, $result)) {
+            throw new LdapException(sprintf('Empty search result for dn `%s`', $base_dn));
+        }
+
+        return $infos[0];
+    }
+
+    /**
+     * Search for a DN in the LDAP
+     * @param string $filter
+     * @param bool $only_one_result
+     * @throws LdapException
+     */
+    private static function _search($link, $base_dn, $filter, $only_one_result = true): array
+    {
+        debug_event(self::class, sprintf('searching in `%s` for `%s`', $base_dn, $filter), 5);
+
+        if (!$result = ldap_search($link, $base_dn, $filter)) {
+            throw new LdapException(ldap_errno($link));
+        }
+
+        $entries = ldap_get_entries($link, $result) ?: [];
+
+        $entries = self::_clean_search_results($entries);
+
+        if ($only_one_result) {
+            if (count($entries) < 1) {
+                throw new LdapException(sprintf('Empty search results for filter `%s`', $filter));
+            }
+
+            if (count($entries) > 1) {
+                throw new LdapException(sprintf('Too many search results for filter `%s`', $filter));
+            }
+
+            return $entries[0];
+        }
+
+        return $entries;
+    }
+
+    /**
+     * Unbinds from the LDAP
+     */
+    private static function _unbind($link): void
+    {
+        ldap_unbind($link);
     }
 }

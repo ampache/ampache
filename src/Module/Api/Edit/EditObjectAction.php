@@ -48,7 +48,6 @@ final class EditObjectAction extends AbstractEditAction
     public const string REQUEST_KEY = 'edit_object';
 
     private LabelRepositoryInterface $labelRepository;
-
     private LoggerInterface $logger;
 
     public function __construct(

@@ -142,29 +142,21 @@ class Api4
     }
 
     /**
-     * message
-     * call the correct error / success message depending on format
+     * check_access
+     *
+     * This function checks the user can perform the function requested
+     * 'interface', 100, $user->id
      */
-    public static function message(string $type, string $message, ?string $error_code = null, string $format = 'xml'): void
+    public static function check_access(AccessTypeEnum $type, AccessLevelEnum $level, int $user_id, string $method = '', string $format = 'xml'): bool
     {
-        if ($type === 'error') {
-            switch ($format) {
-                case 'json':
-                    echo Json4_Data::error($error_code ?? '400', $message);
-                    break;
-                default:
-                    echo Xml4_Data::error($error_code ?? '400', $message);
-            }
+        if (!Access::check($type, $level, $user_id)) {
+            debug_event(self::class, $type->value . " '" . $level->value . "' required on " . $method . " function call.", 2);
+            Api4::message('error', 'User does not have access to this function', '400', $format);
+
+            return false;
         }
-        if ($type === 'success') {
-            switch ($format) {
-                case 'json':
-                    echo Json4_Data::success($message);
-                    break;
-                default:
-                    echo Xml4_Data::success($message);
-            }
-        }
+
+        return true;
     }
 
     /**
@@ -190,20 +182,28 @@ class Api4
     }
 
     /**
-     * check_access
-     *
-     * This function checks the user can perform the function requested
-     * 'interface', 100, $user->id
+     * message
+     * call the correct error / success message depending on format
      */
-    public static function check_access(AccessTypeEnum $type, AccessLevelEnum $level, int $user_id, string $method = '', string $format = 'xml'): bool
+    public static function message(string $type, string $message, ?string $error_code = null, string $format = 'xml'): void
     {
-        if (!Access::check($type, $level, $user_id)) {
-            debug_event(self::class, $type->value . " '" . $level->value . "' required on " . $method . " function call.", 2);
-            Api4::message('error', 'User does not have access to this function', '400', $format);
-
-            return false;
+        if ($type === 'error') {
+            switch ($format) {
+                case 'json':
+                    echo Json4_Data::error($error_code ?? '400', $message);
+                    break;
+                default:
+                    echo Xml4_Data::error($error_code ?? '400', $message);
+            }
         }
-
-        return true;
+        if ($type === 'success') {
+            switch ($format) {
+                case 'json':
+                    echo Json4_Data::success($message);
+                    break;
+                default:
+                    echo Xml4_Data::success($message);
+            }
+        }
     }
 }

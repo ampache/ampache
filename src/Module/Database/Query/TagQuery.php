@@ -47,6 +47,9 @@ final class TagQuery implements QueryInterface
         'tag',
     ];
 
+    protected string $base   = "SELECT %%SELECT%% FROM `tag` ";
+    protected string $select = "`tag`.`id`";
+
     /** @var string[] $sorts */
     protected array $sorts = [
         'id',
@@ -63,9 +66,15 @@ final class TagQuery implements QueryInterface
         'video',
     ];
 
-    protected string $select = "`tag`.`id`";
-
-    protected string $base = "SELECT %%SELECT%% FROM `tag` ";
+    /**
+     * get_base_sql
+     *
+     * Base SELECT query string without filters or joins
+     */
+    public function get_base_sql(): string
+    {
+        return $this->base;
+    }
 
     /**
      * get_select
@@ -75,16 +84,6 @@ final class TagQuery implements QueryInterface
     public function get_select(): string
     {
         return $this->select;
-    }
-
-    /**
-     * get_base_sql
-     *
-     * Base SELECT query string without filters or joins
-     */
-    public function get_base_sql(): string
-    {
-        return $this->base;
     }
 
     /**

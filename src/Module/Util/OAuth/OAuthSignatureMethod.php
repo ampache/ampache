@@ -32,11 +32,6 @@ namespace Ampache\Module\Util\OAuth;
 abstract class OAuthSignatureMethod
 {
     /**
-     * Needs to return the name of the Signature Method (ie HMAC-SHA1)
-     */
-    abstract public function get_name(): string;
-
-    /**
      * Build up the signature
      * NOTE: The output of this function MUST NOT be urlencoded.
      * the encoding is handled in OAuthRequest when the final
@@ -75,4 +70,9 @@ abstract class OAuthSignatureMethod
 
         return $result === 0;
     }
+
+    /**
+     * Needs to return the name of the Signature Method (ie HMAC-SHA1)
+     */
+    abstract public function get_name(): string;
 }

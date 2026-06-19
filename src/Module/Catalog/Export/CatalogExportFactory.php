@@ -39,6 +39,17 @@ final readonly class CatalogExportFactory implements CatalogExportFactoryInterfa
     ) {
     }
 
+    /**
+     * Returns the exporter class based on the export type
+     */
+    public function createFromExportType(CatalogExportTypeEnum $type): CatalogExporterInterface
+    {
+        return match ($type) {
+            CatalogExportTypeEnum::ITUNES => $this->createItunesExporter(),
+            default => $this->createCsvExporter(),
+        };
+    }
+
     private function createCsvExporter(): CatalogExporterInterface
     {
         return new CsvExporter(
@@ -52,16 +63,5 @@ final readonly class CatalogExportFactory implements CatalogExportFactoryInterfa
         return new ItunesExporter(
             $this->songRepository
         );
-    }
-
-    /**
-     * Returns the exporter class based on the export type
-     */
-    public function createFromExportType(CatalogExportTypeEnum $type): CatalogExporterInterface
-    {
-        return match ($type) {
-            CatalogExportTypeEnum::ITUNES => $this->createItunesExporter(),
-            default => $this->createCsvExporter(),
-        };
     }
 }

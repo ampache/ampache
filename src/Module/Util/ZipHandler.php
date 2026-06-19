@@ -47,6 +47,21 @@ final class ZipHandler implements ZipHandlerInterface
     }
 
     /**
+     * Clean up the generated zip file
+     */
+    public static function destroyZip(?string $zipFile): void
+    {
+        if ($zipFile && is_file($zipFile)) {
+            @unlink($zipFile);
+        }
+    }
+
+    public function __destruct()
+    {
+        self::destroyZip($this->zipFile);
+    }
+
+    /**
      * Check that an object type is allowed to be zipped.
      */
     public function isZipable(string $object_type): bool
@@ -55,16 +70,6 @@ final class ZipHandler implements ZipHandlerInterface
             $object_type,
             $this->configContainer->getTypesAllowedForZip()
         );
-    }
-
-    /**
-     * Clean up the generated zip file
-     */
-    public static function destroyZip(?string $zipFile): void
-    {
-        if ($zipFile && is_file($zipFile)) {
-            @unlink($zipFile);
-        }
     }
 
     /**
@@ -172,10 +177,5 @@ final class ZipHandler implements ZipHandlerInterface
             ->withHeader('Cache-Control', 'public, must-revalidate')
             ->withHeader('Content-Transfer-Encoding', 'binary')
             ->withBody($body);
-    }
-
-    public function __destruct()
-    {
-        self::destroyZip($this->zipFile);
     }
 }

@@ -41,23 +41,19 @@ class TalFactoryTest extends MockeryTestCase
 
     private TalFactory $subject;
 
-    #[Override]
-    protected function setUp(): void
-    {
-        $this->configContainer = $this->mock(ConfigContainerInterface::class);
-        $this->guiFactory      = $this->mock(GuiFactoryInterface::class);
-
-        $this->subject = new TalFactory(
-            $this->configContainer,
-            $this->guiFactory
-        );
-    }
-
     public function testCreatePhpTalReturnsInstance(): void
     {
         $this->assertInstanceOf(
             PHPTAL::class,
             $this->subject->createPhpTal()
+        );
+    }
+
+    public function testCreateTalTranslationSeviceReturnsInstance(): void
+    {
+        $this->assertInstanceOf(
+            TalTranslationService::class,
+            $this->subject->createTalTranslationService()
         );
     }
 
@@ -69,11 +65,15 @@ class TalFactoryTest extends MockeryTestCase
         );
     }
 
-    public function testCreateTalTranslationSeviceReturnsInstance(): void
+    #[Override]
+    protected function setUp(): void
     {
-        $this->assertInstanceOf(
-            TalTranslationService::class,
-            $this->subject->createTalTranslationService()
+        $this->configContainer = $this->mock(ConfigContainerInterface::class);
+        $this->guiFactory      = $this->mock(GuiFactoryInterface::class);
+
+        $this->subject = new TalFactory(
+            $this->configContainer,
+            $this->guiFactory
         );
     }
 }

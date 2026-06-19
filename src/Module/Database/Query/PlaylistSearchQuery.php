@@ -52,6 +52,15 @@ final class PlaylistSearchQuery implements QueryInterface
         'user_rating',
     ];
 
+    protected string $base = <<<SQL
+        SELECT %%SELECT%% FROM (
+            SELECT `id`, `id` AS `int_id`, `name`, `user`, `type`, `date`, `last_update`, `last_duration`, `username`, `collaborate`, 'playlist' AS `object_type` FROM `playlist`
+            UNION
+            SELECT CONCAT('smart_', `id`) AS `id`, `id` AS `int_id`, `name`, `user`, `type`, `date`, `last_update`, `last_duration`, `username`, `collaborate`, 'search' AS `object_type` FROM `search`
+        ) AS `playlist`
+        SQL;
+    protected string $select = "`playlist`.`id`";
+
     /** @var string[] $sorts */
     protected array $sorts = [
         'date',
@@ -70,15 +79,15 @@ final class PlaylistSearchQuery implements QueryInterface
         'username',
     ];
 
-    protected string $select = "`playlist`.`id`";
-
-    protected string $base = <<<SQL
-        SELECT %%SELECT%% FROM (
-            SELECT `id`, `id` AS `int_id`, `name`, `user`, `type`, `date`, `last_update`, `last_duration`, `username`, `collaborate`, 'playlist' AS `object_type` FROM `playlist`
-            UNION
-            SELECT CONCAT('smart_', `id`) AS `id`, `id` AS `int_id`, `name`, `user`, `type`, `date`, `last_update`, `last_duration`, `username`, `collaborate`, 'search' AS `object_type` FROM `search`
-        ) AS `playlist`
-        SQL;
+    /**
+     * get_base_sql
+     *
+     * Base SELECT query string without filters or joins
+     */
+    public function get_base_sql(): string
+    {
+        return $this->base;
+    }
 
     /**
      * get_select
@@ -88,16 +97,6 @@ final class PlaylistSearchQuery implements QueryInterface
     public function get_select(): string
     {
         return $this->select;
-    }
-
-    /**
-     * get_base_sql
-     *
-     * Base SELECT query string without filters or joins
-     */
-    public function get_base_sql(): string
-    {
-        return $this->base;
     }
 
     /**

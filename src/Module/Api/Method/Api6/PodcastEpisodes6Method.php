@@ -42,11 +42,9 @@ final class PodcastEpisodes6Method implements MethodInterface
 {
     public const string ACTION = 'podcast_episodes';
 
-    private ModelFactoryInterface $modelFactory;
-
-    private PodcastRepositoryInterface $podcastRepository;
-
     private ConfigContainerInterface $configContainer;
+    private ModelFactoryInterface $modelFactory;
+    private PodcastRepositoryInterface $podcastRepository;
 
     public function __construct(
         ModelFactoryInterface $modelFactory,

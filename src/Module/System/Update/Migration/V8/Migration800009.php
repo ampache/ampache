@@ -33,8 +33,7 @@ use Ampache\Module\System\Update\Migration\AbstractMigration;
 final class Migration800009 extends AbstractMigration
 {
     protected array $changelog = ['Add weight columns to folder table'];
-
-    protected bool $warning = true;
+    protected bool $warning    = true;
 
     public function migrate(): void
     {

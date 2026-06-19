@@ -33,8 +33,7 @@ use Ampache\Module\System\Update\Migration\AbstractMigration;
 final class Migration793001 extends AbstractMigration
 {
     protected array $changelog = ['Fix Licenses on uploaded Songs and delete bad data'];
-
-    protected bool $warning = true;
+    protected bool $warning    = true;
 
     public function migrate(): void
     {

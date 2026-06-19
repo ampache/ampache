@@ -33,22 +33,9 @@ use PHPUnit\Framework\TestCase;
 
 class UserFollowTogglerTest extends TestCase
 {
-    private UserFollowerRepositoryInterface&MockObject $userFollowerRepository;
-
-    private UserActivityPosterInterface&MockObject $userActivityPoster;
-
     private UserFollowToggler $subject;
-
-    protected function setUp(): void
-    {
-        $this->userFollowerRepository = $this->createMock(UserFollowerRepositoryInterface::class);
-        $this->userActivityPoster     = $this->createMock(UserActivityPosterInterface::class);
-
-        $this->subject = new UserFollowToggler(
-            $this->userFollowerRepository,
-            $this->userActivityPoster
-        );
-    }
+    private UserActivityPosterInterface&MockObject $userActivityPoster;
+    private UserFollowerRepositoryInterface&MockObject $userFollowerRepository;
 
     public function testToggleStartsFollowing(): void
     {
@@ -100,6 +87,17 @@ class UserFollowTogglerTest extends TestCase
         $this->subject->toggle(
             $user,
             $followingUser
+        );
+    }
+
+    protected function setUp(): void
+    {
+        $this->userFollowerRepository = $this->createMock(UserFollowerRepositoryInterface::class);
+        $this->userActivityPoster     = $this->createMock(UserActivityPosterInterface::class);
+
+        $this->subject = new UserFollowToggler(
+            $this->userFollowerRepository,
+            $this->userActivityPoster
         );
     }
 }

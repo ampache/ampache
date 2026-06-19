@@ -35,32 +35,31 @@ use Override;
 class AmpachePaypal extends AmpachePlugin implements PluginDisplayUserFieldInterface
 {
     #[Override]
-    public string $name = 'Paypal';
-
-    #[Override]
     public string $categories = 'user';
 
     #[Override]
     public string $description = 'PayPal donation button on user page';
 
     #[Override]
-    public string $url = '';
-
-    #[Override]
-    public string $version = '000001';
+    public string $max_ampache = '999999';
 
     #[Override]
     public string $min_ampache = '370034';
 
     #[Override]
-    public string $max_ampache = '999999';
+    public string $name = 'Paypal';
+
+    #[Override]
+    public string $url = '';
+
+    #[Override]
+    public string $version   = '000001';
+
+    private string $business      = '';
+    private string $currency_code = 'USD';
 
     // These are internal settings used by this class, run this->load to fill them out
     private string $username = '';
-
-    private string $business = '';
-
-    private string $currency_code = 'USD';
 
     /**
      * Constructor
@@ -68,40 +67,6 @@ class AmpachePaypal extends AmpachePlugin implements PluginDisplayUserFieldInter
     public function __construct()
     {
         $this->description = T_('PayPal donation button on user page');
-    }
-
-    /**
-     * install
-     * Inserts plugin preferences into Ampache
-     */
-    public function install(): bool
-    {
-        if (!Preference::insert('paypal_business', T_('PayPal ID'), '', AccessLevelEnum::USER->value, 'string', 'plugins', $this->name)) {
-            return false;
-        }
-
-        return Preference::insert('paypal_currency_code', T_('PayPal Currency Code'), 'USD', AccessLevelEnum::USER->value, 'string', 'plugins', $this->name);
-    }
-
-    /**
-     * uninstall
-     * Removes our preferences from the database returning it to its original form
-     */
-    public function uninstall(): bool
-    {
-        return (
-            Preference::delete('paypal_business') &&
-            Preference::delete('paypal_currency_code')
-        );
-    }
-
-    /**
-     * upgrade
-     * This is a recommended plugin function
-     */
-    public function upgrade(): bool
-    {
-        return true;
     }
 
     /**
@@ -130,6 +95,19 @@ class AmpachePaypal extends AmpachePlugin implements PluginDisplayUserFieldInter
     }
 
     /**
+     * install
+     * Inserts plugin preferences into Ampache
+     */
+    public function install(): bool
+    {
+        if (!Preference::insert('paypal_business', T_('PayPal ID'), '', AccessLevelEnum::USER->value, 'string', 'plugins', $this->name)) {
+            return false;
+        }
+
+        return Preference::insert('paypal_currency_code', T_('PayPal Currency Code'), 'USD', AccessLevelEnum::USER->value, 'string', 'plugins', $this->name);
+    }
+
+    /**
      * load
      * This loads up the data we need into this object, this stuff comes from the preferences.
      */
@@ -151,6 +129,27 @@ class AmpachePaypal extends AmpachePlugin implements PluginDisplayUserFieldInter
             $this->currency_code = 'USD';
         }
 
+        return true;
+    }
+
+    /**
+     * uninstall
+     * Removes our preferences from the database returning it to its original form
+     */
+    public function uninstall(): bool
+    {
+        return (
+            Preference::delete('paypal_business') &&
+            Preference::delete('paypal_currency_code')
+        );
+    }
+
+    /**
+     * upgrade
+     * This is a recommended plugin function
+     */
+    public function upgrade(): bool
+    {
         return true;
     }
 }

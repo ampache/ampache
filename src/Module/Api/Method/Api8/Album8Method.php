@@ -44,7 +44,6 @@ final class Album8Method implements MethodInterface
     public const string ACTION = 'album';
 
     private ModelFactoryInterface $modelFactory;
-
     private StreamFactoryInterface $streamFactory;
 
     public function __construct(

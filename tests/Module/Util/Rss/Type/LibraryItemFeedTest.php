@@ -37,16 +37,6 @@ class LibraryItemFeedTest extends TestCase
 {
     private LibraryItemFeed $subject;
 
-    protected function setUp(): void
-    {
-        $this->subject = new LibraryItemFeed(
-            $this->createMock(ModelFactoryInterface::class),
-            $this->createMock(LibraryItemLoaderInterface::class),
-            $this->createMock(User::class),
-            $this->createMock(library_item::class)
-        );
-    }
-
     public function testConfigureTemplatesConfigures(): void
     {
         $tal = $this->createMock(PhpTalInterface::class);
@@ -62,5 +52,15 @@ class LibraryItemFeedTest extends TestCase
             );
 
         $this->subject->configureTemplate($tal);
+    }
+
+    protected function setUp(): void
+    {
+        $this->subject = new LibraryItemFeed(
+            $this->createMock(ModelFactoryInterface::class),
+            $this->createMock(LibraryItemLoaderInterface::class),
+            $this->createMock(User::class),
+            $this->createMock(library_item::class)
+        );
     }
 }

@@ -34,6 +34,14 @@ namespace Ampache\Repository\Model;
  */
 interface Media extends library_item
 {
+    public function check_play_history(int $user, string $agent, int $date): bool;
+
+    /**
+     * get_stream_name
+     * Get the complete name to display for the stream.
+     */
+    public function get_stream_name(): string;
+
     /**
      * get_stream_types
      *
@@ -43,19 +51,6 @@ interface Media extends library_item
      * @return list<string>
      */
     public function get_stream_types(?string $player = null): array;
-
-    /**
-     * play_url
-     *
-     * Returns the url to stream the specified object
-     */
-    public function play_url(string $additional_params = '', string $player = '', bool $local = false): string;
-
-    /**
-     * get_stream_name
-     * Get the complete name to display for the stream.
-     */
-    public function get_stream_name(): string;
 
     /**
      * get_transcode_settings
@@ -70,9 +65,27 @@ interface Media extends library_item
     public function get_transcode_settings(?string $target = null, ?string $player = null, array $options = []): array;
 
     /**
+     * Returns the filename of the media-item
+     */
+    public function getFileName(): string;
+
+    /**
      * getYear
      */
     public function getYear(): string;
+
+    /**
+     * play_url
+     *
+     * Returns the url to stream the specified object
+     */
+    public function play_url(string $additional_params = '', string $player = '', bool $local = false): string;
+
+    /**
+     * remove
+     * Delete the object from disk and/or database where applicable.
+     */
+    public function remove(): bool;
 
     /**
      * @param array{
@@ -82,17 +95,4 @@ interface Media extends library_item
      * } $location
      */
     public function set_played(int $user_id, string $agent, array $location, int $date): bool;
-
-    public function check_play_history(int $user, string $agent, int $date): bool;
-
-    /**
-     * remove
-     * Delete the object from disk and/or database where applicable.
-     */
-    public function remove(): bool;
-
-    /**
-     * Returns the filename of the media-item
-     */
-    public function getFileName(): string;
 }

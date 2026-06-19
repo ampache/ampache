@@ -32,6 +32,9 @@ final class ShareQuery implements QueryInterface
     public const array FILTERS = [
     ];
 
+    protected string $base   = "SELECT %%SELECT%% FROM `share` ";
+    protected string $select = "`share`.`id`";
+
     /** @var string[] $sorts */
     protected array $sorts = [
         'allow_download',
@@ -46,9 +49,15 @@ final class ShareQuery implements QueryInterface
         'user',
     ];
 
-    protected string $select = "`share`.`id`";
-
-    protected string $base = "SELECT %%SELECT%% FROM `share` ";
+    /**
+     * get_base_sql
+     *
+     * Base SELECT query string without filters or joins
+     */
+    public function get_base_sql(): string
+    {
+        return $this->base;
+    }
 
     /**
      * get_select
@@ -58,16 +67,6 @@ final class ShareQuery implements QueryInterface
     public function get_select(): string
     {
         return $this->select;
-    }
-
-    /**
-     * get_base_sql
-     *
-     * Base SELECT query string without filters or joins
-     */
-    public function get_base_sql(): string
-    {
-        return $this->base;
     }
 
     /**

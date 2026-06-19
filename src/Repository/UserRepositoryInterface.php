@@ -30,9 +30,29 @@ use Ampache\Repository\Model\User;
 interface UserRepositoryInterface
 {
     /**
-     * This returns a built user from a rsstoken
+     * Activates the user by username
      */
-    public function getByRssToken(string $rssToken): ?User;
+    public function activateByUsername(string $username): void;
+
+    /**
+     * Remove details for users that no longer exist.
+     */
+    public function collectGarbage(): void;
+
+    /**
+     * this enables the user
+     */
+    public function enable(int $userId): void;
+
+    /**
+     * This returns a built user from an apikey
+     */
+    public function findByApiKey(string $apikey): ?User;
+
+    /**
+     * This returns a built user from a email
+     */
+    public function findByEmail(string $email): ?User;
 
     /**
      * Finds a user by its id
@@ -40,19 +60,37 @@ interface UserRepositoryInterface
     public function findById(int $id): ?User;
 
     /**
-     * Lookup for a user id with a certain name
+     * This returns a built user from a streamToken
      */
-    public function idByUsername(string $username): int;
+    public function findByStreamToken(string $streamToken): ?User;
 
     /**
-     * Lookup for a user id with a certain email
+     * This returns a built user from a username
      */
-    public function idByEmail(string $email): int;
+    public function findByUsername(string $username): ?User;
 
     /**
-     * Look up a user id by reset token (DOES NOT FIND ADMIN USERS)
+     * This returns users list related to a website.
+     *
+     * @return int[]
+     *
+     * @todo rework. the query limits the results to 1, so it doesn't need to return an array
      */
-    public function idByResetToken(string $token): int;
+    public function findByWebsite(string $website): array;
+
+    /**
+     * This returns a built user from a rsstoken
+     */
+    public function getByRssToken(string $rssToken): ?User;
+
+    /**
+     * Returns statistical data related to user accounts and active users
+     *
+     * @param int $timePeriod Time period to consider sessions `active` (in seconds)
+     *
+     * @return array{users: int, connected: int}
+     */
+    public function getStatistics(int $timePeriod = 1200): array;
 
     /**
      * This returns all valid users in database.
@@ -69,38 +107,34 @@ interface UserRepositoryInterface
     public function getValidArray(bool $includeDisabled = false): array;
 
     /**
-     * Remove details for users that no longer exist.
+     * Retrieve the validation code of a certain user by its username
      */
-    public function collectGarbage(): void;
+    public function getValidationByUsername(string $username): ?string;
 
     /**
-     * This returns a built user from a username
+     * Lookup for a user id with a certain email
      */
-    public function findByUsername(string $username): ?User;
+    public function idByEmail(string $email): int;
 
     /**
-     * This returns a built user from a email
+     * Look up a user id by reset token (DOES NOT FIND ADMIN USERS)
      */
-    public function findByEmail(string $email): ?User;
+    public function idByResetToken(string $token): int;
 
     /**
-     * This returns users list related to a website.
-     *
-     * @return int[]
-     *
-     * @todo rework. the query limits the results to 1, so it doesn't need to return an array
+     * Lookup for a user id with a certain name
      */
-    public function findByWebsite(string $website): array;
+    public function idByUsername(string $username): int;
 
     /**
-     * This returns a built user from an apikey
+     * Get the current hashed user password
      */
-    public function findByApiKey(string $apikey): ?User;
+    public function retrievePasswordFromUser(int $userId): string;
 
     /**
-     * This returns a built user from a streamToken
+     * Updates a users api key
      */
-    public function findByStreamToken(string $streamToken): ?User;
+    public function updateApiKey(int $userId, string $apikey): void;
 
     /**
      * updates the last seen data for this user
@@ -108,21 +142,6 @@ interface UserRepositoryInterface
     public function updateLastSeen(
         int $userId,
     ): void;
-
-    /**
-     * this enables the user
-     */
-    public function enable(int $userId): void;
-
-    /**
-     * Retrieve the validation code of a certain user by its username
-     */
-    public function getValidationByUsername(string $username): ?string;
-
-    /**
-     * Activates the user by username
-     */
-    public function activateByUsername(string $username): void;
 
     /**
      * Updates a users RSS token
@@ -133,23 +152,4 @@ interface UserRepositoryInterface
      * Updates a users Stream token
      */
     public function updateStreamToken(int $userId, string $userName, string $streamToken): void;
-
-    /**
-     * Updates a users api key
-     */
-    public function updateApiKey(int $userId, string $apikey): void;
-
-    /**
-     * Get the current hashed user password
-     */
-    public function retrievePasswordFromUser(int $userId): string;
-
-    /**
-     * Returns statistical data related to user accounts and active users
-     *
-     * @param int $timePeriod Time period to consider sessions `active` (in seconds)
-     *
-     * @return array{users: int, connected: int}
-     */
-    public function getStatistics(int $timePeriod = 1200): array;
 }

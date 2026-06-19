@@ -96,6 +96,99 @@ final readonly class ArtCleanup implements ArtCleanupInterface
     }
 
     /**
+     * This cleans up art that no longer has a corresponding object
+     */
+    public function collectGarbage(): void
+    {
+        $types = self::TYPES;
+
+        $album_art_store_disk = $this->configContainer->get(ConfigurationKeyEnum::ALBUM_ART_STORE_DISK);
+        // iterate over our types and delete the images
+        foreach ($types as $type) {
+            if ($album_art_store_disk) {
+                $sql        = "SELECT `image`.`object_id`, `image`.`object_type` FROM `image` LEFT JOIN `" . $type . "` ON `" . $type . "`.`id`=" . "`image`.`object_id` WHERE `object_type`='" . $type . "' AND `" . $type . "`.`id` IS NULL";
+                $db_results = Dba::read($sql);
+                while ($row = Dba::fetch_row($db_results)) {
+                    Art::delete_from_dir($row[1], (int)$row[0]);
+                }
+            }
+
+            $sql = "DELETE FROM `image` USING `image` LEFT JOIN `" . $type . "` ON `" . $type . "`.`id`=" . "`image`.`object_id` WHERE `object_type`='" . $type . "' AND `" . $type . "`.`id` IS NULL";
+            Dba::write($sql, [], true);
+        }
+    }
+
+    /**
+     * This cleans up art that no longer has a corresponding object
+     */
+    public function collectGarbageForObject(string $object_type, int $object_id): void
+    {
+        $types = self::TYPES;
+
+        $album_art_store_disk = $this->configContainer->get(ConfigurationKeyEnum::ALBUM_ART_STORE_DISK);
+        if (in_array($object_type, $types, true)) {
+            if ($album_art_store_disk) {
+                Art::delete_from_dir($object_type, $object_id);
+            }
+
+            $sql = "DELETE FROM `image` WHERE `object_type` = ? AND `object_id` = ?";
+            Dba::write($sql, [$object_type, $object_id], true);
+        } else {
+            debug_event(self::class, 'Garbage collect on type `' . $object_type . '` is not supported.', 1);
+        }
+    }
+
+    /**
+     * This resets the art in the database
+     */
+    public function deleteForArt(Art $art): void
+    {
+        if ($this->configContainer->get(ConfigurationKeyEnum::ALBUM_ART_STORE_DISK)) {
+            Art::delete_from_dir($art->object_type, $art->object_id, $art->kind);
+        }
+
+        $sql = "DELETE FROM `image` WHERE `object_id` = ? AND `object_type` = ? AND `kind` = ?";
+        Dba::write($sql, [$art->object_id, $art->object_type, $art->kind]);
+    }
+
+    /**
+     * Remove all thumbnail art in the database keeping original images
+     */
+    public function deleteThumbnails(Interactor $interactor, bool $delete): void
+    {
+        $sql        = "SELECT * FROM `image` WHERE `size` != 'original';";
+        $db_results = Dba::read($sql);
+        $thumbnails = [];
+        while ($row = Dba::fetch_assoc($db_results)) {
+            $thumbnails[] = [
+                'id' => $row['id'],
+                'object_id' => $row['object_id'],
+                'object_type' => $row['object_type'],
+                'kind' => $row['kind'],
+                'size' => $row['size'],
+                'mime' => $row['mime'],
+            ];
+        }
+
+        $interactor->info(
+            'Found ' . count($thumbnails) . ' thumbnails to delete',
+            true
+        );
+
+        if ($delete) {
+            $album_art_store_disk = $this->configContainer->get(ConfigurationKeyEnum::ALBUM_ART_STORE_DISK);
+            foreach ($thumbnails as $thumbnail) {
+                if ($album_art_store_disk) {
+                    Art::delete_from_dir($thumbnail['object_type'], $thumbnail['object_id'], $thumbnail['kind'], $thumbnail['size'], $thumbnail['mime']);
+                }
+
+                $sql = "DELETE FROM `image` WHERE `id` = ? AND `size` != 'original'";
+                Dba::write($sql, [$thumbnail['id']]);
+            }
+        }
+    }
+
+    /**
      * clean up the local metadata folder by moving thumbnails to their correct location
      */
     public function migrateThumbnails(Interactor $interactor, bool $delete): void
@@ -303,99 +396,6 @@ final readonly class ArtCleanup implements ArtCleanupInterface
                 'No local metadata directory configured, skipping thumbnail migration',
                 true
             );
-        }
-    }
-
-    /**
-     * This cleans up art that no longer has a corresponding object
-     */
-    public function collectGarbageForObject(string $object_type, int $object_id): void
-    {
-        $types = self::TYPES;
-
-        $album_art_store_disk = $this->configContainer->get(ConfigurationKeyEnum::ALBUM_ART_STORE_DISK);
-        if (in_array($object_type, $types, true)) {
-            if ($album_art_store_disk) {
-                Art::delete_from_dir($object_type, $object_id);
-            }
-
-            $sql = "DELETE FROM `image` WHERE `object_type` = ? AND `object_id` = ?";
-            Dba::write($sql, [$object_type, $object_id], true);
-        } else {
-            debug_event(self::class, 'Garbage collect on type `' . $object_type . '` is not supported.', 1);
-        }
-    }
-
-    /**
-     * This cleans up art that no longer has a corresponding object
-     */
-    public function collectGarbage(): void
-    {
-        $types = self::TYPES;
-
-        $album_art_store_disk = $this->configContainer->get(ConfigurationKeyEnum::ALBUM_ART_STORE_DISK);
-        // iterate over our types and delete the images
-        foreach ($types as $type) {
-            if ($album_art_store_disk) {
-                $sql        = "SELECT `image`.`object_id`, `image`.`object_type` FROM `image` LEFT JOIN `" . $type . "` ON `" . $type . "`.`id`=" . "`image`.`object_id` WHERE `object_type`='" . $type . "' AND `" . $type . "`.`id` IS NULL";
-                $db_results = Dba::read($sql);
-                while ($row = Dba::fetch_row($db_results)) {
-                    Art::delete_from_dir($row[1], (int)$row[0]);
-                }
-            }
-
-            $sql = "DELETE FROM `image` USING `image` LEFT JOIN `" . $type . "` ON `" . $type . "`.`id`=" . "`image`.`object_id` WHERE `object_type`='" . $type . "' AND `" . $type . "`.`id` IS NULL";
-            Dba::write($sql, [], true);
-        }
-    }
-
-    /**
-     * This resets the art in the database
-     */
-    public function deleteForArt(Art $art): void
-    {
-        if ($this->configContainer->get(ConfigurationKeyEnum::ALBUM_ART_STORE_DISK)) {
-            Art::delete_from_dir($art->object_type, $art->object_id, $art->kind);
-        }
-
-        $sql = "DELETE FROM `image` WHERE `object_id` = ? AND `object_type` = ? AND `kind` = ?";
-        Dba::write($sql, [$art->object_id, $art->object_type, $art->kind]);
-    }
-
-    /**
-     * Remove all thumbnail art in the database keeping original images
-     */
-    public function deleteThumbnails(Interactor $interactor, bool $delete): void
-    {
-        $sql        = "SELECT * FROM `image` WHERE `size` != 'original';";
-        $db_results = Dba::read($sql);
-        $thumbnails = [];
-        while ($row = Dba::fetch_assoc($db_results)) {
-            $thumbnails[] = [
-                'id' => $row['id'],
-                'object_id' => $row['object_id'],
-                'object_type' => $row['object_type'],
-                'kind' => $row['kind'],
-                'size' => $row['size'],
-                'mime' => $row['mime'],
-            ];
-        }
-
-        $interactor->info(
-            'Found ' . count($thumbnails) . ' thumbnails to delete',
-            true
-        );
-
-        if ($delete) {
-            $album_art_store_disk = $this->configContainer->get(ConfigurationKeyEnum::ALBUM_ART_STORE_DISK);
-            foreach ($thumbnails as $thumbnail) {
-                if ($album_art_store_disk) {
-                    Art::delete_from_dir($thumbnail['object_type'], $thumbnail['object_id'], $thumbnail['kind'], $thumbnail['size'], $thumbnail['mime']);
-                }
-
-                $sql = "DELETE FROM `image` WHERE `id` = ? AND `size` != 'original'";
-                Dba::write($sql, [$thumbnail['id']]);
-            }
         }
     }
 }

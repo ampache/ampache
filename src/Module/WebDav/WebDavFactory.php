@@ -39,16 +39,14 @@ final readonly class WebDavFactory implements WebDavFactoryInterface
     {
     }
 
-    public function createWebDavAuth(): WebDavAuth
+    public function createBrowserPlugin(bool $enablePost): BrowserPlugin
     {
-        return new WebDavAuth(
-            $this->authenticationManager
-        );
+        return new BrowserPlugin($enablePost);
     }
 
-    public function createWebDavCatalog(int $catalog_id = 0): WebDavCatalog
+    public function createPlugin(?BackendInterface $backend): Plugin
     {
-        return new WebDavCatalog($catalog_id);
+        return new Plugin($backend);
     }
 
     /**
@@ -59,13 +57,15 @@ final readonly class WebDavFactory implements WebDavFactoryInterface
         return new Server($node);
     }
 
-    public function createPlugin(?BackendInterface $backend): Plugin
+    public function createWebDavAuth(): WebDavAuth
     {
-        return new Plugin($backend);
+        return new WebDavAuth(
+            $this->authenticationManager
+        );
     }
 
-    public function createBrowserPlugin(bool $enablePost): BrowserPlugin
+    public function createWebDavCatalog(int $catalog_id = 0): WebDavCatalog
     {
-        return new BrowserPlugin($enablePost);
+        return new WebDavCatalog($catalog_id);
     }
 }

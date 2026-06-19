@@ -39,26 +39,10 @@ use Psr\Http\Message\ServerRequestInterface;
 
 class ShowPreferencesActionTest extends TestCase
 {
-    private UiInterface&MockObject $ui;
-
     private ModelFactoryInterface&MockObject $modelFactory;
-
     private PreferenceRepositoryInterface&MockObject $preferenceRepository;
-
     private ShowPreferencesAction $subject;
-
-    protected function setUp(): void
-    {
-        $this->ui                   = $this->createMock(UiInterface::class);
-        $this->modelFactory         = $this->createMock(ModelFactoryInterface::class);
-        $this->preferenceRepository = $this->createMock(PreferenceRepositoryInterface::class);
-
-        $this->subject = new ShowPreferencesAction(
-            $this->ui,
-            $this->modelFactory,
-            $this->preferenceRepository,
-        );
-    }
+    private UiInterface&MockObject $ui;
 
     public function testRunErrorsIfUserWasNotFound(): void
     {
@@ -142,6 +126,19 @@ class ShowPreferencesActionTest extends TestCase
 
         self::assertNull(
             $this->subject->run($request, $gatekeeper)
+        );
+    }
+
+    protected function setUp(): void
+    {
+        $this->ui                   = $this->createMock(UiInterface::class);
+        $this->modelFactory         = $this->createMock(ModelFactoryInterface::class);
+        $this->preferenceRepository = $this->createMock(PreferenceRepositoryInterface::class);
+
+        $this->subject = new ShowPreferencesAction(
+            $this->ui,
+            $this->modelFactory,
+            $this->preferenceRepository,
         );
     }
 }

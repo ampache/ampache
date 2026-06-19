@@ -30,13 +30,6 @@ namespace Ampache\Module\Catalog;
  */
 class SubsonicClient
 {
-    protected string $_serverUrl;
-
-    protected string $_serverPort;
-
-    /** @var string[] $_creds */
-    protected array $_creds;
-
     /** @var string[] $_commands */
     protected array $_commands = [
         'addChatMessage',
@@ -77,6 +70,12 @@ class SubsonicClient
         'updateShare',
     ];
 
+    /** @var string[] $_creds */
+    protected array $_creds;
+
+    protected string $_serverPort;
+    protected string $_serverUrl;
+
     /**
      * SubsonicClient constructor.
      */
@@ -99,11 +98,16 @@ class SubsonicClient
     }
 
     /**
-     * @param array<string, int|string> $object
+     * getServer
      */
-    public function querySubsonic(string $action, array $object = [], ?bool $rawAnswer = false): object|bool|array|string
+    public function getServer(): string
     {
-        return $this->_querySubsonic($action, $object, $rawAnswer);
+        return $this->_serverUrl . ":" . $this->_serverPort;
+    }
+
+    public function isCommand(string $command): bool
+    {
+        return in_array($command, $this->_commands);
     }
 
     /**
@@ -117,39 +121,11 @@ class SubsonicClient
     }
 
     /**
-     * @param array<string, int|string>|null $object
+     * @param array<string, int|string> $object
      */
-    protected function _querySubsonic(string $action, ?array $object = [], ?bool $rawAnswer = false): object|bool|array|string
+    public function querySubsonic(string $action, array $object = [], ?bool $rawAnswer = false): object|bool|array|string
     {
-        // Make sure the command is in the list of commands
-        if ($this->isCommand($action)) {
-            $url  = $this->parameterize($this->getServer() . "/rest/" . $action . ".view?", $object);
-            $curl = curl_init($url);
-            if ($curl) {
-                curl_setopt_array(
-                    $curl,
-                    [
-                        CURLOPT_HEADER => false,
-                        CURLOPT_RETURNTRANSFER => true,
-                        CURLOPT_CONNECTTIMEOUT => 8,
-                        CURLOPT_SSL_VERIFYPEER => false,
-                        CURLOPT_FOLLOWLOCATION => true,
-                        CURLOPT_PORT => (int)($this->_serverPort)
-                    ]
-                );
-
-                $answer = curl_exec($curl);
-                if ($rawAnswer) {
-                    return $answer;
-                }
-
-                return $this->parseResponse($answer);
-            }
-        } else {
-            return $this->error("Error: Invalid subsonic command: " . $action, $object);
-        }
-
-        return false;
+        return $this->_querySubsonic($action, $object, $rawAnswer);
     }
 
     public function setServer(string $server, ?string $port = null): void
@@ -188,11 +164,39 @@ class SubsonicClient
     }
 
     /**
-     * getServer
+     * @param array<string, int|string>|null $object
      */
-    public function getServer(): string
+    protected function _querySubsonic(string $action, ?array $object = [], ?bool $rawAnswer = false): object|bool|array|string
     {
-        return $this->_serverUrl . ":" . $this->_serverPort;
+        // Make sure the command is in the list of commands
+        if ($this->isCommand($action)) {
+            $url  = $this->parameterize($this->getServer() . "/rest/" . $action . ".view?", $object);
+            $curl = curl_init($url);
+            if ($curl) {
+                curl_setopt_array(
+                    $curl,
+                    [
+                        CURLOPT_HEADER => false,
+                        CURLOPT_RETURNTRANSFER => true,
+                        CURLOPT_CONNECTTIMEOUT => 8,
+                        CURLOPT_SSL_VERIFYPEER => false,
+                        CURLOPT_FOLLOWLOCATION => true,
+                        CURLOPT_PORT => (int)($this->_serverPort)
+                    ]
+                );
+
+                $answer = curl_exec($curl);
+                if ($rawAnswer) {
+                    return $answer;
+                }
+
+                return $this->parseResponse($answer);
+            }
+        } else {
+            return $this->error("Error: Invalid subsonic command: " . $action, $object);
+        }
+
+        return false;
     }
 
     /**
@@ -227,11 +231,6 @@ class SubsonicClient
         debug_event(self::class, 'parseResponse ERROR: ' . print_r($response, true), 1);
 
         return $this->error("Invalid response from server!");
-    }
-
-    public function isCommand(string $command): bool
-    {
-        return in_array($command, $this->_commands);
     }
 
     /**

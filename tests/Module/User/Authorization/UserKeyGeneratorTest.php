@@ -37,25 +37,13 @@ use Psr\Log\LoggerInterface;
 
 class UserKeyGeneratorTest extends MockeryTestCase
 {
-    /** @var UserRepositoryInterface|MockInterface|null */
-    private MockInterface $userRepository;
-
     /** @var LoggerInterface|MockInterface|null */
     private MockInterface $logger;
 
     private ?UserKeyGenerator $subject;
 
-    #[Override]
-    protected function setUp(): void
-    {
-        $this->userRepository = $this->mock(UserRepositoryInterface::class);
-        $this->logger         = $this->mock(LoggerInterface::class);
-
-        $this->subject = new UserKeyGenerator(
-            $this->userRepository,
-            $this->logger
-        );
-    }
+    /** @var UserRepositoryInterface|MockInterface|null */
+    private MockInterface $userRepository;
 
     public function testGenerateApiKeyGeneratesAndSetsNewKey(): void
     {
@@ -94,6 +82,27 @@ class UserKeyGeneratorTest extends MockeryTestCase
         );
     }
 
+    public function testGenerateRssTokenDoesNothingOnError(): void
+    {
+        $errorMessage = 'some-error-message';
+
+        $user = $this->mock(User::class);
+
+        $user->shouldReceive('getId')
+            ->withNoArgs()
+            ->once()
+            ->andThrow(new Exception($errorMessage));
+
+        $this->logger->shouldReceive('error')
+            ->with(
+                sprintf('Could not generate random_bytes: %s', $errorMessage),
+                [LegacyLogger::CONTEXT_TYPE => UserKeyGenerator::class]
+            )
+            ->once();
+
+        $this->subject->generateRssToken($user);
+    }
+
     public function testGenerateRssTokenGeneratesAndSetsToken(): void
     {
         $userId = 666;
@@ -122,24 +131,15 @@ class UserKeyGeneratorTest extends MockeryTestCase
         $this->subject->generateRssToken($user);
     }
 
-    public function testGenerateRssTokenDoesNothingOnError(): void
+    #[Override]
+    protected function setUp(): void
     {
-        $errorMessage = 'some-error-message';
+        $this->userRepository = $this->mock(UserRepositoryInterface::class);
+        $this->logger         = $this->mock(LoggerInterface::class);
 
-        $user = $this->mock(User::class);
-
-        $user->shouldReceive('getId')
-            ->withNoArgs()
-            ->once()
-            ->andThrow(new Exception($errorMessage));
-
-        $this->logger->shouldReceive('error')
-            ->with(
-                sprintf('Could not generate random_bytes: %s', $errorMessage),
-                [LegacyLogger::CONTEXT_TYPE => UserKeyGenerator::class]
-            )
-            ->once();
-
-        $this->subject->generateRssToken($user);
+        $this->subject = new UserKeyGenerator(
+            $this->userRepository,
+            $this->logger
+        );
     }
 }

@@ -45,11 +45,11 @@ use Psr\Http\Message\StreamInterface;
 
 class GenerateConfigActionTest extends MockeryTestCase
 {
-    /** @var ConfigContainerInterface|MockInterface|null */
-    private MockInterface $configContainer;
-
     /** @var Horde_Browser|MockInterface|null */
     private MockInterface $browser;
+
+    /** @var ConfigContainerInterface|MockInterface|null */
+    private MockInterface $configContainer;
 
     /** @var InstallationHelperInterface|MockInterface|null */
     private MockInterface $installationHelper;
@@ -61,59 +61,6 @@ class GenerateConfigActionTest extends MockeryTestCase
     private MockInterface $streamFactory;
 
     private ?GenerateConfigAction $subject;
-
-    #[Override]
-    protected function setUp(): void
-    {
-        $this->configContainer    = $this->mock(ConfigContainerInterface::class);
-        $this->browser            = $this->mock(Horde_Browser::class);
-        $this->installationHelper = $this->mock(InstallationHelperInterface::class);
-        $this->responseFactory    = $this->mock(ResponseFactoryInterface::class);
-        $this->streamFactory      = $this->mock(StreamFactoryInterface::class);
-
-        $this->subject = new GenerateConfigAction(
-            $this->configContainer,
-            $this->browser,
-            $this->installationHelper,
-            $this->responseFactory,
-            $this->streamFactory
-        );
-    }
-
-    public function testRunThrowsAccessViolationIfAccessIsDenied(): void
-    {
-        $this->expectException(AccessDeniedException::class);
-
-        $request    = $this->mock(ServerRequestInterface::class);
-        $gatekeeper = $this->mock(GuiGatekeeperInterface::class);
-
-        $gatekeeper->shouldReceive('mayAccess')
-            ->with(AccessTypeEnum::INTERFACE, AccessLevelEnum::ADMIN)
-            ->once()
-            ->andReturnFalse();
-
-        $this->subject->run($request, $gatekeeper);
-    }
-
-    public function testRunThrowsAccessViolationIfDemoMode(): void
-    {
-        $this->expectException(AccessDeniedException::class);
-
-        $request    = $this->mock(ServerRequestInterface::class);
-        $gatekeeper = $this->mock(GuiGatekeeperInterface::class);
-
-        $gatekeeper->shouldReceive('mayAccess')
-            ->with(AccessTypeEnum::INTERFACE, AccessLevelEnum::ADMIN)
-            ->once()
-            ->andReturnTrue();
-
-        $this->configContainer->shouldReceive('isFeatureEnabled')
-            ->with(ConfigurationKeyEnum::DEMO_MODE)
-            ->once()
-            ->andReturnTrue();
-
-        $this->subject->run($request, $gatekeeper);
-    }
 
     public function testRunReturnsResponse(): void
     {
@@ -184,5 +131,58 @@ class GenerateConfigActionTest extends MockeryTestCase
             ->andReturn($stream);
 
         $this->subject->run($request, $gatekeeper);
+    }
+
+    public function testRunThrowsAccessViolationIfAccessIsDenied(): void
+    {
+        $this->expectException(AccessDeniedException::class);
+
+        $request    = $this->mock(ServerRequestInterface::class);
+        $gatekeeper = $this->mock(GuiGatekeeperInterface::class);
+
+        $gatekeeper->shouldReceive('mayAccess')
+            ->with(AccessTypeEnum::INTERFACE, AccessLevelEnum::ADMIN)
+            ->once()
+            ->andReturnFalse();
+
+        $this->subject->run($request, $gatekeeper);
+    }
+
+    public function testRunThrowsAccessViolationIfDemoMode(): void
+    {
+        $this->expectException(AccessDeniedException::class);
+
+        $request    = $this->mock(ServerRequestInterface::class);
+        $gatekeeper = $this->mock(GuiGatekeeperInterface::class);
+
+        $gatekeeper->shouldReceive('mayAccess')
+            ->with(AccessTypeEnum::INTERFACE, AccessLevelEnum::ADMIN)
+            ->once()
+            ->andReturnTrue();
+
+        $this->configContainer->shouldReceive('isFeatureEnabled')
+            ->with(ConfigurationKeyEnum::DEMO_MODE)
+            ->once()
+            ->andReturnTrue();
+
+        $this->subject->run($request, $gatekeeper);
+    }
+
+    #[Override]
+    protected function setUp(): void
+    {
+        $this->configContainer    = $this->mock(ConfigContainerInterface::class);
+        $this->browser            = $this->mock(Horde_Browser::class);
+        $this->installationHelper = $this->mock(InstallationHelperInterface::class);
+        $this->responseFactory    = $this->mock(ResponseFactoryInterface::class);
+        $this->streamFactory      = $this->mock(StreamFactoryInterface::class);
+
+        $this->subject = new GenerateConfigAction(
+            $this->configContainer,
+            $this->browser,
+            $this->installationHelper,
+            $this->responseFactory,
+            $this->streamFactory
+        );
     }
 }

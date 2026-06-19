@@ -29,11 +29,6 @@ use PhpTal\TranslationServiceInterface;
 
 final class TalTranslationService implements TranslationServiceInterface
 {
-    public function setLanguage(...$langs): string
-    {
-        return (string)current($langs);
-    }
-
     /**
      * Not implemented
      */
@@ -41,9 +36,9 @@ final class TalTranslationService implements TranslationServiceInterface
     {
     }
 
-    public function useDomain(string $domain): ?string
+    public function setLanguage(...$langs): string
     {
-        return null;
+        return (string)current($langs);
     }
 
     /**
@@ -56,5 +51,10 @@ final class TalTranslationService implements TranslationServiceInterface
     public function translate(string $key, bool $htmlescape): string
     {
         return T_($key);
+    }
+
+    public function useDomain(string $domain): ?string
+    {
+        return null;
     }
 }

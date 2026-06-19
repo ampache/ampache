@@ -41,9 +41,6 @@ use Psr\Http\Message\StreamInterface;
 
 class ShowActionTest extends MockeryTestCase
 {
-    /** @var TalFactoryInterface|MockInterface|null */
-    private ?MockInterface $talFactory;
-
     /** @var GuiFactoryInterface|MockInterface|null */
     private ?MockInterface $guiFactory;
 
@@ -55,21 +52,8 @@ class ShowActionTest extends MockeryTestCase
 
     private ?ShowAction $subject;
 
-    #[Override]
-    protected function setUp(): void
-    {
-        $this->talFactory      = $this->mock(TalFactoryInterface::class);
-        $this->guiFactory      = $this->mock(GuiFactoryInterface::class);
-        $this->responseFactory = $this->mock(ResponseFactoryInterface::class);
-        $this->streamFactory   = $this->mock(StreamFactoryInterface::class);
-
-        $this->subject = new ShowAction(
-            $this->talFactory,
-            $this->guiFactory,
-            $this->responseFactory,
-            $this->streamFactory
-        );
-    }
+    /** @var TalFactoryInterface|MockInterface|null */
+    private ?MockInterface $talFactory;
 
     public function testRunReturnsRenderedResponse(): void
     {
@@ -114,6 +98,22 @@ class ShowActionTest extends MockeryTestCase
         $this->assertSame(
             $response,
             $this->subject->run($request, $gatekeeper)
+        );
+    }
+
+    #[Override]
+    protected function setUp(): void
+    {
+        $this->talFactory      = $this->mock(TalFactoryInterface::class);
+        $this->guiFactory      = $this->mock(GuiFactoryInterface::class);
+        $this->responseFactory = $this->mock(ResponseFactoryInterface::class);
+        $this->streamFactory   = $this->mock(StreamFactoryInterface::class);
+
+        $this->subject = new ShowAction(
+            $this->talFactory,
+            $this->guiFactory,
+            $this->responseFactory,
+            $this->streamFactory
         );
     }
 }

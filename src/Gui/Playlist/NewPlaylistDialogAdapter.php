@@ -42,6 +42,29 @@ final readonly class NewPlaylistDialogAdapter implements NewPlaylistDialogAdapte
     }
 
     /**
+     * Returns the ajax api base uri
+     */
+    public function getAjaxUri(): string
+    {
+        return $this->ajaxUriRetriever->getAjaxUri();
+    }
+
+    public function getNewPlaylistTitle(): string
+    {
+        return T_('Playlist Name');
+    }
+
+    public function getObjectIds(): string
+    {
+        return $this->object_ids;
+    }
+
+    public function getObjectType(): string
+    {
+        return $this->object_type;
+    }
+
+    /**
      * Returns a list containing all playlists of the current user
      *
      * @return Playlist[]
@@ -51,28 +74,5 @@ final readonly class NewPlaylistDialogAdapter implements NewPlaylistDialogAdapte
         return $this->playlistLoader->loadByUserId(
             $this->gatekeeper->getUserId()
         );
-    }
-
-    /**
-     * Returns the ajax api base uri
-     */
-    public function getAjaxUri(): string
-    {
-        return $this->ajaxUriRetriever->getAjaxUri();
-    }
-
-    public function getObjectType(): string
-    {
-        return $this->object_type;
-    }
-
-    public function getObjectIds(): string
-    {
-        return $this->object_ids;
-    }
-
-    public function getNewPlaylistTitle(): string
-    {
-        return T_('Playlist Name');
     }
 }

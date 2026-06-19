@@ -54,20 +54,6 @@ class WriteConfigActionTest extends MockeryTestCase
 
     private ?WriteConfigAction $subject;
 
-    #[Override]
-    protected function setUp(): void
-    {
-        $this->configContainer    = $this->mock(ConfigContainerInterface::class);
-        $this->installationHelper = $this->mock(InstallationHelperInterface::class);
-        $this->responseFactory    = $this->mock(ResponseFactoryInterface::class);
-
-        $this->subject = new WriteConfigAction(
-            $this->configContainer,
-            $this->installationHelper,
-            $this->responseFactory
-        );
-    }
-
     public function testRunThrowsExceptionIfAccessIsDenied(): void
     {
         $this->expectException(AccessDeniedException::class);
@@ -101,55 +87,6 @@ class WriteConfigActionTest extends MockeryTestCase
             ->andReturnTrue();
 
         $this->subject->run($request, $gatekeeper);
-    }
-
-    public function testRunWritesConfigAndReturnsSuccessResponse(): void
-    {
-        $request    = $this->mock(ServerRequestInterface::class);
-        $gatekeeper = $this->mock(GuiGatekeeperInterface::class);
-        $response   = $this->mock(ResponseInterface::class);
-
-        $web_path = 'some-web-path';
-
-        $gatekeeper->shouldReceive('mayAccess')
-            ->with(AccessTypeEnum::INTERFACE, AccessLevelEnum::ADMIN)
-            ->once()
-            ->andReturnTrue();
-
-        $this->configContainer->shouldReceive('isFeatureEnabled')
-            ->with(ConfigurationKeyEnum::DEMO_MODE)
-            ->once()
-            ->andReturnFalse();
-
-        $this->installationHelper->shouldReceive('write_config')
-            ->with(
-                Mockery::on(static fn (): bool => true)
-            )
-            ->once()
-            ->andReturnTrue();
-
-        $this->responseFactory->shouldReceive('createResponse')
-            ->with(RFC7231::FOUND)
-            ->once()
-            ->andReturn($response);
-
-        $response->shouldReceive('withHeader')
-            ->with(
-                'Location',
-                sprintf('%s/index.php', $web_path)
-            )
-            ->once()
-            ->andReturnSelf();
-
-        $this->configContainer->shouldReceive('getWebPath')
-            ->withNoArgs()
-            ->once()
-            ->andReturn($web_path);
-
-        $this->assertSame(
-            $response,
-            $this->subject->run($request, $gatekeeper)
-        );
     }
 
     public function testRunWritesConfigAndReturnsFailureResponse(): void
@@ -204,6 +141,69 @@ class WriteConfigActionTest extends MockeryTestCase
         $this->assertSame(
             $response,
             $this->subject->run($request, $gatekeeper)
+        );
+    }
+
+    public function testRunWritesConfigAndReturnsSuccessResponse(): void
+    {
+        $request    = $this->mock(ServerRequestInterface::class);
+        $gatekeeper = $this->mock(GuiGatekeeperInterface::class);
+        $response   = $this->mock(ResponseInterface::class);
+
+        $web_path = 'some-web-path';
+
+        $gatekeeper->shouldReceive('mayAccess')
+            ->with(AccessTypeEnum::INTERFACE, AccessLevelEnum::ADMIN)
+            ->once()
+            ->andReturnTrue();
+
+        $this->configContainer->shouldReceive('isFeatureEnabled')
+            ->with(ConfigurationKeyEnum::DEMO_MODE)
+            ->once()
+            ->andReturnFalse();
+
+        $this->installationHelper->shouldReceive('write_config')
+            ->with(
+                Mockery::on(static fn (): bool => true)
+            )
+            ->once()
+            ->andReturnTrue();
+
+        $this->responseFactory->shouldReceive('createResponse')
+            ->with(RFC7231::FOUND)
+            ->once()
+            ->andReturn($response);
+
+        $response->shouldReceive('withHeader')
+            ->with(
+                'Location',
+                sprintf('%s/index.php', $web_path)
+            )
+            ->once()
+            ->andReturnSelf();
+
+        $this->configContainer->shouldReceive('getWebPath')
+            ->withNoArgs()
+            ->once()
+            ->andReturn($web_path);
+
+        $this->assertSame(
+            $response,
+            $this->subject->run($request, $gatekeeper)
+        );
+    }
+
+    #[Override]
+    protected function setUp(): void
+    {
+        $this->configContainer    = $this->mock(ConfigContainerInterface::class);
+        $this->installationHelper = $this->mock(InstallationHelperInterface::class);
+        $this->responseFactory    = $this->mock(ResponseFactoryInterface::class);
+
+        $this->subject = new WriteConfigAction(
+            $this->configContainer,
+            $this->installationHelper,
+            $this->responseFactory
         );
     }
 }

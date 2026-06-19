@@ -34,16 +34,6 @@ final class CatalogStats implements CatalogStatsInterface
     {
     }
 
-    public function getConnectedCount(): int
-    {
-        return (int)($this->stats['connected'] ?? 0);
-    }
-
-    public function getUserCount(): int
-    {
-        return (int)($this->stats['user'] ?? 0);
-    }
-
     public function getAlbumCount(): int
     {
         return (int)($this->stats['album'] ?? 0);
@@ -59,9 +49,29 @@ final class CatalogStats implements CatalogStatsInterface
         return (int)($this->stats['artist'] ?? 0);
     }
 
-    public function getSongCount(): int
+    public function getCatalogSize(): string
     {
-        return (int)($this->stats['song'] ?? 0);
+        return (string)($this->stats['formatted_size'] ?? '');
+    }
+
+    public function getConnectedCount(): int
+    {
+        return (int)($this->stats['connected'] ?? 0);
+    }
+
+    public function getGenreCount(): int
+    {
+        return (int)($this->stats['tags'] ?? 0);
+    }
+
+    public function getItemCount(): int
+    {
+        return (int)($this->stats['items'] ?? 0);
+    }
+
+    public function getPlayTime(): string
+    {
+        return (string)($this->stats['time_text'] ?? '');
     }
 
     public function getPodcastCount(): int
@@ -74,24 +84,14 @@ final class CatalogStats implements CatalogStatsInterface
         return (int)($this->stats['podcast_episode'] ?? 0);
     }
 
-    public function getGenreCount(): int
+    public function getSongCount(): int
     {
-        return (int)($this->stats['tags'] ?? 0);
+        return (int)($this->stats['song'] ?? 0);
     }
 
-    public function getCatalogSize(): string
+    public function getUserCount(): int
     {
-        return (string)($this->stats['formatted_size'] ?? '');
-    }
-
-    public function getPlayTime(): string
-    {
-        return (string)($this->stats['time_text'] ?? '');
-    }
-
-    public function getItemCount(): int
-    {
-        return (int)($this->stats['items'] ?? 0);
+        return (int)($this->stats['user'] ?? 0);
     }
 
     public function getVideoCount(): int

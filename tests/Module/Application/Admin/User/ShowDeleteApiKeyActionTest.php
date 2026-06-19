@@ -34,22 +34,9 @@ class ShowDeleteApiKeyActionTest extends TestCase
 {
     use UserAdminConfirmationTestTrait;
 
-    private MockObject&UiInterface $ui;
-
     private MockObject&ConfigContainerInterface $configContainer;
-
     private ShowDeleteApiKeyAction $subject;
-
-    protected function setUp(): void
-    {
-        $this->ui              = $this->createMock(UiInterface::class);
-        $this->configContainer = $this->createMock(ConfigContainerInterface::class);
-
-        $this->subject = new ShowDeleteApiKeyAction(
-            $this->ui,
-            $this->configContainer
-        );
-    }
+    private MockObject&UiInterface $ui;
 
     public function testHandleRendersConfirmation(): void
     {
@@ -69,6 +56,17 @@ class ShowDeleteApiKeyActionTest extends TestCase
                         'delete_apikey'
                     );
             }
+        );
+    }
+
+    protected function setUp(): void
+    {
+        $this->ui              = $this->createMock(UiInterface::class);
+        $this->configContainer = $this->createMock(ConfigContainerInterface::class);
+
+        $this->subject = new ShowDeleteApiKeyAction(
+            $this->ui,
+            $this->configContainer
         );
     }
 }

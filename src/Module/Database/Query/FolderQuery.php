@@ -46,6 +46,11 @@ final class FolderQuery implements QueryInterface
         'user_rating',
     ];
 
+    protected string $base = "SELECT %%SELECT%% FROM (
+            SELECT CONCAT(`object_type`, '-', `object_id`) AS `id`, `object_id` AS `int_id`, `name`, `folder_id`, `object_type`, IF(`object_type`='folder', 1, 0) AS `is_folder` FROM `folder_map`
+        ) AS `folder` ";
+    protected string $select = "`folder`.`id`";
+
     /** @var string[] $sorts */
     protected array $sorts = [
         'date',
@@ -66,11 +71,15 @@ final class FolderQuery implements QueryInterface
         'userflag',
     ];
 
-    protected string $select = "`folder`.`id`";
-
-    protected string $base = "SELECT %%SELECT%% FROM (
-            SELECT CONCAT(`object_type`, '-', `object_id`) AS `id`, `object_id` AS `int_id`, `name`, `folder_id`, `object_type`, IF(`object_type`='folder', 1, 0) AS `is_folder` FROM `folder_map`
-        ) AS `folder` ";
+    /**
+     * get_base_sql
+     *
+     * Base SELECT query string without filters or joins
+     */
+    public function get_base_sql(): string
+    {
+        return $this->base;
+    }
 
     /**
      * get_select
@@ -80,16 +89,6 @@ final class FolderQuery implements QueryInterface
     public function get_select(): string
     {
         return $this->select;
-    }
-
-    /**
-     * get_base_sql
-     *
-     * Base SELECT query string without filters or joins
-     */
-    public function get_base_sql(): string
-    {
-        return $this->base;
     }
 
     /**

@@ -47,88 +47,11 @@ class AmpacheMpd extends localplay_controller
 {
     protected const string ACTIVE_PREF = 'mpd_active';
 
-    public bool $block_clear = false;
-
-    private string $version = '000003';
-
+    public bool $block_clear    = false;
+    private int $_add_count     = 0;
+    private ?mpd $_mpd          = null;
     private string $description = 'Controls an instance of MPD';
-
-    private int $_add_count = 0;
-
-    private ?mpd $_mpd = null;
-
-    /**
-     * get_description
-     * Returns the description
-     */
-    public function get_description(): string
-    {
-        return $this->description;
-    }
-
-    /**
-     * get_version
-     * This returns the version information
-     */
-    public function get_version(): string
-    {
-        return $this->version;
-    }
-
-    /**
-     * is_installed
-     * This returns true or false if MPD controller is installed
-     */
-    public function is_installed(): bool
-    {
-        $sql        = "SHOW TABLES LIKE 'localplay_mpd'";
-        $db_results = Dba::read($sql);
-
-        return (Dba::num_rows($db_results) > 0);
-    }
-
-    /**
-     * install
-     * This function installs the MPD Localplay controller
-     */
-    public function install(): bool
-    {
-        $collation = (AmpConfig::get('database_collation', 'utf8mb4_unicode_ci'));
-        $charset   = (AmpConfig::get('database_charset', 'utf8mb4'));
-        $engine    = (AmpConfig::get('database_engine', 'InnoDB'));
-        /* We need to create the MPD table */
-        $sql = <<<SQL
-            CREATE TABLE `localplay_mpd` (
-                `id` INT(11) UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
-                `name` VARCHAR(128) COLLATE {$collation} NOT NULL,
-                `owner` INT(11) NOT NULL,
-                `host` VARCHAR(255) COLLATE {$collation} NOT NULL,
-                `port` INT(11) UNSIGNED NOT NULL DEFAULT '6600',
-                `password` VARCHAR(255) COLLATE {$collation} NOT NULL,
-                `access` SMALLINT(4) UNSIGNED NOT NULL DEFAULT '0'
-            ) ENGINE = {$engine} DEFAULT CHARSET={$charset} COLLATE={$collation}
-            SQL;
-        Dba::query($sql);
-
-        // Add an internal preference for the users current active instance
-        Preference::insert(self::ACTIVE_PREF, T_('MPD Active Instance'), 0, AccessLevelEnum::USER->value, 'integer', 'internal', 'mpd');
-
-        return true;
-    }
-
-    /**
-     * uninstall
-     * This removes the Localplay controller
-     */
-    public function uninstall(): bool
-    {
-        $sql = "DROP TABLE `localplay_mpd`";
-        Dba::write($sql);
-
-        Preference::delete(self::ACTIVE_PREF);
-
-        return true;
-    }
+    private string $version     = '000003';
 
     /**
      * add_instance
@@ -148,132 +71,6 @@ class AmpacheMpd extends localplay_controller
             : -1;
 
         Dba::write($sql, [$data['name'] ?? null, $data['host'] ?? null, $data['port'] ?? null, $data['password'] ?? null, $user_id]);
-    }
-
-    /**
-     * delete_instance
-     * This takes a UID and deletes the instance in question
-     */
-    public function delete_instance(int $uid): void
-    {
-        $sql = "DELETE FROM `localplay_mpd` WHERE `id` = ?";
-        Dba::write($sql, [$uid]);
-    }
-
-    /**
-     * get_instances
-     * This returns a key'd array of the instance information with
-     * [UID]=>[NAME]
-     * @return string[]
-     */
-    public function get_instances(): array
-    {
-        $sql = "SELECT * FROM `localplay_mpd` ORDER BY `name`";
-
-        $db_results = Dba::read($sql);
-        $results    = [];
-        while ($row = Dba::fetch_assoc($db_results)) {
-            $results[(int)$row['id']] = $row['name'];
-        }
-
-        return $results;
-    }
-
-    /**
-     * get_instance
-     * This returns the specified instance and all it's pretty variables
-     * If no instance is passed current is used
-     * @return array{
-     *     id?: int,
-     *     name?: string,
-     *     owner?: int,
-     *     host?: string,
-     *     port?: int,
-     *     password?: string,
-     *     access?: int
-     * }
-     */
-    public function get_instance(?string $instance = ''): array
-    {
-        $instance   = (is_numeric($instance)) ? (int) $instance : (int) AmpConfig::get(self::ACTIVE_PREF, 0);
-        $sql        = ($instance > 0) ? "SELECT * FROM `localplay_mpd` WHERE `id` = ?" : "SELECT * FROM `localplay_mpd`";
-        $db_results = ($instance > 0) ? Dba::query($sql, [$instance]) : Dba::query($sql);
-
-        if ($row = Dba::fetch_assoc($db_results)) {
-            return [
-                'id' => (int)$row['id'],
-                'name' => $row['name'],
-                'owner' => (int)$row['owner'],
-                'host' => $row['host'],
-                'port' => (int)$row['port'],
-                'password' => $row['password'],
-                'access' => (int)$row['access'],
-            ];
-        }
-
-        return [];
-    }
-
-    /**
-     * update_instance
-     * This takes an ID and an array of data and updates the instance specified
-     * @param array{
-     *     host?: string,
-     *     port?: string,
-     *     name: string,
-     *     password: string,
-     * } $data
-     */
-    public function update_instance(int $uid, array $data): void
-    {
-        $sql = "UPDATE `localplay_mpd` SET `host` = ?, `port` = ?, `name` = ?, `password` = ? WHERE `id` = ?;";
-        Dba::write($sql, [$data['host'] ?? '127.0.0.1', $data['port'] ?? '6600', $data['name'], $data['password'], $uid]);
-    }
-
-    /**
-     * instance_fields
-     * This returns a key'd array of [NAME]=>array([DESCRIPTION]=>VALUE,[TYPE]=>VALUE) for the
-     * fields so that we can on-the-fly generate a form
-     * @return array<
-     *     string,
-     *     array{description: string, type: string}
-     * >
-     */
-    public function instance_fields(): array
-    {
-        return ['name' => ['description' => T_('Instance Name'), 'type' => 'text'], 'host' => ['description' => T_('Hostname'), 'type' => 'text'], 'port' => ['description' => T_('Port'), 'type' => 'number'], 'password' => ['description' => T_('Password'), 'type' => 'password']];
-    }
-
-    /**
-     * set_active_instance
-     * This sets the specified instance as the 'active' one
-     */
-    public function set_active_instance(int $uid): bool
-    {
-        $user = Core::get_global('user');
-        if (!$user instanceof User) {
-            return false;
-        }
-
-        Preference::update(self::ACTIVE_PREF, $user->id, $uid);
-        AmpConfig::set(self::ACTIVE_PREF, $uid, true);
-        debug_event(self::class, 'set_active_instance: ' . $uid . ' ' . $user->id, 5);
-
-        return true;
-    }
-
-    /**
-     * get_active_instance
-     * This returns the UID of the current active instance
-     * null if none are active
-     */
-    public function get_active_instance(): ?int
-    {
-        if (AmpConfig::get(self::ACTIVE_PREF)) {
-            return (int)AmpConfig::get(self::ACTIVE_PREF);
-        }
-
-        return null;
     }
 
     /**
@@ -303,16 +100,6 @@ class AmpacheMpd extends localplay_controller
     }
 
     /**
-     * delete_track
-     * This must take a single ID (as returned by the get function)
-     * and delete it from the current playlist
-     */
-    public function delete_track(int $object_id): bool
-    {
-        return $this->_mpd->PLRemove($object_id) !== false;
-    }
-
-    /**
      * clear_playlist
      * This deletes the entire MPD playlist
      */
@@ -324,121 +111,42 @@ class AmpacheMpd extends localplay_controller
     }
 
     /**
-     * play
-     * This just tells MPD to start playing, it does not
-     * take any arguments
+     * connect
+     * This functions creates the connection to MPD and returns
+     * a boolean value for the status, to save time this handle
+     * is stored in this class
      */
-    public function play(): bool
+    public function connect(): bool
     {
-        return $this->_mpd->Play() !== false;
-    }
-
-    /**
-     * stop
-     * This just tells MPD to stop playing, it does not take
-     * any arguments
-     */
-    public function stop(): bool
-    {
-        return $this->_mpd->Stop() !== false;
-    }
-
-    /**
-     * skip
-     * This tells MPD to skip to the specified song
-     */
-    public function skip(int $track_id): bool
-    {
-        if (!$this->_mpd->SkipTo($track_id)) {
+        // Look at the current instance and pull the options for said instance
+        $options = self::get_instance();
+        if ($options === [] || !isset($options['host'], $options['port'])) {
             return false;
         }
 
-        sleep(2);
-        $this->stop();
-        sleep(2);
-        $this->play();
+        $this->_mpd = new mpd($options['host'], $options['port'], $options['password'] ?? null, 'debug_event');
 
-        return true;
+        return $this->_mpd->connected;
     }
 
     /**
-     * This tells MPD to increase the volume by 5
+     * delete_instance
+     * This takes a UID and deletes the instance in question
      */
-    public function volume_up(): bool
+    public function delete_instance(int $uid): void
     {
-        return $this->_mpd->AdjustVolume('5') !== false;
+        $sql = "DELETE FROM `localplay_mpd` WHERE `id` = ?";
+        Dba::write($sql, [$uid]);
     }
 
     /**
-     * This tells MPD to decrease the volume by 5
+     * delete_track
+     * This must take a single ID (as returned by the get function)
+     * and delete it from the current playlist
      */
-    public function volume_down(): bool
+    public function delete_track(int $object_id): bool
     {
-        return $this->_mpd->AdjustVolume('-5') !== false;
-    }
-
-    /**
-     * next
-     * This just tells MPD to skip to the next song
-     */
-    public function next(): bool
-    {
-        return $this->_mpd->Next() !== false;
-    }
-
-    /**
-     * prev
-     * This just tells MPD to skip to the prev song
-     */
-    public function prev(): bool
-    {
-        return $this->_mpd->Previous() !== false;
-    }
-
-    /**
-     * pause
-     * This tells MPD to pause the current song
-     */
-    public function pause(): bool
-    {
-        return $this->_mpd->Pause() !== false;
-    }
-
-    /**
-     * volume
-     * This tells MPD to set the volume to the parameter
-     */
-    public function volume(int $volume): bool
-    {
-        return $this->_mpd->SetVolume($volume) !== false;
-    }
-
-    /**
-     * repeat
-     * This tells MPD to set the repeating the playlist (i.e. loop) to either on or off.
-     */
-    public function repeat(bool $state): bool
-    {
-        return $this->_mpd->SetRepeat($state) !== false;
-    }
-
-    /**
-     * random
-     * This tells MPD to turn on or off the playing of songs from the
-     * playlist in random order.
-     */
-    public function random(bool $state): bool
-    {
-        return $this->_mpd->SetRandom($state) !== false;
-    }
-
-    /**
-     * move
-     * This tells MPD to move a song
-     */
-    public function move($source, $destination): bool|string
-    {
-        return $this->_mpd->PLMoveTrack($source, $destination);
+        return $this->_mpd->PLRemove($object_id) !== false;
     }
 
     /**
@@ -547,6 +255,248 @@ class AmpacheMpd extends localplay_controller
     }
 
     /**
+     * get_active_instance
+     * This returns the UID of the current active instance
+     * null if none are active
+     */
+    public function get_active_instance(): ?int
+    {
+        if (AmpConfig::get(self::ACTIVE_PREF)) {
+            return (int)AmpConfig::get(self::ACTIVE_PREF);
+        }
+
+        return null;
+    }
+
+    /**
+     * get_description
+     * Returns the description
+     */
+    public function get_description(): string
+    {
+        return $this->description;
+    }
+
+    /**
+     * get_instance
+     * This returns the specified instance and all it's pretty variables
+     * If no instance is passed current is used
+     * @return array{
+     *     id?: int,
+     *     name?: string,
+     *     owner?: int,
+     *     host?: string,
+     *     port?: int,
+     *     password?: string,
+     *     access?: int
+     * }
+     */
+    public function get_instance(?string $instance = ''): array
+    {
+        $instance   = (is_numeric($instance)) ? (int) $instance : (int) AmpConfig::get(self::ACTIVE_PREF, 0);
+        $sql        = ($instance > 0) ? "SELECT * FROM `localplay_mpd` WHERE `id` = ?" : "SELECT * FROM `localplay_mpd`";
+        $db_results = ($instance > 0) ? Dba::query($sql, [$instance]) : Dba::query($sql);
+
+        if ($row = Dba::fetch_assoc($db_results)) {
+            return [
+                'id' => (int)$row['id'],
+                'name' => $row['name'],
+                'owner' => (int)$row['owner'],
+                'host' => $row['host'],
+                'port' => (int)$row['port'],
+                'password' => $row['password'],
+                'access' => (int)$row['access'],
+            ];
+        }
+
+        return [];
+    }
+
+    /**
+     * get_instances
+     * This returns a key'd array of the instance information with
+     * [UID]=>[NAME]
+     * @return string[]
+     */
+    public function get_instances(): array
+    {
+        $sql = "SELECT * FROM `localplay_mpd` ORDER BY `name`";
+
+        $db_results = Dba::read($sql);
+        $results    = [];
+        while ($row = Dba::fetch_assoc($db_results)) {
+            $results[(int)$row['id']] = $row['name'];
+        }
+
+        return $results;
+    }
+
+    /**
+     * get_version
+     * This returns the version information
+     */
+    public function get_version(): string
+    {
+        return $this->version;
+    }
+
+    /**
+     * install
+     * This function installs the MPD Localplay controller
+     */
+    public function install(): bool
+    {
+        $collation = (AmpConfig::get('database_collation', 'utf8mb4_unicode_ci'));
+        $charset   = (AmpConfig::get('database_charset', 'utf8mb4'));
+        $engine    = (AmpConfig::get('database_engine', 'InnoDB'));
+        /* We need to create the MPD table */
+        $sql = <<<SQL
+            CREATE TABLE `localplay_mpd` (
+                `id` INT(11) UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
+                `name` VARCHAR(128) COLLATE {$collation} NOT NULL,
+                `owner` INT(11) NOT NULL,
+                `host` VARCHAR(255) COLLATE {$collation} NOT NULL,
+                `port` INT(11) UNSIGNED NOT NULL DEFAULT '6600',
+                `password` VARCHAR(255) COLLATE {$collation} NOT NULL,
+                `access` SMALLINT(4) UNSIGNED NOT NULL DEFAULT '0'
+            ) ENGINE = {$engine} DEFAULT CHARSET={$charset} COLLATE={$collation}
+            SQL;
+        Dba::query($sql);
+
+        // Add an internal preference for the users current active instance
+        Preference::insert(self::ACTIVE_PREF, T_('MPD Active Instance'), 0, AccessLevelEnum::USER->value, 'integer', 'internal', 'mpd');
+
+        return true;
+    }
+
+    /**
+     * instance_fields
+     * This returns a key'd array of [NAME]=>array([DESCRIPTION]=>VALUE,[TYPE]=>VALUE) for the
+     * fields so that we can on-the-fly generate a form
+     * @return array<
+     *     string,
+     *     array{description: string, type: string}
+     * >
+     */
+    public function instance_fields(): array
+    {
+        return ['name' => ['description' => T_('Instance Name'), 'type' => 'text'], 'host' => ['description' => T_('Hostname'), 'type' => 'text'], 'port' => ['description' => T_('Port'), 'type' => 'number'], 'password' => ['description' => T_('Password'), 'type' => 'password']];
+    }
+
+    /**
+     * is_installed
+     * This returns true or false if MPD controller is installed
+     */
+    public function is_installed(): bool
+    {
+        $sql        = "SHOW TABLES LIKE 'localplay_mpd'";
+        $db_results = Dba::read($sql);
+
+        return (Dba::num_rows($db_results) > 0);
+    }
+
+    /**
+     * move
+     * This tells MPD to move a song
+     */
+    public function move($source, $destination): bool|string
+    {
+        return $this->_mpd->PLMoveTrack($source, $destination);
+    }
+
+    /**
+     * next
+     * This just tells MPD to skip to the next song
+     */
+    public function next(): bool
+    {
+        return $this->_mpd->Next() !== false;
+    }
+
+    /**
+     * pause
+     * This tells MPD to pause the current song
+     */
+    public function pause(): bool
+    {
+        return $this->_mpd->Pause() !== false;
+    }
+
+    /**
+     * play
+     * This just tells MPD to start playing, it does not
+     * take any arguments
+     */
+    public function play(): bool
+    {
+        return $this->_mpd->Play() !== false;
+    }
+
+    /**
+     * prev
+     * This just tells MPD to skip to the prev song
+     */
+    public function prev(): bool
+    {
+        return $this->_mpd->Previous() !== false;
+    }
+
+    /**
+     * random
+     * This tells MPD to turn on or off the playing of songs from the
+     * playlist in random order.
+     */
+    public function random(bool $state): bool
+    {
+        return $this->_mpd->SetRandom($state) !== false;
+    }
+
+    /**
+     * repeat
+     * This tells MPD to set the repeating the playlist (i.e. loop) to either on or off.
+     */
+    public function repeat(bool $state): bool
+    {
+        return $this->_mpd->SetRepeat($state) !== false;
+    }
+
+    /**
+     * set_active_instance
+     * This sets the specified instance as the 'active' one
+     */
+    public function set_active_instance(int $uid): bool
+    {
+        $user = Core::get_global('user');
+        if (!$user instanceof User) {
+            return false;
+        }
+
+        Preference::update(self::ACTIVE_PREF, $user->id, $uid);
+        AmpConfig::set(self::ACTIVE_PREF, $uid, true);
+        debug_event(self::class, 'set_active_instance: ' . $uid . ' ' . $user->id, 5);
+
+        return true;
+    }
+
+    /**
+     * skip
+     * This tells MPD to skip to the specified song
+     */
+    public function skip(int $track_id): bool
+    {
+        if (!$this->_mpd->SkipTo($track_id)) {
+            return false;
+        }
+
+        sleep(2);
+        $this->stop();
+        sleep(2);
+        $this->play();
+
+        return true;
+    }
+
+    /**
      * get_status
      * This returns bool/int values for features, loop, repeat and any other features that this Localplay method supports.
      */
@@ -613,21 +563,67 @@ class AmpacheMpd extends localplay_controller
     }
 
     /**
-     * connect
-     * This functions creates the connection to MPD and returns
-     * a boolean value for the status, to save time this handle
-     * is stored in this class
+     * stop
+     * This just tells MPD to stop playing, it does not take
+     * any arguments
      */
-    public function connect(): bool
+    public function stop(): bool
     {
-        // Look at the current instance and pull the options for said instance
-        $options = self::get_instance();
-        if ($options === [] || !isset($options['host'], $options['port'])) {
-            return false;
-        }
+        return $this->_mpd->Stop() !== false;
+    }
 
-        $this->_mpd = new mpd($options['host'], $options['port'], $options['password'] ?? null, 'debug_event');
+    /**
+     * uninstall
+     * This removes the Localplay controller
+     */
+    public function uninstall(): bool
+    {
+        $sql = "DROP TABLE `localplay_mpd`";
+        Dba::write($sql);
 
-        return $this->_mpd->connected;
+        Preference::delete(self::ACTIVE_PREF);
+
+        return true;
+    }
+
+    /**
+     * update_instance
+     * This takes an ID and an array of data and updates the instance specified
+     * @param array{
+     *     host?: string,
+     *     port?: string,
+     *     name: string,
+     *     password: string,
+     * } $data
+     */
+    public function update_instance(int $uid, array $data): void
+    {
+        $sql = "UPDATE `localplay_mpd` SET `host` = ?, `port` = ?, `name` = ?, `password` = ? WHERE `id` = ?;";
+        Dba::write($sql, [$data['host'] ?? '127.0.0.1', $data['port'] ?? '6600', $data['name'], $data['password'], $uid]);
+    }
+
+    /**
+     * volume
+     * This tells MPD to set the volume to the parameter
+     */
+    public function volume(int $volume): bool
+    {
+        return $this->_mpd->SetVolume($volume) !== false;
+    }
+
+    /**
+     * This tells MPD to decrease the volume by 5
+     */
+    public function volume_down(): bool
+    {
+        return $this->_mpd->AdjustVolume('-5') !== false;
+    }
+
+    /**
+     * This tells MPD to increase the volume by 5
+     */
+    public function volume_up(): bool
+    {
+        return $this->_mpd->AdjustVolume('5') !== false;
     }
 }

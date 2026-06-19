@@ -41,9 +41,6 @@ use Psr\Http\Message\ServerRequestInterface;
 
 class ShowDeleteRecordActionTest extends MockeryTestCase
 {
-    /** @var UiInterface|MockInterface|null */
-    private MockInterface $ui;
-
     /** @var ConfigContainerInterface|MockInterface|null */
     private MockInterface $configContainer;
 
@@ -52,34 +49,8 @@ class ShowDeleteRecordActionTest extends MockeryTestCase
 
     private ?ShowDeleteRecordAction $subject;
 
-    #[Override]
-    protected function setUp(): void
-    {
-        $this->ui              = $this->mock(UiInterface::class);
-        $this->configContainer = $this->mock(ConfigContainerInterface::class);
-        $this->modelFactory    = $this->mock(ModelFactoryInterface::class);
-
-        $this->subject = new ShowDeleteRecordAction(
-            $this->ui,
-            $this->configContainer,
-            $this->modelFactory
-        );
-    }
-
-    public function testRunThrowsExceptionIfAccessIsDenied(): void
-    {
-        $request    = $this->mock(ServerRequestInterface::class);
-        $gatekeeper = $this->mock(GuiGatekeeperInterface::class);
-
-        $this->expectException(AccessDeniedException::class);
-
-        $gatekeeper->shouldReceive('mayAccess')
-            ->with(AccessTypeEnum::INTERFACE, AccessLevelEnum::ADMIN)
-            ->once()
-            ->andReturnFalse();
-
-        $this->subject->run($request, $gatekeeper);
-    }
+    /** @var UiInterface|MockInterface|null */
+    private MockInterface $ui;
 
     public function testRunDoesNothingInDemoMode(): void
     {
@@ -177,6 +148,35 @@ class ShowDeleteRecordActionTest extends MockeryTestCase
 
         $this->assertNull(
             $this->subject->run($request, $gatekeeper)
+        );
+    }
+
+    public function testRunThrowsExceptionIfAccessIsDenied(): void
+    {
+        $request    = $this->mock(ServerRequestInterface::class);
+        $gatekeeper = $this->mock(GuiGatekeeperInterface::class);
+
+        $this->expectException(AccessDeniedException::class);
+
+        $gatekeeper->shouldReceive('mayAccess')
+            ->with(AccessTypeEnum::INTERFACE, AccessLevelEnum::ADMIN)
+            ->once()
+            ->andReturnFalse();
+
+        $this->subject->run($request, $gatekeeper);
+    }
+
+    #[Override]
+    protected function setUp(): void
+    {
+        $this->ui              = $this->mock(UiInterface::class);
+        $this->configContainer = $this->mock(ConfigContainerInterface::class);
+        $this->modelFactory    = $this->mock(ModelFactoryInterface::class);
+
+        $this->subject = new ShowDeleteRecordAction(
+            $this->ui,
+            $this->configContainer,
+            $this->modelFactory
         );
     }
 }

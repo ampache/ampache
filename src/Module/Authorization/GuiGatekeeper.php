@@ -38,11 +38,13 @@ final readonly class GuiGatekeeper implements GuiGatekeeperInterface
     {
     }
 
-    public function mayAccess(
-        AccessTypeEnum $type,
-        AccessLevelEnum $level,
-    ): bool {
-        return $this->privilegeChecker->check($type, $level);
+    public function getUser(): ?User
+    {
+        $globalUser = Core::get_global('user');
+
+        return ($globalUser instanceof User)
+            ? $globalUser
+            : null;
     }
 
     public function getUserId(): int
@@ -54,12 +56,10 @@ final readonly class GuiGatekeeper implements GuiGatekeeperInterface
             : 0;
     }
 
-    public function getUser(): ?User
-    {
-        $globalUser = Core::get_global('user');
-
-        return ($globalUser instanceof User)
-            ? $globalUser
-            : null;
+    public function mayAccess(
+        AccessTypeEnum $type,
+        AccessLevelEnum $level,
+    ): bool {
+        return $this->privilegeChecker->check($type, $level);
     }
 }

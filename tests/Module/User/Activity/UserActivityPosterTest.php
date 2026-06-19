@@ -43,18 +43,6 @@ class UserActivityPosterTest extends MockeryTestCase
 
     private ?UserActivityPoster $subject;
 
-    #[Override]
-    protected function setUp(): void
-    {
-        $this->activityTypeHandlerMapper = $this->mock(ActivityTypeHandlerMapperInterface::class);
-        $this->logger                    = $this->mock(LoggerInterface::class);
-
-        $this->subject = new UserActivityPoster(
-            $this->activityTypeHandlerMapper,
-            $this->logger
-        );
-    }
-
     public function testPostRegistersAction(): void
     {
         $userId     = 666;
@@ -93,6 +81,18 @@ class UserActivityPosterTest extends MockeryTestCase
             $objectType,
             $objectId,
             $date
+        );
+    }
+
+    #[Override]
+    protected function setUp(): void
+    {
+        $this->activityTypeHandlerMapper = $this->mock(ActivityTypeHandlerMapperInterface::class);
+        $this->logger                    = $this->mock(LoggerInterface::class);
+
+        $this->subject = new UserActivityPoster(
+            $this->activityTypeHandlerMapper,
+            $this->logger
         );
     }
 }

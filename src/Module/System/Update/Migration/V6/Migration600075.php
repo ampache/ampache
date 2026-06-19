@@ -32,6 +32,17 @@ final class Migration600075 extends AbstractMigration
 {
     protected array $changelog = ['Create `user_playlist_map` to allow browse access to playlists with collaborate access'];
 
+    public function getTableMigrations(
+        string $collation,
+        string $charset,
+        string $engine,
+        int $build,
+    ): Generator {
+        if ($build > 600075) {
+            yield 'user_playlist_map' => "CREATE TABLE IF NOT EXISTS `user_playlist_map` (`playlist_id` int(11) UNSIGNED NOT NULL, `user_id` int(11) UNSIGNED NOT NULL, UNIQUE KEY `playlist_user` (`playlist_id`,`user_id`)) ENGINE=$engine DEFAULT CHARSET=$charset COLLATE=$collation;";
+        }
+    }
+
     public function migrate(): void
     {
         $collation = (AmpConfig::get('database_collation', 'utf8mb4_unicode_ci'));
@@ -47,16 +58,5 @@ final class Migration600075 extends AbstractMigration
                 $collation
             )
         );
-    }
-
-    public function getTableMigrations(
-        string $collation,
-        string $charset,
-        string $engine,
-        int $build,
-    ): Generator {
-        if ($build > 600075) {
-            yield 'user_playlist_map' => "CREATE TABLE IF NOT EXISTS `user_playlist_map` (`playlist_id` int(11) UNSIGNED NOT NULL, `user_id` int(11) UNSIGNED NOT NULL, UNIQUE KEY `playlist_user` (`playlist_id`,`user_id`)) ENGINE=$engine DEFAULT CHARSET=$charset COLLATE=$collation;";
-        }
     }
 }

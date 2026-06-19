@@ -42,6 +42,14 @@ final readonly class UtilityFactory implements UtilityFactoryInterface
     ) {
     }
 
+    /**
+     * Returns a new Curl instance
+     */
+    public function createCurl(): Curl
+    {
+        return new Curl();
+    }
+
     public function createMailer(): MailerInterface
     {
         return new Mailer();
@@ -73,13 +81,5 @@ final readonly class UtilityFactory implements UtilityFactoryInterface
             $filePattern,
             $isLocal
         );
-    }
-
-    /**
-     * Returns a new Curl instance
-     */
-    public function createCurl(): Curl
-    {
-        return new Curl();
     }
 }

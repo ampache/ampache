@@ -35,6 +35,25 @@ use Seafile\Client\Type\DirectoryItem;
 
 class SeafileAdapter
 {
+    /** @var array{Libraries: Library, Directories: Directory, Files: File, Client: Client}|null  */
+    private array|null $client = null;
+
+    /** @var array<string, DirectoryItem[]> */
+    private array $directory_cache = [];
+
+    private Library|null $library = null;
+
+    /**
+     * SeafileAdapter constructor.
+     */
+    public function __construct(
+        private string|null $server,
+        private string|null $library_name,
+        private int|null $call_delay,
+        private string|null $api_key,
+    ) {
+    }
+
     /**
      * request API key from Seafile Server based on username and password
      * @throws Exception
@@ -60,38 +79,103 @@ class SeafileAdapter
         return $token->token;
     }
 
-    /** @var array{Libraries: Library, Directories: Directory, Files: File, Client: Client}|null  */
-    private array|null $client = null;
-
-    private Library|null $library = null;
-
-    /** @var array<string, DirectoryItem[]> */
-    private array $directory_cache = [];
+    // download a file, optionally limited to just enough to be able to read its metadata tags(currently 2MB)
 
     /**
-     * SeafileAdapter constructor.
+     * @param bool $partial
      */
-    public function __construct(
-        private string|null $server,
-        private string|null $library_name,
-        private int|null $call_delay,
-        private string|null $api_key,
-    ) {
+    public function download($file, $partial = false): string
+    {
+        $url  = $this->throttle_check(fn () => $this->client['Files']->getDownloadUrl($this->library, $file, $file->dir));
+        $opts = $partial ? ['curl' => [CURLOPT_RANGE => '0-2097152']] : ['delay' => 0];
+
+        // grab a full 2 meg in case meta has image in it or something
+        $response = $this->throttle_check(fn () => $this->client['Client']->request('GET', $url, $opts));
+
+        $tempfilename = Core::get_tmp_dir() . DIRECTORY_SEPARATOR . $file->name;
+
+        $tempfile = fopen($tempfilename, 'wb');
+
+        if ($tempfile) {
+            fwrite($tempfile, (string) $response->getBody());
+            fclose($tempfile);
+        }
+
+        return $tempfilename;
     }
 
-    // do we have all the info we need?
+    /**
+     * run a function for all files in the Seafile library.
+     * the function receives a DirectoryItem and should return 1 if the file was added, 0 otherwise
+     * (https://github.com/rene-s/Seafile-PHP-SDK/blob/master/src/Type/DirectoryItem.php)
+     * Returns number added, or -1 on failure
+     * @param string $path
+     */
+    public function for_all_files($func, $path = '/'): int
+    {
+        if ($this->client != null) {
+            $directoryItems = $this->get_cached_directory($path);
+
+            $count = 0;
+
+            if ($directoryItems !== null && count($directoryItems) > 0) {
+                foreach ($directoryItems as $item) {
+                    if ($item->type == 'dir') {
+                        $count += $this->for_all_files($func, $path . $item->name . '/');
+                    } elseif ($item->type == 'file') {
+                        $count += $func($item);
+                    }
+                }
+            }
+
+            return $count;
+        }
+
+        return -1;
+    }
+
+    // given a database-stored "virtual" path, return the path & filename
 
     /**
-     * ready
+     * @return array{
+     *     path: string,
+     *     filename: string
+     * }
      */
-    public function ready(): bool
+    public function from_virtual_path(string $file_path): array
     {
-        return (
-            $this->server != null &&
-            $this->api_key != null &&
-            $this->library_name != null &&
-            $this->call_delay != null
-        );
+        $split = explode('|', $file_path);
+
+        return [
+            'path' => $split[1],
+            'filename' => $split[2],
+        ];
+    }
+
+    /**
+     * @return DirectoryItem[]|null
+     */
+    public function get_file(string $path, string $name): ?array
+    {
+        $directory = $this->get_cached_directory($path);
+
+        if ($directory) {
+            foreach ($directory as $file) {
+                if ($file->name === $name) {
+                    return $file;
+                }
+            }
+        }
+
+        return null;
+    }
+
+    /**
+     * get_format_string
+     */
+    public function get_format_string(): string
+    {
+        return 'Seafile server "' . $this->server . '", library "' . $this->library_name . '"';
     }
 
     // create API client object & find library
@@ -150,30 +234,19 @@ class SeafileAdapter
         return true;
     }
 
-    // run a function that hits the Seafile API, but catch throttling errors and retry
+    // do we have all the info we need?
 
-    private function throttle_check(callable $func)
+    /**
+     * ready
+     */
+    public function ready(): bool
     {
-        while (true) {
-            try {
-                return $func();
-            } catch (ClientException $error) {
-                if ($error->getResponse()->getStatusCode() !== 429) {
-                    throw $error;
-                }
-
-                $resp = $error->getResponse()->getBody();
-
-                $error = json_decode($resp)->detail;
-
-                preg_match('/(\d+) sec/', (string) $error, $matches);
-
-                $secs = isset($matches[1]) ? (int)$matches[1] : 0;
-
-                debug_event('SeafileAdapter', sprintf('Throttled by Seafile, waiting %d seconds.', $secs), 5);
-                sleep($secs + 1);
-            }
-        }
+        return (
+            $this->server != null &&
+            $this->api_key != null &&
+            $this->library_name != null &&
+            $this->call_delay != null
+        );
     }
 
     // given a given path & filename, return the "virtual" path string which will be stored in the database
@@ -181,24 +254,6 @@ class SeafileAdapter
     public function to_virtual_path($file): string
     {
         return $this->library->name . '|' . $file->dir . '|' . $file->name;
-    }
-
-    // given a database-stored "virtual" path, return the path & filename
-
-    /**
-     * @return array{
-     *     path: string,
-     *     filename: string
-     * }
-     */
-    public function from_virtual_path(string $file_path): array
-    {
-        $split = explode('|', $file_path);
-
-        return [
-            'path' => $split[1],
-            'filename' => $split[2],
-        ];
     }
 
     /**
@@ -233,84 +288,29 @@ class SeafileAdapter
         }
     }
 
-    /**
-     * run a function for all files in the Seafile library.
-     * the function receives a DirectoryItem and should return 1 if the file was added, 0 otherwise
-     * (https://github.com/rene-s/Seafile-PHP-SDK/blob/master/src/Type/DirectoryItem.php)
-     * Returns number added, or -1 on failure
-     * @param string $path
-     */
-    public function for_all_files($func, $path = '/'): int
+    // run a function that hits the Seafile API, but catch throttling errors and retry
+
+    private function throttle_check(callable $func)
     {
-        if ($this->client != null) {
-            $directoryItems = $this->get_cached_directory($path);
-
-            $count = 0;
-
-            if ($directoryItems !== null && count($directoryItems) > 0) {
-                foreach ($directoryItems as $item) {
-                    if ($item->type == 'dir') {
-                        $count += $this->for_all_files($func, $path . $item->name . '/');
-                    } elseif ($item->type == 'file') {
-                        $count += $func($item);
-                    }
+        while (true) {
+            try {
+                return $func();
+            } catch (ClientException $error) {
+                if ($error->getResponse()->getStatusCode() !== 429) {
+                    throw $error;
                 }
-            }
 
-            return $count;
-        }
+                $resp = $error->getResponse()->getBody();
 
-        return -1;
-    }
+                $error = json_decode($resp)->detail;
 
-    /**
-     * @return DirectoryItem[]|null
-     */
-    public function get_file(string $path, string $name): ?array
-    {
-        $directory = $this->get_cached_directory($path);
+                preg_match('/(\d+) sec/', (string) $error, $matches);
 
-        if ($directory) {
-            foreach ($directory as $file) {
-                if ($file->name === $name) {
-                    return $file;
-                }
+                $secs = isset($matches[1]) ? (int)$matches[1] : 0;
+
+                debug_event('SeafileAdapter', sprintf('Throttled by Seafile, waiting %d seconds.', $secs), 5);
+                sleep($secs + 1);
             }
         }
-
-        return null;
-    }
-
-    // download a file, optionally limited to just enough to be able to read its metadata tags(currently 2MB)
-
-    /**
-     * @param bool $partial
-     */
-    public function download($file, $partial = false): string
-    {
-        $url  = $this->throttle_check(fn () => $this->client['Files']->getDownloadUrl($this->library, $file, $file->dir));
-        $opts = $partial ? ['curl' => [CURLOPT_RANGE => '0-2097152']] : ['delay' => 0];
-
-        // grab a full 2 meg in case meta has image in it or something
-        $response = $this->throttle_check(fn () => $this->client['Client']->request('GET', $url, $opts));
-
-        $tempfilename = Core::get_tmp_dir() . DIRECTORY_SEPARATOR . $file->name;
-
-        $tempfile = fopen($tempfilename, 'wb');
-
-        if ($tempfile) {
-            fwrite($tempfile, (string) $response->getBody());
-            fclose($tempfile);
-        }
-
-        return $tempfilename;
-    }
-
-    /**
-     * get_format_string
-     */
-    public function get_format_string(): string
-    {
-        return 'Seafile server "' . $this->server . '", library "' . $this->library_name . '"';
     }
 }

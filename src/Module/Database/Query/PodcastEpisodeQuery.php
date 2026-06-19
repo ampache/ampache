@@ -53,6 +53,9 @@ final class PodcastEpisodeQuery implements QueryInterface
         'user_rating',
     ];
 
+    protected string $base   = "SELECT %%SELECT%% FROM `podcast_episode` ";
+    protected string $select = "`podcast_episode`.`id`";
+
     /** @var string[] $sorts */
     protected array $sorts = [
         'addition_time',
@@ -75,9 +78,15 @@ final class PodcastEpisodeQuery implements QueryInterface
         'userflag',
     ];
 
-    protected string $select = "`podcast_episode`.`id`";
-
-    protected string $base = "SELECT %%SELECT%% FROM `podcast_episode` ";
+    /**
+     * get_base_sql
+     *
+     * Base SELECT query string without filters or joins
+     */
+    public function get_base_sql(): string
+    {
+        return $this->base;
+    }
 
     /**
      * get_select
@@ -87,16 +96,6 @@ final class PodcastEpisodeQuery implements QueryInterface
     public function get_select(): string
     {
         return $this->select;
-    }
-
-    /**
-     * get_base_sql
-     *
-     * Base SELECT query string without filters or joins
-     */
-    public function get_base_sql(): string
-    {
-        return $this->base;
     }
 
     /**

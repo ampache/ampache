@@ -43,6 +43,11 @@ final readonly class UserStateToggler implements UserStateTogglerInterface
     ) {
     }
 
+    public function disable(User $user): bool
+    {
+        return $user->disable();
+    }
+
     public function enable(User $user): bool
     {
         $this->userRepository->enable($user->getId());
@@ -72,10 +77,5 @@ final readonly class UserStateToggler implements UserStateTogglerInterface
         }
 
         return true;
-    }
-
-    public function disable(User $user): bool
-    {
-        return $user->disable();
     }
 }

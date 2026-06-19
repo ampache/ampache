@@ -43,17 +43,13 @@ use Ampache\Repository\Model\Video;
  */
 abstract class Catalog extends \Ampache\Repository\Model\Catalog
 {
-    protected string $version;
-
-    protected string $type;
-
-    protected string $description;
-
     /** Added Songs counter */
     protected int $addedSongs = 0;
 
-    /** Verified Songs counter */
-    protected int $verifiedSongs = 0;
+    protected string $description;
+
+    /** command which provides the list of all songs */
+    protected string $listCommand;
 
     /**
      * Array of all songs
@@ -61,8 +57,12 @@ abstract class Catalog extends \Ampache\Repository\Model\Catalog
      */
     protected array $songs = [];
 
-    /** command which provides the list of all songs */
-    protected string $listCommand;
+    protected string $type;
+
+    /** Verified Songs counter */
+    protected int $verifiedSongs = 0;
+
+    protected string $version;
 
     /**
      * Counter used for cleaning actions
@@ -85,57 +85,6 @@ abstract class Catalog extends \Ampache\Repository\Model\Catalog
             }
         }
     }
-
-    /**
-     * prepare_media
-     * @return array{
-     *   file_path: string,
-     *   file_name: string,
-     *   file_size: int,
-     *   file_type: string
-     * }
-     */
-    public function prepare_media(Podcast_Episode|Video|Song $media): array
-    {
-        debug_event(self::class, 'Play: Started remote stream - ' . $media->file, 5);
-
-        return [
-            'file_path' => (string) $media->file,
-            'file_name' => $media->getFileName(),
-            'file_size' => $media->size,
-            'file_type' => $media->type,
-        ];
-    }
-
-    /**
-     * @param string $prefix Prefix like add, updated, verify and clean
-     * @param int $count song count
-     * @param array|null $song Song array
-     * @param bool $ignoreTicker ignoring the ticker for the last update
-     */
-    protected function updateUi($prefix, $count, $song = null, $ignoreTicker = false): void
-    {
-        if (!defined('SSE_OUTPUT') && !defined('CLI') && !defined('API')) {
-            return;
-        }
-
-        if ($ignoreTicker || Ui::check_ticker()) {
-            Ui::update_text($prefix . '_count_' . $this->id, $count);
-            if (isset($song)) {
-                Ui::update_text($prefix . '_dir_' . $this->id, scrub_out($this->getVirtualSongPath($song)));
-            }
-        }
-    }
-
-    /**
-     * Get the parser class like CliHandler or JsonHandler
-     */
-    abstract protected function getParser(): Handler;
-
-    /**
-     * Check if a song was added before
-     */
-    abstract public function checkSong(array $song): bool;
 
     /**
      * add_to_catalog
@@ -196,27 +145,152 @@ abstract class Catalog extends \Ampache\Repository\Model\Catalog
     }
 
     /**
-     * Add the song to the DB
+     * cache_catalog_proc
+     */
+    public function cache_catalog_proc(): bool
+    {
+        return false;
+    }
+
+    /**
+     * @return string[]
+     */
+    public function check_catalog_proc(?Interactor $interactor = null): array
+    {
+        return [];
+    }
+
+    /**
+     * Check if a song was added before
+     */
+    abstract public function checkSong(array $song): bool;
+
+    /**
+     * Cleans the Catalog.
+     * This way is a little fishy, but if we start beets for every single file, it may take horribly long.
+     * So first we get the difference between our and the beets database and then clean up the rest.
+     */
+    public function clean_catalog_proc(?Interactor $interactor = null): int
+    {
+        $parser      = $this->getParser();
+        $this->songs = $this->getAllSongfiles();
+        /** @see self::removeFromDeleteList() */
+        $parser->setHandler($this, 'removeFromDeleteList');
+        $parser->start($this->listCommand);
+
+        $count = count($this->songs);
+        if ($count > 0) {
+            $this->deleteSongs($this->songs);
+        }
+
+        $metadataManager = $this->getMetadataManager();
+
+        if ($metadataManager->isCustomMetadataEnabled()) {
+            $metadataManager->collectGarbage();
+        }
+
+        $this->updateUi('clean', $this->cleanCounter, null, true);
+
+        return $count;
+    }
+
+    public function count_scan_folders(?Interactor $interactor = null): void
+    {
+    }
+
+    /**
+     * get_description
+     * This returns the description of this catalog
+     */
+    public function get_description(): string
+    {
+        return $this->description;
+    }
+
+    /**
+     * get_rel_path
+     */
+    public function get_rel_path(string $file_path): string
+    {
+        return '';
+    }
+
+    /**
+     * get_type
+     * This returns the current catalog type
+     */
+    public function get_type(): string
+    {
+        return $this->type;
+    }
+
+    /**
+     * get_version
+     * This returns the current version
+     */
+    public function get_version(): string
+    {
+        return $this->version;
+    }
+
+    /**
+     * Get all songs from the DB into a array
+     * @return string[] (id => file)
+     */
+    public function getAllSongfiles(): array
+    {
+        $sql        = "SELECT `id`, `file` FROM `song` WHERE `catalog` = ?";
+        $db_results = Dba::read($sql, [$this->id]);
+
+        $files = [];
+        while ($row = Dba::fetch_assoc($db_results)) {
+            $files[(int)$row['id']] = (string)$row['file'];
+        }
+
+        return $files;
+    }
+
+    /**
+     * move_catalog_proc
+     * This function updates the file path of the catalog to a new location (unsupported)
+     */
+    public function move_catalog_proc(string $new_path): bool
+    {
+        return false;
+    }
+
+    /**
+     * prepare_media
+     * @return array{
+     *   file_path: string,
+     *   file_name: string,
+     *   file_size: int,
+     *   file_type: string
+     * }
+     */
+    public function prepare_media(Podcast_Episode|Video|Song $media): array
+    {
+        debug_event(self::class, 'Play: Started remote stream - ' . $media->file, 5);
+
+        return [
+            'file_path' => (string) $media->file,
+            'file_name' => $media->getFileName(),
+            'file_size' => $media->size,
+            'file_type' => $media->type,
+        ];
+    }
+
+    /**
+     * Remove a song from the "to be deleted"-list if it was found.
      * @param array $song
      */
-    protected function insertSong($song): ?int
+    public function removeFromDeleteList($song): void
     {
-        $inserted = Song::insert($song);
-        if ($inserted) {
-            debug_event(self::class, 'Adding song ' . $song['file'], 5);
-            flush();
-
-            return $inserted;
+        $key = array_search($song['file'], $this->songs, true);
+        $this->updateUi('clean', ++$this->cleanCounter, $song);
+        if ($key) {
+            unset($this->songs[$key]);
         }
-
-        debug_event(self::class, 'Insert failed for ' . $song['file'], 1);
-        if (!defined('SSE_OUTPUT') && !defined('CLI') && !defined('API')) {
-            /* HINT: filename (file path) */
-            AmpError::add('general', T_('Unable to add Song - %s'), $song['file']);
-            echo AmpError::display('general');
-        }
-
-        return null;
     }
 
     /**
@@ -225,10 +299,6 @@ abstract class Catalog extends \Ampache\Repository\Model\Catalog
     public function scan_catalog_folders(?Interactor $interactor = null, bool $skipCounts = false): int
     {
         return 0;
-    }
-
-    public function count_scan_folders(?Interactor $interactor = null): void
-    {
     }
 
     /**
@@ -270,73 +340,6 @@ abstract class Catalog extends \Ampache\Repository\Model\Catalog
     }
 
     /**
-     * Cleans the Catalog.
-     * This way is a little fishy, but if we start beets for every single file, it may take horribly long.
-     * So first we get the difference between our and the beets database and then clean up the rest.
-     */
-    public function clean_catalog_proc(?Interactor $interactor = null): int
-    {
-        $parser      = $this->getParser();
-        $this->songs = $this->getAllSongfiles();
-        /** @see self::removeFromDeleteList() */
-        $parser->setHandler($this, 'removeFromDeleteList');
-        $parser->start($this->listCommand);
-
-        $count = count($this->songs);
-        if ($count > 0) {
-            $this->deleteSongs($this->songs);
-        }
-
-        $metadataManager = $this->getMetadataManager();
-
-        if ($metadataManager->isCustomMetadataEnabled()) {
-            $metadataManager->collectGarbage();
-        }
-
-        $this->updateUi('clean', $this->cleanCounter, null, true);
-
-        return $count;
-    }
-
-    /**
-     * @return string[]
-     */
-    public function check_catalog_proc(?Interactor $interactor = null): array
-    {
-        return [];
-    }
-
-    /**
-     * move_catalog_proc
-     * This function updates the file path of the catalog to a new location (unsupported)
-     */
-    public function move_catalog_proc(string $new_path): bool
-    {
-        return false;
-    }
-
-    /**
-     * cache_catalog_proc
-     */
-    public function cache_catalog_proc(): bool
-    {
-        return false;
-    }
-
-    /**
-     * Remove a song from the "to be deleted"-list if it was found.
-     * @param array $song
-     */
-    public function removeFromDeleteList($song): void
-    {
-        $key = array_search($song['file'], $this->songs, true);
-        $this->updateUi('clean', ++$this->cleanCounter, $song);
-        if ($key) {
-            unset($this->songs[$key]);
-        }
-    }
-
-    /**
      * Delete Song from DB
      * @param array $songs
      */
@@ -363,21 +366,9 @@ abstract class Catalog extends \Ampache\Repository\Model\Catalog
     }
 
     /**
-     * Get all songs from the DB into a array
-     * @return string[] (id => file)
+     * Get the parser class like CliHandler or JsonHandler
      */
-    public function getAllSongfiles(): array
-    {
-        $sql        = "SELECT `id`, `file` FROM `song` WHERE `catalog` = ?";
-        $db_results = Dba::read($sql, [$this->id]);
-
-        $files = [];
-        while ($row = Dba::fetch_assoc($db_results)) {
-            $files[(int)$row['id']] = (string)$row['file'];
-        }
-
-        return $files;
-    }
+    abstract protected function getParser(): Handler;
 
     /**
      * Assembles a virtual Path. Mostly just to looks nice in the UI.
@@ -393,38 +384,47 @@ abstract class Catalog extends \Ampache\Repository\Model\Catalog
     }
 
     /**
-     * get_description
-     * This returns the description of this catalog
+     * Add the song to the DB
+     * @param array $song
      */
-    public function get_description(): string
+    protected function insertSong($song): ?int
     {
-        return $this->description;
+        $inserted = Song::insert($song);
+        if ($inserted) {
+            debug_event(self::class, 'Adding song ' . $song['file'], 5);
+            flush();
+
+            return $inserted;
+        }
+
+        debug_event(self::class, 'Insert failed for ' . $song['file'], 1);
+        if (!defined('SSE_OUTPUT') && !defined('CLI') && !defined('API')) {
+            /* HINT: filename (file path) */
+            AmpError::add('general', T_('Unable to add Song - %s'), $song['file']);
+            echo AmpError::display('general');
+        }
+
+        return null;
     }
 
     /**
-     * get_version
-     * This returns the current version
+     * @param string $prefix Prefix like add, updated, verify and clean
+     * @param int $count song count
+     * @param array|null $song Song array
+     * @param bool $ignoreTicker ignoring the ticker for the last update
      */
-    public function get_version(): string
+    protected function updateUi($prefix, $count, $song = null, $ignoreTicker = false): void
     {
-        return $this->version;
-    }
+        if (!defined('SSE_OUTPUT') && !defined('CLI') && !defined('API')) {
+            return;
+        }
 
-    /**
-     * get_type
-     * This returns the current catalog type
-     */
-    public function get_type(): string
-    {
-        return $this->type;
-    }
-
-    /**
-     * get_rel_path
-     */
-    public function get_rel_path(string $file_path): string
-    {
-        return '';
+        if ($ignoreTicker || Ui::check_ticker()) {
+            Ui::update_text($prefix . '_count_' . $this->id, $count);
+            if (isset($song)) {
+                Ui::update_text($prefix . '_dir_' . $this->id, scrub_out($this->getVirtualSongPath($song)));
+            }
+        }
     }
 
     private function getMetadataManager(): MetadataManagerInterface

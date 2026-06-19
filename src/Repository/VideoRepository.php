@@ -31,6 +31,20 @@ use Ampache\Repository\Model\Catalog;
 final class VideoRepository implements VideoRepositoryInterface
 {
     /**
+     * Return the number of entries in the database...
+     */
+    public function getItemCount(): int
+    {
+        $sql        = 'SELECT COUNT(*) AS `count` FROM `video`;';
+        $db_results = Dba::read($sql);
+        if (($results = Dba::fetch_assoc($db_results)) && array_key_exists('count', $results)) {
+            return (int) $results['count'];
+        }
+
+        return 0;
+    }
+
+    /**
      * This returns a number of random videos.
      *
      * @return int[]
@@ -47,19 +61,5 @@ final class VideoRepository implements VideoRepositoryInterface
         }
 
         return $results;
-    }
-
-    /**
-     * Return the number of entries in the database...
-     */
-    public function getItemCount(): int
-    {
-        $sql        = 'SELECT COUNT(*) AS `count` FROM `video`;';
-        $db_results = Dba::read($sql);
-        if (($results = Dba::fetch_assoc($db_results)) && array_key_exists('count', $results)) {
-            return (int) $results['count'];
-        }
-
-        return 0;
     }
 }
