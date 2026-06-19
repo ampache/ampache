@@ -128,7 +128,7 @@ final readonly class FolderViewAdapter implements FolderViewAdapterInterface
         if ($this->object instanceof Folder) {
             return (
                 $this->object->playable &&
-                $this->configContainer->get(ConfigurationKeyEnum::DIRECT_PLAY_LIMIT) < $this->object->object_count &&
+                $this->object->object_count < $this->configContainer->get(ConfigurationKeyEnum::DIRECT_PLAY_LIMIT) &&
                 $this->configContainer->isFeatureEnabled(ConfigurationKeyEnum::DIRECTPLAY)
             );
         }
