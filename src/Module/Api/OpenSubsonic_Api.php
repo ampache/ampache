@@ -1142,7 +1142,7 @@ class OpenSubsonic_Api
             return;
         }
 
-        $comment   = $input['comment'] ?? '';
+        $comment   = (string)$input['comment'] ?? '';
         $object_id = self::getAmpacheId($sub_id);
         $type      = self::getAmpacheType($sub_id);
 

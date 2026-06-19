@@ -693,9 +693,8 @@ class Catalog_dropbox extends Catalog
 
     /**
      * get_virtual_path
-     * @param string $file
      */
-    public function get_virtual_path($file): string
+    public function get_virtual_path(string $file): string
     {
         return $this->apikey . '|' . $file;
     }

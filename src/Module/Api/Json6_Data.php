@@ -1005,7 +1005,7 @@ class Json6_Data
      *     }>,
      *     "time": int,
      *     "year": int,
-     *     "tracks": array<mixed>,
+     *     "tracks": array<int, array<string, mixed>>,
      *     "songcount": int,
      *     "diskcount": int,
      *     "type": null|string,
@@ -1747,7 +1747,7 @@ class Json6_Data
      * songs_array
      *
      * @param array<int|string> $objects
-     * @return array<mixed>
+     * @return array<int, array<string, mixed>>
      */
     public static function songs_array(array $objects, User $user, string $auth): array
     {
@@ -1867,7 +1867,7 @@ class Json6_Data
                 $field = $metadata->getField();
 
                 if ($field !== null) {
-                    $meta_name = str_replace(
+                    $meta_name = (string)str_replace(
                         [' ', '(', ')', '/', '\\', '#'],
                         '_',
                         $field->getName()

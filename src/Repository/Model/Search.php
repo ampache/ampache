@@ -1848,11 +1848,17 @@ class Search extends playlist_object
     {
         //debug_event(self::class, 'get_rule_type: ' . $name, 5);
         return match ($name) {
-            'anywhere', 'title', 'album', 'song', 'song_artist', 'album_artist', 'composer', 'comment', 'lyrics', 'label', 'file', 'playlist_name', 'mbid', 'mbid_album', 'mbid_artist', 'mbid_song', 'genre', 'album_genre', 'artist_genre', 'song_genre', 'podcast', 'podcast_episode', 'category', 'username' => 'text',
-            'id', 'track', 'year', 'original_year', 'time', 'disk_count', 'song_count', 'album_count', 'artist_count', 'episode_count', 'played_times', 'skipped_times', 'played_or_skipped_times', 'myplayed_times', 'myskipped_times', 'myplayed_or_skipped_times', 'play_skip_ratio' => 'numeric',
-            'myrating', 'rating', 'albumrating', 'artistrating', 'songrating', 'podcastrating', 'podcast_episoderating' => 'numeric',
-            'played', 'myplayed', 'myplayedalbum', 'myplayedartist', 'my_flagged_song', 'my_flagged_album', 'my_flagged_artist', 'my_flagged_podcast', 'my_flagged_podcast_episode' => 'boolean',
-            'none', 'no_genre', 'no_license', 'possible_duplicate', 'duplicate_tracks', 'possible_duplicate_album', 'orphaned_album' => 'is_true',
+            'anywhere', 'title', 'album', 'song', 'song_artist', 'album_artist', 'composer', 'comment', 'lyrics',
+            'label', 'file', 'playlist_name', 'mbid', 'mbid_album', 'mbid_artist', 'mbid_song', 'genre', 'album_genre',
+            'artist_genre', 'song_genre', 'podcast', 'podcast_episode', 'category', 'username' => 'text',
+            'id', 'track', 'year', 'original_year', 'time', 'disk_count', 'song_count', 'album_count', 'artist_count',
+            'episode_count', 'played_times', 'skipped_times', 'played_or_skipped_times', 'myplayed_times',
+            'myskipped_times', 'myplayed_or_skipped_times', 'play_skip_ratio', 'myrating', 'rating', 'albumrating',
+            'artistrating', 'songrating', 'podcastrating', 'podcast_episoderating' => 'numeric',
+            'played', 'myplayed', 'myplayedalbum', 'myplayedartist', 'my_flagged_song', 'my_flagged_album',
+            'my_flagged_artist', 'my_flagged_podcast', 'my_flagged_podcast_episode' => 'boolean',
+            'none', 'no_genre', 'no_license', 'possible_duplicate', 'duplicate_tracks', 'possible_duplicate_album',
+            'orphaned_album' => 'is_true',
             'last_play', 'last_skip', 'last_play_or_skip', 'days_added', 'days_updated' => 'days',
             'recent_played' => 'recent_played',
             'recent_added' => 'recent_added', 'recent_updated' => 'recent_updated',

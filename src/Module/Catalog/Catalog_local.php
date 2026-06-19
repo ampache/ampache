@@ -1644,12 +1644,11 @@ class Catalog_local extends Catalog
      * This inserts a video file into the video file table the tag
      * information we can get is super sketchy so it's kind of a crap shoot
      * here
-     * @param string $file
      * @param array<string, mixed> $options
      * @throws Exception
      * @throws Exception
      */
-    private function _insert_local_video($file, array $options = []): int
+    private function _insert_local_video(string $file, array $options = []): int
     {
         /* Create the vainfo object and get info */
         $gtypes = $this->get_gather_types('video');

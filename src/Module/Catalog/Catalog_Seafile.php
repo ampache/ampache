@@ -54,20 +54,19 @@ class Catalog_Seafile extends Catalog
 
     private static string $table_name  = 'catalog_seafile';
 
-    /** @var SeafileAdapter seafile */
-    private $seafile;
+    private SeafileAdapter $seafile;
 
     private int $catalog_id = 0;
 
     private int $count = 0;
 
-    private $api_key;
+    private string|null $api_key = null;
 
-    private $api_call_delay;
+    private int $api_call_delay = 250;
 
-    public $server_uri;
+    public string $server_uri;
 
-    public $library_name;
+    public string $library_name;
 
     /**
      * get_description
@@ -160,11 +159,33 @@ class Catalog_Seafile extends Catalog
      */
     public function catalog_fields(): array
     {
-        return ['server_uri' => [
-            'description' => T_('Server URI'),
-            'type' => 'text',
-            'value' => 'https://seafile.example.org/',
-        ], 'library_name' => ['description' => T_('Library Name'), 'type' => 'text', 'value' => 'Music'], 'api_call_delay' => ['description' => T_('API Call Delay'), 'type' => 'number', 'value' => '250'], 'username' => ['description' => T_('Seafile Username/Email'), 'type' => 'text', 'value' => ''], 'password' => ['description' => T_('Seafile Password'), 'type' => 'password', 'value' => '']];
+        return [
+            'server_uri' => [
+                'description' => T_('Server URI'),
+                'type' => 'text',
+                'value' => 'https://seafile.example.org/',
+            ],
+            'library_name' => [
+                'description' => T_('Library Name'),
+                'type' => 'text',
+                'value' => 'Music'
+            ],
+            'api_call_delay' => [
+                'description' => T_('API Call Delay'),
+                'type' => 'number',
+                'value' => '250'
+            ],
+            'username' => [
+                'description' => T_('Seafile Username/Email'),
+                'type' => 'text',
+                'value' => ''
+            ],
+            'password' => [
+                'description' => T_('Seafile Password'),
+                'type' => 'password',
+                'value' => ''
+            ]
+        ];
     }
 
     /**
@@ -385,14 +406,11 @@ class Catalog_Seafile extends Catalog
     }
 
     /**
-     * @param string $sort_pattern
-     * @param string $rename_pattern
      * @param null|string[] $gather_types
-     * @param bool $keep
      * @return array<string, mixed>
      * @throws Exception
      */
-    private function download_metadata($file, $sort_pattern = '', $rename_pattern = '', $gather_types = null, $keep = false): array
+    private function download_metadata(string $file, string $sort_pattern = '', string $rename_pattern = '', ?array $gather_types = null, bool $keep = false): array
     {
         // Check for patterns
         if (!$sort_pattern || !$rename_pattern) {
@@ -463,9 +481,6 @@ class Catalog_Seafile extends Catalog
     {
     }
 
-    /**
-     * @throws ReflectionException
-     */
     public function verify_catalog_proc(?int $limit = 0, ?Interactor $interactor = null): int
     {
         set_time_limit(0);
@@ -481,7 +496,14 @@ class Catalog_Seafile extends Catalog
                 $file     = $this->seafile->get_file($fileinfo['path'], $fileinfo['filename']);
                 $metadata = null;
                 if ($file !== null) {
-                    $metadata = $this->download_metadata($file);
+                    try {
+                        $metadata = $this->download_metadata($file);
+                    } catch (Exception $error) {
+                        /* HINT: %1 filename (File path), %2 error message */
+                        debug_event('seafile_catalog', sprintf('Could not add song "%1$s": %2$s', $file->name, $error->getMessage()), 1);
+                        /* HINT: filename (File path) */
+                        Ui::update_text('', sprintf(T_('Could not add song: %s'), $file->name));
+                    }
                 }
 
                 if ($metadata !== null) {
@@ -540,10 +562,8 @@ class Catalog_Seafile extends Catalog
      * clean_tmp_file
      *
      * Clean up temp files after use.
-     *
-     * @param string|null $tempfilename
      */
-    public function clean_tmp_file($tempfilename): void
+    public function clean_tmp_file(?string $tempfilename = null): void
     {
         if ($tempfilename !== null && file_exists($tempfilename)) {
             unlink($tempfilename);
@@ -652,11 +672,7 @@ class Catalog_Seafile extends Catalog
      */
     public function get_f_info(): string
     {
-        if ($this->seafile != null) {
-            return $this->seafile->get_format_string();
-        }
-
-        return "Seafile Catalog";
+        return $this->seafile->get_format_string();
     }
 
     /**

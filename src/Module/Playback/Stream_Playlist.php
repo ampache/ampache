@@ -317,9 +317,8 @@ class Stream_Playlist
         $url['info_url']  = $object->get_f_link();
         $url['title']     = Stream_Url::get_title($url['url']);
         $url['time']      = -1;
-        $surl             = new Stream_Url($url);
 
-        return $surl;
+        return new Stream_Url($url);
     }
 
     private static function _media_object_to_url(Media $object, string $additional_params = '', string $urltype = 'web', ?User $user = null): ?Stream_Url
