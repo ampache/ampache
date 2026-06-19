@@ -82,7 +82,7 @@ final readonly class ConfirmDeleteAction implements ApplicationActionInterface
             sprintf(
                 '%s/folders.php?action=show&folder_id=%s',
                 $this->configContainer->getWebPath(),
-                $returnId
+                $folderId
             )
         );
         $this->ui->showQueryStats();
