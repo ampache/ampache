@@ -132,6 +132,7 @@ final readonly class FolderViewAdapter implements FolderViewAdapterInterface
                 $this->configContainer->isFeatureEnabled(ConfigurationKeyEnum::DIRECTPLAY)
             );
         }
+
         return ($this->configContainer->isFeatureEnabled(ConfigurationKeyEnum::DIRECTPLAY));
     }
 
