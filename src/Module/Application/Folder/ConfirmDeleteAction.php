@@ -71,6 +71,7 @@ final readonly class ConfirmDeleteAction implements ApplicationActionInterface
                 sprintf('Unauthorized to remove the folder `%s`', $folderId)
             );
         }
+
         $returnId = $folder->parent ?? -1;
 
         $this->folderDeleter->delete($folder);
@@ -82,7 +83,7 @@ final readonly class ConfirmDeleteAction implements ApplicationActionInterface
             sprintf(
                 '%s/folders.php?action=show&folder_id=%s',
                 $this->configContainer->getWebPath(),
-                $folderId
+                $returnId
             )
         );
         $this->ui->showQueryStats();
