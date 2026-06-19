@@ -65,7 +65,7 @@ $cel_folder  = "cel_folder";
 $cel_counter = "cel_counter";
 $css_class   = '';
 $folder_link = Ajax::text('?page=browse&action=set_sort&browse_id=' . $browse->id . '&sort=name', $name_text, 'folder_sort_name');
-$songs_link  = Ajax::text('?page=browse&action=set_sort&browse_id=' . $browse->id . '&sort=song_count', $items_text, 'folder_sort_song_count');
+$songs_link  = Ajax::text('?page=browse&action=set_sort&browse_id=' . $browse->id . '&sort=object_count', $items_text, 'folder_sort_object_count');
 $count_link  = Ajax::text('?page=browse&action=set_sort&browse_id=' . $browse->id . '&sort=total_count', $count_text, 'folder_sort_total_count');
 $rating_link = Ajax::text('?page=browse&action=set_sort&browse_id=' . $browse->id . '&sort=rating', $rating_text, 'folder_sort_rating');
 
