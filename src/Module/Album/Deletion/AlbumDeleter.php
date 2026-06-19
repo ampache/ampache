@@ -71,7 +71,10 @@ final readonly class AlbumDeleter implements AlbumDeleterInterface
             $deleted = $this->songDeleter->delete($song);
             if (!$deleted) {
                 $this->logger->critical(
-                    sprintf('Error when deleting the song `%d`.', $songId),
+                    sprintf(
+                        'Error when deleting the song `%d`.',
+                        $songId
+                    ),
                     [LegacyLogger::CONTEXT_TYPE => self::class]
                 );
 
