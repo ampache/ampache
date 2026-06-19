@@ -86,6 +86,7 @@ interface UiInterface
         ?string $form_name = 'confirmation',
         ?bool $visible = true,
     ): void;
+
     /**
      * shows a simple continue button after an action
      */
