@@ -23,6 +23,8 @@ declare(strict_types=0);
  *
  */
 
+// stylesheets.inc.php
+
 use Ampache\Config\AmpConfig;
 use Ampache\Module\Util\Ui;
 

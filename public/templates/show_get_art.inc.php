@@ -23,6 +23,8 @@ declare(strict_types=0);
  *
  */
 
+// show_get_art.inc.php
+
 use Ampache\Config\AmpConfig;
 use Ampache\Module\Art\Collector\ArtCollector;
 use Ampache\Module\System\Core;

@@ -23,6 +23,8 @@ declare(strict_types=0);
  *
  */
 
+// show_folder.inc.php
+
 use Ampache\Config\AmpConfig;
 use Ampache\Module\Authorization\Access;
 use Ampache\Module\Authorization\AccessFunctionEnum;

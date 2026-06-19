@@ -21,7 +21,10 @@ declare(strict_types=0);
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  *
- */ ?>
+ */
+
+// show_box_bottom.inc.php
+?>
     </div>
     <div class="box-bottom">
       <div class="box-left-bottom"></div>

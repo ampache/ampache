@@ -23,6 +23,8 @@ declare(strict_types=0);
  *
  */
 
+// browse_filters.inc.php
+
 use Ampache\Module\Api\Ajax;
 use Ampache\Module\System\Core;
 use Ampache\Module\System\Dba;

@@ -23,6 +23,8 @@ declare(strict_types=0);
  *
  */
 
+// show_preference_box.inc.php
+
 /* I'm cheating a little here, check to see if we want to show the
  * Apply to All button on this page
  */

@@ -23,6 +23,8 @@ declare(strict_types=0);
  *
  */
 
+// show_edit_license.inc.php
+
 use Ampache\Repository\Model\License;
 
 /** @var License $license */

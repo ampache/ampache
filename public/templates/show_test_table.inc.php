@@ -23,6 +23,8 @@ declare(strict_types=0);
  *
  */
 
+// show_test_table.inc.php
+
 use Ampache\Config\AmpConfig;
 use Ampache\Module\System\Dba;
 use Ampache\Module\Util\EnvironmentInterface;

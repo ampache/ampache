@@ -23,6 +23,8 @@ declare(strict_types=0);
  *
  */
 
+// show_artist_info.inc.php
+
 use Ampache\Repository\Model\Art;
 use Ampache\Repository\Model\Artist;
 use Ampache\Repository\Model\Wanted;

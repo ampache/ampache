@@ -23,6 +23,8 @@ declare(strict_types=0);
  *
  */
 
+// show_edit_shout.inc.php
+
 use Ampache\Config\AmpConfig;
 use Ampache\Module\Util\Ui;
 

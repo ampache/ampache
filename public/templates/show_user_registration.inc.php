@@ -23,6 +23,8 @@ declare(strict_types=0);
  *
  */
 
+// show_user_registration.inc.php
+
 use Ampache\Config\AmpConfig;
 use Ampache\Module\System\AmpError;
 use Ampache\Module\System\Core;

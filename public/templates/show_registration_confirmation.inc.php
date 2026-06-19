@@ -23,6 +23,8 @@ declare(strict_types=0);
  *
  */
 
+// show_registration_confirmation.inc.php
+
 use Ampache\Config\AmpConfig;
 use Ampache\Module\Application\Register\AddUserAction;
 use Ampache\Module\Util\Ui;

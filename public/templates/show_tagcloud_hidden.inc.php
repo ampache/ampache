@@ -23,6 +23,8 @@ declare(strict_types=0);
  *
  */
 
+// show_tagcloud_hidden.inc.php
+
 use Ampache\Module\Api\Ajax;
 use Ampache\Module\Authorization\Access;
 use Ampache\Module\Authorization\AccessLevelEnum;
