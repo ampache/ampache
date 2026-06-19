@@ -123,6 +123,18 @@ final readonly class FolderViewAdapter implements FolderViewAdapterInterface
         return Stream_Playlist::check_autoplay_append();
     }
 
+    public function canDirectplay(): bool
+    {
+        if ($this->object instanceof Folder) {
+            return (
+                $this->object->playable &&
+                $this->configContainer->get(ConfigurationKeyEnum::DIRECT_PLAY_LIMIT) < $this->object->object_count &&
+                $this->configContainer->isFeatureEnabled(ConfigurationKeyEnum::DIRECTPLAY)
+            );
+        }
+        return ($this->configContainer->isFeatureEnabled(ConfigurationKeyEnum::DIRECTPLAY));
+    }
+
     public function getDirectplayButton(): string
     {
         $object_id   = $this->object->getId();

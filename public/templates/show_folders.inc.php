@@ -132,7 +132,6 @@ foreach ($object_ids as $object) {
             ->setContext('USER_IS_REGISTERED', User::is_registered())
             ->setContext('USING_RATINGS', User::is_registered() && (AmpConfig::get('ratings')))
             ->setContext('FOLDER', $guiFactory->createFolderViewAdapter($gatekeeper, $folder, $libitem, $object_type))
-            ->setContext('CONFIG', $guiFactory->createConfigViewAdapter())
             ->setContext('IS_SHOW_PLAYED_TIMES', $show_played_times)
             ->setContext('IS_SHOW_PLAYLIST_ADD', $show_playlist_add)
             ->setContext('CLASS_COVER', $cel_cover)
