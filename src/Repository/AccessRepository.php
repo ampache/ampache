@@ -47,17 +47,54 @@ final readonly class AccessRepository implements AccessRepositoryInterface
     }
 
     /**
-     * Yields all available all access rules on this server
+     * Creates a new acl item
      *
-     * @return Generator<Access>
+     * @param string $startIp The start-ip in in-addr notation
+     * @param string $endIp The end-ip in in-addr notation
+     * @param string $name Name of the acl
+     * @param int $userId Designated user id (or -1 if none)
      */
-    public function getAccessLists(): Generator
-    {
-        $result = $this->connection->query('SELECT `id` FROM `access_list`');
+    public function create(
+        string $startIp,
+        string $endIp,
+        string $name,
+        int $userId,
+        AccessLevelEnum $level,
+        AccessTypeEnum $type,
+    ): void {
+        $this->connection->query(
+            'INSERT INTO `access_list` (`name`, `level`, `start`, `end`, `user`, `type`) VALUES (?, ?, ?, ?, ?, ?)',
+            [$name, $level->value, $startIp, $endIp, $userId, $type->value]
+        );
+    }
 
-        while ($rowId = $result->fetchColumn()) {
-            yield $this->modelFactory->createAccess((int) $rowId);
-        }
+    /**
+     * deletes the specified access_list entry
+     */
+    public function delete(int $accessId): void
+    {
+        $this->connection->query(
+            'DELETE FROM `access_list` WHERE `id` = ?',
+            [$accessId]
+        );
+    }
+
+    /**
+     * This sees if the ACL that we've specified already exists in order to
+     * prevent duplicates. The name is ignored.
+     */
+    public function exists(
+        string $inAddrStart,
+        string $inAddrEnd,
+        AccessTypeEnum $type,
+        int $userId,
+    ): bool {
+        $result = (int) $this->connection->fetchOne(
+            'SELECT COUNT(`id`) FROM `access_list` WHERE `start` = ? AND `end` = ? AND `type` = ? AND `user` = ?',
+            [$inAddrStart, $inAddrEnd, $type->value, $userId]
+        );
+
+        return $result > 0;
     }
 
     /**
@@ -92,54 +129,17 @@ final readonly class AccessRepository implements AccessRepositoryInterface
     }
 
     /**
-     * deletes the specified access_list entry
-     */
-    public function delete(int $accessId): void
-    {
-        $this->connection->query(
-            'DELETE FROM `access_list` WHERE `id` = ?',
-            [$accessId]
-        );
-    }
-
-    /**
-     * This sees if the ACL that we've specified already exists in order to
-     * prevent duplicates. The name is ignored.
-     */
-    public function exists(
-        string $inAddrStart,
-        string $inAddrEnd,
-        AccessTypeEnum $type,
-        int $userId,
-    ): bool {
-        $result = (int) $this->connection->fetchOne(
-            'SELECT COUNT(`id`) FROM `access_list` WHERE `start` = ? AND `end` = ? AND `type` = ? AND `user` = ?',
-            [$inAddrStart, $inAddrEnd, $type->value, $userId]
-        );
-
-        return $result > 0;
-    }
-
-    /**
-     * Creates a new acl item
+     * Yields all available all access rules on this server
      *
-     * @param string $startIp The start-ip in in-addr notation
-     * @param string $endIp The end-ip in in-addr notation
-     * @param string $name Name of the acl
-     * @param int $userId Designated user id (or -1 if none)
+     * @return Generator<Access>
      */
-    public function create(
-        string $startIp,
-        string $endIp,
-        string $name,
-        int $userId,
-        AccessLevelEnum $level,
-        AccessTypeEnum $type,
-    ): void {
-        $this->connection->query(
-            'INSERT INTO `access_list` (`name`, `level`, `start`, `end`, `user`, `type`) VALUES (?, ?, ?, ?, ?, ?)',
-            [$name, $level->value, $startIp, $endIp, $userId, $type->value]
-        );
+    public function getAccessLists(): Generator
+    {
+        $result = $this->connection->query('SELECT `id` FROM `access_list`');
+
+        while ($rowId = $result->fetchColumn()) {
+            yield $this->modelFactory->createAccess((int) $rowId);
+        }
     }
 
     /**

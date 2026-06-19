@@ -38,29 +38,29 @@ use WpOrg\Requests\Requests;
 class AmpacheLrcLib extends AmpachePlugin implements PluginGetLyricsInterface
 {
     #[Override]
-    public string $name = 'LrcLib';
-
-    #[Override]
     public string $categories = 'lyrics';
 
     #[Override]
     public string $description = 'Get lyrics from an LrcLib compatible server';
 
     #[Override]
-    public string $url = 'https://lrclib.net/';
-
-    #[Override]
-    public string $version = '000001';
+    public string $max_ampache = '999999';
 
     #[Override]
     public string $min_ampache = '360022';
 
     #[Override]
-    public string $max_ampache = '999999';
+    public string $name = 'LrcLib';
 
     public string $site_url = 'https://lrclib.net';
 
+    #[Override]
+    public string $url = 'https://lrclib.net/';
+
     public string $user_agent = 'Ampache-LrcLib-Plugin/1.0';
+
+    #[Override]
+    public string $version = '000001';
 
     /**
      * Constructor
@@ -68,98 +68,6 @@ class AmpacheLrcLib extends AmpachePlugin implements PluginGetLyricsInterface
     public function __construct()
     {
         $this->description = T_('Get lyrics from an LrcLib compatible server');
-    }
-
-    /**
-     * @return null|array<int, array{
-     *     id: int,
-     *     name: string,
-     *     trackName: string,
-     *     artistName: string,
-     *     albumName: string,
-     *     duration: float,
-     *     plainLyrics: string|null,
-     *     syncedLyrics: string|null,
-     * }>
-     */
-    private function _query_server(string $path_str, string $query_str = ''): ?array
-    {
-        $url = ($query_str === '' || $query_str === '0')
-            ? $this->site_url . $path_str
-            : $this->site_url . $path_str . '?' . $query_str;
-
-        $headers = [
-            'Accept' => 'application/json',
-            'User-Agent' => $this->user_agent
-        ];
-
-        debug_event(self::class, 'Searching for lyrics: ' . $url, 5);
-        $request = Requests::get($url, $headers);
-
-        // sleep for 0.5s
-        usleep(500000);
-
-        $response = json_decode((string) $request->body, true);
-
-        return ($request->success && is_array($response))
-            ? $response
-            : null;
-    }
-
-    /**
-     * install
-     * This is a required plugin function
-     */
-    public function install(): bool
-    {
-        return Preference::insert('lrclib_site_url', T_('LrcLib site URL'), '', AccessLevelEnum::MANAGER->value, 'string', 'plugins', $this->name);
-    }
-
-    /**
-     * uninstall
-     * This is a required plugin function
-     */
-    public function uninstall(): bool
-    {
-        return Preference::delete('lrclib_site_url');
-    }
-
-    /**
-     * upgrade
-     * This is a recommended plugin function
-     */
-    public function upgrade(): bool
-    {
-        return true;
-    }
-
-    /**
-     * load
-     * This is a required plugin function; here it populates the prefs we
-     * need for this object.
-     */
-    public function load(User $user): bool
-    {
-        $user->set_preferences();
-        $data = $user->prefs;
-        // load system when nothing is given
-        if (trim((string) $data['lrclib_site_url']) === '') {
-            $data                    = [];
-            $data['lrclib_site_url'] = Preference::get_by_user(-1, 'lrclib_site_url');
-        }
-
-        if (strlen(trim((string) $data['lrclib_site_url'])) !== 0) {
-            $site_url = trim((string) $data['lrclib_site_url']);
-        } else {
-            debug_event(self::class, 'No LrcLib site URL, metadata plugin skipped', 3);
-
-            return false;
-        }
-
-        $this->site_url   = rtrim($site_url, '/');
-        $this->user_agent = 'Ampache/' . AmpConfig::get('version') . ' (' . Stream::get_base_url() . ')';
-
-        return true;
     }
 
     /**
@@ -210,5 +118,97 @@ class AmpacheLrcLib extends AmpachePlugin implements PluginGetLyricsInterface
         }
 
         return null;
+    }
+
+    /**
+     * install
+     * This is a required plugin function
+     */
+    public function install(): bool
+    {
+        return Preference::insert('lrclib_site_url', T_('LrcLib site URL'), '', AccessLevelEnum::MANAGER->value, 'string', 'plugins', $this->name);
+    }
+
+    /**
+     * load
+     * This is a required plugin function; here it populates the prefs we
+     * need for this object.
+     */
+    public function load(User $user): bool
+    {
+        $user->set_preferences();
+        $data = $user->prefs;
+        // load system when nothing is given
+        if (trim((string) $data['lrclib_site_url']) === '') {
+            $data                    = [];
+            $data['lrclib_site_url'] = Preference::get_by_user(-1, 'lrclib_site_url');
+        }
+
+        if (strlen(trim((string) $data['lrclib_site_url'])) !== 0) {
+            $site_url = trim((string) $data['lrclib_site_url']);
+        } else {
+            debug_event(self::class, 'No LrcLib site URL, metadata plugin skipped', 3);
+
+            return false;
+        }
+
+        $this->site_url   = rtrim($site_url, '/');
+        $this->user_agent = 'Ampache/' . AmpConfig::get('version') . ' (' . Stream::get_base_url() . ')';
+
+        return true;
+    }
+
+    /**
+     * uninstall
+     * This is a required plugin function
+     */
+    public function uninstall(): bool
+    {
+        return Preference::delete('lrclib_site_url');
+    }
+
+    /**
+     * upgrade
+     * This is a recommended plugin function
+     */
+    public function upgrade(): bool
+    {
+        return true;
+    }
+
+    /**
+     * @return null|array<int, array{
+     *     id: int,
+     *     name: string,
+     *     trackName: string,
+     *     artistName: string,
+     *     albumName: string,
+     *     duration: float,
+     *     plainLyrics: string|null,
+     *     syncedLyrics: string|null,
+     * }>
+     */
+    private function _query_server(string $path_str, string $query_str = ''): ?array
+    {
+        $url = ($query_str === '' || $query_str === '0')
+            ? $this->site_url . $path_str
+            : $this->site_url . $path_str . '?' . $query_str;
+
+        $headers = [
+            'Accept' => 'application/json',
+            'User-Agent' => $this->user_agent
+        ];
+
+        debug_event(self::class, 'Searching for lyrics: ' . $url, 5);
+        $request = Requests::get($url, $headers);
+
+        // sleep for 0.5s
+        usleep(500000);
+
+        $response = json_decode((string) $request->body, true);
+
+        return ($request->success && is_array($response))
+            ? $response
+            : null;
     }
 }

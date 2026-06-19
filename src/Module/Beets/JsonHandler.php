@@ -34,8 +34,6 @@ use Override;
  */
 class JsonHandler extends Handler
 {
-    protected Catalog $handler;
-
     /**
      * Seperator between command and arguments
      */
@@ -53,78 +51,13 @@ class JsonHandler extends Handler
         'bitrate' => ['bitrate', '%d']
     ];
 
+    protected Catalog $handler;
+
     /**
      * JsonHandler constructor.
      */
     public function __construct(protected string $uri)
     {
-    }
-
-    /**
-     * Starts a command
-     */
-    public function start(string $command): void
-    {
-        $handle = fopen($this->assembleUri($command), 'r');
-        if ($handle) {
-            $this->iterateItems($handle);
-        }
-    }
-
-    /**
-     * Iterate over the input and create a song if one is found
-     * @param resource $handle
-     */
-    public function iterateItems($handle): void
-    {
-        $item = '';
-        while (!feof($handle)) {
-            $item .= $char = fgetc($handle);
-            // Check for the brace prevents unneeded call of itemIsComplete() which saves a whole lot of time
-            if ($char === '}' && $this->itemIsComlete($item)) {
-                $song = $this->parse($item);
-                $this->dispatch($song);
-                $item = '';
-                fgetc($handle); // Skip comma between two objects
-            }
-        }
-    }
-
-    /**
-     * Assemble the URI from the different parts
-     */
-    protected function assembleUri(string $command): string
-    {
-        $uriParts = [
-            $this->uri,
-            $command,
-        ];
-
-        return implode('/', $uriParts);
-    }
-
-    /**
-     * Check if the Json is complete to get a song
-     */
-    public function itemIsComlete(string $item): bool
-    {
-        $item = $this->removeUnwantedStrings($item);
-
-        return $this->compareBraces($item);
-    }
-
-    /**
-     * Remove the beginning and the end of the json string so we can access the object in it.
-     */
-    public function removeUnwantedStrings(string $item): string
-    {
-        $toRemove = [
-            '{"items":[',
-            '{"results":[',
-            ']}',
-        ];
-
-        return str_replace($toRemove, '', $item);
     }
 
     /**
@@ -147,18 +80,6 @@ class JsonHandler extends Handler
     }
 
     /**
-     * convert the json string into a song array
-     */
-    public function parse(string $item): array
-    {
-        $item         = $this->removeUnwantedStrings($item);
-        $song         = json_decode($item, true);
-        $song['file'] = $this->createFileUrl($song);
-
-        return $this->mapFields($song);
-    }
-
-    /**
      * Create the Url to access the file
      * Have to do some magic with the file ending so ampache can detect the type
      * @param array $song
@@ -173,5 +94,84 @@ class JsonHandler extends Handler
         ];
 
         return implode('/', $parts);
+    }
+
+    /**
+     * Check if the Json is complete to get a song
+     */
+    public function itemIsComlete(string $item): bool
+    {
+        $item = $this->removeUnwantedStrings($item);
+
+        return $this->compareBraces($item);
+    }
+
+    /**
+     * Iterate over the input and create a song if one is found
+     * @param resource $handle
+     */
+    public function iterateItems($handle): void
+    {
+        $item = '';
+        while (!feof($handle)) {
+            $item .= $char = fgetc($handle);
+            // Check for the brace prevents unneeded call of itemIsComplete() which saves a whole lot of time
+            if ($char === '}' && $this->itemIsComlete($item)) {
+                $song = $this->parse($item);
+                $this->dispatch($song);
+                $item = '';
+                fgetc($handle); // Skip comma between two objects
+            }
+        }
+    }
+
+    /**
+     * convert the json string into a song array
+     */
+    public function parse(string $item): array
+    {
+        $item         = $this->removeUnwantedStrings($item);
+        $song         = json_decode($item, true);
+        $song['file'] = $this->createFileUrl($song);
+
+        return $this->mapFields($song);
+    }
+
+    /**
+     * Remove the beginning and the end of the json string so we can access the object in it.
+     */
+    public function removeUnwantedStrings(string $item): string
+    {
+        $toRemove = [
+            '{"items":[',
+            '{"results":[',
+            ']}',
+        ];
+
+        return str_replace($toRemove, '', $item);
+    }
+
+    /**
+     * Starts a command
+     */
+    public function start(string $command): void
+    {
+        $handle = fopen($this->assembleUri($command), 'r');
+        if ($handle) {
+            $this->iterateItems($handle);
+        }
+    }
+
+    /**
+     * Assemble the URI from the different parts
+     */
+    protected function assembleUri(string $command): string
+    {
+        $uriParts = [
+            $this->uri,
+            $command,
+        ];
+
+        return implode('/', $uriParts);
     }
 }

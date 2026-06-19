@@ -35,15 +35,48 @@ class PodcastTest extends TestCase
 {
     private Podcast $subject;
 
-    protected function setUp(): void
+    public static function getterSetterDataProvider(): Generator
     {
-        $this->subject = new Podcast();
+        yield ['EpisodeCount', 0, 666];
+        yield ['TotalCount', 0, 666];
+        yield ['TotalSkip', 0, 666];
+        yield ['Generator', '', 'some-value',];
+        yield ['Website', '', 'some-value',];
+        yield ['Copyright', '', 'some-value',];
+        yield ['Language', '', 'chars',];
+        yield ['FeedUrl', '', 'some-value',];
+        yield ['Title', '', 'some-value',];
+        yield ['Description', '', 'some-value',];
     }
 
-    public function testIsNewReturnsTrueOnNewObject(): void
+    public function testGetCatalogIdReturnsSetValue(): void
     {
-        self::assertTrue(
-            $this->subject->isNew()
+        $catalogId = 666;
+
+        $catalog = $this->createMock(Catalog::class);
+
+        $catalog->expects(static::once())
+            ->method('getId')
+            ->willReturn($catalogId);
+
+        self::assertSame(
+            0,
+            $this->subject->getCatalogId()
+        );
+
+        $this->subject->setCatalog($catalog);
+
+        self::assertSame(
+            $catalogId,
+            $this->subject->getCatalogId()
+        );
+    }
+
+    public function testGetDefaultArtKindReturnsValue(): void
+    {
+        self::assertSame(
+            'default',
+            $this->subject->get_default_art_kind()
         );
     }
 
@@ -73,6 +106,30 @@ class PodcastTest extends TestCase
         );
     }
 
+    public function testGetLastBuildDateReturnsSetValue(): void
+    {
+        $data = new DateTime();
+
+        $this->subject->setLastBuildDate($data);
+
+        self::assertSame(
+            $data->getTimestamp(),
+            $this->subject->getLastBuildDate()->getTimestamp()
+        );
+    }
+
+    public function testGetLastSyncDateReturnsSetValue(): void
+    {
+        $data = new DateTime();
+
+        $this->subject->setLastSyncDate($data);
+
+        self::assertSame(
+            $data->getTimestamp(),
+            $this->subject->getLastSyncDate()->getTimestamp()
+        );
+    }
+
     public function testGetParentReturnsNull(): void
     {
         self::assertNull(
@@ -87,26 +144,23 @@ class PodcastTest extends TestCase
         );
     }
 
-    public function testGetDefaultArtKindReturnsValue(): void
+    public function testIsNewReturnsTrueOnNewObject(): void
     {
-        self::assertSame(
-            'default',
-            $this->subject->get_default_art_kind()
+        self::assertTrue(
+            $this->subject->isNew()
         );
     }
 
-    public static function getterSetterDataProvider(): Generator
+    public function testSetLanguageTruncates(): void
     {
-        yield ['EpisodeCount', 0, 666];
-        yield ['TotalCount', 0, 666];
-        yield ['TotalSkip', 0, 666];
-        yield ['Generator', '', 'some-value',];
-        yield ['Website', '', 'some-value',];
-        yield ['Copyright', '', 'some-value',];
-        yield ['Language', '', 'chars',];
-        yield ['FeedUrl', '', 'some-value',];
-        yield ['Title', '', 'some-value',];
-        yield ['Description', '', 'some-value',];
+        $value = 'söme-löng-value';
+
+        $this->subject->setLanguage($value);
+
+        self::assertSame(
+            mb_substr($value, 0, 5),
+            $this->subject->getLanguage()
+        );
     }
 
     #[DataProvider(methodName: 'getterSetterDataProvider')]
@@ -128,69 +182,15 @@ class PodcastTest extends TestCase
         );
     }
 
-    public function testSetLanguageTruncates(): void
-    {
-        $value = 'söme-löng-value';
-
-        $this->subject->setLanguage($value);
-
-        self::assertSame(
-            mb_substr($value, 0, 5),
-            $this->subject->getLanguage()
-        );
-    }
-
-    public function testGetCatalogIdReturnsSetValue(): void
-    {
-        $catalogId = 666;
-
-        $catalog = $this->createMock(Catalog::class);
-
-        $catalog->expects(static::once())
-            ->method('getId')
-            ->willReturn($catalogId);
-
-        self::assertSame(
-            0,
-            $this->subject->getCatalogId()
-        );
-
-        $this->subject->setCatalog($catalog);
-
-        self::assertSame(
-            $catalogId,
-            $this->subject->getCatalogId()
-        );
-    }
-
-    public function testGetLastSyncDateReturnsSetValue(): void
-    {
-        $data = new DateTime();
-
-        $this->subject->setLastSyncDate($data);
-
-        self::assertSame(
-            $data->getTimestamp(),
-            $this->subject->getLastSyncDate()->getTimestamp()
-        );
-    }
-
-    public function testGetLastBuildDateReturnsSetValue(): void
-    {
-        $data = new DateTime();
-
-        $this->subject->setLastBuildDate($data);
-
-        self::assertSame(
-            $data->getTimestamp(),
-            $this->subject->getLastBuildDate()->getTimestamp()
-        );
-    }
-
     public function testUpdateThrows(): void
     {
         $this->expectException(LogicException::class);
 
         $this->subject->update([]);
+    }
+
+    protected function setUp(): void
+    {
+        $this->subject = new Podcast();
     }
 }

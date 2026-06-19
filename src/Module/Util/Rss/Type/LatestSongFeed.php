@@ -40,11 +40,6 @@ final readonly class LatestSongFeed extends AbstractGenericRssFeed
     ) {
     }
 
-    protected function getTitle(): string
-    {
-        return T_('Newest Songs');
-    }
-
     protected function getItems(): Generator
     {
         $queryParams = $this->request->getQueryParams();
@@ -70,5 +65,10 @@ final readonly class LatestSongFeed extends AbstractGenericRssFeed
                 'image' => (string)Art::url($song->id, 'song', null, 2),
             ];
         }
+    }
+
+    protected function getTitle(): string
+    {
+        return T_('Newest Songs');
     }
 }

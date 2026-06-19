@@ -51,60 +51,42 @@ class User extends database_object
 {
     /** @var int Defines the internal system user-id */
     public const int INTERNAL_SYSTEM_USER_ID = -1;
+    protected const string DB_TABLENAME      = 'user';
 
-    protected const string DB_TABLENAME = 'user';
-
-    // Basic Components
-    public int $id = 0;
-
-    public ?string $username = null;
-
-    public ?string $fullname = null;
-
-    public ?string $email = null;
-
-    public ?string $website = null;
-
-    public ?string $apikey = null;
-
-    public int $access = 0;
-
-    public bool $disabled = true;
-
-    public int $last_seen = 0;
-
-    public ?int $create_date = null;
-
-    public ?string $validation = null;
-
-    public ?string $state = null;
-
-    public ?string $city = null;
-
-    public bool $fullname_public = false;
-
-    public ?string $rsstoken = null;
-
-    public ?string $streamtoken = null;
-
+    public int $access               = 0;
+    public ?string $apikey           = null;
     public int $catalog_filter_group = 0;
-
-    // Constructed variables
-    public string $ip_history = '';
-
-    /** @var array<string, mixed> $prefs */
-    public array $prefs = [];
-
-    public ?Tmp_Playlist $playlist = null;
-
-    public ?string $link = null;
-
-    private ?string $f_link = null;
 
     /** @var array<string, int[]> $catalogs */
     public array $catalogs = [];
 
-    private ?bool $has_art = null;
+    public ?string $city         = null;
+    public ?int $create_date     = null;
+    public bool $disabled        = true;
+    public ?string $email        = null;
+    public ?string $fullname     = null;
+    public bool $fullname_public = false;
+
+    // Basic Components
+    public int $id = 0;
+
+    // Constructed variables
+    public string $ip_history      = '';
+    public int $last_seen          = 0;
+    public ?string $link           = null;
+    public ?Tmp_Playlist $playlist = null;
+
+    /** @var array<string, mixed> $prefs */
+    public array $prefs = [];
+
+    public ?string $rsstoken    = null;
+    public ?string $state       = null;
+    public ?string $streamtoken = null;
+    public ?string $username    = null;
+    public ?string $validation  = null;
+    public ?string $website     = null;
+    private ?string $f_link     = null;
+    private ?bool $has_art      = null;
 
     public function __construct(?int $user_id = 0)
     {
@@ -120,678 +102,6 @@ class User extends database_object
         // Make sure the Full name is always filled
         if (strlen((string)$this->fullname) < 1) {
             $this->fullname = $this->username;
-        }
-    }
-
-    public function getId(): int
-    {
-        return $this->id ?: 0;
-    }
-
-    public function isNew(): bool
-    {
-        return $this->getId() === 0;
-    }
-
-    /**
-     * set_info
-     * This function gets the information for this object
-     */
-    private function set_info(int $user_id): bool
-    {
-        if (self::is_cached('user', $user_id)) {
-            $data = self::get_from_cache('user', $user_id);
-        } elseif ($user_id === -1) {
-            // If the ID is -1 then send back generic data
-            $data = [
-                'id' => -1,
-                'username' => 'System',
-                'fullname' => 'Ampache User',
-                'fullname_public' => 1,
-                'email' => null,
-                'website' => null,
-                'access' => 25,
-                'disabled' => 0,
-                'catalog_filter_group' => 0,
-                'catalogs' => self::get_user_catalogs(-1),
-                'apikey' => null,
-                'rsstoken' => null,
-                'streamtoken' => null,
-            ];
-        } else {
-            $sql        = "SELECT `id`, `username`, `fullname`, `email`, `website`, `apikey`, `access`, `disabled`, `last_seen`, `create_date`, `validation`, `state`, `city`, `fullname_public`, `rsstoken`, `streamtoken`, `catalog_filter_group` FROM `user` WHERE `id` = ?;";
-            $db_results = Dba::read($sql, [$user_id]);
-
-            $data = Dba::fetch_assoc($db_results);
-        }
-
-        if (empty($data)) {
-            return false;
-        }
-
-        self::add_to_cache('user', $user_id, $data);
-        foreach ($data as $key => $value) {
-            $this->$key = $value;
-        }
-
-        return true;
-    }
-
-    /**
-     * load_playlist
-     * This is called once per page load it makes sure that this session
-     * has a tmp_playlist, creating it if it doesn't, then sets $this->playlist
-     * as a tmp_playlist object that can be fiddled with later on
-     */
-    public function load_playlist(): void
-    {
-        if ($this->playlist === null && session_id()) {
-            $this->playlist = Tmp_Playlist::get_from_session(session_id());
-        }
-    }
-
-    /**
-     * get_playlists
-     * Get your playlists and just your playlists
-     */
-    public function get_playlists(bool $show_all): array
-    {
-        $results = [];
-        $sql     = ($show_all)
-            ? "SELECT `id` FROM `playlist` WHERE `user` = ? ORDER BY `name`;"
-            : "SELECT `id` FROM `playlist` WHERE `user` = ? AND `type` = 'public' ORDER BY `name`;";
-
-        $params     = [$this->id];
-        $db_results = Dba::read($sql, $params);
-        while ($row = Dba::fetch_assoc($db_results)) {
-            $results[] = (int)$row['id'];
-        }
-
-        return $results;
-    }
-
-    /**
-     * get_from_global
-     */
-    public static function get_from_global(): ?User
-    {
-        $globalUser = Core::get_global('user');
-
-        return (empty($globalUser))
-            ? null
-            : $globalUser;
-    }
-
-    /**
-     * get_from_username
-     * This returns a built user from a username. This is a
-     * static function so it doesn't require an instance
-     */
-    public static function get_from_username(string $username): ?User
-    {
-        return self::getUserRepository()->findByUsername($username);
-    }
-
-    /**
-     * get_from_id
-     * This returns a built user from an ID. This is a
-     * static function so it doesn't require an instance
-     */
-    public static function get_from_id(int $id): ?User
-    {
-        return self::getUserRepository()->findById($id);
-    }
-
-    /**
-     * get_user_catalogs
-     * This returns the catalogs as an array of ids that this user is allowed to access
-     * @return int[]
-     */
-    public static function get_user_catalogs(int $user_id, string $filter = ''): array
-    {
-        if (parent::is_cached('user_catalog' . $filter, $user_id)) {
-            return parent::get_from_cache('user_catalog' . $filter, $user_id);
-        }
-
-        $catalogs = Catalog::get_catalogs($filter, $user_id);
-
-        parent::add_to_cache('user_catalog' . $filter, $user_id, $catalogs);
-
-        return $catalogs;
-    }
-
-    /**
-     * get_catalogs
-     * This returns the catalogs as an array of ids that this user is allowed to access
-     * @return int[]
-     */
-    public function get_catalogs(string $filter): array
-    {
-        if (!isset($this->catalogs[$filter])) {
-            $this->catalogs[$filter] = self::get_user_catalogs($this->id, $filter);
-        }
-
-        return $this->catalogs[$filter];
-    }
-
-    /**
-     * get_preferences
-     * This is a little more complicated now that we've got many types of preferences
-     * This function pulls all of them and arranges them into a spiffy little array
-     * You can specify a type to limit it to a single type of preference
-     * []['title'] = uppercase type name
-     * []['prefs'] = array(array('name', 'display', 'value'));
-     * []['admin'] = t/f value if this is an admin only section
-     */
-    public function get_preferences(int|string $type = 0, bool $system = false): array
-    {
-        $user_limit = "";
-        if (!$system) {
-            $user_id    = $this->id;
-            $user_limit = "AND `preference`.`category` != 'system'";
-        } else {
-            $user_id = -1;
-            if ($type != '0') {
-                $user_limit = "AND `preference`.`category` = '" . Dba::escape($type) . "'";
-            }
-        }
-
-        $sql        = "SELECT `preference`.`name`, `preference`.`description`, `preference`.`category`, `preference`.`subcategory`, preference.level, user_preference.value FROM `preference` INNER JOIN `user_preference` ON `user_preference`.`preference` = `preference`.`id` WHERE `user_preference`.`user` = ? " . $user_limit . " ORDER BY `preference`.`category`, `preference`.`subcategory`, `preference`.`description`";
-        $db_results = Dba::read($sql, [$user_id]);
-        $results    = [];
-        $type_array = [];
-        /* Ok this is crappy, need to clean this up or improve the code FIXME */
-        while ($row = Dba::fetch_assoc($db_results)) {
-            $type  = $row['category'];
-            $admin = false;
-            if ($type == 'system') {
-                $admin = true;
-            }
-
-            $type_array[$type][$row['name']] = [
-                'name' => $row['name'],
-                'level' => $row['level'],
-                'description' => T_($row['description']),
-                'value' => $row['value'],
-                'subcategory' => $row['subcategory'],
-            ];
-            $results[$type] = [
-                'title' => ucwords((string)$type),
-                'admin' => $admin,
-                'prefs' => $type_array[$type],
-            ];
-        }
-
-        return $results;
-    }
-
-    /**
-     * set_preferences
-     * sets the prefs for this specific user
-     */
-    public function set_preferences(): void
-    {
-        $user_id    = Dba::escape($this->id);
-        $sql        = "SELECT `preference`.`name`, `user_preference`.`value` FROM `preference`, `user_preference` WHERE `user_preference`.`user` = ? AND `user_preference`.`preference` = `preference`.`id` AND `preference`.`type` != 'system';";
-        $db_results = Dba::read($sql, [$user_id]);
-
-        while ($row = Dba::fetch_assoc($db_results)) {
-            $key               = $row['name'];
-            $this->prefs[$key] = $row['value'];
-        }
-    }
-
-    /**
-     * is_logged_in
-     * checks to see if $this user is logged in returns their current IP if they are logged in
-     */
-    public function is_logged_in(): ?string
-    {
-        $sql = (AmpConfig::get('perpetual_api_session'))
-            ? "SELECT `id`, `ip` FROM `session` WHERE `username` = ? AND ((`expire` = 0 AND `type` = 'api') OR `expire` > ?);"
-            : "SELECT `id`, `ip` FROM `session` WHERE `username` = ? AND `expire` > ?;";
-        $db_results = Dba::read($sql, [$this->username, time()]);
-
-        if ($row = Dba::fetch_assoc($db_results)) {
-            return $row['ip'] ?? null;
-        }
-
-        return null;
-    }
-
-    /**
-     * has_access
-     * this function checks to see if this user has access
-     * to the passed action (pass a level requirement)
-     */
-    public function has_access(AccessLevelEnum $needed_level): bool
-    {
-        if (AmpConfig::get('demo_mode')) {
-            return true;
-        }
-
-        return $this->access >= $needed_level->value;
-    }
-
-    /**
-     * is_registered
-     * Check if the user is registered
-     */
-    public static function is_registered(): bool
-    {
-        if (empty(Core::get_global('user'))) {
-            return false;
-        }
-
-        if (!Core::get_global('user')->getId()) {
-            return false;
-        }
-
-        return !(!AmpConfig::get('use_auth') && Core::get_global('user')->access < 5);
-    }
-
-    /**
-     * set_user_data
-     * This updates some background data for user specific function
-     */
-    public static function set_user_data(int $user_id, string $key, float|int|string $value): void
-    {
-        Dba::write("REPLACE INTO `user_data` SET `user` = ?, `key` = ?, `value` = ?;", [$user_id, $key, $value]);
-    }
-
-    /**
-     * get_user_data
-     * This updates some background data for user specific function
-     */
-    public static function get_user_data(int $user_id, ?string $key = null, int|string|null $default = null): array
-    {
-        $sql    = "SELECT `key`, `value` FROM `user_data` WHERE `user` = ?";
-        $params = [$user_id];
-        if ($key) {
-            $sql .= " AND `key` = ?";
-            $params[] = $key;
-        }
-
-        $db_results = Dba::read($sql, $params);
-        $results    = ($key !== null && $default !== null)
-            ? [$key => $default]
-            : [];
-        while ($row = Dba::fetch_assoc($db_results)) {
-            $results[$row['key']] = $row['value'];
-        }
-
-        return $results;
-    }
-
-    /**
-     * get_play_size
-     * A user might be missing the play_size so it needs to be calculated
-     */
-    public static function get_play_size(int $user_id): int
-    {
-        $params = [$user_id];
-        $total  = 0;
-        $sql_s  = "SELECT IFNULL(SUM(`size`)/1024/1024, 0) AS `size` FROM `object_count` LEFT JOIN `song` ON `song`.`id`=`object_count`.`object_id` AND `object_count`.`object_type` = 'song' AND `object_count`.`count_type` = 'stream' AND `object_count`.`user` = ?;";
-        $db_s   = Dba::read($sql_s, $params);
-        while ($results = Dba::fetch_assoc($db_s)) {
-            $total += (int)$results['size'];
-        }
-
-        $sql_v = "SELECT IFNULL(SUM(`size`)/1024/1024, 0) AS `size` FROM `object_count` LEFT JOIN `video` ON `video`.`id`=`object_count`.`object_id` AND `object_count`.`count_type` = 'stream' AND `object_count`.`object_type` = 'video' AND `object_count`.`user` = ?;";
-        $db_v  = Dba::read($sql_v, $params);
-        while ($results = Dba::fetch_assoc($db_v)) {
-            $total += (int)$results['size'];
-        }
-
-        $sql_p = "SELECT IFNULL(SUM(`size`)/1024/1024, 0) AS `size` FROM `object_count`LEFT JOIN `podcast_episode` ON `podcast_episode`.`id`=`object_count`.`object_id` AND `object_count`.`count_type` = 'stream' AND `object_count`.`object_type` = 'podcast_episode' AND `object_count`.`user` = ?;";
-        $db_p  = Dba::read($sql_p, $params);
-        while ($results = Dba::fetch_assoc($db_p)) {
-            $total += (int)$results['size'];
-        }
-
-        return $total;
-    }
-
-    /**
-     * update
-     * This function is an all encompassing update function that
-     * calls the mini ones does all the error checking and all that
-     * good stuff
-     */
-    public function update(array $data): ?int
-    {
-        if (
-            empty($data['username']) &&
-            in_array(strtolower($data['username']), [strtolower(T_('System')), 'system'])
-        ) {
-            AmpError::add('username', T_('Username is required'));
-        }
-
-        if ($data['password1'] != $data['password2'] && !empty($data['password1'])) {
-            AmpError::add('password', T_("Passwords do not match"));
-        }
-
-        if (AmpError::occurred()) {
-            return null;
-        }
-
-        if (!isset($data['fullname_public'])) {
-            $data['fullname_public'] = false;
-        }
-
-        foreach ($data as $name => $value) {
-            if ($name == 'password1') {
-                $name = 'password';
-            } else {
-                $value = scrub_in($value);
-            }
-
-            switch ($name) {
-                case 'access':
-                case 'catalog_filter_group':
-                case 'city':
-                case 'email':
-                case 'fullname_public':
-                case 'fullname':
-                case 'password':
-                case 'state':
-                case 'username':
-                case 'website':
-                    if ($this->$name != $value) {
-                        $function = 'update_' . $name;
-                        $this->$function($value);
-                    }
-                    break;
-                case 'clear_stats':
-                    Stats::clear($this->id);
-                    break;
-            }
-        }
-
-        return $this->id;
-    }
-
-    /**
-     * update_catalog_filter_group
-     * Set a new filter group catalog filter
-     */
-    public function update_catalog_filter_group(int $new_filter): void
-    {
-        $sql = "UPDATE `user` SET `catalog_filter_group` = ? WHERE `id` = ?";
-
-        debug_event(self::class, 'Updating catalog access group', 4);
-
-        Dba::write($sql, [$new_filter, $this->id]);
-    }
-
-    public function update_username(string $new_username): void
-    {
-        $sql            = "UPDATE `user` SET `username` = ? WHERE `id` = ?";
-        $this->username = $new_username;
-
-        debug_event(self::class, 'Updating username', 4);
-
-        Dba::write($sql, [$new_username, $this->id]);
-    }
-
-    /**
-     * update_validation
-     * This is used by the registration mumbojumbo
-     * Use this function to update the validation key
-     * NOTE: crap this doesn't have update_item the humanity of it all
-     */
-    public function update_validation(string $new_validation): bool
-    {
-        $sql              = "UPDATE `user` SET `validation` = ?, `disabled`='1' WHERE `id` = ?";
-        $db_results       = (Dba::write($sql, [$new_validation, $this->id]) !== null);
-        $this->validation = $new_validation;
-
-        return $db_results;
-    }
-
-    public function update_fullname(string $new_fullname): void
-    {
-        $sql = "UPDATE `user` SET `fullname` = ? WHERE `id` = ?";
-
-        debug_event(self::class, 'Updating fullname', 4);
-
-        Dba::write($sql, [$new_fullname, $this->id]);
-    }
-
-    public function update_fullname_public(bool|string $new_fullname_public): void
-    {
-        $sql = "UPDATE `user` SET `fullname_public` = ? WHERE `id` = ?";
-
-        debug_event(self::class, 'Updating fullname public', 4);
-
-        Dba::write($sql, [($new_fullname_public) ? '1' : '0', $this->id]);
-    }
-
-    public function update_email(string $new_email): void
-    {
-        $sql = "UPDATE `user` SET `email` = ? WHERE `id` = ?";
-
-        debug_event(self::class, 'Updating email', 4);
-
-        Dba::write($sql, [$new_email, $this->id]);
-    }
-
-    public function update_website(string $new_website): void
-    {
-        $new_website = filter_var(urldecode($new_website), FILTER_VALIDATE_URL) ?: null;
-        $new_website = (is_string($new_website))
-            ? rtrim((string)$new_website, "/")
-            : null;
-        $sql = "UPDATE `user` SET `website` = ? WHERE `id` = ?";
-
-        debug_event(self::class, 'Updating website', 4);
-
-        Dba::write($sql, [$new_website, $this->id]);
-    }
-
-    public function update_state(string $new_state): void
-    {
-        $sql = "UPDATE `user` SET `state` = ? WHERE `id` = ?";
-
-        debug_event(self::class, 'Updating state', 4);
-
-        Dba::write($sql, [$new_state, $this->id]);
-    }
-
-    public function update_city(string $new_city): void
-    {
-        $sql = "UPDATE `user` SET `city` = ? WHERE `id` = ?";
-
-        debug_event(self::class, 'Updating city', 4);
-
-        Dba::write($sql, [$new_city, $this->id]);
-    }
-
-    /**
-     * update_counts for individual users
-     */
-    public static function update_counts(): void
-    {
-        $catalog_disable = AmpConfig::get('catalog_disable');
-        $catalog_filter  = AmpConfig::get('catalog_filter');
-        $sql             = "SELECT `id` FROM `user`";
-        $db_results      = Dba::read($sql);
-        $user_list       = [];
-        while ($results = Dba::fetch_assoc($db_results)) {
-            $user_list[] = (int)$results['id'];
-        }
-
-        // TODO $user_list[] = -1; // make sure the System / Guest user gets a count as well
-        if (!$catalog_filter) {
-            // no filter means no need for filtering or counting per user
-            $count_array = [
-                'album_disk',
-                'album',
-                'artist',
-                'catalog',
-                'items',
-                'label',
-                'license',
-                'live_stream',
-                'playlist',
-                'podcast_episode',
-                'podcast',
-                'search',
-                'share',
-                'size',
-                'song',
-                'tag',
-                'time',
-                'user',
-                'video',
-            ];
-            $server_counts = Catalog::get_server_counts(0);
-            foreach ($user_list as $user_id) {
-                debug_event(self::class, 'Update counts for ' . $user_id, 5);
-                foreach ($server_counts as $table => $count) {
-                    if (in_array($table, $count_array)) {
-                        self::set_user_data($user_id, $table, $count);
-                    }
-                }
-            }
-
-            return;
-        }
-
-        $count_array = [
-            'album',
-            'artist',
-            'catalog',
-            'label',
-            'license',
-            'live_stream',
-            'playlist',
-            'podcast_episode',
-            'podcast',
-            'search',
-            'share',
-            'song',
-            'tag',
-            'user',
-            'video',
-        ];
-        foreach ($user_list as $user_id) {
-            $catalog_array = self::get_user_catalogs($user_id);
-            debug_event(self::class, 'Update counts for ' . $user_id, 5);
-            // get counts per user (filtered catalogs aren't counted)
-            foreach ($count_array as $table) {
-                $sql = (in_array($table, ['search', 'user', 'license']))
-                    ? sprintf('SELECT COUNT(`id`) FROM `%s`', $table)
-                    : sprintf('SELECT COUNT(`id`) FROM `%s` WHERE', $table) . Catalog::get_user_filter($table, $user_id);
-                $db_results = Dba::read($sql);
-                $row        = Dba::fetch_row($db_results);
-
-                self::set_user_data($user_id, $table, (int)($row[0] ?? 0));
-            }
-
-            // tables with media items to count, song-related tables and the rest
-            $media_tables = [
-                'song',
-                'video',
-                'podcast_episode'
-            ];
-            $items = 0;
-            $time  = 0;
-            $size  = 0;
-            foreach ($media_tables as $table) {
-                if ($catalog_array === []) {
-                    continue;
-                }
-
-                $sql = ($catalog_disable)
-                    ? sprintf('SELECT COUNT(`id`), IFNULL(SUM(`time`), 0), IFNULL(SUM(`size`)/1024/1024, 0) FROM `%s` WHERE `catalog` IN (', $table) . implode(',', $catalog_array) . sprintf(') AND `%s`.`enabled`=\'1\';', $table)
-                    : sprintf('SELECT COUNT(`id`), IFNULL(SUM(`time`), 0), IFNULL(SUM(`size`)/1024/1024, 0) FROM `%s` WHERE `catalog` IN (', $table) . implode(',', $catalog_array) . ");";
-                $db_results = Dba::read($sql);
-                $row        = Dba::fetch_row($db_results);
-                // save the object and add to the current size
-                $items += (int)($row[0] ?? 0);
-                $time += (int)($row[1] ?? 0);
-                $size += (int)($row[2] ?? 0);
-                self::set_user_data($user_id, $table, (int)($row[0] ?? 0));
-            }
-
-            self::set_user_data($user_id, 'items', $items);
-            self::set_user_data($user_id, 'time', $time);
-            self::set_user_data($user_id, 'size', $size);
-            // album_disk counts
-            $sql        = "SELECT COUNT(DISTINCT `album_disk`.`id`) AS `count` FROM `album_disk` LEFT JOIN `album` ON `album_disk`.`album_id` = `album`.`id` LEFT JOIN `artist_map` ON `artist_map`.`object_id` = `album`.`id` WHERE `artist_map`.`object_type` = 'album' AND `album`.`catalog` IN (" . implode(',', Catalog::get_catalogs('', $user_id, true)) . ")";
-            $db_results = Dba::read($sql);
-            $row        = Dba::fetch_row($db_results);
-            self::set_user_data($user_id, 'album_disk', (int)($row[0] ?? 0));
-        }
-    }
-
-    /**
-     * disable
-     * This disables the current user
-     */
-    public function disable(): bool
-    {
-        // Make sure we aren't disabling the last admin
-        $sql        = "SELECT `id` FROM `user` WHERE `disabled` = '0' AND `access` = ? AND `id` != ? ";
-        $params     = [AccessLevelEnum::ADMIN->value, $this->id];
-        $db_results = Dba::read($sql, $params);
-
-        if (Dba::num_rows($db_results) === 0) {
-            return false;
-        }
-
-        $sql = "UPDATE `user` SET `disabled`='1' WHERE `id`='" . $this->id . "'";
-        Dba::write($sql);
-
-        // Delete any sessions they may have
-        $sql = "DELETE FROM `session` WHERE `username`='" . Dba::escape($this->username) . "'";
-        Dba::write($sql);
-
-        return true;
-    }
-
-    /**
-     * update_access
-     * updates their access level
-     */
-    public function update_access(int $new_access): bool
-    {
-        // There must always be at least one admin left if you're reducing access
-        if ($new_access < 100) {
-            $sql        = "SELECT `id` FROM `user` WHERE `access`= ? AND `id` != ?";
-            $params     = [AccessLevelEnum::ADMIN->value, $this->id];
-            $db_results = Dba::read($sql, $params);
-            if (Dba::num_rows($db_results) === 0) {
-                return false;
-            }
-        }
-
-        $new_access = Dba::escape($new_access);
-        $sql        = "UPDATE `user` SET `access` = ? WHERE `id` = ?;";
-
-        debug_event(self::class, 'Updating access level for ' . $this->id, 4);
-
-        Dba::write($sql, [$new_access, $this->id]);
-
-        return true;
-    }
-
-    /**
-     * save_mediaplay
-     */
-    public static function save_mediaplay(User $user, Song $media): void
-    {
-        foreach (Plugin::get_plugins(PluginTypeEnum::SAVE_MEDIAPLAY) as $plugin_name) {
-            try {
-                $plugin = new Plugin($plugin_name);
-                if ($plugin->_plugin instanceof PluginSaveMediaplayInterface && $plugin->load($user)) {
-                    debug_event(self::class, 'save_mediaplay... ' . $plugin_name, 5);
-                    $plugin->_plugin->save_mediaplay($media);
-                }
-            } catch (Exception $error) {
-                debug_event(self::class, 'save_mediaplay plugin error: ' . $error->getMessage(), 1);
-            }
         }
     }
 
@@ -939,35 +249,6 @@ class User extends database_object
         return $insert_id;
     }
 
-    public function update_password(string $new_password, ?string $hashed_password = null): void
-    {
-        debug_event(self::class, 'Updating password', 1);
-        if (!$hashed_password) {
-            $hashed_password = hash('sha256', $new_password);
-        }
-
-        $escaped_password = Dba::escape($hashed_password);
-        $sql              = "UPDATE `user` SET `password` = ? WHERE `id` = ?";
-        $db_results       = Dba::write($sql, [$escaped_password, $this->id]);
-
-        // Clear this (temp fix)
-        if ($db_results) {
-            unset($_SESSION['userdata']['password']);
-        }
-    }
-
-    /**
-     * does the item have art?
-     */
-    public function has_art(): bool
-    {
-        if ($this->has_art === null) {
-            $this->has_art = Art::has_db($this->id, 'user');
-        }
-
-        return $this->has_art ?? false;
-    }
-
     /**
      * fix_preferences
      * This is the new fix_preferences function, it does the following
@@ -1072,6 +353,369 @@ class User extends database_object
     }
 
     /**
+     * garbage_collection
+     *
+     * This cleans out users that have not activated in the last 30 days
+     */
+    public static function garbage_collection(): void
+    {
+        // activated accounts can log in but might not have cleared validation
+        Dba::write("UPDATE `user` SET `validation` = NULL WHERE `last_seen` > 0;");
+        // delete accounts not activated after 30 days
+        Dba::write("DELETE FROM `user` WHERE (`last_seen` = 0 OR `validation` IS NOT NULL) AND `create_date` < UNIX_TIMESTAMP(DATE_ADD(NOW(), INTERVAL -1 MONTH));");
+    }
+
+    /**
+     * get_from_global
+     */
+    public static function get_from_global(): ?User
+    {
+        $globalUser = Core::get_global('user');
+
+        return (empty($globalUser))
+            ? null
+            : $globalUser;
+    }
+
+    /**
+     * get_from_id
+     * This returns a built user from an ID. This is a
+     * static function so it doesn't require an instance
+     */
+    public static function get_from_id(int $id): ?User
+    {
+        return self::getUserRepository()->findById($id);
+    }
+
+    /**
+     * get_from_username
+     * This returns a built user from a username. This is a
+     * static function so it doesn't require an instance
+     */
+    public static function get_from_username(string $username): ?User
+    {
+        return self::getUserRepository()->findByUsername($username);
+    }
+
+    /**
+     * get_play_size
+     * A user might be missing the play_size so it needs to be calculated
+     */
+    public static function get_play_size(int $user_id): int
+    {
+        $params = [$user_id];
+        $total  = 0;
+        $sql_s  = "SELECT IFNULL(SUM(`size`)/1024/1024, 0) AS `size` FROM `object_count` LEFT JOIN `song` ON `song`.`id`=`object_count`.`object_id` AND `object_count`.`object_type` = 'song' AND `object_count`.`count_type` = 'stream' AND `object_count`.`user` = ?;";
+        $db_s   = Dba::read($sql_s, $params);
+        while ($results = Dba::fetch_assoc($db_s)) {
+            $total += (int)$results['size'];
+        }
+
+        $sql_v = "SELECT IFNULL(SUM(`size`)/1024/1024, 0) AS `size` FROM `object_count` LEFT JOIN `video` ON `video`.`id`=`object_count`.`object_id` AND `object_count`.`count_type` = 'stream' AND `object_count`.`object_type` = 'video' AND `object_count`.`user` = ?;";
+        $db_v  = Dba::read($sql_v, $params);
+        while ($results = Dba::fetch_assoc($db_v)) {
+            $total += (int)$results['size'];
+        }
+
+        $sql_p = "SELECT IFNULL(SUM(`size`)/1024/1024, 0) AS `size` FROM `object_count`LEFT JOIN `podcast_episode` ON `podcast_episode`.`id`=`object_count`.`object_id` AND `object_count`.`count_type` = 'stream' AND `object_count`.`object_type` = 'podcast_episode' AND `object_count`.`user` = ?;";
+        $db_p  = Dba::read($sql_p, $params);
+        while ($results = Dba::fetch_assoc($db_p)) {
+            $total += (int)$results['size'];
+        }
+
+        return $total;
+    }
+
+    /**
+     * get_user_catalogs
+     * This returns the catalogs as an array of ids that this user is allowed to access
+     * @return int[]
+     */
+    public static function get_user_catalogs(int $user_id, string $filter = ''): array
+    {
+        if (parent::is_cached('user_catalog' . $filter, $user_id)) {
+            return parent::get_from_cache('user_catalog' . $filter, $user_id);
+        }
+
+        $catalogs = Catalog::get_catalogs($filter, $user_id);
+
+        parent::add_to_cache('user_catalog' . $filter, $user_id, $catalogs);
+
+        return $catalogs;
+    }
+
+    /**
+     * get_user_data
+     * This updates some background data for user specific function
+     */
+    public static function get_user_data(int $user_id, ?string $key = null, int|string|null $default = null): array
+    {
+        $sql    = "SELECT `key`, `value` FROM `user_data` WHERE `user` = ?";
+        $params = [$user_id];
+        if ($key) {
+            $sql .= " AND `key` = ?";
+            $params[] = $key;
+        }
+
+        $db_results = Dba::read($sql, $params);
+        $results    = ($key !== null && $default !== null)
+            ? [$key => $default]
+            : [];
+        while ($row = Dba::fetch_assoc($db_results)) {
+            $results[$row['key']] = $row['value'];
+        }
+
+        return $results;
+    }
+
+    /**
+     * Get item name based on whether they allow public fullname access.
+     */
+    public static function get_username(int $user_id): string
+    {
+        $users = self::getUserRepository()->getValidArray(true);
+
+        return $users[$user_id] ?? T_('System');
+    }
+
+    /**
+     * Get item name based on whether they allow public fullname access.
+     * @return string[]
+     */
+    public static function getValidArray(): array
+    {
+        return self::getUserRepository()->getValidArray();
+    }
+
+    /**
+     * is_registered
+     * Check if the user is registered
+     */
+    public static function is_registered(): bool
+    {
+        if (empty(Core::get_global('user'))) {
+            return false;
+        }
+
+        if (!Core::get_global('user')->getId()) {
+            return false;
+        }
+
+        return !(!AmpConfig::get('use_auth') && Core::get_global('user')->access < 5);
+    }
+
+    /**
+     * rebuild_all_preferences
+     * This rebuilds the user preferences for all installed users, called by the plugin functions
+     */
+    public static function rebuild_all_preferences(): void
+    {
+        // Garbage collection
+        $sql = "DELETE `user_preference`.* FROM `user_preference` LEFT JOIN `user` ON `user_preference`.`user` = `user`.`id` WHERE (`user_preference`.`user` != -1 AND `user`.`id` IS NULL) OR `preference` = 0;";
+        Dba::write($sql);
+        // delete system prefs from users
+        $sql = "DELETE `user_preference`.* FROM `user_preference` LEFT JOIN `preference` ON `user_preference`.`preference` = `preference`.`id` WHERE `user_preference`.`user` != -1 AND `preference`.`category` = 'system';";
+        Dba::write($sql);
+        // ensure preference names are updated
+        $sql = "UPDATE `user_preference`, (SELECT `preference`.`name`, `preference`.`id` FROM `preference`) AS `preference` SET `user_preference`.`name` = `preference`.`name` WHERE `preference`.`id` = `user_preference`.`preference`;";
+        Dba::write($sql);
+
+        // Fix the system user preferences first
+        self::fix_preferences(-1);
+
+        // How many preferences should we have?
+        $sql        = "SELECT COUNT(`id`) AS `pref_count` FROM `preference` WHERE `category` != 'system';";
+        $db_results = Dba::read($sql);
+        $row        = Dba::fetch_assoc($db_results);
+        $pref_count = (int)$row['pref_count'];
+        // Get only users who have less preferences than excepted otherwise it would have significant performance issue with large user database
+        $sql        = 'SELECT `user` FROM `user_preference` GROUP BY `user` HAVING COUNT(*) < ' . $pref_count;
+        $db_results = Dba::read($sql);
+        while ($row = Dba::fetch_assoc($db_results)) {
+            self::fix_preferences((int)$row['user']);
+        }
+    }
+
+    /**
+     * save_mediaplay
+     */
+    public static function save_mediaplay(User $user, Song $media): void
+    {
+        foreach (Plugin::get_plugins(PluginTypeEnum::SAVE_MEDIAPLAY) as $plugin_name) {
+            try {
+                $plugin = new Plugin($plugin_name);
+                if ($plugin->_plugin instanceof PluginSaveMediaplayInterface && $plugin->load($user)) {
+                    debug_event(self::class, 'save_mediaplay... ' . $plugin_name, 5);
+                    $plugin->_plugin->save_mediaplay($media);
+                }
+            } catch (Exception $error) {
+                debug_event(self::class, 'save_mediaplay plugin error: ' . $error->getMessage(), 1);
+            }
+        }
+    }
+
+    /**
+     * set_user_data
+     * This updates some background data for user specific function
+     */
+    public static function set_user_data(int $user_id, string $key, float|int|string $value): void
+    {
+        Dba::write("REPLACE INTO `user_data` SET `user` = ?, `key` = ?, `value` = ?;", [$user_id, $key, $value]);
+    }
+
+    /**
+     * stream_control
+     * Check all stream control plugins
+     */
+    public static function stream_control(array $media_ids, ?User $user = null): bool
+    {
+        if ($user === null) {
+            $user = Core::get_global('user');
+            if (!$user instanceof User) {
+                return false;
+            }
+        }
+
+        foreach (Plugin::get_plugins(PluginTypeEnum::STREAM_CONTROLLER) as $plugin_name) {
+            $plugin = new Plugin($plugin_name);
+            if ($plugin->_plugin instanceof PluginStreamControlInterface && $plugin->load($user) && !$plugin->_plugin->stream_control($media_ids)) {
+                return false;
+            }
+        }
+
+        return true;
+    }
+
+    /**
+     * update_counts for individual users
+     */
+    public static function update_counts(): void
+    {
+        $catalog_disable = AmpConfig::get('catalog_disable');
+        $catalog_filter  = AmpConfig::get('catalog_filter');
+        $sql             = "SELECT `id` FROM `user`";
+        $db_results      = Dba::read($sql);
+        $user_list       = [];
+        while ($results = Dba::fetch_assoc($db_results)) {
+            $user_list[] = (int)$results['id'];
+        }
+
+        // TODO $user_list[] = -1; // make sure the System / Guest user gets a count as well
+        if (!$catalog_filter) {
+            // no filter means no need for filtering or counting per user
+            $count_array = [
+                'album_disk',
+                'album',
+                'artist',
+                'catalog',
+                'items',
+                'label',
+                'license',
+                'live_stream',
+                'playlist',
+                'podcast_episode',
+                'podcast',
+                'search',
+                'share',
+                'size',
+                'song',
+                'tag',
+                'time',
+                'user',
+                'video',
+            ];
+            $server_counts = Catalog::get_server_counts(0);
+            foreach ($user_list as $user_id) {
+                debug_event(self::class, 'Update counts for ' . $user_id, 5);
+                foreach ($server_counts as $table => $count) {
+                    if (in_array($table, $count_array)) {
+                        self::set_user_data($user_id, $table, $count);
+                    }
+                }
+            }
+
+            return;
+        }
+
+        $count_array = [
+            'album',
+            'artist',
+            'catalog',
+            'label',
+            'license',
+            'live_stream',
+            'playlist',
+            'podcast_episode',
+            'podcast',
+            'search',
+            'share',
+            'song',
+            'tag',
+            'user',
+            'video',
+        ];
+        foreach ($user_list as $user_id) {
+            $catalog_array = self::get_user_catalogs($user_id);
+            debug_event(self::class, 'Update counts for ' . $user_id, 5);
+            // get counts per user (filtered catalogs aren't counted)
+            foreach ($count_array as $table) {
+                $sql = (in_array($table, ['search', 'user', 'license']))
+                    ? sprintf('SELECT COUNT(`id`) FROM `%s`', $table)
+                    : sprintf('SELECT COUNT(`id`) FROM `%s` WHERE', $table) . Catalog::get_user_filter($table, $user_id);
+                $db_results = Dba::read($sql);
+                $row        = Dba::fetch_row($db_results);
+
+                self::set_user_data($user_id, $table, (int)($row[0] ?? 0));
+            }
+
+            // tables with media items to count, song-related tables and the rest
+            $media_tables = [
+                'song',
+                'video',
+                'podcast_episode'
+            ];
+            $items = 0;
+            $time  = 0;
+            $size  = 0;
+            foreach ($media_tables as $table) {
+                if ($catalog_array === []) {
+                    continue;
+                }
+
+                $sql = ($catalog_disable)
+                    ? sprintf('SELECT COUNT(`id`), IFNULL(SUM(`time`), 0), IFNULL(SUM(`size`)/1024/1024, 0) FROM `%s` WHERE `catalog` IN (', $table) . implode(',', $catalog_array) . sprintf(') AND `%s`.`enabled`=\'1\';', $table)
+                    : sprintf('SELECT COUNT(`id`), IFNULL(SUM(`time`), 0), IFNULL(SUM(`size`)/1024/1024, 0) FROM `%s` WHERE `catalog` IN (', $table) . implode(',', $catalog_array) . ");";
+                $db_results = Dba::read($sql);
+                $row        = Dba::fetch_row($db_results);
+                // save the object and add to the current size
+                $items += (int)($row[0] ?? 0);
+                $time += (int)($row[1] ?? 0);
+                $size += (int)($row[2] ?? 0);
+                self::set_user_data($user_id, $table, (int)($row[0] ?? 0));
+            }
+
+            self::set_user_data($user_id, 'items', $items);
+            self::set_user_data($user_id, 'time', $time);
+            self::set_user_data($user_id, 'size', $size);
+            // album_disk counts
+            $sql        = "SELECT COUNT(DISTINCT `album_disk`.`id`) AS `count` FROM `album_disk` LEFT JOIN `album` ON `album_disk`.`album_id` = `album`.`id` LEFT JOIN `artist_map` ON `artist_map`.`object_id` = `album`.`id` WHERE `artist_map`.`object_type` = 'album' AND `album`.`catalog` IN (" . implode(',', Catalog::get_catalogs('', $user_id, true)) . ")";
+            $db_results = Dba::read($sql);
+            $row        = Dba::fetch_row($db_results);
+            self::set_user_data($user_id, 'album_disk', (int)($row[0] ?? 0));
+        }
+    }
+
+    /**
+     * @deprecated inject dependency
+     */
+    private static function getUserRepository(): UserRepositoryInterface
+    {
+        global $dic;
+
+        return $dic->get(UserRepositoryInterface::class);
+    }
+
+    /**
      * delete
      * deletes this user and everything associated with it. This will affect
      * ratings and total stats
@@ -1105,131 +749,53 @@ class User extends database_object
         return true;
     }
 
-    /**
-     * is_online
-     * delay how long since last_seen in seconds default of 20 min
-     * calculates difference between now and last_seen
-     * if less than delay, we consider them still online
-     */
-    public function is_online(int $delay = 1200): bool
+    public function deleteApiKey(): void
     {
-        return time() - $this->last_seen <= $delay;
+        $sql = "UPDATE `user` SET `apikey` = NULL WHERE `id` = ?;";
+        Dba::write($sql, [$this->id]);
+    }
+
+    public function deleteAvatar(): void
+    {
+        $art = new Art($this->id, 'user');
+        $art->reset();
+    }
+
+    public function deleteRssToken(): void
+    {
+        $sql = "UPDATE `user` SET `rsstoken` = NULL WHERE `id` = ?;";
+        Dba::write($sql, [$this->id]);
+    }
+
+    public function deleteStreamToken(): void
+    {
+        $sql = "UPDATE `user` SET `streamtoken` = NULL WHERE `id` = ?;";
+        Dba::write($sql, [$this->id]);
     }
 
     /**
-     * get_recently_played
-     * This gets the recently played items for this user respecting
-     * the limit passed. ger recent by default or oldest if $newest is false.
-     * @return int[]
+     * disable
+     * This disables the current user
      */
-    public function get_recently_played(
-        string $type,
-        int $count,
-        int $offset = 0,
-        bool $newest = true,
-        string $count_type = 'stream',
-    ): array {
-        $ordersql = ($newest === true) ? 'DESC' : 'ASC';
-        $limit    = ($offset < 1) ? $count : $offset . "," . $count;
+    public function disable(): bool
+    {
+        // Make sure we aren't disabling the last admin
+        $sql        = "SELECT `id` FROM `user` WHERE `disabled` = '0' AND `access` = ? AND `id` != ? ";
+        $params     = [AccessLevelEnum::ADMIN->value, $this->id];
+        $db_results = Dba::read($sql, $params);
 
-        $sql        = "SELECT `object_id`, MAX(`date`) AS `date` FROM `object_count` WHERE `object_type` = ? AND `user` = ? AND `count_type` = ? GROUP BY `object_id` ORDER BY `date` " . $ordersql . " LIMIT " . $limit . " ";
-        $db_results = Dba::read($sql, [$type, $this->id, $count_type]);
-
-        $results = [];
-        while ($row = Dba::fetch_assoc($db_results)) {
-            $results[] = (int)$row['object_id'];
+        if (Dba::num_rows($db_results) === 0) {
+            return false;
         }
 
-        return $results;
-    }
+        $sql = "UPDATE `user` SET `disabled`='1' WHERE `id`='" . $this->id . "'";
+        Dba::write($sql);
 
-    /**
-     * Get item fullname.
-     */
-    public function get_fullname(): ?string
-    {
-        return ($this->fullname_public && !empty($this->fullname))
-            ? $this->fullname
-            : $this->username;
-    }
+        // Delete any sessions they may have
+        $sql = "DELETE FROM `session` WHERE `username`='" . Dba::escape($this->username) . "'";
+        Dba::write($sql);
 
-    /**
-     * Get item link.
-     */
-    public function get_link(): string
-    {
-        // don't do anything if it's formatted
-        if ($this->link === null && $this->id > 0) {
-            $web_path = AmpConfig::get_web_path();
-
-            $this->link = $web_path . '/stats.php?action=show_user&user_id=' . $this->id;
-        }
-
-        return $this->link ?? '';
-    }
-
-    /**
-     * Get item f_link.
-     */
-    public function get_f_link(?string $title = null): string
-    {
-        if ($this->f_link === null) {
-            if ($this->getId() === 0) {
-                $this->f_link = '';
-            } else {
-                $this->f_link = '<a href="' . $this->get_link() . '">' . scrub_out($title ?? $this->get_fullname()) . '</a>';
-            }
-        }
-
-        return $this->f_link;
-    }
-
-    /**
-     * Get item f_usage.
-     */
-    public function get_f_usage(): string
-    {
-        $user_data = self::get_user_data($this->id, 'play_size');
-        if (!isset($user_data['play_size'])) {
-            $total = self::get_play_size($this->id);
-            // set the value for next time
-            self::set_user_data($this->id, 'play_size', $total);
-            $user_data['play_size'] = $total;
-        }
-
-        return Ui::format_bytes($user_data['play_size'], 2, 2);
-    }
-
-    /**
-     * Get item ip_history.
-     */
-    public function get_ip_history(): string
-    {
-        $recent_user_ip = $this->getIpHistoryRepository()->getRecentIpForUser($this);
-        if ($recent_user_ip !== null) {
-            return ($recent_user_ip !== '' && filter_var($recent_user_ip, FILTER_VALIDATE_IP)) ? $recent_user_ip : T_('Invalid');
-        }
-
-        return T_('Not Enough Data');
-    }
-
-    /**
-     * Get item name based on whether they allow public fullname access.
-     */
-    public static function get_username(int $user_id): string
-    {
-        $users = self::getUserRepository()->getValidArray(true);
-
-        return $users[$user_id] ?? T_('System');
-    }
-
-    /**
-     * Get item name based on whether they allow public fullname access.
-     * @return string[]
-     */
-    public static function getValidArray(): array
-    {
-        return self::getUserRepository()->getValidArray();
+        return true;
     }
 
     /**
@@ -1286,42 +852,18 @@ class User extends database_object
         return $avatar;
     }
 
-    public function update_avatar(string $data, string $mime = ''): bool
-    {
-        debug_event(self::class, 'Updating avatar for ' . $this->id, 4);
-
-        $art = new Art($this->id, 'user');
-
-        return ($art->insert($data, $mime) === true);
-    }
-
     /**
-     * upload_avatar
+     * get_catalogs
+     * This returns the catalogs as an array of ids that this user is allowed to access
+     * @return int[]
      */
-    public function upload_avatar(): bool
+    public function get_catalogs(string $filter): array
     {
-        $upload = [];
-        if (!empty($_FILES['avatar']['tmp_name']) && $_FILES['avatar']['size'] <= AmpConfig::get('max_upload_size')) {
-            $path_info      = pathinfo((string) $_FILES['avatar']['name']);
-            $upload['file'] = $_FILES['avatar']['tmp_name'];
-            $upload['mime'] = 'image/' . ($path_info['extension'] ?? '');
-            if (!in_array(strtolower($path_info['extension'] ?? ''), Art::VALID_TYPES)) {
-                return false;
-            }
-
-            $image_data = Art::get_from_source($upload, 'user');
-            if ($image_data !== '') {
-                return $this->update_avatar($image_data, $upload['mime']);
-            }
+        if (!isset($this->catalogs[$filter])) {
+            $this->catalogs[$filter] = self::get_user_catalogs($this->id, $filter);
         }
 
-        return true; // only worry about failed uploads
-    }
-
-    public function deleteAvatar(): void
-    {
-        $art = new Art($this->id, 'user');
-        $art->reset();
+        return $this->catalogs[$filter];
     }
 
     /**
@@ -1355,85 +897,172 @@ class User extends database_object
         return '';
     }
 
-    public function deleteStreamToken(): void
+    /**
+     * Get item f_link.
+     */
+    public function get_f_link(?string $title = null): string
     {
-        $sql = "UPDATE `user` SET `streamtoken` = NULL WHERE `id` = ?;";
-        Dba::write($sql, [$this->id]);
-    }
+        if ($this->f_link === null) {
+            if ($this->getId() === 0) {
+                $this->f_link = '';
+            } else {
+                $this->f_link = '<a href="' . $this->get_link() . '">' . scrub_out($title ?? $this->get_fullname()) . '</a>';
+            }
+        }
 
-    public function deleteRssToken(): void
-    {
-        $sql = "UPDATE `user` SET `rsstoken` = NULL WHERE `id` = ?;";
-        Dba::write($sql, [$this->id]);
-    }
-
-    public function deleteApiKey(): void
-    {
-        $sql = "UPDATE `user` SET `apikey` = NULL WHERE `id` = ?;";
-        Dba::write($sql, [$this->id]);
+        return $this->f_link;
     }
 
     /**
-     * rebuild_all_preferences
-     * This rebuilds the user preferences for all installed users, called by the plugin functions
+     * Get item f_usage.
      */
-    public static function rebuild_all_preferences(): void
+    public function get_f_usage(): string
     {
-        // Garbage collection
-        $sql = "DELETE `user_preference`.* FROM `user_preference` LEFT JOIN `user` ON `user_preference`.`user` = `user`.`id` WHERE (`user_preference`.`user` != -1 AND `user`.`id` IS NULL) OR `preference` = 0;";
-        Dba::write($sql);
-        // delete system prefs from users
-        $sql = "DELETE `user_preference`.* FROM `user_preference` LEFT JOIN `preference` ON `user_preference`.`preference` = `preference`.`id` WHERE `user_preference`.`user` != -1 AND `preference`.`category` = 'system';";
-        Dba::write($sql);
-        // ensure preference names are updated
-        $sql = "UPDATE `user_preference`, (SELECT `preference`.`name`, `preference`.`id` FROM `preference`) AS `preference` SET `user_preference`.`name` = `preference`.`name` WHERE `preference`.`id` = `user_preference`.`preference`;";
-        Dba::write($sql);
+        $user_data = self::get_user_data($this->id, 'play_size');
+        if (!isset($user_data['play_size'])) {
+            $total = self::get_play_size($this->id);
+            // set the value for next time
+            self::set_user_data($this->id, 'play_size', $total);
+            $user_data['play_size'] = $total;
+        }
 
-        // Fix the system user preferences first
-        self::fix_preferences(-1);
+        return Ui::format_bytes($user_data['play_size'], 2, 2);
+    }
 
-        // How many preferences should we have?
-        $sql        = "SELECT COUNT(`id`) AS `pref_count` FROM `preference` WHERE `category` != 'system';";
-        $db_results = Dba::read($sql);
-        $row        = Dba::fetch_assoc($db_results);
-        $pref_count = (int)$row['pref_count'];
-        // Get only users who have less preferences than excepted otherwise it would have significant performance issue with large user database
-        $sql        = 'SELECT `user` FROM `user_preference` GROUP BY `user` HAVING COUNT(*) < ' . $pref_count;
-        $db_results = Dba::read($sql);
+    /**
+     * Get item fullname.
+     */
+    public function get_fullname(): ?string
+    {
+        return ($this->fullname_public && !empty($this->fullname))
+            ? $this->fullname
+            : $this->username;
+    }
+
+    /**
+     * Get item ip_history.
+     */
+    public function get_ip_history(): string
+    {
+        $recent_user_ip = $this->getIpHistoryRepository()->getRecentIpForUser($this);
+        if ($recent_user_ip !== null) {
+            return ($recent_user_ip !== '' && filter_var($recent_user_ip, FILTER_VALIDATE_IP)) ? $recent_user_ip : T_('Invalid');
+        }
+
+        return T_('Not Enough Data');
+    }
+
+    /**
+     * Get item link.
+     */
+    public function get_link(): string
+    {
+        // don't do anything if it's formatted
+        if ($this->link === null && $this->id > 0) {
+            $web_path = AmpConfig::get_web_path();
+
+            $this->link = $web_path . '/stats.php?action=show_user&user_id=' . $this->id;
+        }
+
+        return $this->link ?? '';
+    }
+
+    /**
+     * get_playlists
+     * Get your playlists and just your playlists
+     */
+    public function get_playlists(bool $show_all): array
+    {
+        $results = [];
+        $sql     = ($show_all)
+            ? "SELECT `id` FROM `playlist` WHERE `user` = ? ORDER BY `name`;"
+            : "SELECT `id` FROM `playlist` WHERE `user` = ? AND `type` = 'public' ORDER BY `name`;";
+
+        $params     = [$this->id];
+        $db_results = Dba::read($sql, $params);
         while ($row = Dba::fetch_assoc($db_results)) {
-            self::fix_preferences((int)$row['user']);
+            $results[] = (int)$row['id'];
         }
+
+        return $results;
     }
 
     /**
-     * stream_control
-     * Check all stream control plugins
+     * get_preferences
+     * This is a little more complicated now that we've got many types of preferences
+     * This function pulls all of them and arranges them into a spiffy little array
+     * You can specify a type to limit it to a single type of preference
+     * []['title'] = uppercase type name
+     * []['prefs'] = array(array('name', 'display', 'value'));
+     * []['admin'] = t/f value if this is an admin only section
      */
-    public static function stream_control(array $media_ids, ?User $user = null): bool
+    public function get_preferences(int|string $type = 0, bool $system = false): array
     {
-        if ($user === null) {
-            $user = Core::get_global('user');
-            if (!$user instanceof User) {
-                return false;
+        $user_limit = "";
+        if (!$system) {
+            $user_id    = $this->id;
+            $user_limit = "AND `preference`.`category` != 'system'";
+        } else {
+            $user_id = -1;
+            if ($type != '0') {
+                $user_limit = "AND `preference`.`category` = '" . Dba::escape($type) . "'";
             }
         }
 
-        foreach (Plugin::get_plugins(PluginTypeEnum::STREAM_CONTROLLER) as $plugin_name) {
-            $plugin = new Plugin($plugin_name);
-            if ($plugin->_plugin instanceof PluginStreamControlInterface && $plugin->load($user) && !$plugin->_plugin->stream_control($media_ids)) {
-                return false;
+        $sql        = "SELECT `preference`.`name`, `preference`.`description`, `preference`.`category`, `preference`.`subcategory`, preference.level, user_preference.value FROM `preference` INNER JOIN `user_preference` ON `user_preference`.`preference` = `preference`.`id` WHERE `user_preference`.`user` = ? " . $user_limit . " ORDER BY `preference`.`category`, `preference`.`subcategory`, `preference`.`description`";
+        $db_results = Dba::read($sql, [$user_id]);
+        $results    = [];
+        $type_array = [];
+        /* Ok this is crappy, need to clean this up or improve the code FIXME */
+        while ($row = Dba::fetch_assoc($db_results)) {
+            $type  = $row['category'];
+            $admin = false;
+            if ($type == 'system') {
+                $admin = true;
             }
+
+            $type_array[$type][$row['name']] = [
+                'name' => $row['name'],
+                'level' => $row['level'],
+                'description' => T_($row['description']),
+                'value' => $row['value'],
+                'subcategory' => $row['subcategory'],
+            ];
+            $results[$type] = [
+                'title' => ucwords((string)$type),
+                'admin' => $admin,
+                'prefs' => $type_array[$type],
+            ];
         }
 
-        return true;
+        return $results;
     }
 
     /**
-     * Returns the users internal username
+     * get_recently_played
+     * This gets the recently played items for this user respecting
+     * the limit passed. ger recent by default or oldest if $newest is false.
+     * @return int[]
      */
-    public function getUsername(): string
-    {
-        return $this->username ?? '';
+    public function get_recently_played(
+        string $type,
+        int $count,
+        int $offset = 0,
+        bool $newest = true,
+        string $count_type = 'stream',
+    ): array {
+        $ordersql = ($newest === true) ? 'DESC' : 'ASC';
+        $limit    = ($offset < 1) ? $count : $offset . "," . $count;
+
+        $sql        = "SELECT `object_id`, MAX(`date`) AS `date` FROM `object_count` WHERE `object_type` = ? AND `user` = ? AND `count_type` = ? GROUP BY `object_id` ORDER BY `date` " . $ordersql . " LIMIT " . $limit . " ";
+        $db_results = Dba::read($sql, [$type, $this->id, $count_type]);
+
+        $results = [];
+        while ($row = Dba::fetch_assoc($db_results)) {
+            $results[] = (int)$row['object_id'];
+        }
+
+        return $results;
     }
 
     /**
@@ -1445,6 +1074,11 @@ class User extends database_object
     public function getFullDisplayName(): string
     {
         return sprintf('%s (%s)', $this->username, $this->fullname);
+    }
+
+    public function getId(): int
+    {
+        return $this->id ?: 0;
     }
 
     /**
@@ -1465,26 +1099,330 @@ class User extends database_object
     }
 
     /**
-     * garbage_collection
-     *
-     * This cleans out users that have not activated in the last 30 days
+     * Returns the users internal username
      */
-    public static function garbage_collection(): void
+    public function getUsername(): string
     {
-        // activated accounts can log in but might not have cleared validation
-        Dba::write("UPDATE `user` SET `validation` = NULL WHERE `last_seen` > 0;");
-        // delete accounts not activated after 30 days
-        Dba::write("DELETE FROM `user` WHERE (`last_seen` = 0 OR `validation` IS NOT NULL) AND `create_date` < UNIX_TIMESTAMP(DATE_ADD(NOW(), INTERVAL -1 MONTH));");
+        return $this->username ?? '';
     }
 
     /**
-     * @deprecated Inject dependency
+     * has_access
+     * this function checks to see if this user has access
+     * to the passed action (pass a level requirement)
      */
-    private function getUserKeyGenerator(): UserKeyGeneratorInterface
+    public function has_access(AccessLevelEnum $needed_level): bool
     {
-        global $dic;
+        if (AmpConfig::get('demo_mode')) {
+            return true;
+        }
 
-        return $dic->get(UserKeyGeneratorInterface::class);
+        return $this->access >= $needed_level->value;
+    }
+
+    /**
+     * does the item have art?
+     */
+    public function has_art(): bool
+    {
+        if ($this->has_art === null) {
+            $this->has_art = Art::has_db($this->id, 'user');
+        }
+
+        return $this->has_art ?? false;
+    }
+
+    /**
+     * is_logged_in
+     * checks to see if $this user is logged in returns their current IP if they are logged in
+     */
+    public function is_logged_in(): ?string
+    {
+        $sql = (AmpConfig::get('perpetual_api_session'))
+            ? "SELECT `id`, `ip` FROM `session` WHERE `username` = ? AND ((`expire` = 0 AND `type` = 'api') OR `expire` > ?);"
+            : "SELECT `id`, `ip` FROM `session` WHERE `username` = ? AND `expire` > ?;";
+        $db_results = Dba::read($sql, [$this->username, time()]);
+
+        if ($row = Dba::fetch_assoc($db_results)) {
+            return $row['ip'] ?? null;
+        }
+
+        return null;
+    }
+
+    /**
+     * is_online
+     * delay how long since last_seen in seconds default of 20 min
+     * calculates difference between now and last_seen
+     * if less than delay, we consider them still online
+     */
+    public function is_online(int $delay = 1200): bool
+    {
+        return time() - $this->last_seen <= $delay;
+    }
+
+    public function isNew(): bool
+    {
+        return $this->getId() === 0;
+    }
+
+    /**
+     * load_playlist
+     * This is called once per page load it makes sure that this session
+     * has a tmp_playlist, creating it if it doesn't, then sets $this->playlist
+     * as a tmp_playlist object that can be fiddled with later on
+     */
+    public function load_playlist(): void
+    {
+        if ($this->playlist === null && session_id()) {
+            $this->playlist = Tmp_Playlist::get_from_session(session_id());
+        }
+    }
+
+    /**
+     * set_preferences
+     * sets the prefs for this specific user
+     */
+    public function set_preferences(): void
+    {
+        $user_id    = Dba::escape($this->id);
+        $sql        = "SELECT `preference`.`name`, `user_preference`.`value` FROM `preference`, `user_preference` WHERE `user_preference`.`user` = ? AND `user_preference`.`preference` = `preference`.`id` AND `preference`.`type` != 'system';";
+        $db_results = Dba::read($sql, [$user_id]);
+
+        while ($row = Dba::fetch_assoc($db_results)) {
+            $key               = $row['name'];
+            $this->prefs[$key] = $row['value'];
+        }
+    }
+
+    /**
+     * update
+     * This function is an all encompassing update function that
+     * calls the mini ones does all the error checking and all that
+     * good stuff
+     */
+    public function update(array $data): ?int
+    {
+        if (
+            empty($data['username']) &&
+            in_array(strtolower($data['username']), [strtolower(T_('System')), 'system'])
+        ) {
+            AmpError::add('username', T_('Username is required'));
+        }
+
+        if ($data['password1'] != $data['password2'] && !empty($data['password1'])) {
+            AmpError::add('password', T_("Passwords do not match"));
+        }
+
+        if (AmpError::occurred()) {
+            return null;
+        }
+
+        if (!isset($data['fullname_public'])) {
+            $data['fullname_public'] = false;
+        }
+
+        foreach ($data as $name => $value) {
+            if ($name == 'password1') {
+                $name = 'password';
+            } else {
+                $value = scrub_in($value);
+            }
+
+            switch ($name) {
+                case 'access':
+                case 'catalog_filter_group':
+                case 'city':
+                case 'email':
+                case 'fullname_public':
+                case 'fullname':
+                case 'password':
+                case 'state':
+                case 'username':
+                case 'website':
+                    if ($this->$name != $value) {
+                        $function = 'update_' . $name;
+                        $this->$function($value);
+                    }
+                    break;
+                case 'clear_stats':
+                    Stats::clear($this->id);
+                    break;
+            }
+        }
+
+        return $this->id;
+    }
+
+    /**
+     * update_access
+     * updates their access level
+     */
+    public function update_access(int $new_access): bool
+    {
+        // There must always be at least one admin left if you're reducing access
+        if ($new_access < 100) {
+            $sql        = "SELECT `id` FROM `user` WHERE `access`= ? AND `id` != ?";
+            $params     = [AccessLevelEnum::ADMIN->value, $this->id];
+            $db_results = Dba::read($sql, $params);
+            if (Dba::num_rows($db_results) === 0) {
+                return false;
+            }
+        }
+
+        $new_access = Dba::escape($new_access);
+        $sql        = "UPDATE `user` SET `access` = ? WHERE `id` = ?;";
+
+        debug_event(self::class, 'Updating access level for ' . $this->id, 4);
+
+        Dba::write($sql, [$new_access, $this->id]);
+
+        return true;
+    }
+
+    public function update_avatar(string $data, string $mime = ''): bool
+    {
+        debug_event(self::class, 'Updating avatar for ' . $this->id, 4);
+
+        $art = new Art($this->id, 'user');
+
+        return ($art->insert($data, $mime) === true);
+    }
+
+    /**
+     * update_catalog_filter_group
+     * Set a new filter group catalog filter
+     */
+    public function update_catalog_filter_group(int $new_filter): void
+    {
+        $sql = "UPDATE `user` SET `catalog_filter_group` = ? WHERE `id` = ?";
+
+        debug_event(self::class, 'Updating catalog access group', 4);
+
+        Dba::write($sql, [$new_filter, $this->id]);
+    }
+
+    public function update_city(string $new_city): void
+    {
+        $sql = "UPDATE `user` SET `city` = ? WHERE `id` = ?";
+
+        debug_event(self::class, 'Updating city', 4);
+
+        Dba::write($sql, [$new_city, $this->id]);
+    }
+
+    public function update_email(string $new_email): void
+    {
+        $sql = "UPDATE `user` SET `email` = ? WHERE `id` = ?";
+
+        debug_event(self::class, 'Updating email', 4);
+
+        Dba::write($sql, [$new_email, $this->id]);
+    }
+
+    public function update_fullname(string $new_fullname): void
+    {
+        $sql = "UPDATE `user` SET `fullname` = ? WHERE `id` = ?";
+
+        debug_event(self::class, 'Updating fullname', 4);
+
+        Dba::write($sql, [$new_fullname, $this->id]);
+    }
+
+    public function update_fullname_public(bool|string $new_fullname_public): void
+    {
+        $sql = "UPDATE `user` SET `fullname_public` = ? WHERE `id` = ?";
+
+        debug_event(self::class, 'Updating fullname public', 4);
+
+        Dba::write($sql, [($new_fullname_public) ? '1' : '0', $this->id]);
+    }
+
+    public function update_password(string $new_password, ?string $hashed_password = null): void
+    {
+        debug_event(self::class, 'Updating password', 1);
+        if (!$hashed_password) {
+            $hashed_password = hash('sha256', $new_password);
+        }
+
+        $escaped_password = Dba::escape($hashed_password);
+        $sql              = "UPDATE `user` SET `password` = ? WHERE `id` = ?";
+        $db_results       = Dba::write($sql, [$escaped_password, $this->id]);
+
+        // Clear this (temp fix)
+        if ($db_results) {
+            unset($_SESSION['userdata']['password']);
+        }
+    }
+
+    public function update_state(string $new_state): void
+    {
+        $sql = "UPDATE `user` SET `state` = ? WHERE `id` = ?";
+
+        debug_event(self::class, 'Updating state', 4);
+
+        Dba::write($sql, [$new_state, $this->id]);
+    }
+
+    public function update_username(string $new_username): void
+    {
+        $sql            = "UPDATE `user` SET `username` = ? WHERE `id` = ?";
+        $this->username = $new_username;
+
+        debug_event(self::class, 'Updating username', 4);
+
+        Dba::write($sql, [$new_username, $this->id]);
+    }
+
+    /**
+     * update_validation
+     * This is used by the registration mumbojumbo
+     * Use this function to update the validation key
+     * NOTE: crap this doesn't have update_item the humanity of it all
+     */
+    public function update_validation(string $new_validation): bool
+    {
+        $sql              = "UPDATE `user` SET `validation` = ?, `disabled`='1' WHERE `id` = ?";
+        $db_results       = (Dba::write($sql, [$new_validation, $this->id]) !== null);
+        $this->validation = $new_validation;
+
+        return $db_results;
+    }
+
+    public function update_website(string $new_website): void
+    {
+        $new_website = filter_var(urldecode($new_website), FILTER_VALIDATE_URL) ?: null;
+        $new_website = (is_string($new_website))
+            ? rtrim((string)$new_website, "/")
+            : null;
+        $sql = "UPDATE `user` SET `website` = ? WHERE `id` = ?";
+
+        debug_event(self::class, 'Updating website', 4);
+
+        Dba::write($sql, [$new_website, $this->id]);
+    }
+
+    /**
+     * upload_avatar
+     */
+    public function upload_avatar(): bool
+    {
+        $upload = [];
+        if (!empty($_FILES['avatar']['tmp_name']) && $_FILES['avatar']['size'] <= AmpConfig::get('max_upload_size')) {
+            $path_info      = pathinfo((string) $_FILES['avatar']['name']);
+            $upload['file'] = $_FILES['avatar']['tmp_name'];
+            $upload['mime'] = 'image/' . ($path_info['extension'] ?? '');
+            if (!in_array(strtolower($path_info['extension'] ?? ''), Art::VALID_TYPES)) {
+                return false;
+            }
+
+            $image_data = Art::get_from_source($upload, 'user');
+            if ($image_data !== '') {
+                return $this->update_avatar($image_data, $upload['mime']);
+            }
+        }
+
+        return true; // only worry about failed uploads
     }
 
     /**
@@ -1498,12 +1436,56 @@ class User extends database_object
     }
 
     /**
-     * @deprecated inject dependency
+     * @deprecated Inject dependency
      */
-    private static function getUserRepository(): UserRepositoryInterface
+    private function getUserKeyGenerator(): UserKeyGeneratorInterface
     {
         global $dic;
 
-        return $dic->get(UserRepositoryInterface::class);
+        return $dic->get(UserKeyGeneratorInterface::class);
+    }
+
+    /**
+     * set_info
+     * This function gets the information for this object
+     */
+    private function set_info(int $user_id): bool
+    {
+        if (self::is_cached('user', $user_id)) {
+            $data = self::get_from_cache('user', $user_id);
+        } elseif ($user_id === -1) {
+            // If the ID is -1 then send back generic data
+            $data = [
+                'id' => -1,
+                'username' => 'System',
+                'fullname' => 'Ampache User',
+                'fullname_public' => 1,
+                'email' => null,
+                'website' => null,
+                'access' => 25,
+                'disabled' => 0,
+                'catalog_filter_group' => 0,
+                'catalogs' => self::get_user_catalogs(-1),
+                'apikey' => null,
+                'rsstoken' => null,
+                'streamtoken' => null,
+            ];
+        } else {
+            $sql        = "SELECT `id`, `username`, `fullname`, `email`, `website`, `apikey`, `access`, `disabled`, `last_seen`, `create_date`, `validation`, `state`, `city`, `fullname_public`, `rsstoken`, `streamtoken`, `catalog_filter_group` FROM `user` WHERE `id` = ?;";
+            $db_results = Dba::read($sql, [$user_id]);
+
+            $data = Dba::fetch_assoc($db_results);
+        }
+
+        if (empty($data)) {
+            return false;
+        }
+
+        self::add_to_cache('user', $user_id, $data);
+        foreach ($data as $key => $value) {
+            $this->$key = $value;
+        }
+
+        return true;
     }
 }

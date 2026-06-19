@@ -41,8 +41,7 @@ use Exception;
 class Userflag extends database_object
 {
     protected const string DB_TABLENAME = 'user_flag';
-
-    private const array FLAG_TYPES = [
+    private const array FLAG_TYPES      = [
         'album_disk',
         'album',
         'artist',
@@ -72,16 +71,6 @@ class Userflag extends database_object
     ) {
         $this->id   = (int)($object_id);
         $this->type = $type;
-    }
-
-    public function getId(): int
-    {
-        return $this->id;
-    }
-
-    public static function is_valid(string $type): bool
-    {
-        return in_array($type, self::FLAG_TYPES);
     }
 
     /**
@@ -169,6 +158,165 @@ class Userflag extends database_object
     }
 
     /**
+     * get_latest
+     * Get the latest user flagged objects
+     * @return int[]
+     */
+    public static function get_latest(
+        string $type,
+        ?User $user = null,
+        int $count = 0,
+        int $offset = 0,
+        int $since = 0,
+        int $before = 0,
+        bool $by_user = false,
+    ): array {
+        if ($count === 0) {
+            $count = AmpConfig::get('popular_threshold', 10);
+        }
+
+        if ($count === -1) {
+            $count  = 0;
+            $offset = 0;
+        }
+
+        // Select Top objects counting by # of rows
+        $sql   = self::get_latest_sql($type, $user, $since, $before, $by_user);
+        $limit = ($offset < 1)
+            ? $count
+            : $offset . "," . $count;
+        if ($limit > 0) {
+            $sql .= 'LIMIT ' . $limit;
+        }
+
+        //debug_event(self::class, 'get_latest ' . $sql, 5);
+        $db_results = Dba::read($sql);
+        $results    = [];
+        while ($row = Dba::fetch_assoc($db_results)) {
+            $results[] = (int)$row['id'];
+        }
+
+        return $results;
+    }
+
+    /**
+     * get_latest_sql
+     */
+    public static function get_latest_sql(
+        string $input_type,
+        ?User $user = null,
+        int $since = 0,
+        int $before = 0,
+        bool $by_user = false,
+    ): string {
+        $type = Stats::validate_type($input_type);
+        $sql  = "SELECT DISTINCT(`user_flag`.`object_id`) AS `id`, COUNT(DISTINCT(`user_flag`.`user`)) AS `count`, `user_flag`.`object_type` AS `type`, MAX(`user_flag`.`user`) AS `user`, MAX(`user_flag`.`date`) AS `date` FROM `user_flag`";
+        if ($input_type == 'album_artist' || $input_type == 'song_artist') {
+            $sql .= " LEFT JOIN `artist` ON `artist`.`id` = `user_flag`.`object_id` AND `user_flag`.`object_type` = 'artist'";
+        }
+
+        $sql .= " WHERE `user_flag`.`object_type` = '" . $type . "'";
+        if ($by_user && $user?->id > 0) {
+            $sql .= sprintf(' AND `user_flag`.`user` = \'%s\'', $user->id);
+        }
+
+        if (AmpConfig::get('catalog_disable') && in_array($type, ['artist', 'album', 'album_disk', 'song', 'video'])) {
+            $sql .= " AND " . Catalog::get_enable_filter($type, '`object_id`');
+        }
+
+        if (AmpConfig::get('catalog_filter')) {
+            $sql .= " AND" . Catalog::get_user_filter('user_flag_' . $type, $user?->getId() ?? -1);
+        }
+
+        if ($input_type == 'album_artist') {
+            $sql .= " AND `artist`.`album_count` > 0";
+        }
+
+        if ($input_type == 'song_artist') {
+            $sql .= " AND `artist`.`song_count` > 0";
+        }
+
+        if ($since > 0) {
+            $sql .= " AND `user_flag`.`date` >= '" . $since . "'";
+            if ($before > 0) {
+                $sql .= " AND `user_flag`.`date` <= '" . $before . "'";
+            }
+        }
+
+        //debug_event(self::class, 'get_latest_sql ' . $sql, 5);
+
+        return $sql . " GROUP BY `user_flag`.`object_id`, `type` ORDER BY `date` DESC ";
+    }
+
+    public static function is_valid(string $type): bool
+    {
+        return in_array($type, self::FLAG_TYPES);
+    }
+
+    /**
+     * Migrate an object associate stats to a new object
+     */
+    public static function migrate(string $object_type, int $old_object_id, int $new_object_id): void
+    {
+        $sql = "UPDATE IGNORE `user_flag` SET `object_id` = ? WHERE `object_type` = ? AND `object_id` = ?";
+
+        Dba::write($sql, [$new_object_id, $object_type, $old_object_id]);
+    }
+
+    /**
+     * save_flag
+     * Forward flag to last.fm and Libre.fm (song only)
+     */
+    public static function save_flag(User $user, Song $song, bool $flagged): void
+    {
+        foreach (Plugin::get_plugins(PluginTypeEnum::USER_FLAG_MANAGER) as $plugin_name) {
+            try {
+                $plugin = new Plugin($plugin_name);
+                if ($plugin->_plugin instanceof PluginSaveMediaplayInterface && $plugin->load($user)) {
+                    debug_event(self::class, 'save_flag...' . $plugin_name, 5);
+                    $plugin->_plugin->set_flag($song, $flagged);
+                }
+            } catch (Exception $error) {
+                debug_event(self::class, 'save_flag plugin error: ' . $error->getMessage(), 1);
+            }
+        }
+    }
+
+    /**
+     * show
+     * This takes an id and a type and displays the flag statemenabled.
+     */
+    public static function show(int $object_id, string $type): string
+    {
+        // If user flags aren't enabled don't do anything
+        if (!AmpConfig::get('ratings')) {
+            return '';
+        }
+
+        $userflag = new Userflag($object_id, $type);
+
+        $base_url = sprintf(
+            '?action=set_userflag&userflag_type=%s&object_id=%d',
+            $userflag->type,
+            $userflag->id
+        );
+
+        if ($userflag->get_flag()) {
+            $action = $base_url . '&userflag=0';
+            $source = 'userflag_i_' . $userflag->id . '_' . $userflag->type;
+            $icon   = 'favorite-fill';
+            $alt    = T_('Unfavorite');
+        } else {
+            $action = $base_url . '&userflag=1';
+            $source = 'userflag_i_' . $userflag->id . '_' . $userflag->type;
+            $icon   = 'favorite';
+            $alt    = T_('Favorite');
+        }
+
+        return Ajax::button($action, $icon, $alt, $source);
+    }
+
+    /**
      * get_flag
      * @return bool|array{bool, int}
      */
@@ -217,6 +365,11 @@ class Userflag extends database_object
         }
 
         return $flagged;
+    }
+
+    public function getId(): int
+    {
+        return $this->id;
     }
 
     /**
@@ -275,160 +428,6 @@ class Userflag extends database_object
         }
 
         return true;
-    }
-
-    /**
-     * save_flag
-     * Forward flag to last.fm and Libre.fm (song only)
-     */
-    public static function save_flag(User $user, Song $song, bool $flagged): void
-    {
-        foreach (Plugin::get_plugins(PluginTypeEnum::USER_FLAG_MANAGER) as $plugin_name) {
-            try {
-                $plugin = new Plugin($plugin_name);
-                if ($plugin->_plugin instanceof PluginSaveMediaplayInterface && $plugin->load($user)) {
-                    debug_event(self::class, 'save_flag...' . $plugin_name, 5);
-                    $plugin->_plugin->set_flag($song, $flagged);
-                }
-            } catch (Exception $error) {
-                debug_event(self::class, 'save_flag plugin error: ' . $error->getMessage(), 1);
-            }
-        }
-    }
-
-    /**
-     * get_latest_sql
-     */
-    public static function get_latest_sql(
-        string $input_type,
-        ?User $user = null,
-        int $since = 0,
-        int $before = 0,
-        bool $by_user = false,
-    ): string {
-        $type = Stats::validate_type($input_type);
-        $sql  = "SELECT DISTINCT(`user_flag`.`object_id`) AS `id`, COUNT(DISTINCT(`user_flag`.`user`)) AS `count`, `user_flag`.`object_type` AS `type`, MAX(`user_flag`.`user`) AS `user`, MAX(`user_flag`.`date`) AS `date` FROM `user_flag`";
-        if ($input_type == 'album_artist' || $input_type == 'song_artist') {
-            $sql .= " LEFT JOIN `artist` ON `artist`.`id` = `user_flag`.`object_id` AND `user_flag`.`object_type` = 'artist'";
-        }
-
-        $sql .= " WHERE `user_flag`.`object_type` = '" . $type . "'";
-        if ($by_user && $user?->id > 0) {
-            $sql .= sprintf(' AND `user_flag`.`user` = \'%s\'', $user->id);
-        }
-
-        if (AmpConfig::get('catalog_disable') && in_array($type, ['artist', 'album', 'album_disk', 'song', 'video'])) {
-            $sql .= " AND " . Catalog::get_enable_filter($type, '`object_id`');
-        }
-
-        if (AmpConfig::get('catalog_filter')) {
-            $sql .= " AND" . Catalog::get_user_filter('user_flag_' . $type, $user?->getId() ?? -1);
-        }
-
-        if ($input_type == 'album_artist') {
-            $sql .= " AND `artist`.`album_count` > 0";
-        }
-
-        if ($input_type == 'song_artist') {
-            $sql .= " AND `artist`.`song_count` > 0";
-        }
-
-        if ($since > 0) {
-            $sql .= " AND `user_flag`.`date` >= '" . $since . "'";
-            if ($before > 0) {
-                $sql .= " AND `user_flag`.`date` <= '" . $before . "'";
-            }
-        }
-
-        //debug_event(self::class, 'get_latest_sql ' . $sql, 5);
-
-        return $sql . " GROUP BY `user_flag`.`object_id`, `type` ORDER BY `date` DESC ";
-    }
-
-    /**
-     * get_latest
-     * Get the latest user flagged objects
-     * @return int[]
-     */
-    public static function get_latest(
-        string $type,
-        ?User $user = null,
-        int $count = 0,
-        int $offset = 0,
-        int $since = 0,
-        int $before = 0,
-        bool $by_user = false,
-    ): array {
-        if ($count === 0) {
-            $count = AmpConfig::get('popular_threshold', 10);
-        }
-
-        if ($count === -1) {
-            $count  = 0;
-            $offset = 0;
-        }
-
-        // Select Top objects counting by # of rows
-        $sql   = self::get_latest_sql($type, $user, $since, $before, $by_user);
-        $limit = ($offset < 1)
-            ? $count
-            : $offset . "," . $count;
-        if ($limit > 0) {
-            $sql .= 'LIMIT ' . $limit;
-        }
-
-        //debug_event(self::class, 'get_latest ' . $sql, 5);
-        $db_results = Dba::read($sql);
-        $results    = [];
-        while ($row = Dba::fetch_assoc($db_results)) {
-            $results[] = (int)$row['id'];
-        }
-
-        return $results;
-    }
-
-    /**
-     * show
-     * This takes an id and a type and displays the flag statemenabled.
-     */
-    public static function show(int $object_id, string $type): string
-    {
-        // If user flags aren't enabled don't do anything
-        if (!AmpConfig::get('ratings')) {
-            return '';
-        }
-
-        $userflag = new Userflag($object_id, $type);
-
-        $base_url = sprintf(
-            '?action=set_userflag&userflag_type=%s&object_id=%d',
-            $userflag->type,
-            $userflag->id
-        );
-
-        if ($userflag->get_flag()) {
-            $action = $base_url . '&userflag=0';
-            $source = 'userflag_i_' . $userflag->id . '_' . $userflag->type;
-            $icon   = 'favorite-fill';
-            $alt    = T_('Unfavorite');
-        } else {
-            $action = $base_url . '&userflag=1';
-            $source = 'userflag_i_' . $userflag->id . '_' . $userflag->type;
-            $icon   = 'favorite';
-            $alt    = T_('Favorite');
-        }
-
-        return Ajax::button($action, $icon, $alt, $source);
-    }
-
-    /**
-     * Migrate an object associate stats to a new object
-     */
-    public static function migrate(string $object_type, int $old_object_id, int $new_object_id): void
-    {
-        $sql = "UPDATE IGNORE `user_flag` SET `object_id` = ? WHERE `object_type` = ? AND `object_id` = ?";
-
-        Dba::write($sql, [$new_object_id, $object_type, $old_object_id]);
     }
 
     /**

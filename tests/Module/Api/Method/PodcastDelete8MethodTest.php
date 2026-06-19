@@ -46,60 +46,70 @@ use Psr\Http\Message\StreamInterface;
 
 class PodcastDelete8MethodTest extends TestCase
 {
-    private PodcastDeleterInterface&MockObject $podcastDeleter;
-
     private ConfigContainerInterface&MockObject $configContainer;
-
-    private PrivilegeCheckerInterface $privilegeChecker;
-
-    private PodcastRepositoryInterface&MockObject $podcastRepository;
-
-    private PodcastDelete8Method $subject;
-
     private GatekeeperInterface&MockObject $gatekeeper;
-
-    private ResponseInterface&MockObject $response;
-
     private ApiOutputInterface&MockObject $output;
-
+    private PodcastDeleterInterface&MockObject $podcastDeleter;
+    private PodcastRepositoryInterface&MockObject $podcastRepository;
+    private PrivilegeCheckerInterface $privilegeChecker;
+    private ResponseInterface&MockObject $response;
+    private PodcastDelete8Method $subject;
     private User&MockObject $user;
 
-    protected function setUp(): void
+    public function testHandleDeletes(): void
     {
-        $this->podcastDeleter    = $this->createMock(PodcastDeleterInterface::class);
-        $this->configContainer   = $this->createMock(ConfigContainerInterface::class);
-        $this->privilegeChecker  = $this->createMock(PrivilegeCheckerInterface::class);
-        $this->podcastRepository = $this->createMock(PodcastRepositoryInterface::class);
+        $userId    = 666;
+        $podcastId = 42;
+        $result    = 'some-result';
 
-        $this->subject = new PodcastDelete8Method(
-            $this->podcastDeleter,
-            $this->configContainer,
-            $this->privilegeChecker,
-            $this->podcastRepository,
-        );
-
-        $this->gatekeeper = $this->createMock(GatekeeperInterface::class);
-        $this->response   = $this->createMock(ResponseInterface::class);
-        $this->output     = $this->createMock(ApiOutputInterface::class);
-        $this->user       = $this->createMock(User::class);
-    }
-
-    public function testHandleThrowsIfPodcastsNotEnabled(): void
-    {
-        static::expectException(AccessDeniedException::class);
-        static::expectExceptionMessage('Enable: podcast');
+        $podcast = $this->createMock(Podcast::class);
+        $stream  = $this->createMock(StreamInterface::class);
 
         $this->configContainer->expects(static::once())
             ->method('get')
             ->with(ConfigurationKeyEnum::PODCAST)
-            ->willReturn('');
+            ->willReturn('1');
 
-        $this->subject->handle(
-            $this->gatekeeper,
+        $this->user->expects(static::once())
+            ->method('getId')
+            ->willReturn($userId);
+
+        $this->podcastRepository->expects(static::once())
+            ->method('findById')
+            ->with($podcastId)
+            ->willReturn($podcast);
+
+        $this->privilegeChecker->expects(static::once())
+            ->method('check')
+            ->with(AccessTypeEnum::INTERFACE, AccessLevelEnum::MANAGER, $userId)
+            ->willReturn(true);
+
+        $this->podcastDeleter->expects(static::once())
+            ->method('delete')
+            ->with($podcast);
+
+        $this->response->expects(static::once())
+            ->method('getBody')
+            ->willReturn($stream);
+
+        $stream->expects(static::once())
+            ->method('write')
+            ->with($result);
+
+        $this->output->expects(static::once())
+            ->method('success')
+            ->with(sprintf('podcast %d deleted', $podcastId))
+            ->willReturn($result);
+
+        self::assertSame(
             $this->response,
-            $this->output,
-            [],
-            $this->user
+            $this->subject->handle(
+                $this->gatekeeper,
+                $this->response,
+                $this->output,
+                ['filter' => (string) $podcastId],
+                $this->user
+            )
         );
     }
 
@@ -163,6 +173,25 @@ class PodcastDelete8MethodTest extends TestCase
         );
     }
 
+    public function testHandleThrowsIfPodcastsNotEnabled(): void
+    {
+        static::expectException(AccessDeniedException::class);
+        static::expectExceptionMessage('Enable: podcast');
+
+        $this->configContainer->expects(static::once())
+            ->method('get')
+            ->with(ConfigurationKeyEnum::PODCAST)
+            ->willReturn('');
+
+        $this->subject->handle(
+            $this->gatekeeper,
+            $this->response,
+            $this->output,
+            [],
+            $this->user
+        );
+    }
+
     public function testHandleThrowsIfPodcastWasNotFound(): void
     {
         $userId    = 666;
@@ -199,60 +228,23 @@ class PodcastDelete8MethodTest extends TestCase
         );
     }
 
-    public function testHandleDeletes(): void
+    protected function setUp(): void
     {
-        $userId    = 666;
-        $podcastId = 42;
-        $result    = 'some-result';
+        $this->podcastDeleter    = $this->createMock(PodcastDeleterInterface::class);
+        $this->configContainer   = $this->createMock(ConfigContainerInterface::class);
+        $this->privilegeChecker  = $this->createMock(PrivilegeCheckerInterface::class);
+        $this->podcastRepository = $this->createMock(PodcastRepositoryInterface::class);
 
-        $podcast = $this->createMock(Podcast::class);
-        $stream  = $this->createMock(StreamInterface::class);
-
-        $this->configContainer->expects(static::once())
-            ->method('get')
-            ->with(ConfigurationKeyEnum::PODCAST)
-            ->willReturn('1');
-
-        $this->user->expects(static::once())
-            ->method('getId')
-            ->willReturn($userId);
-
-        $this->podcastRepository->expects(static::once())
-            ->method('findById')
-            ->with($podcastId)
-            ->willReturn($podcast);
-
-        $this->privilegeChecker->expects(static::once())
-            ->method('check')
-            ->with(AccessTypeEnum::INTERFACE, AccessLevelEnum::MANAGER, $userId)
-            ->willReturn(true);
-
-        $this->podcastDeleter->expects(static::once())
-            ->method('delete')
-            ->with($podcast);
-
-        $this->response->expects(static::once())
-            ->method('getBody')
-            ->willReturn($stream);
-
-        $stream->expects(static::once())
-            ->method('write')
-            ->with($result);
-
-        $this->output->expects(static::once())
-            ->method('success')
-            ->with(sprintf('podcast %d deleted', $podcastId))
-            ->willReturn($result);
-
-        self::assertSame(
-            $this->response,
-            $this->subject->handle(
-                $this->gatekeeper,
-                $this->response,
-                $this->output,
-                ['filter' => (string) $podcastId],
-                $this->user
-            )
+        $this->subject = new PodcastDelete8Method(
+            $this->podcastDeleter,
+            $this->configContainer,
+            $this->privilegeChecker,
+            $this->podcastRepository,
         );
+
+        $this->gatekeeper = $this->createMock(GatekeeperInterface::class);
+        $this->response   = $this->createMock(ResponseInterface::class);
+        $this->output     = $this->createMock(ApiOutputInterface::class);
+        $this->user       = $this->createMock(User::class);
     }
 }

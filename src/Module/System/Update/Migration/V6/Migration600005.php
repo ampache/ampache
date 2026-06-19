@@ -40,9 +40,7 @@ use Psr\Log\LoggerInterface;
 final class Migration600005 extends AbstractMigration
 {
     protected array $changelog = ['Migrate multi-disk albums to single album id\'s'];
-
-    protected bool $warning = true;
-
+    protected bool $warning    = true;
     private LoggerInterface $logger;
 
     public function __construct(

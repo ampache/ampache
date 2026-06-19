@@ -40,6 +40,9 @@ final class PvmsgQuery implements QueryInterface
         'user',
     ];
 
+    protected string $base   = "SELECT %%SELECT%% FROM `user_pvmsg` ";
+    protected string $select = "`user_pvmsg`.`id`";
+
     /** @var string[] $sorts */
     protected array $sorts = [
         'creation_date',
@@ -47,20 +50,6 @@ final class PvmsgQuery implements QueryInterface
         'subject',
         'to_user',
     ];
-
-    protected string $select = "`user_pvmsg`.`id`";
-
-    protected string $base = "SELECT %%SELECT%% FROM `user_pvmsg` ";
-
-    /**
-     * get_select
-     *
-     * This method returns the columns a query will user for SELECT
-     */
-    public function get_select(): string
-    {
-        return $this->select;
-    }
 
     /**
      * get_base_sql
@@ -70,6 +59,16 @@ final class PvmsgQuery implements QueryInterface
     public function get_base_sql(): string
     {
         return $this->base;
+    }
+
+    /**
+     * get_select
+     *
+     * This method returns the columns a query will user for SELECT
+     */
+    public function get_select(): string
+    {
+        return $this->select;
     }
 
     /**

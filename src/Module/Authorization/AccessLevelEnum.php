@@ -30,12 +30,12 @@ namespace Ampache\Module\Authorization;
  */
 enum AccessLevelEnum: int
 {
+    case ADMIN           = 100;
+    case CONTENT_MANAGER = 50;
     case DEFAULT         = 0;
     case GUEST           = 5;
-    case USER            = 25;
-    case CONTENT_MANAGER = 50;
     case MANAGER         = 75;
-    case ADMIN           = 100;
+    case USER            = 25;
 
     /**
      * This takes the access-level text representation and returns the level

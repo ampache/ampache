@@ -62,6 +62,9 @@ final class AlbumDiskQuery implements QueryInterface
         'user_rating',
     ];
 
+    protected string $base   = "SELECT %%SELECT%% AS `id` FROM `album_disk` ";
+    protected string $select = "`album_disk`.`id`";
+
     /** @var string[] $sorts */
     protected array $sorts = [
         'album_artist_album_sort',
@@ -97,9 +100,15 @@ final class AlbumDiskQuery implements QueryInterface
         'year',
     ];
 
-    protected string $select = "`album_disk`.`id`";
-
-    protected string $base = "SELECT %%SELECT%% AS `id` FROM `album_disk` ";
+    /**
+     * get_base_sql
+     *
+     * Base SELECT query string without filters or joins
+     */
+    public function get_base_sql(): string
+    {
+        return $this->base;
+    }
 
     /**
      * get_select
@@ -109,16 +118,6 @@ final class AlbumDiskQuery implements QueryInterface
     public function get_select(): string
     {
         return $this->select;
-    }
-
-    /**
-     * get_base_sql
-     *
-     * Base SELECT query string without filters or joins
-     */
-    public function get_base_sql(): string
-    {
-        return $this->base;
     }
 
     /**

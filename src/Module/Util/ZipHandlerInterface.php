@@ -30,14 +30,14 @@ use Psr\Http\Message\ResponseInterface;
 interface ZipHandlerInterface
 {
     /**
-     * Check that an object type is allowed to be zipped.
-     */
-    public function isZipable(string $object_type): bool;
-
-    /**
      * Clean up the generated zip file
      */
     public static function destroyZip(?string $zipFile): void;
+
+    /**
+     * Check that an object type is allowed to be zipped.
+     */
+    public function isZipable(string $object_type): bool;
 
     /**
      * takes array of full paths to medias

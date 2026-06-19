@@ -40,11 +40,6 @@ final readonly class LatestArtistFeed extends AbstractGenericRssFeed
     ) {
     }
 
-    protected function getTitle(): string
-    {
-        return T_('Newest Artists');
-    }
-
     protected function getItems(): Generator
     {
         $queryParams = $this->request->getQueryParams();
@@ -70,5 +65,10 @@ final readonly class LatestArtistFeed extends AbstractGenericRssFeed
                 'image' => (string)Art::url($artist->id, 'artist', null, 2),
             ];
         }
+    }
+
+    protected function getTitle(): string
+    {
+        return T_('Newest Artists');
     }
 }

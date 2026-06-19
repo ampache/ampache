@@ -45,6 +45,9 @@ final class UserQuery implements QueryInterface
         'starts_with',
     ];
 
+    protected string $base   = "SELECT %%SELECT%% FROM `user` ";
+    protected string $select = "`user`.`id`";
+
     /** @var string[] $sorts */
     protected array $sorts = [
         'access',
@@ -62,9 +65,15 @@ final class UserQuery implements QueryInterface
         'website',
     ];
 
-    protected string $select = "`user`.`id`";
-
-    protected string $base = "SELECT %%SELECT%% FROM `user` ";
+    /**
+     * get_base_sql
+     *
+     * Base SELECT query string without filters or joins
+     */
+    public function get_base_sql(): string
+    {
+        return $this->base;
+    }
 
     /**
      * get_select
@@ -74,16 +83,6 @@ final class UserQuery implements QueryInterface
     public function get_select(): string
     {
         return $this->select;
-    }
-
-    /**
-     * get_base_sql
-     *
-     * Base SELECT query string without filters or joins
-     */
-    public function get_base_sql(): string
-    {
-        return $this->base;
     }
 
     /**

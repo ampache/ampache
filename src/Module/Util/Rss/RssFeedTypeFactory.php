@@ -50,40 +50,6 @@ final readonly class RssFeedTypeFactory implements RssFeedTypeFactoryInterface
     }
 
     /**
-     * Creates the feed related to a certain library-item
-     */
-    public function createLibraryItemFeed(
-        ?User $user,
-        library_item $libraryItem,
-    ): FeedTypeInterface {
-        return new LibraryItemFeed(
-            $this->dic->get(ModelFactoryInterface::class),
-            $this->dic->get(LibraryItemLoaderInterface::class),
-            $user,
-            $libraryItem
-        );
-    }
-
-    /**
-     * Creates a feed for recently played items
-     */
-    public function createRecentlyPlayedFeed(
-        ?User $user,
-    ): FeedTypeInterface {
-        return new RecentlyPlayedFeed(
-            $user
-        );
-    }
-
-    /**
-     * Creates a feed for currently playing items
-     */
-    public function createNowPlayingFeed(): FeedTypeInterface
-    {
-        return new NowPlayingFeed();
-    }
-
-    /**
      * Creates a feed for recent albums
      */
     public function createLatestAlbumFeed(
@@ -130,6 +96,40 @@ final readonly class RssFeedTypeFactory implements RssFeedTypeFactoryInterface
         return new LatestSongFeed(
             $user,
             $request,
+        );
+    }
+
+    /**
+     * Creates the feed related to a certain library-item
+     */
+    public function createLibraryItemFeed(
+        ?User $user,
+        library_item $libraryItem,
+    ): FeedTypeInterface {
+        return new LibraryItemFeed(
+            $this->dic->get(ModelFactoryInterface::class),
+            $this->dic->get(LibraryItemLoaderInterface::class),
+            $user,
+            $libraryItem
+        );
+    }
+
+    /**
+     * Creates a feed for currently playing items
+     */
+    public function createNowPlayingFeed(): FeedTypeInterface
+    {
+        return new NowPlayingFeed();
+    }
+
+    /**
+     * Creates a feed for recently played items
+     */
+    public function createRecentlyPlayedFeed(
+        ?User $user,
+    ): FeedTypeInterface {
+        return new RecentlyPlayedFeed(
+            $user
         );
     }
 }

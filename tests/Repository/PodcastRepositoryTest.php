@@ -38,21 +38,28 @@ class PodcastRepositoryTest extends TestCase
 {
     use ConsecutiveParams;
 
-    private ModelFactoryInterface&MockObject $modelFactory;
-
     private DatabaseConnectionInterface&MockObject $connection;
-
+    private ModelFactoryInterface&MockObject $modelFactory;
     private PodcastRepository $subject;
 
-    protected function setUp(): void
+    public function testDeleteDeletesPodcast(): void
     {
-        $this->modelFactory = $this->createMock(ModelFactoryInterface::class);
-        $this->connection   = $this->createMock(DatabaseConnectionInterface::class);
+        $podcastId = 666;
 
-        $this->subject = new PodcastRepository(
-            $this->modelFactory,
-            $this->connection,
-        );
+        $podcast = $this->createMock(Podcast::class);
+
+        $podcast->expects(static::once())
+            ->method('getId')
+            ->willReturn($podcastId);
+
+        $this->connection->expects(static::once())
+            ->method('query')
+            ->with(
+                'DELETE FROM `podcast` WHERE `id` = ?',
+                [$podcastId]
+            );
+
+        $this->subject->delete($podcast);
     }
 
     public function testFindAllReturnsAllItems(): void
@@ -84,25 +91,6 @@ class PodcastRepositoryTest extends TestCase
         );
     }
 
-    public function testFindByFeedUrlReturnsNullIfNothingWasFound(): void
-    {
-        $feedUrl = 'some-url';
-
-        $this->connection->expects(static::once())
-            ->method('fetchOne')
-            ->with(
-                'SELECT `id` FROM `podcast` WHERE `feed` = ?',
-                [
-                    $feedUrl,
-                ],
-            )
-            ->willReturn(false);
-
-        self::assertNull(
-            $this->subject->findByFeedUrl($feedUrl),
-        );
-    }
-
     public function testFindByFeedUrlReturnsFoundPodcast(): void
     {
         $feedUrl   = 'some-url';
@@ -131,24 +119,64 @@ class PodcastRepositoryTest extends TestCase
         );
     }
 
-    public function testDeleteDeletesPodcast(): void
+    public function testFindByFeedUrlReturnsNullIfNothingWasFound(): void
+    {
+        $feedUrl = 'some-url';
+
+        $this->connection->expects(static::once())
+            ->method('fetchOne')
+            ->with(
+                'SELECT `id` FROM `podcast` WHERE `feed` = ?',
+                [
+                    $feedUrl,
+                ],
+            )
+            ->willReturn(false);
+
+        self::assertNull(
+            $this->subject->findByFeedUrl($feedUrl),
+        );
+    }
+
+    public function testFindByIdReturnsNullIfNotFound(): void
     {
         $podcastId = 666;
 
         $podcast = $this->createMock(Podcast::class);
 
+        $this->modelFactory->expects(static::once())
+            ->method('createPodcast')
+            ->with($podcastId)
+            ->willReturn($podcast);
+
         $podcast->expects(static::once())
-            ->method('getId')
-            ->willReturn($podcastId);
+            ->method('isNew')
+            ->willReturn(true);
 
-        $this->connection->expects(static::once())
-            ->method('query')
-            ->with(
-                'DELETE FROM `podcast` WHERE `id` = ?',
-                [$podcastId]
-            );
+        self::assertNull(
+            $this->subject->findById($podcastId)
+        );
+    }
 
-        $this->subject->delete($podcast);
+    public function testFindByIdReturnsObject(): void
+    {
+        $podcastId = 666;
+
+        $podcast = $this->createMock(Podcast::class);
+
+        $this->modelFactory->expects(static::once())
+            ->method('createPodcast')
+            ->with($podcastId)
+            ->willReturn($podcast);
+
+        $podcast->expects(static::once())
+            ->method('isNew')
+            ->willReturn(false);
+
+        self::assertSame(
+            $podcast,
+            $this->subject->findById($podcastId)
+        );
     }
 
     public function testPersistCreateItem(): void
@@ -332,52 +360,22 @@ class PodcastRepositoryTest extends TestCase
         );
     }
 
-    public function testFindByIdReturnsNullIfNotFound(): void
-    {
-        $podcastId = 666;
-
-        $podcast = $this->createMock(Podcast::class);
-
-        $this->modelFactory->expects(static::once())
-            ->method('createPodcast')
-            ->with($podcastId)
-            ->willReturn($podcast);
-
-        $podcast->expects(static::once())
-            ->method('isNew')
-            ->willReturn(true);
-
-        self::assertNull(
-            $this->subject->findById($podcastId)
-        );
-    }
-
-    public function testFindByIdReturnsObject(): void
-    {
-        $podcastId = 666;
-
-        $podcast = $this->createMock(Podcast::class);
-
-        $this->modelFactory->expects(static::once())
-            ->method('createPodcast')
-            ->with($podcastId)
-            ->willReturn($podcast);
-
-        $podcast->expects(static::once())
-            ->method('isNew')
-            ->willReturn(false);
-
-        self::assertSame(
-            $podcast,
-            $this->subject->findById($podcastId)
-        );
-    }
-
     public function testPrototypeReturnsNewObject(): void
     {
         self::assertInstanceOf(
             Podcast::class,
             $this->subject->prototype()
+        );
+    }
+
+    protected function setUp(): void
+    {
+        $this->modelFactory = $this->createMock(ModelFactoryInterface::class);
+        $this->connection   = $this->createMock(DatabaseConnectionInterface::class);
+
+        $this->subject = new PodcastRepository(
+            $this->modelFactory,
+            $this->connection,
         );
     }
 }

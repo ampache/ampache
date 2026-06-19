@@ -29,11 +29,16 @@ use Ampache\Repository\Model\Folder;
 
 interface FolderRepositoryInterface
 {
+    /**
+     * This cleans out unused folders
+     */
+    public function collectGarbage(): void;
+
+    public function create(string $folderName, int $catalogId, string $folderPath = '', ?int $parent_id = null): ?Folder;
+
+    public function delete(int $folderId): void;
+
     public function findById(?int $folderId = null): ?Folder;
-
-    public function getByName(string $folderName, int $catalogId = 0, ?int $parent = null): ?Folder;
-
-    public function getByPathName(string $folderPath, int $catalogId = 0, ?string $parentPath = null): ?Folder;
 
     /**
      * Return the list of all available folders
@@ -42,18 +47,13 @@ interface FolderRepositoryInterface
      */
     public function getAll(): array;
 
+    public function getByName(string $folderName, int $catalogId = 0, ?int $parent = null): ?Folder;
+
+    public function getByPathName(string $folderPath, int $catalogId = 0, ?string $parentPath = null): ?Folder;
+
     public function lookup(string $folderName, int $catalogId = 0, ?int $parent_id = null): int;
 
     public function lookupByPathName(string $folderPath, int $catalogId = 0): int;
-
-    public function create(string $folderName, int $catalogId, string $folderPath = '', ?int $parent_id = null): ?Folder;
-
-    public function delete(int $folderId): void;
-
-    /**
-     * Update mapping table after large actions
-     */
-    public function update_folder_map(): void;
 
     /**
      * Update folder counts columns after large actions
@@ -61,7 +61,7 @@ interface FolderRepositoryInterface
     public function update_folder_counts(): void;
 
     /**
-     * This cleans out unused folders
+     * Update mapping table after large actions
      */
-    public function collectGarbage(): void;
+    public function update_folder_map(): void;
 }

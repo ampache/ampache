@@ -43,6 +43,9 @@ final class LabelQuery implements QueryInterface
         'starts_with',
     ];
 
+    protected string $base   = "SELECT %%SELECT%% FROM `label` ";
+    protected string $select = "`label`.`id`";
+
     /** @var string[] $sorts */
     protected array $sorts = [
         'active',
@@ -60,9 +63,15 @@ final class LabelQuery implements QueryInterface
         'userflag',
     ];
 
-    protected string $select = "`label`.`id`";
-
-    protected string $base = "SELECT %%SELECT%% FROM `label` ";
+    /**
+     * get_base_sql
+     *
+     * Base SELECT query string without filters or joins
+     */
+    public function get_base_sql(): string
+    {
+        return $this->base;
+    }
 
     /**
      * get_select
@@ -72,16 +81,6 @@ final class LabelQuery implements QueryInterface
     public function get_select(): string
     {
         return $this->select;
-    }
-
-    /**
-     * get_base_sql
-     *
-     * Base SELECT query string without filters or joins
-     */
-    public function get_base_sql(): string
-    {
-        return $this->base;
     }
 
     /**

@@ -40,17 +40,6 @@ class WebDavFile extends File
     {
     }
 
-    public function getName(): string
-    {
-        if (property_exists($this->libitem, 'file') && $this->libitem->file !== null) {
-            $nameinfo = pathinfo($this->libitem->file);
-
-            return htmlentities($nameinfo['filename'] . '.' . ($nameinfo['extension'] ?? ''));
-        }
-
-        return '';
-    }
-
     /**
      * @return resource|null
      */
@@ -84,14 +73,25 @@ class WebDavFile extends File
         return null;
     }
 
+    public function getETag(): string
+    {
+        return md5($this->libitem->getMediaType()->value . "_" . ($this->libitem->id ?? 0) . "_" . ($this->libitem->update_time ?? time()));
+    }
+
+    public function getName(): string
+    {
+        if (property_exists($this->libitem, 'file') && $this->libitem->file !== null) {
+            $nameinfo = pathinfo($this->libitem->file);
+
+            return htmlentities($nameinfo['filename'] . '.' . ($nameinfo['extension'] ?? ''));
+        }
+
+        return '';
+    }
+
     #[Override]
     public function getSize(): int
     {
         return $this->libitem->size ?? 0;
-    }
-
-    public function getETag(): string
-    {
-        return md5($this->libitem->getMediaType()->value . "_" . ($this->libitem->id ?? 0) . "_" . ($this->libitem->update_time ?? time()));
     }
 }

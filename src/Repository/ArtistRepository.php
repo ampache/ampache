@@ -39,6 +39,31 @@ final readonly class ArtistRepository implements ArtistRepositoryInterface
     }
 
     /**
+     * This cleans out unused artists
+     */
+    public function collectGarbage(): void
+    {
+        debug_event(self::class, 'collectGarbage', 5);
+        $queries = [
+            ['DELETE FROM `artist_map` WHERE `artist_map`.`object_type` = ? AND `artist_map`.`object_id` IN (SELECT `id` FROM `album` WHERE `album_artist` IS NULL);', ['album']],
+            ['DELETE FROM `artist_map` WHERE `artist_map`.`object_type` = ? AND `artist_map`.`object_id` NOT IN (SELECT `id` FROM `album`);', ['album']],
+            ['DELETE FROM `artist_map` WHERE `artist_map`.`object_type` = ? AND `artist_map`.`object_id` NOT IN (SELECT `id` FROM `song`);', ['song']],
+            ['DELETE FROM `artist_map` WHERE `artist_map`.`artist_id` NOT IN (SELECT `id` FROM `artist`);', []],
+            ['DELETE FROM `artist` WHERE `id` IN (SELECT `id` FROM (SELECT `id` FROM `artist` LEFT JOIN (SELECT DISTINCT `song`.`artist` AS `artist_id` FROM `song` UNION SELECT DISTINCT `album`.`album_artist` AS `artist_id` FROM `album` UNION SELECT DISTINCT `wanted`.`artist` AS `artist_id` FROM `wanted` UNION SELECT DISTINCT `artist_id` FROM `artist_map`) AS `artist_map` ON `artist_map`.`artist_id` = `artist`.`id` WHERE `artist_map`.`artist_id` IS NULL AND `artist`.`user` IS NULL) AS `null_artist`);', []]
+        ];
+
+        foreach ($queries as $query) {
+            try {
+                $sql    = $query[0];
+                $params = $query[1];
+                $this->connection->query($sql, $params);
+            } catch (DatabaseException) {
+                debug_event(self::class, 'collectGarbage error', 5);
+            }
+        }
+    }
+
+    /**
      * Deletes the artist entry
      */
     public function delete(
@@ -48,6 +73,23 @@ final readonly class ArtistRepository implements ArtistRepositoryInterface
             'DELETE FROM `artist` WHERE `id` = ?',
             [$artist->getId()]
         );
+    }
+
+    /**
+     * This finds an artist based on its name
+     */
+    public function findByName(string $name): ?Artist
+    {
+        $rowId = $this->connection->fetchOne(
+            "SELECT `id` FROM `artist` WHERE `name` = ? OR LTRIM(CONCAT(COALESCE(`artist`.`prefix`, ''), ' ', `artist`.`name`)) = ? ",
+            [$name, $name]
+        );
+
+        if ($rowId === false) {
+            return null;
+        }
+
+        return new Artist((int) $rowId);
     }
 
     /**
@@ -75,47 +117,5 @@ final readonly class ArtistRepository implements ArtistRepositoryInterface
         }
 
         return $results;
-    }
-
-    /**
-     * This cleans out unused artists
-     */
-    public function collectGarbage(): void
-    {
-        debug_event(self::class, 'collectGarbage', 5);
-        $queries = [
-            ['DELETE FROM `artist_map` WHERE `artist_map`.`object_type` = ? AND `artist_map`.`object_id` IN (SELECT `id` FROM `album` WHERE `album_artist` IS NULL);', ['album']],
-            ['DELETE FROM `artist_map` WHERE `artist_map`.`object_type` = ? AND `artist_map`.`object_id` NOT IN (SELECT `id` FROM `album`);', ['album']],
-            ['DELETE FROM `artist_map` WHERE `artist_map`.`object_type` = ? AND `artist_map`.`object_id` NOT IN (SELECT `id` FROM `song`);', ['song']],
-            ['DELETE FROM `artist_map` WHERE `artist_map`.`artist_id` NOT IN (SELECT `id` FROM `artist`);', []],
-            ['DELETE FROM `artist` WHERE `id` IN (SELECT `id` FROM (SELECT `id` FROM `artist` LEFT JOIN (SELECT DISTINCT `song`.`artist` AS `artist_id` FROM `song` UNION SELECT DISTINCT `album`.`album_artist` AS `artist_id` FROM `album` UNION SELECT DISTINCT `wanted`.`artist` AS `artist_id` FROM `wanted` UNION SELECT DISTINCT `artist_id` FROM `artist_map`) AS `artist_map` ON `artist_map`.`artist_id` = `artist`.`id` WHERE `artist_map`.`artist_id` IS NULL AND `artist`.`user` IS NULL) AS `null_artist`);', []]
-        ];
-
-        foreach ($queries as $query) {
-            try {
-                $sql    = $query[0];
-                $params = $query[1];
-                $this->connection->query($sql, $params);
-            } catch (DatabaseException) {
-                debug_event(self::class, 'collectGarbage error', 5);
-            }
-        }
-    }
-
-    /**
-     * This finds an artist based on its name
-     */
-    public function findByName(string $name): ?Artist
-    {
-        $rowId = $this->connection->fetchOne(
-            "SELECT `id` FROM `artist` WHERE `name` = ? OR LTRIM(CONCAT(COALESCE(`artist`.`prefix`, ''), ' ', `artist`.`name`)) = ? ",
-            [$name, $name]
-        );
-
-        if ($rowId === false) {
-            return null;
-        }
-
-        return new Artist((int) $rowId);
     }
 }

@@ -37,11 +37,6 @@ final readonly class RecentlyPlayedFeed extends AbstractGenericRssFeed
     ) {
     }
 
-    protected function getTitle(): string
-    {
-        return T_('Recently Played');
-    }
-
     /**
      * @return Generator<array{
      *     title: string,
@@ -99,5 +94,10 @@ final readonly class RecentlyPlayedFeed extends AbstractGenericRssFeed
                 ];
             }
         }
+    }
+
+    protected function getTitle(): string
+    {
+        return T_('Recently Played');
     }
 }

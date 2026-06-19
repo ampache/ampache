@@ -34,27 +34,15 @@ use Override;
 
 class AuthenticationManagerTest extends MockeryTestCase
 {
-    /** @var MockInterface|ConfigContainerInterface|null */
-    private MockInterface $configContainer;
-
     /** @var MockInterface|AuthenticatorInterface|null */
     private MockInterface $authenticator;
 
     private string $authenticatorName = 'some-authenticator';
 
+    /** @var MockInterface|ConfigContainerInterface|null */
+    private MockInterface $configContainer;
+
     private ?AuthenticationManager $subject;
-
-    #[Override]
-    protected function setUp(): void
-    {
-        $this->configContainer = Mockery::mock(ConfigContainerInterface::class);
-        $this->authenticator   = Mockery::mock(AuthenticatorInterface::class);
-
-        $this->subject = new AuthenticationManager(
-            $this->configContainer,
-            [$this->authenticatorName => $this->authenticator]
-        );
-    }
 
     public function testLoginFailsIfAuthenticatorNotAvailable(): void
     {
@@ -90,6 +78,28 @@ class AuthenticationManagerTest extends MockeryTestCase
         );
     }
 
+    public function testLoginSucceeds(): void
+    {
+        $username = 'some-username';
+        $password = 'some-password';
+        $result   = ['success' => true];
+
+        $this->authenticator->shouldReceive('auth')
+            ->with($username, $password)
+            ->once()
+            ->andReturn($result);
+
+        $this->configContainer->shouldReceive('get')
+            ->with('auth_methods')
+            ->once()
+            ->andReturn([$this->authenticatorName]);
+
+        self::assertSame(
+            $result,
+            $this->subject->login($username, $password)
+        );
+    }
+
     public function testLoginSucceedsIfUiNotRequired(): void
     {
         $username = 'some-username';
@@ -115,25 +125,18 @@ class AuthenticationManagerTest extends MockeryTestCase
         );
     }
 
-    public function testLoginSucceeds(): void
+    public function testPostAuthDoesNothingIfAuthenticatorWasNotFound(): void
     {
-        $username = 'some-username';
-        $password = 'some-password';
-        $result   = ['success' => true];
-
-        $this->authenticator->shouldReceive('auth')
-            ->with($username, $password)
-            ->once()
-            ->andReturn($result);
+        $method = 'roedlbroem';
 
         $this->configContainer->shouldReceive('get')
             ->with('auth_methods')
             ->once()
-            ->andReturn([$this->authenticatorName]);
+            ->andReturn([$method]);
 
         self::assertSame(
-            $result,
-            $this->subject->login($username, $password)
+            [],
+            $this->subject->postAuth($method)
         );
     }
 
@@ -147,21 +150,6 @@ class AuthenticationManagerTest extends MockeryTestCase
         self::assertSame(
             [],
             $this->subject->postAuth('roedlbroem')
-        );
-    }
-
-    public function testPostAuthDoesNothingIfAuthenticatorWasNotFound(): void
-    {
-        $method = 'roedlbroem';
-
-        $this->configContainer->shouldReceive('get')
-            ->with('auth_methods')
-            ->once()
-            ->andReturn([$method]);
-
-        self::assertSame(
-            [],
-            $this->subject->postAuth($method)
         );
     }
 
@@ -182,6 +170,18 @@ class AuthenticationManagerTest extends MockeryTestCase
         self::assertSame(
             $result,
             $this->subject->postAuth($this->authenticatorName)
+        );
+    }
+
+    #[Override]
+    protected function setUp(): void
+    {
+        $this->configContainer = Mockery::mock(ConfigContainerInterface::class);
+        $this->authenticator   = Mockery::mock(AuthenticatorInterface::class);
+
+        $this->subject = new AuthenticationManager(
+            $this->configContainer,
+            [$this->authenticatorName => $this->authenticator]
         );
     }
 }

@@ -38,8 +38,7 @@ use SimpleXMLElement;
 
 class Ampachelibrefm extends AmpachePlugin implements PluginSaveMediaplayInterface
 {
-    #[Override]
-    public string $name = 'Libre.FM';
+    public string $api_key = '';
 
     #[Override]
     public string $categories = 'scrobbling';
@@ -48,31 +47,28 @@ class Ampachelibrefm extends AmpachePlugin implements PluginSaveMediaplayInterfa
     public string $description = 'Records your played songs to your Libre.FM Account';
 
     #[Override]
-    public string $url = '';
-
-    #[Override]
-    public string $version = '000003';
+    public string $max_ampache = '999999';
 
     #[Override]
     public string $min_ampache = '360003';
 
     #[Override]
-    public string $max_ampache = '999999';
+    public string $name = 'Libre.FM';
 
-    // These are internal settings used by this class, run this->load to fill them out
-    private int $user_id = 0;
+    #[Override]
+    public string $url = '';
 
-    private $challenge;
-
-    public string $api_key = '';
-
-    private string $secret = '';
-
-    private string $scheme = 'https';
-
-    private string $host = 'libre.fm';
+    #[Override]
+    public string $version   = '000003';
 
     private string $api_host = 'libre.fm';
+    private $challenge;
+    private string $host   = 'libre.fm';
+    private string $scheme = 'https';
+    private string $secret = '';
+
+    // These are internal settings used by this class, run this->load to fill them out
+    private int $user_id   = 0;
 
     /**
      * Constructor
@@ -81,6 +77,30 @@ class Ampachelibrefm extends AmpachePlugin implements PluginSaveMediaplayInterfa
     {
         $this->description = T_('Scrobble songs you play to your Libre.FM Account');
         $this->url         = $this->scheme . '://' . $this->host;
+    }
+
+    /**
+     * get_session
+     * This call the getSession method and properly updates the preferences as needed.
+     * This requires a userid so it knows whose crap to update.
+     */
+    public function get_session(?string $token = null): bool
+    {
+        $scrobbler   = new Scrobbler($this->api_key, $this->scheme, $this->api_host, '', $this->secret);
+        $session_key = $scrobbler->get_session_key($token);
+        if (!$session_key instanceof SimpleXMLElement) {
+            debug_event(self::class, 'getSession Failed: ' . $scrobbler->error_msg, 3);
+
+            return false;
+        }
+
+        $this->challenge = $session_key;
+
+        // Update the preferences
+        Preference::update('librefm_challenge', $this->user_id, $session_key);
+        debug_event(self::class, 'getSession Successful', 3);
+
+        return true;
     }
 
     /**
@@ -97,45 +117,23 @@ class Ampachelibrefm extends AmpachePlugin implements PluginSaveMediaplayInterfa
     }
 
     /**
-     * uninstall
-     * Removes our preferences from the database returning it to its original form
+     * load
+     * This loads up the data we need into this object, this stuff comes from the preferences.
      */
-    public function uninstall(): bool
+    public function load(User $user): bool
     {
-        return (
-            Preference::delete('librefm_challenge') &&
-            Preference::delete('librefm_grant_link') &&
-            Preference::delete('librefm_pass') &&
-            Preference::delete('librefm_md5_pass') &&
-            Preference::delete('librefm_user') &&
-            Preference::delete('librefm_url') &&
-            Preference::delete('librefm_host') &&
-            Preference::delete('librefm_port')
-        );
-    }
+        $this->api_key = hash('sha256', 'AmpacheLibreFMPlugin' . AmpConfig::get('version') . Stream::get_base_url());
+        $this->secret  = '';
+        $user->set_preferences();
+        $data          = $user->prefs;
+        $this->user_id = $user->id;
+        // check if user have a session key
+        if (strlen(trim((string) $data['librefm_challenge'])) !== 0) {
+            $this->challenge = trim((string) $data['librefm_challenge']);
+        } else {
+            debug_event(self::class, 'No session key, not scrobbling (need to grant Ampache to libre.fm)', 4);
 
-    /**
-     * upgrade
-     * This is a recommended plugin function
-     */
-    public function upgrade(): bool
-    {
-        $from_version = Plugin::get_plugin_version($this->name);
-        if ($from_version === 0) {
             return false;
-        }
-
-        if ($from_version < 2) {
-            Preference::rename('librefm_pass', 'librefm_md5_pass');
-        }
-
-        if ($from_version < (int)$this->version) {
-            Preference::delete('librefm_md5_pass');
-            Preference::delete('librefm_user');
-            Preference::delete('librefm_url');
-            Preference::delete('librefm_host');
-            Preference::delete('librefm_port');
-            Preference::insert('librefm_grant_link', T_('Libre.FM Grant URL'), '', AccessLevelEnum::USER->value, 'string', 'plugins', $this->name);
         }
 
         return true;
@@ -210,47 +208,45 @@ class Ampachelibrefm extends AmpachePlugin implements PluginSaveMediaplayInterfa
     }
 
     /**
-     * get_session
-     * This call the getSession method and properly updates the preferences as needed.
-     * This requires a userid so it knows whose crap to update.
+     * uninstall
+     * Removes our preferences from the database returning it to its original form
      */
-    public function get_session(?string $token = null): bool
+    public function uninstall(): bool
     {
-        $scrobbler   = new Scrobbler($this->api_key, $this->scheme, $this->api_host, '', $this->secret);
-        $session_key = $scrobbler->get_session_key($token);
-        if (!$session_key instanceof SimpleXMLElement) {
-            debug_event(self::class, 'getSession Failed: ' . $scrobbler->error_msg, 3);
-
-            return false;
-        }
-
-        $this->challenge = $session_key;
-
-        // Update the preferences
-        Preference::update('librefm_challenge', $this->user_id, $session_key);
-        debug_event(self::class, 'getSession Successful', 3);
-
-        return true;
+        return (
+            Preference::delete('librefm_challenge') &&
+            Preference::delete('librefm_grant_link') &&
+            Preference::delete('librefm_pass') &&
+            Preference::delete('librefm_md5_pass') &&
+            Preference::delete('librefm_user') &&
+            Preference::delete('librefm_url') &&
+            Preference::delete('librefm_host') &&
+            Preference::delete('librefm_port')
+        );
     }
 
     /**
-     * load
-     * This loads up the data we need into this object, this stuff comes from the preferences.
+     * upgrade
+     * This is a recommended plugin function
      */
-    public function load(User $user): bool
+    public function upgrade(): bool
     {
-        $this->api_key = hash('sha256', 'AmpacheLibreFMPlugin' . AmpConfig::get('version') . Stream::get_base_url());
-        $this->secret  = '';
-        $user->set_preferences();
-        $data          = $user->prefs;
-        $this->user_id = $user->id;
-        // check if user have a session key
-        if (strlen(trim((string) $data['librefm_challenge'])) !== 0) {
-            $this->challenge = trim((string) $data['librefm_challenge']);
-        } else {
-            debug_event(self::class, 'No session key, not scrobbling (need to grant Ampache to libre.fm)', 4);
-
+        $from_version = Plugin::get_plugin_version($this->name);
+        if ($from_version === 0) {
             return false;
+        }
+
+        if ($from_version < 2) {
+            Preference::rename('librefm_pass', 'librefm_md5_pass');
+        }
+
+        if ($from_version < (int)$this->version) {
+            Preference::delete('librefm_md5_pass');
+            Preference::delete('librefm_user');
+            Preference::delete('librefm_url');
+            Preference::delete('librefm_host');
+            Preference::delete('librefm_port');
+            Preference::insert('librefm_grant_link', T_('Libre.FM Grant URL'), '', AccessLevelEnum::USER->value, 'string', 'plugins', $this->name);
         }
 
         return true;

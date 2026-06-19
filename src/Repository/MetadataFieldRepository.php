@@ -55,22 +55,6 @@ final readonly class MetadataFieldRepository implements MetadataFieldRepositoryI
     }
 
     /**
-     * Returns the list of available fields
-     *
-     * Key is the primary key, value the name
-     *
-     * @return Generator<int, string>
-     */
-    public function getPropertyList(): Generator
-    {
-        $result = $this->connection->query('SELECT `id`, `name` FROM `metadata_field`');
-
-        while ($data = $result->fetch(PDO::FETCH_ASSOC)) {
-            yield (int) $data['id'] => $data['name'];
-        }
-    }
-
-    /**
      * Finds a single `metadata-field` item by its id
      */
     public function findById(int $fieldId): ?MetadataField
@@ -110,6 +94,22 @@ final readonly class MetadataFieldRepository implements MetadataFieldRepositoryI
         }
 
         return $metadataField;
+    }
+
+    /**
+     * Returns the list of available fields
+     *
+     * Key is the primary key, value the name
+     *
+     * @return Generator<int, string>
+     */
+    public function getPropertyList(): Generator
+    {
+        $result = $this->connection->query('SELECT `id`, `name` FROM `metadata_field`');
+
+        while ($data = $result->fetch(PDO::FETCH_ASSOC)) {
+            yield (int) $data['id'] => $data['name'];
+        }
     }
 
     /**

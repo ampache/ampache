@@ -33,6 +33,22 @@ use Ampache\Repository\Model\Media;
 final class InterfaceImplementationChecker
 {
     /**
+     * @param string $instance The subject to search in
+     */
+    public static function is_library_item(string $instance): bool
+    {
+        return self::_is_class_typeof($instance, library_item::class);
+    }
+
+    /**
+     * @param string $instance The subject to search in
+     */
+    public static function is_media(string $instance): bool
+    {
+        return self::_is_class_typeof($instance, Media::class);
+    }
+
+    /**
      * Checks if an object implements a certain interface
      *
      * @param string $instance The subject to search in
@@ -57,21 +73,5 @@ final class InterfaceImplementationChecker
         }
 
         return false;
-    }
-
-    /**
-     * @param string $instance The subject to search in
-     */
-    public static function is_library_item(string $instance): bool
-    {
-        return self::_is_class_typeof($instance, library_item::class);
-    }
-
-    /**
-     * @param string $instance The subject to search in
-     */
-    public static function is_media(string $instance): bool
-    {
-        return self::_is_class_typeof($instance, Media::class);
     }
 }

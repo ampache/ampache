@@ -47,6 +47,14 @@ abstract readonly class AbstractGenericRssFeed implements FeedTypeInterface
     }
 
     /**
+     * Feed image link
+     */
+    protected function getImage(): ?string
+    {
+        return null;
+    }
+
+    /**
      * @return Generator<array{
      *     title: string,
      *     link: string,
@@ -64,14 +72,6 @@ abstract readonly class AbstractGenericRssFeed implements FeedTypeInterface
      * this is a little specific as it uses the 'newest' expire we can find
      */
     protected function getPubDate(): ?int
-    {
-        return null;
-    }
-
-    /**
-     * Feed image link
-     */
-    protected function getImage(): ?string
     {
         return null;
     }

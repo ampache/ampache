@@ -54,20 +54,6 @@ class AlbumArtExporterTest extends MockeryTestCase
 
     private ?AlbumArtExporter $subject;
 
-    #[Override]
-    protected function setUp(): void
-    {
-        $this->configContainer = $this->mock(ConfigContainerInterface::class);
-        $this->modelFactory    = $this->mock(ModelFactoryInterface::class);
-        $this->songRepository  = $this->mock(SongRepositoryInterface::class);
-
-        $this->subject = new AlbumArtExporter(
-            $this->configContainer,
-            $this->modelFactory,
-            $this->songRepository
-        );
-    }
-
     public function testExportDoesNothingIfNoInfoExists(): void
     {
         $interacor      = $this->mock(Interactor::class);
@@ -246,6 +232,20 @@ class AlbumArtExporterTest extends MockeryTestCase
         $this->assertSame(
             $raw_art,
             $file->getContent()
+        );
+    }
+
+    #[Override]
+    protected function setUp(): void
+    {
+        $this->configContainer = $this->mock(ConfigContainerInterface::class);
+        $this->modelFactory    = $this->mock(ModelFactoryInterface::class);
+        $this->songRepository  = $this->mock(SongRepositoryInterface::class);
+
+        $this->subject = new AlbumArtExporter(
+            $this->configContainer,
+            $this->modelFactory,
+            $this->songRepository
         );
     }
 }

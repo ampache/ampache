@@ -32,20 +32,28 @@ use PHPUnit\Framework\TestCase;
 
 class LiveStreamRepositoryTest extends TestCase
 {
-    private ModelFactoryInterface&MockObject $modelFactory;
-
     private DatabaseConnectionInterface&MockObject $connection;
-
+    private ModelFactoryInterface&MockObject $modelFactory;
     private LiveStreamRepository $subject;
 
-    protected function setUp(): void
+    public function testFindByIdReturnsFoundObject(): void
     {
-        $this->modelFactory = $this->createMock(ModelFactoryInterface::class);
-        $this->connection   = $this->createMock(DatabaseConnectionInterface::class);
+        $objectId = 666;
 
-        $this->subject = new LiveStreamRepository(
-            $this->modelFactory,
-            $this->connection
+        $item = $this->createMock(Live_Stream::class);
+
+        $this->modelFactory->expects(static::once())
+            ->method('createLiveStream')
+            ->with($objectId)
+            ->willReturn($item);
+
+        $item->expects(static::once())
+            ->method('isNew')
+            ->willReturn(false);
+
+        self::assertSame(
+            $item,
+            $this->subject->findById($objectId)
         );
     }
 
@@ -69,24 +77,14 @@ class LiveStreamRepositoryTest extends TestCase
         );
     }
 
-    public function testFindByIdReturnsFoundObject(): void
+    protected function setUp(): void
     {
-        $objectId = 666;
+        $this->modelFactory = $this->createMock(ModelFactoryInterface::class);
+        $this->connection   = $this->createMock(DatabaseConnectionInterface::class);
 
-        $item = $this->createMock(Live_Stream::class);
-
-        $this->modelFactory->expects(static::once())
-            ->method('createLiveStream')
-            ->with($objectId)
-            ->willReturn($item);
-
-        $item->expects(static::once())
-            ->method('isNew')
-            ->willReturn(false);
-
-        self::assertSame(
-            $item,
-            $this->subject->findById($objectId)
+        $this->subject = new LiveStreamRepository(
+            $this->modelFactory,
+            $this->connection
         );
     }
 }

@@ -40,13 +40,19 @@ use Override;
 class AmpacheHomeDashboard extends AmpachePlugin implements PluginDisplayHomeInterface
 {
     #[Override]
-    public string $name = 'Home Dashboard';
-
-    #[Override]
     public string $categories = 'home';
 
     #[Override]
     public string $description = 'Show Album dashboard sections on the homepage';
+
+    #[Override]
+    public string $max_ampache = '999999';
+
+    #[Override]
+    public string $min_ampache = '370021';
+
+    #[Override]
+    public string $name = 'Home Dashboard';
 
     #[Override]
     public string $url = '';
@@ -54,28 +60,16 @@ class AmpacheHomeDashboard extends AmpachePlugin implements PluginDisplayHomeInt
     #[Override]
     public string $version = '000002';
 
-    #[Override]
-    public string $min_ampache = '370021';
-
-    #[Override]
-    public string $max_ampache = '999999';
+    private int $maxitems;
+    private bool $newest;
+    private int $order = 0;
+    private bool $popular;
+    private bool $random;
+    private bool $recent;
+    private bool $trending;
 
     // These are internal settings used by this class, run this->load to fill them out
     private User $user;
-
-    private int $maxitems;
-
-    private bool $random;
-
-    private bool $newest;
-
-    private bool $recent;
-
-    private bool $trending;
-
-    private bool $popular;
-
-    private int $order = 0;
 
     /**
      * Constructor
@@ -83,74 +77,6 @@ class AmpacheHomeDashboard extends AmpachePlugin implements PluginDisplayHomeInt
     public function __construct()
     {
         $this->description = T_('Show Album dashboard sections on the homepage');
-    }
-
-    /**
-     * install
-     * Inserts plugin preferences into Ampache
-     */
-    public function install(): bool
-    {
-        if (!Preference::insert('homedash_max_items', T_('Home Dashboard max items'), 6, AccessLevelEnum::USER->value, 'integer', 'plugins', $this->name)) {
-            return false;
-        }
-
-        if (!Preference::insert('homedash_random', T_('Random'), '1', AccessLevelEnum::USER->value, 'boolean', 'plugins', $this->name)) {
-            return false;
-        }
-
-        if (!Preference::insert('homedash_newest', T_('Newest'), '0', AccessLevelEnum::USER->value, 'boolean', 'plugins', $this->name)) {
-            return false;
-        }
-
-        if (!Preference::insert('homedash_recent', T_('Recent'), '0', AccessLevelEnum::USER->value, 'boolean', 'plugins', $this->name)) {
-            return false;
-        }
-
-        if (!Preference::insert('homedash_trending', T_('Trending'), '1', AccessLevelEnum::USER->value, 'boolean', 'plugins', $this->name)) {
-            return false;
-        }
-
-        if (!Preference::insert('homedash_popular', T_('Popular'), '0', AccessLevelEnum::USER->value, 'boolean', 'plugins', $this->name)) {
-            return false;
-        }
-
-        return Preference::insert('homedash_order', T_('Plugin CSS order'), '0', AccessLevelEnum::USER->value, 'integer', 'plugins', $this->name);
-    }
-
-    /**
-     * uninstall
-     * Removes our preferences from the database returning it to its original form
-     */
-    public function uninstall(): bool
-    {
-        return (
-            Preference::delete('homedash_max_items') &&
-            Preference::delete('homedash_newest') &&
-            Preference::delete('homedash_random') &&
-            Preference::delete('homedash_recent') &&
-            Preference::delete('homedash_trending') &&
-            Preference::delete('homedash_popular') &&
-            Preference::delete('homedash_order')
-        );
-    }
-
-    /**
-     * upgrade
-     * This is a recommended plugin function
-     */
-    public function upgrade(): bool
-    {
-        $from_version = Plugin::get_plugin_version($this->name);
-        if ($from_version === 0) {
-            return false;
-        }
-
-        if ($from_version < (int)$this->version) {
-            Preference::insert('homedash_order', T_('Plugin CSS order'), '0', AccessLevelEnum::USER->value, 'integer', 'plugins', $this->name);
-        }
-
-        return true;
     }
 
     /**
@@ -290,6 +216,39 @@ class AmpacheHomeDashboard extends AmpachePlugin implements PluginDisplayHomeInt
     }
 
     /**
+     * install
+     * Inserts plugin preferences into Ampache
+     */
+    public function install(): bool
+    {
+        if (!Preference::insert('homedash_max_items', T_('Home Dashboard max items'), 6, AccessLevelEnum::USER->value, 'integer', 'plugins', $this->name)) {
+            return false;
+        }
+
+        if (!Preference::insert('homedash_random', T_('Random'), '1', AccessLevelEnum::USER->value, 'boolean', 'plugins', $this->name)) {
+            return false;
+        }
+
+        if (!Preference::insert('homedash_newest', T_('Newest'), '0', AccessLevelEnum::USER->value, 'boolean', 'plugins', $this->name)) {
+            return false;
+        }
+
+        if (!Preference::insert('homedash_recent', T_('Recent'), '0', AccessLevelEnum::USER->value, 'boolean', 'plugins', $this->name)) {
+            return false;
+        }
+
+        if (!Preference::insert('homedash_trending', T_('Trending'), '1', AccessLevelEnum::USER->value, 'boolean', 'plugins', $this->name)) {
+            return false;
+        }
+
+        if (!Preference::insert('homedash_popular', T_('Popular'), '0', AccessLevelEnum::USER->value, 'boolean', 'plugins', $this->name)) {
+            return false;
+        }
+
+        return Preference::insert('homedash_order', T_('Plugin CSS order'), '0', AccessLevelEnum::USER->value, 'integer', 'plugins', $this->name);
+    }
+
+    /**
      * load
      * This loads up the data we need into this object, this stuff comes from the preferences.
      */
@@ -311,6 +270,41 @@ class AmpacheHomeDashboard extends AmpachePlugin implements PluginDisplayHomeInt
         $this->trending = ($data['homedash_trending'] == '1');
         $this->popular  = ($data['homedash_popular'] == '1');
         $this->order    = (int)($data['homedash_order'] ?? 0);
+
+        return true;
+    }
+
+    /**
+     * uninstall
+     * Removes our preferences from the database returning it to its original form
+     */
+    public function uninstall(): bool
+    {
+        return (
+            Preference::delete('homedash_max_items') &&
+            Preference::delete('homedash_newest') &&
+            Preference::delete('homedash_random') &&
+            Preference::delete('homedash_recent') &&
+            Preference::delete('homedash_trending') &&
+            Preference::delete('homedash_popular') &&
+            Preference::delete('homedash_order')
+        );
+    }
+
+    /**
+     * upgrade
+     * This is a recommended plugin function
+     */
+    public function upgrade(): bool
+    {
+        $from_version = Plugin::get_plugin_version($this->name);
+        if ($from_version === 0) {
+            return false;
+        }
+
+        if ($from_version < (int)$this->version) {
+            Preference::insert('homedash_order', T_('Plugin CSS order'), '0', AccessLevelEnum::USER->value, 'integer', 'plugins', $this->name);
+        }
 
         return true;
     }

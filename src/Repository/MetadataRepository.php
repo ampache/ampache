@@ -58,21 +58,6 @@ final readonly class MetadataRepository implements MetadataRepositoryInterface
     }
 
     /**
-     * Migrate an object associate stats to a new object
-     */
-    public function migrate(string $objectType, int $oldObjectId, int $newObjectId): void
-    {
-        $this->connection->query(
-            'UPDATE IGNORE `metadata` SET `object_id` = ? WHERE `object_id` = ? AND `type` = ?',
-            [
-                $newObjectId,
-                $oldObjectId,
-                ucfirst($objectType),
-            ],
-        );
-    }
-
-    /**
      * Finds a single `metadata` item by its id
      */
     public function findById(int $metadataId): ?Metadata
@@ -146,24 +131,17 @@ final readonly class MetadataRepository implements MetadataRepositoryInterface
     }
 
     /**
-     * Deletes the `metadata` item
+     * Migrate an object associate stats to a new object
      */
-    public function remove(Metadata $metadata): void
+    public function migrate(string $objectType, int $oldObjectId, int $newObjectId): void
     {
         $this->connection->query(
-            'DELETE FROM `metadata` where `id` = ?',
-            [$metadata->getId()]
-        );
-    }
-
-    /**
-     * Creates a new `metadata` item
-     */
-    public function prototype(): Metadata
-    {
-        return new Metadata(
-            $this,
-            $this->metadataFieldRepository
+            'UPDATE IGNORE `metadata` SET `object_id` = ? WHERE `object_id` = ? AND `type` = ?',
+            [
+                $newObjectId,
+                $oldObjectId,
+                ucfirst($objectType),
+            ],
         );
     }
 
@@ -211,5 +189,27 @@ final readonly class MetadataRepository implements MetadataRepositoryInterface
         }
 
         return $result;
+    }
+
+    /**
+     * Creates a new `metadata` item
+     */
+    public function prototype(): Metadata
+    {
+        return new Metadata(
+            $this,
+            $this->metadataFieldRepository
+        );
+    }
+
+    /**
+     * Deletes the `metadata` item
+     */
+    public function remove(Metadata $metadata): void
+    {
+        $this->connection->query(
+            'DELETE FROM `metadata` where `id` = ?',
+            [$metadata->getId()]
+        );
     }
 }

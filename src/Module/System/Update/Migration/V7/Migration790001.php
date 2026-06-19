@@ -34,8 +34,7 @@ use Ampache\Module\System\Update\Migration\AbstractMigration;
 final class Migration790001 extends AbstractMigration
 {
     protected array $changelog = ['Update Dropbox catalog `authtoken` (if installed)'];
-
-    protected bool $warning = true;
+    protected bool $warning    = true;
 
     public function migrate(): void
     {

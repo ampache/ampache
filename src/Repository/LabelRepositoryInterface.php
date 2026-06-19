@@ -30,12 +30,16 @@ use DateTimeInterface;
 
 interface LabelRepositoryInterface
 {
-    public function findById(int $labelId): ?Label;
+    public function addArtistAssoc(int $labelId, int $artistId, DateTimeInterface $date): void;
 
     /**
-     * @return string[]
+     * This cleans out unused labels
      */
-    public function getByArtist(int $artistId): array;
+    public function collectGarbage(): void;
+
+    public function delete(int $labelId): void;
+
+    public function findById(int $labelId): ?Label;
 
     /**
      * Return the list of all available labels
@@ -44,16 +48,12 @@ interface LabelRepositoryInterface
      */
     public function getAll(): array;
 
+    /**
+     * @return string[]
+     */
+    public function getByArtist(int $artistId): array;
+
     public function lookup(string $labelName, int $labelId = 0): int;
 
     public function removeArtistAssoc(int $labelId, int $artistId): void;
-
-    public function addArtistAssoc(int $labelId, int $artistId, DateTimeInterface $date): void;
-
-    public function delete(int $labelId): void;
-
-    /**
-     * This cleans out unused labels
-     */
-    public function collectGarbage(): void;
 }

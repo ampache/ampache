@@ -51,16 +51,16 @@ final class TalView implements TalViewInterface
         return $engine->execute();
     }
 
-    public function setTemplate(string $templateFilePath): TalViewInterface
+    public function setContext(string $key, $context): TalViewInterface
     {
-        $this->getEngine()->setTemplate($templateFilePath);
+        $this->getEngine()->set($key, $context);
 
         return $this;
     }
 
-    public function setContext(string $key, $context): TalViewInterface
+    public function setTemplate(string $templateFilePath): TalViewInterface
     {
-        $this->getEngine()->set($key, $context);
+        $this->getEngine()->setTemplate($templateFilePath);
 
         return $this;
     }

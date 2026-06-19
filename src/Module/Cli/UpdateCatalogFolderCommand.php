@@ -31,16 +31,6 @@ use Override;
 
 final class UpdateCatalogFolderCommand extends Command
 {
-    #[Override]
-    protected function defaults(): self
-    {
-        $this->option('-h, --help', T_('Help'))->on($this->showHelp(...));
-
-        $this->onExit(static fn ($exitCode = 0) => exit($exitCode));
-
-        return $this;
-    }
-
     public function __construct(
         private readonly UpdateSingleCatalogFolderInterface $updateSingleCatalogFolder,
     ) {
@@ -93,5 +83,15 @@ final class UpdateCatalogFolderCommand extends Command
             $values['art'],
             $values['move']
         );
+    }
+
+    #[Override]
+    protected function defaults(): self
+    {
+        $this->option('-h, --help', T_('Help'))->on($this->showHelp(...));
+
+        $this->onExit(static fn ($exitCode = 0) => exit($exitCode));
+
+        return $this;
     }
 }

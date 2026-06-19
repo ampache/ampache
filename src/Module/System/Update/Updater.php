@@ -50,6 +50,25 @@ final readonly class Updater implements UpdaterInterface
     }
 
     /**
+     * Checks for missing database tables
+     *
+     * @param bool $migrate Set to `true` if the system should try to create the missing tables
+     * @param int $build Current Ampache database build number
+     *
+     * @return Generator<string> The names of the missing database tables
+     *
+     * @throws UpdateFailedException
+     */
+    public function checkTables(bool $migrate = false, int $build = 0): Generator
+    {
+        yield from $this->updateRunner->runTableCheck(
+            $this->getPendingUpdates(),
+            $migrate,
+            $build
+        );
+    }
+
+    /**
      * This yields a list of the needed updates to the database
      *
      * @return Generator<array{
@@ -77,6 +96,14 @@ final readonly class Updater implements UpdaterInterface
     }
 
     /**
+     * Checks to see if the database db_version is higher than the code db_version
+     */
+    public function hasOverUpdated(): bool
+    {
+        return Versions::MAXIMUM_UPDATABLE_VERSION < (int) $this->updateInfoRepository->getValueByKey(UpdateInfoEnum::DB_VERSION);
+    }
+
+    /**
      * Checks to see if we need to update Ampache at all
      */
     public function hasPendingUpdates(): bool
@@ -84,14 +111,6 @@ final readonly class Updater implements UpdaterInterface
         return Versions::getPendingMigrations(
             (int) $this->updateInfoRepository->getValueByKey(UpdateInfoEnum::DB_VERSION)
         )->valid();
-    }
-
-    /**
-     * Checks to see if the database db_version is higher than the code db_version
-     */
-    public function hasOverUpdated(): bool
-    {
-        return Versions::MAXIMUM_UPDATABLE_VERSION < (int) $this->updateInfoRepository->getValueByKey(UpdateInfoEnum::DB_VERSION);
     }
 
     /**
@@ -132,25 +151,6 @@ final readonly class Updater implements UpdaterInterface
         $this->updateRunner->run(
             $this->getPendingUpdates(),
             $interactor
-        );
-    }
-
-    /**
-     * Checks for missing database tables
-     *
-     * @param bool $migrate Set to `true` if the system should try to create the missing tables
-     * @param int $build Current Ampache database build number
-     *
-     * @return Generator<string> The names of the missing database tables
-     *
-     * @throws UpdateFailedException
-     */
-    public function checkTables(bool $migrate = false, int $build = 0): Generator
-    {
-        yield from $this->updateRunner->runTableCheck(
-            $this->getPendingUpdates(),
-            $migrate,
-            $build
         );
     }
 }

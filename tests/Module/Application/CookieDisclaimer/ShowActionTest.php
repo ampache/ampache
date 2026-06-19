@@ -34,20 +34,10 @@ use Psr\Http\Message\ServerRequestInterface;
 
 class ShowActionTest extends MockeryTestCase
 {
-    /** @var MockInterface|UiInterface|null */
-    private MockInterface $ui;
-
     private ?ShowAction $subject;
 
-    #[Override]
-    protected function setUp(): void
-    {
-        $this->ui = $this->mock(UiInterface::class);
-
-        $this->subject = new ShowAction(
-            $this->ui
-        );
-    }
+    /** @var MockInterface|UiInterface|null */
+    private MockInterface $ui;
 
     public function testRunRenders(): void
     {
@@ -66,6 +56,16 @@ class ShowActionTest extends MockeryTestCase
 
         $this->assertNull(
             $this->subject->run($request, $gatekeeper)
+        );
+    }
+
+    #[Override]
+    protected function setUp(): void
+    {
+        $this->ui = $this->mock(UiInterface::class);
+
+        $this->subject = new ShowAction(
+            $this->ui
         );
     }
 }

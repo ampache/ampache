@@ -27,19 +27,18 @@ namespace Ampache\Module\Art\Collector;
 
 final class ArtCollectorTypeEnum
 {
-    public const string GOOGLE      = 'google';
-
-    public const string MUSICBRAINZ = 'musicbrainz';
-
-    public const string LASTFM      = 'lastfm';
-
-    public const string SPOTIFY     = 'spotify';
-
     public const string DB          = 'db';
 
     public const string FOLDER      = 'folder';
+    public const string GOOGLE      = 'google';
+
+    public const string LASTFM      = 'lastfm';
 
     public const string META_TAGS   = 'tags';
+
+    public const string MUSICBRAINZ = 'musicbrainz';
+
+    public const string SPOTIFY     = 'spotify';
 
     /** @var array<string, class-string<CollectorModuleInterface>> */
     public const array TYPE_CLASS_MAP = [

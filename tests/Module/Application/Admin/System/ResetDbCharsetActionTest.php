@@ -42,27 +42,13 @@ class ResetDbCharsetActionTest extends MockeryTestCase
     /** @var ConfigContainerInterface|MockInterface|null */
     private MockInterface $configContainer;
 
-    /** @var UiInterface|MockInterface|null */
-    private MockInterface $ui;
-
     /** @var DatabaseCharsetUpdaterInterface|MockInterface|null */
     private MockInterface $databaseCharsetUpdater;
 
     private ?ResetDbCharsetAction $subject;
 
-    #[Override]
-    protected function setUp(): void
-    {
-        $this->configContainer        = $this->mock(ConfigContainerInterface::class);
-        $this->ui                     = $this->mock(UiInterface::class);
-        $this->databaseCharsetUpdater = $this->mock(DatabaseCharsetUpdaterInterface::class);
-
-        $this->subject = new ResetDbCharsetAction(
-            $this->configContainer,
-            $this->ui,
-            $this->databaseCharsetUpdater
-        );
-    }
+    /** @var UiInterface|MockInterface|null */
+    private MockInterface $ui;
 
     public function testRunThrowsExceptionIfAccessIsDenied(): void
     {
@@ -142,5 +128,19 @@ class ResetDbCharsetActionTest extends MockeryTestCase
             ->once();
 
         $this->subject->run($request, $gatekeeper);
+    }
+
+    #[Override]
+    protected function setUp(): void
+    {
+        $this->configContainer        = $this->mock(ConfigContainerInterface::class);
+        $this->ui                     = $this->mock(UiInterface::class);
+        $this->databaseCharsetUpdater = $this->mock(DatabaseCharsetUpdaterInterface::class);
+
+        $this->subject = new ResetDbCharsetAction(
+            $this->configContainer,
+            $this->ui,
+            $this->databaseCharsetUpdater
+        );
     }
 }

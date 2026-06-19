@@ -48,6 +48,9 @@ final class CatalogQuery implements QueryInterface
         'user',
     ];
 
+    protected string $base   = "SELECT %%SELECT%% FROM `catalog` ";
+    protected string $select = "`catalog`.`id`";
+
     /** @var string[] $sorts */
     protected array $sorts = [
         'catalog_type',
@@ -67,9 +70,15 @@ final class CatalogQuery implements QueryInterface
         'userflag',
     ];
 
-    protected string $select = "`catalog`.`id`";
-
-    protected string $base = "SELECT %%SELECT%% FROM `catalog` ";
+    /**
+     * get_base_sql
+     *
+     * Base SELECT query string without filters or joins
+     */
+    public function get_base_sql(): string
+    {
+        return $this->base;
+    }
 
     /**
      * get_select
@@ -79,16 +88,6 @@ final class CatalogQuery implements QueryInterface
     public function get_select(): string
     {
         return $this->select;
-    }
-
-    /**
-     * get_base_sql
-     *
-     * Base SELECT query string without filters or joins
-     */
-    public function get_base_sql(): string
-    {
-        return $this->base;
     }
 
     /**

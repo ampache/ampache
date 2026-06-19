@@ -33,6 +33,13 @@ namespace Ampache\Repository\Model;
 interface container_item extends library_item
 {
     /**
+     * Get all medias from all childrens. Return an array of `object_type`, `object_id` medias.
+     *
+     * @return array<int, array{object_type: LibraryItemEnum, object_id: int}>
+     */
+    public function get_medias(?string $filter_type = null): array;
+
+    /**
      * @return null|array{object_type: LibraryItemEnum, object_id: int}
      */
     public function get_parent(): ?array;
@@ -41,11 +48,4 @@ interface container_item extends library_item
      * Returns the full/formatted name of the media items artist/author
      */
     public function get_parent_fullname(): string;
-
-    /**
-     * Get all medias from all childrens. Return an array of `object_type`, `object_id` medias.
-     *
-     * @return array<int, array{object_type: LibraryItemEnum, object_id: int}>
-     */
-    public function get_medias(?string $filter_type = null): array;
 }

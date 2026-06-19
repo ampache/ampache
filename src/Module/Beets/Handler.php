@@ -33,16 +33,26 @@ abstract class Handler
     /** Seperator between command and arguments */
     protected string $commandSeperator;
 
+    protected array $fieldMapping = [];
     private Catalog $handler;
-
     private string $handlerCommand;
 
-    protected array $fieldMapping = [];
-
     /**
-     * Starts a command
+     * Get a command to get songs with a timestamp in $tag newer than $time.
+     * For example: 'ls added:2014-10-02..'
      */
-    abstract public function start(string $command): void;
+    public function getTimedCommand(string $command, string $tag, int $time): string
+    {
+        $commandParts = [$command];
+        if ($time > 0) {
+            $commandParts[] = $tag . ':' . date('Y-m-d', $time) . '..';
+        } else {
+            // Add an empty part so we get a trailing slash if needed
+            $commandParts[] = '';
+        }
+
+        return implode($this->commandSeperator, $commandParts);
+    }
 
     /**
      * setHandler
@@ -52,6 +62,11 @@ abstract class Handler
         $this->handler        = $handler;
         $this->handlerCommand = $command;
     }
+
+    /**
+     * Starts a command
+     */
+    abstract public function start(string $command): void;
 
     /**
      * Call function from the dispatcher e.g. to store the new song
@@ -74,22 +89,5 @@ abstract class Handler
         $song['genre'] = preg_split('/[\s]?[,|;][\s?]/', (string) $song['genre']);
 
         return $song;
-    }
-
-    /**
-     * Get a command to get songs with a timestamp in $tag newer than $time.
-     * For example: 'ls added:2014-10-02..'
-     */
-    public function getTimedCommand(string $command, string $tag, int $time): string
-    {
-        $commandParts = [$command];
-        if ($time > 0) {
-            $commandParts[] = $tag . ':' . date('Y-m-d', $time) . '..';
-        } else {
-            // Add an empty part so we get a trailing slash if needed
-            $commandParts[] = '';
-        }
-
-        return implode($this->commandSeperator, $commandParts);
     }
 }

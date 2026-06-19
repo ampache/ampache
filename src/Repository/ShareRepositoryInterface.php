@@ -37,19 +37,19 @@ use DateTimeInterface;
 interface ShareRepositoryInterface
 {
     /**
-     * Migrate a share associate stats to a new object
+     * Cleanup old shares
      */
-    public function migrate(string $objectType, int $oldObjectId, int $newObjectId): void;
+    public function collectGarbage(): void;
+
+    /**
+     * Deletes a single item
+     */
+    public function delete(Share $item): void;
 
     /**
      * Finds a single item by its id
      */
     public function findById(int $itemId): ?Share;
-
-    /**
-     * Cleanup old shares
-     */
-    public function collectGarbage(): void;
 
     /**
      * Returns the ids of all items the user has access to
@@ -59,9 +59,9 @@ interface ShareRepositoryInterface
     public function getIdsByUser(User $user): array;
 
     /**
-     * Deletes a single item
+     * Migrate a share associate stats to a new object
      */
-    public function delete(Share $item): void;
+    public function migrate(string $objectType, int $oldObjectId, int $newObjectId): void;
 
     /**
      * Sets the last access-date and raises the counter

@@ -32,16 +32,12 @@ namespace Ampache\Repository\Model;
  */
 interface library_item
 {
-    public function getId(): int;
-
-    public function isNew(): bool;
+    public function get_default_art_kind(): string;
 
     /**
-     * get_link
-     *
-     * Get the item link.
+     * get_description
      */
-    public function get_link(): string;
+    public function get_description(): string;
 
     /**
      * get_fullname
@@ -56,25 +52,29 @@ interface library_item
      */
     public function get_keywords(): array;
 
+    /**
+     * get_link
+     *
+     * Get the item link.
+     */
+    public function get_link(): string;
+
     public function get_user_owner(): ?int;
 
+    public function getId(): int;
+
     /**
-     * get_description
+     * Returns the media-type of the library-item
      */
-    public function get_description(): string;
+    public function getMediaType(): LibraryItemEnum;
+
+    public function has_art(): bool;
+
+    public function isNew(): bool;
 
     /**
      * update
      * @param array<string, mixed> $data
      */
     public function update(array $data): ?int;
-
-    public function has_art(): bool;
-
-    public function get_default_art_kind(): string;
-
-    /**
-     * Returns the media-type of the library-item
-     */
-    public function getMediaType(): LibraryItemEnum;
 }

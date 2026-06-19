@@ -49,19 +49,12 @@ final readonly class PlayableItemRssItemAdapter implements RssItemInterface
     }
 
     /**
-     * Returns the item title
+     * Returns the itunes category of the item
+     * https://www.rssboard.org/rss-validator/docs/error/InvalidItunesCategory.html
      */
-    public function getTitle(): string
+    public function getCategory(): string
     {
-        return (string)$this->playable->get_fullname();
-    }
-
-    /**
-     * Returns `true` if the item provides an image
-     */
-    public function hasImage(): bool
-    {
-        return $this->playable->has_art();
+        return 'Music';
     }
 
     /**
@@ -73,64 +66,11 @@ final readonly class PlayableItemRssItemAdapter implements RssItemInterface
     }
 
     /**
-     * Returns `true` if the item provides a summary/description text
-     */
-    public function hasSummary(): bool
-    {
-        return $this->playable->get_description() !== '';
-    }
-
-    /**
-     * Returns the items summary/description text
-     */
-    public function getSummary(): string
-    {
-        return $this->playable->get_description();
-    }
-
-    /**
-     * Returns the itunes category of the item
-     * https://www.rssboard.org/rss-validator/docs/error/InvalidItunesCategory.html
-     */
-    public function getCategory(): string
-    {
-        return 'Music';
-    }
-
-    /**
      * Returns a link to the item
      */
     public function getLink(): string
     {
         return $this->playable->get_link();
-    }
-
-    /**
-     * Returns a link to the feed url
-     */
-    public function getRssLink(): string
-    {
-        return ($_SERVER['SCRIPT_URI'] ?? '/rss.php') . '?' . $_SERVER['QUERY_STRING'];
-    }
-
-    /**
-     * Returns `true` if an item-owner is set
-     */
-    public function hasOwner(): bool
-    {
-        return ($this->playable->get_user_owner() ?? 0) > 0;
-    }
-
-    /**
-     * Returns the name of the owner
-     */
-    public function getOwnerName(): string
-    {
-        $user = $this->modelFactory->createUser(
-            (int) $this->playable->get_user_owner()
-        );
-
-        return (string) $user->get_fullname();
     }
 
     /**
@@ -192,5 +132,65 @@ final readonly class PlayableItemRssItemAdapter implements RssItemInterface
 
             yield $data;
         }
+    }
+
+    /**
+     * Returns the name of the owner
+     */
+    public function getOwnerName(): string
+    {
+        $user = $this->modelFactory->createUser(
+            (int) $this->playable->get_user_owner()
+        );
+
+        return (string) $user->get_fullname();
+    }
+
+    /**
+     * Returns a link to the feed url
+     */
+    public function getRssLink(): string
+    {
+        return ($_SERVER['SCRIPT_URI'] ?? '/rss.php') . '?' . $_SERVER['QUERY_STRING'];
+    }
+
+    /**
+     * Returns the items summary/description text
+     */
+    public function getSummary(): string
+    {
+        return $this->playable->get_description();
+    }
+
+    /**
+     * Returns the item title
+     */
+    public function getTitle(): string
+    {
+        return (string)$this->playable->get_fullname();
+    }
+
+    /**
+     * Returns `true` if the item provides an image
+     */
+    public function hasImage(): bool
+    {
+        return $this->playable->has_art();
+    }
+
+    /**
+     * Returns `true` if an item-owner is set
+     */
+    public function hasOwner(): bool
+    {
+        return ($this->playable->get_user_owner() ?? 0) > 0;
+    }
+
+    /**
+     * Returns `true` if the item provides a summary/description text
+     */
+    public function hasSummary(): bool
+    {
+        return $this->playable->get_description() !== '';
     }
 }

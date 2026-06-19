@@ -84,15 +84,19 @@ final readonly class GuiFactory implements GuiFactoryInterface
     ) {
     }
 
-    public function createSongViewAdapter(
+    public function createAlbumDiskViewAdapter(
         GuiGatekeeperInterface $gatekeeper,
-        Song $song,
-    ): SongViewAdapterInterface {
-        return new SongViewAdapter(
+        Browse $browse,
+        AlbumDisk $albumDisk,
+    ): AlbumDiskViewAdapterInterface {
+        return new AlbumDiskViewAdapter(
             $this->configContainer,
             $this->modelFactory,
+            $this->zipHandler,
+            $this->functionChecker,
             $gatekeeper,
-            $song
+            $browse,
+            $albumDisk
         );
     }
 
@@ -112,19 +116,27 @@ final readonly class GuiFactory implements GuiFactoryInterface
         );
     }
 
-    public function createAlbumDiskViewAdapter(
-        GuiGatekeeperInterface $gatekeeper,
-        Browse $browse,
-        AlbumDisk $albumDisk,
-    ): AlbumDiskViewAdapterInterface {
-        return new AlbumDiskViewAdapter(
-            $this->configContainer,
-            $this->modelFactory,
-            $this->zipHandler,
-            $this->functionChecker,
-            $gatekeeper,
-            $browse,
-            $albumDisk
+    public function createCatalogDetails(
+        Catalog $catalog,
+    ): CatalogDetailsInterface {
+        return new CatalogDetails(
+            $this,
+            $catalog
+        );
+    }
+
+    /**
+     * @param array<string, int|string> $stats
+     */
+    public function createCatalogStats(array $stats): CatalogStatsInterface
+    {
+        return new CatalogStats($stats);
+    }
+
+    public function createConfigViewAdapter(): ConfigViewAdapterInterface
+    {
+        return new ConfigViewAdapter(
+            $this->configContainer
         );
     }
 
@@ -146,6 +158,20 @@ final readonly class GuiFactory implements GuiFactoryInterface
         );
     }
 
+    public function createNewPlaylistDialogAdapter(
+        GuiGatekeeperInterface $gatekeeper,
+        string $object_type,
+        string $object_id,
+    ): NewPlaylistDialogAdapterInterface {
+        return new NewPlaylistDialogAdapter(
+            $this->playlistLoader,
+            $this->ajaxUriRetriever,
+            $gatekeeper,
+            $object_type,
+            $object_id
+        );
+    }
+
     public function createPlaylistViewAdapter(
         GuiGatekeeperInterface $gatekeeper,
         Playlist $playlist,
@@ -160,10 +186,15 @@ final readonly class GuiFactory implements GuiFactoryInterface
         );
     }
 
-    public function createConfigViewAdapter(): ConfigViewAdapterInterface
-    {
-        return new ConfigViewAdapter(
-            $this->configContainer
+    public function createSongViewAdapter(
+        GuiGatekeeperInterface $gatekeeper,
+        Song $song,
+    ): SongViewAdapterInterface {
+        return new SongViewAdapter(
+            $this->configContainer,
+            $this->modelFactory,
+            $gatekeeper,
+            $song
         );
     }
 
@@ -176,23 +207,6 @@ final readonly class GuiFactory implements GuiFactoryInterface
         );
     }
 
-    public function createCatalogDetails(
-        Catalog $catalog,
-    ): CatalogDetailsInterface {
-        return new CatalogDetails(
-            $this,
-            $catalog
-        );
-    }
-
-    /**
-     * @param array<string, int|string> $stats
-     */
-    public function createCatalogStats(array $stats): CatalogStatsInterface
-    {
-        return new CatalogStats($stats);
-    }
-
     public function createUpdateViewAdapter(): UpdateViewAdapterInterface
     {
         return new UpdateViewAdapter(
@@ -200,20 +214,6 @@ final readonly class GuiFactory implements GuiFactoryInterface
             $this->updateInfoRepository,
             $this->updateHelper,
             $this->updater
-        );
-    }
-
-    public function createNewPlaylistDialogAdapter(
-        GuiGatekeeperInterface $gatekeeper,
-        string $object_type,
-        string $object_id,
-    ): NewPlaylistDialogAdapterInterface {
-        return new NewPlaylistDialogAdapter(
-            $this->playlistLoader,
-            $this->ajaxUriRetriever,
-            $gatekeeper,
-            $object_type,
-            $object_id
         );
     }
 }

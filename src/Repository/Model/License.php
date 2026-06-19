@@ -35,44 +35,13 @@ use Ampache\Repository\LicenseRepositoryInterface;
  */
 class License extends BaseModel
 {
-    private ?string $name = null;
-
-    private ?string $description = null;
-
+    private ?string $description   = null;
     private ?string $external_link = null; // Link to the license page
-
-    private ?int $order = null; // Item order on the license page
+    private ?string $name          = null;
+    private ?int $order            = null; // Item order on the license page
 
     public function __construct(private readonly LicenseRepositoryInterface $licenseRepository)
     {
-    }
-
-    /**
-     * Set the name
-     */
-    public function setName(string $value): License
-    {
-        $this->name = htmlspecialchars($value);
-
-        return $this;
-    }
-
-    /**
-     * Returns the name
-     */
-    public function getName(): string
-    {
-        return (string) $this->name;
-    }
-
-    /**
-     * Sets the description
-     */
-    public function setDescription(string $value): License
-    {
-        $this->description = htmlspecialchars($value);
-
-        return $this;
     }
 
     /**
@@ -81,16 +50,6 @@ class License extends BaseModel
     public function getDescription(): string
     {
         return (string) $this->description;
-    }
-
-    /**
-     * Sets the external-link
-     */
-    public function setExternalLink(string $value): License
-    {
-        $this->external_link = $value;
-
-        return $this;
     }
 
     /**
@@ -118,13 +77,11 @@ class License extends BaseModel
     }
 
     /**
-     * Sets the order
+     * Returns the name
      */
-    public function setOrder(?int $value): License
+    public function getName(): string
     {
-        $this->order = $value;
-
-        return $this;
+        return (string) $this->name;
     }
 
     /**
@@ -148,5 +105,45 @@ class License extends BaseModel
         ) {
             $this->id = $result;
         }
+    }
+
+    /**
+     * Sets the description
+     */
+    public function setDescription(string $value): License
+    {
+        $this->description = htmlspecialchars($value);
+
+        return $this;
+    }
+
+    /**
+     * Sets the external-link
+     */
+    public function setExternalLink(string $value): License
+    {
+        $this->external_link = $value;
+
+        return $this;
+    }
+
+    /**
+     * Set the name
+     */
+    public function setName(string $value): License
+    {
+        $this->name = htmlspecialchars($value);
+
+        return $this;
+    }
+
+    /**
+     * Sets the order
+     */
+    public function setOrder(?int $value): License
+    {
+        $this->order = $value;
+
+        return $this;
     }
 }

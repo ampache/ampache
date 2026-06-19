@@ -36,13 +36,19 @@ use Override;
 class AmpacheRSSView extends AmpachePlugin implements PluginDisplayHomeInterface
 {
     #[Override]
-    public string $name = 'RSSView';
-
-    #[Override]
     public string $categories = 'home';
 
     #[Override]
     public string $description = 'RSS View';
+
+    #[Override]
+    public string $max_ampache = '999999';
+
+    #[Override]
+    public string $min_ampache = '370021';
+
+    #[Override]
+    public string $name = 'RSSView';
 
     #[Override]
     public string $url = '';
@@ -50,18 +56,10 @@ class AmpacheRSSView extends AmpachePlugin implements PluginDisplayHomeInterface
     #[Override]
     public string $version = '000002';
 
-    #[Override]
-    public string $min_ampache = '370021';
-
-    #[Override]
-    public string $max_ampache = '999999';
-
     // These are internal settings used by this class, run this->load to fill them out
     private string $feed_url = '';
-
-    private int $maxitems = 0;
-
-    private int $order = 0;
+    private int $maxitems    = 0;
+    private int $order       = 0;
 
     /**
      * Constructor
@@ -69,54 +67,6 @@ class AmpacheRSSView extends AmpachePlugin implements PluginDisplayHomeInterface
     public function __construct()
     {
         $this->description = T_('RSS View');
-    }
-
-    /**
-     * install
-     * Inserts plugin preferences into Ampache
-     */
-    public function install(): bool
-    {
-        if (!Preference::insert('rssview_feed_url', T_('RSS Feed URL'), '', AccessLevelEnum::USER->value, 'string', 'plugins', $this->name)) {
-            return false;
-        }
-
-        if (!Preference::insert('rssview_max_items', T_('RSS Feed max items'), 5, AccessLevelEnum::USER->value, 'integer', 'plugins', $this->name)) {
-            return false;
-        }
-
-        return Preference::insert('rssview_order', T_('Plugin CSS order'), '0', AccessLevelEnum::USER->value, 'integer', 'plugins', $this->name);
-    }
-
-    /**
-     * uninstall
-     * Removes our preferences from the database returning it to its original form
-     */
-    public function uninstall(): bool
-    {
-        return (
-            Preference::delete('rssview_feed_url') &&
-            Preference::delete('rssview_max_items') &&
-            Preference::delete('rssview_order')
-        );
-    }
-
-    /**
-     * upgrade
-     * This is a recommended plugin function
-     */
-    public function upgrade(): bool
-    {
-        $from_version = Plugin::get_plugin_version($this->name);
-        if ($from_version === 0) {
-            return false;
-        }
-
-        if ($from_version < (int)$this->version) {
-            Preference::insert('rssview_order', T_('Plugin CSS order'), '0', AccessLevelEnum::USER->value, 'integer', 'plugins', $this->name);
-        }
-
-        return true;
     }
 
     /**
@@ -163,6 +113,23 @@ class AmpacheRSSView extends AmpachePlugin implements PluginDisplayHomeInterface
     }
 
     /**
+     * install
+     * Inserts plugin preferences into Ampache
+     */
+    public function install(): bool
+    {
+        if (!Preference::insert('rssview_feed_url', T_('RSS Feed URL'), '', AccessLevelEnum::USER->value, 'string', 'plugins', $this->name)) {
+            return false;
+        }
+
+        if (!Preference::insert('rssview_max_items', T_('RSS Feed max items'), 5, AccessLevelEnum::USER->value, 'integer', 'plugins', $this->name)) {
+            return false;
+        }
+
+        return Preference::insert('rssview_order', T_('Plugin CSS order'), '0', AccessLevelEnum::USER->value, 'integer', 'plugins', $this->name);
+    }
+
+    /**
      * load
      * This loads up the data we need into this object, this stuff comes from the preferences.
      */
@@ -181,6 +148,37 @@ class AmpacheRSSView extends AmpachePlugin implements PluginDisplayHomeInterface
 
         $this->maxitems = (int)($data['rssview_max_items']);
         $this->order    = (int)($data['rssview_order'] ?? 0);
+
+        return true;
+    }
+
+    /**
+     * uninstall
+     * Removes our preferences from the database returning it to its original form
+     */
+    public function uninstall(): bool
+    {
+        return (
+            Preference::delete('rssview_feed_url') &&
+            Preference::delete('rssview_max_items') &&
+            Preference::delete('rssview_order')
+        );
+    }
+
+    /**
+     * upgrade
+     * This is a recommended plugin function
+     */
+    public function upgrade(): bool
+    {
+        $from_version = Plugin::get_plugin_version($this->name);
+        if ($from_version === 0) {
+            return false;
+        }
+
+        if ($from_version < (int)$this->version) {
+            Preference::insert('rssview_order', T_('Plugin CSS order'), '0', AccessLevelEnum::USER->value, 'integer', 'plugins', $this->name);
+        }
 
         return true;
     }

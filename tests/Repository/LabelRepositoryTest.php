@@ -38,15 +38,70 @@ class LabelRepositoryTest extends TestCase
     use ConsecutiveParams;
 
     private DatabaseConnectionInterface&MockObject $connection;
-
     private LabelRepository $subject;
 
-    protected function setUp(): void
+    public function testAddArtistAssocAdds(): void
     {
-        $this->connection = $this->createMock(DatabaseConnectionInterface::class);
+        $labelId  = 666;
+        $artistId = 42;
+        $date     = new DateTime();
 
-        $this->subject = new LabelRepository(
-            $this->connection,
+        $this->connection->expects(static::once())
+            ->method('query')
+            ->with(
+                'INSERT INTO `label_asso` (`label`, `artist`, `creation_date`) VALUES (?, ?, ?)',
+                [$labelId, $artistId, $date->getTimestamp()]
+            );
+
+        $this->subject->addArtistAssoc($labelId, $artistId, $date);
+    }
+
+    public function testCollectGarbageDeletes(): void
+    {
+        $this->connection->expects(static::exactly(2))
+            ->method('query')
+            ->with(...self::withConsecutive(
+                ['DELETE FROM `label_asso` WHERE `label_asso`.`artist` NOT IN (SELECT `artist`.`id` FROM `artist`)'],
+                ['DELETE FROM `label` WHERE `id` NOT IN (SELECT `label` FROM `label_asso`) AND `user` IS NULL'],
+            ));
+
+        $this->subject->collectGarbage();
+    }
+
+    public function testDeleteDeletes(): void
+    {
+        $labelId = 666;
+
+        $this->connection->expects(static::once())
+            ->method('query')
+            ->with(
+                'DELETE FROM `label` WHERE `id` = ?',
+                [$labelId]
+            );
+
+        $this->subject->delete($labelId);
+    }
+
+    public function testGetAllReturnsData(): void
+    {
+        $labelId   = 42;
+        $labelName = 'some-label';
+
+        $result = $this->createMock(PDOStatement::class);
+
+        $this->connection->expects(static::once())
+            ->method('query')
+            ->with('SELECT `id`, `name` FROM `label`')
+            ->willReturn($result);
+
+        $result->expects(static::exactly(2))
+            ->method('fetch')
+            ->with(PDO::FETCH_ASSOC)
+            ->willReturn(['id' => (string) $labelId, 'name' => $labelName], false);
+
+        self::assertSame(
+            $this->subject->getAll(),
+            [$labelId => $labelName]
         );
     }
 
@@ -73,29 +128,6 @@ class LabelRepositoryTest extends TestCase
 
         self::assertSame(
             $this->subject->getByArtist($artistId),
-            [$labelId => $labelName]
-        );
-    }
-
-    public function testGetAllReturnsData(): void
-    {
-        $labelId   = 42;
-        $labelName = 'some-label';
-
-        $result = $this->createMock(PDOStatement::class);
-
-        $this->connection->expects(static::once())
-            ->method('query')
-            ->with('SELECT `id`, `name` FROM `label`')
-            ->willReturn($result);
-
-        $result->expects(static::exactly(2))
-            ->method('fetch')
-            ->with(PDO::FETCH_ASSOC)
-            ->willReturn(['id' => (string) $labelId, 'name' => $labelName], false);
-
-        self::assertSame(
-            $this->subject->getAll(),
             [$labelId => $labelName]
         );
     }
@@ -155,45 +187,12 @@ class LabelRepositoryTest extends TestCase
         $this->subject->removeArtistAssoc($labelId, $artistId);
     }
 
-    public function testAddArtistAssocAdds(): void
+    protected function setUp(): void
     {
-        $labelId  = 666;
-        $artistId = 42;
-        $date     = new DateTime();
+        $this->connection = $this->createMock(DatabaseConnectionInterface::class);
 
-        $this->connection->expects(static::once())
-            ->method('query')
-            ->with(
-                'INSERT INTO `label_asso` (`label`, `artist`, `creation_date`) VALUES (?, ?, ?)',
-                [$labelId, $artistId, $date->getTimestamp()]
-            );
-
-        $this->subject->addArtistAssoc($labelId, $artistId, $date);
-    }
-
-    public function testDeleteDeletes(): void
-    {
-        $labelId = 666;
-
-        $this->connection->expects(static::once())
-            ->method('query')
-            ->with(
-                'DELETE FROM `label` WHERE `id` = ?',
-                [$labelId]
-            );
-
-        $this->subject->delete($labelId);
-    }
-
-    public function testCollectGarbageDeletes(): void
-    {
-        $this->connection->expects(static::exactly(2))
-            ->method('query')
-            ->with(...self::withConsecutive(
-                ['DELETE FROM `label_asso` WHERE `label_asso`.`artist` NOT IN (SELECT `artist`.`id` FROM `artist`)'],
-                ['DELETE FROM `label` WHERE `id` NOT IN (SELECT `label` FROM `label_asso`) AND `user` IS NULL'],
-            ));
-
-        $this->subject->collectGarbage();
+        $this->subject = new LabelRepository(
+            $this->connection,
+        );
     }
 }

@@ -36,25 +36,25 @@ use Override;
 class AmpacheDiscogs extends AmpachePlugin implements PluginGatherArtsInterface, PluginGetMetadataInterface
 {
     #[Override]
-    public string $name = 'Discogs';
-
-    #[Override]
     public string $categories = 'metadata';
 
     #[Override]
     public string $description = 'Discogs metadata integration';
 
     #[Override]
-    public string $url = 'http://www.discogs.com';
-
-    #[Override]
-    public string $version = '000001';
+    public string $max_ampache = '999999';
 
     #[Override]
     public string $min_ampache = '370021';
 
     #[Override]
-    public string $max_ampache = '999999';
+    public string $name = 'Discogs';
+
+    #[Override]
+    public string $url = 'http://www.discogs.com';
+
+    #[Override]
+    public string $version = '000001';
 
     // These are internal settings used by this class, run this->load to fill them out
     private Discogs $discogs;
@@ -69,74 +69,13 @@ class AmpacheDiscogs extends AmpachePlugin implements PluginGatherArtsInterface,
     }
 
     /**
-     * install
-     * This is a required plugin function
+     * gather_arts
+     * Returns art items for the requested media type
+     * @return array<array{url: string, mime: string, title: string}>
      */
-    public function install(): bool
+    public function gather_arts(string $type, ?array $options = [], ?int $limit = 5): array
     {
-        if (!Preference::insert('discogs_api_key', T_('Discogs consumer key'), '', AccessLevelEnum::MANAGER->value, 'string', 'plugins', $this->name)) {
-            return false;
-        }
-
-        return Preference::insert('discogs_secret_api_key', T_('Discogs secret'), '', AccessLevelEnum::MANAGER->value, 'string', 'plugins', $this->name);
-    }
-
-    /**
-     * uninstall
-     * This is a required plugin function
-     */
-    public function uninstall(): bool
-    {
-        return (
-            Preference::delete('discogs_api_key') &&
-            Preference::delete('discogs_secret_api_key')
-        );
-    }
-
-    /**
-     * upgrade
-     * This is a recommended plugin function
-     */
-    public function upgrade(): bool
-    {
-        return true;
-    }
-
-    /**
-     * load
-     * This is a required plugin function; here it populates the prefs we
-     * need for this object.
-     */
-    public function load(User $user): bool
-    {
-        $user->set_preferences();
-        $data = $user->prefs;
-        // load system when nothing is given
-        if (!strlen(trim((string) $data['discogs_api_key'])) || !strlen(trim((string) $data['discogs_secret_api_key']))) {
-            $data                           = [];
-            $data['discogs_api_key']        = Preference::get_by_user(-1, 'discogs_api_key');
-            $data['discogs_secret_api_key'] = Preference::get_by_user(-1, 'discogs_secret_api_key');
-        }
-
-        if (strlen(trim((string) $data['discogs_api_key'])) !== 0) {
-            $api_key = trim((string) $data['discogs_api_key']);
-        } else {
-            debug_event(self::class, 'No Discogs api key, metadata plugin skipped', 3);
-
-            return false;
-        }
-
-        if (strlen(trim((string) $data['discogs_secret_api_key'])) !== 0) {
-            $secret = trim((string) $data['discogs_secret_api_key']);
-        } else {
-            debug_event(self::class, 'No Discogs secret, metadata plugin skipped', 3);
-
-            return false;
-        }
-
-        $this->discogs = new Discogs($api_key, $secret);
-
-        return true;
+        return array_slice(Art::gather_metadata_plugin($this, $type, ($options ?? [])), 0, $limit);
     }
 
     /**
@@ -292,12 +231,73 @@ class AmpacheDiscogs extends AmpachePlugin implements PluginGatherArtsInterface,
     }
 
     /**
-     * gather_arts
-     * Returns art items for the requested media type
-     * @return array<array{url: string, mime: string, title: string}>
+     * install
+     * This is a required plugin function
      */
-    public function gather_arts(string $type, ?array $options = [], ?int $limit = 5): array
+    public function install(): bool
     {
-        return array_slice(Art::gather_metadata_plugin($this, $type, ($options ?? [])), 0, $limit);
+        if (!Preference::insert('discogs_api_key', T_('Discogs consumer key'), '', AccessLevelEnum::MANAGER->value, 'string', 'plugins', $this->name)) {
+            return false;
+        }
+
+        return Preference::insert('discogs_secret_api_key', T_('Discogs secret'), '', AccessLevelEnum::MANAGER->value, 'string', 'plugins', $this->name);
+    }
+
+    /**
+     * load
+     * This is a required plugin function; here it populates the prefs we
+     * need for this object.
+     */
+    public function load(User $user): bool
+    {
+        $user->set_preferences();
+        $data = $user->prefs;
+        // load system when nothing is given
+        if (!strlen(trim((string) $data['discogs_api_key'])) || !strlen(trim((string) $data['discogs_secret_api_key']))) {
+            $data                           = [];
+            $data['discogs_api_key']        = Preference::get_by_user(-1, 'discogs_api_key');
+            $data['discogs_secret_api_key'] = Preference::get_by_user(-1, 'discogs_secret_api_key');
+        }
+
+        if (strlen(trim((string) $data['discogs_api_key'])) !== 0) {
+            $api_key = trim((string) $data['discogs_api_key']);
+        } else {
+            debug_event(self::class, 'No Discogs api key, metadata plugin skipped', 3);
+
+            return false;
+        }
+
+        if (strlen(trim((string) $data['discogs_secret_api_key'])) !== 0) {
+            $secret = trim((string) $data['discogs_secret_api_key']);
+        } else {
+            debug_event(self::class, 'No Discogs secret, metadata plugin skipped', 3);
+
+            return false;
+        }
+
+        $this->discogs = new Discogs($api_key, $secret);
+
+        return true;
+    }
+
+    /**
+     * uninstall
+     * This is a required plugin function
+     */
+    public function uninstall(): bool
+    {
+        return (
+            Preference::delete('discogs_api_key') &&
+            Preference::delete('discogs_secret_api_key')
+        );
+    }
+
+    /**
+     * upgrade
+     * This is a recommended plugin function
+     */
+    public function upgrade(): bool
+    {
+        return true;
     }
 }

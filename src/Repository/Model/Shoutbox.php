@@ -38,17 +38,11 @@ use DateTimeInterface;
  */
 class Shoutbox extends BaseModel
 {
-    /** @var int User-id */
-    private int $user = 0;
-
-    /** @var string Comment */
-    private string $text = '';
+    /** @var string|null Offset position in songs */
+    private ?string $data = null;
 
     /** @var int Date */
     private int $date = 0;
-
-    /** @var bool True if a sticky shout */
-    private bool $sticky = false;
 
     /** @var int Linked object-id */
     private int $object_id = 0;
@@ -56,8 +50,14 @@ class Shoutbox extends BaseModel
     /** @var string|null Linked object-type */
     private ?string $object_type = null;
 
-    /** @var string|null Offset position in songs */
-    private ?string $data = null;
+    /** @var bool True if a sticky shout */
+    private bool $sticky = false;
+
+    /** @var string Comment */
+    private string $text = '';
+
+    /** @var int User-id */
+    private int $user = 0;
 
     private ?User $user_object = null;
 
@@ -68,15 +68,27 @@ class Shoutbox extends BaseModel
     }
 
     /**
-     * Relates the shout to a certain position in a song
-     *
-     * @param int $offset Position value in seconds
+     * Returns the creation-date
      */
-    public function setOffset(int $offset): Shoutbox
+    public function getDate(): DateTimeInterface
     {
-        $this->data = (string) $offset;
+        return new DateTime('@' . $this->date);
+    }
 
-        return $this;
+    /**
+     * Returns the related object-id
+     */
+    public function getObjectId(): int
+    {
+        return $this->object_id;
+    }
+
+    /**
+     * Returns the related object-type
+     */
+    public function getObjectType(): LibraryItemEnum
+    {
+        return LibraryItemEnum::from((string) $this->object_type);
     }
 
     /**
@@ -90,112 +102,11 @@ class Shoutbox extends BaseModel
     }
 
     /**
-     * Sets the related object-type
-     */
-    public function setObjectType(LibraryItemEnum $object_type): Shoutbox
-    {
-        $this->object_type = $object_type->value;
-
-        return $this;
-    }
-
-    /**
-     * Returns the related object-type
-     */
-    public function getObjectType(): LibraryItemEnum
-    {
-        return LibraryItemEnum::from((string) $this->object_type);
-    }
-
-    /**
-     * Sets the related object-id
-     */
-    public function setObjectId(int $object_id): Shoutbox
-    {
-        $this->object_id = $object_id;
-
-        return $this;
-    }
-
-    /**
-     * Returns the related object-id
-     */
-    public function getObjectId(): int
-    {
-        return $this->object_id;
-    }
-
-    /**
-     * Set the importance of the shout
-     */
-    public function setSticky(bool $sticky): Shoutbox
-    {
-        $this->sticky = $sticky;
-
-        return $this;
-    }
-
-    /**
-     * Returns `true` if the shout is important (`sticky`)
-     */
-    public function isSticky(): bool
-    {
-        return $this->sticky;
-    }
-
-    /**
-     * Returns the creation-date
-     */
-    public function getDate(): DateTimeInterface
-    {
-        return new DateTime('@' . $this->date);
-    }
-
-    /**
-     * Sets the creation-date
-     */
-    public function setDate(DateTimeInterface $date): Shoutbox
-    {
-        $this->date = $date->getTimestamp();
-
-        return $this;
-    }
-
-    /**
      * Returns the shout text
      */
     public function getText(): string
     {
         return $this->text;
-    }
-
-    /**
-     * Sets the shout text
-     */
-    public function setText(string $text): Shoutbox
-    {
-        $this->text = strip_tags(htmlspecialchars($text));
-
-        return $this;
-    }
-
-    /**
-     * Returns the user-id of the shout-creator
-     */
-    public function getUserId(): int
-    {
-        return $this->user;
-    }
-
-    /**
-     * Sets the shout-creator user
-     */
-    public function setUser(User $user): Shoutbox
-    {
-        $this->user        = $user->getId();
-        $this->user_object = $user;
-
-        return $this;
     }
 
     /**
@@ -211,6 +122,22 @@ class Shoutbox extends BaseModel
     }
 
     /**
+     * Returns the user-id of the shout-creator
+     */
+    public function getUserId(): int
+    {
+        return $this->user;
+    }
+
+    /**
+     * Returns `true` if the shout is important (`sticky`)
+     */
+    public function isSticky(): bool
+    {
+        return $this->sticky;
+    }
+
+    /**
      * Persists the object
      */
     public function save(): void
@@ -223,5 +150,78 @@ class Shoutbox extends BaseModel
         ) {
             $this->id = $result;
         }
+    }
+
+    /**
+     * Sets the creation-date
+     */
+    public function setDate(DateTimeInterface $date): Shoutbox
+    {
+        $this->date = $date->getTimestamp();
+
+        return $this;
+    }
+
+    /**
+     * Sets the related object-id
+     */
+    public function setObjectId(int $object_id): Shoutbox
+    {
+        $this->object_id = $object_id;
+
+        return $this;
+    }
+
+    /**
+     * Sets the related object-type
+     */
+    public function setObjectType(LibraryItemEnum $object_type): Shoutbox
+    {
+        $this->object_type = $object_type->value;
+
+        return $this;
+    }
+
+    /**
+     * Relates the shout to a certain position in a song
+     *
+     * @param int $offset Position value in seconds
+     */
+    public function setOffset(int $offset): Shoutbox
+    {
+        $this->data = (string) $offset;
+
+        return $this;
+    }
+
+    /**
+     * Set the importance of the shout
+     */
+    public function setSticky(bool $sticky): Shoutbox
+    {
+        $this->sticky = $sticky;
+
+        return $this;
+    }
+
+    /**
+     * Sets the shout text
+     */
+    public function setText(string $text): Shoutbox
+    {
+        $this->text = strip_tags(htmlspecialchars($text));
+
+        return $this;
+    }
+
+    /**
+     * Sets the shout-creator user
+     */
+    public function setUser(User $user): Shoutbox
+    {
+        $this->user        = $user->getId();
+        $this->user_object = $user;
+
+        return $this;
     }
 }

@@ -31,17 +31,12 @@ class Useractivity extends database_object
 {
     protected const string DB_TABLENAME = 'user_activity';
 
-    public int $id = 0;
-
-    public int $user;
-
     public string $action;
-
-    public int $object_id;
-
-    public string $object_type;
-
     public int $activity_date;
+    public int $id = 0;
+    public int $object_id;
+    public string $object_type;
+    public int $user;
 
     /**
      * Constructor
@@ -58,11 +53,6 @@ class Useractivity extends database_object
         foreach ($info as $key => $value) {
             $this->$key = $value;
         }
-    }
-
-    public function getId(): int
-    {
-        return $this->id;
     }
 
     /**
@@ -94,5 +84,10 @@ class Useractivity extends database_object
         $sql = "UPDATE `user_activity` SET `object_id` = ? WHERE `object_type` = ? AND `object_id` = ?";
 
         Dba::write($sql, [$new_object_id, $object_type, $old_object_id]);
+    }
+
+    public function getId(): int
+    {
+        return $this->id;
     }
 }

@@ -36,31 +36,6 @@ use Override;
 class CliHandler extends Handler
 {
     /**
-     * Field separator for beets field format
-     */
-    protected string $seperator = '###';
-
-    /**
-     * Custom limiter of beets song because we may have multi line output
-     */
-    protected string $itemEnd = '//EOS';
-
-    /**
-     * Format string for the '-f' argument from 'beet ls'
-     */
-    protected string $fieldFormat = '$';
-
-    /**
-     * Choose whether the -f argument from beets is applied. May be needed to use other commands than 'beet ls'
-     */
-    protected bool $useCustomFields = true;
-
-    /**
-     * All stored beets fields
-     */
-    protected array $fields = [];
-
-    /**
      * Beets command
      */
     protected string $beetsCommand = 'beet';
@@ -70,6 +45,11 @@ class CliHandler extends Handler
      */
     #[Override]
     protected string $commandSeperator = ' ';
+
+    /**
+     * Format string for the '-f' argument from 'beet ls'
+     */
+    protected string $fieldFormat = '$';
 
     /**
      * Defines the differences between beets and ampache fields
@@ -84,21 +64,30 @@ class CliHandler extends Handler
     ];
 
     /**
+     * All stored beets fields
+     */
+    protected array $fields = [];
+
+    /**
+     * Custom limiter of beets song because we may have multi line output
+     */
+    protected string $itemEnd = '//EOS';
+
+    /**
+     * Field separator for beets field format
+     */
+    protected string $seperator = '###';
+
+    /**
+     * Choose whether the -f argument from beets is applied. May be needed to use other commands than 'beet ls'
+     */
+    protected bool $useCustomFields = true;
+
+    /**
      * CliHandler constructor.
      */
     public function __construct(protected Catalog $handler)
     {
-    }
-
-    /**
-     * Starts a command
-     */
-    public function start(string $command): void
-    {
-        $handle = popen($this->assembleCommand($command), 'r');
-        if ($handle) {
-            $this->iterateItems($handle);
-        }
     }
 
     /**
@@ -114,6 +103,17 @@ class CliHandler extends Handler
                 $this->dispatch($song);
                 $item = '';
             }
+        }
+    }
+
+    /**
+     * Starts a command
+     */
+    public function start(string $command): void
+    {
+        $handle = popen($this->assembleCommand($command), 'r');
+        if ($handle) {
+            $this->iterateItems($handle);
         }
     }
 
@@ -134,33 +134,6 @@ class CliHandler extends Handler
         }
 
         return implode(' ', $commandParts);
-    }
-
-    /**
-     * itemIsComlete
-     */
-    protected function itemIsComlete(string $item): bool
-    {
-        $offset   = strlen($this->itemEnd);
-        $position = (strlen($item) > $offset)
-            ? strpos($item, $this->itemEnd, $offset)
-            : false;
-
-        return ($position !== false);
-    }
-
-    /**
-     * Parse the output string from beets into a song
-     */
-    protected function parse(string $item): array
-    {
-        $item               = str_replace($this->itemEnd, '', $item);
-        $values             = explode($this->seperator, $item);
-        $song               = array_combine($this->fields, $values);
-        $mappedSong         = $this->mapFields($song);
-        $mappedSong['size'] = Core::get_filesize($mappedSong['file']);
-
-        return $mappedSong;
     }
 
     /**
@@ -193,5 +166,32 @@ class CliHandler extends Handler
         }
 
         return $processedFields;
+    }
+
+    /**
+     * itemIsComlete
+     */
+    protected function itemIsComlete(string $item): bool
+    {
+        $offset   = strlen($this->itemEnd);
+        $position = (strlen($item) > $offset)
+            ? strpos($item, $this->itemEnd, $offset)
+            : false;
+
+        return ($position !== false);
+    }
+
+    /**
+     * Parse the output string from beets into a song
+     */
+    protected function parse(string $item): array
+    {
+        $item               = str_replace($this->itemEnd, '', $item);
+        $values             = explode($this->seperator, $item);
+        $song               = array_combine($this->fields, $values);
+        $mappedSong         = $this->mapFields($song);
+        $mappedSong['size'] = Core::get_filesize($mappedSong['file']);
+
+        return $mappedSong;
     }
 }

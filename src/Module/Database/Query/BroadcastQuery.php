@@ -32,6 +32,9 @@ final class BroadcastQuery implements QueryInterface
     public const array FILTERS = [
     ];
 
+    protected string $base   = "SELECT %%SELECT%% FROM `broadcast` ";
+    protected string $select = "`broadcast`.`id`";
+
     /** @var string[] $sorts */
     protected array $sorts = [
         'listeners',
@@ -41,9 +44,15 @@ final class BroadcastQuery implements QueryInterface
         'user',
     ];
 
-    protected string $select = "`broadcast`.`id`";
-
-    protected string $base = "SELECT %%SELECT%% FROM `broadcast` ";
+    /**
+     * get_base_sql
+     *
+     * Base SELECT query string without filters or joins
+     */
+    public function get_base_sql(): string
+    {
+        return $this->base;
+    }
 
     /**
      * get_select
@@ -53,16 +62,6 @@ final class BroadcastQuery implements QueryInterface
     public function get_select(): string
     {
         return $this->select;
-    }
-
-    /**
-     * get_base_sql
-     *
-     * Base SELECT query string without filters or joins
-     */
-    public function get_base_sql(): string
-    {
-        return $this->base;
     }
 
     /**

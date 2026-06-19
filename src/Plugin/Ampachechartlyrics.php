@@ -34,13 +34,19 @@ use WpOrg\Requests\Requests;
 class Ampachechartlyrics extends AmpachePlugin implements PluginGetLyricsInterface
 {
     #[Override]
-    public string $name = 'ChartLyrics';
-
-    #[Override]
     public string $categories = 'lyrics';
 
     #[Override]
     public string $description = 'Get lyrics from ChartLyrics';
+
+    #[Override]
+    public string $max_ampache = '999999';
+
+    #[Override]
+    public string $min_ampache = '360022';
+
+    #[Override]
+    public string $name = 'ChartLyrics';
 
     #[Override]
     public string $url = 'http://www.chartlyrics.com';
@@ -48,57 +54,12 @@ class Ampachechartlyrics extends AmpachePlugin implements PluginGetLyricsInterfa
     #[Override]
     public string $version = '000001';
 
-    #[Override]
-    public string $min_ampache = '360022';
-
-    #[Override]
-    public string $max_ampache = '999999';
-
     /**
      * Constructor
      */
     public function __construct()
     {
         $this->description = T_('Get lyrics from ChartLyrics');
-    }
-
-    /**
-     * install
-     * This is a required plugin function
-     */
-    public function install(): bool
-    {
-        return true;
-    }
-
-    /**
-     * uninstall
-     * This is a required plugin function
-     */
-    public function uninstall(): bool
-    {
-        return true;
-    }
-
-    /**
-     * upgrade
-     * This is a recommended plugin function
-     */
-    public function upgrade(): bool
-    {
-        return true;
-    }
-
-    /**
-     * load
-     * This is a required plugin function; here it populates the prefs we
-     * need for this object.
-     */
-    public function load(User $user): bool
-    {
-        unset($user);
-
-        return true;
     }
 
     /**
@@ -125,5 +86,44 @@ class Ampachechartlyrics extends AmpachePlugin implements PluginGetLyricsInterfa
         }
 
         return null;
+    }
+
+    /**
+     * install
+     * This is a required plugin function
+     */
+    public function install(): bool
+    {
+        return true;
+    }
+
+    /**
+     * load
+     * This is a required plugin function; here it populates the prefs we
+     * need for this object.
+     */
+    public function load(User $user): bool
+    {
+        unset($user);
+
+        return true;
+    }
+
+    /**
+     * uninstall
+     * This is a required plugin function
+     */
+    public function uninstall(): bool
+    {
+        return true;
+    }
+
+    /**
+     * upgrade
+     * This is a recommended plugin function
+     */
+    public function upgrade(): bool
+    {
+        return true;
     }
 }

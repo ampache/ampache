@@ -33,10 +33,6 @@ use Traversable;
 
 abstract class AbstractMigration implements MigrationInterface
 {
-    private DatabaseConnectionInterface $connection;
-
-    private ?Interactor $interactor = null;
-
     /** @var list<non-empty-string> */
     protected array $changelog = [];
 
@@ -45,10 +41,37 @@ abstract class AbstractMigration implements MigrationInterface
      */
     protected bool $warning = false;
 
+    private DatabaseConnectionInterface $connection;
+    private ?Interactor $interactor = null;
+
     public function __construct(
         DatabaseConnectionInterface $connection,
     ) {
         $this->connection = $connection;
+    }
+
+    /**
+     * Returns a list of changelog-strings
+     *
+     * @return list<non-empty-string>
+     */
+    public function getChangelog(): array
+    {
+        return $this->changelog;
+    }
+
+    /**
+     * Returns the sql-statements used for migrating the database tables
+     *
+     * @return Traversable<string, string> Dictionary with the key being the table name and value the sql-statements
+     */
+    public function getTableMigrations(
+        string $collation,
+        string $charset,
+        string $engine,
+        int $build,
+    ): Traversable {
+        return new ArrayIterator();
     }
 
     /**
@@ -65,16 +88,6 @@ abstract class AbstractMigration implements MigrationInterface
     public function setInteractor(?Interactor $interactor): void
     {
         $this->interactor = $interactor;
-    }
-
-    /**
-     * Returns a list of changelog-strings
-     *
-     * @return list<non-empty-string>
-     */
-    public function getChangelog(): array
-    {
-        return $this->changelog;
     }
 
     /**
@@ -111,19 +124,5 @@ abstract class AbstractMigration implements MigrationInterface
             sprintf(T_('Updated: %s'), $name),
             true
         );
-    }
-
-    /**
-     * Returns the sql-statements used for migrating the database tables
-     *
-     * @return Traversable<string, string> Dictionary with the key being the table name and value the sql-statements
-     */
-    public function getTableMigrations(
-        string $collation,
-        string $charset,
-        string $engine,
-        int $build,
-    ): Traversable {
-        return new ArrayIterator();
     }
 }

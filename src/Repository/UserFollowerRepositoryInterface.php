@@ -30,6 +30,22 @@ use Ampache\Repository\Model\User;
 interface UserFollowerRepositoryInterface
 {
     /**
+     * Adds an entry for a user following another user
+     */
+    public function add(
+        User $user,
+        User $followingUser,
+    ): void;
+
+    /**
+     * Deletes a user follow-entry
+     */
+    public function delete(
+        User $user,
+        User $followingUser,
+    ): void;
+
+    /**
      * Get users following the user
      *
      * @return int[]
@@ -50,20 +66,4 @@ interface UserFollowerRepositoryInterface
         User $user,
         User $followingUser,
     ): bool;
-
-    /**
-     * Adds an entry for a user following another user
-     */
-    public function add(
-        User $user,
-        User $followingUser,
-    ): void;
-
-    /**
-     * Deletes a user follow-entry
-     */
-    public function delete(
-        User $user,
-        User $followingUser,
-    ): void;
 }

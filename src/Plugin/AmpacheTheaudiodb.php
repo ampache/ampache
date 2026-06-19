@@ -42,28 +42,28 @@ use WpOrg\Requests\Requests;
 class AmpacheTheaudiodb extends AmpachePlugin implements PluginGatherArtsInterface, PluginGetMetadataInterface
 {
     #[Override]
-    public string $name = 'TheAudioDb';
-
-    #[Override]
     public string $categories = 'metadata';
 
     #[Override]
     public string $description = 'TheAudioDb metadata integration';
 
     #[Override]
-    public string $url = 'http://www.theaudiodb.com';
-
-    #[Override]
-    public string $version = '000003';
+    public string $max_ampache = '999999';
 
     #[Override]
     public string $min_ampache = '370009';
 
     #[Override]
-    public string $max_ampache = '999999';
+    public string $name = 'TheAudioDb';
 
     // These are internal settings used by this class, run this->load to fill them out
     public bool $overwrite_name;
+
+    #[Override]
+    public string $url = 'http://www.theaudiodb.com';
+
+    #[Override]
+    public string $version = '000003';
 
     private string $api_key;
 
@@ -77,147 +77,15 @@ class AmpacheTheaudiodb extends AmpachePlugin implements PluginGatherArtsInterfa
     }
 
     /**
-     * install
-     * This is a required plugin function
+     * gather_arts
+     * Returns art items for the requested media type
+     * @return array<array{url: string, mime: string, title: string}>
      */
-    public function install(): bool
+    public function gather_arts(string $type, ?array $options = [], ?int $limit = 5): array
     {
-        // API Key requested in TheAudioDB forum, see http://www.theaudiodb.com/forum/viewtopic.php?f=6&t=8&start=140
-        if (!Preference::insert('tadb_api_key', T_('TheAudioDb API key'), '41214789306c4690752dfb', AccessLevelEnum::MANAGER->value, 'string', 'plugins', $this->name)) {
-            return false;
-        }
+        debug_event('theaudiodb.plugin', 'gather_arts for type `' . $type . '`', 5);
 
-        return Preference::insert('tadb_overwrite_name', T_('Overwrite Artist names that match an mbid'), '0', AccessLevelEnum::USER->value, 'boolean', 'plugins', $this->name);
-    }
-
-    /**
-     * uninstall
-     * This is a required plugin function
-     */
-    public function uninstall(): bool
-    {
-        return (
-            Preference::delete('tadb_api_key') &&
-            Preference::delete('tadb_overwrite_name')
-        );
-    }
-
-    /**
-     * upgrade
-     * This is a recommended plugin function
-     */
-    public function upgrade(): bool
-    {
-        $from_version = Plugin::get_plugin_version($this->name);
-        if ($from_version === 0) {
-            return false;
-        }
-
-        if ($from_version < (int)$this->version) {
-            Preference::insert('tadb_overwrite_name', T_('Overwrite Artist names that match an mbid'), '0', AccessLevelEnum::USER->value, 'boolean', 'plugins', $this->name);
-        }
-
-        return true;
-    }
-
-    /**
-     * load
-     * This is a required plugin function; here it populates the prefs we
-     * need for this object.
-     */
-    public function load(User $user): bool
-    {
-        $user->set_preferences();
-        $data = $user->prefs;
-        // load system when nothing is given
-        if (!array_key_exists('tadb_api_key', $data) && !array_key_exists('tadb_overwrite_name', $data)) {
-            $data['tadb_api_key']        = Preference::get_by_user(-1, 'tadb_api_key');
-            $data['tadb_overwrite_name'] = Preference::get_by_user(-1, 'tadb_overwrite_name');
-        }
-
-        if (strlen(trim((string) $data['tadb_api_key'])) !== 0) {
-            $this->api_key = trim((string) $data['tadb_api_key']);
-        } else {
-            debug_event('theaudiodb.plugin', 'No TheAudioDb api key, metadata plugin skipped', 3);
-
-            return false;
-        }
-
-        $this->overwrite_name = (bool)$data['tadb_overwrite_name'];
-
-        return true;
-    }
-
-    /**
-     * get_metadata
-     * Returns song metadata for what we're passed in.
-     * @param string[] $gather_types
-     * @param array<string, mixed> $media_info
-     * @return array<string, mixed>
-     */
-    public function get_metadata(array $gather_types, array $media_info): array
-    {
-        // Music metadata only
-        if (!in_array('music', $gather_types)) {
-            debug_event('theaudiodb.plugin', 'Not a valid media type, skipped.', 5);
-
-            return [];
-        }
-
-        $results = [];
-        try {
-            if (in_array('album', $gather_types)) {
-                debug_event('theaudiodb.plugin', 'Getting album metadata from TheAudioDb...', 5);
-                $release = null;
-                if ($media_info['mb_albumid_group']) {
-                    $album = $this->get_album($media_info['mb_albumid_group']);
-                    if ($album && $album->album !== null) {
-                        $release = $album->album[0];
-                    }
-                } else {
-                    $albums = $this->search_album($media_info['artist'], $media_info['title']);
-                    if ($albums && $albums->album !== null) {
-                        $release = $albums->album[0];
-                    }
-                }
-
-                if ($release) {
-                    $results['art']   = $release->strAlbumThumb ?? null;
-                    $results['title'] = $release->strAlbum ?? null;
-                }
-            } elseif (in_array('artist', $gather_types)) {
-                debug_event('theaudiodb.plugin', 'Getting artist metadata from TheAudioDb...', 5);
-                $release = null;
-                if ($media_info['mb_artistid']) {
-                    $artist  = $this->get_artist($media_info['mb_artistid']);
-                    $release = $artist->artists[0] ?? $release;
-                } else {
-                    $artists = $this->search_artists($media_info['title']);
-                    $release = $artists->artists[0] ?? $release;
-                }
-
-                if ($release !== null) {
-                    $results['art']        = $release->strArtistThumb ?? null;
-                    $results['title']      = $release->strArtist ?? null;
-                    $results['summary']    = $release->strBiographyEN ?? null;
-                    $results['yearformed'] = (is_numeric($release->intFormedYear ?? null)) ? (int)$release->intFormedYear : null;
-                }
-            } elseif ($media_info['mb_trackid']) {
-                $track = $this->get_track($media_info['mb_trackid']);
-                if ($track !== null) {
-                    $track                       = $track->track[0] ?? null;
-                    $results['mb_artistid']      = $track->strMusicBrainzArtistID ?? null;
-                    $results['mb_albumid_group'] = $track->strMusicBrainzAlbumID ?? null;
-                    $results['album']            = $track->strAlbum ?? null;
-                    $results['artist']           = $track->strArtist ?? null;
-                    $results['title']            = $track->strTrack ?? null;
-                }
-            }
-        } catch (Exception $exception) {
-            debug_event('theaudiodb.plugin', 'Error getting metadata: ' . $exception->getMessage(), 1);
-        }
-
-        return $results;
+        return array_slice(Art::gather_metadata_plugin($this, $type, ($options ?? [])), 0, $limit);
     }
 
     /**
@@ -301,15 +169,147 @@ class AmpacheTheaudiodb extends AmpachePlugin implements PluginGatherArtsInterfa
     }
 
     /**
-     * gather_arts
-     * Returns art items for the requested media type
-     * @return array<array{url: string, mime: string, title: string}>
+     * get_metadata
+     * Returns song metadata for what we're passed in.
+     * @param string[] $gather_types
+     * @param array<string, mixed> $media_info
+     * @return array<string, mixed>
      */
-    public function gather_arts(string $type, ?array $options = [], ?int $limit = 5): array
+    public function get_metadata(array $gather_types, array $media_info): array
     {
-        debug_event('theaudiodb.plugin', 'gather_arts for type `' . $type . '`', 5);
+        // Music metadata only
+        if (!in_array('music', $gather_types)) {
+            debug_event('theaudiodb.plugin', 'Not a valid media type, skipped.', 5);
 
-        return array_slice(Art::gather_metadata_plugin($this, $type, ($options ?? [])), 0, $limit);
+            return [];
+        }
+
+        $results = [];
+        try {
+            if (in_array('album', $gather_types)) {
+                debug_event('theaudiodb.plugin', 'Getting album metadata from TheAudioDb...', 5);
+                $release = null;
+                if ($media_info['mb_albumid_group']) {
+                    $album = $this->get_album($media_info['mb_albumid_group']);
+                    if ($album && $album->album !== null) {
+                        $release = $album->album[0];
+                    }
+                } else {
+                    $albums = $this->search_album($media_info['artist'], $media_info['title']);
+                    if ($albums && $albums->album !== null) {
+                        $release = $albums->album[0];
+                    }
+                }
+
+                if ($release) {
+                    $results['art']   = $release->strAlbumThumb ?? null;
+                    $results['title'] = $release->strAlbum ?? null;
+                }
+            } elseif (in_array('artist', $gather_types)) {
+                debug_event('theaudiodb.plugin', 'Getting artist metadata from TheAudioDb...', 5);
+                $release = null;
+                if ($media_info['mb_artistid']) {
+                    $artist  = $this->get_artist($media_info['mb_artistid']);
+                    $release = $artist->artists[0] ?? $release;
+                } else {
+                    $artists = $this->search_artists($media_info['title']);
+                    $release = $artists->artists[0] ?? $release;
+                }
+
+                if ($release !== null) {
+                    $results['art']        = $release->strArtistThumb ?? null;
+                    $results['title']      = $release->strArtist ?? null;
+                    $results['summary']    = $release->strBiographyEN ?? null;
+                    $results['yearformed'] = (is_numeric($release->intFormedYear ?? null)) ? (int)$release->intFormedYear : null;
+                }
+            } elseif ($media_info['mb_trackid']) {
+                $track = $this->get_track($media_info['mb_trackid']);
+                if ($track !== null) {
+                    $track                       = $track->track[0] ?? null;
+                    $results['mb_artistid']      = $track->strMusicBrainzArtistID ?? null;
+                    $results['mb_albumid_group'] = $track->strMusicBrainzAlbumID ?? null;
+                    $results['album']            = $track->strAlbum ?? null;
+                    $results['artist']           = $track->strArtist ?? null;
+                    $results['title']            = $track->strTrack ?? null;
+                }
+            }
+        } catch (Exception $exception) {
+            debug_event('theaudiodb.plugin', 'Error getting metadata: ' . $exception->getMessage(), 1);
+        }
+
+        return $results;
+    }
+
+    /**
+     * install
+     * This is a required plugin function
+     */
+    public function install(): bool
+    {
+        // API Key requested in TheAudioDB forum, see http://www.theaudiodb.com/forum/viewtopic.php?f=6&t=8&start=140
+        if (!Preference::insert('tadb_api_key', T_('TheAudioDb API key'), '41214789306c4690752dfb', AccessLevelEnum::MANAGER->value, 'string', 'plugins', $this->name)) {
+            return false;
+        }
+
+        return Preference::insert('tadb_overwrite_name', T_('Overwrite Artist names that match an mbid'), '0', AccessLevelEnum::USER->value, 'boolean', 'plugins', $this->name);
+    }
+
+    /**
+     * load
+     * This is a required plugin function; here it populates the prefs we
+     * need for this object.
+     */
+    public function load(User $user): bool
+    {
+        $user->set_preferences();
+        $data = $user->prefs;
+        // load system when nothing is given
+        if (!array_key_exists('tadb_api_key', $data) && !array_key_exists('tadb_overwrite_name', $data)) {
+            $data['tadb_api_key']        = Preference::get_by_user(-1, 'tadb_api_key');
+            $data['tadb_overwrite_name'] = Preference::get_by_user(-1, 'tadb_overwrite_name');
+        }
+
+        if (strlen(trim((string) $data['tadb_api_key'])) !== 0) {
+            $this->api_key = trim((string) $data['tadb_api_key']);
+        } else {
+            debug_event('theaudiodb.plugin', 'No TheAudioDb api key, metadata plugin skipped', 3);
+
+            return false;
+        }
+
+        $this->overwrite_name = (bool)$data['tadb_overwrite_name'];
+
+        return true;
+    }
+
+    /**
+     * uninstall
+     * This is a required plugin function
+     */
+    public function uninstall(): bool
+    {
+        return (
+            Preference::delete('tadb_api_key') &&
+            Preference::delete('tadb_overwrite_name')
+        );
+    }
+
+    /**
+     * upgrade
+     * This is a recommended plugin function
+     */
+    public function upgrade(): bool
+    {
+        $from_version = Plugin::get_plugin_version($this->name);
+        if ($from_version === 0) {
+            return false;
+        }
+
+        if ($from_version < (int)$this->version) {
+            Preference::insert('tadb_overwrite_name', T_('Overwrite Artist names that match an mbid'), '0', AccessLevelEnum::USER->value, 'boolean', 'plugins', $this->name);
+        }
+
+        return true;
     }
 
     /**
@@ -328,11 +328,9 @@ class AmpacheTheaudiodb extends AmpachePlugin implements PluginGatherArtsInterfa
         return json_decode((string) $request->body);
     }
 
-    private function search_artists(?string $name = null): mixed
+    private function get_album(string $mbid): mixed
     {
-        return ($name)
-            ? $this->api_call('search.php?s=' . rawurlencode($name))
-            : null;
+        return $this->api_call('album-mb.php?i=' . $mbid);
     }
 
     private function get_artist(string $mbid): mixed
@@ -340,18 +338,20 @@ class AmpacheTheaudiodb extends AmpachePlugin implements PluginGatherArtsInterfa
         return $this->api_call('artist-mb.php?i=' . $mbid);
     }
 
+    private function get_track(string $mbid): mixed
+    {
+        return $this->api_call('track-mb.php?i=' . $mbid);
+    }
+
     private function search_album(string $artist, string $album): mixed
     {
         return $this->api_call('searchalbum.php?s=' . rawurlencode($artist) . '&a=' . rawurlencode($album));
     }
 
-    private function get_album(string $mbid): mixed
+    private function search_artists(?string $name = null): mixed
     {
-        return $this->api_call('album-mb.php?i=' . $mbid);
-    }
-
-    private function get_track(string $mbid): mixed
-    {
-        return $this->api_call('track-mb.php?i=' . $mbid);
+        return ($name)
+            ? $this->api_call('search.php?s=' . rawurlencode($name))
+            : null;
     }
 }

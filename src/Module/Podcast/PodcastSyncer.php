@@ -55,6 +55,67 @@ final readonly class PodcastSyncer implements PodcastSyncerInterface
     }
 
     /**
+     * Add podcast episodes
+     */
+    public function addEpisodes(
+        Podcast $podcast,
+        SimpleXMLElement $episodes,
+        ?DateTimeInterface $lastSync = null,
+        bool $gather = false,
+    ): void {
+        foreach ($episodes as $episode) {
+            if ($episode) {
+                $this->add_episode($podcast, $episode, $lastSync);
+            }
+        }
+
+        $change   = 0;
+        $syncDate = new DateTime();
+
+        $downloadLimit = (int)$this->configContainer->get(ConfigurationKeyEnum::PODCAST_NEW_DOWNLOAD);
+        // -1 means no downloads
+        if ($downloadLimit < 0) {
+            $downloadLimit = false;
+        }
+
+        // 0 means no limit
+        if ($downloadLimit === 0) {
+            $downloadLimit = null;
+        }
+
+        // Select episodes to download
+        $downloadEpisodes = ($downloadLimit === false)
+            ? []
+            : $this->podcastEpisodeRepository->getEpisodesEligibleForDownload($podcast, $downloadLimit);
+
+        /** @var Podcast_Episode $episode */
+        foreach ($downloadEpisodes as $episode) {
+            $episode->change_state(PodcastEpisodeStateEnum::PENDING);
+            if ($gather) {
+                $this->podcastEpisodeDownloader->fetch($episode);
+
+                $change++;
+            }
+        }
+
+        if ($change > 0) {
+            // cleanup old episodes (if available)
+            $this->podcastDeleter->deleteEpisode(
+                $this->podcastEpisodeRepository->getEpisodesEligibleForDeletion($podcast)
+            );
+
+            $podcast->setEpisodeCount(
+                $this->podcastEpisodeRepository->getEpisodeCount($podcast)
+            );
+            Catalog::update_mapping('podcast');
+            Catalog::update_mapping('podcast_episode');
+        }
+
+        $podcast->setLastSyncDate($syncDate);
+        $podcast->save();
+    }
+
+    /**
      * Update the feed and sync all new episodes
      */
     public function sync(
@@ -146,67 +207,6 @@ final readonly class PodcastSyncer implements PodcastSyncerInterface
         }
 
         return $newEpisodeCount;
-    }
-
-    /**
-     * Add podcast episodes
-     */
-    public function addEpisodes(
-        Podcast $podcast,
-        SimpleXMLElement $episodes,
-        ?DateTimeInterface $lastSync = null,
-        bool $gather = false,
-    ): void {
-        foreach ($episodes as $episode) {
-            if ($episode) {
-                $this->add_episode($podcast, $episode, $lastSync);
-            }
-        }
-
-        $change   = 0;
-        $syncDate = new DateTime();
-
-        $downloadLimit = (int)$this->configContainer->get(ConfigurationKeyEnum::PODCAST_NEW_DOWNLOAD);
-        // -1 means no downloads
-        if ($downloadLimit < 0) {
-            $downloadLimit = false;
-        }
-
-        // 0 means no limit
-        if ($downloadLimit === 0) {
-            $downloadLimit = null;
-        }
-
-        // Select episodes to download
-        $downloadEpisodes = ($downloadLimit === false)
-            ? []
-            : $this->podcastEpisodeRepository->getEpisodesEligibleForDownload($podcast, $downloadLimit);
-
-        /** @var Podcast_Episode $episode */
-        foreach ($downloadEpisodes as $episode) {
-            $episode->change_state(PodcastEpisodeStateEnum::PENDING);
-            if ($gather) {
-                $this->podcastEpisodeDownloader->fetch($episode);
-
-                $change++;
-            }
-        }
-
-        if ($change > 0) {
-            // cleanup old episodes (if available)
-            $this->podcastDeleter->deleteEpisode(
-                $this->podcastEpisodeRepository->getEpisodesEligibleForDeletion($podcast)
-            );
-
-            $podcast->setEpisodeCount(
-                $this->podcastEpisodeRepository->getEpisodeCount($podcast)
-            );
-            Catalog::update_mapping('podcast');
-            Catalog::update_mapping('podcast_episode');
-        }
-
-        $podcast->setLastSyncDate($syncDate);
-        $podcast->save();
     }
 
     /**
@@ -318,13 +318,13 @@ final readonly class PodcastSyncer implements PodcastSyncerInterface
     }
 
     /**
-     * get_id_from_source
+     * get_id_from_guid
      *
-     * Get episode id from the source url.
+     * Get episode id from the guid.
      */
-    private function get_id_from_source(string $url): int
+    private function get_id_from_guid(string $url): int
     {
-        $sql        = "SELECT `id` FROM `podcast_episode` WHERE `source` = ?";
+        $sql        = "SELECT `id` FROM `podcast_episode` WHERE `guid` = ?";
         $db_results = Dba::read($sql, [$url]);
 
         if ($results = Dba::fetch_assoc($db_results)) {
@@ -335,13 +335,30 @@ final readonly class PodcastSyncer implements PodcastSyncerInterface
     }
 
     /**
-     * get_id_from_guid
+     * get_id_from_pubdate
      *
-     * Get episode id from the guid.
+     * Get episode id from the source url.
      */
-    private function get_id_from_guid(string $url): int
+    private function get_id_from_pubdate(int $podcast_id, int $pubdate): int
     {
-        $sql        = "SELECT `id` FROM `podcast_episode` WHERE `guid` = ?";
+        $sql        = "SELECT `id` FROM `podcast_episode` WHERE `podcast` = ? AND `pubdate` = ?";
+        $db_results = Dba::read($sql, [$podcast_id, $pubdate]);
+
+        if ($results = Dba::fetch_assoc($db_results)) {
+            return (int)$results['id'];
+        }
+
+        return 0;
+    }
+
+    /**
+     * get_id_from_source
+     *
+     * Get episode id from the source url.
+     */
+    private function get_id_from_source(string $url): int
+    {
+        $sql        = "SELECT `id` FROM `podcast_episode` WHERE `source` = ?";
         $db_results = Dba::read($sql, [$url]);
 
         if ($results = Dba::fetch_assoc($db_results)) {
@@ -360,23 +377,6 @@ final readonly class PodcastSyncer implements PodcastSyncerInterface
     {
         $sql        = "SELECT `id` FROM `podcast_episode` WHERE `podcast` = ? AND `title` = ? AND `time` = ?";
         $db_results = Dba::read($sql, [$podcast_id, $title, $time]);
-
-        if ($results = Dba::fetch_assoc($db_results)) {
-            return (int)$results['id'];
-        }
-
-        return 0;
-    }
-
-    /**
-     * get_id_from_pubdate
-     *
-     * Get episode id from the source url.
-     */
-    private function get_id_from_pubdate(int $podcast_id, int $pubdate): int
-    {
-        $sql        = "SELECT `id` FROM `podcast_episode` WHERE `podcast` = ? AND `pubdate` = ?";
-        $db_results = Dba::read($sql, [$podcast_id, $pubdate]);
 
         if ($results = Dba::fetch_assoc($db_results)) {
             return (int)$results['id'];

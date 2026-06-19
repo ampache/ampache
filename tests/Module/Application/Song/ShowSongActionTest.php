@@ -43,40 +43,22 @@ use Psr\Log\LoggerInterface;
 
 class ShowSongActionTest extends MockeryTestCase
 {
-    /** @var UiInterface|MockInterface|null */
-    private MockInterface $ui;
-
-    /** @var ModelFactoryInterface|MockInterface|null */
-    private MockInterface $modelFactory;
-
     /** @var GuiFactoryInterface|MockInterface|null */
     private MockInterface $guiFactory;
-
-    /** @var MockInterface|TalFactoryInterface|null */
-    private MockInterface $talFactory;
 
     /** @var LoggerInterface|MockInterface|null */
     private MockInterface $logger;
 
+    /** @var ModelFactoryInterface|MockInterface|null */
+    private MockInterface $modelFactory;
+
     private ShowSongAction $subject;
 
-    #[Override]
-    protected function setUp(): void
-    {
-        $this->ui           = $this->mock(UiInterface::class);
-        $this->modelFactory = $this->mock(ModelFactoryInterface::class);
-        $this->guiFactory   = $this->mock(GuiFactoryInterface::class);
-        $this->talFactory   = $this->mock(TalFactoryInterface::class);
-        $this->logger       = $this->mock(LoggerInterface::class);
+    /** @var MockInterface|TalFactoryInterface|null */
+    private MockInterface $talFactory;
 
-        $this->subject = new ShowSongAction(
-            $this->ui,
-            $this->modelFactory,
-            $this->guiFactory,
-            $this->talFactory,
-            $this->logger
-        );
-    }
+    /** @var UiInterface|MockInterface|null */
+    private MockInterface $ui;
 
     public function testRunEchoesErrorIfSongDoesNotExist(): void
     {
@@ -227,6 +209,24 @@ class ShowSongActionTest extends MockeryTestCase
                 $request,
                 $gatekeeper
             )
+        );
+    }
+
+    #[Override]
+    protected function setUp(): void
+    {
+        $this->ui           = $this->mock(UiInterface::class);
+        $this->modelFactory = $this->mock(ModelFactoryInterface::class);
+        $this->guiFactory   = $this->mock(GuiFactoryInterface::class);
+        $this->talFactory   = $this->mock(TalFactoryInterface::class);
+        $this->logger       = $this->mock(LoggerInterface::class);
+
+        $this->subject = new ShowSongAction(
+            $this->ui,
+            $this->modelFactory,
+            $this->guiFactory,
+            $this->talFactory,
+            $this->logger
         );
     }
 }

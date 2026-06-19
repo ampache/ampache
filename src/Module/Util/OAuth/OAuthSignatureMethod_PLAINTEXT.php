@@ -35,14 +35,6 @@ namespace Ampache\Module\Util\OAuth;
 class OAuthSignatureMethod_PLAINTEXT extends OAuthSignatureMethod
 {
     /**
-     * get_name
-     */
-    public function get_name(): string
-    {
-        return "PLAINTEXT";
-    }
-
-    /**
      * oauth_signature is set to the concatenated encoded values of the Consumer Secret and
      * Token Secret, separated by a '&' character (ASCII code 38), even if either secret is
      * empty. The result MUST be encoded again.
@@ -67,5 +59,13 @@ class OAuthSignatureMethod_PLAINTEXT extends OAuthSignatureMethod
         $request->base_string = $key;
 
         return $key;
+    }
+
+    /**
+     * get_name
+     */
+    public function get_name(): string
+    {
+        return "PLAINTEXT";
     }
 }

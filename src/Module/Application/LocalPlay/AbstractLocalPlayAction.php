@@ -55,6 +55,14 @@ abstract class AbstractLocalPlayAction implements ApplicationActionInterface
         return $this->handle($request, $gatekeeper);
     }
 
+    /**
+     * @throws ApplicationException
+     */
+    abstract protected function handle(
+        ServerRequestInterface $request,
+        GuiGatekeeperInterface $gatekeeper,
+    ): ?ResponseInterface;
+
     protected function showRefresh(): void
     {
         $refresh_limit = (int)($this->configContainer->get(ConfigurationKeyEnum::REFRESH_LIMIT) ?? 0);
@@ -63,12 +71,4 @@ abstract class AbstractLocalPlayAction implements ApplicationActionInterface
             require_once Ui::find_template('javascript_refresh.inc.php');
         }
     }
-
-    /**
-     * @throws ApplicationException
-     */
-    abstract protected function handle(
-        ServerRequestInterface $request,
-        GuiGatekeeperInterface $gatekeeper,
-    ): ?ResponseInterface;
 }

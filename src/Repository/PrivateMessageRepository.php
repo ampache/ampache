@@ -44,38 +44,6 @@ final readonly class PrivateMessageRepository implements PrivateMessageRepositor
     }
 
     /**
-     * Get the user received private messages.
-     */
-    public function getUnreadCount(
-        User $user,
-    ): int {
-        return (int) $this->connection->fetchOne(
-            "SELECT count(`id`) as `amount` FROM `user_pvmsg` WHERE `to_user` = ? AND `is_read` = '0'",
-            [$user->getId()]
-        );
-    }
-
-    /**
-     * Get the subsonic chat messages.
-     *
-     * @return int[]
-     */
-    public function getChatMessages(int $since = 0): array
-    {
-        $result = $this->connection->query(
-            'SELECT `id` FROM `user_pvmsg` WHERE `to_user` = 0  AND `user_pvmsg`.`creation_date` > ? ORDER BY `user_pvmsg`.`creation_date` DESC',
-            [$since]
-        );
-
-        $ids = [];
-        while ($rowId = $result->fetchColumn()) {
-            $ids[] = (int) $rowId;
-        }
-
-        return $ids;
-    }
-
-    /**
      * Clear old messages from the subsonic chat message list.
      */
     public function cleanChatMessages(int $days = 30): void
@@ -85,22 +53,6 @@ final readonly class PrivateMessageRepository implements PrivateMessageRepositor
                 'DELETE FROM `user_pvmsg` WHERE `to_user` = 0 AND `creation_date` <= UNIX_TIMESTAMP(DATE_SUB(NOW(), INTERVAL %d day))',
                 $days
             )
-        );
-    }
-
-    public function setIsRead(PrivateMessageInterface $message, int $state): void
-    {
-        $this->connection->query(
-            'UPDATE `user_pvmsg` SET `is_read` = ? WHERE `id` = ?',
-            [$state, $message->getId()]
-        );
-    }
-
-    public function delete(PrivateMessageInterface $message): void
-    {
-        $this->connection->query(
-            'DELETE FROM `user_pvmsg` WHERE `id` = ?',
-            [$message->getId()]
         );
     }
 
@@ -132,6 +84,14 @@ final readonly class PrivateMessageRepository implements PrivateMessageRepositor
         return $this->connection->getLastInsertedId();
     }
 
+    public function delete(PrivateMessageInterface $message): void
+    {
+        $this->connection->query(
+            'DELETE FROM `user_pvmsg` WHERE `id` = ?',
+            [$message->getId()]
+        );
+    }
+
     public function findById(
         int $privateMessageId,
     ): ?PrivateMessageInterface {
@@ -141,5 +101,45 @@ final readonly class PrivateMessageRepository implements PrivateMessageRepositor
         }
 
         return $item;
+    }
+
+    /**
+     * Get the subsonic chat messages.
+     *
+     * @return int[]
+     */
+    public function getChatMessages(int $since = 0): array
+    {
+        $result = $this->connection->query(
+            'SELECT `id` FROM `user_pvmsg` WHERE `to_user` = 0  AND `user_pvmsg`.`creation_date` > ? ORDER BY `user_pvmsg`.`creation_date` DESC',
+            [$since]
+        );
+
+        $ids = [];
+        while ($rowId = $result->fetchColumn()) {
+            $ids[] = (int) $rowId;
+        }
+
+        return $ids;
+    }
+
+    /**
+     * Get the user received private messages.
+     */
+    public function getUnreadCount(
+        User $user,
+    ): int {
+        return (int) $this->connection->fetchOne(
+            "SELECT count(`id`) as `amount` FROM `user_pvmsg` WHERE `to_user` = ? AND `is_read` = '0'",
+            [$user->getId()]
+        );
+    }
+
+    public function setIsRead(PrivateMessageInterface $message, int $state): void
+    {
+        $this->connection->query(
+            'UPDATE `user_pvmsg` SET `is_read` = ? WHERE `id` = ?',
+            [$state, $message->getId()]
+        );
     }
 }

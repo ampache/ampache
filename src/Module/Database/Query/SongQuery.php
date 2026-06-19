@@ -65,6 +65,9 @@ final class SongQuery implements QueryInterface
         'user_rating',
     ];
 
+    protected string $base   = "SELECT %%SELECT%% FROM `song` ";
+    protected string $select = "`song`.`id`";
+
     /** @var string[] $sorts */
     protected array $sorts = [
         'addition_time',
@@ -90,9 +93,15 @@ final class SongQuery implements QueryInterface
         'year',
     ];
 
-    protected string $select = "`song`.`id`";
-
-    protected string $base = "SELECT %%SELECT%% FROM `song` ";
+    /**
+     * get_base_sql
+     *
+     * Base SELECT query string without filters or joins
+     */
+    public function get_base_sql(): string
+    {
+        return $this->base;
+    }
 
     /**
      * get_select
@@ -102,16 +111,6 @@ final class SongQuery implements QueryInterface
     public function get_select(): string
     {
         return $this->select;
-    }
-
-    /**
-     * get_base_sql
-     *
-     * Base SELECT query string without filters or joins
-     */
-    public function get_base_sql(): string
-    {
-        return $this->base;
     }
 
     /**

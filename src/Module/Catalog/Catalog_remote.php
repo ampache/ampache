@@ -56,118 +56,27 @@ class Catalog_remote extends Catalog
 
     private const string CMD_PING = 'ping';
 
-    private const string CMD_SONGS = 'songs';
-
     private const string CMD_SONG = 'song';
 
     private const string CMD_SONG_TAGS = 'song_tags';
+
+    private const string CMD_SONGS = 'songs';
 
     private const string CMD_STREAM = 'stream';
 
     private const string CMD_URL_TO_SONG = 'url_to_song';
 
-    private string $version     = '000001';
-
-    private string $type        = 'remote';
-
-    private string $description = 'Ampache Remote Catalog';
-
+    public string $password;
+    public string $uri = '';
+    public string $username;
     private int $catalog_id;
-
-    // new servers support pulling tags from VaInfo
-    private bool $song_tags = true;
-
+    private string $description        = 'Ampache Remote Catalog';
     private ?AmpacheApi $remote_handle = null;
 
-    public string $uri = '';
-
-    public string $username;
-
-    public string $password;
-
-    /**
-     * get_description
-     * This returns the description of this catalog
-     */
-    public function get_description(): string
-    {
-        return $this->description;
-    }
-
-    /**
-     * get_version
-     * This returns the current version
-     */
-    public function get_version(): string
-    {
-        return $this->version;
-    }
-
-    /**
-     * get_path
-     * This returns the current catalog path/uri
-     */
-    public function get_path(): string
-    {
-        return $this->uri;
-    }
-
-    /**
-     * get_type
-     * This returns the current catalog type
-     */
-    public function get_type(): string
-    {
-        return $this->type;
-    }
-
-    /**
-     * get_create_help
-     * This returns hints on catalog creation
-     */
-    public function get_create_help(): string
-    {
-        return "";
-    }
-
-    /**
-     * is_installed
-     * This returns true or false if remote catalog is installed
-     */
-    public function is_installed(): bool
-    {
-        $sql        = "SHOW TABLES LIKE 'catalog_remote'";
-        $db_results = Dba::query($sql);
-
-        return (Dba::num_rows($db_results) > 0);
-    }
-
-    /**
-     * install
-     * This function installs the remote catalog
-     */
-    public function install(): bool
-    {
-        $collation = (AmpConfig::get('database_collation', 'utf8mb4_unicode_ci'));
-        $charset   = (AmpConfig::get('database_charset', 'utf8mb4'));
-        $engine    = (AmpConfig::get('database_engine', 'InnoDB'));
-
-        $sql = sprintf('CREATE TABLE `catalog_remote` (`id` INT(11) UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY, `uri` VARCHAR(255) COLLATE %s NOT NULL, `username` VARCHAR(255) COLLATE %s NOT NULL, `password` VARCHAR(255) COLLATE %s NOT NULL, `catalog_id` INT(11) NOT NULL) ENGINE = %s DEFAULT CHARSET=%s COLLATE=%s', $collation, $collation, $collation, $engine, $charset, $collation);
-        Dba::query($sql);
-
-        return true;
-    }
-
-    /**
-     * @return array<
-     *     string,
-     *     array{description: string, type: string}
-     * >
-     */
-    public function catalog_fields(): array
-    {
-        return ['uri' => ['description' => T_('URI'), 'type' => 'url'], 'username' => ['description' => T_('Username'), 'type' => 'text'], 'password' => ['description' => T_('Password'), 'type' => 'password']];
-    }
+    // new servers support pulling tags from VaInfo
+    private bool $song_tags     = true;
+    private string $type        = 'remote';
+    private string $version     = '000001';
 
     /**
      * Constructor
@@ -255,6 +164,434 @@ class Catalog_remote extends Catalog
         return $songsadded;
     }
 
+    public function cache_catalog_file(string $file_target, string $media_file): bool
+    {
+        return Catalog::cache_remote_file($file_target, $media_file);
+    }
+
+    /**
+     * cache_catalog_proc
+     */
+    public function cache_catalog_proc(): bool
+    {
+        $this->_connect();
+
+        // If we don't get anything back we failed and should bail now
+        if (!$this->remote_handle instanceof AmpacheApi) {
+            debug_event('remote.catalog', 'Connection to remote server failed', 1);
+
+            return false;
+        }
+
+        try {
+            $handshake = $this->remote_handle->info();
+        } catch (Exception) {
+            return false;
+        }
+
+        if (!$handshake instanceof SimpleXMLElement) {
+            return false;
+        }
+
+        $remote       = AmpConfig::get('cache_remote');
+        $cache_path   = (string)AmpConfig::get('cache_path', '');
+        $cache_target = (string)AmpConfig::get('cache_target', '');
+        // need a destination, source and target format
+        if (!is_dir($cache_path) || !$remote || !$cache_target) {
+            debug_event('remote.catalog', 'Check your cache_path cache_target and cache_remote settings', 5);
+
+            return false;
+        }
+
+        $max_bitrate   = (int)AmpConfig::get('max_bit_rate', 128);
+        $user_bit_rate = (int)AmpConfig::get('transcode_bitrate', 128);
+
+        // If the user's crazy, that's no skin off our back
+        if ($user_bit_rate > $max_bitrate) {
+            $max_bitrate = $user_bit_rate;
+        }
+
+        $sql        = "SELECT `id`, `file`, substring_index(file,'.',-1) AS `extension` FROM `song` WHERE `catalog` = ?;";
+        $db_results = Dba::read($sql, [$this->catalog_id]);
+        while ($row = Dba::fetch_assoc($db_results)) {
+            $file_target = ($row['id'] && $cache_target === $row['extension'])
+                ? Catalog::get_cache_path($row['id'], $this->catalog_id, $cache_path, $cache_target)
+                : null;
+            if (in_array($file_target, [null, '', '0'], true)) {
+                debug_event('remote.catalog', 'Cache error: no target for ' . $row['id'], 5);
+                continue;
+            }
+
+            if (!is_file($file_target) || Core::get_filesize($file_target) === 0) {
+                $old_target_file = rtrim(trim($cache_path), '/') . '/' . $this->catalog_id . '/' . $row['id'] . '.' . $row['extension'];
+                $old_file_exists = is_file($old_target_file);
+                if ($old_file_exists) {
+                    // check for the old path first
+                    rename($old_target_file, $file_target);
+                    debug_event('remote.catalog', 'Moved: ' . $row['id'] . ' from: {' . $old_target_file . '}' . ' to: {' . $file_target . '}', 5);
+                } else {
+                    $song       = new Song($row['id']);
+                    $remote_url = $this->getRemoteStreamingUrl($song, self::CMD_DOWNLOAD);
+                    if (
+                        !in_array($remote_url, [null, '', '0'], true) &&
+                        Catalog::cache_remote_file($file_target, $remote_url)
+                    ) {
+                        debug_event('remote.catalog', 'Saved: ' . $row['id'] . ' to: {' . $file_target . '}', 5);
+                    } else {
+                        debug_event('remote.catalog', 'Cache error: ' . $row['id'], 5);
+                    }
+                }
+
+                try {
+                    // keep alive just in case
+                    $this->remote_handle->send_command(self::CMD_PING);
+                } catch (Exception $error) {
+                    debug_event(self::class, 'PING error: ' . $error->getMessage(), 5);
+
+                    return false;
+                }
+            }
+        }
+
+        return true;
+    }
+
+    /**
+     * @return array<
+     *     string,
+     *     array{description: string, type: string}
+     * >
+     */
+    public function catalog_fields(): array
+    {
+        return ['uri' => ['description' => T_('URI'), 'type' => 'url'], 'username' => ['description' => T_('Username'), 'type' => 'text'], 'password' => ['description' => T_('Password'), 'type' => 'password']];
+    }
+
+    /**
+     * @return string[]
+     */
+    public function check_catalog_proc(?Interactor $interactor = null): array
+    {
+        return [];
+    }
+
+    /**
+     * check_remote_song
+     *
+     * checks to see if a remote song exists in the database or not
+     * if it find a song it returns the UID
+     * @param string[] $song_urls
+     */
+    public function check_remote_song(array $song_urls, string $db_file, string $remote_id): ?int
+    {
+        if ($song_urls === [] || $db_file === '') {
+            return null;
+        }
+
+        // Check by remote id urls first
+        if ($remote_id !== '' && $remote_id !== '0') {
+            $sql        = 'SELECT `id` FROM `song` WHERE `file` LIKE ?;';
+            $db_results = Dba::read($sql, [$this->uri . '/play/index.php?%&type=song%&oid=' . $remote_id . '&%']);
+            if ($results = Dba::fetch_assoc($db_results)) {
+                Dba::write('UPDATE `song` SET `file` = ? WHERE `id` = ?', [$db_file, $results['id']]);
+                Song::update_song_map([$remote_id], 'remote_' . $this->catalog_id, (int)$results['id']);
+
+                return (int)$results['id'];
+            }
+        }
+
+        // Update old urls to the new format if needed
+        foreach ($song_urls as $old_url) {
+            // Check for old formats and update the URL to the current version
+            $sql        = 'SELECT `id` FROM `song` WHERE `file` = ?;';
+            $db_results = Dba::read($sql, [$old_url]);
+            if ($results = Dba::fetch_assoc($db_results)) {
+                Dba::write('UPDATE `song` SET `file` = ? WHERE `id` = ?', [$db_file, $results['id']]);
+
+                return (int)$results['id'];
+            }
+        }
+
+        // Check current format
+        $sql        = 'SELECT `id` FROM `song` WHERE `file` = ?';
+        $db_results = Dba::read($sql, [$db_file]);
+
+        if ($results = Dba::fetch_assoc($db_results)) {
+            return (int)$results['id'];
+        }
+
+        return null;
+    }
+
+    /**
+     * clean_catalog_proc
+     *
+     * Removes remote songs that no longer exist.
+     */
+    public function clean_catalog_proc(?Interactor $interactor = null): int
+    {
+        $this->_connect();
+        if (!$this->remote_handle instanceof AmpacheApi) {
+            debug_event('remote.catalog', 'Remote login failed', 1);
+
+            return 0;
+        }
+
+        $dead       = 0;
+        $sql        = 'SELECT `id`, `file` FROM `song` WHERE `catalog` = ?';
+        $db_results = Dba::read($sql, [$this->catalog_id]);
+        while ($row = Dba::fetch_assoc($db_results)) {
+            debug_event('remote.catalog', 'Starting work on ' . $row['file'] . ' (' . $row['id'] . ')', 5);
+            try {
+                if (filter_var($row['file'], FILTER_VALIDATE_URL)) {
+                    // lookup by url
+                    $song = $this->remote_handle->send_command(self::CMD_URL_TO_SONG, ['url' => $row['file']]);
+                } else {
+                    // lookup by remote id
+                    $remote_id = Song::get_song_map_object_id($row['id'], 'remote_' . $this->catalog_id);
+                    $song      = ($remote_id)
+                        ? $this->remote_handle->send_command(self::CMD_SONG, ['filter' => $remote_id])
+                        : null;
+                }
+
+                if (
+                    $song instanceof SimpleXMLElement &&
+                    $song->song &&
+                    ((int)$song->song->attributes()->id) > 0
+                ) {
+                    debug_event('remote.catalog', 'keeping song', 5);
+                } else {
+                    debug_event('remote.catalog', 'removing song', 5);
+                    $dead++;
+                    Dba::write('DELETE FROM `song` WHERE `id` = ?', [$row['id']]);
+                }
+            } catch (Exception $error) {
+                // FIXME: What to do, what to do
+                debug_event('remote.catalog', 'url_to_song parsing error: ' . $error->getMessage(), 1);
+            }
+        }
+
+        return $dead;
+    }
+
+    public function count_scan_folders(?Interactor $interactor = null): void
+    {
+    }
+
+    /**
+     * get_create_help
+     * This returns hints on catalog creation
+     */
+    public function get_create_help(): string
+    {
+        return "";
+    }
+
+    /**
+     * get_description
+     * This returns the description of this catalog
+     */
+    public function get_description(): string
+    {
+        return $this->description;
+    }
+
+    /**
+     * get_f_info
+     */
+    public function get_f_info(): string
+    {
+        return $this->uri;
+    }
+
+    /**
+     * get_path
+     * This returns the current catalog path/uri
+     */
+    public function get_path(): string
+    {
+        return $this->uri;
+    }
+
+    /**
+     * get_rel_path
+     */
+    public function get_rel_path(string $file_path): string
+    {
+        $catalog_path = rtrim($this->uri, "/");
+
+        return (str_replace($catalog_path . "/", "", $file_path));
+    }
+
+    /**
+     * get_remote_tags
+     * @return null|array<string, mixed>
+     */
+    public function get_remote_tags(Podcast_Episode|Video|Song $media): ?array
+    {
+        $this->_connect();
+        if (!$this->remote_handle instanceof AmpacheApi) {
+            debug_event('remote.catalog', 'connection error', 1);
+
+            return null;
+        }
+
+        $results   = [];
+        $remote_id = ($media->file && filter_var($media->file, FILTER_VALIDATE_URL))
+            ? preg_replace('/^.*[?&]oid=([^&]+).*$/', '$1', html_entity_decode($media->file))
+            : Song::get_song_map_object_id($media->getId(), 'remote_' . $this->catalog_id);
+        if (!$remote_id) {
+            return null;
+        }
+
+        $song = $this->remote_handle->send_command(self::CMD_SONG, ['filter' => $remote_id]);
+
+        if (
+            $song instanceof SimpleXMLElement &&
+            $song->song &&
+            ((int)$song->song->attributes()->id) > 0
+        ) {
+            $results = $this->_gather_tags($song->song);
+        }
+
+        return $results;
+    }
+
+    /**
+     * get_type
+     * This returns the current catalog type
+     */
+    public function get_type(): string
+    {
+        return $this->type;
+    }
+
+    /**
+     * get_version
+     * This returns the current version
+     */
+    public function get_version(): string
+    {
+        return $this->version;
+    }
+
+    /**
+     * Returns the remote streaming-url if supported
+     */
+    public function getRemoteStreamingUrl(Podcast_Episode|Video|Song $media, ?string $action = null): ?string
+    {
+        $this->_connect();
+
+        // If we don't get anything back we failed and should bail now
+        if (!$this->remote_handle instanceof AmpacheApi) {
+            debug_event('remote.catalog', 'Connection to remote server failed', 1);
+
+            return null;
+        }
+
+        if (filter_var($media->file, FILTER_VALIDATE_URL)) {
+            $handshake = $this->remote_handle->info();
+            if (!$handshake instanceof SimpleXMLElement) {
+                debug_event('remote.catalog', 'Handshake with remote server failed', 1);
+
+                return null;
+            }
+
+            return $media->file . '&ssid=' . $handshake->auth;
+        }
+
+        $remote_id = Song::get_song_map_object_id($media->id, 'remote_' . $this->catalog_id);
+        if (!$remote_id) {
+            debug_event('remote.catalog', 'Unable to identify remote id ' . $media->id . '. Update the catalog.', 1);
+
+            return null;
+        }
+
+        $options = [
+            'filter' => $remote_id,
+            'type' => 'song'
+        ];
+
+        return ($action === 'download')
+            ? $this->remote_handle->get_command_url(self::CMD_DOWNLOAD, $options)
+            : $this->remote_handle->get_command_url(self::CMD_STREAM, $options);
+    }
+
+    /**
+     * install
+     * This function installs the remote catalog
+     */
+    public function install(): bool
+    {
+        $collation = (AmpConfig::get('database_collation', 'utf8mb4_unicode_ci'));
+        $charset   = (AmpConfig::get('database_charset', 'utf8mb4'));
+        $engine    = (AmpConfig::get('database_engine', 'InnoDB'));
+
+        $sql = sprintf('CREATE TABLE `catalog_remote` (`id` INT(11) UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY, `uri` VARCHAR(255) COLLATE %s NOT NULL, `username` VARCHAR(255) COLLATE %s NOT NULL, `password` VARCHAR(255) COLLATE %s NOT NULL, `catalog_id` INT(11) NOT NULL) ENGINE = %s DEFAULT CHARSET=%s COLLATE=%s', $collation, $collation, $collation, $engine, $charset, $collation);
+        Dba::query($sql);
+
+        return true;
+    }
+
+    /**
+     * is_installed
+     * This returns true or false if remote catalog is installed
+     */
+    public function is_installed(): bool
+    {
+        $sql        = "SHOW TABLES LIKE 'catalog_remote'";
+        $db_results = Dba::query($sql);
+
+        return (Dba::num_rows($db_results) > 0);
+    }
+
+    /**
+     * move_catalog_proc
+     * This function updates the file path of the catalog to a new location (unsupported)
+     */
+    public function move_catalog_proc(string $new_path): bool
+    {
+        return false;
+    }
+
+    /**
+     * @return null|array{
+     *     file_path: string,
+     *     file_name: string,
+     *     file_size: int,
+     *     file_type: string
+     * }
+     */
+    public function prepare_media(Podcast_Episode|Video|Song $media): ?array
+    {
+        return null;
+    }
+
+    /**
+     * scan_catalog_folders
+     */
+    public function scan_catalog_folders(?Interactor $interactor = null, bool $skipCounts = false): int
+    {
+        return 0;
+    }
+
+    /**
+     * verify_catalog_proc
+     */
+    public function verify_catalog_proc(?int $limit = 0, ?Interactor $interactor = null): int
+    {
+        if (!defined('SSE_OUTPUT') && !defined('CLI') && !defined('API')) {
+            Ui::show_box_top(T_('Running Remote Update'));
+        }
+
+        $songsupdated = $this->_update_remote_catalog('verify');
+        if (!defined('SSE_OUTPUT') && !defined('CLI') && !defined('API')) {
+            Ui::show_box_bottom();
+        }
+
+        return $songsupdated;
+    }
+
     /**
      * _connect
      *
@@ -312,40 +649,6 @@ class Catalog_remote extends Catalog
 
             $this->remote_handle = null;
         }
-    }
-
-    /**
-     * get_remote_tags
-     * @return null|array<string, mixed>
-     */
-    public function get_remote_tags(Podcast_Episode|Video|Song $media): ?array
-    {
-        $this->_connect();
-        if (!$this->remote_handle instanceof AmpacheApi) {
-            debug_event('remote.catalog', 'connection error', 1);
-
-            return null;
-        }
-
-        $results   = [];
-        $remote_id = ($media->file && filter_var($media->file, FILTER_VALIDATE_URL))
-            ? preg_replace('/^.*[?&]oid=([^&]+).*$/', '$1', html_entity_decode($media->file))
-            : Song::get_song_map_object_id($media->getId(), 'remote_' . $this->catalog_id);
-        if (!$remote_id) {
-            return null;
-        }
-
-        $song = $this->remote_handle->send_command(self::CMD_SONG, ['filter' => $remote_id]);
-
-        if (
-            $song instanceof SimpleXMLElement &&
-            $song->song &&
-            ((int)$song->song->attributes()->id) > 0
-        ) {
-            $results = $this->_gather_tags($song->song);
-        }
-
-        return $results;
     }
 
     /**
@@ -828,315 +1131,5 @@ class Catalog_remote extends Catalog
         }
 
         return $songsadded;
-    }
-
-    /**
-     * scan_catalog_folders
-     */
-    public function scan_catalog_folders(?Interactor $interactor = null, bool $skipCounts = false): int
-    {
-        return 0;
-    }
-
-    public function count_scan_folders(?Interactor $interactor = null): void
-    {
-    }
-
-    /**
-     * verify_catalog_proc
-     */
-    public function verify_catalog_proc(?int $limit = 0, ?Interactor $interactor = null): int
-    {
-        if (!defined('SSE_OUTPUT') && !defined('CLI') && !defined('API')) {
-            Ui::show_box_top(T_('Running Remote Update'));
-        }
-
-        $songsupdated = $this->_update_remote_catalog('verify');
-        if (!defined('SSE_OUTPUT') && !defined('CLI') && !defined('API')) {
-            Ui::show_box_bottom();
-        }
-
-        return $songsupdated;
-    }
-
-    /**
-     * clean_catalog_proc
-     *
-     * Removes remote songs that no longer exist.
-     */
-    public function clean_catalog_proc(?Interactor $interactor = null): int
-    {
-        $this->_connect();
-        if (!$this->remote_handle instanceof AmpacheApi) {
-            debug_event('remote.catalog', 'Remote login failed', 1);
-
-            return 0;
-        }
-
-        $dead       = 0;
-        $sql        = 'SELECT `id`, `file` FROM `song` WHERE `catalog` = ?';
-        $db_results = Dba::read($sql, [$this->catalog_id]);
-        while ($row = Dba::fetch_assoc($db_results)) {
-            debug_event('remote.catalog', 'Starting work on ' . $row['file'] . ' (' . $row['id'] . ')', 5);
-            try {
-                if (filter_var($row['file'], FILTER_VALIDATE_URL)) {
-                    // lookup by url
-                    $song = $this->remote_handle->send_command(self::CMD_URL_TO_SONG, ['url' => $row['file']]);
-                } else {
-                    // lookup by remote id
-                    $remote_id = Song::get_song_map_object_id($row['id'], 'remote_' . $this->catalog_id);
-                    $song      = ($remote_id)
-                        ? $this->remote_handle->send_command(self::CMD_SONG, ['filter' => $remote_id])
-                        : null;
-                }
-
-                if (
-                    $song instanceof SimpleXMLElement &&
-                    $song->song &&
-                    ((int)$song->song->attributes()->id) > 0
-                ) {
-                    debug_event('remote.catalog', 'keeping song', 5);
-                } else {
-                    debug_event('remote.catalog', 'removing song', 5);
-                    $dead++;
-                    Dba::write('DELETE FROM `song` WHERE `id` = ?', [$row['id']]);
-                }
-            } catch (Exception $error) {
-                // FIXME: What to do, what to do
-                debug_event('remote.catalog', 'url_to_song parsing error: ' . $error->getMessage(), 1);
-            }
-        }
-
-        return $dead;
-    }
-
-    /**
-     * @return string[]
-     */
-    public function check_catalog_proc(?Interactor $interactor = null): array
-    {
-        return [];
-    }
-
-    /**
-     * move_catalog_proc
-     * This function updates the file path of the catalog to a new location (unsupported)
-     */
-    public function move_catalog_proc(string $new_path): bool
-    {
-        return false;
-    }
-
-    public function cache_catalog_file(string $file_target, string $media_file): bool
-    {
-        return Catalog::cache_remote_file($file_target, $media_file);
-    }
-
-    /**
-     * cache_catalog_proc
-     */
-    public function cache_catalog_proc(): bool
-    {
-        $this->_connect();
-
-        // If we don't get anything back we failed and should bail now
-        if (!$this->remote_handle instanceof AmpacheApi) {
-            debug_event('remote.catalog', 'Connection to remote server failed', 1);
-
-            return false;
-        }
-
-        try {
-            $handshake = $this->remote_handle->info();
-        } catch (Exception) {
-            return false;
-        }
-
-        if (!$handshake instanceof SimpleXMLElement) {
-            return false;
-        }
-
-        $remote       = AmpConfig::get('cache_remote');
-        $cache_path   = (string)AmpConfig::get('cache_path', '');
-        $cache_target = (string)AmpConfig::get('cache_target', '');
-        // need a destination, source and target format
-        if (!is_dir($cache_path) || !$remote || !$cache_target) {
-            debug_event('remote.catalog', 'Check your cache_path cache_target and cache_remote settings', 5);
-
-            return false;
-        }
-
-        $max_bitrate   = (int)AmpConfig::get('max_bit_rate', 128);
-        $user_bit_rate = (int)AmpConfig::get('transcode_bitrate', 128);
-
-        // If the user's crazy, that's no skin off our back
-        if ($user_bit_rate > $max_bitrate) {
-            $max_bitrate = $user_bit_rate;
-        }
-
-        $sql        = "SELECT `id`, `file`, substring_index(file,'.',-1) AS `extension` FROM `song` WHERE `catalog` = ?;";
-        $db_results = Dba::read($sql, [$this->catalog_id]);
-        while ($row = Dba::fetch_assoc($db_results)) {
-            $file_target = ($row['id'] && $cache_target === $row['extension'])
-                ? Catalog::get_cache_path($row['id'], $this->catalog_id, $cache_path, $cache_target)
-                : null;
-            if (in_array($file_target, [null, '', '0'], true)) {
-                debug_event('remote.catalog', 'Cache error: no target for ' . $row['id'], 5);
-                continue;
-            }
-
-            if (!is_file($file_target) || Core::get_filesize($file_target) === 0) {
-                $old_target_file = rtrim(trim($cache_path), '/') . '/' . $this->catalog_id . '/' . $row['id'] . '.' . $row['extension'];
-                $old_file_exists = is_file($old_target_file);
-                if ($old_file_exists) {
-                    // check for the old path first
-                    rename($old_target_file, $file_target);
-                    debug_event('remote.catalog', 'Moved: ' . $row['id'] . ' from: {' . $old_target_file . '}' . ' to: {' . $file_target . '}', 5);
-                } else {
-                    $song       = new Song($row['id']);
-                    $remote_url = $this->getRemoteStreamingUrl($song, self::CMD_DOWNLOAD);
-                    if (
-                        !in_array($remote_url, [null, '', '0'], true) &&
-                        Catalog::cache_remote_file($file_target, $remote_url)
-                    ) {
-                        debug_event('remote.catalog', 'Saved: ' . $row['id'] . ' to: {' . $file_target . '}', 5);
-                    } else {
-                        debug_event('remote.catalog', 'Cache error: ' . $row['id'], 5);
-                    }
-                }
-
-                try {
-                    // keep alive just in case
-                    $this->remote_handle->send_command(self::CMD_PING);
-                } catch (Exception $error) {
-                    debug_event(self::class, 'PING error: ' . $error->getMessage(), 5);
-
-                    return false;
-                }
-            }
-        }
-
-        return true;
-    }
-
-    /**
-     * check_remote_song
-     *
-     * checks to see if a remote song exists in the database or not
-     * if it find a song it returns the UID
-     * @param string[] $song_urls
-     */
-    public function check_remote_song(array $song_urls, string $db_file, string $remote_id): ?int
-    {
-        if ($song_urls === [] || $db_file === '') {
-            return null;
-        }
-
-        // Check by remote id urls first
-        if ($remote_id !== '' && $remote_id !== '0') {
-            $sql        = 'SELECT `id` FROM `song` WHERE `file` LIKE ?;';
-            $db_results = Dba::read($sql, [$this->uri . '/play/index.php?%&type=song%&oid=' . $remote_id . '&%']);
-            if ($results = Dba::fetch_assoc($db_results)) {
-                Dba::write('UPDATE `song` SET `file` = ? WHERE `id` = ?', [$db_file, $results['id']]);
-                Song::update_song_map([$remote_id], 'remote_' . $this->catalog_id, (int)$results['id']);
-
-                return (int)$results['id'];
-            }
-        }
-
-        // Update old urls to the new format if needed
-        foreach ($song_urls as $old_url) {
-            // Check for old formats and update the URL to the current version
-            $sql        = 'SELECT `id` FROM `song` WHERE `file` = ?;';
-            $db_results = Dba::read($sql, [$old_url]);
-            if ($results = Dba::fetch_assoc($db_results)) {
-                Dba::write('UPDATE `song` SET `file` = ? WHERE `id` = ?', [$db_file, $results['id']]);
-
-                return (int)$results['id'];
-            }
-        }
-
-        // Check current format
-        $sql        = 'SELECT `id` FROM `song` WHERE `file` = ?';
-        $db_results = Dba::read($sql, [$db_file]);
-
-        if ($results = Dba::fetch_assoc($db_results)) {
-            return (int)$results['id'];
-        }
-
-        return null;
-    }
-
-    /**
-     * get_rel_path
-     */
-    public function get_rel_path(string $file_path): string
-    {
-        $catalog_path = rtrim($this->uri, "/");
-
-        return (str_replace($catalog_path . "/", "", $file_path));
-    }
-
-    /**
-     * get_f_info
-     */
-    public function get_f_info(): string
-    {
-        return $this->uri;
-    }
-
-    /**
-     * @return null|array{
-     *     file_path: string,
-     *     file_name: string,
-     *     file_size: int,
-     *     file_type: string
-     * }
-     */
-    public function prepare_media(Podcast_Episode|Video|Song $media): ?array
-    {
-        return null;
-    }
-
-    /**
-     * Returns the remote streaming-url if supported
-     */
-    public function getRemoteStreamingUrl(Podcast_Episode|Video|Song $media, ?string $action = null): ?string
-    {
-        $this->_connect();
-
-        // If we don't get anything back we failed and should bail now
-        if (!$this->remote_handle instanceof AmpacheApi) {
-            debug_event('remote.catalog', 'Connection to remote server failed', 1);
-
-            return null;
-        }
-
-        if (filter_var($media->file, FILTER_VALIDATE_URL)) {
-            $handshake = $this->remote_handle->info();
-            if (!$handshake instanceof SimpleXMLElement) {
-                debug_event('remote.catalog', 'Handshake with remote server failed', 1);
-
-                return null;
-            }
-
-            return $media->file . '&ssid=' . $handshake->auth;
-        }
-
-        $remote_id = Song::get_song_map_object_id($media->id, 'remote_' . $this->catalog_id);
-        if (!$remote_id) {
-            debug_event('remote.catalog', 'Unable to identify remote id ' . $media->id . '. Update the catalog.', 1);
-
-            return null;
-        }
-
-        $options = [
-            'filter' => $remote_id,
-            'type' => 'song'
-        ];
-
-        return ($action === 'download')
-            ? $this->remote_handle->get_command_url(self::CMD_DOWNLOAD, $options)
-            : $this->remote_handle->get_command_url(self::CMD_STREAM, $options);
     }
 }

@@ -35,12 +35,11 @@ use DateTimeZone;
 final readonly class InitializationHandlerConfig implements InitializationHandlerInterface
 {
     public const string CONFIG_FILE_PATH = __DIR__ . '/../../../config/ampache.cfg.php';
-
-    private const string VERSION = '8.0.0'; // AMPACHE_VERSION
-
-    private const string CONFIG_VERSION = '87';
+    private const string CONFIG_VERSION  = '87';
 
     private const string STRUCTURE = 'public';
+
+    private const string VERSION         = '8.0.0'; // AMPACHE_VERSION
 
     public function __construct(private EnvironmentInterface $environment)
     {

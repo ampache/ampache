@@ -38,13 +38,19 @@ use Override;
 class AmpacheShoutHome extends AmpachePlugin implements PluginDisplayHomeInterface
 {
     #[Override]
-    public string $name = 'Shout Home';
-
-    #[Override]
     public string $categories = 'home';
 
     #[Override]
     public string $description = 'Shoutbox on homepage';
+
+    #[Override]
+    public string $max_ampache = '999999';
+
+    #[Override]
+    public string $min_ampache = '370021';
+
+    #[Override]
+    public string $name = 'Shout Home';
 
     #[Override]
     public string $url = '';
@@ -52,16 +58,9 @@ class AmpacheShoutHome extends AmpachePlugin implements PluginDisplayHomeInterfa
     #[Override]
     public string $version = '000002';
 
-    #[Override]
-    public string $min_ampache = '370021';
-
-    #[Override]
-    public string $max_ampache = '999999';
-
     // These are internal settings used by this class, run this->load to fill them out
     private int $maxitems = 5;
-
-    private int $order = 0;
+    private int $order    = 0;
 
     /**
      * Constructor
@@ -69,6 +68,30 @@ class AmpacheShoutHome extends AmpachePlugin implements PluginDisplayHomeInterfa
     public function __construct()
     {
         $this->description = T_('Shoutbox on homepage');
+    }
+
+    /**
+     * display_home
+     * This display the module in home page
+     */
+    public function display_home(): void
+    {
+        if (AmpConfig::get('sociable')) {
+            $divString = ($this->order > 0)
+                ? '<div id="shout_objects" style="order: ' . $this->order . '">'
+                : '<div id="shout_objects">';
+            echo $divString;
+            $shouts = iterator_to_array(
+                self::getShoutRepository()->getTop($this->maxitems)
+            );
+            $shoutRenderer = $this->getShoutRenderer();
+
+            if ($shouts !== []) {
+                require_once Ui::find_template('show_shoutbox.inc.php');
+            }
+
+            echo "</div>\n";
+        }
     }
 
     /**
@@ -82,6 +105,25 @@ class AmpacheShoutHome extends AmpachePlugin implements PluginDisplayHomeInterfa
         }
 
         return Preference::insert('shouthome_order', T_('Plugin CSS order'), '0', AccessLevelEnum::USER->value, 'integer', 'plugins', $this->name);
+    }
+
+    /**
+     * load
+     * This loads up the data we need into this object, this stuff comes from the preferences.
+     */
+    public function load(User $user): bool
+    {
+        $user->set_preferences();
+        $data = $user->prefs;
+
+        $this->maxitems = (int)($data['shouthome_max_items']);
+        if ($this->maxitems < 1) {
+            $this->maxitems = 5;
+        }
+
+        $this->order = (int)($data['shouthome_order'] ?? 0);
+
+        return true;
     }
 
     /**
@@ -115,46 +157,13 @@ class AmpacheShoutHome extends AmpachePlugin implements PluginDisplayHomeInterfa
     }
 
     /**
-     * display_home
-     * This display the module in home page
+     * @todo find a better solution...
      */
-    public function display_home(): void
+    private function getShoutRenderer(): ShoutRendererInterface
     {
-        if (AmpConfig::get('sociable')) {
-            $divString = ($this->order > 0)
-                ? '<div id="shout_objects" style="order: ' . $this->order . '">'
-                : '<div id="shout_objects">';
-            echo $divString;
-            $shouts = iterator_to_array(
-                self::getShoutRepository()->getTop($this->maxitems)
-            );
-            $shoutRenderer = $this->getShoutRenderer();
+        global $dic;
 
-            if ($shouts !== []) {
-                require_once Ui::find_template('show_shoutbox.inc.php');
-            }
-
-            echo "</div>\n";
-        }
-    }
-
-    /**
-     * load
-     * This loads up the data we need into this object, this stuff comes from the preferences.
-     */
-    public function load(User $user): bool
-    {
-        $user->set_preferences();
-        $data = $user->prefs;
-
-        $this->maxitems = (int)($data['shouthome_max_items']);
-        if ($this->maxitems < 1) {
-            $this->maxitems = 5;
-        }
-
-        $this->order = (int)($data['shouthome_order'] ?? 0);
-
-        return true;
+        return $dic->get(ShoutRendererInterface::class);
     }
 
     /**
@@ -165,15 +174,5 @@ class AmpacheShoutHome extends AmpachePlugin implements PluginDisplayHomeInterfa
         global $dic;
 
         return $dic->get(ShoutRepositoryInterface::class);
-    }
-
-    /**
-     * @todo find a better solution...
-     */
-    private function getShoutRenderer(): ShoutRendererInterface
-    {
-        global $dic;
-
-        return $dic->get(ShoutRendererInterface::class);
     }
 }

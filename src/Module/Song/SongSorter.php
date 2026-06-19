@@ -39,19 +39,13 @@ use RuntimeException;
 
 final class SongSorter implements SongSorterInterface
 {
-    private ?Catalog $catalog = null;
-
-    private int $move_count = 0;
-
-    private int $limit = 0;
-
+    private ?Catalog $catalog      = null;
+    private bool $dryRun           = true;
+    private bool $filesOnly        = false;
+    private int $limit             = 0;
+    private int $move_count        = 0;
     private string $various_artist = '';
-
-    private bool $dryRun = true;
-
-    private bool $filesOnly = false;
-
-    private bool $windowsCompat = false;
+    private bool $windowsCompat    = false;
 
     public function __construct(
         private readonly ConfigContainerInterface $configContainer,

@@ -42,42 +42,25 @@ use WpOrg\Requests\Requests;
  */
 class AmazonSearch
 {
-    public $base_url_default = 'webservices.amazon.com';
-
-    public $url_suffix       = '/onca/xml';
-
-    public $base_url;
-
-    public $search;
-
-    // Amazon Affiliate Associate Tag
-    public $results = [];
-
-    // Array of results
-    public $_parser;
-
-    // The XML parser
-    public $_grabtags;
-
-    // Tags to grab the contents of
-    public $_sourceTag;
-
-    // source tag don't ask
-    public $_subTag;
+    public $_currentPage           = 0;
 
     // Stupid hack to make things come our right
     public $_currentTag;
 
     // Stupid hack to make things come out right
     public $_currentTagContents;
-
-    public $_currentPage           = 0;
-
-    public $_maxPage               = 1;
-
     public $_default_results_pages = 1;
 
+    // The XML parser
+    public $_grabtags;
+    public $_maxPage               = 1;
+
+    // Array of results
+    public $_parser;
     public $_proxy_host            = "";
+
+    // Proxy user
+    public $_proxy_pass            = ""; // Proxy pass
 
     // Proxy host
     public $_proxy_port            = "";
@@ -85,8 +68,18 @@ class AmazonSearch
     // Proxy port
     public $_proxy_user            = "";
 
-    // Proxy user
-    public $_proxy_pass            = ""; // Proxy pass
+    // Tags to grab the contents of
+    public $_sourceTag;
+
+    // source tag don't ask
+    public $_subTag;
+    public $base_url;
+    public $base_url_default = 'webservices.amazon.com';
+
+    // Amazon Affiliate Associate Tag
+    public $results = [];
+    public $search;
+    public $url_suffix       = '/onca/xml';
 
     /**
      * Class Constructor
@@ -129,32 +122,31 @@ class AmazonSearch
     }
 
     /**
-     * setProxy
-     * Set the class up to search through an http proxy.
-     * The parameters are the proxy's hostname or IP address (a string)
-     * port, username, and password. These are passed directly to the
-     * Requests class when the search is done.
-     * @param string $host
-     * @param string $port
-     * @param string $user
-     * @param string $pass
+     * CDATA handler.
      */
-    public function setProxy($host = '', $port = '', $user = '', $pass = ''): void
+    public function cdata($parser, $cdata): void
     {
-        if ($host) {
-            $this->_proxy_host = $host;
-        }
+        $tag    = $this->_currentTag;
+        $subtag = $this->_subTag;
+        $source = $this->_sourceTag;
 
-        if ($port) {
-            $this->_proxy_port = $port;
-        }
+        switch ($tag) {
+            case 'URL':
+                $this->results[$source][$subtag] = trim((string) $cdata);
+                break;
+            case 'ASIN':
+                $this->_sourceTag = trim((string) $cdata);
+                break;
+            case 'TotalPages':
+                debug_event(self::class, "TotalPages= " . trim((string) $cdata), 5);
+                $this->_maxPage = trim((string) $cdata);
+                break;
+            default:
+                if (strlen((string) $tag) !== 0) {
+                    $this->results[$source][$tag] = trim((string) $cdata);
+                }
 
-        if ($user) {
-            $this->_proxy_user = $user;
-        }
-
-        if ($pass) {
-            $this->_proxy_pass = $pass;
+                break;
         }
     }
 
@@ -175,27 +167,12 @@ class AmazonSearch
     }
 
     /**
-     * Run a search.
-     *
-     * @param string $url The URL of the Amazon webservice.
+     * End XML Element
      */
-    public function runSearch($url): void
+    public function endElement($parser, $tag): void
     {
-        // create the parser
-        $this->createParser();
-
-        // get the proxy config
-        $options = $this->getProxyConfig();
-
-        debug_event(self::class, 'Amazon request: ' . $url, 5);
-        // make the request and retrieve the response
-        $request  = Requests::get($url, [], $options);
-        $contents = $request->body;
-
-        //debug_event(self::class, $contents, 5);
-        if (xml_parse($this->_parser, $contents) === 0) {
-            debug_event(self::class, 'Error:' . sprintf('XML error: %s at line %d', xml_error_string(xml_get_error_code($this->_parser)), xml_get_current_line_number($this->_parser)), 1);
-        }
+        // zero the tag
+        $this->_currentTag = '';
     }
 
     /**
@@ -221,65 +198,6 @@ class AmazonSearch
     }
 
     /**
-     * Create an XML search string.
-     *
-     * @param array $terms The search terms to include within the query.
-     * @param string $type The type of result desired.
-     */
-    public function search($terms, $type = 'Music'): array
-    {
-        $params = [];
-
-        $params['Service']        = 'AWSECommerceService';
-        $params['AWSAccessKeyId'] = $this->public_key;
-        $params['AssociateTag']   = $this->associate_tag;
-        $params['Timestamp']      = gmdate("Y-m-d\TH:i:s\Z");
-        $params['Version']        = '2009-03-31';
-        $params['Operation']      = 'ItemSearch';
-        $params['Artist']         = $terms['artist'];
-        $params['Title']          = $terms['album'];
-        $params['Keywords']       = $terms['keywords'];
-        $params['SearchIndex']    = $type;
-
-        // sort by keys
-        ksort($params);
-
-        $canonicalized_query = [];
-
-        foreach ($params as $param => $value) {
-            $param = str_replace("%7E", "~", rawurlencode($param));
-            $value = str_replace("%7E", "~", rawurlencode((string) $value));
-
-            $canonicalized_query[] = $param . "=" . $value;
-        }
-
-        // build the query string
-        $canonicalized_query = implode('&', $canonicalized_query);
-        $string_to_sign      = 'GET' . "\n" . $this->base_url . "\n" . $this->url_suffix . "\n" . $canonicalized_query;
-
-        $url = 'http://' . $this->base_url . $this->url_suffix . '?' . $canonicalized_query . '&Signature=' . $this->signString($string_to_sign);
-
-        $this->runSearch($url);
-
-        unset($this->results['ASIN']);
-
-        return $this->results;
-    }
-
-    /**
-     * signString
-     * Sign a query string
-     */
-    public function signString(string $string_to_sign): string
-    {
-        // hash and encode the query string
-        $signature = base64_encode(hash_hmac("sha256", $string_to_sign, (string) $this->private_key, true));
-
-        // urlencode the signed string, replace illegal char
-        return str_replace("%7E", "~", rawurlencode($signature));
-    }
-
-    /**
      * Lookup the selected item by the 'Amazon Standard Identification Number'
      *
      * @param string $asin The 'Amazon standard Identification Number'
@@ -299,6 +217,30 @@ class AmazonSearch
         unset($this->results['ASIN']);
 
         return $this->results;
+    }
+
+    /**
+     * Run a search.
+     *
+     * @param string $url The URL of the Amazon webservice.
+     */
+    public function runSearch($url): void
+    {
+        // create the parser
+        $this->createParser();
+
+        // get the proxy config
+        $options = $this->getProxyConfig();
+
+        debug_event(self::class, 'Amazon request: ' . $url, 5);
+        // make the request and retrieve the response
+        $request  = Requests::get($url, [], $options);
+        $contents = $request->body;
+
+        //debug_event(self::class, $contents, 5);
+        if (xml_parse($this->_parser, $contents) === 0) {
+            debug_event(self::class, 'Error:' . sprintf('XML error: %s at line %d', xml_error_string(xml_get_error_code($this->_parser)), xml_get_current_line_number($this->_parser)), 1);
+        }
     }
 
     /**
@@ -351,6 +293,95 @@ class AmazonSearch
     }
 
     /**
+     * Create an XML search string.
+     *
+     * @param array $terms The search terms to include within the query.
+     * @param string $type The type of result desired.
+     */
+    public function search($terms, $type = 'Music'): array
+    {
+        $params = [];
+
+        $params['Service']        = 'AWSECommerceService';
+        $params['AWSAccessKeyId'] = $this->public_key;
+        $params['AssociateTag']   = $this->associate_tag;
+        $params['Timestamp']      = gmdate("Y-m-d\TH:i:s\Z");
+        $params['Version']        = '2009-03-31';
+        $params['Operation']      = 'ItemSearch';
+        $params['Artist']         = $terms['artist'];
+        $params['Title']          = $terms['album'];
+        $params['Keywords']       = $terms['keywords'];
+        $params['SearchIndex']    = $type;
+
+        // sort by keys
+        ksort($params);
+
+        $canonicalized_query = [];
+
+        foreach ($params as $param => $value) {
+            $param = str_replace("%7E", "~", rawurlencode($param));
+            $value = str_replace("%7E", "~", rawurlencode((string) $value));
+
+            $canonicalized_query[] = $param . "=" . $value;
+        }
+
+        // build the query string
+        $canonicalized_query = implode('&', $canonicalized_query);
+        $string_to_sign      = 'GET' . "\n" . $this->base_url . "\n" . $this->url_suffix . "\n" . $canonicalized_query;
+
+        $url = 'http://' . $this->base_url . $this->url_suffix . '?' . $canonicalized_query . '&Signature=' . $this->signString($string_to_sign);
+
+        $this->runSearch($url);
+
+        unset($this->results['ASIN']);
+
+        return $this->results;
+    }
+
+    /**
+     * setProxy
+     * Set the class up to search through an http proxy.
+     * The parameters are the proxy's hostname or IP address (a string)
+     * port, username, and password. These are passed directly to the
+     * Requests class when the search is done.
+     * @param string $host
+     * @param string $port
+     * @param string $user
+     * @param string $pass
+     */
+    public function setProxy($host = '', $port = '', $user = '', $pass = ''): void
+    {
+        if ($host) {
+            $this->_proxy_host = $host;
+        }
+
+        if ($port) {
+            $this->_proxy_port = $port;
+        }
+
+        if ($user) {
+            $this->_proxy_user = $user;
+        }
+
+        if ($pass) {
+            $this->_proxy_pass = $pass;
+        }
+    }
+
+    /**
+     * signString
+     * Sign a query string
+     */
+    public function signString(string $string_to_sign): string
+    {
+        // hash and encode the query string
+        $signature = base64_encode(hash_hmac("sha256", $string_to_sign, (string) $this->private_key, true));
+
+        // urlencode the signed string, replace illegal char
+        return str_replace("%7E", "~", rawurlencode($signature));
+    }
+
+    /**
      * Start XML Element.
      */
     public function startElement($parser, $tag, $attributes): void
@@ -371,43 +402,5 @@ class AmazonSearch
         } else {
             $this->_currentTag = $tag;
         }
-    }
-
-    /**
-     * CDATA handler.
-     */
-    public function cdata($parser, $cdata): void
-    {
-        $tag    = $this->_currentTag;
-        $subtag = $this->_subTag;
-        $source = $this->_sourceTag;
-
-        switch ($tag) {
-            case 'URL':
-                $this->results[$source][$subtag] = trim((string) $cdata);
-                break;
-            case 'ASIN':
-                $this->_sourceTag = trim((string) $cdata);
-                break;
-            case 'TotalPages':
-                debug_event(self::class, "TotalPages= " . trim((string) $cdata), 5);
-                $this->_maxPage = trim((string) $cdata);
-                break;
-            default:
-                if (strlen((string) $tag) !== 0) {
-                    $this->results[$source][$tag] = trim((string) $cdata);
-                }
-
-                break;
-        }
-    }
-
-    /**
-     * End XML Element
-     */
-    public function endElement($parser, $tag): void
-    {
-        // zero the tag
-        $this->_currentTag = '';
     }
 }

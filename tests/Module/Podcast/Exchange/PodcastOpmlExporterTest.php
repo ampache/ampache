@@ -39,22 +39,9 @@ class PodcastOpmlExporterTest extends TestCase
 {
     use ConsecutiveParams;
 
-    private TalFactoryInterface&MockObject $talFactory;
-
     private PodcastRepositoryInterface&MockObject $podcastRepository;
-
     private PodcastOpmlExporter $subject;
-
-    protected function setUp(): void
-    {
-        $this->talFactory        = $this->createMock(TalFactoryInterface::class);
-        $this->podcastRepository = $this->createMock(PodcastRepositoryInterface::class);
-
-        $this->subject = new PodcastOpmlExporter(
-            $this->talFactory,
-            $this->podcastRepository
-        );
-    }
+    private TalFactoryInterface&MockObject $talFactory;
 
     public function testExportExportsPodcasts(): void
     {
@@ -135,6 +122,17 @@ class PodcastOpmlExporterTest extends TestCase
         self::assertSame(
             'text/x-opml',
             $this->subject->getContentType()
+        );
+    }
+
+    protected function setUp(): void
+    {
+        $this->talFactory        = $this->createMock(TalFactoryInterface::class);
+        $this->podcastRepository = $this->createMock(PodcastRepositoryInterface::class);
+
+        $this->subject = new PodcastOpmlExporter(
+            $this->talFactory,
+            $this->podcastRepository
         );
     }
 }

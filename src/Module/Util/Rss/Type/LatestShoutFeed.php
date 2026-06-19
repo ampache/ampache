@@ -40,11 +40,6 @@ final readonly class LatestShoutFeed extends AbstractGenericRssFeed
     ) {
     }
 
-    protected function getTitle(): string
-    {
-        return T_('Newest Shouts');
-    }
-
     protected function getItems(): Generator
     {
         $shouts = $this->shoutRepository->getTop(10);
@@ -71,5 +66,10 @@ final readonly class LatestShoutFeed extends AbstractGenericRssFeed
                 ];
             }
         }
+    }
+
+    protected function getTitle(): string
+    {
+        return T_('Newest Shouts');
     }
 }

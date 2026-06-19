@@ -35,6 +35,17 @@ final class Migration800007 extends AbstractMigration
 {
     protected array $changelog = ['Add `folder` table for mapping folder\'s to library items'];
 
+    public function getTableMigrations(
+        string $collation,
+        string $charset,
+        string $engine,
+        int $build,
+    ): Generator {
+        if ($build > 800007) {
+            yield 'folder' => "CREATE TABLE IF NOT EXISTS `folder` (`id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT, `name` varchar(255) DEFAULT NULL, `catalog` int(11) NOT NULL DEFAULT 0, `parent` int(11) DEFAULT NULL NULL, `user` int(11) DEFAULT NULL, `update_time` int(11) UNSIGNED DEFAULT 0, `addition_time` int(11) UNSIGNED DEFAULT 0, `playable` tinyint(1) UNSIGNED NOT NULL DEFAULT 0, `object_count` int(11) UNSIGNED DEFAULT 0, `total_count` int(11) UNSIGNED NOT NULL DEFAULT 0, `total_skip` int(11) UNSIGNED NOT NULL DEFAULT 0, `path` varchar(255) DEFAULT NULL, `path_name` varchar(512) DEFAULT NULL, PRIMARY KEY (`id`), KEY `name` (`name`), KEY `folder_catalog_IDX` (`catalog`,`path_name`), KEY `catalog` (`catalog`), KEY `user` (`user`)) ENGINE=$engine DEFAULT CHARSET=$charset COLLATE=$collation;";
+        }
+    }
+
     public function migrate(): void
     {
         $collation = (AmpConfig::get('database_collation', 'utf8mb4_unicode_ci'));
@@ -45,16 +56,5 @@ final class Migration800007 extends AbstractMigration
 
         // create the table
         $this->updateDatabase("CREATE TABLE `folder` (`id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT, `name` varchar(255) DEFAULT NULL, `catalog` int(11) NOT NULL DEFAULT 0, `parent` int(11) DEFAULT NULL NULL, `user` int(11) DEFAULT NULL, `update_time` int(11) UNSIGNED DEFAULT 0, `addition_time` int(11) UNSIGNED DEFAULT 0, `playable` tinyint(1) UNSIGNED NOT NULL DEFAULT 0, `object_count` int(11) UNSIGNED DEFAULT 0, `total_count` int(11) UNSIGNED NOT NULL DEFAULT 0, `total_skip` int(11) UNSIGNED NOT NULL DEFAULT 0, `path` varchar(255) DEFAULT NULL, `path_name` varchar(512) DEFAULT NULL, PRIMARY KEY (`id`), KEY `name` (`name`), KEY `folder_catalog_IDX` (`catalog`,`path_name`), KEY `catalog` (`catalog`), KEY `user` (`user`)) ENGINE=$engine DEFAULT CHARSET=$charset COLLATE=$collation;");
-    }
-
-    public function getTableMigrations(
-        string $collation,
-        string $charset,
-        string $engine,
-        int $build,
-    ): Generator {
-        if ($build > 800007) {
-            yield 'folder' => "CREATE TABLE IF NOT EXISTS `folder` (`id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT, `name` varchar(255) DEFAULT NULL, `catalog` int(11) NOT NULL DEFAULT 0, `parent` int(11) DEFAULT NULL NULL, `user` int(11) DEFAULT NULL, `update_time` int(11) UNSIGNED DEFAULT 0, `addition_time` int(11) UNSIGNED DEFAULT 0, `playable` tinyint(1) UNSIGNED NOT NULL DEFAULT 0, `object_count` int(11) UNSIGNED DEFAULT 0, `total_count` int(11) UNSIGNED NOT NULL DEFAULT 0, `total_skip` int(11) UNSIGNED NOT NULL DEFAULT 0, `path` varchar(255) DEFAULT NULL, `path_name` varchar(512) DEFAULT NULL, PRIMARY KEY (`id`), KEY `name` (`name`), KEY `folder_catalog_IDX` (`catalog`,`path_name`), KEY `catalog` (`catalog`), KEY `user` (`user`)) ENGINE=$engine DEFAULT CHARSET=$charset COLLATE=$collation;";
-        }
     }
 }

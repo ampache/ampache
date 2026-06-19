@@ -34,6 +34,11 @@ namespace Ampache\Repository\Model;
 interface displayable_item
 {
     /**
+     * @param array{width: int, height: int} $size
+     */
+    public function display_art(array $size, bool $force = false): void;
+
+    /**
      * Get item f_link.
      */
     public function get_f_link(?string $title = null): string;
@@ -42,11 +47,6 @@ interface displayable_item
      * Return a formatted link to the parent object (if appliccable)
      */
     public function get_f_parent_link(): ?string;
-
-    /**
-     * @param array{width: int, height: int} $size
-     */
-    public function display_art(array $size, bool $force = false): void;
 
     public function get_f_time(): string;
 }

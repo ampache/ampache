@@ -31,16 +31,6 @@ use Override;
 
 final class ComputeCacheCommand extends Command
 {
-    #[Override]
-    protected function defaults(): self
-    {
-        $this->option('-h, --help', T_('Help'))->on($this->showHelp(...));
-
-        $this->onExit(static fn ($exitCode = 0) => exit($exitCode));
-
-        return $this;
-    }
-
     public function __construct(
         private readonly ObjectCacheInterface $objectCache,
     ) {
@@ -67,5 +57,15 @@ final class ComputeCacheCommand extends Command
             true
         );
         debug_event('compute_cache', 'Completed cache process', 5);
+    }
+
+    #[Override]
+    protected function defaults(): self
+    {
+        $this->option('-h, --help', T_('Help'))->on($this->showHelp(...));
+
+        $this->onExit(static fn ($exitCode = 0) => exit($exitCode));
+
+        return $this;
     }
 }

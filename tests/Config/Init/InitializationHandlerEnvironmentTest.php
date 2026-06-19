@@ -38,14 +38,14 @@ class InitializationHandlerEnvironmentTest extends MockeryTestCase
 
     private InitializationHandlerEnvironment $subject;
 
-    #[Override]
-    protected function setUp(): void
+    public function testInitPassesIfCheckSuceeds(): void
     {
-        $this->environment = $this->mock(EnvironmentInterface::class);
+        $this->environment->shouldReceive('check')
+            ->withNoArgs()
+            ->once()
+            ->andReturnTrue();
 
-        $this->subject = new InitializationHandlerEnvironment(
-            $this->environment
-        );
+        $this->subject->init();
     }
 
     public function testInitThrowsExceptionIfEnvironmentNotSuitable(): void
@@ -60,13 +60,13 @@ class InitializationHandlerEnvironmentTest extends MockeryTestCase
         $this->subject->init();
     }
 
-    public function testInitPassesIfCheckSuceeds(): void
+    #[Override]
+    protected function setUp(): void
     {
-        $this->environment->shouldReceive('check')
-            ->withNoArgs()
-            ->once()
-            ->andReturnTrue();
+        $this->environment = $this->mock(EnvironmentInterface::class);
 
-        $this->subject->init();
+        $this->subject = new InitializationHandlerEnvironment(
+            $this->environment
+        );
     }
 }

@@ -50,6 +50,74 @@ final readonly class PodcastEpisodeRepository implements PodcastEpisodeRepositor
     }
 
     /**
+     * Cleans up orphaned episodes
+     */
+    public function collectGarbage(): void
+    {
+        try {
+            $this->connection->query(
+                'DELETE FROM `podcast_episode` USING `podcast_episode` LEFT JOIN `podcast` ON `podcast`.`id` = `podcast_episode`.`podcast` WHERE `podcast`.`id` IS NULL'
+            );
+        } catch (DatabaseException) {
+            debug_event(self::class, 'collectGarbage error', 5);
+        }
+    }
+
+    /**
+     * Deletes a podcast-episode
+     *
+     * Before deleting the episode, a backup of the episodes meta-data is created
+     */
+    public function deleteEpisode(Podcast_Episode $episode): void
+    {
+        $params = [$episode->getId()];
+
+        // keep details about deletions
+        $sql = <<<SQL
+        REPLACE INTO
+            `deleted_podcast_episode`
+            (`id`, `addition_time`, `delete_time`, `title`, `file`, `catalog`, `total_count`, `total_skip`, `podcast`)
+        SELECT
+            `id`, `addition_time`, UNIX_TIMESTAMP(), `title`, `file`, `catalog`, `total_count`, `total_skip`, `podcast`
+        FROM
+            `podcast_episode`
+        WHERE
+            `id` = ?;
+        SQL;
+
+        $this->connection->query($sql, $params);
+
+        $this->connection->query(
+            'DELETE FROM `podcast_episode` WHERE `id` = ?',
+            $params
+        );
+    }
+
+    /**
+     * Finds a single item by its id
+     */
+    public function findById(int $itemId): ?Podcast_Episode
+    {
+        $item = new Podcast_Episode($itemId);
+        if ($item->isNew()) {
+            return null;
+        }
+
+        return $item;
+    }
+
+    /**
+     * Returns the calculated count of available episodes for the given podcast
+     */
+    public function getEpisodeCount(Podcast $podcast): int
+    {
+        return (int) $this->connection->fetchOne(
+            'SELECT COUNT(id) from `podcast_episode` where `podcast` = ?',
+            [$podcast->getId()]
+        );
+    }
+
+    /**
      * Returns all episode-ids for the given podcast
      *
      * @param null|PodcastEpisodeStateEnum $stateFilter Return only items with this state
@@ -88,36 +156,6 @@ final readonly class PodcastEpisodeRepository implements PodcastEpisodeRepositor
         }
 
         return $episodeIds;
-    }
-
-    /**
-     * Deletes a podcast-episode
-     *
-     * Before deleting the episode, a backup of the episodes meta-data is created
-     */
-    public function deleteEpisode(Podcast_Episode $episode): void
-    {
-        $params = [$episode->getId()];
-
-        // keep details about deletions
-        $sql = <<<SQL
-        REPLACE INTO
-            `deleted_podcast_episode`
-            (`id`, `addition_time`, `delete_time`, `title`, `file`, `catalog`, `total_count`, `total_skip`, `podcast`)
-        SELECT
-            `id`, `addition_time`, UNIX_TIMESTAMP(), `title`, `file`, `catalog`, `total_count`, `total_skip`, `podcast`
-        FROM
-            `podcast_episode`
-        WHERE
-            `id` = ?;
-        SQL;
-
-        $this->connection->query($sql, $params);
-
-        $this->connection->query(
-            'DELETE FROM `podcast_episode` WHERE `id` = ?',
-            $params
-        );
     }
 
     /**
@@ -192,17 +230,6 @@ final readonly class PodcastEpisodeRepository implements PodcastEpisodeRepositor
     }
 
     /**
-     * Returns the calculated count of available episodes for the given podcast
-     */
-    public function getEpisodeCount(Podcast $podcast): int
-    {
-        return (int) $this->connection->fetchOne(
-            'SELECT COUNT(id) from `podcast_episode` where `podcast` = ?',
-            [$podcast->getId()]
-        );
-    }
-
-    /**
      * Updates the state of an episode
      */
     public function updateState(
@@ -213,32 +240,5 @@ final readonly class PodcastEpisodeRepository implements PodcastEpisodeRepositor
             'UPDATE `podcast_episode` SET `state` = ? WHERE `id` = ?',
             [$state->value, $episode->getId()]
         );
-    }
-
-    /**
-     * Cleans up orphaned episodes
-     */
-    public function collectGarbage(): void
-    {
-        try {
-            $this->connection->query(
-                'DELETE FROM `podcast_episode` USING `podcast_episode` LEFT JOIN `podcast` ON `podcast`.`id` = `podcast_episode`.`podcast` WHERE `podcast`.`id` IS NULL'
-            );
-        } catch (DatabaseException) {
-            debug_event(self::class, 'collectGarbage error', 5);
-        }
-    }
-
-    /**
-     * Finds a single item by its id
-     */
-    public function findById(int $itemId): ?Podcast_Episode
-    {
-        $item = new Podcast_Episode($itemId);
-        if ($item->isNew()) {
-            return null;
-        }
-
-        return $item;
     }
 }

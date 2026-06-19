@@ -44,6 +44,17 @@ final readonly class PodcastRepository implements PodcastRepositoryInterface
     }
 
     /**
+     * Deletes a podcast
+     */
+    public function delete(Podcast $podcast): void
+    {
+        $this->connection->query(
+            'DELETE FROM `podcast` WHERE `id` = ?',
+            [$podcast->getId()]
+        );
+    }
+
+    /**
      * Retrieve all podcast objects and maintain db-order
      *
      * @return Generator<Podcast>
@@ -78,22 +89,16 @@ final readonly class PodcastRepository implements PodcastRepositoryInterface
     }
 
     /**
-     * Deletes a podcast
+     * Retrieve a single podcast-item by its id
      */
-    public function delete(Podcast $podcast): void
+    public function findById(int $podcastId): ?Podcast
     {
-        $this->connection->query(
-            'DELETE FROM `podcast` WHERE `id` = ?',
-            [$podcast->getId()]
-        );
-    }
+        $podcast = $this->modelFactory->createPodcast($podcastId);
+        if ($podcast->isNew()) {
+            return null;
+        }
 
-    /**
-     * Returns a new podcast item
-     */
-    public function prototype(): Podcast
-    {
-        return new Podcast();
+        return $podcast;
     }
 
     /**
@@ -153,15 +158,10 @@ final readonly class PodcastRepository implements PodcastRepositoryInterface
     }
 
     /**
-     * Retrieve a single podcast-item by its id
+     * Returns a new podcast item
      */
-    public function findById(int $podcastId): ?Podcast
+    public function prototype(): Podcast
     {
-        $podcast = $this->modelFactory->createPodcast($podcastId);
-        if ($podcast->isNew()) {
-            return null;
-        }
-
-        return $podcast;
+        return new Podcast();
     }
 }

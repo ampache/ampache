@@ -35,25 +35,13 @@ use Psr\Http\Message\ServerRequestInterface;
 
 class AdvancedActionTest extends MockeryTestCase
 {
+    private ?AdvancedAction $subject;
+
     /** @var UiInterface|MockInterface|null */
     private MockInterface $ui;
 
     /** @var VideoRepositoryInterface|MockInterface|null */
     private MockInterface $videoRepository;
-
-    private ?AdvancedAction $subject;
-
-    #[Override]
-    protected function setUp(): void
-    {
-        $this->ui              = $this->mock(UiInterface::class);
-        $this->videoRepository = $this->mock(VideoRepositoryInterface::class);
-
-        $this->subject = new AdvancedAction(
-            $this->ui,
-            $this->videoRepository
-        );
-    }
 
     public function testRunRenders(): void
     {
@@ -81,6 +69,18 @@ class AdvancedActionTest extends MockeryTestCase
 
         $this->assertNull(
             $this->subject->run($request, $gatekeeper)
+        );
+    }
+
+    #[Override]
+    protected function setUp(): void
+    {
+        $this->ui              = $this->mock(UiInterface::class);
+        $this->videoRepository = $this->mock(VideoRepositoryInterface::class);
+
+        $this->subject = new AdvancedAction(
+            $this->ui,
+            $this->videoRepository
         );
     }
 }

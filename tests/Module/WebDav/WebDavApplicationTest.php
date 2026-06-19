@@ -41,34 +41,10 @@ class WebDavApplicationTest extends MockeryTestCase
     /** @var MockInterface|ConfigContainerInterface|null */
     private ?MockInterface $configContainer;
 
-    /** @var MockInterface|WebDavFactoryInterface|null */
-    private ?MockInterface $webDavFactory;
-
     private ?WebDavApplication $subject;
 
-    #[Override]
-    protected function setUp(): void
-    {
-        $this->configContainer = Mockery::mock(ConfigContainerInterface::class);
-        $this->webDavFactory   = Mockery::mock(WebDavFactoryInterface::class);
-
-        $this->subject = new WebDavApplication(
-            $this->configContainer,
-            $this->webDavFactory
-        );
-    }
-
-    public function testRunsDoesnWorkIfDisabled(): void
-    {
-        $this->configContainer->shouldReceive('isWebDavBackendEnabled')
-            ->withNoArgs()
-            ->once()
-            ->andReturnFalse();
-
-        $this->expectOutputString('Disabled');
-
-        $this->subject->run();
-    }
+    /** @var MockInterface|WebDavFactoryInterface|null */
+    private ?MockInterface $webDavFactory;
 
     public function testRunDelegatesToDavServer(): void
     {
@@ -128,5 +104,29 @@ class WebDavApplicationTest extends MockeryTestCase
             ->once();
 
         $this->subject->run();
+    }
+
+    public function testRunsDoesnWorkIfDisabled(): void
+    {
+        $this->configContainer->shouldReceive('isWebDavBackendEnabled')
+            ->withNoArgs()
+            ->once()
+            ->andReturnFalse();
+
+        $this->expectOutputString('Disabled');
+
+        $this->subject->run();
+    }
+
+    #[Override]
+    protected function setUp(): void
+    {
+        $this->configContainer = Mockery::mock(ConfigContainerInterface::class);
+        $this->webDavFactory   = Mockery::mock(WebDavFactoryInterface::class);
+
+        $this->subject = new WebDavApplication(
+            $this->configContainer,
+            $this->webDavFactory
+        );
     }
 }

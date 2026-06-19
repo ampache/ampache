@@ -36,28 +36,28 @@ use Psr\Container\ContainerInterface;
 
 class UpdaterTest extends TestCase
 {
-    private UpdateHelperInterface&MockObject $updateHelper;
-
-    private UpdateInfoRepositoryInterface&MockObject $updateInfoRepository;
-
     private ContainerInterface&MockObject $dic;
-
+    private Updater $subject;
+    private UpdateHelperInterface&MockObject $updateHelper;
+    private UpdateInfoRepositoryInterface&MockObject $updateInfoRepository;
     private UpdateRunnerInterface&MockObject $updateRunner;
 
-    private Updater $subject;
-
-    protected function setUp(): void
+    public function testCheckTablesYieldMissingTables(): void
     {
-        $this->updateHelper         = $this->createMock(UpdateHelperInterface::class);
-        $this->updateInfoRepository = $this->createMock(UpdateInfoRepositoryInterface::class);
-        $this->dic                  = $this->createMock(ContainerInterface::class);
-        $this->updateRunner         = $this->createMock(UpdateRunnerInterface::class);
+        $table = 'snafu';
 
-        $this->subject = new Updater(
-            $this->updateHelper,
-            $this->updateInfoRepository,
-            $this->dic,
-            $this->updateRunner
+        $this->updateRunner->expects(static::once())
+            ->method('runTableCheck')
+            ->with(
+                self::isType('iterable'),
+                true,
+                600000
+            )
+            ->willReturn(new ArrayIterator([$table]));
+
+        self::assertSame(
+            $table,
+            $this->subject->checkTables(true, 600000)->current()
         );
     }
 
@@ -107,18 +107,6 @@ class UpdaterTest extends TestCase
         );
     }
 
-    public function testUpdateThrowsIfCurrentVersionIsLowerThenTheMinimum(): void
-    {
-        $this->updateInfoRepository->expects(static::once())
-            ->method('getValueByKey')
-            ->with(UpdateInfoEnum::DB_VERSION)
-            ->willReturn('350000');
-
-        static::expectException(VersionNotUpdatableException::class);
-
-        $this->subject->update();
-    }
-
     public function testUpdatePerformsTheActualUpdate(): void
     {
         $this->updateInfoRepository->expects(static::once())
@@ -136,22 +124,30 @@ class UpdaterTest extends TestCase
         $this->subject->update();
     }
 
-    public function testCheckTablesYieldMissingTables(): void
+    public function testUpdateThrowsIfCurrentVersionIsLowerThenTheMinimum(): void
     {
-        $table = 'snafu';
+        $this->updateInfoRepository->expects(static::once())
+            ->method('getValueByKey')
+            ->with(UpdateInfoEnum::DB_VERSION)
+            ->willReturn('350000');
 
-        $this->updateRunner->expects(static::once())
-            ->method('runTableCheck')
-            ->with(
-                self::isType('iterable'),
-                true,
-                600000
-            )
-            ->willReturn(new ArrayIterator([$table]));
+        static::expectException(VersionNotUpdatableException::class);
 
-        self::assertSame(
-            $table,
-            $this->subject->checkTables(true, 600000)->current()
+        $this->subject->update();
+    }
+
+    protected function setUp(): void
+    {
+        $this->updateHelper         = $this->createMock(UpdateHelperInterface::class);
+        $this->updateInfoRepository = $this->createMock(UpdateInfoRepositoryInterface::class);
+        $this->dic                  = $this->createMock(ContainerInterface::class);
+        $this->updateRunner         = $this->createMock(UpdateRunnerInterface::class);
+
+        $this->subject = new Updater(
+            $this->updateHelper,
+            $this->updateInfoRepository,
+            $this->dic,
+            $this->updateRunner
         );
     }
 }

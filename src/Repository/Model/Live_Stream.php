@@ -40,24 +40,17 @@ class Live_Stream extends database_object implements Media, displayable_item, co
 {
     protected const string DB_TABLENAME = 'live_stream';
 
-    /* DB based variables */
-    public int $id = 0;
-
-    public ?string $name = null;
-
-    public ?string $site_url = null;
-
-    public ?string $url = null;
-
+    public int $catalog;
+    public ?string $codec = null;
     public int $genre;
 
-    public int $catalog;
-
-    public ?string $codec = null;
-
-    public ?string $link = null;
-
-    private ?string $f_link = null;
+    /* DB based variables */
+    public int $id           = 0;
+    public ?string $link     = null;
+    public ?string $name     = null;
+    public ?string $site_url = null;
+    public ?string $url      = null;
+    private ?string $f_link  = null;
 
     /**
      * Constructor
@@ -73,203 +66,6 @@ class Live_Stream extends database_object implements Media, displayable_item, co
         foreach ($info as $key => $value) {
             $this->$key = $value;
         }
-    }
-
-    public function getId(): int
-    {
-        return $this->id;
-    }
-
-    public function isNew(): bool
-    {
-        return $this->getId() === 0;
-    }
-
-    /**
-     * Get item keywords for metadata searches.
-     * @return array<string, array{important: bool, label: string, value: string}>
-     */
-    public function get_keywords(): array
-    {
-        return [];
-    }
-
-    /**
-     * get_fullname
-     */
-    public function get_fullname(): ?string
-    {
-        return $this->name;
-    }
-
-    /**
-     * Get item link.
-     */
-    public function get_link(): string
-    {
-        // don't do anything if it's formatted
-        if ($this->link === null) {
-            $web_path = AmpConfig::get_web_path();
-
-            $this->link = $web_path . '/radio.php?action=show&radio=' . $this->id;
-        }
-
-        return $this->link ?? '';
-    }
-
-    /**
-     * Get item f_link.
-     */
-    public function get_f_link(?string $title = null): string
-    {
-        // don't do anything if it's formatted
-        if ($this->f_link === null) {
-            $this->f_link = "<a href=\"" . $this->get_link() . "\">" . scrub_out($title ?? $this->get_fullname()) . "</a>";
-        }
-
-        return $this->f_link;
-    }
-
-    /**
-     * Return a formatted link to the parent object (if appliccable)
-     */
-    public function get_f_parent_link(): ?string
-    {
-        return null;
-    }
-
-    /**
-     * Get item f_time or f_time_h.
-     */
-    public function get_f_time(): string
-    {
-        return '';
-    }
-
-    /**
-     * Get item get_f_album_link.
-     */
-    public function get_f_album_link(): string
-    {
-        return '';
-    }
-
-    /**
-     * Get item get_f_album_disk_link.
-     */
-    public function get_f_album_disk_link(): string
-    {
-        return '';
-    }
-
-    /**
-     * get_parent
-     * Return parent `object_type`, `object_id`; null otherwise.
-     */
-    public function get_parent(): ?array
-    {
-        return null;
-    }
-
-    /**
-     * @return array<int, array{object_type: LibraryItemEnum, object_id: int}>
-     */
-    public function get_medias(?string $filter_type = null): array
-    {
-        $medias = [];
-        if ($filter_type === null || $filter_type === 'live_stream') {
-            $medias[] = ['object_type' => LibraryItemEnum::LIVE_STREAM, 'object_id' => $this->id];
-        }
-
-        return $medias;
-    }
-
-    /**
-     * Returns the id of the catalog the item is associated to
-     */
-    public function getCatalogId(): int
-    {
-        return $this->catalog;
-    }
-
-    public function get_user_owner(): ?int
-    {
-        return null;
-    }
-
-    public function get_default_art_kind(): string
-    {
-        return 'default';
-    }
-
-    public function get_description(): string
-    {
-        return '';
-    }
-
-    /**
-     * display_art
-     * @param array{width: int, height: int} $size
-     */
-    public function display_art(array $size, bool $force = false): void
-    {
-        if ($this->has_art() || $force) {
-            Art::display('live_stream', $this->id, (string)$this->get_fullname(), $size, $this->get_link());
-        }
-    }
-
-    public function has_art(): bool
-    {
-        return Art::has_db($this->id, 'live_stream');
-    }
-
-    /**
-     * update
-     * This is a static function that takes a key'd array for input
-     * it depends on a ID element to determine which radio element it
-     * should be updating
-     */
-    public function update(array $data): ?int
-    {
-        if (!$data['name']) {
-            AmpError::add('general', T_('Name is required'));
-        }
-
-        $allowed_array = [
-            'https',
-            'http',
-            'mms',
-            'mmsh',
-            'mmsu',
-            'mmst',
-            'rtsp',
-            'rtmp',
-        ];
-
-        $elements = explode(":", (string)$data['url']);
-
-        if (!in_array($elements['0'], $allowed_array)) {
-            AmpError::add('general', T_('URL is invalid, must be mms://, https:// or http://'));
-        }
-
-        if (!empty($data['site_url'])) {
-            $elements = explode(":", (string)$data['site_url']);
-            if (!in_array($elements['0'], $allowed_array)) {
-                AmpError::add('site_url', T_('URL is invalid, must be http:// or https://'));
-            }
-        }
-
-        if (AmpError::occurred()) {
-            return null;
-        }
-
-        $sql = "UPDATE `live_stream` SET `name` = ?, `site_url` = ?, `url` = ?, codec = ? WHERE `id` = ?";
-        Dba::write(
-            $sql,
-            [$data['name'] ?? $this->name, $data['site_url'] ?? null, $data['url'] ?? $this->url, strtolower((string)$data['codec']), $this->id]
-        );
-
-        return $this->id;
     }
 
     /**
@@ -337,23 +133,137 @@ class Live_Stream extends database_object implements Media, displayable_item, co
         return $insert_id;
     }
 
-    /**
-     * get_stream_types
-     * This is needed by the media interface
-     * @return list<string>
-     */
-    public function get_stream_types(?string $player = null): array
+    public function check_play_history(int $user, string $agent, int $date): bool
     {
-        return ['native'];
+        // Do nothing
+        unset($user, $agent, $date);
+
+        return false;
     }
 
     /**
-     * play_url
-     * This is needed by the media interface
+     * display_art
+     * @param array{width: int, height: int} $size
      */
-    public function play_url(string $additional_params = '', string $player = '', bool $local = false, ?string $sid = '', ?string $force_http = ''): string
+    public function display_art(array $size, bool $force = false): void
     {
-        return $this->url . $additional_params;
+        if ($this->has_art() || $force) {
+            Art::display('live_stream', $this->id, (string)$this->get_fullname(), $size, $this->get_link());
+        }
+    }
+
+    public function get_default_art_kind(): string
+    {
+        return 'default';
+    }
+
+    public function get_description(): string
+    {
+        return '';
+    }
+
+    /**
+     * Get item get_f_album_disk_link.
+     */
+    public function get_f_album_disk_link(): string
+    {
+        return '';
+    }
+
+    /**
+     * Get item get_f_album_link.
+     */
+    public function get_f_album_link(): string
+    {
+        return '';
+    }
+
+    /**
+     * Get item f_link.
+     */
+    public function get_f_link(?string $title = null): string
+    {
+        // don't do anything if it's formatted
+        if ($this->f_link === null) {
+            $this->f_link = "<a href=\"" . $this->get_link() . "\">" . scrub_out($title ?? $this->get_fullname()) . "</a>";
+        }
+
+        return $this->f_link;
+    }
+
+    /**
+     * Return a formatted link to the parent object (if appliccable)
+     */
+    public function get_f_parent_link(): ?string
+    {
+        return null;
+    }
+
+    /**
+     * Get item f_time or f_time_h.
+     */
+    public function get_f_time(): string
+    {
+        return '';
+    }
+
+    /**
+     * get_fullname
+     */
+    public function get_fullname(): ?string
+    {
+        return $this->name;
+    }
+
+    /**
+     * Get item keywords for metadata searches.
+     * @return array<string, array{important: bool, label: string, value: string}>
+     */
+    public function get_keywords(): array
+    {
+        return [];
+    }
+
+    /**
+     * Get item link.
+     */
+    public function get_link(): string
+    {
+        // don't do anything if it's formatted
+        if ($this->link === null) {
+            $web_path = AmpConfig::get_web_path();
+
+            $this->link = $web_path . '/radio.php?action=show&radio=' . $this->id;
+        }
+
+        return $this->link ?? '';
+    }
+
+    /**
+     * @return array<int, array{object_type: LibraryItemEnum, object_id: int}>
+     */
+    public function get_medias(?string $filter_type = null): array
+    {
+        $medias = [];
+        if ($filter_type === null || $filter_type === 'live_stream') {
+            $medias[] = ['object_type' => LibraryItemEnum::LIVE_STREAM, 'object_id' => $this->id];
+        }
+
+        return $medias;
+    }
+
+    /**
+     * get_parent
+     * Return parent `object_type`, `object_id`; null otherwise.
+     */
+    public function get_parent(): ?array
+    {
+        return null;
+    }
+
+    public function get_parent_fullname(): string
+    {
+        return '';
     }
 
     /**
@@ -362,6 +272,16 @@ class Live_Stream extends database_object implements Media, displayable_item, co
     public function get_stream_name(): string
     {
         return (string)$this->get_fullname();
+    }
+
+    /**
+     * get_stream_types
+     * This is needed by the media interface
+     * @return list<string>
+     */
+    public function get_stream_types(?string $player = null): array
+    {
+        return ['native'];
     }
 
     /**
@@ -376,12 +296,67 @@ class Live_Stream extends database_object implements Media, displayable_item, co
         return [];
     }
 
+    public function get_user_owner(): ?int
+    {
+        return null;
+    }
+
+    /**
+     * Returns the id of the catalog the item is associated to
+     */
+    public function getCatalogId(): int
+    {
+        return $this->catalog;
+    }
+
+    /**
+     * Returns the filename of the media-item
+     */
+    public function getFileName(): string
+    {
+        return '';
+    }
+
+    public function getId(): int
+    {
+        return $this->id;
+    }
+
+    public function getMediaType(): LibraryItemEnum
+    {
+        return LibraryItemEnum::LIVE_STREAM;
+    }
+
     /**
      * getYear
      */
     public function getYear(): string
     {
         return '';
+    }
+
+    public function has_art(): bool
+    {
+        return Art::has_db($this->id, 'live_stream');
+    }
+
+    public function isNew(): bool
+    {
+        return $this->getId() === 0;
+    }
+
+    /**
+     * play_url
+     * This is needed by the media interface
+     */
+    public function play_url(string $additional_params = '', string $player = '', bool $local = false, ?string $sid = '', ?string $force_http = ''): string
+    {
+        return $this->url . $additional_params;
+    }
+
+    public function remove(): bool
+    {
+        return true;
     }
 
     /**
@@ -399,34 +374,52 @@ class Live_Stream extends database_object implements Media, displayable_item, co
         return false;
     }
 
-    public function check_play_history(int $user, string $agent, int $date): bool
-    {
-        // Do nothing
-        unset($user, $agent, $date);
-
-        return false;
-    }
-
     /**
-     * Returns the filename of the media-item
+     * update
+     * This is a static function that takes a key'd array for input
+     * it depends on a ID element to determine which radio element it
+     * should be updating
      */
-    public function getFileName(): string
+    public function update(array $data): ?int
     {
-        return '';
-    }
+        if (!$data['name']) {
+            AmpError::add('general', T_('Name is required'));
+        }
 
-    public function remove(): bool
-    {
-        return true;
-    }
+        $allowed_array = [
+            'https',
+            'http',
+            'mms',
+            'mmsh',
+            'mmsu',
+            'mmst',
+            'rtsp',
+            'rtmp',
+        ];
 
-    public function get_parent_fullname(): string
-    {
-        return '';
-    }
+        $elements = explode(":", (string)$data['url']);
 
-    public function getMediaType(): LibraryItemEnum
-    {
-        return LibraryItemEnum::LIVE_STREAM;
+        if (!in_array($elements['0'], $allowed_array)) {
+            AmpError::add('general', T_('URL is invalid, must be mms://, https:// or http://'));
+        }
+
+        if (!empty($data['site_url'])) {
+            $elements = explode(":", (string)$data['site_url']);
+            if (!in_array($elements['0'], $allowed_array)) {
+                AmpError::add('site_url', T_('URL is invalid, must be http:// or https://'));
+            }
+        }
+
+        if (AmpError::occurred()) {
+            return null;
+        }
+
+        $sql = "UPDATE `live_stream` SET `name` = ?, `site_url` = ?, `url` = ?, codec = ? WHERE `id` = ?";
+        Dba::write(
+            $sql,
+            [$data['name'] ?? $this->name, $data['site_url'] ?? null, $data['url'] ?? $this->url, strtolower((string)$data['codec']), $this->id]
+        );
+
+        return $this->id;
     }
 }

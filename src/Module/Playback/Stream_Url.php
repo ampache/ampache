@@ -61,6 +61,75 @@ class Stream_Url extends MemoryObject
     ]; // Columns for the stream_playlist table. (Ordered by database structure)
 
     /**
+     * add_options
+     *
+     * Add options to an existing stream url.
+     */
+    public static function add_options(string $url, string $options): string
+    {
+        if (AmpConfig::get('stream_beautiful_url')) {
+            // We probably want beautiful url to have a real mp3 filename at the end.
+            // Add the new options before the filename
+
+            $curel = explode('/', $url);
+            $newel = explode('&', $options);
+
+            if (count($curel) > 2) {
+                foreach ($newel as $urlParameter) {
+                    if (strpos($urlParameter, '=')) {
+                        $element = explode('=', $urlParameter);
+                        array_splice($curel, count($curel) - 2, 0, $element);
+                    }
+                }
+
+                $url = implode('/', $curel);
+            }
+        } else {
+            $pos = strpos($url, '&');
+            if ($pos !== false) {
+                // Insert options after the ssid
+                $url = substr($url, 0, $pos) . $options . substr($url, $pos);
+            } else {
+                $url .= $options;
+            }
+        }
+
+        return $url;
+    }
+
+    /**
+     * format
+     * This format the string url according to settings.
+     */
+    public static function format(string $url): string
+    {
+        if (AmpConfig::get('stream_beautiful_url')) {
+            $url = str_replace('index.php?&', '', $url);
+            $url = str_replace('index.php?', '', $url);
+            $url = str_replace('&', '/', $url);
+            $url = str_replace('=', '/', $url);
+        }
+
+        return $url;
+    }
+
+    /**
+     * get_title
+     * Get a translated title for the webplayer
+     */
+    public static function get_title(string $url): string
+    {
+        $urlinfo = self::parse($url);
+        $type    = $urlinfo['type'] ?? 'URL-Add';
+
+        return match ($type) {
+            'random' => T_('Random'),
+            'democratic' => T_('Democratic'),
+            default => $type,
+        };
+    }
+
+    /**
      * parse
      *
      * Takes an url and parses out all the chewy goodness.
@@ -129,74 +198,5 @@ class Stream_Url extends MemoryObject
         }
 
         return $results;
-    }
-
-    /**
-     * add_options
-     *
-     * Add options to an existing stream url.
-     */
-    public static function add_options(string $url, string $options): string
-    {
-        if (AmpConfig::get('stream_beautiful_url')) {
-            // We probably want beautiful url to have a real mp3 filename at the end.
-            // Add the new options before the filename
-
-            $curel = explode('/', $url);
-            $newel = explode('&', $options);
-
-            if (count($curel) > 2) {
-                foreach ($newel as $urlParameter) {
-                    if (strpos($urlParameter, '=')) {
-                        $element = explode('=', $urlParameter);
-                        array_splice($curel, count($curel) - 2, 0, $element);
-                    }
-                }
-
-                $url = implode('/', $curel);
-            }
-        } else {
-            $pos = strpos($url, '&');
-            if ($pos !== false) {
-                // Insert options after the ssid
-                $url = substr($url, 0, $pos) . $options . substr($url, $pos);
-            } else {
-                $url .= $options;
-            }
-        }
-
-        return $url;
-    }
-
-    /**
-     * format
-     * This format the string url according to settings.
-     */
-    public static function format(string $url): string
-    {
-        if (AmpConfig::get('stream_beautiful_url')) {
-            $url = str_replace('index.php?&', '', $url);
-            $url = str_replace('index.php?', '', $url);
-            $url = str_replace('&', '/', $url);
-            $url = str_replace('=', '/', $url);
-        }
-
-        return $url;
-    }
-
-    /**
-     * get_title
-     * Get a translated title for the webplayer
-     */
-    public static function get_title(string $url): string
-    {
-        $urlinfo = self::parse($url);
-        $type    = $urlinfo['type'] ?? 'URL-Add';
-
-        return match ($type) {
-            'random' => T_('Random'),
-            'democratic' => T_('Democratic'),
-            default => $type,
-        };
     }
 }

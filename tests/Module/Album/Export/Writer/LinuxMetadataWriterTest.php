@@ -33,12 +33,6 @@ class LinuxMetadataWriterTest extends MockeryTestCase
 {
     private ?LinuxMetadataWriter $subject;
 
-    #[Override]
-    protected function setUp(): void
-    {
-        $this->subject = new LinuxMetadataWriter();
-    }
-
     public function testWriteWritesData(): void
     {
         $dir  = vfsStream::setup();
@@ -64,5 +58,11 @@ class LinuxMetadataWriterTest extends MockeryTestCase
             ),
             $file->getContent()
         );
+    }
+
+    #[Override]
+    protected function setUp(): void
+    {
+        $this->subject = new LinuxMetadataWriter();
     }
 }

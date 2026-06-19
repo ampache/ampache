@@ -41,22 +41,20 @@ class StatsViewAdapterTest extends MockeryTestCase
     /** @var GuiFactoryInterface|MockInterface|null */
     private ?MockInterface $guiFactory;
 
+    private ?StatsViewAdapter $subject;
+
     /** @var MockInterface|VideoRepositoryInterface|null */
     private ?MockInterface $videoRepository;
 
-    private ?StatsViewAdapter $subject;
-
-    #[Override]
-    protected function setUp(): void
+    public function testDisplayPodcastReturnsValue(): void
     {
-        $this->configContainer = $this->mock(ConfigContainerInterface::class);
-        $this->guiFactory      = $this->mock(GuiFactoryInterface::class);
-        $this->videoRepository = $this->mock(VideoRepositoryInterface::class);
+        $this->configContainer->shouldReceive('isFeatureEnabled')
+            ->with(ConfigurationKeyEnum::PODCAST)
+            ->once()
+            ->andReturnTrue();
 
-        $this->subject = new StatsViewAdapter(
-            $this->configContainer,
-            $this->guiFactory,
-            $this->videoRepository
+        $this->assertTrue(
+            $this->subject->displayPodcast()
         );
     }
 
@@ -71,15 +69,17 @@ class StatsViewAdapterTest extends MockeryTestCase
         );
     }
 
-    public function testDisplayPodcastReturnsValue(): void
+    #[Override]
+    protected function setUp(): void
     {
-        $this->configContainer->shouldReceive('isFeatureEnabled')
-            ->with(ConfigurationKeyEnum::PODCAST)
-            ->once()
-            ->andReturnTrue();
+        $this->configContainer = $this->mock(ConfigContainerInterface::class);
+        $this->guiFactory      = $this->mock(GuiFactoryInterface::class);
+        $this->videoRepository = $this->mock(VideoRepositoryInterface::class);
 
-        $this->assertTrue(
-            $this->subject->displayPodcast()
+        $this->subject = new StatsViewAdapter(
+            $this->configContainer,
+            $this->guiFactory,
+            $this->videoRepository
         );
     }
 }

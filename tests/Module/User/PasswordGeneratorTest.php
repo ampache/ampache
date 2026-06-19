@@ -32,12 +32,6 @@ class PasswordGeneratorTest extends MockeryTestCase
 {
     private ?PasswordGenerator $subject;
 
-    #[Override]
-    protected function setUp(): void
-    {
-        $this->subject = new PasswordGenerator();
-    }
-
     public function testGenerateReturnsRandomPasswordsWithFixedLength(): void
     {
         $length = 8;
@@ -67,5 +61,11 @@ class PasswordGeneratorTest extends MockeryTestCase
                 true
             )
         );
+    }
+
+    #[Override]
+    protected function setUp(): void
+    {
+        $this->subject = new PasswordGenerator();
     }
 }

@@ -47,23 +47,14 @@ class WebDavCatalog extends Collection
     }
 
     /**
-     * @return list<WebDavDirectory>
+     * @param string $name
      */
-    public function getChildren(): array
+    #[Override]
+    public function childExists($name): bool
     {
-        $children = [];
-        $catalogs = null;
-        if ($this->catalog_id > 0) {
-            $catalogs   = [];
-            $catalogs[] = $this->catalog_id;
-        }
+        $matches = Catalog::get_children($name, $this->catalog_id);
 
-        $artists = Catalog::get_artists($catalogs);
-        foreach ($artists as $artist) {
-            $children[] = new WebDavDirectory($artist);
-        }
-
-        return $children;
+        return $matches !== [];
     }
 
     /**
@@ -86,14 +77,23 @@ class WebDavCatalog extends Collection
     }
 
     /**
-     * @param string $name
+     * @return list<WebDavDirectory>
      */
-    #[Override]
-    public function childExists($name): bool
+    public function getChildren(): array
     {
-        $matches = Catalog::get_children($name, $this->catalog_id);
+        $children = [];
+        $catalogs = null;
+        if ($this->catalog_id > 0) {
+            $catalogs   = [];
+            $catalogs[] = $this->catalog_id;
+        }
 
-        return $matches !== [];
+        $artists = Catalog::get_artists($catalogs);
+        foreach ($artists as $artist) {
+            $children[] = new WebDavDirectory($artist);
+        }
+
+        return $children;
     }
 
     public function getName(): string

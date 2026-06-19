@@ -46,89 +46,11 @@ class AmpacheXbmc extends localplay_controller
 {
     protected const string ACTIVE_PREF = 'xbmc_active';
 
-    private string $version = '000001';
-
-    private string $description = 'Controls a XBMC instance';
-
-    private $_xbmc;
-
-    private $_playerId = 0; // Always use player 0 for now
-
+    private $_playerId   = 0; // Always use player 0 for now
     private $_playlistId = 0; // Always use playlist 0 for now
-
-    /**
-     * get_description
-     * This returns the description of this Localplay method
-     */
-    public function get_description(): string
-    {
-        return $this->description;
-    }
-
-    /**
-     * get_version
-     * This returns the current version
-     */
-    public function get_version(): string
-    {
-        return $this->version;
-    }
-
-    /**
-     * is_installed
-     * This returns true or false if xbmc controller is installed
-     */
-    public function is_installed(): bool
-    {
-        $sql        = "SHOW TABLES LIKE 'localplay_xbmc'";
-        $db_results = Dba::query($sql);
-
-        return (Dba::num_rows($db_results) > 0);
-    }
-
-    /**
-     * install
-     * This function installs the XBMC Localplay controller
-     */
-    public function install(): bool
-    {
-        $collation = (AmpConfig::get('database_collation', 'utf8mb4_unicode_ci'));
-        $charset   = (AmpConfig::get('database_charset', 'utf8mb4'));
-        $engine    = (AmpConfig::get('database_engine', 'InnoDB'));
-
-        $sql = <<<SQL
-            CREATE TABLE `localplay_xbmc` (
-                `id` INT(11) UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
-                `name` VARCHAR(128) COLLATE {$collation} NOT NULL,
-                `owner` INT(11) NOT NULL,
-                `host` VARCHAR(255) COLLATE {$collation} NOT NULL,
-                `port` INT(11) UNSIGNED NOT NULL,
-                `user` VARCHAR(255) COLLATE {$collation} NOT NULL,
-                `pass` VARCHAR(255) COLLATE {$collation} NOT NULL
-            ) ENGINE = {$engine} DEFAULT CHARSET={$charset} COLLATE={$collation};
-            SQL;
-        Dba::query($sql);
-
-        // Add an internal preference for the users current active instance
-        Preference::insert(self::ACTIVE_PREF, T_('XBMC Active Instance'), 0, AccessLevelEnum::USER->value, 'integer', 'internal', 'xbmc');
-
-        return true;
-    }
-
-    /**
-     * uninstall
-     * This removes the Localplay controller
-     */
-    public function uninstall(): bool
-    {
-        $sql = "DROP TABLE `localplay_xbmc`";
-        Dba::query($sql);
-
-        // Remove the pref we added for this
-        Preference::delete(self::ACTIVE_PREF);
-
-        return true;
-    }
+    private $_xbmc;
+    private string $description = 'Controls a XBMC instance';
+    private string $version     = '000001';
 
     /**
      * add_instance
@@ -152,132 +74,6 @@ class AmpacheXbmc extends localplay_controller
     }
 
     /**
-     * delete_instance
-     * This takes a UID and deletes the instance in question
-     */
-    public function delete_instance(int $uid): void
-    {
-        $sql = "DELETE FROM `localplay_xbmc` WHERE `id` = ?";
-        Dba::query($sql, [$uid]);
-    }
-
-    /**
-     * get_instances
-     * This returns a key'd array of the instance information with
-     * [UID]=>[NAME]
-     * @return string[]
-     */
-    public function get_instances(): array
-    {
-        $sql        = "SELECT * FROM `localplay_xbmc` ORDER BY `name`";
-        $db_results = Dba::query($sql);
-        $results    = [];
-
-        while ($row = Dba::fetch_assoc($db_results)) {
-            $results[$row['id']] = $row['name'];
-        }
-
-        return $results;
-    }
-
-    /**
-     * update_instance
-     * This takes an ID and an array of data and updates the instance specified
-     * @param array{
-     *     host: string,
-     *     port: string,
-     *     name: string,
-     *     user: string,
-     *     pass: string,
-     * } $data
-     */
-    public function update_instance(int $uid, array $data): void
-    {
-        $sql = "UPDATE `localplay_xbmc` SET `host` = ?, `port` = ?, `name` = ?, `user` = ?, `pass` = ? WHERE `id` = ?";
-        Dba::query($sql, [$data['host'], $data['port'], $data['name'], $data['user'], $data['pass'], $uid]);
-    }
-
-    /**
-     * instance_fields
-     * This returns a key'd array of [NAME]=>array([DESCRIPTION]=>VALUE,[TYPE]=>VALUE) for the
-     * fields so that we can on-the-fly generate a form
-     * @return array<
-     *     string,
-     *     array{description: string, type: string}
-     * >
-     */
-    public function instance_fields(): array
-    {
-        return ['name' => ['description' => T_('Instance Name'), 'type' => 'text'], 'host' => ['description' => T_('Hostname'), 'type' => 'text'], 'port' => ['description' => T_('Port'), 'type' => 'number'], 'user' => ['description' => T_('Username'), 'type' => 'text'], 'pass' => ['description' => T_('Password'), 'type' => 'password']];
-    }
-
-    /**
-     * get_instance
-     * This returns a single instance and all it's variables
-     * @return array{
-     *     id?: int,
-     *     name?: string,
-     *     owner?: int,
-     *     host?: string,
-     *     port?: int,
-     *     user?: string,
-     *     pass?: string
-     * }
-     */
-    public function get_instance(?string $instance = ''): array
-    {
-        $instance   = (is_numeric($instance)) ? (int) $instance : (int) AmpConfig::get(self::ACTIVE_PREF, 0);
-        $sql        = ($instance > 0) ? "SELECT * FROM `localplay_xbmc` WHERE `id` = ?" : "SELECT * FROM `localplay_xbmc`";
-        $db_results = ($instance > 0) ? Dba::query($sql, [$instance]) : Dba::query($sql);
-
-        if ($row = Dba::fetch_assoc($db_results)) {
-            return [
-                'id' => (int)$row['id'],
-                'name' => $row['name'],
-                'owner' => (int)$row['owner'],
-                'host' => $row['host'],
-                'port' => (int)$row['port'],
-                'user' => $row['user'],
-                'pass' => $row['pass'],
-            ];
-        }
-
-        return [];
-    }
-
-    /**
-     * set_active_instance
-     * This sets the specified instance as the 'active' one
-     */
-    public function set_active_instance(int $uid): bool
-    {
-        $user = Core::get_global('user');
-        if (!$user instanceof User) {
-            return false;
-        }
-
-        Preference::update(self::ACTIVE_PREF, $user->id, $uid);
-        AmpConfig::set(self::ACTIVE_PREF, $uid, true);
-        debug_event(self::class, 'set_active_instance: ' . $uid . ' ' . $user->id, 5);
-
-        return true;
-    }
-
-    /**
-     * get_active_instance
-     * This returns the UID of the current active instance
-     * null if none are active
-     */
-    public function get_active_instance(): ?int
-    {
-        if (AmpConfig::get(self::ACTIVE_PREF)) {
-            return (int)AmpConfig::get(self::ACTIVE_PREF);
-        }
-
-        return null;
-    }
-
-    /**
      * add_url
      */
     public function add_url(Stream_Url $url): bool
@@ -297,32 +93,6 @@ class AmpacheXbmc extends localplay_controller
             return true;
         } catch (XBMC_RPC_Exception $xBMCRPCException) {
             debug_event(self::class, 'add_url failed: ' . $xBMCRPCException->getMessage(), 1);
-
-            return false;
-        }
-    }
-
-    /**
-     * delete_track
-     * Delete a track from the xbmc playlist
-     */
-    public function delete_track(int $object_id): bool
-    {
-        if (!$this->_xbmc) {
-            return false;
-        }
-
-        try {
-            $this->_xbmc->Playlist->Remove(
-                [
-                    'playlistid' => $this->_playlistId,
-                    'position' => $object_id
-                ]
-            );
-
-            return true;
-        } catch (XBMC_RPC_Exception $xBMCRPCException) {
-            debug_event(self::class, 'delete_track failed: ' . $xBMCRPCException->getMessage(), 1);
 
             return false;
         }
@@ -357,290 +127,58 @@ class AmpacheXbmc extends localplay_controller
     }
 
     /**
-     * play
-     * This just tells xbmc to start playing, it does not
-     * take any arguments
+     * connect
+     * This functions creates the connection to XBMC and returns
+     * a boolean value for the status, to save time this handle
+     * is stored in this class
      */
-    public function play(): bool
+    public function connect(): bool
     {
-        if (!$this->_xbmc) {
-            return false;
-        }
-
+        $options = self::get_instance();
         try {
-            // XBMC requires to load a playlist to play. We don't know if this play is after a new playlist or after pause
-            // So we get current status
-            $status = $this->status();
-
-            if ($status['state'] == 'pause') {
-                $this->_xbmc->Player->PlayPause(
-                    [
-                        'playerid' => $this->_playerId,
-                        'play' => true
-                    ]
-                );
-            } elseif ($status['state'] == 'stop') {
-                $this->_xbmc->Player->Open(['item' => ['playlistid' => $this->_playlistId]]);
-            }
+            debug_event(self::class, 'Trying to connect xbmc instance ' . ($options['host'] ?? '') . ':' . ($options['port'] ?? '') . '.', 5);
+            $this->_xbmc = new XBMC_RPC_HTTPClient($options);
+            debug_event(self::class, 'Connected.', 5);
 
             return true;
-        } catch (XBMC_RPC_Exception $xBMCRPCException) {
-            debug_event(self::class, 'play failed: ' . $xBMCRPCException->getMessage(), 1);
+        } catch (XBMC_RPC_ConnectionException $xBMCRPCConnectionException) {
+            debug_event(self::class, 'xbmc connection failed: ' . $xBMCRPCConnectionException->getMessage(), 1);
 
             return false;
         }
     }
 
     /**
-     * pause
-     * This tells XBMC to pause the current song
+     * delete_instance
+     * This takes a UID and deletes the instance in question
      */
-    public function pause(): bool
+    public function delete_instance(int $uid): void
+    {
+        $sql = "DELETE FROM `localplay_xbmc` WHERE `id` = ?";
+        Dba::query($sql, [$uid]);
+    }
+
+    /**
+     * delete_track
+     * Delete a track from the xbmc playlist
+     */
+    public function delete_track(int $object_id): bool
     {
         if (!$this->_xbmc) {
             return false;
         }
 
-        $play = false;
-
-        $status = $this->status();
-        // stop if is playing, restart if pausing
-        if ($status['state'] == 'pause') {
-            $play = true;
-        }
-
         try {
-            $this->_xbmc->Player->PlayPause(
+            $this->_xbmc->Playlist->Remove(
                 [
-                    'playerid' => $this->_playerId,
-                    'play' => $play
+                    'playlistid' => $this->_playlistId,
+                    'position' => $object_id
                 ]
             );
 
             return true;
         } catch (XBMC_RPC_Exception $xBMCRPCException) {
-            debug_event(self::class, 'pause failed, is the player started? ' . $xBMCRPCException->getMessage(), 1);
-
-            return false;
-        }
-    }
-
-    /**
-     * stop
-     * This just tells XBMC to stop playing, it does not take
-     * any arguments
-     */
-    public function stop(): bool
-    {
-        if (!$this->_xbmc) {
-            return false;
-        }
-
-        try {
-            $this->_xbmc->Player->Stop(
-                ['playerid' => $this->_playerId]
-            );
-
-            return true;
-        } catch (XBMC_RPC_Exception $xBMCRPCException) {
-            debug_event(self::class, 'stop failed, is the player started? ' . $xBMCRPCException->getMessage(), 1);
-
-            return false;
-        }
-    }
-
-    /**
-     * skip
-     * This tells XBMC to skip to the specified song
-     */
-    public function skip(int $track_id): bool
-    {
-        if (!$this->_xbmc) {
-            return false;
-        }
-
-        try {
-            $this->_xbmc->Player->GoTo(
-                [
-                    'playerid' => $this->_playerId,
-                    'to' => $track_id
-                ]
-            );
-
-            return true;
-        } catch (XBMC_RPC_Exception $xBMCRPCException) {
-            debug_event(self::class, 'skip failed, is the player started?: ' . $xBMCRPCException->getMessage(), 1);
-
-            return false;
-        }
-    }
-
-    /**
-     * This tells XBMC to increase the volume
-     */
-    public function volume_up(): bool
-    {
-        if (!$this->_xbmc) {
-            return false;
-        }
-
-        try {
-            $this->_xbmc->Application->SetVolume(
-                ['volume' => 'increment']
-            );
-
-            return true;
-        } catch (XBMC_RPC_Exception $xBMCRPCException) {
-            debug_event(self::class, 'volume_up failed: ' . $xBMCRPCException->getMessage(), 1);
-
-            return false;
-        }
-    }
-
-    /**
-     * This tells XBMC to decrease the volume
-     */
-    public function volume_down(): bool
-    {
-        if (!$this->_xbmc) {
-            return false;
-        }
-
-        try {
-            $this->_xbmc->Application->SetVolume(
-                ['volume' => 'decrement']
-            );
-
-            return true;
-        } catch (XBMC_RPC_Exception $xBMCRPCException) {
-            debug_event(self::class, 'volume_down failed: ' . $xBMCRPCException->getMessage(), 1);
-
-            return false;
-        }
-    }
-
-    /**
-     * next
-     * This just tells xbmc to skip to the next song
-     */
-    public function next(): bool
-    {
-        if (!$this->_xbmc) {
-            return false;
-        }
-
-        try {
-            $this->_xbmc->Player->GoTo(
-                [
-                    'playerid' => $this->_playerId,
-                    'to' => 'next'
-                ]
-            );
-
-            return true;
-        } catch (XBMC_RPC_Exception $xBMCRPCException) {
-            debug_event(self::class, 'next failed, is the player started? ' . $xBMCRPCException->getMessage(), 1);
-
-            return false;
-        }
-    }
-
-    /**
-     * prev
-     * This just tells xbmc to skip to the prev song
-     */
-    public function prev(): bool
-    {
-        if (!$this->_xbmc) {
-            return false;
-        }
-
-        try {
-            $this->_xbmc->Player->GoTo(
-                [
-                    'playerid' => $this->_playerId,
-                    'to' => 'previous'
-                ]
-            );
-
-            return true;
-        } catch (XBMC_RPC_Exception $xBMCRPCException) {
-            debug_event(self::class, 'prev failed, is the player started? ' . $xBMCRPCException->getMessage(), 1);
-
-            return false;
-        }
-    }
-
-    /**
-     * volume
-     * This tells XBMC to set the volume to the specified amount
-     */
-    public function volume(int $volume): bool
-    {
-        if (!$this->_xbmc) {
-            return false;
-        }
-
-        try {
-            $this->_xbmc->Application->SetVolume(
-                ['volume' => $volume]
-            );
-
-            return true;
-        } catch (XBMC_RPC_Exception $xBMCRPCException) {
-            debug_event(self::class, 'volume failed: ' . $xBMCRPCException->getMessage(), 1);
-
-            return false;
-        }
-    }
-
-    /**
-     * repeat
-     * This tells XBMC to set the repeating the playlist (i.e. loop) to either on or off
-     */
-    public function repeat(bool $state): bool
-    {
-        if (!$this->_xbmc) {
-            return false;
-        }
-
-        try {
-            $this->_xbmc->Player->SetRepeat(
-                [
-                    'playerid' => $this->_playerId,
-                    'repeat' => (($state) ? 'all' : 'off')
-                ]
-            );
-
-            return true;
-        } catch (XBMC_RPC_Exception $xBMCRPCException) {
-            debug_event(self::class, 'repeat failed, is the player started? ' . $xBMCRPCException->getMessage(), 1);
-
-            return false;
-        }
-    }
-
-    /**
-     * random
-     * This tells XBMC to turn on or off the playing of songs from the playlist in random order
-     */
-    public function random(bool $state): bool
-    {
-        if (!$this->_xbmc) {
-            return false;
-        }
-
-        try {
-            $this->_xbmc->Player->SetShuffle(
-                [
-                    'playerid' => $this->_playerId,
-                    'shuffle' => $state
-                ]
-            );
-
-            return true;
-        } catch (XBMC_RPC_Exception $xBMCRPCException) {
-            debug_event(self::class, 'random failed, is the player started? ' . $xBMCRPCException->getMessage(), 1);
+            debug_event(self::class, 'delete_track failed: ' . $xBMCRPCException->getMessage(), 1);
 
             return false;
         }
@@ -702,6 +240,363 @@ class AmpacheXbmc extends localplay_controller
         }
 
         return $results;
+    }
+
+    /**
+     * get_active_instance
+     * This returns the UID of the current active instance
+     * null if none are active
+     */
+    public function get_active_instance(): ?int
+    {
+        if (AmpConfig::get(self::ACTIVE_PREF)) {
+            return (int)AmpConfig::get(self::ACTIVE_PREF);
+        }
+
+        return null;
+    }
+
+    /**
+     * get_description
+     * This returns the description of this Localplay method
+     */
+    public function get_description(): string
+    {
+        return $this->description;
+    }
+
+    /**
+     * get_instance
+     * This returns a single instance and all it's variables
+     * @return array{
+     *     id?: int,
+     *     name?: string,
+     *     owner?: int,
+     *     host?: string,
+     *     port?: int,
+     *     user?: string,
+     *     pass?: string
+     * }
+     */
+    public function get_instance(?string $instance = ''): array
+    {
+        $instance   = (is_numeric($instance)) ? (int) $instance : (int) AmpConfig::get(self::ACTIVE_PREF, 0);
+        $sql        = ($instance > 0) ? "SELECT * FROM `localplay_xbmc` WHERE `id` = ?" : "SELECT * FROM `localplay_xbmc`";
+        $db_results = ($instance > 0) ? Dba::query($sql, [$instance]) : Dba::query($sql);
+
+        if ($row = Dba::fetch_assoc($db_results)) {
+            return [
+                'id' => (int)$row['id'],
+                'name' => $row['name'],
+                'owner' => (int)$row['owner'],
+                'host' => $row['host'],
+                'port' => (int)$row['port'],
+                'user' => $row['user'],
+                'pass' => $row['pass'],
+            ];
+        }
+
+        return [];
+    }
+
+    /**
+     * get_instances
+     * This returns a key'd array of the instance information with
+     * [UID]=>[NAME]
+     * @return string[]
+     */
+    public function get_instances(): array
+    {
+        $sql        = "SELECT * FROM `localplay_xbmc` ORDER BY `name`";
+        $db_results = Dba::query($sql);
+        $results    = [];
+
+        while ($row = Dba::fetch_assoc($db_results)) {
+            $results[$row['id']] = $row['name'];
+        }
+
+        return $results;
+    }
+
+    /**
+     * get_version
+     * This returns the current version
+     */
+    public function get_version(): string
+    {
+        return $this->version;
+    }
+
+    /**
+     * install
+     * This function installs the XBMC Localplay controller
+     */
+    public function install(): bool
+    {
+        $collation = (AmpConfig::get('database_collation', 'utf8mb4_unicode_ci'));
+        $charset   = (AmpConfig::get('database_charset', 'utf8mb4'));
+        $engine    = (AmpConfig::get('database_engine', 'InnoDB'));
+
+        $sql = <<<SQL
+            CREATE TABLE `localplay_xbmc` (
+                `id` INT(11) UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
+                `name` VARCHAR(128) COLLATE {$collation} NOT NULL,
+                `owner` INT(11) NOT NULL,
+                `host` VARCHAR(255) COLLATE {$collation} NOT NULL,
+                `port` INT(11) UNSIGNED NOT NULL,
+                `user` VARCHAR(255) COLLATE {$collation} NOT NULL,
+                `pass` VARCHAR(255) COLLATE {$collation} NOT NULL
+            ) ENGINE = {$engine} DEFAULT CHARSET={$charset} COLLATE={$collation};
+            SQL;
+        Dba::query($sql);
+
+        // Add an internal preference for the users current active instance
+        Preference::insert(self::ACTIVE_PREF, T_('XBMC Active Instance'), 0, AccessLevelEnum::USER->value, 'integer', 'internal', 'xbmc');
+
+        return true;
+    }
+
+    /**
+     * instance_fields
+     * This returns a key'd array of [NAME]=>array([DESCRIPTION]=>VALUE,[TYPE]=>VALUE) for the
+     * fields so that we can on-the-fly generate a form
+     * @return array<
+     *     string,
+     *     array{description: string, type: string}
+     * >
+     */
+    public function instance_fields(): array
+    {
+        return ['name' => ['description' => T_('Instance Name'), 'type' => 'text'], 'host' => ['description' => T_('Hostname'), 'type' => 'text'], 'port' => ['description' => T_('Port'), 'type' => 'number'], 'user' => ['description' => T_('Username'), 'type' => 'text'], 'pass' => ['description' => T_('Password'), 'type' => 'password']];
+    }
+
+    /**
+     * is_installed
+     * This returns true or false if xbmc controller is installed
+     */
+    public function is_installed(): bool
+    {
+        $sql        = "SHOW TABLES LIKE 'localplay_xbmc'";
+        $db_results = Dba::query($sql);
+
+        return (Dba::num_rows($db_results) > 0);
+    }
+
+    /**
+     * next
+     * This just tells xbmc to skip to the next song
+     */
+    public function next(): bool
+    {
+        if (!$this->_xbmc) {
+            return false;
+        }
+
+        try {
+            $this->_xbmc->Player->GoTo(
+                [
+                    'playerid' => $this->_playerId,
+                    'to' => 'next'
+                ]
+            );
+
+            return true;
+        } catch (XBMC_RPC_Exception $xBMCRPCException) {
+            debug_event(self::class, 'next failed, is the player started? ' . $xBMCRPCException->getMessage(), 1);
+
+            return false;
+        }
+    }
+
+    /**
+     * pause
+     * This tells XBMC to pause the current song
+     */
+    public function pause(): bool
+    {
+        if (!$this->_xbmc) {
+            return false;
+        }
+
+        $play = false;
+
+        $status = $this->status();
+        // stop if is playing, restart if pausing
+        if ($status['state'] == 'pause') {
+            $play = true;
+        }
+
+        try {
+            $this->_xbmc->Player->PlayPause(
+                [
+                    'playerid' => $this->_playerId,
+                    'play' => $play
+                ]
+            );
+
+            return true;
+        } catch (XBMC_RPC_Exception $xBMCRPCException) {
+            debug_event(self::class, 'pause failed, is the player started? ' . $xBMCRPCException->getMessage(), 1);
+
+            return false;
+        }
+    }
+
+    /**
+     * play
+     * This just tells xbmc to start playing, it does not
+     * take any arguments
+     */
+    public function play(): bool
+    {
+        if (!$this->_xbmc) {
+            return false;
+        }
+
+        try {
+            // XBMC requires to load a playlist to play. We don't know if this play is after a new playlist or after pause
+            // So we get current status
+            $status = $this->status();
+
+            if ($status['state'] == 'pause') {
+                $this->_xbmc->Player->PlayPause(
+                    [
+                        'playerid' => $this->_playerId,
+                        'play' => true
+                    ]
+                );
+            } elseif ($status['state'] == 'stop') {
+                $this->_xbmc->Player->Open(['item' => ['playlistid' => $this->_playlistId]]);
+            }
+
+            return true;
+        } catch (XBMC_RPC_Exception $xBMCRPCException) {
+            debug_event(self::class, 'play failed: ' . $xBMCRPCException->getMessage(), 1);
+
+            return false;
+        }
+    }
+
+    /**
+     * prev
+     * This just tells xbmc to skip to the prev song
+     */
+    public function prev(): bool
+    {
+        if (!$this->_xbmc) {
+            return false;
+        }
+
+        try {
+            $this->_xbmc->Player->GoTo(
+                [
+                    'playerid' => $this->_playerId,
+                    'to' => 'previous'
+                ]
+            );
+
+            return true;
+        } catch (XBMC_RPC_Exception $xBMCRPCException) {
+            debug_event(self::class, 'prev failed, is the player started? ' . $xBMCRPCException->getMessage(), 1);
+
+            return false;
+        }
+    }
+
+    /**
+     * random
+     * This tells XBMC to turn on or off the playing of songs from the playlist in random order
+     */
+    public function random(bool $state): bool
+    {
+        if (!$this->_xbmc) {
+            return false;
+        }
+
+        try {
+            $this->_xbmc->Player->SetShuffle(
+                [
+                    'playerid' => $this->_playerId,
+                    'shuffle' => $state
+                ]
+            );
+
+            return true;
+        } catch (XBMC_RPC_Exception $xBMCRPCException) {
+            debug_event(self::class, 'random failed, is the player started? ' . $xBMCRPCException->getMessage(), 1);
+
+            return false;
+        }
+    }
+
+    /**
+     * repeat
+     * This tells XBMC to set the repeating the playlist (i.e. loop) to either on or off
+     */
+    public function repeat(bool $state): bool
+    {
+        if (!$this->_xbmc) {
+            return false;
+        }
+
+        try {
+            $this->_xbmc->Player->SetRepeat(
+                [
+                    'playerid' => $this->_playerId,
+                    'repeat' => (($state) ? 'all' : 'off')
+                ]
+            );
+
+            return true;
+        } catch (XBMC_RPC_Exception $xBMCRPCException) {
+            debug_event(self::class, 'repeat failed, is the player started? ' . $xBMCRPCException->getMessage(), 1);
+
+            return false;
+        }
+    }
+
+    /**
+     * set_active_instance
+     * This sets the specified instance as the 'active' one
+     */
+    public function set_active_instance(int $uid): bool
+    {
+        $user = Core::get_global('user');
+        if (!$user instanceof User) {
+            return false;
+        }
+
+        Preference::update(self::ACTIVE_PREF, $user->id, $uid);
+        AmpConfig::set(self::ACTIVE_PREF, $uid, true);
+        debug_event(self::class, 'set_active_instance: ' . $uid . ' ' . $user->id, 5);
+
+        return true;
+    }
+
+    /**
+     * skip
+     * This tells XBMC to skip to the specified song
+     */
+    public function skip(int $track_id): bool
+    {
+        if (!$this->_xbmc) {
+            return false;
+        }
+
+        try {
+            $this->_xbmc->Player->GoTo(
+                [
+                    'playerid' => $this->_playerId,
+                    'to' => $track_id
+                ]
+            );
+
+            return true;
+        } catch (XBMC_RPC_Exception $xBMCRPCException) {
+            debug_event(self::class, 'skip failed, is the player started?: ' . $xBMCRPCException->getMessage(), 1);
+
+            return false;
+        }
     }
 
     /**
@@ -797,22 +692,123 @@ class AmpacheXbmc extends localplay_controller
     }
 
     /**
-     * connect
-     * This functions creates the connection to XBMC and returns
-     * a boolean value for the status, to save time this handle
-     * is stored in this class
+     * stop
+     * This just tells XBMC to stop playing, it does not take
+     * any arguments
      */
-    public function connect(): bool
+    public function stop(): bool
     {
-        $options = self::get_instance();
+        if (!$this->_xbmc) {
+            return false;
+        }
+
         try {
-            debug_event(self::class, 'Trying to connect xbmc instance ' . ($options['host'] ?? '') . ':' . ($options['port'] ?? '') . '.', 5);
-            $this->_xbmc = new XBMC_RPC_HTTPClient($options);
-            debug_event(self::class, 'Connected.', 5);
+            $this->_xbmc->Player->Stop(
+                ['playerid' => $this->_playerId]
+            );
 
             return true;
-        } catch (XBMC_RPC_ConnectionException $xBMCRPCConnectionException) {
-            debug_event(self::class, 'xbmc connection failed: ' . $xBMCRPCConnectionException->getMessage(), 1);
+        } catch (XBMC_RPC_Exception $xBMCRPCException) {
+            debug_event(self::class, 'stop failed, is the player started? ' . $xBMCRPCException->getMessage(), 1);
+
+            return false;
+        }
+    }
+
+    /**
+     * uninstall
+     * This removes the Localplay controller
+     */
+    public function uninstall(): bool
+    {
+        $sql = "DROP TABLE `localplay_xbmc`";
+        Dba::query($sql);
+
+        // Remove the pref we added for this
+        Preference::delete(self::ACTIVE_PREF);
+
+        return true;
+    }
+
+    /**
+     * update_instance
+     * This takes an ID and an array of data and updates the instance specified
+     * @param array{
+     *     host: string,
+     *     port: string,
+     *     name: string,
+     *     user: string,
+     *     pass: string,
+     * } $data
+     */
+    public function update_instance(int $uid, array $data): void
+    {
+        $sql = "UPDATE `localplay_xbmc` SET `host` = ?, `port` = ?, `name` = ?, `user` = ?, `pass` = ? WHERE `id` = ?";
+        Dba::query($sql, [$data['host'], $data['port'], $data['name'], $data['user'], $data['pass'], $uid]);
+    }
+
+    /**
+     * volume
+     * This tells XBMC to set the volume to the specified amount
+     */
+    public function volume(int $volume): bool
+    {
+        if (!$this->_xbmc) {
+            return false;
+        }
+
+        try {
+            $this->_xbmc->Application->SetVolume(
+                ['volume' => $volume]
+            );
+
+            return true;
+        } catch (XBMC_RPC_Exception $xBMCRPCException) {
+            debug_event(self::class, 'volume failed: ' . $xBMCRPCException->getMessage(), 1);
+
+            return false;
+        }
+    }
+
+    /**
+     * This tells XBMC to decrease the volume
+     */
+    public function volume_down(): bool
+    {
+        if (!$this->_xbmc) {
+            return false;
+        }
+
+        try {
+            $this->_xbmc->Application->SetVolume(
+                ['volume' => 'decrement']
+            );
+
+            return true;
+        } catch (XBMC_RPC_Exception $xBMCRPCException) {
+            debug_event(self::class, 'volume_down failed: ' . $xBMCRPCException->getMessage(), 1);
+
+            return false;
+        }
+    }
+
+    /**
+     * This tells XBMC to increase the volume
+     */
+    public function volume_up(): bool
+    {
+        if (!$this->_xbmc) {
+            return false;
+        }
+
+        try {
+            $this->_xbmc->Application->SetVolume(
+                ['volume' => 'increment']
+            );
+
+            return true;
+        } catch (XBMC_RPC_Exception $xBMCRPCException) {
+            debug_event(self::class, 'volume_up failed: ' . $xBMCRPCException->getMessage(), 1);
 
             return false;
         }

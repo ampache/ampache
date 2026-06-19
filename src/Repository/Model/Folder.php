@@ -42,40 +42,21 @@ class Folder extends database_object implements
 {
     protected const string DB_TABLENAME = 'folder';
 
-    public int $id = 0;
-
-    public ?string $name = null;
-
-    public int $catalog = 0;
-
-    public ?int $parent = null;
-
-    public ?int $user = null;
-
-    public ?int $update_time = null;
-
     public ?int $addition_time = null;
-
-    public ?int $object_count = null;
-
-    public int $total_count = 0;
-
-    public int $total_skip = 0;
-
-    public bool $playable = false;
-
-    public int $weight = 0;
-
-    public ?string $path = null;
-
-    public ?string $path_name = null;
-
-    public ?string $link = null;
-
-    public ?string $parent_link = null;
+    public int $catalog        = 0;
 
     /** @var array<int, array{object_type: LibraryItemEnum|null, object_id: int}>|null $children */
     public ?array $children = null;
+
+    public int $id              = 0;
+    public ?string $link        = null;
+    public ?string $name        = null;
+    public ?int $object_count   = null;
+    public ?int $parent         = null;
+    public ?string $parent_link = null;
+    public ?string $path        = null;
+    public ?string $path_name   = null;
+    public bool $playable       = false;
 
     /** @var int[] $podcast_episodes */
     public array $podcast_episodes = [];
@@ -83,11 +64,16 @@ class Folder extends database_object implements
     /** @var int[] $songs */
     public array $songs = [];
 
+    public int $total_count  = 0;
+    public int $total_skip   = 0;
+    public ?int $update_time = null;
+    public ?int $user        = null;
+
     /** @var int[] $videos */
     public array $videos = [];
 
-    private ?string $f_link = null;
-
+    public int $weight             = 0;
+    private ?string $f_link        = null;
     private ?string $f_parent_link = null;
 
     /**
@@ -111,330 +97,6 @@ class Folder extends database_object implements
         foreach ($info as $key => $value) {
             $this->$key = $value;
         }
-    }
-
-    public function getId(): int
-    {
-        return $this->id;
-    }
-
-    public function isNew(): bool
-    {
-        return $this->getId() === 0;
-    }
-
-    /**
-     * Returns the id of the catalog the item is associated to
-     */
-    public function getCatalogId(): int
-    {
-        return $this->catalog;
-    }
-
-    /**
-     * display_art
-     * @param array{width: int, height: int} $size
-     */
-    public function display_art(array $size, bool $force = false): void
-    {
-        if ($this->has_art() || $force) {
-            Art::display('folder', $this->id, (string)$this->get_fullname(), $size, $this->get_link());
-        }
-    }
-
-    public function has_art(): bool
-    {
-        return Art::has_db($this->id, 'folder');
-    }
-
-    /**
-     * @see WebDavDirectory::getChildren
-     * @return array{string?: array<int, array{object_type: LibraryItemEnum, object_id: int}>}
-     */
-    public function get_childrens(): array
-    {
-        $results = [];
-        foreach ($this->get_children((string)$this->get_fullpathname()) as $objects) {
-            $results[] = [
-                'object_type' => $objects['object_type'],
-                'object_id' => $objects['object_id']
-            ];
-        }
-
-        return ['podcast_episode' => $results];
-    }
-
-    public function get_default_art_kind(): string
-    {
-        return 'default';
-    }
-
-    /**
-     * get_description
-     */
-    public function get_description(): string
-    {
-        return $this->summary ?? '';
-    }
-
-    /**
-     * get_fullname
-     */
-    public function get_fullname(): ?string
-    {
-        return $this->name;
-    }
-
-    /**
-     * get_fullname_by_id
-     */
-    public function get_fullname_by_id(?int $folder_id = 0): string
-    {
-        if (empty($folder_id)) {
-            return '';
-        }
-
-        if (database_object::is_cached('folder_fullname_by_id', $folder_id)) {
-            return database_object::get_from_cache('folder_fullname_by_id', $folder_id)[0];
-        }
-
-        $sql        = "SELECT `folder`.`name` AS `f_name` FROM `folder` WHERE `id` = ?;";
-        $db_results = Dba::read($sql, [$folder_id]);
-        if ($row = Dba::fetch_assoc($db_results)) {
-            database_object::add_to_cache('folder_fullname_by_id', $folder_id, [$row['f_name']]);
-
-            return $row['f_name'];
-        }
-
-        return '';
-    }
-
-    /**
-     * get_name_by_id
-     */
-    public static function get_name_by_id(?int $folder_id = 0): string
-    {
-        if (empty($folder_id)) {
-            return '';
-        }
-
-        if (database_object::is_cached('folder_name_by_id', $folder_id)) {
-            return database_object::get_from_cache('folder_name_by_id', $folder_id)[0];
-        }
-
-        $sql        = "SELECT `folder`.`name` AS `f_name` FROM `folder` WHERE `id` = ?;";
-        $db_results = Dba::read($sql, [$folder_id]);
-        if ($row = Dba::fetch_assoc($db_results)) {
-            database_object::add_to_cache('folder_name_by_id', $folder_id, [$row['f_name']]);
-
-            return $row['f_name'];
-        }
-
-        return '';
-    }
-
-    /**
-     * get_fullpathname
-     */
-    public function get_fullpathname(): ?string
-    {
-        return $this->path_name;
-    }
-
-    /**
-     * Get item link.
-     */
-    public function get_link(): string
-    {
-        // don't do anything if it's formatted
-        if ($this->link === null) {
-            $web_path = AmpConfig::get_web_path();
-
-            $this->link = $web_path . '/folders.php?action=show&folder=' . $this->id;
-        }
-
-        return $this->link ?? '';
-    }
-
-    /**
-     * Get item f_link.
-     */
-    public function get_f_link(?string $title = null): string
-    {
-        // don't do anything if it's formatted
-        if ($this->f_link === null) {
-            $this->f_link = "<a href=\"" . $this->get_link() . "\" title=\"" . scrub_out($this->get_fullname()) . "\">" . scrub_out($title ?? $this->get_fullname());
-        }
-
-        return $this->f_link;
-    }
-
-    /**
-     * Get item link.
-     */
-    public function get_parent_link(): string
-    {
-        // don't do anything if it's formatted
-        if ($this->parent_link === null && $this->parent) {
-            $web_path = AmpConfig::get_web_path();
-
-            $this->parent_link = $web_path . '/folders.php?action=show&folder=' . $this->parent;
-        }
-
-        return $this->parent_link ?? '';
-    }
-
-    /**
-     * Get item f_link.
-     */
-    public function get_f_parent_link(): string
-    {
-        // don't do anything if it's formatted
-        if ($this->f_parent_link === null && $this->parent) {
-            $parent_name         = scrub_out(self::get_fullname_by_id($this->parent));
-            $this->f_parent_link = "<a href=\"" . $this->get_parent_link() . "\" title=\"" . $parent_name . "\">" . $parent_name . "</a>";
-        }
-
-        return $this->f_parent_link ?? '';
-    }
-
-    /**
-     * Get root path link.
-     */
-    public function get_f_home_link(): string
-    {
-        $t_home   = T_('Home');
-        $web_path = AmpConfig::get_web_path();
-
-        return "<a href=\"" . $web_path . "/folders.php?action=show&folder=-1\" title=\"" . $t_home . "\">" . $t_home . "</a>";
-    }
-
-    /**
-     * Get item f_time or f_time_h.
-     */
-    public function get_f_time(): string
-    {
-        return '';
-    }
-
-    /**
-     * Get item keywords for metadata searches.
-     * @return array<string, array{important: bool, label: string, value: string}>
-     */
-    public function get_keywords(): array
-    {
-        return [
-            'folder' => [
-                'important' => true,
-                'label' => T_('Folder'),
-                'value' => (string)$this->get_fullname()
-            ],
-        ];
-    }
-
-    /**
-     * @return array<int, array{object_type: LibraryItemEnum|null, object_id: int}>
-     */
-    public function get_medias(?string $filter_type = null): array
-    {
-        if ($filter_type === null) {
-            $sql    = "SELECT `folder_map`.`object_id`, `folder_map`.`object_type` FROM `folder_map` WHERE `folder_map`.`object_type` != 'folder' AND (`folder_map`.`folder_id` = ? OR `folder_map`.`path_name` LIKE ?) ORDER BY `folder_map`.`name`;";
-            $params = [$this->id, $this->path_name . '/%'];
-        } else {
-            $sql    = "SELECT `folder_map`.`object_id`, `folder_map`.`object_type` FROM `folder_map` WHERE `folder_map`.`object_type` = ? AND (`folder_map`.`folder_id` = ? OR `folder_map`.`path_name` LIKE ?) ORDER BY `folder_map`.`name`;";
-            $params = [$filter_type, $this->id, $this->path_name . '/%'];
-        }
-        $db_results = Dba::read($sql, $params);
-        $results    = [];
-        while ($row = Dba::fetch_assoc($db_results)) {
-            $results[] = [
-                'object_type' => LibraryItemEnum::tryFrom($row['object_type']),
-                'object_id' => (int)$row['object_id']
-            ];
-        }
-
-        return $results;
-    }
-
-    /**
-     * get_parent
-     * @return null|array{object_type: LibraryItemEnum, object_id: int}
-     */
-    public function get_parent(): ?array
-    {
-        $parent = self::getFolderRepository()->findById($this->parent);
-        if (!$parent) {
-            return null;
-        }
-
-        return [
-            'object_type' => LibraryItemEnum::FOLDER,
-            'object_id' => $parent->getId()
-        ];
-    }
-
-    public function get_parent_fullname(): string
-    {
-        return self::get_fullname_by_id($this->parent);
-    }
-
-    /**
-     * get_user_owner
-     */
-    public function get_user_owner(): ?int
-    {
-        return $this->user;
-    }
-
-    /**
-     * Search for direct children of an object
-     * @return array<int, array{object_type: LibraryItemEnum|null, object_id: int}>
-     */
-    public function get_children(string $name): array
-    {
-        debug_event(self::class, 'get_children ' . $name, 5);
-        $sql        = "SELECT `object_id`, `object_type` FROM `folder_map` WHERE `folder_id` = ? ORDER BY `name`;";
-        $db_results = Dba::read($sql, [$this->id]);
-        $results    = [];
-        while ($row = Dba::fetch_assoc($db_results)) {
-            $results[] = [
-                'object_type' => LibraryItemEnum::tryFrom($row['object_type']),
-                'object_id' => (int)$row['object_id']
-            ];
-        }
-
-        return $results;
-    }
-
-    public function has_children(string $name): bool
-    {
-        debug_event(self::class, 'has_children ' . $name, 5);
-        $sql        = "SELECT `object_id`, `object_type` FROM `folder_map` WHERE `folder_id` = ?;";
-        $db_results = Dba::read($sql, [$this->id]);
-
-        return (Dba::num_rows($db_results) > 0);
-    }
-
-    /**
-     * update
-     */
-    public function update(array $data): ?int
-    {
-        // duplicate name check
-        if (self::getFolderRepository()->lookup($data['name'], ($data['catalog'] ?? $this->catalog)) !== 0) {
-            return null;
-        }
-
-        $name         = $data['name'] ?? $this->name;
-        $catalog      = $data['catalog'] ?? $this->catalog;
-        $parent       = $data['parent'] ?? null;
-        $update_time  = time();
-        $object_count = $data['object_count'] ?? null;
-
-        $sql = "UPDATE `folder` SET `name` = ?, `catalog` = ?, `parent` = ?, `update_time` = ?, `object_count` = ? WHERE `id` = ?";
-        Dba::write($sql, [$name, $catalog, $parent, $update_time, $object_count, $this->id]);
-
-        return $this->id;
     }
 
     /**
@@ -485,6 +147,283 @@ class Folder extends database_object implements
     }
 
     /**
+     * get_display
+     * This returns a csv formatted version of the folders that we are given
+     * @param string[] $folders
+     */
+    public static function get_display(array $folders, bool $link = false): string
+    {
+        if (empty($folders)) {
+            return '';
+        }
+
+        $web_path = AmpConfig::get_web_path();
+
+        $results = '';
+        // Iterate through the folders, format them according to type and element id
+        foreach ($folders as $folder_id => $value) {
+            if ($link) {
+                $results .= '<a href="' . $web_path . '/folders.php?action=show&folder=' . $folder_id . '" title="' . $value . '">';
+            }
+
+            $results .= $value;
+            if ($link) {
+                $results .= '</a>';
+            }
+
+            $results .= ', ';
+        }
+
+        return rtrim($results, ', ');
+    }
+
+    /**
+     * get_name_by_id
+     */
+    public static function get_name_by_id(?int $folder_id = 0): string
+    {
+        if (empty($folder_id)) {
+            return '';
+        }
+
+        if (database_object::is_cached('folder_name_by_id', $folder_id)) {
+            return database_object::get_from_cache('folder_name_by_id', $folder_id)[0];
+        }
+
+        $sql        = "SELECT `folder`.`name` AS `f_name` FROM `folder` WHERE `id` = ?;";
+        $db_results = Dba::read($sql, [$folder_id]);
+        if ($row = Dba::fetch_assoc($db_results)) {
+            database_object::add_to_cache('folder_name_by_id', $folder_id, [$row['f_name']]);
+
+            return $row['f_name'];
+        }
+
+        return '';
+    }
+
+    /**
+     * Migrate an object associate stats to a new object
+     */
+    public static function migrate(string $object_type, int $old_object_id, int $new_object_id): void
+    {
+        $sql    = "UPDATE `folder_map` SET `object_id` = ? WHERE `object_id` = ? AND `object_type` = ?;";
+        $params = [$new_object_id, $old_object_id, $object_type];
+
+        Dba::write($sql, $params);
+    }
+
+    /**
+     * @deprecated inject dependency
+     */
+    private static function getFolderRepository(): FolderRepositoryInterface
+    {
+        global $dic;
+
+        return $dic->get(FolderRepositoryInterface::class);
+    }
+
+    /**
+     * display_art
+     * @param array{width: int, height: int} $size
+     */
+    public function display_art(array $size, bool $force = false): void
+    {
+        if ($this->has_art() || $force) {
+            Art::display('folder', $this->id, (string)$this->get_fullname(), $size, $this->get_link());
+        }
+    }
+
+    /**
+     * Search for direct children of an object
+     * @return array<int, array{object_type: LibraryItemEnum|null, object_id: int}>
+     */
+    public function get_children(string $name): array
+    {
+        debug_event(self::class, 'get_children ' . $name, 5);
+        $sql        = "SELECT `object_id`, `object_type` FROM `folder_map` WHERE `folder_id` = ? ORDER BY `name`;";
+        $db_results = Dba::read($sql, [$this->id]);
+        $results    = [];
+        while ($row = Dba::fetch_assoc($db_results)) {
+            $results[] = [
+                'object_type' => LibraryItemEnum::tryFrom($row['object_type']),
+                'object_id' => (int)$row['object_id']
+            ];
+        }
+
+        return $results;
+    }
+
+    /**
+     * @see WebDavDirectory::getChildren
+     * @return array{string?: array<int, array{object_type: LibraryItemEnum, object_id: int}>}
+     */
+    public function get_childrens(): array
+    {
+        $results = [];
+        foreach ($this->get_children((string)$this->get_fullpathname()) as $objects) {
+            $results[] = [
+                'object_type' => $objects['object_type'],
+                'object_id' => $objects['object_id']
+            ];
+        }
+
+        return ['podcast_episode' => $results];
+    }
+
+    public function get_default_art_kind(): string
+    {
+        return 'default';
+    }
+
+    /**
+     * get_description
+     */
+    public function get_description(): string
+    {
+        return $this->summary ?? '';
+    }
+
+    /**
+     * Get root path link.
+     */
+    public function get_f_home_link(): string
+    {
+        $t_home   = T_('Home');
+        $web_path = AmpConfig::get_web_path();
+
+        return "<a href=\"" . $web_path . "/folders.php?action=show&folder=-1\" title=\"" . $t_home . "\">" . $t_home . "</a>";
+    }
+
+    /**
+     * Get item f_link.
+     */
+    public function get_f_link(?string $title = null): string
+    {
+        // don't do anything if it's formatted
+        if ($this->f_link === null) {
+            $this->f_link = "<a href=\"" . $this->get_link() . "\" title=\"" . scrub_out($this->get_fullname()) . "\">" . scrub_out($title ?? $this->get_fullname());
+        }
+
+        return $this->f_link;
+    }
+
+    /**
+     * Get item f_link.
+     */
+    public function get_f_parent_link(): string
+    {
+        // don't do anything if it's formatted
+        if ($this->f_parent_link === null && $this->parent) {
+            $parent_name         = scrub_out(self::get_fullname_by_id($this->parent));
+            $this->f_parent_link = "<a href=\"" . $this->get_parent_link() . "\" title=\"" . $parent_name . "\">" . $parent_name . "</a>";
+        }
+
+        return $this->f_parent_link ?? '';
+    }
+
+    /**
+     * Get item f_time or f_time_h.
+     */
+    public function get_f_time(): string
+    {
+        return '';
+    }
+
+    /**
+     * get_fullname
+     */
+    public function get_fullname(): ?string
+    {
+        return $this->name;
+    }
+
+    /**
+     * get_fullname_by_id
+     */
+    public function get_fullname_by_id(?int $folder_id = 0): string
+    {
+        if (empty($folder_id)) {
+            return '';
+        }
+
+        if (database_object::is_cached('folder_fullname_by_id', $folder_id)) {
+            return database_object::get_from_cache('folder_fullname_by_id', $folder_id)[0];
+        }
+
+        $sql        = "SELECT `folder`.`name` AS `f_name` FROM `folder` WHERE `id` = ?;";
+        $db_results = Dba::read($sql, [$folder_id]);
+        if ($row = Dba::fetch_assoc($db_results)) {
+            database_object::add_to_cache('folder_fullname_by_id', $folder_id, [$row['f_name']]);
+
+            return $row['f_name'];
+        }
+
+        return '';
+    }
+
+    /**
+     * get_fullpathname
+     */
+    public function get_fullpathname(): ?string
+    {
+        return $this->path_name;
+    }
+
+    /**
+     * Get item keywords for metadata searches.
+     * @return array<string, array{important: bool, label: string, value: string}>
+     */
+    public function get_keywords(): array
+    {
+        return [
+            'folder' => [
+                'important' => true,
+                'label' => T_('Folder'),
+                'value' => (string)$this->get_fullname()
+            ],
+        ];
+    }
+
+    /**
+     * Get item link.
+     */
+    public function get_link(): string
+    {
+        // don't do anything if it's formatted
+        if ($this->link === null) {
+            $web_path = AmpConfig::get_web_path();
+
+            $this->link = $web_path . '/folders.php?action=show&folder=' . $this->id;
+        }
+
+        return $this->link ?? '';
+    }
+
+    /**
+     * @return array<int, array{object_type: LibraryItemEnum|null, object_id: int}>
+     */
+    public function get_medias(?string $filter_type = null): array
+    {
+        if ($filter_type === null) {
+            $sql    = "SELECT `folder_map`.`object_id`, `folder_map`.`object_type` FROM `folder_map` WHERE `folder_map`.`object_type` != 'folder' AND (`folder_map`.`folder_id` = ? OR `folder_map`.`path_name` LIKE ?) ORDER BY `folder_map`.`name`;";
+            $params = [$this->id, $this->path_name . '/%'];
+        } else {
+            $sql    = "SELECT `folder_map`.`object_id`, `folder_map`.`object_type` FROM `folder_map` WHERE `folder_map`.`object_type` = ? AND (`folder_map`.`folder_id` = ? OR `folder_map`.`path_name` LIKE ?) ORDER BY `folder_map`.`name`;";
+            $params = [$filter_type, $this->id, $this->path_name . '/%'];
+        }
+        $db_results = Dba::read($sql, $params);
+        $results    = [];
+        while ($row = Dba::fetch_assoc($db_results)) {
+            $results[] = [
+                'object_type' => LibraryItemEnum::tryFrom($row['object_type']),
+                'object_id' => (int)$row['object_id']
+            ];
+        }
+
+        return $results;
+    }
+
+    /**
      * get_objects
      * @return array<int, array{
      *     object_type: LibraryItemEnum|null,
@@ -517,45 +456,61 @@ class Folder extends database_object implements
     }
 
     /**
-     * get_display
-     * This returns a csv formatted version of the folders that we are given
-     * @param string[] $folders
+     * get_parent
+     * @return null|array{object_type: LibraryItemEnum, object_id: int}
      */
-    public static function get_display(array $folders, bool $link = false): string
+    public function get_parent(): ?array
     {
-        if (empty($folders)) {
-            return '';
+        $parent = self::getFolderRepository()->findById($this->parent);
+        if (!$parent) {
+            return null;
         }
 
-        $web_path = AmpConfig::get_web_path();
+        return [
+            'object_type' => LibraryItemEnum::FOLDER,
+            'object_id' => $parent->getId()
+        ];
+    }
 
-        $results = '';
-        // Iterate through the folders, format them according to type and element id
-        foreach ($folders as $folder_id => $value) {
-            if ($link) {
-                $results .= '<a href="' . $web_path . '/folders.php?action=show&folder=' . $folder_id . '" title="' . $value . '">';
-            }
-
-            $results .= $value;
-            if ($link) {
-                $results .= '</a>';
-            }
-
-            $results .= ', ';
-        }
-
-        return rtrim($results, ', ');
+    public function get_parent_fullname(): string
+    {
+        return self::get_fullname_by_id($this->parent);
     }
 
     /**
-     * Migrate an object associate stats to a new object
+     * Get item link.
      */
-    public static function migrate(string $object_type, int $old_object_id, int $new_object_id): void
+    public function get_parent_link(): string
     {
-        $sql    = "UPDATE `folder_map` SET `object_id` = ? WHERE `object_id` = ? AND `object_type` = ?;";
-        $params = [$new_object_id, $old_object_id, $object_type];
+        // don't do anything if it's formatted
+        if ($this->parent_link === null && $this->parent) {
+            $web_path = AmpConfig::get_web_path();
 
-        Dba::write($sql, $params);
+            $this->parent_link = $web_path . '/folders.php?action=show&folder=' . $this->parent;
+        }
+
+        return $this->parent_link ?? '';
+    }
+
+    /**
+     * get_user_owner
+     */
+    public function get_user_owner(): ?int
+    {
+        return $this->user;
+    }
+
+    /**
+     * Returns the id of the catalog the item is associated to
+     */
+    public function getCatalogId(): int
+    {
+        return $this->catalog;
+    }
+
+    public function getId(): int
+    {
+        return $this->id;
     }
 
     public function getMediaType(): LibraryItemEnum
@@ -563,13 +518,44 @@ class Folder extends database_object implements
         return LibraryItemEnum::FOLDER;
     }
 
-    /**
-     * @deprecated inject dependency
-     */
-    private static function getFolderRepository(): FolderRepositoryInterface
+    public function has_art(): bool
     {
-        global $dic;
+        return Art::has_db($this->id, 'folder');
+    }
 
-        return $dic->get(FolderRepositoryInterface::class);
+    public function has_children(string $name): bool
+    {
+        debug_event(self::class, 'has_children ' . $name, 5);
+        $sql        = "SELECT `object_id`, `object_type` FROM `folder_map` WHERE `folder_id` = ?;";
+        $db_results = Dba::read($sql, [$this->id]);
+
+        return (Dba::num_rows($db_results) > 0);
+    }
+
+    public function isNew(): bool
+    {
+        return $this->getId() === 0;
+    }
+
+    /**
+     * update
+     */
+    public function update(array $data): ?int
+    {
+        // duplicate name check
+        if (self::getFolderRepository()->lookup($data['name'], ($data['catalog'] ?? $this->catalog)) !== 0) {
+            return null;
+        }
+
+        $name         = $data['name'] ?? $this->name;
+        $catalog      = $data['catalog'] ?? $this->catalog;
+        $parent       = $data['parent'] ?? null;
+        $update_time  = time();
+        $object_count = $data['object_count'] ?? null;
+
+        $sql = "UPDATE `folder` SET `name` = ?, `catalog` = ?, `parent` = ?, `update_time` = ?, `object_count` = ? WHERE `id` = ?";
+        Dba::write($sql, [$name, $catalog, $parent, $update_time, $object_count, $this->id]);
+
+        return $this->id;
     }
 }

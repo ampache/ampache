@@ -223,34 +223,6 @@ class Waveform
     }
 
     /**
-     * findValues
-     */
-    protected static function findValues(string $byte1, string $byte2): float|int
-    {
-        $byte1 = hexdec(bin2hex($byte1));
-        $byte2 = hexdec(bin2hex($byte2));
-
-        return ($byte1 + ($byte2 * 256));
-    }
-
-    /**
-     * Great function slightly modified as posted by Minux at
-     * http://forums.clantemplates.com/showthread.php?t=133805
-     * Converts a hex color string (#RRGGBB or RRGGBB) to its RGB components.
-     * @return array{0: int<0,255>, 1: int<0,255>, 2: int<0,255>} [red, green, blue], each in the range 0–255
-     */
-    protected static function html2rgb(string $input): array
-    {
-        $input = ($input[0] == "#") ? substr($input, 1, 6) : substr($input, 0, 6);
-
-        return [
-            min(255, max(0, (int)hexdec(substr($input, 0, 2)))),
-            min(255, max(0, (int)hexdec(substr($input, 2, 2)))),
-            min(255, max(0, (int)hexdec(substr($input, 4, 2)))),
-        ];
-    }
-
-    /**
      * Create waveform from song file.
      */
     protected static function create_waveform(string $filename): ?string
@@ -413,6 +385,34 @@ class Waveform
         ob_clean();
 
         return $imgdata ?: null;
+    }
+
+    /**
+     * findValues
+     */
+    protected static function findValues(string $byte1, string $byte2): float|int
+    {
+        $byte1 = hexdec(bin2hex($byte1));
+        $byte2 = hexdec(bin2hex($byte2));
+
+        return ($byte1 + ($byte2 * 256));
+    }
+
+    /**
+     * Great function slightly modified as posted by Minux at
+     * http://forums.clantemplates.com/showthread.php?t=133805
+     * Converts a hex color string (#RRGGBB or RRGGBB) to its RGB components.
+     * @return array{0: int<0,255>, 1: int<0,255>, 2: int<0,255>} [red, green, blue], each in the range 0–255
+     */
+    protected static function html2rgb(string $input): array
+    {
+        $input = ($input[0] == "#") ? substr($input, 1, 6) : substr($input, 0, 6);
+
+        return [
+            min(255, max(0, (int)hexdec(substr($input, 0, 2)))),
+            min(255, max(0, (int)hexdec(substr($input, 2, 2)))),
+            min(255, max(0, (int)hexdec(substr($input, 4, 2)))),
+        ];
     }
 
     /**

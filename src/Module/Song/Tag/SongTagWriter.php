@@ -47,6 +47,31 @@ final readonly class SongTagWriter implements SongTagWriterInterface
     }
 
     /**
+     * @param array<int, array{data: string, description: null|string, mime: null|string, picturetypeid: int}> $apics
+     * @param array<string, array<int, array{data: string, description: null|string, mime: null|string, picturetypeid: int}>> $ndata
+     * @param array{data: string, description: null|string, mime: null|string, picturetypeid: int, encodingid: int} $new_pic
+     */
+    public function check_for_duplicate(array $apics, array $new_pic, array &$ndata, string $apic_typeid): ?int
+    {
+        $idx = null;
+        $cnt = count($apics);
+        for ($i = 0; $i < $cnt; $i++) {
+            if ($new_pic['picturetypeid'] == $apics[$i][$apic_typeid]) {
+                $ndata['attached_picture'][$i] = [
+                    'data' => $new_pic['data'],
+                    'description' => $new_pic['description'] ?? null,
+                    'mime' => $new_pic['mime'] ?? null,
+                    'picturetypeid' => $new_pic['picturetypeid'],
+                ];
+
+                $idx = $i;
+            }
+        }
+
+        return $idx;
+    }
+
+    /**
      * Write the current song id3 metadata to the file
      */
     public function write(
@@ -441,117 +466,6 @@ final readonly class SongTagWriter implements SongTagWriterInterface
     }
 
     /**
-     * @param int|string $description
-     * @param array $ndata
-     */
-    private function search_txxx($description, $ndata): ?int
-    {
-        $cnt = count($ndata);
-        for ($index = 0; $index < $cnt; $index++) {
-            if (strtolower((string) $ndata[$index]['description']) === strtolower((string)$description)) {
-                return $index;
-            }
-        }
-
-        return null;
-    }
-
-    /**
-     * @param array<int, array{data: string, description: null|string, mime: null|string, picturetypeid: int}> $apics
-     * @param array<string, array<int, array{data: string, description: null|string, mime: null|string, picturetypeid: int}>> $ndata
-     * @param array{data: string, description: null|string, mime: null|string, picturetypeid: int, encodingid: int} $new_pic
-     */
-    public function check_for_duplicate(array $apics, array $new_pic, array &$ndata, string $apic_typeid): ?int
-    {
-        $idx = null;
-        $cnt = count($apics);
-        for ($i = 0; $i < $cnt; $i++) {
-            if ($new_pic['picturetypeid'] == $apics[$i][$apic_typeid]) {
-                $ndata['attached_picture'][$i] = [
-                    'data' => $new_pic['data'],
-                    'description' => $new_pic['description'] ?? null,
-                    'mime' => $new_pic['mime'] ?? null,
-                    'picturetypeid' => $new_pic['picturetypeid'],
-                ];
-
-                $idx = $i;
-            }
-        }
-
-        return $idx;
-    }
-
-    private function getVorbisMetadata(
-        Song $song,
-    ): array {
-        $meta = [];
-
-        $meta['date']                = $song->year;
-        $meta['title']               = $song->title;
-        $meta['comment']             = $song->comment;
-        $meta['album']               = $song->get_album_fullname();
-        $meta['artist']              = $song->get_parent_fullname();
-        $meta['albumartist']         = $song->get_album_artist_fullname();
-        $meta['composer']            = $song->composer;
-        $meta['label']               = $song->label ?? null;
-        $meta['tracknumber']         = $song->track;
-        $meta['discnumber']          = $song->disk;
-        $meta['musicbrainz_trackid'] = $song->mbid;
-        $meta['musicbrainz_albumid'] = $song->get_album_mbid();
-        $meta['license']             = $song->license;
-        $meta['genre']               = [];
-
-        foreach ($song->get_tags() as $tag) {
-            $meta['genre'][] = $tag['name'];
-        }
-
-        $meta['genre'] = implode(', ', $meta['genre']);
-
-        $album = new Album($song->album);
-
-        $meta['musicbrainz_albumartistid']  = $song->get_album_mbid();
-        $meta['musicbrainz_releasegroupid'] = $album->mbid_group;
-
-        if ($album->release_type !== null) {
-            $release_type = explode(',', $album->release_type);
-            if (count($release_type) === 2) {
-                $release_type[1] = trim($release_type[1]);
-            }
-
-            $meta['releasetype'] = $release_type;
-        }
-
-        if ($album->release_status !== null) {
-            $release_status = explode(',', $album->release_status);
-            if (count($release_status) === 2) {
-                $release_status[1] = trim($release_status[1]);
-            }
-
-            $meta['releasestatus'] = $release_status;
-        }
-
-        $meta['barcode']       = $album->barcode;
-        $meta['catalognumber'] = $album->catalog_number;
-        $meta['original_year'] = $album->original_year;
-
-        $user = Core::get_global('user');
-        if ($this->configContainer->isFeatureEnabled(ConfigurationKeyEnum::RATINGS) && $user instanceof User) {
-            $rating    = new Rating($song->id, 'song');
-            $my_rating = $rating->get_user_rating($user->id);
-            if (!in_array($user->email, [null, '', '0'], true)) {
-                $meta['rating:' . $user->email] = [($my_rating > 0) ? $my_rating * (100 / 5) : 0];
-            } else {
-                $this->logger->debug(
-                    'Rating user must have an email address on record.',
-                    [LegacyLogger::CONTEXT_TYPE => self::class]
-                );
-            }
-        }
-
-        return $meta;
-    }
-
-    /**
      * Get an array of metadata for writing id3 file tags.
      */
     private function getId3Metadata(
@@ -663,5 +577,91 @@ final readonly class SongTagWriter implements SongTagWriterInterface
         }
 
         return $meta;
+    }
+
+    private function getVorbisMetadata(
+        Song $song,
+    ): array {
+        $meta = [];
+
+        $meta['date']                = $song->year;
+        $meta['title']               = $song->title;
+        $meta['comment']             = $song->comment;
+        $meta['album']               = $song->get_album_fullname();
+        $meta['artist']              = $song->get_parent_fullname();
+        $meta['albumartist']         = $song->get_album_artist_fullname();
+        $meta['composer']            = $song->composer;
+        $meta['label']               = $song->label ?? null;
+        $meta['tracknumber']         = $song->track;
+        $meta['discnumber']          = $song->disk;
+        $meta['musicbrainz_trackid'] = $song->mbid;
+        $meta['musicbrainz_albumid'] = $song->get_album_mbid();
+        $meta['license']             = $song->license;
+        $meta['genre']               = [];
+
+        foreach ($song->get_tags() as $tag) {
+            $meta['genre'][] = $tag['name'];
+        }
+
+        $meta['genre'] = implode(', ', $meta['genre']);
+
+        $album = new Album($song->album);
+
+        $meta['musicbrainz_albumartistid']  = $song->get_album_mbid();
+        $meta['musicbrainz_releasegroupid'] = $album->mbid_group;
+
+        if ($album->release_type !== null) {
+            $release_type = explode(',', $album->release_type);
+            if (count($release_type) === 2) {
+                $release_type[1] = trim($release_type[1]);
+            }
+
+            $meta['releasetype'] = $release_type;
+        }
+
+        if ($album->release_status !== null) {
+            $release_status = explode(',', $album->release_status);
+            if (count($release_status) === 2) {
+                $release_status[1] = trim($release_status[1]);
+            }
+
+            $meta['releasestatus'] = $release_status;
+        }
+
+        $meta['barcode']       = $album->barcode;
+        $meta['catalognumber'] = $album->catalog_number;
+        $meta['original_year'] = $album->original_year;
+
+        $user = Core::get_global('user');
+        if ($this->configContainer->isFeatureEnabled(ConfigurationKeyEnum::RATINGS) && $user instanceof User) {
+            $rating    = new Rating($song->id, 'song');
+            $my_rating = $rating->get_user_rating($user->id);
+            if (!in_array($user->email, [null, '', '0'], true)) {
+                $meta['rating:' . $user->email] = [($my_rating > 0) ? $my_rating * (100 / 5) : 0];
+            } else {
+                $this->logger->debug(
+                    'Rating user must have an email address on record.',
+                    [LegacyLogger::CONTEXT_TYPE => self::class]
+                );
+            }
+        }
+
+        return $meta;
+    }
+
+    /**
+     * @param int|string $description
+     * @param array $ndata
+     */
+    private function search_txxx($description, $ndata): ?int
+    {
+        $cnt = count($ndata);
+        for ($index = 0; $index < $cnt; $index++) {
+            if (strtolower((string) $ndata[$index]['description']) === strtolower((string)$description)) {
+                return $index;
+            }
+        }
+
+        return null;
     }
 }

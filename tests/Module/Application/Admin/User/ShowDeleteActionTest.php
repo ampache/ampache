@@ -42,68 +42,10 @@ use Psr\Http\Message\ServerRequestInterface;
 
 class ShowDeleteActionTest extends MockeryTestCase
 {
-    private MockInterface&UiInterface $ui;
-
-    private MockInterface&ModelFactoryInterface $modelFactory;
-
     private MockInterface&ConfigContainerInterface $configContainer;
-
+    private MockInterface&ModelFactoryInterface $modelFactory;
     private ShowDeleteAction $subject;
-
-    #[Override]
-    protected function setUp(): void
-    {
-        $this->ui              = $this->mock(UiInterface::class);
-        $this->modelFactory    = $this->mock(ModelFactoryInterface::class);
-        $this->configContainer = $this->mock(ConfigContainerInterface::class);
-
-        $this->subject = new ShowDeleteAction(
-            $this->ui,
-            $this->modelFactory,
-            $this->configContainer
-        );
-    }
-
-    public function testRunThrowsExceptionIfAccessDenied(): void
-    {
-        $this->expectException(AccessDeniedException::class);
-
-        $request    = $this->mock(ServerRequestInterface::class);
-        $gatekeeper = $this->mock(GuiGatekeeperInterface::class);
-
-        $gatekeeper->shouldReceive('mayAccess')
-            ->with(AccessTypeEnum::INTERFACE, AccessLevelEnum::ADMIN)
-            ->once()
-            ->andReturnFalse();
-
-        $this->subject->run(
-            $request,
-            $gatekeeper
-        );
-    }
-
-    public function testRunReturnsNullIfDemoModeIsEnabled(): void
-    {
-        $request    = $this->mock(ServerRequestInterface::class);
-        $gatekeeper = $this->mock(GuiGatekeeperInterface::class);
-
-        $gatekeeper->shouldReceive('mayAccess')
-            ->with(AccessTypeEnum::INTERFACE, AccessLevelEnum::ADMIN)
-            ->once()
-            ->andReturnTrue();
-
-        $this->configContainer->shouldReceive('isFeatureEnabled')
-            ->with(ConfigurationKeyEnum::DEMO_MODE)
-            ->once()
-            ->andReturnTrue();
-
-        $this->assertNull(
-            $this->subject->run(
-                $request,
-                $gatekeeper
-            )
-        );
-    }
+    private MockInterface&UiInterface $ui;
 
     public function testRunErrorsIfUserIsLesserThenOne(): void
     {
@@ -214,6 +156,61 @@ class ShowDeleteActionTest extends MockeryTestCase
                 $request,
                 $gatekeeper
             )
+        );
+    }
+
+    public function testRunReturnsNullIfDemoModeIsEnabled(): void
+    {
+        $request    = $this->mock(ServerRequestInterface::class);
+        $gatekeeper = $this->mock(GuiGatekeeperInterface::class);
+
+        $gatekeeper->shouldReceive('mayAccess')
+            ->with(AccessTypeEnum::INTERFACE, AccessLevelEnum::ADMIN)
+            ->once()
+            ->andReturnTrue();
+
+        $this->configContainer->shouldReceive('isFeatureEnabled')
+            ->with(ConfigurationKeyEnum::DEMO_MODE)
+            ->once()
+            ->andReturnTrue();
+
+        $this->assertNull(
+            $this->subject->run(
+                $request,
+                $gatekeeper
+            )
+        );
+    }
+
+    public function testRunThrowsExceptionIfAccessDenied(): void
+    {
+        $this->expectException(AccessDeniedException::class);
+
+        $request    = $this->mock(ServerRequestInterface::class);
+        $gatekeeper = $this->mock(GuiGatekeeperInterface::class);
+
+        $gatekeeper->shouldReceive('mayAccess')
+            ->with(AccessTypeEnum::INTERFACE, AccessLevelEnum::ADMIN)
+            ->once()
+            ->andReturnFalse();
+
+        $this->subject->run(
+            $request,
+            $gatekeeper
+        );
+    }
+
+    #[Override]
+    protected function setUp(): void
+    {
+        $this->ui              = $this->mock(UiInterface::class);
+        $this->modelFactory    = $this->mock(ModelFactoryInterface::class);
+        $this->configContainer = $this->mock(ConfigContainerInterface::class);
+
+        $this->subject = new ShowDeleteAction(
+            $this->ui,
+            $this->modelFactory,
+            $this->configContainer
         );
     }
 }

@@ -49,30 +49,6 @@ final readonly class ShareRepository implements ShareRepositoryInterface
     }
 
     /**
-     * Finds a single item by its id
-     */
-    public function findById(int $itemId): ?Share
-    {
-        $result = new Share($itemId);
-        if ($result->isNew()) {
-            return null;
-        }
-
-        return $result;
-    }
-
-    /**
-     * Migrate a share associate stats to a new object
-     */
-    public function migrate(string $objectType, int $oldObjectId, int $newObjectId): void
-    {
-        $this->connection->query(
-            'UPDATE `share` SET `object_id` = ? WHERE `object_type` = ? AND `object_id` = ?',
-            [$newObjectId, $objectType, $oldObjectId]
-        );
-    }
-
-    /**
      * Cleanup old shares
      */
     public function collectGarbage(): void
@@ -84,6 +60,30 @@ final readonly class ShareRepository implements ShareRepositoryInterface
         } catch (DatabaseException) {
             debug_event(self::class, 'collectGarbage error', 5);
         }
+    }
+
+    /**
+     * Deletes a single item
+     */
+    public function delete(Share $item): void
+    {
+        $this->connection->query(
+            'DELETE FROM `share` WHERE `id` = ?',
+            [$item->getId()]
+        );
+    }
+
+    /**
+     * Finds a single item by its id
+     */
+    public function findById(int $itemId): ?Share
+    {
+        $result = new Share($itemId);
+        if ($result->isNew()) {
+            return null;
+        }
+
+        return $result;
     }
 
     /**
@@ -124,13 +124,13 @@ final readonly class ShareRepository implements ShareRepositoryInterface
     }
 
     /**
-     * Deletes a single item
+     * Migrate a share associate stats to a new object
      */
-    public function delete(Share $item): void
+    public function migrate(string $objectType, int $oldObjectId, int $newObjectId): void
     {
         $this->connection->query(
-            'DELETE FROM `share` WHERE `id` = ?',
-            [$item->getId()]
+            'UPDATE `share` SET `object_id` = ? WHERE `object_type` = ? AND `object_id` = ?',
+            [$newObjectId, $objectType, $oldObjectId]
         );
     }
 

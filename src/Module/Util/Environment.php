@@ -45,82 +45,9 @@ final class Environment implements EnvironmentInterface
         );
     }
 
-    /**
-     * check for required php version
-     */
-    public function check_php_version(): bool
+    public function check_dependencies_folder(): bool
     {
-        return floatval(phpversion()) >= self::PHP_VERSION;
-    }
-
-    /**
-     * check for required function exists
-     */
-    public function check_php_hash(): bool
-    {
-        return function_exists('hash_algos');
-    }
-
-    /**
-     * check for required function exists
-     */
-    public function check_php_hash_algo(): bool
-    {
-        return (
-            function_exists('hash_algos') &&
-            in_array('sha256', hash_algos())
-        );
-    }
-
-    /**
-     * check for required function exists
-     */
-    public function check_php_json(): bool
-    {
-        return function_exists('json_encode');
-    }
-
-    /**
-     * check for required function exists
-     */
-    public function check_php_curl(): bool
-    {
-        return function_exists('curl_version');
-    }
-
-    /**
-     * check for required module
-     */
-    public function check_php_intl(): bool
-    {
-        return (extension_loaded('intl'));
-    }
-
-    /**
-     * check for required function exists
-     */
-    public function check_php_session(): bool
-    {
-        return function_exists('session_set_save_handler');
-    }
-
-    /**
-     * check for required function exists
-     */
-    public function check_php_pdo(): bool
-    {
-        return class_exists('PDO');
-    }
-
-    /**
-     * check for required function exists
-     */
-    public function check_php_pdo_mysql(): bool
-    {
-        return (
-            class_exists('PDO') &&
-            in_array('mysql', PDO::getAvailableDrivers())
-        );
+        return file_exists(__DIR__ . '/../../../vendor');
     }
 
     /**
@@ -132,27 +59,14 @@ final class Environment implements EnvironmentInterface
     }
 
     /**
-     * This checks to make sure that the php memory limit is withing the
-     * recommended range, this doesn't take into account the size of your
-     * catalog.
+     * This checks to see if we can manually override the max execution time
      */
-    public function check_php_memory(): bool
+    public function check_override_exec_time(): bool
     {
-        $current_memory = ini_get('memory_limit');
-        $current_memory = substr($current_memory, 0, strlen((string) $current_memory) - 1);
+        $current = ini_get('max_execution_time');
+        set_time_limit((int) $current + 60);
 
-        return ((int) ($current_memory) >= 48);
-    }
-
-    /**
-     * This checks to make sure that the php time limit is set to some
-     * semi-sane limit, IE greater then 60 seconds
-     */
-    public function check_php_timelimit(): bool
-    {
-        $current = (int) (ini_get('max_execution_time'));
-
-        return ($current >= 60 || $current === 0);
+        return ($current != ini_get('max_execution_time'));
     }
 
     /**
@@ -178,14 +92,125 @@ final class Environment implements EnvironmentInterface
     }
 
     /**
-     * This checks to see if we can manually override the max execution time
+     * check for required function exists
      */
-    public function check_override_exec_time(): bool
+    public function check_php_curl(): bool
     {
-        $current = ini_get('max_execution_time');
-        set_time_limit((int) $current + 60);
+        return function_exists('curl_version');
+    }
 
-        return ($current != ini_get('max_execution_time'));
+    public function check_php_gd(): bool
+    {
+        return (extension_loaded('gd') || extension_loaded('gd2'));
+    }
+
+    /**
+     * check for required function exists
+     */
+    public function check_php_hash(): bool
+    {
+        return function_exists('hash_algos');
+    }
+
+    /**
+     * check for required function exists
+     */
+    public function check_php_hash_algo(): bool
+    {
+        return (
+            function_exists('hash_algos') &&
+            in_array('sha256', hash_algos())
+        );
+    }
+
+    public function check_php_int_size(): bool
+    {
+        return (PHP_INT_SIZE > 4);
+    }
+
+    /**
+     * check for required module
+     */
+    public function check_php_intl(): bool
+    {
+        return (extension_loaded('intl'));
+    }
+
+    /**
+     * check for required function exists
+     */
+    public function check_php_json(): bool
+    {
+        return function_exists('json_encode');
+    }
+
+    /**
+     * This checks to make sure that the php memory limit is withing the
+     * recommended range, this doesn't take into account the size of your
+     * catalog.
+     */
+    public function check_php_memory(): bool
+    {
+        $current_memory = ini_get('memory_limit');
+        $current_memory = substr($current_memory, 0, strlen((string) $current_memory) - 1);
+
+        return ((int) ($current_memory) >= 48);
+    }
+
+    /**
+     * check for required function exists
+     */
+    public function check_php_pdo(): bool
+    {
+        return class_exists('PDO');
+    }
+
+    /**
+     * check for required function exists
+     */
+    public function check_php_pdo_mysql(): bool
+    {
+        return (
+            class_exists('PDO') &&
+            in_array('mysql', PDO::getAvailableDrivers())
+        );
+    }
+
+    /**
+     * check for required function exists
+     */
+    public function check_php_session(): bool
+    {
+        return function_exists('session_set_save_handler');
+    }
+
+    public function check_php_simplexml(): bool
+    {
+        return function_exists('simplexml_load_string');
+    }
+
+    /**
+     * This checks to make sure that the php time limit is set to some
+     * semi-sane limit, IE greater then 60 seconds
+     */
+    public function check_php_timelimit(): bool
+    {
+        $current = (int) (ini_get('max_execution_time'));
+
+        return ($current >= 60 || $current === 0);
+    }
+
+    /**
+     * check for required php version
+     */
+    public function check_php_version(): bool
+    {
+        return floatval(phpversion()) >= self::PHP_VERSION;
+    }
+
+    public function check_php_zlib(): bool
+    {
+        return function_exists('gzcompress');
     }
 
     /**
@@ -209,59 +234,21 @@ final class Environment implements EnvironmentInterface
         );
     }
 
-    public function check_php_int_size(): bool
+    public function getHttpPort(): int
     {
-        return (PHP_INT_SIZE > 4);
-    }
+        $port = 80;
+        if (isset($_SERVER['HTTP_X_FORWARDED_PORT'])) {
+            $port = (int) $_SERVER['HTTP_X_FORWARDED_PORT'];
+        } elseif (isset($_SERVER['SERVER_PORT'])) {
+            $port = (int) $_SERVER['SERVER_PORT'];
+        }
 
-    public function check_php_zlib(): bool
-    {
-        return function_exists('gzcompress');
-    }
-
-    public function check_php_simplexml(): bool
-    {
-        return function_exists('simplexml_load_string');
-    }
-
-    public function check_php_gd(): bool
-    {
-        return (extension_loaded('gd') || extension_loaded('gd2'));
-    }
-
-    public function check_dependencies_folder(): bool
-    {
-        return file_exists(__DIR__ . '/../../../vendor');
+        return $port;
     }
 
     public function isCli(): bool
     {
         return PHP_SAPI === 'cli';
-    }
-
-    public function isSsl(): bool
-    {
-        return (
-            (
-                isset($_SERVER['HTTP_X_FORWARDED_PROTO']) &&
-                Core::get_server('HTTP_X_FORWARDED_PROTO') === 'https'
-            ) ||
-            (
-                isset($_SERVER['HTTPS']) &&
-                Core::get_server('HTTPS') === 'on'
-            )
-        );
-    }
-
-    public function isMobile(): bool
-    {
-        $user_agent = (string)($_SERVER['HTTP_USER_AGENT'] ?? '');
-
-        return strpos($user_agent, 'Mobile') && (
-            strpos($user_agent, 'Android') ||
-            strpos($user_agent, 'iPad') ||
-            strpos($user_agent, 'iPhone')
-        );
     }
 
     public function isDevJS(string $entry): bool
@@ -291,16 +278,29 @@ final class Environment implements EnvironmentInterface
         return !$error;
     }
 
-    public function getHttpPort(): int
+    public function isMobile(): bool
     {
-        $port = 80;
-        if (isset($_SERVER['HTTP_X_FORWARDED_PORT'])) {
-            $port = (int) $_SERVER['HTTP_X_FORWARDED_PORT'];
-        } elseif (isset($_SERVER['SERVER_PORT'])) {
-            $port = (int) $_SERVER['SERVER_PORT'];
-        }
+        $user_agent = (string)($_SERVER['HTTP_USER_AGENT'] ?? '');
 
-        return $port;
+        return strpos($user_agent, 'Mobile') && (
+            strpos($user_agent, 'Android') ||
+            strpos($user_agent, 'iPad') ||
+            strpos($user_agent, 'iPhone')
+        );
+    }
+
+    public function isSsl(): bool
+    {
+        return (
+            (
+                isset($_SERVER['HTTP_X_FORWARDED_PROTO']) &&
+                Core::get_server('HTTP_X_FORWARDED_PROTO') === 'https'
+            ) ||
+            (
+                isset($_SERVER['HTTPS']) &&
+                Core::get_server('HTTPS') === 'on'
+            )
+        );
     }
 
     public function setUp(): void

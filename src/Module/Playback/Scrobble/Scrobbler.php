@@ -49,29 +49,6 @@ class Scrobbler
     }
 
     /**
-     * get_api_sig
-     * Provide the API signature for calling Last.fm / Libre.fm services
-     * It is the md5 of the <name><value> of all parameter plus API's secret
-     * @param null|array<string, string> $vars
-     */
-    public function get_api_sig(?array $vars = []): string
-    {
-        if (!$vars) {
-            return '';
-        }
-
-        ksort($vars);
-        $sig = '';
-        foreach ($vars as $name => $value) {
-            $sig .= $name . $value;
-        }
-
-        $sig .= $this->secret;
-
-        return md5($sig);
-    }
-
-    /**
      * call_url
      * This is a generic caller for HTTP requests
      * It need the method (GET/POST), the url and the parameters
@@ -119,6 +96,29 @@ class Scrobbler
         fclose($filepath);
 
         return $buffer ?: null;
+    }
+
+    /**
+     * get_api_sig
+     * Provide the API signature for calling Last.fm / Libre.fm services
+     * It is the md5 of the <name><value> of all parameter plus API's secret
+     * @param null|array<string, string> $vars
+     */
+    public function get_api_sig(?array $vars = []): string
+    {
+        if (!$vars) {
+            return '';
+        }
+
+        ksort($vars);
+        $sig = '';
+        foreach ($vars as $name => $value) {
+            $sig .= $name . $value;
+        }
+
+        $sig .= $this->secret;
+
+        return md5($sig);
     }
 
     /**
@@ -183,6 +183,46 @@ class Scrobbler
         $this->error_msg = 'Need a token to call getSession';
 
         return null;
+    }
+
+    /**
+     * love
+     * This takes care of spreading your love to the world
+     * If passed the API key, session key combined with the signature
+     */
+    public function love(bool $is_loved, string $artist = '', string $title = ''): bool
+    {
+        $vars           = [];
+        $vars['track']  = $title;
+        $vars['artist'] = $artist;
+        // Add the method, API and session keys
+        $vars['method']  = ($is_loved) ? 'track.love' : 'track.unlove';
+        $vars['api_key'] = $this->api_key;
+        $vars['sk']      = (string)$this->challenge;
+
+        // Sign the call
+        $sig             = $this->get_api_sig($vars);
+        $vars['api_sig'] = $sig;
+
+        // Call the method and parse response
+        $response = $this->call_url('/2.0/', 'POST', $vars);
+        $xml      = ($response)
+            ? simplexml_load_string($response)
+            : false;
+        if ($xml) {
+            $status = (string)$xml['status'];
+            if ($status === 'ok') {
+                return true;
+            }
+
+            $this->error_msg = $xml->error;
+
+            return false;
+        }
+
+        $this->error_msg = 'Did not receive a valid response';
+
+        return false;
     }
 
     /**
@@ -251,46 +291,6 @@ class Scrobbler
 
         // Add the method, API and session keys
         $vars['method']  = 'track.scrobble';
-        $vars['api_key'] = $this->api_key;
-        $vars['sk']      = (string)$this->challenge;
-
-        // Sign the call
-        $sig             = $this->get_api_sig($vars);
-        $vars['api_sig'] = $sig;
-
-        // Call the method and parse response
-        $response = $this->call_url('/2.0/', 'POST', $vars);
-        $xml      = ($response)
-            ? simplexml_load_string($response)
-            : false;
-        if ($xml) {
-            $status = (string)$xml['status'];
-            if ($status === 'ok') {
-                return true;
-            }
-
-            $this->error_msg = $xml->error;
-
-            return false;
-        }
-
-        $this->error_msg = 'Did not receive a valid response';
-
-        return false;
-    }
-
-    /**
-     * love
-     * This takes care of spreading your love to the world
-     * If passed the API key, session key combined with the signature
-     */
-    public function love(bool $is_loved, string $artist = '', string $title = ''): bool
-    {
-        $vars           = [];
-        $vars['track']  = $title;
-        $vars['artist'] = $artist;
-        // Add the method, API and session keys
-        $vars['method']  = ($is_loved) ? 'track.love' : 'track.unlove';
         $vars['api_key'] = $this->api_key;
         $vars['sk']      = (string)$this->challenge;
 

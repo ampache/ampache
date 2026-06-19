@@ -59,11 +59,6 @@ abstract class AbstractCatalogAction implements ApplicationActionInterface
         return null;
     }
 
-    abstract protected function handle(
-        ServerRequestInterface $request,
-        array $catalogIds,
-    ): ?ResponseInterface;
-
     protected function getCatalogIds(): ?array
     {
         $catalogs = (isset($_REQUEST['catalogs']))
@@ -87,4 +82,9 @@ abstract class AbstractCatalogAction implements ApplicationActionInterface
 
         return $catalogs;
     }
+
+    abstract protected function handle(
+        ServerRequestInterface $request,
+        array $catalogIds,
+    ): ?ResponseInterface;
 }

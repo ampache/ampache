@@ -35,16 +35,6 @@ use Override;
 
 final class PrintTagsCommand extends Command
 {
-    #[Override]
-    protected function defaults(): self
-    {
-        $this->option('-h, --help', T_('Help'))->on($this->showHelp(...));
-
-        $this->onExit(static fn ($exitCode = 0) => exit($exitCode));
-
-        return $this;
-    }
-
     public function __construct(
         private readonly UtilityFactoryInterface $utilityFactory,
     ) {
@@ -128,5 +118,15 @@ final class PrintTagsCommand extends Command
         } catch (Exception $exception) {
             debug_event('print_tags', 'get_info exception: ' . $exception->getMessage(), 1);
         }
+    }
+
+    #[Override]
+    protected function defaults(): self
+    {
+        $this->option('-h, --help', T_('Help'))->on($this->showHelp(...));
+
+        $this->onExit(static fn ($exitCode = 0) => exit($exitCode));
+
+        return $this;
     }
 }

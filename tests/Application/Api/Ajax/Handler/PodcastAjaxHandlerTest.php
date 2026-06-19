@@ -39,42 +39,14 @@ use Psr\Log\LoggerInterface;
 
 class PodcastAjaxHandlerTest extends TestCase
 {
-    private RequestParserInterface&MockObject $requestParser;
-
-    private PodcastSyncerInterface&MockObject $podcastSyncer;
-
-    private PodcastRepositoryInterface&MockObject $podcastRepository;
-
-    private PodcastEpisodeRepositoryInterface&MockObject $podcastEpisodeRepository;
-
-    private PrivilegeCheckerInterface&MockObject $privilegeChecker;
-
     private LoggerInterface&MockObject $logger;
-
+    private PodcastEpisodeRepositoryInterface&MockObject $podcastEpisodeRepository;
+    private PodcastRepositoryInterface&MockObject $podcastRepository;
+    private PodcastSyncerInterface&MockObject $podcastSyncer;
+    private PrivilegeCheckerInterface&MockObject $privilegeChecker;
+    private RequestParserInterface&MockObject $requestParser;
     private PodcastAjaxHandler $subject;
-
     private User&MockObject $user;
-
-    protected function setUp(): void
-    {
-        $this->requestParser            = $this->createMock(RequestParserInterface::class);
-        $this->podcastSyncer            = $this->createMock(PodcastSyncerInterface::class);
-        $this->podcastRepository        = $this->createMock(PodcastRepositoryInterface::class);
-        $this->podcastEpisodeRepository = $this->createMock(PodcastEpisodeRepositoryInterface::class);
-        $this->privilegeChecker         = $this->createMock(PrivilegeCheckerInterface::class);
-        $this->logger                   = $this->createMock(LoggerInterface::class);
-
-        $this->subject = new PodcastAjaxHandler(
-            $this->requestParser,
-            $this->podcastSyncer,
-            $this->podcastRepository,
-            $this->podcastEpisodeRepository,
-            $this->privilegeChecker,
-            $this->logger,
-        );
-
-        $this->user = $this->createMock(User::class);
-    }
 
     public function testHandleFailsIfAccessIsDenied(): void
     {
@@ -97,5 +69,26 @@ class PodcastAjaxHandlerTest extends TestCase
             );
 
         $this->subject->handle($this->user);
+    }
+
+    protected function setUp(): void
+    {
+        $this->requestParser            = $this->createMock(RequestParserInterface::class);
+        $this->podcastSyncer            = $this->createMock(PodcastSyncerInterface::class);
+        $this->podcastRepository        = $this->createMock(PodcastRepositoryInterface::class);
+        $this->podcastEpisodeRepository = $this->createMock(PodcastEpisodeRepositoryInterface::class);
+        $this->privilegeChecker         = $this->createMock(PrivilegeCheckerInterface::class);
+        $this->logger                   = $this->createMock(LoggerInterface::class);
+
+        $this->subject = new PodcastAjaxHandler(
+            $this->requestParser,
+            $this->podcastSyncer,
+            $this->podcastRepository,
+            $this->podcastEpisodeRepository,
+            $this->privilegeChecker,
+            $this->logger,
+        );
+
+        $this->user = $this->createMock(User::class);
     }
 }

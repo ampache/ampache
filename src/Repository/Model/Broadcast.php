@@ -36,32 +36,21 @@ class Broadcast extends database_object implements library_item, displayable_ite
 {
     protected const string DB_TABLENAME = 'broadcast';
 
-    public int $id = 0;
-
-    public int $user;
-
-    public ?string $name = null;
-
     public ?string $description = null;
-
+    public int $id              = 0;
     public bool $is_private;
-
-    public int $song;
-
-    public int $started = 0;
-
-    public int $listeners;
-
-    public ?string $key = null;
-
+    public ?string $key  = null;
     public ?string $link = null;
-
+    public int $listeners;
+    public ?string $name = null;
+    public int $song;
     public int $song_position = 0;
+    public int $started       = 0;
+    public int $user;
+    private ?string $f_link = null;
 
     /** @var array<int, array{id: int, name: string, is_hidden: int, count: int}> $tags */
     private ?array $tags = null;
-
-    private ?string $f_link = null;
 
     public function __construct(?int $broadcast_id = 0)
     {
@@ -73,58 +62,6 @@ class Broadcast extends database_object implements library_item, displayable_ite
         foreach ($info as $key => $value) {
             $this->$key = $value;
         }
-    }
-
-    public function getId(): int
-    {
-        return $this->id;
-    }
-
-    public function isNew(): bool
-    {
-        return $this->getId() === 0;
-    }
-
-    /**
-     * Update broadcast state.
-     */
-    public function update_state(int $started, string $key = ''): void
-    {
-        $sql = "UPDATE `broadcast` SET `started` = ?, `key` = ?, `song` = '0', `listeners` = '0' WHERE `id` = ?";
-        Dba::write($sql, [$started, $key, $this->id]);
-
-        $this->started = $started;
-    }
-
-    /**
-     * Update broadcast listeners.
-     */
-    public function update_listeners(int $listeners): void
-    {
-        $sql = "UPDATE `broadcast` SET `listeners` = ? WHERE `id` = ?";
-        Dba::write($sql, [$listeners, $this->id]);
-        $this->listeners = $listeners;
-    }
-
-    /**
-     * Update broadcast current song.
-     */
-    public function update_song(int $song_id): void
-    {
-        $sql = "UPDATE `broadcast` SET `song` = ? WHERE `id` = ?";
-        Dba::write($sql, [$song_id, $this->id]);
-        $this->song          = $song_id;
-        $this->song_position = 0;
-    }
-
-    /**
-     * Delete the broadcast.
-     */
-    public function delete(): bool
-    {
-        $sql = "DELETE FROM `broadcast` WHERE `id` = ?";
-
-        return (Dba::write($sql, [$this->id]) !== null);
     }
 
     /**
@@ -144,76 +81,100 @@ class Broadcast extends database_object implements library_item, displayable_ite
     }
 
     /**
-     * Update a broadcast from data array.
+     * Get broadcast from its key.
      */
-    public function update(array $data): int
+    public static function get_broadcast(string $key): ?Broadcast
     {
-        if (isset($data['edit_tags'])) {
-            Tag::update_tag_list($data['edit_tags'], 'broadcast', $this->id, true);
+        $sql        = "SELECT `id` FROM `broadcast` WHERE `key` = ?";
+        $db_results = Dba::read($sql, [$key]);
+
+        if ($results = Dba::fetch_assoc($db_results)) {
+            return new Broadcast($results['id']);
         }
 
-        $name        = $data['title'] ?? $this->name;
-        $description = $data['description'] ?? '';
-        $private     = (!empty($data['private'] && (int)$data['private'] === 1)) ? 1 : 0;
-
-        $sql    = "UPDATE `broadcast` SET `name` = ?, `description` = ?, `is_private` = ? WHERE `id` = ?";
-        $params = [$name, $description, $private, $this->id];
-        Dba::write($sql, $params);
-
-        return $this->id;
+        return null;
     }
 
     /**
-     * Get item keywords for metadata searches.
-     * @return array<string, array{important: bool, label: string, value: string}>
+     * Get broadcast link.
      */
-    public function get_keywords(): array
+    public static function get_broadcast_link(): string
     {
-        return [];
+        $link = "<div class=\"broadcast-action\">";
+        $link .= "<a href=\"#\" onclick=\"showBroadcastsDialog(event);\">" . Ui::get_material_symbol('cell_tower', T_('Broadcast')) . "</a>";
+
+        return $link . "</div>";
     }
 
     /**
-     * Get item fullname.
+     * Get broadcasts from a user.
+     * @return int[]
      */
-    public function get_fullname(): ?string
+    public static function get_broadcasts(int $user_id): array
     {
-        return $this->name;
-    }
+        $sql        = "SELECT `id` FROM `broadcast` WHERE `user` = ?";
+        $db_results = Dba::read($sql, [$user_id]);
 
-    /**
-     * get_link
-     */
-    public function get_link(): string
-    {
-        // don't do anything if it's formatted
-        if ($this->link === null) {
-            $web_path = AmpConfig::get_web_path();
-
-            $this->link = $web_path . '/broadcast.php?id=' . $this->id;
+        $broadcasts = [];
+        while ($results = Dba::fetch_assoc($db_results)) {
+            $broadcasts[] = (int)$results['id'];
         }
 
-        return $this->link ?? '';
+        return $broadcasts;
     }
 
     /**
-     * Get item tags.
-     * @return array<int, array{id: int, name: string, is_hidden: int, count: int}>
+     * Get unbroadcast link.
      */
-    public function get_tags(): array
+    public static function get_unbroadcast_link(int $broadcast_id): string
     {
-        if ($this->tags === null) {
-            $this->tags = Tag::get_top_tags('broadcast', $this->id);
+        $link = "<div class=\"broadcast-action\">";
+        $link .= Ajax::button(
+            '?page=player&action=unbroadcast&broadcast_id=' . $broadcast_id,
+            'cell_tower',
+            T_('Unbroadcast'),
+            'broadcast_action'
+        );
+        $link .= "</div>";
+
+        return $link . "<div class=\"broadcast-info\">(<span id=\"broadcast_listeners\">0</span>)</div>";
+    }
+
+    /**
+     * Delete the broadcast.
+     */
+    public function delete(): bool
+    {
+        $sql = "DELETE FROM `broadcast` WHERE `id` = ?";
+
+        return (Dba::write($sql, [$this->id]) !== null);
+    }
+
+    /**
+     * display_art
+     * @param array{width: int, height: int} $size
+     */
+    public function display_art(array $size, bool $force = false): void
+    {
+        if ($this->has_art() || $force) {
+            Art::display('broadcast', $this->id, (string)$this->get_fullname(), $size);
         }
-
-        return $this->tags ?? [];
     }
 
     /**
-     * Get item f_tags.
+     * Get default art kind for this item.
      */
-    public function get_f_tags(): string
+    public function get_default_art_kind(): string
     {
-        return Tag::get_display($this->get_tags(), true, 'broadcast');
+        return 'default';
+    }
+
+    /**
+     * get_description
+     */
+    public function get_description(): string
+    {
+        return '';
     }
 
     /**
@@ -238,6 +199,14 @@ class Broadcast extends database_object implements library_item, displayable_ite
     }
 
     /**
+     * Get item f_tags.
+     */
+    public function get_f_tags(): string
+    {
+        return Tag::get_display($this->get_tags(), true, 'broadcast');
+    }
+
+    /**
      * Get item f_time or f_time_h.
      */
     public function get_f_time(): string
@@ -246,12 +215,35 @@ class Broadcast extends database_object implements library_item, displayable_ite
     }
 
     /**
-     * get_parent
-     * Return parent `object_type`, `object_id`; null otherwise.
+     * Get item fullname.
      */
-    public function get_parent(): ?array
+    public function get_fullname(): ?string
     {
-        return null;
+        return $this->name;
+    }
+
+    /**
+     * Get item keywords for metadata searches.
+     * @return array<string, array{important: bool, label: string, value: string}>
+     */
+    public function get_keywords(): array
+    {
+        return [];
+    }
+
+    /**
+     * get_link
+     */
+    public function get_link(): string
+    {
+        // don't do anything if it's formatted
+        if ($this->link === null) {
+            $web_path = AmpConfig::get_web_path();
+
+            $this->link = $web_path . '/broadcast.php?id=' . $this->id;
+        }
+
+        return $this->link ?? '';
     }
 
     /**
@@ -271,6 +263,33 @@ class Broadcast extends database_object implements library_item, displayable_ite
     }
 
     /**
+     * get_parent
+     * Return parent `object_type`, `object_id`; null otherwise.
+     */
+    public function get_parent(): ?array
+    {
+        return null;
+    }
+
+    public function get_parent_fullname(): string
+    {
+        return '';
+    }
+
+    /**
+     * Get item tags.
+     * @return array<int, array{id: int, name: string, is_hidden: int, count: int}>
+     */
+    public function get_tags(): array
+    {
+        if ($this->tags === null) {
+            $this->tags = Tag::get_top_tags('broadcast', $this->id);
+        }
+
+        return $this->tags ?? [];
+    }
+
+    /**
      * Get item's owner.
      */
     public function get_user_owner(): ?int
@@ -278,31 +297,14 @@ class Broadcast extends database_object implements library_item, displayable_ite
         return $this->user;
     }
 
-    /**
-     * Get default art kind for this item.
-     */
-    public function get_default_art_kind(): string
+    public function getId(): int
     {
-        return 'default';
+        return $this->id;
     }
 
-    /**
-     * get_description
-     */
-    public function get_description(): string
+    public function getMediaType(): LibraryItemEnum
     {
-        return '';
-    }
-
-    /**
-     * display_art
-     * @param array{width: int, height: int} $size
-     */
-    public function display_art(array $size, bool $force = false): void
-    {
-        if ($this->has_art() || $force) {
-            Art::display('broadcast', $this->id, (string)$this->get_fullname(), $size);
-        }
+        return LibraryItemEnum::BROADCAST;
     }
 
     public function has_art(): bool
@@ -310,19 +312,9 @@ class Broadcast extends database_object implements library_item, displayable_ite
         return Art::has_db($this->id, 'broadcast');
     }
 
-    /**
-     * Get broadcast from its key.
-     */
-    public static function get_broadcast(string $key): ?Broadcast
+    public function isNew(): bool
     {
-        $sql        = "SELECT `id` FROM `broadcast` WHERE `key` = ?";
-        $db_results = Dba::read($sql, [$key]);
-
-        if ($results = Dba::fetch_assoc($db_results)) {
-            return new Broadcast($results['id']);
-        }
-
-        return null;
+        return $this->getId() === 0;
     }
 
     /**
@@ -337,57 +329,54 @@ class Broadcast extends database_object implements library_item, displayable_ite
     }
 
     /**
-     * Get broadcast link.
+     * Update a broadcast from data array.
      */
-    public static function get_broadcast_link(): string
+    public function update(array $data): int
     {
-        $link = "<div class=\"broadcast-action\">";
-        $link .= "<a href=\"#\" onclick=\"showBroadcastsDialog(event);\">" . Ui::get_material_symbol('cell_tower', T_('Broadcast')) . "</a>";
-
-        return $link . "</div>";
-    }
-
-    /**
-     * Get unbroadcast link.
-     */
-    public static function get_unbroadcast_link(int $broadcast_id): string
-    {
-        $link = "<div class=\"broadcast-action\">";
-        $link .= Ajax::button(
-            '?page=player&action=unbroadcast&broadcast_id=' . $broadcast_id,
-            'cell_tower',
-            T_('Unbroadcast'),
-            'broadcast_action'
-        );
-        $link .= "</div>";
-
-        return $link . "<div class=\"broadcast-info\">(<span id=\"broadcast_listeners\">0</span>)</div>";
-    }
-
-    /**
-     * Get broadcasts from a user.
-     * @return int[]
-     */
-    public static function get_broadcasts(int $user_id): array
-    {
-        $sql        = "SELECT `id` FROM `broadcast` WHERE `user` = ?";
-        $db_results = Dba::read($sql, [$user_id]);
-
-        $broadcasts = [];
-        while ($results = Dba::fetch_assoc($db_results)) {
-            $broadcasts[] = (int)$results['id'];
+        if (isset($data['edit_tags'])) {
+            Tag::update_tag_list($data['edit_tags'], 'broadcast', $this->id, true);
         }
 
-        return $broadcasts;
+        $name        = $data['title'] ?? $this->name;
+        $description = $data['description'] ?? '';
+        $private     = (!empty($data['private'] && (int)$data['private'] === 1)) ? 1 : 0;
+
+        $sql    = "UPDATE `broadcast` SET `name` = ?, `description` = ?, `is_private` = ? WHERE `id` = ?";
+        $params = [$name, $description, $private, $this->id];
+        Dba::write($sql, $params);
+
+        return $this->id;
     }
 
-    public function getMediaType(): LibraryItemEnum
+    /**
+     * Update broadcast listeners.
+     */
+    public function update_listeners(int $listeners): void
     {
-        return LibraryItemEnum::BROADCAST;
+        $sql = "UPDATE `broadcast` SET `listeners` = ? WHERE `id` = ?";
+        Dba::write($sql, [$listeners, $this->id]);
+        $this->listeners = $listeners;
     }
 
-    public function get_parent_fullname(): string
+    /**
+     * Update broadcast current song.
+     */
+    public function update_song(int $song_id): void
     {
-        return '';
+        $sql = "UPDATE `broadcast` SET `song` = ? WHERE `id` = ?";
+        Dba::write($sql, [$song_id, $this->id]);
+        $this->song          = $song_id;
+        $this->song_position = 0;
+    }
+
+    /**
+     * Update broadcast state.
+     */
+    public function update_state(int $started, string $key = ''): void
+    {
+        $sql = "UPDATE `broadcast` SET `started` = ?, `key` = ?, `song` = '0', `listeners` = '0' WHERE `id` = ?";
+        Dba::write($sql, [$started, $key, $this->id]);
+
+        $this->started = $started;
     }
 }

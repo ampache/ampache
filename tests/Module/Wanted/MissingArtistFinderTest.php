@@ -39,16 +39,6 @@ class MissingArtistFinderTest extends MockeryTestCase
 
     private ?MissingArtistFinder $subject;
 
-    #[Override]
-    protected function setUp(): void
-    {
-        $this->musicBrainz = $this->mock(MusicBrainz::class);
-
-        $this->subject = new MissingArtistFinder(
-            $this->musicBrainz
-        );
-    }
-
     public function testFindReturnsFinds(): void
     {
         $artistName    = 'some-artist-name';
@@ -72,6 +62,16 @@ class MissingArtistFinderTest extends MockeryTestCase
         $this->assertSame(
             [['mbid' => $musicBrainzId, 'name' => $name]],
             $this->subject->find($artistName)
+        );
+    }
+
+    #[Override]
+    protected function setUp(): void
+    {
+        $this->musicBrainz = $this->mock(MusicBrainz::class);
+
+        $this->subject = new MissingArtistFinder(
+            $this->musicBrainz
         );
     }
 }

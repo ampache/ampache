@@ -32,153 +32,12 @@ use Ampache\Repository\Model\User;
 final readonly class UserRepository implements UserRepositoryInterface
 {
     /**
-     * This returns a built user from a rsstoken
+     * Activates the user by username
      */
-    public function getByRssToken(string $rssToken): ?User
+    public function activateByUsername(string $username): void
     {
-        $user       = null;
-        $sql        = "SELECT `id` FROM `user` WHERE `rsstoken` = ?";
-        $db_results = Dba::read($sql, [$rssToken]);
-        if ($results = Dba::fetch_assoc($db_results)) {
-            $user = new User((int) $results['id']);
-        }
-
-        return $user;
-    }
-
-    /**
-     * Finds a user by its id
-     */
-    public function findById(int $id): ?User
-    {
-        $user = new User($id);
-        if ($user->isNew()) {
-            return null;
-        }
-
-        return $user;
-    }
-
-    /**
-     * Lookup for a user id with a certain name
-     */
-    public function idByUsername(string $username): int
-    {
-        if ($username === '-1') {
-            return 0;
-        }
-
-        $db_results = Dba::read(
-            'SELECT `id` FROM `user` WHERE `username` = ?',
-            [$username]
-        );
-
-        $data   = Dba::fetch_assoc($db_results);
-        $result = $data['id'] ?? null;
-
-        if ($result !== null) {
-            return (int) $result;
-        }
-
-        return 0;
-    }
-
-    /**
-     * Lookup for a user id with a certain email
-     */
-    public function idByEmail(string $email): int
-    {
-        $db_results = Dba::read(
-            'SELECT `id` FROM `user` WHERE `email` = ?',
-            [$email]
-        );
-
-        $data   = Dba::fetch_assoc($db_results);
-        $result = $data['id'] ?? null;
-
-        if ($result !== null) {
-            return (int) $result;
-        }
-
-        return 0;
-    }
-
-    /**
-     * Look up a user id by reset token (DOES NOT FIND ADMIN USERS)
-     */
-    public function idByResetToken(string $token): int
-    {
-        $sql        = 'SELECT `id`, `username`, `email` FROM `user` WHERE `access` != 100;';
-        $db_results = Dba::read($sql);
-        while ($row = Dba::fetch_assoc($db_results)) {
-            $email_hash = hash('sha256', (string) $row['email']);
-            $user_token = hash('sha256', $row['username'] . $email_hash);
-            if ($token === $user_token) {
-                return (int)$row['id'];
-            }
-        }
-
-        return 0;
-    }
-
-    /**
-     * This returns all valid users in database.
-     *
-     * @return int[]
-     */
-    public function getValid(bool $includeDisabled = false): array
-    {
-        $key   = 'users';
-        $value = ($includeDisabled)
-            ? 'users_all'
-            : 'users_valid';
-        if (User::is_cached($key, $value)) {
-            return User::get_from_cache($key, $value);
-        }
-
-        $users = [];
-        $sql   = ($includeDisabled)
-            ? 'SELECT `id` FROM `user`;'
-            : "SELECT `id` FROM `user` WHERE `disabled` = '0';";
-
-        $db_results = Dba::read($sql);
-        while ($results = Dba::fetch_assoc($db_results)) {
-            $users[] = (int) $results['id'];
-        }
-
-        User::add_to_cache($key, $value, $users);
-
-        return $users;
-    }
-
-    /**
-     * This returns all valid users in an array (id => name).
-     *
-     * @return string[]
-     */
-    public function getValidArray(bool $includeDisabled = false): array
-    {
-        $key   = 'users';
-        $value = ($includeDisabled)
-            ? 'userarray_all'
-            : 'userarray_valid';
-        if (User::is_cached($key, $value)) {
-            return User::get_from_cache($key, $value);
-        }
-
-        $users = [];
-        $sql   = ($includeDisabled)
-            ? 'SELECT `id`, `username` FROM `user`;'
-            : "SELECT `id`, `username` FROM `user` WHERE `disabled` = '0';";
-
-        $db_results = Dba::read($sql);
-        while ($results = Dba::fetch_assoc($db_results)) {
-            $users[(int) $results['id']] = $results['username'];
-        }
-
-        User::add_to_cache($key, $value, $users);
-
-        return $users;
+        $sql = "UPDATE `user` SET `disabled`='0', `validation` = NULL WHERE `username` = ?";
+        Dba::write($sql, [$username]);
     }
 
     /**
@@ -246,57 +105,14 @@ final readonly class UserRepository implements UserRepositoryInterface
     }
 
     /**
-     * This returns a built user from a username
+     * this enables the user
      */
-    public function findByUsername(string $username): ?User
+    public function enable(int $userId): void
     {
-        if ($username === '-1') {
-            return new User(-1);
-        }
-
-        $user       = null;
-        $sql        = 'SELECT `id` FROM `user` WHERE `username` = ?';
-        $db_results = Dba::read($sql, [$username]);
-        if ($results = Dba::fetch_assoc($db_results)) {
-            $user = new User((int) $results['id']);
-        }
-
-        return $user;
-    }
-
-    /**
-     * This returns a built user from a email
-     */
-    public function findByEmail(string $email): ?User
-    {
-        $user       = null;
-        $sql        = 'SELECT `id` FROM `user` WHERE `email` = ?';
-        $db_results = Dba::read($sql, [$email]);
-        if ($results = Dba::fetch_assoc($db_results)) {
-            $user = new User((int) $results['id']);
-        }
-
-        return $user;
-    }
-
-    /**
-     * This returns users list related to a website.
-     *
-     * @return int[]
-     *
-     * @todo rework. the query limits the results to 1, so it doesn't need to return an array
-     */
-    public function findByWebsite(string $website): array
-    {
-        $website    = rtrim($website, "/");
-        $sql        = 'SELECT `id` FROM `user` WHERE `website` = ? LIMIT 1';
-        $db_results = Dba::read($sql, [$website]);
-        $users      = [];
-        while ($results = Dba::fetch_assoc($db_results)) {
-            $users[] = (int) $results['id'];
-        }
-
-        return $users;
+        Dba::write(
+            "UPDATE `user` SET `disabled`='0' WHERE `id` = ?",
+            [$userId]
+        );
     }
 
     /**
@@ -344,6 +160,34 @@ final readonly class UserRepository implements UserRepositoryInterface
     }
 
     /**
+     * This returns a built user from a email
+     */
+    public function findByEmail(string $email): ?User
+    {
+        $user       = null;
+        $sql        = 'SELECT `id` FROM `user` WHERE `email` = ?';
+        $db_results = Dba::read($sql, [$email]);
+        if ($results = Dba::fetch_assoc($db_results)) {
+            $user = new User((int) $results['id']);
+        }
+
+        return $user;
+    }
+
+    /**
+     * Finds a user by its id
+     */
+    public function findById(int $id): ?User
+    {
+        $user = new User($id);
+        if ($user->isNew()) {
+            return null;
+        }
+
+        return $user;
+    }
+
+    /**
      * This returns a built user from a streamToken
      */
     public function findByStreamToken(string $streamToken): ?User
@@ -377,89 +221,57 @@ final readonly class UserRepository implements UserRepositoryInterface
     }
 
     /**
-     * updates the last seen data for the user
+     * This returns a built user from a username
      */
-    public function updateLastSeen(
-        int $userId,
-    ): void {
-        Dba::write(
-            'UPDATE user SET last_seen = ? WHERE `id` = ?',
-            [time(), $userId]
-        );
-    }
-
-    /**
-     * this enables the user
-     */
-    public function enable(int $userId): void
+    public function findByUsername(string $username): ?User
     {
-        Dba::write(
-            "UPDATE `user` SET `disabled`='0' WHERE `id` = ?",
-            [$userId]
-        );
-    }
+        if ($username === '-1') {
+            return new User(-1);
+        }
 
-    /**
-     * Retrieve the validation code of a certain user by its username
-     */
-    public function getValidationByUsername(string $username): ?string
-    {
-        $sql        = "SELECT `validation` FROM `user` WHERE `username` = ?";
+        $user       = null;
+        $sql        = 'SELECT `id` FROM `user` WHERE `username` = ?';
         $db_results = Dba::read($sql, [$username]);
+        if ($results = Dba::fetch_assoc($db_results)) {
+            $user = new User((int) $results['id']);
+        }
 
-        $row = Dba::fetch_assoc($db_results);
-
-        return $row['validation'] ?? null;
+        return $user;
     }
 
     /**
-     * Activates the user by username
+     * This returns users list related to a website.
+     *
+     * @return int[]
+     *
+     * @todo rework. the query limits the results to 1, so it doesn't need to return an array
      */
-    public function activateByUsername(string $username): void
+    public function findByWebsite(string $website): array
     {
-        $sql = "UPDATE `user` SET `disabled`='0', `validation` = NULL WHERE `username` = ?";
-        Dba::write($sql, [$username]);
+        $website    = rtrim($website, "/");
+        $sql        = 'SELECT `id` FROM `user` WHERE `website` = ? LIMIT 1';
+        $db_results = Dba::read($sql, [$website]);
+        $users      = [];
+        while ($results = Dba::fetch_assoc($db_results)) {
+            $users[] = (int) $results['id'];
+        }
+
+        return $users;
     }
 
     /**
-     * Updates a users RSS token
+     * This returns a built user from a rsstoken
      */
-    public function updateRssToken(int $userId, string $rssToken): void
+    public function getByRssToken(string $rssToken): ?User
     {
-        $sql = "UPDATE `user` SET `rsstoken` = ? WHERE `id` = ?";
+        $user       = null;
+        $sql        = "SELECT `id` FROM `user` WHERE `rsstoken` = ?";
+        $db_results = Dba::read($sql, [$rssToken]);
+        if ($results = Dba::fetch_assoc($db_results)) {
+            $user = new User((int) $results['id']);
+        }
 
-        Dba::write($sql, [$rssToken, $userId]);
-    }
-
-    /**
-     * Updates a users Stream token
-     */
-    public function updateStreamToken(int $userId, string $userName, string $streamToken): void
-    {
-        $sql = "UPDATE `user` SET `streamtoken` = ? WHERE `id` = ?";
-        Dba::write($sql, [$streamToken, $userId]);
-    }
-
-    /**
-     * Updates a users api key
-     */
-    public function updateApiKey(int $userId, string $apikey): void
-    {
-        $sql = "UPDATE `user` SET `apikey` = ? WHERE `id` = ?";
-
-        Dba::write($sql, [$apikey, $userId]);
-    }
-
-    /**
-     * Get the current hashed user password
-     */
-    public function retrievePasswordFromUser(int $userId): string
-    {
-        $sql        = 'SELECT * FROM `user` WHERE `id` = ?';
-        $db_results = Dba::read($sql, [$userId]);
-        $row        = Dba::fetch_assoc($db_results);
-
-        return $row['password'] ?? '';
+        return $user;
     }
 
     /**
@@ -493,5 +305,193 @@ final readonly class UserRepository implements UserRepositoryInterface
             'users' => (int) $userResult,
             'connected' => (int) $sessionResult,
         ];
+    }
+
+    /**
+     * This returns all valid users in database.
+     *
+     * @return int[]
+     */
+    public function getValid(bool $includeDisabled = false): array
+    {
+        $key   = 'users';
+        $value = ($includeDisabled)
+            ? 'users_all'
+            : 'users_valid';
+        if (User::is_cached($key, $value)) {
+            return User::get_from_cache($key, $value);
+        }
+
+        $users = [];
+        $sql   = ($includeDisabled)
+            ? 'SELECT `id` FROM `user`;'
+            : "SELECT `id` FROM `user` WHERE `disabled` = '0';";
+
+        $db_results = Dba::read($sql);
+        while ($results = Dba::fetch_assoc($db_results)) {
+            $users[] = (int) $results['id'];
+        }
+
+        User::add_to_cache($key, $value, $users);
+
+        return $users;
+    }
+
+    /**
+     * This returns all valid users in an array (id => name).
+     *
+     * @return string[]
+     */
+    public function getValidArray(bool $includeDisabled = false): array
+    {
+        $key   = 'users';
+        $value = ($includeDisabled)
+            ? 'userarray_all'
+            : 'userarray_valid';
+        if (User::is_cached($key, $value)) {
+            return User::get_from_cache($key, $value);
+        }
+
+        $users = [];
+        $sql   = ($includeDisabled)
+            ? 'SELECT `id`, `username` FROM `user`;'
+            : "SELECT `id`, `username` FROM `user` WHERE `disabled` = '0';";
+
+        $db_results = Dba::read($sql);
+        while ($results = Dba::fetch_assoc($db_results)) {
+            $users[(int) $results['id']] = $results['username'];
+        }
+
+        User::add_to_cache($key, $value, $users);
+
+        return $users;
+    }
+
+    /**
+     * Retrieve the validation code of a certain user by its username
+     */
+    public function getValidationByUsername(string $username): ?string
+    {
+        $sql        = "SELECT `validation` FROM `user` WHERE `username` = ?";
+        $db_results = Dba::read($sql, [$username]);
+
+        $row = Dba::fetch_assoc($db_results);
+
+        return $row['validation'] ?? null;
+    }
+
+    /**
+     * Lookup for a user id with a certain email
+     */
+    public function idByEmail(string $email): int
+    {
+        $db_results = Dba::read(
+            'SELECT `id` FROM `user` WHERE `email` = ?',
+            [$email]
+        );
+
+        $data   = Dba::fetch_assoc($db_results);
+        $result = $data['id'] ?? null;
+
+        if ($result !== null) {
+            return (int) $result;
+        }
+
+        return 0;
+    }
+
+    /**
+     * Look up a user id by reset token (DOES NOT FIND ADMIN USERS)
+     */
+    public function idByResetToken(string $token): int
+    {
+        $sql        = 'SELECT `id`, `username`, `email` FROM `user` WHERE `access` != 100;';
+        $db_results = Dba::read($sql);
+        while ($row = Dba::fetch_assoc($db_results)) {
+            $email_hash = hash('sha256', (string) $row['email']);
+            $user_token = hash('sha256', $row['username'] . $email_hash);
+            if ($token === $user_token) {
+                return (int)$row['id'];
+            }
+        }
+
+        return 0;
+    }
+
+    /**
+     * Lookup for a user id with a certain name
+     */
+    public function idByUsername(string $username): int
+    {
+        if ($username === '-1') {
+            return 0;
+        }
+
+        $db_results = Dba::read(
+            'SELECT `id` FROM `user` WHERE `username` = ?',
+            [$username]
+        );
+
+        $data   = Dba::fetch_assoc($db_results);
+        $result = $data['id'] ?? null;
+
+        if ($result !== null) {
+            return (int) $result;
+        }
+
+        return 0;
+    }
+
+    /**
+     * Get the current hashed user password
+     */
+    public function retrievePasswordFromUser(int $userId): string
+    {
+        $sql        = 'SELECT * FROM `user` WHERE `id` = ?';
+        $db_results = Dba::read($sql, [$userId]);
+        $row        = Dba::fetch_assoc($db_results);
+
+        return $row['password'] ?? '';
+    }
+
+    /**
+     * Updates a users api key
+     */
+    public function updateApiKey(int $userId, string $apikey): void
+    {
+        $sql = "UPDATE `user` SET `apikey` = ? WHERE `id` = ?";
+
+        Dba::write($sql, [$apikey, $userId]);
+    }
+
+    /**
+     * updates the last seen data for the user
+     */
+    public function updateLastSeen(
+        int $userId,
+    ): void {
+        Dba::write(
+            'UPDATE user SET last_seen = ? WHERE `id` = ?',
+            [time(), $userId]
+        );
+    }
+
+    /**
+     * Updates a users RSS token
+     */
+    public function updateRssToken(int $userId, string $rssToken): void
+    {
+        $sql = "UPDATE `user` SET `rsstoken` = ? WHERE `id` = ?";
+
+        Dba::write($sql, [$rssToken, $userId]);
+    }
+
+    /**
+     * Updates a users Stream token
+     */
+    public function updateStreamToken(int $userId, string $userName, string $streamToken): void
+    {
+        $sql = "UPDATE `user` SET `streamtoken` = ? WHERE `id` = ?";
+        Dba::write($sql, [$streamToken, $userId]);
     }
 }

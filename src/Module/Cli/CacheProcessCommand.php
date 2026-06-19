@@ -32,18 +32,6 @@ use Override;
 
 final class CacheProcessCommand extends Command
 {
-    #[Override]
-    protected function defaults(): self
-    {
-        $this
-            ->option('-h, --help', T_('Help'))->on($this->showHelp(...))
-            ->option('-c|--cleanup', T_('Clean'), 'boolval', false);
-
-        $this->onExit(static fn ($exitCode = 0) => exit($exitCode));
-
-        return $this;
-    }
-
     public function __construct(
         private readonly ConfigContainerInterface $configContainer,
     ) {
@@ -75,5 +63,17 @@ final class CacheProcessCommand extends Command
             T_('Completed cache process'),
             true
         );
+    }
+
+    #[Override]
+    protected function defaults(): self
+    {
+        $this
+            ->option('-h, --help', T_('Help'))->on($this->showHelp(...))
+            ->option('-c|--cleanup', T_('Clean'), 'boolval', false);
+
+        $this->onExit(static fn ($exitCode = 0) => exit($exitCode));
+
+        return $this;
     }
 }
