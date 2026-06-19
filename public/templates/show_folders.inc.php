@@ -65,8 +65,6 @@ $cel_folder  = "cel_folder";
 $cel_counter = "cel_counter";
 $css_class   = '';
 $folder_link = Ajax::text('?page=browse&action=set_sort&browse_id=' . $browse->id . '&sort=name', $name_text, 'folder_sort_name');
-$songs_link  = Ajax::text('?page=browse&action=set_sort&browse_id=' . $browse->id . '&sort=object_count', $items_text, 'folder_sort_object_count');
-$count_link  = Ajax::text('?page=browse&action=set_sort&browse_id=' . $browse->id . '&sort=total_count', $count_text, 'folder_sort_total_count');
 $rating_link = Ajax::text('?page=browse&action=set_sort&browse_id=' . $browse->id . '&sort=rating', $rating_text, 'folder_sort_rating');
 
 if ($browse->is_show_header()) {
@@ -82,9 +80,9 @@ if ($browse->is_show_header()) {
                 <th class="<?php echo $cel_cover; ?> optional"><?php echo T_('Art'); ?></th>
                 <th class="<?php echo $cel_folder; ?> essential persist"><?php echo $folder_link; ?></th>
                 <th class="cel_add essential"></th>
-                <th class="cel_songs optional"><?php echo $songs_link; ?></th>
+                <th class="cel_songs optional"></th>
 <?php if ($show_played_times) { ?>
-                <th class="<?php echo $cel_counter; ?> optional"><?php echo $count_link; ?></th>
+                <th class="<?php echo $cel_counter; ?> optional"></th>
 <?php } ?>
 <?php if ($show_ratings) {
     ++$thcount; ?>
@@ -155,12 +153,12 @@ foreach ($object_ids as $object) {
                 <th class="<?php echo $cel_folder; ?>"><?php echo $name_text; ?></th>
                 <th class="cel_add"></th>
                 <th class="cel_songs"><?php echo $items_text; ?></th>
-                <?php if ($show_played_times) { ?>
+<?php if ($show_played_times) { ?>
                 <th class="<?php echo $cel_counter; ?> optional"><?php echo $count_text; ?></th>
-                <?php } ?>
-                <?php if ($show_ratings) { ?>
+<?php } ?>
+<?php if ($show_ratings) { ?>
                     <th class="cel_ratings optional"><?php echo $rating_text; ?></th>
-                    <?php } ?>
+<?php } ?>
                 <th class="cel_action"><?php echo $action_text; ?></th>
             </tr>
         </tfoot>
