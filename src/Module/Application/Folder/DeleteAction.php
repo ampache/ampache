@@ -57,6 +57,7 @@ final readonly class DeleteAction implements ApplicationActionInterface
         }
 
         $folderId = (int) ($request->getQueryParams()['folder_id'] ?? 0);
+        $returnId = $folder->parent ?? -1;
         $webPath  = $this->configContainer->getWebPath();
 
         $this->ui->showHeader();
@@ -75,7 +76,7 @@ final readonly class DeleteAction implements ApplicationActionInterface
                 sprintf(
                     '%s/folders.php?action=show&folder=%s',
                     $webPath,
-                    $folderId
+                    $returnId
                 ),
                 'delete_folder'
             );
