@@ -39,6 +39,7 @@ use Ampache\Repository\Model\Art;
 use Ampache\Repository\Model\Artist;
 use Ampache\Repository\Model\Catalog;
 use Ampache\Repository\Model\Democratic;
+use Ampache\Repository\Model\Folder;
 use Ampache\Repository\Model\library_item;
 use Ampache\Repository\Model\LibraryItemEnum;
 use Ampache\Repository\Model\Live_Stream;
@@ -58,6 +59,7 @@ use Ampache\Repository\Model\Video;
 use Ampache\Repository\PodcastRepositoryInterface;
 use Ampache\Repository\SongRepositoryInterface;
 use DOMDocument;
+use SimpleXMLElement;
 
 /**
  * Xml8_Data Class
@@ -415,6 +417,100 @@ class Xml8_Data
         $xml_string = "\t<error errorCode=\"$code\">\n\t\t<errorAction><![CDATA[" . $action . "]]></errorAction>\n\t\t<errorType><![CDATA[" . $type . "]]></errorType>\n\t\t<errorMessage><![CDATA[" . $string . "]]></errorMessage>\n\t</error>";
 
         return self::output_xml($xml_string);
+    }
+
+    /**
+     * folders
+     *
+     * This returns folders to the user in an xml document.
+     *
+     * @param array<string> $folder_ids Folder children id's in object_type-Object_id format.
+     */
+    public static function folders(array $folder_ids, Folder $folder, User $user, string $auth): string
+    {
+        self::$count = self::$count ?? count($folder_ids);
+
+        $count = self::$count ?? count($folder_ids);
+        if (($count > self::$limit || self::$offset > 0) && self::$limit) {
+            $folder_ids = array_splice($folder_ids, self::$offset, self::$limit);
+        }
+
+        $xml = new SimpleXMLElement(
+            sprintf(
+                '<?xml version="1.0" encoding="%s"?><root/>',
+                AmpConfig::get('site_charset', 'UTF-8')
+            )
+        );
+        $xml->addChild('total_count', (string)self::$count);
+        $xml->addChild('md5', md5(serialize($folder_ids)));
+
+        $xml_folder = $xml->addChild('folder');
+        $xml_folder->addAttribute('id', (string)$folder->getId());
+        $xml_folder->addChild('title', (string)$folder->get_fullname());
+        $xml_folder->addChild('parent', (string)$folder->parent);
+        $xml_folder->addChild('path', (string)$folder->path_name);
+        $xml_folder->addChild('catalog', (string)$folder->catalog);
+        $xml_items = $xml_folder->addChild('items');
+
+        foreach ($folder_ids as $object) {
+            preg_match('/([a-z_]+)-([0-9]+)/', $object, $matches);
+            $object_type = $matches[1] ?? null;
+            $object_id   = (int)($matches[2] ?? 0);
+            $libitem     = null;
+            switch ($object_type) {
+                case 'folder':
+                    $libitem = new Folder($object_id);
+                    break;
+                case 'podcast_episode':
+                    $libitem = new Podcast_Episode($object_id);
+                    break;
+                case 'song':
+                    $libitem = new Song($object_id);
+                    break;
+                case 'video':
+                    $libitem = new Video($object_id);
+                    break;
+            }
+
+            if ($libitem === null || $libitem->isNew()) {
+                continue;
+            }
+
+            $rating      = new Rating($libitem->getId(), $object_type);
+            $user_rating = $rating->get_user_rating($user->getId());
+            $art_url     = Art::url($libitem->getId(), $object_type, $auth);
+            $play_url    = $libitem->play_url('', 'api', false, $user->id, $user->streamtoken);
+            $filename    = (property_exists($libitem, 'file'))
+                ? $libitem->get_f_link(pathinfo($libitem->file, PATHINFO_BASENAME))
+                : $libitem->get_fullname();
+
+            $item = $xml_items->addChild('item');
+            $item->addAttribute('id', (string)$libitem->id);
+            $item->addChild('object_type', (string)$object_type);
+            $item->addChild('title', (string)$filename);
+            $item->addChild('parent', (string)$folder->getId());
+            $item->addChild('art', (string)$art_url);
+            $item->addChild('has_art', $libitem->has_art() ? '1' : '0');
+            $item->addChild('play_url', (string)$play_url);
+            $item->addChild('rating', (string)$user_rating);
+            $item->addChild('averagerating', (string)($rating->get_average_rating() ?? ''));
+        }
+
+        $xml_string = $xml->asXML();
+        if ($xml_string === false) {
+            return self::empty();
+        }
+
+        $xml_string = Ui::clean_utf8($xml_string);
+        $dom        = new DOMDocument();
+        $dom->preserveWhiteSpace = false;
+        if (!$dom->loadXML($xml_string)) {
+            return $xml_string;
+        }
+        $dom->encoding     = AmpConfig::get('site_charset', 'UTF-8');
+        $dom->formatOutput = true;
+
+        return $dom->saveXML() ?: $xml_string;
     }
 
     /**
