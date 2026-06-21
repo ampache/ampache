@@ -1017,7 +1017,7 @@ class Json8_Data
             $rating      = new Rating($libitem->getId(), $object_type);
             $user_rating = $rating->get_user_rating($user->getId());
             $art_url     = Art::url($libitem->getId(), $object_type, $auth);
-            $play_url    = $libitem->play_url('', 'api', false, $user->id, $user->streamtoken);
+            $play_url    = ($libitem instanceof Folder) ? '' : $libitem->play_url('', 'api', false, $user->id, $user->streamtoken);
             $filename    = (property_exists($libitem, 'file'))
                 ? $libitem->get_f_link(pathinfo($libitem->file, PATHINFO_BASENAME))
                 : $libitem->get_fullname();
