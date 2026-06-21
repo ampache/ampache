@@ -117,6 +117,7 @@ class Folder extends database_object implements
         $path          = '';
         $user          = null;
         $addition_time = time();
+        $update_time   = filemtime($data['path_name']);
 
         // Build the folder paths
         if ($parent) {
@@ -135,8 +136,8 @@ class Folder extends database_object implements
             $parent = self::getFolderRepository()->lookup(str_replace(DIRECTORY_SEPARATOR . $name, '', $path_name), $catalog) ?: null;
         }
 
-        $sql = "INSERT INTO `folder` (`name`, `catalog`, `parent`, `user`, `addition_time`, `path`, `path_name`) VALUES (?, ?, ?, ?, ?, ?, ?)";
-        Dba::write($sql, [$name, $catalog, $parent, $user, $addition_time, $path, $path_name]);
+        $sql = "INSERT INTO `folder` (`name`, `catalog`, `parent`, `user`, `addition_time`, `update_time`, `path`, `path_name`) VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
+        Dba::write($sql, [$name, $catalog, $parent, $user, $addition_time, $update_time, $path, $path_name]);
 
         $folder_id = Dba::insert_id();
         if (!$folder_id) {
@@ -542,19 +543,13 @@ class Folder extends database_object implements
      */
     public function update(array $data): ?int
     {
-        // duplicate name check
-        if (self::getFolderRepository()->lookup($data['name'], ($data['catalog'] ?? $this->catalog)) !== 0) {
-            return null;
-        }
-
         $name         = $data['name'] ?? $this->name;
         $catalog      = $data['catalog'] ?? $this->catalog;
-        $parent       = $data['parent'] ?? null;
-        $update_time  = time();
-        $object_count = $data['object_count'] ?? null;
+        $parent       = $data['parent'] ?? $this->parent;
+        $update_time  = filemtime($data['path_name'] ?? $this->path_name);
 
-        $sql = "UPDATE `folder` SET `name` = ?, `catalog` = ?, `parent` = ?, `update_time` = ?, `object_count` = ? WHERE `id` = ?";
-        Dba::write($sql, [$name, $catalog, $parent, $update_time, $object_count, $this->id]);
+        $sql = "UPDATE `folder` SET `name` = ?, `catalog` = ?, `parent` = ?, `update_time` = ? WHERE `id` = ?";
+        Dba::write($sql, [$name, $catalog, $parent, $update_time, $this->id]);
 
         return $this->id;
     }

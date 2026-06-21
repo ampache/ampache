@@ -57,6 +57,7 @@ $button_flip_state_id = 'button_flip_state_' . $catalog->id; ?>
         <option value="add_to_catalog"><?php echo T_('Add'); ?></option>
         <option value="update_catalog"><?php echo T_('Verify'); ?></option>
         <option value="clean_catalog"><?php echo T_('Clean'); ?></option>
+        <option value="scan_catalog_folders"><?php echo T_('Scan Folders'); ?></option>
         <option value="full_service"><?php echo T_('Update'); ?></option>
         <option value="gather_media_art"><?php echo T_('Gather Art'); ?></option>
         <option value="import_to_catalog"><?php echo T_('Import'); ?></option>
