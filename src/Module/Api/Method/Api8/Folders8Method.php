@@ -79,6 +79,7 @@ final class Folders8Method
 
         $browse = Api::getBrowse($user);
         $browse->set_type('folder');
+        $browse->set_filter('int_id', $object_id);
         $browse->set_filter('catalog', User::get_user_catalogs($user->getId()));
         $browse->set_api_filter('add', $input['add'] ?? '');
         $browse->set_api_filter('update', $input['update'] ?? '');
