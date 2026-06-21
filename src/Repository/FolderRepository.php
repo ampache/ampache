@@ -27,6 +27,7 @@ namespace Ampache\Repository;
 
 use Ampache\Module\Database\DatabaseConnectionInterface;
 use Ampache\Module\Database\Exception\DatabaseException;
+use Ampache\Module\System\Dba;
 use Ampache\Repository\Model\Folder;
 use PDO;
 
@@ -198,6 +199,20 @@ final readonly class FolderRepository implements FolderRepositoryInterface
         }
 
         return $ret;
+    }
+
+    /**
+     * update_utime
+     * sets a new update time
+     */
+    public function update_utime(int $folder_id, int $time = 0): void
+    {
+        if (!$time) {
+            $time = time();
+        }
+
+        $sql = "UPDATE `folder` SET `update_time` = ? WHERE `id` = ?;";
+        $this->connection->query($sql, [$time, $folder_id]);
     }
 
     /**
