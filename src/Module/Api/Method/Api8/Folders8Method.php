@@ -66,7 +66,7 @@ final class Folders8Method
      *     auth: string,
      * } $input
      */
-    public static function browse(array $input, User $user): bool
+    public static function folders(array $input, User $user): bool
     {
         $object_id = (isset($input['filter'])) ? (int)$input['filter'] : -1;
         $folder    = new Folder($object_id);
