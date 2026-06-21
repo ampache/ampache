@@ -1018,15 +1018,22 @@ class Json8_Data
             $user_rating = $rating->get_user_rating($user->getId());
             $art_url     = Art::url($libitem->getId(), $object_type, $auth);
             $play_url    = ($libitem instanceof Folder) ? '' : $libitem->play_url('', 'api', false, $user->id, $user->streamtoken);
-            $filename    = (property_exists($libitem, 'file'))
-                ? $libitem->get_f_link(pathinfo($libitem->file, PATHINFO_BASENAME))
-                : $libitem->get_fullname();
+            if (property_exists($libitem, 'file')) {
+                $p_info   = pathinfo($libitem->file);
+                $filename = $p_info['basename'];
+                $dirname  = $p_info['dirname'];
+            } else {
+                /** @var Folder $libitem */
+                $filename = $libitem->get_fullname();
+                $dirname  = $libitem->path_name;
+            }
 
             $JSON["items"][] = [
                 "id" => (string)$libitem->id,
                 "object_type" => $object_type,
                 "title" => $filename,
                 "parent" => $folder->getId(),
+                "path" => $dirname,
                 "art" => $art_url,
                 "has_art" => $libitem->has_art(),
                 "play_url" => $play_url,
