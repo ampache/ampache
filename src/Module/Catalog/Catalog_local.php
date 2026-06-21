@@ -1738,7 +1738,7 @@ class Catalog_local extends Catalog
             $this->videos_to_gather[] = $video_id;
         }
 
-        $this->_filecache[strtolower($file)] = 'v_' . $video_id;
+        $this->_filecache[strtolower($file)] = $video_id;
 
         return $video_id;
     }
