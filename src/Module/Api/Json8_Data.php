@@ -38,6 +38,7 @@ use Ampache\Repository\Model\Art;
 use Ampache\Repository\Model\Artist;
 use Ampache\Repository\Model\Catalog;
 use Ampache\Repository\Model\Democratic;
+use Ampache\Repository\Model\Folder;
 use Ampache\Repository\Model\library_item;
 use Ampache\Repository\Model\LibraryItemEnum;
 use Ampache\Repository\Model\Live_Stream;
@@ -963,6 +964,84 @@ class Json8_Data
         ];
 
         return json_encode($message, JSON_PRETTY_PRINT) ?: '';
+    }
+
+    /**
+     * folders
+     *
+     * This returns folders to the user in a JSON document.
+     *
+     * @param array<string> $folder_ids Folder children id's in object_type-Object_id format.
+     */
+    public static function folders(array $folder_ids, Folder $folder, User $user, string $auth): string
+    {
+        self::$count = self::$count ?? count($folder_ids);
+
+        $count = self::$count ?? count($folder_ids);
+        if (($count > self::$limit || self::$offset > 0) && self::$limit) {
+            $folder_ids = array_splice($folder_ids, self::$offset, self::$limit);
+        }
+
+        $JSON = [
+            "id" => (string)$folder->getId(),
+            "title" => $folder->get_fullname(),
+            "parent" => $folder->parent,
+            "path" => $folder->path_name,
+            "catalog" => $folder->catalog,
+            "items" => []
+        ];
+        foreach ($folder_ids as $object) {
+            preg_match('/([a-z_]+)-([0-9]+)/', $object, $matches);
+            $object_type = $matches[1] ?? null;
+            $object_id   = (int)($matches[2] ?? 0);
+            $libitem     = null;
+            switch ($object_type) {
+                case 'folder':
+                    $libitem = new Folder($object_id);
+                    break;
+                case 'podcast_episode':
+                    $libitem = new Podcast_Episode($object_id);
+                    break;
+                case 'song':
+                    $libitem = new Song($object_id);
+                    break;
+                case 'video':
+                    $libitem = new Video($object_id);
+                    break;
+            }
+
+            if ($libitem === null || $libitem->isNew()) {
+                continue;
+            }
+
+            $rating      = new Rating($libitem->getId(), $object_type);
+            $user_rating = $rating->get_user_rating($user->getId());
+            $art_url     = Art::url($libitem->getId(), $object_type, $auth);
+            $play_url    = $libitem->play_url('', 'api', false, $user->id, $user->streamtoken);
+            $filename    = (property_exists($libitem, 'file'))
+                ? $libitem->get_f_link(pathinfo($libitem->file, PATHINFO_BASENAME))
+                : $libitem->get_fullname();
+
+            $JSON["items"][] = [
+                "id" => (string)$libitem->id,
+                "object_type" => $object_type,
+                "title" => $filename,
+                "parent" => $folder->getId(),
+                "art" => $art_url,
+                "has_art" => $libitem->has_art(),
+                "play_url" => $play_url,
+                "rating" => $user_rating,
+                "averagerating" => ($rating->get_average_rating() ?? null),
+            ];
+        }
+
+        $output = [
+            "total_count" => self::$count,
+            "md5" => md5(serialize($folder_ids)),
+            "folder" => $JSON
+        ];
+
+        return json_encode($output, JSON_PRETTY_PRINT) ?: '';
     }
 
     /**
