@@ -1866,10 +1866,10 @@ class Catalog_local extends Catalog
 
             try {
                 if (is_dir($full_file)) {
-                    if (
-                        !isset($this->_filecache[strtolower($full_file)]) &&
-                        $this->add_folder($file, $full_file, $path) !== null
-                    ) {
+                    if (isset($this->_filecache[strtolower($full_file)])) {
+                        // set mod time on scan
+                        self::getFolderRepository()->update_utime($this->_filecache[strtolower($full_file)], filemtime($full_file));
+                    } elseif ($this->add_folder($file, $full_file, $path) !== null) {
                         $this->count++;
                         $interactor?->info(
                             sprintf('Added %s, closing handle', $full_file),
@@ -1877,6 +1877,7 @@ class Catalog_local extends Catalog
                         );
                         debug_event('local.catalog', sprintf('Added %s, closing handle', $full_file), 5);
                     }
+
                     $this->_scan_folder($full_file, $interactor);
                 }
             } catch (Exception $error) {
