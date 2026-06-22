@@ -36,7 +36,7 @@ use Seafile\Client\Type\Library as LibraryType;
 
 class SeafileAdapter
 {
-    /** @var array{Libraries: LibraryType, Directories: Directory, Files: File, Client: Client}|null  */
+    /** @var array{Libraries: Library, Directories: Directory, Files: File, Client: Client}|null  */
     private array|null $client = null;
 
     /** @var array<string, DirectoryItem[]> */
@@ -84,17 +84,17 @@ class SeafileAdapter
 
     public function download(DirectoryItem $file, bool $partial = false): string
     {
-        $url  = ($this->library) ? $this->throttle_check(fn () => $this->client['Files']->getDownloadUrl($this->library, $file, $file->dir)) : '';
+        $url  = ($this->client && $file->dir) ? $this->throttle_check(fn () => $this->client['Files']->getDownloadUrl($this->library, $file, $file->dir)) : '';
         $opts = $partial ? ['curl' => [CURLOPT_RANGE => '0-2097152']] : ['delay' => 0];
 
         // grab a full 2 meg in case meta has image in it or something
-        $response = $this->throttle_check(fn () => $this->client['Client']->request('GET', $url, $opts));
+        $response = ($this->client) ? $this->throttle_check(fn () => $this->client['Client']->request('GET', $url, $opts)) : null;
 
         $tempfilename = Core::get_tmp_dir() . DIRECTORY_SEPARATOR . $file->name;
 
         $tempfile = fopen($tempfilename, 'wb');
 
-        if ($tempfile) {
+        if ($tempfile && $response) {
             fwrite($tempfile, (string) $response->getBody());
             fclose($tempfile);
         }
@@ -206,7 +206,7 @@ class SeafileAdapter
         ];
 
         // Get Library
-        /** @var Library[] $libraries */
+        /** @var LibraryType[] $libraries */
         $libraries = $this->throttle_check(fn () => $this->client['Libraries']->getAll());
 
         $matches = array_values(array_filter($libraries, fn ($library) => $library->name == $this->library_name));
@@ -262,6 +262,9 @@ class SeafileAdapter
                 return $directory;
             }
 
+            return null;
+        }
+        if (!$this->client) {
             return null;
         }
 
