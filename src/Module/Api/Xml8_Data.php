@@ -508,8 +508,8 @@ class Xml8_Data
             return self::empty();
         }
 
-        $xml_string = Ui::clean_utf8($xml_string);
-        $dom        = new DOMDocument();
+        $xml_string              = Ui::clean_utf8($xml_string);
+        $dom                     = new DOMDocument();
         $dom->preserveWhiteSpace = false;
         if (!$dom->loadXML($xml_string)) {
             return $xml_string;

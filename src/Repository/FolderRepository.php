@@ -27,7 +27,6 @@ namespace Ampache\Repository;
 
 use Ampache\Module\Database\DatabaseConnectionInterface;
 use Ampache\Module\Database\Exception\DatabaseException;
-use Ampache\Module\System\Dba;
 use Ampache\Repository\Model\Folder;
 use PDO;
 
@@ -202,20 +201,6 @@ final readonly class FolderRepository implements FolderRepositoryInterface
     }
 
     /**
-     * update_utime
-     * sets a new update time
-     */
-    public function update_utime(int $folder_id, int $time = 0): void
-    {
-        if (!$time) {
-            $time = time();
-        }
-
-        $sql = "UPDATE `folder` SET `update_time` = ? WHERE `id` = ?;";
-        $this->connection->query($sql, [$time, $folder_id]);
-    }
-
-    /**
      * Update folder counts columns after large actions
      */
     public function update_folder_counts(): void
@@ -244,5 +229,19 @@ final readonly class FolderRepository implements FolderRepositoryInterface
         $this->connection->query('INSERT INTO `folder_map` (`folder_id`, `object_id`, `object_type`, `name`, `catalog`, `path_name`) SELECT `folder`.`id` AS `folder_id`, `source`.`object_id`, \'video\' AS `object_type`, `source`.`filename` AS `name`, `source`.`catalog`, `source`.`dir` AS `path_name` FROM (SELECT `video`.`id` AS `object_id`, `video`.`title` AS `name`, `video`.`catalog`, `video`.`file`, SUBSTRING_INDEX(`video`.`file`, \'/\', -1) AS `filename`, SUBSTRING(`video`.`file`, 1, LENGTH(`video`.`file`) - LENGTH(SUBSTRING_INDEX(`video`.`file`, \'/\', -1)) - 1) AS `dir` FROM `video`) `source` JOIN `folder` ON `folder`.`path_name` = `source`.`dir` AND `folder`.`catalog` = `source`.`catalog` LEFT JOIN `folder_map` ON `folder_map`.`object_id` = `source`.`object_id` AND `folder_map`.`object_type` = \'video\' WHERE `folder_map`.`object_id` IS NULL;');
         // podcast_episode
         $this->connection->query('INSERT INTO `folder_map` (`folder_id`, `object_id`, `object_type`, `name`, `catalog`, `path_name`) SELECT `folder`.`id` AS `folder_id`, `source`.`object_id`, \'podcast_episode\' AS `object_type`, `source`.`filename` AS `name`, `source`.`catalog`, `source`.`dir` AS `path_name` FROM (SELECT `podcast_episode`.`id` AS `object_id`, `podcast_episode`.`title` AS `name`, `podcast_episode`.`catalog`, `podcast_episode`.`file`, SUBSTRING_INDEX(`podcast_episode`.`file`, \'/\', -1) AS `filename`, SUBSTRING(`podcast_episode`.`file`, 1, LENGTH(`podcast_episode`.`file`) - LENGTH(SUBSTRING_INDEX(`podcast_episode`.`file`, \'/\', -1)) - 1) AS `dir` FROM `podcast_episode`) `source` JOIN `folder` ON `folder`.`path_name` = `source`.`dir` AND `folder`.`catalog` = `source`.`catalog` LEFT JOIN `folder_map` ON `folder_map`.`object_id` = `source`.`object_id` AND `folder_map`.`object_type` = \'podcast_episode\' WHERE `folder_map`.`object_id` IS NULL;');
+    }
+
+    /**
+     * update_utime
+     * sets a new update time
+     */
+    public function update_utime(int $folder_id, int $time = 0): void
+    {
+        if (!$time) {
+            $time = time();
+        }
+
+        $sql = "UPDATE `folder` SET `update_time` = ? WHERE `id` = ?;";
+        $this->connection->query($sql, [$time, $folder_id]);
     }
 }
