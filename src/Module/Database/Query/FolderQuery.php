@@ -121,32 +121,32 @@ final class FolderQuery implements QueryInterface
                 break;
             case 'equal':
             case 'exact_match':
-                $filter_sql = " `folder`.`name` = '" . Dba::escape($value) . "' AND ";
+                $filter_sql = " (`folder`.`name` = '" . Dba::escape($value) . "' OR `folder`.`path_name` = '" . Dba::escape($value) . "') AND ";
                 break;
             case 'like':
             case 'alpha_match':
-                $filter_sql = " `folder`.`name` LIKE '%" . Dba::escape($value) . "%' AND ";
+                $filter_sql = " (`folder`.`name` LIKE '%" . Dba::escape($value) . "%' OR `folder`.`path_name` LIKE '%" . Dba::escape($value) . "%') AND ";
                 break;
             case 'not_like':
-                $filter_sql = " `folder`.`name` NOT LIKE '%" . Dba::escape($value) . "%' AND ";
+                $filter_sql = " (`folder`.`name` NOT LIKE '%" . Dba::escape($value) . "%' AND `folder`.`path_name` NOT LIKE '%" . Dba::escape($value) . "%') AND ";
                 break;
             case 'regex_match':
                 if (!empty($value)) {
-                    $filter_sql = " `folder`.`name` REGEXP '" . Dba::escape($value) . "' AND ";
+                    $filter_sql = " (`folder`.`name` REGEXP '" . Dba::escape($value) . "' OR `folder`.`path_name` REGEXP '" . Dba::escape($value) . "') AND ";
                 }
 
                 break;
             case 'regex_not_match':
                 if (!empty($value)) {
-                    $filter_sql = " `folder`.`name` NOT REGEXP '" . Dba::escape($value) . "' AND ";
+                    $filter_sql = " (`folder`.`name` NOT REGEXP '" . Dba::escape($value) . "' AND `folder`.`path_name` NOT REGEXP '" . Dba::escape($value) . "') AND ";
                 }
 
                 break;
             case 'starts_with':
-                $filter_sql = " `folder`.`name` LIKE '" . Dba::escape($value) . "%' AND ";
+                $filter_sql = " (`folder`.`name` LIKE '" . Dba::escape($value) . "%' OR `folder`.`path_name` LIKE '" . Dba::escape($value) . "%') AND ";
                 break;
             case 'not_starts_with':
-                $filter_sql = " `folder`.`name` NOT LIKE '" . Dba::escape($value) . "%' AND ";
+                $filter_sql = " (`folder`.`name` NOT LIKE '" . Dba::escape($value) . "%' AND `folder`.`path_name` NOT LIKE '" . Dba::escape($value) . "%') AND ";
                 break;
             case 'user_flag':
                 $filter_sql = ((int) $value === 0)

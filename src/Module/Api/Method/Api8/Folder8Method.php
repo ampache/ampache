@@ -29,7 +29,6 @@ use Ampache\Module\Api\Api;
 use Ampache\Module\Api\Exception\ErrorCodeEnum;
 use Ampache\Module\Api\Json8_Data;
 use Ampache\Module\Api\Xml8_Data;
-use Ampache\Repository\FolderRepositoryInterface;
 use Ampache\Repository\Model\Folder;
 use Ampache\Repository\Model\User;
 
@@ -37,28 +36,26 @@ use Ampache\Repository\Model\User;
  * Class List8Method
  * @package Lib\Api8Methods
  */
-final class Folders8Method
+final class Folder8Method
 {
-    public const string ACTION = 'folders';
+    public const string ACTION = 'folder';
 
     /**
-     * folders
+     * folder
      * MINIMUM_API_VERSION=8.0.0
      *
-     * Return children of a parent object in a folder traversal style
+     * Return children of a parent object by ID
      *
-     * filter = (string) path name filter (Default: '/') //optional
-     * exact  = (integer) 0,1, if true filter is exact rather then fuzzy (Default: 1) //optional
-     * add    = $browse->set_api_filter(date) //optional
-     * update = $browse->set_api_filter(date) //optional
-     * offset = (integer) //optional
-     * limit  = (integer) //optional
-     * cond   = (string) Apply additional filters to the browse using ';' separated comma string pairs (e.g. 'filter1,value1;filter2,value2') //optional
-     * sort   = (string) sort name or comma separated key pair. Order default 'ASC' (e.g. 'name,ASC' and 'name' are the same) //optional
+     * filter  = (string) object_id default: -1 (root folder) //optional
+     * add     = $browse->set_api_filter(date) //optional
+     * update  = $browse->set_api_filter(date) //optional
+     * offset  = (integer) //optional
+     * limit   = (integer) //optional
+     * cond    = (string) Apply additional filters to the browse using ';' separated comma string pairs (e.g. 'filter1,value1;filter2,value2') //optional
+     * sort    = (string) sort name or comma separated key pair. Order default 'ASC' (e.g. 'name,ASC' and 'name' are the same) //optional
      *
      * @param array{
      *     filter?: string,
-     *     exact?: int,
      *     add?: string,
      *     update?: string,
      *     offset?: int,
@@ -69,32 +66,20 @@ final class Folders8Method
      *     auth: string,
      * } $input
      */
-    public static function folders(array $input, User $user): bool
+    public static function folder(array $input, User $user): bool
     {
-        $browse = Api::getBrowse($user);
-        $browse->set_type('folder');
-
-        $path_name = $input['filter'] ?? '/';
-        $folder    = ($path_name === '/')
-            ? new Folder(-1)
-            : self::getFolderRepository()->getByPathName($path_name);
-
-            if ($folder->isNew()) {
+        $object_id = (isset($input['filter'])) ? (int) $input['filter'] : -1;
+        $folder    = new Folder($object_id);
+        if ($folder->isNew()) {
             /* HINT: Requested object string/id/type ("album", "myusername", "some song title", 1298376) */
-            Api::error(sprintf('Not Found: %s', $path_name), ErrorCodeEnum::NOT_FOUND, self::ACTION, 'filter', $input['api_format']);
+            Api::error(sprintf('Not Found: %s', $object_id), ErrorCodeEnum::NOT_FOUND, self::ACTION, 'filter', $input['api_format']);
 
             return false;
         }
 
-        $method = (array_key_exists('exact', $input) && (int) $input['exact'] == 0) ? 'alpha_match' : 'exact_match';
-        if ($path_name === '/') {
-            if ($method === 'exact_match') {
-                $browse->set_filter('int_id', $folder->getId());
-            }
-        } else {
-            $browse->set_api_filter($method, $path_name);
-        }
-
+        $browse = Api::getBrowse($user);
+        $browse->set_type('folder');
+        $browse->set_filter('int_id', $object_id);
         $browse->set_filter('catalog', User::get_user_catalogs($user->getId()));
         $browse->set_api_filter('add', $input['add'] ?? '');
         $browse->set_api_filter('update', $input['update'] ?? '');
@@ -124,15 +109,5 @@ final class Folders8Method
         }
 
         return true;
-    }
-
-    /**
-     * @deprecated inject dependency
-     */
-    protected static function getFolderRepository(): FolderRepositoryInterface
-    {
-        global $dic;
-
-        return $dic->get(FolderRepositoryInterface::class);
     }
 }
