@@ -6,7 +6,7 @@ checks:
 build:
   environment:
     php:
-      version: "8.5"
+      version: "8.5.7"
       ini:
         memory_limit: "-1"
         xdebug.mode: coverage
