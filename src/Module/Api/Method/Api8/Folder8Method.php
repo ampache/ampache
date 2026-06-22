@@ -46,7 +46,7 @@ final class Folder8Method
      *
      * Return children of a parent object by ID
      *
-     * filter  = (string) object_id default: -1 (root folder) //optional
+     * filter  = (int) object_id default: -1 (root folder) //optional
      * add     = $browse->set_api_filter(date) //optional
      * update  = $browse->set_api_filter(date) //optional
      * offset  = (integer) //optional
@@ -55,7 +55,7 @@ final class Folder8Method
      * sort    = (string) sort name or comma separated key pair. Order default 'ASC' (e.g. 'name,ASC' and 'name' are the same) //optional
      *
      * @param array{
-     *     filter?: string,
+     *     filter?: int,
      *     add?: string,
      *     update?: string,
      *     offset?: int,
