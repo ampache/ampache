@@ -59,8 +59,7 @@ class Ui implements UiInterface
 
     public function __construct(
         private readonly ConfigContainerInterface $configContainer,
-    ) {
-    }
+    ) {}
 
     /**
      * ajax_include
@@ -126,7 +125,7 @@ class Ui implements UiInterface
             );
 
             if ($clean) {
-                return rtrim((string)$clean);
+                return rtrim((string) $clean);
             }
 
             debug_event(self::class, 'Charset cleanup failed, something might break', 1);
@@ -172,7 +171,7 @@ class Ui implements UiInterface
             return '';
         }
 
-        while (strlen((string)floor($value)) > 3) {
+        while (strlen((string) floor($value)) > 3) {
             $value /= 1024;
             $pass++;
         }
@@ -226,7 +225,7 @@ class Ui implements UiInterface
 
                 $svgicon->addAttribute('class', $class_attrib);
 
-                $tag = explode("\n", (string)$svgicon->asXML(), 2)[1];
+                $tag = explode("\n", (string) $svgicon->asXML(), 2)[1];
             }
         } else {
             // fall back to png
@@ -281,7 +280,7 @@ class Ui implements UiInterface
                 $class_attrib ??= 'image image-' . $name;
                 $svgimage->addAttribute('class', $class_attrib);
 
-                $tag = explode("\n", (string)$svgimage->asXML(), 2)[1];
+                $tag = explode("\n", (string) $svgimage->asXML(), 2)[1];
             }
         } else {
             // fall back to png
@@ -361,7 +360,7 @@ class Ui implements UiInterface
 
             $svgicon->addAttribute('class', 'material-symbol material-symbol-' . $name . " " . $class_attrib);
 
-            $tag = explode("\n", (string)$svgicon->asXML(), 3)[1];
+            $tag = explode("\n", (string) $svgicon->asXML(), 3)[1];
         }
 
         return $tag;
@@ -498,11 +497,11 @@ class Ui implements UiInterface
      */
     public static function unformat_bytes(int|string $value): string
     {
-        if (preg_match('/^(\d+) *([[:alpha:]]+)$/', (string)$value, $matches)) {
-            $value = (int)$matches[1];
+        if (preg_match('/^(\d+) *([[:alpha:]]+)$/', (string) $value, $matches)) {
+            $value = (int) $matches[1];
             $unit  = strtolower(substr($matches[2], 0, 1));
         } else {
-            return (string)$value;
+            return (string) $value;
         }
 
         switch ($unit) {
@@ -522,7 +521,7 @@ class Ui implements UiInterface
                 $value *= 1024;
         }
 
-        return (string)$value;
+        return (string) $value;
     }
 
     /**
@@ -1253,7 +1252,7 @@ class Ui implements UiInterface
                 $plugin      = new Plugin($plugin_name);
                 if ($plugin->_plugin instanceof Ampachelibrefm || $plugin->_plugin instanceof AmpacheLastfm) {
                     $url      = $plugin->_plugin->url;
-                    $api_key  = rawurlencode((string)$plugin->_plugin->api_key);
+                    $api_key  = rawurlencode((string) $plugin->_plugin->api_key);
                     $callback = rawurlencode(AmpConfig::get_web_path() . '/preferences.php?tab=plugins&action=grant&plugin=' . $plugin_name);
                     /* HINT: Plugin Name */
                     echo sprintf('<a href="%s/api/auth/?api_key=%s&cb=%s" target="_blank">', $url, $api_key, $callback) . self::get_material_symbol('extension', sprintf(T_("Click to grant %s access to Ampache"), $plugin_name)) . '</a>';
@@ -1295,13 +1294,13 @@ class Ui implements UiInterface
             case 'stream_control_hits_days':
             case 'stream_control_time_max':
             case 'stream_control_time_days':
-                echo '<input type="number" name="' . $name . '" value="' . (int)$value . '" />';
+                echo '<input type="number" name="' . $name . '" value="' . (int) $value . '" />';
                 break;
             default:
                 if (str_ends_with($name, '_pass')) {
                     echo '<input type="password" name="' . $name . '" value="******" />';
                 } else {
-                    echo '<input type="text" name="' . $name . '" value="' . strip_tags((string)$value) . '" />';
+                    echo '<input type="text" name="' . $name . '" value="' . strip_tags((string) $value) . '" />';
                 }
 
                 break;

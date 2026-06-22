@@ -48,8 +48,7 @@ final readonly class InstallLocalplayAction implements ApplicationActionInterfac
         private UiInterface $ui,
         private ConfigContainerInterface $configContainer,
         private RequestParserInterface $requestParser,
-    ) {
-    }
+    ) {}
 
     public function run(ServerRequestInterface $request, GuiGatekeeperInterface $gatekeeper): ?ResponseInterface
     {
@@ -70,7 +69,7 @@ final readonly class InstallLocalplayAction implements ApplicationActionInterfac
             return null;
         }
 
-        $localplay = new LocalPlay((string)filter_input(INPUT_GET, 'type', FILTER_SANITIZE_SPECIAL_CHARS));
+        $localplay = new LocalPlay((string) filter_input(INPUT_GET, 'type', FILTER_SANITIZE_SPECIAL_CHARS));
         if (!$localplay->player_loaded()) {
             AmpError::add('general', T_('Failed to enable the Localplay module'));
             echo AmpError::display('general');

@@ -85,7 +85,7 @@ class Wanted extends database_object
      */
     public static function get_missing_albums(?Artist $artist, ?string $mbid = ''): array
     {
-        $lookupMbid = (string)($artist->mbid ?? $mbid);
+        $lookupMbid = (string) ($artist->mbid ?? $mbid);
         $includes   = ['release-groups'];
         $types      = AmpConfig::get('wanted_types', []);
         if (is_string($types)) {
@@ -144,12 +144,12 @@ class Wanted extends database_object
             }
             $user = Core::get_global('user');
             foreach ($martist->{'release-groups'} as $group) {
-                if (is_array($types) && in_array(strtolower((string)$group->{'primary-type'}), $types)) {
+                if (is_array($types) && in_array(strtolower((string) $group->{'primary-type'}), $types)) {
                     $add     = true;
                     $g_count = count($group->{'secondary-types'});
 
                     for ($i = 0; $i < $g_count && $add; ++$i) {
-                        $add = in_array(strtolower((string)$group->{'secondary-types'}[$i]), $types);
+                        $add = in_array(strtolower((string) $group->{'secondary-types'}[$i]), $types);
                     }
 
                     if (
@@ -172,10 +172,10 @@ class Wanted extends database_object
                             $wanted->user = $user?->getId();
                             $wanted->name = $group->title;
                             if (!empty($group->{'first-release-date'})) {
-                                if (strlen((string)$group->{'first-release-date'}) == 4) {
+                                if (strlen((string) $group->{'first-release-date'}) == 4) {
                                     $wanted->year = $group->{'first-release-date'};
                                 } elseif (strtotime((string) $group->{'first-release-date'})) {
-                                    $wanted->year = (int)date("Y", strtotime((string) $group->{'first-release-date'}) ?: null);
+                                    $wanted->year = (int) date("Y", strtotime((string) $group->{'first-release-date'}) ?: null);
                                 } else {
                                     $wanted->year = null;
                                 }
@@ -395,7 +395,7 @@ class Wanted extends database_object
                 // Set fresh data
                 $this->name = $group->title;
                 $this->year = (strtotime((string) $group->{'first-release-date'}))
-                    ? (int)date("Y", strtotime((string) $group->{'first-release-date'}) ?: null)
+                    ? (int) date("Y", strtotime((string) $group->{'first-release-date'}) ?: null)
                     : null;
 
                 // Load from database if already cached
@@ -441,7 +441,7 @@ class Wanted extends database_object
 
                                 if ($this->artist) {
                                     $artist      = new Artist($this->artist);
-                                    $artist_name = (string)$artist->name;
+                                    $artist_name = (string) $artist->name;
                                 } elseif ($this->artist_mbid !== null) {
                                     $wartist     = self::getMissingArtistRetriever()->retrieve($this->artist_mbid);
                                     $artist_name = $wartist['name'] ?? '';
@@ -512,6 +512,6 @@ class Wanted extends database_object
             return $result;
         }
 
-        return Ajax::button('?page=index&action=add_wanted&mbid=' . $this->mbid . (($this->artist) ? '&artist=' . $this->artist : '&artist_mbid=' . $this->artist_mbid) . '&name=' . urlencode((string)$this->name) . '&year=' . (int) $this->year, 'saved_search', T_('Add to wanted list'), 'wanted_add_' . $this->mbid);
+        return Ajax::button('?page=index&action=add_wanted&mbid=' . $this->mbid . (($this->artist) ? '&artist=' . $this->artist : '&artist_mbid=' . $this->artist_mbid) . '&name=' . urlencode((string) $this->name) . '&year=' . (int) $this->year, 'saved_search', T_('Add to wanted list'), 'wanted_add_' . $this->mbid);
     }
 }

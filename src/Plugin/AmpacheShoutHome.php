@@ -116,12 +116,12 @@ class AmpacheShoutHome extends AmpachePlugin implements PluginDisplayHomeInterfa
         $user->set_preferences();
         $data = $user->prefs;
 
-        $this->maxitems = (int)($data['shouthome_max_items']);
+        $this->maxitems = (int) ($data['shouthome_max_items']);
         if ($this->maxitems < 1) {
             $this->maxitems = 5;
         }
 
-        $this->order = (int)($data['shouthome_order'] ?? 0);
+        $this->order = (int) ($data['shouthome_order'] ?? 0);
 
         return true;
     }
@@ -149,7 +149,7 @@ class AmpacheShoutHome extends AmpachePlugin implements PluginDisplayHomeInterfa
             return false;
         }
 
-        if ($from_version < (int)$this->version) {
+        if ($from_version < (int) $this->version) {
             Preference::insert('shouthome_order', T_('Plugin CSS order'), '0', AccessLevelEnum::USER->value, 'integer', 'plugins', $this->name);
         }
 

@@ -51,8 +51,7 @@ final readonly class PodcastSyncer implements PodcastSyncerInterface
         private PodcastDeleterInterface $podcastDeleter,
         private PodcastEpisodeRepositoryInterface $podcastEpisodeRepository,
         private ConfigContainerInterface $configContainer,
-    ) {
-    }
+    ) {}
 
     /**
      * Add podcast episodes
@@ -72,7 +71,7 @@ final readonly class PodcastSyncer implements PodcastSyncerInterface
         $change   = 0;
         $syncDate = new DateTime();
 
-        $downloadLimit = (int)$this->configContainer->get(ConfigurationKeyEnum::PODCAST_NEW_DOWNLOAD);
+        $downloadLimit = (int) $this->configContainer->get(ConfigurationKeyEnum::PODCAST_NEW_DOWNLOAD);
         // -1 means no downloads
         if ($downloadLimit < 0) {
             $downloadLimit = false;
@@ -172,7 +171,7 @@ final readonly class PodcastSyncer implements PodcastSyncerInterface
         iterable $catalogs,
     ): int {
         $newEpisodeCount = 0;
-        $downloadLimit   = (int)$this->configContainer->get(ConfigurationKeyEnum::PODCAST_NEW_DOWNLOAD);
+        $downloadLimit   = (int) $this->configContainer->get(ConfigurationKeyEnum::PODCAST_NEW_DOWNLOAD);
 
         foreach ($catalogs as $catalog) {
             $podcastIds = $catalog->get_podcast_ids();
@@ -217,15 +216,15 @@ final readonly class PodcastSyncer implements PodcastSyncerInterface
         SimpleXMLElement $episode,
         ?DateTimeInterface $lastSync,
     ): void {
-        $title       = html_entity_decode((string)$episode->title);
-        $website     = (string)$episode->link;
-        $guid        = (string)$episode->guid;
-        $description = html_entity_decode(Dba::check_length((string)$episode->description, 4096));
-        $author      = html_entity_decode(Dba::check_length((string)$episode->author, 64));
-        $category    = html_entity_decode((string)$episode->category);
+        $title       = html_entity_decode((string) $episode->title);
+        $website     = (string) $episode->link;
+        $guid        = (string) $episode->guid;
+        $description = html_entity_decode(Dba::check_length((string) $episode->description, 4096));
+        $author      = html_entity_decode(Dba::check_length((string) $episode->author, 64));
+        $category    = html_entity_decode((string) $episode->category);
         $source      = '';
         if ($episode->enclosure) {
-            $source = (string)$episode->enclosure['url'];
+            $source = (string) $episode->enclosure['url'];
         }
 
         $itunes   = $episode->children('itunes', true);
@@ -245,7 +244,7 @@ final readonly class PodcastSyncer implements PodcastSyncerInterface
             : (int) $ptime;
 
         $pubdate    = 0;
-        $pubdatestr = (string)$episode->pubDate;
+        $pubdatestr = (string) $episode->pubDate;
         if ($pubdatestr !== '' && $pubdatestr !== '0') {
             $pubdate = strtotime($pubdatestr);
         }
@@ -328,7 +327,7 @@ final readonly class PodcastSyncer implements PodcastSyncerInterface
         $db_results = Dba::read($sql, [$url]);
 
         if ($results = Dba::fetch_assoc($db_results)) {
-            return (int)$results['id'];
+            return (int) $results['id'];
         }
 
         return 0;
@@ -345,7 +344,7 @@ final readonly class PodcastSyncer implements PodcastSyncerInterface
         $db_results = Dba::read($sql, [$podcast_id, $pubdate]);
 
         if ($results = Dba::fetch_assoc($db_results)) {
-            return (int)$results['id'];
+            return (int) $results['id'];
         }
 
         return 0;
@@ -362,7 +361,7 @@ final readonly class PodcastSyncer implements PodcastSyncerInterface
         $db_results = Dba::read($sql, [$url]);
 
         if ($results = Dba::fetch_assoc($db_results)) {
-            return (int)$results['id'];
+            return (int) $results['id'];
         }
 
         return 0;
@@ -379,7 +378,7 @@ final readonly class PodcastSyncer implements PodcastSyncerInterface
         $db_results = Dba::read($sql, [$podcast_id, $title, $time]);
 
         if ($results = Dba::fetch_assoc($db_results)) {
-            return (int)$results['id'];
+            return (int) $results['id'];
         }
 
         return 0;

@@ -52,13 +52,13 @@ $is_owner     = $current_user instanceof User && $current_user->getId() == $libi
                 <td>
                     <?php
                         if ($has_access) {
-                            show_artist_select('album_artist', (int)$libitem->album_artist, true, $libitem->id, true); ?>
+                            show_artist_select('album_artist', (int) $libitem->album_artist, true, $libitem->id, true); ?>
                     <div id="album_artist_select_album_<?php echo $libitem->id; ?>">
                         <?php echo Ajax::observe('album_artist_select_' . $libitem->id, 'change', 'check_inline_song_edit("album_artist", ' . $libitem->id . ')'); ?>
                     </div>
                     <?php
                         } else {
-                            echo '<input type="hidden" name="album_artist" value="' . (int)$libitem->album_artist . '"/>' . scrub_out($libitem->get_parent_fullname());
+                            echo '<input type="hidden" name="album_artist" value="' . (int) $libitem->album_artist . '"/>' . scrub_out($libitem->get_parent_fullname());
                         } ?>
                 </td>
             </tr>
@@ -70,7 +70,7 @@ $is_owner     = $current_user instanceof User && $current_user->getId() == $libi
             <?php } ?>
             <tr>
                 <td class="edit_dialog_content_header"><?php echo T_('Year'); ?></td>
-                <td><input type="text" name="year" value="<?php echo scrub_out((string)$libitem->year); ?>" /></td>
+                <td><input type="text" name="year" value="<?php echo scrub_out((string) $libitem->year); ?>" /></td>
             </tr>
             <tr>
                 <td class="edit_dialog_content_header"><?php echo T_('MusicBrainz ID'); ?></td>

@@ -10,6 +10,7 @@ $finder = PhpCsFixer\Finder::create()
 return (new PhpCsFixer\Config())
     ->setRules([
         '@PSR12' => true,
+        '@PER-CS3x0' => true,
         'no_useless_else' => true,
         'no_useless_return' => true,
         'simplified_if_return' => true,
@@ -73,6 +74,11 @@ return (new PhpCsFixer\Config())
         'ordered_imports' => [
             'sort_algorithm' => 'alpha'
         ],
+        'operator_linebreak' => [
+            'only_booleans' => true,
+            'position' => 'end'
+        ],
+        'ternary_operator_spaces' => true,
         'ordered_class_elements' => [
             'order' => [
                 'use_trait',
@@ -104,4 +110,3 @@ return (new PhpCsFixer\Config())
     ->setUsingCache(true)
     ->setParallelConfig(PhpCsFixer\Runner\Parallel\ParallelConfigFactory::detect())
 ;
-

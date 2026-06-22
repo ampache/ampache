@@ -39,9 +39,7 @@ use Sabre\DAV\Node;
  */
 class WebDavDirectory extends Collection
 {
-    public function __construct(private readonly WebDavDirectoryInterface $libitem)
-    {
-    }
+    public function __construct(private readonly WebDavDirectoryInterface $libitem) {}
 
     /**
      * @param array{object_type: LibraryItemEnum, object_id: int} $array
@@ -114,6 +112,6 @@ class WebDavDirectory extends Collection
 
     public function getName(): string
     {
-        return str_replace('/', '', (string)$this->libitem->get_fullname());
+        return str_replace('/', '', (string) $this->libitem->get_fullname());
     }
 }

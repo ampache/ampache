@@ -92,9 +92,9 @@ class AmpacheStreamHits extends AmpachePlugin implements PluginStreamControlInte
         $data = $user->prefs;
 
         $this->user_id   = $user->id;
-        $this->hits_max  = (int)($data['stream_control_hits_max']) ?: -1;
-        $this->hits_days = ((int)($data['stream_control_hits_days']) > 0)
-            ? (int)($data['stream_control_hits_days'])
+        $this->hits_max  = (int) ($data['stream_control_hits_max']) ?: -1;
+        $this->hits_days = ((int) ($data['stream_control_hits_days']) > 0)
+            ? (int) ($data['stream_control_hits_days'])
             : 30;
 
         return true;

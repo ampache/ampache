@@ -36,9 +36,7 @@ use Ampache\Repository\AccessRepositoryInterface;
  */
 final readonly class AccessListManager implements AccessListManagerInterface
 {
-    public function __construct(private AccessRepositoryInterface $accessRepository)
-    {
-    }
+    public function __construct(private AccessRepositoryInterface $accessRepository) {}
 
     /**
      * Creates a new acl item
@@ -58,8 +56,8 @@ final readonly class AccessListManager implements AccessListManagerInterface
         AccessTypeEnum $type,
         AccessTypeEnum $additionalType,
     ): void {
-        $startIp = (string)@inet_pton($startIp);
-        $endIp   = (string)@inet_pton($endIp);
+        $startIp = (string) @inet_pton($startIp);
+        $endIp   = (string) @inet_pton($endIp);
         $type    = (in_array($type, AccessTypeEnum::CONFIGURABLE_TYPE_LIST, true))
             ? $type
             : AccessTypeEnum::STREAM;
@@ -120,8 +118,8 @@ final readonly class AccessListManager implements AccessListManagerInterface
         AccessLevelEnum $level,
         AccessTypeEnum $type,
     ): void {
-        $startIp = (string)@inet_pton($startIp);
-        $endIp   = (string)@inet_pton($endIp);
+        $startIp = (string) @inet_pton($startIp);
+        $endIp   = (string) @inet_pton($endIp);
 
         $this->verifyRange($startIp, $endIp);
 
@@ -153,7 +151,7 @@ final readonly class AccessListManager implements AccessListManagerInterface
             throw new InvalidEndIpException();
         }
 
-        if (strlen(bin2hex((string)$startIp)) !== strlen(bin2hex((string)$endIp))) {
+        if (strlen(bin2hex((string) $startIp)) !== strlen(bin2hex((string) $endIp))) {
             throw new InvalidIpRangeException();
         }
     }

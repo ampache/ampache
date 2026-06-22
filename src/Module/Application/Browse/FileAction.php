@@ -39,8 +39,7 @@ final readonly class FileAction implements ApplicationActionInterface
     public function __construct(
         private ModelFactoryInterface $modelFactory,
         private UiInterface $ui,
-    ) {
-    }
+    ) {}
 
     public function run(ServerRequestInterface $request, GuiGatekeeperInterface $gatekeeper): ?ResponseInterface
     {

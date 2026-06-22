@@ -44,8 +44,7 @@ final readonly class WantedManager implements WantedManagerInterface
         private WantedRepositoryInterface $wantedRepository,
         private MusicBrainz $musicBrainz,
         private PluginRetrieverInterface $pluginRetriever,
-    ) {
-    }
+    ) {}
 
     /**
      * Accept a wanted request.
@@ -86,7 +85,7 @@ final readonly class WantedManager implements WantedManagerInterface
         );
 
         if (AmpConfig::get('wanted_auto_accept', false)) {
-            $wanted_id = (int)Dba::insert_id();
+            $wanted_id = (int) Dba::insert_id();
             $wanted    = new Wanted($wanted_id);
 
             $this->accept($wanted, $user);

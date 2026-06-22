@@ -75,7 +75,7 @@ final class PlaylistExporter implements PlaylistExporterInterface
                 $items = Catalog::get_artists();
                 break;
             case 'smartlists':
-                if ((int)$playlistId < 1) {
+                if ((int) $playlistId < 1) {
                     $browse = new Browse(null, false);
                     $browse->set_type('smartplaylist');
                     if ($userId > 0) {
@@ -90,8 +90,8 @@ final class PlaylistExporter implements PlaylistExporterInterface
                 $items = [];
                 foreach ($ids as $playlist_id) {
                     $playlist = ($user->id !== 0)
-                        ? new Search((int)$playlist_id, 'song', $user)
-                        : new Search((int)$playlist_id);
+                        ? new Search((int) $playlist_id, 'song', $user)
+                        : new Search((int) $playlist_id);
                     if ($playlist->isNew() === false) {
                         $items[] = $playlist;
                     }
@@ -100,7 +100,7 @@ final class PlaylistExporter implements PlaylistExporterInterface
                 break;
             case 'playlists':
             default:
-                if ((int)$playlistId < 1) {
+                if ((int) $playlistId < 1) {
                     $browse = new Browse(null, false);
                     $browse->set_type('playlist');
                     $browse->set_sort('name', 'ASC');
@@ -110,12 +110,12 @@ final class PlaylistExporter implements PlaylistExporterInterface
 
                     $ids = $browse->get_objects();
                 } else {
-                    $ids = [(int)$playlistId];
+                    $ids = [(int) $playlistId];
                 }
 
                 $items = [];
                 foreach ($ids as $playlist_id) {
-                    $playlist = new Playlist((int)$playlist_id);
+                    $playlist = new Playlist((int) $playlist_id);
                     if ($playlist->isNew() === false) {
                         $items[] = $playlist;
                     }
@@ -127,7 +127,7 @@ final class PlaylistExporter implements PlaylistExporterInterface
         $dirname = rtrim($dirname, "/");
 
         foreach ($items as $item) {
-            $name = (string)$item->get_fullname();
+            $name = (string) $item->get_fullname();
             // We don't know about file system encoding / specificity
             // For now, we only keep simple characters to be sure it will work everywhere
             $name            = (string) preg_replace('/[:]/', '.', $name);

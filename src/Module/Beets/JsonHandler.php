@@ -56,9 +56,7 @@ class JsonHandler extends Handler
     /**
      * JsonHandler constructor.
      */
-    public function __construct(protected string $uri)
-    {
-    }
+    public function __construct(protected string $uri) {}
 
     /**
      * Compare the braces to ensure that we have a complete song object

@@ -68,7 +68,7 @@ final class Folders8Method
      */
     public static function folders(array $input, User $user): bool
     {
-        $object_id = (isset($input['filter'])) ? (int)$input['filter'] : -1;
+        $object_id = (isset($input['filter'])) ? (int) $input['filter'] : -1;
         $folder    = new Folder($object_id);
         if ($folder->isNew()) {
             /* HINT: Requested object string/id/type ("album", "myusername", "some song title", 1298376) */
@@ -84,7 +84,7 @@ final class Folders8Method
         $browse->set_api_filter('add', $input['add'] ?? '');
         $browse->set_api_filter('update', $input['update'] ?? '');
 
-        $browse->set_conditions(html_entity_decode((string)($input['cond'] ?? '')));
+        $browse->set_conditions(html_entity_decode((string) ($input['cond'] ?? '')));
 
         $results = $browse->get_objects();
         if (empty($results)) {
@@ -96,13 +96,13 @@ final class Folders8Method
         ob_end_clean();
         switch ($input['api_format']) {
             case 'json':
-                Json8_Data::set_offset((int)($input['offset'] ?? 0));
+                Json8_Data::set_offset((int) ($input['offset'] ?? 0));
                 Json8_Data::set_limit($input['limit'] ?? 0);
                 Json8_Data::set_count($browse->get_total());
                 echo Json8_Data::folders($results, $folder, $user, $input['auth']);
                 break;
             default:
-                Xml8_Data::set_offset((int)($input['offset'] ?? 0));
+                Xml8_Data::set_offset((int) ($input['offset'] ?? 0));
                 Xml8_Data::set_limit($input['limit'] ?? 0);
                 Xml8_Data::set_count($browse->get_total());
                 echo Xml8_Data::folders($results, $folder, $user, $input['auth']);

@@ -27,6 +27,4 @@ namespace Ampache\Module\Util\WebFetcher\Exception;
 
 use Exception;
 
-final class FetchFailedException extends Exception
-{
-}
+final class FetchFailedException extends Exception {}

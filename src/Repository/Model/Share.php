@@ -100,7 +100,7 @@ class Share extends database_object
     {
         if (isset($time)) {
             // 0 is a valid expiry too
-            $expire_days = ((int)$time > 0)
+            $expire_days = ((int) $time > 0)
                 ? round(($time - time()) / 86400, 0, PHP_ROUND_HALF_EVEN)
                 : 0;
         } else {
@@ -108,7 +108,7 @@ class Share extends database_object
             $expire_days = AmpConfig::get('share_expire', 7);
         }
 
-        return (int)$expire_days;
+        return (int) $expire_days;
     }
 
     /**
@@ -184,7 +184,7 @@ class Share extends database_object
     public function getObjectName(): string
     {
         return ($this->getObject())
-            ? (string)$this->getObject()->get_fullname()
+            ? (string) $this->getObject()->get_fullname()
             : '';
     }
 
@@ -333,8 +333,8 @@ class Share extends database_object
      */
     public function update(array $data, User $user): bool
     {
-        $this->max_counter    = (int)($data['max_counter']);
-        $this->expire_days    = (int)($data['expire']);
+        $this->max_counter    = (int) ($data['max_counter']);
+        $this->expire_days    = (int) ($data['expire']);
         $this->allow_stream   = ($data['allow_stream'] == '1');
         $this->allow_download = ($data['allow_download'] == '1');
         $this->description    = $data['description'] ?? $this->description;

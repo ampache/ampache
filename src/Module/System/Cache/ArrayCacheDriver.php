@@ -93,7 +93,7 @@ final class ArrayCacheDriver implements CacheInterface
         return array_key_exists($key, $this->cache);
     }
 
-    public function set(string $key, mixed $value, null|int|DateInterval $ttl = null): bool
+    public function set(string $key, mixed $value, int|DateInterval|null $ttl = null): bool
     {
         $this->cache[$key] = $value;
 
@@ -103,7 +103,7 @@ final class ArrayCacheDriver implements CacheInterface
     /**
      * @param iterable<string, scalar> $values
      */
-    public function setMultiple(iterable $values, null|int|DateInterval $ttl = null): bool
+    public function setMultiple(iterable $values, int|DateInterval|null $ttl = null): bool
     {
         foreach ($values as $key => $value) {
             $this->cache[$key] = $value;

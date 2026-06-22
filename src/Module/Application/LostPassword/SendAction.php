@@ -45,8 +45,7 @@ final readonly class SendAction implements ApplicationActionInterface
         private ConfigContainerInterface $configContainer,
         private NewPasswordSenderInterface $newPasswordSender,
         private UiInterface $ui,
-    ) {
-    }
+    ) {}
 
     public function run(ServerRequestInterface $request, GuiGatekeeperInterface $gatekeeper): ?ResponseInterface
     {

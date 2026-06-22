@@ -49,8 +49,7 @@ final class MetadataManager implements MetadataManagerInterface
         private readonly MetadataRepositoryInterface $metadataRepository,
         private readonly MetadataFieldRepositoryInterface $metadataFieldRepository,
         private readonly ConfigContainerInterface $configContainer,
-    ) {
-    }
+    ) {}
 
     /**
      * Adds a new metadata item

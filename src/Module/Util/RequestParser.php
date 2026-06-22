@@ -33,9 +33,7 @@ use Psr\Log\LoggerInterface;
  */
 final readonly class RequestParser implements RequestParserInterface
 {
-    public function __construct(private LoggerInterface $logger)
-    {
-    }
+    public function __construct(private LoggerInterface $logger) {}
 
     /**
      * Return a $_POST variable instead of calling directly

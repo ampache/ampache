@@ -50,7 +50,7 @@ class WebPlayer
                 break;
             }
 
-            $addjs .= $callback_container . "addMedia(" . self::get_media_js_param($item, (string)$transcode_cfg) . ");";
+            $addjs .= $callback_container . "addMedia(" . self::get_media_js_param($item, (string) $transcode_cfg) . ");";
         }
 
         return $addjs;
@@ -207,7 +207,7 @@ class WebPlayer
         }
 
         if (array_key_exists('id', $urlinfo) && $urlinfo['type'] == 'song_preview') {
-            return new Song_Preview((int)$urlinfo['id']);
+            return new Song_Preview((int) $urlinfo['id']);
         }
 
         return null;
@@ -290,7 +290,7 @@ class WebPlayer
                 break;
             }
 
-            $addjs .= $callback_container . "playNext(" . self::get_media_js_param($item, (string)$transcode_cfg) . ");";
+            $addjs .= $callback_container . "playNext(" . self::get_media_js_param($item, (string) $transcode_cfg) . ");";
         }
 
         return $addjs;
@@ -327,12 +327,12 @@ class WebPlayer
         } else {
             $ext = pathinfo($item->url, PATHINFO_EXTENSION);
             if (!empty($ext)) {
-                $types['real'] = (string)$ext;
+                $types['real'] = (string) $ext;
             }
         }
 
         if (!$types['player']) {
-            $types['player'] = (string)$types['real'];
+            $types['player'] = (string) $types['real'];
         }
 
         return $types;

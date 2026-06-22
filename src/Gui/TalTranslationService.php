@@ -32,21 +32,17 @@ final class TalTranslationService implements TranslationServiceInterface
     /**
      * Not implemented
      */
-    public function setEncoding(string $encoding): void
-    {
-    }
+    public function setEncoding(string $encoding): void {}
 
     public function setLanguage(...$langs): string
     {
-        return (string)current($langs);
+        return (string) current($langs);
     }
 
     /**
      * Not implemented
      */
-    public function setVar(string $key, string $value_escaped): void
-    {
-    }
+    public function setVar(string $key, string $value_escaped): void {}
 
     public function translate(string $key, bool $htmlescape): string
     {

@@ -62,8 +62,7 @@ final readonly class ImportPodcastsAction implements ApplicationActionInterface
         private RequestParserInterface $requestParser,
         private CatalogLoaderInterface $catalogLoader,
         private PodcastOpmlImporterInterface $podcastOpmlImporter,
-    ) {
-    }
+    ) {}
 
     public function run(ServerRequestInterface $request, GuiGatekeeperInterface $gatekeeper): ?ResponseInterface
     {
@@ -79,7 +78,7 @@ final readonly class ImportPodcastsAction implements ApplicationActionInterface
             throw new AccessDeniedException();
         }
 
-        $data = (array)$request->getParsedBody();
+        $data = (array) $request->getParsedBody();
 
         $catalogId = (int) ($data['catalog'] ?? 0);
 
@@ -97,7 +96,7 @@ final readonly class ImportPodcastsAction implements ApplicationActionInterface
         if (AmpError::occurred()) {
             $this->ui->show(
                 'show_import_podcasts.inc.php',
-                ['catalogId' => (int)($data['catalog'] ?? 0)]
+                ['catalogId' => (int) ($data['catalog'] ?? 0)]
             );
         } else {
             $this->ui->showConfirmation(

@@ -62,8 +62,7 @@ class HttpQPlayer
         public ?string $host = "localhost",
         public ?string $password = '',
         public ?int $port = 4800,
-    ) {
-    }
+    ) {}
 
     /**
      * add
@@ -193,7 +192,7 @@ class HttpQPlayer
             return null;
         }
 
-        return round((((int)$results / 255) * 100), 2);
+        return round((((int) $results / 255) * 100), 2);
     }
 
     /**

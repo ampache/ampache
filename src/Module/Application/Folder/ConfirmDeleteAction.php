@@ -46,8 +46,7 @@ final readonly class ConfirmDeleteAction implements ApplicationActionInterface
         private UiInterface $ui,
         private FolderDeleterInterface $folderDeleter,
         private FolderRepositoryInterface $folderRepository,
-    ) {
-    }
+    ) {}
 
     public function run(ServerRequestInterface $request, GuiGatekeeperInterface $gatekeeper): ?ResponseInterface
     {
@@ -60,7 +59,7 @@ final readonly class ConfirmDeleteAction implements ApplicationActionInterface
         }
 
         $body     = $request->getQueryParams();
-        $folderId = (int)($body['folder_id'] ?? 0);
+        $folderId = (int) ($body['folder_id'] ?? 0);
 
         $folder = $this->folderRepository->findById($folderId);
         if (

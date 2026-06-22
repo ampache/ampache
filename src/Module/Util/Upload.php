@@ -111,7 +111,7 @@ class Upload
                 return null;
             }
 
-            return (int)$album_id;
+            return (int) $album_id;
         }
 
         return null;
@@ -130,7 +130,7 @@ class Upload
                 return null;
             }
 
-            $artist_id = (int)Artist::check($artist_name);
+            $artist_id = (int) Artist::check($artist_name);
             if ($artist_id === 0) {
                 debug_event(self::class, 'Artist information required, uploaded song skipped.', 3);
 
@@ -236,7 +236,7 @@ class Upload
             AccessTypeEnum::INTERFACE,
             AccessLevelEnum::from((int) AmpConfig::get(ConfigurationKeyEnum::UPLOAD_ACCESS_LEVEL, AccessLevelEnum::USER->value))
         );
-        $catalog_id = (int)AmpConfig::get('upload_catalog', 0);
+        $catalog_id = (int) AmpConfig::get('upload_catalog', 0);
         $catalog    = self::check($catalog_id);
         if ($catalog instanceof Catalog_local) {
             debug_event(self::class, 'Uploading to catalog ID ' . $catalog_id, 4);
@@ -282,12 +282,12 @@ class Upload
                 }
 
                 if (Core::get_request('artist_id') !== '') {
-                    $options['artist_id'] = (int)Core::get_request('artist_id');
+                    $options['artist_id'] = (int) Core::get_request('artist_id');
                 }
 
                 // Try to create a new artist
                 if (Core::get_request('artist_name') !== '') {
-                    $artist_id = self::check_artist(Core::get_request('artist_name'), (int)(Core::get_global('user')?->getId()));
+                    $artist_id = self::check_artist(Core::get_request('artist_name'), (int) (Core::get_global('user')?->getId()));
                     if (!$artist_id) {
                         debug_event(self::class, "error: check_artist.", 3);
 
@@ -308,7 +308,7 @@ class Upload
                 }
 
                 if (Core::get_request('album_id') !== '') {
-                    $options['album_id'] = (int)Core::get_request('album_id');
+                    $options['album_id'] = (int) Core::get_request('album_id');
                 }
 
                 // Try to create a new album

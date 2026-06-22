@@ -363,12 +363,12 @@ class Stats
             ? "`album_disk`.`album_id`"
             : $sql_type;
         // join valid catalogs or a specific one
-        $sql .= ((int)$catalog_id > 0)
+        $sql .= ((int) $catalog_id > 0)
             ? "LEFT JOIN `catalog_map` ON `catalog_map`.`object_id` = " . $join_type . " AND `catalog_map`.`object_type` = '" . $base_type . "' WHERE `catalog_map`.`catalog_id` = '" . $catalog_id . "' "
             : "LEFT JOIN `catalog_map` ON `catalog_map`.`object_id` = " . $join_type . " AND `catalog_map`.`object_type` = '" . $base_type . "' WHERE `catalog_map`.`catalog_id` IN (" . implode(',', Catalog::get_catalogs('', $user?->getId(), true)) . ") ";
 
         $rating_filter = AmpConfig::get_rating_filter();
-        $user_id       = (int)(Core::get_global('user')?->getId());
+        $user_id       = (int) (Core::get_global('user')?->getId());
         if ($rating_filter > 0 && $rating_filter <= 5 && $user_id > 0) {
             $sql .= "AND " . $sql_type . " NOT IN (SELECT `object_id` FROM `rating` WHERE `rating`.`object_type` = '" . $type . "' AND `rating`.`rating` <=" . $rating_filter . " AND `rating`.`user` = " . $user_id . ") ";
         }
@@ -399,7 +399,7 @@ class Stats
         } else {
             $sql = "SELECT COUNT(*) AS `total_count` FROM `object_count` WHERE `object_type` = ? AND `object_id` = ? AND `count_type` = ?";
             if ($threshold > 0) {
-                $date = time() - (86400 * (int)$threshold);
+                $date = time() - (86400 * (int) $threshold);
                 $sql .= " AND `date` >= '" . $date . "'";
             }
         }
@@ -407,7 +407,7 @@ class Stats
         $db_results = Dba::read($sql, [$object_type, $object_id, $count_type]);
         $results    = Dba::fetch_assoc($db_results);
 
-        return (int)($results['total_count'] ?? 0);
+        return (int) ($results['total_count'] ?? 0);
     }
 
     /**
@@ -451,7 +451,7 @@ class Stats
 
         $results = [];
         while ($row = Dba::fetch_assoc($db_results)) {
-            $results[] = (int)$row['object_id'];
+            $results[] = (int) $row['object_id'];
         }
 
         return $results;
@@ -490,7 +490,7 @@ class Stats
         $db_results = Dba::read($sql);
         $results    = [];
         while ($row = Dba::fetch_assoc($db_results)) {
-            $results[] = (int)$row['id'];
+            $results[] = (int) $row['id'];
         }
 
         return $results;
@@ -591,7 +591,7 @@ class Stats
             ? "AND `catalog_map`.`catalog_id` IN (" . implode(',', Catalog::get_catalogs('', $user_id, true)) . ") "
             : "";
 
-        if ((int)$user_id > 0 || !$access100) {
+        if ((int) $user_id > 0 || !$access100) {
             $sql .= ($user_only)
                 ? "AND (`object_count`.`user` = ? AND `pref_recent`.`user` IS NOT NULL) "
                 : "AND (`object_count`.`user` = ? OR `pref_recent`.`user` IS NOT NULL) ";
@@ -609,7 +609,7 @@ class Stats
                 !empty($row['geo_latitude']) &&
                 !empty($row['geo_longitude'])
             ) {
-                $row['geo_name'] = Stats::get_cached_place_name((float)$row['geo_latitude'], (float)$row['geo_longitude']);
+                $row['geo_name'] = Stats::get_cached_place_name((float) $row['geo_latitude'], (float) $row['geo_longitude']);
             }
 
             $results[] = [
@@ -648,7 +648,7 @@ class Stats
         $db_results = Dba::read($sql, [$object_id]);
         $results    = Dba::fetch_assoc($db_results);
 
-        return (int)($results['time'] ?? 0);
+        return (int) ($results['time'] ?? 0);
     }
 
     /**
@@ -689,7 +689,7 @@ class Stats
         $db_results = Dba::read($sql);
         $results    = [];
         while ($row = Dba::fetch_assoc($db_results)) {
-            $results[] = (int)$row['id'];
+            $results[] = (int) $row['id'];
         }
 
         return $results;
@@ -917,8 +917,8 @@ class Stats
             return false;
         }
 
-        $latitude   = (isset($location['latitude'])) ? (float)$location['latitude'] : null;
-        $longitude  = (isset($location['longitude'])) ? (float)$location['longitude'] : null;
+        $latitude   = (isset($location['latitude'])) ? (float) $location['latitude'] : null;
+        $longitude  = (isset($location['longitude'])) ? (float) $location['longitude'] : null;
         $geoname    = $location['name'] ?? null;
         $sql        = "INSERT IGNORE INTO `object_count` (`object_type`, `object_id`, `count_type`, `date`, `user`, `agent`, `geo_latitude`, `geo_longitude`, `geo_name`) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
         $db_results = Dba::write($sql, [$type, $object_id, $count_type, $date, $user_id, $agent, $latitude, $longitude, $geoname]);
@@ -933,7 +933,7 @@ class Stats
                 self::count($type, [$object_id], 'up');
                 // don't register activity for album or artist plays
                 if (!in_array($type, ['album', 'album_disk', 'artist', 'podcast'], true)) {
-                    self::getUserActivityPoster()->post($user_id, 'play', $type, $object_id, (int)$date);
+                    self::getUserActivityPoster()->post($user_id, 'play', $type, $object_id, (int) $date);
                 }
             }
 
@@ -1039,7 +1039,7 @@ class Stats
                 self::count('album_disk', [$song->album_disk], 'down');
                 $artists = array_unique(array_merge(Song::get_parent_array($song->id), Song::get_parent_array($song->album, 'album')));
                 foreach ($artists as $artist_id) {
-                    self::count('artist', [(int)$artist_id], 'down');
+                    self::count('artist', [(int) $artist_id], 'down');
                 }
             }
 

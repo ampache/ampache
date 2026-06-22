@@ -30,7 +30,7 @@ use Ampache\Module\System\Core;
 use Ampache\Module\Util\Ui;
 use Ampache\Repository\Model\Art;
 
-$art_url  = Art::url((int)Core::get_get('id'), 'album');
+$art_url  = Art::url((int) Core::get_get('id'), 'album');
 $htmllang = str_replace("_", "-", AmpConfig::get('lang', 'en_US')); ?>
 <!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="<?php echo $htmllang; ?>" lang="<?php echo $htmllang; ?>">

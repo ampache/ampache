@@ -33,9 +33,7 @@ use PDO;
 
 final readonly class LabelRepository implements LabelRepositoryInterface
 {
-    public function __construct(private DatabaseConnectionInterface $connection)
-    {
-    }
+    public function __construct(private DatabaseConnectionInterface $connection) {}
 
     public function addArtistAssoc(int $labelId, int $artistId, DateTimeInterface $date): void
     {

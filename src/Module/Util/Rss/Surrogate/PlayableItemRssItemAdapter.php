@@ -45,8 +45,7 @@ final readonly class PlayableItemRssItemAdapter implements RssItemInterface
         private ModelFactoryInterface $modelFactory,
         private library_item $playable,
         private ?User $user,
-    ) {
-    }
+    ) {}
 
     /**
      * Returns the itunes category of the item
@@ -62,7 +61,7 @@ final readonly class PlayableItemRssItemAdapter implements RssItemInterface
      */
     public function getImageUrl(): string
     {
-        return (string)Art::url($this->playable->getId(), 'album');
+        return (string) Art::url($this->playable->getId(), 'album');
     }
 
     /**
@@ -110,7 +109,7 @@ final readonly class PlayableItemRssItemAdapter implements RssItemInterface
                     ? 'https://musicbrainz.org/recording/' . $media->mbid
                     : $media->get_link(),
                 'isPermaLink' => 'true',
-                'length' => (string)$media->get_f_time(),
+                'length' => (string) $media->get_f_time(),
                 'author' => $media->get_parent_fullname(),
                 'pubDate' => null,
                 'type' => null,
@@ -167,7 +166,7 @@ final readonly class PlayableItemRssItemAdapter implements RssItemInterface
      */
     public function getTitle(): string
     {
-        return (string)$this->playable->get_fullname();
+        return (string) $this->playable->get_fullname();
     }
 
     /**

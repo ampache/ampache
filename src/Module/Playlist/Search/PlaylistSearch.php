@@ -73,7 +73,7 @@ final class PlaylistSearch implements SearchInterface
                 }
             }
 
-            $input        = $search->filter_data((string)$rule[2], $type, $operator);
+            $input        = $search->filter_data((string) $rule[2], $type, $operator);
             $operator_sql = $operator['sql'] ?? '';
 
             $where[] = "(`playlist`.`type` = 'public' OR `playlist`.`user` = " . $search_user_id . " OR FIND_IN_SET(" . $search_user_id . ", `playlist`.`collaborate`) > 0)";

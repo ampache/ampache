@@ -65,7 +65,7 @@ $web_path = AmpConfig::get_web_path(); ?>
 </td>
 <?php
 if ($is_mashup) {
-    $name = scrub_out((string)$libitem->get_fullname()); ?>
+    $name = scrub_out((string) $libitem->get_fullname()); ?>
     <td class="<?php echo $cel_cover; ?>">
         <?php $size = ($browse->is_grid_view())
             ? ['width' => 150, 'height' => 150]

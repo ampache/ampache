@@ -234,7 +234,7 @@ final class UpdateSingleCatalogFolder extends AbstractCatalogUpdater implements 
         ob_end_clean();
 
         $interactor->info(
-            $this->cleanBuffer((string)$buffer),
+            $this->cleanBuffer((string) $buffer),
             true
         );
     }

@@ -45,8 +45,7 @@ final readonly class ShowDeleteRecordAction implements ApplicationActionInterfac
         private UiInterface $ui,
         private ConfigContainerInterface $configContainer,
         private ModelFactoryInterface $modelFactory,
-    ) {
-    }
+    ) {}
 
     public function run(ServerRequestInterface $request, GuiGatekeeperInterface $gatekeeper): ?ResponseInterface
     {
@@ -63,7 +62,7 @@ final readonly class ShowDeleteRecordAction implements ApplicationActionInterfac
             return null;
         }
 
-        $accessId = (int)($request->getQueryParams()['access_id'] ?? 0);
+        $accessId = (int) ($request->getQueryParams()['access_id'] ?? 0);
         $access   = $this->modelFactory->createAccess($accessId);
 
         $this->ui->showConfirmation(

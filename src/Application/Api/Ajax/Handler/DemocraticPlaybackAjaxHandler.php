@@ -39,8 +39,7 @@ final readonly class DemocraticPlaybackAjaxHandler implements AjaxHandlerInterfa
 {
     public function __construct(
         private RequestParserInterface $requestParser,
-    ) {
-    }
+    ) {}
 
     public function handle(User $user): void
     {
@@ -54,7 +53,7 @@ final readonly class DemocraticPlaybackAjaxHandler implements AjaxHandlerInterfa
         // Switch on the actions
         switch ($action) {
             case 'delete_vote':
-                $democratic->remove_vote((int)$_REQUEST['row_id']);
+                $democratic->remove_vote((int) $_REQUEST['row_id']);
                 $show_browse = true;
                 break;
             case 'add_vote':
@@ -62,7 +61,7 @@ final readonly class DemocraticPlaybackAjaxHandler implements AjaxHandlerInterfa
                     [
                         [
                             Core::get_request('type'),
-                            (int)filter_input(INPUT_GET, 'object_id', FILTER_SANITIZE_NUMBER_INT)
+                            (int) filter_input(INPUT_GET, 'object_id', FILTER_SANITIZE_NUMBER_INT)
                         ]
                     ]
                 );
@@ -99,7 +98,7 @@ final readonly class DemocraticPlaybackAjaxHandler implements AjaxHandlerInterfa
         if ($show_browse) {
             ob_start();
             $object_ids = $democratic->get_items();
-            $browse_id  = (int)($_REQUEST['browse_id'] ?? 0);
+            $browse_id  = (int) ($_REQUEST['browse_id'] ?? 0);
             $browse     = new Browse($browse_id);
             $browse->set_type('democratic');
             $browse->set_static_content(false);

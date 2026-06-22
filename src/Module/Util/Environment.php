@@ -76,7 +76,7 @@ final class Environment implements EnvironmentInterface
     {
         /* Check memory */
         $current_memory = ini_get('memory_limit');
-        $current_memory = (int)substr($current_memory, 0, strlen((string) $current_memory) - 1);
+        $current_memory = (int) substr($current_memory, 0, strlen((string) $current_memory) - 1);
 
         $new_limit      = ($current_memory + 16) . "M";
 
@@ -218,8 +218,8 @@ final class Environment implements EnvironmentInterface
      */
     public function check_upload_size(): bool
     {
-        $upload_max = return_bytes((string)ini_get('upload_max_filesize'));
-        $post_max   = return_bytes((string)ini_get('post_max_size'));
+        $upload_max = return_bytes((string) ini_get('upload_max_filesize'));
+        $post_max   = return_bytes((string) ini_get('post_max_size'));
         $mini       = 20971520; // 20M
 
         return (
@@ -280,7 +280,7 @@ final class Environment implements EnvironmentInterface
 
     public function isMobile(): bool
     {
-        $user_agent = (string)($_SERVER['HTTP_USER_AGENT'] ?? '');
+        $user_agent = (string) ($_SERVER['HTTP_USER_AGENT'] ?? '');
 
         return strpos($user_agent, 'Mobile') && (
             strpos($user_agent, 'Android') ||

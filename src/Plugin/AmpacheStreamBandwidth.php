@@ -94,10 +94,10 @@ class AmpacheStreamBandwidth extends AmpachePlugin implements PluginStreamContro
         $data = $user->prefs;
 
         $this->user_id       = $user->id;
-        $this->bandwidth_max = (int)($data['stream_control_bandwidth_max']) ?: 1024;
+        $this->bandwidth_max = (int) ($data['stream_control_bandwidth_max']) ?: 1024;
 
-        if ((int)($data['stream_control_bandwidth_days']) > 0) {
-            $this->bandwidth_days = (int)($data['stream_control_bandwidth_days']);
+        if ((int) ($data['stream_control_bandwidth_days']) > 0) {
+            $this->bandwidth_days = (int) ($data['stream_control_bandwidth_days']);
         } else {
             $this->bandwidth_days = 30;
         }

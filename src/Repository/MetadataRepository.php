@@ -42,8 +42,7 @@ final readonly class MetadataRepository implements MetadataRepositoryInterface
     public function __construct(
         private DatabaseConnectionInterface $connection,
         private MetadataFieldRepositoryInterface $metadataFieldRepository,
-    ) {
-    }
+    ) {}
 
     /**
      * Remove metadata for songs which don't exist anymore

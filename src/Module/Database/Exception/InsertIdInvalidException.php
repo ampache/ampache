@@ -25,6 +25,4 @@ declare(strict_types=1);
 
 namespace Ampache\Module\Database\Exception;
 
-final class InsertIdInvalidException extends DatabaseException
-{
-}
+final class InsertIdInvalidException extends DatabaseException {}

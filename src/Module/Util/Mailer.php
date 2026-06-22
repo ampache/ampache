@@ -203,7 +203,7 @@ final class Mailer implements MailerInterface
         $mail = new PHPMailer();
 
         foreach (self::get_users($group_name) as $member) {
-            $recipient_name = (string)($member['fullname'] ?? $member['username']);
+            $recipient_name = (string) ($member['fullname'] ?? $member['username']);
             if (function_exists('mb_encode_mimeheader')) {
                 $recipient_name = mb_encode_mimeheader($recipient_name);
             }

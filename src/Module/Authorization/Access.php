@@ -78,7 +78,7 @@ class Access
             return;
         }
 
-        $this->id = (int)$access_id;
+        $this->id = (int) $access_id;
     }
 
     /**

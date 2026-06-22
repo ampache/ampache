@@ -38,9 +38,7 @@ final readonly class ShowAddAdvancedAction implements ApplicationActionInterface
 {
     public const string REQUEST_KEY = 'show_add_advanced';
 
-    public function __construct(private UiInterface $ui)
-    {
-    }
+    public function __construct(private UiInterface $ui) {}
 
     public function run(ServerRequestInterface $request, GuiGatekeeperInterface $gatekeeper): ?ResponseInterface
     {

@@ -46,8 +46,7 @@ final readonly class MissingArtistFromMusicBrainzRetriever implements MissingArt
         private MusicBrainz $musicBrainz,
         private CacheInterface $cache,
         private LoggerInterface $logger,
-    ) {
-    }
+    ) {}
 
     /**
      * Get missing artist data.

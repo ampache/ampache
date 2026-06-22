@@ -45,8 +45,7 @@ final readonly class AlbumArtExporter implements AlbumArtExporterInterface
         private ConfigContainerInterface $configContainer,
         private ModelFactoryInterface $modelFactory,
         private SongRepositoryInterface $songRepository,
-    ) {
-    }
+    ) {}
 
     public function export(
         Interactor $interactor,
@@ -72,7 +71,7 @@ final readonly class AlbumArtExporter implements AlbumArtExporterInterface
             // Get the first song in the album
             $songs = $this->songRepository->getByAlbum($albumId, 1);
             $song  = $this->modelFactory->createSong((int) $songs[0]);
-            $dir   = dirname((string)$song->file);
+            $dir   = dirname((string) $song->file);
 
             $extension = Art::extension($art->raw_mime);
 

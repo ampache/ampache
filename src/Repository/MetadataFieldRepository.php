@@ -38,9 +38,7 @@ use PDO;
  */
 final readonly class MetadataFieldRepository implements MetadataFieldRepositoryInterface
 {
-    public function __construct(private DatabaseConnectionInterface $connection)
-    {
-    }
+    public function __construct(private DatabaseConnectionInterface $connection) {}
 
     /**
      * Remove metadata for songs which don't exist anymore

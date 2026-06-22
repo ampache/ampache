@@ -40,8 +40,7 @@ abstract readonly class AbstractGraphRendererAction implements ApplicationAction
 {
     protected function __construct(
         private LibraryItemLoaderInterface $libraryItemLoader,
-    ) {
-    }
+    ) {}
 
     /**
      * @throws ApplicationException
@@ -76,14 +75,14 @@ abstract readonly class AbstractGraphRendererAction implements ApplicationAction
             throw new AccessDeniedException();
         }
 
-        $user_id = (int)Core::get_request('user_id');
-        $zoom    = (string)($_REQUEST['zoom'] ?? 'day');
+        $user_id = (int) Core::get_request('user_id');
+        $zoom    = (string) ($_REQUEST['zoom'] ?? 'day');
 
         $end_date = (isset($_REQUEST['end_date']))
-            ? (int)strtotime((string)$_REQUEST['end_date'])
+            ? (int) strtotime((string) $_REQUEST['end_date'])
             : time();
         $start_date = (isset($_REQUEST['start_date']))
-            ? (int)strtotime((string)$_REQUEST['start_date'])
+            ? (int) strtotime((string) $_REQUEST['start_date'])
             : ($end_date - 864000);
 
         $f_end_date   = get_datetime($end_date);

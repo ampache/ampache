@@ -160,7 +160,7 @@ class Query
             }
 
             $this->reset();
-            $this->id = (int)$insert_id;
+            $this->id = (int) $insert_id;
 
             return;
         }
@@ -168,10 +168,10 @@ class Query
 
         $db_results = Dba::read($sql, [$query_id, $sid]);
         if ($results = Dba::fetch_assoc($db_results)) {
-            $this->id     = (int)$query_id;
-            $this->_state = (array)$this->_unserialize($results['data']);
+            $this->id     = (int) $query_id;
+            $this->_state = (array) $this->_unserialize($results['data']);
             $this->_cache = (array_key_exists('object_data', $results) && !empty($results['object_data']))
-                ? (array)$this->_unserialize($results['object_data'])
+                ? (array) $this->_unserialize($results['object_data'])
                 : [];
             // queryType isn't set by restoring state
             $this->set_type($this->_state['type']);
@@ -341,13 +341,13 @@ class Query
             $results    = Dba::fetch_assoc($db_results);
 
             if (array_key_exists('data', $results) && !empty($results['data'])) {
-                $data = (array)$this->_unserialize($results['data']);
+                $data = (array) $this->_unserialize($results['data']);
                 // queryType isn't set by restoring state
                 $this->set_type($data['type']);
             }
 
             if (array_key_exists('object_data', $results) && !empty($results['object_data'])) {
-                $this->_cache = (array)$this->_unserialize($results['object_data']);
+                $this->_cache = (array) $this->_unserialize($results['object_data']);
 
                 return $this->_cache;
             }
@@ -497,7 +497,7 @@ class Query
      */
     public function set_catalog(?int $catalog_number = 0): void
     {
-        $this->catalog = (int)$catalog_number;
+        $this->catalog = (int) $catalog_number;
     }
 
     /**
@@ -506,7 +506,7 @@ class Query
      */
     public function set_content_div_ak(int|string $key): void
     {
-        $this->_state['extended_key_name'] = str_replace(", ", "_", (string)$key);
+        $this->_state['extended_key_name'] = str_replace(", ", "_", (string) $key);
     }
 
     /**
@@ -554,7 +554,7 @@ class Query
             case 'year_gt':
             case 'year_lg':
             case 'year_lt':
-                $this->_state['filter'][$key] = (int)($value);
+                $this->_state['filter'][$key] = (int) ($value);
                 break;
             case 'alpha_match':
             case 'equal':
@@ -679,7 +679,7 @@ class Query
         string $dest2,
         int $priority,
     ): void {
-        $this->_state['join'][$priority][$table] = strtoupper((string)$type) . sprintf(' JOIN %s ON %s = %s AND %s = %s', $table, $source1, $dest1, $source2, $dest2);
+        $this->_state['join'][$priority][$table] = strtoupper((string) $type) . sprintf(' JOIN %s ON %s = %s AND %s = %s', $table, $source1, $dest1, $source2, $dest2);
     }
 
     /**
@@ -697,7 +697,7 @@ class Query
         string $dest3,
         int $priority,
     ): void {
-        $this->_state['join'][$priority][$table] = strtoupper((string)$type) . sprintf(' JOIN %s ON %s = %s AND %s = %s AND %s = %s', $table, $source1, $dest1, $source2, $dest2, $source3, $dest3);
+        $this->_state['join'][$priority][$table] = strtoupper((string) $type) . sprintf(' JOIN %s ON %s = %s AND %s = %s AND %s = %s', $table, $source1, $dest1, $source2, $dest2, $source3, $dest3);
     }
 
     /**
@@ -961,7 +961,7 @@ class Query
                 break;
             case 'rating':
                 $sql = sprintf('`rating`.`rating` %s, `rating`.`id`', $order);
-                $this->set_join_and_and('LEFT', "`rating`", "`rating`.`object_id`", "`video`.`id`", "`rating`.`object_type`", "'video'", "`rating`.`user`", (string)$this->user_id, 100);
+                $this->set_join_and_and('LEFT', "`rating`", "`rating`.`object_id`", "`video`.`id`", "`rating`.`object_type`", "'video'", "`rating`.`user`", (string) $this->user_id, 100);
                 break;
             case 'release_date':
                 $sql = "`video`.`release_date`";
@@ -971,12 +971,12 @@ class Query
                 break;
             case 'user_flag':
                 $sql = "`user_flag`.`date`";
-                $this->set_join_and_and('LEFT', "`user_flag`", "`user_flag`.`object_id`", "`video`.`id`", "`user_flag`.`object_type`", "'video'", "`user_flag`.`user`", (string)$this->user_id, 100);
+                $this->set_join_and_and('LEFT', "`user_flag`", "`user_flag`.`object_id`", "`video`.`id`", "`user_flag`.`object_type`", "'video'", "`user_flag`.`user`", (string) $this->user_id, 100);
                 break;
             case 'user_flag_rating':
                 $sql = "`user_flag`.`date` $order `rating`.`rating` $order, `rating`.`date`";
-                $this->set_join_and_and('LEFT', "`user_flag`", "`user_flag`.`object_id`", "`video`.`id`", "`user_flag`.`object_type`", "'video'", "`user_flag`.`user`", (string)$this->user_id, 100);
-                $this->set_join_and_and('LEFT', "`rating`", "`rating`.`object_id`", "`video`.`id`", "`rating`.`object_type`", "'video'", "`rating`.`user`", (string)$this->user_id, 100);
+                $this->set_join_and_and('LEFT', "`user_flag`", "`user_flag`.`object_id`", "`video`.`id`", "`user_flag`.`object_type`", "'video'", "`user_flag`.`user`", (string) $this->user_id, 100);
+                $this->set_join_and_and('LEFT', "`rating`", "`rating`.`object_id`", "`video`.`id`", "`rating`.`object_type`", "'video'", "`rating`.`user`", (string) $this->user_id, 100);
                 break;
         }
 
@@ -1133,10 +1133,10 @@ class Query
         $offset = $this->get_offset();
         if ($this->_state['limit'] > 0) {
             if ($offset > 0) {
-                return ' LIMIT ' . (string)($this->_state['limit']) . ', ' . (string)($offset);
+                return ' LIMIT ' . (string) ($this->_state['limit']) . ', ' . (string) ($offset);
             }
 
-            return ' LIMIT ' . (string)($this->_state['limit']);
+            return ' LIMIT ' . (string) ($this->_state['limit']);
         }
 
         $start = $this->get_start();
@@ -1144,7 +1144,7 @@ class Query
             return '';
         }
 
-        return ' LIMIT ' . (string)($start) . ', ' . (string)($offset);
+        return ' LIMIT ' . (string) ($start) . ', ' . (string) ($offset);
     }
 
     /**
@@ -1241,7 +1241,7 @@ class Query
 
         foreach ($count as $key => $value) {
             if ($value >= $tag_count) {
-                $results[] = ['id' => (int)$key];
+                $results[] = ['id' => (int) $key];
             }
         }
 
@@ -1305,7 +1305,7 @@ class Query
 
         $results = [];
         while ($row = Dba::fetch_assoc($db_results)) {
-            $results[] = (int)$row['id'];
+            $results[] = (int) $row['id'];
         }
 
         $this->save_objects($results);
@@ -1329,7 +1329,7 @@ class Query
     private function _set_base_sql(?bool $force = false, ?string $custom_base = '', ?array $parameters = []): void
     {
         // Only allow it to be set once
-        if (!empty((string)$this->_state['base']) && !$force) {
+        if (!empty((string) $this->_state['base']) && !$force) {
             return;
         }
 
@@ -1411,6 +1411,6 @@ class Query
      */
     private function _unserialize(string $data): mixed
     {
-        return json_decode((string)$data, true);
+        return json_decode((string) $data, true);
     }
 }

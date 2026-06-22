@@ -144,7 +144,7 @@ final class AlbumDiskQuery implements QueryInterface
             case 'id':
                 $filter_sql = " `album_disk`.`id` IN (";
                 foreach ($value as $uid) {
-                    $filter_sql .= (int)$uid . ',';
+                    $filter_sql .= (int) $uid . ',';
                 }
 
                 $filter_sql = rtrim($filter_sql, ',') . ") AND ";
@@ -242,21 +242,21 @@ final class AlbumDiskQuery implements QueryInterface
                 $filter_sql = " `album_disk`.`catalog` IN (" . implode(',', Catalog::get_catalogs('', $query->user_id, true)) . ") AND ";
                 break;
             case 'user_flag':
-                $filter_sql = ((int)$value === 0)
-                    ? " `album_disk`.`id` NOT IN (SELECT `object_id` FROM `user_flag` WHERE `object_type` = 'album_disk' AND `user` = " . (int)$query->user_id . ") AND "
-                    : " `album_disk`.`id` IN (SELECT `object_id` FROM `user_flag` WHERE `object_type` = 'album_disk' AND `user` = " . (int)$query->user_id . ") AND ";
+                $filter_sql = ((int) $value === 0)
+                    ? " `album_disk`.`id` NOT IN (SELECT `object_id` FROM `user_flag` WHERE `object_type` = 'album_disk' AND `user` = " . (int) $query->user_id . ") AND "
+                    : " `album_disk`.`id` IN (SELECT `object_id` FROM `user_flag` WHERE `object_type` = 'album_disk' AND `user` = " . (int) $query->user_id . ") AND ";
                 break;
             case 'user_rating':
-                $filter_sql = ((int)$value === 0)
-                    ? " `album_disk`.`id` NOT IN (SELECT `object_id` FROM `rating` WHERE `object_type` = 'album_disk' AND `user` = " . (int)$query->user_id . ") AND "
-                    : " `album_disk`.`id` IN (SELECT `object_id` FROM `rating` WHERE `object_type` = 'album_disk' AND `user` = " . (int)$query->user_id . " AND `rating` = " . Dba::escape($value) . ") AND ";
+                $filter_sql = ((int) $value === 0)
+                    ? " `album_disk`.`id` NOT IN (SELECT `object_id` FROM `rating` WHERE `object_type` = 'album_disk' AND `user` = " . (int) $query->user_id . ") AND "
+                    : " `album_disk`.`id` IN (SELECT `object_id` FROM `rating` WHERE `object_type` = 'album_disk' AND `user` = " . (int) $query->user_id . " AND `rating` = " . Dba::escape($value) . ") AND ";
                 break;
             case 'catalog_enabled':
                 $query->set_join('LEFT', '`catalog`', '`catalog`.`id`', '`album_disk`.`catalog`', 100);
                 $filter_sql = " `catalog`.`enabled` = '1' AND ";
                 break;
             case 'unplayed':
-                if ((int)$value === 1) {
+                if ((int) $value === 1) {
                     $filter_sql = " `album_disk`.`total_count`='0' AND ";
                 }
 
@@ -345,17 +345,17 @@ final class AlbumDiskQuery implements QueryInterface
                 break;
             case 'rating':
                 $sql = sprintf('`rating`.`rating` %s, `rating`.`date`', $order);
-                $query->set_join_and_and('LEFT', "`rating`", "`rating`.`object_id`", "`album_disk`.`id`", "`rating`.`object_type`", "'album_disk'", "`rating`.`user`", (string)$query->user_id, 100);
+                $query->set_join_and_and('LEFT', "`rating`", "`rating`.`object_id`", "`album_disk`.`id`", "`rating`.`object_type`", "'album_disk'", "`rating`.`user`", (string) $query->user_id, 100);
                 break;
             case 'user_flag':
             case 'userflag':
                 $sql = "`user_flag`.`date`";
-                $query->set_join_and_and('LEFT', "`user_flag`", "`user_flag`.`object_id`", "`album_disk`.`id`", "`user_flag`.`object_type`", "'album_disk'", "`user_flag`.`user`", (string)$query->user_id, 100);
+                $query->set_join_and_and('LEFT', "`user_flag`", "`user_flag`.`object_id`", "`album_disk`.`id`", "`user_flag`.`object_type`", "'album_disk'", "`user_flag`.`user`", (string) $query->user_id, 100);
                 break;
             case 'user_flag_rating':
                 $sql = sprintf('`user_flag`.`date` %s, `rating`.`rating` %s, `rating`.`date`', $order, $order);
-                $query->set_join_and_and('LEFT', "`user_flag`", "`user_flag`.`object_id`", "`album_disk`.`id`", "`user_flag`.`object_type`", "'album_disk'", "`user_flag`.`user`", (string)$query->user_id, 100);
-                $query->set_join_and_and('LEFT', "`rating`", "`rating`.`object_id`", "`album_disk`.`id`", "`rating`.`object_type`", "'album_disk'", "`rating`.`user`", (string)$query->user_id, 100);
+                $query->set_join_and_and('LEFT', "`user_flag`", "`user_flag`.`object_id`", "`album_disk`.`id`", "`user_flag`.`object_type`", "'album_disk'", "`user_flag`.`user`", (string) $query->user_id, 100);
+                $query->set_join_and_and('LEFT', "`rating`", "`rating`.`object_id`", "`album_disk`.`id`", "`rating`.`object_type`", "'album_disk'", "`rating`.`user`", (string) $query->user_id, 100);
                 break;
             case 'original_year':
                 $sql   = sprintf('IFNULL(`album`.`original_year`, `album`.`year`) %s, `album`.`addition_time` %s, `album`.`name`, `album_disk`.`disk`', $order, $order);

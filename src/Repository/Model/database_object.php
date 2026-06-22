@@ -111,7 +111,7 @@ abstract class database_object
 
         return (
             $object_id &&
-            array_key_exists((string)$object_id, self::$object_cache[$index]) &&
+            array_key_exists((string) $object_id, self::$object_cache[$index]) &&
             !empty(self::$object_cache[$index][$object_id])
         );
     }
@@ -143,7 +143,7 @@ abstract class database_object
     protected function get_info(int $object_id, ?string $table_name = null): array
     {
         $table     = $this->getTableName($table_name);
-        $object_id = (int)$object_id;
+        $object_id = (int) $object_id;
 
         // Make sure we've got a real id and table
         if ($table === null || $object_id < 1) {

@@ -65,7 +65,7 @@ class Tmp_Playlist extends database_object
             return;
         }
 
-        $this->id = (int)$playlist_id;
+        $this->id = (int) $playlist_id;
     }
 
     /**
@@ -117,7 +117,7 @@ class Tmp_Playlist extends database_object
             $row[0] = self::create(['session_id' => $session_id, 'type' => 'user', 'object_type' => 'song']);
         }
 
-        return new Tmp_Playlist((int)$row[0]);
+        return new Tmp_Playlist((int) $row[0]);
     }
 
     /**
@@ -134,7 +134,7 @@ class Tmp_Playlist extends database_object
             return null;
         }
 
-        return (int)$results['id'];
+        return (int) $results['id'];
     }
 
     /**
@@ -220,7 +220,7 @@ class Tmp_Playlist extends database_object
         $db_results = Dba::read($sql, [$this->id]);
         $row        = Dba::fetch_row($db_results);
 
-        return (int)($row[0] ?? 0);
+        return (int) ($row[0] ?? 0);
     }
 
     /**
@@ -292,7 +292,7 @@ class Tmp_Playlist extends database_object
 
         $results = Dba::fetch_assoc($db_results);
 
-        return (int)$results['object_id'];
+        return (int) $results['object_id'];
     }
 
     public function getId(): int

@@ -39,8 +39,7 @@ final readonly class FunctionChecker implements FunctionCheckerInterface
     public function __construct(
         private ConfigContainerInterface $configContainer,
         private LoggerInterface $logger,
-    ) {
-    }
+    ) {}
 
     /**
      * This checks if specific functionality is enabled.

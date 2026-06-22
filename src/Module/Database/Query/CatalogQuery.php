@@ -113,7 +113,7 @@ final class CatalogQuery implements QueryInterface
             case 'id':
                 $filter_sql = " `catalog`.`id` IN (";
                 foreach ($value as $uid) {
-                    $filter_sql .= (int)$uid . ',';
+                    $filter_sql .= (int) $uid . ',';
                 }
 
                 $filter_sql = rtrim($filter_sql, ',') . ") AND ";
@@ -148,7 +148,7 @@ final class CatalogQuery implements QueryInterface
                 $filter_sql = " `catalog`.`name` NOT LIKE '" . Dba::escape($value) . "%' AND ";
                 break;
             case 'enabled':
-                $filter_sql = " `catalog`.`enabled` = '" . (int)$value . "' AND ";
+                $filter_sql = " `catalog`.`enabled` = '" . (int) $value . "' AND ";
                 break;
             case 'gather_type':
                 $filter_sql = " `catalog`.`gather_types` = '" . Dba::escape($value) . "' AND ";
@@ -192,17 +192,17 @@ final class CatalogQuery implements QueryInterface
                 break;
             case 'rating':
                 $sql = sprintf('`rating`.`rating` %s, `rating`.`date`', $order);
-                $query->set_join_and_and('LEFT', "`rating`", "`rating`.`object_id`", "`catalog`.`id`", "`rating`.`object_type`", "'catalog'", "`rating`.`user`", (string)$query->user_id, 100);
+                $query->set_join_and_and('LEFT', "`rating`", "`rating`.`object_id`", "`catalog`.`id`", "`rating`.`object_type`", "'catalog'", "`rating`.`user`", (string) $query->user_id, 100);
                 break;
             case 'user_flag':
             case 'userflag':
                 $sql = "`user_flag`.`date`";
-                $query->set_join_and_and('LEFT', "`user_flag`", "`user_flag`.`object_id`", "`catalog`.`id`", "`user_flag`.`object_type`", "'catalog'", "`user_flag`.`user`", (string)$query->user_id, 100);
+                $query->set_join_and_and('LEFT', "`user_flag`", "`user_flag`.`object_id`", "`catalog`.`id`", "`user_flag`.`object_type`", "'catalog'", "`user_flag`.`user`", (string) $query->user_id, 100);
                 break;
             case 'user_flag_rating':
                 $sql = sprintf('`user_flag`.`date` %s, `rating`.`rating` %s, `rating`.`date`', $order, $order);
-                $query->set_join_and_and('LEFT', "`user_flag`", "`user_flag`.`object_id`", "`catalog`.`id`", "`user_flag`.`object_type`", "'catalog'", "`user_flag`.`user`", (string)$query->user_id, 100);
-                $query->set_join_and_and('LEFT', "`rating`", "`rating`.`object_id`", "`catalog`.`id`", "`rating`.`object_type`", "'catalog'", "`rating`.`user`", (string)$query->user_id, 100);
+                $query->set_join_and_and('LEFT', "`user_flag`", "`user_flag`.`object_id`", "`catalog`.`id`", "`user_flag`.`object_type`", "'catalog'", "`user_flag`.`user`", (string) $query->user_id, 100);
+                $query->set_join_and_and('LEFT', "`rating`", "`rating`.`object_id`", "`catalog`.`id`", "`rating`.`object_type`", "'catalog'", "`rating`.`user`", (string) $query->user_id, 100);
                 break;
             default:
                 $sql = '';

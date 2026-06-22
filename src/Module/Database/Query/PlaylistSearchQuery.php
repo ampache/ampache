@@ -122,9 +122,9 @@ final class PlaylistSearchQuery implements QueryInterface
             case 'id':
                 $filter_sql = " `playlist`.`id` IN (";
                 foreach ($value as $uid) {
-                    $filter_sql .= ((int)str_replace('smart_', '', $uid) > 0)
+                    $filter_sql .= ((int) str_replace('smart_', '', $uid) > 0)
                         ? Dba::escape($uid) . ','
-                        : (int)$uid . ',';
+                        : (int) $uid . ',';
                 }
 
                 $filter_sql = rtrim($filter_sql, ',') . ") AND ";
@@ -165,11 +165,11 @@ final class PlaylistSearchQuery implements QueryInterface
                 $filter_sql = " (`playlist`.`id` NOT LIKE 'smart_%' OR (`playlist`.`id` like 'smart_%' AND CONCAT(`playlist`.`name`, `playlist`.`user`) NOT IN (SELECT CONCAT(`playlist`.`name`, `playlist`.`user`) FROM `playlist`))) AND ";
                 break;
             case 'playlist_open':
-                $query->set_join_and('LEFT', '`user_playlist_map`', '`user_playlist_map`.`playlist_id`', '`playlist`.`id`', "`user_playlist_map`.`user_id`", (string)$value, 100);
-                $filter_sql = " (`playlist`.`type` = 'public' OR `playlist`.`user`=" . (int)$value . " OR FIND_IN_SET(" . (int)$value . ", `playlist`.`collaborate`) > 0 OR `user_playlist_map`.`user_id` IS NOT NULL) AND ";
+                $query->set_join_and('LEFT', '`user_playlist_map`', '`user_playlist_map`.`playlist_id`', '`playlist`.`id`', "`user_playlist_map`.`user_id`", (string) $value, 100);
+                $filter_sql = " (`playlist`.`type` = 'public' OR `playlist`.`user`=" . (int) $value . " OR FIND_IN_SET(" . (int) $value . ", `playlist`.`collaborate`) > 0 OR `user_playlist_map`.`user_id` IS NOT NULL) AND ";
                 break;
             case 'playlist_user':
-                $filter_sql = " `playlist`.`user` = " . (int)$value . " AND ";
+                $filter_sql = " `playlist`.`user` = " . (int) $value . " AND ";
                 break;
             case 'playlist_type':
                 $user_id = (Core::get_global('user') instanceof User && Core::get_global('user')->id > 0)
@@ -178,20 +178,20 @@ final class PlaylistSearchQuery implements QueryInterface
                 if ($value == 0) {
                     $filter_sql = sprintf(" (`playlist`.`user`='%s') AND ", $user_id);
                 } else {
-                    $query->set_join_and('LEFT', '`user_playlist_map`', '`user_playlist_map`.`playlist_id`', '`playlist`.`id`', "`user_playlist_map`.`user_id`", (string)$user_id, 100);
+                    $query->set_join_and('LEFT', '`user_playlist_map`', '`user_playlist_map`.`playlist_id`', '`playlist`.`id`', "`user_playlist_map`.`user_id`", (string) $user_id, 100);
                     $filter_sql = " (`playlist`.`type` = 'public' OR `playlist`.`user`=" . $user_id . " OR FIND_IN_SET(" . $user_id . ", `playlist`.`collaborate`) > 0 OR `user_playlist_map`.`user_id` IS NOT NULL) AND ";
                 }
 
                 break;
             case 'user_flag':
-                $filter_sql = ((int)$value === 0)
-                    ? " `playlist`.`int_id` NOT IN (SELECT `object_id` FROM `user_flag` WHERE `object_type` = `playlist`.`object_type` AND `user` = " . (int)$query->user_id . ") AND "
-                    : " `playlist`.`int_id` IN (SELECT `object_id` FROM `user_flag` WHERE `object_type` = `playlist`.`object_type` AND `user` = " . (int)$query->user_id . ") AND ";
+                $filter_sql = ((int) $value === 0)
+                    ? " `playlist`.`int_id` NOT IN (SELECT `object_id` FROM `user_flag` WHERE `object_type` = `playlist`.`object_type` AND `user` = " . (int) $query->user_id . ") AND "
+                    : " `playlist`.`int_id` IN (SELECT `object_id` FROM `user_flag` WHERE `object_type` = `playlist`.`object_type` AND `user` = " . (int) $query->user_id . ") AND ";
                 break;
             case 'user_rating':
-                $filter_sql = ((int)$value === 0)
-                    ? " `playlist`.`int_id` NOT IN (SELECT `object_id` FROM `rating` WHERE `object_type` = `playlist`.`object_type` AND `user` = " . (int)$query->user_id . ") AND "
-                    : " `playlist`.`int_id` IN (SELECT `object_id` FROM `rating` WHERE `object_type` = `playlist`.`object_type` AND `user` = " . (int)$query->user_id . " AND `rating` = " . Dba::escape($value) . ") AND ";
+                $filter_sql = ((int) $value === 0)
+                    ? " `playlist`.`int_id` NOT IN (SELECT `object_id` FROM `rating` WHERE `object_type` = `playlist`.`object_type` AND `user` = " . (int) $query->user_id . ") AND "
+                    : " `playlist`.`int_id` IN (SELECT `object_id` FROM `rating` WHERE `object_type` = `playlist`.`object_type` AND `user` = " . (int) $query->user_id . " AND `rating` = " . Dba::escape($value) . ") AND ";
                 break;
         }
 
@@ -224,17 +224,17 @@ final class PlaylistSearchQuery implements QueryInterface
                 break;
             case 'rating':
                 $sql = sprintf('`rating`.`rating` %s, `rating`.`date`', $order);
-                $query->set_join_and_and('LEFT', "`rating`", "`rating`.`object_id`", "`playlist`.`int_id`", "`rating`.`object_type`", "`playlist`.`object_type`", "`rating`.`user`", (string)$query->user_id, 100);
+                $query->set_join_and_and('LEFT', "`rating`", "`rating`.`object_id`", "`playlist`.`int_id`", "`rating`.`object_type`", "`playlist`.`object_type`", "`rating`.`user`", (string) $query->user_id, 100);
                 break;
             case 'user_flag':
             case 'userflag':
                 $sql = "`user_flag`.`date`";
-                $query->set_join_and_and('LEFT', "`user_flag`", "`user_flag`.`object_id`", "`playlist`.`int_id`", "`user_flag`.`object_type`", "`playlist`.`object_type`", "`user_flag`.`user`", (string)$query->user_id, 100);
+                $query->set_join_and_and('LEFT', "`user_flag`", "`user_flag`.`object_id`", "`playlist`.`int_id`", "`user_flag`.`object_type`", "`playlist`.`object_type`", "`user_flag`.`user`", (string) $query->user_id, 100);
                 break;
             case 'user_flag_rating':
                 $sql = sprintf('`user_flag`.`date` %s, `rating`.`rating` %s, `rating`.`date`', $order, $order);
-                $query->set_join_and_and('LEFT', "`user_flag`", "`user_flag`.`object_id`", "`playlist`.`int_id`", "`user_flag`.`object_type`", "`playlist`.`object_type`", "`user_flag`.`user`", (string)$query->user_id, 100);
-                $query->set_join_and_and('LEFT', "`rating`", "`rating`.`object_id`", "`playlist`.`int_id`", "`rating`.`object_type`", "`playlist`.`object_type`", "`rating`.`user`", (string)$query->user_id, 100);
+                $query->set_join_and_and('LEFT', "`user_flag`", "`user_flag`.`object_id`", "`playlist`.`int_id`", "`user_flag`.`object_type`", "`playlist`.`object_type`", "`user_flag`.`user`", (string) $query->user_id, 100);
+                $query->set_join_and_and('LEFT', "`rating`", "`rating`.`object_id`", "`playlist`.`int_id`", "`rating`.`object_type`", "`playlist`.`object_type`", "`rating`.`user`", (string) $query->user_id, 100);
                 break;
             default:
                 $sql = '';

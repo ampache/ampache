@@ -78,7 +78,7 @@ class ShowEditRecordActionTest extends MockeryTestCase
         $this->ui->shouldReceive('show')
             ->with(
                 'show_edit_access.inc.php',
-                Mockery::on(static fn (array $context): bool => $context['access'] instanceof AccessListItemInterface)
+                Mockery::on(static fn(array $context): bool => $context['access'] instanceof AccessListItemInterface)
             )
             ->once();
         $this->ui->shouldReceive('showQueryStats')

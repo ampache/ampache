@@ -47,8 +47,7 @@ final readonly class ShowAction implements ApplicationActionInterface
         private RequestParserInterface $requestParser,
         private ConfigContainerInterface $configContainer,
         private LoggerInterface $logger,
-    ) {
-    }
+    ) {}
 
     public function run(ServerRequestInterface $request, GuiGatekeeperInterface $gatekeeper): ?ResponseInterface
     {
@@ -87,22 +86,22 @@ final readonly class ShowAction implements ApplicationActionInterface
         }
 
         $graph     = new Graph();
-        $user_id   = (int)$this->requestParser->getFromRequest('user_id');
-        $object_id = (int)$this->requestParser->getFromRequest('object_id');
+        $user_id   = (int) $this->requestParser->getFromRequest('user_id');
+        $object_id = (int) $this->requestParser->getFromRequest('object_id');
         $end_date  = (in_array($this->requestParser->getFromRequest('end_date'), ['', '0'], true))
             ? time()
-            : (int)$this->requestParser->getFromRequest('end_date');
+            : (int) $this->requestParser->getFromRequest('end_date');
         $start_date = (in_array($this->requestParser->getFromRequest('start_date'), ['', '0'], true))
             ? $end_date - 864000
-            : ((int)$this->requestParser->getFromRequest('start_date'));
+            : ((int) $this->requestParser->getFromRequest('start_date'));
         $zoom = (in_array($this->requestParser->getFromRequest('zoom'), ['', '0'], true))
             ? 'day'
             : $this->requestParser->getFromRequest('zoom');
-        $width = ((int)$this->requestParser->getFromRequest('width') !== 0)
-            ? (int)$this->requestParser->getFromRequest('width')
+        $width = ((int) $this->requestParser->getFromRequest('width') !== 0)
+            ? (int) $this->requestParser->getFromRequest('width')
             : 700;
-        $height = ((int)$this->requestParser->getFromRequest('height') !== 0)
-            ? (int)$this->requestParser->getFromRequest('height')
+        $height = ((int) $this->requestParser->getFromRequest('height') !== 0)
+            ? (int) $this->requestParser->getFromRequest('height')
             : 260;
 
         $action_type = $this->requestParser->getFromRequest('type');

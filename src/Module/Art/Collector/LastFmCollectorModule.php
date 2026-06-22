@@ -41,8 +41,7 @@ final readonly class LastFmCollectorModule implements CollectorModuleInterface
         private ConfigContainerInterface $configContainer,
         private LastFmQueryInterface $lastFmQuery,
         private LoggerInterface $logger,
-    ) {
-    }
+    ) {}
 
     /**
      * This returns the art from lastfm. It doesn't currently require an
@@ -91,7 +90,7 @@ final readonly class LastFmCollectorModule implements CollectorModuleInterface
                 }
 
                 foreach ($xmldata->album->image as $albumart) {
-                    $coverart[] = (string)$albumart;
+                    $coverart[] = (string) $albumart;
                 }
             }
 

@@ -39,8 +39,7 @@ final readonly class ShowAction implements ApplicationActionInterface
     public function __construct(
         private ResponseFactoryInterface $responseFactory,
         private ConfigContainerInterface $configContainer,
-    ) {
-    }
+    ) {}
 
     public function run(ServerRequestInterface $request, GuiGatekeeperInterface $gatekeeper): ResponseInterface
     {

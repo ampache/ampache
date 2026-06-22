@@ -43,8 +43,7 @@ final readonly class BrowseAjaxHandler implements AjaxHandlerInterface
         private ModelFactoryInterface $modelFactory,
         private LiveStreamRepositoryInterface $liveStreamRepository,
         private ShareUiLinkRendererInterface $shareUiLinkRenderer,
-    ) {
-    }
+    ) {}
 
     public function handle(User $user): void
     {
@@ -53,7 +52,7 @@ final readonly class BrowseAjaxHandler implements AjaxHandlerInterface
         }
 
         $browse_id = (isset($_REQUEST['browse_id']))
-            ? (int)$_REQUEST['browse_id']
+            ? (int) $_REQUEST['browse_id']
             : null;
         $browse = $this->modelFactory->createBrowse($browse_id);
 
@@ -69,7 +68,7 @@ final readonly class BrowseAjaxHandler implements AjaxHandlerInterface
 
         // hide some of the useless columns in a browse
         if (array_key_exists('hide', $_REQUEST)) {
-            $argument = ['hide' => explode(',', scrub_in((string)$_REQUEST['hide']))];
+            $argument = ['hide' => explode(',', scrub_in((string) $_REQUEST['hide']))];
         }
 
         $results = [];
@@ -94,7 +93,7 @@ final readonly class BrowseAjaxHandler implements AjaxHandlerInterface
 
                     // Checkbox unplayed
                     if (isset($_REQUEST['value'])) {
-                        $value = (int)$_REQUEST['value'];
+                        $value = (int) $_REQUEST['value'];
                         if ($_REQUEST['key'] == 'unplayed' && $browse->get_filter('unplayed')) {
                             $value = 0;
                         }
@@ -198,7 +197,7 @@ final readonly class BrowseAjaxHandler implements AjaxHandlerInterface
 
                 break;
             case 'page':
-                $browse->set_start((int)($_REQUEST['start'] ?? 0));
+                $browse->set_start((int) ($_REQUEST['start'] ?? 0));
                 ob_start();
                 $browse->show_objects([], $argument, true);
                 $results[$browse->get_content_div()] = ob_get_clean();
@@ -255,14 +254,14 @@ final readonly class BrowseAjaxHandler implements AjaxHandlerInterface
                         $browse->set_grid_view($value);
                         break;
                     case 'limit':
-                        $value = (int)$value;
+                        $value = (int) $value;
                         if ($value > 0) {
                             $browse->set_offset($value);
                         }
 
                         break;
                     case 'custom':
-                        $value = (int)$value;
+                        $value = (int) $value;
                         $limit = $browse->get_offset();
                         if ($limit > 0 && $value > 0) {
                             $total = $browse->get_total();
@@ -288,7 +287,7 @@ final readonly class BrowseAjaxHandler implements AjaxHandlerInterface
                 break;
             case 'get_share_links':
                 $object_type = LibraryItemEnum::tryFrom(Core::get_request('object_type')) ?? null;
-                $object_id   = (int)filter_input(INPUT_GET, 'object_id', FILTER_SANITIZE_NUMBER_INT);
+                $object_id   = (int) filter_input(INPUT_GET, 'object_id', FILTER_SANITIZE_NUMBER_INT);
 
                 if ($object_type !== null && $object_id > 0) {
                     echo $this->shareUiLinkRenderer->render($object_type, $object_id);

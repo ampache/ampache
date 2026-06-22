@@ -36,8 +36,7 @@ final readonly class CatalogExportFactory implements CatalogExportFactoryInterfa
     public function __construct(
         private SongRepositoryInterface $songRepository,
         private ModelFactoryInterface $modelFactory,
-    ) {
-    }
+    ) {}
 
     /**
      * Returns the exporter class based on the export type

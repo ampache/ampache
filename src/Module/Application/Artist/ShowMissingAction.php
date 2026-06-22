@@ -40,8 +40,7 @@ final readonly class ShowMissingAction implements ApplicationActionInterface
     public function __construct(
         private UiInterface $ui,
         private MissingArtistRetrieverInterface $missingArtistRetriever,
-    ) {
-    }
+    ) {}
 
     public function run(ServerRequestInterface $request, GuiGatekeeperInterface $gatekeeper): ?ResponseInterface
     {

@@ -47,8 +47,7 @@ final readonly class ShareCreator implements ShareCreatorInterface
     public function __construct(
         private PluginRetrieverInterface $pluginRetriever,
         private LoggerInterface $logger,
-    ) {
-    }
+    ) {}
 
     public function create(
         User $user,
@@ -104,8 +103,8 @@ final readonly class ShareCreator implements ShareCreatorInterface
             $object_type->value,
             $object_id,
             time(),
-            (int)$allow_stream,
-            (int)$allow_download,
+            (int) $allow_stream,
+            (int) $allow_download,
             $expire_days,
             $secret,
             0,
@@ -114,7 +113,7 @@ final readonly class ShareCreator implements ShareCreatorInterface
         ];
         Dba::write($sql, $params);
 
-        $share_id = (int)Dba::insert_id();
+        $share_id = (int) Dba::insert_id();
 
         $url = Share::get_url($share_id, $secret);
         // Get a shortener url if any available

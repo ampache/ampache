@@ -177,13 +177,13 @@ class Art extends database_object
         if ($type && $uid) {
             // there are 2 paths to clear for thumbs and art.
             if (empty($size)) {
-                $path = self::get_dir_on_disk($type, $uid, 'thumbnail', (string)$kind);
+                $path = self::get_dir_on_disk($type, $uid, 'thumbnail', (string) $kind);
                 if ($path !== null) {
                     self::_delete_rec_dir(rtrim($path, '/'), $size, $mime);
                 }
                 $size = 'original';
             }
-            $path = self::get_dir_on_disk($type, $uid, $size, (string)$kind);
+            $path = self::get_dir_on_disk($type, $uid, $size, (string) $kind);
             if ($path !== null) {
                 self::_delete_rec_dir(rtrim($path, '/'), $size, $mime);
             }
@@ -228,12 +228,12 @@ class Art extends database_object
             $difference = $src_ratio - $dst_ratio;
             if ($difference > 0.3) {
                 // keep original height and widen a bit
-                $size['width'] = (int)($size['height'] * (min($src_ratio, 1.5)));
+                $size['width'] = (int) ($size['height'] * (min($src_ratio, 1.5)));
             }
             if ($difference < -0.1) {
                 // extend the height a little bit and thin it out
-                $size['height'] = (int)($size['height'] * (min(($art->height / $art->width), 1.1)));
-                $size['width']  = (int)($size['height'] * (min($src_ratio, 0.8)));
+                $size['height'] = (int) ($size['height'] * (min(($art->height / $art->width), 1.1)));
+                $size['width']  = (int) ($size['height'] * (min($src_ratio, 0.8)));
             }
         }
 
@@ -533,7 +533,7 @@ class Art extends database_object
             $db_results = Dba::read($sql, [$data['db']]);
             if ($row = Dba::fetch_assoc($db_results)) {
                 if (AmpConfig::get('album_art_store_disk')) {
-                    return (string)self::_read_from_dir('original', $type, $row['object_id'], 'default', $row['mime']);
+                    return (string) self::_read_from_dir('original', $type, $row['object_id'], 'default', $row['mime']);
                 }
 
                 return $row['image'];
@@ -565,7 +565,7 @@ class Art extends database_object
                 $handle &&
                 $size > 0
             ) {
-                $image_data = (string)fread($handle, $size);
+                $image_data = (string) fread($handle, $size);
                 fclose($handle);
 
                 return $image_data;
@@ -702,7 +702,7 @@ class Art extends database_object
         $db_results = Dba::read($sql, [$object_type, $object_id, $size, $kind]);
         $nb_img     = 0;
         if ($results = Dba::fetch_assoc($db_results)) {
-            $nb_img = (int)$results['nb_img'];
+            $nb_img = (int) $results['nb_img'];
         }
         database_object::add_to_cache('art_has_db_' . $object_type, $object_id, [$nb_img]);
 
@@ -994,10 +994,10 @@ class Art extends database_object
             return [];
         }
 
-        $src_width  = (int)imagesx($source);
-        $src_height = (int)imagesy($source);
-        $dst_width  = (int)$size['width'];
-        $dst_height = (int)$size['height'];
+        $src_width  = (int) imagesx($source);
+        $src_height = (int) imagesy($source);
+        $dst_width  = (int) $size['width'];
+        $dst_height = (int) $size['height'];
 
         // Calculate aspect ratios
         $src_ratio  = $src_width / $src_height;
@@ -1006,24 +1006,24 @@ class Art extends database_object
         if ($difference > 0.3 || $difference < -0.3) {
             if ($difference > 0.3) {
                 // Source is wider than destination, crop width
-                $new_width  = (int)($src_height * $dst_ratio);
+                $new_width  = (int) ($src_height * $dst_ratio);
                 $new_height = $src_height;
-                $src_x      = (int)(($src_width - $new_width) / 2);
+                $src_x      = (int) (($src_width - $new_width) / 2);
                 $src_y      = 0;
             } else {
                 // Source is taller than destination, crop height, with upward bias
                 $new_width     = $src_width;
-                $new_height    = (int)($src_width / $dst_ratio);
+                $new_height    = (int) ($src_width / $dst_ratio);
                 $src_x         = 0;
                 $center_offset = ($src_height - $new_height) / 2;
-                $src_y         = (int)($center_offset * 0.8);
+                $src_y         = (int) ($center_offset * 0.8);
             }
         } else {
             $new_width     = $src_width;
             $new_height    = $src_height;
             $src_x         = 0;
             $center_offset = ($src_height - $new_height) / 2;
-            $src_y         = (int)($center_offset * 0.8);
+            $src_y         = (int) ($center_offset * 0.8);
         }
 
         if ($dst_width < 1 || $dst_height < 1) {
@@ -1037,7 +1037,7 @@ class Art extends database_object
         imagecopyresampled($thumbnail, $source, 0, 0, $src_x, $src_y, $dst_width, $dst_height, $new_width, $new_height);
 
         $data = explode('/', (string) $mime);
-        $type = ((string)($data[1] ?? '') !== '') ? strtolower($data[1]) : 'jpg';
+        $type = ((string) ($data[1] ?? '') !== '') ? strtolower($data[1]) : 'jpg';
 
         // Start output buffer
         ob_start();
@@ -1122,7 +1122,7 @@ class Art extends database_object
 
         if ($results = Dba::fetch_assoc($db_results)) {
             if (AmpConfig::get('album_art_store_disk')) {
-                $this->raw = (string)self::_read_from_dir($results['size'], $this->object_type, $this->object_id, $this->kind, $results['mime']);
+                $this->raw = (string) self::_read_from_dir($results['size'], $this->object_type, $this->object_id, $this->kind, $results['mime']);
             } else {
                 if (empty($results['image'])) {
                     return false;
@@ -1131,9 +1131,9 @@ class Art extends database_object
             }
 
             $this->raw_mime = $results['mime'];
-            $this->id       = (int)$results['id'];
-            $this->width    = (int)$results['width'];
-            $this->height   = (int)$results['height'];
+            $this->id       = (int) $results['id'];
+            $this->width    = (int) $results['width'];
+            $this->height   = (int) $results['height'];
         }
 
         // return a default image if fallback is requested
@@ -1216,8 +1216,8 @@ class Art extends database_object
 
         if (preg_match('/^[0-9]+x[0-9]+$/', $size)) {
             $dimensions           = explode('x', $size);
-            $width                = (int)$dimensions[0];
-            $height               = (int)$dimensions[1];
+            $width                = (int) $dimensions[0];
+            $height               = (int) $dimensions[1];
             $thumb_size           = [];
             $thumb_size['width']  = $width;
             $thumb_size['height'] = $height;
@@ -1240,12 +1240,12 @@ class Art extends database_object
         }
         $db_results = Dba::read($sql, $params);
         if ($results = Dba::fetch_assoc($db_results)) {
-            $this->id         = (int)$results['id'];
-            $this->width      = (int)$results['width'];
-            $this->height     = (int)$results['height'];
+            $this->id         = (int) $results['id'];
+            $this->width      = (int) $results['width'];
+            $this->height     = (int) $results['height'];
             $this->thumb_mime = $results['mime'];
             $this->thumb      = (AmpConfig::get('album_art_store_disk'))
-                ? (string)self::_read_from_dir($results['size'], $this->object_type, $this->object_id, $this->kind, $results['mime'])
+                ? (string) self::_read_from_dir($results['size'], $this->object_type, $this->object_id, $this->kind, $results['mime'])
                 : $results['image'];
 
             if (!empty($this->thumb)) {
@@ -1513,7 +1513,7 @@ class Art extends database_object
 
         $art_id = Dba::insert_id() ?: null;
         if (is_string($art_id)) {
-            $this->id = (int)$art_id;
+            $this->id = (int) $art_id;
         }
 
         return true;
@@ -1539,8 +1539,8 @@ class Art extends database_object
                     // resize the image if requested
                     $dimensions     = explode('x', $size);
                     $size           = [];
-                    $size['width']  = (int)$dimensions[0];
-                    $size['height'] = (int)$dimensions[1];
+                    $size['width']  = (int) $dimensions[0];
+                    $size['height'] = (int) $dimensions[1];
                     if ($size['width'] === 0 || $size['height'] === 0) {
                         // art not found
                         http_response_code(404);
@@ -1551,7 +1551,7 @@ class Art extends database_object
                     $thumb = $this->get_thumb($size);
                     if (!empty($thumb) && isset($thumb['thumb']) && isset($thumb['thumb_mime'])) {
                         header('Content-type: ' . $thumb['thumb_mime']);
-                        header('Content-Length: ' . strlen((string)$thumb['thumb']));
+                        header('Content-Length: ' . strlen((string) $thumb['thumb']));
                         echo $thumb['thumb'];
 
                         return true;
@@ -1711,7 +1711,7 @@ class Art extends database_object
             return 'invalid_image';
         }
 
-        $max_upload_size = (int)AmpConfig::get('max_upload_size', 0);
+        $max_upload_size = (int) AmpConfig::get('max_upload_size', 0);
 
         // Check image size doesn't exceed the limit
         if ($max_upload_size > 0 && $source_size > $max_upload_size) {

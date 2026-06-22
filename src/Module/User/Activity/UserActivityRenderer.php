@@ -38,8 +38,7 @@ final readonly class UserActivityRenderer implements UserActivityRendererInterfa
         private ConfigContainerInterface $configContainer,
         private ModelFactoryInterface $modelFactory,
         private LibraryItemLoaderInterface $libraryItemLoader,
-    ) {
-    }
+    ) {}
 
     /**
      * Show the activity entry.

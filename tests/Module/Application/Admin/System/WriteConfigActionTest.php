@@ -164,7 +164,7 @@ class WriteConfigActionTest extends MockeryTestCase
 
         $this->installationHelper->shouldReceive('write_config')
             ->with(
-                Mockery::on(static fn (): bool => true)
+                Mockery::on(static fn(): bool => true)
             )
             ->once()
             ->andReturnTrue();

@@ -43,8 +43,7 @@ final class AddFilterAction extends AbstractFilterAction
         private readonly UiInterface $ui,
         private readonly ConfigContainerInterface $configContainer,
         private readonly RequestParserInterface $requestParser,
-    ) {
-    }
+    ) {}
 
     protected function handle(ServerRequestInterface $request): ?ResponseInterface
     {
@@ -56,7 +55,7 @@ final class AddFilterAction extends AbstractFilterAction
             throw new AccessDeniedException();
         }
 
-        $body = (array)$request->getParsedBody();
+        $body = (array) $request->getParsedBody();
 
         $this->ui->showHeader();
 
@@ -90,7 +89,7 @@ final class AddFilterAction extends AbstractFilterAction
 
         foreach ($catalogs as $catalog_id) {
             $catalog_name                 = Catalog::getName($catalog_id);
-            $catalog_array[$catalog_name] = (int)filter_input(INPUT_POST, 'catalog_' . $catalog_id, FILTER_SANITIZE_NUMBER_INT);
+            $catalog_array[$catalog_name] = (int) filter_input(INPUT_POST, 'catalog_' . $catalog_id, FILTER_SANITIZE_NUMBER_INT);
         }
 
         // Attempt to create the filter

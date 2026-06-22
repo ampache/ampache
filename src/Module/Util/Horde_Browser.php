@@ -294,7 +294,7 @@ class Horde_Browser
             if (str_contains($version[1], '.')) {
                 [$this->_majorVersion, $this->_minorVersion] = explode('.', $version[1]);
             } else {
-                $this->_majorVersion = (int)$version[1];
+                $this->_majorVersion = (int) $version[1];
                 $this->_minorVersion = 0;
             }
 
@@ -406,9 +406,9 @@ class Horde_Browser
                 $this->setQuirk('avoid_popup_windows');
             }
 
-            $this->_majorVersion = (int)$version[1];
+            $this->_majorVersion = (int) $version[1];
             if (isset($version[2])) {
-                $this->_minorVersion = (int)$version[2];
+                $this->_minorVersion = (int) $version[2];
             }
 
             if (stripos($agent, 'Chrome/') !== false || stripos($agent, 'CriOS/') !== false) {
@@ -435,7 +435,7 @@ class Horde_Browser
                 // numbers until Version 3.
                 if (preg_match('|Version/([0-9.]+)|', $agent, $version_string)) {
                     [$this->_majorVersion, $this->_minorVersion]     = explode('.', $version_string[1], 2);
-                    $this->_minorVersion                             = (int)($this->_minorVersion);
+                    $this->_minorVersion                             = (int) ($this->_minorVersion);
                     $this->setFeature('ajax');
                     $this->setFeature('rte');
                 } elseif ($this->_majorVersion >= 412) {

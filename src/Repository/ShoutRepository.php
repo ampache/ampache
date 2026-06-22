@@ -47,8 +47,7 @@ final class ShoutRepository extends BaseRepository implements ShoutRepositoryInt
         protected DatabaseConnectionInterface $connection,
         private readonly UserRepositoryInterface $userRepository,
         private readonly LoggerInterface $logger,
-    ) {
-    }
+    ) {}
 
     /**
      * Cleans out orphaned shout-box items

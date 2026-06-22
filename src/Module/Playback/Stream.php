@@ -110,7 +110,7 @@ class Stream
         $max_bitrate = AmpConfig::get('max_bit_rate');
         $min_bitrate = AmpConfig::get('min_bit_rate', 8);
         // FIXME: This should be configurable for each output type
-        $user_bit_rate = (int)AmpConfig::get('transcode_bitrate', 128);
+        $user_bit_rate = (int) AmpConfig::get('transcode_bitrate', 128);
 
         // If the user's crazy, that's no skin off our back
         if ($user_bit_rate < $min_bitrate) {
@@ -147,7 +147,7 @@ class Stream
             $bit_rate = $user_bit_rate;
         }
 
-        return (int)$bit_rate;
+        return (int) $bit_rate;
     }
 
     /**
@@ -172,21 +172,21 @@ class Stream
             ? AmpConfig::get('local_web_path')
             : AmpConfig::get_web_path();
         if (empty($web_path) && !empty(AmpConfig::get('fallback_url'))) {
-            $web_path = rtrim((string)AmpConfig::get('fallback_url'), '/');
+            $web_path = rtrim((string) AmpConfig::get('fallback_url'), '/');
         }
 
         if (AmpConfig::get('force_http_play')) {
             $web_path = str_replace("https://", "http://", $web_path);
         }
 
-        $http_port = ($local && preg_match("/:(\d+)/", (string)$web_path, $matches))
+        $http_port = ($local && preg_match("/:(\d+)/", (string) $web_path, $matches))
             ? $matches[1]
             : AmpConfig::get('http_port');
         if (!empty($http_port) && $http_port != 80 && $http_port != 443) {
             if (preg_match("/:(\d+)/", (string) $web_path, $matches)) {
-                $web_path = str_replace(':' . $matches[1], ':' . $http_port, (string)$web_path);
+                $web_path = str_replace(':' . $matches[1], ':' . $http_port, (string) $web_path);
             } else {
-                $web_path = str_replace(AmpConfig::get('http_host'), AmpConfig::get('http_host') . ':' . $http_port, (string)$web_path);
+                $web_path = str_replace(AmpConfig::get('http_host'), AmpConfig::get('http_host') . ':' . $http_port, (string) $web_path);
             }
         }
 
@@ -199,7 +199,7 @@ class Stream
     public static function get_image_preview(Video $media): ?string
     {
         $image = null;
-        $sec   = mt_rand((int)($media->time * 0.2), (int)($media->time * 0.8));
+        $sec   = mt_rand((int) ($media->time * 0.2), (int) ($media->time * 0.8));
         $frame = gmdate("H:i:s", $sec);
 
         if (AmpConfig::get('transcode_cmd') && AmpConfig::get('transcode_input') && AmpConfig::get('encode_get_image')) {
@@ -249,7 +249,7 @@ class Stream
         if (!array_key_exists('bitrate', $options)) {
             // Validate the bitrate
             $bit_rate = self::validate_bitrate($bit_rate);
-        } elseif ($bit_rate > ((int)$options['bitrate']) || $bit_rate === 0) {
+        } elseif ($bit_rate > ((int) $options['bitrate']) || $bit_rate === 0) {
             // use the file bitrate if lower than the gathered
             $bit_rate = $options['bitrate'];
         }
@@ -265,10 +265,10 @@ class Stream
             $media->bitrate > 0
         ) {
             debug_event(self::class, 'Clamping bitrate to avoid upsampling to ' . $bit_rate, 5);
-            $bit_rate = self::validate_bitrate((int)($media->bitrate / 1024));
+            $bit_rate = self::validate_bitrate((int) ($media->bitrate / 1024));
         }
 
-        return (int)$bit_rate;
+        return (int) $bit_rate;
     }
 
     /**
@@ -313,7 +313,7 @@ class Stream
                 continue;
             }
 
-            if (($user_id === 0 || (int)$row['user'] === $user_id) && Catalog::has_access($media->getCatalogId(), (int)$row['user'])) {
+            if (($user_id === 0 || (int) $row['user'] === $user_id) && Catalog::has_access($media->getCatalogId(), (int) $row['user'])) {
                 $client = new User($row['user']);
                 if ($client->isNew()) {
                     continue;
@@ -645,7 +645,7 @@ class Stream
     public static function set_session(int|string $sid): void
     {
         if ($sid !== 0 && ($sid !== '' && $sid !== '0')) {
-            self::$session = (string)$sid;
+            self::$session = (string) $sid;
         }
     }
 
@@ -701,12 +701,12 @@ class Stream
         }
 
         if (isset($options['frame'])) {
-            $frame                = gmdate("H:i:s", (int)$options['frame']);
+            $frame                = gmdate("H:i:s", (int) $options['frame']);
             $string_map['%TIME%'] = $frame;
         }
 
         if (isset($options['duration'])) {
-            $duration                 = gmdate("H:i:s", (int)$options['duration']);
+            $duration                 = gmdate("H:i:s", (int) $options['duration']);
             $string_map['%DURATION%'] = $duration;
         }
 
@@ -716,7 +716,7 @@ class Stream
         }
 
         foreach ($string_map as $search => $replace) {
-            $command = str_replace($search, (string)$replace, $command, $ret);
+            $command = str_replace($search, (string) $replace, $command, $ret);
             if ($ret === 0) {
                 debug_event(self::class, $search . ' not in transcode command', 5);
             }
@@ -724,7 +724,7 @@ class Stream
 
         if ($out_file) {
             // when running cache_catalog_proc redirect to the file path instead of piping
-            $command = str_replace("pipe:1", $out_file, (string)$command);
+            $command = str_replace("pipe:1", $out_file, (string) $command);
             debug_event(self::class, 'Final command is ' . $command, 4);
             $process = proc_open($command, [], $pipes);
             if (is_resource($process)) {
@@ -753,10 +753,10 @@ class Stream
     private static function _scrub_arg(?string $arg): string
     {
         if (strtoupper(substr(PHP_OS, 0, 3)) === 'WIN') {
-            return '"' . str_replace(['"', '%'], ['', ''], (string)$arg) . '"';
+            return '"' . str_replace(['"', '%'], ['', ''], (string) $arg) . '"';
         }
 
-        return "'" . str_replace("'", "'\\''", (string)$arg) . "'";
+        return "'" . str_replace("'", "'\\''", (string) $arg) . "'";
     }
 
     /**

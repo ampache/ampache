@@ -51,9 +51,7 @@ final readonly class MetaTagCollectorModule implements CollectorModuleInterface
         'ID3 Other',
     ];
 
-    public function __construct(private SongRepositoryInterface $songRepository)
-    {
-    }
+    public function __construct(private SongRepositoryInterface $songRepository) {}
 
     /**
      * Gather all art from tags in given file.
@@ -87,7 +85,7 @@ final readonly class MetaTagCollectorModule implements CollectorModuleInterface
             // Foreach in case they have more than one
             foreach ($id3['id3v2']['APIC'] as $image) {
                 if (isset($image['picturetypeid']) && array_key_exists('data', $image)) {
-                    $type     = self::getPictureType((int)$image['picturetypeid']);
+                    $type     = self::getPictureType((int) $image['picturetypeid']);
                     $images[] = [
                         'raw' => $image['data'],
                         'mime' => $image['mime'],
@@ -101,7 +99,7 @@ final readonly class MetaTagCollectorModule implements CollectorModuleInterface
             // Foreach in case they have more than one
             foreach ($id3['id3v2']['PIC'] as $image) {
                 if (isset($image['picturetypeid']) && array_key_exists('data', $image)) {
-                    $type     = self::getPictureType((int)$image['picturetypeid']);
+                    $type     = self::getPictureType((int) $image['picturetypeid']);
                     $images[] = [
                         'raw' => $image['data'],
                         'mime' => $image['image_mime'],
@@ -115,7 +113,7 @@ final readonly class MetaTagCollectorModule implements CollectorModuleInterface
             // Foreach in case they have more than one
             foreach ($id3['flac']['PICTURE'] as $image) {
                 if (isset($image['typeid']) && array_key_exists('data', $image)) {
-                    $type     = self::getPictureType((int)$image['typeid']);
+                    $type     = self::getPictureType((int) $image['typeid']);
                     $images[] = [
                         'raw' => $image['data'],
                         'mime' => $image['image_mime'],
@@ -245,7 +243,7 @@ final readonly class MetaTagCollectorModule implements CollectorModuleInterface
     {
         $mtype = $media instanceof Song ? 'song' : 'video';
 
-        $images = self::gatherFileArt((string)$media->file);
+        $images = self::gatherFileArt((string) $media->file);
 
         // stop collecting dupes for each album
         $raw_array = [];
@@ -323,7 +321,7 @@ final readonly class MetaTagCollectorModule implements CollectorModuleInterface
             return count($priorities);
         }
 
-        return (int)$priority;
+        return (int) $priority;
     }
 
     /**

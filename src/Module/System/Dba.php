@@ -73,7 +73,7 @@ class Dba
 
         if (!$dbh || $dbh->errorCode()) {
             if ($dbh instanceof PDO) {
-                self::$_error = (string)json_encode($dbh->errorInfo());
+                self::$_error = (string) json_encode($dbh->errorInfo());
             }
 
             return false;
@@ -122,7 +122,7 @@ class Dba
                 }
 
                 $row = self::fetch_row($db_results);
-                if ((int)$row[0] < $item['count']) {
+                if ((int) $row[0] < $item['count']) {
                     return false;
                 }
             }
@@ -477,7 +477,7 @@ class Dba
     public static function translate_to_mysqlcharset($charset): array
     {
         // Translate real charset names into fancy MySQL land names
-        switch (strtoupper((string)$charset)) {
+        switch (strtoupper((string) $charset)) {
             case 'CP1250':
             case 'WINDOWS-1250':
                 $target_charset   = AmpConfig::get('database_charset', 'cp1250');
@@ -554,7 +554,7 @@ class Dba
         $dsn = str_starts_with((string) $hostname, '/') ? 'mysql:unix_socket=' . $hostname : 'mysql:host=' . $hostname;
 
         if ($port) {
-            $dsn .= ';port=' . (int)($port);
+            $dsn .= ';port=' . (int) ($port);
         }
 
         try {
@@ -588,7 +588,7 @@ class Dba
         self::$_sql = $sql;
         try {
             // Run the query
-            if (!empty($params) && strpos((string)self::$_sql, '?')) {
+            if (!empty($params) && strpos((string) self::$_sql, '?')) {
                 $stmt = $dbh->prepare(self::$_sql);
                 $stmt->execute($params);
             } else {
@@ -606,7 +606,7 @@ class Dba
         }
 
         if (!$stmt) {
-            self::$_error = (string)json_encode($dbh->errorInfo());
+            self::$_error = (string) json_encode($dbh->errorInfo());
             if (!$silent) {
                 debug_event(self::class, 'Error_query SQL: ' . self::$_sql . ' ' . json_encode($params), 5);
                 debug_event(self::class, 'Error_query MSG: ' . json_encode($dbh->errorInfo()), 1);
@@ -614,7 +614,7 @@ class Dba
 
             self::disconnect();
         } elseif ($stmt->errorCode() && $stmt->errorCode() !== '00000') {
-            self::$_error = (string)json_encode($stmt->errorInfo());
+            self::$_error = (string) json_encode($stmt->errorInfo());
             if (!$silent) {
                 debug_event(self::class, 'Error_query SQL: ' . self::$_sql . ' ' . json_encode($params), 5);
                 debug_event(self::class, 'Error_query MSG: ' . json_encode($stmt->errorInfo()), 1);
@@ -654,7 +654,7 @@ class Dba
         try {
             $dbh->exec('USE `' . $database . '`');
         } catch (PDOException) {
-            self::$_error = (string)json_encode($dbh->errorInfo());
+            self::$_error = (string) json_encode($dbh->errorInfo());
             debug_event(self::class, 'Unable to select database ' . $database . ': ' . json_encode($dbh->errorInfo()), 1);
         }
 

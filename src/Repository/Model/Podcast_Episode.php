@@ -155,7 +155,7 @@ class Podcast_Episode extends database_object implements
         }
 
         /* Can't update to blank */
-        if (trim((string)$value) === '') {
+        if (trim((string) $value) === '') {
             return;
         }
 
@@ -183,9 +183,9 @@ class Podcast_Episode extends database_object implements
     public function display_art(array $size, bool $force = false): void
     {
         if (Art::has_db($this->id, 'podcast_episode')) {
-            Art::display('podcast_episode', $this->id, (string)$this->get_fullname(), $size, $this->get_link());
+            Art::display('podcast_episode', $this->id, (string) $this->get_fullname(), $size, $this->get_link());
         } elseif (Art::has_db($this->podcast, 'podcast') || $force) {
-            Art::display('podcast', $this->podcast, (string)$this->get_fullname(), $size, $this->get_link());
+            Art::display('podcast', $this->podcast, (string) $this->get_fullname(), $size, $this->get_link());
         }
     }
 
@@ -282,7 +282,7 @@ class Podcast_Episode extends database_object implements
             'title' => [
                 'important' => true,
                 'label' => T_('Title'),
-                'value' => (string)$this->get_fullname()
+                'value' => (string) $this->get_fullname()
             ]
         ];
     }
@@ -370,7 +370,7 @@ class Podcast_Episode extends database_object implements
 
     public function getBitrateFormatted(): string
     {
-        return sprintf('%d-%s', (int) ($this->bitrate / 1024), strtoupper((string)$this->mode));
+        return sprintf('%d-%s', (int) ($this->bitrate / 1024), strtoupper((string) $this->mode));
     }
 
     /**
@@ -420,7 +420,7 @@ class Podcast_Episode extends database_object implements
     {
         if ($this->podcast_link === null) {
             $podcast            = $this->getPodcastRepository()->findById($this->podcast);
-            $this->podcast_link = (string)$podcast?->get_f_link();
+            $this->podcast_link = (string) $podcast?->get_f_link();
         }
 
         return $this->podcast_link;
@@ -430,7 +430,7 @@ class Podcast_Episode extends database_object implements
     {
         if ($this->podcast_name === null) {
             $podcast            = $this->getPodcastRepository()->findById($this->podcast);
-            $this->podcast_name = (string)$podcast?->get_fullname();
+            $this->podcast_name = (string) $podcast?->get_fullname();
         }
 
         return $this->podcast_name;
@@ -582,9 +582,9 @@ class Podcast_Episode extends database_object implements
             : null;
         $category = $data['category'] ?? null;
         /** @var string $description */
-        $description = (isset($data['description'])) ? scrub_in(Dba::check_length((string)$data['description'], 4096)) : null;
+        $description = (isset($data['description'])) ? scrub_in(Dba::check_length((string) $data['description'], 4096)) : null;
         /** @var string $author */
-        $author = (isset($data['author'])) ? scrub_in(Dba::check_length((string)$data['author'], 64)) : null;
+        $author = (isset($data['author'])) ? scrub_in(Dba::check_length((string) $data['author'], 64)) : null;
 
         $sql = 'UPDATE `podcast_episode` SET `title` = ?, `website` = ?, `description` = ?, `author` = ?, `category` = ? WHERE `id` = ?';
         Dba::write($sql, [$title, $website, $description, $author, $category, $this->id]);

@@ -411,7 +411,7 @@ class UPnPPlayer
         }
 
         $songUrl = $song['link'];
-        $songId  = (int)preg_replace('/(.+)\/oid\/(\d+)\/(.+)/i', '${2}', (string) $songUrl);
+        $songId  = (int) preg_replace('/(.+)\/oid\/(\d+)\/(.+)/i', '${2}', (string) $songUrl);
 
         $song     = new Song($songId);
         $songItem = Upnp_Api::_itemSong($song, '');

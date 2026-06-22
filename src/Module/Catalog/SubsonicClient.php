@@ -181,7 +181,7 @@ class SubsonicClient
                         CURLOPT_CONNECTTIMEOUT => 8,
                         CURLOPT_SSL_VERIFYPEER => false,
                         CURLOPT_FOLLOWLOCATION => true,
-                        CURLOPT_PORT => (int)($this->_serverPort)
+                        CURLOPT_PORT => (int) ($this->_serverPort)
                     ]
                 );
 
@@ -206,7 +206,7 @@ class SubsonicClient
     {
         error_log($error . "\n" . print_r($data, true));
 
-        return (object)[
+        return (object) [
             'success' => false,
             'error' => $error,
             'data' => $data
@@ -219,7 +219,7 @@ class SubsonicClient
             ? json_decode($response, true)
             : false;
         if (is_array($arr) && $arr['subsonic-response']) {
-            $response = (array)$arr['subsonic-response'];
+            $response = (array) $arr['subsonic-response'];
             $data     = $response;
 
             return [

@@ -35,9 +35,7 @@ use Ampache\Repository\Model\Catalog;
 
 final readonly class AlbumRepository implements AlbumRepositoryInterface
 {
-    public function __construct(private DatabaseConnectionInterface $connection)
-    {
-    }
+    public function __construct(private DatabaseConnectionInterface $connection) {}
 
     /**
      * Cleans out unused albums
@@ -129,7 +127,7 @@ final readonly class AlbumRepository implements AlbumRepositoryInterface
         $db_results = Dba::read($sql, [$artistId]);
         $results    = [];
         while ($row = Dba::fetch_assoc($db_results)) {
-            $results[] = (int)$row['id'];
+            $results[] = (int) $row['id'];
         }
 
         return $results;
@@ -193,14 +191,14 @@ final readonly class AlbumRepository implements AlbumRepositoryInterface
         if ($group_release_type) {
             while ($row = Dba::fetch_assoc($db_results)) {
                 // We assume undefined release type is album
-                $rtype = (string)($row['release_type'] ?? 'album');
+                $rtype = (string) ($row['release_type'] ?? 'album');
                 if (!isset($results[$rtype])) {
                     $results[$rtype] = [];
                 }
 
-                $results[$rtype][] = (int)$row['id'];
+                $results[$rtype][] = (int) $row['id'];
 
-                $sort = (string)AmpConfig::get('album_release_type_sort');
+                $sort = (string) AmpConfig::get('album_release_type_sort');
                 if ($sort !== '' && $sort !== '0') {
                     $results_sort = [];
                     $asort        = explode(',', $sort);
@@ -217,7 +215,7 @@ final readonly class AlbumRepository implements AlbumRepositoryInterface
             }
         } else {
             while ($row = Dba::fetch_assoc($db_results)) {
-                $results[] = (int)$row['id'];
+                $results[] = (int) $row['id'];
             }
         }
 
@@ -319,7 +317,7 @@ final readonly class AlbumRepository implements AlbumRepositoryInterface
         $db_results = Dba::read($sql);
 
         while ($row = Dba::fetch_assoc($db_results)) {
-            $results[] = (int)$row['id'];
+            $results[] = (int) $row['id'];
         }
 
         return $results;
@@ -358,7 +356,7 @@ final readonly class AlbumRepository implements AlbumRepositoryInterface
         $db_results = Dba::read($sql);
 
         while ($row = Dba::fetch_assoc($db_results)) {
-            $results[] = (int)$row['id'];
+            $results[] = (int) $row['id'];
         }
 
         return $results;

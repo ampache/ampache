@@ -50,8 +50,7 @@ final class UpdateUserAction extends AbstractUserAction
         private readonly ConfigContainerInterface $configContainer,
         private readonly UserRepositoryInterface $userRepository,
         private readonly RequestParserInterface $requestParser,
-    ) {
-    }
+    ) {}
 
     protected function handle(ServerRequestInterface $request): ?ResponseInterface
     {
@@ -63,7 +62,7 @@ final class UpdateUserAction extends AbstractUserAction
             throw new AccessDeniedException();
         }
 
-        $body = (array)$request->getParsedBody();
+        $body = (array) $request->getParsedBody();
 
         $this->ui->showHeader();
 
@@ -87,11 +86,11 @@ final class UpdateUserAction extends AbstractUserAction
         $client = $this->modelFactory->createUser($user_id);
 
         // option to reset user preferences to default
-        $preset = (string)($body['preset'] ?? '');
+        $preset = (string) ($body['preset'] ?? '');
         // you must explicitly disable the option on the edit page to reset user preferences admin can't be changed
         $prevent_override = ($client->access === 100)
             ? 1
-            : (int)($body['prevent_override'] ?? 0);
+            : (int) ($body['prevent_override'] ?? 0);
 
         /* Verify Input */
         if (empty($username)) {

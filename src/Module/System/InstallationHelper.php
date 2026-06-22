@@ -93,7 +93,7 @@ final class InstallationHelper implements InstallationHelperInterface
         }
 
         $valid     = true;
-        $htaccess  = (string)file_get_contents($file);
+        $htaccess  = (string) file_get_contents($file);
         $new_lines = [];
         $lines     = explode("\n", $htaccess);
         foreach ($lines as $line) {
@@ -404,7 +404,7 @@ final class InstallationHelper implements InstallationHelperInterface
             }
         } else {
             $browser = new Horde_Browser();
-            $headers = $browser->getDownloadHeaders('ampache.cfg.php', 'text/plain', false, (string)strlen($final));
+            $headers = $browser->getDownloadHeaders('ampache.cfg.php', 'text/plain', false, (string) strlen($final));
             foreach ($headers as $headerName => $value) {
                 header(sprintf('%s: %s', $headerName, $value));
             }
@@ -612,7 +612,7 @@ final class InstallationHelper implements InstallationHelperInterface
             }
         } else {
             $browser = new Horde_Browser();
-            $headers = $browser->getDownloadHeaders(basename($file), 'text/plain', false, (string)strlen((string) $final));
+            $headers = $browser->getDownloadHeaders(basename($file), 'text/plain', false, (string) strlen((string) $final));
 
             foreach ($headers as $headerName => $value) {
                 header(sprintf('%s: %s', $headerName, $value));
@@ -705,7 +705,7 @@ final class InstallationHelper implements InstallationHelperInterface
     private function split_sql(string $sql): array
     {
         $sql       = trim($sql);
-        $sql       = (string)preg_replace("/\n--[^\n]*\n/", "\n", $sql);
+        $sql       = (string) preg_replace("/\n--[^\n]*\n/", "\n", $sql);
 
         $buffer    = [];
         $ret       = [];

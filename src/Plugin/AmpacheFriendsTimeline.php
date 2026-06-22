@@ -132,12 +132,12 @@ class AmpacheFriendsTimeline extends AmpachePlugin implements PluginDisplayHomeI
         $user->set_preferences();
         $data = $user->prefs;
 
-        $this->maxitems = (int)($data['ftl_max_items']);
+        $this->maxitems = (int) ($data['ftl_max_items']);
         if ($this->maxitems < 1) {
             $this->maxitems = 10;
         }
 
-        $this->order = (int)($data['ftl_order'] ?? 0);
+        $this->order = (int) ($data['ftl_order'] ?? 0);
 
         return true;
     }
@@ -165,7 +165,7 @@ class AmpacheFriendsTimeline extends AmpachePlugin implements PluginDisplayHomeI
             return false;
         }
 
-        if ($from_version < (int)$this->version) {
+        if ($from_version < (int) $this->version) {
             Preference::insert('ftl_order', T_('Plugin CSS order'), '0', AccessLevelEnum::USER->value, 'integer', 'plugins', $this->name);
         }
 

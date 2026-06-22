@@ -49,8 +49,7 @@ final readonly class ShoutCreator implements ShoutCreatorInterface
         private ShoutRepositoryInterface $shoutRepository,
         private UtilityFactoryInterface $utilityFactory,
         private UserRepositoryInterface $userRepository,
-    ) {
-    }
+    ) {}
 
     /**
      * Creates a new shout item

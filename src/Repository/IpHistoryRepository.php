@@ -44,8 +44,7 @@ final readonly class IpHistoryRepository implements IpHistoryRepositoryInterface
     public function __construct(
         private DatabaseConnectionInterface $connection,
         private ConfigContainerInterface $configContainer,
-    ) {
-    }
+    ) {}
 
     /**
      * Deletes outdated records
@@ -55,7 +54,7 @@ final readonly class IpHistoryRepository implements IpHistoryRepositoryInterface
         try {
             $this->connection->query(
                 'DELETE FROM `ip_history` WHERE `date` < `date` - ?',
-                [86400 * (int)$this->configContainer->get('user_ip_cardinality')]
+                [86400 * (int) $this->configContainer->get('user_ip_cardinality')]
             );
         } catch (DatabaseException) {
             debug_event(self::class, 'collectGarbage error', 5);

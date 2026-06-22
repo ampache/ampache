@@ -44,8 +44,7 @@ final readonly class ShowAction implements ApplicationActionInterface
         private RequestParserInterface $requestParser,
         private UiInterface $ui,
         private ConfigContainerInterface $configContainer,
-    ) {
-    }
+    ) {}
 
     public function run(ServerRequestInterface $request, GuiGatekeeperInterface $gatekeeper): ?ResponseInterface
     {
@@ -59,7 +58,7 @@ final readonly class ShowAction implements ApplicationActionInterface
 
         $_SESSION['catalog'] = 0;
 
-        $refreshLimit = (int)$this->configContainer->get(ConfigurationKeyEnum::REFRESH_LIMIT);
+        $refreshLimit = (int) $this->configContainer->get(ConfigurationKeyEnum::REFRESH_LIMIT);
 
         /**
          * Check for the refresh mojo, if it's there then require the

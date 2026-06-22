@@ -42,13 +42,12 @@ final readonly class ShowAction implements ApplicationActionInterface
         private UiInterface $ui,
         private LoggerInterface $logger,
         private ModelFactoryInterface $modelFactory,
-    ) {
-    }
+    ) {}
 
     public function run(ServerRequestInterface $request, GuiGatekeeperInterface $gatekeeper): ?ResponseInterface
     {
         $playlist = $this->modelFactory->createPlaylist(
-            (int)($_REQUEST['playlist_id'] ?? 0)
+            (int) ($_REQUEST['playlist_id'] ?? 0)
         );
         $this->ui->showHeader();
 

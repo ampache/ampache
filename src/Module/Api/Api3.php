@@ -95,7 +95,5 @@ class Api3
      * constructor
      * This really isn't anything to do here, so it's private
      */
-    private function __construct()
-    {
-    }
+    private function __construct() {}
 }

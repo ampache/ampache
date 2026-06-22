@@ -61,8 +61,7 @@ final readonly class DefaultAction implements ApplicationActionInterface
         private NetworkCheckerInterface $networkChecker,
         private UiInterface $ui,
         private UserTrackerInterface $userTracker,
-    ) {
-    }
+    ) {}
 
     public function run(ServerRequestInterface $request, GuiGatekeeperInterface $gatekeeper): ?ResponseInterface
     {
@@ -85,7 +84,7 @@ final readonly class DefaultAction implements ApplicationActionInterface
                     );
             } elseif (array_key_exists($name, $_COOKIE)) {
                 // now auth so unset this cookie
-                setcookie($name, '', ['expires' => -1, 'path' => (string)$this->configContainer->get('cookie_path')]);
+                setcookie($name, '', ['expires' => -1, 'path' => (string) $this->configContainer->get('cookie_path')]);
                 setcookie($name, '', ['expires' => -1]);
             }
         }
@@ -125,7 +124,7 @@ final readonly class DefaultAction implements ApplicationActionInterface
                     $auth['info']['offset_limit'] = 50;
                 } else {
                     if (Core::get_post('username') !== '') {
-                        $username = (string)$_POST['username'];
+                        $username = (string) $_POST['username'];
                         $password = $_POST['password'] ?? '';
                     } else {
                         if (isset($_SERVER['REMOTE_USER'])) {

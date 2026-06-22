@@ -76,11 +76,11 @@ class Live_Stream extends database_object implements Media, displayable_item, co
     public static function create(array $data): ?string
     {
         // Make sure we've got a name and codec
-        if ((string)$data['name'] === '') {
+        if ((string) $data['name'] === '') {
             AmpError::add('name', T_('Name is required'));
         }
 
-        if ((string)$data['codec'] === '') {
+        if ((string) $data['codec'] === '') {
             AmpError::add('codec', T_('Codec is required (e.g. MP3, OGG...)'));
         }
 
@@ -95,14 +95,14 @@ class Live_Stream extends database_object implements Media, displayable_item, co
             'rtmp',
         ];
 
-        $elements = explode(":", (string)$data['url']);
+        $elements = explode(":", (string) $data['url']);
 
         if (!in_array($elements['0'], $allowed_array)) {
             AmpError::add('url', T_('URL is invalid, must be http:// or https://'));
         }
 
         if (!empty($data['site_url'])) {
-            $elements = explode(":", (string)$data['site_url']);
+            $elements = explode(":", (string) $data['site_url']);
             if (!in_array($elements['0'], $allowed_array)) {
                 AmpError::add('site_url', T_('URL is invalid, must be http:// or https://'));
             }
@@ -122,7 +122,7 @@ class Live_Stream extends database_object implements Media, displayable_item, co
 
         // If we've made it this far everything must be ok... I hope
         $sql = "INSERT INTO `live_stream` (`name`, `site_url`, `url`, `catalog`, `codec`) VALUES (?, ?, ?, ?, ?)";
-        Dba::write($sql, [$data['name'], $data['site_url'], $data['url'], $catalog->id, strtolower((string)$data['codec'])]);
+        Dba::write($sql, [$data['name'], $data['site_url'], $data['url'], $catalog->id, strtolower((string) $data['codec'])]);
         $insert_id = Dba::insert_id();
         if (!$insert_id) {
             return null;
@@ -148,7 +148,7 @@ class Live_Stream extends database_object implements Media, displayable_item, co
     public function display_art(array $size, bool $force = false): void
     {
         if ($this->has_art() || $force) {
-            Art::display('live_stream', $this->id, (string)$this->get_fullname(), $size, $this->get_link());
+            Art::display('live_stream', $this->id, (string) $this->get_fullname(), $size, $this->get_link());
         }
     }
 
@@ -271,7 +271,7 @@ class Live_Stream extends database_object implements Media, displayable_item, co
      */
     public function get_stream_name(): string
     {
-        return (string)$this->get_fullname();
+        return (string) $this->get_fullname();
     }
 
     /**
@@ -397,14 +397,14 @@ class Live_Stream extends database_object implements Media, displayable_item, co
             'rtmp',
         ];
 
-        $elements = explode(":", (string)$data['url']);
+        $elements = explode(":", (string) $data['url']);
 
         if (!in_array($elements['0'], $allowed_array)) {
             AmpError::add('general', T_('URL is invalid, must be mms://, https:// or http://'));
         }
 
         if (!empty($data['site_url'])) {
-            $elements = explode(":", (string)$data['site_url']);
+            $elements = explode(":", (string) $data['site_url']);
             if (!in_array($elements['0'], $allowed_array)) {
                 AmpError::add('site_url', T_('URL is invalid, must be http:// or https://'));
             }
@@ -417,7 +417,7 @@ class Live_Stream extends database_object implements Media, displayable_item, co
         $sql = "UPDATE `live_stream` SET `name` = ?, `site_url` = ?, `url` = ?, codec = ? WHERE `id` = ?";
         Dba::write(
             $sql,
-            [$data['name'] ?? $this->name, $data['site_url'] ?? null, $data['url'] ?? $this->url, strtolower((string)$data['codec']), $this->id]
+            [$data['name'] ?? $this->name, $data['site_url'] ?? null, $data['url'] ?? $this->url, strtolower((string) $data['codec']), $this->id]
         );
 
         return $this->id;

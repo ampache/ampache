@@ -411,7 +411,7 @@ final readonly class UserRepository implements UserRepositoryInterface
             $email_hash = hash('sha256', (string) $row['email']);
             $user_token = hash('sha256', $row['username'] . $email_hash);
             if ($token === $user_token) {
-                return (int)$row['id'];
+                return (int) $row['id'];
             }
         }
 

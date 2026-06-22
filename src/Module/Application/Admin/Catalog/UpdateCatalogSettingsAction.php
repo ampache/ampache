@@ -57,7 +57,7 @@ final class UpdateCatalogSettingsAction extends AbstractCatalogAction
             return null;
         }
 
-        $data = (array)$request->getParsedBody();
+        $data = (array) $request->getParsedBody();
         if (
             $data === [] ||
             (!isset($data['catalog_id']) || !isset($data['name']) || !isset($data['rename_pattern']) || !isset($data['sort_pattern']))
@@ -69,7 +69,7 @@ final class UpdateCatalogSettingsAction extends AbstractCatalogAction
             'name' => $data['name'],
             'rename_pattern' => $data['rename_pattern'],
             'sort_pattern' => $data['sort_pattern'],
-            'catalog_id' => (int)$data['catalog_id'],
+            'catalog_id' => (int) $data['catalog_id'],
         ]);
 
         $url   = sprintf('%s/catalog.php', $this->configContainer->getWebPath('/admin'));

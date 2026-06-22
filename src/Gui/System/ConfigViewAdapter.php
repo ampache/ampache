@@ -30,9 +30,7 @@ use Ampache\Config\ConfigurationKeyEnum;
 
 final readonly class ConfigViewAdapter implements ConfigViewAdapterInterface
 {
-    public function __construct(private ConfigContainerInterface $configContainer)
-    {
-    }
+    public function __construct(private ConfigContainerInterface $configContainer) {}
 
     public function isDirectplayEnabled(): bool
     {

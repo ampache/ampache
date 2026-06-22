@@ -55,7 +55,7 @@ final class CacheProcessCommand extends Command
          * Pre-cache any new files
          */
         if ($this->configContainer->get('cache_path') && $this->configContainer->get('cache_target')) {
-            Catalog::cache_catalogs($interactor, (bool)$values['cleanup']);
+            Catalog::cache_catalogs($interactor, (bool) $values['cleanup']);
         }
 
         debug_event('cache', 'finished cache process', 4);
@@ -72,7 +72,7 @@ final class CacheProcessCommand extends Command
             ->option('-h, --help', T_('Help'))->on($this->showHelp(...))
             ->option('-c|--cleanup', T_('Clean'), 'boolval', false);
 
-        $this->onExit(static fn ($exitCode = 0) => exit($exitCode));
+        $this->onExit(static fn($exitCode = 0) => exit($exitCode));
 
         return $this;
     }

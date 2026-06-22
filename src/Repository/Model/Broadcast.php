@@ -74,7 +74,7 @@ class Broadcast extends database_object implements library_item, displayable_ite
             $params = [Core::get_global('user')?->getId(), $name, $description];
             Dba::write($sql, $params);
 
-            return (int)Dba::insert_id();
+            return (int) Dba::insert_id();
         }
 
         return 0;
@@ -117,7 +117,7 @@ class Broadcast extends database_object implements library_item, displayable_ite
 
         $broadcasts = [];
         while ($results = Dba::fetch_assoc($db_results)) {
-            $broadcasts[] = (int)$results['id'];
+            $broadcasts[] = (int) $results['id'];
         }
 
         return $broadcasts;
@@ -157,7 +157,7 @@ class Broadcast extends database_object implements library_item, displayable_ite
     public function display_art(array $size, bool $force = false): void
     {
         if ($this->has_art() || $force) {
-            Art::display('broadcast', $this->id, (string)$this->get_fullname(), $size);
+            Art::display('broadcast', $this->id, (string) $this->get_fullname(), $size);
         }
     }
 
@@ -339,7 +339,7 @@ class Broadcast extends database_object implements library_item, displayable_ite
 
         $name        = $data['title'] ?? $this->name;
         $description = $data['description'] ?? '';
-        $private     = (!empty($data['private'] && (int)$data['private'] === 1)) ? 1 : 0;
+        $private     = (!empty($data['private'] && (int) $data['private'] === 1)) ? 1 : 0;
 
         $sql    = "UPDATE `broadcast` SET `name` = ?, `description` = ?, `is_private` = ? WHERE `id` = ?";
         $params = [$name, $description, $private, $this->id];

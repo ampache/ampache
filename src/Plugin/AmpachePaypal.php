@@ -116,7 +116,7 @@ class AmpachePaypal extends AmpachePlugin implements PluginDisplayUserFieldInter
         $user->set_preferences();
         $data = $user->prefs;
 
-        $this->username = (string)$user->get_fullname();
+        $this->username = (string) $user->get_fullname();
         $this->business = trim((string) $data['paypal_business']);
         if ($this->business === '') {
             debug_event('paypal.plugin', 'No PayPal ID, user field plugin skipped', 3);

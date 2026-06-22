@@ -98,7 +98,7 @@ class Artist extends database_object implements
             $this->$key = $value;
         }
 
-        $this->time = (int)$this->time;
+        $this->time = (int) $this->time;
     }
 
     /**
@@ -106,7 +106,7 @@ class Artist extends database_object implements
      */
     public static function add_artist_map(?int $artist_id, string $object_type, int $object_id): void
     {
-        if ((int)$artist_id > 0 && (int)$object_id > 0) {
+        if ((int) $artist_id > 0 && (int) $object_id > 0) {
             debug_event(self::class, "add_artist_map artist_id {" . $artist_id . sprintf('} %s {', $object_type) . $object_id . "}", 5);
             $sql = "INSERT IGNORE INTO `artist_map` (`artist_id`, `object_type`, `object_id`) VALUES (?, ?, ?);";
             Dba::write($sql, [$artist_id, $object_type, $object_id]);
@@ -163,7 +163,7 @@ class Artist extends database_object implements
         $full_name    = ($split_artist && preg_match('/[^ ]' . $split_artist . '[^ ]/', $name))
             ? explode($split_artist, $name)[0]
             : $name;
-        $trimmed = Catalog::trim_prefix(trim((string)$name));
+        $trimmed = Catalog::trim_prefix(trim((string) $name));
         $name    = $trimmed['string'];
         $prefix  = $trimmed['prefix'];
         $trimmed = Catalog::trim_featuring($name);
@@ -197,7 +197,7 @@ class Artist extends database_object implements
             $sql        = 'SELECT `id` FROM `artist` WHERE `mbid` = ?';
             $db_results = Dba::read($sql, [$mbid]);
             if ($row = Dba::fetch_assoc($db_results)) {
-                $artist_id = (int)$row['id'];
+                $artist_id = (int) $row['id'];
                 $exists    = ($artist_id > 0);
             }
 
@@ -215,7 +215,7 @@ class Artist extends database_object implements
             $sql        = "SELECT `id` FROM `artist` WHERE `mbid` IS NULL AND (`artist`.`name` = ? OR LTRIM(CONCAT(COALESCE(`artist`.`prefix`, ''), ' ', `artist`.`name`)) = ?) ORDER BY `id` LIMIT 1;";
             $db_results = Dba::read($sql, [$name, $full_name]);
             if ($row = Dba::fetch_assoc($db_results)) {
-                $artist_id = (int)$row['id'];
+                $artist_id = (int) $row['id'];
                 $exists    = true;
             }
 
@@ -223,7 +223,7 @@ class Artist extends database_object implements
                 $sql        = "SELECT `id`, `mbid` FROM `artist` WHERE `mbid` IS NOT NULL AND (`artist`.`name` = ? OR LTRIM(CONCAT(COALESCE(`artist`.`prefix`, ''), ' ', `artist`.`name`)) = ?) ORDER BY `id` LIMIT 1;";
                 $db_results = Dba::read($sql, [$name, $full_name]);
                 if ($row = Dba::fetch_assoc($db_results)) {
-                    $artist_id = (int)$row['id'];
+                    $artist_id = (int) $row['id'];
                     $exists    = true;
                 }
             }
@@ -248,7 +248,7 @@ class Artist extends database_object implements
                 ? $plugin->_plugin->get_artist($parsed_mbid)
                 : [];
             if (array_key_exists('name', $data)) {
-                $trimmed = Catalog::trim_prefix(trim((string)$data['name']));
+                $trimmed = Catalog::trim_prefix(trim((string) $data['name']));
                 $name    = $trimmed['string'];
                 $prefix  = $trimmed['prefix'];
             }
@@ -290,7 +290,7 @@ class Artist extends database_object implements
             $sql        = 'SELECT `id` FROM `artist` WHERE `mbid` = ?';
             $db_results = Dba::read($sql, [$parsed_mbid]);
             if ($results = Dba::fetch_assoc($db_results)) {
-                $artist_id = (int)$results['id'];
+                $artist_id = (int) $results['id'];
             }
 
             // return the result
@@ -304,7 +304,7 @@ class Artist extends database_object implements
                 ? $plugin->_plugin->get_artist($parsed_mbid)
                 : [];
             if (array_key_exists('name', $data)) {
-                $trimmed = Catalog::trim_prefix(trim((string)$data['name']));
+                $trimmed = Catalog::trim_prefix(trim((string) $data['name']));
                 $name    = $trimmed['string'];
                 $prefix  = $trimmed['prefix'];
 
@@ -314,7 +314,7 @@ class Artist extends database_object implements
                     return $artist_id;
                 }
 
-                $artist_id = (int)Dba::insert_id();
+                $artist_id = (int) Dba::insert_id();
                 debug_event(self::class, sprintf('check mbid: created {%d} ', $artist_id) . $data['name'], 4);
             }
         }
@@ -356,7 +356,7 @@ class Artist extends database_object implements
         $sql        = "SELECT `artist_id` AS `artist_id` FROM `artist_map` WHERE `object_type` = ? AND `object_id` = ?";
         $db_results = Dba::read($sql, [$object_type, $object_id]);
         while ($row = Dba::fetch_assoc($db_results)) {
-            $results[] = (int)$row['artist_id'];
+            $results[] = (int) $row['artist_id'];
         }
 
         return $results;
@@ -424,12 +424,12 @@ class Artist extends database_object implements
         $db_results = Dba::read($sql, [$artist_id]);
         if ($row = Dba::fetch_assoc($db_results, false)) {
             return [
-                'id' => (int)$row['id'],
+                'id' => (int) $row['id'],
                 'f_name' => $row['f_name'],
                 'name' => $row['name'],
-                'album_count' => (int)$row['album_count'],
-                'song_count' => (int)$row['song_count'],
-                'catalog_id' => (int)$row['catalog_id'],
+                'album_count' => (int) $row['album_count'],
+                'song_count' => (int) $row['song_count'],
+                'catalog_id' => (int) $row['catalog_id'],
             ];
         }
 
@@ -469,13 +469,13 @@ class Artist extends database_object implements
                 $db_results = Dba::read($sql, [$catalog_id]);
                 while ($row = Dba::fetch_assoc($db_results, false)) {
                     $results[] = [
-                        'id' => (int)$row['id'],
+                        'id' => (int) $row['id'],
                         'f_name' => $row['f_name'],
                         'name' => $row['name'],
-                        'album_count' => (int)$row['album_count'],
-                        'song_count' => (int)$row['song_count'],
+                        'album_count' => (int) $row['album_count'],
+                        'song_count' => (int) $row['song_count'],
                         'catalog_id' => $catalog_id,
-                        'has_art' => (int)$row['has_art'],
+                        'has_art' => (int) $row['has_art'],
                     ];
                 }
             }
@@ -486,13 +486,13 @@ class Artist extends database_object implements
             $db_results = Dba::read($sql);
             while ($row = Dba::fetch_assoc($db_results, false)) {
                 $results[] = [
-                    'id' => (int)$row['id'],
+                    'id' => (int) $row['id'],
                     'f_name' => $row['f_name'],
                     'name' => $row['name'],
-                    'album_count' => (int)$row['album_count'],
-                    'song_count' => (int)$row['song_count'],
+                    'album_count' => (int) $row['album_count'],
+                    'song_count' => (int) $row['song_count'],
                     'catalog_id' => 0,
-                    'has_art' => (int)$row['has_art'],
+                    'has_art' => (int) $row['has_art'],
                 ];
             }
         }
@@ -524,10 +524,10 @@ class Artist extends database_object implements
         $db_results = Dba::read($sql, [$artist_id]);
         if ($row = Dba::fetch_assoc($db_results)) {
             return [
-                "id" => (string)$row['id'],
-                "name" => (string)$row['name'],
+                "id" => (string) $row['id'],
+                "name" => (string) $row['name'],
                 "prefix" => $row['prefix'],
-                "basename" => (string)$row['basename']
+                "basename" => (string) $row['basename']
             ];
         }
 
@@ -545,7 +545,7 @@ class Artist extends database_object implements
         $db_results = Dba::read($sql, [$artist_id]);
         $user_id    = 0;
         if ($results = Dba::fetch_assoc($db_results)) {
-            $user_id = (int)$results['user'];
+            $user_id = (int) $results['user'];
         }
 
         return ($user_id > 0);
@@ -556,7 +556,7 @@ class Artist extends database_object implements
      */
     public static function migrate(int $old_object_id, int $new_object_id): void
     {
-        if ((int)$new_object_id > 0) {
+        if ((int) $new_object_id > 0) {
             // migrating to a new artist
             $params = [$new_object_id, $old_object_id];
             $sql    = "UPDATE `song` SET `artist` = ? WHERE `artist` = ?;";
@@ -590,7 +590,7 @@ class Artist extends database_object implements
      */
     public static function remove_artist_map(int $artist_id, string $object_type, int $object_id): void
     {
-        if ((int)$artist_id > 0 && (int)$object_id > 0) {
+        if ((int) $artist_id > 0 && (int) $object_id > 0) {
             debug_event(self::class, "remove_artist_map artist_id {" . $artist_id . sprintf('} %s {', $object_type) . $object_id . "}", 5);
             $sql = "DELETE FROM `artist_map` WHERE `artist_id` = ? AND `object_type` = ? AND `object_id` = ?;";
             Dba::write($sql, [$artist_id, $object_type, $object_id]);
@@ -651,7 +651,7 @@ class Artist extends database_object implements
         $new_name     = ($split_artist && preg_match('/[^ ]' . $split_artist . '[^ ]/', $new_name))
             ? explode($split_artist, $new_name)[0]
             : $new_name;
-        $trimmed = Catalog::trim_prefix(trim((string)$new_name));
+        $trimmed = Catalog::trim_prefix(trim((string) $new_name));
         $name    = $trimmed['string'];
         $prefix  = $trimmed['prefix'];
         $trimmed = Catalog::trim_featuring($name);
@@ -706,7 +706,7 @@ class Artist extends database_object implements
     public function display_art(array $size, bool $force = false): void
     {
         if (Art::has_db($this->id, 'artist') || $force) {
-            Art::display('artist', $this->id, (string)$this->get_fullname(), $size, $this->get_link());
+            Art::display('artist', $this->id, (string) $this->get_fullname(), $size, $this->get_link());
         }
     }
 
@@ -834,12 +834,12 @@ class Artist extends database_object implements
             'mb_artistid' => [
                 'important' => false,
                 'label' => T_('Artist MusicBrainzID'),
-                'value' => (string)$this->mbid,
+                'value' => (string) $this->mbid,
             ],
             'artist' => [
                 'important' => true,
                 'label' => T_('Artist'),
-                'value' => (string)$this->get_fullname(),
+                'value' => (string) $this->get_fullname(),
             ],
         ];
     }
@@ -913,7 +913,7 @@ class Artist extends database_object implements
         $results    = [];
 
         while ($row = Dba::fetch_assoc($db_results, false)) {
-            $results[] = (int)$row['id'];
+            $results[] = (int) $row['id'];
         }
 
         return $results;
@@ -1009,14 +1009,14 @@ class Artist extends database_object implements
         $mbid        = $data['mbid'] ?? null;
         $summary     = $data['summary'] ?? null;
         $placeformed = $data['placeformed'] ?? null;
-        $yearformed  = is_numeric($data['yearformed'] ?? null) ? (int)$data['yearformed'] : null;
-        $user        = is_numeric($data['user'] ?? null) ? (int)$data['user'] : null;
+        $yearformed  = is_numeric($data['yearformed'] ?? null) ? (int) $data['yearformed'] : null;
+        $user        = is_numeric($data['user'] ?? null) ? (int) $data['user'] : null;
         $current_id  = $this->id;
 
         // Check if name is different than the current name
         if ($this->prefix != $prefix || $this->name != $name) {
             $updated   = false;
-            $artist_id = (int)self::check($name, $mbid, true);
+            $artist_id = (int) self::check($name, $mbid, true);
 
             // If you couldn't find an artist OR you found the current one, just rename it and move on
             if ($artist_id == 0 || ($artist_id > 0 && $artist_id == $current_id)) {
@@ -1063,8 +1063,8 @@ class Artist extends database_object implements
         $this->mbid   = $mbid;
 
         if (isset($data['user'])) {
-            $user = ((int)$data['user'] == 0) ? null : (int)$data['user'];
-            if ($this->user != (int)$data['user']) {
+            $user = ((int) $data['user'] == 0) ? null : (int) $data['user'];
+            if ($this->user != (int) $data['user']) {
                 $sql = 'UPDATE `artist` SET `user` = ? WHERE `id` = ?';
                 Dba::write($sql, [$user, $current_id]);
             }
@@ -1083,7 +1083,7 @@ class Artist extends database_object implements
         if (isset($data['edit_tags'])) {
             $this->getArtistTagUpdater()->updateTags(
                 $this,
-                (string)$data['edit_tags'],
+                (string) $data['edit_tags'],
                 $override_childs,
                 $add_to_childs,
                 true
@@ -1109,7 +1109,7 @@ class Artist extends database_object implements
         // set null values if missing
         $summary     = (empty($summary)) ? null : $summary;
         $placeformed = (empty($placeformed)) ? null : $placeformed;
-        $yearformed  = ((int)$yearformed == 0) ? null : Catalog::normalize_year($yearformed);
+        $yearformed  = ((int) $yearformed == 0) ? null : Catalog::normalize_year($yearformed);
 
         $sql = "UPDATE `artist` SET `summary` = ?, `placeformed` = ?, `yearformed` = ?, `last_update` = ?, `manual_update` = ? WHERE `id` = ?";
         Dba::write($sql, [
@@ -1117,7 +1117,7 @@ class Artist extends database_object implements
             $placeformed,
             $yearformed,
             time(),
-            (int)$manual,
+            (int) $manual,
             $this->id,
         ]);
 

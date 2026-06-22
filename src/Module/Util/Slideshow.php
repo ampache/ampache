@@ -38,8 +38,7 @@ final readonly class Slideshow implements SlideshowInterface
     public function __construct(
         private ModelFactoryInterface $modelFactory,
         private PluginRetrieverInterface $pluginRetriever,
-    ) {
-    }
+    ) {}
 
     public function getCurrentSlideshow(User $user): array
     {

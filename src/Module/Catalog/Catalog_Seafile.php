@@ -53,7 +53,7 @@ class Catalog_Seafile extends Catalog
     public string $library_name;
     public string $server_uri;
     private int $api_call_delay        = 250;
-    private string|null $api_key       = null;
+    private ?string $api_key           = null;
     private int $catalog_id            = 0;
     private int $count                 = 0;
     private SeafileAdapter $seafile;
@@ -66,7 +66,7 @@ class Catalog_Seafile extends Catalog
     public function __construct(?int $catalog_id = null)
     {
         if ($catalog_id) {
-            $this->id = (int)$catalog_id;
+            $this->id = (int) $catalog_id;
             $info     = $this->get_info($catalog_id, static::DB_TABLENAME);
             foreach ($info as $key => $value) {
                 $this->$key = $value;
@@ -98,7 +98,7 @@ class Catalog_Seafile extends Catalog
     {
         $server_uri     = rtrim(trim($data['server_uri'] ?? ''), '/');
         $library_name   = trim($data['library_name'] ?? '');
-        $api_call_delay = trim((string)($data['api_call_delay'] ?? ''));
+        $api_call_delay = trim((string) ($data['api_call_delay'] ?? ''));
         $username       = trim($data['username'] ?? '');
         $password       = trim($data['password'] ?? '');
 
@@ -135,7 +135,7 @@ class Catalog_Seafile extends Catalog
         try {
             $api_key = SeafileAdapter::request_api_key($server_uri, $username, $password);
             $sql     = "INSERT INTO `catalog_seafile` (`server_uri`, `api_key`, `library_name`, `api_call_delay`, `catalog_id`) VALUES (?, ?, ?, ?, ?)";
-            Dba::write($sql, [$server_uri, $api_key, $library_name, (int)($api_call_delay), $catalog_id]);
+            Dba::write($sql, [$server_uri, $api_key, $library_name, (int) ($api_call_delay), $catalog_id]);
             debug_event('seafile_catalog', 'Retrieved API token for user ' . $username . '.', 1);
 
             return true;
@@ -278,7 +278,7 @@ class Catalog_Seafile extends Catalog
         $db_results = Dba::read($sql, [$file]);
 
         if ($results = Dba::fetch_assoc($db_results)) {
-            return (int)$results['id'];
+            return (int) $results['id'];
         }
 
         return null;
@@ -350,9 +350,7 @@ class Catalog_Seafile extends Catalog
         }
     }
 
-    public function count_scan_folders(?Interactor $interactor = null): void
-    {
-    }
+    public function count_scan_folders(?Interactor $interactor = null): void {}
 
     /**
      * get_create_help
@@ -403,7 +401,7 @@ class Catalog_Seafile extends Catalog
         }
 
         if ($this->seafile->prepare()) {
-            $fileinfo = $this->seafile->from_virtual_path((string)$media_file);
+            $fileinfo = $this->seafile->from_virtual_path((string) $media_file);
 
             $file = $this->seafile->get_file($fileinfo['path'], $fileinfo['filename']);
 
@@ -517,7 +515,7 @@ class Catalog_Seafile extends Catalog
         if ($this->seafile->prepare()) {
             set_time_limit(0);
 
-            $fileinfo = $this->seafile->from_virtual_path((string)$media->file);
+            $fileinfo = $this->seafile->from_virtual_path((string) $media->file);
 
             $file = $this->seafile->get_file($fileinfo['path'], $fileinfo['filename']);
 
@@ -636,14 +634,14 @@ class Catalog_Seafile extends Catalog
             (string) $rename_pattern
         );
         if ($is_diritem) {
-            $vainfo->forceSize((int)$file->size);
+            $vainfo->forceSize((int) $file->size);
         }
 
         $vainfo->gather_tags();
         $key = VaInfo::get_tag_type($vainfo->tags);
 
         if ($is_diritem) {
-            $vainfo->tags['general']['size'] = (int)($file->size);
+            $vainfo->tags['general']['size'] = (int) ($file->size);
         }
 
         $results = VaInfo::clean_tag_info($vainfo->tags, $key, $tempfilename);

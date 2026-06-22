@@ -81,14 +81,14 @@ class AmpachePersonalFavorites extends AmpachePlugin implements PluginDisplayHom
         if ($this->display) {
             $list_array = [];
             foreach (explode(',', $this->playlist) as $list_id) {
-                $playlist = new Playlist((int)$list_id);
+                $playlist = new Playlist((int) $list_id);
                 if ($playlist->isNew() === false) {
                     $list_array[] = [$playlist, 'playlist'];
                 }
             }
 
             foreach (explode(',', $this->smartlist) as $list_id) {
-                $smartlist = new Search((int)$list_id);
+                $smartlist = new Search((int) $list_id);
                 if ($smartlist->isNew() === false) {
                     $list_array[] = [$smartlist, 'search'];
                 }
@@ -183,7 +183,7 @@ class AmpachePersonalFavorites extends AmpachePlugin implements PluginDisplayHom
         $this->display   = (array_key_exists('personalfav_display', $data) && $data['personalfav_display'] == '1');
         $this->playlist  = $data['personalfav_playlist'] ?? '';
         $this->smartlist = $data['personalfav_smartlist'] ?? '';
-        $this->order     = (int)($data['personalfav_order'] ?? 0);
+        $this->order     = (int) ($data['personalfav_order'] ?? 0);
 
         return true;
     }
@@ -213,7 +213,7 @@ class AmpachePersonalFavorites extends AmpachePlugin implements PluginDisplayHom
             return false;
         }
 
-        if ($from_version < (int)$this->version) {
+        if ($from_version < (int) $this->version) {
             Preference::insert('personalfav_order', T_('Plugin CSS order'), '0', AccessLevelEnum::USER->value, 'integer', 'plugins', $this->name);
         }
 

@@ -55,8 +55,7 @@ final readonly class ConsumeAction implements ApplicationActionInterface
         private ContainerInterface $dic,
         private UiInterface $ui,
         private ShareRepositoryInterface $shareRepository,
-    ) {
-    }
+    ) {}
 
     public function run(ServerRequestInterface $request, GuiGatekeeperInterface $gatekeeper): ?ResponseInterface
     {
@@ -82,7 +81,7 @@ final readonly class ConsumeAction implements ApplicationActionInterface
             );
         } // access_control is enabled
 
-        $share_id = (int)$this->requestParser->getFromRequest('id');
+        $share_id = (int) $this->requestParser->getFromRequest('id');
         $secret   = $this->requestParser->getFromRequest('secret');
 
         $share = $this->shareRepository->findById($share_id);

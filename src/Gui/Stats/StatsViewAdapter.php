@@ -38,8 +38,7 @@ final readonly class StatsViewAdapter implements StatsViewAdapterInterface
         private ConfigContainerInterface $configContainer,
         private GuiFactoryInterface $guiFactory,
         private VideoRepositoryInterface $videoRepository,
-    ) {
-    }
+    ) {}
 
     public function displayAlbum(): bool
     {

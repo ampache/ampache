@@ -46,8 +46,7 @@ final readonly class PodcastEpisodeDownloader implements PodcastEpisodeDownloade
         private WebFetcherInterface $webFetcher,
         private PodcastRepositoryInterface $podcastRepository,
         private LoggerInterface $logger,
-    ) {
-    }
+    ) {}
 
     /**
      * Download the podcast-episodes files and perform media info update

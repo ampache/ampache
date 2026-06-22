@@ -42,12 +42,11 @@ final readonly class RemoveDuplicatesAction implements ApplicationActionInterfac
         private RequestParserInterface $requestParser,
         private UiInterface $ui,
         private ModelFactoryInterface $modelFactory,
-    ) {
-    }
+    ) {}
 
     public function run(ServerRequestInterface $request, GuiGatekeeperInterface $gatekeeper): ?ResponseInterface
     {
-        $playlist_id = (int)$this->requestParser->getFromRequest('playlist_id');
+        $playlist_id = (int) $this->requestParser->getFromRequest('playlist_id');
         $playlist    = $this->modelFactory->createPlaylist($playlist_id);
         /* Make sure they have permission */
         if (!$playlist->has_access()) {

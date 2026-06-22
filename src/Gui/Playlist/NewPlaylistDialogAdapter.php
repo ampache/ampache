@@ -38,8 +38,7 @@ final readonly class NewPlaylistDialogAdapter implements NewPlaylistDialogAdapte
         private GuiGatekeeperInterface $gatekeeper,
         private string $object_type,
         private string $object_ids,
-    ) {
-    }
+    ) {}
 
     /**
      * Returns the ajax api base uri

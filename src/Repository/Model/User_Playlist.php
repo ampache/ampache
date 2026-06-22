@@ -59,7 +59,7 @@ class User_Playlist extends database_object
             return;
         }
 
-        $this->user   = (int)$user_id;
+        $this->user   = (int) $user_id;
         $this->client = substr($client, 0, 254);
     }
 
@@ -108,7 +108,7 @@ class User_Playlist extends database_object
         $db_results = Dba::read($sql, [$this->user, $this->client]);
         $results    = Dba::fetch_assoc($db_results);
 
-        return (int)$results['count'];
+        return (int) $results['count'];
     }
 
     /**
@@ -133,11 +133,11 @@ class User_Playlist extends database_object
         while ($results = Dba::fetch_assoc($db_results)) {
             $items = [
                 'object_type' => $results['object_type'],
-                'object_id' => (int)$results['object_id'],
-                'track_id' => (int)$results['object_id'],
-                'track' => (int)$results['track'],
-                'current_track' => (int)$results['current_track'],
-                'current_time' => (int)$results['current_time'],
+                'object_id' => (int) $results['object_id'],
+                'track_id' => (int) $results['object_id'],
+                'track' => (int) $results['track'],
+                'current_track' => (int) $results['current_track'],
+                'current_time' => (int) $results['current_time'],
             ];
         }
 
@@ -203,7 +203,7 @@ class User_Playlist extends database_object
             return time();
         }
 
-        return (int)$results['time'];
+        return (int) $results['time'];
     }
 
     /**

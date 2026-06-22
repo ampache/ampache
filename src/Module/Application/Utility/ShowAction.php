@@ -41,9 +41,7 @@ final readonly class ShowAction implements ApplicationActionInterface
 {
     public const string REQUEST_KEY = 'show';
 
-    public function __construct(private ResponseFactoryInterface $responseFactory)
-    {
-    }
+    public function __construct(private ResponseFactoryInterface $responseFactory) {}
 
     public function run(ServerRequestInterface $request, GuiGatekeeperInterface $gatekeeper): ResponseInterface
     {

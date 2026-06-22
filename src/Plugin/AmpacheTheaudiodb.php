@@ -137,14 +137,14 @@ class AmpacheTheaudiodb extends AmpachePlugin implements PluginGatherArtsInterfa
                         default => $release->strBiographyEN ?? null,
                     };
                     $data['placeformed'] = $release->strCountry ?? null;
-                    $data['yearformed']  = (is_numeric($release->intFormedYear ?? null)) ? (int)$release->intFormedYear : null;
+                    $data['yearformed']  = (is_numeric($release->intFormedYear ?? null)) ? (int) $release->intFormedYear : null;
 
                     // when you come in with an mbid you might want to keep the name updated (ignore case)
                     if (
                         $this->overwrite_name &&
                         $object->mbid !== null &&
                         MusicBrainz::isMBID($object->mbid) &&
-                        strtolower($data['name'] ?? '') !== strtolower((string)$object->get_fullname())
+                        strtolower($data['name'] ?? '') !== strtolower((string) $object->get_fullname())
                     ) {
                         $name_check = Artist::update_name_from_mbid($data['name'], $object->mbid);
                         if ($object->prefix !== null) {
@@ -220,7 +220,7 @@ class AmpacheTheaudiodb extends AmpachePlugin implements PluginGatherArtsInterfa
                     $results['art']        = $release->strArtistThumb ?? null;
                     $results['title']      = $release->strArtist ?? null;
                     $results['summary']    = $release->strBiographyEN ?? null;
-                    $results['yearformed'] = (is_numeric($release->intFormedYear ?? null)) ? (int)$release->intFormedYear : null;
+                    $results['yearformed'] = (is_numeric($release->intFormedYear ?? null)) ? (int) $release->intFormedYear : null;
                 }
             } elseif ($media_info['mb_trackid']) {
                 $track = $this->get_track($media_info['mb_trackid']);
@@ -277,7 +277,7 @@ class AmpacheTheaudiodb extends AmpachePlugin implements PluginGatherArtsInterfa
             return false;
         }
 
-        $this->overwrite_name = (bool)$data['tadb_overwrite_name'];
+        $this->overwrite_name = (bool) $data['tadb_overwrite_name'];
 
         return true;
     }
@@ -305,7 +305,7 @@ class AmpacheTheaudiodb extends AmpachePlugin implements PluginGatherArtsInterfa
             return false;
         }
 
-        if ($from_version < (int)$this->version) {
+        if ($from_version < (int) $this->version) {
             Preference::insert('tadb_overwrite_name', T_('Overwrite Artist names that match an mbid'), '0', AccessLevelEnum::USER->value, 'boolean', 'plugins', $this->name);
         }
 

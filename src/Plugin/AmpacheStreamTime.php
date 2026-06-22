@@ -94,9 +94,9 @@ class AmpacheStreamTime extends AmpachePlugin implements PluginStreamControlInte
         $data = $user->prefs;
 
         $this->user_id   = $user->id;
-        $this->time_max  = (int)($data['stream_control_time_max']) ?: 1024;
-        $this->time_days = ((int)($data['stream_control_time_days']) > 0)
-            ? (int)($data['stream_control_time_days'])
+        $this->time_max  = (int) ($data['stream_control_time_max']) ?: 1024;
+        $this->time_days = ((int) ($data['stream_control_time_days']) > 0)
+            ? (int) ($data['stream_control_time_days'])
             : 30;
 
         return true;

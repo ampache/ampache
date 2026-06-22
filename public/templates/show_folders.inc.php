@@ -103,7 +103,7 @@ $gatekeeper = $dic->get(GatekeeperFactoryInterface::class)->createGuiGatekeeper(
 foreach ($object_ids as $object) {
     preg_match('/([a-z_]+)-([0-9]+)/', $object, $matches);
     $object_type = $matches[1] ?? null;
-    $object_id   = (int)($matches[2] ?? 0);
+    $object_id   = (int) ($matches[2] ?? 0);
     $libitem     = null;
     switch ($object_type) {
         case 'folder':

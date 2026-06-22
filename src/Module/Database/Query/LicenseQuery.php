@@ -99,7 +99,7 @@ final class LicenseQuery implements QueryInterface
             case 'id':
                 $filter_sql = " `license`.`id` IN (";
                 foreach ($value as $uid) {
-                    $filter_sql .= (int)$uid . ',';
+                    $filter_sql .= (int) $uid . ',';
                 }
 
                 $filter_sql = rtrim($filter_sql, ',') . ") AND ";

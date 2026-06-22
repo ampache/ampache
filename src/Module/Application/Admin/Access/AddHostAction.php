@@ -55,8 +55,7 @@ final readonly class AddHostAction implements ApplicationActionInterface
         private AccessListManagerInterface $accessListManager,
         private RequestParserInterface $requestParser,
         private LoggerInterface $logger,
-    ) {
-    }
+    ) {}
 
     public function run(ServerRequestInterface $request, GuiGatekeeperInterface $gatekeeper): ?ResponseInterface
     {
@@ -70,7 +69,7 @@ final readonly class AddHostAction implements ApplicationActionInterface
 
         $this->ui->showHeader();
 
-        $data    = (array)$request->getParsedBody();
+        $data    = (array) $request->getParsedBody();
         $startIp = $data['start'] ?? '';
         $endIp   = $data['end'] ?? '';
 
@@ -79,8 +78,8 @@ final readonly class AddHostAction implements ApplicationActionInterface
                 $startIp,
                 $endIp,
                 $data['name'] ?? '',
-                (int)($data['user'] ?? -1),
-                AccessLevelEnum::from((int)($data['level'] ?? 0)),
+                (int) ($data['user'] ?? -1),
+                AccessLevelEnum::from((int) ($data['level'] ?? 0)),
                 AccessTypeEnum::from($data['type'] ?? 'stream'),
                 AccessTypeEnum::from($data['addtype'] ?? 'stream')
             );

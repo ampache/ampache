@@ -143,17 +143,17 @@ class Browse extends Query
      */
     public function get_threshold(): string
     {
-        return (string)($this->_state['threshold'] ?? '');
+        return (string) ($this->_state['threshold'] ?? '');
     }
 
     public function get_title(string $default): string
     {
-        return (string)($this->_state['title'] ?? $default);
+        return (string) ($this->_state['title'] ?? $default);
     }
 
     public function getId(): int
     {
-        return (int)$this->id;
+        return (int) $this->id;
     }
 
     /**
@@ -240,8 +240,8 @@ class Browse extends Query
             $remember_length = time() + 31536000;
             $cookie_options  = [
                 'expires' => $remember_length,
-                'path' => (string)AmpConfig::get('cookie_path'),
-                'domain' => (string)AmpConfig::get('cookie_domain'),
+                'path' => (string) AmpConfig::get('cookie_path'),
+                'domain' => (string) AmpConfig::get('cookie_domain'),
                 'secure' => make_bool(AmpConfig::get('cookie_secure')),
                 'samesite' => 'Strict',
             ];
@@ -264,29 +264,29 @@ class Browse extends Query
      */
     public function set_api_filter(string $filter, bool|int|string|null $value): void
     {
-        if (!strlen((string)$value)) {
+        if (!strlen((string) $value)) {
             return;
         }
 
         switch ($filter) {
             case 'add':
                 // Check for a range, if no range default to gt
-                if (strpos((string)$value, '/')) {
-                    $elements = explode('/', (string)$value);
-                    $this->set_filter('add_lt', strtotime((string)$elements[1]));
-                    $this->set_filter('add_gt', strtotime((string)$elements[0]));
+                if (strpos((string) $value, '/')) {
+                    $elements = explode('/', (string) $value);
+                    $this->set_filter('add_lt', strtotime((string) $elements[1]));
+                    $this->set_filter('add_gt', strtotime((string) $elements[0]));
                 } else {
-                    $this->set_filter('add_gt', strtotime((string)$value));
+                    $this->set_filter('add_gt', strtotime((string) $value));
                 }
                 break;
             case 'update':
                 // Check for a range, if no range default to gt
-                if (strpos((string)$value, '/')) {
-                    $elements = explode('/', (string)$value);
-                    $this->set_filter('update_lt', strtotime((string)$elements[1]));
-                    $this->set_filter('update_gt', strtotime((string)$elements[0]));
+                if (strpos((string) $value, '/')) {
+                    $elements = explode('/', (string) $value);
+                    $this->set_filter('update_lt', strtotime((string) $elements[1]));
+                    $this->set_filter('update_gt', strtotime((string) $elements[0]));
                 } else {
-                    $this->set_filter('update_gt', strtotime((string)$value));
+                    $this->set_filter('update_gt', strtotime((string) $value));
                 }
                 break;
             case 'alpha_match':
@@ -306,8 +306,8 @@ class Browse extends Query
      */
     public function set_conditions(string $cond): void
     {
-        foreach ((explode(';', (string)$cond)) as $condition) {
-            $filter = (explode(',', (string)$condition));
+        foreach ((explode(';', (string) $cond)) as $condition) {
+            $filter = (explode(',', (string) $condition));
             if (!empty($filter[0])) {
                 $this->set_filter(strtolower($filter[0]), ($filter[1] ?: null));
             }
@@ -580,7 +580,7 @@ class Browse extends Query
             $match = ' (' . $filter_value . ')';
         } elseif ($filter_value = $this->get_filter('catalog')) {
             // Get the catalog title
-            $catalog = Catalog::create_from_id((int)($filter_value));
+            $catalog = Catalog::create_from_id((int) ($filter_value));
             if ($catalog !== null) {
                 $match = ' (' . $catalog->name . ')';
             }
@@ -606,14 +606,14 @@ class Browse extends Query
             if ($hide_columns !== []) {
                 $argument_param = '&hide=';
                 foreach ($hide_columns as $column) {
-                    $argument_param .= scrub_in((string)$column) . ',';
+                    $argument_param .= scrub_in((string) $column) . ',';
                 }
 
                 $argument_param = rtrim($argument_param, ',');
             }
         } else {
             $argument_param = ($argument)
-                ? '&argument=' . scrub_in((string)$argument)
+                ? '&argument=' . scrub_in((string) $argument)
                 : '';
         }
 
@@ -651,7 +651,7 @@ class Browse extends Query
                     }
 
                     if (array_key_exists('group_disks', $argument)) {
-                        $group_release = (bool)$argument['group_disks'];
+                        $group_release = (bool) $argument['group_disks'];
                     }
                 }
 
@@ -666,7 +666,7 @@ class Browse extends Query
                     }
 
                     if (array_key_exists('group_disks', $argument)) {
-                        $group_release = (bool)$argument['group_disks'];
+                        $group_release = (bool) $argument['group_disks'];
                     }
                 }
 
@@ -728,8 +728,8 @@ class Browse extends Query
                         continue;
                     }
                     $shout = (is_array($shoutId) && isset($shoutId['object_id']))
-                        ? $shoutRepository->findById((int)$shoutId['object_id'])
-                        : $shoutRepository->findById((int)$shoutId);
+                        ? $shoutRepository->findById((int) $shoutId['object_id'])
+                        : $shoutRepository->findById((int) $shoutId);
                     if ($shout !== null) {
                         // used within the template
                         $shouts[] = $shout;
@@ -842,7 +842,7 @@ class Browse extends Query
             $name = 'browse_current_' . $this->get_type();
             if (array_key_exists($name, $_SESSION) && array_key_exists('start', $_SESSION[$name]) && $_SESSION[$name]['start'] > 0) {
                 // Checking if value is suitable
-                $start = (int)$_SESSION[$name]['start'];
+                $start = (int) $_SESSION[$name]['start'];
                 if ($this->get_offset() > 0) {
                     $set_page    = floor($start / $this->get_offset());
                     $total_pages = ($this->get_total() > $this->get_offset())

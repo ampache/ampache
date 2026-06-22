@@ -94,13 +94,13 @@ class User extends database_object
             return;
         }
 
-        $info = $this->set_info((int)$user_id);
+        $info = $this->set_info((int) $user_id);
         if (!$info) {
             return;
         }
 
         // Make sure the Full name is always filled
-        if (strlen((string)$this->fullname) < 1) {
+        if (strlen((string) $this->fullname) < 1) {
             $this->fullname = $this->username;
         }
     }
@@ -156,7 +156,7 @@ class User extends database_object
             return 0;
         }
 
-        $website = rtrim((string)$website, "/");
+        $website = rtrim((string) $website, "/");
         if (!$encrypted) {
             $password = hash('sha256', $password);
         }
@@ -239,7 +239,7 @@ class User extends database_object
         }
 
         // Get the insert_id
-        $insert_id = (int)Dba::insert_id();
+        $insert_id = (int) Dba::insert_id();
 
         // Populates any missing preferences, in this case all of them
         self::fix_preferences($insert_id);
@@ -272,7 +272,7 @@ class User extends database_object
             $sql        = "SELECT MAX(`id`) AS `filter_count` FROM `catalog_filter_group`;";
             $db_results = Dba::read($sql);
             $row        = Dba::fetch_assoc($db_results);
-            $increment  = (int)($row['filter_count'] ?? 0) + 1;
+            $increment  = (int) ($row['filter_count'] ?? 0) + 1;
             $sql        = sprintf('ALTER TABLE `catalog_filter_group` AUTO_INCREMENT = %d;', $increment);
             Dba::write($sql);
         }
@@ -408,19 +408,19 @@ class User extends database_object
         $sql_s  = "SELECT IFNULL(SUM(`size`)/1024/1024, 0) AS `size` FROM `object_count` LEFT JOIN `song` ON `song`.`id`=`object_count`.`object_id` AND `object_count`.`object_type` = 'song' AND `object_count`.`count_type` = 'stream' AND `object_count`.`user` = ?;";
         $db_s   = Dba::read($sql_s, $params);
         while ($results = Dba::fetch_assoc($db_s)) {
-            $total += (int)$results['size'];
+            $total += (int) $results['size'];
         }
 
         $sql_v = "SELECT IFNULL(SUM(`size`)/1024/1024, 0) AS `size` FROM `object_count` LEFT JOIN `video` ON `video`.`id`=`object_count`.`object_id` AND `object_count`.`count_type` = 'stream' AND `object_count`.`object_type` = 'video' AND `object_count`.`user` = ?;";
         $db_v  = Dba::read($sql_v, $params);
         while ($results = Dba::fetch_assoc($db_v)) {
-            $total += (int)$results['size'];
+            $total += (int) $results['size'];
         }
 
         $sql_p = "SELECT IFNULL(SUM(`size`)/1024/1024, 0) AS `size` FROM `object_count`LEFT JOIN `podcast_episode` ON `podcast_episode`.`id`=`object_count`.`object_id` AND `object_count`.`count_type` = 'stream' AND `object_count`.`object_type` = 'podcast_episode' AND `object_count`.`user` = ?;";
         $db_p  = Dba::read($sql_p, $params);
         while ($results = Dba::fetch_assoc($db_p)) {
-            $total += (int)$results['size'];
+            $total += (int) $results['size'];
         }
 
         return $total;
@@ -527,12 +527,12 @@ class User extends database_object
         $sql        = "SELECT COUNT(`id`) AS `pref_count` FROM `preference` WHERE `category` != 'system';";
         $db_results = Dba::read($sql);
         $row        = Dba::fetch_assoc($db_results);
-        $pref_count = (int)$row['pref_count'];
+        $pref_count = (int) $row['pref_count'];
         // Get only users who have less preferences than excepted otherwise it would have significant performance issue with large user database
         $sql        = 'SELECT `user` FROM `user_preference` GROUP BY `user` HAVING COUNT(*) < ' . $pref_count;
         $db_results = Dba::read($sql);
         while ($row = Dba::fetch_assoc($db_results)) {
-            self::fix_preferences((int)$row['user']);
+            self::fix_preferences((int) $row['user']);
         }
     }
 
@@ -597,7 +597,7 @@ class User extends database_object
         $db_results      = Dba::read($sql);
         $user_list       = [];
         while ($results = Dba::fetch_assoc($db_results)) {
-            $user_list[] = (int)$results['id'];
+            $user_list[] = (int) $results['id'];
         }
 
         // TODO $user_list[] = -1; // make sure the System / Guest user gets a count as well
@@ -665,7 +665,7 @@ class User extends database_object
                 $db_results = Dba::read($sql);
                 $row        = Dba::fetch_row($db_results);
 
-                self::set_user_data($user_id, $table, (int)($row[0] ?? 0));
+                self::set_user_data($user_id, $table, (int) ($row[0] ?? 0));
             }
 
             // tables with media items to count, song-related tables and the rest
@@ -688,10 +688,10 @@ class User extends database_object
                 $db_results = Dba::read($sql);
                 $row        = Dba::fetch_row($db_results);
                 // save the object and add to the current size
-                $items += (int)($row[0] ?? 0);
-                $time += (int)($row[1] ?? 0);
-                $size += (int)($row[2] ?? 0);
-                self::set_user_data($user_id, $table, (int)($row[0] ?? 0));
+                $items += (int) ($row[0] ?? 0);
+                $time += (int) ($row[1] ?? 0);
+                $size += (int) ($row[2] ?? 0);
+                self::set_user_data($user_id, $table, (int) ($row[0] ?? 0));
             }
 
             self::set_user_data($user_id, 'items', $items);
@@ -701,7 +701,7 @@ class User extends database_object
             $sql        = "SELECT COUNT(DISTINCT `album_disk`.`id`) AS `count` FROM `album_disk` LEFT JOIN `album` ON `album_disk`.`album_id` = `album`.`id` LEFT JOIN `artist_map` ON `artist_map`.`object_id` = `album`.`id` WHERE `artist_map`.`object_type` = 'album' AND `album`.`catalog` IN (" . implode(',', Catalog::get_catalogs('', $user_id, true)) . ")";
             $db_results = Dba::read($sql);
             $row        = Dba::fetch_row($db_results);
-            self::set_user_data($user_id, 'album_disk', (int)($row[0] ?? 0));
+            self::set_user_data($user_id, 'album_disk', (int) ($row[0] ?? 0));
         }
     }
 
@@ -981,7 +981,7 @@ class User extends database_object
         $params     = [$this->id];
         $db_results = Dba::read($sql, $params);
         while ($row = Dba::fetch_assoc($db_results)) {
-            $results[] = (int)$row['id'];
+            $results[] = (int) $row['id'];
         }
 
         return $results;
@@ -1029,7 +1029,7 @@ class User extends database_object
                 'subcategory' => $row['subcategory'],
             ];
             $results[$type] = [
-                'title' => ucwords((string)$type),
+                'title' => ucwords((string) $type),
                 'admin' => $admin,
                 'prefs' => $type_array[$type],
             ];
@@ -1059,7 +1059,7 @@ class User extends database_object
 
         $results = [];
         while ($row = Dba::fetch_assoc($db_results)) {
-            $results[] = (int)$row['object_id'];
+            $results[] = (int) $row['object_id'];
         }
 
         return $results;
@@ -1095,7 +1095,7 @@ class User extends database_object
             $this->getUserKeyGenerator()->generateRssToken($this);
         }
 
-        return (string)$this->rsstoken;
+        return (string) $this->rsstoken;
     }
 
     /**
@@ -1393,7 +1393,7 @@ class User extends database_object
     {
         $new_website = filter_var(urldecode($new_website), FILTER_VALIDATE_URL) ?: null;
         $new_website = (is_string($new_website))
-            ? rtrim((string)$new_website, "/")
+            ? rtrim((string) $new_website, "/")
             : null;
         $sql = "UPDATE `user` SET `website` = ? WHERE `id` = ?";
 

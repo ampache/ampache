@@ -48,15 +48,14 @@ final readonly class UpdateUserAction implements ApplicationActionInterface
         private UiInterface $ui,
         private ConfigContainerInterface $configContainer,
         private RequestParserInterface $requestParser,
-    ) {
-    }
+    ) {}
 
     public function run(ServerRequestInterface $request, GuiGatekeeperInterface $gatekeeper): ?ResponseInterface
     {
         if (
             (
                 $gatekeeper->mayAccess(AccessTypeEnum::INTERFACE, AccessLevelEnum::USER) === false &&
-                (int)(Core::get_global('user')?->getId()) > 0
+                (int) (Core::get_global('user')?->getId()) > 0
             ) ||
             !$this->requestParser->verifyForm('update_user')
         ) {

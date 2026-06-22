@@ -36,8 +36,7 @@ final readonly class NewPasswordSender implements NewPasswordSenderInterface
     public function __construct(
         private PasswordGeneratorInterface $passwordGenerator,
         private UserRepositoryInterface $userRepository,
-    ) {
-    }
+    ) {}
 
     /**
      * @throws Exception
@@ -62,7 +61,7 @@ final readonly class NewPasswordSender implements NewPasswordSenderInterface
         }
 
         $time        = time();
-        $last_reset  = (int)User::get_user_data($user->id, 'password_reset', 0)['password_reset'];
+        $last_reset  = (int) User::get_user_data($user->id, 'password_reset', 0)['password_reset'];
         $reset_limit = ($time - 3600) > $last_reset; // don't let a user spam resets
         if ($user->email == $email && Mailer::is_mail_enabled() && $reset_limit) {
             $newpassword = $this->passwordGenerator->generate();

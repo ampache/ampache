@@ -53,8 +53,7 @@ final readonly class ArtistDeleter implements ArtistDeleterInterface
         private LabelRepositoryInterface $labelRepository,
         private ArtCleanupInterface $artCleanup,
         private FolderRepositoryInterface $folderRepository,
-    ) {
-    }
+    ) {}
 
     /**
      * @throws ArtistDeletionException

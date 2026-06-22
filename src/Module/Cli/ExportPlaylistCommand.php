@@ -79,7 +79,7 @@ final class ExportPlaylistCommand extends Command
     {
         $this->option('-h, --help', T_('Help'))->on($this->showHelp(...));
 
-        $this->onExit(static fn ($exitCode = 0) => exit($exitCode));
+        $this->onExit(static fn($exitCode = 0) => exit($exitCode));
 
         return $this;
     }

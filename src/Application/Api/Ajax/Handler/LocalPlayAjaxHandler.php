@@ -40,8 +40,7 @@ final readonly class LocalPlayAjaxHandler implements AjaxHandlerInterface
 {
     public function __construct(
         private RequestParserInterface $requestParser,
-    ) {
-    }
+    ) {}
 
     public function handle(User $user): void
     {
@@ -61,7 +60,7 @@ final readonly class LocalPlayAjaxHandler implements AjaxHandlerInterface
                 $type = (isset($_REQUEST['instance'])) ? 'localplay' : 'stream';
 
                 $localplay = new LocalPlay(AmpConfig::get('localplay_controller', ''));
-                $localplay->set_active_instance((int)$_REQUEST['instance']);
+                $localplay->set_active_instance((int) $_REQUEST['instance']);
                 Preference::update('play_type', $user->getId(), $type);
 
                 // We should also refresh the sidebar
@@ -171,7 +170,7 @@ final readonly class LocalPlayAjaxHandler implements AjaxHandlerInterface
                 $objects = $localplay->get();
 
                 ob_start();
-                $browse_id = (int)($_REQUEST['browse_id'] ?? 0);
+                $browse_id = (int) ($_REQUEST['browse_id'] ?? 0);
                 $browse    = new Browse($browse_id);
                 $browse->set_type('playlist_localplay');
                 $browse->set_static_content(true);
@@ -192,7 +191,7 @@ final readonly class LocalPlayAjaxHandler implements AjaxHandlerInterface
 
                 // Scrub it in
                 $localplay = new LocalPlay(AmpConfig::get('localplay_controller', ''));
-                $localplay->delete_instance((int)$_REQUEST['instance']);
+                $localplay->delete_instance((int) $_REQUEST['instance']);
 
                 $key           = 'localplay_instance_' . $_REQUEST['instance'];
                 $results[$key] = '';

@@ -42,12 +42,11 @@ final readonly class SetTrackNumbersAction implements ApplicationActionInterface
         private RequestParserInterface $requestParser,
         private ModelFactoryInterface $modelFactory,
         private UiInterface $ui,
-    ) {
-    }
+    ) {}
 
     public function run(ServerRequestInterface $request, GuiGatekeeperInterface $gatekeeper): ?ResponseInterface
     {
-        $playlist_id = (int)$this->requestParser->getFromRequest('playlist_id');
+        $playlist_id = (int) $this->requestParser->getFromRequest('playlist_id');
         $playlist    = $this->modelFactory->createPlaylist($playlist_id);
         /* Make sure they have permission */
         if (!$playlist->has_access()) {
@@ -63,14 +62,14 @@ final readonly class SetTrackNumbersAction implements ApplicationActionInterface
 
         if (array_key_exists('order', $_GET)) {
             $songs = explode(";", (string) $_GET['order']);
-            $track = (int)($_GET['offset'] ?? 0) + 1;
+            $track = (int) ($_GET['offset'] ?? 0) + 1;
             if ($track < 1) {
                 $track = 1;
             }
 
             foreach ($songs as $track_id) {
                 if ($track_id !== '') {
-                    $playlist->update_track_number((int)$track_id, $track);
+                    $playlist->update_track_number((int) $track_id, $track);
                     ++$track;
                 }
             }

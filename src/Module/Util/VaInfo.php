@@ -321,23 +321,23 @@ final class VaInfo implements VaInfoInterface
             $info['channels'] = (!$info['channels'] && array_key_exists('channels', $tags)) ? $tags['channels'] : $info['channels'];
 
             // This because video title are almost always bad...
-            $info['original_name'] = (!$info['original_name'] && array_key_exists('original_name', $tags)) ? stripslashes(trim((string)$tags['original_name'])) : $info['original_name'];
-            $info['title']         = (!$info['title'] && array_key_exists('title', $tags)) ? stripslashes(trim((string)$tags['title'])) : $info['title'];
+            $info['original_name'] = (!$info['original_name'] && array_key_exists('original_name', $tags)) ? stripslashes(trim((string) $tags['original_name'])) : $info['original_name'];
+            $info['title']         = (!$info['title'] && array_key_exists('title', $tags)) ? stripslashes(trim((string) $tags['title'])) : $info['title'];
 
             // Not even sure if these can be negative, but better safe than llama.
             $info['year'] = (!$info['year'] && array_key_exists('year', $tags)) ? Catalog::normalize_year((int) $tags['year']) : $info['year'];
             $info['disk'] = (!$info['disk'] && array_key_exists('disk', $tags)) ? abs((int) $tags['disk']) : $info['disk'];
 
             $info['totaldisks']   = (!$info['totaldisks'] && array_key_exists('totaldisks', $tags)) ? (int) $tags['totaldisks'] : $info['totaldisks'];
-            $info['disksubtitle'] = (!$info['disksubtitle'] && array_key_exists('disksubtitle', $tags)) ? trim((string)$tags['disksubtitle']) : $info['disksubtitle'];
+            $info['disksubtitle'] = (!$info['disksubtitle'] && array_key_exists('disksubtitle', $tags)) ? trim((string) $tags['disksubtitle']) : $info['disksubtitle'];
 
-            $info['artist']      = (!$info['artist'] && array_key_exists('artist', $tags)) ? trim((string)$tags['artist']) : $info['artist'];
-            $info['albumartist'] = (!$info['albumartist'] && array_key_exists('albumartist', $tags)) ? trim((string)$tags['albumartist']) : $info['albumartist'];
+            $info['artist']      = (!$info['artist'] && array_key_exists('artist', $tags)) ? trim((string) $tags['artist']) : $info['artist'];
+            $info['albumartist'] = (!$info['albumartist'] && array_key_exists('albumartist', $tags)) ? trim((string) $tags['albumartist']) : $info['albumartist'];
 
-            $info['album'] = (!$info['album'] && array_key_exists('album', $tags)) ? trim((string)$tags['album']) : $info['album'];
+            $info['album'] = (!$info['album'] && array_key_exists('album', $tags)) ? trim((string) $tags['album']) : $info['album'];
 
-            $info['composer']  = (!$info['composer'] && array_key_exists('composer', $tags)) ? trim((string)$tags['composer']) : $info['composer'];
-            $info['publisher'] = (!$info['publisher'] && array_key_exists('publisher', $tags)) ? trim((string)$tags['publisher']) : $info['publisher'];
+            $info['composer']  = (!$info['composer'] && array_key_exists('composer', $tags)) ? trim((string) $tags['composer']) : $info['composer'];
+            $info['publisher'] = (!$info['publisher'] && array_key_exists('publisher', $tags)) ? trim((string) $tags['publisher']) : $info['publisher'];
 
             // genre is an array treat it as one
             $info['genre'] = (!$info['genre'] && array_key_exists('genre', $tags) && is_array($tags['genre']) && (!empty($tags['genre'])))
@@ -348,11 +348,11 @@ final class VaInfo implements VaInfoInterface
                 ? $tags['isrc']
                 : $info['isrc'];
 
-            $info['mb_trackid']       = (!$info['mb_trackid'] && array_key_exists('mb_trackid', $tags)) ? trim((string)$tags['mb_trackid']) : $info['mb_trackid'];
-            $info['mb_albumid']       = (!$info['mb_albumid'] && array_key_exists('mb_albumid', $tags)) ? trim((string)$tags['mb_albumid']) : $info['mb_albumid'];
-            $info['mb_albumid_group'] = (!$info['mb_albumid_group'] && array_key_exists('mb_albumid_group', $tags)) ? trim((string)$tags['mb_albumid_group']) : $info['mb_albumid_group'];
-            $info['mb_artistid']      = (!$info['mb_artistid'] && array_key_exists('mb_artistid', $tags)) ? trim((string)$tags['mb_artistid']) : $info['mb_artistid'];
-            $info['mb_albumartistid'] = (!$info['mb_albumartistid'] && array_key_exists('mb_albumartistid', $tags)) ? trim((string)$tags['mb_albumartistid']) : $info['mb_albumartistid'];
+            $info['mb_trackid']       = (!$info['mb_trackid'] && array_key_exists('mb_trackid', $tags)) ? trim((string) $tags['mb_trackid']) : $info['mb_trackid'];
+            $info['mb_albumid']       = (!$info['mb_albumid'] && array_key_exists('mb_albumid', $tags)) ? trim((string) $tags['mb_albumid']) : $info['mb_albumid'];
+            $info['mb_albumid_group'] = (!$info['mb_albumid_group'] && array_key_exists('mb_albumid_group', $tags)) ? trim((string) $tags['mb_albumid_group']) : $info['mb_albumid_group'];
+            $info['mb_artistid']      = (!$info['mb_artistid'] && array_key_exists('mb_artistid', $tags)) ? trim((string) $tags['mb_artistid']) : $info['mb_artistid'];
+            $info['mb_albumartistid'] = (!$info['mb_albumartistid'] && array_key_exists('mb_albumartistid', $tags)) ? trim((string) $tags['mb_albumartistid']) : $info['mb_albumartistid'];
             // groups of artists can be ID'd using their mbid easily
             $info['mb_artistid_array'] = (!$info['mb_artistid_array'] && array_key_exists('mb_artistid_array', $tags) && !empty($tags['mb_artistid_array']))
                 ? $tags['mb_artistid_array']
@@ -361,8 +361,8 @@ final class VaInfo implements VaInfoInterface
                 ? $tags['mb_albumartistid_array']
                 : $info['mb_albumartistid_array'];
 
-            $info['release_type']   = (!$info['release_type'] && array_key_exists('release_type', $tags)) ? trim((string)$tags['release_type']) : $info['release_type'];
-            $info['release_status'] = (!$info['release_status'] && array_key_exists('release_status', $tags)) ? trim((string)$tags['release_status']) : $info['release_status'];
+            $info['release_type']   = (!$info['release_type'] && array_key_exists('release_type', $tags)) ? trim((string) $tags['release_type']) : $info['release_type'];
+            $info['release_status'] = (!$info['release_status'] && array_key_exists('release_status', $tags)) ? trim((string) $tags['release_status']) : $info['release_status'];
 
             // artists is an array treat it as one
             if (!empty($tags['artists']) && !is_array($tags['artists'])) {
@@ -373,14 +373,14 @@ final class VaInfo implements VaInfoInterface
                 ? $tags['artists']
                 : $info['artists'];
 
-            $info['original_year']  = (!$info['original_year'] && array_key_exists('original_year', $tags)) ? trim((string)$tags['original_year']) : $info['original_year'];
-            $info['barcode']        = (!$info['barcode'] && array_key_exists('barcode', $tags)) ? trim((string)$tags['barcode']) : $info['barcode'];
-            $info['catalog_number'] = (!$info['catalog_number'] && array_key_exists('catalog_number', $tags)) ? trim((string)$tags['catalog_number']) : $info['catalog_number'];
-            $info['version']        = (!$info['version'] && array_key_exists('version', $tags)) ? trim((string)$tags['version']) : $info['version'];
+            $info['original_year']  = (!$info['original_year'] && array_key_exists('original_year', $tags)) ? trim((string) $tags['original_year']) : $info['original_year'];
+            $info['barcode']        = (!$info['barcode'] && array_key_exists('barcode', $tags)) ? trim((string) $tags['barcode']) : $info['barcode'];
+            $info['catalog_number'] = (!$info['catalog_number'] && array_key_exists('catalog_number', $tags)) ? trim((string) $tags['catalog_number']) : $info['catalog_number'];
+            $info['version']        = (!$info['version'] && array_key_exists('version', $tags)) ? trim((string) $tags['version']) : $info['version'];
 
-            $info['language'] = (!$info['language'] && array_key_exists('language', $tags)) ? trim((string)$tags['language']) : $info['language'];
-            $info['license']  = (!$info['license'] && array_key_exists('license', $tags)) ? trim((string)$tags['license']) : $info['license'];
-            $info['comment']  = (!$info['comment'] && array_key_exists('comment', $tags)) ? trim((string)$tags['comment']) : $info['comment'];
+            $info['language'] = (!$info['language'] && array_key_exists('language', $tags)) ? trim((string) $tags['language']) : $info['language'];
+            $info['license']  = (!$info['license'] && array_key_exists('license', $tags)) ? trim((string) $tags['license']) : $info['license'];
+            $info['comment']  = (!$info['comment'] && array_key_exists('comment', $tags)) ? trim((string) $tags['comment']) : $info['comment'];
             $info['lyrics']   = (!$info['lyrics'] && array_key_exists('lyrics', $tags) && is_string($tags['lyrics'])) ? nl2br(strip_tags($tags['lyrics'])) : $info['lyrics'];
 
             // extended checks to make sure "0" makes it through, which would otherwise eval to false
@@ -391,19 +391,19 @@ final class VaInfo implements VaInfoInterface
             $info['r128_track_gain']       = (!$info['r128_track_gain'] && array_key_exists('r128_track_gain', $tags) && !is_null($tags['r128_track_gain'])) ? (int) $tags['r128_track_gain'] : $info['r128_track_gain'];
             $info['r128_album_gain']       = (!$info['r128_album_gain'] && array_key_exists('r128_album_gain', $tags) && !is_null($tags['r128_album_gain'])) ? (int) $tags['r128_album_gain'] : $info['r128_album_gain'];
 
-            $info['track']         = (!$info['track'] && array_key_exists('track', $tags)) ? (int)$tags['track'] : $info['track'];
-            $info['totaltracks']   = (!$info['totaltracks'] && array_key_exists('totaltracks', $tags)) ? (int)$tags['totaltracks'] : $info['totaltracks'];
-            $info['resolution_x']  = (!$info['resolution_x'] && array_key_exists('resolution_x', $tags)) ? (int)$tags['resolution_x'] : $info['resolution_x'];
-            $info['resolution_y']  = (!$info['resolution_y'] && array_key_exists('resolution_y', $tags)) ? (int)$tags['resolution_y'] : $info['resolution_y'];
-            $info['display_x']     = (!$info['display_x'] && array_key_exists('display_x', $tags)) ? (int)$tags['display_x'] : $info['display_x'];
-            $info['display_y']     = (!$info['display_y'] && array_key_exists('display_y', $tags)) ? (int)$tags['display_y'] : $info['display_y'];
-            $info['frame_rate']    = (!$info['frame_rate'] && array_key_exists('frame_rate', $tags)) ? (float)$tags['frame_rate'] : $info['frame_rate'];
+            $info['track']         = (!$info['track'] && array_key_exists('track', $tags)) ? (int) $tags['track'] : $info['track'];
+            $info['totaltracks']   = (!$info['totaltracks'] && array_key_exists('totaltracks', $tags)) ? (int) $tags['totaltracks'] : $info['totaltracks'];
+            $info['resolution_x']  = (!$info['resolution_x'] && array_key_exists('resolution_x', $tags)) ? (int) $tags['resolution_x'] : $info['resolution_x'];
+            $info['resolution_y']  = (!$info['resolution_y'] && array_key_exists('resolution_y', $tags)) ? (int) $tags['resolution_y'] : $info['resolution_y'];
+            $info['display_x']     = (!$info['display_x'] && array_key_exists('display_x', $tags)) ? (int) $tags['display_x'] : $info['display_x'];
+            $info['display_y']     = (!$info['display_y'] && array_key_exists('display_y', $tags)) ? (int) $tags['display_y'] : $info['display_y'];
+            $info['frame_rate']    = (!$info['frame_rate'] && array_key_exists('frame_rate', $tags)) ? (float) $tags['frame_rate'] : $info['frame_rate'];
             $info['video_bitrate'] = (!$info['video_bitrate'] && array_key_exists('video_bitrate', $tags)) ? Catalog::check_int((int) $tags['video_bitrate'], PHP_INT_MAX, 0) : $info['video_bitrate'];
-            $info['audio_codec']   = (!$info['audio_codec'] && array_key_exists('audio_codec', $tags)) ? trim((string)$tags['audio_codec']) : $info['audio_codec'];
-            $info['video_codec']   = (!$info['video_codec'] && array_key_exists('video_codec', $tags)) ? trim((string)$tags['video_codec']) : $info['video_codec'];
-            $info['description']   = (!$info['description'] && array_key_exists('description', $tags)) ? trim((string)$tags['description']) : $info['description'];
+            $info['audio_codec']   = (!$info['audio_codec'] && array_key_exists('audio_codec', $tags)) ? trim((string) $tags['audio_codec']) : $info['audio_codec'];
+            $info['video_codec']   = (!$info['video_codec'] && array_key_exists('video_codec', $tags)) ? trim((string) $tags['video_codec']) : $info['video_codec'];
+            $info['description']   = (!$info['description'] && array_key_exists('description', $tags)) ? trim((string) $tags['description']) : $info['description'];
 
-            $info['art'] = (!$info['art'] && array_key_exists('art', $tags)) ? trim((string)$tags['art']) : $info['art'];
+            $info['art'] = (!$info['art'] && array_key_exists('art', $tags)) ? trim((string) $tags['art']) : $info['art'];
 
             if (self::getConfigContainer()->get(ConfigurationKeyEnum::ENABLE_CUSTOM_METADATA) && is_array($tags)) {
                 // Add rest of the tags without typecast to the array
@@ -412,14 +412,14 @@ final class VaInfo implements VaInfoInterface
                         !array_key_exists($tag, $info) &&
                         is_scalar($value)
                     ) {
-                        $info[$tag] = trim((string)$value);
+                        $info[$tag] = trim((string) $value);
                     }
                 }
             }
         }
 
         // Determine the correct file size, do not get fooled by the size which may be returned by id3v2!
-        $size         = $results['general']['size'] ?? Core::get_filesize(Core::conv_lc_file((string)$filename));
+        $size         = $results['general']['size'] ?? Core::get_filesize(Core::conv_lc_file((string) $filename));
         $info['size'] ??= $size;
 
         return $info;
@@ -583,10 +583,10 @@ final class VaInfo implements VaInfoInterface
 
         // Mangle the pattern by turning the codes into regex captures
         $pattern = preg_replace('/\%d/', '(\d?)', $pattern);
-        $pattern = preg_replace('/\%[TyY]/', '(\d+?)', (string)$pattern);
-        $pattern = preg_replace('/\%\w/', '(.+?)', (string)$pattern);
-        $pattern = str_replace('/', '\/', (string)$pattern);
-        $pattern = str_replace(' ', '\s', (string)$pattern);
+        $pattern = preg_replace('/\%[TyY]/', '(\d+?)', (string) $pattern);
+        $pattern = preg_replace('/\%\w/', '(.+?)', (string) $pattern);
+        $pattern = str_replace('/', '\/', (string) $pattern);
+        $pattern = str_replace(' ', '\s', (string) $pattern);
         $pattern = '/' . $pattern . '\..+$/';
 
         // Pull out our actual matches
@@ -639,7 +639,7 @@ final class VaInfo implements VaInfoInterface
                 return 1;
             }
         } else {
-            return (int)($value / 255 * 5);
+            return (int) ($value / 255 * 5);
         }
 
         return 0;
@@ -1096,7 +1096,7 @@ final class VaInfo implements VaInfoInterface
                         $parsed['release_status'] = $value;
                         break;
                     case 'wm/originalreleaseyear':
-                        $parsed['original_year'] = (int)$value;
+                        $parsed['original_year'] = (int) $value;
                         break;
                     case 'wm/barcode':
                         $parsed['barcode'] = $value;
@@ -1287,7 +1287,7 @@ final class VaInfo implements VaInfoInterface
                 case 'originaldate':
                     $parsed['originaldate'] = strtotime(str_replace(" ", "", $data[0]));
                     if (strlen((string) $data['0']) > 4) {
-                        $data[0] = date('Y', (int)$parsed['originaldate']);
+                        $data[0] = date('Y', (int) $parsed['originaldate']);
                     }
 
                     $parsed['original_year'] = (array_key_exists('original_year', $parsed)) ? ($parsed['original_year']) : $data[0];
@@ -1439,7 +1439,7 @@ final class VaInfo implements VaInfoInterface
                     $user = $this->userRepository->findByEmail($popm['email']);
                     if ($user instanceof User) {
                         // Ratings are out of 255; scale it
-                        $parsed['rating'][$user->id] = self::parse_rating((int)$popm['rating']);
+                        $parsed['rating'][$user->id] = self::parse_rating((int) $popm['rating']);
                     }
 
                     continue;
@@ -1451,7 +1451,7 @@ final class VaInfo implements VaInfoInterface
                     $rating_user = (int) $this->configContainer->get(ConfigurationKeyEnum::RATING_FILE_TAG_USER);
                 }
 
-                $parsed['rating'][$rating_user] = self::parse_rating((int)$popm['rating']);
+                $parsed['rating'][$rating_user] = self::parse_rating((int) $popm['rating']);
             }
         }
 
@@ -1502,7 +1502,7 @@ final class VaInfo implements VaInfoInterface
                 case 'creation_date':
                     $parsed['creation_date'] = strtotime(str_replace(" ", "", $data[0]));
                     if (strlen((string) $data['0']) > 4) {
-                        $data[0] = date('Y', (int)$parsed['creation_date']);
+                        $data[0] = date('Y', (int) $parsed['creation_date']);
                     }
 
                     $parsed['year'] = $data[0];
@@ -1560,7 +1560,7 @@ final class VaInfo implements VaInfoInterface
                 case 'originaldate':
                     $parsed['originaldate'] = strtotime(str_replace(" ", "", $data[0]));
                     if (strlen((string) $data['0']) > 4) {
-                        $data[0] = date('Y', (int)$parsed['originaldate']);
+                        $data[0] = date('Y', (int) $parsed['originaldate']);
                     }
 
                     $parsed['original_year'] ??= $data[0];
@@ -1701,7 +1701,7 @@ final class VaInfo implements VaInfoInterface
                 case 'originaldate':
                     $parsed['originaldate'] = strtotime(str_replace(" ", "", $data[0]));
                     if (strlen((string) $data['0']) > 4) {
-                        $data[0] = date('Y', (int)$parsed['originaldate']);
+                        $data[0] = date('Y', (int) $parsed['originaldate']);
                     }
 
                     $parsed['original_year'] ??= $data[0];
@@ -1733,7 +1733,7 @@ final class VaInfo implements VaInfoInterface
                         $rating_user = (int) $this->configContainer->get(ConfigurationKeyEnum::RATING_FILE_TAG_USER);
                     }
 
-                    $parsed['rating'][$rating_user] = floor(((int)$data[0]) * 5 / 100);
+                    $parsed['rating'][$rating_user] = floor(((int) $data[0]) * 5 / 100);
                     break;
                 default:
                     $parsed[strtolower($tag)] = $data[0];
@@ -1744,7 +1744,7 @@ final class VaInfo implements VaInfoInterface
             foreach (preg_grep("/^rating:.*@.*/", array_keys($parsed)) ?: [] as $user_rating) {
                 $rating_user = $this->userRepository->findByEmail(ltrim((string) $user_rating, "rating:"));
                 if ($rating_user instanceof User) {
-                    $parsed['rating'][$rating_user->id] = floor(((int)$parsed[$user_rating]) * 5 / 100);
+                    $parsed['rating'][$rating_user->id] = floor(((int) $parsed[$user_rating]) * 5 / 100);
                 }
             }
         }
@@ -2010,8 +2010,8 @@ final class VaInfo implements VaInfoInterface
             }
 
             $parsed['bitrate']     = $tags['audio']['bitrate'] ?? null;
-            $parsed['channels']    = (empty($tags['audio']['channels'])) ? null : (int)$tags['audio']['channels'];
-            $parsed['rate']        = (empty($tags['audio']['sample_rate'])) ? null : (int)$tags['audio']['sample_rate'];
+            $parsed['channels']    = (empty($tags['audio']['channels'])) ? null : (int) $tags['audio']['channels'];
+            $parsed['rate']        = (empty($tags['audio']['sample_rate'])) ? null : (int) $tags['audio']['sample_rate'];
             $parsed['audio_codec'] = $tags['audio']['dataformat'] ?? null;
         }
 
@@ -2139,6 +2139,6 @@ final class VaInfo implements VaInfoInterface
 
     private function trimAscii(string $string): string
     {
-        return (string)preg_replace('/[\x00-\x1F\x80-\xFF]/', '', trim($string));
+        return (string) preg_replace('/[\x00-\x1F\x80-\xFF]/', '', trim($string));
     }
 }

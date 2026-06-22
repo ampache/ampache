@@ -290,7 +290,7 @@ class Search extends playlist_object
     public static function get_search_array(?int $user_id = null): array
     {
         if ($user_id === null) {
-            $user_id = (int)(Core::get_global('user')?->id);
+            $user_id = (int) (Core::get_global('user')?->id);
         }
 
         $key = 'searcharray';
@@ -330,7 +330,7 @@ class Search extends playlist_object
     public static function get_searches(?int $user_id = null): array
     {
         if ($user_id === null) {
-            $user_id = (int)(Core::get_global('user')?->id);
+            $user_id = (int) (Core::get_global('user')?->id);
         }
 
         $key = 'searches';
@@ -353,7 +353,7 @@ class Search extends playlist_object
         $results    = [];
         while ($row = Dba::fetch_assoc($db_results)) {
             $results[] = [
-                'id' => (int)$row['id'],
+                'id' => (int) $row['id'],
                 'name' => $row['name']
             ];
         }
@@ -377,7 +377,7 @@ class Search extends playlist_object
         $song_ids = [];
         foreach ($songs as $objects) {
             $song_ids[] = (is_array($objects))
-                ? (string)$objects['object_id']
+                ? (string) $objects['object_id']
                 : $objects;
         }
 
@@ -391,7 +391,7 @@ class Search extends playlist_object
         $db_results = Dba::read($sql);
         $row        = Dba::fetch_row($db_results);
 
-        return (int)($row[0] ?? 0);
+        return (int) ($row[0] ?? 0);
     }
 
     /**
@@ -407,9 +407,9 @@ class Search extends playlist_object
      */
     public static function prepare(array $data, ?User $user = null, bool $require_rules = false): array
     {
-        $limit  = (int)($data['limit'] ?? 0);
-        $offset = (int)($data['offset'] ?? 0);
-        $random = ((int)($data['random'] ?? 0) > 0) ? 1 : 0;
+        $limit  = (int) ($data['limit'] ?? 0);
+        $offset = (int) ($data['offset'] ?? 0);
+        $random = ((int) ($data['random'] ?? 0) > 0) ? 1 : 0;
         $search = new Search(0, $data['type'], $user);
 
         if ($data['weight'] ?? false) {
@@ -476,11 +476,11 @@ class Search extends playlist_object
      */
     public static function query(array $search_sql): array
     {
-        $db_results = Dba::read((string)$search_sql['sql'], $search_sql['parameters']);
+        $db_results = Dba::read((string) $search_sql['sql'], $search_sql['parameters']);
         $num_rows   = Dba::num_rows($db_results);
         $results    = [];
         while ($row = Dba::fetch_assoc($db_results)) {
-            $results[] = (int)$row['id'];
+            $results[] = (int) $row['id'];
         }
 
         return [
@@ -501,10 +501,10 @@ class Search extends playlist_object
     public static function run(array $data, ?User $user = null, bool $require_rules = false): array
     {
         $search_sql = self::prepare($data, $user, $require_rules);
-        $db_results = Dba::read((string)$search_sql['sql'], $search_sql['parameters']);
+        $db_results = Dba::read((string) $search_sql['sql'], $search_sql['parameters']);
         $results    = [];
         while ($row = Dba::fetch_assoc($db_results)) {
-            $results[] = (int)$row['id'];
+            $results[] = (int) $row['id'];
         }
 
         return $results;
@@ -576,7 +576,7 @@ class Search extends playlist_object
             return null;
         }
 
-        $this->id = (int)$insert_id;
+        $this->id = (int) $insert_id;
         Catalog::count_table('search');
 
         return $insert_id;
@@ -620,7 +620,7 @@ class Search extends playlist_object
         }
 
         if ($type == 'numeric' || $type == 'days') {
-            return (int)($data);
+            return (int) ($data);
         }
 
         if ($type == 'boolean') {
@@ -879,7 +879,7 @@ class Search extends playlist_object
 
         $db_results = Dba::read($sql, $sqltbl['parameters']);
         while ($row = Dba::fetch_assoc($db_results)) {
-            $results[] = (int)$row['id'];
+            $results[] = (int) $row['id'];
         }
 
         return $results;
@@ -989,19 +989,19 @@ class Search extends playlist_object
     public function set_rules(array $data): void
     {
         if (isset($data['playlist_name'])) {
-            $this->name = (string)$data['playlist_name'];
+            $this->name = (string) $data['playlist_name'];
         }
 
         if (isset($data['playlist_type'])) {
-            $this->type = (string)$data['playlist_type'];
+            $this->type = (string) $data['playlist_type'];
         }
 
         if (isset($data['catalog_id'])) {
-            $this->catalog_id = (int)$data['catalog_id'];
+            $this->catalog_id = (int) $data['catalog_id'];
         }
 
         // check that a limit or random flag and operator have been sent
-        $this->random = (isset($data['random'])) ? (int)$data['random'] : $this->random;
+        $this->random = (isset($data['random'])) ? (int) $data['random'] : $this->random;
         $this->limit  = (isset($data['limit'])) ? (int) $data['limit'] : $this->limit;
         // the rules array needs to be filtered to just have rules
         $data                 = $this->_filter_request($data);
@@ -1023,7 +1023,7 @@ class Search extends playlist_object
                 continue;
             }
 
-            $rule_input    = (string)($data['rule_' . $ruleID . '_input'] ?? '');
+            $rule_input    = (string) ($data['rule_' . $ruleID . '_input'] ?? '');
             $rule_operator = $this->get_basetypes()[$rule_type][$data['rule_' . $ruleID . '_operator']]['name'] ?? '';
             // keep vertical bar in regular expression
             $is_regex = in_array($rule_operator, ['regexp', 'notregexp']);
@@ -1111,7 +1111,7 @@ class Search extends playlist_object
         $request = [];
         foreach ($data as $key => $value) {
             $prefix = substr($key, 0, 4);
-            $value  = (string)$value;
+            $value  = (string) $value;
 
             if ($prefix == 'rule' && strlen($value)) {
                 $request[$key] = Dba::escape($value);
@@ -1133,7 +1133,7 @@ class Search extends playlist_object
         }
 
         if (array_key_exists('random', $data)) {
-            $request['random'] = (int)$data['random'];
+            $request['random'] = (int) $data['random'];
         }
 
         // Verify the type

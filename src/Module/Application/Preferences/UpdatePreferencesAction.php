@@ -46,8 +46,7 @@ final readonly class UpdatePreferencesAction implements ApplicationActionInterfa
         private PreferencesFromRequestUpdaterInterface $preferencesFromRequestUpdater,
         private UiInterface $ui,
         private RequestParserInterface $requestParser,
-    ) {
-    }
+    ) {}
 
     public function run(ServerRequestInterface $request, GuiGatekeeperInterface $gatekeeper): ?ResponseInterface
     {

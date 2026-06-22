@@ -69,7 +69,7 @@ class Userflag extends database_object
         ?int $object_id,
         string $type,
     ) {
-        $this->id   = (int)($object_id);
+        $this->id   = (int) ($object_id);
         $this->type = $type;
     }
 
@@ -193,7 +193,7 @@ class Userflag extends database_object
         $db_results = Dba::read($sql);
         $results    = [];
         while ($row = Dba::fetch_assoc($db_results)) {
-            $results[] = (int)$row['id'];
+            $results[] = (int) $row['id'];
         }
 
         return $results;
@@ -340,12 +340,12 @@ class Userflag extends database_object
 
             if ($get_date) {
                 return [
-                    (bool)$object[0],
-                    (int)$object[1],
+                    (bool) $object[0],
+                    (int) $object[1],
                 ];
             }
 
-            return (bool)$object[0];
+            return (bool) $object[0];
         }
 
         $flagged    = false;
@@ -353,11 +353,11 @@ class Userflag extends database_object
         $db_results = Dba::read($sql, [$user_id, $this->id, $this->type]);
         if ($row = Dba::fetch_assoc($db_results)) {
             // always cache the date in case it's called by subsonic
-            parent::add_to_cache($key, $this->id, [true, (int)$row['date']]);
+            parent::add_to_cache($key, $this->id, [true, (int) $row['date']]);
             if ($get_date) {
                 return [
                     true,
-                    (int)$row['date']
+                    (int) $row['date']
                 ];
             }
 

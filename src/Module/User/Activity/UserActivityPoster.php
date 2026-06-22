@@ -34,8 +34,7 @@ final readonly class UserActivityPoster implements UserActivityPosterInterface
     public function __construct(
         private ActivityTypeHandlerMapperInterface $activityTypeHandlerMapper,
         private LoggerInterface $logger,
-    ) {
-    }
+    ) {}
 
     /**
      * Registers a certain user action for certain object types

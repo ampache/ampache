@@ -40,7 +40,7 @@ $max_upload_size = AmpConfig::get('max_upload_size'); ?>
     <table class="tabledata">
         <tr>
             <td><?php echo T_('Username'); ?>: *</td>
-            <td><input type="text" name="username" maxlength="128" value="<?php echo scrub_out((string)filter_input(INPUT_POST, 'username', FILTER_SANITIZE_SPECIAL_CHARS, FILTER_FLAG_NO_ENCODE_QUOTES)); ?>" />
+            <td><input type="text" name="username" maxlength="128" value="<?php echo scrub_out((string) filter_input(INPUT_POST, 'username', FILTER_SANITIZE_SPECIAL_CHARS, FILTER_FLAG_NO_ENCODE_QUOTES)); ?>" />
                 <?php echo AmpError::display('username'); ?>
             </td>
         </tr>
@@ -62,7 +62,7 @@ $max_upload_size = AmpConfig::get('max_upload_size'); ?>
         </tr>
         <tr>
             <td><?php echo T_('E-mail'); ?>: *</td>
-            <td><input type="text" name="email" maxlength="128" value="<?php echo scrub_out((string)filter_input(INPUT_POST, 'email', FILTER_SANITIZE_EMAIL)); ?>" />
+            <td><input type="text" name="email" maxlength="128" value="<?php echo scrub_out((string) filter_input(INPUT_POST, 'email', FILTER_SANITIZE_EMAIL)); ?>" />
                 <?php echo AmpError::display('email'); ?>
             </td>
         </tr>

@@ -34,9 +34,7 @@ use Ampache\Repository\Model\AlbumDisk;
  */
 final readonly class AlbumDiskRepository implements AlbumDiskRepositoryInterface
 {
-    public function __construct(private DatabaseConnectionInterface $connection)
-    {
-    }
+    public function __construct(private DatabaseConnectionInterface $connection) {}
 
     /**
      * Returns the disks for an album

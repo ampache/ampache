@@ -500,7 +500,7 @@ class SongViewAdapterTest extends MockeryTestCase
         $this->song->track = $trackNumber;
 
         $this->assertSame(
-            (string)$trackNumber,
+            (string) $trackNumber,
             $this->subject->getTrackNumber()
         );
     }

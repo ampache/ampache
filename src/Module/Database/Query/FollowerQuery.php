@@ -85,7 +85,7 @@ final class FollowerQuery implements QueryInterface
         $filter_sql = '';
 
         return match ($filter) {
-            'follow_user', 'user' => sprintf(" `user_follower`.`%s` = '", $filter) . (int)$value . "' AND ",
+            'follow_user', 'user' => sprintf(" `user_follower`.`%s` = '", $filter) . (int) $value . "' AND ",
             default => $filter_sql,
         };
     }

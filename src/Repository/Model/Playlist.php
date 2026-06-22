@@ -104,7 +104,7 @@ class Playlist extends playlist_object
         $db_results = Dba::read($sql, [$name, $user_id, $type]);
 
         while ($row = Dba::fetch_assoc($db_results)) {
-            $results[] = (int)$row['id'];
+            $results[] = (int) $row['id'];
         }
 
         // return the duplicate ID
@@ -149,7 +149,7 @@ class Playlist extends playlist_object
 
         Catalog::count_table('playlist');
 
-        return (int)$insert_id;
+        return (int) $insert_id;
     }
 
     /**
@@ -258,7 +258,7 @@ class Playlist extends playlist_object
         }
 
         if (!$includeHidden) {
-            $hide_string = str_replace('%', '\%', str_replace('_', '\_', (string)Preference::get_by_user($user_id, 'api_hidden_playlists')));
+            $hide_string = str_replace('%', '\%', str_replace('_', '\_', (string) Preference::get_by_user($user_id, 'api_hidden_playlists')));
             if (!empty($hide_string)) {
                 $sql .= $join . ' `name` NOT LIKE \'' . Dba::escape($hide_string) . "%' ";
             }
@@ -270,7 +270,7 @@ class Playlist extends playlist_object
         $db_results = Dba::read($sql, $params);
         $results    = [];
         while ($row = Dba::fetch_assoc($db_results)) {
-            $results[] = (int)$row['id'];
+            $results[] = (int) $row['id'];
         }
 
         if (
@@ -312,13 +312,13 @@ class Playlist extends playlist_object
         $sql        = "SELECT MAX(`track`) AS `track` FROM `playlist_data` WHERE `playlist` = ? ";
         $db_results = Dba::read($sql, [$this->id]);
         $row        = Dba::fetch_assoc($db_results);
-        $base_track = (int)($row['track'] ?? 0);
+        $base_track = (int) ($row['track'] ?? 0);
         $count      = 0;
         $sql        = "REPLACE INTO `playlist_data` (`playlist`, `object_id`, `object_type`, `track`) VALUES ";
         $values     = [];
         foreach ($medias as $data) {
             $object_type = (is_string($data['object_type']))
-                ? LibraryItemEnum::tryFrom((string)$data['object_type'])
+                ? LibraryItemEnum::tryFrom((string) $data['object_type'])
                 : $data['object_type'];
             if ($unique && in_array($data['object_id'], $track_data)) {
                 debug_event(self::class, "Can't add a duplicate " . $object_type?->value . " (" . $data['object_id'] . ") when unique_playlist is enabled", 3);
@@ -354,7 +354,7 @@ class Playlist extends playlist_object
         foreach ($song_ids as $song_id) {
             $medias[] = [
                 'object_type' => LibraryItemEnum::SONG,
-                'object_id' => (int)$song_id,
+                'object_id' => (int) $song_id,
             ];
         }
 
@@ -516,9 +516,9 @@ class Playlist extends playlist_object
             while ($row = Dba::fetch_assoc($db_results)) {
                 $results[] = [
                     'object_type' => LibraryItemEnum::from($row['object_type']),
-                    'object_id' => (int)$row['object_id'],
+                    'object_id' => (int) $row['object_id'],
                     'track_id' => $row['id'],
-                    'track' => (int)$row['track']
+                    'track' => (int) $row['track']
                 ];
             }
         }
@@ -590,7 +590,7 @@ class Playlist extends playlist_object
             return 0;
         }
 
-        return (int)$row['list_count'];
+        return (int) $row['list_count'];
     }
 
     /**
@@ -643,8 +643,8 @@ class Playlist extends playlist_object
             while ($row = Dba::fetch_assoc($db_results)) {
                 $results[] = [
                     'object_type' => LibraryItemEnum::from($row['object_type']),
-                    'object_id' => (int)$row['object_id'],
-                    'track' => (int)$row['track'],
+                    'object_id' => (int) $row['object_id'],
+                    'track' => (int) $row['track'],
                     'track_id' => $row['id']
                 ];
             }
@@ -685,7 +685,7 @@ class Playlist extends playlist_object
         //debug_event(self::class, "get_songs(): " . $sql . ' ' . print_r($params, true), 5);
 
         while ($row = Dba::fetch_assoc($db_results)) {
-            $results[] = (int)$row['object_id'];
+            $results[] = (int) $row['object_id'];
         }
 
         return $results;
@@ -764,17 +764,17 @@ class Playlist extends playlist_object
         $db_results = Dba::read($sql, [$playlist_user]);
         while ($row = Dba::fetch_assoc($db_results)) {
             if ($row['name'] == $this->name) {
-                return (int)$row['id'];
+                return (int) $row['id'];
             }
         }
 
         // look for public ones
-        $user_id    = (int)(Core::get_global('user')?->getId());
+        $user_id    = (int) (Core::get_global('user')?->getId());
         $sql        = "SELECT `id`, `name` FROM `search` WHERE (`type`='public' OR `user` = ?)";
         $db_results = Dba::read($sql, [$user_id]);
         while ($row = Dba::fetch_assoc($db_results)) {
             if ($row['name'] == $this->name) {
-                return (int)$row['id'];
+                return (int) $row['id'];
             }
         }
 
@@ -791,7 +791,7 @@ class Playlist extends playlist_object
         $tracks = Dba::read($sql, [$this->id]);
 
         while ($row = Dba::fetch_assoc($tracks)) {
-            $this->update_track_number((int)$row['id'], $index);
+            $this->update_track_number((int) $row['id'], $index);
             ++$index;
         }
 

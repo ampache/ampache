@@ -50,7 +50,7 @@ final class RandomAction extends AbstractStreamAction
             return null;
         }
 
-        $randomId   = (int)($request->getQueryParams()['random_id'] ?? 0);
+        $randomId   = (int) ($request->getQueryParams()['random_id'] ?? 0);
         $randomType = $request->getQueryParams()['random_type'] ?? 'song';
         $urls       = [Random::get_play_url($randomType, $randomId)];
 

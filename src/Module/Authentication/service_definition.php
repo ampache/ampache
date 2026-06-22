@@ -37,7 +37,7 @@ use function DI\factory;
 use Psr\Container\ContainerInterface;
 
 return [
-    AuthenticationManagerInterface::class => factory(static fn (ContainerInterface $dic): AuthenticationManagerInterface => new AuthenticationManager(
+    AuthenticationManagerInterface::class => factory(static fn(ContainerInterface $dic): AuthenticationManagerInterface => new AuthenticationManager(
         $dic->get(ConfigContainerInterface::class),
         [
             'mysql' => $dic->get(DatabaseAuthenticator::class),

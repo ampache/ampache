@@ -35,8 +35,7 @@ final readonly class UserFollowerRepository implements UserFollowerRepositoryInt
 {
     public function __construct(
         private DatabaseConnectionInterface $connection,
-    ) {
-    }
+    ) {}
 
     /**
      * Adds an entry for a user following another user

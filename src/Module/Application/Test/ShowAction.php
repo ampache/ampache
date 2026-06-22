@@ -44,8 +44,7 @@ final readonly class ShowAction implements ApplicationActionInterface
     public function __construct(
         private ConfigContainerInterface $configContainer,
         private ResponseFactoryInterface $responseFactory,
-    ) {
-    }
+    ) {}
 
     /**
      * @throws Exception

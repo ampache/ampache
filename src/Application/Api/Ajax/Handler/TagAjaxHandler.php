@@ -41,8 +41,7 @@ final readonly class TagAjaxHandler implements AjaxHandlerInterface
         private RequestParserInterface $requestParser,
         private LabelRepositoryInterface $labelRepository,
         private PrivilegeCheckerInterface $privilegeChecker,
-    ) {
-    }
+    ) {}
 
     public function handle(User $user): void
     {

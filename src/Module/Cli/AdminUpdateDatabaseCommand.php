@@ -87,7 +87,7 @@ final class AdminUpdateDatabaseCommand extends Command
 
         // check tables
         try {
-            $build   = (int)$this->updateInfoRepository->getValueByKey(UpdateInfoEnum::DB_VERSION);
+            $build   = (int) $this->updateInfoRepository->getValueByKey(UpdateInfoEnum::DB_VERSION);
             $missing = $this->updater->checkTables($execute, $build);
             if ($missing->valid()) {
                 $message = ($execute)
@@ -222,7 +222,7 @@ final class AdminUpdateDatabaseCommand extends Command
     {
         $this->option('-h, --help', T_('Help'))->on($this->showHelp(...));
 
-        $this->onExit(static fn ($exitCode = 0) => exit($exitCode));
+        $this->onExit(static fn($exitCode = 0) => exit($exitCode));
 
         return $this;
     }

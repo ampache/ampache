@@ -29,9 +29,7 @@ use Ampache\Config\ConfigContainerInterface;
 
 final readonly class AjaxUriRetriever implements AjaxUriRetrieverInterface
 {
-    public function __construct(private ConfigContainerInterface $configContainer)
-    {
-    }
+    public function __construct(private ConfigContainerInterface $configContainer) {}
 
     public function getAjaxServerUri(): string
     {

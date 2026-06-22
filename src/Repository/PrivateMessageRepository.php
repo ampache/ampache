@@ -40,8 +40,7 @@ final readonly class PrivateMessageRepository implements PrivateMessageRepositor
     public function __construct(
         private ModelFactoryInterface $modelFactory,
         private DatabaseConnectionInterface $connection,
-    ) {
-    }
+    ) {}
 
     /**
      * Clear old messages from the subsonic chat message list.

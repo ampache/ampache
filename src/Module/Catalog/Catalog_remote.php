@@ -91,7 +91,7 @@ class Catalog_remote extends Catalog
                 $this->$key = $value;
             }
 
-            $this->catalog_id = (int)$catalog_id;
+            $this->catalog_id = (int) $catalog_id;
         }
     }
 
@@ -194,8 +194,8 @@ class Catalog_remote extends Catalog
         }
 
         $remote       = AmpConfig::get('cache_remote');
-        $cache_path   = (string)AmpConfig::get('cache_path', '');
-        $cache_target = (string)AmpConfig::get('cache_target', '');
+        $cache_path   = (string) AmpConfig::get('cache_path', '');
+        $cache_target = (string) AmpConfig::get('cache_target', '');
         // need a destination, source and target format
         if (!is_dir($cache_path) || !$remote || !$cache_target) {
             debug_event('remote.catalog', 'Check your cache_path cache_target and cache_remote settings', 5);
@@ -203,8 +203,8 @@ class Catalog_remote extends Catalog
             return false;
         }
 
-        $max_bitrate   = (int)AmpConfig::get('max_bit_rate', 128);
-        $user_bit_rate = (int)AmpConfig::get('transcode_bitrate', 128);
+        $max_bitrate   = (int) AmpConfig::get('max_bit_rate', 128);
+        $user_bit_rate = (int) AmpConfig::get('transcode_bitrate', 128);
 
         // If the user's crazy, that's no skin off our back
         if ($user_bit_rate > $max_bitrate) {
@@ -294,9 +294,9 @@ class Catalog_remote extends Catalog
             $db_results = Dba::read($sql, [$this->uri . '/play/index.php?%&type=song%&oid=' . $remote_id . '&%']);
             if ($results = Dba::fetch_assoc($db_results)) {
                 Dba::write('UPDATE `song` SET `file` = ? WHERE `id` = ?', [$db_file, $results['id']]);
-                Song::update_song_map([$remote_id], 'remote_' . $this->catalog_id, (int)$results['id']);
+                Song::update_song_map([$remote_id], 'remote_' . $this->catalog_id, (int) $results['id']);
 
-                return (int)$results['id'];
+                return (int) $results['id'];
             }
         }
 
@@ -308,7 +308,7 @@ class Catalog_remote extends Catalog
             if ($results = Dba::fetch_assoc($db_results)) {
                 Dba::write('UPDATE `song` SET `file` = ? WHERE `id` = ?', [$db_file, $results['id']]);
 
-                return (int)$results['id'];
+                return (int) $results['id'];
             }
         }
 
@@ -317,7 +317,7 @@ class Catalog_remote extends Catalog
         $db_results = Dba::read($sql, [$db_file]);
 
         if ($results = Dba::fetch_assoc($db_results)) {
-            return (int)$results['id'];
+            return (int) $results['id'];
         }
 
         return null;
@@ -357,7 +357,7 @@ class Catalog_remote extends Catalog
                 if (
                     $song instanceof SimpleXMLElement &&
                     $song->song &&
-                    ((int)$song->song->attributes()->id) > 0
+                    ((int) $song->song->attributes()->id) > 0
                 ) {
                     debug_event('remote.catalog', 'keeping song', 5);
                 } else {
@@ -374,9 +374,7 @@ class Catalog_remote extends Catalog
         return $dead;
     }
 
-    public function count_scan_folders(?Interactor $interactor = null): void
-    {
-    }
+    public function count_scan_folders(?Interactor $interactor = null): void {}
 
     /**
      * get_create_help
@@ -449,7 +447,7 @@ class Catalog_remote extends Catalog
         if (
             $song instanceof SimpleXMLElement &&
             $song->song &&
-            ((int)$song->song->attributes()->id) > 0
+            ((int) $song->song->attributes()->id) > 0
         ) {
             $results = $this->_gather_tags($song->song);
         }
@@ -666,7 +664,7 @@ class Catalog_remote extends Catalog
             return null;
         }
 
-        $remote_id = (int)($song->attributes()->id ?? 0);
+        $remote_id = (int) ($song->attributes()->id ?? 0);
         if (!$remote_id) {
             return null;
         }
@@ -683,26 +681,26 @@ class Catalog_remote extends Catalog
             $song_tags = $tags->song_tag;
             $data      = [];
             foreach ($song_tags->children() as $name => $value) {
-                $key = (string)$name;
+                $key = (string) $name;
                 if (count($song_tags->$name) > 1) {
                     // Key in XML multiple times so it's an array
                     if (!is_array($data[$key])) {
                         $data[$key] = [];
                     }
 
-                    if ((string)$value !== '' && (string)$value !== '0') {
-                        $data[$key][] = (string)$value;
+                    if ((string) $value !== '' && (string) $value !== '0') {
+                        $data[$key][] = (string) $value;
                     }
                 } else {
                     // single value
-                    $data[$key] = ((string)$value === '' || (string)$value === '0')
+                    $data[$key] = ((string) $value === '' || (string) $value === '0')
                         ? null
-                        : (string)$value;
+                        : (string) $value;
                 }
             }
 
             $data['catalog'] = $this->catalog_id;
-            $data['file']    = (string)$song->filename;
+            $data['file']    = (string) $song->filename;
 
             if (is_string($data['artists'])) {
                 $data['artists'] = (empty($data['artists']))
@@ -733,27 +731,27 @@ class Catalog_remote extends Catalog
 
             $genres = [];
             foreach ($song->genre as $genre) {
-                $genres[] = (string)$genre->name;
+                $genres[] = (string) $genre->name;
             }
 
             $albumartistids = [];
             $albumartists   = [];
             foreach ($song->albumartist as $albumartist) {
-                $albumartistids[] = (string)$albumartist->attributes()->id;
-                $albumartists[]   = (string)$albumartist->name;
+                $albumartistids[] = (string) $albumartist->attributes()->id;
+                $albumartists[]   = (string) $albumartist->name;
             }
 
             $artistids = [];
             $artists   = [];
             foreach ($song->artist as $artist) {
-                $artistids[] = (string)$artist->attributes()->id;
-                $artists[]   = (string)$artist->name;
+                $artistids[] = (string) $artist->attributes()->id;
+                $artists[]   = (string) $artist->name;
             }
 
-            $albumid = (property_exists($song, 'album') && $song->album !== null) ? (int)$song->album->attributes()->id : null;
+            $albumid = (property_exists($song, 'album') && $song->album !== null) ? (int) $song->album->attributes()->id : null;
             $album   = ($albumid) ? $this->remote_handle->send_command(self::CMD_ALBUM, ['filter' => $albumid]) : null;
 
-            $album_data = (object)[];
+            $album_data = (object) [];
             if (
                 $album instanceof SimpleXMLElement &&
                 $album->album->count() > 0
@@ -761,8 +759,8 @@ class Catalog_remote extends Catalog
                 $albumartistids = [];
                 $album_data     = $album->album;
                 foreach ($album_data->albumartist as $albumartist) {
-                    $albumartistids[] = (string)$albumartist->attributes()->id;
-                    $albumartists[]   = (string)$albumartist->name;
+                    $albumartistids[] = (string) $albumartist->attributes()->id;
+                    $albumartists[]   = (string) $albumartist->name;
                 }
             }
 
@@ -778,7 +776,7 @@ class Catalog_remote extends Catalog
                     $mb_artistid = (isset($artist_data[0])) ? $artist_data[0]->mbid : null;
                     foreach ($artist_data->artist as $artist) {
                         if (!empty($artist->mbid)) {
-                            $mb_artistid_array[] = (string)$artist->mbid;
+                            $mb_artistid_array[] = (string) $artist->mbid;
                         }
                     }
                 }
@@ -796,7 +794,7 @@ class Catalog_remote extends Catalog
                     $mb_albumartistid = (isset($artist_data[0])) ? $artist_data[0]->mbid : null;
                     foreach ($artist_data->artist as $artist) {
                         if (!empty($artist->mbid)) {
-                            $mb_albumartistid_array[] = (string)$artist->mbid;
+                            $mb_albumartistid_array[] = (string) $artist->mbid;
                         }
                     }
                 }
@@ -805,25 +803,25 @@ class Catalog_remote extends Catalog
             /** @see VaInfo::DEFAULT_INFO */
             $data = [
                 'albumartist' => ($albumartists === []) ? null : $albumartists[0],
-                'album' => (property_exists($song, 'album') && $song->album !== null) ? (string)$song->album->name : null,
+                'album' => (property_exists($song, 'album') && $song->album !== null) ? (string) $song->album->name : null,
                 'artist' => ($artists === []) ? null : $artists[0],
                 'artists' => $artists,
                 'art' => null,
                 'audio_codec' => null,
                 'barcode' => null,
-                'bitrate' => (property_exists($song, 'bitrate') && $song->bitrate !== null) ? (string)$song->bitrate : null,
+                'bitrate' => (property_exists($song, 'bitrate') && $song->bitrate !== null) ? (string) $song->bitrate : null,
                 'catalog_number' => null,
                 'catalog' => $this->catalog_id,
-                'channels' => (property_exists($song, 'channels') && $song->channels !== null) ? (string)$song->channels : null,
-                'comment' => (property_exists($song, 'comment') && $song->comment !== null) ? (string)$song->comment : null,
-                'composer' => (property_exists($song, 'composer') && $song->composer !== null) ? (string)$song->composer : null,
+                'channels' => (property_exists($song, 'channels') && $song->channels !== null) ? (string) $song->channels : null,
+                'comment' => (property_exists($song, 'comment') && $song->comment !== null) ? (string) $song->comment : null,
+                'composer' => (property_exists($song, 'composer') && $song->composer !== null) ? (string) $song->composer : null,
                 'description' => null,
-                'disk' => (property_exists($song, 'disk') && $song->disk !== null) ? (string)$song->disk : null,
-                'disksubtitle' => (property_exists($song, 'disksubtitle') && $song->disksubtitle !== null) ? (string)$song->disksubtitle : null,
+                'disk' => (property_exists($song, 'disk') && $song->disk !== null) ? (string) $song->disk : null,
+                'disksubtitle' => (property_exists($song, 'disksubtitle') && $song->disksubtitle !== null) ? (string) $song->disksubtitle : null,
                 'display_x' => null,
                 'display_y' => null,
                 'encoding' => null,
-                'file' => (string)$song->filename,
+                'file' => (string) $song->filename,
                 'frame_rate' => null,
                 'genre' => $genres,
                 'isrc' => null,
@@ -831,40 +829,40 @@ class Catalog_remote extends Catalog
                 'lyrics' => null,
                 'mb_albumartistid' => $mb_albumartistid,
                 'mb_albumartistid_array' => (empty($mb_albumartistid_array)) ? null : $mb_albumartistid_array,
-                'mb_albumid_group' => (isset($album_data->mbid_group)) ? (string)$album_data->mbid_group : null,
-                'mb_albumid' => (isset($album_data->mbid)) ? (string)$album_data->mbid : null,
+                'mb_albumid_group' => (isset($album_data->mbid_group)) ? (string) $album_data->mbid_group : null,
+                'mb_albumid' => (isset($album_data->mbid)) ? (string) $album_data->mbid : null,
                 'mb_artistid' => $mb_artistid,
                 'mb_artistid_array' => (empty($mb_artistid_array)) ? null : $mb_artistid_array,
-                'mb_trackid' => (property_exists($song, 'mbid') && $song->mbid !== null) ? (string)$song->mbid : null,
-                'mime' => (property_exists($song, 'mime') && $song->mime !== null) ? (string)$song->mime : null,
-                'mode' => (property_exists($song, 'mode') && $song->mode !== null) ? (string)$song->mode : null,
+                'mb_trackid' => (property_exists($song, 'mbid') && $song->mbid !== null) ? (string) $song->mbid : null,
+                'mime' => (property_exists($song, 'mime') && $song->mime !== null) ? (string) $song->mime : null,
+                'mode' => (property_exists($song, 'mode') && $song->mode !== null) ? (string) $song->mode : null,
                 'original_name' => null,
                 'original_year' => null,
-                'publisher' => (property_exists($song, 'publisher') && $song->publisher !== null) ? (string)$song->publisher : null,
-                'r128_album_gain' => (property_exists($song, 'r128_album_gain') && $song->r128_album_gain !== null) ? (string)$song->r128_album_gain : null,
-                'r128_track_gain' => (property_exists($song, 'r128_track_gain') && $song->r128_track_gain !== null) ? (string)$song->r128_track_gain : null,
-                'rate' => (property_exists($song, 'rate') && $song->rate !== null) ? (string)$song->rate : null,
+                'publisher' => (property_exists($song, 'publisher') && $song->publisher !== null) ? (string) $song->publisher : null,
+                'r128_album_gain' => (property_exists($song, 'r128_album_gain') && $song->r128_album_gain !== null) ? (string) $song->r128_album_gain : null,
+                'r128_track_gain' => (property_exists($song, 'r128_track_gain') && $song->r128_track_gain !== null) ? (string) $song->r128_track_gain : null,
+                'rate' => (property_exists($song, 'rate') && $song->rate !== null) ? (string) $song->rate : null,
                 'rating' => null,
                 'release_date' => null,
                 'release_status' => null,
                 'release_type' => null,
-                'replaygain_album_gain' => (property_exists($song, 'replaygain_album_gain') && $song->replaygain_album_gain !== null) ? (string)$song->replaygain_album_gain : null,
-                'replaygain_album_peak' => (property_exists($song, 'replaygain_album_peak') && $song->replaygain_album_peak !== null) ? (string)$song->replaygain_album_peak : null,
-                'replaygain_track_gain' => (property_exists($song, 'replaygain_track_gain') && $song->replaygain_track_gain !== null) ? (string)$song->replaygain_track_gain : null,
-                'replaygain_track_peak' => (property_exists($song, 'replaygain_track_peak') && $song->replaygain_track_peak !== null) ? (string)$song->replaygain_track_peak : null,
+                'replaygain_album_gain' => (property_exists($song, 'replaygain_album_gain') && $song->replaygain_album_gain !== null) ? (string) $song->replaygain_album_gain : null,
+                'replaygain_album_peak' => (property_exists($song, 'replaygain_album_peak') && $song->replaygain_album_peak !== null) ? (string) $song->replaygain_album_peak : null,
+                'replaygain_track_gain' => (property_exists($song, 'replaygain_track_gain') && $song->replaygain_track_gain !== null) ? (string) $song->replaygain_track_gain : null,
+                'replaygain_track_peak' => (property_exists($song, 'replaygain_track_peak') && $song->replaygain_track_peak !== null) ? (string) $song->replaygain_track_peak : null,
                 'resolution_x' => null,
                 'resolution_y' => null,
-                'size' => (property_exists($song, 'size') && $song->size !== null) ? (string)$song->size : null,
+                'size' => (property_exists($song, 'size') && $song->size !== null) ? (string) $song->size : null,
                 'version' => null,
                 'summary' => null,
-                'time' => (property_exists($song, 'time') && $song->time !== null) ? (string)$song->time : null,
-                'title' => (property_exists($song, 'title') && $song->title !== null) ? (string)$song->title : null,
+                'time' => (property_exists($song, 'time') && $song->time !== null) ? (string) $song->time : null,
+                'title' => (property_exists($song, 'title') && $song->title !== null) ? (string) $song->title : null,
                 'totaldisks' => null,
                 'totaltracks' => null,
-                'track' => (property_exists($song, 'track') && $song->track !== null) ? (string)$song->track : null,
+                'track' => (property_exists($song, 'track') && $song->track !== null) ? (string) $song->track : null,
                 'video_bitrate' => null,
                 'video_codec' => null,
-                'year' => (property_exists($song, 'year') && $song->year !== null) ? (string)$song->year : null,
+                'year' => (property_exists($song, 'year') && $song->year !== null) ? (string) $song->year : null,
             ];
 
             // If we don't have an album artist, use the artist
@@ -914,12 +912,12 @@ class Catalog_remote extends Catalog
             sprintf(nT_('%s song was found', '%s songs were found', $total), $total)
         );
 
-        $cache_path   = (string)AmpConfig::get('cache_path', '');
-        $cache_target = (string)AmpConfig::get('cache_target', '');
+        $cache_path   = (string) AmpConfig::get('cache_path', '');
+        $cache_target = (string) AmpConfig::get('cache_target', '');
         $web_path     = AmpConfig::get_web_path();
 
         if (($web_path === '' || $web_path === '0') && !empty(AmpConfig::get('fallback_url'))) {
-            $web_path = rtrim((string)AmpConfig::get('fallback_url'), '/');
+            $web_path = rtrim((string) AmpConfig::get('fallback_url'), '/');
         }
 
         $date = time();
@@ -949,12 +947,12 @@ class Catalog_remote extends Catalog
                         }
 
                         $song_id   = 0;
-                        $remote_id = (string)$song->attributes()->id;
+                        $remote_id = (string) $song->attributes()->id;
 
                         // Update URLS to the current format for remote catalogs
-                        $old_url  = (string)preg_replace('/ssid=[0-9a-z]*&/', '', $song->url);
-                        $db_url   = (string)preg_replace('/ssid=[0-9a-z]*&/', 'client=' . urlencode($web_path) . '&', $song->url);
-                        $db_file  = (string)$song->filename;
+                        $old_url  = (string) preg_replace('/ssid=[0-9a-z]*&/', '', $song->url);
+                        $db_url   = (string) preg_replace('/ssid=[0-9a-z]*&/', 'client=' . urlencode($web_path) . '&', $song->url);
+                        $db_file  = (string) $song->filename;
 
                         if ($db_file === '' || $db_file === '0') {
                             continue;
@@ -987,7 +985,7 @@ class Catalog_remote extends Catalog
                             continue;
                         }
 
-                        $file_target  = ($song_id_check && ($cache_target !== '' && $cache_target !== '0') && $cache_target === (string)$song->stream_format)
+                        $file_target  = ($song_id_check && ($cache_target !== '' && $cache_target !== '0') && $cache_target === (string) $song->stream_format)
                             ? Catalog::get_cache_path($song_id_check, $this->catalog_id, $cache_path, $cache_target)
                             : null;
 
@@ -1051,7 +1049,7 @@ class Catalog_remote extends Catalog
 
                             // update missing art
                             if (
-                                (int)$song->has_art === 1 &&
+                                (int) $song->has_art === 1 &&
                                 $song->art
                             ) {
                                 $current_song = new Song($song_id);
@@ -1101,10 +1099,10 @@ class Catalog_remote extends Catalog
                             continue;
                         }
 
-                        $artist_id = Artist::check((string)$artist->name, (string)$artist->mbid, true);
+                        $artist_id = Artist::check((string) $artist->name, (string) $artist->mbid, true);
                         if (
                             $artist_id &&
-                            (int)$artist->has_art === 1 &&
+                            (int) $artist->has_art === 1 &&
                             $artist->art
                         ) {
                             $art = new Art($artist_id, 'artist');

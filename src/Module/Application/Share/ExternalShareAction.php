@@ -56,8 +56,7 @@ final readonly class ExternalShareAction implements ApplicationActionInterface
         private ResponseFactoryInterface $responseFactory,
         private FunctionCheckerInterface $functionChecker,
         private ShareCreatorInterface $shareCreator,
-    ) {
-    }
+    ) {}
 
     public function run(ServerRequestInterface $request, GuiGatekeeperInterface $gatekeeper): ResponseInterface
     {
@@ -90,7 +89,7 @@ final readonly class ExternalShareAction implements ApplicationActionInterface
         $share_id = $this->shareCreator->create(
             $user,
             $type,
-            (int)$share_id,
+            (int) $share_id,
             true,
             $allow_download,
             $this->configContainer->get(ConfigurationKeyEnum::SHARE_EXPIRE) ?? 7,

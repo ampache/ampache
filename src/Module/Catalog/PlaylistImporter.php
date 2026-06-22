@@ -64,16 +64,16 @@ final class PlaylistImporter
         if (isset($files)) {
             foreach ($files as $file) {
                 $found    = false;
-                $file     = trim((string)$file);
+                $file     = trim((string) $file);
                 $orig     = $file;
                 $url_data = Stream_Url::parse($file);
                 // Check to see if it's a url from this ampache instance
                 if (array_key_exists('id', $url_data) && ($web_path !== '' && $web_path !== '0') && str_starts_with($file, $web_path)) {
                     $sql        = 'SELECT COUNT(*) FROM `song` WHERE `id` = ?';
                     $db_results = Dba::read($sql, [$url_data['id']]);
-                    if (Dba::num_rows($db_results) && (int)$url_data['id'] > 0) {
+                    if (Dba::num_rows($db_results) && (int) $url_data['id'] > 0) {
                         debug_event(self::class, "import_playlist identified: {" . $url_data['id'] . "}", 5);
-                        $songs[$track] = (int)$url_data['id'];
+                        $songs[$track] = (int) $url_data['id'];
                         $track++;
                         $found = true;
                     }
@@ -97,9 +97,9 @@ final class PlaylistImporter
                     $db_results = Dba::read($sql, [$file]);
                     $results    = Dba::fetch_assoc($db_results);
 
-                    if (array_key_exists('id', $results) && (int)($results['id'] ?? 0) > 0) {
-                        debug_event(self::class, "import_playlist identified: {" . (int)$results['id'] . "}", 5);
-                        $songs[$track] = (int)$results['id'];
+                    if (array_key_exists('id', $results) && (int) ($results['id'] ?? 0) > 0) {
+                        debug_event(self::class, "import_playlist identified: {" . (int) $results['id'] . "}", 5);
+                        $songs[$track] = (int) $results['id'];
                         $track++;
                         $found = true;
                     } else {
@@ -111,9 +111,9 @@ final class PlaylistImporter
                             $db_results = Dba::read($sql, [$file]);
                             $results    = Dba::fetch_assoc($db_results);
 
-                            if (array_key_exists('id', $results) && (int)($results['id'] ?? 0) > 0) {
-                                debug_event(self::class, "import_playlist identified: {" . (int)$results['id'] . "}", 5);
-                                $songs[$track] = (int)$results['id'];
+                            if (array_key_exists('id', $results) && (int) ($results['id'] ?? 0) > 0) {
+                                debug_event(self::class, "import_playlist identified: {" . (int) $results['id'] . "}", 5);
+                                $songs[$track] = (int) $results['id'];
                                 $track++;
                                 $found = true;
                             }
@@ -130,7 +130,7 @@ final class PlaylistImporter
                 $import[] = [
                     'track' => $track - 1,
                     'file' => $orig,
-                    'found' => (int)$found
+                    'found' => (int) $found
                 ];
             }
         }
@@ -139,7 +139,7 @@ final class PlaylistImporter
 
         if ($songs !== []) {
             $name        = $pinfo['filename'];
-            $playlist_id = (int)Playlist::create($name, $playlist_type, $user_id);
+            $playlist_id = (int) Playlist::create($name, $playlist_type, $user_id);
 
             if ($playlist_id < 1) {
                 return null;
@@ -170,7 +170,7 @@ final class PlaylistImporter
 
         if ($xml) {
             foreach ($xml->entry as $entry) {
-                $file = trim((string)$entry->ref['href']);
+                $file = trim((string) $entry->ref['href']);
                 if ($file !== '' && $file !== '0') {
                     yield $file;
                 }
@@ -226,7 +226,7 @@ final class PlaylistImporter
         $xml = simplexml_load_string($data);
         if ($xml) {
             foreach ($xml->trackList->track as $track) {
-                $file = trim((string)$track->location);
+                $file = trim((string) $track->location);
                 if ($file !== '' && $file !== '0') {
                     yield $file;
                 }

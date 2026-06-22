@@ -48,8 +48,7 @@ final readonly class AdminUpdatePreferencesAction implements ApplicationActionIn
         private ResponseFactoryInterface $responseFactory,
         private ConfigContainerInterface $configContainer,
         private RequestParserInterface $requestParser,
-    ) {
-    }
+    ) {}
 
     public function run(ServerRequestInterface $request, GuiGatekeeperInterface $gatekeeper): ResponseInterface
     {

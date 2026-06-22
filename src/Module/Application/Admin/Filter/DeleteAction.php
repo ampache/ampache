@@ -38,8 +38,7 @@ final class DeleteAction extends AbstractFilterAction
     public function __construct(
         private readonly UiInterface $ui,
         private readonly ConfigContainerInterface $configContainer,
-    ) {
-    }
+    ) {}
 
     protected function handle(ServerRequestInterface $request): ?ResponseInterface
     {
@@ -49,7 +48,7 @@ final class DeleteAction extends AbstractFilterAction
 
         $this->ui->showHeader();
 
-        $filter_id   = (int)($request->getQueryParams()['filter_id'] ?? 0);
+        $filter_id   = (int) ($request->getQueryParams()['filter_id'] ?? 0);
         $filter_name = scrub_out($request->getQueryParams()['filter_name']);
         /* HINT: The name of the catalog filter */
         $warning_msg = sprintf(T_('This will permanently delete the catalog filter "%s"'), $filter_name) . '<br>' . T_('Users will be reset to the DEFAULT filter.');

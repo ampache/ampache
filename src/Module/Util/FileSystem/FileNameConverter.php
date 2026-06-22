@@ -33,9 +33,7 @@ use Ampache\Repository\Model\Catalog;
 
 final readonly class FileNameConverter implements FileNameConverterInterface
 {
-    public function __construct(private ConfigContainerInterface $configContainer)
-    {
-    }
+    public function __construct(private ConfigContainerInterface $configContainer) {}
 
     public function convert(
         Interactor $interactor,
@@ -83,10 +81,10 @@ final readonly class FileNameConverter implements FileNameConverterInterface
     private function charset_clean_name(string $string): string
     {
         /* First remove any / or \ chars */
-        $clean_string = (string)preg_replace('/[\/\\\]/', '-', $string);
+        $clean_string = (string) preg_replace('/[\/\\\]/', '-', $string);
         $clean_string = str_replace(':', ' ', $clean_string);
 
-        return (string)preg_replace('/[\!\:\*]/', '_', $clean_string);
+        return (string) preg_replace('/[\!\:\*]/', '_', $clean_string);
     }
 
     /**

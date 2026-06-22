@@ -167,7 +167,7 @@ class Ampachelibrefm extends AmpachePlugin implements PluginSaveMediaplayInterfa
         $scrobbler = new Scrobbler($this->api_key, $this->scheme, $this->api_host, $this->challenge, $this->secret);
 
         // Check to see if the scrobbling works by queueing song
-        if (!$scrobbler->queue_track($song->get_parent_fullname(), $song->get_album_fullname(), (string)$song->title, time(), $song->time, (int)$song->track)) {
+        if (!$scrobbler->queue_track($song->get_parent_fullname(), $song->get_album_fullname(), (string) $song->title, time(), $song->time, (int) $song->track)) {
             return false;
         }
 
@@ -198,7 +198,7 @@ class Ampachelibrefm extends AmpachePlugin implements PluginSaveMediaplayInterfa
 
         // Create our scrobbler and then queue it
         $scrobbler = new Scrobbler($this->api_key, $this->scheme, $this->api_host, $this->challenge, $this->secret);
-        if (!in_array($song->get_parent_fullname(), ['', '0'], true) && !$scrobbler->love($flagged, $song->get_parent_fullname(), (string)$song->title)) {
+        if (!in_array($song->get_parent_fullname(), ['', '0'], true) && !$scrobbler->love($flagged, $song->get_parent_fullname(), (string) $song->title)) {
             debug_event(self::class, 'Error Love Failed: ' . $scrobbler->error_msg, 3);
 
             return;
@@ -240,7 +240,7 @@ class Ampachelibrefm extends AmpachePlugin implements PluginSaveMediaplayInterfa
             Preference::rename('librefm_pass', 'librefm_md5_pass');
         }
 
-        if ($from_version < (int)$this->version) {
+        if ($from_version < (int) $this->version) {
             Preference::delete('librefm_md5_pass');
             Preference::delete('librefm_user');
             Preference::delete('librefm_url');

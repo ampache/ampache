@@ -58,7 +58,7 @@ $web_path = AmpConfig::get_web_path();
 $show_direct_play  = AmpConfig::get('directplay');
 $show_playlist_add = Access::check(AccessTypeEnum::INTERFACE, AccessLevelEnum::USER);
 $show_similar      = AmpConfig::get('show_similar');
-$directplay_limit  = (int)AmpConfig::get('direct_play_limit', 500);
+$directplay_limit  = (int) AmpConfig::get('direct_play_limit', 500);
 $use_label         = AmpConfig::get('label');
 $use_wanted        = AmpConfig::get('wanted');
 $is_album_type     = $object_type == 'album' || $object_type == 'album_disk';
@@ -71,7 +71,7 @@ if ($directplay_limit > 0) {
 }
 
 $current_user = Core::get_global('user');
-$f_name       = (string)$artist->get_fullname();
+$f_name       = (string) $artist->get_fullname();
 $url_f_name   = rawurlencode($f_name);
 $title        = scrub_out($f_name);
 Ui::show_box_top($title, 'info-box'); ?>
@@ -227,7 +227,7 @@ if (AmpConfig::get('sociable') && $owner_id > 0) {
                 RssFeedTypeEnum::LIBRARY_ITEM,
                 $current_user,
                 T_('RSS Feed'),
-                ['object_type' => 'artist', 'object_id' => (string)$artist->id]
+                ['object_type' => 'artist', 'object_id' => (string) $artist->id]
             ); ?>
         </li>
 <?php } ?>

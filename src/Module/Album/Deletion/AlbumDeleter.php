@@ -55,8 +55,7 @@ final readonly class AlbumDeleter implements AlbumDeleterInterface
         private UserActivityRepositoryInterface $useractivityRepository,
         private ArtCleanupInterface $artCleanup,
         private FolderRepositoryInterface $folderRepository,
-    ) {
-    }
+    ) {}
 
     /**
      * @throws AlbumDeletionException

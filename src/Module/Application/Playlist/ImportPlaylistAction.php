@@ -42,8 +42,7 @@ final readonly class ImportPlaylistAction implements ApplicationActionInterface
     public function __construct(
         private UiInterface $ui,
         private ConfigContainerInterface $configContainer,
-    ) {
-    }
+    ) {}
 
     public function run(ServerRequestInterface $request, GuiGatekeeperInterface $gatekeeper): ?ResponseInterface
     {

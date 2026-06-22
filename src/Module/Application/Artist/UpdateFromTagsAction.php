@@ -45,8 +45,7 @@ final readonly class UpdateFromTagsAction implements ApplicationActionInterface
         private ModelFactoryInterface $modelFactory,
         private ConfigContainerInterface $configContainer,
         private UiInterface $ui,
-    ) {
-    }
+    ) {}
 
     public function run(ServerRequestInterface $request, GuiGatekeeperInterface $gatekeeper): ?ResponseInterface
     {

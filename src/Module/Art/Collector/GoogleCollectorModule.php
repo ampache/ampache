@@ -34,9 +34,7 @@ use WpOrg\Requests\Requests;
 
 final readonly class GoogleCollectorModule implements CollectorModuleInterface
 {
-    public function __construct(private LoggerInterface $logger)
-    {
-    }
+    public function __construct(private LoggerInterface $logger) {}
 
     /**
      * Raw google search to retrieve the art, not very reliable

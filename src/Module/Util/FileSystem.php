@@ -171,14 +171,14 @@ class FileSystem
             }
         }
 
-        usort($res, fn ($a, $b) => strcasecmp((string) $a['title'], (string) $b['title']));
+        usort($res, fn($a, $b) => strcasecmp((string) $a['title'], (string) $b['title']));
         if (
             $with_root &&
             $this->id($dir) === '/'
         ) {
             $res = [
                 [
-                    'title' => basename((string)$this->base),
+                    'title' => basename((string) $this->base),
                     'children' => $res,
                     'key' => '/',
                     'expanded' => true,
@@ -307,7 +307,7 @@ class FileSystem
     protected function id(string $path): string
     {
         $path = $this->real($path);
-        $path = substr($path, strlen((string)$this->base));
+        $path = substr($path, strlen((string) $this->base));
         $path = str_replace(DIRECTORY_SEPARATOR, '/', $path);
         $path = trim($path, '/');
 

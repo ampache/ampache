@@ -32,9 +32,7 @@ use PDO;
 
 final readonly class FolderRepository implements FolderRepositoryInterface
 {
-    public function __construct(private DatabaseConnectionInterface $connection)
-    {
-    }
+    public function __construct(private DatabaseConnectionInterface $connection) {}
 
     /**
      * This cleans out unused folders
@@ -133,7 +131,7 @@ final readonly class FolderRepository implements FolderRepositoryInterface
             return null;
         }
 
-        return new Folder((int)$rowId);
+        return new Folder((int) $rowId);
     }
 
     public function getByPathName(string $folderPath, int $catalogId = 0, ?string $parentPath = null): ?Folder
@@ -151,7 +149,7 @@ final readonly class FolderRepository implements FolderRepositoryInterface
             return null;
         }
 
-        return new Folder((int)$rowId);
+        return new Folder((int) $rowId);
     }
 
     public function lookup(string $folderName = '', int $catalogId = 0, ?int $parent_id = null): int

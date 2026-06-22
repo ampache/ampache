@@ -250,7 +250,7 @@ class AmpacheXbmc extends localplay_controller
     public function get_active_instance(): ?int
     {
         if (AmpConfig::get(self::ACTIVE_PREF)) {
-            return (int)AmpConfig::get(self::ACTIVE_PREF);
+            return (int) AmpConfig::get(self::ACTIVE_PREF);
         }
 
         return null;
@@ -286,11 +286,11 @@ class AmpacheXbmc extends localplay_controller
 
         if ($row = Dba::fetch_assoc($db_results)) {
             return [
-                'id' => (int)$row['id'],
+                'id' => (int) $row['id'],
                 'name' => $row['name'],
-                'owner' => (int)$row['owner'],
+                'owner' => (int) $row['owner'],
                 'host' => $row['host'],
-                'port' => (int)$row['port'],
+                'port' => (int) $row['port'],
                 'user' => $row['user'],
                 'pass' => $row['pass'],
             ];
@@ -615,7 +615,7 @@ class AmpacheXbmc extends localplay_controller
             $appprop = $this->_xbmc->Application->GetProperties(
                 ['properties' => ['volume']]
             );
-            $array['volume']       = (int)($appprop['volume']);
+            $array['volume']       = (int) ($appprop['volume']);
             $array['track_title']  = '';
             $array['track_artist'] = '';
             $array['track_album']  = '';

@@ -56,9 +56,7 @@ final readonly class ArtCleanup implements ArtCleanupInterface
         'video',
     ];
 
-    public function __construct(private ConfigContainerInterface $configContainer)
-    {
-    }
+    public function __construct(private ConfigContainerInterface $configContainer) {}
 
     /**
      * look for art in the image table that doesn't fit min or max dimensions and delete it
@@ -109,7 +107,7 @@ final readonly class ArtCleanup implements ArtCleanupInterface
                 $sql        = "SELECT `image`.`object_id`, `image`.`object_type` FROM `image` LEFT JOIN `" . $type . "` ON `" . $type . "`.`id`=" . "`image`.`object_id` WHERE `object_type`='" . $type . "' AND `" . $type . "`.`id` IS NULL";
                 $db_results = Dba::read($sql);
                 while ($row = Dba::fetch_row($db_results)) {
-                    Art::delete_from_dir($row[1], (int)$row[0]);
+                    Art::delete_from_dir($row[1], (int) $row[0]);
                 }
             }
 
@@ -264,7 +262,7 @@ final readonly class ArtCleanup implements ArtCleanupInterface
                             }
 
                             $size = $matches[1];
-                            if (!Art::has_db((int)$object_id, $type, 'default', $size)) {
+                            if (!Art::has_db((int) $object_id, $type, 'default', $size)) {
                                 if ($delete) {
                                     unlink($object_path . DIRECTORY_SEPARATOR . $file);
                                     $interactor->info(
@@ -306,7 +304,7 @@ final readonly class ArtCleanup implements ArtCleanupInterface
                             }
 
                             $size = $matches[1];
-                            if (!Art::has_db((int)$object_id, $type, 'default', $size)) {
+                            if (!Art::has_db((int) $object_id, $type, 'default', $size)) {
                                 if ($delete) {
                                     unlink($object_path . DIRECTORY_SEPARATOR . $file);
                                     $interactor->info(
@@ -342,8 +340,8 @@ final readonly class ArtCleanup implements ArtCleanupInterface
                 $sql        = "SELECT `object_id`, `object_type`, `kind`, `size`, `mime` FROM `image` WHERE `size` != 'original'";
                 $db_results = Dba::read($sql);
                 while ($row = Dba::fetch_assoc($db_results)) {
-                    $art_path = Art::get_dir_on_disk($row['object_type'], (int)$row['object_id'], $row['size'], $row['kind'], true);
-                    $old_path = Art::get_dir_on_disk($row['object_type'], (int)$row['object_id'], 'original', $row['kind']);
+                    $art_path = Art::get_dir_on_disk($row['object_type'], (int) $row['object_id'], $row['size'], $row['kind'], true);
+                    $old_path = Art::get_dir_on_disk($row['object_type'], (int) $row['object_id'], 'original', $row['kind']);
 
                     $art_path .= "art-" . $row['size'] . "." . Art::extension($row['mime']);
                     $old_path .= "art-" . $row['size'] . "." . Art::extension($row['mime']);
@@ -362,13 +360,13 @@ final readonly class ArtCleanup implements ArtCleanupInterface
             $sql        = "SELECT `object_id`, `object_type`, `kind`, `size`, `mime` FROM `image`;";
             $db_results = Dba::read($sql);
             while ($row = Dba::fetch_assoc($db_results)) {
-                $art_path = Art::get_dir_on_disk($row['object_type'], (int)$row['object_id'], $row['size'], $row['kind'], true);
+                $art_path = Art::get_dir_on_disk($row['object_type'], (int) $row['object_id'], $row['size'], $row['kind'], true);
                 $art_path .= "art-" . $row['size'] . "." . Art::extension($row['mime']);
                 if (!Core::is_readable($art_path)) {
                     if ($delete) {
                         // If this art is gone stop trying to find it
                         $sql = "DELETE FROM `image` WHERE `object_id` = ? AND `object_type` = ? AND `kind` = ? AND `size` = ?";
-                        Dba::write($sql, [(int)$row['object_id'], $row['object_type'], $row['kind'], $row['size']], true);
+                        Dba::write($sql, [(int) $row['object_id'], $row['object_type'], $row['kind'], $row['size']], true);
                         $interactor->info(
                             sprintf(
                                 'DELETE: %s/%s',

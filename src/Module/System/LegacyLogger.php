@@ -52,9 +52,7 @@ final readonly class LegacyLogger implements LoggerInterface
 
     private const string LOG_NAME          = 'ampache';
 
-    public function __construct(private ConfigContainerInterface $configContainer)
-    {
-    }
+    public function __construct(private ConfigContainerInterface $configContainer) {}
 
     /**
      * @see LegacyLogger::critical (Required function to implement LoggerInterface)

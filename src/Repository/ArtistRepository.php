@@ -34,9 +34,7 @@ use Ampache\Repository\Model\Catalog;
 
 final readonly class ArtistRepository implements ArtistRepositoryInterface
 {
-    public function __construct(private DatabaseConnectionInterface $connection)
-    {
-    }
+    public function __construct(private DatabaseConnectionInterface $connection) {}
 
     /**
      * This cleans out unused artists

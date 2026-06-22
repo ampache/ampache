@@ -44,8 +44,7 @@ final readonly class ShoutRenderer implements ShoutRendererInterface
         private PrivilegeCheckerInterface $privilegeChecker,
         private ConfigContainerInterface $configContainer,
         private ShoutObjectLoaderInterface $shoutObjectLoader,
-    ) {
-    }
+    ) {}
 
     /**
      * Renders the shout and returns the rendered output

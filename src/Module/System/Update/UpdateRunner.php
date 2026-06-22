@@ -50,8 +50,7 @@ final readonly class UpdateRunner implements UpdateRunnerInterface
         private LoggerInterface $logger,
         private UpdateInfoRepositoryInterface $updateInfoRepository,
         private ConfigContainerInterface $configContainer,
-    ) {
-    }
+    ) {}
 
     /**
      * Runs the migrations with are determined by the given updates
@@ -144,14 +143,14 @@ final readonly class UpdateRunner implements UpdateRunnerInterface
         set_time_limit(0);
 
         $this->logger->notice(
-            sprintf('Successful rollback to update %s', (string)Versions::MAXIMUM_UPDATABLE_VERSION),
+            sprintf('Successful rollback to update %s', (string) Versions::MAXIMUM_UPDATABLE_VERSION),
             [LegacyLogger::CONTEXT_TYPE => self::class]
         );
 
         // set the new version
         $this->updateInfoRepository->setValue(
             UpdateInfoEnum::DB_VERSION,
-            (string)Versions::MAXIMUM_UPDATABLE_VERSION
+            (string) Versions::MAXIMUM_UPDATABLE_VERSION
         );
 
         // Let's also clean up the preferences unconditionally

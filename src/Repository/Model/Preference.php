@@ -295,9 +295,7 @@ class Preference extends database_object
      * __constructor
      * This does nothing... amazing isn't it!
      */
-    private function __construct()
-    {
-    }
+    private function __construct() {}
 
     /**
      * clean_preferences
@@ -391,18 +389,18 @@ class Preference extends database_object
         ];
 
         foreach ($arrays as $item) {
-            $results[$item] = (array_key_exists($item, $results) && trim((string)$results[$item]))
+            $results[$item] = (array_key_exists($item, $results) && trim((string) $results[$item]))
                 ? explode(',', (string) $results[$item])
                 : [];
         }
 
         foreach ($results as $key => $data) {
             if (!is_array($data)) {
-                if (strcasecmp((string)$data, "true") == "0") {
+                if (strcasecmp((string) $data, "true") == "0") {
                     $results[$key] = 1;
                 }
 
-                if (strcasecmp((string)$data, "false") == "0") {
+                if (strcasecmp((string) $data, "false") == "0") {
                     $results[$key] = 0;
                 }
             }
@@ -631,7 +629,7 @@ class Preference extends database_object
     public static function id_from_name(string $name): ?int
     {
         if (parent::is_cached('id_from_name', $name)) {
-            return (int)(parent::get_from_cache('id_from_name', $name))[0];
+            return (int) (parent::get_from_cache('id_from_name', $name))[0];
         }
 
         $sql        = "SELECT `id` FROM `preference` WHERE `name` = ?";
@@ -640,7 +638,7 @@ class Preference extends database_object
         if (array_key_exists('id', $results)) {
             parent::add_to_cache('id_from_name', $name, [$results['id']]);
 
-            return (int)$results['id'];
+            return (int) $results['id'];
         }
 
         return null;
@@ -675,7 +673,7 @@ class Preference extends database_object
         }
 
         /* Set the Theme mojo */
-        if (array_key_exists('theme_name', $results) && strlen((string)$results['theme_name']) > 0) {
+        if (array_key_exists('theme_name', $results) && strlen((string) $results['theme_name']) > 0) {
             // In case the theme was removed
             if (!Core::is_readable(__DIR__ . '/../../../public/themes/' . $results['theme_name'])) {
                 unset($results['theme_name']);
@@ -702,7 +700,7 @@ class Preference extends database_object
             $results['theme_color'] = 'dark';
         }
 
-        if (strlen((string)$results['theme_color']) > 0) {
+        if (strlen((string) $results['theme_color']) > 0) {
             // In case the color was removed
             if (!Core::is_readable(__DIR__ . '/../../../public/themes/' . $results['theme_name'] . '/templates/' . $results['theme_color'] . '.css')) {
                 unset($results['theme_color']);
@@ -713,7 +711,7 @@ class Preference extends database_object
 
         if (!isset($results['theme_color'])) {
             $results['theme_color'] = (isset($theme_cfg['colors']))
-                ? strtolower((string)$theme_cfg['colors'][0])
+                ? strtolower((string) $theme_cfg['colors'][0])
                 : 'dark';
         }
 
@@ -748,14 +746,14 @@ class Preference extends database_object
         }
 
         if ($subcategory !== null) {
-            $subcategory = strtolower((string)$subcategory);
+            $subcategory = strtolower((string) $subcategory);
         }
 
         // Work around ampache 5 preference insert < Ampache\Module\System\Update\Migration\V6\Migration600051
         $sql = (Dba::read('SELECT `category` FROM `preference` LIMIT 1;', [], true))
             ? "INSERT INTO `preference` (`name`, `description`, `value`, `level`, `type`, `category`, `subcategory`) VALUES (?, ?, ?, ?, ?, ?, ?)"
             : "INSERT INTO `preference` (`name`, `description`, `value`, `level`, `type`, `catagory`, `subcatagory`) VALUES (?, ?, ?, ?, ?, ?, ?)";
-        $db_results = Dba::write($sql, [$name, $description, $default, (int)$level, $type, $category, $subcategory]);
+        $db_results = Dba::write($sql, [$name, $description, $default, (int) $level, $type, $category, $subcategory]);
         if (!$db_results) {
             return false;
         }
@@ -763,7 +761,7 @@ class Preference extends database_object
         $pref_id = Dba::insert_id();
         if (
             !$pref_id ||
-            (int)$pref_id < 1
+            (int) $pref_id < 1
         ) {
             return false;
         }
@@ -1080,7 +1078,7 @@ class Preference extends database_object
             return null;
         }
 
-        return (string)$results['name'];
+        return (string) $results['name'];
     }
 
     /**
@@ -2171,9 +2169,9 @@ class Preference extends database_object
         // First prepare
         if (!is_numeric($preference)) {
             $pref_id = self::id_from_name($preference);
-            $name    = (string)$preference;
+            $name    = (string) $preference;
         } else {
-            $pref_id = (int)$preference;
+            $pref_id = (int) $preference;
             $name    = self::name_from_id($preference);
         }
 

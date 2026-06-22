@@ -277,7 +277,7 @@ class mpd
         ?string $debug_callback = null,
     ) {
         $this->host     = trim($server);
-        $this->port     = (int)$port;
+        $this->port     = (int) $port;
 
         if (is_callable($debug_callback)) {
             $this->_debug_callback = $debug_callback;
@@ -370,13 +370,13 @@ class mpd
                 $status = socket_get_status($this->_mpd_sock);
             }
 
-            if (strncmp(self::RESPONSE_OK, (string)$response, strlen(self::RESPONSE_OK)) === 0) {
+            if (strncmp(self::RESPONSE_OK, (string) $response, strlen(self::RESPONSE_OK)) === 0) {
                 $this->connected = true;
 
                 return $response ?: null;
             }
 
-            if (strncmp(self::RESPONSE_ERR, (string)$response, strlen(self::RESPONSE_ERR)) === 0) {
+            if (strncmp(self::RESPONSE_ERR, (string) $response, strlen(self::RESPONSE_ERR)) === 0) {
                 $this->_error('Connect', "Server responded with: " . $response);
 
                 return null;
@@ -909,12 +909,12 @@ class mpd
             $response = fgets($this->_mpd_sock, 1024);
 
             // An OK signals the end of transmission
-            if (strncmp(self::RESPONSE_OK, (string)$response, strlen(self::RESPONSE_OK)) === 0) {
+            if (strncmp(self::RESPONSE_OK, (string) $response, strlen(self::RESPONSE_OK)) === 0) {
                 break;
             }
 
             // An ERR signals an error!
-            if (strncmp(self::RESPONSE_ERR, (string)$response, strlen(self::RESPONSE_ERR)) === 0) {
+            if (strncmp(self::RESPONSE_ERR, (string) $response, strlen(self::RESPONSE_ERR)) === 0) {
                 $this->_error('SendCommand', 'MPD Error: ' . $response);
 
                 return false;
@@ -1137,7 +1137,7 @@ class mpd
     {
         $parts = explode('.', $string);
 
-        return (100 * (int)$parts[0]) + (10 * (int)$parts[1]) + (int)$parts[2];
+        return (100 * (int) $parts[0]) + (10 * (int) $parts[1]) + (int) $parts[2];
     }
 
     /**

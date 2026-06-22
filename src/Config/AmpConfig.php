@@ -80,7 +80,7 @@ class AmpConfig
     {
         $rating_filter = 0;
         if (self::get('rating_browse_filter')) {
-            $rating_filter = (int)self::get('rating_browse_minimum_stars');
+            $rating_filter = (int) self::get('rating_browse_minimum_stars');
         }
         if ($rating_filter > 0 && $rating_filter <= 5) {
             return $rating_filter;
@@ -98,11 +98,11 @@ class AmpConfig
     {
         $timekeeper = self::get('skip_timer');
         $skip_time  = 20;
-        if ((int)$timekeeper > 1) {
+        if ((int) $timekeeper > 1) {
             $skip_time = $timekeeper;
         }
         if ($timekeeper < 1 && $timekeeper > 0) {
-            $skip_time = (int)($previous_time * $timekeeper);
+            $skip_time = (int) ($previous_time * $timekeeper);
         }
 
         return $skip_time;

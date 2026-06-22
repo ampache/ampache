@@ -318,7 +318,7 @@ class AmpacheMusicBrainz extends AmpachePlugin implements PluginGetMetadataInter
                 $artist = $brainzData['artist-credit'][0];
                 $artist = (is_array($artist))
                     ? $artist['artist']
-                    : (array)$artist->{'artist'};
+                    : (array) $artist->{'artist'};
             }
 
             // pull first release
@@ -380,7 +380,7 @@ class AmpacheMusicBrainz extends AmpachePlugin implements PluginGetMetadataInter
         }
 
         // overwrite matching MBID artist names
-        $this->overwrite_name = (bool)$data['mb_overwrite_name'];
+        $this->overwrite_name = (bool) $data['mb_overwrite_name'];
 
         return true;
     }
@@ -507,7 +507,7 @@ class AmpacheMusicBrainz extends AmpachePlugin implements PluginGetMetadataInter
                     case 'label':
                         $args   = ['name' => $fullname];
                         $filter = MusicBrainz::newFilter('label', $args);
-                        $search = (array)$brainz->search(
+                        $search = (array) $brainz->search(
                             $filter,
                             1,
                             null,
@@ -530,7 +530,7 @@ class AmpacheMusicBrainz extends AmpachePlugin implements PluginGetMetadataInter
                             'artist' => $parent_name,
                         ];
                         $filter = MusicBrainz::newFilter('release-group', $args);
-                        $search = (array)$brainz->search(
+                        $search = (array) $brainz->search(
                             $filter,
                             1,
                             null,
@@ -550,7 +550,7 @@ class AmpacheMusicBrainz extends AmpachePlugin implements PluginGetMetadataInter
                     case 'artist':
                         $args   = ['name' => $fullname];
                         $filter = MusicBrainz::newFilter('artist', $args);
-                        $search = (array)$brainz->search(
+                        $search = (array) $brainz->search(
                             $filter,
                             1,
                             null,
@@ -573,7 +573,7 @@ class AmpacheMusicBrainz extends AmpachePlugin implements PluginGetMetadataInter
                             'artist' => $parent_name,
                         ];
                         $filter = MusicBrainz::newFilter('recording', $args);
-                        $search = (array)$brainz->search(
+                        $search = (array) $brainz->search(
                             $filter,
                             1,
                             null,

@@ -38,8 +38,7 @@ final readonly class PrivilegeChecker implements PrivilegeCheckerInterface
     public function __construct(
         private ConfigContainerInterface $configContainer,
         private ModelFactoryInterface $modelFactory,
-    ) {
-    }
+    ) {}
 
     /**
      * This is the global 'has_access' function. it can check for any 'type'

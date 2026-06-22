@@ -40,8 +40,7 @@ final readonly class SongRepository implements SongRepositoryInterface
 {
     public function __construct(
         private DatabaseConnectionInterface $connection,
-    ) {
-    }
+    ) {}
 
     public function collectGarbage(Song $song): void
     {

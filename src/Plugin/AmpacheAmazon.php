@@ -157,7 +157,7 @@ class AmpacheAmazon extends AmpachePlugin implements PluginGatherArtsInterface
 
         /* Foreach through what we've found */
         foreach ($final_results as $result) {
-            $key = array_find($possible_keys, fn ($pKey) => strlen((string) $result[$pKey]) !== 0);
+            $key = array_find($possible_keys, fn($pKey) => strlen((string) $result[$pKey]) !== 0);
             // foreach
 
             if ($key) {
@@ -264,7 +264,7 @@ class AmpacheAmazon extends AmpachePlugin implements PluginGatherArtsInterface
         }
 
         if (strlen(trim((string) $data['amazon_max_results_pages'])) !== 0) {
-            $this->amazon_max_results_pages = (int)trim((string) $data['amazon_max_results_pages']);
+            $this->amazon_max_results_pages = (int) trim((string) $data['amazon_max_results_pages']);
         } else {
             $this->amazon_max_results_pages = 1;
         }

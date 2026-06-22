@@ -46,8 +46,8 @@ use Ampache\Repository\Model\Video;
 /** @var string $token */
 /** @var bool $isZipable */
 
-$allow_stream   = (bool)($_REQUEST['allow_stream'] ?? 0);
-$allow_download = (bool)($_REQUEST['allow_download'] ?? 0);
+$allow_stream   = (bool) ($_REQUEST['allow_stream'] ?? 0);
+$allow_download = (bool) ($_REQUEST['allow_download'] ?? 0);
 
 Ui::show_box_top(T_('Create Share'), 'box box_add_share'); ?>
 <form name="share" method="post" action="<?php echo AmpConfig::get_web_path(); ?>/share.php?action=create">

@@ -46,8 +46,7 @@ final readonly class ShowAction implements ApplicationActionInterface
         private ConfigContainerInterface $configContainer,
         private LoggerInterface $logger,
         private UiInterface $ui,
-    ) {
-    }
+    ) {}
 
     public function run(ServerRequestInterface $request, GuiGatekeeperInterface $gatekeeper): ?ResponseInterface
     {
@@ -113,7 +112,7 @@ final readonly class ShowAction implements ApplicationActionInterface
             $css,
             $refreshLimit
         );
-        $user_id = (int)$this->requestParser->getFromRequest('user_id');
+        $user_id = (int) $this->requestParser->getFromRequest('user_id');
         $results = Stream::get_now_playing($user_id);
 
         $this->ui->show(

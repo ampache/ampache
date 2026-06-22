@@ -70,7 +70,7 @@ class Ampachechartlyrics extends AmpachePlugin implements PluginGetLyricsInterfa
     public function get_lyrics(Song $song): ?array
     {
         $base    = 'http://api.chartlyrics.com/apiv1.asmx/';
-        $uri     = $base . 'SearchLyricDirect?artist=' . urlencode($song->get_parent_fullname()) . '&song=' . urlencode((string)$song->title);
+        $uri     = $base . 'SearchLyricDirect?artist=' . urlencode($song->get_parent_fullname()) . '&song=' . urlencode((string) $song->title);
         $request = Requests::get($uri, [], Core::requests_options());
         if ($request->status_code == 200) {
             $xml = simplexml_load_string((string) $request->body);
@@ -79,8 +79,8 @@ class Ampachechartlyrics extends AmpachePlugin implements PluginGetLyricsInterfa
                 !empty($xml->Lyric)
             ) {
                 return [
-                    'text' => nl2br((string)$xml->Lyric),
-                    'url' => (string)$xml->LyricUrl
+                    'text' => nl2br((string) $xml->Lyric),
+                    'url' => (string) $xml->LyricUrl
                 ];
             }
         }

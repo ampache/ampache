@@ -53,8 +53,7 @@ final readonly class AddMessageAction implements ApplicationActionInterface
         private PrivateMessageCreatorInterface $privateMessageCreator,
         private ModelFactoryInterface $modelFactory,
         private RequestParserInterface $requestParser,
-    ) {
-    }
+    ) {}
 
     public function run(ServerRequestInterface $request, GuiGatekeeperInterface $gatekeeper): ?ResponseInterface
     {
@@ -73,7 +72,7 @@ final readonly class AddMessageAction implements ApplicationActionInterface
             return null;
         }
 
-        $data = (array)$request->getParsedBody();
+        $data = (array) $request->getParsedBody();
 
         $this->ui->showHeader();
 
@@ -113,7 +112,7 @@ final readonly class AddMessageAction implements ApplicationActionInterface
                     $this->configContainer->getWebPath()
                 )
             );
-        } catch (PrivateMessageCreationException | Exception) {
+        } catch (PrivateMessageCreationException|Exception) {
             $this->ui->show('show_add_pvmsg.inc.php');
         }
 

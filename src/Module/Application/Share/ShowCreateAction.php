@@ -56,8 +56,7 @@ final readonly class ShowCreateAction implements ApplicationActionInterface
         private PasswordGeneratorInterface $passwordGenerator,
         private ZipHandlerInterface $zipHandler,
         private LibraryItemLoaderInterface $libraryItemLoader,
-    ) {
-    }
+    ) {}
 
     public function run(ServerRequestInterface $request, GuiGatekeeperInterface $gatekeeper): ?ResponseInterface
     {
@@ -71,8 +70,8 @@ final readonly class ShowCreateAction implements ApplicationActionInterface
         $this->ui->showHeader();
 
         if (
-            in_array($object_type, Share::VALID_TYPES, true)
-            && $object_id !== 0
+            in_array($object_type, Share::VALID_TYPES, true) &&
+            $object_id !== 0
         ) {
             $object = $this->libraryItemLoader->load(
                 $object_type,

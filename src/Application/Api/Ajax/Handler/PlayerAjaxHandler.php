@@ -38,8 +38,7 @@ final readonly class PlayerAjaxHandler implements AjaxHandlerInterface
         private RequestParserInterface $requestParser,
         private AjaxUriRetrieverInterface $ajaxUriRetriever,
         private UiInterface $ui,
-    ) {
-    }
+    ) {}
 
     public function handle(User $user): void
     {

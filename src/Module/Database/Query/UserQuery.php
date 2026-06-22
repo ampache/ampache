@@ -108,7 +108,7 @@ final class UserQuery implements QueryInterface
             case 'id':
                 $filter_sql = " `user`.`id` IN (";
                 foreach ($value as $uid) {
-                    $filter_sql .= (int)$uid . ',';
+                    $filter_sql .= (int) $uid . ',';
                 }
 
                 $filter_sql = rtrim($filter_sql, ',') . ") AND ";
@@ -148,7 +148,7 @@ final class UserQuery implements QueryInterface
                 break;
             case 'access':
             case 'disabled':
-                $filter_sql = sprintf(' `user`.`%s` = ', $filter) . (int)$value . " AND ";
+                $filter_sql = sprintf(' `user`.`%s` = ', $filter) . (int) $value . " AND ";
                 break;
         }
 

@@ -54,8 +54,7 @@ abstract readonly class AbstractShowAction implements ApplicationActionInterface
         private ResponseFactoryInterface $responseFactory,
         private StreamFactoryInterface $streamFactory,
         private LoggerInterface $logger,
-    ) {
-    }
+    ) {}
 
     public function run(ServerRequestInterface $request, GuiGatekeeperInterface $gatekeeper): ?ResponseInterface
     {
@@ -105,7 +104,7 @@ abstract readonly class AbstractShowAction implements ApplicationActionInterface
             $_GET['size']  = null;
         }
 
-        $thumb = (int)filter_input(INPUT_GET, 'thumb', FILTER_SANITIZE_NUMBER_INT);
+        $thumb = (int) filter_input(INPUT_GET, 'thumb', FILTER_SANITIZE_NUMBER_INT);
         $size  = ($thumb === 0)
             ? filter_input(INPUT_GET, 'size', FILTER_SANITIZE_SPECIAL_CHARS, FILTER_NULL_ON_FAILURE) ?? 'original'
             : 'original';
@@ -201,7 +200,7 @@ abstract readonly class AbstractShowAction implements ApplicationActionInterface
         }
 
         if (!empty($image)) {
-            $extension = Art::extension((string)$mime);
+            $extension = Art::extension((string) $mime);
             $filename  = scrub_out($filename . '.' . $extension);
 
             // Send the headers and output the image

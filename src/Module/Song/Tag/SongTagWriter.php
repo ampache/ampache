@@ -43,8 +43,7 @@ final readonly class SongTagWriter implements SongTagWriterInterface
         private ConfigContainerInterface $configContainer,
         private UtilityFactoryInterface $utilityFactory,
         private LoggerInterface $logger,
-    ) {
-    }
+    ) {}
 
     /**
      * @param array<int, array{data: string, description: null|string, mime: null|string, picturetypeid: int}> $apics
@@ -657,7 +656,7 @@ final readonly class SongTagWriter implements SongTagWriterInterface
     {
         $cnt = count($ndata);
         for ($index = 0; $index < $cnt; $index++) {
-            if (strtolower((string) $ndata[$index]['description']) === strtolower((string)$description)) {
+            if (strtolower((string) $ndata[$index]['description']) === strtolower((string) $description)) {
                 return $index;
             }
         }

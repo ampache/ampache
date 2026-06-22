@@ -45,8 +45,7 @@ final readonly class SongDeleter implements SongDeleterInterface
         private UserActivityRepositoryInterface $useractivityRepository,
         private ArtCleanupInterface $artCleanup,
         private FolderRepositoryInterface $folderRepository,
-    ) {
-    }
+    ) {}
 
     public function delete(Song $song): bool
     {

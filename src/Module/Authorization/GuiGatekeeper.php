@@ -34,9 +34,7 @@ use Ampache\Repository\Model\User;
  */
 final readonly class GuiGatekeeper implements GuiGatekeeperInterface
 {
-    public function __construct(private PrivilegeCheckerInterface $privilegeChecker)
-    {
-    }
+    public function __construct(private PrivilegeCheckerInterface $privilegeChecker) {}
 
     public function getUser(): ?User
     {
