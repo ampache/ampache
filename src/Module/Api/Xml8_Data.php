@@ -483,7 +483,7 @@ class Xml8_Data
             if (property_exists($libitem, 'file')) {
                 $p_info   = pathinfo((string)$libitem->file);
                 $filename = $p_info['basename'];
-                $dirname  = $p_info['dirname'];
+                $dirname  = $p_info['dirname'] ?? '';
             } else {
                 /** @var Folder $libitem */
                 $filename = $libitem->get_fullname();

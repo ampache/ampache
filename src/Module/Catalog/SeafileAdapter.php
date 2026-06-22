@@ -84,7 +84,7 @@ class SeafileAdapter
 
     public function download(DirectoryItem $file, bool $partial = false): string
     {
-        $url  = ($this->client && $file->dir) ? $this->throttle_check(fn () => $this->client['Files']->getDownloadUrl($this->library, $file, $file->dir)) : '';
+        $url  = ($this->client && $this->library && is_string($file->dir)) ? $this->throttle_check(fn () => $this->client['Files']->getDownloadUrl($this->library, $file, $file->dir)) : '';
         $opts = $partial ? ['curl' => [CURLOPT_RANGE => '0-2097152']] : ['delay' => 0];
 
         // grab a full 2 meg in case meta has image in it or something
@@ -223,7 +223,7 @@ class SeafileAdapter
             return false;
         }
 
-        $this->library = ($matches[0] instanceof Library) ? $matches[0] : null;
+        $this->library = ($matches[0] instanceof LibraryType) ? $matches[0] : null;
 
         return true;
     }
@@ -247,7 +247,7 @@ class SeafileAdapter
 
     public function to_virtual_path(DirectoryItem $file): string
     {
-        return $this->library->name . '|' . $file->dir . '|' . $file->name;
+        return ($this->library->name ?? '') . '|' . $file->dir . '|' . $file->name;
     }
 
     /**
@@ -264,7 +264,7 @@ class SeafileAdapter
 
             return null;
         }
-        if (!$this->client) {
+        if (!$this->client || !$this->library) {
             return null;
         }
 
@@ -276,7 +276,7 @@ class SeafileAdapter
             return $directory;
         } catch (ClientException $clientException) {
             if ($clientException->getResponse()->getStatusCode() == 404) {
-                $this->directory_cache[$path] = false;
+                unset($this->directory_cache[$path]);
 
                 return null;
             }

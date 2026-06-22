@@ -398,7 +398,7 @@ class Catalog_Seafile extends Catalog
         // if you have the file it's all good
         $media_file = $file_override ?? $media->file;
 
-        if (!in_array($media_file, [null, '', '0'], true) && $media_file && is_file($media_file)) {
+        if ($media_file && !in_array($media_file, [null, '', '0'], true) && is_file($media_file)) {
             return $this->download_metadata($media_file, $sort_pattern, $rename_pattern, $gather_types);
         }
 
@@ -611,13 +611,13 @@ class Catalog_Seafile extends Catalog
         }
 
         $is_diritem = ($file instanceof DirectoryItem);
-        $is_cached  = (!$is_diritem && is_string($file) && is_file($file));
+        $is_cached  = (!$is_diritem && is_file($file));
 
         if ($is_cached) {
             debug_event('seafile_catalog', 'Using tmp file ' . $file, 5);
             $tempfilename = $file;
         } else {
-            debug_event('seafile_catalog', 'Downloading partial song ' . $file->name, 5);
+            debug_event('seafile_catalog', 'Downloading partial song', 5);
             $tempfilename = ($file instanceof DirectoryItem)
                 ? $this->seafile->download($file, true)
                 : $file;
