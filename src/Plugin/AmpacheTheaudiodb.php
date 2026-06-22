@@ -141,10 +141,10 @@ class AmpacheTheaudiodb extends AmpachePlugin implements PluginGatherArtsInterfa
 
                     // when you come in with an mbid you might want to keep the name updated (ignore case)
                     if (
-                        $this->overwrite_name &&
-                        $object->mbid !== null &&
-                        MusicBrainz::isMBID($object->mbid) &&
-                        strtolower($data['name'] ?? '') !== strtolower((string) $object->get_fullname())
+                        $this->overwrite_name
+                        && $object->mbid !== null
+                        && MusicBrainz::isMBID($object->mbid)
+                        && strtolower($data['name'] ?? '') !== strtolower((string) $object->get_fullname())
                     ) {
                         $name_check = Artist::update_name_from_mbid($data['name'], $object->mbid);
                         if ($object->prefix !== null) {
@@ -289,8 +289,8 @@ class AmpacheTheaudiodb extends AmpachePlugin implements PluginGatherArtsInterfa
     public function uninstall(): bool
     {
         return (
-            Preference::delete('tadb_api_key') &&
-            Preference::delete('tadb_overwrite_name')
+            Preference::delete('tadb_api_key')
+            && Preference::delete('tadb_overwrite_name')
         );
     }
 

@@ -65,9 +65,9 @@ final readonly class ImportPlaylistAction implements ApplicationActionInterface
             $url   = 'show_playlist&playlist_id=' . $result['id'];
             $title = T_('No Problem');
             $body  = basename((string) $_FILES['filename']['name']);
-            $body .= '<br />' .
+            $body .= '<br />'
                 /* HINT: Number of songs */
-                sprintf(nT_("Successfully imported playlist with %d song.", "Successfully imported playlist with %d songs.", $result['count']), $result['count']);
+                . sprintf(nT_("Successfully imported playlist with %d song.", "Successfully imported playlist with %d songs.", $result['count']), $result['count']);
             if (!empty($result['results'])) {
                 $body .= "<table class=\"tabledata striped-rows\">\n<thead><tr class=\"th-top\">\n<th>" . T_('Track') . "</th><th>" . T_('File') . "</th><th>" . T_('Status') . "</th>\n<tbody>\n";
                 foreach ($result['results'] as $file) {

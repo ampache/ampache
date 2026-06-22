@@ -65,9 +65,9 @@ final readonly class PlaylistViewAdapter implements PlaylistViewAdapterInterface
 
     public function canBatchDownload(): bool
     {
-        return $this->functionChecker->check(AccessFunctionEnum::FUNCTION_BATCH_DOWNLOAD) &&
-            $this->configContainer->isFeatureEnabled(ConfigurationKeyEnum::ALLOW_ZIP_DOWNLOAD) &&
-            $this->zipHandler->isZipable('playlist');
+        return $this->functionChecker->check(AccessFunctionEnum::FUNCTION_BATCH_DOWNLOAD)
+            && $this->configContainer->isFeatureEnabled(ConfigurationKeyEnum::ALLOW_ZIP_DOWNLOAD)
+            && $this->zipHandler->isZipable('playlist');
     }
 
     public function canBeDeleted(): bool
@@ -79,14 +79,14 @@ final readonly class PlaylistViewAdapter implements PlaylistViewAdapterInterface
     {
         $search_id = $this->playlist->has_search((int) $this->playlist->user);
 
-        return $this->playlist->has_access() &&
-            $search_id > 0;
+        return $this->playlist->has_access()
+            && $search_id > 0;
     }
 
     public function canShare(): bool
     {
-        return $this->gatekeeper->mayAccess(AccessTypeEnum::INTERFACE, AccessLevelEnum::USER) &&
-            $this->configContainer->isFeatureEnabled(ConfigurationKeyEnum::SHARE);
+        return $this->gatekeeper->mayAccess(AccessTypeEnum::INTERFACE, AccessLevelEnum::USER)
+            && $this->configContainer->isFeatureEnabled(ConfigurationKeyEnum::SHARE);
     }
 
     public function getAddToPlaylistIcon(): string

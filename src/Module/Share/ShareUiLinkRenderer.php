@@ -73,8 +73,8 @@ final readonly class ShareUiLinkRenderer implements ShareUiLinkRendererInterface
                     $object_id
                 );
             } elseif (
-                $this->functionChecker->check(AccessFunctionEnum::FUNCTION_BATCH_DOWNLOAD) &&
-                $this->zipHandler->isZipable($object_type->value)
+                $this->functionChecker->check(AccessFunctionEnum::FUNCTION_BATCH_DOWNLOAD)
+                && $this->zipHandler->isZipable($object_type->value)
             ) {
                 $dllink = sprintf(
                     '%s/batch.php?action=%s&id=%d',

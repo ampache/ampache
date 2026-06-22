@@ -210,8 +210,8 @@ class Browse extends Query
     public function is_use_alpha(): bool
     {
         return (
-            $this->is_use_filters() &&
-             make_bool($this->_state['use_alpha'] ?? false)
+            $this->is_use_filters()
+             && make_bool($this->_state['use_alpha'] ?? false)
         );
     }
 
@@ -555,9 +555,9 @@ class Browse extends Query
         // Limit is based on the user's preferences if this is not a
         // simple browse because we've got too much here
         if (
-            $this->get_offset() > 0 &&
-            $this->get_start() >= 0 &&
-            !$this->is_simple()
+            $this->get_offset() > 0
+            && $this->get_start() >= 0
+            && !$this->is_simple()
         ) {
             $object_ids = array_slice($object_ids, $this->get_start(), $this->get_offset(), true);
         } elseif ($object_ids === []) {

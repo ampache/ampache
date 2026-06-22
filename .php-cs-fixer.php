@@ -74,10 +74,6 @@ return (new PhpCsFixer\Config())
         'ordered_imports' => [
             'sort_algorithm' => 'alpha'
         ],
-        'operator_linebreak' => [
-            'only_booleans' => true,
-            'position' => 'end'
-        ],
         'ternary_operator_spaces' => true,
         'ordered_class_elements' => [
             'order' => [

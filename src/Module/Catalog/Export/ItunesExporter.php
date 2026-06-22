@@ -42,18 +42,18 @@ final readonly class ItunesExporter implements CatalogExporterInterface
     {
         $result = $this->songRepository->getByCatalog($catalog);
 
-        echo "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n" .
-            "<!DOCTYPE plist PUBLIC \"-//Apple Computer//DTD PLIST 1.0//EN\"\n" .
-            "\"http://www.apple.com/DTDs/PropertyList-1.0.dtd\">\n" .
-            "<plist version=\"1.0\">\n" .
-            "<dict>\n" .
-            "       <key>Major Version</key><integer>1</integer>\n" .
-            "       <key>Minor Version</key><integer>1</integer>\n" .
-            "       <key>Application Version</key><string>7.0.2</string>\n" .
-            "       <key>Features</key><integer>1</integer>\n" .
-            "       <key>Show Content Ratings</key><true/>\n" .
-            "       <key>Tracks</key>\n" .
-            "       <dict>\n";
+        echo "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n"
+            . "<!DOCTYPE plist PUBLIC \"-//Apple Computer//DTD PLIST 1.0//EN\"\n"
+            . "\"http://www.apple.com/DTDs/PropertyList-1.0.dtd\">\n"
+            . "<plist version=\"1.0\">\n"
+            . "<dict>\n"
+            . "       <key>Major Version</key><integer>1</integer>\n"
+            . "       <key>Minor Version</key><integer>1</integer>\n"
+            . "       <key>Application Version</key><string>7.0.2</string>\n"
+            . "       <key>Features</key><integer>1</integer>\n"
+            . "       <key>Show Content Ratings</key><true/>\n"
+            . "       <key>Tracks</key>\n"
+            . "       <dict>\n";
 
         /** @var int $songId */
         foreach ($result as $songId) {
@@ -83,9 +83,9 @@ final readonly class ItunesExporter implements CatalogExporterInterface
             echo xoutput_from_array($xml, true, 'itunes');
         }
 
-        echo "      </dict>\n" .
-            "</dict>\n" .
-            "</plist>\n";
+        echo "      </dict>\n"
+            . "</dict>\n"
+            . "</plist>\n";
     }
 
     /**

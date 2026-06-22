@@ -55,9 +55,9 @@ final readonly class DefaultAction implements ApplicationActionInterface
         ) ?? AccessLevelEnum::USER;
 
         if (
-            $this->configContainer->isFeatureEnabled(ConfigurationKeyEnum::ALLOW_UPLOAD) === false ||
-            $access_level === AccessLevelEnum::DEFAULT ||
-            $gatekeeper->mayAccess(AccessTypeEnum::INTERFACE, $access_level) === false
+            $this->configContainer->isFeatureEnabled(ConfigurationKeyEnum::ALLOW_UPLOAD) === false
+            || $access_level === AccessLevelEnum::DEFAULT
+            || $gatekeeper->mayAccess(AccessTypeEnum::INTERFACE, $access_level) === false
         ) {
             throw new AccessDeniedException();
         }
@@ -71,9 +71,9 @@ final readonly class DefaultAction implements ApplicationActionInterface
 
         // Check to handle POST requests exceeding max post size.
         if (
-            Core::get_server('CONTENT_LENGTH') > 0 &&
-            $post_max > 0 &&
-            Core::get_server('CONTENT_LENGTH') > $upload_max
+            Core::get_server('CONTENT_LENGTH') > 0
+            && $post_max > 0
+            && Core::get_server('CONTENT_LENGTH') > $upload_max
         ) {
             Upload::rerror();
 

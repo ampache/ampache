@@ -167,8 +167,8 @@ class HttpQPlayer
         $results = $this->sendCommand('getplaylistfile', ['delim' => '::']);
 
         if (
-            !$results ||
-            !is_string($results)
+            !$results
+            || !is_string($results)
         ) {
             return null;
         }
@@ -186,8 +186,8 @@ class HttpQPlayer
         $results = $this->sendCommand('getvolume', $args);
 
         if (
-            !$results ||
-            $results == '0'
+            !$results
+            || $results == '0'
         ) {
             return null;
         }
@@ -292,8 +292,8 @@ class HttpQPlayer
         $results = $this->sendCommand('setplaylistpos', $args);
 
         if (
-            !$results ||
-            $results == '0'
+            !$results
+            || $results == '0'
         ) {
             return false;
         }
@@ -320,8 +320,8 @@ class HttpQPlayer
         }
 
         if (
-            !$results ||
-            $results == '0'
+            !$results
+            || $results == '0'
         ) {
             $state = 'stop';
         }

@@ -153,9 +153,9 @@ class Wanted extends database_object
                     }
 
                     if (
-                        $add &&
-                        (self::getAlbumRepository()->getByMbidGroup(($group->id)) === [] ||
-                        ($artist !== null && $artist->id && self::getAlbumRepository()->getByName($group->title, $artist->id) === []))
+                        $add
+                        && (self::getAlbumRepository()->getByMbidGroup(($group->id)) === []
+                        || ($artist !== null && $artist->id && self::getAlbumRepository()->getByName($group->title, $artist->id) === []))
                     ) {
                         $wanted = $wantedRepository->findByMusicBrainzId($group->id);
                         if ($wanted !== null) {
@@ -193,11 +193,11 @@ class Wanted extends database_object
                             $wanted->f_link = "<a href=\"" . $wanted->link . "\" title=\"" . $wanted->name . "\">" . $wanted->name . "</a>";
 
                             if (
-                                $user instanceof User &&
-                                $wanted->mbid &&
-                                ($wanted->artist || $wanted->artist_mbid) &&
-                                $wanted->name &&
-                                $wanted->year
+                                $user instanceof User
+                                && $wanted->mbid
+                                && ($wanted->artist || $wanted->artist_mbid)
+                                && $wanted->name
+                                && $wanted->year
                             ) {
                                 self::getWantedManager()->add(
                                     $user,
@@ -374,8 +374,8 @@ class Wanted extends database_object
             $user            = Core::get_global('user');
             $preview_plugins = Plugin::get_plugins(PluginTypeEnum::SONG_PREVIEW_PROVIDER);
             if (
-                $user instanceof User &&
-                $this->mbid !== null
+                $user instanceof User
+                && $this->mbid !== null
             ) {
                 /**
                  * https://musicbrainz.org/ws/2/release-group/3bd76d40-7f0e-36b7-9348-91a33afee20e?inc=releases&fmt=json
@@ -482,8 +482,8 @@ class Wanted extends database_object
         if ($this->isNew() === false) {
             $result = '';
             if (
-                $this->accepted === 0 &&
-                (Core::get_global('user') instanceof User && Core::get_global('user')->has_access(AccessLevelEnum::MANAGER))
+                $this->accepted === 0
+                && (Core::get_global('user') instanceof User && Core::get_global('user')->has_access(AccessLevelEnum::MANAGER))
             ) {
                 $result .= Ajax::button(
                     '?page=index&action=accept_wanted&mbid=' . $this->mbid,
@@ -496,13 +496,13 @@ class Wanted extends database_object
             /** @var User|null $user */
             $user = (Core::get_global('user') instanceof User) ? Core::get_global('user') : null;
             if (
-                $user instanceof User &&
-                (
-                    $user->has_access(AccessLevelEnum::MANAGER) ||
-                    (
-                        $this->mbid !== null &&
-                        self::getWantedRepository()->find($this->mbid, $user) &&
-                        $this->accepted !== 1
+                $user instanceof User
+                && (
+                    $user->has_access(AccessLevelEnum::MANAGER)
+                    || (
+                        $this->mbid !== null
+                        && self::getWantedRepository()->find($this->mbid, $user)
+                        && $this->accepted !== 1
                     )
                 )
             ) {

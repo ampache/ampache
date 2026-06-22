@@ -66,8 +66,8 @@ final readonly class DefaultAction implements ApplicationActionInterface
     public function run(ServerRequestInterface $request, GuiGatekeeperInterface $gatekeeper): ResponseInterface
     {
         if (
-            !defined('NO_SESSION') &&
-            !$this->functionChecker->check(AccessFunctionEnum::FUNCTION_BATCH_DOWNLOAD)
+            !defined('NO_SESSION')
+            && !$this->functionChecker->check(AccessFunctionEnum::FUNCTION_BATCH_DOWNLOAD)
         ) {
             throw new AccessDeniedException();
         }
@@ -223,10 +223,10 @@ final readonly class DefaultAction implements ApplicationActionInterface
             }
 
             if (
-                $media instanceof container_item &&
-                property_exists($media, 'enabled') &&
-                $media->enabled &&
-                !empty($media->file)
+                $media instanceof container_item
+                && property_exists($media, 'enabled')
+                && $media->enabled
+                && !empty($media->file)
             ) {
                 $total_size += $media->size ?? 0;
                 $dirname = '';

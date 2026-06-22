@@ -233,10 +233,10 @@ class Playlist extends playlist_object
         }
 
         $is_admin = (
-            $userOnly === false ||
-            (
-                Access::check(AccessTypeEnum::INTERFACE, AccessLevelEnum::ADMIN, $user_id) ||
-                $user_id == -1
+            $userOnly === false
+            || (
+                Access::check(AccessTypeEnum::INTERFACE, AccessLevelEnum::ADMIN, $user_id)
+                || $user_id == -1
             )
         );
         $sql    = "SELECT `id` FROM `playlist` ";
@@ -274,8 +274,8 @@ class Playlist extends playlist_object
         }
 
         if (
-            $playlist_name === '' ||
-            $playlist_name === '0'
+            $playlist_name === ''
+            || $playlist_name === '0'
         ) {
             parent::add_to_cache($key, $user_id, $results);
         }
@@ -544,15 +544,15 @@ class Playlist extends playlist_object
 
         if ($all_media) {
             // empty or invalid type so check for all media types
-            $sql = "SELECT COUNT(`playlist_data`.`id`) AS `list_count` FROM `playlist_data` " .
-                "LEFT JOIN `broadcast` ON `playlist_data`.`object_id` = `broadcast`.`id` AND `playlist_data`.`object_type` = 'broadcast' " .
-                "LEFT JOIN `democratic` ON `playlist_data`.`object_id` = `democratic`.`id` AND `playlist_data`.`object_type` = 'democratic' " .
-                "LEFT JOIN `live_stream` ON `playlist_data`.`object_id` = `live_stream`.`id` AND `playlist_data`.`object_type` = 'live_stream' " .
-                "LEFT JOIN `podcast_episode` ON `playlist_data`.`object_id` = `podcast_episode`.`id` AND `playlist_data`.`object_type` = 'podcast_episode' " .
-                "LEFT JOIN `song` ON `playlist_data`.`object_id` = `song`.`id` AND `playlist_data`.`object_type` = 'song' " .
-                "LEFT JOIN `song_preview` ON `playlist_data`.`object_id` = `song_preview`.`id` AND `playlist_data`.`object_type` = 'song_preview' " .
-                "LEFT JOIN `video` ON `playlist_data`.`object_id` = `video`.`id` AND `playlist_data`.`object_type` = 'video' " .
-                "WHERE `playlist_data`.`playlist` = ?  AND `playlist_data`.`object_type` IS NOT NULL ";
+            $sql = "SELECT COUNT(`playlist_data`.`id`) AS `list_count` FROM `playlist_data` "
+                . "LEFT JOIN `broadcast` ON `playlist_data`.`object_id` = `broadcast`.`id` AND `playlist_data`.`object_type` = 'broadcast' "
+                . "LEFT JOIN `democratic` ON `playlist_data`.`object_id` = `democratic`.`id` AND `playlist_data`.`object_type` = 'democratic' "
+                . "LEFT JOIN `live_stream` ON `playlist_data`.`object_id` = `live_stream`.`id` AND `playlist_data`.`object_type` = 'live_stream' "
+                . "LEFT JOIN `podcast_episode` ON `playlist_data`.`object_id` = `podcast_episode`.`id` AND `playlist_data`.`object_type` = 'podcast_episode' "
+                . "LEFT JOIN `song` ON `playlist_data`.`object_id` = `song`.`id` AND `playlist_data`.`object_type` = 'song' "
+                . "LEFT JOIN `song_preview` ON `playlist_data`.`object_id` = `song_preview`.`id` AND `playlist_data`.`object_type` = 'song_preview' "
+                . "LEFT JOIN `video` ON `playlist_data`.`object_id` = `video`.`id` AND `playlist_data`.`object_type` = 'video' "
+                . "WHERE `playlist_data`.`playlist` = ?  AND `playlist_data`.`object_type` IS NOT NULL ";
         } else {
             // check for a specific type of object
             $sql = 'SELECT COUNT(`playlist_data`.`id`) AS `list_count` FROM `playlist_data` INNER JOIN `' . $type . '` ON `playlist_data`.`object_id` = `' . $type . '`.`id` WHERE `playlist_data`.`playlist` = ? AND `object_id` IS NOT NULL ';
@@ -561,18 +561,18 @@ class Playlist extends playlist_object
         if (AmpConfig::get('catalog_filter')) {
             if ($user_id < 0) {
                 if ($all_media) {
-                    $sql .= "AND (`playlist_data`.`object_type` = 'live_stream' AND `live_stream`.`catalog` IN (SELECT `catalog_id` FROM `catalog_filter_group_map` WHERE `catalog_filter_group_map`.`group_id` = 0 AND `catalog_filter_group_map`.`enabled`=1) " .
-                        "OR `playlist_data`.`object_type` = 'podcast_episode' AND `podcast_episode`.`catalog` IN (SELECT `catalog_id` FROM `catalog_filter_group_map` WHERE `catalog_filter_group_map`.`group_id` = 0 AND `catalog_filter_group_map`.`enabled`=1) " .
-                        "OR `playlist_data`.`object_type` = 'song' AND `song`.`catalog` IN (SELECT `catalog_id` FROM `catalog_filter_group_map` WHERE `catalog_filter_group_map`.`group_id` = 0 AND `catalog_filter_group_map`.`enabled`=1) " .
-                        "OR `playlist_data`.`object_type` = 'video' AND `video`.`catalog` IN (SELECT `catalog_id` FROM `catalog_filter_group_map` WHERE `catalog_filter_group_map`.`group_id` = 0 AND `catalog_filter_group_map`.`enabled`=1)) ";
+                    $sql .= "AND (`playlist_data`.`object_type` = 'live_stream' AND `live_stream`.`catalog` IN (SELECT `catalog_id` FROM `catalog_filter_group_map` WHERE `catalog_filter_group_map`.`group_id` = 0 AND `catalog_filter_group_map`.`enabled`=1) "
+                        . "OR `playlist_data`.`object_type` = 'podcast_episode' AND `podcast_episode`.`catalog` IN (SELECT `catalog_id` FROM `catalog_filter_group_map` WHERE `catalog_filter_group_map`.`group_id` = 0 AND `catalog_filter_group_map`.`enabled`=1) "
+                        . "OR `playlist_data`.`object_type` = 'song' AND `song`.`catalog` IN (SELECT `catalog_id` FROM `catalog_filter_group_map` WHERE `catalog_filter_group_map`.`group_id` = 0 AND `catalog_filter_group_map`.`enabled`=1) "
+                        . "OR `playlist_data`.`object_type` = 'video' AND `video`.`catalog` IN (SELECT `catalog_id` FROM `catalog_filter_group_map` WHERE `catalog_filter_group_map`.`group_id` = 0 AND `catalog_filter_group_map`.`enabled`=1)) ";
                 } else {
                     $sql .= "AND `playlist_data`.`object_type` = '$type' AND `$type`.`catalog` IN (SELECT `catalog_id` FROM `catalog_filter_group_map` WHERE `catalog_filter_group_map`.`group_id` = 0 AND `catalog_filter_group_map`.`enabled`=1) ";
                 }
             } elseif ($all_media) {
-                $sql .= "AND (`playlist_data`.`object_type` = 'live_stream' AND `live_stream`.`catalog` IN (SELECT `catalog_id` FROM `catalog_filter_group_map` INNER JOIN `user` ON `user`.`catalog_filter_group` = `catalog_filter_group_map`.`group_id` WHERE `user`.`id` = ? AND `catalog_filter_group_map`.`enabled`=1) " .
-                    "OR `playlist_data`.`object_type` = 'podcast_episode' AND `podcast_episode`.`catalog` IN (SELECT `catalog_id` FROM `catalog_filter_group_map` INNER JOIN `user` ON `user`.`catalog_filter_group` = `catalog_filter_group_map`.`group_id` WHERE `user`.`id` = ? AND `catalog_filter_group_map`.`enabled`=1) " .
-                    "OR `playlist_data`.`object_type` = 'song' AND `song`.`catalog` IN (SELECT `catalog_id` FROM `catalog_filter_group_map` INNER JOIN `user` ON `user`.`catalog_filter_group` = `catalog_filter_group_map`.`group_id` WHERE `user`.`id` = ? AND `catalog_filter_group_map`.`enabled`=1) " .
-                    "OR `playlist_data`.`object_type` = 'video' AND `video`.`catalog` IN (SELECT `catalog_id` FROM `catalog_filter_group_map` INNER JOIN `user` ON `user`.`catalog_filter_group` = `catalog_filter_group_map`.`group_id` WHERE `user`.`id` = ? AND `catalog_filter_group_map`.`enabled`=1)) ";
+                $sql .= "AND (`playlist_data`.`object_type` = 'live_stream' AND `live_stream`.`catalog` IN (SELECT `catalog_id` FROM `catalog_filter_group_map` INNER JOIN `user` ON `user`.`catalog_filter_group` = `catalog_filter_group_map`.`group_id` WHERE `user`.`id` = ? AND `catalog_filter_group_map`.`enabled`=1) "
+                    . "OR `playlist_data`.`object_type` = 'podcast_episode' AND `podcast_episode`.`catalog` IN (SELECT `catalog_id` FROM `catalog_filter_group_map` INNER JOIN `user` ON `user`.`catalog_filter_group` = `catalog_filter_group_map`.`group_id` WHERE `user`.`id` = ? AND `catalog_filter_group_map`.`enabled`=1) "
+                    . "OR `playlist_data`.`object_type` = 'song' AND `song`.`catalog` IN (SELECT `catalog_id` FROM `catalog_filter_group_map` INNER JOIN `user` ON `user`.`catalog_filter_group` = `catalog_filter_group_map`.`group_id` WHERE `user`.`id` = ? AND `catalog_filter_group_map`.`enabled`=1) "
+                    . "OR `playlist_data`.`object_type` = 'video' AND `video`.`catalog` IN (SELECT `catalog_id` FROM `catalog_filter_group_map` INNER JOIN `user` ON `user`.`catalog_filter_group` = `catalog_filter_group_map`.`group_id` WHERE `user`.`id` = ? AND `catalog_filter_group_map`.`enabled`=1)) ";
                 $params = [$this->id, $user_id, $user_id, $user_id, $user_id];
             } else {
                 $sql .= "AND `playlist_data`.`object_type` = '$type' AND `$type`.`catalog` IN (SELECT `catalog_id` FROM `catalog_filter_group_map` INNER JOIN `user` ON `user`.`catalog_filter_group` = `catalog_filter_group_map`.`group_id` WHERE `user`.`id` = ? AND `catalog_filter_group_map`.`enabled`=1) ";
@@ -833,9 +833,9 @@ class Playlist extends playlist_object
     public function set_last(int $count, string $column): void
     {
         if (
-            $this->id &&
-            in_array($column, ['last_count', 'last_duration']) &&
-            $count >= 0
+            $this->id
+            && in_array($column, ['last_count', 'last_duration'])
+            && $count >= 0
         ) {
             $sql = "UPDATE `playlist` SET `" . Dba::escape($column) . "` = " . $count . " WHERE `id` = ?;";
             Dba::write($sql, [$this->id]);

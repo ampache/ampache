@@ -310,8 +310,8 @@ class AmpacheMusicBrainz extends AmpachePlugin implements PluginGetMetadataInter
         }
 
         if (
-            isset($brainzData['artist-credit']) ||
-            isset($brainzData['releases'])
+            isset($brainzData['artist-credit'])
+            || isset($brainzData['releases'])
         ) {
             // pull first artist-credit
             if (isset($brainzData['artist-credit']) && count($brainzData['artist-credit']) > 0) {

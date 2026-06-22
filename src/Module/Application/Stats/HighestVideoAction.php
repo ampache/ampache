@@ -64,8 +64,8 @@ final readonly class HighestVideoAction implements ApplicationActionInterface
         define('NO_BROWSE_SORTING', true);
 
         if (
-            $this->configContainer->isFeatureEnabled(ConfigurationKeyEnum::ALLOW_VIDEO) &&
-            $this->videoRepository->getItemCount()
+            $this->configContainer->isFeatureEnabled(ConfigurationKeyEnum::ALLOW_VIDEO)
+            && $this->videoRepository->getItemCount()
         ) {
             $user_id = $gatekeeper->getUser()?->id;
             $objects = Rating::get_highest('video', -1, 0, $user_id, $by_user);

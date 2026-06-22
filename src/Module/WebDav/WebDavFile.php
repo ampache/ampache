@@ -48,9 +48,9 @@ class WebDavFile extends File
         if (property_exists($this->libitem, 'catalog') && $this->libitem->catalog !== null) {
             $catalog = Catalog::create_from_id($this->libitem->catalog);
             if (
-                $catalog !== null &&
-                $catalog->get_type() === 'local' &&
-                (property_exists($this->libitem, 'file') && $this->libitem->file !== null)
+                $catalog !== null
+                && $catalog->get_type() === 'local'
+                && (property_exists($this->libitem, 'file') && $this->libitem->file !== null)
             ) {
                 $filepointer = fopen(Core::conv_lc_file($this->libitem->file), 'r');
 

@@ -145,8 +145,8 @@ class Ampache7digital extends AmpachePlugin implements PluginSongPreviewInterfac
     public function uninstall(): bool
     {
         return (
-            Preference::delete('7digital_api_key') &&
-            Preference::delete('7digital_secret_api_key')
+            Preference::delete('7digital_api_key')
+            && Preference::delete('7digital_secret_api_key')
         );
     }
 

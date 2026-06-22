@@ -53,8 +53,8 @@ class Upload
 
         $user_access = $user->access ?? -1;
 
-        return AmpConfig::get('allow_upload') &&
-            $user_access >= AmpConfig::get(ConfigurationKeyEnum::UPLOAD_ACCESS_LEVEL, AccessLevelEnum::USER->value);
+        return AmpConfig::get('allow_upload')
+            && $user_access >= AmpConfig::get(ConfigurationKeyEnum::UPLOAD_ACCESS_LEVEL, AccessLevelEnum::USER->value);
     }
 
     /**
@@ -201,8 +201,8 @@ class Upload
         $rootdir  = "";
         $pathname = realpath($catalog->get_path());
         if (
-            is_string($pathname) &&
-            !empty($pathname)
+            is_string($pathname)
+            && !empty($pathname)
         ) {
             $rootdir = $pathname;
             if (AmpConfig::get('upload_subdir')) {
@@ -296,8 +296,8 @@ class Upload
 
                     $artist = new Artist($artist_id);
                     if (
-                        $artist->get_user_owner() &&
-                        $artist->get_user_owner() != $options['user_upload']
+                        $artist->get_user_owner()
+                        && $artist->get_user_owner() != $options['user_upload']
                     ) {
                         debug_event(self::class, "Artist owner doesn't match the current user.", 3);
 
@@ -322,8 +322,8 @@ class Upload
 
                     $album = new Album($album_id);
                     if (
-                        $album->get_user_owner() &&
-                        $album->get_user_owner() != $options['user_upload']
+                        $album->get_user_owner()
+                        && $album->get_user_owner() != $options['user_upload']
                     ) {
                         debug_event(self::class, "Album owner doesn't match the current user.", 3);
 

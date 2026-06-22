@@ -63,8 +63,8 @@ final readonly class RecentVideoAction implements ApplicationActionInterface
         define('NO_BROWSE_SORTING', true);
 
         if (
-            $this->configContainer->isFeatureEnabled(ConfigurationKeyEnum::ALLOW_VIDEO) &&
-            $this->videoRepository->getItemCount()
+            $this->configContainer->isFeatureEnabled(ConfigurationKeyEnum::ALLOW_VIDEO)
+            && $this->videoRepository->getItemCount()
         ) {
             $user = ($by_user)
                 ? $gatekeeper->getUser()

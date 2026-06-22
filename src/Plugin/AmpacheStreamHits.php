@@ -136,8 +136,8 @@ class AmpacheStreamHits extends AmpachePlugin implements PluginStreamControlInte
     public function uninstall(): bool
     {
         return (
-            Preference::delete('stream_control_hits_max') &&
-            Preference::delete('stream_control_hits_days')
+            Preference::delete('stream_control_hits_max')
+            && Preference::delete('stream_control_hits_days')
         );
     }
 

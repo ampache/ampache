@@ -143,8 +143,8 @@ class AmpacheHeadphones extends AmpachePlugin implements PluginProcessWantedInte
     public function uninstall(): bool
     {
         return (
-            Preference::delete('headphones_api_url') &&
-            Preference::delete('headphones_api_key')
+            Preference::delete('headphones_api_url')
+            && Preference::delete('headphones_api_key')
         );
     }
 
@@ -163,8 +163,8 @@ class AmpacheHeadphones extends AmpachePlugin implements PluginProcessWantedInte
     protected function headphones_call(string $command, array $params): string
     {
         if (
-            (!isset($this->api_url) || ($this->api_url === '' || $this->api_url === '0')) ||
-            (!isset($this->api_key) || ($this->api_key === '' || $this->api_key === '0'))
+            (!isset($this->api_url) || ($this->api_url === '' || $this->api_url === '0'))
+            || (!isset($this->api_key) || ($this->api_key === '' || $this->api_key === '0'))
         ) {
             debug_event(self::class, 'Headphones url or api key missing', 3);
 

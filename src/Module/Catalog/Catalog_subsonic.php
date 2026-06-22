@@ -197,8 +197,8 @@ class Catalog_subsonic extends Catalog
 
                     $remote_url = $this->subsonic->parameterize($row['file'] . '&', $options);
                     if (
-                        $remote_url &&
-                        Catalog::cache_remote_file($file_target, $remote_url)
+                        $remote_url
+                        && Catalog::cache_remote_file($file_target, $remote_url)
                     ) {
                         debug_event('subsonic.catalog', 'Saved: ' . $row['id'] . ' to: {' . $file_target . '}', 5);
                     } else {
@@ -445,8 +445,8 @@ class Catalog_subsonic extends Catalog
         $image = $this->subsonic->querySubsonic('getCoverArt', ['id' => (string) $data['coverArt'], 'size' => $size], true);
 
         return (
-            is_string($image) &&
-            $art->insert($image) === true
+            is_string($image)
+            && $art->insert($image) === true
         );
     }
 
@@ -659,8 +659,8 @@ class Catalog_subsonic extends Catalog
                                 }
 
                                 if (
-                                    $action === 'add' &&
-                                    $existing_song
+                                    $action === 'add'
+                                    && $existing_song
                                 ) {
                                     debug_event('subsonic.catalog', 'Skipping existing song ' . $song_id_check, 5);
                                     if (Song::get_song_map_object_id($song_id_check, 'subsonic_' . $this->catalog_id) !== $remote_id) {
@@ -671,8 +671,8 @@ class Catalog_subsonic extends Catalog
                                 }
 
                                 if (
-                                    $action === 'verify' &&
-                                    !$existing_song
+                                    $action === 'verify'
+                                    && !$existing_song
                                 ) {
                                     continue;
                                 }

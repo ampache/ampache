@@ -169,14 +169,14 @@ $is_owner     = $current_user instanceof User && $current_user->getId() == $libi
                 /** @var Metadata $metadata */
                 $field = $metadata->getField();
                 if (
-                    $field !== null &&
-                    $field->isPublic() &&
-                    !in_array($field->getName(), $dismetas)
+                    $field !== null
+                    && $field->isPublic()
+                    && !in_array($field->getName(), $dismetas)
                 ) {
-                    echo '<tr>' .
-                    '<td class="edit_dialog_content_header">' . ucwords(str_replace("_", " ", $field->getName())) . '</td>' .
-                    '<td><input type="text" name="metadata[' . $metadata->getId() . ']" value="' . $metadata->getData() . '"/></td>' .
-                    '</tr>';
+                    echo '<tr>'
+                    . '<td class="edit_dialog_content_header">' . ucwords(str_replace("_", " ", $field->getName())) . '</td>'
+                    . '<td><input type="text" name="metadata[' . $metadata->getId() . ']" value="' . $metadata->getData() . '"/></td>'
+                    . '</tr>';
                 }
             } ?>
                     </table>

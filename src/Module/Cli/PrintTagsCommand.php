@@ -80,8 +80,8 @@ final class PrintTagsCommand extends Command
         );
 
         if (
-            $dir_pattern !== '' ||
-            $file_pattern !== ''
+            $dir_pattern !== ''
+            || $file_pattern !== ''
         ) {
             /* HINT: %1 $dir_pattern (e.g. %A/%Y %a), %2 $file_pattern (e.g. %d - %t) */
             $interactor->info(

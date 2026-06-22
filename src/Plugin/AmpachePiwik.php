@@ -148,8 +148,8 @@ class AmpachePiwik extends AmpachePlugin implements PluginDisplayOnFooterInterfa
     public function uninstall(): bool
     {
         return (
-            Preference::delete('piwik_site_id') &&
-            Preference::delete('piwik_url')
+            Preference::delete('piwik_site_id')
+            && Preference::delete('piwik_url')
         );
     }
 

@@ -268,10 +268,10 @@ class Share extends database_object
         }
 
         if (
-            $this->secret !== null &&
-            $this->secret !== '' &&
-            $this->secret !== '0' &&
-            $secret != $this->secret
+            $this->secret !== null
+            && $this->secret !== ''
+            && $this->secret !== '0'
+            && $secret != $this->secret
         ) {
             debug_event(self::class, 'Access Denied: secret requires to access share ' . $this->id . '.', 3);
 
@@ -298,8 +298,8 @@ class Share extends database_object
      */
     public function isAccessible(User $user): bool
     {
-        return $user->has_access(AccessLevelEnum::MANAGER) ||
-            $this->user === $user->getId();
+        return $user->has_access(AccessLevelEnum::MANAGER)
+            || $this->user === $user->getId();
     }
 
     public function isNew(): bool
@@ -310,12 +310,12 @@ class Share extends database_object
     public function show_action_buttons(): void
     {
         if (
-            $this->isNew() === false &&
-            (
-                Core::get_global('user') instanceof User &&
-                (
-                    Core::get_global('user')->has_access(AccessLevelEnum::MANAGER) ||
-                    $this->user === Core::get_global('user')->id
+            $this->isNew() === false
+            && (
+                Core::get_global('user') instanceof User
+                && (
+                    Core::get_global('user')->has_access(AccessLevelEnum::MANAGER)
+                    || $this->user === Core::get_global('user')->id
                 )
             )
         ) {

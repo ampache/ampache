@@ -110,9 +110,9 @@ abstract class database_object
         }
 
         return (
-            $object_id &&
-            array_key_exists((string) $object_id, self::$object_cache[$index]) &&
-            !empty(self::$object_cache[$index][$object_id])
+            $object_id
+            && array_key_exists((string) $object_id, self::$object_cache[$index])
+            && !empty(self::$object_cache[$index][$object_id])
         );
     }
 

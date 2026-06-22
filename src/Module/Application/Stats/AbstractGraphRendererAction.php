@@ -67,10 +67,10 @@ abstract readonly class AbstractGraphRendererAction implements ApplicationAction
 
         if (
             (
-                $owner_id < 1 ||
-                $owner_id != Core::get_global('user')?->getId()
-            ) &&
-            $gatekeeper->mayAccess(AccessTypeEnum::INTERFACE, AccessLevelEnum::CONTENT_MANAGER) === false
+                $owner_id < 1
+                || $owner_id != Core::get_global('user')?->getId()
+            )
+            && $gatekeeper->mayAccess(AccessTypeEnum::INTERFACE, AccessLevelEnum::CONTENT_MANAGER) === false
         ) {
             throw new AccessDeniedException();
         }

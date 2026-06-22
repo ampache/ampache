@@ -170,8 +170,8 @@ class AmpacheRatingMatch extends AmpachePlugin implements PluginSaveMediaplayInt
                 $play = (int) $rule_array[0];
                 // play count only
                 if (
-                    $play > 0 &&
-                    $play_count >= $play
+                    $play > 0
+                    && $play_count >= $play
                 ) {
                     return true;
                 }
@@ -183,20 +183,20 @@ class AmpacheRatingMatch extends AmpachePlugin implements PluginSaveMediaplayInt
                 // play rule and no skip
                 if (
                     (
-                        $play > 0 &&
-                        $play_count >= $play &&
-                        $skip === 0
-                    ) ||
-                    (
-                        $skip > 0 &&
-                        $skip_count >= $skip &&
-                        $play === 0
-                    ) ||
-                    (
-                        $play > 0 &&
-                        $play_count >= $play &&
-                        $skip > 0 &&
-                        $skip_count >= $skip
+                        $play > 0
+                        && $play_count >= $play
+                        && $skip === 0
+                    )
+                    || (
+                        $skip > 0
+                        && $skip_count >= $skip
+                        && $play === 0
+                    )
+                    || (
+                        $play > 0
+                        && $play_count >= $play
+                        && $skip > 0
+                        && $skip_count >= $skip
                     )
                 ) {
                     return true;
@@ -377,15 +377,15 @@ class AmpacheRatingMatch extends AmpachePlugin implements PluginSaveMediaplayInt
     public function uninstall(): bool
     {
         return (
-            Preference::delete('ratingmatch_stars') &&
-            Preference::delete('ratingmatch_flags') &&
-            Preference::delete('ratingmatch_star1_rule') &&
-            Preference::delete('ratingmatch_star2_rule') &&
-            Preference::delete('ratingmatch_star3_rule') &&
-            Preference::delete('ratingmatch_star4_rule') &&
-            Preference::delete('ratingmatch_star5_rule') &&
-            Preference::delete('ratingmatch_flag_rule') &&
-            Preference::delete('ratingmatch_write_tags')
+            Preference::delete('ratingmatch_stars')
+            && Preference::delete('ratingmatch_flags')
+            && Preference::delete('ratingmatch_star1_rule')
+            && Preference::delete('ratingmatch_star2_rule')
+            && Preference::delete('ratingmatch_star3_rule')
+            && Preference::delete('ratingmatch_star4_rule')
+            && Preference::delete('ratingmatch_star5_rule')
+            && Preference::delete('ratingmatch_flag_rule')
+            && Preference::delete('ratingmatch_write_tags')
         );
     }
 

@@ -66,8 +66,8 @@ final readonly class UserflagVideoAction implements ApplicationActionInterface
         define('NO_BROWSE_SORTING', true);
 
         if (
-            $this->configContainer->isFeatureEnabled(ConfigurationKeyEnum::ALLOW_VIDEO) &&
-            $this->videoRepository->getItemCount()
+            $this->configContainer->isFeatureEnabled(ConfigurationKeyEnum::ALLOW_VIDEO)
+            && $this->videoRepository->getItemCount()
         ) {
             $objects = Userflag::get_latest('video', $gatekeeper->getUser(), -1, 0, 0, 0, $by_user);
             $browse  = $this->modelFactory->createBrowse();

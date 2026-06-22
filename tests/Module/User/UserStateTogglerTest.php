@@ -97,9 +97,9 @@ class UserStateTogglerTest extends MockeryTestCase
         $fullName  = 'some-fullname';
         $siteTitle = 'some-title';
         $webPath   = 'some-path';
-        $message   = sprintf('A new user has been enabled. %s', $userName) .
-            "\n\n" .
-            sprintf(
+        $message   = sprintf('A new user has been enabled. %s', $userName)
+            . "\n\n"
+            . sprintf(
                 'You can log in at the following address %s',
                 $webPath
             );

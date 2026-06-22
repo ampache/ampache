@@ -57,10 +57,10 @@ final class InstallationHelper implements InstallationHelperInterface
         $final = "";
         foreach ($data as $line) {
             if (
-                preg_match("/^;?([\w\d]+)\s+=\s+[\"]{1}(.*?)[\"]{1}$/", $line, $matches) ||
-                preg_match("/^;?([\w\d]+)\s+=\s+[\']{1}(.*?)[\']{1}$/", $line, $matches) ||
-                preg_match("/^;?([\w\d]+)\s+=\s+[\'\"]{0}(.*)[\'\"]{0}$/", $line, $matches) ||
-                preg_match("/^;?([\w\d]+)\s{0}=\s{0}[\'\"]?(.*?)[\'\"]?$/", $line, $matches)
+                preg_match("/^;?([\w\d]+)\s+=\s+[\"]{1}(.*?)[\"]{1}$/", $line, $matches)
+                || preg_match("/^;?([\w\d]+)\s+=\s+[\']{1}(.*?)[\']{1}$/", $line, $matches)
+                || preg_match("/^;?([\w\d]+)\s+=\s+[\'\"]{0}(.*)[\'\"]{0}$/", $line, $matches)
+                || preg_match("/^;?([\w\d]+)\s{0}=\s{0}[\'\"]?(.*?)[\'\"]?$/", $line, $matches)
             ) {
                 $key   = $matches[1];
                 $value = $matches[2];
@@ -632,9 +632,9 @@ final class InstallationHelper implements InstallationHelperInterface
     public function write_config(string $current_file_path): bool
     {
         if (
-            !$current_file_path ||
-            !is_writable($current_file_path) ||
-            !parse_ini_file($current_file_path)
+            !$current_file_path
+            || !is_writable($current_file_path)
+            || !parse_ini_file($current_file_path)
         ) {
             return false;
         }
@@ -645,9 +645,9 @@ final class InstallationHelper implements InstallationHelperInterface
         $handle = fopen($current_file_path, 'w+');
         $length = strlen($new_data);
         if (
-            $new_data === '' || $new_data === '0' ||
-            !$handle ||
-            $length <= 0
+            $new_data === '' || $new_data === '0'
+            || !$handle
+            || $length <= 0
         ) {
             return false;
         }
@@ -720,14 +720,14 @@ final class InstallationHelper implements InstallationHelperInterface
             if ($in_string && ($sql[$count] == $in_string) && $buffer[1] != "\\") {
                 $in_string = false;
             } elseif (
-                !$in_string &&
-                (
-                    $sql[$count] == '"' ||
-                    $sql[$count] == "'"
-                ) &&
-                (
-                    !isset($buffer[0]) ||
-                    $buffer[0] != "\\"
+                !$in_string
+                && (
+                    $sql[$count] == '"'
+                    || $sql[$count] == "'"
+                )
+                && (
+                    !isset($buffer[0])
+                    || $buffer[0] != "\\"
                 )
             ) {
                 $in_string = $sql[$count];

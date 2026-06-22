@@ -178,12 +178,12 @@ final readonly class FolderCollectorModule implements CollectorModuleInterface
 
                 if (
                     (
-                        $file == $preferred_filename ||
-                        pathinfo($file, PATHINFO_FILENAME) == $preferred_filename
-                    ) ||
-                        (
-                            $file == $artist_filename ||
-                            pathinfo($file, PATHINFO_FILENAME) == $artist_filename
+                        $file == $preferred_filename
+                        || pathinfo($file, PATHINFO_FILENAME) == $preferred_filename
+                    )
+                        || (
+                            $file == $artist_filename
+                            || pathinfo($file, PATHINFO_FILENAME) == $artist_filename
                         )
                 ) {
                     // We found the preferred filename and so we're done.

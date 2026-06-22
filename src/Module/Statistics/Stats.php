@@ -105,8 +105,8 @@ class Stats
         }
 
         if (
-            $count_type === 'down' &&
-            in_array($type, ['song', 'podcast_episode', 'video'], true)
+            $count_type === 'down'
+            && in_array($type, ['song', 'podcast_episode', 'video'], true)
         ) {
             $sql = sprintf('UPDATE `%s` SET `played` = 0 WHERE `id` = ? AND `total_count` = 0 and `played` = 1;', $type);
             Dba::write($sql, $params);
@@ -604,10 +604,10 @@ class Stats
         $db_results = Dba::read($sql, $params);
         while ($row = Dba::fetch_assoc($db_results)) {
             if (
-                $geolocation &&
-                empty($row['geo_name']) &&
-                !empty($row['geo_latitude']) &&
-                !empty($row['geo_longitude'])
+                $geolocation
+                && empty($row['geo_name'])
+                && !empty($row['geo_latitude'])
+                && !empty($row['geo_longitude'])
             ) {
                 $row['geo_name'] = Stats::get_cached_place_name((float) $row['geo_latitude'], (float) $row['geo_longitude']);
             }
@@ -746,10 +746,10 @@ class Stats
         }
 
         if (
-            $user === null &&
-            AmpConfig::get('cron_cache') &&
-            !$addAdditionalColumns &&
-            in_array($type, ['album', 'album_disk', 'artist', 'song', 'genre', 'catalog', 'live_stream', 'video', 'podcast', 'podcast_episode', 'playlist'], true)
+            $user === null
+            && AmpConfig::get('cron_cache')
+            && !$addAdditionalColumns
+            && in_array($type, ['album', 'album_disk', 'artist', 'song', 'genre', 'catalog', 'live_stream', 'video', 'podcast', 'podcast_episode', 'playlist'], true)
         ) {
             $sql = "SELECT `object_id` AS `id`, MAX(`count`) AS `count` FROM `cache_object_count` WHERE `object_type` = '" . $type . "' AND `count_type` = '" . $count_type . "' AND `threshold` = '" . $threshold . "' GROUP BY `object_id`, `object_type`";
         } else {
@@ -926,9 +926,9 @@ class Stats
         // the count was inserted
         if ($db_results instanceof PDOStatement) {
             if (
-                in_array($type, ['song', 'album', 'album_disk', 'artist', 'video', 'podcast', 'podcast_episode'], true) &&
-                $count_type === 'stream' && $user_id > 0 &&
-                $agent !== 'debug'
+                in_array($type, ['song', 'album', 'album_disk', 'artist', 'video', 'podcast', 'podcast_episode'], true)
+                && $count_type === 'stream' && $user_id > 0
+                && $agent !== 'debug'
             ) {
                 self::count($type, [$object_id], 'up');
                 // don't register activity for album or artist plays

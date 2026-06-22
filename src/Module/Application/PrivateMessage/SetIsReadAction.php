@@ -50,8 +50,8 @@ final readonly class SetIsReadAction implements ApplicationActionInterface
     public function run(ServerRequestInterface $request, GuiGatekeeperInterface $gatekeeper): ?ResponseInterface
     {
         if (
-            $gatekeeper->mayAccess(AccessTypeEnum::INTERFACE, AccessLevelEnum::USER) === false ||
-            $this->configContainer->isFeatureEnabled(ConfigurationKeyEnum::SOCIABLE) === false
+            $gatekeeper->mayAccess(AccessTypeEnum::INTERFACE, AccessLevelEnum::USER) === false
+            || $this->configContainer->isFeatureEnabled(ConfigurationKeyEnum::SOCIABLE) === false
         ) {
             throw new AccessDeniedException('Access Denied: sociable features are not enabled.');
         }
@@ -71,8 +71,8 @@ final readonly class SetIsReadAction implements ApplicationActionInterface
         foreach ($messageIds as $messageId) {
             $message = $this->pmRepository->findById($messageId);
             if (
-                $message === null ||
-                $message->getRecipientUserId() !== $gatekeeper->getUserId()
+                $message === null
+                || $message->getRecipientUserId() !== $gatekeeper->getUserId()
             ) {
                 throw new AccessDeniedException(
                     sprintf('Unknown or unauthorized private message `%d`.', $messageId),

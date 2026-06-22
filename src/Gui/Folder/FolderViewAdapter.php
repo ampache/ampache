@@ -74,10 +74,10 @@ final readonly class FolderViewAdapter implements FolderViewAdapterInterface
     public function canBatchDownload(): bool
     {
         return (
-            $this->object_type === 'folder' &&
-            $this->functionChecker->check(AccessFunctionEnum::FUNCTION_BATCH_DOWNLOAD) &&
-            $this->configContainer->isFeatureEnabled(ConfigurationKeyEnum::ALLOW_ZIP_DOWNLOAD) &&
-            $this->zipHandler->isZipable($this->object_type));
+            $this->object_type === 'folder'
+            && $this->functionChecker->check(AccessFunctionEnum::FUNCTION_BATCH_DOWNLOAD)
+            && $this->configContainer->isFeatureEnabled(ConfigurationKeyEnum::ALLOW_ZIP_DOWNLOAD)
+            && $this->zipHandler->isZipable($this->object_type));
     }
 
     public function canBeDeleted(): bool
@@ -89,9 +89,9 @@ final readonly class FolderViewAdapter implements FolderViewAdapterInterface
     {
         if ($this->object instanceof Folder) {
             return (
-                $this->object->playable &&
-                $this->object->object_count < $this->configContainer->get(ConfigurationKeyEnum::DIRECT_PLAY_LIMIT) &&
-                $this->configContainer->isFeatureEnabled(ConfigurationKeyEnum::DIRECTPLAY)
+                $this->object->playable
+                && $this->object->object_count < $this->configContainer->get(ConfigurationKeyEnum::DIRECT_PLAY_LIMIT)
+                && $this->configContainer->isFeatureEnabled(ConfigurationKeyEnum::DIRECTPLAY)
             );
         }
 
@@ -101,20 +101,20 @@ final readonly class FolderViewAdapter implements FolderViewAdapterInterface
     public function canPostShout(): bool
     {
         return
-            $this->object_type !== 'folder' &&
-            $this->configContainer->isFeatureEnabled(ConfigurationKeyEnum::SOCIABLE) &&
-            (
-                $this->configContainer->isAuthenticationEnabled() === false ||
-                $this->gatekeeper->mayAccess(AccessTypeEnum::INTERFACE, AccessLevelEnum::USER)
+            $this->object_type !== 'folder'
+            && $this->configContainer->isFeatureEnabled(ConfigurationKeyEnum::SOCIABLE)
+            && (
+                $this->configContainer->isAuthenticationEnabled() === false
+                || $this->gatekeeper->mayAccess(AccessTypeEnum::INTERFACE, AccessLevelEnum::USER)
             );
     }
 
     public function canShare(): bool
     {
         return (
-            $this->object_type !== 'folder' &&
-            $this->gatekeeper->mayAccess(AccessTypeEnum::INTERFACE, AccessLevelEnum::USER) &&
-            $this->configContainer->isFeatureEnabled(ConfigurationKeyEnum::SHARE)
+            $this->object_type !== 'folder'
+            && $this->gatekeeper->mayAccess(AccessTypeEnum::INTERFACE, AccessLevelEnum::USER)
+            && $this->configContainer->isFeatureEnabled(ConfigurationKeyEnum::SHARE)
         );
     }
 
@@ -159,9 +159,9 @@ final readonly class FolderViewAdapter implements FolderViewAdapterInterface
         $object_id   = $this->object->getId();
         $object_type = $this->object_type;
         if (
-            $this->object_type === 'song' &&
-            $this->object instanceof Song &&
-            !$this->configContainer->get(ConfigurationKeyEnum::SHOW_SONG_ART)
+            $this->object_type === 'song'
+            && $this->object instanceof Song
+            && !$this->configContainer->get(ConfigurationKeyEnum::SHOW_SONG_ART)
         ) {
             $object_id   = $this->object->album;
             $object_type = 'album';
@@ -353,10 +353,10 @@ final readonly class FolderViewAdapter implements FolderViewAdapterInterface
     public function isEditable(): bool
     {
         return (
-            $this->object_type !== 'folder' &&
-            (
-                $this->gatekeeper->mayAccess(AccessTypeEnum::INTERFACE, AccessLevelEnum::CONTENT_MANAGER) ||
-                $this->gatekeeper->getUserId() == $this->object->get_user_owner()
+            $this->object_type !== 'folder'
+            && (
+                $this->gatekeeper->mayAccess(AccessTypeEnum::INTERFACE, AccessLevelEnum::CONTENT_MANAGER)
+                || $this->gatekeeper->getUserId() == $this->object->get_user_owner()
             )
         );
     }

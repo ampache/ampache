@@ -107,9 +107,9 @@ class Podcast_Episode extends database_object implements
 
         $this->id = $episode_id;
         if (
-            $this->file !== null &&
-            $this->file !== '' &&
-            $this->file !== '0'
+            $this->file !== null
+            && $this->file !== ''
+            && $this->file !== '0'
         ) {
             $this->type    = strtolower(pathinfo($this->file, PATHINFO_EXTENSION));
             $this->mime    = Song::type_to_mime($this->type);

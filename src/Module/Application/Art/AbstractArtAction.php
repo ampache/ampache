@@ -53,8 +53,8 @@ abstract class AbstractArtAction implements ApplicationActionInterface
         // If not a content manager user then kick em out
         if (
             $gatekeeper->mayAccess(AccessTypeEnum::INTERFACE, AccessLevelEnum::CONTENT_MANAGER) === false && (
-                $gatekeeper->mayAccess(AccessTypeEnum::INTERFACE, AccessLevelEnum::USER) === false ||
-                $item->get_user_owner() != Core::get_global('user')?->getId()
+                $gatekeeper->mayAccess(AccessTypeEnum::INTERFACE, AccessLevelEnum::USER) === false
+                || $item->get_user_owner() != Core::get_global('user')?->getId()
             )
         ) {
             return null;

@@ -50,8 +50,8 @@ final readonly class DeleteAction implements ApplicationActionInterface
     public function run(ServerRequestInterface $request, GuiGatekeeperInterface $gatekeeper): ?ResponseInterface
     {
         if (
-            $this->configContainer->isFeatureEnabled(ConfigurationKeyEnum::BROADCAST) === false ||
-            $this->configContainer->isFeatureEnabled(ConfigurationKeyEnum::DEMO_MODE)
+            $this->configContainer->isFeatureEnabled(ConfigurationKeyEnum::BROADCAST) === false
+            || $this->configContainer->isFeatureEnabled(ConfigurationKeyEnum::DEMO_MODE)
         ) {
             throw new AccessDeniedException();
         }

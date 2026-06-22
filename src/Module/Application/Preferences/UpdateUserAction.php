@@ -54,10 +54,10 @@ final readonly class UpdateUserAction implements ApplicationActionInterface
     {
         if (
             (
-                $gatekeeper->mayAccess(AccessTypeEnum::INTERFACE, AccessLevelEnum::USER) === false &&
-                (int) (Core::get_global('user')?->getId()) > 0
-            ) ||
-            !$this->requestParser->verifyForm('update_user')
+                $gatekeeper->mayAccess(AccessTypeEnum::INTERFACE, AccessLevelEnum::USER) === false
+                && (int) (Core::get_global('user')?->getId()) > 0
+            )
+            || !$this->requestParser->verifyForm('update_user')
         ) {
             throw new AccessDeniedException();
         }

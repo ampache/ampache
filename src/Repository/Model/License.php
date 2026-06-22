@@ -98,8 +98,8 @@ class License extends BaseModel
         $result = $this->licenseRepository->persist($this);
 
         if (
-            $result !== null &&
-            $this->isNew()
+            $result !== null
+            && $this->isNew()
         ) {
             $this->id = $result;
         }

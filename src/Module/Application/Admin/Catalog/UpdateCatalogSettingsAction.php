@@ -59,8 +59,8 @@ final class UpdateCatalogSettingsAction extends AbstractCatalogAction
 
         $data = (array) $request->getParsedBody();
         if (
-            $data === [] ||
-            (!isset($data['catalog_id']) || !isset($data['name']) || !isset($data['rename_pattern']) || !isset($data['sort_pattern']))
+            $data === []
+            || (!isset($data['catalog_id']) || !isset($data['name']) || !isset($data['rename_pattern']) || !isset($data['sort_pattern']))
         ) {
             return null;
         }

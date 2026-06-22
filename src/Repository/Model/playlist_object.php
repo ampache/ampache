@@ -301,10 +301,10 @@ abstract class playlist_object extends database_object implements
     public function has_access(?User $user = null): bool
     {
         if (
-            $user instanceof User &&
-            (
-                $user->access === AccessLevelEnum::ADMIN->value ||
-                $this->user === $user->getId()
+            $user instanceof User
+            && (
+                $user->access === AccessLevelEnum::ADMIN->value
+                || $this->user === $user->getId()
             )
         ) {
             return true;
@@ -319,8 +319,8 @@ abstract class playlist_object extends database_object implements
         }
 
         return (
-            Core::get_global('user') instanceof User &&
-            $this->user == Core::get_global('user')->id
+            Core::get_global('user') instanceof User
+            && $this->user == Core::get_global('user')->id
         );
     }
 
@@ -354,9 +354,9 @@ abstract class playlist_object extends database_object implements
             : Core::get_global('user');
 
         return (bool) (
-            $user instanceof User &&
-            !empty($this->collaborate) &&
-            in_array($user->getId(), array_map('intval', explode(',', (string) $this->collaborate)))
+            $user instanceof User
+            && !empty($this->collaborate)
+            && in_array($user->getId(), array_map('intval', explode(',', (string) $this->collaborate)))
         );
     }
 

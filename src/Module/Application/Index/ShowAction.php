@@ -66,8 +66,8 @@ final readonly class ShowAction implements ApplicationActionInterface
          * going to let them break their servers
          */
         if (
-            $refreshLimit > 5 &&
-            $this->configContainer->isFeatureEnabled(ConfigurationKeyEnum::HOME_NOW_PLAYING)
+            $refreshLimit > 5
+            && $this->configContainer->isFeatureEnabled(ConfigurationKeyEnum::HOME_NOW_PLAYING)
         ) {
             $refresh_limit = $refreshLimit;
             $ajax_url      = '?page=index&action=refresh_index';

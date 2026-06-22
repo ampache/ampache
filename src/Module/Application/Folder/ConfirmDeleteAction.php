@@ -63,8 +63,8 @@ final readonly class ConfirmDeleteAction implements ApplicationActionInterface
 
         $folder = $this->folderRepository->findById($folderId);
         if (
-            $folder === null ||
-            !Catalog::can_remove($folder)
+            $folder === null
+            || !Catalog::can_remove($folder)
         ) {
             throw new AccessDeniedException(
                 sprintf('Unauthorized to remove the folder `%s`', $folderId)

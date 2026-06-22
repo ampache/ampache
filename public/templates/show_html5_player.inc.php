@@ -250,8 +250,8 @@ echo implode(',', $solutions); ?>",
                     obj.artist = obj.artist.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
 
                     <?php if (
-                        $isVideo === false &&
-                        $isShare === false
+                        $isVideo === false
+                        && $isShare === false
                     ) {
                         if ($iframed) {
                             if (AmpConfig::get('sociable')) {
@@ -286,9 +286,9 @@ echo implode(',', $solutions); ?>",
                     $('.playing_title').html(titleobj);
                     $('.playing_artist').html(artistobj);
                     <?php if (
-                        $iframed &&
-                        $isRandom === false &&
-                        $isDemocratic === false
+                        $iframed
+                        && $isRandom === false
+                        && $isDemocratic === false
                     ) { ?>
                     $('.playing_actions').html(actionsobj);
                     <?php if (AmpConfig::get('show_lyrics')) { ?>

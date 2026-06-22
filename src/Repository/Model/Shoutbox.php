@@ -144,8 +144,8 @@ class Shoutbox extends BaseModel
         $result = $this->shoutRepository->persist($this);
 
         if (
-            $result !== null &&
-            $this->isNew()
+            $result !== null
+            && $this->isNew()
         ) {
             $this->id = $result;
         }

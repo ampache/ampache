@@ -135,9 +135,9 @@ final readonly class ArtCollector implements ArtCollectorInterface
             if (in_array(strtolower((string) $method), $plugin_names)) {
                 $plugin = new Plugin($method);
                 if (
-                    $plugin->_plugin instanceof PluginGatherArtsInterface &&
-                    Plugin::get_plugin_version($plugin->_plugin->name) > 0 &&
-                    $plugin->load($user)
+                    $plugin->_plugin instanceof PluginGatherArtsInterface
+                    && Plugin::get_plugin_version($plugin->_plugin->name) > 0
+                    && $plugin->load($user)
                 ) {
                     $data = $plugin->_plugin->gather_arts($type, $options, $limit);
                 }

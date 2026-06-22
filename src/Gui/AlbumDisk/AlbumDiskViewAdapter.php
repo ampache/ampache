@@ -70,9 +70,9 @@ final readonly class AlbumDiskViewAdapter implements AlbumDiskViewAdapterInterfa
 
     public function canBatchDownload(): bool
     {
-        return $this->functionChecker->check(AccessFunctionEnum::FUNCTION_BATCH_DOWNLOAD) &&
-            $this->configContainer->isFeatureEnabled(ConfigurationKeyEnum::ALLOW_ZIP_DOWNLOAD) &&
-            $this->zipHandler->isZipable('album_disk');
+        return $this->functionChecker->check(AccessFunctionEnum::FUNCTION_BATCH_DOWNLOAD)
+            && $this->configContainer->isFeatureEnabled(ConfigurationKeyEnum::ALLOW_ZIP_DOWNLOAD)
+            && $this->zipHandler->isZipable('album_disk');
     }
 
     public function canBeDeleted(): bool
@@ -83,16 +83,16 @@ final readonly class AlbumDiskViewAdapter implements AlbumDiskViewAdapterInterfa
     public function canPostShout(): bool
     {
         return (
-            $this->configContainer->isAuthenticationEnabled() === false ||
-            $this->gatekeeper->mayAccess(AccessTypeEnum::INTERFACE, AccessLevelEnum::USER)
-        ) &&
-            $this->configContainer->isFeatureEnabled(ConfigurationKeyEnum::SOCIABLE);
+            $this->configContainer->isAuthenticationEnabled() === false
+            || $this->gatekeeper->mayAccess(AccessTypeEnum::INTERFACE, AccessLevelEnum::USER)
+        )
+            && $this->configContainer->isFeatureEnabled(ConfigurationKeyEnum::SOCIABLE);
     }
 
     public function canShare(): bool
     {
-        return $this->gatekeeper->mayAccess(AccessTypeEnum::INTERFACE, AccessLevelEnum::USER) &&
-            $this->configContainer->isFeatureEnabled(ConfigurationKeyEnum::SHARE);
+        return $this->gatekeeper->mayAccess(AccessTypeEnum::INTERFACE, AccessLevelEnum::USER)
+            && $this->configContainer->isFeatureEnabled(ConfigurationKeyEnum::SHARE);
     }
 
     public function canShowYear(): bool

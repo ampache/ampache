@@ -63,12 +63,12 @@ final class ArtCleanupCommand extends Command
 
             $runable = (
                 (
-                    !$this->configContainer->get('album_art_min_width') &&
-                    $this->configContainer->get('album_art_min_height')
-                ) ||
-                (
-                    !$this->configContainer->get('album_art_max_width') &&
-                    !$this->configContainer->get('album_art_max_height')
+                    !$this->configContainer->get('album_art_min_width')
+                    && $this->configContainer->get('album_art_min_height')
+                )
+                || (
+                    !$this->configContainer->get('album_art_max_width')
+                    && !$this->configContainer->get('album_art_max_height')
                 )
             );
 

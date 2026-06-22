@@ -79,9 +79,9 @@ class AmpacheLyristLyrics extends AmpachePlugin implements PluginGetLyricsInterf
         if ($request->status_code == 200) {
             $json = json_decode((string) $request->body);
             if (
-                $json &&
-                !empty($json->lyrics) &&
-                !empty($json->image)
+                $json
+                && !empty($json->lyrics)
+                && !empty($json->image)
             ) {
                 return [
                     'text' => nl2br((string) $json->lyrics),

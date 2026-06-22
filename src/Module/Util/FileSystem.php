@@ -173,8 +173,8 @@ class FileSystem
 
         usort($res, fn($a, $b) => strcasecmp((string) $a['title'], (string) $b['title']));
         if (
-            $with_root &&
-            $this->id($dir) === '/'
+            $with_root
+            && $this->id($dir) === '/'
         ) {
             $res = [
                 [

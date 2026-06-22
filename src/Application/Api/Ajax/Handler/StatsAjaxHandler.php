@@ -58,9 +58,9 @@ final readonly class StatsAjaxHandler implements AjaxHandlerInterface
                     if ($user->id > 0) {
                         $name = $_REQUEST['name'] ?? null;
                         if (
-                            empty($name) &&
-                            !empty($_REQUEST['latitude']) &&
-                            !empty($_REQUEST['longitude'])
+                            empty($name)
+                            && !empty($_REQUEST['latitude'])
+                            && !empty($_REQUEST['longitude'])
                         ) {
                             $latitude  = (float) $_REQUEST['latitude'];
                             $longitude = (float) $_REQUEST['longitude'];
@@ -80,9 +80,9 @@ final readonly class StatsAjaxHandler implements AjaxHandlerInterface
                             // Better to check for bugged values here and keep previous user good location
                             // Someone listing music at 0.0,0.0 location would need a waterproof music player btw
                             if (
-                                !in_array($name, [null, '', '0'], true) &&
-                                $latitude > 0 &&
-                                $longitude > 0
+                                !in_array($name, [null, '', '0'], true)
+                                && $latitude > 0
+                                && $longitude > 0
                             ) {
                                 Session::update_geolocation((string) session_id(), $latitude, $longitude, $name);
                             }
@@ -95,9 +95,9 @@ final readonly class StatsAjaxHandler implements AjaxHandlerInterface
                 break;
             case 'delete_play':
                 if (
-                    check_http_referer() === true &&
-                    Access::check(AccessTypeEnum::INTERFACE, AccessLevelEnum::ADMIN) &&
-                    isset($_REQUEST['activity_id'])
+                    check_http_referer() === true
+                    && Access::check(AccessTypeEnum::INTERFACE, AccessLevelEnum::ADMIN)
+                    && isset($_REQUEST['activity_id'])
                 ) {
                     Stats::delete((int) $_REQUEST['activity_id']);
                 }
@@ -124,9 +124,9 @@ final readonly class StatsAjaxHandler implements AjaxHandlerInterface
                 break;
             case 'delete_skip':
                 if (
-                    check_http_referer() === true &&
-                    Access::check(AccessTypeEnum::INTERFACE, AccessLevelEnum::ADMIN) &&
-                    isset($_REQUEST['activity_id'])
+                    check_http_referer() === true
+                    && Access::check(AccessTypeEnum::INTERFACE, AccessLevelEnum::ADMIN)
+                    && isset($_REQUEST['activity_id'])
                 ) {
                     Stats::delete((int) $_REQUEST['activity_id']);
                 }

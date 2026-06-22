@@ -57,8 +57,8 @@ final readonly class WantedAction implements ApplicationActionInterface
 
         $user = $gatekeeper->getUser();
         if (
-            $user !== null &&
-            $user->has_access(AccessLevelEnum::MANAGER)
+            $user !== null
+            && $user->has_access(AccessLevelEnum::MANAGER)
         ) {
             $user = null;
         }

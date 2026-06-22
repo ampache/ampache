@@ -159,9 +159,9 @@ class AmpacheRSSView extends AmpachePlugin implements PluginDisplayHomeInterface
     public function uninstall(): bool
     {
         return (
-            Preference::delete('rssview_feed_url') &&
-            Preference::delete('rssview_max_items') &&
-            Preference::delete('rssview_order')
+            Preference::delete('rssview_feed_url')
+            && Preference::delete('rssview_max_items')
+            && Preference::delete('rssview_order')
         );
     }
 

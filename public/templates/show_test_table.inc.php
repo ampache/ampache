@@ -43,8 +43,8 @@ function debug_wresult(bool $status = false, ?string $value = null, string $comm
         $value = ($status) ? T_('OK') : T_('WARNING');
     }
 
-    return '<button type="button" class="btn btn-' . $class . '">' . scrub_out($value) .
-        '</span> <em>' . $comment . '</em></button>';
+    return '<button type="button" class="btn btn-' . $class . '">' . scrub_out($value)
+        . '</span> <em>' . $comment . '</em></button>';
 }
 
 // TODO remove me

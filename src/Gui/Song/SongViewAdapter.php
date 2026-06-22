@@ -78,16 +78,16 @@ final readonly class SongViewAdapter implements SongViewAdapterInterface
         $owner_id = $this->song->get_user_owner();
 
         return (
-            $this->configContainer->isFeatureEnabled(ConfigurationKeyEnum::STATISTICAL_GRAPHS) &&
-            is_dir(__DIR__ . '/../../../vendor/szymach/c-pchart/src/Chart/') &&
-            (
+            $this->configContainer->isFeatureEnabled(ConfigurationKeyEnum::STATISTICAL_GRAPHS)
+            && is_dir(__DIR__ . '/../../../vendor/szymach/c-pchart/src/Chart/')
+            && (
                 (
-                    $owner_id !== null &&
-                    !empty($GLOBALS['user'])
-                ) &&
-                $owner_id == $GLOBALS['user']->id
-            ) ||
-            $this->gatekeeper->mayAccess(AccessTypeEnum::INTERFACE, AccessLevelEnum::CONTENT_MANAGER)
+                    $owner_id !== null
+                    && !empty($GLOBALS['user'])
+                )
+                && $owner_id == $GLOBALS['user']->id
+            )
+            || $this->gatekeeper->mayAccess(AccessTypeEnum::INTERFACE, AccessLevelEnum::CONTENT_MANAGER)
         );
     }
 
@@ -104,28 +104,28 @@ final readonly class SongViewAdapter implements SongViewAdapterInterface
     public function canPostShout(): bool
     {
         return (
-            $this->configContainer->isAuthenticationEnabled() === false ||
-            $this->gatekeeper->mayAccess(AccessTypeEnum::INTERFACE, AccessLevelEnum::USER)
-        ) &&
-            $this->configContainer->isFeatureEnabled(ConfigurationKeyEnum::SOCIABLE);
+            $this->configContainer->isAuthenticationEnabled() === false
+            || $this->gatekeeper->mayAccess(AccessTypeEnum::INTERFACE, AccessLevelEnum::USER)
+        )
+            && $this->configContainer->isFeatureEnabled(ConfigurationKeyEnum::SOCIABLE);
     }
 
     public function canShare(): bool
     {
-        return $this->gatekeeper->mayAccess(AccessTypeEnum::INTERFACE, AccessLevelEnum::USER) &&
-            $this->configContainer->isFeatureEnabled(ConfigurationKeyEnum::SHARE);
+        return $this->gatekeeper->mayAccess(AccessTypeEnum::INTERFACE, AccessLevelEnum::USER)
+            && $this->configContainer->isFeatureEnabled(ConfigurationKeyEnum::SHARE);
     }
 
     public function canToggleState(): bool
     {
         return (
-            $this->gatekeeper->mayAccess(AccessTypeEnum::INTERFACE, AccessLevelEnum::MANAGER) ||
-            (
+            $this->gatekeeper->mayAccess(AccessTypeEnum::INTERFACE, AccessLevelEnum::MANAGER)
+            || (
                 (
-                    Core::get_global('user') instanceof User &&
-                    $this->song->get_user_owner() == Core::get_global('user')->id
-                ) &&
-                $this->configContainer->isFeatureEnabled(ConfigurationKeyEnum::UPLOAD_ALLOW_EDIT)
+                    Core::get_global('user') instanceof User
+                    && $this->song->get_user_owner() == Core::get_global('user')->id
+                )
+                && $this->configContainer->isFeatureEnabled(ConfigurationKeyEnum::UPLOAD_ALLOW_EDIT)
             )
         );
     }
@@ -563,13 +563,13 @@ final readonly class SongViewAdapter implements SongViewAdapterInterface
     public function isEditable(): bool
     {
         return (
-            $this->gatekeeper->mayAccess(AccessTypeEnum::INTERFACE, AccessLevelEnum::CONTENT_MANAGER) ||
-            (
+            $this->gatekeeper->mayAccess(AccessTypeEnum::INTERFACE, AccessLevelEnum::CONTENT_MANAGER)
+            || (
                 (
-                    Core::get_global('user') instanceof User &&
-                    $this->song->get_user_owner() == Core::get_global('user')->id
-                ) &&
-                $this->configContainer->isFeatureEnabled(ConfigurationKeyEnum::UPLOAD_ALLOW_EDIT)
+                    Core::get_global('user') instanceof User
+                    && $this->song->get_user_owner() == Core::get_global('user')->id
+                )
+                && $this->configContainer->isFeatureEnabled(ConfigurationKeyEnum::UPLOAD_ALLOW_EDIT)
             )
         );
     }

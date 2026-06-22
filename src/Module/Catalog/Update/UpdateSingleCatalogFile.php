@@ -177,8 +177,8 @@ final class UpdateSingleCatalogFile extends AbstractCatalogUpdater implements Up
             $file_test = is_file($filePath);
             // deleted file but it was valid media in the database
             if (
-                !$file_test &&
-                $cleanupMode == 1
+                !$file_test
+                && $cleanupMode == 1
             ) {
                 $catalog->clean_file($filePath, $type);
                 $interactor->info(

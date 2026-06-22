@@ -306,9 +306,9 @@ class Song extends database_object implements
         foreach (array_keys($fields) as $key) {
             $key = trim((string) $key);
             if (
-                $key === '' ||
-                $key === '0' ||
-                in_array($key, $skip_array)
+                $key === ''
+                || $key === '0'
+                || in_array($key, $skip_array)
             ) {
                 continue;
             }
@@ -326,10 +326,10 @@ class Song extends database_object implements
 
             // Skip the item if it is no string nor something we can turn into a string
             if (
-                !is_string($mediaData) &&
-                !is_numeric($mediaData) &&
-                !is_bool($mediaData) &&
-                (is_object($mediaData) && !method_exists($mediaData, '__toString'))
+                !is_string($mediaData)
+                && !is_numeric($mediaData)
+                && !is_bool($mediaData)
+                && (is_object($mediaData) && !method_exists($mediaData, '__toString'))
             ) {
                 continue;
             }
@@ -706,13 +706,13 @@ class Song extends database_object implements
         // if you have an artist array this will be named better than what your tags will give you
         if (!empty($artists_array)) {
             if (
-                $artist !== '' &&
-                $artist !== '0' &&
-                (
-                    $albumartist !== '' &&
-                    $albumartist !== '0'
-                ) &&
-                $artist === $albumartist
+                $artist !== ''
+                && $artist !== '0'
+                && (
+                    $albumartist !== ''
+                    && $albumartist !== '0'
+                )
+                && $artist === $albumartist
             ) {
                 $albumartist = (string) $artists_array[0];
             }
@@ -740,9 +740,9 @@ class Song extends database_object implements
         if (isset($results['albumartist_id'])) {
             $albumartist_id = (int) ($results['albumartist_id']);
         } elseif (
-            $albumartist !== null &&
-            $albumartist !== '' &&
-            $albumartist !== '0'
+            $albumartist !== null
+            && $albumartist !== ''
+            && $albumartist !== '0'
         ) {
             $albumartist_mbid = Catalog::trim_slashed_list($albumartist_mbid);
             $albumartist_id   = Artist::check($albumartist, $albumartist_mbid);
@@ -751,9 +751,9 @@ class Song extends database_object implements
         // song artist text is the same as album artist so don't worry about looking up id's if they match
         $artist_id = null;
         if (
-            $albumartist_id &&
-            $albumartist &&
-            $albumartist === $artist
+            $albumartist_id
+            && $albumartist
+            && $albumartist === $artist
         ) {
             $artist_id = $albumartist_id;
         } elseif (isset($results['artist_id'])) {
@@ -1322,8 +1322,8 @@ class Song extends database_object implements
         if ($check_owner && Core::get_global('user') instanceof User) {
             $item = new Song($song_id);
             if (
-                $item->id &&
-                $item->get_user_owner() == Core::get_global('user')->id
+                $item->id
+                && $item->get_user_owner() == Core::get_global('user')->id
             ) {
                 $level = AccessLevelEnum::USER;
             }
@@ -1853,8 +1853,8 @@ class Song extends database_object implements
             foreach (Plugin::get_plugins(PluginTypeEnum::LYRIC_RETRIEVER) as $plugin_name) {
                 $plugin = new Plugin($plugin_name);
                 if (
-                    $plugin->_plugin instanceof PluginGetLyricsInterface &&
-                    $plugin->load($user)
+                    $plugin->_plugin instanceof PluginGetLyricsInterface
+                    && $plugin->load($user)
                 ) {
                     $lyrics = $plugin->_plugin->get_lyrics($this);
                     if (!empty($lyrics)) {
@@ -2029,9 +2029,9 @@ class Song extends database_object implements
     public function getLicense(): ?License
     {
         if (
-            AmpConfig::get('licensing') &&
-            $this->licenseObj === null &&
-            $this->license !== null
+            AmpConfig::get('licensing')
+            && $this->licenseObj === null
+            && $this->license !== null
         ) {
             $this->licenseObj = $this->getLicenseRepository()->findById($this->license);
         }
@@ -2115,8 +2115,8 @@ class Song extends database_object implements
 
         // enforce or disable transcoding depending on local network ACL. Transcoding must also not be disabled with 'never'
         if (
-            $downsample_remote &&
-            $transcode !== 'never'
+            $downsample_remote
+            && $transcode !== 'never'
         ) {
             if (!$lan_user) {
                 // remote network user will require transcoding with downsample_remote
@@ -2131,12 +2131,12 @@ class Song extends database_object implements
 
         // if you transcode the media mime will change
         if (
-            $transcode != 'never' &&
-            (
-                empty($additional_params) ||
-                (
-                    !str_contains($additional_params, '&bitrate=') &&
-                    !str_contains($additional_params, '&format=')
+            $transcode != 'never'
+            && (
+                empty($additional_params)
+                || (
+                    !str_contains($additional_params, '&bitrate=')
+                    && !str_contains($additional_params, '&format=')
                 )
             )
         ) {
@@ -2148,10 +2148,10 @@ class Song extends database_object implements
                 ? $cache_target
                 : Stream::get_transcode_format($this->type, null, $player);
             if (
-                $transcode_type !== null &&
-                $transcode_type !== '' &&
-                $transcode_type !== '0' &&
-                ($this->type !== $transcode_type || $bitrate < $this->bitrate)
+                $transcode_type !== null
+                && $transcode_type !== ''
+                && $transcode_type !== '0'
+                && ($this->type !== $transcode_type || $bitrate < $this->bitrate)
             ) {
                 $this->type    = $transcode_type;
                 $this->mime    = self::type_to_mime($transcode_type);

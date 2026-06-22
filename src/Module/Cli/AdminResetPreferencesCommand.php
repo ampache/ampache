@@ -74,8 +74,8 @@ final class AdminResetPreferencesCommand extends Command
                 true
             );
         } elseif (
-            $preset &&
-            Preference::set_preset($username, $preset)
+            $preset
+            && Preference::set_preset($username, $preset)
         ) {
             $interactor->ok(
                 "\n" . T_('Updated'),

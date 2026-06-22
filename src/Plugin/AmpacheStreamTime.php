@@ -147,8 +147,8 @@ class AmpacheStreamTime extends AmpachePlugin implements PluginStreamControlInte
     public function uninstall(): bool
     {
         return (
-            Preference::delete('stream_control_time_max') &&
-            Preference::delete('stream_control_time_days')
+            Preference::delete('stream_control_time_max')
+            && Preference::delete('stream_control_time_days')
         );
     }
 

@@ -125,8 +125,8 @@ final readonly class PlaylistAjaxHandler implements AjaxHandlerInterface
                 }
 
                 if (
-                    $medias !== [] &&
-                    $playlist->add_medias($medias)
+                    $medias !== []
+                    && $playlist->add_medias($medias)
                 ) {
                     Ajax::set_include_override(true);
 

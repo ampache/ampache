@@ -195,10 +195,10 @@ class AmpachePersonalFavorites extends AmpachePlugin implements PluginDisplayHom
     public function uninstall(): bool
     {
         return (
-            Preference::delete('personalfav_display') &&
-            Preference::delete('personalfav_playlist') &&
-            Preference::delete('personalfav_smartlist') &&
-            Preference::delete('personalfav_order')
+            Preference::delete('personalfav_display')
+            && Preference::delete('personalfav_playlist')
+            && Preference::delete('personalfav_smartlist')
+            && Preference::delete('personalfav_order')
         );
     }
 

@@ -86,11 +86,11 @@ class AmpacheHomeDashboard extends AmpachePlugin implements PluginDisplayHomeInt
     public function display_home(): void
     {
         if (
-            !$this->newest &&
-            !$this->random &&
-            !$this->recent &&
-            !$this->trending &&
-            !$this->popular
+            !$this->newest
+            && !$this->random
+            && !$this->recent
+            && !$this->trending
+            && !$this->popular
         ) {
             return;
         }
@@ -281,13 +281,13 @@ class AmpacheHomeDashboard extends AmpachePlugin implements PluginDisplayHomeInt
     public function uninstall(): bool
     {
         return (
-            Preference::delete('homedash_max_items') &&
-            Preference::delete('homedash_newest') &&
-            Preference::delete('homedash_random') &&
-            Preference::delete('homedash_recent') &&
-            Preference::delete('homedash_trending') &&
-            Preference::delete('homedash_popular') &&
-            Preference::delete('homedash_order')
+            Preference::delete('homedash_max_items')
+            && Preference::delete('homedash_newest')
+            && Preference::delete('homedash_random')
+            && Preference::delete('homedash_recent')
+            && Preference::delete('homedash_trending')
+            && Preference::delete('homedash_popular')
+            && Preference::delete('homedash_order')
         );
     }
 

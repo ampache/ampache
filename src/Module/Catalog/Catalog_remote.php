@@ -233,8 +233,8 @@ class Catalog_remote extends Catalog
                     $song       = new Song($row['id']);
                     $remote_url = $this->getRemoteStreamingUrl($song, self::CMD_DOWNLOAD);
                     if (
-                        !in_array($remote_url, [null, '', '0'], true) &&
-                        Catalog::cache_remote_file($file_target, $remote_url)
+                        !in_array($remote_url, [null, '', '0'], true)
+                        && Catalog::cache_remote_file($file_target, $remote_url)
                     ) {
                         debug_event('remote.catalog', 'Saved: ' . $row['id'] . ' to: {' . $file_target . '}', 5);
                     } else {
@@ -355,9 +355,9 @@ class Catalog_remote extends Catalog
                 }
 
                 if (
-                    $song instanceof SimpleXMLElement &&
-                    $song->song &&
-                    ((int) $song->song->attributes()->id) > 0
+                    $song instanceof SimpleXMLElement
+                    && $song->song
+                    && ((int) $song->song->attributes()->id) > 0
                 ) {
                     debug_event('remote.catalog', 'keeping song', 5);
                 } else {
@@ -445,9 +445,9 @@ class Catalog_remote extends Catalog
         $song = $this->remote_handle->send_command(self::CMD_SONG, ['filter' => $remote_id]);
 
         if (
-            $song instanceof SimpleXMLElement &&
-            $song->song &&
-            ((int) $song->song->attributes()->id) > 0
+            $song instanceof SimpleXMLElement
+            && $song->song
+            && ((int) $song->song->attributes()->id) > 0
         ) {
             $results = $this->_gather_tags($song->song);
         }
@@ -597,8 +597,8 @@ class Catalog_remote extends Catalog
      */
     private function _connect(): void
     {
-        if ($this->remote_handle &&
-            $this->remote_handle->state() === 'CONNECTED'
+        if ($this->remote_handle
+            && $this->remote_handle->state() === 'CONNECTED'
         ) {
             return;
         }
@@ -632,8 +632,8 @@ class Catalog_remote extends Catalog
         }
 
         if (
-            $this->remote_handle &&
-            $this->remote_handle->state() !== 'CONNECTED'
+            $this->remote_handle
+            && $this->remote_handle->state() !== 'CONNECTED'
         ) {
             debug_event('remote.catalog', 'API client failed to connect', 1);
             if (defined('CLI')) {
@@ -675,8 +675,8 @@ class Catalog_remote extends Catalog
 
         // Iterate over the songs we retrieved and insert them
         if (
-            $tags instanceof SimpleXMLElement &&
-            (property_exists($tags, 'song_tag') && $tags->song_tag !== null)
+            $tags instanceof SimpleXMLElement
+            && (property_exists($tags, 'song_tag') && $tags->song_tag !== null)
         ) {
             $song_tags = $tags->song_tag;
             $data      = [];
@@ -753,8 +753,8 @@ class Catalog_remote extends Catalog
 
             $album_data = (object) [];
             if (
-                $album instanceof SimpleXMLElement &&
-                $album->album->count() > 0
+                $album instanceof SimpleXMLElement
+                && $album->album->count() > 0
             ) {
                 $albumartistids = [];
                 $album_data     = $album->album;
@@ -769,8 +769,8 @@ class Catalog_remote extends Catalog
             foreach ($artistids as $artistid) {
                 $artist = $this->remote_handle->send_command(self::CMD_ARTIST, ['filter' => $artistid]);
                 if (
-                    $artist instanceof SimpleXMLElement &&
-                    $artist->artist->count() > 0
+                    $artist instanceof SimpleXMLElement
+                    && $artist->artist->count() > 0
                 ) {
                     $artist_data = $artist->artist;
                     $mb_artistid = (isset($artist_data[0])) ? $artist_data[0]->mbid : null;
@@ -787,8 +787,8 @@ class Catalog_remote extends Catalog
             foreach ($albumartistids as $artistid) {
                 $artist = $this->remote_handle->send_command(self::CMD_ARTIST, ['filter' => $artistid]);
                 if (
-                    $artist instanceof SimpleXMLElement &&
-                    $artist->artist->count() > 0
+                    $artist instanceof SimpleXMLElement
+                    && $artist->artist->count() > 0
                 ) {
                     $artist_data      = $artist->artist;
                     $mb_albumartistid = (isset($artist_data[0])) ? $artist_data[0]->mbid : null;
@@ -929,8 +929,8 @@ class Catalog_remote extends Catalog
         $songsFound = true;
 
         while (
-            $total > $current &&
-            $songsFound
+            $total > $current
+            && $songsFound
         ) {
             $start = $current;
             $current += $step;
@@ -938,8 +938,8 @@ class Catalog_remote extends Catalog
                 $songs = $this->remote_handle->send_command(self::CMD_SONGS, ['offset' => $start, 'limit' => $step]);
                 // Iterate over the songs we retrieved and insert them
                 if (
-                    $songs instanceof SimpleXMLElement &&
-                    $songs->song->count() > 0
+                    $songs instanceof SimpleXMLElement
+                    && $songs->song->count() > 0
                 ) {
                     foreach ($songs->song as $song) {
                         if (!$song->url) {
@@ -979,8 +979,8 @@ class Catalog_remote extends Catalog
                         }
 
                         if (
-                            $action === 'verify' &&
-                            !$existing_song
+                            $action === 'verify'
+                            && !$existing_song
                         ) {
                             continue;
                         }
@@ -991,9 +991,9 @@ class Catalog_remote extends Catalog
 
                         if ($action === 'verify') {
                             if (
-                                $file_target !== null &&
-                                is_file($file_target) &&
-                                filemtime($file_target) > ($date - (60 * 60 * 24 * 30)) // 30 day
+                                $file_target !== null
+                                && is_file($file_target)
+                                && filemtime($file_target) > ($date - (60 * 60 * 24 * 30)) // 30 day
                             ) {
                                 // get file tags directly from the cached file
                                 $media = new Song($song_id_check);
@@ -1049,8 +1049,8 @@ class Catalog_remote extends Catalog
 
                             // update missing art
                             if (
-                                (int) $song->has_art === 1 &&
-                                $song->art
+                                (int) $song->has_art === 1
+                                && $song->art
                             ) {
                                 $current_song = new Song($song_id);
                                 $art          = new Art($current_song->album, 'album');
@@ -1082,8 +1082,8 @@ class Catalog_remote extends Catalog
         $artistsFound = true;
 
         while (
-            $total_artists > $current &&
-            $artistsFound
+            $total_artists > $current
+            && $artistsFound
         ) {
             $start = $current;
             $current += $step;
@@ -1091,8 +1091,8 @@ class Catalog_remote extends Catalog
                 $artists = $this->remote_handle->send_command(self::CMD_ARTISTS, ['offset' => $start, 'limit' => $step]);
                 // Iterate over the songs we retrieved and insert them
                 if (
-                    $artists instanceof SimpleXMLElement &&
-                    $artists->artist->count() > 0
+                    $artists instanceof SimpleXMLElement
+                    && $artists->artist->count() > 0
                 ) {
                     foreach ($artists->artist as $artist) {
                         if (!$artist->art) {
@@ -1101,9 +1101,9 @@ class Catalog_remote extends Catalog
 
                         $artist_id = Artist::check((string) $artist->name, (string) $artist->mbid, true);
                         if (
-                            $artist_id &&
-                            (int) $artist->has_art === 1 &&
-                            $artist->art
+                            $artist_id
+                            && (int) $artist->has_art === 1
+                            && $artist->art
                         ) {
                             $art = new Art($artist_id, 'artist');
                             if (!$art->has_db_info()) {

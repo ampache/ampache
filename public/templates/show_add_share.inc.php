@@ -80,12 +80,12 @@ Ui::show_box_top(T_('Create Share'), 'box box_add_share'); ?>
 </tr>
 <?php if (
     (
-        in_array($object_type, [LibraryItemEnum::SONG, LibraryItemEnum::VIDEO, LibraryItemEnum::PODCAST_EPISODE], true) &&
-        Access::check_function(AccessFunctionEnum::FUNCTION_DOWNLOAD)
-    ) ||
-    (
-        $isZipable &&
-        Access::check_function(AccessFunctionEnum::FUNCTION_BATCH_DOWNLOAD)
+        in_array($object_type, [LibraryItemEnum::SONG, LibraryItemEnum::VIDEO, LibraryItemEnum::PODCAST_EPISODE], true)
+        && Access::check_function(AccessFunctionEnum::FUNCTION_DOWNLOAD)
+    )
+    || (
+        $isZipable
+        && Access::check_function(AccessFunctionEnum::FUNCTION_BATCH_DOWNLOAD)
     )
 ) { ?>
 <tr>

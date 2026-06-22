@@ -57,8 +57,8 @@ final readonly class UpdateDiskFromTagsAction implements ApplicationActionInterf
 
         // Make sure they are a 'power' user or the object owner
         if (
-            $gatekeeper->mayAccess(AccessTypeEnum::INTERFACE, AccessLevelEnum::CONTENT_MANAGER) === false &&
-            $gatekeeper->getUserId() !== $albumDisk->get_user_owner()
+            $gatekeeper->mayAccess(AccessTypeEnum::INTERFACE, AccessLevelEnum::CONTENT_MANAGER) === false
+            && $gatekeeper->getUserId() !== $albumDisk->get_user_owner()
         ) {
             throw new AccessDeniedException();
         }

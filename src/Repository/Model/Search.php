@@ -550,9 +550,9 @@ class Search extends playlist_object
 
         // Make sure we have a unique name
         if (
-            $this->name === null ||
-            $this->name === '' ||
-            $this->name === '0'
+            $this->name === null
+            || $this->name === ''
+            || $this->name === '0'
         ) {
             $this->name = $user->username . ' - ' . get_datetime(time());
         }
@@ -613,8 +613,8 @@ class Search extends playlist_object
     public function filter_data(string $data, string $type, array $operator): bool|int|string|null
     {
         if (
-            array_key_exists('preg_match', $operator) &&
-            array_key_exists('preg_replace', $operator)
+            array_key_exists('preg_match', $operator)
+            && array_key_exists('preg_replace', $operator)
         ) {
             $data = preg_replace($operator['preg_match'], $operator['preg_replace'], $data);
         }
@@ -646,8 +646,8 @@ class Search extends playlist_object
         if ($translate) {
             foreach ($basetypes as $key => $group) {
                 foreach ($group as $typeKey => $typeValue) {
-                    $basetypes[$key][$typeKey]['description'] =
-                        T_($typeValue['description']);
+                    $basetypes[$key][$typeKey]['description']
+                        = T_($typeValue['description']);
                 }
             }
         }

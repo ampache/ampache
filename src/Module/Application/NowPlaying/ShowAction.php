@@ -52,8 +52,8 @@ final readonly class ShowAction implements ApplicationActionInterface
     {
         /* Check Perms */
         if (
-            $this->configContainer->isFeatureEnabled(ConfigurationKeyEnum::USE_NOW_PLAYING_EMBEDDED) === false ||
-            $this->configContainer->isFeatureEnabled(ConfigurationKeyEnum::DEMO_MODE)
+            $this->configContainer->isFeatureEnabled(ConfigurationKeyEnum::USE_NOW_PLAYING_EMBEDDED) === false
+            || $this->configContainer->isFeatureEnabled(ConfigurationKeyEnum::DEMO_MODE)
         ) {
             $this->logger->warning(
                 'Enable use_now_playing_embedded and disable demo mode for this feature',

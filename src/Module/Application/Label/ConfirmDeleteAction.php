@@ -67,8 +67,8 @@ final readonly class ConfirmDeleteAction implements ApplicationActionInterface
 
         $label = $this->labelRepository->findById($labelId);
         if (
-            $label === null ||
-            !Catalog::can_remove($label)
+            $label === null
+            || !Catalog::can_remove($label)
         ) {
             throw new AccessDeniedException(
                 sprintf('Unauthorized to remove the label `%s`', $labelId)

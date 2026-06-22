@@ -222,9 +222,9 @@ final class DefaultAction implements ApplicationActionInterface
 
                 /* Make sure we've got a valid config file */
                 if (
-                    !$results ||
-                    !check_config_values($results) ||
-                    !$created_config
+                    !$results
+                    || !check_config_values($results)
+                    || !$created_config
                 ) {
                     AmpError::add('general', T_('Configuration files were either not found or unreadable'));
                     require_once Ui::find_template('show_install_config.inc.php');

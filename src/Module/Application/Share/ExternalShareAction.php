@@ -67,8 +67,8 @@ final readonly class ExternalShareAction implements ApplicationActionInterface
         $user = $gatekeeper->getUser();
 
         if (
-            $this->configContainer->isFeatureEnabled(ConfigurationKeyEnum::DEMO_MODE) ||
-            $user === null
+            $this->configContainer->isFeatureEnabled(ConfigurationKeyEnum::DEMO_MODE)
+            || $user === null
         ) {
             throw new AccessDeniedException();
         }
@@ -83,8 +83,8 @@ final readonly class ExternalShareAction implements ApplicationActionInterface
         $type           = LibraryItemEnum::from($this->requestParser->getFromRequest('type'));
         $share_id       = $this->requestParser->getFromRequest('id');
         $secret         = $this->passwordGenerator->generate_token();
-        $allow_download = ($type === LibraryItemEnum::SONG && $this->functionChecker->check(AccessFunctionEnum::FUNCTION_DOWNLOAD)) ||
-            $this->functionChecker->check(AccessFunctionEnum::FUNCTION_BATCH_DOWNLOAD);
+        $allow_download = ($type === LibraryItemEnum::SONG && $this->functionChecker->check(AccessFunctionEnum::FUNCTION_DOWNLOAD))
+            || $this->functionChecker->check(AccessFunctionEnum::FUNCTION_BATCH_DOWNLOAD);
 
         $share_id = $this->shareCreator->create(
             $user,

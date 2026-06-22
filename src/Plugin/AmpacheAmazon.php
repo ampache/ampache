@@ -225,11 +225,11 @@ class AmpacheAmazon extends AmpachePlugin implements PluginGatherArtsInterface
         $data = $user->prefs;
         // load system when nothing is given
         if (
-            !strlen(trim((string) $data['amazon_base_url'])) ||
-            !strlen(trim((string) $data['amazon_developer_public_key'])) ||
-            !strlen(trim((string) $data['amazon_developer_private_api_key'])) ||
-            !strlen(trim((string) $data['amazon_max_results_pages'])) ||
-            !strlen(trim((string) $data['amazon_developer_associate_tag']))
+            !strlen(trim((string) $data['amazon_base_url']))
+            || !strlen(trim((string) $data['amazon_developer_public_key']))
+            || !strlen(trim((string) $data['amazon_developer_private_api_key']))
+            || !strlen(trim((string) $data['amazon_max_results_pages']))
+            || !strlen(trim((string) $data['amazon_developer_associate_tag']))
         ) {
             $data                                     = [];
             $data['amazon_base_url']                  = Preference::get_by_user(-1, 'amazon_base_url');
@@ -285,11 +285,11 @@ class AmpacheAmazon extends AmpachePlugin implements PluginGatherArtsInterface
     public function uninstall(): bool
     {
         return (
-            Preference::delete('amazon_base_url') &&
-            Preference::delete('amazon_max_results_pages') &&
-            Preference::delete('amazon_developer_public_key') &&
-            Preference::delete('amazon_developer_private_api_key') &&
-            Preference::delete('amazon_developer_associate_tag')
+            Preference::delete('amazon_base_url')
+            && Preference::delete('amazon_max_results_pages')
+            && Preference::delete('amazon_developer_public_key')
+            && Preference::delete('amazon_developer_private_api_key')
+            && Preference::delete('amazon_developer_associate_tag')
         );
     }
 

@@ -202,9 +202,9 @@ final readonly class PlayAction implements ApplicationActionInterface
         // allow disabling stat recording from the play url
         $record_stats = true;
         if (
-            $share_id ||
-            $cache === 1 ||
-            !in_array($type, ['song', 'video', 'podcast_episode'])
+            $share_id
+            || $cache === 1
+            || !in_array($type, ['song', 'video', 'podcast_episode'])
         ) {
             $this->logger->debug(
                 'record_stats disabled: cache {' . $type . "}",
@@ -262,12 +262,12 @@ final readonly class PlayAction implements ApplicationActionInterface
 
         // First things first, if we don't have a uid/oid stop here
         if (
-            ($object_id === 0 || ($object_id === '' || $object_id === '0')) &&
-            (
-                !$demo_id &&
-                !$share_id &&
-                !$secret &&
-                !$random
+            ($object_id === 0 || ($object_id === '' || $object_id === '0'))
+            && (
+                !$demo_id
+                && !$share_id
+                && !$secret
+                && !$random
             )
         ) {
             $this->logger->error(
@@ -635,8 +635,8 @@ final readonly class PlayAction implements ApplicationActionInterface
             $has_cache = ($file_target !== null && is_file($file_target));
             if ($catalog && !$has_cache) {
                 if (
-                    ($catalog instanceof Catalog_remote || $catalog instanceof Catalog_subsonic) &&
-                    (bool) AmpConfig::get('cache_remote', false)
+                    ($catalog instanceof Catalog_remote || $catalog instanceof Catalog_subsonic)
+                    && (bool) AmpConfig::get('cache_remote', false)
                 ) {
                     $media_file = $catalog->getRemoteStreamingUrl($media, 'download');
                     if ($file_target && $media_file) {
@@ -645,9 +645,9 @@ final readonly class PlayAction implements ApplicationActionInterface
                 }
 
                 if (
-                    $catalog instanceof Catalog_local &&
-                    $file_target &&
-                    (bool) AmpConfig::get('cache_' . $cache_target, false)
+                    $catalog instanceof Catalog_local
+                    && $file_target
+                    && (bool) AmpConfig::get('cache_' . $cache_target, false)
                 ) {
                     $catalog->cache_catalog_file($file_target, $media, $cache_target);
                 }
@@ -664,10 +664,10 @@ final readonly class PlayAction implements ApplicationActionInterface
 
             $streamConfiguration = null;
             if (
-                $transcode_cfg != 'never' &&
-                $transcode_to &&
-                ($bitrate === 0 || $bitrate === (int) AmpConfig::get('transcode_bitrate', 128) * 1000) &&
-                $has_cache
+                $transcode_cfg != 'never'
+                && $transcode_to
+                && ($bitrate === 0 || $bitrate === (int) AmpConfig::get('transcode_bitrate', 128) * 1000)
+                && $has_cache
             ) {
                 $this->logger->debug(
                     'Found pre-cached file {' . $file_target . '}',
@@ -1175,12 +1175,12 @@ final readonly class PlayAction implements ApplicationActionInterface
                     $bytes_streamed += strlen($buf);
                 }
             } while (
-                !feof($filepointer) &&
-                (
-                    connection_status() === 0 &&
-                    (
-                        $transcode ||
-                        $bytes_streamed < $stream_size
+                !feof($filepointer)
+                && (
+                    connection_status() === 0
+                    && (
+                        $transcode
+                        || $bytes_streamed < $stream_size
                     )
                 )
             );

@@ -133,8 +133,8 @@ class AmpacheShoutHome extends AmpachePlugin implements PluginDisplayHomeInterfa
     public function uninstall(): bool
     {
         return (
-            Preference::delete('shouthome_max_items') &&
-            Preference::delete('shouthome_order')
+            Preference::delete('shouthome_max_items')
+            && Preference::delete('shouthome_order')
         );
     }
 

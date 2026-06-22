@@ -62,8 +62,8 @@ final readonly class ShowAction implements ApplicationActionInterface
     {
         /* Check Perms */
         if (
-            $this->configContainer->isFeatureEnabled(ConfigurationKeyEnum::USE_RSS) === false ||
-            $this->configContainer->isFeatureEnabled(ConfigurationKeyEnum::DEMO_MODE)
+            $this->configContainer->isFeatureEnabled(ConfigurationKeyEnum::USE_RSS) === false
+            || $this->configContainer->isFeatureEnabled(ConfigurationKeyEnum::DEMO_MODE)
         ) {
             return null;
         }
