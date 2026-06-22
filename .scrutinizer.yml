@@ -20,7 +20,7 @@ build:
 
   nodes:
     analysis:
-      image: default-noble
+      image: default-jammy
       tests:
         override:
           - command: "php-scrutinizer-run"
