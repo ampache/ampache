@@ -424,7 +424,7 @@ class Xml8_Data
      *
      * This returns folders to the user in an xml document.
      *
-     * @param array<string> $folder_ids Folder children id's in object_type-Object_id format.
+     * @param array<int|string> $folder_ids Folder children id's in object_type-Object_id format.
      */
     public static function folders(array $folder_ids, Folder $folder, User $user, string $auth): string
     {
@@ -453,7 +453,7 @@ class Xml8_Data
         $xml_items = $xml_folder->addChild('items');
 
         foreach ($folder_ids as $object) {
-            preg_match('/([a-z_]+)-([0-9]+)/', $object, $matches);
+            preg_match('/([a-z_]+)-([0-9]+)/', (string)$object, $matches);
             $object_type = $matches[1] ?? null;
             $object_id   = (int)($matches[2] ?? 0);
             $libitem     = null;
@@ -481,7 +481,7 @@ class Xml8_Data
             $art_url     = Art::url($libitem->getId(), $object_type, $auth);
             $play_url    = ($libitem instanceof Folder) ? '' : $libitem->play_url('', 'api', false, $user->id, $user->streamtoken);
             if (property_exists($libitem, 'file')) {
-                $p_info   = pathinfo($libitem->file, [PATHINFO_DIRNAME, PATHINFO_BASENAME]);
+                $p_info   = pathinfo((string)$libitem->file, PATHINFO_DIRNAME | PATHINFO_BASENAME);
                 $filename = $p_info['basename'];
                 $dirname  = $p_info['dirname'];
             } else {

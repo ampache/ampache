@@ -398,7 +398,7 @@ class Catalog_Seafile extends Catalog
         // if you have the file it's all good
         $media_file = $file_override ?? $media->file;
 
-        if (!in_array($media_file, [null, '', '0'], true) && is_file($media_file)) {
+        if (!in_array($media_file, [null, '', '0'], true) && is_string($media_file) && is_file($media_file)) {
             return $this->download_metadata($media_file, $sort_pattern, $rename_pattern, $gather_types);
         }
 
@@ -600,7 +600,7 @@ class Catalog_Seafile extends Catalog
      * @return array<string, mixed>
      * @throws Exception
      */
-    private function download_metadata(DirectoryItem $file, string $sort_pattern = '', string $rename_pattern = '', ?array $gather_types = null, bool $keep = false): array
+    private function download_metadata(DirectoryItem|string $file, string $sort_pattern = '', string $rename_pattern = '', ?array $gather_types = null, bool $keep = false): array
     {
         // Check for patterns
         if (!$sort_pattern || !$rename_pattern) {
@@ -608,7 +608,7 @@ class Catalog_Seafile extends Catalog
             $rename_pattern = $this->rename_pattern;
         }
 
-        $is_cached = (is_string($file) && is_file($file));
+        $is_cached = (!$file instanceof DirectoryItem && is_file($file));
 
         if ($is_cached) {
             debug_event('seafile_catalog', 'Using tmp file ' . $file, 5);
@@ -642,7 +642,7 @@ class Catalog_Seafile extends Catalog
         }
 
         $results = ($is_cached)
-            ? VaInfo::clean_tag_info($vainfo->tags, $key, $file)
+            ? VaInfo::clean_tag_info($vainfo->tags, $key, $file->path)
             : VaInfo::clean_tag_info($vainfo->tags, $key, $file->name);
 
         // Set the remote path
