@@ -393,12 +393,12 @@ class Horde_Browser
             $this->setFeature('dataurl');
 
             if (
-                str_contains($agent, 'Mobile') ||
-                str_contains($agent, 'Android') ||
-                str_contains($agent, 'SAMSUNG-GT') ||
-                ((str_contains($agent, 'Nokia') || str_contains($agent, 'Symbian')) && str_contains($agent, 'WebKit')) ||
-                (str_contains($agent, 'N900') && str_contains($agent, 'Maemo Browser')) ||
-                (str_contains($agent, 'MeeGo') && str_contains($agent, 'NokiaN9'))
+                str_contains($agent, 'Mobile')
+                || str_contains($agent, 'Android')
+                || str_contains($agent, 'SAMSUNG-GT')
+                || ((str_contains($agent, 'Nokia') || str_contains($agent, 'Symbian')) && str_contains($agent, 'WebKit'))
+                || (str_contains($agent, 'N900') && str_contains($agent, 'Maemo Browser'))
+                || (str_contains($agent, 'MeeGo') && str_contains($agent, 'NokiaN9'))
             ) {
                 // WebKit Mobile
                 $this->setFeature('frames', false);

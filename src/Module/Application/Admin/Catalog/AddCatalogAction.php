@@ -67,8 +67,8 @@ final class AddCatalogAction extends AbstractCatalogAction
         $body = (array) $request->getParsedBody();
         $type = filter_input(INPUT_POST, 'type', FILTER_SANITIZE_SPECIAL_CHARS);
         if (
-            empty($type) ||
-            $type == 'none'
+            empty($type)
+            || $type == 'none'
         ) {
             AmpError::add('general', T_('Please select a Catalog type'));
         }

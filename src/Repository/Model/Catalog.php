@@ -330,8 +330,8 @@ abstract class Catalog extends database_object
                         }
 
                         if (
-                            $extension &&
-                            !((bool) AmpConfig::get('cache_' . $extension, false))
+                            $extension
+                            && !((bool) AmpConfig::get('cache_' . $extension, false))
                         ) {
                             unlink($file);
                             debug_event(self::class, 'cache_catalogs: removed (cache_' . $extension . ' ' . $song->file . ') {' . $file . '}', 4);
@@ -422,10 +422,10 @@ abstract class Catalog extends database_object
         }
 
         return (
-            Access::check(AccessTypeEnum::INTERFACE, AccessLevelEnum::MANAGER) ||
-            (
-                $libitem->get_user_owner() == $user_id &&
-                AmpConfig::get('upload_allow_remove')
+            Access::check(AccessTypeEnum::INTERFACE, AccessLevelEnum::MANAGER)
+            || (
+                $libitem->get_user_owner() == $user_id
+                && AmpConfig::get('upload_allow_remove')
             )
         );
     }
@@ -1004,8 +1004,8 @@ abstract class Catalog extends database_object
                 $licenseId   = $licenseRepository->find($licenseName);
 
                 if (
-                    $licenseId === 0 ||
-                    $licenseId === null
+                    $licenseId === 0
+                    || $licenseId === null
                 ) {
                     $license = $licenseRepository->prototype()
                         ->setName($licenseName);
@@ -3289,14 +3289,14 @@ abstract class Catalog extends database_object
         // if you have an artist array this will be named better than what your tags will give you
         if (!empty($artists_array)) {
             if (
-                $artist !== '' &&
-                $artist !== '0' &&
-                (
-                    $albumartist !== null &&
-                    $albumartist !== '' &&
-                    $albumartist !== '0'
-                ) &&
-                $artist === $albumartist
+                $artist !== ''
+                && $artist !== '0'
+                && (
+                    $albumartist !== null
+                    && $albumartist !== ''
+                    && $albumartist !== '0'
+                )
+                && $artist === $albumartist
             ) {
                 $albumartist = $artists_array[0];
             }
@@ -3327,9 +3327,9 @@ abstract class Catalog extends database_object
             $artist_mbid_array = [];
             $new_song->artist  = $song->artist;
         } elseif (
-            $new_song->albumartist &&
-            $albumartist &&
-            $albumartist === $artist
+            $new_song->albumartist
+            && $albumartist
+            && $albumartist === $artist
         ) {
             $new_song->artist = $new_song->albumartist;
         } else {
@@ -3604,8 +3604,8 @@ abstract class Catalog extends database_object
             }
 
             if (
-                array_diff($song_tag_array, $new_tag_array) !== [] ||
-                array_diff($new_tag_array, $song_tag_array) !== []
+                array_diff($song_tag_array, $new_tag_array) !== []
+                || array_diff($new_tag_array, $song_tag_array) !== []
             ) {
                 // we do still care if there are no tags on your object
                 $tag_comma = ($new_tag_array === [])
@@ -3633,8 +3633,8 @@ abstract class Catalog extends database_object
             foreach ($filtered_results['rating'] as $user => $rating) {
                 debug_event(self::class, "Updating rating for Song " . $song->id . sprintf(' to %s for user %s', $rating, $user), 5);
                 if (
-                    (int) $user > 0 &&
-                    $o_rating->get_user_rating((int) $user) != (int) $rating
+                    (int) $user > 0
+                    && $o_rating->get_user_rating((int) $user) != (int) $rating
                 ) {
                     $o_rating->set_rating((int) $rating, (int) $user, false);
                 }
@@ -3660,13 +3660,13 @@ abstract class Catalog extends database_object
         }
 
         if (
-            self::updateAlbumTags($song->album) ||
-            $map_change ||
-            (
+            self::updateAlbumTags($song->album)
+            || $map_change
+            || (
                 $info['change'] && (
-                    array_key_exists('album', $info['element']) ||
-                    array_key_exists('artist', $info['element']) ||
-                    array_key_exists('tags', $info['element'])
+                    array_key_exists('album', $info['element'])
+                    || array_key_exists('artist', $info['element'])
+                    || array_key_exists('tags', $info['element'])
                 )
             )
         ) {
@@ -4404,9 +4404,9 @@ abstract class Catalog extends database_object
     {
         $catalog_media_type = $this->gather_types;
         if (
-            $catalog_media_type === null ||
-            $catalog_media_type === '' ||
-            $catalog_media_type === '0'
+            $catalog_media_type === null
+            || $catalog_media_type === ''
+            || $catalog_media_type === '0'
         ) {
             $catalog_media_type = "music";
         }

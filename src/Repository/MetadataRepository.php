@@ -154,9 +154,9 @@ final readonly class MetadataRepository implements MetadataRepositoryInterface
     {
         // check that metadata value exists
         if (
-            $metadata->getObjectId() === 0 ||
-            $metadata->getFieldId() === 0 ||
-            in_array($metadata->getData(), ['', '0'], true)
+            $metadata->getObjectId() === 0
+            || $metadata->getFieldId() === 0
+            || in_array($metadata->getData(), ['', '0'], true)
         ) {
             return null;
         }

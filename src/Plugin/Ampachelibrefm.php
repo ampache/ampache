@@ -214,14 +214,14 @@ class Ampachelibrefm extends AmpachePlugin implements PluginSaveMediaplayInterfa
     public function uninstall(): bool
     {
         return (
-            Preference::delete('librefm_challenge') &&
-            Preference::delete('librefm_grant_link') &&
-            Preference::delete('librefm_pass') &&
-            Preference::delete('librefm_md5_pass') &&
-            Preference::delete('librefm_user') &&
-            Preference::delete('librefm_url') &&
-            Preference::delete('librefm_host') &&
-            Preference::delete('librefm_port')
+            Preference::delete('librefm_challenge')
+            && Preference::delete('librefm_grant_link')
+            && Preference::delete('librefm_pass')
+            && Preference::delete('librefm_md5_pass')
+            && Preference::delete('librefm_user')
+            && Preference::delete('librefm_url')
+            && Preference::delete('librefm_host')
+            && Preference::delete('librefm_port')
         );
     }
 

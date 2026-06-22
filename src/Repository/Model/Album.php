@@ -640,9 +640,9 @@ class Album extends database_object implements
     public function findAlbumArtist(): ?int
     {
         if (
-            $this->isNew() === false &&
-            !$this->album_artist &&
-            $this->song_artist_count == 1
+            $this->isNew() === false
+            && !$this->album_artist
+            && $this->song_artist_count == 1
         ) {
             $sql        = "SELECT `artist`.`name` AS `artist_name`, `artist`.`prefix` AS `artist_prefix`, `song`.`artist` AS `album_artist` FROM `song` INNER JOIN `artist` ON `artist`.`id`=`song`.`artist` WHERE `song`.`album` = ? GROUP BY `song`.`album`, `artist`.`prefix`, `artist`.`name`, `song`.`artist`;";
             $db_results = Dba::read($sql, [$this->id]);
@@ -682,8 +682,8 @@ class Album extends database_object implements
         }
 
         if (
-            $this->album_artists === null ||
-            $this->album_artists === []
+            $this->album_artists === null
+            || $this->album_artists === []
         ) {
             $this->album_artists = self::get_parent_array($this->id, $this->album_artist);
         }

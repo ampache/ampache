@@ -409,8 +409,8 @@ final class VaInfo implements VaInfoInterface
                 // Add rest of the tags without typecast to the array
                 foreach ($tags as $tag => $value) {
                     if (
-                        !array_key_exists($tag, $info) &&
-                        is_scalar($value)
+                        !array_key_exists($tag, $info)
+                        && is_scalar($value)
                     ) {
                         $info[$tag] = trim((string) $value);
                     }
@@ -724,9 +724,9 @@ final class VaInfo implements VaInfoInterface
         $enabled_sources = $this->get_metadata_order();
 
         if (
-            in_array('getid3', $enabled_sources) &&
-            $this->islocal &&
-            $this->_getID3
+            in_array('getid3', $enabled_sources)
+            && $this->islocal
+            && $this->_getID3
         ) {
             try {
                 $this->_raw = $this->_getID3->analyze(Core::conv_lc_file($this->filename));
@@ -1334,8 +1334,8 @@ final class VaInfo implements VaInfoInterface
         }
 
         if (
-            !empty($id3v2['TXXX']) &&
-            isset($id3v2['comments']['text'])
+            !empty($id3v2['TXXX'])
+            && isset($id3v2['comments']['text'])
         ) {
             // Find the MBIDs for the album and artist
             // Use trimAscii to remove noise (see #225 and #438 issues). Is this a GetID3 bug?
@@ -1840,9 +1840,9 @@ final class VaInfo implements VaInfoInterface
             if (in_array($tag_source, $plugin_names)) {
                 $plugin = new Plugin($tag_source);
                 if (
-                    $plugin->_plugin instanceof PluginGetMetadataInterface &&
-                    Plugin::get_plugin_version($plugin->_plugin->name) > 0 &&
-                    $plugin->load($user)
+                    $plugin->_plugin instanceof PluginGetMetadataInterface
+                    && Plugin::get_plugin_version($plugin->_plugin->name) > 0
+                    && $plugin->load($user)
                 ) {
                     $this->tags[$tag_source] = $plugin->_plugin->get_metadata(
                         $this->gatherTypes,
@@ -1976,8 +1976,8 @@ final class VaInfo implements VaInfoInterface
         $results = [];
 
         if (
-            in_array('music', $this->gatherTypes) ||
-            in_array('video', $this->gatherTypes)
+            in_array('music', $this->gatherTypes)
+            || in_array('video', $this->gatherTypes)
         ) {
             $patres  = VaInfo::parse_pattern($filepath, $this->_dir_pattern, $this->_file_pattern);
             $results = array_merge($results, $patres);

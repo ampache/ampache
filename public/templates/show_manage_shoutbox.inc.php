@@ -67,8 +67,8 @@ $t_no     = T_('No'); ?>
             $client = $libitem->getUser();
 
             if (
-                $client !== null &&
-                $object instanceof displayable_item
+                $client !== null
+                && $object instanceof displayable_item
             ) {
                 $f_link = $object->get_f_link();
                 require Ui::find_template('show_shout_row.inc.php');

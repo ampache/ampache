@@ -73,8 +73,8 @@ final class PreferenceEdit6Method
         $default = (array_key_exists('default', $input) && (int) $input['default'] == 1);
         // don't apply to all or set default when you aren't an admin
         if (
-            ($all || $default) &&
-            !Api6::check_access(AccessTypeEnum::INTERFACE, AccessLevelEnum::ADMIN, $user->id, self::ACTION, $input['api_format'])
+            ($all || $default)
+            && !Api6::check_access(AccessTypeEnum::INTERFACE, AccessLevelEnum::ADMIN, $user->id, self::ACTION, $input['api_format'])
         ) {
             return false;
         }

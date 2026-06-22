@@ -236,10 +236,10 @@ class SeafileAdapter
     public function ready(): bool
     {
         return (
-            $this->server != null &&
-            $this->api_key != null &&
-            $this->library_name != null &&
-            $this->call_delay != null
+            $this->server != null
+            && $this->api_key != null
+            && $this->library_name != null
+            && $this->call_delay != null
         );
     }
 

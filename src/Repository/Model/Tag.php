@@ -282,9 +282,9 @@ class Tag extends database_object implements library_item, displayable_item, con
         foreach ($taglist as $tag) {
             $tag = trim((string) $tag);
             if (
-                $tag !== '' &&
-                $tag !== '0' &&
-                self::tag_exists($tag)
+                $tag !== ''
+                && $tag !== '0'
+                && self::tag_exists($tag)
             ) {
                 $ret[] = $tag;
             }
@@ -735,8 +735,8 @@ class Tag extends database_object implements library_item, displayable_item, con
                 }
 
                 if (
-                    !$found &&
-                    $overwrite
+                    !$found
+                    && $overwrite
                 ) {
                     debug_event(self::class, 'update_tag_list ' . $object_type . ' delete {' . $ctag->name . '}', 5);
                     $ctag->remove_map($object_type, $object_id);

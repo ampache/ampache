@@ -61,8 +61,8 @@ final readonly class PrivateMessageCreator implements PrivateMessageCreatorInter
         );
 
         if (
-            $recipient !== null &&
-            Preference::get_by_user($recipient->getId(), 'notify_email')
+            $recipient !== null
+            && Preference::get_by_user($recipient->getId(), 'notify_email')
         ) {
             $mailer = $this->utilityFactory->createMailer();
             if (!in_array($recipient->email, [null, '', '0'], true) && $mailer->isMailEnabled()) {

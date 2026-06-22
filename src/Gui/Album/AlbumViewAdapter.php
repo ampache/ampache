@@ -70,9 +70,9 @@ final readonly class AlbumViewAdapter implements AlbumViewAdapterInterface
 
     public function canBatchDownload(): bool
     {
-        return $this->functionChecker->check(AccessFunctionEnum::FUNCTION_BATCH_DOWNLOAD) &&
-            $this->configContainer->isFeatureEnabled(ConfigurationKeyEnum::ALLOW_ZIP_DOWNLOAD) &&
-            $this->zipHandler->isZipable('album');
+        return $this->functionChecker->check(AccessFunctionEnum::FUNCTION_BATCH_DOWNLOAD)
+            && $this->configContainer->isFeatureEnabled(ConfigurationKeyEnum::ALLOW_ZIP_DOWNLOAD)
+            && $this->zipHandler->isZipable('album');
     }
 
     public function canBeDeleted(): bool
@@ -83,16 +83,16 @@ final readonly class AlbumViewAdapter implements AlbumViewAdapterInterface
     public function canPostShout(): bool
     {
         return (
-            $this->configContainer->isAuthenticationEnabled() === false ||
-            $this->gatekeeper->mayAccess(AccessTypeEnum::INTERFACE, AccessLevelEnum::USER)
-        ) &&
-            $this->configContainer->isFeatureEnabled(ConfigurationKeyEnum::SOCIABLE);
+            $this->configContainer->isAuthenticationEnabled() === false
+            || $this->gatekeeper->mayAccess(AccessTypeEnum::INTERFACE, AccessLevelEnum::USER)
+        )
+            && $this->configContainer->isFeatureEnabled(ConfigurationKeyEnum::SOCIABLE);
     }
 
     public function canShare(): bool
     {
-        return $this->gatekeeper->mayAccess(AccessTypeEnum::INTERFACE, AccessLevelEnum::USER) &&
-            $this->configContainer->isFeatureEnabled(ConfigurationKeyEnum::SHARE);
+        return $this->gatekeeper->mayAccess(AccessTypeEnum::INTERFACE, AccessLevelEnum::USER)
+            && $this->configContainer->isFeatureEnabled(ConfigurationKeyEnum::SHARE);
     }
 
     public function canShowYear(): bool
@@ -310,8 +310,8 @@ final readonly class AlbumViewAdapter implements AlbumViewAdapterInterface
     public function isEditable(): bool
     {
         return (
-            $this->gatekeeper->mayAccess(AccessTypeEnum::INTERFACE, AccessLevelEnum::CONTENT_MANAGER) ||
-            $this->gatekeeper->getUserId() == $this->album->get_user_owner()
+            $this->gatekeeper->mayAccess(AccessTypeEnum::INTERFACE, AccessLevelEnum::CONTENT_MANAGER)
+            || $this->gatekeeper->getUserId() == $this->album->get_user_owner()
         );
     }
 }

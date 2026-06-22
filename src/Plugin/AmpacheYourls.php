@@ -146,8 +146,8 @@ class AmpacheYourls extends AmpachePlugin implements PluginShortenerInterface
                 // WARNING: http_build_url requires php-pecl-http module.
                 $purl = parse_url((string) $shorturl);
                 if (
-                    is_array($purl) &&
-                    array_key_exists('host', $purl)
+                    is_array($purl)
+                    && array_key_exists('host', $purl)
                 ) {
                     $purl['host'] = (string) idn_to_utf8($purl['host']);
                     $shorturl     = http_build_url($purl);
@@ -173,9 +173,9 @@ class AmpacheYourls extends AmpachePlugin implements PluginShortenerInterface
     public function uninstall(): bool
     {
         return (
-            Preference::delete('yourls_domain') &&
-            Preference::delete('yourls_use_idn') &&
-            Preference::delete('yourls_api_key')
+            Preference::delete('yourls_domain')
+            && Preference::delete('yourls_use_idn')
+            && Preference::delete('yourls_api_key')
         );
     }
 

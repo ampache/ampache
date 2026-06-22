@@ -78,8 +78,8 @@ final class SmartlistSongs6Method
             return false;
         }
         if (
-            $smartlist->type !== 'public' &&
-            !$smartlist->has_collaborate($user)
+            $smartlist->type !== 'public'
+            && !$smartlist->has_collaborate($user)
         ) {
             Api6::error('Require: 100', ErrorCodeEnum::FAILED_ACCESS_CHECK, self::ACTION, 'account', $input['api_format']);
 

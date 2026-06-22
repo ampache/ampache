@@ -84,10 +84,10 @@ final class Stream6Method
         $type      = (string) $input['type'];
 
         if (
-            $object_id === 0 &&
-            (
-                $type == 'playlist' ||
-                $type == 'search'
+            $object_id === 0
+            && (
+                $type == 'playlist'
+                || $type == 'search'
             )
         ) {
             // The API can use searches as playlists so check for those too

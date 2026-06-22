@@ -133,9 +133,9 @@ final class ZipHandler implements ZipHandlerInterface
         }
 
         if (
-            $addart &&
-            ($folder !== '' && $folder !== '0') &&
-            is_file($artpath)
+            $addart
+            && ($folder !== '' && $folder !== '0')
+            && is_file($artpath)
         ) {
             $arc->addFile($artpath, $folder . DIRECTORY_SEPARATOR . $art_name);
         }

@@ -98,8 +98,8 @@ final class PlaylistEdit8Method
 
         $change_made = false;
         if (
-            $has_collab &&
-            !empty($playlist_edit)
+            $has_collab
+            && !empty($playlist_edit)
         ) {
             foreach ($playlist_edit as $track => $song) {
                 if ($song > 0 && $track > 0) {
@@ -133,9 +133,9 @@ final class PlaylistEdit8Method
 
         // update name/type
         if (
-            $name !== $playlist->name ||
-            $type !== $playlist->type ||
-            $owner !== $playlist->user
+            $name !== $playlist->name
+            || $type !== $playlist->type
+            || $owner !== $playlist->user
         ) {
             $array = [
                 "name" => $name,

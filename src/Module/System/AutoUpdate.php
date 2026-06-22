@@ -60,8 +60,8 @@ class AutoUpdate
     {
         $git_branch = self::is_force_git_branch();
         if (
-            $git_branch !== '' &&
-            is_readable(__DIR__ . '/../../../.git/refs/heads/' . $git_branch)
+            $git_branch !== ''
+            && is_readable(__DIR__ . '/../../../.git/refs/heads/' . $git_branch)
         ) {
             return trim((string) file_get_contents(__DIR__ . '/../../../.git/refs/heads/' . $git_branch));
         }
@@ -95,8 +95,8 @@ class AutoUpdate
 
         // Don't spam the GitHub API
         if (
-            $force === false &&
-            self::lastcheck_expired() === false
+            $force === false
+            && self::lastcheck_expired() === false
         ) {
             return $lastversion;
         }
@@ -107,12 +107,12 @@ class AutoUpdate
         $git_branch = self::is_force_git_branch();
         // Development version, get latest commit on develop branch
         if (
-            self::_is_develop() ||
-            $git_branch !== ''
+            self::_is_develop()
+            || $git_branch !== ''
         ) {
             if (
-                self::_is_develop() ||
-                $git_branch === 'develop'
+                self::_is_develop()
+                || $git_branch === 'develop'
             ) {
                 $commits = self::github_request('/commits/develop');
             } else {
@@ -120,8 +120,8 @@ class AutoUpdate
             }
 
             if (
-                !empty($commits) &&
-                isset($commits->sha)
+                !empty($commits)
+                && isset($commits->sha)
             ) {
                 $lastversion = $commits->sha;
                 Preference::update_all('autoupdate_lastversion', $lastversion);
@@ -212,9 +212,9 @@ class AutoUpdate
             $pattern = '/ref: refs\/heads\/(.*)/';
             $matches = [];
             if (
-                is_string($current) &&
-                preg_match($pattern, $current, $matches) &&
-                !in_array($matches[1], ['master', 'release5', 'release6', 'release7'], true)
+                is_string($current)
+                && preg_match($pattern, $current, $matches)
+                && !in_array($matches[1], ['master', 'release5', 'release6', 'release7'], true)
             ) {
                 return $matches[1];
             }
@@ -229,8 +229,8 @@ class AutoUpdate
     public static function is_update_available(?bool $force = false): bool
     {
         if (
-            $force === false &&
-            self::lastcheck_expired() === false
+            $force === false
+            && self::lastcheck_expired() === false
         ) {
             return (bool) AmpConfig::get('autoupdate_lastversion_new', false);
         }
@@ -246,12 +246,12 @@ class AutoUpdate
 
         debug_event(self::class, 'Checking latest version online...', 5);
         if (
-            $latest !== '' && $latest !== '0' &&
-            $current !== $latest
+            $latest !== '' && $latest !== '0'
+            && $current !== $latest
         ) {
             if (
-                preg_match("/^\\d+\\.\\d+\\.\\d+\$/", $current) &&
-                preg_match("/^\\d+\\.\\d+\\.\\d+\$/", $latest)
+                preg_match("/^\\d+\\.\\d+\\.\\d+\$/", $current)
+                && preg_match("/^\\d+\\.\\d+\\.\\d+\$/", $latest)
             ) {
                 $cpart = explode('-', $current);
                 $lpart = explode('-', $latest);
@@ -262,15 +262,15 @@ class AutoUpdate
                 // returns -1 if the first version is lower than the second, (e.g. version_compare(6.3.3, 7.0.0) = -1)
                 $available = (version_compare($current, $latest) === -1);
             } elseif (
-                self::_is_develop() ||
-                $git_branch !== ''
+                self::_is_develop()
+                || $git_branch !== ''
             ) {
                 $ccommit = AmpConfig::get($current) ?? self::github_request('/commits/' . $current);
                 $lcommit = AmpConfig::get($latest) ?? self::github_request('/commits/' . $latest);
 
                 if (
-                    !empty($ccommit) &&
-                    !empty($lcommit)
+                    !empty($ccommit)
+                    && !empty($lcommit)
                 ) {
                     // Comparison based on commit date
                     $ctime = strtotime((string) $ccommit->commit->author->date);
@@ -329,12 +329,12 @@ class AutoUpdate
 
         // Don't show anything if the current version is newer than the second, (e.g. version_compare(7.0.0, 6.9.0) = 1)
         if (
-            $latest === '' || $latest === '0' ||
-            $current === $latest ||
-            (
-                preg_match("/^\\d+\\.\\d+\\.\\d+\$/", $current) &&
-                preg_match("/^\\d+\\.\\d+\\.\\d+\$/", $latest) &&
-                version_compare($current, $latest) === 1
+            $latest === '' || $latest === '0'
+            || $current === $latest
+            || (
+                preg_match("/^\\d+\\.\\d+\\.\\d+\$/", $current)
+                && preg_match("/^\\d+\\.\\d+\\.\\d+\$/", $latest)
+                && version_compare($current, $latest) === 1
             )
         ) {
             echo '<div id="autoupdate">';

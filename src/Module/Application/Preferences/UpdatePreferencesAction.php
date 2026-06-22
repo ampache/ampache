@@ -52,10 +52,10 @@ final readonly class UpdatePreferencesAction implements ApplicationActionInterfa
     {
         if (
             (
-                Core::get_post('method') === 'admin' &&
-                $gatekeeper->mayAccess(AccessTypeEnum::INTERFACE, AccessLevelEnum::ADMIN) === false
-            ) ||
-            !$this->requestParser->verifyForm('update_preference')
+                Core::get_post('method') === 'admin'
+                && $gatekeeper->mayAccess(AccessTypeEnum::INTERFACE, AccessLevelEnum::ADMIN) === false
+            )
+            || !$this->requestParser->verifyForm('update_preference')
         ) {
             throw new AccessDeniedException();
         }

@@ -74,8 +74,8 @@ final class UpdateArtistInfo4Method
         $like = Recommendation::get_artists_like($object_id);
         // update your object, you need at least catalog_manager access to the db
         if (
-            $info['id'] !== null ||
-            count($like) > 0
+            $info['id'] !== null
+            || count($like) > 0
         ) {
             Api4::message('success', 'Updated artist info: ' . $object_id, null, $input['api_format']);
 

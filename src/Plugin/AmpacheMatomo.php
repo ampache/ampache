@@ -148,8 +148,8 @@ class AmpacheMatomo extends AmpachePlugin implements PluginDisplayOnFooterInterf
     public function uninstall(): bool
     {
         return (
-            Preference::delete('matomo_site_id') &&
-            Preference::delete('matomo_url')
+            Preference::delete('matomo_site_id')
+            && Preference::delete('matomo_url')
         );
     }
 

@@ -114,8 +114,8 @@ final class List8Method
         $name_type = $type;
         $hide      = (array_key_exists('hide_search', $input) && (int) $input['hide_search'] == 1) || AmpConfig::get('hide_search', false);
         if (
-            $type === 'playlist' &&
-            $hide === false
+            $type === 'playlist'
+            && $hide === false
         ) {
             $name_type = 'playlist_search';
             $browse->set_type('playlist_search');
@@ -125,8 +125,8 @@ final class List8Method
 
         // hide playlists starting with the user string (if enabled)
         $hide_string = ($type === 'playlist')
-            ? str_replace('%', '\%', str_replace('_', '\_', (string) Preference::get_by_user($user->id, 'api_hidden_playlists'))) :
-            '';
+            ? str_replace('%', '\%', str_replace('_', '\_', (string) Preference::get_by_user($user->id, 'api_hidden_playlists')))
+            : '';
         if (!empty($hide_string)) {
             $browse->set_filter('not_starts_with', $hide_string);
         }
@@ -142,8 +142,8 @@ final class List8Method
             $browse->set_filter('playlist_open', $user->getId());
 
             if (
-                $hide === false &&
-                (bool) Preference::get_by_user($user->getId(), 'api_hide_dupe_searches') === true
+                $hide === false
+                && (bool) Preference::get_by_user($user->getId(), 'api_hide_dupe_searches') === true
             ) {
                 $browse->set_filter('hide_dupe_smartlist', 1);
             }

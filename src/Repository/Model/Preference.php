@@ -316,9 +316,9 @@ class Preference extends database_object
     public static function clear_from_session(): void
     {
         if (
-            isset($_SESSION) &&
-            array_key_exists('userdata', $_SESSION) &&
-            array_key_exists('preferences', $_SESSION['userdata'])
+            isset($_SESSION)
+            && array_key_exists('userdata', $_SESSION)
+            && array_key_exists('preferences', $_SESSION['userdata'])
         ) {
             unset($_SESSION['userdata']['preferences']);
         }
@@ -492,8 +492,8 @@ class Preference extends database_object
 
         // Handle if a parameter is missing
         if (
-            empty($pref_name) ||
-            !array_key_exists($pref_name, $pref)
+            empty($pref_name)
+            || !array_key_exists($pref_name, $pref)
         ) {
             debug_event(self::class, 'Getting preference {' . $pref_name . '} for user identifier {' . $user_id . '} -- this preference is missing, return default value', 5);
 
@@ -760,8 +760,8 @@ class Preference extends database_object
 
         $pref_id = Dba::insert_id();
         if (
-            !$pref_id ||
-            (int) $pref_id < 1
+            !$pref_id
+            || (int) $pref_id < 1
         ) {
             return false;
         }
@@ -1050,10 +1050,10 @@ class Preference extends database_object
         }
 
         if (
-            array_key_exists('userdata', $_SESSION) &&
-            array_key_exists('preferences', $_SESSION['userdata']) &&
-            is_array($_SESSION['userdata']['preferences']) &&
-            $_SESSION['userdata']['uid'] == $uid
+            array_key_exists('userdata', $_SESSION)
+            && array_key_exists('preferences', $_SESSION['userdata'])
+            && is_array($_SESSION['userdata']['preferences'])
+            && $_SESSION['userdata']['uid'] == $uid
         ) {
             AmpConfig::set_by_array($_SESSION['userdata']['preferences'], true);
 
@@ -1633,61 +1633,61 @@ class Preference extends database_object
                     Dba::write(
                         "UPDATE `preference` SET `level` = ? WHERE `name` IN ('libitem_contextmenu', 'show_lyrics', 'theme_color', 'theme_name');",
                         [AccessLevelEnum::DEFAULT->value]
-                    ) !== null &&
-                    Dba::write(
+                    ) !== null
+                    && Dba::write(
                         "UPDATE `preference` SET `level` = ? WHERE `name` IN ('offset_limit', 'playlist_method');",
                         [AccessLevelEnum::GUEST->value]
-                    ) !== null &&
-                    Dba::write(
-                        "UPDATE `preference` SET `level` = ? WHERE `name` IN (" .
-                        "'ajax_load', 'album_group', 'album_release_type', 'album_release_type_sort', 'album_sort'," .
-                        " 'allow_personal_info_agent', 'allow_personal_info_now', 'allow_personal_info_recent'" .
-                        " 'allow_personal_info_time', 'api_always_download', 'api_enable_3', 'api_enable_4'" .
-                        " 'api_enable_5', 'api_enable_6', 'api_enable_8', 'api_force_version', 'api_hidden_playlists'" .
-                        " 'api_hide_dupe_searches', 'autoupdate_lastcheck', 'autoupdate_lastversion_new'" .
-                        " 'autoupdate_lastversion', 'bookmark_latest', 'broadcast_by_default', 'browse_filter'" .
-                        " 'browser_notify_timeout', 'browser_notify', 'custom_datetime', 'custom_logo_user'" .
-                        " 'custom_logo', 'custom_timezone', 'demo_clear_sessions', 'direct_play_limit'" .
-                        " 'geolocation', 'hide_genres', 'hide_single_artist', 'home_moment_albums', 'home_moment_videos'" .
-                        " 'home_now_playing', 'home_recently_played_all', 'home_recently_played', 'httpq_active'" .
-                        " 'index_dashboard_form', 'jp_volume', 'lastfm_challenge', 'lastfm_grant_link', 'mpd_active'" .
-                        " 'notify_email', 'of_the_moment', 'play_type', 'popular_threshold', 'show_album_artist'" .
-                        " 'show_artist', 'show_donate', 'show_folder', 'show_license', 'show_original_year', 'show_played_times'" .
-                        " 'show_playlist_media_parent', 'show_playlist_username', 'show_skipped_times', 'show_subtitle', 'show_wrapped'" .
-                        " 'sidebar_hide_browse', 'sidebar_hide_dashboard', 'sidebar_hide_information'" .
-                        " 'sidebar_hide_playlist', 'sidebar_hide_search', 'sidebar_hide_switcher', 'sidebar_hide_video'" .
-                        " 'sidebar_light', 'sidebar_order_browse', 'sidebar_order_dashboard', 'sidebar_order_information'" .
-                        " 'sidebar_order_playlist', 'sidebar_order_search', 'sidebar_order_video', 'slideshow_time'" .
-                        " 'song_page_title', 'subsonic_always_download', 'topmenu', 'transcode_bitrate', 'transcode'" .
-                        " 'ui_fixed', 'unique_playlist', 'use_original_year', 'use_play2', 'webplayer_aurora'" .
-                        " 'webplayer_confirmclose', 'webplayer_flash', 'webplayer_html5', 'webplayer_pausetabs'" .
-                        " 'webplayer_removeplayed', 'subsonic_force_album_artist', 'subsonic_single_user_data'" .
-                        ");",
+                    ) !== null
+                    && Dba::write(
+                        "UPDATE `preference` SET `level` = ? WHERE `name` IN ("
+                        . "'ajax_load', 'album_group', 'album_release_type', 'album_release_type_sort', 'album_sort',"
+                        . " 'allow_personal_info_agent', 'allow_personal_info_now', 'allow_personal_info_recent'"
+                        . " 'allow_personal_info_time', 'api_always_download', 'api_enable_3', 'api_enable_4'"
+                        . " 'api_enable_5', 'api_enable_6', 'api_enable_8', 'api_force_version', 'api_hidden_playlists'"
+                        . " 'api_hide_dupe_searches', 'autoupdate_lastcheck', 'autoupdate_lastversion_new'"
+                        . " 'autoupdate_lastversion', 'bookmark_latest', 'broadcast_by_default', 'browse_filter'"
+                        . " 'browser_notify_timeout', 'browser_notify', 'custom_datetime', 'custom_logo_user'"
+                        . " 'custom_logo', 'custom_timezone', 'demo_clear_sessions', 'direct_play_limit'"
+                        . " 'geolocation', 'hide_genres', 'hide_single_artist', 'home_moment_albums', 'home_moment_videos'"
+                        . " 'home_now_playing', 'home_recently_played_all', 'home_recently_played', 'httpq_active'"
+                        . " 'index_dashboard_form', 'jp_volume', 'lastfm_challenge', 'lastfm_grant_link', 'mpd_active'"
+                        . " 'notify_email', 'of_the_moment', 'play_type', 'popular_threshold', 'show_album_artist'"
+                        . " 'show_artist', 'show_donate', 'show_folder', 'show_license', 'show_original_year', 'show_played_times'"
+                        . " 'show_playlist_media_parent', 'show_playlist_username', 'show_skipped_times', 'show_subtitle', 'show_wrapped'"
+                        . " 'sidebar_hide_browse', 'sidebar_hide_dashboard', 'sidebar_hide_information'"
+                        . " 'sidebar_hide_playlist', 'sidebar_hide_search', 'sidebar_hide_switcher', 'sidebar_hide_video'"
+                        . " 'sidebar_light', 'sidebar_order_browse', 'sidebar_order_dashboard', 'sidebar_order_information'"
+                        . " 'sidebar_order_playlist', 'sidebar_order_search', 'sidebar_order_video', 'slideshow_time'"
+                        . " 'song_page_title', 'subsonic_always_download', 'topmenu', 'transcode_bitrate', 'transcode'"
+                        . " 'ui_fixed', 'unique_playlist', 'use_original_year', 'use_play2', 'webplayer_aurora'"
+                        . " 'webplayer_confirmclose', 'webplayer_flash', 'webplayer_html5', 'webplayer_pausetabs'"
+                        . " 'webplayer_removeplayed', 'subsonic_force_album_artist', 'subsonic_single_user_data'"
+                        . ");",
                         [AccessLevelEnum::USER->value]
-                    ) !== null &&
-                    Dba::write(
+                    ) !== null
+                    && Dba::write(
                         "UPDATE `preference` SET `level` = ? WHERE `name` IN ('now_playing_per_user');",
                         [AccessLevelEnum::CONTENT_MANAGER->value]
-                    ) !== null &&
-                    Dba::write(
-                        "UPDATE `preference` SET `level` = ? WHERE `name` IN (" .
-                        "'allow_video', 'custom_blankalbum', 'custom_favicon' 'custom_login_background'," .
-                        " 'custom_login_logo', 'custom_text_footer', 'libitem_browse_alpha', 'stats_threshold'" .
-                        ");",
+                    ) !== null
+                    && Dba::write(
+                        "UPDATE `preference` SET `level` = ? WHERE `name` IN ("
+                        . "'allow_video', 'custom_blankalbum', 'custom_favicon' 'custom_login_background',"
+                        . " 'custom_login_logo', 'custom_text_footer', 'libitem_browse_alpha', 'stats_threshold'"
+                        . ");",
                         [AccessLevelEnum::MANAGER->value]
-                    ) !== null &&
-                    Dba::write(
-                        "UPDATE `preference` SET `level` = ? WHERE `name` IN (" .
-                        "'allow_democratic_playback', 'allow_localplay_playback', 'allow_stream_playback', 'allow_upload'" .
-                        " 'autoupdate', 'catalog_check_duplicate', 'cron_cache', 'daap_backend', 'daap_pass'" .
-                        " 'demo_use_search', 'disabled_custom_metadata_fields_input', 'disabled_custom_metadata_fields'" .
-                        " 'download', 'force_http_play', 'lang', 'localplay_controller', 'localplay_level', 'lock_songs'" .
-                        " 'perpetual_api_session', 'playlist_type', 'podcast_keep', 'podcast_new_download', 'rate_limit'" .
-                        " 'share_expire', 'share', 'show_header_login', 'site_title', 'stream_beautiful_url'" .
-                        " 'subsonic_backend', 'upload_access_level', 'upload_allow_edit', 'upload_allow_remove'" .
-                        " 'upload_catalog_pattern', 'upload_catalog', 'upload_script', 'upload_subdir', 'upload_user_artist'" .
-                        " 'upnp_backend', 'webdav_backend'" .
-                        ");",
+                    ) !== null
+                    && Dba::write(
+                        "UPDATE `preference` SET `level` = ? WHERE `name` IN ("
+                        . "'allow_democratic_playback', 'allow_localplay_playback', 'allow_stream_playback', 'allow_upload'"
+                        . " 'autoupdate', 'catalog_check_duplicate', 'cron_cache', 'daap_backend', 'daap_pass'"
+                        . " 'demo_use_search', 'disabled_custom_metadata_fields_input', 'disabled_custom_metadata_fields'"
+                        . " 'download', 'force_http_play', 'lang', 'localplay_controller', 'localplay_level', 'lock_songs'"
+                        . " 'perpetual_api_session', 'playlist_type', 'podcast_keep', 'podcast_new_download', 'rate_limit'"
+                        . " 'share_expire', 'share', 'show_header_login', 'site_title', 'stream_beautiful_url'"
+                        . " 'subsonic_backend', 'upload_access_level', 'upload_allow_edit', 'upload_allow_remove'"
+                        . " 'upload_catalog_pattern', 'upload_catalog', 'upload_script', 'upload_subdir', 'upload_user_artist'"
+                        . " 'upnp_backend', 'webdav_backend'"
+                        . ");",
                         [AccessLevelEnum::ADMIN->value]
                     ) !== null
                 );
@@ -1725,179 +1725,179 @@ class Preference extends database_object
                 return true;
             case 'default':
                 return (
-                    Dba::write("UPDATE `user_preference` SET `value` = '-1' WHERE `name` IN ('upload_catalog') AND `user` = ?;", [$user->getId()]) !== null &&
-                    Dba::write(
-                        "UPDATE `user_preference` SET `value` = '' WHERE `name` IN (" .
-                        "'api_hidden_playlists', 'autoupdate_lastcheck', 'autoupdate_lastversion_new', 'autoupdate_lastversion', 'custom_blankalbum'," .
-                        " 'custom_datetime', 'custom_favicon', 'custom_login_background', 'custom_login_logo', 'custom_logo'," .
-                        " 'custom_text_footer', 'custom_timezone', 'daap_pass', 'disabled_custom_metadata_fields_input', 'disabled_custom_metadata_fields'," .
-                        " 'lastfm_challenge', 'lastfm_grant_link', 'libitem_browse_alpha', 'upload_script') AND `user` = ?;",
+                    Dba::write("UPDATE `user_preference` SET `value` = '-1' WHERE `name` IN ('upload_catalog') AND `user` = ?;", [$user->getId()]) !== null
+                    && Dba::write(
+                        "UPDATE `user_preference` SET `value` = '' WHERE `name` IN ("
+                        . "'api_hidden_playlists', 'autoupdate_lastcheck', 'autoupdate_lastversion_new', 'autoupdate_lastversion', 'custom_blankalbum',"
+                        . " 'custom_datetime', 'custom_favicon', 'custom_login_background', 'custom_login_logo', 'custom_logo',"
+                        . " 'custom_text_footer', 'custom_timezone', 'daap_pass', 'disabled_custom_metadata_fields_input', 'disabled_custom_metadata_fields',"
+                        . " 'lastfm_challenge', 'lastfm_grant_link', 'libitem_browse_alpha', 'upload_script') AND `user` = ?;",
                         [$user->getId()]
-                    ) !== null &&
-                    Dba::write("UPDATE `user_preference` SET `value` = '0.8' WHERE `name` IN ('jp_volume') AND `user` = ?;", [$user->getId()]) !== null &&
-                    Dba::write(
-                        "UPDATE `user_preference` SET `value` = '0' WHERE `name` IN (" .
-                        "'album_sort', 'allow_upload', 'allow_video', 'api_force_version', 'api_hide_dupe_searches', 'bookmark_latest', 'broadcast_by_default', 'browse_filter'," .
-                        " 'catalog_check_duplicate', 'cron_cache', 'custom_logo_user', 'daap_backend', 'demo_clear_sessions'," .
-                        " 'demo_use_search', 'direct_play_limit', 'force_http_play', 'geolocation', 'hide_genres', 'hide_single_artist', 'home_moment_videos'," .
-                        " 'httpq_active', 'index_dashboard_form', 'lock_songs', 'mpd_active', 'notify_email', 'perpetual_api_session'," .
-                        " 'share', 'show_album_artist', 'show_lyrics', 'show_played_times', 'show_playlist_media_parent', 'show_playlist_username', 'show_skipped_times'," .
-                        " 'sidebar_hide_browse', 'sidebar_hide_dashboard', 'sidebar_hide_information', 'sidebar_hide_playlist'," .
-                        " 'sidebar_hide_search', 'sidebar_hide_switcher', 'sidebar_hide_video', 'sidebar_light', 'slideshow_time', 'stream_beautiful_url'," .
-                        " 'subsonic_always_download', 'topmenu', 'ui_fixed', 'unique_playlist', 'upload_catalog_pattern', 'upload_user_artist', 'upnp_backend'," .
-                        " 'use_original_year', 'use_play2', 'webdav_backend', 'webplayer_confirmclose', 'webplayer_removeplayed', 'api_always_download') AND `user` = ?;",
+                    ) !== null
+                    && Dba::write("UPDATE `user_preference` SET `value` = '0.8' WHERE `name` IN ('jp_volume') AND `user` = ?;", [$user->getId()]) !== null
+                    && Dba::write(
+                        "UPDATE `user_preference` SET `value` = '0' WHERE `name` IN ("
+                        . "'album_sort', 'allow_upload', 'allow_video', 'api_force_version', 'api_hide_dupe_searches', 'bookmark_latest', 'broadcast_by_default', 'browse_filter',"
+                        . " 'catalog_check_duplicate', 'cron_cache', 'custom_logo_user', 'daap_backend', 'demo_clear_sessions',"
+                        . " 'demo_use_search', 'direct_play_limit', 'force_http_play', 'geolocation', 'hide_genres', 'hide_single_artist', 'home_moment_videos',"
+                        . " 'httpq_active', 'index_dashboard_form', 'lock_songs', 'mpd_active', 'notify_email', 'perpetual_api_session',"
+                        . " 'share', 'show_album_artist', 'show_lyrics', 'show_played_times', 'show_playlist_media_parent', 'show_playlist_username', 'show_skipped_times',"
+                        . " 'sidebar_hide_browse', 'sidebar_hide_dashboard', 'sidebar_hide_information', 'sidebar_hide_playlist',"
+                        . " 'sidebar_hide_search', 'sidebar_hide_switcher', 'sidebar_hide_video', 'sidebar_light', 'slideshow_time', 'stream_beautiful_url',"
+                        . " 'subsonic_always_download', 'topmenu', 'ui_fixed', 'unique_playlist', 'upload_catalog_pattern', 'upload_user_artist', 'upnp_backend',"
+                        . " 'use_original_year', 'use_play2', 'webdav_backend', 'webplayer_confirmclose', 'webplayer_removeplayed', 'api_always_download') AND `user` = ?;",
                         [$user->getId()]
-                    ) !== null &&
-                    Dba::write(
-                        "UPDATE `user_preference` SET `value` = '1' WHERE `name` IN (" .
-                        "'ajax_load', 'album_group', 'album_release_type', 'allow_democratic_playback', 'allow_localplay_playback'," .
-                        " 'allow_personal_info_agent', 'allow_personal_info_now', 'allow_personal_info_recent', 'allow_personal_info_time'," .
-                        " 'allow_stream_playback', 'api_enable_3', 'api_enable_4', 'api_enable_5', 'api_enable_6'," .
-                        " 'autoupdate', 'browser_notify', 'download', 'home_moment_albums'," .
-                        " 'home_now_playing', 'home_recently_played_all', 'home_recently_played', 'libitem_contextmenu', 'now_playing_per_user'," .
-                        " 'podcast_new_download', 'show_artist', 'show_donate', 'show_folder', 'show_header_login', 'show_license', 'show_original_year'," .
-                        " 'show_subtitle', 'show_wrapped', 'song_page_title', 'subsonic_backend', 'upload_allow_edit', 'upload_allow_remove', 'upload_subdir'," .
-                        " 'webplayer_aurora', 'webplayer_flash', 'webplayer_html5', 'webplayer_pausetabs') AND `user` = ?;",
+                    ) !== null
+                    && Dba::write(
+                        "UPDATE `user_preference` SET `value` = '1' WHERE `name` IN ("
+                        . "'ajax_load', 'album_group', 'album_release_type', 'allow_democratic_playback', 'allow_localplay_playback',"
+                        . " 'allow_personal_info_agent', 'allow_personal_info_now', 'allow_personal_info_recent', 'allow_personal_info_time',"
+                        . " 'allow_stream_playback', 'api_enable_3', 'api_enable_4', 'api_enable_5', 'api_enable_6',"
+                        . " 'autoupdate', 'browser_notify', 'download', 'home_moment_albums',"
+                        . " 'home_now_playing', 'home_recently_played_all', 'home_recently_played', 'libitem_contextmenu', 'now_playing_per_user',"
+                        . " 'podcast_new_download', 'show_artist', 'show_donate', 'show_folder', 'show_header_login', 'show_license', 'show_original_year',"
+                        . " 'show_subtitle', 'show_wrapped', 'song_page_title', 'subsonic_backend', 'upload_allow_edit', 'upload_allow_remove', 'upload_subdir',"
+                        . " 'webplayer_aurora', 'webplayer_flash', 'webplayer_html5', 'webplayer_pausetabs') AND `user` = ?;",
                         [$user->getId()]
-                    ) !== null &&
-                    Dba::write("UPDATE `user_preference` SET `value` = '10' WHERE `name` IN ('browser_notify_timeout', 'podcast_keep', 'popular_threshold', 'sidebar_order_browse') AND `user` = ?;", [$user->getId()]) !== null &&
-                    Dba::write("UPDATE `user_preference` SET `value` = '100' WHERE `name` IN ('localplay_level') AND `user` = ?;", [$user->getId()]) !== null &&
-                    Dba::write("UPDATE `user_preference` SET `value` = '15' WHERE `name` IN ('sidebar_order_dashboard') AND `user` = ?;", [$user->getId()]) !== null &&
-                    Dba::write("UPDATE `user_preference` SET `value` = '20' WHERE `name` IN ('sidebar_order_video') AND `user` = ?;", [$user->getId()]) !== null &&
-                    Dba::write("UPDATE `user_preference` SET `value` = '25' WHERE `name` IN ('upload_access_level') AND `user` = ?;", [$user->getId()]) !== null &&
-                    Dba::write("UPDATE `user_preference` SET `value` = '30' WHERE `name` IN ('sidebar_order_playlist') AND `user` = ?;", [$user->getId()]) !== null &&
-                    Dba::write("UPDATE `user_preference` SET `value` = '32' WHERE `name` IN ('transcode_bitrate') AND `user` = ?;", [$user->getId()]) !== null &&
-                    Dba::write("UPDATE `user_preference` SET `value` = '40' WHERE `name` IN ('sidebar_order_search') AND `user` = ?;", [$user->getId()]) !== null &&
-                    Dba::write("UPDATE `user_preference` SET `value` = '50' WHERE `name` IN ('offset_limit') AND `user` = ?;", [$user->getId()]) !== null &&
-                    Dba::write("UPDATE `user_preference` SET `value` = '6' WHERE `name` IN ('of_the_moment') AND `user` = ?;", [$user->getId()]) !== null &&
-                    Dba::write("UPDATE `user_preference` SET `value` = '60' WHERE `name` IN ('sidebar_order_information') AND `user` = ?;", [$user->getId()]) !== null &&
-                    Dba::write("UPDATE `user_preference` SET `value` = '7' WHERE `name` IN ('share_expire', 'stats_threshold') AND `user` = ?;", [$user->getId()]) !== null &&
-                    Dba::write("UPDATE `user_preference` SET `value` = '8192' WHERE `name` IN ('rate_limit') AND `user` = ?;", [$user->getId()]) !== null &&
-                    Dba::write("UPDATE `user_preference` SET `value` = 'album,ep,live,single' WHERE `name` IN ('album_release_type_sort') AND `user` = ?;", [$user->getId()]) !== null &&
-                    Dba::write("UPDATE `user_preference` SET `value` = 'Ampache :: For the Love of Music' WHERE `name` IN ('site_title') AND `user` = ?;", [$user->getId()]) !== null &&
-                    Dba::write("UPDATE `user_preference` SET `value` = 'dark' WHERE `name` IN ('theme_color') AND `user` = ?;", [$user->getId()]) !== null &&
-                    Dba::write("UPDATE `user_preference` SET `value` = 'default' WHERE `name` IN ('playlist_method', 'transcode') AND `user` = ?;", [$user->getId()]) !== null &&
-                    Dba::write("UPDATE `user_preference` SET `value` = 'en_US' WHERE `name` IN ('lang') AND `user` = ?;", [$user->getId()]) !== null &&
-                    Dba::write("UPDATE `user_preference` SET `value` = 'm3u' WHERE `name` IN ('playlist_type') AND `user` = ?;", [$user->getId()]) !== null &&
-                    Dba::write("UPDATE `user_preference` SET `value` = 'mpd' WHERE `name` IN ('localplay_controller') AND `user` = ?;", [$user->getId()]) !== null &&
-                    Dba::write("UPDATE `user_preference` SET `value` = 'reborn' WHERE `name` IN ('theme_name') AND `user` = ?;", [$user->getId()]) !== null &&
-                    Dba::write("UPDATE `user_preference` SET `value` = 'web_player' WHERE `name` IN ('play_type') AND `user` = ?;", [$user->getId()]) !== null
+                    ) !== null
+                    && Dba::write("UPDATE `user_preference` SET `value` = '10' WHERE `name` IN ('browser_notify_timeout', 'podcast_keep', 'popular_threshold', 'sidebar_order_browse') AND `user` = ?;", [$user->getId()]) !== null
+                    && Dba::write("UPDATE `user_preference` SET `value` = '100' WHERE `name` IN ('localplay_level') AND `user` = ?;", [$user->getId()]) !== null
+                    && Dba::write("UPDATE `user_preference` SET `value` = '15' WHERE `name` IN ('sidebar_order_dashboard') AND `user` = ?;", [$user->getId()]) !== null
+                    && Dba::write("UPDATE `user_preference` SET `value` = '20' WHERE `name` IN ('sidebar_order_video') AND `user` = ?;", [$user->getId()]) !== null
+                    && Dba::write("UPDATE `user_preference` SET `value` = '25' WHERE `name` IN ('upload_access_level') AND `user` = ?;", [$user->getId()]) !== null
+                    && Dba::write("UPDATE `user_preference` SET `value` = '30' WHERE `name` IN ('sidebar_order_playlist') AND `user` = ?;", [$user->getId()]) !== null
+                    && Dba::write("UPDATE `user_preference` SET `value` = '32' WHERE `name` IN ('transcode_bitrate') AND `user` = ?;", [$user->getId()]) !== null
+                    && Dba::write("UPDATE `user_preference` SET `value` = '40' WHERE `name` IN ('sidebar_order_search') AND `user` = ?;", [$user->getId()]) !== null
+                    && Dba::write("UPDATE `user_preference` SET `value` = '50' WHERE `name` IN ('offset_limit') AND `user` = ?;", [$user->getId()]) !== null
+                    && Dba::write("UPDATE `user_preference` SET `value` = '6' WHERE `name` IN ('of_the_moment') AND `user` = ?;", [$user->getId()]) !== null
+                    && Dba::write("UPDATE `user_preference` SET `value` = '60' WHERE `name` IN ('sidebar_order_information') AND `user` = ?;", [$user->getId()]) !== null
+                    && Dba::write("UPDATE `user_preference` SET `value` = '7' WHERE `name` IN ('share_expire', 'stats_threshold') AND `user` = ?;", [$user->getId()]) !== null
+                    && Dba::write("UPDATE `user_preference` SET `value` = '8192' WHERE `name` IN ('rate_limit') AND `user` = ?;", [$user->getId()]) !== null
+                    && Dba::write("UPDATE `user_preference` SET `value` = 'album,ep,live,single' WHERE `name` IN ('album_release_type_sort') AND `user` = ?;", [$user->getId()]) !== null
+                    && Dba::write("UPDATE `user_preference` SET `value` = 'Ampache :: For the Love of Music' WHERE `name` IN ('site_title') AND `user` = ?;", [$user->getId()]) !== null
+                    && Dba::write("UPDATE `user_preference` SET `value` = 'dark' WHERE `name` IN ('theme_color') AND `user` = ?;", [$user->getId()]) !== null
+                    && Dba::write("UPDATE `user_preference` SET `value` = 'default' WHERE `name` IN ('playlist_method', 'transcode') AND `user` = ?;", [$user->getId()]) !== null
+                    && Dba::write("UPDATE `user_preference` SET `value` = 'en_US' WHERE `name` IN ('lang') AND `user` = ?;", [$user->getId()]) !== null
+                    && Dba::write("UPDATE `user_preference` SET `value` = 'm3u' WHERE `name` IN ('playlist_type') AND `user` = ?;", [$user->getId()]) !== null
+                    && Dba::write("UPDATE `user_preference` SET `value` = 'mpd' WHERE `name` IN ('localplay_controller') AND `user` = ?;", [$user->getId()]) !== null
+                    && Dba::write("UPDATE `user_preference` SET `value` = 'reborn' WHERE `name` IN ('theme_name') AND `user` = ?;", [$user->getId()]) !== null
+                    && Dba::write("UPDATE `user_preference` SET `value` = 'web_player' WHERE `name` IN ('play_type') AND `user` = ?;", [$user->getId()]) !== null
                 );
             case 'minimalist':
                 return (
-                    Dba::write("UPDATE `user_preference` SET `value` = '-1' WHERE `name` IN ('upload_catalog') AND `user` = ?;", [$user->getId()]) !== null &&
-                    Dba::write(
-                        "UPDATE `user_preference` SET `value` = '' WHERE `name` IN (" .
-                        "'api_hidden_playlists', 'autoupdate_lastcheck', 'autoupdate_lastversion_new', 'autoupdate_lastversion', 'custom_blankalbum'," .
-                        " 'custom_datetime', 'custom_favicon', 'custom_login_background', 'custom_login_logo', 'custom_logo'," .
-                        " 'custom_text_footer', 'custom_timezone', 'daap_pass', 'disabled_custom_metadata_fields_input', 'disabled_custom_metadata_fields'," .
-                        " 'lastfm_challenge', 'lastfm_grant_link', 'libitem_browse_alpha', 'upload_script') AND `user` = ?;",
+                    Dba::write("UPDATE `user_preference` SET `value` = '-1' WHERE `name` IN ('upload_catalog') AND `user` = ?;", [$user->getId()]) !== null
+                    && Dba::write(
+                        "UPDATE `user_preference` SET `value` = '' WHERE `name` IN ("
+                        . "'api_hidden_playlists', 'autoupdate_lastcheck', 'autoupdate_lastversion_new', 'autoupdate_lastversion', 'custom_blankalbum',"
+                        . " 'custom_datetime', 'custom_favicon', 'custom_login_background', 'custom_login_logo', 'custom_logo',"
+                        . " 'custom_text_footer', 'custom_timezone', 'daap_pass', 'disabled_custom_metadata_fields_input', 'disabled_custom_metadata_fields',"
+                        . " 'lastfm_challenge', 'lastfm_grant_link', 'libitem_browse_alpha', 'upload_script') AND `user` = ?;",
                         [$user->getId()]
-                    ) !== null &&
-                    Dba::write("UPDATE `user_preference` SET `value` = '0.8' WHERE `name` IN ('jp_volume') AND `user` = ?;", [$user->getId()]) !== null &&
-                    Dba::write(
-                        "UPDATE `user_preference` SET `value` = '0' WHERE `name` IN (" .
-                        "'album_sort', 'allow_upload', 'allow_video', 'api_force_version', 'api_hide_dupe_searches', 'bookmark_latest', 'broadcast_by_default', 'browse_filter', 'catalog_check_duplicate'," .
-                        " 'cron_cache', 'custom_logo_user', 'daap_backend', 'demo_clear_sessions', 'demo_use_search', 'direct_play_limit', 'download'," .
-                        " 'force_http_play', 'geolocation', 'hide_genres', 'hide_single_artist', 'home_moment_videos', 'httpq_active', 'index_dashboard_form', 'lock_songs'," .
-                        " 'mpd_active', 'notify_email', 'perpetual_api_session', 'share', 'show_album_artist', 'show_lyrics', 'show_played_times'," .
-                        " 'show_playlist_media_parent', 'show_playlist_username', 'show_skipped_times', 'show_wrapped', 'sidebar_hide_browse', 'sidebar_hide_dashboard', 'sidebar_hide_information'," .
-                        " 'sidebar_hide_playlist', 'sidebar_hide_search', 'sidebar_hide_switcher', 'sidebar_hide_video', 'sidebar_light', 'slideshow_time'," .
-                        " 'stream_beautiful_url', 'subsonic_always_download', 'topmenu', 'ui_fixed', 'unique_playlist', 'upload_catalog_pattern', 'upload_user_artist'," .
-                        " 'upnp_backend', 'use_original_year', 'use_play2', 'webdav_backend', 'webplayer_confirmclose', 'webplayer_removeplayed'," .
-                        " 'api_always_download') AND `user` = ?;",
+                    ) !== null
+                    && Dba::write("UPDATE `user_preference` SET `value` = '0.8' WHERE `name` IN ('jp_volume') AND `user` = ?;", [$user->getId()]) !== null
+                    && Dba::write(
+                        "UPDATE `user_preference` SET `value` = '0' WHERE `name` IN ("
+                        . "'album_sort', 'allow_upload', 'allow_video', 'api_force_version', 'api_hide_dupe_searches', 'bookmark_latest', 'broadcast_by_default', 'browse_filter', 'catalog_check_duplicate',"
+                        . " 'cron_cache', 'custom_logo_user', 'daap_backend', 'demo_clear_sessions', 'demo_use_search', 'direct_play_limit', 'download',"
+                        . " 'force_http_play', 'geolocation', 'hide_genres', 'hide_single_artist', 'home_moment_videos', 'httpq_active', 'index_dashboard_form', 'lock_songs',"
+                        . " 'mpd_active', 'notify_email', 'perpetual_api_session', 'share', 'show_album_artist', 'show_lyrics', 'show_played_times',"
+                        . " 'show_playlist_media_parent', 'show_playlist_username', 'show_skipped_times', 'show_wrapped', 'sidebar_hide_browse', 'sidebar_hide_dashboard', 'sidebar_hide_information',"
+                        . " 'sidebar_hide_playlist', 'sidebar_hide_search', 'sidebar_hide_switcher', 'sidebar_hide_video', 'sidebar_light', 'slideshow_time',"
+                        . " 'stream_beautiful_url', 'subsonic_always_download', 'topmenu', 'ui_fixed', 'unique_playlist', 'upload_catalog_pattern', 'upload_user_artist',"
+                        . " 'upnp_backend', 'use_original_year', 'use_play2', 'webdav_backend', 'webplayer_confirmclose', 'webplayer_removeplayed',"
+                        . " 'api_always_download') AND `user` = ?;",
                         [$user->getId()]
-                    ) !== null &&
-                    Dba::write(
-                        "UPDATE `user_preference` SET `value` = '1' WHERE `name` IN (" .
-                        "'ajax_load', 'album_group', 'album_release_type', 'allow_democratic_playback', 'allow_localplay_playback', 'allow_personal_info_agent'," .
-                        " 'allow_personal_info_now', 'allow_personal_info_recent', 'allow_personal_info_time', 'allow_stream_playback', 'api_enable_3'," .
-                        " 'api_enable_4', 'api_enable_5', 'api_enable_6', 'autoupdate', 'browser_notify'," .
-                        " 'home_moment_albums', 'home_now_playing', 'home_recently_played_all', 'home_recently_played'," .
-                        " 'libitem_contextmenu', 'now_playing_per_user', 'podcast_new_download', 'show_artist', 'show_donate', 'show_folder', 'show_header_login'," .
-                        " 'show_license', 'show_original_year', 'show_subtitle', 'song_page_title', 'subsonic_backend', 'upload_allow_edit', 'upload_allow_remove'," .
-                        " 'upload_subdir', 'webplayer_aurora', 'webplayer_flash', 'webplayer_html5', 'webplayer_pausetabs') AND `user` = ?;",
+                    ) !== null
+                    && Dba::write(
+                        "UPDATE `user_preference` SET `value` = '1' WHERE `name` IN ("
+                        . "'ajax_load', 'album_group', 'album_release_type', 'allow_democratic_playback', 'allow_localplay_playback', 'allow_personal_info_agent',"
+                        . " 'allow_personal_info_now', 'allow_personal_info_recent', 'allow_personal_info_time', 'allow_stream_playback', 'api_enable_3',"
+                        . " 'api_enable_4', 'api_enable_5', 'api_enable_6', 'autoupdate', 'browser_notify',"
+                        . " 'home_moment_albums', 'home_now_playing', 'home_recently_played_all', 'home_recently_played',"
+                        . " 'libitem_contextmenu', 'now_playing_per_user', 'podcast_new_download', 'show_artist', 'show_donate', 'show_folder', 'show_header_login',"
+                        . " 'show_license', 'show_original_year', 'show_subtitle', 'song_page_title', 'subsonic_backend', 'upload_allow_edit', 'upload_allow_remove',"
+                        . " 'upload_subdir', 'webplayer_aurora', 'webplayer_flash', 'webplayer_html5', 'webplayer_pausetabs') AND `user` = ?;",
                         [$user->getId()]
-                    ) !== null &&
-                    Dba::write("UPDATE `user_preference` SET `value` = '10' WHERE `name` IN ('browser_notify_timeout', 'podcast_keep', 'popular_threshold', 'sidebar_order_browse') AND `user` = ?;", [$user->getId()]) !== null &&
-                    Dba::write("UPDATE `user_preference` SET `value` = '100' WHERE `name` IN ('localplay_level') AND `user` = ?;", [$user->getId()]) !== null &&
-                    Dba::write("UPDATE `user_preference` SET `value` = '15' WHERE `name` IN ('sidebar_order_dashboard') AND `user` = ?;", [$user->getId()]) !== null &&
-                    Dba::write("UPDATE `user_preference` SET `value` = '20' WHERE `name` IN ('sidebar_order_video') AND `user` = ?;", [$user->getId()]) !== null &&
-                    Dba::write("UPDATE `user_preference` SET `value` = '25' WHERE `name` IN ('upload_access_level') AND `user` = ?;", [$user->getId()]) !== null &&
-                    Dba::write("UPDATE `user_preference` SET `value` = '30' WHERE `name` IN ('sidebar_order_playlist') AND `user` = ?;", [$user->getId()]) !== null &&
-                    Dba::write("UPDATE `user_preference` SET `value` = '32' WHERE `name` IN ('transcode_bitrate') AND `user` = ?;", [$user->getId()]) !== null &&
-                    Dba::write("UPDATE `user_preference` SET `value` = '40' WHERE `name` IN ('sidebar_order_search') AND `user` = ?;", [$user->getId()]) !== null &&
-                    Dba::write("UPDATE `user_preference` SET `value` = '50' WHERE `name` IN ('offset_limit') AND `user` = ?;", [$user->getId()]) !== null &&
-                    Dba::write("UPDATE `user_preference` SET `value` = '6' WHERE `name` IN ('of_the_moment') AND `user` = ?;", [$user->getId()]) !== null &&
-                    Dba::write("UPDATE `user_preference` SET `value` = '60' WHERE `name` IN ('sidebar_order_information') AND `user` = ?;", [$user->getId()]) !== null &&
-                    Dba::write("UPDATE `user_preference` SET `value` = '7' WHERE `name` IN ('share_expire', 'stats_threshold') AND `user` = ?;", [$user->getId()]) !== null &&
-                    Dba::write("UPDATE `user_preference` SET `value` = '8192' WHERE `name` IN ('rate_limit') AND `user` = ?;", [$user->getId()]) !== null &&
-                    Dba::write("UPDATE `user_preference` SET `value` = 'album,ep,live,single' WHERE `name` IN ('album_release_type_sort') AND `user` = ?;", [$user->getId()]) !== null &&
-                    Dba::write("UPDATE `user_preference` SET `value` = 'Ampache :: For the Love of Music' WHERE `name` IN ('site_title') AND `user` = ?;", [$user->getId()]) !== null &&
-                    Dba::write("UPDATE `user_preference` SET `value` = 'dark' WHERE `name` IN ('theme_color') AND `user` = ?;", [$user->getId()]) !== null &&
-                    Dba::write("UPDATE `user_preference` SET `value` = 'default' WHERE `name` IN ('playlist_method', 'transcode') AND `user` = ?;", [$user->getId()]) !== null &&
-                    Dba::write("UPDATE `user_preference` SET `value` = 'en_US' WHERE `name` IN ('lang') AND `user` = ?;", [$user->getId()]) !== null &&
-                    Dba::write("UPDATE `user_preference` SET `value` = 'm3u' WHERE `name` IN ('playlist_type') AND `user` = ?;", [$user->getId()]) !== null &&
-                    Dba::write("UPDATE `user_preference` SET `value` = 'mpd' WHERE `name` IN ('localplay_controller') AND `user` = ?;", [$user->getId()]) !== null &&
-                    Dba::write("UPDATE `user_preference` SET `value` = 'reborn' WHERE `name` IN ('theme_name') AND `user` = ?;", [$user->getId()]) !== null &&
-                    Dba::write("UPDATE `user_preference` SET `value` = 'web_player' WHERE `name` IN ('play_type') AND `user` = ?;", [$user->getId()]) !== null
+                    ) !== null
+                    && Dba::write("UPDATE `user_preference` SET `value` = '10' WHERE `name` IN ('browser_notify_timeout', 'podcast_keep', 'popular_threshold', 'sidebar_order_browse') AND `user` = ?;", [$user->getId()]) !== null
+                    && Dba::write("UPDATE `user_preference` SET `value` = '100' WHERE `name` IN ('localplay_level') AND `user` = ?;", [$user->getId()]) !== null
+                    && Dba::write("UPDATE `user_preference` SET `value` = '15' WHERE `name` IN ('sidebar_order_dashboard') AND `user` = ?;", [$user->getId()]) !== null
+                    && Dba::write("UPDATE `user_preference` SET `value` = '20' WHERE `name` IN ('sidebar_order_video') AND `user` = ?;", [$user->getId()]) !== null
+                    && Dba::write("UPDATE `user_preference` SET `value` = '25' WHERE `name` IN ('upload_access_level') AND `user` = ?;", [$user->getId()]) !== null
+                    && Dba::write("UPDATE `user_preference` SET `value` = '30' WHERE `name` IN ('sidebar_order_playlist') AND `user` = ?;", [$user->getId()]) !== null
+                    && Dba::write("UPDATE `user_preference` SET `value` = '32' WHERE `name` IN ('transcode_bitrate') AND `user` = ?;", [$user->getId()]) !== null
+                    && Dba::write("UPDATE `user_preference` SET `value` = '40' WHERE `name` IN ('sidebar_order_search') AND `user` = ?;", [$user->getId()]) !== null
+                    && Dba::write("UPDATE `user_preference` SET `value` = '50' WHERE `name` IN ('offset_limit') AND `user` = ?;", [$user->getId()]) !== null
+                    && Dba::write("UPDATE `user_preference` SET `value` = '6' WHERE `name` IN ('of_the_moment') AND `user` = ?;", [$user->getId()]) !== null
+                    && Dba::write("UPDATE `user_preference` SET `value` = '60' WHERE `name` IN ('sidebar_order_information') AND `user` = ?;", [$user->getId()]) !== null
+                    && Dba::write("UPDATE `user_preference` SET `value` = '7' WHERE `name` IN ('share_expire', 'stats_threshold') AND `user` = ?;", [$user->getId()]) !== null
+                    && Dba::write("UPDATE `user_preference` SET `value` = '8192' WHERE `name` IN ('rate_limit') AND `user` = ?;", [$user->getId()]) !== null
+                    && Dba::write("UPDATE `user_preference` SET `value` = 'album,ep,live,single' WHERE `name` IN ('album_release_type_sort') AND `user` = ?;", [$user->getId()]) !== null
+                    && Dba::write("UPDATE `user_preference` SET `value` = 'Ampache :: For the Love of Music' WHERE `name` IN ('site_title') AND `user` = ?;", [$user->getId()]) !== null
+                    && Dba::write("UPDATE `user_preference` SET `value` = 'dark' WHERE `name` IN ('theme_color') AND `user` = ?;", [$user->getId()]) !== null
+                    && Dba::write("UPDATE `user_preference` SET `value` = 'default' WHERE `name` IN ('playlist_method', 'transcode') AND `user` = ?;", [$user->getId()]) !== null
+                    && Dba::write("UPDATE `user_preference` SET `value` = 'en_US' WHERE `name` IN ('lang') AND `user` = ?;", [$user->getId()]) !== null
+                    && Dba::write("UPDATE `user_preference` SET `value` = 'm3u' WHERE `name` IN ('playlist_type') AND `user` = ?;", [$user->getId()]) !== null
+                    && Dba::write("UPDATE `user_preference` SET `value` = 'mpd' WHERE `name` IN ('localplay_controller') AND `user` = ?;", [$user->getId()]) !== null
+                    && Dba::write("UPDATE `user_preference` SET `value` = 'reborn' WHERE `name` IN ('theme_name') AND `user` = ?;", [$user->getId()]) !== null
+                    && Dba::write("UPDATE `user_preference` SET `value` = 'web_player' WHERE `name` IN ('play_type') AND `user` = ?;", [$user->getId()]) !== null
                 );
             case 'community':
                 return (
-                    Dba::write("UPDATE `user_preference` SET `value` = '-1' WHERE `name` IN ('upload_catalog') AND `user` = ?;", [$user->getId()]) !== null &&
-                    Dba::write(
-                        "UPDATE `user_preference` SET `value` = '' WHERE `name` IN (" .
-                        "'api_hidden_playlists', 'autoupdate_lastcheck', 'autoupdate_lastversion_new', 'autoupdate_lastversion', 'custom_blankalbum'," .
-                        " 'custom_datetime', 'custom_favicon', 'custom_login_background', 'custom_login_logo', 'custom_logo', 'custom_text_footer', 'custom_timezone'," .
-                        " 'daap_pass', 'disabled_custom_metadata_fields_input', 'disabled_custom_metadata_fields', 'lastfm_challenge', 'lastfm_grant_link', 'libitem_browse_alpha'," .
-                        " 'upload_script') AND `user` = ?;",
+                    Dba::write("UPDATE `user_preference` SET `value` = '-1' WHERE `name` IN ('upload_catalog') AND `user` = ?;", [$user->getId()]) !== null
+                    && Dba::write(
+                        "UPDATE `user_preference` SET `value` = '' WHERE `name` IN ("
+                        . "'api_hidden_playlists', 'autoupdate_lastcheck', 'autoupdate_lastversion_new', 'autoupdate_lastversion', 'custom_blankalbum',"
+                        . " 'custom_datetime', 'custom_favicon', 'custom_login_background', 'custom_login_logo', 'custom_logo', 'custom_text_footer', 'custom_timezone',"
+                        . " 'daap_pass', 'disabled_custom_metadata_fields_input', 'disabled_custom_metadata_fields', 'lastfm_challenge', 'lastfm_grant_link', 'libitem_browse_alpha',"
+                        . " 'upload_script') AND `user` = ?;",
                         [$user->getId()]
-                    ) !== null &&
-                    Dba::write("UPDATE `user_preference` SET `value` = '0.8' WHERE `name` IN ('jp_volume') AND `user` = ?;", [$user->getId()]) !== null &&
-                    Dba::write(
-                        "UPDATE `user_preference` SET `value` = '0' WHERE `name` IN (" .
-                        "'album_sort', 'allow_upload', 'allow_video', 'api_force_version', 'api_hide_dupe_searches', 'bookmark_latest', 'broadcast_by_default', 'browse_filter', 'catalog_check_duplicate', 'cron_cache'," .
-                        " 'custom_logo_user', 'daap_backend', 'demo_clear_sessions', 'demo_use_search', 'direct_play_limit', 'download', 'force_http_play', 'geolocation'," .
-                        " 'hide_genres', 'hide_single_artist', 'home_moment_videos', 'home_now_playing', 'home_recently_played_all', 'home_recently_played', 'httpq_active', 'index_dashboard_form'," .
-                        " 'lock_songs', 'mpd_active', 'notify_email', 'perpetual_api_session', 'show_album_artist', 'show_lyrics', 'show_played_times'," .
-                        " 'show_playlist_media_parent', 'show_playlist_username', 'show_skipped_times', 'show_wrapped', 'sidebar_hide_browse', 'sidebar_hide_dashboard', 'sidebar_hide_information'," .
-                        " 'sidebar_hide_playlist', 'sidebar_hide_search', 'sidebar_hide_switcher', 'sidebar_hide_video', 'sidebar_light', 'slideshow_time', 'stream_beautiful_url'," .
-                        " 'subsonic_always_download', 'topmenu', 'ui_fixed', 'unique_playlist', 'upload_catalog_pattern', 'upload_user_artist', 'upnp_backend', 'use_original_year'," .
-                        " 'use_play2', 'webdav_backend', 'webplayer_confirmclose', 'webplayer_removeplayed', 'api_always_download') AND `user` = ?;",
+                    ) !== null
+                    && Dba::write("UPDATE `user_preference` SET `value` = '0.8' WHERE `name` IN ('jp_volume') AND `user` = ?;", [$user->getId()]) !== null
+                    && Dba::write(
+                        "UPDATE `user_preference` SET `value` = '0' WHERE `name` IN ("
+                        . "'album_sort', 'allow_upload', 'allow_video', 'api_force_version', 'api_hide_dupe_searches', 'bookmark_latest', 'broadcast_by_default', 'browse_filter', 'catalog_check_duplicate', 'cron_cache',"
+                        . " 'custom_logo_user', 'daap_backend', 'demo_clear_sessions', 'demo_use_search', 'direct_play_limit', 'download', 'force_http_play', 'geolocation',"
+                        . " 'hide_genres', 'hide_single_artist', 'home_moment_videos', 'home_now_playing', 'home_recently_played_all', 'home_recently_played', 'httpq_active', 'index_dashboard_form',"
+                        . " 'lock_songs', 'mpd_active', 'notify_email', 'perpetual_api_session', 'show_album_artist', 'show_lyrics', 'show_played_times',"
+                        . " 'show_playlist_media_parent', 'show_playlist_username', 'show_skipped_times', 'show_wrapped', 'sidebar_hide_browse', 'sidebar_hide_dashboard', 'sidebar_hide_information',"
+                        . " 'sidebar_hide_playlist', 'sidebar_hide_search', 'sidebar_hide_switcher', 'sidebar_hide_video', 'sidebar_light', 'slideshow_time', 'stream_beautiful_url',"
+                        . " 'subsonic_always_download', 'topmenu', 'ui_fixed', 'unique_playlist', 'upload_catalog_pattern', 'upload_user_artist', 'upnp_backend', 'use_original_year',"
+                        . " 'use_play2', 'webdav_backend', 'webplayer_confirmclose', 'webplayer_removeplayed', 'api_always_download') AND `user` = ?;",
                         [$user->getId()]
-                    ) !== null &&
-                    Dba::write(
-                        "UPDATE `user_preference` SET `value` = '1' WHERE `name` IN (" .
-                        "'ajax_load', 'album_group', 'album_release_type', 'allow_democratic_playback', 'allow_localplay_playback', 'allow_personal_info_agent'," .
-                        " 'allow_personal_info_now', 'allow_personal_info_recent', 'allow_personal_info_time', 'allow_stream_playback', 'api_enable_3', 'api_enable_4'," .
-                        " 'api_enable_5', 'api_enable_6', 'autoupdate', 'browser_notify', 'home_moment_albums'," .
-                        " 'libitem_contextmenu', 'now_playing_per_user', 'podcast_new_download', 'share', 'show_artist', 'show_donate', 'show_folder'," .
-                        " 'show_header_login', 'show_license', 'show_original_year', 'show_subtitle', 'song_page_title', 'subsonic_backend', 'upload_allow_edit'," .
-                        " 'upload_allow_remove', 'upload_subdir', 'webplayer_aurora', 'webplayer_flash', 'webplayer_html5', 'webplayer_pausetabs') AND `user` = ?;",
+                    ) !== null
+                    && Dba::write(
+                        "UPDATE `user_preference` SET `value` = '1' WHERE `name` IN ("
+                        . "'ajax_load', 'album_group', 'album_release_type', 'allow_democratic_playback', 'allow_localplay_playback', 'allow_personal_info_agent',"
+                        . " 'allow_personal_info_now', 'allow_personal_info_recent', 'allow_personal_info_time', 'allow_stream_playback', 'api_enable_3', 'api_enable_4',"
+                        . " 'api_enable_5', 'api_enable_6', 'autoupdate', 'browser_notify', 'home_moment_albums',"
+                        . " 'libitem_contextmenu', 'now_playing_per_user', 'podcast_new_download', 'share', 'show_artist', 'show_donate', 'show_folder',"
+                        . " 'show_header_login', 'show_license', 'show_original_year', 'show_subtitle', 'song_page_title', 'subsonic_backend', 'upload_allow_edit',"
+                        . " 'upload_allow_remove', 'upload_subdir', 'webplayer_aurora', 'webplayer_flash', 'webplayer_html5', 'webplayer_pausetabs') AND `user` = ?;",
                         [$user->getId()]
-                    ) !== null &&
-                    Dba::write("UPDATE `user_preference` SET `value` = '10' WHERE `name` IN ('browser_notify_timeout', 'podcast_keep', 'popular_threshold', 'sidebar_order_browse') AND `user` = ?;", [$user->getId()]) !== null &&
-                    Dba::write("UPDATE `user_preference` SET `value` = '100' WHERE `name` IN ('localplay_level') AND `user` = ?;", [$user->getId()]) !== null &&
-                    Dba::write("UPDATE `user_preference` SET `value` = '15' WHERE `name` IN ('sidebar_order_dashboard') AND `user` = ?;", [$user->getId()]) !== null &&
-                    Dba::write("UPDATE `user_preference` SET `value` = '20' WHERE `name` IN ('sidebar_order_video') AND `user` = ?;", [$user->getId()]) !== null &&
-                    Dba::write("UPDATE `user_preference` SET `value` = '25' WHERE `name` IN ('upload_access_level') AND `user` = ?;", [$user->getId()]) !== null &&
-                    Dba::write("UPDATE `user_preference` SET `value` = '30' WHERE `name` IN ('sidebar_order_playlist') AND `user` = ?;", [$user->getId()]) !== null &&
-                    Dba::write("UPDATE `user_preference` SET `value` = '32' WHERE `name` IN ('transcode_bitrate') AND `user` = ?;", [$user->getId()]) !== null &&
-                    Dba::write("UPDATE `user_preference` SET `value` = '40' WHERE `name` IN ('sidebar_order_search') AND `user` = ?;", [$user->getId()]) !== null &&
-                    Dba::write("UPDATE `user_preference` SET `value` = '50' WHERE `name` IN ('offset_limit') AND `user` = ?;", [$user->getId()]) !== null &&
-                    Dba::write("UPDATE `user_preference` SET `value` = '6' WHERE `name` IN ('of_the_moment') AND `user` = ?;", [$user->getId()]) !== null &&
-                    Dba::write("UPDATE `user_preference` SET `value` = '60' WHERE `name` IN ('sidebar_order_information') AND `user` = ?;", [$user->getId()]) !== null &&
-                    Dba::write("UPDATE `user_preference` SET `value` = '7' WHERE `name` IN ('share_expire', 'stats_threshold') AND `user` = ?;", [$user->getId()]) !== null &&
-                    Dba::write("UPDATE `user_preference` SET `value` = '8192' WHERE `name` IN ('rate_limit') AND `user` = ?;", [$user->getId()]) !== null &&
-                    Dba::write("UPDATE `user_preference` SET `value` = 'album,ep,live,single' WHERE `name` IN ('album_release_type_sort') AND `user` = ?;", [$user->getId()]) !== null &&
-                    Dba::write("UPDATE `user_preference` SET `value` = 'Ampache :: For the Love of Music' WHERE `name` IN ('site_title') AND `user` = ?;", [$user->getId()]) !== null &&
-                    Dba::write("UPDATE `user_preference` SET `value` = 'dark' WHERE `name` IN ('theme_color') AND `user` = ?;", [$user->getId()]) !== null &&
-                    Dba::write("UPDATE `user_preference` SET `value` = 'default' WHERE `name` IN ('playlist_method', 'transcode') AND `user` = ?;", [$user->getId()]) !== null &&
-                    Dba::write("UPDATE `user_preference` SET `value` = 'en_US' WHERE `name` IN ('lang') AND `user` = ?;", [$user->getId()]) !== null &&
-                    Dba::write("UPDATE `user_preference` SET `value` = 'm3u' WHERE `name` IN ('playlist_type') AND `user` = ?;", [$user->getId()]) !== null &&
-                    Dba::write("UPDATE `user_preference` SET `value` = 'mpd' WHERE `name` IN ('localplay_controller') AND `user` = ?;", [$user->getId()]) !== null &&
-                    Dba::write("UPDATE `user_preference` SET `value` = 'reborn' WHERE `name` IN ('theme_name') AND `user` = ?;", [$user->getId()]) !== null &&
-                    Dba::write("UPDATE `user_preference` SET `value` = 'web_player' WHERE `name` IN ('play_type') AND `user` = ?;", [$user->getId()]) !== null
+                    ) !== null
+                    && Dba::write("UPDATE `user_preference` SET `value` = '10' WHERE `name` IN ('browser_notify_timeout', 'podcast_keep', 'popular_threshold', 'sidebar_order_browse') AND `user` = ?;", [$user->getId()]) !== null
+                    && Dba::write("UPDATE `user_preference` SET `value` = '100' WHERE `name` IN ('localplay_level') AND `user` = ?;", [$user->getId()]) !== null
+                    && Dba::write("UPDATE `user_preference` SET `value` = '15' WHERE `name` IN ('sidebar_order_dashboard') AND `user` = ?;", [$user->getId()]) !== null
+                    && Dba::write("UPDATE `user_preference` SET `value` = '20' WHERE `name` IN ('sidebar_order_video') AND `user` = ?;", [$user->getId()]) !== null
+                    && Dba::write("UPDATE `user_preference` SET `value` = '25' WHERE `name` IN ('upload_access_level') AND `user` = ?;", [$user->getId()]) !== null
+                    && Dba::write("UPDATE `user_preference` SET `value` = '30' WHERE `name` IN ('sidebar_order_playlist') AND `user` = ?;", [$user->getId()]) !== null
+                    && Dba::write("UPDATE `user_preference` SET `value` = '32' WHERE `name` IN ('transcode_bitrate') AND `user` = ?;", [$user->getId()]) !== null
+                    && Dba::write("UPDATE `user_preference` SET `value` = '40' WHERE `name` IN ('sidebar_order_search') AND `user` = ?;", [$user->getId()]) !== null
+                    && Dba::write("UPDATE `user_preference` SET `value` = '50' WHERE `name` IN ('offset_limit') AND `user` = ?;", [$user->getId()]) !== null
+                    && Dba::write("UPDATE `user_preference` SET `value` = '6' WHERE `name` IN ('of_the_moment') AND `user` = ?;", [$user->getId()]) !== null
+                    && Dba::write("UPDATE `user_preference` SET `value` = '60' WHERE `name` IN ('sidebar_order_information') AND `user` = ?;", [$user->getId()]) !== null
+                    && Dba::write("UPDATE `user_preference` SET `value` = '7' WHERE `name` IN ('share_expire', 'stats_threshold') AND `user` = ?;", [$user->getId()]) !== null
+                    && Dba::write("UPDATE `user_preference` SET `value` = '8192' WHERE `name` IN ('rate_limit') AND `user` = ?;", [$user->getId()]) !== null
+                    && Dba::write("UPDATE `user_preference` SET `value` = 'album,ep,live,single' WHERE `name` IN ('album_release_type_sort') AND `user` = ?;", [$user->getId()]) !== null
+                    && Dba::write("UPDATE `user_preference` SET `value` = 'Ampache :: For the Love of Music' WHERE `name` IN ('site_title') AND `user` = ?;", [$user->getId()]) !== null
+                    && Dba::write("UPDATE `user_preference` SET `value` = 'dark' WHERE `name` IN ('theme_color') AND `user` = ?;", [$user->getId()]) !== null
+                    && Dba::write("UPDATE `user_preference` SET `value` = 'default' WHERE `name` IN ('playlist_method', 'transcode') AND `user` = ?;", [$user->getId()]) !== null
+                    && Dba::write("UPDATE `user_preference` SET `value` = 'en_US' WHERE `name` IN ('lang') AND `user` = ?;", [$user->getId()]) !== null
+                    && Dba::write("UPDATE `user_preference` SET `value` = 'm3u' WHERE `name` IN ('playlist_type') AND `user` = ?;", [$user->getId()]) !== null
+                    && Dba::write("UPDATE `user_preference` SET `value` = 'mpd' WHERE `name` IN ('localplay_controller') AND `user` = ?;", [$user->getId()]) !== null
+                    && Dba::write("UPDATE `user_preference` SET `value` = 'reborn' WHERE `name` IN ('theme_name') AND `user` = ?;", [$user->getId()]) !== null
+                    && Dba::write("UPDATE `user_preference` SET `value` = 'web_player' WHERE `name` IN ('play_type') AND `user` = ?;", [$user->getId()]) !== null
                 );
         }
 
@@ -2177,13 +2177,13 @@ class Preference extends database_object
 
         if (
             (
-                $pref_id === null ||
-                $pref_id === 0
-            ) ||
-            (
-                $name === null ||
-                $name === '' ||
-                $name === '0'
+                $pref_id === null
+                || $pref_id === 0
+            )
+            || (
+                $name === null
+                || $name === ''
+                || $name === '0'
             )
         ) {
             return false;

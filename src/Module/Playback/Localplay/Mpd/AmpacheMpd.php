@@ -85,8 +85,8 @@ class AmpacheMpd extends localplay_controller
         // If we haven't added anything then maybe we should clear the playlist.
         if ($this->_add_count < 1) {
             $this->_mpd->RefreshInfo();
-            if ($this->block_clear === false &&
-                $this->_mpd->status['state'] == mpd::STATE_STOPPED
+            if ($this->block_clear === false
+                && $this->_mpd->status['state'] == mpd::STATE_STOPPED
             ) {
                 $this->clear_playlist();
             }
@@ -525,8 +525,8 @@ class AmpacheMpd extends localplay_controller
     public function skip(int $track_id): bool
     {
         if (
-            !$this->_mpd ||
-            !$this->_mpd->SkipTo($track_id)
+            !$this->_mpd
+            || !$this->_mpd->SkipTo($track_id)
         ) {
             return false;
         }

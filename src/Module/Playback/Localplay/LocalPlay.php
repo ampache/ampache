@@ -92,8 +92,8 @@ class LocalPlay
     public function add_url(Stream_Url $url): bool
     {
         if (
-            !$this->_player instanceof localplay_controller ||
-            !$this->_player->add_url($url)
+            !$this->_player instanceof localplay_controller
+            || !$this->_player->add_url($url)
         ) {
             debug_event(self::class, 'Unable to add url ' . $url->url . ', check ' . $this->type . ' controller', 1);
 
@@ -111,8 +111,8 @@ class LocalPlay
     public function connect(): bool
     {
         if (
-            !$this->_player instanceof localplay_controller ||
-            $this->_player->connect() === false
+            !$this->_player instanceof localplay_controller
+            || $this->_player->connect() === false
         ) {
             debug_event(self::class, 'Error Unable to connect, check ' . $this->type . ' controller', 1);
 
@@ -146,8 +146,8 @@ class LocalPlay
     public function delete_all(): bool
     {
         if (
-            !$this->_player instanceof localplay_controller ||
-            !$this->_player->clear_playlist()
+            !$this->_player instanceof localplay_controller
+            || !$this->_player->clear_playlist()
         ) {
             debug_event(self::class, 'Error: Unable to delete entire playlist, check ' . $this->type . ' controller', 1);
 
@@ -176,8 +176,8 @@ class LocalPlay
     public function delete_track(int $object_id): bool
     {
         if (
-            !$this->_player instanceof localplay_controller ||
-            !$this->_player->delete_track($object_id)
+            !$this->_player instanceof localplay_controller
+            || !$this->_player->delete_track($object_id)
         ) {
             debug_event(self::class, 'Error: Unable to remove songs, check ' . $this->type . ' controller', 1);
 
@@ -346,8 +346,8 @@ class LocalPlay
     {
         // Run the player's installer
         return (
-            $this->_player instanceof localplay_controller &&
-            $this->_player->install()
+            $this->_player instanceof localplay_controller
+            && $this->_player->install()
         );
     }
 
@@ -359,8 +359,8 @@ class LocalPlay
     public function next(): bool
     {
         if (
-            !$this->_player instanceof localplay_controller ||
-            !$this->_player->next()
+            !$this->_player instanceof localplay_controller
+            || !$this->_player->next()
         ) {
             debug_event(self::class, 'Error: Unable to skip to next song, check ' . $this->type . ' controller', 1);
 
@@ -378,8 +378,8 @@ class LocalPlay
     public function pause(): bool
     {
         if (
-            !$this->_player instanceof localplay_controller ||
-            !$this->_player->pause()
+            !$this->_player instanceof localplay_controller
+            || !$this->_player->pause()
         ) {
             debug_event(self::class, 'Error: Unable to pause song, check ' . $this->type . ' controller', 1);
 
@@ -397,8 +397,8 @@ class LocalPlay
     public function play(): bool
     {
         if (
-            !$this->_player instanceof localplay_controller ||
-            !$this->_player->play()
+            !$this->_player instanceof localplay_controller
+            || !$this->_player->play()
         ) {
             debug_event(self::class, 'Error Unable to start playback, check ' . $this->type . ' controller', 1);
 
@@ -426,8 +426,8 @@ class LocalPlay
     public function prev(): bool
     {
         if (
-            !$this->_player instanceof localplay_controller ||
-            !$this->_player->prev()
+            !$this->_player instanceof localplay_controller
+            || !$this->_player->prev()
         ) {
             debug_event(self::class, 'Error: Unable to skip to previous song, check ' . $this->type . ' controller', 1);
 
@@ -445,8 +445,8 @@ class LocalPlay
     public function random(bool $state): bool
     {
         $data = (
-            $this->_player instanceof localplay_controller &&
-            $this->_player->random($state)
+            $this->_player instanceof localplay_controller
+            && $this->_player->random($state)
         );
 
         if (!$data) {
@@ -464,8 +464,8 @@ class LocalPlay
     public function repeat(bool $state): bool
     {
         $data = (
-            $this->_player instanceof localplay_controller &&
-            $this->_player->repeat($state)
+            $this->_player instanceof localplay_controller
+            && $this->_player->repeat($state)
         );
 
         if (!$data) {
@@ -504,8 +504,8 @@ class LocalPlay
     public function skip(int $track_id): bool
     {
         if (
-            !$this->_player instanceof localplay_controller ||
-            !$this->_player->skip($track_id)
+            !$this->_player instanceof localplay_controller
+            || !$this->_player->skip($track_id)
         ) {
             debug_event(self::class, 'Error: Unable to skip to next song, check ' . $this->type . ' controller', 1);
 
@@ -543,8 +543,8 @@ class LocalPlay
     public function stop(): bool
     {
         if (
-            !$this->_player instanceof localplay_controller ||
-            !$this->_player->stop()
+            !$this->_player instanceof localplay_controller
+            || !$this->_player->stop()
         ) {
             debug_event(self::class, 'Error Unable to stop playback, check ' . $this->type . ' controller', 1);
 
@@ -597,8 +597,8 @@ class LocalPlay
     public function volume_down(): bool
     {
         if (
-            !$this->_player instanceof localplay_controller ||
-            !$this->_player->volume_down()
+            !$this->_player instanceof localplay_controller
+            || !$this->_player->volume_down()
         ) {
             debug_event(self::class, 'Error: Unable to decrese volume, check ' . $this->type . ' controller', 1);
 
@@ -616,8 +616,8 @@ class LocalPlay
     public function volume_mute(): bool
     {
         if (
-            !$this->_player instanceof localplay_controller ||
-            !$this->_player->volume(0)
+            !$this->_player instanceof localplay_controller
+            || !$this->_player->volume(0)
         ) {
             debug_event(self::class, 'Error: Unable to mute volume, check ' . $this->type . ' controller', 1);
 
@@ -644,8 +644,8 @@ class LocalPlay
         }
 
         if (
-            !$this->_player instanceof localplay_controller ||
-            !$this->_player->volume($value)
+            !$this->_player instanceof localplay_controller
+            || !$this->_player->volume($value)
         ) {
             debug_event(self::class, 'Error: Unable to set volume, check ' . $this->type . ' controller', 1);
 
@@ -663,8 +663,8 @@ class LocalPlay
     public function volume_up(): bool
     {
         if (
-            !$this->_player instanceof localplay_controller ||
-            !$this->_player->volume_up()
+            !$this->_player instanceof localplay_controller
+            || !$this->_player->volume_up()
         ) {
             debug_event(self::class, 'Error: Unable to increase volume, check ' . $this->type . ' controller', 1);
 

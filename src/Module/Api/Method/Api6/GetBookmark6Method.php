@@ -113,8 +113,8 @@ final class GetBookmark6Method
         ];
         $results = Bookmark::getBookmarks($object);
         if (
-            empty($results) &&
-            !$all
+            empty($results)
+            && !$all
         ) {
             Api6::empty(null, $input['api_format']);
 

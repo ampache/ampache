@@ -83,8 +83,8 @@ final class Timeline8Method
             $limit = (int) ($input['limit'] ?? 0);
             $since = (int) ($input['since'] ?? 0);
             if (
-                $leadUser->getId() === $user->getId() ||
-                Preference::get_by_user($leadUser->getId(), 'allow_personal_info_recent')
+                $leadUser->getId() === $user->getId()
+                || Preference::get_by_user($leadUser->getId(), 'allow_personal_info_recent')
             ) {
                 $results = self::getUseractivityRepository()->getActivities(
                     $leadUser->getId(),

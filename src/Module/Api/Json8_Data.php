@@ -627,8 +627,8 @@ class Json8_Data
 
             $user = User::get_from_username($bookmark_username);
             if (
-                $include &&
-                $user !== null
+                $include
+                && $user !== null
             ) {
                 switch ($bookmark_object_type) {
                     case 'song':

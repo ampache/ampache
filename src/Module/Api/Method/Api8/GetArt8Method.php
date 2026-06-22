@@ -133,8 +133,8 @@ final class GetArt8Method
         Session::extend($input['auth'], AccessTypeEnum::API->value);
 
         if (
-            preg_match('/^[0-9]+x[0-9]+$/', $size) &&
-            !$art->has_db_info($size, $fallback)
+            preg_match('/^[0-9]+x[0-9]+$/', $size)
+            && !$art->has_db_info($size, $fallback)
         ) {
             $size = 'original';
         }

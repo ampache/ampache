@@ -149,9 +149,9 @@ final class UpdateSingleCatalogFolder extends AbstractCatalogUpdater implements 
 
                 // deleted file
                 if (
-                    $media->isNew() === false &&
-                    !$file_test &&
-                    $cleanupMode == 1
+                    $media->isNew() === false
+                    && !$file_test
+                    && $cleanupMode == 1
                 ) {
                     if ($catalog->clean_file($file_path, $type)) {
                         $changed++;

@@ -72,8 +72,8 @@ final class AdminUpdatePreferenceAccessLevelCommand extends Command
                 true
             );
         } elseif (
-            $level &&
-            Preference::set_level($level)
+            $level
+            && Preference::set_level($level)
         ) {
             $interactor->ok(
                 "\n" . T_('Updated'),

@@ -136,8 +136,8 @@ final readonly class FileNameConverter implements FileNameConverterInterface
             $full_file = $path . $slash_type . $file;
 
             if (
-                is_dir($full_file) &&
-                $this->charset_directory_correct($interactor, $full_file, $force)
+                is_dir($full_file)
+                && $this->charset_directory_correct($interactor, $full_file, $force)
             ) {
                 continue;
             }
@@ -152,8 +152,8 @@ final readonly class FileNameConverter implements FileNameConverterInterface
 
                 // Make sure the extension stayed the same
                 if (
-                    $translated_filename &&
-                    substr($translated_filename, strlen($translated_filename) - 3, 3) !== substr($full_file, strlen($full_file) - 3, 3)
+                    $translated_filename
+                    && substr($translated_filename, strlen($translated_filename) - 3, 3) !== substr($full_file, strlen($full_file) - 3, 3)
                 ) {
                     $interactor->warn(
                         T_('Translation failure, stripping non-valid characters'),

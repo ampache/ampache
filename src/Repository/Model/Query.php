@@ -747,9 +747,9 @@ class Query
     {
         // Don't allow pointless sorts
         if (
-            !empty($this->get_type()) &&
-            $this->queryType !== null &&
-            !in_array($sort, $this->queryType->get_sorts())
+            !empty($this->get_type())
+            && $this->queryType !== null
+            && !in_array($sort, $this->queryType->get_sorts())
         ) {
             debug_event(self::class, 'IGNORED set_sort ' . $this->get_type() . ': ' . $sort, 5);
 
@@ -918,8 +918,8 @@ class Query
             $this->_state['type'] = $type;
             // don't overwrite an existing browse with defaults
             if (
-                !empty($custom_base) ||
-                !$this->_state['base']
+                !empty($custom_base)
+                || !$this->_state['base']
             ) {
                 $this->_set_base_sql(true, $custom_base, $parameters);
             }
@@ -981,9 +981,9 @@ class Query
         }
 
         if (
-            $sql !== '' &&
-            $sql !== '0' &&
-            $table != 'video'
+            $sql !== ''
+            && $sql !== '0'
+            && $table != 'video'
         ) {
             $this->set_join('LEFT', '`video`', '`' . $table . '`.`id`', '`video`.`id`', 50);
         }
@@ -1192,10 +1192,10 @@ class Query
             $filter_sql = $this->_get_filter_sql();
             $sort_sql   = $this->_get_sort_sql();
             // regular queries need to be joined with all the other parts
-            $final_sql = $this->_get_base_sql() .
-                $this->_get_join_sql() .
-                $filter_sql .
-                $this->_get_having_sql();
+            $final_sql = $this->_get_base_sql()
+                . $this->_get_join_sql()
+                . $filter_sql
+                . $this->_get_having_sql();
 
             // allow forcing a group by
             if (!empty($this->_get_group_sql())) {

@@ -639,8 +639,8 @@ class Dba
     private static function _setup_dbh($dbh, $database): bool
     {
         if (
-            !$dbh ||
-            $dbh->errorCode()
+            !$dbh
+            || $dbh->errorCode()
         ) {
             return false;
         }

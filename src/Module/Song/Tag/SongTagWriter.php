@@ -99,8 +99,8 @@ final readonly class SongTagWriter implements SongTagWriterInterface
         }
 
         if (
-            in_array($song->file, [null, '', '0'], true) ||
-            !is_file($song->file)
+            in_array($song->file, [null, '', '0'], true)
+            || !is_file($song->file)
         ) {
             $this->logger->error(
                 sprintf('File %s does not exist', $song->file),

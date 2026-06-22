@@ -81,9 +81,9 @@ final class StreamItemAction extends AbstractStreamAction
                 $user = $gatekeeper->getUser();
                 // record this as a 'play' to help show usage and history for playlists and streams
                 if (
-                    $user !== null &&
-                    $mediaIds !== [] &&
-                    in_array($objectType, [LibraryItemEnum::PLAYLIST, LibraryItemEnum::LIVE_STREAM])
+                    $user !== null
+                    && $mediaIds !== []
+                    && in_array($objectType, [LibraryItemEnum::PLAYLIST, LibraryItemEnum::LIVE_STREAM])
                 ) {
                     $client = $_REQUEST['client'] ?? substr(Core::get_server('HTTP_USER_AGENT'), 0, 254);
                     Stats::insert($objectType->value, (int) $object_id, $user->getId(), $client, [], 'stream', time());

@@ -91,8 +91,8 @@ class AmpacheCatalogFavorites extends AmpachePlugin implements PluginDisplayHome
 
         $userflags = Userflag::get_latest('song', null, $this->maxitems);
         if (
-            AmpConfig::get('ratings') &&
-            $userflags !== []
+            AmpConfig::get('ratings')
+            && $userflags !== []
         ) {
             $divString = ($this->order > 0)
                 ? '<div class="catalogfav" style="order: ' . $this->order . '">'
@@ -336,10 +336,10 @@ class AmpacheCatalogFavorites extends AmpachePlugin implements PluginDisplayHome
     public function uninstall(): bool
     {
         return (
-            Preference::delete('catalogfav_max_items') &&
-            Preference::delete('catalogfav_gridview') &&
-            Preference::delete('catalogfav_order') &&
-            Preference::delete('catalogfav_compact')
+            Preference::delete('catalogfav_max_items')
+            && Preference::delete('catalogfav_gridview')
+            && Preference::delete('catalogfav_order')
+            && Preference::delete('catalogfav_compact')
         );
     }
 

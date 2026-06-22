@@ -70,8 +70,8 @@ final readonly class ShareCreator implements ShareCreatorInterface
         }
 
         if (
-            !$allow_stream &&
-            !$allow_download
+            !$allow_stream
+            && !$allow_download
         ) {
             $this->logger->error(
                 'create_share: must allow stream OR allow download',

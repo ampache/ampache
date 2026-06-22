@@ -69,9 +69,9 @@ final readonly class PrivilegeChecker implements PrivilegeCheckerInterface
 
         // an empty string is an empty global
         if (
-            !$user instanceof User ||
-            $user == '' ||
-            $user->id === 0
+            !$user instanceof User
+            || $user == ''
+            || $user->id === 0
         ) {
             return false;
         }
@@ -79,8 +79,8 @@ final readonly class PrivilegeChecker implements PrivilegeCheckerInterface
         // Switch on the type
         return match ($type) {
             AccessTypeEnum::LOCALPLAY => (
-                $this->configContainer->get(ConfigurationKeyEnum::LOCALPLAY_LEVEL) >= $level->value ||
-                $user->access >= AccessLevelEnum::ADMIN->value
+                $this->configContainer->get(ConfigurationKeyEnum::LOCALPLAY_LEVEL) >= $level->value
+                || $user->access >= AccessLevelEnum::ADMIN->value
             ),
             AccessTypeEnum::INTERFACE => ($user->access >= $level->value),
             default => false,

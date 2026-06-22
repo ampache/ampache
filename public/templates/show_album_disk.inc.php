@@ -124,9 +124,9 @@ Art::display('album', $albumDisk->album_id, $name, ['width' => 384, 'height' => 
 <?php if (AmpConfig::get('show_played_times')) { ?>
 <br />
 <div style="display:inline;">
-    <?php echo T_('Played') . ' ' .
+    <?php echo T_('Played') . ' '
 /* HINT: Number of times an object has been played */
-sprintf(nT_('%d time', '%d times', $albumDisk->total_count), $albumDisk->total_count); ?>
+. sprintf(nT_('%d time', '%d times', $albumDisk->total_count), $albumDisk->total_count); ?>
 </div>
 <?php } ?>
 

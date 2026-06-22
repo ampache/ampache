@@ -150,8 +150,8 @@ class AmpacheStreamBandwidth extends AmpachePlugin implements PluginStreamContro
     public function uninstall(): bool
     {
         return (
-            Preference::delete('stream_control_bandwidth_max') &&
-            Preference::delete('stream_control_bandwidth_days')
+            Preference::delete('stream_control_bandwidth_max')
+            && Preference::delete('stream_control_bandwidth_days')
         );
     }
 

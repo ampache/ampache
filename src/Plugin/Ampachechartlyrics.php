@@ -75,8 +75,8 @@ class Ampachechartlyrics extends AmpachePlugin implements PluginGetLyricsInterfa
         if ($request->status_code == 200) {
             $xml = simplexml_load_string((string) $request->body);
             if (
-                $xml &&
-                !empty($xml->Lyric)
+                $xml
+                && !empty($xml->Lyric)
             ) {
                 return [
                     'text' => nl2br((string) $xml->Lyric),

@@ -679,19 +679,19 @@ class Catalog_local extends Catalog
 
         // need at least one type to transcode
         if (
-            !$m4a &&
-            !$flac &&
-            !$mpc &&
-            !$ogg &&
-            !$oga &&
-            !$opus &&
-            !$wav &&
-            !$wma &&
-            !$aif &&
-            !$aiff &&
-            !$ape &&
-            !$shn &&
-            !$mp3
+            !$m4a
+            && !$flac
+            && !$mpc
+            && !$ogg
+            && !$oga
+            && !$opus
+            && !$wav
+            && !$wma
+            && !$aif
+            && !$aiff
+            && !$ape
+            && !$shn
+            && !$mp3
         ) {
             debug_event('local.catalog', 'You need to pick at least 1 file format to cache', 5);
 
@@ -788,9 +788,9 @@ class Catalog_local extends Catalog
             $media       = new Song($song_id);
 
             if (
-                $media->isNew() ||
-                !$media->file ||
-                !is_file($media->file)
+                $media->isNew()
+                || !$media->file
+                || !is_file($media->file)
             ) {
                 debug_event('local.catalog', sprintf('Not Found: %s', $media->file), 3);
 

@@ -39,9 +39,9 @@ final class Environment implements EnvironmentInterface
     public function check(): bool
     {
         return (
-            $this->check_php_version() &&
-            $this->check_php() &&
-            $this->check_dependencies_folder()
+            $this->check_php_version()
+            && $this->check_php()
+            && $this->check_dependencies_folder()
         );
     }
 
@@ -118,8 +118,8 @@ final class Environment implements EnvironmentInterface
     public function check_php_hash_algo(): bool
     {
         return (
-            function_exists('hash_algos') &&
-            in_array('sha256', hash_algos())
+            function_exists('hash_algos')
+            && in_array('sha256', hash_algos())
         );
     }
 
@@ -171,8 +171,8 @@ final class Environment implements EnvironmentInterface
     public function check_php_pdo_mysql(): bool
     {
         return (
-            class_exists('PDO') &&
-            in_array('mysql', PDO::getAvailableDrivers())
+            class_exists('PDO')
+            && in_array('mysql', PDO::getAvailableDrivers())
         );
     }
 
@@ -224,12 +224,12 @@ final class Environment implements EnvironmentInterface
 
         return (
             (
-                $upload_max >= $mini ||
-                $upload_max < 1
-            ) &&
-            (
-                $post_max >= $mini ||
-                $post_max < 1
+                $upload_max >= $mini
+                || $upload_max < 1
+            )
+            && (
+                $post_max >= $mini
+                || $post_max < 1
             )
         );
     }
@@ -283,9 +283,9 @@ final class Environment implements EnvironmentInterface
         $user_agent = (string) ($_SERVER['HTTP_USER_AGENT'] ?? '');
 
         return strpos($user_agent, 'Mobile') && (
-            strpos($user_agent, 'Android') ||
-            strpos($user_agent, 'iPad') ||
-            strpos($user_agent, 'iPhone')
+            strpos($user_agent, 'Android')
+            || strpos($user_agent, 'iPad')
+            || strpos($user_agent, 'iPhone')
         );
     }
 
@@ -293,12 +293,12 @@ final class Environment implements EnvironmentInterface
     {
         return (
             (
-                isset($_SERVER['HTTP_X_FORWARDED_PROTO']) &&
-                Core::get_server('HTTP_X_FORWARDED_PROTO') === 'https'
-            ) ||
-            (
-                isset($_SERVER['HTTPS']) &&
-                Core::get_server('HTTPS') === 'on'
+                isset($_SERVER['HTTP_X_FORWARDED_PROTO'])
+                && Core::get_server('HTTP_X_FORWARDED_PROTO') === 'https'
+            )
+            || (
+                isset($_SERVER['HTTPS'])
+                && Core::get_server('HTTPS') === 'on'
             )
         );
     }
@@ -311,8 +311,8 @@ final class Environment implements EnvironmentInterface
         // Check their PHP Vars to make sure we're cool here
         $post_size = @ini_get('post_max_size');
         if (
-            $post_size &&
-            substr($post_size, strlen($post_size) - 1, strlen($post_size)) !== 'M'
+            $post_size
+            && substr($post_size, strlen($post_size) - 1, strlen($post_size)) !== 'M'
         ) {
             // Sane value time
             ini_set('post_max_size', '8M');
@@ -322,8 +322,8 @@ final class Environment implements EnvironmentInterface
         ini_set('session.gc_probability', '5');
         $current_memory = ini_get('memory_limit');
         if (
-            !$current_memory ||
-            Ui::unformat_bytes($current_memory) < Ui::unformat_bytes('32M')
+            !$current_memory
+            || Ui::unformat_bytes($current_memory) < Ui::unformat_bytes('32M')
         ) {
             $current_memory = '32M';
         }
@@ -337,12 +337,12 @@ final class Environment implements EnvironmentInterface
     private function check_php(): bool
     {
         return
-            $this->check_php_hash() &&
-            $this->check_php_hash_algo() &&
-            $this->check_php_pdo() &&
-            $this->check_php_pdo_mysql() &&
-            $this->check_php_session() &&
-            $this->check_php_json() &&
-            $this->check_php_intl();
+            $this->check_php_hash()
+            && $this->check_php_hash_algo()
+            && $this->check_php_pdo()
+            && $this->check_php_pdo_mysql()
+            && $this->check_php_session()
+            && $this->check_php_json()
+            && $this->check_php_intl();
     }
 }

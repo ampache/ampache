@@ -102,8 +102,8 @@ final class Playlists8Method
         $browse->set_filter('playlist_open', $user->getId());
 
         if (
-            $hide === false &&
-            $show_dupes === false
+            $hide === false
+            && $show_dupes === false
         ) {
             $browse->set_filter('hide_dupe_smartlist', 1);
         }

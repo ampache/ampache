@@ -258,11 +258,11 @@ class Stream
 
         // Never upsample a media
         if (
-            isset($media->bitrate) &&
-            isset($transcode_settings['format']) &&
-            $media->type == $transcode_settings['format'] &&
-            ($bit_rate * 1024) > $media->bitrate &&
-            $media->bitrate > 0
+            isset($media->bitrate)
+            && isset($transcode_settings['format'])
+            && $media->type == $transcode_settings['format']
+            && ($bit_rate * 1024) > $media->bitrate
+            && $media->bitrate > 0
         ) {
             debug_event(self::class, 'Clamping bitrate to avoid upsampling to ' . $bit_rate, 5);
             $bit_rate = self::validate_bitrate((int) ($media->bitrate / 1024));
@@ -526,8 +526,8 @@ class Stream
 
         $argst = AmpConfig::get('encode_args_' . $target);
         if (
-            !$argst ||
-            !$target
+            !$argst
+            || !$target
         ) {
             debug_event(self::class, 'Target format ' . $target . ' is not properly configured', 2);
 

@@ -65,8 +65,8 @@ final readonly class PodcastCreator implements PodcastCreatorInterface
     ): Podcast {
         // Feed must be http/https
         if (
-            !str_starts_with($feedUrl, 'http://') &&
-            !str_starts_with($feedUrl, 'https://')
+            !str_starts_with($feedUrl, 'http://')
+            && !str_starts_with($feedUrl, 'https://')
         ) {
             throw new InvalidFeedUrlException();
         }

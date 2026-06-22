@@ -68,8 +68,8 @@ final class AddUserAction implements ApplicationActionInterface
 
         // Check for confirmation email requirements when mail is disabled
         if (
-            $this->configContainer->isFeatureEnabled(ConfigurationKeyEnum::USER_NO_EMAIL_CONFIRM) === false &&
-            !Mailer::is_mail_enabled()
+            $this->configContainer->isFeatureEnabled(ConfigurationKeyEnum::USER_NO_EMAIL_CONFIRM) === false
+            && !Mailer::is_mail_enabled()
         ) {
             throw new AccessDeniedException('Error `mail_enable` failed. Enable `user_no_email_confirm` to disable mail requirements');
         }
@@ -97,8 +97,8 @@ final class AddUserAction implements ApplicationActionInterface
             $captcha_phrase = $_POST['captcha_phrase'] ?? false;
             $captcha_user   = $_POST['captcha_user'] ?? '';
             if (
-                $captcha_user !== '' &&
-                !PhraseBuilder::comparePhrases($captcha_phrase, $captcha_user)
+                $captcha_user !== ''
+                && !PhraseBuilder::comparePhrases($captcha_phrase, $captcha_user)
             ) {
                 AmpError::add('captcha_user', T_('Captcha failed'));
             }

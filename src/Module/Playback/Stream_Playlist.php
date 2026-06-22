@@ -286,8 +286,8 @@ class Stream_Playlist
         }
 
         if (
-            $urltype === 'file' &&
-            (property_exists($object, 'file') && $object->file !== null)
+            $urltype === 'file'
+            && (property_exists($object, 'file') && $object->file !== null)
         ) {
             $url['url'] = $object->file;
             // Relative path

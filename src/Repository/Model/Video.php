@@ -301,10 +301,10 @@ class Video extends database_object implements
         }
 
         if (
-            $data['art'] &&
-            $options !== null &&
-            $options !== [] &&
-            $options['gather_art']
+            $data['art']
+            && $options !== null
+            && $options !== []
+            && $options['gather_art']
         ) {
             $art = new Art($video_id, 'video');
             $art->insert_url($data['art']);

@@ -879,8 +879,8 @@ class mpd
     {
         $this->_debug('SendCommand', sprintf('cmd: %s, args: ', $command) . json_encode($arguments), 5);
         if (
-            !$this->connected ||
-            !is_resource($this->_mpd_sock)
+            !$this->connected
+            || !is_resource($this->_mpd_sock)
         ) {
             $this->_error('SendCommand', 'Not connected');
 

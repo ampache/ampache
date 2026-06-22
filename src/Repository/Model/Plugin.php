@@ -152,8 +152,8 @@ class Plugin
                 $installed_version = self::get_plugin_version($plugin->_plugin->name);
                 // if any plugin needs an update then you need to update
                 if (
-                    $installed_version > 0 &&
-                    $installed_version < $plugin->_plugin->version
+                    $installed_version > 0
+                    && $installed_version < $plugin->_plugin->version
                 ) {
                     return true;
                 }
@@ -190,9 +190,9 @@ class Plugin
             $plugin            = new Plugin($name);
             $installed_version = self::get_plugin_version($plugin->_plugin->name ?? '');
             if (
-                $plugin->_plugin instanceof AmpachePlugin &&
-                $installed_version > 0 &&
-                $installed_version < $plugin->_plugin->version
+                $plugin->_plugin instanceof AmpachePlugin
+                && $installed_version > 0
+                && $installed_version < $plugin->_plugin->version
             ) {
                 if ($plugin->_plugin->upgrade()) {
                     $plugin->set_plugin_version($plugin->_plugin->version);
@@ -232,8 +232,8 @@ class Plugin
     public function install(): bool
     {
         if (
-            $this->_plugin instanceof AmpachePlugin &&
-            $this->_plugin->install()
+            $this->_plugin instanceof AmpachePlugin
+            && $this->_plugin->install()
         ) {
             $this->set_plugin_version($this->_plugin->version);
 
@@ -274,8 +274,8 @@ class Plugin
         $db_version = $this->get_ampache_db_version();
 
         if (
-            empty($db_version) ||
-            $db_version < $this->_plugin->min_ampache
+            empty($db_version)
+            || $db_version < $this->_plugin->min_ampache
         ) {
             return false;
         }
@@ -340,8 +340,8 @@ class Plugin
     public function uninstall(): bool
     {
         if (
-            $this->_plugin instanceof AmpachePlugin &&
-            $this->_plugin->uninstall()
+            $this->_plugin instanceof AmpachePlugin
+            && $this->_plugin->uninstall()
         ) {
             $this->remove_plugin_version();
 
@@ -359,8 +359,8 @@ class Plugin
     public function upgrade(): bool
     {
         if (
-            $this->_plugin instanceof AmpachePlugin &&
-            $this->_plugin->upgrade()
+            $this->_plugin instanceof AmpachePlugin
+            && $this->_plugin->upgrade()
         ) {
             $this->set_plugin_version($this->_plugin->version);
 

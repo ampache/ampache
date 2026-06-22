@@ -205,8 +205,8 @@ class Xml6_Data
             $string .= "<bookmark id=\"$bookmark_id\">\n\t<user><![CDATA[" . $bookmark->getUserName() . "]]></user>\n\t<object_type><![CDATA[" . $bookmark->object_type . "]]></object_type>\n\t<object_id>" . $bookmark->object_id . "</object_id>\n\t<position>" . $bookmark->position . "</position>\n\t<client><![CDATA[" . $bookmark->comment . "]]></client>\n\t<creation_date>" . $bookmark->creation_date . "</creation_date>\n\t<update_date><![CDATA[" . $bookmark->update_date . "]]></update_date>\n";
             $user = User::get_from_username($bookmark->getUserName());
             if (
-                $include &&
-                $user !== null
+                $include
+                && $user !== null
             ) {
                 switch ($bookmark->object_type) {
                     case 'song':
@@ -240,20 +240,20 @@ class Xml6_Data
         if (($count > self::$limit || self::$offset > 0) && self::$limit) {
             $objects = array_slice($objects, self::$offset, self::$limit);
         }
-        $string .= "<catalog_id>" . $catalog_id . "</catalog_id>\n" .
-            "<parent_id>" . $parent_id . "</parent_id>\n" .
-            "<parent_type>" . $parent_type . "</parent_type>\n" .
-            "<child_type>" . $child_type . "</child_type>\n";
+        $string .= "<catalog_id>" . $catalog_id . "</catalog_id>\n"
+            . "<parent_id>" . $parent_id . "</parent_id>\n"
+            . "<parent_type>" . $parent_type . "</parent_type>\n"
+            . "<child_type>" . $child_type . "</child_type>\n";
 
         $pattern = '/^(' . implode('\\s|', explode('|', AmpConfig::get('catalog_prefix_pattern', 'The|An|A|Die|Das|Ein|Eine|Les|Le|La'))) . '\\s)(.*)/i';
         foreach ($objects as $object) {
             $trimmed  = Catalog::trim_prefix(trim((string) $object['name']), $pattern);
             $prefix   = $trimmed['prefix'];
             $basename = $trimmed['string'];
-            $string .= "<browse id=\"" . $object['id'] . "\">\n" .
-                "\t<name><![CDATA[" . $object['name'] . "]]></name>\n" .
-                "\t<prefix><![CDATA[" . $prefix . "]]></prefix>\n" .
-                "\t<basename><![CDATA[" . $basename . "]]></basename>\n</browse>\n";
+            $string .= "<browse id=\"" . $object['id'] . "\">\n"
+                . "\t<name><![CDATA[" . $object['name'] . "]]></name>\n"
+                . "\t<prefix><![CDATA[" . $prefix . "]]></prefix>\n"
+                . "\t<basename><![CDATA[" . $basename . "]]></basename>\n</browse>\n";
         }
 
         return self::output_xml($string);
@@ -381,10 +381,10 @@ class Xml6_Data
             $songBitrate = $song->bitrate;
             $play_url    = $song->play_url('', 'api', false, $user->id, $user->streamtoken);
 
-            $string .= "<song id=\"" . $song->id . "\">\n\t<name><![CDATA[" . $song->get_fullname() . "]]></name>\n\t<title><![CDATA[" . $song->get_fullname() . "]]></title>\n" .
-                "\t<artist id=\"" . $song->artist . "\"><name><![CDATA[" . $song_artist['name'] . "]]></name>\n\t<prefix><![CDATA[" . $song_artist['prefix'] . "]]></prefix>\n\t<basename><![CDATA[" . $song_artist['basename'] . "]]></basename>\n</artist>\n" .
-                "\t<album id=\"" . $song->album . "\"><name><![CDATA[" . $song_album['name'] . "]]></name>\n\t<prefix><![CDATA[" . $song_album['prefix'] . "]]></prefix>\n\t<basename><![CDATA[" . $song_album['basename'] . "]]></basename>\n</album>\n" .
-                "\t<genre id=\"" . ($tag->id ?: '') . "\"><name><![CDATA[" . ($tag->name ?: '') . "]]></name></genre>\n";
+            $string .= "<song id=\"" . $song->id . "\">\n\t<name><![CDATA[" . $song->get_fullname() . "]]></name>\n\t<title><![CDATA[" . $song->get_fullname() . "]]></title>\n"
+                . "\t<artist id=\"" . $song->artist . "\"><name><![CDATA[" . $song_artist['name'] . "]]></name>\n\t<prefix><![CDATA[" . $song_artist['prefix'] . "]]></prefix>\n\t<basename><![CDATA[" . $song_artist['basename'] . "]]></basename>\n</artist>\n"
+                . "\t<album id=\"" . $song->album . "\"><name><![CDATA[" . $song_album['name'] . "]]></name>\n\t<prefix><![CDATA[" . $song_album['prefix'] . "]]></prefix>\n\t<basename><![CDATA[" . $song_album['basename'] . "]]></basename>\n</album>\n"
+                . "\t<genre id=\"" . ($tag->id ?: '') . "\"><name><![CDATA[" . ($tag->name ?: '') . "]]></name></genre>\n";
             $string .= $tag_string . "\t<track>" . $song->track . "</track>\n\t<time><![CDATA[" . $song->time . "]]></time>\n\t<format>" . $songType . "</format>\n\t<bitrate>" . $songBitrate . "</bitrate>\n\t<mime><![CDATA[" . $songMime . "]]></mime>\n\t<url><![CDATA[" . $play_url . "]]></url>\n\t<size>" . $song->size . "</size>\n\t<art><![CDATA[" . $art_url . "]]></art>\n\t<has_art>" . ($song->has_art() ? 1 : 0) . "</has_art>\n\t<rating>" . $user_rating . "</rating>\n\t<averagerating>" . $rating->get_average_rating() . "</averagerating>\n<playcount>" . $song->total_count . "</playcount>\n\t<vote>" . $democratic->get_vote($row_id) . "</vote>\n</song>\n";
         }
 
@@ -665,9 +665,9 @@ class Xml6_Data
                     $song        = new Song((int) $object_id);
                     $song_album  = self::getAlbumRepository()->getNames($song->album);
                     $song_artist = Artist::get_name_array_by_id($song->artist);
-                    $string .= "<$object_type id=\"" . $object_id . "\">\n\t<title><![CDATA[" . $song->get_fullname() . "]]></title>\n\t<name><![CDATA[" . $song->get_fullname() . "]]></name>\n" .
-                        "\t<artist id=\"" . $song->artist . "\"><name><![CDATA[" . $song_artist['name'] . "]]></name><prefix><![CDATA[" . $song_artist['prefix'] . "]]></prefix><basename><![CDATA[" . $song_artist['basename'] . "]]></basename></artist>\n" .
-                        "\t<album id=\"" . $song->album . "\"><name><![CDATA[" . $song_album['name'] . "]]></name>\n\t<prefix><![CDATA[" . $song_album['prefix'] . "]]></prefix>\n\t<basename><![CDATA[" . $song_album['basename'] . "]]></basename>\n</album>\n";
+                    $string .= "<$object_type id=\"" . $object_id . "\">\n\t<title><![CDATA[" . $song->get_fullname() . "]]></title>\n\t<name><![CDATA[" . $song->get_fullname() . "]]></name>\n"
+                        . "\t<artist id=\"" . $song->artist . "\"><name><![CDATA[" . $song_artist['name'] . "]]></name><prefix><![CDATA[" . $song_artist['prefix'] . "]]></prefix><basename><![CDATA[" . $song_artist['basename'] . "]]></basename></artist>\n"
+                        . "\t<album id=\"" . $song->album . "\"><name><![CDATA[" . $song_album['name'] . "]]></name>\n\t<prefix><![CDATA[" . $song_album['prefix'] . "]]></prefix>\n\t<basename><![CDATA[" . $song_album['basename'] . "]]></basename>\n</album>\n";
                     if ($song->get_album_artist_fullname() != "") {
                         $album_artist = ($song->artist !== $song->albumartist)
                             ? Artist::get_name_array_by_id($song->albumartist)
@@ -848,10 +848,10 @@ class Xml6_Data
             $trimmed  = Catalog::trim_prefix(trim((string) $object['name']), $pattern);
             $prefix   = $trimmed['prefix'] ?? null;
             $basename = $trimmed['string'];
-            $string .= "<list id=\"" . $object['id'] . "\">\n" .
-                "\t<name><![CDATA[" . $object['name'] . "]]></name>\n" .
-                "\t<prefix><![CDATA[" . $prefix . "]]></prefix>\n" .
-                "\t<basename><![CDATA[" . $basename . "]]></basename>\n</list>\n";
+            $string .= "<list id=\"" . $object['id'] . "\">\n"
+                . "\t<name><![CDATA[" . $object['name'] . "]]></name>\n"
+                . "\t<prefix><![CDATA[" . $prefix . "]]></prefix>\n"
+                . "\t<basename><![CDATA[" . $basename . "]]></basename>\n</list>\n";
         }
 
         return self::output_xml($string);
@@ -1190,9 +1190,9 @@ class Xml6_Data
                         $song        = new Song((int) $object_id);
                         $song_album  = self::getAlbumRepository()->getNames($song->album);
                         $song_artist = Artist::get_name_array_by_id($song->artist);
-                        $string .= "<$object_type id=\"" . $object_id . "\">\n\t<title><![CDATA[" . $song->get_fullname() . "]]></title>\n\t<name><![CDATA[" . $song->get_fullname() . "]]></name>\n" .
-                            "\t<artist id=\"" . $song->artist . "\"><name><![CDATA[" . $song_artist['name'] . "]]></name><prefix><![CDATA[" . $song_artist['prefix'] . "]]></prefix><basename><![CDATA[" . $song_artist['basename'] . "]]></basename></artist>\n" .
-                            "\t<album id=\"" . $song->album . "\"><name><![CDATA[" . $song_album['name'] . "]]></name>\n\t<prefix><![CDATA[" . $song_album['prefix'] . "]]></prefix>\n\t<basename><![CDATA[" . $song_album['basename'] . "]]></basename>\n</album>\n";
+                        $string .= "<$object_type id=\"" . $object_id . "\">\n\t<title><![CDATA[" . $song->get_fullname() . "]]></title>\n\t<name><![CDATA[" . $song->get_fullname() . "]]></name>\n"
+                            . "\t<artist id=\"" . $song->artist . "\"><name><![CDATA[" . $song_artist['name'] . "]]></name><prefix><![CDATA[" . $song_artist['prefix'] . "]]></prefix><basename><![CDATA[" . $song_artist['basename'] . "]]></basename></artist>\n"
+                            . "\t<album id=\"" . $song->album . "\"><name><![CDATA[" . $song_album['name'] . "]]></name>\n\t<prefix><![CDATA[" . $song_album['prefix'] . "]]></prefix>\n\t<basename><![CDATA[" . $song_album['basename'] . "]]></basename>\n</album>\n";
                         if ($song->get_album_artist_fullname() != "") {
                             $album_artist = ($song->artist !== $song->albumartist)
                                 ? Artist::get_name_array_by_id($song->albumartist)

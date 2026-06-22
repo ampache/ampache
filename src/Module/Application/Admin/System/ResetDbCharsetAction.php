@@ -49,8 +49,8 @@ final readonly class ResetDbCharsetAction implements ApplicationActionInterface
     public function run(ServerRequestInterface $request, GuiGatekeeperInterface $gatekeeper): ?ResponseInterface
     {
         if (
-            $gatekeeper->mayAccess(AccessTypeEnum::INTERFACE, AccessLevelEnum::ADMIN) === false ||
-            $this->configContainer->isDemoMode()
+            $gatekeeper->mayAccess(AccessTypeEnum::INTERFACE, AccessLevelEnum::ADMIN) === false
+            || $this->configContainer->isDemoMode()
         ) {
             throw new AccessDeniedException();
         }

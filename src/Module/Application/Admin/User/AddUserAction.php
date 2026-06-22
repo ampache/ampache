@@ -95,8 +95,8 @@ final class AddUserAction extends AbstractUserAction
 
         // Check the mail for correct address formation and if it already exists
         if (
-            !Mailer::validate_address($email) ||
-            $this->userRepository->idByEmail($email) > 0
+            !Mailer::validate_address($email)
+            || $this->userRepository->idByEmail($email) > 0
         ) {
             AmpError::add('email', T_('You entered an invalid e-mail address'));
         }
@@ -111,8 +111,8 @@ final class AddUserAction extends AbstractUserAction
 
         /* If we've got an error then show add form! */
         if (
-            AmpError::occurred() ||
-            $user_id < 1
+            AmpError::occurred()
+            || $user_id < 1
         ) {
             require_once Ui::find_template('show_add_user.inc.php');
 

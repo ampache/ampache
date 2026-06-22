@@ -50,8 +50,8 @@ final readonly class ShowAction implements ApplicationActionInterface
     public function run(ServerRequestInterface $request, GuiGatekeeperInterface $gatekeeper): ?ResponseInterface
     {
         if (
-            $gatekeeper->mayAccess(AccessTypeEnum::INTERFACE, AccessLevelEnum::USER) === false ||
-            $this->configContainer->isFeatureEnabled(ConfigurationKeyEnum::SOCIABLE) === false
+            $gatekeeper->mayAccess(AccessTypeEnum::INTERFACE, AccessLevelEnum::USER) === false
+            || $this->configContainer->isFeatureEnabled(ConfigurationKeyEnum::SOCIABLE) === false
         ) {
             throw new AccessDeniedException('Access Denied: sociable features are not enabled.');
         }
@@ -63,8 +63,8 @@ final readonly class ShowAction implements ApplicationActionInterface
         $pvmsg = $this->pmRepository->findById($msgId);
 
         if (
-            $pvmsg === null ||
-            $pvmsg->getRecipientUserId() !== $gatekeeper->getUserId()
+            $pvmsg === null
+            || $pvmsg->getRecipientUserId() !== $gatekeeper->getUserId()
         ) {
             throw new AccessDeniedException(
                 sprintf('Unknown or unauthorized private message #%d.', $msgId),

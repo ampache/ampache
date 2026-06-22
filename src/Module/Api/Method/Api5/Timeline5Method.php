@@ -77,8 +77,8 @@ final class Timeline5Method
         if (!empty($username)) {
             $user = User::get_from_username($username);
             if (
-                $user instanceof User &&
-                Preference::get_by_user($user->id, 'allow_personal_info_recent')
+                $user instanceof User
+                && Preference::get_by_user($user->id, 'allow_personal_info_recent')
             ) {
                 $results = self::getUseractivityRepository()->getActivities(
                     $user->getId(),

@@ -103,8 +103,8 @@ final class GetIndexes4Method
         }
         $browse = Api::getBrowse($user);
         if (
-            $type === 'playlist' &&
-            $hide === false
+            $type === 'playlist'
+            && $hide === false
         ) {
             $browse->set_type('playlist_search');
         } elseif ($album_artist) {

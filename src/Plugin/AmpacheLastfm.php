@@ -224,14 +224,14 @@ class AmpacheLastfm extends AmpachePlugin implements PluginSaveMediaplayInterfac
     public function uninstall(): bool
     {
         return (
-            Preference::delete('lastfm_challenge') &&
-            Preference::delete('lastfm_grant_link') &&
-            Preference::delete('lastfm_pass') &&
-            Preference::delete('lastfm_md5_pass') &&
-            Preference::delete('lastfm_user') &&
-            Preference::delete('lastfm_url') &&
-            Preference::delete('lastfm_host') &&
-            Preference::delete('lastfm_port')
+            Preference::delete('lastfm_challenge')
+            && Preference::delete('lastfm_grant_link')
+            && Preference::delete('lastfm_pass')
+            && Preference::delete('lastfm_md5_pass')
+            && Preference::delete('lastfm_user')
+            && Preference::delete('lastfm_url')
+            && Preference::delete('lastfm_host')
+            && Preference::delete('lastfm_port')
         );
     }
 

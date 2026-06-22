@@ -110,8 +110,8 @@ final readonly class AccessRepository implements AccessRepositoryInterface
         $params = [inet_pton($userIp), inet_pton($userIp), $level->value, $type->value];
 
         if (
-            $userId !== null &&
-            $userId !== User::INTERNAL_SYSTEM_USER_ID
+            $userId !== null
+            && $userId !== User::INTERNAL_SYSTEM_USER_ID
         ) {
             $sql .= sprintf(' AND `user` IN (?, %d)', User::INTERNAL_SYSTEM_USER_ID);
             $params[] = $userId;

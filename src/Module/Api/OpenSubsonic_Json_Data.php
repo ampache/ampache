@@ -802,9 +802,9 @@ class OpenSubsonic_Json_Data
         $json = ['entry' => []];
         foreach ($data as $row) {
             if (
-                $row['media'] instanceof Song &&
-                $row['media']->isNew() === false &&
-                $row['media']->enabled
+                $row['media'] instanceof Song
+                && $row['media']->isNew() === false
+                && $row['media']->enabled
             ) {
                 $track               = self::_getChildSong($row['media']);
                 $track['username']   = (string) $row['client']->username;

@@ -174,8 +174,8 @@ final class ApiHandler implements ApiHandlerInterface
             }
 
             if (
-                $api_version == 7 ||
-                ($api_version == 8 && !Preference::get_by_user($userId, 'api_enable_8'))
+                $api_version == 7
+                || ($api_version == 8 && !Preference::get_by_user($userId, 'api_enable_8'))
             ) {
                 $this->logger->warning(
                     'No API version available; check your options!',
@@ -201,8 +201,8 @@ final class ApiHandler implements ApiHandlerInterface
          * If you are doing anything else, you hide the session behind an MD5 hash of the username
          */
         if (
-            $header_auth &&
-            $user instanceof User
+            $header_auth
+            && $user instanceof User
         ) {
             $data             = [];
             $data['username'] = $user->username;
@@ -210,8 +210,8 @@ final class ApiHandler implements ApiHandlerInterface
             if ($is_handshake || $is_ping) {
                 // for a handshake there needs to be a valid auth response (ping when sent needs one)
                 if (
-                    $input['auth'] !== md5((string) $user->username) &&
-                    !Session::read($input['auth'])
+                    $input['auth'] !== md5((string) $user->username)
+                    && !Session::read($input['auth'])
                 ) {
                     $data['type']  = 'api';
                     $input['auth'] = Session::create($data);
@@ -309,14 +309,14 @@ final class ApiHandler implements ApiHandlerInterface
          * login via this interface so we do have an exception for action=login
          */
         if (
-            !$is_public &&
-            (
-                !$user instanceof User || // User is required for non-public methods
-                (
-                    !$header_auth &&
-                    $input['auth'] === md5((string) $user->username)
-                ) || // require header auth for simplified session
-                $gatekeeper->sessionExists($input['auth']) === false // no valid session
+            !$is_public
+            && (
+                !$user instanceof User // User is required for non-public methods
+                || (
+                    !$header_auth
+                    && $input['auth'] === md5((string) $user->username)
+                ) // require header auth for simplified session
+                || $gatekeeper->sessionExists($input['auth']) === false // no valid session
             )
         ) {
             $this->logger->warning(
@@ -706,9 +706,9 @@ final class ApiHandler implements ApiHandlerInterface
             }
 
             if (
-                $action === 'song' && ($type === 'playlist' || $type === 'smartlist' || $type === 'album' || $type === 'artist' || $type === 'genre' || $type === 'license' || $type === 'get_similar') ||
-                $action === 'album' && ($type === 'artist' || $type === 'genre') ||
-                $action === 'artist' && ($type === 'genre' || $type === 'get_similar' || $type === 'label')
+                $action === 'song' && ($type === 'playlist' || $type === 'smartlist' || $type === 'album' || $type === 'artist' || $type === 'genre' || $type === 'license' || $type === 'get_similar')
+                || $action === 'album' && ($type === 'artist' || $type === 'genre')
+                || $action === 'artist' && ($type === 'genre' || $type === 'get_similar' || $type === 'label')
             ) {
                 $action = $type . '_' . $action . 's';
             }
@@ -717,11 +717,11 @@ final class ApiHandler implements ApiHandlerInterface
                 $action = $type . '_' . $action . 's';
             }
             if (
-                ($type === 'playlist' && ($action === 'create' || $action === 'delete' || $action === 'add' || $action === 'add_song' || $action === 'remove_song')) ||
-                ($type === 'smartlist' && $action === 'delete') ||
-                ($type === 'bookmark' && $action === 'create') ||
-                ($type === 'podcast' && $action === 'update') ||
-                ($type === 'song' && $action === 'tags')
+                ($type === 'playlist' && ($action === 'create' || $action === 'delete' || $action === 'add' || $action === 'add_song' || $action === 'remove_song'))
+                || ($type === 'smartlist' && $action === 'delete')
+                || ($type === 'bookmark' && $action === 'create')
+                || ($type === 'podcast' && $action === 'update')
+                || ($type === 'song' && $action === 'tags')
             ) {
                 $action = $type . '_' . $action;
             }
@@ -784,9 +784,9 @@ final class ApiHandler implements ApiHandlerInterface
         );
 
         if (
-            $user instanceof User &&
-            $this->dic->has($handlerClassName) &&
-            $this->dic->get($handlerClassName) instanceof MethodInterface
+            $user instanceof User
+            && $this->dic->has($handlerClassName)
+            && $this->dic->get($handlerClassName) instanceof MethodInterface
         ) {
             /** @var MethodInterface $handler */
             $handler = $this->dic->get($handlerClassName);
@@ -849,9 +849,9 @@ final class ApiHandler implements ApiHandlerInterface
             );
 
             if (
-                $user instanceof User &&
-                $this->dic->has($handlerClassName) &&
-                $this->dic->get($handlerClassName) instanceof MethodInterface
+                $user instanceof User
+                && $this->dic->has($handlerClassName)
+                && $this->dic->get($handlerClassName) instanceof MethodInterface
             ) {
                 /** @var MethodInterface $handler */
                 $handler = $this->dic->get($handlerClassName);

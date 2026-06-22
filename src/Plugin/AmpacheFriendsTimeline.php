@@ -149,8 +149,8 @@ class AmpacheFriendsTimeline extends AmpachePlugin implements PluginDisplayHomeI
     public function uninstall(): bool
     {
         return (
-            Preference::delete('ftl_max_items') &&
-            Preference::delete('ftl_order')
+            Preference::delete('ftl_max_items')
+            && Preference::delete('ftl_order')
         );
     }
 

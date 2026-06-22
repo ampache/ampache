@@ -752,10 +752,10 @@ class Upnp_Api
             }
 
             if (
-                $item['upnp:class'] == 'object.container' ||
-                $item['upnp:class'] == 'object.container.album.musicAlbum' ||
-                $item['upnp:class'] == 'object.container.person.musicArtist' ||
-                $item['upnp:class'] == 'object.container.storageFolder'
+                $item['upnp:class'] == 'object.container'
+                || $item['upnp:class'] == 'object.container.album.musicAlbum'
+                || $item['upnp:class'] == 'object.container.person.musicArtist'
+                || $item['upnp:class'] == 'object.container.storageFolder'
             ) {
                 $ndItem = $xmlDoc->createElement('container');
             } else {

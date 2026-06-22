@@ -128,9 +128,9 @@ final class GetExternalMetadata6Method
         foreach ($plugin_names as $tag_source) {
             $plugin = new Plugin($tag_source);
             if (
-                $plugin->_plugin instanceof PluginGetMetadataInterface &&
-                Plugin::get_plugin_version($plugin->_plugin->name) > 0 &&
-                $plugin->load($user)
+                $plugin->_plugin instanceof PluginGetMetadataInterface
+                && Plugin::get_plugin_version($plugin->_plugin->name) > 0
+                && $plugin->load($user)
             ) {
                 $results['plugin'][$tag_source] = $plugin->_plugin->get_metadata(
                     ['music', $type],

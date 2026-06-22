@@ -210,10 +210,10 @@ class Random
         $results  = [];
         $playlist = new Playlist($playlist_id);
         if (
-            $playlist->isNew() === false &&
-            (
-                $playlist->type === 'public' ||
-                $playlist->has_collaborate($user)
+            $playlist->isNew() === false
+            && (
+                $playlist->type === 'public'
+                || $playlist->has_collaborate($user)
             )
         ) {
             foreach ($playlist->get_random_items('1') as $songs) {
@@ -234,10 +234,10 @@ class Random
         $results = [];
         $search  = new Search($search_id, 'song', $user);
         if (
-            $search->isNew() === false &&
-            (
-                $search->type === 'public' ||
-                $search->has_access($user)
+            $search->isNew() === false
+            && (
+                $search->type === 'public'
+                || $search->has_access($user)
             )
         ) {
             foreach ($search->get_random_items('1') as $songs) {

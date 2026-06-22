@@ -65,8 +65,8 @@ final readonly class PodcastFolderProvider implements PodcastFolderProviderInter
 
         // create path if it doesn't exist
         if (
-            !is_dir($fullPath) &&
-            @mkdir($fullPath, 0775) === false
+            !is_dir($fullPath)
+            && @mkdir($fullPath, 0775) === false
         ) {
             throw new PodcastFolderException(sprintf('Cannot create folder: %s', $fullPath));
         }

@@ -53,8 +53,8 @@ final readonly class ShowAction implements ApplicationActionInterface
     {
         // Check to see if they've got an interface session or a valid API session
         if (
-            !Session::exists(AccessTypeEnum::INTERFACE->value, $_COOKIE[$this->configContainer->getSessionName()]) &&
-            !Session::exists(AccessTypeEnum::API->value, $_REQUEST['auth'] ?? '')
+            !Session::exists(AccessTypeEnum::INTERFACE->value, $_COOKIE[$this->configContainer->getSessionName()])
+            && !Session::exists(AccessTypeEnum::API->value, $_REQUEST['auth'] ?? '')
         ) {
             $this->logger->warning(
                 sprintf(
@@ -69,8 +69,8 @@ final readonly class ShowAction implements ApplicationActionInterface
         }
 
         if (
-            !$this->configContainer->isFeatureEnabled(ConfigurationKeyEnum::STATISTICAL_GRAPHS) ||
-            !is_dir(__DIR__ . '/../../../../vendor/szymach/c-pchart/src/Chart/')
+            !$this->configContainer->isFeatureEnabled(ConfigurationKeyEnum::STATISTICAL_GRAPHS)
+            || !is_dir(__DIR__ . '/../../../../vendor/szymach/c-pchart/src/Chart/')
         ) {
             $this->logger->warning(
                 'Access denied, statistical graph disabled.',

@@ -92,8 +92,8 @@ final readonly class StreamAjaxHandler implements AjaxHandlerInterface
                 debug_event('stream.ajax', 'Called for ' . $object_type . ': {' . $object_id . '}', 5);
 
                 if (
-                    $object_type === 'browse' ||
-                    InterfaceImplementationChecker::is_library_item($object_type)
+                    $object_type === 'browse'
+                    || InterfaceImplementationChecker::is_library_item($object_type)
                 ) {
                     $web_path = AmpConfig::get_web_path();
 

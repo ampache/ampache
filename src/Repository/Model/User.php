@@ -124,9 +124,9 @@ class User extends database_object
     ): int {
         // don't try to overwrite users that already exist
         if (
-            in_array(strtolower($username), [strtolower(T_('System')), 'system']) ||
-            self::getUserRepository()->idByUsername($username) > 0 ||
-            self::getUserRepository()->idByEmail($email) > 0
+            in_array(strtolower($username), [strtolower(T_('System')), 'system'])
+            || self::getUserRepository()->idByUsername($username) > 0
+            || self::getUserRepository()->idByEmail($email) > 0
         ) {
             return 0;
         }
@@ -134,10 +134,10 @@ class User extends database_object
         // Forbid username or fullname to have an URL (usually spambot)
         $name_filter = AmpConfig::get('user_name_filter');
         if (
-            $name_filter &&
-            (
-                preg_match('/' . $name_filter . '/i', $username) ||
-                preg_match('/' . $name_filter . '/i', $fullname)
+            $name_filter
+            && (
+                preg_match('/' . $name_filter . '/i', $username)
+                || preg_match('/' . $name_filter . '/i', $fullname)
             )
         ) {
             debug_event(self::class, 'Checking for spambot: matched regex (' . $name_filter . '). Won\'t create user. ' . json_encode(['username' => $username,'fullname' => $fullname,'ip' => Core::get_user_ip()]), 1);
@@ -148,8 +148,8 @@ class User extends database_object
         // Forbid website with markdown syntax (usually spambot)
         $site_filter = AmpConfig::get('user_website_filter');
         if (
-            $site_filter &&
-            preg_match('/' . $site_filter . '/i', $website)
+            $site_filter
+            && preg_match('/' . $site_filter . '/i', $website)
         ) {
             debug_event(self::class, 'Checking for spambot: matched regex (' . $site_filter . '). Won\'t create user. ' . json_encode(['website' => $website, 'ip' => Core::get_user_ip() ]), 1);
 
@@ -874,22 +874,22 @@ class User extends database_object
         $avatar = $this->get_avatar();
 
         if (
-            $avatar_type == 'f_avatar' &&
-            !empty($avatar['url'])
+            $avatar_type == 'f_avatar'
+            && !empty($avatar['url'])
         ) {
             return '<img src="' . $avatar['url'] . '" title="' . $avatar['title'] . '"' . ' width="256px" height="auto" />';
         }
 
         if (
-            $avatar_type == 'f_avatar_mini' &&
-            !empty($avatar['url_mini'])
+            $avatar_type == 'f_avatar_mini'
+            && !empty($avatar['url_mini'])
         ) {
             return '<img src="' . $avatar['url_mini'] . '" title="' . $avatar['title'] . '" style="width: 32px; height: 32px;" />';
         }
 
         if (
-            $avatar_type == 'f_avatar_medium' &&
-            !empty($avatar['url_medium'])
+            $avatar_type == 'f_avatar_medium'
+            && !empty($avatar['url_medium'])
         ) {
             return '<img src="' . $avatar['url_medium'] . '" title="' . $avatar['title'] . '" style="width: 64px; height: 64px;" />';
         }
@@ -1204,8 +1204,8 @@ class User extends database_object
     public function update(array $data): ?int
     {
         if (
-            empty($data['username']) &&
-            in_array(strtolower($data['username']), [strtolower(T_('System')), 'system'])
+            empty($data['username'])
+            && in_array(strtolower($data['username']), [strtolower(T_('System')), 'system'])
         ) {
             AmpError::add('username', T_('Username is required'));
         }

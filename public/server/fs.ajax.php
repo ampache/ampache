@@ -67,10 +67,10 @@ if (isset($_GET['operation'])) {
         ) ?? AccessLevelEnum::USER;
 
         if (
-            AmpConfig::get(ConfigurationKeyEnum::ALLOW_UPLOAD, false) === false ||
-            $access_level === AccessLevelEnum::DEFAULT ||
-            !Access::check(AccessTypeEnum::INTERFACE, $access_level) ||
-            AmpConfig::get(ConfigurationKeyEnum::DEMO_MODE) === true
+            AmpConfig::get(ConfigurationKeyEnum::ALLOW_UPLOAD, false) === false
+            || $access_level === AccessLevelEnum::DEFAULT
+            || !Access::check(AccessTypeEnum::INTERFACE, $access_level)
+            || AmpConfig::get(ConfigurationKeyEnum::DEMO_MODE) === true
         ) {
             throw new AccessDeniedException();
         }

@@ -166,9 +166,9 @@ function get_languages(): array
 
         // Check to see if it's a directory
         if (
-            is_dir($full_file) &&
-            !str_starts_with($file, '.') &&
-            $file != 'base'
+            is_dir($full_file)
+            && !str_starts_with($file, '.')
+            && $file != 'base'
         ) {
             $name = match ($file) {
                 'af_ZA' => 'Afrikaans',
@@ -294,8 +294,8 @@ function check_http_referer(): bool
     $web_path = AmpConfig::get_web_path();
 
     if (
-        empty($referer) &&
-        empty($web_path)
+        empty($referer)
+        && empty($web_path)
     ) {
         // cli / tests
         return true;
@@ -391,8 +391,8 @@ function check_config_values(array $conf): bool
     }
 
     return ! (
-        isset($conf['debug']) &&
-        !isset($conf['log_path'])
+        isset($conf['debug'])
+        && !isset($conf['log_path'])
     );
 }
 
@@ -426,8 +426,8 @@ function return_bytes(string $val): int
 function check_config_writable(): bool
 {
     // file exists && is writable, or dir is writable
-    return ((file_exists(__DIR__ . '/../../config/ampache.cfg.php') && is_writeable(__DIR__ . '/../../config/ampache.cfg.php')) ||
-        (!file_exists(__DIR__ . '/../../config/ampache.cfg.php') && is_writeable(__DIR__ . '/../../config/')));
+    return ((file_exists(__DIR__ . '/../../config/ampache.cfg.php') && is_writeable(__DIR__ . '/../../config/ampache.cfg.php'))
+        || (!file_exists(__DIR__ . '/../../config/ampache.cfg.php') && is_writeable(__DIR__ . '/../../config/')));
 }
 
 /**
@@ -435,8 +435,8 @@ function check_config_writable(): bool
  */
 function check_htaccess_rest_writable(): bool
 {
-    return ((file_exists(__DIR__ . '/../../public/rest/.htaccess') && is_writeable(__DIR__ . '/../../public/rest/.htaccess')) ||
-        (!file_exists(__DIR__ . '/../../public/rest/.htaccess') && is_writeable(__DIR__ . '/../../public/rest/')));
+    return ((file_exists(__DIR__ . '/../../public/rest/.htaccess') && is_writeable(__DIR__ . '/../../public/rest/.htaccess'))
+        || (!file_exists(__DIR__ . '/../../public/rest/.htaccess') && is_writeable(__DIR__ . '/../../public/rest/')));
 }
 
 /**
@@ -444,8 +444,8 @@ function check_htaccess_rest_writable(): bool
  */
 function check_htaccess_play_writable(): bool
 {
-    return ((file_exists(__DIR__ . '/../../public/play/.htaccess') && is_writeable(__DIR__ . '/../../public/play/.htaccess')) ||
-        (!file_exists(__DIR__ . '/../../public/play/.htaccess') && is_writeable(__DIR__ . '/../../public/play/')));
+    return ((file_exists(__DIR__ . '/../../public/play/.htaccess') && is_writeable(__DIR__ . '/../../public/play/.htaccess'))
+        || (!file_exists(__DIR__ . '/../../public/play/.htaccess') && is_writeable(__DIR__ . '/../../public/play/')));
 }
 
 /**
@@ -463,8 +463,8 @@ function debug_result($status = false, $value = null, $comment = ''): string
         $value = ($status) ? T_('OK') : T_('Error');
     }
 
-    return '<button type="button" class="btn btn-' . $class . '">' . scrub_out($value) .
-        '<em>' . $comment . '</em></button>';
+    return '<button type="button" class="btn btn-' . $class . '">' . scrub_out($value)
+        . '<em>' . $comment . '</em></button>';
 }
 
 /**
@@ -782,8 +782,8 @@ function show_catalog_select($name, $catalog_id, $style = '', $allow_none = fals
     }
 
     if (
-        empty($results) &&
-        !empty($gather_types)
+        empty($results)
+        && !empty($gather_types)
     ) {
         /* HINT: Requested object string/id/type ("album", "myusername", "some song title", 1298376) */
         echo "\t<option value=\"-1\" selected=\"selected\">" . sprintf(T_('Not Found: %s'), $gather_types) . "</option>\n";
@@ -1107,9 +1107,9 @@ function canEditArtist(
     int $userId,
 ): bool {
     if (
-        AmpConfig::get('upload_allow_edit') &&
-        $artist->user !== null &&
-        $userId == $artist->user
+        AmpConfig::get('upload_allow_edit')
+        && $artist->user !== null
+        && $userId == $artist->user
     ) {
         return true;
     }

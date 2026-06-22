@@ -390,10 +390,10 @@ class Ui implements UiInterface
         }
 
         $string = (
-            '<a class="nohtml" href="' . AmpConfig::get('web_path') .
-            '/rss.php?type=' . $type->value .
-            $rsstoken . $strparams . '" target="_blank">' .
-            self::get_material_symbol(
+            '<a class="nohtml" href="' . AmpConfig::get('web_path')
+            . '/rss.php?type=' . $type->value
+            . $rsstoken . $strparams . '" target="_blank">'
+            . self::get_material_symbol(
                 'rss_feed',
                 T_('RSS Feed')
             )
@@ -654,8 +654,8 @@ class Ui implements UiInterface
         }
 
         if (
-            $filesearch &&
-            pathinfo($filename, PATHINFO_EXTENSION) === 'svg'
+            $filesearch
+            && pathinfo($filename, PATHINFO_EXTENSION) === 'svg'
         ) {
             $url = $filesearch[0];
         } else {

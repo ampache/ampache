@@ -141,8 +141,8 @@ class UPnPPlaylist
     {
         // note that pos is started from 1 not from zero
         if (
-            $track_id >= 1 &&
-            $track_id <= count($this->_songs)
+            $track_id >= 1
+            && $track_id <= count($this->_songs)
         ) {
             $this->_current = $track_id - 1;
             $this->PlayListSave();

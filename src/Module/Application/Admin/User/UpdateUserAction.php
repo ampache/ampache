@@ -110,9 +110,9 @@ final class UpdateUserAction extends AbstractUserAction
 
         // Check the website for a valid site.
         if (
-            isset($body['website']) &&
-            strlen($body['website']) > 6 &&
-            $website === ''
+            isset($body['website'])
+            && strlen($body['website']) > 6
+            && $website === ''
         ) {
             AmpError::add('website', T_('Error'));
         }
@@ -169,8 +169,8 @@ final class UpdateUserAction extends AbstractUserAction
 
         // reset preferences if allowed
         if (
-            $prevent_override === 0 &&
-            in_array($preset, ['system', 'default', 'minimalist', 'community'], true)
+            $prevent_override === 0
+            && in_array($preset, ['system', 'default', 'minimalist', 'community'], true)
         ) {
             Preference::set_preset($client->getUsername(), $preset);
         }

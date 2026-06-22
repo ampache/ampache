@@ -72,8 +72,8 @@ final class User6Method
                 ? $userRepository->findById((int) $username)
                 : $userRepository->findByUsername((string) $username);
             if (
-                $check_user === null ||
-                !in_array($check_user->getId(), $userRepository->getValid(true))
+                $check_user === null
+                || !in_array($check_user->getId(), $userRepository->getValid(true))
             ) {
                 /* HINT: Requested object string/id/type */
                 Api6::error(sprintf('Not Found: %s', $username), ErrorCodeEnum::NOT_FOUND, self::ACTION, 'username', $input['api_format']);

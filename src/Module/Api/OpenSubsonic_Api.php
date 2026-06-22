@@ -683,8 +683,8 @@ class OpenSubsonic_Api
 
         $playlist = self::getAmpacheObject($sub_id);
         if (
-            (!($playlist instanceof Playlist || $playlist instanceof Search)) ||
-            $playlist->isNew()
+            (!($playlist instanceof Playlist || $playlist instanceof Search))
+            || $playlist->isNew()
         ) {
             self::_errorOutput($input, self::SSERROR_DATA_NOTFOUND, __FUNCTION__);
 
@@ -786,8 +786,8 @@ class OpenSubsonic_Api
                 : null;
 
             if (
-                $share === null ||
-                !$share->isAccessible($user)
+                $share === null
+                || !$share->isAccessible($user)
             ) {
                 self::_errorOutput($input, self::SSERROR_DATA_NOTFOUND, __FUNCTION__);
             } else {
@@ -1568,8 +1568,8 @@ class OpenSubsonic_Api
         $object_id   = self::getAmpacheId($sub_id);
         $object_type = self::getAmpacheType($sub_id);
         if (
-            !$object_id ||
-            empty($object_type)
+            !$object_id
+            || empty($object_type)
         ) {
             self::_errorOutput($input, self::SSERROR_DATA_NOTFOUND, __FUNCTION__);
 
@@ -2019,8 +2019,8 @@ class OpenSubsonic_Api
 
         $playlist = self::getAmpacheObject($sub_id);
         if (
-            (!($playlist instanceof Playlist || $playlist instanceof Search)) ||
-            $playlist->isNew()
+            (!($playlist instanceof Playlist || $playlist instanceof Search))
+            || $playlist->isNew()
         ) {
             self::_errorOutput($input, self::SSERROR_DATA_NOTFOUND, __FUNCTION__);
 
@@ -3076,10 +3076,10 @@ class OpenSubsonic_Api
                 ? self::getAmpacheObject($current)
                 : null;
             if (
-                $media instanceof library_item &&
-                $media instanceof Media &&
-                $media->isNew() === false &&
-                isset($media->time)
+                $media instanceof library_item
+                && $media instanceof Media
+                && $media->isNew() === false
+                && isset($media->time)
             ) {
                 $playqueue_time = (int) User::get_user_data($user->id, 'playqueue_time', 0)['playqueue_time'];
                 // wait a few seconds before smashing out play times
@@ -3120,8 +3120,8 @@ class OpenSubsonic_Api
             $playQueue->add_items($playlist, $time);
 
             if (
-                isset($type) &&
-                isset($media->id)
+                isset($type)
+                && isset($media->id)
             ) {
                 $playQueue->set_current_object($type, $media->id, $position);
             }
@@ -3169,10 +3169,10 @@ class OpenSubsonic_Api
                 ? self::getAmpacheObject($current)
                 : null;
             if (
-                $media instanceof library_item &&
-                $media instanceof Media &&
-                $media->isNew() === false &&
-                isset($media->time)
+                $media instanceof library_item
+                && $media instanceof Media
+                && $media->isNew() === false
+                && isset($media->time)
             ) {
                 $playqueue_time = (int) User::get_user_data($user->id, 'playqueue_time', 0)['playqueue_time'];
                 // wait a few seconds before smashing out play times
@@ -3210,8 +3210,8 @@ class OpenSubsonic_Api
             $playQueue->add_items($playlist, $time);
 
             if (
-                isset($type) &&
-                isset($media->id)
+                isset($type)
+                && isset($media->id)
             ) {
                 $playQueue->set_current_object($type, $media->id, $position);
             }
@@ -4302,9 +4302,9 @@ class OpenSubsonic_Api
 
         // saving xml can fail
         if (!$output) {
-            $output = "<subsonic-response status=\"failed\" " . "version=\"1.16.1\" " . "type=\"ampache\" " . "serverVersion=\"" . AmpConfig::get('version') . "\" " . "openSubsonic=\"1\" " . ">" .
-                "<error code=\"" . OpenSubsonic_Api::SSERROR_GENERIC . "\" message=\"Error creating response.\" helpUrl=\"https://ampache.org/api/subsonic\"/>" .
-                "</subsonic-response>";
+            $output = "<subsonic-response status=\"failed\" " . "version=\"1.16.1\" " . "type=\"ampache\" " . "serverVersion=\"" . AmpConfig::get('version') . "\" " . "openSubsonic=\"1\" " . ">"
+                . "<error code=\"" . OpenSubsonic_Api::SSERROR_GENERIC . "\" message=\"Error creating response.\" helpUrl=\"https://ampache.org/api/subsonic\"/>"
+                . "</subsonic-response>";
         }
 
         header("Content-type: text/xml; charset=" . AmpConfig::get('site_charset', 'UTF-8'));

@@ -81,8 +81,8 @@ final class PlaylistSongs6Method
             return false;
         }
         if (
-            $playlist->type !== 'public' &&
-            !$playlist->has_collaborate($user)
+            $playlist->type !== 'public'
+            && !$playlist->has_collaborate($user)
         ) {
             Api6::error('Require: 100', ErrorCodeEnum::FAILED_ACCESS_CHECK, self::ACTION, 'account', $input['api_format']);
 

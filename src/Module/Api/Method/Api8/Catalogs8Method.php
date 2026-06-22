@@ -66,8 +66,8 @@ final class Catalogs8Method
         $browse->set_type('catalog');
         $browse->set_filter('user', $user->getId());
         if (
-            isset($input['filter']) &&
-            in_array($input['filter'], ['music', 'clip', 'tvshow', 'movie', 'personal_video', 'video', 'podcast'])
+            isset($input['filter'])
+            && in_array($input['filter'], ['music', 'clip', 'tvshow', 'movie', 'personal_video', 'video', 'podcast'])
         ) {
             if (in_array($input['filter'], ['clip', 'tvshow', 'movie', 'personal_video'])) {
                 $input['filter'] = 'video';

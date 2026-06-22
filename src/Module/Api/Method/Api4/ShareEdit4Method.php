@@ -74,8 +74,8 @@ final class ShareEdit4Method
         $share = self::getShareRepository()->findById((int) $share_id);
 
         if (
-            $share === null ||
-            !$share->isAccessible($user)
+            $share === null
+            || !$share->isAccessible($user)
         ) {
             Api4::message('error', 'share ' . $share_id . ' was not found', '404', $input['api_format']);
 

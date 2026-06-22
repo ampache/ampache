@@ -287,10 +287,10 @@ final class SubsonicApiApplication implements ApiApplicationInterface
 
         // make sure we have correct authentication parameters
         if (
-            empty($userName) ||
-            empty($version) ||
-            empty($action) ||
-            empty($clientapp)
+            empty($userName)
+            || empty($version)
+            || empty($action)
+            || empty($clientapp)
         ) {
             ob_end_clean();
             $this->logger->warning(
@@ -308,9 +308,9 @@ final class SubsonicApiApplication implements ApiApplicationInterface
         }
 
         if (
-            !$token_auth &&
-            !$api_auth &&
-            !$pass_auth
+            !$token_auth
+            && !$api_auth
+            && !$pass_auth
         ) {
             $this->logger->warning(
                 'Error Invalid Authentication attempt to Subsonic API',
@@ -372,8 +372,8 @@ final class SubsonicApiApplication implements ApiApplicationInterface
 
         // Check server version
         if (
-            version_compare(Subsonic_Api::API_VERSION, $version) < 0 &&
-            !($clientapp == 'Sublime Music' && $version == '1.15.0')
+            version_compare(Subsonic_Api::API_VERSION, $version) < 0
+            && !($clientapp == 'Sublime Music' && $version == '1.15.0')
         ) {
             ob_end_clean();
             $this->logger->warning(
@@ -422,10 +422,10 @@ final class SubsonicApiApplication implements ApiApplicationInterface
                 $matches = [];
                 if ($decname == "id" && preg_match('/^(\d{1,3})\.(\d{1,3})\.(\d{1,3})\.(\d{1,3})$/', $decvalue, $matches)) {
                     $calc = (
-                        (((int) $matches[1]) << 24) +
-                        (((int) $matches[2]) << 16) +
-                        (((int) $matches[3]) << 8) +
-                        ((int) $matches[4])
+                        (((int) $matches[1]) << 24)
+                        + (((int) $matches[2]) << 16)
+                        + (((int) $matches[3]) << 8)
+                        + ((int) $matches[4])
                     );
                     if ($calc) {
                         $this->logger->notice(
@@ -460,10 +460,10 @@ final class SubsonicApiApplication implements ApiApplicationInterface
         // Call your function if it's valid
         $callback = [OpenSubsonic_Api::class, $action];
         if (
-            $os_methods !== [] &&
-            in_array(strtolower($action), $os_methods) &&
-            method_exists(OpenSubsonic_Api::class, $action) &&
-            assert(is_callable($callback))
+            $os_methods !== []
+            && in_array(strtolower($action), $os_methods)
+            && method_exists(OpenSubsonic_Api::class, $action)
+            && assert(is_callable($callback))
         ) {
             call_user_func($callback, $input, $user);
 
@@ -471,10 +471,10 @@ final class SubsonicApiApplication implements ApiApplicationInterface
         }
         $callback = [Subsonic_Api::class, $action];
         if (
-            $methods !== [] &&
-            in_array(strtolower($action), $methods) &&
-            method_exists(Subsonic_Api::class, $action) &&
-            assert(is_callable($callback))
+            $methods !== []
+            && in_array(strtolower($action), $methods)
+            && method_exists(Subsonic_Api::class, $action)
+            && assert(is_callable($callback))
         ) {
             call_user_func($callback, $input, $user);
 

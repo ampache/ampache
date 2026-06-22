@@ -215,10 +215,10 @@ class AlbumDisk extends database_object implements
 
             Art::display('album', $this->album_id, $title, $size, $this->get_link());
         } elseif (
-            $this->album->album_artist &&
-            (
-                Art::has_db($this->album->album_artist, 'artist') ||
-                $force
+            $this->album->album_artist
+            && (
+                Art::has_db($this->album->album_artist, 'artist')
+                || $force
             )
         ) {
             $title = (!empty($this->get_parent_fullname()))
@@ -255,8 +255,8 @@ class AlbumDisk extends database_object implements
         }
 
         if (
-            $this->album_artists === null ||
-            $this->album_artists === []
+            $this->album_artists === null
+            || $this->album_artists === []
         ) {
             $this->album_artists = $this->album->get_artists();
         }

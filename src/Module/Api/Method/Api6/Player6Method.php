@@ -126,8 +126,8 @@ final class Player6Method
 
             // internal scrobbling (user_activity and object_count tables)
             if (
-                $media instanceof Song &&
-                $media->set_played($user->id, $agent, [], ($time - $position))
+                $media instanceof Song
+                && $media->set_played($user->id, $agent, [], ($time - $position))
             ) {
                 // scrobble plugins
                 User::save_mediaplay($user, $media);

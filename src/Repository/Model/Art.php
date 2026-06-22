@@ -311,12 +311,12 @@ class Art extends database_object
             $libitem = new $className($object_id);
             echo "<div class=\"item_art_actions\">";
             if (
-                $user instanceof User &&
-                (
-                    $user->has_access(AccessLevelEnum::CONTENT_MANAGER) ||
-                    (
-                        $user->has_access(AccessLevelEnum::USER) &&
-                        $user->id == $libitem->get_user_owner()
+                $user instanceof User
+                && (
+                    $user->has_access(AccessLevelEnum::CONTENT_MANAGER)
+                    || (
+                        $user->has_access(AccessLevelEnum::USER)
+                        && $user->id == $libitem->get_user_owner()
                     )
                 )
             ) {
@@ -350,9 +350,9 @@ class Art extends database_object
             : $object_type;
 
         if (
-            !$new_object_id ||
-            self::has_db($new_object_id, $write_type) ||
-            $old_object_id == $new_object_id
+            !$new_object_id
+            || self::has_db($new_object_id, $write_type)
+            || $old_object_id == $new_object_id
         ) {
             return;
         }
@@ -562,8 +562,8 @@ class Art extends database_object
             $handle = fopen($data['file'], 'rb');
             $size   = Core::get_filesize($data['file']);
             if (
-                $handle &&
-                $size > 0
+                $handle
+                && $size > 0
             ) {
                 $image_data = (string) fread($handle, $size);
                 fclose($handle);
@@ -716,9 +716,9 @@ class Art extends database_object
         }
 
         return (
-            InterfaceImplementationChecker::is_library_item($type) ||
-            $type == 'folder' ||
-            $type == 'user'
+            InterfaceImplementationChecker::is_library_item($type)
+            || $type == 'folder'
+            || $type == 'user'
         );
     }
 
@@ -780,16 +780,16 @@ class Art extends database_object
 
         $extension = self::extension($mime);
         if (
-            $extension === '' ||
-            $extension === '0'
+            $extension === ''
+            || $extension === '0'
         ) {
             $extension = 'jpg';
         }
 
         if (
-            $type !== 'user' &&
-            AmpConfig::get('stream_beautiful_url') &&
-            $size !== 'original'
+            $type !== 'user'
+            && AmpConfig::get('stream_beautiful_url')
+            && $size !== 'original'
         ) {
             // e.g. https://demo.ampache.dev/play/art/{sessionid}/artist/1240/size400x400.png
             $url = AmpConfig::get_web_path() . '/play/art/' . $sid . '/' . scrub_out($type) . '/' . $uid . '/size' . $size . '.' . $extension;
@@ -860,8 +860,8 @@ class Art extends database_object
     private static function _hasGD(): bool
     {
         return (
-            AmpConfig::get('resize_images') &&
-            ((extension_loaded('gd') || extension_loaded('gd2')) && function_exists('gd_info'))
+            AmpConfig::get('resize_images')
+            && ((extension_loaded('gd') || extension_loaded('gd2')) && function_exists('gd_info'))
         );
     }
 
@@ -1208,8 +1208,8 @@ class Art extends database_object
     public function has_db_info(string $size = 'original', bool $fallback = false): bool
     {
         if (
-            $size === 'original' ||
-            !self::_hasGD()
+            $size === 'original'
+            || !self::_hasGD()
         ) {
             return $this->get_image($fallback, $size);
         }
@@ -1528,8 +1528,8 @@ class Art extends database_object
         if ($this->has_db_info($size, $fallback)) {
             header('Access-Control-Allow-Origin: *');
             if (
-                $size &&
-                preg_match('/^[0-9]+x[0-9]+$/', $size)
+                $size
+                && preg_match('/^[0-9]+x[0-9]+$/', $size)
             ) {
                 if ($this->thumb && $this->thumb_mime) {
                     // found the thumb by looking up the size

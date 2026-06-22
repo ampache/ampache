@@ -91,8 +91,8 @@ final class Rate8Method
 
         // searches are playlists but not in the database
         if (
-            $type === 'playlist' &&
-            $object_id === 0
+            $type === 'playlist'
+            && $object_id === 0
         ) {
             $type      = 'search';
             $object_id = (int) str_replace('smart_', '', (string) $input['filter']);

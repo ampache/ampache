@@ -792,9 +792,9 @@ class OpenSubsonic_Xml_Data
         $xplaynow = self::_addChildToResultXml($xml, 'nowPlaying');
         foreach ($data as $row) {
             if (
-                $row['media'] instanceof Song &&
-                $row['media']->isNew() === false &&
-                $row['media']->enabled
+                $row['media'] instanceof Song
+                && $row['media']->isNew() === false
+                && $row['media']->enabled
             ) {
                 $attributes = [
                     'username' => (string) $row['client']->username,

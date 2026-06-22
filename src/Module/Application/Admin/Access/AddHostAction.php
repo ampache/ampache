@@ -61,8 +61,8 @@ final readonly class AddHostAction implements ApplicationActionInterface
     {
         // Make sure we've got a valid form submission
         if (
-            $gatekeeper->mayAccess(AccessTypeEnum::INTERFACE, AccessLevelEnum::ADMIN) === false ||
-            !$this->requestParser->verifyForm('add_acl')
+            $gatekeeper->mayAccess(AccessTypeEnum::INTERFACE, AccessLevelEnum::ADMIN) === false
+            || !$this->requestParser->verifyForm('add_acl')
         ) {
             throw new AccessDeniedException();
         }

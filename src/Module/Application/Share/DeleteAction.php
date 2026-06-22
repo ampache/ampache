@@ -67,9 +67,9 @@ final readonly class DeleteAction implements ApplicationActionInterface
         );
 
         if (
-            $share === null ||
-            $user === null ||
-            !$share->isAccessible($user)
+            $share === null
+            || $user === null
+            || !$share->isAccessible($user)
         ) {
             throw new AccessDeniedException();
         }

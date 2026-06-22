@@ -139,8 +139,8 @@ class AmpachePaypal extends AmpachePlugin implements PluginDisplayUserFieldInter
     public function uninstall(): bool
     {
         return (
-            Preference::delete('paypal_business') &&
-            Preference::delete('paypal_currency_code')
+            Preference::delete('paypal_business')
+            && Preference::delete('paypal_currency_code')
         );
     }
 

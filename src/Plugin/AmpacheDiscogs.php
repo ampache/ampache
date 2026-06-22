@@ -287,8 +287,8 @@ class AmpacheDiscogs extends AmpachePlugin implements PluginGatherArtsInterface,
     public function uninstall(): bool
     {
         return (
-            Preference::delete('discogs_api_key') &&
-            Preference::delete('discogs_secret_api_key')
+            Preference::delete('discogs_api_key')
+            && Preference::delete('discogs_secret_api_key')
         );
     }
 

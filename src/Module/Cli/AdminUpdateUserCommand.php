@@ -122,8 +122,8 @@ final class AdminUpdateUserCommand extends Command
         }
 
         if (
-            in_array($accessLevel, [0, 5, 25, 50, 75, 100], true) &&
-            $accessLevel !== $user->access
+            in_array($accessLevel, [0, 5, 25, 50, 75, 100], true)
+            && $accessLevel !== $user->access
         ) {
             $user->update_access($accessLevel);
 

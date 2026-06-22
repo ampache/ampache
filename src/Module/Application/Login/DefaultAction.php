@@ -112,8 +112,8 @@ final readonly class DefaultAction implements ApplicationActionInterface
         if (in_array($this->requestParser->getFromRequest('step'), ['', '0'], true)) {
             /* Check for posted username and password, or appropriate environment variable if using HTTP auth */
             if (
-                (isset($_POST['username'])) ||
-                (in_array('http', $this->configContainer->get(ConfigurationKeyEnum::AUTH_METHODS)) && (isset($_SERVER['REMOTE_USER']) || isset($_SERVER['HTTP_REMOTE_USER'])))
+                (isset($_POST['username']))
+                || (in_array('http', $this->configContainer->get(ConfigurationKeyEnum::AUTH_METHODS)) && (isset($_SERVER['REMOTE_USER']) || isset($_SERVER['HTTP_REMOTE_USER'])))
             ) {
                 /* If we are in demo mode let's force auth success */
                 if ($this->configContainer->isFeatureEnabled(ConfigurationKeyEnum::DEMO_MODE)) {
@@ -246,10 +246,10 @@ final readonly class DefaultAction implements ApplicationActionInterface
 
             // This allows stealing passwords validated by external means such as LDAP
             if (
-                $this->configContainer->isFeatureEnabled(ConfigurationKeyEnum::AUTH_PASSWORD_SAVE) &&
-                $auth['success'] &&
-                isset($password) &&
-                $user instanceof User
+                $this->configContainer->isFeatureEnabled(ConfigurationKeyEnum::AUTH_PASSWORD_SAVE)
+                && $auth['success']
+                && isset($password)
+                && $user instanceof User
             ) {
                 $user->update_password($password);
             }
@@ -310,8 +310,8 @@ final readonly class DefaultAction implements ApplicationActionInterface
 
             // If an admin, check for update
             if (
-                $this->configContainer->isFeatureEnabled(ConfigurationKeyEnum::AUTOUPDATE) &&
-                $gatekeeper->mayAccess(AccessTypeEnum::INTERFACE, AccessLevelEnum::ADMIN)
+                $this->configContainer->isFeatureEnabled(ConfigurationKeyEnum::AUTOUPDATE)
+                && $gatekeeper->mayAccess(AccessTypeEnum::INTERFACE, AccessLevelEnum::ADMIN)
             ) {
                 // admins need to know if an update is available
                 AutoUpdate::is_update_available();
@@ -322,13 +322,13 @@ final readonly class DefaultAction implements ApplicationActionInterface
              */
             $web_path = $this->configContainer->getWebPath();
             if (
-                (str_starts_with((string) $_POST['referrer'], $web_path)) &&
-                !str_contains((string) $_POST['referrer'], 'install.php') &&
-                !str_contains((string) $_POST['referrer'], 'login.php') &&
-                !str_contains((string) $_POST['referrer'], 'logout.php') &&
-                !str_contains((string) $_POST['referrer'], 'update.php') &&
-                !str_contains((string) $_POST['referrer'], 'activate.php') &&
-                !str_contains((string) $_POST['referrer'], 'admin')
+                (str_starts_with((string) $_POST['referrer'], $web_path))
+                && !str_contains((string) $_POST['referrer'], 'install.php')
+                && !str_contains((string) $_POST['referrer'], 'login.php')
+                && !str_contains((string) $_POST['referrer'], 'logout.php')
+                && !str_contains((string) $_POST['referrer'], 'update.php')
+                && !str_contains((string) $_POST['referrer'], 'activate.php')
+                && !str_contains((string) $_POST['referrer'], 'admin')
             ) {
                 return $this->responseFactory
                     ->createResponse(RFC7231::FOUND)

@@ -57,12 +57,12 @@ final class UpdateCatalogFolderCommand extends Command
         $interactor = $this->io();
 
         if (
-            ($values['move'] != null) &&
-            (
-                $values['verify'] ||
-                $values['add'] ||
-                $values['cleanup'] ||
-                $values['art']
+            ($values['move'] != null)
+            && (
+                $values['verify']
+                || $values['add']
+                || $values['cleanup']
+                || $values['art']
             )
         ) {
             $interactor->error(
