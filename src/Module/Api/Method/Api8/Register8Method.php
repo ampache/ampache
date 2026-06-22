@@ -77,7 +77,7 @@ final class Register8Method
         $fullname             = $input['fullname'] ?? $username;
         $email                = urldecode($input['email']);
         $password             = $input['password'];
-        $disable              = (bool)AmpConfig::get('admin_enable_required');
+        $disable              = (bool) AmpConfig::get('admin_enable_required');
         $access               = AccessLevelEnum::fromTextual(AmpConfig::get('auto_user', 'guest'));
         $catalog_filter_group = 0;
         $user_id              = User::create($username, $fullname, $email, '', $password, $access, $catalog_filter_group, '', '', $disable, true);

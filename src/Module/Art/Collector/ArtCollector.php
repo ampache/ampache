@@ -49,8 +49,7 @@ final readonly class ArtCollector implements ArtCollectorInterface
         private ContainerInterface $dic,
         private LoggerInterface $logger,
         private ConfigContainerInterface $configContainer,
-    ) {
-    }
+    ) {}
 
     /**
      * This tries to get the art in question
@@ -171,7 +170,7 @@ final readonly class ArtCollector implements ArtCollectorInterface
             }
 
             // Add the results we got to the current set
-            $results = array_merge($results, (array)$data);
+            $results = array_merge($results, (array) $data);
         }
 
         $this->logger->notice(

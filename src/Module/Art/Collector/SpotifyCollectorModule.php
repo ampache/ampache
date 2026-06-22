@@ -39,8 +39,7 @@ final readonly class SpotifyCollectorModule implements CollectorModuleInterface
         private ConfigContainerInterface $configContainer,
         private SpotifyWebAPI $spotifyWebAPI,
         private LoggerInterface $logger,
-    ) {
-    }
+    ) {}
 
     /**
      * This function gathers art from the spotify catalog

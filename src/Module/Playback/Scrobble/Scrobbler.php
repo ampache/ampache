@@ -45,8 +45,7 @@ class Scrobbler
         public ?string $host = '',
         public ?string $challenge = '',
         private readonly ?string $secret = '',
-    ) {
-    }
+    ) {}
 
     /**
      * call_url
@@ -159,7 +158,7 @@ class Scrobbler
                 ? simplexml_load_string($response)
                 : false;
             if ($xml) {
-                $status = (string)$xml['status'];
+                $status = (string) $xml['status'];
                 if ($status === 'ok') {
                     if ($xml->session && $xml->session->key) {
                         return $xml->session->key;
@@ -198,7 +197,7 @@ class Scrobbler
         // Add the method, API and session keys
         $vars['method']  = ($is_loved) ? 'track.love' : 'track.unlove';
         $vars['api_key'] = $this->api_key;
-        $vars['sk']      = (string)$this->challenge;
+        $vars['sk']      = (string) $this->challenge;
 
         // Sign the call
         $sig             = $this->get_api_sig($vars);
@@ -210,7 +209,7 @@ class Scrobbler
             ? simplexml_load_string($response)
             : false;
         if ($xml) {
-            $status = (string)$xml['status'];
+            $status = (string) $xml['status'];
             if ($status === 'ok') {
                 return true;
             }
@@ -280,19 +279,19 @@ class Scrobbler
         $vars  = [];
         foreach ($this->queued_tracks as $track) {
             // construct array of parameters for each song
-            $vars[sprintf('artist[%d]', $count)]      = (string)$track['artist'];
-            $vars[sprintf('track[%d]', $count)]       = (string)$track['title'];
-            $vars[sprintf('timestamp[%d]', $count)]   = (string)$track['time'];
-            $vars[sprintf('album[%d]', $count)]       = (string)$track['album'];
-            $vars[sprintf('trackNumber[%d]', $count)] = (string)$track['track'];
-            $vars[sprintf('duration[%d]', $count)]    = (string)$track['length'];
+            $vars[sprintf('artist[%d]', $count)]      = (string) $track['artist'];
+            $vars[sprintf('track[%d]', $count)]       = (string) $track['title'];
+            $vars[sprintf('timestamp[%d]', $count)]   = (string) $track['time'];
+            $vars[sprintf('album[%d]', $count)]       = (string) $track['album'];
+            $vars[sprintf('trackNumber[%d]', $count)] = (string) $track['track'];
+            $vars[sprintf('duration[%d]', $count)]    = (string) $track['length'];
             $count++;
         }
 
         // Add the method, API and session keys
         $vars['method']  = 'track.scrobble';
         $vars['api_key'] = $this->api_key;
-        $vars['sk']      = (string)$this->challenge;
+        $vars['sk']      = (string) $this->challenge;
 
         // Sign the call
         $sig             = $this->get_api_sig($vars);
@@ -304,7 +303,7 @@ class Scrobbler
             ? simplexml_load_string($response)
             : false;
         if ($xml) {
-            $status = (string)$xml['status'];
+            $status = (string) $xml['status'];
             if ($status === 'ok') {
                 return true;
             }

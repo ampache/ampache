@@ -41,8 +41,7 @@ final readonly class PlaylistAjaxHandler implements AjaxHandlerInterface
 {
     public function __construct(
         private RequestParserInterface $requestParser,
-    ) {
-    }
+    ) {}
 
     public function handle(User $user): void
     {
@@ -64,7 +63,7 @@ final readonly class PlaylistAjaxHandler implements AjaxHandlerInterface
                     $playlist->regenerate_track_numbers();
                 }
 
-                $browse_id  = (int)($_REQUEST['browse_id'] ?? 0);
+                $browse_id  = (int) ($_REQUEST['browse_id'] ?? 0);
                 $object_ids = $playlist->get_items();
                 ob_start();
                 $browse = new Browse($browse_id);
@@ -89,7 +88,7 @@ final readonly class PlaylistAjaxHandler implements AjaxHandlerInterface
                         $name = $user->username . ' - ' . get_datetime(time());
                     }
 
-                    $playlist_id = (int)Playlist::create($name, 'public');
+                    $playlist_id = (int) Playlist::create($name, 'public');
                     if ($playlist_id < 1) {
                         break;
                     }

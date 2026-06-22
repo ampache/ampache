@@ -74,7 +74,7 @@ final class PodcastCreate5Method
             return false;
         }
 
-        $catalog = Catalog::create_from_id((int)$input['catalog']);
+        $catalog = Catalog::create_from_id((int) $input['catalog']);
         if ($catalog === null) {
             Api5::error(T_('Bad Request'), ErrorCodeEnum::BAD_REQUEST, self::ACTION, 'system', $input['api_format']);
 

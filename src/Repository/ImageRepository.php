@@ -36,9 +36,7 @@ use PDO;
  */
 final readonly class ImageRepository implements ImageRepositoryInterface
 {
-    public function __construct(private DatabaseConnectionInterface $connection)
-    {
-    }
+    public function __construct(private DatabaseConnectionInterface $connection) {}
 
     /**
      * Clear the image column (if you have the image on disk)

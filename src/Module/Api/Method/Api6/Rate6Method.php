@@ -74,7 +74,7 @@ final class Rate6Method
         }
         ob_end_clean();
         $type      = (string) $input['type'];
-        $object_id = (int)$input['id'];
+        $object_id = (int) $input['id'];
         $rating    = (string) $input['rating'];
         // confirm the correct data
         if (!Rating::is_valid(strtolower($type))) {
@@ -95,7 +95,7 @@ final class Rate6Method
             $object_id === 0
         ) {
             $type      = 'search';
-            $object_id = (int) str_replace('smart_', '', (string)$input['id']);
+            $object_id = (int) str_replace('smart_', '', (string) $input['id']);
         }
 
         $className = ObjectTypeToClassNameMapper::map($type);
@@ -111,7 +111,7 @@ final class Rate6Method
                 return false;
             }
             $rate = new Rating($object_id, $type);
-            $rate->set_rating((int)$rating, $user->id);
+            $rate->set_rating((int) $rating, $user->id);
             Api6::message('rating set to ' . $rating . ' for ' . $object_id, $input['api_format']);
         }
 

@@ -36,9 +36,7 @@ use PDOStatement;
 
 final class UpdateCatalog extends AbstractCatalogUpdater implements UpdateCatalogInterface
 {
-    public function __construct(private readonly CatalogGarbageCollectorInterface $catalogGarbageCollector)
-    {
-    }
+    public function __construct(private readonly CatalogGarbageCollectorInterface $catalogGarbageCollector) {}
 
     public function update(
         Interactor $interactor,
@@ -132,7 +130,7 @@ final class UpdateCatalog extends AbstractCatalogUpdater implements UpdateCatalo
                 ob_end_clean();
 
                 $interactor->info(
-                    $this->cleanBuffer((string)$buffer),
+                    $this->cleanBuffer((string) $buffer),
                     true
                 );
                 $interactor->info(
@@ -154,7 +152,7 @@ final class UpdateCatalog extends AbstractCatalogUpdater implements UpdateCatalo
                     ob_end_clean();
 
                     $interactor->info(
-                        $this->cleanBuffer((string)$buffer),
+                        $this->cleanBuffer((string) $buffer),
                         true
                     );
                     $interactor->info(
@@ -178,7 +176,7 @@ final class UpdateCatalog extends AbstractCatalogUpdater implements UpdateCatalo
                     ob_end_clean();
 
                     $interactor->info(
-                        $this->cleanBuffer((string)$buffer),
+                        $this->cleanBuffer((string) $buffer),
                         true
                     );
                     $interactor->info(
@@ -202,7 +200,7 @@ final class UpdateCatalog extends AbstractCatalogUpdater implements UpdateCatalo
                     ob_end_clean();
 
                     $interactor->info(
-                        $this->cleanBuffer((string)$buffer),
+                        $this->cleanBuffer((string) $buffer),
                         true
                     );
                     $interactor->info(
@@ -226,7 +224,7 @@ final class UpdateCatalog extends AbstractCatalogUpdater implements UpdateCatalo
                     ob_end_clean();
 
                     $interactor->info(
-                        $this->cleanBuffer((string)$buffer),
+                        $this->cleanBuffer((string) $buffer),
                         true
                     );
                     $interactor->info(
@@ -251,7 +249,7 @@ final class UpdateCatalog extends AbstractCatalogUpdater implements UpdateCatalo
                 ob_end_clean();
 
                 $interactor->info(
-                    $this->cleanBuffer((string)$buffer),
+                    $this->cleanBuffer((string) $buffer),
                     true
                 );
                 $interactor->info(
@@ -286,7 +284,7 @@ final class UpdateCatalog extends AbstractCatalogUpdater implements UpdateCatalo
                 ob_end_clean();
 
                 $interactor->info(
-                    $this->cleanBuffer((string)$buffer),
+                    $this->cleanBuffer((string) $buffer),
                     true
                 );
                 if (AmpConfig::get('label')) {
@@ -302,7 +300,7 @@ final class UpdateCatalog extends AbstractCatalogUpdater implements UpdateCatalo
                     ob_end_clean();
 
                     $interactor->info(
-                        $this->cleanBuffer((string)$buffer),
+                        $this->cleanBuffer((string) $buffer),
                         true
                     );
                 }
@@ -379,7 +377,7 @@ final class UpdateCatalog extends AbstractCatalogUpdater implements UpdateCatalo
             ob_end_clean();
 
             $interactor->info(
-                $this->cleanBuffer((string)$buffer),
+                $this->cleanBuffer((string) $buffer),
                 true
             );
 
@@ -413,7 +411,7 @@ final class UpdateCatalog extends AbstractCatalogUpdater implements UpdateCatalo
             $catalogName
         );
         // trim everything
-        $newPath = rtrim(trim((string)$newPath), "/");
+        $newPath = rtrim(trim((string) $newPath), "/");
 
         if (!is_dir($newPath)) {
             $interactor->error(
@@ -475,7 +473,7 @@ final class UpdateCatalog extends AbstractCatalogUpdater implements UpdateCatalo
     private function lookupCatalogs(
         string $catalogType,
         ?string $catalogName,
-    ): PDOStatement|null {
+    ): ?PDOStatement {
         $where = sprintf(
             "catalog_type = '%s'",
             Dba::escape($catalogType)

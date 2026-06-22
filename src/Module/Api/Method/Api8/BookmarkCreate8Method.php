@@ -76,9 +76,9 @@ final class BookmarkCreate8Method
         if (!Api::check_parameter($input, ['filter', 'type', 'position'], self::ACTION)) {
             return false;
         }
-        $object_id = (int)$input['filter'];
+        $object_id = (int) $input['filter'];
         $type      = $input['type'];
-        $position  = (int)$input['position'];
+        $position  = (int) $input['position'];
         $comment   = (isset($input['client'])) ? scrub_in((string) $input['client']) : null;
         $time      = (isset($input['date'])) ? (int) $input['date'] : time();
         $include   = make_bool($input['include'] ?? false);

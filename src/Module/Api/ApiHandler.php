@@ -147,11 +147,11 @@ final class ApiHandler implements ApiHandlerInterface
             ? $gatekeeper->getUser()
             : null;
         $userId      = $user->id ?? -1;
-        $api_version = (int)Preference::get_by_user($userId, 'api_force_version');
+        $api_version = (int) Preference::get_by_user($userId, 'api_force_version');
         if (!in_array($api_version, Api::API_VERSIONS)) {
             $api_session = Session::get_api_version($input['auth']);
             $api_version = ($is_public || (isset($input['version']) && $header_auth))
-                ? (int)substr($version, 0, 1)
+                ? (int) substr($version, 0, 1)
                 : $api_session;
 
             // If you call api3 from json you don't get anything so change back to the latest version
@@ -210,7 +210,7 @@ final class ApiHandler implements ApiHandlerInterface
             if ($is_handshake || $is_ping) {
                 // for a handshake there needs to be a valid auth response (ping when sent needs one)
                 if (
-                    $input['auth'] !== md5((string)$user->username) &&
+                    $input['auth'] !== md5((string) $user->username) &&
                     !Session::read($input['auth'])
                 ) {
                     $data['type']  = 'api';
@@ -218,7 +218,7 @@ final class ApiHandler implements ApiHandlerInterface
                 }
             } else {
                 $data['type']   = 'header';
-                $data['apikey'] = md5((string)$user->username);
+                $data['apikey'] = md5((string) $user->username);
                 // Session might not exist or has expired
                 if (!Session::read($data['apikey'])) {
                     Session::destroy($data['apikey']);
@@ -314,7 +314,7 @@ final class ApiHandler implements ApiHandlerInterface
                 !$user instanceof User || // User is required for non-public methods
                 (
                     !$header_auth &&
-                    $input['auth'] === md5((string)$user->username)
+                    $input['auth'] === md5((string) $user->username)
                 ) || // require header auth for simplified session
                 $gatekeeper->sessionExists($input['auth']) === false // no valid session
             )

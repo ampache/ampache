@@ -67,8 +67,7 @@ final readonly class CatalogGarbageCollector implements CatalogGarbageCollectorI
         private ArtCleanupInterface $artCleanup,
         private ArtistRepositoryInterface $artistRepository,
         private FolderRepositoryInterface $folderRepository,
-    ) {
-    }
+    ) {}
 
     public function collect(): void
     {

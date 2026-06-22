@@ -65,7 +65,7 @@ final class InterfaceImplementationChecker
             return in_array(
                 $interface_name,
                 array_map(
-                    static fn (string $name): string => $name,
+                    static fn(string $name): string => $name,
                     class_implements($instance)
                 ),
                 true

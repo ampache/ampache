@@ -194,9 +194,7 @@ abstract class Catalog extends \Ampache\Repository\Model\Catalog
         return $count;
     }
 
-    public function count_scan_folders(?Interactor $interactor = null): void
-    {
-    }
+    public function count_scan_folders(?Interactor $interactor = null): void {}
 
     /**
      * get_description
@@ -244,7 +242,7 @@ abstract class Catalog extends \Ampache\Repository\Model\Catalog
 
         $files = [];
         while ($row = Dba::fetch_assoc($db_results)) {
-            $files[(int)$row['id']] = (string)$row['file'];
+            $files[(int) $row['id']] = (string) $row['file'];
         }
 
         return $files;
@@ -362,7 +360,7 @@ abstract class Catalog extends \Ampache\Repository\Model\Catalog
             return 0;
         }
 
-        return (int)$row[0];
+        return (int) $row[0];
     }
 
     /**

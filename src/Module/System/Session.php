@@ -50,8 +50,7 @@ final readonly class Session implements SessionInterface
         private ConfigContainerInterface $configContainer,
         private AuthenticationManagerInterface $authenticationManager,
         private UserRepositoryInterface $userRepository,
-    ) {
-    }
+    ) {}
 
     /**
      * agent
@@ -123,9 +122,9 @@ final readonly class Session implements SessionInterface
         }
 
         $cookie_params = [
-            'lifetime' => (int)AmpConfig::get('cookie_life'),
-            'path' => (string)AmpConfig::get('cookie_path'),
-            'domain' => (string)AmpConfig::get('cookie_domain'),
+            'lifetime' => (int) AmpConfig::get('cookie_life'),
+            'path' => (string) AmpConfig::get('cookie_path'),
+            'domain' => (string) AmpConfig::get('cookie_domain'),
             'secure' => make_bool(AmpConfig::get('cookie_secure')),
             'samesite' => 'Lax',
         ];
@@ -203,7 +202,7 @@ final readonly class Session implements SessionInterface
             $username = $data['username'];
         }
 
-        $s_ip  = (string)(isset($_SERVER['REMOTE_ADDR']) ? filter_var($_SERVER['REMOTE_ADDR'], FILTER_VALIDATE_IP) : '0');
+        $s_ip  = (string) (isset($_SERVER['REMOTE_ADDR']) ? filter_var($_SERVER['REMOTE_ADDR'], FILTER_VALIDATE_IP) : '0');
         $value = '';
         if (isset($data['value'])) {
             $value = $data['value'];
@@ -236,7 +235,7 @@ final readonly class Session implements SessionInterface
             $geoname = $data['geo_name'];
         }
 
-        if ((string)$value === '') {
+        if ((string) $value === '') {
             $value = ' ';
         }
 
@@ -266,21 +265,21 @@ final readonly class Session implements SessionInterface
     public static function create_cookie(): void
     {
         $cookie_params = [
-            'lifetime' => (int)AmpConfig::get('cookie_life'),
-            'path' => (string)AmpConfig::get('cookie_path'),
-            'domain' => (string)AmpConfig::get('cookie_domain'),
+            'lifetime' => (int) AmpConfig::get('cookie_life'),
+            'path' => (string) AmpConfig::get('cookie_path'),
+            'domain' => (string) AmpConfig::get('cookie_domain'),
             'secure' => make_bool(AmpConfig::get('cookie_secure')),
             'samesite' => 'Lax',
         ];
         if (isset($_SESSION)) {
             $cookie_options = [
-                'expires' => (int)AmpConfig::get('cookie_life'),
-                'path' => (string)AmpConfig::get('cookie_path'),
-                'domain' => (string)AmpConfig::get('cookie_domain'),
+                'expires' => (int) AmpConfig::get('cookie_life'),
+                'path' => (string) AmpConfig::get('cookie_path'),
+                'domain' => (string) AmpConfig::get('cookie_domain'),
                 'secure' => make_bool(AmpConfig::get('cookie_secure')),
                 'samesite' => 'Lax'
             ];
-            setcookie((string)session_name(), (string)session_id(), $cookie_options);
+            setcookie((string) session_name(), (string) session_id(), $cookie_options);
         } else {
             session_set_cookie_params($cookie_params);
         }
@@ -302,9 +301,9 @@ final readonly class Session implements SessionInterface
     public static function create_preference_cookies(User $user): void
     {
         $cookie_options = [
-            'expires' => (int)AmpConfig::get('cookie_life'),
-            'path' => (string)AmpConfig::get('cookie_path'),
-            'domain' => (string)AmpConfig::get('cookie_domain'),
+            'expires' => (int) AmpConfig::get('cookie_life'),
+            'path' => (string) AmpConfig::get('cookie_path'),
+            'domain' => (string) AmpConfig::get('cookie_domain'),
             'secure' => make_bool(AmpConfig::get('cookie_secure')),
             'samesite' => 'Strict',
         ];
@@ -354,11 +353,11 @@ final readonly class Session implements SessionInterface
     public static function create_remember_cookie(string $username): void
     {
         $session_name    = AmpConfig::get('session_name', 'ampache');
-        $remember_length = (int)(time() + AmpConfig::get('remember_length', 604800));
+        $remember_length = (int) (time() + AmpConfig::get('remember_length', 604800));
         $cookie_options  = [
             'expires' => $remember_length,
-            'path' => (string)AmpConfig::get('cookie_path'),
-            'domain' => (string)AmpConfig::get('cookie_domain'),
+            'path' => (string) AmpConfig::get('cookie_path'),
+            'domain' => (string) AmpConfig::get('cookie_domain'),
             'secure' => make_bool(AmpConfig::get('cookie_secure')),
             'samesite' => 'Strict',
         ];
@@ -384,9 +383,9 @@ final readonly class Session implements SessionInterface
     {
         $session_name   = AmpConfig::get('session_name', 'ampache');
         $cookie_options = [
-            'expires' => (int)AmpConfig::get('cookie_life'),
-            'path' => (string)AmpConfig::get('cookie_path'),
-            'domain' => (string)AmpConfig::get('cookie_domain'),
+            'expires' => (int) AmpConfig::get('cookie_life'),
+            'path' => (string) AmpConfig::get('cookie_path'),
+            'domain' => (string) AmpConfig::get('cookie_domain'),
             'secure' => make_bool(AmpConfig::get('cookie_secure')),
             'samesite' => 'Strict',
         ];
@@ -429,8 +428,8 @@ final readonly class Session implements SessionInterface
         $session_name   = AmpConfig::get('session_name', 'ampache');
         $cookie_options = [
             'expires' => -1,
-            'path' => (string)AmpConfig::get('cookie_path'),
-            'domain' => (string)AmpConfig::get('cookie_domain'),
+            'path' => (string) AmpConfig::get('cookie_path'),
+            'domain' => (string) AmpConfig::get('cookie_domain'),
             'secure' => make_bool(AmpConfig::get('cookie_secure')),
             'samesite' => 'Strict',
         ];
@@ -602,7 +601,7 @@ final readonly class Session implements SessionInterface
             $db_results = Dba::read($sql, [$sid]);
             $row        = Dba::fetch_assoc($db_results);
             if ($row !== []) {
-                $api_version = (int)$row['value'];
+                $api_version = (int) $row['value'];
             }
         }
 
@@ -626,8 +625,8 @@ final readonly class Session implements SessionInterface
             $sql        = "SELECT `geo_latitude`, `geo_longitude`, `geo_name` FROM `session` WHERE `id` = ?";
             $db_results = Dba::read($sql, [$sid]);
             if ($row = Dba::fetch_assoc($db_results)) {
-                $location['latitude']  = (float)$row['geo_latitude'];
-                $location['longitude'] = (float)$row['geo_longitude'];
+                $location['latitude']  = (float) $row['geo_latitude'];
+                $location['longitude'] = (float) $row['geo_longitude'];
                 $location['name']      = $row['geo_name'];
             }
         }
@@ -781,7 +780,7 @@ final readonly class Session implements SessionInterface
             $sessionData = $_COOKIE[$sessionName] ?? '';
             // Verify their session
             if (!self::exists('interface', $sessionData) && !self::auth_remember()) {
-                $this->authenticationManager->logout((string)$sessionData);
+                $this->authenticationManager->logout((string) $sessionData);
 
                 return false;
             }
@@ -797,7 +796,7 @@ final readonly class Session implements SessionInterface
             // If the user ID doesn't exist deny them
             $user_id = Core::get_global('user')?->getId();
             if (!$user_id && !$isDemoMode) {
-                $this->authenticationManager->logout((string)session_id());
+                $this->authenticationManager->logout((string) session_id());
 
                 return false;
             }
@@ -828,12 +827,12 @@ final readonly class Session implements SessionInterface
                     $GLOBALS['user']->id       = -1;
                     $GLOBALS['user']->username = $auth['username'];
                     $GLOBALS['user']->fullname = $auth['fullname'];
-                    $GLOBALS['user']->access   = (int)$auth['access'];
+                    $GLOBALS['user']->access   = (int) $auth['access'];
                 }
 
                 $user_id = Core::get_global('user')?->getId();
                 if (!$user_id && !$isDemoMode) {
-                    $this->authenticationManager->logout((string)session_id());
+                    $this->authenticationManager->logout((string) session_id());
 
                     return false;
                 }

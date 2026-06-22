@@ -43,8 +43,7 @@ final readonly class LibraryItemLoader implements LibraryItemLoaderInterface
 {
     public function __construct(
         private ContainerInterface $dic,
-    ) {
-    }
+    ) {}
 
     /**
      * Loads a generic library-item

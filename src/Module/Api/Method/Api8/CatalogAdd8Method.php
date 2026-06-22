@@ -81,14 +81,14 @@ final class CatalogAdd8Method
             return false;
         }
 
-        $path           = (string)$input['path'];
-        $name           = (string)$input['name'];
-        $type           = (string)($input['type'] ?? 'local');
-        $rename_pattern = (string)($input['file_pattern'] ?? '%T - %t');
-        $sort_pattern   = (string)($input['folder_pattern'] ?? '%a/%A');
-        $username       = (isset($input['username'])) ? (string)$input['username'] : null;
-        $password       = (isset($input['password'])) ? (string)$input['password'] : null;
-        $gather_types   = (string)($input['media_type'] ?? 'music');
+        $path           = (string) $input['path'];
+        $name           = (string) $input['name'];
+        $type           = (string) ($input['type'] ?? 'local');
+        $rename_pattern = (string) ($input['file_pattern'] ?? '%T - %t');
+        $sort_pattern   = (string) ($input['folder_pattern'] ?? '%a/%A');
+        $username       = (isset($input['username'])) ? (string) $input['username'] : null;
+        $password       = (isset($input['password'])) ? (string) $input['password'] : null;
+        $gather_types   = (string) ($input['media_type'] ?? 'music');
         if (in_array($gather_types, ['clip', 'tvshow', 'movie', 'personal_video'])) {
             $gather_types = 'video';
         }
@@ -140,7 +140,7 @@ final class CatalogAdd8Method
             $object['api_call_delay'] = 250;
         }
         if ($type == 'beetsdb') {
-            $object['beetsdb'] = (string)($input['beetsdb'] ?? '');
+            $object['beetsdb'] = (string) ($input['beetsdb'] ?? '');
         }
 
         // create it then retrieve it

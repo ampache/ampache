@@ -96,7 +96,7 @@ class EditShoutActionTest extends MockeryTestCase
             ->withNoArgs()
             ->once()
             ->andReturn([
-                'shout_id' => (string)$shoutId,
+                'shout_id' => (string) $shoutId,
                 'comment' => $comment,
                 'sticky' => 'on',
             ]);
@@ -146,7 +146,7 @@ class EditShoutActionTest extends MockeryTestCase
             ->withNoArgs()
             ->once()
             ->andReturn([
-                'shout_id' => (string)$shoutId,
+                'shout_id' => (string) $shoutId,
             ]);
 
         $this->subject->run($request, $gatekeeper);

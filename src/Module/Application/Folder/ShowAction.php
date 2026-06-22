@@ -49,8 +49,7 @@ final readonly class ShowAction implements ApplicationActionInterface
         private UiInterface $ui,
         private LoggerInterface $logger,
         private FolderRepositoryInterface $folderRepository,
-    ) {
-    }
+    ) {}
 
     public function run(ServerRequestInterface $request, GuiGatekeeperInterface $gatekeeper): ?ResponseInterface
     {
@@ -64,7 +63,7 @@ final readonly class ShowAction implements ApplicationActionInterface
 
         // lookup by ID
         $user      = $gatekeeper->getUser() ?? $this->modelFactory->createUser(-1);
-        $folder_id = (isset($input['folder'])) ? (int)$input['folder'] : -1;
+        $folder_id = (isset($input['folder'])) ? (int) $input['folder'] : -1;
         $folder    = ($folder_id > 0)
             ? $this->folderRepository->findById($folder_id)
             : new Folder(-1);

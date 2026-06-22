@@ -48,8 +48,7 @@ final readonly class EditAction implements ApplicationActionInterface
         private UiInterface $ui,
         private ConfigContainerInterface $configContainer,
         private LicenseRepositoryInterface $licenseRepository,
-    ) {
-    }
+    ) {}
 
     public function run(ServerRequestInterface $request, GuiGatekeeperInterface $gatekeeper): ?ResponseInterface
     {
@@ -57,12 +56,12 @@ final readonly class EditAction implements ApplicationActionInterface
             throw new AccessDeniedException();
         }
 
-        $data        = (array)$request->getParsedBody();
+        $data        = (array) $request->getParsedBody();
         $licenseId   = (int) ($data['license_id'] ?? 0);
         $name        = (string) ($data['name'] ?? '');
         $description = (string) ($data['description'] ?? '');
         $order       = (isset($data['order']) && is_numeric($data['order']))
-            ? (int)$data['order']
+            ? (int) $data['order']
             : null;
 
         $url = (string) filter_var($data['external_link'] ?? '', FILTER_SANITIZE_URL);

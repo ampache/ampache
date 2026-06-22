@@ -51,8 +51,7 @@ final class AddUserAction extends AbstractUserAction
         private readonly ConfigContainerInterface $configContainer,
         private readonly UserRepositoryInterface $userRepository,
         private readonly RequestParserInterface $requestParser,
-    ) {
-    }
+    ) {}
 
     protected function handle(ServerRequestInterface $request): ?ResponseInterface
     {
@@ -64,7 +63,7 @@ final class AddUserAction extends AbstractUserAction
             throw new AccessDeniedException();
         }
 
-        $body = (array)$request->getParsedBody();
+        $body = (array) $request->getParsedBody();
 
         $this->ui->showHeader();
         $user_id  = 0;

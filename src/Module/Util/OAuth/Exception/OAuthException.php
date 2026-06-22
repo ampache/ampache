@@ -27,6 +27,4 @@ namespace Ampache\Module\Util\OAuth\Exception;
 
 use Exception;
 
-final class OAuthException extends Exception
-{
-}
+final class OAuthException extends Exception {}

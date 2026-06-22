@@ -67,7 +67,7 @@ final class Catalogs5Method
             $filter = 'video';
         }
 
-        $results = $user->get_catalogs((string)$filter);
+        $results = $user->get_catalogs((string) $filter);
         if (empty($results)) {
             Api5::empty('catalog', $input['api_format']);
 

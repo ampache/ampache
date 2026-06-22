@@ -41,8 +41,7 @@ final readonly class LibraryItemFeed implements FeedTypeInterface
         private LibraryItemLoaderInterface $libraryItemLoader,
         private ?User $user,
         private library_item $libraryItem,
-    ) {
-    }
+    ) {}
 
     public function configureTemplate(PhpTalInterface $tal): void
     {

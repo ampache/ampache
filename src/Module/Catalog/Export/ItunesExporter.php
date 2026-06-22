@@ -31,9 +31,7 @@ use Ampache\Repository\SongRepositoryInterface;
 
 final readonly class ItunesExporter implements CatalogExporterInterface
 {
-    public function __construct(private SongRepositoryInterface $songRepository)
-    {
-    }
+    public function __construct(private SongRepositoryInterface $songRepository) {}
 
     /**
      * Exports all songs
@@ -76,9 +74,9 @@ final readonly class ItunesExporter implements CatalogExporterInterface
                 'short',
                 "Y-m-d\TH:i:s\Z"
             );
-            $xml['dict']['Bit Rate']    = (int)($song->bitrate / 1024);
+            $xml['dict']['Bit Rate']    = (int) ($song->bitrate / 1024);
             $xml['dict']['Sample Rate'] = $song->rate;
-            $xml['dict']['Play Count']  = (int)($song->played);
+            $xml['dict']['Play Count']  = (int) ($song->played);
             $xml['dict']['Track Type']  = 'URL';
             $xml['dict']['Location']    = $song->play_url();
 

@@ -35,9 +35,7 @@ use Psr\Http\Message\ServerRequestInterface;
 
 abstract class AbstractCatalogAction implements ApplicationActionInterface
 {
-    public function __construct(private readonly UiInterface $ui)
-    {
-    }
+    public function __construct(private readonly UiInterface $ui) {}
 
     public function run(ServerRequestInterface $request, GuiGatekeeperInterface $gatekeeper): ?ResponseInterface
     {
@@ -68,7 +66,7 @@ abstract class AbstractCatalogAction implements ApplicationActionInterface
         // If only one catalog, check it is ready.
         if (count($catalogs) == 1) {
             // If not ready, display the data to make it ready / stop the action.
-            $catalog = Catalog::create_from_id((int)$catalogs[0]);
+            $catalog = Catalog::create_from_id((int) $catalogs[0]);
             if ($catalog !== null && !$catalog->isReady()) {
                 if (!isset($_REQUEST['perform_ready'])) {
                     $catalog->show_ready_process();

@@ -114,7 +114,7 @@ class UPnPDevice
         //debug_event('upnpdevice', 'sendRequestToDevice response: ' . $response, 5);
 
         $headers = [];
-        $tmp     = explode("\r\n\r\n", (string)$response);
+        $tmp     = explode("\r\n\r\n", (string) $response);
 
         foreach ($tmp as $key => $value) {
             if (str_starts_with($value, 'HTTP/1.1')) {
@@ -143,14 +143,14 @@ class UPnPDevice
         $response = curl_exec($curl);
         //!!debug_event('upnpdevice', 'parseDescriptionUrl response: ' . $response, 5);
 
-        $responseXML = simplexml_load_string((string)$response);
+        $responseXML = simplexml_load_string((string) $response);
         $services    = $responseXML->device->serviceList->service ?? [];
         foreach ($services as $service) {
             $serviceType                                      = $service->serviceType;
             $serviceTypeNames                                 = explode(":", $serviceType);
             $serviceTypeName                                  = $serviceTypeNames[3];
-            $this->_settings['controlURLs'][$serviceTypeName] = (string)$service->controlURL;
-            $this->_settings['eventURLs'][$serviceTypeName]   = (string)$service->eventSubURL;
+            $this->_settings['controlURLs'][$serviceTypeName] = (string) $service->controlURL;
+            $this->_settings['eventURLs'][$serviceTypeName]   = (string) $service->eventSubURL;
         }
 
         $urldata                 = parse_url($descriptionUrl);

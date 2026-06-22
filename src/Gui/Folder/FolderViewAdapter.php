@@ -59,8 +59,7 @@ final readonly class FolderViewAdapter implements FolderViewAdapterInterface
         private Folder $folder,
         private Podcast_Episode|Video|Song|Folder $object,
         private string $object_type,
-    ) {
-    }
+    ) {}
 
     public function canAppendNext(): bool
     {

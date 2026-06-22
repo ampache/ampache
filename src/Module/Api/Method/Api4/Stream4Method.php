@@ -70,14 +70,14 @@ final class Stream4Method
         if (!Api4::check_parameter($input, ['id', 'type'], self::ACTION)) {
             return false;
         }
-        $fileid = (int)$input['id'];
+        $fileid = (int) $input['id'];
         $type   = $input['type'];
 
-        $maxBitRate    = (int)($input['bitrate'] ?? 0);
+        $maxBitRate    = (int) ($input['bitrate'] ?? 0);
         $format        = $input['format'] ?? null; // mp3, flv or raw
         $transcode_to  = $format && $format != 'raw';
         $timeOffset    = $input['offset'] ?? null;
-        $contentLength = (int)($input['length'] ?? 0); // Force content-length guessing if transcode
+        $contentLength = (int) ($input['length'] ?? 0); // Force content-length guessing if transcode
 
         $params = '&client=api';
         if ($contentLength == 1) {

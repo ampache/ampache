@@ -56,8 +56,7 @@ final readonly class AlbumDiskViewAdapter implements AlbumDiskViewAdapterInterfa
         private GuiGatekeeperInterface $gatekeeper,
         private Browse $browse,
         private AlbumDisk $albumDisk,
-    ) {
-    }
+    ) {}
 
     public function canAppendNext(): bool
     {
@@ -169,7 +168,7 @@ final readonly class AlbumDiskViewAdapter implements AlbumDiskViewAdapterInterfa
 
     public function getArtistLink(): string
     {
-        return (string)$this->albumDisk->get_f_parent_link();
+        return (string) $this->albumDisk->get_f_parent_link();
     }
 
     public function getAutoplayNextButton(): string

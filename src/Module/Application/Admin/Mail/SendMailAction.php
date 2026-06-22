@@ -48,8 +48,7 @@ final readonly class SendMailAction implements ApplicationActionInterface
         private RequestParserInterface $requestParser,
         private UiInterface $ui,
         private ConfigContainerInterface $configContainer,
-    ) {
-    }
+    ) {}
 
     public function run(ServerRequestInterface $request, GuiGatekeeperInterface $gatekeeper): ?ResponseInterface
     {
@@ -84,7 +83,7 @@ final readonly class SendMailAction implements ApplicationActionInterface
             } else {
                 $user = Core::get_global('user');
                 if ($user instanceof User) {
-                    $mailer->setSender((string)$user->email, (string)$user->get_fullname());
+                    $mailer->setSender((string) $user->email, (string) $user->get_fullname());
                 } else {
                     $mailer->set_default_sender();
                 }

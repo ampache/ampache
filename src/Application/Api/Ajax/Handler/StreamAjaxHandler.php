@@ -37,8 +37,7 @@ final readonly class StreamAjaxHandler implements AjaxHandlerInterface
 {
     public function __construct(
         private RequestParserInterface $requestParser,
-    ) {
-    }
+    ) {}
 
     public function handle(User $user): void
     {
@@ -74,7 +73,7 @@ final readonly class StreamAjaxHandler implements AjaxHandlerInterface
                 $current = AmpConfig::get('play_type');
 
                 // Go ahead and update their preference
-                if (Preference::update('play_type', (int)(Core::get_global('user')?->getId()), $new)) {
+                if (Preference::update('play_type', (int) (Core::get_global('user')?->getId()), $new)) {
                     AmpConfig::set('play_type', $new, true);
                 }
 

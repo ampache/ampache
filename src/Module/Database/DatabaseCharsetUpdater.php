@@ -31,9 +31,7 @@ use PDOStatement;
 
 final readonly class DatabaseCharsetUpdater implements DatabaseCharsetUpdaterInterface
 {
-    public function __construct(private ConfigContainerInterface $configContainer)
-    {
-    }
+    public function __construct(private ConfigContainerInterface $configContainer) {}
 
     public function update(): void
     {

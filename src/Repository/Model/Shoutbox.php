@@ -64,8 +64,7 @@ class Shoutbox extends BaseModel
     public function __construct(
         private readonly ShoutRepositoryInterface $shoutRepository,
         private readonly UserRepositoryInterface $userRepository,
-    ) {
-    }
+    ) {}
 
     /**
      * Returns the creation-date

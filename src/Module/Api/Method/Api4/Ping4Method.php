@@ -62,7 +62,7 @@ final class Ping4Method
     public static function ping(array $input): void
     {
         $version      = (isset($input['version'])) ? $input['version'] : Api4::$version;
-        $data_version = (int)substr($version, 0, 1);
+        $data_version = (int) substr($version, 0, 1);
         $results      = [
             'server' => AmpConfig::get('version'),
             'version' => Api4::$version,
@@ -73,10 +73,10 @@ final class Ping4Method
         if (array_key_exists('auth', $input) && Session::exists(AccessTypeEnum::API->value, $input['auth'])) {
             Session::extend($input['auth'], AccessTypeEnum::API->value);
             // perpetual sessions do not expire
-            $perpetual      = (bool)AmpConfig::get('perpetual_api_session', false);
+            $perpetual      = (bool) AmpConfig::get('perpetual_api_session', false);
             $session_expire = ($perpetual)
                 ? 0
-                : date("c", time() + (int)AmpConfig::get('session_length', 3600) - 60);
+                : date("c", time() + (int) AmpConfig::get('session_length', 3600) - 60);
             if (in_array($data_version, Api::API_VERSIONS)) {
                 Session::write($input['auth'], $data_version, $perpetual);
             }
@@ -96,9 +96,9 @@ final class Ping4Method
             $countarray = [
                 'api' => Api4::$version,
                 'session_expire' => $session_expire,
-                'update' => date("c", (int)$row['update']),
-                'add' => date("c", (int)$row['add']),
-                'clean' => date("c", (int)$row['clean']),
+                'update' => date("c", (int) $row['update']),
+                'add' => date("c", (int) $row['add']),
+                'clean' => date("c", (int) $row['clean']),
                 'songs' => $counts['song'],
                 'albums' => $counts['album'],
                 'artists' => $counts['artist'],

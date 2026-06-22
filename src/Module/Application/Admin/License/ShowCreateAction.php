@@ -44,8 +44,7 @@ final readonly class ShowCreateAction implements ApplicationActionInterface
         private UiInterface $ui,
         private LicenseRepositoryInterface $licenseRepository,
         private ConfigContainerInterface $configContainer,
-    ) {
-    }
+    ) {}
 
     public function run(ServerRequestInterface $request, GuiGatekeeperInterface $gatekeeper): ?ResponseInterface
     {

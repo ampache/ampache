@@ -31,8 +31,7 @@ final readonly class UserFollowStateRenderer implements UserFollowStateRendererI
 {
     public function __construct(
         private UserFollowerRepositoryInterface $userFollowerRepository,
-    ) {
-    }
+    ) {}
 
     /**
      * Get html code to display the follow/unfollow link

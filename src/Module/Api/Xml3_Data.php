@@ -63,9 +63,7 @@ class Xml3_Data
      *
      * We don't use this, as its really a static class
      */
-    private function __construct()
-    {
-    }
+    private function __construct() {}
 
     /**
      * albums
@@ -91,7 +89,7 @@ class Xml3_Data
         Rating::build_cache('album', $albums);
 
         foreach ($albums as $album_id) {
-            $album = new Album((int)$album_id);
+            $album = new Album((int) $album_id);
             if ($album->isNew()) {
                 continue;
             }
@@ -149,7 +147,7 @@ class Xml3_Data
         Rating::build_cache('artist', $artists);
 
         foreach ($artists as $artist_id) {
-            $artist = new Artist((int)$artist_id);
+            $artist = new Artist((int) $artist_id);
             if ($artist->isNew()) {
                 continue;
             }
@@ -207,7 +205,7 @@ class Xml3_Data
             $song->fill_ext_info();
 
             //FIXME: This is duplicate code and so wrong, functions need to be improved
-            $tag         = new Tag((int)($song->get_tags()[0]['id'] ?? 0));
+            $tag         = new Tag((int) ($song->get_tags()[0]['id'] ?? 0));
             $tag_string  = self::_tags_string($song->get_tags());
             $rating      = new Rating($song->id, 'song');
             $user_rating = $rating->get_user_rating($user->getId());
@@ -276,7 +274,7 @@ class Xml3_Data
         foreach ($array as $key => $value) {
             $attribute = '';
             if (is_object($value)) {
-                $value = (array)$value;
+                $value = (array) $value;
             }
             // See if the key has attributes
             if (is_array($value) && isset($value['<attributes>'])) {
@@ -321,7 +319,7 @@ class Xml3_Data
 
         // Foreach the playlist ids
         foreach ($playlists as $playlist_id) {
-            $playlist = new Playlist((int)$playlist_id);
+            $playlist = new Playlist((int) $playlist_id);
             if ($playlist->isNew()) {
                 continue;
             }
@@ -346,7 +344,7 @@ class Xml3_Data
             return false;
         }
 
-        self::$limit = (strtolower((string)$limit) == "none") ? null : (int)$limit;
+        self::$limit = (strtolower((string) $limit) == "none") ? null : (int) $limit;
 
         return true;
     }
@@ -359,7 +357,7 @@ class Xml3_Data
      */
     public static function set_offset(int|string $offset): void
     {
-        self::$offset = (int)$offset;
+        self::$offset = (int) $offset;
     }
 
     /**
@@ -446,7 +444,7 @@ class Xml3_Data
 
         // Foreach the ids!
         foreach ($songs as $song_id) {
-            $song = new Song((int)$song_id);
+            $song = new Song((int) $song_id);
 
             // If the song id is invalid/null
             if ($song->isNew()) {
@@ -502,7 +500,7 @@ class Xml3_Data
         }
 
         foreach ($tags as $tag_id) {
-            $tag = new Tag((int)$tag_id);
+            $tag = new Tag((int) $tag_id);
             $string .= "<tag id=\"$tag_id\">\n\t<name><![CDATA[" . $tag->name . "]]></name>\n\t<albums>" . $tag->album . "</albums>\n\t<artists>" . $tag->artist . "</artists>\n\t<songs>" . $tag->song . "</songs>\n\t<videos>" . $tag->video . "</videos>\n\t<playlists>0</playlists>\n\t<stream>0</stream>\n</tag>\n";
         }
 
@@ -560,7 +558,7 @@ class Xml3_Data
     {
         $string = "<users>\n";
         foreach ($users as $user_id) {
-            $user = new User((int)$user_id);
+            $user = new User((int) $user_id);
             if ($user->isNew() === false) {
                 $string .= "\t<username><![CDATA[" . $user->username . "]]></username>\n";
             }
@@ -590,7 +588,7 @@ class Xml3_Data
         }
 
         foreach ($videos as $video_id) {
-            $video = new Video((int)$video_id);
+            $video = new Video((int) $video_id);
             if ($video->isNew()) {
                 continue;
             }

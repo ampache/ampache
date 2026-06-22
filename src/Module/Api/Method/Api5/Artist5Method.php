@@ -72,7 +72,7 @@ final class Artist5Method
         $include = [];
         if (array_key_exists('include', $input)) {
             if (!is_array($input['include'])) {
-                $input['include'] = explode(',', html_entity_decode((string)($input['include'])));
+                $input['include'] = explode(',', html_entity_decode((string) ($input['include'])));
             }
             foreach ($input['include'] as $item) {
                 if ($item === 'songs' || $item == '1') {

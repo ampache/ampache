@@ -48,8 +48,7 @@ final readonly class GrantAction implements ApplicationActionInterface
         private RequestParserInterface $requestParser,
         private UiInterface $ui,
         private ConfigContainerInterface $configContainer,
-    ) {
-    }
+    ) {}
 
     public function run(ServerRequestInterface $request, GuiGatekeeperInterface $gatekeeper): ?ResponseInterface
     {

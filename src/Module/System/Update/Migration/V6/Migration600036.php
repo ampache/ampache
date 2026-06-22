@@ -41,7 +41,7 @@ final class Migration600036 extends AbstractMigration
         $db_users  = Dba::read($sql);
         $user_list = [];
         while ($results = Dba::fetch_assoc($db_users)) {
-            $user_list[] = (int)$results['id'];
+            $user_list[] = (int) $results['id'];
         }
 
         // After the change recalculate their total Bandwidth Usage

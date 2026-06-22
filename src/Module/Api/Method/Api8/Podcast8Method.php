@@ -79,7 +79,7 @@ final class Podcast8Method
         }
 
         ob_end_clean();
-        $episodes = ($include == 'episodes' || (int)$include == 1);
+        $episodes = ($include == 'episodes' || (int) $include == 1);
         switch ($input['api_format']) {
             case 'json':
                 echo Json8_Data::podcasts([$object_id], $user, $input['auth'], $episodes, false);

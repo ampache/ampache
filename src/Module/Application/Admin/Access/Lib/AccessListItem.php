@@ -33,8 +33,7 @@ final readonly class AccessListItem implements AccessListItemInterface
     public function __construct(
         private ModelFactoryInterface $modelFactory,
         private Access $access,
-    ) {
-    }
+    ) {}
 
     /**
      * Returns a human readable representation of the end ip
@@ -54,7 +53,7 @@ final readonly class AccessListItem implements AccessListItemInterface
      */
     public function getId(): int
     {
-        return (int)$this->access->id;
+        return (int) $this->access->id;
     }
 
     /**

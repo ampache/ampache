@@ -43,8 +43,7 @@ final readonly class AccessRepository implements AccessRepositoryInterface
     public function __construct(
         private DatabaseConnectionInterface $connection,
         private ModelFactoryInterface $modelFactory,
-    ) {
-    }
+    ) {}
 
     /**
      * Creates a new acl item

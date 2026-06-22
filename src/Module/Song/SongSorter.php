@@ -51,8 +51,7 @@ final class SongSorter implements SongSorterInterface
         private readonly ConfigContainerInterface $configContainer,
         private readonly LoggerInterface $logger,
         private readonly ModelFactoryInterface $modelFactory,
-    ) {
-    }
+    ) {}
 
     public function sort(
         Interactor $interactor,
@@ -101,13 +100,13 @@ final class SongSorter implements SongSorterInterface
 
             /* HINT: Catalog Name */
             $interactor->info(
-                sprintf(T_('Starting Catalog: %s'), stripslashes((string)$this->catalog->name)),
+                sprintf(T_('Starting Catalog: %s'), stripslashes((string) $this->catalog->name)),
                 true
             );
 
             $stats  = Catalog::get_server_counts(0);
             $total  = $stats['song'];
-            $chunks = (int)floor($total / 10000) + 1;
+            $chunks = (int) floor($total / 10000) + 1;
             foreach (range(1, $chunks) as $chunk) {
                 /* HINT: Catalog Block: 4/120 */
                 $interactor->info(
@@ -280,7 +279,7 @@ final class SongSorter implements SongSorterInterface
         bool $test_mode,
         ?bool $windowsCompat = false,
     ): bool {
-        $old_dir   = dirname((string)$media->file);
+        $old_dir   = dirname((string) $media->file);
         $info      = pathinfo($fullname);
         $directory = ($info['dirname'] ?? '');
         $file      = $info['basename'];

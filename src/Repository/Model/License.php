@@ -40,9 +40,7 @@ class License extends BaseModel
     private ?string $name          = null;
     private ?int $order            = null; // Item order on the license page
 
-    public function __construct(private readonly LicenseRepositoryInterface $licenseRepository)
-    {
-    }
+    public function __construct(private readonly LicenseRepositoryInterface $licenseRepository) {}
 
     /**
      * Returns the description

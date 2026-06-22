@@ -46,8 +46,7 @@ final readonly class WriteConfigAction implements ApplicationActionInterface
         private ConfigContainerInterface $configContainer,
         private InstallationHelperInterface $installationHelper,
         private ResponseFactoryInterface $responseFactory,
-    ) {
-    }
+    ) {}
 
     public function run(ServerRequestInterface $request, GuiGatekeeperInterface $gatekeeper): ResponseInterface
     {

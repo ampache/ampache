@@ -81,8 +81,7 @@ final readonly class GuiFactory implements GuiFactoryInterface
         private UpdateInfoRepositoryInterface $updateInfoRepository,
         private UpdateHelperInterface $updateHelper,
         private UpdaterInterface $updater,
-    ) {
-    }
+    ) {}
 
     public function createAlbumDiskViewAdapter(
         GuiGatekeeperInterface $gatekeeper,

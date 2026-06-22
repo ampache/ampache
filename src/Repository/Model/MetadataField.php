@@ -47,9 +47,7 @@ class MetadataField
      */
     private bool $public = true;
 
-    public function __construct(private readonly MetadataFieldRepositoryInterface $metadataFieldRepository)
-    {
-    }
+    public function __construct(private readonly MetadataFieldRepositoryInterface $metadataFieldRepository) {}
 
     /**
      * Returns the items id

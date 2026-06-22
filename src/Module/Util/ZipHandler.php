@@ -43,8 +43,7 @@ final class ZipHandler implements ZipHandlerInterface
         private readonly ConfigContainerInterface $configContainer,
         private readonly StreamFactoryInterface $streamFactory,
         private readonly LoggerInterface $logger,
-    ) {
-    }
+    ) {}
 
     /**
      * Clean up the generated zip file
@@ -88,8 +87,8 @@ final class ZipHandler implements ZipHandlerInterface
     ): ResponseInterface {
         $art_name    = $this->configContainer->get(ConfigurationKeyEnum::ALBUM_ART_PREFERRED_FILENAME);
         $addart      = $this->configContainer->isFeatureEnabled(ConfigurationKeyEnum::ART_ZIP_ADD);
-        $archiveName = (string)preg_replace('/[^a-zA-Z0-9. -]/', '', $name);
-        $comment     = (string)$this->configContainer->get(ConfigurationKeyEnum::FILE_ZIP_COMMENT);
+        $archiveName = (string) preg_replace('/[^a-zA-Z0-9. -]/', '', $name);
+        $comment     = (string) $this->configContainer->get(ConfigurationKeyEnum::FILE_ZIP_COMMENT);
 
         $this->zipFile = Core::get_tmp_dir() . DIRECTORY_SEPARATOR . uniqid('ampache-zip-');
 

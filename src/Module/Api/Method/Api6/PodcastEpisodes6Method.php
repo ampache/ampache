@@ -98,7 +98,7 @@ final class PodcastEpisodes6Method implements MethodInterface
             return $response;
         }
 
-        $podcastId = (int)($input['filter'] ?? 0);
+        $podcastId = (int) ($input['filter'] ?? 0);
         $podcast   = $this->podcastRepository->findById($podcastId);
         if (isset($input['filter']) && $podcast === null) {
             throw new RequestParamMissingException(
@@ -112,13 +112,13 @@ final class PodcastEpisodes6Method implements MethodInterface
 
         $browse->set_type('podcast_episode');
 
-        $browse->set_sort_order(html_entity_decode((string)($input['sort'] ?? '')), ['pubdate','DESC']);
+        $browse->set_sort_order(html_entity_decode((string) ($input['sort'] ?? '')), ['pubdate','DESC']);
 
         if ($podcast !== null) {
             $browse->set_filter('podcast', $podcastId);
         }
 
-        $browse->set_conditions(html_entity_decode((string)($input['cond'] ?? '')));
+        $browse->set_conditions(html_entity_decode((string) ($input['cond'] ?? '')));
 
         $results = $browse->get_objects();
         if ($results === []) {

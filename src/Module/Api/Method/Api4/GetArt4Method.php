@@ -68,7 +68,7 @@ final class GetArt4Method
         }
         $object_id = (int) $input['id'];
         $type      = (string) $input['type'];
-        $size      = (string)($input['size'] ?? 'original');
+        $size      = (string) ($input['size'] ?? 'original');
 
         // confirm the correct data
         if (!in_array(strtolower($type), ['song', 'album', 'artist', 'playlist', 'search', 'podcast'])) {

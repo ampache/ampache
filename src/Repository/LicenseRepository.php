@@ -39,9 +39,7 @@ use PDO;
  */
 final class LicenseRepository extends BaseRepository implements LicenseRepositoryInterface
 {
-    public function __construct(protected DatabaseConnectionInterface $connection)
-    {
-    }
+    public function __construct(protected DatabaseConnectionInterface $connection) {}
 
     /**
      * Searches for the License by name and external link

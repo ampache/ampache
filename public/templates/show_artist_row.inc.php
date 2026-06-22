@@ -70,7 +70,7 @@ $web_path = AmpConfig::get_web_path();
     } ?>
     </div>
 </td>
-<?php $name = scrub_out((string)$libitem->get_fullname()); ?>
+<?php $name = scrub_out((string) $libitem->get_fullname()); ?>
 <td class="<?php echo $cel_cover; ?>">
     <?php $size = (isset($browse) && $browse->is_grid_view())
         ? ['width' => 150, 'height' => 150]

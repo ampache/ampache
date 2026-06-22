@@ -48,8 +48,7 @@ final readonly class ShowPlaylistAction implements ApplicationActionInterface
         private UiInterface $ui,
         private ConfigContainerInterface $configContainer,
         private ModelFactoryInterface $modelFactory,
-    ) {
-    }
+    ) {}
 
     public function run(ServerRequestInterface $request, GuiGatekeeperInterface $gatekeeper): ?ResponseInterface
     {
@@ -71,7 +70,7 @@ final readonly class ShowPlaylistAction implements ApplicationActionInterface
 
         $democratic->set_parent();
 
-        $browse = $this->modelFactory->createBrowse((int)$this->requestParser->getFromRequest('browse_id'));
+        $browse = $this->modelFactory->createBrowse((int) $this->requestParser->getFromRequest('browse_id'));
 
         require_once Ui::find_template('show_democratic.inc.php');
 

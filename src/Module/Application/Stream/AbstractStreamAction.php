@@ -48,8 +48,7 @@ abstract class AbstractStreamAction implements ApplicationActionInterface
     protected function __construct(
         private readonly LoggerInterface $logger,
         private readonly ConfigContainerInterface $configContainer,
-    ) {
-    }
+    ) {}
 
     /**
      * @throws ApplicationException
@@ -99,7 +98,7 @@ abstract class AbstractStreamAction implements ApplicationActionInterface
             }
 
             if ($user instanceof User && $user->getId() > -1) {
-                Session::update_username(Stream::get_session(), (string)$user->username);
+                Session::update_username(Stream::get_session(), (string) $user->username);
             }
 
             $playlist = new Stream_Playlist();

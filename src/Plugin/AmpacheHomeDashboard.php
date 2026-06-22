@@ -259,7 +259,7 @@ class AmpacheHomeDashboard extends AmpachePlugin implements PluginDisplayHomeInt
 
         $data = $user->prefs;
 
-        $this->maxitems = (int)($data['homedash_max_items']);
+        $this->maxitems = (int) ($data['homedash_max_items']);
         if ($this->maxitems < 1) {
             $this->maxitems = 12;
         }
@@ -269,7 +269,7 @@ class AmpacheHomeDashboard extends AmpachePlugin implements PluginDisplayHomeInt
         $this->recent   = ($data['homedash_recent'] == '1');
         $this->trending = ($data['homedash_trending'] == '1');
         $this->popular  = ($data['homedash_popular'] == '1');
-        $this->order    = (int)($data['homedash_order'] ?? 0);
+        $this->order    = (int) ($data['homedash_order'] ?? 0);
 
         return true;
     }
@@ -302,7 +302,7 @@ class AmpacheHomeDashboard extends AmpachePlugin implements PluginDisplayHomeInt
             return false;
         }
 
-        if ($from_version < (int)$this->version) {
+        if ($from_version < (int) $this->version) {
             Preference::insert('homedash_order', T_('Plugin CSS order'), '0', AccessLevelEnum::USER->value, 'integer', 'plugins', $this->name);
         }
 

@@ -48,8 +48,7 @@ final readonly class ShowDisabledAction implements ApplicationActionInterface
         private UiInterface $ui,
         private ConfigContainerInterface $configContainer,
         private SongRepositoryInterface $songRepository,
-    ) {
-    }
+    ) {}
 
     public function run(ServerRequestInterface $request, GuiGatekeeperInterface $gatekeeper): ?ResponseInterface
     {

@@ -66,7 +66,7 @@ final class JsonApiApplication implements ApiApplicationInterface
 
         $request = $this->serverRequestCreator->fromGlobals();
         $post    = (in_array(strtoupper($request->getMethod()), ['POST', 'PATCH', 'PUT', 'DELETE']))
-            ? (array)$request->getParsedBody()
+            ? (array) $request->getParsedBody()
             : [];
         $request = $request->withQueryParams(
             array_merge(

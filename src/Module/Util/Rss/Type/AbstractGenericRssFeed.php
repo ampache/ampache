@@ -41,7 +41,7 @@ abstract readonly class AbstractGenericRssFeed implements FeedTypeInterface
         $tal->set('LINK_RSS', AmpConfig::get_web_path() . ($_SERVER['SCRIPT_URI'] ?? '/rss.php') . '?' . $_SERVER['QUERY_STRING']);
         $tal->set(
             'PUBDATE',
-            ($this->getPubDate()) ? date('r', (int)$this->getPubDate()) : null
+            ($this->getPubDate()) ? date('r', (int) $this->getPubDate()) : null
         );
         $tal->set('IMAGE', $this->getImage());
     }

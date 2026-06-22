@@ -37,14 +37,13 @@ final readonly class LatestSongFeed extends AbstractGenericRssFeed
     public function __construct(
         private ?User $user,
         private ServerRequestInterface $request,
-    ) {
-    }
+    ) {}
 
     protected function getItems(): Generator
     {
         $queryParams = $this->request->getQueryParams();
-        $count       = (int)($queryParams['count'] ?? 10);
-        $offset      = (int)($queryParams['offset'] ?? 0);
+        $count       = (int) ($queryParams['count'] ?? 10);
+        $offset      = (int) ($queryParams['offset'] ?? 0);
         $ids         = Stats::get_newest('song', $count, $offset, 0, $this->user);
 
         foreach ($ids as $songid) {
@@ -62,7 +61,7 @@ final readonly class LatestSongFeed extends AbstractGenericRssFeed
                 'isPermaLink' => ($song->mbid !== null)
                     ? 'true'
                     : 'false',
-                'image' => (string)Art::url($song->id, 'song', null, 2),
+                'image' => (string) Art::url($song->id, 'song', null, 2),
             ];
         }
     }

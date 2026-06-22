@@ -69,14 +69,14 @@ final class PlaylistAddSong6Method
             return false;
         }
         ob_end_clean();
-        $playlist = new Playlist((int)$input['filter']);
-        $song     = (int)$input['song'];
+        $playlist = new Playlist((int) $input['filter']);
+        $song     = (int) $input['song'];
         if (!$playlist->has_collaborate($user)) {
             Api6::error('Require: 100', ErrorCodeEnum::FAILED_ACCESS_CHECK, self::ACTION, 'account', $input['api_format']);
 
             return false;
         }
-        if ((AmpConfig::get('unique_playlist') || (array_key_exists('check', $input) && (int)$input['check'] == 1)) && $playlist->has_item($song)) {
+        if ((AmpConfig::get('unique_playlist') || (array_key_exists('check', $input) && (int) $input['check'] == 1)) && $playlist->has_item($song)) {
             /* HINT: Requested object string/id/type ("album", "myusername", "some song title", 1298376) */
             Api6::error(sprintf('Bad Request: %s', $song), ErrorCodeEnum::BAD_REQUEST, self::ACTION, 'duplicate', $input['api_format']);
 

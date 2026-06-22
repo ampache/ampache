@@ -111,7 +111,7 @@ class Daap_Api
         self::_setHeaders();
 
         if (Core::get_server('REQUEST_METHOD') != 'OPTIONS') {
-            header("Content-length: " . strlen((string)$string));
+            header("Content-length: " . strlen((string) $string));
             echo $string;
         } else {
             header("Content-type: text/plain");
@@ -352,9 +352,9 @@ class Daap_Api
         } elseif (count($input) == 3) {
             // Stream
             if ($input[1] == 'items') {
-                $finfo = explode('.', (string)$input[2]);
+                $finfo = explode('.', (string) $input[2]);
                 if (count($finfo) == 2) {
-                    $object_id = (int)($finfo[0]);
+                    $object_id = (int) ($finfo[0]);
                     $type      = $finfo[1];
 
                     $params  = '';
@@ -377,7 +377,7 @@ class Daap_Api
         } elseif (count($input) == 4) {
             // Playlist
             if ($input[1] == 'containers' && $input[3] == 'items') {
-                $object_id = (int)($input[2]);
+                $object_id = (int) ($input[2]);
 
                 self::_check_session('daap.playlistsongs');
 
@@ -518,7 +518,7 @@ class Daap_Api
         echo $data;
         ob_flush();
 
-        return strlen((string)$data);
+        return strlen((string) $data);
     }
 
     /**
@@ -527,7 +527,7 @@ class Daap_Api
      */
     public static function output_header($curl, $header): int
     {
-        $rheader = trim((string)$header);
+        $rheader = trim((string) $header);
         $rhpart  = explode(':', $rheader);
         if (!empty($rheader) && count($rhpart) > 1) {
             if ($rhpart[0] != "Transfer-Encoding") {
@@ -535,7 +535,7 @@ class Daap_Api
             }
         }
 
-        return strlen((string)$header);
+        return strlen((string) $header);
     }
 
     /**
@@ -643,9 +643,9 @@ class Daap_Api
         if (!empty($pass)) {
             $headers = apache_request_headers();
             $auth    = $headers['Authorization'];
-            if (str_starts_with(strtolower((string)$auth), 'basic')) {
+            if (str_starts_with(strtolower((string) $auth), 'basic')) {
                 $decauth  = base64_decode(substr($auth, 6));
-                $userpass = explode(':', (string)$decauth);
+                $userpass = explode(':', (string) $decauth);
                 if (count($userpass) == 2) {
                     if ($userpass[1] == $pass) {
                         $authenticated = true;
@@ -756,7 +756,7 @@ class Daap_Api
                     break;
             }
 
-            return $code . pack("N", strlen((string)$value)) . $value;
+            return $code . pack("N", strlen((string) $value)) . $value;
         }
         debug_event(self::class, 'Unknown DAAP tag `' . $tag . '`.', 3);
 
@@ -829,7 +829,7 @@ class Daap_Api
                         $output .= self::_tlv($tag, $song->composer);
                         break;
                     case 'daap.songbitrate':
-                        $output .= self::_tlv($tag, (int)($song->bitrate / 1024));
+                        $output .= self::_tlv($tag, (int) ($song->bitrate / 1024));
                         break;
                     case 'daap.songcomment':
                         $output .= self::_tlv($tag, $song->comment);
@@ -881,7 +881,7 @@ class Daap_Api
 
     private static function _tlv_string($tag, $value): string
     {
-        return $tag . pack("N", strlen((string)$value)) . $value;
+        return $tag . pack("N", strlen((string) $value)) . $value;
     }
 
     private static function _tlv_version($tag, $value): string

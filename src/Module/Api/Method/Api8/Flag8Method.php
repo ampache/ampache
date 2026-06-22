@@ -81,7 +81,7 @@ final class Flag8Method
         $type      = (string) $input['type'];
         $object_id = (int) $input['filter'];
         $flag      = make_bool($input['flag']);
-        $date      = (int)($input['date'] ?? time());
+        $date      = (int) ($input['date'] ?? time());
 
         // confirm the correct data
         if (!Userflag::is_valid(strtolower($type))) {
@@ -96,7 +96,7 @@ final class Flag8Method
             $object_id === 0
         ) {
             $type      = 'search';
-            $object_id = (int) str_replace('smart_', '', (string)$input['filter']);
+            $object_id = (int) str_replace('smart_', '', (string) $input['filter']);
         }
 
         $className = ObjectTypeToClassNameMapper::map($type);

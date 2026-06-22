@@ -72,10 +72,10 @@ final class Playlists4Method
      */
     public static function playlists(array $input, User $user): void
     {
-        $hide       = (array_key_exists('hide_search', $input) && (int)$input['hide_search'] == 1) || AmpConfig::get('hide_search', false);
+        $hide       = (array_key_exists('hide_search', $input) && (int) $input['hide_search'] == 1) || AmpConfig::get('hide_search', false);
         $show_dupes = (array_key_exists('show_dupes', $input))
             ? make_bool($input['show_dupes'])
-            : (bool)Preference::get_by_user($user->getId(), 'api_hide_dupe_searches') === false;
+            : (bool) Preference::get_by_user($user->getId(), 'api_hide_dupe_searches') === false;
 
         $browse = Api::getBrowse($user);
         if ($hide === false) {
@@ -84,9 +84,9 @@ final class Playlists4Method
             $browse->set_type('playlist');
         }
 
-        $browse->set_sort_order(html_entity_decode((string)($input['sort'] ?? '')), ['name', 'ASC']);
+        $browse->set_sort_order(html_entity_decode((string) ($input['sort'] ?? '')), ['name', 'ASC']);
 
-        $method = (array_key_exists('exact', $input) && (int)$input['exact'] == 1) ? 'exact_match' : 'alpha_match';
+        $method = (array_key_exists('exact', $input) && (int) $input['exact'] == 1) ? 'exact_match' : 'alpha_match';
         $browse->set_api_filter($method, $input['filter'] ?? '');
         $browse->set_filter('playlist_open', $user->getId());
 
@@ -97,19 +97,19 @@ final class Playlists4Method
             $browse->set_filter('hide_dupe_smartlist', 1);
         }
 
-        $browse->set_conditions(html_entity_decode((string)($input['cond'] ?? '')));
+        $browse->set_conditions(html_entity_decode((string) ($input['cond'] ?? '')));
 
         $results = $browse->get_objects();
 
         ob_end_clean();
         switch ($input['api_format']) {
             case 'json':
-                Json4_Data::set_offset((int)($input['offset'] ?? 0));
+                Json4_Data::set_offset((int) ($input['offset'] ?? 0));
                 Json4_Data::set_limit($input['limit'] ?? 0);
                 echo Json4_Data::playlists($results, $user, $input['auth']);
                 break;
             default:
-                Xml4_Data::set_offset((int)($input['offset'] ?? 0));
+                Xml4_Data::set_offset((int) ($input['offset'] ?? 0));
                 Xml4_Data::set_limit($input['limit'] ?? 0);
                 echo Xml4_Data::playlists($results, $user, $input['auth']);
         }

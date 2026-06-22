@@ -270,7 +270,7 @@ class AmpacheVlc extends localplay_controller
     public function get_active_instance(): ?int
     {
         if (AmpConfig::get(self::ACTIVE_PREF)) {
-            return (int)AmpConfig::get(self::ACTIVE_PREF);
+            return (int) AmpConfig::get(self::ACTIVE_PREF);
         }
 
         return null;
@@ -306,13 +306,13 @@ class AmpacheVlc extends localplay_controller
 
         if ($row = Dba::fetch_assoc($db_results)) {
             return [
-                'id' => (int)$row['id'],
+                'id' => (int) $row['id'],
                 'name' => $row['name'],
-                'owner' => (int)$row['owner'],
+                'owner' => (int) $row['owner'],
                 'host' => $row['host'],
-                'port' => (int)$row['port'],
+                'port' => (int) $row['port'],
                 'password' => $row['password'],
-                'access' => (int)$row['access'],
+                'access' => (int) $row['access'],
             ];
         }
 
@@ -544,7 +544,7 @@ class AmpacheVlc extends localplay_controller
         $array['track_album']  = '';
         $array['state']        = $state ?? '';
         $array['volume']       = ($arrayholder['root']['volume']['value'] > 0)
-            ? (int)(((int)($arrayholder['root']['volume']['value']) / 2.56))
+            ? (int) (((int) ($arrayholder['root']['volume']['value']) / 2.56))
             : 0;
         $array['repeat'] = $arrayholder['root']['repeat']['value'];
         $array['random'] = $arrayholder['root']['random']['value'];
@@ -568,7 +568,7 @@ class AmpacheVlc extends localplay_controller
 
         // api version 3
         if (isset($arrayholder['root']['currentplid'])) {
-            $numtrack = (int)($arrayholder['root']['currentplid']['value'] ?? 0);
+            $numtrack = (int) ($arrayholder['root']['currentplid']['value'] ?? 0);
 
             foreach ($listtracks as $track) {
                 if ($track['vlid'] == $numtrack) {

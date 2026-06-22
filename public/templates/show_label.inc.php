@@ -50,9 +50,9 @@ $browse->set_use_filters(false);
 $limit_threshold = AmpConfig::get('stats_threshold', 7);
 $argument        = false;
 if (array_key_exists('argument', $_REQUEST)) {
-    $argument = (string)scrub_in((string)$_REQUEST['argument']);
+    $argument = (string) scrub_in((string) $_REQUEST['argument']);
 }
-$f_name     = (string)$label->get_fullname();
+$f_name     = (string) $label->get_fullname();
 $url_f_name = rawurlencode($f_name);
 Ui::show_box_top($f_name, 'info-box');
 if ($label->website) {

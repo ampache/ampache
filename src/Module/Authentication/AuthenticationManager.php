@@ -36,8 +36,7 @@ final class AuthenticationManager implements AuthenticationManagerInterface
         private readonly ConfigContainerInterface $configContainer,
         /** @var AuthenticatorInterface[] $authenticatorList */
         private array $authenticatorList,
-    ) {
-    }
+    ) {}
 
     /**
      * @return array{
@@ -86,7 +85,7 @@ final class AuthenticationManager implements AuthenticationManagerInterface
             : $key;
 
         // Nuke the cookie before all else
-        Session::destroy((string)$key);
+        Session::destroy((string) $key);
         if ((!$relogin) && $this->configContainer->get('logout_redirect')) {
             $target = $this->configContainer->get('logout_redirect');
         } else {

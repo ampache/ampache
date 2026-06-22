@@ -118,7 +118,7 @@ class AmpacheYourls extends AmpachePlugin implements PluginShortenerInterface
             return false;
         }
 
-        $this->yourls_use_idn = ((int)($data['yourls_use_idn']) === 1);
+        $this->yourls_use_idn = ((int) ($data['yourls_use_idn']) === 1);
 
         return true;
     }
@@ -149,7 +149,7 @@ class AmpacheYourls extends AmpachePlugin implements PluginShortenerInterface
                     is_array($purl) &&
                     array_key_exists('host', $purl)
                 ) {
-                    $purl['host'] = (string)idn_to_utf8($purl['host']);
+                    $purl['host'] = (string) idn_to_utf8($purl['host']);
                     $shorturl     = http_build_url($purl);
                 }
             }

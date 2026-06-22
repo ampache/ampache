@@ -42,8 +42,7 @@ final readonly class LabelDeleter implements LabelDeleterInterface
         private UserActivityRepositoryInterface $useractivityRepository,
         private ArtCleanupInterface $artCleanup,
         private FolderRepositoryInterface $folderRepository,
-    ) {
-    }
+    ) {}
 
     public function delete(
         Label $label,

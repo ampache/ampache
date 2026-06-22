@@ -97,7 +97,7 @@ Ui::show_box_top(scrub_out($client->get_fullname())); ?>
     <dd>
         <?php echo scrub_out($client->get_fullname()); ?>
         <?php if (Access::check(AccessTypeEnum::INTERFACE, AccessLevelEnum::USER) && AmpConfig::get('sociable')) { ?>
-            <a id="<?php echo 'reply_pvmsg_' . $client->id; ?>" href="<?php echo $web_path; ?>/pvmsg.php?action=show_add_message&to_user=<?php echo urlencode((string)$client->username); ?>">
+            <a id="<?php echo 'reply_pvmsg_' . $client->id; ?>" href="<?php echo $web_path; ?>/pvmsg.php?action=show_add_message&to_user=<?php echo urlencode((string) $client->username); ?>">
                 <?php echo Ui::get_material_symbol('mail', T_('Send private message')); ?>
             </a>
         <?php } ?>
@@ -155,7 +155,7 @@ Ui::show_box_top(scrub_out($client->get_fullname())); ?>
     </div>
     <div id="tabs_content">
         <div id="recently_played" class="tab_content" style="display: block;">
-        <?php $current_list = Tmp_Playlist::get_from_username((string)$client->username);
+        <?php $current_list = Tmp_Playlist::get_from_username((string) $client->username);
 if ($current_list) {
     $tmp_playlist = new Tmp_Playlist($current_list);
     $object_ids   = $tmp_playlist->get_items();

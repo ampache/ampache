@@ -86,9 +86,7 @@ class CliHandler extends Handler
     /**
      * CliHandler constructor.
      */
-    public function __construct(protected Catalog $handler)
-    {
-    }
+    public function __construct(protected Catalog $handler) {}
 
     /**
      * @param resource $handle

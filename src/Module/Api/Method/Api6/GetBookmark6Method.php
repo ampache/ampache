@@ -71,7 +71,7 @@ final class GetBookmark6Method
         if (!Api6::check_parameter($input, ['filter', 'type'], self::ACTION)) {
             return false;
         }
-        $object_id = (int)$input['filter'];
+        $object_id = (int) $input['filter'];
         $type      = $input['type'];
         $include   = make_bool($input['include'] ?? false);
         $all       = make_bool($input['all'] ?? false);

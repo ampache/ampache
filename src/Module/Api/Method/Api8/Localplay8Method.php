@@ -92,7 +92,7 @@ final class Localplay8Method
         switch ($command) {
             case 'add':
                 // for add commands get the object details
-                $object_id = (int)($input['filter'] ?? $input['oid'] ?? 0);
+                $object_id = (int) ($input['filter'] ?? $input['oid'] ?? 0);
                 $type      = LibraryItemEnum::tryFrom((string) strtolower($input['type'] ?? '')) ?? LibraryItemEnum::SONG;
 
                 if (!AmpConfig::get('allow_video') && $type === LibraryItemEnum::VIDEO) {
@@ -101,9 +101,9 @@ final class Localplay8Method
                     return false;
                 }
 
-                $clear = (int)($input['clear'] ?? 0);
+                $clear = (int) ($input['clear'] ?? 0);
                 if ($localplay->type === 'mpd') {
-                    $localplay->set_block_clear(make_bool((string)$clear));
+                    $localplay->set_block_clear(make_bool((string) $clear));
                 }
 
                 // clear before the add
@@ -125,7 +125,7 @@ final class Localplay8Method
                     return false;
                 }
                 // localplay_songs 'track' starts at 1 but localplay starts at 0 behind the scenes
-                $result = $localplay->skip((int)($input['track'] ?? 1) - 1);
+                $result = $localplay->skip((int) ($input['track'] ?? 1) - 1);
                 break;
             case 'next':
                 $result = $localplay->next();
@@ -157,8 +157,8 @@ final class Localplay8Method
             case 'status':
                 $status = $localplay->status();
                 if (is_array($status) && $input['api_format'] == 'json') {
-                    $status['repeat'] = (bool)$status['repeat'];
-                    $status['random'] = (bool)$status['random'];
+                    $status['repeat'] = (bool) $status['repeat'];
+                    $status['random'] = (bool) $status['random'];
                 }
                 break;
             default:

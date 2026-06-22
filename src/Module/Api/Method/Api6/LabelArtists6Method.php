@@ -76,7 +76,7 @@ final class LabelArtists6Method
             return false;
         }
 
-        $label = self::getLabelRepository()->findById((int)$input['filter']);
+        $label = self::getLabelRepository()->findById((int) $input['filter']);
         if ($label === null) {
             Api6::empty('artist', $input['api_format']);
 
@@ -86,11 +86,11 @@ final class LabelArtists6Method
         $browse = Api6::getBrowse($user);
         $browse->set_type('artist');
 
-        $browse->set_sort_order(html_entity_decode((string)($input['sort'] ?? '')), ['name', 'ASC']);
+        $browse->set_sort_order(html_entity_decode((string) ($input['sort'] ?? '')), ['name', 'ASC']);
 
         $browse->set_filter('label', $label->getId());
 
-        $browse->set_conditions(html_entity_decode((string)($input['cond'] ?? '')));
+        $browse->set_conditions(html_entity_decode((string) ($input['cond'] ?? '')));
 
         $results = $browse->get_objects();
         if (empty($results)) {
@@ -102,7 +102,7 @@ final class LabelArtists6Method
         $include = [];
         if (array_key_exists('include', $input)) {
             if (!is_array($input['include'])) {
-                $input['include'] = explode(',', html_entity_decode((string)($input['include'])));
+                $input['include'] = explode(',', html_entity_decode((string) ($input['include'])));
             }
             foreach ($input['include'] as $item) {
                 if ($item === 'songs' || $item == '1') {
@@ -117,13 +117,13 @@ final class LabelArtists6Method
         ob_end_clean();
         switch ($input['api_format']) {
             case 'json':
-                Json6_Data::set_offset((int)($input['offset'] ?? 0));
+                Json6_Data::set_offset((int) ($input['offset'] ?? 0));
                 Json6_Data::set_limit($input['limit'] ?? 0);
                 Json6_Data::set_count($browse->get_total());
                 echo Json6_Data::artists($results, $include, $user, $input['auth']);
                 break;
             default:
-                Xml6_Data::set_offset((int)($input['offset'] ?? 0));
+                Xml6_Data::set_offset((int) ($input['offset'] ?? 0));
                 Xml6_Data::set_limit($input['limit'] ?? 0);
                 Xml6_Data::set_count($browse->get_total());
                 echo Xml6_Data::artists($results, $include, $user, $input['auth']);

@@ -40,8 +40,7 @@ final readonly class UserStateToggler implements UserStateTogglerInterface
         private ConfigContainerInterface $configContainer,
         private UtilityFactoryInterface $utilityFactory,
         private UserRepositoryInterface $userRepository,
-    ) {
-    }
+    ) {}
 
     public function disable(User $user): bool
     {

@@ -105,7 +105,7 @@ class Core
             return null;
         }
 
-        return bin2hex((string)$buffer);
+        return bin2hex((string) $buffer);
     }
 
     /**
@@ -113,7 +113,7 @@ class Core
      */
     public static function generate_random_key(): string
     {
-        return md5(uniqid((string)random_int(0, mt_getrandmax()), true));
+        return md5(uniqid((string) random_int(0, mt_getrandmax()), true));
     }
 
     /**
@@ -147,21 +147,21 @@ class Core
             }
 
             $offset = PHP_INT_MAX - 1;
-            $size   = (float)$offset;
+            $size   = (float) $offset;
             if (fseek($filepointer, $offset) === 0) {
                 return 0;
             }
 
             $chunksize = 8192;
             while (!feof($filepointer)) {
-                $size += strlen((string)fread($filepointer, $chunksize));
+                $size += strlen((string) fread($filepointer, $chunksize));
             }
         } elseif ($size < 0) {
             // Handle overflowed integer...
             $size = sprintf("%u", $size);
         }
 
-        return (int)$size;
+        return (int) $size;
     }
 
     /**
@@ -243,7 +243,7 @@ class Core
     public static function get_tmp_dir(): string
     {
         if (AmpConfig::get('tmp_dir_path')) {
-            return rtrim((string)AmpConfig::get('tmp_dir_path'), DIRECTORY_SEPARATOR);
+            return rtrim((string) AmpConfig::get('tmp_dir_path'), DIRECTORY_SEPARATOR);
         }
 
         if (function_exists('sys_get_temp_dir')) {

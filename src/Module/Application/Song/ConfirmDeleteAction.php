@@ -48,8 +48,7 @@ final readonly class ConfirmDeleteAction implements ApplicationActionInterface
         private UiInterface $ui,
         private ModelFactoryInterface $modelFactory,
         private SongDeleterInterface $songDeleter,
-    ) {
-    }
+    ) {}
 
     public function run(
         ServerRequestInterface $request,
@@ -59,7 +58,7 @@ final readonly class ConfirmDeleteAction implements ApplicationActionInterface
             return null;
         }
 
-        $song_id = (int)$this->requestParser->getFromRequest('song_id');
+        $song_id = (int) $this->requestParser->getFromRequest('song_id');
         $song    = $this->modelFactory->createSong($song_id);
         if (!Catalog::can_remove($song)) {
             throw new AccessDeniedException(

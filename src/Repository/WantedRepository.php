@@ -40,9 +40,7 @@ use Ampache\Repository\Model\Wanted;
  */
 final readonly class WantedRepository implements WantedRepositoryInterface
 {
-    public function __construct(private DatabaseConnectionInterface $connection)
-    {
-    }
+    public function __construct(private DatabaseConnectionInterface $connection) {}
 
     /**
      * This cleans out unused wanted items

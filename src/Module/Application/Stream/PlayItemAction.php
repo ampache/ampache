@@ -58,7 +58,7 @@ final class PlayItemAction extends AbstractStreamAction
 
         $object_type = $_REQUEST['object_type'] ?? '';
         if ($object_type === 'browse') {
-            $browse     = new Browse((int)Core::get_get('object_id'));
+            $browse     = new Browse((int) Core::get_get('object_id'));
             $objectIds  = [];
             $objectType = null;
             $saved      = $browse->get_saved();
@@ -119,7 +119,7 @@ final class PlayItemAction extends AbstractStreamAction
                     in_array($objectType, [LibraryItemEnum::PLAYLIST, LibraryItemEnum::LIVE_STREAM])
                 ) {
                     $client = $_REQUEST['client'] ?? substr(Core::get_server('HTTP_USER_AGENT'), 0, 254);
-                    Stats::insert($objectType->value, (int)$object_id, $user->getId(), $client, [], 'stream', time());
+                    Stats::insert($objectType->value, (int) $object_id, $user->getId(), $client, [], 'stream', time());
                 }
             }
         }

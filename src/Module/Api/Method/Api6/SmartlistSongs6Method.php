@@ -67,8 +67,8 @@ final class SmartlistSongs6Method
             return false;
         }
 
-        $object_id = (string)$input['filter'];
-        $random    = (array_key_exists('random', $input) && (int)$input['random'] == 1);
+        $object_id = (string) $input['filter'];
+        $random    = (array_key_exists('random', $input) && (int) $input['random'] == 1);
         $smartlist = new Search((int) str_replace('smart_', '', $object_id), 'song', $user);
 
         if ($smartlist->isNew()) {
@@ -105,13 +105,13 @@ final class SmartlistSongs6Method
         ob_end_clean();
         switch ($input['api_format']) {
             case 'json':
-                Json6_Data::set_offset((int)($input['offset'] ?? 0));
+                Json6_Data::set_offset((int) ($input['offset'] ?? 0));
                 Json6_Data::set_limit($input['limit'] ?? 0);
                 Json6_Data::set_count(count($results));
                 echo Json6_Data::songs($results, $user, $input['auth']);
                 break;
             default:
-                Xml6_Data::set_offset((int)($input['offset'] ?? 0));
+                Xml6_Data::set_offset((int) ($input['offset'] ?? 0));
                 Xml6_Data::set_limit($input['limit'] ?? 0);
                 Xml6_Data::set_count(count($results));
                 echo Xml6_Data::songs($results, $user, $input['auth']);

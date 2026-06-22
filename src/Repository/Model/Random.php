@@ -56,7 +56,7 @@ class Random
     public static function advanced(string $type, array $data): array
     {
         /* Figure out our object limit */
-        $limit     = (int)($data['limit'] ?? -1);
+        $limit     = (int) ($data['limit'] ?? -1);
         $limit_sql = "LIMIT " . Dba::escape($limit);
 
         /* If they've passed -1 as limit then get everything */
@@ -99,7 +99,7 @@ class Random
         $db_results = Dba::read($sql);
         $results    = Dba::fetch_assoc($db_results);
 
-        return (int)$results['id'];
+        return (int) $results['id'];
     }
 
     /**
@@ -144,7 +144,7 @@ class Random
         $db_results = Dba::read($sql);
 
         while ($row = Dba::fetch_assoc($db_results)) {
-            $results[] = (int)$row['id'];
+            $results[] = (int) $row['id'];
         }
 
         return $results;
@@ -182,7 +182,7 @@ class Random
         //debug_event(self::class, "get_default " . $sql, 5);
 
         while ($row = Dba::fetch_assoc($db_results)) {
-            $results[] = (int)$row['id'];
+            $results[] = (int) $row['id'];
         }
 
         return $results;
@@ -195,7 +195,7 @@ class Random
     public static function get_play_url(string $object_type, int $object_id): string
     {
         $user = Core::get_global('user');
-        $link = Stream::get_base_url(false, $user?->streamtoken) . 'uid=' . scrub_out((string)($user->id ?? '')) . '&random=1&random_type=' . scrub_out($object_type) . '&random_id=' . scrub_out((string)$object_id);
+        $link = Stream::get_base_url(false, $user?->streamtoken) . 'uid=' . scrub_out((string) ($user->id ?? '')) . '&random=1&random_type=' . scrub_out($object_type) . '&random_id=' . scrub_out((string) $object_id);
 
         return Stream_Url::format($link);
     }
@@ -241,7 +241,7 @@ class Random
             )
         ) {
             foreach ($search->get_random_items('1') as $songs) {
-                $results[] = (int)$songs['object_id'];
+                $results[] = (int) $songs['object_id'];
             }
         }
 
@@ -263,7 +263,7 @@ class Random
         $song = array_pop($song_ids);
         //debug_event(self::class, "get_single_song:" . $song, 5);
 
-        return (int)$song;
+        return (int) $song;
     }
 
     /**
@@ -310,7 +310,7 @@ class Random
         $db_results = Dba::read($sql);
         $results    = Dba::fetch_assoc($db_results);
 
-        return (int)$results['id'];
+        return (int) $results['id'];
     }
 
     /**
@@ -350,7 +350,7 @@ class Random
                 }
 
                 $size_total += $new_size;
-                $results[] = (int)$row['id'];
+                $results[] = (int) $row['id'];
 
                 // If we are within 4mb of target then jump ship
                 if (($data['size_limit'] - floor($size_total)) < 4) {
@@ -374,7 +374,7 @@ class Random
                 }
 
                 $time_total += $new_time;
-                $results[] = (int)$row['id'];
+                $results[] = (int) $row['id'];
 
                 // If there are less then 2 min of free space return
                 if (($data['length'] - $time_total) < 2) {
@@ -383,7 +383,7 @@ class Random
             } // if length does matter
 
             if (!$size_limit && !$length) {
-                $results[] = (int)$row['id'];
+                $results[] = (int) $row['id'];
             }
         }
 

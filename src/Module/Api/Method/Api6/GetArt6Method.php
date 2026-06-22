@@ -94,8 +94,8 @@ final class GetArt6Method
         }
 
         $object_id = (int) $input['id'];
-        $size      = (string)($input['size'] ?? 'original');
-        $fallback  = (array_key_exists('fallback', $input) && (int)$input['fallback'] == 1);
+        $size      = (string) ($input['size'] ?? 'original');
+        $fallback  = (array_key_exists('fallback', $input) && (int) $input['fallback'] == 1);
 
         // confirm the correct data
         if (!in_array(strtolower($type), ['song', 'artist', 'album', 'label', 'live_stream', 'playlist', 'podcast', 'search', 'smartlist', 'user', 'video'])) {
@@ -113,7 +113,7 @@ final class GetArt6Method
                 $art  = new Art($song->album, 'album');
             }
         } elseif ($type == 'search' || $type == 'smartlist') {
-            $object_id = (int) str_replace('smart_', '', (string)$object_id);
+            $object_id = (int) str_replace('smart_', '', (string) $object_id);
             $smartlist = new Search($object_id, 'song', $user);
             $listitems = $smartlist->get_items();
             $item      = $listitems[array_rand($listitems)];

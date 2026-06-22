@@ -40,8 +40,7 @@ final class TalView implements TalViewInterface
         private readonly TalFactoryInterface $talFactory,
         private readonly ConfigContainerInterface $configContainer,
         private readonly GuiFactoryInterface $guiFactory,
-    ) {
-    }
+    ) {}
 
     public function render(): string
     {

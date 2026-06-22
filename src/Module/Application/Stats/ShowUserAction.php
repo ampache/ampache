@@ -52,8 +52,7 @@ final readonly class ShowUserAction implements ApplicationActionInterface
         private UserFollowerRepositoryInterface $userFollowerRepository,
         private UserFollowStateRendererInterface $userFollowStateRenderer,
         private LibraryItemLoaderInterface $libraryItemLoader,
-    ) {
-    }
+    ) {}
 
     public function run(ServerRequestInterface $request, GuiGatekeeperInterface $gatekeeper): ?ResponseInterface
     {
@@ -64,7 +63,7 @@ final readonly class ShowUserAction implements ApplicationActionInterface
         // Temporary workaround to avoid sorting on custom base requests
         define('NO_BROWSE_SORTING', true);
 
-        $userId = (int)($request->getQueryParams()['user_id'] ?? 0);
+        $userId = (int) ($request->getQueryParams()['user_id'] ?? 0);
         $client = $this->modelFactory->createUser($userId);
         if ($client->isNew()) {
             $this->logger->warning(

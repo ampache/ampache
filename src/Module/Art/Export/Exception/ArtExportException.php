@@ -27,6 +27,4 @@ namespace Ampache\Module\Art\Export\Exception;
 
 use Exception;
 
-final class ArtExportException extends Exception
-{
-}
+final class ArtExportException extends Exception {}

@@ -103,7 +103,7 @@ class AmpacheDiscogs extends AmpachePlugin implements PluginGatherArtsInterface,
                 if (isset($artists['results']) && count($artists['results']) > 0) {
                     foreach ($artists['results'] as $result) {
                         if ($result['title'] === $media_info['artist']) {
-                            $artist = $this->discogs->get_artist((int)$result['id']);
+                            $artist = $this->discogs->get_artist((int) $result['id']);
                             if (isset($artist['images']) && count($artist['images']) > 0) {
                                 $results['art'] = $artist['images'][0]['uri'];
                             }
@@ -187,8 +187,8 @@ class AmpacheDiscogs extends AmpachePlugin implements PluginGatherArtsInterface,
                          * } $album
                          */
                         $album = (($albums['results'][0]['master_id'] ?? 0) > 0)
-                            ? $this->discogs->get_album((int)$albums['results'][0]['master_id'])
-                            : $this->discogs->get_album((int)$albums['results'][0]['id'], 'releases');
+                            ? $this->discogs->get_album((int) $albums['results'][0]['master_id'])
+                            : $this->discogs->get_album((int) $albums['results'][0]['id'], 'releases');
                     }
 
                     // fallback to the initial search if we don't have a master

@@ -105,7 +105,7 @@ final class ShareCreate6Method
             return false;
         }
         // searches are playlists but not in the database
-        if (($object_type === 'playlist' || $object_type === 'smartlist') && ((int)$object_id) === 0) {
+        if (($object_type === 'playlist' || $object_type === 'smartlist') && ((int) $object_id) === 0) {
             $object_id   = str_replace('smart_', '', (string) $object_id);
             $object_type = 'search';
         }
@@ -119,7 +119,7 @@ final class ShareCreate6Method
             Api6::error(sprintf('Bad Request: %s', $object_type), ErrorCodeEnum::BAD_REQUEST, self::ACTION, 'type', $input['api_format']);
         } else {
             /** @var Album|Artist|Live_stream|Playlist|Podcast|Podcast_episode|Search|Song|Video $item */
-            $item = new $className((int)$object_id);
+            $item = new $className((int) $object_id);
             if ($item->isNew()) {
                 /* HINT: Requested object string/id/type ("album", "myusername", "some song title", 1298376) */
                 Api6::error(sprintf('Not Found: %s', $object_id), ErrorCodeEnum::NOT_FOUND, self::ACTION, 'filter', $input['api_format']);

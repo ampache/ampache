@@ -282,7 +282,7 @@ class AmpacheRatingMatch extends AmpachePlugin implements PluginSaveMediaplayInt
                 $song = new Song($rating->id);
 
                 $rAlbum       = new Rating($song->album, 'album');
-                $rating_album = (int)$rAlbum->get_user_rating($this->user->id);
+                $rating_album = (int) $rAlbum->get_user_rating($this->user->id);
                 if ($rating_album < $new_rating) {
                     $rAlbum->set_rating($new_rating, $this->user->id);
                 }
@@ -290,7 +290,7 @@ class AmpacheRatingMatch extends AmpachePlugin implements PluginSaveMediaplayInt
                 // rate all the song artists (If there are more than one)
                 foreach (Song::get_parent_array($song->id) as $artist_id) {
                     $rArtist       = new Rating($artist_id, 'artist');
-                    $rating_artist = (int)$rArtist->get_user_rating($this->user->id);
+                    $rating_artist = (int) $rArtist->get_user_rating($this->user->id);
                     if ($rating_artist < $new_rating) {
                         $rArtist->set_rating($new_rating, $this->user->id);
                     }
@@ -310,7 +310,7 @@ class AmpacheRatingMatch extends AmpachePlugin implements PluginSaveMediaplayInt
                 // rate the album when the disk count is 1
                 if ($album_disk->disk_count === 1) {
                     $rAlbum       = new Rating($album_disk->album_id, 'album');
-                    $rating_album = (int)$rAlbum->get_user_rating($this->user->id);
+                    $rating_album = (int) $rAlbum->get_user_rating($this->user->id);
                     if ($rating_album < $new_rating) {
                         $rAlbum->set_rating($new_rating, $this->user->id);
                     }
@@ -320,7 +320,7 @@ class AmpacheRatingMatch extends AmpachePlugin implements PluginSaveMediaplayInt
                     // rate all the album artists (If there are more than one)
                     foreach (Album::get_parent_array($album_disk->album_id, $album_disk->album_artist) as $artist_id) {
                         $rArtist       = new Rating($artist_id, 'artist');
-                        $rating_artist = (int)$rArtist->get_user_rating($this->user->id);
+                        $rating_artist = (int) $rArtist->get_user_rating($this->user->id);
                         if ($rating_artist < $new_rating) {
                             $rArtist->set_rating($new_rating, $this->user->id);
                         }
@@ -334,7 +334,7 @@ class AmpacheRatingMatch extends AmpachePlugin implements PluginSaveMediaplayInt
                     // rate all the album artists (If there are more than one)
                     foreach (Album::get_parent_array($album->id, $album->album_artist) as $artist_id) {
                         $rArtist       = new Rating($artist_id, 'artist');
-                        $rating_artist = (int)$rArtist->get_user_rating($this->user->id);
+                        $rating_artist = (int) $rArtist->get_user_rating($this->user->id);
                         if ($rating_artist < $new_rating) {
                             $rArtist->set_rating($new_rating, $this->user->id);
                         }
@@ -359,7 +359,7 @@ class AmpacheRatingMatch extends AmpachePlugin implements PluginSaveMediaplayInt
             $fAlbumDisk = new Userflag($song->album_disk, 'album_disk');
             $fAlbumDisk->set_flag(true, $this->user->id);
             // rate all the album artists (If there are more than one)
-            if (((int)$album->findAlbumArtist()) > 0) {
+            if (((int) $album->findAlbumArtist()) > 0) {
                 foreach (Album::get_parent_array($album->id, $album->album_artist) as $artist_id) {
                     $fArtist = new Userflag($artist_id, 'artist');
                     if (!$fArtist->get_flag($this->user->id)) {

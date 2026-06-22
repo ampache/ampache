@@ -146,8 +146,8 @@ class AmpacheRSSView extends AmpachePlugin implements PluginDisplayHomeInterface
             return false;
         }
 
-        $this->maxitems = (int)($data['rssview_max_items']);
-        $this->order    = (int)($data['rssview_order'] ?? 0);
+        $this->maxitems = (int) ($data['rssview_max_items']);
+        $this->order    = (int) ($data['rssview_order'] ?? 0);
 
         return true;
     }
@@ -176,7 +176,7 @@ class AmpacheRSSView extends AmpachePlugin implements PluginDisplayHomeInterface
             return false;
         }
 
-        if ($from_version < (int)$this->version) {
+        if ($from_version < (int) $this->version) {
             Preference::insert('rssview_order', T_('Plugin CSS order'), '0', AccessLevelEnum::USER->value, 'integer', 'plugins', $this->name);
         }
 

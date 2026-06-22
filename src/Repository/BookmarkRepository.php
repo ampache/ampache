@@ -33,9 +33,7 @@ use DateTimeInterface;
 
 final readonly class BookmarkRepository implements BookmarkRepositoryInterface
 {
-    public function __construct(private DatabaseConnectionInterface $connection)
-    {
-    }
+    public function __construct(private DatabaseConnectionInterface $connection) {}
 
     /**
      * Remove bookmark for items that no longer exist.

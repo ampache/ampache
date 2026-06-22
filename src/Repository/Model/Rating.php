@@ -69,7 +69,7 @@ class Rating extends database_object
         ?int $rating_id,
         string $type,
     ) {
-        $this->id   = (int)$rating_id;
+        $this->id   = (int) $rating_id;
         $this->type = $type;
     }
 
@@ -113,13 +113,13 @@ class Rating extends database_object
 
         foreach ($ids as $object_id) {
             // First store the user-specific rating
-            $rating = (isset($user_ratings[$object_id])) ? (int)$user_ratings[$object_id] : 0;
+            $rating = (isset($user_ratings[$object_id])) ? (int) $user_ratings[$object_id] : 0;
 
             parent::add_to_cache('rating_' . $type . '_user' . $user_id, $object_id, [$rating]);
             // Then store the average
             $rating = (isset($ratings[$object_id])) ? round($ratings[$object_id], 1) : 0;
 
-            parent::add_to_cache('rating_' . $type . '_all', $object_id, [(int)$rating]);
+            parent::add_to_cache('rating_' . $type . '_all', $object_id, [(int) $rating]);
         }
 
         return true;
@@ -196,7 +196,7 @@ class Rating extends database_object
         $db_results = Dba::read($sql);
         $results    = [];
         while ($row = Dba::fetch_assoc($db_results)) {
-            $results[] = (int)$row['id'];
+            $results[] = (int) $row['id'];
         }
 
         return $results;
@@ -275,7 +275,7 @@ class Rating extends database_object
         $db_results = Dba::read($sql);
         $results    = [];
         while ($row = Dba::fetch_assoc($db_results)) {
-            $results[] = (int)$row['id'];
+            $results[] = (int) $row['id'];
         }
 
         return $results;
@@ -444,7 +444,7 @@ class Rating extends database_object
     {
         $key = 'rating_' . $this->type . '_all';
         if (parent::is_cached($key, $this->id) && parent::get_from_cache($key, $this->id)[0] > 0) {
-            return (float)parent::get_from_cache($key, $this->id)[0];
+            return (float) parent::get_from_cache($key, $this->id)[0];
         }
 
         $params     = [$this->id, $this->type];
@@ -456,7 +456,7 @@ class Rating extends database_object
             return null;
         }
 
-        $rating = (float)$row['rating'];
+        $rating = (float) $row['rating'];
         parent::add_to_cache($key, $this->id, [$rating]);
 
         return $rating;
@@ -491,7 +491,7 @@ class Rating extends database_object
             return null;
         }
 
-        $rating = (int)$row['rating'];
+        $rating = (int) $row['rating'];
         parent::add_to_cache($key, $this->id, [$rating]);
 
         return $rating;
@@ -556,7 +556,7 @@ class Rating extends database_object
 
         // sometimes we're reading the rating so don't always write back
         if ($write_back) {
-            self::save_rating($this->id, $this->type, (int)$rating, (int)$user_id);
+            self::save_rating($this->id, $this->type, (int) $rating, (int) $user_id);
         }
 
         return true;

@@ -61,8 +61,7 @@ final readonly class DefaultAction implements ApplicationActionInterface
         private SongRepositoryInterface $songRepository,
         private ResponseFactoryInterface $responseFactory,
         private LibraryItemLoaderInterface $libraryItemLoader,
-    ) {
-    }
+    ) {}
 
     public function run(ServerRequestInterface $request, GuiGatekeeperInterface $gatekeeper): ResponseInterface
     {
@@ -90,7 +89,7 @@ final readonly class DefaultAction implements ApplicationActionInterface
             throw new AccessDeniedException();
         }
 
-        $object_id = (int)$this->requestParser->getFromRequest('id');
+        $object_id = (int) $this->requestParser->getFromRequest('id');
         $this->logger->debug(
             'Requested item ' . $object_id,
             [LegacyLogger::CONTEXT_TYPE => self::class]
@@ -106,7 +105,7 @@ final readonly class DefaultAction implements ApplicationActionInterface
                 $libItem->fill_ext_info();
             }
 
-            $name      = (string)$libItem->get_fullname();
+            $name      = (string) $libItem->get_fullname();
             $media_ids = array_merge($media_ids, $libItem->get_medias());
         } else {
             // Switch on the actions
@@ -121,13 +120,13 @@ final readonly class DefaultAction implements ApplicationActionInterface
 
                     break;
                 case 'browse':
-                    $object_id        = (int)$this->requestParser->getFromRequest('browse_id');
+                    $object_id        = (int) $this->requestParser->getFromRequest('browse_id');
                     $browse           = $this->modelFactory->createBrowse($object_id);
                     $browse_media_ids = $browse->get_saved();
                     foreach ($browse_media_ids as $media) {
                         if (is_array($media)) {
                             /** @var array<array{object_type: string, object_id: int}> $media */
-                            $media_id = (int)$media['object_id'];
+                            $media_id = (int) $media['object_id'];
                         } else {
                             /** @var int $media */
                             $media_id = $media;
@@ -236,7 +235,7 @@ final readonly class DefaultAction implements ApplicationActionInterface
                     $className = ObjectTypeToClassNameMapper::map($parent['object_type']->value);
                     /** @var class-string<library_item> $className */
                     $pobj    = new $className($parent['object_id']);
-                    $dirname = (string)$pobj->get_fullname();
+                    $dirname = (string) $pobj->get_fullname();
                 }
 
                 if ($dirname !== '' && $dirname !== '0' && !array_key_exists($dirname, $media_files)) {

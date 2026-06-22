@@ -289,7 +289,7 @@ class Video extends database_object implements
         Dba::write($sql, $params);
         $video_id = (int) Dba::insert_id();
 
-        Catalog::update_map((int)$data['catalog'], 'video', $video_id);
+        Catalog::update_map((int) $data['catalog'], 'video', $video_id);
 
         if (is_array($tags)) {
             foreach ($tags as $tag) {
@@ -443,7 +443,7 @@ class Video extends database_object implements
     public function display_art(array $size, bool $force = false): void
     {
         if (Art::has_db($this->id, 'video') || $force) {
-            Art::display('video', $this->id, (string)$this->get_fullname(), $size, $this->get_link());
+            Art::display('video', $this->id, (string) $this->get_fullname(), $size, $this->get_link());
         }
     }
 
@@ -622,7 +622,7 @@ class Video extends database_object implements
      */
     public function get_stream_name(): string
     {
-        return (string)$this->title;
+        return (string) $this->title;
     }
 
     /**
@@ -796,7 +796,7 @@ class Video extends database_object implements
         }
 
         $media_name = $this->get_stream_name() . "." . $this->type;
-        $media_name = (string)preg_replace("/[^a-zA-Z0-9\. ]+/", "-", $media_name);
+        $media_name = (string) preg_replace("/[^a-zA-Z0-9\. ]+/", "-", $media_name);
         $media_name = (AmpConfig::get('stream_beautiful_url'))
             ? urlencode($media_name)
             : rawurlencode($media_name);

@@ -100,7 +100,7 @@ final class PodcastDelete6Method implements MethodInterface
             );
         }
 
-        $podcastId = (int)($input['filter'] ?? 0);
+        $podcastId = (int) ($input['filter'] ?? 0);
         if ($podcastId === 0) {
             throw new RequestParamMissingException(
                 sprintf(T_('Bad Request: %s'), 'filter')

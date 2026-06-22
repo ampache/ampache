@@ -50,8 +50,7 @@ final readonly class PodcastCreator implements PodcastCreatorInterface
         private PodcastSyncerInterface $podcastSyncer,
         private PodcastFolderProviderInterface $podcastFolderProvider,
         private LoggerInterface $logger,
-    ) {
-    }
+    ) {}
 
     /**
      * Creates a new podcast object

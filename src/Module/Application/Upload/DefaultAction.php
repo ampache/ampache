@@ -46,8 +46,7 @@ final readonly class DefaultAction implements ApplicationActionInterface
         private ConfigContainerInterface $configContainer,
         private UiInterface $ui,
         private AjaxUriRetrieverInterface $ajaxUriRetriever,
-    ) {
-    }
+    ) {}
 
     public function run(ServerRequestInterface $request, GuiGatekeeperInterface $gatekeeper): ?ResponseInterface
     {
@@ -63,8 +62,8 @@ final readonly class DefaultAction implements ApplicationActionInterface
             throw new AccessDeniedException();
         }
 
-        $upload_max = return_bytes((string)ini_get('upload_max_filesize'));
-        $post_max   = return_bytes((string)ini_get('post_max_size'));
+        $upload_max = return_bytes((string) ini_get('upload_max_filesize'));
+        $post_max   = return_bytes((string) ini_get('post_max_size'));
         $ajaxfs     = $this->ajaxUriRetriever->getAjaxServerUri() . '/fs.ajax.php';
         if ($post_max > 0 && ($post_max < $upload_max || $upload_max == 0)) {
             $upload_max = $post_max;

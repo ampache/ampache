@@ -77,7 +77,7 @@ final class Handshake5Method
     public static function handshake(array $input): bool
     {
         $now_time   = time();
-        $timestamp  = (int)preg_replace('/[^0-9]/', '', (string)($input['timestamp'] ?? $now_time));
+        $timestamp  = (int) preg_replace('/[^0-9]/', '', (string) ($input['timestamp'] ?? $now_time));
         $passphrase = $input['auth'];
         if (empty($passphrase)) {
             $passphrase = Core::get_post('auth');
@@ -86,11 +86,11 @@ final class Handshake5Method
         $user_ip  = Core::get_user_ip();
         // set the version to the old string for old api clients
         $version       = (isset($input['version'])) ? $input['version'] : Api5::$version;
-        Api5::$version = ((int)$version >= 350001) ? Api5::$version_numeric : Api5::$version;
-        $data_version  = (int)substr($version, 0, 1);
+        Api5::$version = ((int) $version >= 350001) ? Api5::$version_numeric : Api5::$version;
+        $data_version  = (int) substr($version, 0, 1);
 
         // Version check shouldn't be soo restrictive... only check with initial version to not break clients compatibility
-        if ((int)($version) < Api5::$auth_version && $data_version !== 5) {
+        if ((int) ($version) < Api5::$auth_version && $data_version !== 5) {
             debug_event(self::class, 'Login Failed: Version too old', 1);
             AmpError::add('api', T_('Login failed, API version is too old'));
 
@@ -163,12 +163,12 @@ final class Handshake5Method
                 } else {
                     // Create the session
                     $data             = [];
-                    $data['username'] = (string)$client->username;
+                    $data['username'] = (string) $client->username;
                     $data['type']     = 'api';
-                    $data['apikey']   = (string)$client->apikey;
+                    $data['apikey']   = (string) $client->apikey;
                     $data['value']    = $data_version;
                     if (isset($input['client'])) {
-                        $data['agent'] = scrub_in((string)$input['client']);
+                        $data['agent'] = scrub_in((string) $input['client']);
                     }
                     if (isset($input['geo_latitude'])) {
                         $data['geo_latitude'] = $input['geo_latitude'];

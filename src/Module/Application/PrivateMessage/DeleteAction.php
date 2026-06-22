@@ -45,8 +45,7 @@ final readonly class DeleteAction implements ApplicationActionInterface
         private ConfigContainerInterface $configContainer,
         private UiInterface $ui,
         private RequestParserInterface $requestParser,
-    ) {
-    }
+    ) {}
 
     public function run(ServerRequestInterface $request, GuiGatekeeperInterface $gatekeeper): ?ResponseInterface
     {

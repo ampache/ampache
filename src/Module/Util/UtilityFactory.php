@@ -39,8 +39,7 @@ final readonly class UtilityFactory implements UtilityFactoryInterface
         private UserRepositoryInterface $userRepository,
         private ConfigContainerInterface $configContainer,
         private LoggerInterface $logger,
-    ) {
-    }
+    ) {}
 
     /**
      * Returns a new Curl instance

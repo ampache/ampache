@@ -40,8 +40,7 @@ final readonly class FolderDeleter implements FolderDeleterInterface
         private FolderRepositoryInterface $folderRepository,
         private UserActivityRepositoryInterface $useractivityRepository,
         private ArtCleanupInterface $artCleanup,
-    ) {
-    }
+    ) {}
 
     public function delete(
         Folder $folder,

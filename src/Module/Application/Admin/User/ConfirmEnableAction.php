@@ -49,8 +49,7 @@ final class ConfirmEnableAction extends AbstractUserAction
         private readonly ModelFactoryInterface $modelFactory,
         private readonly ConfigContainerInterface $configContainer,
         private readonly UserStateTogglerInterface $userStateToggler,
-    ) {
-    }
+    ) {}
 
     protected function handle(ServerRequestInterface $request): ?ResponseInterface
     {
@@ -62,7 +61,7 @@ final class ConfirmEnableAction extends AbstractUserAction
             throw new AccessDeniedException();
         }
 
-        $userId = (int)($request->getQueryParams()['user_id'] ?? 0);
+        $userId = (int) ($request->getQueryParams()['user_id'] ?? 0);
         $user   = $this->modelFactory->createUser($userId);
 
         if ($user->isNew()) {

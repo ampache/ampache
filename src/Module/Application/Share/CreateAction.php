@@ -56,8 +56,7 @@ final readonly class CreateAction implements ApplicationActionInterface
         private RequestParserInterface $requestParser,
         private ShareCreatorInterface $shareCreator,
         private LibraryItemLoaderInterface $libraryItemLoader,
-    ) {
-    }
+    ) {}
 
     public function run(ServerRequestInterface $request, GuiGatekeeperInterface $gatekeeper): ?ResponseInterface
     {
@@ -84,8 +83,8 @@ final readonly class CreateAction implements ApplicationActionInterface
             $user,
             $object_type,
             $object_id,
-            (bool)($_REQUEST['allow_stream'] ?? 0),
-            (bool)($_REQUEST['allow_download'] ?? 0),
+            (bool) ($_REQUEST['allow_stream'] ?? 0),
+            (bool) ($_REQUEST['allow_download'] ?? 0),
             (int) $_REQUEST['expire'],
             $_REQUEST['secret'],
             (int) $_REQUEST['max_counter']
@@ -100,7 +99,7 @@ final readonly class CreateAction implements ApplicationActionInterface
                 '<script>$(\'#share_qrcode\').qrcode({text: "' . $share->public_url . '", width: 128, height: 128});</script>' .
                 '<br /><br />' .
                 T_('You can also embed this share as a web player into your website, with the following HTML code:') . '<br />' .
-                '<i>' . htmlentities('<iframe style="width: 630px; height: 75px;" src="' . Share::get_url($share->id, (string)$share->secret) . '&embed=true"></iframe>') . '</i><br />';
+                '<i>' . htmlentities('<iframe style="width: 630px; height: 75px;" src="' . Share::get_url($share->id, (string) $share->secret) . '&embed=true"></iframe>') . '</i><br />';
 
             $title = T_('No Problem');
             $this->ui->showConfirmation(
@@ -113,7 +112,7 @@ final readonly class CreateAction implements ApplicationActionInterface
             );
         } else {
             $this->logger->error(
-                'Share failed: ' . (int)($_REQUEST['id'] ?? 0),
+                'Share failed: ' . (int) ($_REQUEST['id'] ?? 0),
                 [LegacyLogger::CONTEXT_TYPE => self::class]
             );
 

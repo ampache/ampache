@@ -43,12 +43,11 @@ final class FindArtAction extends AbstractArtAction
         private readonly ArtCollectorInterface $artCollector,
         private readonly ModelFactoryInterface $modelFactory,
         private readonly UiInterface $ui,
-    ) {
-    }
+    ) {}
 
     public function run(ServerRequestInterface $request, GuiGatekeeperInterface $gatekeeper): ?ResponseInterface
     {
-        $object_type = (string)filter_input(INPUT_GET, 'object_type', FILTER_SANITIZE_SPECIAL_CHARS);
+        $object_type = (string) filter_input(INPUT_GET, 'object_type', FILTER_SANITIZE_SPECIAL_CHARS);
         $item        = $this->getItem($gatekeeper);
 
         if ($item === null) {
@@ -90,7 +89,7 @@ final class FindArtAction extends AbstractArtAction
         }
 
         if (array_key_exists('search_limit', $_REQUEST)) {
-            $options['search_limit'] = $limit = (int)$_REQUEST['search_limit'];
+            $options['search_limit'] = $limit = (int) $_REQUEST['search_limit'];
         }
 
         if (array_key_exists('year_filter', $_REQUEST) && !empty($_REQUEST['year_filter'])) {

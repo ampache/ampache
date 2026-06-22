@@ -71,7 +71,7 @@ final class Artists5Method
      */
     public static function artists(array $input, User $user): bool
     {
-        $album_artist = (array_key_exists('album_artist', $input) && (int)$input['album_artist'] == 1);
+        $album_artist = (array_key_exists('album_artist', $input) && (int) $input['album_artist'] == 1);
         $browse       = Api::getBrowse($user);
         if ($album_artist) {
             $browse->set_type('album_artist');
@@ -80,7 +80,7 @@ final class Artists5Method
         }
         $browse->set_sort('name', 'ASC', false);
 
-        $method = (array_key_exists('exact', $input) && (int)$input['exact'] == 1) ? 'exact_match' : 'alpha_match';
+        $method = (array_key_exists('exact', $input) && (int) $input['exact'] == 1) ? 'exact_match' : 'alpha_match';
         $browse->set_api_filter($method, $input['filter'] ?? '');
         $browse->set_api_filter('add', $input['add'] ?? '');
         $browse->set_api_filter('update', $input['update'] ?? '');
@@ -96,7 +96,7 @@ final class Artists5Method
         $include = [];
         if (array_key_exists('include', $input)) {
             if (!is_array($input['include'])) {
-                $input['include'] = explode(',', html_entity_decode((string)($input['include'])));
+                $input['include'] = explode(',', html_entity_decode((string) ($input['include'])));
             }
             foreach ($input['include'] as $item) {
                 if ($item === 'songs' || $item == '1') {

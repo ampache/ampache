@@ -69,9 +69,7 @@ class Json4_Data
      *
      * We don't use this, as its really a static class
      */
-    private function __construct()
-    {
-    }
+    private function __construct() {}
 
     /**
      * albums
@@ -91,7 +89,7 @@ class Json4_Data
 
         $JSON = [];
         foreach ($albums as $album_id) {
-            $album = new Album((int)$album_id);
+            $album = new Album((int) $album_id);
             if ($album->isNew()) {
                 continue;
             }
@@ -110,7 +108,7 @@ class Json4_Data
 
             if ($album->get_parent_fullname() != "") {
                 $objArray['artist'] = [
-                    "id" => (string)$album->findAlbumArtist(),
+                    "id" => (string) $album->findAlbumArtist(),
                     "name" => $album->get_parent_fullname()
                 ];
             }
@@ -122,7 +120,7 @@ class Json4_Data
                 $songs = $album->song_count;
             }
 
-            $objArray['time']          = (int)$album->time;
+            $objArray['time']          = (int) $album->time;
             $objArray['year']          = (int) $album->year;
             $objArray['tracks']        = $songs;
             $objArray['songcount']     = (int) $album->song_count;
@@ -167,7 +165,7 @@ class Json4_Data
         Rating::build_cache('artist', $artists);
 
         foreach ($artists as $artist_id) {
-            $artist = new Artist((int)$artist_id);
+            $artist = new Artist((int) $artist_id);
             if ($artist->isNew()) {
                 continue;
             }
@@ -192,7 +190,7 @@ class Json4_Data
             }
 
             $JSON[] = [
-                "id" => (string)$artist->id,
+                "id" => (string) $artist->id,
                 "name" => $artist->get_fullname(),
                 "albums" => $albums,
                 "albumcount" => $artist->album_count,
@@ -206,8 +204,8 @@ class Json4_Data
                 "averagerating" => ($rating->get_average_rating() ?? null),
                 "mbid" => $artist->mbid,
                 "summary" => $artist->summary,
-                "time" => (int)$artist->time,
-                "yearformed" => (int)$artist->yearformed,
+                "time" => (int) $artist->time,
+                "yearformed" => (int) $artist->yearformed,
                 "placeformed" => $artist->placeformed
             ];
         }
@@ -250,7 +248,7 @@ class Json4_Data
             $catalog_sort_pattern   = $catalog->sort_pattern;
             // Build this element
             $allCatalogs[] = [
-                "id" => (string)$catalog_id,
+                "id" => (string) $catalog_id,
                 "name" => $catalog_name,
                 "type" => $catalog_type,
                 "gather_types" => $catalog_gather_types,
@@ -301,22 +299,22 @@ class Json4_Data
             $play_url    = $song->play_url('', 'api', false, $user->id, $user->streamtoken);
 
             $JSON[] = [
-                "id" => (string)$song->id,
+                "id" => (string) $song->id,
                 "title" => $song->title,
                 "artist" => [
-                    "id" => (string)$song->artist,
+                    "id" => (string) $song->artist,
                     "name" => $song->get_parent_fullname()
                 ],
                 "album" => [
-                    "id" => (string)$song->album,
+                    "id" => (string) $song->album,
                     "name" => $song->get_album_fullname()
                 ],
                 "tag" => self::_tags_array($song->get_tags()),
-                "track" => (int)$song->track,
-                "time" => (int)$song->time,
+                "track" => (int) $song->track,
+                "time" => (int) $song->time,
                 "mime" => $songMime,
                 "url" => $play_url,
-                "size" => (int)$song->size,
+                "size" => (int) $song->size,
                 "art" => $art_url,
                 "preciserating" => $user_rating,
                 "rating" => $user_rating,
@@ -420,11 +418,11 @@ class Json4_Data
 
         $JSON = [];
         foreach ($licenses as $license_id) {
-            $license = self::getLicenseRepository()->findById((int)$license_id);
+            $license = self::getLicenseRepository()->findById((int) $license_id);
 
             if ($license !== null) {
                 $JSON[] = [
-                    'id' => (string)$license_id,
+                    'id' => (string) $license_id,
                     'name' => $license->getName(),
                     'description' => $license->getDescription(),
                     'external_link' => $license->getExternalLink()
@@ -457,7 +455,7 @@ class Json4_Data
              * smartlist = 'smart_1'
              * playlist  = 1000000
              */
-            if ((int)$playlist_id === 0) {
+            if ((int) $playlist_id === 0) {
                 $playlist = new Search((int) str_replace('smart_', '', (string) $playlist_id), 'song', $user);
                 if ($playlist->isNew()) {
                     continue;
@@ -465,7 +463,7 @@ class Json4_Data
                 $object_type    = 'search';
                 $playitem_total = $playlist->last_count;
             } else {
-                $playlist = new Playlist((int)$playlist_id);
+                $playlist = new Playlist((int) $playlist_id);
                 if ($playlist->isNew()) {
                     continue;
                 }
@@ -483,7 +481,7 @@ class Json4_Data
                 $playlisttracks = $playlist->get_items();
                 foreach ($playlisttracks as $objects) {
                     $items[] = [
-                        "id" => (string)$objects['object_id'],
+                        "id" => (string) $objects['object_id'],
                         "playlisttrack" => $trackcount
                     ];
                     $trackcount++;
@@ -497,7 +495,7 @@ class Json4_Data
 
             // Build this element
             $JSON[] = [
-                "id" => (string)$playlist_id,
+                "id" => (string) $playlist_id,
                 "name" => $playlist_name,
                 "owner" => $playlist_user,
                 "items" => $items,
@@ -506,7 +504,7 @@ class Json4_Data
                 "flag" => (!$flag->get_flag($user->getId()) ? 0 : 1),
                 "preciserating" => $user_rating,
                 "rating" => $user_rating,
-                "averagerating" => (string)($rating->get_average_rating() ?? null)];
+                "averagerating" => (string) ($rating->get_average_rating() ?? null)];
         }
 
         return json_encode($JSON, JSON_PRETTY_PRINT) ?: '';
@@ -528,7 +526,7 @@ class Json4_Data
         }
         $JSON = [];
         foreach ($podcast_episodes as $episode_id) {
-            $episode = new Podcast_Episode((int)$episode_id);
+            $episode = new Podcast_Episode((int) $episode_id);
             if ($episode->isNew()) {
                 continue;
             }
@@ -538,7 +536,7 @@ class Json4_Data
             $flag        = new Userflag($episode->id, 'podcast_episode');
             $art_url     = Art::url($episode->podcast, 'podcast', $auth);
             $JSON[]      = [
-                "id" => (string)$episode_id,
+                "id" => (string) $episode_id,
                 "name" => $episode->get_fullname(),
                 "description" => $episode->get_description(),
                 "category" => $episode->getCategory(),
@@ -553,13 +551,13 @@ class Json4_Data
                 "filename" => $episode->getFileName(),
                 "public_url" => $episode->get_link(),
                 "url" => $episode->play_url('', 'api', false, $user->getId(), $user->streamtoken),
-                "catalog" => (string)$episode->catalog,
+                "catalog" => (string) $episode->catalog,
                 "art" => $art_url,
                 "flag" => (!$flag->get_flag($user->getId()) ? 0 : 1),
                 "preciserating" => $user_rating,
                 "rating" => $user_rating,
-                "averagerating" => (string)($rating->get_average_rating() ?? null),
-                "played" => (string)$episode->played
+                "averagerating" => (string) ($rating->get_average_rating() ?? null),
+                "played" => (string) $episode->played
             ];
         }
         if (!$encode) {
@@ -588,16 +586,16 @@ class Json4_Data
 
         $allPodcasts = [];
         foreach ($podcasts as $podcast_id) {
-            $podcast = $podcastRepository->findById((int)$podcast_id);
+            $podcast = $podcastRepository->findById((int) $podcast_id);
 
             if ($podcast === null) {
                 continue;
             }
 
-            $rating              = new Rating((int)$podcast_id, 'podcast');
+            $rating              = new Rating((int) $podcast_id, 'podcast');
             $user_rating         = $rating->get_user_rating($user->getId());
-            $flag                = new Userflag((int)$podcast_id, 'podcast');
-            $art_url             = Art::url((int)$podcast_id, 'podcast', $auth);
+            $flag                = new Userflag((int) $podcast_id, 'podcast');
+            $art_url             = Art::url((int) $podcast_id, 'podcast', $auth);
             $podcast_name        = $podcast->get_fullname();
             $podcast_description = $podcast->get_description();
             $podcast_language    = scrub_out($podcast->getLanguage());
@@ -615,7 +613,7 @@ class Json4_Data
             }
             // Build this element
             $allPodcasts[] = [
-                "id" => (string)$podcast_id,
+                "id" => (string) $podcast_id,
                 "name" => $podcast_name,
                 "description" => $podcast_description,
                 "language" => $podcast_language,
@@ -630,7 +628,7 @@ class Json4_Data
                 "flag" => (!$flag->get_flag($user->getId()) ? 0 : 1),
                 "preciserating" => $user_rating,
                 "rating" => $user_rating,
-                "averagerating" => (string)($rating->get_average_rating() ?? null),
+                "averagerating" => (string) ($rating->get_average_rating() ?? null),
                 "podcast_episode" => $podcast_episodes
             ];
         }
@@ -651,7 +649,7 @@ class Json4_Data
             return false;
         }
 
-        self::$limit = (strtolower((string) $limit) == "none") ? null : (int)$limit;
+        self::$limit = (strtolower((string) $limit) == "none") ? null : (int) $limit;
 
         return true;
     }
@@ -665,7 +663,7 @@ class Json4_Data
      */
     public static function set_offset(int|string $offset): void
     {
-        self::$offset = (int)$offset;
+        self::$offset = (int) $offset;
     }
 
     /**
@@ -683,7 +681,7 @@ class Json4_Data
 
         $allShares = [];
         foreach ($shares as $share_id) {
-            $share                = new Share((int)$share_id);
+            $share                = new Share((int) $share_id);
             $share_name           = $share->getObjectName();
             $share_user           = $share->getUserName();
             $share_allow_stream   = (int) $share->allow_stream;
@@ -691,7 +689,7 @@ class Json4_Data
             $share_creation_date  = $share->creation_date;
             $share_lastvisit_date = $share->lastvisit_date;
             $share_object_type    = $share->object_type;
-            $share_object_id      = (string)$share->object_id;
+            $share_object_id      = (string) $share->object_id;
             $share_expire_days    = $share->expire_days;
             $share_max_counter    = $share->max_counter;
             $share_counter        = $share->counter;
@@ -700,7 +698,7 @@ class Json4_Data
             $share_description    = $share->description;
             // Build this element
             $allShares[] = [
-                "id" => (string)$share_id,
+                "id" => (string) $share_id,
                 "name" => $share_name,
                 "owner" => $share_user,
                 "allow_stream" => $share_allow_stream,
@@ -771,7 +769,7 @@ class Json4_Data
 
         // Foreach the ids!
         foreach ($songs as $song_id) {
-            $song = new Song((int)$song_id);
+            $song = new Song((int) $song_id);
             // If the song id is invalid/null
             if ($song->isNew()) {
                 continue;
@@ -818,7 +816,7 @@ class Json4_Data
             $ourSong['mode']                  = $song->mode;
             $ourSong['mime']                  = $songMime;
             $ourSong['url']                   = $play_url;
-            $ourSong['size']                  = (int)$song->size;
+            $ourSong['size']                  = (int) $song->size;
             $ourSong['mbid']                  = $song->mbid;
             $ourSong['album_mbid']            = $song->get_album_mbid();
             $ourSong['artist_mbid']           = $song->get_artist_mbid();
@@ -893,9 +891,9 @@ class Json4_Data
         $TAGS = [];
 
         foreach ($tags as $tag_id) {
-            $tag    = new Tag((int)$tag_id);
+            $tag    = new Tag((int) $tag_id);
             $TAGS[] = [
-                "id" => (string)$tag_id,
+                "id" => (string) $tag_id,
                 "name" => $tag->name,
                 "albums" => $tag->album,
                 "artists" => $tag->artist,
@@ -928,14 +926,14 @@ class Json4_Data
             $user         = new User($activity->user);
             $user_array   = [];
             $user_array[] = [
-                "id" => (string)$user->getId(),
+                "id" => (string) $user->getId(),
                 "username" => $user->username
             ];
             $objArray = [
                 "id" => (string) $activity_id,
                 "date" => $activity->activity_date,
                 "object_type" => $activity->object_type,
-                "object_id" => (string)$activity->object_id,
+                "object_id" => (string) $activity->object_id,
                 "action" => $activity->action,
                 "user" => $user_array
             ];
@@ -1001,9 +999,9 @@ class Json4_Data
         $JSON       = [];
         $user_array = [];
         foreach ($users as $user_id) {
-            $user         = new User((int)$user_id);
+            $user         = new User((int) $user_id);
             $user_array[] = [
-                "id" => (string)$user_id,
+                "id" => (string) $user_id,
                 "username" => $user->username
             ];
         }
@@ -1029,7 +1027,7 @@ class Json4_Data
 
         $JSON = [];
         foreach ($videos as $video_id) {
-            $video = new Video((int)$video_id);
+            $video = new Video((int) $video_id);
             if ($video->isNew()) {
                 continue;
             }
@@ -1038,19 +1036,19 @@ class Json4_Data
             $flag        = new Userflag($video->id, 'video');
             $art_url     = Art::url($video->id, 'video', $auth);
             $JSON[]      = [
-                "id" => (string)$video->id,
+                "id" => (string) $video->id,
                 "title" => $video->title,
                 "mime" => $video->mime,
                 "resolution" => $video->get_f_resolution(),
-                "size" => (int)$video->size,
+                "size" => (int) $video->size,
                 "tag" => self::_tags_array($video->get_tags()),
-                "time" => (int)$video->time,
+                "time" => (int) $video->time,
                 "url" => $video->play_url('', 'api', false, $user->getId(), $user->streamtoken),
                 "art" => $art_url,
                 "flag" => (!$flag->get_flag($user->getId()) ? 0 : 1),
                 "preciserating" => $user_rating,
                 "rating" => $user_rating,
-                "averagerating" => (string)($rating->get_average_rating() ?? null)
+                "averagerating" => (string) ($rating->get_average_rating() ?? null)
             ];
         }
 
@@ -1085,7 +1083,7 @@ class Json4_Data
                 $JSON[] = ["name" => $data['name']];
             } else {
                 $JSON[] = [
-                    "id" => (string)$tag_id,
+                    "id" => (string) $tag_id,
                     "name" => $data['name']
                 ];
             }

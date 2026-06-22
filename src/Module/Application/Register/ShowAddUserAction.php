@@ -44,8 +44,7 @@ final readonly class ShowAddUserAction implements ApplicationActionInterface
         private ConfigContainerInterface $configContainer,
         private RegistrationAgreementRendererInterface $registrationAgreementRenderer,
         private UiInterface $ui,
-    ) {
-    }
+    ) {}
 
     public function run(ServerRequestInterface $request, GuiGatekeeperInterface $gatekeeper): ?ResponseInterface
     {

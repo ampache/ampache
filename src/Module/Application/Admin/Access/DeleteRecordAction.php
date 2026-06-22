@@ -49,8 +49,7 @@ final readonly class DeleteRecordAction implements ApplicationActionInterface
         private AccessRepositoryInterface $accessRepository,
         private ConfigContainerInterface $configContainer,
         private RequestParserInterface $requestParser,
-    ) {
-    }
+    ) {}
 
     public function run(ServerRequestInterface $request, GuiGatekeeperInterface $gatekeeper): ?ResponseInterface
     {

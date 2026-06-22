@@ -49,8 +49,7 @@ final readonly class GenerateConfigAction implements ApplicationActionInterface
         private InstallationHelperInterface $installationHelper,
         private ResponseFactoryInterface $responseFactory,
         private StreamFactoryInterface $streamFactory,
-    ) {
-    }
+    ) {}
 
     public function run(ServerRequestInterface $request, GuiGatekeeperInterface $gatekeeper): ResponseInterface
     {
@@ -69,7 +68,7 @@ final readonly class GenerateConfigAction implements ApplicationActionInterface
             'ampache.cfg.php',
             'text/plain',
             false,
-            (string)strlen($generatedConfig)
+            (string) strlen($generatedConfig)
         );
 
         $response = $this->responseFactory->createResponse();

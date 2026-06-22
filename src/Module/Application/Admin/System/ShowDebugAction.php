@@ -50,8 +50,7 @@ final readonly class ShowDebugAction implements ApplicationActionInterface
         private ConfigContainerInterface $configContainer,
         private UiInterface $ui,
         private UpdateInfoRepositoryInterface $updateInfoRepository,
-    ) {
-    }
+    ) {}
 
     public function run(ServerRequestInterface $request, GuiGatekeeperInterface $gatekeeper): ?ResponseInterface
     {

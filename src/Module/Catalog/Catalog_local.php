@@ -82,7 +82,7 @@ class Catalog_local extends Catalog
                 $this->$key = $value;
             }
 
-            $this->catalog_id = (int)$catalog_id;
+            $this->catalog_id = (int) $catalog_id;
         }
     }
 
@@ -175,7 +175,7 @@ class Catalog_local extends Catalog
         $component_path = $path;
 
         while ($row = Dba::fetch_assoc($db_results)) {
-            $catalog_paths[$row['path']] = (int)$row['catalog_id'];
+            $catalog_paths[$row['path']] = (int) $row['catalog_id'];
         }
 
         // Break it down into its component parts and start looking for a catalog
@@ -622,7 +622,7 @@ class Catalog_local extends Catalog
         $rate      = ($time_diff > 0)
             ? number_format($this->count / $time_diff)
             : '0';
-        if (((float)$rate) < 1) {
+        if (((float) $rate) < 1) {
             $rate = T_('N/A');
         }
 
@@ -668,8 +668,8 @@ class Catalog_local extends Catalog
         $shn  = AmpConfig::get('cache_shn');
         $mp3  = AmpConfig::get('cache_mp3');
 
-        $cache_path   = (string)AmpConfig::get('cache_path', '');
-        $cache_target = (string)AmpConfig::get('cache_target', '');
+        $cache_path   = (string) AmpConfig::get('cache_path', '');
+        $cache_target = (string) AmpConfig::get('cache_target', '');
         // need a destination and target filetype
         if (!is_dir($cache_path) || ($cache_target === '' || $cache_target === '0')) {
             debug_event('local.catalog', 'Check your cache_path and cache_target settings', 5);
@@ -772,7 +772,7 @@ class Catalog_local extends Catalog
         $db_results = Dba::read($sql, $params);
         $results    = [];
         while ($row = Dba::fetch_assoc($db_results)) {
-            $results[] = (int)$row['id'];
+            $results[] = (int) $row['id'];
         }
 
         foreach ($results as $song_id) {
@@ -818,7 +818,7 @@ class Catalog_local extends Catalog
             if (!$file_exists) {
                 // transcode to the new path
                 $transcode_settings = $media->get_transcode_settings($cache_target);
-                Stream::start_transcode($media, $transcode_settings, (string)$target_file);
+                Stream::start_transcode($media, $transcode_settings, (string) $target_file);
                 debug_event('local.catalog', 'Saved: ' . $song_id . ' to: {' . $target_file . '}', 5);
             }
         }
@@ -868,10 +868,10 @@ class Catalog_local extends Catalog
             return $missing;
         }
 
-        $chunks = (int)ceil($total / 10000);
+        $chunks = (int) ceil($total / 10000);
         foreach (range(1, $chunks) as $chunk) {
             debug_event('local.catalog', "catalog " . $this->name . " Starting check " . $media_type . sprintf(' on chunk %d/%d', $chunk, $chunks), 5);
-            $missing = array_merge($missing, $this->_check_chunk($media_type, (int)$chunk, 10000, $interactor));
+            $missing = array_merge($missing, $this->_check_chunk($media_type, (int) $chunk, 10000, $interactor));
         }
 
         return $missing;
@@ -919,7 +919,7 @@ class Catalog_local extends Catalog
         $chunks = 1;
         $chunk  = 0;
         if ($total > 10000) {
-            $chunks = (int)ceil($total / 10000);
+            $chunks = (int) ceil($total / 10000);
         }
 
         while ($chunk < $chunks) {
@@ -997,7 +997,7 @@ class Catalog_local extends Catalog
             Dba::write($sql, $params);
 
             return true;
-        } elseif (!Core::is_readable(Core::conv_lc_file((string)$file))) {
+        } elseif (!Core::is_readable(Core::conv_lc_file((string) $file))) {
             debug_event('local.catalog', "clean_file: " . $file . ' is not readable, but does exist', 1);
         }
 
@@ -1323,7 +1323,7 @@ class Catalog_local extends Catalog
             case 'song':
             case 'video':
             case 'podcast_episode':
-                $newCatalogId = self::get_id_from_file($new_file, (string)$media_type);
+                $newCatalogId = self::get_id_from_file($new_file, (string) $media_type);
                 $newCatalog   = self::create_from_id($newCatalogId);
                 if ($newCatalog === null) {
                     return false;
@@ -1401,7 +1401,7 @@ class Catalog_local extends Catalog
 
         // how many loops through the catalog
         if ($total > $chunk_size) {
-            $chunks = (int)ceil($total / $chunk_size);
+            $chunks = (int) ceil($total / $chunk_size);
         }
 
         // one loop
@@ -1479,7 +1479,7 @@ class Catalog_local extends Catalog
                 );
                 debug_event('local.catalog', '_clean_chunk: {' . $results['id'] . '} File not found or empty ' . $results['file'], 5);
                 $missing[] = $results['file'];
-            } elseif (!Core::is_readable(Core::conv_lc_file((string)$results['file']))) {
+            } elseif (!Core::is_readable(Core::conv_lc_file((string) $results['file']))) {
                 $interactor?->info(
                     $results['file'] . ' is not readable, but does exist',
                     true
@@ -1535,7 +1535,7 @@ class Catalog_local extends Catalog
         $db_results = Dba::read($sql, [$file_path]);
 
         if ($results = Dba::fetch_assoc($db_results)) {
-            return (int)$results['catalog_id'];
+            return (int) $results['catalog_id'];
         }
 
         return 0;
@@ -1574,7 +1574,7 @@ class Catalog_local extends Catalog
             $results['license'] = $options['license'];
         }
 
-        if (array_key_exists('artist_id', $options) && (int)$options['artist_id'] > 0) {
+        if (array_key_exists('artist_id', $options) && (int) $options['artist_id'] > 0) {
             $results['artist_id']      = $options['artist_id'];
             $results['albumartist_id'] = $options['artist_id'];
             $artist                    = new Artist($results['artist_id']);
@@ -1583,7 +1583,7 @@ class Catalog_local extends Catalog
             }
         }
 
-        if (array_key_exists('album_id', $options) && (int)$options['album_id'] > 0) {
+        if (array_key_exists('album_id', $options) && (int) $options['album_id'] > 0) {
             $results['album_id'] = $options['album_id'];
             $album               = new Album($results['album_id']);
             if ($album->isNew() === false) {
@@ -1622,9 +1622,9 @@ class Catalog_local extends Catalog
                 $directory = $this->sort_find_home($song, (string) $this->sort_pattern, $root);
                 $filename  = $this->sort_find_home($song, (string) $this->rename_pattern);
                 if ($directory === null || $filename === null) {
-                    $fullpath = (string)$song->file;
+                    $fullpath = (string) $song->file;
                 } else {
-                    $fullpath = rtrim($directory, "\/") . '/' . ltrim($filename, "\/") . "." . (pathinfo((string)$song->file, PATHINFO_EXTENSION));
+                    $fullpath = rtrim($directory, "\/") . '/' . ltrim($filename, "\/") . "." . (pathinfo((string) $song->file, PATHINFO_EXTENSION));
                 }
 
                 // don't move over existing files
@@ -1668,7 +1668,7 @@ class Catalog_local extends Catalog
                 foreach ($results['rating'] as $user => $rating) {
                     debug_event('local.catalog', sprintf('Setting rating for Song %s to %s for user %s', $song_id, $rating, $user), 5);
                     $o_rating = new Rating($song_id, 'song');
-                    $o_rating->set_rating((int)$rating, $user, false);
+                    $o_rating->set_rating((int) $rating, $user, false);
                 }
             }
 
@@ -1869,7 +1869,7 @@ class Catalog_local extends Catalog
                     if (isset($this->_filecache[strtolower($full_file)])) {
                         // set mod time on scan
                         self::getFolderRepository()->update_utime(
-                            (int)$this->_filecache[strtolower($full_file)],
+                            (int) $this->_filecache[strtolower($full_file)],
                             filemtime($full_file) ?: time()
                         );
                     } elseif ($this->add_folder($file, $full_file, $path) !== null) {
@@ -1936,7 +1936,7 @@ class Catalog_local extends Catalog
             }
 
             if ($tableName !== 'album') {
-                if (!Core::is_readable(Core::conv_lc_file((string)$row['file']))) {
+                if (!Core::is_readable(Core::conv_lc_file((string) $row['file']))) {
                     /* HINT: filename (file path) */
                     AmpError::add('general', sprintf(T_("The file couldn't be read. Does it exist? %s"), $row['file']));
                     debug_event('local.catalog', $row['file'] . ' does not exist or is not readable', 5);
@@ -1975,7 +1975,7 @@ class Catalog_local extends Catalog
                     }
 
                     // check the modification time on the file to see if it's worth checking the tags.
-                    if ((int)($row['min_update_time'] ?? 0) > $file_time) {
+                    if ((int) ($row['min_update_time'] ?? 0) > $file_time) {
                         //debug_event('local.catalog', 'verify_by_time: skipping ' . $row['file'], 5);
                         switch ($tableName) {
                             case 'song':

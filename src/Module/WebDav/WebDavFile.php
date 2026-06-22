@@ -36,9 +36,7 @@ use Sabre\DAV\File;
  */
 class WebDavFile extends File
 {
-    public function __construct(private readonly Media $libitem)
-    {
-    }
+    public function __construct(private readonly Media $libitem) {}
 
     /**
      * @return resource|null

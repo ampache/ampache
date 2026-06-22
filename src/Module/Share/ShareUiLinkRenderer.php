@@ -43,8 +43,7 @@ final readonly class ShareUiLinkRenderer implements ShareUiLinkRendererInterface
         private FunctionCheckerInterface $functionChecker,
         private ZipHandlerInterface $zipHandler,
         private ConfigContainerInterface $configContainer,
-    ) {
-    }
+    ) {}
 
     public function render(
         LibraryItemEnum $object_type,

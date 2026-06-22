@@ -158,7 +158,7 @@ class Stream_Url extends MemoryObject
             }
         }
 
-        $query    = (string)parse_url($url, PHP_URL_QUERY);
+        $query    = (string) parse_url($url, PHP_URL_QUERY);
         $elements = explode('&', $query);
         $results  = [];
 

@@ -175,7 +175,7 @@ class AmpacheUPnP extends localplay_controller
 
             $url_data = Stream_Url::parse($data['link']);
             if (array_key_exists('id', $url_data)) {
-                $song = new Song((int)$url_data['id']);
+                $song = new Song((int) $url_data['id']);
                 if ($song->isNew() === false) {
                     $data['name'] = $song->get_parent_fullname() . ' - ' . $song->title;
                 }
@@ -200,7 +200,7 @@ class AmpacheUPnP extends localplay_controller
     public function get_active_instance(): ?int
     {
         if (AmpConfig::get(self::ACTIVE_PREF)) {
-            return (int)AmpConfig::get(self::ACTIVE_PREF);
+            return (int) AmpConfig::get(self::ACTIVE_PREF);
         }
 
         return null;
@@ -233,9 +233,9 @@ class AmpacheUPnP extends localplay_controller
 
         if ($row = Dba::fetch_assoc($db_results)) {
             return [
-                'id' => (int)$row['id'],
+                'id' => (int) $row['id'],
                 'name' => $row['name'],
-                'owner' => (int)$row['owner'],
+                'owner' => (int) $row['owner'],
                 'url' => $row['url'],
             ];
         }
@@ -464,7 +464,7 @@ class AmpacheUPnP extends localplay_controller
 
         $url_data = Stream_Url::parse($array['track']);
         if (array_key_exists('id', $url_data)) {
-            $song = new Song((int)$url_data['id']);
+            $song = new Song((int) $url_data['id']);
             if ($song->isNew() === false) {
                 $array['track_artist'] = $song->get_parent_fullname();
                 $array['track_album']  = $song->get_album_fullname();

@@ -34,8 +34,7 @@ final readonly class RecentlyPlayedFeed extends AbstractGenericRssFeed
 {
     public function __construct(
         private ?User $user,
-    ) {
-    }
+    ) {}
 
     /**
      * @return Generator<array{
@@ -84,7 +83,7 @@ final readonly class RecentlyPlayedFeed extends AbstractGenericRssFeed
                         get_datetime($item['date'])
                     ),
                     'comments' => $client->get_link(),
-                    'pubDate' => date("r", (int)$item['date']),
+                    'pubDate' => date("r", (int) $item['date']),
                     'guid' => ($song->mbid !== null)
                         ? 'https://musicbrainz.org/recording/' . $song->mbid
                         : $item['date'] . '-' . $client->getId() . '-' . $song->getId(),

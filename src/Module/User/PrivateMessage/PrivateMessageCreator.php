@@ -39,8 +39,7 @@ final readonly class PrivateMessageCreator implements PrivateMessageCreatorInter
         private PrivateMessageRepositoryInterface $pmRepository,
         private UtilityFactoryInterface $utilityFactory,
         private ConfigContainerInterface $configContainer,
-    ) {
-    }
+    ) {}
 
     /**
      * Sends a private message to a user

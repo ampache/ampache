@@ -140,7 +140,7 @@ final class SubsonicApiApplication implements ApiApplicationInterface
 
                 $segments = array_values(array_filter(
                     array_map('trim', explode('+', $part)),
-                    static fn (string $segment): bool => $segment !== ''
+                    static fn(string $segment): bool => $segment !== ''
                 ));
 
                 if (count($segments) > 1) {
@@ -214,7 +214,7 @@ final class SubsonicApiApplication implements ApiApplicationInterface
         );
 
         $post = ($request->getMethod() === 'POST')
-            ? (array)$request->getParsedBody()
+            ? (array) $request->getParsedBody()
             : [];
 
         $query = array_merge($request->getQueryParams(), $post);
@@ -228,10 +228,10 @@ final class SubsonicApiApplication implements ApiApplicationInterface
             $action = strtolower($query['action'] ?? '');
         }
 
-        $format = (string)($query['f'] ?? 'xml');
+        $format = (string) ($query['f'] ?? 'xml');
 
         // Set the correct default headers
-        self::_setHeaders($action, $format, (string)AmpConfig::get('site_charset', 'UTF-8'));
+        self::_setHeaders($action, $format, (string) AmpConfig::get('site_charset', 'UTF-8'));
 
         // If we don't even have access control on then we can't use this!
         if (!AmpConfig::get('access_control')) {
@@ -336,7 +336,7 @@ final class SubsonicApiApplication implements ApiApplicationInterface
             if ($auth === []) {
                 $auth = $this->authenticationManager->login($userName, $password, true);
             }
-            $login = (bool)$auth['success'];
+            $login = (bool) $auth['success'];
             $user  = User::get_from_username($userName);
         }
 
@@ -400,7 +400,7 @@ final class SubsonicApiApplication implements ApiApplicationInterface
             : [];
 
         // We do not use $_GET because of multiple parameters with the same name
-        $query_string = (string)($_SERVER['QUERY_STRING'] ?? '');
+        $query_string = (string) ($_SERVER['QUERY_STRING'] ?? '');
         // Trick to avoid $HTTP_RAW_POST_DATA
         $postdata = file_get_contents("php://input");
         if (!empty($postdata)) {
@@ -411,7 +411,7 @@ final class SubsonicApiApplication implements ApiApplicationInterface
         foreach ($query as $param) {
             $decname  = false;
             $decvalue = false;
-            if (strpos((string)$param, '=')) {
+            if (strpos((string) $param, '=')) {
                 [$name, $value] = explode('=', $param);
                 $decname        = urldecode($name);
                 $decvalue       = urldecode($value);
@@ -422,10 +422,10 @@ final class SubsonicApiApplication implements ApiApplicationInterface
                 $matches = [];
                 if ($decname == "id" && preg_match('/^(\d{1,3})\.(\d{1,3})\.(\d{1,3})\.(\d{1,3})$/', $decvalue, $matches)) {
                     $calc = (
-                        (((int)$matches[1]) << 24) +
-                        (((int)$matches[2]) << 16) +
-                        (((int)$matches[3]) << 8) +
-                        ((int)$matches[4])
+                        (((int) $matches[1]) << 24) +
+                        (((int) $matches[2]) << 16) +
+                        (((int) $matches[3]) << 8) +
+                        ((int) $matches[4])
                     );
                     if ($calc) {
                         $this->logger->notice(

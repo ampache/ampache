@@ -55,8 +55,7 @@ final class AddUserAction implements ApplicationActionInterface
         private readonly UserRepositoryInterface $userRepository,
         private readonly RegistrationAgreementRendererInterface $registrationAgreementRenderer,
         public UiInterface $ui,
-    ) {
-    }
+    ) {}
 
     public function run(ServerRequestInterface $request, GuiGatekeeperInterface $gatekeeper): ?ResponseInterface
     {

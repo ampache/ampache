@@ -123,11 +123,11 @@ function make_bool($string): bool
     if ($string === null) {
         return false;
     }
-    if (strcasecmp((string)$string, 'false') == 0 || $string === '0' || $string === 0) {
+    if (strcasecmp((string) $string, 'false') == 0 || $string === '0' || $string === 0) {
         return false;
     }
 
-    return (bool)$string;
+    return (bool) $string;
 }
 
 /**
@@ -406,17 +406,17 @@ function return_bytes(string $val): int
     $last = strtolower((string) $val[strlen((string) $val) - 1]);
     switch ($last) {
         case 'g':
-            $val = (int)$val * 1024;
+            $val = (int) $val * 1024;
             // Intentional break fall-through
         case 'm':
-            $val = (int)$val * 1024;
+            $val = (int) $val * 1024;
             // Intentional break fall-through
         case 'k':
-            $val = (int)$val * 1024;
+            $val = (int) $val * 1024;
             break;
     }
 
-    return (int)$val;
+    return (int) $val;
 }
 
 /**
@@ -905,7 +905,7 @@ function xoutput_from_array(array $array, bool $callback = false, string $type =
     } elseif ($output == 'raw') {
         $outputnode = Core::get_request('xoutputnode');
 
-        return (string)($array[$outputnode] ?? '');
+        return (string) ($array[$outputnode] ?? '');
     }
 
     return json_encode($array) ?: '';
@@ -1003,7 +1003,7 @@ function T_(string $msgid): string
 function nT_($original, $plural, $value): string
 {
     if (function_exists('n__')) {
-        return n__($original, $plural, (string)$value);
+        return n__($original, $plural, (string) $value);
     }
 
     return $plural;
@@ -1069,14 +1069,14 @@ function get_theme(string $name): ?array
         $results = parse_ini_file($config_file);
         if (is_array($results)) {
             $results['path'] = $name;
-            $results['base'] = explode(',', (string)$results['base']);
+            $results['base'] = explode(',', (string) $results['base']);
             $nbbases         = count($results['base']);
             for ($count = 0; $count < $nbbases; $count++) {
                 $results['base'][$count] = (is_array($results['base'][$count]))
                         ? $results['base'][$count]
                         : explode('|', $results['base'][$count]);
             }
-            $results['colors'] = explode(',', (string)$results['colors']);
+            $results['colors'] = explode(',', (string) $results['colors']);
         } else {
             $results = null;
         }

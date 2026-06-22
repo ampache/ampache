@@ -46,8 +46,7 @@ final readonly class PodcastEpisodeRepository implements PodcastEpisodeRepositor
         private ModelFactoryInterface $modelFactory,
         private DatabaseConnectionInterface $connection,
         private ConfigContainerInterface $configContainer,
-    ) {
-    }
+    ) {}
 
     /**
      * Cleans up orphaned episodes

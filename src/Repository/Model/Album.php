@@ -198,16 +198,16 @@ class Album extends database_object implements
         $trimmed      = Catalog::trim_prefix(trim((string) $name));
         $name         = $trimmed['string'];
         $prefix       = $trimmed['prefix'];
-        $album_artist = (int)$album_artist;
+        $album_artist = (int) $album_artist;
         $album_artist = ($album_artist < 1) ? null : $album_artist;
 
         $mbid           = (empty($mbid)) ? null : $mbid;
         $mbid_group     = (empty($mbid_group)) ? null : $mbid_group;
         $release_type   = (empty($release_type)) ? null : $release_type;
         $release_status = (empty($release_status)) ? null : $release_status;
-        $original_year  = ((int)substr((string)$original_year, 0, 4) < 1)
+        $original_year  = ((int) substr((string) $original_year, 0, 4) < 1)
             ? null
-            : substr((string)$original_year, 0, 4);
+            : substr((string) $original_year, 0, 4);
         $barcode        = (empty($barcode)) ? null : $barcode;
         $catalog_number = (empty($catalog_number)) ? null : $catalog_number;
         $version        = (empty($version)) ? null : $version;
@@ -307,7 +307,7 @@ class Album extends database_object implements
         $db_results = Dba::read($sql, $params);
 
         if ($row = Dba::fetch_assoc($db_results)) {
-            $album_id = (int)$row['id'];
+            $album_id = (int) $row['id'];
             if ($album_id > 0) {
                 // cache the album id against it's details
                 self::$_mapcache[$name][$year][$album_artist ?? ''][$mbid ?? ''][$mbid_group ?? ''][$release_type ?? ''][$release_status ?? ''][$original_year ?? ''][$barcode ?? ''][$catalog_number ?? ''][$version ?? ''] = $album_id;
@@ -347,7 +347,7 @@ class Album extends database_object implements
         }
         debug_event(self::class, sprintf('check album: created {%s}', $album_id), 4);
         // map the new id
-        Catalog::update_map($catalog_id, 'album', (int)$album_id);
+        Catalog::update_map($catalog_id, 'album', (int) $album_id);
         // Remove from wanted album list if any request on it
         if (!empty($mbid) && AmpConfig::get('wanted')) {
             $user = Core::get_global('user');
@@ -366,7 +366,7 @@ class Album extends database_object implements
 
         self::$_mapcache[$name][$year][$album_artist ?? ''][$mbid ?? ''][$mbid_group ?? ''][$release_type ?? ''][$release_status ?? ''][$original_year ?? ''][$barcode ?? ''][$catalog_number ?? ''][$version ?? ''] = $album_id;
 
-        return (int)$album_id;
+        return (int) $album_id;
     }
 
     /**
@@ -402,11 +402,11 @@ class Album extends database_object implements
         $db_results = Dba::read($sql, [$object_type, $album_id]);
         //debug_event(self::class, 'get_parent_array ' . $sql, 5);
         while ($row = Dba::fetch_assoc($db_results)) {
-            $results[] = (int)$row['object_id'];
+            $results[] = (int) $row['object_id'];
         }
 
-        $primary = ((int)$primary_id > 0)
-            ? [(int)$primary_id]
+        $primary = ((int) $primary_id > 0)
+            ? [(int) $primary_id]
             : [];
 
         return array_unique(array_merge($primary, $results));
@@ -449,13 +449,13 @@ class Album extends database_object implements
             return 0;
         }
 
-        if ((int)$disk == 0) {
+        if ((int) $disk == 0) {
             // A is 0 but we want to start at disk 1
             $alphabet = range('A', 'Z');
-            $disk     = (int)array_search(strtoupper((string)$disk), $alphabet, true) + 1;
+            $disk     = (int) array_search(strtoupper((string) $disk), $alphabet, true) + 1;
         }
 
-        return (int)$disk;
+        return (int) $disk;
     }
 
     /**
@@ -476,7 +476,7 @@ class Album extends database_object implements
 
             // these are albums that only have 1 artist
             if ($row = Dba::fetch_assoc($db_results)) {
-                $artist_id = (int)$row['artist'];
+                $artist_id = (int) $row['artist'];
             }
 
             // Update the album
@@ -665,7 +665,7 @@ class Album extends database_object implements
         $db_results = Dba::read($sql, [$this->id]);
         $row        = Dba::fetch_assoc($db_results);
         if ($row !== []) {
-            return (int)$row['artist_count'];
+            return (int) $row['artist_count'];
         }
 
         return 0;
@@ -703,7 +703,7 @@ class Album extends database_object implements
         while ($row = Dba::fetch_assoc($db_results)) {
             $childrens[] = [
                 'object_type' => LibraryItemEnum::SONG,
-                'object_id' => (int)$row['id']
+                'object_id' => (int) $row['id']
             ];
         }
 
@@ -853,27 +853,27 @@ class Album extends database_object implements
             'mb_albumid' => [
                 'important' => false,
                 'label' => T_('Album MusicBrainzID'),
-                'value' => (string)$this->mbid,
+                'value' => (string) $this->mbid,
             ],
             'mb_albumid_group' => [
                 'important' => false,
                 'label' => T_('Release Group MusicBrainzID'),
-                'value' => (string)$this->mbid_group,
+                'value' => (string) $this->mbid_group,
             ],
             'artist' => [
                 'important' => true,
                 'label' => T_('Artist'),
-                'value' => (string)$this->get_parent_fullname(),
+                'value' => (string) $this->get_parent_fullname(),
             ],
             'album' => [
                 'important' => true,
                 'label' => T_('Album'),
-                'value' => (string)$this->get_fullname(true),
+                'value' => (string) $this->get_fullname(true),
             ],
             'year' => [
                 'important' => false,
                 'label' => T_('Year'),
-                'value' => (string)$this->year,
+                'value' => (string) $this->year,
             ],
         ];
     }
@@ -952,7 +952,7 @@ class Album extends database_object implements
             }
         }
 
-        return (string)$this->f_artist_name;
+        return (string) $this->f_artist_name;
     }
 
     /**
@@ -984,7 +984,7 @@ class Album extends database_object implements
         $db_results = Dba::read($sql, $params);
 
         while ($row = Dba::fetch_assoc($db_results, false)) {
-            $results[] = (int)$row['id'];
+            $results[] = (int) $row['id'];
         }
 
         return $results;
@@ -1064,7 +1064,7 @@ class Album extends database_object implements
      */
     public function getYear(): string
     {
-        return (string)($this->year ?: '');
+        return (string) ($this->year ?: '');
     }
 
     /**
@@ -1101,15 +1101,15 @@ class Album extends database_object implements
     {
         //debug_event(self::class, "update: " . print_r($data, true), 4);
         $name           = $data['name'] ?? $this->name;
-        $album_artist   = (isset($data['album_artist']) && (int)$data['album_artist'] > 0) ? (int)$data['album_artist'] : null;
-        $year           = (int)($data['year'] ?? 0);
+        $album_artist   = (isset($data['album_artist']) && (int) $data['album_artist'] > 0) ? (int) $data['album_artist'] : null;
+        $year           = (int) ($data['year'] ?? 0);
         $mbid           = $data['mbid'] ?? null;
         $mbid_group     = $data['mbid_group'] ?? null;
         $release_type   = $data['release_type'] ?? null;
         $release_status = $data['release_status'] ?? null;
         $original_year  = (empty($data['original_year']))
             ? null
-            : (int)$data['original_year'];
+            : (int) $data['original_year'];
         $barcode        = $data['barcode'] ?? null;
         $catalog_number = $data['catalog_number'] ?? null;
         $version        = $data['version'] ?? null;
@@ -1210,8 +1210,8 @@ class Album extends database_object implements
 
             if ($album_artist !== $this->album_artist) {
                 self::_update_field('album_artist', $album_artist, $this->id);
-                self::add_album_map($this->id, 'album', (int)$album_artist);
-                self::remove_album_map($this->id, 'album', (int)$this->album_artist);
+                self::add_album_map($this->id, 'album', (int) $album_artist);
+                self::remove_album_map($this->id, 'album', (int) $this->album_artist);
             }
 
             if ($release_type != $this->release_type) {

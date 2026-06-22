@@ -71,9 +71,7 @@ class Xml4_Data
      *
      * We don't use this, as its really a static class
      */
-    private function __construct()
-    {
-    }
+    private function __construct() {}
 
     /**
      * albums
@@ -94,7 +92,7 @@ class Xml4_Data
         Rating::build_cache('album', $albums);
 
         foreach ($albums as $album_id) {
-            $album = new Album((int)$album_id);
+            $album = new Album((int) $album_id);
             if ($album->isNew()) {
                 continue;
             }
@@ -144,7 +142,7 @@ class Xml4_Data
         Rating::build_cache('artist', $artists);
 
         foreach ($artists as $artist_id) {
-            $artist = new Artist((int)$artist_id);
+            $artist = new Artist((int) $artist_id);
             if ($artist->isNew()) {
                 continue;
             }
@@ -228,7 +226,7 @@ class Xml4_Data
             $song->fill_ext_info();
 
             // FIXME: This is duplicate code and so wrong, functions need to be improved
-            $tag        = new Tag((int)($song->get_tags()[0]['id'] ?? 0));
+            $tag        = new Tag((int) ($song->get_tags()[0]['id'] ?? 0));
             $tag_string = self::_tags_string($song->get_tags());
             $rating     = new Rating($song->id, 'song');
             $art_url    = Art::url($song->album, 'album', $auth);
@@ -306,13 +304,13 @@ class Xml4_Data
             case 'artist':
                 foreach ($objects as $object_id) {
                     if ($include) {
-                        $string .= self::artists([(int)$object_id], ['songs', 'albums'], $user, $auth, false);
+                        $string .= self::artists([(int) $object_id], ['songs', 'albums'], $user, $auth, false);
                     } else {
-                        $artist = new Artist((int)$object_id);
+                        $artist = new Artist((int) $object_id);
                         if ($artist->isNew()) {
                             break;
                         }
-                        $albums = self::getAlbumRepository()->getAlbumByArtist((int)$object_id);
+                        $albums = self::getAlbumRepository()->getAlbumByArtist((int) $object_id);
                         $string .= "<$object_type id=\"" . $object_id . "\">\n\t<name><![CDATA[" . $artist->get_fullname() . "]]></name>\n";
                         foreach ($albums as $album_id) {
                             if ($album_id > 0) {
@@ -327,9 +325,9 @@ class Xml4_Data
             case 'album':
                 foreach ($objects as $object_id) {
                     if ($include) {
-                        $string .= self::albums([(int)$object_id], ['songs'], $user, $auth, false);
+                        $string .= self::albums([(int) $object_id], ['songs'], $user, $auth, false);
                     } else {
-                        $album = new Album((int)$object_id);
+                        $album = new Album((int) $object_id);
                         $string .= "<$object_type id=\"" . $object_id . "\">\n\t<name><![CDATA[" . $album->get_fullname() . "]]></name>\n" .
                             "\t\t<artist id=\"" . $album->album_artist . "\"><![CDATA[" . $album->get_parent_fullname() . "]]></artist>\n</$object_type>\n";
                     }
@@ -337,7 +335,7 @@ class Xml4_Data
                 break;
             case 'song':
                 foreach ($objects as $object_id) {
-                    $song = new Song((int)$object_id);
+                    $song = new Song((int) $object_id);
                     $song->fill_ext_info();
                     $string .= "<$object_type id=\"" . $object_id . "\">\n\t<title><![CDATA[" . $song->title . "]]></title>\n\t<name><![CDATA[" . $song->get_fullname() . "]]></name>\n" .
                         "\t<artist id=\"" . $song->artist . "\"><![CDATA[" . $song->get_parent_fullname() . "]]></artist>\n" .
@@ -347,8 +345,8 @@ class Xml4_Data
                 break;
             case 'playlist':
                 foreach ($objects as $object_id) {
-                    if ((int)$object_id === 0) {
-                        $playlist = new Search((int)str_replace('smart_', '', (string)$object_id), 'song', $user);
+                    if ((int) $object_id === 0) {
+                        $playlist = new Search((int) str_replace('smart_', '', (string) $object_id), 'song', $user);
                         if ($playlist->isNew()) {
                             break;
                         }
@@ -358,7 +356,7 @@ class Xml4_Data
                             : $playlist->type;
                         $playitem_total = $playlist->last_count;
                     } else {
-                        $playlist = new Playlist((int)$object_id);
+                        $playlist = new Playlist((int) $object_id);
                         if ($playlist->isNew()) {
                             break;
                         }
@@ -368,7 +366,7 @@ class Xml4_Data
                     }
                     $playlist_name = $playlist->get_fullname();
                     $songs         = ($include) ? $playlist->get_items() : [];
-                    $string .= "<$object_type id=\"" . $object_id . "\">\n\t<name><![CDATA[" . $playlist_name . "]]></name>\n\t<items>" . (int)$playitem_total . "</items>\n\t<owner><![CDATA[" . $playlist_user . "]]></owner>\n\t<type><![CDATA[" . $playlist->type . "]]></type>\n";
+                    $string .= "<$object_type id=\"" . $object_id . "\">\n\t<name><![CDATA[" . $playlist_name . "]]></name>\n\t<items>" . (int) $playitem_total . "</items>\n\t<owner><![CDATA[" . $playlist_user . "]]></owner>\n\t<type><![CDATA[" . $playlist->type . "]]></type>\n";
                     $playlist_track = 0;
                     foreach ($songs as $song_id) {
                         if ($song_id['object_type']->value == 'song') {
@@ -384,7 +382,7 @@ class Xml4_Data
                 break;
             case 'podcast':
                 foreach ($objects as $object_id) {
-                    $podcast = self::getPodcastRepository()->findById((int)$object_id);
+                    $podcast = self::getPodcastRepository()->findById((int) $object_id);
                     if ($podcast !== null) {
                         $string .= "<podcast id=\"$object_id\">\n\t<name><![CDATA[" . $podcast->get_fullname() . "]]></name>\n\t<description><![CDATA[" . $podcast->get_description() . "]]></description>\n\t<language><![CDATA[" . scrub_out($podcast->getLanguage()) . "]]></language>\n\t<copyright><![CDATA[" . scrub_out($podcast->getCopyright()) . "]]></copyright>\n\t<feed_url><![CDATA[" . $podcast->getFeedUrl() . "]]></feed_url>\n\t<generator><![CDATA[" . scrub_out($podcast->getGenerator()) . "]]></generator>\n\t<website><![CDATA[" . scrub_out($podcast->getWebsite()) . "]]></website>\n\t<build_date><![CDATA[" . $podcast->getLastBuildDate()->format(DATE_ATOM) . "]]></build_date>\n\t<sync_date><![CDATA[" . $podcast->getLastSyncDate()->format(DATE_ATOM) . "]]></sync_date>\n\t<public_url><![CDATA[" . $podcast->get_link() . "]]></public_url>\n";
                         if ($include) {
@@ -422,7 +420,7 @@ class Xml4_Data
         foreach ($array as $key => $value) {
             $attribute = '';
             if (is_object($value)) {
-                $value = (array)$value;
+                $value = (array) $value;
             }
             // See if the key has attributes
             if (is_array($value) && isset($value['attributes'])) {
@@ -463,7 +461,7 @@ class Xml4_Data
         $licenseRepository = self::getLicenseRepository();
 
         foreach ($licenses as $license_id) {
-            $license = $licenseRepository->findById((int)$license_id);
+            $license = $licenseRepository->findById((int) $license_id);
             if ($license !== null) {
                 $string .= "<license id=\"$license_id\">\n\t<name><![CDATA[" . $license->getName() . "]]></name>\n\t<description><![CDATA[" . $license->getDescription() . "]]></description>\n\t<external_link><![CDATA[" . $license->getExternalLink() . "]]></external_link>\n</license>\n";
             }
@@ -494,7 +492,7 @@ class Xml4_Data
              * smartlist = 'smart_1'
              * playlist  = 1000000
              */
-            if ((int)$playlist_id === 0) {
+            if ((int) $playlist_id === 0) {
                 $playlist = new Search((int) str_replace('smart_', '', (string) $playlist_id), 'song', $user);
                 if ($playlist->isNew()) {
                     continue;
@@ -502,7 +500,7 @@ class Xml4_Data
                 $object_type    = 'search';
                 $playitem_total = $playlist->last_count;
             } else {
-                $playlist = new Playlist((int)$playlist_id);
+                $playlist = new Playlist((int) $playlist_id);
                 if ($playlist->isNew()) {
                     continue;
                 }
@@ -519,7 +517,7 @@ class Xml4_Data
             $flag        = new Userflag($playlist->id, $object_type);
 
             // Build this element
-            $string .= "<playlist id=\"" . $playlist_id . "\">\n\t<name><![CDATA[" . $playlist_name . "]]></name>\n\t<owner><![CDATA[" . $playlist_user . "]]></owner>\n\t<items>" . (int)$playitem_total . "</items>\n\t<type>" . $playlist_type . "</type>\n\t<art><![CDATA[" . $art_url . "]]></art>\n\t<flag>" . (!$flag->get_flag($user->getId()) ? 0 : 1) . "</flag>\n\t<preciserating>" . $user_rating . "</preciserating>\n\t<rating>" . $user_rating . "</rating>\n\t<averagerating>" . (string) ($rating->get_average_rating() ?? null) . "</averagerating>\n</playlist>\n";
+            $string .= "<playlist id=\"" . $playlist_id . "\">\n\t<name><![CDATA[" . $playlist_name . "]]></name>\n\t<owner><![CDATA[" . $playlist_user . "]]></owner>\n\t<items>" . (int) $playitem_total . "</items>\n\t<type>" . $playlist_type . "</type>\n\t<art><![CDATA[" . $art_url . "]]></art>\n\t<flag>" . (!$flag->get_flag($user->getId()) ? 0 : 1) . "</flag>\n\t<preciserating>" . $user_rating . "</preciserating>\n\t<rating>" . $user_rating . "</rating>\n\t<averagerating>" . (string) ($rating->get_average_rating() ?? null) . "</averagerating>\n</playlist>\n";
         }
 
         return Xml8_Data::output_xml($string);
@@ -541,7 +539,7 @@ class Xml4_Data
         $string = ($full_xml) ? "<total_count>" . count($podcast_episodes) . "</total_count>\n" : '';
 
         foreach ($podcast_episodes as $episode_id) {
-            $episode = new Podcast_Episode((int)$episode_id);
+            $episode = new Podcast_Episode((int) $episode_id);
             if ($episode->isNew()) {
                 continue;
             }
@@ -575,7 +573,7 @@ class Xml4_Data
         $podcastRepository = self::getPodcastRepository();
 
         foreach ($podcasts as $podcast_id) {
-            $podcast = $podcastRepository->findById((int)$podcast_id);
+            $podcast = $podcastRepository->findById((int) $podcast_id);
             if ($podcast === null) {
                 continue;
             }
@@ -609,7 +607,7 @@ class Xml4_Data
             return false;
         }
 
-        self::$limit = (strtolower((string)$limit) == "none") ? null : (int)$limit;
+        self::$limit = (strtolower((string) $limit) == "none") ? null : (int) $limit;
 
         return true;
     }
@@ -623,7 +621,7 @@ class Xml4_Data
      */
     public static function set_offset(int|string $offset): void
     {
-        self::$offset = (int)$offset;
+        self::$offset = (int) $offset;
     }
 
     /**
@@ -660,7 +658,7 @@ class Xml4_Data
         $string = ($full_xml) ? "<total_count>" . count($shares) . "</total_count>\n" : '';
 
         foreach ($shares as $share_id) {
-            $share = new Share((int)$share_id);
+            $share = new Share((int) $share_id);
             $string .= "<share id=\"$share_id\">\n\t<name><![CDATA[" . $share->getObjectName() . "]]></name>\n\t<user><![CDATA[" . $share->getUserName() . "]]></user>\n\t<allow_stream>" . (int) $share->allow_stream . "</allow_stream>\n\t<allow_download>" . (int) $share->allow_download . "</allow_download>\n\t<creation_date><![CDATA[" . $share->creation_date . "]]></creation_date>\n\t<lastvisit_date><![CDATA[" . $share->lastvisit_date . "]]></lastvisit_date>\n\t<object_type><![CDATA[" . $share->object_type . "]]></object_type>\n\t<object_id>" . $share->object_id . "</object_id>\n\t<expire_days>" . $share->expire_days . "</expire_days>\n\t<max_counter>" . $share->max_counter . "</max_counter>\n\t<counter>" . $share->counter . "</counter>\n\t<secret><![CDATA[" . $share->secret . "]]></secret>\n\t<public_url><![CDATA[" . $share->public_url . "]]></public_url>\n\t<description><![CDATA[" . $share->description . "]]></description>\n</share>\n";
         }
 
@@ -711,7 +709,7 @@ class Xml4_Data
 
         // Foreach the ids!
         foreach ($songs as $song_id) {
-            $song = new Song((int)$song_id);
+            $song = new Song((int) $song_id);
 
             // If the song id is invalid/null
             if ($song->isNew()) {
@@ -728,7 +726,7 @@ class Xml4_Data
             $songBitrate = $song->bitrate;
             $play_url    = $song->play_url('', 'api', false, $user->id, $user->streamtoken);
             $license     = $song->getLicense();
-            $licenseLink = (string)($license?->getExternalLink());
+            $licenseLink = (string) ($license?->getExternalLink());
 
             $playlist_track++;
 
@@ -786,7 +784,7 @@ class Xml4_Data
         $string = "<total_count>" . count($tags) . "</total_count>\n";
 
         foreach ($tags as $tag_id) {
-            $tag = new Tag((int)$tag_id);
+            $tag = new Tag((int) $tag_id);
             $string .= "<tag id=\"$tag_id\">\n\t<name><![CDATA[" . $tag->name . "]]></name>\n\t<albums>" . $tag->album . "</albums>\n\t<artists>" . $tag->artist . "</artists>\n\t<songs>" . $tag->song . "</songs>\n\t<videos>" . $tag->video . "</videos>\n\t<playlists>0</playlists>\n\t<stream>0</stream>\n</tag>\n";
         }
 
@@ -848,7 +846,7 @@ class Xml4_Data
     {
         $string = "<users>\n";
         foreach ($users as $user_id) {
-            $user = new User((int)$user_id);
+            $user = new User((int) $user_id);
             if ($user->isNew() === false) {
                 $string .= "<user id=\"" . (string) $user->id . "\">\n\t<username><![CDATA[" . $user->username . "]]></username>\n</user>\n";
             }
@@ -874,7 +872,7 @@ class Xml4_Data
         $string = ($full_xml) ? "<total_count>" . count($videos) . "</total_count>\n" : '';
 
         foreach ($videos as $video_id) {
-            $video = new Video((int)$video_id);
+            $video = new Video((int) $video_id);
             if ($video->isNew()) {
                 continue;
             }

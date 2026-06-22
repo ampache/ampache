@@ -42,8 +42,7 @@ final readonly class ShowLyricsAction implements ApplicationActionInterface
         private RequestParserInterface $requestParser,
         private UiInterface $ui,
         private ModelFactoryInterface $modelFactory,
-    ) {
-    }
+    ) {}
 
     public function run(
         ServerRequestInterface $request,
@@ -51,7 +50,7 @@ final readonly class ShowLyricsAction implements ApplicationActionInterface
     ): ?ResponseInterface {
         $this->ui->showHeader();
 
-        $song_id = (int)$this->requestParser->getFromRequest('song_id');
+        $song_id = (int) $this->requestParser->getFromRequest('song_id');
         $song    = $this->modelFactory->createSong($song_id);
         if ($song->isNew()) {
             throw new ObjectNotFoundException($song_id);

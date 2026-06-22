@@ -96,7 +96,7 @@ final class JsonOutput implements ApiOutputInterface
     public function error4(int $code, string $message): string
     {
         return Json4_Data::error(
-            (string)$code,
+            (string) $code,
             $message
         );
     }

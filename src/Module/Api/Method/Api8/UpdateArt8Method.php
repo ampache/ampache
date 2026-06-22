@@ -75,9 +75,9 @@ final class UpdateArt8Method
             return false;
         }
 
-        $type      = (string)$input['type'];
-        $object_id = (int)$input['filter'];
-        $overwrite = array_key_exists('overwrite', $input) && (int)$input['overwrite'] == 0;
+        $type      = (string) $input['type'];
+        $object_id = (int) $input['filter'];
+        $overwrite = array_key_exists('overwrite', $input) && (int) $input['overwrite'] == 0;
         $art_url   = Art::url($object_id, $type, $input['auth']);
 
         // confirm the correct data

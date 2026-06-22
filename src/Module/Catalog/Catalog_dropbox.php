@@ -74,7 +74,7 @@ class Catalog_dropbox extends Catalog
     public function __construct(?int $catalog_id = null)
     {
         if ($catalog_id) {
-            $this->id = (int)$catalog_id;
+            $this->id = (int) $catalog_id;
             $info     = $this->get_info($catalog_id, static::DB_TABLENAME);
             foreach ($info as $key => $value) {
                 $this->$key = $value;
@@ -103,7 +103,7 @@ class Catalog_dropbox extends Catalog
         $secret    = trim($data['secret'] ?? '');
         $authtoken = trim($data['authtoken'] ?? '');
         $path      = $data['path'] ?? '';
-        $getchunk  = (int)($data['getchunk'] ?? 0);
+        $getchunk  = (int) ($data['getchunk'] ?? 0);
 
         if (!strlen($apikey) || !strlen($secret) || !strlen($authtoken)) {
             AmpError::add('general', T_('Error: API Key, Secret and Access Token Required for Dropbox Catalogs'));
@@ -292,7 +292,7 @@ class Catalog_dropbox extends Catalog
 
         $db_results = Dba::read($sql, [$file]);
         if ($results = Dba::fetch_assoc($db_results)) {
-            return (int)$results['id'];
+            return (int) $results['id'];
         }
 
         return null;
@@ -331,9 +331,7 @@ class Catalog_dropbox extends Catalog
         return $dead;
     }
 
-    public function count_scan_folders(?Interactor $interactor = null): void
-    {
-    }
+    public function count_scan_folders(?Interactor $interactor = null): void {}
 
     /**
      * @throws DropboxClientException
@@ -631,7 +629,7 @@ class Catalog_dropbox extends Catalog
 
         try {
             set_time_limit(0);
-            $meta    = $dropbox->getMetadata((string)$media->file);
+            $meta    = $dropbox->getMetadata((string) $media->file);
             $outfile = Core::get_tmp_dir() . DIRECTORY_SEPARATOR . $meta->getName();
 
             // Download File

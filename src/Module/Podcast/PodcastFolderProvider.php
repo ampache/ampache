@@ -35,9 +35,7 @@ use Ampache\Repository\Model\Podcast;
  */
 final readonly class PodcastFolderProvider implements PodcastFolderProviderInterface
 {
-    public function __construct(private CatalogLoaderInterface $catalogLoader)
-    {
-    }
+    public function __construct(private CatalogLoaderInterface $catalogLoader) {}
 
     /**
      * Returns the podcasts base folder

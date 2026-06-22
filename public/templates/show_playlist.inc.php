@@ -142,7 +142,7 @@ if (Access::check_function(AccessFunctionEnum::FUNCTION_BATCH_DOWNLOAD) && $zipH
             <?php echo Ajax::button_with_text('?action=basket&type=playlist_random&id=' . $playlist->id, 'shuffle', T_('Random All to Temporary Playlist'), 'play_playlist_random'); ?>
         </li>
     <?php if ($playlist->has_access()) { ?>
-        <?php $search_id = $playlist->has_search((int)$playlist->user);
+        <?php $search_id = $playlist->has_search((int) $playlist->user);
         if ($search_id > 0) { ?>
             <li>
                 <a href="<?php echo $web_path; ?>/playlist.php?action=refresh_playlist&type=playlist&user_id=<?php echo $playlist->user; ?>&playlist_id=<?php echo $playlist->id; ?>&search_id=<?php echo $search_id; ?>">

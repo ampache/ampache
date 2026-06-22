@@ -46,8 +46,7 @@ final readonly class Updater implements UpdaterInterface
         private UpdateInfoRepositoryInterface $updateInfoRepository,
         private ContainerInterface $dic,
         private UpdateRunnerInterface $updateRunner,
-    ) {
-    }
+    ) {}
 
     /**
      * Checks for missing database tables

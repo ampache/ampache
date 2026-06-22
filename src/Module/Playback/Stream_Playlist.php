@@ -257,7 +257,7 @@ class Stream_Playlist
         $type = $object->getMediaType();
 
         $url['type']      = $type->value;
-        $url['url']       = (string)$object->id;
+        $url['url']       = (string) $object->id;
         $url['author']    = 'Ampache';
         $url['info_url']  = $object->get_f_link();
         $url['title']     = Stream_Url::get_title($url['url']);
@@ -328,7 +328,7 @@ class Stream_Playlist
                 $url['image_url'] = Art::url($art_object, $art_type, $api_session, (AmpConfig::get('ajax_load') ? 3 : 4));
                 //$url['album']     = $object->get_album_fullname();
                 $url['codec']     = $object->type;
-                $url['track_num'] = (string)$object->track;
+                $url['track_num'] = (string) $object->track;
                 break;
             case LibraryItemEnum::VIDEO:
                 /** @var Video $object */
@@ -550,7 +550,7 @@ class Stream_Playlist
         $localplay = new LocalPlay(AmpConfig::get('localplay_controller', ''));
         $localplay->connect();
 
-        $append = (bool)($_REQUEST['append'] ?? 0);
+        $append = (bool) ($_REQUEST['append'] ?? 0);
         if (!$append) {
             $localplay->delete_all();
         }

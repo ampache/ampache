@@ -38,7 +38,7 @@ use Ampache\Repository\Model\Tag;
             </tr>
             <tr>
                 <td class="edit_dialog_content_header"><?php echo T_('Hidden'); ?></td>
-                <td><input type="checkbox" <?php echo $string = ((int)$libitem->is_hidden == 1) ? 'checked="checked"' : ''; ?> name="is_hidden" value="1" /></td>
+                <td><input type="checkbox" <?php echo $string = ((int) $libitem->is_hidden == 1) ? 'checked="checked"' : ''; ?> name="is_hidden" value="1" /></td>
             </tr>
             <tr><td>&nbsp;</td></tr>
             <tr>

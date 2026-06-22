@@ -100,7 +100,7 @@ final class XmlOutput implements ApiOutputInterface
     public function error4(int $code, string $message): string
     {
         return Xml4_Data::error(
-            (string)$code,
+            (string) $code,
             $message
         );
     }

@@ -206,7 +206,7 @@ class AmpacheMpd extends localplay_controller
 
             switch ($url_key) {
                 case 'oid':
-                    $data['oid']  = (int)$url_data['oid'];
+                    $data['oid']  = (int) $url_data['oid'];
                     $song         = new Song($data['oid']);
                     $data['name'] = $song->get_fullname() . ' - ' . $song->get_album_fullname($song->album, true) . ' - ' . $song->get_parent_fullname();
                     $data['link'] = $song->get_f_link();
@@ -243,7 +243,7 @@ class AmpacheMpd extends localplay_controller
                                 /** @var Live_Stream $media */
                                 $site_url     = ($media->site_url) ? '(' . $media->site_url . ')' : '';
                                 $data['name'] = sprintf('%s %s', $media->name, $site_url);
-                                $data['link'] = (string)$media->site_url;
+                                $data['link'] = (string) $media->site_url;
                                 break;
                         }
                     } else {
@@ -274,7 +274,7 @@ class AmpacheMpd extends localplay_controller
     public function get_active_instance(): ?int
     {
         if (AmpConfig::get(self::ACTIVE_PREF)) {
-            return (int)AmpConfig::get(self::ACTIVE_PREF);
+            return (int) AmpConfig::get(self::ACTIVE_PREF);
         }
 
         return null;
@@ -311,13 +311,13 @@ class AmpacheMpd extends localplay_controller
 
         if ($row = Dba::fetch_assoc($db_results)) {
             return [
-                'id' => (int)$row['id'],
+                'id' => (int) $row['id'],
                 'name' => $row['name'],
-                'owner' => (int)$row['owner'],
+                'owner' => (int) $row['owner'],
                 'host' => $row['host'],
-                'port' => (int)$row['port'],
+                'port' => (int) $row['port'],
                 'password' => $row['password'],
-                'access' => (int)$row['access'],
+                'access' => (int) $row['access'],
             ];
         }
 
@@ -337,7 +337,7 @@ class AmpacheMpd extends localplay_controller
         $db_results = Dba::read($sql);
         $results    = [];
         while ($row = Dba::fetch_assoc($db_results)) {
-            $results[(int)$row['id']] = $row['name'];
+            $results[(int) $row['id']] = $row['name'];
         }
 
         return $results;

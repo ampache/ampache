@@ -45,8 +45,7 @@ final readonly class ShareRepository implements ShareRepositoryInterface
     public function __construct(
         private DatabaseConnectionInterface $connection,
         private ConfigContainerInterface $configContainer,
-    ) {
-    }
+    ) {}
 
     /**
      * Cleanup old shares

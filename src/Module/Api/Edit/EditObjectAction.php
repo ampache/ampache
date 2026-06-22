@@ -73,7 +73,7 @@ final class EditObjectAction extends AbstractEditAction
             foreach ($data as $key => $value) {
                 $data[$key] = (is_array($value))
                     ? $entities($value)
-                    : unhtmlentities((string)scrub_in((string) $value));
+                    : unhtmlentities((string) scrub_in((string) $value));
             }
 
             return $data;
@@ -98,7 +98,7 @@ final class EditObjectAction extends AbstractEditAction
             'edit_object: {' . $object_type . '} {' . $object_id . '}',
             [LegacyLogger::CONTEXT_TYPE => self::class]
         );
-        $className = ObjectTypeToClassNameMapper::map((string)$object_type);
+        $className = ObjectTypeToClassNameMapper::map((string) $object_type);
         /** @var library_item|Share $libitem */
         $libitem = new $className($_POST['id']);
         if (
@@ -185,7 +185,7 @@ final class EditObjectAction extends AbstractEditAction
         $ret   = [];
         if ($array !== false) {
             foreach ($array as $label) {
-                $label = trim((string)$label);
+                $label = trim((string) $label);
                 if (!empty($label)) {
                     if ($this->labelRepository->lookup($label) > 0) {
                         $ret[] = $label;

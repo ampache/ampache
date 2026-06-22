@@ -56,8 +56,7 @@ final readonly class ShowAction implements ApplicationActionInterface
         private TalFactoryInterface $talFactory,
         private RssFeedTypeFactoryInterface $rssFeedTypeFactory,
         private LibraryItemLoaderInterface $libraryItemLoader,
-    ) {
-    }
+    ) {}
 
     public function run(ServerRequestInterface $request, GuiGatekeeperInterface $gatekeeper): ?ResponseInterface
     {

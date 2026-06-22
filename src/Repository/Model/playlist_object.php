@@ -72,7 +72,7 @@ abstract class playlist_object extends database_object implements
             $list_type = ($this instanceof Search)
                 ? 'search'
                 : 'playlist';
-            Art::display($list_type, $this->id, (string)$this->get_fullname(), $size, $add_link);
+            Art::display($list_type, $this->id, (string) $this->get_fullname(), $size, $add_link);
         }
     }
 
@@ -142,7 +142,7 @@ abstract class playlist_object extends database_object implements
         // don't do anything if it's formatted
         if ($this->f_last_update === null) {
             $this->f_last_update = ($this->last_update)
-                ? get_datetime((int)$this->last_update)
+                ? get_datetime((int) $this->last_update)
                 : T_('Unknown');
         }
 
@@ -257,7 +257,7 @@ abstract class playlist_object extends database_object implements
         if ($filter_type) {
             return array_filter(
                 $this->get_items(),
-                static fn (array $item): bool => $item['object_type']->value === $filter_type
+                static fn(array $item): bool => $item['object_type']->value === $filter_type
             );
         }
 
@@ -353,10 +353,10 @@ abstract class playlist_object extends database_object implements
             ? $user
             : Core::get_global('user');
 
-        return (bool)(
+        return (bool) (
             $user instanceof User &&
             !empty($this->collaborate) &&
-            in_array($user->getId(), array_map('intval', explode(',', (string)$this->collaborate)))
+            in_array($user->getId(), array_map('intval', explode(',', (string) $this->collaborate)))
         );
     }
 
@@ -397,7 +397,7 @@ abstract class playlist_object extends database_object implements
         }
 
         if (isset($data['playlist_user']) && $data['playlist_user'] != $this->user) {
-            $this->user     = (int)$data['playlist_user'];
+            $this->user     = (int) $data['playlist_user'];
             $this->username = User::get_username($this->user);
             $this->update_item('user', $data['playlist_user']);
             $this->update_item('username', $this->username);

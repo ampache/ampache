@@ -195,7 +195,7 @@ class AccessListItemTest extends MockeryTestCase
     {
         $userId = -1;
 
-        $this->access->user = (string)$userId;
+        $this->access->user = (string) $userId;
 
         $this->assertSame(
             'All',

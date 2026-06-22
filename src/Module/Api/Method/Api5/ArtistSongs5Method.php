@@ -75,7 +75,7 @@ final class ArtistSongs5Method
 
             return false;
         }
-        $results = (array_key_exists('top50', $input) && (int)$input['top50'] == 1)
+        $results = (array_key_exists('top50', $input) && (int) $input['top50'] == 1)
             ? self::getSongRepository()->getTopSongsByArtist($artist)
             : self::getSongRepository()->getByArtist($object_id);
         if (empty($results)) {

@@ -66,7 +66,7 @@ class Plugin
         if (database_object::is_cached('plugin_version_update_info', 1)) {
             $cache = database_object::get_from_cache('plugin_version_update_info', 1);
 
-            return (int)($cache[$name] ?? 0);
+            return (int) ($cache[$name] ?? 0);
         }
         $sql        = "SELECT `key`, `value` FROM `update_info`;";
         $db_results = Dba::read($sql, [$name]);
@@ -78,7 +78,7 @@ class Plugin
 
         database_object::add_to_cache('plugin_version_update_info', 1, $results);
 
-        return (int)($results[$name] ?? 0);
+        return (int) ($results[$name] ?? 0);
     }
 
     /**
@@ -88,7 +88,7 @@ class Plugin
      */
     public static function get_plugins(?PluginTypeEnum $type = null): array
     {
-        $type = (string)$type?->value;
+        $type = (string) $type?->value;
 
         // make static cache for optimization when multiple call
         static $plugins_list = [];
@@ -218,7 +218,7 @@ class Plugin
         $sql        = "SELECT `key`, `value` FROM `update_info` WHERE `key`='db_version'";
         $db_results = Dba::read($sql);
         $results    = Dba::fetch_assoc($db_results);
-        $version    = (string)($results['value'] ?? '');
+        $version    = (string) ($results['value'] ?? '');
         database_object::add_to_cache('plugin_version_db_version', 1, [$version]);
 
         return $version;
@@ -258,15 +258,15 @@ class Plugin
         }
 
         /* Check the plugin to make sure it's got the needed vars */
-        if ((string)$this->_plugin->name === '') {
+        if ((string) $this->_plugin->name === '') {
             return false;
         }
 
-        if ((string)$this->_plugin->description === '') {
+        if ((string) $this->_plugin->description === '') {
             return false;
         }
 
-        if ((string)$this->_plugin->version === '') {
+        if ((string) $this->_plugin->version === '') {
             return false;
         }
 
@@ -325,7 +325,7 @@ class Plugin
         }
 
         $name    = Dba::escape('Plugin_' . $this->_plugin->name);
-        $version = (int)Dba::escape($version);
+        $version = (int) Dba::escape($version);
 
         $sql = "REPLACE INTO `update_info` SET `key` = ?, `value` = ?";
         Dba::write($sql, [$name, $version]);

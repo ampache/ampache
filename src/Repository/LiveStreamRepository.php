@@ -41,8 +41,7 @@ final readonly class LiveStreamRepository implements LiveStreamRepositoryInterfa
     public function __construct(
         private ModelFactoryInterface $modelFactory,
         private DatabaseConnectionInterface $connection,
-    ) {
-    }
+    ) {}
 
     /**
      * This deletes the object with the given id from the database

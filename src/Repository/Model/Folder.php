@@ -122,7 +122,7 @@ class Folder extends database_object implements
         // Build the folder paths
         if ($parent) {
             // identify full path when missing based on history
-            $parentFolder = self::getFolderRepository()->findById((int)$parent);
+            $parentFolder = self::getFolderRepository()->findById((int) $parent);
             while ($parentFolder) {
                 $path_name    = $path_name ?: $parentFolder->get_fullpathname() . DIRECTORY_SEPARATOR . $path_name;
                 $path         = $parentFolder->id . ($path ? ',' : '') . $path;
@@ -144,7 +144,7 @@ class Folder extends database_object implements
             return null;
         }
 
-        return (int)$folder_id;
+        return (int) $folder_id;
     }
 
     /**
@@ -230,7 +230,7 @@ class Folder extends database_object implements
     public function display_art(array $size, bool $force = false): void
     {
         if ($this->has_art() || $force) {
-            Art::display('folder', $this->id, (string)$this->get_fullname(), $size, $this->get_link());
+            Art::display('folder', $this->id, (string) $this->get_fullname(), $size, $this->get_link());
         }
     }
 
@@ -247,7 +247,7 @@ class Folder extends database_object implements
         while ($row = Dba::fetch_assoc($db_results)) {
             $results[] = [
                 'object_type' => LibraryItemEnum::tryFrom($row['object_type']),
-                'object_id' => (int)$row['object_id']
+                'object_id' => (int) $row['object_id']
             ];
         }
 
@@ -261,7 +261,7 @@ class Folder extends database_object implements
     public function get_childrens(): array
     {
         $results = [];
-        foreach ($this->get_children((string)$this->get_fullpathname()) as $objects) {
+        foreach ($this->get_children((string) $this->get_fullpathname()) as $objects) {
             $results[] = [
                 'object_type' => $objects['object_type'],
                 'object_id' => $objects['object_id']
@@ -380,7 +380,7 @@ class Folder extends database_object implements
             'folder' => [
                 'important' => true,
                 'label' => T_('Folder'),
-                'value' => (string)$this->get_fullname()
+                'value' => (string) $this->get_fullname()
             ],
         ];
     }
@@ -417,7 +417,7 @@ class Folder extends database_object implements
         while ($row = Dba::fetch_assoc($db_results)) {
             $results[] = [
                 'object_type' => LibraryItemEnum::tryFrom($row['object_type']),
-                'object_id' => (int)$row['object_id']
+                'object_id' => (int) $row['object_id']
             ];
         }
 
@@ -446,7 +446,7 @@ class Folder extends database_object implements
             while ($row = Dba::fetch_assoc($db_results)) {
                 $results[] = [
                     'object_type' => LibraryItemEnum::tryFrom($row['object_type']),
-                    'object_id' => (int)$row['object_id']
+                    'object_id' => (int) $row['object_id']
                 ];
             }
 

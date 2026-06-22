@@ -115,7 +115,7 @@ class Broadcast_Server implements MessageComponentInterface
      */
     public function onMessage(ConnectionInterface $from, $msg): void
     {
-        $commands = explode(';', (string)$msg);
+        $commands = explode(';', (string) $msg);
         foreach ($commands as $command) {
             $command = trim($command);
             if ($command !== '' && $command !== '0') {
@@ -123,12 +123,12 @@ class Broadcast_Server implements MessageComponentInterface
 
                 if (count($cmdinfo) === 2) {
                     match ($cmdinfo[0]) {
-                        self::BROADCAST_SONG => $this->notifySong($from, (int)$cmdinfo[1]),
-                        self::BROADCAST_SONG_POSITION => $this->notifySongPosition($from, (int)$cmdinfo[1]),
+                        self::BROADCAST_SONG => $this->notifySong($from, (int) $cmdinfo[1]),
+                        self::BROADCAST_SONG_POSITION => $this->notifySongPosition($from, (int) $cmdinfo[1]),
                         self::BROADCAST_PLAYER_PLAY => $this->notifyPlayerPlay($from, make_bool($cmdinfo[1])),
                         self::BROADCAST_ENDED => $this->notifyEnded($from),
                         self::BROADCAST_REGISTER_BROADCAST => $this->registerBroadcast($from, $cmdinfo[1]),
-                        self::BROADCAST_REGISTER_LISTENER => $this->registerListener($from, (int)$cmdinfo[1]),
+                        self::BROADCAST_REGISTER_LISTENER => $this->registerListener($from, (int) $cmdinfo[1]),
                         self::BROADCAST_AUTH_SID => $this->authSid($from, $cmdinfo[1]),
                         default => $this->echo_message($this->verbose, "[" . time() . "][warning]Unknown message code." . "\r\n"),
                     };
@@ -217,7 +217,7 @@ class Broadcast_Server implements MessageComponentInterface
         $item          = Stream_Playlist::media_to_urlarray($media);
         $transcode_cfg = AmpConfig::get('transcode', 'default');
 
-        return WebPlayer::get_media_js_param($item[0], (string)$transcode_cfg);
+        return WebPlayer::get_media_js_param($item[0], (string) $transcode_cfg);
     }
 
     /**
@@ -255,7 +255,7 @@ class Broadcast_Server implements MessageComponentInterface
             $clients[]    = $this->clients[$broadcaster_id];
             $nb_listeners = count($this->listeners[$broadcast->id]);
             $broadcast->update_listeners($nb_listeners);
-            $this->broadcastMessage($clients, self::BROADCAST_NB_LISTENERS, (string)$nb_listeners);
+            $this->broadcastMessage($clients, self::BROADCAST_NB_LISTENERS, (string) $nb_listeners);
         }
     }
 
@@ -312,7 +312,7 @@ class Broadcast_Server implements MessageComponentInterface
             $seekdiff  = $broadcast->song_position - $song_position;
             if ($seekdiff > 2 || $seekdiff < -2) {
                 $clients = $this->getListeners($broadcast);
-                $this->broadcastMessage($clients, self::BROADCAST_SONG_POSITION, (string)$song_position);
+                $this->broadcastMessage($clients, self::BROADCAST_SONG_POSITION, (string) $song_position);
             }
 
             $broadcast->song_position = $song_position;
@@ -351,7 +351,7 @@ class Broadcast_Server implements MessageComponentInterface
                 self::BROADCAST_SONG,
                 base64_encode($this->getSongJS($broadcast->song))
             );
-            $this->broadcastMessage([$from], self::BROADCAST_SONG_POSITION, (string)$broadcast->song_position);
+            $this->broadcastMessage([$from], self::BROADCAST_SONG_POSITION, (string) $broadcast->song_position);
             $this->notifyNbListeners($broadcast);
 
             $this->echo_message($this->verbose, "[info]New listener on broadcast " . $broadcast->id . "." . "\r\n");
@@ -381,7 +381,7 @@ class Broadcast_Server implements MessageComponentInterface
      */
     protected function unregisterListener(ConnectionInterface $conn): void
     {
-        $listeners = (array)$this->listeners;
+        $listeners = (array) $this->listeners;
         foreach ($listeners as $broadcast_id => $brlisteners) {
             $lindex = array_search($conn, $brlisteners, true);
             if (

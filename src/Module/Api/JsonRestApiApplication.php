@@ -70,11 +70,11 @@ final class JsonRestApiApplication implements ApiApplicationInterface
 
         // normalize input types (REST paths)
         $type = (isset($input['type']) && !empty($input['type']))
-            ? $this->apiHandler->normalizeType((string)$input['type'])
+            ? $this->apiHandler->normalizeType((string) $input['type'])
             : null;
 
         // normalize input actions (REST paths)
-        $action = $this->apiHandler->normalizeAction((string)$input['action'], $type, isset($input['filter']));
+        $action = $this->apiHandler->normalizeAction((string) $input['action'], $type, isset($input['filter']));
         $action = match ($method) {
             'DELETE' => $action . '_delete',
             'PATCH' => $action . '_edit',
@@ -97,7 +97,7 @@ final class JsonRestApiApplication implements ApiApplicationInterface
         }
 
         $post = (in_array($method, ['POST', 'PATCH', 'PUT', 'DELETE']))
-            ? (array)$request->getParsedBody()
+            ? (array) $request->getParsedBody()
             : [];
 
         $request = $request->withQueryParams(

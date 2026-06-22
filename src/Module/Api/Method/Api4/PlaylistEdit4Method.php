@@ -68,9 +68,9 @@ final class PlaylistEdit4Method
         if (!Api4::check_parameter($input, ['filter'], self::ACTION)) {
             return false;
         }
-        $items = explode(',', html_entity_decode((string)($input['items'] ?? '')));
-        $order = explode(',', html_entity_decode((string)($input['tracks'] ?? '')));
-        $sort  = (int)($input['sort'] ?? 0);
+        $items = explode(',', html_entity_decode((string) ($input['items'] ?? '')));
+        $order = explode(',', html_entity_decode((string) ($input['tracks'] ?? '')));
+        $sort  = (int) ($input['sort'] ?? 0);
         // calculate whether we are editing the track order too
         $playlist_edit = [];
         if (count($items) == count($order) && count($items) > 0) {
@@ -78,7 +78,7 @@ final class PlaylistEdit4Method
         }
 
         ob_end_clean();
-        $object_id = (int)$input['filter'];
+        $object_id = (int) $input['filter'];
         $playlist  = new Playlist($object_id);
 
         if ($playlist->isNew()) {

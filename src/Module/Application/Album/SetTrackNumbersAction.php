@@ -45,8 +45,7 @@ final readonly class SetTrackNumbersAction implements ApplicationActionInterface
     public function __construct(
         private UiInterface $ui,
         private LoggerInterface $logger,
-    ) {
-    }
+    ) {}
 
     public function run(ServerRequestInterface $request, GuiGatekeeperInterface $gatekeeper): ?ResponseInterface
     {
@@ -74,7 +73,7 @@ final readonly class SetTrackNumbersAction implements ApplicationActionInterface
         if (isset($_GET['order'])) {
             $songs = explode(';', Core::get_get('order'));
             $track = (filter_input(INPUT_GET, 'offset', FILTER_SANITIZE_NUMBER_INT))
-                ? ((int)filter_input(INPUT_GET, 'offset', FILTER_SANITIZE_NUMBER_INT)) + 1
+                ? ((int) filter_input(INPUT_GET, 'offset', FILTER_SANITIZE_NUMBER_INT)) + 1
                 : 1;
             foreach ($songs as $song_id) {
                 if ($song_id !== '') {

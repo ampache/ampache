@@ -94,7 +94,7 @@ class Ldap
             /* Test if the user is in the required group (optional) */
 
             if ($group_dn = AmpConfig::get('ldap_require_group')) {
-                $member_attribute = (string)AmpConfig::get('ldap_member_attribute', 'member');
+                $member_attribute = (string) AmpConfig::get('ldap_member_attribute', 'member');
 
                 $group_infos = self::_read($link, $group_dn, [$member_attribute]);
 
@@ -106,10 +106,10 @@ class Ldap
 
             // Obtain name and email field. Reconstruct name field to allow custom things like "givenName sn"
             $name_field = AmpConfig::get('ldap_name_field', 'cn');
-            $name       = $user_entry[strtolower((string)$name_field)][0];
+            $name       = $user_entry[strtolower((string) $name_field)][0];
 
             $email_field = AmpConfig::get('ldap_email_field', 'mail');
-            $email       = $user_entry[strtolower((string)$email_field)][0];
+            $email       = $user_entry[strtolower((string) $email_field)][0];
 
             $return_value = [
                 'success' => true,
@@ -120,16 +120,16 @@ class Ldap
             ];
 
             if (($state_field = AmpConfig::get('ldap_state_field')) !== null) {
-                $return_value['state'] = $user_entry[strtolower((string)$state_field)][0];
+                $return_value['state'] = $user_entry[strtolower((string) $state_field)][0];
             }
 
             if (($city_field = AmpConfig::get('ldap_city_field')) !== null) {
-                $return_value['city'] = $user_entry[strtolower((string)$city_field)][0];
+                $return_value['city'] = $user_entry[strtolower((string) $city_field)][0];
             }
 
             if (($avatar_field = AmpConfig::get('ldap_avatar_field')) !== null) {
                 $return_value['avatar'] = [
-                    'data' => $user_entry[strtolower((string)$avatar_field)][0],
+                    'data' => $user_entry[strtolower((string) $avatar_field)][0],
                     'mime' => AmpConfig::get('ldap_avatar_mime', 'image/jpeg'),
                 ];
             }

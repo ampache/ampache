@@ -45,8 +45,7 @@ final readonly class ApplicationRunner
         private LoggerInterface $logger,
         private GatekeeperFactoryInterface $gatekeeperFactory,
         private UiInterface $ui,
-    ) {
-    }
+    ) {}
 
     /**
      * @param array<string, string> $action_list A dict containing request keys and handler class names
@@ -57,7 +56,7 @@ final readonly class ApplicationRunner
         array $action_list,
         string $default_action,
     ): void {
-        $body        = (array)$request->getParsedBody();
+        $body        = (array) $request->getParsedBody();
         $action_name = htmlspecialchars($body['action'] ?? $request->getQueryParams()['action'] ?? '');
 
         if (array_key_exists($action_name, $action_list) === false) {

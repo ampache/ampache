@@ -46,9 +46,7 @@ class Ajax
      * constructor
      * This is what is called when the class is loaded
      */
-    public function __construct()
-    {
-    }
+    public function __construct() {}
 
     /**
      * action

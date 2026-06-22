@@ -41,9 +41,7 @@ final readonly class InitializationHandlerConfig implements InitializationHandle
 
     private const string VERSION         = '8.0.0'; // AMPACHE_VERSION
 
-    public function __construct(private EnvironmentInterface $environment)
-    {
-    }
+    public function __construct(private EnvironmentInterface $environment) {}
 
     public function init(): void
     {

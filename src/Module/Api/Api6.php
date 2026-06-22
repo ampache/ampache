@@ -424,7 +424,7 @@ class Api6
             ]
             : [];
         // perpetual sessions do not expire
-        $perpetual      = (bool)AmpConfig::get('perpetual_api_session', false);
+        $perpetual      = (bool) AmpConfig::get('perpetual_api_session', false);
         $session_expire = ($perpetual)
             ? 0
             : date("c", time() + AmpConfig::get('session_length', 3600) - 60);
@@ -433,15 +433,15 @@ class Api6
         $outarray = [
             'api' => self::$version,
             'session_expire' => $session_expire,
-            'update' => date("c", (int)$details['update']),
-            'add' => date("c", (int)$details['add']),
-            'clean' => date("c", (int)$details['clean']),
-            'max_song' => (int)$details['max_song'],
-            'max_album' => (int)$details['max_album'],
-            'max_artist' => (int)$details['max_artist'],
-            'max_video' => (int)$details['max_video'],
-            'max_podcast' => (int)$details['max_podcast'],
-            'max_podcast_episode' => (int)$details['max_podcast_episode'],
+            'update' => date("c", (int) $details['update']),
+            'add' => date("c", (int) $details['add']),
+            'clean' => date("c", (int) $details['clean']),
+            'max_song' => (int) $details['max_song'],
+            'max_album' => (int) $details['max_album'],
+            'max_artist' => (int) $details['max_artist'],
+            'max_video' => (int) $details['max_video'],
+            'max_podcast' => (int) $details['max_podcast'],
+            'max_podcast_episode' => (int) $details['max_podcast_episode'],
             'songs' => $counts['song'],
             'albums' => $counts['album'],
             'artists' => $counts['artist'],

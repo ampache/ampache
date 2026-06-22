@@ -382,7 +382,7 @@ class Graph
                 foreach ($values as $date => $value) {
                     $value = array_key_exists($date, $catalog_values) ? $catalog_values[$date] : 0;
 
-                    $MyData->addPoints($value, (string)$catalog->name);
+                    $MyData->addPoints($value, (string) $catalog->name);
                 }
             }
         }
@@ -464,8 +464,8 @@ class Graph
         $start_date = null,
         $end_date = null,
     ): string {
-        $start_date = (int)($start_date);
-        $end_date   = (int)($end_date);
+        $start_date = (int) ($start_date);
+        $end_date   = (int) ($end_date);
         if ($end_date === 0) {
             $end_date = time();
         }
@@ -479,7 +479,7 @@ class Graph
             $sql .= " AND `" . $object_type . "`.`catalog` = " . $catalog_id;
         }
 
-        $object_id = (int)$object_id;
+        $object_id = (int) $object_id;
         if ($object_id > 0) {
             $sql .= " AND `" . $object_type . "`.`id` = '" . $object_id . "'";
         }
@@ -680,8 +680,8 @@ class Graph
         $start_date = null,
         $end_date = null,
     ): string {
-        $start_date = (int)($start_date);
-        $end_date   = (int)($end_date);
+        $start_date = (int) ($start_date);
+        $end_date   = (int) ($end_date);
         if ($end_date === 0) {
             $end_date = time();
         }
@@ -695,7 +695,7 @@ class Graph
             $sql .= " AND `object_count`.`user` = " . $user_id;
         }
 
-        if (InterfaceImplementationChecker::is_library_item((string)$object_type)) {
+        if (InterfaceImplementationChecker::is_library_item((string) $object_type)) {
             $sql .= " AND `object_count`.`object_type` = '" . $object_type . "'";
             if ($object_id > 0) {
                 $sql .= " AND `object_count`.`object_id` = '" . $object_id . "'";
@@ -733,12 +733,12 @@ class Graph
     protected function render_graph($title, Data $MyData, $zoom, $width = 0, $height = 0): void
     {
         // Check graph size sanity
-        $width = (int)$width;
+        $width = (int) $width;
         if ($width <= 50 || $width > 4096) {
             $width = 700;
         }
 
-        $height = (int)$height;
+        $height = (int) $height;
         if ($height <= 60 || $height > 4096) {
             $height = 260;
         }

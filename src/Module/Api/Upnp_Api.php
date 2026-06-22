@@ -109,7 +109,7 @@ class Upnp_Api
                     $song = new Song($song_id);
                     if ($song->isNew() === false) {
                         $song->fill_ext_info();
-                        $parent       = 'amp://music/albums/' . (string)$song->album;
+                        $parent       = 'amp://music/albums/' . (string) $song->album;
                         $mediaItems[] = self::_itemSong($song, $parent);
                     }
                 }
@@ -256,7 +256,7 @@ class Upnp_Api
                         }
                         break;
                     case 2: // Get artist's albums list
-                        $artist = new Artist((int)$pathreq[1]);
+                        $artist = new Artist((int) $pathreq[1]);
                         if ($artist->isNew() === false) {
                             $album_ids              = self::getAlbumRepository()->getAlbumByArtist($artist->id);
                             [$maxCount, $album_ids] = self::_slice($album_ids, $start, $count);
@@ -287,7 +287,7 @@ class Upnp_Api
                         }
                         break;
                     case 2: // Get album's songs list
-                        $album = new Album((int)$pathreq[1]);
+                        $album = new Album((int) $pathreq[1]);
                         if ($album->isNew() === false) {
                             $song_ids              = self::getSongRepository()->getByAlbum($album->id);
                             [$maxCount, $song_ids] = self::_slice($song_ids, $start, $count);
@@ -333,7 +333,7 @@ class Upnp_Api
                         }
                         break;
                     case 2: // Get playlist's songs list
-                        $playlist = new Playlist((int)$pathreq[1]);
+                        $playlist = new Playlist((int) $pathreq[1]);
                         if ($playlist->isNew() === false) {
                             $items              = $playlist->get_items();
                             [$maxCount, $items] = self::_slice($items, $start, $count);
@@ -361,7 +361,7 @@ class Upnp_Api
                         }
                         break;
                     case 2: // Get playlist's songs list
-                        $playlist = new Search((int)$pathreq[1], 'song');
+                        $playlist = new Search((int) $pathreq[1], 'song');
                         if ($playlist->isNew() === false) {
                             $items              = $playlist->get_items();
                             [$maxCount, $items] = self::_slice($items, $start, $count);
@@ -404,7 +404,7 @@ class Upnp_Api
                         }
                         break;
                     case 2: // Get podcast episodes list
-                        $podcast = self::getPodcastRepository()->findById((int)$pathreq[1]);
+                        $podcast = self::getPodcastRepository()->findById((int) $pathreq[1]);
                         if ($podcast !== null) {
                             $episodes = $podcast->getEpisodeIds();
 
@@ -471,7 +471,7 @@ class Upnp_Api
                         ];
                         break;
                     case 2:
-                        $artist = new Artist((int)$pathreq[1]);
+                        $artist = new Artist((int) $pathreq[1]);
                         if ($artist->isNew() === false) {
                             $meta = self::_itemArtist($artist, $root . '/artists');
                         }
@@ -491,7 +491,7 @@ class Upnp_Api
                         ];
                         break;
                     case 2:
-                        $album = new Album((int)$pathreq[1]);
+                        $album = new Album((int) $pathreq[1]);
                         if ($album->isNew() === false) {
                             $meta = self::_itemAlbum($album, $root . '/albums');
                         }
@@ -511,7 +511,7 @@ class Upnp_Api
                         ];
                         break;
                     case 2:
-                        $song = new Song((int)$pathreq[1]);
+                        $song = new Song((int) $pathreq[1]);
                         if ($song->isNew() === false) {
                             $song->fill_ext_info();
                             $meta = self::_itemSong($song, $root . '/songs');
@@ -532,7 +532,7 @@ class Upnp_Api
                         ];
                         break;
                     case 2:
-                        $playlist = new Playlist((int)$pathreq[1]);
+                        $playlist = new Playlist((int) $pathreq[1]);
                         if ($playlist->isNew() === false) {
                             $meta = self::_itemPlaylist($playlist, $root . '/playlists');
                         }
@@ -552,7 +552,7 @@ class Upnp_Api
                         ];
                         break;
                     case 2:
-                        $playlist = new Search((int)$pathreq[1], 'song');
+                        $playlist = new Search((int) $pathreq[1], 'song');
                         if ($playlist->isNew() === false) {
                             $meta = self::_itemSmartPlaylist($playlist, $root . '/smartplaylists');
                         }
@@ -572,7 +572,7 @@ class Upnp_Api
                         ];
                         break;
                     case 2:
-                        $radio = new Live_Stream((int)$pathreq[1]);
+                        $radio = new Live_Stream((int) $pathreq[1]);
                         if ($radio->isNew() === false) {
                             $meta = self::_itemLiveStream($radio, $root . '/live_streams');
                         }
@@ -592,13 +592,13 @@ class Upnp_Api
                         ];
                         break;
                     case 2:
-                        $podcast = self::getPodcastRepository()->findById((int)$pathreq[1]);
+                        $podcast = self::getPodcastRepository()->findById((int) $pathreq[1]);
                         if ($podcast !== null) {
                             $meta = self::_itemPodcast($podcast, $root . '/podcasts');
                         }
                         break;
                     case 3:
-                        $episode = new Podcast_Episode((int)$pathreq[2]);
+                        $episode = new Podcast_Episode((int) $pathreq[2]);
                         if ($episode->isNew() === false) {
                             $meta = self::_itemPodcastEpisode($episode, $root . '/podcasts/' . $pathreq[1]);
                         }
@@ -699,7 +699,7 @@ class Upnp_Api
                         ];
                         break;
                     case 2:
-                        $video = new Video((int)$pathreq[1]);
+                        $video = new Video((int) $pathreq[1]);
                         if ($video->isNew() === false) {
                             $meta = self::_itemVideo($video, $root . '/videos');
                         }
@@ -922,7 +922,7 @@ class Upnp_Api
         $new_usn = 'uuid:' . self::get_uuidStr();
         $actst   = $headers['st'];
         //echo 'DELAYTIME: [' . $headers['mx'] . ']' . PHP_EOL;
-        $delaytime = (int)($headers['mx']);
+        $delaytime = (int) ($headers['mx']);
         if ($headers['man'] == 'ssdp:discover') {
             if ($headers['st'] == 'urn:schemas-upnp-org:device:MediaServer:1') {
                 self::sendResponse($delaytime, $actst, $address);
@@ -964,7 +964,7 @@ class Upnp_Api
         $values = [];
         foreach ($lines as $line) {
             //$line = str_replace( ' ', '', $line );
-            $line   = (string)preg_replace('/[\x00-\x1F\x7F]/', '', $line);
+            $line   = (string) preg_replace('/[\x00-\x1F\x7F]/', '', $line);
             $tokens = explode(' ', $line);
             //echo 'BARELINE:'.$line.'&'.count($tokens).PHP_EOL;
             if (count($tokens) > 1) {
@@ -1642,7 +1642,7 @@ class Upnp_Api
             if ($host == "239.255.255.250") {
                 socket_set_option($socket, SOL_SOCKET, SO_BROADCAST, 1);
             }
-            socket_sendto($socket, $buf, strlen((string)$buf), 0, $host, $port);
+            socket_sendto($socket, $buf, strlen((string) $buf), 0, $host, $port);
             socket_close($socket);
         }
     }
@@ -1730,11 +1730,11 @@ class Upnp_Api
                         $tokens[$index++] = $onetoken;
                         $onetoken         = "";
                     }
-                    $tokens[$index++] = (string)$token;
+                    $tokens[$index++] = (string) $token;
                     break;
                 default:
                     if ($onetoken == "") {
-                        $onetoken = (string)$token;
+                        $onetoken = (string) $token;
                     } else {
                         $onetoken = $onetoken . " " . $token;
                     }

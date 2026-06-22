@@ -92,7 +92,7 @@ class Podcast extends database_object implements
     public function display_art(array $size, bool $force = false): void
     {
         if (Art::has_db($this->id, 'podcast') || $force) {
-            Art::display('podcast', $this->id, (string)$this->get_fullname(), $size, $this->get_link());
+            Art::display('podcast', $this->id, (string) $this->get_fullname(), $size, $this->get_link());
         }
     }
 
@@ -183,7 +183,7 @@ class Podcast extends database_object implements
             'podcast' => [
                 'important' => true,
                 'label' => T_('Podcast'),
-                'value' => (string)$this->get_fullname(),
+                'value' => (string) $this->get_fullname(),
             ],
         ];
     }

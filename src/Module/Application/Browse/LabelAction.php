@@ -42,8 +42,7 @@ final readonly class LabelAction implements ApplicationActionInterface
         private ModelFactoryInterface $modelFactory,
         private UiInterface $ui,
         private ConfigContainerInterface $configContainer,
-    ) {
-    }
+    ) {}
 
     public function run(ServerRequestInterface $request, GuiGatekeeperInterface $gatekeeper): ?ResponseInterface
     {
@@ -62,7 +61,7 @@ final readonly class LabelAction implements ApplicationActionInterface
         $browse->set_update_session(true);
 
         if (array_key_exists('catalog', $_SESSION)) {
-            $browse->set_filter('catalog', (int)$_SESSION['catalog']);
+            $browse->set_filter('catalog', (int) $_SESSION['catalog']);
         }
 
         if ($this->configContainer->isFeatureEnabled(ConfigurationKeyEnum::CATALOG_DISABLE)) {

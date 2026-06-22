@@ -71,7 +71,7 @@ final class Gatekeeper implements GatekeeperInterface
             preg_match('/Bearer ([0-9a-f].*)/', $auth, $matches);
 
             if ($matches !== []) {
-                $token = (string)$matches[1];
+                $token = (string) $matches[1];
                 $this->logger->notice(
                     'API session using Bearer token',
                     [LegacyLogger::CONTEXT_TYPE => self::class]
@@ -82,7 +82,7 @@ final class Gatekeeper implements GatekeeperInterface
                  * Remove some day when backwards compatability isn't a problem
                  */
                 $post = ($this->request->getMethod() === 'POST')
-                    ? (array)$this->request->getParsedBody()
+                    ? (array) $this->request->getParsedBody()
                     : [];
                 $query = array_merge($this->request->getQueryParams(), $post);
                 $token = $query[$requestKey] ?? '';

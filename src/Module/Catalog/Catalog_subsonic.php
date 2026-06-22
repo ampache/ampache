@@ -64,7 +64,7 @@ class Catalog_subsonic extends Catalog
                 $this->$key = $value;
             }
 
-            $this->catalog_id = (int)$catalog_id;
+            $this->catalog_id = (int) $catalog_id;
         }
     }
 
@@ -153,8 +153,8 @@ class Catalog_subsonic extends Catalog
         }
 
         $remote       = AmpConfig::get('cache_remote');
-        $cache_path   = (string)AmpConfig::get('cache_path', '');
-        $cache_target = (string)AmpConfig::get('cache_target', '');
+        $cache_path   = (string) AmpConfig::get('cache_path', '');
+        $cache_target = (string) AmpConfig::get('cache_target', '');
         // need a destination, source and target format
         if (!$remote || !is_dir($cache_path) || !$cache_target) {
             debug_event('subsonic.catalog', 'Check your cache_path cache_target and cache_remote settings', 5);
@@ -182,8 +182,8 @@ class Catalog_subsonic extends Catalog
                     rename($old_target_file, $file_target);
                     debug_event('subsonic.catalog', 'Moved: ' . $row['id'] . ' from: {' . $old_target_file . '}' . ' to: {' . $file_target . '}', 5);
                 } else {
-                    $max_bitrate   = (int)AmpConfig::get('max_bit_rate', 128);
-                    $user_bit_rate = (int)AmpConfig::get('transcode_bitrate', 128);
+                    $max_bitrate   = (int) AmpConfig::get('max_bit_rate', 128);
+                    $user_bit_rate = (int) AmpConfig::get('transcode_bitrate', 128);
 
                     // If the user's crazy, that's no skin off our back
                     if ($user_bit_rate > $max_bitrate) {
@@ -244,9 +244,9 @@ class Catalog_subsonic extends Catalog
             $db_results = Dba::read($sql, [$this->uri . '/rest/stream.view?id=' . $remote_id . '&filename=' . urlencode($db_file)]);
             if ($results = Dba::fetch_assoc($db_results)) {
                 Dba::write('UPDATE `song` SET `file` = ? WHERE `id` = ?', [$db_file, $results['id']]);
-                Song::update_song_map([$remote_id], 'subsonic_' . $this->catalog_id, (int)$results['id']);
+                Song::update_song_map([$remote_id], 'subsonic_' . $this->catalog_id, (int) $results['id']);
 
-                return (int)$results['id'];
+                return (int) $results['id'];
             }
         }
 
@@ -254,7 +254,7 @@ class Catalog_subsonic extends Catalog
         $db_results = Dba::read($sql, [$db_file]);
 
         if ($results = Dba::fetch_assoc($db_results)) {
-            return (int)$results['id'];
+            return (int) $results['id'];
         }
 
         return null;
@@ -301,9 +301,7 @@ class Catalog_subsonic extends Catalog
         return $dead;
     }
 
-    public function count_scan_folders(?Interactor $interactor = null): void
-    {
-    }
+    public function count_scan_folders(?Interactor $interactor = null): void {}
 
     /**
      * get_create_help
@@ -439,12 +437,12 @@ class Catalog_subsonic extends Catalog
         $song = new Song($song_Id);
         $art  = new Art($song->album, 'album');
         if (AmpConfig::get('album_art_max_height') && AmpConfig::get('album_art_max_width')) {
-            $size = (int)max(AmpConfig::get('album_art_max_width'), AmpConfig::get('album_art_max_height'));
+            $size = (int) max(AmpConfig::get('album_art_max_width'), AmpConfig::get('album_art_max_height'));
         } else {
             $size = 275;
         }
 
-        $image = $this->subsonic->querySubsonic('getCoverArt', ['id' => (string)$data['coverArt'], 'size' => $size], true);
+        $image = $this->subsonic->querySubsonic('getCoverArt', ['id' => (string) $data['coverArt'], 'size' => $size], true);
 
         return (
             is_string($image) &&
@@ -518,7 +516,7 @@ class Catalog_subsonic extends Catalog
             $song_id = $matches[1];
         }
 
-        return (int)$song_id;
+        return (int) $song_id;
     }
 
     /**
@@ -702,7 +700,7 @@ class Catalog_subsonic extends Catalog
                                     $songsadded++;
                                 } elseif ($action === 'verify' && $existing_song) {
                                     // If we already have the song, update it
-                                    $song_id = (int)$song_id_check;
+                                    $song_id = (int) $song_id_check;
                                     if ($song_id > 0) {
                                         $current_song = new Song($song_id);
                                         $current_song->fill_ext_info();

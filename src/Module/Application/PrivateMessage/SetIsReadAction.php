@@ -45,8 +45,7 @@ final readonly class SetIsReadAction implements ApplicationActionInterface
         private ConfigContainerInterface $configContainer,
         private UiInterface $ui,
         private PrivateMessageRepositoryInterface $pmRepository,
-    ) {
-    }
+    ) {}
 
     public function run(ServerRequestInterface $request, GuiGatekeeperInterface $gatekeeper): ?ResponseInterface
     {

@@ -53,7 +53,7 @@ final class DemocraticAction extends AbstractStreamAction
             return null;
         }
 
-        $democratic_id = (int)$this->requestParser->getFromRequest('democratic_id');
+        $democratic_id = (int) $this->requestParser->getFromRequest('democratic_id');
         $democratic    = $this->modelFactory->createDemocratic($democratic_id);
         $urls          = [$democratic->play_url()];
         $play_type     = $this->configContainer->get(ConfigurationKeyEnum::PLAY_TYPE);

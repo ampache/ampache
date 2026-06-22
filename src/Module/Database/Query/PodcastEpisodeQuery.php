@@ -121,7 +121,7 @@ final class PodcastEpisodeQuery implements QueryInterface
             case 'id':
                 $filter_sql = " `podcast_episode`.`id` IN (";
                 foreach ($value as $uid) {
-                    $filter_sql .= (int)$uid . ',';
+                    $filter_sql .= (int) $uid . ',';
                 }
 
                 $filter_sql = rtrim($filter_sql, ',') . ") AND ";
@@ -174,21 +174,21 @@ final class PodcastEpisodeQuery implements QueryInterface
                 $filter_sql = " `podcast_episode`.`catalog` IN (" . implode(',', Catalog::get_catalogs('', $query->user_id, true)) . ") AND ";
                 break;
             case 'user_flag':
-                $filter_sql = ((int)$value === 0)
-                    ? " `podcast_episode`.`id` NOT IN (SELECT `object_id` FROM `user_flag` WHERE `object_type` = 'podcast_episode' AND `user` = " . (int)$query->user_id . ") AND "
-                    : " `podcast_episode`.`id` IN (SELECT `object_id` FROM `user_flag` WHERE `object_type` = 'podcast_episode' AND `user` = " . (int)$query->user_id . ") AND ";
+                $filter_sql = ((int) $value === 0)
+                    ? " `podcast_episode`.`id` NOT IN (SELECT `object_id` FROM `user_flag` WHERE `object_type` = 'podcast_episode' AND `user` = " . (int) $query->user_id . ") AND "
+                    : " `podcast_episode`.`id` IN (SELECT `object_id` FROM `user_flag` WHERE `object_type` = 'podcast_episode' AND `user` = " . (int) $query->user_id . ") AND ";
                 break;
             case 'user_rating':
-                $filter_sql = ((int)$value === 0)
-                    ? " `podcast_episode`.`id` NOT IN (SELECT `object_id` FROM `rating` WHERE `object_type` = 'podcast_episode' AND `user` = " . (int)$query->user_id . ") AND "
-                    : " `podcast_episode`.`id` IN (SELECT `object_id` FROM `rating` WHERE `object_type` = 'podcast_episode' AND `user` = " . (int)$query->user_id . " AND `rating` = " . Dba::escape($value) . ") AND ";
+                $filter_sql = ((int) $value === 0)
+                    ? " `podcast_episode`.`id` NOT IN (SELECT `object_id` FROM `rating` WHERE `object_type` = 'podcast_episode' AND `user` = " . (int) $query->user_id . ") AND "
+                    : " `podcast_episode`.`id` IN (SELECT `object_id` FROM `rating` WHERE `object_type` = 'podcast_episode' AND `user` = " . (int) $query->user_id . " AND `rating` = " . Dba::escape($value) . ") AND ";
                 break;
             case 'catalog_enabled':
                 $query->set_join('LEFT', '`catalog`', '`catalog`.`id`', '`podcast_episode`.`catalog`', 100);
                 $filter_sql = " `catalog`.`enabled` = '1' AND ";
                 break;
             case 'unplayed':
-                if ((int)$value === 1) {
+                if ((int) $value === 1) {
                     $filter_sql = " `podcast_episode`.`played`='0' AND ";
                 }
 
@@ -229,17 +229,17 @@ final class PodcastEpisodeQuery implements QueryInterface
                 break;
             case 'rating':
                 $sql = sprintf('`rating`.`rating` %s, `rating`.`date`', $order);
-                $query->set_join_and_and('LEFT', "`rating`", "`rating`.`object_id`", "`podcast_episode`.`id`", "`rating`.`object_type`", "'podcast_episode'", "`rating`.`user`", (string)$query->user_id, 100);
+                $query->set_join_and_and('LEFT', "`rating`", "`rating`.`object_id`", "`podcast_episode`.`id`", "`rating`.`object_type`", "'podcast_episode'", "`rating`.`user`", (string) $query->user_id, 100);
                 break;
             case 'user_flag':
             case 'userflag':
                 $sql = "`user_flag`.`date`";
-                $query->set_join_and_and('LEFT', "`user_flag`", "`user_flag`.`object_id`", "`podcast_episode`.`id`", "`user_flag`.`object_type`", "'podcast_episode'", "`user_flag`.`user`", (string)$query->user_id, 100);
+                $query->set_join_and_and('LEFT', "`user_flag`", "`user_flag`.`object_id`", "`podcast_episode`.`id`", "`user_flag`.`object_type`", "'podcast_episode'", "`user_flag`.`user`", (string) $query->user_id, 100);
                 break;
             case 'user_flag_rating':
                 $sql = sprintf('`user_flag`.`date` %s, `rating`.`rating` %s, `rating`.`date`', $order, $order);
-                $query->set_join_and_and('LEFT', "`user_flag`", "`user_flag`.`object_id`", "`podcast_episode`.`id`", "`user_flag`.`object_type`", "'podcast_episode'", "`user_flag`.`user`", (string)$query->user_id, 100);
-                $query->set_join_and_and('LEFT', "`rating`", "`rating`.`object_id`", "`podcast_episode`.`id`", "`rating`.`object_type`", "'podcast_episode'", "`rating`.`user`", (string)$query->user_id, 100);
+                $query->set_join_and_and('LEFT', "`user_flag`", "`user_flag`.`object_id`", "`podcast_episode`.`id`", "`user_flag`.`object_type`", "'podcast_episode'", "`user_flag`.`user`", (string) $query->user_id, 100);
+                $query->set_join_and_and('LEFT', "`rating`", "`rating`.`object_id`", "`podcast_episode`.`id`", "`rating`.`object_type`", "'podcast_episode'", "`rating`.`user`", (string) $query->user_id, 100);
                 break;
             default:
                 $sql = '';

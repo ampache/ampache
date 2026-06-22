@@ -72,9 +72,9 @@ final class RecordPlay8Method
         }
         $play_user = $user;
         if (isset($input['user'])) {
-            $play_user = ((int)$input['user'] > 0)
-                ? new User((int)$input['user'])
-                : User::get_from_username((string)$input['user']);
+            $play_user = ((int) $input['user'] > 0)
+                ? new User((int) $input['user'])
+                : User::get_from_username((string) $input['user']);
         }
         // validate supplied user
         $valid = ($play_user instanceof User && in_array($play_user->id, self::getUserRepository()->getValid()));
@@ -93,7 +93,7 @@ final class RecordPlay8Method
         $date      = (array_key_exists('date', $input)) ? (int) scrub_in((string) $input['date']) : time(); //optional
 
         // validate client string or fall back to 'api'
-        $agent = scrub_in((string)($input['client'] ?? 'api'));
+        $agent = scrub_in((string) ($input['client'] ?? 'api'));
 
         $media = new Song($object_id);
         if ($media->isNew()) {

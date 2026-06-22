@@ -69,7 +69,7 @@ final class User8Method
         } else {
             $userRepository = self::getUserRepository();
             $check_user     = (is_numeric($username))
-                ? $userRepository->findById((int)$username)
+                ? $userRepository->findById((int) $username)
                 : $userRepository->findByUsername((string) $username);
             if (
                 $check_user === null ||

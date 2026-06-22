@@ -59,8 +59,7 @@ final readonly class IndexAjaxHandler implements AjaxHandlerInterface
         private WantedRepositoryInterface $wantedRepository,
         private VideoRepositoryInterface $videoRepository,
         private WantedManagerInterface $wantedManager,
-    ) {
-    }
+    ) {}
 
     public function handle(User $user): void
     {
@@ -75,8 +74,8 @@ final readonly class IndexAjaxHandler implements AjaxHandlerInterface
         // Switch on the actions
         switch ($action) {
             case 'top_tracks':
-                $artist       = new Artist((int)$this->requestParser->getFromRequest('artist'));
-                $object_ids   = $this->songRepository->getTopSongsByArtist($artist, (int)AmpConfig::get('popular_threshold', 10));
+                $artist       = new Artist((int) $this->requestParser->getFromRequest('artist'));
+                $object_ids   = $this->songRepository->getTopSongsByArtist($artist, (int) AmpConfig::get('popular_threshold', 10));
                 $hide_columns = ['cel_artist'];
                 ob_start();
                 require_once Ui::find_template('show_top_tracks.inc.php');
@@ -151,7 +150,7 @@ final readonly class IndexAjaxHandler implements AjaxHandlerInterface
             case 'artist_info':
                 if (AmpConfig::get('lastfm_api_key') && (array_key_exists('artist', $_REQUEST) || array_key_exists('fullname', $_REQUEST))) {
                     if (array_key_exists('artist', $_REQUEST)) {
-                        $artist    = new Artist((int)$this->requestParser->getFromRequest('artist'));
+                        $artist    = new Artist((int) $this->requestParser->getFromRequest('artist'));
                         $biography = Recommendation::get_artist_info($artist->id);
                     } else {
                         $fullname  = $this->requestParser->getFromRequest('fullname');
@@ -167,7 +166,7 @@ final readonly class IndexAjaxHandler implements AjaxHandlerInterface
                 break;
             case 'similar_artist':
                 if (AmpConfig::get('show_similar') && array_key_exists('artist', $_REQUEST)) {
-                    $artist          = new Artist((int)$this->requestParser->getFromRequest('artist'));
+                    $artist          = new Artist((int) $this->requestParser->getFromRequest('artist'));
                     $limit_threshold = AmpConfig::get('stats_threshold', 7);
                     $object_ids      = [];
                     $missing_objects = [];
@@ -185,7 +184,7 @@ final readonly class IndexAjaxHandler implements AjaxHandlerInterface
 
                 break;
             case 'similar_songs':
-                $artist     = new Artist((int)$this->requestParser->getFromRequest('artist'));
+                $artist     = new Artist((int) $this->requestParser->getFromRequest('artist'));
                 $similars   = Recommendation::get_artists_like($artist->id);
                 $object_ids = [];
                 foreach ($similars as $similar) {
@@ -198,7 +197,7 @@ final readonly class IndexAjaxHandler implements AjaxHandlerInterface
 
                 // randomize and slice
                 shuffle($object_ids);
-                $object_ids   = array_slice($object_ids, 0, (int)AmpConfig::get('popular_threshold', 10));
+                $object_ids   = array_slice($object_ids, 0, (int) AmpConfig::get('popular_threshold', 10));
                 $browse       = new Browse();
                 $hide_columns = [];
                 ob_start();
@@ -206,9 +205,9 @@ final readonly class IndexAjaxHandler implements AjaxHandlerInterface
                 $results['similar_songs'] = ob_get_clean();
                 break;
             case 'similar_now_playing':
-                $media_id = (int)$this->requestParser->getFromRequest('media_id');
+                $media_id = (int) $this->requestParser->getFromRequest('media_id');
                 if (AmpConfig::get('show_similar') && $media_id > 0 && array_key_exists('media_artist', $_REQUEST)) {
-                    $artists = Recommendation::get_artists_like((int)$this->requestParser->getFromRequest('media_artist'), 3, false);
+                    $artists = Recommendation::get_artists_like((int) $this->requestParser->getFromRequest('media_artist'), 3, false);
                     $songs   = Recommendation::get_songs_like($media_id, 3);
                     ob_start();
                     require_once Ui::find_template('show_now_playing_similar.inc.php');
@@ -218,7 +217,7 @@ final readonly class IndexAjaxHandler implements AjaxHandlerInterface
                 break;
             case 'labels':
                 if (AmpConfig::get('label') && array_key_exists('artist', $_REQUEST)) {
-                    $labels     = $this->labelRepository->getByArtist((int)$this->requestParser->getFromRequest('artist'));
+                    $labels     = $this->labelRepository->getByArtist((int) $this->requestParser->getFromRequest('artist'));
                     $object_ids = [];
                     foreach ($labels as $labelid => $label) {
                         $object_ids[] = $labelid;
@@ -238,7 +237,7 @@ final readonly class IndexAjaxHandler implements AjaxHandlerInterface
             case 'wanted_missing_albums':
                 if (AmpConfig::get('wanted') && (array_key_exists('artist', $_REQUEST) || array_key_exists('artist_mbid', $_REQUEST))) {
                     if (array_key_exists('artist', $_REQUEST)) {
-                        $artist = new Artist((int)$this->requestParser->getFromRequest('artist'));
+                        $artist = new Artist((int) $this->requestParser->getFromRequest('artist'));
                         if (
                             !in_array($artist->mbid, [null, '', '0'], true)
                         ) {
@@ -265,7 +264,7 @@ final readonly class IndexAjaxHandler implements AjaxHandlerInterface
                         $artist_mbid = $_REQUEST['artist_mbid'];
                         $artist      = null;
                     } else {
-                        $artist      = (int)$this->requestParser->getFromRequest('artist');
+                        $artist      = (int) $this->requestParser->getFromRequest('artist');
                         $aobj        = new Artist($artist);
                         $artist_mbid = $aobj->mbid;
                     }
@@ -332,7 +331,7 @@ final readonly class IndexAjaxHandler implements AjaxHandlerInterface
                     Access::check(AccessTypeEnum::INTERFACE, AccessLevelEnum::ADMIN) &&
                     isset($_REQUEST['activity_id'])
                 ) {
-                    Stats::delete((int)$_REQUEST['activity_id']);
+                    Stats::delete((int) $_REQUEST['activity_id']);
                 }
 
                 ob_start();
@@ -360,7 +359,7 @@ final readonly class IndexAjaxHandler implements AjaxHandlerInterface
                 $results['now_playing'] = ob_get_clean();
                 ob_start();
                 $user_id = (isset($_REQUEST['user_id']))
-                    ? (int)$this->requestParser->getFromRequest('user_id')
+                    ? (int) $this->requestParser->getFromRequest('user_id')
                     : ($user->id ?: -1);
                 $user_only = isset($_REQUEST['user_only']);
                 $ajax_page = 'index';
@@ -523,7 +522,7 @@ final readonly class IndexAjaxHandler implements AjaxHandlerInterface
 
                     $object_ids = ($label === null)
                         ? []
-                        : $this->songRepository->getByLabel((string)$label->name);
+                        : $this->songRepository->getByLabel((string) $label->name);
 
                     $browse = new Browse();
                     $browse->set_type('song');

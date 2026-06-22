@@ -156,7 +156,7 @@ class AlbumDisk extends database_object implements
             : Dba::read("SELECT `album_disk`.* FROM `album_disk` INNER JOIN `album` ON `album`.`id` = `album_disk`.`album_id` WHERE `album_disk`.`album_id` = ? AND `album_disk`.`disk` = ? AND `album_disk`.`catalog` = CASE WHEN `album`.`catalog` = 0 THEN 0 ELSE ? END AND (`album_disk`.`disksubtitle` = '' OR `album_disk`.`disksubtitle` IS NULL);", [$album_id, $disk, $catalog_id]);
         $row = Dba::fetch_assoc($db_results);
         if (isset($row['id'])) {
-            return (int)$row['id'];
+            return (int) $row['id'];
         }
 
         // update existing ID
@@ -169,7 +169,7 @@ class AlbumDisk extends database_object implements
                     // Duplicates might collide here
                     $db_results = Dba::read("SELECT `album_disk`.`id` FROM `album_disk` INNER JOIN `album` ON `album`.`id` = `album_disk`.`album_id` WHERE `album_disk`.`album_id` = ? AND `album_disk`.`disk` = ? AND `album_disk`.`catalog` = CASE WHEN `album`.`catalog` = 0 THEN 0 ELSE ? END AND `album_disk`.`disksubtitle` = ?;", [$album_id, $disk, $catalog_id, ($disksubtitle ?: null)]);
                     if ($row = Dba::fetch_assoc($db_results)) {
-                        $current_id = (int)$row['id'];
+                        $current_id = (int) $row['id'];
                     }
                 }
 
@@ -178,7 +178,7 @@ class AlbumDisk extends database_object implements
                     Dba::write("UPDATE `song` SET `disk` = ? WHERE `album` = ? AND `disk` = ?;", [$disk, $album_id, $row['disk']]);
                 }
 
-                return (int)$current_id;
+                return (int) $current_id;
             }
         }
 
@@ -199,7 +199,7 @@ class AlbumDisk extends database_object implements
             Dba::write($sql, [$disksubtitle, $album_disk_id]);
         }
 
-        return (int)$album_id;
+        return (int) $album_id;
     }
 
     /**
@@ -238,7 +238,7 @@ class AlbumDisk extends database_object implements
         $db_results = Dba::read($sql, [$this->id]);
         $row        = Dba::fetch_assoc($db_results);
         if ($row !== []) {
-            return (int)$row['artist_count'];
+            return (int) $row['artist_count'];
         }
 
         return 0;
@@ -276,7 +276,7 @@ class AlbumDisk extends database_object implements
         while ($row = Dba::fetch_assoc($db_results)) {
             $childrens[] = [
                 'object_type' => LibraryItemEnum::SONG,
-                'object_id' => (int)$row['id']
+                'object_id' => (int) $row['id']
             ];
         }
 
@@ -402,27 +402,27 @@ class AlbumDisk extends database_object implements
             'mb_albumid' => [
                 'important' => false,
                 'label' => T_('Album MusicBrainzID'),
-                'value' => (string)$this->mbid,
+                'value' => (string) $this->mbid,
             ],
             'mb_albumid_group' => [
                 'important' => false,
                 'label' => T_('Release Group MusicBrainzID'),
-                'value' => (string)$this->mbid_group,
+                'value' => (string) $this->mbid_group,
             ],
             'artist' => [
                 'important' => true,
                 'label' => T_('Artist'),
-                'value' => (string)$this->get_parent_fullname(),
+                'value' => (string) $this->get_parent_fullname(),
             ],
             'album' => [
                 'important' => true,
                 'label' => T_('Album'),
-                'value' => (string)$this->get_fullname(true),
+                'value' => (string) $this->get_fullname(true),
             ],
             'year' => [
                 'important' => false,
                 'label' => T_('Year'),
-                'value' => (string)$this->year,
+                'value' => (string) $this->year,
             ],
         ];
     }
@@ -512,7 +512,7 @@ class AlbumDisk extends database_object implements
         $db_results = Dba::read($sql, $params);
 
         while ($row = Dba::fetch_assoc($db_results, false)) {
-            $results[] = (int)$row['id'];
+            $results[] = (int) $row['id'];
         }
 
         return $results;
@@ -573,7 +573,7 @@ class AlbumDisk extends database_object implements
      */
     public function getYear(): string
     {
-        return (string)($this->year ?: '');
+        return (string) ($this->year ?: '');
     }
 
     /**
@@ -610,7 +610,7 @@ class AlbumDisk extends database_object implements
     {
         //debug_event(self::class, "update: " . print_r($data, true), 4);
         $album_id     = $this->album->update($data);
-        $disk         = (int)($data['disk'] ?? $this->disk);
+        $disk         = (int) ($data['disk'] ?? $this->disk);
         $catalog      = $data['catalog'] ?? $this->catalog;
         $disksubtitle = $data['disksubtitle'] ?? $this->disksubtitle;
 

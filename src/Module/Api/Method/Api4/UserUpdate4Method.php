@@ -108,8 +108,8 @@ final class UserUpdate4Method
             : null;
         $state      = $input['state'] ?? null;
         $city       = $input['city'] ?? null;
-        $disable    = (isset($input['disable'])) ? (int)$input['disable'] : null;
-        $maxbitrate = (int)($input['maxbitrate'] ?? 0);
+        $disable    = (isset($input['disable'])) ? (int) $input['disable'] : null;
+        $maxbitrate = (int) ($input['maxbitrate'] ?? 0);
 
         $user_id = $update_user->id;
         if ($user_id > 0) {

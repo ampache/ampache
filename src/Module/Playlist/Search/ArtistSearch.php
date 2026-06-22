@@ -36,9 +36,7 @@ final readonly class ArtistSearch implements SearchInterface
      * constructor
      * @param string $subType // artist, album_artist, song_artist
      */
-    public function __construct(private string $subType)
-    {
-    }
+    public function __construct(private string $subType) {}
 
     /**
      * Handles the generation of the SQL for artist searches.
@@ -86,7 +84,7 @@ final readonly class ArtistSearch implements SearchInterface
                 }
             }
 
-            $input        = $search->filter_data((string)$rule[2], $type, $operator);
+            $input        = $search->filter_data((string) $rule[2], $type, $operator);
             $operator_sql = $operator['sql'] ?? '';
 
             switch ($rule[0]) {
@@ -115,7 +113,7 @@ final readonly class ArtistSearch implements SearchInterface
                     $parameters[] = $input;
                     break;
                 case 'time':
-                    $input        = ((int)$input) * 60;
+                    $input        = ((int) $input) * 60;
                     $where[]      = sprintf('`artist`.`time` %s ?', $operator_sql);
                     $parameters[] = $input;
                     break;
@@ -301,7 +299,7 @@ final readonly class ArtistSearch implements SearchInterface
                 case 'myplayed':
                     $column       = 'id';
                     $my_type      = 'artist';
-                    $operator_sql = ((int)$operator_sql === 0) ? 'IS NULL' : 'IS NOT NULL';
+                    $operator_sql = ((int) $operator_sql === 0) ? 'IS NULL' : 'IS NOT NULL';
                     // played once per user
                     if (!array_key_exists('myplayed', $table)) {
                         $table['myplayed'] = '';
@@ -330,7 +328,7 @@ final readonly class ArtistSearch implements SearchInterface
                 case 'played':
                     $column       = 'id';
                     $my_type      = 'artist';
-                    $operator_sql = ((int)$operator_sql === 0) ? 'IS NULL' : 'IS NOT NULL';
+                    $operator_sql = ((int) $operator_sql === 0) ? 'IS NULL' : 'IS NOT NULL';
                     // played once per user
                     if (!array_key_exists('played', $table)) {
                         $table['played'] = '';
@@ -380,7 +378,7 @@ final readonly class ArtistSearch implements SearchInterface
                     $join['song'] = true;
                     break;
                 case 'days_added':
-                    $where[] = sprintf('`artist`.`addition_time` %s (UNIX_TIMESTAMP() - (', $operator_sql) . (int)$input . " * 86400))";
+                    $where[] = sprintf('`artist`.`addition_time` %s (UNIX_TIMESTAMP() - (', $operator_sql) . (int) $input . " * 86400))";
                     break;
                 case 'played_times':
                     $where[]      = sprintf('`artist`.`total_count` %s ?', $operator_sql);
@@ -492,7 +490,7 @@ final readonly class ArtistSearch implements SearchInterface
                 case 'recent_played':
                     $key                     = md5($input . $operator_sql);
                     $where[]                 = sprintf('`played_%s`.`object_id` IS NOT NULL', $key);
-                    $table['played_' . $key] = sprintf("LEFT JOIN (SELECT `object_id` FROM `object_count` WHERE `object_type` = 'artist' ORDER BY %s DESC LIMIT ", $operator_sql) . (int)$input . sprintf(') AS `played_%s` ON `artist`.`id` = `played_%s`.`object_id`', $key, $key);
+                    $table['played_' . $key] = sprintf("LEFT JOIN (SELECT `object_id` FROM `object_count` WHERE `object_type` = 'artist' ORDER BY %s DESC LIMIT ", $operator_sql) . (int) $input . sprintf(') AS `played_%s` ON `artist`.`id` = `played_%s`.`object_id`', $key, $key);
                     break;
                 case 'catalog':
                     $where[]         = sprintf('`catalog_se`.`id` %s ?', $operator_sql);

@@ -51,8 +51,7 @@ final readonly class ConfirmDeleteAction implements ApplicationActionInterface
         private UiInterface $ui,
         private PodcastRepositoryInterface $podcastRepository,
         private PodcastDeleterInterface $podcastDeleter,
-    ) {
-    }
+    ) {}
 
     public function run(ServerRequestInterface $request, GuiGatekeeperInterface $gatekeeper): ?ResponseInterface
     {

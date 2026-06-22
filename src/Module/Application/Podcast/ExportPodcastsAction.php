@@ -45,8 +45,7 @@ final readonly class ExportPodcastsAction implements ApplicationActionInterface
         private ConfigContainerInterface $configContainer,
         private PodcastExporterInterface $podcastExporter,
         private ResponseFactoryInterface $responseFactory,
-    ) {
-    }
+    ) {}
 
     public function run(ServerRequestInterface $request, GuiGatekeeperInterface $gatekeeper): ?ResponseInterface
     {

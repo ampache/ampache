@@ -77,11 +77,11 @@ final class Timeline8Method
 
         $username = $input['filter'];
         $leadUser = (is_numeric($username))
-            ? User::get_from_id((int)$username)
-            : User::get_from_username((string)$username);
+            ? User::get_from_id((int) $username)
+            : User::get_from_username((string) $username);
         if (!empty($leadUser)) {
-            $limit = (int)($input['limit'] ?? 0);
-            $since = (int)($input['since'] ?? 0);
+            $limit = (int) ($input['limit'] ?? 0);
+            $since = (int) ($input['since'] ?? 0);
             if (
                 $leadUser->getId() === $user->getId() ||
                 Preference::get_by_user($leadUser->getId(), 'allow_personal_info_recent')

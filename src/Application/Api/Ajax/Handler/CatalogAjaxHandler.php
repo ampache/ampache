@@ -37,8 +37,7 @@ final readonly class CatalogAjaxHandler implements AjaxHandlerInterface
 {
     public function __construct(
         private RequestParserInterface $requestParser,
-    ) {
-    }
+    ) {}
 
     public function handle(User $user): void
     {
@@ -52,7 +51,7 @@ final readonly class CatalogAjaxHandler implements AjaxHandlerInterface
                 return;
             }
 
-            $catalog = Catalog::create_from_id((int)$this->requestParser->getFromRequest('catalog_id'));
+            $catalog = Catalog::create_from_id((int) $this->requestParser->getFromRequest('catalog_id'));
             if ($catalog === null) {
                 return;
             }

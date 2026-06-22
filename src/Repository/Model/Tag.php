@@ -80,7 +80,7 @@ class Tag extends database_object implements library_item, displayable_item, con
         }
 
         $cleaned_value = str_replace('Folk, World, & Country', 'Folk World & Country', $value);
-        if ((string)$cleaned_value === '') {
+        if ((string) $cleaned_value === '') {
             return 0;
         }
 
@@ -110,13 +110,13 @@ class Tag extends database_object implements library_item, displayable_item, con
      */
     public static function add_tag(string $value): ?int
     {
-        if ((string)$value === '') {
+        if ((string) $value === '') {
             return null;
         }
 
         $sql = "REPLACE INTO `tag` SET `name` = ?";
         Dba::write($sql, [$value]);
-        $insert_id = (int)Dba::insert_id();
+        $insert_id = (int) Dba::insert_id();
 
         parent::add_to_cache('tag_name', $value, [$insert_id]);
 
@@ -135,8 +135,8 @@ class Tag extends database_object implements library_item, displayable_item, con
             return 0;
         }
 
-        $tag_id  = (int)($tag_id);
-        $item_id = (int)($object_id);
+        $tag_id  = (int) ($tag_id);
+        $item_id = (int) ($object_id);
 
         if (!$tag_id || !$item_id) {
             return 0;
@@ -154,7 +154,7 @@ class Tag extends database_object implements library_item, displayable_item, con
             $sql = "INSERT IGNORE INTO `tag_map` (`tag_id`, `user`, `object_type`, `object_id`) VALUES (?, ?, ?, ?)";
             Dba::write($sql, [$tag['id'], 0, $type, $item_id]);
 
-            $insert_id = (int)Dba::insert_id();
+            $insert_id = (int) Dba::insert_id();
             parent::add_to_cache(
                 'tag_map_' . $type,
                 $insert_id,
@@ -202,7 +202,7 @@ class Tag extends database_object implements library_item, displayable_item, con
         $db_results = Dba::read($sql);
 
         while ($row = Dba::fetch_assoc($db_results)) {
-            parent::add_to_cache('tag', (int)$row['id'], $row);
+            parent::add_to_cache('tag', (int) $row['id'], $row);
         }
 
         return true;
@@ -280,7 +280,7 @@ class Tag extends database_object implements library_item, displayable_item, con
 
         $ret = [];
         foreach ($taglist as $tag) {
-            $tag = trim((string)$tag);
+            $tag = trim((string) $tag);
             if (
                 $tag !== '' &&
                 $tag !== '0' &&
@@ -385,7 +385,7 @@ class Tag extends database_object implements library_item, displayable_item, con
         $db_results = Dba::read($sql);
 
         if ($row = Dba::fetch_assoc($db_results)) {
-            $results = (int)$row['tag_count'];
+            $results = (int) $row['tag_count'];
         }
 
         return $results;
@@ -413,10 +413,10 @@ class Tag extends database_object implements library_item, displayable_item, con
         $results    = [];
         while ($row = Dba::fetch_assoc($db_results)) {
             $results[] = [
-                'id' => (int)$row['id'],
+                'id' => (int) $row['id'],
                 'name' => $row['name'],
-                'is_hidden' => (int)$row['is_hidden'],
-                'user' => (int)$row['user'],
+                'is_hidden' => (int) $row['is_hidden'],
+                'user' => (int) $row['user'],
             ];
         }
 
@@ -455,7 +455,7 @@ class Tag extends database_object implements library_item, displayable_item, con
         $results = [];
 
         while ($row = Dba::fetch_assoc($db_results)) {
-            $results[] = (int)$row['tag_id'];
+            $results[] = (int) $row['tag_id'];
         }
 
         return $results;
@@ -481,7 +481,7 @@ class Tag extends database_object implements library_item, displayable_item, con
                 $limit_sql .= $offset . ', ';
             }
 
-            $limit_sql .= (string)($count);
+            $limit_sql .= (string) ($count);
         }
 
         $sql = sprintf('SELECT DISTINCT `tag_map`.`object_id` FROM `tag_map` WHERE %s `tag_map`.`object_type` = ?', $tag_sql);
@@ -495,7 +495,7 @@ class Tag extends database_object implements library_item, displayable_item, con
         $results = [];
 
         while ($row = Dba::fetch_assoc($db_results)) {
-            $results[] = (int)$row['object_id'];
+            $results[] = (int) $row['object_id'];
         }
 
         return $results;
@@ -578,7 +578,7 @@ class Tag extends database_object implements library_item, displayable_item, con
             return [];
         }
 
-        $object_id  = (int)($object_id);
+        $object_id  = (int) ($object_id);
         $limit_text = ($limit == 0)
             ? ''
             : 'LIMIT ' . $limit;
@@ -590,10 +590,10 @@ class Tag extends database_object implements library_item, displayable_item, con
         $results    = [];
         while ($row = Dba::fetch_assoc($db_results)) {
             $results[] = [
-                'id' => (int)$row['id'],
+                'id' => (int) $row['id'],
                 'name' => $row['name'],
                 'is_hidden' => $row['is_hidden'],
-                'count' => (int)$row['count']
+                'count' => (int) $row['count']
             ];
         }
 
@@ -648,7 +648,7 @@ class Tag extends database_object implements library_item, displayable_item, con
     public static function tag_exists(string $value): int
     {
         if (parent::is_cached('tag_name', $value)) {
-            return (int)(parent::get_from_cache('tag_name', $value))[0];
+            return (int) (parent::get_from_cache('tag_name', $value))[0];
         }
 
         $sql        = "SELECT `id` FROM `tag` WHERE `name` = ?";
@@ -658,7 +658,7 @@ class Tag extends database_object implements library_item, displayable_item, con
         if (array_key_exists('id', $results)) {
             parent::add_to_cache('tag_name', $value, [$results['id']]);
 
-            return (int)$results['id'];
+            return (int) $results['id'];
         }
 
         return 0;
@@ -680,7 +680,7 @@ class Tag extends database_object implements library_item, displayable_item, con
         $db_results = Dba::read($sql, [$tag_id, 0, $object_id, $type]);
         $results    = Dba::fetch_assoc($db_results);
 
-        return (bool)(array_key_exists('id', $results));
+        return (bool) (array_key_exists('id', $results));
     }
 
     /**
@@ -714,14 +714,14 @@ class Tag extends database_object implements library_item, displayable_item, con
 
                 //debug_event(self::class, 'update_tag_list ' . $object_type . ' current_tag ' . print_r($ctv, true), 5);
                 foreach ($editedTags as $tag_name) {
-                    if (strtolower((string)$ctag->name) === strtolower($tag_name)) {
+                    if (strtolower((string) $ctag->name) === strtolower($tag_name)) {
                         $found = true;
                         break;
                     }
 
                     // check if this thing has been renamed into something else
                     $merged = self::construct_from_name($tag_name);
-                    if ($merged->id && $merged->is_hidden && $merged->has_merge((string)$ctag->name)) {
+                    if ($merged->id && $merged->is_hidden && $merged->has_merge((string) $ctag->name)) {
                         $found = true;
                         break;
                     }
@@ -729,7 +729,7 @@ class Tag extends database_object implements library_item, displayable_item, con
 
                 if ($found) {
                     //debug_event(self::class, 'update_tag_list ' . $object_type . ' matched {' . $ctag->id . '} to ' . $tag_name, 5);
-                    if (($key = array_search((string)$ctag->name, $editedTags)) !== false) {
+                    if (($key = array_search((string) $ctag->name, $editedTags)) !== false) {
                         unset($editedTags[$key]);
                     }
                 }
@@ -786,7 +786,7 @@ class Tag extends database_object implements library_item, displayable_item, con
     public function display_art(array $size, bool $force = false): void
     {
         if ($this->has_art() || $force) {
-            Art::display('tag', $this->id, (string)$this->get_fullname(), $size);
+            Art::display('tag', $this->id, (string) $this->get_fullname(), $size);
         }
     }
 
@@ -848,7 +848,7 @@ class Tag extends database_object implements library_item, displayable_item, con
             'tag' => [
                 'important' => true,
                 'label' => T_('Genre'),
-                'value' => (string)$this->name,
+                'value' => (string) $this->name,
             ]
         ];
     }
@@ -1022,13 +1022,13 @@ class Tag extends database_object implements library_item, displayable_item, con
      */
     public function update(array $data): ?int
     {
-        if ((string)$data['name'] === '') {
+        if ((string) $data['name'] === '') {
             return null;
         }
 
         $name      = $data['name'] ?? $this->name;
         $is_hidden = (array_key_exists('is_hidden', $data))
-            ? (int)$data['is_hidden']
+            ? (int) $data['is_hidden']
             : 0;
 
         if ($name != $this->name) {

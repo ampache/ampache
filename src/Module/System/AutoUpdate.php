@@ -50,7 +50,7 @@ class AutoUpdate
         Preference::update_all('autoupdate_lastversion_new', 0);
         AmpConfig::set('autoupdate_lastversion_new', false, true);
         Preference::update_all('autoupdate_lastcheck', $time);
-        AmpConfig::set('autoupdate_lastcheck', (string)$time, true);
+        AmpConfig::set('autoupdate_lastcheck', (string) $time, true);
     }
 
     /**
@@ -63,11 +63,11 @@ class AutoUpdate
             $git_branch !== '' &&
             is_readable(__DIR__ . '/../../../.git/refs/heads/' . $git_branch)
         ) {
-            return trim((string)file_get_contents(__DIR__ . '/../../../.git/refs/heads/' . $git_branch));
+            return trim((string) file_get_contents(__DIR__ . '/../../../.git/refs/heads/' . $git_branch));
         }
 
         if (self::_is_branch_develop_exists()) {
-            return trim((string)file_get_contents(__DIR__ . '/../../../.git/refs/heads/develop'));
+            return trim((string) file_get_contents(__DIR__ . '/../../../.git/refs/heads/develop'));
         }
 
         return '';
@@ -185,7 +185,7 @@ class AutoUpdate
             }
 
             debug_event(self::class, 'GitHub API request ' . $url, 5);
-            $result = json_decode((string)$request->body);
+            $result = json_decode((string) $request->body);
 
             return (is_object($result))
                 ? $result
@@ -202,7 +202,7 @@ class AutoUpdate
      */
     public static function is_force_git_branch(): string
     {
-        $config_branch = (string)AmpConfig::get('github_force_branch');
+        $config_branch = (string) AmpConfig::get('github_force_branch');
         if ($config_branch !== '' && $config_branch !== '0') {
             return $config_branch;
         }
@@ -232,7 +232,7 @@ class AutoUpdate
             $force === false &&
             self::lastcheck_expired() === false
         ) {
-            return (bool)AmpConfig::get('autoupdate_lastversion_new', false);
+            return (bool) AmpConfig::get('autoupdate_lastversion_new', false);
         }
 
         if ($force) {
@@ -464,7 +464,7 @@ class AutoUpdate
      */
     protected static function _is_develop(): bool
     {
-        $version    = (string)AmpConfig::get('version');
+        $version    = (string) AmpConfig::get('version');
         $vspart     = explode('-', $version);
         $git_branch = self::is_force_git_branch();
 

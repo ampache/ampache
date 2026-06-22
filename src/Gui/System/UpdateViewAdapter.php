@@ -43,8 +43,7 @@ final readonly class UpdateViewAdapter implements UpdateViewAdapterInterface
         private UpdateInfoRepositoryInterface $updateInfoRepository,
         private UpdateHelperInterface $updateHelper,
         private UpdaterInterface $updater,
-    ) {
-    }
+    ) {}
 
     public function getCharset(): string
     {

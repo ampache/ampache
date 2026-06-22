@@ -159,7 +159,7 @@ class UPnPPlaylist
         $pls_data = json_decode(Session::read($sid), true);
 
         $this->_songs   = (is_array($pls_data['upnp_playlist'])) ? $pls_data['upnp_playlist'] : [];
-        $this->_current = (int)($pls_data['upnp_current'] ?? 0);
+        $this->_current = (int) ($pls_data['upnp_current'] ?? 0);
     }
 
     private function PlayListSave(): void

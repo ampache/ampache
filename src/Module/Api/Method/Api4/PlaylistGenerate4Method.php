@@ -82,8 +82,8 @@ final class PlaylistGenerate4Method
             ? $input['format']
             : 'song';
 
-        $offset     = (int)($input['offset'] ?? 0);
-        $limit      = (int)($input['limit'] ?? 0);
+        $offset     = (int) ($input['offset'] ?? 0);
+        $limit      = (int) ($input['limit'] ?? 0);
         $rule_count = 1;
         $data       = ['type' => 'song'];
         debug_event(self::class, 'playlist_generate ' . $mode, 5);
@@ -111,7 +111,7 @@ final class PlaylistGenerate4Method
             $rule_count++;
         }
         // additional rules
-        if ((int)($input['flag'] ?? 0) == 1) {
+        if ((int) ($input['flag'] ?? 0) == 1) {
             $data['rule_' . $rule_count]               = 'favorite';
             $data['rule_' . $rule_count . '_input']    = '%';
             $data['rule_' . $rule_count . '_operator'] = 0;
@@ -119,11 +119,11 @@ final class PlaylistGenerate4Method
         }
         if (array_key_exists('filter', $input)) {
             $data['rule_' . $rule_count]               = 'title';
-            $data['rule_' . $rule_count . '_input']    = (string)$input['filter'];
+            $data['rule_' . $rule_count . '_input']    = (string) $input['filter'];
             $data['rule_' . $rule_count . '_operator'] = 0;
             $rule_count++;
         }
-        $album = new Album((int)($input['album'] ?? 0));
+        $album = new Album((int) ($input['album'] ?? 0));
         if ((array_key_exists('album', $input)) && ($album->id == $input['album'])) {
             // set rule
             $data['rule_' . $rule_count]               = 'album';
@@ -131,7 +131,7 @@ final class PlaylistGenerate4Method
             $data['rule_' . $rule_count . '_operator'] = 4;
             $rule_count++;
         }
-        $artist = new Artist((int)($input['artist'] ?? 0));
+        $artist = new Artist((int) ($input['artist'] ?? 0));
         if ((array_key_exists('artist', $input)) && ($artist->id == $input['artist'])) {
             // set rule
             $data['rule_' . $rule_count]               = 'artist';

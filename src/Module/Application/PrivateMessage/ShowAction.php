@@ -45,8 +45,7 @@ final readonly class ShowAction implements ApplicationActionInterface
         private UiInterface $ui,
         private ConfigContainerInterface $configContainer,
         private PrivateMessageRepositoryInterface $pmRepository,
-    ) {
-    }
+    ) {}
 
     public function run(ServerRequestInterface $request, GuiGatekeeperInterface $gatekeeper): ?ResponseInterface
     {
@@ -59,7 +58,7 @@ final readonly class ShowAction implements ApplicationActionInterface
 
         $this->ui->showHeader();
 
-        $msgId = (int)($request->getQueryParams()['pvmsg_id'] ?? 0);
+        $msgId = (int) ($request->getQueryParams()['pvmsg_id'] ?? 0);
 
         $pvmsg = $this->pmRepository->findById($msgId);
 

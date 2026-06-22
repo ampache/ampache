@@ -43,8 +43,7 @@ final readonly class Init
         private EnvironmentInterface $environment,
         /** @var InitializationHandlerInterface[] */
         private array $initializationHandler,
-    ) {
-    }
+    ) {}
 
     public function init(): void
     {
@@ -59,7 +58,7 @@ final readonly class Init
             $redirectionUrl = 'install.php';
         } catch (ConfigFileNotParsableException $error) {
             $redirectionUrl = 'test.php?action=config';
-        } catch (EnvironmentNotSuitableException | GetTextNotAvailableException $error) {
+        } catch (EnvironmentNotSuitableException|GetTextNotAvailableException $error) {
             $redirectionUrl = 'test.php';
         } catch (DatabaseOutdatedException $error) {
             $redirectionUrl = 'update.php';
@@ -74,7 +73,7 @@ final readonly class Init
                 throw $error;
             }
 
-            $this->redirect((string)$redirectionUrl);
+            $this->redirect((string) $redirectionUrl);
         }
     }
 

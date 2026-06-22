@@ -76,7 +76,7 @@ class Recommendation
         $album = new Album($album_id);
         $query = ($album->mbid)
             ? 'mbid=' . rawurlencode($album->mbid)
-            : 'artist=' . rawurlencode((string)$album->get_parent_fullname()) . '&album=' . rawurlencode($album->get_fullname());
+            : 'artist=' . rawurlencode((string) $album->get_parent_fullname()) . '&album=' . rawurlencode($album->get_fullname());
 
         $results = [
             'id' => $album_id,
@@ -94,7 +94,7 @@ class Recommendation
         }
 
         $results['summary'] = strip_tags(
-            (string)preg_replace(
+            (string) preg_replace(
                 "#<a href=([^<]*)Last\.fm</a>.#",
                 "",
                 ($xml->album->wiki->summary ?? '')
@@ -132,11 +132,11 @@ class Recommendation
         $artist = new Artist($artist_id);
         $query  = ($artist->mbid)
             ? 'mbid=' . rawurlencode($artist->mbid)
-            : 'artist=' . rawurlencode((string)$artist->get_fullname());
+            : 'artist=' . rawurlencode((string) $artist->get_fullname());
 
         // Data newer than 6 months, use it
         if (($artist->last_update + 15768000) > time() || $artist->manual_update) {
-            return ['id' => $artist_id, 'summary' => $artist->summary, 'placeformed' => $artist->placeformed, 'yearformed' => (int)$artist->yearformed, 'largephoto' => Art::url($artist->id, 'artist', null, 174), 'smallphoto' => Art::url($artist->id, 'artist', null, 34), 'mediumphoto' => Art::url($artist->id, 'artist', null, 64), 'megaphoto' => Art::url($artist->id, 'artist', null, 300)];
+            return ['id' => $artist_id, 'summary' => $artist->summary, 'placeformed' => $artist->placeformed, 'yearformed' => (int) $artist->yearformed, 'largephoto' => Art::url($artist->id, 'artist', null, 174), 'smallphoto' => Art::url($artist->id, 'artist', null, 34), 'mediumphoto' => Art::url($artist->id, 'artist', null, 64), 'megaphoto' => Art::url($artist->id, 'artist', null, 300)];
         }
 
         try {
@@ -162,7 +162,7 @@ class Recommendation
             'megaphoto' => null,
         ];
         $results['summary'] = strip_tags(
-            (string)preg_replace(
+            (string) preg_replace(
                 "#<a href=([^<]*)Last\.fm</a>.#",
                 "",
                 ($xml->artist->bio->summary ?? '')
@@ -170,10 +170,10 @@ class Recommendation
         );
         $results['summary']     = str_replace("Read more on Last.fm", "", $results['summary']);
         $results['placeformed'] = (property_exists($xml->artist->bio, 'yearformed') && $xml->artist->bio->yearformed !== null)
-            ? (string)$xml->artist->bio->placeformed
+            ? (string) $xml->artist->bio->placeformed
             : null;
         $results['yearformed'] = (property_exists($xml->artist->bio, 'yearformed') && $xml->artist->bio->yearformed !== null)
-            ? (int)$xml->artist->bio->yearformed
+            ? (int) $xml->artist->bio->yearformed
             : null;
 
         if ($artist->isNew() === false) {
@@ -218,16 +218,16 @@ class Recommendation
         }
 
         $results['summary'] = strip_tags(
-            (string)preg_replace(
+            (string) preg_replace(
                 "#<a href=([^<]*)Last\.fm</a>.#",
                 "",
-                (string)$xml->artist->bio->summary
+                (string) $xml->artist->bio->summary
             )
         );
         $results['summary']     = str_replace("Read more on Last.fm", "", $results['summary']);
-        $results['placeformed'] = (string)$xml->artist->bio->placeformed;
+        $results['placeformed'] = (string) $xml->artist->bio->placeformed;
         $results['yearformed']  = (property_exists($xml->artist->bio, 'yearformed') && $xml->artist->bio->yearformed !== null)
-            ? (int)$xml->artist->bio->yearformed
+            ? (int) $xml->artist->bio->yearformed
             : null;
 
         return $results;
@@ -253,7 +253,7 @@ class Recommendation
         if ($cache === null || !$cache['id']) {
             $artist   = new Artist($artist_id);
             $similars = [];
-            $fullname = (string)$artist->get_fullname();
+            $fullname = (string) $artist->get_fullname();
             $query    = ($artist->mbid) ? 'mbid=' . rawurlencode($artist->mbid) : 'artist=' . rawurlencode($fullname);
 
             try {
@@ -282,7 +282,7 @@ class Recommendation
                         if ($local_id === null) {
                             $searchname = Catalog::trim_prefix($name);
                             $s_name     = $searchname['string'];
-                            $s_fullname = trim(trim((string)$searchname['prefix']) . ' ' . trim((string)$searchname['string']));
+                            $s_fullname = trim(trim((string) $searchname['prefix']) . ' ' . trim((string) $searchname['string']));
                             $sql        = ($catalog_disable)
                                 ? "SELECT `artist`.`id` FROM `artist` WHERE (`artist`.`name` = ? OR LTRIM(CONCAT(COALESCE(`artist`.`prefix`, ''), ' ', `artist`.`name`)) = ?) AND " . $enable_filter
                                 : "SELECT `artist`.`id` FROM `artist` WHERE (`artist`.`name` = ? OR LTRIM(CONCAT(COALESCE(`artist`.`prefix`, ''), ' ', `artist`.`name`)) = ?)";
@@ -384,7 +384,7 @@ class Recommendation
             return [];
         }
 
-        $fullname = (string)$artist->get_fullname();
+        $fullname = (string) $artist->get_fullname();
         $query    = ($artist->mbid) ? 'mbid=' . rawurlencode($artist->mbid) : 'artist=' . rawurlencode($fullname);
 
         if (!in_array($song->mbid, [null, '', '0'], true)) {
@@ -401,9 +401,9 @@ class Recommendation
                     foreach ($xml->similartracks->children() as $child) {
                         $song_name   = $child->name;
                         $artist_name = $child->artist->name;
-                        $searchname  = Catalog::trim_prefix((string)$artist_name);
+                        $searchname  = Catalog::trim_prefix((string) $artist_name);
                         $s_name      = $searchname['string'];
-                        $s_fullname  = trim(trim((string)$searchname['prefix']) . ' ' . trim((string)$searchname['string']));
+                        $s_fullname  = trim(trim((string) $searchname['prefix']) . ' ' . trim((string) $searchname['string']));
 
                         if ($catalog_disable) {
                             $sql = <<<SQL
@@ -427,7 +427,7 @@ class Recommendation
 
                         $db_result = Dba::read($sql, [$song_name, $s_name, $s_fullname]);
                         if ($result = Dba::fetch_assoc($db_result)) {
-                            $local_id = (int)$result['id'];
+                            $local_id = (int) $result['id'];
                             debug_event(self::class, sprintf('%s matched local song %d', $song_name, $local_id), 4);
                             $similars[] = [
                                 'id' => $local_id,
@@ -523,8 +523,8 @@ class Recommendation
         $db_results = Dba::read($sql, [$type, $object_id]);
         if ($row = Dba::fetch_assoc($db_results)) {
             $cache = [
-                'id' => (int)$row['id'],
-                'last_update' => (string)$row['last_update'],
+                'id' => (int) $row['id'],
+                'last_update' => (string) $row['last_update'],
             ];
         }
 
@@ -534,10 +534,10 @@ class Recommendation
             $db_results     = Dba::read($sql, [$cache['id']]);
             while ($results = Dba::fetch_assoc($db_results)) {
                 $cache['items'][] = [
-                    'id' => ($results['id'] !== null) ? (int)$results['id'] : null,
-                    'name' => (string)$results['name'],
-                    'rel' => ($results['rel'] !== null) ? (string)$results['rel'] : null,
-                    'mbid' => ($results['mbid'] !== null) ? (string)$results['mbid'] : null,
+                    'id' => ($results['id'] !== null) ? (int) $results['id'] : null,
+                    'name' => (string) $results['name'],
+                    'rel' => ($results['rel'] !== null) ? (string) $results['rel'] : null,
+                    'mbid' => ($results['mbid'] !== null) ? (string) $results['mbid'] : null,
                 ];
             }
 

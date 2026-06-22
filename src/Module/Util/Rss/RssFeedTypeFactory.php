@@ -46,8 +46,7 @@ final readonly class RssFeedTypeFactory implements RssFeedTypeFactoryInterface
 {
     public function __construct(
         private ContainerInterface $dic,
-    ) {
-    }
+    ) {}
 
     /**
      * Creates a feed for recent albums

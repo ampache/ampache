@@ -71,9 +71,9 @@ final class UpdateArt5Method
         if (!Api5::check_access(AccessTypeEnum::INTERFACE, AccessLevelEnum::MANAGER, $user->id, self::ACTION, $input['api_format'])) {
             return false;
         }
-        $type      = (string)$input['type'];
-        $object_id = (int)$input['id'];
-        $overwrite = array_key_exists('overwrite', $input) && (int)$input['overwrite'] == 0;
+        $type      = (string) $input['type'];
+        $object_id = (int) $input['id'];
+        $overwrite = array_key_exists('overwrite', $input) && (int) $input['overwrite'] == 0;
         $art_url   = Art::url($object_id, $type, $input['auth']);
 
         // confirm the correct data

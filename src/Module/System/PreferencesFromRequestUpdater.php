@@ -35,9 +35,7 @@ use DateTimeZone;
 
 final readonly class PreferencesFromRequestUpdater implements PreferencesFromRequestUpdaterInterface
 {
-    public function __construct(private PrivilegeCheckerInterface $privilegeChecker)
-    {
-    }
+    public function __construct(private PrivilegeCheckerInterface $privilegeChecker) {}
 
     /**
      * grabs the current keys that should be added and then runs
@@ -74,10 +72,10 @@ final readonly class PreferencesFromRequestUpdater implements PreferencesFromReq
             $name         = (string) $data['name'];
             $apply_to_all = 'check_' . $data['name'];
             $new_level    = 'level_' . $data['name'];
-            $pref_id      = (string)$data['id'];
+            $pref_id      = (string) $data['id'];
             $value        = (isset($_REQUEST[$name]) && is_array($_REQUEST[$name]))
                 ? implode(',', $_REQUEST[$name])
-                : (string)scrub_in((string)($_REQUEST[$name] ?? ''));
+                : (string) scrub_in((string) ($_REQUEST[$name] ?? ''));
 
             // Some preferences require some extra checks to be performed
             switch ($name) {
@@ -94,7 +92,7 @@ final readonly class PreferencesFromRequestUpdater implements PreferencesFromReq
                     $value = filter_var(urldecode($value), FILTER_VALIDATE_URL) ?: null;
                     break;
                 case 'transcode_bitrate':
-                    $value = (string) Stream::validate_bitrate((int)$value);
+                    $value = (string) Stream::validate_bitrate((int) $value);
                     break;
                 case 'custom_timezone':
                     $listIdentifiers = DateTimeZone::listIdentifiers() ?: [];
@@ -120,7 +118,7 @@ final readonly class PreferencesFromRequestUpdater implements PreferencesFromReq
             }
 
             if ($this->privilegeChecker->check(AccessTypeEnum::INTERFACE, AccessLevelEnum::ADMIN) && array_key_exists($new_level, $_REQUEST)) {
-                Preference::update_level($pref_id, (int)$_REQUEST[$new_level]);
+                Preference::update_level($pref_id, (int) $_REQUEST[$new_level]);
             }
         }
 

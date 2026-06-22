@@ -30,9 +30,7 @@ use Ampache\Module\Util\EnvironmentInterface;
 
 final readonly class InitializationHandlerEnvironment implements InitializationHandlerInterface
 {
-    public function __construct(private EnvironmentInterface $environment)
-    {
-    }
+    public function __construct(private EnvironmentInterface $environment) {}
 
     public function init(): void
     {

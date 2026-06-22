@@ -100,7 +100,7 @@ if (AmpConfig::get('external_links_bandcamp')) {
     echo "<a href=\"https://bandcamp.com/search?q=" . rawurlencode((string) $albumDisk->get_parent_fullname()) . "+" . rawurlencode($simple) . "&item_type=a\" target=\"_blank\">" . Ui::get_icon('bandcamp', T_('Search on Bandcamp ...')) . "</a>";
 }
 if (AmpConfig::get('external_links_discogs')) {
-    echo "<a href=\"https://www.discogs.com/search/?q=" . rawurlencode(($albumDisk->get_parent_fullname() == 'Various Artists') ? 'Various' : (string)$albumDisk->get_parent_fullname()) . "+" . rawurlencode($simple) . "&type=master\" target=\"_blank\">" . Ui::get_icon('discogs', T_('Search on Discogs ...')) . "</a>";
+    echo "<a href=\"https://www.discogs.com/search/?q=" . rawurlencode(($albumDisk->get_parent_fullname() == 'Various Artists') ? 'Various' : (string) $albumDisk->get_parent_fullname()) . "+" . rawurlencode($simple) . "&type=master\" target=\"_blank\">" . Ui::get_icon('discogs', T_('Search on Discogs ...')) . "</a>";
 }
 if (AmpConfig::get('external_links_musicbrainz')) {
     if ($albumDisk->mbid) {
@@ -187,7 +187,7 @@ if (AmpConfig::get('sociable') && !empty($owner_id)) {
                 RssFeedTypeEnum::LIBRARY_ITEM,
                 $current_user,
                 T_('RSS Feed'),
-                ['object_type' => 'album_disk', 'object_id' => (string)$albumDisk->id]
+                ['object_type' => 'album_disk', 'object_id' => (string) $albumDisk->id]
             ); ?>
         </li>
         <?php } ?>

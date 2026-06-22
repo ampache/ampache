@@ -317,14 +317,14 @@ class AmpacheCatalogFavorites extends AmpachePlugin implements PluginDisplayHome
         $user->set_preferences();
         $data = $user->prefs;
 
-        $this->maxitems = (int)($data['catalogfav_max_items']);
+        $this->maxitems = (int) ($data['catalogfav_max_items']);
         if ($this->maxitems === 0) {
             $this->maxitems = 5;
         }
 
         $this->gridview = ($data['catalogfav_gridview'] == '1');
         $this->compact  = ($data['catalogfav_compact'] == '1');
-        $this->order    = (int)($data['catalogfav_order'] ?? 0);
+        $this->order    = (int) ($data['catalogfav_order'] ?? 0);
 
         return true;
     }
@@ -359,7 +359,7 @@ class AmpacheCatalogFavorites extends AmpachePlugin implements PluginDisplayHome
             Preference::insert('catalogfav_order', T_('Plugin CSS order'), '0', AccessLevelEnum::USER->value, 'integer', 'plugins', $this->name);
         }
 
-        if ($from_version < (int)$this->version) {
+        if ($from_version < (int) $this->version) {
             Preference::insert('catalogfav_compact', T_('Catalog favorites media row display'), '0', AccessLevelEnum::USER->value, 'boolean', 'plugins', $this->name);
         }
 

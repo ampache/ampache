@@ -32,9 +32,7 @@ use Ampache\Module\System\Update\UpdaterInterface;
 
 final readonly class InitializationHandlerDatabaseUpdate implements InitializationHandlerInterface
 {
-    public function __construct(private UpdaterInterface $updater)
-    {
-    }
+    public function __construct(private UpdaterInterface $updater) {}
 
     public function init(): void
     {

@@ -132,7 +132,7 @@ class LocalPlay
             ? $this->_player->get_instance()
             : [];
         if (array_key_exists('id', $data)) {
-            return (int)$data['id'];
+            return (int) $data['id'];
         }
 
         return null;
@@ -636,7 +636,7 @@ class LocalPlay
     public function volume_set(float $value): bool
     {
         /* Make sure it's int and 0 - 100 */
-        $value = (int)$value;
+        $value = (int) $value;
 
         /* Make sure that it's between 0 and 100 */
         if ($value > 100 || $value < 0) {

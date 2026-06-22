@@ -117,7 +117,7 @@ final class FolderQuery implements QueryInterface
             case 'int_id':
                 $filter_sql = ($value === -1)
                     ? " `folder`.`folder_id` IS NULL AND "
-                    : " `folder`.`folder_id` = " . (int)$value . " AND ";
+                    : " `folder`.`folder_id` = " . (int) $value . " AND ";
                 break;
             case 'equal':
             case 'exact_match':
@@ -149,14 +149,14 @@ final class FolderQuery implements QueryInterface
                 $filter_sql = " `folder`.`name` NOT LIKE '" . Dba::escape($value) . "%' AND ";
                 break;
             case 'user_flag':
-                $filter_sql = ((int)$value === 0)
-                    ? " `folder`.`int_id` NOT IN (SELECT `object_id` FROM `user_flag` WHERE `object_type` = 'folder' AND `user` = " . (int)$query->user_id . ") AND "
-                    : " `folder`.`int_id` IN (SELECT `object_id` FROM `user_flag` WHERE `object_type` = 'folder' AND `user` = " . (int)$query->user_id . ") AND ";
+                $filter_sql = ((int) $value === 0)
+                    ? " `folder`.`int_id` NOT IN (SELECT `object_id` FROM `user_flag` WHERE `object_type` = 'folder' AND `user` = " . (int) $query->user_id . ") AND "
+                    : " `folder`.`int_id` IN (SELECT `object_id` FROM `user_flag` WHERE `object_type` = 'folder' AND `user` = " . (int) $query->user_id . ") AND ";
                 break;
             case 'user_rating':
-                $filter_sql = ((int)$value === 0)
-                    ? " `folder`.`int_id` NOT IN (SELECT `object_id` FROM `rating` WHERE `object_type` = 'folder' AND `user` = " . (int)$query->user_id . ") AND "
-                    : " `folder`.`int_id` IN (SELECT `object_id` FROM `rating` WHERE `object_type` = 'folder' AND `user` = " . (int)$query->user_id . " AND `rating` = " . Dba::escape($value) . ") AND ";
+                $filter_sql = ((int) $value === 0)
+                    ? " `folder`.`int_id` NOT IN (SELECT `object_id` FROM `rating` WHERE `object_type` = 'folder' AND `user` = " . (int) $query->user_id . ") AND "
+                    : " `folder`.`int_id` IN (SELECT `object_id` FROM `rating` WHERE `object_type` = 'folder' AND `user` = " . (int) $query->user_id . " AND `rating` = " . Dba::escape($value) . ") AND ";
                 break;
         }
 
@@ -185,17 +185,17 @@ final class FolderQuery implements QueryInterface
                 break;
             case 'rating':
                 $sql = sprintf('`rating`.`rating` %s, `rating`.`date`', $order);
-                $query->set_join_and_and('LEFT', "`rating`", "`rating`.`object_id`", "`folder`.`int_id`", "`rating`.`object_type`", "'folder'", "`rating`.`user`", (string)$query->user_id, 100);
+                $query->set_join_and_and('LEFT', "`rating`", "`rating`.`object_id`", "`folder`.`int_id`", "`rating`.`object_type`", "'folder'", "`rating`.`user`", (string) $query->user_id, 100);
                 break;
             case 'user_flag':
             case 'userflag':
                 $sql = "`user_flag`.`date`";
-                $query->set_join_and_and('LEFT', "`user_flag`", "`user_flag`.`object_id`", "`folder`.`int_id`", "`user_flag`.`object_type`", "'folder'", "`user_flag`.`user`", (string)$query->user_id, 100);
+                $query->set_join_and_and('LEFT', "`user_flag`", "`user_flag`.`object_id`", "`folder`.`int_id`", "`user_flag`.`object_type`", "'folder'", "`user_flag`.`user`", (string) $query->user_id, 100);
                 break;
             case 'user_flag_rating':
                 $sql = sprintf('`user_flag`.`date` %s, `rating`.`rating` %s, `rating`.`date`', $order, $order);
-                $query->set_join_and_and('LEFT', "`user_flag`", "`user_flag`.`object_id`", "`folder`.`int_id`", "`user_flag`.`object_type`", "'folder'", "`user_flag`.`user`", (string)$query->user_id, 100);
-                $query->set_join_and_and('LEFT', "`rating`", "`rating`.`object_id`", "`folder`.`int_id`", "`rating`.`object_type`", "'folder'", "`rating`.`user`", (string)$query->user_id, 100);
+                $query->set_join_and_and('LEFT', "`user_flag`", "`user_flag`.`object_id`", "`folder`.`int_id`", "`user_flag`.`object_type`", "'folder'", "`user_flag`.`user`", (string) $query->user_id, 100);
+                $query->set_join_and_and('LEFT', "`rating`", "`rating`.`object_id`", "`folder`.`int_id`", "`rating`.`object_type`", "'folder'", "`rating`.`user`", (string) $query->user_id, 100);
                 break;
             default:
                 $sql = '';

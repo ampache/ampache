@@ -69,7 +69,7 @@ final class BookmarkDelete6Method
         if (!Api6::check_parameter($input, ['filter'], self::ACTION)) {
             return false;
         }
-        $object_id = (int)$input['filter'];
+        $object_id = (int) $input['filter'];
         $type      = $input['type'] ?? 'bookmark';
         $comment   = (isset($input['client'])) ? scrub_in((string) $input['client']) : null;
         if (!AmpConfig::get('allow_video') && $type == 'video') {

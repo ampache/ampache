@@ -37,23 +37,22 @@ use Seafile\Client\Type\Library as LibraryType;
 class SeafileAdapter
 {
     /** @var array{Libraries: Library, Directories: Directory, Files: File, Client: Client}|null  */
-    private array|null $client = null;
+    private ?array $client = null;
 
     /** @var array<string, DirectoryItem[]> */
     private array $directory_cache = [];
 
-    private LibraryType|null $library = null;
+    private ?LibraryType $library = null;
 
     /**
      * SeafileAdapter constructor.
      */
     public function __construct(
-        private string|null $server,
-        private string|null $library_name,
-        private int|null $call_delay,
-        private string|null $api_key,
-    ) {
-    }
+        private ?string $server,
+        private ?string $library_name,
+        private ?int $call_delay,
+        private ?string $api_key,
+    ) {}
 
     /**
      * request API key from Seafile Server based on username and password
@@ -84,12 +83,12 @@ class SeafileAdapter
 
     public function download(DirectoryItem $file, bool $partial = false): string
     {
-        $dir  = (string)$file->dir;
-        $url  = ($this->client && $this->library) ? $this->throttle_check(fn () => $this->client['Files']->getDownloadUrl($this->library, $file, $dir)) : '';
+        $dir  = (string) $file->dir;
+        $url  = ($this->client && $this->library) ? $this->throttle_check(fn() => $this->client['Files']->getDownloadUrl($this->library, $file, $dir)) : '';
         $opts = $partial ? ['curl' => [CURLOPT_RANGE => '0-2097152']] : ['delay' => 0];
 
         // grab a full 2 meg in case meta has image in it or something
-        $response = ($this->client) ? $this->throttle_check(fn () => $this->client['Client']->request('GET', $url, $opts)) : null;
+        $response = ($this->client) ? $this->throttle_check(fn() => $this->client['Client']->request('GET', $url, $opts)) : null;
 
         $tempfilename = Core::get_tmp_dir() . DIRECTORY_SEPARATOR . $file->name;
 
@@ -208,9 +207,9 @@ class SeafileAdapter
 
         // Get Library
         /** @var LibraryType[] $libraries */
-        $libraries = $this->throttle_check(fn () => $this->client['Libraries']->getAll());
+        $libraries = $this->throttle_check(fn() => $this->client['Libraries']->getAll());
 
-        $matches = array_values(array_filter($libraries, fn ($library) => $library->name == $this->library_name));
+        $matches = array_values(array_filter($libraries, fn($library) => $library->name == $this->library_name));
 
         if ($matches === []) {
             AmpError::add(
@@ -271,7 +270,7 @@ class SeafileAdapter
 
         try {
             /** @var DirectoryItem[] $directory */
-            $directory                    = $this->throttle_check(fn () => $this->client['Directories']->getAll($this->library, $path));
+            $directory                    = $this->throttle_check(fn() => $this->client['Directories']->getAll($this->library, $path));
             $this->directory_cache[$path] = $directory;
 
             return $directory;
@@ -304,7 +303,7 @@ class SeafileAdapter
 
                 preg_match('/(\d+) sec/', (string) $error, $matches);
 
-                $secs = isset($matches[1]) ? (int)$matches[1] : 0;
+                $secs = isset($matches[1]) ? (int) $matches[1] : 0;
 
                 debug_event('SeafileAdapter', sprintf('Throttled by Seafile, waiting %d seconds.', $secs), 5);
                 sleep($secs + 1);

@@ -39,9 +39,7 @@ use Psr\Http\Message\ServerRequestInterface;
 
 abstract class AbstractLocalPlayAction implements ApplicationActionInterface
 {
-    protected function __construct(private readonly ConfigContainerInterface $configContainer)
-    {
-    }
+    protected function __construct(private readonly ConfigContainerInterface $configContainer) {}
 
     public function run(ServerRequestInterface $request, GuiGatekeeperInterface $gatekeeper): ?ResponseInterface
     {
@@ -65,7 +63,7 @@ abstract class AbstractLocalPlayAction implements ApplicationActionInterface
 
     protected function showRefresh(): void
     {
-        $refresh_limit = (int)($this->configContainer->get(ConfigurationKeyEnum::REFRESH_LIMIT) ?? 0);
+        $refresh_limit = (int) ($this->configContainer->get(ConfigurationKeyEnum::REFRESH_LIMIT) ?? 0);
         if ($refresh_limit > 5) {
             $ajax_url = '?page=localplay&action=command&command=refresh';
             require_once Ui::find_template('javascript_refresh.inc.php');

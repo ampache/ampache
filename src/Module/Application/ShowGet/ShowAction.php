@@ -45,8 +45,7 @@ final readonly class ShowAction implements ApplicationActionInterface
         private RequestParserInterface $requestParser,
         private ResponseFactoryInterface $responseFactory,
         private StreamFactoryInterface $streamFactory,
-    ) {
-    }
+    ) {}
 
     public function run(ServerRequestInterface $request, GuiGatekeeperInterface $gatekeeper): ResponseInterface
     {

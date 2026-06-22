@@ -108,7 +108,7 @@ class Label extends database_object implements
             return null;
         }
 
-        return (int)$label_id;
+        return (int) $label_id;
     }
 
     /**
@@ -194,7 +194,7 @@ class Label extends database_object implements
     public function display_art(array $size, bool $force = false): void
     {
         if ($this->has_art() || $force) {
-            Art::display('label', $this->id, (string)$this->get_fullname(), $size, $this->get_link());
+            Art::display('label', $this->id, (string) $this->get_fullname(), $size, $this->get_link());
         }
     }
 
@@ -221,7 +221,7 @@ class Label extends database_object implements
             $db_results = Dba::read($sql, [$this->id]);
             $results    = [];
             while ($row = Dba::fetch_assoc($db_results)) {
-                $results[] = (int)$row['artist'];
+                $results[] = (int) $row['artist'];
             }
 
             $this->artists = $results;
@@ -331,7 +331,7 @@ class Label extends database_object implements
             'label' => [
                 'important' => true,
                 'label' => T_('Label'),
-                'value' => (string)$this->get_fullname()
+                'value' => (string) $this->get_fullname()
             ]
         ];
     }
@@ -358,7 +358,7 @@ class Label extends database_object implements
     {
         $medias = [];
         if ($filter_type === null || $filter_type === 'song') {
-            $songs = $this->getSongRepository()->getByLabel((string)$this->name);
+            $songs = $this->getSongRepository()->getByLabel((string) $this->name);
             foreach ($songs as $song_id) {
                 $medias[] = ['object_type' => LibraryItemEnum::SONG, 'object_id' => $song_id];
             }
@@ -442,7 +442,7 @@ class Label extends database_object implements
             ? filter_var(urldecode($data['website']), FILTER_VALIDATE_URL) ?: null
             : null;
         $active = (isset($data['active']))
-            ? (bool)$data['active']
+            ? (bool) $data['active']
             : $this->active;
 
         $sql = "UPDATE `label` SET `name` = ?, `mbid` = ?, `category` = ?, `summary` = ?, `address` = ?, `country` = ?, `email` = ?, `website` = ?, `active` = ? WHERE `id` = ?";

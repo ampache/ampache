@@ -109,7 +109,7 @@ final class TagQuery implements QueryInterface
             case 'id':
                 $filter_sql = " `tag`.`id` IN (";
                 foreach ($value as $uid) {
-                    $filter_sql .= (int)$uid . ',';
+                    $filter_sql .= (int) $uid . ',';
                 }
 
                 $filter_sql = rtrim($filter_sql, ',') . ") AND ";
@@ -145,10 +145,10 @@ final class TagQuery implements QueryInterface
                 break;
             case 'genre':
             case 'tag':
-                $filter_sql = " `tag`.`id` = '" . (int)$value . "' AND ";
+                $filter_sql = " `tag`.`id` = '" . (int) $value . "' AND ";
                 break;
             case 'hidden':
-                $filter_sql = " `tag`.`is_hidden` = " . (int)$value . " AND ";
+                $filter_sql = " `tag`.`is_hidden` = " . (int) $value . " AND ";
                 break;
             case 'object_type':
                 $query->set_join('LEFT', '`tag_map`', '`tag_map`.`tag_id`', '`tag`.`id`', 100);
@@ -187,17 +187,17 @@ final class TagQuery implements QueryInterface
                 break;
             case 'rating':
                 $sql = sprintf('`rating`.`rating` %s, `rating`.`date`', $order);
-                $query->set_join_and_and('LEFT', "`rating`", "`rating`.`object_id`", "`tag`.`id`", "`rating`.`object_type`", "'tag'", "`rating`.`user`", (string)$query->user_id, 100);
+                $query->set_join_and_and('LEFT', "`rating`", "`rating`.`object_id`", "`tag`.`id`", "`rating`.`object_type`", "'tag'", "`rating`.`user`", (string) $query->user_id, 100);
                 break;
             case 'user_flag':
             case 'userflag':
                 $sql = "`user_flag`.`date`";
-                $query->set_join_and_and('LEFT', "`user_flag`", "`user_flag`.`object_id`", "`tag`.`id`", "`user_flag`.`object_type`", "'tag'", "`user_flag`.`user`", (string)$query->user_id, 100);
+                $query->set_join_and_and('LEFT', "`user_flag`", "`user_flag`.`object_id`", "`tag`.`id`", "`user_flag`.`object_type`", "'tag'", "`user_flag`.`user`", (string) $query->user_id, 100);
                 break;
             case 'user_flag_rating':
                 $sql = sprintf('`user_flag`.`date` %s, `rating`.`rating` %s, `rating`.`date`', $order, $order);
-                $query->set_join_and_and('LEFT', "`user_flag`", "`user_flag`.`object_id`", "`tag`.`id`", "`user_flag`.`object_type`", "'tag'", "`user_flag`.`user`", (string)$query->user_id, 100);
-                $query->set_join_and_and('LEFT', "`rating`", "`rating`.`object_id`", "`tag`.`id`", "`rating`.`object_type`", "'tag'", "`rating`.`user`", (string)$query->user_id, 100);
+                $query->set_join_and_and('LEFT', "`user_flag`", "`user_flag`.`object_id`", "`tag`.`id`", "`user_flag`.`object_type`", "'tag'", "`user_flag`.`user`", (string) $query->user_id, 100);
+                $query->set_join_and_and('LEFT', "`rating`", "`rating`.`object_id`", "`tag`.`id`", "`rating`.`object_type`", "'tag'", "`rating`.`user`", (string) $query->user_id, 100);
                 break;
             default:
                 $sql = '';

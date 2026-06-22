@@ -64,7 +64,7 @@ final class AddCatalogAction extends AbstractCatalogAction
 
         ob_end_flush();
 
-        $body = (array)$request->getParsedBody();
+        $body = (array) $request->getParsedBody();
         $type = filter_input(INPUT_POST, 'type', FILTER_SANITIZE_SPECIAL_CHARS);
         if (
             empty($type) ||

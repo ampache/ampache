@@ -187,9 +187,7 @@ class Ampachelistenbrainz extends AmpachePlugin implements PluginSaveMediaplayIn
      * set_flag
      * This takes care of spreading your love on ListenBrainz
      */
-    public function set_flag(Song $song, bool $flagged): void
-    {
-    }
+    public function set_flag(Song $song, bool $flagged): void {}
 
     /**
      * uninstall

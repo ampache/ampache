@@ -81,7 +81,7 @@ final class Localplay4Method
         switch ($command) {
             case 'add':
                 // for add commands get the object details
-                $object_id = (int)($input['oid'] ?? 0);
+                $object_id = (int) ($input['oid'] ?? 0);
                 $type      = LibraryItemEnum::tryFrom((string) strtolower($input['type'] ?? '')) ?? LibraryItemEnum::SONG;
 
                 if (!AmpConfig::get('allow_video') && $type === LibraryItemEnum::VIDEO) {
@@ -90,9 +90,9 @@ final class Localplay4Method
                     return false;
                 }
 
-                $clear = (int)($input['clear'] ?? 0);
+                $clear = (int) ($input['clear'] ?? 0);
                 if ($localplay->type === 'mpd') {
-                    $localplay->set_block_clear(make_bool((string)$clear));
+                    $localplay->set_block_clear(make_bool((string) $clear));
                 }
 
                 // clear before the add

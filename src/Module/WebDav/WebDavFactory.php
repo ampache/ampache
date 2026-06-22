@@ -35,9 +35,7 @@ use Sabre\DAV\Server;
 
 final readonly class WebDavFactory implements WebDavFactoryInterface
 {
-    public function __construct(private AuthenticationManagerInterface $authenticationManager)
-    {
-    }
+    public function __construct(private AuthenticationManagerInterface $authenticationManager) {}
 
     public function createBrowserPlugin(bool $enablePost): BrowserPlugin
     {

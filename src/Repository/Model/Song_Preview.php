@@ -78,7 +78,7 @@ class Song_Preview extends database_object implements Media, displayable_item, c
             $this->$key = $value;
         }
 
-        $this->id = (int)$object_id;
+        $this->id = (int) $object_id;
         if ($this->file) {
             $data       = pathinfo($this->file);
             $this->type = (isset($data['extension']))
@@ -119,7 +119,7 @@ class Song_Preview extends database_object implements Media, displayable_item, c
         while ($row = Dba::fetch_assoc($db_results)) {
             parent::add_to_cache('song_preview', $row['id'], $row);
             if ($row['artist']) {
-                $artists[] = (int)$row['artist'];
+                $artists[] = (int) $row['artist'];
             }
         }
 
@@ -163,11 +163,11 @@ class Song_Preview extends database_object implements Media, displayable_item, c
      */
     public static function insert(array $results): ?int
     {
-        if ((int)$results['disk'] == 0) {
+        if ((int) $results['disk'] == 0) {
             $results['disk'] = Album::sanitize_disk($results['disk']);
         }
 
-        if ((int)$results['track'] == 0) {
+        if ((int) $results['track'] == 0) {
             $results['disk']  = Album::sanitize_disk($results['track'][0]);
             $results['track'] = substr((string) $results['track'], 1);
         }
@@ -187,7 +187,7 @@ class Song_Preview extends database_object implements Media, displayable_item, c
             return null;
         }
 
-        return (int)$preview_id;
+        return (int) $preview_id;
     }
 
     public function check_play_history(int $user, string $agent, int $date): bool
@@ -316,7 +316,7 @@ class Song_Preview extends database_object implements Media, displayable_item, c
     public function get_parent_fullname(): string
     {
         if ($this->artist) {
-            return (string)(new Artist($this->artist)->get_fullname());
+            return (string) (new Artist($this->artist)->get_fullname());
         }
         $wartist = $this->getMissingArtistRetriever()->retrieve((string) $this->artist_mbid);
 
@@ -328,7 +328,7 @@ class Song_Preview extends database_object implements Media, displayable_item, c
      */
     public function get_stream_name(): string
     {
-        return (string)$this->title;
+        return (string) $this->title;
     }
 
     /**
@@ -402,7 +402,7 @@ class Song_Preview extends database_object implements Media, displayable_item, c
     public function play_url(string $additional_params = '', string $player = '', bool $local = false): string
     {
         $user_id = (Core::get_global('user') instanceof User)
-            ? (string)Core::get_global('user')->getId()
+            ? (string) Core::get_global('user')->getId()
             : '-1';
         $type      = $this->type;
         $song_name = rawurlencode($this->get_parent_fullname() . " - " . $this->title . "." . $type);

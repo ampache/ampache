@@ -40,8 +40,7 @@ final readonly class PodcastRepository implements PodcastRepositoryInterface
     public function __construct(
         private ModelFactoryInterface $modelFactory,
         private DatabaseConnectionInterface $connection,
-    ) {
-    }
+    ) {}
 
     /**
      * Deletes a podcast

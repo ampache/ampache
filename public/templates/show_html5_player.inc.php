@@ -35,8 +35,8 @@ $cookie_string = (make_bool(AmpConfig::get('cookie_secure')))
 $autoplay     = true;
 $embed        = $embed ?? false;
 $loop         = ($isRandom || $isDemocratic);
-$jp_volume    = (float)AmpConfig::get('jp_volume', 0.80);
-$removeCount  = (int)AmpConfig::get('webplayer_removeplayed', 0);
+$jp_volume    = (float) AmpConfig::get('jp_volume', 0.80);
+$removeCount  = (int) AmpConfig::get('webplayer_removeplayed', 0);
 $waveform     = AmpConfig::get('waveform', false) && $isShare === false;
 $canSlideshow = Preference::exists('flickr_api_key');
 $removePlayed = ($removeCount > 0);

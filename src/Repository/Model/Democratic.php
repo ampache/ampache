@@ -109,11 +109,11 @@ class Democratic extends Tmp_Playlist
     {
         // Clean up the input
         $name    = $data['name'];
-        $base    = (int)$data['democratic'];
-        $cool    = (int)$data['cooldown'];
-        $level   = (int)$data['level'];
-        $default = (int)$data['make_default'];
-        $user    = (int)Core::get_global('user')?->getId();
+        $base    = (int) $data['democratic'];
+        $cool    = (int) $data['cooldown'];
+        $level   = (int) $data['level'];
+        $default = (int) $data['make_default'];
+        $user    = (int) Core::get_global('user')?->getId();
         if ($cool < 0 || $cool > 999999) {
             $cool = 1;
         }
@@ -188,7 +188,7 @@ class Democratic extends Tmp_Playlist
         $db_results = Dba::read($sql);
         $results    = [];
         while ($row = Dba::fetch_assoc($db_results)) {
-            $results[] = (int)$row['id'];
+            $results[] = (int) $row['id'];
         }
 
         return $results;
@@ -248,8 +248,8 @@ class Democratic extends Tmp_Playlist
     {
         /* Iterate through the objects if no vote, add to playlist and vote */
         foreach ($items as $element) {
-            $type      = (string)array_shift($element);
-            $object_id = (int)array_shift($element);
+            $type      = (string) array_shift($element);
+            $object_id = (int) array_shift($element);
             if (!$this->has_vote($object_id, $type)) {
                 $this->_add_vote($object_id, $type);
             }
@@ -394,7 +394,7 @@ class Democratic extends Tmp_Playlist
     {
         // FIXME: Shouldn't this return object_type?
 
-        $offset     = (int)($offset);
+        $offset     = (int) ($offset);
         $items      = $this->get_items($offset + 1);
         $use_search = AmpConfig::get('demo_use_search');
 
@@ -440,7 +440,7 @@ class Democratic extends Tmp_Playlist
             return null;
         }
 
-        return (int)$row['id'];
+        return (int) $row['id'];
     }
 
     /**
@@ -450,7 +450,7 @@ class Democratic extends Tmp_Playlist
     public function get_vote(int $object_id): int
     {
         if (parent::is_cached('democratic_vote', $object_id)) {
-            return (int)(parent::get_from_cache('democratic_vote', $object_id))[0];
+            return (int) (parent::get_from_cache('democratic_vote', $object_id))[0];
         }
 
         $sql        = "SELECT COUNT(`user`) AS `count` FROM `user_vote` WHERE `object_id` = ?";
@@ -459,7 +459,7 @@ class Democratic extends Tmp_Playlist
         $results = Dba::fetch_assoc($db_results);
         parent::add_to_cache('democratic_vote', $object_id, [$results['count']]);
 
-        return (int)$results['count'];
+        return (int) $results['count'];
     }
 
     public function getAccessLevel(): AccessLevelEnum
@@ -521,7 +521,7 @@ class Democratic extends Tmp_Playlist
             $user = Core::get_global('user');
         }
 
-        $link = Stream::get_base_url(false, $user?->streamtoken) . 'uid=' . $user?->id . '&demo_id=' . scrub_out((string)$this->id);
+        $link = Stream::get_base_url(false, $user?->streamtoken) . 'uid=' . $user?->id . '&demo_id=' . scrub_out((string) $this->id);
 
         return Stream_Url::format($link);
     }
@@ -578,10 +578,10 @@ class Democratic extends Tmp_Playlist
     public function update(array $data): int
     {
         $name    = $data['name'] ?? $this->name;
-        $base    = (int)($data['democratic'] ?? $this->base_playlist);
-        $cool    = (int)($data['cooldown'] ?? $this->cooldown);
-        $level   = (int)($data['level'] ?? $this->level);
-        $default = (int)($data['make_default'] ?? 0);
+        $base    = (int) ($data['democratic'] ?? $this->base_playlist);
+        $cool    = (int) ($data['cooldown'] ?? $this->cooldown);
+        $level   = (int) ($data['level'] ?? $this->level);
+        $default = (int) ($data['make_default'] ?? 0);
         $demo_id = $this->id;
 
         if ($cool < 0 || $cool > 999999) {
@@ -607,7 +607,7 @@ class Democratic extends Tmp_Playlist
         $className = ObjectTypeToClassNameMapper::map($object_type);
         /** @var Media $media */
         $media = new $className($object_id);
-        $track = (isset($media->track)) ? (int)($media->track) : null;
+        $track = (isset($media->track)) ? (int) ($media->track) : null;
 
         /* If it's on the playlist just vote */
         $sql        = "SELECT `id` FROM `tmp_playlist_data` WHERE `tmp_playlist_data`.`object_id` = ? AND `tmp_playlist_data`.`tmp_playlist` = ?";

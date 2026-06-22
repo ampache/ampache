@@ -42,8 +42,7 @@ class VlcPlayer
         public string $host = 'localhost',
         public string $password = '',
         public int $port = 8080,
-    ) {
-    }
+    ) {}
 
     /**
      * add
@@ -412,9 +411,9 @@ class VlcPlayer
             unset($attributes, $value);
 
             // tag(string), type(string), level(int), attributes(array)
-            $tag        = (string)$data['tag'];
-            $type       = (string)$data['type'];
-            $level      = (int)$data['level'];
+            $tag        = (string) $data['tag'];
+            $type       = (string) $data['type'];
+            $level      = (int) $data['level'];
             $value      = $data['value'] ?? null;
             $attributes = $data['attributes'] ?? null;
 

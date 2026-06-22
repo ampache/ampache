@@ -69,8 +69,8 @@ final class PreferenceEdit6Method
             return false;
         }
 
-        $all     = (array_key_exists('all', $input) && (int)$input['all'] == 1);
-        $default = (array_key_exists('default', $input) && (int)$input['default'] == 1);
+        $all     = (array_key_exists('all', $input) && (int) $input['all'] == 1);
+        $default = (array_key_exists('default', $input) && (int) $input['default'] == 1);
         // don't apply to all or set default when you aren't an admin
         if (
             ($all || $default) &&

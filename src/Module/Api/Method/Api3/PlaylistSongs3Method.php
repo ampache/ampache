@@ -52,7 +52,7 @@ final class PlaylistSongs3Method
      */
     public static function playlist_songs(array $input, User $user): void
     {
-        $playlist = new Playlist((int)$input['filter']);
+        $playlist = new Playlist((int) $input['filter']);
         $items    = $playlist->get_items();
 
         $results = [];

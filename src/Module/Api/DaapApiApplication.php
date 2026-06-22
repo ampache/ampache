@@ -55,7 +55,7 @@ final class DaapApiApplication implements ApiApplicationInterface
 
         $params = array_filter(
             explode('/', $action),
-            fn (string $value): bool => strlen($value) > 0
+            fn(string $value): bool => strlen($value) > 0
         );
         $p_count = count($params);
         if ($p_count > 0) {

@@ -54,14 +54,14 @@ final readonly class NowPlayingFeed extends AbstractGenericRssFeed
             ? 'video'
             : 'song';
 
-        return (string)Art::url($media->getId(), $type, null, 2);
+        return (string) Art::url($media->getId(), $type, null, 2);
     }
 
     protected function getItems(): Generator
     {
         $data = Stream::get_now_playing();
 
-        $format     = (string)AmpConfig::get('rss_format', '%t - %a - %A');
+        $format     = (string) AmpConfig::get('rss_format', '%t - %a - %A');
         $string_map = [
             '%t' => 'title',
             '%a' => 'artist',
@@ -76,7 +76,7 @@ final readonly class NowPlayingFeed extends AbstractGenericRssFeed
             $description = $format;
             foreach ($string_map as $search => $replace) {
                 $text = match ($replace) {
-                    'title' => (string)$media->get_fullname(),
+                    'title' => (string) $media->get_fullname(),
                     'artist' => ($media instanceof Song)
                         ? $media->get_parent_fullname()
                         : '',
@@ -93,7 +93,7 @@ final readonly class NowPlayingFeed extends AbstractGenericRssFeed
                 'link' => $media->get_link(),
                 'description' => str_replace('<p>Artist: </p><p>Album: </p>', '', $description),
                 'comments' => $client->get_link(),
-                'pubDate' => date("r", (int)$element['expire']),
+                'pubDate' => date("r", (int) $element['expire']),
                 'guid' => (isset($media->mbid))
                     ? 'https://musicbrainz.org/recording/' . $media->mbid
                     : $element['expire'] . '-' . $client->getId() . '-' . $media->getId(),

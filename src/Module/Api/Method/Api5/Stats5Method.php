@@ -86,7 +86,7 @@ final class Stats5Method
         $offset = (int) ($input['offset'] ?? 0);
         $limit  = (int) ($input['limit'] ?? 0);
         if ($limit < 1) {
-            $limit = (int)AmpConfig::get('popular_threshold', 10);
+            $limit = (int) AmpConfig::get('popular_threshold', 10);
         }
         // do you allow video?
         if (!AmpConfig::get('allow_video') && $type == 'video') {
@@ -115,7 +115,7 @@ final class Stats5Method
         } elseif (array_key_exists('user_id', $input)) {
             $userTwo = new User($user_id);
             if (!$userTwo->isNew()) {
-                $user_id = (int)$input['user_id'];
+                $user_id = (int) $input['user_id'];
                 $user    = new User($user_id);
             }
         }
@@ -134,7 +134,7 @@ final class Stats5Method
                 $limit   = 0;
                 break;
             case 'frequent':
-                $threshold = (int)AmpConfig::get('stats_threshold', 7);
+                $threshold = (int) AmpConfig::get('stats_threshold', 7);
                 $results   = Stats::get_top($type, $limit, $threshold, $offset);
                 $offset    = 0;
                 $limit     = 0;
@@ -177,7 +177,7 @@ final class Stats5Method
                         $browse->set_sort('rand', null, false);
                         $browse->set_filter('playlist_open', $user->getId());
 
-                        $hide_string = str_replace('%', '\%', str_replace('_', '\_', (string)Preference::get_by_user($user->getId(), 'api_hidden_playlists')));
+                        $hide_string = str_replace('%', '\%', str_replace('_', '\_', (string) Preference::get_by_user($user->getId(), 'api_hidden_playlists')));
                         if (!empty($hide_string)) {
                             $browse->set_filter('not_starts_with', $hide_string);
                         }

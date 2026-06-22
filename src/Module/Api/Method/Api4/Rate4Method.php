@@ -96,7 +96,7 @@ final class Rate4Method
                 return false;
             }
             $rate = new Rating($object_id, $type);
-            $rate->set_rating((int)$rating, $user->id);
+            $rate->set_rating((int) $rating, $user->id);
             Api4::message('success', 'rating set to ' . $rating . ' for ' . $object_id, null, $input['api_format']);
         }
 
