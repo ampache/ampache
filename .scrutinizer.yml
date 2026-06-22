@@ -20,6 +20,7 @@ build:
 
   nodes:
     analysis:
+      image: default-bionic
       tests:
         override:
           - command: "php-scrutinizer-run"
