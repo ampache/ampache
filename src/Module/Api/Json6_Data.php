@@ -366,7 +366,7 @@ class Json6_Data
      *         "mbid_group": null|string,
      *     }>,
      *     "albumcount": int,
-     *     "songs": array<mixed>,
+     *     "songs": array<int, array<string, mixed>>,
      *     "songcount": int,
      *     "genre": array<int, array{id: string, name: string}>,
      *     "art": null|string,

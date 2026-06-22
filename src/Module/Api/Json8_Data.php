@@ -971,7 +971,7 @@ class Json8_Data
      *
      * This returns folders to the user in a JSON document.
      *
-     * @param array<string> $folder_ids Folder children id's in object_type-Object_id format.
+     * @param array<int|string> $folder_ids Folder children id's in object_type-Object_id format.
      */
     public static function folders(array $folder_ids, Folder $folder, User $user, string $auth): string
     {
@@ -1010,7 +1010,7 @@ class Json8_Data
                     break;
             }
 
-            if ($libitem === null || $libitem->isNew()) {
+            if ($libitem === null || $libitem->isNew() || $object_type === null) {
                 continue;
             }
 
@@ -1019,7 +1019,7 @@ class Json8_Data
             $art_url     = Art::url($libitem->getId(), $object_type, $auth);
             $play_url    = ($libitem instanceof Folder) ? '' : $libitem->play_url('', 'api', false, $user->id, $user->streamtoken);
             if (property_exists($libitem, 'file')) {
-                $p_info   = pathinfo($libitem->file);
+                $p_info   = pathinfo($libitem->file, [PATHINFO_DIRNAME, PATHINFO_BASENAME]);
                 $filename = $p_info['basename'];
                 $dirname  = $p_info['dirname'];
             } else {

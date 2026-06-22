@@ -78,6 +78,10 @@ class AmpacheMpd extends localplay_controller
      */
     public function add_url(Stream_Url $url): bool
     {
+        if (!$this->_mpd) {
+            return false;
+        }
+
         // If we haven't added anything then maybe we should clear the playlist.
         if ($this->_add_count < 1) {
             $this->_mpd->RefreshInfo();
@@ -105,6 +109,10 @@ class AmpacheMpd extends localplay_controller
      */
     public function clear_playlist(): bool
     {
+        if (!$this->_mpd) {
+            return false;
+        }
+
         $this->_add_count = 0;
 
         return $this->_mpd->PLClear() !== false;
@@ -146,6 +154,10 @@ class AmpacheMpd extends localplay_controller
      */
     public function delete_track(int $object_id): bool
     {
+        if (!$this->_mpd) {
+            return false;
+        }
+
         return $this->_mpd->PLRemove($object_id) !== false;
     }
 
@@ -401,6 +413,10 @@ class AmpacheMpd extends localplay_controller
      */
     public function move($source, $destination): bool|string
     {
+        if (!$this->_mpd) {
+            return false;
+        }
+
         return $this->_mpd->PLMoveTrack($source, $destination);
     }
 
@@ -410,6 +426,10 @@ class AmpacheMpd extends localplay_controller
      */
     public function next(): bool
     {
+        if (!$this->_mpd) {
+            return false;
+        }
+
         return $this->_mpd->Next() !== false;
     }
 
@@ -419,6 +439,10 @@ class AmpacheMpd extends localplay_controller
      */
     public function pause(): bool
     {
+        if (!$this->_mpd) {
+            return false;
+        }
+
         return $this->_mpd->Pause() !== false;
     }
 
@@ -429,6 +453,10 @@ class AmpacheMpd extends localplay_controller
      */
     public function play(): bool
     {
+        if (!$this->_mpd) {
+            return false;
+        }
+
         return $this->_mpd->Play() !== false;
     }
 
@@ -438,6 +466,10 @@ class AmpacheMpd extends localplay_controller
      */
     public function prev(): bool
     {
+        if (!$this->_mpd) {
+            return false;
+        }
+
         return $this->_mpd->Previous() !== false;
     }
 
@@ -448,6 +480,10 @@ class AmpacheMpd extends localplay_controller
      */
     public function random(bool $state): bool
     {
+        if (!$this->_mpd) {
+            return false;
+        }
+
         return $this->_mpd->SetRandom($state) !== false;
     }
 
@@ -457,6 +493,10 @@ class AmpacheMpd extends localplay_controller
      */
     public function repeat(bool $state): bool
     {
+        if (!$this->_mpd) {
+            return false;
+        }
+
         return $this->_mpd->SetRepeat($state) !== false;
     }
 
@@ -484,7 +524,10 @@ class AmpacheMpd extends localplay_controller
      */
     public function skip(int $track_id): bool
     {
-        if (!$this->_mpd->SkipTo($track_id)) {
+        if (
+            !$this->_mpd ||
+            !$this->_mpd->SkipTo($track_id)
+        ) {
             return false;
         }
 
@@ -569,6 +612,10 @@ class AmpacheMpd extends localplay_controller
      */
     public function stop(): bool
     {
+        if (!$this->_mpd) {
+            return false;
+        }
+
         return $this->_mpd->Stop() !== false;
     }
 
@@ -608,6 +655,10 @@ class AmpacheMpd extends localplay_controller
      */
     public function volume(int $volume): bool
     {
+        if (!$this->_mpd) {
+            return false;
+        }
+
         return $this->_mpd->SetVolume($volume) !== false;
     }
 
@@ -616,6 +667,10 @@ class AmpacheMpd extends localplay_controller
      */
     public function volume_down(): bool
     {
+        if (!$this->_mpd) {
+            return false;
+        }
+
         return $this->_mpd->AdjustVolume('-5') !== false;
     }
 
@@ -624,6 +679,10 @@ class AmpacheMpd extends localplay_controller
      */
     public function volume_up(): bool
     {
+        if (!$this->_mpd) {
+            return false;
+        }
+
         return $this->_mpd->AdjustVolume('5') !== false;
     }
 }

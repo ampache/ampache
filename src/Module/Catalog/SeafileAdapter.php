@@ -32,16 +32,17 @@ use Seafile\Client\Resource\Directory;
 use Seafile\Client\Resource\File;
 use Seafile\Client\Resource\Library;
 use Seafile\Client\Type\DirectoryItem;
+use Seafile\Client\Type\Library as LibraryType;
 
 class SeafileAdapter
 {
-    /** @var array{Libraries: Library, Directories: Directory, Files: File, Client: Client}|null  */
+    /** @var array{Libraries: LibraryType, Directories: Directory, Files: File, Client: Client}|null  */
     private array|null $client = null;
 
     /** @var array<string, DirectoryItem[]> */
     private array $directory_cache = [];
 
-    private Library|null $library = null;
+    private LibraryType|null $library = null;
 
     /**
      * SeafileAdapter constructor.
@@ -81,12 +82,9 @@ class SeafileAdapter
 
     // download a file, optionally limited to just enough to be able to read its metadata tags(currently 2MB)
 
-    /**
-     * @param bool $partial
-     */
-    public function download($file, $partial = false): string
+    public function download(DirectoryItem $file, bool $partial = false): string
     {
-        $url  = $this->throttle_check(fn () => $this->client['Files']->getDownloadUrl($this->library, $file, $file->dir));
+        $url  = ($this->library) ? $this->throttle_check(fn () => $this->client['Files']->getDownloadUrl($this->library, $file, $file->dir)) : '';
         $opts = $partial ? ['curl' => [CURLOPT_RANGE => '0-2097152']] : ['delay' => 0];
 
         // grab a full 2 meg in case meta has image in it or something
@@ -109,9 +107,8 @@ class SeafileAdapter
      * the function receives a DirectoryItem and should return 1 if the file was added, 0 otherwise
      * (https://github.com/rene-s/Seafile-PHP-SDK/blob/master/src/Type/DirectoryItem.php)
      * Returns number added, or -1 on failure
-     * @param string $path
      */
-    public function for_all_files($func, $path = '/'): int
+    public function for_all_files($func, string $path = '/'): int
     {
         if ($this->client != null) {
             $directoryItems = $this->get_cached_directory($path);
@@ -155,7 +152,7 @@ class SeafileAdapter
     /**
      * @return DirectoryItem[]|null
      */
-    public function get_file(string $path, string $name): ?array
+    public function get_file(string $path, string $name): ?DirectoryItem
     {
         $directory = $this->get_cached_directory($path);
 
