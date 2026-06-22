@@ -398,7 +398,7 @@ class Catalog_Seafile extends Catalog
         // if you have the file it's all good
         $media_file = $file_override ?? $media->file;
 
-        if (!in_array($media_file, [null, '', '0'], true) && is_string($media_file) && is_file($media_file)) {
+        if (!in_array($media_file, [null, '', '0'], true) && $media_file && is_file($media_file)) {
             return $this->download_metadata($media_file, $sort_pattern, $rename_pattern, $gather_types);
         }
 
@@ -521,8 +521,10 @@ class Catalog_Seafile extends Catalog
 
             $file = $this->seafile->get_file($fileinfo['path'], $fileinfo['filename']);
 
-            $stream_path = $this->seafile->download($file);
-            $stream_name = $fileinfo['filename'];
+            if ($file !== null) {
+                $stream_path = $this->seafile->download($file);
+                $stream_name = $fileinfo['filename'];
+            }
 
             // in case this didn't get set for some reason
             if ($size === 0) {
@@ -608,14 +610,17 @@ class Catalog_Seafile extends Catalog
             $rename_pattern = $this->rename_pattern;
         }
 
-        $is_cached = (!$file instanceof DirectoryItem && is_file($file));
+        $is_diritem = ($file instanceof DirectoryItem);
+        $is_cached  = (!$is_diritem && is_string($file) && is_file($file));
 
         if ($is_cached) {
             debug_event('seafile_catalog', 'Using tmp file ' . $file, 5);
             $tempfilename = $file;
         } else {
             debug_event('seafile_catalog', 'Downloading partial song ' . $file->name, 5);
-            $tempfilename = $this->seafile->download($file, true);
+            $tempfilename = ($file instanceof DirectoryItem)
+                ? $this->seafile->download($file, true)
+                : $file;
         }
 
         if ($gather_types === null) {
@@ -630,26 +635,24 @@ class Catalog_Seafile extends Catalog
             (string) $sort_pattern,
             (string) $rename_pattern
         );
-        if (!$is_cached) {
+        if ($is_diritem) {
             $vainfo->forceSize((int)$file->size);
         }
 
         $vainfo->gather_tags();
         $key = VaInfo::get_tag_type($vainfo->tags);
 
-        if (!$is_cached) {
+        if ($is_diritem) {
             $vainfo->tags['general']['size'] = (int)($file->size);
         }
 
-        $results = ($is_cached)
-            ? VaInfo::clean_tag_info($vainfo->tags, $key, $file->path)
-            : VaInfo::clean_tag_info($vainfo->tags, $key, $file->name);
+        $results = VaInfo::clean_tag_info($vainfo->tags, $key, $tempfilename);
 
         // Set the remote path
         $results['catalog'] = $this->id;
-        $results['file']    = ($is_cached)
-            ? $file
-            : $this->seafile->to_virtual_path($file);
+        $results['file']    = ($is_diritem)
+            ? $this->seafile->to_virtual_path($file)
+            : $tempfilename;
 
         // remove the temp file
         if (!$keep) {
