@@ -472,7 +472,7 @@ class Xml8_Data
                     break;
             }
 
-            if ($libitem === null || $libitem->isNew()) {
+            if ($libitem === null || $libitem->isNew() || $object_type === null) {
                 continue;
             }
 
@@ -481,7 +481,7 @@ class Xml8_Data
             $art_url     = Art::url($libitem->getId(), $object_type, $auth);
             $play_url    = ($libitem instanceof Folder) ? '' : $libitem->play_url('', 'api', false, $user->id, $user->streamtoken);
             if (property_exists($libitem, 'file')) {
-                $p_info   = pathinfo($libitem->file);
+                $p_info   = pathinfo($libitem->file, [PATHINFO_DIRNAME, PATHINFO_BASENAME]);
                 $filename = $p_info['basename'];
                 $dirname  = $p_info['dirname'];
             } else {

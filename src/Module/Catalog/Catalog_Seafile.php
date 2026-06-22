@@ -39,6 +39,7 @@ use Ampache\Repository\Model\Song;
 use Ampache\Repository\Model\Video;
 use Exception;
 use Override;
+use Seafile\Client\Type\DirectoryItem;
 
 /**
  * This class handles all actual work in regards to remote Seafile catalogs.
@@ -599,7 +600,7 @@ class Catalog_Seafile extends Catalog
      * @return array<string, mixed>
      * @throws Exception
      */
-    private function download_metadata(string $file, string $sort_pattern = '', string $rename_pattern = '', ?array $gather_types = null, bool $keep = false): array
+    private function download_metadata(DirectoryItem $file, string $sort_pattern = '', string $rename_pattern = '', ?array $gather_types = null, bool $keep = false): array
     {
         // Check for patterns
         if (!$sort_pattern || !$rename_pattern) {

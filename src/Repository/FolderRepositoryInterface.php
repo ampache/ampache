@@ -55,6 +55,8 @@ interface FolderRepositoryInterface
 
     public function lookupByPathName(string $folderPath, int $catalogId = 0): int;
 
+    public function update_utime(int $folder_id, int $time = 0): void;
+
     /**
      * Update folder counts columns after large actions
      */
