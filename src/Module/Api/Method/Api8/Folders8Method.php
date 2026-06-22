@@ -79,7 +79,7 @@ final class Folders8Method
             ? new Folder(-1)
             : self::getFolderRepository()->getByPathName($path_name);
 
-            if ($folder->isNew()) {
+        if ($folder === null || $folder->isNew()) {
             /* HINT: Requested object string/id/type ("album", "myusername", "some song title", 1298376) */
             Api::error(sprintf('Not Found: %s', $path_name), ErrorCodeEnum::NOT_FOUND, self::ACTION, 'filter', $input['api_format']);
 
