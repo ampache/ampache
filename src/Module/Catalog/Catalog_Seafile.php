@@ -398,7 +398,7 @@ class Catalog_Seafile extends Catalog
         // if you have the file it's all good
         $media_file = $file_override ?? $media->file;
 
-        if ($media_file && !in_array($media_file, [null, '', '0'], true) && is_file($media_file)) {
+        if ($media_file && is_file($media_file)) {
             return $this->download_metadata($media_file, $sort_pattern, $rename_pattern, $gather_types);
         }
 
