@@ -149,9 +149,6 @@ class SeafileAdapter
         ];
     }
 
-    /**
-     * @return DirectoryItem[]|null
-     */
     public function get_file(string $path, string $name): ?DirectoryItem
     {
         $directory = $this->get_cached_directory($path);
@@ -248,7 +245,7 @@ class SeafileAdapter
 
     // given a given path & filename, return the "virtual" path string which will be stored in the database
 
-    public function to_virtual_path($file): string
+    public function to_virtual_path(DirectoryItem $file): string
     {
         return $this->library->name . '|' . $file->dir . '|' . $file->name;
     }
@@ -256,9 +253,9 @@ class SeafileAdapter
     /**
      * @return DirectoryItem[]|null
      */
-    private function get_cached_directory($path): ?array
+    private function get_cached_directory(string $path): ?array
     {
-        if (array_key_exists((string) $path, $this->directory_cache)) {
+        if (array_key_exists($path, $this->directory_cache)) {
             $directory = $this->directory_cache[$path];
 
             if ($directory) {

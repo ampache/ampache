@@ -1868,7 +1868,10 @@ class Catalog_local extends Catalog
                 if (is_dir($full_file)) {
                     if (isset($this->_filecache[strtolower($full_file)])) {
                         // set mod time on scan
-                        self::getFolderRepository()->update_utime($this->_filecache[strtolower($full_file)], filemtime($full_file));
+                        self::getFolderRepository()->update_utime(
+                            (int)$this->_filecache[strtolower($full_file)],
+                            filemtime($full_file) ?: time()
+                        );
                     } elseif ($this->add_folder($file, $full_file, $path) !== null) {
                         $this->count++;
                         $interactor?->info(
