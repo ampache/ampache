@@ -64,8 +64,8 @@ final readonly class UserStateToggler implements UserStateTogglerInterface
             /* HINT: Username */
             $mailer->setMessage(
                 sprintf(T_('A new user has been enabled. %s'), $user->getUsername())
-                /* HINT: Ampache Login Page */. "\n\n"
-                . sprintf(
+                /* HINT: Ampache Login Page */
+                . "\n\n" . sprintf(
                     T_('You can log in at the following address %s'),
                     $this->configContainer->getWebPath()
                 )
