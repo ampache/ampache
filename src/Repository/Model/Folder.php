@@ -241,8 +241,13 @@ class Folder extends database_object implements
     public function get_children(string $name): array
     {
         debug_event(self::class, 'get_children ' . $name, 5);
-        $sql        = "SELECT `object_id`, `object_type` FROM `folder_map` WHERE `folder_id` = ? ORDER BY `name`;";
-        $db_results = Dba::read($sql, [$this->id]);
+        if ($this->getId() === -1) {
+            $sql        = "SELECT `object_id`, `object_type` FROM `folder_map` WHERE `folder_id` IS NULL ORDER BY `name`;";
+            $db_results = Dba::read($sql);
+        } else {
+            $sql        = "SELECT `object_id`, `object_type` FROM `folder_map` WHERE `folder_id` = ? ORDER BY `name`;";
+            $db_results = Dba::read($sql, [$this->id]);
+        }
         $results    = [];
         while ($row = Dba::fetch_assoc($db_results)) {
             $object_type = LibraryItemEnum::tryFrom($row['object_type']);
