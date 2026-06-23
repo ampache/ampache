@@ -27,19 +27,12 @@ use Ampache\Repository\Model\library_item;
 use Ampache\Repository\Model\LibraryItemEnum;
 
 /**
- * library_item Interface
+ * WebDavDirectory Interface
  *
- * This defines how the media file classes should
- * work, this lists all required functions and the expected
- * input
+ * This defines classes for WebDav browsing and traversal of Folder objects to Media objects.
  */
 interface WebDavDirectoryInterface extends library_item
 {
-    public int $catalog = 0 {
-        get;
-        set;
-    }
-
     /**
      * Search for direct children of an object
      * @return array<int, array{object_type: LibraryItemEnum, object_id: int}>
@@ -53,6 +46,8 @@ interface WebDavDirectoryInterface extends library_item
      * @return array{string?: array<int, array{object_type: LibraryItemEnum, object_id: int}>}
      */
     public function get_childrens(): array;
+
+    public function getCatalog(): int;
 
     public function has_children(string $name): bool;
 }
