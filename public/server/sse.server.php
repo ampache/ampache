@@ -26,6 +26,8 @@ declare(strict_types=1);
 use Ampache\Module\Api\SseApiApplication;
 use Psr\Container\ContainerInterface;
 
+// sse.server.php
+
 /** @var ContainerInterface $dic */
 $dic = require __DIR__ . '/../../src/Config/Init.php';
 
