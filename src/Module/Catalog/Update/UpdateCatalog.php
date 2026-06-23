@@ -325,7 +325,7 @@ final class UpdateCatalog extends AbstractCatalogUpdater implements UpdateCatalo
             Catalog::clean_empty_albums();
             Album::update_album_artist();
             Catalog::update_counts();
-            if ($scanFolders && empty($catalogName)) {
+            if (empty($catalogName)) {
                 $catalog?->count_scan_folders($interactor);
             }
             $interactor->info(
