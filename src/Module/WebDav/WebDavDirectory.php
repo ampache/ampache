@@ -99,11 +99,9 @@ class WebDavDirectory extends Collection
     {
         //debug_event(self::class, 'Directory getChildren', 5);
         $children = [];
-        $childs   = $this->libitem->get_childrens();
-        foreach ($childs as $child) {
-            foreach ($child as $schild) {
-                $children[] = WebDavDirectory::getChildFromArray($schild);
-            }
+        $itemss   = $this->libitem->get_childrens();
+        foreach ($itemss as $child) {
+            $children[] = WebDavDirectory::getChildFromArray($child);
         }
 
         return $children;
@@ -112,7 +110,7 @@ class WebDavDirectory extends Collection
     public function getName(): string
     {
         if (property_exists($this->libitem, 'file')) {
-            pathinfo($this->libitem->file, PATHINFO_BASENAME);
+            return pathinfo($this->libitem->file, PATHINFO_BASENAME);
         }
 
         return str_replace('/', '', (string) $this->libitem->get_fullname());

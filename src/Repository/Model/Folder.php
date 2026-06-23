@@ -264,7 +264,7 @@ class Folder extends database_object implements
 
     /**
      * @see WebDavDirectory::getChildren
-     * @return array{string?: array<int, array{object_type: LibraryItemEnum, object_id: int}>}
+     * @return array<int, array{object_type: LibraryItemEnum, object_id: int}>
      */
     public function get_childrens(): array
     {
@@ -276,7 +276,7 @@ class Folder extends database_object implements
             ];
         }
 
-        return ['podcast_episode' => $results];
+        return $results;
     }
 
     public function get_default_art_kind(): string
