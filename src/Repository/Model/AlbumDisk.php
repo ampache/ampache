@@ -27,7 +27,6 @@ namespace Ampache\Repository\Model;
 
 use Ampache\Config\AmpConfig;
 use Ampache\Module\System\Dba;
-use Ampache\Module\WebDav\WebDavDirectoryInterface;
 use Ampache\Repository\SongRepositoryInterface;
 
 /**

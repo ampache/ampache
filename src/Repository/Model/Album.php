@@ -32,7 +32,6 @@ use Ampache\Module\Statistics\Stats;
 use Ampache\Module\System\Core;
 use Ampache\Module\System\Dba;
 use Ampache\Module\Wanted\WantedManagerInterface;
-use Ampache\Module\WebDav\WebDavDirectoryInterface;
 use Ampache\Repository\AlbumDiskRepositoryInterface;
 use Ampache\Repository\AlbumRepositoryInterface;
 use Ampache\Repository\SongRepositoryInterface;
