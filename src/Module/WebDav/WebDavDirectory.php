@@ -99,8 +99,8 @@ class WebDavDirectory extends Collection
     {
         //debug_event(self::class, 'Directory getChildren', 5);
         $children = [];
-        $itemss   = $this->libitem->get_childrens();
-        foreach ($itemss as $child) {
+        $items    = $this->libitem->get_childrens();
+        foreach ($items as $child) {
             $children[] = WebDavDirectory::getChildFromArray($child);
         }
 

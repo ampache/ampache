@@ -2074,13 +2074,15 @@ abstract class Catalog extends database_object
         return (bool) Dba::num_rows($db_results);
     }
 
-    public static function has_children(string $name, ?int $catalog_id = 0, ?int $parent_id = null): array
+    public static function has_children(string $name, ?int $catalog_id = 0, ?int $parent_id = null): bool
     {
         $folder = ($name === '/')
             ? new Folder(-1)
             : self::getFolderRepository()->getByName($name, $catalog_id, $parent_id);
 
-        return $folder?->has_children($name) ?? [];
+        return ($folder)
+            ? $folder->has_children($name)
+            : false;
     }
 
     /**

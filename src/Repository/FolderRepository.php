@@ -122,18 +122,18 @@ final readonly class FolderRepository implements FolderRepositoryInterface
 
     public function getByName(string $folderName, ?int $catalogId = null, ?int $parent = null): ?Folder
     {
-        $sql    = 'SELECT `folder`.`id` FROM `folder` WHERE `folder`.`name` = ?';
+        $sql    = 'SELECT `folder_map`.`object_id`, `folder_map`.`object_type` FROM `folder_map` WHERE `folder_map`.`name` = ?';
         $params = [$folderName];
         if (($catalogId)) {
-            $sql .= 'AND `folder`.`catalog` = ? ';
+            $sql .= 'AND `folder_map`.`catalog` = ? ';
             $params[] = $catalogId;
         }
         if ($parent) {
-            $sql .= 'AND `folder`.`parent` = ? ';
+            $sql .= 'AND `folder_map`.`folder_id` = ? ';
             $params[] = $parent;
         }
         if ($parent === null) {
-            $sql .= 'AND `folder`.`parent` IS NULL ';
+            $sql .= 'AND `folder_map`.`folder_id` IS NULL ';
         }
         //debug_event(self::class, 'getByName ' . sprintf('SQL %s', $sql) . print_r([$folderName, $catalogId, $parent], true), 5);
 
