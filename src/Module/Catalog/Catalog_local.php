@@ -409,9 +409,6 @@ class Catalog_local extends Catalog
         $path = rtrim((string) $path, '/');
         $path = rtrim($path, '\\');
 
-        // Correctly detect the slash we need to use here
-        $slash_type = str_contains($path, '/') ? '/' : '\\';
-
         /* Open up the directory */
         $handle = opendir($path);
 
@@ -460,7 +457,7 @@ class Catalog_local extends Catalog
             $counter++;
 
             /* Create the new path */
-            $full_file = $path . $slash_type . $file;
+            $full_file = $path . DIRECTORY_SEPARATOR . $file;
             try {
                 if ($this->add_file($full_file, $options, $counter, $interactor)) {
                     $songsadded++;
@@ -1870,9 +1867,6 @@ class Catalog_local extends Catalog
         $path = rtrim($path, '/');
         $path = rtrim($path, '\\');
 
-        // Correctly detect the slash we need to use here
-        $slash_type = str_contains($path, '/') ? '/' : '\\';
-
         /* Open up the directory */
         $handle = opendir($path);
 
@@ -1895,7 +1889,7 @@ class Catalog_local extends Catalog
             }
 
             /* Create the new path */
-            $full_file = $path . $slash_type . $file;
+            $full_file = $path . DIRECTORY_SEPARATOR . $file;
 
             try {
                 if (is_dir($full_file)) {
