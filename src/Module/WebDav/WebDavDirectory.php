@@ -84,8 +84,12 @@ class WebDavDirectory extends Collection
     {
         //debug_event(self::class, 'Directory getChild: ' . unhtmlentities($name), 5);
         $folder = Catalog::get_child(unhtmlentities($name), $this->libitem->getCatalog(), $this->libitem->getId());
-        if ($folder !== null) {
+        if ($folder instanceof WebDavDirectoryInterface) {
             return new WebDavDirectory($folder);
+        }
+
+        if ($folder !== null) {
+            return new WebDavFile($folder);
         }
 
         throw new NotFound(self::class . ' The child with name: ' . $name . ' could not be found');

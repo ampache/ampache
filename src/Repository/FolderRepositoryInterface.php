@@ -26,6 +26,9 @@ declare(strict_types=1);
 namespace Ampache\Repository;
 
 use Ampache\Repository\Model\Folder;
+use Ampache\Repository\Model\Podcast_Episode;
+use Ampache\Repository\Model\Song;
+use Ampache\Repository\Model\Video;
 
 interface FolderRepositoryInterface
 {
@@ -47,7 +50,7 @@ interface FolderRepositoryInterface
      */
     public function getAll(): array;
 
-    public function getByName(string $folderName, ?int $catalogId = null, ?int $parent = null): ?Folder;
+    public function getByName(string $folderName, ?int $catalogId = null, ?int $parent = null): Folder|Podcast_Episode|Song|Video|null;
 
     public function getByPathName(string $folderPath, int $catalogId = 0, ?string $parentPath = null): ?Folder;
 

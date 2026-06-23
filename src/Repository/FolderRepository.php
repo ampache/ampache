@@ -28,6 +28,9 @@ namespace Ampache\Repository;
 use Ampache\Module\Database\DatabaseConnectionInterface;
 use Ampache\Module\Database\Exception\DatabaseException;
 use Ampache\Repository\Model\Folder;
+use Ampache\Repository\Model\Podcast_Episode;
+use Ampache\Repository\Model\Song;
+use Ampache\Repository\Model\Video;
 use PDO;
 
 final readonly class FolderRepository implements FolderRepositoryInterface
@@ -120,7 +123,7 @@ final readonly class FolderRepository implements FolderRepositoryInterface
         return $folders;
     }
 
-    public function getByName(string $folderName, ?int $catalogId = null, ?int $parent = null): ?Folder
+    public function getByName(string $folderName, ?int $catalogId = null, ?int $parent = null): Folder|Podcast_Episode|Song|Video|null
     {
         $sql    = 'SELECT `folder_map`.`object_id`, `folder_map`.`object_type` FROM `folder_map` WHERE `folder_map`.`name` = ?';
         $params = [$folderName];
@@ -137,13 +140,22 @@ final readonly class FolderRepository implements FolderRepositoryInterface
         }
         //debug_event(self::class, 'getByName ' . sprintf('SQL %s', $sql) . print_r([$folderName, $catalogId, $parent], true), 5);
 
-        $rowId = $this->connection->fetchOne($sql . 'LIMIT 1;', $params);
+        $result = $this->connection->query($sql . 'LIMIT 1;', $params);
 
-        if ($rowId === false) {
-            return null;
+        if ($row = $result->fetch(PDO::FETCH_ASSOC)) {
+            switch ($row['object_type']) {
+                case 'folder':
+                    return new Folder($row['object_id']);
+                case 'song':
+                    return new Song($row['object_id']);
+                case 'video':
+                    return new Video($row['object_id']);
+                case 'podcast_episode':
+                    return new Podcast_Episode($row['object_id']);
+            }
         }
 
-        return new Folder((int) $rowId);
+        return null;
     }
 
     public function getByPathName(string $folderPath, int $catalogId = 0, ?string $parentPath = null): ?Folder
