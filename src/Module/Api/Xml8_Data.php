@@ -58,7 +58,6 @@ use Ampache\Repository\Model\Video;
 use Ampache\Repository\PodcastRepositoryInterface;
 use Ampache\Repository\SongRepositoryInterface;
 use DOMDocument;
-use SimpleXMLElement;
 
 /**
  * Xml8_Data Class

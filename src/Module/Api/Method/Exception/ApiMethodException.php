@@ -25,4 +25,6 @@ namespace Ampache\Module\Api\Method\Exception;
 
 use Ampache\Module\Api\Exception\ApiException;
 
-abstract class ApiMethodException extends ApiException {}
+abstract class ApiMethodException extends ApiException
+{
+}
