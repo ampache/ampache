@@ -109,10 +109,6 @@ class WebDavDirectory extends Collection
 
     public function getName(): string
     {
-        if (property_exists($this->libitem, 'file')) {
-            return pathinfo($this->libitem->file, PATHINFO_BASENAME);
-        }
-
         return str_replace('/', '', (string) $this->libitem->get_fullname());
     }
 }
