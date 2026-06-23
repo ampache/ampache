@@ -1866,13 +1866,14 @@ class Catalog_local extends Catalog
 
             try {
                 if (is_dir($full_file)) {
-                    if (isset($this->_filecache[strtolower($full_file)])) {
+                    $lc_dir = strtolower(Core::conv_lc_file((string) $file));
+                    if (isset($this->_filecache[$lc_dir])) {
                         // set mod time on scan
                         self::getFolderRepository()->update_utime(
-                            (int) $this->_filecache[strtolower($full_file)],
+                            (int) $this->_filecache[$lc_dir],
                             filemtime($full_file) ?: time()
                         );
-                    } elseif ($this->add_folder($file, $full_file, $path) !== null) {
+                    } elseif ($this->add_folder($file, $lc_dir, $path) !== null) {
                         $this->count++;
                         $interactor?->info(
                             sprintf('Added %s, closing handle', $full_file),
