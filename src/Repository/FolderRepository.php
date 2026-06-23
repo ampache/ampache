@@ -136,16 +136,19 @@ final readonly class FolderRepository implements FolderRepositoryInterface
 
     public function getByPathName(string $folderPath, int $catalogId = 0, ?string $parentPath = null): ?Folder
     {
-        $sql = 'SELECT `folder`.`id` FROM `folder` WHERE `folder`.`path_name` = ? ';
-        $sql .= ($catalogId)
-            ? 'AND `folder`.`catalog` = ? '
-            : '';
-        $sql .= ($parentPath)
-            ? 'AND `folder`.`parent` = (SELECT `id` FROM `folder` WHERE `path_name` = ?);'
-            : 'AND `folder`.`parent` IS NULL;';
-        $params = ($parentPath)
-            ? [$folderPath, $catalogId, $parentPath]
-            : [$folderPath, $catalogId];
+        $sql    = 'SELECT `folder`.`id` FROM `folder` WHERE `folder`.`path_name` = ? ';
+        $params = [$folderPath];
+        if (($catalogId)) {
+            $sql .= 'AND `folder`.`catalog` = ? ';
+            $params[] = $catalogId;
+        }
+
+        if ($parentPath) {
+            $sql .= 'AND `folder`.`parent` = (SELECT `id` FROM `folder` WHERE `path_name` = ?);';
+            $params[] = $parentPath;
+        } else {
+            $sql .= 'AND `folder`.`parent` IS NULL;';
+        }
 
         //debug_event(self::class, 'getByPathName ' . sprintf('SQL %s', $sql) . print_r($params, true), 5);
 
