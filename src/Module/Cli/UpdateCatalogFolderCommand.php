@@ -64,6 +64,7 @@ final class UpdateCatalogFolderCommand extends Command
                 || $values['add']
                 || $values['cleanup']
                 || $values['art']
+                || $values['scan']
             )
         ) {
             $interactor->error(
@@ -82,8 +83,8 @@ final class UpdateCatalogFolderCommand extends Command
             $values['add'],
             $values['cleanup'],
             $values['art'],
-            $values['move'],
-            $values['scan']
+            $values['scan'],
+            $values['move']
         );
     }
 
