@@ -78,10 +78,8 @@ class WebDavFile extends File
 
     public function getName(): string
     {
-        if (property_exists($this->libitem, 'file') && $this->libitem->file !== null) {
-            $nameinfo = pathinfo($this->libitem->file);
-
-            return htmlentities($nameinfo['filename'] . '.' . ($nameinfo['extension'] ?? ''));
+        if (property_exists($this->libitem, 'file')) {
+            return pathinfo($this->libitem->file, PATHINFO_BASENAME);
         }
 
         return '';
