@@ -40,7 +40,7 @@ use SimpleXMLElement;
  */
 class UPnPPlayer
 {
-    private string $_description_url = "http://localhost";
+    private string $_description_url;
     private ?UPnPDevice $_device     = null;
     private int $_intState           = 0; // 0 - stopped, 1 - playing
     private ?UPnPPlaylist $_playlist = null;
@@ -86,10 +86,8 @@ class UPnPPlayer
 
     /**
      * GetState
-     *
-     * @return SimpleXMLElement|string
      */
-    public function GetState()
+    public function GetState(): SimpleXMLElement|string
     {
         $state       = '';
         $response    = $this->Device()->instanceOnly('GetTransportInfo');
@@ -109,10 +107,8 @@ class UPnPPlayer
 
     /**
      * GetVolume
-     *
-     * @return SimpleXMLElement|string
      */
-    public function GetVolume()
+    public function GetVolume(): SimpleXMLElement|string
     {
         $instanceId = 0;
         $channel    = 'Master';

@@ -72,9 +72,8 @@ class AmpError
      * display
      * This prints the error out with a standard Error class span
      * Ben Goska: Renamed from print to display, print is reserved
-     * @param string $name
      */
-    public static function display($name): string
+    public static function display(string $name): string
     {
         // Be smart about this, if no error don't print
         if (isset(self::$errors[$name])) {
@@ -87,9 +86,8 @@ class AmpError
     /**
      * get
      * This returns an error by name
-     * @param string $name
      */
-    public static function get($name): string
+    public static function get(string $name): string
     {
         if (!isset(self::$errors[$name])) {
             return '';
