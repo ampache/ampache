@@ -26,8 +26,11 @@ declare(strict_types=0);
 namespace Ampache\Module\WebDav;
 
 use Ampache\Config\AmpConfig;
+use Ampache\Module\Util\ObjectTypeToClassNameMapper;
 use Ampache\Repository\Model\Catalog;
+use Ampache\Repository\Model\container_item;
 use Ampache\Repository\Model\Folder;
+use Ampache\Repository\Model\Media;
 use Override;
 use Sabre\DAV\Collection;
 use Sabre\DAV\Exception\NotFound;
@@ -59,13 +62,10 @@ class WebDavCatalog extends Collection
     #[Override]
     public function getChild($name): Node
     {
-        $matches = Catalog::get_children($name, $this->catalog_id, $this->parent_id);
+        $folder = Catalog::get_child($name, $this->catalog_id, $this->parent_id);
         //debug_event(self::class, 'Catalog getChild for: `' . $name . '` catalog: ' . $this->catalog_id . ' parent: ' . $this->parent_id, 5);
-        //debug_event(self::class, 'Found ' . count($matches) . ' childs.', 5);
-        // Always return first match
-        // Warning: this means that two items with the same name will not be supported for now TODO support folders instead of objects
-        if ($matches !== []) {
-            return WebDavDirectory::getChildFromArray($matches[0]);
+        if ($folder instanceof Folder) {
+            return new WebDavDirectory($folder);
         }
 
         throw new NotFound('The folder with name: ' . $name . ' could not be found');
