@@ -117,10 +117,6 @@ class WebDavDirectory extends Collection
             pathinfo($this->libitem->file, PATHINFO_BASENAME);
         }
 
-        if ($this->libitem instanceof Folder && $this->libitem->path_name) {
-            return $this->libitem->path_name;
-        }
-
         return str_replace('/', '', (string) $this->libitem->get_fullname());
     }
 }
