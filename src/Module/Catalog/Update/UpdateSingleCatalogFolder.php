@@ -86,28 +86,37 @@ final class UpdateSingleCatalogFolder extends AbstractCatalogUpdater implements 
                 case 'podcast':
                     $type      = 'podcast_episode';
                     $tables    = ['podcast_episode', 'podcast'];
-                    $file_ids  = Catalog::get_ids_from_folder($folderPath, $type);
                     $className = Podcast_Episode::class;
                     break;
                 case 'video':
                     $type      = 'video';
                     $tables    = ['video'];
-                    $file_ids  = Catalog::get_ids_from_folder($folderPath, $type);
                     $className = Video::class;
                     break;
                 case 'music':
                 default:
                     $type      = 'song';
                     $tables    = ['album', 'artist', 'song'];
-                    $file_ids  = Catalog::get_ids_from_folder($folderPath, $type);
                     $className = Song::class;
                     break;
             }
 
-            $interactor->info(
-                sprintf(T_('File count: %d'), count($file_ids)),
-                true
-            );
+            // Only query existing media IDs when needed
+            $file_ids = [];
+            if (
+                is_string($moveDirPath)
+                || $cleanupMode == 1
+                || $verificationMode == 1
+                || $searchArtMode == 1
+            ) {
+                $file_ids = Catalog::get_ids_from_folder($folderPath, $type);
+
+                $interactor->info(
+                    sprintf(T_('File count: %d'), count($file_ids)),
+                    true
+                );
+            }
+
             foreach ($file_ids as $file_id) {
                 $media     = new $className($file_id);
                 $file_path = $media->file;
