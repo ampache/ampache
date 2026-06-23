@@ -32,7 +32,6 @@ use Ampache\Module\Statistics\Stats;
 use Ampache\Module\System\Dba;
 use Ampache\Module\Util\VaInfo;
 use Ampache\Plugin\AmpacheMusicBrainz;
-use Ampache\Repository\AlbumRepositoryInterface;
 use Ampache\Repository\ArtistRepositoryInterface;
 use Ampache\Repository\LabelRepositoryInterface;
 use Ampache\Repository\SongRepositoryInterface;
@@ -932,6 +931,11 @@ class Artist extends database_object implements
         return $this->has_art;
     }
 
+    public function isNew(): bool
+    {
+        return $this->getId() === 0;
+    }
+
     /**
      * update
      * This takes a key'd array of data and updates the current artist
@@ -1091,16 +1095,6 @@ class Artist extends database_object implements
     {
         $sql = "UPDATE `artist` SET `user` = ? WHERE `id` = ?";
         Dba::write($sql, [$user_id, $this->id]);
-    }
-
-    /**
-     * @deprecated
-     */
-    private function getAlbumRepository(): AlbumRepositoryInterface
-    {
-        global $dic;
-
-        return $dic->get(AlbumRepositoryInterface::class);
     }
 
     /**
