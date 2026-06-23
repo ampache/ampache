@@ -41,7 +41,7 @@ class WebDavCatalog extends Collection
 {
     private int $catalog_id;
 
-    public function __construct(int $catalog_id)
+    public function __construct(int $catalog_id = 0)
     {
         $this->catalog_id = $catalog_id;
     }
@@ -77,20 +77,15 @@ class WebDavCatalog extends Collection
     }
 
     /**
-     * @return list<WebDavDirectory>
+     * @return list<Node>
+     * @throws NotFound
      */
     public function getChildren(): array
     {
+        $items    = Catalog::get_children('/');
         $children = [];
-        $catalogs = null;
-        if ($this->catalog_id > 0) {
-            $catalogs   = [];
-            $catalogs[] = $this->catalog_id;
-        }
-
-        $artists = Catalog::get_artists($catalogs);
-        foreach ($artists as $artist) {
-            $children[] = new WebDavDirectory($artist);
+        foreach ($items as $item) {
+            $children[] = WebDavDirectory::getChildFromArray($item);
         }
 
         return $children;
