@@ -42,6 +42,7 @@ final class UpdateCatalogFolderCommand extends Command
             ->option('-a|--add', T_('Adds new media files to the database'), 'boolval', false)
             ->option('-g|--art', T_('Gathers media Art'), 'boolval', false)
             ->option('-m|--move', T_('Move file in the database to a new location'), 'strval')
+            ->option('-s|--scan', T_('Scan Local Catalog folders for folder browsing'), 'boolval', false)
             ->argument('<catalogName>', T_('Catalog Name'))
             ->argument('<folderPath>', T_('Path'))
             /* HINT: filename (/tmp/some-file.mp3) OR folder path (/tmp/Artist/Album) */
@@ -81,7 +82,8 @@ final class UpdateCatalogFolderCommand extends Command
             $values['add'],
             $values['cleanup'],
             $values['art'],
-            $values['move']
+            $values['move'],
+            $values['scan']
         );
     }
 
