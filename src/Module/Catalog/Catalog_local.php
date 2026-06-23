@@ -1295,7 +1295,7 @@ class Catalog_local extends Catalog
             return 0;
         }
 
-        $folder = self::getFolderRepository()->getByPathName($folderPath, $this->getId());
+        $folder = self::getFolderRepository()->getByPathName($folderPath, $this->getId(), dirname($folderPath));
 
         if (!$folder) {
             $interactor?->error(
