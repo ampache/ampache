@@ -76,7 +76,7 @@ final class Podcasts5Method
         $browse->set_type('podcast');
         $browse->set_sort('title', 'ASC', false);
 
-        $method = (array_key_exists('exact', $input) && (int)$input['exact'] == 1) ? 'exact_match' : 'alpha_match';
+        $method = (array_key_exists('exact', $input) && (int) $input['exact'] == 1) ? 'exact_match' : 'alpha_match';
         $browse->set_api_filter($method, $input['filter'] ?? '');
         $browse->set_api_filter('add', $input['add'] ?? '');
         $browse->set_api_filter('update', $input['update'] ?? '');
@@ -90,7 +90,7 @@ final class Podcasts5Method
 
         ob_end_clean();
         $include  = $input['include'] ?? '';
-        $episodes = ($include == 'episodes' || (int)$include == 1);
+        $episodes = ($include == 'episodes' || (int) $include == 1);
         switch ($input['api_format']) {
             case 'json':
                 Json5_Data::set_offset($input['offset'] ?? 0);

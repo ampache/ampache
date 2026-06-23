@@ -80,8 +80,8 @@ final class Followers6Method
             ? $input['username']
             : $user->username;
         $leadUser = (is_numeric($username))
-            ? User::get_from_id((int)$username)
-            : User::get_from_username((string)$username);
+            ? User::get_from_id((int) $username)
+            : User::get_from_username((string) $username);
         if ($leadUser === null) {
             debug_event(self::class, 'User `' . $username . '` cannot be found.', 1);
             /* HINT: Requested object string/id/type ("album", "myusername", "some song title", 1298376) */
@@ -93,11 +93,11 @@ final class Followers6Method
         $browse = Api6::getBrowse($user);
         $browse->set_type('follower');
 
-        $browse->set_sort_order(html_entity_decode((string)($input['sort'] ?? '')), ['follow_date','DESC']);
+        $browse->set_sort_order(html_entity_decode((string) ($input['sort'] ?? '')), ['follow_date','DESC']);
 
         $browse->set_filter('user', $leadUser->getId());
 
-        $browse->set_conditions(html_entity_decode((string)($input['cond'] ?? '')));
+        $browse->set_conditions(html_entity_decode((string) ($input['cond'] ?? '')));
 
         $results = $browse->get_objects();
         if (empty($results)) {
@@ -109,13 +109,13 @@ final class Followers6Method
         ob_end_clean();
         switch ($input['api_format']) {
             case 'json':
-                Json6_Data::set_offset((int)($input['offset'] ?? 0));
+                Json6_Data::set_offset((int) ($input['offset'] ?? 0));
                 Json6_Data::set_limit($input['limit'] ?? 0);
                 Json6_Data::set_count($browse->get_total());
                 echo Json6_Data::users($results);
                 break;
             default:
-                Xml6_Data::set_offset((int)($input['offset'] ?? 0));
+                Xml6_Data::set_offset((int) ($input['offset'] ?? 0));
                 Xml6_Data::set_limit($input['limit'] ?? 0);
                 Xml6_Data::set_count($browse->get_total());
                 echo Xml6_Data::users($results);

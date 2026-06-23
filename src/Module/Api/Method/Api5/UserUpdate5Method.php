@@ -95,8 +95,8 @@ final class UserUpdate5Method
             : null;
         $state      = $input['state'] ?? null;
         $city       = $input['city'] ?? null;
-        $disable    = (isset($input['disable'])) ? (int)$input['disable'] : null;
-        $maxbitrate = (int)($input['maxbitrate'] ?? 0);
+        $disable    = (isset($input['disable'])) ? (int) $input['disable'] : null;
+        $maxbitrate = (int) ($input['maxbitrate'] ?? 0);
 
         // identify the user to modify
         $update_user = User::get_from_username($username);

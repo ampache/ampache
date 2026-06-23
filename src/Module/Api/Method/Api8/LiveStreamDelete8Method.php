@@ -68,7 +68,7 @@ final class LiveStreamDelete8Method
 
         $liveStreamRepository = self::getLiveStreamRepository();
 
-        $object_id = (int)$input['filter'];
+        $object_id = (int) $input['filter'];
 
         $liveStream = $liveStreamRepository->findById($object_id);
         if ($liveStream === null) {

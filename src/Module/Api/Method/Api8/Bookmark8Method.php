@@ -63,8 +63,8 @@ final class Bookmark8Method
         $bookmark = self::getBookmarkRepository()->findById((int) $input['filter']);
 
         if (
-            $bookmark === null ||
-            !$bookmark->ownedByUser($user)
+            $bookmark === null
+            || !$bookmark->ownedByUser($user)
         ) {
             Api::empty(null, $input['api_format']);
 

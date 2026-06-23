@@ -62,7 +62,7 @@ final class Download4Method
         if (!Api4::check_parameter($input, ['id', 'type'], self::ACTION)) {
             return false;
         }
-        $fileid       = (int)$input['id'];
+        $fileid       = (int) $input['id'];
         $type         = $input['type'];
         $format       = $input['format'] ?? null; // mp3, flv or raw
         $transcode_to = $format && $format != 'raw';

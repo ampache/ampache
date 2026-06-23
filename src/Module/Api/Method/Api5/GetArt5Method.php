@@ -71,8 +71,8 @@ final class GetArt5Method
         }
         $object_id = (int) $input['id'];
         $type      = (string) $input['type'];
-        $size      = (string)($input['size'] ?? 'original');
-        $fallback  = (array_key_exists('fallback', $input) && (int)$input['fallback'] == 1);
+        $size      = (string) ($input['size'] ?? 'original');
+        $fallback  = (array_key_exists('fallback', $input) && (int) $input['fallback'] == 1);
 
         // confirm the correct data
         if (!in_array(strtolower($type), ['song', 'album', 'artist', 'playlist', 'search', 'podcast'])) {

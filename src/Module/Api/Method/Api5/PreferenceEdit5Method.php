@@ -63,7 +63,7 @@ final class PreferenceEdit5Method
         if (!Api5::check_parameter($input, ['filter', 'value'], self::ACTION)) {
             return false;
         }
-        $all = array_key_exists('all', $input) && (int)$input['all'] == 1;
+        $all = array_key_exists('all', $input) && (int) $input['all'] == 1;
         // don't apply to all when you aren't an admin
         if ($all && !Api5::check_access(AccessTypeEnum::INTERFACE, AccessLevelEnum::ADMIN, $user->id, self::ACTION, $input['api_format'])) {
             return false;
@@ -76,7 +76,7 @@ final class PreferenceEdit5Method
             ? User::INTERNAL_SYSTEM_USER_ID
             : $user->id;
 
-        $pref_name  = (string)$input['filter'];
+        $pref_name  = (string) $input['filter'];
         $preference = Preference::get($pref_name, $user_id);
         if (empty($preference)) {
             /* HINT: Requested object string/id/type ("album", "myusername", "some song title", 1298376) */

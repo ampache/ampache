@@ -33,16 +33,11 @@ use Slim\ResponseEmitter;
 
 final class XmlRestApiApplication implements ApiApplicationInterface
 {
-    private ApiOutputFactoryInterface $apiOutputFactory;
-
     private ApiHandlerInterface $apiHandler;
-
+    private ApiOutputFactoryInterface $apiOutputFactory;
     private ConfigContainerInterface $configContainer;
-
     private ResponseFactoryInterface $responseFactory;
-
     private ResponseEmitter $sapiEmitter;
-
     private ServerRequestCreatorInterface $serverRequestCreator;
 
     public function __construct(
@@ -76,11 +71,11 @@ final class XmlRestApiApplication implements ApiApplicationInterface
 
         // normalize input types (REST paths)
         $type = (isset($input['type']) && !empty($input['type']))
-            ? $this->apiHandler->normalizeType((string)$input['type'])
+            ? $this->apiHandler->normalizeType((string) $input['type'])
             : null;
 
         // normalize input actions (REST paths)
-        $action = $this->apiHandler->normalizeAction((string)$input['action'], $type, isset($input['filter']));
+        $action = $this->apiHandler->normalizeAction((string) $input['action'], $type, isset($input['filter']));
         $action = match ($method) {
             'DELETE' => $action . '_delete',
             'PATCH' => $action . '_edit',
@@ -103,7 +98,7 @@ final class XmlRestApiApplication implements ApiApplicationInterface
         }
 
         $post = (in_array($method, ['POST', 'PATCH', 'PUT', 'DELETE']))
-            ? (array)$request->getParsedBody()
+            ? (array) $request->getParsedBody()
             : [];
 
         $request = $request->withQueryParams(

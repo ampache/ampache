@@ -84,7 +84,7 @@ final class GetLyrics8Method
             $results['plugin']['database'] = $database_lyrics;
         }
 
-        if ((int)($input['plugins'] ?? 1) === 1) {
+        if ((int) ($input['plugins'] ?? 1) === 1) {
             foreach (Plugin::get_plugins(PluginTypeEnum::LYRIC_RETRIEVER) as $plugin_name) {
                 $plugin = new Plugin($plugin_name);
                 if ($plugin->_plugin instanceof PluginGetLyricsInterface && $plugin->load($user)) {

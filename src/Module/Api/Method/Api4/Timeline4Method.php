@@ -66,26 +66,27 @@ final class Timeline4Method
                 return false;
             }
             $username = $input['username'];
-            $limit    = (int)($input['limit'] ?? 0);
-            $since    = (int)($input['since'] ?? 0);
+            $limit    = (int) ($input['limit'] ?? 0);
+            $since    = (int) ($input['since'] ?? 0);
 
             if (!empty($username)) {
                 $user = User::get_from_username($username);
-                if ($user instanceof User) {
-                    if (Preference::get_by_user($user->id, 'allow_personal_info_recent')) {
-                        $results = self::getUseractivityRepository()->getActivities(
-                            $user->id,
-                            $limit,
-                            $since
-                        );
-                        ob_end_clean();
-                        switch ($input['api_format']) {
-                            case 'json':
-                                echo Json4_Data::timeline($results);
-                                break;
-                            default:
-                                echo Xml4_Data::timeline($results);
-                        }
+                if (
+                    $user instanceof User
+                    && Preference::get_by_user($user->id, 'allow_personal_info_recent')
+                ) {
+                    $results = self::getUseractivityRepository()->getActivities(
+                        $user->id,
+                        $limit,
+                        $since
+                    );
+                    ob_end_clean();
+                    switch ($input['api_format']) {
+                        case 'json':
+                            echo Json4_Data::timeline($results);
+                            break;
+                        default:
+                            echo Xml4_Data::timeline($results);
                     }
                 }
             }

@@ -73,9 +73,9 @@ final class PlaylistEdit6Method
         if (!Api6::check_parameter($input, ['filter'], self::ACTION)) {
             return false;
         }
-        $items = explode(',', html_entity_decode((string)($input['items'] ?? '')));
-        $order = explode(',', html_entity_decode((string)($input['tracks'] ?? '')));
-        $sort  = (int)($input['sort'] ?? 0);
+        $items = explode(',', html_entity_decode((string) ($input['items'] ?? '')));
+        $order = explode(',', html_entity_decode((string) ($input['tracks'] ?? '')));
+        $sort  = (int) ($input['sort'] ?? 0);
         // calculate whether we are editing the track order too
         $playlist_edit = [];
         if (count($items) == count($order)) {
@@ -83,7 +83,7 @@ final class PlaylistEdit6Method
         }
 
         ob_end_clean();
-        $object_id = (int)$input['filter'];
+        $object_id = (int) $input['filter'];
         $playlist  = new Playlist($object_id);
 
         if ($playlist->isNew()) {
@@ -98,8 +98,8 @@ final class PlaylistEdit6Method
 
         $change_made = false;
         if (
-            $has_collab &&
-            !empty($playlist_edit)
+            $has_collab
+            && !empty($playlist_edit)
         ) {
             foreach ($playlist_edit as $track => $song) {
                 if ($song > 0 && $track > 0) {
@@ -126,21 +126,21 @@ final class PlaylistEdit6Method
         $name  = $input['name'] ?? $playlist->name;
         $type  = $input['type'] ?? $playlist->type;
         $owner = $input['owner'] ?? $playlist->user;
-        if ((int)$owner === 0) {
-            $lookup = User::get_from_username((string)$owner);
+        if ((int) $owner === 0) {
+            $lookup = User::get_from_username((string) $owner);
             $owner  = $lookup->id ?? $playlist->user;
         }
 
         // update name/type
         if (
-            $name !== $playlist->name ||
-            $type !== $playlist->type ||
-            $owner !== $playlist->user
+            $name !== $playlist->name
+            || $type !== $playlist->type
+            || $owner !== $playlist->user
         ) {
             $array = [
                 "name" => $name,
                 "playlist_type" => $type,
-                "playlist_user" => (int)$owner,
+                "playlist_user" => (int) $owner,
             ];
             $playlist->update($array);
             $change_made = true;

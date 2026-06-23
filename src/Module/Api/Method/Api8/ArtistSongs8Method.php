@@ -80,18 +80,18 @@ final class ArtistSongs8Method
 
         $browse = Api::getBrowse($user);
         $browse->set_type('song');
-        if (array_key_exists('top50', $input) && (int)$input['top50'] == 1) {
+        if (array_key_exists('top50', $input) && (int) $input['top50'] == 1) {
             $browse->set_limit(50);
             $browse->set_sort('object_count', 'DESC', false);
             $type = 'top50';
         } else {
-            $browse->set_sort_order(html_entity_decode((string)($input['sort'] ?? '')), ['name', 'ASC']);
+            $browse->set_sort_order(html_entity_decode((string) ($input['sort'] ?? '')), ['name', 'ASC']);
             $type = 'artist';
         }
 
         $browse->set_filter($type, $object_id);
 
-        $browse->set_conditions(html_entity_decode((string)($input['cond'] ?? '')));
+        $browse->set_conditions(html_entity_decode((string) ($input['cond'] ?? '')));
 
         $results = $browse->get_objects();
         if (empty($results)) {
@@ -103,13 +103,13 @@ final class ArtistSongs8Method
         ob_end_clean();
         switch ($input['api_format']) {
             case 'json':
-                Json8_Data::set_offset((int)($input['offset'] ?? 0));
+                Json8_Data::set_offset((int) ($input['offset'] ?? 0));
                 Json8_Data::set_limit($input['limit'] ?? 0);
                 Json8_Data::set_count($browse->get_total());
                 echo Json8_Data::songs($results, $user, $input['auth']);
                 break;
             default:
-                Xml8_Data::set_offset((int)($input['offset'] ?? 0));
+                Xml8_Data::set_offset((int) ($input['offset'] ?? 0));
                 Xml8_Data::set_limit($input['limit'] ?? 0);
                 Xml8_Data::set_count($browse->get_total());
                 echo Xml8_Data::songs($results, $user, $input['auth']);

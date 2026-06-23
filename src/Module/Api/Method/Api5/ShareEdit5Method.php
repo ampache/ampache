@@ -75,8 +75,8 @@ final class ShareEdit5Method
         $share = self::getShareRepository()->findById((int) $share_id);
 
         if (
-            $share === null ||
-            !$share->isAccessible($user)
+            $share === null
+            || !$share->isAccessible($user)
         ) {
             /* HINT: Requested object string/id/type ("album", "myusername", "some song title", 1298376) */
             Api5::error(sprintf(T_('Not Found: %s'), $share_id), ErrorCodeEnum::NOT_FOUND, self::ACTION, 'filter', $input['api_format']);

@@ -64,10 +64,10 @@ final class UrlToSong4Method
         ob_end_clean();
         switch ($input['api_format']) {
             case 'json':
-                echo Json4_Data::songs([(int)($url_data['id'] ?? 0)], $user, $input['auth']);
+                echo Json4_Data::songs([(int) ($url_data['id'] ?? 0)], $user, $input['auth']);
                 break;
             default:
-                echo Xml4_Data::songs([(int)($url_data['id'] ?? 0)], $user, $input['auth']);
+                echo Xml4_Data::songs([(int) ($url_data['id'] ?? 0)], $user, $input['auth']);
         }
 
         return true;

@@ -80,7 +80,7 @@ final class Localplay3Method
                 echo Xml3_Data::error(405, T_('Invalid Request'));
 
                 return false;
-        } // end switch on command
+        }
 
         $results = ['localplay' => ['command' => [$input['command'] => $result]]];
 

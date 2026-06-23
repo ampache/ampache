@@ -66,8 +66,8 @@ final class Catalogs8Method
         $browse->set_type('catalog');
         $browse->set_filter('user', $user->getId());
         if (
-            isset($input['filter']) &&
-            in_array($input['filter'], ['music', 'clip', 'tvshow', 'movie', 'personal_video', 'video', 'podcast'])
+            isset($input['filter'])
+            && in_array($input['filter'], ['music', 'clip', 'tvshow', 'movie', 'personal_video', 'video', 'podcast'])
         ) {
             if (in_array($input['filter'], ['clip', 'tvshow', 'movie', 'personal_video'])) {
                 $input['filter'] = 'video';
@@ -77,7 +77,7 @@ final class Catalogs8Method
             $browse->set_filter('gather_type', $input['filter']);
         }
 
-        $browse->set_conditions(html_entity_decode((string)($input['cond'] ?? '')));
+        $browse->set_conditions(html_entity_decode((string) ($input['cond'] ?? '')));
 
         $results = $browse->get_objects();
         if (empty($results)) {
@@ -89,13 +89,13 @@ final class Catalogs8Method
         ob_end_clean();
         switch ($input['api_format']) {
             case 'json':
-                Json8_Data::set_offset((int)($input['offset'] ?? 0));
+                Json8_Data::set_offset((int) ($input['offset'] ?? 0));
                 Json8_Data::set_limit($input['limit'] ?? 0);
                 Json8_Data::set_count($browse->get_total());
                 echo Json8_Data::catalogs($results);
                 break;
             default:
-                Xml8_Data::set_offset((int)($input['offset'] ?? 0));
+                Xml8_Data::set_offset((int) ($input['offset'] ?? 0));
                 Xml8_Data::set_limit($input['limit'] ?? 0);
                 Xml8_Data::set_count($browse->get_total());
                 echo Xml8_Data::catalogs($results, $user);

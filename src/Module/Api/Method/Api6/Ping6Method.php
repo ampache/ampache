@@ -62,8 +62,8 @@ final class Ping6Method
     public static function ping(array $input): void
     {
         $version       = (isset($input['version'])) ? $input['version'] : Api6::$version;
-        Api6::$version = ((int)$version >= 350001) ? Api6::$version_numeric : Api6::$version;
-        $data_version  = (int)substr($version, 0, 1);
+        Api6::$version = ((int) $version >= 350001) ? Api6::$version_numeric : Api6::$version;
+        $data_version  = (int) substr($version, 0, 1);
         $results       = [
             'server' => AmpConfig::get('version'),
             'version' => Api6::$version,
@@ -72,15 +72,15 @@ final class Ping6Method
 
         // Check and see if we should extend the api sessions (done if valid session is passed)
         if (
-            array_key_exists('auth', $input) &&
-            Session::exists(AccessTypeEnum::API->value, $input['auth'])
+            array_key_exists('auth', $input)
+            && Session::exists(AccessTypeEnum::API->value, $input['auth'])
         ) {
             Session::extend($input['auth'], AccessTypeEnum::API->value);
             // perpetual sessions do not expire
-            $perpetual      = (bool)AmpConfig::get('perpetual_api_session', false);
+            $perpetual      = (bool) AmpConfig::get('perpetual_api_session', false);
             $session_expire = ($perpetual)
                 ? 0
-                : date("c", time() + (int)AmpConfig::get('session_length', 3600) - 60);
+                : date("c", time() + (int) AmpConfig::get('session_length', 3600) - 60);
             if (in_array($data_version, Api::API_VERSIONS)) {
                 Session::write($input['auth'], $data_version, $perpetual);
             }

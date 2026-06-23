@@ -63,8 +63,8 @@ final class Bookmark6Method
         $bookmark = self::getBookmarkRepository()->findById((int) $input['filter']);
 
         if (
-            $bookmark === null ||
-            !$bookmark->ownedByUser($user)
+            $bookmark === null
+            || !$bookmark->ownedByUser($user)
         ) {
             Api6::empty(null, $input['api_format']);
 

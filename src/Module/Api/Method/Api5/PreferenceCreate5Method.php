@@ -76,7 +76,7 @@ final class PreferenceCreate5Method
         if (!Api5::check_access(AccessTypeEnum::INTERFACE, AccessLevelEnum::ADMIN, $user->id, self::ACTION, $input['api_format'])) {
             return false;
         }
-        $pref_name = (string)$input['filter'];
+        $pref_name = (string) $input['filter'];
         $pref_list = Preference::get($pref_name, -1);
         // if you found the preference or it's a system preference; don't add it.
         if (!empty($pref_list) || in_array($pref_name, array_merge(Preference::SYSTEM_LIST, Preference::PLUGIN_LIST))) {
@@ -99,8 +99,8 @@ final class PreferenceCreate5Method
         }
         $level       = (isset($input['level'])) ? (int) $input['level'] : 100;
         $default     = ($type == 'boolean' || $type == 'integer') ? (int) $input['default'] : (string) $input['default'];
-        $description = (string)($input['description'] ?? '');
-        $subcategory = (string)($input['subcategory'] ?? '');
+        $description = (string) ($input['description'] ?? '');
+        $subcategory = (string) ($input['subcategory'] ?? '');
 
         // insert and return the new preference
         Preference::insert($pref_name, $description, $default, $level, $type, $category, $subcategory);

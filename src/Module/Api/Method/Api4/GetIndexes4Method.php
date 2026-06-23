@@ -76,8 +76,8 @@ final class GetIndexes4Method
         if (!Api4::check_parameter($input, ['type'], self::ACTION)) {
             return false;
         }
-        $album_artist = ((string)$input['type'] == 'album_artist');
-        $type         = ($album_artist) ? 'artist' : (string)$input['type'];
+        $album_artist = ((string) $input['type'] == 'album_artist');
+        $type         = ($album_artist) ? 'artist' : (string) $input['type'];
         if (!AmpConfig::get('allow_video') && $type == 'video') {
             Api4::message('error', T_('Access Denied: allow_video is not enabled.'), '400', $input['api_format']);
 
@@ -93,8 +93,8 @@ final class GetIndexes4Method
 
             return false;
         }
-        $include = (array_key_exists('include', $input) && (int)$input['include'] == 1);
-        $hide    = (array_key_exists('hide_search', $input) && (int)$input['hide_search'] == 1) || AmpConfig::get('hide_search', false);
+        $include = (array_key_exists('include', $input) && (int) $input['include'] == 1);
+        $hide    = (array_key_exists('hide_search', $input) && (int) $input['hide_search'] == 1) || AmpConfig::get('hide_search', false);
         // confirm the correct data
         if (!in_array(strtolower($type), ['song', 'album', 'artist', 'album_artist', 'playlist', 'podcast', 'podcast_episode', 'share', 'video'])) {
             Api4::message('error', T_('Incorrect object type') . ' ' . $type, '401', $input['api_format']);
@@ -103,8 +103,8 @@ final class GetIndexes4Method
         }
         $browse = Api::getBrowse($user);
         if (
-            $type === 'playlist' &&
-            $hide === false
+            $type === 'playlist'
+            && $hide === false
         ) {
             $browse->set_type('playlist_search');
         } elseif ($album_artist) {
@@ -114,7 +114,7 @@ final class GetIndexes4Method
         }
         $browse->set_sort('name', 'ASC', false);
 
-        $method = (array_key_exists('exact', $input) && (int)$input['exact'] == 1) ? 'exact_match' : 'alpha_match';
+        $method = (array_key_exists('exact', $input) && (int) $input['exact'] == 1) ? 'exact_match' : 'alpha_match';
         $browse->set_api_filter($method, $input['filter'] ?? '');
         $browse->set_api_filter('add', $input['add'] ?? '');
         $browse->set_api_filter('update', $input['update'] ?? '');

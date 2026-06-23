@@ -27,13 +27,13 @@ use Ampache\Repository\Model\User;
 
 interface GatekeeperInterface
 {
-    public function getUser(string $requestKey = 'auth'): ?User;
-
-    public function sessionExists(string $auth): bool;
-
     public function extendSession(string $auth): void;
+
+    public function getAuth(string $requestKey = 'auth'): string;
+
+    public function getUser(string $requestKey = 'auth'): ?User;
 
     public function getUserName(string $requestKey = 'auth'): string;
 
-    public function getAuth(string $requestKey = 'auth'): string;
+    public function sessionExists(string $auth): bool;
 }

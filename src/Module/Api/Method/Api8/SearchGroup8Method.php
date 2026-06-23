@@ -230,7 +230,7 @@ final class SearchGroup8Method
                 echo json_encode($output, JSON_PRETTY_PRINT);
                 break;
             default:
-                Xml8_Data::set_offset((int)($input['offset'] ?? 0));
+                Xml8_Data::set_offset((int) ($input['offset'] ?? 0));
                 Xml8_Data::set_limit($input['limit'] ?? 0);
                 // don't set count here as each type of object will count themselves
                 echo Xml8_Data::searches($results, $count, $user, $input['auth']);

@@ -108,10 +108,10 @@ final class BookmarkCreate5Method
         }
         $object = [
             'user' => $user->getId(),
-            'object_id' => (int)$object_id,
+            'object_id' => (int) $object_id,
             'object_type' => $type,
             'comment' => $comment,
-            'position' => (int)$position,
+            'position' => (int) $position,
         ];
 
         // create it then retrieve it

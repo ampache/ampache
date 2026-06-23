@@ -78,7 +78,7 @@ final class Podcast5Method
         }
 
         ob_end_clean();
-        $episodes = ($include == 'episodes' || (int)$include == 1);
+        $episodes = ($include == 'episodes' || (int) $include == 1);
         switch ($input['api_format']) {
             case 'json':
                 echo Json5_Data::podcasts([$object_id], $user, $input['auth'], $episodes, false);

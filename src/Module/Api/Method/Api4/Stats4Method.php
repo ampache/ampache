@@ -86,14 +86,14 @@ final class Stats4Method
         } elseif (array_key_exists('user_id', $input)) {
             $userTwo = new User($user_id);
             if (!$userTwo->isNew()) {
-                $user_id = (int)$input['user_id'];
+                $user_id = (int) $input['user_id'];
                 $user    = new User($user_id);
             }
         }
         // moved type to filter and allowed multiple type selection
         $type   = $input['type'];
-        $offset = (int)($input['offset'] ?? 0);
-        $limit  = (int)($input['limit'] ?? 0);
+        $offset = (int) ($input['offset'] ?? 0);
+        $limit  = (int) ($input['limit'] ?? 0);
         // original method only searched albums and had poor method inputs
         if (in_array($type, ['newest', 'highest', 'frequent', 'recent', 'forgotten', 'flagged'])) {
             $type            = 'album';

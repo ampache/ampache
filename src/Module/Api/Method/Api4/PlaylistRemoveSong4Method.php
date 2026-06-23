@@ -66,14 +66,14 @@ final class PlaylistRemoveSong4Method
             return false;
         }
         ob_end_clean();
-        $playlist = new Playlist((int)$input['filter']);
+        $playlist = new Playlist((int) $input['filter']);
         if (!$playlist->has_collaborate($user)) {
             Api4::message('error', T_('Access denied to this playlist'), '401', $input['api_format']);
 
             return false;
         }
 
-        if (array_key_exists('clear', $input) && (int)$input['clear'] === 1) {
+        if (array_key_exists('clear', $input) && (int) $input['clear'] === 1) {
             $playlist->delete_all();
             Api4::message('success', 'all songs removed from playlist', null, $input['api_format']);
         } elseif (array_key_exists('song', $input)) {

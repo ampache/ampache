@@ -40,13 +40,10 @@ use Psr\Log\LoggerInterface;
  */
 final class Gatekeeper implements GatekeeperInterface
 {
-    private UserRepositoryInterface $userRepository;
-
-    private ServerRequestInterface $request;
-
-    private LoggerInterface $logger;
-
     private ?string $auth = null;
+    private LoggerInterface $logger;
+    private ServerRequestInterface $request;
+    private UserRepositoryInterface $userRepository;
 
     public function __construct(
         UserRepositoryInterface $userRepository,
@@ -58,26 +55,9 @@ final class Gatekeeper implements GatekeeperInterface
         $this->request        = $request;
     }
 
-    public function getUser(string $requestKey = 'auth'): ?User
-    {
-        return $this->userRepository->findByApiKey($this->getAuth($requestKey)) ?? $this->userRepository->findByUsername($this->request->getQueryParams()['user'] ?? '');
-    }
-
-    public function sessionExists(string $auth): bool
-    {
-        return Session::exists(AccessTypeEnum::API->value, $auth);
-    }
-
     public function extendSession(string $auth): void
     {
         Session::extend($auth, AccessTypeEnum::API->value);
-    }
-
-    public function getUserName(string $requestKey = 'auth'): string
-    {
-        return (isset($this->request->getQueryParams()['user']))
-            ? $this->request->getQueryParams()['user']
-            : Session::username($this->getAuth($requestKey));
     }
 
     public function getAuth(string $requestKey = 'auth'): string
@@ -91,7 +71,7 @@ final class Gatekeeper implements GatekeeperInterface
             preg_match('/Bearer ([0-9a-f].*)/', $auth, $matches);
 
             if ($matches !== []) {
-                $token = (string)$matches[1];
+                $token = (string) $matches[1];
                 $this->logger->notice(
                     'API session using Bearer token',
                     [LegacyLogger::CONTEXT_TYPE => self::class]
@@ -102,7 +82,7 @@ final class Gatekeeper implements GatekeeperInterface
                  * Remove some day when backwards compatability isn't a problem
                  */
                 $post = ($this->request->getMethod() === 'POST')
-                    ? (array)$this->request->getParsedBody()
+                    ? (array) $this->request->getParsedBody()
                     : [];
                 $query = array_merge($this->request->getQueryParams(), $post);
                 $token = $query[$requestKey] ?? '';
@@ -118,5 +98,22 @@ final class Gatekeeper implements GatekeeperInterface
         }
 
         return $this->auth ?? '';
+    }
+
+    public function getUser(string $requestKey = 'auth'): ?User
+    {
+        return $this->userRepository->findByApiKey($this->getAuth($requestKey)) ?? $this->userRepository->findByUsername($this->request->getQueryParams()['user'] ?? '');
+    }
+
+    public function getUserName(string $requestKey = 'auth'): string
+    {
+        return (isset($this->request->getQueryParams()['user']))
+            ? $this->request->getQueryParams()['user']
+            : Session::username($this->getAuth($requestKey));
+    }
+
+    public function sessionExists(string $auth): bool
+    {
+        return Session::exists(AccessTypeEnum::API->value, $auth);
     }
 }

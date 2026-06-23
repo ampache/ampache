@@ -70,14 +70,14 @@ final class PlaylistRemoveSong6Method
             return false;
         }
         ob_end_clean();
-        $playlist = new Playlist((int)$input['filter']);
+        $playlist = new Playlist((int) $input['filter']);
         if (!$playlist->has_collaborate($user)) {
             Api6::error('Require: 100', ErrorCodeEnum::FAILED_ACCESS_CHECK, self::ACTION, 'account', $input['api_format']);
 
             return false;
         }
 
-        if (array_key_exists('clear', $input) && (int)$input['clear'] === 1) {
+        if (array_key_exists('clear', $input) && (int) $input['clear'] === 1) {
             $playlist->delete_all();
             Api6::message('all songs removed from playlist', $input['api_format']);
         } elseif (array_key_exists('song', $input)) {

@@ -71,24 +71,24 @@ final class Smartlists8Method
      */
     public static function smartlists(array $input, User $user): bool
     {
-        $include = (isset($input['include']) && ((int)$input['include'] === 1 || $input['include'] === 'songs'));
+        $include = (isset($input['include']) && ((int) $input['include'] === 1 || $input['include'] === 'songs'));
 
         $browse = Api::getBrowse($user);
         $browse->set_type('smartplaylist');
 
         // hide smartlists starting with the user string (if enabled)
-        $hide_string = str_replace('%', '\%', str_replace('_', '\_', (string)Preference::get_by_user($user->id, 'api_hidden_playlists')));
+        $hide_string = str_replace('%', '\%', str_replace('_', '\_', (string) Preference::get_by_user($user->id, 'api_hidden_playlists')));
         if (!empty($hide_string)) {
             $browse->set_filter('not_starts_with', $hide_string);
         }
 
-        $browse->set_sort_order(html_entity_decode((string)($input['sort'] ?? '')), ['name', 'ASC']);
+        $browse->set_sort_order(html_entity_decode((string) ($input['sort'] ?? '')), ['name', 'ASC']);
 
-        $method = (array_key_exists('exact', $input) && (int)$input['exact'] == 1) ? 'exact_match' : 'alpha_match';
+        $method = (array_key_exists('exact', $input) && (int) $input['exact'] == 1) ? 'exact_match' : 'alpha_match';
         $browse->set_api_filter($method, $input['filter'] ?? '');
         $browse->set_filter('playlist_open', $user->getId());
 
-        $browse->set_conditions(html_entity_decode((string)($input['cond'] ?? '')));
+        $browse->set_conditions(html_entity_decode((string) ($input['cond'] ?? '')));
 
         $objects = $browse->get_objects();
         if (empty($objects)) {
@@ -105,13 +105,13 @@ final class Smartlists8Method
         ob_end_clean();
         switch ($input['api_format']) {
             case 'json':
-                Json8_Data::set_offset((int)($input['offset'] ?? 0));
+                Json8_Data::set_offset((int) ($input['offset'] ?? 0));
                 Json8_Data::set_limit($input['limit'] ?? 0);
                 Json8_Data::set_count($browse->get_total());
                 echo Json8_Data::playlists($results, $user, $input['auth'], $include);
                 break;
             default:
-                Xml8_Data::set_offset((int)($input['offset'] ?? 0));
+                Xml8_Data::set_offset((int) ($input['offset'] ?? 0));
                 Xml8_Data::set_limit($input['limit'] ?? 0);
                 Xml8_Data::set_count($browse->get_total());
                 echo Xml8_Data::playlists($results, $user, $input['auth'], $include);

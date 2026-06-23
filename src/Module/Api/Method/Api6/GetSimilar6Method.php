@@ -84,7 +84,7 @@ final class GetSimilar6Method
                 $similar = Recommendation::get_songs_like($object_id);
         }
         foreach ($similar as $child) {
-            $results[] = (int)$child['id'];
+            $results[] = (int) $child['id'];
         }
         if (empty($results)) {
             Api6::empty($type, $input['api_format']);
@@ -95,7 +95,7 @@ final class GetSimilar6Method
         ob_end_clean();
         switch ($input['api_format']) {
             case 'json':
-                Json6_Data::set_offset((int)($input['offset'] ?? 0));
+                Json6_Data::set_offset((int) ($input['offset'] ?? 0));
                 Json6_Data::set_limit($input['limit'] ?? 0);
                 Json6_Data::set_count(count($results));
                 switch ($type) {
@@ -107,7 +107,7 @@ final class GetSimilar6Method
                 }
                 break;
             default:
-                Xml6_Data::set_offset((int)($input['offset'] ?? 0));
+                Xml6_Data::set_offset((int) ($input['offset'] ?? 0));
                 Xml6_Data::set_limit($input['limit'] ?? 0);
                 Xml6_Data::set_count(count($results));
                 switch ($type) {

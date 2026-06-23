@@ -104,8 +104,8 @@ final class UserEdit8Method
         // identify the user to modify
         $username    = $input['filter'];
         $update_user = (is_numeric($username))
-            ? User::get_from_id((int)$username)
-            : User::get_from_username((string)$username);
+            ? User::get_from_id((int) $username)
+            : User::get_from_username((string) $username);
         if ($update_user === null) {
             /* HINT: Requested object string/id/type ("album", "myusername", "some song title", 1298376) */
             Api::error(sprintf('Bad Request: %s', $username), ErrorCodeEnum::BAD_REQUEST, self::ACTION, 'system', $input['api_format']);
@@ -128,10 +128,10 @@ final class UserEdit8Method
             : null;
         $state                = $input['state'] ?? null;
         $city                 = $input['city'] ?? null;
-        $disable              = (isset($input['disable'])) ? (int)$input['disable'] : null;
+        $disable              = (isset($input['disable'])) ? (int) $input['disable'] : null;
         $catalog_filter_group = $input['group'] ?? null;
-        $maxbitrate           = (int)($input['maxbitrate'] ?? 0);
-        $fullname_public      = (isset($input['fullname_public'])) ? (bool)$input['fullname_public'] : null;
+        $maxbitrate           = (int) ($input['maxbitrate'] ?? 0);
+        $fullname_public      = (isset($input['fullname_public'])) ? (bool) $input['fullname_public'] : null;
         $reset_apikey         = $input['reset_apikey'] ?? null;
         $reset_streamtoken    = $input['reset_streamtoken'] ?? null;
         $clear_stats          = $input['clear_stats'] ?? null;
@@ -157,13 +157,13 @@ final class UserEdit8Method
                 $update_user->update_city($city);
             }
             $userStateToggler = self::getUserStateToggler();
-            if ((int)$user->disabled === 0 && $disable === 1) {
+            if ((int) $user->disabled === 0 && $disable === 1) {
                 $userStateToggler->disable($update_user);
-            } elseif ((int)$user->disabled === 1 && $disable === 0) {
+            } elseif ((int) $user->disabled === 1 && $disable === 0) {
                 $userStateToggler->enable($update_user);
             }
             if ($catalog_filter_group !== null) {
-                $update_user->update_catalog_filter_group((int)$catalog_filter_group);
+                $update_user->update_catalog_filter_group((int) $catalog_filter_group);
             }
             if ($maxbitrate > 0) {
                 Preference::update('transcode_bitrate', $user_id, $maxbitrate);
@@ -219,20 +219,20 @@ final class UserEdit8Method
     /**
      * @deprecated Inject by constructor
      */
-    private static function getUserStateToggler(): UserStateTogglerInterface
-    {
-        global $dic;
-
-        return $dic->get(UserStateTogglerInterface::class);
-    }
-
-    /**
-     * @deprecated Inject by constructor
-     */
     private static function getUserKeyGenerator(): UserKeyGeneratorInterface
     {
         global $dic;
 
         return $dic->get(UserKeyGeneratorInterface::class);
+    }
+
+    /**
+     * @deprecated Inject by constructor
+     */
+    private static function getUserStateToggler(): UserStateTogglerInterface
+    {
+        global $dic;
+
+        return $dic->get(UserStateTogglerInterface::class);
     }
 }

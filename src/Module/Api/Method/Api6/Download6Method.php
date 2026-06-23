@@ -79,21 +79,21 @@ final class Download6Method
         $type      = (string) $input['type'];
 
         if (
-            $object_id === 0 &&
-            (
-                $type == 'playlist' ||
-                $type == 'search'
+            $object_id === 0
+            && (
+                $type == 'playlist'
+                || $type == 'search'
             )
         ) {
             // The API can use searches as playlists so check for those too
-            $object_id = (int)str_replace('smart_', '', ($input['id'] ?? '0'));
+            $object_id = (int) str_replace('smart_', '', ($input['id'] ?? '0'));
             $type      = 'search';
         }
 
-        $maxBitRate  = (int)($input['bitrate'] ?? 0);
+        $maxBitRate  = (int) ($input['bitrate'] ?? 0);
         $format      = $input['format'] ?? null; // mp3, flv or raw
         $params      = '&client=api&action=download';
-        $recordStats = (int)($input['stats'] ?? 1);
+        $recordStats = (int) ($input['stats'] ?? 1);
 
         if (AmpConfig::get('api_always_download') || $recordStats == 0) {
             $params .= '&cache=1';

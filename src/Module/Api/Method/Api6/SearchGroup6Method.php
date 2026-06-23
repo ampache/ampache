@@ -220,7 +220,7 @@ final class SearchGroup6Method
                 echo json_encode($output, JSON_PRETTY_PRINT);
                 break;
             default:
-                Xml6_Data::set_offset((int)($input['offset'] ?? 0));
+                Xml6_Data::set_offset((int) ($input['offset'] ?? 0));
                 Xml6_Data::set_limit($input['limit'] ?? 0);
                 // don't set count here as each type of object will count themselves
                 echo Xml6_Data::searches($results, $count, $user, $input['auth']);

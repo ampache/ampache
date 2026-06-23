@@ -82,7 +82,7 @@ final class Index6Method
             return false;
         }
 
-        $type = (string)$input['type'];
+        $type = (string) $input['type'];
         if (!AmpConfig::get('allow_video') && $type == 'video') {
             Api6::error('Enable: video', ErrorCodeEnum::ACCESS_DENIED, self::ACTION, 'system', $input['api_format']);
 
@@ -103,8 +103,8 @@ final class Index6Method
 
             return false;
         }
-        $include = (array_key_exists('include', $input) && (int)$input['include'] == 1);
-        $hide    = (array_key_exists('hide_search', $input) && (int)$input['hide_search'] == 1) || AmpConfig::get('hide_search', false);
+        $include = (array_key_exists('include', $input) && (int) $input['include'] == 1);
+        $hide    = (array_key_exists('hide_search', $input) && (int) $input['hide_search'] == 1) || AmpConfig::get('hide_search', false);
         // confirm the correct data
         if (!in_array(strtolower($type), ['album_artist', 'album', 'artist', 'catalog', 'live_stream', 'playlist', 'podcast_episode', 'podcast', 'share', 'song_artist', 'song', 'video'])) {
             Api6::error(sprintf('Bad Request: %s', $type), ErrorCodeEnum::BAD_REQUEST, self::ACTION, 'type', $input['api_format']);
@@ -114,8 +114,8 @@ final class Index6Method
 
         $browse = Api6::getBrowse($user);
         if (
-            $type === 'playlist' &&
-            $hide === false
+            $type === 'playlist'
+            && $hide === false
         ) {
             $browse->set_type('playlist_search');
         } else {
@@ -124,19 +124,19 @@ final class Index6Method
 
         // hide playlists starting with the user string (if enabled)
         $hide_string = ($type === 'playlist')
-            ? str_replace('%', '\%', str_replace('_', '\_', (string)Preference::get_by_user($user->id, 'api_hidden_playlists'))) :
-            '';
+            ? str_replace('%', '\%', str_replace('_', '\_', (string) Preference::get_by_user($user->id, 'api_hidden_playlists')))
+            : '';
         if (!empty($hide_string)) {
             $browse->set_filter('not_starts_with', $hide_string);
         }
 
-        $browse->set_sort_order(html_entity_decode((string)($input['sort'] ?? '')), ['name', 'ASC']);
+        $browse->set_sort_order(html_entity_decode((string) ($input['sort'] ?? '')), ['name', 'ASC']);
 
         if ($type === 'catalog') {
             $browse->set_filter('user', $user->getId());
         }
 
-        $method = (array_key_exists('exact', $input) && (int)$input['exact'] == 1) ? 'exact_match' : 'alpha_match';
+        $method = (array_key_exists('exact', $input) && (int) $input['exact'] == 1) ? 'exact_match' : 'alpha_match';
         $browse->set_api_filter($method, $input['filter'] ?? '');
         $browse->set_api_filter('add', $input['add'] ?? '');
         $browse->set_api_filter('update', $input['update'] ?? '');
@@ -144,14 +144,14 @@ final class Index6Method
             $browse->set_filter('playlist_open', $user->getId());
 
             if (
-                $hide === false &&
-                (bool)Preference::get_by_user($user->getId(), 'api_hide_dupe_searches') === true
+                $hide === false
+                && (bool) Preference::get_by_user($user->getId(), 'api_hide_dupe_searches') === true
             ) {
                 $browse->set_filter('hide_dupe_smartlist', 1);
             }
         }
 
-        $browse->set_conditions(html_entity_decode((string)($input['cond'] ?? '')));
+        $browse->set_conditions(html_entity_decode((string) ($input['cond'] ?? '')));
 
         $results = $browse->get_objects();
         if (empty($results)) {
@@ -163,13 +163,13 @@ final class Index6Method
         ob_end_clean();
         switch ($input['api_format']) {
             case 'json':
-                Json6_Data::set_offset((int)($input['offset'] ?? 0));
+                Json6_Data::set_offset((int) ($input['offset'] ?? 0));
                 Json6_Data::set_limit($input['limit'] ?? 0);
                 Json6_Data::set_count($browse->get_total());
                 echo Json6_Data::index($results, $type, $user, $include);
                 break;
             default:
-                Xml6_Data::set_offset((int)($input['offset'] ?? 0));
+                Xml6_Data::set_offset((int) ($input['offset'] ?? 0));
                 Xml6_Data::set_limit($input['limit'] ?? 0);
                 Xml6_Data::set_count($browse->get_total());
                 echo Xml6_Data::index($results, $type, $user, $include);

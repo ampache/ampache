@@ -29,6 +29,7 @@ use Ampache\Config\AmpConfig;
 use Ampache\Module\Api\Api6;
 use Ampache\Module\Api\Exception\ErrorCodeEnum;
 use Ampache\Module\Authorization\AccessLevelEnum;
+use Ampache\Module\System\Core;
 use Ampache\Module\User\Registration;
 use Ampache\Repository\Model\Catalog;
 use Ampache\Repository\Model\User;
@@ -76,7 +77,7 @@ final class Register6Method
         $fullname             = $input['fullname'] ?? $username;
         $email                = urldecode($input['email']);
         $password             = $input['password'];
-        $disable              = (bool)AmpConfig::get('admin_enable_required');
+        $disable              = (bool) AmpConfig::get('admin_enable_required');
         $access               = AccessLevelEnum::fromTextual(AmpConfig::get('auto_user', 'guest'));
         $catalog_filter_group = 0;
         $user_id              = User::create($username, $fullname, $email, '', $password, $access, $catalog_filter_group, '', '', $disable, true);
@@ -84,7 +85,7 @@ final class Register6Method
         if ($user_id > 0) {
             if (!AmpConfig::get('user_no_email_confirm', false)) {
                 $client     = new User($user_id);
-                $validation = md5(uniqid((string) mt_rand(), true));
+                $validation = Core::generate_random_key();
                 $client->update_validation($validation);
 
                 // Notify user and/or admins

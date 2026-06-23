@@ -76,7 +76,7 @@ final class Player8Method
         }
 
         ob_end_clean();
-        $object_id = (int)$input['filter'];
+        $object_id = (int) $input['filter'];
         $type      = $input['type'] ?? 'song';
 
         // confirm the correct data
@@ -117,24 +117,24 @@ final class Player8Method
             ? (int) scrub_in((string) $input['time'])
             : 0;
         // validate client string or fall back to 'api'
-        $agent = scrub_in((string)($input['client'] ?? 'api'));
+        $agent = scrub_in((string) ($input['client'] ?? 'api'));
 
         if ($state === 'play') {
             // make sure the now_playing state is set
             Stream::garbage_collection();
-            Stream::insert_now_playing((int)$media->id, $user->getId(), ((int)($media->time) - $position), (string)$user->username, $type, ($time - $position));
+            Stream::insert_now_playing((int) $media->id, $user->getId(), ((int) ($media->time) - $position), (string) $user->username, $type, ($time - $position));
 
             // internal scrobbling (user_activity and object_count tables)
             if (
-                $media instanceof Song &&
-                $media->set_played($user->id, $agent, [], ($time - $position))
+                $media instanceof Song
+                && $media->set_played($user->id, $agent, [], ($time - $position))
             ) {
                 // scrobble plugins
                 User::save_mediaplay($user, $media);
             }
         } else {
             // A stop/paused state isn't playing. Remove it.
-            Stream::delete_now_playing((string)$user->username, (int)$media->id, $type, $user->getId());
+            Stream::delete_now_playing((string) $user->username, (int) $media->id, $type, $user->getId());
         }
 
         // return the now playing state for that user
@@ -148,13 +148,13 @@ final class Player8Method
         ob_end_clean();
         switch ($input['api_format']) {
             case 'json':
-                Json8_Data::set_offset((int)($input['offset'] ?? 0));
+                Json8_Data::set_offset((int) ($input['offset'] ?? 0));
                 Json8_Data::set_limit($input['limit'] ?? 0);
                 Json8_Data::set_count(count($results));
                 echo Json8_Data::now_playing($results);
                 break;
             default:
-                Xml8_Data::set_offset((int)($input['offset'] ?? 0));
+                Xml8_Data::set_offset((int) ($input['offset'] ?? 0));
                 Xml8_Data::set_limit($input['limit'] ?? 0);
                 Xml8_Data::set_count(count($results));
                 echo Xml8_Data::now_playing($results);

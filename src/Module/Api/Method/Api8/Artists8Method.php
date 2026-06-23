@@ -73,7 +73,7 @@ final class Artists8Method
      */
     public static function artists(array $input, User $user): bool
     {
-        $album_artist = (array_key_exists('album_artist', $input) && (int)$input['album_artist'] == 1);
+        $album_artist = (array_key_exists('album_artist', $input) && (int) $input['album_artist'] == 1);
         $browse       = Api::getBrowse($user);
         if ($album_artist) {
             $browse->set_type('album_artist');
@@ -81,14 +81,14 @@ final class Artists8Method
             $browse->set_type('artist');
         }
 
-        $browse->set_sort_order(html_entity_decode((string)($input['sort'] ?? '')), ['name', 'ASC']);
+        $browse->set_sort_order(html_entity_decode((string) ($input['sort'] ?? '')), ['name', 'ASC']);
 
-        $method = (array_key_exists('exact', $input) && (int)$input['exact'] == 1) ? 'exact_match' : 'alpha_match';
+        $method = (array_key_exists('exact', $input) && (int) $input['exact'] == 1) ? 'exact_match' : 'alpha_match';
         $browse->set_api_filter($method, $input['filter'] ?? '');
         $browse->set_api_filter('add', $input['add'] ?? '');
         $browse->set_api_filter('update', $input['update'] ?? '');
 
-        $browse->set_conditions(html_entity_decode((string)($input['cond'] ?? '')));
+        $browse->set_conditions(html_entity_decode((string) ($input['cond'] ?? '')));
 
         $results = $browse->get_objects();
         if (empty($results)) {
@@ -101,7 +101,7 @@ final class Artists8Method
         $include = [];
         if (array_key_exists('include', $input)) {
             if (!is_array($input['include'])) {
-                $input['include'] = explode(',', html_entity_decode((string)($input['include'])));
+                $input['include'] = explode(',', html_entity_decode((string) ($input['include'])));
             }
             foreach ($input['include'] as $item) {
                 if ($item === 'songs' || $item == '1') {
@@ -114,13 +114,13 @@ final class Artists8Method
         }
         switch ($input['api_format']) {
             case 'json':
-                Json8_Data::set_offset((int)($input['offset'] ?? 0));
+                Json8_Data::set_offset((int) ($input['offset'] ?? 0));
                 Json8_Data::set_limit($input['limit'] ?? 0);
                 Json8_Data::set_count($browse->get_total());
                 echo Json8_Data::artists($results, $include, $user, $input['auth']);
                 break;
             default:
-                Xml8_Data::set_offset((int)($input['offset'] ?? 0));
+                Xml8_Data::set_offset((int) ($input['offset'] ?? 0));
                 Xml8_Data::set_limit($input['limit'] ?? 0);
                 Xml8_Data::set_count($browse->get_total());
                 echo Xml8_Data::artists($results, $include, $user, $input['auth']);

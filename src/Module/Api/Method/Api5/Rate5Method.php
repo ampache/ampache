@@ -98,7 +98,7 @@ final class Rate5Method
                 return false;
             }
             $rate = new Rating($object_id, $type);
-            $rate->set_rating((int)$rating, $user->id);
+            $rate->set_rating((int) $rating, $user->id);
             Api5::message('rating set to ' . $rating . ' for ' . $object_id, $input['api_format']);
         }
 

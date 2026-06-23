@@ -67,7 +67,7 @@ final class ArtistAlbums8Method
             return false;
         }
 
-        $object_id = (int)$input['filter'];
+        $object_id = (int) $input['filter'];
         $artist    = new Artist($object_id);
         if ($artist->isNew()) {
             /* HINT: Requested object string/id/type ("album", "myusername", "some song title", 1298376) */
@@ -102,14 +102,14 @@ final class ArtistAlbums8Method
                 $sort  = 'name_' . $original_year;
                 $order = 'ASC';
         }
-        $browse->set_sort_order(html_entity_decode((string)($input['sort'] ?? '')), [$sort, $order]);
+        $browse->set_sort_order(html_entity_decode((string) ($input['sort'] ?? '')), [$sort, $order]);
 
-        $typeFilter = (array_key_exists('album_artist', $input) && (int)$input['album_artist'] == 1)
+        $typeFilter = (array_key_exists('album_artist', $input) && (int) $input['album_artist'] == 1)
             ? 'album_artist'
             : 'artist';
         $browse->set_filter($typeFilter, $object_id);
 
-        $browse->set_conditions(html_entity_decode((string)($input['cond'] ?? '')));
+        $browse->set_conditions(html_entity_decode((string) ($input['cond'] ?? '')));
 
         $results = $browse->get_objects();
         if (empty($results)) {
@@ -121,13 +121,13 @@ final class ArtistAlbums8Method
         ob_end_clean();
         switch ($input['api_format']) {
             case 'json':
-                Json8_Data::set_offset((int)($input['offset'] ?? 0));
+                Json8_Data::set_offset((int) ($input['offset'] ?? 0));
                 Json8_Data::set_limit($input['limit'] ?? 0);
                 Json8_Data::set_count($browse->get_total());
                 echo Json8_Data::albums($results, [], $user, $input['auth']);
                 break;
             default:
-                Xml8_Data::set_offset((int)($input['offset'] ?? 0));
+                Xml8_Data::set_offset((int) ($input['offset'] ?? 0));
                 Xml8_Data::set_limit($input['limit'] ?? 0);
                 Xml8_Data::set_count($browse->get_total());
                 echo Xml8_Data::albums($results, [], $user, $input['auth']);

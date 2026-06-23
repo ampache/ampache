@@ -74,6 +74,14 @@ class Core
     }
 
     /**
+     * generate a random md5 key using random_int
+     */
+    public static function generate_random_key(): string
+    {
+        return md5(uniqid((string) random_int(0, mt_getrandmax()), true));
+    }
+
+    /**
      * get_cookie
      * Return a $COOKIE variable instead of calling directly
      * @deprecated Not in use

@@ -70,7 +70,7 @@ final class UpdateArt4Method
         }
         $type      = (string) $input['type'];
         $object_id = (int) $input['id'];
-        $overwrite = array_key_exists('overwrite', $input) && (int)$input['overwrite'] == 0;
+        $overwrite = array_key_exists('overwrite', $input) && (int) $input['overwrite'] == 0;
 
         // confirm the correct data
         if (!in_array(strtolower($type), ['artist', 'album'])) {
