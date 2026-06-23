@@ -1485,6 +1485,16 @@ abstract class Catalog extends database_object
     }
 
     /**
+     * Get Folder for browsing (Used for WebDav)
+     */
+    public static function get_child(string $name, ?int $catalog_id = 0, ?int $parent_id = null): ?Folder
+    {
+        return ($name === '/')
+            ? new Folder(-1)
+            : self::getFolderRepository()->getByName($name, $catalog_id, $parent_id);
+    }
+
+    /**
      * get all artists or artist children of a catalog id (Used for WebDav)
      * @return array<int, array{object_type: LibraryItemEnum, object_id: int}>
      */
