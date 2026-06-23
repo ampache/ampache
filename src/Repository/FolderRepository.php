@@ -120,7 +120,7 @@ final readonly class FolderRepository implements FolderRepositoryInterface
         return $folders;
     }
 
-    public function getByName(string $folderName, int $catalogId = 0, ?int $parent = null): ?Folder
+    public function getByName(string $folderName, ?int $catalogId = null, ?int $parent = null): ?Folder
     {
         $sql    = 'SELECT `folder`.`id` FROM `folder` WHERE `folder`.`name` = ?';
         $params = [$folderName];
