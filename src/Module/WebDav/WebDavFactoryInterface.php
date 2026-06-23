@@ -41,5 +41,5 @@ interface WebDavFactoryInterface
 
     public function createWebDavAuth(): BackendInterface;
 
-    public function createWebDavCatalog(int $catalog_id = 0): ICollection;
+    public function createWebDavCatalog(): ICollection;
 }

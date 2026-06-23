@@ -27,6 +27,7 @@ namespace Ampache\Module\WebDav;
 
 use Ampache\Config\AmpConfig;
 use Ampache\Repository\Model\Catalog;
+use Ampache\Repository\Model\Folder;
 use Override;
 use Sabre\DAV\Collection;
 use Sabre\DAV\Exception\NotFound;
@@ -39,12 +40,8 @@ use Sabre\DAV\Node;
  */
 class WebDavCatalog extends Collection
 {
-    private int $catalog_id;
-
-    public function __construct(int $catalog_id = 0)
-    {
-        $this->catalog_id = $catalog_id;
-    }
+    private ?int $catalog_id = null;
+    private ?int $parent_id  = null;
 
     /**
      * @param string $name
@@ -52,9 +49,7 @@ class WebDavCatalog extends Collection
     #[Override]
     public function childExists($name): bool
     {
-        $matches = Catalog::get_children($name, $this->catalog_id);
-
-        return $matches !== [];
+        return Catalog::get_children($name, $this->catalog_id, $this->parent_id) !== [];
     }
 
     /**
@@ -64,8 +59,8 @@ class WebDavCatalog extends Collection
     #[Override]
     public function getChild($name): Node
     {
-        $matches = Catalog::get_children($name, $this->catalog_id);
-        //debug_event(self::class, 'Catalog getChild for `' . $name . '`', 5);
+        $matches = Catalog::get_children($name, $this->catalog_id, $this->parent_id);
+        //debug_event(self::class, 'Catalog getChild for: `' . $name . '` catalog: ' . $this->catalog_id . ' parent: ' . $this->parent_id, 5);
         //debug_event(self::class, 'Found ' . count($matches) . ' childs.', 5);
         // Always return first match
         // Warning: this means that two items with the same name will not be supported for now TODO support folders instead of objects
@@ -73,7 +68,7 @@ class WebDavCatalog extends Collection
             return WebDavDirectory::getChildFromArray($matches[0]);
         }
 
-        throw new NotFound('The artist with name: ' . $name . ' could not be found');
+        throw new NotFound('The folder with name: ' . $name . ' could not be found');
     }
 
     /**
@@ -93,10 +88,12 @@ class WebDavCatalog extends Collection
 
     public function getName(): string
     {
-        if ($this->catalog_id > 0) {
-            $catalog = Catalog::create_from_id($this->catalog_id);
+        if ($this->parent_id > 0) {
+            $folder = new Folder($this->parent_id);
 
-            return $catalog->name ?? '';
+            if (!$folder->isNew()) {
+                return $folder->name ?? '';
+            }
         }
 
         return (string) AmpConfig::get('site_title');

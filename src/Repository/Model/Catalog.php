@@ -1488,11 +1488,11 @@ abstract class Catalog extends database_object
      * get all artists or artist children of a catalog id (Used for WebDav)
      * @return array<int, array{object_type: LibraryItemEnum, object_id: int}>
      */
-    public static function get_children(string $name, int $catalog_id = 0): array
+    public static function get_children(string $name, int $catalog_id = 0, ?int $parent_id = null): array
     {
         $folder = ($name === '/')
             ? new Folder(-1)
-            : self::getFolderRepository()->getByPathName($name, $catalog_id);
+            : self::getFolderRepository()->getByName($name, $catalog_id, $parent_id);
 
         return $folder?->get_children($name) ?? [];
     }
