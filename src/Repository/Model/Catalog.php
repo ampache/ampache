@@ -1490,26 +1490,11 @@ abstract class Catalog extends database_object
      */
     public static function get_children(string $name, int $catalog_id = 0): array
     {
-        $childrens = [];
-        $sql       = "SELECT DISTINCT `artist`.`id` FROM `artist` ";
-        if ((int) $catalog_id > 0) {
-            $sql .= "LEFT JOIN `catalog_map` ON `catalog_map`.`object_type` = 'album_artist' AND `catalog_map`.`object_id` = `artist`.`id` AND `catalog_map`.`catalog_id` = " . (int) $catalog_id;
-        }
+        $folder = ($name === '/')
+            ? new Folder(-1)
+            : self::getFolderRepository()->getByPathName($name, $catalog_id);
 
-        $sql .= "WHERE (`artist`.`name` = ? OR LTRIM(CONCAT(COALESCE(`artist`.`prefix`, ''), ' ', `artist`.`name`)) = ? OR REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(`artist`.`name`, ?, ''), ?, ''), ?, ''), ?, ''), ?, ''), ?, ''), ?, ''), ?, ''), ?, ''), ?, ''), ?, ''), ?, '') = ?) ";
-        if ((int) $catalog_id > 0) {
-            $sql .= "AND `catalog_map`.`object_id` IS NOT NULL";
-        }
-
-        $db_results = Dba::read($sql, [$name, $name, '/', '\\', ':', '?', '*', '|', '"', '<', '>', '#', '%', '\n', $name]);
-        while ($row = Dba::fetch_assoc($db_results)) {
-            $childrens[] = [
-                'object_type' => LibraryItemEnum::ARTIST,
-                'object_id' => (int) $row['id']
-            ];
-        }
-
-        return $childrens;
+        return $folder?->get_children($name) ?? [];
     }
 
     /**

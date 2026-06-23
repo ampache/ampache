@@ -45,7 +45,7 @@ class Folder extends database_object implements
     public ?int $addition_time = null;
     public int $catalog        = 0;
 
-    /** @var array<int, array{object_type: LibraryItemEnum|null, object_id: int}>|null $children */
+    /** @var array<int, array{object_type: LibraryItemEnum, object_id: int}>|null $children */
     public ?array $children = null;
 
     public int $id              = 0;
@@ -236,7 +236,7 @@ class Folder extends database_object implements
 
     /**
      * Search for direct children of an object
-     * @return array<int, array{object_type: LibraryItemEnum|null, object_id: int}>
+     * @return array<int, array{object_type: LibraryItemEnum, object_id: int}>
      */
     public function get_children(string $name): array
     {
@@ -245,10 +245,13 @@ class Folder extends database_object implements
         $db_results = Dba::read($sql, [$this->id]);
         $results    = [];
         while ($row = Dba::fetch_assoc($db_results)) {
-            $results[] = [
-                'object_type' => LibraryItemEnum::tryFrom($row['object_type']),
-                'object_id' => (int) $row['object_id']
-            ];
+            $object_type = LibraryItemEnum::tryFrom($row['object_type']);
+            if ($object_type !== null) {
+                $results[] = [
+                    'object_type' => $object_type,
+                    'object_id' => (int) $row['object_id']
+                ];
+            }
         }
 
         return $results;
@@ -401,7 +404,7 @@ class Folder extends database_object implements
     }
 
     /**
-     * @return array<int, array{object_type: LibraryItemEnum|null, object_id: int}>
+     * @return array<int, array{object_type: LibraryItemEnum, object_id: int}>
      */
     public function get_medias(?string $filter_type = null): array
     {
@@ -415,10 +418,13 @@ class Folder extends database_object implements
         $db_results = Dba::read($sql, $params);
         $results    = [];
         while ($row = Dba::fetch_assoc($db_results)) {
-            $results[] = [
-                'object_type' => LibraryItemEnum::tryFrom($row['object_type']),
-                'object_id' => (int) $row['object_id']
-            ];
+            $object_type = LibraryItemEnum::tryFrom($row['object_type']);
+            if ($object_type !== null) {
+                $results[] = [
+                    'object_type' => $object_type,
+                    'object_id' => (int) $row['object_id']
+                ];
+            }
         }
 
         return $results;
@@ -427,7 +433,7 @@ class Folder extends database_object implements
     /**
      * get_objects
      * @return array<int, array{
-     *     object_type: LibraryItemEnum|null,
+     *     object_type: LibraryItemEnum,
      *     object_id: int
      * }>
      */
@@ -444,10 +450,13 @@ class Folder extends database_object implements
 
             $results    = [];
             while ($row = Dba::fetch_assoc($db_results)) {
-                $results[] = [
-                    'object_type' => LibraryItemEnum::tryFrom($row['object_type']),
-                    'object_id' => (int) $row['object_id']
-                ];
+                $object_type = LibraryItemEnum::tryFrom($row['object_type']);
+                if ($object_type !== null) {
+                    $results[] = [
+                        'object_type' => $object_type,
+                        'object_id' => (int) $row['object_id']
+                    ];
+                }
             }
 
             $this->children = $results;
