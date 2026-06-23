@@ -65,6 +65,9 @@ class WebDavCatalog extends Collection
         $folder = Catalog::get_child($name, $this->catalog_id, $this->parent_id);
         //debug_event(self::class, 'Catalog getChild for: `' . $name . '` catalog: ' . $this->catalog_id . ' parent: ' . $this->parent_id, 5);
         if ($folder instanceof Folder) {
+            $this->catalog_id = $folder->catalog;
+            $this->parent_id  = $folder->id;
+
             return new WebDavDirectory($folder);
         }
 
