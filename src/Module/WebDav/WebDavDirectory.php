@@ -27,6 +27,7 @@ namespace Ampache\Module\WebDav;
 
 use Ampache\Module\Util\ObjectTypeToClassNameMapper;
 use Ampache\Repository\Model\container_item;
+use Ampache\Repository\Model\Folder;
 use Ampache\Repository\Model\LibraryItemEnum;
 use Ampache\Repository\Model\Media;
 use Override;
@@ -112,6 +113,14 @@ class WebDavDirectory extends Collection
 
     public function getName(): string
     {
+        if (property_exists($this->libitem, 'file')) {
+            pathinfo($this->libitem->file, PATHINFO_BASENAME);
+        }
+
+        if ($this->libitem instanceof Folder && $this->libitem->path_name) {
+            return $this->libitem->path_name;
+        }
+
         return str_replace('/', '', (string) $this->libitem->get_fullname());
     }
 }
