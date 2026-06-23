@@ -31,7 +31,6 @@ use Ampache\Module\Label\LabelListUpdaterInterface;
 use Ampache\Module\Statistics\Stats;
 use Ampache\Module\System\Dba;
 use Ampache\Module\Util\VaInfo;
-use Ampache\Module\WebDav\WebDavDirectoryInterface;
 use Ampache\Plugin\AmpacheMusicBrainz;
 use Ampache\Repository\AlbumRepositoryInterface;
 use Ampache\Repository\ArtistRepositoryInterface;

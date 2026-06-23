@@ -26,11 +26,8 @@ declare(strict_types=0);
 namespace Ampache\Module\WebDav;
 
 use Ampache\Config\AmpConfig;
-use Ampache\Module\Util\ObjectTypeToClassNameMapper;
 use Ampache\Repository\Model\Catalog;
-use Ampache\Repository\Model\container_item;
 use Ampache\Repository\Model\Folder;
-use Ampache\Repository\Model\Media;
 use Override;
 use Sabre\DAV\Collection;
 use Sabre\DAV\Exception\NotFound;
@@ -52,7 +49,7 @@ class WebDavCatalog extends Collection
     #[Override]
     public function childExists($name): bool
     {
-        return Catalog::get_children($name, $this->catalog_id, $this->parent_id) !== [];
+        return Catalog::has_children($name, $this->catalog_id, $this->parent_id) !== [];
     }
 
     /**
