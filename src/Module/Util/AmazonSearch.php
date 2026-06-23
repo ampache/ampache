@@ -42,54 +42,57 @@ use WpOrg\Requests\Requests;
  */
 class AmazonSearch
 {
-    public $_currentPage           = 0;
+    public int $_currentPage           = 0;
 
     // Stupid hack to make things come our right
     public $_currentTag;
 
     // Stupid hack to make things come out right
     public $_currentTagContents;
-    public $_default_results_pages = 1;
+    public int $_default_results_pages = 1;
 
     // The XML parser
-    public $_grabtags;
-    public $_maxPage               = 1;
+    /** @var string[] $_grabtags */
+    public array $_grabtags;
+
+    public int $_maxPage = 1;
 
     // Array of results
     public $_parser;
-    public $_proxy_host            = "";
+    public string $_proxy_host = "";
 
     // Proxy user
-    public $_proxy_pass            = ""; // Proxy pass
+    public string $_proxy_pass = ""; // Proxy pass
 
     // Proxy host
-    public $_proxy_port            = "";
+    public string $_proxy_port = "";
 
     // Proxy port
-    public $_proxy_user            = "";
+    public string $_proxy_user = "";
 
     // Tags to grab the contents of
     public $_sourceTag;
 
     // source tag don't ask
     public $_subTag;
-    public $base_url;
-    public $base_url_default = 'webservices.amazon.com';
+    public mixed $base_url;
+    public string $base_url_default = 'webservices.amazon.com';
 
     // Amazon Affiliate Associate Tag
-    public $results = [];
+    /** @var array<string, array<string, mixed>> */
+    public array $results = [];
+
     public $search;
-    public $url_suffix       = '/onca/xml';
+    public string $url_suffix = '/onca/xml';
 
     /**
      * Class Constructor
-     * @param string $base_url_param
      */
     public function __construct(
         public $public_key,
         public $private_key,
         public $associate_tag,
-        $base_url_param = '',
+        string $base_url_param = '',
     ) {
         // If we have a base url then use it
         if ($base_url_param != '') {
@@ -139,7 +142,7 @@ class AmazonSearch
                 break;
             case 'TotalPages':
                 debug_event(self::class, "TotalPages= " . trim((string) $cdata), 5);
-                $this->_maxPage = trim((string) $cdata);
+                $this->_maxPage = (int) trim((string) $cdata);
                 break;
             default:
                 if (strlen((string) $tag) !== 0) {
@@ -203,7 +206,7 @@ class AmazonSearch
      * @param string $asin The 'Amazon standard Identification Number'
      * @param string $type The category of results desired from the web service.
      */
-    public function lookup($asin, $type = 'Music'): array
+    public function lookup(string $asin, string $type = 'Music'): array
     {
         if (is_array($asin)) {
             foreach (array_keys($asin) as $key) {
@@ -224,7 +227,7 @@ class AmazonSearch
      *
      * @param string $url The URL of the Amazon webservice.
      */
-    public function runSearch($url): void
+    public function runSearch(string $url): void
     {
         // create the parser
         $this->createParser();
@@ -248,7 +251,7 @@ class AmazonSearch
      *
      * @param string $asin The 'Amazon standard Identification Number'
      */
-    public function runSearchAsin($asin): void
+    public function runSearchAsin(string $asin): void
     {
         // get the proxy config
         $options = $this->getProxyConfig();
@@ -298,7 +301,7 @@ class AmazonSearch
      * @param array $terms The search terms to include within the query.
      * @param string $type The type of result desired.
      */
-    public function search($terms, $type = 'Music'): array
+    public function search(array $terms, string $type = 'Music'): array
     {
         $params = [];
 
@@ -344,12 +347,8 @@ class AmazonSearch
      * The parameters are the proxy's hostname or IP address (a string)
      * port, username, and password. These are passed directly to the
      * Requests class when the search is done.
-     * @param string $host
-     * @param string $port
-     * @param string $user
-     * @param string $pass
      */
-    public function setProxy($host = '', $port = '', $user = '', $pass = ''): void
+    public function setProxy(string $host = '', string $port = '', string $user = '', string $pass = ''): void
     {
         if ($host) {
             $this->_proxy_host = $host;

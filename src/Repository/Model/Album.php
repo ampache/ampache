@@ -52,18 +52,18 @@ class Album extends database_object implements
 {
     protected const string DB_TABLENAME = 'album';
 
-    /** @var array $_mapcache */
-    private static $_mapcache = [];
+    /**  */
+    private static array $_mapcache = [];
 
     public ?int $addition_time = null;
     public ?int $album_artist  = null;
     public int $artist_count   = 0;
 
-    /** @var string $artist_name */
-    public $artist_name;
+    /**  */
+    public string $artist_name;
 
-    /** @var string $artist_prefix */
-    public $artist_prefix;
+    /**  */
+    public string $artist_prefix;
 
     public ?string $barcode = null;
     public int $catalog;

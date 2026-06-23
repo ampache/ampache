@@ -94,11 +94,8 @@ final class ShareQuery implements QueryInterface
      * get_sql_sort
      *
      * Sorting SQL for ORDER BY
-     * @param Query $query
-     * @param string|null $field
-     * @param string|null $order
      */
-    public function get_sql_sort($query, $field, $order): string
+    public function get_sql_sort(Query $query, ?string $field, ?string $order): string
     {
         $sql = match ($field) {
             'object' => "`share`.`object_type`, `share`.`object.id`",

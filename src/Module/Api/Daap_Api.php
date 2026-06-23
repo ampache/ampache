@@ -89,10 +89,8 @@ class Daap_Api
     public static array $tags = [];
 
     /**
-     * @param Playlist|Search $playlist
-     * @param bool $isSmart
      */
-    public static function _tlv_playlist($playlist, $isSmart = false): string
+    public static function _tlv_playlist(Playlist|Search $playlist, bool $isSmart = false): string
     {
         $pl_id = (($isSmart) ? Daap_Api::AMPACHEID_SMARTPL : 0) + $playlist->id;
         $plist = self::_tlv('dmap.itemid', $pl_id);
@@ -138,7 +136,7 @@ class Daap_Api
      * content_codes
      * @param array<mixed> $input
      */
-    public static function content_codes($input): void
+    public static function content_codes(array $input): void
     {
         $output = self::_tlv('dmap.status', 200);
         foreach (self::$tags as $name => $tag) {
@@ -255,11 +253,8 @@ class Daap_Api
     }
 
     /**
-     * @param string $tag
-     * @param int $code
-     * @param string $msg
      */
-    public static function createApiError($tag, $code, $msg = ''): bool
+    public static function createApiError(string $tag, int $code, string $msg = ''): bool
     {
         $output = self::_tlv('dmap.status', $code);
         if (!empty($msg)) {
@@ -295,7 +290,7 @@ class Daap_Api
      * databases
      * @param array<mixed> $input
      */
-    public static function databases($input): bool
+    public static function databases(array $input): bool
     {
         $output = '';
         // Database list
@@ -428,9 +423,8 @@ class Daap_Api
 
     /**
      * follow_stream
-     * @param string $url
      */
-    public static function follow_stream($url): void
+    public static function follow_stream(string $url): void
     {
         set_time_limit(0);
         ob_end_clean();
@@ -478,7 +472,7 @@ class Daap_Api
      * login
      * @param array<mixed> $input
      */
-    public static function login($input): void
+    public static function login(array $input): void
     {
         self::_check_auth('dmap.loginresponse');
 
@@ -498,7 +492,7 @@ class Daap_Api
      * logout
      * @param array<mixed> $input
      */
-    public static function logout($input): void
+    public static function logout(array $input): void
     {
         self::_check_auth();
 
@@ -511,9 +505,8 @@ class Daap_Api
 
     /**
      * @param resource $curl
-     * @param string $data
      */
-    public static function output_body($curl, $data): int
+    public static function output_body($curl, string $data): int
     {
         echo $data;
         ob_flush();
@@ -523,9 +516,8 @@ class Daap_Api
 
     /**
      * @param resource $curl
-     * @param string $header
      */
-    public static function output_header($curl, $header): int
+    public static function output_header($curl, string $header): int
     {
         $rheader = trim((string) $header);
         $rhpart  = explode(':', $rheader);
@@ -542,7 +534,7 @@ class Daap_Api
      * server_info (Based on the server_info part of the forkedd-daapd project)
      * @param array<mixed> $input
      */
-    public static function server_info($input): void
+    public static function server_info(array $input): void
     {
         $output = self::_tlv('dmap.status', 200);
         $output .= self::_tlv('dmap.protocolversion', '0.2.0.0');
@@ -581,7 +573,7 @@ class Daap_Api
      * update
      * @param array<mixed> $input
      */
-    public static function update($input): void
+    public static function update(array $input): void
     {
         self::_check_session('dmap.updateresponse');
 
@@ -593,11 +585,8 @@ class Daap_Api
     }
 
     /**
-     * @param string $code
-     * @param string $type
-     * @param string $name
      */
-    private static function _add_dict($code, $type, $name): void
+    private static function _add_dict(string $code, string $type, string $name): void
     {
         self::$tags[$name] = [
             'type' => $type,
@@ -633,9 +622,8 @@ class Daap_Api
     }
 
     /**
-     * @param string $code
      */
-    private static function _check_auth($code = ''): void
+    private static function _check_auth(string $code = ''): void
     {
         $authenticated = false;
         $pass          = AmpConfig::get('daap_pass');
@@ -665,9 +653,8 @@ class Daap_Api
     }
 
     /**
-     * @param string $code
      */
-    private static function _check_session($code): void
+    private static function _check_session(string $code): void
     {
         // Purge expired sessions
         $sql = "DELETE FROM `daap_session` WHERE `creationdate` < ?";

@@ -152,10 +152,8 @@ class Upnp_Api
     }
 
     /**
-     * @param Live_Stream $radio
-     * @param string $parent
      */
-    public static function _itemLiveStream($radio, $parent): array
+    public static function _itemLiveStream(Live_Stream $radio, string $parent): array
     {
         $api_session = (AmpConfig::get('require_session')) ? Stream::get_session() : null;
         $art_url     = Art::url($radio->id, 'live_stream', $api_session);
@@ -179,10 +177,8 @@ class Upnp_Api
     }
 
     /**
-     * @param Song $song
-     * @param string $parent
      */
-    public static function _itemSong($song, $parent): array
+    public static function _itemSong(Song $song, string $parent): array
     {
         $api_session = (AmpConfig::get('require_session')) ? Stream::get_session() : null;
         $art_url     = Art::url($song->album, 'album', $api_session);
@@ -444,9 +440,8 @@ class Upnp_Api
     }
 
     /**
-     * @param string $prmPath
      */
-    public static function _musicMetadata($prmPath): ?array
+    public static function _musicMetadata(string $prmPath): ?array
     {
         $root    = 'amp://music';
         $pathreq = explode('/', $prmPath);
@@ -673,9 +668,8 @@ class Upnp_Api
     }
 
     /**
-     * @param string $prmPath
      */
-    public static function _videoMetadata($prmPath): ?array
+    public static function _videoMetadata(string $prmPath): ?array
     {
         $root    = 'amp://video';
         $pathreq = explode('/', $prmPath);
@@ -861,15 +855,13 @@ class Upnp_Api
     }
 
     /**
-     * @param string $prmResponseType
-     * @param string $prmUpdateID
      */
     public static function createSOAPEnvelope(
         $prmDIDL,
         $prmNumRet,
         $prmTotMatches,
-        $prmResponseType = 'u:BrowseResponse',
-        $prmUpdateID = '0',
+        string $prmResponseType = 'u:BrowseResponse',
+        string $prmUpdateID = '0',
     ): DOMDocument {
         /**
         * $prmDIDL is DIDL XML string
@@ -906,11 +898,9 @@ class Upnp_Api
     }
 
     /**
-     * @param string $data
-     * @param string $address
      * @throws Exception
      */
-    public static function discovery_request($data, $address): void
+    public static function discovery_request(string $data, string $address): void
     {
         // Process a discovery request.  The response must be sent to the address specified by $remote
         $headers = self::get_headers($data);
@@ -957,7 +947,7 @@ class Upnp_Api
      * @param string $data The raw data string containing the headers to process.
      * @return array An associative array of headers where keys are header names and values are their corresponding values.
      */
-    public static function get_headers($data): array
+    public static function get_headers(string $data): array
     {
         $lines  = explode(PHP_EOL, $data); // split into lines
         $keys   = [];
@@ -1107,13 +1097,8 @@ class Upnp_Api
     }
 
     /**
-     * @param int $delay
-     * @param string $host
-     * @param int $port
-     * @param string $prefix
-     * @param bool $alive
      */
-    public static function sddpSend($delay = 15, $host = "239.255.255.250", $port = 1900, $prefix = "NT", $alive = true): void
+    public static function sddpSend(int $delay = 15, string $host = "239.255.255.250", int $port = 1900, string $prefix = "NT", bool $alive = true): void
     {
         $strHeader = 'NOTIFY * HTTP/1.1' . "\r\n";
         $strHeader .= 'HOST: ' . $host . ':' . $port . "\r\n";
@@ -1251,10 +1236,8 @@ class Upnp_Api
     }
 
     /**
-     * @param Album $album
-     * @param string $parent
      */
-    private static function _itemAlbum($album, $parent): array
+    private static function _itemAlbum(Album $album, string $parent): array
     {
         $api_session = (AmpConfig::get('require_session')) ? Stream::get_session() : null;
         $art_url     = Art::url($album->id, 'album', $api_session);
@@ -1273,10 +1256,8 @@ class Upnp_Api
     }
 
     /**
-     * @param Artist $artist
-     * @param string $parent
      */
-    private static function _itemArtist($artist, $parent): array
+    private static function _itemArtist(Artist $artist, string $parent): array
     {
         return [
             'id' => 'amp://music/artists/' . $artist->id,
@@ -1290,9 +1271,8 @@ class Upnp_Api
     }
 
     /**
-     * @param string $parent
      */
-    private static function _itemPlaylist($playlist, $parent): array
+    private static function _itemPlaylist($playlist, string $parent): array
     {
         return [
             'id' => 'amp://music/playlists/' . $playlist->id,
@@ -1305,9 +1285,8 @@ class Upnp_Api
     }
 
     /**
-     * @param string $parent
      */
-    private static function _itemPodcast($podcast, $parent): array
+    private static function _itemPodcast($podcast, string $parent): array
     {
         return [
             'id' => 'amp://music/podcasts/' . $podcast->id,
@@ -1320,10 +1299,8 @@ class Upnp_Api
     }
 
     /**
-     * @param Podcast_Episode $episode
-     * @param string $parent
      */
-    private static function _itemPodcastEpisode($episode, $parent): array
+    private static function _itemPodcastEpisode(Podcast_Episode $episode, string $parent): array
     {
         $api_session = (AmpConfig::get('require_session')) ? Stream::get_session() : null;
         $art_url     = Art::url($episode->podcast, 'podcast', $api_session);
@@ -1351,10 +1328,8 @@ class Upnp_Api
     }
 
     /**
-     * @param Search $playlist
-     * @param string $parent
      */
-    private static function _itemSmartPlaylist($playlist, $parent): array
+    private static function _itemSmartPlaylist(Search $playlist, string $parent): array
     {
         return [
             'id' => 'amp://music/smartplaylists/' . $playlist->id,
@@ -1367,10 +1342,8 @@ class Upnp_Api
     }
 
     /**
-     * @param Tag $tag
-     * @param string $parent
      */
-    private static function _itemTag($tag, $parent): array
+    private static function _itemTag(Tag $tag, string $parent): array
     {
         return [
             'id' => 'amp://music/tags/' . $tag->id,
@@ -1384,10 +1357,8 @@ class Upnp_Api
     }
 
     /**
-     * @param Video $video
-     * @param string $parent
      */
-    private static function _itemVideo($video, $parent): array
+    private static function _itemVideo(Video $video, string $parent): array
     {
         $api_session = (AmpConfig::get('require_session')) ? Stream::get_session() : null;
         $art_url     = Art::url($video->id, 'video', $api_session);
@@ -1427,10 +1398,8 @@ class Upnp_Api
     }
 
     /**
-     * @param string $query
-     * @param string $context
      */
-    private static function _parse_upnp_search_term($query, $context): array
+    private static function _parse_upnp_search_term(string $query, string $context): array
     {
         //echo "Search term ", $query, "\n";
         $tok = str_getcsv($query, ' ');
@@ -1605,9 +1574,8 @@ class Upnp_Api
     }
 
     /**
-     * @param string|null $title
      */
-    private static function _replaceSpecialSymbols($title): string
+    private static function _replaceSpecialSymbols(?string $title): string
     {
         /**
         * replace non letter or digits
@@ -1628,12 +1596,8 @@ class Upnp_Api
     /* ================================== Begin SSDP functions ================================== */
 
     /**
-     * @param string $buf
-     * @param int $delay
-     * @param string $host
-     * @param int $port
      */
-    private static function _udpSend($buf, $delay = 15, $host = "239.255.255.250", $port = 1900): void
+    private static function _udpSend(string $buf, int $delay = 15, string $host = "239.255.255.250", int $port = 1900): void
     {
         usleep($delay * 1000); // we are supposed to delay before sending
         $socket = socket_create(AF_INET, SOCK_DGRAM, SOL_UDP);

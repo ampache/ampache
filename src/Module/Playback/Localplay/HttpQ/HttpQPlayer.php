@@ -69,10 +69,8 @@ class HttpQPlayer
      * append a song to the playlist
      * $name    Name to be shown in the playlist
      * $url     URL of the song
-     * @param string $name
-     * @param string $url
      */
-    public function add($name, $url): bool
+    public function add(string $name, string $url): bool
     {
         $args = [];
 

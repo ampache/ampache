@@ -49,20 +49,14 @@ class Graph
     }
 
     /**
-     * @param int $user_id
-     * @param string $object_type
-     * @param int $object_id
-     * @param int $start_date
-     * @param int $end_date
-     * @param string $zoom
      */
     public function display_map(
-        $user_id,
-        $object_type,
-        $object_id,
-        $start_date,
-        $end_date,
-        $zoom,
+        int    $user_id,
+        string $object_type,
+        int    $object_id,
+        int    $start_date,
+        int    $end_date,
+        string $zoom,
     ): bool {
         $pts  = $this->get_geolocation_pts($user_id, $object_type, $object_id, $start_date, $end_date, $zoom);
         $user = Core::get_global('user');
@@ -81,11 +75,8 @@ class Graph
     }
 
     /**
-     * @param int $user_id
-     * @param int $start_date
-     * @param int $end_date
      */
-    public function get_total_bandwidth($user_id = 0, $start_date = null, $end_date = null): int
+    public function get_total_bandwidth(int $user_id = 0, ?int $start_date = null, ?int $end_date = null): int
     {
         $total  = 0;
         $values = $this->get_all_type_pts('get_user_bandwidth_pts', $user_id, null, 0, $start_date, $end_date, 'month');
@@ -97,11 +88,8 @@ class Graph
     }
 
     /**
-     * @param int $user_id
-     * @param int $start_date
-     * @param int $end_date
      */
-    public function get_total_hits($user_id = 0, $start_date = null, $end_date = null): int
+    public function get_total_hits(int $user_id = 0, ?int $start_date = null, ?int $end_date = null): int
     {
         $total  = 0;
         $values = $this->get_all_type_pts('get_user_hits_pts', $user_id, null, 0, $start_date, $end_date, 'month');
@@ -113,11 +101,8 @@ class Graph
     }
 
     /**
-     * @param int $user_id
-     * @param int $start_date
-     * @param int $end_date
      */
-    public function get_total_time($user_id = 0, $start_date = null, $end_date = null): int
+    public function get_total_time(int $user_id = 0, ?int $start_date = null, ?int $end_date = null): int
     {
         $total  = 0;
         $values = $this->get_all_type_pts('get_user_time_pts', $user_id, null, 0, $start_date, $end_date, 'month');
@@ -129,24 +114,16 @@ class Graph
     }
 
     /**
-     * @param int $catalog_id
-     * @param string $object_type
-     * @param int $object_id
-     * @param int $start_date
-     * @param int $end_date
-     * @param string $zoom
-     * @param int $width
-     * @param int $height
      */
     public function render_catalog_files(
-        $catalog_id = 0,
-        $object_type = null,
-        $object_id = 0,
-        $start_date = null,
-        $end_date = null,
-        $zoom = 'day',
-        $width = 0,
-        $height = 0,
+        int     $catalog_id = 0,
+        ?string $object_type = null,
+        int     $object_id = 0,
+        ?int    $start_date = null,
+        ?int    $end_date = null,
+        string  $zoom = 'day',
+        int     $width = 0,
+        int     $height = 0,
     ): void {
         $MyData = new Data();
         $this->get_catalog_all_pts(
@@ -167,24 +144,16 @@ class Graph
     }
 
     /**
-     * @param int $catalog_id
-     * @param string $object_type
-     * @param int $object_id
-     * @param int $start_date
-     * @param int $end_date
-     * @param string $zoom
-     * @param int $width
-     * @param int $height
      */
     public function render_catalog_size(
-        $catalog_id = 0,
-        $object_type = null,
-        $object_id = 0,
-        $start_date = null,
-        $end_date = null,
-        $zoom = 'day',
-        $width = 0,
-        $height = 0,
+        int     $catalog_id = 0,
+        ?string $object_type = null,
+        int     $object_id = 0,
+        ?int    $start_date = null,
+        ?int    $end_date = null,
+        string  $zoom = 'day',
+        int     $width = 0,
+        int     $height = 0,
     ): void {
         $MyData = new Data();
         $this->get_catalog_all_pts(
@@ -206,24 +175,16 @@ class Graph
     }
 
     /**
-     * @param int $user_id
-     * @param string $object_type
-     * @param int $object_id
-     * @param int $start_date
-     * @param int $end_date
-     * @param string $zoom
-     * @param int $width
-     * @param int $height
      */
     public function render_user_bandwidth(
-        $user_id = 0,
-        $object_type = null,
-        $object_id = 0,
-        $start_date = null,
-        $end_date = null,
-        $zoom = 'day',
-        $width = 0,
-        $height = 0,
+        int     $user_id = 0,
+        ?string $object_type = null,
+        int     $object_id = 0,
+        ?int    $start_date = null,
+        ?int    $end_date = null,
+        string  $zoom = 'day',
+        int     $width = 0,
+        int     $height = 0,
     ): void {
         $MyData = new Data();
         $this->get_user_all_pts('get_user_bandwidth_pts', $MyData, $user_id, $object_type, $object_id, $start_date, $end_date, $zoom);
@@ -235,24 +196,16 @@ class Graph
     }
 
     /**
-     * @param int $user_id
-     * @param string|null $object_type
-     * @param int $object_id
-     * @param int $start_date
-     * @param int $end_date
-     * @param string $zoom
-     * @param int $width
-     * @param int $height
      */
     public function render_user_hits(
-        $user_id,
-        $object_type,
-        $object_id,
-        $start_date = null,
-        $end_date = null,
-        $zoom = 'day',
-        $width = 0,
-        $height = 0,
+        int     $user_id,
+        ?string $object_type,
+        int     $object_id,
+        ?int    $start_date = null,
+        ?int    $end_date = null,
+        string  $zoom = 'day',
+        int     $width = 0,
+        int     $height = 0,
     ): void {
         $MyData = new Data();
         $this->get_user_all_pts(
@@ -273,25 +226,17 @@ class Graph
     }
 
     /**
-     * @param string $fct
-     * @param int $user_id
-     * @param string $object_type
-     * @param int $object_id
-     * @param int $start_date
-     * @param int $end_date
-     * @param string $zoom
-     * @param bool $show_total
      */
     protected function get_all_pts(
-        $fct,
-        Data $MyData,
-        $user_id = 0,
-        $object_type = null,
-        $object_id = 0,
-        $start_date = null,
-        $end_date = null,
-        $zoom = 'day',
-        $show_total = true,
+        string  $fct,
+        Data    $MyData,
+        int     $user_id = 0,
+        ?string $object_type = null,
+        int     $object_id = 0,
+        ?int    $start_date = null,
+        ?int    $end_date = null,
+        string  $zoom = 'day',
+        bool    $show_total = true,
     ): array {
         $values = $this->get_all_type_pts($fct, $user_id, $object_type, $object_id, $start_date, $end_date, $zoom);
         foreach ($values as $date => $value) {
@@ -306,22 +251,15 @@ class Graph
     }
 
     /**
-     * @param string $fct
-     * @param int $id
-     * @param string $object_type
-     * @param int $object_id
-     * @param int $start_date
-     * @param int $end_date
-     * @param string $zoom
      */
     protected function get_all_type_pts(
-        $fct,
-        $id = 0,
-        $object_type = null,
-        $object_id = 0,
-        $start_date = null,
-        $end_date = null,
-        $zoom = 'day',
+        string  $fct,
+        int     $id = 0,
+        ?string $object_type = null,
+        int     $object_id = 0,
+        ?int    $start_date = null,
+        ?int    $end_date = null,
+        string  $zoom = 'day',
     ): array {
         $type = $object_type;
         if ($object_type === null) {
@@ -349,23 +287,16 @@ class Graph
     }
 
     /**
-     * @param string $fct
-     * @param int $catalog_id
-     * @param string $object_type
-     * @param int $object_id
-     * @param int $start_date
-     * @param int $end_date
-     * @param string $zoom
      */
     protected function get_catalog_all_pts(
-        $fct,
-        Data $MyData,
-        $catalog_id = 0,
-        $object_type = null,
-        $object_id = 0,
-        $start_date = null,
-        $end_date = null,
-        $zoom = 'day',
+        string  $fct,
+        Data    $MyData,
+        int     $catalog_id = 0,
+        ?string $object_type = null,
+        int     $object_id = 0,
+        ?int    $start_date = null,
+        ?int    $end_date = null,
+        string  $zoom = 'day',
     ): void {
         $values = $this->get_all_pts($fct, $MyData, $catalog_id, $object_type, $object_id, $start_date, $end_date, $zoom, false);
 
@@ -389,20 +320,14 @@ class Graph
     }
 
     /**
-     * @param int $catalog_id
-     * @param string $object_type
-     * @param int $object_id
-     * @param int $start_date
-     * @param int $end_date
-     * @param string $zoom
      */
     protected function get_catalog_files_pts(
-        $catalog_id = 0,
-        $object_type = 'song',
-        $object_id = 0,
-        $start_date = null,
-        $end_date = null,
-        $zoom = 'day',
+        int    $catalog_id = 0,
+        string $object_type = 'song',
+        int    $object_id = 0,
+        ?int   $start_date = null,
+        ?int   $end_date = null,
+        string $zoom = 'day',
     ): array {
         $start_date ??= ($end_date ?? time()) - 864000;
         $dateformat = $this->get_sql_date_format("`" . $object_type . "`.`addition_time`", $zoom);
@@ -419,20 +344,14 @@ class Graph
     }
 
     /**
-     * @param int $catalog_id
-     * @param string $object_type
-     * @param int $object_id
-     * @param int $start_date
-     * @param int $end_date
-     * @param string $zoom
      */
     protected function get_catalog_size_pts(
-        $catalog_id = 0,
-        $object_type = 'song',
-        $object_id = 0,
-        $start_date = null,
-        $end_date = null,
-        $zoom = 'day',
+        int    $catalog_id = 0,
+        string $object_type = 'song',
+        int    $object_id = 0,
+        ?int   $start_date = null,
+        ?int   $end_date = null,
+        string $zoom = 'day',
     ): array {
         $start_date ??= ($end_date ?? time()) - 864000;
         $dateformat = $this->get_sql_date_format("`" . $object_type . "`.`addition_time`", $zoom);
@@ -451,18 +370,13 @@ class Graph
     }
 
     /**
-     * @param string $object_type
-     * @param int $object_id
-     * @param int $catalog_id
-     * @param int $start_date
-     * @param int $end_date
      */
     protected function get_catalog_sql_where(
-        $object_type = 'song',
-        $object_id = 0,
-        $catalog_id = 0,
-        $start_date = null,
-        $end_date = null,
+        string $object_type = 'song',
+        int    $object_id = 0,
+        int    $catalog_id = 0,
+        ?int   $start_date = null,
+        ?int   $end_date = null,
     ): string {
         $start_date = (int) ($start_date);
         $end_date   = (int) ($end_date);
@@ -488,20 +402,14 @@ class Graph
     }
 
     /**
-     * @param int $user_id
-     * @param string $object_type
-     * @param int $object_id
-     * @param int $start_date
-     * @param int $end_date
-     * @param string $zoom
      */
     protected function get_geolocation_pts(
-        $user_id = 0,
-        $object_type = '',
-        $object_id = 0,
-        $start_date = null,
-        $end_date = null,
-        $zoom = 'day',
+        int    $user_id = 0,
+        string $object_type = '',
+        int    $object_id = 0,
+        ?int   $start_date = null,
+        ?int   $end_date = null,
+        string $zoom = 'day',
     ): array {
         $pts = [];
 
@@ -526,10 +434,8 @@ class Graph
     }
 
     /**
-     * @param string $field
-     * @param string $zoom
      */
-    protected function get_sql_date_format($field, $zoom): string
+    protected function get_sql_date_format(string $field, string $zoom): string
     {
         $dateformat = match ($zoom) {
             'hour' => "DATE_FORMAT(FROM_UNIXTIME(" . $field . "), '%Y-%m-%d %H:00:00')",
@@ -543,23 +449,16 @@ class Graph
 
     /**
      * get_user_all_pts
-     * @param string $fct
-     * @param int $user_id
-     * @param string|null $object_type
-     * @param int $object_id
-     * @param int $start_date
-     * @param int $end_date
-     * @param string $zoom
      */
     protected function get_user_all_pts(
-        $fct,
-        Data $MyData,
-        $user_id = 0,
-        $object_type = null,
-        $object_id = 0,
-        $start_date = null,
-        $end_date = null,
-        $zoom = 'day',
+        string  $fct,
+        Data    $MyData,
+        int     $user_id = 0,
+        ?string $object_type = null,
+        int     $object_id = 0,
+        ?int    $start_date = null,
+        ?int    $end_date = null,
+        string  $zoom = 'day',
     ): void {
         $userRepository = $this->getUserRepository();
 
@@ -588,39 +487,27 @@ class Graph
     }
 
     /**
-     * @param int $user_id
-     * @param string $object_type
-     * @param int $object_id
-     * @param int $start_date
-     * @param int $end_date
-     * @param string $zoom
      */
     protected function get_user_bandwidth_pts(
-        $user_id = 0,
-        $object_type = 'song',
-        $object_id = 0,
-        $start_date = null,
-        $end_date = null,
-        $zoom = 'day',
+        int    $user_id = 0,
+        string $object_type = 'song',
+        int    $object_id = 0,
+        ?int   $start_date = null,
+        ?int   $end_date = null,
+        string $zoom = 'day',
     ): array {
         return $this->get_user_object_count_pts($user_id, $object_type, $object_id, $start_date, $end_date, $zoom);
     }
 
     /**
-     * @param int $user_id
-     * @param string $object_type
-     * @param int $object_id
-     * @param int $start_date
-     * @param int $end_date
-     * @param string $zoom
      */
     protected function get_user_hits_pts(
-        $user_id = 0,
-        $object_type = 'song',
-        $object_id = 0,
-        $start_date = null,
-        $end_date = null,
-        $zoom = 'day',
+        int    $user_id = 0,
+        string $object_type = 'song',
+        int    $object_id = 0,
+        ?int   $start_date = null,
+        ?int   $end_date = null,
+        string $zoom = 'day',
     ): array {
         $dateformat = $this->get_sql_date_format("`object_count`.`date`", $zoom);
         $where      = $this->get_user_sql_where($user_id, $object_type, $object_id, $start_date, $end_date);
@@ -636,22 +523,15 @@ class Graph
     }
 
     /**
-     * @param int $user_id
-     * @param string $object_type
-     * @param int $object_id
-     * @param int $start_date
-     * @param int $end_date
-     * @param string $zoom
-     * @param string $column
      */
     protected function get_user_object_count_pts(
-        $user_id = 0,
-        $object_type = 'song',
-        $object_id = 0,
-        $start_date = null,
-        $end_date = null,
-        $zoom = 'day',
-        $column = 'size',
+        int    $user_id = 0,
+        string $object_type = 'song',
+        int    $object_id = 0,
+        ?int   $start_date = null,
+        ?int   $end_date = null,
+        string $zoom = 'day',
+        string $column = 'size',
     ): array {
         $dateformat = $this->get_sql_date_format("`object_count`.`date`", $zoom);
         $where      = $this->get_user_sql_where($user_id, $object_type, $object_id, $start_date, $end_date);
@@ -667,18 +547,13 @@ class Graph
     }
 
     /**
-     * @param int $user_id
-     * @param string $object_type
-     * @param int $object_id
-     * @param int $start_date
-     * @param int $end_date
      */
     protected function get_user_sql_where(
-        $user_id = 0,
-        $object_type = null,
-        $object_id = 0,
-        $start_date = null,
-        $end_date = null,
+        int     $user_id = 0,
+        ?string $object_type = null,
+        int     $object_id = 0,
+        ?int    $start_date = null,
+        ?int    $end_date = null,
     ): string {
         $start_date = (int) ($start_date);
         $end_date   = (int) ($end_date);
@@ -706,31 +581,21 @@ class Graph
     }
 
     /**
-     * @param int $user_id
-     * @param string $object_type
-     * @param int $object_id
-     * @param int $start_date
-     * @param int $end_date
-     * @param string $zoom
      */
     protected function get_user_time_pts(
-        $user_id = 0,
-        $object_type = 'song',
-        $object_id = 0,
-        $start_date = null,
-        $end_date = null,
-        $zoom = 'day',
+        int    $user_id = 0,
+        string $object_type = 'song',
+        int    $object_id = 0,
+        ?int   $start_date = null,
+        ?int   $end_date = null,
+        string $zoom = 'day',
     ): array {
         return $this->get_user_object_count_pts($user_id, $object_type, $object_id, $start_date, $end_date, $zoom, 'time');
     }
 
     /**
-     * @param string $title
-     * @param string $zoom
-     * @param int $width
-     * @param int $height
      */
-    protected function render_graph($title, Data $MyData, $zoom, $width = 0, $height = 0): void
+    protected function render_graph(string $title, Data $MyData, string $zoom, int $width = 0, int $height = 0): void
     {
         // Check graph size sanity
         $width = (int) $width;

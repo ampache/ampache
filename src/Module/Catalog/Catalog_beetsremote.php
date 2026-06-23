@@ -104,9 +104,8 @@ class Catalog_beetsremote extends Catalog
 
     /**
      * Check if a song was added before
-     * @param array $song
      */
-    public function checkSong($song): bool
+    public function checkSong(array $song): bool
     {
         if ($song['added'] < $this->last_add) {
             debug_event('beetsremote.catalog', 'Skipping ' . $song['file'] . ' File modify time before last add run', 3);

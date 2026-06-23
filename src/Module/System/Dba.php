@@ -41,9 +41,11 @@ use PDOStatement;
  */
 class Dba
 {
-    public static $stats = ['query' => 0];
+    /** @var array<string, int> $stats  */
+    public static array $stats = ['query' => 0];
+
     private static string $_error;
-    private static $_sql;
+    private static string $_sql;
 
     /**
      * affected_rows
@@ -134,10 +136,8 @@ class Dba
     /**
      * check_length
      * Truncate strings for the database that are longer than the limits
-     * @param string $value
-     * @param int $length
      */
-    public static function check_length($value, $length): string
+    public static function check_length(string $value, int $length): string
     {
         $result = substr($value, 0, $length);
         if ($result === '' || $result === '0') {
@@ -409,12 +409,8 @@ class Dba
 
     /**
      * query
-     * @param string $sql
-     * @param array $params
-     * @param bool $silent
-     * @param Interactor|null $interactor
      */
-    public static function query($sql, $params = [], $silent = false, $interactor = null): ?PDOStatement
+    public static function query(string $sql, array $params = [], bool $silent = false, ?Interactor $interactor = null): ?PDOStatement
     {
         // json_encode throws errors about UTF-8 cleanliness, which we don't care about here.
         //debug_event(self::class, $sql . ' ' . json_encode($params), 5);
@@ -440,11 +436,8 @@ class Dba
 
     /**
      * read
-     * @param string $sql
-     * @param array $params
-     * @param bool $silent
      */
-    public static function read($sql, $params = [], $silent = false): ?PDOStatement
+    public static function read(string $sql, array $params = [], bool $silent = false): ?PDOStatement
     {
         return self::query($sql, $params, $silent) ?: null;
     }
@@ -472,9 +465,8 @@ class Dba
      * translate_to_mysqlcharset
      *
      * This translates the specified charset to a mysql charset.
-     * @param string|null $charset
      */
-    public static function translate_to_mysqlcharset($charset): array
+    public static function translate_to_mysqlcharset(?string $charset): array
     {
         // Translate real charset names into fancy MySQL land names
         switch (strtoupper((string) $charset)) {
@@ -525,11 +517,8 @@ class Dba
 
     /**
      * write
-     * @param string $sql
-     * @param array $params
-     * @param bool $silent
      */
-    public static function write($sql, $params = [], $silent = false): ?PDOStatement
+    public static function write(string $sql, array $params = [], bool $silent = false): ?PDOStatement
     {
         return self::query($sql, $params, $silent);
     }
@@ -572,11 +561,8 @@ class Dba
 
     /**
      * _query
-     * @param string $sql
-     * @param array $params
-     * @param bool $silent
      */
-    private static function _query($sql, $params, $silent = false): ?PDOStatement
+    private static function _query(string $sql, array $params, bool $silent = false): ?PDOStatement
     {
         $dbh = self::dbh();
         if (!$dbh instanceof PDO) {
@@ -633,10 +619,8 @@ class Dba
 
     /**
      * _setup_dbh
-     * @param null|PDO $dbh
-     * @param string $database
      */
-    private static function _setup_dbh($dbh, $database): bool
+    private static function _setup_dbh(?PDO $dbh, string $database): bool
     {
         if (
             !$dbh

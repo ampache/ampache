@@ -46,8 +46,6 @@ class Ldap
      *
      * This handles authentication against a LDAP server.
      *
-     * @param string $username
-     * @param string $password
      * @return array{
      *     success: bool,
      *     type?: string,
@@ -57,7 +55,7 @@ class Ldap
      *     error?: string
      * }
      */
-    public static function auth($username, $password): array
+    public static function auth(string $username, string $password): array
     {
         try {
             $link = self::_connect();
@@ -156,21 +154,18 @@ class Ldap
     /**
      * array_filter_key
      *
-     * @param array $array
      * @param callable-string $callback
      */
-    private static function _array_filter_key($array, $callback): array
+    private static function _array_filter_key(array $array, string $callback): array
     {
         return array_filter($array, $callback, ARRAY_FILTER_USE_KEY);
     }
 
     /**
      * Binds to the LDAP
-     * @param string $username
-     * @param string $password
      * @throws LdapException
      */
-    private static function _bind($link, $username = null, $password = null): void
+    private static function _bind($link, ?string $username = null, ?string $password = null): void
     {
         if ($username === null && $password === null) {
             $username = AmpConfig::get('ldap_username', '');
@@ -191,9 +186,8 @@ class Ldap
      *
      * This function is here to return a real array {number} => {field} => {value array}
      * instead of the custom LDAP search results provided by the ldap_* library.
-     * @param array $searchresult
      */
-    private static function _clean_search_results($searchresult): array
+    private static function _clean_search_results(array $searchresult): array
     {
         $sr_clean = [];
 
@@ -247,12 +241,9 @@ class Ldap
 
     /**
      * Read attributes for a DN from the LDAP
-     * @param string $base_dn
-     * @param array $attrs
-     * @param string $filter
      * @throws LdapException
      */
-    private static function _read($link, $base_dn, $attrs = [], $filter = 'objectClass=*')
+    private static function _read($link, string $base_dn, array $attrs = [], string $filter = 'objectClass=*')
     {
         $attrs_json = json_encode($attrs);
         debug_event(self::class, sprintf('reading attributes %s in `%s`', $attrs_json, $base_dn), 5);
@@ -270,11 +261,9 @@ class Ldap
 
     /**
      * Search for a DN in the LDAP
-     * @param string $filter
-     * @param bool $only_one_result
      * @throws LdapException
      */
-    private static function _search($link, $base_dn, $filter, $only_one_result = true): array
+    private static function _search($link, $base_dn, string $filter, bool $only_one_result = true): array
     {
         debug_event(self::class, sprintf('searching in `%s` for `%s`', $base_dn, $filter), 5);
 

@@ -100,10 +100,8 @@ class Ampacheflickr extends AmpachePlugin implements PluginGatherArtsInterface
     }
 
     /**
-     * @param string $search
-     * @param string $category
      */
-    public function get_photos($search, $category = 'concert'): array
+    public function get_photos(string $search, string $category = 'concert'): array
     {
         $photos = [];
         $url    = "https://api.flickr.com/services/rest/?&method=flickr.photos.search&api_key=" . $this->api_key . "&per_page=20&content_type=1&text=" . rawurlencode(trim($search . " " . $category));

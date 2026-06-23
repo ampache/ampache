@@ -118,9 +118,8 @@ abstract class Catalog extends \Ampache\Repository\Model\Catalog
 
     /**
      * Add $song to ampache if it isn't already
-     * @param array $song
      */
-    public function addSong($song): void
+    public function addSong(array $song): void
     {
         $song['catalog'] = $this->id;
 
@@ -280,9 +279,8 @@ abstract class Catalog extends \Ampache\Repository\Model\Catalog
 
     /**
      * Remove a song from the "to be deleted"-list if it was found.
-     * @param array $song
      */
-    public function removeFromDeleteList($song): void
+    public function removeFromDeleteList(array $song): void
     {
         $key = array_search($song['file'], $this->songs, true);
         $this->updateUi('clean', ++$this->cleanCounter, $song);
@@ -339,9 +337,8 @@ abstract class Catalog extends \Ampache\Repository\Model\Catalog
 
     /**
      * Delete Song from DB
-     * @param array $songs
      */
-    protected function deleteSongs($songs): void
+    protected function deleteSongs(array $songs): void
     {
         $ids = implode(',', array_keys($songs));
         $sql = sprintf('DELETE FROM `song` WHERE `id` IN (%s)', $ids);
@@ -370,9 +367,8 @@ abstract class Catalog extends \Ampache\Repository\Model\Catalog
 
     /**
      * Assembles a virtual Path. Mostly just to looks nice in the UI.
-     * @param array $song
      */
-    protected function getVirtualSongPath($song): string
+    protected function getVirtualSongPath(array $song): string
     {
         return implode('/', [
             $song['artist'],
@@ -383,9 +379,8 @@ abstract class Catalog extends \Ampache\Repository\Model\Catalog
 
     /**
      * Add the song to the DB
-     * @param array $song
      */
-    protected function insertSong($song): ?int
+    protected function insertSong(array $song): ?int
     {
         $inserted = Song::insert($song);
         if ($inserted) {
@@ -411,7 +406,7 @@ abstract class Catalog extends \Ampache\Repository\Model\Catalog
      * @param array|null $song Song array
      * @param bool $ignoreTicker ignoring the ticker for the last update
      */
-    protected function updateUi($prefix, $count, $song = null, $ignoreTicker = false): void
+    protected function updateUi(string $prefix, int $count, ?array $song = null, bool $ignoreTicker = false): void
     {
         if (!defined('SSE_OUTPUT') && !defined('CLI') && !defined('API')) {
             return;
