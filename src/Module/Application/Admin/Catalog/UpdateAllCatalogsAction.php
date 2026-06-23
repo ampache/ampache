@@ -53,8 +53,8 @@ final class UpdateAllCatalogsAction extends AbstractCatalogAction
     ): ?ResponseInterface {
         catalog_worker('update_all_catalogs');
         $this->ui->showConfirmation(
+            T_('No Problem'),
             T_('Catalog update process has started'),
-            '',
             sprintf('%s/catalog.php', $this->configContainer->getWebPath('/admin')),
             0,
             'confirmation',
