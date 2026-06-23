@@ -35,6 +35,11 @@ use Ampache\Repository\Model\LibraryItemEnum;
  */
 interface WebDavDirectoryInterface extends library_item
 {
+    public int $catalog = 0 {
+        get;
+        set;
+    }
+
     /**
      * Search for direct children of an object
      * @return array<int, array{object_type: LibraryItemEnum, object_id: int}>

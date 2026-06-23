@@ -26,8 +26,8 @@ declare(strict_types=0);
 namespace Ampache\Module\WebDav;
 
 use Ampache\Module\Util\ObjectTypeToClassNameMapper;
+use Ampache\Repository\Model\Catalog;
 use Ampache\Repository\Model\container_item;
-use Ampache\Repository\Model\Folder;
 use Ampache\Repository\Model\LibraryItemEnum;
 use Ampache\Repository\Model\Media;
 use Override;
@@ -83,11 +83,9 @@ class WebDavDirectory extends Collection
     public function getChild($name): Node
     {
         //debug_event(self::class, 'Directory getChild: ' . unhtmlentities($name), 5);
-        $matches = $this->libitem->get_children(unhtmlentities($name));
-        // Always return first match
-        // Warning: this means that two items with the same name will not be supported for now
-        if ($matches !== []) {
-            return WebDavDirectory::getChildFromArray($matches[0]);
+        $folder = Catalog::get_child(unhtmlentities($name), $this->libitem->catalog, $this->libitem->getId());
+        if ($folder !== null) {
+            return new WebDavDirectory($folder);
         }
 
         throw new NotFound('The child with name: ' . $name . ' could not be found');
