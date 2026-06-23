@@ -157,7 +157,7 @@ final class ShareCreate6Method
         ob_end_clean();
         switch ($input['api_format']) {
             case 'json':
-                echo Json6_Data::shares($results, false);
+                echo Json6_Data::shares($results, $user, false);
                 break;
             default:
                 echo Xml6_Data::shares($results, $user);

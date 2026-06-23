@@ -378,7 +378,7 @@ class Xml4_Data
                 }
                 break;
             case 'share':
-                $string .= self::shares($objects, false);
+                $string .= self::shares($objects, $user, false);
                 break;
             case 'podcast':
                 foreach ($objects as $object_id) {
@@ -650,7 +650,7 @@ class Xml4_Data
      * @param array<int|string> $shares
      * @param bool $full_xml whether to return a full XML document or just the node, bool $full_xml = true
      */
-    public static function shares(array $shares, bool $full_xml = true): string
+    public static function shares(array $shares, User $user, bool $full_xml = true): string
     {
         if ((count($shares) > self::$limit || self::$offset > 0) && self::$limit) {
             $shares = array_splice($shares, self::$offset, self::$limit);
@@ -659,6 +659,10 @@ class Xml4_Data
 
         foreach ($shares as $share_id) {
             $share = new Share((int) $share_id);
+            if ($share->isNew() || !$share->isAccessible($user)) {
+                continue;
+            }
+
             $string .= "<share id=\"$share_id\">\n\t<name><![CDATA[" . $share->getObjectName() . "]]></name>\n\t<user><![CDATA[" . $share->getUserName() . "]]></user>\n\t<allow_stream>" . (int) $share->allow_stream . "</allow_stream>\n\t<allow_download>" . (int) $share->allow_download . "</allow_download>\n\t<creation_date><![CDATA[" . $share->creation_date . "]]></creation_date>\n\t<lastvisit_date><![CDATA[" . $share->lastvisit_date . "]]></lastvisit_date>\n\t<object_type><![CDATA[" . $share->object_type . "]]></object_type>\n\t<object_id>" . $share->object_id . "</object_id>\n\t<expire_days>" . $share->expire_days . "</expire_days>\n\t<max_counter>" . $share->max_counter . "</max_counter>\n\t<counter>" . $share->counter . "</counter>\n\t<secret><![CDATA[" . $share->secret . "]]></secret>\n\t<public_url><![CDATA[" . $share->public_url . "]]></public_url>\n\t<description><![CDATA[" . $share->description . "]]></description>\n</share>\n";
         }
 

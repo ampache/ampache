@@ -382,7 +382,7 @@ class Json4_Data
                 break;
             case 'share':
                 /** @var string $results */
-                $results = self::shares($objects);
+                $results = self::shares($objects, $user);
                 break;
             case 'podcast':
                 /** @var string $results */
@@ -673,7 +673,7 @@ class Json4_Data
      *
      * @param array<int|string> $shares
      */
-    public static function shares(array $shares): string
+    public static function shares(array $shares, User $user): string
     {
         if ((count($shares) > self::$limit || self::$offset > 0) && self::$limit) {
             $shares = array_splice($shares, self::$offset, self::$limit);
@@ -681,7 +681,11 @@ class Json4_Data
 
         $allShares = [];
         foreach ($shares as $share_id) {
-            $share                = new Share((int) $share_id);
+            $share = new Share((int) $share_id);
+            if ($share->isNew() || !$share->isAccessible($user)) {
+                continue;
+            }
+
             $share_name           = $share->getObjectName();
             $share_user           = $share->getUserName();
             $share_allow_stream   = (int) $share->allow_stream;

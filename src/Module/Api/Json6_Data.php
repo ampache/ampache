@@ -1015,7 +1015,7 @@ class Json6_Data
                 $results = self::playlists($objects, $user, $auth, $include);
                 break;
             case 'share':
-                $results = self::shares($objects);
+                $results = self::shares($objects, $user);
                 break;
             case 'podcast':
                 $results = self::podcasts($objects, $user, $auth, $include);
@@ -1765,7 +1765,7 @@ class Json6_Data
      * @param array<int|string> $objects Share id's to include
      * @param bool $object (whether to return as a named object array or regular array)
      */
-    public static function shares(array $objects, bool $object = true): string
+    public static function shares(array $objects, User $user, bool $object = true): string
     {
         $count  = self::$count ?? count($objects);
         $output = [
@@ -1779,7 +1779,11 @@ class Json6_Data
 
         $JSON = [];
         foreach ($objects as $share_id) {
-            $share                = new Share((int) $share_id);
+            $share = new Share((int) $share_id);
+            if ($share->isNew() || !$share->isAccessible($user)) {
+                continue;
+            }
+
             $share_name           = $share->getObjectName();
             $share_user           = $share->getUserName();
             $share_allow_stream   = (bool) $share->allow_stream;

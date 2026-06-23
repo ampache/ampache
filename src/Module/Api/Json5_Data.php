@@ -570,7 +570,7 @@ class Json5_Data
                 break;
             case 'share':
                 /** @var string $results */
-                $results = self::shares($objects);
+                $results = self::shares($objects, $user);
                 break;
             case 'podcast':
                 /** @var string $results */
@@ -956,7 +956,7 @@ class Json5_Data
      * @param array<int|string> $shares Share id's to include
      * @param bool $object (whether to return as a named object array or regular array)
      */
-    public static function shares(array $shares, bool $object = true): string
+    public static function shares(array $shares, User $user, bool $object = true): string
     {
         if ((count($shares) > self::$limit || self::$offset > 0) && self::$limit) {
             $shares = array_splice($shares, self::$offset, self::$limit);
@@ -964,7 +964,11 @@ class Json5_Data
 
         $JSON = [];
         foreach ($shares as $share_id) {
-            $share                = new Share((int) $share_id);
+            $share = new Share((int) $share_id);
+            if ($share->isNew() || !$share->isAccessible($user)) {
+                continue;
+            }
+
             $share_name           = $share->getObjectName();
             $share_user           = $share->getUserName();
             $share_allow_stream   = (int) $share->allow_stream;

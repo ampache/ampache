@@ -92,7 +92,7 @@ final class Shares5Method
             case 'json':
                 Json5_Data::set_offset($input['offset'] ?? 0);
                 Json5_Data::set_limit($input['limit'] ?? 0);
-                echo Json5_Data::shares($results);
+                echo Json5_Data::shares($results, $user);
                 break;
             default:
                 Xml5_Data::set_offset($input['offset'] ?? 0);
