@@ -49,7 +49,7 @@ class WebDavCatalog extends Collection
     #[Override]
     public function childExists($name): bool
     {
-        return Catalog::has_children($name, $this->catalog_id, $this->parent_id) !== [];
+        return Catalog::has_children($name, $this->catalog_id, $this->parent_id);
     }
 
     /**
