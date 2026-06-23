@@ -39,8 +39,7 @@ use Ampache\Repository\SongRepositoryInterface;
 class Label extends database_object implements
     library_item,
     container_item,
-    displayable_item,
-    WebDavDirectoryInterface
+    displayable_item
 {
     protected const string DB_TABLENAME = 'label';
 
@@ -230,47 +229,6 @@ class Label extends database_object implements
         return $this->artists;
     }
 
-    /**
-     * Search for direct children of an object
-     * @return array<int, array{object_type: LibraryItemEnum, object_id: int}>
-     */
-    public function get_children(string $name): array
-    {
-        $search                    = [];
-        $search['type']            = "artist";
-        $search['rule_0_input']    = $name;
-        $search['rule_0_operator'] = 4;
-        $search['rule_0']          = "title";
-        $artists                   = Search::run($search);
-
-        $childrens = [];
-        foreach ($artists as $artist_id) {
-            $childrens[] = [
-                'object_type' => LibraryItemEnum::ARTIST,
-                'object_id' => $artist_id
-            ];
-        }
-
-        return $childrens;
-    }
-
-    /**
-     * @return array{artist: array<int, array{object_type: LibraryItemEnum, object_id: int}>}
-     */
-    public function get_childrens(): array
-    {
-        $medias  = [];
-        $artists = $this->get_artists();
-        foreach ($artists as $artist_id) {
-            $medias[] = [
-                'object_type' => LibraryItemEnum::ARTIST,
-                'object_id' => $artist_id
-            ];
-        }
-
-        return ['artist' => $medias];
-    }
-
     public function get_default_art_kind(): string
     {
         return 'default';
@@ -402,18 +360,6 @@ class Label extends database_object implements
     public function has_art(): bool
     {
         return Art::has_db($this->id, 'label');
-    }
-
-    public function has_children(string $name): bool
-    {
-        $search                    = [];
-        $search['type']            = "artist";
-        $search['rule_0_input']    = $name;
-        $search['rule_0_operator'] = 4;
-        $search['rule_0']          = "title";
-        $artists                   = Search::run($search);
-
-        return !empty($artists);
     }
 
     public function isNew(): bool

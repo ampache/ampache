@@ -43,8 +43,7 @@ class Artist extends database_object implements
     library_item,
     displayable_item,
     container_item,
-    CatalogItemInterface,
-    WebDavDirectoryInterface
+    CatalogItemInterface
 {
     protected const string DB_TABLENAME = 'artist';
 
@@ -719,40 +718,6 @@ class Artist extends database_object implements
     }
 
     /**
-     * Search for direct children of an object
-     * @return array<int, array{object_type: LibraryItemEnum, object_id: int}>
-     */
-    public function get_children(string $name): array
-    {
-        $childrens  = [];
-        $sql        = "SELECT DISTINCT `album`.`id` FROM `album` LEFT JOIN `album_map` ON `album_map`.`album_id` = `album`.`id` WHERE `album_map`.`object_id` = ? AND `album_map`.`object_type` = 'album' AND (`album`.`name` = ? OR LTRIM(CONCAT(COALESCE(`album`.`prefix`, ''), ' ', `album`.`name`)) = ?);";
-        $db_results = Dba::read($sql, [$this->id, $name, $name]);
-        while ($row = Dba::fetch_assoc($db_results)) {
-            $childrens[] = [
-                'object_type' => LibraryItemEnum::ALBUM,
-                'object_id' => $row['id']
-            ];
-        }
-
-        return $childrens;
-    }
-
-    /**
-     * Get item childrens.
-     * @return array{album: array<int, array{object_type: LibraryItemEnum, object_id: int}>}
-     */
-    public function get_childrens(): array
-    {
-        $medias = [];
-        $albums = $this->getAlbumRepository()->getAlbumByArtist($this->id);
-        foreach ($albums as $album_id) {
-            $medias[] = ['object_type' => LibraryItemEnum::ALBUM, 'object_id' => $album_id];
-        }
-
-        return ['album' => $medias];
-    }
-
-    /**
      * Get default art kind for this item.
      */
     public function get_default_art_kind(): string
@@ -966,19 +931,6 @@ class Artist extends database_object implements
         }
 
         return $this->has_art;
-    }
-
-    public function has_children(string $name): bool
-    {
-        $sql        = "SELECT DISTINCT `album`.`id` FROM `album` LEFT JOIN `album_map` ON `album_map`.`album_id` = `album`.`id` WHERE `album_map`.`object_id` = ? AND `album_map`.`object_type` = 'album' AND (`album`.`name` = ? OR LTRIM(CONCAT(COALESCE(`album`.`prefix`, ''), ' ', `album`.`name`)) = ?);";
-        $db_results = Dba::read($sql, [$this->id, $name . $name]);
-
-        return (Dba::num_rows($db_results) > 0);
-    }
-
-    public function isNew(): bool
-    {
-        return $this->getId() === 0;
     }
 
     /**
