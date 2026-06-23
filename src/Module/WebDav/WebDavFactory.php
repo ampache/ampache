@@ -62,8 +62,8 @@ final readonly class WebDavFactory implements WebDavFactoryInterface
         );
     }
 
-    public function createWebDavCatalog(int $catalog_id = 0): WebDavCatalog
+    public function createWebDavCatalog(): WebDavCatalog
     {
-        return new WebDavCatalog($catalog_id);
+        return new WebDavCatalog();
     }
 }
