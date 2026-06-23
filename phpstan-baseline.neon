@@ -1327,38 +1327,8 @@ parameters:
 			path: src/Module/Broadcast/Broadcast_Server.php
 
 		-
-			message: '#^Method Ampache\\Module\\Catalog\\Catalog_Seafile\:\:download_metadata\(\) has parameter \$file with no type specified\.$#'
-			identifier: missingType.parameter
-			count: 1
-			path: src/Module/Catalog/Catalog_Seafile.php
-
-		-
 			message: '#^Method Ampache\\Module\\Catalog\\Catalog_Seafile\:\:insert_song\(\) has parameter \$file with no type specified\.$#'
 			identifier: missingType.parameter
-			count: 1
-			path: src/Module/Catalog/Catalog_Seafile.php
-
-		-
-			message: '#^Property Ampache\\Module\\Catalog\\Catalog_Seafile\:\:\$api_call_delay has no type specified\.$#'
-			identifier: missingType.property
-			count: 1
-			path: src/Module/Catalog/Catalog_Seafile.php
-
-		-
-			message: '#^Property Ampache\\Module\\Catalog\\Catalog_Seafile\:\:\$api_key has no type specified\.$#'
-			identifier: missingType.property
-			count: 1
-			path: src/Module/Catalog/Catalog_Seafile.php
-
-		-
-			message: '#^Property Ampache\\Module\\Catalog\\Catalog_Seafile\:\:\$library_name has no type specified\.$#'
-			identifier: missingType.property
-			count: 1
-			path: src/Module/Catalog/Catalog_Seafile.php
-
-		-
-			message: '#^Property Ampache\\Module\\Catalog\\Catalog_Seafile\:\:\$server_uri has no type specified\.$#'
-			identifier: missingType.property
 			count: 1
 			path: src/Module/Catalog/Catalog_Seafile.php
 
@@ -1387,68 +1357,14 @@ parameters:
 			path: src/Module/Catalog/Catalog_local.php
 
 		-
-			message: '#^Method Ampache\\Module\\Catalog\\SeafileAdapter\:\:download\(\) has parameter \$file with no type specified\.$#'
-			identifier: missingType.parameter
-			count: 1
-			path: src/Module/Catalog/SeafileAdapter.php
-
-		-
 			message: '#^Method Ampache\\Module\\Catalog\\SeafileAdapter\:\:for_all_files\(\) has parameter \$func with no type specified\.$#'
 			identifier: missingType.parameter
 			count: 1
 			path: src/Module/Catalog/SeafileAdapter.php
 
 		-
-			message: '#^Method Ampache\\Module\\Catalog\\SeafileAdapter\:\:get_cached_directory\(\) has parameter \$path with no type specified\.$#'
-			identifier: missingType.parameter
-			count: 1
-			path: src/Module/Catalog/SeafileAdapter.php
-
-		-
-			message: '#^Method Ampache\\Module\\Catalog\\SeafileAdapter\:\:get_file\(\) has parameter \$path with no type specified\.$#'
-			identifier: missingType.parameter
-			count: 1
-			path: src/Module/Catalog/SeafileAdapter.php
-
-		-
-			message: '#^Method Ampache\\Module\\Catalog\\SeafileAdapter\:\:request_api_key\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: src/Module/Catalog/SeafileAdapter.php
-
-		-
 			message: '#^Method Ampache\\Module\\Catalog\\SeafileAdapter\:\:throttle_check\(\) has no return type specified\.$#'
 			identifier: missingType.return
-			count: 1
-			path: src/Module/Catalog/SeafileAdapter.php
-
-		-
-			message: '#^Method Ampache\\Module\\Catalog\\SeafileAdapter\:\:throttle_check\(\) has parameter \$func with no type specified\.$#'
-			identifier: missingType.parameter
-			count: 1
-			path: src/Module/Catalog/SeafileAdapter.php
-
-		-
-			message: '#^Method Ampache\\Module\\Catalog\\SeafileAdapter\:\:to_virtual_path\(\) has parameter \$file with no type specified\.$#'
-			identifier: missingType.parameter
-			count: 1
-			path: src/Module/Catalog/SeafileAdapter.php
-
-		-
-			message: '#^Property Ampache\\Module\\Catalog\\SeafileAdapter\:\:\$client has no type specified\.$#'
-			identifier: missingType.property
-			count: 1
-			path: src/Module/Catalog/SeafileAdapter.php
-
-		-
-			message: '#^Property Ampache\\Module\\Catalog\\SeafileAdapter\:\:\$directory_cache has no type specified\.$#'
-			identifier: missingType.property
-			count: 1
-			path: src/Module/Catalog/SeafileAdapter.php
-
-		-
-			message: '#^Property Ampache\\Module\\Catalog\\SeafileAdapter\:\:\$library has no type specified\.$#'
-			identifier: missingType.property
 			count: 1
 			path: src/Module/Catalog/SeafileAdapter.php
 
@@ -1525,12 +1441,6 @@ parameters:
 			path: src/Module/Playback/Localplay/Mpd/AmpacheMpd.php
 
 		-
-			message: '#^Property Ampache\\Module\\Playback\\Localplay\\Mpd\\AmpacheMpd\:\:\$_mpd has no type specified\.$#'
-			identifier: missingType.property
-			count: 1
-			path: src/Module/Playback/Localplay/Mpd/AmpacheMpd.php
-
-		-
 			message: '#^Method Ampache\\Module\\Playback\\Localplay\\Mpd\\mpd\:\:GetAlbums\(\) has parameter \$artist with no type specified\.$#'
 			identifier: missingType.parameter
 			count: 1
@@ -1573,12 +1483,6 @@ parameters:
 			path: src/Module/Playback/Localplay/Mpd/mpd.php
 
 		-
-			message: '#^Method Ampache\\Module\\Playback\\Localplay\\Mpd\\mpd\:\:SeekTo\(\) has parameter \$pos with no type specified\.$#'
-			identifier: missingType.parameter
-			count: 1
-			path: src/Module/Playback/Localplay/Mpd/mpd.php
-
-		-
 			message: '#^Method Ampache\\Module\\Playback\\Localplay\\Mpd\\mpd\:\:SetRandom\(\) has parameter \$value with no type specified\.$#'
 			identifier: missingType.parameter
 			count: 1
@@ -1586,12 +1490,6 @@ parameters:
 
 		-
 			message: '#^Method Ampache\\Module\\Playback\\Localplay\\Mpd\\mpd\:\:SetRepeat\(\) has parameter \$value with no type specified\.$#'
-			identifier: missingType.parameter
-			count: 1
-			path: src/Module/Playback/Localplay/Mpd/mpd.php
-
-		-
-			message: '#^Method Ampache\\Module\\Playback\\Localplay\\Mpd\\mpd\:\:SkipTo\(\) has parameter \$idx with no type specified\.$#'
 			identifier: missingType.parameter
 			count: 1
 			path: src/Module/Playback/Localplay/Mpd/mpd.php
@@ -2359,114 +2257,6 @@ parameters:
 			path: src/Module/Util/OAuth/OAuthConsumer.php
 
 		-
-			message: '#^Method Ampache\\Module\\Util\\OAuth\\OAuthDataStore\:\:lookup_consumer\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: src/Module/Util/OAuth/OAuthDataStore.php
-
-		-
-			message: '#^Method Ampache\\Module\\Util\\OAuth\\OAuthDataStore\:\:lookup_consumer\(\) has parameter \$consumer_key with no type specified\.$#'
-			identifier: missingType.parameter
-			count: 1
-			path: src/Module/Util/OAuth/OAuthDataStore.php
-
-		-
-			message: '#^Method Ampache\\Module\\Util\\OAuth\\OAuthDataStore\:\:lookup_nonce\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: src/Module/Util/OAuth/OAuthDataStore.php
-
-		-
-			message: '#^Method Ampache\\Module\\Util\\OAuth\\OAuthDataStore\:\:lookup_nonce\(\) has parameter \$consumer with no type specified\.$#'
-			identifier: missingType.parameter
-			count: 1
-			path: src/Module/Util/OAuth/OAuthDataStore.php
-
-		-
-			message: '#^Method Ampache\\Module\\Util\\OAuth\\OAuthDataStore\:\:lookup_nonce\(\) has parameter \$nonce with no type specified\.$#'
-			identifier: missingType.parameter
-			count: 1
-			path: src/Module/Util/OAuth/OAuthDataStore.php
-
-		-
-			message: '#^Method Ampache\\Module\\Util\\OAuth\\OAuthDataStore\:\:lookup_nonce\(\) has parameter \$timestamp with no type specified\.$#'
-			identifier: missingType.parameter
-			count: 1
-			path: src/Module/Util/OAuth/OAuthDataStore.php
-
-		-
-			message: '#^Method Ampache\\Module\\Util\\OAuth\\OAuthDataStore\:\:lookup_nonce\(\) has parameter \$token with no type specified\.$#'
-			identifier: missingType.parameter
-			count: 1
-			path: src/Module/Util/OAuth/OAuthDataStore.php
-
-		-
-			message: '#^Method Ampache\\Module\\Util\\OAuth\\OAuthDataStore\:\:lookup_token\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: src/Module/Util/OAuth/OAuthDataStore.php
-
-		-
-			message: '#^Method Ampache\\Module\\Util\\OAuth\\OAuthDataStore\:\:lookup_token\(\) has parameter \$consumer with no type specified\.$#'
-			identifier: missingType.parameter
-			count: 1
-			path: src/Module/Util/OAuth/OAuthDataStore.php
-
-		-
-			message: '#^Method Ampache\\Module\\Util\\OAuth\\OAuthDataStore\:\:lookup_token\(\) has parameter \$token with no type specified\.$#'
-			identifier: missingType.parameter
-			count: 1
-			path: src/Module/Util/OAuth/OAuthDataStore.php
-
-		-
-			message: '#^Method Ampache\\Module\\Util\\OAuth\\OAuthDataStore\:\:lookup_token\(\) has parameter \$token_type with no type specified\.$#'
-			identifier: missingType.parameter
-			count: 1
-			path: src/Module/Util/OAuth/OAuthDataStore.php
-
-		-
-			message: '#^Method Ampache\\Module\\Util\\OAuth\\OAuthDataStore\:\:new_access_token\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: src/Module/Util/OAuth/OAuthDataStore.php
-
-		-
-			message: '#^Method Ampache\\Module\\Util\\OAuth\\OAuthDataStore\:\:new_access_token\(\) has parameter \$consumer with no type specified\.$#'
-			identifier: missingType.parameter
-			count: 1
-			path: src/Module/Util/OAuth/OAuthDataStore.php
-
-		-
-			message: '#^Method Ampache\\Module\\Util\\OAuth\\OAuthDataStore\:\:new_access_token\(\) has parameter \$token with no type specified\.$#'
-			identifier: missingType.parameter
-			count: 1
-			path: src/Module/Util/OAuth/OAuthDataStore.php
-
-		-
-			message: '#^Method Ampache\\Module\\Util\\OAuth\\OAuthDataStore\:\:new_access_token\(\) has parameter \$verifier with no type specified\.$#'
-			identifier: missingType.parameter
-			count: 1
-			path: src/Module/Util/OAuth/OAuthDataStore.php
-
-		-
-			message: '#^Method Ampache\\Module\\Util\\OAuth\\OAuthDataStore\:\:new_request_token\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: src/Module/Util/OAuth/OAuthDataStore.php
-
-		-
-			message: '#^Method Ampache\\Module\\Util\\OAuth\\OAuthDataStore\:\:new_request_token\(\) has parameter \$callback with no type specified\.$#'
-			identifier: missingType.parameter
-			count: 1
-			path: src/Module/Util/OAuth/OAuthDataStore.php
-
-		-
-			message: '#^Method Ampache\\Module\\Util\\OAuth\\OAuthDataStore\:\:new_request_token\(\) has parameter \$consumer with no type specified\.$#'
-			identifier: missingType.parameter
-			count: 1
-			path: src/Module/Util/OAuth/OAuthDataStore.php
-
-		-
 			message: '#^Binary operation "\." between ''Authorization\:…'' and array\<string\>\|string results in an error\.$#'
 			identifier: binaryOp.invalid
 			count: 1
@@ -2475,12 +2265,6 @@ parameters:
 		-
 			message: '#^Binary operation "\." between array\<string\>\|string and ''\="'' results in an error\.$#'
 			identifier: binaryOp.invalid
-			count: 1
-			path: src/Module/Util/OAuth/OAuthRequest.php
-
-		-
-			message: '#^Cannot access property \$key on string\.$#'
-			identifier: property.nonObject
 			count: 1
 			path: src/Module/Util/OAuth/OAuthRequest.php
 
@@ -2521,19 +2305,7 @@ parameters:
 			path: src/Module/Util/OAuth/OAuthRequest.php
 
 		-
-			message: '#^Method Ampache\\Module\\Util\\OAuth\\OAuthRequest\:\:from_consumer_and_token\(\) has parameter \$parameters with no value type specified in iterable type array\.$#'
-			identifier: missingType.iterableValue
-			count: 1
-			path: src/Module/Util/OAuth/OAuthRequest.php
-
-		-
 			message: '#^Method Ampache\\Module\\Util\\OAuth\\OAuthRequest\:\:from_request\(\) has parameter \$parameters with no value type specified in iterable type array\.$#'
-			identifier: missingType.iterableValue
-			count: 1
-			path: src/Module/Util/OAuth/OAuthRequest.php
-
-		-
-			message: '#^Method Ampache\\Module\\Util\\OAuth\\OAuthRequest\:\:get_parameters\(\) return type has no value type specified in iterable type array\.$#'
 			identifier: missingType.iterableValue
 			count: 1
 			path: src/Module/Util/OAuth/OAuthRequest.php
@@ -2575,202 +2347,10 @@ parameters:
 			path: src/Module/Util/OAuth/OAuthRequest.php
 
 		-
-			message: '#^Method Ampache\\Module\\Util\\OAuth\\OAuthServer\:\:__construct\(\) has parameter \$data_store with no type specified\.$#'
-			identifier: missingType.parameter
-			count: 1
-			path: src/Module/Util/OAuth/OAuthServer.php
-
-		-
-			message: '#^Method Ampache\\Module\\Util\\OAuth\\OAuthServer\:\:add_signature_method\(\) has parameter \$signature_method with no type specified\.$#'
-			identifier: missingType.parameter
-			count: 1
-			path: src/Module/Util/OAuth/OAuthServer.php
-
-		-
-			message: '#^Method Ampache\\Module\\Util\\OAuth\\OAuthServer\:\:check_nonce\(\) has parameter \$consumer with no type specified\.$#'
-			identifier: missingType.parameter
-			count: 1
-			path: src/Module/Util/OAuth/OAuthServer.php
-
-		-
-			message: '#^Method Ampache\\Module\\Util\\OAuth\\OAuthServer\:\:check_nonce\(\) has parameter \$nonce with no type specified\.$#'
-			identifier: missingType.parameter
-			count: 1
-			path: src/Module/Util/OAuth/OAuthServer.php
-
-		-
-			message: '#^Method Ampache\\Module\\Util\\OAuth\\OAuthServer\:\:check_nonce\(\) has parameter \$timestamp with no type specified\.$#'
-			identifier: missingType.parameter
-			count: 1
-			path: src/Module/Util/OAuth/OAuthServer.php
-
-		-
-			message: '#^Method Ampache\\Module\\Util\\OAuth\\OAuthServer\:\:check_nonce\(\) has parameter \$token with no type specified\.$#'
-			identifier: missingType.parameter
-			count: 1
-			path: src/Module/Util/OAuth/OAuthServer.php
-
-		-
-			message: '#^Method Ampache\\Module\\Util\\OAuth\\OAuthServer\:\:check_signature\(\) has parameter \$consumer with no type specified\.$#'
-			identifier: missingType.parameter
-			count: 1
-			path: src/Module/Util/OAuth/OAuthServer.php
-
-		-
-			message: '#^Method Ampache\\Module\\Util\\OAuth\\OAuthServer\:\:check_signature\(\) has parameter \$request with no type specified\.$#'
-			identifier: missingType.parameter
-			count: 1
-			path: src/Module/Util/OAuth/OAuthServer.php
-
-		-
-			message: '#^Method Ampache\\Module\\Util\\OAuth\\OAuthServer\:\:check_signature\(\) has parameter \$token with no type specified\.$#'
-			identifier: missingType.parameter
-			count: 1
-			path: src/Module/Util/OAuth/OAuthServer.php
-
-		-
-			message: '#^Method Ampache\\Module\\Util\\OAuth\\OAuthServer\:\:check_timestamp\(\) has parameter \$timestamp with no type specified\.$#'
-			identifier: missingType.parameter
-			count: 1
-			path: src/Module/Util/OAuth/OAuthServer.php
-
-		-
-			message: '#^Method Ampache\\Module\\Util\\OAuth\\OAuthServer\:\:fetch_access_token\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: src/Module/Util/OAuth/OAuthServer.php
-
-		-
-			message: '#^Method Ampache\\Module\\Util\\OAuth\\OAuthServer\:\:fetch_access_token\(\) has parameter \$request with no type specified\.$#'
-			identifier: missingType.parameter
-			count: 1
-			path: src/Module/Util/OAuth/OAuthServer.php
-
-		-
-			message: '#^Method Ampache\\Module\\Util\\OAuth\\OAuthServer\:\:fetch_request_token\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: src/Module/Util/OAuth/OAuthServer.php
-
-		-
-			message: '#^Method Ampache\\Module\\Util\\OAuth\\OAuthServer\:\:fetch_request_token\(\) has parameter \$request with no type specified\.$#'
-			identifier: missingType.parameter
-			count: 1
-			path: src/Module/Util/OAuth/OAuthServer.php
-
-		-
-			message: '#^Method Ampache\\Module\\Util\\OAuth\\OAuthServer\:\:get_consumer\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: src/Module/Util/OAuth/OAuthServer.php
-
-		-
-			message: '#^Method Ampache\\Module\\Util\\OAuth\\OAuthServer\:\:get_consumer\(\) has parameter \$request with no type specified\.$#'
-			identifier: missingType.parameter
-			count: 1
-			path: src/Module/Util/OAuth/OAuthServer.php
-
-		-
-			message: '#^Method Ampache\\Module\\Util\\OAuth\\OAuthServer\:\:get_signature_method\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: src/Module/Util/OAuth/OAuthServer.php
-
-		-
-			message: '#^Method Ampache\\Module\\Util\\OAuth\\OAuthServer\:\:get_signature_method\(\) has parameter \$request with no type specified\.$#'
-			identifier: missingType.parameter
-			count: 1
-			path: src/Module/Util/OAuth/OAuthServer.php
-
-		-
-			message: '#^Method Ampache\\Module\\Util\\OAuth\\OAuthServer\:\:get_token\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: src/Module/Util/OAuth/OAuthServer.php
-
-		-
-			message: '#^Method Ampache\\Module\\Util\\OAuth\\OAuthServer\:\:get_token\(\) has parameter \$consumer with no type specified\.$#'
-			identifier: missingType.parameter
-			count: 1
-			path: src/Module/Util/OAuth/OAuthServer.php
-
-		-
-			message: '#^Method Ampache\\Module\\Util\\OAuth\\OAuthServer\:\:get_token\(\) has parameter \$request with no type specified\.$#'
-			identifier: missingType.parameter
-			count: 1
-			path: src/Module/Util/OAuth/OAuthServer.php
-
-		-
-			message: '#^Method Ampache\\Module\\Util\\OAuth\\OAuthServer\:\:get_version\(\) has parameter \$request with no type specified\.$#'
-			identifier: missingType.parameter
-			count: 1
-			path: src/Module/Util/OAuth/OAuthServer.php
-
-		-
-			message: '#^Method Ampache\\Module\\Util\\OAuth\\OAuthServer\:\:verify_request\(\) has parameter \$request with no type specified\.$#'
-			identifier: missingType.parameter
-			count: 1
-			path: src/Module/Util/OAuth/OAuthServer.php
-
-		-
-			message: '#^Method Ampache\\Module\\Util\\OAuth\\OAuthServer\:\:verify_request\(\) return type has no value type specified in iterable type array\.$#'
-			identifier: missingType.iterableValue
-			count: 1
-			path: src/Module/Util/OAuth/OAuthServer.php
-
-		-
-			message: '#^Property Ampache\\Module\\Util\\OAuth\\OAuthServer\:\:\$signature_methods has no type specified\.$#'
-			identifier: missingType.property
-			count: 1
-			path: src/Module/Util/OAuth/OAuthServer.php
-
-		-
-			message: '#^Property Ampache\\Module\\Util\\OAuth\\OAuthServer\:\:\$timestamp_threshold has no type specified\.$#'
-			identifier: missingType.property
-			count: 1
-			path: src/Module/Util/OAuth/OAuthServer.php
-
-		-
-			message: '#^Property Ampache\\Module\\Util\\OAuth\\OAuthServer\:\:\$version has no type specified\.$#'
-			identifier: missingType.property
-			count: 1
-			path: src/Module/Util/OAuth/OAuthServer.php
-
-		-
 			message: '#^Ternary operator condition is always true\.$#'
 			identifier: ternary.alwaysTrue
 			count: 1
 			path: src/Module/Util/OAuth/OAuthSignatureMethod_HMAC_SHA1.php
-
-		-
-			message: '#^Ternary operator condition is always true\.$#'
-			identifier: ternary.alwaysTrue
-			count: 1
-			path: src/Module/Util/OAuth/OAuthSignatureMethod_PLAINTEXT.php
-
-		-
-			message: '#^Method Ampache\\Module\\Util\\OAuth\\OAuthSignatureMethod_RSA_SHA1\:\:fetch_private_cert\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: src/Module/Util/OAuth/OAuthSignatureMethod_RSA_SHA1.php
-
-		-
-			message: '#^Method Ampache\\Module\\Util\\OAuth\\OAuthSignatureMethod_RSA_SHA1\:\:fetch_private_cert\(\) has parameter \$request with no type specified\.$#'
-			identifier: missingType.parameter
-			count: 1
-			path: src/Module/Util/OAuth/OAuthSignatureMethod_RSA_SHA1.php
-
-		-
-			message: '#^Method Ampache\\Module\\Util\\OAuth\\OAuthSignatureMethod_RSA_SHA1\:\:fetch_public_cert\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: src/Module/Util/OAuth/OAuthSignatureMethod_RSA_SHA1.php
-
-		-
-			message: '#^Method Ampache\\Module\\Util\\OAuth\\OAuthSignatureMethod_RSA_SHA1\:\:fetch_public_cert\(\) has parameter \$request with no type specified\.$#'
-			identifier: missingType.parameter
-			count: 1
-			path: src/Module/Util/OAuth/OAuthSignatureMethod_RSA_SHA1.php
 
 		-
 			message: '#^Binary operation "\." between ''oauth_token\='' and array\<string\>\|string results in an error\.$#'
