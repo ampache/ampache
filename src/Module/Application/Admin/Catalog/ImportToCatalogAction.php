@@ -58,8 +58,8 @@ final class ImportToCatalogAction extends AbstractCatalogAction
 
         catalog_worker('import_to_catalog', $catalogIds);
         $this->ui->showConfirmation(
+            T_('No Problem'),
             T_('Catalog update process has started'),
-            '',
             sprintf('%s/catalog.php', $this->configContainer->getWebPath('/admin')),
             0,
             'confirmation',
