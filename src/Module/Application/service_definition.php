@@ -51,10 +51,10 @@ use Ampache\Module\Application\Admin\Catalog\ShowCustomizeCatalogAction;
 use Ampache\Module\Application\Admin\Catalog\ShowDeleteCatalogAction;
 use Ampache\Module\Application\Admin\Catalog\ShowDisabledAction;
 use Ampache\Module\Application\Admin\Catalog\UpdateAllCatalogsAction;
-use Ampache\Module\Application\Admin\Catalog\UpdateAllFileTagsActions;
+use Ampache\Module\Application\Admin\Catalog\ScanAllCatalogFoldersActions;
 use Ampache\Module\Application\Admin\Catalog\UpdateCatalogAction;
 use Ampache\Module\Application\Admin\Catalog\UpdateCatalogSettingsAction;
-use Ampache\Module\Application\Admin\Catalog\UpdateFileTagsAction;
+use Ampache\Module\Application\Admin\Catalog\ScanCatalogFoldersAction;
 use Ampache\Module\Application\Admin\Catalog\UpdateFromAction;
 use Ampache\Module\Application\Admin\Export\ExportAction;
 use Ampache\Module\Application\Admin\Filter\AbstractFilterAction;
@@ -480,8 +480,8 @@ return [
     CleanAllCatalogsAction::class => autowire(CleanAllCatalogsAction::class),
     CleanCatalogAction::class => autowire(CleanCatalogAction::class),
     GarbageCollectAction::class => autowire(GarbageCollectAction::class),
-    UpdateFileTagsAction::class => autowire(UpdateFileTagsAction::class),
-    UpdateAllFileTagsActions::class => autowire(UpdateAllFileTagsActions::class),
+    ScanCatalogFoldersAction::class => autowire(ScanCatalogFoldersAction::class),
+    ScanAllCatalogFoldersActions::class => autowire(ScanAllCatalogFoldersActions::class),
     GatherMediaArtAction::class => autowire(GatherMediaArtAction::class),
     ImportToCatalogAction::class => autowire(ImportToCatalogAction::class),
     AddCatalogAction::class => autowire(AddCatalogAction::class),
