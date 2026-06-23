@@ -515,6 +515,11 @@ class Folder extends database_object implements
         return $this->user;
     }
 
+    public function getCatalog(): int
+    {
+        return $this->catalog;
+    }
+
     /**
      * Returns the id of the catalog the item is associated to
      */

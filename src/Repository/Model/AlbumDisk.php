@@ -38,8 +38,7 @@ class AlbumDisk extends database_object implements
     library_item,
     displayable_item,
     container_item,
-    CatalogItemInterface,
-    WebDavDirectoryInterface
+    CatalogItemInterface
 {
     protected const string DB_TABLENAME = 'album_disk';
 
@@ -262,34 +261,6 @@ class AlbumDisk extends database_object implements
         }
 
         return $this->album_artists;
-    }
-
-    /**
-     * Search for direct children of an object
-     * @return array<int, array{object_type: LibraryItemEnum, object_id: int}>
-     */
-    public function get_children(string $name): array
-    {
-        $childrens  = [];
-        $sql        = "SELECT DISTINCT `song`.`id` FROM `song` LEFT JOIN `album_disk` ON `album_disk`.`album_id` = `song`.`album` AND `album_disk`.`disk` = `song`.`disk` WHERE `album_disk`.`album_id` IS NOT NULL AND `album_disk`.`id` = ? AND `song`.`file` LIKE ?;";
-        $db_results = Dba::read($sql, [$this->id, "%" . $name]);
-        while ($row = Dba::fetch_assoc($db_results)) {
-            $childrens[] = [
-                'object_type' => LibraryItemEnum::SONG,
-                'object_id' => (int) $row['id']
-            ];
-        }
-
-        return $childrens;
-    }
-
-    /**
-     * Get item children.
-     * @return array{song: array<int, array{object_type: LibraryItemEnum, object_id: int}>}
-     */
-    public function get_childrens(): array
-    {
-        return ['song' => $this->get_medias()];
     }
 
     /**
@@ -586,14 +557,6 @@ class AlbumDisk extends database_object implements
         }
 
         return $this->has_art;
-    }
-
-    public function has_children(string $name): bool
-    {
-        $sql        = "SELECT DISTINCT `song`.`id` FROM `song` LEFT JOIN `album_disk` ON `album_disk`.`album_id` = `song`.`album` AND `album_disk`.`disk` = `song`.`disk` WHERE `album_disk`.`album_id` IS NOT NULL AND `album_disk`.`id` = ? AND `song`.`file` LIKE ?;";
-        $db_results = Dba::read($sql, [$this->id, "%" . $name]);
-
-        return (Dba::num_rows($db_results) > 0);
     }
 
     public function isNew(): bool

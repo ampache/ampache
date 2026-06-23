@@ -83,7 +83,7 @@ class WebDavDirectory extends Collection
     public function getChild($name): Node
     {
         //debug_event(self::class, 'Directory getChild: ' . unhtmlentities($name), 5);
-        $folder = Catalog::get_child(unhtmlentities($name), $this->libitem->catalog, $this->libitem->getId());
+        $folder = Catalog::get_child(unhtmlentities($name), $this->libitem->getCatalog(), $this->libitem->getId());
         if ($folder !== null) {
             return new WebDavDirectory($folder);
         }

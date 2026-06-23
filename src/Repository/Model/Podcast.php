@@ -45,8 +45,7 @@ class Podcast extends database_object implements
     library_item,
     displayable_item,
     container_item,
-    CatalogItemInterface,
-    WebDavDirectoryInterface
+    CatalogItemInterface
 {
     protected const string DB_TABLENAME = 'podcast';
 
@@ -94,33 +93,6 @@ class Podcast extends database_object implements
         if (Art::has_db($this->id, 'podcast') || $force) {
             Art::display('podcast', $this->id, (string) $this->get_fullname(), $size, $this->get_link());
         }
-    }
-
-    /**
-     * Search for direct children of an object
-     * @return array<int, array{object_type: LibraryItemEnum, object_id: int}>
-     */
-    public function get_children(string $name): array
-    {
-        debug_event(self::class, 'get_children ' . $name, 5);
-
-        return [];
-    }
-
-    /**
-     * @return array{podcast_episode: array<int, array{object_type: LibraryItemEnum, object_id: int}>}
-     */
-    public function get_childrens(): array
-    {
-        $results = [];
-        foreach ($this->getEpisodeIds() as $episodeId) {
-            $results[] = [
-                'object_type' => LibraryItemEnum::PODCAST_EPISODE,
-                'object_id' => $episodeId
-            ];
-        }
-
-        return ['podcast_episode' => $results];
     }
 
     public function get_default_art_kind(): string
@@ -377,11 +349,6 @@ class Podcast extends database_object implements
         }
 
         return $this->has_art ?? false;
-    }
-
-    public function has_children(string $name): bool
-    {
-        return !empty($this->getEpisodeIds());
     }
 
     public function isNew(): bool
