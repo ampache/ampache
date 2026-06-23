@@ -284,7 +284,7 @@ class Subsonic_Api
             return;
         }
 
-        $comment   = $input['comment'] ?? '';
+        $comment   = (string) ($input['comment'] ?? '');
         $object_id = self::getAmpacheId($sub_id);
         $type      = self::getAmpacheType($sub_id);
 
@@ -296,7 +296,7 @@ class Subsonic_Api
                         'object_id' => $object_id,
                         'object_type' => $type,
                         'comment' => $comment,
-                        'position' => $position
+                        'position' => (int)$position
                     ],
                     $user->id,
                     time()

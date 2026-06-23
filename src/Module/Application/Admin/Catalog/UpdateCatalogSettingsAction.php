@@ -66,9 +66,9 @@ final class UpdateCatalogSettingsAction extends AbstractCatalogAction
         }
 
         Catalog::update_settings([
-            'name' => $data['name'],
-            'rename_pattern' => $data['rename_pattern'],
-            'sort_pattern' => $data['sort_pattern'],
+            'name' => (string)$data['name'],
+            'rename_pattern' => (string)$data['rename_pattern'],
+            'sort_pattern' => (string)$data['sort_pattern'],
             'catalog_id' => (int) $data['catalog_id'],
         ]);
 

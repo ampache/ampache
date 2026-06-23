@@ -303,7 +303,7 @@ class OpenSubsonic_Api
                         'object_id' => $object_id,
                         'object_type' => $type,
                         'comment' => $comment,
-                        'position' => $position
+                        'position' => (int)$position
                     ],
                     $user->id,
                     time()
