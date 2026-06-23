@@ -43,7 +43,7 @@ interface WebDavDirectoryInterface extends library_item
      * get_childrens
      *
      * Get direct childrens. Return an array of `object_type`, `object_id` childrens.
-     * @return array{string?: array<int, array{object_type: LibraryItemEnum, object_id: int}>}
+     * @return array<int, array{object_type: LibraryItemEnum, object_id: int}>
      */
     public function get_childrens(): array;
 
