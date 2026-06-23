@@ -47,7 +47,7 @@ interface FolderRepositoryInterface
      */
     public function getAll(): array;
 
-    public function getByName(string $folderName, int $catalogId = 0, ?int $parent = null): ?Folder;
+    public function getByName(string $folderName, ?int $catalogId = null, ?int $parent = null): ?Folder;
 
     public function getByPathName(string $folderPath, int $catalogId = 0, ?string $parentPath = null): ?Folder;
 
