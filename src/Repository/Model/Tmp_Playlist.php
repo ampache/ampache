@@ -43,10 +43,12 @@ class Tmp_Playlist extends database_object
     public int $id = 0;
 
     // Generated Elements
-    public $items               = [];
-    public ?string $object_type = null;
-    public ?string $session     = null;
-    public ?string $type        = null;
+    /** @var array<int, array{object_type: LibraryItemEnum, object_id: int, track: int, track_id: int}> */
+    public array $items               = [];
+
+    public ?string $object_type       = null;
+    public ?string $session           = null;
+    public ?string $type              = null;
 
     /**
      * Constructor

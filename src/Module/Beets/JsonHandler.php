@@ -80,9 +80,8 @@ class JsonHandler extends Handler
     /**
      * Create the Url to access the file
      * Have to do some magic with the file ending so ampache can detect the type
-     * @param array $song
      */
-    public function createFileUrl($song): string
+    public function createFileUrl(array $song): string
     {
         $parts = [
             $this->uri,

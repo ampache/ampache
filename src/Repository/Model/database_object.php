@@ -39,16 +39,15 @@ abstract class database_object
 
     public static int $cache_hit   = 0; // Statistics for debugging
     private static ?bool $_enabled = null;
-    private static $object_cache   = [];
+
+    /** @var array<string, array<int|string, array<string, mixed>|bool>> */
+    private static array $object_cache = [];
 
     /**
      * add_to_cache
      * This adds the specified object to the specified index in the cache
-     * @param string $index
-     * @param int|string $object_id
-     * @param array $data
      */
-    public static function add_to_cache($index, $object_id, $data): bool
+    public static function add_to_cache(string $index, int|string $object_id, array $data): bool
     {
         /**
          * Lazy load the cache setting to avoid some magic auto_init logic
@@ -82,10 +81,8 @@ abstract class database_object
     /**
      * get_from_cache
      * This attempts to retrieve the specified object from the cache we've got here
-     * @param string $index
-     * @param int|string $object_id
      */
-    public static function get_from_cache($index, $object_id): array
+    public static function get_from_cache(string $index, int|string $object_id): array
     {
         // Check if the object is set
         if (isset(self::$object_cache[$index][$object_id]) && is_array(self::$object_cache[$index][$object_id])) {
@@ -100,9 +97,8 @@ abstract class database_object
     /**
      * is_cached
      * this checks the cache to see if the specified object is there
-     * @param int|string $object_id
      */
-    public static function is_cached(string $index, $object_id): bool
+    public static function is_cached(string $index, int|string $object_id): bool
     {
         // Make sure we've got some parents here before we dive below
         if (!array_key_exists($index, self::$object_cache)) {
@@ -120,10 +116,8 @@ abstract class database_object
      * remove_from_cache
      * This function clears something from the cache, there are a few places we need to do this
      * in order to have things display correctly
-     * @param string $index
-     * @param int|null $object_id
      */
-    public static function remove_from_cache($index, $object_id = null): void
+    public static function remove_from_cache(string $index, ?int $object_id = null): void
     {
         if (isset(self::$object_cache[$index])) {
             if (is_null($object_id)) {

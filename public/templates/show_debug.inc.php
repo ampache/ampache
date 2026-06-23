@@ -34,7 +34,7 @@ use Ampache\Repository\Model\Preference;
 global $dic;
 $environment = $dic->get(EnvironmentInterface::class);
 
-/** @var array $configuration */
+/** @var array<string, mixed> $configuration */
 /** @var string $latest_version */
 /** @var int $lastCronDate */
 

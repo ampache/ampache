@@ -28,7 +28,9 @@ namespace Ampache\Module\Util;
 class MemoryObject
 {
     public $properties;
-    private $_data = [];
+
+    /** @var array<string, mixed> */
+    private array $_data = [];
 
     /**
      * memory_object constructor.

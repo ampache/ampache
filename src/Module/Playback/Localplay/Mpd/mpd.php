@@ -241,11 +241,11 @@ class mpd
         self::COMMAND_STICKER => ['min' => '0.15.0', 'max' => false],
         self::COMMAND_VOLUME => ['min' => false, 'max' => '0.10.0']
     ];
-    public bool $connected    = false;
-    public bool $debugging    = false;
-    public $err_str           = ''; // Stores the latest error message
-    public $mpd_class_version = '1.3'; // Misc Other Vars
-    public $mpd_version       = "(unknown)"; // MPD Status variables
+    public bool $connected           = false;
+    public bool $debugging           = false;
+    public string $err_str           = ''; // Stores the latest error message
+    public string $mpd_class_version = '1.3'; // Misc Other Vars
+    public string $mpd_version       = "(unknown)"; // MPD Status variables
     public $playlist;
     public $stats;
     public $status;
@@ -260,9 +260,9 @@ class mpd
     /**
      * TCP/Connection variables
      */
-    private $host;
+    private string $host;
 
-    private $port;
+    private int $port;
 
     /**
      * Constructor
@@ -319,9 +319,8 @@ class mpd
      *
      * Adjusts the mixer volume on the MPD by <value>, which can be a
      * positive (volume increase) or negative (volume decrease) value.
-     * @param float|int|string $value
      */
-    public function AdjustVolume($value): bool|string
+    public function AdjustVolume(float|int|string $value): bool|string
     {
         $this->_debug('AdjustVolume', 'start', 5);
         if (!is_numeric($value)) {
@@ -686,9 +685,8 @@ class mpd
      * PLRemove
      *
      * Removes track <id> from the playlist.
-     * @param int $id
      */
-    public function PLRemove($id): bool|string
+    public function PLRemove(int $id): bool|string
     {
         $response = $this->SendCommand(self::COMMAND_DELETE, $id);
         $this->_debug('PLRemove', 'return: ' . $response, 5);
@@ -747,9 +745,8 @@ class mpd
      * CommandQueue can hold as many commands as needed, and are sent all
      * at once, in the order they were queued, using the SendCommandQueue
      * method. The syntax for queueing commands is identical to SendCommand.
-     * @param string|array|null $arguments
      */
-    public function QueueCommand(string $command, $arguments = null): bool
+    public function QueueCommand(string $command, array|string|null $arguments = null): bool
     {
         $this->_debug('QueueCommand', sprintf('start; cmd: %s args: ', $command) . json_encode($arguments), 5);
         if (!$this->connected) {
@@ -995,9 +992,8 @@ class mpd
      * SetVolume
      *
      * Sets the mixer volume to <value>, which should be between 1 - 100.
-     * @param float|int|string $value
      */
-    public function SetVolume($value): bool|string
+    public function SetVolume(float|int|string $value): bool|string
     {
         $this->_debug('SetVolume', 'start', 5);
         if (!is_numeric($value)) {

@@ -52,10 +52,8 @@ class UPnPDevice
 
     /**
      * helper function for calls that require only an instance id
-     * @param string $type
-     * @param int $instance_id
      */
-    public function instanceOnly($command, $type = 'AVTransport', $instance_id = 0): string
+    public function instanceOnly($command, string $type = 'AVTransport', int $instance_id = 0): string
     {
         $args = ['InstanceID' => $instance_id];
         //$response = \Format::forge($response, 'xml:ns')->to_[];
@@ -69,9 +67,8 @@ class UPnPDevice
      *
      * @param string $method Method name
      * @param array $arguments Key-Value array
-     * @param string $type
      */
-    public function sendRequestToDevice($method, $arguments, $type = 'RenderingControl'): string
+    public function sendRequestToDevice(string $method, array $arguments, string $type = 'RenderingControl'): string
     {
         if (!$this->_settings['host'] || !$this->_settings['controlURLs'][$type]) {
             return '';
@@ -127,9 +124,8 @@ class UPnPDevice
     }
 
     /**
-     * @param string $descriptionUrl
      */
-    private function parseDescriptionUrl($descriptionUrl): void
+    private function parseDescriptionUrl(string $descriptionUrl): void
     {
         debug_event('upnpdevice', 'parseDescriptionUrl: ' . $descriptionUrl, 5);
 
@@ -169,9 +165,8 @@ class UPnPDevice
 
     /**
      * Reads description URL from session
-     * @param string $descriptionUrl
      */
-    private function restoreDescriptionUrl($descriptionUrl): bool
+    private function restoreDescriptionUrl(string $descriptionUrl): bool
     {
         debug_event('upnpdevice', 'readDescriptionUrl: ' . $descriptionUrl, 5);
         $this->_settings = json_decode(Session::read('upnp_dev_' . $descriptionUrl), true);

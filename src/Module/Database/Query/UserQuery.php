@@ -159,11 +159,8 @@ final class UserQuery implements QueryInterface
      * get_sql_sort
      *
      * Sorting SQL for ORDER BY
-     * @param Query $query
-     * @param string|null $field
-     * @param string|null $order
      */
-    public function get_sql_sort($query, $field, $order): string
+    public function get_sql_sort(Query $query, ?string $field, ?string $order): string
     {
         $sql = match ($field) {
             'access', 'city', 'create_date', 'disabled', 'email', 'fullname_public', 'fullname', 'id', 'last_seen', 'state', 'username', 'website' => sprintf('`user`.`%s`', $field),

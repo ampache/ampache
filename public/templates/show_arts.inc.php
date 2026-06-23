@@ -31,7 +31,7 @@ use Ampache\Module\System\Core;
 use Ampache\Module\Util\Ui;
 use Ampache\Repository\Model\Art;
 
-/** @var array $images */
+/** @var array<int, array{'raw'?: string, 'db'?: int, 'url'?: string, 'title'?: string, 'mime'?: string}> $images */
 /** @var int $object_id */
 /** @var string $object_type */
 /** @var string $burl */
@@ -50,7 +50,7 @@ $select_art   = '/' . $ajax_str . 'arts.php?action=select_art'; ?>
 while ($count <= $rows) {
     $j=0;
     while ($j < 5) {
-        $key        = $count * 5 + $j;
+        $key        = (int) ($count * 5 + $j);
         $image_url  = $web_path . '/image.php?type=session&image_index=' . $key . '&cache_bust=' . date('YmdHis') . bin2hex(random_bytes(20)) . '&object_type=' . $object_type;
         $dimensions = [
             'width' => 0,

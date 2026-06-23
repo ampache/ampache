@@ -105,10 +105,9 @@ class Catalog_beets extends Catalog
 
     /**
      * Check if a song was added before
-     * @param array $song
      * @throws Exception
      */
-    public function checkSong($song): bool
+    public function checkSong(array $song): bool
     {
         $date       = new DateTime($song['added']);
         $last_added = date("Y-m-d H:i:s", $this->last_add);

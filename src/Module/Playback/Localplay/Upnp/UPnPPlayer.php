@@ -136,9 +136,8 @@ class UPnPPlayer
     /**
      * next
      * go to next song
-     * @param bool $forcePlay
      */
-    public function Next($forcePlay = true): bool
+    public function Next(bool $forcePlay = true): bool
     {
         // get current internal play state, for case if someone has changed it
         if (!$forcePlay) {

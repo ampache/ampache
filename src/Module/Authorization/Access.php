@@ -40,32 +40,32 @@ class Access
 {
     protected const string DB_TABLENAME = 'access_list';
 
-    /** @var bool $enabled
+    /**
      *
      * @deprecated seems not to be in use
      */
-    public $enabled;
+    public bool $enabled;
 
-    /** @var string $end */
-    public $end;
+    /**  */
+    public string $end;
 
-    /** @var int $id */
-    public $id;
+    /**  */
+    public int $id;
 
-    /** @var int $level */
-    public $level;
+    /**  */
+    public int $level;
 
-    /** @var string $name */
-    public $name;
+    /**  */
+    public string $name;
 
-    /** @var string $start */
-    public $start;
+    /**  */
+    public string $start;
 
-    /** @var string $type */
-    public $type;
+    /**  */
+    public string $type;
 
-    /** @var int $user */
-    public $user;
+    /**  */
+    public int $user;
 
     public function __construct(?int $access_id)
     {

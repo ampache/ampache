@@ -108,17 +108,17 @@ class Horde_Browser
      * Returns the headers for a browser download.
      *
      * @param string $filename The filename of the download.
-     * @param string $cType The content-type description of the file.
+     * @param string|null $cType The content-type description of the file.
      * @param bool $inline True if inline, false if attachment.
-     * @param string $cLength The content-length of this file.
+     * @param string|null $cLength The content-length of this file.
      *
      * @return string[]
      */
     public function getDownloadHeaders(
-        $filename = 'unknown',
-        $cType = null,
-        $inline = false,
-        $cLength = null,
+        string  $filename = 'unknown',
+        ?string $cType = null,
+        bool    $inline = false,
+        ?string $cLength = null,
     ): array {
         /* Remove linebreaks (and ',', ';') from file names. */
         $filename = str_replace(["\r\n", "\r", "\n"], ' ', $filename);
@@ -189,7 +189,7 @@ class Horde_Browser
      *
      * @param string $browser The browser to check.
      */
-    public function isBrowser($browser): bool
+    public function isBrowser(string $browser): bool
     {
         return ($this->_browser === $browser);
     }
@@ -198,10 +198,10 @@ class Horde_Browser
      * Parses the user agent string and initializes the object with all the
      * known features and quirks for the given browser.
      *
-     * @param string $userAgent The browser string to parse.
-     * @param string $accept The HTTP_ACCEPT settings to use.
+     * @param string|null $userAgent The browser string to parse.
+     * @param string|null $accept The HTTP_ACCEPT settings to use.
      */
-    public function match($userAgent = null, $accept = null): void
+    public function match(?string $userAgent = null, ?string $accept = null): void
     {
         // Set our agent string.
         if ($userAgent == null) {
@@ -643,9 +643,9 @@ class Horde_Browser
      *   - utf
      *   - wml
      *   - xmlhttpreq
-     * @param bool|string|float|int $value Special capability parameter.
+     * @param float|bool|int|string $value Special capability parameter.
      */
-    public function setFeature(string $feature, $value = true): void
+    public function setFeature(string $feature, float|bool|int|string $value = true): void
     {
         if ($value) {
             $this->_features[$feature] = $value;
@@ -667,7 +667,7 @@ class Horde_Browser
      *
      * @param string $quirk The behavior to check.
      */
-    private function hasQuirk($quirk): bool
+    private function hasQuirk(string $quirk): bool
     {
         return !empty($this->_quirks[$quirk]);
     }
@@ -677,7 +677,7 @@ class Horde_Browser
      *
      * @param string $browser The browser to set as current.
      */
-    private function setBrowser($browser): void
+    private function setBrowser(string $browser): void
     {
         $this->_browser = $browser;
     }
@@ -722,7 +722,7 @@ class Horde_Browser
      *   - windowed_controls
      * @param bool $value Special behavior parameter.
      */
-    private function setQuirk($quirk, $value = true): void
+    private function setQuirk(string $quirk, bool $value = true): void
     {
         if ($value) {
             $this->_quirks[$quirk] = $value;

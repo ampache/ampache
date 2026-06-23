@@ -57,19 +57,19 @@ class Broadcast_Server implements MessageComponentInterface
 
     public const string BROADCAST_SONG_POSITION      = "SONG_POSITION";
 
-    public $verbose = false;
+    public bool $verbose = false;
 
     /** @var Broadcast[] $broadcasters */
-    protected $broadcasters = [];
+    protected array $broadcasters = [];
 
     /** @var ConnectionInterface[] $clients */
-    protected $clients = [];
+    protected array $clients = [];
 
     /** @var array<int, array<int, ConnectionInterface>> $listeners */
-    protected $listeners = [];
+    protected array $listeners = [];
 
     /** @var string[] $sids */
-    protected $sids = [];
+    protected array $sids = [];
 
     /**
      * get_address
@@ -149,9 +149,8 @@ class Broadcast_Server implements MessageComponentInterface
 
     /**
      *
-     * @param string $sid
      */
-    protected function authSid(ConnectionInterface $conn, $sid): void
+    protected function authSid(ConnectionInterface $conn, string $sid): void
     {
         if (Session::exists(AccessTypeEnum::STREAM->value, $sid)) {
             $this->sids[$conn->resourceId] = $sid;
@@ -188,9 +187,8 @@ class Broadcast_Server implements MessageComponentInterface
 
     /**
      * getRunningBroadcast
-     * @param int $broadcast_id
      */
-    protected function getRunningBroadcast($broadcast_id): ?Broadcast
+    protected function getRunningBroadcast(int $broadcast_id): ?Broadcast
     {
         $result = null;
         foreach ($this->broadcasters as $broadcast) {
@@ -205,9 +203,8 @@ class Broadcast_Server implements MessageComponentInterface
 
     /**
      *
-     * @param int $song_id
      */
-    protected function getSongJS($song_id): string
+    protected function getSongJS(int $song_id): string
     {
         $media   = [];
         $media[] = [
@@ -261,9 +258,8 @@ class Broadcast_Server implements MessageComponentInterface
 
     /**
      *
-     * @param bool $play
      */
-    protected function notifyPlayerPlay(ConnectionInterface $from, $play): void
+    protected function notifyPlayerPlay(ConnectionInterface $from, bool $play): void
     {
         if ($this->isBroadcaster($from)) {
             $broadcast = $this->broadcasters[$from->resourceId];
@@ -282,9 +278,8 @@ class Broadcast_Server implements MessageComponentInterface
 
     /**
      *
-     * @param int $song_id
      */
-    protected function notifySong(ConnectionInterface $from, $song_id): void
+    protected function notifySong(ConnectionInterface $from, int $song_id): void
     {
         if ($this->isBroadcaster($from)) {
             $broadcast = $this->broadcasters[$from->resourceId];
@@ -303,9 +298,8 @@ class Broadcast_Server implements MessageComponentInterface
 
     /**
      *
-     * @param int $song_position
      */
-    protected function notifySongPosition(ConnectionInterface $from, $song_position): void
+    protected function notifySongPosition(ConnectionInterface $from, int $song_position): void
     {
         if ($this->isBroadcaster($from)) {
             $broadcast = $this->broadcasters[$from->resourceId];
@@ -336,9 +330,8 @@ class Broadcast_Server implements MessageComponentInterface
 
     /**
      *
-     * @param int $broadcast_id
      */
-    protected function registerListener(ConnectionInterface $from, $broadcast_id): void
+    protected function registerListener(ConnectionInterface $from, int $broadcast_id): void
     {
         $broadcast = $this->getRunningBroadcast($broadcast_id);
 
@@ -405,10 +398,8 @@ class Broadcast_Server implements MessageComponentInterface
 
     /**
      * echo_message
-     * @param bool $verbose
-     * @param string $message
      */
-    private function echo_message($verbose, $message): void
+    private function echo_message(bool $verbose, string $message): void
     {
         if ($verbose) {
             echo $message;

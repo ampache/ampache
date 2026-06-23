@@ -36,20 +36,13 @@ abstract class OAuthSignatureMethod
      * NOTE: The output of this function MUST NOT be urlencoded.
      * the encoding is handled in OAuthRequest when the final
      * request is serialized
-     * @param OAuthRequest $request
-     * @param OAuthConsumer $consumer
-     * @param OAuthToken $token
      */
-    abstract public function build_signature($request, $consumer, $token): string;
+    abstract public function build_signature(OAuthRequest $request, OAuthConsumer $consumer, OAuthToken $token): string;
 
     /**
      * Verifies that a given signature is correct
-     * @param OAuthRequest $request
-     * @param OAuthConsumer $consumer
-     * @param OAuthToken $token
-     * @param string $signature
      */
-    public function check_signature($request, $consumer, $token, $signature): bool
+    public function check_signature(OAuthRequest $request, OAuthConsumer $consumer, OAuthToken $token, string $signature): bool
     {
         $built = $this->build_signature($request, $consumer, $token);
 

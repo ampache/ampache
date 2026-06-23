@@ -32,7 +32,7 @@ use Ampache\Module\Authorization\AccessTypeEnum;
 use Ampache\Module\Util\Ui;
 
 $admin_path = AmpConfig::get_web_path('/admin');
-/** @var array $filter */
+/** @var array{id: int, name: string} $filter */
 /** @var int $num_users */
 /** @var int $num_catalogs */
 /** @var string $t_edit */

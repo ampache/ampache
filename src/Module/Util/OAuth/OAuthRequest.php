@@ -34,8 +34,8 @@ use Stringable;
  */
 class OAuthRequest implements Stringable
 {
-    public static $POST_INPUT  = 'php://input';
-    public static $version     = '1.0';
+    public static string $POST_INPUT  = 'php://input';
+    public static string $version     = '1.0';
 
     // for debug purposes
     public string $base_string  = '';
@@ -87,11 +87,8 @@ class OAuthRequest implements Stringable
     /**
      * from_request
      * attempt to build up a request from what was passed to the server
-     * @param string $http_method
-     * @param string $http_url
-     * @param array $parameters
      */
-    public static function from_request($http_method = null, $http_url = null, $parameters = null): OAuthRequest
+    public static function from_request(?string $http_method = null, ?string $http_url = null, ?array $parameters = null): OAuthRequest
     {
         $scheme      = (!isset($_SERVER['HTTPS']) || Core::get_server('HTTPS') !== "on") ? 'http' : 'https';
         $http_url    = $http_url ?: $scheme . '://' . $_SERVER['SERVER_NAME'] . ':' . $_SERVER['SERVER_PORT'] . $_SERVER['REQUEST_URI'];

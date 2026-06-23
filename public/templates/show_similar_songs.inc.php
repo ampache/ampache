@@ -40,7 +40,7 @@ use Ampache\Repository\Model\Userflag;
 /** @var Ampache\Repository\Model\Artist $artist */
 /** @var Ampache\Repository\Model\Browse $browse */
 /** @var list<int> $object_ids */
-/** @var array $hide_columns */
+/** @var string[] $hide_columns */
 /** @var string $argument_param */
 
 $web_path = AmpConfig::get_web_path();
