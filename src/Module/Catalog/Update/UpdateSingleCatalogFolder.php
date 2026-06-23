@@ -49,6 +49,7 @@ final class UpdateSingleCatalogFolder extends AbstractCatalogUpdater implements 
         bool $addMode,
         bool $cleanupMode,
         bool $searchArtMode,
+        bool $scanMode,
         string|bool|null $moveDirPath,
     ): void {
         $sql        = "SELECT `id` FROM `catalog` WHERE `name` = ? AND `catalog_type`='local'";
@@ -200,6 +201,31 @@ final class UpdateSingleCatalogFolder extends AbstractCatalogUpdater implements 
                         }
                     }
                 }
+            }
+
+
+            if ($scanMode) {
+                ob_start();
+
+                // Look for new files
+                $interactor->info(
+                    T_('Start scanning folders'),
+                    true
+                );
+                $changed += $catalog->scan_catalog_folder($folderPath, $interactor);
+
+                $buffer = ob_get_contents();
+
+                ob_end_clean();
+
+                $interactor->info(
+                    $this->cleanBuffer((string) $buffer),
+                    true
+                );
+                $interactor->info(
+                    '------------------',
+                    true
+                );
             }
 
             // new files don't have an ID

@@ -1240,7 +1240,7 @@ class Catalog_local extends Catalog
      * scan_catalog_folder
      * This is the clean function and is broken into chunks to try to save a little memory
      */
-    public function scan_catalog_folder(?Interactor $interactor = null): void
+    public function scan_catalog(?Interactor $interactor = null): void
     {
         $interactor?->info(
             'Scanning check on: ' . $this->path,
@@ -1280,6 +1280,39 @@ class Catalog_local extends Catalog
     }
 
     /**
+     * scan_catalog_folder
+     * This is the clean function and is broken into chunks to try to save a little memory
+     */
+    public function scan_catalog_folder(string $folderPath, ?Interactor $interactor = null): int
+    {
+        $interactor?->info(
+            'Scanning check on: ' . $folderPath,
+            true
+        );
+        debug_event('local.catalog', 'Scanning check on: ' . $folderPath, 5);
+
+        if (!$this->get_fullname()) {
+            return 0;
+        }
+
+        $folder = self::getFolderRepository()->getByPathName($folderPath, $this->getId());
+
+        if (!$folder) {
+            $interactor?->error(
+                'Failed to open folder: ' . $folderPath,
+                true
+            );
+            debug_event('local.catalog', 'Failed to open folder: ' . $folderPath, 5);
+
+            return 0;
+        }
+
+        $this->_scan_folder($folderPath, $interactor);
+
+        return $this->count;
+    }
+
+    /**
      * scan_catalog_folders
      */
     public function scan_catalog_folders(?Interactor $interactor = null, bool $skipCounts = false): int
@@ -1293,7 +1326,7 @@ class Catalog_local extends Catalog
         debug_event('local.catalog', 'Scan starting on ' . $this->name . ' (' . time() . ')', 5);
         sleep(1);
 
-        $this->scan_catalog_folder($interactor);
+        $this->scan_catalog($interactor);
 
         Ui::update_text('scan_count_' . $this->catalog_id, $this->count);
 
