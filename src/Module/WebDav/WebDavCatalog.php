@@ -68,7 +68,7 @@ class WebDavCatalog extends Collection
             return new WebDavDirectory($folder);
         }
 
-        throw new NotFound('The folder with name: ' . $name . ' could not be found');
+        throw new NotFound(self::class . ' The folder with name: ' . $name . ' could not be found');
     }
 
     /**

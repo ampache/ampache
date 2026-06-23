@@ -52,7 +52,7 @@ class WebDavDirectory extends Collection
         /** @var container_item $libitem */
         $libitem = new $className($array['object_id']);
         if ($libitem->isNew()) {
-            throw new NotFound('The library item `' . $array['object_type']->value . '` with id `' . $array['object_id'] . '` could not be found');
+            throw new NotFound(self::class . ' The library item `' . $array['object_type']->value . '` with id `' . $array['object_id'] . '` could not be found');
         }
 
         if ($libitem instanceof Media) {
@@ -63,7 +63,7 @@ class WebDavDirectory extends Collection
             return new WebDavDirectory($libitem);
         }
 
-        throw new NotFound('The child with name: ' . $libitem->get_fullname() . ' could not be created');
+        throw new NotFound(self::class . ' The child with name: ' . $libitem->get_fullname() . ' could not be created');
     }
 
     /**
@@ -88,7 +88,7 @@ class WebDavDirectory extends Collection
             return new WebDavDirectory($folder);
         }
 
-        throw new NotFound('The child with name: ' . $name . ' could not be found');
+        throw new NotFound(self::class . ' The child with name: ' . $name . ' could not be found');
     }
 
     /**
