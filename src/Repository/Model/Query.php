@@ -88,7 +88,7 @@ class Query
     /** @var int[]|string[]|array<array{object_id: int,object_type: LibraryItemEnum|string,track_id: int,track: int}>|array<int, array{name?: string|null, id: int, track: int, raw: string, link?: string|null, track: int, oid?: int, vlid?: int}> $_cache */
     protected array $_cache = [];
 
-    /**  */
+    /** @var array<string, mixed> $_state */
     protected array $_state = [
         'album_artist' => false, // Used by $browse->set_type() to filter artists to album artist only
         'base' => null,

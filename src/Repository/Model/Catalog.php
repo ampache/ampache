@@ -145,15 +145,6 @@ abstract class Catalog extends database_object
 
     /* Used in functions */
 
-    /**  */
-    protected static array $albums = [];
-
-    /**  */
-    protected static array $artists = [];
-
-    /**  */
-    protected static array $tags = [];
-
     public ?string $catalog_type = null;
     public bool $enabled;
     public ?string $gather_types = '';
