@@ -36,6 +36,16 @@ final class Tag3Method
     public const ACTION = 'tag';
 
     /**
+     * genre
+     * This returns a single tag based on UID
+     * @param array<string, mixed> $input
+     */
+    public static function genre(array $input, User $user): void
+    {
+        self::tag($input, $user);
+    }
+
+    /**
      * tag
      * This returns a single tag based on UID
      * @param array<string, mixed> $input
@@ -45,16 +55,6 @@ final class Tag3Method
         unset($user);
         $uid = scrub_in((string) $input['filter']);
         ob_end_clean();
-        echo Xml3_Data::tags([(int)$uid]);
-    }
-
-    /**
-     * genre
-     * This returns a single tag based on UID
-     * @param array<string, mixed> $input
-     */
-    public static function genre(array $input, User $user): void
-    {
-        self::tag($input, $user);
+        echo Xml3_Data::tags([(int) $uid]);
     }
 }

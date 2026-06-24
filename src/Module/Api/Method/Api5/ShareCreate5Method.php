@@ -57,10 +57,10 @@ final class ShareCreate5Method
      * Create a public url that can be used by anyone to stream media.
      * Takes the file id with optional description and expires parameters.
      *
-     * filter      = (string) object_id
-     * type        = (string) object_type ('song', 'album', 'artist')
+     * filter = (string) object_id
+     * type = (string) object_type ('song', 'album', 'artist')
      * description = (string) description (will be filled for you if empty) //optional
-     * expires     = (integer) days to keep active //optional
+     * expires = (integer) days to keep active //optional
      *
      * @param array{
      *     filter: string,
@@ -142,7 +142,7 @@ final class ShareCreate5Method
         ob_end_clean();
         switch ($input['api_format']) {
             case 'json':
-                echo Json5_Data::shares($results, false);
+                echo Json5_Data::shares($results, $user, false);
                 break;
             default:
                 echo Xml5_Data::shares($results, $user);

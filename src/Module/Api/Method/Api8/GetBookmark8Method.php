@@ -52,10 +52,10 @@ final class GetBookmark8Method
      * Get the bookmark from it's object_id and object_type.
      * By default; get only the most recent bookmark. (use all to retrieve all media bookmarks for the object)
      *
-     * filter  = (string) object_id to find
-     * type    = (string) object_type ('bookmark', 'song', 'video', 'podcast_episode')
+     * filter = (string) object_id to find
+     * type = (string) object_type ('bookmark', 'song', 'video', 'podcast_episode')
      * include = (integer) 0,1, if true include the object in the bookmark //optional
-     * all     = (integer) 0,1, if true every bookmark related to the object //optional
+     * all = (integer) 0,1, if true every bookmark related to the object //optional
      *
      * @param array{
      *     filter: string,
@@ -71,7 +71,7 @@ final class GetBookmark8Method
         if (!Api::check_parameter($input, ['filter', 'type'], self::ACTION)) {
             return false;
         }
-        $object_id = (int)$input['filter'];
+        $object_id = (int) $input['filter'];
         $type      = $input['type'];
         $include   = make_bool($input['include'] ?? false);
         $all       = make_bool($input['all'] ?? false);
@@ -113,8 +113,8 @@ final class GetBookmark8Method
         ];
         $results = Bookmark::getBookmarks($object);
         if (
-            empty($results) &&
-            !$all
+            empty($results)
+            && !$all
         ) {
             Api::empty(null, $input['api_format']);
 

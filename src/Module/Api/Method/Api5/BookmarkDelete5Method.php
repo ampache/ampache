@@ -50,7 +50,7 @@ final class BookmarkDelete5Method
      * Delete an existing bookmark. (if it exists)
      *
      * filter = (string) object_id to delete
-     * type   = (string) object_type  ('bookmark', 'song', 'video', 'podcast_episode')
+     * type = (string) object_type  ('bookmark', 'song', 'video', 'podcast_episode')
      * client = (string) Agent string Default: 'AmpacheAPI' //optional
      *
      * @param array{
@@ -91,7 +91,7 @@ final class BookmarkDelete5Method
         }
 
         /** @var Bookmark|Song|Podcast_Episode|Video $item */
-        $item = new $className((int)$object_id);
+        $item = new $className((int) $object_id);
         if ($item->isNew()) {
             /* HINT: Requested object string/id/type ("album", "myusername", "some song title", 1298376) */
             Api5::error(sprintf(T_('Not Found: %s'), $object_id), ErrorCodeEnum::NOT_FOUND, self::ACTION, 'filter', $input['api_format']);
@@ -100,7 +100,7 @@ final class BookmarkDelete5Method
         }
         $object = [
             'user' => $user->id,
-            'object_id' => (int)$object_id,
+            'object_id' => (int) $object_id,
             'object_type' => $type,
             'comment' => $comment,
         ];

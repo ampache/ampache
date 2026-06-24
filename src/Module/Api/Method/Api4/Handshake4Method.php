@@ -56,10 +56,10 @@ final class Handshake4Method
      * This is the function that handles verifying a new handshake
      * Takes a timestamp, auth key, and username.
      *
-     * auth      = (string) $passphrase
-     * user      = (string) $username //optional
+     * auth = (string) $passphrase
+     * user = (string) $username //optional
      * timestamp = (integer) UNIXTIME() //Required if login/password authentication
-     * version   = (string) $version //optional
+     * version = (string) $version //optional
      *
      * @param array{
      *     user?: string,
@@ -78,7 +78,7 @@ final class Handshake4Method
     public static function handshake(array $input): bool
     {
         $now_time   = time();
-        $timestamp  = (int)preg_replace('/[^0-9]/', '', (string)($input['timestamp'] ?? $now_time));
+        $timestamp  = (int) preg_replace('/[^0-9]/', '', (string) ($input['timestamp'] ?? $now_time));
         $passphrase = $input['auth'];
         if (empty($passphrase)) {
             $passphrase = Core::get_post('auth');
@@ -86,7 +86,7 @@ final class Handshake4Method
         $username     = trim((string) ($input['user'] ?? Session::username($passphrase)));
         $user_ip      = Core::get_user_ip();
         $version      = (isset($input['version'])) ? (string) $input['version'] : Api4::$version;
-        $data_version = (int)substr($version, 0, 1);
+        $data_version = (int) substr($version, 0, 1);
 
         // Version check shouldn't be soo restrictive... only check with initial version to not break clients compatibility
         if ((int) ($version) < Api4::$auth_version) {
@@ -125,8 +125,8 @@ final class Handshake4Method
             if ($username) {
                 // If the timestamp isn't within 30 minutes sucks to be them
                 if (
-                    ($timestamp < ($now_time - 1800)) ||
-                    ($timestamp > ($now_time + 1800))
+                    ($timestamp < ($now_time - 1800))
+                    || ($timestamp > ($now_time + 1800))
                 ) {
                     debug_event(self::class, 'Login Failed: timestamp out of range ' . $timestamp . '/' . $now_time, 1);
                     AmpError::add('api', T_('Login Failed, timestamp is out of range'));
@@ -160,9 +160,9 @@ final class Handshake4Method
                 } else {
                     // Create the session
                     $data             = [];
-                    $data['username'] = (string)$client->username;
+                    $data['username'] = (string) $client->username;
                     $data['type']     = 'api';
-                    $data['apikey']   = (string)$client->apikey;
+                    $data['apikey']   = (string) $client->apikey;
                     $data['value']    = $data_version;
                     if (isset($input['client'])) {
                         $data['agent'] = $input['client'];
@@ -200,7 +200,7 @@ final class Handshake4Method
                 // Now we need to quickly get the totals
                 $counts = Catalog::get_server_counts($user_id);
                 // perpetual sessions do not expire
-                $perpetual      = (bool)AmpConfig::get('perpetual_api_session', false);
+                $perpetual      = (bool) AmpConfig::get('perpetual_api_session', false);
                 $session_expire = ($perpetual)
                     ? 0
                     : date("c", $now_time + AmpConfig::get('session_length') - 60);
@@ -210,9 +210,9 @@ final class Handshake4Method
                     'auth' => $token,
                     'api' => Api4::$version,
                     'session_expire' => $session_expire,
-                    'update' => date("c", (int)$row['update']),
-                    'add' => date("c", (int)$row['add']),
-                    'clean' => date("c", (int)$row['clean']),
+                    'update' => date("c", (int) $row['update']),
+                    'add' => date("c", (int) $row['add']),
+                    'clean' => date("c", (int) $row['clean']),
                     'songs' => $counts['song'],
                     'albums' => $counts['album'],
                     'artists' => $counts['artist'],
@@ -238,7 +238,7 @@ final class Handshake4Method
 
                 return true;
             } // match
-        } // end while
+        }
 
         debug_event(self::class, 'Login Failed, unable to match passphrase', 1);
         Api4::message('error', T_('Received Invalid Handshake') . ' - ' . T_('Incorrect username or password'), '401', $input['api_format']);

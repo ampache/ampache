@@ -45,7 +45,7 @@ final class Album5Method
      *
      * This returns a single album based on the UID provided
      *
-     * filter  = (string) UID of Album
+     * filter = (string) UID of Album
      * include = (array|string) 'songs' //optional
      *
      * @param array{

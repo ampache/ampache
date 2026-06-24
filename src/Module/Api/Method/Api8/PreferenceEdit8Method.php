@@ -49,9 +49,9 @@ final class PreferenceEdit8Method
      *
      * Edit a preference value and apply to all users if allowed
      *
-     * filter  = (string) Preference name e.g ('notify_email', 'ajax_load')
-     * value   = (string|integer) Preference value
-     * all     = (integer) 0,1 if true apply to all users //optional
+     * filter = (string) Preference name e.g ('notify_email', 'ajax_load')
+     * value = (string|integer) Preference value
+     * all = (integer) 0,1 if true apply to all users //optional
      * default = (integer) 0,1 if true set as system default (New and public users) //optional
      *
      * @param array{
@@ -69,12 +69,12 @@ final class PreferenceEdit8Method
             return false;
         }
 
-        $all     = (array_key_exists('all', $input) && (int)$input['all'] == 1);
-        $default = (array_key_exists('default', $input) && (int)$input['default'] == 1);
+        $all     = (array_key_exists('all', $input) && (int) $input['all'] == 1);
+        $default = (array_key_exists('default', $input) && (int) $input['default'] == 1);
         // don't apply to all or set default when you aren't an admin
         if (
-            ($all || $default) &&
-            !Api::check_access(AccessTypeEnum::INTERFACE, AccessLevelEnum::ADMIN, $user->id, self::ACTION, $input['api_format'])
+            ($all || $default)
+            && !Api::check_access(AccessTypeEnum::INTERFACE, AccessLevelEnum::ADMIN, $user->id, self::ACTION, $input['api_format'])
         ) {
             return false;
         }

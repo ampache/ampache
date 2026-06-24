@@ -46,7 +46,7 @@ final class PodcastEpisode5Method
      *
      * Get the podcast_episode from it's id.
      *
-     * filter  = (integer) podcast_episode ID number
+     * filter = (integer) podcast_episode ID number
      *
      * @param array{
      *     filter: string,

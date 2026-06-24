@@ -45,7 +45,7 @@ final class Bookmark6Method
      *
      * Get a single bookmark
      *
-     * filter  = (string) bookmark_id
+     * filter = (string) bookmark_id
      * include = (integer) 0,1, if true include the object in the bookmark //optional
      *
      * @param array{
@@ -63,8 +63,8 @@ final class Bookmark6Method
         $bookmark = self::getBookmarkRepository()->findById((int) $input['filter']);
 
         if (
-            $bookmark === null ||
-            !$bookmark->ownedByUser($user)
+            $bookmark === null
+            || !$bookmark->ownedByUser($user)
         ) {
             Api6::empty(null, $input['api_format']);
 

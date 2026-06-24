@@ -54,19 +54,8 @@ use Throwable;
 
 final class ApiHandler implements ApiHandlerInterface
 {
-    private StreamFactoryInterface $streamFactory;
-
-    private LoggerInterface $logger;
-
-    private ConfigContainerInterface $configContainer;
-
-    private NetworkCheckerInterface $networkChecker;
-
-    private ContainerInterface $dic;
-
-    private UserRepositoryInterface $userRepository;
-
     private static int $default = 6;
+    private ConfigContainerInterface $configContainer;
 
     /** @var string[] */
     private array $deprecated = [
@@ -83,6 +72,12 @@ final class ApiHandler implements ApiHandlerInterface
         'playlist_add_song',
         'user_update',
     ];
+
+    private ContainerInterface $dic;
+    private LoggerInterface $logger;
+    private NetworkCheckerInterface $networkChecker;
+    private StreamFactoryInterface $streamFactory;
+    private UserRepositoryInterface $userRepository;
 
     public function __construct(
         StreamFactoryInterface $streamFactory,
@@ -113,8 +108,8 @@ final class ApiHandler implements ApiHandlerInterface
         // block html and visual output
         define('API', true);
 
-        $input        = $request->getQueryParams();
-        $action       = $input['action'];
+        $input  = $request->getQueryParams();
+        $action = $input['action'];
         if ($action == 'bad_request') {
             $this->logger->warning(
                 'Bad API request, check your HTTP Method is correct for your action',
@@ -152,11 +147,11 @@ final class ApiHandler implements ApiHandlerInterface
             ? $gatekeeper->getUser()
             : null;
         $userId      = $user->id ?? -1;
-        $api_version = (int)Preference::get_by_user($userId, 'api_force_version');
+        $api_version = (int) Preference::get_by_user($userId, 'api_force_version');
         if (!in_array($api_version, Api::API_VERSIONS)) {
             $api_session = Session::get_api_version($input['auth']);
             $api_version = ($is_public || (isset($input['version']) && $header_auth))
-                ? (int)substr($version, 0, 1)
+                ? (int) substr($version, 0, 1)
                 : $api_session;
 
             // If you call api3 from json you don't get anything so change back to the latest version
@@ -179,8 +174,8 @@ final class ApiHandler implements ApiHandlerInterface
             }
 
             if (
-                $api_version == 7 ||
-                $api_version == 8 //|| ($api_version == 8 && !Preference::get_by_user($userId, 'api_enable_8'))
+                $api_version == 7
+                || $api_version == 8 //|| ($api_version == 8 && !Preference::get_by_user($userId, 'api_enable_8'))
             ) {
                 $this->logger->warning(
                     'No API version available; check your options!',
@@ -206,8 +201,8 @@ final class ApiHandler implements ApiHandlerInterface
          * If you are doing anything else, you hide the session behind an MD5 hash of the username
          */
         if (
-            $header_auth &&
-            $user instanceof User
+            $header_auth
+            && $user instanceof User
         ) {
             $data             = [];
             $data['username'] = $user->username;
@@ -215,15 +210,15 @@ final class ApiHandler implements ApiHandlerInterface
             if ($is_handshake || $is_ping) {
                 // for a handshake there needs to be a valid auth response (ping when sent needs one)
                 if (
-                    $input['auth'] !== md5((string)$user->username) &&
-                    !Session::read($input['auth'])
+                    $input['auth'] !== md5((string) $user->username)
+                    && !Session::read($input['auth'])
                 ) {
                     $data['type']  = 'api';
                     $input['auth'] = Session::create($data);
                 }
             } else {
                 $data['type']   = 'header';
-                $data['apikey'] = md5((string)$user->username);
+                $data['apikey'] = md5((string) $user->username);
                 // Session might not exist or has expired
                 if (!Session::read($data['apikey'])) {
                     Session::destroy($data['apikey']);
@@ -314,14 +309,14 @@ final class ApiHandler implements ApiHandlerInterface
          * login via this interface so we do have an exception for action=login
          */
         if (
-            !$is_public &&
-            (
-                !$user instanceof User || // User is required for non-public methods
-                (
-                    !$header_auth &&
-                    $input['auth'] === md5((string)$user->username)
-                ) || // require header auth for simplified session
-                $gatekeeper->sessionExists($input['auth']) === false // no valid session
+            !$is_public
+            && (
+                !$user instanceof User // User is required for non-public methods
+                || (
+                    !$header_auth
+                    && $input['auth'] === md5((string) $user->username)
+                ) // require header auth for simplified session
+                || $gatekeeper->sessionExists($input['auth']) === false // no valid session
             )
         ) {
             $this->logger->warning(
@@ -711,9 +706,9 @@ final class ApiHandler implements ApiHandlerInterface
             }
 
             if (
-                $action === 'song' && ($type === 'playlist' || $type === 'smartlist' || $type === 'album' || $type === 'artist' || $type === 'genre' || $type === 'license' || $type === 'get_similar') ||
-                $action === 'album' && ($type === 'artist' || $type === 'genre') ||
-                $action === 'artist' && ($type === 'genre' || $type === 'get_similar' || $type === 'label')
+                $action === 'song' && ($type === 'playlist' || $type === 'smartlist' || $type === 'album' || $type === 'artist' || $type === 'genre' || $type === 'license' || $type === 'get_similar')
+                || $action === 'album' && ($type === 'artist' || $type === 'genre')
+                || $action === 'artist' && ($type === 'genre' || $type === 'get_similar' || $type === 'label')
             ) {
                 $action = $type . '_' . $action . 's';
             }
@@ -722,11 +717,11 @@ final class ApiHandler implements ApiHandlerInterface
                 $action = $type . '_' . $action . 's';
             }
             if (
-                ($type === 'playlist' && ($action === 'create' || $action === 'delete' || $action === 'add' || $action === 'add_song' || $action === 'remove_song')) ||
-                ($type === 'smartlist' && $action === 'delete') ||
-                ($type === 'bookmark' && $action === 'create') ||
-                ($type === 'podcast' && $action === 'update') ||
-                ($type === 'song' && $action === 'tags')
+                ($type === 'playlist' && ($action === 'create' || $action === 'delete' || $action === 'add' || $action === 'add_song' || $action === 'remove_song'))
+                || ($type === 'smartlist' && $action === 'delete')
+                || ($type === 'bookmark' && $action === 'create')
+                || ($type === 'podcast' && $action === 'update')
+                || ($type === 'song' && $action === 'tags')
             ) {
                 $action = $type . '_' . $action;
             }
@@ -764,6 +759,70 @@ final class ApiHandler implements ApiHandlerInterface
     }
 
     /**
+     * Run the DEBUG API handler with NO exception handling!
+     * @throws ApiException|Throwable
+     */
+    private function _executeDebugHandler(
+        Gatekeeper $gatekeeper,
+        bool $is_public,
+        string $action,
+        string $handlerClassName,
+        array $input,
+        ?User $user,
+        ResponseInterface $response,
+        ApiOutputInterface $output,
+    ): ?ResponseInterface {
+        /**
+         * This condition allows the `new` approach and the legacy one to co-exist.
+         * After implementing the MethodInterface in all api methods, the condition will be removed
+         *
+         * @todo cleanup
+         */
+        $this->logger->notice(
+            sprintf('DebugHandler: API function [%s]', $handlerClassName),
+            [LegacyLogger::CONTEXT_TYPE => self::class]
+        );
+
+        if (
+            $user instanceof User
+            && $this->dic->has($handlerClassName)
+            && $this->dic->get($handlerClassName) instanceof MethodInterface
+        ) {
+            /** @var MethodInterface $handler */
+            $handler = $this->dic->get($handlerClassName);
+
+            $response = $handler->handle(
+                $gatekeeper,
+                $response,
+                $output,
+                $input,
+                $user
+            );
+
+            $gatekeeper->extendSession($input['auth']);
+
+            return $response;
+        }
+        $params = [$input];
+
+        /** @var callable $callback */
+        $callback = [$handlerClassName, $action];
+
+        if (!$is_public) {
+            $params[] = $user;
+        }
+
+        call_user_func_array(
+            $callback,
+            $params
+        );
+
+        $gatekeeper->extendSession($input['auth']);
+
+        return null;
+    }
+
+    /**
      * Run the default API handler with exception handling
      */
     private function _executeHandler(
@@ -790,9 +849,9 @@ final class ApiHandler implements ApiHandlerInterface
             );
 
             if (
-                $user instanceof User &&
-                $this->dic->has($handlerClassName) &&
-                $this->dic->get($handlerClassName) instanceof MethodInterface
+                $user instanceof User
+                && $this->dic->has($handlerClassName)
+                && $this->dic->get($handlerClassName) instanceof MethodInterface
             ) {
                 /** @var MethodInterface $handler */
                 $handler = $this->dic->get($handlerClassName);
@@ -945,69 +1004,5 @@ final class ApiHandler implements ApiHandlerInterface
                     );
             }
         }
-    }
-
-    /**
-     * Run the DEBUG API handler with NO exception handling!
-     * @throws ApiException|Throwable
-     */
-    private function _executeDebugHandler(
-        Gatekeeper $gatekeeper,
-        bool $is_public,
-        string $action,
-        string $handlerClassName,
-        array $input,
-        ?User $user,
-        ResponseInterface $response,
-        ApiOutputInterface $output,
-    ): ?ResponseInterface {
-        /**
-         * This condition allows the `new` approach and the legacy one to co-exist.
-         * After implementing the MethodInterface in all api methods, the condition will be removed
-         *
-         * @todo cleanup
-         */
-        $this->logger->notice(
-            sprintf('DebugHandler: API function [%s]', $handlerClassName),
-            [LegacyLogger::CONTEXT_TYPE => self::class]
-        );
-
-        if (
-            $user instanceof User &&
-            $this->dic->has($handlerClassName) &&
-            $this->dic->get($handlerClassName) instanceof MethodInterface
-        ) {
-            /** @var MethodInterface $handler */
-            $handler = $this->dic->get($handlerClassName);
-
-            $response = $handler->handle(
-                $gatekeeper,
-                $response,
-                $output,
-                $input,
-                $user
-            );
-
-            $gatekeeper->extendSession($input['auth']);
-
-            return $response;
-        }
-        $params = [$input];
-
-        /** @var callable $callback */
-        $callback = [$handlerClassName, $action];
-
-        if (!$is_public) {
-            $params[] = $user;
-        }
-
-        call_user_func_array(
-            $callback,
-            $params
-        );
-
-        $gatekeeper->extendSession($input['auth']);
-
-        return null;
     }
 }

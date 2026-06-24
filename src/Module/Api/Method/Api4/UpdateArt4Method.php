@@ -48,8 +48,8 @@ final class UpdateArt4Method
      * updates a single album, artist, song running the gather_art process
      * Doesn't overwrite existing art by default.
      *
-     * type      = (string) 'artist'|'album'
-     * id        = (integer) $artist_id, $album_id
+     * type = (string) 'artist'|'album'
+     * id = (integer) $artist_id, $album_id
      * overwrite = (integer) 0,1 //optional
      *
      * @param array{
@@ -70,7 +70,7 @@ final class UpdateArt4Method
         }
         $type      = (string) $input['type'];
         $object_id = (int) $input['id'];
-        $overwrite = array_key_exists('overwrite', $input) && (int)$input['overwrite'] == 0;
+        $overwrite = array_key_exists('overwrite', $input) && (int) $input['overwrite'] == 0;
 
         // confirm the correct data
         if (!in_array(strtolower($type), ['artist', 'album'])) {

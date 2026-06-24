@@ -116,7 +116,7 @@ foreach ($object_ids as $episode_id) {
             <?php } ?>
             <th class="cel_action"><?php echo $action_text; ?></th>
         </tr>
-    <tfoot>
+    </tfoot>
 </table>
 <?php show_table_render(); ?>
 <?php if ($browse->is_show_header()) {

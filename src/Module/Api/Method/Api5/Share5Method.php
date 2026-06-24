@@ -68,7 +68,7 @@ final class Share5Method
         ob_end_clean();
         switch ($input['api_format']) {
             case 'json':
-                echo Json5_Data::shares($results, false);
+                echo Json5_Data::shares($results, $user, false);
                 break;
             default:
                 echo Xml5_Data::shares($results, $user);

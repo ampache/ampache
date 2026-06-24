@@ -48,7 +48,7 @@ final class PodcastEpisodes5Method
      *
      * filter = (string) UID of podcast
      * offset = (integer) //optional
-     * limit  = (integer) //optional
+     * limit = (integer) //optional
      *
      * @param array{
      *     filter?: string,
@@ -73,7 +73,7 @@ final class PodcastEpisodes5Method
 
         $podcastRepository = self::getPodcastRepository();
 
-        $object_id = (int)($input['filter'] ?? 0);
+        $object_id = (int) ($input['filter'] ?? 0);
         $podcast   = $podcastRepository->findById($object_id);
         if ($podcast === null) {
             /* HINT: Requested object string/id/type ("album", "myusername", "some song title", 1298376) */

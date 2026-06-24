@@ -70,10 +70,10 @@ final class PlaylistCreate4Method
         Catalog::count_table('playlist');
         switch ($input['api_format']) {
             case 'json':
-                echo Json4_Data::playlists([(int)$uid], $user, $input['auth']);
+                echo Json4_Data::playlists([(int) $uid], $user, $input['auth']);
                 break;
             default:
-                echo Xml4_Data::playlists([(int)$uid], $user, $input['auth']);
+                echo Xml4_Data::playlists([(int) $uid], $user, $input['auth']);
         }
 
         return true;

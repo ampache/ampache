@@ -50,8 +50,8 @@ final class FriendsTimeline3Method
     public static function friends_timeline(array $input, User $user): void
     {
         if (AmpConfig::get('sociable')) {
-            $limit = (int)($input['limit'] ?? 0);
-            $since = (int)($input['since'] ?? 0);
+            $limit = (int) ($input['limit'] ?? 0);
+            $since = (int) ($input['since'] ?? 0);
 
             $results = self::getUseractivityRepository()->getActivities(
                 $user->id,

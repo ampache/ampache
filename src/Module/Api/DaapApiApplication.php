@@ -76,7 +76,7 @@ final class DaapApiApplication implements ApiApplicationInterface
                         // We only allow a single function to be called, and we assume it's cleaned up!
                         return;
                     }
-                } // end foreach methods in API
+                }
             }
         }
 
