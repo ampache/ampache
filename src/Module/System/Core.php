@@ -48,10 +48,14 @@ class Core
             return $filename;
         }
 
+        $lc_charset = AmpConfig::get('lc_charset');
+        if (!$lc_charset) {
+            return $filename;
+        }
+
         $lc_filename  = $filename;
         $site_charset = AmpConfig::get('site_charset', 'UTF-8');
-        $lc_charset   = AmpConfig::get('lc_charset');
-        if ($lc_charset && $lc_charset != $site_charset) {
+        if ($lc_charset != $site_charset) {
             $lc_filename = iconv((string) $site_charset, (string) $lc_charset, $filename);
         }
 
