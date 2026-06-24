@@ -51,7 +51,7 @@ final class LastShouts3Method
     public static function last_shouts(array $input, User $user): void
     {
         unset($user);
-        $limit = (int)($input['limit'] ?? 0);
+        $limit = (int) ($input['limit'] ?? 0);
         if ($limit < 1) {
             $limit = (int) AmpConfig::get('popular_threshold');
         }

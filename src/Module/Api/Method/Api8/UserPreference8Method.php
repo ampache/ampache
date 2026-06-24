@@ -58,7 +58,7 @@ final class UserPreference8Method
         // fix preferences that are missing for user
         User::fix_preferences($user->id);
 
-        $pref_name  = (string)($input['filter'] ?? '');
+        $pref_name  = (string) ($input['filter'] ?? '');
         $preference = Preference::get($pref_name, -1);
         if (empty($preference)) {
             /* HINT: Requested object string/id/type ("album", "myusername", "some song title", 1298376) */
@@ -69,7 +69,7 @@ final class UserPreference8Method
 
         $results   = [];
         $results[] = [
-            "id" => (string)$preference[0]['id'],
+            "id" => (string) $preference[0]['id'],
             "name" => $preference[0]['name'],
             "level" => $preference[0]['level'],
             "description" => $preference[0]['description'],
@@ -77,7 +77,7 @@ final class UserPreference8Method
             "type" => $preference[0]['type'],
             "category" => $preference[0]['category'],
             "subcategory" => $preference[0]['subcategory'],
-            "has_access" => (((int)$preference[0]['level']) <= $user->access),
+            "has_access" => (((int) $preference[0]['level']) <= $user->access),
             "values" => [],
         ];
 

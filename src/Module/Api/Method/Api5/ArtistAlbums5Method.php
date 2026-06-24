@@ -45,7 +45,7 @@ final class ArtistAlbums5Method
      *
      * filter = (string) UID of artist
      * offset = (integer) //optional
-     * limit  = (integer) //optional
+     * limit = (integer) //optional
      *
      * @param array{
      *     filter: string,

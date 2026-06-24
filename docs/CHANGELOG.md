@@ -23,6 +23,8 @@ Check out the new library on GitHub at [Gregwar/Captcha](https://github.com/Greg
 ### Removed (7.7.0)
 
 * Remove `easy_captcha` classes and files
+* Don't count the map tables on `Catalog::update_counts()` calls
+* Delete `scrutinizer.yml` and other external integrations
 
 ### Fixed (7.10.0)
 
@@ -30,8 +32,12 @@ Check out the new library on GitHub at [Gregwar/Captcha](https://github.com/Greg
 * Update Vite for security issues
 * Throw exception to login on missing auth (when required)
 * Possible error on FileSystem scan
+* Closing HTML tags missing on a couple of templates
+* Verify Podcast URL is a http url on set
+* DB
+  * Database update 794004 - Error with more left over bad data
 * CLI
-  * Table checks column typo
+  * Table checks column typo with DatabaseCharsetUpdater
 * Search
   * Joining by `catalog_id` not set on some searches
 * Ampache Remote Catalogs

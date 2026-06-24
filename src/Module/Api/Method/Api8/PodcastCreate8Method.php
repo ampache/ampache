@@ -53,7 +53,7 @@ final class PodcastCreate8Method
      * Create a public url that can be used by anyone to stream media.
      * Takes the file id with optional description and expires parameters.
      *
-     * url     = (string) rss url for podcast
+     * url = (string) rss url for podcast
      * catalog = (string) podcast catalog
      *
      * @param array{
@@ -77,7 +77,7 @@ final class PodcastCreate8Method
             return false;
         }
 
-        $catalog = Catalog::create_from_id((int)$input['catalog']);
+        $catalog = Catalog::create_from_id((int) $input['catalog']);
 
         if ($catalog === null) {
             Api::error('Bad Request', ErrorCodeEnum::BAD_REQUEST, self::ACTION, 'system', $input['api_format']);

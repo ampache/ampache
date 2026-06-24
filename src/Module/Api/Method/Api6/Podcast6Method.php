@@ -47,7 +47,7 @@ final class Podcast6Method
      *
      * Get the podcast from it's id.
      *
-     * filter  = (string) Podcast ID number
+     * filter = (string) Podcast ID number
      * include = (string) 'episodes' (include episodes in the response) //optional
      *
      * @param array{
@@ -79,7 +79,7 @@ final class Podcast6Method
         }
 
         ob_end_clean();
-        $episodes = ($include == 'episodes' || (int)$include == 1);
+        $episodes = ($include == 'episodes' || (int) $include == 1);
         switch ($input['api_format']) {
             case 'json':
                 echo Json6_Data::podcasts([$object_id], $user, $input['auth'], $episodes, false);

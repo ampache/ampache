@@ -46,7 +46,7 @@ final class LabelArtists5Method
      *
      * This returns all artists attached to a label ID
      *
-     * filter  = (string) UID of label
+     * filter = (string) UID of label
      * include = (array|string) 'albums', 'songs' //optional
      *
      * @param array{
@@ -73,7 +73,7 @@ final class LabelArtists5Method
         $include = [];
         if (array_key_exists('include', $input)) {
             if (!is_array($input['include'])) {
-                $input['include'] = explode(',', html_entity_decode((string)($input['include'])));
+                $input['include'] = explode(',', html_entity_decode((string) ($input['include'])));
             }
             foreach ($input['include'] as $item) {
                 if ($item === 'songs' || $item == '1') {

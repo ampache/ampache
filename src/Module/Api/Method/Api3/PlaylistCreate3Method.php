@@ -58,6 +58,6 @@ final class PlaylistCreate3Method
         Catalog::count_table('playlist');
 
         $uid = Playlist::create($name, $type, $user->id);
-        echo Xml3_Data::playlists([(int)$uid]);
+        echo Xml3_Data::playlists([(int) $uid]);
     }
 }

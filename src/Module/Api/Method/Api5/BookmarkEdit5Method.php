@@ -50,11 +50,11 @@ final class BookmarkEdit5Method
      *
      * Edit a placeholder for the current media that you can return to later.
      *
-     * filter   = (string) object_id
-     * type     = (string) object_type ('bookmark', 'song', 'video', 'podcast_episode')
+     * filter = (string) object_id
+     * type = (string) object_type ('bookmark', 'song', 'video', 'podcast_episode')
      * position = (integer) current track time in seconds
-     * client   = (string) Agent string Default: 'AmpacheAPI' //optional
-     * date     = (integer) UNIXTIME() //optional
+     * client = (string) Agent string Default: 'AmpacheAPI' //optional
+     * date = (integer) UNIXTIME() //optional
      *
      * @param array{
      *     filter: string,
@@ -74,7 +74,7 @@ final class BookmarkEdit5Method
         }
         $object_id = $input['filter'];
         $type      = $input['type'];
-        $position  = (int)filter_var($input['position'], FILTER_SANITIZE_NUMBER_INT);
+        $position  = (int) filter_var($input['position'], FILTER_SANITIZE_NUMBER_INT);
         $comment   = (isset($input['client'])) ? scrub_in((string) $input['client']) : 'AmpacheAPI';
         $time      = (isset($input['date'])) ? (int) $input['date'] : time();
         if (!AmpConfig::get('allow_video') && $type == 'video') {
@@ -99,7 +99,7 @@ final class BookmarkEdit5Method
         }
 
         /** @var Bookmark|Song|Podcast_Episode|Video $item */
-        $item = new $className((int)$object_id);
+        $item = new $className((int) $object_id);
         if ($item->isNew()) {
             /* HINT: Requested object string/id/type ("album", "myusername", "some song title", 1298376) */
             Api5::error(sprintf(T_('Not Found: %s'), $object_id), ErrorCodeEnum::NOT_FOUND, self::ACTION, 'filter', $input['api_format']);
@@ -108,10 +108,10 @@ final class BookmarkEdit5Method
         }
         $object = [
             'user' => $user->id,
-            'object_id' => (int)$object_id,
+            'object_id' => (int) $object_id,
             'object_type' => $type,
             'comment' => $comment,
-            'position' => (int)$position,
+            'position' => (int) $position,
         ];
 
         // check for the bookmark first

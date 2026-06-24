@@ -47,9 +47,9 @@ final class ArtistSongs5Method
      * This returns the songs of the specified artist
      *
      * filter = (string) UID of Artist
-     * top50  = (integer) 0,1, if true filter to the artist top 50 //optional
+     * top50 = (integer) 0,1, if true filter to the artist top 50 //optional
      * offset = (integer) //optional
-     * limit  = (integer) //optional
+     * limit = (integer) //optional
      *
      * @param array{
      *     filter: string,
@@ -75,7 +75,7 @@ final class ArtistSongs5Method
 
             return false;
         }
-        $results = (array_key_exists('top50', $input) && (int)$input['top50'] == 1)
+        $results = (array_key_exists('top50', $input) && (int) $input['top50'] == 1)
             ? self::getSongRepository()->getTopSongsByArtist($artist)
             : self::getSongRepository()->getByArtist($object_id);
         if (empty($results)) {

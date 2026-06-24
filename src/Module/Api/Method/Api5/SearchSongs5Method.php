@@ -46,7 +46,7 @@ final class SearchSongs5Method
      *
      * filter = (string) Alpha-numeric search term
      * offset = (integer) //optional
-     * limit  = (integer) //optional
+     * limit = (integer) //optional
      *
      * @param array<string, mixed> $input
      */

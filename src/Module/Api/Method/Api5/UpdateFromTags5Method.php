@@ -48,7 +48,7 @@ final class UpdateFromTags5Method
      * updates a single album, artist, song from the tag data
      *
      * type = (string) 'artist', 'album', 'song'
-     * id   = (integer) $artist_id, $album_id, $song_id
+     * id = (integer) $artist_id, $album_id, $song_id
      *
      * @param array{
      *     id: string,

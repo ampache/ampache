@@ -53,16 +53,11 @@ final class RefreshUpdatedAction extends AbstractEditAction
 {
     public const REQUEST_KEY = 'refresh_updated';
 
-    private ResponseFactoryInterface $responseFactory;
-
-    private StreamFactoryInterface $streamFactory;
-
-    private TalFactoryInterface $talFactory;
-
-    private GuiFactoryInterface $guiFactory;
-
     private Browse $browse;
-
+    private GuiFactoryInterface $guiFactory;
+    private ResponseFactoryInterface $responseFactory;
+    private StreamFactoryInterface $streamFactory;
+    private TalFactoryInterface $talFactory;
     private UiInterface $ui;
 
     public function __construct(
@@ -370,7 +365,7 @@ final class RefreshUpdatedAction extends AbstractEditAction
 
         return $this->responseFactory->createResponse()
             ->withBody(
-                $this->streamFactory->createStream((string)$results)
+                $this->streamFactory->createStream((string) $results)
             );
     }
 }

@@ -33,66 +33,40 @@ use Ampache\Repository\Model\User;
 
 final class JsonOutput implements ApiOutputInterface
 {
-    public function setOffset6(int|string $offset): void
-    {
-        Json6_Data::set_offset($offset);
-    }
-
-    public function setOffset(int|string $offset): void
-    {
-        Json8_Data::set_offset($offset);
-    }
-
-    public function setLimit6(int|string $limit): void
-    {
-        Json6_Data::set_limit($limit);
-    }
-
-    public function setLimit(int|string $limit): void
-    {
-        Json8_Data::set_limit($limit);
-    }
-
-    public function setCount6(int|string $count): void
-    {
-        Json6_Data::set_count($count);
-    }
-
-    public function setCount(int|string $count): void
-    {
-        Json8_Data::set_count($count);
+    /**
+     * At the moment, this method just acts as a proxy
+     *
+     * @param array<int|string> $albums
+     * @param string[] $include
+     *
+     */
+    public function albums(
+        array $albums,
+        array $include,
+        User $user,
+        string $auth,
+        bool $encode = true,
+        bool $asObject = true,
+    ): string {
+        return Json8_Data::albums($albums, $include, $user, $auth, $encode, $asObject);
     }
 
     /**
-     * @param array<int|string> $result
+     * At the moment, this method just acts as a proxy
+     *
+     * @param array<int|string> $albums
+     * @param string[] $include
+     *
      */
-    public function podcastEpisodes6(array $result, User $user, string $auth): string
-    {
-        return Json6_Data::podcast_episodes($result, $user, $auth);
-    }
-
-    /**
-     * @param array<int|string> $result
-     */
-    public function podcastEpisodes(array $result, User $user, string $auth): string
-    {
-        return Json8_Data::podcast_episodes($result, $user, $auth);
-    }
-
-    /**
-     * Generate an empty api result
-     */
-    public function writeEmpty6(string $emptyType): string
-    {
-        return Json6_Data::empty($emptyType);
-    }
-
-    /**
-     * Generate an empty api result
-     */
-    public function writeEmpty(string $emptyType): string
-    {
-        return Json8_Data::empty($emptyType);
+    public function albums6(
+        array $albums,
+        array $include,
+        User $user,
+        string $auth,
+        bool $encode = true,
+        bool $asObject = true,
+    ): string {
+        return Json6_Data::albums($albums, $include, $user, $auth, $encode, $asObject);
     }
 
     /**
@@ -122,7 +96,7 @@ final class JsonOutput implements ApiOutputInterface
     public function error4(int $code, string $message): string
     {
         return Json4_Data::error(
-            (string)$code,
+            (string) $code,
             $message
         );
     }
@@ -154,39 +128,61 @@ final class JsonOutput implements ApiOutputInterface
     }
 
     /**
-     * At the moment, this method just acts as a proxy
-     *
-     * @param array<int|string> $albums
-     * @param string[] $include
-     *
+     * @param array<int|string> $result
      */
-    public function albums6(
-        array $albums,
-        array $include,
-        User $user,
-        string $auth,
-        bool $encode = true,
-        bool $asObject = true,
-    ): string {
-        return Json6_Data::albums($albums, $include, $user, $auth, $encode, $asObject);
+    public function podcastEpisodes(array $result, User $user, string $auth): string
+    {
+        return Json8_Data::podcast_episodes($result, $user, $auth);
     }
 
     /**
-     * At the moment, this method just acts as a proxy
-     *
-     * @param array<int|string> $albums
-     * @param string[] $include
-     *
+     * @param array<int|string> $result
      */
-    public function albums(
-        array $albums,
-        array $include,
-        User $user,
-        string $auth,
-        bool $encode = true,
-        bool $asObject = true,
-    ): string {
-        return Json8_Data::albums($albums, $include, $user, $auth, $encode, $asObject);
+    public function podcastEpisodes6(array $result, User $user, string $auth): string
+    {
+        return Json6_Data::podcast_episodes($result, $user, $auth);
+    }
+
+    public function setCount(int|string $count): void
+    {
+        Json8_Data::set_count($count);
+    }
+
+    public function setCount6(int|string $count): void
+    {
+        Json6_Data::set_count($count);
+    }
+
+    public function setLimit(int|string $limit): void
+    {
+        Json8_Data::set_limit($limit);
+    }
+
+    public function setLimit6(int|string $limit): void
+    {
+        Json6_Data::set_limit($limit);
+    }
+
+    public function setOffset(int|string $offset): void
+    {
+        Json8_Data::set_offset($offset);
+    }
+
+    public function setOffset6(int|string $offset): void
+    {
+        Json6_Data::set_offset($offset);
+    }
+
+    /**
+     * This generates a standard JSON Success message
+     * nothing fancy here...
+     *
+     * @param string $string success message
+     * @param array<string, string> $return_data
+     */
+    public function success(string $string, array $return_data = []): string
+    {
+        return Json8_Data::success($string, $return_data);
     }
 
     /**
@@ -202,14 +198,18 @@ final class JsonOutput implements ApiOutputInterface
     }
 
     /**
-     * This generates a standard JSON Success message
-     * nothing fancy here...
-     *
-     * @param string $string success message
-     * @param array<string, string> $return_data
+     * Generate an empty api result
      */
-    public function success(string $string, array $return_data = []): string
+    public function writeEmpty(string $emptyType): string
     {
-        return Json8_Data::success($string, $return_data);
+        return Json8_Data::empty($emptyType);
+    }
+
+    /**
+     * Generate an empty api result
+     */
+    public function writeEmpty6(string $emptyType): string
+    {
+        return Json6_Data::empty($emptyType);
     }
 }

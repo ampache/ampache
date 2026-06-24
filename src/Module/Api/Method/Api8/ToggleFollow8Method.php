@@ -45,7 +45,7 @@ final class ToggleFollow8Method
      *
      * This will follow/unfollow a user
      *
-     * filter   = (integer|string) filter by user id OR username //optional
+     * filter = (integer|string) filter by user id OR username //optional
      * username = (string) $username
      *
      * @param array{
@@ -76,8 +76,8 @@ final class ToggleFollow8Method
         }
 
         $leader = (is_numeric($username))
-            ? User::get_from_id((int)$username)
-            : User::get_from_username((string)$username);
+            ? User::get_from_id((int) $username)
+            : User::get_from_username((string) $username);
 
         if ($leader instanceof User) {
             self::getUserFollowToggler()->toggle(

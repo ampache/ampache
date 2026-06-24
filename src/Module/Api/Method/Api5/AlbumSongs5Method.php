@@ -47,9 +47,9 @@ class AlbumSongs5Method
      * This returns the songs of a specified album
      *
      * filter = (string) UID of Album
-     * exact  = (integer) 0,1, if true don't group songs from different disks //optional
+     * exact = (integer) 0,1, if true don't group songs from different disks //optional
      * offset = (integer) //optional
-     * limit  = (integer) //optional
+     * limit = (integer) //optional
      *
      * @param array{
      *     filter: string,

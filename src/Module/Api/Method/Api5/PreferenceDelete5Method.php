@@ -61,7 +61,7 @@ final class PreferenceDelete5Method
         if (!Api5::check_access(AccessTypeEnum::INTERFACE, AccessLevelEnum::ADMIN, $user->id, self::ACTION, $input['api_format'])) {
             return false;
         }
-        $pref_name  = (string)$input['filter'];
+        $pref_name  = (string) $input['filter'];
         $preference = Preference::get($pref_name, -1);
         if (empty($preference)) {
             Api5::error(sprintf(T_('Not Found: %s'), $pref_name), ErrorCodeEnum::NOT_FOUND, self::ACTION, 'filter', $input['api_format']);

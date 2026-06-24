@@ -49,10 +49,10 @@ final class PlaylistRemove8Method
      * This removes an object from a playlist using track number in the list or object id and type
      *
      * filter = (string) UID of playlist
-     * id     = (string) $object_id
-     * type   = (string) 'song', 'album', 'artist', 'playlist' //optional, default = song
-     * track  = (string) track number to remove from the playlist //optional
-     * clear  = (integer) 0,1 Clear the whole playlist //optional, default = 0
+     * id = (string) $object_id
+     * type = (string) 'song', 'album', 'artist', 'playlist' //optional, default = song
+     * track = (string) track number to remove from the playlist //optional
+     * clear = (integer) 0,1 Clear the whole playlist //optional, default = 0
      *
      * @param array{
      *     filter: string,
@@ -70,19 +70,19 @@ final class PlaylistRemove8Method
             return false;
         }
         ob_end_clean();
-        $playlist = new Playlist((int)$input['filter']);
+        $playlist = new Playlist((int) $input['filter']);
         if (!$playlist->has_collaborate($user)) {
             Api::error('Require: 100', ErrorCodeEnum::FAILED_ACCESS_CHECK, self::ACTION, 'account', $input['api_format']);
 
             return false;
         }
 
-        if (array_key_exists('clear', $input) && (int)$input['clear'] === 1) {
+        if (array_key_exists('clear', $input) && (int) $input['clear'] === 1) {
             $playlist->delete_all();
             Api::message('all items removed from playlist', $input['api_format']);
         } elseif (array_key_exists('id', $input)) {
             $track = (int) scrub_in((string) $input['id']);
-            if (!$playlist->has_item($track, null, (string)($input['type'] ?? 'song'))) {
+            if (!$playlist->has_item($track, null, (string) ($input['type'] ?? 'song'))) {
                 Api::error('Not Found', ErrorCodeEnum::NOT_FOUND, self::ACTION, 'song', $input['api_format']);
 
                 return false;

@@ -68,59 +68,402 @@ use SimpleXMLElement;
 class OpenSubsonic_Xml_Data
 {
     /**
-     * _createResponse
+     * addAlbum
      *
-     * Common answer wrapper.
-     * https://opensubsonic.netlify.app/docs/responses/subsonicresponse/
+     * https://opensubsonic.netlify.app/docs/responses/child/
      */
-    private static function _createResponse(string $status = 'ok'): SimpleXMLElement
+    public static function addAlbum(SimpleXMLElement $xml, Album $album, bool $songs = false, string $elementName = 'album'): void
     {
-        $response = new SimpleXMLElement('<?xml version="1.0" encoding="UTF-8"?><subsonic-response/>');
-        $response->addAttribute('xmlns', 'http://subsonic.org/restapi');
-        $response->addAttribute('status', (string)$status);
-        $response->addAttribute('version', OpenSubsonic_Api::API_VERSION);
-        $response->addAttribute('type', 'ampache');
-        $response->addAttribute('serverVersion', AmpConfig::get('version'));
-        $response->addAttribute('openSubsonic', "1");
+        if ($album->isNew()) {
+            return;
+        }
 
-        return $response;
+        $sub_id = OpenSubsonic_Api::getAlbumSubId($album->id);
+        $xalbum = self::_addChildToResultXml($xml, htmlspecialchars($elementName));
+        $xalbum->addAttribute('id', $sub_id);
+        $album_artist = $album->findAlbumArtist();
+        if ($album_artist) {
+            $xalbum->addAttribute('parent', OpenSubsonic_Api::getArtistSubId($album_artist));
+        }
+        $f_name = $album->get_fullname();
+        $xalbum->addAttribute('album', $f_name);
+        $xalbum->addAttribute('title', $f_name);
+        $xalbum->addAttribute('name', $f_name);
+        $xalbum->addAttribute('isDir', 'true');
+        //$xalbum->addAttribute('discNumber', (string)$album->disk);
+        if ($album->has_art()) {
+            $xalbum->addAttribute('coverArt', $sub_id);
+        }
+        $xalbum->addAttribute('songCount', (string) $album->song_count);
+        $xalbum->addAttribute('created', date('c', (int) $album->addition_time));
+        $xalbum->addAttribute('duration', (string) $album->time);
+        if ($album_artist) {
+            $xalbum->addAttribute('artistId', OpenSubsonic_Api::getArtistSubId($album_artist));
+        }
+        $xalbum->addAttribute('artist', (string) $album->get_parent_fullname());
+        // original year (fall back to regular year)
+        $original_year = AmpConfig::get('use_original_year');
+        $year          = ($original_year && $album->original_year)
+            ? $album->original_year
+            : $album->year;
+        if ($year > 0) {
+            $xalbum->addAttribute('year', (string) $year);
+        }
+        $tags = Tag::get_object_tags('album', $album->id);
+        if (!empty($tags)) {
+            $xalbum->addAttribute('genre', implode(',', array_column($tags, 'name')));
+            foreach ($tags as $tag) {
+                $xlastcat = self::_addChildToResultXml($xalbum, 'genres');
+                $xlastcat->addAttribute('name', (string) $tag['name']);
+            }
+        }
+
+        $rating      = new Rating($album->id, 'album');
+        $user_rating = ($rating->get_user_rating() ?? 0);
+        if ($user_rating > 0) {
+            $xalbum->addAttribute('userRating', (string) ceil($user_rating));
+        }
+        $avg_rating = $rating->get_average_rating();
+        if ($avg_rating > 0) {
+            $xalbum->addAttribute('averageRating', (string) $avg_rating);
+        }
+
+        $xalbum->addAttribute('playCount', (string) $album->total_count);
+
+        self::_setIfStarred($xalbum, 'album', $album->id);
+
+        if ($songs) {
+            $media_ids = self::getAlbumRepository()->getSongs($album->id);
+            foreach ($media_ids as $song_id) {
+                $song = new Song($song_id);
+                if ($song->isNew() || !$song->enabled) {
+                    continue;
+                }
+                self::addSong($xalbum, $song);
+            }
+        }
     }
 
     /**
-     * _createSuccessResponse
+     * addAlbumID3
      *
-     * https://opensubsonic.netlify.app/docs/responses/subsonicresponse/
+     * An album from ID3 tags.
+     * https://opensubsonic.netlify.app/docs/responses/albumid3/
      */
-    private static function _createSuccessResponse(string $function = ''): SimpleXMLElement
+    public static function addAlbumID3(SimpleXMLElement $xml, Album $album, bool $songs = false, string $elementName = 'album'): SimpleXMLElement
     {
-        $response = self::_createResponse();
-        debug_event(self::class, 'API success in function ' . $function . '-' . OpenSubsonic_Api::API_VERSION, 5);
+        if ($album->isNew()) {
+            return $xml;
+        }
 
-        return $response;
+        $sub_id = OpenSubsonic_Api::getAlbumSubId($album->id);
+        $xalbum = self::_addChildToResultXml($xml, htmlspecialchars($elementName));
+        $xalbum->addAttribute('id', $sub_id);
+        $album_artist = $album->findAlbumArtist();
+        if ($album_artist) {
+            $xalbum->addAttribute('parent', OpenSubsonic_Api::getArtistSubId($album_artist));
+        }
+        $f_name = (string) $album->get_fullname();
+        $xalbum->addAttribute('album', $f_name);
+        $xalbum->addAttribute('title', $f_name);
+        $xalbum->addAttribute('name', $f_name);
+        $xalbum->addAttribute('isDir', 'true');
+        //$xalbum->addAttribute('discNumber', (string)$album->disk);
+        if ($album->has_art()) {
+            $xalbum->addAttribute('coverArt', $sub_id);
+        }
+        $xalbum->addAttribute('songCount', (string) $album->song_count);
+        $xalbum->addAttribute('created', date('c', (int) $album->addition_time));
+        $xalbum->addAttribute('duration', (string) $album->time);
+        if ($album_artist) {
+            $xalbum->addAttribute('artistId', OpenSubsonic_Api::getArtistSubId($album_artist));
+        }
+        $xalbum->addAttribute('artist', (string) $album->get_parent_fullname());
+        // original year (fall back to regular year)
+        $original_year = AmpConfig::get('use_original_year');
+        $year          = ($original_year && $album->original_year)
+            ? $album->original_year
+            : $album->year;
+        if ($year > 0) {
+            $xalbum->addAttribute('year', (string) $year);
+        }
+        $tags = Tag::get_object_tags('album', $album->id);
+        if (!empty($tags)) {
+            $xalbum->addAttribute('genre', implode(',', array_column($tags, 'name')));
+            foreach ($tags as $tag) {
+                $xlastcat = self::_addChildToResultXml($xalbum, 'genres');
+                $xlastcat->addAttribute('name', (string) $tag['name']);
+            }
+        }
+
+        $rating      = new Rating($album->id, 'album');
+        $user_rating = ($rating->get_user_rating() ?? 0);
+        if ($user_rating > 0) {
+            $xalbum->addAttribute('userRating', (string) ceil($user_rating));
+        }
+        $avg_rating = $rating->get_average_rating();
+        if ($avg_rating > 0) {
+            $xalbum->addAttribute('averageRating', (string) $avg_rating);
+        }
+
+        $xalbum->addAttribute('playCount', (string) $album->total_count);
+
+        self::_setIfStarred($xalbum, 'album', $album->id);
+
+        if ($songs) {
+            $media_ids = self::getAlbumRepository()->getSongs($album->id);
+            foreach ($media_ids as $song_id) {
+                $song = new Song($song_id);
+                if ($song->isNew() || !$song->enabled) {
+                    continue;
+                }
+                self::addSong($xalbum, $song);
+            }
+        }
+
+        return $xml;
     }
 
     /**
-     * _createFailedResponse
+     * addAlbumInfo
      *
-     * https://opensubsonic.netlify.app/docs/responses/subsonic-response/
+     * https://opensubsonic.netlify.app/docs/responses/albuminfo/
+     * @param array{
+     *     id: int,
+     *     summary: ?string,
+     *     largephoto: ?string,
+     *     smallphoto: ?string,
+     *     mediumphoto: ?string,
+     *     megaphoto: ?string
+     * } $info
      */
-    private static function _createFailedResponse(string $function = ''): SimpleXMLElement
+    public static function addAlbumInfo(SimpleXMLElement $xml, array $info, Album $album): SimpleXMLElement
     {
-        $response = self::_createResponse('failed');
-        debug_event(self::class, 'API fail in function ' . $function . '-' . OpenSubsonic_Api::API_VERSION, 3);
+        $xartist = self::_addChildToResultXml($xml, htmlspecialchars('albumInfo'));
+        $xartist->addChild('notes', htmlspecialchars(trim((string) $info['summary'])));
+        $xartist->addChild('musicBrainzId', $album->mbid);
+        //$xartist->addChild('lastFmUrl', "");
+        $xartist->addChild('smallImageUrl', html_entity_decode((string) $info['smallphoto']));
+        $xartist->addChild('mediumImageUrl', html_entity_decode((string) $info['mediumphoto']));
+        $xartist->addChild('largeImageUrl', html_entity_decode((string) $info['largephoto']));
 
-        return $response;
+        return $xml;
     }
 
     /**
-     * addResponse
+     * addAlbumList
      *
-     * Generate a subsonic-response
-     * https://opensubsonic.netlify.app/docs/responses/subsonic-response/
+     * https://opensubsonic.netlify.app/docs/responses/albumList/
+     * @param int[] $albums
      */
-    public static function addResponse(string $function): SimpleXMLElement
+    public static function addAlbumList(SimpleXMLElement $xml, array $albums): SimpleXMLElement
     {
-        return self::_createSuccessResponse($function);
+        $xlist = self::_addChildToResultXml($xml, htmlspecialchars('albumList'));
+        foreach ($albums as $album_id) {
+            $album = new Album($album_id);
+            self::addAlbumID3($xlist, $album);
+        }
+
+        return $xml;
+    }
+
+    /**
+     * addAlbumList2
+     *
+     * https://opensubsonic.netlify.app/docs/responses/albumList2/
+     * @param int[] $albums
+     */
+    public static function addAlbumList2(SimpleXMLElement $xml, array $albums): SimpleXMLElement
+    {
+        $xlist = self::_addChildToResultXml($xml, htmlspecialchars('albumList2'));
+        foreach ($albums as $album_id) {
+            $album = new Album($album_id);
+            self::addAlbumID3($xlist, $album);
+        }
+
+        return $xml;
+    }
+
+    /**
+     * addArtist
+     *
+     * https://opensubsonic.netlify.app/docs/responses/artist/
+     */
+    public static function addArtist(SimpleXMLElement $xml, Artist $artist, bool $albums = false): SimpleXMLElement
+    {
+        if ($artist->isNew()) {
+            return $xml;
+        }
+
+        $sub_id  = OpenSubsonic_Api::getArtistSubId($artist->id);
+        $xartist = self::_addChildToResultXml($xml, 'artist');
+        $xartist->addAttribute('id', $sub_id);
+        $xartist->addAttribute('name', (string) $artist->get_fullname());
+
+        if ($artist->has_art()) {
+            $xartist->addAttribute('coverArt', $sub_id);
+        }
+
+        $xartist->addAttribute('albumCount', (string) $artist->album_count);
+
+        self::_setIfStarred($xartist, 'artist', $artist->id);
+        if ($albums) {
+            $allalbums = self::getAlbumRepository()->getAlbumByArtist($artist->id);
+            foreach ($allalbums as $album_id) {
+                $album = new Album($album_id);
+                self::addAlbumID3($xartist, $album);
+            }
+        }
+
+        return $xml;
+    }
+
+    /**
+     * addArtistInfo
+     *
+     * https://opensubsonic.netlify.app/docs/responses/artistinfo/
+     * @param array{
+     *     id: ?int,
+     *     summary: ?string,
+     *     placeformed: ?string,
+     *     yearformed: ?int,
+     *     largephoto: ?string,
+     *     smallphoto: ?string,
+     *     mediumphoto: ?string,
+     *     megaphoto: ?string
+     * } $info
+     * @param array<int, array{
+     *     id: ?int,
+     *     name: string,
+     *     rel?: ?string,
+     *     mbid?: ?string
+     * }> $similars
+     */
+    public static function addArtistInfo(SimpleXMLElement $xml, array $info, Artist $artist, array $similars, string $elementName = 'artistInfo'): SimpleXMLElement
+    {
+        $xartist   = self::_addChildToResultXml($xml, htmlspecialchars($elementName));
+        $biography = trim((string) $info['summary']);
+        if (!empty($biography)) {
+            $xartist->addChild('biography', htmlspecialchars($biography));
+        }
+        $xartist->addChild('musicBrainzId', (string) $artist->mbid);
+        //$xartist->addChild('lastFmUrl', "");
+        $xartist->addChild('smallImageUrl', html_entity_decode((string) $info['smallphoto']));
+        $xartist->addChild('mediumImageUrl', html_entity_decode((string) $info['mediumphoto']));
+        $xartist->addChild('largeImageUrl', html_entity_decode((string) $info['largephoto']));
+
+        $unknownCount = 0;
+        foreach ($similars as $similar) {
+            $xsimilar = self::_addChildToResultXml($xartist, 'similarArtist');
+            $xsimilar->addAttribute('id', (($similar['id'] !== null) ? OpenSubsonic_Api::getArtistSubId($similar['id']) : (string) ('-' . $unknownCount++)));
+            $xsimilar->addAttribute('name', (string) $similar['name']);
+        }
+
+        return $xml;
+    }
+
+    /**
+     * addArtistInfo2
+     *
+     * https://opensubsonic.netlify.app/docs/responses/artistinfo2/
+     * @param array{
+          *     id: ?int,
+          *     summary: ?string,
+          *     placeformed: ?string,
+          *     yearformed: ?int,
+          *     largephoto: ?string,
+          *     smallphoto: ?string,
+          *     mediumphoto: ?string,
+          *     megaphoto: ?string
+          * } $info
+     * @param array<int, array{
+          *     id: ?int,
+          *     name: string,
+          *     rel?: ?string,
+          *     mbid?: ?string
+          * }> $similars
+     */
+    public static function addArtistInfo2(SimpleXMLElement $xml, array $info, Artist $artist, array $similars): SimpleXMLElement
+    {
+        return self::addArtistInfo($xml, $info, $artist, $similars, 'artistInfo2');
+    }
+
+    /**
+     * addArtists
+     *
+     * https://opensubsonic.netlify.app/docs/responses/artistsid3/
+     * @param array<int, array{
+     *     id: int,
+     *     f_name: string,
+     *     name: string,
+     *     album_count: int,
+     *     catalog_id: int,
+     *     has_art: int
+     * }> $artists
+     */
+    public static function addArtists(SimpleXMLElement $xml, array $artists): SimpleXMLElement
+    {
+        $xartists = self::_addChildToResultXml($xml, 'artists');
+        self::_addIgnoredArticles($xartists);
+        self::_addIndex($xartists, $artists);
+
+        return $xml;
+    }
+
+    /**
+     * addBookmarks
+     *
+     * https://opensubsonic.netlify.app/docs/responses/bookmarks/
+     * @param list<Bookmark> $bookmarks
+     */
+    public static function addBookmarks(SimpleXMLElement $xml, array $bookmarks): SimpleXMLElement
+    {
+        $xbookmarks = self::_addChildToResultXml($xml, 'bookmarks');
+        foreach ($bookmarks as $bookmark) {
+            self::_addBookmark($xbookmarks, $bookmark);
+        }
+
+        return $xml;
+    }
+
+    /**
+     * addChatMessages
+     *
+     * https://opensubsonic.netlify.app/docs/responses/chatmessages/
+     * @param int[] $messages
+     */
+    public static function addChatMessages(SimpleXMLElement $xml, array $messages): SimpleXMLElement
+    {
+        $xmessages = self::_addChildToResultXml($xml, 'chatMessages');
+        if (empty($messages)) {
+            return $xml;
+        }
+
+        foreach ($messages as $message) {
+            $chat = new PrivateMsg($message);
+            self::_addMessage($xmessages, $chat);
+        }
+
+        return $xml;
+    }
+
+    /**
+     * addDirectory
+     *
+     * Create the directory element based on the type
+     * https://opensubsonic.netlify.app/docs/responses/directory/
+     */
+    public static function addDirectory(SimpleXMLElement $xml, Artist|Album|Catalog $object): SimpleXMLElement
+    {
+        if ($object instanceof Artist) {
+            self::_addDirectory_Artist($xml, $object);
+        } elseif ($object instanceof Album) {
+            self::_addDirectory_Album($xml, $object);
+        } elseif ($object instanceof Catalog) {
+            self::_addDirectory_Catalog($xml, $object);
+        }
+
+        return $xml;
     }
 
     /**
@@ -132,7 +475,7 @@ class OpenSubsonic_Xml_Data
     {
         $xml  = self::_createFailedResponse($function);
         $xerr = self::_addChildToResultXml($xml, 'error');
-        $xerr->addAttribute('code', (string)$code);
+        $xerr->addAttribute('code', (string) $code);
 
         $message = "Error creating response.";
         switch ($code) {
@@ -177,37 +520,20 @@ class OpenSubsonic_Xml_Data
     }
 
     /**
-     * addLicense
+     * addGenres
      *
-     * getLicense result.
-     * https://opensubsonic.netlify.app/docs/responses/license/
+     * https://opensubsonic.netlify.app/docs/responses/genres/
+     * @param array<int, array{id: int, name: string, is_hidden: int, count: int}> $tags
      */
-    public static function addLicense(SimpleXMLElement $xml): SimpleXMLElement
+    public static function addGenres(SimpleXMLElement $xml, array $tags): SimpleXMLElement
     {
-        $xlic = self::_addChildToResultXml($xml, 'license');
-        $xlic->addAttribute('valid', 'true');
-        $xlic->addAttribute('email', 'webmaster@ampache.org');
+        $xgenres = self::_addChildToResultXml($xml, 'genres');
 
-        return $xml;
-    }
-
-    /**
-     * addMusicFolders
-     *
-     * https://opensubsonic.netlify.app/docs/responses/musicfolders/
-     * @param int[] $catalogs
-     */
-    public static function addMusicFolders(SimpleXMLElement $xml, array $catalogs): SimpleXMLElement
-    {
-        $xfolders = self::_addChildToResultXml($xml, 'musicFolders');
-        foreach ($catalogs as $catalog_id) {
-            $catalog = Catalog::create_from_id($catalog_id);
-            if ($catalog === null) {
-                break;
-            }
-            $xfolder = self::_addChildToResultXml($xfolders, 'musicFolder');
-            $xfolder->addAttribute('id', OpenSubsonic_Api::getCatalogSubId($catalog_id));
-            $xfolder->addAttribute('name', (string)$catalog->name);
+        foreach ($tags as $tag) {
+            $otag   = new Tag($tag['id']);
+            $xgenre = self::_addChildToResultXml($xgenres, 'genre', htmlspecialchars((string) $otag->name));
+            $xgenre->addAttribute('songCount', (string) ($otag->song));
+            $xgenre->addAttribute('albumCount', (string) ($otag->album));
         }
 
         return $xml;
@@ -237,66 +563,251 @@ class OpenSubsonic_Xml_Data
     }
 
     /**
-     * addIgnoredArticles
+     * addInternetRadioStations
+     *
+     * https://opensubsonic.netlify.app/docs/responses/internetradiostations/
+     * @param int[] $radios
      */
-    private static function _addIgnoredArticles(SimpleXMLElement $xml): void
+    public static function addInternetRadioStations(SimpleXMLElement $xml, array $radios): SimpleXMLElement
     {
-        $ignoredArticles = AmpConfig::get('catalog_prefix_pattern', 'The|An|A|Die|Das|Ein|Eine|Les|Le|La');
-        if (!empty($ignoredArticles)) {
-            $ignoredArticles = str_replace('|', ' ', $ignoredArticles);
-            $xml->addAttribute('ignoredArticles', (string)$ignoredArticles);
+        $xradios = self::_addChildToResultXml($xml, 'internetRadioStations');
+        foreach ($radios as $radio_id) {
+            $radio = new Live_Stream((int) $radio_id);
+            self::_addInternetRadioStation($xradios, $radio);
         }
+
+        return $xml;
     }
 
     /**
-     * addIndex
+     * addJukeboxPlaylist
      *
-     * https://opensubsonic.netlify.app/docs/responses/index_/
-     * @param array<int, array{
-     *     id: int,
-     *     f_name: string,
-     *     name: string,
-     *     album_count: int,
-     *     catalog_id: int,
-     *     has_art: int
-     * }> $artists
+     * https://opensubsonic.netlify.app/docs/responses/jukeboxplaylist/
      */
-    private static function _addIndex(SimpleXMLElement $xml, array $artists): void
+    public static function addJukeboxPlaylist(SimpleXMLElement $xml, LocalPlay $localplay): SimpleXMLElement
     {
-        $xlastcat     = null;
-        $sharpartists = [];
-        $xlastletter  = '';
-        foreach ($artists as $artist) {
-            if (strlen((string)$artist['name']) > 0) {
-                $letter = strtoupper((string)$artist['name'][0]);
-                if ($letter == 'X' || $letter == 'Y' || $letter == 'Z') {
-                    $letter = 'X-Z';
-                } elseif (!preg_match("/^[A-W]$/", $letter)) {
-                    $sharpartists[] = $artist;
+        $xjbox  = self::addJukeboxStatus($xml, $localplay, 'jukeboxPlaylist');
+        $tracks = $localplay->get();
+        foreach ($tracks as $track) {
+            if (array_key_exists('oid', $track)) {
+                $song = new Song((int) $track['oid']);
+                if ($song->isNew() || !$song->enabled) {
                     continue;
                 }
+                self::addSong($xjbox, $song, 'entry');
+            }
+            // TODO This can be random play, democratic, podcasts, etc. not just songs
+        }
 
-                if ($letter != $xlastletter) {
-                    $xlastletter = $letter;
-                    $xlastcat    = self::_addChildToResultXml($xml, 'index');
-                    $xlastcat->addAttribute('name', (string)$xlastletter);
+        return $xml;
+    }
+
+    /**
+     * addJukeboxStatus
+     *
+     * https://opensubsonic.netlify.app/docs/responses/jukeboxstatus/
+     */
+    public static function addJukeboxStatus(SimpleXMLElement $xml, LocalPlay $localplay, string $elementName = 'jukeboxStatus'): SimpleXMLElement
+    {
+        $xjbox  = self::_addChildToResultXml($xml, htmlspecialchars($elementName));
+        $status = $localplay->status();
+        if (empty($status)) {
+            $xjbox->addAttribute('currentIndex', '0');
+            $xjbox->addAttribute('playing', 'false');
+            $xjbox->addAttribute('gain', '0');
+
+            return $xml;
+        }
+        $index = (((int) $status['track']) === 0)
+            ? 0
+            : $status['track'] - 1;
+        $xjbox->addAttribute('currentIndex', (string) $index);
+        $xjbox->addAttribute('playing', ($status['state'] == 'play') ? 'true' : 'false');
+        $xjbox->addAttribute('gain', (string) $status['volume']);
+        $xjbox->addAttribute('position', '0'); // TODO Not supported
+
+        return $xml;
+    }
+
+    /**
+     * addLicense
+     *
+     * getLicense result.
+     * https://opensubsonic.netlify.app/docs/responses/license/
+     */
+    public static function addLicense(SimpleXMLElement $xml): SimpleXMLElement
+    {
+        $xlic = self::_addChildToResultXml($xml, 'license');
+        $xlic->addAttribute('valid', 'true');
+        $xlic->addAttribute('email', 'webmaster@ampache.org');
+
+        return $xml;
+    }
+
+    /**
+     * addLyrics
+     *
+     * https://opensubsonic.netlify.app/docs/responses/lyrics/
+     */
+    public static function addLyrics(SimpleXMLElement $xml, string $artist, string $title, Song $song): SimpleXMLElement
+    {
+        if ($song->isNew() || !$song->enabled) {
+            return $xml;
+        }
+
+        $lyrics = $song->get_lyrics();
+
+        if (!empty($lyrics) && $lyrics['text']) {
+            $text    = preg_replace('/\<br(\s*)?\/?\>/i', "\n", $lyrics['text']);
+            $text    = preg_replace('/\\n\\n/i', "\n", (string) $text);
+            $text    = str_replace("\r", '', (string) $text);
+            $xlyrics = self::_addChildToResultXml($xml, 'lyrics', html_entity_decode($text));
+            if ($artist) {
+                $xlyrics->addAttribute('artist', $artist);
+            }
+            if ($title) {
+                $xlyrics->addAttribute('title', $title);
+            }
+        }
+
+        return $xml;
+    }
+
+    /**
+     * addLyricsList
+     *
+     * https://opensubsonic.netlify.app/docs/responses/lyricslist/
+     */
+    public static function addLyricsList(SimpleXMLElement $xml, Song $song): SimpleXMLElement
+    {
+        if ($song->isNew() || !$song->enabled) {
+            return $xml;
+        }
+
+        $xlist  = self::_addChildToResultXml($xml, 'lyricsList');
+        $lyrics = $song->get_lyrics();
+
+        if (!empty($lyrics) && $lyrics['text']) {
+            $xlyrics = self::_addChildToResultXml($xlist, 'structuredLyrics');
+            $xlyrics->addAttribute('displayArtist', $song->get_parent_fullname());
+            $xlyrics->addAttribute('displayTitle', (string) $song->title);
+            $xlyrics->addAttribute('lang', 'xxx');
+
+            $text = preg_replace('/\<br(\s*)?\/?\>/i', "\n", $lyrics['text']);
+            $text = preg_replace('/\\n\\n/i', "\n", (string) $text);
+            $text = str_replace("\r", '', (string) $text);
+
+            $synced = [];
+            $lines  = [];
+            foreach (explode("\n", html_entity_decode($text)) as $line) {
+                if (!empty($line)) {
+                    if (preg_match('/^\[(\d{2}):(\d{2})\.(\d{2})\]\s*(.*)$/', $line, $matches)) {
+                        $minutes      = (int) $matches[1];
+                        $seconds      = (int) $matches[2];
+                        $centiseconds = (int) $matches[3];
+                        $milliseconds = ($minutes * 60 * 1000) + ($seconds * 1000) + ($centiseconds * 10);
+
+                        // Lyrics text
+                        $lyricLine = trim($matches[4]);
+                        $synced[]  = [
+                            'start' => (string) $milliseconds,
+                            'value' => $lyricLine,
+                        ];
+                    } else {
+                        $lines[] = ['value' => (string) $line];
+                    }
                 }
             }
 
-            if ($xlastcat != null) {
-                self::_addArtistArray($xlastcat, $artist);
+            if ($synced !== []) {
+                $xlyrics->addAttribute('synced', 'true');
+                foreach ($synced as $line) {
+                    $xline = self::_addChildToResultXml($xlyrics, 'line');
+                    $xline->addAttribute('start', $line['start']);
+                    $xline->addAttribute('value', $line['value']);
+                }
+            } elseif ($lines !== []) {
+                $xlyrics->addAttribute('synced', 'false');
+                foreach ($lines as $line) {
+                    $xline = self::_addChildToResultXml($xlyrics, 'line');
+                    $xline->addAttribute('value', $line['value']);
+                }
             }
         }
 
-        // Always add # index at the end
-        if (count($sharpartists) > 0) {
-            $xsharpcat = self::_addChildToResultXml($xml, 'index');
-            $xsharpcat->addAttribute('name', '#');
+        return $xml;
+    }
 
-            foreach ($sharpartists as $artist) {
-                self::_addArtistArray($xsharpcat, $artist);
+    /**
+     * addMusicFolders
+     *
+     * https://opensubsonic.netlify.app/docs/responses/musicfolders/
+     * @param int[] $catalogs
+     */
+    public static function addMusicFolders(SimpleXMLElement $xml, array $catalogs): SimpleXMLElement
+    {
+        $xfolders = self::_addChildToResultXml($xml, 'musicFolders');
+        foreach ($catalogs as $catalog_id) {
+            $catalog = Catalog::create_from_id($catalog_id);
+            if ($catalog === null) {
+                break;
+            }
+            $xfolder = self::_addChildToResultXml($xfolders, 'musicFolder');
+            $xfolder->addAttribute('id', OpenSubsonic_Api::getCatalogSubId($catalog_id));
+            $xfolder->addAttribute('name', (string) $catalog->name);
+        }
+
+        return $xml;
+    }
+
+    /**
+     * addNewestPodcasts
+     *
+     * https://opensubsonic.netlify.app/docs/responses/newestpodcasts/
+     * @param Podcast_Episode[] $episodes
+     */
+    public static function addNewestPodcasts(SimpleXMLElement $xml, array $episodes): SimpleXMLElement
+    {
+        $xpodcasts = self::_addChildToResultXml($xml, 'newestPodcasts');
+        foreach ($episodes as $episode) {
+            self::_addPodcastEpisode($xpodcasts, $episode);
+        }
+
+        return $xml;
+    }
+
+    /**
+     * addNowPlaying
+     *
+     * https://opensubsonic.netlify.app/docs/responses/nowplaying/
+     * @param array<int, array{
+     *     media: library_item,
+     *     client: User,
+     *     agent: string,
+     *     expire: int
+     * }> $data
+     */
+    public static function addNowPlaying(SimpleXMLElement $xml, array $data): SimpleXMLElement
+    {
+        $xplaynow = self::_addChildToResultXml($xml, 'nowPlaying');
+        foreach ($data as $row) {
+            if (
+                $row['media'] instanceof Song
+                && $row['media']->isNew() === false
+                && $row['media']->enabled
+            ) {
+                $attributes = [
+                    'username' => (string) $row['client']->username,
+                    'minutesAgo' => (string) (abs((time() - ($row['expire'] - $row['media']->time)) / 60)),
+                    'playerId' => '0',
+                    'playerName' => (string) $row['agent'],
+                ];
+
+                self::addSong($xplaynow, $row['media'], 'entry', $attributes);
             }
         }
+
+        return $xml;
     }
 
     /**
@@ -311,618 +822,8 @@ class OpenSubsonic_Xml_Data
             $xextension = self::_addChildToResultXml($xml, 'openSubsonicExtensions');
             $xextension->addAttribute('name', $name);
             foreach ($versions as $version) {
-                $xextension->addChild('versions', (string)$version);
+                $xextension->addChild('versions', (string) $version);
             }
-        }
-
-        return $xml;
-    }
-
-    /**
-     * addArtists
-     *
-     * https://opensubsonic.netlify.app/docs/responses/artistsid3/
-     * @param array<int, array{
-     *     id: int,
-     *     f_name: string,
-     *     name: string,
-     *     album_count: int,
-     *     catalog_id: int,
-     *     has_art: int
-     * }> $artists
-     */
-    public static function addArtists(SimpleXMLElement $xml, array $artists): SimpleXMLElement
-    {
-        $xartists = self::_addChildToResultXml($xml, 'artists');
-        self::_addIgnoredArticles($xartists);
-        self::_addIndex($xartists, $artists);
-
-        return $xml;
-    }
-
-    /**
-     * addArtist
-     *
-     * https://opensubsonic.netlify.app/docs/responses/artist/
-     */
-    public static function addArtist(SimpleXMLElement $xml, Artist $artist, bool $albums = false): SimpleXMLElement
-    {
-        if ($artist->isNew()) {
-            return $xml;
-        }
-
-        $sub_id  = OpenSubsonic_Api::getArtistSubId($artist->id);
-        $xartist = self::_addChildToResultXml($xml, 'artist');
-        $xartist->addAttribute('id', $sub_id);
-        $xartist->addAttribute('name', (string)$artist->get_fullname());
-
-        if ($artist->has_art()) {
-            $xartist->addAttribute('coverArt', $sub_id);
-        }
-
-        $xartist->addAttribute('albumCount', (string)$artist->album_count);
-
-        self::_setIfStarred($xartist, 'artist', $artist->id);
-        if ($albums) {
-            $allalbums = self::getAlbumRepository()->getAlbumByArtist($artist->id);
-            foreach ($allalbums as $album_id) {
-                $album = new Album($album_id);
-                self::addAlbumID3($xartist, $album);
-            }
-        }
-
-        return $xml;
-    }
-
-    /**
-     * addChildArray
-     * @param array{
-     *     id: int,
-     *     f_name: string,
-     *     name: string,
-     *     album_count: int,
-     *     catalog_id: int,
-     *     has_art: int
-     * } $child
-     */
-    private static function _addChildArray(SimpleXMLElement $xml, array $child): void
-    {
-        $sub_id = OpenSubsonic_Api::getArtistSubId($child['id']);
-        $xchild = self::_addChildToResultXml($xml, 'child');
-        $xchild->addAttribute('id', $sub_id);
-        $xchild->addAttribute('parent', (string)$child['catalog_id']);
-        $xchild->addAttribute('isDir', 'true');
-        $xchild->addAttribute('title', $child['f_name']);
-        $xchild->addAttribute('artist', $child['f_name']);
-        if ($child['has_art']) {
-            $xchild->addAttribute('coverArt', $sub_id);
-        }
-    }
-
-    /**
-     * addChildSong
-     *
-     * https://opensubsonic.netlify.app/docs/responses/child/
-     * @param array<string, string> $attributes
-     */
-    private static function _addChildSong(SimpleXMLElement $xml, Song $song, string $elementName, array $attributes = []): SimpleXMLElement
-    {
-        $sub_id    = OpenSubsonic_Api::getSongSubId($song->id);
-        $subParent = OpenSubsonic_Api::getAlbumSubId($song->album);
-        $xsong     = self::_addChildToResultXml($xml, htmlspecialchars($elementName));
-        $xsong->addAttribute('id', $sub_id);
-        $xsong->addAttribute('parent', $subParent);
-        //$xsong->addAttribute('created', );
-        $xsong->addAttribute('title', (string)$song->title);
-        $xsong->addAttribute('isDir', 'false');
-        $xsong->addAttribute('isVideo', 'false');
-        $xsong->addAttribute('type', 'music');
-        $xsong->addAttribute('albumId', $subParent);
-        $xsong->addAttribute('album', (string)$song->get_album_fullname());
-        $xsong->addAttribute('artistId', ($song->artist) ? OpenSubsonic_Api::getArtistSubId($song->artist) : '');
-        $xsong->addAttribute('artist', (string)$song->get_parent_fullname());
-        if ($song->has_art()) {
-            $art_id = (AmpConfig::get('show_song_art', false)) ? $sub_id : $subParent;
-            $xsong->addAttribute('coverArt', $art_id);
-        }
-        $xsong->addAttribute('duration', (string)$song->time);
-        $xsong->addAttribute('bitRate', (string)((int)($song->bitrate / 1024)));
-        $rating      = new Rating($song->id, 'song');
-        $user_rating = ($rating->get_user_rating() ?? 0);
-        if ($user_rating > 0) {
-            $xsong->addAttribute('userRating', (string)ceil($user_rating));
-        }
-        $avg_rating = $rating->get_average_rating();
-        if ($avg_rating > 0) {
-            $xsong->addAttribute('averageRating', (string)$avg_rating);
-        }
-
-        $xsong->addAttribute('playCount', (string)$song->total_count);
-
-        self::_setIfStarred($xsong, 'song', $song->id);
-        if ($song->track > 0) {
-            $xsong->addAttribute('track', (string)$song->track);
-        }
-        if ($song->year > 0) {
-            $xsong->addAttribute('year', (string)$song->year);
-        }
-        $tags = Tag::get_object_tags('song', $song->id);
-        if (!empty($tags)) {
-            $xsong->addAttribute('genre', implode(',', array_column($tags, 'name')));
-            foreach ($tags as $tag) {
-                $xlastcat = self::_addChildToResultXml($xsong, 'genres');
-                $xlastcat->addAttribute('name', (string)$tag['name']);
-            }
-        }
-        $xsong->addAttribute('size', (string)$song->size);
-        $disk = $song->disk;
-        if ($disk > 0) {
-            $xsong->addAttribute('discNumber', (string)$disk);
-        }
-        $xsong->addAttribute('suffix', (string)$song->type);
-        $xsong->addAttribute('contentType', (string)$song->mime);
-        // Always return the original filename, not the transcoded one
-        $xsong->addAttribute('path', (string)$song->file);
-        if (AmpConfig::get('transcode', 'default') != 'never') {
-            $cache_path     = (string)AmpConfig::get('cache_path', '');
-            $cache_target   = (string)AmpConfig::get('cache_target', '');
-            $file_target    = Catalog::get_cache_path($song->getId(), $song->getCatalogId(), $cache_path, $cache_target);
-            $transcode_type = ($file_target !== null && is_file($file_target))
-                ? $cache_target
-                : Stream::get_transcode_format($song->type, null, 'api');
-
-            if (!empty($transcode_type) && $song->type !== $transcode_type) {
-                // Set transcoding information
-                $xsong->addAttribute('transcodedSuffix', $transcode_type);
-                $xsong->addAttribute('transcodedContentType', Song::type_to_mime($transcode_type));
-            }
-        }
-        foreach ($attributes as $key => $value) {
-            $xsong->addAttribute($key, $value);
-        }
-
-        return $xml;
-    }
-
-    /**
-     * addArtistArray
-     * @param array{
-     *     id: int,
-     *     f_name: string,
-     *     name: string,
-     *     album_count: int,
-     *     catalog_id: int,
-     *     has_art: int
-     * } $artist
-     */
-    private static function _addArtistArray(SimpleXMLElement $xml, array $artist): void
-    {
-        $sub_id  = OpenSubsonic_Api::getArtistSubId($artist['id']);
-        $xartist = self::_addChildToResultXml($xml, 'artist');
-        $xartist->addAttribute('id', $sub_id);
-        $xartist->addAttribute('name', $artist['f_name']);
-        if ($artist['has_art']) {
-            $xartist->addAttribute('coverArt', $sub_id);
-        }
-        $xartist->addAttribute('albumCount', (string)$artist['album_count']);
-        self::_setIfStarred($xartist, 'artist', $artist['id']);
-    }
-
-    /**
-     * addAlbumList
-     *
-     * https://opensubsonic.netlify.app/docs/responses/albumList/
-     * @param int[] $albums
-     */
-    public static function addAlbumList(SimpleXMLElement $xml, array $albums): SimpleXMLElement
-    {
-        $xlist = self::_addChildToResultXml($xml, htmlspecialchars('albumList'));
-        foreach ($albums as $album_id) {
-            $album = new Album($album_id);
-            self::addAlbumID3($xlist, $album);
-        }
-
-        return $xml;
-    }
-
-    /**
-     * addAlbumList2
-     *
-     * https://opensubsonic.netlify.app/docs/responses/albumList2/
-     * @param int[] $albums
-     */
-    public static function addAlbumList2(SimpleXMLElement $xml, array $albums): SimpleXMLElement
-    {
-        $xlist = self::_addChildToResultXml($xml, htmlspecialchars('albumList2'));
-        foreach ($albums as $album_id) {
-            $album = new Album($album_id);
-            self::addAlbumID3($xlist, $album);
-        }
-
-        return $xml;
-    }
-
-    /**
-     * addAlbumID3
-     *
-     * An album from ID3 tags.
-     * https://opensubsonic.netlify.app/docs/responses/albumid3/
-     */
-    public static function addAlbumID3(SimpleXMLElement $xml, Album $album, bool $songs = false, string $elementName = 'album'): SimpleXMLElement
-    {
-        if ($album->isNew()) {
-            return $xml;
-        }
-
-        $sub_id = OpenSubsonic_Api::getAlbumSubId($album->id);
-        $xalbum = self::_addChildToResultXml($xml, htmlspecialchars($elementName));
-        $xalbum->addAttribute('id', $sub_id);
-        $album_artist = $album->findAlbumArtist();
-        if ($album_artist) {
-            $xalbum->addAttribute('parent', OpenSubsonic_Api::getArtistSubId($album_artist));
-        }
-        $f_name = (string)$album->get_fullname();
-        $xalbum->addAttribute('album', $f_name);
-        $xalbum->addAttribute('title', $f_name);
-        $xalbum->addAttribute('name', $f_name);
-        $xalbum->addAttribute('isDir', 'true');
-        //$xalbum->addAttribute('discNumber', (string)$album->disk);
-        if ($album->has_art()) {
-            $xalbum->addAttribute('coverArt', $sub_id);
-        }
-        $xalbum->addAttribute('songCount', (string) $album->song_count);
-        $xalbum->addAttribute('created', date('c', (int)$album->addition_time));
-        $xalbum->addAttribute('duration', (string) $album->time);
-        if ($album_artist) {
-            $xalbum->addAttribute('artistId', OpenSubsonic_Api::getArtistSubId($album_artist));
-        }
-        $xalbum->addAttribute('artist', (string)$album->get_parent_fullname());
-        // original year (fall back to regular year)
-        $original_year = AmpConfig::get('use_original_year');
-        $year          = ($original_year && $album->original_year)
-            ? $album->original_year
-            : $album->year;
-        if ($year > 0) {
-            $xalbum->addAttribute('year', (string)$year);
-        }
-        $tags = Tag::get_object_tags('album', $album->id);
-        if (!empty($tags)) {
-            $xalbum->addAttribute('genre', implode(',', array_column($tags, 'name')));
-            foreach ($tags as $tag) {
-                $xlastcat = self::_addChildToResultXml($xalbum, 'genres');
-                $xlastcat->addAttribute('name', (string)$tag['name']);
-            }
-        }
-
-        $rating      = new Rating($album->id, 'album');
-        $user_rating = ($rating->get_user_rating() ?? 0);
-        if ($user_rating > 0) {
-            $xalbum->addAttribute('userRating', (string)ceil($user_rating));
-        }
-        $avg_rating = $rating->get_average_rating();
-        if ($avg_rating > 0) {
-            $xalbum->addAttribute('averageRating', (string)$avg_rating);
-        }
-
-        $xalbum->addAttribute('playCount', (string)$album->total_count);
-
-        self::_setIfStarred($xalbum, 'album', $album->id);
-
-        if ($songs) {
-            $media_ids = self::getAlbumRepository()->getSongs($album->id);
-            foreach ($media_ids as $song_id) {
-                $song = new Song($song_id);
-                if ($song->isNew() || !$song->enabled) {
-                    continue;
-                }
-                self::addSong($xalbum, $song);
-            }
-        }
-
-        return $xml;
-    }
-
-    /**
-     * addAlbum
-     *
-     * https://opensubsonic.netlify.app/docs/responses/child/
-     */
-    public static function addAlbum(SimpleXMLElement $xml, Album $album, bool $songs = false, string $elementName = 'album'): void
-    {
-        if ($album->isNew()) {
-            return;
-        }
-
-        $sub_id = OpenSubsonic_Api::getAlbumSubId($album->id);
-        $xalbum = self::_addChildToResultXml($xml, htmlspecialchars($elementName));
-        $xalbum->addAttribute('id', $sub_id);
-        $album_artist = $album->findAlbumArtist();
-        if ($album_artist) {
-            $xalbum->addAttribute('parent', OpenSubsonic_Api::getArtistSubId($album_artist));
-        }
-        $f_name = $album->get_fullname();
-        $xalbum->addAttribute('album', $f_name);
-        $xalbum->addAttribute('title', $f_name);
-        $xalbum->addAttribute('name', $f_name);
-        $xalbum->addAttribute('isDir', 'true');
-        //$xalbum->addAttribute('discNumber', (string)$album->disk);
-        if ($album->has_art()) {
-            $xalbum->addAttribute('coverArt', $sub_id);
-        }
-        $xalbum->addAttribute('songCount', (string) $album->song_count);
-        $xalbum->addAttribute('created', date('c', (int)$album->addition_time));
-        $xalbum->addAttribute('duration', (string) $album->time);
-        if ($album_artist) {
-            $xalbum->addAttribute('artistId', OpenSubsonic_Api::getArtistSubId($album_artist));
-        }
-        $xalbum->addAttribute('artist', (string)$album->get_parent_fullname());
-        // original year (fall back to regular year)
-        $original_year = AmpConfig::get('use_original_year');
-        $year          = ($original_year && $album->original_year)
-            ? $album->original_year
-            : $album->year;
-        if ($year > 0) {
-            $xalbum->addAttribute('year', (string)$year);
-        }
-        $tags = Tag::get_object_tags('album', $album->id);
-        if (!empty($tags)) {
-            $xalbum->addAttribute('genre', implode(',', array_column($tags, 'name')));
-            foreach ($tags as $tag) {
-                $xlastcat = self::_addChildToResultXml($xalbum, 'genres');
-                $xlastcat->addAttribute('name', (string)$tag['name']);
-            }
-        }
-
-        $rating      = new Rating($album->id, 'album');
-        $user_rating = ($rating->get_user_rating() ?? 0);
-        if ($user_rating > 0) {
-            $xalbum->addAttribute('userRating', (string)ceil($user_rating));
-        }
-        $avg_rating = $rating->get_average_rating();
-        if ($avg_rating > 0) {
-            $xalbum->addAttribute('averageRating', (string)$avg_rating);
-        }
-
-        $xalbum->addAttribute('playCount', (string)$album->total_count);
-
-        self::_setIfStarred($xalbum, 'album', $album->id);
-
-        if ($songs) {
-            $media_ids = self::getAlbumRepository()->getSongs($album->id);
-            foreach ($media_ids as $song_id) {
-                $song = new Song($song_id);
-                if ($song->isNew() || !$song->enabled) {
-                    continue;
-                }
-                self::addSong($xalbum, $song);
-            }
-        }
-    }
-
-    /**
-     * addSong
-     *
-     * https://opensubsonic.netlify.app/docs/responses/song/
-     * @param array<string, string> $attributes
-     */
-    public static function addSong(SimpleXMLElement $xml, Song $song, string $elementName = 'song', array $attributes = []): SimpleXMLElement
-    {
-        return self::_addChildSong($xml, $song, $elementName, $attributes);
-    }
-
-    /**
-     * addDirectory
-     *
-     * Create the directory element based on the type
-     * https://opensubsonic.netlify.app/docs/responses/directory/
-     */
-    public static function addDirectory(SimpleXMLElement $xml, Artist|Album|Catalog $object): SimpleXMLElement
-    {
-        if ($object instanceof Artist) {
-            self::_addDirectory_Artist($xml, $object);
-        } elseif ($object instanceof Album) {
-            self::_addDirectory_Album($xml, $object);
-        } elseif ($object instanceof Catalog) {
-            self::_addDirectory_Catalog($xml, $object);
-        }
-
-        return $xml;
-    }
-
-    /**
-     * addDirectory_Album for subsonic album id
-     */
-    private static function _addDirectory_Album(SimpleXMLElement $xml, Album $album): void
-    {
-        $album_id = $album->id;
-        $xdir     = self::_addChildToResultXml($xml, 'directory');
-        $xdir->addAttribute('id', OpenSubsonic_Api::getAlbumSubId($album_id));
-        $album_artist = $album->findAlbumArtist();
-        if ($album_artist) {
-            $xdir->addAttribute('parent', OpenSubsonic_Api::getArtistSubId($album_artist));
-        } else {
-            $xdir->addAttribute('parent', (string)$album->catalog);
-        }
-        $xdir->addAttribute('name', (string)$album->get_fullname());
-        self::_setIfStarred($xdir, 'album', $album->id);
-
-        $media_ids = self::getAlbumRepository()->getSongs($album->id);
-        foreach ($media_ids as $song_id) {
-            // TODO addChild || use addChildArray
-            $song = new Song($song_id);
-            if ($song->isNew() || !$song->enabled) {
-                continue;
-            }
-            self::addSong($xdir, $song, 'child');
-        }
-    }
-
-    /**
-     * addDirectory_Artist for subsonic artist id
-     */
-    private static function _addDirectory_Artist(SimpleXMLElement $xml, Artist $artist): void
-    {
-        $artist_id = $artist->id;
-        $data      = Artist::get_id_array($artist_id);
-        $xdir      = self::_addChildToResultXml($xml, 'directory');
-        $xdir->addAttribute('id', OpenSubsonic_Api::getArtistSubId($artist_id));
-        if ($data['catalog_id']) {
-            $xdir->addAttribute('parent', (string)$data['catalog_id']);
-        }
-        $xdir->addAttribute('name', (string)$data['f_name']);
-        self::_setIfStarred($xdir, 'artist', $artist_id);
-        $allalbums = self::getAlbumRepository()->getAlbumByArtist($artist_id);
-        foreach ($allalbums as $album_id) {
-            $album = new Album($album_id);
-            // TODO addChild || use addChildArray
-            self::addAlbumID3($xdir, $album, false, 'child');
-        }
-    }
-
-    /**
-     * addDirectory_Catalog for subsonic artist id
-     */
-    private static function _addDirectory_Catalog(SimpleXMLElement $xml, Catalog $catalog): void
-    {
-        $catalog_id = $catalog->id;
-        $xdir       = self::_addChildToResultXml($xml, 'directory');
-        $xdir->addAttribute('id', OpenSubsonic_Api::getCatalogSubId($catalog_id));
-        $xdir->addAttribute('name', (string)$catalog->name);
-        $allartists = Catalog::get_artist_arrays([$catalog_id]);
-        foreach ($allartists as $artist) {
-            self::_addChildArray($xdir, $artist);
-        }
-    }
-
-    /**
-     * addGenres
-     *
-     * https://opensubsonic.netlify.app/docs/responses/genres/
-     * @param array<int, array{id: int, name: string, is_hidden: int, count: int}> $tags
-     */
-    public static function addGenres(SimpleXMLElement $xml, array $tags): SimpleXMLElement
-    {
-        $xgenres = self::_addChildToResultXml($xml, 'genres');
-
-        foreach ($tags as $tag) {
-            $otag   = new Tag($tag['id']);
-            $xgenre = self::_addChildToResultXml($xgenres, 'genre', htmlspecialchars((string)$otag->name));
-            $xgenre->addAttribute('songCount', (string)($otag->song));
-            $xgenre->addAttribute('albumCount', (string)($otag->album));
-        }
-
-        return $xml;
-    }
-
-    /**
-     * addVideos
-     *
-     * https://opensubsonic.netlify.app/docs/responses/videos/
-     * @param Video[] $videos
-     */
-    public static function addVideos(SimpleXMLElement $xml, array $videos): SimpleXMLElement
-    {
-        $xvideos = self::_addChildToResultXml($xml, 'videos');
-        foreach ($videos as $video) {
-            self::_addVideo($xvideos, $video);
-        }
-
-        return $xml;
-    }
-
-    /**
-     * addVideo
-     *
-     * https://opensubsonic.netlify.app/docs/responses/child/
-     */
-    private static function _addVideo(SimpleXMLElement $xml, Video $video, string $elementName = 'video'): void
-    {
-        if ($video->isNew()) {
-            return;
-        }
-
-        $sub_id = OpenSubsonic_Api::getVideoSubId($video->id);
-        $xvideo = self::_addChildToResultXml($xml, htmlspecialchars($elementName));
-        $xvideo->addAttribute('id', $sub_id);
-        $xvideo->addAttribute('title', $video->getFileName());
-        $xvideo->addAttribute('isDir', 'false');
-        if ($video->has_art()) {
-            $xvideo->addAttribute('coverArt', $sub_id);
-        }
-        $xvideo->addAttribute('isVideo', 'true');
-        $xvideo->addAttribute('type', 'video');
-        $xvideo->addAttribute('duration', (string)$video->time);
-        if (isset($video->year) && $video->year > 0) {
-            $xvideo->addAttribute('year', (string)$video->year);
-        }
-        $tags = Tag::get_object_tags('video', (int)$video->id);
-        if (!empty($tags)) {
-            $xvideo->addAttribute('genre', implode(',', array_column($tags, 'name')));
-            foreach ($tags as $tag) {
-                $xlastcat = self::_addChildToResultXml($xvideo, 'genres');
-                $xlastcat->addAttribute('name', (string)$tag['name']);
-            }
-        }
-        $xvideo->addAttribute('size', (string)$video->size);
-        $xvideo->addAttribute('suffix', (string)$video->type);
-        $xvideo->addAttribute('contentType', (string)$video->mime);
-        // Create a clean fake path instead of song real file path to have better offline mode storage on Subsonic clients
-        $path = basename($video->file);
-        $xvideo->addAttribute('path', (string)$path);
-
-        self::_setIfStarred($xvideo, 'video', $video->id);
-        // Set transcoding information if required
-        $transcode_cfg = AmpConfig::get('transcode', 'default');
-        $valid_types   = Stream::get_stream_types_for_type($video->type, 'api');
-        if ($transcode_cfg == 'always' || ($transcode_cfg != 'never' && !in_array('native', $valid_types))) {
-            $transcode_settings = $video->get_transcode_settings(null, 'api');
-            if (!empty($transcode_settings['format'])) {
-                $transcode_type = $transcode_settings['format'];
-                $xvideo->addAttribute('transcodedSuffix', (string)$transcode_type);
-                $xvideo->addAttribute('transcodedContentType', Video::type_to_mime($transcode_type));
-            }
-        }
-    }
-
-    /**
-     * addVideoInfo
-     *
-     * https://opensubsonic.netlify.app/docs/responses/videoinfo/
-     */
-    public static function addVideoInfo(SimpleXMLElement $xml, int $video_id): SimpleXMLElement
-    {
-        $xvideoinfo = self::_addChildToResultXml($xml, 'videoInfo');
-        $xvideoinfo->addAttribute('id', OpenSubsonic_Api::getVideoSubId($video_id));
-
-        return $xml;
-    }
-
-    /**
-     * addPlaylists
-     *
-     * return playlists object with nested playlist items
-     * https://opensubsonic.netlify.app/docs/responses/playlists/
-     * https://opensubsonic.netlify.app/docs/responses/playlist/
-     * @param int[]|string[] $playlists
-     */
-    public static function addPlaylists(SimpleXMLElement $xml, User $user, array $playlists): SimpleXMLElement
-    {
-        $xplaylists = self::_addChildToResultXml($xml, 'playlists');
-        foreach ($playlists as $playlist_id) {
-            /**
-             * Strip smart_ from playlist id and compare to original
-             * smartlist = 'smart_1'
-             * playlist  = 1000000
-             */
-            $playlist = ((int)$playlist_id === 0)
-                ? new Search((int) str_replace('smart_', '', (string) $playlist_id), 'song', $user)
-                : new Playlist((int)$playlist_id);
-
-            if ($playlist->isNew()) {
-                continue;
-            }
-
-            self::addPlaylist($xplaylists, $playlist, $user);
         }
 
         return $xml;
@@ -946,96 +847,31 @@ class OpenSubsonic_Xml_Data
     }
 
     /**
-     * addPlaylist_Playlist
+     * addPlaylists
      *
+     * return playlists object with nested playlist items
+     * https://opensubsonic.netlify.app/docs/responses/playlists/
      * https://opensubsonic.netlify.app/docs/responses/playlist/
-     * https://opensubsonic.netlify.app/docs/responses/playlistwithsongs/
+     * @param int[]|string[] $playlists
      */
-    private static function _addPlaylist_Playlist(SimpleXMLElement $xml, Playlist $playlist, User $user, bool $songs = false): SimpleXMLElement
+    public static function addPlaylists(SimpleXMLElement $xml, User $user, array $playlists): SimpleXMLElement
     {
-        $sub_id    = OpenSubsonic_Api::getPlaylistSubId($playlist->id);
-        $songcount = $playlist->get_media_count('song');
-        $duration  = ($songcount > 0) ? $playlist->get_total_duration() : 0;
-        $xplaylist = self::_addChildToResultXml($xml, 'playlist');
-        $xplaylist->addAttribute('id', $sub_id);
-        $xplaylist->addAttribute('name', (string)$playlist->get_fullname());
-        $xplaylist->addAttribute('owner', (string)$playlist->username);
-        $xplaylist->addAttribute('public', ($playlist->type != 'private') ? 'true' : 'false');
-        $xplaylist->addAttribute('songCount', (string)$songcount);
-        $xplaylist->addAttribute('duration', (string)$duration);
-        $xplaylist->addAttribute('created', date('c', (int)$playlist->date));
-        $xplaylist->addAttribute('changed', date('c', (int)$playlist->last_update));
-        if ($playlist->has_art()) {
-            $xplaylist->addAttribute('coverArt', $sub_id);
-        }
+        $xplaylists = self::_addChildToResultXml($xml, 'playlists');
+        foreach ($playlists as $playlist_id) {
+            /**
+             * Strip smart_ from playlist id and compare to original
+             * smartlist = 'smart_1'
+             * playlist = 1000000
+             */
+            $playlist = ((int) $playlist_id === 0)
+                ? new Search((int) str_replace('smart_', '', (string) $playlist_id), 'song', $user)
+                : new Playlist((int) $playlist_id);
 
-        $xplaylist->addAttribute('readonly', (string)$playlist->has_access($user));
-
-        try {
-            $date = new DateTime(date("Y-m-d H:i:s", time() + 300));
-            $date->setTimezone(new DateTimeZone('UTC'));
-            $xplaylist->addAttribute('validUntil', $date->format('c'));
-        } catch (Exception $error) {
-            debug_event(self::class, 'DateTime error: ' . $error->getMessage(), 5);
-        }
-        if ($songs) {
-            $allsongs = $playlist->get_songs();
-            foreach ($allsongs as $song_id) {
-                $song = new Song($song_id);
-                if ($song->isNew() || !$song->enabled) {
-                    continue;
-                }
-                self::addSong($xplaylist, $song, 'entry');
-            }
-        }
-
-        return $xml;
-    }
-
-    /**
-     * addPlaylist_Search
-     *
-     * https://opensubsonic.netlify.app/docs/responses/playlist/
-     * https://opensubsonic.netlify.app/docs/responses/playlistwithsongs/
-     */
-    private static function _addPlaylist_Search(SimpleXMLElement $xml, Search $search, User $user, bool $songs = false): SimpleXMLElement
-    {
-        $sub_id    = OpenSubsonic_Api::getSmartPlaylistSubId($search->id);
-        $xplaylist = self::_addChildToResultXml($xml, 'playlist');
-        $xplaylist->addAttribute('id', $sub_id);
-        $xplaylist->addAttribute('name', (string)$search->get_fullname());
-        $xplaylist->addAttribute('owner', (string)$search->username);
-        $xplaylist->addAttribute('public', ($search->type != 'private') ? 'true' : 'false');
-        if ($songs) {
-            $allitems  = $search->get_items();
-            $songcount = count($allitems);
-            $duration  = ($songcount > 0) ? Search::get_total_duration($allitems) : 0;
-        } else {
-            $allitems  = [];
-            $songcount = $search->last_count;
-            $duration  = $search->last_duration;
-        }
-        $xplaylist->addAttribute('songCount', (string)$songcount);
-        $xplaylist->addAttribute('duration', (string)$duration);
-        $xplaylist->addAttribute('created', date('c', (int)$search->date));
-        $xplaylist->addAttribute('changed', date('c', time()));
-        $xplaylist->addAttribute('coverArt', $sub_id);
-        $xplaylist->addAttribute('readonly', '0');
-
-        try {
-            $date = new DateTime(date("Y-m-d H:i:s", time() + 300));
-            $date->setTimezone(new DateTimeZone('UTC'));
-            $xplaylist->addAttribute('validUntil', $date->format('c'));
-        } catch (Exception $error) {
-            debug_event(self::class, 'DateTime error: ' . $error->getMessage(), 5);
-        }
-
-        foreach ($allitems as $item) {
-            $song = new Song((int)$item['object_id']);
-            if ($song->isNew() || !$song->enabled) {
+            if ($playlist->isNew()) {
                 continue;
             }
-            self::addSong($xplaylist, $song, 'entry');
+
+            self::addPlaylist($xplaylists, $playlist, $user);
         }
 
         return $xml;
@@ -1058,39 +894,19 @@ class OpenSubsonic_Xml_Data
             $xplayqueue = self::_addChildToResultXml($xml, 'playQueue');
             if (!empty($current)) {
                 $xplayqueue->addAttribute('current', OpenSubsonic_Api::getSongSubId($current['object_id']));
-                $xplayqueue->addAttribute('position', (string)($current['current_time'] * 1000));
-                $xplayqueue->addAttribute('username', (string)$username);
+                $xplayqueue->addAttribute('position', (string) ($current['current_time'] * 1000));
+                $xplayqueue->addAttribute('username', (string) $username);
                 $xplayqueue->addAttribute('changed', $date->format('c'));
-                $xplayqueue->addAttribute('changedBy', (string)$changedBy);
+                $xplayqueue->addAttribute('changedBy', (string) $changedBy);
             }
 
             foreach ($items as $row) {
-                $song = new Song((int)$row['object_id']);
+                $song = new Song((int) $row['object_id']);
                 if ($song->isNew() || !$song->enabled) {
                     continue;
                 }
                 self::addSong($xplayqueue, $song, 'entry');
             }
-        }
-
-        return $xml;
-    }
-
-    /**
-     * addRandomSongs
-     *
-     * https://opensubsonic.netlify.app/docs/responses/randomsongs/
-     * @param int[] $songs
-     */
-    public static function addRandomSongs(SimpleXMLElement $xml, array $songs): SimpleXMLElement
-    {
-        $xsongs = self::_addChildToResultXml($xml, 'randomSongs');
-        foreach ($songs as $song_id) {
-            $song = new Song($song_id);
-            if ($song->isNew() || !$song->enabled) {
-                continue;
-            }
-            self::addSong($xsongs, $song);
         }
 
         return $xml;
@@ -1118,8 +934,11 @@ class OpenSubsonic_Xml_Data
             $changedBy  = $playQueue->client ?? '';
             $xplayqueue = self::_addChildToResultXml($xml, 'playQueueByIndex');
             if (!empty($current)) {
-                $xplayqueue->addAttribute('currentIndex', (string)$current['current_track']);
-                $xplayqueue->addAttribute('position', (string)($current['current_time'] * 1000));
+                $xplayqueue->addAttribute('currentIndex', (string) $current['current_track']);
+                $xplayqueue->addAttribute('position', (string) ($current['current_time'] * 1000));
+                $xplayqueue->addAttribute('username', $username);
+                $xplayqueue->addAttribute('changed', $date->format('c'));
+                $xplayqueue->addAttribute('changedBy', $changedBy);
             }
 
             $xplayqueue->addAttribute('username', $username);
@@ -1127,7 +946,7 @@ class OpenSubsonic_Xml_Data
             $xplayqueue->addAttribute('changedBy', $changedBy);
 
             foreach ($items as $row) {
-                $song = new Song((int)$row['object_id']);
+                $song = new Song((int) $row['object_id']);
                 if ($song->isNew() || !$song->enabled) {
                     continue;
                 }
@@ -1139,14 +958,62 @@ class OpenSubsonic_Xml_Data
     }
 
     /**
-     * addSongsByGenre
+     * addPodcastEpisode
      *
-     * https://opensubsonic.netlify.app/docs/responses/songsbygenre/
+     * https://opensubsonic.netlify.app/docs/responses/podcastepisode/
+     */
+    public static function addPodcastEpisode(SimpleXMLElement $xml, Podcast_Episode $episode): SimpleXMLElement
+    {
+        $xepisode = self::_addChildToResultXml($xml, 'podcastEpisode');
+        self::_addPodcastEpisode($xepisode, $episode);
+
+        return $xml;
+    }
+
+    /**
+     * addPodcasts
+     *
+     * https://opensubsonic.netlify.app/docs/responses/podcasts/
+     * @param Podcast[] $podcasts
+     */
+    public static function addPodcasts(SimpleXMLElement $xml, array $podcasts, bool $includeEpisodes = true, ?string $sub_id = null): SimpleXMLElement
+    {
+        $xpodcasts = self::_addChildToResultXml($xml, 'podcasts');
+        foreach ($podcasts as $podcast) {
+            $sub_id = (!empty($sub_id))
+                ? $sub_id
+                : Subsonic_Api::getPodcastSubId($podcast->getId());
+            $xchannel = self::_addChildToResultXml($xpodcasts, 'channel');
+            $xchannel->addAttribute('id', $sub_id);
+            $xchannel->addAttribute('url', $podcast->getFeedUrl());
+            $xchannel->addAttribute('title', (string) $podcast->get_fullname());
+            $xchannel->addAttribute('description', $podcast->get_description());
+            if ($podcast->has_art()) {
+                $xchannel->addAttribute('coverArt', $sub_id);
+            }
+            $xchannel->addAttribute('status', 'completed');
+            if ($includeEpisodes) {
+                $episodes = $podcast->getEpisodeIds();
+
+                foreach ($episodes as $episode_id) {
+                    $episode = new Podcast_Episode($episode_id);
+                    self::_addPodcastEpisode($xchannel, $episode);
+                }
+            }
+        }
+
+        return $xml;
+    }
+
+    /**
+     * addRandomSongs
+     *
+     * https://opensubsonic.netlify.app/docs/responses/randomsongs/
      * @param int[] $songs
      */
-    public static function addSongsByGenre(SimpleXMLElement $xml, array $songs): SimpleXMLElement
+    public static function addRandomSongs(SimpleXMLElement $xml, array $songs): SimpleXMLElement
     {
-        $xsongs = self::_addChildToResultXml($xml, 'songsByGenre');
+        $xsongs = self::_addChildToResultXml($xml, 'randomSongs');
         foreach ($songs as $song_id) {
             $song = new Song($song_id);
             if ($song->isNew() || !$song->enabled) {
@@ -1159,55 +1026,28 @@ class OpenSubsonic_Xml_Data
     }
 
     /**
-     * addTopSongs
+     * addResponse
      *
-     * https://opensubsonic.netlify.app/docs/responses/topsongs/
-     * @param int[] $songs
+     * Generate a subsonic-response
+     * https://opensubsonic.netlify.app/docs/responses/subsonic-response/
      */
-    public static function addTopSongs(SimpleXMLElement $xml, array $songs): SimpleXMLElement
+    public static function addResponse(string $function): SimpleXMLElement
     {
-        $xsongs = self::_addChildToResultXml($xml, 'topSongs');
-        foreach ($songs as $song_id) {
-            $song = new Song($song_id);
-            if ($song->isNew() || !$song->enabled) {
-                continue;
-            }
-            self::addSong($xsongs, $song);
-        }
-
-        return $xml;
+        return self::_createSuccessResponse($function);
     }
 
     /**
-     * addNowPlaying
+     * addScanStatus
      *
-     * https://opensubsonic.netlify.app/docs/responses/nowplaying/
-     * @param array<int, array{
-     *     media: library_item,
-     *     client: User,
-     *     agent: string,
-     *     expire: int
-     * }> $data
+     * https://opensubsonic.netlify.app/docs/responses/scanstatus/
      */
-    public static function addNowPlaying(SimpleXMLElement $xml, array $data): SimpleXMLElement
+    public static function addScanStatus(SimpleXMLElement $xml, User $user): SimpleXMLElement
     {
-        $xplaynow = self::_addChildToResultXml($xml, 'nowPlaying');
-        foreach ($data as $row) {
-            if (
-                $row['media'] instanceof Song &&
-                $row['media']->isNew() === false &&
-                $row['media']->enabled
-            ) {
-                $attributes = [
-                    'username' => (string)$row['client']->username,
-                    'minutesAgo' => (string)(abs((time() - ($row['expire'] - $row['media']->time)) / 60)),
-                    'playerId' => '0',
-                    'playerName' => (string)$row['agent'],
-                ];
-
-                self::addSong($xplaynow, $row['media'], 'entry', $attributes);
-            }
-        }
+        $counts = Catalog::get_server_counts($user->id);
+        $count  = $counts['artist'] + $counts['album'] + $counts['song'] + $counts['podcast_episode'];
+        $xscan  = self::_addChildToResultXml($xml, htmlspecialchars('scanStatus'));
+        $xscan->addAttribute('scanning', "false");
+        $xscan->addAttribute('count', (string) $count);
 
         return $xml;
     }
@@ -1221,8 +1061,8 @@ class OpenSubsonic_Xml_Data
     public static function addSearchResult(SimpleXMLElement $xml, array $songs, int $offset, int $total): SimpleXMLElement
     {
         $xresult = self::_addChildToResultXml($xml, htmlspecialchars('searchResult'));
-        $xresult->addAttribute('offset', (string)$offset);
-        $xresult->addAttribute('totalHits', (string)$total);
+        $xresult->addAttribute('offset', (string) $offset);
+        $xresult->addAttribute('totalHits', (string) $total);
         foreach ($songs as $song_id) {
             $song = new Song($song_id);
             if ($song->isNew() || !$song->enabled) {
@@ -1295,6 +1135,111 @@ class OpenSubsonic_Xml_Data
     }
 
     /**
+     * addShares
+     *
+     * https://opensubsonic.netlify.app/docs/responses/shares/
+     * @param int[] $shares
+     */
+    public static function addShares(SimpleXMLElement $xml, array $shares): SimpleXMLElement
+    {
+        $xshares = self::_addChildToResultXml($xml, 'shares');
+        foreach ($shares as $share_id) {
+            $share = new Share($share_id);
+            // Don't add share with max counter already reached
+            if ($share->max_counter === 0 || $share->counter < $share->max_counter) {
+                self::_addShare($xshares, $share);
+            }
+        }
+
+        return $xml;
+    }
+
+    /**
+     * addSimilarSongs
+     *
+     * https://opensubsonic.netlify.app/docs/responses/similarsongs/
+     * @param array<int, array{
+     *     id: ?int,
+     *     name?: ?string,
+     *     rel?: ?string,
+     *     mbid?: ?string,
+     * }> $similar_songs
+     */
+    public static function addSimilarSongs(SimpleXMLElement $xml, array $similar_songs): SimpleXMLElement
+    {
+        $xsimilar = self::_addChildToResultXml($xml, 'similarSongs');
+        foreach ($similar_songs as $similar_song) {
+            if ($similar_song['id'] !== null) {
+                $song = new Song($similar_song['id']);
+                if ($song->isNew() || !$song->enabled) {
+                    continue;
+                }
+                self::addSong($xsimilar, $song);
+            }
+        }
+
+        return $xml;
+    }
+
+    /**
+     * addSimilarSongs2
+     *
+     * https://opensubsonic.netlify.app/docs/responses/similarsongs2/
+     * @param array<int, array{
+     *     id: ?int,
+     *     name?: ?string,
+     *     rel?: ?string,
+     *     mbid?: ?string,
+     * }> $similar_songs
+     */
+    public static function addSimilarSongs2(SimpleXMLElement $xml, array $similar_songs): SimpleXMLElement
+    {
+        $xsimilar = self::_addChildToResultXml($xml, 'similarSongs2');
+        foreach ($similar_songs as $similar_song) {
+            if ($similar_song['id'] !== null) {
+                $song = new Song($similar_song['id']);
+                if ($song->isNew() || !$song->enabled) {
+                    continue;
+                }
+                self::addSong($xsimilar, $song);
+            }
+        }
+
+        return $xml;
+    }
+
+    /**
+     * addSong
+     *
+     * https://opensubsonic.netlify.app/docs/responses/song/
+     * @param array<string, string> $attributes
+     */
+    public static function addSong(SimpleXMLElement $xml, Song $song, string $elementName = 'song', array $attributes = []): SimpleXMLElement
+    {
+        return self::_addChildSong($xml, $song, $elementName, $attributes);
+    }
+
+    /**
+     * addSongsByGenre
+     *
+     * https://opensubsonic.netlify.app/docs/responses/songsbygenre/
+     * @param int[] $songs
+     */
+    public static function addSongsByGenre(SimpleXMLElement $xml, array $songs): SimpleXMLElement
+    {
+        $xsongs = self::_addChildToResultXml($xml, 'songsByGenre');
+        foreach ($songs as $song_id) {
+            $song = new Song($song_id);
+            if ($song->isNew() || !$song->enabled) {
+                continue;
+            }
+            self::addSong($xsongs, $song);
+        }
+
+        return $xml;
+    }
+
+    /**
      * addStarred
      *
      * https://opensubsonic.netlify.app/docs/responses/starred/
@@ -1361,6 +1306,40 @@ class OpenSubsonic_Xml_Data
     }
 
     /**
+     * addTokenInfo
+     *
+     * Information about an API key
+     * https://opensubsonic.netlify.app/docs/responses/tokeninfo/
+     */
+    public static function addTokenInfo(SimpleXMLElement $xml, User $user): SimpleXMLElement
+    {
+        $xscan = self::_addChildToResultXml($xml, htmlspecialchars('tokenInfo'));
+        $xscan->addAttribute('username', (string) $user->username);
+
+        return $xml;
+    }
+
+    /**
+     * addTopSongs
+     *
+     * https://opensubsonic.netlify.app/docs/responses/topsongs/
+     * @param int[] $songs
+     */
+    public static function addTopSongs(SimpleXMLElement $xml, array $songs): SimpleXMLElement
+    {
+        $xsongs = self::_addChildToResultXml($xml, 'topSongs');
+        foreach ($songs as $song_id) {
+            $song = new Song($song_id);
+            if ($song->isNew() || !$song->enabled) {
+                continue;
+            }
+            self::addSong($xsongs, $song);
+        }
+
+        return $xml;
+    }
+
+    /**
      * addUser
      *
      * https://opensubsonic.netlify.app/docs/responses/user/
@@ -1368,8 +1347,8 @@ class OpenSubsonic_Xml_Data
     public static function addUser(SimpleXMLElement $xml, User $user): SimpleXMLElement
     {
         $xuser = self::_addChildToResultXml($xml, 'user');
-        $xuser->addAttribute('username', (string)$user->username);
-        $xuser->addAttribute('email', (string)$user->email);
+        $xuser->addAttribute('username', (string) $user->username);
+        $xuser->addAttribute('email', (string) $user->email);
         $xuser->addAttribute('scrobblingEnabled', 'true');
         $isManager = ($user->access >= 75);
         $isAdmin   = ($user->access === 100);
@@ -1408,20 +1387,330 @@ class OpenSubsonic_Xml_Data
     }
 
     /**
-     * addInternetRadioStations
+     * addVideoInfo
      *
-     * https://opensubsonic.netlify.app/docs/responses/internetradiostations/
-     * @param int[] $radios
+     * https://opensubsonic.netlify.app/docs/responses/videoinfo/
      */
-    public static function addInternetRadioStations(SimpleXMLElement $xml, array $radios): SimpleXMLElement
+    public static function addVideoInfo(SimpleXMLElement $xml, int $video_id): SimpleXMLElement
     {
-        $xradios = self::_addChildToResultXml($xml, 'internetRadioStations');
-        foreach ($radios as $radio_id) {
-            $radio = new Live_Stream((int)$radio_id);
-            self::_addInternetRadioStation($xradios, $radio);
+        $xvideoinfo = self::_addChildToResultXml($xml, 'videoInfo');
+        $xvideoinfo->addAttribute('id', OpenSubsonic_Api::getVideoSubId($video_id));
+
+        return $xml;
+    }
+
+    /**
+     * addVideos
+     *
+     * https://opensubsonic.netlify.app/docs/responses/videos/
+     * @param Video[] $videos
+     */
+    public static function addVideos(SimpleXMLElement $xml, array $videos): SimpleXMLElement
+    {
+        $xvideos = self::_addChildToResultXml($xml, 'videos');
+        foreach ($videos as $video) {
+            self::_addVideo($xvideos, $video);
         }
 
         return $xml;
+    }
+
+    /**
+     * addArtistArray
+     * @param array{
+     *     id: int,
+     *     f_name: string,
+     *     name: string,
+     *     album_count: int,
+     *     catalog_id: int,
+     *     has_art: int
+     * } $artist
+     */
+    private static function _addArtistArray(SimpleXMLElement $xml, array $artist): void
+    {
+        $sub_id  = OpenSubsonic_Api::getArtistSubId($artist['id']);
+        $xartist = self::_addChildToResultXml($xml, 'artist');
+        $xartist->addAttribute('id', $sub_id);
+        $xartist->addAttribute('name', $artist['f_name']);
+        if ($artist['has_art']) {
+            $xartist->addAttribute('coverArt', $sub_id);
+        }
+        $xartist->addAttribute('albumCount', (string) $artist['album_count']);
+        self::_setIfStarred($xartist, 'artist', $artist['id']);
+    }
+
+    /**
+     * addBookmark
+     *
+     * https://opensubsonic.netlify.app/docs/responses/bookmark/
+     */
+    private static function _addBookmark(SimpleXMLElement $xml, Bookmark $bookmark): void
+    {
+        $xbookmark = self::_addChildToResultXml($xml, 'bookmark');
+        $xbookmark->addAttribute('position', (string) $bookmark->position);
+        $xbookmark->addAttribute('username', $bookmark->getUserName());
+        $xbookmark->addAttribute('comment', (string) $bookmark->comment);
+        $xbookmark->addAttribute('created', date("c", (int) $bookmark->creation_date));
+        $xbookmark->addAttribute('changed', date("c", (int) $bookmark->update_date));
+        if ($bookmark->object_type == "song") {
+            $song = new Song($bookmark->object_id);
+            if ($song->isNew() === false && $song->enabled) {
+                self::addSong($xbookmark, $song, 'entry');
+            }
+        } elseif ($bookmark->object_type == "video") {
+            self::_addVideo($xbookmark, new Video($bookmark->object_id), 'entry');
+        } elseif ($bookmark->object_type == "podcast_episode") {
+            self::_addPodcastEpisode($xbookmark, new Podcast_Episode($bookmark->object_id), 'entry');
+        }
+    }
+
+    /**
+     * addChildArray
+     * @param array{
+     *     id: int,
+     *     f_name: string,
+     *     name: string,
+     *     album_count: int,
+     *     catalog_id: int,
+     *     has_art: int
+     * } $child
+     */
+    private static function _addChildArray(SimpleXMLElement $xml, array $child): void
+    {
+        $sub_id = OpenSubsonic_Api::getArtistSubId($child['id']);
+        $xchild = self::_addChildToResultXml($xml, 'child');
+        $xchild->addAttribute('id', $sub_id);
+        $xchild->addAttribute('parent', (string) $child['catalog_id']);
+        $xchild->addAttribute('isDir', 'true');
+        $xchild->addAttribute('title', $child['f_name']);
+        $xchild->addAttribute('artist', $child['f_name']);
+        if ($child['has_art']) {
+            $xchild->addAttribute('coverArt', $sub_id);
+        }
+    }
+
+    /**
+     * addChildSong
+     *
+     * https://opensubsonic.netlify.app/docs/responses/child/
+     * @param array<string, string> $attributes
+     */
+    private static function _addChildSong(SimpleXMLElement $xml, Song $song, string $elementName, array $attributes = []): SimpleXMLElement
+    {
+        $sub_id    = OpenSubsonic_Api::getSongSubId($song->id);
+        $subParent = OpenSubsonic_Api::getAlbumSubId($song->album);
+        $xsong     = self::_addChildToResultXml($xml, htmlspecialchars($elementName));
+        $xsong->addAttribute('id', $sub_id);
+        $xsong->addAttribute('parent', $subParent);
+        //$xsong->addAttribute('created', );
+        $xsong->addAttribute('title', (string) $song->title);
+        $xsong->addAttribute('isDir', 'false');
+        $xsong->addAttribute('isVideo', 'false');
+        $xsong->addAttribute('type', 'music');
+        $xsong->addAttribute('albumId', $subParent);
+        $xsong->addAttribute('album', (string) $song->get_album_fullname());
+        $xsong->addAttribute('artistId', ($song->artist) ? OpenSubsonic_Api::getArtistSubId($song->artist) : '');
+        $xsong->addAttribute('artist', (string) $song->get_parent_fullname());
+        if ($song->has_art()) {
+            $art_id = (AmpConfig::get('show_song_art', false)) ? $sub_id : $subParent;
+            $xsong->addAttribute('coverArt', $art_id);
+        }
+        $xsong->addAttribute('duration', (string) $song->time);
+        $xsong->addAttribute('bitRate', (string) ((int) ($song->bitrate / 1024)));
+        $rating      = new Rating($song->id, 'song');
+        $user_rating = ($rating->get_user_rating() ?? 0);
+        if ($user_rating > 0) {
+            $xsong->addAttribute('userRating', (string) ceil($user_rating));
+        }
+        $avg_rating = $rating->get_average_rating();
+        if ($avg_rating > 0) {
+            $xsong->addAttribute('averageRating', (string) $avg_rating);
+        }
+
+        $xsong->addAttribute('playCount', (string) $song->total_count);
+
+        self::_setIfStarred($xsong, 'song', $song->id);
+        if ($song->track > 0) {
+            $xsong->addAttribute('track', (string) $song->track);
+        }
+        if ($song->year > 0) {
+            $xsong->addAttribute('year', (string) $song->year);
+        }
+        $tags = Tag::get_object_tags('song', $song->id);
+        if (!empty($tags)) {
+            $xsong->addAttribute('genre', implode(',', array_column($tags, 'name')));
+            foreach ($tags as $tag) {
+                $xlastcat = self::_addChildToResultXml($xsong, 'genres');
+                $xlastcat->addAttribute('name', (string) $tag['name']);
+            }
+        }
+        $xsong->addAttribute('size', (string) $song->size);
+        $disk = $song->disk;
+        if ($disk > 0) {
+            $xsong->addAttribute('discNumber', (string) $disk);
+        }
+        $xsong->addAttribute('suffix', (string) $song->type);
+        $xsong->addAttribute('contentType', (string) $song->mime);
+        // Always return the original filename, not the transcoded one
+        $xsong->addAttribute('path', (string) $song->file);
+        if (AmpConfig::get('transcode', 'default') != 'never') {
+            $cache_path     = (string) AmpConfig::get('cache_path', '');
+            $cache_target   = (string) AmpConfig::get('cache_target', '');
+            $file_target    = Catalog::get_cache_path($song->getId(), $song->getCatalogId(), $cache_path, $cache_target);
+            $transcode_type = ($file_target !== null && is_file($file_target))
+                ? $cache_target
+                : Stream::get_transcode_format($song->type, null, 'api');
+
+            if (!empty($transcode_type) && $song->type !== $transcode_type) {
+                // Set transcoding information
+                $xsong->addAttribute('transcodedSuffix', $transcode_type);
+                $xsong->addAttribute('transcodedContentType', Song::type_to_mime($transcode_type));
+            }
+        }
+        foreach ($attributes as $key => $value) {
+            $xsong->addAttribute($key, $value);
+        }
+
+        return $xml;
+    }
+
+    /**
+     * Adds a child to an existing result xml structure
+     */
+    private static function _addChildToResultXml(SimpleXMLElement $xml, string $qualifiedName, ?string $value = null): SimpleXMLElement
+    {
+        /** @var SimpleXMLElement $child */
+        $child = $xml->addChild($qualifiedName, $value);
+
+        return $child;
+    }
+
+    /**
+     * addDirectory_Album for subsonic album id
+     */
+    private static function _addDirectory_Album(SimpleXMLElement $xml, Album $album): void
+    {
+        $album_id = $album->id;
+        $xdir     = self::_addChildToResultXml($xml, 'directory');
+        $xdir->addAttribute('id', OpenSubsonic_Api::getAlbumSubId($album_id));
+        $album_artist = $album->findAlbumArtist();
+        if ($album_artist) {
+            $xdir->addAttribute('parent', OpenSubsonic_Api::getArtistSubId($album_artist));
+        } else {
+            $xdir->addAttribute('parent', (string) $album->catalog);
+        }
+        $xdir->addAttribute('name', (string) $album->get_fullname());
+        self::_setIfStarred($xdir, 'album', $album->id);
+
+        $media_ids = self::getAlbumRepository()->getSongs($album->id);
+        foreach ($media_ids as $song_id) {
+            // TODO addChild || use addChildArray
+            $song = new Song($song_id);
+            if ($song->isNew() || !$song->enabled) {
+                continue;
+            }
+            self::addSong($xdir, $song, 'child');
+        }
+    }
+
+    /**
+     * addDirectory_Artist for subsonic artist id
+     */
+    private static function _addDirectory_Artist(SimpleXMLElement $xml, Artist $artist): void
+    {
+        $artist_id = $artist->id;
+        $data      = Artist::get_id_array($artist_id);
+        $xdir      = self::_addChildToResultXml($xml, 'directory');
+        $xdir->addAttribute('id', OpenSubsonic_Api::getArtistSubId($artist_id));
+        if ($data['catalog_id']) {
+            $xdir->addAttribute('parent', (string) $data['catalog_id']);
+        }
+        $xdir->addAttribute('name', (string) $data['f_name']);
+        self::_setIfStarred($xdir, 'artist', $artist_id);
+        $allalbums = self::getAlbumRepository()->getAlbumByArtist($artist_id);
+        foreach ($allalbums as $album_id) {
+            $album = new Album($album_id);
+            // TODO addChild || use addChildArray
+            self::addAlbumID3($xdir, $album, false, 'child');
+        }
+    }
+
+    /**
+     * addDirectory_Catalog for subsonic artist id
+     */
+    private static function _addDirectory_Catalog(SimpleXMLElement $xml, Catalog $catalog): void
+    {
+        $catalog_id = $catalog->id;
+        $xdir       = self::_addChildToResultXml($xml, 'directory');
+        $xdir->addAttribute('id', OpenSubsonic_Api::getCatalogSubId($catalog_id));
+        $xdir->addAttribute('name', (string) $catalog->name);
+        $allartists = Catalog::get_artist_arrays([$catalog_id]);
+        foreach ($allartists as $artist) {
+            self::_addChildArray($xdir, $artist);
+        }
+    }
+
+    /**
+     * addIgnoredArticles
+     */
+    private static function _addIgnoredArticles(SimpleXMLElement $xml): void
+    {
+        $ignoredArticles = AmpConfig::get('catalog_prefix_pattern', 'The|An|A|Die|Das|Ein|Eine|Les|Le|La');
+        if (!empty($ignoredArticles)) {
+            $ignoredArticles = str_replace('|', ' ', $ignoredArticles);
+            $xml->addAttribute('ignoredArticles', (string) $ignoredArticles);
+        }
+    }
+
+    /**
+     * addIndex
+     *
+     * https://opensubsonic.netlify.app/docs/responses/index_/
+     * @param array<int, array{
+     *     id: int,
+     *     f_name: string,
+     *     name: string,
+     *     album_count: int,
+     *     catalog_id: int,
+     *     has_art: int
+     * }> $artists
+     */
+    private static function _addIndex(SimpleXMLElement $xml, array $artists): void
+    {
+        $xlastcat     = null;
+        $sharpartists = [];
+        $xlastletter  = '';
+        foreach ($artists as $artist) {
+            if (strlen((string) $artist['name']) > 0) {
+                $letter = strtoupper((string) $artist['name'][0]);
+                if ($letter == 'X' || $letter == 'Y' || $letter == 'Z') {
+                    $letter = 'X-Z';
+                } elseif (!preg_match("/^[A-W]$/", $letter)) {
+                    $sharpartists[] = $artist;
+                    continue;
+                }
+
+                if ($letter != $xlastletter) {
+                    $xlastletter = $letter;
+                    $xlastcat    = self::_addChildToResultXml($xml, 'index');
+                    $xlastcat->addAttribute('name', (string) $xlastletter);
+                }
+            }
+
+            if ($xlastcat != null) {
+                self::_addArtistArray($xlastcat, $artist);
+            }
+        }
+
+        // Always add # index at the end
+        if (count($sharpartists) > 0) {
+            $xsharpcat = self::_addChildToResultXml($xml, 'index');
+            $xsharpcat->addAttribute('name', '#');
+
+            foreach ($sharpartists as $artist) {
+                self::_addArtistArray($xsharpcat, $artist);
+            }
+        }
     }
 
     /**
@@ -1434,32 +1723,169 @@ class OpenSubsonic_Xml_Data
         $sub_id = OpenSubsonic_Api::getLiveStreamSubId($radio->id);
         $xradio = self::_addChildToResultXml($xml, 'internetRadioStation');
         $xradio->addAttribute('id', $sub_id);
-        $xradio->addAttribute('name', (string)$radio->name);
-        $xradio->addAttribute('streamUrl', (string)$radio->url);
-        $xradio->addAttribute('homepageUrl', (string)$radio->site_url);
+        $xradio->addAttribute('name', (string) $radio->name);
+        $xradio->addAttribute('streamUrl', (string) $radio->url);
+        $xradio->addAttribute('homepageUrl', (string) $radio->site_url);
         if ($radio->has_art()) {
             $xradio->addAttribute('coverArt', $sub_id);
         }
     }
 
     /**
-     * addShares
+     * addMessage
      *
-     * https://opensubsonic.netlify.app/docs/responses/shares/
-     * @param int[] $shares
+     * A chatMessage.
+     * https://opensubsonic.netlify.app/docs/responses/chatmessage/
      */
-    public static function addShares(SimpleXMLElement $xml, array $shares): SimpleXMLElement
+    private static function _addMessage(SimpleXMLElement $xml, PrivateMsg $message): void
     {
-        $xshares = self::_addChildToResultXml($xml, 'shares');
-        foreach ($shares as $share_id) {
-            $share = new Share($share_id);
-            // Don't add share with max counter already reached
-            if ($share->max_counter === 0 || $share->counter < $share->max_counter) {
-                self::_addShare($xshares, $share);
+        $user      = new User($message->getSenderUserId());
+        $xbookmark = self::_addChildToResultXml($xml, 'chatMessage');
+        if ($user->fullname_public) {
+            $xbookmark->addAttribute('username', (string) $user->fullname);
+        } else {
+            $xbookmark->addAttribute('username', (string) $user->username);
+        }
+        $xbookmark->addAttribute('time', (string) ($message->getCreationDate() * 1000));
+        $xbookmark->addAttribute('message', (string) $message->getMessage());
+    }
+
+    /**
+     * addPlaylist_Playlist
+     *
+     * https://opensubsonic.netlify.app/docs/responses/playlist/
+     * https://opensubsonic.netlify.app/docs/responses/playlistwithsongs/
+     */
+    private static function _addPlaylist_Playlist(SimpleXMLElement $xml, Playlist $playlist, User $user, bool $songs = false): SimpleXMLElement
+    {
+        $sub_id    = OpenSubsonic_Api::getPlaylistSubId($playlist->id);
+        $songcount = $playlist->get_media_count('song');
+        $duration  = ($songcount > 0) ? $playlist->get_total_duration() : 0;
+        $xplaylist = self::_addChildToResultXml($xml, 'playlist');
+        $xplaylist->addAttribute('id', $sub_id);
+        $xplaylist->addAttribute('name', (string) $playlist->get_fullname());
+        $xplaylist->addAttribute('owner', (string) $playlist->username);
+        $xplaylist->addAttribute('public', ($playlist->type != 'private') ? 'true' : 'false');
+        $xplaylist->addAttribute('songCount', (string) $songcount);
+        $xplaylist->addAttribute('duration', (string) $duration);
+        $xplaylist->addAttribute('created', date('c', (int) $playlist->date));
+        $xplaylist->addAttribute('changed', date('c', (int) $playlist->last_update));
+        if ($playlist->has_art()) {
+            $xplaylist->addAttribute('coverArt', $sub_id);
+        }
+
+        $xplaylist->addAttribute('readonly', (string) $playlist->has_access($user));
+
+        try {
+            $date = new DateTime(date("Y-m-d H:i:s", time() + 300));
+            $date->setTimezone(new DateTimeZone('UTC'));
+            $xplaylist->addAttribute('validUntil', $date->format('c'));
+        } catch (Exception $error) {
+            debug_event(self::class, 'DateTime error: ' . $error->getMessage(), 5);
+        }
+        if ($songs) {
+            $allsongs = $playlist->get_songs();
+            foreach ($allsongs as $song_id) {
+                $song = new Song($song_id);
+                if ($song->isNew() || !$song->enabled) {
+                    continue;
+                }
+                self::addSong($xplaylist, $song, 'entry');
             }
         }
 
         return $xml;
+    }
+
+    /**
+     * addPlaylist_Search
+     *
+     * https://opensubsonic.netlify.app/docs/responses/playlist/
+     * https://opensubsonic.netlify.app/docs/responses/playlistwithsongs/
+     */
+    private static function _addPlaylist_Search(SimpleXMLElement $xml, Search $search, User $user, bool $songs = false): SimpleXMLElement
+    {
+        $sub_id    = OpenSubsonic_Api::getSmartPlaylistSubId($search->id);
+        $xplaylist = self::_addChildToResultXml($xml, 'playlist');
+        $xplaylist->addAttribute('id', $sub_id);
+        $xplaylist->addAttribute('name', (string) $search->get_fullname());
+        $xplaylist->addAttribute('owner', (string) $search->username);
+        $xplaylist->addAttribute('public', ($search->type != 'private') ? 'true' : 'false');
+        if ($songs) {
+            $allitems  = $search->get_items();
+            $songcount = count($allitems);
+            $duration  = ($songcount > 0) ? Search::get_total_duration($allitems) : 0;
+        } else {
+            $allitems  = [];
+            $songcount = $search->last_count;
+            $duration  = $search->last_duration;
+        }
+        $xplaylist->addAttribute('songCount', (string) $songcount);
+        $xplaylist->addAttribute('duration', (string) $duration);
+        $xplaylist->addAttribute('created', date('c', (int) $search->date));
+        $xplaylist->addAttribute('changed', date('c', time()));
+        $xplaylist->addAttribute('coverArt', $sub_id);
+        $xplaylist->addAttribute('readonly', '0');
+
+        try {
+            $date = new DateTime(date("Y-m-d H:i:s", time() + 300));
+            $date->setTimezone(new DateTimeZone('UTC'));
+            $xplaylist->addAttribute('validUntil', $date->format('c'));
+        } catch (Exception $error) {
+            debug_event(self::class, 'DateTime error: ' . $error->getMessage(), 5);
+        }
+
+        foreach ($allitems as $item) {
+            $song = new Song((int) $item['object_id']);
+            if ($song->isNew() || !$song->enabled) {
+                continue;
+            }
+            self::addSong($xplaylist, $song, 'entry');
+        }
+
+        return $xml;
+    }
+
+    /**
+     * addPodcastEpisode
+     *
+     * https://opensubsonic.netlify.app/docs/responses/podcastepisode/
+     */
+    private static function _addPodcastEpisode(SimpleXMLElement $xml, Podcast_Episode $episode, string $elementName = 'episode'): void
+    {
+        if ($episode->isNew()) {
+            return;
+        }
+
+        $sub_id    = OpenSubsonic_Api::getPodcastEpisodeSubId($episode->id);
+        $subParent = OpenSubsonic_Api::getPodcastSubId($episode->podcast);
+        $xepisode  = self::_addChildToResultXml($xml, htmlspecialchars($elementName));
+        $xepisode->addAttribute('id', $sub_id);
+        $xepisode->addAttribute('channelId', $subParent);
+        $xepisode->addAttribute('title', (string) $episode->get_fullname());
+        $xepisode->addAttribute('album', $episode->getPodcastName());
+        $xepisode->addAttribute('description', $episode->get_description());
+        $xepisode->addAttribute('duration', (string) $episode->time);
+        $xepisode->addAttribute('genre', "Podcast");
+        $xepisode->addAttribute('isDir', "false");
+        $xepisode->addAttribute('publishDate', $episode->getPubDate()->format(DATE_ATOM));
+        $xepisode->addAttribute('status', (string) $episode->state);
+        $xepisode->addAttribute('parent', $subParent);
+        if ($episode->has_art()) {
+            $xepisode->addAttribute('coverArt', $subParent);
+        }
+
+        self::_setIfStarred($xepisode, 'podcast_episode', $episode->id);
+
+        if ($episode->file) {
+            $xepisode->addAttribute('streamId', $sub_id);
+            $xepisode->addAttribute('size', (string) $episode->size);
+            $xepisode->addAttribute('suffix', (string) $episode->type);
+            $xepisode->addAttribute('contentType', (string) $episode->mime);
+            // Create a clean fake path instead of song real file path to have better offline mode storage on Subsonic clients
+            $path = basename($episode->file);
+            $xepisode->addAttribute('path', (string) $path);
+        }
     }
 
     /**
@@ -1471,18 +1897,18 @@ class OpenSubsonic_Xml_Data
     {
         $xshare = self::_addChildToResultXml($xml, 'share');
         $xshare->addAttribute('id', OpenSubsonic_Api::getShareSubId($share->id));
-        $xshare->addAttribute('url', (string)$share->public_url);
-        $xshare->addAttribute('description', (string)$share->description);
+        $xshare->addAttribute('url', (string) $share->public_url);
+        $xshare->addAttribute('description', (string) $share->description);
         $user = new User($share->user);
-        $xshare->addAttribute('username', (string)$user->username);
-        $xshare->addAttribute('created', date('c', (int)$share->creation_date));
+        $xshare->addAttribute('username', (string) $user->username);
+        $xshare->addAttribute('created', date('c', (int) $share->creation_date));
         if ($share->lastvisit_date > 0) {
-            $xshare->addAttribute('lastVisited', date('c', (int)$share->lastvisit_date));
+            $xshare->addAttribute('lastVisited', date('c', (int) $share->lastvisit_date));
         }
         if ($share->expire_days > 0) {
-            $xshare->addAttribute('expires', date('c', (int)$share->creation_date + ($share->expire_days * 86400)));
+            $xshare->addAttribute('expires', date('c', (int) $share->creation_date + ($share->expire_days * 86400)));
         }
-        $xshare->addAttribute('visitCount', (string)$share->counter);
+        $xshare->addAttribute('visitCount', (string) $share->counter);
 
         if ($share->object_type == 'song') {
             $song = new Song($share->object_id);
@@ -1512,514 +1938,102 @@ class OpenSubsonic_Xml_Data
     }
 
     /**
-     * addJukeboxPlaylist
+     * addVideo
      *
-     * https://opensubsonic.netlify.app/docs/responses/jukeboxplaylist/
+     * https://opensubsonic.netlify.app/docs/responses/child/
      */
-    public static function addJukeboxPlaylist(SimpleXMLElement $xml, LocalPlay $localplay): SimpleXMLElement
+    private static function _addVideo(SimpleXMLElement $xml, Video $video, string $elementName = 'video'): void
     {
-        $xjbox  = self::addJukeboxStatus($xml, $localplay, 'jukeboxPlaylist');
-        $tracks = $localplay->get();
-        foreach ($tracks as $track) {
-            if (array_key_exists('oid', $track)) {
-                $song = new Song((int)$track['oid']);
-                if ($song->isNew() || !$song->enabled) {
-                    continue;
-                }
-                self::addSong($xjbox, $song, 'entry');
-            }
-            // TODO This can be random play, democratic, podcasts, etc. not just songs
-        }
-
-        return $xml;
-    }
-
-    /**
-     * addJukeboxStatus
-     *
-     * https://opensubsonic.netlify.app/docs/responses/jukeboxstatus/
-     */
-    public static function addJukeboxStatus(SimpleXMLElement $xml, LocalPlay $localplay, string $elementName = 'jukeboxStatus'): SimpleXMLElement
-    {
-        $xjbox  = self::_addChildToResultXml($xml, htmlspecialchars($elementName));
-        $status = $localplay->status();
-        if (empty($status)) {
-            $xjbox->addAttribute('currentIndex', '0');
-            $xjbox->addAttribute('playing', 'false');
-            $xjbox->addAttribute('gain', '0');
-
-            return $xml;
-        }
-        $index  = (((int)$status['track']) === 0)
-            ? 0
-            : $status['track'] - 1;
-        $xjbox->addAttribute('currentIndex', (string)$index);
-        $xjbox->addAttribute('playing', ($status['state'] == 'play') ? 'true' : 'false');
-        $xjbox->addAttribute('gain', (string)$status['volume']);
-        $xjbox->addAttribute('position', '0'); // TODO Not supported
-
-        return $xml;
-    }
-
-    /**
-     * addLyrics
-     *
-     * https://opensubsonic.netlify.app/docs/responses/lyrics/
-     */
-    public static function addLyrics(SimpleXMLElement $xml, string $artist, string $title, Song $song): SimpleXMLElement
-    {
-        if ($song->isNew() || !$song->enabled) {
-            return $xml;
-        }
-
-        $lyrics = $song->get_lyrics();
-
-        if (!empty($lyrics) && $lyrics['text']) {
-            $text    = preg_replace('/\<br(\s*)?\/?\>/i', "\n", $lyrics['text']);
-            $text    = preg_replace('/\\n\\n/i', "\n", (string)$text);
-            $text    = str_replace("\r", '', (string)$text);
-            $xlyrics = self::_addChildToResultXml($xml, 'lyrics', html_entity_decode($text));
-            if ($artist) {
-                $xlyrics->addAttribute('artist', $artist);
-            }
-            if ($title) {
-                $xlyrics->addAttribute('title', $title);
-            }
-        }
-
-        return $xml;
-    }
-
-    /**
-     * addLyricsList
-     *
-     * https://opensubsonic.netlify.app/docs/responses/lyricslist/
-     */
-    public static function addLyricsList(SimpleXMLElement $xml, Song $song): SimpleXMLElement
-    {
-        if ($song->isNew() || !$song->enabled) {
-            return $xml;
-        }
-
-        $xlist  = self::_addChildToResultXml($xml, 'lyricsList');
-        $lyrics = $song->get_lyrics();
-
-        if (!empty($lyrics) && $lyrics['text']) {
-            $xlyrics = self::_addChildToResultXml($xlist, 'structuredLyrics');
-            $xlyrics->addAttribute('displayArtist', $song->get_parent_fullname());
-            $xlyrics->addAttribute('displayTitle', (string)$song->title);
-            $xlyrics->addAttribute('lang', 'xxx');
-
-            $text = preg_replace('/\<br(\s*)?\/?\>/i', "\n", $lyrics['text']);
-            $text = preg_replace('/\\n\\n/i', "\n", (string)$text);
-            $text = str_replace("\r", '', (string)$text);
-
-            $synced = [];
-            $lines  = [];
-            foreach (explode("\n", html_entity_decode($text)) as $line) {
-                if (!empty($line)) {
-                    if (preg_match('/^\[(\d{2}):(\d{2})\.(\d{2})\]\s*(.*)$/', $line, $matches)) {
-                        $minutes      = (int)$matches[1];
-                        $seconds      = (int)$matches[2];
-                        $centiseconds = (int)$matches[3];
-                        $milliseconds = ($minutes * 60 * 1000) + ($seconds * 1000) + ($centiseconds * 10);
-
-                        // Lyrics text
-                        $lyricLine = trim($matches[4]);
-                        $synced[]  = [
-                            'start' => (string)$milliseconds,
-                            'value' => $lyricLine,
-                        ];
-                    } else {
-                        $lines[] = ['value' => (string)$line];
-                    }
-                }
-            }
-
-            if ($synced !== []) {
-                $xlyrics->addAttribute('synced', 'true');
-                foreach ($synced as $line) {
-                    $xline = self::_addChildToResultXml($xlyrics, 'line');
-                    $xline->addAttribute('start', $line['start']);
-                    $xline->addAttribute('value', $line['value']);
-                }
-            } elseif ($lines !== []) {
-                $xlyrics->addAttribute('synced', 'false');
-                foreach ($lines as $line) {
-                    $xline = self::_addChildToResultXml($xlyrics, 'line');
-                    $xline->addAttribute('value', $line['value']);
-                }
-            }
-        }
-
-        return $xml;
-    }
-
-    /**
-     * addAlbumInfo
-     *
-     * https://opensubsonic.netlify.app/docs/responses/albuminfo/
-     * @param array{
-     *     id: int,
-     *     summary: ?string,
-     *     largephoto: ?string,
-     *     smallphoto: ?string,
-     *     mediumphoto: ?string,
-     *     megaphoto: ?string
-     * } $info
-     */
-    public static function addAlbumInfo(SimpleXMLElement $xml, array $info, Album $album): SimpleXMLElement
-    {
-        $xartist = self::_addChildToResultXml($xml, htmlspecialchars('albumInfo'));
-        $xartist->addChild('notes', htmlspecialchars(trim((string)$info['summary'])));
-        $xartist->addChild('musicBrainzId', $album->mbid);
-        //$xartist->addChild('lastFmUrl', "");
-        $xartist->addChild('smallImageUrl', html_entity_decode((string)$info['smallphoto']));
-        $xartist->addChild('mediumImageUrl', html_entity_decode((string)$info['mediumphoto']));
-        $xartist->addChild('largeImageUrl', html_entity_decode((string)$info['largephoto']));
-
-        return $xml;
-    }
-
-    /**
-     * addArtistInfo
-     *
-     * https://opensubsonic.netlify.app/docs/responses/artistinfo/
-     * @param array{
-     *     id: ?int,
-     *     summary: ?string,
-     *     placeformed: ?string,
-     *     yearformed: ?int,
-     *     largephoto: ?string,
-     *     smallphoto: ?string,
-     *     mediumphoto: ?string,
-     *     megaphoto: ?string
-     * } $info
-     * @param array<int, array{
-     *     id: ?int,
-     *     name: string,
-     *     rel?: ?string,
-     *     mbid?: ?string
-     * }> $similars
-     */
-    public static function addArtistInfo(SimpleXMLElement $xml, array $info, Artist $artist, array $similars, string $elementName = 'artistInfo'): SimpleXMLElement
-    {
-        $xartist   = self::_addChildToResultXml($xml, htmlspecialchars($elementName));
-        $biography = trim((string)$info['summary']);
-        if (!empty($biography)) {
-            $xartist->addChild('biography', htmlspecialchars($biography));
-        }
-        $xartist->addChild('musicBrainzId', (string)$artist->mbid);
-        //$xartist->addChild('lastFmUrl', "");
-        $xartist->addChild('smallImageUrl', html_entity_decode((string)$info['smallphoto']));
-        $xartist->addChild('mediumImageUrl', html_entity_decode((string)$info['mediumphoto']));
-        $xartist->addChild('largeImageUrl', html_entity_decode((string)$info['largephoto']));
-
-        $unknownCount = 0;
-        foreach ($similars as $similar) {
-            $xsimilar = self::_addChildToResultXml($xartist, 'similarArtist');
-            $xsimilar->addAttribute('id', (($similar['id'] !== null) ? OpenSubsonic_Api::getArtistSubId($similar['id']) : (string)('-' . $unknownCount++)));
-            $xsimilar->addAttribute('name', (string)$similar['name']);
-        }
-
-        return $xml;
-    }
-
-    /**
-     * addArtistInfo2
-     *
-     * https://opensubsonic.netlify.app/docs/responses/artistinfo2/
-     * @param array{
-          *     id: ?int,
-          *     summary: ?string,
-          *     placeformed: ?string,
-          *     yearformed: ?int,
-          *     largephoto: ?string,
-          *     smallphoto: ?string,
-          *     mediumphoto: ?string,
-          *     megaphoto: ?string
-          * } $info
-     * @param array<int, array{
-          *     id: ?int,
-          *     name: string,
-          *     rel?: ?string,
-          *     mbid?: ?string
-          * }> $similars
-     */
-    public static function addArtistInfo2(SimpleXMLElement $xml, array $info, Artist $artist, array $similars): SimpleXMLElement
-    {
-        return self::addArtistInfo($xml, $info, $artist, $similars, 'artistInfo2');
-    }
-
-    /**
-     * addSimilarSongs
-     *
-     * https://opensubsonic.netlify.app/docs/responses/similarsongs/
-     * @param array<int, array{
-     *     id: ?int,
-     *     name?: ?string,
-     *     rel?: ?string,
-     *     mbid?: ?string,
-     * }> $similar_songs
-     */
-    public static function addSimilarSongs(SimpleXMLElement $xml, array $similar_songs): SimpleXMLElement
-    {
-        $xsimilar = self::_addChildToResultXml($xml, 'similarSongs');
-        foreach ($similar_songs as $similar_song) {
-            if ($similar_song['id'] !== null) {
-                $song = new Song($similar_song['id']);
-                if ($song->isNew() || !$song->enabled) {
-                    continue;
-                }
-                self::addSong($xsimilar, $song);
-            }
-        }
-
-        return $xml;
-    }
-
-    /**
-     * addSimilarSongs2
-     *
-     * https://opensubsonic.netlify.app/docs/responses/similarsongs2/
-     * @param array<int, array{
-     *     id: ?int,
-     *     name?: ?string,
-     *     rel?: ?string,
-     *     mbid?: ?string,
-     * }> $similar_songs
-     */
-    public static function addSimilarSongs2(SimpleXMLElement $xml, array $similar_songs): SimpleXMLElement
-    {
-        $xsimilar = self::_addChildToResultXml($xml, 'similarSongs2');
-        foreach ($similar_songs as $similar_song) {
-            if ($similar_song['id'] !== null) {
-                $song = new Song($similar_song['id']);
-                if ($song->isNew() || !$song->enabled) {
-                    continue;
-                }
-                self::addSong($xsimilar, $song);
-            }
-        }
-
-        return $xml;
-    }
-
-    /**
-     * addPodcastEpisode
-     *
-     * https://opensubsonic.netlify.app/docs/responses/podcastepisode/
-     */
-    public static function addPodcastEpisode(SimpleXMLElement $xml, Podcast_Episode $episode): SimpleXMLElement
-    {
-        $xepisode = self::_addChildToResultXml($xml, 'podcastEpisode');
-        self::_addPodcastEpisode($xepisode, $episode);
-
-        return $xml;
-    }
-
-    /**
-     * addPodcasts
-     *
-     * https://opensubsonic.netlify.app/docs/responses/podcasts/
-     * @param Podcast[] $podcasts
-     */
-    public static function addPodcasts(SimpleXMLElement $xml, array $podcasts, bool $includeEpisodes = true, ?string $sub_id = null): SimpleXMLElement
-    {
-        $xpodcasts = self::_addChildToResultXml($xml, 'podcasts');
-        foreach ($podcasts as $podcast) {
-            $sub_id = (!empty($sub_id))
-                ? $sub_id
-                : Subsonic_Api::getPodcastSubId($podcast->getId());
-            $xchannel = self::_addChildToResultXml($xpodcasts, 'channel');
-            $xchannel->addAttribute('id', $sub_id);
-            $xchannel->addAttribute('url', $podcast->getFeedUrl());
-            $xchannel->addAttribute('title', (string)$podcast->get_fullname());
-            $xchannel->addAttribute('description', $podcast->get_description());
-            if ($podcast->has_art()) {
-                $xchannel->addAttribute('coverArt', $sub_id);
-            }
-            $xchannel->addAttribute('status', 'completed');
-            if ($includeEpisodes) {
-                $episodes = $podcast->getEpisodeIds();
-
-                foreach ($episodes as $episode_id) {
-                    $episode = new Podcast_Episode($episode_id);
-                    self::_addPodcastEpisode($xchannel, $episode);
-                }
-            }
-        }
-
-        return $xml;
-    }
-
-    /**
-     * addNewestPodcasts
-     *
-     * https://opensubsonic.netlify.app/docs/responses/newestpodcasts/
-     * @param Podcast_Episode[] $episodes
-     */
-    public static function addNewestPodcasts(SimpleXMLElement $xml, array $episodes): SimpleXMLElement
-    {
-        $xpodcasts = self::_addChildToResultXml($xml, 'newestPodcasts');
-        foreach ($episodes as $episode) {
-            self::_addPodcastEpisode($xpodcasts, $episode);
-        }
-
-        return $xml;
-    }
-
-    /**
-     * addBookmarks
-     *
-     * https://opensubsonic.netlify.app/docs/responses/bookmarks/
-     * @param list<Bookmark> $bookmarks
-     */
-    public static function addBookmarks(SimpleXMLElement $xml, array $bookmarks): SimpleXMLElement
-    {
-        $xbookmarks = self::_addChildToResultXml($xml, 'bookmarks');
-        foreach ($bookmarks as $bookmark) {
-            self::_addBookmark($xbookmarks, $bookmark);
-        }
-
-        return $xml;
-    }
-
-    /**
-     * addBookmark
-     *
-     * https://opensubsonic.netlify.app/docs/responses/bookmark/
-     */
-    private static function _addBookmark(SimpleXMLElement $xml, Bookmark $bookmark): void
-    {
-        $xbookmark = self::_addChildToResultXml($xml, 'bookmark');
-        $xbookmark->addAttribute('position', (string)$bookmark->position);
-        $xbookmark->addAttribute('username', $bookmark->getUserName());
-        $xbookmark->addAttribute('comment', (string)$bookmark->comment);
-        $xbookmark->addAttribute('created', date("c", (int)$bookmark->creation_date));
-        $xbookmark->addAttribute('changed', date("c", (int)$bookmark->update_date));
-        if ($bookmark->object_type == "song") {
-            $song = new Song($bookmark->object_id);
-            if ($song->isNew() === false && $song->enabled) {
-                self::addSong($xbookmark, $song, 'entry');
-            }
-        } elseif ($bookmark->object_type == "video") {
-            self::_addVideo($xbookmark, new Video($bookmark->object_id), 'entry');
-        } elseif ($bookmark->object_type == "podcast_episode") {
-            self::_addPodcastEpisode($xbookmark, new Podcast_Episode($bookmark->object_id), 'entry');
-        }
-    }
-
-    /**
-     * addPodcastEpisode
-     *
-     * https://opensubsonic.netlify.app/docs/responses/podcastepisode/
-     */
-    private static function _addPodcastEpisode(SimpleXMLElement $xml, Podcast_Episode $episode, string $elementName = 'episode'): void
-    {
-        if ($episode->isNew()) {
+        if ($video->isNew()) {
             return;
         }
 
-        $sub_id    = OpenSubsonic_Api::getPodcastEpisodeSubId($episode->id);
-        $subParent = OpenSubsonic_Api::getPodcastSubId($episode->podcast);
-        $xepisode  = self::_addChildToResultXml($xml, htmlspecialchars($elementName));
-        $xepisode->addAttribute('id', $sub_id);
-        $xepisode->addAttribute('channelId', $subParent);
-        $xepisode->addAttribute('title', (string)$episode->get_fullname());
-        $xepisode->addAttribute('album', $episode->getPodcastName());
-        $xepisode->addAttribute('description', $episode->get_description());
-        $xepisode->addAttribute('duration', (string)$episode->time);
-        $xepisode->addAttribute('genre', "Podcast");
-        $xepisode->addAttribute('isDir', "false");
-        $xepisode->addAttribute('publishDate', $episode->getPubDate()->format(DATE_ATOM));
-        $xepisode->addAttribute('status', (string)$episode->state);
-        $xepisode->addAttribute('parent', $subParent);
-        if ($episode->has_art()) {
-            $xepisode->addAttribute('coverArt', $subParent);
+        $sub_id = OpenSubsonic_Api::getVideoSubId($video->id);
+        $xvideo = self::_addChildToResultXml($xml, htmlspecialchars($elementName));
+        $xvideo->addAttribute('id', $sub_id);
+        $xvideo->addAttribute('title', $video->getFileName());
+        $xvideo->addAttribute('isDir', 'false');
+        if ($video->has_art()) {
+            $xvideo->addAttribute('coverArt', $sub_id);
         }
+        $xvideo->addAttribute('isVideo', 'true');
+        $xvideo->addAttribute('type', 'video');
+        $xvideo->addAttribute('duration', (string) $video->time);
+        if (isset($video->year) && $video->year > 0) {
+            $xvideo->addAttribute('year', (string) $video->year);
+        }
+        $tags = Tag::get_object_tags('video', (int) $video->id);
+        if (!empty($tags)) {
+            $xvideo->addAttribute('genre', implode(',', array_column($tags, 'name')));
+            foreach ($tags as $tag) {
+                $xlastcat = self::_addChildToResultXml($xvideo, 'genres');
+                $xlastcat->addAttribute('name', (string) $tag['name']);
+            }
+        }
+        $xvideo->addAttribute('size', (string) $video->size);
+        $xvideo->addAttribute('suffix', (string) $video->type);
+        $xvideo->addAttribute('contentType', (string) $video->mime);
+        // Create a clean fake path instead of song real file path to have better offline mode storage on Subsonic clients
+        $path = basename($video->file ?? '');
+        $xvideo->addAttribute('path', (string) $path);
 
-        self::_setIfStarred($xepisode, 'podcast_episode', $episode->id);
-
-        if ($episode->file) {
-            $xepisode->addAttribute('streamId', $sub_id);
-            $xepisode->addAttribute('size', (string)$episode->size);
-            $xepisode->addAttribute('suffix', (string)$episode->type);
-            $xepisode->addAttribute('contentType', (string)$episode->mime);
-            // Create a clean fake path instead of song real file path to have better offline mode storage on Subsonic clients
-            $path = basename($episode->file);
-            $xepisode->addAttribute('path', (string)$path);
+        self::_setIfStarred($xvideo, 'video', $video->id);
+        // Set transcoding information if required
+        $transcode_cfg = AmpConfig::get('transcode', 'default');
+        $valid_types   = Stream::get_stream_types_for_type($video->type, 'api');
+        if ($transcode_cfg == 'always' || ($transcode_cfg != 'never' && !in_array('native', $valid_types))) {
+            $transcode_settings = $video->get_transcode_settings(null, 'api');
+            if (!empty($transcode_settings['format'])) {
+                $transcode_type = $transcode_settings['format'];
+                $xvideo->addAttribute('transcodedSuffix', (string) $transcode_type);
+                $xvideo->addAttribute('transcodedContentType', Video::type_to_mime($transcode_type));
+            }
         }
     }
 
     /**
-     * addChatMessages
+     * _createFailedResponse
      *
-     * https://opensubsonic.netlify.app/docs/responses/chatmessages/
-     * @param int[] $messages
+     * https://opensubsonic.netlify.app/docs/responses/subsonic-response/
      */
-    public static function addChatMessages(SimpleXMLElement $xml, array $messages): SimpleXMLElement
+    private static function _createFailedResponse(string $function = ''): SimpleXMLElement
     {
-        $xmessages = self::_addChildToResultXml($xml, 'chatMessages');
-        if (empty($messages)) {
-            return $xml;
-        }
+        $response = self::_createResponse('failed');
+        debug_event(self::class, 'API fail in function ' . $function . '-' . OpenSubsonic_Api::API_VERSION, 3);
 
-        foreach ($messages as $message) {
-            $chat = new PrivateMsg($message);
-            self::_addMessage($xmessages, $chat);
-        }
-
-        return $xml;
+        return $response;
     }
 
     /**
-     * addScanStatus
+     * _createResponse
      *
-     * https://opensubsonic.netlify.app/docs/responses/scanstatus/
+     * Common answer wrapper.
+     * https://opensubsonic.netlify.app/docs/responses/subsonicresponse/
      */
-    public static function addScanStatus(SimpleXMLElement $xml, User $user): SimpleXMLElement
+    private static function _createResponse(string $status = 'ok'): SimpleXMLElement
     {
-        $counts = Catalog::get_server_counts($user->id);
-        $count  = $counts['artist'] + $counts['album'] + $counts['song'] + $counts['podcast_episode'];
-        $xscan  = self::_addChildToResultXml($xml, htmlspecialchars('scanStatus'));
-        $xscan->addAttribute('scanning', "false");
-        $xscan->addAttribute('count', (string)$count);
+        $response = new SimpleXMLElement('<?xml version="1.0" encoding="UTF-8"?><subsonic-response/>');
+        $response->addAttribute('xmlns', 'http://subsonic.org/restapi');
+        $response->addAttribute('status', (string) $status);
+        $response->addAttribute('version', OpenSubsonic_Api::API_VERSION);
+        $response->addAttribute('type', 'ampache');
+        $response->addAttribute('serverVersion', AmpConfig::get('version'));
+        $response->addAttribute('openSubsonic', "1");
 
-        return $xml;
+        return $response;
     }
 
     /**
-     * addTokenInfo
+     * _createSuccessResponse
      *
-     * Information about an API key
-     * https://opensubsonic.netlify.app/docs/responses/tokeninfo/
+     * https://opensubsonic.netlify.app/docs/responses/subsonicresponse/
      */
-    public static function addTokenInfo(SimpleXMLElement $xml, User $user): SimpleXMLElement
+    private static function _createSuccessResponse(string $function = ''): SimpleXMLElement
     {
-        $xscan = self::_addChildToResultXml($xml, htmlspecialchars('tokenInfo'));
-        $xscan->addAttribute('username', (string)$user->username);
+        $response = self::_createResponse();
+        debug_event(self::class, 'API success in function ' . $function . '-' . OpenSubsonic_Api::API_VERSION, 5);
 
-        return $xml;
-    }
-
-    /**
-     * addMessage
-     *
-     * A chatMessage.
-     * https://opensubsonic.netlify.app/docs/responses/chatmessage/
-     */
-    private static function _addMessage(SimpleXMLElement $xml, PrivateMsg $message): void
-    {
-        $user      = new User($message->getSenderUserId());
-        $xbookmark = self::_addChildToResultXml($xml, 'chatMessage');
-        if ($user->fullname_public) {
-            $xbookmark->addAttribute('username', (string)$user->fullname);
-        } else {
-            $xbookmark->addAttribute('username', (string)$user->username);
-        }
-        $xbookmark->addAttribute('time', (string)($message->getCreationDate() * 1000));
-        $xbookmark->addAttribute('message', (string)$message->getMessage());
+        return $response;
     }
 
     /**
@@ -2039,14 +2053,13 @@ class OpenSubsonic_Xml_Data
     }
 
     /**
-     * Adds a child to an existing result xml structure
+     * @deprecated
      */
-    private static function _addChildToResultXml(SimpleXMLElement $xml, string $qualifiedName, ?string $value = null): SimpleXMLElement
+    private static function getAlbumRepository(): AlbumRepositoryInterface
     {
-        /** @var SimpleXMLElement $child */
-        $child = $xml->addChild($qualifiedName, $value);
+        global $dic;
 
-        return $child;
+        return $dic->get(AlbumRepositoryInterface::class);
     }
 
     /**
@@ -2057,15 +2070,5 @@ class OpenSubsonic_Xml_Data
         global $dic;
 
         return $dic->get(SongRepositoryInterface::class);
-    }
-
-    /**
-     * @deprecated
-     */
-    private static function getAlbumRepository(): AlbumRepositoryInterface
-    {
-        global $dic;
-
-        return $dic->get(AlbumRepositoryInterface::class);
     }
 }

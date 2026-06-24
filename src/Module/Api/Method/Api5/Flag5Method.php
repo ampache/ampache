@@ -49,7 +49,7 @@ final class Flag5Method
      * Setting flag to false (0) will remove the flag
      *
      * type = (string) 'song', 'album', 'artist', 'playlist', 'podcast', 'podcast_episode', 'video' $type
-     * id   = (integer) $object_id
+     * id = (integer) $object_id
      * flag = (integer) 0,1 $flag
      *
      * @param array{

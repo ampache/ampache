@@ -178,7 +178,7 @@ foreach ($object_ids as $album_id) {
                 <?php } ?>
             <th class="cel_action"><?php echo $action_text; ?></th>
         </tr>
-    <tfoot>
+    </tfoot>
 </table>
 
 <?php show_table_render(); ?>

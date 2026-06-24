@@ -47,7 +47,7 @@ final class ArtistSongs4Method
      *
      * filter = (string) UID of Artist
      * offset = (integer) //optional
-     * limit  = (integer) //optional
+     * limit = (integer) //optional
      *
      * @param array{
      *     filter: string,
@@ -65,7 +65,7 @@ final class ArtistSongs4Method
         if (!Api4::check_parameter($input, ['filter'], self::ACTION)) {
             return false;
         }
-        $artist  = new Artist((int)$input['filter']);
+        $artist  = new Artist((int) $input['filter']);
         $results = self::getSongRepository()->getByArtist($artist->id);
 
         if (!empty($results)) {

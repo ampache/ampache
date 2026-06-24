@@ -47,7 +47,7 @@ final class LastShouts8Method
      *
      * This get the latest posted shouts
      *
-     * filter   = (integer|string) filter by user id OR username //optional
+     * filter = (integer|string) filter by user id OR username //optional
      * username = (string) $username //optional
      * limit = (integer) $limit Default: 10 (popular_threshold) //optional
      *
@@ -73,7 +73,7 @@ final class LastShouts8Method
         }
 
         unset($user);
-        $limit = (int)($input['limit'] ?? 0);
+        $limit = (int) ($input['limit'] ?? 0);
         if ($limit < 1) {
             $limit = AmpConfig::get('popular_threshold', 10);
         }
@@ -84,7 +84,7 @@ final class LastShouts8Method
 
         if (is_numeric($username)) {
             $results = iterator_to_array(
-                self::getShoutRepository()->getTopById($limit, (int)$username)
+                self::getShoutRepository()->getTopById($limit, (int) $username)
             );
         } else {
             $results = iterator_to_array(

@@ -51,13 +51,13 @@ final class PreferenceCreate8Method
      *
      * This inserts a new preference into the preference table
      *
-     * filter      = (string) preference name
-     * type        = (string) 'boolean', 'integer', 'string', 'special'
-     * default     = (string|integer) default value
-     * category    = (string) 'interface', 'internal', 'options', 'playlist', 'plugins', 'streaming'
+     * filter = (string) preference name
+     * type = (string) 'boolean', 'integer', 'string', 'special'
+     * default = (string|integer) default value
+     * category = (string) 'interface', 'internal', 'options', 'playlist', 'plugins', 'streaming'
      * description = (string) description of preference //optional
      * subcategory = (string) $subcategory //optional
-     * level       = (integer) access level required to change the value (default 100) //optional
+     * level = (integer) access level required to change the value (default 100) //optional
      *
      * @param array{
      *     filter: string,
@@ -102,8 +102,8 @@ final class PreferenceCreate8Method
         }
         $level       = (isset($input['level'])) ? (int) $input['level'] : 100;
         $default     = ($type == 'boolean' || $type == 'integer') ? (int) $input['default'] : (string) $input['default'];
-        $description = (string)($input['description'] ?? '');
-        $subcategory = (string)($input['subcategory'] ?? '');
+        $description = (string) ($input['description'] ?? '');
+        $subcategory = (string) ($input['subcategory'] ?? '');
 
         // insert and return the new preference
         Preference::insert($pref_name, $description, $default, $level, $type, $category, $subcategory);

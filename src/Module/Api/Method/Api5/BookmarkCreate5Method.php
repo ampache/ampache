@@ -50,11 +50,11 @@ final class BookmarkCreate5Method
      *
      * Create a placeholder for the current media that you can return to later.
      *
-     * filter   = (string) object_id
-     * type     = (string) object_type ('song', 'video', 'podcast_episode')
+     * filter = (string) object_id
+     * type = (string) object_type ('song', 'video', 'podcast_episode')
      * position = (integer) current track time in seconds
-     * client   = (string) Agent string Default: 'AmpacheAPI' //optional
-     * date     = (integer) UNIXTIME() //optional
+     * client = (string) Agent string Default: 'AmpacheAPI' //optional
+     * date = (integer) UNIXTIME() //optional
      *
      * @param array{
      *     filter: string,
@@ -108,10 +108,10 @@ final class BookmarkCreate5Method
         }
         $object = [
             'user' => $user->getId(),
-            'object_id' => (int)$object_id,
+            'object_id' => (int) $object_id,
             'object_type' => $type,
             'comment' => $comment,
-            'position' => (int)$position,
+            'position' => (int) $position,
         ];
 
         // create it then retrieve it

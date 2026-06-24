@@ -50,7 +50,7 @@ final class PlaylistSongs5Method
      * filter = (string) UID of playlist
      * random = (integer) 0,1, if true get random songs using limit //optional
      * offset = (integer) //optional
-     * limit  = (integer) //optional
+     * limit = (integer) //optional
      *
      * @param array{
      *     filter: string,
@@ -67,7 +67,7 @@ final class PlaylistSongs5Method
             return false;
         }
         $object_id = $input['filter'];
-        $random    = (array_key_exists('random', $input) && (int)$input['random'] == 1);
+        $random    = (array_key_exists('random', $input) && (int) $input['random'] == 1);
         $playlist  = ((int) $object_id === 0)
             ? new Search((int) str_replace('smart_', '', $object_id), 'song', $user)
             : new Playlist((int) $object_id);
@@ -79,8 +79,8 @@ final class PlaylistSongs5Method
             return false;
         }
         if (
-            $playlist->type !== 'public' &&
-            !$playlist->has_collaborate($user)
+            $playlist->type !== 'public'
+            && !$playlist->has_collaborate($user)
         ) {
             Api5::error(T_('Require: 100'), ErrorCodeEnum::FAILED_ACCESS_CHECK, self::ACTION, 'account', $input['api_format']);
 
@@ -101,7 +101,7 @@ final class PlaylistSongs5Method
             if ($object['object_type'] === LibraryItemEnum::SONG) {
                 $results[] = $object['object_id'];
             }
-        } // end foreach
+        }
 
         ob_end_clean();
         switch ($input['api_format']) {

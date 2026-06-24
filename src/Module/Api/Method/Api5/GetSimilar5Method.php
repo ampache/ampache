@@ -45,10 +45,10 @@ final class GetSimilar5Method
      *
      * Return similar artist id's or similar song ids compared to the input filter
      *
-     * type   = (string) 'song', 'artist'
+     * type = (string) 'song', 'artist'
      * filter = (integer) artist id or song id
      * offset = (integer) //optional
-     * limit  = (integer) //optional
+     * limit = (integer) //optional
      *
      * @param array{
      *     filter: string,
@@ -83,7 +83,7 @@ final class GetSimilar5Method
                 $similar = Recommendation::get_songs_like($object_id);
         }
         foreach ($similar as $child) {
-            $results[] = (int)$child['id'];
+            $results[] = (int) $child['id'];
         }
         if (empty($results)) {
             Api5::empty($type, $input['api_format']);

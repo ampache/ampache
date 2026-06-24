@@ -47,9 +47,9 @@ final class Labels5Method
      * This returns the labels based on the specified filter
      *
      * filter = (string) Alpha-numeric search term //optional
-     * exact  = (integer) 0,1, if true filter is exact rather then fuzzy //optional
+     * exact = (integer) 0,1, if true filter is exact rather then fuzzy //optional
      * offset = (integer) //optional
-     * limit  = (integer) //optional
+     * limit = (integer) //optional
      *
      * @param array{
      *     filter?: string,
@@ -74,7 +74,7 @@ final class Labels5Method
         $browse->set_type('label');
         $browse->set_sort('name', 'ASC', false);
 
-        $method = (array_key_exists('exact', $input) && (int)$input['exact'] == 1) ? 'exact_match' : 'alpha_match';
+        $method = (array_key_exists('exact', $input) && (int) $input['exact'] == 1) ? 'exact_match' : 'alpha_match';
         $browse->set_api_filter($method, $input['filter'] ?? '');
         $results = $browse->get_objects();
         if (empty($results)) {
