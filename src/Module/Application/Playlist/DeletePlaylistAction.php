@@ -43,8 +43,7 @@ final readonly class DeletePlaylistAction implements ApplicationActionInterface
         private ModelFactoryInterface $modelFactory,
         private ResponseFactoryInterface $responseFactory,
         private ConfigContainerInterface $configContainer,
-    ) {
-    }
+    ) {}
 
     public function run(ServerRequestInterface $request, GuiGatekeeperInterface $gatekeeper): ResponseInterface
     {
@@ -52,7 +51,7 @@ final readonly class DeletePlaylistAction implements ApplicationActionInterface
             $playlistId = $request->getQueryParams()['playlist_id'] ?? null;
             if ($playlistId !== null) {
                 // Check rights
-                $playlist = $this->modelFactory->createPlaylist((int)$playlistId);
+                $playlist = $this->modelFactory->createPlaylist((int) $playlistId);
                 if ($playlist->has_access()) {
                     $playlist->delete();
 

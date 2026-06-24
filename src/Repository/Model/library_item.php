@@ -30,20 +30,8 @@ namespace Ampache\Repository\Model;
  * work, this lists all required functions and the expected
  * input
  */
-interface library_item extends playable_item
+interface library_item
 {
-    public function getId(): int;
-
-    public function isNew(): bool;
-
-    /**
-     * Get item keywords for metadata searches.
-     * @return array<string, array{important: bool, label: string, value: string}>
-     */
-    public function get_keywords(): array;
-
-    public function get_user_owner(): ?int;
-
     public function get_default_art_kind(): string;
 
     /**
@@ -52,24 +40,41 @@ interface library_item extends playable_item
     public function get_description(): string;
 
     /**
-     * format time to Hours:Minutes:Seconds.
+     * get_fullname
+     *
+     * Get the item full name.
      */
-    public function get_f_time(): string;
+    public function get_fullname(): ?string;
 
     /**
-     * display_art
-     * @param array{width: int, height: int} $size
+     * Get item keywords for metadata searches.
+     * @return array<string, array{important: bool, label: string, value: string}>
      */
-    public function display_art(array $size, bool $force = false): void;
+    public function get_keywords(): array;
+
+    /**
+     * get_link
+     *
+     * Get the item link.
+     */
+    public function get_link(): string;
+
+    public function get_user_owner(): ?int;
+
+    public function getId(): int;
+
+    /**
+     * Returns the media-type of the library-item
+     */
+    public function getMediaType(): LibraryItemEnum;
+
+    public function has_art(): bool;
+
+    public function isNew(): bool;
 
     /**
      * update
      * @param array<string, mixed> $data
      */
     public function update(array $data): ?int;
-
-    /**
-     * Returns the media-type of the library-item
-     */
-    public function getMediaType(): LibraryItemEnum;
 }

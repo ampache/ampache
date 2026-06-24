@@ -32,16 +32,6 @@ use Override;
 
 final class ArtCleanupCommand extends Command
 {
-    #[Override]
-    protected function defaults(): self
-    {
-        $this->option('-h, --help', T_('Help'))->on($this->showHelp(...));
-
-        $this->onExit(static fn ($exitCode = 0) => exit($exitCode));
-
-        return $this;
-    }
-
     public function __construct(
         private readonly ConfigContainerInterface $configContainer,
         private readonly ArtCleanupInterface $artCleanup,
@@ -73,12 +63,12 @@ final class ArtCleanupCommand extends Command
 
             $runable = (
                 (
-                    !$this->configContainer->get('album_art_min_width') &&
-                    $this->configContainer->get('album_art_min_height')
-                ) ||
-                (
-                    !$this->configContainer->get('album_art_max_width') &&
-                    !$this->configContainer->get('album_art_max_height')
+                    !$this->configContainer->get('album_art_min_width')
+                    && $this->configContainer->get('album_art_min_height')
+                )
+                || (
+                    !$this->configContainer->get('album_art_max_width')
+                    && !$this->configContainer->get('album_art_max_height')
                 )
             );
 
@@ -144,5 +134,15 @@ final class ArtCleanupCommand extends Command
             'Clean Completed',
             true
         );
+    }
+
+    #[Override]
+    protected function defaults(): self
+    {
+        $this->option('-h, --help', T_('Help'))->on($this->showHelp(...));
+
+        $this->onExit(static fn($exitCode = 0) => exit($exitCode));
+
+        return $this;
     }
 }

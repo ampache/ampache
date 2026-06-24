@@ -46,8 +46,7 @@ final readonly class WrappedAction implements ApplicationActionInterface
         private RequestParserInterface $requestParser,
         private UiInterface $ui,
         private UserRepositoryInterface $userRepository,
-    ) {
-    }
+    ) {}
 
     public function run(ServerRequestInterface $request, GuiGatekeeperInterface $gatekeeper): ?ResponseInterface
     {
@@ -57,7 +56,7 @@ final readonly class WrappedAction implements ApplicationActionInterface
 
         session_start();
 
-        $userId = (int)$this->requestParser->getFromRequest('user_id');
+        $userId = (int) $this->requestParser->getFromRequest('user_id');
 
         $user = $this->userRepository->findById($userId);
         if ($user === null) {

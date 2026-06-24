@@ -39,11 +39,7 @@ use Override;
  */
 class Catalog_beets extends Catalog
 {
-    #[Override]
-    protected string $version     = '000001';
-
-    #[Override]
-    protected string $type        = 'beets';
+    protected string $beetsdb = '';
 
     #[Override]
     protected string $description = 'Beets Catalog';
@@ -51,57 +47,11 @@ class Catalog_beets extends Catalog
     #[Override]
     protected string $listCommand = 'ls';
 
-    protected string $beetsdb = '';
+    #[Override]
+    protected string $type = 'beets';
 
-    public int $catalog_id;
-
-    /**
-     * get_create_help
-     * This returns hints on catalog creation
-     */
-    public function get_create_help(): string
-    {
-        return "<ul><li>Fetch songs from beets command over CLI.</li><li>You have to ensure that the beets command ( beet ), the music directories and the Database file are accessible by the Webserver.</li></ul>";
-    }
-
-    /**
-     * is_installed
-     * This returns true or false if remote catalog is installed
-     */
-    public function is_installed(): bool
-    {
-        $sql        = "SHOW TABLES LIKE 'catalog_beets'";
-        $db_results = Dba::query($sql);
-
-        return (Dba::num_rows($db_results) > 0);
-    }
-
-    /**
-     * install
-     * This function installs the remote catalog
-     */
-    public function install(): bool
-    {
-        $collation = (AmpConfig::get('database_collation', 'utf8mb4_unicode_ci'));
-        $charset   = (AmpConfig::get('database_charset', 'utf8mb4'));
-        $engine    = (AmpConfig::get('database_engine', 'InnoDB'));
-
-        $sql = sprintf('CREATE TABLE `catalog_beets` (`id` INT(11) UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY, `beetsdb` VARCHAR(255) COLLATE %s NOT NULL, `catalog_id` INT(11) NOT NULL) ENGINE = %s DEFAULT CHARSET=%s COLLATE=%s', $collation, $engine, $charset, $collation);
-        Dba::query($sql);
-
-        return true;
-    }
-
-    /**
-     * @return array<
-     *     string,
-     *     array{description: string, type: string}
-     * >
-     */
-    public function catalog_fields(): array
-    {
-        return ['beetsdb' => ['description' => T_('Beets Database File'), 'type' => 'text']];
-    }
+    #[Override]
+    protected string $version = '000001';
 
     /**
      * create_type
@@ -142,19 +92,21 @@ class Catalog_beets extends Catalog
     }
 
     /**
-     * getParser
+     * @return array<
+     *     string,
+     *     array{description: string, type: string}
+     * >
      */
-    protected function getParser(): CliHandler
+    public function catalog_fields(): array
     {
-        return new CliHandler($this);
+        return ['beetsdb' => ['description' => T_('Beets Database File'), 'type' => 'text']];
     }
 
     /**
      * Check if a song was added before
-     * @param array $song
      * @throws Exception
      */
-    public function checkSong($song): bool
+    public function checkSong(array $song): bool
     {
         $date       = new DateTime($song['added']);
         $last_added = date("Y-m-d H:i:s", $this->last_add);
@@ -165,7 +117,24 @@ class Catalog_beets extends Catalog
             return true;
         }
 
-        return (bool)$this->getIdFromPath($song['file']);
+        return (bool) $this->getIdFromPath($song['file']);
+    }
+
+    /**
+     * get_create_help
+     * This returns hints on catalog creation
+     */
+    public function get_create_help(): string
+    {
+        return "<ul><li>Fetch songs from beets command over CLI.</li><li>You have to ensure that the beets command ( beet ), the music directories and the Database file are accessible by the Webserver.</li></ul>";
+    }
+
+    /**
+     * get_f_info
+     */
+    public function get_f_info(): string
+    {
+        return $this->beetsdb;
     }
 
     /**
@@ -178,10 +147,38 @@ class Catalog_beets extends Catalog
     }
 
     /**
-     * get_f_info
+     * install
+     * This function installs the remote catalog
      */
-    public function get_f_info(): string
+    public function install(): bool
     {
-        return $this->beetsdb;
+        $collation = (AmpConfig::get('database_collation', 'utf8mb4_unicode_ci'));
+        $charset   = (AmpConfig::get('database_charset', 'utf8mb4'));
+        $engine    = (AmpConfig::get('database_engine', 'InnoDB'));
+
+        $sql = sprintf('CREATE TABLE `catalog_beets` (`id` INT(11) UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY, `beetsdb` VARCHAR(255) COLLATE %s NOT NULL, `catalog_id` INT(11) NOT NULL) ENGINE = %s DEFAULT CHARSET=%s COLLATE=%s', $collation, $engine, $charset, $collation);
+        Dba::query($sql);
+
+        return true;
+    }
+
+    /**
+     * is_installed
+     * This returns true or false if remote catalog is installed
+     */
+    public function is_installed(): bool
+    {
+        $sql        = "SHOW TABLES LIKE 'catalog_beets'";
+        $db_results = Dba::query($sql);
+
+        return (Dba::num_rows($db_results) > 0);
+    }
+
+    /**
+     * getParser
+     */
+    protected function getParser(): CliHandler
+    {
+        return new CliHandler($this);
     }
 }

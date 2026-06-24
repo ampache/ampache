@@ -46,8 +46,7 @@ final readonly class PodcastEpisodeDownloader implements PodcastEpisodeDownloade
         private WebFetcherInterface $webFetcher,
         private PodcastRepositoryInterface $podcastRepository,
         private LoggerInterface $logger,
-    ) {
-    }
+    ) {}
 
     /**
      * Download the podcast-episodes files and perform media info update
@@ -108,8 +107,8 @@ final readonly class PodcastEpisodeDownloader implements PodcastEpisodeDownloade
         }
 
         if (
-            !is_file($destinationFilePath) ||
-            Core::get_filesize(Core::conv_lc_file($destinationFilePath)) === 0
+            !is_file($destinationFilePath)
+            || Core::get_filesize(Core::conv_lc_file($destinationFilePath)) === 0
         ) {
             // the file doesn't exist locally so download it
 

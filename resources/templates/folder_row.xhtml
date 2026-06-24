@@ -3,7 +3,7 @@
     <td class="cel_play">
         <span class="cel_play_content"> </span>
         <div class="cel_play_hover">
-            <tal:block tal:condition="CONFIG/isDirectplayEnabled">
+            <tal:block tal:condition="FOLDER/canDirectplay">
                 <tal:block tal:replace="structure FOLDER/getDirectplayButton">DIRECTPLAY</tal:block>
                 <tal:block tal:condition="FOLDER/canAutoplayNext" tal:replace="structure FOLDER/getAutoplayNextButton">PLAY NEXT</tal:block>
                 <tal:block tal:condition="FOLDER/canAppendNext" tal:replace="structure FOLDER/getAppendNextButton">APPEND NEXT</tal:block>

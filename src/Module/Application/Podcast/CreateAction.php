@@ -52,8 +52,7 @@ final readonly class CreateAction implements ApplicationActionInterface
         private UiInterface $ui,
         private PodcastCreatorInterface $podcastCreator,
         private RequestParserInterface $requestParser,
-    ) {
-    }
+    ) {}
 
     public function run(ServerRequestInterface $request, GuiGatekeeperInterface $gatekeeper): ?ResponseInterface
     {
@@ -62,14 +61,14 @@ final readonly class CreateAction implements ApplicationActionInterface
         }
 
         if (
-            $gatekeeper->mayAccess(AccessTypeEnum::INTERFACE, AccessLevelEnum::MANAGER) === false ||
-            $this->configContainer->isFeatureEnabled(ConfigurationKeyEnum::DEMO_MODE) ||
-            !$this->requestParser->verifyForm('add_podcast')
+            $gatekeeper->mayAccess(AccessTypeEnum::INTERFACE, AccessLevelEnum::MANAGER) === false
+            || $this->configContainer->isFeatureEnabled(ConfigurationKeyEnum::DEMO_MODE)
+            || !$this->requestParser->verifyForm('add_podcast')
         ) {
             throw new AccessDeniedException();
         }
 
-        $data = (array)$request->getParsedBody();
+        $data = (array) $request->getParsedBody();
 
         $catalog = Catalog::create_from_id((int) ($data['catalog'] ?? 0));
         if ($catalog === null) {
@@ -94,7 +93,7 @@ final readonly class CreateAction implements ApplicationActionInterface
             $this->ui->show(
                 'show_add_podcast.inc.php',
                 [
-                    'catalog_id' => (int)($data['catalog'] ?? 0),
+                    'catalog_id' => (int) ($data['catalog'] ?? 0),
                     'feed' => ($data['feed'] ?? '')
                 ]
             );

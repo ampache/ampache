@@ -36,21 +36,21 @@ use Traversable;
 interface AccessRepositoryInterface
 {
     /**
-     * Yields all available all access rules on this server
+     * Creates a new acl item
      *
-     * @return Traversable<Access>
+     * @param string $startIp The start-ip in in-addr notation
+     * @param string $endIp The end-ip in in-addr notation
+     * @param string $name Name of the acl
+     * @param int $userId Designated user id (or -1 if none)
      */
-    public function getAccessLists(): Traversable;
-
-    /**
-     * Searches for certain ip and config. Returns true if a match was found
-     */
-    public function findByIp(
-        string $userIp,
+    public function create(
+        string $startIp,
+        string $endIp,
+        string $name,
+        int $userId,
         AccessLevelEnum $level,
         AccessTypeEnum $type,
-        ?int $userId,
-    ): bool;
+    ): void;
 
     /**
      * deletes the specified access_list entry
@@ -69,21 +69,21 @@ interface AccessRepositoryInterface
     ): bool;
 
     /**
-     * Creates a new acl item
-     *
-     * @param string $startIp The start-ip in in-addr notation
-     * @param string $endIp The end-ip in in-addr notation
-     * @param string $name Name of the acl
-     * @param int $userId Designated user id (or -1 if none)
+     * Searches for certain ip and config. Returns true if a match was found
      */
-    public function create(
-        string $startIp,
-        string $endIp,
-        string $name,
-        int $userId,
+    public function findByIp(
+        string $userIp,
         AccessLevelEnum $level,
         AccessTypeEnum $type,
-    ): void;
+        ?int $userId,
+    ): bool;
+
+    /**
+     * Yields all available all access rules on this server
+     *
+     * @return Traversable<Access>
+     */
+    public function getAccessLists(): Traversable;
 
     /**
      * Updates the data of a certain acl item

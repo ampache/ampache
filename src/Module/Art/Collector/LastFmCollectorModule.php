@@ -41,8 +41,7 @@ final readonly class LastFmCollectorModule implements CollectorModuleInterface
         private ConfigContainerInterface $configContainer,
         private LastFmQueryInterface $lastFmQuery,
         private LoggerInterface $logger,
-    ) {
-    }
+    ) {}
 
     /**
      * This returns the art from lastfm. It doesn't currently require an
@@ -91,7 +90,7 @@ final readonly class LastFmCollectorModule implements CollectorModuleInterface
                 }
 
                 foreach ($xmldata->album->image as $albumart) {
-                    $coverart[] = (string)$albumart;
+                    $coverart[] = (string) $albumart;
                 }
             }
 
@@ -119,9 +118,9 @@ final readonly class LastFmCollectorModule implements CollectorModuleInterface
                 // HACK: we shouldn't rely on the extension to determine file type
                 $results = pathinfo($url);
                 if (
-                    array_key_exists('extension', $results) &&
-                    $results['extension'] !== '' &&
-                    $results['extension'] !== '0'
+                    array_key_exists('extension', $results)
+                    && $results['extension'] !== ''
+                    && $results['extension'] !== '0'
                 ) {
                     $mime     = 'image/' . $results['extension'];
                     $images[] = [
@@ -133,7 +132,7 @@ final readonly class LastFmCollectorModule implements CollectorModuleInterface
                         return $images;
                     }
                 }
-            } // end foreach
+            }
         } catch (Exception $exception) {
             $this->logger->error(
                 'LastFM error: ' . $exception->getMessage(),

@@ -43,7 +43,21 @@ final class ZipHandler implements ZipHandlerInterface
         private readonly ConfigContainerInterface $configContainer,
         private readonly StreamFactoryInterface $streamFactory,
         private readonly LoggerInterface $logger,
-    ) {
+    ) {}
+
+    /**
+     * Clean up the generated zip file
+     */
+    public static function destroyZip(?string $zipFile): void
+    {
+        if ($zipFile && is_file($zipFile)) {
+            @unlink($zipFile);
+        }
+    }
+
+    public function __destruct()
+    {
+        self::destroyZip($this->zipFile);
     }
 
     /**
@@ -55,16 +69,6 @@ final class ZipHandler implements ZipHandlerInterface
             $object_type,
             $this->configContainer->getTypesAllowedForZip()
         );
-    }
-
-    /**
-     * Clean up the generated zip file
-     */
-    public static function destroyZip(?string $zipFile): void
-    {
-        if ($zipFile && is_file($zipFile)) {
-            @unlink($zipFile);
-        }
     }
 
     /**
@@ -83,8 +87,8 @@ final class ZipHandler implements ZipHandlerInterface
     ): ResponseInterface {
         $art_name    = $this->configContainer->get(ConfigurationKeyEnum::ALBUM_ART_PREFERRED_FILENAME);
         $addart      = $this->configContainer->isFeatureEnabled(ConfigurationKeyEnum::ART_ZIP_ADD);
-        $archiveName = (string)preg_replace('/[^a-zA-Z0-9. -]/', '', $name);
-        $comment     = (string)$this->configContainer->get(ConfigurationKeyEnum::FILE_ZIP_COMMENT);
+        $archiveName = (string) preg_replace('/[^a-zA-Z0-9. -]/', '', $name);
+        $comment     = (string) $this->configContainer->get(ConfigurationKeyEnum::FILE_ZIP_COMMENT);
 
         $this->zipFile = Core::get_tmp_dir() . DIRECTORY_SEPARATOR . uniqid('ampache-zip-');
 
@@ -129,9 +133,9 @@ final class ZipHandler implements ZipHandlerInterface
         }
 
         if (
-            $addart &&
-            ($folder !== '' && $folder !== '0') &&
-            is_file($artpath)
+            $addart
+            && ($folder !== '' && $folder !== '0')
+            && is_file($artpath)
         ) {
             $arc->addFile($artpath, $folder . DIRECTORY_SEPARATOR . $art_name);
         }
@@ -172,10 +176,5 @@ final class ZipHandler implements ZipHandlerInterface
             ->withHeader('Cache-Control', 'public, must-revalidate')
             ->withHeader('Content-Transfer-Encoding', 'binary')
             ->withBody($body);
-    }
-
-    public function __destruct()
-    {
-        self::destroyZip($this->zipFile);
     }
 }

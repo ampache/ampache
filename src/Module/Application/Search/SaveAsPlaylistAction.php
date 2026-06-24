@@ -48,8 +48,7 @@ final readonly class SaveAsPlaylistAction implements ApplicationActionInterface
         private UiInterface $ui,
         private ConfigContainerInterface $configContainer,
         private ModelFactoryInterface $modelFactory,
-    ) {
-    }
+    ) {}
 
     public function run(ServerRequestInterface $request, GuiGatekeeperInterface $gatekeeper): ?ResponseInterface
     {
@@ -58,7 +57,7 @@ final readonly class SaveAsPlaylistAction implements ApplicationActionInterface
         }
 
         $this->ui->showHeader();
-        $browse  = $this->modelFactory->createBrowse((int)$this->requestParser->getFromRequest('browse_id'));
+        $browse  = $this->modelFactory->createBrowse((int) $this->requestParser->getFromRequest('browse_id'));
         $objects = $browse->get_saved();
 
         // Make sure we have a unique name
@@ -72,7 +71,7 @@ final readonly class SaveAsPlaylistAction implements ApplicationActionInterface
 
         if ($objects !== []) {
             // create the playlist
-            $playlist_id = (int)Playlist::create($playlist_name, $playlist_type);
+            $playlist_id = (int) Playlist::create($playlist_name, $playlist_type);
             $playlist    = $this->modelFactory->createPlaylist($playlist_id);
             $playlist->delete_all();
             // different browses could store objects in different ways

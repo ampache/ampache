@@ -47,7 +47,7 @@ final class PodcastEpisodes4Method
      *
      * filter = (string) UID of podcast
      * offset = (integer) //optional
-     * limit  = (integer) //optional
+     * limit = (integer) //optional
      *
      * @param array{
      *     filter: string,
@@ -69,7 +69,7 @@ final class PodcastEpisodes4Method
         if (!Api4::check_parameter($input, ['filter'], self::ACTION)) {
             return false;
         }
-        $podcast_id = (int)$input['filter'];
+        $podcast_id = (int) $input['filter'];
         debug_event(self::class, 'User ' . $user->id . ' loading podcast: ' . $podcast_id, 5);
         $podcastRepository = self::getPodcastRepository();
         $podcast           = $podcastRepository->findById($podcast_id);

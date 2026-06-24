@@ -34,26 +34,15 @@ final class FollowerQuery implements QueryInterface
         'user',
     ];
 
+    protected string $base   = "SELECT %%SELECT%% FROM `user_follower` ";
+    protected string $select = "`user_follower`.`id`";
+
     /** @var string[] $sorts */
     protected array $sorts = [
         'follow_date',
         'follow_user',
         'user',
     ];
-
-    protected string $select = "`user_follower`.`id`";
-
-    protected string $base = "SELECT %%SELECT%% FROM `user_follower` ";
-
-    /**
-     * get_select
-     *
-     * This method returns the columns a query will user for SELECT
-     */
-    public function get_select(): string
-    {
-        return $this->select;
-    }
 
     /**
      * get_base_sql
@@ -63,6 +52,16 @@ final class FollowerQuery implements QueryInterface
     public function get_base_sql(): string
     {
         return $this->base;
+    }
+
+    /**
+     * get_select
+     *
+     * This method returns the columns a query will user for SELECT
+     */
+    public function get_select(): string
+    {
+        return $this->select;
     }
 
     /**
@@ -86,7 +85,7 @@ final class FollowerQuery implements QueryInterface
         $filter_sql = '';
 
         return match ($filter) {
-            'follow_user', 'user' => sprintf(" `user_follower`.`%s` = '", $filter) . (int)$value . "' AND ",
+            'follow_user', 'user' => sprintf(" `user_follower`.`%s` = '", $filter) . (int) $value . "' AND ",
             default => $filter_sql,
         };
     }
@@ -95,11 +94,8 @@ final class FollowerQuery implements QueryInterface
      * get_sql_sort
      *
      * Sorting SQL for ORDER BY
-     * @param Query $query
-     * @param string|null $field
-     * @param string|null $order
      */
-    public function get_sql_sort($query, $field, $order): string
+    public function get_sql_sort(Query $query, ?string $field, ?string $order): string
     {
         $sql = match ($field) {
             'user', 'follow_user', 'follow_date' => sprintf('`user_follower`.`%s`', $field),

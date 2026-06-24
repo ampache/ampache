@@ -36,7 +36,7 @@ abstract class MockeryTestCase extends Mockery\Adapter\Phpunit\MockeryTestCase
      * @param class-string<TClassName> $className
      * @return MockInterface&TClassName
      */
-    public function mock($className)
+    public function mock(string $className)
     {
         return Mockery::mock($className);
     }

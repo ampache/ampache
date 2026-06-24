@@ -42,8 +42,7 @@ final readonly class LogoutAction implements ApplicationActionInterface
         private ConfigContainerInterface $configContainer,
         private AuthenticationManagerInterface $authenticationManager,
         private LoggerInterface $logger,
-    ) {
-    }
+    ) {}
 
     public function run(ServerRequestInterface $request, GuiGatekeeperInterface $gatekeeper): ?ResponseInterface
     {
@@ -53,8 +52,8 @@ final readonly class LogoutAction implements ApplicationActionInterface
             $sessionName    = $this->configContainer->get('session_name');
             $cookie_options = [
                 'expires' => -1,
-                'path' => (string)$this->configContainer->get('cookie_path'),
-                'domain' => (string)$this->configContainer->get('cookie_domain'),
+                'path' => (string) $this->configContainer->get('cookie_path'),
+                'domain' => (string) $this->configContainer->get('cookie_domain'),
                 'secure' => make_bool($this->configContainer->get('cookie_secure')),
                 'samesite' => 'Strict'
             ];
@@ -65,7 +64,7 @@ final readonly class LogoutAction implements ApplicationActionInterface
             // To end a legitimate session, just call logout.
             setcookie($sessionName . '_remember', '', $cookie_options);
 
-            $this->authenticationManager->logout((string)$input['session'], false);
+            $this->authenticationManager->logout((string) $input['session'], false);
         } else {
             header('Location: ' . $this->configContainer->getWebPath('/client'));
         }

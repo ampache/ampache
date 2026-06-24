@@ -37,13 +37,9 @@ use Traversable;
 interface PodcastEpisodeRepositoryInterface
 {
     /**
-     * Returns all episode-ids for the given podcast
-     *
-     * @param null|PodcastEpisodeStateEnum $stateFilter Return only items with this state
-     *
-     * @return list<int>
+     * Cleans up orphaned episodes
      */
-    public function getEpisodes(Podcast $podcast, ?PodcastEpisodeStateEnum $stateFilter = null): array;
+    public function collectGarbage(): void;
 
     /**
      * Deletes a podcast-episode
@@ -51,6 +47,25 @@ interface PodcastEpisodeRepositoryInterface
      * Before deleting the episode, a backup of the episodes meta-data is created
      */
     public function deleteEpisode(Podcast_Episode $episode): void;
+
+    /**
+     * Finds a single item by its id
+     */
+    public function findById(int $itemId): ?Podcast_Episode;
+
+    /**
+     * Returns the calculated count of available episodes for the given podcast
+     */
+    public function getEpisodeCount(Podcast $podcast): int;
+
+    /**
+     * Returns all episode-ids for the given podcast
+     *
+     * @param null|PodcastEpisodeStateEnum $stateFilter Return only items with this state
+     *
+     * @return list<int>
+     */
+    public function getEpisodes(Podcast $podcast, ?PodcastEpisodeStateEnum $stateFilter = null): array;
 
     /**
      * Returns all podcast episodes which are eligible for deletion
@@ -71,25 +86,10 @@ interface PodcastEpisodeRepositoryInterface
     public function getEpisodesEligibleForDownload(Podcast $podcast, ?int $downloadLimit): Traversable;
 
     /**
-     * Returns the calculated count of available episodes for the given podcast
-     */
-    public function getEpisodeCount(Podcast $podcast): int;
-
-    /**
      * Updates the state of an episode
      */
     public function updateState(
         Podcast_Episode $episode,
         PodcastEpisodeStateEnum $state,
     ): void;
-
-    /**
-     * Cleans up orphaned episodes
-     */
-    public function collectGarbage(): void;
-
-    /**
-     * Finds a single item by its id
-     */
-    public function findById(int $itemId): ?Podcast_Episode;
 }

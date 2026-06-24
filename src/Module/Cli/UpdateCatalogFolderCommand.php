@@ -31,16 +31,6 @@ use Override;
 
 final class UpdateCatalogFolderCommand extends Command
 {
-    #[Override]
-    protected function defaults(): self
-    {
-        $this->option('-h, --help', T_('Help'))->on($this->showHelp(...));
-
-        $this->onExit(static fn ($exitCode = 0) => exit($exitCode));
-
-        return $this;
-    }
-
     public function __construct(
         private readonly UpdateSingleCatalogFolderInterface $updateSingleCatalogFolder,
     ) {
@@ -52,6 +42,7 @@ final class UpdateCatalogFolderCommand extends Command
             ->option('-a|--add', T_('Adds new media files to the database'), 'boolval', false)
             ->option('-g|--art', T_('Gathers media Art'), 'boolval', false)
             ->option('-m|--move', T_('Move file in the database to a new location'), 'strval')
+            ->option('-s|--scan', T_('Scan Local Catalog folders for folder browsing'), 'boolval', false)
             ->argument('<catalogName>', T_('Catalog Name'))
             ->argument('<folderPath>', T_('Path'))
             /* HINT: filename (/tmp/some-file.mp3) OR folder path (/tmp/Artist/Album) */
@@ -67,12 +58,13 @@ final class UpdateCatalogFolderCommand extends Command
         $interactor = $this->io();
 
         if (
-            ($values['move'] != null) &&
-            (
-                $values['verify'] ||
-                $values['add'] ||
-                $values['cleanup'] ||
-                $values['art']
+            ($values['move'] != null)
+            && (
+                $values['verify']
+                || $values['add']
+                || $values['cleanup']
+                || $values['art']
+                || $values['scan']
             )
         ) {
             $interactor->error(
@@ -91,7 +83,18 @@ final class UpdateCatalogFolderCommand extends Command
             $values['add'],
             $values['cleanup'],
             $values['art'],
+            $values['scan'],
             $values['move']
         );
+    }
+
+    #[Override]
+    protected function defaults(): self
+    {
+        $this->option('-h, --help', T_('Help'))->on($this->showHelp(...));
+
+        $this->onExit(static fn($exitCode = 0) => exit($exitCode));
+
+        return $this;
     }
 }

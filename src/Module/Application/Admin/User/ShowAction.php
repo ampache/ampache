@@ -37,8 +37,7 @@ final class ShowAction extends AbstractUserAction
     public function __construct(
         private readonly UiInterface $ui,
         private readonly ModelFactoryInterface $modelFactory,
-    ) {
-    }
+    ) {}
 
     protected function handle(ServerRequestInterface $request): ?ResponseInterface
     {

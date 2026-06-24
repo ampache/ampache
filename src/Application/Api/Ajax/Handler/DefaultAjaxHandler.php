@@ -34,8 +34,8 @@ use Ampache\Module\Util\Ui;
 use Ampache\Repository\AlbumRepositoryInterface;
 use Ampache\Repository\Model\Artist;
 use Ampache\Repository\Model\Browse;
+use Ampache\Repository\Model\container_item;
 use Ampache\Repository\Model\LibraryItemEnum;
-use Ampache\Repository\Model\playable_item;
 use Ampache\Repository\Model\Playlist;
 use Ampache\Repository\Model\Rating;
 use Ampache\Repository\Model\Tag;
@@ -49,13 +49,12 @@ final readonly class DefaultAjaxHandler implements AjaxHandlerInterface
         private RequestParserInterface $requestParser,
         private AlbumRepositoryInterface $albumRepository,
         private SongRepositoryInterface $songRepository,
-    ) {
-    }
+    ) {}
 
     public function handle(User $user): void
     {
         $results      = [];
-        $request_id   = (int)$this->requestParser->getFromRequest('id');
+        $request_id   = (int) $this->requestParser->getFromRequest('id');
         $request_type = $this->requestParser->getFromRequest('type');
         $action       = $this->requestParser->getFromRequest('action');
 
@@ -69,7 +68,7 @@ final readonly class DefaultAjaxHandler implements AjaxHandlerInterface
                 if ($request_type === 'delete') {
                     $user->load_playlist();
                     $user->playlist?->delete_track($request_id);
-                } // end switch
+                }
 
                 $results['rightbar'] = Ui::ajax_include('rightbar.inc.php');
                 break;
@@ -79,13 +78,13 @@ final readonly class DefaultAjaxHandler implements AjaxHandlerInterface
                     ? $this->requestParser->getFromRequest('object_type')
                     : $request_type;
 
-                if (InterfaceImplementationChecker::is_playable_item($object_type)) {
+                if (InterfaceImplementationChecker::is_library_item($object_type)) {
                     $object_id = ($request_id === 0)
-                        ? (int)$this->requestParser->getFromRequest('object_id')
+                        ? (int) $this->requestParser->getFromRequest('object_id')
                         : $request_id;
                     if ($object_id > 0) {
                         $className = ObjectTypeToClassNameMapper::map($object_type);
-                        /** @var playable_item $object */
+                        /** @var container_item $object */
                         $object = new $className($object_id);
                         $medias = $object->get_medias();
 
@@ -97,14 +96,14 @@ final readonly class DefaultAjaxHandler implements AjaxHandlerInterface
                         case 'browse_set':
                         case 'browse_set_random':
                             $songs   = [];
-                            $browse  = new Browse((int)$this->requestParser->getFromRequest('browse_id'));
+                            $browse  = new Browse((int) $this->requestParser->getFromRequest('browse_id'));
                             $objects = $browse->get_saved();
                             switch ($browse->get_type()) {
                                 case 'album':
                                     foreach ($objects as $object) {
                                         $songs = (is_array($object))
                                             ? array_merge($songs, $this->getSongRepository()->getByAlbum($object['object_id'] ?? 0))
-                                            : array_merge($songs, $this->getSongRepository()->getByAlbum((int)$object));
+                                            : array_merge($songs, $this->getSongRepository()->getByAlbum((int) $object));
                                     }
 
                                     break;
@@ -112,7 +111,7 @@ final readonly class DefaultAjaxHandler implements AjaxHandlerInterface
                                     foreach ($objects as $object) {
                                         $songs = (is_array($object))
                                             ? array_merge($songs, $this->getSongRepository()->getAllByArtist($object['object_id'] ?? 0))
-                                            : array_merge($songs, $this->getSongRepository()->getAllByArtist((int)$object));
+                                            : array_merge($songs, $this->getSongRepository()->getAllByArtist((int) $object));
                                     }
 
                                     break;
@@ -127,7 +126,7 @@ final readonly class DefaultAjaxHandler implements AjaxHandlerInterface
 
                             foreach ($songs as $object) {
                                 $user->playlist?->add_object(
-                                    (is_array($object) && isset($object['object_id'])) ? $object['object_id'] : (int)$object,
+                                    (is_array($object) && isset($object['object_id'])) ? $object['object_id'] : (int) $object,
                                     LibraryItemEnum::SONG
                                 );
                             }
@@ -183,9 +182,9 @@ final readonly class DefaultAjaxHandler implements AjaxHandlerInterface
                 /* Setting ratings */
                 if (User::is_registered()) {
                     ob_start();
-                    $object_id = (int)filter_input(INPUT_GET, 'object_id', FILTER_SANITIZE_NUMBER_INT);
+                    $object_id = (int) filter_input(INPUT_GET, 'object_id', FILTER_SANITIZE_NUMBER_INT);
                     $rating    = new Rating($object_id, Core::get_get('rating_type'));
-                    $rating->set_rating((int)Core::get_get('rating'));
+                    $rating->set_rating((int) Core::get_get('rating'));
                     echo Rating::show($object_id, Core::get_get('rating_type'));
                     $key           = "rating_" . filter_input(INPUT_GET, 'object_id', FILTER_SANITIZE_NUMBER_INT) . "_" . Core::get_get('rating_type');
                     $results[$key] = ob_get_contents();
@@ -199,9 +198,9 @@ final readonly class DefaultAjaxHandler implements AjaxHandlerInterface
                     ob_start();
                     $flagtype = Core::get_get('userflag_type');
                     $flag_id  = filter_input(INPUT_GET, 'object_id', FILTER_SANITIZE_NUMBER_INT);
-                    $userflag = new Userflag((int)$flag_id, $flagtype);
+                    $userflag = new Userflag((int) $flag_id, $flagtype);
                     $userflag->set_flag($_GET['userflag']);
-                    echo Userflag::show((int)$flag_id, $flagtype);
+                    echo Userflag::show((int) $flag_id, $flagtype);
                     $key           = "userflag_" . $flag_id . "_" . $flagtype;
                     $results[$key] = ob_get_contents();
                     ob_end_clean();
@@ -209,8 +208,8 @@ final readonly class DefaultAjaxHandler implements AjaxHandlerInterface
 
                 break;
             case 'action_buttons':
-                $rating_id   = (int)filter_input(INPUT_GET, 'object_id', FILTER_SANITIZE_NUMBER_INT);
-                $rating_type = (string)filter_input(INPUT_GET, 'object_type', FILTER_SANITIZE_SPECIAL_CHARS);
+                $rating_id   = (int) filter_input(INPUT_GET, 'object_id', FILTER_SANITIZE_NUMBER_INT);
+                $rating_type = (string) filter_input(INPUT_GET, 'object_type', FILTER_SANITIZE_SPECIAL_CHARS);
                 ob_start();
                 if (AmpConfig::get('ratings') && Rating::is_valid($rating_type)) {
                     echo " <span id='rating_" . $rating_id . "_" . $rating_type . "'>";
@@ -223,7 +222,7 @@ final readonly class DefaultAjaxHandler implements AjaxHandlerInterface
 
                 $results['action_buttons'] = ob_get_contents();
                 ob_end_clean();
-        } // end switch action
+        }
 
         // Go ahead and do the echo
         echo xoutput_from_array($results);

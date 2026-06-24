@@ -23,6 +23,8 @@ declare(strict_types=0);
  *
  */
 
+// show_now_playing_similar.inc.php
+
 use Ampache\Config\AmpConfig;
 use Ampache\Repository\Model\Artist;
 use Ampache\Repository\Model\Song;

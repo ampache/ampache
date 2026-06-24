@@ -29,13 +29,13 @@ use Ampache\Repository\Model\User;
 
 class AmpacheExample extends AmpachePlugin
 {
-    public string $name        = 'Example';
     public string $categories  = 'home';
     public string $description = 'Example Plugin';
+    public string $max_ampache = '999999';
+    public string $min_ampache = '370021';
+    public string $name        = 'Example';
     public string $url         = '';
     public string $version     = '000001';
-    public string $min_ampache = '370021';
-    public string $max_ampache = '999999';
 
     /**
      * Constructor
@@ -55,30 +55,10 @@ class AmpacheExample extends AmpachePlugin
     }
 
     /**
-     * uninstall
-     * Removes our preferences from the database returning it to its original form
-     */
-    public function uninstall(): bool
-    {
-        return true;
-    }
-
-    /**
-     * upgrade
-     * This is a recommended plugin function
-     */
-    public function upgrade(): bool
-    {
-        return true;
-    }
-
-    /**
      * load
      * This loads up the data we need into this object, this stuff comes from the preferences.
-     * @param User $user
-     * @return bool
      */
-    public function load($user): bool
+    public function load(User $user): bool
     {
         unset($user);
 
@@ -110,5 +90,23 @@ class AmpacheExample extends AmpachePlugin
     public function PLUGIN_FUNCTION(): void
     {
         // usually you would do something here
+    }
+
+    /**
+     * uninstall
+     * Removes our preferences from the database returning it to its original form
+     */
+    public function uninstall(): bool
+    {
+        return true;
+    }
+
+    /**
+     * upgrade
+     * This is a recommended plugin function
+     */
+    public function upgrade(): bool
+    {
+        return true;
     }
 }

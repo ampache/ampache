@@ -23,6 +23,8 @@ declare(strict_types=0);
  *
  */
 
+// show_add_label.inc.php
+
 use Ampache\Config\AmpConfig;
 use Ampache\Module\System\AmpError;
 use Ampache\Module\System\Core;
@@ -121,10 +123,10 @@ Ui::show_box_top(T_('Add Label'), 'box box_add_label'); ?>
     <td><?php echo T_('Status'); ?></td>
     <td>
         <select name="active">
-            <option value="1" <?php if (array_key_exists('active', $_REQUEST) && (int)$_REQUEST['active'] === 1) {
+            <option value="1" <?php if (array_key_exists('active', $_REQUEST) && (int) $_REQUEST['active'] === 1) {
                 echo "selected";
             } ?>><?php echo T_('Active'); ?></option>
-            <option value="0" <?php if (empty($_REQUEST['active']) || (int)$_REQUEST['active'] === 0) {
+            <option value="0" <?php if (empty($_REQUEST['active']) || (int) $_REQUEST['active'] === 0) {
                 echo "selected";
             } ?>><?php echo T_('Inactive'); ?></option>
         </select>

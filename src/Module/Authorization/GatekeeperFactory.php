@@ -29,9 +29,7 @@ use Ampache\Module\Authorization\Check\PrivilegeCheckerInterface;
 
 final readonly class GatekeeperFactory implements GatekeeperFactoryInterface
 {
-    public function __construct(private PrivilegeCheckerInterface $privilegeChecker)
-    {
-    }
+    public function __construct(private PrivilegeCheckerInterface $privilegeChecker) {}
 
     public function createGuiGatekeeper(): GuiGatekeeperInterface
     {

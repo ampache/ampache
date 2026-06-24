@@ -37,19 +37,13 @@ final readonly class LatestArtistFeed extends AbstractGenericRssFeed
     public function __construct(
         private ?User $user,
         private ServerRequestInterface $request,
-    ) {
-    }
-
-    protected function getTitle(): string
-    {
-        return T_('Newest Artists');
-    }
+    ) {}
 
     protected function getItems(): Generator
     {
         $queryParams = $this->request->getQueryParams();
-        $count       = (int)($queryParams['count'] ?? 10);
-        $offset      = (int)($queryParams['offset'] ?? 0);
+        $count       = (int) ($queryParams['count'] ?? 10);
+        $offset      = (int) ($queryParams['offset'] ?? 0);
         $ids         = Stats::get_newest('artist', $count, $offset, 0, $this->user);
 
         foreach ($ids as $artistid) {
@@ -67,8 +61,13 @@ final readonly class LatestArtistFeed extends AbstractGenericRssFeed
                 'isPermaLink' => ($artist->mbid !== null)
                     ? 'true'
                     : 'false',
-                'image' => (string)Art::url($artist->id, 'artist', null, 2),
+                'image' => (string) Art::url($artist->id, 'artist', null, 2),
             ];
         }
+    }
+
+    protected function getTitle(): string
+    {
+        return T_('Newest Artists');
     }
 }

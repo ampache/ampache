@@ -25,9 +25,9 @@ declare(strict_types=1);
 
 namespace Ampache\Module\Util\Rss\Surrogate;
 
+use Ampache\Repository\Model\library_item;
 use Ampache\Repository\Model\LibraryItemLoaderInterface;
 use Ampache\Repository\Model\ModelFactoryInterface;
-use Ampache\Repository\Model\playable_item;
 use Ampache\Repository\Model\User;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
@@ -35,27 +35,48 @@ use PHPUnit\Framework\TestCase;
 class PlayableItemRssItemAdapterTest extends TestCase
 {
     private LibraryItemLoaderInterface&MockObject $libraryItemLoader;
-
     private ModelFactoryInterface&MockObject $modelFactory;
-
-    private playable_item&MockObject $playable;
-
+    private library_item&MockObject $playable;
+    private PlayableItemRssItemAdapter $subject;
     private User&MockObject $user;
 
-    private PlayableItemRssItemAdapter $subject;
-
-    protected function setUp(): void
+    public function testGetOwnerNameReturnsValue(): void
     {
-        $this->libraryItemLoader = $this->createMock(LibraryItemLoaderInterface::class);
-        $this->modelFactory      = $this->createMock(ModelFactoryInterface::class);
-        $this->playable          = $this->createMock(playable_item::class);
-        $this->user              = $this->createMock(User::class);
+        $user = $this->createMock(User::class);
 
-        $this->subject = new PlayableItemRssItemAdapter(
-            $this->libraryItemLoader,
-            $this->modelFactory,
-            $this->playable,
-            $this->user,
+        $userId = 666;
+        $name   = 'some-name';
+
+        $this->playable->expects(static::once())
+            ->method('get_user_owner')
+            ->willReturn($userId);
+
+        $this->modelFactory->expects(static::once())
+            ->method('createUser')
+            ->with($userId)
+            ->willReturn($user);
+
+        $user->expects(static::once())
+            ->method('get_fullname')
+            ->willReturn($name);
+
+        self::assertSame(
+            $name,
+            $this->subject->getOwnerName()
+        );
+    }
+
+    public function testGetSummaryReturnsValue(): void
+    {
+        $value = 'snafu';
+
+        $this->playable->expects(static::once())
+            ->method('get_description')
+            ->willReturn($value);
+
+        self::assertSame(
+            $value,
+            $this->subject->getSummary()
         );
     }
 
@@ -95,39 +116,14 @@ class PlayableItemRssItemAdapterTest extends TestCase
         );
     }
 
-    public function testHasSummaryReturnsTrueIfAvailable(): void
+    public function testHasOwnerReturnsFalseIfNotAvailable(): void
     {
         $this->playable->expects(static::once())
-            ->method('get_description')
-            ->willReturn('snafu');
-
-        self::assertTrue(
-            $this->subject->hasSummary()
-        );
-    }
-
-    public function testHasSummaryReturnsFalseIfNotAvailable(): void
-    {
-        $this->playable->expects(static::once())
-            ->method('get_description')
-            ->willReturn('');
+            ->method('get_user_owner')
+            ->willReturn(null);
 
         self::assertFalse(
-            $this->subject->hasSummary()
-        );
-    }
-
-    public function testGetSummaryReturnsValue(): void
-    {
-        $value = 'snafu';
-
-        $this->playable->expects(static::once())
-            ->method('get_description')
-            ->willReturn($value);
-
-        self::assertSame(
-            $value,
-            $this->subject->getSummary()
+            $this->subject->hasOwner()
         );
     }
 
@@ -142,40 +138,40 @@ class PlayableItemRssItemAdapterTest extends TestCase
         );
     }
 
-    public function testHasOwnerReturnsFalseIfNotAvailable(): void
+    public function testHasSummaryReturnsFalseIfNotAvailable(): void
     {
         $this->playable->expects(static::once())
-            ->method('get_user_owner')
-            ->willReturn(null);
+            ->method('get_description')
+            ->willReturn('');
 
         self::assertFalse(
-            $this->subject->hasOwner()
+            $this->subject->hasSummary()
         );
     }
 
-    public function testGetOwnerNameReturnsValue(): void
+    public function testHasSummaryReturnsTrueIfAvailable(): void
     {
-        $user = $this->createMock(User::class);
-
-        $userId = 666;
-        $name   = 'some-name';
-
         $this->playable->expects(static::once())
-            ->method('get_user_owner')
-            ->willReturn($userId);
+            ->method('get_description')
+            ->willReturn('snafu');
 
-        $this->modelFactory->expects(static::once())
-            ->method('createUser')
-            ->with($userId)
-            ->willReturn($user);
+        self::assertTrue(
+            $this->subject->hasSummary()
+        );
+    }
 
-        $user->expects(static::once())
-            ->method('get_fullname')
-            ->willReturn($name);
+    protected function setUp(): void
+    {
+        $this->libraryItemLoader = $this->createMock(LibraryItemLoaderInterface::class);
+        $this->modelFactory      = $this->createMock(ModelFactoryInterface::class);
+        $this->playable          = $this->createMock(library_item::class);
+        $this->user              = $this->createMock(User::class);
 
-        self::assertSame(
-            $name,
-            $this->subject->getOwnerName()
+        $this->subject = new PlayableItemRssItemAdapter(
+            $this->libraryItemLoader,
+            $this->modelFactory,
+            $this->playable,
+            $this->user,
         );
     }
 }

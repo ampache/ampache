@@ -43,6 +43,16 @@ final class SongDelete6Method
     public const string REST_ACTION = 'songs_delete';
 
     /**
+     * @deprecated
+     */
+    public static function getSongDeleter(): SongDeleterInterface
+    {
+        global $dic;
+
+        return $dic->get(SongDeleterInterface::class);
+    }
+
+    /**
      * song_delete
      * MINIMUM_API_VERSION=5.0.0
      *
@@ -98,15 +108,5 @@ final class SongDelete6Method
     public static function songs_delete(array $input, User $user): bool
     {
         return self::song_delete($input, $user);
-    }
-
-    /**
-     * @deprecated
-     */
-    public static function getSongDeleter(): SongDeleterInterface
-    {
-        global $dic;
-
-        return $dic->get(SongDeleterInterface::class);
     }
 }

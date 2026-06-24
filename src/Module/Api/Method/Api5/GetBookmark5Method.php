@@ -51,7 +51,7 @@ final class GetBookmark5Method
      * Get the bookmark from it's object_id and object_type.
      *
      * filter = (string) object_id to find
-     * type   = (string) object_type ('bookmark', 'song', 'video', 'podcast_episode')
+     * type = (string) object_type ('bookmark', 'song', 'video', 'podcast_episode')
      *
      * @param array{
      *     filter: string,

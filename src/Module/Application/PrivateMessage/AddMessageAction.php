@@ -53,14 +53,13 @@ final readonly class AddMessageAction implements ApplicationActionInterface
         private PrivateMessageCreatorInterface $privateMessageCreator,
         private ModelFactoryInterface $modelFactory,
         private RequestParserInterface $requestParser,
-    ) {
-    }
+    ) {}
 
     public function run(ServerRequestInterface $request, GuiGatekeeperInterface $gatekeeper): ?ResponseInterface
     {
         if (
-            $gatekeeper->mayAccess(AccessTypeEnum::INTERFACE, AccessLevelEnum::USER) === false ||
-            $this->configContainer->isFeatureEnabled(ConfigurationKeyEnum::SOCIABLE) === false
+            $gatekeeper->mayAccess(AccessTypeEnum::INTERFACE, AccessLevelEnum::USER) === false
+            || $this->configContainer->isFeatureEnabled(ConfigurationKeyEnum::SOCIABLE) === false
         ) {
             throw new AccessDeniedException('Access Denied: sociable features are not enabled.');
         }
@@ -73,7 +72,7 @@ final readonly class AddMessageAction implements ApplicationActionInterface
             return null;
         }
 
-        $data = (array)$request->getParsedBody();
+        $data = (array) $request->getParsedBody();
 
         $this->ui->showHeader();
 
@@ -113,7 +112,7 @@ final readonly class AddMessageAction implements ApplicationActionInterface
                     $this->configContainer->getWebPath('/client')
                 )
             );
-        } catch (PrivateMessageCreationException | Exception) {
+        } catch (PrivateMessageCreationException|Exception) {
             $this->ui->show('show_add_pvmsg.inc.php');
         }
 

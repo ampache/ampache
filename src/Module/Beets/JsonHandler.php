@@ -34,8 +34,6 @@ use Override;
  */
 class JsonHandler extends Handler
 {
-    protected Catalog $handler;
-
     /**
      * Seperator between command and arguments
      */
@@ -53,22 +51,56 @@ class JsonHandler extends Handler
         'bitrate' => ['bitrate', '%d']
     ];
 
+    protected Catalog $handler;
+
     /**
      * JsonHandler constructor.
      */
-    public function __construct(protected string $uri)
+    public function __construct(protected string $uri) {}
+
+    /**
+     * Compare the braces to ensure that we have a complete song object
+     */
+    public function compareBraces(string $item): bool
     {
+        $start = $this->countChar('{', $item);
+        $end   = $this->countChar('}', $item);
+
+        return $start !== 0 && $start === $end;
     }
 
     /**
-     * Starts a command
+     * countChar
      */
-    public function start(string $command): void
+    public function countChar(string $char, string $string): int
     {
-        $handle = fopen($this->assembleUri($command), 'r');
-        if ($handle) {
-            $this->iterateItems($handle);
-        }
+        return substr_count($string, $char);
+    }
+
+    /**
+     * Create the Url to access the file
+     * Have to do some magic with the file ending so ampache can detect the type
+     */
+    public function createFileUrl(array $song): string
+    {
+        $parts = [
+            $this->uri,
+            'item',
+            $song['id'],
+            'file#.' . strtolower((string) $song['format']),
+        ];
+
+        return implode('/', $parts);
+    }
+
+    /**
+     * Check if the Json is complete to get a song
+     */
+    public function itemIsComlete(string $item): bool
+    {
+        $item = $this->removeUnwantedStrings($item);
+
+        return $this->compareBraces($item);
     }
 
     /**
@@ -91,26 +123,15 @@ class JsonHandler extends Handler
     }
 
     /**
-     * Assemble the URI from the different parts
+     * convert the json string into a song array
      */
-    protected function assembleUri(string $command): string
+    public function parse(string $item): array
     {
-        $uriParts = [
-            $this->uri,
-            $command,
-        ];
+        $item         = $this->removeUnwantedStrings($item);
+        $song         = json_decode($item, true);
+        $song['file'] = $this->createFileUrl($song);
 
-        return implode('/', $uriParts);
-    }
-
-    /**
-     * Check if the Json is complete to get a song
-     */
-    public function itemIsComlete(string $item): bool
-    {
-        $item = $this->removeUnwantedStrings($item);
-
-        return $this->compareBraces($item);
+        return $this->mapFields($song);
     }
 
     /**
@@ -128,50 +149,26 @@ class JsonHandler extends Handler
     }
 
     /**
-     * Compare the braces to ensure that we have a complete song object
+     * Starts a command
      */
-    public function compareBraces(string $item): bool
+    public function start(string $command): void
     {
-        $start = $this->countChar('{', $item);
-        $end   = $this->countChar('}', $item);
-
-        return $start !== 0 && $start === $end;
+        $handle = fopen($this->assembleUri($command), 'r');
+        if ($handle) {
+            $this->iterateItems($handle);
+        }
     }
 
     /**
-     * countChar
+     * Assemble the URI from the different parts
      */
-    public function countChar(string $char, string $string): int
+    protected function assembleUri(string $command): string
     {
-        return substr_count($string, $char);
-    }
-
-    /**
-     * convert the json string into a song array
-     */
-    public function parse(string $item): array
-    {
-        $item         = $this->removeUnwantedStrings($item);
-        $song         = json_decode($item, true);
-        $song['file'] = $this->createFileUrl($song);
-
-        return $this->mapFields($song);
-    }
-
-    /**
-     * Create the Url to access the file
-     * Have to do some magic with the file ending so ampache can detect the type
-     * @param array $song
-     */
-    public function createFileUrl($song): string
-    {
-        $parts = [
+        $uriParts = [
             $this->uri,
-            'item',
-            $song['id'],
-            'file#.' . strtolower((string) $song['format']),
+            $command,
         ];
 
-        return implode('/', $parts);
+        return implode('/', $uriParts);
     }
 }

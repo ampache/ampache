@@ -43,8 +43,7 @@ final readonly class DeleteAction implements ApplicationActionInterface
     public function __construct(
         private ConfigContainerInterface $configContainer,
         private UiInterface $ui,
-    ) {
-    }
+    ) {}
 
     public function run(ServerRequestInterface $request, GuiGatekeeperInterface $gatekeeper): ?ResponseInterface
     {
@@ -57,21 +56,27 @@ final readonly class DeleteAction implements ApplicationActionInterface
         }
 
         $folderId = (int) ($request->getQueryParams()['folder_id'] ?? 0);
+        $returnId = (int) ($request->getQueryParams()['parent_id'] ?? -1);
+        $webPath  = $this->configContainer->getWebPath();
 
         $this->ui->showHeader();
 
         if (
             $gatekeeper->mayAccess(AccessTypeEnum::INTERFACE, AccessLevelEnum::CONTENT_MANAGER)
         ) {
-            $this->ui->showConfirmation(
+            $this->ui->showConfirmationWithReturn(
                 T_('Are You Sure?'),
                 T_('This Folder will be deleted'),
                 sprintf(
                     '%s/folders.php?action=confirm_delete&folder_id=%s',
-                    $this->configContainer->getWebPath('/client'),
+                    $webPath,
                     $folderId
                 ),
-                1,
+                sprintf(
+                    '%s/folders.php?action=show&folder=%s',
+                    $webPath,
+                    $returnId
+                ),
                 'delete_folder'
             );
         } else {

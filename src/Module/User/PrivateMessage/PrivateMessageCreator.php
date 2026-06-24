@@ -39,8 +39,7 @@ final readonly class PrivateMessageCreator implements PrivateMessageCreatorInter
         private PrivateMessageRepositoryInterface $pmRepository,
         private UtilityFactoryInterface $utilityFactory,
         private ConfigContainerInterface $configContainer,
-    ) {
-    }
+    ) {}
 
     /**
      * Sends a private message to a user
@@ -62,8 +61,8 @@ final readonly class PrivateMessageCreator implements PrivateMessageCreatorInter
         );
 
         if (
-            $recipient !== null &&
-            Preference::get_by_user($recipient->getId(), 'notify_email')
+            $recipient !== null
+            && Preference::get_by_user($recipient->getId(), 'notify_email')
         ) {
             $mailer = $this->utilityFactory->createMailer();
             if (!in_array($recipient->email, [null, '', '0'], true) && $mailer->isMailEnabled()) {

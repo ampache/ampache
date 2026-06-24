@@ -23,6 +23,8 @@ declare(strict_types=0);
  *
  */
 
+// show_recently_skipped.inc.php
+
 use Ampache\Config\AmpConfig;
 use Ampache\Module\Api\Ajax;
 use Ampache\Module\Authorization\Access;
@@ -141,7 +143,7 @@ foreach ($data as $row) {
                 <td class="cel_year"><?php echo $song->year; ?></td>
                 <?php if ($show_user) { ?>
                     <td class="cel_username">
-                        <a href="<?php echo $web_path; ?>/stats.php?action=show_user&user_id=<?php echo scrub_out((string)$row_user->id); ?>">
+                        <a href="<?php echo $web_path; ?>/stats.php?action=show_user&user_id=<?php echo scrub_out((string) $row_user->id); ?>">
                             <?php echo scrub_out($row_user->fullname); ?>
                         </a>
                     </td>

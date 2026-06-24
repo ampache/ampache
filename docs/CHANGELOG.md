@@ -1,5 +1,50 @@
 # CHANGELOG
 
+## Ampache 7.10.0
+
+This release replaces the old captcha which includes OCR testing on image generation!
+
+Check out the new library on GitHub at [Gregwar/Captcha](https://github.com/Gregwar/Captcha)
+
+
+### Added (7.10.0)
+
+* Search
+  * Allow filtering by Catalog ID outside of search rules
+
+### Changed (7.10.0)
+
+* Backport `gregwar/captcha` from Ampache8 to replace the old `easy_captcha` classes
+* Update Composer and NPM packages
+* Rename function `get_artist_fullname` to `get_parent_fullname`
+* Subsonic
+  * Search3 rules and grouping style changed to match Subsonic expectations
+
+### Removed (7.7.0)
+
+* Remove `easy_captcha` classes and files
+
+### Fixed (7.10.0)
+
+* Broadcasts couldn't play becuase they are not Media
+* Update Vite for security issues
+* Throw exception to login on missing auth (when required)
+* Possible error on FileSystem scan
+* DB
+  * Database update 794004 - Error with more left over bad data
+* CLI
+  * Table checks column typo with DatabaseCharsetUpdater
+* Search
+  * Joining by `catalog_id` not set on some searches
+* Ampache Remote Catalogs
+  * Scanning tags on new file import
+  * Playing songs using the stream action
+  * Added support for Ampache8 servers and set default to API6
+  * Catch errors when the XML can't find the Song
+* Subsonic
+  * Errors when missing `fromYear` and `toYear`
+  * Remove HTML encoding on ArtistInfo calls
+
 ## Ampache 7.9.8
 
 I'm making a lot of mistakes this week! Sorry!

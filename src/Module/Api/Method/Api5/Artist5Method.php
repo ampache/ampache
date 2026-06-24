@@ -45,7 +45,7 @@ final class Artist5Method
      *
      * This returns a single artist based on the UID of said artist
      *
-     * filter  = (string) Alpha-numeric search term
+     * filter = (string) Alpha-numeric search term
      * include = (array|string) 'albums', 'songs' //optional
      *
      * @param array{
@@ -72,7 +72,7 @@ final class Artist5Method
         $include = [];
         if (array_key_exists('include', $input)) {
             if (!is_array($input['include'])) {
-                $input['include'] = explode(',', html_entity_decode((string)($input['include'])));
+                $input['include'] = explode(',', html_entity_decode((string) ($input['include'])));
             }
             foreach ($input['include'] as $item) {
                 if ($item === 'songs' || $item == '1') {

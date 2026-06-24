@@ -48,8 +48,7 @@ final readonly class GrantAction implements ApplicationActionInterface
         private RequestParserInterface $requestParser,
         private UiInterface $ui,
         private ConfigContainerInterface $configContainer,
-    ) {
-    }
+    ) {}
 
     public function run(ServerRequestInterface $request, GuiGatekeeperInterface $gatekeeper): ?ResponseInterface
     {
@@ -57,8 +56,8 @@ final readonly class GrantAction implements ApplicationActionInterface
 
         // Make sure we're a user and they came from the form
         if (
-            $gatekeeper->mayAccess(AccessTypeEnum::INTERFACE, AccessLevelEnum::USER) === false &&
-            !isset($user->id)
+            $gatekeeper->mayAccess(AccessTypeEnum::INTERFACE, AccessLevelEnum::USER) === false
+            && !isset($user->id)
         ) {
             throw new AccessDeniedException();
         }
@@ -68,8 +67,8 @@ final readonly class GrantAction implements ApplicationActionInterface
         if ($user !== null) {
             $plugin_name = mb_strtolower($this->requestParser->getFromRequest('plugin'));
             if (
-                $this->requestParser->getFromRequest('token') &&
-                in_array($plugin_name, Plugin::get_plugins(PluginTypeEnum::SAVE_MEDIAPLAY))
+                $this->requestParser->getFromRequest('token')
+                && in_array($plugin_name, Plugin::get_plugins(PluginTypeEnum::SAVE_MEDIAPLAY))
             ) {
                 // we receive a token for a valid plugin, have to call getSession and obtain a session key
                 $plugin = new Plugin($plugin_name);
@@ -77,10 +76,10 @@ final readonly class GrantAction implements ApplicationActionInterface
                     $plugin->load($user);
                     if (
                         (
-                            $plugin->_plugin instanceof Ampachelibrefm ||
-                            $plugin->_plugin instanceof AmpacheLastfm
-                        ) &&
-                        $plugin->_plugin->get_session($this->requestParser->getFromRequest('token'))
+                            $plugin->_plugin instanceof Ampachelibrefm
+                            || $plugin->_plugin instanceof AmpacheLastfm
+                        )
+                        && $plugin->_plugin->get_session($this->requestParser->getFromRequest('token'))
                     ) {
                         $title = T_('No Problem');
                         $text  = T_('Your account has been updated') . ' : ' . $plugin_name;

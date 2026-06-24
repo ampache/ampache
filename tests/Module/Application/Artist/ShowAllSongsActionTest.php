@@ -37,30 +37,10 @@ use Psr\Http\Message\ServerRequestInterface;
 
 class ShowAllSongsActionTest extends MockeryTestCase
 {
-    /** @var ModelFactoryInterface|MockInterface|null */
-    private MockInterface $modelFactory;
-
-    /** @var UiInterface|MockInterface|null */
-    private MockInterface $ui;
-
-    /** @var SongRepositoryInterface|MockInterface|null */
-    private MockInterface $songRepository;
-
+    private ModelFactoryInterface|MockInterface|null $modelFactory;
+    private SongRepositoryInterface|MockInterface|null $songRepository;
     private ?ShowAllSongsAction $subject;
-
-    #[Override]
-    protected function setUp(): void
-    {
-        $this->modelFactory   = $this->mock(ModelFactoryInterface::class);
-        $this->ui             = $this->mock(UiInterface::class);
-        $this->songRepository = $this->mock(SongRepositoryInterface::class);
-
-        $this->subject = new ShowAllSongsAction(
-            $this->modelFactory,
-            $this->ui,
-            $this->songRepository
-        );
-    }
+    private UiInterface|MockInterface|null $ui;
 
     public function testRunRenders(): void
     {
@@ -110,6 +90,20 @@ class ShowAllSongsActionTest extends MockeryTestCase
 
         $this->assertNull(
             $this->subject->run($request, $gatekeeper)
+        );
+    }
+
+    #[Override]
+    protected function setUp(): void
+    {
+        $this->modelFactory   = $this->mock(ModelFactoryInterface::class);
+        $this->ui             = $this->mock(UiInterface::class);
+        $this->songRepository = $this->mock(SongRepositoryInterface::class);
+
+        $this->subject = new ShowAllSongsAction(
+            $this->modelFactory,
+            $this->ui,
+            $this->songRepository
         );
     }
 }

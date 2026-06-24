@@ -36,15 +36,13 @@ final readonly class ShowVideoAction implements ApplicationActionInterface
 {
     public const string REQUEST_KEY = 'show_video';
 
-    public function __construct(private UiInterface $ui)
-    {
-    }
+    public function __construct(private UiInterface $ui) {}
 
     public function run(ServerRequestInterface $request, GuiGatekeeperInterface $gatekeeper): ?ResponseInterface
     {
         $this->ui->showHeader();
 
-        $video = new Video((int)filter_input(INPUT_GET, 'video_id', FILTER_SANITIZE_SPECIAL_CHARS));
+        $video = new Video((int) filter_input(INPUT_GET, 'video_id', FILTER_SANITIZE_SPECIAL_CHARS));
 
         $this->ui->show(
             'show_video.inc.php',

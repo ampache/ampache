@@ -23,6 +23,8 @@ declare(strict_types=0);
  *
  */
 
+// show_manage_catalogs.inc.php
+
 use Ampache\Config\AmpConfig;
 
 $web_path = AmpConfig::get_web_path('/client');
@@ -47,6 +49,9 @@ $admin_path = AmpConfig::get_web_path('/admin'); ?>
         </li>
         <li>
             <a class="option-list" href="<?php echo $admin_path; ?>/catalog.php?action=clean_all_catalogs"><?php echo T_('Clean All'); ?></a>
+        </li>
+        <li>
+            <a class="option-list" href="<?php echo $admin_path; ?>/catalog.php?action=scan_all_catalog_folders"><?php echo T_('Scan All Folders'); ?></a>
         </li>
         <li>
             <a class="option-list" href="<?php echo $admin_path; ?>/catalog.php?action=full_service"><?php echo T_('Update All'); ?></a>

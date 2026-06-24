@@ -23,6 +23,8 @@ declare(strict_types=0);
  *
  */
 
+// show_podcast.inc.php
+
 use Ampache\Config\AmpConfig;
 use Ampache\Module\Api\Ajax;
 use Ampache\Module\Authorization\Access;
@@ -50,12 +52,12 @@ $browse   = new Browse();
 $browse->set_type($object_type);
 $browse->set_use_filters(false);
 $browse->set_skip_catalog_check(true);
-Ui::show_box_top((string)$podcast->get_fullname(), 'info-box'); ?>
+Ui::show_box_top((string) $podcast->get_fullname(), 'info-box'); ?>
 <div class="item_right_info">
 <?php $size = Ui::is_grid_view('album')
     ? ['width' => 150, 'height' => 150]
     : ['width' => 384, 'height' => 384];
-Art::display('podcast', $podcast->getId(), (string)$podcast->get_fullname(), $size, null, true, false); ?>
+Art::display('podcast', $podcast->getId(), (string) $podcast->get_fullname(), $size, null, true, false); ?>
 </div>
 <?php if ($podcast->get_description()) { ?>
 <div id="item_summary">
@@ -103,7 +105,7 @@ Art::display('podcast', $podcast->getId(), (string)$podcast->get_fullname(), $si
                 RssFeedTypeEnum::LIBRARY_ITEM,
                 $current_user,
                 T_('RSS Feed'),
-                ['object_type' => 'podcast', 'object_id' => (string)$podcast->getId()]
+                ['object_type' => 'podcast', 'object_id' => (string) $podcast->getId()]
             ); ?>
         </li>
         <?php } ?>

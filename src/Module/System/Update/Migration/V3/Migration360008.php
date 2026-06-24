@@ -49,7 +49,7 @@ final class Migration360008 extends AbstractMigration
             if ($row['Field'] == 'remote_password') {
                 $remote_password = true;
             }
-        } // end while
+        }
 
         if (!$remote_username) {
             // Add in Username / Password for catalog - to be used for remote catalogs

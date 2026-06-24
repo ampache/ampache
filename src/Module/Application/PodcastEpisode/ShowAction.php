@@ -48,8 +48,7 @@ final readonly class ShowAction implements ApplicationActionInterface
         private UiInterface $ui,
         private LoggerInterface $logger,
         private ModelFactoryInterface $modelFactory,
-    ) {
-    }
+    ) {}
 
     public function run(ServerRequestInterface $request, GuiGatekeeperInterface $gatekeeper): ?ResponseInterface
     {
@@ -61,7 +60,7 @@ final readonly class ShowAction implements ApplicationActionInterface
 
         $user       = $gatekeeper->getUser() ?? $this->modelFactory->createUser(-1);
         $catalogs   = $user->catalogs['podcast'] ?? User::get_user_catalogs($user->id);
-        $episode_id = (int)$this->requestParser->getFromRequest('podcast_episode');
+        $episode_id = (int) $this->requestParser->getFromRequest('podcast_episode');
         $episode    = $this->modelFactory->createPodcastEpisode($episode_id);
         if ($episode->isNew() || !in_array($episode->catalog, $catalogs)) {
             $this->logger->warning(

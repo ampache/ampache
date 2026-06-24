@@ -45,8 +45,7 @@ final readonly class UpdateFromMusicBrainzAction implements ApplicationActionInt
     public function __construct(
         private ConfigContainerInterface $configContainer,
         private UiInterface $ui,
-    ) {
-    }
+    ) {}
 
     public function run(ServerRequestInterface $request, GuiGatekeeperInterface $gatekeeper): ?ResponseInterface
     {

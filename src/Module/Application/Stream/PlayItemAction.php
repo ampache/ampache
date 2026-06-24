@@ -31,6 +31,7 @@ use Ampache\Module\Authorization\GuiGatekeeperInterface;
 use Ampache\Module\Statistics\Stats;
 use Ampache\Module\System\Core;
 use Ampache\Repository\Model\Browse;
+use Ampache\Repository\Model\container_item;
 use Ampache\Repository\Model\LibraryItemEnum;
 use Ampache\Repository\Model\LibraryItemLoaderInterface;
 use Psr\Http\Message\ResponseInterface;
@@ -57,7 +58,7 @@ final class PlayItemAction extends AbstractStreamAction
 
         $object_type = $_REQUEST['object_type'] ?? '';
         if ($object_type === 'browse') {
-            $browse     = new Browse((int)Core::get_get('object_id'));
+            $browse     = new Browse((int) Core::get_get('object_id'));
             $objectIds  = [];
             $objectType = null;
             $saved      = $browse->get_saved();
@@ -69,10 +70,10 @@ final class PlayItemAction extends AbstractStreamAction
                     }
 
                     if (
-                        !$objectType &&
-                        isset($item['object_type']) && (
-                            ($item['object_type'] instanceof LibraryItemEnum && in_array($item['object_type']->value, ['album', 'artist', 'song'])) ||
-                            (is_string($item['object_type']) && in_array($item['object_type'], ['album', 'artist', 'song'], true))
+                        !$objectType
+                        && isset($item['object_type']) && (
+                            ($item['object_type'] instanceof LibraryItemEnum && in_array($item['object_type']->value, ['album', 'artist', 'song']))
+                            || (is_string($item['object_type']) && in_array($item['object_type'], ['album', 'artist', 'song'], true))
                         )
                     ) {
                         $objectType = ($item['object_type'] instanceof LibraryItemEnum)
@@ -94,14 +95,14 @@ final class PlayItemAction extends AbstractStreamAction
             return null;
         }
 
-        $mediaIds  = [];
+        $mediaIds = [];
         foreach ($objectIds as $object_id) {
             $item = $this->libraryItemLoader->load(
                 $objectType,
                 (int) $object_id,
             );
 
-            if ($item !== null) {
+            if ($item instanceof container_item) {
                 $mediaIds = array_merge($mediaIds, $item->get_medias());
 
                 if (array_key_exists('custom_play_action', $_REQUEST)) {
@@ -113,12 +114,12 @@ final class PlayItemAction extends AbstractStreamAction
                 $user = $gatekeeper->getUser();
                 // record this as a 'play' to help show usage and history for playlists and streams
                 if (
-                    $user !== null &&
-                    $mediaIds !== [] &&
-                    in_array($objectType, [LibraryItemEnum::PLAYLIST, LibraryItemEnum::LIVE_STREAM])
+                    $user !== null
+                    && $mediaIds !== []
+                    && in_array($objectType, [LibraryItemEnum::PLAYLIST, LibraryItemEnum::LIVE_STREAM])
                 ) {
                     $client = $_REQUEST['client'] ?? substr(Core::get_server('HTTP_USER_AGENT'), 0, 254);
-                    Stats::insert($objectType->value, (int)$object_id, $user->getId(), $client, [], 'stream', time());
+                    Stats::insert($objectType->value, (int) $object_id, $user->getId(), $client, [], 'stream', time());
                 }
             }
         }

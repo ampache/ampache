@@ -40,37 +40,6 @@ use PDOStatement;
 final class DbaDatabaseConnection implements DatabaseConnectionInterface
 {
     /**
-     * Executes the provided sql query
-     *
-     * If the query fails, a DatabaseException will be thrown
-     *
-     * @param list<mixed> $params
-     *
-     * @throws QueryFailedException
-     */
-    public function query(
-        string $sql,
-        array $params = [],
-        bool $silent = false,
-        ?Interactor $interactor = null,
-    ): PDOStatement {
-        $result = Dba::query($sql, $params, $silent, $interactor);
-
-        if ($result === null) {
-            if (!$silent) {
-                $interactor?->error(
-                    'ERROR_query ' . $sql . ' ' . print_r($params, true),
-                    true
-                );
-            }
-
-            throw new QueryFailedException();
-        }
-
-        return $result;
-    }
-
-    /**
      * Fetches a single column from the query result
      *
      * Useful e.g. for counting-queries
@@ -81,7 +50,7 @@ final class DbaDatabaseConnection implements DatabaseConnectionInterface
     public function fetchOne(
         string $sql,
         array $params = [],
-    ) {
+    ): mixed {
         return $this->query($sql, $params)->fetchColumn();
     }
 
@@ -113,6 +82,37 @@ final class DbaDatabaseConnection implements DatabaseConnectionInterface
 
         if ($result <= 0) {
             throw new InsertIdInvalidException();
+        }
+
+        return $result;
+    }
+
+    /**
+     * Executes the provided sql query
+     *
+     * If the query fails, a DatabaseException will be thrown
+     *
+     * @param list<mixed> $params
+     *
+     * @throws QueryFailedException
+     */
+    public function query(
+        string $sql,
+        array $params = [],
+        bool $silent = false,
+        ?Interactor $interactor = null,
+    ): PDOStatement {
+        $result = Dba::query($sql, $params, $silent, $interactor);
+
+        if ($result === null) {
+            if (!$silent) {
+                $interactor?->error(
+                    'ERROR_query ' . $sql . ' ' . print_r($params, true),
+                    true
+                );
+            }
+
+            throw new QueryFailedException();
         }
 
         return $result;

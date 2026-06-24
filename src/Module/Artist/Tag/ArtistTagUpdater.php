@@ -37,8 +37,7 @@ final readonly class ArtistTagUpdater implements ArtistTagUpdaterInterface
         private AlbumRepositoryInterface $albumRepository,
         private AlbumTagUpdaterInterface $albumTagUpdater,
         private ModelFactoryInterface $modelFactory,
-    ) {
-    }
+    ) {}
 
     /**
      * Update tags of artists and/or albums

@@ -23,6 +23,8 @@ declare(strict_types=0);
  *
  */
 
+// subnavbar.inc.php
+
 /**
  * This file expect an array of 'items' which have ['0']['url'] ['0']['title']
  * ['0']['active'] == true/false and ['0']['cssclass'] this is called from show_submenu($items);

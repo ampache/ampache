@@ -31,16 +31,6 @@ use Override;
 
 final class UpdateCatalogCommand extends Command
 {
-    #[Override]
-    protected function defaults(): self
-    {
-        $this->option('-h, --help', T_('Help'))->on($this->showHelp(...));
-
-        $this->onExit(static fn ($exitCode = 0) => exit($exitCode));
-
-        return $this;
-    }
-
     public function __construct(
         private readonly UpdateCatalogInterface $updateCatalog,
     ) {
@@ -71,19 +61,19 @@ final class UpdateCatalogCommand extends Command
         $values = $this->values();
         // do a default list of actions if you don't have anything set
         if (
-            empty($values['cleanup']) &&
-            empty($values['add']) &&
-            empty($values['art']) &&
-            empty($values['verify']) &&
-            empty($values['find']) &&
-            empty($values['update']) &&
-            empty($values['import']) &&
-            empty($values['optimize']) &&
-            empty($values['garbage']) &&
-            empty($values['scan']) &&
-            empty($values['memorylimit']) &&
-            empty($values['catalogName']) &&
-            $values['catalogType'] === 'local'
+            empty($values['cleanup'])
+            && empty($values['add'])
+            && empty($values['art'])
+            && empty($values['verify'])
+            && empty($values['find'])
+            && empty($values['update'])
+            && empty($values['import'])
+            && empty($values['optimize'])
+            && empty($values['garbage'])
+            && empty($values['scan'])
+            && empty($values['memorylimit'])
+            && empty($values['catalogName'])
+            && $values['catalogType'] === 'local'
         ) {
             $values['cleanup'] = true;
             $values['add']     = true;
@@ -109,5 +99,15 @@ final class UpdateCatalogCommand extends Command
             $catalogName,
             $values['limit']
         );
+    }
+
+    #[Override]
+    protected function defaults(): self
+    {
+        $this->option('-h, --help', T_('Help'))->on($this->showHelp(...));
+
+        $this->onExit(static fn($exitCode = 0) => exit($exitCode));
+
+        return $this;
     }
 }

@@ -31,6 +31,7 @@ use Ampache\Module\Authorization\AccessTypeEnum;
 use Ampache\Module\Authorization\GuiGatekeeperInterface;
 use Ampache\Module\System\Core;
 use Ampache\Module\Util\Ui;
+use Ampache\Repository\Model\displayable_item;
 use Ampache\Repository\Model\LibraryItemEnum;
 use Ampache\Repository\Model\LibraryItemLoaderInterface;
 use Ampache\Repository\Model\User;
@@ -39,8 +40,7 @@ abstract readonly class AbstractGraphRendererAction implements ApplicationAction
 {
     protected function __construct(
         private LibraryItemLoaderInterface $libraryItemLoader,
-    ) {
-    }
+    ) {}
 
     /**
      * @throws ApplicationException
@@ -67,22 +67,22 @@ abstract readonly class AbstractGraphRendererAction implements ApplicationAction
 
         if (
             (
-                $owner_id < 1 ||
-                $owner_id != Core::get_global('user')?->getId()
-            ) &&
-            $gatekeeper->mayAccess(AccessTypeEnum::INTERFACE, AccessLevelEnum::CONTENT_MANAGER) === false
+                $owner_id < 1
+                || $owner_id != Core::get_global('user')?->getId()
+            )
+            && $gatekeeper->mayAccess(AccessTypeEnum::INTERFACE, AccessLevelEnum::CONTENT_MANAGER) === false
         ) {
             throw new AccessDeniedException();
         }
 
-        $user_id = (int)Core::get_request('user_id');
-        $zoom    = (string)($_REQUEST['zoom'] ?? 'day');
+        $user_id = (int) Core::get_request('user_id');
+        $zoom    = (string) ($_REQUEST['zoom'] ?? 'day');
 
         $end_date = (isset($_REQUEST['end_date']))
-            ? (int)strtotime((string)$_REQUEST['end_date'])
+            ? (int) strtotime((string) $_REQUEST['end_date'])
             : time();
         $start_date = (isset($_REQUEST['start_date']))
-            ? (int)strtotime((string)$_REQUEST['start_date'])
+            ? (int) strtotime((string) $_REQUEST['start_date'])
             : ($end_date - 864000);
 
         $f_end_date   = get_datetime($end_date);
@@ -103,7 +103,7 @@ abstract readonly class AbstractGraphRendererAction implements ApplicationAction
         }
 
         $blink = '';
-        if ($libitem !== null) {
+        if ($libitem instanceof displayable_item) {
             $f_link = $libitem->get_f_link();
             if ($f_link !== '' && $f_link !== '0') {
                 $blink = $f_link;

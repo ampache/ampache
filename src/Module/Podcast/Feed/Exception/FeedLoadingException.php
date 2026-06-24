@@ -27,6 +27,4 @@ namespace Ampache\Module\Podcast\Feed\Exception;
 
 use Exception;
 
-final class FeedLoadingException extends Exception
-{
-}
+final class FeedLoadingException extends Exception {}

@@ -32,9 +32,7 @@ use Ampache\Repository\Model\Catalog;
 
 final class AddCatalog extends AbstractCatalogUpdater implements AddCatalogInterface
 {
-    public function __construct(private readonly ConfigContainerInterface $configContainer)
-    {
-    }
+    public function __construct(private readonly ConfigContainerInterface $configContainer) {}
 
     public function add(
         Interactor $interactor,
@@ -66,7 +64,7 @@ final class AddCatalog extends AbstractCatalogUpdater implements AddCatalogInter
             ob_end_clean();
 
             $interactor->info(
-                $this->cleanBuffer((string)$buffer),
+                $this->cleanBuffer((string) $buffer),
                 true
             );
             $interactor->error(
@@ -85,7 +83,7 @@ final class AddCatalog extends AbstractCatalogUpdater implements AddCatalogInter
         ob_end_clean();
 
         $interactor->info(
-            $this->cleanBuffer((string)$buffer),
+            $this->cleanBuffer((string) $buffer),
             true
         );
         $interactor->info(

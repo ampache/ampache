@@ -43,8 +43,7 @@ final readonly class ShowCustomizeCatalogAction implements ApplicationActionInte
     public function __construct(
         private RequestParserInterface $requestParser,
         private UiInterface $ui,
-    ) {
-    }
+    ) {}
 
     public function run(ServerRequestInterface $request, GuiGatekeeperInterface $gatekeeper): ?ResponseInterface
     {
@@ -54,7 +53,7 @@ final readonly class ShowCustomizeCatalogAction implements ApplicationActionInte
 
         $this->ui->showHeader();
 
-        $catalog = Catalog::create_from_id((int)$this->requestParser->getFromRequest('catalog_id'));
+        $catalog = Catalog::create_from_id((int) $this->requestParser->getFromRequest('catalog_id'));
         if ($catalog === null) {
             return null;
         }

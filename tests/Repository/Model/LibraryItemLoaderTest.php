@@ -38,16 +38,17 @@ use Psr\Container\ContainerInterface;
 class LibraryItemLoaderTest extends TestCase
 {
     private ContainerInterface&MockObject $dic;
-
     private LibraryItemLoader $subject;
 
-    protected function setUp(): void
+    public static function loadDataProvider(): Generator
     {
-        $this->dic = $this->createMock(ContainerInterface::class);
+        yield [LibraryItemEnum::LABEL, LabelRepositoryInterface::class, Label::class];
 
-        $this->subject = new LibraryItemLoader(
-            $this->dic,
-        );
+        yield [LibraryItemEnum::LIVE_STREAM, LiveStreamRepositoryInterface::class, Live_Stream::class];
+
+        yield [LibraryItemEnum::PODCAST, PodcastRepositoryInterface::class, Podcast::class];
+
+        yield[LibraryItemEnum::PODCAST_EPISODE, PodcastEpisodeRepositoryInterface::class, Podcast_Episode::class];
     }
 
     #[DataProvider(methodName: 'loadDataProvider')]
@@ -81,17 +82,6 @@ class LibraryItemLoaderTest extends TestCase
         );
     }
 
-    public static function loadDataProvider(): Generator
-    {
-        yield [LibraryItemEnum::LABEL, LabelRepositoryInterface::class, Label::class];
-
-        yield [LibraryItemEnum::LIVE_STREAM, LiveStreamRepositoryInterface::class, Live_Stream::class];
-
-        yield [LibraryItemEnum::PODCAST, PodcastRepositoryInterface::class, Podcast::class];
-
-        yield[LibraryItemEnum::PODCAST_EPISODE, PodcastEpisodeRepositoryInterface::class, Podcast_Episode::class];
-    }
-
     public function testReturnsNullIfObjectWasNotFound(): void
     {
         $objectId = 666;
@@ -115,6 +105,15 @@ class LibraryItemLoaderTest extends TestCase
 
         self::assertNull(
             $this->subject->load(LibraryItemEnum::LABEL, $objectId),
+        );
+    }
+
+    protected function setUp(): void
+    {
+        $this->dic = $this->createMock(ContainerInterface::class);
+
+        $this->subject = new LibraryItemLoader(
+            $this->dic,
         );
     }
 }

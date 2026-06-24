@@ -23,6 +23,8 @@ declare(strict_types=0);
  *
  */
 
+// show_search_bar.inc.php
+
 use Ampache\Config\AmpConfig;
 use Ampache\Module\Util\EnvironmentInterface;
 

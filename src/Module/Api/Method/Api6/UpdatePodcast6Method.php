@@ -90,16 +90,6 @@ final class UpdatePodcast6Method
     }
 
     /**
-     * @deprecated Inject by constructor
-     */
-    private static function getPodcastSyncer(): PodcastSyncerInterface
-    {
-        global $dic;
-
-        return $dic->get(PodcastSyncerInterface::class);
-    }
-
-    /**
      * @deprecated inject by constructor
      */
     private static function getPodcastRepository(): PodcastRepositoryInterface
@@ -107,5 +97,15 @@ final class UpdatePodcast6Method
         global $dic;
 
         return $dic->get(PodcastRepositoryInterface::class);
+    }
+
+    /**
+     * @deprecated Inject by constructor
+     */
+    private static function getPodcastSyncer(): PodcastSyncerInterface
+    {
+        global $dic;
+
+        return $dic->get(PodcastSyncerInterface::class);
     }
 }

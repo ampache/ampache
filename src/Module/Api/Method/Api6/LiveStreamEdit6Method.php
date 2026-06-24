@@ -51,11 +51,11 @@ final class LiveStreamEdit6Method
      *
      * Edit a live_stream (radio station) object.
      *
-     * filter   = (string) object_id
-     * name     = (string) Stream title //optional
-     * url      = (string) URL of the http/s stream //optional
-     * codec    = (string) stream codec ('mp3', 'flac', 'ogg', 'vorbis', 'opus', 'aac', 'alac') //optional
-     * catalog  = (int) Catalog ID to associate with this stream //optional
+     * filter = (string) object_id
+     * name = (string) Stream title //optional
+     * url = (string) URL of the http/s stream //optional
+     * codec = (string) stream codec ('mp3', 'flac', 'ogg', 'vorbis', 'opus', 'aac', 'alac') //optional
+     * catalog = (int) Catalog ID to associate with this stream //optional
      * site_url = (string) Homepage URL of the stream //optional
      *
      * @param array{
@@ -77,7 +77,7 @@ final class LiveStreamEdit6Method
         if (!Api6::check_parameter($input, ['filter'], self::ACTION)) {
             return false;
         }
-        $object_id = (int)filter_var($input['filter'], FILTER_SANITIZE_NUMBER_INT);
+        $object_id = (int) filter_var($input['filter'], FILTER_SANITIZE_NUMBER_INT);
         $item      = new Live_Stream($object_id);
         if ($item->isNew()) {
             /* HINT: Requested object string/id/type ("album", "myusername", "some song title", 1298376) */
@@ -87,23 +87,23 @@ final class LiveStreamEdit6Method
         }
         $name = $item->name;
         if (isset($input['name']) && filter_var(urldecode($input['name']), FILTER_SANITIZE_SPECIAL_CHARS)) {
-            $name = (string)filter_var(urldecode($input['name']), FILTER_SANITIZE_SPECIAL_CHARS);
+            $name = (string) filter_var(urldecode($input['name']), FILTER_SANITIZE_SPECIAL_CHARS);
         }
         $url = $item->url;
         if (isset($input['url']) && filter_var(urldecode($input['url']), FILTER_VALIDATE_URL)) {
-            $url = (string)filter_var(urldecode($input['url']), FILTER_VALIDATE_URL);
+            $url = (string) filter_var(urldecode($input['url']), FILTER_VALIDATE_URL);
         }
         $codec = $item->codec;
         if (isset($input['codec']) && preg_replace("/[^a-z]/", "", strtolower($input['codec']))) {
-            $codec = (string)preg_replace("/[^a-z]/", "", strtolower($input['codec']));
+            $codec = (string) preg_replace("/[^a-z]/", "", strtolower($input['codec']));
         }
         $site_url = $item->site_url;
         if (isset($input['site_url']) && filter_var(urldecode($input['site_url']), FILTER_VALIDATE_URL)) {
-            $site_url = (string)filter_var(urldecode($input['site_url']), FILTER_VALIDATE_URL);
+            $site_url = (string) filter_var(urldecode($input['site_url']), FILTER_VALIDATE_URL);
         }
         $catalog_id = $item->catalog;
         if (isset($input['catalog']) && filter_var($input['catalog'], FILTER_SANITIZE_NUMBER_INT)) {
-            $catalog_id = (int)filter_var($input['catalog'], FILTER_SANITIZE_NUMBER_INT);
+            $catalog_id = (int) filter_var($input['catalog'], FILTER_SANITIZE_NUMBER_INT);
         }
 
         // Make sure it's a real catalog

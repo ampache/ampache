@@ -38,8 +38,7 @@ final class ShowAddFilterAction extends AbstractFilterAction
     public function __construct(
         private readonly UiInterface $ui,
         private readonly ConfigContainerInterface $configContainer,
-    ) {
-    }
+    ) {}
 
     protected function handle(ServerRequestInterface $request): ?ResponseInterface
     {
@@ -47,7 +46,7 @@ final class ShowAddFilterAction extends AbstractFilterAction
             return null;
         }
 
-        $body = (array)$request->getParsedBody();
+        $body = (array) $request->getParsedBody();
 
         $filter_name = scrub_in(htmlspecialchars($body['name'] ?? '', ENT_NOQUOTES));
 

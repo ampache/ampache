@@ -46,8 +46,7 @@ final readonly class ShareAction implements ApplicationActionInterface
         private ModelFactoryInterface $modelFactory,
         private ConfigContainerInterface $configContainer,
         private ShareRepositoryInterface $shareRepository,
-    ) {
-    }
+    ) {}
 
     public function run(ServerRequestInterface $request, GuiGatekeeperInterface $gatekeeper): ?ResponseInterface
     {

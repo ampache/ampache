@@ -23,6 +23,8 @@ declare(strict_types=0);
  *
  */
 
+// show_album_group_disks.inc.php
+
 use Ampache\Config\AmpConfig;
 use Ampache\Module\Api\Ajax;
 use Ampache\Module\Authorization\Access;
@@ -50,13 +52,13 @@ use Ampache\Repository\Model\Userflag;
 $web_path = AmpConfig::get_web_path('/client');
 
 // Title for this album
-$f_album_name     = (string)$album->get_artist_fullname();
-$simple           = (string)$album->get_fullname(true);
-$f_name           = (string)$album->get_fullname(false, true);
+$f_album_name     = (string) $album->get_parent_fullname();
+$simple           = (string) $album->get_fullname(true);
+$f_name           = (string) $album->get_fullname(false, true);
 $url_f_album_name = rawurlencode($f_album_name);
 $url_f_simple     = rawurlencode($simple);
 $title            = ($album->album_artist > 0)
-    ? scrub_out($f_name) . '&nbsp;-&nbsp;' . ((string)$album->get_f_parent_link())
+    ? scrub_out($f_name) . '&nbsp;-&nbsp;' . ((string) $album->get_f_parent_link())
     : scrub_out($f_name);
 
 $current_user         = Core::get_global('user');
@@ -133,9 +135,9 @@ if (AmpConfig::get('external_links_musicbrainz')) {
 <?php if (AmpConfig::get('show_played_times')) { ?>
     <br />
     <div style="display:inline;">
-        <?php echo T_('Played') . ' ' .
+        <?php echo T_('Played') . ' '
         /* HINT: Number of times an object has been played */
-        sprintf(nT_('%d time', '%d times', $album->total_count), $album->total_count); ?>
+        . sprintf(nT_('%d time', '%d times', $album->total_count), $album->total_count); ?>
     </div>
 <?php } ?>
 <?php
@@ -192,7 +194,7 @@ if (AmpConfig::get('use_rss')) { ?>
                 RssFeedTypeEnum::LIBRARY_ITEM,
                 $current_user,
                 T_('RSS Feed'),
-                ['object_type' => 'album', 'object_id' => (string)$album->id]
+                ['object_type' => 'album', 'object_id' => (string) $album->id]
             ); ?>
         </li>
 <?php }

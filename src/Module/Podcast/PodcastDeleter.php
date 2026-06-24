@@ -49,8 +49,7 @@ final readonly class PodcastDeleter implements PodcastDeleterInterface
         private ConfigContainerInterface $config,
         private PodcastEpisodeRepositoryInterface $podcastEpisodeRepository,
         private LoggerInterface $logger,
-    ) {
-    }
+    ) {}
 
     /**
      * Deletes a podcast including its episodes

@@ -47,16 +47,15 @@ final readonly class CreateAction implements ApplicationActionInterface
         private ConfigContainerInterface $configContainer,
         private ResponseFactoryInterface $responseFactory,
         private RequestParserInterface $requestParser,
-    ) {
-    }
+    ) {}
 
     public function run(ServerRequestInterface $request, GuiGatekeeperInterface $gatekeeper): ResponseInterface
     {
         /* Make sure they have access to this */
         if (
-            $this->configContainer->isFeatureEnabled(ConfigurationKeyEnum::ALLOW_DEMOCRATIC_PLAYBACK) === false ||
-            !$this->requestParser->verifyForm('create_democratic') ||
-            $gatekeeper->mayAccess(AccessTypeEnum::INTERFACE, AccessLevelEnum::MANAGER) === false
+            $this->configContainer->isFeatureEnabled(ConfigurationKeyEnum::ALLOW_DEMOCRATIC_PLAYBACK) === false
+            || !$this->requestParser->verifyForm('create_democratic')
+            || $gatekeeper->mayAccess(AccessTypeEnum::INTERFACE, AccessLevelEnum::MANAGER) === false
         ) {
             throw new AccessDeniedException();
         }
@@ -67,11 +66,11 @@ final readonly class CreateAction implements ApplicationActionInterface
         if ($democratic->isNew()) {
             // Create the playlist
             Democratic::create([
-                'name' => (string)$_POST['name'],
-                'democratic' => (int)$_POST['democratic'],
-                'cooldown' => (int)$_POST['cooldown'],
-                'level' => (int)$_POST['level'],
-                'make_default' => (int)$_POST['make_default'],
+                'name' => (string) $_POST['name'],
+                'democratic' => (int) $_POST['democratic'],
+                'cooldown' => (int) $_POST['cooldown'],
+                'level' => (int) $_POST['level'],
+                'make_default' => (int) $_POST['make_default'],
             ]);
         } else {
             $democratic->update($_POST);

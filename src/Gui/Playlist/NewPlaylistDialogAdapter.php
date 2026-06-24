@@ -38,7 +38,29 @@ final readonly class NewPlaylistDialogAdapter implements NewPlaylistDialogAdapte
         private GuiGatekeeperInterface $gatekeeper,
         private string $object_type,
         private string $object_ids,
-    ) {
+    ) {}
+
+    /**
+     * Returns the ajax api base uri
+     */
+    public function getAjaxUri(): string
+    {
+        return $this->ajaxUriRetriever->getAjaxUri();
+    }
+
+    public function getNewPlaylistTitle(): string
+    {
+        return T_('Playlist Name');
+    }
+
+    public function getObjectIds(): string
+    {
+        return $this->object_ids;
+    }
+
+    public function getObjectType(): string
+    {
+        return $this->object_type;
     }
 
     /**
@@ -51,28 +73,5 @@ final readonly class NewPlaylistDialogAdapter implements NewPlaylistDialogAdapte
         return $this->playlistLoader->loadByUserId(
             $this->gatekeeper->getUserId()
         );
-    }
-
-    /**
-     * Returns the ajax api base uri
-     */
-    public function getAjaxUri(): string
-    {
-        return $this->ajaxUriRetriever->getAjaxUri();
-    }
-
-    public function getObjectType(): string
-    {
-        return $this->object_type;
-    }
-
-    public function getObjectIds(): string
-    {
-        return $this->object_ids;
-    }
-
-    public function getNewPlaylistTitle(): string
-    {
-        return T_('Playlist Name');
     }
 }

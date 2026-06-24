@@ -54,34 +54,14 @@ namespace Ampache\Module\Util;
 class Horde_Browser
 {
     /**
-     * Major version number.
-     */
-    private int|string $_majorVersion = 0;
-
-    /**
-     * Minor version number.
-     */
-    private int|string $_minorVersion = 0;
-
-    /**
-     * Browser name.
-     */
-    private string $_browser = '';
-
-    /**
      * Full user agent string.
      */
     private string $_agent = '';
 
     /**
-     * Lower-case user agent string.
+     * Browser name.
      */
-    private string $_lowerAgent = '';
-
-    /**
-     * Platform the browser is running on.
-     */
-    private string $_platform = '';
+    private string $_browser = '';
 
     /** @var array<string, bool|float|int|string> */
     private array $_features = [
@@ -92,6 +72,26 @@ class Horde_Browser
         'javascript' => true,
         'tables' => true
     ];
+
+    /**
+     * Lower-case user agent string.
+     */
+    private string $_lowerAgent = '';
+
+    /**
+     * Major version number.
+     */
+    private int|string $_majorVersion = 0;
+
+    /**
+     * Minor version number.
+     */
+    private int|string $_minorVersion = 0;
+
+    /**
+     * Platform the browser is running on.
+     */
+    private string $_platform = '';
 
     /** @var array<string, bool> */
     private array $_quirks = [];
@@ -105,13 +105,103 @@ class Horde_Browser
     }
 
     /**
+     * Returns the headers for a browser download.
+     *
+     * @param string $filename The filename of the download.
+     * @param string|null $cType The content-type description of the file.
+     * @param bool $inline True if inline, false if attachment.
+     * @param string|null $cLength The content-length of this file.
+     *
+     * @return string[]
+     */
+    public function getDownloadHeaders(
+        string  $filename = 'unknown',
+        ?string $cType = null,
+        bool    $inline = false,
+        ?string $cLength = null,
+    ): array {
+        /* Remove linebreaks (and ',', ';') from file names. */
+        $filename = str_replace(["\r\n", "\r", "\n"], ' ', $filename);
+        $filename = str_replace([",", ";"], '', $filename);
+
+        /* Some browsers don't like spaces in the filename. */
+        if ($this->hasQuirk('no_filename_spaces')) {
+            $filename = strtr($filename, ' ', '_');
+        }
+
+        /* MSIE doesn't like multiple periods in the file name. Convert all
+         * periods (except the last one) to underscores. */
+        if ($this->isBrowser('msie')) {
+            if (($pos = strrpos($filename, '.'))) {
+                $filename = strtr(substr($filename, 0, $pos), '.', '_') . substr($filename, $pos);
+            }
+
+            /* Encode the filename so IE downloads it correctly. (Bug #129) */
+            $filename = rawurlencode($filename);
+        }
+
+        $headers = [];
+
+        /* Content-Type/Content-Disposition Header. */
+        if ($inline) {
+            if ($cType !== null) {
+                $headers['Content-Type'] = trim($cType);
+            } elseif ($this->isBrowser('msie')) {
+                $headers['Content-Type'] = 'application/x-msdownload';
+            } else {
+                $headers['Content-Type'] = 'application/octet-stream';
+            }
+
+            $headers['Content-Disposition'] = 'inline; filename="' . $filename . '"';
+        } else {
+            if ($this->isBrowser('msie')) {
+                $headers['Content-Type'] = 'application/x-msdownload';
+            } elseif ($cType !== null) {
+                $headers['Content-Type'] = trim($cType);
+            } else {
+                $headers['Content-Type'] = 'application/octet-stream';
+            }
+
+            if ($this->hasQuirk('break_disposition_header')) {
+                $headers['Content-Disposition'] = 'filename="' . $filename . '"';
+            } else {
+                $headers['Content-Disposition'] = 'attachment; filename="' . $filename . '"';
+            }
+        }
+
+        /* Content-Length Header. Only send if we are not compressing output. */
+        if (!in_array($cLength, [null, '', '0'], true) && !in_array('ob_gzhandler', ob_list_handlers())) {
+            $headers['Content-Length'] = $cLength;
+        }
+
+        /* Overwrite Pragma: and other caching headers for IE. */
+        if ($this->hasQuirk('cache_ssl_downloads')) {
+            $headers['Expires']       = '0';
+            $headers['Cache-Control'] = 'must-revalidate';
+            $headers['Pragma']        = 'public';
+        }
+
+        return $headers;
+    }
+
+    /**
+     * Determines if the given browser is the same as the current.
+     *
+     * @param string $browser The browser to check.
+     */
+    public function isBrowser(string $browser): bool
+    {
+        return ($this->_browser === $browser);
+    }
+
+    /**
      * Parses the user agent string and initializes the object with all the
      * known features and quirks for the given browser.
      *
-     * @param string $userAgent The browser string to parse.
-     * @param string $accept The HTTP_ACCEPT settings to use.
+     * @param string|null $userAgent The browser string to parse.
+     * @param string|null $accept The HTTP_ACCEPT settings to use.
      */
-    public function match($userAgent = null, $accept = null): void
+    public function match(?string $userAgent = null, ?string $accept = null): void
     {
         // Set our agent string.
         if ($userAgent == null) {
@@ -204,7 +294,7 @@ class Horde_Browser
             if (str_contains($version[1], '.')) {
                 [$this->_majorVersion, $this->_minorVersion] = explode('.', $version[1]);
             } else {
-                $this->_majorVersion = (int)$version[1];
+                $this->_majorVersion = (int) $version[1];
                 $this->_minorVersion = 0;
             }
 
@@ -303,12 +393,12 @@ class Horde_Browser
             $this->setFeature('dataurl');
 
             if (
-                str_contains($agent, 'Mobile') ||
-                str_contains($agent, 'Android') ||
-                str_contains($agent, 'SAMSUNG-GT') ||
-                ((str_contains($agent, 'Nokia') || str_contains($agent, 'Symbian')) && str_contains($agent, 'WebKit')) ||
-                (str_contains($agent, 'N900') && str_contains($agent, 'Maemo Browser')) ||
-                (str_contains($agent, 'MeeGo') && str_contains($agent, 'NokiaN9'))
+                str_contains($agent, 'Mobile')
+                || str_contains($agent, 'Android')
+                || str_contains($agent, 'SAMSUNG-GT')
+                || ((str_contains($agent, 'Nokia') || str_contains($agent, 'Symbian')) && str_contains($agent, 'WebKit'))
+                || (str_contains($agent, 'N900') && str_contains($agent, 'Maemo Browser'))
+                || (str_contains($agent, 'MeeGo') && str_contains($agent, 'NokiaN9'))
             ) {
                 // WebKit Mobile
                 $this->setFeature('frames', false);
@@ -316,9 +406,9 @@ class Horde_Browser
                 $this->setQuirk('avoid_popup_windows');
             }
 
-            $this->_majorVersion = (int)$version[1];
+            $this->_majorVersion = (int) $version[1];
             if (isset($version[2])) {
-                $this->_minorVersion = (int)$version[2];
+                $this->_minorVersion = (int) $version[2];
             }
 
             if (stripos($agent, 'Chrome/') !== false || stripos($agent, 'CriOS/') !== false) {
@@ -344,8 +434,8 @@ class Horde_Browser
                 // Truly annoying - Safari did not start putting real version
                 // numbers until Version 3.
                 if (preg_match('|Version/([0-9.]+)|', $agent, $version_string)) {
-                    [$this->_majorVersion, $this->_minorVersion]     = explode('.', $version_string[1], 2);
-                    $this->_minorVersion                             = (int)($this->_minorVersion);
+                    [$this->_majorVersion, $this->_minorVersion] = explode('.', $version_string[1], 2);
+                    $this->_minorVersion                         = (int) ($this->_minorVersion);
                     $this->setFeature('ajax');
                     $this->setFeature('rte');
                 } elseif ($this->_majorVersion >= 412) {
@@ -528,93 +618,6 @@ class Horde_Browser
     }
 
     /**
-     * Matches the platform of the browser.
-     *
-     * This is a pretty simplistic implementation, but it's intended to let us
-     * tell what line breaks to send, so it's good enough for its purpose.
-     */
-    private function setPlatform(): void
-    {
-        if (str_contains($this->_lowerAgent, 'wind')) {
-            $this->_platform = 'win';
-        } elseif (str_contains($this->_lowerAgent, 'mac')) {
-            $this->_platform = 'mac';
-        } else {
-            $this->_platform = 'unix';
-        }
-    }
-
-    /**
-     * Returns the currently matched platform.
-     */
-    private function getPlatform(): string
-    {
-        return $this->_platform;
-    }
-
-    /**
-     * Sets the current browser.
-     *
-     * @param string $browser The browser to set as current.
-     */
-    private function setBrowser($browser): void
-    {
-        $this->_browser = $browser;
-    }
-
-    /**
-     * Determines if the given browser is the same as the current.
-     *
-     * @param string $browser The browser to check.
-     */
-    public function isBrowser($browser): bool
-    {
-        return ($this->_browser === $browser);
-    }
-
-    /**
-     * Sets unique behavior for the current browser.
-     *
-     * @param string $quirk The behavior to set. Quirks:
-     *   - avoid_popup_windows
-     *   - break_disposition_header
-     *   - break_disposition_filename
-     *   - broken_multipart_form
-     *   - buggy_compression
-     *   - cache_same_url
-     *   - cache_ssl_downloads
-     *   - double_linebreak_textarea
-     *   - empty_file_input_value
-     *   - must_cache_forms
-     *   - no_filename_spaces
-     *   - no_hidden_overflow_tables
-     *   - ow_gui_1.3
-     *   - png_transparency
-     *   - scrollbar_in_way
-     *   - scroll_tds
-     *   - windowed_controls
-     * @param bool $value Special behavior parameter.
-     */
-    private function setQuirk($quirk, $value = true): void
-    {
-        if ($value) {
-            $this->_quirks[$quirk] = $value;
-        } else {
-            unset($this->_quirks[$quirk]);
-        }
-    }
-
-    /**
-     * Checks unique behavior for the current browser.
-     *
-     * @param string $quirk The behavior to check.
-     */
-    private function hasQuirk($quirk): bool
-    {
-        return !empty($this->_quirks[$quirk]);
-    }
-
-    /**
      * Sets capabilities for the current browser.
      *
      * @param string $feature The capability to set. Features:
@@ -640,9 +643,9 @@ class Horde_Browser
      *   - utf
      *   - wml
      *   - xmlhttpreq
-     * @param bool|string|float|int $value Special capability parameter.
+     * @param float|bool|int|string $value Special capability parameter.
      */
-    public function setFeature(string $feature, $value = true): void
+    public function setFeature(string $feature, float|bool|int|string $value = true): void
     {
         if ($value) {
             $this->_features[$feature] = $value;
@@ -652,82 +655,79 @@ class Horde_Browser
     }
 
     /**
-     * Returns the headers for a browser download.
-     *
-     * @param string $filename The filename of the download.
-     * @param string $cType The content-type description of the file.
-     * @param bool $inline True if inline, false if attachment.
-     * @param string $cLength The content-length of this file.
-     *
-     * @return string[]
+     * Returns the currently matched platform.
      */
-    public function getDownloadHeaders(
-        $filename = 'unknown',
-        $cType = null,
-        $inline = false,
-        $cLength = null,
-    ): array {
-        /* Remove linebreaks (and ',', ';') from file names. */
-        $filename = str_replace(["\r\n", "\r", "\n"], ' ', $filename);
-        $filename = str_replace([",", ";"], '', $filename);
+    private function getPlatform(): string
+    {
+        return $this->_platform;
+    }
 
-        /* Some browsers don't like spaces in the filename. */
-        if ($this->hasQuirk('no_filename_spaces')) {
-            $filename = strtr($filename, ' ', '_');
-        }
+    /**
+     * Checks unique behavior for the current browser.
+     *
+     * @param string $quirk The behavior to check.
+     */
+    private function hasQuirk(string $quirk): bool
+    {
+        return !empty($this->_quirks[$quirk]);
+    }
 
-        /* MSIE doesn't like multiple periods in the file name. Convert all
-         * periods (except the last one) to underscores. */
-        if ($this->isBrowser('msie')) {
-            if (($pos = strrpos($filename, '.'))) {
-                $filename = strtr(substr($filename, 0, $pos), '.', '_') . substr($filename, $pos);
-            }
+    /**
+     * Sets the current browser.
+     *
+     * @param string $browser The browser to set as current.
+     */
+    private function setBrowser(string $browser): void
+    {
+        $this->_browser = $browser;
+    }
 
-            /* Encode the filename so IE downloads it correctly. (Bug #129) */
-            $filename = rawurlencode($filename);
-        }
-
-        $headers = [];
-
-        /* Content-Type/Content-Disposition Header. */
-        if ($inline) {
-            if ($cType !== null) {
-                $headers['Content-Type'] = trim($cType);
-            } elseif ($this->isBrowser('msie')) {
-                $headers['Content-Type'] = 'application/x-msdownload';
-            } else {
-                $headers['Content-Type'] = 'application/octet-stream';
-            }
-
-            $headers['Content-Disposition'] = 'inline; filename="' . $filename . '"';
+    /**
+     * Matches the platform of the browser.
+     *
+     * This is a pretty simplistic implementation, but it's intended to let us
+     * tell what line breaks to send, so it's good enough for its purpose.
+     */
+    private function setPlatform(): void
+    {
+        if (str_contains($this->_lowerAgent, 'wind')) {
+            $this->_platform = 'win';
+        } elseif (str_contains($this->_lowerAgent, 'mac')) {
+            $this->_platform = 'mac';
         } else {
-            if ($this->isBrowser('msie')) {
-                $headers['Content-Type'] = 'application/x-msdownload';
-            } elseif ($cType !== null) {
-                $headers['Content-Type'] = trim($cType);
-            } else {
-                $headers['Content-Type'] = 'application/octet-stream';
-            }
-
-            if ($this->hasQuirk('break_disposition_header')) {
-                $headers['Content-Disposition'] = 'filename="' . $filename . '"';
-            } else {
-                $headers['Content-Disposition'] = 'attachment; filename="' . $filename . '"';
-            }
+            $this->_platform = 'unix';
         }
+    }
 
-        /* Content-Length Header. Only send if we are not compressing output. */
-        if (!empty($cLength) && !in_array('ob_gzhandler', ob_list_handlers())) {
-            $headers['Content-Length'] = $cLength;
+    /**
+     * Sets unique behavior for the current browser.
+     *
+     * @param string $quirk The behavior to set. Quirks:
+     *   - avoid_popup_windows
+     *   - break_disposition_header
+     *   - break_disposition_filename
+     *   - broken_multipart_form
+     *   - buggy_compression
+     *   - cache_same_url
+     *   - cache_ssl_downloads
+     *   - double_linebreak_textarea
+     *   - empty_file_input_value
+     *   - must_cache_forms
+     *   - no_filename_spaces
+     *   - no_hidden_overflow_tables
+     *   - ow_gui_1.3
+     *   - png_transparency
+     *   - scrollbar_in_way
+     *   - scroll_tds
+     *   - windowed_controls
+     * @param bool $value Special behavior parameter.
+     */
+    private function setQuirk(string $quirk, bool $value = true): void
+    {
+        if ($value) {
+            $this->_quirks[$quirk] = $value;
+        } else {
+            unset($this->_quirks[$quirk]);
         }
-
-        /* Overwrite Pragma: and other caching headers for IE. */
-        if ($this->hasQuirk('cache_ssl_downloads')) {
-            $headers['Expires']       = '0';
-            $headers['Cache-Control'] = 'must-revalidate';
-            $headers['Pragma']        = 'public';
-        }
-
-        return $headers;
     }
 }

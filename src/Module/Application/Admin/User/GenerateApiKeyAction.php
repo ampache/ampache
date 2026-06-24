@@ -49,8 +49,7 @@ final class GenerateApiKeyAction extends AbstractUserAction
         private readonly ModelFactoryInterface $modelFactory,
         private readonly ConfigContainerInterface $configContainer,
         private readonly UserKeyGeneratorInterface $userKeyGenerator,
-    ) {
-    }
+    ) {}
 
     protected function handle(ServerRequestInterface $request): ?ResponseInterface
     {

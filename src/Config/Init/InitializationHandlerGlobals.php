@@ -31,9 +31,7 @@ use Ampache\Module\System\Session;
 
 final readonly class InitializationHandlerGlobals implements InitializationHandlerInterface
 {
-    public function __construct(private ConfigContainerInterface $configContainer)
-    {
-    }
+    public function __construct(private ConfigContainerInterface $configContainer) {}
 
     public function init(): void
     {

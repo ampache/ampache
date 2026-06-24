@@ -28,12 +28,67 @@ namespace Ampache\Repository;
 use Ampache\Module\Database\DatabaseConnectionInterface;
 use Ampache\Module\Database\Exception\DatabaseException;
 use Ampache\Repository\Model\Folder;
+use Ampache\Repository\Model\Podcast_Episode;
+use Ampache\Repository\Model\Song;
+use Ampache\Repository\Model\Video;
 use PDO;
 
 final readonly class FolderRepository implements FolderRepositoryInterface
 {
-    public function __construct(private DatabaseConnectionInterface $connection)
+    public function __construct(private DatabaseConnectionInterface $connection) {}
+
+    /**
+     * This cleans out unused folders
+     */
+    public function collectGarbage(): void
     {
+        try {
+            $this->connection->query('DELETE FROM `folder_map` WHERE `folder_map`.`folder_id` NOT IN (SELECT `folder`.`id` FROM `folder`);');
+            $this->connection->query("DELETE FROM `folder_map` WHERE `folder_map`.`object_type` = 'podcast_episode' AND `folder_map`.`object_id` NOT IN (SELECT `podcast_episode`.`id` FROM `podcast_episode`);");
+            $this->connection->query("DELETE FROM `folder_map` WHERE `folder_map`.`object_type` = 'song' AND `folder_map`.`object_id` NOT IN (SELECT `song`.`id` FROM `song`);");
+            $this->connection->query("DELETE FROM `folder_map` WHERE `folder_map`.`object_type` = 'video' AND `folder_map`.`object_id` NOT IN (SELECT `video`.`id` FROM `video`);");
+            $this->connection->query("DELETE FROM `folder_map` WHERE `folder_map`.`object_type` = 'folder' AND `folder_map`.`object_id` NOT IN (SELECT `folder`.`id` FROM `folder`);");
+            $this->connection->query('DELETE FROM `folder` WHERE `folder`.`catalog` NOT IN (SELECT `catalog`.`id` FROM `catalog`);');
+            $this->connection->query('DELETE FROM `folder` WHERE `id` NOT IN (SELECT `folder_id` FROM `folder_map`) AND `parent` IS NOT NULL AND `user` IS NULL;');
+            $this->update_folder_counts();
+        } catch (DatabaseException) {
+            debug_event(self::class, 'collectGarbage error', 5);
+        }
+    }
+
+    public function create(string $folderName, int $catalogId, string $folderPath = '', ?int $parent_id = null): ?Folder
+    {
+        //debug_event(self::class, 'CREATE ' . $folderName . ' ' . $folderPath . ' ' . $parent_id, 5);
+        $folderId = Folder::create([
+            'name' => $folderName,
+            'catalog' => $catalogId,
+            'path_name' => $folderPath,
+            'parent' => $parent_id,
+        ]);
+
+        return ($folderId)
+            ? new Folder($folderId)
+            : null;
+    }
+
+    public function delete(int $folderId): void
+    {
+        $folder = new Folder($folderId);
+        if ($folder->isNew() || $folder->object_count > 0) {
+            return;
+        }
+
+        if (!$folder->path_name || !file_exists($folder->path_name) || rmdir($folder->path_name)) {
+            $this->connection->query(
+                'DELETE FROM `folder` WHERE `id` = ?;',
+                [$folderId]
+            );
+            $this->connection->query(
+                "DELETE FROM `folder_map` WHERE `folder_id` = ? OR (`object_id` = ? AND `object_type` = 'folder');",
+                [$folderId, $folderId]
+            );
+            $this->connection->query('UPDATE `folder` SET `object_count` = (SELECT COUNT(*) FROM `folder_map` AS `map_count` WHERE `map_count`.`folder_id` = `folder`.`id`);');
+        }
     }
 
     public function findById(?int $folderId = null): ?Folder
@@ -48,38 +103,6 @@ final readonly class FolderRepository implements FolderRepositoryInterface
         }
 
         return $folder;
-    }
-
-    public function getByName(string $folderName, int $catalogId = 0, ?int $parent = null): ?Folder
-    {
-        $sql = 'SELECT `folder`.`id` FROM `folder` WHERE `folder`.`name` = ? AND `folder`.`catalog` = ? AND `folder`.`parent` = ? LIMIT 1;';
-        //debug_event(self::class, 'getByName ' . sprintf('SQL %s', $sql) . print_r([$folderName, $catalogId, $parent], true), 5);
-
-        $rowId = $this->connection->fetchOne($sql, [$folderName, $catalogId, $parent]);
-
-        if ($rowId === false) {
-            return null;
-        }
-
-        return new Folder((int)$rowId);
-    }
-
-    public function getByPathName(string $folderPath, int $catalogId = 0, ?string $parentPath = null): ?Folder
-    {
-        $sql = ($parentPath)
-            ? 'SELECT `folder`.`id` FROM `folder` WHERE `folder`.`path_name` = ? AND `folder`.`catalog` = ? AND `folder`.`parent` = (SELECT `id` FROM `folder` WHERE `path_name` = ?);'
-            : 'SELECT `folder`.`id` FROM `folder` WHERE `folder`.`path_name` = ? AND `folder`.`catalog` = ? AND `folder`.`parent` IS NULL;';
-        $params = ($parentPath)
-            ? [$folderPath, $catalogId, $parentPath]
-            : [$folderPath, $catalogId];
-        //debug_event(self::class, 'getByPathName ' . sprintf('SQL %s', $sql) . print_r($params, true), 5);
-
-        $rowId = $this->connection->fetchOne($sql, $params);
-        if ($rowId === false) {
-            return null;
-        }
-
-        return new Folder((int)$rowId);
     }
 
     /**
@@ -100,7 +123,71 @@ final readonly class FolderRepository implements FolderRepositoryInterface
         return $folders;
     }
 
-    public function lookup(string $folderName = '', int $catalogId = 0, ?int $parent = null): int
+    public function getByName(string $folderName, ?int $catalogId = null, ?int $parent = null): Folder|Podcast_Episode|Song|Video|null
+    {
+        $sql    = 'SELECT `folder_map`.`object_id`, `folder_map`.`object_type` FROM `folder_map` WHERE `folder_map`.`name` = ?';
+        $params = [$folderName];
+        if (($catalogId)) {
+            $sql .= 'AND `folder_map`.`catalog` = ? ';
+            $params[] = $catalogId;
+        }
+
+        if ($parent) {
+            $sql .= 'AND `folder_map`.`folder_id` = ? ';
+            $params[] = $parent;
+        }
+
+        if ($parent === null) {
+            $sql .= 'AND `folder_map`.`folder_id` IS NULL ';
+        }
+
+        //debug_event(self::class, 'getByName ' . sprintf('SQL %s', $sql) . print_r([$folderName, $catalogId, $parent], true), 5);
+
+        $result = $this->connection->query($sql . 'LIMIT 1;', $params);
+
+        if ($row = $result->fetch(PDO::FETCH_ASSOC)) {
+            switch ($row['object_type']) {
+                case 'folder':
+                    return new Folder($row['object_id']);
+                case 'song':
+                    return new Song($row['object_id']);
+                case 'video':
+                    return new Video($row['object_id']);
+                case 'podcast_episode':
+                    return new Podcast_Episode($row['object_id']);
+            }
+        }
+
+        return null;
+    }
+
+    public function getByPathName(string $folderPath, int $catalogId = 0, ?string $parentPath = null): ?Folder
+    {
+        $sql    = 'SELECT `folder`.`id` FROM `folder` WHERE `folder`.`path_name` = ? ';
+        $params = [$folderPath];
+        if (($catalogId !== 0)) {
+            $sql .= 'AND `folder`.`catalog` = ? ';
+            $params[] = $catalogId;
+        }
+
+        if ($parentPath) {
+            $sql .= 'AND `folder`.`parent` = (SELECT `id` FROM `folder` WHERE `path_name` = ?);';
+            $params[] = $parentPath;
+        } else {
+            $sql .= 'AND `folder`.`parent` IS NULL;';
+        }
+
+        //debug_event(self::class, 'getByPathName ' . sprintf('SQL %s', $sql) . print_r($params, true), 5);
+
+        $rowId = $this->connection->fetchOne($sql, $params);
+        if ($rowId === false) {
+            return null;
+        }
+
+        return new Folder((int) $rowId);
+    }
+
+    public function lookup(string $folderName = '', int $catalogId = 0, ?int $parent_id = null): int
     {
         $ret  = -1;
         $name = trim($folderName);
@@ -109,10 +196,11 @@ final readonly class FolderRepository implements FolderRepositoryInterface
             $ret    = 0;
             $sql    = 'SELECT `id` FROM `folder` WHERE `name` = ? AND `catalog` = ?';
             $params = [$name, $catalogId];
-            if ($parent) {
+            if ($parent_id) {
                 $sql .= ' AND `parent` = ?';
-                $params[] = $parent;
+                $params[] = $parent_id;
             }
+
             //debug_event(self::class, 'lookup' . sprintf('SQL %s', $sql) . print_r($params, true), 5);
 
             $result = $this->connection->fetchOne($sql, $params);
@@ -125,7 +213,7 @@ final readonly class FolderRepository implements FolderRepositoryInterface
         return $ret;
     }
 
-    public function lookupByPathName(string $folderPath = '', int $catalogId = 0, ?int $parent = null): int
+    public function lookupByPathName(string $folderPath = '', int $catalogId = 0): int
     {
         $ret  = -1;
         $name = trim($folderPath);
@@ -134,10 +222,6 @@ final readonly class FolderRepository implements FolderRepositoryInterface
             $ret    = 0;
             $sql    = 'SELECT `id` FROM `folder` WHERE `path_name` = ? AND `catalog` = ?';
             $params = [$name, $catalogId];
-            if ($parent) {
-                $sql .= ' AND `parent` = ?';
-                $params[] = $parent;
-            }
             //debug_event(self::class, 'lookupByPathName ' . sprintf('SQL %s', $sql) . print_r($params, true), 5);
 
             $result = $this->connection->fetchOne($sql, $params);
@@ -150,68 +234,48 @@ final readonly class FolderRepository implements FolderRepositoryInterface
         return $ret;
     }
 
-    public function create(string $folderName, int $catalogId, string $folderPath = '', ?int $parent = null): ?Folder
+    /**
+     * Update folder counts columns after large actions
+     */
+    public function update_folder_counts(): void
     {
-        // don't allow duplicate podcasts
-        $folderId = $this->lookup($folderPath, $catalogId);
-        if (!$folderId) {
-            $folderId = Folder::create([
-                'name' => $folderName,
-                'catalog' => $catalogId,
-                'path_name' => $folderPath,
-                'parent' => $parent,
-            ]);
-        }
-
-        return ($folderId)
-            ? new Folder($folderId)
-            : null;
-    }
-
-    public function create_map(int $object_id, string $object_type, int $folderId): void
-    {
-        $this->connection->query(
-            "INSERT IGNORE INTO `folder_map` (`folder_id`, `object_type`, `object_id`) VALUES (?, ?, ?);",
-            [$folderId, $object_type, $object_id]
-        );
-    }
-
-    public function delete(int $folderId): void
-    {
-        $this->connection->query(
-            'DELETE FROM `folder` WHERE `id` = ?',
-            [$folderId]
-        );
+        $this->connection->query('UPDATE `folder` SET `object_count` = (SELECT COUNT(*) FROM `folder_map` AS `map_count` WHERE `map_count`.`folder_id` = `folder`.`id`);');
+        $this->connection->query("UPDATE `folder` SET `total_count` = (SELECT IFNULL(SUM(`song`.`total_count`), 0) FROM `folder_map` AS `map_count` LEFT JOIN `song` ON `object_type` = 'song' AND `object_id` = `song`.`id` WHERE `map_count`.`folder_id` = `folder`.`id`);");
+        $this->connection->query("UPDATE `folder` SET `total_skip` = (SELECT IFNULL(SUM(`song`.`total_skip`), 0) FROM `folder_map` AS `map_count` LEFT JOIN `song` ON `object_type` = 'song' AND `object_id` = `song`.`id` WHERE `map_count`.`folder_id` = `folder`.`id`);");
+        $this->connection->query("UPDATE `folder` SET `total_count` = (SELECT IFNULL(SUM(`video`.`total_count`), 0) FROM `folder_map` AS `map_count` LEFT JOIN `video` ON `object_type` = 'video' AND `object_id` = `video`.`id` WHERE `map_count`.`folder_id` = `folder`.`id`);");
+        $this->connection->query("UPDATE `folder` SET `total_skip` = (SELECT IFNULL(SUM(`video`.`total_skip`), 0) FROM `folder_map` AS `map_count` LEFT JOIN `video` ON `object_type` = 'video' AND `object_id` = `video`.`id` WHERE `map_count`.`folder_id` = `folder`.`id`);");
+        $this->connection->query("UPDATE `folder` SET `total_count` = (SELECT IFNULL(SUM(`podcast_episode`.`total_count`), 0) FROM `folder_map` AS `map_count` LEFT JOIN `podcast_episode` ON `object_type` = 'podcast_episode' AND `object_id` = `podcast_episode`.`id` WHERE `map_count`.`folder_id` = `folder`.`id`);");
+        $this->connection->query("UPDATE `folder` SET `total_skip` = (SELECT IFNULL(SUM(`podcast_episode`.`total_skip`), 0) FROM `folder_map` AS `map_count` LEFT JOIN `podcast_episode` ON `object_type` = 'podcast_episode' AND `object_id` = `podcast_episode`.`id` WHERE `map_count`.`folder_id` = `folder`.`id`);");
+        $this->connection->query("UPDATE `folder` SET `playable` = 1 WHERE `playable` = 0 AND `id` IN (SELECT `folder_id` FROM `folder_map` WHERE `object_type` != 'folder');");
+        $this->connection->query("UPDATE `folder` SET `playable` = 0 WHERE `playable` = 1 AND `id` NOT IN (SELECT `folder_id` FROM `folder_map` WHERE `object_type` != 'folder');");
     }
 
     /**
-     * Create a link to media in the folder_map table
+     * Update mapping table after large actions
      */
-    public function add_folder_map(int $object_id, string $object_type, string $dir_path, int $catalog_id): void
+    public function update_folder_map(): void
     {
-        $folderId = $this->lookupByPathName($dir_path, $catalog_id);
-        if ($folderId) {
-            $this->create_map($object_id, $object_type, $folderId);
-        }
+        // folder
+        $this->connection->query("INSERT INTO `folder_map` (`object_id`, `folder_id`, `object_type`, `name`, `catalog`, `path_name`) SELECT `id` AS `object_id`, `parent` AS `folder_id`, 'folder' AS `object_type`, `name`, `catalog`, `path_name` FROM `folder` WHERE `id` NOT IN (SELECT `object_id` FROM `folder_map` WHERE `object_type` = 'folder');");
+        // song
+        $this->connection->query('INSERT INTO `folder_map` (`folder_id`, `object_id`, `object_type`, `name`, `catalog`, `path_name`) SELECT `folder`.`id` AS `folder_id`, `source`.`object_id`, \'song\' AS `object_type`, `source`.`filename` AS `name`, `source`.`catalog`, `source`.`dir` AS `path_name` FROM (SELECT `song`.`id` AS `object_id`, `song`.`title` AS `name`, `song`.`catalog`, `song`.`file`, SUBSTRING_INDEX(`song`.`file`, \'/\', -1) AS `filename`, REGEXP_REPLACE(`song`.`file`, \'/[^/]+$\', \'\') AS `dir` FROM `song` ) `source` LEFT JOIN `folder` ON `folder`.`path_name` = `source`.`dir` AND `folder`.`catalog` = `source`.`catalog` LEFT JOIN `folder_map` ON `folder_map`.`object_id` = `source`.`object_id` AND `folder_map`.`object_type` = \'song\' WHERE `folder`.`id` IS NOT NULL AND folder_map.object_id IS NULL;');
+        // video
+        $this->connection->query('INSERT INTO `folder_map` (`folder_id`, `object_id`, `object_type`, `name`, `catalog`, `path_name`) SELECT `folder`.`id` AS `folder_id`, `source`.`object_id`, \'video\' AS `object_type`, `source`.`filename` AS `name`, `source`.`catalog`, `source`.`dir` AS `path_name` FROM (SELECT `video`.`id` AS `object_id`, `video`.`title` AS `name`, `video`.`catalog`, `video`.`file`, SUBSTRING_INDEX(`video`.`file`, \'/\', -1) AS `filename`, REGEXP_REPLACE(`video`.`file`, \'/[^/]+$\', \'\') AS `dir` FROM `video` ) `source` LEFT JOIN `folder` ON `folder`.`path_name` = `source`.`dir` AND `folder`.`catalog` = `source`.`catalog` LEFT JOIN `folder_map` ON `folder_map`.`object_id` = `source`.`object_id` AND `folder_map`.`object_type` = \'video\' WHERE `folder`.`id` IS NOT NULL AND folder_map.object_id IS NULL;');
+        // podcast_episode
+        $this->connection->query('INSERT INTO `folder_map` (`folder_id`, `object_id`, `object_type`, `name`, `catalog`, `path_name`) SELECT `folder`.`id` AS `folder_id`, `source`.`object_id`, \'podcast_episode\' AS `object_type`, `source`.`filename` AS `name`, `source`.`catalog`, `source`.`dir` AS `path_name` FROM (SELECT `podcast_episode`.`id` AS `object_id`, `podcast_episode`.`title` AS `name`, `podcast_episode`.`catalog`, `podcast_episode`.`file`, SUBSTRING_INDEX(`podcast_episode`.`file`, \'/\', -1) AS `filename`, REGEXP_REPLACE(`podcast_episode`.`file`, \'/[^/]+$\', \'\') AS `dir` FROM `podcast_episode` ) `source` LEFT JOIN `folder` ON `folder`.`path_name` = `source`.`dir` AND `folder`.`catalog` = `source`.`catalog` LEFT JOIN `folder_map` ON `folder_map`.`object_id` = `source`.`object_id` AND `folder_map`.`object_type` = \'podcast_episode\' WHERE `folder`.`id` IS NOT NULL AND folder_map.object_id IS NULL;');
     }
 
     /**
-     * This cleans out unused folders
+     * update_utime
+     * sets a new update time
      */
-    public function collectGarbage(): void
+    public function update_utime(int $folder_id, int $time = 0): void
     {
-        try {
-            $this->connection->query('DELETE FROM `folder_map` WHERE `folder_map`.`object_type` = \'album\' AND `folder_map`.`object_id` NOT IN (SELECT `album`.`id` FROM `album`);');
-            $this->connection->query('DELETE FROM `folder_map` WHERE `folder_map`.`object_type` = \'artist\' AND `folder_map`.`object_id` NOT IN (SELECT `artist`.`id` FROM `artist`);');
-            $this->connection->query('DELETE FROM `folder_map` WHERE `folder_map`.`object_type` = \'podcast\' AND `folder_map`.`object_id` NOT IN (SELECT `podcast`.`id` FROM `podcast`);');
-            $this->connection->query('DELETE FROM `folder_map` WHERE `folder_map`.`object_type` = \'podcast_episode\' AND `folder_map`.`object_id` NOT IN (SELECT `podcast_episode`.`id` FROM `podcast_episode`);');
-            $this->connection->query('DELETE FROM `folder_map` WHERE `folder_map`.`object_type` = \'song\' AND `folder_map`.`object_id` NOT IN (SELECT `song`.`id` FROM `song`);');
-            $this->connection->query('DELETE FROM `folder_map` WHERE `folder_map`.`object_type` = \'folder\' AND `folder_map`.`object_id` NOT IN (SELECT `folder`.`id` FROM `folder`);');
-            $this->connection->query('DELETE FROM `folder` WHERE `folder`.`catalog` NOT IN (SELECT `catalog`.`id` FROM `catalog`);');
-            $this->connection->query('DELETE FROM `folder` WHERE `id` NOT IN (SELECT `folder_id` FROM `folder_map`) AND `parent` IS NOT NULL AND `user` IS NULL;');
-            $this->connection->query('UPDATE `folder` SET `object_count` = (SELECT COUNT(*) FROM `folder_map` AS `map_count` WHERE `map_count`.`folder_id` = `folder`.`id`);');
-        } catch (DatabaseException) {
-            debug_event(self::class, 'collectGarbage error', 5);
+        if ($time === 0) {
+            $time = time();
         }
+
+        $sql = "UPDATE `folder` SET `update_time` = ? WHERE `id` = ?;";
+        $this->connection->query($sql, [$time, $folder_id]);
     }
 }

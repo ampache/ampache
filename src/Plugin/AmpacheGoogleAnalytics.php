@@ -33,25 +33,25 @@ use Override;
 class AmpacheGoogleAnalytics extends AmpachePlugin implements PluginDisplayOnFooterInterface
 {
     #[Override]
-    public string $name = 'GoogleAnalytics';
-
-    #[Override]
     public string $categories = 'stats';
 
     #[Override]
     public string $description = 'Google Analytics statistics';
 
     #[Override]
-    public string $url = '';
-
-    #[Override]
-    public string $version = '000001';
+    public string $max_ampache = '999999';
 
     #[Override]
     public string $min_ampache = '370034';
 
     #[Override]
-    public string $max_ampache = '999999';
+    public string $name = 'GoogleAnalytics';
+
+    #[Override]
+    public string $url = '';
+
+    #[Override]
+    public string $version = '000001';
 
     private $tracking_id;
 
@@ -61,33 +61,6 @@ class AmpacheGoogleAnalytics extends AmpachePlugin implements PluginDisplayOnFoo
     public function __construct()
     {
         $this->description = T_('Google Analytics statistics');
-    }
-
-    /**
-     * install
-     * Inserts plugin preferences into Ampache
-     */
-    public function install(): bool
-    {
-        return Preference::insert('googleanalytics_tracking_id', T_('Google Analytics Tracking ID'), '', AccessLevelEnum::ADMIN->value, 'string', 'plugins', $this->name);
-    }
-
-    /**
-     * uninstall
-     * Removes our preferences from the database returning it to its original form
-     */
-    public function uninstall(): bool
-    {
-        return Preference::delete('googleanalytics_tracking_id');
-    }
-
-    /**
-     * upgrade
-     * This is a recommended plugin function
-     */
-    public function upgrade(): bool
-    {
-        return true;
     }
 
     /**
@@ -105,6 +78,15 @@ class AmpacheGoogleAnalytics extends AmpachePlugin implements PluginDisplayOnFoo
         echo "ga('create', '" . scrub_out($this->tracking_id) . "', 'auto');\n";
         echo "ga('send', 'pageview');\n";
         echo "</script>\n";
+    }
+
+    /**
+     * install
+     * Inserts plugin preferences into Ampache
+     */
+    public function install(): bool
+    {
+        return Preference::insert('googleanalytics_tracking_id', T_('Google Analytics Tracking ID'), '', AccessLevelEnum::ADMIN->value, 'string', 'plugins', $this->name);
     }
 
     /**
@@ -128,6 +110,24 @@ class AmpacheGoogleAnalytics extends AmpachePlugin implements PluginDisplayOnFoo
             return false;
         }
 
+        return true;
+    }
+
+    /**
+     * uninstall
+     * Removes our preferences from the database returning it to its original form
+     */
+    public function uninstall(): bool
+    {
+        return Preference::delete('googleanalytics_tracking_id');
+    }
+
+    /**
+     * upgrade
+     * This is a recommended plugin function
+     */
+    public function upgrade(): bool
+    {
         return true;
     }
 }

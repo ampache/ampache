@@ -37,9 +37,7 @@ use SimpleXMLElement;
  */
 final readonly class FeedLoader implements FeedLoaderInterface
 {
-    public function __construct(private WebFetcherInterface $webFetcher)
-    {
-    }
+    public function __construct(private WebFetcherInterface $webFetcher) {}
 
     /**
      * Load the podcast content by its feed-url
@@ -81,22 +79,22 @@ final readonly class FeedLoader implements FeedLoaderInterface
             throw new FeedLoadingException();
         }
 
-        $lastbuilddatestr = (string)$xml->channel->lastBuildDate;
+        $lastbuilddatestr = (string) $xml->channel->lastBuildDate;
         if ($lastbuilddatestr !== '') {
             $lastBuildDate = new DateTime($lastbuilddatestr);
         }
 
         if ($xml->channel->image) {
-            $artUrl = (string)$xml->channel->image->url;
+            $artUrl = (string) $xml->channel->image->url;
         }
 
         return [
-            'title' => html_entity_decode((string)$xml->channel->title),
-            'website' => (string)$xml->channel->link,
-            'description' => html_entity_decode((string)$xml->channel->description),
-            'language' => (string)$xml->channel->language,
-            'copyright' => html_entity_decode((string)$xml->channel->copyright),
-            'generator' => html_entity_decode((string)$xml->channel->generator),
+            'title' => html_entity_decode((string) $xml->channel->title),
+            'website' => (string) $xml->channel->link,
+            'description' => html_entity_decode((string) $xml->channel->description),
+            'language' => (string) $xml->channel->language,
+            'copyright' => html_entity_decode((string) $xml->channel->copyright),
+            'generator' => html_entity_decode((string) $xml->channel->generator),
             'episodes' => $xml->channel->item,
             'artUrl' => $artUrl,
             'lastBuildDate' => $lastBuildDate,

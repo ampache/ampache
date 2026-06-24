@@ -46,158 +46,15 @@ use Psr\Http\Message\StreamInterface;
 
 class PodcastDelete8MethodTest extends TestCase
 {
-    private PodcastDeleterInterface&MockObject $podcastDeleter;
-
     private ConfigContainerInterface&MockObject $configContainer;
-
-    private PrivilegeCheckerInterface $privilegeChecker;
-
-    private PodcastRepositoryInterface&MockObject $podcastRepository;
-
-    private PodcastDelete8Method $subject;
-
     private GatekeeperInterface&MockObject $gatekeeper;
-
-    private ResponseInterface&MockObject $response;
-
     private ApiOutputInterface&MockObject $output;
-
+    private PodcastDeleterInterface&MockObject $podcastDeleter;
+    private PodcastRepositoryInterface&MockObject $podcastRepository;
+    private PrivilegeCheckerInterface $privilegeChecker;
+    private ResponseInterface&MockObject $response;
+    private PodcastDelete8Method $subject;
     private User&MockObject $user;
-
-    protected function setUp(): void
-    {
-        $this->podcastDeleter    = $this->createMock(PodcastDeleterInterface::class);
-        $this->configContainer   = $this->createMock(ConfigContainerInterface::class);
-        $this->privilegeChecker  = $this->createMock(PrivilegeCheckerInterface::class);
-        $this->podcastRepository = $this->createMock(PodcastRepositoryInterface::class);
-
-        $this->subject = new PodcastDelete8Method(
-            $this->podcastDeleter,
-            $this->configContainer,
-            $this->privilegeChecker,
-            $this->podcastRepository,
-        );
-
-        $this->gatekeeper = $this->createMock(GatekeeperInterface::class);
-        $this->response   = $this->createMock(ResponseInterface::class);
-        $this->output     = $this->createMock(ApiOutputInterface::class);
-        $this->user       = $this->createMock(User::class);
-    }
-
-    public function testHandleThrowsIfPodcastsNotEnabled(): void
-    {
-        static::expectException(AccessDeniedException::class);
-        static::expectExceptionMessage('Enable: podcast');
-
-        $this->configContainer->expects(static::once())
-            ->method('get')
-            ->with(ConfigurationKeyEnum::PODCAST)
-            ->willReturn('');
-
-        $this->subject->handle(
-            $this->gatekeeper,
-            $this->response,
-            $this->output,
-            [],
-            $this->user
-        );
-    }
-
-    public function testHandleThrowsIfAccessIsDenied(): void
-    {
-        static::expectException(AccessDeniedException::class);
-        static::expectExceptionMessage('Access denied');
-
-        $userId = 666;
-
-        $this->configContainer->expects(static::once())
-            ->method('get')
-            ->with(ConfigurationKeyEnum::PODCAST)
-            ->willReturn('1');
-
-        $this->user->expects(static::once())
-            ->method('getId')
-            ->willReturn($userId);
-
-        $this->privilegeChecker->expects(static::once())
-            ->method('check')
-            ->with(AccessTypeEnum::INTERFACE, AccessLevelEnum::MANAGER, $userId)
-            ->willReturn(false);
-
-        $this->subject->handle(
-            $this->gatekeeper,
-            $this->response,
-            $this->output,
-            [],
-            $this->user
-        );
-    }
-
-    public function testHandleThrowsIfFilterIsMissing(): void
-    {
-        static::expectException(RequestParamMissingException::class);
-        static::expectExceptionMessage(sprintf(T_('Bad Request: %s'), 'filter'));
-
-        $userId = 666;
-
-        $this->configContainer->expects(static::once())
-            ->method('get')
-            ->with(ConfigurationKeyEnum::PODCAST)
-            ->willReturn('1');
-
-        $this->user->expects(static::once())
-            ->method('getId')
-            ->willReturn($userId);
-
-        $this->privilegeChecker->expects(static::once())
-            ->method('check')
-            ->with(AccessTypeEnum::INTERFACE, AccessLevelEnum::MANAGER, $userId)
-            ->willReturn(true);
-
-        $this->subject->handle(
-            $this->gatekeeper,
-            $this->response,
-            $this->output,
-            [],
-            $this->user
-        );
-    }
-
-    public function testHandleThrowsIfPodcastWasNotFound(): void
-    {
-        $userId    = 666;
-        $podcastId = 42;
-
-        static::expectException(ResultEmptyException::class);
-        static::expectExceptionMessage((string) $podcastId);
-
-        $this->configContainer->expects(static::once())
-            ->method('get')
-            ->with(ConfigurationKeyEnum::PODCAST)
-            ->willReturn('1');
-
-        $this->user->expects(static::once())
-            ->method('getId')
-            ->willReturn($userId);
-
-        $this->podcastRepository->expects(static::once())
-            ->method('findById')
-            ->with($podcastId)
-            ->willReturn(null);
-
-        $this->privilegeChecker->expects(static::once())
-            ->method('check')
-            ->with(AccessTypeEnum::INTERFACE, AccessLevelEnum::MANAGER, $userId)
-            ->willReturn(true);
-
-        $this->subject->handle(
-            $this->gatekeeper,
-            $this->response,
-            $this->output,
-            ['filter' => (string) $podcastId],
-            $this->user
-        );
-    }
 
     public function testHandleDeletes(): void
     {
@@ -244,6 +101,7 @@ class PodcastDelete8MethodTest extends TestCase
             ->with(sprintf('podcast %d deleted', $podcastId))
             ->willReturn($result);
 
+        /** @noinspection PhpMissingArrayKeyInspection */
         self::assertSame(
             $this->response,
             $this->subject->handle(
@@ -254,5 +112,144 @@ class PodcastDelete8MethodTest extends TestCase
                 $this->user
             )
         );
+    }
+
+    public function testHandleThrowsIfAccessIsDenied(): void
+    {
+        static::expectException(AccessDeniedException::class);
+        static::expectExceptionMessage('Access denied');
+
+        $userId = 666;
+
+        $this->configContainer->expects(static::once())
+            ->method('get')
+            ->with(ConfigurationKeyEnum::PODCAST)
+            ->willReturn('1');
+
+        $this->user->expects(static::once())
+            ->method('getId')
+            ->willReturn($userId);
+
+        $this->privilegeChecker->expects(static::once())
+            ->method('check')
+            ->with(AccessTypeEnum::INTERFACE, AccessLevelEnum::MANAGER, $userId)
+            ->willReturn(false);
+
+        /** @noinspection PhpMissingArrayKeyInspection */
+        $this->subject->handle(
+            $this->gatekeeper,
+            $this->response,
+            $this->output,
+            [],
+            $this->user
+        );
+    }
+
+    public function testHandleThrowsIfFilterIsMissing(): void
+    {
+        static::expectException(RequestParamMissingException::class);
+        static::expectExceptionMessage(sprintf(T_('Bad Request: %s'), 'filter'));
+
+        $userId = 666;
+
+        $this->configContainer->expects(static::once())
+            ->method('get')
+            ->with(ConfigurationKeyEnum::PODCAST)
+            ->willReturn('1');
+
+        $this->user->expects(static::once())
+            ->method('getId')
+            ->willReturn($userId);
+
+        $this->privilegeChecker->expects(static::once())
+            ->method('check')
+            ->with(AccessTypeEnum::INTERFACE, AccessLevelEnum::MANAGER, $userId)
+            ->willReturn(true);
+
+        /** @noinspection PhpMissingArrayKeyInspection */
+        $this->subject->handle(
+            $this->gatekeeper,
+            $this->response,
+            $this->output,
+            [],
+            $this->user
+        );
+    }
+
+    public function testHandleThrowsIfPodcastsNotEnabled(): void
+    {
+        static::expectException(AccessDeniedException::class);
+        static::expectExceptionMessage('Enable: podcast');
+
+        $this->configContainer->expects(static::once())
+            ->method('get')
+            ->with(ConfigurationKeyEnum::PODCAST)
+            ->willReturn('');
+
+        /** @noinspection PhpMissingArrayKeyInspection */
+        $this->subject->handle(
+            $this->gatekeeper,
+            $this->response,
+            $this->output,
+            [],
+            $this->user
+        );
+    }
+
+    public function testHandleThrowsIfPodcastWasNotFound(): void
+    {
+        $userId    = 666;
+        $podcastId = 42;
+
+        static::expectException(ResultEmptyException::class);
+        static::expectExceptionMessage((string) $podcastId);
+
+        $this->configContainer->expects(static::once())
+            ->method('get')
+            ->with(ConfigurationKeyEnum::PODCAST)
+            ->willReturn('1');
+
+        $this->user->expects(static::once())
+            ->method('getId')
+            ->willReturn($userId);
+
+        $this->podcastRepository->expects(static::once())
+            ->method('findById')
+            ->with($podcastId)
+            ->willReturn(null);
+
+        $this->privilegeChecker->expects(static::once())
+            ->method('check')
+            ->with(AccessTypeEnum::INTERFACE, AccessLevelEnum::MANAGER, $userId)
+            ->willReturn(true);
+
+        /** @noinspection PhpMissingArrayKeyInspection */
+        $this->subject->handle(
+            $this->gatekeeper,
+            $this->response,
+            $this->output,
+            ['filter' => (string) $podcastId],
+            $this->user
+        );
+    }
+
+    protected function setUp(): void
+    {
+        $this->podcastDeleter    = $this->createMock(PodcastDeleterInterface::class);
+        $this->configContainer   = $this->createMock(ConfigContainerInterface::class);
+        $this->privilegeChecker  = $this->createMock(PrivilegeCheckerInterface::class);
+        $this->podcastRepository = $this->createMock(PodcastRepositoryInterface::class);
+
+        $this->subject = new PodcastDelete8Method(
+            $this->podcastDeleter,
+            $this->configContainer,
+            $this->privilegeChecker,
+            $this->podcastRepository,
+        );
+
+        $this->gatekeeper = $this->createMock(GatekeeperInterface::class);
+        $this->response   = $this->createMock(ResponseInterface::class);
+        $this->output     = $this->createMock(ApiOutputInterface::class);
+        $this->user       = $this->createMock(User::class);
     }
 }

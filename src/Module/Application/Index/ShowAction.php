@@ -44,8 +44,7 @@ final readonly class ShowAction implements ApplicationActionInterface
         private RequestParserInterface $requestParser,
         private UiInterface $ui,
         private ConfigContainerInterface $configContainer,
-    ) {
-    }
+    ) {}
 
     public function run(ServerRequestInterface $request, GuiGatekeeperInterface $gatekeeper): ?ResponseInterface
     {
@@ -59,7 +58,7 @@ final readonly class ShowAction implements ApplicationActionInterface
 
         $_SESSION['catalog'] = 0;
 
-        $refreshLimit = (int)$this->configContainer->get(ConfigurationKeyEnum::REFRESH_LIMIT);
+        $refreshLimit = (int) $this->configContainer->get(ConfigurationKeyEnum::REFRESH_LIMIT);
 
         /**
          * Check for the refresh mojo, if it's there then require the
@@ -67,8 +66,8 @@ final readonly class ShowAction implements ApplicationActionInterface
          * going to let them break their servers
          */
         if (
-            $refreshLimit > 5 &&
-            $this->configContainer->isFeatureEnabled(ConfigurationKeyEnum::HOME_NOW_PLAYING)
+            $refreshLimit > 5
+            && $this->configContainer->isFeatureEnabled(ConfigurationKeyEnum::HOME_NOW_PLAYING)
         ) {
             $refresh_limit = $refreshLimit;
             $ajax_url      = '?page=index&action=refresh_index';

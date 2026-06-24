@@ -43,8 +43,7 @@ final class ShowPreferencesAction extends AbstractUserAction
         private readonly UiInterface $ui,
         private readonly ModelFactoryInterface $modelFactory,
         private readonly PreferenceRepositoryInterface $preferenceRepository,
-    ) {
-    }
+    ) {}
 
     protected function handle(ServerRequestInterface $request): ?ResponseInterface
     {

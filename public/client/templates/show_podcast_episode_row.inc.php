@@ -23,6 +23,8 @@ declare(strict_types=0);
  *
  */
 
+// show_podcast_episode_row.inc.php
+
 use Ampache\Config\AmpConfig;
 use Ampache\Module\Api\Ajax;
 use Ampache\Module\Authorization\Access;
@@ -63,7 +65,7 @@ $web_path = AmpConfig::get_web_path('/client'); ?>
 </td>
 <?php
 if ($is_mashup) {
-    $name = scrub_out((string)$libitem->get_fullname()); ?>
+    $name = scrub_out((string) $libitem->get_fullname()); ?>
     <td class="<?php echo $cel_cover; ?>">
         <?php $size = ($browse->is_grid_view())
             ? ['width' => 150, 'height' => 150]

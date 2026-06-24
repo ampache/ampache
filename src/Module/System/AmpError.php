@@ -33,20 +33,10 @@ namespace Ampache\Module\System;
  */
 class AmpError
 {
-    private static $state = false; // set to one when an error occurs
+    /** @var array<string, string> $errors  */
+    public static array $errors = []; // Errors array key'd array with errors that have occurred
 
-    public static $errors = []; // Errors array key'd array with errors that have occurred
-
-    /**
-     * __destruct
-     * This saves all of the errors that are left into the session
-     */
-    public function __destruct()
-    {
-        foreach (self::$errors as $key => $error) {
-            $_SESSION['errors'][$key] = $error;
-        }
-    }
+    private static bool $state = false; // set to one when an error occurs
 
     /**
      * add
@@ -60,7 +50,7 @@ class AmpError
             self::$errors[$name]       = $message;
             self::$state               = true;
             $_SESSION['errors'][$name] = $message;
-        } elseif ($clobber) {
+        } elseif ($clobber !== 0) {
             // They want us to clobber it
             self::$state               = true;
             self::$errors[$name]       = $message;
@@ -81,35 +71,11 @@ class AmpError
     }
 
     /**
-     * occurred
-     * This returns true / false if an error has occurred anywhere
-     */
-    public static function occurred(): bool
-    {
-        return self::$state == '1';
-    }
-
-    /**
-     * get
-     * This returns an error by name
-     * @param string $name
-     */
-    public static function get($name): string
-    {
-        if (!isset(self::$errors[$name])) {
-            return '';
-        }
-
-        return self::$errors[$name];
-    }
-
-    /**
      * display
      * This prints the error out with a standard Error class span
      * Ben Goska: Renamed from print to display, print is reserved
-     * @param string $name
      */
-    public static function display($name): string
+    public static function display(string $name): string
     {
         // Be smart about this, if no error don't print
         if (isset(self::$errors[$name])) {
@@ -119,6 +85,19 @@ class AmpError
         return '';
     }
 
+    /**
+     * get
+     * This returns an error by name
+     */
+    public static function get(string $name): string
+    {
+        if (!isset(self::$errors[$name])) {
+            return '';
+        }
+
+        return self::$errors[$name];
+    }
+
     public static function getErrorsFormatted(string $name): string
     {
         if (isset(self::$errors[$name])) {
@@ -126,5 +105,25 @@ class AmpError
         }
 
         return '';
+    }
+
+    /**
+     * occurred
+     * This returns true / false if an error has occurred anywhere
+     */
+    public static function occurred(): bool
+    {
+        return self::$state == '1';
+    }
+
+    /**
+     * __destruct
+     * This saves all of the errors that are left into the session
+     */
+    public function __destruct()
+    {
+        foreach (self::$errors as $key => $error) {
+            $_SESSION['errors'][$key] = $error;
+        }
     }
 }

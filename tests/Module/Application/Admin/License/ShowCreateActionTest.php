@@ -41,42 +41,10 @@ use Psr\Http\Message\ServerRequestInterface;
 
 class ShowCreateActionTest extends MockeryTestCase
 {
-    private MockInterface&UiInterface $ui;
-
-    private LicenseRepositoryInterface&MockObject $licenseRepository;
-
     private ConfigContainerInterface&MockObject $configContainer;
-
+    private LicenseRepositoryInterface&MockObject $licenseRepository;
     private ShowCreateAction $subject;
-
-    #[Override]
-    protected function setUp(): void
-    {
-        $this->ui                = $this->mock(UiInterface::class);
-        $this->licenseRepository = $this->createMock(LicenseRepositoryInterface::class);
-        $this->configContainer   = $this->createMock(ConfigContainerInterface::class);
-
-        $this->subject = new ShowCreateAction(
-            $this->ui,
-            $this->licenseRepository,
-            $this->configContainer,
-        );
-    }
-
-    public function testRunThrowsExceptionIfAccessIsDenied(): void
-    {
-        $this->expectException(AccessDeniedException::class);
-
-        $request    = $this->mock(ServerRequestInterface::class);
-        $gatekeeper = $this->mock(GuiGatekeeperInterface::class);
-
-        $gatekeeper->shouldReceive('mayAccess')
-            ->with(AccessTypeEnum::INTERFACE, AccessLevelEnum::MANAGER)
-            ->once()
-            ->andReturnFalse();
-
-        $this->subject->run($request, $gatekeeper);
-    }
+    private MockInterface&UiInterface $ui;
 
     public function testRunRendersAndReturnsNull(): void
     {
@@ -125,6 +93,35 @@ class ShowCreateActionTest extends MockeryTestCase
 
         $this->assertNull(
             $this->subject->run($request, $gatekeeper)
+        );
+    }
+
+    public function testRunThrowsExceptionIfAccessIsDenied(): void
+    {
+        $this->expectException(AccessDeniedException::class);
+
+        $request    = $this->mock(ServerRequestInterface::class);
+        $gatekeeper = $this->mock(GuiGatekeeperInterface::class);
+
+        $gatekeeper->shouldReceive('mayAccess')
+            ->with(AccessTypeEnum::INTERFACE, AccessLevelEnum::MANAGER)
+            ->once()
+            ->andReturnFalse();
+
+        $this->subject->run($request, $gatekeeper);
+    }
+
+    #[Override]
+    protected function setUp(): void
+    {
+        $this->ui                = $this->mock(UiInterface::class);
+        $this->licenseRepository = $this->createMock(LicenseRepositoryInterface::class);
+        $this->configContainer   = $this->createMock(ConfigContainerInterface::class);
+
+        $this->subject = new ShowCreateAction(
+            $this->ui,
+            $this->licenseRepository,
+            $this->configContainer,
         );
     }
 }

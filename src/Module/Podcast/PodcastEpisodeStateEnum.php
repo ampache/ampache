@@ -30,9 +30,8 @@ namespace Ampache\Module\Podcast;
  */
 enum PodcastEpisodeStateEnum: string
 {
-    case PENDING = 'pending';
-
     case COMPLETED = 'completed';
+    case PENDING   = 'pending';
 
     case SKIPPED = 'skipped';
 

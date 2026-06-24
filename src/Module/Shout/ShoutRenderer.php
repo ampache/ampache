@@ -32,6 +32,7 @@ use Ampache\Module\Authorization\AccessTypeEnum;
 use Ampache\Module\Authorization\Check\PrivilegeCheckerInterface;
 use Ampache\Module\Util\Ui;
 use Ampache\Repository\Model\Art;
+use Ampache\Repository\Model\displayable_item;
 use Ampache\Repository\Model\Shoutbox;
 
 /**
@@ -43,8 +44,7 @@ final readonly class ShoutRenderer implements ShoutRendererInterface
         private PrivilegeCheckerInterface $privilegeChecker,
         private ConfigContainerInterface $configContainer,
         private ShoutObjectLoaderInterface $shoutObjectLoader,
-    ) {
-    }
+    ) {}
 
     /**
      * Renders the shout and returns the rendered output
@@ -55,7 +55,7 @@ final readonly class ShoutRenderer implements ShoutRendererInterface
         $shoutObjectId   = $shout->getObjectId();
         $shoutObjectType = $shout->getObjectType()->value;
 
-        if ($object === null) {
+        if (!$object instanceof displayable_item) {
             return '';
         }
 
@@ -64,8 +64,8 @@ final readonly class ShoutRenderer implements ShoutRendererInterface
         $html = "<div class='shoutbox-item'>";
         $html .= "<div class='shoutbox-data'>";
         if (
-            $details &&
-            Art::has_db($shoutObjectId, $shoutObjectType)
+            $details
+            && Art::has_db($shoutObjectId, $shoutObjectType)
         ) {
             $html .= "<div class='shoutbox-img'><img class=\"shoutboximage\" height=\"75\" width=\"75\" src=\"" . $webPath . "/image.php?object_id=" . $shoutObjectId . "&object_type=" . $shoutObjectType . '&size=150x150" /></div>';
         }

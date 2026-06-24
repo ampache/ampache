@@ -56,8 +56,7 @@ final readonly class UpdateAction implements ApplicationActionInterface
         private ConfigContainerInterface $configContainer,
         private StreamFactoryInterface $streamFactory,
         private UpdaterInterface $updater,
-    ) {
-    }
+    ) {}
 
     public function run(ServerRequestInterface $request, GuiGatekeeperInterface $gatekeeper): ResponseInterface
     {

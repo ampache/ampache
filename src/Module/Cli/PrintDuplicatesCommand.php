@@ -33,16 +33,6 @@ use Override;
 
 final class PrintDuplicatesCommand extends Command
 {
-    #[Override]
-    protected function defaults(): self
-    {
-        $this->option('-h, --help', T_('Help'))->on($this->showHelp(...));
-
-        $this->onExit(static fn ($exitCode = 0) => exit($exitCode));
-
-        return $this;
-    }
-
     public function __construct(
         private readonly ModelFactoryInterface $modelFactory,
     ) {
@@ -113,7 +103,7 @@ final class PrintDuplicatesCommand extends Command
             // songs are missing some data
             if ($object instanceof Song) {
                 $object->get_album_fullname();
-                $object->get_artist_fullname();
+                $object->get_parent_fullname();
             }
 
             $props = get_object_vars($object);
@@ -140,5 +130,15 @@ final class PrintDuplicatesCommand extends Command
         }
 
         print_r("\n" . T_('Done') . "\n");
+    }
+
+    #[Override]
+    protected function defaults(): self
+    {
+        $this->option('-h, --help', T_('Help'))->on($this->showHelp(...));
+
+        $this->onExit(static fn($exitCode = 0) => exit($exitCode));
+
+        return $this;
     }
 }

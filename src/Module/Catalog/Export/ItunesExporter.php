@@ -31,9 +31,7 @@ use Ampache\Repository\SongRepositoryInterface;
 
 final readonly class ItunesExporter implements CatalogExporterInterface
 {
-    public function __construct(private SongRepositoryInterface $songRepository)
-    {
-    }
+    public function __construct(private SongRepositoryInterface $songRepository) {}
 
     /**
      * Exports all songs
@@ -44,18 +42,18 @@ final readonly class ItunesExporter implements CatalogExporterInterface
     {
         $result = $this->songRepository->getByCatalog($catalog);
 
-        echo "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n" .
-            "<!DOCTYPE plist PUBLIC \"-//Apple Computer//DTD PLIST 1.0//EN\"\n" .
-            "\"http://www.apple.com/DTDs/PropertyList-1.0.dtd\">\n" .
-            "<plist version=\"1.0\">\n" .
-            "<dict>\n" .
-            "       <key>Major Version</key><integer>1</integer>\n" .
-            "       <key>Minor Version</key><integer>1</integer>\n" .
-            "       <key>Application Version</key><string>7.0.2</string>\n" .
-            "       <key>Features</key><integer>1</integer>\n" .
-            "       <key>Show Content Ratings</key><true/>\n" .
-            "       <key>Tracks</key>\n" .
-            "       <dict>\n";
+        echo "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n"
+            . "<!DOCTYPE plist PUBLIC \"-//Apple Computer//DTD PLIST 1.0//EN\"\n"
+            . "\"http://www.apple.com/DTDs/PropertyList-1.0.dtd\">\n"
+            . "<plist version=\"1.0\">\n"
+            . "<dict>\n"
+            . "       <key>Major Version</key><integer>1</integer>\n"
+            . "       <key>Minor Version</key><integer>1</integer>\n"
+            . "       <key>Application Version</key><string>7.0.2</string>\n"
+            . "       <key>Features</key><integer>1</integer>\n"
+            . "       <key>Show Content Ratings</key><true/>\n"
+            . "       <key>Tracks</key>\n"
+            . "       <dict>\n";
 
         /** @var int $songId */
         foreach ($result as $songId) {
@@ -65,7 +63,7 @@ final readonly class ItunesExporter implements CatalogExporterInterface
             $xml['key']                  = $songId;
             $xml['dict']['Track ID']     = $songId;
             $xml['dict']['Name']         = $song->title;
-            $xml['dict']['Artist']       = $song->get_artist_fullname();
+            $xml['dict']['Artist']       = $song->get_parent_fullname();
             $xml['dict']['Album']        = $song->get_album_fullname();
             $xml['dict']['Total Time']   = $song->time * 1000; // iTunes uses milliseconds
             $xml['dict']['Track Number'] = (int) $song->track;
@@ -76,18 +74,18 @@ final readonly class ItunesExporter implements CatalogExporterInterface
                 'short',
                 "Y-m-d\TH:i:s\Z"
             );
-            $xml['dict']['Bit Rate']    = (int)($song->bitrate / 1024);
+            $xml['dict']['Bit Rate']    = (int) ($song->bitrate / 1024);
             $xml['dict']['Sample Rate'] = $song->rate;
-            $xml['dict']['Play Count']  = (int)($song->played);
+            $xml['dict']['Play Count']  = (int) ($song->played);
             $xml['dict']['Track Type']  = 'URL';
             $xml['dict']['Location']    = $song->play_url();
 
             echo xoutput_from_array($xml, true, 'itunes');
         }
 
-        echo "      </dict>\n" .
-            "</dict>\n" .
-            "</plist>\n";
+        echo "      </dict>\n"
+            . "</dict>\n"
+            . "</plist>\n";
     }
 
     /**

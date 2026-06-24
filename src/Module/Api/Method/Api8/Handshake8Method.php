@@ -56,10 +56,10 @@ final class Handshake8Method
      * This is the function that handles verifying a new handshake
      * Takes a timestamp, auth key, and username.
      *
-     * auth      = (string) $passphrase
-     * user      = (string) $username //optional
+     * auth = (string) $passphrase
+     * user = (string) $username //optional
      * timestamp = (integer) UNIXTIME() //Required if login/password authentication
-     * version   = (string) $version //optional
+     * version = (string) $version //optional
      *
      * @param array{
      *     user?: string,
@@ -78,7 +78,7 @@ final class Handshake8Method
     public static function handshake(array $input): bool
     {
         $now_time   = time();
-        $timestamp  = (int)preg_replace('/[^0-9]/', '', (string)($input['timestamp'] ?? $now_time));
+        $timestamp  = (int) preg_replace('/[^0-9]/', '', (string) ($input['timestamp'] ?? $now_time));
         $passphrase = $input['auth'];
         if (empty($passphrase)) {
             $passphrase = Core::get_post('auth');
@@ -87,8 +87,8 @@ final class Handshake8Method
         $user_ip  = Core::get_user_ip();
         // set the version to the old string for old api clients
         $version      = (isset($input['version'])) ? $input['version'] : Api::$version;
-        Api::$version = ((int)$version >= 350001) ? Api::$version_numeric : Api::$version;
-        $data_version = (int)substr($version, 0, 1);
+        Api::$version = ((int) $version >= 350001) ? Api::$version_numeric : Api::$version;
+        $data_version = (int) substr($version, 0, 1);
 
         if ($data_version < 8) {
             debug_event(self::class, 'Login Failed: Version too old', 1);
@@ -128,8 +128,8 @@ final class Handshake8Method
             if ($username) {
                 // If the timestamp isn't within 30 minutes sucks to be them
                 if (
-                    ($timestamp < ($now_time - 1800)) ||
-                    ($timestamp > ($now_time + 1800))
+                    ($timestamp < ($now_time - 1800))
+                    || ($timestamp > ($now_time + 1800))
                 ) {
                     debug_event(self::class, 'Login Failed: timestamp out of range ' . $timestamp . '/' . $now_time, 1);
                     AmpError::add('api', T_('Login failed, timestamp is out of range'));
@@ -163,19 +163,19 @@ final class Handshake8Method
                 } else {
                     // Create the session
                     $data                = [];
-                    $data['username']    = (string)$client->username;
+                    $data['username']    = (string) $client->username;
                     $data['type']        = 'api';
-                    $data['apikey']      = (string)$client->apikey;
-                    $data['streamtoken'] = (string)$client->streamtoken;
+                    $data['apikey']      = (string) $client->apikey;
+                    $data['streamtoken'] = (string) $client->streamtoken;
                     $data['value']       = $data_version;
                     if (isset($input['client'])) {
-                        $data['agent'] = scrub_in((string)$input['client']);
+                        $data['agent'] = scrub_in((string) $input['client']);
                     }
                     if (isset($input['geo_latitude'])) {
-                        $data['geo_latitude'] = (float)$input['geo_latitude'];
+                        $data['geo_latitude'] = (float) $input['geo_latitude'];
                     }
                     if (isset($input['geo_longitude'])) {
-                        $data['geo_longitude'] = (float)$input['geo_longitude'];
+                        $data['geo_longitude'] = (float) $input['geo_longitude'];
                     }
                     if (isset($input['geo_name'])) {
                         $data['geo_name'] = $input['geo_name'];
@@ -208,7 +208,7 @@ final class Handshake8Method
 
                 return true;
             } // match
-        } // end while
+        }
 
         debug_event(self::class, 'Login Failed, unable to match passphrase', 1);
         Api::error('Received Invalid Handshake - Incorrect username or password', ErrorCodeEnum::INVALID_HANDSHAKE, self::ACTION, 'account', $input['api_format']);

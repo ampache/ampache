@@ -23,6 +23,8 @@ declare(strict_types=0);
  *
  */
 
+// show_shared_objects.inc.php
+
 use Ampache\Module\Api\Ajax;
 use Ampache\Module\Util\Ui;
 use Ampache\Repository\Model\Share;

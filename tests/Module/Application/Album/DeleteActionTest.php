@@ -39,24 +39,48 @@ use Psr\Log\LoggerInterface;
 class DeleteActionTest extends MockeryTestCase
 {
     private ConfigContainerInterface&MockInterface $configContainer;
-
+    private LoggerInterface&MockInterface $logger;
+    private DeleteAction $subject;
     private UiInterface&MockInterface $ui;
 
-    private LoggerInterface&MockInterface $logger;
-
-    private DeleteAction $subject;
-
-    #[Override]
-    protected function setup(): void
+    public function testRunErrorsIfAlbumIdIsLesserThenOne(): void
     {
-        $this->configContainer = $this->mock(ConfigContainerInterface::class);
-        $this->ui              = $this->mock(UiInterface::class);
-        $this->logger          = $this->mock(LoggerInterface::class);
+        $request    = $this->mock(ServerRequestInterface::class);
+        $gatekeeper = $this->mock(GuiGatekeeperInterface::class);
 
-        $this->subject = new DeleteAction(
-            $this->configContainer,
-            $this->ui,
-            $this->logger
+        $albumId = 0;
+
+        $this->ui->shouldReceive('showHeader')
+            ->withNoArgs()
+            ->once();
+        $this->ui->shouldReceive('showQueryStats')
+            ->withNoArgs()
+            ->once();
+        $this->ui->shouldReceive('showFooter')
+            ->withNoArgs()
+            ->once();
+
+        $this->configContainer->shouldReceive('isFeatureEnabled')
+            ->with(ConfigurationKeyEnum::DEMO_MODE)
+            ->once()
+            ->andReturnFalse();
+
+        $request->shouldReceive('getQueryParams')
+            ->withNoArgs()
+            ->once()
+            ->andReturn(['album_id' => $albumId]);
+
+        $this->logger->shouldReceive('warning')
+            ->with(
+                'Requested an album that does not exist',
+                [LegacyLogger::CONTEXT_TYPE => $this->subject::class]
+            )
+            ->once();
+
+        static::expectOutputString('You have requested an object that does not exist');
+
+        self::assertNull(
+            $this->subject->run($request, $gatekeeper)
         );
     }
 
@@ -136,44 +160,17 @@ class DeleteActionTest extends MockeryTestCase
         );
     }
 
-    public function testRunErrorsIfAlbumIdIsLesserThenOne(): void
+    #[Override]
+    protected function setup(): void
     {
-        $request    = $this->mock(ServerRequestInterface::class);
-        $gatekeeper = $this->mock(GuiGatekeeperInterface::class);
+        $this->configContainer = $this->mock(ConfigContainerInterface::class);
+        $this->ui              = $this->mock(UiInterface::class);
+        $this->logger          = $this->mock(LoggerInterface::class);
 
-        $albumId = 0;
-
-        $this->ui->shouldReceive('showHeader')
-            ->withNoArgs()
-            ->once();
-        $this->ui->shouldReceive('showQueryStats')
-            ->withNoArgs()
-            ->once();
-        $this->ui->shouldReceive('showFooter')
-            ->withNoArgs()
-            ->once();
-
-        $this->configContainer->shouldReceive('isFeatureEnabled')
-            ->with(ConfigurationKeyEnum::DEMO_MODE)
-            ->once()
-            ->andReturnFalse();
-
-        $request->shouldReceive('getQueryParams')
-            ->withNoArgs()
-            ->once()
-            ->andReturn(['album_id' => $albumId]);
-
-        $this->logger->shouldReceive('warning')
-            ->with(
-                'Requested an album that does not exist',
-                [LegacyLogger::CONTEXT_TYPE => $this->subject::class]
-            )
-            ->once();
-
-        static::expectOutputString('You have requested an object that does not exist');
-
-        self::assertNull(
-            $this->subject->run($request, $gatekeeper)
+        $this->subject = new DeleteAction(
+            $this->configContainer,
+            $this->ui,
+            $this->logger
         );
     }
 }

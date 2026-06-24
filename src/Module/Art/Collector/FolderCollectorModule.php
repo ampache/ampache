@@ -43,8 +43,7 @@ final readonly class FolderCollectorModule implements CollectorModuleInterface
         private ConfigContainerInterface $configContainer,
         private LoggerInterface $logger,
         private SongRepositoryInterface $songRepository,
-    ) {
-    }
+    ) {}
 
     /**
      * This returns the art from the folder of the files
@@ -87,14 +86,16 @@ final readonly class FolderCollectorModule implements CollectorModuleInterface
             $songs = $this->songRepository->getByAlbum($media->id);
             foreach ($songs as $song_id) {
                 $song   = new Song($song_id);
-                $dirs[] = Core::conv_lc_file(dirname((string)$song->file));
+                $dirs[] = Core::conv_lc_file(dirname((string) $song->file));
             }
         } elseif ($art->object_type === 'video') {
-            $media  = new Video($art->object_id);
-            $dirs[] = Core::conv_lc_file(dirname($media->file));
+            $media = new Video($art->object_id);
+            if ($media->file) {
+                $dirs[] = Core::conv_lc_file(dirname($media->file));
+            }
         } elseif ($art->object_type === 'artist') {
             $media              = new Artist($art->object_id);
-            $preferred_filename = str_replace(['<', '>', '\\', '/'], '_', (string)$media->get_fullname());
+            $preferred_filename = str_replace(['<', '>', '\\', '/'], '_', (string) $media->get_fullname());
             if ($artist_art_folder) {
                 $dirs[] = Core::conv_lc_file($artist_art_folder);
             }
@@ -104,9 +105,9 @@ final readonly class FolderCollectorModule implements CollectorModuleInterface
             foreach ($songs as $song_id) {
                 $song = new Song($song_id);
                 // look in the directory name of the files (e.g. /mnt/Music/%artistName%/%album%)
-                $dirs[] = Core::conv_lc_file(dirname((string)$song->file));
+                $dirs[] = Core::conv_lc_file(dirname((string) $song->file));
                 // look one level up (e.g. /mnt/Music/%artistName%)
-                $dirs[] = Core::conv_lc_file(dirname((string)$song->file, 2));
+                $dirs[] = Core::conv_lc_file(dirname((string) $song->file, 2));
             }
         }
 
@@ -177,12 +178,12 @@ final readonly class FolderCollectorModule implements CollectorModuleInterface
 
                 if (
                     (
-                        $file == $preferred_filename ||
-                        pathinfo($file, PATHINFO_FILENAME) == $preferred_filename
-                    ) ||
-                        (
-                            $file == $artist_filename ||
-                            pathinfo($file, PATHINFO_FILENAME) == $artist_filename
+                        $file == $preferred_filename
+                        || pathinfo($file, PATHINFO_FILENAME) == $preferred_filename
+                    )
+                        || (
+                            $file == $artist_filename
+                            || pathinfo($file, PATHINFO_FILENAME) == $artist_filename
                         )
                 ) {
                     // We found the preferred filename and so we're done.
@@ -211,9 +212,8 @@ final readonly class FolderCollectorModule implements CollectorModuleInterface
                 }
             }
 
-            // end while reading dir
             closedir($handle);
-        } // end foreach dirs
+        }
 
         if ($preferred !== []) {
             // We found our favorite filename somewhere, so we need

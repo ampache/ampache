@@ -35,19 +35,13 @@ class PrivateMsg extends database_object implements PrivateMessageInterface
 {
     protected const string DB_TABLENAME = 'user_pvmsg';
 
-    private int $id = 0;
-
-    private ?string $subject = null;
-
-    private ?string $message = null;
-
-    private int $from_user;
-
-    private int $to_user;
-
-    private bool $is_read;
-
     private ?int $creation_date = null;
+    private int $from_user;
+    private int $id = 0;
+    private bool $is_read;
+    private ?string $message = null;
+    private ?string $subject = null;
+    private int $to_user;
 
     public function __construct(?int $pm_id = 0)
     {
@@ -61,31 +55,6 @@ class PrivateMsg extends database_object implements PrivateMessageInterface
         }
     }
 
-    public function getId(): int
-    {
-        return $this->id;
-    }
-
-    public function isNew(): bool
-    {
-        return $this->getId() === 0;
-    }
-
-    public function getSenderUserLink(): string
-    {
-        return new User($this->from_user)->get_f_link();
-    }
-
-    public function getRecipientUserLink(): string
-    {
-        $to_user = new User($this->to_user);
-        if ($to_user->isNew()) {
-            return '';
-        }
-
-        return $to_user->get_f_link();
-    }
-
     public function getCreationDate(): int
     {
         return (int) $this->creation_date;
@@ -94,6 +63,11 @@ class PrivateMsg extends database_object implements PrivateMessageInterface
     public function getCreationDateFormatted(): string
     {
         return get_datetime((int) $this->creation_date);
+    }
+
+    public function getId(): int
+    {
+        return $this->id;
     }
 
     public function getLinkFormatted(): string
@@ -106,14 +80,9 @@ class PrivateMsg extends database_object implements PrivateMessageInterface
         );
     }
 
-    public function getSubjectFormatted(): string
+    public function getMessage(): string
     {
-        return scrub_out((string) $this->subject);
-    }
-
-    public function isRead(): bool
-    {
-        return (int) $this->is_read === 1;
+        return (string) $this->message;
     }
 
     public function getRecipientUserId(): int
@@ -121,18 +90,43 @@ class PrivateMsg extends database_object implements PrivateMessageInterface
         return $this->to_user;
     }
 
+    public function getRecipientUserLink(): string
+    {
+        $to_user = new User($this->to_user);
+        if ($to_user->isNew()) {
+            return '';
+        }
+
+        return $to_user->get_f_link();
+    }
+
     public function getSenderUserId(): int
     {
         return $this->from_user;
     }
 
-    public function getMessage(): string
+    public function getSenderUserLink(): string
     {
-        return (string) $this->message;
+        return new User($this->from_user)->get_f_link();
     }
 
     public function getSubject(): string
     {
         return (string) $this->subject;
+    }
+
+    public function getSubjectFormatted(): string
+    {
+        return scrub_out((string) $this->subject);
+    }
+
+    public function isNew(): bool
+    {
+        return $this->getId() === 0;
+    }
+
+    public function isRead(): bool
+    {
+        return (int) $this->is_read === 1;
     }
 }

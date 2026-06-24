@@ -49,8 +49,7 @@ final readonly class ConfirmDeleteAction implements ApplicationActionInterface
         private UiInterface $ui,
         private ModelFactoryInterface $modelFactory,
         private ArtistDeleterInterface $artistDeleter,
-    ) {
-    }
+    ) {}
 
     public function run(ServerRequestInterface $request, GuiGatekeeperInterface $gatekeeper): ?ResponseInterface
     {
@@ -62,7 +61,7 @@ final readonly class ConfirmDeleteAction implements ApplicationActionInterface
             return null;
         }
 
-        $artist_id = (int)$this->requestParser->getFromRequest('artist_id');
+        $artist_id = (int) $this->requestParser->getFromRequest('artist_id');
         $artist    = $this->modelFactory->createArtist($artist_id);
 
         if (!Catalog::can_remove($artist)) {

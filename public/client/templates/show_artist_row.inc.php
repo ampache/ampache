@@ -23,6 +23,8 @@ declare(strict_types=0);
  *
  */
 
+// show_artist_row.inc.php
+
 use Ampache\Config\AmpConfig;
 use Ampache\Module\Api\Ajax;
 use Ampache\Module\Authorization\Access;
@@ -68,7 +70,7 @@ $web_path = AmpConfig::get_web_path('/client');
     } ?>
     </div>
 </td>
-<?php $name = scrub_out((string)$libitem->get_fullname()); ?>
+<?php $name = scrub_out((string) $libitem->get_fullname()); ?>
 <td class="<?php echo $cel_cover; ?>">
     <?php $size = (isset($browse) && $browse->is_grid_view())
         ? ['width' => 150, 'height' => 150]

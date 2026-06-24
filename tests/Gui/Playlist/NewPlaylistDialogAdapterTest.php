@@ -35,34 +35,49 @@ use Override;
 
 class NewPlaylistDialogAdapterTest extends MockeryTestCase
 {
-    /** @var MockInterface|PlaylistLoaderInterface|null */
-    private MockInterface $playlistLoader;
-
-    /** @var MockInterface|AjaxUriRetrieverInterface|null */
-    private MockInterface $ajaxUriRetriever;
-
-    /** @var MockInterface|GuiGatekeeperInterface|null */
-    private MockInterface $gatekeeper;
-
+    private MockInterface|AjaxUriRetrieverInterface|null $ajaxUriRetriever;
+    private MockInterface|GuiGatekeeperInterface|null $gatekeeper;
+    private string $objectIds  = '666';
     private string $objectType = 'some-object-type';
-
-    private string $objectIds = '666';
-
+    private MockInterface|PlaylistLoaderInterface|null $playlistLoader;
     private ?NewPlaylistDialogAdapter $subject;
 
-    #[Override]
-    protected function setUp(): void
+    public function testAjaxUriReturnsUri(): void
     {
-        $this->playlistLoader   = $this->mock(PlaylistLoaderInterface::class);
-        $this->ajaxUriRetriever = $this->mock(AjaxUriRetrieverInterface::class);
-        $this->gatekeeper       = $this->mock(GuiGatekeeperInterface::class);
+        $uri = 'some-uri';
 
-        $this->subject = new NewPlaylistDialogAdapter(
-            $this->playlistLoader,
-            $this->ajaxUriRetriever,
-            $this->gatekeeper,
+        $this->ajaxUriRetriever->shouldReceive('getAjaxUri')
+            ->withNoArgs()
+            ->once()
+            ->andReturn($uri);
+
+        $this->assertSame(
+            $uri,
+            $this->subject->getAjaxUri()
+        );
+    }
+
+    public function testGetNewPlaylistTitleReturnsValue(): void
+    {
+        $this->assertSame(
+            'Playlist Name',
+            $this->subject->getNewPlaylistTitle()
+        );
+    }
+
+    public function testGetObjectIdsReturnsValue(): void
+    {
+        $this->assertSame(
+            $this->objectIds,
+            $this->subject->getObjectIds()
+        );
+    }
+
+    public function testGetObjectTypeReturnsValue(): void
+    {
+        $this->assertSame(
             $this->objectType,
-            $this->objectIds
+            $this->subject->getObjectType()
         );
     }
 
@@ -88,42 +103,19 @@ class NewPlaylistDialogAdapterTest extends MockeryTestCase
         );
     }
 
-    public function testAjaxUriReturnsUri(): void
+    #[Override]
+    protected function setUp(): void
     {
-        $uri = 'some-uri';
+        $this->playlistLoader   = $this->mock(PlaylistLoaderInterface::class);
+        $this->ajaxUriRetriever = $this->mock(AjaxUriRetrieverInterface::class);
+        $this->gatekeeper       = $this->mock(GuiGatekeeperInterface::class);
 
-        $this->ajaxUriRetriever->shouldReceive('getAjaxUri')
-            ->withNoArgs()
-            ->once()
-            ->andReturn($uri);
-
-        $this->assertSame(
-            $uri,
-            $this->subject->getAjaxUri()
-        );
-    }
-
-    public function testGetObjectTypeReturnsValue(): void
-    {
-        $this->assertSame(
+        $this->subject = new NewPlaylistDialogAdapter(
+            $this->playlistLoader,
+            $this->ajaxUriRetriever,
+            $this->gatekeeper,
             $this->objectType,
-            $this->subject->getObjectType()
-        );
-    }
-
-    public function testGetObjectIdsReturnsValue(): void
-    {
-        $this->assertSame(
-            $this->objectIds,
-            $this->subject->getObjectIds()
-        );
-    }
-
-    public function testGetNewPlaylistTitleReturnsValue(): void
-    {
-        $this->assertSame(
-            'Playlist Name',
-            $this->subject->getNewPlaylistTitle()
+            $this->objectIds
         );
     }
 }

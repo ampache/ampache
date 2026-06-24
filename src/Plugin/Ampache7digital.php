@@ -36,13 +36,19 @@ use Override;
 class Ampache7digital extends AmpachePlugin implements PluginSongPreviewInterface
 {
     #[Override]
-    public string $name = '7digital';
-
-    #[Override]
     public string $categories = 'preview';
 
     #[Override]
     public string $description = 'Song preview from 7digital';
+
+    #[Override]
+    public string $max_ampache = '999999';
+
+    #[Override]
+    public string $min_ampache = '370015';
+
+    #[Override]
+    public string $name = '7digital';
 
     #[Override]
     public string $url = 'http://www.7digital.com';
@@ -50,15 +56,8 @@ class Ampache7digital extends AmpachePlugin implements PluginSongPreviewInterfac
     #[Override]
     public string $version = '000001';
 
-    #[Override]
-    public string $min_ampache = '370015';
-
-    #[Override]
-    public string $max_ampache = '999999';
-
     // These are internal settings used by this class, run this->load to fill them out
     private string $api_key;
-
     private string $secret;
 
     /**
@@ -67,6 +66,14 @@ class Ampache7digital extends AmpachePlugin implements PluginSongPreviewInterfac
     public function __construct()
     {
         $this->description = T_('Song preview from 7digital');
+    }
+
+    /**
+     * Get song preview.
+     */
+    public function get_song_preview(string $track_mbid, string $artist_name, string $title): array
+    {
+        return [];
     }
 
     /**
@@ -80,50 +87,6 @@ class Ampache7digital extends AmpachePlugin implements PluginSongPreviewInterfac
         }
 
         return !(Preference::exists('7digital_secret_api_key') && !Preference::insert('7digital_secret_api_key', T_('7digital secret'), '', AccessLevelEnum::MANAGER->value, 'string', 'plugins', $this->name));
-    }
-
-    /**
-     * uninstall
-     * Removes our preferences from the database returning it to its original form
-     */
-    public function uninstall(): bool
-    {
-        return (
-            Preference::delete('7digital_api_key') &&
-            Preference::delete('7digital_secret_api_key')
-        );
-    }
-
-    /**
-     * upgrade
-     * This is a recommended plugin function
-     */
-    public function upgrade(): bool
-    {
-        return true;
-    }
-
-    /**
-     * Get song preview.
-     */
-    public function get_song_preview(string $track_mbid, string $artist_name, string $title): array
-    {
-        return [];
-    }
-
-    /**
-     * stream_song_preview
-     */
-    public function stream_song_preview(string $file): void
-    {
-        if (str_contains($file, "7digital")) {
-            $consumer = new OAuthConsumer($this->api_key, $this->secret);
-            $request  = OAuthRequest::from_consumer_and_token($consumer, null, 'GET', $file);
-            $request->sign_request(new OAuthSignatureMethod_HMAC_SHA1(), $consumer, null);
-            $url = $request->to_url();
-
-            header("Location: " . $url);
-        }
     }
 
     /**
@@ -157,6 +120,42 @@ class Ampache7digital extends AmpachePlugin implements PluginSongPreviewInterfac
             return false;
         }
 
+        return true;
+    }
+
+    /**
+     * stream_song_preview
+     */
+    public function stream_song_preview(string $file): void
+    {
+        if (str_contains($file, "7digital")) {
+            $consumer = new OAuthConsumer($this->api_key, $this->secret);
+            $request  = OAuthRequest::from_consumer_and_token($file, 'GET', $consumer);
+            $request->sign_request(new OAuthSignatureMethod_HMAC_SHA1(), $consumer, null);
+            $url = $request->to_url();
+
+            header("Location: " . $url);
+        }
+    }
+
+    /**
+     * uninstall
+     * Removes our preferences from the database returning it to its original form
+     */
+    public function uninstall(): bool
+    {
+        return (
+            Preference::delete('7digital_api_key')
+            && Preference::delete('7digital_secret_api_key')
+        );
+    }
+
+    /**
+     * upgrade
+     * This is a recommended plugin function
+     */
+    public function upgrade(): bool
+    {
         return true;
     }
 }

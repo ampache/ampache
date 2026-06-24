@@ -30,9 +30,7 @@ use MusicBrainz\MusicBrainz;
 
 final readonly class MissingArtistFinder implements MissingArtistFinderInterface
 {
-    public function __construct(private MusicBrainz $musicBrainz)
-    {
-    }
+    public function __construct(private MusicBrainz $musicBrainz) {}
 
     /**
      * @return array<array<string, string>>
@@ -50,11 +48,11 @@ final readonly class MissingArtistFinder implements MissingArtistFinderInterface
             }
 
             return array_map(
-                static fn ($result): array => [
+                static fn($result): array => [
                     'mbid' => $result->id,
                     'name' => $result->name,
                 ],
-                (array)$this->musicBrainz->search($filter)
+                (array) $this->musicBrainz->search($filter)
             );
         } catch (Exception) {
             return [];

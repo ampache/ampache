@@ -48,13 +48,12 @@ final readonly class ShowAddShoutAction implements ApplicationActionInterface
         private ShoutRepositoryInterface $shoutRepository,
         private ShoutRendererInterface $shoutRenderer,
         private ShoutObjectLoaderInterface $shoutObjectLoader,
-    ) {
-    }
+    ) {}
 
     public function run(ServerRequestInterface $request, GuiGatekeeperInterface $gatekeeper): ?ResponseInterface
     {
         $object_type = LibraryItemEnum::from($this->requestParser->getFromRequest('type'));
-        $object_id   = (int)$this->requestParser->getFromRequest('id');
+        $object_id   = (int) $this->requestParser->getFromRequest('id');
 
         // Get our object first
         $object = $this->shoutObjectLoader->loadByObjectType($object_type, $object_id);

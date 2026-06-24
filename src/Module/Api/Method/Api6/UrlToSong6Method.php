@@ -63,7 +63,7 @@ final class UrlToSong6Method
             return false;
         }
         $charset  = AmpConfig::get('site_charset', 'UTF-8');
-        $song_url = html_entity_decode((string)$input['url'], ENT_QUOTES, $charset);
+        $song_url = html_entity_decode((string) $input['url'], ENT_QUOTES, $charset);
         $url_data = Stream_Url::parse($song_url);
         if (!array_key_exists('id', $url_data)) {
             Api6::error('Bad Request', ErrorCodeEnum::BAD_REQUEST, self::ACTION, 'url', $input['api_format']);
@@ -73,10 +73,10 @@ final class UrlToSong6Method
         ob_end_clean();
         switch ($input['api_format']) {
             case 'json':
-                echo Json6_Data::songs([(int)$url_data['id']], $user, $input['auth'], true, false);
+                echo Json6_Data::songs([(int) $url_data['id']], $user, $input['auth'], true, false);
                 break;
             default:
-                echo Xml6_Data::songs([(int)$url_data['id']], $user, $input['auth']);
+                echo Xml6_Data::songs([(int) $url_data['id']], $user, $input['auth']);
         }
 
         return true;

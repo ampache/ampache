@@ -27,13 +27,13 @@ namespace Ampache\Gui\Playlist;
 
 interface NewPlaylistDialogAdapterInterface
 {
-    public function getPlaylists(): array;
-
     public function getAjaxUri(): string;
 
-    public function getObjectType(): string;
+    public function getNewPlaylistTitle(): string;
 
     public function getObjectIds(): string;
 
-    public function getNewPlaylistTitle(): string;
+    public function getObjectType(): string;
+
+    public function getPlaylists(): array;
 }

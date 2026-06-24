@@ -32,18 +32,21 @@ use Override;
 
 class AjaxUriRetrieverTest extends MockeryTestCase
 {
-    /** @var MockInterface|ConfigContainerInterface|null */
-    private MockInterface $configContainer;
-
+    private MockInterface|ConfigContainerInterface|null $configContainer;
     private AjaxUriRetriever $subject;
 
-    #[Override]
-    protected function setUp(): void
+    public function testGetAjaxServerUriReturnsValue(): void
     {
-        $this->configContainer = $this->mock(ConfigContainerInterface::class);
+        $webPath = 'some-path';
 
-        $this->subject = new AjaxUriRetriever(
-            $this->configContainer
+        $this->configContainer->shouldReceive('getWebPath')
+            ->with('/server')
+            ->once()
+            ->andReturn($webPath);
+
+        self::assertSame(
+            $webPath,
+            $this->subject->getAjaxServerUri()
         );
     }
 
@@ -65,18 +68,13 @@ class AjaxUriRetrieverTest extends MockeryTestCase
         );
     }
 
-    public function testGetAjaxServerUriReturnsValue(): void
+    #[Override]
+    protected function setUp(): void
     {
-        $webPath = 'some-path';
+        $this->configContainer = $this->mock(ConfigContainerInterface::class);
 
-        $this->configContainer->shouldReceive('getWebPath')
-            ->with('/server')
-            ->once()
-            ->andReturn($webPath);
-
-        self::assertSame(
-            $webPath,
-            $this->subject->getAjaxServerUri()
+        $this->subject = new AjaxUriRetriever(
+            $this->configContainer
         );
     }
 }

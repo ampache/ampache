@@ -73,7 +73,7 @@ final class AlbumDiskSearch implements SearchInterface
                 }
             }
 
-            $input        = $search->filter_data((string)$rule[2], $type, $operator);
+            $input        = $search->filter_data((string) $rule[2], $type, $operator);
             $operator_sql = $operator['sql'] ?? '';
             $group[]      = "`album_disk`.`id`";
             $group[]      = "`album`.`name`";
@@ -111,7 +111,7 @@ final class AlbumDiskSearch implements SearchInterface
                     $parameters = array_merge($parameters, [$input, $input]);
                     break;
                 case 'time':
-                    $input        = ((int)$input) * 60;
+                    $input        = ((int) $input) * 60;
                     $where[]      = sprintf('`album_disk`.`time` %s ?', $operator_sql);
                     $parameters[] = $input;
                     break;
@@ -235,7 +235,7 @@ final class AlbumDiskSearch implements SearchInterface
                     $looking      = str_replace('myplayed', '', $rule[0]);
                     $column       = ($looking == 'artist') ? 'album_artist' : 'id';
                     $my_type      = ($looking == 'artist') ? 'artist' : 'album';
-                    $operator_sql = ((int)$operator_sql === 0) ? 'IS NULL' : 'IS NOT NULL';
+                    $operator_sql = ((int) $operator_sql === 0) ? 'IS NULL' : 'IS NOT NULL';
                     // played once per user
                     if (!array_key_exists('myplayed', $table)) {
                         $table['myplayed'] = '';
@@ -264,7 +264,7 @@ final class AlbumDiskSearch implements SearchInterface
                 case 'played':
                     $column       = 'id';
                     $my_type      = 'album';
-                    $operator_sql = ((int)$operator_sql === 0) ? 'IS NULL' : 'IS NOT NULL';
+                    $operator_sql = ((int) $operator_sql === 0) ? 'IS NULL' : 'IS NOT NULL';
                     // played once per user
                     if (!array_key_exists('played', $table)) {
                         $table['played'] = '';
@@ -314,7 +314,7 @@ final class AlbumDiskSearch implements SearchInterface
                     $join['song'] = true;
                     break;
                 case 'days_added':
-                    $where[] = sprintf('`album`.`addition_time` %s (UNIX_TIMESTAMP() - (', $operator_sql) . (int)$input . " * 86400))";
+                    $where[] = sprintf('`album`.`addition_time` %s (UNIX_TIMESTAMP() - (', $operator_sql) . (int) $input . " * 86400))";
                     break;
                 case 'played_times':
                     $where[]      = sprintf('`album_disk`.`total_count` %s ?', $operator_sql);
@@ -405,12 +405,12 @@ final class AlbumDiskSearch implements SearchInterface
                 case 'recent_played':
                     $key                     = md5($input . $operator_sql);
                     $where[]                 = sprintf('`played_%s`.`object_id` IS NOT NULL', $key);
-                    $table['played_' . $key] = sprintf("LEFT JOIN (SELECT `object_id` FROM `object_count` WHERE `object_type` = 'album' ORDER BY %s DESC LIMIT ", $operator_sql) . (int)$input . sprintf(') AS `played_%s` ON `album`.`id` = `played_%s`.`object_id`', $key, $key);
+                    $table['played_' . $key] = sprintf("LEFT JOIN (SELECT `object_id` FROM `object_count` WHERE `object_type` = 'album' ORDER BY %s DESC LIMIT ", $operator_sql) . (int) $input . sprintf(') AS `played_%s` ON `album`.`id` = `played_%s`.`object_id`', $key, $key);
                     break;
                 case 'recent_added':
                     $key                       = md5($input . $operator_sql);
                     $where[]                   = sprintf('`addition_time_%s`.`id` IS NOT NULL', $key);
-                    $table['addition_' . $key] = sprintf('LEFT JOIN (SELECT `id` FROM `album` ORDER BY %s DESC LIMIT ', $operator_sql) . (int)$input . sprintf(') AS `addition_time_%s` ON `album`.`id` = `addition_time_%s`.`id`', $key, $key);
+                    $table['addition_' . $key] = sprintf('LEFT JOIN (SELECT `id` FROM `album` ORDER BY %s DESC LIMIT ', $operator_sql) . (int) $input . sprintf(') AS `addition_time_%s` ON `album`.`id` = `addition_time_%s`.`id`', $key, $key);
                     break;
                 case 'genre':
                     $where[] = ($operator_sql == "NOT LIKE")

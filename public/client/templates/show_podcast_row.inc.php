@@ -23,6 +23,8 @@ declare(strict_types=0);
  *
  */
 
+// show_podcast_row.inc.php
+
 use Ampache\Config\AmpConfig;
 use Ampache\Module\Api\Ajax;
 use Ampache\Module\Authorization\Access;
@@ -56,7 +58,7 @@ use Ampache\Repository\Model\Userflag;
     </div>
 </td>
 <td class="<?php echo $cel_cover; ?>">
-    <?php Art::display('podcast', $libitem->getId(), (string)$libitem->get_fullname(), ['width' => 128, 'height' => 128], $libitem->get_link()); ?>
+    <?php Art::display('podcast', $libitem->getId(), (string) $libitem->get_fullname(), ['width' => 128, 'height' => 128], $libitem->get_link()); ?>
 </td>
 <td class="cel_title"><?php echo $libitem->get_f_link(); ?></td>
 <td class="cel_siteurl"><?php echo "<a target=\"_blank\" href=\"" . $libitem->getWebsite() . "\">" . $libitem->getWebsite() . "</a>"; ?></td>

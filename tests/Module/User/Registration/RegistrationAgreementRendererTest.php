@@ -30,20 +30,8 @@ use PHPUnit\Framework\TestCase;
 
 class RegistrationAgreementRendererTest extends TestCase
 {
-    private vfsStreamFile $vfsStream;
-
     private RegistrationAgreementRenderer $subject;
-
-    protected function setUp(): void
-    {
-        $dir = vfsStream::setup('/');
-
-        $this->vfsStream = new vfsStreamFile('snafu');
-
-        $dir->addChild($this->vfsStream);
-
-        $this->subject = new RegistrationAgreementRenderer($this->vfsStream->url());
-    }
+    private vfsStreamFile $vfsStream;
 
     public function testRenderFailsIfFileDoesNotExist(): void
     {
@@ -75,5 +63,16 @@ class RegistrationAgreementRendererTest extends TestCase
             $content,
             $this->subject->render()
         );
+    }
+
+    protected function setUp(): void
+    {
+        $dir = vfsStream::setup('/');
+
+        $this->vfsStream = new vfsStreamFile('snafu');
+
+        $dir->addChild($this->vfsStream);
+
+        $this->subject = new RegistrationAgreementRenderer($this->vfsStream->url());
     }
 }

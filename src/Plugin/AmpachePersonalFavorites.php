@@ -37,13 +37,19 @@ use Override;
 class AmpachePersonalFavorites extends AmpachePlugin implements PluginDisplayHomeInterface
 {
     #[Override]
-    public string $name = 'Personal Favorites';
-
-    #[Override]
     public string $categories = 'home';
 
     #[Override]
     public string $description = 'Personal favorites on homepage';
+
+    #[Override]
+    public string $max_ampache = '999999';
+
+    #[Override]
+    public string $min_ampache = '370021';
+
+    #[Override]
+    public string $name = 'Personal Favorites';
 
     #[Override]
     public string $url = '';
@@ -51,20 +57,11 @@ class AmpachePersonalFavorites extends AmpachePlugin implements PluginDisplayHom
     #[Override]
     public string $version = '000003';
 
-    #[Override]
-    public string $min_ampache = '370021';
-
-    #[Override]
-    public string $max_ampache = '999999';
-
     // These are internal settings used by this class, run this->load to fill them out
-    private bool $display = false;
-
-    private string $playlist = '';
-
+    private bool $display     = false;
+    private int $order        = 0;
+    private string $playlist  = '';
     private string $smartlist = '';
-
-    private int $order = 0;
 
     /**
      * Constructor
@@ -72,59 +69,6 @@ class AmpachePersonalFavorites extends AmpachePlugin implements PluginDisplayHom
     public function __construct()
     {
         $this->description = T_('Personal favorites on homepage');
-    }
-
-    /**
-     * install
-     * Inserts plugin preferences into Ampache
-     */
-    public function install(): bool
-    {
-        if (!Preference::insert('personalfav_display', T_('Personal favorites on the homepage'), '0', AccessLevelEnum::USER->value, 'boolean', 'plugins', $this->name)) {
-            return false;
-        }
-
-        if (!Preference::insert('personalfav_playlist', T_('Favorite Playlists'), '', AccessLevelEnum::USER->value, 'integer', 'plugins', $this->name)) {
-            return false;
-        }
-
-        if (!Preference::insert('personalfav_smartlist', T_('Favorite Smartlists'), '', AccessLevelEnum::USER->value, 'integer', 'plugins', $this->name)) {
-            return false;
-        }
-
-        return Preference::insert('personalfav_order', T_('Plugin CSS order'), '0', AccessLevelEnum::USER->value, 'integer', 'plugins', $this->name);
-    }
-
-    /**
-     * uninstall
-     * Removes our preferences from the database returning it to its original form
-     */
-    public function uninstall(): bool
-    {
-        return (
-            Preference::delete('personalfav_display') &&
-            Preference::delete('personalfav_playlist') &&
-            Preference::delete('personalfav_smartlist') &&
-            Preference::delete('personalfav_order')
-        );
-    }
-
-    /**
-     * upgrade
-     * This is a recommended plugin function
-     */
-    public function upgrade(): bool
-    {
-        $from_version = Plugin::get_plugin_version($this->name);
-        if ($from_version === 0) {
-            return false;
-        }
-
-        if ($from_version < (int)$this->version) {
-            Preference::insert('personalfav_order', T_('Plugin CSS order'), '0', AccessLevelEnum::USER->value, 'integer', 'plugins', $this->name);
-        }
-
-        return true;
     }
 
     /**
@@ -137,14 +81,14 @@ class AmpachePersonalFavorites extends AmpachePlugin implements PluginDisplayHom
         if ($this->display) {
             $list_array = [];
             foreach (explode(',', $this->playlist) as $list_id) {
-                $playlist = new Playlist((int)$list_id);
+                $playlist = new Playlist((int) $list_id);
                 if ($playlist->isNew() === false) {
                     $list_array[] = [$playlist, 'playlist'];
                 }
             }
 
             foreach (explode(',', $this->smartlist) as $list_id) {
-                $smartlist = new Search((int)$list_id);
+                $smartlist = new Search((int) $list_id);
                 if ($smartlist->isNew() === false) {
                     $list_array[] = [$smartlist, 'search'];
                 }
@@ -207,6 +151,27 @@ class AmpachePersonalFavorites extends AmpachePlugin implements PluginDisplayHom
     }
 
     /**
+     * install
+     * Inserts plugin preferences into Ampache
+     */
+    public function install(): bool
+    {
+        if (!Preference::insert('personalfav_display', T_('Personal favorites on the homepage'), '0', AccessLevelEnum::USER->value, 'boolean', 'plugins', $this->name)) {
+            return false;
+        }
+
+        if (!Preference::insert('personalfav_playlist', T_('Favorite Playlists'), '', AccessLevelEnum::USER->value, 'integer', 'plugins', $this->name)) {
+            return false;
+        }
+
+        if (!Preference::insert('personalfav_smartlist', T_('Favorite Smartlists'), '', AccessLevelEnum::USER->value, 'integer', 'plugins', $this->name)) {
+            return false;
+        }
+
+        return Preference::insert('personalfav_order', T_('Plugin CSS order'), '0', AccessLevelEnum::USER->value, 'integer', 'plugins', $this->name);
+    }
+
+    /**
      * load
      * This loads up the data we need into this object, this stuff comes from the preferences.
      */
@@ -218,7 +183,39 @@ class AmpachePersonalFavorites extends AmpachePlugin implements PluginDisplayHom
         $this->display   = (array_key_exists('personalfav_display', $data) && $data['personalfav_display'] == '1');
         $this->playlist  = $data['personalfav_playlist'] ?? '';
         $this->smartlist = $data['personalfav_smartlist'] ?? '';
-        $this->order     = (int)($data['personalfav_order'] ?? 0);
+        $this->order     = (int) ($data['personalfav_order'] ?? 0);
+
+        return true;
+    }
+
+    /**
+     * uninstall
+     * Removes our preferences from the database returning it to its original form
+     */
+    public function uninstall(): bool
+    {
+        return (
+            Preference::delete('personalfav_display')
+            && Preference::delete('personalfav_playlist')
+            && Preference::delete('personalfav_smartlist')
+            && Preference::delete('personalfav_order')
+        );
+    }
+
+    /**
+     * upgrade
+     * This is a recommended plugin function
+     */
+    public function upgrade(): bool
+    {
+        $from_version = Plugin::get_plugin_version($this->name);
+        if ($from_version === 0) {
+            return false;
+        }
+
+        if ($from_version < (int) $this->version) {
+            Preference::insert('personalfav_order', T_('Plugin CSS order'), '0', AccessLevelEnum::USER->value, 'integer', 'plugins', $this->name);
+        }
 
         return true;
     }

@@ -23,6 +23,8 @@ declare(strict_types=0);
  *
  */
 
+// show_catalog_types.inc.php
+
 use Ampache\Config\AmpConfig;
 use Ampache\Repository\Model\Catalog;
 

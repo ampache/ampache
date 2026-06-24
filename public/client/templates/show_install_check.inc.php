@@ -23,6 +23,8 @@ declare(strict_types=0);
  *
  */
 
+// show_install_check.inc.php
+
 /** @var string $web_path */
 /** @var string $htmllang */
 

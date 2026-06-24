@@ -70,8 +70,7 @@ final readonly class AjaxApplication implements ApplicationInterface
 
     public function __construct(
         private ContainerInterface $dic,
-    ) {
-    }
+    ) {}
 
     public function run(): void
     {

@@ -42,9 +42,9 @@ final class Videos4Method
      * This returns video objects!
      *
      * filter = (string) Alpha-numeric search term //optional
-     * exact  = (integer) 0,1, Whether to match the exact term or not //optional
+     * exact = (integer) 0,1, Whether to match the exact term or not //optional
      * offset = (integer) //optional
-     * limit  = (integer) //optional
+     * limit = (integer) //optional
      *
      * @param array{
      *     filter?: string,
@@ -63,7 +63,7 @@ final class Videos4Method
         $browse->set_type('video');
         $browse->set_sort('title', 'ASC', false);
 
-        $method = (array_key_exists('exact', $input) && (int)$input['exact'] == 1) ? 'exact_match' : 'alpha_match';
+        $method = (array_key_exists('exact', $input) && (int) $input['exact'] == 1) ? 'exact_match' : 'alpha_match';
         $browse->set_api_filter($method, $input['filter'] ?? '');
 
         $results = $browse->get_objects();

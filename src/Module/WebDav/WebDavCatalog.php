@@ -27,6 +27,7 @@ namespace Ampache\Module\WebDav;
 
 use Ampache\Config\AmpConfig;
 use Ampache\Repository\Model\Catalog;
+use Ampache\Repository\Model\Folder;
 use Override;
 use Sabre\DAV\Collection;
 use Sabre\DAV\Exception\NotFound;
@@ -39,31 +40,16 @@ use Sabre\DAV\Node;
  */
 class WebDavCatalog extends Collection
 {
-    private int $catalog_id;
-
-    public function __construct(int $catalog_id)
-    {
-        $this->catalog_id = $catalog_id;
-    }
+    private ?int $catalog_id = null;
+    private ?int $parent_id  = null;
 
     /**
-     * @return list<WebDavDirectory>
+     * @param string $name
      */
-    public function getChildren(): array
+    #[Override]
+    public function childExists($name): bool
     {
-        $children = [];
-        $catalogs = null;
-        if ($this->catalog_id > 0) {
-            $catalogs   = [];
-            $catalogs[] = $this->catalog_id;
-        }
-
-        $artists = Catalog::get_artists($catalogs);
-        foreach ($artists as $artist) {
-            $children[] = new WebDavDirectory($artist);
-        }
-
-        return $children;
+        return Catalog::has_children($name, $this->catalog_id, $this->parent_id);
     }
 
     /**
@@ -73,35 +59,41 @@ class WebDavCatalog extends Collection
     #[Override]
     public function getChild($name): Node
     {
-        $matches = Catalog::get_children($name, $this->catalog_id);
-        //debug_event(self::class, 'Catalog getChild for `' . $name . '`', 5);
-        //debug_event(self::class, 'Found ' . count($matches) . ' childs.', 5);
-        // Always return first match
-        // Warning: this means that two items with the same name will not be supported for now TODO support folders instead of objects
-        if ($matches !== []) {
-            return WebDavDirectory::getChildFromArray($matches[0]);
+        $folder = Catalog::get_child($name, $this->catalog_id, $this->parent_id);
+        //debug_event(self::class, 'Catalog getChild for: `' . $name . '` catalog: ' . $this->catalog_id . ' parent: ' . $this->parent_id, 5);
+        if ($folder instanceof Folder) {
+            $this->catalog_id = $folder->catalog;
+            $this->parent_id  = $folder->id;
+
+            return new WebDavDirectory($folder);
         }
 
-        throw new NotFound('The artist with name: ' . $name . ' could not be found');
+        throw new NotFound(self::class . ' The folder with name: ' . $name . ' could not be found');
     }
 
     /**
-     * @param string $name
+     * @return list<Node>
+     * @throws NotFound
      */
-    #[Override]
-    public function childExists($name): bool
+    public function getChildren(): array
     {
-        $matches = Catalog::get_children($name, $this->catalog_id);
+        $items    = Catalog::get_children('/');
+        $children = [];
+        foreach ($items as $item) {
+            $children[] = WebDavDirectory::getChildFromArray($item);
+        }
 
-        return $matches !== [];
+        return $children;
     }
 
     public function getName(): string
     {
-        if ($this->catalog_id > 0) {
-            $catalog = Catalog::create_from_id($this->catalog_id);
+        if ($this->parent_id > 0) {
+            $folder = new Folder($this->parent_id);
 
-            return $catalog->name ?? '';
+            if (!$folder->isNew()) {
+                return $folder->name ?? '';
+            }
         }
 
         return (string) AmpConfig::get('site_title');

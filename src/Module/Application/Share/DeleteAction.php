@@ -48,8 +48,7 @@ final readonly class DeleteAction implements ApplicationActionInterface
         private ConfigContainerInterface $configContainer,
         private UiInterface $ui,
         private ShareRepositoryInterface $shareRepository,
-    ) {
-    }
+    ) {}
 
     public function run(ServerRequestInterface $request, GuiGatekeeperInterface $gatekeeper): ?ResponseInterface
     {
@@ -68,9 +67,9 @@ final readonly class DeleteAction implements ApplicationActionInterface
         );
 
         if (
-            $share === null ||
-            $user === null ||
-            !$share->isAccessible($user)
+            $share === null
+            || $user === null
+            || !$share->isAccessible($user)
         ) {
             throw new AccessDeniedException();
         }

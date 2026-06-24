@@ -52,10 +52,10 @@ final class Migration600037 extends AbstractMigration
             $db_results  = Dba::read($sql);
             $row         = Dba::fetch_row($db_results);
             // save the object and add to the current size
-            $items += (int)($row[0] ?? 0);
-            $time += (int)($row[1] ?? 0);
+            $items += (int) ($row[0] ?? 0);
+            $time += (int) ($row[1] ?? 0);
             $size += $row[2] ?? 0;
-            Catalog::set_update_info($table, (int)($row[0] ?? 0));
+            Catalog::set_update_info($table, (int) ($row[0] ?? 0));
         }
         Catalog::set_update_info('items', $items);
         Catalog::set_update_info('time', $time);

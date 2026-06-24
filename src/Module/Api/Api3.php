@@ -1,6 +1,7 @@
 <?php
 
 declare(strict_types=0);
+
 /**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
@@ -94,8 +95,5 @@ class Api3
      * constructor
      * This really isn't anything to do here, so it's private
      */
-    private function __construct()
-    {
-        // Rien a faire
-    }
+    private function __construct() {}
 }

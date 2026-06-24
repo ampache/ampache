@@ -51,8 +51,7 @@ final readonly class SearchAjaxHandler implements AjaxHandlerInterface
         private ConfigContainerInterface $configContainer,
         private MissingArtistFinderInterface $missingArtistFinder,
         private LabelRepositoryInterface $labelRepository,
-    ) {
-    }
+    ) {}
 
     public function handle(User $user): void
     {
@@ -94,7 +93,7 @@ final readonly class SearchAjaxHandler implements AjaxHandlerInterface
                             'label' => scrub_out($artist->get_fullname()),
                             'value' => scrub_out($artist->get_fullname()),
                             'rels' => '',
-                            'image' => (string)Art::url($artist->id, 'artist', null, 10),
+                            'image' => (string) Art::url($artist->id, 'artist', null, 10),
                         ];
                     }
                 }
@@ -123,8 +122,8 @@ final readonly class SearchAjaxHandler implements AjaxHandlerInterface
                             'link' => $web_path . '/albums.php?action=show&album=' . $albumid,
                             'label' => scrub_out($album->get_fullname()),
                             'value' => scrub_out($album->get_fullname()),
-                            'rels' => scrub_out($album->get_artist_fullname()),
-                            'image' => (string)Art::url($album->id, 'album', null, 10),
+                            'rels' => scrub_out($album->get_parent_fullname()),
+                            'image' => (string) Art::url($album->id, 'album', null, 10),
                         ];
                     }
                 }
@@ -153,8 +152,8 @@ final readonly class SearchAjaxHandler implements AjaxHandlerInterface
                             'link' => $web_path . '/albums.php?action=show_disk&album_disk=' . $albumdiskid,
                             'label' => scrub_out($albumdisk->get_fullname()),
                             'value' => scrub_out($albumdisk->get_fullname()),
-                            'rels' => scrub_out($albumdisk->get_artist_fullname()),
-                            'image' => (string)Art::url($albumdisk->album_id, 'album', null, 10),
+                            'rels' => scrub_out($albumdisk->get_parent_fullname()),
+                            'image' => (string) Art::url($albumdisk->album_id, 'album', null, 10),
                         ];
                     }
                 }
@@ -187,8 +186,8 @@ final readonly class SearchAjaxHandler implements AjaxHandlerInterface
                             'link' => $web_path . "/song.php?action=show_song&song_id=" . $songid,
                             'label' => scrub_out($song->title),
                             'value' => scrub_out($song->title),
-                            'rels' => scrub_out($song->get_artist_fullname()),
-                            'image' => (string)Art::url($art_object, $art_type, null, 10),
+                            'rels' => scrub_out($song->get_parent_fullname()),
+                            'image' => (string) Art::url($art_object, $art_type, null, 10),
                             'album' => $song->get_album_fullname(),
                         ];
                     }
@@ -252,7 +251,7 @@ final readonly class SearchAjaxHandler implements AjaxHandlerInterface
                                 'label' => $label->name,
                                 'value' => $label->name,
                                 'rels' => '',
-                                'image' => (string)Art::url($label->getId(), 'label', null, 10),
+                                'image' => (string) Art::url($label->getId(), 'label', null, 10),
                             ];
                         }
                     }

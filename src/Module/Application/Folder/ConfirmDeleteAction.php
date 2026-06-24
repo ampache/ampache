@@ -46,8 +46,7 @@ final readonly class ConfirmDeleteAction implements ApplicationActionInterface
         private UiInterface $ui,
         private FolderDeleterInterface $folderDeleter,
         private FolderRepositoryInterface $folderRepository,
-    ) {
-    }
+    ) {}
 
     public function run(ServerRequestInterface $request, GuiGatekeeperInterface $gatekeeper): ?ResponseInterface
     {
@@ -60,17 +59,19 @@ final readonly class ConfirmDeleteAction implements ApplicationActionInterface
         }
 
         $body     = $request->getQueryParams();
-        $folderId = (int)($body['folder_id'] ?? 0);
+        $folderId = (int) ($body['folder_id'] ?? 0);
 
         $folder = $this->folderRepository->findById($folderId);
         if (
-            $folder === null ||
-            !Catalog::can_remove($folder)
+            $folder === null
+            || !Catalog::can_remove($folder)
         ) {
             throw new AccessDeniedException(
                 sprintf('Unauthorized to remove the folder `%s`', $folderId)
             );
         }
+
+        $returnId = $folder->parent ?? -1;
 
         $this->folderDeleter->delete($folder);
 
@@ -78,7 +79,11 @@ final readonly class ConfirmDeleteAction implements ApplicationActionInterface
         $this->ui->showConfirmation(
             T_('No Problem'),
             T_('The Folder has been deleted'),
-            $this->configContainer->getWebPath()
+            sprintf(
+                '%s/folders.php?action=show&folder_id=%s',
+                $this->configContainer->getWebPath(),
+                $returnId
+            )
         );
         $this->ui->showQueryStats();
         $this->ui->showFooter();

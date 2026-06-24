@@ -17,6 +17,8 @@ global $dic;
 $environment = $dic->get(EnvironmentInterface::class);
 
 /** @var bool $isVideo  */
+
+// show_html5_player.inc.php
 /** @var bool $isDemocratic */
 /** @var bool $isRandom */
 /** @var bool $isShare */
@@ -33,8 +35,8 @@ $cookie_string = (make_bool(AmpConfig::get('cookie_secure')))
 $autoplay     = true;
 $embed        = $embed ?? false;
 $loop         = ($isRandom || $isDemocratic);
-$jp_volume    = (float)AmpConfig::get('jp_volume', 0.80);
-$removeCount  = (int)AmpConfig::get('webplayer_removeplayed', 0);
+$jp_volume    = (float) AmpConfig::get('jp_volume', 0.80);
+$removeCount  = (int) AmpConfig::get('webplayer_removeplayed', 0);
 $waveform     = AmpConfig::get('waveform', false) && $isShare === false;
 $canSlideshow = Preference::exists('flickr_api_key');
 $removePlayed = ($removeCount > 0);
@@ -248,8 +250,8 @@ echo implode(',', $solutions); ?>",
                     obj.artist = obj.artist.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
 
                     <?php if (
-                        $isVideo === false &&
-                        $isShare === false
+                        $isVideo === false
+                        && $isShare === false
                     ) {
                         if ($iframed) {
                             if (AmpConfig::get('sociable')) {
@@ -284,9 +286,9 @@ echo implode(',', $solutions); ?>",
                     $('.playing_title').html(titleobj);
                     $('.playing_artist').html(artistobj);
                     <?php if (
-                        $iframed &&
-                        $isRandom === false &&
-                        $isDemocratic === false
+                        $iframed
+                        && $isRandom === false
+                        && $isDemocratic === false
                     ) { ?>
                     $('.playing_actions').html(actionsobj);
                     <?php if (AmpConfig::get('show_lyrics')) { ?>
@@ -544,7 +546,7 @@ if ($isVideo === false) {
                                     }
 
                                     $broadcast = new Broadcast((int) $broadcast_id);
-                                    $key       = Broadcast::generate_key();
+                                    $key       = Core::generate_random_key();
                                     $broadcast->update_state(1, $key);
                                     echo Broadcast::get_unbroadcast_link($broadcast_id) . '<script>startBroadcast(\'' . $key . '\');</script>';
                                 } else {

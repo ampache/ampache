@@ -28,9 +28,7 @@ use DateTime;
 
 final readonly class LabelListUpdater implements LabelListUpdaterInterface
 {
-    public function __construct(private LabelRepositoryInterface $labelRepository)
-    {
-    }
+    public function __construct(private LabelRepositoryInterface $labelRepository) {}
 
     /**
      * Update the labels list based on a comma separated list (ex. label1,label2,label3,..)

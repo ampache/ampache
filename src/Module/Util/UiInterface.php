@@ -28,40 +28,33 @@ namespace Ampache\Module\Util;
 interface UiInterface
 {
     /**
-     * Show the requested template file
-     */
-    public function show(string $template, array $context = []): void;
-
-    /**
-     * This displays the query stats
-     */
-    public function showQueryStats(): void;
-
-    /**
-     * This displays the footer
-     */
-    public function showFooter(): void;
-
-    /**
-     * This displays the header
-     */
-    public function showHeader(): void;
-
-    public function showBoxTop(string $title = '', string $class = ''): void;
-
-    public function showBoxBottom(): void;
-
-    public function showObjectNotFound(): void;
-
-    /**
      * Displays the default error page
      */
     public function accessDenied(string $error = 'Access Denied'): void;
 
     /**
+     * takes the key and then creates the correct type of input for updating it
+     */
+    public function createPreferenceInput(
+        string $name,
+        $value,
+    ): void;
+
+    /**
      * Displays an error page when you can't write the config
      */
     public function permissionDenied(string $fileName): void;
+
+    public function scrubOut(?string $string): string;
+
+    /**
+     * Show the requested template file
+     */
+    public function show(string $template, array $context = []): void;
+
+    public function showBoxBottom(): void;
+
+    public function showBoxTop(string $title = '', string $class = ''): void;
 
     /**
      * shows a confirmation of an action
@@ -76,6 +69,18 @@ interface UiInterface
     ): void;
 
     /**
+     * shows a confirmation of an action
+     */
+    public function showConfirmationWithReturn(
+        string $title,
+        string $text,
+        string $return_url,
+        string $cancel_url,
+        ?string $form_name = 'confirmation',
+        ?bool $visible = true,
+    ): void;
+
+    /**
      * shows a simple continue button after an action
      */
     public function showContinue(
@@ -84,15 +89,17 @@ interface UiInterface
         string $next_url,
     ): void;
 
-    public function scrubOut(?string $string): string;
+    /**
+     * This displays the footer
+     */
+    public function showFooter(): void;
 
     /**
-     * takes the key and then creates the correct type of input for updating it
+     * This displays the header
      */
-    public function createPreferenceInput(
-        string $name,
-        $value,
-    ): void;
+    public function showHeader(): void;
+
+    public function showObjectNotFound(): void;
 
     /**
      * This shows the preference box for the preferences pages.
@@ -100,4 +107,9 @@ interface UiInterface
      * @param array<string, mixed> $preferences
      */
     public function showPreferenceBox(array $preferences): void;
+
+    /**
+     * This displays the query stats
+     */
+    public function showQueryStats(): void;
 }

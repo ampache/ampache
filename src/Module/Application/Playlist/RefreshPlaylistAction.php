@@ -42,8 +42,7 @@ final readonly class RefreshPlaylistAction implements ApplicationActionInterface
         private ModelFactoryInterface $modelFactory,
         private ResponseFactoryInterface $responseFactory,
         private ConfigContainerInterface $configContainer,
-    ) {
-    }
+    ) {}
 
     public function run(ServerRequestInterface $request, GuiGatekeeperInterface $gatekeeper): ResponseInterface
     {
@@ -52,9 +51,9 @@ final readonly class RefreshPlaylistAction implements ApplicationActionInterface
         $searchId   = $request->getQueryParams()['search_id'] ?? null;
         if ($userId !== null && $playlistId !== null && $searchId !== null) {
             // Check rights
-            $user     = $this->modelFactory->createUser((int)$userId);
-            $playlist = $this->modelFactory->createPlaylist((int)$playlistId);
-            $search   = $this->modelFactory->createSearch((int)$searchId, 'song', $user);
+            $user     = $this->modelFactory->createUser((int) $userId);
+            $playlist = $this->modelFactory->createPlaylist((int) $playlistId);
+            $search   = $this->modelFactory->createSearch((int) $searchId, 'song', $user);
             $objects  = $search->get_items();
             if ($playlist->has_access() && $objects !== []) {
                 $playlist->delete_all();

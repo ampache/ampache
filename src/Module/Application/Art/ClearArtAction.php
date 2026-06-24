@@ -40,13 +40,12 @@ final class ClearArtAction extends AbstractArtAction
     public function __construct(
         private readonly ModelFactoryInterface $modelFactory,
         private readonly UiInterface $ui,
-    ) {
-    }
+    ) {}
 
     public function run(ServerRequestInterface $request, GuiGatekeeperInterface $gatekeeper): ?ResponseInterface
     {
-        $object_type = (string)filter_input(INPUT_GET, 'object_type', FILTER_SANITIZE_SPECIAL_CHARS);
-        $kind        = (string)filter_input(INPUT_GET, 'kind', FILTER_SANITIZE_SPECIAL_CHARS);
+        $object_type = (string) filter_input(INPUT_GET, 'object_type', FILTER_SANITIZE_SPECIAL_CHARS);
+        $kind        = (string) filter_input(INPUT_GET, 'kind', FILTER_SANITIZE_SPECIAL_CHARS);
         if ($kind === '' || $kind === '0') {
             $kind = 'default';
         }

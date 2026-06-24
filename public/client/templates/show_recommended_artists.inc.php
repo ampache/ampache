@@ -23,6 +23,8 @@ declare(strict_types=0);
  *
  */
 
+// show_recommended_artists.inc.php
+
 use Ampache\Config\AmpConfig;
 use Ampache\Module\Authorization\Access;
 use Ampache\Module\Authorization\AccessLevelEnum;
@@ -34,7 +36,7 @@ use Ampache\Repository\Model\User;
 use Ampache\Repository\Model\Userflag;
 
 /** @var list<int> $object_ids */
-/** @var array $missing_objects */
+/** @var array<int, array{mbid: string, name: string}> $missing_objects */
 /** @var string $limit_threshold */
 
 $show_ratings = User::is_registered() && (AmpConfig::get('ratings'));

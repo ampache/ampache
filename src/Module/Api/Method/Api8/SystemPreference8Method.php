@@ -74,7 +74,7 @@ final class SystemPreference8Method
 
         $results   = [];
         $results[] = [
-            "id" => (string)$preference[0]['id'],
+            "id" => (string) $preference[0]['id'],
             "name" => $preference[0]['name'],
             "level" => $preference[0]['level'],
             "description" => $preference[0]['description'],
@@ -82,7 +82,7 @@ final class SystemPreference8Method
             "type" => $preference[0]['type'],
             "category" => $preference[0]['category'],
             "subcategory" => $preference[0]['subcategory'],
-            "has_access" => (((int)$preference[0]['level']) <= $user->access),
+            "has_access" => (((int) $preference[0]['level']) <= $user->access),
             "values" => [],
         ];
 

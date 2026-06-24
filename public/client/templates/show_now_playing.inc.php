@@ -21,6 +21,8 @@
  *
  */
 
+// show_now_playing.inc.php
+
 /**
  * This is the Now Playing container, it holds the master div for Now Playing
  * and loops through what's current playing as passed and includes

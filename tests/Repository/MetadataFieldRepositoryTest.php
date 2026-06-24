@@ -35,17 +35,7 @@ use PHPUnit\Framework\TestCase;
 class MetadataFieldRepositoryTest extends TestCase
 {
     private DatabaseConnectionInterface&MockObject $connection;
-
     private MetadataFieldRepository $subject;
-
-    protected function setUp(): void
-    {
-        $this->connection = $this->createMock(DatabaseConnectionInterface::class);
-
-        $this->subject = new MetadataFieldRepository(
-            $this->connection
-        );
-    }
 
     public function testCollectGarbageExecutesQuery(): void
     {
@@ -54,57 +44,6 @@ class MetadataFieldRepositoryTest extends TestCase
             ->with('DELETE FROM `metadata_field` USING `metadata_field` LEFT JOIN `metadata` ON `metadata`.`field` = `metadata_field`.`id` WHERE `metadata`.`id` IS NULL;');
 
         $this->subject->collectGarbage();
-    }
-
-    public function testGetPropertyListReturnsData(): void
-    {
-        $id   = 666;
-        $name = 'some-name';
-
-        $result = $this->createMock(PDOStatement::class);
-
-        $this->connection->expects(static::once())
-            ->method('query')
-            ->with('SELECT `id`, `name` FROM `metadata_field`')
-            ->willReturn($result);
-
-        $result->expects(static::exactly(2))
-            ->method('fetch')
-            ->with(PDO::FETCH_ASSOC)
-            ->willReturn(['id' => (string) $id, 'name' => $name], false);
-
-        self::assertSame(
-            [$id => $name],
-            iterator_to_array($this->subject->getPropertyList())
-        );
-    }
-
-    public function testFindByIdReturnsNullIfNoItemWasFound(): void
-    {
-        $id = 666;
-
-        $result = $this->createMock(PDOStatement::class);
-
-        $this->connection->expects(static::once())
-            ->method('query')
-            ->with(
-                'SELECT * FROM `metadata_field` WHERE `id` = ?',
-                [
-                    $id
-                ],
-            )
-            ->willReturn($result);
-
-        $result->expects(static::once())
-            ->method('setFetchMode')
-            ->with(PDO::FETCH_CLASS, MetadataField::class, [$this->subject]);
-        $result->expects(static::once())
-            ->method('fetch')
-            ->willReturn(false);
-
-        self::assertNull(
-            $this->subject->findById($id)
-        );
     }
 
     public function testFindByIdReturnsFoundItem(): void
@@ -137,18 +76,18 @@ class MetadataFieldRepositoryTest extends TestCase
         );
     }
 
-    public function testFindByNameReturnsNullIfNoItemWasFound(): void
+    public function testFindByIdReturnsNullIfNoItemWasFound(): void
     {
-        $name = 'some-name';
+        $id = 666;
 
         $result = $this->createMock(PDOStatement::class);
 
         $this->connection->expects(static::once())
             ->method('query')
             ->with(
-                'SELECT * FROM `metadata_field` WHERE `name` = ? LIMIT 1',
+                'SELECT * FROM `metadata_field` WHERE `id` = ?',
                 [
-                    $name
+                    $id
                 ],
             )
             ->willReturn($result);
@@ -161,7 +100,7 @@ class MetadataFieldRepositoryTest extends TestCase
             ->willReturn(false);
 
         self::assertNull(
-            $this->subject->findByName($name)
+            $this->subject->findById($id)
         );
     }
 
@@ -192,6 +131,57 @@ class MetadataFieldRepositoryTest extends TestCase
         self::assertSame(
             $item,
             $this->subject->findByName($name)
+        );
+    }
+
+    public function testFindByNameReturnsNullIfNoItemWasFound(): void
+    {
+        $name = 'some-name';
+
+        $result = $this->createMock(PDOStatement::class);
+
+        $this->connection->expects(static::once())
+            ->method('query')
+            ->with(
+                'SELECT * FROM `metadata_field` WHERE `name` = ? LIMIT 1',
+                [
+                    $name
+                ],
+            )
+            ->willReturn($result);
+
+        $result->expects(static::once())
+            ->method('setFetchMode')
+            ->with(PDO::FETCH_CLASS, MetadataField::class, [$this->subject]);
+        $result->expects(static::once())
+            ->method('fetch')
+            ->willReturn(false);
+
+        self::assertNull(
+            $this->subject->findByName($name)
+        );
+    }
+
+    public function testGetPropertyListReturnsData(): void
+    {
+        $id   = 666;
+        $name = 'some-name';
+
+        $result = $this->createMock(PDOStatement::class);
+
+        $this->connection->expects(static::once())
+            ->method('query')
+            ->with('SELECT `id`, `name` FROM `metadata_field`')
+            ->willReturn($result);
+
+        $result->expects(static::exactly(2))
+            ->method('fetch')
+            ->with(PDO::FETCH_ASSOC)
+            ->willReturn(['id' => (string) $id, 'name' => $name], false);
+
+        self::assertSame(
+            [$id => $name],
+            iterator_to_array($this->subject->getPropertyList())
         );
     }
 
@@ -274,6 +264,15 @@ class MetadataFieldRepositoryTest extends TestCase
         self::assertInstanceOf(
             MetadataField::class,
             $this->subject->prototype()
+        );
+    }
+
+    protected function setUp(): void
+    {
+        $this->connection = $this->createMock(DatabaseConnectionInterface::class);
+
+        $this->subject = new MetadataFieldRepository(
+            $this->connection
         );
     }
 }

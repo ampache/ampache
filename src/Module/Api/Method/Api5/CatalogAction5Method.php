@@ -48,7 +48,7 @@ final class CatalogAction5Method
      * Kick off a catalog update or clean for the selected catalog
      * Added 'verify_catalog', 'gather_art'
      *
-     * task    = (string) 'add_to_catalog', 'clean_catalog', 'verify_catalog', 'gather_art'
+     * task = (string) 'add_to_catalog', 'clean_catalog', 'verify_catalog', 'gather_art'
      * catalog = (integer) $catalog_id
      *
      * @param array{

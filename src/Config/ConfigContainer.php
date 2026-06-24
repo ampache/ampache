@@ -43,37 +43,31 @@ final class ConfigContainer implements ConfigContainerInterface
         $this->configuration = $configuration;
     }
 
-    /**
-     * @param array<string, mixed> $configuration
-     */
-    public function updateConfig(array $configuration): ConfigContainerInterface
-    {
-        $this->configuration = array_merge(
-            $this->configuration,
-            $configuration
-        );
-
-        return $this;
-    }
-
     public function get(string $configKey): mixed
     {
         return $this->configuration[$configKey] ?? null;
     }
 
-    public function getSessionName(): string
+    public function getComposerBinaryPath(): string
     {
-        return $this->configuration[ConfigurationKeyEnum::SESSION_NAME] ?? '';
+        return $this->configuration[ConfigurationKeyEnum::COMPOSER_BINARY_PATH] ?? 'composer';
     }
 
-    public function isWebDavBackendEnabled(): bool
+    public function getComposerParameters(): string
     {
-        return (bool) ($this->configuration[ConfigurationKeyEnum::BACKEND_WEBDAV] ?? false);
+        return ($this->configuration[ConfigurationKeyEnum::COMPOSER_NO_DEV] ?? true)
+            ? '--prefer-source --no-interaction --no-dev'
+            : '--prefer-source --no-interaction';
     }
 
-    public function isAuthenticationEnabled(): bool
+    public function getConfigFilePath(): string
     {
-        return (bool) ($this->configuration[ConfigurationKeyEnum::USE_AUTH] ?? true);
+        return __DIR__ . '/../../config/ampache.cfg.php';
+    }
+
+    public function getNpmBinaryPath(): string
+    {
+        return $this->configuration[ConfigurationKeyEnum::NPM_BINARY_PATH] ?? 'npm';
     }
 
     public function getRawWebPath(): string
@@ -81,9 +75,14 @@ final class ConfigContainer implements ConfigContainerInterface
         return $this->configuration[ConfigurationKeyEnum::RAW_WEB_PATH] ?? '';
     }
 
-    public function getWebPath(?string $suffix = ''): string
+    public function getSessionName(): string
     {
-        return ($this->configuration[ConfigurationKeyEnum::WEB_PATH] ?? '') . $suffix;
+        return $this->configuration[ConfigurationKeyEnum::SESSION_NAME] ?? '';
+    }
+
+    public function getThemePath(): string
+    {
+        return $this->configuration[ConfigurationKeyEnum::THEME_PATH] ?? '';
     }
 
     /**
@@ -108,38 +107,22 @@ final class ConfigContainer implements ConfigContainerInterface
         );
     }
 
-    public function getComposerBinaryPath(): string
+    /**
+     * Returns the current Ampache version
+     */
+    public function getVersion(): string
     {
-        return $this->configuration[ConfigurationKeyEnum::COMPOSER_BINARY_PATH] ?? 'composer';
+        return $this->configuration[ConfigurationKeyEnum::VERSION] ?? '';
     }
 
-    public function getComposerParameters(): string
+    public function getWebPath(?string $suffix = ''): string
     {
-        return ($this->configuration[ConfigurationKeyEnum::COMPOSER_NO_DEV] ?? true)
-            ? '--prefer-source --no-interaction --no-dev'
-            : '--prefer-source --no-interaction';
+        return ($this->configuration[ConfigurationKeyEnum::WEB_PATH] ?? '') . $suffix;
     }
 
-    public function getNpmBinaryPath(): string
+    public function isAuthenticationEnabled(): bool
     {
-        return $this->configuration[ConfigurationKeyEnum::NPM_BINARY_PATH] ?? 'npm';
-    }
-
-    public function isFeatureEnabled(string $feature): bool
-    {
-        $value = $this->configuration[$feature] ?? false;
-
-        return (
-            $value === 'true' ||
-            $value === true ||
-            $value === 1 ||
-            $value === '1'
-        );
-    }
-
-    public function getThemePath(): string
-    {
-        return $this->configuration[ConfigurationKeyEnum::THEME_PATH] ?? '';
+        return (bool) ($this->configuration[ConfigurationKeyEnum::USE_AUTH] ?? true);
     }
 
     public function isDebugMode(): bool
@@ -152,16 +135,33 @@ final class ConfigContainer implements ConfigContainerInterface
         return $this->isFeatureEnabled(ConfigurationKeyEnum::DEMO_MODE);
     }
 
-    /**
-     * Returns the current Ampache version
-     */
-    public function getVersion(): string
+    public function isFeatureEnabled(string $feature): bool
     {
-        return $this->configuration[ConfigurationKeyEnum::VERSION] ?? '';
+        $value = $this->configuration[$feature] ?? false;
+
+        return (
+            $value === 'true'
+            || $value === true
+            || $value === 1
+            || $value === '1'
+        );
     }
 
-    public function getConfigFilePath(): string
+    public function isWebDavBackendEnabled(): bool
     {
-        return __DIR__ . '/../../config/ampache.cfg.php';
+        return (bool) ($this->configuration[ConfigurationKeyEnum::BACKEND_WEBDAV] ?? false);
+    }
+
+    /**
+     * @param array<string, mixed> $configuration
+     */
+    public function updateConfig(array $configuration): ConfigContainerInterface
+    {
+        $this->configuration = array_merge(
+            $this->configuration,
+            $configuration
+        );
+
+        return $this;
     }
 }

@@ -45,8 +45,8 @@ final class Rate4Method
      *
      * This rates a library item
      *
-     * type   = (string) 'song', 'album', 'artist', 'playlist', 'podcast', 'podcast_episode', 'video' $type
-     * id     = (integer) $object_id
+     * type = (string) 'song', 'album', 'artist', 'playlist', 'podcast', 'podcast_episode', 'video' $type
+     * id = (integer) $object_id
      * rating = (integer) 0|1|2|3|4|5 $rating
      *
      * @param array{
@@ -96,7 +96,7 @@ final class Rate4Method
                 return false;
             }
             $rate = new Rating($object_id, $type);
-            $rate->set_rating((int)$rating, $user->id);
+            $rate->set_rating((int) $rating, $user->id);
             Api4::message('success', 'rating set to ' . $rating . ' for ' . $object_id, null, $input['api_format']);
         }
 

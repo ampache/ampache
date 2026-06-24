@@ -42,7 +42,7 @@ final class FullServiceAction extends AbstractCatalogAction
         private readonly ConfigContainerInterface $configContainer,
     ) {
         parent::__construct($ui);
-        $this->ui              = $ui;
+        $this->ui = $ui;
     }
 
     /**
@@ -64,8 +64,8 @@ final class FullServiceAction extends AbstractCatalogAction
         catalog_worker('full_service', $catalogIds, $options);
 
         $this->ui->showConfirmation(
+            T_('No Problem'),
             T_('Catalog update process has started'),
-            '',
             sprintf('%s/catalog.php', $this->configContainer->getWebPath('/admin')),
             0,
             'confirmation',

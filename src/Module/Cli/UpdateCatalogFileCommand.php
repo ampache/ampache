@@ -31,16 +31,6 @@ use Override;
 
 final class UpdateCatalogFileCommand extends Command
 {
-    #[Override]
-    protected function defaults(): self
-    {
-        $this->option('-h, --help', T_('Help'))->on($this->showHelp(...));
-
-        $this->onExit(static fn ($exitCode = 0) => exit($exitCode));
-
-        return $this;
-    }
-
     public function __construct(
         private readonly UpdateSingleCatalogFileInterface $updateSingleCatalogFile,
     ) {
@@ -57,8 +47,8 @@ final class UpdateCatalogFileCommand extends Command
             ->argument('<filePath>', T_('File Path'))
             /* HINT: filename (/tmp/some-file.mp3) OR folder path (/tmp/Artist/Album) */
             ->usage(
-                '<bold>  run:updateCatalogFile some-catalog /tmp/some-file.mp3 -e</end> <comment> ## ' . sprintf(T_('Update %s in the catalog `some-catalog`'), '/tmp/some-file.mp3') . '</end><eol/>' .
-                '<bold>  run:updateCatalogFile some-catalog /tmp/some-file.flac -r /tmp/new-file.flac</end> <comment> ## ' . sprintf(T_('Rename %s to %s in the catalog `some-catalog`'), '/tmp/some-file.flac', '/tmp/new-file.flac') . '</end><eol/>'
+                '<bold>  run:updateCatalogFile some-catalog /tmp/some-file.mp3 -e</end> <comment> ## ' . sprintf(T_('Update %s in the catalog `some-catalog`'), '/tmp/some-file.mp3') . '</end><eol/>'
+                . '<bold>  run:updateCatalogFile some-catalog /tmp/some-file.flac -r /tmp/new-file.flac</end> <comment> ## ' . sprintf(T_('Rename %s to %s in the catalog `some-catalog`'), '/tmp/some-file.flac', '/tmp/new-file.flac') . '</end><eol/>'
             );
     }
 
@@ -72,19 +62,19 @@ final class UpdateCatalogFileCommand extends Command
 
         if (
             (
-                $values['rename'] != null &&
-                $values['move'] != null
-            ) ||
-            (
+                $values['rename'] != null
+                && $values['move'] != null
+            )
+            || (
                 (
-                    $values['rename'] != null ||
-                    $values['move'] != null
-                ) &&
-                (
-                    $values['verify'] ||
-                    $values['add'] ||
-                    $values['cleanup'] ||
-                    $values['art']
+                    $values['rename'] != null
+                    || $values['move'] != null
+                )
+                && (
+                    $values['verify']
+                    || $values['add']
+                    || $values['cleanup']
+                    || $values['art']
                 )
             )
         ) {
@@ -116,5 +106,15 @@ final class UpdateCatalogFileCommand extends Command
             $values['rename'],
             $values['move']
         );
+    }
+
+    #[Override]
+    protected function defaults(): self
+    {
+        $this->option('-h, --help', T_('Help'))->on($this->showHelp(...));
+
+        $this->onExit(static fn($exitCode = 0) => exit($exitCode));
+
+        return $this;
     }
 }

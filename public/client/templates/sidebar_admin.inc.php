@@ -23,6 +23,8 @@ declare(strict_types=0);
  *
  */
 
+// sidebar_admin.inc.php
+
 use Ampache\Config\AmpConfig;
 use Ampache\Module\Api\Ajax;
 use Ampache\Module\Authorization\Access;

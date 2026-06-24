@@ -23,6 +23,8 @@ declare(strict_types=0);
  *
  */
 
+// show_form_browse.inc.php
+
 use Ampache\Config\AmpConfig;
 use Ampache\Repository\VideoRepositoryInterface;
 
@@ -41,6 +43,9 @@ $albumString     = (AmpConfig::get('album_group'))
 <h3 class="box-title"><?php echo T_('Browse Ampache...'); ?></h3>
 
 <div class="category_options">
+    <?php if (AmpConfig::get('show_folder')) { ?>
+        <a class="category <?php echo ($filter_str == 'show') ? 'current' : ''; ?>" href="<?php echo $web_path; ?>/folders.php?action=show&folder=-1"><?php echo T_('Folders'); ?></a>
+    <?php } ?>
     <a class="category <?php echo ($filter_str == 'song') ? 'current' : ''; ?>" href="<?php echo $web_path; ?>/browse.php?action=song"><?php echo T_('Songs'); ?></a>
     <a class="category <?php echo ($filter_str == 'album_disk' || $filter_str == 'album') ? 'current' : ''; ?>" href="<?php echo $web_path; ?>/browse.php?action=<?php echo $albumString; ?>"><?php echo T_('Albums'); ?></a>
     <?php if ($showArtist || $filter_str == 'artist') { ?>

@@ -28,6 +28,11 @@ namespace Ampache\Repository;
 interface VideoRepositoryInterface
 {
     /**
+     * Return the number of entries in the database...
+     */
+    public function getItemCount(): int;
+
+    /**
      * This returns a number of random videos.
      *
      * @return int[]
@@ -36,9 +41,4 @@ interface VideoRepositoryInterface
         int $userId,
         ?int $count = 1,
     ): array;
-
-    /**
-     * Return the number of entries in the database...
-     */
-    public function getItemCount(): int;
 }

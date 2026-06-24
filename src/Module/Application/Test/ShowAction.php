@@ -44,8 +44,7 @@ final readonly class ShowAction implements ApplicationActionInterface
     public function __construct(
         private ConfigContainerInterface $configContainer,
         private ResponseFactoryInterface $responseFactory,
-    ) {
-    }
+    ) {}
 
     /**
      * @throws Exception
@@ -70,7 +69,7 @@ final readonly class ShowAction implements ApplicationActionInterface
             $link = __DIR__ . '/../../public/client/test.php?action=config';
         }
 
-        if (!empty($results)) {
+        if ($results !== [] && $results !== false) {
             /* Temp Fixes */
             $results = Preference::fix_preferences($results);
             $this->configContainer->updateConfig($results);

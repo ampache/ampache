@@ -47,6 +47,35 @@ class Random
     ];
 
     /**
+     * advanced
+     * This processes the results of a post from a form and returns an
+     * array of song items that were returned from said randomness
+     * @param array<string, mixed> $data
+     * @return int[]
+     */
+    public static function advanced(string $type, array $data): array
+    {
+        /* Figure out our object limit */
+        $limit     = (int) ($data['limit'] ?? -1);
+        $limit_sql = "LIMIT " . Dba::escape($limit);
+
+        /* If they've passed -1 as limit then get everything */
+        if ($limit == -1) {
+            if (array_key_exists('limit', $data)) {
+                unset($data['limit']);
+            }
+
+            $limit_sql = "";
+        }
+
+        $search  = self::_advanced_sql($data, $type, $limit_sql);
+        $results = self::_advanced_results($search['sql'], $search['parameters'], $data);
+        //debug_event(self::class, 'advanced ' . print_r($search, true), 5);
+
+        return self::get_songs($type, $results);
+    }
+
+    /**
      * artist
      * This returns the ID of a random artist, nothing special here for now
      */
@@ -70,78 +99,7 @@ class Random
         $db_results = Dba::read($sql);
         $results    = Dba::fetch_assoc($db_results);
 
-        return (int)$results['id'];
-    }
-
-    /**
-     * playlist
-     * This returns a random Playlist with songs little bit of extra
-     * logic require
-     */
-    public static function playlist(): int
-    {
-        $sql = "SELECT `playlist`.`id` FROM `playlist` LEFT JOIN `playlist_data` ON `playlist`.`id`=`playlist_data`.`playlist` WHERE `playlist_data`.`object_id` IS NOT NULL ORDER BY RAND()";
-
-        $db_results = Dba::read($sql);
-        $results    = Dba::fetch_assoc($db_results);
-
-        return (int)$results['id'];
-    }
-
-    /**
-     * get_single_song
-     * This returns a single song pulled based on the passed random method
-     */
-    public static function get_single_song(string $random_type, User $user, int $object_id = 0): int
-    {
-        $song_ids = match ($random_type) {
-            'artist' => self::get_artist(1, $user),
-            'playlist' => self::get_playlist($user, $object_id),
-            'search' => self::get_search($user, $object_id),
-            default => self::get_default(1, $user),
-        };
-        $song = array_pop($song_ids);
-        //debug_event(self::class, "get_single_song:" . $song, 5);
-
-        return (int)$song;
-    }
-
-    /**
-     * get_default
-     * This just randomly picks a song at whim from all catalogs
-     * @return int[]
-     */
-    public static function get_default(int $limit, ?User $user = null): array
-    {
-        $results = [];
-
-        if (empty($user)) {
-            $user = Core::get_global('user');
-        }
-
-        $user_id   = $user?->getId();
-        $sql       = "SELECT `song`.`id` FROM `song` ";
-        $where_sql = (AmpConfig::get('catalog_disable') || AmpConfig::get('catalog_filter'))
-            ? "WHERE `song`.`catalog` IN (" . implode(',', Catalog::get_catalogs('', $user_id, true)) . ") "
-            : "";
-
-        $rating_filter = AmpConfig::get_rating_filter();
-        if ($rating_filter > 0 && $rating_filter <= 5 && $user_id !== null) {
-            $where_sql .= ($where_sql == "")
-                ? sprintf('WHERE `song`.`artist` NOT IN (SELECT `object_id` FROM `rating` WHERE `rating`.`object_type` = \'artist\' AND `rating`.`rating` <=%d AND `rating`.`user` = %d)', $rating_filter, $user_id)
-                : sprintf('AND `song`.`artist` NOT IN (SELECT `object_id` FROM `rating` WHERE `rating`.`object_type` = \'artist\' AND `rating`.`rating` <=%d AND `rating`.`user` = %d)', $rating_filter, $user_id);
-            $where_sql .= sprintf('AND `song`.`album` NOT IN (SELECT `object_id` FROM `rating` WHERE `rating`.`object_type` = \'album\' AND `rating`.`rating` <=%d AND `rating`.`user` = %d)', $rating_filter, $user_id);
-        }
-
-        $sql .= sprintf('%s ORDER BY RAND() LIMIT %d', $where_sql, $limit);
-        $db_results = Dba::read($sql);
-        //debug_event(self::class, "get_default " . $sql, 5);
-
-        while ($row = Dba::fetch_assoc($db_results)) {
-            $results[] = (int)$row['id'];
-        }
-
-        return $results;
+        return (int) $results['id'];
     }
 
     /**
@@ -186,10 +144,60 @@ class Random
         $db_results = Dba::read($sql);
 
         while ($row = Dba::fetch_assoc($db_results)) {
-            $results[] = (int)$row['id'];
+            $results[] = (int) $row['id'];
         }
 
         return $results;
+    }
+
+    /**
+     * get_default
+     * This just randomly picks a song at whim from all catalogs
+     * @return int[]
+     */
+    public static function get_default(int $limit, ?User $user = null): array
+    {
+        $results = [];
+
+        if (empty($user)) {
+            $user = Core::get_global('user');
+        }
+
+        $user_id   = $user?->getId();
+        $sql       = "SELECT `song`.`id` FROM `song` ";
+        $where_sql = (AmpConfig::get('catalog_disable') || AmpConfig::get('catalog_filter'))
+            ? "WHERE `song`.`catalog` IN (" . implode(',', Catalog::get_catalogs('', $user_id, true)) . ") "
+            : "";
+
+        $rating_filter = AmpConfig::get_rating_filter();
+        if ($rating_filter > 0 && $rating_filter <= 5 && $user_id !== null) {
+            $where_sql .= ($where_sql == "")
+                ? sprintf('WHERE `song`.`artist` NOT IN (SELECT `object_id` FROM `rating` WHERE `rating`.`object_type` = \'artist\' AND `rating`.`rating` <=%d AND `rating`.`user` = %d)', $rating_filter, $user_id)
+                : sprintf('AND `song`.`artist` NOT IN (SELECT `object_id` FROM `rating` WHERE `rating`.`object_type` = \'artist\' AND `rating`.`rating` <=%d AND `rating`.`user` = %d)', $rating_filter, $user_id);
+            $where_sql .= sprintf('AND `song`.`album` NOT IN (SELECT `object_id` FROM `rating` WHERE `rating`.`object_type` = \'album\' AND `rating`.`rating` <=%d AND `rating`.`user` = %d)', $rating_filter, $user_id);
+        }
+
+        $sql .= sprintf('%s ORDER BY RAND() LIMIT %d', $where_sql, $limit);
+        $db_results = Dba::read($sql);
+        //debug_event(self::class, "get_default " . $sql, 5);
+
+        while ($row = Dba::fetch_assoc($db_results)) {
+            $results[] = (int) $row['id'];
+        }
+
+        return $results;
+    }
+
+    /**
+     * get_play_url
+     * This returns the special play URL for random play
+     */
+    public static function get_play_url(string $object_type, int $object_id): string
+    {
+        $user = Core::get_global('user');
+        $link = Stream::get_base_url(false, $user?->streamtoken) . 'uid=' . scrub_out((string) ($user->id ?? '')) . '&random=1&random_type=' . scrub_out($object_type) . '&random_id=' . scrub_out((string) $object_id);
+
+        return Stream_Url::format($link);
     }
 
     /**
@@ -202,10 +210,10 @@ class Random
         $results  = [];
         $playlist = new Playlist($playlist_id);
         if (
-            $playlist->isNew() === false &&
-            (
-                $playlist->type === 'public' ||
-                $playlist->has_collaborate($user)
+            $playlist->isNew() === false
+            && (
+                $playlist->type === 'public'
+                || $playlist->has_collaborate($user)
             )
         ) {
             foreach ($playlist->get_random_items('1') as $songs) {
@@ -226,14 +234,14 @@ class Random
         $results = [];
         $search  = new Search($search_id, 'song', $user);
         if (
-            $search->isNew() === false &&
-            (
-                $search->type === 'public' ||
-                $search->has_access($user)
+            $search->isNew() === false
+            && (
+                $search->type === 'public'
+                || $search->has_access($user)
             )
         ) {
             foreach ($search->get_random_items('1') as $songs) {
-                $results[] = (int)$songs['object_id'];
+                $results[] = (int) $songs['object_id'];
             }
         }
 
@@ -241,32 +249,21 @@ class Random
     }
 
     /**
-     * advanced
-     * This processes the results of a post from a form and returns an
-     * array of song items that were returned from said randomness
-     * @param array<string, mixed> $data
-     * @return int[]
+     * get_single_song
+     * This returns a single song pulled based on the passed random method
      */
-    public static function advanced(string $type, array $data): array
+    public static function get_single_song(string $random_type, User $user, int $object_id = 0): int
     {
-        /* Figure out our object limit */
-        $limit     = (int)($data['limit'] ?? -1);
-        $limit_sql = "LIMIT " . Dba::escape($limit);
+        $song_ids = match ($random_type) {
+            'artist' => self::get_artist(1, $user),
+            'playlist' => self::get_playlist($user, $object_id),
+            'search' => self::get_search($user, $object_id),
+            default => self::get_default(1, $user),
+        };
+        $song = array_pop($song_ids);
+        //debug_event(self::class, "get_single_song:" . $song, 5);
 
-        /* If they've passed -1 as limit then get everything */
-        if ($limit == -1) {
-            if (array_key_exists('limit', $data)) {
-                unset($data['limit']);
-            }
-
-            $limit_sql = "";
-        }
-
-        $search  = self::advanced_sql($data, $type, $limit_sql);
-        $results = self::advanced_results($search['sql'], $search['parameters'], $data);
-        //debug_event(self::class, 'advanced ' . print_r($search, true), 5);
-
-        return self::get_songs($type, $results);
+        return (int) $song;
     }
 
     /**
@@ -302,13 +299,28 @@ class Random
     }
 
     /**
+     * playlist
+     * This returns a random Playlist with songs little bit of extra
+     * logic require
+     */
+    public static function playlist(): int
+    {
+        $sql = "SELECT `playlist`.`id` FROM `playlist` LEFT JOIN `playlist_data` ON `playlist`.`id`=`playlist_data`.`playlist` WHERE `playlist_data`.`object_id` IS NOT NULL ORDER BY RAND()";
+
+        $db_results = Dba::read($sql);
+        $results    = Dba::fetch_assoc($db_results);
+
+        return (int) $results['id'];
+    }
+
+    /**
      * advanced_results
      * Run the query generated above by self::advanced so we can while it
      * @param array<int, mixed> $sql_params
      * @param array<string, mixed> $data
      * @return int[]
      */
-    private static function advanced_results(string $sql_query, array $sql_params, array $data): array
+    private static function _advanced_results(string $sql_query, array $sql_params, array $data): array
     {
         // Run the query generated above so we can while it
         $db_results = Dba::read($sql_query, $sql_params);
@@ -338,7 +350,7 @@ class Random
                 }
 
                 $size_total += $new_size;
-                $results[] = (int)$row['id'];
+                $results[] = (int) $row['id'];
 
                 // If we are within 4mb of target then jump ship
                 if (($data['size_limit'] - floor($size_total)) < 4) {
@@ -362,7 +374,7 @@ class Random
                 }
 
                 $time_total += $new_time;
-                $results[] = (int)$row['id'];
+                $results[] = (int) $row['id'];
 
                 // If there are less then 2 min of free space return
                 if (($data['length'] - $time_total) < 2) {
@@ -371,7 +383,7 @@ class Random
             } // if length does matter
 
             if (!$size_limit && !$length) {
-                $results[] = (int)$row['id'];
+                $results[] = (int) $row['id'];
             }
         }
 
@@ -387,7 +399,7 @@ class Random
      *     parameters: array<int, mixed>
      * }
      */
-    private static function advanced_sql(array $data, string $type, string $limit_sql): array
+    private static function _advanced_sql(array $data, string $type, string $limit_sql): array
     {
         $search = new Search(0, $type);
         $search->set_rules($data);
@@ -444,18 +456,6 @@ class Random
             'sql' => $sql,
             'parameters' => $search_info['parameters'],
         ];
-    }
-
-    /**
-     * get_play_url
-     * This returns the special play URL for random play
-     */
-    public static function get_play_url(string $object_type, int $object_id): string
-    {
-        $user = Core::get_global('user');
-        $link = Stream::get_base_url(false, $user?->streamtoken) . 'uid=' . scrub_out((string)($user->id ?? '')) . '&random=1&random_type=' . scrub_out($object_type) . '&random_id=' . scrub_out((string)$object_id);
-
-        return Stream_Url::format($link);
     }
 
     /**

@@ -49,6 +49,9 @@ final class LiveStreamQuery implements QueryInterface
         'user_rating',
     ];
 
+    protected string $base   = "SELECT %%SELECT%% FROM `live_stream` ";
+    protected string $select = "`live_stream`.`id`";
+
     /** @var string[] $sorts */
     protected array $sorts = [
         'catalog',
@@ -66,9 +69,15 @@ final class LiveStreamQuery implements QueryInterface
         'userflag',
     ];
 
-    protected string $select = "`live_stream`.`id`";
-
-    protected string $base = "SELECT %%SELECT%% FROM `live_stream` ";
+    /**
+     * get_base_sql
+     *
+     * Base SELECT query string without filters or joins
+     */
+    public function get_base_sql(): string
+    {
+        return $this->base;
+    }
 
     /**
      * get_select
@@ -78,16 +87,6 @@ final class LiveStreamQuery implements QueryInterface
     public function get_select(): string
     {
         return $this->select;
-    }
-
-    /**
-     * get_base_sql
-     *
-     * Base SELECT query string without filters or joins
-     */
-    public function get_base_sql(): string
-    {
-        return $this->base;
     }
 
     /**
@@ -113,7 +112,7 @@ final class LiveStreamQuery implements QueryInterface
             case 'id':
                 $filter_sql = " `live_stream`.`id` IN (";
                 foreach ($value as $uid) {
-                    $filter_sql .= (int)$uid . ',';
+                    $filter_sql .= (int) $uid . ',';
                 }
 
                 $filter_sql = rtrim($filter_sql, ',') . ") AND ";
@@ -157,14 +156,14 @@ final class LiveStreamQuery implements QueryInterface
                 $filter_sql = " `live_stream`.`catalog` IN (" . implode(',', Catalog::get_catalogs('', $query->user_id, true)) . ") AND ";
                 break;
             case 'user_flag':
-                $filter_sql = ((int)$value === 0)
-                    ? " `live_stream`.`id` NOT IN (SELECT `object_id` FROM `user_flag` WHERE `object_type` = 'live_stream' AND `user` = " . (int)$query->user_id . ") AND "
-                    : " `live_stream`.`id` IN (SELECT `object_id` FROM `user_flag` WHERE `object_type` = 'live_stream' AND `user` = " . (int)$query->user_id . ") AND ";
+                $filter_sql = ((int) $value === 0)
+                    ? " `live_stream`.`id` NOT IN (SELECT `object_id` FROM `user_flag` WHERE `object_type` = 'live_stream' AND `user` = " . (int) $query->user_id . ") AND "
+                    : " `live_stream`.`id` IN (SELECT `object_id` FROM `user_flag` WHERE `object_type` = 'live_stream' AND `user` = " . (int) $query->user_id . ") AND ";
                 break;
             case 'user_rating':
-                $filter_sql = ((int)$value === 0)
-                    ? " `live_stream`.`id` NOT IN (SELECT `object_id` FROM `rating` WHERE `object_type` = 'live_stream' AND `user` = " . (int)$query->user_id . ") AND "
-                    : " `live_stream`.`id` IN (SELECT `object_id` FROM `rating` WHERE `object_type` = 'live_stream' AND `user` = " . (int)$query->user_id . " AND `rating` = " . Dba::escape($value) . ") AND ";
+                $filter_sql = ((int) $value === 0)
+                    ? " `live_stream`.`id` NOT IN (SELECT `object_id` FROM `rating` WHERE `object_type` = 'live_stream' AND `user` = " . (int) $query->user_id . ") AND "
+                    : " `live_stream`.`id` IN (SELECT `object_id` FROM `rating` WHERE `object_type` = 'live_stream' AND `user` = " . (int) $query->user_id . " AND `rating` = " . Dba::escape($value) . ") AND ";
                 break;
             case 'catalog_enabled':
                 $query->set_join('LEFT', '`catalog`', '`catalog`.`id`', '`live_stream`.`catalog`', 100);
@@ -179,11 +178,8 @@ final class LiveStreamQuery implements QueryInterface
      * get_sql_sort
      *
      * Sorting SQL for ORDER BY
-     * @param Query $query
-     * @param string|null $field
-     * @param string|null $order
      */
-    public function get_sql_sort($query, $field, $order): string
+    public function get_sql_sort(Query $query, ?string $field, ?string $order): string
     {
         switch ($field) {
             case 'name':
@@ -200,17 +196,17 @@ final class LiveStreamQuery implements QueryInterface
                 break;
             case 'rating':
                 $sql = sprintf('`rating`.`rating` %s, `rating`.`date`', $order);
-                $query->set_join_and_and('LEFT', "`rating`", "`rating`.`object_id`", "`live_stream`.`id`", "`rating`.`object_type`", "'live_stream'", "`rating`.`user`", (string)$query->user_id, 100);
+                $query->set_join_and_and('LEFT', "`rating`", "`rating`.`object_id`", "`live_stream`.`id`", "`rating`.`object_type`", "'live_stream'", "`rating`.`user`", (string) $query->user_id, 100);
                 break;
             case 'user_flag':
             case 'userflag':
                 $sql = "`user_flag`.`date`";
-                $query->set_join_and_and('LEFT', "`user_flag`", "`user_flag`.`object_id`", "`live_stream`.`id`", "`user_flag`.`object_type`", "'live_stream'", "`user_flag`.`user`", (string)$query->user_id, 100);
+                $query->set_join_and_and('LEFT', "`user_flag`", "`user_flag`.`object_id`", "`live_stream`.`id`", "`user_flag`.`object_type`", "'live_stream'", "`user_flag`.`user`", (string) $query->user_id, 100);
                 break;
             case 'user_flag_rating':
                 $sql = sprintf('`user_flag`.`date` %s, `rating`.`rating` %s, `rating`.`date`', $order, $order);
-                $query->set_join_and_and('LEFT', "`user_flag`", "`user_flag`.`object_id`", "`live_stream`.`id`", "`user_flag`.`object_type`", "'live_stream'", "`user_flag`.`user`", (string)$query->user_id, 100);
-                $query->set_join_and_and('LEFT', "`rating`", "`rating`.`object_id`", "`live_stream`.`id`", "`rating`.`object_type`", "'live_stream'", "`rating`.`user`", (string)$query->user_id, 100);
+                $query->set_join_and_and('LEFT', "`user_flag`", "`user_flag`.`object_id`", "`live_stream`.`id`", "`user_flag`.`object_type`", "'live_stream'", "`user_flag`.`user`", (string) $query->user_id, 100);
+                $query->set_join_and_and('LEFT', "`rating`", "`rating`.`object_id`", "`live_stream`.`id`", "`rating`.`object_type`", "'live_stream'", "`rating`.`user`", (string) $query->user_id, 100);
                 break;
             default:
                 $sql = '';

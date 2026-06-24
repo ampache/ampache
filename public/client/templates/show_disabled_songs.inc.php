@@ -23,6 +23,8 @@ declare(strict_types=0);
  *
  */
 
+// show_disabled_songs.inc.php
+
 use Ampache\Config\AmpConfig;
 use Ampache\Repository\Model\Song;
 
@@ -47,12 +49,13 @@ use Ampache\Repository\Model\Song;
                 <td colspan="6" style="text-align: center"><span class="error"><?php echo T_('No records found'); ?></span></td>
             </tr>
         <?php } ?>
-            <?php foreach ($songs as $song) { ?>
+            <?php foreach ($songs as $song) {
+                /** @var Song $song */?>
                 <tr>
                     <td class="cel_select"><input type="checkbox" name="song[]" value="<?php echo $song->getId(); ?>" /></td>
                     <td class="cel_song"><?php echo scrub_out($song->get_fullname()); ?></td>
                     <td class="cel_album"><?php echo scrub_out($song->get_album_fullname()); ?></td>
-                    <td class="cel_artist"><?php echo scrub_out($song->get_artist_fullname()); ?></td>
+                    <td class="cel_artist"><?php echo scrub_out($song->get_parent_fullname()); ?></td>
                     <td class="cel_filename"><?php echo scrub_out($song->getFile()); ?></td>
                     <td class="cel_additiontime"><?php echo get_datetime($song->getAdditionTime()); ?></td>
                 </tr>

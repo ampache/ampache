@@ -22,6 +22,8 @@ declare(strict_types=0);
  *
  */
 
+// install_header.inc.php
+
 /** @var string $charset */
 /** @var string $lang */
 $htmllang = str_replace("_", "-", $lang);

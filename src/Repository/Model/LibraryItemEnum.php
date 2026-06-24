@@ -41,7 +41,7 @@ enum LibraryItemEnum: string
     case SEARCH          = 'search';
     case SONG            = 'song';
     case SONG_PREVIEW    = 'song_preview';
-    case TAG_HIDDEN      = 'tag_hidden';
     case TAG             = 'tag';
+    case TAG_HIDDEN      = 'tag_hidden';
     case VIDEO           = 'video';
 }

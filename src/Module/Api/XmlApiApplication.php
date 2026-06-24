@@ -33,16 +33,11 @@ use Slim\ResponseEmitter;
 
 final class XmlApiApplication implements ApiApplicationInterface
 {
-    private ApiOutputFactoryInterface $apiOutputFactory;
-
     private ApiHandlerInterface $apiHandler;
-
+    private ApiOutputFactoryInterface $apiOutputFactory;
     private ConfigContainerInterface $configContainer;
-
     private ResponseFactoryInterface $responseFactory;
-
     private ResponseEmitter $sapiEmitter;
-
     private ServerRequestCreatorInterface $serverRequestCreator;
 
     public function __construct(
@@ -72,7 +67,7 @@ final class XmlApiApplication implements ApiApplicationInterface
 
         $request = $this->serverRequestCreator->fromGlobals();
         $post    = (in_array(strtoupper($request->getMethod()), ['POST', 'PATCH', 'PUT', 'DELETE']))
-            ? (array)$request->getParsedBody()
+            ? (array) $request->getParsedBody()
             : [];
         $request = $request->withQueryParams(
             array_merge(

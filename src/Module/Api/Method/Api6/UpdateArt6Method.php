@@ -51,8 +51,8 @@ final class UpdateArt6Method
      * updates a single album, artist, song running the gather_art process
      * Doesn't overwrite existing art by default.
      *
-     * type      = (string) 'artist', 'album'
-     * id        = (string) $artist_id, $album_id
+     * type = (string) 'artist', 'album'
+     * id = (string) $artist_id, $album_id
      * overwrite = (integer) 0,1 //optional
      *
      * @param array{
@@ -74,9 +74,9 @@ final class UpdateArt6Method
             return false;
         }
 
-        $type      = (string)$input['type'];
-        $object_id = (int)$input['id'];
-        $overwrite = array_key_exists('overwrite', $input) && (int)$input['overwrite'] == 0;
+        $type      = (string) $input['type'];
+        $object_id = (int) $input['id'];
+        $overwrite = array_key_exists('overwrite', $input) && (int) $input['overwrite'] == 0;
         $art_url   = Art::url($object_id, $type, $input['auth']);
 
         // confirm the correct data

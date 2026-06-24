@@ -39,8 +39,7 @@ final readonly class FunctionChecker implements FunctionCheckerInterface
     public function __construct(
         private ConfigContainerInterface $configContainer,
         private LoggerInterface $logger,
-    ) {
-    }
+    ) {}
 
     /**
      * This checks if specific functionality is enabled.
@@ -63,9 +62,9 @@ final readonly class FunctionChecker implements FunctionCheckerInterface
                 $user = Core::get_global('user');
 
                 if (
-                    $user instanceof User &&
-                    $this->configContainer->isFeatureEnabled(ConfigurationKeyEnum::ALLOW_ZIP_DOWNLOAD) &&
-                    $user->has_access(AccessLevelEnum::GUEST)
+                    $user instanceof User
+                    && $this->configContainer->isFeatureEnabled(ConfigurationKeyEnum::ALLOW_ZIP_DOWNLOAD)
+                    && $user->has_access(AccessLevelEnum::GUEST)
                 ) {
                     return $this->configContainer->isFeatureEnabled(ConfigurationKeyEnum::DOWNLOAD);
                 }

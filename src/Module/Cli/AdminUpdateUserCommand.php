@@ -32,16 +32,6 @@ use Override;
 
 final class AdminUpdateUserCommand extends Command
 {
-    #[Override]
-    protected function defaults(): self
-    {
-        $this->option('-h, --help', T_('Help'))->on($this->showHelp(...));
-
-        $this->onExit(static fn ($exitCode = 0) => exit($exitCode));
-
-        return $this;
-    }
-
     public function __construct(
         private readonly UserRepositoryInterface $userRepository,
         private readonly UserKeyGeneratorInterface $userKeyGenerator,
@@ -132,8 +122,8 @@ final class AdminUpdateUserCommand extends Command
         }
 
         if (
-            in_array($accessLevel, [0, 5, 25, 50, 75, 100], true) &&
-            $accessLevel !== $user->access
+            in_array($accessLevel, [0, 5, 25, 50, 75, 100], true)
+            && $accessLevel !== $user->access
         ) {
             $user->update_access($accessLevel);
 
@@ -146,5 +136,15 @@ final class AdminUpdateUserCommand extends Command
                 true
             );
         }
+    }
+
+    #[Override]
+    protected function defaults(): self
+    {
+        $this->option('-h, --help', T_('Help'))->on($this->showHelp(...));
+
+        $this->onExit(static fn($exitCode = 0) => exit($exitCode));
+
+        return $this;
     }
 }

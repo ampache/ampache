@@ -34,16 +34,52 @@ use PHPUnit\Framework\TestCase;
 class WantedRepositoryTest extends TestCase
 {
     private DatabaseConnectionInterface&MockObject $connection;
-
     private WantedRepository $subject;
 
-    protected function setUp(): void
+    public function testCollectGarbagePerformsCleanup(): void
     {
-        $this->connection = $this->createMock(DatabaseConnectionInterface::class);
+        $this->connection->expects(static::once())
+            ->method('query')
+            ->with(
+                'DELETE FROM `wanted` WHERE `wanted`.`artist` NOT IN (SELECT `artist`.`id` FROM `artist`)'
+            );
 
-        $this->subject = new WantedRepository(
-            $this->connection
-        );
+        $this->subject->collectGarbage();
+    }
+
+    public function testDeleteByMusicbrainzIdDeletesUser(): void
+    {
+        $musicBrainzId = 'some-mbid';
+        $userId        = 666;
+
+        $user = $this->createMock(User::class);
+
+        $user->expects(static::once())
+            ->method('getId')
+            ->willReturn($userId);
+
+        $this->connection->expects(static::once())
+            ->method('query')
+            ->with(
+                'DELETE FROM `wanted` WHERE `mbid` = ? AND `user` = ?',
+                [$musicBrainzId, $userId]
+            );
+
+        $this->subject->deleteByMusicbrainzId($musicBrainzId, $user);
+    }
+
+    public function testDeleteByMusicbrainzIdDeletesWithoutUser(): void
+    {
+        $musicBrainzId = 'some-mbid';
+
+        $this->connection->expects(static::once())
+            ->method('query')
+            ->with(
+                'DELETE FROM `wanted` WHERE `mbid` = ?',
+                [$musicBrainzId]
+            );
+
+        $this->subject->deleteByMusicbrainzId($musicBrainzId);
     }
 
     public function testFindAllReturnDataWithoutUserRestriction(): void
@@ -100,6 +136,40 @@ class WantedRepositoryTest extends TestCase
         );
     }
 
+    public function testFindByMusicBrainzIdReturnsNullIfNoEntryWasFound(): void
+    {
+        $mbid = 'some-mbid';
+
+        $this->connection->expects(static::once())
+            ->method('fetchOne')
+            ->with(
+                'SELECT `id` FROM `wanted` WHERE `mbid` = ?',
+                [$mbid]
+            )
+            ->willReturn(false);
+
+        self::assertNull(
+            $this->subject->findByMusicBrainzId($mbid)
+        );
+    }
+
+    public function testFindByNameReturnsNullIfNoEntryWasFound(): void
+    {
+        $name = 'some-value';
+
+        $this->connection->expects(static::once())
+            ->method('fetchOne')
+            ->with(
+                'SELECT `id` FROM `wanted` WHERE `name` = ? LIMIT 1',
+                [$name]
+            )
+            ->willReturn(false);
+
+        self::assertNull(
+            $this->subject->findByName($name)
+        );
+    }
+
     public function testFindReturnsNullIfItemWasNotFound(): void
     {
         $musicBrainzId = 'some-id';
@@ -150,41 +220,6 @@ class WantedRepositoryTest extends TestCase
         );
     }
 
-    public function testDeleteByMusicbrainzIdDeletesWithoutUser(): void
-    {
-        $musicBrainzId = 'some-mbid';
-
-        $this->connection->expects(static::once())
-            ->method('query')
-            ->with(
-                'DELETE FROM `wanted` WHERE `mbid` = ?',
-                [$musicBrainzId]
-            );
-
-        $this->subject->deleteByMusicbrainzId($musicBrainzId);
-    }
-
-    public function testDeleteByMusicbrainzIdDeletesUser(): void
-    {
-        $musicBrainzId = 'some-mbid';
-        $userId        = 666;
-
-        $user = $this->createMock(User::class);
-
-        $user->expects(static::once())
-            ->method('getId')
-            ->willReturn($userId);
-
-        $this->connection->expects(static::once())
-            ->method('query')
-            ->with(
-                'DELETE FROM `wanted` WHERE `mbid` = ? AND `user` = ?',
-                [$musicBrainzId, $userId]
-            );
-
-        $this->subject->deleteByMusicbrainzId($musicBrainzId, $user);
-    }
-
     public function testGetAcceptedCountReturnsValue(): void
     {
         $value = 1234;
@@ -198,59 +233,6 @@ class WantedRepositoryTest extends TestCase
             $value,
             $this->subject->getAcceptedCount()
         );
-    }
-
-    public function testFindByNameReturnsNullIfNoEntryWasFound(): void
-    {
-        $name = 'some-value';
-
-        $this->connection->expects(static::once())
-            ->method('fetchOne')
-            ->with(
-                'SELECT `id` FROM `wanted` WHERE `name` = ? LIMIT 1',
-                [$name]
-            )
-            ->willReturn(false);
-
-        self::assertNull(
-            $this->subject->findByName($name)
-        );
-    }
-
-    public function testFindByMusicBrainzIdReturnsNullIfNoEntryWasFound(): void
-    {
-        $mbid = 'some-mbid';
-
-        $this->connection->expects(static::once())
-            ->method('fetchOne')
-            ->with(
-                'SELECT `id` FROM `wanted` WHERE `mbid` = ?',
-                [$mbid]
-            )
-            ->willReturn(false);
-
-        self::assertNull(
-            $this->subject->findByMusicBrainzId($mbid)
-        );
-    }
-
-    public function testPrototypeReturnsNewInstance(): void
-    {
-        self::assertInstanceOf(
-            Wanted::class,
-            $this->subject->prototype()
-        );
-    }
-
-    public function testCollectGarbagePerformsCleanup(): void
-    {
-        $this->connection->expects(static::once())
-            ->method('query')
-            ->with(
-                'DELETE FROM `wanted` WHERE `wanted`.`artist` NOT IN (SELECT `artist`.`id` FROM `artist`)'
-            );
-
-        $this->subject->collectGarbage();
     }
 
     public function testMigrateArtistMigrates(): void
@@ -269,5 +251,22 @@ class WantedRepositoryTest extends TestCase
             );
 
         $this->subject->migrateArtist($oldObjectId, $newObjectId);
+    }
+
+    public function testPrototypeReturnsNewInstance(): void
+    {
+        self::assertInstanceOf(
+            Wanted::class,
+            $this->subject->prototype()
+        );
+    }
+
+    protected function setUp(): void
+    {
+        $this->connection = $this->createMock(DatabaseConnectionInterface::class);
+
+        $this->subject = new WantedRepository(
+            $this->connection
+        );
     }
 }

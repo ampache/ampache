@@ -32,16 +32,6 @@ use Override;
 
 final class ExportPlaylistCommand extends Command
 {
-    #[Override]
-    protected function defaults(): self
-    {
-        $this->option('-h, --help', T_('Help'))->on($this->showHelp(...));
-
-        $this->onExit(static fn ($exitCode = 0) => exit($exitCode));
-
-        return $this;
-    }
-
     public function __construct(
         private readonly PlaylistExporterInterface $playlistExporter,
     ) {
@@ -82,5 +72,15 @@ final class ExportPlaylistCommand extends Command
             $userId,
             $urltype
         );
+    }
+
+    #[Override]
+    protected function defaults(): self
+    {
+        $this->option('-h, --help', T_('Help'))->on($this->showHelp(...));
+
+        $this->onExit(static fn($exitCode = 0) => exit($exitCode));
+
+        return $this;
     }
 }

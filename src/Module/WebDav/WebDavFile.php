@@ -36,20 +36,7 @@ use Sabre\DAV\File;
  */
 class WebDavFile extends File
 {
-    public function __construct(private readonly Media $libitem)
-    {
-    }
-
-    public function getName(): string
-    {
-        if (property_exists($this->libitem, 'file') && $this->libitem->file !== null) {
-            $nameinfo = pathinfo($this->libitem->file);
-
-            return htmlentities($nameinfo['filename'] . '.' . ($nameinfo['extension'] ?? ''));
-        }
-
-        return '';
-    }
+    public function __construct(private readonly Media $libitem) {}
 
     /**
      * @return resource|null
@@ -61,9 +48,9 @@ class WebDavFile extends File
         if (property_exists($this->libitem, 'catalog') && $this->libitem->catalog !== null) {
             $catalog = Catalog::create_from_id($this->libitem->catalog);
             if (
-                $catalog !== null &&
-                $catalog->get_type() === 'local' &&
-                (property_exists($this->libitem, 'file') && $this->libitem->file !== null)
+                $catalog !== null
+                && $catalog->get_type() === 'local'
+                && (property_exists($this->libitem, 'file') && $this->libitem->file !== null)
             ) {
                 $filepointer = fopen(Core::conv_lc_file($this->libitem->file), 'r');
 
@@ -84,14 +71,23 @@ class WebDavFile extends File
         return null;
     }
 
+    public function getETag(): string
+    {
+        return md5($this->libitem->getMediaType()->value . "_" . ($this->libitem->id ?? 0) . "_" . ($this->libitem->update_time ?? time()));
+    }
+
+    public function getName(): string
+    {
+        if (property_exists($this->libitem, 'file')) {
+            return pathinfo((string) $this->libitem->file, PATHINFO_BASENAME);
+        }
+
+        return '';
+    }
+
     #[Override]
     public function getSize(): int
     {
         return $this->libitem->size ?? 0;
-    }
-
-    public function getETag(): string
-    {
-        return md5($this->libitem->getMediaType()->value . "_" . ($this->libitem->id ?? 0) . "_" . ($this->libitem->update_time ?? time()));
     }
 }

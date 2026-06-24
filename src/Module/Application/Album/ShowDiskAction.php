@@ -51,8 +51,7 @@ final readonly class ShowDiskAction implements ApplicationActionInterface
         private LoggerInterface $logger,
         private PrivilegeCheckerInterface $privilegeChecker,
         private ConfigContainerInterface $configContainer,
-    ) {
-    }
+    ) {}
 
     public function run(ServerRequestInterface $request, GuiGatekeeperInterface $gatekeeper): ?ResponseInterface
     {

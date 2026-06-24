@@ -21,6 +21,8 @@
  *
  */
 
+// show_gather_art.inc.php
+
 use Ampache\Module\Util\Ui;
 
 /** @var int $catalog_id */

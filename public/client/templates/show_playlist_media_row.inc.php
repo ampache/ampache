@@ -23,6 +23,8 @@ declare(strict_types=0);
  *
  */
 
+// show_playlist_media_row.inc.php
+
 use Ampache\Config\AmpConfig;
 use Ampache\Module\Api\Ajax;
 use Ampache\Module\Authorization\Access;
@@ -30,6 +32,8 @@ use Ampache\Module\Authorization\AccessLevelEnum;
 use Ampache\Module\Authorization\AccessTypeEnum;
 use Ampache\Module\Playback\Stream_Playlist;
 use Ampache\Module\Util\Ui;
+use Ampache\Repository\Model\displayable_item;
+use Ampache\Repository\Model\LibraryItemEnum;
 use Ampache\Repository\Model\Playlist;
 use Ampache\Repository\Model\Rating;
 use Ampache\Repository\Model\Share;
@@ -40,7 +44,7 @@ use Ampache\Repository\Model\Userflag;
 /** @var Playlist|null $playlist */
 /** @var int $playlist_track */
 /** @var int $search */
-/** @var array $object */
+/** @var array{object_type: LibraryItemEnum|string, object_id: int, track_id: int, track: int} $object */
 /** @var string $object_type */
 /** @var string $cel_cover */
 /** @var string $cel_time */
@@ -57,7 +61,7 @@ use Ampache\Repository\Model\Userflag;
 /** @var string $t_reorder */
 
 // Don't show disabled medias to normal users
-if (!isset($libitem->enabled) || $libitem->enabled || Access::check(AccessTypeEnum::INTERFACE, AccessLevelEnum::CONTENT_MANAGER)) {
+if ((!isset($libitem->enabled) || $libitem->enabled || Access::check(AccessTypeEnum::INTERFACE, AccessLevelEnum::CONTENT_MANAGER)) && $libitem instanceof displayable_item) {
     $thumb = (isset($browse) && $browse->is_grid_view())
         ? ['width' => 150, 'height' => 150]
         : ['width' => 80, 'height' => 80];

@@ -36,23 +36,17 @@ use Ampache\Module\Util\InterfaceImplementationChecker;
  * This class handles all of the genre related operations
  *
  */
-class Tag extends database_object implements library_item, GarbageCollectibleInterface
+class Tag extends database_object implements library_item, displayable_item, container_item, GarbageCollectibleInterface
 {
     protected const string DB_TABLENAME = 'tag';
 
-    public int $id = 0;
-
-    public ?string $name = null;
-
+    public int $album     = 0;
+    public int $artist    = 0;
+    public int $id        = 0;
     public int $is_hidden = 0;
-
-    public int $artist = 0;
-
-    public int $album = 0;
-
-    public int $song = 0;
-
-    public int $video = 0;
+    public ?string $name  = null;
+    public int $song      = 0;
+    public int $video     = 0;
 
     /**
      * constructor
@@ -74,25 +68,121 @@ class Tag extends database_object implements library_item, GarbageCollectibleInt
         }
     }
 
-    public function getId(): int
+    /**
+     * add
+     * This is a wrapper function, it figures out what we need to add, be it a tag
+     * and map, or just the mapping
+     */
+    public static function add(string $type, int $object_id, string $value): int
     {
-        return $this->id;
-    }
+        if (!InterfaceImplementationChecker::is_library_item($type)) {
+            return 0;
+        }
 
-    public function isNew(): bool
-    {
-        return $this->getId() === 0;
+        $cleaned_value = str_replace('Folk, World, & Country', 'Folk World & Country', $value);
+        if ((string) $cleaned_value === '') {
+            return 0;
+        }
+
+        // Check and see if the tag exists, if not create it, we need the tag id from this
+        if (($tag_id = self::tag_exists($cleaned_value)) === 0) {
+            debug_event(self::class, 'Adding new tag {' . $cleaned_value . '}', 5);
+            $tag_id = self::add_tag($cleaned_value);
+        }
+
+        if (!$tag_id) {
+            debug_event(self::class, 'Error unable to create tag value:' . $cleaned_value . ' unknown error', 1);
+
+            return 0;
+        }
+
+        // We've got the tag id, let's see if it's already got a map, if not then create the map and return the value
+        if (!self::tag_map_exists($type, $object_id, $tag_id)) {
+            return self::add_tag_map($type, $object_id, $tag_id);
+        }
+
+        return 0;
     }
 
     /**
-     * construct_from_name
-     * This attempts to construct the tag from a name, rather then the ID
+     * add_tag
+     * This function adds a new tag, for now we're going to limit the tagging a bit
      */
-    public static function construct_from_name(string $name): Tag
+    public static function add_tag(string $value): ?int
     {
-        $tag_id = self::tag_exists($name);
+        if ((string) $value === '') {
+            return null;
+        }
 
-        return new Tag($tag_id);
+        $sql = "REPLACE INTO `tag` SET `name` = ?";
+        Dba::write($sql, [$value]);
+        $insert_id = (int) Dba::insert_id();
+
+        parent::add_to_cache('tag_name', $value, [$insert_id]);
+
+        return $insert_id;
+    }
+
+    /**
+     * add_tag_map
+     * This adds a specific tag to the map for specified object
+     */
+    public static function add_tag_map(string $type, int|string $object_id, int|string $tag_id): int
+    {
+        if (!InterfaceImplementationChecker::is_library_item($type)) {
+            debug_event(self::class, $type . " is not a library item.", 3);
+
+            return 0;
+        }
+
+        $tag_id  = (int) ($tag_id);
+        $item_id = (int) ($object_id);
+
+        if (!$tag_id || !$item_id) {
+            return 0;
+        }
+
+        // If tag merged to another one, add reference to the merge destination
+        $parent = new Tag($tag_id);
+        $merges = $parent->get_merged_tags();
+        if ($parent->is_hidden === 0) {
+            $merges[] = ['id' => $parent->id, 'name' => $parent->name];
+        }
+
+        $insert_id = 0;
+        foreach ($merges as $tag) {
+            $sql = "INSERT IGNORE INTO `tag_map` (`tag_id`, `user`, `object_type`, `object_id`) VALUES (?, ?, ?, ?)";
+            Dba::write($sql, [$tag['id'], 0, $type, $item_id]);
+
+            $insert_id = (int) Dba::insert_id();
+            parent::add_to_cache(
+                'tag_map_' . $type,
+                $insert_id,
+                [
+                    'tag_id' => $tag_id,
+                    'user' => 0,
+                    'object_type' => $type,
+                    'object_id' => $item_id
+                ]
+            );
+
+            switch ($type) {
+                case 'album':
+                    Dba::write("UPDATE `tag` SET `album` = `album` + 1 WHERE `id` = ?", [$tag['id']]);
+                    break;
+                case 'artist':
+                    Dba::write("UPDATE `tag` SET `artist` = `artist` + 1 WHERE `id` = ?", [$tag['id']]);
+                    break;
+                case 'song':
+                    Dba::write("UPDATE `tag` SET `song` = `song` + 1 WHERE `id` = ?", [$tag['id']]);
+                    break;
+                case 'video':
+                    Dba::write("UPDATE `tag` SET `video` = `video` + 1 WHERE `id` = ?", [$tag['id']]);
+                    break;
+            }
+        }
+
+        return $insert_id;
     }
 
     /**
@@ -112,7 +202,7 @@ class Tag extends database_object implements library_item, GarbageCollectibleInt
         $db_results = Dba::read($sql);
 
         while ($row = Dba::fetch_assoc($db_results)) {
-            parent::add_to_cache('tag', (int)$row['id'], $row);
+            parent::add_to_cache('tag', (int) $row['id'], $row);
         }
 
         return true;
@@ -171,277 +261,49 @@ class Tag extends database_object implements library_item, GarbageCollectibleInt
     }
 
     /**
-     * add
-     * This is a wrapper function, it figures out what we need to add, be it a tag
-     * and map, or just the mapping
+     * clean_to_existing
+     * Clean tag list to existing tag list only
+     * @param string[]|string $tags
+     * @return string[]|string
      */
-    public static function add(string $type, int $object_id, string $value): int
+    public static function clean_to_existing(array|string $tags): array|string
     {
-        if (!InterfaceImplementationChecker::is_library_item($type)) {
-            return 0;
-        }
-
-        $cleaned_value = str_replace('Folk, World, & Country', 'Folk World & Country', $value);
-        if ((string)$cleaned_value === '') {
-            return 0;
-        }
-
-        // Check and see if the tag exists, if not create it, we need the tag id from this
-        if (($tag_id = self::tag_exists($cleaned_value)) === 0) {
-            debug_event(self::class, 'Adding new tag {' . $cleaned_value . '}', 5);
-            $tag_id = self::add_tag($cleaned_value);
-        }
-
-        if (!$tag_id) {
-            debug_event(self::class, 'Error unable to create tag value:' . $cleaned_value . ' unknown error', 1);
-
-            return 0;
-        }
-
-        // We've got the tag id, let's see if it's already got a map, if not then create the map and return the value
-        if (!self::tag_map_exists($type, $object_id, $tag_id)) {
-            return self::add_tag_map($type, $object_id, $tag_id);
-        }
-
-        return 0;
-    }
-
-    /**
-     * add_tag
-     * This function adds a new tag, for now we're going to limit the tagging a bit
-     */
-    public static function add_tag(string $value): ?int
-    {
-        if ((string)$value === '') {
-            return null;
-        }
-
-        $sql = "REPLACE INTO `tag` SET `name` = ?";
-        Dba::write($sql, [$value]);
-        $insert_id = (int)Dba::insert_id();
-
-        parent::add_to_cache('tag_name', $value, [$insert_id]);
-
-        return $insert_id;
-    }
-
-    /**
-     * update
-     * Update the name of the tag
-     */
-    public function update(array $data): ?int
-    {
-        if ((string)$data['name'] === '') {
-            return null;
-        }
-
-        $name      = $data['name'] ?? $this->name;
-        $is_hidden = (array_key_exists('is_hidden', $data))
-            ? (int)$data['is_hidden']
-            : 0;
-
-        if ($name != $this->name) {
-            debug_event(self::class, 'Updating tag {' . $this->id . '} with name {' . $data['name'] . '}...', 5);
-            $sql = 'UPDATE `tag` SET `name` = ? WHERE `id` = ?';
-            Dba::write($sql, [$name, $this->id]);
-        }
-
-        if ($is_hidden !== $this->is_hidden) {
-            debug_event(self::class, 'Hidden tag {' . $this->id . '} with status {' . $is_hidden . '}...', 5);
-            $sql = ($is_hidden == 1 && $this->is_hidden == 0)
-                ? 'UPDATE `tag` SET `is_hidden` = ?, `artist` = 0, `album` = 0, `song` = 0 WHERE `id` = ?'
-                : 'UPDATE `tag` SET `is_hidden` = ? WHERE `id` = ?';
-            Dba::write($sql, [$is_hidden, $this->id]);
-            // if you had previously hidden this tag then remove the merges too
-            if ($is_hidden == 0 && $this->is_hidden == 1) {
-                debug_event(self::class, 'Unhiding tag {' . $this->id . '} removing all previous merges', 5);
-                $this->remove_merges();
-            }
-
-            $this->is_hidden = $is_hidden;
-        }
-
-        if (array_key_exists('edit_tags', $data) && $data['edit_tags']) {
-            $filterfolk  = str_replace('Folk, World, & Country', 'Folk World & Country', (string) $data['edit_tags']);
+        if (is_array($tags)) {
+            $taglist = $tags;
+        } else {
+            $filterfolk  = str_replace('Folk, World, & Country', 'Folk World & Country', $tags);
             $filterunder = str_replace('_', ', ', $filterfolk);
             $filter      = str_replace(';', ', ', $filterunder);
             $filter_list = preg_split('/(\s*,*\s*)*,+(\s*,*\s*)*/', $filter);
-            $tag_names   = (is_array($filter_list)) ? array_unique($filter_list) : [];
+            $taglist     = (is_array($filter_list)) ? array_unique($filter_list) : [];
+        }
 
-            // remove merges that don't exist before adding new ones
-            $this->remove_merges();
-
-            // apply the new merge list
-            foreach ($tag_names as $tag) {
-                $merge_to = self::construct_from_name($tag);
-                if ($merge_to->id == 0) {
-                    self::add_tag($tag);
-                    $merge_to = self::construct_from_name($tag);
-                }
-
-                $this->merge($merge_to->id, array_key_exists('merge_persist', $data));
-            }
-
-            if (!array_key_exists('keep_existing', $data)) {
-                $sql = "DELETE FROM `tag_map` WHERE `tag_map`.`tag_id` = ? ";
-                Dba::write($sql, [$this->id]);
-                if (!array_key_exists('merge_persist', $data)) {
-                    $this->delete();
-                } else {
-                    $sql = "UPDATE `tag` SET `is_hidden` = 1 WHERE `tag`.`id` = ? ";
-                    Dba::write($sql, [$this->id]);
-                }
+        $ret = [];
+        foreach ($taglist as $tag) {
+            $tag = trim((string) $tag);
+            if (
+                $tag !== ''
+                && $tag !== '0'
+                && self::tag_exists($tag)
+            ) {
+                $ret[] = $tag;
             }
         }
 
-        return $this->id;
+        return (is_array($tags)
+            ? $ret
+            : implode(",", $ret));
     }
 
     /**
-     * merge
-     * merges this tag to another one.
+     * construct_from_name
+     * This attempts to construct the tag from a name, rather then the ID
      */
-    public function merge(int $merge_to, bool $is_persistent): void
+    public static function construct_from_name(string $name): Tag
     {
-        if ($this->id != $merge_to) {
-            debug_event(self::class, 'Merging tag ' . $this->id . ' into ' . $merge_to . ')...', 5);
+        $tag_id = self::tag_exists($name);
 
-            $sql = "REPLACE INTO `tag_map` (`tag_id`, `user`, `object_type`, `object_id`) SELECT " . $merge_to . ",`user`, `object_type`, `object_id` FROM `tag_map` AS `tm` WHERE `tm`.`tag_id` = " . $this->id . " AND NOT EXISTS (SELECT 1 FROM `tag_map` WHERE `tag_map`.`tag_id` = " . $merge_to . " AND `tag_map`.`object_id` = `tm`.`object_id` AND `tag_map`.`object_type` = `tm`.`object_type` AND `tag_map`.`user` = `tm`.`user`)";
-            Dba::write($sql);
-            if ($is_persistent) {
-                $sql = "REPLACE INTO `tag_merge` (`tag_id`, `merged_to`) VALUES (?, ?)";
-                Dba::write($sql, [$this->id, $merge_to]);
-            }
-        }
-    }
-
-    /**
-     * get_merged_tags
-     * Get merged tags to this tag.
-     * @return array<int, array{id: int, name: string, is_hidden: int, count: int}>
-     */
-    public function get_merged_tags(): array
-    {
-        $sql = "SELECT `tag`.`id`, `tag`.`name`, `tag`.`is_hidden`, 0 AS `count` FROM `tag_merge` INNER JOIN `tag` ON `tag`.`id` = `tag_merge`.`merged_to` WHERE `tag_merge`.`tag_id` = ? ORDER BY `tag`.`name`;";
-
-        $db_results = Dba::read($sql, [$this->id]);
-
-        $results = [];
-        while ($row = Dba::fetch_assoc($db_results)) {
-            $results[$row['id']] = [
-                'id' => $row['id'],
-                'name' => $row['name'],
-                'is_hidden' => $row['is_hidden'],
-                'count' => $row['count']
-            ];
-        }
-
-        return $results;
-    }
-
-    /**
-     * get_merged_count
-     */
-    public static function get_merged_count(): int
-    {
-        $results    = 0;
-        $sql        = "SELECT COUNT(DISTINCT `tag_id`) AS `tag_count` FROM `tag_merge`;";
-        $db_results = Dba::read($sql);
-
-        if ($row = Dba::fetch_assoc($db_results)) {
-            $results = (int)$row['tag_count'];
-        }
-
-        return $results;
-    }
-
-    /**
-     * has_merge
-     * Get merged tags to this tag.
-     */
-    public function has_merge(string $name): bool
-    {
-        $sql        = "SELECT `tag`.`name` FROM `tag_merge` INNER JOIN `tag` ON `tag`.`id` = `tag_merge`.`merged_to` WHERE `tag_merge`.`tag_id` = ? ORDER BY `tag`.`name` ";
-        $db_results = Dba::read($sql, [$this->id]);
-        while ($row = Dba::fetch_assoc($db_results)) {
-            if ($name == $row['name']) {
-                return true;
-            }
-        }
-
-        return false;
-    }
-
-    /**
-     * remove_merges
-     * Remove merged tags from this tag.
-     */
-    public function remove_merges(): void
-    {
-        $sql = "DELETE FROM `tag_merge` WHERE `tag_merge`.`tag_id` = ?;";
-        Dba::write($sql, [$this->id]);
-    }
-
-    /**
-     * add_tag_map
-     * This adds a specific tag to the map for specified object
-     */
-    public static function add_tag_map(string $type, int|string $object_id, int|string $tag_id): int
-    {
-        if (!InterfaceImplementationChecker::is_library_item($type)) {
-            debug_event(self::class, $type . " is not a library item.", 3);
-
-            return 0;
-        }
-
-        $tag_id  = (int)($tag_id);
-        $item_id = (int)($object_id);
-
-        if (!$tag_id || !$item_id) {
-            return 0;
-        }
-
-        // If tag merged to another one, add reference to the merge destination
-        $parent = new Tag($tag_id);
-        $merges = $parent->get_merged_tags();
-        if ($parent->is_hidden === 0) {
-            $merges[] = ['id' => $parent->id, 'name' => $parent->name];
-        }
-
-        $insert_id = 0;
-        foreach ($merges as $tag) {
-            $sql = "INSERT IGNORE INTO `tag_map` (`tag_id`, `user`, `object_type`, `object_id`) VALUES (?, ?, ?, ?)";
-            Dba::write($sql, [$tag['id'], 0, $type, $item_id]);
-
-            $insert_id = (int)Dba::insert_id();
-            parent::add_to_cache(
-                'tag_map_' . $type,
-                $insert_id,
-                [
-                    'tag_id' => $tag_id,
-                    'user' => 0,
-                    'object_type' => $type,
-                    'object_id' => $item_id
-                ]
-            );
-
-            switch ($type) {
-                case 'album':
-                    Dba::write("UPDATE `tag` SET `album` = `album` + 1 WHERE `id` = ?", [$tag['id']]);
-                    break;
-                case 'artist':
-                    Dba::write("UPDATE `tag` SET `artist` = `artist` + 1 WHERE `id` = ?", [$tag['id']]);
-                    break;
-                case 'song':
-                    Dba::write("UPDATE `tag` SET `song` = `song` + 1 WHERE `id` = ?", [$tag['id']]);
-                    break;
-                case 'video':
-                    Dba::write("UPDATE `tag` SET `video` = `video` + 1 WHERE `id` = ?", [$tag['id']]);
-                    break;
-            }
-        }
-
-        return $insert_id;
+        return new Tag($tag_id);
     }
 
     /**
@@ -479,97 +341,51 @@ class Tag extends database_object implements library_item, GarbageCollectibleInt
     }
 
     /**
-     * delete
-     *
-     * Delete the tag and all maps
+     * get_display
+     * This returns a csv formatted version of the tags that we are given
+     * it also takes a type so that it knows how to return it, this is used
+     * by the formatting functions of the different objects
+     * @param array<int, array{id: int, name: string, is_hidden: int, count: int}> $tags
      */
-    public function delete(): void
+    public static function get_display(array $tags, ?bool $link = false, ?string $filter_type = ''): string
     {
-        $sql = "DELETE FROM `tag_map` WHERE `tag_map`.`tag_id` = ?";
-        Dba::write($sql, [$this->id]);
+        //debug_event(self::class, 'Get display tags called...', 5);
+        if (empty($tags)) {
+            return '';
+        }
 
-        $sql = "DELETE FROM `tag_merge` WHERE `tag_merge`.`tag_id` = ?";
-        Dba::write($sql, [$this->id]);
+        $web_path = AmpConfig::get_web_path();
 
-        $sql = "DELETE FROM `tag` WHERE `tag`.`id` = ? ";
-        Dba::write($sql, [$this->id]);
+        $results = '';
 
-        // Call the garbage collector to clean everything
-        self::garbage_collection();
+        // Iterate through the tags, format them according to type and element id
+        foreach ($tags as $value) {
+            if ($link) {
+                $results .= '<a href="' . $web_path . '/browse.php?action=tag&show_tag=' . $value['id'] . (empty($filter_type) ? '' : '&type=' . $filter_type) . '" title="' . scrub_out($value['name']) . '">';
+            }
 
-        parent::clear_cache();
+            $results .= $value['name'];
+            if ($link) {
+                $results .= '</a>';
+            }
+
+            $results .= ', ';
+        }
+
+        return rtrim($results, ', ');
     }
 
     /**
-     * tag_exists
-     * This checks to see if a tag exists, this has nothing to do with objects or maps
+     * get_merged_count
      */
-    public static function tag_exists(string $value): int
+    public static function get_merged_count(): int
     {
-        if (parent::is_cached('tag_name', $value)) {
-            return (int)(parent::get_from_cache('tag_name', $value))[0];
-        }
+        $results    = 0;
+        $sql        = "SELECT COUNT(DISTINCT `tag_id`) AS `tag_count` FROM `tag_merge`;";
+        $db_results = Dba::read($sql);
 
-        $sql        = "SELECT `id` FROM `tag` WHERE `name` = ?";
-        $db_results = Dba::read($sql, [$value]);
-        $results    = Dba::fetch_assoc($db_results);
-
-        if (array_key_exists('id', $results)) {
-            parent::add_to_cache('tag_name', $value, [$results['id']]);
-
-            return (int)$results['id'];
-        }
-
-        return 0;
-    }
-
-    /**
-     * tag_map_exists
-     * This looks to see if the current mapping of the current object exists
-     */
-    public static function tag_map_exists(string $type, int $object_id, int $tag_id): bool
-    {
-        if (!InterfaceImplementationChecker::is_library_item($type)) {
-            debug_event(self::class, 'Requested type is not a library item.', 3);
-
-            return false;
-        }
-
-        $sql        = "SELECT * FROM `tag_map` LEFT JOIN `tag` ON `tag`.`id` = `tag_map`.`tag_id` LEFT JOIN `tag_merge` ON `tag`.`id`=`tag_merge`.`tag_id` WHERE (`tag_map`.`tag_id` = ? OR `tag_map`.`tag_id` = `tag_merge`.`merged_to`) AND `tag_map`.`user` = ? AND `tag_map`.`object_id` = ? AND `tag_map`.`object_type` = ?";
-        $db_results = Dba::read($sql, [$tag_id, 0, $object_id, $type]);
-        $results    = Dba::fetch_assoc($db_results);
-
-        return (bool)(array_key_exists('id', $results));
-    }
-
-    /**
-     * get_top_tags
-     * This gets the top tags for the specified object using limit
-     * @return array<int, array{id: int, name: string, is_hidden: int, count: int}>
-     */
-    public static function get_top_tags(string $type, int $object_id, ?int $limit = 10): array
-    {
-        if (!InterfaceImplementationChecker::is_library_item($type)) {
-            return [];
-        }
-
-        $object_id  = (int)($object_id);
-        $limit_text = ($limit == 0)
-            ? ''
-            : 'LIMIT ' . $limit;
-        $sql = (in_array($type, ['artist', 'album', 'song', 'video']))
-            ? 'SELECT `tag`.`id`, `tag`.`name`, `tag`.`is_hidden`, `tag`.`' . $type . '` AS `count` FROM `tag` LEFT JOIN `tag_map` ON `tag_map`.`tag_id`=`tag`.`id` WHERE `tag`.`is_hidden` = false AND `tag_map`.`object_type` = ? AND `tag_map`.`object_id` = ? ORDER BY `' . $type . '` DESC ' . $limit_text
-            : 'SELECT `tag`.`id`, `tag`.`name`, `tag`.`is_hidden`, (SUM(`tag`.`artist`)+SUM(`tag`.`album`)+SUM(`tag`.`song`)) AS `count` FROM `tag` LEFT JOIN `tag_map` ON `tag_map`.`tag_id`=`tag`.`id` WHERE `tag`.`is_hidden` = false AND `tag_map`.`object_type` = ? AND `tag_map`.`object_id` = ? ORDER BY `count` DESC ' . $limit_text;
-
-        $db_results = Dba::read($sql, [$type, $object_id]);
-        $results    = [];
-        while ($row = Dba::fetch_assoc($db_results)) {
-            $results[] = [
-                'id' => (int)$row['id'],
-                'name' => $row['name'],
-                'is_hidden' => $row['is_hidden'],
-                'count' => (int)$row['count']
-            ];
+        if ($row = Dba::fetch_assoc($db_results)) {
+            $results = (int) $row['tag_count'];
         }
 
         return $results;
@@ -597,51 +413,11 @@ class Tag extends database_object implements library_item, GarbageCollectibleInt
         $results    = [];
         while ($row = Dba::fetch_assoc($db_results)) {
             $results[] = [
-                'id' => (int)$row['id'],
+                'id' => (int) $row['id'],
                 'name' => $row['name'],
-                'is_hidden' => (int)$row['is_hidden'],
-                'user' => (int)$row['user'],
+                'is_hidden' => (int) $row['is_hidden'],
+                'user' => (int) $row['user'],
             ];
-        }
-
-        return $results;
-    }
-
-    /**
-     * get_tag_objects
-     * This gets the objects from a specified tag and returns an array of object ids, nothing more
-     * @return int[]
-     */
-    public static function get_tag_objects(string $type, int $tag_id, int $count = 0, int $offset = 0): array
-    {
-        if (!InterfaceImplementationChecker::is_library_item($type)) {
-            return [];
-        }
-
-        $tag_sql   = ($tag_id === 0) ? "" : "`tag_map`.`tag_id` = ? AND";
-        $sql_param = ($tag_sql === "") ? [$type] : [$tag_id, $type];
-        $limit_sql = "";
-        if ($count) {
-            $limit_sql = " LIMIT ";
-            if ($offset) {
-                $limit_sql .= $offset . ', ';
-            }
-
-            $limit_sql .= (string)($count);
-        }
-
-        $sql = sprintf('SELECT DISTINCT `tag_map`.`object_id` FROM `tag_map` WHERE %s `tag_map`.`object_type` = ?', $tag_sql);
-        if (AmpConfig::get('catalog_disable') && in_array($type, ['artist', 'album', 'album_disk', 'song', 'video'])) {
-            $sql .= "AND " . Catalog::get_enable_filter($type, '`tag_map`.`object_id`');
-        }
-
-        $sql .= $limit_sql;
-        $db_results = Dba::read($sql, $sql_param);
-
-        $results = [];
-
-        while ($row = Dba::fetch_assoc($db_results)) {
-            $results[] = (int)$row['object_id'];
         }
 
         return $results;
@@ -679,7 +455,47 @@ class Tag extends database_object implements library_item, GarbageCollectibleInt
         $results = [];
 
         while ($row = Dba::fetch_assoc($db_results)) {
-            $results[] = (int)$row['tag_id'];
+            $results[] = (int) $row['tag_id'];
+        }
+
+        return $results;
+    }
+
+    /**
+     * get_tag_objects
+     * This gets the objects from a specified tag and returns an array of object ids, nothing more
+     * @return int[]
+     */
+    public static function get_tag_objects(string $type, int $tag_id, int $count = 0, int $offset = 0): array
+    {
+        if (!InterfaceImplementationChecker::is_library_item($type)) {
+            return [];
+        }
+
+        $tag_sql   = ($tag_id === 0) ? "" : "`tag_map`.`tag_id` = ? AND";
+        $sql_param = ($tag_sql === "") ? [$type] : [$tag_id, $type];
+        $limit_sql = "";
+        if ($count) {
+            $limit_sql = " LIMIT ";
+            if ($offset) {
+                $limit_sql .= $offset . ', ';
+            }
+
+            $limit_sql .= (string) ($count);
+        }
+
+        $sql = sprintf('SELECT DISTINCT `tag_map`.`object_id` FROM `tag_map` WHERE %s `tag_map`.`object_type` = ?', $tag_sql);
+        if (AmpConfig::get('catalog_disable') && in_array($type, ['artist', 'album', 'album_disk', 'song', 'video'])) {
+            $sql .= "AND " . Catalog::get_enable_filter($type, '`tag_map`.`object_id`');
+        }
+
+        $sql .= $limit_sql;
+        $db_results = Dba::read($sql, $sql_param);
+
+        $results = [];
+
+        while ($row = Dba::fetch_assoc($db_results)) {
+            $results[] = (int) $row['object_id'];
         }
 
         return $results;
@@ -752,178 +568,46 @@ class Tag extends database_object implements library_item, GarbageCollectibleInt
     }
 
     /**
-     * get_display
-     * This returns a csv formatted version of the tags that we are given
-     * it also takes a type so that it knows how to return it, this is used
-     * by the formatting functions of the different objects
-     * @param array<int, array{id: int, name: string, is_hidden: int, count: int}> $tags
+     * get_top_tags
+     * This gets the top tags for the specified object using limit
+     * @return array<int, array{id: int, name: string, is_hidden: int, count: int}>
      */
-    public static function get_display(array $tags, ?bool $link = false, ?string $filter_type = ''): string
-    {
-        //debug_event(self::class, 'Get display tags called...', 5);
-        if (empty($tags)) {
-            return '';
-        }
-
-        $web_path = AmpConfig::get_web_path('/client');
-
-        $results = '';
-
-        // Iterate through the tags, format them according to type and element id
-        foreach ($tags as $value) {
-            if ($link) {
-                $results .= '<a href="' . $web_path . '/browse.php?action=tag&show_tag=' . $value['id'] . (empty($filter_type) ? '' : '&type=' . $filter_type) . '" title="' . scrub_out($value['name']) . '">';
-            }
-
-            $results .= $value['name'];
-            if ($link) {
-                $results .= '</a>';
-            }
-
-            $results .= ', ';
-        }
-
-        return rtrim($results, ', ');
-    }
-
-    /**
-     * update_tag_list
-     * Update the tags list based on a comma-separated list
-     *  (ex. tag1,tag2,tag3,..)
-     */
-    public static function update_tag_list(string $tags_comma, string $object_type, int $object_id, bool $overwrite): bool
-    {
-        if (!strlen((string) $tags_comma) > 0) {
-            return self::remove_all_maps($object_type, $object_id);
-        }
-
-        debug_event(self::class, sprintf('update_tag_list %s {%d}', $object_type, $object_id), 5);
-        // tags from your file can be in a terrible format
-        $filterfolk  = str_replace('Folk, World, & Country', 'Folk World & Country', $tags_comma);
-        $filterunder = str_replace('_', ', ', $filterfolk);
-        $filter      = str_replace(';', ', ', $filterunder);
-        $filter_list = preg_split('/(\s*,*\s*)*,+(\s*,*\s*)*/', $filter);
-        $editedTags  = (is_array($filter_list)) ? array_unique($filter_list) : [];
-
-        $change       = false;
-        $current_tags = self::get_top_tags($object_type, $object_id, 0);
-        foreach ($current_tags as $ctv) {
-            $found = false;
-            if ($ctv['id'] > 0) {
-                $ctag = new Tag($ctv['id']);
-                if ($ctag->isNew()) {
-                    continue;
-                }
-
-                //debug_event(self::class, 'update_tag_list ' . $object_type . ' current_tag ' . print_r($ctv, true), 5);
-                foreach ($editedTags as $tag_name) {
-                    if (strtolower((string)$ctag->name) === strtolower($tag_name)) {
-                        $found = true;
-                        break;
-                    }
-
-                    // check if this thing has been renamed into something else
-                    $merged = self::construct_from_name($tag_name);
-                    if ($merged->id && $merged->is_hidden && $merged->has_merge((string)$ctag->name)) {
-                        $found = true;
-                        break;
-                    }
-                }
-
-                if ($found) {
-                    //debug_event(self::class, 'update_tag_list ' . $object_type . ' matched {' . $ctag->id . '} to ' . $tag_name, 5);
-                    if (($key = array_search((string)$ctag->name, $editedTags)) !== false) {
-                        unset($editedTags[$key]);
-                    }
-                }
-
-                if (
-                    !$found &&
-                    $overwrite
-                ) {
-                    debug_event(self::class, 'update_tag_list ' . $object_type . ' delete {' . $ctag->name . '}', 5);
-                    $ctag->remove_map($object_type, $object_id);
-                    $change = true;
-                }
-            }
-        }
-
-        // Look if we need to add some new tags
-        foreach ($editedTags as $tag_name) {
-            if ($tag_name != '') {
-                debug_event(self::class, 'update_tag_list ' . $object_type . ' add {' . $tag_name . '}', 5);
-                self::add($object_type, $object_id, $tag_name);
-                $change = true;
-            }
-        }
-
-        return $change;
-    }
-
-    /**
-     * clean_to_existing
-     * Clean tag list to existing tag list only
-     * @param string[]|string $tags
-     * @return string[]|string
-     */
-    public static function clean_to_existing(array|string $tags): array|string
-    {
-        if (is_array($tags)) {
-            $taglist = $tags;
-        } else {
-            $filterfolk  = str_replace('Folk, World, & Country', 'Folk World & Country', $tags);
-            $filterunder = str_replace('_', ', ', $filterfolk);
-            $filter      = str_replace(';', ', ', $filterunder);
-            $filter_list = preg_split('/(\s*,*\s*)*,+(\s*,*\s*)*/', $filter);
-            $taglist     = (is_array($filter_list)) ? array_unique($filter_list) : [];
-        }
-
-        $ret = [];
-        foreach ($taglist as $tag) {
-            $tag = trim((string)$tag);
-            if (
-                $tag !== '' &&
-                $tag !== '0' &&
-                self::tag_exists($tag)
-            ) {
-                $ret[] = $tag;
-            }
-        }
-
-        return (is_array($tags)
-            ? $ret
-            : implode(",", $ret));
-    }
-
-    /**
-     * remove_map
-     * This will only remove tag maps for the current user
-     */
-    public function remove_map(string $type, int $object_id): bool
+    public static function get_top_tags(string $type, int $object_id, ?int $limit = 10): array
     {
         if (!InterfaceImplementationChecker::is_library_item($type)) {
-            return false;
+            return [];
         }
 
-        $sql = "DELETE FROM `tag_map` WHERE `tag_id` = ? AND `object_type` = ? AND `object_id` = ? AND `user` = ?";
-        Dba::write($sql, [$this->id, $type, $object_id, 0]);
+        $object_id  = (int) ($object_id);
+        $limit_text = ($limit == 0)
+            ? ''
+            : 'LIMIT ' . $limit;
+        $sql = (in_array($type, ['artist', 'album', 'song', 'video']))
+            ? 'SELECT `tag`.`id`, `tag`.`name`, `tag`.`is_hidden`, `tag`.`' . $type . '` AS `count` FROM `tag` LEFT JOIN `tag_map` ON `tag_map`.`tag_id`=`tag`.`id` WHERE `tag`.`is_hidden` = false AND `tag_map`.`object_type` = ? AND `tag_map`.`object_id` = ? ORDER BY `' . $type . '` DESC ' . $limit_text
+            : 'SELECT `tag`.`id`, `tag`.`name`, `tag`.`is_hidden`, (SUM(`tag`.`artist`)+SUM(`tag`.`album`)+SUM(`tag`.`song`)) AS `count` FROM `tag` LEFT JOIN `tag_map` ON `tag_map`.`tag_id`=`tag`.`id` WHERE `tag`.`is_hidden` = false AND `tag_map`.`object_type` = ? AND `tag_map`.`object_id` = ? ORDER BY `count` DESC ' . $limit_text;
 
-        switch ($type) {
-            case 'album':
-                Dba::write("UPDATE `tag` SET `album` = `album` - 1 WHERE `id` = ? AND `album` > 0;", [$this->id]);
-                break;
-            case 'artist':
-                Dba::write("UPDATE `tag` SET `artist` = `artist` - 1 WHERE `id` = ? AND `artist` > 0;", [$this->id]);
-                break;
-            case 'song':
-                Dba::write("UPDATE `tag` SET `song` = `song` - 1 WHERE `id` = ? AND `song` > 0;", [$this->id]);
-                break;
-            case 'video':
-                Dba::write("UPDATE `tag` SET `video` = `video` - 1 WHERE `id` = ? AND `video` > 0;", [$this->id]);
-                break;
+        $db_results = Dba::read($sql, [$type, $object_id]);
+        $results    = [];
+        while ($row = Dba::fetch_assoc($db_results)) {
+            $results[] = [
+                'id' => (int) $row['id'],
+                'name' => $row['name'],
+                'is_hidden' => $row['is_hidden'],
+                'count' => (int) $row['count']
+            ];
         }
 
-        return true;
+        return $results;
+    }
+
+    /**
+     * Migrate an object associate stats to a new object
+     */
+    public static function migrate(string $object_type, int $old_object_id, int $new_object_id): void
+    {
+        $sql = "UPDATE IGNORE `tag_map` SET `object_id` = ? WHERE `object_type` = ? AND `object_id` = ?";
+
+        Dba::write($sql, [$new_object_id, $object_type, $old_object_id]);
     }
 
     /**
@@ -958,32 +642,166 @@ class Tag extends database_object implements library_item, GarbageCollectibleInt
     }
 
     /**
-     * Get item keywords for metadata searches.
-     * @return array{tag: array{important: true, label: string, value: string}}
+     * tag_exists
+     * This checks to see if a tag exists, this has nothing to do with objects or maps
      */
-    public function get_keywords(): array
+    public static function tag_exists(string $value): int
     {
-        return [
-            'tag' => [
-                'important' => true,
-                'label' => T_('Genre'),
-                'value' => (string)$this->name,
-            ]
-        ];
+        if (parent::is_cached('tag_name', $value)) {
+            return (int) (parent::get_from_cache('tag_name', $value))[0];
+        }
+
+        $sql        = "SELECT `id` FROM `tag` WHERE `name` = ?";
+        $db_results = Dba::read($sql, [$value]);
+        $results    = Dba::fetch_assoc($db_results);
+
+        if (array_key_exists('id', $results)) {
+            parent::add_to_cache('tag_name', $value, [$results['id']]);
+
+            return (int) $results['id'];
+        }
+
+        return 0;
     }
 
     /**
-     * get_fullname
+     * tag_map_exists
+     * This looks to see if the current mapping of the current object exists
      */
-    public function get_fullname(): ?string
+    public static function tag_map_exists(string $type, int $object_id, int $tag_id): bool
     {
-        return $this->name;
+        if (!InterfaceImplementationChecker::is_library_item($type)) {
+            debug_event(self::class, 'Requested type is not a library item.', 3);
+
+            return false;
+        }
+
+        $sql        = "SELECT * FROM `tag_map` LEFT JOIN `tag` ON `tag`.`id` = `tag_map`.`tag_id` LEFT JOIN `tag_merge` ON `tag`.`id`=`tag_merge`.`tag_id` WHERE (`tag_map`.`tag_id` = ? OR `tag_map`.`tag_id` = `tag_merge`.`merged_to`) AND `tag_map`.`user` = ? AND `tag_map`.`object_id` = ? AND `tag_map`.`object_type` = ?";
+        $db_results = Dba::read($sql, [$tag_id, 0, $object_id, $type]);
+        $results    = Dba::fetch_assoc($db_results);
+
+        return (bool) (array_key_exists('id', $results));
     }
 
     /**
-     * Get item link.
+     * update_tag_list
+     * Update the tags list based on a comma-separated list
+     *  (ex. tag1,tag2,tag3,..)
      */
-    public function get_link(): string
+    public static function update_tag_list(string $tags_comma, string $object_type, int $object_id, bool $overwrite): bool
+    {
+        if (!strlen((string) $tags_comma) > 0) {
+            return self::remove_all_maps($object_type, $object_id);
+        }
+
+        debug_event(self::class, sprintf('update_tag_list %s {%d}', $object_type, $object_id), 5);
+        // tags from your file can be in a terrible format
+        $filterfolk  = str_replace('Folk, World, & Country', 'Folk World & Country', $tags_comma);
+        $filterunder = str_replace('_', ', ', $filterfolk);
+        $filter      = str_replace(';', ', ', $filterunder);
+        $filter_list = preg_split('/(\s*,*\s*)*,+(\s*,*\s*)*/', $filter);
+        $editedTags  = (is_array($filter_list)) ? array_unique($filter_list) : [];
+
+        $change       = false;
+        $current_tags = self::get_top_tags($object_type, $object_id, 0);
+        foreach ($current_tags as $ctv) {
+            $found = false;
+            if ($ctv['id'] > 0) {
+                $ctag = new Tag($ctv['id']);
+                if ($ctag->isNew()) {
+                    continue;
+                }
+
+                //debug_event(self::class, 'update_tag_list ' . $object_type . ' current_tag ' . print_r($ctv, true), 5);
+                foreach ($editedTags as $tag_name) {
+                    if (strtolower((string) $ctag->name) === strtolower($tag_name)) {
+                        $found = true;
+                        break;
+                    }
+
+                    // check if this thing has been renamed into something else
+                    $merged = self::construct_from_name($tag_name);
+                    if ($merged->id && $merged->is_hidden && $merged->has_merge((string) $ctag->name)) {
+                        $found = true;
+                        break;
+                    }
+                }
+
+                if ($found) {
+                    //debug_event(self::class, 'update_tag_list ' . $object_type . ' matched {' . $ctag->id . '} to ' . $tag_name, 5);
+                    if (($key = array_search((string) $ctag->name, $editedTags)) !== false) {
+                        unset($editedTags[$key]);
+                    }
+                }
+
+                if (
+                    !$found
+                    && $overwrite
+                ) {
+                    debug_event(self::class, 'update_tag_list ' . $object_type . ' delete {' . $ctag->name . '}', 5);
+                    $ctag->remove_map($object_type, $object_id);
+                    $change = true;
+                }
+            }
+        }
+
+        // Look if we need to add some new tags
+        foreach ($editedTags as $tag_name) {
+            if ($tag_name != '') {
+                debug_event(self::class, 'update_tag_list ' . $object_type . ' add {' . $tag_name . '}', 5);
+                self::add($object_type, $object_id, $tag_name);
+                $change = true;
+            }
+        }
+
+        return $change;
+    }
+
+    /**
+     * delete
+     *
+     * Delete the tag and all maps
+     */
+    public function delete(): void
+    {
+        $sql = "DELETE FROM `tag_map` WHERE `tag_map`.`tag_id` = ?";
+        Dba::write($sql, [$this->id]);
+
+        $sql = "DELETE FROM `tag_merge` WHERE `tag_merge`.`tag_id` = ?";
+        Dba::write($sql, [$this->id]);
+
+        $sql = "DELETE FROM `tag` WHERE `tag`.`id` = ? ";
+        Dba::write($sql, [$this->id]);
+
+        // Call the garbage collector to clean everything
+        self::garbage_collection();
+
+        parent::clear_cache();
+    }
+
+    /**
+     * display_art
+     * @param array{width: int, height: int} $size
+     */
+    public function display_art(array $size, bool $force = false): void
+    {
+        if ($this->has_art() || $force) {
+            Art::display('tag', $this->id, (string) $this->get_fullname(), $size);
+        }
+    }
+
+    /**
+     * get_default_art_kind
+     */
+    public function get_default_art_kind(): string
+    {
+        return 'default';
+    }
+
+    /**
+     * get_description
+     */
+    public function get_description(): string
     {
         return '';
     }
@@ -991,7 +809,7 @@ class Tag extends database_object implements library_item, GarbageCollectibleInt
     /**
      * Get item f_link.
      */
-    public function get_f_link(): string
+    public function get_f_link(?string $title = null): string
     {
         return '';
     }
@@ -1013,31 +831,34 @@ class Tag extends database_object implements library_item, GarbageCollectibleInt
     }
 
     /**
-     * get_parent
-     * Return parent `object_type`, `object_id`; null otherwise.
+     * get_fullname
      */
-    public function get_parent(): ?array
+    public function get_fullname(): ?string
     {
-        return null;
+        return $this->name;
     }
 
     /**
-     * @return array{string?: array<int, array{object_type: LibraryItemEnum, object_id: int}>}
+     * Get item keywords for metadata searches.
+     * @return array{tag: array{important: true, label: string, value: string}}
      */
-    public function get_childrens(): array
+    public function get_keywords(): array
     {
-        return [];
+        return [
+            'tag' => [
+                'important' => true,
+                'label' => T_('Genre'),
+                'value' => (string) $this->name,
+            ]
+        ];
     }
 
     /**
-     * Search for direct children of an object
-     * @return array<int, array{object_type: LibraryItemEnum, object_id: int}>
+     * Get item link.
      */
-    public function get_children(string $name): array
+    public function get_link(): string
     {
-        debug_event(self::class, 'get_children ' . $name, 5);
-
-        return [];
+        return '';
     }
 
     /**
@@ -1056,36 +877,57 @@ class Tag extends database_object implements library_item, GarbageCollectibleInt
         return $medias;
     }
 
+    /**
+     * get_merged_tags
+     * Get merged tags to this tag.
+     * @return array<int, array{id: int, name: string, is_hidden: int, count: int}>
+     */
+    public function get_merged_tags(): array
+    {
+        $sql = "SELECT `tag`.`id`, `tag`.`name`, `tag`.`is_hidden`, 0 AS `count` FROM `tag_merge` INNER JOIN `tag` ON `tag`.`id` = `tag_merge`.`merged_to` WHERE `tag_merge`.`tag_id` = ? ORDER BY `tag`.`name`;";
+
+        $db_results = Dba::read($sql, [$this->id]);
+
+        $results = [];
+        while ($row = Dba::fetch_assoc($db_results)) {
+            $results[$row['id']] = [
+                'id' => $row['id'],
+                'name' => $row['name'],
+                'is_hidden' => $row['is_hidden'],
+                'count' => $row['count']
+            ];
+        }
+
+        return $results;
+    }
+
+    /**
+     * get_parent
+     * Return parent `object_type`, `object_id`; null otherwise.
+     */
+    public function get_parent(): ?array
+    {
+        return null;
+    }
+
+    public function get_parent_fullname(): string
+    {
+        return '';
+    }
+
     public function get_user_owner(): ?int
     {
         return null;
     }
 
-    /**
-     * get_default_art_kind
-     */
-    public function get_default_art_kind(): string
+    public function getId(): int
     {
-        return 'default';
+        return $this->id;
     }
 
-    /**
-     * get_description
-     */
-    public function get_description(): string
+    public function getMediaType(): LibraryItemEnum
     {
-        return '';
-    }
-
-    /**
-     * display_art
-     * @param array{width: int, height: int} $size
-     */
-    public function display_art(array $size, bool $force = false): void
-    {
-        if ($this->has_art() || $force) {
-            Art::display('tag', $this->id, (string)$this->get_fullname(), $size);
-        }
+        return LibraryItemEnum::TAG;
     }
 
     public function has_art(): bool
@@ -1094,17 +936,155 @@ class Tag extends database_object implements library_item, GarbageCollectibleInt
     }
 
     /**
-     * Migrate an object associate stats to a new object
+     * has_merge
+     * Get merged tags to this tag.
      */
-    public static function migrate(string $object_type, int $old_object_id, int $new_object_id): void
+    public function has_merge(string $name): bool
     {
-        $sql = "UPDATE IGNORE `tag_map` SET `object_id` = ? WHERE `object_type` = ? AND `object_id` = ?";
+        $sql        = "SELECT `tag`.`name` FROM `tag_merge` INNER JOIN `tag` ON `tag`.`id` = `tag_merge`.`merged_to` WHERE `tag_merge`.`tag_id` = ? ORDER BY `tag`.`name` ";
+        $db_results = Dba::read($sql, [$this->id]);
+        while ($row = Dba::fetch_assoc($db_results)) {
+            if ($name == $row['name']) {
+                return true;
+            }
+        }
 
-        Dba::write($sql, [$new_object_id, $object_type, $old_object_id]);
+        return false;
     }
 
-    public function getMediaType(): LibraryItemEnum
+    public function isNew(): bool
     {
-        return LibraryItemEnum::TAG;
+        return $this->getId() === 0;
+    }
+
+    /**
+     * merge
+     * merges this tag to another one.
+     */
+    public function merge(int $merge_to, bool $is_persistent): void
+    {
+        if ($this->id != $merge_to) {
+            debug_event(self::class, 'Merging tag ' . $this->id . ' into ' . $merge_to . ')...', 5);
+
+            $sql = "REPLACE INTO `tag_map` (`tag_id`, `user`, `object_type`, `object_id`) SELECT " . $merge_to . ",`user`, `object_type`, `object_id` FROM `tag_map` AS `tm` WHERE `tm`.`tag_id` = " . $this->id . " AND NOT EXISTS (SELECT 1 FROM `tag_map` WHERE `tag_map`.`tag_id` = " . $merge_to . " AND `tag_map`.`object_id` = `tm`.`object_id` AND `tag_map`.`object_type` = `tm`.`object_type` AND `tag_map`.`user` = `tm`.`user`)";
+            Dba::write($sql);
+            if ($is_persistent) {
+                $sql = "REPLACE INTO `tag_merge` (`tag_id`, `merged_to`) VALUES (?, ?)";
+                Dba::write($sql, [$this->id, $merge_to]);
+            }
+        }
+    }
+
+    /**
+     * remove_map
+     * This will only remove tag maps for the current user
+     */
+    public function remove_map(string $type, int $object_id): bool
+    {
+        if (!InterfaceImplementationChecker::is_library_item($type)) {
+            return false;
+        }
+
+        $sql = "DELETE FROM `tag_map` WHERE `tag_id` = ? AND `object_type` = ? AND `object_id` = ? AND `user` = ?";
+        Dba::write($sql, [$this->id, $type, $object_id, 0]);
+
+        switch ($type) {
+            case 'album':
+                Dba::write("UPDATE `tag` SET `album` = `album` - 1 WHERE `id` = ? AND `album` > 0;", [$this->id]);
+                break;
+            case 'artist':
+                Dba::write("UPDATE `tag` SET `artist` = `artist` - 1 WHERE `id` = ? AND `artist` > 0;", [$this->id]);
+                break;
+            case 'song':
+                Dba::write("UPDATE `tag` SET `song` = `song` - 1 WHERE `id` = ? AND `song` > 0;", [$this->id]);
+                break;
+            case 'video':
+                Dba::write("UPDATE `tag` SET `video` = `video` - 1 WHERE `id` = ? AND `video` > 0;", [$this->id]);
+                break;
+        }
+
+        return true;
+    }
+
+    /**
+     * remove_merges
+     * Remove merged tags from this tag.
+     */
+    public function remove_merges(): void
+    {
+        $sql = "DELETE FROM `tag_merge` WHERE `tag_merge`.`tag_id` = ?;";
+        Dba::write($sql, [$this->id]);
+    }
+
+    /**
+     * update
+     * Update the name of the tag
+     */
+    public function update(array $data): ?int
+    {
+        if ((string) $data['name'] === '') {
+            return null;
+        }
+
+        $name      = $data['name'] ?? $this->name;
+        $is_hidden = (array_key_exists('is_hidden', $data))
+            ? (int) $data['is_hidden']
+            : 0;
+
+        if ($name != $this->name) {
+            debug_event(self::class, 'Updating tag {' . $this->id . '} with name {' . $data['name'] . '}...', 5);
+            $sql = 'UPDATE `tag` SET `name` = ? WHERE `id` = ?';
+            Dba::write($sql, [$name, $this->id]);
+        }
+
+        if ($is_hidden !== $this->is_hidden) {
+            debug_event(self::class, 'Hidden tag {' . $this->id . '} with status {' . $is_hidden . '}...', 5);
+            $sql = ($is_hidden == 1 && $this->is_hidden == 0)
+                ? 'UPDATE `tag` SET `is_hidden` = ?, `artist` = 0, `album` = 0, `song` = 0 WHERE `id` = ?'
+                : 'UPDATE `tag` SET `is_hidden` = ? WHERE `id` = ?';
+            Dba::write($sql, [$is_hidden, $this->id]);
+            // if you had previously hidden this tag then remove the merges too
+            if ($is_hidden == 0 && $this->is_hidden == 1) {
+                debug_event(self::class, 'Unhiding tag {' . $this->id . '} removing all previous merges', 5);
+                $this->remove_merges();
+            }
+
+            $this->is_hidden = $is_hidden;
+        }
+
+        if (array_key_exists('edit_tags', $data) && $data['edit_tags']) {
+            $filterfolk  = str_replace('Folk, World, & Country', 'Folk World & Country', (string) $data['edit_tags']);
+            $filterunder = str_replace('_', ', ', $filterfolk);
+            $filter      = str_replace(';', ', ', $filterunder);
+            $filter_list = preg_split('/(\s*,*\s*)*,+(\s*,*\s*)*/', $filter);
+            $tag_names   = (is_array($filter_list)) ? array_unique($filter_list) : [];
+
+            // remove merges that don't exist before adding new ones
+            $this->remove_merges();
+
+            // apply the new merge list
+            foreach ($tag_names as $tag) {
+                $merge_to = self::construct_from_name($tag);
+                if ($merge_to->id == 0) {
+                    self::add_tag($tag);
+                    $merge_to = self::construct_from_name($tag);
+                }
+
+                $this->merge($merge_to->id, array_key_exists('merge_persist', $data));
+            }
+
+            if (!array_key_exists('keep_existing', $data)) {
+                $sql = "DELETE FROM `tag_map` WHERE `tag_map`.`tag_id` = ? ";
+                Dba::write($sql, [$this->id]);
+                if (!array_key_exists('merge_persist', $data)) {
+                    $this->delete();
+                } else {
+                    $sql = "UPDATE `tag` SET `is_hidden` = 1 WHERE `tag`.`id` = ? ";
+                    Dba::write($sql, [$this->id]);
+                }
+            }
+        }
+
+        return $this->id;
     }
 }

@@ -43,8 +43,7 @@ final readonly class ShowDeleteAction implements ApplicationActionInterface
         private RequestParserInterface $requestParser,
         private ConfigContainerInterface $configContainer,
         private UiInterface $ui,
-    ) {
-    }
+    ) {}
 
     public function run(ServerRequestInterface $request, GuiGatekeeperInterface $gatekeeper): ?ResponseInterface
     {

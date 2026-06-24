@@ -34,16 +34,6 @@ use Override;
 
 final class ArtSizeCalculationCommand extends Command
 {
-    #[Override]
-    protected function defaults(): self
-    {
-        $this->option('-h, --help', T_('Help'))->on($this->showHelp(...));
-
-        $this->onExit(static fn ($exitCode = 0) => exit($exitCode));
-
-        return $this;
-    }
-
     public function __construct(
         private readonly ConfigContainerInterface $configContainer,
     ) {
@@ -77,7 +67,7 @@ final class ArtSizeCalculationCommand extends Command
 
         while ($row = Dba::fetch_assoc($db_results)) {
             if ($inDisk && $localDir) {
-                $folder = Art::get_dir_on_disk($row['object_type'], (int)$row['object_id'], $row['size'], 'default');
+                $folder = Art::get_dir_on_disk($row['object_type'], (int) $row['object_id'], $row['size'], 'default');
                 if ($folder === null) {
                     continue;
                 }
@@ -120,5 +110,15 @@ final class ArtSizeCalculationCommand extends Command
             "\n" . T_('Finished art size calculation'),
             true
         );
+    }
+
+    #[Override]
+    protected function defaults(): self
+    {
+        $this->option('-h, --help', T_('Help'))->on($this->showHelp(...));
+
+        $this->onExit(static fn($exitCode = 0) => exit($exitCode));
+
+        return $this;
     }
 }

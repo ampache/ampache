@@ -23,6 +23,8 @@ declare(strict_types=0);
  *
  */
 
+// show_confirmation.inc.php
+
 use Ampache\Config\AmpConfig;
 use Ampache\Module\System\Core;
 use Ampache\Module\Util\Ui;

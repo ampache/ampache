@@ -38,8 +38,7 @@ final readonly class Slideshow implements SlideshowInterface
     public function __construct(
         private ModelFactoryInterface $modelFactory,
         private PluginRetrieverInterface $pluginRetriever,
-    ) {
-    }
+    ) {}
 
     public function getCurrentSlideshow(User $user): array
     {
@@ -59,7 +58,7 @@ final readonly class Slideshow implements SlideshowInterface
 
         foreach ($this->pluginRetriever->retrieveByType(PluginTypeEnum::SLIDESHOW, $user) as $plugin) {
             if ($plugin->_plugin instanceof Ampacheflickr) {
-                $images += $plugin->_plugin->get_photos($song->get_artist_fullname());
+                $images += $plugin->_plugin->get_photos($song->get_parent_fullname());
             }
         }
 

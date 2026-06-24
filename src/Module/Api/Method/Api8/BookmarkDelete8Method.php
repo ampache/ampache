@@ -53,7 +53,7 @@ final class BookmarkDelete8Method
      * Delete an existing bookmark. (if it exists)
      *
      * filter = (string) object_id to delete
-     * type   = (string) object_type  ('bookmark', 'song', 'video', 'podcast_episode') //optional default: bookmark
+     * type = (string) object_type  ('bookmark', 'song', 'video', 'podcast_episode') //optional default: bookmark
      * client = (string) Agent string //optional
      *
      * @param array{
@@ -69,7 +69,7 @@ final class BookmarkDelete8Method
         if (!Api::check_parameter($input, ['filter'], self::ACTION)) {
             return false;
         }
-        $object_id = (int)$input['filter'];
+        $object_id = (int) $input['filter'];
         $type      = $input['type'] ?? 'bookmark';
         $comment   = (isset($input['client'])) ? scrub_in((string) $input['client']) : null;
         if (!AmpConfig::get('allow_video') && $type == 'video') {

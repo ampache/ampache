@@ -1,5 +1,7 @@
 <?php
 
+// cookie_disclaimer.inc.php
+
 use Ampache\Config\AmpConfig;
 
 $session_name = AmpConfig::get('session_name', 'ampache'); ?>

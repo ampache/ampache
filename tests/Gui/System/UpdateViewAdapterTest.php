@@ -40,28 +40,23 @@ use PHPUnit\Framework\MockObject\MockObject;
 class UpdateViewAdapterTest extends MockeryTestCase
 {
     private MockInterface $configContainer;
-
-    private UpdateInfoRepositoryInterface&MockObject $updateInfoRepository;
-
+    private UpdateViewAdapter $subject;
     private UpdateHelperInterface&MockObject $updateHelper;
-
+    private UpdateInfoRepositoryInterface&MockObject $updateInfoRepository;
     private UpdaterInterface&MockObject $updater;
 
-    private UpdateViewAdapter $subject;
-
-    #[Override]
-    protected function setUp(): void
+    public function testGetCharsetReturnsValue(): void
     {
-        $this->configContainer      = $this->mock(ConfigContainerInterface::class);
-        $this->updateInfoRepository = $this->createMock(UpdateInfoRepositoryInterface::class);
-        $this->updateHelper         = $this->createMock(UpdateHelperInterface::class);
-        $this->updater              = $this->createMock(UpdaterInterface::class);
+        $value = 'some-charset';
 
-        $this->subject = new UpdateViewAdapter(
-            $this->configContainer,
-            $this->updateInfoRepository,
-            $this->updateHelper,
-            $this->updater
+        $this->configContainer->shouldReceive('get')
+            ->with(ConfigurationKeyEnum::SITE_CHARSET)
+            ->once()
+            ->andReturn($value);
+
+        $this->assertSame(
+            $value,
+            $this->subject->getCharset()
         );
     }
 
@@ -80,18 +75,11 @@ class UpdateViewAdapterTest extends MockeryTestCase
         );
     }
 
-    public function testGetCharsetReturnsValue(): void
+    public function testGetInstallationTitleReturnsValue(): void
     {
-        $value = 'some-charset';
-
-        $this->configContainer->shouldReceive('get')
-            ->with(ConfigurationKeyEnum::SITE_CHARSET)
-            ->once()
-            ->andReturn($value);
-
         $this->assertSame(
-            $value,
-            $this->subject->getCharset()
+            'Ampache :: For the Love of Music - Installation',
+            $this->subject->getInstallationTitle()
         );
     }
 
@@ -113,14 +101,6 @@ class UpdateViewAdapterTest extends MockeryTestCase
         );
     }
 
-    public function testGetInstallationTitleReturnsValue(): void
-    {
-        $this->assertSame(
-            'Ampache :: For the Love of Music - Installation',
-            $this->subject->getInstallationTitle()
-        );
-    }
-
     public function testGetUpdateActionUrlReturnsValue(): void
     {
         $webPath = 'some-web-path';
@@ -136,21 +116,6 @@ class UpdateViewAdapterTest extends MockeryTestCase
                 $webPath
             ),
             $this->subject->getUpdateActionUrl()
-        );
-    }
-
-    public function testGetWebPathReturnsValue(): void
-    {
-        $webPath = '';
-
-        $this->configContainer->shouldReceive('getWebPath')
-            ->with('')
-            ->once()
-            ->andReturn($webPath);
-
-        $this->assertSame(
-            $webPath,
-            $this->subject->getWebPath()
         );
     }
 
@@ -183,6 +148,37 @@ class UpdateViewAdapterTest extends MockeryTestCase
                 'warning' => $warning
             ]],
             iterator_to_array($this->subject->getUpdateInfo())
+        );
+    }
+
+    public function testGetWebPathReturnsValue(): void
+    {
+        $webPath = '';
+
+        $this->configContainer->shouldReceive('getWebPath')
+            ->with('')
+            ->once()
+            ->andReturn($webPath);
+
+        $this->assertSame(
+            $webPath,
+            $this->subject->getWebPath()
+        );
+    }
+
+    #[Override]
+    protected function setUp(): void
+    {
+        $this->configContainer      = $this->mock(ConfigContainerInterface::class);
+        $this->updateInfoRepository = $this->createMock(UpdateInfoRepositoryInterface::class);
+        $this->updateHelper         = $this->createMock(UpdateHelperInterface::class);
+        $this->updater              = $this->createMock(UpdaterInterface::class);
+
+        $this->subject = new UpdateViewAdapter(
+            $this->configContainer,
+            $this->updateInfoRepository,
+            $this->updateHelper,
+            $this->updater
         );
     }
 }

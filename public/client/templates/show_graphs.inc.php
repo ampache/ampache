@@ -23,6 +23,8 @@ declare(strict_types=0);
  *
  */
 
+// show_graphs.inc.php
+
 use Ampache\Config\AmpConfig;
 use Ampache\Module\Util\Graph;
 use Ampache\Module\Util\Ui;
@@ -35,7 +37,7 @@ use Ampache\Module\Util\Ui;
 /** @var int $start_date */
 /** @var null|string $f_start_date */
 /** @var string $zoom */
-/** @var array $gtypes */
+/** @var string[] $gtypes */
 /** @var string $blink */
 
 $web_path = AmpConfig::get_web_path('/client');
