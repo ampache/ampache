@@ -38,13 +38,9 @@ use Sabre\DAV\Server;
 
 class WebDavApplicationTest extends MockeryTestCase
 {
-    /** @var MockInterface|ConfigContainerInterface|null */
-    private ?MockInterface $configContainer;
-
+    private MockInterface|ConfigContainerInterface|null $configContainer;
     private ?WebDavApplication $subject;
-
-    /** @var MockInterface|WebDavFactoryInterface|null */
-    private ?MockInterface $webDavFactory;
+    private MockInterface|WebDavFactoryInterface|null $webDavFactory;
 
     public function testRunDelegatesToDavServer(): void
     {

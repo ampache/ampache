@@ -41,12 +41,8 @@ use Psr\Http\Message\StreamInterface;
 
 class Album8MethodTest extends MockeryTestCase
 {
-    /** @var ModelFactoryInterface|MockInterface|null */
-    private MockInterface $modelFactory;
-
-    /** @var StreamFactoryInterface|MockInterface|null */
-    private MockInterface $streamFactory;
-
+    private ModelFactoryInterface|MockInterface|null $modelFactory;
+    private StreamFactoryInterface|MockInterface|null $streamFactory;
     private ?Album8Method $subject;
 
     public function testHandleReturnsOutput(): void

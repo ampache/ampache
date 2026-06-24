@@ -33,9 +33,7 @@ use Override;
 class SongActivityTypeHandlerTest extends MockeryTestCase
 {
     private ?SongActivityTypeHandler $subject;
-
-    /** @var UserActivityRepositoryInterface|MockInterface|null */
-    private MockInterface $useractivityRepository;
+    private UserActivityRepositoryInterface|MockInterface|null $userActivityRepository;
 
     public function testRegisterActivityRegisterAlbumActivity(): void
     {
@@ -45,7 +43,7 @@ class SongActivityTypeHandlerTest extends MockeryTestCase
         $userId     = 42;
         $date       = 123;
 
-        $this->useractivityRepository->shouldReceive('registerGenericEntry')
+        $this->userActivityRepository->shouldReceive('registerGenericEntry')
             ->with(
                 $userId,
                 $action,
@@ -72,7 +70,7 @@ class SongActivityTypeHandlerTest extends MockeryTestCase
         $userId     = 42;
         $date       = 123;
 
-        $this->useractivityRepository->shouldReceive('registerGenericEntry')
+        $this->userActivityRepository->shouldReceive('registerGenericEntry')
             ->with(
                 $userId,
                 $action,
@@ -94,10 +92,10 @@ class SongActivityTypeHandlerTest extends MockeryTestCase
     #[Override]
     protected function setUp(): void
     {
-        $this->useractivityRepository = $this->mock(UserActivityRepositoryInterface::class);
+        $this->userActivityRepository = $this->mock(UserActivityRepositoryInterface::class);
 
         $this->subject = new SongActivityTypeHandler(
-            $this->useractivityRepository
+            $this->userActivityRepository
         );
     }
 }

@@ -35,18 +35,11 @@ use Override;
 
 class NewPlaylistDialogAdapterTest extends MockeryTestCase
 {
-    /** @var MockInterface|AjaxUriRetrieverInterface|null */
-    private MockInterface $ajaxUriRetriever;
-
-    /** @var MockInterface|GuiGatekeeperInterface|null */
-    private MockInterface $gatekeeper;
-
+    private MockInterface|AjaxUriRetrieverInterface|null $ajaxUriRetriever;
+    private MockInterface|GuiGatekeeperInterface|null $gatekeeper;
     private string $objectIds  = '666';
     private string $objectType = 'some-object-type';
-
-    /** @var MockInterface|PlaylistLoaderInterface|null */
-    private MockInterface $playlistLoader;
-
+    private MockInterface|PlaylistLoaderInterface|null $playlistLoader;
     private ?NewPlaylistDialogAdapter $subject;
 
     public function testAjaxUriReturnsUri(): void

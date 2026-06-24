@@ -40,15 +40,9 @@ use Teapot\StatusCode\RFC\RFC7231;
 
 class DeletePlaylistActionTest extends MockeryTestCase
 {
-    /** @var ConfigContainerInterface|MockInterface|null */
-    private ?MockInterface $configContainer;
-
-    /** @var ModelFactoryInterface|MockInterface|null */
-    private ?MockInterface $modelFactory;
-
-    /** @var ResponseFactoryInterface|MockInterface|null */
-    private ?MockInterface $responseFactory;
-
+    private ConfigContainerInterface|MockInterface|null $configContainer;
+    private ModelFactoryInterface|MockInterface|null $modelFactory;
+    private ResponseFactoryInterface|MockInterface|null $responseFactory;
     private ?DeletePlaylistAction $subject;
 
     public function testRunDeletesAndReturnsResponse(): void

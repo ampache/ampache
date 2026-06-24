@@ -42,25 +42,13 @@ use Override;
 
 class PlaylistViewAdapterTest extends MockeryTestCase
 {
-    /** @var ConfigContainerInterface|MockInterface|null */
-    private MockInterface $configContainer;
-
-    /** @var FunctionCheckerInterface|MockInterface|null */
-    private MockInterface $functionChecker;
-
-    /** @var GuiGatekeeperInterface|MockInterface|null */
-    private ?MockInterface $gatekeeper;
-
-    /** @var ModelFactoryInterface|MockInterface|null */
-    private MockInterface $modelFactory;
-
-    /** @var Playlist|MockInterface|null */
-    private MockInterface $playlist;
-
+    private ConfigContainerInterface|MockInterface|null $configContainer;
+    private FunctionCheckerInterface|MockInterface|null $functionChecker;
+    private GuiGatekeeperInterface|MockInterface|null $gatekeeper;
+    private ModelFactoryInterface|MockInterface|null $modelFactory;
+    private Playlist|MockInterface|null $playlist;
     private PlaylistViewAdapter $subject;
-
-    /** @var ZipHandlerInterface|MockInterface|null */
-    private MockInterface $zipHandler;
+    private ZipHandlerInterface|MockInterface|null $zipHandler;
 
     public function testCanBatchDownloadReturnsValue(): void
     {

@@ -36,12 +36,8 @@ use Psr\Http\Message\ServerRequestInterface;
 class AdvancedActionTest extends MockeryTestCase
 {
     private ?AdvancedAction $subject;
-
-    /** @var UiInterface|MockInterface|null */
-    private MockInterface $ui;
-
-    /** @var VideoRepositoryInterface|MockInterface|null */
-    private MockInterface $videoRepository;
+    private UiInterface|MockInterface|null $ui;
+    private VideoRepositoryInterface|MockInterface|null $videoRepository;
 
     public function testRunRenders(): void
     {

@@ -38,7 +38,7 @@ final readonly class FolderDeleter implements FolderDeleterInterface
     public function __construct(
         private ShoutRepositoryInterface $shoutRepository,
         private FolderRepositoryInterface $folderRepository,
-        private UserActivityRepositoryInterface $useractivityRepository,
+        private UserActivityRepositoryInterface $userActivityRepository,
         private ArtCleanupInterface $artCleanup,
     ) {}
 
@@ -52,7 +52,7 @@ final readonly class FolderDeleter implements FolderDeleterInterface
         Userflag::garbage_collection('folder', $folderId);
         Rating::garbage_collection('folder', $folderId);
         $this->shoutRepository->collectGarbage('folder', $folderId);
-        $this->useractivityRepository->collectGarbage('folder', $folderId);
+        $this->userActivityRepository->collectGarbage('folder', $folderId);
         $this->folderRepository->collectGarbage();
     }
 }

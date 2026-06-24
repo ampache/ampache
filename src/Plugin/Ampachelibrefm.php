@@ -62,7 +62,7 @@ class Ampachelibrefm extends AmpachePlugin implements PluginSaveMediaplayInterfa
     public string $version   = '000003';
 
     private string $api_host = 'libre.fm';
-    private $challenge;
+    private ?string $challenge;
     private string $host   = 'libre.fm';
     private string $scheme = 'https';
     private string $secret = '';

@@ -34,14 +34,9 @@ use Override;
 
 class AuthenticationManagerTest extends MockeryTestCase
 {
-    /** @var MockInterface|AuthenticatorInterface|null */
-    private MockInterface $authenticator;
-
+    private MockInterface|AuthenticatorInterface|null $authenticator;
     private string $authenticatorName = 'some-authenticator';
-
-    /** @var MockInterface|ConfigContainerInterface|null */
-    private MockInterface $configContainer;
-
+    private MockInterface|ConfigContainerInterface|null $configContainer;
     private ?AuthenticationManager $subject;
 
     public function testLoginFailsIfAuthenticatorNotAvailable(): void

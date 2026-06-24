@@ -37,16 +37,10 @@ use Psr\Http\Message\ServerRequestInterface;
 
 class ShowAllSongsActionTest extends MockeryTestCase
 {
-    /** @var ModelFactoryInterface|MockInterface|null */
-    private MockInterface $modelFactory;
-
-    /** @var SongRepositoryInterface|MockInterface|null */
-    private MockInterface $songRepository;
-
+    private ModelFactoryInterface|MockInterface|null $modelFactory;
+    private SongRepositoryInterface|MockInterface|null $songRepository;
     private ?ShowAllSongsAction $subject;
-
-    /** @var UiInterface|MockInterface|null */
-    private MockInterface $ui;
+    private UiInterface|MockInterface|null $ui;
 
     public function testRunRenders(): void
     {

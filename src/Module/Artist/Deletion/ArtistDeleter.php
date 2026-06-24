@@ -49,7 +49,7 @@ final readonly class ArtistDeleter implements ArtistDeleterInterface
         private ModelFactoryInterface $modelFactory,
         private LoggerInterface $logger,
         private ShoutRepositoryInterface $shoutRepository,
-        private UserActivityRepositoryInterface $useractivityRepository,
+        private UserActivityRepositoryInterface $userActivityRepository,
         private LabelRepositoryInterface $labelRepository,
         private ArtCleanupInterface $artCleanup,
         private FolderRepositoryInterface $folderRepository,
@@ -90,7 +90,7 @@ final readonly class ArtistDeleter implements ArtistDeleterInterface
         Rating::garbage_collection('artist', $artistId);
         $this->labelRepository->collectGarbage();
         $this->shoutRepository->collectGarbage('artist', $artistId);
-        $this->useractivityRepository->collectGarbage('artist', $artistId);
+        $this->userActivityRepository->collectGarbage('artist', $artistId);
         $this->folderRepository->collectGarbage();
     }
 }

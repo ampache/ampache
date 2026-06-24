@@ -33,9 +33,7 @@ use Override;
 
 class InitializationHandlerEnvironmentTest extends MockeryTestCase
 {
-    /** @var MockInterface|EnvironmentInterface|null */
-    private MockInterface $environment;
-
+    private MockInterface|EnvironmentInterface|null $environment;
     private InitializationHandlerEnvironment $subject;
 
     public function testInitPassesIfCheckSuceeds(): void

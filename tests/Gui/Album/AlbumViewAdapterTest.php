@@ -44,28 +44,14 @@ use Override;
 
 class AlbumViewAdapterTest extends MockeryTestCase
 {
-    /** @var Album|MockInterface|null */
-    private MockInterface $album;
-
-    /** @var Browse|MockInterface|null */
-    private MockInterface $browse;
-
-    /** @var ConfigContainerInterface|MockInterface|null */
-    private MockInterface $configContainer;
-
-    /** @var FunctionCheckerInterface|MockInterface|null */
-    private MockInterface $functionChecker;
-
-    /** @var GuiGatekeeperInterface|MockInterface|null */
-    private ?MockInterface $gatekeeper;
-
-    /** @var ModelFactoryInterface|MockInterface|null */
-    private MockInterface $modelFactory;
-
+    private Album|MockInterface|null $album;
+    private Browse|MockInterface|null $browse;
+    private ConfigContainerInterface|MockInterface|null $configContainer;
+    private FunctionCheckerInterface|MockInterface|null $functionChecker;
+    private GuiGatekeeperInterface|MockInterface|null $gatekeeper;
+    private ModelFactoryInterface|MockInterface|null $modelFactory;
     private AlbumViewAdapter $subject;
-
-    /** @var ZipHandlerInterface|MockInterface|null */
-    private MockInterface $zipHandler;
+    private ZipHandlerInterface|MockInterface|null $zipHandler;
 
     public function testCanBatchDownloadReturnsValue(): void
     {

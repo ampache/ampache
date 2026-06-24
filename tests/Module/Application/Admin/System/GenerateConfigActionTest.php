@@ -45,21 +45,11 @@ use Psr\Http\Message\StreamInterface;
 
 class GenerateConfigActionTest extends MockeryTestCase
 {
-    /** @var Horde_Browser|MockInterface|null */
-    private MockInterface $browser;
-
-    /** @var ConfigContainerInterface|MockInterface|null */
-    private MockInterface $configContainer;
-
-    /** @var InstallationHelperInterface|MockInterface|null */
-    private MockInterface $installationHelper;
-
-    /** @var ResponseFactoryInterface|MockInterface|null */
-    private MockInterface $responseFactory;
-
-    /** @var StreamFactoryInterface|MockInterface|null */
-    private MockInterface $streamFactory;
-
+    private Horde_Browser|MockInterface|null $browser;
+    private ConfigContainerInterface|MockInterface|null $configContainer;
+    private InstallationHelperInterface|MockInterface|null $installationHelper;
+    private ResponseFactoryInterface|MockInterface|null $responseFactory;
+    private StreamFactoryInterface|MockInterface|null $streamFactory;
     private ?GenerateConfigAction $subject;
 
     public function testRunReturnsResponse(): void

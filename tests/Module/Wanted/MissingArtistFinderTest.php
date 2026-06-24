@@ -34,9 +34,7 @@ use Override;
 
 class MissingArtistFinderTest extends MockeryTestCase
 {
-    /** @var MockInterface|MusicBrainz|null */
-    private MockInterface $musicBrainz;
-
+    private MockInterface|MusicBrainz|null $musicBrainz;
     private ?MissingArtistFinder $subject;
 
     public function testFindReturnsFinds(): void

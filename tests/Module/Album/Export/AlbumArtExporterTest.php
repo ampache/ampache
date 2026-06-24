@@ -43,15 +43,9 @@ use Override;
 
 class AlbumArtExporterTest extends MockeryTestCase
 {
-    /** @var ConfigContainerInterface|MockInterface|null */
-    private MockInterface $configContainer;
-
-    /** @var ModelFactoryInterface|MockInterface|null */
-    private MockInterface $modelFactory;
-
-    /** @var MockInterface|SongRepositoryInterface|null */
-    private MockInterface $songRepository;
-
+    private ConfigContainerInterface|MockInterface|null $configContainer;
+    private ModelFactoryInterface|MockInterface|null $modelFactory;
+    private SongRepositoryInterface|MockInterface|null $songRepository;
     private ?AlbumArtExporter $subject;
 
     public function testExportDoesNothingIfNoInfoExists(): void

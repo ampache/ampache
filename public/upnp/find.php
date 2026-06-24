@@ -83,9 +83,15 @@ class UPnPFind
         $msg .= "ST: upnp:rootdevice\r\n";
         $msg .= "\r\n";
 
+        if (!extension_loaded('sockets')) {
+            return [];
+        }
+
         $response = [];
         $socket   = socket_create(AF_INET, SOCK_DGRAM, SOL_UDP);
         if ($socket === false) {
+            debug_event(self::class, 'ERROR: PHP missing ext-sockets', 1);
+
             return $response;
         }
         socket_set_option($socket, SOL_SOCKET, SO_BROADCAST, 1);
@@ -110,11 +116,8 @@ class UPnPFind
 
     /**
      * Transforms discovery response string to key/value array
-     *
-     * @param string $res discovery response
-     * @return stdClass
      */
-    private static function _discoveryReponse2Array($res)
+    private static function _discoveryReponse2Array(string $res): stdClass
     {
         $result = [];
         $lines  = explode("\n", trim($res));

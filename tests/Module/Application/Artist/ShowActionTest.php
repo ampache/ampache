@@ -41,22 +41,12 @@ use Psr\Log\LoggerInterface;
 
 class ShowActionTest extends MockeryTestCase
 {
-    /** @var AlbumRepositoryInterface|MockInterface|null */
-    private MockInterface $albumRepository;
-
-    /** @var ConfigContainerInterface|MockInterface|null */
-    private MockInterface $configContainer;
-
-    /** @var LoggerInterface|MockInterface|null */
-    private MockInterface $logger;
-
-    /** @var ModelFactoryInterface|MockInterface|null */
-    private MockInterface $modelFactory;
-
+    private AlbumRepositoryInterface|MockInterface|null $albumRepository;
+    private ConfigContainerInterface|MockInterface|null $configContainer;
+    private LoggerInterface|MockInterface|null $logger;
+    private ModelFactoryInterface|MockInterface|null $modelFactory;
     private ?ShowAction $subject;
-
-    /** @var UiInterface|MockInterface|null */
-    private MockInterface $ui;
+    private UiInterface|MockInterface|null $ui;
 
     public function testRunsOutputsGroupedAlbums(): void
     {

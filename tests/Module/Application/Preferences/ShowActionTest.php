@@ -36,9 +36,7 @@ use Psr\Http\Message\ServerRequestInterface;
 class ShowActionTest extends MockeryTestCase
 {
     private ShowAction $subject;
-
-    /** @var MockInterface|UiInterface */
-    private MockInterface $ui;
+    private MockInterface|UiInterface $ui;
 
     public function testRunShowOptions(): void
     {

@@ -33,9 +33,7 @@ use Override;
 class AlbumActivityTypeHandlerTest extends MockeryTestCase
 {
     private ?AlbumActivityTypeHandler $subject;
-
-    /** @var UserActivityRepositoryInterface|MockInterface|null */
-    private MockInterface $useractivityRepository;
+    private UserActivityRepositoryInterface|MockInterface|null $userActivityRepository;
 
     public function testRegisterActivityRegisterAlbumActivity(): void
     {
@@ -45,7 +43,7 @@ class AlbumActivityTypeHandlerTest extends MockeryTestCase
         $userId     = 42;
         $date       = 123;
 
-        $this->useractivityRepository->shouldReceive('registerGenericEntry')
+        $this->userActivityRepository->shouldReceive('registerGenericEntry')
             ->with(
                 $userId,
                 $action,
@@ -67,10 +65,10 @@ class AlbumActivityTypeHandlerTest extends MockeryTestCase
     #[Override]
     protected function setUp(): void
     {
-        $this->useractivityRepository = $this->mock(UserActivityRepositoryInterface::class);
+        $this->userActivityRepository = $this->mock(UserActivityRepositoryInterface::class);
 
         $this->subject = new AlbumActivityTypeHandler(
-            $this->useractivityRepository
+            $this->userActivityRepository
         );
     }
 }

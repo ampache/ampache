@@ -52,7 +52,7 @@ final readonly class AlbumDeleter implements AlbumDeleterInterface
         private SongRepositoryInterface $songRepository,
         private ShoutRepositoryInterface $shoutRepository,
         private SongDeleterInterface $songDeleter,
-        private UserActivityRepositoryInterface $useractivityRepository,
+        private UserActivityRepositoryInterface $userActivityRepository,
         private ArtCleanupInterface $artCleanup,
         private FolderRepositoryInterface $folderRepository,
     ) {}
@@ -87,7 +87,7 @@ final readonly class AlbumDeleter implements AlbumDeleterInterface
         Userflag::garbage_collection('album', $albumId);
         Rating::garbage_collection('album', $albumId);
         $this->shoutRepository->collectGarbage('album', $albumId);
-        $this->useractivityRepository->collectGarbage('album', $albumId);
+        $this->userActivityRepository->collectGarbage('album', $albumId);
         $this->folderRepository->collectGarbage();
     }
 }

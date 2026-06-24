@@ -39,13 +39,9 @@ use Psr\Http\Message\ServerRequestInterface;
 
 class ShowActionTest extends MockeryTestCase
 {
-    /** @var ModelFactoryInterface|MockInterface|null */
-    private ?MockInterface $modelFactory;
-
+    private ModelFactoryInterface|MockInterface|null $modelFactory;
     private ?ShowAction $subject;
-
-    /** @var UiInterface|MockInterface|null */
-    private ?MockInterface $ui;
+    private UiInterface|MockInterface|null $ui;
 
     public function testRunsShowsAndReturnsNull(): void
     {

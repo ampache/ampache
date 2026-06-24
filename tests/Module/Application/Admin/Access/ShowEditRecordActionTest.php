@@ -41,13 +41,9 @@ use Psr\Http\Message\ServerRequestInterface;
 
 class ShowEditRecordActionTest extends MockeryTestCase
 {
-    /** @var ModelFactoryInterface|MockInterface|null */
-    private MockInterface $modelFactory;
-
+    private ModelFactoryInterface|MockInterface|null $modelFactory;
     private ?ShowEditRecordAction $subject;
-
-    /** @var UiInterface|MockInterface|null */
-    private MockInterface $ui;
+    private UiInterface|MockInterface|null $ui;
 
     public function testRunRenders(): void
     {

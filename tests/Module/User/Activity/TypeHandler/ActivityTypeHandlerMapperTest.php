@@ -26,20 +26,14 @@ declare(strict_types=1);
 namespace Ampache\Module\User\Activity\TypeHandler;
 
 use Ampache\MockeryTestCase;
-use Ampache\Repository\Model\ModelFactoryInterface;
 use Ampache\Repository\UserActivityRepositoryInterface;
 use Mockery\MockInterface;
 use Override;
 
 class ActivityTypeHandlerMapperTest extends MockeryTestCase
 {
-    /** @var ModelFactoryInterface|MockInterface|null */
-    private MockInterface $modelFactory;
-
     private ?ActivityTypeHandlerMapper $subject;
-
-    /** @var UserActivityRepositoryInterface|MockInterface|null */
-    private MockInterface $userActivityRepository;
+    private UserActivityRepositoryInterface|MockInterface|null $userActivityRepository;
 
     public function testMapReturnsGenericEntry(): void
     {
@@ -61,11 +55,9 @@ class ActivityTypeHandlerMapperTest extends MockeryTestCase
     protected function setUp(): void
     {
         $this->userActivityRepository = $this->mock(UserActivityRepositoryInterface::class);
-        $this->modelFactory           = $this->mock(ModelFactoryInterface::class);
 
         $this->subject = new ActivityTypeHandlerMapper(
-            $this->userActivityRepository,
-            $this->modelFactory
+            $this->userActivityRepository
         );
     }
 }

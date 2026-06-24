@@ -47,7 +47,8 @@ use Override;
 class Stream_Url extends MemoryObject
 {
     #[Override]
-    public $properties = [
+    /** @var string[] $properties */
+    public array $properties = [
         'url',
         'info_url',
         'image_url',

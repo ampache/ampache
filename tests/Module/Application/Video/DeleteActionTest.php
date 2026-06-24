@@ -37,16 +37,10 @@ use Psr\Log\LoggerInterface;
 
 class DeleteActionTest extends MockeryTestCase
 {
-    /** @var ConfigContainerInterface|MockInterface|null */
-    private ?MockInterface $configContainer;
-
-    /** @var LoggerInterface|MockInterface|null */
-    private MockInterface $logger;
-
+    private ConfigContainerInterface|MockInterface|null $configContainer;
+    private LoggerInterface|MockInterface|null $logger;
     private ?DeleteAction $subject;
-
-    /** @var UiInterface|MockInterface|null */
-    private ?MockInterface $ui;
+    private UiInterface|MockInterface|null $ui;
 
     public function testRunDeletesAndReturnsNull(): void
     {

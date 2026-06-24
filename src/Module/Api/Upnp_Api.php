@@ -1599,15 +1599,19 @@ class Upnp_Api
      */
     private static function _udpSend(string $buf, int $delay = 15, string $host = "239.255.255.250", int $port = 1900): void
     {
-        usleep($delay * 1000); // we are supposed to delay before sending
-        $socket = socket_create(AF_INET, SOCK_DGRAM, SOL_UDP);
-        if ($socket !== false) {
-            // when broadcast, set broadcast socket option
-            if ($host == "239.255.255.250") {
-                socket_set_option($socket, SOL_SOCKET, SO_BROADCAST, 1);
+        if (extension_loaded('sockets')) {
+            usleep($delay * 1000); // we are supposed to delay before sending
+            $socket = socket_create(AF_INET, SOCK_DGRAM, SOL_UDP);
+            if ($socket !== false) {
+                // when broadcast, set broadcast socket option
+                if ($host == "239.255.255.250") {
+                    socket_set_option($socket, SOL_SOCKET, SO_BROADCAST, 1);
+                }
+                socket_sendto($socket, $buf, strlen((string) $buf), 0, $host, $port);
+                socket_close($socket);
             }
-            socket_sendto($socket, $buf, strlen((string) $buf), 0, $host, $port);
-            socket_close($socket);
+        } else {
+            debug_event(self::class, 'ERROR: PHP missing ext-sockets', 1);
         }
     }
 

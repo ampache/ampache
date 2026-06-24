@@ -43,15 +43,9 @@ use Teapot\StatusCode\RFC\RFC7231;
 
 class WriteConfigActionTest extends MockeryTestCase
 {
-    /** @var ConfigContainerInterface|MockInterface|null */
-    private ?MockInterface $configContainer;
-
-    /** @var InstallationHelperInterface|MockInterface|null */
-    private ?MockInterface $installationHelper;
-
-    /** @var ResponseFactoryInterface|MockInterface|null */
-    private ?MockInterface $responseFactory;
-
+    private ConfigContainerInterface|MockInterface|null $configContainer;
+    private InstallationHelperInterface|MockInterface|null $installationHelper;
+    private ResponseFactoryInterface|MockInterface|null $responseFactory;
     private ?WriteConfigAction $subject;
 
     public function testRunThrowsExceptionIfAccessIsDenied(): void

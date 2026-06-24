@@ -55,10 +55,10 @@ class AmpachePiwik extends AmpachePlugin implements PluginDisplayOnFooterInterfa
     #[Override]
     public string $version = '000001';
 
-    private $piwik_url;
+    private string $piwik_url;
 
     // These are internal settings used by this class, run this->load to fill them out
-    private $site_id;
+    private string $site_id;
 
     /**
      * Constructor
