@@ -444,20 +444,36 @@ class Catalog_local extends Catalog
                 continue;
             }
 
-            // reduce the crazy log info
-            if ($counter % 1000 === 0) {
+            $counter++;
+
+            if ($counter % 5000 === 0) {
                 $interactor?->info(
-                    sprintf('Reading %s inside %s', $file, $path),
+                    sprintf('Reading directory: %s (processed %d files)', $path, $counter),
                     true
                 );
-                debug_event('local.catalog', sprintf('Reading %s inside %s', $file, $path), 5);
-                debug_event('local.catalog', "Memory usage: " . Ui::format_bytes(memory_get_usage(true)), 5);
+                debug_event('local.catalog', sprintf('add_files progress: %s (%d files)', $path, $counter), 5);
             }
-
-            $counter++;
 
             /* Create the new path */
             $full_file = $path . DIRECTORY_SEPARATOR . $file;
+
+            if (!is_dir($full_file)) {
+                $is_audio_file = Catalog::is_audio_file($full_file);
+                $is_video_file = false;
+                if (AmpConfig::get('catalog_video_pattern')) {
+                    $is_video_file = Catalog::is_video_file($full_file);
+                }
+
+                $is_playlist = false;
+                if ($options['parse_playlist'] && AmpConfig::get('catalog_playlist_pattern')) {
+                    $is_playlist = Catalog::is_playlist_file($full_file);
+                }
+
+                if (!$is_audio_file && !$is_video_file && !$is_playlist) {
+                    continue;
+                }
+            }
+
             try {
                 if ($this->add_file($full_file, $options, $counter, $interactor)) {
                     $songsadded++;
@@ -471,11 +487,7 @@ class Catalog_local extends Catalog
             }
         }
 
-        $interactor?->info(
-            sprintf('Finished reading %s, closing handle', $path),
-            true
-        );
-        debug_event('local.catalog', sprintf('Finished reading %s, closing handle', $path), 5);
+        debug_event('local.catalog', sprintf('add_files finished: %s (added %d items)', $path, $songsadded), 5);
 
         // This should only happen on the last run
         if ($path === $this->path) {
@@ -1572,10 +1584,10 @@ class Catalog_local extends Catalog
                 $dead[] = (int) $oid;
             } elseif ($count % 1000 == 0) {
                 $interactor?->info(
-                    'chunk progress: ' . $count . '/' . $total . ' on ' . $this->name,
+                    'progress: ' . $count . '/' . $total . ' on ' . $this->name,
                     true
                 );
-                debug_event('local.catalog', 'chunk progress: ' . $count . '/' . $total . ' on ' . $this->name, 5);
+                debug_event('local.catalog', 'progress: ' . $count . '/' . $total . ' on ' . $this->name, 5);
             }
         }
 
