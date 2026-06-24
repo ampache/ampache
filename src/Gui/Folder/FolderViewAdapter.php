@@ -175,7 +175,7 @@ final readonly class FolderViewAdapter implements FolderViewAdapterInterface
             $object_id,
             $name,
             $size,
-            $this->configContainer->getWebPath() . '/' . $object_type . 's.php?action=show&' . ($object_type === 'song' ? 'song_id' : $object_type) . '=' . $object_id
+            $this->configContainer->getWebPath('/client') . '/' . $object_type . 's.php?action=show&' . ($object_type === 'song' ? 'song_id' : $object_type) . '=' . $object_id
         );
 
         return '';
@@ -218,7 +218,7 @@ final readonly class FolderViewAdapter implements FolderViewAdapterInterface
     {
         return sprintf(
             '%s/batch.php?action=' . $this->object_type . '&id=%s',
-            $this->configContainer->getWebPath(),
+            $this->configContainer->getWebPath('/client'),
             $this->object->getId()
         );
     }
@@ -234,7 +234,7 @@ final readonly class FolderViewAdapter implements FolderViewAdapterInterface
 
         return sprintf(
             '%s/' . $this->object_type . 's.php?action=%s&' . $this->object_type . '_id=%d&parent_id=%d',
-            $this->configContainer->getWebPath(),
+            $this->configContainer->getWebPath('/client'),
             DeleteAction::REQUEST_KEY,
             $this->object->getId(),
             $parent_id
@@ -311,7 +311,7 @@ final readonly class FolderViewAdapter implements FolderViewAdapterInterface
     {
         return sprintf(
             '%s/shout.php?action=show_add_shout&type=' . $this->object_type . '&id=%d',
-            $this->configContainer->getWebPath(),
+            $this->configContainer->getWebPath('/client'),
             $this->object->getId()
         );
     }

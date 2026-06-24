@@ -155,7 +155,7 @@ final readonly class AlbumViewAdapter implements AlbumViewAdapterInterface
             $albumId,
             $name,
             $size,
-            $this->configContainer->getWebPath() . '/albums.php?action=show&album=' . $albumId
+            $this->configContainer->getWebPath('/client') . '/albums.php?action=show&album=' . $albumId
         );
 
         return '';
@@ -197,7 +197,7 @@ final readonly class AlbumViewAdapter implements AlbumViewAdapterInterface
     {
         return sprintf(
             '%s/batch.php?action=album&id=%s',
-            $this->configContainer->getWebPath(),
+            $this->configContainer->getWebPath('/client'),
             $this->album->id
         );
     }
@@ -211,7 +211,7 @@ final readonly class AlbumViewAdapter implements AlbumViewAdapterInterface
     {
         return sprintf(
             '%s/albums.php?action=%s&album_id=%d',
-            $this->configContainer->getWebPath(),
+            $this->configContainer->getWebPath('/client'),
             DeleteAction::REQUEST_KEY,
             $this->album->getId()
         );
@@ -270,7 +270,7 @@ final readonly class AlbumViewAdapter implements AlbumViewAdapterInterface
     {
         return sprintf(
             '%s/shout.php?action=show_add_shout&type=album&id=%d',
-            $this->configContainer->getWebPath(),
+            $this->configContainer->getWebPath('/client'),
             $this->album->getId()
         );
     }

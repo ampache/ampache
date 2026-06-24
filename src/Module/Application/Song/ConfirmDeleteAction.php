@@ -71,14 +71,14 @@ final readonly class ConfirmDeleteAction implements ApplicationActionInterface
             $this->ui->showConfirmation(
                 T_('No Problem'),
                 T_('Song has been deleted'),
-                $this->configContainer->getWebPath()
+                $this->configContainer->getWebPath('/client')
             );
         } else {
             $this->ui->showConfirmation(
                 T_('There Was a Problem'),
                 /* HINT: Artist, Album, Song, Catalog, Video, Catalog Filter */
                 sprintf(T_("Couldn't delete this %s"), T_('Song')),
-                $this->configContainer->getWebPath()
+                $this->configContainer->getWebPath('/client')
             );
         }
 

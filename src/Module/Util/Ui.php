@@ -144,7 +144,7 @@ class Ui implements UiInterface
     public static function find_template(string $template, bool $extern = false): string
     {
         $path      = AmpConfig::get('theme_path', '/themes/reborn') . '/templates/' . $template;
-        $realpath  = __DIR__ . '/../../../public/' . $path;
+        $realpath  = __DIR__ . '/../../../public/client/' . $path;
         $extension = strtolower(pathinfo($path, PATHINFO_EXTENSION));
         if (($extension !== 'php' || AmpConfig::get('allow_php_themes')) && file_exists($realpath) && is_file($realpath)) {
             return $path;
@@ -154,7 +154,7 @@ class Ui implements UiInterface
             return '/templates/' . $template;
         }
 
-        return __DIR__ . '/../../../public/templates/' . $template;
+        return __DIR__ . '/../../../public/client/templates/' . $template;
     }
 
     /**
@@ -313,10 +313,10 @@ class Ui implements UiInterface
         }
 
         if ($color !== null) {
-            return AmpConfig::get_web_path() . AmpConfig::get('theme_path', '/themes/reborn') . '/images/ampache-' . $color . '.png';
+            return AmpConfig::get_web_path('/client') . AmpConfig::get('theme_path', '/themes/reborn') . '/images/ampache-' . $color . '.png';
         }
 
-        return AmpConfig::get_web_path() . AmpConfig::get('theme_path', '/themes/reborn') . '/images/ampache-' . AmpConfig::get('theme_color', 'dark') . '.png';
+        return AmpConfig::get_web_path('/client') . AmpConfig::get('theme_path', '/themes/reborn') . '/images/ampache-' . AmpConfig::get('theme_color', 'dark') . '.png';
     }
 
     /**
@@ -457,7 +457,7 @@ class Ui implements UiInterface
             echo "<style>#loginPage #headerlogo, #registerPage #logo { background-image: url('" . AmpConfig::get('custom_login_logo') . "') !important; }</style>";
         }
 
-        $favicon = AmpConfig::get('custom_favicon', false) ?: AmpConfig::get_web_path() . "/favicon.ico";
+        $favicon = AmpConfig::get('custom_favicon', false) ?: AmpConfig::get_web_path('/client') . "/favicon.ico";
         echo '<link rel="icon" href="' . $favicon . "\">\n";
     }
 
@@ -572,8 +572,8 @@ class Ui implements UiInterface
         $path = 'themes/' . AmpConfig::get('theme_name', 'reborn') . '/images/icons/';
         // Can't use GLOB_BRACE for Alpine compatibility https://github.com/ampache/ampache/issues/4008
         $filesearch = array_merge(
-            glob(__DIR__ . '/../../../public/' . $path . 'icon_' . $name . '.svg') ?: [],
-            glob(__DIR__ . '/../../../public/' . $path . 'icon_' . $name . '.png') ?: []
+            glob(__DIR__ . '/../../../public/client/' . $path . 'icon_' . $name . '.svg') ?: [],
+            glob(__DIR__ . '/../../../public/client/' . $path . 'icon_' . $name . '.png') ?: []
         );
 
         if ($filesearch === []) {
@@ -585,8 +585,8 @@ class Ui implements UiInterface
                 // finally fall back to the public images folder
                 // Can't use GLOB_BRACE for Alpine compatibility https://github.com/ampache/ampache/issues/4008
                 $filesearch = array_merge(
-                    glob(__DIR__ . '/../../../public/' . $path . 'icon_' . $name . '.svg') ?: [],
-                    glob(__DIR__ . '/../../../public/' . $path . 'icon_' . $name . '.png') ?: []
+                    glob(__DIR__ . '/../../../public/client/' . $path . 'icon_' . $name . '.svg') ?: [],
+                    glob(__DIR__ . '/../../../public/client/' . $path . 'icon_' . $name . '.png') ?: []
                 );
             }
         }
@@ -603,7 +603,7 @@ class Ui implements UiInterface
         if (pathinfo($filename, PATHINFO_EXTENSION) === 'svg') {
             $url = $filesearch[0];
         } else {
-            $url = AmpConfig::get_web_path() . '/' . $path . $filename;
+            $url = AmpConfig::get_web_path('/client') . '/' . $path . $filename;
         }
 
         // cache the url so you don't need to keep searching
@@ -627,8 +627,8 @@ class Ui implements UiInterface
         $path = 'themes/' . AmpConfig::get('theme_name', 'reborn') . '/images/';
         // Can't use GLOB_BRACE for Alpine compatibility https://github.com/ampache/ampache/issues/4008
         $filesearch = array_merge(
-            glob(__DIR__ . '/../../../public/' . $path . $name . '.svg') ?: [],
-            glob(__DIR__ . '/../../../public/' . $path . $name . '.png') ?: []
+            glob(__DIR__ . '/../../../public/client/' . $path . $name . '.svg') ?: [],
+            glob(__DIR__ . '/../../../public/client/' . $path . $name . '.png') ?: []
         );
 
         if ($filesearch === []) {
@@ -639,8 +639,8 @@ class Ui implements UiInterface
                 // finally fall back to the public images folder
                 // Can't use GLOB_BRACE for Alpine compatibility https://github.com/ampache/ampache/issues/4008
                 $filesearch = array_merge(
-                    glob(__DIR__ . '/../../../public/' . $path . $name . '.svg') ?: [],
-                    glob(__DIR__ . '/../../../public/' . $path . $name . '.png') ?: []
+                    glob(__DIR__ . '/../../../public/client/' . $path . $name . '.svg') ?: [],
+                    glob(__DIR__ . '/../../../public/client/' . $path . $name . '.png') ?: []
                 );
             }
         }
@@ -659,7 +659,7 @@ class Ui implements UiInterface
         ) {
             $url = $filesearch[0];
         } else {
-            $url = AmpConfig::get_web_path() . '/' . $path . $filename;
+            $url = AmpConfig::get_web_path('/client') . '/' . $path . $filename;
         }
 
         // cache the url so you don't need to keep searching
@@ -1253,7 +1253,7 @@ class Ui implements UiInterface
                 if ($plugin->_plugin instanceof Ampachelibrefm || $plugin->_plugin instanceof AmpacheLastfm) {
                     $url      = $plugin->_plugin->url;
                     $api_key  = rawurlencode((string) $plugin->_plugin->api_key);
-                    $callback = rawurlencode(AmpConfig::get_web_path() . '/preferences.php?tab=plugins&action=grant&plugin=' . $plugin_name);
+                    $callback = rawurlencode(AmpConfig::get_web_path('/client') . '/preferences.php?tab=plugins&action=grant&plugin=' . $plugin_name);
                     /* HINT: Plugin Name */
                     echo sprintf('<a href="%s/api/auth/?api_key=%s&cb=%s" target="_blank">', $url, $api_key, $callback) . self::get_material_symbol('extension', sprintf(T_("Click to grant %s access to Ampache"), $plugin_name)) . '</a>';
                 }
@@ -1363,7 +1363,7 @@ class Ui implements UiInterface
         ?string $form_name = 'confirmation',
         ?bool $visible = true,
     ): void {
-        $webPath = $this->configContainer->getWebPath();
+        $webPath = $this->configContainer->getWebPath('/client');
         $path    = substr_count($next_url, $webPath) !== 0 ? $next_url : sprintf('%s/%s', $webPath, $next_url);
 
         $this->show(
@@ -1389,7 +1389,7 @@ class Ui implements UiInterface
         ?string $form_name = 'confirmation',
         ?bool $visible = true,
     ): void {
-        $webPath = $this->configContainer->getWebPath();
+        $webPath = $this->configContainer->getWebPath('/client');
         $return  = (substr_count($return_url, $webPath) !== 0) ? $return_url : sprintf('%s/%s', $webPath, $return_url);
         $cancel  = (substr_count($cancel_url, $webPath) !== 0) ? $cancel_url : sprintf('%s/%s', $webPath, $cancel_url);
 
@@ -1413,7 +1413,7 @@ class Ui implements UiInterface
         string $text,
         string $next_url,
     ): void {
-        $webPath = $this->configContainer->getWebPath();
+        $webPath = $this->configContainer->getWebPath('/client');
 
         $path = substr_count($next_url, $webPath) !== 0 ? $next_url : sprintf('%s/%s', $webPath, $next_url);
 

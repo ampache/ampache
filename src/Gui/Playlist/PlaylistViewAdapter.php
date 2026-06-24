@@ -154,7 +154,7 @@ final readonly class PlaylistViewAdapter implements PlaylistViewAdapterInterface
     {
         return sprintf(
             '%s/batch.php?action=playlist&id=%d',
-            $this->configContainer->getWebPath(),
+            $this->configContainer->getWebPath('/client'),
             $this->playlist->getId()
         );
     }
@@ -274,7 +274,7 @@ final readonly class PlaylistViewAdapter implements PlaylistViewAdapterInterface
 
         return sprintf(
             '%s/playlist.php?action=refresh_playlist&type=playlist&user_id=%d&playlist_id=%d&search_id=%d',
-            $this->configContainer->getWebPath(),
+            $this->configContainer->getWebPath('/client'),
             $this->playlist->user,
             $this->playlist->getId(),
             $search_id

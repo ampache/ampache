@@ -1660,7 +1660,7 @@ class Song extends database_object implements
     {
         // don't do anything if it's formatted
         if ($this->f_album_disk_link === null) {
-            $web_path = AmpConfig::get_web_path();
+            $web_path = AmpConfig::get_web_path('/client');
 
             $this->f_album_disk_link = '';
             $this->f_album_disk_link = "<a href=\"" . $web_path . "/albums.php?action=show_disk&album_disk=" . $this->album_disk . "\" title=\"" . scrub_out($this->get_album_disk_fullname()) . "\"> " . scrub_out($this->get_album_disk_fullname()) . "</a>";
@@ -1676,7 +1676,7 @@ class Song extends database_object implements
     {
         // don't do anything if it's formatted
         if ($this->f_album_link === null) {
-            $web_path = AmpConfig::get_web_path();
+            $web_path = AmpConfig::get_web_path('/client');
 
             $this->f_album_link = '';
             $this->f_album_link = "<a href=\"" . $web_path . "/albums.php?action=show&album=" . $this->album . "\" title=\"" . scrub_out($this->get_album_fullname()) . "\"> " . scrub_out($this->get_album_fullname()) . "</a>";
@@ -1692,7 +1692,7 @@ class Song extends database_object implements
     {
         // don't do anything if it's formatted
         if ($this->f_albumartist_link === null) {
-            $web_path = AmpConfig::get_web_path();
+            $web_path = AmpConfig::get_web_path('/client');
 
             $this->f_albumartist_link = '';
             foreach ($this->get_album_artists() as $artist_id) {
@@ -1728,7 +1728,7 @@ class Song extends database_object implements
     {
         // don't do anything if it's formatted
         if ($this->f_artist_link === null) {
-            $web_path = AmpConfig::get_web_path();
+            $web_path = AmpConfig::get_web_path('/client');
 
             $this->f_artist_link = '';
             foreach ($this->get_artists() as $artist_id) {
@@ -1822,7 +1822,7 @@ class Song extends database_object implements
     {
         // don't do anything if it's formatted
         if ($this->link === null) {
-            $web_path = AmpConfig::get_web_path();
+            $web_path = AmpConfig::get_web_path('/client');
 
             $this->link = $web_path . "/song.php?action=show_song&song_id=" . $this->id;
         }

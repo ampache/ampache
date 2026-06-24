@@ -35,7 +35,7 @@ use Ampache\Repository\Model\User;
 
 $threshold = AmpConfig::get('stats_threshold', 7);
 $limit     = (int) AmpConfig::get('popular_threshold', 10);
-$web_path  = AmpConfig::get_web_path();
+$web_path  = AmpConfig::get_web_path('/client');
 
 require_once Ui::find_template('show_form_mashup.inc.php');
 

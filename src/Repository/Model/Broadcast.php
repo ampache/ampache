@@ -238,7 +238,7 @@ class Broadcast extends database_object implements library_item, displayable_ite
     {
         // don't do anything if it's formatted
         if ($this->link === null) {
-            $web_path = AmpConfig::get_web_path();
+            $web_path = AmpConfig::get_web_path('/client');
 
             $this->link = $web_path . '/broadcast.php?id=' . $this->id;
         }
@@ -324,7 +324,7 @@ class Broadcast extends database_object implements library_item, displayable_ite
     {
         if ($this->id !== 0 && (Core::get_global('user') instanceof User && Core::get_global('user')->has_access(AccessLevelEnum::MANAGER))) {
             echo "<a id=\"edit_broadcast_ " . $this->id . "\" onclick=\"showEditDialog('broadcast_row', '" . $this->id . "', 'edit_broadcast_" . $this->id . "', '" . T_('Broadcast Edit') . "', 'broadcast_row_')\">" . Ui::get_material_symbol('edit', T_('Edit')) . "</a>";
-            echo " <a href=\"" . AmpConfig::get_web_path() . "/broadcast.php?action=show_delete&id=" . $this->id . "\">" . Ui::get_material_symbol('close', T_('Delete')) . "</a>";
+            echo " <a href=\"" . AmpConfig::get_web_path('/client') . "/broadcast.php?action=show_delete&id=" . $this->id . "\">" . Ui::get_material_symbol('close', T_('Delete')) . "</a>";
         }
     }
 

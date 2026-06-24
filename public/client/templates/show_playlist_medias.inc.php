@@ -43,7 +43,7 @@ $libraryItemLoader = $dic->get(LibraryItemLoaderInterface::class);
 /** @var array<int|string>|array<int, array{object_type: LibraryItemEnum|string, object_id: int, track_id: int, track: int}>|array<Song_Preview>|array<int, array{name?: string|null, id: int, track: int, raw: string, link?: string|null, track: int, oid?: int, vlid?: int}>|null $object_ids */
 /** @var bool $argument */
 
-$web_path = AmpConfig::get_web_path();
+$web_path = AmpConfig::get_web_path('/client');
 
 // playlists and searches come from the same 'playlist_media' browse but you can't reorder a search
 $object_ids     = $object_ids ?? [];

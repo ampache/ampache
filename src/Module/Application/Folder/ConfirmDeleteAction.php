@@ -81,7 +81,7 @@ final readonly class ConfirmDeleteAction implements ApplicationActionInterface
             T_('The Folder has been deleted'),
             sprintf(
                 '%s/folders.php?action=show&folder_id=%s',
-                $this->configContainer->getWebPath(),
+                $this->configContainer->getWebPath('/client'),
                 $returnId
             )
         );

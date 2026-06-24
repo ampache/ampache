@@ -86,7 +86,7 @@ final readonly class PreferencesFromRequestUpdater implements PreferencesFromReq
                 case 'custom_logo':
                     $value = urldecode($value);
                     if ($value !== '' && $value !== '0' && !str_starts_with($value, 'http')) {
-                        $value = AmpConfig::get_web_path() . '/' . ltrim($value, '/');
+                        $value = AmpConfig::get_web_path('/client') . '/' . ltrim($value, '/');
                     }
 
                     $value = filter_var(urldecode($value), FILTER_VALIDATE_URL) ?: null;

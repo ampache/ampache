@@ -912,7 +912,7 @@ class Catalog_remote extends Catalog
 
         $cache_path   = (string) AmpConfig::get('cache_path', '');
         $cache_target = (string) AmpConfig::get('cache_target', '');
-        $web_path     = AmpConfig::get_web_path();
+        $web_path     = AmpConfig::get_web_path('/client');
 
         if (($web_path === '' || $web_path === '0') && !empty(AmpConfig::get('fallback_url'))) {
             $web_path = rtrim((string) AmpConfig::get('fallback_url'), '/');

@@ -242,7 +242,7 @@ class Art extends database_object
             ? ($size['width'] * 2) . 'x' . ($size['height'] * 2)
             : $size['width'] . 'x' . $size['height'];
 
-        $web_path = AmpConfig::get_web_path();
+        $web_path = AmpConfig::get_web_path('/client');
         $use_auth = ((!AmpConfig::get('public_images')) && AmpConfig::get('use_auth') && AmpConfig::get('require_session'));
 
         $prettyPhoto = ($link === null);
@@ -792,12 +792,12 @@ class Art extends database_object
             && $size !== 'original'
         ) {
             // e.g. https://demo.ampache.dev/play/art/{sessionid}/artist/1240/size400x400.png
-            $url = AmpConfig::get_web_path() . '/play/art/' . $sid . '/' . scrub_out($type) . '/' . $uid . '/size' . $size . '.' . $extension;
+            $url = AmpConfig::get_web_path('/client') . '/play/art/' . $sid . '/' . scrub_out($type) . '/' . $uid . '/size' . $size . '.' . $extension;
         } else {
             $actionStr = ($type === 'user')
                     ? 'action=show_user_avatar&'
                     : '';
-            $url = AmpConfig::get_web_path() . '/image.php?' . $actionStr . 'object_id=' . $uid . '&object_type=' . scrub_out($type);
+            $url = AmpConfig::get_web_path('/client') . '/image.php?' . $actionStr . 'object_id=' . $uid . '&object_type=' . scrub_out($type);
             if ($sid !== 'none') {
                 $url .= '&auth=' . $sid;
             }
@@ -1608,27 +1608,27 @@ class Art extends database_object
         $defaultimg = ($this->object_type === 'folder') ? 'folder' : 'blankalbum';
         switch ($size) {
             case '128x128':
-                $path         = __DIR__ . '/../../../public/images/' . $defaultimg . '_128x128.png';
+                $path         = __DIR__ . '/../../../public/client/images/' . $defaultimg . '_128x128.png';
                 $this->width  = 128;
                 $this->height = 128;
                 break;
             case '256x256':
-                $path         = __DIR__ . '/../../../public/images/' . $defaultimg . '_256x256.png';
+                $path         = __DIR__ . '/../../../public/client/images/' . $defaultimg . '_256x256.png';
                 $this->width  = 256;
                 $this->height = 256;
                 break;
             case '384x384':
-                $path         = __DIR__ . '/../../../public/images/' . $defaultimg . '_384x384.png';
+                $path         = __DIR__ . '/../../../public/client/images/' . $defaultimg . '_384x384.png';
                 $this->width  = 384;
                 $this->height = 384;
                 break;
             case '768x768':
-                $path         = __DIR__ . '/../../../public/images/' . $defaultimg . '_768x768.png';
+                $path         = __DIR__ . '/../../../public/client/images/' . $defaultimg . '_768x768.png';
                 $this->width  = 768;
                 $this->height = 768;
                 break;
             default:
-                $path         = __DIR__ . '/../../../public/images/' . $defaultimg . '.png';
+                $path         = __DIR__ . '/../../../public/client/images/' . $defaultimg . '.png';
                 $this->width  = 1400;
                 $this->height = 1400;
         }

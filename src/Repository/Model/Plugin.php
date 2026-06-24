@@ -168,7 +168,7 @@ class Plugin
      */
     public static function show_update_available(): void
     {
-        $web_path = AmpConfig::get_web_path();
+        $web_path = AmpConfig::get_web_path('/client');
 
         $admin_path = AmpConfig::get_web_path('/admin');
 

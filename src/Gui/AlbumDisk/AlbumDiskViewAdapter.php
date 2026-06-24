@@ -160,7 +160,7 @@ final readonly class AlbumDiskViewAdapter implements AlbumDiskViewAdapterInterfa
             $albumId,
             $name,
             $size,
-            $this->configContainer->getWebPath() . '/albums.php?action=show_disk&album_disk=' . $this->albumDisk->getId()
+            $this->configContainer->getWebPath('/client') . '/albums.php?action=show_disk&album_disk=' . $this->albumDisk->getId()
         );
 
         return '';
@@ -202,7 +202,7 @@ final readonly class AlbumDiskViewAdapter implements AlbumDiskViewAdapterInterfa
     {
         return sprintf(
             '%s/batch.php?action=album_disk&id=%s',
-            $this->configContainer->getWebPath(),
+            $this->configContainer->getWebPath('/client'),
             $this->albumDisk->getId()
         );
     }
@@ -216,7 +216,7 @@ final readonly class AlbumDiskViewAdapter implements AlbumDiskViewAdapterInterfa
     {
         return sprintf(
             '%s/albums.php?action=%s&album_id=%d',
-            $this->configContainer->getWebPath(),
+            $this->configContainer->getWebPath('/client'),
             DeleteAction::REQUEST_KEY,
             $this->albumDisk->getAlbumId()
         );
@@ -277,7 +277,7 @@ final readonly class AlbumDiskViewAdapter implements AlbumDiskViewAdapterInterfa
     {
         return sprintf(
             '%s/shout.php?action=show_add_shout&type=album_disk&id=%d',
-            $this->configContainer->getWebPath(),
+            $this->configContainer->getWebPath('/client'),
             $this->albumDisk->getId()
         );
     }

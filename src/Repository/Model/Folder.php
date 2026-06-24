@@ -158,7 +158,7 @@ class Folder extends database_object implements
             return '';
         }
 
-        $web_path = AmpConfig::get_web_path();
+        $web_path = AmpConfig::get_web_path('/client');
 
         $results = '';
         // Iterate through the folders, format them according to type and element id
@@ -298,7 +298,7 @@ class Folder extends database_object implements
     public function get_f_home_link(): string
     {
         $t_home   = T_('Home');
-        $web_path = AmpConfig::get_web_path();
+        $web_path = AmpConfig::get_web_path('/client');
 
         return "<a href=\"" . $web_path . "/folders.php?action=show&folder=-1\" title=\"" . $t_home . "\">" . $t_home . "</a>";
     }
@@ -400,7 +400,7 @@ class Folder extends database_object implements
     {
         // don't do anything if it's formatted
         if ($this->link === null) {
-            $web_path = AmpConfig::get_web_path();
+            $web_path = AmpConfig::get_web_path('/client');
 
             $this->link = $web_path . '/folders.php?action=show&folder=' . $this->id;
         }
@@ -499,7 +499,7 @@ class Folder extends database_object implements
     {
         // don't do anything if it's formatted
         if ($this->parent_link === null && $this->parent) {
-            $web_path = AmpConfig::get_web_path();
+            $web_path = AmpConfig::get_web_path('/client');
 
             $this->parent_link = $web_path . '/folders.php?action=show&folder=' . $this->parent;
         }

@@ -41,7 +41,7 @@ use Ampache\Repository\PodcastRepositoryInterface;
 /** @var list<int> $object_ids */
 /** @var PodcastRepositoryInterface $podcastRepository */
 
-$webPath           = AmpConfig::get_web_path();
+$webPath           = AmpConfig::get_web_path('/client');
 $thcount           = 7;
 $show_ratings      = User::is_registered() && (AmpConfig::get('ratings'));
 $show_played_times = AmpConfig::get('show_played_times');

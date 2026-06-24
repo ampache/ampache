@@ -28,7 +28,7 @@ declare(strict_types=0);
 use Ampache\Config\AmpConfig;
 use Ampache\Module\Util\Ui;
 
-$web_path = AmpConfig::get_web_path();
+$web_path = AmpConfig::get_web_path('/client');
 
 $theme_path      = AmpConfig::get('theme_path', '/themes/reborn') . '/templates';
 $theme_color     = AmpConfig::get('theme_color', 'dark');
@@ -58,7 +58,7 @@ if (is_string($theme_css_base)) {
 <?php
 if (
     is_rtl(AmpConfig::get('lang', 'en_US'))
-    && is_file(__DIR__ . '/../../public/' . $theme_path . '/rtl.css')
+    && is_file(__DIR__ . '/../../../public/client/' . $theme_path . '/rtl.css')
 ) { ?>
     <link rel="stylesheet" href="<?php echo $web_path . $theme_path; ?>/rtl.css" type="text/css" media="screen">
 <?php } ?>
