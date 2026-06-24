@@ -1533,6 +1533,7 @@ class Catalog_local extends Catalog
         $dead   = [];
         $offset = $chunk * $chunk_size;
         $count  = $offset;
+        $total  = count($this->_filecache);
 
         $filecache_chunk = array_slice($this->_filecache, $offset, $chunk_size, true);
         foreach ($filecache_chunk as $file => $oid) {
@@ -1551,10 +1552,10 @@ class Catalog_local extends Catalog
                 $dead[] = (int) $oid;
             } elseif ($count % 1000 == 0) {
                 $interactor?->info(
-                    'chunk progress: ' . $count . '/' . count($this->_filecache) . ' on ' . $this->name,
+                    'chunk progress: ' . $count . '/' . $total . ' on ' . $this->name,
                     true
                 );
-                debug_event('local.catalog', 'chunk progress: ' . $count . '/' . count($this->_filecache) . ' on ' . $this->name, 5);
+                debug_event('local.catalog', 'chunk progress: ' . $count . '/' . $total . ' on ' . $this->name, 5);
             }
         }
 
