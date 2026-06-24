@@ -983,7 +983,7 @@ class Json8_Data
         }
 
         $JSON = [
-            "id" => (string)$folder->getId(),
+            "id" => (string) $folder->getId(),
             "title" => $folder->get_fullname(),
             "parent" => $folder->parent,
             "path" => $folder->path_name,
@@ -991,9 +991,9 @@ class Json8_Data
             "items" => []
         ];
         foreach ($folder_ids as $object) {
-            preg_match('/([a-z_]+)-([0-9]+)/', (string)$object, $matches);
+            preg_match('/([a-z_]+)-([0-9]+)/', (string) $object, $matches);
             $object_type = $matches[1] ?? null;
-            $object_id   = (int)($matches[2] ?? 0);
+            $object_id   = (int) ($matches[2] ?? 0);
             $libitem     = null;
             switch ($object_type) {
                 case 'folder':
@@ -1019,7 +1019,7 @@ class Json8_Data
             $art_url     = Art::url($libitem->getId(), $object_type, $auth);
             $play_url    = ($libitem instanceof Folder) ? '' : $libitem->play_url('', 'api', false, $user->id, $user->streamtoken);
             if (property_exists($libitem, 'file')) {
-                $p_info   = pathinfo((string)$libitem->file);
+                $p_info   = pathinfo((string) $libitem->file);
                 $filename = $p_info['basename'];
                 $dirname  = $p_info['dirname'] ?? '';
             } else {
@@ -1029,7 +1029,7 @@ class Json8_Data
             }
 
             $JSON["items"][] = [
-                "id" => (string)$libitem->id,
+                "id" => (string) $libitem->id,
                 "object_type" => $object_type,
                 "title" => $filename,
                 "parent" => $folder->getId(),

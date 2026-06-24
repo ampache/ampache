@@ -107,7 +107,7 @@ final readonly class Play2Action implements ApplicationActionInterface
                     // key name
                     $key = $v;
                     $i   = 1;
-                } else {
+                } elseif ($key !== null) {
                     // key value
                     $value = $v;
                     $i     = 0;
@@ -237,13 +237,12 @@ final readonly class Play2Action implements ApplicationActionInterface
             $record_stats = false;
         }
 
-        $is_download   = ($action === 'download');
-        $maxbitrate    = 0;
-        $media_bitrate = 0;
-        $quality       = 0;
-        $resolution    = '';
-        $subtitle      = '';
-        $time          = time();
+        $is_download = ($action === 'download');
+        $maxbitrate  = 0;
+        $quality     = 0;
+        $resolution  = '';
+        $subtitle    = '';
+        $time        = time();
 
         if ($player_customize && !$original) {
             // Trick to avoid LimitInternalRecursion reconfiguration
@@ -433,7 +432,7 @@ final readonly class Play2Action implements ApplicationActionInterface
             $user = new User($share->user);
         }
 
-        if ((!$user instanceof User || $user->isNew()) && (!$share_id && !$secret)) {
+        if ($user->isNew() && !$share_id && !$secret) {
             $this->logger->error(
                 'No user specified {' . print_r($user, true) . '}',
                 [LegacyLogger::CONTEXT_TYPE => self::class]
@@ -724,7 +723,7 @@ final readonly class Play2Action implements ApplicationActionInterface
                 return null;
             }
 
-            $streamConfiguration = $streamConfiguration ?? $catalog?->prepare_media($media);
+            $streamConfiguration ??= $catalog?->prepare_media($media);
             if ($streamConfiguration === null) {
                 return null;
             }
@@ -1046,7 +1045,7 @@ final readonly class Play2Action implements ApplicationActionInterface
         }
 
         if (in_array($this->requestParser->getFromRequest('segment'), ['', '0'], true)) {
-            if ($media->time) {
+            if ($media->time !== 0) {
                 header('X-Content-Duration: ' . $media->time);
             }
 

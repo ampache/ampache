@@ -107,7 +107,7 @@ final readonly class PlayAction implements ApplicationActionInterface
                     // key name
                     $key = $v;
                     $i   = 1;
-                } else {
+                } elseif ($key !== null) {
                     // key value
                     $value = $v;
                     $i     = 0;
@@ -412,7 +412,7 @@ final readonly class PlayAction implements ApplicationActionInterface
             $user = new User($share->user);
         }
 
-        if ((!$user instanceof User || $user->isNew()) && (!$share_id && !$secret)) {
+        if ($user->isNew() && !$share_id && !$secret) {
             $this->logger->error(
                 'No user specified {' . print_r($user, true) . '}',
                 [LegacyLogger::CONTEXT_TYPE => self::class]

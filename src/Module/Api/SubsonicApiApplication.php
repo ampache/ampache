@@ -140,7 +140,7 @@ final class SubsonicApiApplication implements ApiApplicationInterface
 
                 $segments = array_values(array_filter(
                     array_map('trim', explode('+', $part)),
-                    static fn (string $segment): bool => $segment !== ''
+                    static fn(string $segment): bool => $segment !== ''
                 ));
 
                 if (count($segments) > 1) {

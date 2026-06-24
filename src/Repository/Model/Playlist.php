@@ -69,7 +69,7 @@ class Playlist extends playlist_object
     /**
      * build_cache
      * This is what builds the cache from the objects
-     * @param int[]|string[] $ids
+     * @param array<int|string> $ids
      */
     public static function build_cache(array $ids): bool
     {

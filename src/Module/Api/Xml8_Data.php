@@ -441,21 +441,21 @@ class Xml8_Data
                 AmpConfig::get('site_charset', 'UTF-8')
             )
         );
-        $xml->addChild('total_count', (string)self::$count);
+        $xml->addChild('total_count', (string) self::$count);
         $xml->addChild('md5', md5(serialize($folder_ids)));
 
         $xml_folder = $xml->addChild('folder');
-        $xml_folder->addAttribute('id', (string)$folder->getId());
-        $xml_folder->addChild('title', (string)$folder->get_fullname());
-        $xml_folder->addChild('parent', (string)$folder->parent);
-        $xml_folder->addChild('path', (string)$folder->path_name);
-        $xml_folder->addChild('catalog', (string)$folder->catalog);
+        $xml_folder->addAttribute('id', (string) $folder->getId());
+        $xml_folder->addChild('title', (string) $folder->get_fullname());
+        $xml_folder->addChild('parent', (string) $folder->parent);
+        $xml_folder->addChild('path', (string) $folder->path_name);
+        $xml_folder->addChild('catalog', (string) $folder->catalog);
         $xml_items = $xml_folder->addChild('items');
 
         foreach ($folder_ids as $object) {
-            preg_match('/([a-z_]+)-([0-9]+)/', (string)$object, $matches);
+            preg_match('/([a-z_]+)-([0-9]+)/', (string) $object, $matches);
             $object_type = $matches[1] ?? null;
-            $object_id   = (int)($matches[2] ?? 0);
+            $object_id   = (int) ($matches[2] ?? 0);
             $libitem     = null;
             switch ($object_type) {
                 case 'folder':
@@ -481,7 +481,7 @@ class Xml8_Data
             $art_url     = Art::url($libitem->getId(), $object_type, $auth);
             $play_url    = ($libitem instanceof Folder) ? '' : $libitem->play_url('', 'api', false, $user->id, $user->streamtoken);
             if (property_exists($libitem, 'file')) {
-                $p_info   = pathinfo((string)$libitem->file);
+                $p_info   = pathinfo((string) $libitem->file);
                 $filename = $p_info['basename'];
                 $dirname  = $p_info['dirname'] ?? '';
             } else {
@@ -491,16 +491,16 @@ class Xml8_Data
             }
 
             $item = $xml_items->addChild('item');
-            $item->addAttribute('id', (string)$libitem->id);
-            $item->addChild('object_type', (string)$object_type);
-            $item->addChild('title', (string)$filename);
-            $item->addChild('parent', (string)$folder->getId());
+            $item->addAttribute('id', (string) $libitem->id);
+            $item->addChild('object_type', (string) $object_type);
+            $item->addChild('title', (string) $filename);
+            $item->addChild('parent', (string) $folder->getId());
             $item->addChild('path', $dirname);
-            $item->addChild('art', (string)$art_url);
+            $item->addChild('art', (string) $art_url);
             $item->addChild('has_art', $libitem->has_art() ? '1' : '0');
-            $item->addChild('play_url', (string)$play_url);
-            $item->addChild('rating', (string)$user_rating);
-            $item->addChild('averagerating', (string)($rating->get_average_rating() ?? ''));
+            $item->addChild('play_url', (string) $play_url);
+            $item->addChild('rating', (string) $user_rating);
+            $item->addChild('averagerating', (string) ($rating->get_average_rating() ?? ''));
         }
 
         $xml_string = $xml->asXML();
