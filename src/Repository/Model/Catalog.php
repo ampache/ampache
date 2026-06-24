@@ -2634,67 +2634,69 @@ abstract class Catalog extends database_object
         //$sql = "INSERT IGNORE INTO `album_disk` (`album_id`, `disk`, `catalog`, `disksubtitle`) SELECT DISTINCT `song`.`album` AS `album_id`, `song`.`disk` AS `disk`, `song`.`catalog` AS `catalog`, NULLIF(`song_data`.`disksubtitle`, '') AS `disksubtitle` FROM `song` LEFT JOIN `song_data` ON `song_data`.`song_id` = `song`.`id`;";
         //Dba::write($sql);
         // do the longer updates over a larger stretch of time
-        if ($update_time !== 0 && $update_time < ($now_time - 86400)) {
-            // delete old maps in album_map table
-            $sql        = "SELECT `album_map`.`album_id`, `album_map`.`object_id`, `album_map`.`object_type` FROM (SELECT * FROM `album_map` WHERE `object_type` = 'song') AS `album_map` LEFT JOIN (SELECT DISTINCT `artist_id`, `album` FROM (SELECT `artist_id`, `object_id` AS `song_id` FROM `artist_map` WHERE `object_type` = 'song') AS `artist_songs`, `song` WHERE `song_id` = `id`) AS `artist_map` ON `album_map`.`object_id` = `artist_map`.`artist_id` AND `album_map`.`album_id` = `artist_map`.`album` WHERE `artist_map`.`album` IS NULL;";
-            $db_results = Dba::read($sql);
-            while ($row = Dba::fetch_assoc($db_results)) {
-                $sql = "DELETE FROM `album_map` WHERE `album_id` = ? AND `object_id` = ? AND `object_type` = ?;";
-                Dba::write($sql, [$row['album_id'], $row['object_id'], $row['object_type']]);
-            }
 
-            // this isn't really needed often and is slow
-            Dba::write("DELETE FROM `recommendation_item` WHERE `recommendation` NOT IN (SELECT `id` FROM `recommendation`);");
-            // Fill in null Agents with a value
-            $sql = "UPDATE `object_count` SET `agent` = 'Unknown' WHERE `agent` IS NULL;";
-            Dba::write($sql);
-            // object_count.album
-            $sql = "UPDATE IGNORE `object_count`, (SELECT `song_count`.`date`, `song`.`id` AS `songid`, `song`.`album`, `album_count`.`object_id` AS `albumid`, `album_count`.`user`, `album_count`.`agent`, `album_count`.`count_type` FROM `song` LEFT JOIN `object_count` AS `song_count` ON `song_count`.`object_type` = 'song' AND `song_count`.`count_type` = 'stream' AND `song_count`.`object_id` = `song`.`id` LEFT JOIN `object_count` AS `album_count` ON `album_count`.`object_type` = 'album' AND `album_count`.`count_type` = 'stream' AND `album_count`.`date` = `song_count`.`date` WHERE `song_count`.`date` IS NOT NULL AND `song`.`album` != `album_count`.`object_id` AND `album_count`.`count_type` = 'stream') AS `album_check` SET `object_count`.`object_id` = `album_check`.`album` WHERE `object_count`.`object_id` != `album_check`.`album` AND `object_count`.`object_type` = 'album' AND `object_count`.`date` = `album_check`.`date` AND `object_count`.`user` = `album_check`.`user` AND `object_count`.`agent` = `album_check`.`agent` AND `object_count`.`count_type` = `album_check`.`count_type`;";
-            Dba::write($sql);
-            // object_count.artist
-            $sql = "UPDATE IGNORE `object_count`, (SELECT `song_count`.`date`, MIN(`song`.`id`) AS `songid`, MIN(`song`.`artist`) AS `artist`, `artist_count`.`object_id` AS `artistid`, `artist_count`.`user`, `artist_count`.`agent`, `artist_count`.`count_type` FROM `song` LEFT JOIN `object_count` AS `song_count` ON `song_count`.`object_type` = 'song' AND `song_count`.`count_type` = 'stream' AND `song_count`.`object_id` = `song`.`id` LEFT JOIN `object_count` AS `artist_count` ON `artist_count`.`object_type` = 'artist' AND `artist_count`.`count_type` = 'stream' AND `artist_count`.`date` = `song_count`.`date` WHERE `song_count`.`date` IS NOT NULL AND `song`.`artist` != `artist_count`.`object_id` AND `artist_count`.`count_type` = 'stream' GROUP BY `artist_count`.`object_id`, `date`, `user`, `agent`, `count_type`) AS `artist_check` SET `object_count`.`object_id` = `artist_check`.`artist` WHERE `object_count`.`object_id` != `artist_check`.`artist` AND `object_count`.`object_type` = 'artist' AND `object_count`.`date` = `artist_check`.`date` AND `object_count`.`user` = `artist_check`.`user` AND `object_count`.`agent` = `artist_check`.`agent` AND `object_count`.`count_type` = `artist_check`.`count_type`;";
-            Dba::write($sql);
-        }
+        //if ($update_time !== 0 && $update_time < ($now_time - 86400)) {
+        //    // delete old maps in album_map table
+        //    $sql        = "SELECT `album_map`.`album_id`, `album_map`.`object_id`, `album_map`.`object_type` FROM (SELECT * FROM `album_map` WHERE `object_type` = 'song') AS `album_map` LEFT JOIN (SELECT DISTINCT `artist_id`, `album` FROM (SELECT `artist_id`, `object_id` AS `song_id` FROM `artist_map` WHERE `object_type` = 'song') AS `artist_songs`, `song` WHERE `song_id` = `id`) AS `artist_map` ON `album_map`.`object_id` = `artist_map`.`artist_id` AND `album_map`.`album_id` = `artist_map`.`album` WHERE `artist_map`.`album` IS NULL;";
+        //    $db_results = Dba::read($sql);
+        //    while ($row = Dba::fetch_assoc($db_results)) {
+        //        $sql = "DELETE FROM `album_map` WHERE `album_id` = ? AND `object_id` = ? AND `object_type` = ?;";
+        //        Dba::write($sql, [$row['album_id'], $row['object_id'], $row['object_type']]);
+        //    }
+        //
+        //    // this isn't really needed often and is slow
+        //    Dba::write("DELETE FROM `recommendation_item` WHERE `recommendation` NOT IN (SELECT `id` FROM `recommendation`);");
+        //    // Fill in null Agents with a value
+        //    $sql = "UPDATE `object_count` SET `agent` = 'Unknown' WHERE `agent` IS NULL;";
+        //    Dba::write($sql);
+        //    // object_count.album
+        //    $sql = "UPDATE IGNORE `object_count`, (SELECT `song_count`.`date`, `song`.`id` AS `songid`, `song`.`album`, `album_count`.`object_id` AS `albumid`, `album_count`.`user`, `album_count`.`agent`, `album_count`.`count_type` FROM `song` LEFT JOIN `object_count` AS `song_count` ON `song_count`.`object_type` = 'song' AND `song_count`.`count_type` = 'stream' AND `song_count`.`object_id` = `song`.`id` LEFT JOIN `object_count` AS `album_count` ON `album_count`.`object_type` = 'album' AND `album_count`.`count_type` = 'stream' AND `album_count`.`date` = `song_count`.`date` WHERE `song_count`.`date` IS NOT NULL AND `song`.`album` != `album_count`.`object_id` AND `album_count`.`count_type` = 'stream') AS `album_check` SET `object_count`.`object_id` = `album_check`.`album` WHERE `object_count`.`object_id` != `album_check`.`album` AND `object_count`.`object_type` = 'album' AND `object_count`.`date` = `album_check`.`date` AND `object_count`.`user` = `album_check`.`user` AND `object_count`.`agent` = `album_check`.`agent` AND `object_count`.`count_type` = `album_check`.`count_type`;";
+        //    Dba::write($sql);
+        //    // object_count.artist
+        //    $sql = "UPDATE IGNORE `object_count`, (SELECT `song_count`.`date`, MIN(`song`.`id`) AS `songid`, MIN(`song`.`artist`) AS `artist`, `artist_count`.`object_id` AS `artistid`, `artist_count`.`user`, `artist_count`.`agent`, `artist_count`.`count_type` FROM `song` LEFT JOIN `object_count` AS `song_count` ON `song_count`.`object_type` = 'song' AND `song_count`.`count_type` = 'stream' AND `song_count`.`object_id` = `song`.`id` LEFT JOIN `object_count` AS `artist_count` ON `artist_count`.`object_type` = 'artist' AND `artist_count`.`count_type` = 'stream' AND `artist_count`.`date` = `song_count`.`date` WHERE `song_count`.`date` IS NOT NULL AND `song`.`artist` != `artist_count`.`object_id` AND `artist_count`.`count_type` = 'stream' GROUP BY `artist_count`.`object_id`, `date`, `user`, `agent`, `count_type`) AS `artist_check` SET `object_count`.`object_id` = `artist_check`.`artist` WHERE `object_count`.`object_id` != `artist_check`.`artist` AND `object_count`.`object_type` = 'artist' AND `object_count`.`date` = `artist_check`.`date` AND `object_count`.`user` = `artist_check`.`user` AND `object_count`.`agent` = `artist_check`.`agent` AND `object_count`.`count_type` = `artist_check`.`count_type`;";
+        //    Dba::write($sql);
+        //}
 
         // fix object_count table missing artist row
-        debug_event(self::class, 'update_counts object_count table missing artist row', 5);
-        $sql = "INSERT IGNORE INTO `object_count` (`object_type`, `object_id`, `date`, `user`, `agent`, `geo_latitude`, `geo_longitude`, `geo_name`, `count_type`) SELECT 'artist', `artist_map`.`artist_id`, `object_count`.`date`, `object_count`.`user`, `object_count`.`agent`, `object_count`.`geo_latitude`, `object_count`.`geo_longitude`, `object_count`.`geo_name`, `object_count`.`count_type` FROM `object_count` LEFT JOIN `artist_map` on `object_count`.`object_type` = `artist_map`.`object_type` AND `object_count`.`object_id` = `artist_map`.`object_id` LEFT JOIN `object_count` AS `artist_check` ON `object_count`.`date` = `artist_check`.`date` AND `artist_check`.`object_type` = 'artist' AND `artist_check`.`object_id` = `artist_map`.`artist_id` WHERE `object_count`.`object_type` = 'song' AND `object_count`.`count_type` = 'stream' AND `object_count`.`object_id` IN (SELECT `id` FROM `song` WHERE `id` IN (SELECT `object_id` FROM `artist_map` WHERE `object_type` = 'song')) AND `artist_check`.`object_id` IS NULL UNION SELECT 'artist', `artist_map`.`artist_id`, `object_count`.`date`, `object_count`.`user`, `object_count`.`agent`, `object_count`.`geo_latitude`, `object_count`.`geo_longitude`, `object_count`.`geo_name`, `object_count`.`count_type` FROM `object_count` LEFT JOIN `artist_map` ON `object_count`.`object_type` = `artist_map`.`object_type` AND `object_count`.`object_id` = `artist_map`.`object_id` LEFT JOIN `object_count` AS `artist_check` ON `object_count`.`date` = `artist_check`.`date` AND `artist_check`.`object_type` = 'artist' AND `artist_check`.`object_id` = `artist_map`.`artist_id` WHERE `object_count`.`object_type` = 'album' AND `object_count`.`count_type` = 'stream' AND `object_count`.`object_id` IN (SELECT `id` FROM `song` WHERE `id` IN (SELECT `object_id` FROM `artist_map` WHERE `object_type` = 'album')) AND `artist_check`.`object_id` IS NULL GROUP BY `artist_map`.`artist_id`, `object_count`.`object_type`, `object_count`.`object_id`, `object_count`.`date`, `object_count`.`user`, `object_count`.`agent`, `object_count`.`geo_latitude`, `object_count`.`geo_longitude`, `object_count`.`geo_name`, `object_count`.`count_type`;";
-        Dba::write($sql);
+        //debug_event(self::class, 'update_counts object_count table missing artist row', 5);
+        //$sql = "INSERT IGNORE INTO `object_count` (`object_type`, `object_id`, `date`, `user`, `agent`, `geo_latitude`, `geo_longitude`, `geo_name`, `count_type`) SELECT 'artist', `artist_map`.`artist_id`, `object_count`.`date`, `object_count`.`user`, `object_count`.`agent`, `object_count`.`geo_latitude`, `object_count`.`geo_longitude`, `object_count`.`geo_name`, `object_count`.`count_type` FROM `object_count` LEFT JOIN `artist_map` on `object_count`.`object_type` = `artist_map`.`object_type` AND `object_count`.`object_id` = `artist_map`.`object_id` LEFT JOIN `object_count` AS `artist_check` ON `object_count`.`date` = `artist_check`.`date` AND `artist_check`.`object_type` = 'artist' AND `artist_check`.`object_id` = `artist_map`.`artist_id` WHERE `object_count`.`object_type` = 'song' AND `object_count`.`count_type` = 'stream' AND `object_count`.`object_id` IN (SELECT `id` FROM `song` WHERE `id` IN (SELECT `object_id` FROM `artist_map` WHERE `object_type` = 'song')) AND `artist_check`.`object_id` IS NULL UNION SELECT 'artist', `artist_map`.`artist_id`, `object_count`.`date`, `object_count`.`user`, `object_count`.`agent`, `object_count`.`geo_latitude`, `object_count`.`geo_longitude`, `object_count`.`geo_name`, `object_count`.`count_type` FROM `object_count` LEFT JOIN `artist_map` ON `object_count`.`object_type` = `artist_map`.`object_type` AND `object_count`.`object_id` = `artist_map`.`object_id` LEFT JOIN `object_count` AS `artist_check` ON `object_count`.`date` = `artist_check`.`date` AND `artist_check`.`object_type` = 'artist' AND `artist_check`.`object_id` = `artist_map`.`artist_id` WHERE `object_count`.`object_type` = 'album' AND `object_count`.`count_type` = 'stream' AND `object_count`.`object_id` IN (SELECT `id` FROM `song` WHERE `id` IN (SELECT `object_id` FROM `artist_map` WHERE `object_type` = 'album')) AND `artist_check`.`object_id` IS NULL GROUP BY `artist_map`.`artist_id`, `object_count`.`object_type`, `object_count`.`object_id`, `object_count`.`date`, `object_count`.`user`, `object_count`.`agent`, `object_count`.`geo_latitude`, `object_count`.`geo_longitude`, `object_count`.`geo_name`, `object_count`.`count_type`;";
+        //Dba::write($sql);
         // fix object_count table missing album row
-        debug_event(self::class, 'update_counts object_count table missing album row', 5);
-        $sql = "INSERT IGNORE INTO `object_count` (`object_type`, `object_id`, `date`, `user`, `agent`, `geo_latitude`, `geo_longitude`, `geo_name`, `count_type`) SELECT 'album', `song`.`album`, `object_count`.`date`, `object_count`.`user`, `object_count`.`agent`, `object_count`.`geo_latitude`, `object_count`.`geo_longitude`, `object_count`.`geo_name`, `object_count`.`count_type` FROM `object_count` LEFT JOIN `song` ON `object_count`.`object_type` = 'song' AND `object_count`.`count_type` = 'stream' AND `object_count`.`object_id` = `song`.`id` LEFT JOIN `object_count` AS `album_count` ON `album_count`.`object_type` = 'album' AND `object_count`.`date` = `album_count`.`date` AND `object_count`.`user` = `album_count`.`user` AND `object_count`.`agent` = `album_count`.`agent` AND `object_count`.`count_type` = `album_count`.`count_type` WHERE `object_count`.`object_type` = 'song' AND `object_count`.`count_type` = 'stream' AND `album_count`.`id` IS NULL;";
-        Dba::write($sql);
+        //debug_event(self::class, 'update_counts object_count table missing album row', 5);
+        //$sql = "INSERT IGNORE INTO `object_count` (`object_type`, `object_id`, `date`, `user`, `agent`, `geo_latitude`, `geo_longitude`, `geo_name`, `count_type`) SELECT 'album', `song`.`album`, `object_count`.`date`, `object_count`.`user`, `object_count`.`agent`, `object_count`.`geo_latitude`, `object_count`.`geo_longitude`, `object_count`.`geo_name`, `object_count`.`count_type` FROM `object_count` LEFT JOIN `song` ON `object_count`.`object_type` = 'song' AND `object_count`.`count_type` = 'stream' AND `object_count`.`object_id` = `song`.`id` LEFT JOIN `object_count` AS `album_count` ON `album_count`.`object_type` = 'album' AND `object_count`.`date` = `album_count`.`date` AND `object_count`.`user` = `album_count`.`user` AND `object_count`.`agent` = `album_count`.`agent` AND `object_count`.`count_type` = `album_count`.`count_type` WHERE `object_count`.`object_type` = 'song' AND `object_count`.`count_type` = 'stream' AND `album_count`.`id` IS NULL;";
+        //Dba::write($sql);
+
         // also clean up some bad data that might creep in
-        Dba::write("UPDATE `artist` SET `prefix` = NULL WHERE `prefix` = '';");
-        Dba::write("UPDATE `artist` SET `mbid` = NULL WHERE `mbid` = '';");
-        Dba::write("UPDATE `artist` SET `summary` = NULL WHERE `summary` = '';");
-        Dba::write("UPDATE `artist` SET `placeformed` = NULL WHERE `placeformed` = '';");
-        Dba::write("UPDATE `artist` SET `yearformed` = NULL WHERE `yearformed` = 0;");
-        Dba::write("UPDATE `album` SET `album_artist` = NULL WHERE `album_artist` = 0;");
-        Dba::write("UPDATE `album` SET `prefix` = NULL WHERE `prefix` = '';");
-        Dba::write("UPDATE `album` SET `mbid` = NULL WHERE `mbid` = '';");
-        Dba::write("UPDATE `album` SET `mbid_group` = NULL WHERE `mbid_group` = '';");
-        Dba::write("UPDATE `album` SET `release_type` = NULL WHERE `release_type` = '';");
-        Dba::write("UPDATE `album` SET `original_year` = NULL WHERE `original_year` = 0;");
-        Dba::write("UPDATE `album` SET `barcode` = NULL WHERE `barcode` = '';");
-        Dba::write("UPDATE `album` SET `catalog_number` = NULL WHERE `catalog_number` = '';");
-        Dba::write("UPDATE `album` SET `release_status` = NULL WHERE `release_status` = '';");
-        Dba::write("UPDATE `album_disk` SET `disksubtitle` = NULL WHERE `disksubtitle` = '';");
-        // artist.addition_time
-        $sql = "UPDATE `artist`, (SELECT MIN(`song`.`addition_time`) AS `addition_time`, `artist_map`.`artist_id` FROM `song` LEFT JOIN `artist_map` ON `artist_map`.`object_id` = `song`.`id` AND `artist_map`.`object_type` = 'song' AND `artist_map`.`object_type` IS NOT NULL GROUP BY `artist_map`.`artist_id` UNION SELECT MIN(`album`.`addition_time`) AS `addition_time`, `artist_map`.`artist_id` FROM `album` LEFT JOIN `artist_map` ON `artist_map`.`object_id` = `album`.`id` AND `artist_map`.`object_type` = 'album' AND `artist_map`.`object_type` IS NOT NULL GROUP BY `artist_map`.`artist_id`) AS `addition` SET `artist`.`addition_time` = `addition`.`addition_time` WHERE (`artist`.`addition_time` > `addition`.`addition_time` OR `artist`.`addition_time` IS NULL OR `artist`.`addition_time` = 0) AND `addition`.`artist_id` = `artist`.`id`;";
-        Dba::write($sql);
-        // song.played might have had issues
-        $sql = "UPDATE `song` SET `song`.`played` = 0 WHERE `song`.`played` = 1 AND `song`.`id` NOT IN (SELECT `object_id` FROM `object_count` WHERE `object_type` = 'song' AND `count_type` = 'stream');";
-        Dba::write($sql);
-        $sql = "UPDATE `song` SET `song`.`played` = 1 WHERE `song`.`played` = 0 AND `song`.`id` IN (SELECT `object_id` FROM `object_count` WHERE `object_type` = 'song' AND `count_type` = 'stream');";
-        Dba::write($sql);
-        // fix up incorrect total_count values too
-        $sql = "UPDATE `song` SET `total_count` = 0 WHERE `total_count` > 0 AND `id` NOT IN (SELECT `object_id` FROM `object_count` WHERE `object_count`.`object_type` = 'song' AND `object_count`.`count_type` = 'stream');";
-        Dba::write($sql);
-        $sql = "UPDATE `song` SET `total_skip` = 0 WHERE `total_skip` > 0 AND `id` NOT IN (SELECT `object_id` FROM `object_count` WHERE `object_count`.`object_type` = 'song' AND `object_count`.`count_type` = 'stream');";
-        Dba::write($sql);
+        //Dba::write("UPDATE `artist` SET `prefix` = NULL WHERE `prefix` = '';");
+        //Dba::write("UPDATE `artist` SET `mbid` = NULL WHERE `mbid` = '';");
+        //Dba::write("UPDATE `artist` SET `summary` = NULL WHERE `summary` = '';");
+        //Dba::write("UPDATE `artist` SET `placeformed` = NULL WHERE `placeformed` = '';");
+        //Dba::write("UPDATE `artist` SET `yearformed` = NULL WHERE `yearformed` = 0;");
+        //Dba::write("UPDATE `album` SET `album_artist` = NULL WHERE `album_artist` = 0;");
+        //Dba::write("UPDATE `album` SET `prefix` = NULL WHERE `prefix` = '';");
+        //Dba::write("UPDATE `album` SET `mbid` = NULL WHERE `mbid` = '';");
+        //Dba::write("UPDATE `album` SET `mbid_group` = NULL WHERE `mbid_group` = '';");
+        //Dba::write("UPDATE `album` SET `release_type` = NULL WHERE `release_type` = '';");
+        //Dba::write("UPDATE `album` SET `original_year` = NULL WHERE `original_year` = 0;");
+        //Dba::write("UPDATE `album` SET `barcode` = NULL WHERE `barcode` = '';");
+        //Dba::write("UPDATE `album` SET `catalog_number` = NULL WHERE `catalog_number` = '';");
+        //Dba::write("UPDATE `album` SET `release_status` = NULL WHERE `release_status` = '';");
+        //Dba::write("UPDATE `album_disk` SET `disksubtitle` = NULL WHERE `disksubtitle` = '';");
+        //// artist.addition_time
+        //$sql = "UPDATE `artist`, (SELECT MIN(`song`.`addition_time`) AS `addition_time`, `artist_map`.`artist_id` FROM `song` LEFT JOIN `artist_map` ON `artist_map`.`object_id` = `song`.`id` AND `artist_map`.`object_type` = 'song' AND `artist_map`.`object_type` IS NOT NULL GROUP BY `artist_map`.`artist_id` UNION SELECT MIN(`album`.`addition_time`) AS `addition_time`, `artist_map`.`artist_id` FROM `album` LEFT JOIN `artist_map` ON `artist_map`.`object_id` = `album`.`id` AND `artist_map`.`object_type` = 'album' AND `artist_map`.`object_type` IS NOT NULL GROUP BY `artist_map`.`artist_id`) AS `addition` SET `artist`.`addition_time` = `addition`.`addition_time` WHERE (`artist`.`addition_time` > `addition`.`addition_time` OR `artist`.`addition_time` IS NULL OR `artist`.`addition_time` = 0) AND `addition`.`artist_id` = `artist`.`id`;";
+        //Dba::write($sql);
+        //// song.played might have had issues
+        //$sql = "UPDATE `song` SET `song`.`played` = 0 WHERE `song`.`played` = 1 AND `song`.`id` NOT IN (SELECT `object_id` FROM `object_count` WHERE `object_type` = 'song' AND `count_type` = 'stream');";
+        //Dba::write($sql);
+        //$sql = "UPDATE `song` SET `song`.`played` = 1 WHERE `song`.`played` = 0 AND `song`.`id` IN (SELECT `object_id` FROM `object_count` WHERE `object_type` = 'song' AND `count_type` = 'stream');";
+        //Dba::write($sql);
+        //// fix up incorrect total_count values too
+        //$sql = "UPDATE `song` SET `total_count` = 0 WHERE `total_count` > 0 AND `id` NOT IN (SELECT `object_id` FROM `object_count` WHERE `object_count`.`object_type` = 'song' AND `object_count`.`count_type` = 'stream');";
+        //Dba::write($sql);
+        //$sql = "UPDATE `song` SET `total_skip` = 0 WHERE `total_skip` > 0 AND `id` NOT IN (SELECT `object_id` FROM `object_count` WHERE `object_count`.`object_type` = 'song' AND `object_count`.`count_type` = 'stream');";
+        //Dba::write($sql);
         if (AmpConfig::get('podcast')) {
-            //debug_event(self::class, 'update_counts podcast_episode table', 5);
+            debug_event(self::class, 'update_counts podcast_episode table', 5);
             // fix object_count table missing podcast row
             $sql        = "SELECT `podcast_episode`.`podcast`, `object_count`.`date`, `object_count`.`user`, `object_count`.`agent`, `object_count`.`geo_latitude`, `object_count`.`geo_longitude`, `object_count`.`geo_name`, `object_count`.`count_type` FROM `object_count` LEFT JOIN `podcast_episode` ON `object_count`.`object_type` = 'podcast_episode' AND `object_count`.`count_type` = 'stream' AND `object_count`.`object_id` = `podcast_episode`.`id` LEFT JOIN `object_count` AS `podcast_count` ON `podcast_count`.`object_type` = 'podcast' AND `object_count`.`date` = `podcast_count`.`date` AND `object_count`.`user` = `podcast_count`.`user` AND `object_count`.`agent` = `podcast_count`.`agent` AND `object_count`.`count_type` = `podcast_count`.`count_type` WHERE `object_count`.`count_type` = 'stream' AND `object_count`.`object_type` = 'podcast_episode' AND `podcast_count`.`id` IS NULL LIMIT 100;";
             $db_results = Dba::read($sql);
