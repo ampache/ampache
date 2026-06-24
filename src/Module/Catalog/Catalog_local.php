@@ -1554,6 +1554,7 @@ class Catalog_local extends Catalog
                     'chunk progress: ' . $count . '/' . count($this->_filecache) . ' on ' . $this->name,
                     true
                 );
+                debug_event('local.catalog', 'chunk progress: ' . $count . '/' . count($this->_filecache) . ' on ' . $this->name, 5);
             }
         }
 
