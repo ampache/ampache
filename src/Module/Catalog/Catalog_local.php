@@ -906,7 +906,7 @@ class Catalog_local extends Catalog
         }
 
         // Ensure that we've got our cache
-        $this->_create_filecache();
+        $this->_create_filecache(false);
 
         $total = count($this->_filecache);
         if ($total === 0) {

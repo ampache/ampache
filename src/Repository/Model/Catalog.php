@@ -5037,7 +5037,7 @@ abstract class Catalog extends database_object
      *
      * This populates an array which is used to speed up the add process.
      */
-    protected function _create_filecache(): void
+    protected function _create_filecache(bool $lower = true): void
     {
         if (count($this->_filecache) == 0) {
             // Get _EVERYTHING_
@@ -5046,14 +5046,22 @@ abstract class Catalog extends database_object
 
             // Populate the filecache
             while ($results = Dba::fetch_assoc($db_results)) {
-                $this->_filecache[strtolower($results['file'])] = $results['id'];
+                if ($lower) {
+                    $this->_filecache[strtolower($results['file'])] = $results['id'];
+                } else {
+                    $this->_filecache[$results['file']] = $results['id'];
+                }
             }
 
             $sql        = 'SELECT `id`, `file` FROM `video` WHERE `catalog` = ? AND `file` IS NOT NULL ORDER BY `id` DESC;';
             $db_results = Dba::read($sql, [$this->id]);
 
             while ($results = Dba::fetch_assoc($db_results)) {
-                $this->_filecache[strtolower($results['file'])] = $results['id'];
+                if ($lower) {
+                    $this->_filecache[strtolower($results['file'])] = $results['id'];
+                } else {
+                    $this->_filecache[$results['file']] = $results['id'];
+                }
             }
         }
     }
