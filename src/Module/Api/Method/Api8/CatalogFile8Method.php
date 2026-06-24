@@ -56,8 +56,8 @@ final class CatalogFile8Method
      * Single file versions of catalog add, clean and verify.
      * Make sure you remember to urlencode those file names!
      *
-     * file    = (string) urlencode(FULL path to local file)
-     * task    = (string) 'add', 'clean', 'verify', 'remove' (can be comma separated)
+     * file = (string) urlencode(FULL path to local file)
+     * task = (string) 'add', 'clean', 'verify', 'remove' (can be comma separated)
      * catalog = (integer) $catalog_id
      *
      * @param array{

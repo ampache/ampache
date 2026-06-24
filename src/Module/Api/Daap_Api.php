@@ -46,7 +46,7 @@ class Daap_Api
 {
     public const int AMPACHEID_SMARTPL = 400000000;
 
-    public const int BASE_LIBRARY      = 0;
+    public const int BASE_LIBRARY = 0;
 
     /** @var array<string> */
     public static array $metas = [

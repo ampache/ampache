@@ -44,10 +44,10 @@ final readonly class FolderRepository implements FolderRepositoryInterface
     {
         try {
             $this->connection->query('DELETE FROM `folder_map` WHERE `folder_map`.`folder_id` NOT IN (SELECT `folder`.`id` FROM `folder`);');
-            $this->connection->query('DELETE FROM `folder_map` WHERE `folder_map`.`object_type` = \'podcast_episode\' AND `folder_map`.`object_id` NOT IN (SELECT `podcast_episode`.`id` FROM `podcast_episode`);');
-            $this->connection->query('DELETE FROM `folder_map` WHERE `folder_map`.`object_type` = \'song\' AND `folder_map`.`object_id` NOT IN (SELECT `song`.`id` FROM `song`);');
-            $this->connection->query('DELETE FROM `folder_map` WHERE `folder_map`.`object_type` = \'video\' AND `folder_map`.`object_id` NOT IN (SELECT `video`.`id` FROM `video`);');
-            $this->connection->query('DELETE FROM `folder_map` WHERE `folder_map`.`object_type` = \'folder\' AND `folder_map`.`object_id` NOT IN (SELECT `folder`.`id` FROM `folder`);');
+            $this->connection->query("DELETE FROM `folder_map` WHERE `folder_map`.`object_type` = 'podcast_episode' AND `folder_map`.`object_id` NOT IN (SELECT `podcast_episode`.`id` FROM `podcast_episode`);");
+            $this->connection->query("DELETE FROM `folder_map` WHERE `folder_map`.`object_type` = 'song' AND `folder_map`.`object_id` NOT IN (SELECT `song`.`id` FROM `song`);");
+            $this->connection->query("DELETE FROM `folder_map` WHERE `folder_map`.`object_type` = 'video' AND `folder_map`.`object_id` NOT IN (SELECT `video`.`id` FROM `video`);");
+            $this->connection->query("DELETE FROM `folder_map` WHERE `folder_map`.`object_type` = 'folder' AND `folder_map`.`object_id` NOT IN (SELECT `folder`.`id` FROM `folder`);");
             $this->connection->query('DELETE FROM `folder` WHERE `folder`.`catalog` NOT IN (SELECT `catalog`.`id` FROM `catalog`);');
             $this->connection->query('DELETE FROM `folder` WHERE `id` NOT IN (SELECT `folder_id` FROM `folder_map`) AND `parent` IS NOT NULL AND `user` IS NULL;');
             $this->update_folder_counts();
@@ -84,7 +84,7 @@ final readonly class FolderRepository implements FolderRepositoryInterface
                 [$folderId]
             );
             $this->connection->query(
-                'DELETE FROM `folder_map` WHERE `folder_id` = ? OR (`object_id` = ? AND `object_type` = \'folder\');',
+                "DELETE FROM `folder_map` WHERE `folder_id` = ? OR (`object_id` = ? AND `object_type` = 'folder');",
                 [$folderId, $folderId]
             );
             $this->connection->query('UPDATE `folder` SET `object_count` = (SELECT COUNT(*) FROM `folder_map` AS `map_count` WHERE `map_count`.`folder_id` = `folder`.`id`);');
@@ -131,13 +131,16 @@ final readonly class FolderRepository implements FolderRepositoryInterface
             $sql .= 'AND `folder_map`.`catalog` = ? ';
             $params[] = $catalogId;
         }
+
         if ($parent) {
             $sql .= 'AND `folder_map`.`folder_id` = ? ';
             $params[] = $parent;
         }
+
         if ($parent === null) {
             $sql .= 'AND `folder_map`.`folder_id` IS NULL ';
         }
+
         //debug_event(self::class, 'getByName ' . sprintf('SQL %s', $sql) . print_r([$folderName, $catalogId, $parent], true), 5);
 
         $result = $this->connection->query($sql . 'LIMIT 1;', $params);
@@ -162,7 +165,7 @@ final readonly class FolderRepository implements FolderRepositoryInterface
     {
         $sql    = 'SELECT `folder`.`id` FROM `folder` WHERE `folder`.`path_name` = ? ';
         $params = [$folderPath];
-        if (($catalogId)) {
+        if (($catalogId !== 0)) {
             $sql .= 'AND `folder`.`catalog` = ? ';
             $params[] = $catalogId;
         }
@@ -197,6 +200,7 @@ final readonly class FolderRepository implements FolderRepositoryInterface
                 $sql .= ' AND `parent` = ?';
                 $params[] = $parent_id;
             }
+
             //debug_event(self::class, 'lookup' . sprintf('SQL %s', $sql) . print_r($params, true), 5);
 
             $result = $this->connection->fetchOne($sql, $params);
@@ -236,14 +240,14 @@ final readonly class FolderRepository implements FolderRepositoryInterface
     public function update_folder_counts(): void
     {
         $this->connection->query('UPDATE `folder` SET `object_count` = (SELECT COUNT(*) FROM `folder_map` AS `map_count` WHERE `map_count`.`folder_id` = `folder`.`id`);');
-        $this->connection->query('UPDATE `folder` SET `total_count` = (SELECT IFNULL(SUM(`song`.`total_count`), 0) FROM `folder_map` AS `map_count` LEFT JOIN `song` ON `object_type` = \'song\' AND `object_id` = `song`.`id` WHERE `map_count`.`folder_id` = `folder`.`id`);');
-        $this->connection->query('UPDATE `folder` SET `total_skip` = (SELECT IFNULL(SUM(`song`.`total_skip`), 0) FROM `folder_map` AS `map_count` LEFT JOIN `song` ON `object_type` = \'song\' AND `object_id` = `song`.`id` WHERE `map_count`.`folder_id` = `folder`.`id`);');
-        $this->connection->query('UPDATE `folder` SET `total_count` = (SELECT IFNULL(SUM(`video`.`total_count`), 0) FROM `folder_map` AS `map_count` LEFT JOIN `video` ON `object_type` = \'video\' AND `object_id` = `video`.`id` WHERE `map_count`.`folder_id` = `folder`.`id`);');
-        $this->connection->query('UPDATE `folder` SET `total_skip` = (SELECT IFNULL(SUM(`video`.`total_skip`), 0) FROM `folder_map` AS `map_count` LEFT JOIN `video` ON `object_type` = \'video\' AND `object_id` = `video`.`id` WHERE `map_count`.`folder_id` = `folder`.`id`);');
-        $this->connection->query('UPDATE `folder` SET `total_count` = (SELECT IFNULL(SUM(`podcast_episode`.`total_count`), 0) FROM `folder_map` AS `map_count` LEFT JOIN `podcast_episode` ON `object_type` = \'podcast_episode\' AND `object_id` = `podcast_episode`.`id` WHERE `map_count`.`folder_id` = `folder`.`id`);');
-        $this->connection->query('UPDATE `folder` SET `total_skip` = (SELECT IFNULL(SUM(`podcast_episode`.`total_skip`), 0) FROM `folder_map` AS `map_count` LEFT JOIN `podcast_episode` ON `object_type` = \'podcast_episode\' AND `object_id` = `podcast_episode`.`id` WHERE `map_count`.`folder_id` = `folder`.`id`);');
-        $this->connection->query('UPDATE `folder` SET `playable` = 1 WHERE `playable` = 0 AND `id` IN (SELECT `folder_id` FROM `folder_map` WHERE `object_type` != \'folder\');');
-        $this->connection->query('UPDATE `folder` SET `playable` = 0 WHERE `playable` = 1 AND `id` NOT IN (SELECT `folder_id` FROM `folder_map` WHERE `object_type` != \'folder\');');
+        $this->connection->query("UPDATE `folder` SET `total_count` = (SELECT IFNULL(SUM(`song`.`total_count`), 0) FROM `folder_map` AS `map_count` LEFT JOIN `song` ON `object_type` = 'song' AND `object_id` = `song`.`id` WHERE `map_count`.`folder_id` = `folder`.`id`);");
+        $this->connection->query("UPDATE `folder` SET `total_skip` = (SELECT IFNULL(SUM(`song`.`total_skip`), 0) FROM `folder_map` AS `map_count` LEFT JOIN `song` ON `object_type` = 'song' AND `object_id` = `song`.`id` WHERE `map_count`.`folder_id` = `folder`.`id`);");
+        $this->connection->query("UPDATE `folder` SET `total_count` = (SELECT IFNULL(SUM(`video`.`total_count`), 0) FROM `folder_map` AS `map_count` LEFT JOIN `video` ON `object_type` = 'video' AND `object_id` = `video`.`id` WHERE `map_count`.`folder_id` = `folder`.`id`);");
+        $this->connection->query("UPDATE `folder` SET `total_skip` = (SELECT IFNULL(SUM(`video`.`total_skip`), 0) FROM `folder_map` AS `map_count` LEFT JOIN `video` ON `object_type` = 'video' AND `object_id` = `video`.`id` WHERE `map_count`.`folder_id` = `folder`.`id`);");
+        $this->connection->query("UPDATE `folder` SET `total_count` = (SELECT IFNULL(SUM(`podcast_episode`.`total_count`), 0) FROM `folder_map` AS `map_count` LEFT JOIN `podcast_episode` ON `object_type` = 'podcast_episode' AND `object_id` = `podcast_episode`.`id` WHERE `map_count`.`folder_id` = `folder`.`id`);");
+        $this->connection->query("UPDATE `folder` SET `total_skip` = (SELECT IFNULL(SUM(`podcast_episode`.`total_skip`), 0) FROM `folder_map` AS `map_count` LEFT JOIN `podcast_episode` ON `object_type` = 'podcast_episode' AND `object_id` = `podcast_episode`.`id` WHERE `map_count`.`folder_id` = `folder`.`id`);");
+        $this->connection->query("UPDATE `folder` SET `playable` = 1 WHERE `playable` = 0 AND `id` IN (SELECT `folder_id` FROM `folder_map` WHERE `object_type` != 'folder');");
+        $this->connection->query("UPDATE `folder` SET `playable` = 0 WHERE `playable` = 1 AND `id` NOT IN (SELECT `folder_id` FROM `folder_map` WHERE `object_type` != 'folder');");
     }
 
     /**
@@ -252,7 +256,7 @@ final readonly class FolderRepository implements FolderRepositoryInterface
     public function update_folder_map(): void
     {
         // folder
-        $this->connection->query('INSERT INTO `folder_map` (`object_id`, `folder_id`, `object_type`, `name`, `catalog`, `path_name`) SELECT `id` AS `object_id`, `parent` AS `folder_id`, \'folder\' AS `object_type`, `name`, `catalog`, `path_name` FROM `folder` WHERE `id` NOT IN (SELECT `object_id` FROM `folder_map` WHERE `object_type` = \'folder\');');
+        $this->connection->query("INSERT INTO `folder_map` (`object_id`, `folder_id`, `object_type`, `name`, `catalog`, `path_name`) SELECT `id` AS `object_id`, `parent` AS `folder_id`, 'folder' AS `object_type`, `name`, `catalog`, `path_name` FROM `folder` WHERE `id` NOT IN (SELECT `object_id` FROM `folder_map` WHERE `object_type` = 'folder');");
         // song
         $this->connection->query('INSERT INTO `folder_map` (`folder_id`, `object_id`, `object_type`, `name`, `catalog`, `path_name`) SELECT `folder`.`id` AS `folder_id`, `source`.`object_id`, \'song\' AS `object_type`, `source`.`filename` AS `name`, `source`.`catalog`, `source`.`dir` AS `path_name` FROM (SELECT `song`.`id` AS `object_id`, `song`.`title` AS `name`, `song`.`catalog`, `song`.`file`, SUBSTRING_INDEX(`song`.`file`, \'/\', -1) AS `filename`, REGEXP_REPLACE(`song`.`file`, \'/[^/]+$\', \'\') AS `dir` FROM `song` ) `source` LEFT JOIN `folder` ON `folder`.`path_name` = `source`.`dir` AND `folder`.`catalog` = `source`.`catalog` LEFT JOIN `folder_map` ON `folder_map`.`object_id` = `source`.`object_id` AND `folder_map`.`object_type` = \'song\' WHERE `folder`.`id` IS NOT NULL AND folder_map.object_id IS NULL;');
         // video
@@ -267,7 +271,7 @@ final readonly class FolderRepository implements FolderRepositoryInterface
      */
     public function update_utime(int $folder_id, int $time = 0): void
     {
-        if (!$time) {
+        if ($time === 0) {
             $time = time();
         }
 

@@ -301,7 +301,7 @@ class Graph
         $values = $this->get_all_pts($fct, $MyData, $catalog_id, $object_type, $object_id, $start_date, $end_date, $zoom, false);
 
         // Only display other users if the graph is not for a specific catalog
-        if (!$catalog_id) {
+        if ($catalog_id === 0) {
             $catalogs = Catalog::get_all_catalogs();
             foreach ($catalogs as $catalog_id) {
                 $catalog = Catalog::create_from_id($catalog_id);
@@ -356,7 +356,7 @@ class Graph
         $start_date ??= ($end_date ?? time()) - 864000;
         $dateformat = $this->get_sql_date_format("`" . $object_type . "`.`addition_time`", $zoom);
         $where      = $this->get_catalog_sql_where($object_type, $object_id, $catalog_id, $start_date, $end_date);
-        $sql        = ($object_type == 'album')
+        $sql        = ($object_type === 'album')
             ? "SELECT " . $dateformat . " AS `zoom_date`, ((SELECT SUM(`song`.`size`) AS `size` FROM `album` `t2` LEFT JOIN `song` ON `t2`.`id` = `song`.`id` WHERE `t2`.`addition_time` < `zoom_date`)) AS `storage` FROM `album` " . $where . " GROUP BY " . $dateformat
             : "SELECT " . $dateformat . " AS `zoom_date`, ((SELECT SUM(`t2`.`size`) FROM `" . $object_type . "` `t2` WHERE `t2`.`addition_time` < `zoom_date`) + SUM(`" . $object_type . "`.`size`)) AS `storage` FROM `" . $object_type . "` " . $where . " GROUP BY " . $dateformat;
         $db_results = Dba::read($sql);
@@ -393,7 +393,6 @@ class Graph
             $sql .= " AND `" . $object_type . "`.`catalog` = " . $catalog_id;
         }
 
-        $object_id = (int) $object_id;
         if ($object_id > 0) {
             $sql .= " AND `" . $object_type . "`.`id` = '" . $object_id . "'";
         }
@@ -597,13 +596,10 @@ class Graph
      */
     protected function render_graph(string $title, Data $MyData, string $zoom, int $width = 0, int $height = 0): void
     {
-        // Check graph size sanity
-        $width = (int) $width;
         if ($width <= 50 || $width > 4096) {
             $width = 700;
         }
 
-        $height = (int) $height;
         if ($height <= 60 || $height > 4096) {
             $height = 260;
         }

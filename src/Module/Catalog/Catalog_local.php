@@ -55,7 +55,7 @@ use Exception;
  */
 class Catalog_local extends Catalog
 {
-    public string $path             = '';
+    public string $path = '';
     private int $catalog_id;
     private int $count          = 0;
     private string $description = 'Local Catalog';
@@ -92,7 +92,7 @@ class Catalog_local extends Catalog
      */
     public static function check_path(string $path): bool
     {
-        if ((string) $path === '') {
+        if ($path === '') {
             debug_event('local.catalog', 'Path was not specified', 1);
             AmpError::add('general', T_('Path was not specified'));
 
@@ -491,14 +491,14 @@ class Catalog_local extends Catalog
     public function add_folder(string $folderName, string $folderPath, string $parentPath): ?Folder
     {
         $folder = self::getFolderRepository()->getByPathName($folderPath, $this->getId(), $parentPath);
-        if ($folder) {
+        if ($folder instanceof Folder) {
             return null;
         }
 
         $parent_id = self::getFolderRepository()->lookupByPathName($parentPath, $this->getId());
 
         // This can happen with upper/lower case and accent duplicates
-        if (self::getFolderRepository()->lookup($folderPath, $this->getId(), $parent_id)) {
+        if (self::getFolderRepository()->lookup($folderPath, $this->getId(), $parent_id) !== 0) {
             return null;
         }
 
@@ -994,7 +994,7 @@ class Catalog_local extends Catalog
             Dba::write($sql, $params);
 
             return true;
-        } elseif (!Core::is_readable(Core::conv_lc_file((string) $file))) {
+        } elseif (!Core::is_readable(Core::conv_lc_file($file))) {
             debug_event('local.catalog', "clean_file: " . $file . ' is not readable, but does exist', 1);
         }
 
@@ -1263,7 +1263,7 @@ class Catalog_local extends Catalog
                 : null;
         }
 
-        if (!$folder) {
+        if (!$folder instanceof Folder) {
             $interactor?->error(
                 'Failed to open folder: ' . $this->path,
                 true
@@ -1294,7 +1294,7 @@ class Catalog_local extends Catalog
 
         $folder = self::getFolderRepository()->getByPathName($folderPath, $this->getId(), dirname($folderPath));
 
-        if (!$folder) {
+        if (!$folder instanceof Folder) {
             $interactor?->error(
                 'Failed to open folder: ' . $folderPath,
                 true
@@ -1893,7 +1893,7 @@ class Catalog_local extends Catalog
 
             try {
                 if (is_dir($full_file)) {
-                    $lc_dir = strtolower(Core::conv_lc_file((string) $file));
+                    $lc_dir = strtolower(Core::conv_lc_file($file));
                     if (isset($this->_filecache[$lc_dir])) {
                         // set mod time on scan
                         self::getFolderRepository()->update_utime(

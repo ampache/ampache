@@ -47,9 +47,9 @@ final class ArtistSongs5Method
      * This returns the songs of the specified artist
      *
      * filter = (string) UID of Artist
-     * top50  = (integer) 0,1, if true filter to the artist top 50 //optional
+     * top50 = (integer) 0,1, if true filter to the artist top 50 //optional
      * offset = (integer) //optional
-     * limit  = (integer) //optional
+     * limit = (integer) //optional
      *
      * @param array{
      *     filter: string,

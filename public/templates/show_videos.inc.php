@@ -36,10 +36,10 @@ use Ampache\Repository\Model\Video;
 
 $web_path = AmpConfig::get_web_path();
 
-$show_ratings       = User::is_registered() && (AmpConfig::get('ratings'));
-$show_played_times  = AmpConfig::get('show_played_times');
-$hide_genres        = AmpConfig::get('hide_genres');
-$is_table           = !$browse->is_grid_view();
+$show_ratings      = User::is_registered() && (AmpConfig::get('ratings'));
+$show_played_times = AmpConfig::get('show_played_times');
+$hide_genres       = AmpConfig::get('hide_genres');
+$is_table          = !$browse->is_grid_view();
 //mashup and grid view need different css
 $cel_cover   = ($is_table) ? "cel_cover" : 'grid_cover';
 $cel_tags    = ($is_table) ? "cel_tags" : 'grid_tags';

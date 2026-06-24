@@ -47,9 +47,9 @@ final class GetSimilar6Method
      * Return similar artist id's or similar song ids compared to the input filter
      *
      * filter = (string) artist id or song id
-     * type   = (string) 'song', 'artist'
+     * type = (string) 'song', 'artist'
      * offset = (integer) //optional
-     * limit  = (integer) //optional
+     * limit = (integer) //optional
      *
      * @param array{
      *     filter: string,

@@ -46,12 +46,12 @@ class Catalog_beetsremote extends Catalog
     protected string $listCommand = 'item/query';
 
     #[Override]
-    protected string $type        = 'beetsremote';
+    protected string $type = 'beetsremote';
 
     protected string $uri = '';
 
     #[Override]
-    protected string $version     = '000001';
+    protected string $version = '000001';
 
     /**
      * create_type

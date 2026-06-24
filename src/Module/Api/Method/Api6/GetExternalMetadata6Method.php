@@ -53,7 +53,7 @@ final class GetExternalMetadata6Method
      * Return External plugin metadata searching by object id and type
      *
      * filter = (string) album id, artist id or song id
-     * type   = (string) 'song', 'artist', 'album', 'label'
+     * type = (string) 'song', 'artist', 'album', 'label'
      *
      * @param array{
      *     filter: string,

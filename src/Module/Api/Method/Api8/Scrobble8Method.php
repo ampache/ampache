@@ -47,14 +47,14 @@ final class Scrobble8Method
      * Search for a song using text info and then record a play if found.
      * This allows other sources to record play history to Ampache
      *
-     * song       = (string)  $song_name
-     * artist     = (string)  $artist_name
-     * album      = (string)  $album_name
-     * songmbid   = (string)  $song_mbid //optional
+     * song = (string)  $song_name
+     * artist = (string)  $artist_name
+     * album = (string)  $album_name
+     * songmbid = (string)  $song_mbid //optional
      * artistmbid = (string)  $artist_mbid //optional
-     * albummbid  = (string)  $album_mbid //optional
-     * date       = (integer) UNIXTIME() //optional
-     * client     = (string)  $agent //optional
+     * albummbid = (string)  $album_mbid //optional
+     * date = (integer) UNIXTIME() //optional
+     * client = (string)  $agent //optional
      *
      * @param array{
      *     song: string,

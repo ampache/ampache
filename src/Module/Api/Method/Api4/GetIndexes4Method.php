@@ -45,14 +45,14 @@ final class GetIndexes4Method
      *
      * This takes a collection of inputs and returns ID + name for the object type
      *
-     * type        = (string) 'song', 'album', 'artist', 'album_artist', 'playlist', 'podcast', 'podcast_episode', 'share', 'video'
-     * filter      = (string) //optional
-     * exact       = (integer) 0,1, if true filter is exact rather then fuzzy //optional
-     * add         = $browse->set_api_filter(date) //optional
-     * update      = $browse->set_api_filter(date) //optional
-     * include     = (integer) 0,1 include songs if available for that object //optional
-     * offset      = (integer) //optional
-     * limit       = (integer) //optional
+     * type = (string) 'song', 'album', 'artist', 'album_artist', 'playlist', 'podcast', 'podcast_episode', 'share', 'video'
+     * filter = (string) //optional
+     * exact = (integer) 0,1, if true filter is exact rather then fuzzy //optional
+     * add = $browse->set_api_filter(date) //optional
+     * update = $browse->set_api_filter(date) //optional
+     * include = (integer) 0,1 include songs if available for that object //optional
+     * offset = (integer) //optional
+     * limit = (integer) //optional
      * hide_search = (integer) 0,1, if true do not include searches/smartlists in the result //optional
      *
      * @param array{

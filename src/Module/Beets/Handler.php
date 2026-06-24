@@ -82,8 +82,8 @@ abstract class Handler
     protected function mapFields(array $song): array
     {
         foreach ($this->fieldMapping as $from => $to) {
-            [$key, $format]     = $to;
-            $song[$key]         = sprintf($format, $song[$from]);
+            [$key, $format] = $to;
+            $song[$key]     = sprintf($format, $song[$from]);
         }
 
         $song['genre'] = preg_split('/[\s]?[,|;][\s?]/', (string) $song['genre']);

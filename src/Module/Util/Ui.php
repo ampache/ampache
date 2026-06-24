@@ -55,7 +55,7 @@ class Ui implements UiInterface
     /** @var array<string, string> $_image_cache */
     private static array $_image_cache = [];
 
-    private static int $_ticker        = 0;
+    private static int $_ticker = 0;
 
     public function __construct(
         private readonly ConfigContainerInterface $configContainer,

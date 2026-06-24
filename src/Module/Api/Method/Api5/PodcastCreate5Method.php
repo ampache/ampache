@@ -50,7 +50,7 @@ final class PodcastCreate5Method
      * Create a public url that can be used by anyone to stream media.
      * Takes the file id with optional description and expires parameters.
      *
-     * url     = (string) rss url for podcast
+     * url = (string) rss url for podcast
      * catalog = (string) podcast catalog
      *
      * @param array{

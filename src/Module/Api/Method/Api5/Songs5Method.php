@@ -47,11 +47,11 @@ final class Songs5Method
      * All calls that return songs now include <playlisttrack> which can be used to identify track order.
      *
      * filter = (string) Alpha-numeric search term //optional
-     * exact  = (integer) 0,1, if true filter is exact rather then fuzzy //optional
-     * add    = $browse->set_api_filter(date) //optional
+     * exact = (integer) 0,1, if true filter is exact rather then fuzzy //optional
+     * add = $browse->set_api_filter(date) //optional
      * update = $browse->set_api_filter(date) //optional
      * offset = (integer) //optional
-     * limit  = (integer) //optional
+     * limit = (integer) //optional
      *
      * @param array{
      *     filter?: string,

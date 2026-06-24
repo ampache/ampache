@@ -52,10 +52,10 @@ class Catalog_Seafile extends Catalog
     private static string $version     = '000001';
     public string $library_name;
     public string $server_uri;
-    private int $api_call_delay        = 250;
-    private ?string $api_key           = null;
-    private int $catalog_id            = 0;
-    private int $count                 = 0;
+    private int $api_call_delay = 250;
+    private ?string $api_key    = null;
+    private int $catalog_id     = 0;
+    private int $count          = 0;
     private SeafileAdapter $seafile;
 
     /**

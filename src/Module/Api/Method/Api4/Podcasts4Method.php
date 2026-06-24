@@ -45,10 +45,10 @@ final class Podcasts4Method
      *
      * Get information about podcasts.
      *
-     * filter  = (string) Alpha-numeric search term
+     * filter = (string) Alpha-numeric search term
      * include = (string) 'episodes' (include episodes in the response) //optional
-     * offset  = (integer) //optional
-     * limit   = (integer) //optional
+     * offset = (integer) //optional
+     * limit = (integer) //optional
      *
      * @param array{
      *     filter?: string,

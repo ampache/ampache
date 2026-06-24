@@ -50,145 +50,146 @@ namespace Ampache\Module\Playback\Localplay\Mpd;
 class mpd
 {
     // Current playlist control
-    public const string COMMAND_ADD            = 'add';
+    public const string COMMAND_ADD = 'add';
 
-    public const string COMMAND_ADDID          = 'addid';
+    public const string COMMAND_ADDID = 'addid';
 
-    public const string COMMAND_CLEAR          = 'clear';
+    public const string COMMAND_CLEAR = 'clear';
+
     // Command names
     // Status queries
-    public const string COMMAND_CLEARERROR  = 'clearerror';
+    public const string COMMAND_CLEARERROR = 'clearerror';
 
     // Connection
-    public const string COMMAND_CLOSE    = 'close';
+    public const string COMMAND_CLOSE = 'close';
 
     // Playback options
-    public const string COMMAND_CONSUME            = 'consume';
+    public const string COMMAND_CONSUME = 'consume';
 
     // Music database
-    public const string COMMAND_COUNT       = 'count';
+    public const string COMMAND_COUNT = 'count';
 
-    public const string COMMAND_CROSSFADE          = 'crossfade';
+    public const string COMMAND_CROSSFADE = 'crossfade';
 
     public const string COMMAND_CURRENTSONG = 'currentsong';
 
-    public const string COMMAND_DELETE         = 'delete';
+    public const string COMMAND_DELETE = 'delete';
 
-    public const string COMMAND_DELETEID       = 'deleteid';
+    public const string COMMAND_DELETEID = 'deleteid';
 
-    public const string COMMAND_END_BULK   = 'command_list_end';
+    public const string COMMAND_END_BULK = 'command_list_end';
 
-    public const string COMMAND_FIND        = 'find';
+    public const string COMMAND_FIND = 'find';
 
-    public const string COMMAND_FINDADD     = 'findadd';
+    public const string COMMAND_FINDADD = 'findadd';
 
-    public const string COMMAND_IDLE        = 'idle';
+    public const string COMMAND_IDLE = 'idle';
 
-    public const string COMMAND_KILL     = 'kill';
+    public const string COMMAND_KILL = 'kill';
 
-    public const string COMMAND_LISTALL     = 'listall';
+    public const string COMMAND_LISTALL = 'listall';
 
     public const string COMMAND_LISTALLINFO = 'listallinfo';
 
     // Stored playlists
-    public const string COMMAND_LISTPL        = 'listplaylist';
+    public const string COMMAND_LISTPL = 'listplaylist';
 
     public const string COMMAND_LISTPLAYLISTS = 'listplaylists';
 
-    public const string COMMAND_LISTPLINFO    = 'listplaylistinfo';
+    public const string COMMAND_LISTPLINFO = 'listplaylistinfo';
 
-    public const string COMMAND_LSDIR       = 'lsinfo';
+    public const string COMMAND_LSDIR = 'lsinfo';
 
-    public const string COMMAND_MOVEID         = 'moveid';
+    public const string COMMAND_MOVEID = 'moveid';
 
-    public const string COMMAND_MOVETRACK      = 'move';
+    public const string COMMAND_MOVETRACK = 'move';
 
     // Playback control
-    public const string COMMAND_NEXT     = 'next';
+    public const string COMMAND_NEXT = 'next';
 
     public const string COMMAND_PASSWORD = 'password';
 
-    public const string COMMAND_PAUSE    = 'pause';
+    public const string COMMAND_PAUSE = 'pause';
 
-    public const string COMMAND_PING     = 'ping';
+    public const string COMMAND_PING = 'ping';
 
-    public const string COMMAND_PLADD         = 'playlistadd';
+    public const string COMMAND_PLADD = 'playlistadd';
 
-    public const string COMMAND_PLAY     = 'play';
+    public const string COMMAND_PLAY = 'play';
 
-    public const string COMMAND_PLAYID   = 'playid';
+    public const string COMMAND_PLAYID = 'playid';
 
-    public const string COMMAND_PLCHANGES      = 'plchanges';
+    public const string COMMAND_PLCHANGES = 'plchanges';
 
     public const string COMMAND_PLCHANGESPOSID = 'plchangesposid';
 
-    public const string COMMAND_PLCLEAR       = 'playlistclear';
+    public const string COMMAND_PLCLEAR = 'playlistclear';
 
-    public const string COMMAND_PLDELETE      = 'playlistdelete';
+    public const string COMMAND_PLDELETE = 'playlistdelete';
 
-    public const string COMMAND_PLFIND         = 'playlistfind';
+    public const string COMMAND_PLFIND = 'playlistfind';
 
-    public const string COMMAND_PLID           = 'playlistid';
+    public const string COMMAND_PLID = 'playlistid';
 
-    public const string COMMAND_PLINFO         = 'playlistinfo';
+    public const string COMMAND_PLINFO = 'playlistinfo';
 
-    public const string COMMAND_PLLOAD        = 'load';
+    public const string COMMAND_PLLOAD = 'load';
 
-    public const string COMMAND_PLMOVE        = 'playlistmove';
+    public const string COMMAND_PLMOVE = 'playlistmove';
 
-    public const string COMMAND_PLSAVE        = 'save';
+    public const string COMMAND_PLSAVE = 'save';
 
-    public const string COMMAND_PLSEARCH       = 'playlistsearch';
+    public const string COMMAND_PLSEARCH = 'playlistsearch';
 
-    public const string COMMAND_PLSHUFFLE      = 'shuffle';
+    public const string COMMAND_PLSHUFFLE = 'shuffle';
 
-    public const string COMMAND_PLSWAPID       = 'swapid';
+    public const string COMMAND_PLSWAPID = 'swapid';
 
-    public const string COMMAND_PLSWAPTRACK    = 'swap';
+    public const string COMMAND_PLSWAPTRACK = 'swap';
 
     public const string COMMAND_PREVIOUS = 'previous';
 
-    public const string COMMAND_RANDOM             = 'random';
+    public const string COMMAND_RANDOM = 'random';
 
-    public const string COMMAND_REFRESH     = 'update';
+    public const string COMMAND_REFRESH = 'update';
 
-    public const string COMMAND_RENAME        = 'rename';
+    public const string COMMAND_RENAME = 'rename';
 
-    public const string COMMAND_REPEAT             = 'repeat';
+    public const string COMMAND_REPEAT = 'repeat';
 
-    public const string COMMAND_REPLAY_GAIN_MODE   = 'replay_gain_mode';
+    public const string COMMAND_REPLAY_GAIN_MODE = 'replay_gain_mode';
 
     public const string COMMAND_REPLAY_GAIN_STATUS = 'replay_gain_status';
 
-    public const string COMMAND_RESCAN      = 'rescan';
+    public const string COMMAND_RESCAN = 'rescan';
 
-    public const string COMMAND_RM            = 'rm';
+    public const string COMMAND_RM = 'rm';
 
-    public const string COMMAND_SEARCH      = 'search';
+    public const string COMMAND_SEARCH = 'search';
 
-    public const string COMMAND_SEEK     = 'seek';
+    public const string COMMAND_SEEK = 'seek';
 
-    public const string COMMAND_SEEKID   = 'seekid';
+    public const string COMMAND_SEEKID = 'seekid';
 
-    public const string COMMAND_SETVOL             = 'setvol';
+    public const string COMMAND_SETVOL = 'setvol';
 
     public const string COMMAND_SHUTDOWN = 'shutdown';
 
-    public const string COMMAND_SINGLE             = 'single';
+    public const string COMMAND_SINGLE = 'single';
 
     // Bulk commands
     public const string COMMAND_START_BULK = 'command_list_begin';
 
-    public const string COMMAND_STATISTICS  = 'stats';
+    public const string COMMAND_STATISTICS = 'stats';
 
-    public const string COMMAND_STATUS      = 'status';
+    public const string COMMAND_STATUS = 'status';
 
     // Stickers
     public const string COMMAND_STICKER = 'sticker';
 
-    public const string COMMAND_STOP     = 'stop';
+    public const string COMMAND_STOP = 'stop';
 
-    public const string COMMAND_TABLE       = 'list';
+    public const string COMMAND_TABLE = 'list';
 
     // Deprecated commands
     public const string COMMAND_VOLUME = 'volume';
@@ -196,33 +197,33 @@ class mpd
     // Predefined MPD Response messages
     public const string RESPONSE_ERR = 'ACK';
 
-    public const string RESPONSE_OK  = 'OK';
+    public const string RESPONSE_OK = 'OK';
 
-    public const string SEARCH_ALBUM  = 'album';
+    public const string SEARCH_ALBUM = 'album';
 
     // MPD Searching Constants
     public const string SEARCH_ARTIST = 'artist';
 
-    public const string SEARCH_TITLE  = 'title';
+    public const string SEARCH_TITLE = 'title';
 
-    public const string STATE_PAUSED  = 'pause';
+    public const string STATE_PAUSED = 'pause';
 
     // MPD State Constants
     public const string STATE_PLAYING = 'play';
 
     public const string STATE_STOPPED = 'stop';
 
-    public const string STICKER_DELETE  = 'delete';
+    public const string STICKER_DELETE = 'delete';
 
-    public const string STICKER_FIND    = 'find';
+    public const string STICKER_FIND = 'find';
 
-    public const string STICKER_GET     = 'get';
+    public const string STICKER_GET = 'get';
 
-    public const string STICKER_LIST    = 'list';
+    public const string STICKER_LIST = 'list';
 
-    public const string STICKER_SET     = 'set';
+    public const string STICKER_SET = 'set';
 
-    public const string TABLE_ALBUM  = 'album';
+    public const string TABLE_ALBUM = 'album';
 
     // MPD Cache Tables
     public const string TABLE_ARTIST = 'artist';
@@ -241,11 +242,17 @@ class mpd
         self::COMMAND_STICKER => ['min' => '0.15.0', 'max' => false],
         self::COMMAND_VOLUME => ['min' => false, 'max' => '0.10.0']
     ];
-    public bool $connected           = false;
-    public bool $debugging           = false;
-    public string $err_str           = ''; // Stores the latest error message
-    public string $mpd_class_version = '1.3'; // Misc Other Vars
-    public string $mpd_version       = "(unknown)"; // MPD Status variables
+    public bool $connected = false;
+    public bool $debugging = false;
+    public string $err_str = '';
+
+    // Stores the latest error message
+    public string $mpd_class_version = '1.3';
+
+    // Misc Other Vars
+    public string $mpd_version = "(unknown)";
+
+    // MPD Status variables
     public $playlist;
     public $stats;
     public $status;
@@ -260,9 +267,9 @@ class mpd
     /**
      * TCP/Connection variables
      */
-    private string $host;
+    private readonly string $host;
 
-    private int $port;
+    private readonly int $port;
 
     /**
      * Constructor
@@ -273,11 +280,11 @@ class mpd
     public function __construct(
         string $server,
         string|int $port,
-        private ?string $password = null,
+        private readonly ?string $password = null,
         ?string $debug_callback = null,
     ) {
-        $this->host     = trim($server);
-        $this->port     = (int) $port;
+        $this->host = trim($server);
+        $this->port = (int) $port;
 
         if (is_callable($debug_callback)) {
             $this->_debug_callback = $debug_callback;
@@ -285,7 +292,7 @@ class mpd
 
         $this->_debug('construct', 'constructor called', 5);
 
-        if (empty($this->host)) {
+        if ($this->host === '' || $this->host === '0') {
             $this->_error('construct', 'Host is empty');
 
             return;
@@ -349,7 +356,7 @@ class mpd
     public function connect(): ?string
     {
         $this->_debug(self::class, "host: " . $this->host . ", port: " . $this->port, 5);
-        $this->_mpd_sock = fsockopen($this->host, (int) $this->port, $err, $err_str, 6);
+        $this->_mpd_sock = fsockopen($this->host, $this->port, $err, $err_str, 6);
 
         if (!$this->_mpd_sock) {
             $this->_error('Connect', sprintf('Socket Error: %s (%d)', $err_str, $err));
@@ -381,6 +388,7 @@ class mpd
                 return null;
             }
         }
+
         // Generic response
         $this->_error('Connect', "Connection not available");
 
@@ -434,7 +442,7 @@ class mpd
     public function Find(string $type, string $string): array|bool
     {
         $this->_debug('Find', 'start', 5);
-        if (!in_array($type, [self::SEARCH_ARTIST, self::SEARCH_ALBUM, self::SEARCH_TITLE])) {
+        if (!in_array($type, [self::SEARCH_ARTIST, self::SEARCH_ALBUM, self::SEARCH_TITLE], true)) {
             $this->_error('Find', 'invalid find type');
 
             return false;
@@ -818,7 +826,7 @@ class mpd
     {
         $this->_debug('Search', 'start', 5);
 
-        if (!in_array($type, [self::SEARCH_ARTIST, self::SEARCH_ALBUM, self::SEARCH_TITLE])) {
+        if (!in_array($type, [self::SEARCH_ARTIST, self::SEARCH_ALBUM, self::SEARCH_TITLE], true)) {
             $this->_error('Search', 'invalid search type');
 
             return false;
@@ -855,7 +863,7 @@ class mpd
             return null;
         }
 
-        if ($track == -1) {
+        if ($track === -1) {
             $track = $this->current_track_id;
         }
 
@@ -1129,7 +1137,7 @@ class mpd
      *
      * Computes numeric value from a version string
      */
-    private function _computeVersionValue(string $string): float|int
+    private function _computeVersionValue(string $string): int
     {
         $parts = explode('.', $string);
 

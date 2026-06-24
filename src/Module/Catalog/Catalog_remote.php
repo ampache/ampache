@@ -73,9 +73,9 @@ class Catalog_remote extends Catalog
     private ?AmpacheApi $remote_handle = null;
 
     // new servers support pulling tags from VaInfo
-    private bool $song_tags     = true;
-    private string $type        = 'remote';
-    private string $version     = '000001';
+    private bool $song_tags = true;
+    private string $type    = 'remote';
+    private string $version = '000001';
 
     /**
      * Constructor
@@ -664,7 +664,7 @@ class Catalog_remote extends Catalog
         }
 
         $remote_id = (int) ($song->attributes()->id ?? 0);
-        if (!$remote_id) {
+        if ($remote_id === 0) {
             return null;
         }
 
@@ -949,9 +949,9 @@ class Catalog_remote extends Catalog
                         $remote_id = (string) $song->attributes()->id;
 
                         // Update URLS to the current format for remote catalogs
-                        $old_url  = (string) preg_replace('/ssid=[0-9a-z]*&/', '', $song->url);
-                        $db_url   = (string) preg_replace('/ssid=[0-9a-z]*&/', 'client=' . urlencode($web_path) . '&', $song->url);
-                        $db_file  = (string) $song->filename;
+                        $old_url = (string) preg_replace('/ssid=[0-9a-z]*&/', '', $song->url);
+                        $db_url  = (string) preg_replace('/ssid=[0-9a-z]*&/', 'client=' . urlencode($web_path) . '&', $song->url);
+                        $db_file = (string) $song->filename;
 
                         if ($db_file === '' || $db_file === '0') {
                             continue;
@@ -973,6 +973,7 @@ class Catalog_remote extends Catalog
 
                                 continue;
                             }
+
                             $data = $this->_gather_tags($song) ?? [];
 
                         }
@@ -984,7 +985,7 @@ class Catalog_remote extends Catalog
                             continue;
                         }
 
-                        $file_target  = ($song_id_check && ($cache_target !== '' && $cache_target !== '0') && $cache_target === (string) $song->stream_format)
+                        $file_target = ($song_id_check && ($cache_target !== '' && $cache_target !== '0') && $cache_target === (string) $song->stream_format)
                             ? Catalog::get_cache_path($song_id_check, $this->catalog_id, $cache_path, $cache_target)
                             : null;
 

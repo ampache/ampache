@@ -47,7 +47,7 @@ abstract class OAuthSignatureMethod
         $built = $this->build_signature($request, $consumer, $token);
 
         // Check for zero length, although unlikely here
-        if ($built === '' || (string) $signature === '') {
+        if ($built === '' || $signature === '') {
             return false;
         }
 

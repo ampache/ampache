@@ -45,7 +45,7 @@ final class Bookmark8Method
      *
      * Get a single bookmark
      *
-     * filter  = (string) bookmark_id
+     * filter = (string) bookmark_id
      * include = (integer) 0,1, if true include the object in the bookmark //optional
      *
      * @param array{

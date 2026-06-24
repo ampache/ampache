@@ -95,7 +95,7 @@ final class PlayItemAction extends AbstractStreamAction
             return null;
         }
 
-        $mediaIds  = [];
+        $mediaIds = [];
         foreach ($objectIds as $object_id) {
             $item = $this->libraryItemLoader->load(
                 $objectType,

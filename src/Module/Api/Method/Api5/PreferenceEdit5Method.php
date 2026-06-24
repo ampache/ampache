@@ -47,8 +47,8 @@ final class PreferenceEdit5Method
      * Edit a preference value and apply to all users if allowed
      *
      * filter = (string) Preference name e.g ('notify_email', 'ajax_load')
-     * value  = (string|integer) Preference value
-     * all    = (boolean) apply to all users //optional
+     * value = (string|integer) Preference value
+     * all = (boolean) apply to all users //optional
      *
      * @param array{
      *     filter: string,

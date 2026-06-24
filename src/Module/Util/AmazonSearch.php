@@ -42,7 +42,7 @@ use WpOrg\Requests\Requests;
  */
 class AmazonSearch
 {
-    public int $_currentPage           = 0;
+    public int $_currentPage = 0;
 
     // Stupid hack to make things come our right
     public $_currentTag;
@@ -95,7 +95,7 @@ class AmazonSearch
         string $base_url_param = '',
     ) {
         // If we have a base url then use it
-        if ($base_url_param != '') {
+        if ($base_url_param !== '') {
             $this->base_url = str_replace('http://', '', $base_url_param);
             debug_event(self::class, 'Retrieving from ' . $base_url_param . $this->url_suffix, 5);
         } else {
@@ -164,9 +164,9 @@ class AmazonSearch
 
         xml_set_object($this->_parser, $this);
 
-        xml_set_element_handler($this->_parser, [$this, 'startElement'], [$this, 'endElement']);
+        xml_set_element_handler($this->_parser, $this->startElement(...), $this->endElement(...));
 
-        xml_set_character_data_handler($this->_parser, [$this, 'cdata']);
+        xml_set_character_data_handler($this->_parser, $this->cdata(...));
     }
 
     /**
@@ -186,10 +186,10 @@ class AmazonSearch
     public function getProxyConfig(): array
     {
         $options = [];
-        if ($this->_proxy_host) {
+        if ($this->_proxy_host !== '' && $this->_proxy_host !== '0') {
             $proxy   = [];
-            $proxy[] = $this->_proxy_host . (($this->_proxy_port) ? ':' . $this->_proxy_port : '');
-            if ($this->_proxy_user) {
+            $proxy[] = $this->_proxy_host . (($this->_proxy_port !== '' && $this->_proxy_port !== '0') ? ':' . $this->_proxy_port : '');
+            if ($this->_proxy_user !== '' && $this->_proxy_user !== '0') {
                 $proxy[] = $this->_proxy_user;
                 $proxy[] = $this->_proxy_pass;
             }
@@ -350,19 +350,19 @@ class AmazonSearch
      */
     public function setProxy(string $host = '', string $port = '', string $user = '', string $pass = ''): void
     {
-        if ($host) {
+        if ($host !== '' && $host !== '0') {
             $this->_proxy_host = $host;
         }
 
-        if ($port) {
+        if ($port !== '' && $port !== '0') {
             $this->_proxy_port = $port;
         }
 
-        if ($user) {
+        if ($user !== '' && $user !== '0') {
             $this->_proxy_user = $user;
         }
 
-        if ($pass) {
+        if ($pass !== '' && $pass !== '0') {
             $this->_proxy_pass = $pass;
         }
     }

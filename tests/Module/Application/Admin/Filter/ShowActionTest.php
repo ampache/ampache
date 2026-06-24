@@ -82,7 +82,7 @@ class ShowActionTest extends TestCase
 
     protected function setUp(): void
     {
-        $this->ui              = $this->createMock(UiInterface::class);
+        $this->ui = $this->createMock(UiInterface::class);
 
         $this->subject = new ShowAction(
             $this->ui

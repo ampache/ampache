@@ -94,6 +94,7 @@ class Album8MethodTest extends MockeryTestCase
             ->once()
             ->andReturnSelf();
 
+        /** @noinspection PhpMissingArrayKeyInspection */
         $this->assertSame(
             $response,
             $this->subject->handle(
@@ -133,6 +134,7 @@ class Album8MethodTest extends MockeryTestCase
         $this->expectException(ResultEmptyException::class);
         $this->expectExceptionMessage((string) $albumId);
 
+        /** @noinspection PhpMissingArrayKeyInspection */
         $this->subject->handle(
             $gatekeeper,
             $response,
@@ -152,6 +154,7 @@ class Album8MethodTest extends MockeryTestCase
         $this->expectException(RequestParamMissingException::class);
         $this->expectExceptionMessage(sprintf(T_('Bad Request: %s'), 'filter'));
 
+        /** @noinspection PhpMissingArrayKeyInspection */
         $this->subject->handle($gatekeeper, $response, $output, [], $user);
     }
 

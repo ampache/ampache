@@ -53,12 +53,12 @@ final class Stats4Method
      * This method has partial backwards compatibility with older api versions
      * but should be updated to follow the current input values
      *
-     * type     = (string)  'song'|'album'|'artist'
-     * filter   = (string)  'newest'|'highest'|'frequent'|'recent'|'forgotten'|'flagged'|'random'
-     * user_id  = (integer) //optional
+     * type = (string)  'song'|'album'|'artist'
+     * filter = (string)  'newest'|'highest'|'frequent'|'recent'|'forgotten'|'flagged'|'random'
+     * user_id = (integer) //optional
      * username = (string)  //optional
-     * offset   = (integer) //optional
-     * limit    = (integer)Default: 10 (popular_threshold) //optional
+     * offset = (integer) //optional
+     * limit = (integer)Default: 10 (popular_threshold) //optional
      *
      * @param array{
      *     type: string,

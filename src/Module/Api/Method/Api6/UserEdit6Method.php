@@ -54,21 +54,21 @@ final class UserEdit6Method
      * Update an existing user.
      * Takes the username with optional parameters.
      *
-     * filter            = (integer|string) filter by user id OR username //optional
-     * username          = (string) $username
-     * fullname          = (string) $fullname //optional
-     * password          = (string) hash('sha256', $password) //optional
-     * email             = (string) $email //optional
-     * website           = (string) $website //optional
-     * state             = (string) $state //optional
-     * city              = (string) $city //optional
-     * disable           = (integer) 0,1 true to disable, false to enable //optional
-     * group             = (integer) Catalog filter group for the new user //optional, default = 0
-     * maxbitrate        = (integer) $maxbitrate //optional
-     * fullname_public   = (integer) 0,1 true to enable, false to disable using fullname in public display //optional
-     * reset_apikey      = (integer) 0,1 true to reset a user Api Key //optional
+     * filter = (integer|string) filter by user id OR username //optional
+     * username = (string) $username
+     * fullname = (string) $fullname //optional
+     * password = (string) hash('sha256', $password) //optional
+     * email = (string) $email //optional
+     * website = (string) $website //optional
+     * state = (string) $state //optional
+     * city = (string) $city //optional
+     * disable = (integer) 0,1 true to disable, false to enable //optional
+     * group = (integer) Catalog filter group for the new user //optional, default = 0
+     * maxbitrate = (integer) $maxbitrate //optional
+     * fullname_public = (integer) 0,1 true to enable, false to disable using fullname in public display //optional
+     * reset_apikey = (integer) 0,1 true to reset a user Api Key //optional
      * reset_streamtoken = (integer) 0,1 true to reset a user Stream Token //optional
-     * clear_stats       = (integer) 0,1 true reset all stats for this user //optional
+     * clear_stats = (integer) 0,1 true reset all stats for this user //optional
      *
      * @param array{
      *     filter?: int|string,

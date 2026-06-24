@@ -249,19 +249,19 @@ class Stream_Playlist
 
     private static function _broadcast_object_to_url(Broadcast $object): ?Stream_Url
     {
-        if (!$object->started) {
+        if ($object->started === 0) {
             return null;
         }
 
         $url  = self::STREAM_PLAYLIST_ROW;
         $type = $object->getMediaType();
 
-        $url['type']      = $type->value;
-        $url['url']       = (string) $object->id;
-        $url['author']    = 'Ampache';
-        $url['info_url']  = $object->get_f_link();
-        $url['title']     = Stream_Url::get_title($url['url']);
-        $url['time']      = -1;
+        $url['type']     = $type->value;
+        $url['url']      = (string) $object->id;
+        $url['author']   = 'Ampache';
+        $url['info_url'] = $object->get_f_link();
+        $url['title']    = Stream_Url::get_title($url['url']);
+        $url['time']     = -1;
 
         return new Stream_Url($url);
     }
@@ -279,7 +279,7 @@ class Stream_Playlist
 
         // Don't add disabled media objects to the stream playlist
         // Playing a disabled media return a 404 error that could make failed the player (mpd ...)
-        if (isset($object->enabled) && make_bool($object->enabled) === false) {
+        if (property_exists($object, 'enabled') && $object->enabled !== null && make_bool($object->enabled) === false) {
             debug_event(self::class, 'media_object_to_url: SKIP {' . $object->getId() . '} of type {' . $type->value . '} is disabled', 5);
 
             return null;
@@ -326,7 +326,7 @@ class Stream_Playlist
                 $art_object       = ($show_song_art && $has_art) ? $object->id : $object->album;
                 $art_type         = ($show_song_art && $has_art) ? 'song' : 'album';
                 $url['image_url'] = Art::url($art_object, $art_type, $api_session, (AmpConfig::get('ajax_load') ? 3 : 4));
-                //$url['album']     = $object->get_album_fullname();
+                //$url['album'] = $object->get_album_fullname();
                 $url['codec']     = $object->type;
                 $url['track_num'] = (string) $object->track;
                 break;

@@ -417,8 +417,6 @@ class HttpQPlayer
         // Explode the results by line break and take 4th line (results)
         $data = explode("\n", $data);
 
-        return (isset($data[4]))
-            ? $data[4]
-            : false;
+        return $data[4] ?? false;
     }
 }

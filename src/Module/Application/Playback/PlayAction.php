@@ -703,7 +703,7 @@ final readonly class PlayAction implements ApplicationActionInterface
                 return null;
             }
 
-            $streamConfiguration = $streamConfiguration ?? $catalog?->prepare_media($media);
+            $streamConfiguration ??= $catalog?->prepare_media($media);
             if ($streamConfiguration === null) {
                 return null;
             }
@@ -1043,7 +1043,7 @@ final readonly class PlayAction implements ApplicationActionInterface
         }
 
         if (!isset($_REQUEST['segment'])) {
-            if ($media->time) {
+            if ($media->time !== 0) {
                 header('X-Content-Duration: ' . $media->time);
             }
 

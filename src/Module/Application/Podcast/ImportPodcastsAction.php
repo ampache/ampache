@@ -50,6 +50,7 @@ use Psr\Http\Message\UploadedFileInterface;
 final readonly class ImportPodcastsAction implements ApplicationActionInterface
 {
     public const string REQUEST_KEY = 'import_podcasts';
+
     /** @var list<string> */
     private const array EXPECTED_MIME_TYPES = [
         'text/x-opml+xml',

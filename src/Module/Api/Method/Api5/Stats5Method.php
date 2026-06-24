@@ -57,12 +57,12 @@ final class Stats5Method
      * Get some items based on some simple search types and filters. (Random by default)
      * This method HAD partial backwards compatibility with older api versions but it has now been removed
      *
-     * type     = (string)  'song', 'album', 'artist', 'video', 'playlist', 'podcast', 'podcast_episode'
-     * filter   = (string)  'newest', 'highest', 'frequent', 'recent', 'forgotten', 'flagged', 'random' (Default: random) //optional
-     * user_id  = (integer) //optional
+     * type = (string)  'song', 'album', 'artist', 'video', 'playlist', 'podcast', 'podcast_episode'
+     * filter = (string)  'newest', 'highest', 'frequent', 'recent', 'forgotten', 'flagged', 'random' (Default: random) //optional
+     * user_id = (integer) //optional
      * username = (string)  //optional
-     * offset   = (integer) //optional
-     * limit    = (integer) Default: 10 (popular_threshold) //optional
+     * offset = (integer) //optional
+     * limit = (integer) Default: 10 (popular_threshold) //optional
      *
      * @param array{
      *     type: string,

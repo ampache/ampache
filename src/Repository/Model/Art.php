@@ -53,7 +53,7 @@ use WpOrg\Requests\Requests;
  */
 class Art extends database_object
 {
-    public const array VALID_TYPES      = [
+    public const array VALID_TYPES = [
         'bmp',
         'gif',
         'jp2',
@@ -504,9 +504,9 @@ class Art extends database_object
      * This gets an image for the album art from a source as
      * defined in the passed array. Because we don't know where
      * it's coming from we are a passed an array that can look like
-     * ['url']      = URL *** OPTIONAL ***
-     * ['file']     = FILENAME *** OPTIONAL ***
-     * ['raw']      = Actual Image data, already captured
+     * ['url'] = URL *** OPTIONAL ***
+     * ['file'] = FILENAME *** OPTIONAL ***
+     * ['raw'] = Actual Image data, already captured
      * @param array{
      *     url?: string,
      *     file?: string,

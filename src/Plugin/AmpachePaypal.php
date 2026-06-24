@@ -53,7 +53,7 @@ class AmpachePaypal extends AmpachePlugin implements PluginDisplayUserFieldInter
     public string $url = '';
 
     #[Override]
-    public string $version   = '000001';
+    public string $version = '000001';
 
     private string $business      = '';
     private string $currency_code = 'USD';

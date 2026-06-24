@@ -53,15 +53,15 @@ final class Browse8Method
      * If you don't send any parameters you'll get a catalog list (the 'root' path)
      * Catalog ID is required on 'artist', 'album', 'podcast' so you can filter the browse correctly
      *
-     * filter  = (string) object_id //optional
-     * type    = (string) 'root', 'catalog', 'artist', 'album', 'podcast' // optional
+     * filter = (string) object_id //optional
+     * type = (string) 'root', 'catalog', 'artist', 'album', 'podcast' // optional
      * catalog = (integer) catalog ID you are browsing // optional
-     * add     = $browse->set_api_filter(date) //optional
-     * update  = $browse->set_api_filter(date) //optional
-     * offset  = (integer) //optional
-     * limit   = (integer) //optional
-     * cond    = (string) Apply additional filters to the browse using ';' separated comma string pairs (e.g. 'filter1,value1;filter2,value2') //optional
-     * sort    = (string) sort name or comma separated key pair. Order default 'ASC' (e.g. 'name,ASC' and 'name' are the same) //optional
+     * add = $browse->set_api_filter(date) //optional
+     * update = $browse->set_api_filter(date) //optional
+     * offset = (integer) //optional
+     * limit = (integer) //optional
+     * cond = (string) Apply additional filters to the browse using ';' separated comma string pairs (e.g. 'filter1,value1;filter2,value2') //optional
+     * sort = (string) sort name or comma separated key pair. Order default 'ASC' (e.g. 'name,ASC' and 'name' are the same) //optional
      *
      * @param array{
      *     filter?: string,

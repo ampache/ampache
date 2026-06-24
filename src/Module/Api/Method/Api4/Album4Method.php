@@ -43,7 +43,7 @@ final class Album4Method
      *
      * This returns a single album based on the UID provided
      *
-     * filter  = (string) UID of Album
+     * filter = (string) UID of Album
      * include = (array) 'songs' //optional
      *
      * @param array{

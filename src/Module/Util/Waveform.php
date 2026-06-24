@@ -357,7 +357,7 @@ class Waveform
                 }
             } else {
                 // skip this one due to lack of detail
-                fseek($handle, (int) ($ratio + $byte), SEEK_CUR);
+                fseek($handle, $ratio + $byte, SEEK_CUR);
             }
         }
 

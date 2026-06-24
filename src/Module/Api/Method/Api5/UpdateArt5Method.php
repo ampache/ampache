@@ -50,8 +50,8 @@ final class UpdateArt5Method
      * updates a single album, artist, song running the gather_art process
      * Doesn't overwrite existing art by default.
      *
-     * type      = (string) 'artist', 'album'
-     * id        = (integer) $artist_id, $album_id
+     * type = (string) 'artist', 'album'
+     * id = (integer) $artist_id, $album_id
      * overwrite = (integer) 0,1 //optional
      *
      * @param array{

@@ -57,14 +57,14 @@ final class Stats6Method
      * Get some items based on some simple search types and filters. (Random by default)
      * This method HAD partial backwards compatibility with older api versions but it has now been removed
      *
-     * type     = (string)  'song', 'album', 'artist', 'video', 'playlist', 'podcast', 'podcast_episode'
-     * filter   = (string)  'newest', 'highest', 'frequent', 'recent', 'forgotten', 'flagged', 'random' (Default: random) //optional
-     * user_id  = (string) //optional
+     * type = (string)  'song', 'album', 'artist', 'video', 'playlist', 'podcast', 'podcast_episode'
+     * filter = (string)  'newest', 'highest', 'frequent', 'recent', 'forgotten', 'flagged', 'random' (Default: random) //optional
+     * user_id = (string) //optional
      * username = (string)  //optional
-     * offset   = (integer) //optional
-     * limit    = (integer) Default: 10 (popular_threshold) //optional
-     * cond     = (string) Apply additional filters to the browse using ';' separated comma string pairs (e.g. 'filter1,value1;filter2,value2') //optional
-     * sort     = (string) sort name or comma separated key pair. Order default 'ASC' (e.g. 'name,ASC' and 'name' are the same) //optional
+     * offset = (integer) //optional
+     * limit = (integer) Default: 10 (popular_threshold) //optional
+     * cond = (string) Apply additional filters to the browse using ';' separated comma string pairs (e.g. 'filter1,value1;filter2,value2') //optional
+     * sort = (string) sort name or comma separated key pair. Order default 'ASC' (e.g. 'name,ASC' and 'name' are the same) //optional
      *
      * @param array{
      *     type: string,

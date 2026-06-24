@@ -3705,8 +3705,8 @@ class Subsonic_Api
             // We use the curl `writefunction` and `headerfunction` callbacks
             // to write the fetched data back to the open stream from the
             // client.
-            $headers      = apache_request_headers();
-            $reqheaders   = [];
+            $headers    = apache_request_headers();
+            $reqheaders = [];
             if (isset($headers['User-Agent'])) {
                 $reqheaders[] = "User-Agent: " . $headers['User-Agent'];
             }

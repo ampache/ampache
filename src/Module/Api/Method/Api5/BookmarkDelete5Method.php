@@ -50,7 +50,7 @@ final class BookmarkDelete5Method
      * Delete an existing bookmark. (if it exists)
      *
      * filter = (string) object_id to delete
-     * type   = (string) object_type  ('bookmark', 'song', 'video', 'podcast_episode')
+     * type = (string) object_type  ('bookmark', 'song', 'video', 'podcast_episode')
      * client = (string) Agent string Default: 'AmpacheAPI' //optional
      *
      * @param array{

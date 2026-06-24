@@ -52,7 +52,7 @@ class Access
     public string $name;
     public string $start;
     public string $type;
-    public ?int $user     = null;
+    public ?int $user = null;
 
     public function __construct(?int $access_id)
     {

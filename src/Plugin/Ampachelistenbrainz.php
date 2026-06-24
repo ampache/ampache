@@ -55,7 +55,7 @@ class Ampachelistenbrainz extends AmpachePlugin implements PluginSaveMediaplayIn
     public string $url = '';
 
     #[Override]
-    public string $version   = '000002';
+    public string $version = '000002';
 
     private string $api_host = 'api.listenbrainz.org';
     private string $host     = 'listenbrainz.org';

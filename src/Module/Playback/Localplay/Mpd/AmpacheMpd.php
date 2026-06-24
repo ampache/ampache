@@ -78,7 +78,7 @@ class AmpacheMpd extends localplay_controller
      */
     public function add_url(Stream_Url $url): bool
     {
-        if (!$this->_mpd) {
+        if (!$this->_mpd instanceof mpd) {
             return false;
         }
 
@@ -109,7 +109,7 @@ class AmpacheMpd extends localplay_controller
      */
     public function clear_playlist(): bool
     {
-        if (!$this->_mpd) {
+        if (!$this->_mpd instanceof mpd) {
             return false;
         }
 
@@ -154,7 +154,7 @@ class AmpacheMpd extends localplay_controller
      */
     public function delete_track(int $object_id): bool
     {
-        if (!$this->_mpd) {
+        if (!$this->_mpd instanceof mpd) {
             return false;
         }
 
@@ -177,12 +177,12 @@ class AmpacheMpd extends localplay_controller
      */
     public function get(): array
     {
-        if (!$this->_mpd) {
+        if (!$this->_mpd instanceof mpd) {
             return [];
         }
 
         // If we don't have the playlist yet, pull it
-        if (!isset($this->_mpd->playlist)) {
+        if ($this->_mpd->playlist === null) {
             $this->_mpd->RefreshInfo();
         }
 
@@ -413,7 +413,7 @@ class AmpacheMpd extends localplay_controller
      */
     public function move($source, $destination): bool|string
     {
-        if (!$this->_mpd) {
+        if (!$this->_mpd instanceof mpd) {
             return false;
         }
 
@@ -426,7 +426,7 @@ class AmpacheMpd extends localplay_controller
      */
     public function next(): bool
     {
-        if (!$this->_mpd) {
+        if (!$this->_mpd instanceof mpd) {
             return false;
         }
 
@@ -439,7 +439,7 @@ class AmpacheMpd extends localplay_controller
      */
     public function pause(): bool
     {
-        if (!$this->_mpd) {
+        if (!$this->_mpd instanceof mpd) {
             return false;
         }
 
@@ -453,7 +453,7 @@ class AmpacheMpd extends localplay_controller
      */
     public function play(): bool
     {
-        if (!$this->_mpd) {
+        if (!$this->_mpd instanceof mpd) {
             return false;
         }
 
@@ -466,7 +466,7 @@ class AmpacheMpd extends localplay_controller
      */
     public function prev(): bool
     {
-        if (!$this->_mpd) {
+        if (!$this->_mpd instanceof mpd) {
             return false;
         }
 
@@ -480,7 +480,7 @@ class AmpacheMpd extends localplay_controller
      */
     public function random(bool $state): bool
     {
-        if (!$this->_mpd) {
+        if (!$this->_mpd instanceof mpd) {
             return false;
         }
 
@@ -493,7 +493,7 @@ class AmpacheMpd extends localplay_controller
      */
     public function repeat(bool $state): bool
     {
-        if (!$this->_mpd) {
+        if (!$this->_mpd instanceof mpd) {
             return false;
         }
 
@@ -546,7 +546,7 @@ class AmpacheMpd extends localplay_controller
     public function status(): array
     {
         $array = [];
-        if (!$this->_mpd) {
+        if (!$this->_mpd instanceof mpd) {
             return $array;
         }
 
@@ -612,7 +612,7 @@ class AmpacheMpd extends localplay_controller
      */
     public function stop(): bool
     {
-        if (!$this->_mpd) {
+        if (!$this->_mpd instanceof mpd) {
             return false;
         }
 
@@ -655,7 +655,7 @@ class AmpacheMpd extends localplay_controller
      */
     public function volume(int $volume): bool
     {
-        if (!$this->_mpd) {
+        if (!$this->_mpd instanceof mpd) {
             return false;
         }
 
@@ -667,7 +667,7 @@ class AmpacheMpd extends localplay_controller
      */
     public function volume_down(): bool
     {
-        if (!$this->_mpd) {
+        if (!$this->_mpd instanceof mpd) {
             return false;
         }
 
@@ -679,7 +679,7 @@ class AmpacheMpd extends localplay_controller
      */
     public function volume_up(): bool
     {
-        if (!$this->_mpd) {
+        if (!$this->_mpd instanceof mpd) {
             return false;
         }
 

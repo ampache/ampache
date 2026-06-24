@@ -1217,7 +1217,7 @@ class Json8_Data
                         /**
                          * Strip smart_ from playlist id and compare to original
                          * smartlist = 'smart_1'
-                         * playlist  = 1000000
+                         * playlist = 1000000
                          */
                         if ((int) $object_id === 0) {
                             $playlist = new Search((int) str_replace('smart_', '', (string) $object_id), 'song', $user);
@@ -1660,7 +1660,7 @@ class Json8_Data
             /**
              * Strip smart_ from playlist id and compare to original
              * smartlist = 'smart_1'
-             * playlist  = 1000000
+             * playlist = 1000000
              */
             if ((int) $playlist_id === 0) {
                 $playlist = new Search((int) str_replace('smart_', '', (string) $playlist_id), 'song', $user);
@@ -1744,7 +1744,7 @@ class Json8_Data
      */
     public static function podcast_episodes(array $objects, User $user, string $auth, bool $encode = true, bool $object = true): string
     {
-        self::$count  = self::$count ?? count($objects);
+        self::$count = self::$count ?? count($objects);
         if ((self::$count > self::$limit || self::$offset > 0) && (self::$limit && $encode)) {
             $objects = array_splice($objects, self::$offset, self::$limit);
         }
@@ -2372,16 +2372,16 @@ class Json8_Data
                 continue;
             }
             $song->fill_ext_info();
-            $rating       = new Rating((int) $song_id, 'song');
-            $user_rating  = $rating->get_user_rating($user->getId());
-            $flag         = new Userflag((int) $song_id, 'song');
-            $art_url      = Art::url($song->album, 'album', $auth);
-            $songType     = $song->type;
-            $songMime     = $song->mime;
-            $songBitrate  = $song->bitrate;
-            $play_url     = $song->play_url('', 'api', false, $user->id, $user->streamtoken);
-            $song_album   = self::getAlbumRepository()->getNames($song->album);
-            $song_artist  = Artist::get_name_array_by_id($song->artist);
+            $rating      = new Rating((int) $song_id, 'song');
+            $user_rating = $rating->get_user_rating($user->getId());
+            $flag        = new Userflag((int) $song_id, 'song');
+            $art_url     = Art::url($song->album, 'album', $auth);
+            $songType    = $song->type;
+            $songMime    = $song->mime;
+            $songBitrate = $song->bitrate;
+            $play_url    = $song->play_url('', 'api', false, $user->id, $user->streamtoken);
+            $song_album  = self::getAlbumRepository()->getNames($song->album);
+            $song_artist = Artist::get_name_array_by_id($song->artist);
             /** @var array<int, array{id: string, name: string, prefix: string, basename: string}> $song_artists */
             $song_artists = [];
             foreach ($song->get_artists() as $artist_id) {

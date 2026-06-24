@@ -46,7 +46,7 @@ final class GenreArtists5Method
      *
      * filter = (string) UID of Album //optional
      * offset = (integer) //optional
-     * limit  = (integer) //optional
+     * limit = (integer) //optional
      *
      * @param array{
      *     filter?: string,

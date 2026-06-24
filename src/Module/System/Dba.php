@@ -54,7 +54,7 @@ class Dba
      */
     public static function affected_rows(?PDOStatement $resource): int
     {
-        if ($resource) {
+        if ($resource instanceof PDOStatement) {
             $result = $resource->rowCount();
             if ($result) {
                 return $result;
@@ -242,7 +242,7 @@ class Dba
      */
     public static function fetch_assoc(?PDOStatement $resource, bool $finish = true): array
     {
-        if (!$resource) {
+        if (!$resource instanceof PDOStatement) {
             return [];
         }
 
@@ -264,7 +264,7 @@ class Dba
      */
     public static function fetch_object(?PDOStatement $resource, string $class = 'stdClass', bool $finish = true): ?object
     {
-        if (!$resource) {
+        if (!$resource instanceof PDOStatement) {
             return null;
         }
 
@@ -291,7 +291,7 @@ class Dba
      */
     public static function fetch_row(?PDOStatement $resource, bool $finish = true): array
     {
-        if (!$resource) {
+        if (!$resource instanceof PDOStatement) {
             return [];
         }
 
@@ -375,7 +375,7 @@ class Dba
      */
     public static function num_rows(?PDOStatement $resource): int
     {
-        if ($resource) {
+        if ($resource instanceof PDOStatement) {
             $result = $resource->rowCount();
             if ($result) {
                 return $result;
@@ -574,7 +574,7 @@ class Dba
         self::$_sql = $sql;
         try {
             // Run the query
-            if (!empty($params) && strpos((string) self::$_sql, '?')) {
+            if ($params !== [] && strpos(self::$_sql, '?')) {
                 $stmt = $dbh->prepare(self::$_sql);
                 $stmt->execute($params);
             } else {

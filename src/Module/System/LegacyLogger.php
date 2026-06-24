@@ -33,24 +33,26 @@ use Psr\Log\LoggerInterface;
  */
 final readonly class LegacyLogger implements LoggerInterface
 {
-    public const string CONTEXT_TYPE       = 'event_type';
+    public const string CONTEXT_TYPE = 'event_type';
+
     /**
      * This emulates the Ampache log levels
      */
     public const int LOG_LEVEL_CRITICAL = 1;
 
-    public const int LOG_LEVEL_DEBUG    = 5;
+    public const int LOG_LEVEL_DEBUG = 5;
 
-    public const int LOG_LEVEL_ERROR    = 2;
+    public const int LOG_LEVEL_ERROR = 2;
 
-    public const int LOG_LEVEL_NOTICE   = 4;
+    public const int LOG_LEVEL_NOTICE = 4;
 
-    public const int LOG_LEVEL_WARNING     = 3;
+    public const int LOG_LEVEL_WARNING = 3;
+
     private const string FALLBACK_DATETIME = 'c';
 
     private const string FALLBACK_USERNAME = 'ampache';
 
-    private const string LOG_NAME          = 'ampache';
+    private const string LOG_NAME = 'ampache';
 
     public function __construct(private ConfigContainerInterface $configContainer) {}
 

@@ -49,9 +49,9 @@ final class PreferenceEdit8Method
      *
      * Edit a preference value and apply to all users if allowed
      *
-     * filter  = (string) Preference name e.g ('notify_email', 'ajax_load')
-     * value   = (string|integer) Preference value
-     * all     = (integer) 0,1 if true apply to all users //optional
+     * filter = (string) Preference name e.g ('notify_email', 'ajax_load')
+     * value = (string|integer) Preference value
+     * all = (integer) 0,1 if true apply to all users //optional
      * default = (integer) 0,1 if true set as system default (New and public users) //optional
      *
      * @param array{

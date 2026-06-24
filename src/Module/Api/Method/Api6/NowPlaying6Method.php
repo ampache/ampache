@@ -45,7 +45,7 @@ final class NowPlaying6Method
      * Get what is currently being played by all users.
      *
      * offset = (integer) //optional
-     * limit  = (integer) //optional
+     * limit = (integer) //optional
      *
      * @param array{
      *     offset?: int,

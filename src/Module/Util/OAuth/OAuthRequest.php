@@ -34,8 +34,8 @@ use Stringable;
  */
 class OAuthRequest implements Stringable
 {
-    public static string $POST_INPUT  = 'php://input';
-    public static string $version     = '1.0';
+    public static string $POST_INPUT = 'php://input';
+    public static string $version    = '1.0';
 
     // for debug purposes
     public string $base_string  = '';
@@ -57,9 +57,9 @@ class OAuthRequest implements Stringable
             (string) $http_url,
             PHP_URL_QUERY
         )), $parameters);
-        $this->parameters  = $parameters;
+        $this->parameters = $parameters;
 
-        $this->http_url    = $http_url;
+        $this->http_url = $http_url;
     }
 
     /**
@@ -75,7 +75,7 @@ class OAuthRequest implements Stringable
             "oauth_timestamp" => OAuthRequest::generate_timestamp(),
             "oauth_consumer_key" => $consumer->key,
         ];
-        if ($token) {
+        if ($token instanceof OAuthToken) {
             $defaults['oauth_token'] = $token->key;
         }
 
@@ -107,14 +107,14 @@ class OAuthRequest implements Stringable
 
             // It's a POST request of the proper content-type, so parse POST
             // parameters and add those overriding any duplicates from GET
-            if ($http_method == "POST" && isset($request_headers['Content-Type']) && strstr($request_headers['Content-Type'], 'application/x-www-form-urlencoded')) {
+            if ($http_method == "POST" && isset($request_headers['Content-Type']) && strstr((string) $request_headers['Content-Type'], 'application/x-www-form-urlencoded')) {
                 $post_data  = OAuthUtil::parse_parameters(file_get_contents(self::$POST_INPUT));
                 $parameters = array_merge($parameters, $post_data);
             }
 
             // We have a Authorization-header with OAuth data. Parse the header
             // and add those overriding any duplicates from GET or POST
-            if (isset($request_headers['Authorization']) && str_starts_with($request_headers['Authorization'], 'OAuth ')) {
+            if (isset($request_headers['Authorization']) && str_starts_with((string) $request_headers['Authorization'], 'OAuth ')) {
                 $header_parameters = OAuthUtil::split_header($request_headers['Authorization']);
                 $parameters        = array_merge($parameters, $header_parameters);
             }

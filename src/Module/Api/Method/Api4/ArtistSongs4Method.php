@@ -47,7 +47,7 @@ final class ArtistSongs4Method
      *
      * filter = (string) UID of Artist
      * offset = (integer) //optional
-     * limit  = (integer) //optional
+     * limit = (integer) //optional
      *
      * @param array{
      *     filter: string,

@@ -45,8 +45,8 @@ final class PlaylistAddSong5Method
      * This adds a song to a playlist
      *
      * filter = (string) UID of playlist
-     * song   = (string) UID of song to add to playlist
-     * check  = (integer) 0,1 Check for duplicates //optional, default = 0
+     * song = (string) UID of song to add to playlist
+     * check = (integer) 0,1 Check for duplicates //optional, default = 0
      *
      * @param array{
      *     filter: string,

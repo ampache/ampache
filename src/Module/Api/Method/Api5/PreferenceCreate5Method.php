@@ -48,13 +48,13 @@ final class PreferenceCreate5Method
      *
      * This inserts a new preference into the preference table
      *
-     * filter      = (string) preference name
-     * type        = (string) 'boolean', 'integer', 'string', 'special'
-     * default     = (string|integer) default value
-     * category    = (string) 'interface', 'internal', 'options', 'playlist', 'plugins', 'streaming', 'system'
+     * filter = (string) preference name
+     * type = (string) 'boolean', 'integer', 'string', 'special'
+     * default = (string|integer) default value
+     * category = (string) 'interface', 'internal', 'options', 'playlist', 'plugins', 'streaming', 'system'
      * description = (string) description of preference //optional
      * subcategory = (string) $subcategory //optional
-     * level       = (integer) access level required to change the value (default 100) //optional
+     * level = (integer) access level required to change the value (default 100) //optional
      *
      * @param array{
      *     filter: string,

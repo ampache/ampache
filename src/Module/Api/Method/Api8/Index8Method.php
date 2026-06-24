@@ -48,17 +48,17 @@ final class Index8Method
      * This takes a collection of inputs and return ID's for the object type
      * Add 'include' to include child objects
      *
-     * type        = (string) 'album_artist', 'album', 'artist', 'catalog', 'live_stream', 'playlist', 'podcast_episode', 'podcast', 'share', 'song_artist', 'song', 'video'
-     * filter      = (string) //optional
+     * type = (string) 'album_artist', 'album', 'artist', 'catalog', 'live_stream', 'playlist', 'podcast_episode', 'podcast', 'share', 'song_artist', 'song', 'video'
+     * filter = (string) //optional
      * hide_search = (integer) 0,1, if true do not include searches/smartlists in the result //optional
-     * exact       = (integer) 0,1, if true filter is exact rather then fuzzy //optional
-     * add         = $browse->set_api_filter(date) //optional
-     * update      = $browse->set_api_filter(date) //optional
-     * include     = (integer) 0,1 include songs if available for that object //optional
-     * offset      = (integer) //optional
-     * limit       = (integer) //optional
-     * cond        = (string) Apply additional filters to the browse using ';' separated comma string pairs (e.g. 'filter1,value1;filter2,value2') //optional
-     * sort        = (string) sort name or comma separated key pair. Order default 'ASC' (e.g. 'name,ASC' and 'name' are the same) //optional
+     * exact = (integer) 0,1, if true filter is exact rather then fuzzy //optional
+     * add = $browse->set_api_filter(date) //optional
+     * update = $browse->set_api_filter(date) //optional
+     * include = (integer) 0,1 include songs if available for that object //optional
+     * offset = (integer) //optional
+     * limit = (integer) //optional
+     * cond = (string) Apply additional filters to the browse using ';' separated comma string pairs (e.g. 'filter1,value1;filter2,value2') //optional
+     * sort = (string) sort name or comma separated key pair. Order default 'ASC' (e.g. 'name,ASC' and 'name' are the same) //optional
      *
      * @param array{
      *     type: string,

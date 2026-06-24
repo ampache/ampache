@@ -43,12 +43,12 @@ final class ArtistAlbums6Method
      *
      * This returns the albums of an artist
      *
-     * filter       = (string) UID of artist
+     * filter = (string) UID of artist
      * album_artist = (integer) 0,1, if true return albums where the UID is an album_artist of the object //optional
-     * offset       = (integer) //optional
-     * limit        = (integer) //optional
-     * cond         = (string) Apply additional filters to the browse using ';' separated comma string pairs (e.g. 'filter1,value1;filter2,value2') //optional
-     * sort         = (string) sort name or comma separated key pair. Order default 'ASC' (e.g. 'name,ASC' and 'name' are the same) //optional
+     * offset = (integer) //optional
+     * limit = (integer) //optional
+     * cond = (string) Apply additional filters to the browse using ';' separated comma string pairs (e.g. 'filter1,value1;filter2,value2') //optional
+     * sort = (string) sort name or comma separated key pair. Order default 'ASC' (e.g. 'name,ASC' and 'name' are the same) //optional
      *
      * @param array{
      *     filter: string,

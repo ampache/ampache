@@ -41,11 +41,11 @@ use Ampache\Repository\PodcastRepositoryInterface;
 /** @var list<int> $object_ids */
 /** @var PodcastRepositoryInterface $podcastRepository */
 
-$webPath            = AmpConfig::get_web_path();
-$thcount            = 7;
-$show_ratings       = User::is_registered() && (AmpConfig::get('ratings'));
-$show_played_times  = AmpConfig::get('show_played_times');
-$is_table           = !$browse->is_grid_view();
+$webPath           = AmpConfig::get_web_path();
+$thcount           = 7;
+$show_ratings      = User::is_registered() && (AmpConfig::get('ratings'));
+$show_played_times = AmpConfig::get('show_played_times');
+$is_table          = !$browse->is_grid_view();
 // translate once
 $count_text  = T_('Played');
 $rating_text = T_('Rating');

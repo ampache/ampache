@@ -121,7 +121,7 @@ final readonly class SongTagWriter implements SongTagWriterInterface
                 $field = $metadata->getField();
                 $name  = $field?->getName();
 
-                if (is_string($name) && !empty($name)) {
+                if (is_string($name) && ($name !== '' && $name !== '0')) {
                     $ndata[$name] = $metadata->getData();
                 }
             }

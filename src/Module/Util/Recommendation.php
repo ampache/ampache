@@ -76,7 +76,7 @@ class Recommendation
         $album = new Album($album_id);
         $query = ($album->mbid)
             ? 'mbid=' . rawurlencode($album->mbid)
-            : 'artist=' . rawurlencode((string) $album->get_parent_fullname()) . '&album=' . rawurlencode($album->get_fullname());
+            : 'artist=' . rawurlencode($album->get_parent_fullname()) . '&album=' . rawurlencode($album->get_fullname());
 
         $results = [
             'id' => $album_id,
@@ -178,7 +178,7 @@ class Recommendation
 
         if ($artist->isNew() === false) {
             $results['id'] = $artist->id;
-            if (!empty($results['summary'])) {
+            if (isset($results['summary']) && ($results['summary'] !== '' && $results['summary'] !== '0')) {
                 $artist->update_artist_info($results['summary'], $results['placeformed'], $results['yearformed']);
             }
 

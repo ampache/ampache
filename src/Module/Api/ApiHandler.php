@@ -108,8 +108,8 @@ final class ApiHandler implements ApiHandlerInterface
         // block html and visual output
         define('API', true);
 
-        $input        = $request->getQueryParams();
-        $action       = $input['action'];
+        $input  = $request->getQueryParams();
+        $action = $input['action'];
         if ($action == 'bad_request') {
             $this->logger->warning(
                 'Bad API request, check your HTTP Method is correct for your action',

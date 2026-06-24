@@ -166,8 +166,9 @@ final readonly class FolderViewAdapter implements FolderViewAdapterInterface
             $object_id   = $this->object->album;
             $object_type = 'album';
         }
-        $name        = scrub_out($this->object->get_fullname());
-        $size        = ['width' => 100, 'height' => 100];
+
+        $name = scrub_out($this->object->get_fullname());
+        $size = ['width' => 100, 'height' => 100];
 
         Art::display(
             $object_type,
@@ -273,7 +274,7 @@ final readonly class FolderViewAdapter implements FolderViewAdapterInterface
     public function getFolderLink(): string
     {
         if (property_exists($this->object, 'file')) {
-            return $this->object->get_f_link(pathinfo($this->object->file, PATHINFO_BASENAME));
+            return $this->object->get_f_link(pathinfo((string) $this->object->file, PATHINFO_BASENAME));
         }
 
         return $this->object->get_f_link(

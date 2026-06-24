@@ -46,7 +46,7 @@ final class DeletedVideos6Method
      * This returns video objects that have been deleted
      *
      * offset = (integer) //optional
-     * limit  = (integer) //optional
+     * limit = (integer) //optional
      *
      * @param array{
      *     limit?: string,

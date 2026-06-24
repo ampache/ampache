@@ -148,7 +148,7 @@ class Catalog_subsonic extends Catalog
     public function cache_catalog_proc(): bool
     {
         $this->_createClient();
-        if (!$this->subsonic) {
+        if (!$this->subsonic instanceof SubsonicClient) {
             return false;
         }
 
@@ -162,8 +162,8 @@ class Catalog_subsonic extends Catalog
             return false;
         }
 
-        $sql          = "SELECT `id`, `file`, substring_index(file,'.',-1) AS `extension` FROM `song` WHERE `catalog` = ?;";
-        $db_results   = Dba::read($sql, [$this->catalog_id]);
+        $sql        = "SELECT `id`, `file`, substring_index(file,'.',-1) AS `extension` FROM `song` WHERE `catalog` = ?;";
+        $db_results = Dba::read($sql, [$this->catalog_id]);
         while ($row = Dba::fetch_assoc($db_results)) {
             $file_target = ($row['id'] && $cache_target === $row['extension'])
                 ? Catalog::get_cache_path($row['id'], $this->catalog_id, $cache_path, $cache_target)
@@ -268,7 +268,7 @@ class Catalog_subsonic extends Catalog
     public function clean_catalog_proc(?Interactor $interactor = null): int
     {
         $this->_createClient();
-        if (!$this->subsonic) {
+        if (!$this->subsonic instanceof SubsonicClient) {
             return 0;
         }
 
@@ -355,7 +355,7 @@ class Catalog_subsonic extends Catalog
     public function get_remote_tags(Podcast_Episode|Video|Song $media): ?array
     {
         $this->_createClient();
-        if (!$this->subsonic) {
+        if (!$this->subsonic instanceof SubsonicClient) {
             return null;
         }
 
@@ -402,7 +402,7 @@ class Catalog_subsonic extends Catalog
     public function getRemoteStreamingUrl(Podcast_Episode|Video|Song $media, ?string $action = null): ?string
     {
         $this->_createClient();
-        if (!$this->subsonic) {
+        if (!$this->subsonic instanceof SubsonicClient) {
             return null;
         }
 
@@ -430,7 +430,7 @@ class Catalog_subsonic extends Catalog
     public function insertArt(array $data, ?int $song_Id): bool
     {
         $this->_createClient();
-        if (!$this->subsonic) {
+        if (!$this->subsonic instanceof SubsonicClient) {
             return false;
         }
 
@@ -553,7 +553,7 @@ class Catalog_subsonic extends Catalog
      */
     private function _gather_tags(array $song): ?array
     {
-        if (!$this->subsonic) {
+        if (!$this->subsonic instanceof SubsonicClient) {
             return null;
         }
 
@@ -589,8 +589,8 @@ class Catalog_subsonic extends Catalog
             $data['genre'] = explode(',', html_entity_decode((string) $song['genre']));
         }
 
-        $data['file']         = $song['path'];
-        $data['catalog']      = $this->catalog_id;
+        $data['file']    = $song['path'];
+        $data['catalog'] = $this->catalog_id;
 
         return $data;
     }
@@ -605,7 +605,7 @@ class Catalog_subsonic extends Catalog
         debug_event('subsonic.catalog', 'Updating remote catalog...', 5);
 
         $this->_createClient();
-        if (!$this->subsonic) {
+        if (!$this->subsonic instanceof SubsonicClient) {
             return 0;
         }
 

@@ -130,7 +130,7 @@ class UPnPDevice
         debug_event('upnpdevice', 'parseDescriptionUrl: ' . $descriptionUrl, 5);
 
         $curl = curl_init();
-        if (empty($descriptionUrl)) {
+        if ($descriptionUrl === '' || $descriptionUrl === '0') {
             return;
         }
 

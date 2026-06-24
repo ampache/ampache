@@ -237,12 +237,12 @@ final readonly class Play2Action implements ApplicationActionInterface
             $record_stats = false;
         }
 
-        $is_download   = ($action === 'download');
-        $maxbitrate    = 0;
-        $quality       = 0;
-        $resolution    = '';
-        $subtitle      = '';
-        $time          = time();
+        $is_download = ($action === 'download');
+        $maxbitrate  = 0;
+        $quality     = 0;
+        $resolution  = '';
+        $subtitle    = '';
+        $time        = time();
 
         if ($player_customize && !$original) {
             // Trick to avoid LimitInternalRecursion reconfiguration
@@ -723,7 +723,7 @@ final readonly class Play2Action implements ApplicationActionInterface
                 return null;
             }
 
-            $streamConfiguration = $streamConfiguration ?? $catalog?->prepare_media($media);
+            $streamConfiguration ??= $catalog?->prepare_media($media);
             if ($streamConfiguration === null) {
                 return null;
             }
@@ -1045,7 +1045,7 @@ final readonly class Play2Action implements ApplicationActionInterface
         }
 
         if (in_array($this->requestParser->getFromRequest('segment'), ['', '0'], true)) {
-            if ($media->time) {
+            if ($media->time !== 0) {
                 header('X-Content-Duration: ' . $media->time);
             }
 

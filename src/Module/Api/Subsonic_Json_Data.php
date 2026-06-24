@@ -823,7 +823,7 @@ class Subsonic_Json_Data
             /**
              * Strip smart_ from playlist id and compare to original
              * smartlist = 'smart_1'
-             * playlist  = 1000000
+             * playlist = 1000000
              */
             if ((int) $playlist_id === 0) {
                 $playlist = new Search((int) str_replace('smart_', '', (string) $playlist_id), 'song', $user);
@@ -1343,7 +1343,7 @@ class Subsonic_Json_Data
     {
         $json = ['song' => []];
         foreach ($songs as $song_id) {
-            $song   = new Song($song_id);
+            $song = new Song($song_id);
             if ($song->isNew() || !$song->enabled) {
                 continue;
             }
@@ -2752,7 +2752,7 @@ class Subsonic_Json_Data
                 'gain' => 0
             ];
         }
-        $index  = (((int) $status['track']) === 0)
+        $index = (((int) $status['track']) === 0)
             ? 0
             : $status['track'] - 1;
 
@@ -3029,8 +3029,8 @@ class Subsonic_Json_Data
                 $json['entry'][] = self::_getChildSong($song);
             }
         } elseif ($share->object_type == 'playlist') {
-            $playlist      = new Playlist($share->object_id);
-            $songs         = $playlist->get_songs();
+            $playlist = new Playlist($share->object_id);
+            $songs    = $playlist->get_songs();
             foreach ($songs as $song_id) {
                 $song = new Song($song_id);
                 if ($song->isNew() || !$song->enabled) {

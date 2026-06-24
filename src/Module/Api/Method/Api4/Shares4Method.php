@@ -47,7 +47,7 @@ final class Shares4Method
      *
      * filter = (string) Alpha-numeric search term //optional
      * offset = (integer) //optional
-     * limit  = (integer) //optional
+     * limit = (integer) //optional
      *
      * @param array{
      *     filter?: string,

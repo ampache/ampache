@@ -560,7 +560,7 @@ class Subsonic_Xml_Data
 
             return $xml;
         }
-        $index  = (((int) $status['track']) === 0)
+        $index = (((int) $status['track']) === 0)
             ? 0
             : $status['track'] - 1;
         $xjbox->addAttribute('currentIndex', (string) $index);
@@ -766,7 +766,7 @@ class Subsonic_Xml_Data
             /**
              * Strip smart_ from playlist id and compare to original
              * smartlist = 'smart_1'
-             * playlist  = 1000000
+             * playlist = 1000000
              */
             $playlist = ((int) $playlist_id === 0)
                 ? new Search((int) str_replace('smart_', '', (string) $playlist_id), 'song', $user)

@@ -49,7 +49,7 @@ final class Following6Method
      * Get users followed by the user
      * Error when user not found or no followers
      *
-     * filter   = (integer|string) filter by user id OR username //optional
+     * filter = (integer|string) filter by user id OR username //optional
      * username = (string) $username//optional
      *
      * @param array{

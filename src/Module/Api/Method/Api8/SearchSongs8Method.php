@@ -49,14 +49,14 @@ final class SearchSongs8Method
      * https://ampache.org/api/api-xml-methods
      * https://ampache.org/api/api-json-methods
      *
-     * operator        = (string) 'and', 'or' (whether to match one rule or all)
-     * rule_1          = (string)
+     * operator = (string) 'and', 'or' (whether to match one rule or all)
+     * rule_1 = (string)
      * rule_1_operator = (integer) 0|1|2|3|4|5|6
-     * filter          = (string) The string, date, integer you are searching for
-     * type            = (string) 'song', 'album', 'song_artist', 'album_artist', 'artist', 'label', 'playlist', 'podcast', 'podcast_episode', 'genre', 'user', 'video' (song by default) //optional
-     * random          = (boolean)  0, 1 (random order of results; default to 0) //optional
-     * offset          = (integer) //optional
-     * limit           = (integer) //optional
+     * filter = (string) The string, date, integer you are searching for
+     * type = (string) 'song', 'album', 'song_artist', 'album_artist', 'artist', 'label', 'playlist', 'podcast', 'podcast_episode', 'genre', 'user', 'video' (song by default) //optional
+     * random = (boolean)  0, 1 (random order of results; default to 0) //optional
+     * offset = (integer) //optional
+     * limit = (integer) //optional
      *
      * @param array{
      *     operator: string,

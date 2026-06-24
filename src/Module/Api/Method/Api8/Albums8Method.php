@@ -58,15 +58,15 @@ final class Albums8Method implements MethodInterface
      *
      * This returns albums based on the provided search filters
      *
-     *   filter  = (string) Alpha-numeric search term //optional
+     *   filter = (string) Alpha-numeric search term //optional
      *   include = (array|string) 'songs' //optional
-     *   exact   = (integer) 0,1, if true filter is exact rather then fuzzy //optional
-     *   add     = $browse->set_api_filter(date) //optional
-     *   update  = $browse->set_api_filter(date) //optional
-     *   offset  = (integer) //optional
-     *   limit   = (integer) //optional
-     *   cond    = (string) Apply additional filters to the browse using ';' separated comma string pairs (e.g. 'filter1,value1;filter2,value2') //optional
-     *   sort    = (string) sort name or comma separated key pair. Order default 'ASC' (e.g. 'name,ASC' and 'name' are the same) //optional
+     *   exact = (integer) 0,1, if true filter is exact rather then fuzzy //optional
+     *   add = $browse->set_api_filter(date) //optional
+     *   update = $browse->set_api_filter(date) //optional
+     *   offset = (integer) //optional
+     *   limit = (integer) //optional
+     *   cond = (string) Apply additional filters to the browse using ';' separated comma string pairs (e.g. 'filter1,value1;filter2,value2') //optional
+     *   sort = (string) sort name or comma separated key pair. Order default 'ASC' (e.g. 'name,ASC' and 'name' are the same) //optional
      *
      * @param array{
      *     filter?: string,

@@ -53,12 +53,12 @@ final class BookmarkEdit8Method
      *
      * Edit a placeholder for the current media that you can return to later.
      *
-     * filter   = (string) object_id
-     * type     = (string) object_type ('bookmark', 'song', 'video', 'podcast_episode')
+     * filter = (string) object_id
+     * type = (string) object_type ('bookmark', 'song', 'video', 'podcast_episode')
      * position = (integer) current track time in seconds
-     * client   = (string) Agent string //optional
-     * date     = (integer) UNIXTIME() //optional
-     * include  = (integer) 0,1, if true include the object in the bookmark //optional
+     * client = (string) Agent string //optional
+     * date = (integer) UNIXTIME() //optional
+     * include = (integer) 0,1, if true include the object in the bookmark //optional
      *
      * @param array{
      *     filter: string,

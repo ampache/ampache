@@ -1116,9 +1116,9 @@ class Album extends database_object implements
         } else {
             // run updates on the single fields
             if (!empty($name) && $name != $this->get_fullname()) {
-                $trimmed          = Catalog::trim_prefix(trim((string) $name));
-                $new_name         = $trimmed['string'];
-                $aPrefix          = $trimmed['prefix'];
+                $trimmed  = Catalog::trim_prefix(trim((string) $name));
+                $new_name = $trimmed['string'];
+                $aPrefix  = $trimmed['prefix'];
 
                 self::_update_field('name', $new_name, $this->id);
                 self::_update_field('prefix', $aPrefix, $this->id);

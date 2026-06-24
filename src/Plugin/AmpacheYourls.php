@@ -128,7 +128,7 @@ class AmpacheYourls extends AmpachePlugin implements PluginShortenerInterface
      */
     public function shortener(string $url): ?string
     {
-        if (empty($this->yourls_domain) || empty($this->yourls_api_key)) {
+        if (!isset($this->yourls_domain) || ($this->yourls_domain === '' || $this->yourls_domain === '0') || in_array($this->yourls_api_key, [null, '', '0'], true)) {
             debug_event('yourls.plugin', 'YOURLS domain or api key missing', 3);
 
             return null;

@@ -373,7 +373,7 @@ class VlcPlayer
      */
     private function xmltoarray(string $contents, int $get_attributes = 1, string $priority = 'attribute'): array
     {
-        if (!$contents) {
+        if ($contents === '' || $contents === '0') {
             return [];
         }
 
@@ -421,7 +421,7 @@ class VlcPlayer
             $attributes_data = [];
 
             if ($value !== null) {
-                if ($priority == 'tag') {
+                if ($priority === 'tag') {
                     $result = $value;
                 } else {
                     // Put the value in a assoc array if we are in the 'Attribute' mode
@@ -432,7 +432,7 @@ class VlcPlayer
             // Set the attributes too.
             if ($attributes !== null && $get_attributes) {
                 foreach ($attributes as $attr => $val) {
-                    if ($priority == 'tag') {
+                    if ($priority === 'tag') {
                         $attributes_data[$attr] = $val;
                     } else {
                         // Set all the attributes in a array called 'attr'
@@ -486,14 +486,14 @@ class VlcPlayer
                     //New Key
                     $current[$tag]                           = $result;
                     $repeated_tag_index[$tag . '_' . $level] = 1;
-                    if ($priority == 'tag' && $attributes_data) {
+                    if ($priority === 'tag' && $attributes_data) {
                         $current[$tag . '_attr'] = $attributes_data;
                     }
                 } elseif (isset($current[$tag][0]) && is_array($current[$tag])) {
                     // If it is already an array push the new element into that array.
                     $current[$tag][$repeated_tag_index[$tag . '_' . $level]] = $result;
 
-                    if ($priority == 'tag' && $get_attributes && $attributes_data) {
+                    if ($priority === 'tag' && $get_attributes && $attributes_data) {
                         $current[$tag][$repeated_tag_index[$tag . '_' . $level] . '_attr'] = $attributes_data;
                     }
 
@@ -505,7 +505,7 @@ class VlcPlayer
                         $result
                     ];
                     $repeated_tag_index[$tag . '_' . $level] = 1;
-                    if ($priority == 'tag' && $get_attributes) {
+                    if ($priority === 'tag' && $get_attributes) {
                         if (isset($current[$tag . '_attr'])) {
                             // The attribute of the last(0th) tag must be moved as well
                             $current[$tag]['0_attr'] = $current[$tag . '_attr'];

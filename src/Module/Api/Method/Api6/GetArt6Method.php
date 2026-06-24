@@ -50,10 +50,10 @@ final class GetArt6Method
      *
      * Get an art image.
      *
-     * id       = (string) $object_id
-     * type     = (string) 'song', 'artist', 'album', 'label', 'live_stream', 'playlist', 'podcast', 'search', 'smartlist', 'user', 'video'
+     * id = (string) $object_id
+     * type = (string) 'song', 'artist', 'album', 'label', 'live_stream', 'playlist', 'podcast', 'search', 'smartlist', 'user', 'video'
      * fallback = (integer) 0,1, if true return default art ('blankalbum.png') //optional
-     * size     = (string) width x height ('640x480', 'original') //optional
+     * size = (string) width x height ('640x480', 'original') //optional
      *
      * @param array{
      *     filter?: string,

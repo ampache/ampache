@@ -48,7 +48,7 @@ final class PodcastEpisodes5Method
      *
      * filter = (string) UID of podcast
      * offset = (integer) //optional
-     * limit  = (integer) //optional
+     * limit = (integer) //optional
      *
      * @param array{
      *     filter?: string,

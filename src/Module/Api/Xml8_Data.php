@@ -360,7 +360,7 @@ class Xml8_Data
     {
         $democratic = Democratic::get_current_playlist($user);
 
-        $string     = '';
+        $string = '';
         foreach ($object_ids as $row_id => $data) {
             $className = ObjectTypeToClassNameMapper::map($data['object_type']->value);
             /** @var Song $song */
@@ -641,7 +641,7 @@ class Xml8_Data
                         /**
                          * Strip smart_ from playlist id and compare to original
                          * smartlist = 'smart_1'
-                         * playlist  = 1000000
+                         * playlist = 1000000
                          */
                         if ((int) $object_id === 0) {
                             $playlist = new Search((int) str_replace('smart_', '', (string) $object_id), 'song', $user);
@@ -1175,7 +1175,7 @@ class Xml8_Data
             /**
              * Strip smart_ from playlist id and compare to original
              * smartlist = 'smart_1'
-             * playlist  = 1000000
+             * playlist = 1000000
              */
             if ((int) $playlist_id === 0) {
                 $playlist = new Search((int) str_replace('smart_', '', (string) $playlist_id), 'song', $user);

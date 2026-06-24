@@ -47,7 +47,7 @@ class AlbumSongs4Method
      *
      * filter = (string) UID of Album
      * offset = (integer) //optional
-     * limit  = (integer) //optional
+     * limit = (integer) //optional
      *
      * @param array{
      *     filter: string,

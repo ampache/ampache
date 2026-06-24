@@ -47,9 +47,9 @@ final class Labels5Method
      * This returns the labels based on the specified filter
      *
      * filter = (string) Alpha-numeric search term //optional
-     * exact  = (integer) 0,1, if true filter is exact rather then fuzzy //optional
+     * exact = (integer) 0,1, if true filter is exact rather then fuzzy //optional
      * offset = (integer) //optional
-     * limit  = (integer) //optional
+     * limit = (integer) //optional
      *
      * @param array{
      *     filter?: string,

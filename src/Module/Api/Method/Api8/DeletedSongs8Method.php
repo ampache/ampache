@@ -47,7 +47,7 @@ final class DeletedSongs8Method
      * Returns songs that have been deleted from the server
      *
      * offset = (integer) //optional
-     * limit  = (integer) //optional
+     * limit = (integer) //optional
      *
      * @param array{
      *     limit?: string,
