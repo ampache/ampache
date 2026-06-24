@@ -1548,7 +1548,12 @@ class Catalog_local extends Catalog
                     'File removed: ' . $file,
                     true
                 );
-                $dead[] = $oid;
+                $dead[] = (int) $oid;
+            } elseif ($count % 1000 == 0) {
+                $interactor?->info(
+                    'chunk progress: ' . $count . '/' . count($this->_filecache) . ' on ' . $this->name,
+                    true
+                );
             }
         }
 
