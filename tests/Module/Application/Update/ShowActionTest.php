@@ -41,19 +41,11 @@ use Psr\Http\Message\StreamInterface;
 
 class ShowActionTest extends MockeryTestCase
 {
-    /** @var GuiFactoryInterface|MockInterface|null */
-    private ?MockInterface $guiFactory;
-
-    /** @var ResponseFactoryInterface|MockInterface|null */
-    private ?MockInterface $responseFactory;
-
-    /** @var StreamFactoryInterface|MockInterface|null */
-    private ?MockInterface $streamFactory;
-
+    private GuiFactoryInterface|MockInterface|null $guiFactory;
+    private ResponseFactoryInterface|MockInterface|null $responseFactory;
+    private StreamFactoryInterface|MockInterface|null $streamFactory;
     private ?ShowAction $subject;
-
-    /** @var TalFactoryInterface|MockInterface|null */
-    private ?MockInterface $talFactory;
+    private TalFactoryInterface|MockInterface|null $talFactory;
 
     public function testRunReturnsRenderedResponse(): void
     {

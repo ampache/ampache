@@ -35,12 +35,8 @@ use Psr\Log\LoggerInterface;
 
 class UserActivityPosterTest extends MockeryTestCase
 {
-    /** @var MockInterface|ActivityTypeHandlerMapperInterface|null */
-    private MockInterface $activityTypeHandlerMapper;
-
-    /** @var LoggerInterface|MockInterface|null */
-    private MockInterface $logger;
-
+    private MockInterface|ActivityTypeHandlerMapperInterface|null $activityTypeHandlerMapper;
+    private LoggerInterface|MockInterface|null $logger;
     private ?UserActivityPoster $subject;
 
     public function testPostRegistersAction(): void

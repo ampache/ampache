@@ -37,13 +37,9 @@ use Psr\Log\LoggerInterface;
 
 class UserKeyGeneratorTest extends MockeryTestCase
 {
-    /** @var LoggerInterface|MockInterface|null */
-    private MockInterface $logger;
-
+    private LoggerInterface|MockInterface|null $logger;
     private ?UserKeyGenerator $subject;
-
-    /** @var UserRepositoryInterface|MockInterface|null */
-    private MockInterface $userRepository;
+    private UserRepositoryInterface|MockInterface|null $userRepository;
 
     public function testGenerateApiKeyGeneratesAndSetsNewKey(): void
     {

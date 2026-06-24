@@ -55,10 +55,10 @@ class AmpacheMatomo extends AmpachePlugin implements PluginDisplayOnFooterInterf
     #[Override]
     public string $version = '000001';
 
-    private $matomo_url;
+    private string $matomo_url;
 
     // These are internal settings used by this class, run this->load to fill them out
-    private $site_id;
+    private string $site_id;
 
     /**
      * Constructor

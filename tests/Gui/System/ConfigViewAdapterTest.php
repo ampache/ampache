@@ -33,9 +33,7 @@ use Override;
 
 class ConfigViewAdapterTest extends MockeryTestCase
 {
-    /** @var MockInterface|ConfigContainerInterface|null */
-    private MockInterface $configContainer;
-
+    private MockInterface|ConfigContainerInterface|null $configContainer;
     private ConfigViewAdapter $subject;
 
     public function testIsDirectplayEnabled(): void

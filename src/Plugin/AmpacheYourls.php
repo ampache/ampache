@@ -56,11 +56,11 @@ class AmpacheYourls extends AmpachePlugin implements PluginShortenerInterface
     #[Override]
     public string $version = '000002';
 
-    private $yourls_api_key;
+    private ?string $yourls_api_key = null;
 
     // These are internal settings used by this class, run this->load to fill them out
-    private $yourls_domain;
-    private $yourls_use_idn;
+    private string $yourls_domain;
+    private bool $yourls_use_idn;
 
     /**
      * Constructor

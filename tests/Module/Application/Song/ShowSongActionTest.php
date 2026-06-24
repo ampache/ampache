@@ -43,22 +43,12 @@ use Psr\Log\LoggerInterface;
 
 class ShowSongActionTest extends MockeryTestCase
 {
-    /** @var GuiFactoryInterface|MockInterface|null */
-    private MockInterface $guiFactory;
-
-    /** @var LoggerInterface|MockInterface|null */
-    private MockInterface $logger;
-
-    /** @var ModelFactoryInterface|MockInterface|null */
-    private MockInterface $modelFactory;
-
+    private GuiFactoryInterface|MockInterface|null $guiFactory;
+    private LoggerInterface|MockInterface|null $logger;
+    private ModelFactoryInterface|MockInterface|null $modelFactory;
     private ShowSongAction $subject;
-
-    /** @var MockInterface|TalFactoryInterface|null */
-    private MockInterface $talFactory;
-
-    /** @var UiInterface|MockInterface|null */
-    private MockInterface $ui;
+    private MockInterface|TalFactoryInterface|null $talFactory;
+    private UiInterface|MockInterface|null $ui;
 
     public function testRunEchoesErrorIfSongDoesNotExist(): void
     {

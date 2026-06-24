@@ -60,7 +60,7 @@ class AmpacheLastfm extends AmpachePlugin implements PluginSaveMediaplayInterfac
     public string $version   = '000005';
 
     private string $api_host = 'ws.audioscrobbler.com';
-    private $challenge;
+    private ?string $challenge;
     private string $host    = 'www.last.fm';
     private string $scheme  = 'http';
     private ?string $secret = null;

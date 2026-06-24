@@ -32,9 +32,7 @@ use Override;
 
 class AjaxUriRetrieverTest extends MockeryTestCase
 {
-    /** @var MockInterface|ConfigContainerInterface|null */
-    private MockInterface $configContainer;
-
+    private MockInterface|ConfigContainerInterface|null $configContainer;
     private AjaxUriRetriever $subject;
 
     public function testGetAjaxServerUriReturnsValue(): void

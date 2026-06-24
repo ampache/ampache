@@ -35,16 +35,10 @@ use Override;
 
 class StatsViewAdapterTest extends MockeryTestCase
 {
-    /** @var ConfigContainerInterface|MockInterface|null */
-    private ?MockInterface $configContainer;
-
-    /** @var GuiFactoryInterface|MockInterface|null */
-    private ?MockInterface $guiFactory;
-
+    private ConfigContainerInterface|MockInterface|null $configContainer;
+    private GuiFactoryInterface|MockInterface|null $guiFactory;
     private ?StatsViewAdapter $subject;
-
-    /** @var MockInterface|VideoRepositoryInterface|null */
-    private ?MockInterface $videoRepository;
+    private MockInterface|VideoRepositoryInterface|null $videoRepository;
 
     public function testDisplayPodcastReturnsValue(): void
     {

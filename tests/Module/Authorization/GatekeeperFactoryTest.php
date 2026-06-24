@@ -32,9 +32,7 @@ use Override;
 
 class GatekeeperFactoryTest extends MockeryTestCase
 {
-    /** @var MockInterface|PrivilegeCheckerInterface|null */
-    private MockInterface $privilegeChecker;
-
+    private MockInterface|PrivilegeCheckerInterface|null $privilegeChecker;
     private ?GatekeeperFactory $subject;
 
     public function testCreateGuiGatekeeperReturnsInstance(): void

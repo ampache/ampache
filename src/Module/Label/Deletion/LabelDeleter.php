@@ -39,7 +39,7 @@ final readonly class LabelDeleter implements LabelDeleterInterface
     public function __construct(
         private ShoutRepositoryInterface $shoutRepository,
         private LabelRepositoryInterface $labelRepository,
-        private UserActivityRepositoryInterface $useractivityRepository,
+        private UserActivityRepositoryInterface $userActivityRepository,
         private ArtCleanupInterface $artCleanup,
         private FolderRepositoryInterface $folderRepository,
     ) {}
@@ -54,7 +54,7 @@ final readonly class LabelDeleter implements LabelDeleterInterface
         Userflag::garbage_collection('label', $labelId);
         Rating::garbage_collection('label', $labelId);
         $this->shoutRepository->collectGarbage('label', $labelId);
-        $this->useractivityRepository->collectGarbage('label', $labelId);
+        $this->userActivityRepository->collectGarbage('label', $labelId);
         $this->folderRepository->collectGarbage();
     }
 }

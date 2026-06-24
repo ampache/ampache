@@ -47,7 +47,7 @@ final readonly class ShowUserAction implements ApplicationActionInterface
         private UiInterface $ui,
         private LoggerInterface $logger,
         private ModelFactoryInterface $modelFactory,
-        private UserActivityRepositoryInterface $useractivityRepository,
+        private UserActivityRepositoryInterface $userActivityRepository,
         private UserActivityRendererInterface $userActivityRenderer,
         private UserFollowerRepositoryInterface $userFollowerRepository,
         private UserFollowStateRendererInterface $userFollowStateRenderer,
@@ -76,7 +76,7 @@ final readonly class ShowUserAction implements ApplicationActionInterface
                 'show_user.inc.php',
                 [
                     'client' => $client,
-                    'activities' => $this->useractivityRepository->getActivities($userId),
+                    'activities' => $this->userActivityRepository->getActivities($userId),
                     'followers' => $this->userFollowerRepository->getFollowers($client),
                     'following' => $this->userFollowerRepository->getFollowing($client),
                     'userFollowStateRenderer' => $this->userFollowStateRenderer,

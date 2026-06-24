@@ -37,12 +37,8 @@ use Psr\Http\Message\ServerRequestInterface;
 
 class RefreshPlaylistMediasActionTest extends MockeryTestCase
 {
-    /** @var MockInterface|ModelFactoryInterface|null */
-    private MockInterface $modelFactory;
-
-    /** @var MockInterface|RequestParserInterface|null */
-    private MockInterface $requestParser;
-
+    private MockInterface|ModelFactoryInterface|null $modelFactory;
+    private MockInterface|RequestParserInterface|null $requestParser;
     private ?RefreshPlaylistMediasAction $subject;
 
     public function testRunRendersAndReturnsNull(): void

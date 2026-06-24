@@ -36,13 +36,9 @@ use Psr\Http\Message\ServerRequestInterface;
 
 class DeleteActionTest extends MockeryTestCase
 {
-    /** @var ConfigContainerInterface|MockInterface|null */
-    private MockInterface $configContainer;
-
+    private ConfigContainerInterface|MockInterface|null $configContainer;
     private ?DeleteAction $subject;
-
-    /** @var UiInterface|MockInterface|null */
-    private MockInterface $ui;
+    private UiInterface|MockInterface|null $ui;
 
     public function testRunDoesNothingInDemoMode(): void
     {

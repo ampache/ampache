@@ -37,13 +37,9 @@ use Psr\Http\Message\ServerRequestInterface;
 
 class UpdatePlaylistActionTest extends MockeryTestCase
 {
-    /** @var ModelFactoryInterface|MockInterface */
-    private MockInterface $modelFactory;
-
+    private ModelFactoryInterface|MockInterface $modelFactory;
     private UpdatePlaylistAction $subject;
-
-    /** @var UiInterface|MockInterface */
-    private MockInterface $ui;
+    private UiInterface|MockInterface $ui;
 
     public function testRunThrowsExceptionIfAccessDenied(): void
     {

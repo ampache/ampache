@@ -44,19 +44,11 @@ use Slim\ResponseEmitter;
 
 class ApplicationRunnerTest extends MockeryTestCase
 {
-    /** @var ContainerInterface|MockInterface|null */
-    private ?MockInterface $dic;
-
-    /** @var GatekeeperFactoryInterface|MockInterface|null */
-    private ?MockInterface $gatekeeperFactory;
-
-    /** @var LoggerInterface|MockInterface|null */
-    private ?MockInterface $logger;
-
+    private ContainerInterface|MockInterface|null $dic;
+    private GatekeeperFactoryInterface|MockInterface|null $gatekeeperFactory;
+    private LoggerInterface|MockInterface|null $logger;
     private ApplicationRunner $subject;
-
-    /** @var MockInterface|UiInterface|null  */
-    private ?MockInterface $ui;
+    private MockInterface|UiInterface|null $ui;
 
     public function testRunCatchesDeniedException(): void
     {

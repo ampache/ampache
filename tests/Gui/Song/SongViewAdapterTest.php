@@ -41,18 +41,10 @@ use Override;
 
 class SongViewAdapterTest extends MockeryTestCase
 {
-    /** @var ConfigContainerInterface|MockInterface|null */
-    private MockInterface $configContainer;
-
-    /** @var MockInterface|GuiGatekeeperInterface|null */
-    private ?MockInterface $gatekeeper;
-
-    /** @var ModelFactoryInterface|MockInterface|null */
-    private MockInterface $modelFactory;
-
-    /** @var Song|MockInterface|null */
-    private MockInterface $song;
-
+    private ConfigContainerInterface|MockInterface|null $configContainer;
+    private MockInterface|GuiGatekeeperInterface|null $gatekeeper;
+    private ModelFactoryInterface|MockInterface|null $modelFactory;
+    private Song|MockInterface|null $song;
     private SongViewAdapter $subject;
 
     public function testCanBeReorderedReturnsValues(): void

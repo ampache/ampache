@@ -39,16 +39,10 @@ use Psr\Http\Message\ServerRequestInterface;
 
 class UpdateFromTagsActionTest extends MockeryTestCase
 {
-    /** @var ConfigContainerInterface|MockInterface|null */
-    private MockInterface $configContainer;
-
-    /** @var ModelFactoryInterface|MockInterface|null */
-    private MockInterface $modelFactory;
-
+    private ConfigContainerInterface|MockInterface|null $configContainer;
+    private ModelFactoryInterface|MockInterface|null $modelFactory;
     private ?UpdateFromTagsAction $subject;
-
-    /** @var UiInterface|MockInterface|null */
-    private MockInterface $ui;
+    private UiInterface|MockInterface|null $ui;
 
     public function testRunRenders(): void
     {

@@ -58,7 +58,7 @@ final readonly class CatalogGarbageCollector implements CatalogGarbageCollectorI
         private AlbumRepositoryInterface $albumRepository,
         private BookmarkRepositoryInterface $bookmarkRepository,
         private ShoutRepositoryInterface $shoutRepository,
-        private UserActivityRepositoryInterface $useractivityRepository,
+        private UserActivityRepositoryInterface $userActivityRepository,
         private UserRepositoryInterface $userRepository,
         private MetadataManagerInterface $metadataManager,
         private PodcastEpisodeRepositoryInterface $podcastEpisodeRepository,
@@ -83,7 +83,7 @@ final readonly class CatalogGarbageCollector implements CatalogGarbageCollectorI
         Userflag::garbage_collection();
         $this->labelRepository->collectGarbage();
         Recommendation::garbage_collection();
-        $this->useractivityRepository->collectGarbage();
+        $this->userActivityRepository->collectGarbage();
         $this->userRepository->collectGarbage();
         Playlist::garbage_collection();
         $this->shoutRepository->collectGarbage();

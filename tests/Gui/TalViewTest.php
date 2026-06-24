@@ -36,16 +36,10 @@ use PhpTal\TranslationServiceInterface;
 
 class TalViewTest extends MockeryTestCase
 {
-    /** @var MockInterface|ConfigContainerInterface|null */
-    private MockInterface $configContainer;
-
-    /** @var MockInterface|GuiFactoryInterface|null */
-    private MockInterface $guiFactory;
-
+    private MockInterface|ConfigContainerInterface|null $configContainer;
+    private MockInterface|GuiFactoryInterface|null $guiFactory;
     private TalView $subject;
-
-    /** @var MockInterface|TalFactoryInterface|null */
-    private MockInterface $talFactory;
+    private MockInterface|TalFactoryInterface|null $talFactory;
 
     public function testRenderRenders(): void
     {

@@ -39,16 +39,10 @@ use Psr\Http\Message\ServerRequestInterface;
 
 class ResetDbCharsetActionTest extends MockeryTestCase
 {
-    /** @var ConfigContainerInterface|MockInterface|null */
-    private MockInterface $configContainer;
-
-    /** @var DatabaseCharsetUpdaterInterface|MockInterface|null */
-    private MockInterface $databaseCharsetUpdater;
-
+    private ConfigContainerInterface|MockInterface|null $configContainer;
+    private DatabaseCharsetUpdaterInterface|MockInterface|null $databaseCharsetUpdater;
     private ?ResetDbCharsetAction $subject;
-
-    /** @var UiInterface|MockInterface|null */
-    private MockInterface $ui;
+    private UiInterface|MockInterface|null $ui;
 
     public function testRunThrowsExceptionIfAccessIsDenied(): void
     {
