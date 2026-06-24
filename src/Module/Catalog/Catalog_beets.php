@@ -39,7 +39,6 @@ use Override;
  */
 class Catalog_beets extends Catalog
 {
-    public int $catalog_id;
     protected string $beetsdb = '';
 
     #[Override]

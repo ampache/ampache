@@ -45,7 +45,6 @@ class Catalog_subsonic extends Catalog
     public string $password;
     public string $uri = '';
     public string $username;
-    private int $catalog_id;
     private string $description       = 'Subsonic Remote Catalog';
     private ?SubsonicClient $subsonic = null;
     private string $type              = 'subsonic';
@@ -65,8 +64,6 @@ class Catalog_subsonic extends Catalog
                     $this->$key = $value;
                 }
             }
-
-            $this->catalog_id = (int) $catalog_id;
         }
     }
 
@@ -165,10 +162,10 @@ class Catalog_subsonic extends Catalog
         }
 
         $sql        = "SELECT `id`, `file`, substring_index(file,'.',-1) AS `extension` FROM `song` WHERE `catalog` = ?;";
-        $db_results = Dba::read($sql, [$this->catalog_id]);
+        $db_results = Dba::read($sql, [$this->getId()]);
         while ($row = Dba::fetch_assoc($db_results)) {
             $file_target = ($row['id'] && $cache_target === $row['extension'])
-                ? Catalog::get_cache_path($row['id'], $this->catalog_id, $cache_path, $cache_target)
+                ? Catalog::get_cache_path($row['id'], $this->getId(), $cache_path, $cache_target)
                 : null;
             if (in_array($file_target, [null, '', '0'], true)) {
                 debug_event('subsonic.catalog', 'Cache error: no target for ' . $row['id'], 5);
@@ -177,7 +174,7 @@ class Catalog_subsonic extends Catalog
 
             $file_exists = is_file($file_target);
             if (!$file_exists || Core::get_filesize($file_target) === 0) {
-                $old_target_file = rtrim(trim($cache_path), '/') . '/' . $this->catalog_id . '/' . $row['id'] . '.' . $cache_target;
+                $old_target_file = rtrim(trim($cache_path), '/') . '/' . $this->getId() . '/' . $row['id'] . '.' . $cache_target;
                 $old_file_exists = is_file($old_target_file);
                 if ($old_file_exists) {
                     // check for the old path first
@@ -246,7 +243,7 @@ class Catalog_subsonic extends Catalog
             $db_results = Dba::read($sql, [$this->uri . '/rest/stream.view?id=' . $remote_id . '&filename=' . urlencode($db_file)]);
             if ($results = Dba::fetch_assoc($db_results)) {
                 Dba::write('UPDATE `song` SET `file` = ? WHERE `id` = ?', [$db_file, $results['id']]);
-                Song::update_song_map([$remote_id], 'subsonic_' . $this->catalog_id, (int) $results['id']);
+                Song::update_song_map([$remote_id], 'subsonic_' . $this->getId(), (int) $results['id']);
 
                 return (int) $results['id'];
             }
@@ -277,7 +274,7 @@ class Catalog_subsonic extends Catalog
         $dead = 0;
 
         $sql        = 'SELECT `id`, `file` FROM `song` WHERE `catalog` = ?';
-        $db_results = Dba::read($sql, [$this->catalog_id]);
+        $db_results = Dba::read($sql, [$this->getId()]);
         while ($row = Dba::fetch_assoc($db_results)) {
             debug_event('subsonic.catalog', 'Starting work on ' . $row['file'] . ' (' . $row['id'] . ')', 5);
             $remove = false;
@@ -363,7 +360,7 @@ class Catalog_subsonic extends Catalog
 
         $remote_id = ($media->file && filter_var($media->file, FILTER_VALIDATE_URL))
             ? preg_replace('/^.*[?&]id=([^&]+).*$/', '$1', html_entity_decode($media->file))
-            : Song::get_song_map_object_id($media->getId(), 'remote_' . $this->catalog_id);
+            : Song::get_song_map_object_id($media->getId(), 'remote_' . $this->getId());
         if (!$remote_id) {
             return null;
         }
@@ -412,7 +409,7 @@ class Catalog_subsonic extends Catalog
             return $this->subsonic->parameterize($media->file . '&');
         }
 
-        $remote_id = Song::get_song_map_object_id($media->id, 'subsonic_' . $this->catalog_id);
+        $remote_id = Song::get_song_map_object_id($media->id, 'subsonic_' . $this->getId());
         if (!in_array($remote_id, [null, '', '0'], true) && $media->file !== null) {
             $action = ($action === 'download')
                 ? 'download'
@@ -592,7 +589,7 @@ class Catalog_subsonic extends Catalog
         }
 
         $data['file']    = $song['path'];
-        $data['catalog'] = $this->catalog_id;
+        $data['catalog'] = $this->getId();
 
         return $data;
     }
@@ -665,8 +662,8 @@ class Catalog_subsonic extends Catalog
                                     && $existing_song
                                 ) {
                                     debug_event('subsonic.catalog', 'Skipping existing song ' . $song_id_check, 5);
-                                    if (Song::get_song_map_object_id($song_id_check, 'subsonic_' . $this->catalog_id) !== $remote_id) {
-                                        Song::update_song_map([$remote_id], 'subsonic_' . $this->catalog_id, $song_id_check);
+                                    if (Song::get_song_map_object_id($song_id_check, 'subsonic_' . $this->getId()) !== $remote_id) {
+                                        Song::update_song_map([$remote_id], 'subsonic_' . $this->getId(), $song_id_check);
                                     }
 
                                     continue;
@@ -716,8 +713,8 @@ class Catalog_subsonic extends Catalog
                                 }
 
                                 // Update the remote id for streaming / lookup
-                                if ($song_id !== 0 && Song::get_song_map_object_id($song_id, 'subsonic_' . $this->catalog_id) !== $remote_id) {
-                                    Song::update_song_map([$remote_id], 'subsonic_' . $this->catalog_id, $song_id);
+                                if ($song_id !== 0 && Song::get_song_map_object_id($song_id, 'subsonic_' . $this->getId()) !== $remote_id) {
+                                    Song::update_song_map([$remote_id], 'subsonic_' . $this->getId(), $song_id);
                                 }
                             }
                         }

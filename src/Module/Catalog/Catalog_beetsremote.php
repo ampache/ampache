@@ -37,8 +37,6 @@ use Override;
  */
 class Catalog_beetsremote extends Catalog
 {
-    public int $catalog_id;
-
     #[Override]
     protected string $description = 'Beets Remote Catalog';
 
