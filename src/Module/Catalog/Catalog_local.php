@@ -970,7 +970,7 @@ class Catalog_local extends Catalog
      */
     public function clean_file(string $file, string $media_type = 'song'): bool
     {
-        $file_info = Core::get_filesize(Core::conv_lc_file($file));
+        $file_info = (!is_file($file)) ? 0 : filesize(Core::conv_lc_file($file));
         if ($file_info < 1) {
             $object_id = Catalog::get_id_from_file($file, $media_type);
             debug_event('local.catalog', 'clean_file: {' . $object_id . '} File not found or empty ' . $file, 5);
@@ -1503,8 +1503,8 @@ class Catalog_local extends Catalog
         $db_results = Dba::read($sql, [$this->getId()]);
 
         while ($results = Dba::fetch_assoc($db_results)) {
-            $file_info = Core::get_filesize(Core::conv_lc_file($results['file']));
-            if ($file_info < 1) {
+            $file_info = filesize(Core::conv_lc_file($results['file']));
+            if ($file_info === false || $file_info < 1) {
                 $interactor?->info(
                     'File not found or empty: ' . $results['file'],
                     true
