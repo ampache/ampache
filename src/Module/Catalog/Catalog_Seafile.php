@@ -52,10 +52,10 @@ class Catalog_Seafile extends Catalog
     private static string $version     = '000001';
     public string $library_name;
     public string $server_uri;
-    private int $api_call_delay = 250;
-    private ?string $api_key    = null;
-    private int $catalog_id     = 0;
-    private int $count          = 0;
+    private ?int $api_call_delay = null;
+    private ?string $api_key     = null;
+    private int $catalog_id      = 0;
+    private int $count           = 0;
     private SeafileAdapter $seafile;
 
     /**
@@ -66,17 +66,19 @@ class Catalog_Seafile extends Catalog
     public function __construct(?int $catalog_id = null)
     {
         if ($catalog_id) {
-            $this->id = (int) $catalog_id;
+            $this->id = $catalog_id;
             $info     = $this->get_info($catalog_id, static::DB_TABLENAME);
             foreach ($info as $key => $value) {
-                $this->$key = $value;
+                if (property_exists($this, $key)) {
+                    $this->$key = $value;
+                }
             }
 
             $this->seafile = new SeafileAdapter(
-                $info['server_uri'],
-                $info['library_name'],
-                $info['api_call_delay'],
-                $info['api_key']
+                $this->server_uri,
+                $this->library_name,
+                $this->api_call_delay,
+                $this->api_key
             );
         }
     }
@@ -98,7 +100,7 @@ class Catalog_Seafile extends Catalog
     {
         $server_uri     = rtrim(trim($data['server_uri'] ?? ''), '/');
         $library_name   = trim($data['library_name'] ?? '');
-        $api_call_delay = trim((string) ($data['api_call_delay'] ?? ''));
+        $api_call_delay = isset($data['api_call_delay']) ? (int) $data['api_call_delay'] : null;
         $username       = trim($data['username'] ?? '');
         $password       = trim($data['password'] ?? '');
 
@@ -672,7 +674,7 @@ class Catalog_Seafile extends Catalog
      *
      * Insert a song that isn't already in the database.
      */
-    private function insert_song($file): ?int
+    private function insert_song(DirectoryItem $file): ?int
     {
         if ($this->check_remote_song($this->seafile->to_virtual_path($file))) {
             debug_event('seafile_catalog', 'Skipping existing song ' . $file->name, 5);

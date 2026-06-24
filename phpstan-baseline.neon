@@ -1321,14 +1321,8 @@ parameters:
 			path: src/Module/Broadcast/Broadcast_Server.php
 
 		-
-			message: '#^Property Ampache\\Module\\Broadcast\\Broadcast_Server\:\:\$verbose has no type specified\.$#'
-			identifier: missingType.property
-			count: 1
-			path: src/Module/Broadcast/Broadcast_Server.php
-
-		-
-			message: '#^Method Ampache\\Module\\Catalog\\Catalog_Seafile\:\:insert_song\(\) has parameter \$file with no type specified\.$#'
-			identifier: missingType.parameter
+			message: '#^Property Ampache\\Module\\Catalog\\Catalog_Seafile\:\:\$catalog_id is never read, only written\.$#'
+			identifier: property.onlyWritten
 			count: 1
 			path: src/Module/Catalog/Catalog_Seafile.php
 
@@ -1347,6 +1341,12 @@ parameters:
 		-
 			message: '#^Parameter \#2 \$offset of function substr expects int, int\<1, max\>\|false given\.$#'
 			identifier: argument.type
+			count: 1
+			path: src/Module/Catalog/Catalog_dropbox.php
+
+		-
+			message: '#^Property Ampache\\Module\\Catalog\\Catalog_dropbox\:\:\$catalog_id is never read, only written\.$#'
+			identifier: property.onlyWritten
 			count: 1
 			path: src/Module/Catalog/Catalog_dropbox.php
 
@@ -1495,12 +1495,6 @@ parameters:
 			path: src/Module/Playback/Localplay/Mpd/mpd.php
 
 		-
-			message: '#^Method Ampache\\Module\\Playback\\Localplay\\Mpd\\mpd\:\:_computeVersionValue\(\) never returns float so it can be removed from the return type\.$#'
-			identifier: return.unusedType
-			count: 1
-			path: src/Module/Playback/Localplay/Mpd/mpd.php
-
-		-
 			message: '#^Method Ampache\\Module\\Playback\\Localplay\\Mpd\\mpd\:\:_parseResponse\(\) has parameter \$response with no type specified\.$#'
 			identifier: missingType.parameter
 			count: 1
@@ -1543,37 +1537,7 @@ parameters:
 			path: src/Module/Playback/Localplay/Mpd/mpd.php
 
 		-
-			message: '#^Property Ampache\\Module\\Playback\\Localplay\\Mpd\\mpd\:\:\$err_str has no type specified\.$#'
-			identifier: missingType.property
-			count: 1
-			path: src/Module/Playback/Localplay/Mpd/mpd.php
-
-		-
-			message: '#^Property Ampache\\Module\\Playback\\Localplay\\Mpd\\mpd\:\:\$host has no type specified\.$#'
-			identifier: missingType.property
-			count: 1
-			path: src/Module/Playback/Localplay/Mpd/mpd.php
-
-		-
-			message: '#^Property Ampache\\Module\\Playback\\Localplay\\Mpd\\mpd\:\:\$mpd_class_version has no type specified\.$#'
-			identifier: missingType.property
-			count: 1
-			path: src/Module/Playback/Localplay/Mpd/mpd.php
-
-		-
-			message: '#^Property Ampache\\Module\\Playback\\Localplay\\Mpd\\mpd\:\:\$mpd_version has no type specified\.$#'
-			identifier: missingType.property
-			count: 1
-			path: src/Module/Playback/Localplay/Mpd/mpd.php
-
-		-
 			message: '#^Property Ampache\\Module\\Playback\\Localplay\\Mpd\\mpd\:\:\$playlist has no type specified\.$#'
-			identifier: missingType.property
-			count: 1
-			path: src/Module/Playback/Localplay/Mpd/mpd.php
-
-		-
-			message: '#^Property Ampache\\Module\\Playback\\Localplay\\Mpd\\mpd\:\:\$port has no type specified\.$#'
 			identifier: missingType.property
 			count: 1
 			path: src/Module/Playback/Localplay/Mpd/mpd.php
@@ -1705,18 +1669,6 @@ parameters:
 			path: src/Module/Playback/Localplay/Xbmc/AmpacheXbmc.php
 
 		-
-			message: '#^Property Ampache\\Module\\Playback\\Localplay\\Xbmc\\AmpacheXbmc\:\:\$_playerId has no type specified\.$#'
-			identifier: missingType.property
-			count: 1
-			path: src/Module/Playback/Localplay/Xbmc/AmpacheXbmc.php
-
-		-
-			message: '#^Property Ampache\\Module\\Playback\\Localplay\\Xbmc\\AmpacheXbmc\:\:\$_playlistId has no type specified\.$#'
-			identifier: missingType.property
-			count: 1
-			path: src/Module/Playback/Localplay/Xbmc/AmpacheXbmc.php
-
-		-
 			message: '#^Property Ampache\\Module\\Playback\\Localplay\\Xbmc\\AmpacheXbmc\:\:\$_xbmc has no type specified\.$#'
 			identifier: missingType.property
 			count: 1
@@ -1753,12 +1705,6 @@ parameters:
 			path: src/Module/Playback/Stream.php
 
 		-
-			message: '#^Property Ampache\\Module\\Playback\\Stream_Url\:\:\$properties has no type specified\.$#'
-			identifier: missingType.property
-			count: 1
-			path: src/Module/Playback/Stream_Url.php
-
-		-
 			message: '#^Method Ampache\\Module\\Song\\Tag\\SongTagWriter\:\:getId3Metadata\(\) return type has no value type specified in iterable type array\.$#'
 			identifier: missingType.iterableValue
 			count: 1
@@ -1775,18 +1721,6 @@ parameters:
 			identifier: missingType.iterableValue
 			count: 1
 			path: src/Module/Song/Tag/SongTagWriter.php
-
-		-
-			message: '#^Property Ampache\\Module\\System\\AmpError\:\:\$errors has no type specified\.$#'
-			identifier: missingType.property
-			count: 1
-			path: src/Module/System/AmpError.php
-
-		-
-			message: '#^Property Ampache\\Module\\System\\AmpError\:\:\$state has no type specified\.$#'
-			identifier: missingType.property
-			count: 1
-			path: src/Module/System/AmpError.php
 
 		-
 			message: '#^Argument of an invalid type object supplied for foreach, only iterables are supported\.$#'
@@ -1845,18 +1779,6 @@ parameters:
 		-
 			message: '#^Method Ampache\\Module\\System\\Dba\:\:write\(\) has parameter \$params with no value type specified in iterable type array\.$#'
 			identifier: missingType.iterableValue
-			count: 1
-			path: src/Module/System/Dba.php
-
-		-
-			message: '#^Property Ampache\\Module\\System\\Dba\:\:\$_sql has no type specified\.$#'
-			identifier: missingType.property
-			count: 1
-			path: src/Module/System/Dba.php
-
-		-
-			message: '#^Property Ampache\\Module\\System\\Dba\:\:\$stats has no type specified\.$#'
-			identifier: missingType.property
 			count: 1
 			path: src/Module/System/Dba.php
 
@@ -2041,12 +1963,6 @@ parameters:
 			path: src/Module/Util/AmazonSearch.php
 
 		-
-			message: '#^Property Ampache\\Module\\Util\\AmazonSearch\:\:\$_currentPage has no type specified\.$#'
-			identifier: missingType.property
-			count: 1
-			path: src/Module/Util/AmazonSearch.php
-
-		-
 			message: '#^Property Ampache\\Module\\Util\\AmazonSearch\:\:\$_currentTag has no type specified\.$#'
 			identifier: missingType.property
 			count: 1
@@ -2059,49 +1975,7 @@ parameters:
 			path: src/Module/Util/AmazonSearch.php
 
 		-
-			message: '#^Property Ampache\\Module\\Util\\AmazonSearch\:\:\$_default_results_pages has no type specified\.$#'
-			identifier: missingType.property
-			count: 1
-			path: src/Module/Util/AmazonSearch.php
-
-		-
-			message: '#^Property Ampache\\Module\\Util\\AmazonSearch\:\:\$_grabtags has no type specified\.$#'
-			identifier: missingType.property
-			count: 1
-			path: src/Module/Util/AmazonSearch.php
-
-		-
-			message: '#^Property Ampache\\Module\\Util\\AmazonSearch\:\:\$_maxPage has no type specified\.$#'
-			identifier: missingType.property
-			count: 1
-			path: src/Module/Util/AmazonSearch.php
-
-		-
 			message: '#^Property Ampache\\Module\\Util\\AmazonSearch\:\:\$_parser has no type specified\.$#'
-			identifier: missingType.property
-			count: 1
-			path: src/Module/Util/AmazonSearch.php
-
-		-
-			message: '#^Property Ampache\\Module\\Util\\AmazonSearch\:\:\$_proxy_host has no type specified\.$#'
-			identifier: missingType.property
-			count: 1
-			path: src/Module/Util/AmazonSearch.php
-
-		-
-			message: '#^Property Ampache\\Module\\Util\\AmazonSearch\:\:\$_proxy_pass has no type specified\.$#'
-			identifier: missingType.property
-			count: 1
-			path: src/Module/Util/AmazonSearch.php
-
-		-
-			message: '#^Property Ampache\\Module\\Util\\AmazonSearch\:\:\$_proxy_port has no type specified\.$#'
-			identifier: missingType.property
-			count: 1
-			path: src/Module/Util/AmazonSearch.php
-
-		-
-			message: '#^Property Ampache\\Module\\Util\\AmazonSearch\:\:\$_proxy_user has no type specified\.$#'
 			identifier: missingType.property
 			count: 1
 			path: src/Module/Util/AmazonSearch.php
@@ -2119,31 +1993,7 @@ parameters:
 			path: src/Module/Util/AmazonSearch.php
 
 		-
-			message: '#^Property Ampache\\Module\\Util\\AmazonSearch\:\:\$base_url has no type specified\.$#'
-			identifier: missingType.property
-			count: 1
-			path: src/Module/Util/AmazonSearch.php
-
-		-
-			message: '#^Property Ampache\\Module\\Util\\AmazonSearch\:\:\$base_url_default has no type specified\.$#'
-			identifier: missingType.property
-			count: 1
-			path: src/Module/Util/AmazonSearch.php
-
-		-
-			message: '#^Property Ampache\\Module\\Util\\AmazonSearch\:\:\$results has no type specified\.$#'
-			identifier: missingType.property
-			count: 1
-			path: src/Module/Util/AmazonSearch.php
-
-		-
 			message: '#^Property Ampache\\Module\\Util\\AmazonSearch\:\:\$search has no type specified\.$#'
-			identifier: missingType.property
-			count: 1
-			path: src/Module/Util/AmazonSearch.php
-
-		-
-			message: '#^Property Ampache\\Module\\Util\\AmazonSearch\:\:\$url_suffix has no type specified\.$#'
 			identifier: missingType.property
 			count: 1
 			path: src/Module/Util/AmazonSearch.php
@@ -2223,18 +2073,6 @@ parameters:
 		-
 			message: '#^Method Ampache\\Module\\Util\\MemoryObject\:\:__set\(\) has parameter \$value with no type specified\.$#'
 			identifier: missingType.parameter
-			count: 1
-			path: src/Module/Util/MemoryObject.php
-
-		-
-			message: '#^Property Ampache\\Module\\Util\\MemoryObject\:\:\$_data has no type specified\.$#'
-			identifier: missingType.property
-			count: 1
-			path: src/Module/Util/MemoryObject.php
-
-		-
-			message: '#^Property Ampache\\Module\\Util\\MemoryObject\:\:\$properties has no type specified\.$#'
-			identifier: missingType.property
 			count: 1
 			path: src/Module/Util/MemoryObject.php
 
@@ -2331,18 +2169,6 @@ parameters:
 		-
 			message: '#^Method Ampache\\Module\\Util\\OAuth\\OAuthRequest\:\:to_header\(\) has parameter \$realm with no type specified\.$#'
 			identifier: missingType.parameter
-			count: 1
-			path: src/Module/Util/OAuth/OAuthRequest.php
-
-		-
-			message: '#^Property Ampache\\Module\\Util\\OAuth\\OAuthRequest\:\:\$POST_INPUT has no type specified\.$#'
-			identifier: missingType.property
-			count: 1
-			path: src/Module/Util/OAuth/OAuthRequest.php
-
-		-
-			message: '#^Property Ampache\\Module\\Util\\OAuth\\OAuthRequest\:\:\$version has no type specified\.$#'
-			identifier: missingType.property
 			count: 1
 			path: src/Module/Util/OAuth/OAuthRequest.php
 
@@ -2653,36 +2479,6 @@ parameters:
 			path: src/Plugin/AmpacheGoogleMaps.php
 
 		-
-			message: '#^Property Ampache\\Plugin\\AmpacheLastfm\:\:\$challenge has no type specified\.$#'
-			identifier: missingType.property
-			count: 1
-			path: src/Plugin/AmpacheLastfm.php
-
-		-
-			message: '#^Property Ampache\\Plugin\\AmpacheMatomo\:\:\$matomo_url has no type specified\.$#'
-			identifier: missingType.property
-			count: 1
-			path: src/Plugin/AmpacheMatomo.php
-
-		-
-			message: '#^Property Ampache\\Plugin\\AmpacheMatomo\:\:\$site_id has no type specified\.$#'
-			identifier: missingType.property
-			count: 1
-			path: src/Plugin/AmpacheMatomo.php
-
-		-
-			message: '#^Property Ampache\\Plugin\\AmpachePiwik\:\:\$piwik_url has no type specified\.$#'
-			identifier: missingType.property
-			count: 1
-			path: src/Plugin/AmpachePiwik.php
-
-		-
-			message: '#^Property Ampache\\Plugin\\AmpachePiwik\:\:\$site_id has no type specified\.$#'
-			identifier: missingType.property
-			count: 1
-			path: src/Plugin/AmpachePiwik.php
-
-		-
 			message: '#^Method Ampache\\Plugin\\AmpacheStreamBandwidth\:\:stream_control\(\) has parameter \$media_ids with no value type specified in iterable type array\.$#'
 			identifier: missingType.iterableValue
 			count: 1
@@ -2707,24 +2503,6 @@ parameters:
 			path: src/Plugin/AmpacheTheaudiodb.php
 
 		-
-			message: '#^Property Ampache\\Plugin\\AmpacheYourls\:\:\$yourls_api_key has no type specified\.$#'
-			identifier: missingType.property
-			count: 1
-			path: src/Plugin/AmpacheYourls.php
-
-		-
-			message: '#^Property Ampache\\Plugin\\AmpacheYourls\:\:\$yourls_domain has no type specified\.$#'
-			identifier: missingType.property
-			count: 1
-			path: src/Plugin/AmpacheYourls.php
-
-		-
-			message: '#^Property Ampache\\Plugin\\AmpacheYourls\:\:\$yourls_use_idn has no type specified\.$#'
-			identifier: missingType.property
-			count: 1
-			path: src/Plugin/AmpacheYourls.php
-
-		-
 			message: '#^Method Ampache\\Plugin\\Ampacheflickr\:\:gather_arts\(\) has parameter \$options with no value type specified in iterable type array\.$#'
 			identifier: missingType.iterableValue
 			count: 1
@@ -2741,12 +2519,6 @@ parameters:
 			identifier: missingType.property
 			count: 1
 			path: src/Plugin/Ampacheflickr.php
-
-		-
-			message: '#^Property Ampache\\Plugin\\Ampachelibrefm\:\:\$challenge has no type specified\.$#'
-			identifier: missingType.property
-			count: 1
-			path: src/Plugin/Ampachelibrefm.php
 
 		-
 			message: '#^Method Ampache\\Plugin\\PluginGatherArtsInterface\:\:gather_arts\(\) has parameter \$options with no value type specified in iterable type array\.$#'
@@ -2815,12 +2587,6 @@ parameters:
 			path: src/Repository/Model/Catalog.php
 
 		-
-			message: '#^Method Ampache\\Repository\\Model\\Catalog\:\:get_info\(\) return type has no value type specified in iterable type array\.$#'
-			identifier: missingType.iterableValue
-			count: 1
-			path: src/Repository/Model/Catalog.php
-
-		-
 			message: '#^Method Ampache\\Repository\\Model\\Catalog\:\:update_song_from_tags\(\) has parameter \$results with no value type specified in iterable type array\.$#'
 			identifier: missingType.iterableValue
 			count: 1
@@ -2840,24 +2606,6 @@ parameters:
 
 		-
 			message: '#^Method Ampache\\Repository\\Model\\Catalog\:\:update_video_from_tags\(\) return type has no value type specified in iterable type array\.$#'
-			identifier: missingType.iterableValue
-			count: 1
-			path: src/Repository/Model/Catalog.php
-
-		-
-			message: '#^Property Ampache\\Repository\\Model\\Catalog\:\:\$albums type has no value type specified in iterable type array\.$#'
-			identifier: missingType.iterableValue
-			count: 1
-			path: src/Repository/Model/Catalog.php
-
-		-
-			message: '#^Property Ampache\\Repository\\Model\\Catalog\:\:\$artists type has no value type specified in iterable type array\.$#'
-			identifier: missingType.iterableValue
-			count: 1
-			path: src/Repository/Model/Catalog.php
-
-		-
-			message: '#^Property Ampache\\Repository\\Model\\Catalog\:\:\$tags type has no value type specified in iterable type array\.$#'
 			identifier: missingType.iterableValue
 			count: 1
 			path: src/Repository/Model/Catalog.php
@@ -2929,12 +2677,6 @@ parameters:
 			path: src/Repository/Model/Query.php
 
 		-
-			message: '#^Property Ampache\\Repository\\Model\\Query\:\:\$_state type has no value type specified in iterable type array\.$#'
-			identifier: missingType.iterableValue
-			count: 1
-			path: src/Repository/Model/Query.php
-
-		-
 			message: '#^Method Ampache\\Repository\\Model\\Search\:\:filter_data\(\) has parameter \$operator with no value type specified in iterable type array\.$#'
 			identifier: missingType.iterableValue
 			count: 2
@@ -2981,12 +2723,6 @@ parameters:
 			identifier: missingType.iterableValue
 			count: 1
 			path: src/Repository/Model/Song_Preview.php
-
-		-
-			message: '#^Property Ampache\\Repository\\Model\\Tmp_Playlist\:\:\$items has no type specified\.$#'
-			identifier: missingType.property
-			count: 1
-			path: src/Repository/Model/Tmp_Playlist.php
 
 		-
 			message: '#^Method Ampache\\Repository\\Model\\User\:\:get_avatar\(\) return type has no value type specified in iterable type array\.$#'
@@ -3075,12 +2811,6 @@ parameters:
 		-
 			message: '#^Method Ampache\\Repository\\Model\\database_object\:\:get_info\(\) return type has no value type specified in iterable type array\.$#'
 			identifier: missingType.iterableValue
-			count: 1
-			path: src/Repository/Model/database_object.php
-
-		-
-			message: '#^Property Ampache\\Repository\\Model\\database_object\:\:\$object_cache has no type specified\.$#'
-			identifier: missingType.property
 			count: 1
 			path: src/Repository/Model/database_object.php
 

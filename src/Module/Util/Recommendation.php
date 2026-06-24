@@ -178,7 +178,7 @@ class Recommendation
 
         if ($artist->isNew() === false) {
             $results['id'] = $artist->id;
-            if (isset($results['summary']) && ($results['summary'] !== '' && $results['summary'] !== '0')) {
+            if (($results['summary'] !== '' && $results['summary'] !== '0')) {
                 $artist->update_artist_info($results['summary'], $results['placeformed'], $results['yearformed']);
             }
 

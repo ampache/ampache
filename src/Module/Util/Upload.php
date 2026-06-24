@@ -200,10 +200,7 @@ class Upload
 
         $rootdir  = "";
         $pathname = realpath($catalog->get_path());
-        if (
-            is_string($pathname)
-            && ($pathname !== '' && $pathname !== '0')
-        ) {
+        if ($pathname) {
             $rootdir = $pathname;
             if (AmpConfig::get('upload_subdir')) {
                 if (in_array($username, [null, '', '0'], true)) {
