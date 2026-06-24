@@ -54,7 +54,6 @@ class Catalog_Seafile extends Catalog
     public string $server_uri;
     private ?int $api_call_delay = null;
     private ?string $api_key     = null;
-    private int $catalog_id      = 0;
     private int $count           = 0;
     private SeafileAdapter $seafile;
 
@@ -66,8 +65,7 @@ class Catalog_Seafile extends Catalog
     public function __construct(?int $catalog_id = null)
     {
         if ($catalog_id) {
-            $this->id = $catalog_id;
-            $info     = $this->get_info($catalog_id, static::DB_TABLENAME);
+            $info = $this->get_info($catalog_id, static::DB_TABLENAME);
             foreach ($info as $key => $value) {
                 if (property_exists($this, $key)) {
                     $this->$key = $value;
@@ -299,7 +297,7 @@ class Catalog_Seafile extends Catalog
 
         if ($this->seafile->prepare()) {
             $sql        = 'SELECT `id`, `file` FROM `song` WHERE `catalog` = ?';
-            $db_results = Dba::read($sql, [$this->id]);
+            $db_results = Dba::read($sql, [$this->getId()]);
             while ($row = Dba::fetch_assoc($db_results)) {
                 debug_event('seafile_catalog', 'Clean starting work on ' . $row['file'] . ' (' . $row['id'] . ')', 5);
                 $file = $this->seafile->from_virtual_path($row['file']);
@@ -556,7 +554,7 @@ class Catalog_Seafile extends Catalog
         $results = 0;
         if ($this->seafile->prepare()) {
             $sql        = 'SELECT `id`, `file`, `title` FROM `song` WHERE `catalog` = ?';
-            $db_results = Dba::read($sql, [$this->id]);
+            $db_results = Dba::read($sql, [$this->getId()]);
             while ($row = Dba::fetch_assoc($db_results)) {
                 debug_event('seafile_catalog', 'Verify starting work on ' . $row['file'] . ' (' . $row['id'] . ')', 5);
                 $fileinfo = $this->seafile->from_virtual_path($row['file']);
@@ -649,7 +647,7 @@ class Catalog_Seafile extends Catalog
         $results = VaInfo::clean_tag_info($vainfo->tags, $key, $tempfilename);
 
         // Set the remote path
-        $results['catalog'] = $this->id;
+        $results['catalog'] = $this->getId();
         $results['file']    = ($is_diritem)
             ? $this->seafile->to_virtual_path($file)
             : $tempfilename;

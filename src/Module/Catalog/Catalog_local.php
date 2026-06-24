@@ -55,8 +55,7 @@ use Exception;
  */
 class Catalog_local extends Catalog
 {
-    public string $path = '';
-    private int $catalog_id;
+    public string $path         = '';
     private int $count          = 0;
     private string $description = 'Local Catalog';
 
@@ -83,8 +82,6 @@ class Catalog_local extends Catalog
                     $this->$key = $value;
                 }
             }
-
-            $this->catalog_id = (int) $catalog_id;
         }
     }
 
@@ -374,8 +371,8 @@ class Catalog_local extends Catalog
                 $this->count++;
                 $file = str_replace(['(', ')', "'"], '', $full_file);
                 if (Ui::check_ticker()) {
-                    Ui::update_text('add_count_' . $this->catalog_id, $this->count);
-                    Ui::update_text('add_dir_' . $this->catalog_id, scrub_out($file));
+                    Ui::update_text('add_count_' . $this->getId(), $this->count);
+                    Ui::update_text('add_dir_' . $this->getId(), scrub_out($file));
                 } // update our current state
             } // if it's not an m3u
 
@@ -481,7 +478,7 @@ class Catalog_local extends Catalog
 
         // This should only happen on the last run
         if ($path === $this->path) {
-            Ui::update_text('add_count_' . $this->catalog_id, $this->count);
+            Ui::update_text('add_count_' . $this->getId(), $this->count);
         }
 
         /* Close the dir handle */
@@ -596,7 +593,7 @@ class Catalog_local extends Catalog
                     true
                 );
                 debug_event(self::class, 'gather_art after adding', 4);
-                $catalog_id = $this->catalog_id;
+                $catalog_id = $this->getId();
                 if (!defined('SSE_OUTPUT') && !defined('CLI') && !defined('API')) {
                     require Ui::find_template('show_gather_art.inc.php');
                     flush();
@@ -698,7 +695,7 @@ class Catalog_local extends Catalog
         }
 
         $sql    = "SELECT `id` FROM `song` WHERE `catalog` = ? ";
-        $params = [$this->catalog_id];
+        $params = [$this->getId()];
         $join   = 'AND (';
         if ($m4a) {
             $sql .= $join . " `file` LIKE '%.m4a' ";
@@ -775,8 +772,8 @@ class Catalog_local extends Catalog
         }
 
         foreach ($results as $song_id) {
-            $target_file     = Catalog::get_cache_path($song_id, $this->catalog_id, $cache_path, $cache_target);
-            $old_target_file = rtrim(trim($cache_path), '/') . '/' . $this->catalog_id . '/' . $song_id . '.' . $cache_target;
+            $target_file     = Catalog::get_cache_path($song_id, $this->getId(), $cache_path, $cache_target);
+            $old_target_file = rtrim(trim($cache_path), '/') . '/' . $this->getId() . '/' . $song_id . '.' . $cache_target;
             if ($target_file !== null && is_file($old_target_file)) {
                 // check for the old path first
                 rename($old_target_file, $target_file);
@@ -862,7 +859,7 @@ class Catalog_local extends Catalog
             $media_type = 'video';
         }
 
-        $total = self::count_table($media_type, $this->catalog_id);
+        $total = self::count_table($media_type, $this->getId());
         if ($total === 0) {
             return $missing;
         }
@@ -908,7 +905,7 @@ class Catalog_local extends Catalog
             $media_type = 'video';
         }
 
-        $total = self::count_table($media_type, $this->catalog_id);
+        $total = self::count_table($media_type, $this->getId());
         if ($total === 0) {
             return $this->count;
         }
@@ -1138,11 +1135,11 @@ class Catalog_local extends Catalog
         }
 
         $sql    = "UPDATE `catalog_local` SET `path` = ? WHERE `catalog_id` = ?";
-        $params = [$new_path, $this->catalog_id];
+        $params = [$new_path, $this->getId()];
         Dba::write($sql, $params);
 
         $sql    = "UPDATE `song` SET `file` = REPLACE(`file`, '" . Dba::escape($this->path) . "', '" . Dba::escape($new_path) . "') WHERE `catalog` = ?";
-        $params = [$this->catalog_id];
+        $params = [$this->getId()];
         Dba::write($sql, $params);
 
         return true;
@@ -1327,7 +1324,7 @@ class Catalog_local extends Catalog
 
         $this->scan_catalog($interactor);
 
-        Ui::update_text('scan_count_' . $this->catalog_id, $this->count);
+        Ui::update_text('scan_count_' . $this->getId(), $this->count);
 
         if (!$skipCounts && $this->count > 0) {
             $this->count_scan_folders($interactor);
@@ -1403,20 +1400,20 @@ class Catalog_local extends Catalog
         if (!$verify_by_album && $gather_type == 'music') {
             Song::clear_cache();
             $media_type = 'song';
-            $total      = self::count_table($media_type, $this->catalog_id, $update_time, $limit);
+            $total      = self::count_table($media_type, $this->getId(), $update_time, $limit);
         } elseif ($verify_by_album && $gather_type == 'music') {
             $chunk_size = 1000;
             Album::clear_cache();
             $media_type = 'album';
-            $total      = self::count_table($media_type, $this->catalog_id, $update_time, $limit);
+            $total      = self::count_table($media_type, $this->getId(), $update_time, $limit);
         } elseif ($gather_type == 'podcast') {
             Podcast_Episode::clear_cache();
             $media_type = 'podcast_episode';
-            $total      = self::count_table($media_type, $this->catalog_id, $update_time, $limit);
+            $total      = self::count_table($media_type, $this->getId(), $update_time, $limit);
         } elseif ($gather_type == 'video') {
             Video::clear_cache();
             $media_type = 'video';
-            $total      = self::count_table($media_type, $this->catalog_id, $update_time, $limit);
+            $total      = self::count_table($media_type, $this->getId(), $update_time, $limit);
         } else {
             return $this->count;
         }
@@ -1424,7 +1421,7 @@ class Catalog_local extends Catalog
         // count with no limit after 0
         if ($total === 0 && ($update_time > 0 || $limit > 0)) {
             $last_update = false;
-            $total       = self::count_table($media_type, $this->catalog_id);
+            $total       = self::count_table($media_type, $this->getId());
         }
 
         $count  = 1;
@@ -1500,7 +1497,7 @@ class Catalog_local extends Catalog
         $count   = $chunk * $chunk_size;
 
         $sql        = sprintf('SELECT `id`, `file` FROM `%s` WHERE `catalog` = ? LIMIT %d, %d;', $media_type, $count, $chunk_size);
-        $db_results = Dba::read($sql, [$this->catalog_id]);
+        $db_results = Dba::read($sql, [$this->getId()]);
 
         while ($results = Dba::fetch_assoc($db_results)) {
             $file_info = Core::get_filesize(Core::conv_lc_file($results['file']));
@@ -1534,14 +1531,14 @@ class Catalog_local extends Catalog
         $count = $chunk * $chunk_size;
 
         $sql        = sprintf('SELECT `id`, `file` FROM `%s` WHERE `catalog` = ? AND `file` IS NOT NULL LIMIT %d, %d;', $media_type, $count, $chunk_size);
-        $db_results = Dba::read($sql, [$this->catalog_id]);
+        $db_results = Dba::read($sql, [$this->getId()]);
         while ($results = Dba::fetch_assoc($db_results)) {
             //debug_event('local.catalog', 'Cleaning check on ' . $results['file'] . ' (' . $results['id'] . ')', 5);
             $count++;
             if (Ui::check_ticker()) {
                 $file = str_replace(['(', ')', "'"], '', $results['file']);
-                Ui::update_text('clean_count_' . $this->catalog_id, $count);
-                Ui::update_text('clean_dir_' . $this->catalog_id, scrub_out($file));
+                Ui::update_text('clean_count_' . $this->getId(), $count);
+                Ui::update_text('clean_dir_' . $this->getId(), scrub_out($file));
             }
 
             if ($this->clean_file($results['file'], $media_type)) {
@@ -1596,7 +1593,7 @@ class Catalog_local extends Catalog
         $key = VaInfo::get_tag_type($vainfo->tags);
 
         $results            = VaInfo::clean_tag_info($vainfo->tags, $key, $file);
-        $results['catalog'] = $this->catalog_id;
+        $results['catalog'] = $this->getId();
 
         if (array_key_exists('user_upload', $options)) {
             $results['user_upload'] = $options['user_upload'];
@@ -1756,7 +1753,7 @@ class Catalog_local extends Catalog
 
         $tag_name           = VaInfo::get_tag_type($vainfo->tags, 'metadata_order_video');
         $results            = VaInfo::clean_tag_info($vainfo->tags, $tag_name, $file);
-        $results['catalog'] = $this->catalog_id;
+        $results['catalog'] = $this->getId();
 
         $video_id = Video::insert($results, $options);
         if ($results['art']) {
@@ -1946,7 +1943,7 @@ class Catalog_local extends Catalog
         //debug_event(self::class, '_verify_chunk (' . $chunk . ') ' . $sql. ' ' . print_r($params, true), 5);
         if ($tableName !== 'podcast_episode' && AmpConfig::get('memory_cache', false)) {
             $media_ids  = [];
-            $db_results = Dba::read($sql, [$this->catalog_id]);
+            $db_results = Dba::read($sql, [$this->getId()]);
             $className  = ObjectTypeToClassNameMapper::map($tableName);
             while ($row = Dba::fetch_assoc($db_results, false)) {
                 $media_ids[] = $row['id'];
@@ -1956,13 +1953,13 @@ class Catalog_local extends Catalog
         }
 
         $changed    = 0;
-        $db_results = Dba::read($sql, [$this->catalog_id]);
+        $db_results = Dba::read($sql, [$this->getId()]);
         while ($row = Dba::fetch_assoc($db_results)) {
             $count++;
             if (Ui::check_ticker()) {
                 $file = str_replace(['(', ')', "'"], '', $row['file']);
-                Ui::update_text('verify_count_' . $this->catalog_id, $count);
-                Ui::update_text('verify_dir_' . $this->catalog_id, scrub_out($file));
+                Ui::update_text('verify_count_' . $this->getId(), $count);
+                Ui::update_text('verify_dir_' . $this->getId(), scrub_out($file));
             }
 
             if ($tableName !== 'album') {
@@ -2029,7 +2026,7 @@ class Catalog_local extends Catalog
             }
         }
 
-        Ui::update_text('verify_count_' . $this->catalog_id, $count);
+        Ui::update_text('verify_count_' . $this->getId(), $count);
 
         return $changed;
     }

@@ -68,7 +68,6 @@ class Catalog_remote extends Catalog
     public string $password;
     public string $uri = '';
     public string $username;
-    private int $catalog_id;
     private string $description        = 'Ampache Remote Catalog';
     private ?AmpacheApi $remote_handle = null;
 
@@ -91,8 +90,6 @@ class Catalog_remote extends Catalog
                     $this->$key = $value;
                 }
             }
-
-            $this->catalog_id = (int) $catalog_id;
         }
     }
 
@@ -213,10 +210,10 @@ class Catalog_remote extends Catalog
         }
 
         $sql        = "SELECT `id`, `file`, substring_index(file,'.',-1) AS `extension` FROM `song` WHERE `catalog` = ?;";
-        $db_results = Dba::read($sql, [$this->catalog_id]);
+        $db_results = Dba::read($sql, [$this->getId()]);
         while ($row = Dba::fetch_assoc($db_results)) {
             $file_target = ($row['id'] && $cache_target === $row['extension'])
-                ? Catalog::get_cache_path($row['id'], $this->catalog_id, $cache_path, $cache_target)
+                ? Catalog::get_cache_path($row['id'], $this->getId(), $cache_path, $cache_target)
                 : null;
             if (in_array($file_target, [null, '', '0'], true)) {
                 debug_event('remote.catalog', 'Cache error: no target for ' . $row['id'], 5);
@@ -224,7 +221,7 @@ class Catalog_remote extends Catalog
             }
 
             if (!is_file($file_target) || Core::get_filesize($file_target) === 0) {
-                $old_target_file = rtrim(trim($cache_path), '/') . '/' . $this->catalog_id . '/' . $row['id'] . '.' . $row['extension'];
+                $old_target_file = rtrim(trim($cache_path), '/') . '/' . $this->getId() . '/' . $row['id'] . '.' . $row['extension'];
                 $old_file_exists = is_file($old_target_file);
                 if ($old_file_exists) {
                     // check for the old path first
@@ -295,7 +292,7 @@ class Catalog_remote extends Catalog
             $db_results = Dba::read($sql, [$this->uri . '/play/index.php?%&type=song%&oid=' . $remote_id . '&%']);
             if ($results = Dba::fetch_assoc($db_results)) {
                 Dba::write('UPDATE `song` SET `file` = ? WHERE `id` = ?', [$db_file, $results['id']]);
-                Song::update_song_map([$remote_id], 'remote_' . $this->catalog_id, (int) $results['id']);
+                Song::update_song_map([$remote_id], 'remote_' . $this->getId(), (int) $results['id']);
 
                 return (int) $results['id'];
             }
@@ -340,7 +337,7 @@ class Catalog_remote extends Catalog
 
         $dead       = 0;
         $sql        = 'SELECT `id`, `file` FROM `song` WHERE `catalog` = ?';
-        $db_results = Dba::read($sql, [$this->catalog_id]);
+        $db_results = Dba::read($sql, [$this->getId()]);
         while ($row = Dba::fetch_assoc($db_results)) {
             debug_event('remote.catalog', 'Starting work on ' . $row['file'] . ' (' . $row['id'] . ')', 5);
             try {
@@ -349,7 +346,7 @@ class Catalog_remote extends Catalog
                     $song = $this->remote_handle->send_command(self::CMD_URL_TO_SONG, ['url' => $row['file']]);
                 } else {
                     // lookup by remote id
-                    $remote_id = Song::get_song_map_object_id($row['id'], 'remote_' . $this->catalog_id);
+                    $remote_id = Song::get_song_map_object_id($row['id'], 'remote_' . $this->getId());
                     $song      = ($remote_id)
                         ? $this->remote_handle->send_command(self::CMD_SONG, ['filter' => $remote_id])
                         : null;
@@ -438,7 +435,7 @@ class Catalog_remote extends Catalog
         $results   = [];
         $remote_id = ($media->file && filter_var($media->file, FILTER_VALIDATE_URL))
             ? preg_replace('/^.*[?&]oid=([^&]+).*$/', '$1', html_entity_decode($media->file))
-            : Song::get_song_map_object_id($media->getId(), 'remote_' . $this->catalog_id);
+            : Song::get_song_map_object_id($media->getId(), 'remote_' . $this->getId());
         if (!$remote_id) {
             return null;
         }
@@ -499,7 +496,7 @@ class Catalog_remote extends Catalog
             return $media->file . '&ssid=' . $handshake->auth;
         }
 
-        $remote_id = Song::get_song_map_object_id($media->id, 'remote_' . $this->catalog_id);
+        $remote_id = Song::get_song_map_object_id($media->id, 'remote_' . $this->getId());
         if (!$remote_id) {
             debug_event('remote.catalog', 'Unable to identify remote id ' . $media->id . '. Update the catalog.', 1);
 
@@ -700,7 +697,7 @@ class Catalog_remote extends Catalog
                 }
             }
 
-            $data['catalog'] = $this->catalog_id;
+            $data['catalog'] = $this->getId();
             $data['file']    = (string) $song->filename;
 
             if (is_string($data['artists'])) {
@@ -812,7 +809,7 @@ class Catalog_remote extends Catalog
                 'barcode' => null,
                 'bitrate' => (property_exists($song, 'bitrate') && $song->bitrate !== null) ? (string) $song->bitrate : null,
                 'catalog_number' => null,
-                'catalog' => $this->catalog_id,
+                'catalog' => $this->getId(),
                 'channels' => (property_exists($song, 'channels') && $song->channels !== null) ? (string) $song->channels : null,
                 'comment' => (property_exists($song, 'comment') && $song->comment !== null) ? (string) $song->comment : null,
                 'composer' => (property_exists($song, 'composer') && $song->composer !== null) ? (string) $song->composer : null,
@@ -969,8 +966,8 @@ class Catalog_remote extends Catalog
                         if ($action === 'add') {
                             if ($existing_song) {
                                 debug_event('remote.catalog', 'Skip existing song: ' . $song_id_check, 5);
-                                if (Song::get_song_map_object_id($song_id_check, 'remote_' . $this->catalog_id) !== $remote_id) {
-                                    Song::update_song_map([$remote_id], 'remote_' . $this->catalog_id, $song_id_check);
+                                if (Song::get_song_map_object_id($song_id_check, 'remote_' . $this->getId()) !== $remote_id) {
+                                    Song::update_song_map([$remote_id], 'remote_' . $this->getId(), $song_id_check);
                                 }
 
                                 continue;
@@ -988,7 +985,7 @@ class Catalog_remote extends Catalog
                         }
 
                         $file_target = ($song_id_check && ($cache_target !== '' && $cache_target !== '0') && $cache_target === (string) $song->stream_format)
-                            ? Catalog::get_cache_path($song_id_check, $this->catalog_id, $cache_path, $cache_target)
+                            ? Catalog::get_cache_path($song_id_check, $this->getId(), $cache_path, $cache_target)
                             : null;
 
                         if ($action === 'verify') {
@@ -1045,8 +1042,8 @@ class Catalog_remote extends Catalog
 
                         if ($song_id) {
                             // Update the remote id for streaming / lookup
-                            if (Song::get_song_map_object_id($song_id, 'remote_' . $this->catalog_id) !== $remote_id) {
-                                Song::update_song_map([$remote_id], 'remote_' . $this->catalog_id, $song_id);
+                            if (Song::get_song_map_object_id($song_id, 'remote_' . $this->getId()) !== $remote_id) {
+                                Song::update_song_map([$remote_id], 'remote_' . $this->getId(), $song_id);
                             }
 
                             // update missing art
