@@ -693,7 +693,7 @@ abstract class Catalog extends database_object
      *     password?: ?string,
      *     library_name?: string,
      *     server_uri?: string,
-     *     api_call_delay?: string|int|null,
+     *     api_call_delay?: int|null,
      *     beetsdb?: string,
      *     apikey?: ?string,
      *     secret?: ?string,
@@ -4425,15 +4425,42 @@ abstract class Catalog extends database_object
 
     /**
      * Get catalog info from table.
+     * @return array{
+     *     id: int,
+     *     name: ?string,
+     *     catalog_type: ?string,
+     *     last_update: int,
+     *     last_clean: int,
+     *     last_add: int,
+     *     enabled: bool,
+     *     rename_pattern: ?string,
+     *     sort_pattern: ?string,
+     *     gather_types: ?string,
+     *     catalog_id?: int,
+     *     beetsdb?: string,
+     *     uri?: string,
+     *     path?: string,
+     *     apikey?: string,
+     *     api_key?: string,
+     *     api_call_delay?: int|null,
+     *     secret?: string,
+     *     library_name?: string,
+     *     authtoken?: string,
+     *     getchunk?: bool,
+     *     username?: string,
+     *     password?: string
+     * }
      */
     public function get_info(int $object_id, ?string $table_name = 'catalog'): array
     {
+        /** @var array{id: int, name: ?string, catalog_type: ?string, last_update: int, last_clean: int, last_add: int, enabled: bool, rename_pattern: ?string, sort_pattern: ?string, gather_types: ?string} $info */
         $info = parent::get_info($object_id, $table_name);
 
         $table      = 'catalog_' . $this->get_type();
         $sql        = sprintf('SELECT `id` FROM `%s` WHERE `catalog_id` = ?', $table);
         $db_results = Dba::read($sql, [$object_id]);
         if ($results = Dba::fetch_assoc($db_results)) {
+            /** @var array{id:int, catalog_id: int, beetsdb?: string, uri?: string, path?: string, apikey?:string, secret?: string, authtoken?: string, getchunk?: bool, username?: string, password?: string, api_key?: string, api_call_delay?: int|null, secret?: string, library_name?: string} $info_type */
             $info_type = parent::get_info($results['id'], $table);
             foreach ($info_type as $key => $value) {
                 if (!array_key_exists($key, $info) || !$info[$key]) {

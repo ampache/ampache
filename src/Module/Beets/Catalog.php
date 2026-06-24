@@ -80,7 +80,9 @@ abstract class Catalog extends \Ampache\Repository\Model\Catalog
         if ($catalog_id) {
             $info = $this->get_info($catalog_id, static::DB_TABLENAME);
             foreach ($info as $key => $value) {
-                $this->$key = $value;
+                if (property_exists($this, $key)) {
+                    $this->$key = $value;
+                }
             }
         }
     }

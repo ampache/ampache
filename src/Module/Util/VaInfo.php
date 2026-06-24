@@ -340,7 +340,7 @@ final class VaInfo implements VaInfoInterface
             $info['publisher'] = (!$info['publisher'] && array_key_exists('publisher', $tags)) ? trim((string) $tags['publisher']) : $info['publisher'];
 
             // genre is an array treat it as one
-            $info['genre'] = (!$info['genre'] && array_key_exists('genre', $tags) && is_array($tags['genre']) && (isset($tags['genre']) && $tags['genre'] !== []))
+            $info['genre'] = (!$info['genre'] && array_key_exists('genre', $tags) && is_array($tags['genre']) && $tags['genre'] !== [])
                 ? $tags['genre']
                 : $info['genre'];
 

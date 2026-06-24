@@ -50,21 +50,18 @@ use ReflectionException;
  */
 class Catalog_dropbox extends Catalog
 {
-    public int $getchunk;
+    public bool $getchunk;
     public string $path;
     private string $apikey = '';
 
     //private string $authcode;
-    private readonly string $authtoken;
-    private readonly int $catalog_id;
+    private string $authtoken;
+    private int $catalog_id;
     private int $count          = 0;
     private string $description = 'Dropbox Remote Catalog';
-    private readonly string $secret;
+    private string $secret;
     private string $type    = 'dropbox';
     private string $version = '000002';
-
-    /** @var int[] */
-    private array $videos_to_gather;
 
     /**
      * Constructor
@@ -74,10 +71,12 @@ class Catalog_dropbox extends Catalog
     public function __construct(?int $catalog_id = null)
     {
         if ($catalog_id) {
-            $this->id = (int) $catalog_id;
+            $this->id = $catalog_id;
             $info     = $this->get_info($catalog_id, static::DB_TABLENAME);
             foreach ($info as $key => $value) {
-                $this->$key = $value;
+                if (property_exists($this, $key)) {
+                    $this->$key = $value;
+                }
             }
         }
     }
@@ -103,7 +102,7 @@ class Catalog_dropbox extends Catalog
         $secret    = trim($data['secret'] ?? '');
         $authtoken = trim($data['authtoken'] ?? '');
         $path      = $data['path'] ?? '';
-        $getchunk  = (int) ($data['getchunk'] ?? 0);
+        $getchunk  = (bool) ($data['getchunk'] ?? 0);
 
         if (!strlen($apikey) || !strlen($secret) || !strlen($authtoken)) {
             AmpError::add('general', T_('Error: API Key, Secret and Access Token Required for Dropbox Catalogs'));
@@ -367,8 +366,8 @@ class Catalog_dropbox extends Catalog
      * This runs through all of the albums and finds art for them
      * This runs through all of the needs art albums and tries
      * to find the art for them from the mp3s
-     * @param Song[]|null $songs
-     * @param Video[]|null $videos
+     * @param int[]|null $songs
+     * @param int[]|null $videos
      * @throws DropboxClientException
      */
     #[Override]
@@ -542,8 +541,6 @@ class Catalog_dropbox extends Catalog
                 if (AmpConfig::get('generate_video_preview')) {
                     Video::generate_preview($video_id);
                 }
-            } else {
-                $this->videos_to_gather[] = $video_id;
             }
 
             $results['file'] = $path;
