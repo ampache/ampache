@@ -444,14 +444,12 @@ class Catalog_local extends Catalog
                 continue;
             }
 
-            $counter++;
-
             if ($counter % 5000 === 0) {
                 $interactor?->info(
-                    sprintf('Reading directory: %s (processed %d files)', $path, $counter),
+                    sprintf('Reading directory: %s (processed %d media files)', $path, $counter),
                     true
                 );
-                debug_event('local.catalog', sprintf('add_files progress: %s (%d files)', $path, $counter), 5);
+                debug_event('local.catalog', sprintf('add_files progress: %s (%d  media files)', $path, $counter), 5);
             }
 
             /* Create the new path */
@@ -474,6 +472,8 @@ class Catalog_local extends Catalog
                 }
             }
 
+            $counter++;
+
             try {
                 if ($this->add_file($full_file, $options, $counter, $interactor)) {
                     $songsadded++;
@@ -486,8 +486,6 @@ class Catalog_local extends Catalog
                 debug_event('local.catalog', 'add_file error: ' . $error->getMessage(), 1);
             }
         }
-
-        debug_event('local.catalog', sprintf('add_files finished: %s (added %d items)', $path, $songsadded), 5);
 
         // This should only happen on the last run
         if ($path === $this->path) {
