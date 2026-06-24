@@ -30,11 +30,6 @@ class PodcastOpmlLoaderTest extends TestCase
 {
     private PodcastOpmlLoader $subject;
 
-    protected function setUp(): void
-    {
-        $this->subject = new PodcastOpmlLoader();
-    }
-
     public function testLoadReturnsEmptyListIfNoInputAvailable(): void
     {
         self::assertSame(
@@ -53,5 +48,10 @@ class PodcastOpmlLoaderTest extends TestCase
                 $this->subject->load('<root><outline xmlUrl="" /><outline xmlUrl="' . $url . '" /></root>')
             )
         );
+    }
+
+    protected function setUp(): void
+    {
+        $this->subject = new PodcastOpmlLoader();
     }
 }

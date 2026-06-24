@@ -32,13 +32,19 @@ use Override;
 class AmpacheLibravatar extends AmpachePlugin implements PluginGetAvatarUrlInterface
 {
     #[Override]
-    public string $name = 'Libravatar';
-
-    #[Override]
     public string $categories = 'avatar';
 
     #[Override]
     public string $description = "Users avatar's with Libravatar";
+
+    #[Override]
+    public string $max_ampache = '999999';
+
+    #[Override]
+    public string $min_ampache = '360040';
+
+    #[Override]
+    public string $name = 'Libravatar';
 
     #[Override]
     public string $url = 'https://www.libravatar.org';
@@ -46,45 +52,12 @@ class AmpacheLibravatar extends AmpachePlugin implements PluginGetAvatarUrlInter
     #[Override]
     public string $version = '000001';
 
-    #[Override]
-    public string $min_ampache = '360040';
-
-    #[Override]
-    public string $max_ampache = '999999';
-
     /**
      * Constructor
      */
     public function __construct()
     {
         $this->description = T_("Users avatar's with Libravatar");
-    }
-
-    /**
-     * install
-     * Inserts plugin preferences into Ampache
-     */
-    public function install(): bool
-    {
-        return true;
-    }
-
-    /**
-     * uninstall
-     * Removes our preferences from the database returning it to its original form
-     */
-    public function uninstall(): bool
-    {
-        return true;
-    }
-
-    /**
-     * upgrade
-     * This is a recommended plugin function
-     */
-    public function upgrade(): bool
-    {
-        return true;
     }
 
     /**
@@ -113,6 +86,15 @@ class AmpacheLibravatar extends AmpachePlugin implements PluginGetAvatarUrlInter
     }
 
     /**
+     * install
+     * Inserts plugin preferences into Ampache
+     */
+    public function install(): bool
+    {
+        return true;
+    }
+
+    /**
      * load
      * This loads up the data we need into this object, this stuff comes from the preferences.
      */
@@ -120,6 +102,24 @@ class AmpacheLibravatar extends AmpachePlugin implements PluginGetAvatarUrlInter
     {
         unset($user);
 
+        return true;
+    }
+
+    /**
+     * uninstall
+     * Removes our preferences from the database returning it to its original form
+     */
+    public function uninstall(): bool
+    {
+        return true;
+    }
+
+    /**
+     * upgrade
+     * This is a recommended plugin function
+     */
+    public function upgrade(): bool
+    {
         return true;
     }
 }

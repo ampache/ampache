@@ -56,8 +56,7 @@ final readonly class ShowCreateAction implements ApplicationActionInterface
         private PasswordGeneratorInterface $passwordGenerator,
         private ZipHandlerInterface $zipHandler,
         private LibraryItemLoaderInterface $libraryItemLoader,
-    ) {
-    }
+    ) {}
 
     public function run(ServerRequestInterface $request, GuiGatekeeperInterface $gatekeeper): ?ResponseInterface
     {

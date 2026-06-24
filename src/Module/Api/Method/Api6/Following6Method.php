@@ -49,7 +49,7 @@ final class Following6Method
      * Get users followed by the user
      * Error when user not found or no followers
      *
-     * filter   = (integer|string) filter by user id OR username //optional
+     * filter = (integer|string) filter by user id OR username //optional
      * username = (string) $username//optional
      *
      * @param array{
@@ -73,8 +73,8 @@ final class Following6Method
             ? $input['username']
             : $user->username;
         $leader = (is_numeric($username))
-            ? User::get_from_id((int)$username)
-            : User::get_from_username((string)$username);
+            ? User::get_from_id((int) $username)
+            : User::get_from_username((string) $username);
         if ($leader === null || $leader->id < 1) {
             debug_event(self::class, 'User `' . $username . '` cannot be found.', 1);
             /* HINT: Requested object string/id/type ("album", "myusername", "some song title", 1298376) */

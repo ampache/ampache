@@ -47,8 +47,7 @@ final readonly class ShareCreator implements ShareCreatorInterface
     public function __construct(
         private PluginRetrieverInterface $pluginRetriever,
         private LoggerInterface $logger,
-    ) {
-    }
+    ) {}
 
     public function create(
         User $user,
@@ -71,8 +70,8 @@ final readonly class ShareCreator implements ShareCreatorInterface
         }
 
         if (
-            !$allow_stream &&
-            !$allow_download
+            !$allow_stream
+            && !$allow_download
         ) {
             $this->logger->error(
                 'create_share: must allow stream OR allow download',
@@ -91,10 +90,10 @@ final readonly class ShareCreator implements ShareCreatorInterface
                 $description = 'Playlist - ' . $playlist->name;
             } elseif ($object_type === LibraryItemEnum::ALBUM) {
                 $album       = new Album($object_id);
-                $description = $album->get_fullname() . ' (' . $album->get_artist_fullname() . ')';
+                $description = $album->get_fullname() . ' (' . $album->get_parent_fullname() . ')';
             } elseif ($object_type === LibraryItemEnum::ALBUM_DISK) {
                 $albumdisk   = new AlbumDisk($object_id);
-                $description = $albumdisk->get_fullname() . ' (' . $albumdisk->get_artist_fullname() . ')';
+                $description = $albumdisk->get_fullname() . ' (' . $albumdisk->get_parent_fullname() . ')';
             }
         }
 
@@ -104,8 +103,8 @@ final readonly class ShareCreator implements ShareCreatorInterface
             $object_type->value,
             $object_id,
             time(),
-            (int)$allow_stream,
-            (int)$allow_download,
+            (int) $allow_stream,
+            (int) $allow_download,
             $expire_days,
             $secret,
             0,
@@ -114,7 +113,7 @@ final readonly class ShareCreator implements ShareCreatorInterface
         ];
         Dba::write($sql, $params);
 
-        $share_id = (int)Dba::insert_id();
+        $share_id = (int) Dba::insert_id();
 
         $url = Share::get_url($share_id, $secret);
         // Get a shortener url if any available

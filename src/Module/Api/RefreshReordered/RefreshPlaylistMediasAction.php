@@ -36,9 +36,8 @@ final class RefreshPlaylistMediasAction implements ApplicationActionInterface
 {
     public const string REQUEST_KEY = 'refresh_playlist_medias';
 
-    private RequestParserInterface $requestParser;
-
     private ModelFactoryInterface $modelFactory;
+    private RequestParserInterface $requestParser;
 
     public function __construct(
         RequestParserInterface $requestParser,

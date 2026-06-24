@@ -34,8 +34,7 @@ final readonly class UserFollowToggler implements UserFollowTogglerInterface
     public function __construct(
         private UserFollowerRepositoryInterface $userFollowerRepository,
         private UserActivityPosterInterface $userActivityPoster,
-    ) {
-    }
+    ) {}
 
     /**
      * Let a user (un)follow another user

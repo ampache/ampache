@@ -30,6 +30,7 @@ use Ampache\Module\Art\ArtCleanupInterface;
 use Ampache\Module\Song\Deletion\SongDeleterInterface;
 use Ampache\Module\System\LegacyLogger;
 use Ampache\Repository\AlbumRepositoryInterface;
+use Ampache\Repository\FolderRepositoryInterface;
 use Ampache\Repository\Model\Album;
 use Ampache\Repository\Model\ModelFactoryInterface;
 use Ampache\Repository\Model\Rating;
@@ -51,10 +52,10 @@ final readonly class AlbumDeleter implements AlbumDeleterInterface
         private SongRepositoryInterface $songRepository,
         private ShoutRepositoryInterface $shoutRepository,
         private SongDeleterInterface $songDeleter,
-        private UserActivityRepositoryInterface $useractivityRepository,
+        private UserActivityRepositoryInterface $userActivityRepository,
         private ArtCleanupInterface $artCleanup,
-    ) {
-    }
+        private FolderRepositoryInterface $folderRepository,
+    ) {}
 
     /**
      * @throws AlbumDeletionException
@@ -69,7 +70,10 @@ final readonly class AlbumDeleter implements AlbumDeleterInterface
             $deleted = $this->songDeleter->delete($song);
             if (!$deleted) {
                 $this->logger->critical(
-                    sprintf('Error when deleting the song `%d`.', $songId),
+                    sprintf(
+                        'Error when deleting the song `%d`.',
+                        $songId
+                    ),
                     [LegacyLogger::CONTEXT_TYPE => self::class]
                 );
 
@@ -83,6 +87,7 @@ final readonly class AlbumDeleter implements AlbumDeleterInterface
         Userflag::garbage_collection('album', $albumId);
         Rating::garbage_collection('album', $albumId);
         $this->shoutRepository->collectGarbage('album', $albumId);
-        $this->useractivityRepository->collectGarbage('album', $albumId);
+        $this->userActivityRepository->collectGarbage('album', $albumId);
+        $this->folderRepository->collectGarbage();
     }
 }

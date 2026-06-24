@@ -45,8 +45,7 @@ final readonly class UpdateFromTagsAction implements ApplicationActionInterface
         private ModelFactoryInterface $modelFactory,
         private UiInterface $ui,
         private ConfigContainerInterface $configContainer,
-    ) {
-    }
+    ) {}
 
     public function run(ServerRequestInterface $request, GuiGatekeeperInterface $gatekeeper): ?ResponseInterface
     {
@@ -58,8 +57,8 @@ final readonly class UpdateFromTagsAction implements ApplicationActionInterface
 
         // Make sure they are a 'power' user or the object owner
         if (
-            $gatekeeper->mayAccess(AccessTypeEnum::INTERFACE, AccessLevelEnum::CONTENT_MANAGER) === false &&
-            $gatekeeper->getUserId() !== $song->get_user_owner()
+            $gatekeeper->mayAccess(AccessTypeEnum::INTERFACE, AccessLevelEnum::CONTENT_MANAGER) === false
+            && $gatekeeper->getUserId() !== $song->get_user_owner()
         ) {
             throw new AccessDeniedException();
         }

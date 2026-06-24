@@ -31,6 +31,11 @@ use Ampache\Repository\Model\User;
 interface LiveStreamRepositoryInterface
 {
     /**
+     * This deletes the object with the given id from the database
+     */
+    public function delete(Live_Stream $liveStream): void;
+
+    /**
      * Returns all items
      *
      * If a user is provided, the result will be limited to catalogs the user has access to
@@ -45,9 +50,4 @@ interface LiveStreamRepositoryInterface
      * Finds a single item by its id
      */
     public function findById(int $objectId): ?Live_Stream;
-
-    /**
-     * This deletes the object with the given id from the database
-     */
-    public function delete(Live_Stream $liveStream): void;
 }

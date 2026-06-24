@@ -44,7 +44,7 @@ final class ArtistAlbums4Method
      *
      * filter = (string) UID of artist
      * offset = (integer) //optional
-     * limit  = (integer) //optional
+     * limit = (integer) //optional
      *
      * @param array{
      *     filter: string,
@@ -62,7 +62,7 @@ final class ArtistAlbums4Method
         if (!Api4::check_parameter($input, ['filter'], self::ACTION)) {
             return false;
         }
-        $artist  = new Artist((int)$input['filter']);
+        $artist  = new Artist((int) $input['filter']);
         $results = [];
         if ($artist->isNew() === false) {
             $results = self::getAlbumRepository()->getAlbumByArtist($artist->id);

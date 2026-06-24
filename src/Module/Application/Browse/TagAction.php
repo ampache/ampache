@@ -47,8 +47,7 @@ final readonly class TagAction implements ApplicationActionInterface
         private RequestParserInterface $requestParser,
         private ModelFactoryInterface $modelFactory,
         private UiInterface $ui,
-    ) {
-    }
+    ) {}
 
     public function run(ServerRequestInterface $request, GuiGatekeeperInterface $gatekeeper): ?ResponseInterface
     {

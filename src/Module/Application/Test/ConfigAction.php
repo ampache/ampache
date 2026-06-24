@@ -43,8 +43,7 @@ final readonly class ConfigAction implements ApplicationActionInterface
     public function __construct(
         private ConfigContainerInterface $configContainer,
         private ResponseFactoryInterface $responseFactory,
-    ) {
-    }
+    ) {}
 
     public function run(ServerRequestInterface $request, GuiGatekeeperInterface $gatekeeper): ?ResponseInterface
     {
@@ -75,7 +74,7 @@ final readonly class ConfigAction implements ApplicationActionInterface
             $link = __DIR__ . '/../../../../test.php?action=config';
         }
 
-        if (!empty($results)) {
+        if ($results !== [] && $results !== false) {
             /* Temp Fixes */
             $results = Preference::fix_preferences($results);
             $this->configContainer->updateConfig($results);

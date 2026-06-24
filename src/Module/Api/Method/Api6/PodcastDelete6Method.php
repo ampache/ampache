@@ -50,13 +50,10 @@ final class PodcastDelete6Method implements MethodInterface
 
     public const string REST_ACTION = 'podcasts_delete';
 
-    private PodcastDeleterInterface $podcastDeleter;
-
     private ConfigContainerInterface $configContainer;
-
-    private PrivilegeCheckerInterface $privilegeChecker;
-
+    private PodcastDeleterInterface $podcastDeleter;
     private PodcastRepositoryInterface $podcastRepository;
+    private PrivilegeCheckerInterface $privilegeChecker;
 
     public function __construct(
         PodcastDeleterInterface $podcastDeleter,
@@ -103,7 +100,7 @@ final class PodcastDelete6Method implements MethodInterface
             );
         }
 
-        $podcastId = (int)($input['filter'] ?? 0);
+        $podcastId = (int) ($input['filter'] ?? 0);
         if ($podcastId === 0) {
             throw new RequestParamMissingException(
                 sprintf(T_('Bad Request: %s'), 'filter')

@@ -33,48 +33,9 @@ abstract class Handler
     /** Seperator between command and arguments */
     protected string $commandSeperator;
 
-    private Catalog $handler;
-
-    private string $handlerCommand;
-
     protected array $fieldMapping = [];
-
-    /**
-     * Starts a command
-     */
-    abstract public function start(string $command): void;
-
-    /**
-     * setHandler
-     */
-    public function setHandler(Catalog $handler, string $command): void
-    {
-        $this->handler        = $handler;
-        $this->handlerCommand = $command;
-    }
-
-    /**
-     * Call function from the dispatcher e.g. to store the new song
-     */
-    protected function dispatch(array $data): void
-    {
-        call_user_func([$this->handler, $this->handlerCommand], $data);
-    }
-
-    /**
-     * Resolves the differences between Beets and Ampache properties
-     */
-    protected function mapFields(array $song): array
-    {
-        foreach ($this->fieldMapping as $from => $to) {
-            [$key, $format]     = $to;
-            $song[$key]         = sprintf($format, $song[$from]);
-        }
-
-        $song['genre'] = preg_split('/[\s]?[,|;][\s?]/', (string) $song['genre']);
-
-        return $song;
-    }
+    private Catalog $handler;
+    private string $handlerCommand;
 
     /**
      * Get a command to get songs with a timestamp in $tag newer than $time.
@@ -91,5 +52,42 @@ abstract class Handler
         }
 
         return implode($this->commandSeperator, $commandParts);
+    }
+
+    /**
+     * setHandler
+     */
+    public function setHandler(Catalog $handler, string $command): void
+    {
+        $this->handler        = $handler;
+        $this->handlerCommand = $command;
+    }
+
+    /**
+     * Starts a command
+     */
+    abstract public function start(string $command): void;
+
+    /**
+     * Call function from the dispatcher e.g. to store the new song
+     */
+    protected function dispatch(array $data): void
+    {
+        call_user_func([$this->handler, $this->handlerCommand], $data);
+    }
+
+    /**
+     * Resolves the differences between Beets and Ampache properties
+     */
+    protected function mapFields(array $song): array
+    {
+        foreach ($this->fieldMapping as $from => $to) {
+            [$key, $format] = $to;
+            $song[$key]     = sprintf($format, $song[$from]);
+        }
+
+        $song['genre'] = preg_split('/[\s]?[,|;][\s?]/', (string) $song['genre']);
+
+        return $song;
     }
 }

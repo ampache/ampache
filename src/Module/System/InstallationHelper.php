@@ -36,51 +36,105 @@ use PDOStatement;
 final class InstallationHelper implements InstallationHelperInterface
 {
     /**
-     * splits up a standard SQL dump file into distinct sql queries
+     * This takes an array of results and re-generates the config file
+     * this is used by the installer and by the admin/system page
+     * @throws Exception
      */
-    private function split_sql(string $sql): array
+    public function generate_config(array $current): string
     {
-        $sql       = trim($sql);
-        $sql       = (string)preg_replace("/\n--[^\n]*\n/", "\n", $sql);
+        // Start building the new config file
+        $distfile = __DIR__ . '/../../../config/ampache.cfg.php.dist';
+        $handle   = fopen($distfile, 'r');
+        $length   = Core::get_filesize($distfile);
+        if (!$handle || $length <= 0) {
+            return '';
+        }
 
-        $buffer    = [];
-        $ret       = [];
-        $in_string = false;
-        for ($count = 0; $count < strlen($sql) - 1; $count++) {
-            if ($sql[$count] == ";" && !$in_string) {
-                $ret[] = substr($sql, 0, $count);
-                $sql   = substr($sql, $count + 1);
-                $count = 0;
-            }
+        $dist = fread($handle, $length);
+        fclose($handle);
 
-            if ($in_string && ($sql[$count] == $in_string) && $buffer[1] != "\\") {
-                $in_string = false;
-            } elseif (
-                !$in_string &&
-                (
-                    $sql[$count] == '"' ||
-                    $sql[$count] == "'"
-                ) &&
-                (
-                    !isset($buffer[0]) ||
-                    $buffer[0] != "\\"
-                )
+        $data  = explode("\n", (string) $dist);
+        $final = "";
+        foreach ($data as $line) {
+            if (
+                preg_match("/^;?([\w\d]+)\s+=\s+[\"]{1}(.*?)[\"]{1}$/", $line, $matches)
+                || preg_match("/^;?([\w\d]+)\s+=\s+[\']{1}(.*?)[\']{1}$/", $line, $matches)
+                || preg_match("/^;?([\w\d]+)\s+=\s+[\'\"]{0}(.*)[\'\"]{0}$/", $line, $matches)
+                || preg_match("/^;?([\w\d]+)\s{0}=\s{0}[\'\"]?(.*?)[\'\"]?$/", $line, $matches)
             ) {
-                $in_string = $sql[$count];
+                $key   = $matches[1];
+                $value = $matches[2];
+
+                // Put in the current value
+                if ($key === 'config_version') {
+                    $line = $key . ' = ' . $this->escape_ini($value);
+                } elseif ($key === 'secret_key' && !isset($current[$key])) {
+                    $secret_key = Core::gen_secure_token(31);
+                    if ($secret_key !== null) {
+                        $line = $key . ' = "' . $this->escape_ini($secret_key) . '"';
+                    }
+                } elseif (isset($current[$key])) {
+                    // unable to generate a cryptographically secure token, use the default one
+                    $line = $key . ' = "' . $this->escape_ini((string) $current[$key]) . '"';
+                    unset($current[$key]);
+                }
             }
 
-            if (isset($buffer[1])) {
-                $buffer[0] = $buffer[1];
+            $final .= $line . "\n";
+        }
+
+        return $final;
+    }
+
+    public function install_check_rewrite_rules(string $file, string $web_path, bool $fix = false): bool|string
+    {
+        if (!is_readable($file)) {
+            $file .= '.dist';
+        }
+
+        $valid     = true;
+        $htaccess  = (string) file_get_contents($file);
+        $new_lines = [];
+        $lines     = explode("\n", $htaccess);
+        foreach ($lines as $line) {
+            $parts   = explode(' ', $line);
+            $p_count = count($parts);
+            for ($count = 0; $count < $p_count; $count++) {
+                // Matching url rewriting rule syntax
+                if ($parts[$count] === 'RewriteRule' && $count < ($p_count - 2)) {
+                    $reprule = $parts[$count + 2];
+                    if ($web_path !== '' && $web_path !== '0' && !str_starts_with($reprule, $web_path)) {
+                        $reprule = $web_path . $reprule;
+                        if ($fix) {
+                            $parts[$count + 2] = $reprule;
+                            $line              = implode(' ', $parts);
+                        } else {
+                            $valid = false;
+                        }
+                    }
+
+                    break;
+                }
             }
 
-            $buffer[1] = $sql[$count];
+            if ($fix) {
+                $new_lines[] = $line;
+            }
         }
 
-        if (!empty($sql)) {
-            $ret[] = $sql;
+        if ($fix) {
+            return implode("\n", $new_lines);
         }
 
-        return $ret;
+        return $valid;
+    }
+
+    /**
+     * install_check_server_apache
+     */
+    public function install_check_server_apache(): bool
+    {
+        return (str_starts_with((string) $_SERVER['SERVER_SOFTWARE'], "Apache/"));
     }
 
     /**
@@ -135,75 +189,222 @@ final class InstallationHelper implements InstallationHelperInterface
     }
 
     /**
-     * install_check_server_apache
+     * @param string[] $backends
      */
-    public function install_check_server_apache(): bool
+    public function install_config_backends(array $backends): void
     {
-        return (str_starts_with((string) $_SERVER['SERVER_SOFTWARE'], "Apache/"));
-    }
+        $dbconfig = [
+            'subsonic_backend' => '0',
+            'daap_backend' => '0',
+            'upnp_backend' => '0',
+            'webdav_backend' => '0',
+            'stream_beautiful_url' => '0',
+        ];
 
-    public function install_check_rewrite_rules(string $file, string $web_path, bool $fix = false): bool|string
-    {
-        if (!is_readable($file)) {
-            $file .= '.dist';
-        }
-
-        $valid     = true;
-        $htaccess  = (string)file_get_contents($file);
-        $new_lines = [];
-        $lines     = explode("\n", $htaccess);
-        foreach ($lines as $line) {
-            $parts   = explode(' ', $line);
-            $p_count = count($parts);
-            for ($count = 0; $count < $p_count; $count++) {
-                // Matching url rewriting rule syntax
-                if ($parts[$count] === 'RewriteRule' && $count < ($p_count - 2)) {
-                    $reprule = $parts[$count + 2];
-                    if ($web_path !== '' && $web_path !== '0' && !str_starts_with($reprule, $web_path)) {
-                        $reprule = $web_path . $reprule;
-                        if ($fix) {
-                            $parts[$count + 2] = $reprule;
-                            $line              = implode(' ', $parts);
-                        } else {
-                            $valid = false;
-                        }
-                    }
-
+        foreach ($backends as $backend) {
+            switch ($backend) {
+                case 'subsonic':
+                    $dbconfig['subsonic_backend'] = '1';
                     break;
-                }
-            }
-
-            if ($fix) {
-                $new_lines[] = $line;
+                case 'upnp':
+                    $dbconfig['upnp_backend']         = '1';
+                    $dbconfig['stream_beautiful_url'] = '1';
+                    break;
+                case 'daap':
+                    $dbconfig['daap_backend'] = '1';
+                    break;
+                case 'webdav':
+                    $dbconfig['webdav_backend'] = '1';
+                    break;
             }
         }
 
-        if ($fix) {
-            return implode("\n", $new_lines);
+        foreach ($dbconfig as $preference => $value) {
+            Preference::update($preference, -1, $value, true, true);
         }
-
-        return $valid;
     }
 
-    public function install_rewrite_rules(string $file, string $web_path, bool $download): bool
+    public function install_config_transcode_mode(string $mode): void
     {
-        $final = $this->install_check_rewrite_rules($file, $web_path, true);
-        if ($final === false || ($final === '' || $final === '0')) {
-            AmpError::add('general', T_('Config file is not writable') . ': ' . $file);
+        $trconfig = [
+            'encode_target' => 'mp3',
+            'encode_video_target' => 'webm',
+            'transcode_m4a' => 'required',
+            'transcode_flac' => 'required',
+            'transcode_mpc' => 'required',
+            'transcode_ogg' => 'allowed',
+            'transcode_wav' => 'required',
+            'transcode_avi' => 'allowed',
+            'transcode_mpg' => 'allowed',
+            'transcode_mkv' => 'allowed',
+        ];
+        if ($mode === 'ffmpeg' || $mode === 'avconv') {
+            $trconfig['transcode_cmd']          = $mode;
+            $trconfig['transcode_input']        = '-i %FILE%';
+            $trconfig['waveform']               = 'true';
+            $trconfig['generate_video_preview'] = 'true';
+
+            AmpConfig::set_by_array($trconfig, true);
+        }
+    }
+
+    public function install_config_use_case(string $case): void
+    {
+        $trconfig = [
+            'use_auth' => 'true',
+            'ratings' => 'true',
+            'sociable' => 'true',
+            'licensing' => 'false',
+            'wanted' => 'false',
+            'live_stream' => 'true',
+            'allow_public_registration' => 'false',
+            'cookie_disclaimer' => 'false',
+            'share' => 'false',
+        ];
+
+        $dbconfig = [
+            'download' => '1',
+            'share' => '0',
+            'allow_video' => '0',
+            'home_now_playing' => '1',
+            'home_recently_played' => '1',
+        ];
+
+        switch ($case) {
+            case 'minimalist':
+                $trconfig['ratings']     = 'false';
+                $trconfig['sociable']    = 'false';
+                $trconfig['wanted']      = 'false';
+                $trconfig['live_stream'] = 'false';
+
+                $dbconfig['download']    = '0';
+                $dbconfig['allow_video'] = '0';
+
+                $cookie_options = [
+                    'expires' => time() + (60 * 60 * 24 * 30), // 30 day
+                    'path' => '/',
+                    'samesite' => 'Strict'
+                ];
+
+                // Default local UI preferences to have a better 'minimalist first look'.
+                setcookie('sidebar_state', 'collapsed', $cookie_options);
+                setcookie('browse_album_grid_view', 'false', $cookie_options);
+                setcookie('browse_artist_grid_view', 'false', $cookie_options);
+                break;
+            case 'community':
+                $trconfig['use_auth']                  = 'false';
+                $trconfig['licensing']                 = 'true';
+                $trconfig['wanted']                    = 'false';
+                $trconfig['live_stream']               = 'false';
+                $trconfig['allow_public_registration'] = 'true';
+                $trconfig['cookie_disclaimer']         = 'true';
+                $trconfig['share']                     = 'true';
+
+                $dbconfig['download']             = '0';
+                $dbconfig['share']                = '1';
+                $dbconfig['home_now_playing']     = '0';
+                $dbconfig['home_recently_played'] = '0';
+                break;
+        }
+
+        AmpConfig::set_by_array($trconfig, true);
+        foreach ($dbconfig as $preference => $value) {
+            Preference::update($preference, -1, $value, true, true);
+        }
+    }
+
+    /**
+     * this creates your initial account and sets up the preferences for the -1 user and you
+     */
+    public function install_create_account(string $username, string $password, string $password2): bool
+    {
+        if (!strlen($username) || !strlen($password)) {
+            AmpError::add('general', T_('No username or password was specified'));
 
             return false;
         }
 
+        if ($password !== $password2) {
+            AmpError::add('general', T_('Passwords do not match'));
+
+            return false;
+        }
+
+        if (!Dba::check_database()) {
+            /* HINT: Database error message */
+            AmpError::add('general', sprintf(T_('Connection to the database failed: %s'), Dba::error()));
+
+            return false;
+        }
+
+        if (!Dba::check_database_inserted()) {
+            /* HINT: Database error message */
+            AmpError::add('general', sprintf(T_('Database select failed: %s'), Dba::error()));
+
+            return false;
+        }
+
+        $user_id = User::create($username, 'Administrator', '', '', $password, AccessLevelEnum::ADMIN);
+        if ($user_id < 1) {
+            /* HINT: Database error message */
+            AmpError::add('general', sprintf(T_('Administrative user creation failed: %s'), Dba::error()));
+
+            return false;
+        }
+
+        // Fix the system user preferences
+        User::fix_preferences(-1);
+
+        return true;
+    }
+
+    /**
+     * Attempts to write out the config file or offer it as a download.
+     * @throws Exception
+     */
+    public function install_create_config(bool $download = false): bool
+    {
+        $config_file = __DIR__ . '/../../../config/ampache.cfg.php';
+
+        /* Attempt to make DB connection */
+        Dba::dbh();
+
+        $params = AmpConfig::get_all();
+        if (!$params || empty($params['database_username']) || (empty($params['database_password']) && !str_starts_with((string) $params['database_hostname'], '/'))) {
+            AmpError::add('general', T_("Invalid configuration settings"));
+
+            return false;
+        }
+
+        // Connect to the DB
+        if (!Dba::check_database()) {
+            AmpError::add('general', T_("Connection to the database failed: Check hostname, username and password"));
+
+            return false;
+        }
+
+        $final = $this->generate_config($params);
+        if ($final === '' || $final === '0') {
+            AmpError::add('general', T_('Config file is not writable'));
+
+            return false;
+        }
+
+        // Make sure the directory is writable OR the empty config file is
         if (!$download) {
-            if (!file_put_contents($file, $final)) {
-                AmpError::add('general', T_('Failed to write config file') . ': ' . $file);
+            if (!check_config_writable()) {
+                AmpError::add('general', T_('Config file is not writable'));
+
+                return false;
+            } elseif (!file_put_contents($config_file, $final)) {
+                // Given that $final is > 0, we can ignore lazy comparison problems
+                AmpError::add('general', T_('Failed writing config file'));
 
                 return false;
             }
         } else {
             $browser = new Horde_Browser();
-            $headers = $browser->getDownloadHeaders(basename($file), 'text/plain', false, (string)strlen((string) $final));
-
+            $headers = $browser->getDownloadHeaders('ampache.cfg.php', 'text/plain', false, (string) strlen($final));
             foreach ($headers as $headerName => $value) {
                 header(sprintf('%s: %s', $headerName, $value));
             }
@@ -214,6 +415,25 @@ final class InstallationHelper implements InstallationHelperInterface
         }
 
         return true;
+    }
+
+    /**
+     * get transcode modes available on this machine.
+     * @return string[]
+     */
+    public function install_get_transcode_modes(): array
+    {
+        $modes = [];
+
+        if ($this->command_exists('ffmpeg')) {
+            $modes[] = 'ffmpeg';
+        }
+
+        if ($this->command_exists('avconv')) {
+            $modes[] = 'avconv';
+        }
+
+        return $modes;
     }
 
     /**
@@ -323,7 +543,7 @@ final class InstallationHelper implements InstallationHelperInterface
 
                 return false;
             }
-        } // end if we are creating a user
+        }
 
         if ($create_tables) {
             $sql_file   = __DIR__ . '/../../../resources/sql/ampache.sql';
@@ -347,7 +567,7 @@ final class InstallationHelper implements InstallationHelperInterface
             $errors  = [];
             for ($count = 0; $count < $p_count; $count++) {
                 $pieces[$count] = trim((string) $pieces[$count]);
-                if (($pieces[$count] !== '' && $pieces[$count] !== '0') && $pieces[$count] != '#' && !Dba::write($pieces[$count])) {
+                if (!in_array($pieces[$count], ['', '0', '#'], true) && !Dba::write($pieces[$count])) {
                     $errors[] = [Dba::error(), $pieces[$count]];
                 }
             }
@@ -375,53 +595,25 @@ final class InstallationHelper implements InstallationHelperInterface
         return true;
     }
 
-    /**
-     * Attempts to write out the config file or offer it as a download.
-     * @throws Exception
-     */
-    public function install_create_config(bool $download = false): bool
+    public function install_rewrite_rules(string $file, string $web_path, bool $download): bool
     {
-        $config_file = __DIR__ . '/../../../config/ampache.cfg.php';
-
-        /* Attempt to make DB connection */
-        Dba::dbh();
-
-        $params = AmpConfig::get_all();
-        if (!$params || empty($params['database_username']) || (empty($params['database_password']) && !str_starts_with((string) $params['database_hostname'], '/'))) {
-            AmpError::add('general', T_("Invalid configuration settings"));
+        $final = $this->install_check_rewrite_rules($file, $web_path, true);
+        if ($final === false || ($final === '' || $final === '0')) {
+            AmpError::add('general', T_('Config file is not writable') . ': ' . $file);
 
             return false;
         }
 
-        // Connect to the DB
-        if (!Dba::check_database()) {
-            AmpError::add('general', T_("Connection to the database failed: Check hostname, username and password"));
-
-            return false;
-        }
-
-        $final = $this->generate_config($params);
-        if ($final === '' || $final === '0') {
-            AmpError::add('general', T_('Config file is not writable'));
-
-            return false;
-        }
-
-        // Make sure the directory is writable OR the empty config file is
         if (!$download) {
-            if (!check_config_writable()) {
-                AmpError::add('general', T_('Config file is not writable'));
-
-                return false;
-            } elseif (!file_put_contents($config_file, $final)) {
-                // Given that $final is > 0, we can ignore lazy comparison problems
-                AmpError::add('general', T_('Failed writing config file'));
+            if (!file_put_contents($file, $final)) {
+                AmpError::add('general', T_('Failed to write config file') . ': ' . $file);
 
                 return false;
             }
         } else {
             $browser = new Horde_Browser();
-            $headers = $browser->getDownloadHeaders('ampache.cfg.php', 'text/plain', false, (string)strlen($final));
+            $headers = $browser->getDownloadHeaders(basename($file), 'text/plain', false, (string) strlen((string) $final));
+
             foreach ($headers as $headerName => $value) {
                 header(sprintf('%s: %s', $headerName, $value));
             }
@@ -435,46 +627,33 @@ final class InstallationHelper implements InstallationHelperInterface
     }
 
     /**
-     * this creates your initial account and sets up the preferences for the -1 user and you
+     * Write new configuration into the current configuration file by keeping old values.
      */
-    public function install_create_account(string $username, string $password, string $password2): bool
+    public function write_config(string $current_file_path): bool
     {
-        if (!strlen($username) || !strlen($password)) {
-            AmpError::add('general', T_('No username or password was specified'));
-
+        if (
+            !$current_file_path
+            || !is_writable($current_file_path)
+            || !parse_ini_file($current_file_path)
+        ) {
             return false;
         }
 
-        if ($password !== $password2) {
-            AmpError::add('general', T_('Passwords do not match'));
+        $new_data = $this->generate_config(parse_ini_file($current_file_path) ?: []);
 
+        // Start writing into the current config file
+        $handle = fopen($current_file_path, 'w+');
+        $length = strlen($new_data);
+        if (
+            $new_data === '' || $new_data === '0'
+            || !$handle
+            || $length <= 0
+        ) {
             return false;
         }
 
-        if (!Dba::check_database()) {
-            /* HINT: Database error message */
-            AmpError::add('general', sprintf(T_('Connection to the database failed: %s'), Dba::error()));
-
-            return false;
-        }
-
-        if (!Dba::check_database_inserted()) {
-            /* HINT: Database error message */
-            AmpError::add('general', sprintf(T_('Database select failed: %s'), Dba::error()));
-
-            return false;
-        }
-
-        $user_id = User::create($username, 'Administrator', '', '', $password, AccessLevelEnum::ADMIN);
-        if ($user_id < 1) {
-            /* HINT: Database error message */
-            AmpError::add('general', sprintf(T_('Administrative user creation failed: %s'), Dba::error()));
-
-            return false;
-        }
-
-        // Fix the system user preferences
-        User::fix_preferences(-1);
+        fwrite($handle, $new_data, $length);
+        fclose($handle);
 
         return true;
     }
@@ -510,233 +689,6 @@ final class InstallationHelper implements InstallationHelperInterface
     }
 
     /**
-     * get transcode modes available on this machine.
-     * @return string[]
-     */
-    public function install_get_transcode_modes(): array
-    {
-        $modes = [];
-
-        if ($this->command_exists('ffmpeg')) {
-            $modes[] = 'ffmpeg';
-        }
-
-        if ($this->command_exists('avconv')) {
-            $modes[] = 'avconv';
-        }
-
-        return $modes;
-    }
-
-    public function install_config_transcode_mode(string $mode): void
-    {
-        $trconfig = [
-            'encode_target' => 'mp3',
-            'encode_video_target' => 'webm',
-            'transcode_m4a' => 'required',
-            'transcode_flac' => 'required',
-            'transcode_mpc' => 'required',
-            'transcode_ogg' => 'allowed',
-            'transcode_wav' => 'required',
-            'transcode_avi' => 'allowed',
-            'transcode_mpg' => 'allowed',
-            'transcode_mkv' => 'allowed',
-        ];
-        if ($mode === 'ffmpeg' || $mode === 'avconv') {
-            $trconfig['transcode_cmd']          = $mode;
-            $trconfig['transcode_input']        = '-i %FILE%';
-            $trconfig['waveform']               = 'true';
-            $trconfig['generate_video_preview'] = 'true';
-
-            AmpConfig::set_by_array($trconfig, true);
-        }
-    }
-
-    public function install_config_use_case(string $case): void
-    {
-        $trconfig = [
-            'use_auth' => 'true',
-            'ratings' => 'true',
-            'sociable' => 'true',
-            'licensing' => 'false',
-            'wanted' => 'false',
-            'live_stream' => 'true',
-            'allow_public_registration' => 'false',
-            'cookie_disclaimer' => 'false',
-            'share' => 'false',
-        ];
-
-        $dbconfig = [
-            'download' => '1',
-            'share' => '0',
-            'allow_video' => '0',
-            'home_now_playing' => '1',
-            'home_recently_played' => '1',
-        ];
-
-        switch ($case) {
-            case 'minimalist':
-                $trconfig['ratings']     = 'false';
-                $trconfig['sociable']    = 'false';
-                $trconfig['wanted']      = 'false';
-                $trconfig['live_stream'] = 'false';
-
-                $dbconfig['download']    = '0';
-                $dbconfig['allow_video'] = '0';
-
-                $cookie_options = [
-                    'expires' => time() + (60 * 60 * 24 * 30), // 30 day
-                    'path' => '/',
-                    'samesite' => 'Strict'
-                ];
-
-                // Default local UI preferences to have a better 'minimalist first look'.
-                setcookie('sidebar_state', 'collapsed', $cookie_options);
-                setcookie('browse_album_grid_view', 'false', $cookie_options);
-                setcookie('browse_artist_grid_view', 'false', $cookie_options);
-                break;
-            case 'community':
-                $trconfig['use_auth']                  = 'false';
-                $trconfig['licensing']                 = 'true';
-                $trconfig['wanted']                    = 'false';
-                $trconfig['live_stream']               = 'false';
-                $trconfig['allow_public_registration'] = 'true';
-                $trconfig['cookie_disclaimer']         = 'true';
-                $trconfig['share']                     = 'true';
-
-                $dbconfig['download']             = '0';
-                $dbconfig['share']                = '1';
-                $dbconfig['home_now_playing']     = '0';
-                $dbconfig['home_recently_played'] = '0';
-                break;
-        }
-
-        AmpConfig::set_by_array($trconfig, true);
-        foreach ($dbconfig as $preference => $value) {
-            Preference::update($preference, -1, $value, true, true);
-        }
-    }
-
-    /**
-     * @param string[] $backends
-     */
-    public function install_config_backends(array $backends): void
-    {
-        $dbconfig = [
-            'subsonic_backend' => '0',
-            'daap_backend' => '0',
-            'upnp_backend' => '0',
-            'webdav_backend' => '0',
-            'stream_beautiful_url' => '0',
-        ];
-
-        foreach ($backends as $backend) {
-            switch ($backend) {
-                case 'subsonic':
-                    $dbconfig['subsonic_backend'] = '1';
-                    break;
-                case 'upnp':
-                    $dbconfig['upnp_backend']         = '1';
-                    $dbconfig['stream_beautiful_url'] = '1';
-                    break;
-                case 'daap':
-                    $dbconfig['daap_backend'] = '1';
-                    break;
-                case 'webdav':
-                    $dbconfig['webdav_backend'] = '1';
-                    break;
-            }
-        }
-
-        foreach ($dbconfig as $preference => $value) {
-            Preference::update($preference, -1, $value, true, true);
-        }
-    }
-
-    /**
-     * Write new configuration into the current configuration file by keeping old values.
-     */
-    public function write_config(string $current_file_path): bool
-    {
-        if (
-            !$current_file_path ||
-            !is_writable($current_file_path) ||
-            !parse_ini_file($current_file_path)
-        ) {
-            return false;
-        }
-
-        $new_data = $this->generate_config(parse_ini_file($current_file_path) ?: []);
-
-        // Start writing into the current config file
-        $handle = fopen($current_file_path, 'w+');
-        $length = strlen($new_data);
-        if (
-            $new_data === '' || $new_data === '0' ||
-            !$handle ||
-            $length <= 0
-        ) {
-            return false;
-        }
-
-        fwrite($handle, $new_data, $length);
-        fclose($handle);
-
-        return true;
-    }
-
-    /**
-     * This takes an array of results and re-generates the config file
-     * this is used by the installer and by the admin/system page
-     * @throws Exception
-     */
-    public function generate_config(array $current): string
-    {
-        // Start building the new config file
-        $distfile = __DIR__ . '/../../../config/ampache.cfg.php.dist';
-        $handle   = fopen($distfile, 'r');
-        $length   = Core::get_filesize($distfile);
-        if (!$handle || $length <= 0) {
-            return '';
-        }
-
-        $dist = fread($handle, $length);
-        fclose($handle);
-
-        $data  = explode("\n", (string) $dist);
-        $final = "";
-        foreach ($data as $line) {
-            if (
-                preg_match("/^;?([\w\d]+)\s+=\s+[\"]{1}(.*?)[\"]{1}$/", $line, $matches) ||
-                preg_match("/^;?([\w\d]+)\s+=\s+[\']{1}(.*?)[\']{1}$/", $line, $matches) ||
-                preg_match("/^;?([\w\d]+)\s+=\s+[\'\"]{0}(.*)[\'\"]{0}$/", $line, $matches) ||
-                preg_match("/^;?([\w\d]+)\s{0}=\s{0}[\'\"]?(.*?)[\'\"]?$/", $line, $matches)
-            ) {
-                $key   = $matches[1];
-                $value = $matches[2];
-
-                // Put in the current value
-                if ($key === 'config_version') {
-                    $line = $key . ' = ' . $this->escape_ini($value);
-                } elseif ($key === 'secret_key' && !isset($current[$key])) {
-                    $secret_key = Core::gen_secure_token(31);
-                    if ($secret_key !== null) {
-                        $line = $key . ' = "' . $this->escape_ini($secret_key) . '"';
-                    }
-                } elseif (isset($current[$key])) {
-                    // unable to generate a cryptographically secure token, use the default one
-                    $line = $key . ' = "' . $this->escape_ini((string) $current[$key]) . '"';
-                    unset($current[$key]);
-                }
-            }
-
-            $final .= $line . "\n";
-        }
-
-        return $final;
-    }
-
-    /**
      * Escape a value used for inserting into an ini file.
      * Won't quote ', like addslashes does.
      * @param string|string[] $str
@@ -745,5 +697,53 @@ final class InstallationHelper implements InstallationHelperInterface
     private function escape_ini(array|string $str): array|string
     {
         return str_replace('"', '\"', $str);
+    }
+
+    /**
+     * splits up a standard SQL dump file into distinct sql queries
+     */
+    private function split_sql(string $sql): array
+    {
+        $sql = trim($sql);
+        $sql = (string) preg_replace("/\n--[^\n]*\n/", "\n", $sql);
+
+        $buffer    = [];
+        $ret       = [];
+        $in_string = false;
+        for ($count = 0; $count < strlen($sql) - 1; $count++) {
+            if ($sql[$count] == ";" && !$in_string) {
+                $ret[] = substr($sql, 0, $count);
+                $sql   = substr($sql, $count + 1);
+                $count = 0;
+            }
+
+            if ($in_string && ($sql[$count] == $in_string) && $buffer[1] != "\\") {
+                $in_string = false;
+            } elseif (
+                !$in_string
+                && (
+                    $sql[$count] == '"'
+                    || $sql[$count] == "'"
+                )
+                && (
+                    !isset($buffer[0])
+                    || $buffer[0] != "\\"
+                )
+            ) {
+                $in_string = $sql[$count];
+            }
+
+            if (isset($buffer[1])) {
+                $buffer[0] = $buffer[1];
+            }
+
+            $buffer[1] = $sql[$count];
+        }
+
+        if (!empty($sql)) {
+            $ret[] = $sql;
+        }
+
+        return $ret;
     }
 }

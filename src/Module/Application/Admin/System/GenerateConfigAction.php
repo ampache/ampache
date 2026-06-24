@@ -49,14 +49,13 @@ final readonly class GenerateConfigAction implements ApplicationActionInterface
         private InstallationHelperInterface $installationHelper,
         private ResponseFactoryInterface $responseFactory,
         private StreamFactoryInterface $streamFactory,
-    ) {
-    }
+    ) {}
 
     public function run(ServerRequestInterface $request, GuiGatekeeperInterface $gatekeeper): ResponseInterface
     {
         if (
-            $gatekeeper->mayAccess(AccessTypeEnum::INTERFACE, AccessLevelEnum::ADMIN) === false ||
-            $this->configContainer->isFeatureEnabled(ConfigurationKeyEnum::DEMO_MODE)
+            $gatekeeper->mayAccess(AccessTypeEnum::INTERFACE, AccessLevelEnum::ADMIN) === false
+            || $this->configContainer->isFeatureEnabled(ConfigurationKeyEnum::DEMO_MODE)
         ) {
             throw new AccessDeniedException();
         }
@@ -69,7 +68,7 @@ final readonly class GenerateConfigAction implements ApplicationActionInterface
             'ampache.cfg.php',
             'text/plain',
             false,
-            (string)strlen($generatedConfig)
+            (string) strlen($generatedConfig)
         );
 
         $response = $this->responseFactory->createResponse();

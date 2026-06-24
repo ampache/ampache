@@ -30,6 +30,25 @@ use PHPUnit\Framework\Attributes\DataProvider;
 
 class CatalogStatsTest extends MockeryTestCase
 {
+    public static function methodDataProvider(): array
+    {
+        return [
+            ['getConnectedCount', 'connected', 666, 0],
+            ['getUserCount', 'user', 666, 0],
+            ['getAlbumCount', 'album', 666, 0],
+            ['getAlbumDiskCount', 'album_disk', 666, 0],
+            ['getArtistCount', 'artist', 666, 0],
+            ['getSongCount', 'song', 666, 0],
+            ['getPodcastCount', 'podcast', 666, 0],
+            ['getPodcastEpisodeCount', 'podcast_episode', 666, 0],
+            ['getGenreCount', 'tags', 666, 0],
+            ['getCatalogSize', 'formatted_size', 'some-size', ''],
+            ['getPlayTime', 'time_text', 'some-time', ''],
+            ['getItemCount', 'items', 666, 0],
+            ['getVideoCount', 'video', 666, 0],
+        ];
+    }
+
     #[DataProvider(methodName: 'methodDataProvider')]
     public function testArrayAccessorsReturnData(
         string $methodName,
@@ -51,24 +70,5 @@ class CatalogStatsTest extends MockeryTestCase
             $defaultValue,
             call_user_func_array([$subject, $methodName], [])
         );
-    }
-
-    public static function methodDataProvider(): array
-    {
-        return [
-            ['getConnectedCount', 'connected', 666, 0],
-            ['getUserCount', 'user', 666, 0],
-            ['getAlbumCount', 'album', 666, 0],
-            ['getAlbumDiskCount', 'album_disk', 666, 0],
-            ['getArtistCount', 'artist', 666, 0],
-            ['getSongCount', 'song', 666, 0],
-            ['getPodcastCount', 'podcast', 666, 0],
-            ['getPodcastEpisodeCount', 'podcast_episode', 666, 0],
-            ['getGenreCount', 'tags', 666, 0],
-            ['getCatalogSize', 'formatted_size', 'some-size', ''],
-            ['getPlayTime', 'time_text', 'some-time', ''],
-            ['getItemCount', 'items', 666, 0],
-            ['getVideoCount', 'video', 666, 0],
-        ];
     }
 }

@@ -55,10 +55,10 @@ final class Handshake5Method
      * This is the function that handles verifying a new handshake
      * Takes a timestamp, auth key, and username.
      *
-     * auth      = (string) $passphrase
-     * user      = (string) $username //optional
+     * auth = (string) $passphrase
+     * user = (string) $username //optional
      * timestamp = (integer) UNIXTIME() //Required if login/password authentication
-     * version   = (string) $version //optional
+     * version = (string) $version //optional
      *
      * @param array{
      *     user?: string,
@@ -77,7 +77,7 @@ final class Handshake5Method
     public static function handshake(array $input): bool
     {
         $now_time   = time();
-        $timestamp  = (int)preg_replace('/[^0-9]/', '', (string)($input['timestamp'] ?? $now_time));
+        $timestamp  = (int) preg_replace('/[^0-9]/', '', (string) ($input['timestamp'] ?? $now_time));
         $passphrase = $input['auth'];
         if (empty($passphrase)) {
             $passphrase = Core::get_post('auth');
@@ -86,11 +86,11 @@ final class Handshake5Method
         $user_ip  = Core::get_user_ip();
         // set the version to the old string for old api clients
         $version       = (isset($input['version'])) ? $input['version'] : Api5::$version;
-        Api5::$version = ((int)$version >= 350001) ? Api5::$version_numeric : Api5::$version;
-        $data_version  = (int)substr($version, 0, 1);
+        Api5::$version = ((int) $version >= 350001) ? Api5::$version_numeric : Api5::$version;
+        $data_version  = (int) substr($version, 0, 1);
 
         // Version check shouldn't be soo restrictive... only check with initial version to not break clients compatibility
-        if ((int)($version) < Api5::$auth_version && $data_version !== 5) {
+        if ((int) ($version) < Api5::$auth_version && $data_version !== 5) {
             debug_event(self::class, 'Login Failed: Version too old', 1);
             AmpError::add('api', T_('Login failed, API version is too old'));
 
@@ -128,8 +128,8 @@ final class Handshake5Method
             if ($username) {
                 // If the timestamp isn't within 30 minutes sucks to be them
                 if (
-                    ($timestamp < ($now_time - 1800)) ||
-                    ($timestamp > ($now_time + 1800))
+                    ($timestamp < ($now_time - 1800))
+                    || ($timestamp > ($now_time + 1800))
                 ) {
                     debug_event(self::class, 'Login Failed: timestamp out of range ' . $timestamp . '/' . $now_time, 1);
                     AmpError::add('api', T_('Login failed, timestamp is out of range'));
@@ -163,12 +163,12 @@ final class Handshake5Method
                 } else {
                     // Create the session
                     $data             = [];
-                    $data['username'] = (string)$client->username;
+                    $data['username'] = (string) $client->username;
                     $data['type']     = 'api';
-                    $data['apikey']   = (string)$client->apikey;
+                    $data['apikey']   = (string) $client->apikey;
                     $data['value']    = $data_version;
                     if (isset($input['client'])) {
-                        $data['agent'] = scrub_in((string)$input['client']);
+                        $data['agent'] = scrub_in((string) $input['client']);
                     }
                     if (isset($input['geo_latitude'])) {
                         $data['geo_latitude'] = $input['geo_latitude'];
@@ -207,7 +207,7 @@ final class Handshake5Method
 
                 return true;
             } // match
-        } // end while
+        }
 
         debug_event(self::class, 'Login Failed, unable to match passphrase', 1);
         Api5::error(T_('Received Invalid Handshake') . ' - ' . T_('Incorrect username or password'), ErrorCodeEnum::INVALID_HANDSHAKE, self::ACTION, 'account', $input['api_format']);

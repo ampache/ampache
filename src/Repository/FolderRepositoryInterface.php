@@ -26,14 +26,22 @@ declare(strict_types=1);
 namespace Ampache\Repository;
 
 use Ampache\Repository\Model\Folder;
+use Ampache\Repository\Model\Podcast_Episode;
+use Ampache\Repository\Model\Song;
+use Ampache\Repository\Model\Video;
 
 interface FolderRepositoryInterface
 {
+    /**
+     * This cleans out unused folders
+     */
+    public function collectGarbage(): void;
+
+    public function create(string $folderName, int $catalogId, string $folderPath = '', ?int $parent_id = null): ?Folder;
+
+    public function delete(int $folderId): void;
+
     public function findById(?int $folderId = null): ?Folder;
-
-    public function getByName(string $folderName, int $catalogId = 0, ?int $parent = null): ?Folder;
-
-    public function getByPathName(string $folderPath, int $catalogId = 0, ?string $parentPath = null): ?Folder;
 
     /**
      * Return the list of all available folders
@@ -42,18 +50,23 @@ interface FolderRepositoryInterface
      */
     public function getAll(): array;
 
-    public function lookup(string $folderName, int $catalogId = 0, ?int $parent = null): int;
+    public function getByName(string $folderName, ?int $catalogId = null, ?int $parent = null): Folder|Podcast_Episode|Song|Video|null;
 
-    public function lookupByPathName(string $folderPath, int $catalogId = 0, ?int $parent = null): int;
+    public function getByPathName(string $folderPath, int $catalogId = 0, ?string $parentPath = null): ?Folder;
 
-    public function create(string $folderName, int $catalogId, string $folderPath = '', ?int $parent = null): ?Folder;
+    public function lookup(string $folderName, int $catalogId = 0, ?int $parent_id = null): int;
 
-    public function delete(int $folderId): void;
-
-    public function add_folder_map(int $object_id, string $object_type, string $dir_path, int $catalog_id): void;
+    public function lookupByPathName(string $folderPath, int $catalogId = 0): int;
 
     /**
-     * This cleans out unused folders
+     * Update folder counts columns after large actions
      */
-    public function collectGarbage(): void;
+    public function update_folder_counts(): void;
+
+    /**
+     * Update mapping table after large actions
+     */
+    public function update_folder_map(): void;
+
+    public function update_utime(int $folder_id, int $time = 0): void;
 }

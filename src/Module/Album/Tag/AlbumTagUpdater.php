@@ -31,9 +31,7 @@ use Ampache\Repository\SongRepositoryInterface;
 
 final readonly class AlbumTagUpdater implements AlbumTagUpdaterInterface
 {
-    public function __construct(private SongRepositoryInterface $songRepository)
-    {
-    }
+    public function __construct(private SongRepositoryInterface $songRepository) {}
 
     /**
      * Update tags of albums and/or songs

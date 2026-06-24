@@ -33,32 +33,8 @@ use Override;
 
 class ConfigViewAdapterTest extends MockeryTestCase
 {
-    /** @var MockInterface|ConfigContainerInterface|null */
-    private MockInterface $configContainer;
-
+    private MockInterface|ConfigContainerInterface|null $configContainer;
     private ConfigViewAdapter $subject;
-
-    #[Override]
-    protected function setUp(): void
-    {
-        $this->configContainer = $this->mock(ConfigContainerInterface::class);
-
-        $this->subject = new ConfigViewAdapter(
-            $this->configContainer
-        );
-    }
-
-    public function testIsWaveformEnabledReturnsValue(): void
-    {
-        $this->configContainer->shouldReceive('isFeatureEnabled')
-            ->with(ConfigurationKeyEnum::WAVEFORM)
-            ->once()
-            ->andReturnTrue();
-
-        $this->assertTrue(
-            $this->subject->isWaveformEnabled()
-        );
-    }
 
     public function testIsDirectplayEnabled(): void
     {
@@ -84,15 +60,15 @@ class ConfigViewAdapterTest extends MockeryTestCase
         );
     }
 
-    public function testIsShowSkippedTimesEnabled(): void
+    public function testIsRatingEnabled(): void
     {
         $this->configContainer->shouldReceive('isFeatureEnabled')
-            ->with(ConfigurationKeyEnum::SHOW_SKIPPED_TIMES)
+            ->with(ConfigurationKeyEnum::RATINGS)
             ->once()
             ->andReturnTrue();
 
         $this->assertTrue(
-            $this->subject->isShowSkippedTimesEnabled()
+            $this->subject->isRatingEnabled()
         );
     }
 
@@ -108,15 +84,37 @@ class ConfigViewAdapterTest extends MockeryTestCase
         );
     }
 
-    public function testIsRatingEnabled(): void
+    public function testIsShowSkippedTimesEnabled(): void
     {
         $this->configContainer->shouldReceive('isFeatureEnabled')
-            ->with(ConfigurationKeyEnum::RATINGS)
+            ->with(ConfigurationKeyEnum::SHOW_SKIPPED_TIMES)
             ->once()
             ->andReturnTrue();
 
         $this->assertTrue(
-            $this->subject->isRatingEnabled()
+            $this->subject->isShowSkippedTimesEnabled()
+        );
+    }
+
+    public function testIsWaveformEnabledReturnsValue(): void
+    {
+        $this->configContainer->shouldReceive('isFeatureEnabled')
+            ->with(ConfigurationKeyEnum::WAVEFORM)
+            ->once()
+            ->andReturnTrue();
+
+        $this->assertTrue(
+            $this->subject->isWaveformEnabled()
+        );
+    }
+
+    #[Override]
+    protected function setUp(): void
+    {
+        $this->configContainer = $this->mock(ConfigContainerInterface::class);
+
+        $this->subject = new ConfigViewAdapter(
+            $this->configContainer
         );
     }
 }

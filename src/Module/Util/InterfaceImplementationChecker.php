@@ -1,6 +1,7 @@
 <?php
 
 declare(strict_types=0);
+
 /**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
@@ -26,7 +27,6 @@ namespace Ampache\Module\Util;
 
 use Ampache\Repository\Model\library_item;
 use Ampache\Repository\Model\Media;
-use Ampache\Repository\Model\playable_item;
 
 /**
  * Provides utility methods to check whether an object implements a certain interface
@@ -34,12 +34,28 @@ use Ampache\Repository\Model\playable_item;
 final class InterfaceImplementationChecker
 {
     /**
+     * @param string $instance The subject to search in
+     */
+    public static function is_library_item(string $instance): bool
+    {
+        return self::_is_class_typeof($instance, library_item::class);
+    }
+
+    /**
+     * @param string $instance The subject to search in
+     */
+    public static function is_media(string $instance): bool
+    {
+        return self::_is_class_typeof($instance, Media::class);
+    }
+
+    /**
      * Checks if an object implements a certain interface
      *
      * @param string $instance The subject to search in
      * @param string $interface_name The interface name to search for
      */
-    private static function is_class_typeof(string $instance, string $interface_name): bool
+    private static function _is_class_typeof(string $instance, string $interface_name): bool
     {
         if ($instance === '' || $instance === '0') {
             return false;
@@ -50,7 +66,7 @@ final class InterfaceImplementationChecker
             return in_array(
                 $interface_name,
                 array_map(
-                    static fn (string $name): string => $name,
+                    static fn(string $name): string => $name,
                     class_implements($instance)
                 ),
                 true
@@ -58,29 +74,5 @@ final class InterfaceImplementationChecker
         }
 
         return false;
-    }
-
-    /**
-     * @param string $instance The subject to search in
-     */
-    public static function is_playable_item(string $instance): bool
-    {
-        return self::is_class_typeof($instance, playable_item::class);
-    }
-
-    /**
-     * @param string $instance The subject to search in
-     */
-    public static function is_library_item(string $instance): bool
-    {
-        return self::is_class_typeof($instance, library_item::class);
-    }
-
-    /**
-     * @param string $instance The subject to search in
-     */
-    public static function is_media(string $instance): bool
-    {
-        return self::is_class_typeof($instance, Media::class);
     }
 }

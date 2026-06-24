@@ -48,14 +48,13 @@ final readonly class AdminUpdatePreferencesAction implements ApplicationActionIn
         private ResponseFactoryInterface $responseFactory,
         private ConfigContainerInterface $configContainer,
         private RequestParserInterface $requestParser,
-    ) {
-    }
+    ) {}
 
     public function run(ServerRequestInterface $request, GuiGatekeeperInterface $gatekeeper): ResponseInterface
     {
         if (
-            $gatekeeper->mayAccess(AccessTypeEnum::INTERFACE, AccessLevelEnum::ADMIN) === false ||
-            !$this->requestParser->verifyForm('update_preference')
+            $gatekeeper->mayAccess(AccessTypeEnum::INTERFACE, AccessLevelEnum::ADMIN) === false
+            || !$this->requestParser->verifyForm('update_preference')
         ) {
             throw new AccessDeniedException();
         }

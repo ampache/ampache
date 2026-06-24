@@ -40,34 +40,12 @@ use PHPUnit\Framework\TestCase;
 
 class ShoutCreatorTest extends TestCase
 {
-    private UserActivityPosterInterface&MockObject $userActivityPoster;
-
     private ConfigContainerInterface&MockObject $configContainer;
-
     private ShoutRepositoryInterface&MockObject $shoutRepository;
-
-    private UtilityFactoryInterface&MockObject $utilityFactory;
-
-    private UserRepositoryInterface&MockObject $userRepository;
-
     private ShoutCreator $subject;
-
-    protected function setUp(): void
-    {
-        $this->userActivityPoster = $this->createMock(UserActivityPosterInterface::class);
-        $this->configContainer    = $this->createMock(ConfigContainerInterface::class);
-        $this->shoutRepository    = $this->createMock(ShoutRepositoryInterface::class);
-        $this->utilityFactory     = $this->createMock(UtilityFactoryInterface::class);
-        $this->userRepository     = $this->createMock(UserRepositoryInterface::class);
-
-        $this->subject = new ShoutCreator(
-            $this->userActivityPoster,
-            $this->configContainer,
-            $this->shoutRepository,
-            $this->utilityFactory,
-            $this->userRepository,
-        );
-    }
+    private UserActivityPosterInterface&MockObject $userActivityPoster;
+    private UserRepositoryInterface&MockObject $userRepository;
+    private UtilityFactoryInterface&MockObject $utilityFactory;
 
     public function testCreateFailsToCreateItem(): void
     {
@@ -92,7 +70,7 @@ class ShoutCreatorTest extends TestCase
 
         $shout->expects(static::once())
             ->method('setDate')
-            ->with(self::callback(static fn (DateTimeInterface $value): bool => true))
+            ->with(self::callback(static fn(DateTimeInterface $value): bool => true))
             ->willReturnSelf();
         $shout->expects(static::once())
             ->method('setUser')
@@ -132,7 +110,7 @@ class ShoutCreatorTest extends TestCase
                 'shout',
                 $objectType->value,
                 $objectId,
-                self::callback(static fn (int $value): bool => $value <= time())
+                self::callback(static fn(int $value): bool => $value <= time())
             );
 
         $this->subject->create(
@@ -142,6 +120,23 @@ class ShoutCreatorTest extends TestCase
             $text,
             $isSticky,
             $offset
+        );
+    }
+
+    protected function setUp(): void
+    {
+        $this->userActivityPoster = $this->createMock(UserActivityPosterInterface::class);
+        $this->configContainer    = $this->createMock(ConfigContainerInterface::class);
+        $this->shoutRepository    = $this->createMock(ShoutRepositoryInterface::class);
+        $this->utilityFactory     = $this->createMock(UtilityFactoryInterface::class);
+        $this->userRepository     = $this->createMock(UserRepositoryInterface::class);
+
+        $this->subject = new ShoutCreator(
+            $this->userActivityPoster,
+            $this->configContainer,
+            $this->shoutRepository,
+            $this->utilityFactory,
+            $this->userRepository,
         );
     }
 }

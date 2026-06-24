@@ -35,16 +35,6 @@ final class Migration770001 extends AbstractMigration
 {
     protected array $changelog = ['Add `song_map` table for mapping song id\'s to external data sources'];
 
-    public function migrate(): void
-    {
-        $collation = (AmpConfig::get('database_collation', 'utf8mb4_unicode_ci'));
-        $charset   = (AmpConfig::get('database_charset', 'utf8mb4'));
-        $engine    = (AmpConfig::get('database_engine', 'InnoDB'));
-
-        // create the table
-        $this->updateDatabase("CREATE TABLE IF NOT EXISTS `song_map` (`song_id` int(11) UNSIGNED NOT NULL, `object_id` int(11) UNSIGNED NOT NULL, `object_type` varchar(16) CHARACTER SET utf8 COLLATE utf8_unicode_ci DEFAULT NULL, UNIQUE KEY `unique_song_map` (`object_id`, `object_type`, `song_id`), INDEX `object_id_index` (`object_id`), INDEX `song_id_type_index` (`song_id`, `object_type`), INDEX `object_id_type_index` (`object_id`, `object_type`)) ENGINE=$engine DEFAULT CHARSET=$charset COLLATE=$collation;");
-    }
-
     public function getTableMigrations(
         string $collation,
         string $charset,
@@ -54,5 +44,15 @@ final class Migration770001 extends AbstractMigration
         if ($build > 770001) {
             yield 'song_map' => "CREATE TABLE IF NOT EXISTS `song_map` (`song_id` int(11) UNSIGNED NOT NULL, `object_id` int(11) UNSIGNED NOT NULL, `object_type` varchar(16) CHARACTER SET utf8 COLLATE utf8_unicode_ci DEFAULT NULL, UNIQUE KEY `unique_song_map` (`object_id`, `object_type`, `song_id`), INDEX `object_id_index` (`object_id`), INDEX `song_id_type_index` (`song_id`, `object_type`), INDEX `object_id_type_index` (`object_id`, `object_type`)) ENGINE=$engine DEFAULT CHARSET=$charset COLLATE=$collation;";
         }
+    }
+
+    public function migrate(): void
+    {
+        $collation = (AmpConfig::get('database_collation', 'utf8mb4_unicode_ci'));
+        $charset   = (AmpConfig::get('database_charset', 'utf8mb4'));
+        $engine    = (AmpConfig::get('database_engine', 'InnoDB'));
+
+        // create the table
+        $this->updateDatabase("CREATE TABLE IF NOT EXISTS `song_map` (`song_id` int(11) UNSIGNED NOT NULL, `object_id` int(11) UNSIGNED NOT NULL, `object_type` varchar(16) CHARACTER SET utf8 COLLATE utf8_unicode_ci DEFAULT NULL, UNIQUE KEY `unique_song_map` (`object_id`, `object_type`, `song_id`), INDEX `object_id_index` (`object_id`), INDEX `song_id_type_index` (`song_id`, `object_type`), INDEX `object_id_type_index` (`object_id`, `object_type`)) ENGINE=$engine DEFAULT CHARSET=$charset COLLATE=$collation;");
     }
 }

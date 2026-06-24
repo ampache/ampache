@@ -27,6 +27,4 @@ namespace Ampache\Module\Podcast\Exception;
 
 use Exception;
 
-final class PodcastFolderException extends Exception
-{
-}
+final class PodcastFolderException extends Exception {}

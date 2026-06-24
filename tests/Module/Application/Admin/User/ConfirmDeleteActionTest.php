@@ -43,42 +43,13 @@ class ConfirmDeleteActionTest extends TestCase
 {
     use UserAdminAccessTestTrait;
 
-    private RequestParserInterface&MockObject $requestParser;
-
-    private UiInterface&MockObject $ui;
-
-    private ModelFactoryInterface&MockObject $modelFactory;
-
     private ConfigContainerInterface&MockObject $configContainer;
-
     private GuiGatekeeperInterface&MockObject $gatekeeper;
-
+    private ModelFactoryInterface&MockObject $modelFactory;
     private ServerRequestInterface&MockObject $request;
-
+    private RequestParserInterface&MockObject $requestParser;
     private ConfirmDeleteAction $subject;
-
-    protected function setUp(): void
-    {
-        $this->requestParser   = $this->createMock(RequestParserInterface::class);
-        $this->ui              = $this->createMock(UiInterface::class);
-        $this->modelFactory    = $this->createMock(ModelFactoryInterface::class);
-        $this->configContainer = $this->createMock(ConfigContainerInterface::class);
-
-        $this->subject = new ConfirmDeleteAction(
-            $this->requestParser,
-            $this->ui,
-            $this->modelFactory,
-            $this->configContainer,
-        );
-
-        $this->gatekeeper = $this->createMock(GuiGatekeeperInterface::class);
-        $this->request    = $this->createMock(ServerRequestInterface::class);
-    }
-
-    protected function getValidationFormName(): string
-    {
-        return 'delete_user';
-    }
+    private UiInterface&MockObject $ui;
 
     public function testHandleDeletes(): void
     {
@@ -238,5 +209,28 @@ class ConfirmDeleteActionTest extends TestCase
         self::assertNull(
             $this->subject->run($this->request, $this->gatekeeper)
         );
+    }
+
+    protected function getValidationFormName(): string
+    {
+        return 'delete_user';
+    }
+
+    protected function setUp(): void
+    {
+        $this->requestParser   = $this->createMock(RequestParserInterface::class);
+        $this->ui              = $this->createMock(UiInterface::class);
+        $this->modelFactory    = $this->createMock(ModelFactoryInterface::class);
+        $this->configContainer = $this->createMock(ConfigContainerInterface::class);
+
+        $this->subject = new ConfirmDeleteAction(
+            $this->requestParser,
+            $this->ui,
+            $this->modelFactory,
+            $this->configContainer,
+        );
+
+        $this->gatekeeper = $this->createMock(GuiGatekeeperInterface::class);
+        $this->request    = $this->createMock(ServerRequestInterface::class);
     }
 }

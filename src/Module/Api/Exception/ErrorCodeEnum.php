@@ -26,12 +26,12 @@ namespace Ampache\Module\Api\Exception;
 final class ErrorCodeEnum
 {
     public const int ACCESS_CONTROL_NOT_ENABLED = 4700;
-    public const int INVALID_HANDSHAKE          = 4701;
-    public const int GENERIC_ERROR              = 4702;
     public const int ACCESS_DENIED              = 4703;
-    public const int NOT_FOUND                  = 4704;
-    public const int MISSING                    = 4705;
-    public const int DEPRECATED                 = 4706;
     public const int BAD_REQUEST                = 4710;
+    public const int DEPRECATED                 = 4706;
     public const int FAILED_ACCESS_CHECK        = 4742;
+    public const int GENERIC_ERROR              = 4702;
+    public const int INVALID_HANDSHAKE          = 4701;
+    public const int MISSING                    = 4705;
+    public const int NOT_FOUND                  = 4704;
 }

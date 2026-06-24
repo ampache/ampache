@@ -57,6 +57,9 @@ final class VideoQuery implements QueryInterface
         'user_rating',
     ];
 
+    protected string $base   = "SELECT %%SELECT%% FROM `video` ";
+    protected string $select = "`video`.`id`";
+
     /** @var string[] $sorts */
     protected array $sorts = [
         'addition_time',
@@ -77,9 +80,15 @@ final class VideoQuery implements QueryInterface
         'userflag',
     ];
 
-    protected string $select = "`video`.`id`";
-
-    protected string $base = "SELECT %%SELECT%% FROM `video` ";
+    /**
+     * get_base_sql
+     *
+     * Base SELECT query string without filters or joins
+     */
+    public function get_base_sql(): string
+    {
+        return $this->base;
+    }
 
     /**
      * get_select
@@ -89,16 +98,6 @@ final class VideoQuery implements QueryInterface
     public function get_select(): string
     {
         return $this->select;
-    }
-
-    /**
-     * get_base_sql
-     *
-     * Base SELECT query string without filters or joins
-     */
-    public function get_base_sql(): string
-    {
-        return $this->base;
     }
 
     /**
@@ -124,7 +123,7 @@ final class VideoQuery implements QueryInterface
             case 'id':
                 $filter_sql = " `video`.`id` IN (";
                 foreach ($value as $uid) {
-                    $filter_sql .= (int)$uid . ',';
+                    $filter_sql .= (int) $uid . ',';
                 }
 
                 $filter_sql = rtrim($filter_sql, ',') . ") AND ";
@@ -195,14 +194,14 @@ final class VideoQuery implements QueryInterface
                 $filter_sql = " `video`.`catalog` IN (" . implode(',', Catalog::get_catalogs('', $query->user_id, true)) . ") AND ";
                 break;
             case 'user_flag':
-                $filter_sql = ((int)$value === 0)
-                    ? " `video`.`id` NOT IN (SELECT `object_id` FROM `user_flag` WHERE `object_type` = 'video' AND `user` = " . (int)$query->user_id . ") AND "
-                    : " `video`.`id` IN (SELECT `object_id` FROM `user_flag` WHERE `object_type` = 'video' AND `user` = " . (int)$query->user_id . ") AND ";
+                $filter_sql = ((int) $value === 0)
+                    ? " `video`.`id` NOT IN (SELECT `object_id` FROM `user_flag` WHERE `object_type` = 'video' AND `user` = " . (int) $query->user_id . ") AND "
+                    : " `video`.`id` IN (SELECT `object_id` FROM `user_flag` WHERE `object_type` = 'video' AND `user` = " . (int) $query->user_id . ") AND ";
                 break;
             case 'user_rating':
-                $filter_sql = ((int)$value === 0)
-                    ? " `video`.`id` NOT IN (SELECT `object_id` FROM `rating` WHERE `object_type` = 'video' AND `user` = " . (int)$query->user_id . ") AND "
-                    : " `video`.`id` IN (SELECT `object_id` FROM `rating` WHERE `object_type` = 'video' AND `user` = " . (int)$query->user_id . " AND `rating` = " . Dba::escape($value) . ") AND ";
+                $filter_sql = ((int) $value === 0)
+                    ? " `video`.`id` NOT IN (SELECT `object_id` FROM `rating` WHERE `object_type` = 'video' AND `user` = " . (int) $query->user_id . ") AND "
+                    : " `video`.`id` IN (SELECT `object_id` FROM `rating` WHERE `object_type` = 'video' AND `user` = " . (int) $query->user_id . " AND `rating` = " . Dba::escape($value) . ") AND ";
                 break;
             case 'catalog_enabled':
                 $query->set_join('LEFT', '`catalog`', '`catalog`.`id`', '`video`.`catalog`', 100);
@@ -217,11 +216,8 @@ final class VideoQuery implements QueryInterface
      * get_sql_sort
      *
      * Sorting SQL for ORDER BY
-     * @param Query $query
-     * @param string|null $field
-     * @param string|null $order
      */
-    public function get_sql_sort($query, $field, $order): string
+    public function get_sql_sort(Query $query, ?string $field, ?string $order): string
     {
         return $query->sql_sort_video($field, $order);
     }

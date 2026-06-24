@@ -23,6 +23,8 @@ declare(strict_types=0);
  *
  */
 
+// show_manage_democratic.inc.php
+
 use Ampache\Config\AmpConfig;
 use Ampache\Module\Api\Ajax;
 use Ampache\Module\Util\Ui;
@@ -60,7 +62,7 @@ Ui::show_box_top(T_('Manage')); ?>
         <td><?php echo $democratic->count_items(); ?></td>
         <td>
         <?php echo Ajax::button('?page=democratic&action=send_playlist&democratic_id=' . $democratic->id, 'cell_tower', T_('Play'), 'play_democratic'); ?>
-        <a href="<?php echo $web_path; ?>/democratic.php?action=delete&democratic_id=<?php echo scrub_out((string)$democratic->id); ?>"><?php echo Ui::get_material_symbol('close', T_('Delete')); ?></a>
+        <a href="<?php echo $web_path; ?>/democratic.php?action=delete&democratic_id=<?php echo scrub_out((string) $democratic->id); ?>"><?php echo Ui::get_material_symbol('close', T_('Delete')); ?></a>
         </td>
     </tr>
     <?php

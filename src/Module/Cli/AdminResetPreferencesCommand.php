@@ -31,16 +31,6 @@ use Override;
 
 final class AdminResetPreferencesCommand extends Command
 {
-    #[Override]
-    protected function defaults(): self
-    {
-        $this->option('-h, --help', T_('Help'))->on($this->showHelp(...));
-
-        $this->onExit(static fn ($exitCode = 0) => exit($exitCode));
-
-        return $this;
-    }
-
     public function __construct()
     {
         parent::__construct('admin:resetPreferences', T_('Reset preference values for users'));
@@ -84,8 +74,8 @@ final class AdminResetPreferencesCommand extends Command
                 true
             );
         } elseif (
-            $preset &&
-            Preference::set_preset($username, $preset)
+            $preset
+            && Preference::set_preset($username, $preset)
         ) {
             $interactor->ok(
                 "\n" . T_('Updated'),
@@ -104,5 +94,15 @@ final class AdminResetPreferencesCommand extends Command
                 true
             );
         }
+    }
+
+    #[Override]
+    protected function defaults(): self
+    {
+        $this->option('-h, --help', T_('Help'))->on($this->showHelp(...));
+
+        $this->onExit(static fn($exitCode = 0) => exit($exitCode));
+
+        return $this;
     }
 }

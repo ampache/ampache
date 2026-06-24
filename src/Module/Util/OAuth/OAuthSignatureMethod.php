@@ -32,34 +32,22 @@ namespace Ampache\Module\Util\OAuth;
 abstract class OAuthSignatureMethod
 {
     /**
-     * Needs to return the name of the Signature Method (ie HMAC-SHA1)
-     */
-    abstract public function get_name(): string;
-
-    /**
      * Build up the signature
      * NOTE: The output of this function MUST NOT be urlencoded.
      * the encoding is handled in OAuthRequest when the final
      * request is serialized
-     * @param OAuthRequest $request
-     * @param OAuthConsumer $consumer
-     * @param OAuthToken $token
      */
-    abstract public function build_signature($request, $consumer, $token): string;
+    abstract public function build_signature(OAuthRequest $request, OAuthConsumer $consumer, OAuthToken $token): string;
 
     /**
      * Verifies that a given signature is correct
-     * @param OAuthRequest $request
-     * @param OAuthConsumer $consumer
-     * @param OAuthToken $token
-     * @param string $signature
      */
-    public function check_signature($request, $consumer, $token, $signature): bool
+    public function check_signature(OAuthRequest $request, OAuthConsumer $consumer, OAuthToken $token, string $signature): bool
     {
         $built = $this->build_signature($request, $consumer, $token);
 
         // Check for zero length, although unlikely here
-        if ($built === '' || (string) $signature === '') {
+        if ($built === '' || $signature === '') {
             return false;
         }
 
@@ -75,4 +63,9 @@ abstract class OAuthSignatureMethod
 
         return $result === 0;
     }
+
+    /**
+     * Needs to return the name of the Signature Method (ie HMAC-SHA1)
+     */
+    abstract public function get_name(): string;
 }

@@ -43,8 +43,7 @@ final class UpdateFilterAction extends AbstractFilterAction
         private readonly UiInterface $ui,
         private readonly ConfigContainerInterface $configContainer,
         private readonly RequestParserInterface $requestParser,
-    ) {
-    }
+    ) {}
 
     protected function handle(ServerRequestInterface $request): ?ResponseInterface
     {
@@ -56,7 +55,7 @@ final class UpdateFilterAction extends AbstractFilterAction
             throw new AccessDeniedException();
         }
 
-        $body = (array)$request->getParsedBody();
+        $body = (array) $request->getParsedBody();
 
         $this->ui->showHeader();
 
@@ -93,7 +92,7 @@ final class UpdateFilterAction extends AbstractFilterAction
         $catalogs      = Catalog::get_all_catalogs();
         $catalog_array = [];
         foreach ($catalogs as $catalog_id) {
-            $catalog_status             = (int)filter_input(INPUT_POST, 'catalog_' . $catalog_id, FILTER_SANITIZE_NUMBER_INT);
+            $catalog_status             = (int) filter_input(INPUT_POST, 'catalog_' . $catalog_id, FILTER_SANITIZE_NUMBER_INT);
             $catalog_array[$catalog_id] = $catalog_status;
         }
 

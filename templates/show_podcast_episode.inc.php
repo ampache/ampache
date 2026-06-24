@@ -23,6 +23,8 @@ declare(strict_types=0);
  *
  */
 
+// show_podcast_episode.inc.php
+
 use Ampache\Config\AmpConfig;
 use Ampache\Module\Api\Ajax;
 use Ampache\Module\Authorization\Access;
@@ -131,7 +133,7 @@ if (!empty($episode->file)) {
     $songprops[T_('File')]     = $episode->file;
     $songprops[T_('Size')]     = $episode->getSizeFormatted();
     $songprops[T_('Bitrate')]  = scrub_out($episode->getBitrateFormatted());
-    $songprops[T_('Channels')] = scrub_out((string)$episode->channels);
+    $songprops[T_('Channels')] = scrub_out((string) $episode->channels);
 }
 
 foreach ($songprops as $key => $value) {

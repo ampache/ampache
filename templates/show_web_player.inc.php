@@ -23,6 +23,8 @@ declare(strict_types=0);
  *
  */
 
+// show_web_player.inc.php
+
 use Ampache\Config\AmpConfig;
 use Ampache\Module\Playback\Stream_Playlist;
 use Ampache\Module\Playback\WebPlayer;

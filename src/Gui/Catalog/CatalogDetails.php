@@ -34,22 +34,18 @@ final readonly class CatalogDetails implements CatalogDetailsInterface
     public function __construct(
         private GuiFactoryInterface $guiFactory,
         private Catalog $catalog,
-    ) {
-    }
+    ) {}
 
-    public function getName(): string
+    public function getCatalogStats(): CatalogStatsInterface
     {
-        return $this->catalog->name ?? '';
+        return $this->guiFactory->createCatalogStats(
+            Catalog::get_stats($this->catalog->id)
+        );
     }
 
     public function getFullInfo(): string
     {
         return scrub_out($this->catalog->get_f_info());
-    }
-
-    public function getLastUpdateDate(): string
-    {
-        return scrub_out($this->catalog->get_f_update());
     }
 
     public function getLastAddDate(): string
@@ -62,10 +58,13 @@ final readonly class CatalogDetails implements CatalogDetailsInterface
         return scrub_out($this->catalog->get_f_clean());
     }
 
-    public function getCatalogStats(): CatalogStatsInterface
+    public function getLastUpdateDate(): string
     {
-        return $this->guiFactory->createCatalogStats(
-            Catalog::get_stats($this->catalog->id)
-        );
+        return scrub_out($this->catalog->get_f_update());
+    }
+
+    public function getName(): string
+    {
+        return $this->catalog->name ?? '';
     }
 }

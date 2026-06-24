@@ -23,6 +23,8 @@ declare(strict_types=0);
  *
  */
 
+// show_web_player_embedded.inc.php
+
 use Ampache\Config\AmpConfig;
 
 ?>

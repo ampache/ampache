@@ -35,9 +35,7 @@ final readonly class ActivityTypeHandlerMapper implements ActivityTypeHandlerMap
         ActivityTypeEnum::TYPE_ARTIST => ArtistActivityTypeHandler::class,
     ];
 
-    public function __construct(private UserActivityRepositoryInterface $userActivityRepository)
-    {
-    }
+    public function __construct(private UserActivityRepositoryInterface $userActivityRepository) {}
 
     /**
      * Maps a certain object type to a type handler class. Returns a generic handler if

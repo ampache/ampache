@@ -37,9 +37,7 @@ final class WebDavAuth extends AbstractBasic
     #[Override]
     protected $realm = 'Ampache';
 
-    public function __construct(private readonly AuthenticationManagerInterface $authenticationManager)
-    {
-    }
+    public function __construct(private readonly AuthenticationManagerInterface $authenticationManager) {}
 
     /**
      * @param string $username

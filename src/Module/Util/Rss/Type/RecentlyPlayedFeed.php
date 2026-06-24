@@ -34,13 +34,7 @@ final readonly class RecentlyPlayedFeed extends AbstractGenericRssFeed
 {
     public function __construct(
         private ?User $user,
-    ) {
-    }
-
-    protected function getTitle(): string
-    {
-        return T_('Recently Played');
-    }
+    ) {}
 
     /**
      * @return Generator<array{
@@ -71,7 +65,7 @@ final readonly class RecentlyPlayedFeed extends AbstractGenericRssFeed
                     'title' => sprintf(
                         '%s - %s - %s',
                         $song->get_fullname(),
-                        $song->get_artist_fullname(),
+                        $song->get_parent_fullname(),
                         $song->get_album_fullname()
                     ),
                     'link' => str_replace('&amp;', '&', $song->get_link()),
@@ -82,14 +76,14 @@ final readonly class RecentlyPlayedFeed extends AbstractGenericRssFeed
                         T_('Title'),
                         $song->get_fullname(),
                         T_('Artist'),
-                        $song->get_artist_fullname(),
+                        $song->get_parent_fullname(),
                         T_('Album'),
                         $song->get_album_fullname(),
                         T_('Play date'),
                         get_datetime($item['date'])
                     ),
                     'comments' => $client->get_link(),
-                    'pubDate' => date("r", (int)$item['date']),
+                    'pubDate' => date("r", (int) $item['date']),
                     'guid' => ($song->mbid !== null)
                         ? 'https://musicbrainz.org/recording/' . $song->mbid
                         : $item['date'] . '-' . $client->getId() . '-' . $song->getId(),
@@ -99,5 +93,10 @@ final readonly class RecentlyPlayedFeed extends AbstractGenericRssFeed
                 ];
             }
         }
+    }
+
+    protected function getTitle(): string
+    {
+        return T_('Recently Played');
     }
 }

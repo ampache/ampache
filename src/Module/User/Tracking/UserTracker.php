@@ -40,8 +40,7 @@ final readonly class UserTracker implements UserTrackerInterface
         private ConfigContainerInterface $configContainer,
         private IpHistoryRepositoryInterface $ipHistoryRepository,
         private LoggerInterface $logger,
-    ) {
-    }
+    ) {}
 
     /**
      * Records the users ip in the ip history
@@ -75,7 +74,7 @@ final readonly class UserTracker implements UserTrackerInterface
 
         $this->ipHistoryRepository->create(
             $user,
-            trim((string)$ip, '[]'),
+            trim((string) $ip, '[]'),
             Core::get_server('HTTP_USER_AGENT'),
             new DateTimeImmutable(),
             $action

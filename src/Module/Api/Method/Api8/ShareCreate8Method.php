@@ -66,10 +66,10 @@ final class ShareCreate8Method
      * Create a public url that can be used by anyone to stream media.
      * Takes the file id with optional description and expires parameters.
      *
-     * filter      = (string) object_id
-     * type        = (string) object_type ('album', 'artist', 'playlist', 'podcast', 'podcast_episode', 'smartlist', 'song', 'video')
+     * filter = (string) object_id
+     * type = (string) object_type ('album', 'artist', 'playlist', 'podcast', 'podcast_episode', 'smartlist', 'song', 'video')
      * description = (string) description (will be filled for you if empty) //optional
-     * expires     = (integer) days to keep active //optional
+     * expires = (integer) days to keep active //optional
      *
      * @param array{
      *     filter: string,
@@ -105,7 +105,7 @@ final class ShareCreate8Method
             return false;
         }
         // searches are playlists but not in the database
-        if (($object_type === 'playlist' || $object_type === 'smartlist') && ((int)$object_id) === 0) {
+        if (($object_type === 'playlist' || $object_type === 'smartlist') && ((int) $object_id) === 0) {
             $object_id   = str_replace('smart_', '', (string) $object_id);
             $object_type = 'search';
         }
@@ -119,7 +119,7 @@ final class ShareCreate8Method
             Api::error(sprintf('Bad Request: %s', $object_type), ErrorCodeEnum::BAD_REQUEST, self::ACTION, 'type', $input['api_format']);
         } else {
             /** @var Album|Artist|Live_stream|Playlist|Podcast|Podcast_episode|Search|Song|Video $item */
-            $item = new $className((int)$object_id);
+            $item = new $className((int) $object_id);
             if ($item->isNew()) {
                 /* HINT: Requested object string/id/type ("album", "myusername", "some song title", 1298376) */
                 Api::error(sprintf('Not Found: %s', $object_id), ErrorCodeEnum::NOT_FOUND, self::ACTION, 'filter', $input['api_format']);
@@ -157,7 +157,7 @@ final class ShareCreate8Method
         ob_end_clean();
         switch ($input['api_format']) {
             case 'json':
-                echo Json8_Data::shares($results, false);
+                echo Json8_Data::shares($results, $user, false);
                 break;
             default:
                 echo Xml8_Data::shares($results, $user);

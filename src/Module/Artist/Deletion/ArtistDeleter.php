@@ -30,6 +30,7 @@ use Ampache\Module\Artist\Deletion\Exception\ArtistDeletionException;
 use Ampache\Module\System\LegacyLogger;
 use Ampache\Repository\AlbumRepositoryInterface;
 use Ampache\Repository\ArtistRepositoryInterface;
+use Ampache\Repository\FolderRepositoryInterface;
 use Ampache\Repository\LabelRepositoryInterface;
 use Ampache\Repository\Model\Artist;
 use Ampache\Repository\Model\ModelFactoryInterface;
@@ -48,11 +49,11 @@ final readonly class ArtistDeleter implements ArtistDeleterInterface
         private ModelFactoryInterface $modelFactory,
         private LoggerInterface $logger,
         private ShoutRepositoryInterface $shoutRepository,
-        private UserActivityRepositoryInterface $useractivityRepository,
+        private UserActivityRepositoryInterface $userActivityRepository,
         private LabelRepositoryInterface $labelRepository,
         private ArtCleanupInterface $artCleanup,
-    ) {
-    }
+        private FolderRepositoryInterface $folderRepository,
+    ) {}
 
     /**
      * @throws ArtistDeletionException
@@ -89,6 +90,7 @@ final readonly class ArtistDeleter implements ArtistDeleterInterface
         Rating::garbage_collection('artist', $artistId);
         $this->labelRepository->collectGarbage();
         $this->shoutRepository->collectGarbage('artist', $artistId);
-        $this->useractivityRepository->collectGarbage('artist', $artistId);
+        $this->userActivityRepository->collectGarbage('artist', $artistId);
+        $this->folderRepository->collectGarbage();
     }
 }

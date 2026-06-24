@@ -38,13 +38,19 @@ use Override;
 class AmpacheShoutHome extends AmpachePlugin implements PluginDisplayHomeInterface
 {
     #[Override]
-    public string $name = 'Shout Home';
-
-    #[Override]
     public string $categories = 'home';
 
     #[Override]
     public string $description = 'Shoutbox on homepage';
+
+    #[Override]
+    public string $max_ampache = '999999';
+
+    #[Override]
+    public string $min_ampache = '370021';
+
+    #[Override]
+    public string $name = 'Shout Home';
 
     #[Override]
     public string $url = '';
@@ -52,16 +58,9 @@ class AmpacheShoutHome extends AmpachePlugin implements PluginDisplayHomeInterfa
     #[Override]
     public string $version = '000002';
 
-    #[Override]
-    public string $min_ampache = '370021';
-
-    #[Override]
-    public string $max_ampache = '999999';
-
     // These are internal settings used by this class, run this->load to fill them out
     private int $maxitems = 5;
-
-    private int $order = 0;
+    private int $order    = 0;
 
     /**
      * Constructor
@@ -69,49 +68,6 @@ class AmpacheShoutHome extends AmpachePlugin implements PluginDisplayHomeInterfa
     public function __construct()
     {
         $this->description = T_('Shoutbox on homepage');
-    }
-
-    /**
-     * install
-     * Inserts plugin preferences into Ampache
-     */
-    public function install(): bool
-    {
-        if (!Preference::insert('shouthome_max_items', T_('Shoutbox on homepage max items'), 5, AccessLevelEnum::USER->value, 'integer', 'plugins', $this->name)) {
-            return false;
-        }
-
-        return Preference::insert('shouthome_order', T_('Plugin CSS order'), '0', AccessLevelEnum::USER->value, 'integer', 'plugins', $this->name);
-    }
-
-    /**
-     * uninstall
-     * Removes our preferences from the database returning it to its original form
-     */
-    public function uninstall(): bool
-    {
-        return (
-            Preference::delete('shouthome_max_items') &&
-            Preference::delete('shouthome_order')
-        );
-    }
-
-    /**
-     * upgrade
-     * This is a recommended plugin function
-     */
-    public function upgrade(): bool
-    {
-        $from_version = Plugin::get_plugin_version($this->name);
-        if ($from_version === 0) {
-            return false;
-        }
-
-        if ($from_version < (int)$this->version) {
-            Preference::insert('shouthome_order', T_('Plugin CSS order'), '0', AccessLevelEnum::USER->value, 'integer', 'plugins', $this->name);
-        }
-
-        return true;
     }
 
     /**
@@ -139,6 +95,19 @@ class AmpacheShoutHome extends AmpachePlugin implements PluginDisplayHomeInterfa
     }
 
     /**
+     * install
+     * Inserts plugin preferences into Ampache
+     */
+    public function install(): bool
+    {
+        if (!Preference::insert('shouthome_max_items', T_('Shoutbox on homepage max items'), 5, AccessLevelEnum::USER->value, 'integer', 'plugins', $this->name)) {
+            return false;
+        }
+
+        return Preference::insert('shouthome_order', T_('Plugin CSS order'), '0', AccessLevelEnum::USER->value, 'integer', 'plugins', $this->name);
+    }
+
+    /**
      * load
      * This loads up the data we need into this object, this stuff comes from the preferences.
      */
@@ -147,24 +116,44 @@ class AmpacheShoutHome extends AmpachePlugin implements PluginDisplayHomeInterfa
         $user->set_preferences();
         $data = $user->prefs;
 
-        $this->maxitems = (int)($data['shouthome_max_items']);
+        $this->maxitems = (int) ($data['shouthome_max_items']);
         if ($this->maxitems < 1) {
             $this->maxitems = 5;
         }
 
-        $this->order = (int)($data['shouthome_order'] ?? 0);
+        $this->order = (int) ($data['shouthome_order'] ?? 0);
 
         return true;
     }
 
     /**
-     * @todo find a better solution...
+     * uninstall
+     * Removes our preferences from the database returning it to its original form
      */
-    private function getShoutRepository(): ShoutRepositoryInterface
+    public function uninstall(): bool
     {
-        global $dic;
+        return (
+            Preference::delete('shouthome_max_items')
+            && Preference::delete('shouthome_order')
+        );
+    }
 
-        return $dic->get(ShoutRepositoryInterface::class);
+    /**
+     * upgrade
+     * This is a recommended plugin function
+     */
+    public function upgrade(): bool
+    {
+        $from_version = Plugin::get_plugin_version($this->name);
+        if ($from_version === 0) {
+            return false;
+        }
+
+        if ($from_version < (int) $this->version) {
+            Preference::insert('shouthome_order', T_('Plugin CSS order'), '0', AccessLevelEnum::USER->value, 'integer', 'plugins', $this->name);
+        }
+
+        return true;
     }
 
     /**
@@ -175,5 +164,15 @@ class AmpacheShoutHome extends AmpachePlugin implements PluginDisplayHomeInterfa
         global $dic;
 
         return $dic->get(ShoutRendererInterface::class);
+    }
+
+    /**
+     * @todo find a better solution...
+     */
+    private function getShoutRepository(): ShoutRepositoryInterface
+    {
+        global $dic;
+
+        return $dic->get(ShoutRepositoryInterface::class);
     }
 }

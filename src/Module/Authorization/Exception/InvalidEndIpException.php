@@ -25,6 +25,4 @@ declare(strict_types=1);
 
 namespace Ampache\Module\Authorization\Exception;
 
-final class InvalidEndIpException extends AclItemConfigurationException
-{
-}
+final class InvalidEndIpException extends AclItemConfigurationException {}

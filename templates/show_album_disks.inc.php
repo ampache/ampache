@@ -23,6 +23,8 @@ declare(strict_types=0);
  *
  */
 
+// show_album_disks.inc.php
+
 use Ampache\Config\AmpConfig;
 use Ampache\Gui\GuiFactoryInterface;
 use Ampache\Gui\TalFactoryInterface;
@@ -177,7 +179,7 @@ foreach ($object_ids as $album_disk_id) {
 <?php } ?>
             <th class="cel_action"><?php echo $action_text; ?></th>
         </tr>
-    <tfoot>
+    </tfoot>
 </table>
 <?php show_table_render(); ?>
 <?php if ($browse->is_show_header()) {

@@ -51,8 +51,7 @@ final class AddUserAction extends AbstractUserAction
         private readonly ConfigContainerInterface $configContainer,
         private readonly UserRepositoryInterface $userRepository,
         private readonly RequestParserInterface $requestParser,
-    ) {
-    }
+    ) {}
 
     protected function handle(ServerRequestInterface $request): ?ResponseInterface
     {
@@ -64,7 +63,7 @@ final class AddUserAction extends AbstractUserAction
             throw new AccessDeniedException();
         }
 
-        $body = (array)$request->getParsedBody();
+        $body = (array) $request->getParsedBody();
 
         $this->ui->showHeader();
         $user_id  = 0;
@@ -96,8 +95,8 @@ final class AddUserAction extends AbstractUserAction
 
         // Check the mail for correct address formation and if it already exists
         if (
-            !Mailer::validate_address($email) ||
-            $this->userRepository->idByEmail($email) > 0
+            !Mailer::validate_address($email)
+            || $this->userRepository->idByEmail($email) > 0
         ) {
             AmpError::add('email', T_('You entered an invalid e-mail address'));
         }
@@ -112,8 +111,8 @@ final class AddUserAction extends AbstractUserAction
 
         /* If we've got an error then show add form! */
         if (
-            AmpError::occurred() ||
-            $user_id < 1
+            AmpError::occurred()
+            || $user_id < 1
         ) {
             require_once Ui::find_template('show_add_user.inc.php');
 

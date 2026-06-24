@@ -55,8 +55,7 @@ final class AddUserAction implements ApplicationActionInterface
         private readonly UserRepositoryInterface $userRepository,
         private readonly RegistrationAgreementRendererInterface $registrationAgreementRenderer,
         public UiInterface $ui,
-    ) {
-    }
+    ) {}
 
     public function run(ServerRequestInterface $request, GuiGatekeeperInterface $gatekeeper): ?ResponseInterface
     {
@@ -69,8 +68,8 @@ final class AddUserAction implements ApplicationActionInterface
 
         // Check for confirmation email requirements when mail is disabled
         if (
-            $this->configContainer->isFeatureEnabled(ConfigurationKeyEnum::USER_NO_EMAIL_CONFIRM) === false &&
-            !Mailer::is_mail_enabled()
+            $this->configContainer->isFeatureEnabled(ConfigurationKeyEnum::USER_NO_EMAIL_CONFIRM) === false
+            && !Mailer::is_mail_enabled()
         ) {
             throw new AccessDeniedException('Error `mail_enable` failed. Enable `user_no_email_confirm` to disable mail requirements');
         }
@@ -98,12 +97,12 @@ final class AddUserAction implements ApplicationActionInterface
             $captcha_phrase = $_POST['captcha_phrase'] ?? false;
             $captcha_user   = $_POST['captcha_user'] ?? '';
             if (
-                $captcha_user !== '' &&
-                !PhraseBuilder::comparePhrases($captcha_phrase, $captcha_user)
+                $captcha_user !== ''
+                && !PhraseBuilder::comparePhrases($captcha_phrase, $captcha_user)
             ) {
                 AmpError::add('captcha_user', T_('Captcha failed'));
             }
-        } // end if it's enabled
+        }
 
         if ($this->configContainer->isFeatureEnabled(ConfigurationKeyEnum::USER_AGREEMENT) && !$_POST['accept_agreement']) {
             AmpError::add('user_agreement', T_('You must accept the user agreement'));
@@ -190,7 +189,7 @@ final class AddUserAction implements ApplicationActionInterface
 
         if ($this->configContainer->isFeatureEnabled(ConfigurationKeyEnum::USER_NO_EMAIL_CONFIRM) === false) {
             $client     = $this->modelFactory->createUser($userId);
-            $validation = md5(uniqid((string) mt_rand(), true));
+            $validation = Core::generate_random_key();
             $client->update_validation($validation);
 
             // Notify user and/or admins

@@ -27,6 +27,4 @@ namespace Ampache\Module\Catalog\Exception;
 
 use Exception;
 
-final class CatalogLoadingException extends Exception
-{
-}
+final class CatalogLoadingException extends Exception {}

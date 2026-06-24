@@ -40,9 +40,7 @@ use Psr\Log\LoggerInterface;
 final class Migration600005 extends AbstractMigration
 {
     protected array $changelog = ['Migrate multi-disk albums to single album id\'s'];
-
-    protected bool $warning = true;
-
+    protected bool $warning    = true;
     private LoggerInterface $logger;
 
     public function __construct(
@@ -68,7 +66,7 @@ final class Migration600005 extends AbstractMigration
         }
         // get all matching albums that will migrate into the base albums
         foreach ($album_list as $album_id) {
-            $album  = new Album((int)$album_id);
+            $album  = new Album((int) $album_id);
             $f_name = trim(trim($album->prefix ?? '') . ' ' . trim($album->name ?? ''));
             $where  = " WHERE (`album`.`name` = ? OR LTRIM(CONCAT(COALESCE(`album`.`prefix`, ''), ' ', `album`.`name`)) = ? ) ";
             $params = [$f_name, $f_name];

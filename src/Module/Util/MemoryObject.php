@@ -27,9 +27,11 @@ namespace Ampache\Module\Util;
 
 class MemoryObject
 {
-    private $_data = [];
+    /** @var string[] $properties */
+    public array $properties;
 
-    public $properties;
+    /** @var array<string, mixed> */
+    private array $_data = [];
 
     /**
      * memory_object constructor.
@@ -43,13 +45,6 @@ class MemoryObject
         }
     }
 
-    public function __set(string $name, $value)
-    {
-        if (in_array($name, $this->properties)) {
-            $this->_data[$name] = $value;
-        }
-    }
-
     /**
      * @return bool|mixed|null
      */
@@ -60,5 +55,12 @@ class MemoryObject
         }
 
         return $this->_data[$name] ?? null;
+    }
+
+    public function __set(string $name, $value)
+    {
+        if (in_array($name, $this->properties)) {
+            $this->_data[$name] = $value;
+        }
     }
 }

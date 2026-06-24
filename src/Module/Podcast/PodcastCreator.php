@@ -50,8 +50,7 @@ final readonly class PodcastCreator implements PodcastCreatorInterface
         private PodcastSyncerInterface $podcastSyncer,
         private PodcastFolderProviderInterface $podcastFolderProvider,
         private LoggerInterface $logger,
-    ) {
-    }
+    ) {}
 
     /**
      * Creates a new podcast object
@@ -66,8 +65,8 @@ final readonly class PodcastCreator implements PodcastCreatorInterface
     ): Podcast {
         // Feed must be http/https
         if (
-            !str_starts_with($feedUrl, 'http://') &&
-            !str_starts_with($feedUrl, 'https://')
+            !str_starts_with($feedUrl, 'http://')
+            && !str_starts_with($feedUrl, 'https://')
         ) {
             throw new InvalidFeedUrlException();
         }

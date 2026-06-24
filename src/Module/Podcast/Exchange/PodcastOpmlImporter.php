@@ -45,8 +45,7 @@ final readonly class PodcastOpmlImporter implements PodcastOpmlImporterInterface
         private PodcastOpmlLoaderInterface $podcastOpmlLoader,
         private PodcastCreatorInterface $podcastCreator,
         private LoggerInterface $logger,
-    ) {
-    }
+    ) {}
 
     /**
      * Loads the opml-xml and tries to create all contained podcasts

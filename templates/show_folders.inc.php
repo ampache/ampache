@@ -23,6 +23,8 @@ declare(strict_types=0);
  *
  */
 
+// show_folders.inc.php
+
 use Ampache\Config\AmpConfig;
 use Ampache\Gui\GuiFactoryInterface;
 use Ampache\Gui\TalFactoryInterface;
@@ -31,12 +33,8 @@ use Ampache\Module\Authorization\Access;
 use Ampache\Module\Authorization\AccessLevelEnum;
 use Ampache\Module\Authorization\AccessTypeEnum;
 use Ampache\Module\Authorization\GatekeeperFactoryInterface;
-use Ampache\Repository\Model\Album;
-use Ampache\Repository\Model\AlbumDisk;
-use Ampache\Repository\Model\Artist;
+use Ampache\Module\Util\Ui;
 use Ampache\Repository\Model\Folder;
-use Ampache\Repository\Model\LibraryItemEnum;
-use Ampache\Repository\Model\Podcast;
 use Ampache\Repository\Model\Podcast_Episode;
 use Ampache\Repository\Model\Song;
 use Ampache\Repository\Model\User;
@@ -44,7 +42,7 @@ use Ampache\Repository\Model\Video;
 
 /** @var Ampache\Repository\Model\Browse $browse */
 /** @var Ampache\Repository\Model\Folder $folder */
-/** @var array<int, array{object_type: LibraryItemEnum|null, object_id: int}> $object_ids */
+/** @var string[] $object_ids */
 
 $web_path = AmpConfig::get_web_path();
 
@@ -68,57 +66,48 @@ $cel_cover   = "cel_cover";
 $cel_folder  = "cel_folder";
 $cel_counter = "cel_counter";
 $css_class   = '';
-$folder_link = Ajax::text('?page=browse&action=set_sort&folder_id=' . $folder->id . '&sort=name', $name_text, 'folder_sort_name');
-$songs_link  = Ajax::text('?page=browse&action=set_sort&folder_id=' . $folder->id . '&sort=song_count', $items_text, 'folder_sort_song_count');
-$count_link  = Ajax::text('?page=browse&action=set_sort&folder_id=' . $folder->id . '&sort=total_count', $count_text, 'folder_sort_total_count');
-$rating_link = Ajax::text('?page=browse&action=set_sort&folder_id=' . $folder->id . '&sort=rating', $rating_text, 'folder_sort_rating'); ?>
-<table class="tabledata striped-rows<?php echo $css_class; ?>" data-objecttype="folder">
-    <thead>
-        <tr class="th-top">
-        <div class="libitem_menu">
-            <th class="cel_play essential"></th>
-            <th class="<?php echo $cel_cover; ?> optional"><?php echo T_('Art'); ?></th>
-</div>
-            <th class="<?php echo $cel_folder; ?> essential persist"><?php echo $folder_link; ?></th>
-            <th class="cel_add essential"></th>
-            <th class="cel_songs optional"><?php echo $songs_link; ?></th>
-            <?php if ($show_played_times) { ?>
-            <th class="<?php echo $cel_counter; ?> optional"><?php echo $count_link; ?></th>
-            <?php } ?>
-            <?php if ($show_ratings) {
-                ++$thcount; ?>
+$folder_link = Ajax::text('?page=browse&action=set_sort&browse_id=' . $browse->id . '&sort=name', $name_text, 'folder_sort_name');
+$rating_link = Ajax::text('?page=browse&action=set_sort&browse_id=' . $browse->id . '&sort=rating', $rating_text, 'folder_sort_rating');
+
+if ($browse->is_show_header()) {
+    require Ui::find_template('list_header.inc.php');
+} ?>
+<form method="post" id="reorder_folder_<?php echo $folder->id; ?>">
+    <div class="libitem_menu">
+    </div>
+    <table class="tabledata striped-rows<?php echo $css_class; ?>" data-objecttype="folder">
+        <thead>
+            <tr class="th-top">
+                <th class="cel_play essential"></th>
+                <th class="<?php echo $cel_cover; ?> optional"><?php echo T_('Art'); ?></th>
+                <th class="<?php echo $cel_folder; ?> essential persist"><?php echo $folder_link; ?></th>
+                <th class="cel_add essential"></th>
+                <th class="cel_songs optional"><?php echo $items_text; ?></th>
+<?php if ($show_played_times) { ?>
+                <th class="<?php echo $cel_counter; ?> optional"><?php echo $count_text; ?></th>
+<?php } ?>
+<?php if ($show_ratings) {
+    ++$thcount; ?>
                 <th class="cel_ratings optional"><?php echo $rating_link; ?></th>
-                <?php
-            } ?>
-            <th class="cel_action essential"><?php echo $action_text; ?></th>
-        </tr>
-    </thead>
-    <tbody>
-        <?php global $dic;
+<?php } ?>
+                <th class="cel_action essential"><?php echo $action_text; ?></th>
+            </tr>
+        </thead>
+        <tbody>
+<?php global $dic;
 $talFactory = $dic->get(TalFactoryInterface::class);
 $guiFactory = $dic->get(GuiFactoryInterface::class);
 $gatekeeper = $dic->get(GatekeeperFactoryInterface::class)->createGuiGatekeeper();
 
-/* Foreach through the objects */
+/* Foreach through the objects e.g. folder-12 song-125 podcast_episode-233 */
 foreach ($object_ids as $object) {
-    $object_type = $object['object_type']?->value;
-    $object_id   = $object['object_id'];
+    preg_match('/([a-z_]+)-([0-9]+)/', $object, $matches);
+    $object_type = $matches[1] ?? null;
+    $object_id   = (int) ($matches[2] ?? 0);
     $libitem     = null;
     switch ($object_type) {
         case 'folder':
             $libitem = new Folder($object_id);
-            break;
-        case 'album':
-            $libitem = new Album($object_id);
-            break;
-        case 'album_disk':
-            $libitem = new AlbumDisk($object_id);
-            break;
-        case 'artist':
-            $libitem = new Artist($object_id);
-            break;
-        case 'podcast':
-            $libitem = new Podcast($object_id);
             break;
         case 'podcast_episode':
             $libitem = new Podcast_Episode($object_id);
@@ -129,28 +118,20 @@ foreach ($object_ids as $object) {
         case 'video':
             $libitem = new Video($object_id);
             break;
-        default:
-
     }
 
     if ($libitem === null || $libitem->isNew()) {
         continue;
     }
 
-    if ($directplay_limit > 0) {
-        if (property_exists($libitem, 'song_count')) {
-            $show_playlist_add = $access25 && ($libitem->song_count > 0 && $libitem->song_count <= $directplay_limit);
-        }
-        if (property_exists($libitem, 'object_count')) {
-            $show_playlist_add = $access25 && ($libitem->object_count > 0 && $libitem->object_count <= $directplay_limit);
-        }
+    if ($directplay_limit > 0 && property_exists($libitem, 'object_count')) {
+        $show_playlist_add = $access25 && ($libitem->object_count > 0 && $libitem->object_count <= $directplay_limit);
     } ?>
-        <tr id="<?php echo $object_type . '_' . $libitem->getId(); ?>" class="libitem_menu">
-            <?php $content = $talFactory->createTalView()
+            <tr id="<?php echo $object_type . '_' . $libitem->getId(); ?>" class="libitem_menu">
+    <?php $content = $talFactory->createTalView()
             ->setContext('USER_IS_REGISTERED', User::is_registered())
             ->setContext('USING_RATINGS', User::is_registered() && (AmpConfig::get('ratings')))
             ->setContext('FOLDER', $guiFactory->createFolderViewAdapter($gatekeeper, $folder, $libitem, $object_type))
-            ->setContext('CONFIG', $guiFactory->createConfigViewAdapter())
             ->setContext('IS_SHOW_PLAYED_TIMES', $show_played_times)
             ->setContext('IS_SHOW_PLAYLIST_ADD', $show_playlist_add)
             ->setContext('CLASS_COVER', $cel_cover)
@@ -158,33 +139,35 @@ foreach ($object_ids as $object) {
             ->setContext('CLASS_COUNTER', $cel_counter)
             ->setTemplate('folder_row.xhtml')
             ->render();
-
     echo $content; ?>
-        </tr>
-        <?php
-} ?>
-        <?php if (!count($object_ids)) { ?>
-        <tr>
-            <td colspan="<?php echo $thcount; ?>"><span class="nodata"></span></td>
-        </tr>
-        <?php } ?>
-    </tbody>
-    <tfoot>
-        <tr class="th-bottom">
-            <th class="cel_play"></th>
-            <th class="<?php echo $cel_cover; ?>"><?php echo T_('Art'); ?></th>
-            <th class="<?php echo $cel_folder; ?>"><?php echo $name_text; ?></th>
-            <th class="cel_add"></th>
-            <th class="cel_songs"><?php echo $items_text; ?></th>
-            <?php if ($show_played_times) { ?>
-            <th class="<?php echo $cel_counter; ?> optional"><?php echo $count_text; ?></th>
-            <?php } ?>
-            <?php if ($show_ratings) { ?>
-                <th class="cel_ratings optional"><?php echo $rating_text; ?></th>
-                <?php } ?>
-            <th class="cel_action"><?php echo $action_text; ?></th>
-        </tr>
-    <tfoot>
-</table>
+            </tr>
+<?php } ?>
+<?php if (!count($object_ids)) { ?>
+            <tr>
+                <td colspan="<?php echo $thcount; ?>"><span class="nodata"></span></td>
+            </tr>
+<?php } ?>
+        </tbody>
+        <tfoot>
+            <tr class="th-bottom">
+                <th class="cel_play"></th>
+                <th class="<?php echo $cel_cover; ?>"><?php echo T_('Art'); ?></th>
+                <th class="<?php echo $cel_folder; ?>"><?php echo $name_text; ?></th>
+                <th class="cel_add"></th>
+                <th class="cel_songs"><?php echo $items_text; ?></th>
+<?php if ($show_played_times) { ?>
+                <th class="<?php echo $cel_counter; ?> optional"><?php echo $count_text; ?></th>
+<?php } ?>
+<?php if ($show_ratings) { ?>
+                    <th class="cel_ratings optional"><?php echo $rating_text; ?></th>
+<?php } ?>
+                <th class="cel_action"><?php echo $action_text; ?></th>
+            </tr>
+        </tfoot>
+    </table>
+</form>
 
 <?php show_table_render(); ?>
+<?php if ($browse->is_show_header()) {
+    require Ui::find_template('list_header.inc.php');
+} ?>

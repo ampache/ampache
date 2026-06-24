@@ -61,6 +61,9 @@ final class ArtistQuery implements QueryInterface
         'user_rating',
     ];
 
+    protected string $base   = "SELECT %%SELECT%% FROM `artist` ";
+    protected string $select = "`artist`.`id`";
+
     /** @var string[] $sorts */
     protected array $sorts = [
         'album_count',
@@ -79,9 +82,15 @@ final class ArtistQuery implements QueryInterface
         'yearformed',
     ];
 
-    protected string $select = "`artist`.`id`";
-
-    protected string $base = "SELECT %%SELECT%% FROM `artist` ";
+    /**
+     * get_base_sql
+     *
+     * Base SELECT query string without filters or joins
+     */
+    public function get_base_sql(): string
+    {
+        return $this->base;
+    }
 
     /**
      * get_select
@@ -91,16 +100,6 @@ final class ArtistQuery implements QueryInterface
     public function get_select(): string
     {
         return $this->select;
-    }
-
-    /**
-     * get_base_sql
-     *
-     * Base SELECT query string without filters or joins
-     */
-    public function get_base_sql(): string
-    {
-        return $this->base;
     }
 
     /**
@@ -126,7 +125,7 @@ final class ArtistQuery implements QueryInterface
             case 'id':
                 $filter_sql = " `artist`.`id` IN (";
                 foreach ($value as $uid) {
-                    $filter_sql .= (int)$uid . ',';
+                    $filter_sql .= (int) $uid . ',';
                 }
 
                 $filter_sql = rtrim($filter_sql, ',') . ") AND ";
@@ -238,14 +237,14 @@ final class ArtistQuery implements QueryInterface
 
                 break;
             case 'user_flag':
-                $filter_sql = ((int)$value === 0)
-                    ? " `artist`.`id` NOT IN (SELECT `object_id` FROM `user_flag` WHERE `object_type` = 'artist' AND `user` = " . (int)$query->user_id . ") AND "
-                    : " `artist`.`id` IN (SELECT `object_id` FROM `user_flag` WHERE `object_type` = 'artist' AND `user` = " . (int)$query->user_id . ") AND ";
+                $filter_sql = ((int) $value === 0)
+                    ? " `artist`.`id` NOT IN (SELECT `object_id` FROM `user_flag` WHERE `object_type` = 'artist' AND `user` = " . (int) $query->user_id . ") AND "
+                    : " `artist`.`id` IN (SELECT `object_id` FROM `user_flag` WHERE `object_type` = 'artist' AND `user` = " . (int) $query->user_id . ") AND ";
                 break;
             case 'user_rating':
-                $filter_sql = ((int)$value === 0)
-                    ? " `artist`.`id` NOT IN (SELECT `object_id` FROM `rating` WHERE `object_type` = 'artist' AND `user` = " . (int)$query->user_id . ") AND "
-                    : " `artist`.`id` IN (SELECT `object_id` FROM `rating` WHERE `object_type` = 'artist' AND `user` = " . (int)$query->user_id . " AND `rating` = " . Dba::escape($value) . ") AND ";
+                $filter_sql = ((int) $value === 0)
+                    ? " `artist`.`id` NOT IN (SELECT `object_id` FROM `rating` WHERE `object_type` = 'artist' AND `user` = " . (int) $query->user_id . ") AND "
+                    : " `artist`.`id` IN (SELECT `object_id` FROM `rating` WHERE `object_type` = 'artist' AND `user` = " . (int) $query->user_id . " AND `rating` = " . Dba::escape($value) . ") AND ";
                 break;
             case 'catalog_enabled':
                 $type = "'artist'";
@@ -272,7 +271,7 @@ final class ArtistQuery implements QueryInterface
                     : " `artist`.`id` IN (SELECT `artist_id` FROM `artist_map` WHERE `artist_map`.`object_type` = 'song') AND ";
                 break;
             case 'unplayed':
-                if ((int)$value === 1) {
+                if ((int) $value === 1) {
                     $filter_sql = " `artist`.`total_count`='0' AND ";
                 }
 
@@ -286,11 +285,8 @@ final class ArtistQuery implements QueryInterface
      * get_sql_sort
      *
      * Sorting SQL for ORDER BY
-     * @param Query $query
-     * @param string|null $field
-     * @param string|null $order
      */
-    public function get_sql_sort($query, $field, $order): string
+    public function get_sql_sort(Query $query, ?string $field, ?string $order): string
     {
         switch ($field) {
             case 'name':
@@ -308,17 +304,17 @@ final class ArtistQuery implements QueryInterface
                 break;
             case 'rating':
                 $sql = sprintf('`rating`.`rating` %s, `rating`.`date`', $order);
-                $query->set_join_and_and('LEFT', "`rating`", "`rating`.`object_id`", "`artist`.`id`", "`rating`.`object_type`", "'artist'", "`rating`.`user`", (string)$query->user_id, 100);
+                $query->set_join_and_and('LEFT', "`rating`", "`rating`.`object_id`", "`artist`.`id`", "`rating`.`object_type`", "'artist'", "`rating`.`user`", (string) $query->user_id, 100);
                 break;
             case 'user_flag':
             case 'userflag':
                 $sql = "`user_flag`.`date`";
-                $query->set_join_and_and('LEFT', "`user_flag`", "`user_flag`.`object_id`", "`artist`.`id`", "`user_flag`.`object_type`", "'artist'", "`user_flag`.`user`", (string)$query->user_id, 100);
+                $query->set_join_and_and('LEFT', "`user_flag`", "`user_flag`.`object_id`", "`artist`.`id`", "`user_flag`.`object_type`", "'artist'", "`user_flag`.`user`", (string) $query->user_id, 100);
                 break;
             case 'user_flag_rating':
                 $sql = sprintf('`user_flag`.`date` %s, `rating`.`rating` %s, `rating`.`date`', $order, $order);
-                $query->set_join_and_and('LEFT', "`user_flag`", "`user_flag`.`object_id`", "`artist`.`id`", "`user_flag`.`object_type`", "'artist'", "`user_flag`.`user`", (string)$query->user_id, 100);
-                $query->set_join_and_and('LEFT', "`rating`", "`rating`.`object_id`", "`artist`.`id`", "`rating`.`object_type`", "'artist'", "`rating`.`user`", (string)$query->user_id, 100);
+                $query->set_join_and_and('LEFT', "`user_flag`", "`user_flag`.`object_id`", "`artist`.`id`", "`user_flag`.`object_type`", "'artist'", "`user_flag`.`user`", (string) $query->user_id, 100);
+                $query->set_join_and_and('LEFT', "`rating`", "`rating`.`object_id`", "`artist`.`id`", "`rating`.`object_type`", "'artist'", "`rating`.`user`", (string) $query->user_id, 100);
                 break;
             default:
                 $sql = '';

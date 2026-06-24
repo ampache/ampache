@@ -33,18 +33,18 @@ use Ampache\Repository\Model\ModelInterface;
 interface BaseRepositoryInterface
 {
     /**
-     * Retrieve a single item by its id
-     *
-     * @return null|TModel
-     */
-    public function findById(int $objectId): ?object;
-
-    /**
      * This function deletes the items entry
      *
      * @param TModel $record
      */
     public function delete(object $record): void;
+
+    /**
+     * Retrieve a single item by its id
+     *
+     * @return null|TModel
+     */
+    public function findById(int $objectId): ?object;
 
     /**
      * Returns a new item

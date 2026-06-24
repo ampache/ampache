@@ -23,6 +23,8 @@ declare(strict_types=0);
  *
  */
 
+// show_top_tracks.inc.php
+
 use Ampache\Config\AmpConfig;
 use Ampache\Gui\GuiFactoryInterface;
 use Ampache\Gui\TalFactoryInterface;
@@ -37,7 +39,7 @@ use Ampache\Repository\Model\User;
 use Ampache\Repository\Model\Userflag;
 
 /** @var list<int> $object_ids */
-/** @var array $hide_columns */
+/** @var string[] $hide_columns */
 /** @var string $argument_param */
 /** @var Artist $artist */
 

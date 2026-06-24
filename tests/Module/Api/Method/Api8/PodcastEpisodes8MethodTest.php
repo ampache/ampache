@@ -43,119 +43,14 @@ use Psr\Http\Message\StreamInterface;
 
 class PodcastEpisodes8MethodTest extends TestCase
 {
-    private ModelFactoryInterface&MockObject $modelFactory;
-
-    private PodcastRepositoryInterface&MockObject $podcastRepository;
-
     private ConfigContainerInterface&MockObject $configContainer;
-
-    private PodcastEpisodes8Method $subject;
-
     private GatekeeperInterface&MockObject $gatekeeper;
-
-    private ResponseInterface&MockObject $response;
-
+    private ModelFactoryInterface&MockObject $modelFactory;
     private ApiOutputInterface&MockObject $output;
-
+    private PodcastRepositoryInterface&MockObject $podcastRepository;
+    private ResponseInterface&MockObject $response;
+    private PodcastEpisodes8Method $subject;
     private User $user;
-
-    protected function setUp(): void
-    {
-        $this->modelFactory      = $this->createMock(ModelFactoryInterface::class);
-        $this->podcastRepository = $this->createMock(PodcastRepositoryInterface::class);
-        $this->configContainer   = $this->createMock(ConfigContainerInterface::class);
-
-        $this->subject = new PodcastEpisodes8Method(
-            $this->modelFactory,
-            $this->podcastRepository,
-            $this->configContainer,
-        );
-
-        $this->gatekeeper = $this->createMock(GatekeeperInterface::class);
-        $this->response   = $this->createMock(ResponseInterface::class);
-        $this->output     = $this->createMock(ApiOutputInterface::class);
-        $this->user       = $this->createMock(User::class);
-    }
-
-    public function testHandleThrowsIfPodcastsDisabled(): void
-    {
-        $podcastId = 666;
-
-        $stream = $this->createMock(StreamInterface::class);
-
-        $result = 'some-error';
-
-        $this->configContainer->expects(static::once())
-            ->method('get')
-            ->with(ConfigurationKeyEnum::PODCAST)
-            ->willReturn(0);
-
-        $this->response->expects(static::once())
-            ->method('getBody')
-            ->willReturn($stream);
-
-        $stream->expects(static::once())
-            ->method('write')
-            ->with($result);
-
-        $this->output->expects(static::once())
-            ->method('error')
-            ->with(
-                ErrorCodeEnum::ACCESS_DENIED,
-                'Enable: podcast',
-                PodcastEpisodes8Method::ACTION,
-                'system'
-            )
-            ->willReturn($result);
-
-        self::assertSame(
-            $this->response,
-            $this->subject->handle(
-                $this->gatekeeper,
-                $this->response,
-                $this->output,
-                [
-                    'filter' => (string) $podcastId,
-                    'auth' => 'string',
-                    'api_format' => 'xml'
-                ],
-                $this->user
-            )
-        );
-    }
-
-    public function testHandleThrowsIfPodcastIsNew(): void
-    {
-        $podcastId = 666;
-
-        static::expectException(RequestParamMissingException::class);
-        static::expectExceptionMessage('Bad Request: filter');
-
-        $this->configContainer->expects(static::once())
-            ->method('get')
-            ->with(ConfigurationKeyEnum::PODCAST)
-            ->willReturn('1');
-
-        $this->podcastRepository->expects(static::once())
-            ->method('findById')
-            ->with($podcastId)
-            ->willReturn(null);
-
-        self::assertSame(
-            $this->response,
-            $this->subject->handle(
-                $this->gatekeeper,
-                $this->response,
-                $this->output,
-                [
-                    'filter' => (string) $podcastId,
-                    'auth' => 'string',
-                    'api_format' => 'xml'
-                ],
-                $this->user
-            )
-        );
-    }
 
     public function testHandleReturnsEmptyResultIfEmpty(): void
     {
@@ -281,5 +176,103 @@ class PodcastEpisodes8MethodTest extends TestCase
                 $this->user
             )
         );
+    }
+
+    public function testHandleThrowsIfPodcastIsNew(): void
+    {
+        $podcastId = 666;
+
+        static::expectException(RequestParamMissingException::class);
+        static::expectExceptionMessage('Bad Request: filter');
+
+        $this->configContainer->expects(static::once())
+            ->method('get')
+            ->with(ConfigurationKeyEnum::PODCAST)
+            ->willReturn('1');
+
+        $this->podcastRepository->expects(static::once())
+            ->method('findById')
+            ->with($podcastId)
+            ->willReturn(null);
+
+        self::assertSame(
+            $this->response,
+            $this->subject->handle(
+                $this->gatekeeper,
+                $this->response,
+                $this->output,
+                [
+                    'filter' => (string) $podcastId,
+                    'auth' => 'string',
+                    'api_format' => 'xml'
+                ],
+                $this->user
+            )
+        );
+    }
+
+    public function testHandleThrowsIfPodcastsDisabled(): void
+    {
+        $podcastId = 666;
+
+        $stream = $this->createMock(StreamInterface::class);
+
+        $result = 'some-error';
+
+        $this->configContainer->expects(static::once())
+            ->method('get')
+            ->with(ConfigurationKeyEnum::PODCAST)
+            ->willReturn(0);
+
+        $this->response->expects(static::once())
+            ->method('getBody')
+            ->willReturn($stream);
+
+        $stream->expects(static::once())
+            ->method('write')
+            ->with($result);
+
+        $this->output->expects(static::once())
+            ->method('error')
+            ->with(
+                ErrorCodeEnum::ACCESS_DENIED,
+                'Enable: podcast',
+                PodcastEpisodes8Method::ACTION,
+                'system'
+            )
+            ->willReturn($result);
+
+        self::assertSame(
+            $this->response,
+            $this->subject->handle(
+                $this->gatekeeper,
+                $this->response,
+                $this->output,
+                [
+                    'filter' => (string) $podcastId,
+                    'auth' => 'string',
+                    'api_format' => 'xml'
+                ],
+                $this->user
+            )
+        );
+    }
+
+    protected function setUp(): void
+    {
+        $this->modelFactory      = $this->createMock(ModelFactoryInterface::class);
+        $this->podcastRepository = $this->createMock(PodcastRepositoryInterface::class);
+        $this->configContainer   = $this->createMock(ConfigContainerInterface::class);
+
+        $this->subject = new PodcastEpisodes8Method(
+            $this->modelFactory,
+            $this->podcastRepository,
+            $this->configContainer,
+        );
+
+        $this->gatekeeper = $this->createMock(GatekeeperInterface::class);
+        $this->response   = $this->createMock(ResponseInterface::class);
+        $this->output     = $this->createMock(ApiOutputInterface::class);
+        $this->user       = $this->createMock(User::class);
     }
 }

@@ -38,18 +38,7 @@ final readonly class StatsViewAdapter implements StatsViewAdapterInterface
         private ConfigContainerInterface $configContainer,
         private GuiFactoryInterface $guiFactory,
         private VideoRepositoryInterface $videoRepository,
-    ) {
-    }
-
-    public function displayVideo(): bool
-    {
-        return $this->videoRepository->getItemCount() > 0;
-    }
-
-    public function displayPodcast(): bool
-    {
-        return $this->configContainer->isFeatureEnabled(ConfigurationKeyEnum::PODCAST);
-    }
+    ) {}
 
     public function displayAlbum(): bool
     {
@@ -61,9 +50,14 @@ final readonly class StatsViewAdapter implements StatsViewAdapterInterface
         return ($this->configContainer->isFeatureEnabled(ConfigurationKeyEnum::ALBUM_GROUP) === false);
     }
 
-    public function getCatalogStats(): CatalogStatsInterface
+    public function displayPodcast(): bool
     {
-        return $this->guiFactory->createCatalogStats(Catalog::get_stats());
+        return $this->configContainer->isFeatureEnabled(ConfigurationKeyEnum::PODCAST);
+    }
+
+    public function displayVideo(): bool
+    {
+        return $this->videoRepository->getItemCount() > 0;
     }
 
     /**
@@ -81,5 +75,10 @@ final readonly class StatsViewAdapter implements StatsViewAdapterInterface
         }
 
         return $result;
+    }
+
+    public function getCatalogStats(): CatalogStatsInterface
+    {
+        return $this->guiFactory->createCatalogStats(Catalog::get_stats());
     }
 }

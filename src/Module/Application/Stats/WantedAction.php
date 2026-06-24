@@ -42,8 +42,7 @@ final readonly class WantedAction implements ApplicationActionInterface
         private UiInterface $ui,
         private ModelFactoryInterface $modelFactory,
         private WantedRepositoryInterface $wantedRepository,
-    ) {
-    }
+    ) {}
 
     public function run(ServerRequestInterface $request, GuiGatekeeperInterface $gatekeeper): ?ResponseInterface
     {
@@ -58,8 +57,8 @@ final readonly class WantedAction implements ApplicationActionInterface
 
         $user = $gatekeeper->getUser();
         if (
-            $user !== null &&
-            $user->has_access(AccessLevelEnum::MANAGER)
+            $user !== null
+            && $user->has_access(AccessLevelEnum::MANAGER)
         ) {
             $user = null;
         }

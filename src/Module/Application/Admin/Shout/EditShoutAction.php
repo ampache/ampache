@@ -48,8 +48,7 @@ final readonly class EditShoutAction implements ApplicationActionInterface
         private UiInterface $ui,
         private ShoutRepositoryInterface $shoutRepository,
         private ConfigContainerInterface $configContainer,
-    ) {
-    }
+    ) {}
 
     public function run(ServerRequestInterface $request, GuiGatekeeperInterface $gatekeeper): ?ResponseInterface
     {
@@ -57,7 +56,7 @@ final readonly class EditShoutAction implements ApplicationActionInterface
             throw new AccessDeniedException();
         }
 
-        $requestData = (array)$request->getParsedBody();
+        $requestData = (array) $request->getParsedBody();
         $shoutId     = (int) ($requestData['shout_id'] ?? 0);
 
         $shout = $this->shoutRepository->findById($shoutId);

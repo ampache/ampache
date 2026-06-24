@@ -23,6 +23,8 @@ declare(strict_types=0);
  *
  */
 
+// list_header.inc.php
+
 /**
  * List Header
  * The default pager widget for moving through a list of many items.

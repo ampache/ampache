@@ -30,11 +30,21 @@ use Ampache\Repository\Model\Artist;
 interface ArtistRepositoryInterface
 {
     /**
+     * This cleans out unused artists
+     */
+    public function collectGarbage(): void;
+
+    /**
      * Deletes the artist entry
      */
     public function delete(
         Artist $artist,
     ): void;
+
+    /**
+     * This finds an artist based on its name
+     */
+    public function findByName(string $name): ?Artist;
 
     /**
      * This returns a number of random artists.
@@ -45,14 +55,4 @@ interface ArtistRepositoryInterface
         int $userId,
         ?int $count = 1,
     ): array;
-
-    /**
-     * This cleans out unused artists
-     */
-    public function collectGarbage(): void;
-
-    /**
-     * This finds an artist based on its name
-     */
-    public function findByName(string $name): ?Artist;
 }

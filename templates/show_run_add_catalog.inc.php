@@ -23,6 +23,8 @@ declare(strict_types=0);
  *
  */
 
+// show_run_add_catalog.inc.php
+
 /** @var string $catalog_add_found */
 /** @var string $catalog_add_directory */
 

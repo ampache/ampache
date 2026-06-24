@@ -38,35 +38,8 @@ use Psr\Http\Message\ServerRequestInterface;
 
 class UserActionTest extends MockeryTestCase
 {
-    /** @var MockInterface|UiInterface */
-    private MockInterface $ui;
-
     private UserAction $subject;
-
-    #[Override]
-    protected function setUp(): void
-    {
-        $this->ui = $this->mock(UiInterface::class);
-
-        $this->subject = new UserAction(
-            $this->ui
-        );
-    }
-
-    public function testRunThrowsExceptionIfAccessIsDenied(): void
-    {
-        $request    = $this->mock(ServerRequestInterface::class);
-        $gatekeeper = $this->mock(GuiGatekeeperInterface::class);
-
-        $this->expectException(AccessDeniedException::class);
-
-        $gatekeeper->shouldReceive('mayAccess')
-            ->with(AccessTypeEnum::INTERFACE, AccessLevelEnum::ADMIN)
-            ->once()
-            ->andReturnFalse();
-
-        $this->subject->run($request, $gatekeeper);
-    }
+    private MockInterface|UiInterface $ui;
 
     public function testRunShowOptions(): void
     {
@@ -121,6 +94,31 @@ class UserActionTest extends MockeryTestCase
 
         $this->assertNull(
             $this->subject->run($request, $gatekeeper)
+        );
+    }
+
+    public function testRunThrowsExceptionIfAccessIsDenied(): void
+    {
+        $request    = $this->mock(ServerRequestInterface::class);
+        $gatekeeper = $this->mock(GuiGatekeeperInterface::class);
+
+        $this->expectException(AccessDeniedException::class);
+
+        $gatekeeper->shouldReceive('mayAccess')
+            ->with(AccessTypeEnum::INTERFACE, AccessLevelEnum::ADMIN)
+            ->once()
+            ->andReturnFalse();
+
+        $this->subject->run($request, $gatekeeper);
+    }
+
+    #[Override]
+    protected function setUp(): void
+    {
+        $this->ui = $this->mock(UiInterface::class);
+
+        $this->subject = new UserAction(
+            $this->ui
         );
     }
 }

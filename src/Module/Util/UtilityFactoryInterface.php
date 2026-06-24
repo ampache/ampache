@@ -29,6 +29,11 @@ use Curl\Curl;
 
 interface UtilityFactoryInterface
 {
+    /**
+     * Returns a new Curl instance
+     */
+    public function createCurl(): Curl;
+
     public function createMailer(): MailerInterface;
 
     /**
@@ -45,9 +50,4 @@ interface UtilityFactoryInterface
         string $filePattern = '',
         bool $isLocal = true,
     ): VaInfo;
-
-    /**
-     * Returns a new Curl instance
-     */
-    public function createCurl(): Curl;
 }

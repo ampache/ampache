@@ -23,6 +23,8 @@ declare(strict_types=0);
  *
  */
 
+// sidebar_preferences.inc.php
+
 /* This one is a little dynamic as we add plugins or Localplay modules
  * they can have their own preference sections so we need to build the
  * links based on that, always ignore 'internal' though

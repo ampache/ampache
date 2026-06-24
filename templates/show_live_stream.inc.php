@@ -23,6 +23,8 @@ declare(strict_types=0);
  *
  */
 
+// show_live_stream.inc.php
+
 use Ampache\Config\AmpConfig;
 use Ampache\Module\Api\Ajax;
 use Ampache\Module\Playback\Stream_Playlist;
@@ -33,12 +35,12 @@ use Ampache\Repository\Model\Live_Stream;
 /** @var Live_Stream $radio */
 ?>
 
-<?php Ui::show_box_top((string)$radio->get_fullname(), 'box box_live_stream_details'); ?>
+<?php Ui::show_box_top((string) $radio->get_fullname(), 'box box_live_stream_details'); ?>
 <div class="item_right_info">
     <?php $size = Ui::is_grid_view('live_stream')
         ? ['width' => 150, 'height' => 150]
         : ['width' => 128, 'height' => 128];
-Art::display('live_stream', $radio->id, (string)$radio->get_fullname(), $size, null, true, false); ?>
+Art::display('live_stream', $radio->id, (string) $radio->get_fullname(), $size, null, true, false); ?>
 </div>
 <dl class="media_details">
 <dt><?php echo T_('Action'); ?></dt>
@@ -54,7 +56,7 @@ Art::display('live_stream', $radio->id, (string)$radio->get_fullname(), $size, n
         <?php } ?>
         <?php echo Ajax::button('?action=basket&type=live_stream&id=' . $radio->id, 'new_window', T_('Add to Temporary Playlist'), 'add_live_stream_' . $radio->id); ?>
     </dd>
-<?php $itemprops[T_('Name')] = (string)$radio->get_fullname();
+<?php $itemprops[T_('Name')] = (string) $radio->get_fullname();
 $itemprops[T_('Website')]    = scrub_out($radio->site_url);
 $itemprops[T_('Stream')]     = "<a target=\"_blank\" href=\"" . $radio->url . "\">" . $radio->url . "</a>";
 $itemprops[T_('Codec')]      = scrub_out($radio->codec);

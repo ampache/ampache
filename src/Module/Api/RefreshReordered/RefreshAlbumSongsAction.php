@@ -36,9 +36,8 @@ final class RefreshAlbumSongsAction implements ApplicationActionInterface
 {
     public const string REQUEST_KEY = 'refresh_album_songs';
 
-    private RequestParserInterface $requestParser;
-
     private ModelFactoryInterface $modelFactory;
+    private RequestParserInterface $requestParser;
 
     public function __construct(
         RequestParserInterface $requestParser,

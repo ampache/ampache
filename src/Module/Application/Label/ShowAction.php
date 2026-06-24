@@ -51,8 +51,7 @@ final readonly class ShowAction implements ApplicationActionInterface
         private LoggerInterface $logger,
         private PrivilegeCheckerInterface $privilegeChecker,
         private LabelRepositoryInterface $labelRepository,
-    ) {
-    }
+    ) {}
 
     public function run(ServerRequestInterface $request, GuiGatekeeperInterface $gatekeeper): ?ResponseInterface
     {
@@ -65,12 +64,12 @@ final readonly class ShowAction implements ApplicationActionInterface
         $input = $request->getQueryParams();
 
         // lookup by ID
-        $label_id = (isset($input['label'])) ? (int)$input['label'] : null;
+        $label_id = (isset($input['label'])) ? (int) $input['label'] : null;
         $label    = (is_int($label_id))
             ? $this->labelRepository->findById($label_id)
             : null;
         // lookup by name if ID didn't work
-        $label_name = (isset($input['name'])) ? urldecode((string)$input['name']) : null;
+        $label_name = (isset($input['name'])) ? urldecode((string) $input['name']) : null;
         if (!$label && $label_name !== null) {
             $label_id = $this->labelRepository->lookup($label_name);
             $label    = ($label_id > 0)

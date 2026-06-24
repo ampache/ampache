@@ -42,7 +42,7 @@ final class AddToCatalogAction extends AbstractCatalogAction
         private readonly ConfigContainerInterface $configContainer,
     ) {
         parent::__construct($ui);
-        $this->ui              = $ui;
+        $this->ui = $ui;
     }
 
     /**
@@ -58,8 +58,8 @@ final class AddToCatalogAction extends AbstractCatalogAction
 
         catalog_worker('add_to_catalog', $catalogIds);
         $this->ui->showConfirmation(
+            T_('No Problem'),
             T_('Catalog update process has started'),
-            '',
             sprintf(
                 '%s/catalog.php',
                 $this->configContainer->getWebPath('/admin')

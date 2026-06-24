@@ -53,15 +53,15 @@ final class Browse8Method
      * If you don't send any parameters you'll get a catalog list (the 'root' path)
      * Catalog ID is required on 'artist', 'album', 'podcast' so you can filter the browse correctly
      *
-     * filter  = (string) object_id //optional
-     * type    = (string) 'root', 'catalog', 'artist', 'album', 'podcast' // optional
+     * filter = (string) object_id //optional
+     * type = (string) 'root', 'catalog', 'artist', 'album', 'podcast' // optional
      * catalog = (integer) catalog ID you are browsing // optional
-     * add     = $browse->set_api_filter(date) //optional
-     * update  = $browse->set_api_filter(date) //optional
-     * offset  = (integer) //optional
-     * limit   = (integer) //optional
-     * cond    = (string) Apply additional filters to the browse using ';' separated comma string pairs (e.g. 'filter1,value1;filter2,value2') //optional
-     * sort    = (string) sort name or comma separated key pair. Order default 'ASC' (e.g. 'name,ASC' and 'name' are the same) //optional
+     * add = $browse->set_api_filter(date) //optional
+     * update = $browse->set_api_filter(date) //optional
+     * offset = (integer) //optional
+     * limit = (integer) //optional
+     * cond = (string) Apply additional filters to the browse using ';' separated comma string pairs (e.g. 'filter1,value1;filter2,value2') //optional
+     * sort = (string) sort name or comma separated key pair. Order default 'ASC' (e.g. 'name,ASC' and 'name' are the same) //optional
      *
      * @param array{
      *     filter?: string,
@@ -79,8 +79,8 @@ final class Browse8Method
      */
     public static function browse(array $input, User $user): bool
     {
-        $catalog_id  = (isset($input['catalog'])) ? (int)$input['catalog'] : null;
-        $object_id   = (isset($input['filter'])) ? (int)$input['filter'] : null;
+        $catalog_id  = (isset($input['catalog'])) ? (int) $input['catalog'] : null;
+        $object_id   = (isset($input['filter'])) ? (int) $input['filter'] : null;
         $object_type = $input['type'] ?? 'root';
         if (!$object_id && $object_type == 'catalog') {
             $object_id = $catalog_id;
@@ -129,7 +129,7 @@ final class Browse8Method
                 return false;
             }
 
-            switch ((string)$catalog->gather_types) {
+            switch ((string) $catalog->gather_types) {
                 case 'video':
                     $output_type = 'video';
                     $gather_type = 'video';
@@ -153,7 +153,7 @@ final class Browse8Method
             }
             $child_type = $output_type;
 
-            $browse->set_sort_order(html_entity_decode((string)($input['sort'] ?? '')), ['name', 'ASC']);
+            $browse->set_sort_order(html_entity_decode((string) ($input['sort'] ?? '')), ['name', 'ASC']);
 
             $browse->set_filter('gather_type', $gather_type);
             $browse->set_filter('catalog', $catalog->id);
@@ -242,7 +242,7 @@ final class Browse8Method
             }
             $child_type = $output_type;
 
-            $browse->set_sort_order(html_entity_decode((string)($input['sort'] ?? '')), [$sort, $order]);
+            $browse->set_sort_order(html_entity_decode((string) ($input['sort'] ?? '')), [$sort, $order]);
 
             if (!empty($filter_type)) {
                 $browse->set_filter($filter_type, $item->getId());
@@ -253,7 +253,7 @@ final class Browse8Method
         $browse->set_api_filter('add', $input['add'] ?? '');
         $browse->set_api_filter('update', $input['update'] ?? '');
 
-        $browse->set_conditions(html_entity_decode((string)($input['cond'] ?? '')));
+        $browse->set_conditions(html_entity_decode((string) ($input['cond'] ?? '')));
 
         $objects = $browse->get_objects();
         if (empty($objects)) {
@@ -272,13 +272,13 @@ final class Browse8Method
         ob_end_clean();
         switch ($input['api_format']) {
             case 'json':
-                Json8_Data::set_offset((int)($input['offset'] ?? 0));
+                Json8_Data::set_offset((int) ($input['offset'] ?? 0));
                 Json8_Data::set_limit($input['limit'] ?? 0);
                 Json8_Data::set_count($browse->get_total());
                 echo Json8_Data::browses($results, $object_id, $object_type, $child_type, $catalog_id);
                 break;
             default:
-                Xml8_Data::set_offset((int)($input['offset'] ?? 0));
+                Xml8_Data::set_offset((int) ($input['offset'] ?? 0));
                 Xml8_Data::set_limit($input['limit'] ?? 0);
                 Xml8_Data::set_count($browse->get_total());
                 echo Xml8_Data::browses($results, $object_id, $object_type, $child_type, $catalog_id);

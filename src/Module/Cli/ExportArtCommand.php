@@ -36,16 +36,6 @@ use Psr\Log\LoggerInterface;
 
 final class ExportArtCommand extends Command
 {
-    #[Override]
-    protected function defaults(): self
-    {
-        $this->option('-h, --help', T_('Help'))->on($this->showHelp(...));
-
-        $this->onExit(static fn ($exitCode = 0) => exit($exitCode));
-
-        return $this;
-    }
-
     public function __construct(
         private readonly LoggerInterface $logger,
         private readonly ArtExporterInterface $artExporter,
@@ -93,5 +83,15 @@ final class ExportArtCommand extends Command
             T_('Art Dump Complete'),
             true
         );
+    }
+
+    #[Override]
+    protected function defaults(): self
+    {
+        $this->option('-h, --help', T_('Help'))->on($this->showHelp(...));
+
+        $this->onExit(static fn($exitCode = 0) => exit($exitCode));
+
+        return $this;
     }
 }

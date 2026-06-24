@@ -23,6 +23,8 @@ declare(strict_types=0);
  *
  */
 
+// show_add_access.inc.php
+
 use Ampache\Config\AmpConfig;
 use Ampache\Module\Application\Admin\Access\Lib\AccessListTypeEnum;
 use Ampache\Module\System\AmpError;
@@ -39,7 +41,7 @@ $streamaccess = T_('Stream Access');
 $all          = T_('All');
 $current_ip   = (!filter_var($_SERVER['REMOTE_ADDR'], FILTER_VALIDATE_IP))
     ? ''
-    : (string)filter_var($_SERVER['REMOTE_ADDR'], FILTER_VALIDATE_IP); ?>
+    : (string) filter_var($_SERVER['REMOTE_ADDR'], FILTER_VALIDATE_IP); ?>
 <form name="update_access" method="post" enctype="multipart/form-data" action="<?php echo AmpConfig::get_web_path('/admin'); ?>/access.php?action=add_host">
     <table class="tabledata">
         <tr>

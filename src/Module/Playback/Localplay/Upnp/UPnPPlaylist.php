@@ -30,10 +30,10 @@ use Ampache\Module\System\Session;
 
 class UPnPPlaylist
 {
+    private int $_current = 0;
+
     /** @var array<int, array{name: string, link: string}> $_songs */
     private array $_songs = [];
-
-    private int $_current = 0;
 
     /**
      * UPnPPlaylist constructor.
@@ -53,10 +53,12 @@ class UPnPPlaylist
         $this->PlayListSave();
     }
 
-    public function RemoveTrack(int $track): void
+    /**
+     * @return array<int, array{name: string, link: string}>
+     */
+    public function AllItems(): array
     {
-        unset($this->_songs[$track - 1]);
-        $this->PlayListSave();
+        return $this->_songs;
     }
 
     public function Clear(): void
@@ -64,14 +66,6 @@ class UPnPPlaylist
         $this->_songs   = [];
         $this->_current = 0;
         $this->PlayListSave();
-    }
-
-    /**
-     * @return array<int, array{name: string, link: string}>
-     */
-    public function AllItems(): array
-    {
-        return $this->_songs;
     }
 
     /**
@@ -134,6 +128,12 @@ class UPnPPlaylist
         return false;
     }
 
+    public function RemoveTrack(int $track): void
+    {
+        unset($this->_songs[$track - 1]);
+        $this->PlayListSave();
+    }
+
     /**
      * skip
      */
@@ -141,8 +141,8 @@ class UPnPPlaylist
     {
         // note that pos is started from 1 not from zero
         if (
-            $track_id >= 1 &&
-            $track_id <= count($this->_songs)
+            $track_id >= 1
+            && $track_id <= count($this->_songs)
         ) {
             $this->_current = $track_id - 1;
             $this->PlayListSave();
@@ -159,7 +159,7 @@ class UPnPPlaylist
         $pls_data = json_decode(Session::read($sid), true);
 
         $this->_songs   = (is_array($pls_data['upnp_playlist'])) ? $pls_data['upnp_playlist'] : [];
-        $this->_current = (int)($pls_data['upnp_current'] ?? 0);
+        $this->_current = (int) ($pls_data['upnp_current'] ?? 0);
     }
 
     private function PlayListSave(): void

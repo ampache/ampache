@@ -37,8 +37,7 @@ final readonly class NetworkChecker implements NetworkCheckerInterface
     public function __construct(
         private ConfigContainerInterface $configContainer,
         private AccessRepositoryInterface $accessRepository,
-    ) {
-    }
+    ) {}
 
     /**
      * This takes a type, ip, user, level and key and then returns whether they

@@ -132,7 +132,7 @@ final class PreferenceRepository implements PreferenceRepositoryInterface
                 'subcategory' => $row['subcategory']
             ];
             if ($api) {
-                $result['has_access'] = (((int)$row['level']) <= $accessLevel);
+                $result['has_access'] = (((int) $row['level']) <= $accessLevel);
             }
 
             if ($row['type'] == 'special') {

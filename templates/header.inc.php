@@ -23,6 +23,8 @@ declare(strict_types=0);
  *
  */
 
+// header.inc.php
+
 use Ampache\Config\AmpConfig;
 use Ampache\Module\Authorization\Access;
 use Ampache\Module\Authorization\AccessLevelEnum;
@@ -202,10 +204,10 @@ if ($is_session) {
 $sidebarLight = AmpConfig::get('sidebar_light');
 $hideSwitcher = AmpConfig::get('sidebar_hide_switcher', false);
 $isCollapsed  = (
-    ($sidebarLight && $hideSwitcher) ||
-    ($sidebarLight && (!isset($_COOKIE['sidebar_state']))) ||
-    ($sidebarLight && (isset($_COOKIE['sidebar_state']) && $_COOKIE['sidebar_state'] != "expanded")) ||
-    (isset($_COOKIE['sidebar_state']) && $_COOKIE['sidebar_state'] == "collapsed")
+    ($sidebarLight && $hideSwitcher)
+    || ($sidebarLight && (!isset($_COOKIE['sidebar_state'])))
+    || ($sidebarLight && (isset($_COOKIE['sidebar_state']) && $_COOKIE['sidebar_state'] != "expanded"))
+    || (isset($_COOKIE['sidebar_state']) && $_COOKIE['sidebar_state'] == "collapsed")
 ); ?>
             <div id="sidebar" class="sidebar-<?php echo ($ui_fixed) ? 'fixed' : 'float'; ?>">
             <?php if (!$hideSwitcher) {
@@ -243,10 +245,10 @@ echo ($isCollapsed) ? ' content-left-wild' : ''; ?>">
                         $latest_version  = AutoUpdate::get_latest_version();
                         if (
                             (
-                                !empty($latest_version) &&
-                                $current_version !== $latest_version
-                            ) ||
-                            AutoUpdate::is_update_available()
+                                !empty($latest_version)
+                                && $current_version !== $latest_version
+                            )
+                            || AutoUpdate::is_update_available()
                         ) {
                             AutoUpdate::show_new_version();
                             echo '<br />';

@@ -36,41 +36,7 @@ use Ampache\Repository\AccessRepositoryInterface;
  */
 final readonly class AccessListManager implements AccessListManagerInterface
 {
-    public function __construct(private AccessRepositoryInterface $accessRepository)
-    {
-    }
-
-    /**
-     * Updates an existing acl item
-     *
-     * @throws InvalidEndIpException
-     * @throws InvalidIpRangeException
-     * @throws InvalidStartIpException
-     */
-    public function update(
-        int $accessId,
-        string $startIp,
-        string $endIp,
-        string $name,
-        int $userId,
-        AccessLevelEnum $level,
-        AccessTypeEnum $type,
-    ): void {
-        $startIp = (string)@inet_pton($startIp);
-        $endIp   = (string)@inet_pton($endIp);
-
-        $this->verifyRange($startIp, $endIp);
-
-        $this->accessRepository->update(
-            $accessId,
-            $startIp,
-            $endIp,
-            $name,
-            $userId,
-            $level,
-            in_array($type, AccessTypeEnum::CONFIGURABLE_TYPE_LIST, true) ? $type : AccessTypeEnum::STREAM
-        );
-    }
+    public function __construct(private AccessRepositoryInterface $accessRepository) {}
 
     /**
      * Creates a new acl item
@@ -90,8 +56,8 @@ final readonly class AccessListManager implements AccessListManagerInterface
         AccessTypeEnum $type,
         AccessTypeEnum $additionalType,
     ): void {
-        $startIp = (string)@inet_pton($startIp);
-        $endIp   = (string)@inet_pton($endIp);
+        $startIp = (string) @inet_pton($startIp);
+        $endIp   = (string) @inet_pton($endIp);
         $type    = (in_array($type, AccessTypeEnum::CONFIGURABLE_TYPE_LIST, true))
             ? $type
             : AccessTypeEnum::STREAM;
@@ -137,6 +103,38 @@ final readonly class AccessListManager implements AccessListManagerInterface
     }
 
     /**
+     * Updates an existing acl item
+     *
+     * @throws InvalidEndIpException
+     * @throws InvalidIpRangeException
+     * @throws InvalidStartIpException
+     */
+    public function update(
+        int $accessId,
+        string $startIp,
+        string $endIp,
+        string $name,
+        int $userId,
+        AccessLevelEnum $level,
+        AccessTypeEnum $type,
+    ): void {
+        $startIp = (string) @inet_pton($startIp);
+        $endIp   = (string) @inet_pton($endIp);
+
+        $this->verifyRange($startIp, $endIp);
+
+        $this->accessRepository->update(
+            $accessId,
+            $startIp,
+            $endIp,
+            $name,
+            $userId,
+            $level,
+            in_array($type, AccessTypeEnum::CONFIGURABLE_TYPE_LIST, true) ? $type : AccessTypeEnum::STREAM
+        );
+    }
+
+    /**
      * Verifies the entered ip addresses
      *
      * @throws InvalidEndIpException
@@ -145,15 +143,15 @@ final readonly class AccessListManager implements AccessListManagerInterface
      */
     private function verifyRange(string $startIp, string $endIp): void
     {
-        if (!$startIp) {
+        if ($startIp === '' || $startIp === '0') {
             throw new InvalidStartIpException();
         }
 
-        if (!$endIp) {
+        if ($endIp === '' || $endIp === '0') {
             throw new InvalidEndIpException();
         }
 
-        if (strlen(bin2hex((string)$startIp)) !== strlen(bin2hex((string)$endIp))) {
+        if (strlen(bin2hex($startIp)) !== strlen(bin2hex($endIp))) {
             throw new InvalidIpRangeException();
         }
     }

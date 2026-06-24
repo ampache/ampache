@@ -30,9 +30,7 @@ use Ampache\Repository\Model\Playlist;
 
 final readonly class PlaylistLoader implements PlaylistLoaderInterface
 {
-    public function __construct(private ModelFactoryInterface $modelFactory)
-    {
-    }
+    public function __construct(private ModelFactoryInterface $modelFactory) {}
 
     public function loadByUserId(int $userId): array
     {

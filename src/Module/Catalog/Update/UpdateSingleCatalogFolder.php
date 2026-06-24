@@ -49,6 +49,7 @@ final class UpdateSingleCatalogFolder extends AbstractCatalogUpdater implements 
         bool $addMode,
         bool $cleanupMode,
         bool $searchArtMode,
+        bool $scanMode,
         string|bool|null $moveDirPath,
     ): void {
         $sql        = "SELECT `id` FROM `catalog` WHERE `name` = ? AND `catalog_type`='local'";
@@ -85,28 +86,37 @@ final class UpdateSingleCatalogFolder extends AbstractCatalogUpdater implements 
                 case 'podcast':
                     $type      = 'podcast_episode';
                     $tables    = ['podcast_episode', 'podcast'];
-                    $file_ids  = Catalog::get_ids_from_folder($folderPath, $type);
                     $className = Podcast_Episode::class;
                     break;
                 case 'video':
                     $type      = 'video';
                     $tables    = ['video'];
-                    $file_ids  = Catalog::get_ids_from_folder($folderPath, $type);
                     $className = Video::class;
                     break;
                 case 'music':
                 default:
                     $type      = 'song';
                     $tables    = ['album', 'artist', 'song'];
-                    $file_ids  = Catalog::get_ids_from_folder($folderPath, $type);
                     $className = Song::class;
                     break;
             }
 
-            $interactor->info(
-                sprintf(T_('File count: %d'), count($file_ids)),
-                true
-            );
+            // Only query existing media IDs when needed
+            $file_ids = [];
+            if (
+                is_string($moveDirPath)
+                || $cleanupMode == 1
+                || $verificationMode == 1
+                || $searchArtMode == 1
+            ) {
+                $file_ids = Catalog::get_ids_from_folder($folderPath, $type);
+
+                $interactor->info(
+                    sprintf(T_('File count: %d'), count($file_ids)),
+                    true
+                );
+            }
+
             foreach ($file_ids as $file_id) {
                 $media     = new $className($file_id);
                 $file_path = $media->file;
@@ -149,9 +159,9 @@ final class UpdateSingleCatalogFolder extends AbstractCatalogUpdater implements 
 
                 // deleted file
                 if (
-                    $media->isNew() === false &&
-                    !$file_test &&
-                    $cleanupMode == 1
+                    $media->isNew() === false
+                    && !$file_test
+                    && $cleanupMode == 1
                 ) {
                     if ($catalog->clean_file($file_path, $type)) {
                         $changed++;
@@ -202,6 +212,31 @@ final class UpdateSingleCatalogFolder extends AbstractCatalogUpdater implements 
                 }
             }
 
+
+            if ($scanMode) {
+                ob_start();
+
+                // Look for new files
+                $interactor->info(
+                    T_('Start scanning folders'),
+                    true
+                );
+                $changed += $catalog->scan_catalog_folder($folderPath, $interactor);
+
+                $buffer = ob_get_contents();
+
+                ob_end_clean();
+
+                $interactor->info(
+                    $this->cleanBuffer((string) $buffer),
+                    true
+                );
+                $interactor->info(
+                    '------------------',
+                    true
+                );
+            }
+
             // new files don't have an ID
             if ($addMode == 1) {
                 $options = ['gather_art' => ($searchArtMode == 1)];
@@ -234,7 +269,7 @@ final class UpdateSingleCatalogFolder extends AbstractCatalogUpdater implements 
         ob_end_clean();
 
         $interactor->info(
-            $this->cleanBuffer((string)$buffer),
+            $this->cleanBuffer((string) $buffer),
             true
         );
     }

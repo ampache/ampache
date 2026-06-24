@@ -22,6 +22,9 @@ declare(strict_types=0);
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  *
  */
+
+// show_share_row.inc.php
+
 use Ampache\Repository\Model\Share;
 
 /** @var Share $libitem */

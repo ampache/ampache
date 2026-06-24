@@ -42,22 +42,17 @@ class Democratic extends Tmp_Playlist
 {
     protected const string DB_TABLENAME = 'democratic';
 
-    public ?string $name = null;
-
-    public ?int $cooldown = null;
-
-    public int $level = 0;
-
-    public int $user = 0;
-
-    public bool $primary = false;
-
     public int $base_playlist = 0;
-
-    public ?int $tmp_playlist = null;
+    public ?int $cooldown     = null;
+    public int $level         = 0;
+    public ?string $name      = null;
 
     /** @var array<int|string> $object_ids */
     public array $object_ids = [];
+
+    public bool $primary      = false;
+    public ?int $tmp_playlist = null;
+    public int $user          = 0;
 
     /** @var array<int|string> $vote_ids */
     public array $vote_ids = [];
@@ -74,16 +69,6 @@ class Democratic extends Tmp_Playlist
         foreach ($info as $key => $value) {
             $this->$key = $value;
         }
-    }
-
-    public function getId(): int
-    {
-        return $this->id ?: 0;
-    }
-
-    public function isNew(): bool
-    {
-        return $this->getId() === 0;
     }
 
     /**
@@ -110,50 +95,61 @@ class Democratic extends Tmp_Playlist
     }
 
     /**
-     * is_enabled
-     * This function just returns true / false if the current democratic
-     * playlist is currently enabled / configured
+     * create
+     * This is the democratic play create function it inserts this into the democratic table
+     * @param array{
+     *     name: string,
+     *     democratic: int,
+     *     cooldown: int,
+     *     level: int,
+     *     make_default: int,
+     * } $data
      */
-    public function is_enabled(): bool
+    public static function create(array $data): ?string
     {
-        return (bool) $this->tmp_playlist;
+        // Clean up the input
+        $name    = $data['name'];
+        $base    = (int) $data['democratic'];
+        $cool    = (int) $data['cooldown'];
+        $level   = (int) $data['level'];
+        $default = (int) $data['make_default'];
+        $user    = (int) Core::get_global('user')?->getId();
+        if ($cool < 0 || $cool > 999999) {
+            $cool = 1;
+        }
+
+        $sql        = "INSERT INTO `democratic` (`name`, `base_playlist`, `cooldown`, `level`, `user`, `primary`) VALUES (?, ?, ?, ?, ?, ?)";
+        $db_results = Dba::write($sql, [$name, $base, $cool, $level, $user, $default]);
+
+        if ($db_results) {
+            $democratic_id = Dba::insert_id();
+            if (!$democratic_id) {
+                return null;
+            }
+
+            parent::create(['session_id' => $democratic_id, 'type' => 'vote', 'object_type' => 'song']);
+
+            return $democratic_id;
+        }
+
+        return null;
     }
 
     /**
-     * set_parent
-     * This returns the Tmp_Playlist for this democratic play instance
+     * delete
+     * This deletes a democratic playlist
      */
-    public function set_parent(): void
+    public static function delete(int $democratic_id): bool
     {
-        $sql        = "SELECT * FROM `tmp_playlist` WHERE `session` = ?";
-        $db_results = Dba::read($sql, [$this->id]);
-        $row        = Dba::fetch_assoc($db_results);
-        if ($row !== []) {
-            $this->tmp_playlist = $row['id'] ?? null;
-        }
-    }
+        $sql = "DELETE FROM `democratic` WHERE `id` = ?;";
+        Dba::write($sql, [$democratic_id]);
 
-    public function getAccessLevel(): AccessLevelEnum
-    {
-        return AccessLevelEnum::from($this->level);
-    }
+        $sql = "DELETE FROM `tmp_playlist` WHERE `session` = ?;";
+        Dba::write($sql, [$democratic_id]);
 
-    /**
-     * get_playlists
-     * This returns all of the current valid 'Democratic' Playlists that have been created.
-     * @return int[]
-     */
-    public static function get_playlists(): array
-    {
-        $sql = "SELECT `id` FROM `democratic` ORDER BY `name`";
+        self::prune_tracks();
 
-        $db_results = Dba::read($sql);
-        $results    = [];
-        while ($row = Dba::fetch_assoc($db_results)) {
-            $results[] = (int)$row['id'];
-        }
-
-        return $results;
+        return true;
     }
 
     /**
@@ -178,6 +174,167 @@ class Democratic extends Tmp_Playlist
         }
 
         return new Democratic($democratic_id);
+    }
+
+    /**
+     * get_playlists
+     * This returns all of the current valid 'Democratic' Playlists that have been created.
+     * @return int[]
+     */
+    public static function get_playlists(): array
+    {
+        $sql = "SELECT `id` FROM `democratic` ORDER BY `name`";
+
+        $db_results = Dba::read($sql);
+        $results    = [];
+        while ($row = Dba::fetch_assoc($db_results)) {
+            $results[] = (int) $row['id'];
+        }
+
+        return $results;
+    }
+
+    /**
+     * prune_tracks
+     * This replaces the normal prune tracks and correctly removes the votes
+     * as well
+     */
+    public static function prune_tracks(): void
+    {
+        // This deletes data without votes, if it's a voting democratic playlist
+        $sql = "DELETE FROM `tmp_playlist_data` USING `tmp_playlist_data` LEFT JOIN `user_vote` ON `tmp_playlist_data`.`id`=`user_vote`.`object_id` LEFT JOIN `tmp_playlist` ON `tmp_playlist`.`id`=`tmp_playlist_data`.`tmp_playlist` WHERE `user_vote`.`object_id` IS NULL AND `tmp_playlist`.`type` = 'vote'";
+        Dba::write($sql);
+    }
+
+    /**
+     * show_playlist_select
+     * This one is for playlists!
+     */
+    public static function show_playlist_select(string $name, string $selected = '', string $style = ''): string
+    {
+        $user             = Core::get_global('user');
+        $string           = "<select name=\"{$name}\" style=\"{$style}\">\n\t<option value=\"\">" . T_('None') . "</option>\n";
+        $already_selected = false;
+        $index            = 1;
+        $use_search       = AmpConfig::get('demo_use_search');
+        $playlists        = ($use_search)
+            ? Search::get_search_array($user?->id)
+            : Playlist::get_playlist_array($user?->id);
+        $nb_items = count($playlists);
+
+        foreach ($playlists as $key => $value) {
+            $select_txt = '';
+            if (!$already_selected && ($key == $selected || $index == $nb_items)) {
+                $select_txt       = 'selected="selected"';
+                $already_selected = true;
+            }
+
+            $string .= "\t<option value=\"" . $key . sprintf('" %s>', $select_txt) . scrub_out($value) . "</option>\n";
+            ++$index;
+        }
+
+        return $string . "</select>\n";
+    }
+
+    /**
+     * vote
+     * This function is called by users to vote on a system wide playlist
+     * This adds the specified objects to the tmp_playlist and adds a 'vote'
+     * by this user, naturally it checks to make sure that the user hasn't
+     * already voted on any of these objects
+     * @param array<array{string, string|int}> $items
+     */
+    public function add_vote(array $items): void
+    {
+        /* Iterate through the objects if no vote, add to playlist and vote */
+        foreach ($items as $element) {
+            $type      = (string) array_shift($element);
+            $object_id = (int) array_shift($element);
+            if (!$this->has_vote($object_id, $type)) {
+                $this->_add_vote($object_id, $type);
+            }
+        }
+    }
+
+    /**
+     * clear
+     * This is really just a wrapper function, it clears the entire playlist
+     * including all votes etc.
+     */
+    public function clear(): bool
+    {
+        if (!$this->tmp_playlist) {
+            return false;
+        }
+
+        // Clear all votes then prune
+        $sql = "DELETE FROM `user_vote` USING `user_vote` LEFT JOIN `tmp_playlist_data` ON `user_vote`.`object_id` = `tmp_playlist_data`.`id` WHERE `tmp_playlist_data`.`tmp_playlist` = ?;";
+        Dba::write($sql, [$this->tmp_playlist]);
+
+        // Prune!
+        self::prune_tracks();
+
+        // Clean the votes
+        $this->clear_votes();
+
+        return true;
+    }
+
+    /**
+     * clean_votes
+     * This removes in left over garbage in the votes table
+     */
+    public function clear_votes(): bool
+    {
+        $sql = "DELETE FROM `user_vote` USING `user_vote` LEFT JOIN `tmp_playlist_data` ON `user_vote`.`object_id`=`tmp_playlist_data`.`id` WHERE `tmp_playlist_data`.`id` IS NULL";
+        Dba::write($sql);
+
+        return true;
+    }
+
+    /**
+     * delete_from_oid
+     * This takes an OID and type and removes the object from the democratic playlist
+     */
+    public function delete_from_oid(int $object_id, string $object_type): bool
+    {
+        $row_id = $this->get_uid_from_object_id($object_id, $object_type);
+        if ($row_id) {
+            debug_event(self::class, 'Removing Votes for ' . $object_id . ' of type ' . $object_type, 5);
+            $this->delete_votes($row_id);
+        } else {
+            debug_event(self::class, 'Unable to find Votes for ' . $object_id . ' of type ' . $object_type, 3);
+        }
+
+        return true;
+    }
+
+    /**
+     * delete_votes
+     * This removes the votes for the specified object on the current playlist
+     */
+    public function delete_votes(int|string $row_id): bool
+    {
+        $sql = "DELETE FROM `user_vote` WHERE `object_id` = ?";
+        Dba::write($sql, [$row_id]);
+
+        $sql = "DELETE FROM `tmp_playlist_data` WHERE `id` = ?";
+        Dba::write($sql, [$row_id]);
+
+        return true;
+    }
+
+    /**
+     * get_cool_songs
+     * This returns all of the song_ids for songs that have happened within
+     * the last 'cooldown' for this user.
+     */
+    public function get_cool_songs(): array
+    {
+        // Convert cooldown time to a timestamp in the past
+        $cool_time = time() - ($this->cooldown * 60);
+
+        return Stats::get_object_history($cool_time);
     }
 
     /**
@@ -227,21 +384,6 @@ class Democratic extends Tmp_Playlist
     }
 
     /**
-     * play_url
-     * This returns the special play URL for democratic play, only open to ADMINs
-     */
-    public function play_url(?User $user = null): string
-    {
-        if (empty($user)) {
-            $user = Core::get_global('user');
-        }
-
-        $link = Stream::get_base_url(false, $user?->streamtoken) . 'uid=' . $user?->id . '&demo_id=' . scrub_out((string)$this->id);
-
-        return Stream_Url::format($link);
-    }
-
-    /**
      * get_next_object
      * This returns the next object in the tmp_playlist.
      * Most of the time this will just be the top entry, but if there is a
@@ -252,7 +394,7 @@ class Democratic extends Tmp_Playlist
     {
         // FIXME: Shouldn't this return object_type?
 
-        $offset     = (int)($offset);
+        $offset     = (int) ($offset);
         $items      = $this->get_items($offset + 1);
         $use_search = AmpConfig::get('demo_use_search');
 
@@ -298,40 +440,36 @@ class Democratic extends Tmp_Playlist
             return null;
         }
 
-        return (int)$row['id'];
+        return (int) $row['id'];
     }
 
     /**
-     * get_cool_songs
-     * This returns all of the song_ids for songs that have happened within
-     * the last 'cooldown' for this user.
+     * get_vote
+     * This returns the current count for a specific song
      */
-    public function get_cool_songs(): array
+    public function get_vote(int $object_id): int
     {
-        // Convert cooldown time to a timestamp in the past
-        $cool_time = time() - ($this->cooldown * 60);
-
-        return Stats::get_object_history($cool_time);
-    }
-
-    /**
-     * vote
-     * This function is called by users to vote on a system wide playlist
-     * This adds the specified objects to the tmp_playlist and adds a 'vote'
-     * by this user, naturally it checks to make sure that the user hasn't
-     * already voted on any of these objects
-     * @param array<array{string, string|int}> $items
-     */
-    public function add_vote(array $items): void
-    {
-        /* Iterate through the objects if no vote, add to playlist and vote */
-        foreach ($items as $element) {
-            $type      = (string)array_shift($element);
-            $object_id = (int)array_shift($element);
-            if (!$this->has_vote($object_id, $type)) {
-                $this->_add_vote($object_id, $type);
-            }
+        if (parent::is_cached('democratic_vote', $object_id)) {
+            return (int) (parent::get_from_cache('democratic_vote', $object_id))[0];
         }
+
+        $sql        = "SELECT COUNT(`user`) AS `count` FROM `user_vote` WHERE `object_id` = ?";
+        $db_results = Dba::read($sql, [$object_id]);
+
+        $results = Dba::fetch_assoc($db_results);
+        parent::add_to_cache('democratic_vote', $object_id, [$results['count']]);
+
+        return (int) $results['count'];
+    }
+
+    public function getAccessLevel(): AccessLevelEnum
+    {
+        return AccessLevelEnum::from($this->level);
+    }
+
+    public function getId(): int
+    {
+        return $this->id ?: 0;
     }
 
     /**
@@ -359,36 +497,33 @@ class Democratic extends Tmp_Playlist
     }
 
     /**
-     * _add_vote
-     * This takes an object id and user and actually inserts the row
+     * is_enabled
+     * This function just returns true / false if the current democratic
+     * playlist is currently enabled / configured
      */
-    private function _add_vote(int $object_id, string $object_type = 'song'): void
+    public function is_enabled(): bool
     {
-        if (!$this->tmp_playlist) {
-            return;
+        return (bool) $this->tmp_playlist;
+    }
+
+    public function isNew(): bool
+    {
+        return $this->getId() === 0;
+    }
+
+    /**
+     * play_url
+     * This returns the special play URL for democratic play, only open to ADMINs
+     */
+    public function play_url(?User $user = null): string
+    {
+        if (empty($user)) {
+            $user = Core::get_global('user');
         }
 
-        $className = ObjectTypeToClassNameMapper::map($object_type);
-        /** @var Media $media */
-        $media = new $className($object_id);
-        $track = (isset($media->track)) ? (int)($media->track) : null;
+        $link = Stream::get_base_url(false, $user?->streamtoken) . 'uid=' . $user?->id . '&demo_id=' . scrub_out((string) $this->id);
 
-        /* If it's on the playlist just vote */
-        $sql        = "SELECT `id` FROM `tmp_playlist_data` WHERE `tmp_playlist_data`.`object_id` = ? AND `tmp_playlist_data`.`tmp_playlist` = ?";
-        $db_results = Dba::write($sql, [$object_id, $this->tmp_playlist]);
-
-        /* If it's not there, add it and pull ID */
-        if (!$results = Dba::fetch_assoc($db_results)) {
-            $sql = "INSERT INTO `tmp_playlist_data` (`tmp_playlist`, `object_id`, `object_type`, `track`) VALUES (?, ?, ?, ?)";
-            Dba::write($sql, [$this->tmp_playlist, $object_id, $object_type, $track]);
-            $results       = [];
-            $results['id'] = Dba::insert_id();
-        }
-
-        /* Vote! */
-        $time = time();
-        $sql  = "INSERT INTO user_vote (`user`, `object_id`, `date`, `sid`) VALUES (?, ?, ?, ?)";
-        Dba::write($sql, [Core::get_global('user')?->getId(), $results['id'], $time, session_id()]);
+        return Stream_Url::format($link);
     }
 
     /**
@@ -416,52 +551,17 @@ class Democratic extends Tmp_Playlist
     }
 
     /**
-     * delete_votes
-     * This removes the votes for the specified object on the current playlist
+     * set_parent
+     * This returns the Tmp_Playlist for this democratic play instance
      */
-    public function delete_votes(int|string $row_id): bool
+    public function set_parent(): void
     {
-        $sql = "DELETE FROM `user_vote` WHERE `object_id` = ?";
-        Dba::write($sql, [$row_id]);
-
-        $sql = "DELETE FROM `tmp_playlist_data` WHERE `id` = ?";
-        Dba::write($sql, [$row_id]);
-
-        return true;
-    }
-
-    /**
-     * delete_from_oid
-     * This takes an OID and type and removes the object from the democratic playlist
-     */
-    public function delete_from_oid(int $object_id, string $object_type): bool
-    {
-        $row_id = $this->get_uid_from_object_id($object_id, $object_type);
-        if ($row_id) {
-            debug_event(self::class, 'Removing Votes for ' . $object_id . ' of type ' . $object_type, 5);
-            $this->delete_votes($row_id);
-        } else {
-            debug_event(self::class, 'Unable to find Votes for ' . $object_id . ' of type ' . $object_type, 3);
+        $sql        = "SELECT * FROM `tmp_playlist` WHERE `session` = ?";
+        $db_results = Dba::read($sql, [$this->id]);
+        $row        = Dba::fetch_assoc($db_results);
+        if ($row !== []) {
+            $this->tmp_playlist = $row['id'] ?? null;
         }
-
-        return true;
-    }
-
-    /**
-     * delete
-     * This deletes a democratic playlist
-     */
-    public static function delete(int $democratic_id): bool
-    {
-        $sql = "DELETE FROM `democratic` WHERE `id` = ?;";
-        Dba::write($sql, [$democratic_id]);
-
-        $sql = "DELETE FROM `tmp_playlist` WHERE `session` = ?;";
-        Dba::write($sql, [$democratic_id]);
-
-        self::prune_tracks();
-
-        return true;
     }
 
     /**
@@ -478,10 +578,10 @@ class Democratic extends Tmp_Playlist
     public function update(array $data): int
     {
         $name    = $data['name'] ?? $this->name;
-        $base    = (int)($data['democratic'] ?? $this->base_playlist);
-        $cool    = (int)($data['cooldown'] ?? $this->cooldown);
-        $level   = (int)($data['level'] ?? $this->level);
-        $default = (int)($data['make_default'] ?? 0);
+        $base    = (int) ($data['democratic'] ?? $this->base_playlist);
+        $cool    = (int) ($data['cooldown'] ?? $this->cooldown);
+        $level   = (int) ($data['level'] ?? $this->level);
+        $default = (int) ($data['make_default'] ?? 0);
         $demo_id = $this->id;
 
         if ($cool < 0 || $cool > 999999) {
@@ -495,140 +595,35 @@ class Democratic extends Tmp_Playlist
     }
 
     /**
-     * create
-     * This is the democratic play create function it inserts this into the democratic table
-     * @param array{
-     *     name: string,
-     *     democratic: int,
-     *     cooldown: int,
-     *     level: int,
-     *     make_default: int,
-     * } $data
+     * _add_vote
+     * This takes an object id and user and actually inserts the row
      */
-    public static function create(array $data): ?string
-    {
-        // Clean up the input
-        $name    = $data['name'];
-        $base    = (int)$data['democratic'];
-        $cool    = (int)$data['cooldown'];
-        $level   = (int)$data['level'];
-        $default = (int)$data['make_default'];
-        $user    = (int)Core::get_global('user')?->getId();
-        if ($cool < 0 || $cool > 999999) {
-            $cool = 1;
-        }
-
-        $sql        = "INSERT INTO `democratic` (`name`, `base_playlist`, `cooldown`, `level`, `user`, `primary`) VALUES (?, ?, ?, ?, ?, ?)";
-        $db_results = Dba::write($sql, [$name, $base, $cool, $level, $user, $default]);
-
-        if ($db_results) {
-            $democratic_id = Dba::insert_id();
-            if (!$democratic_id) {
-                return null;
-            }
-
-            parent::create(['session_id' => $democratic_id, 'type' => 'vote', 'object_type' => 'song']);
-
-            return $democratic_id;
-        }
-
-        return null;
-    }
-
-    /**
-     * prune_tracks
-     * This replaces the normal prune tracks and correctly removes the votes
-     * as well
-     */
-    public static function prune_tracks(): void
-    {
-        // This deletes data without votes, if it's a voting democratic playlist
-        $sql = "DELETE FROM `tmp_playlist_data` USING `tmp_playlist_data` LEFT JOIN `user_vote` ON `tmp_playlist_data`.`id`=`user_vote`.`object_id` LEFT JOIN `tmp_playlist` ON `tmp_playlist`.`id`=`tmp_playlist_data`.`tmp_playlist` WHERE `user_vote`.`object_id` IS NULL AND `tmp_playlist`.`type` = 'vote'";
-        Dba::write($sql);
-    }
-
-    /**
-     * clear
-     * This is really just a wrapper function, it clears the entire playlist
-     * including all votes etc.
-     */
-    public function clear(): bool
+    private function _add_vote(int $object_id, string $object_type = 'song'): void
     {
         if (!$this->tmp_playlist) {
-            return false;
+            return;
         }
 
-        // Clear all votes then prune
-        $sql = "DELETE FROM `user_vote` USING `user_vote` LEFT JOIN `tmp_playlist_data` ON `user_vote`.`object_id` = `tmp_playlist_data`.`id` WHERE `tmp_playlist_data`.`tmp_playlist` = ?;";
-        Dba::write($sql, [$this->tmp_playlist]);
+        $className = ObjectTypeToClassNameMapper::map($object_type);
+        /** @var Media $media */
+        $media = new $className($object_id);
+        $track = (isset($media->track)) ? (int) ($media->track) : null;
 
-        // Prune!
-        self::prune_tracks();
+        /* If it's on the playlist just vote */
+        $sql        = "SELECT `id` FROM `tmp_playlist_data` WHERE `tmp_playlist_data`.`object_id` = ? AND `tmp_playlist_data`.`tmp_playlist` = ?";
+        $db_results = Dba::write($sql, [$object_id, $this->tmp_playlist]);
 
-        // Clean the votes
-        $this->clear_votes();
-
-        return true;
-    }
-
-    /**
-     * clean_votes
-     * This removes in left over garbage in the votes table
-     */
-    public function clear_votes(): bool
-    {
-        $sql = "DELETE FROM `user_vote` USING `user_vote` LEFT JOIN `tmp_playlist_data` ON `user_vote`.`object_id`=`tmp_playlist_data`.`id` WHERE `tmp_playlist_data`.`id` IS NULL";
-        Dba::write($sql);
-
-        return true;
-    }
-
-    /**
-     * get_vote
-     * This returns the current count for a specific song
-     */
-    public function get_vote(int $object_id): int
-    {
-        if (parent::is_cached('democratic_vote', $object_id)) {
-            return (int)(parent::get_from_cache('democratic_vote', $object_id))[0];
+        /* If it's not there, add it and pull ID */
+        if (!$results = Dba::fetch_assoc($db_results)) {
+            $sql = "INSERT INTO `tmp_playlist_data` (`tmp_playlist`, `object_id`, `object_type`, `track`) VALUES (?, ?, ?, ?)";
+            Dba::write($sql, [$this->tmp_playlist, $object_id, $object_type, $track]);
+            $results       = [];
+            $results['id'] = Dba::insert_id();
         }
 
-        $sql        = "SELECT COUNT(`user`) AS `count` FROM `user_vote` WHERE `object_id` = ?";
-        $db_results = Dba::read($sql, [$object_id]);
-
-        $results = Dba::fetch_assoc($db_results);
-        parent::add_to_cache('democratic_vote', $object_id, [$results['count']]);
-
-        return (int)$results['count'];
-    }
-
-    /**
-     * show_playlist_select
-     * This one is for playlists!
-     */
-    public static function show_playlist_select(string $name, string $selected = '', string $style = ''): string
-    {
-        $user             = Core::get_global('user');
-        $string           = "<select name=\"{$name}\" style=\"{$style}\">\n\t<option value=\"\">" . T_('None') . "</option>\n";
-        $already_selected = false;
-        $index            = 1;
-        $use_search       = AmpConfig::get('demo_use_search');
-        $playlists        = ($use_search)
-            ? Search::get_search_array($user?->id)
-            : Playlist::get_playlist_array($user?->id);
-        $nb_items = count($playlists);
-
-        foreach ($playlists as $key => $value) {
-            $select_txt = '';
-            if (!$already_selected && ($key == $selected || $index == $nb_items)) {
-                $select_txt       = 'selected="selected"';
-                $already_selected = true;
-            }
-
-            $string .= "\t<option value=\"" . $key . sprintf('" %s>', $select_txt) . scrub_out($value) . "</option>\n";
-            ++$index;
-        }
-
-        return $string . "</select>\n";
+        /* Vote! */
+        $time = time();
+        $sql  = "INSERT INTO user_vote (`user`, `object_id`, `date`, `sid`) VALUES (?, ?, ?, ?)";
+        Dba::write($sql, [Core::get_global('user')?->getId(), $results['id'], $time, session_id()]);
     }
 }

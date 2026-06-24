@@ -63,8 +63,8 @@ final class FriendsTimeline6Method
 
             return false;
         }
-        $limit = (int)($input['limit'] ?? 0);
-        $since = (int)($input['since'] ?? 0);
+        $limit = (int) ($input['limit'] ?? 0);
+        $since = (int) ($input['since'] ?? 0);
 
         $results = self::getUseractivityRepository()->getFriendsActivities(
             $user->getId(),

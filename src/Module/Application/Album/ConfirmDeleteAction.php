@@ -49,8 +49,7 @@ final readonly class ConfirmDeleteAction implements ApplicationActionInterface
         private ModelFactoryInterface $modelFactory,
         private UiInterface $ui,
         private AlbumDeleterInterface $albumDeleter,
-    ) {
-    }
+    ) {}
 
     public function run(ServerRequestInterface $request, GuiGatekeeperInterface $gatekeeper): ?ResponseInterface
     {
@@ -62,7 +61,7 @@ final readonly class ConfirmDeleteAction implements ApplicationActionInterface
             return null;
         }
 
-        $album_id = (int)$this->requestParser->getFromRequest('album_id');
+        $album_id = (int) $this->requestParser->getFromRequest('album_id');
         $album    = $this->modelFactory->createAlbum($album_id);
         if (!Catalog::can_remove($album)) {
             throw new AccessDeniedException(

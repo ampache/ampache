@@ -46,8 +46,7 @@ final readonly class ConfirmDeleteAction implements ApplicationActionInterface
         private UiInterface $ui,
         private LabelDeleterInterface $labelDeleter,
         private LabelRepositoryInterface $labelRepository,
-    ) {
-    }
+    ) {}
 
     public function run(ServerRequestInterface $request, GuiGatekeeperInterface $gatekeeper): ?ResponseInterface
     {
@@ -64,12 +63,12 @@ final readonly class ConfirmDeleteAction implements ApplicationActionInterface
         }
 
         $body    = $request->getQueryParams();
-        $labelId = (int)($body['label_id'] ?? 0);
+        $labelId = (int) ($body['label_id'] ?? 0);
 
         $label = $this->labelRepository->findById($labelId);
         if (
-            $label === null ||
-            !Catalog::can_remove($label)
+            $label === null
+            || !Catalog::can_remove($label)
         ) {
             throw new AccessDeniedException(
                 sprintf('Unauthorized to remove the label `%s`', $labelId)

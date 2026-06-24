@@ -34,12 +34,6 @@ class DbCollectorModuleTest extends MockeryTestCase
 {
     private ?DbCollectorModule $subject;
 
-    #[Override]
-    protected function setUp(): void
-    {
-        $this->subject = new DbCollectorModule();
-    }
-
     public function testCollectsReturnsDbInfoIfHasInfo(): void
     {
         $art = Mockery::mock(Art::class);
@@ -76,5 +70,11 @@ class DbCollectorModuleTest extends MockeryTestCase
             [],
             $this->subject->collectArt($art)
         );
+    }
+
+    #[Override]
+    protected function setUp(): void
+    {
+        $this->subject = new DbCollectorModule();
     }
 }

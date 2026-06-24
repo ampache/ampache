@@ -23,6 +23,8 @@ declare(strict_types=0);
  *
  */
 
+// test_error_page.inc.php
+
 use Ampache\Module\System\AmpError;
 use Ampache\Module\Util\Ui;
 

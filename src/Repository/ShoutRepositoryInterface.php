@@ -35,6 +35,11 @@ use Traversable;
 interface ShoutRepositoryInterface extends BaseRepositoryInterface
 {
     /**
+     * Cleans out orphaned shout-box items
+     */
+    public function collectGarbage(?string $objectType = null, ?int $objectId = null): void;
+
+    /**
      * Returns all shout-box items for the provided object-type and -id
      *
      * @return Traversable<Shoutbox>
@@ -43,11 +48,6 @@ interface ShoutRepositoryInterface extends BaseRepositoryInterface
         LibraryItemEnum $objectType,
         int $objectId,
     ): Traversable;
-
-    /**
-     * Cleans out orphaned shout-box items
-     */
-    public function collectGarbage(?string $objectType = null, ?int $objectId = null): void;
 
     /**
      * This returns the top user_shouts, shout-box objects are always shown regardless and count against the total
@@ -66,6 +66,11 @@ interface ShoutRepositoryInterface extends BaseRepositoryInterface
     public function getTopById(int $limit, ?int $userId = null): Traversable;
 
     /**
+     * Migrates an object associate shouts to a new object
+     */
+    public function migrate(string $objectType, int $oldObjectId, int $newObjectId): void;
+
+    /**
      * Persists the shout-item in the database
      *
      * If the item is new, it will be created. Otherwise, an update will happen
@@ -73,9 +78,4 @@ interface ShoutRepositoryInterface extends BaseRepositoryInterface
      * @return null|non-negative-int
      */
     public function persist(Shoutbox $shout): ?int;
-
-    /**
-     * Migrates an object associate shouts to a new object
-     */
-    public function migrate(string $objectType, int $oldObjectId, int $newObjectId): void;
 }

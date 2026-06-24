@@ -36,8 +36,7 @@ final readonly class UserKeyGenerator implements UserKeyGeneratorInterface
     public function __construct(
         private UserRepositoryInterface $userRepository,
         private LoggerInterface $logger,
-    ) {
-    }
+    ) {}
 
     /**
      * Generates and saves a new API key for the given user
@@ -97,7 +96,7 @@ final readonly class UserKeyGenerator implements UserKeyGeneratorInterface
         try {
             $streamtoken = bin2hex(random_bytes(20));
             $userId      = $user->getId();
-            $userName    = (string)$user->username;
+            $userName    = (string) $user->username;
 
             $this->userRepository->updateStreamToken(
                 $userId,

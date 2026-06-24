@@ -49,8 +49,7 @@ final readonly class ShowAction implements ApplicationActionInterface
         private UiInterface $ui,
         private LoggerInterface $logger,
         private ModelFactoryInterface $modelFactory,
-    ) {
-    }
+    ) {}
 
     public function run(ServerRequestInterface $request, GuiGatekeeperInterface $gatekeeper): ?ResponseInterface
     {
@@ -62,7 +61,7 @@ final readonly class ShowAction implements ApplicationActionInterface
 
         $user     = $gatekeeper->getUser() ?? $this->modelFactory->createUser(-1);
         $catalogs = User::get_user_catalogs($user->id);
-        $radio_id = (int)$this->requestParser->getFromRequest('radio');
+        $radio_id = (int) $this->requestParser->getFromRequest('radio');
         $radio    = $this->modelFactory->createLiveStream($radio_id);
         if ($radio->isNew() || !in_array($radio->catalog, $catalogs)) {
             $this->logger->warning(

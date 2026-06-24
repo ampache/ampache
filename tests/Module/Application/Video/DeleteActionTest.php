@@ -37,45 +37,10 @@ use Psr\Log\LoggerInterface;
 
 class DeleteActionTest extends MockeryTestCase
 {
-    /** @var ConfigContainerInterface|MockInterface|null */
-    private ?MockInterface $configContainer;
-
-    /** @var UiInterface|MockInterface|null */
-    private ?MockInterface $ui;
-
-    /** @var LoggerInterface|MockInterface|null */
-    private MockInterface $logger;
-
+    private ConfigContainerInterface|MockInterface|null $configContainer;
+    private LoggerInterface|MockInterface|null $logger;
     private ?DeleteAction $subject;
-
-    #[Override]
-    protected function setUp(): void
-    {
-        $this->configContainer = $this->mock(ConfigContainerInterface::class);
-        $this->ui              = $this->mock(UiInterface::class);
-        $this->logger          = $this->mock(LoggerInterface::class);
-
-        $this->subject = new DeleteAction(
-            $this->configContainer,
-            $this->ui,
-            $this->logger
-        );
-    }
-
-    public function testRunReturnsNullInDemoMode(): void
-    {
-        $request    = $this->mock(ServerRequestInterface::class);
-        $gatekeeper = $this->mock(GuiGatekeeperInterface::class);
-
-        $this->configContainer->shouldReceive('isFeatureEnabled')
-            ->with(ConfigurationKeyEnum::DEMO_MODE)
-            ->once()
-            ->andReturnTrue();
-
-        $this->assertNull(
-            $this->subject->run($request, $gatekeeper)
-        );
-    }
+    private UiInterface|MockInterface|null $ui;
 
     public function testRunDeletesAndReturnsNull(): void
     {
@@ -125,6 +90,35 @@ class DeleteActionTest extends MockeryTestCase
 
         $this->assertNull(
             $this->subject->run($request, $gatekeeper)
+        );
+    }
+
+    public function testRunReturnsNullInDemoMode(): void
+    {
+        $request    = $this->mock(ServerRequestInterface::class);
+        $gatekeeper = $this->mock(GuiGatekeeperInterface::class);
+
+        $this->configContainer->shouldReceive('isFeatureEnabled')
+            ->with(ConfigurationKeyEnum::DEMO_MODE)
+            ->once()
+            ->andReturnTrue();
+
+        $this->assertNull(
+            $this->subject->run($request, $gatekeeper)
+        );
+    }
+
+    #[Override]
+    protected function setUp(): void
+    {
+        $this->configContainer = $this->mock(ConfigContainerInterface::class);
+        $this->ui              = $this->mock(UiInterface::class);
+        $this->logger          = $this->mock(LoggerInterface::class);
+
+        $this->subject = new DeleteAction(
+            $this->configContainer,
+            $this->ui,
+            $this->logger
         );
     }
 }

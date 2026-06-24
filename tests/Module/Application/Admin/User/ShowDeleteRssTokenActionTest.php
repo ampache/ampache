@@ -34,22 +34,9 @@ class ShowDeleteRssTokenActionTest extends TestCase
 {
     use UserAdminConfirmationTestTrait;
 
-    private MockObject&UiInterface $ui;
-
     private MockObject&ConfigContainerInterface $configContainer;
-
     private ShowDeleteRssTokenAction $subject;
-
-    protected function setUp(): void
-    {
-        $this->ui              = $this->createMock(UiInterface::class);
-        $this->configContainer = $this->createMock(ConfigContainerInterface::class);
-
-        $this->subject = new ShowDeleteRssTokenAction(
-            $this->ui,
-            $this->configContainer
-        );
-    }
+    private MockObject&UiInterface $ui;
 
     public function testHandleRendersConfirmation(): void
     {
@@ -69,6 +56,17 @@ class ShowDeleteRssTokenActionTest extends TestCase
                         'delete_rsstoken'
                     );
             }
+        );
+    }
+
+    protected function setUp(): void
+    {
+        $this->ui              = $this->createMock(UiInterface::class);
+        $this->configContainer = $this->createMock(ConfigContainerInterface::class);
+
+        $this->subject = new ShowDeleteRssTokenAction(
+            $this->ui,
+            $this->configContainer
         );
     }
 }

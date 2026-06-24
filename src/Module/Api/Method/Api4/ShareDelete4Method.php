@@ -68,8 +68,8 @@ final class ShareDelete4Method
         $share = $shareRepository->findById((int) $object_id);
 
         if (
-            $share === null ||
-            !$share->isAccessible($user)
+            $share === null
+            || !$share->isAccessible($user)
         ) {
             Api4::message('error', 'share ' . $object_id . ' was not found', '404', $input['api_format']);
 

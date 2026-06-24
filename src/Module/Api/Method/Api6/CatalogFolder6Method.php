@@ -55,8 +55,8 @@ final class CatalogFolder6Method
      * Single folder versions of catalog add, clean and verify.
      * Make sure you remember to urlencode those folder names!
      *
-     * folder  = (string) urlencode(FULL path to local folder)
-     * task    = (string) 'add', 'clean', 'verify', 'remove' (can be comma separated)
+     * folder = (string) urlencode(FULL path to local folder)
+     * task = (string) 'add', 'clean', 'verify', 'remove' (can be comma separated)
      * catalog = (integer) $catalog_id
      *
      * @param array{
@@ -79,7 +79,7 @@ final class CatalogFolder6Method
             return false;
         }
         $folder = html_entity_decode($input['folder']);
-        $task   = explode(',', html_entity_decode((string)($input['task'])));
+        $task   = explode(',', html_entity_decode((string) ($input['task'])));
 
         // confirm that a valid task is going to happen
         if (!AmpConfig::get('delete_from_disk') && in_array('remove', $task)) {

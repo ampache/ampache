@@ -27,6 +27,4 @@ namespace Ampache\Module\User\PrivateMessage\Exception;
 
 use Exception;
 
-final class PrivateMessageCreationException extends Exception
-{
-}
+final class PrivateMessageCreationException extends Exception {}

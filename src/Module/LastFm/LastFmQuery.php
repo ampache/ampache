@@ -35,9 +35,7 @@ final readonly class LastFmQuery implements LastFmQueryInterface
 {
     private const string API_URL = 'http://ws.audioscrobbler.com/2.0/?method=';
 
-    public function __construct(private ConfigContainerInterface $configContainer)
-    {
-    }
+    public function __construct(private ConfigContainerInterface $configContainer) {}
 
     /**
      * @throws Exception\LastFmQueryFailedException
@@ -61,7 +59,7 @@ final readonly class LastFmQuery implements LastFmQueryInterface
 
         $request = Requests::get($url, [], Core::requests_options());
 
-        $result = simplexml_load_string((string)$request->body);
+        $result = simplexml_load_string((string) $request->body);
 
         if ($result === false) {
             throw new LastFmQueryFailedException();

@@ -23,6 +23,8 @@ declare(strict_types=0);
  *
  */
 
+// show_playlist_medias.inc.php
+
 use Ampache\Config\AmpConfig;
 use Ampache\Module\Util\Ui;
 use Ampache\Repository\Model\Browse;
@@ -117,7 +119,7 @@ if ($browse->is_show_header()) {
                 }
                 if ($libitem !== null) {
                     $object_type    = $libtype?->value;
-                    $playlist_track = (int)($object['track']); ?>
+                    $playlist_track = (int) ($object['track']); ?>
                     <tr id="track_<?php echo($object['track_id'] ?? 0); ?>">
                         <?php require Ui::find_template('show_playlist_media_row.inc.php'); ?>
                     </tr>

@@ -35,14 +35,6 @@ final class Migration370015 extends AbstractMigration
 {
     protected array $changelog = ['Add session_remember table to store remember tokens'];
 
-    public function migrate(): void
-    {
-        $charset = (AmpConfig::get('database_charset', 'utf8mb4'));
-        $engine  = ($charset == 'utf8mb4') ? 'InnoDB' : 'MYISAM';
-
-        $this->updateDatabase("CREATE TABLE IF NOT EXISTS `session_remember` (`username` varchar(16) NOT NULL, `token` varchar(32) NOT NULL, `expire` int(11) NULL, PRIMARY KEY (`username`, `token`)) ENGINE=$engine;");
-    }
-
     public function getTableMigrations(
         string $collation,
         string $charset,
@@ -52,5 +44,13 @@ final class Migration370015 extends AbstractMigration
         if ($build > 370015) {
             yield 'session_remember' => "CREATE TABLE IF NOT EXISTS `session_remember` (`username` varchar(16) NOT NULL, `token` varchar(32) NOT NULL, `expire` int(11) NULL, PRIMARY KEY (`username`, `token`)) ENGINE=$engine;";
         }
+    }
+
+    public function migrate(): void
+    {
+        $charset = (AmpConfig::get('database_charset', 'utf8mb4'));
+        $engine  = ($charset == 'utf8mb4') ? 'InnoDB' : 'MYISAM';
+
+        $this->updateDatabase("CREATE TABLE IF NOT EXISTS `session_remember` (`username` varchar(16) NOT NULL, `token` varchar(32) NOT NULL, `expire` int(11) NULL, PRIMARY KEY (`username`, `token`)) ENGINE=$engine;");
     }
 }

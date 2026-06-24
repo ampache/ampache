@@ -33,8 +33,35 @@ use PDO;
 
 final readonly class LabelRepository implements LabelRepositoryInterface
 {
-    public function __construct(private DatabaseConnectionInterface $connection)
+    public function __construct(private DatabaseConnectionInterface $connection) {}
+
+    public function addArtistAssoc(int $labelId, int $artistId, DateTimeInterface $date): void
     {
+        $this->connection->query(
+            'INSERT INTO `label_asso` (`label`, `artist`, `creation_date`) VALUES (?, ?, ?)',
+            [$labelId, $artistId, $date->getTimestamp()]
+        );
+    }
+
+    /**
+     * This cleans out unused labels
+     */
+    public function collectGarbage(): void
+    {
+        try {
+            $this->connection->query('DELETE FROM `label_asso` WHERE `label_asso`.`artist` NOT IN (SELECT `artist`.`id` FROM `artist`)');
+            $this->connection->query('DELETE FROM `label` WHERE `id` NOT IN (SELECT `label` FROM `label_asso`) AND `user` IS NULL');
+        } catch (DatabaseException) {
+            debug_event(self::class, 'collectGarbage error', 5);
+        }
+    }
+
+    public function delete(int $labelId): void
+    {
+        $this->connection->query(
+            'DELETE FROM `label` WHERE `id` = ?',
+            [$labelId]
+        );
     }
 
     public function findById(int $labelId): ?Label
@@ -48,6 +75,24 @@ final readonly class LabelRepository implements LabelRepositoryInterface
     }
 
     /**
+     * Return the list of all available labels
+     *
+     * @return string[]
+     */
+    public function getAll(): array
+    {
+        $result = $this->connection->query('SELECT `id`, `name` FROM `label`');
+
+        $labels = [];
+
+        while ($row = $result->fetch(PDO::FETCH_ASSOC)) {
+            $labels[(int) $row['id']] = $row['name'];
+        }
+
+        return $labels;
+    }
+
+    /**
      * @return string[]
      */
     public function getByArtist(int $artistId): array
@@ -58,24 +103,6 @@ final readonly class LabelRepository implements LabelRepositoryInterface
             'SELECT `label`.`id`, `label`.`name` FROM `label` LEFT JOIN `label_asso` ON `label_asso`.`label` = `label`.`id` WHERE `label_asso`.`artist` = ?',
             [$artistId]
         );
-
-        while ($row = $result->fetch(PDO::FETCH_ASSOC)) {
-            $labels[(int) $row['id']] = $row['name'];
-        }
-
-        return $labels;
-    }
-
-    /**
-     * Return the list of all available labels
-     *
-     * @return string[]
-     */
-    public function getAll(): array
-    {
-        $result = $this->connection->query('SELECT `id`, `name` FROM `label`');
-
-        $labels = [];
 
         while ($row = $result->fetch(PDO::FETCH_ASSOC)) {
             $labels[(int) $row['id']] = $row['name'];
@@ -114,34 +141,5 @@ final readonly class LabelRepository implements LabelRepositoryInterface
             'DELETE FROM `label_asso` WHERE `label` = ? AND `artist` = ?',
             [$labelId, $artistId]
         );
-    }
-
-    public function addArtistAssoc(int $labelId, int $artistId, DateTimeInterface $date): void
-    {
-        $this->connection->query(
-            'INSERT INTO `label_asso` (`label`, `artist`, `creation_date`) VALUES (?, ?, ?)',
-            [$labelId, $artistId, $date->getTimestamp()]
-        );
-    }
-
-    public function delete(int $labelId): void
-    {
-        $this->connection->query(
-            'DELETE FROM `label` WHERE `id` = ?',
-            [$labelId]
-        );
-    }
-
-    /**
-     * This cleans out unused labels
-     */
-    public function collectGarbage(): void
-    {
-        try {
-            $this->connection->query('DELETE FROM `label_asso` WHERE `label_asso`.`artist` NOT IN (SELECT `artist`.`id` FROM `artist`)');
-            $this->connection->query('DELETE FROM `label` WHERE `id` NOT IN (SELECT `label` FROM `label_asso`) AND `user` IS NULL');
-        } catch (DatabaseException) {
-            debug_event(self::class, 'collectGarbage error', 5);
-        }
     }
 }

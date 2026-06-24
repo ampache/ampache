@@ -1,6 +1,6 @@
 <?php
 
-declare(strict_types=0);
+declare(strict_types=1);
 
 /**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
@@ -23,40 +23,33 @@ declare(strict_types=0);
  *
  */
 
-namespace Ampache\Module\Util\OAuth;
+namespace Ampache\Module\WebDav;
+
+use Ampache\Repository\Model\library_item;
+use Ampache\Repository\Model\LibraryItemEnum;
 
 /**
- * Class OAuthDataStore
+ * WebDavDirectory Interface
  *
- * @deprecated not in use
+ * This defines classes for WebDav browsing and traversal of Folder objects to Media objects.
  */
-class OAuthDataStore
+interface WebDavDirectoryInterface extends library_item
 {
-    public function lookup_consumer($consumer_key)
-    {
-        // implement me
-    }
+    /**
+     * Search for direct children of an object
+     * @return array<int, array{object_type: LibraryItemEnum, object_id: int}>
+     */
+    public function get_children(string $name): array;
 
-    public function lookup_token($consumer, $token_type, $token)
-    {
-        // implement me
-    }
+    /**
+     * get_childrens
+     *
+     * Get direct childrens. Return an array of `object_type`, `object_id` childrens.
+     * @return array<int, array{object_type: LibraryItemEnum, object_id: int}>
+     */
+    public function get_childrens(): array;
 
-    public function lookup_nonce($consumer, $token, $nonce, $timestamp)
-    {
-        // implement me
-    }
+    public function getCatalog(): int;
 
-    public function new_request_token($consumer, $callback = null)
-    {
-        // return a new token attached to this consumer
-    }
-
-    public function new_access_token($token, $consumer, $verifier = null)
-    {
-        // return a new access token attached to this consumer
-        // for the user associated with this token if the request token
-        // is authorized
-        // should also invalidate the request token
-    }
+    public function has_children(string $name): bool;
 }

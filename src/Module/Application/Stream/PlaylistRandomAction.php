@@ -51,7 +51,7 @@ final class PlaylistRandomAction extends AbstractStreamAction
             return null;
         }
 
-        $playlist_id = (int)$this->requestParser->getFromRequest('playlist_id');
+        $playlist_id = (int) $this->requestParser->getFromRequest('playlist_id');
         $playlist    = $this->modelFactory->createPlaylist($playlist_id);
         $mediaIds    = $playlist->get_random_items();
 

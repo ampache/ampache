@@ -58,7 +58,7 @@ final class User5Method
         if (!Api5::check_parameter($input, ['username'], self::ACTION)) {
             return false;
         }
-        $username = (string)$input['username'];
+        $username = (string) $input['username'];
         if (empty($username)) {
             debug_event(self::class, 'User `' . $username . '` cannot be found.', 1);
             /* HINT: Requested object string/id/type ("album", "myusername", "some song title", 1298376) */

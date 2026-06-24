@@ -38,16 +38,24 @@ use Sabre\DAV\Server;
 class WebDavFactoryTest extends MockeryTestCase
 {
     private AuthenticationManagerInterface&MockInterface $authenticationManager;
-
     private WebDavFactory $subject;
 
-    #[Override]
-    protected function setUp(): void
+    public static function methodDataProvider(): array
     {
-        $this->authenticationManager = Mockery::mock(AuthenticationManagerInterface::class);
+        return [
+            ['createWebDavAuth', WebDavAuth::class, []],
+            ['createWebDavCatalog', WebDavCatalog::class, [666]],
+            ['createPlugin', Plugin::class, [null]]
+        ];
+    }
 
-        $this->subject = new WebDavFactory(
-            $this->authenticationManager
+    public function testCreateServerReturnsInstance(): void
+    {
+        self::assertInstanceOf(
+            Server::class,
+            $this->subject->createServer(
+                $this->createMock(ICollection::class)
+            )
         );
     }
 
@@ -64,22 +72,13 @@ class WebDavFactoryTest extends MockeryTestCase
         );
     }
 
-    public function testCreateServerReturnsInstance(): void
+    #[Override]
+    protected function setUp(): void
     {
-        self::assertInstanceOf(
-            Server::class,
-            $this->subject->createServer(
-                $this->createMock(ICollection::class)
-            )
-        );
-    }
+        $this->authenticationManager = Mockery::mock(AuthenticationManagerInterface::class);
 
-    public static function methodDataProvider(): array
-    {
-        return [
-            ['createWebDavAuth', WebDavAuth::class, []],
-            ['createWebDavCatalog', WebDavCatalog::class, [666]],
-            ['createPlugin', Plugin::class, [null]]
-        ];
+        $this->subject = new WebDavFactory(
+            $this->authenticationManager
+        );
     }
 }

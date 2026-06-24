@@ -47,7 +47,7 @@ if (!$current_user instanceof User) {
     return false;
 }
 
-$catalog_id = (int)AmpConfig::get('upload_catalog', 0);
+$catalog_id = (int) AmpConfig::get('upload_catalog', 0);
 $catalog    = Catalog::create_from_id($catalog_id);
 
 $rootdir = ($catalog instanceof Catalog_local)
@@ -67,10 +67,10 @@ if (isset($_GET['operation'])) {
         ) ?? AccessLevelEnum::USER;
 
         if (
-            AmpConfig::get(ConfigurationKeyEnum::ALLOW_UPLOAD, false) === false ||
-            $access_level === AccessLevelEnum::DEFAULT ||
-            !Access::check(AccessTypeEnum::INTERFACE, $access_level) ||
-            AmpConfig::get(ConfigurationKeyEnum::DEMO_MODE) === true
+            AmpConfig::get(ConfigurationKeyEnum::ALLOW_UPLOAD, false) === false
+            || $access_level === AccessLevelEnum::DEFAULT
+            || !Access::check(AccessTypeEnum::INTERFACE, $access_level)
+            || AmpConfig::get(ConfigurationKeyEnum::DEMO_MODE) === true
         ) {
             throw new AccessDeniedException();
         }
@@ -78,7 +78,7 @@ if (isset($_GET['operation'])) {
         $fs   = new FileSystem($rootdir);
         $rslt = null;
         $node = (isset($_GET['id']) && $_GET['id'] !== '#')
-            ? (string)$_GET['id']
+            ? (string) $_GET['id']
             : '/';
         switch (Core::get_get('operation')) {
             case 'get_node':
@@ -98,13 +98,13 @@ if (isset($_GET['operation'])) {
                 break;
             case 'move_node':
                 $parn = (isset($_GET['parent']) && $_GET['parent'] !== '#')
-                    ? (string)$_GET['parent']
+                    ? (string) $_GET['parent']
                     : '/';
                 $rslt = $fs->move($node, $parn, $current_user);
                 break;
             case 'copy_node':
                 $parn = (isset($_GET['parent']) && $_GET['parent'] !== '#')
-                    ? (string)$_GET['parent']
+                    ? (string) $_GET['parent']
                     : '/';
                 $rslt = $fs->copy($node, $parn);
                 break;

@@ -32,10 +32,16 @@ use Override;
 
 class GatekeeperFactoryTest extends MockeryTestCase
 {
-    /** @var MockInterface|PrivilegeCheckerInterface|null */
-    private MockInterface $privilegeChecker;
-
+    private MockInterface|PrivilegeCheckerInterface|null $privilegeChecker;
     private ?GatekeeperFactory $subject;
+
+    public function testCreateGuiGatekeeperReturnsInstance(): void
+    {
+        $this->assertInstanceOf(
+            GuiGatekeeper::class,
+            $this->subject->createGuiGatekeeper()
+        );
+    }
 
     #[Override]
     protected function setUp(): void
@@ -44,14 +50,6 @@ class GatekeeperFactoryTest extends MockeryTestCase
 
         $this->subject = new GatekeeperFactory(
             $this->privilegeChecker
-        );
-    }
-
-    public function testCreateGuiGatekeeperReturnsInstance(): void
-    {
-        $this->assertInstanceOf(
-            GuiGatekeeper::class,
-            $this->subject->createGuiGatekeeper()
         );
     }
 }

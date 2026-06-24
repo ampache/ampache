@@ -57,11 +57,9 @@ use Ampache\Module\Util\AjaxUriRetrieverInterface;
 use Ampache\Module\Util\ZipHandlerInterface;
 use Ampache\Repository\Model\Album;
 use Ampache\Repository\Model\AlbumDisk;
-use Ampache\Repository\Model\Artist;
 use Ampache\Repository\Model\Browse;
 use Ampache\Repository\Model\Catalog;
 use Ampache\Repository\Model\Folder;
-use Ampache\Repository\Model\Label;
 use Ampache\Repository\Model\ModelFactoryInterface;
 use Ampache\Repository\Model\Playlist;
 use Ampache\Repository\Model\Podcast_Episode;
@@ -83,36 +81,7 @@ final readonly class GuiFactory implements GuiFactoryInterface
         private UpdateInfoRepositoryInterface $updateInfoRepository,
         private UpdateHelperInterface $updateHelper,
         private UpdaterInterface $updater,
-    ) {
-    }
-
-    public function createSongViewAdapter(
-        GuiGatekeeperInterface $gatekeeper,
-        Song $song,
-    ): SongViewAdapterInterface {
-        return new SongViewAdapter(
-            $this->configContainer,
-            $this->modelFactory,
-            $gatekeeper,
-            $song
-        );
-    }
-
-    public function createAlbumViewAdapter(
-        GuiGatekeeperInterface $gatekeeper,
-        Browse $browse,
-        Album $album,
-    ): AlbumViewAdapterInterface {
-        return new AlbumViewAdapter(
-            $this->configContainer,
-            $this->modelFactory,
-            $this->zipHandler,
-            $this->functionChecker,
-            $gatekeeper,
-            $browse,
-            $album
-        );
-    }
+    ) {}
 
     public function createAlbumDiskViewAdapter(
         GuiGatekeeperInterface $gatekeeper,
@@ -130,51 +99,19 @@ final readonly class GuiFactory implements GuiFactoryInterface
         );
     }
 
-    public function createFolderViewAdapter(
+    public function createAlbumViewAdapter(
         GuiGatekeeperInterface $gatekeeper,
-        Folder $folder,
-        Podcast_Episode|AlbumDisk|Video|Song|Album|Artist|Label|Folder $object,
-        string $object_type,
-    ): FolderViewAdapterInterface {
-        return new FolderViewAdapter(
+        Browse $browse,
+        Album $album,
+    ): AlbumViewAdapterInterface {
+        return new AlbumViewAdapter(
             $this->configContainer,
             $this->modelFactory,
             $this->zipHandler,
             $this->functionChecker,
             $gatekeeper,
-            $folder,
-            $object,
-            $object_type,
-        );
-    }
-
-    public function createPlaylistViewAdapter(
-        GuiGatekeeperInterface $gatekeeper,
-        Playlist $playlist,
-    ): PlaylistViewAdapterInterface {
-        return new PlaylistViewAdapter(
-            $this->configContainer,
-            $this->modelFactory,
-            $this->zipHandler,
-            $this->functionChecker,
-            $gatekeeper,
-            $playlist
-        );
-    }
-
-    public function createConfigViewAdapter(): ConfigViewAdapterInterface
-    {
-        return new ConfigViewAdapter(
-            $this->configContainer
-        );
-    }
-
-    public function createStatsViewAdapter(): StatsViewAdapterInterface
-    {
-        return new StatsViewAdapter(
-            $this->configContainer,
-            $this,
-            $this->videoRepository
+            $browse,
+            $album
         );
     }
 
@@ -195,13 +132,28 @@ final readonly class GuiFactory implements GuiFactoryInterface
         return new CatalogStats($stats);
     }
 
-    public function createUpdateViewAdapter(): UpdateViewAdapterInterface
+    public function createConfigViewAdapter(): ConfigViewAdapterInterface
     {
-        return new UpdateViewAdapter(
+        return new ConfigViewAdapter(
+            $this->configContainer
+        );
+    }
+
+    public function createFolderViewAdapter(
+        GuiGatekeeperInterface $gatekeeper,
+        Folder $folder,
+        Podcast_Episode|Video|Song|Folder $object,
+        string $object_type,
+    ): FolderViewAdapterInterface {
+        return new FolderViewAdapter(
             $this->configContainer,
-            $this->updateInfoRepository,
-            $this->updateHelper,
-            $this->updater
+            $this->modelFactory,
+            $this->zipHandler,
+            $this->functionChecker,
+            $gatekeeper,
+            $folder,
+            $object,
+            $object_type,
         );
     }
 
@@ -216,6 +168,51 @@ final readonly class GuiFactory implements GuiFactoryInterface
             $gatekeeper,
             $object_type,
             $object_id
+        );
+    }
+
+    public function createPlaylistViewAdapter(
+        GuiGatekeeperInterface $gatekeeper,
+        Playlist $playlist,
+    ): PlaylistViewAdapterInterface {
+        return new PlaylistViewAdapter(
+            $this->configContainer,
+            $this->modelFactory,
+            $this->zipHandler,
+            $this->functionChecker,
+            $gatekeeper,
+            $playlist
+        );
+    }
+
+    public function createSongViewAdapter(
+        GuiGatekeeperInterface $gatekeeper,
+        Song $song,
+    ): SongViewAdapterInterface {
+        return new SongViewAdapter(
+            $this->configContainer,
+            $this->modelFactory,
+            $gatekeeper,
+            $song
+        );
+    }
+
+    public function createStatsViewAdapter(): StatsViewAdapterInterface
+    {
+        return new StatsViewAdapter(
+            $this->configContainer,
+            $this,
+            $this->videoRepository
+        );
+    }
+
+    public function createUpdateViewAdapter(): UpdateViewAdapterInterface
+    {
+        return new UpdateViewAdapter(
+            $this->configContainer,
+            $this->updateInfoRepository,
+            $this->updateHelper,
+            $this->updater
         );
     }
 }

@@ -38,8 +38,7 @@ final readonly class MusicbrainzCollectorModule implements CollectorModuleInterf
     public function __construct(
         private MusicBrainz $musicBrainz,
         private LoggerInterface $logger,
-    ) {
-    }
+    ) {}
 
     /**
      * This function retrieves art based on MusicBrainz' Advanced

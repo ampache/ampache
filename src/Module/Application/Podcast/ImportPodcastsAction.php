@@ -49,13 +49,13 @@ use Psr\Http\Message\UploadedFileInterface;
  */
 final readonly class ImportPodcastsAction implements ApplicationActionInterface
 {
+    public const string REQUEST_KEY = 'import_podcasts';
+
     /** @var list<string> */
     private const array EXPECTED_MIME_TYPES = [
         'text/x-opml+xml',
         'text/xml',
     ];
-
-    public const string REQUEST_KEY = 'import_podcasts';
 
     public function __construct(
         private ConfigContainerInterface $configContainer,
@@ -63,8 +63,7 @@ final readonly class ImportPodcastsAction implements ApplicationActionInterface
         private RequestParserInterface $requestParser,
         private CatalogLoaderInterface $catalogLoader,
         private PodcastOpmlImporterInterface $podcastOpmlImporter,
-    ) {
-    }
+    ) {}
 
     public function run(ServerRequestInterface $request, GuiGatekeeperInterface $gatekeeper): ?ResponseInterface
     {
@@ -73,14 +72,14 @@ final readonly class ImportPodcastsAction implements ApplicationActionInterface
         }
 
         if (
-            $gatekeeper->mayAccess(AccessTypeEnum::INTERFACE, AccessLevelEnum::MANAGER) === false ||
-            $this->configContainer->isFeatureEnabled(ConfigurationKeyEnum::DEMO_MODE) ||
-            !$this->requestParser->verifyForm('import_podcasts')
+            $gatekeeper->mayAccess(AccessTypeEnum::INTERFACE, AccessLevelEnum::MANAGER) === false
+            || $this->configContainer->isFeatureEnabled(ConfigurationKeyEnum::DEMO_MODE)
+            || !$this->requestParser->verifyForm('import_podcasts')
         ) {
             throw new AccessDeniedException();
         }
 
-        $data = (array)$request->getParsedBody();
+        $data = (array) $request->getParsedBody();
 
         $catalogId = (int) ($data['catalog'] ?? 0);
 
@@ -98,7 +97,7 @@ final readonly class ImportPodcastsAction implements ApplicationActionInterface
         if (AmpError::occurred()) {
             $this->ui->show(
                 'show_import_podcasts.inc.php',
-                ['catalogId' => (int)($data['catalog'] ?? 0)]
+                ['catalogId' => (int) ($data['catalog'] ?? 0)]
             );
         } else {
             $this->ui->showConfirmation(

@@ -37,8 +37,7 @@ final readonly class StreamAjaxHandler implements AjaxHandlerInterface
 {
     public function __construct(
         private RequestParserInterface $requestParser,
-    ) {
-    }
+    ) {}
 
     public function handle(User $user): void
     {
@@ -69,12 +68,12 @@ final readonly class StreamAjaxHandler implements AjaxHandlerInterface
                         break;
                     default:
                         break 2;
-                } // end switch
+                }
 
                 $current = AmpConfig::get('play_type');
 
                 // Go ahead and update their preference
-                if (Preference::update('play_type', (int)(Core::get_global('user')?->getId()), $new)) {
+                if (Preference::update('play_type', (int) (Core::get_global('user')?->getId()), $new)) {
                     AmpConfig::set('play_type', $new, true);
                 }
 
@@ -93,8 +92,8 @@ final readonly class StreamAjaxHandler implements AjaxHandlerInterface
                 debug_event('stream.ajax', 'Called for ' . $object_type . ': {' . $object_id . '}', 5);
 
                 if (
-                    $object_type === 'browse' ||
-                    InterfaceImplementationChecker::is_playable_item($object_type)
+                    $object_type === 'browse'
+                    || InterfaceImplementationChecker::is_library_item($object_type)
                 ) {
                     $web_path = AmpConfig::get_web_path();
 

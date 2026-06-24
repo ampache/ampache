@@ -45,6 +45,9 @@ final class UserQuery implements QueryInterface
         'starts_with',
     ];
 
+    protected string $base   = "SELECT %%SELECT%% FROM `user` ";
+    protected string $select = "`user`.`id`";
+
     /** @var string[] $sorts */
     protected array $sorts = [
         'access',
@@ -62,9 +65,15 @@ final class UserQuery implements QueryInterface
         'website',
     ];
 
-    protected string $select = "`user`.`id`";
-
-    protected string $base = "SELECT %%SELECT%% FROM `user` ";
+    /**
+     * get_base_sql
+     *
+     * Base SELECT query string without filters or joins
+     */
+    public function get_base_sql(): string
+    {
+        return $this->base;
+    }
 
     /**
      * get_select
@@ -74,16 +83,6 @@ final class UserQuery implements QueryInterface
     public function get_select(): string
     {
         return $this->select;
-    }
-
-    /**
-     * get_base_sql
-     *
-     * Base SELECT query string without filters or joins
-     */
-    public function get_base_sql(): string
-    {
-        return $this->base;
     }
 
     /**
@@ -109,7 +108,7 @@ final class UserQuery implements QueryInterface
             case 'id':
                 $filter_sql = " `user`.`id` IN (";
                 foreach ($value as $uid) {
-                    $filter_sql .= (int)$uid . ',';
+                    $filter_sql .= (int) $uid . ',';
                 }
 
                 $filter_sql = rtrim($filter_sql, ',') . ") AND ";
@@ -127,17 +126,17 @@ final class UserQuery implements QueryInterface
                 break;
             case 'regex_match':
                 if (!empty($value)) {
-                    $filter_sql = " (`user`.`fullname` REGEXP '" . Dba::escape($value) . "' OR " .
-                        "`user`.`username` REGEXP '" . Dba::escape($value) . "' OR " .
-                        "`user`.`email` REGEXP '" . Dba::escape($value) . "') AND ";
+                    $filter_sql = " (`user`.`fullname` REGEXP '" . Dba::escape($value) . "' OR "
+                        . "`user`.`username` REGEXP '" . Dba::escape($value) . "' OR "
+                        . "`user`.`email` REGEXP '" . Dba::escape($value) . "') AND ";
                 }
 
                 break;
             case 'regex_not_match':
                 if (!empty($value)) {
-                    $filter_sql = " (`user`.`fullname` NOT REGEXP '" . Dba::escape($value) . "' OR " .
-                        "`user`.`username` NOT REGEXP '" . Dba::escape($value) . "' OR " .
-                        "`user`.`email` NOT REGEXP '" . Dba::escape($value) . "') AND ";
+                    $filter_sql = " (`user`.`fullname` NOT REGEXP '" . Dba::escape($value) . "' OR "
+                        . "`user`.`username` NOT REGEXP '" . Dba::escape($value) . "' OR "
+                        . "`user`.`email` NOT REGEXP '" . Dba::escape($value) . "') AND ";
                 }
 
                 break;
@@ -149,7 +148,7 @@ final class UserQuery implements QueryInterface
                 break;
             case 'access':
             case 'disabled':
-                $filter_sql = sprintf(' `user`.`%s` = ', $filter) . (int)$value . " AND ";
+                $filter_sql = sprintf(' `user`.`%s` = ', $filter) . (int) $value . " AND ";
                 break;
         }
 
@@ -160,11 +159,8 @@ final class UserQuery implements QueryInterface
      * get_sql_sort
      *
      * Sorting SQL for ORDER BY
-     * @param Query $query
-     * @param string|null $field
-     * @param string|null $order
      */
-    public function get_sql_sort($query, $field, $order): string
+    public function get_sql_sort(Query $query, ?string $field, ?string $order): string
     {
         $sql = match ($field) {
             'access', 'city', 'create_date', 'disabled', 'email', 'fullname_public', 'fullname', 'id', 'last_seen', 'state', 'username', 'website' => sprintf('`user`.`%s`', $field),

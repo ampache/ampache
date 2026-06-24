@@ -41,8 +41,7 @@ final class ShowAction extends AbstractUploadAction
         private readonly UiInterface $ui,
         private readonly ModelFactoryInterface $modelFactory,
         private readonly ConfigContainerInterface $configContainer,
-    ) {
-    }
+    ) {}
 
     protected function handle(ServerRequestInterface $request): ?ResponseInterface
     {

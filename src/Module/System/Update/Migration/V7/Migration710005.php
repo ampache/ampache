@@ -37,7 +37,6 @@ final class Migration710005 extends AbstractMigration
         'Fill the `album_disk` column in the song table',
         'Create an `album_disk` index on the song table',
     ];
-
     protected bool $warning = true;
 
     public function migrate(): void

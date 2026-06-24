@@ -42,16 +42,6 @@ use Override;
 
 final class CronProcessCommand extends Command
 {
-    #[Override]
-    protected function defaults(): self
-    {
-        $this->option('-h, --help', T_('Help'))->on($this->showHelp(...));
-
-        $this->onExit(static fn ($exitCode = 0) => exit($exitCode));
-
-        return $this;
-    }
-
     public function __construct(
         private readonly ConfigContainerInterface $configContainer,
         private readonly ObjectCacheInterface $objectCache,
@@ -150,7 +140,7 @@ final class CronProcessCommand extends Command
         // mark the date this cron was completed.
         $this->updateInfoRepository->setValue(
             UpdateInfoEnum::CRON_DATE,
-            (string)$time
+            (string) $time
         );
 
         debug_event(self::class, 'finished cron process', 4);
@@ -165,5 +155,15 @@ final class CronProcessCommand extends Command
             T_('Time') . ": " . date('i:s', $time_diff),
             true
         );
+    }
+
+    #[Override]
+    protected function defaults(): self
+    {
+        $this->option('-h, --help', T_('Help'))->on($this->showHelp(...));
+
+        $this->onExit(static fn($exitCode = 0) => exit($exitCode));
+
+        return $this;
     }
 }

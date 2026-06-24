@@ -38,9 +38,7 @@ use PDO;
  */
 final readonly class MetadataFieldRepository implements MetadataFieldRepositoryInterface
 {
-    public function __construct(private DatabaseConnectionInterface $connection)
-    {
-    }
+    public function __construct(private DatabaseConnectionInterface $connection) {}
 
     /**
      * Remove metadata for songs which don't exist anymore
@@ -51,22 +49,6 @@ final readonly class MetadataFieldRepository implements MetadataFieldRepositoryI
             $this->connection->query('DELETE FROM `metadata_field` USING `metadata_field` LEFT JOIN `metadata` ON `metadata`.`field` = `metadata_field`.`id` WHERE `metadata`.`id` IS NULL;');
         } catch (DatabaseException) {
             debug_event(self::class, 'collectGarbage error', 5);
-        }
-    }
-
-    /**
-     * Returns the list of available fields
-     *
-     * Key is the primary key, value the name
-     *
-     * @return Generator<int, string>
-     */
-    public function getPropertyList(): Generator
-    {
-        $result = $this->connection->query('SELECT `id`, `name` FROM `metadata_field`');
-
-        while ($data = $result->fetch(PDO::FETCH_ASSOC)) {
-            yield (int) $data['id'] => $data['name'];
         }
     }
 
@@ -110,6 +92,22 @@ final readonly class MetadataFieldRepository implements MetadataFieldRepositoryI
         }
 
         return $metadataField;
+    }
+
+    /**
+     * Returns the list of available fields
+     *
+     * Key is the primary key, value the name
+     *
+     * @return Generator<int, string>
+     */
+    public function getPropertyList(): Generator
+    {
+        $result = $this->connection->query('SELECT `id`, `name` FROM `metadata_field`');
+
+        while ($data = $result->fetch(PDO::FETCH_ASSOC)) {
+            yield (int) $data['id'] => $data['name'];
+        }
     }
 
     /**

@@ -26,6 +26,7 @@ declare(strict_types=1);
 namespace Ampache\Module\User\Activity;
 
 use Ampache\Config\ConfigContainerInterface;
+use Ampache\Repository\Model\displayable_item;
 use Ampache\Repository\Model\LibraryItemEnum;
 use Ampache\Repository\Model\LibraryItemLoaderInterface;
 use Ampache\Repository\Model\ModelFactoryInterface;
@@ -37,8 +38,7 @@ final readonly class UserActivityRenderer implements UserActivityRendererInterfa
         private ConfigContainerInterface $configContainer,
         private ModelFactoryInterface $modelFactory,
         private LibraryItemLoaderInterface $libraryItemLoader,
-    ) {
-    }
+    ) {}
 
     /**
      * Show the activity entry.
@@ -57,7 +57,7 @@ final readonly class UserActivityRenderer implements UserActivityRendererInterfa
             $useractivity->object_id
         );
 
-        if ($libitem === null) {
+        if (!$libitem instanceof displayable_item) {
             return '';
         }
 

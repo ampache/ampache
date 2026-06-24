@@ -44,10 +44,10 @@ final class ShareEdit5Method
      * Update the description and/or expiration date for an existing share.
      * Takes the share id to update with optional description and expires parameters.
      *
-     * filter      = (string) Alpha-numeric search term
-     * stream      = (boolean) 0,1 //optional
-     * download    = (boolean) 0,1 //optional
-     * expires     = (integer) number of whole days before expiry //optional
+     * filter = (string) Alpha-numeric search term
+     * stream = (boolean) 0,1 //optional
+     * download = (boolean) 0,1 //optional
+     * expires = (integer) number of whole days before expiry //optional
      * description = (string) update description //optional
      *
      * @param array{
@@ -75,8 +75,8 @@ final class ShareEdit5Method
         $share = self::getShareRepository()->findById((int) $share_id);
 
         if (
-            $share === null ||
-            !$share->isAccessible($user)
+            $share === null
+            || !$share->isAccessible($user)
         ) {
             /* HINT: Requested object string/id/type ("album", "myusername", "some song title", 1298376) */
             Api5::error(sprintf(T_('Not Found: %s'), $share_id), ErrorCodeEnum::NOT_FOUND, self::ACTION, 'filter', $input['api_format']);

@@ -34,6 +34,16 @@ use SimpleXMLElement;
 interface PodcastSyncerInterface
 {
     /**
+     * Add podcast episodes
+     */
+    public function addEpisodes(
+        Podcast $podcast,
+        SimpleXMLElement $episodes,
+        ?DateTimeInterface $lastSync = null,
+        bool $gather = false,
+    ): void;
+
+    /**
      * Update the feed and sync all new episodes
      */
     public function sync(Podcast $podcast, bool $gather = false): bool;
@@ -53,14 +63,4 @@ interface PodcastSyncerInterface
     public function syncForCatalogs(
         iterable $catalogs,
     ): int;
-
-    /**
-     * Add podcast episodes
-     */
-    public function addEpisodes(
-        Podcast $podcast,
-        SimpleXMLElement $episodes,
-        ?DateTimeInterface $lastSync = null,
-        bool $gather = false,
-    ): void;
 }

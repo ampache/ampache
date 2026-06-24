@@ -42,7 +42,7 @@ final class ObjectCache implements ObjectCacheInterface
         $db_results = Dba::read($sql);
         while ($row = Dba::fetch_assoc($db_results)) {
             // get individual user thresholds if not the default
-            $thresholds[] = (int)$row['value'];
+            $thresholds[] = (int) $row['value'];
         }
 
         $object_types = [

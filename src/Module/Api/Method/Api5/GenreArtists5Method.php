@@ -46,7 +46,7 @@ final class GenreArtists5Method
      *
      * filter = (string) UID of Album //optional
      * offset = (integer) //optional
-     * limit  = (integer) //optional
+     * limit = (integer) //optional
      *
      * @param array{
      *     filter?: string,
@@ -60,7 +60,7 @@ final class GenreArtists5Method
      */
     public static function genre_artists(array $input, User $user): bool
     {
-        $results = Tag::get_tag_objects('artist', (int)($input['filter'] ?? 0));
+        $results = Tag::get_tag_objects('artist', (int) ($input['filter'] ?? 0));
         if (empty($results)) {
             Api5::empty('artist', $input['api_format']);
 

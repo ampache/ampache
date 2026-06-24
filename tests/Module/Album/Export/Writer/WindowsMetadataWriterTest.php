@@ -33,12 +33,6 @@ class WindowsMetadataWriterTest extends MockeryTestCase
 {
     private ?WindowsMetadataWriter $subject;
 
-    #[Override]
-    protected function setUp(): void
-    {
-        $this->subject = new WindowsMetadataWriter();
-    }
-
     public function testWriteWritesData(): void
     {
         $dir  = vfsStream::setup();
@@ -65,5 +59,11 @@ class WindowsMetadataWriterTest extends MockeryTestCase
             ),
             $file->getContent()
         );
+    }
+
+    #[Override]
+    protected function setUp(): void
+    {
+        $this->subject = new WindowsMetadataWriter();
     }
 }

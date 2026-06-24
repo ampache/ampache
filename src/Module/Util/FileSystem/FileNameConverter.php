@@ -33,9 +33,7 @@ use Ampache\Repository\Model\Catalog;
 
 final readonly class FileNameConverter implements FileNameConverterInterface
 {
-    public function __construct(private ConfigContainerInterface $configContainer)
-    {
-    }
+    public function __construct(private ConfigContainerInterface $configContainer) {}
 
     public function convert(
         Interactor $interactor,
@@ -72,6 +70,21 @@ final readonly class FileNameConverter implements FileNameConverterInterface
                 true
             );
         }
+    }
+
+    /**
+     * We have to have some special rules here
+     * This is run on every individual element of the search
+     * Before it is put together, this removes / and \ and also
+     * once I figure it out, it'll clean other stuff
+     */
+    private function charset_clean_name(string $string): string
+    {
+        /* First remove any / or \ chars */
+        $clean_string = (string) preg_replace('/[\/\\\]/', '-', $string);
+        $clean_string = str_replace(':', ' ', $clean_string);
+
+        return (string) preg_replace('/[\!\:\*]/', '_', $clean_string);
     }
 
     /**
@@ -123,8 +136,8 @@ final readonly class FileNameConverter implements FileNameConverterInterface
             $full_file = $path . $slash_type . $file;
 
             if (
-                is_dir($full_file) &&
-                $this->charset_directory_correct($interactor, $full_file, $force)
+                is_dir($full_file)
+                && $this->charset_directory_correct($interactor, $full_file, $force)
             ) {
                 continue;
             }
@@ -139,8 +152,8 @@ final readonly class FileNameConverter implements FileNameConverterInterface
 
                 // Make sure the extension stayed the same
                 if (
-                    $translated_filename &&
-                    substr($translated_filename, strlen($translated_filename) - 3, 3) !== substr($full_file, strlen($full_file) - 3, 3)
+                    $translated_filename
+                    && substr($translated_filename, strlen($translated_filename) - 3, 3) !== substr($full_file, strlen($full_file) - 3, 3)
                 ) {
                     $interactor->warn(
                         T_('Translation failure, stripping non-valid characters'),
@@ -232,7 +245,7 @@ final readonly class FileNameConverter implements FileNameConverterInterface
                     return false;
                 }
             } // if the dir doesn't exist
-        } // end foreach
+        }
 
         // Now to copy the file
         $results_copy = copy($full_file, $translated_filename);
@@ -274,20 +287,5 @@ final readonly class FileNameConverter implements FileNameConverterInterface
         $interactor->eol();
 
         return true;
-    }
-
-    /**
-     * We have to have some special rules here
-     * This is run on every individual element of the search
-     * Before it is put together, this removes / and \ and also
-     * once I figure it out, it'll clean other stuff
-     */
-    private function charset_clean_name(string $string): string
-    {
-        /* First remove any / or \ chars */
-        $clean_string = (string)preg_replace('/[\/\\\]/', '-', $string);
-        $clean_string = str_replace(':', ' ', $clean_string);
-
-        return (string)preg_replace('/[\!\:\*]/', '_', $clean_string);
     }
 }

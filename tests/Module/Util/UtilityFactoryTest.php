@@ -35,13 +35,26 @@ use Psr\Log\LoggerInterface;
 
 class UtilityFactoryTest extends MockeryTestCase
 {
+    private MockInterface&ConfigContainerInterface $configContainer;
+    private MockInterface&LoggerInterface $logger;
+    private UtilityFactory $subject;
     private MockInterface&UserRepositoryInterface $userRepository;
 
-    private MockInterface&ConfigContainerInterface $configContainer;
+    public function testCreateCurlReturnsNewInstance(): void
+    {
+        self::assertInstanceOf(
+            Curl::class,
+            $this->subject->createCurl()
+        );
+    }
 
-    private MockInterface&LoggerInterface $logger;
-
-    private UtilityFactory $subject;
+    public function testCreateMailerReturnsInstance(): void
+    {
+        $this->assertInstanceOf(
+            Mailer::class,
+            $this->subject->createMailer()
+        );
+    }
 
     #[Override]
     protected function setUp(): void
@@ -54,22 +67,6 @@ class UtilityFactoryTest extends MockeryTestCase
             $this->userRepository,
             $this->configContainer,
             $this->logger
-        );
-    }
-
-    public function testCreateMailerReturnsInstance(): void
-    {
-        $this->assertInstanceOf(
-            Mailer::class,
-            $this->subject->createMailer()
-        );
-    }
-
-    public function testCreateCurlReturnsNewInstance(): void
-    {
-        self::assertInstanceOf(
-            Curl::class,
-            $this->subject->createCurl()
         );
     }
 }

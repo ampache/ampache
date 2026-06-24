@@ -23,6 +23,8 @@ declare(strict_types=0);
  *
  */
 
+// show_random.inc.php
+
 use Ampache\Config\AmpConfig;
 use Ampache\Module\Api\Ajax;
 use Ampache\Module\System\Core;
@@ -77,13 +79,13 @@ Ui::show_box_top(T_('Play Random Selection'), 'box box_random'); ?>
         <select name="limit">
 <?php
         foreach ([1, 5, 10, 20, 30, 50, 100, 500, 1000] as $count) {
-            echo "\t\t\t" . '<option value="' . $count . '" ' .
-                (($random_count == $count) ? 'selected="selected"' : '') . '>' .
-                $count . "</option>\n";
+            echo "\t\t\t" . '<option value="' . $count . '" '
+                . (($random_count == $count) ? 'selected="selected"' : '') . '>'
+                . $count . "</option>\n";
         }
-echo "\t\t\t" . '<option value="-1" ' .
-    (($random_count == '-1') ? 'selected="selected"' : '') . '>' .
-    T_('All') . "</option>\n"; ?>
+echo "\t\t\t" . '<option value="-1" '
+    . (($random_count == '-1') ? 'selected="selected"' : '') . '>'
+    . T_('All') . "</option>\n"; ?>
         </select>
         </td>
 </tr>
@@ -94,12 +96,12 @@ echo "\t\t\t" . '<option value="-1" ' .
 ${$name}                    = ' selected="selected"'; ?>
                 <select name="length">
 <?php
-            echo "\t\t\t" . '<option value="0" ' .
-(($length == 0) ? 'selected="selected"' : '') . '>' .
-T_('Unlimited') . "</option>\n";
+            echo "\t\t\t" . '<option value="0" '
+. (($length == 0) ? 'selected="selected"' : '') . '>'
+. T_('Unlimited') . "</option>\n";
 foreach ([15, 30, 60, 120, 240, 480, 960] as $value) {
-    echo "\t\t\t" . '<option value="' . $value . '" ' .
-        (($length == $value) ? 'selected="selected"' : '') . '>';
+    echo "\t\t\t" . '<option value="' . $value . '" '
+        . (($length == $value) ? 'selected="selected"' : '') . '>';
     if ($value < 60) {
         printf(nT_('%d minute', '%d minutes', $value), $value);
     } else {
@@ -115,13 +117,13 @@ foreach ([15, 30, 60, 120, 240, 480, 960] as $value) {
         <td>
                 <select name="size_limit">
 <?php
-    echo "\t\t\t" . '<option value="0" ' .
-        (($size_limit == 0) ? 'selected="selected"' : '') . '>' .
-        T_('Unlimited') . "</option>\n";
+    echo "\t\t\t" . '<option value="0" '
+        . (($size_limit == 0) ? 'selected="selected"' : '') . '>'
+        . T_('Unlimited') . "</option>\n";
 foreach ([64, 128, 256, 512, 1024] as $value) {
-    echo "\t\t\t" . '<option value="' . $value . '"' .
-        (($size_limit == $value) ? 'selected="selected"' : '') . '>' .
-        Ui::format_bytes($value * 1048576) . "</option>\n";
+    echo "\t\t\t" . '<option value="' . $value . '"'
+        . (($size_limit == $value) ? 'selected="selected"' : '') . '>'
+        . Ui::format_bytes($value * 1048576) . "</option>\n";
 } ?>
                 </select>
         </td>

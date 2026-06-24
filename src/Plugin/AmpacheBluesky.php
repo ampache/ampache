@@ -31,25 +31,25 @@ use Override;
 class AmpacheBluesky extends AmpachePlugin implements PluginExternalShareInterface
 {
     #[Override]
-    public string $name = 'Bluesky';
-
-    #[Override]
     public string $categories = 'share';
 
     #[Override]
     public string $description = 'Bluesky share';
 
     #[Override]
-    public string $url = 'https://bsky.app/';
-
-    #[Override]
-    public string $version = '000001';
+    public string $max_ampache = '999999';
 
     #[Override]
     public string $min_ampache = '370027';
 
     #[Override]
-    public string $max_ampache = '999999';
+    public string $name = 'Bluesky';
+
+    #[Override]
+    public string $url = 'https://bsky.app/';
+
+    #[Override]
+    public string $version = '000001';
 
     /**
      * Constructor
@@ -60,11 +60,32 @@ class AmpacheBluesky extends AmpachePlugin implements PluginExternalShareInterfa
     }
 
     /**
+     * external_share
+     */
+    public function external_share(string $url, string $text): string
+    {
+        unset($text);
+
+        return "https://bsky.app/intent/compose?text=" . rawurlencode($url);
+    }
+
+    /**
      * install
      * Inserts plugin preferences into Ampache
      */
     public function install(): bool
     {
+        return true;
+    }
+
+    /**
+     * load
+     * This loads up the data we need into this object, this stuff comes from the preferences.
+     */
+    public function load(User $user): bool
+    {
+        unset($user);
+
         return true;
     }
 
@@ -83,27 +104,6 @@ class AmpacheBluesky extends AmpachePlugin implements PluginExternalShareInterfa
      */
     public function upgrade(): bool
     {
-        return true;
-    }
-
-    /**
-     * external_share
-     */
-    public function external_share(string $url, string $text): string
-    {
-        unset($text);
-
-        return "https://bsky.app/intent/compose?text=" . rawurlencode($url);
-    }
-
-    /**
-     * load
-     * This loads up the data we need into this object, this stuff comes from the preferences.
-     */
-    public function load(User $user): bool
-    {
-        unset($user);
-
         return true;
     }
 }

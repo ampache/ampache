@@ -55,22 +55,21 @@ final readonly class AddHostAction implements ApplicationActionInterface
         private AccessListManagerInterface $accessListManager,
         private RequestParserInterface $requestParser,
         private LoggerInterface $logger,
-    ) {
-    }
+    ) {}
 
     public function run(ServerRequestInterface $request, GuiGatekeeperInterface $gatekeeper): ?ResponseInterface
     {
         // Make sure we've got a valid form submission
         if (
-            $gatekeeper->mayAccess(AccessTypeEnum::INTERFACE, AccessLevelEnum::ADMIN) === false ||
-            !$this->requestParser->verifyForm('add_acl')
+            $gatekeeper->mayAccess(AccessTypeEnum::INTERFACE, AccessLevelEnum::ADMIN) === false
+            || !$this->requestParser->verifyForm('add_acl')
         ) {
             throw new AccessDeniedException();
         }
 
         $this->ui->showHeader();
 
-        $data    = (array)$request->getParsedBody();
+        $data    = (array) $request->getParsedBody();
         $startIp = $data['start'] ?? '';
         $endIp   = $data['end'] ?? '';
 
@@ -79,8 +78,8 @@ final readonly class AddHostAction implements ApplicationActionInterface
                 $startIp,
                 $endIp,
                 $data['name'] ?? '',
-                (int)($data['user'] ?? -1),
-                AccessLevelEnum::from((int)($data['level'] ?? 0)),
+                (int) ($data['user'] ?? -1),
+                AccessLevelEnum::from((int) ($data['level'] ?? 0)),
                 AccessTypeEnum::from($data['type'] ?? 'stream'),
                 AccessTypeEnum::from($data['addtype'] ?? 'stream')
             );

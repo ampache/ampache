@@ -48,8 +48,7 @@ final class DefaultAction implements ApplicationActionInterface
     public function __construct(
         public InstallationHelperInterface $installationHelper,
         private readonly EnvironmentInterface $environment,
-    ) {
-    }
+    ) {}
 
     public function run(ServerRequestInterface $request, GuiGatekeeperInterface $gatekeeper): ?ResponseInterface
     {
@@ -99,12 +98,12 @@ final class DefaultAction implements ApplicationActionInterface
         }
 
         if (array_key_exists('transcode_template', $_REQUEST)) {
-            $mode = (string)$_REQUEST['transcode_template'];
+            $mode = (string) $_REQUEST['transcode_template'];
             $this->installationHelper->install_config_transcode_mode($mode);
         }
 
         if (array_key_exists('usecase', $_REQUEST)) {
-            $case = (string)$_REQUEST['usecase'];
+            $case = (string) $_REQUEST['usecase'];
             if (Dba::check_database()) {
                 $this->installationHelper->install_config_use_case($case);
             }
@@ -223,9 +222,9 @@ final class DefaultAction implements ApplicationActionInterface
 
                 /* Make sure we've got a valid config file */
                 if (
-                    !$results ||
-                    !check_config_values($results) ||
-                    !$created_config
+                    !$results
+                    || !check_config_values($results)
+                    || !$created_config
                 ) {
                     AmpError::add('general', T_('Configuration files were either not found or unreadable'));
                     require_once Ui::find_template('show_install_config.inc.php');
@@ -263,7 +262,7 @@ final class DefaultAction implements ApplicationActionInterface
                 // Show the language options first
                 require_once __DIR__ . '/../../../../templates/show_install_lang.inc.php';
                 break;
-        } // end action switch
+        }
 
         return null;
     }

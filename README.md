@@ -36,10 +36,6 @@ choosing a suitable method for doing so.
 The recommended and most stable version is the current stable [release7 branch](https://github.com/ampache/ampache/archive/release7.tar.gz).
 
 You get the latest version with recent changes and fixes but maybe in an unstable state from our [develop branch](https://github.com/ampache/ampache/archive/develop.tar.gz).
-[![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/ampache/ampache/badges/quality-score.png?b=develop)](https://scrutinizer-ci.com/g/ampache/ampache/?branch=develop)
-[![Code Coverage](https://scrutinizer-ci.com/g/ampache/ampache/badges/coverage.png?b=develop)](https://scrutinizer-ci.com/g/ampache/ampache/?branch=develop)
-[![Codacy Badge](https://api.codacy.com/project/badge/Grade/f995711a30364908968bf0efb3e7e257)](https://app.codacy.com/gh/ampache/ampache)
-[![Code Climate](https://codeclimate.com/github/ampache/ampache/badges/gpa.svg)](https://codeclimate.com/github/ampache/ampache)
 
 If you want to run the last stable version [release6](https://github.com/ampache/ampache/archive/release6.tar.gz) is still available
 

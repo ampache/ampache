@@ -25,6 +25,4 @@ declare(strict_types=1);
 
 namespace Ampache\Module\Authorization\Exception;
 
-final class InvalidStartIpException extends AclItemConfigurationException
-{
-}
+final class InvalidStartIpException extends AclItemConfigurationException {}

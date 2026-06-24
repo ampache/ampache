@@ -36,8 +36,39 @@ use PDO;
  */
 final readonly class ImageRepository implements ImageRepositoryInterface
 {
-    public function __construct(private DatabaseConnectionInterface $connection)
+    public function __construct(private DatabaseConnectionInterface $connection) {}
+
+    /**
+     * Clear the image column (if you have the image on disk)
+     */
+    public function deleteImage(int $imageId): void
     {
+        $this->connection->query(
+            'UPDATE `image` SET `image` = NULL WHERE `id` = ?',
+            [$imageId]
+        );
+    }
+
+    /**
+     * Get the object details for the art table
+     *
+     * @return Generator<array{id: int, object_id: int, object_type: string, size: string, mime: string}>
+     */
+    public function findAllImage(): Generator
+    {
+        $result = $this->connection->query(
+            'SELECT `id`, `object_id`, `object_type`, `size`, `mime` FROM `image` WHERE `image` IS NOT NULL',
+        );
+
+        while ($row = $result->fetch(PDO::FETCH_ASSOC)) {
+            yield [
+                'id' => (int) $row['id'],
+                'object_id' => (int) $row['object_id'],
+                'object_type' => $row['object_type'],
+                'size' => (string) $row['size'],
+                'mime' => (string) $row['mime'],
+            ];
+        }
     }
 
     /**
@@ -64,38 +95,5 @@ final readonly class ImageRepository implements ImageRepositoryInterface
         }
 
         return (string) $result;
-    }
-
-    /**
-     * Get the object details for the art table
-     *
-     * @return Generator<array{id: int, object_id: int, object_type: string, size: string, mime: string}>
-     */
-    public function findAllImage(): Generator
-    {
-        $result = $this->connection->query(
-            'SELECT `id`, `object_id`, `object_type`, `size`, `mime` FROM `image` WHERE `image` IS NOT NULL',
-        );
-
-        while ($row = $result->fetch(PDO::FETCH_ASSOC)) {
-            yield [
-                'id' => (int) $row['id'],
-                'object_id' => (int) $row['object_id'],
-                'object_type' => $row['object_type'],
-                'size' => (string) $row['size'],
-                'mime' => (string) $row['mime'],
-            ];
-        }
-    }
-
-    /**
-     * Clear the image column (if you have the image on disk)
-     */
-    public function deleteImage(int $imageId): void
-    {
-        $this->connection->query(
-            'UPDATE `image` SET `image` = NULL WHERE `id` = ?',
-            [$imageId]
-        );
     }
 }

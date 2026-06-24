@@ -69,7 +69,7 @@ final class Share8Method
         ob_end_clean();
         switch ($input['api_format']) {
             case 'json':
-                echo Json8_Data::shares($results, false);
+                echo Json8_Data::shares($results, $user, false);
                 break;
             default:
                 echo Xml8_Data::shares($results, $user);

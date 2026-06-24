@@ -74,7 +74,7 @@ final class SseApiApplication implements ApiApplicationInterface
         if (array_key_exists('catalogs', $_REQUEST)) {
             $catalogs = array_map(
                 'intval',
-                (array)json_decode(urldecode($_REQUEST['catalogs']), true)
+                (array) json_decode(urldecode($_REQUEST['catalogs']), true)
             );
         } else {
             $catalogs = null;

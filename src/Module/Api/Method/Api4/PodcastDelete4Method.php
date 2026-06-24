@@ -67,7 +67,7 @@ final class PodcastDelete4Method
         if (!Api4::check_parameter($input, ['filter'], self::ACTION)) {
             return false;
         }
-        $object_id = (int)$input['filter'];
+        $object_id = (int) $input['filter'];
         $podcast   = self::getPodcastRepository()->findById($object_id);
 
         if ($podcast !== null) {

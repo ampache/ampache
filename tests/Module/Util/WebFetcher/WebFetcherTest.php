@@ -41,24 +41,66 @@ class WebFetcherTest extends TestCase
     use ConsecutiveParams;
 
     private ConfigContainerInterface&MockObject $config;
-
+    private LoggerInterface&MockObject $logger;
+    private WebFetcher $subject;
     private UtilityFactoryInterface&MockObject $utilityFactory;
 
-    private LoggerInterface&MockObject $logger;
-
-    private WebFetcher $subject;
-
-    protected function setUp(): void
+    public function testFetchFails(): void
     {
-        $this->config         = $this->createMock(ConfigContainerInterface::class);
-        $this->utilityFactory = $this->createMock(UtilityFactoryInterface::class);
-        $this->logger         = $this->createMock(LoggerInterface::class);
+        $uri       = 'some-uri';
+        $version   = '4.5.6';
+        $proxyHost = 'some-proxy-host';
+        $proxyPort = 'some-proxy-port';
 
-        $this->subject = new WebFetcher(
-            $this->config,
-            $this->utilityFactory,
-            $this->logger
-        );
+        $curl = $this->createMock(Curl::class);
+
+        static::expectException(FetchFailedException::class);
+        static::expectExceptionMessage(sprintf('Error fetching url: %s', $uri));
+
+        $this->utilityFactory->expects(static::once())
+            ->method('createCurl')
+            ->willReturn($curl);
+
+        $curl->expects(static::once())
+            ->method('setFollowLocation');
+        $curl->expects(static::once())
+            ->method('setUserAgent')
+            ->with(sprintf('Ampache/%s', $version));
+        $curl->expects(static::once())
+            ->method('setProxy')
+            ->with($proxyHost, $proxyPort, null, null);
+        $curl->expects(static::once())
+            ->method('setTimeout')
+            ->with(300);
+        $curl->expects(static::once())
+            ->method('get')
+            ->with($uri);
+        $curl->expects(static::once())
+            ->method('close');
+
+        $this->config->expects(static::once())
+            ->method('getVersion')
+            ->willReturn($version);
+        $this->config->expects(static::exactly(4))
+            ->method('get')
+            ->with(...self::withConsecutive(
+                [ConfigurationKeyEnum::PROXY_HOST],
+                [ConfigurationKeyEnum::PROXY_PORT],
+                [ConfigurationKeyEnum::PROXY_USER],
+                [ConfigurationKeyEnum::PROXY_PASS],
+            ))
+            ->willReturn($proxyHost, $proxyPort, '', '');
+
+        $this->logger->expects(static::once())
+            ->method('debug')
+            ->with(
+                sprintf('Fetching url: %s', $uri),
+                [LegacyLogger::CONTEXT_TYPE => WebFetcher::class]
+            );
+
+        $curl->error = true;
+
+        $this->subject->fetch($uri);
     }
 
     public function testFetchFetchesWithProxy(): void
@@ -119,101 +161,6 @@ class WebFetcherTest extends TestCase
         );
     }
 
-    public function testFetchFails(): void
-    {
-        $uri       = 'some-uri';
-        $version   = '4.5.6';
-        $proxyHost = 'some-proxy-host';
-        $proxyPort = 'some-proxy-port';
-
-        $curl = $this->createMock(Curl::class);
-
-        static::expectException(FetchFailedException::class);
-        static::expectExceptionMessage(sprintf('Error fetching url: %s', $uri));
-
-        $this->utilityFactory->expects(static::once())
-            ->method('createCurl')
-            ->willReturn($curl);
-
-        $curl->expects(static::once())
-            ->method('setFollowLocation');
-        $curl->expects(static::once())
-            ->method('setUserAgent')
-            ->with(sprintf('Ampache/%s', $version));
-        $curl->expects(static::once())
-            ->method('setProxy')
-            ->with($proxyHost, $proxyPort, null, null);
-        $curl->expects(static::once())
-            ->method('setTimeout')
-            ->with(300);
-        $curl->expects(static::once())
-            ->method('get')
-            ->with($uri);
-        $curl->expects(static::once())
-            ->method('close');
-
-        $this->config->expects(static::once())
-            ->method('getVersion')
-            ->willReturn($version);
-        $this->config->expects(static::exactly(4))
-            ->method('get')
-            ->with(...self::withConsecutive(
-                [ConfigurationKeyEnum::PROXY_HOST],
-                [ConfigurationKeyEnum::PROXY_PORT],
-                [ConfigurationKeyEnum::PROXY_USER],
-                [ConfigurationKeyEnum::PROXY_PASS],
-            ))
-            ->willReturn($proxyHost, $proxyPort, '', '');
-
-        $this->logger->expects(static::once())
-            ->method('debug')
-            ->with(
-                sprintf('Fetching url: %s', $uri),
-                [LegacyLogger::CONTEXT_TYPE => WebFetcher::class]
-            );
-
-        $curl->error = true;
-
-        $this->subject->fetch($uri);
-    }
-
-    public function testFetchToFileThrowsIfFetchErrors(): void
-    {
-        $uri                 = 'some-uri';
-        $destinationFilePath = 'some-path';
-        $version             = '1.2.3';
-
-        $curl = $this->createMock(Curl::class);
-
-        static::expectException(FetchFailedException::class);
-        static::expectExceptionMessage(sprintf('Error downloading to file: %s', $destinationFilePath));
-
-        $this->config->expects(static::once())
-            ->method('getVersion')
-            ->willReturn($version);
-
-        $this->utilityFactory->expects(static::once())
-            ->method('createCurl')
-            ->willReturn($curl);
-
-        $curl->expects(static::once())
-            ->method('setFollowLocation');
-        $curl->expects(static::once())
-            ->method('setUserAgent')
-            ->with(sprintf('Ampache/%s', $version));
-        $curl->expects(static::once())
-            ->method('setReferer')
-            ->with($uri);
-        $curl->expects(static::once())
-            ->method('download')
-            ->with($uri, $destinationFilePath)
-            ->willReturn(false);
-        $curl->expects(static::once())
-            ->method('close');
-
-        $this->subject->fetchToFile($uri, $destinationFilePath);
-    }
-
     public function testFetchToFileDownloads(): void
     {
         $uri                 = 'some-uri';
@@ -253,5 +200,55 @@ class WebFetcherTest extends TestCase
             );
 
         $this->subject->fetchToFile($uri, $destinationFilePath);
+    }
+
+    public function testFetchToFileThrowsIfFetchErrors(): void
+    {
+        $uri                 = 'some-uri';
+        $destinationFilePath = 'some-path';
+        $version             = '1.2.3';
+
+        $curl = $this->createMock(Curl::class);
+
+        static::expectException(FetchFailedException::class);
+        static::expectExceptionMessage(sprintf('Error downloading to file: %s', $destinationFilePath));
+
+        $this->config->expects(static::once())
+            ->method('getVersion')
+            ->willReturn($version);
+
+        $this->utilityFactory->expects(static::once())
+            ->method('createCurl')
+            ->willReturn($curl);
+
+        $curl->expects(static::once())
+            ->method('setFollowLocation');
+        $curl->expects(static::once())
+            ->method('setUserAgent')
+            ->with(sprintf('Ampache/%s', $version));
+        $curl->expects(static::once())
+            ->method('setReferer')
+            ->with($uri);
+        $curl->expects(static::once())
+            ->method('download')
+            ->with($uri, $destinationFilePath)
+            ->willReturn(false);
+        $curl->expects(static::once())
+            ->method('close');
+
+        $this->subject->fetchToFile($uri, $destinationFilePath);
+    }
+
+    protected function setUp(): void
+    {
+        $this->config         = $this->createMock(ConfigContainerInterface::class);
+        $this->utilityFactory = $this->createMock(UtilityFactoryInterface::class);
+        $this->logger         = $this->createMock(LoggerInterface::class);
+
+        $this->subject = new WebFetcher(
+            $this->config,
+            $this->utilityFactory,
+            $this->logger
+        );
     }
 }

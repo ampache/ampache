@@ -27,73 +27,73 @@ namespace Ampache\Gui\Folder;
 
 interface FolderViewAdapterInterface
 {
-    public function getId(): int;
-
-    public function getRating(): string;
-
-    public function getAverageRating(): string;
-
-    public function getUserFlags(): string;
-
-    public function getArt(): string;
+    public function canAppendNext(): bool;
 
     public function canAutoplayNext(): bool;
 
-    public function canAppendNext(): bool;
+    public function canBatchDownload(): bool;
 
-    public function getDirectplayButton(): string;
-
-    public function getAutoplayNextButton(): string;
-
-    public function getAppendNextButton(): string;
-
-    public function getAddToTemporaryPlaylistButton(): string;
-
-    public function getRandomToTemporaryPlaylistButton(): string;
+    public function canBeDeleted(): bool;
 
     public function canPostShout(): bool;
 
-    public function getPostShoutUrl(): string;
-
-    public function getPostShoutIcon(): string;
-
     public function canShare(): bool;
 
-    public function getShareUi(): string;
+    public function canShowYear(): bool;
 
-    public function canBatchDownload(): bool;
+    public function getAddToPlaylistIcon(): string;
 
-    public function getBatchDownloadUrl(): string;
+    public function getAddToTemporaryPlaylistButton(): string;
+
+    public function getAppendNextButton(): string;
+
+    public function getArt(): string;
+
+    public function getArtistLink(): string;
+
+    public function getAutoplayNextButton(): string;
+
+    public function getAverageRating(): string;
 
     public function getBatchDownloadIcon(): string;
 
-    public function isEditable(): bool;
+    public function getBatchDownloadUrl(): string;
+
+    public function getDeletionIcon(): string;
+
+    public function getDeletionUrl(): string;
+
+    public function getDirectplayButton(): string;
+
+    public function getDisplayYear(): int;
 
     public function getEditButtonTitle(): string;
 
     public function getEditIcon(): string;
 
-    public function getDeletionUrl(): string;
-
-    public function getDeletionIcon(): string;
-
-    public function canBeDeleted(): bool;
-
-    public function getAddToPlaylistIcon(): string;
-
-    public function getPlayedTimes(): ?int;
+    public function getFolderLink(): string;
 
     public function getFolderUrl(): string;
 
-    public function getFolderLink(): string;
-
-    public function getArtistLink(): string;
-
-    public function canShowYear(): bool;
-
-    public function getDisplayYear(): int;
-
     public function getGenre(): string;
 
+    public function getId(): int;
+
+    public function getPlayedTimes(): ?int;
+
+    public function getPostShoutIcon(): string;
+
+    public function getPostShoutUrl(): string;
+
+    public function getRandomToTemporaryPlaylistButton(): string;
+
+    public function getRating(): string;
+
+    public function getShareUi(): string;
+
     public function getSongCount(): ?int;
+
+    public function getUserFlags(): string;
+
+    public function isEditable(): bool;
 }
