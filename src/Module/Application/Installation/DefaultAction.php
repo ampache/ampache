@@ -134,7 +134,7 @@ final class DefaultAction implements ApplicationActionInterface
         AmpConfig::set('lang', $htmllang, true);
         AmpConfig::set('site_charset', $charset, true);
         if (!class_exists(Translations::class)) {
-            require_once __DIR__ . '/../../../../public/client/templates/test_error_page.inc.php';
+            require_once __DIR__ . '/../../../../public/templates/test_error_page.inc.php';
             throw new Exception('load_gettext()');
         }
 
@@ -169,13 +169,13 @@ final class DefaultAction implements ApplicationActionInterface
 
                     if (!strlen($new_user) || !strlen($new_pass)) {
                         AmpError::add('general', T_('The Ampache database username or password is missing'));
-                        require_once __DIR__ . '/../../../../public/client/templates/show_install.inc.php';
+                        require_once __DIR__ . '/../../../../public/templates/show_install.inc.php';
                         break;
                     }
                 }
 
                 if (!$skip_admin && !$this->installationHelper->install_insert_db($new_user, $new_pass, array_key_exists('create_db', $_REQUEST), array_key_exists('overwrite_db', $_REQUEST), array_key_exists('create_tables', $_REQUEST))) {
-                    require_once __DIR__ . '/../../../../public/client/templates/show_install.inc.php';
+                    require_once __DIR__ . '/../../../../public/templates/show_install.inc.php';
                     break;
                 }
 
@@ -183,7 +183,7 @@ final class DefaultAction implements ApplicationActionInterface
                 Preference::update('lang', -1, AmpConfig::get('lang', 'en_US'));
                 // Intentional break fall-through
             case 'show_create_config':
-                require_once __DIR__ . '/../../../../public/client/templates/show_install_config.inc.php';
+                require_once __DIR__ . '/../../../../public/templates/show_install_config.inc.php';
                 break;
             case 'create_config':
                 // Intentional break fall-through
@@ -253,14 +253,14 @@ final class DefaultAction implements ApplicationActionInterface
                 header("Location: " . $web_path . '/index.php');
                 break;
             case 'init':
-                require_once __DIR__ . '/../../../../public/client/templates/show_install.inc.php';
+                require_once __DIR__ . '/../../../../public/templates/show_install.inc.php';
                 break;
             case 'check':
-                require_once __DIR__ . '/../../../../public/client/templates/show_install_check.inc.php';
+                require_once __DIR__ . '/../../../../public/templates/show_install_check.inc.php';
                 break;
             default:
                 // Show the language options first
-                require_once __DIR__ . '/../../../../public/client/templates/show_install_lang.inc.php';
+                require_once __DIR__ . '/../../../../public/templates/show_install_lang.inc.php';
                 break;
         }
 
