@@ -50,13 +50,13 @@ final class Stream8Method
      * Takes the file id in parameter with optional max bit rate, file format, time offset, size and estimate content length option.
      * Search and Playlist will only stream a random object not the whole thing
      *
-     * id      = (string) $song_id|$podcast_episode_id|$search_id|$playlist_id
-     * type    = (string) 'song', 'podcast_episode', 'search', 'playlist'
+     * id = (string) $song_id|$podcast_episode_id|$search_id|$playlist_id
+     * type = (string) 'song', 'podcast_episode', 'search', 'playlist'
      * bitrate = (integer) max bitrate for transcoding in bytes (e.g 192000=192Kb) // Song only
-     * format  = (string) 'mp3', 'ogg', etc use 'raw' to skip transcoding // Song only
-     * offset  = (integer) time offset in seconds
-     * length  = (integer) 0,1
-     * stats   = (integer) 0,1, if false disable stat recording when playing the object (default: 1) //optional
+     * format = (string) 'mp3', 'ogg', etc use 'raw' to skip transcoding // Song only
+     * offset = (integer) time offset in seconds
+     * length = (integer) 0,1
+     * stats = (integer) 0,1, if false disable stat recording when playing the object (default: 1) //optional
      *
      * @param array{
      *     filter?: string,

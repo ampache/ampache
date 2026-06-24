@@ -51,10 +51,10 @@ final class LiveStreamCreate6Method
      *
      * Create a live_stream (radio station) object.
      *
-     * name     = (string) Stream title
-     * url      = (string) URL of the http/s stream
-     * codec    = (string) stream codec ('mp3', 'flac', 'ogg', 'vorbis', 'opus', 'aac', 'alac')
-     * catalog  = (int) Catalog ID to associate with this stream
+     * name = (string) Stream title
+     * url = (string) URL of the http/s stream
+     * codec = (string) stream codec ('mp3', 'flac', 'ogg', 'vorbis', 'opus', 'aac', 'alac')
+     * catalog = (int) Catalog ID to associate with this stream
      * site_url = (string) Homepage URL of the stream //optional
      *
      * @param array{

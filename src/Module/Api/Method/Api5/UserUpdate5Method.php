@@ -49,14 +49,14 @@ final class UserUpdate5Method
      * Update an existing user.
      * Takes the username with optional parameters.
      *
-     * username   = (string) $username
-     * password   = (string) hash('sha256', $password)) //optional
-     * fullname   = (string) $fullname //optional
-     * email      = (string) $email //optional
-     * website    = (string) $website //optional
-     * state      = (string) $state //optional
-     * city       = (string) $city //optional
-     * disable    = (integer) 0,1 true to disable, false to enable //optional
+     * username = (string) $username
+     * password = (string) hash('sha256', $password)) //optional
+     * fullname = (string) $fullname //optional
+     * email = (string) $email //optional
+     * website = (string) $website //optional
+     * state = (string) $state //optional
+     * city = (string) $city //optional
+     * disable = (integer) 0,1 true to disable, false to enable //optional
      * maxbitrate = (integer) $maxbitrate //optional
      *
      * @param array{

@@ -50,7 +50,7 @@ final class SmartlistSongs6Method
      * filter = (string) UID of smartlist
      * random = (integer) 0,1, if true get random songs using limit //optional
      * offset = (integer) //optional
-     * limit  = (integer) //optional
+     * limit = (integer) //optional
      *
      * @param array{
      *     filter: string,

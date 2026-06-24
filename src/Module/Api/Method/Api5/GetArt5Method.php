@@ -48,10 +48,10 @@ final class GetArt5Method
      *
      * Get an art image.
      *
-     * id       = (string) $object_id
-     * type     = (string) 'song', 'artist', 'album', 'playlist', 'search', 'podcast')
+     * id = (string) $object_id
+     * type = (string) 'song', 'artist', 'album', 'playlist', 'search', 'podcast')
      * fallback = (integer) 0,1, if true return default art ('blankalbum.png') //optional
-     * size     = (string) 'original' or size in '200x200' format //optional
+     * size = (string) 'original' or size in '200x200' format //optional
      *
      * @param array{
      *     id: string,

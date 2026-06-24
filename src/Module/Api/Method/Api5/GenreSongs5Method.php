@@ -46,7 +46,7 @@ final class GenreSongs5Method
      *
      * filter = (string) UID of Genre //optional
      * offset = (integer) //optional
-     * limit  = (integer) //optional
+     * limit = (integer) //optional
      *
      * @param array{
      *     filter?: string,

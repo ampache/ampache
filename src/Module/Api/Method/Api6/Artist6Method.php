@@ -46,7 +46,7 @@ final class Artist6Method
      *
      * This returns a single artist based on the UID of said artist
      *
-     * filter  = (string) Alpha-numeric search term
+     * filter = (string) Alpha-numeric search term
      * include = (array|string) 'albums', 'songs' //optional
      *
      * @param array{

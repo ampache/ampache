@@ -46,7 +46,7 @@ final class UpdateArtistInfo4Method
      * Update artist information and fetch similar artists from last.fm
      * Make sure lastfm_api_key is set in your configuration file
      *
-     * id   = (integer) $artist_id
+     * id = (integer) $artist_id
      *
      * @param array{
      *     id: string,

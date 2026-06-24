@@ -49,10 +49,10 @@ final class PlaylistRemove8Method
      * This removes an object from a playlist using track number in the list or object id and type
      *
      * filter = (string) UID of playlist
-     * id     = (string) $object_id
-     * type   = (string) 'song', 'album', 'artist', 'playlist' //optional, default = song
-     * track  = (string) track number to remove from the playlist //optional
-     * clear  = (integer) 0,1 Clear the whole playlist //optional, default = 0
+     * id = (string) $object_id
+     * type = (string) 'song', 'album', 'artist', 'playlist' //optional, default = song
+     * track = (string) track number to remove from the playlist //optional
+     * clear = (integer) 0,1 Clear the whole playlist //optional, default = 0
      *
      * @param array{
      *     filter: string,

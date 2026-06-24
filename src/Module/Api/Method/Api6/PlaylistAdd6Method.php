@@ -52,8 +52,8 @@ final class PlaylistAdd6Method
      * This adds a song to a playlist, allowing different song parent types
      *
      * filter = (string) UID of playlist
-     * id     = (string) $object_id
-     * type   = (string) 'song', 'album', 'artist', 'playlist'
+     * id = (string) $object_id
+     * type = (string) 'song', 'album', 'artist', 'playlist'
      *
      * @param array{
      *     filter: string,

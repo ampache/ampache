@@ -46,7 +46,7 @@ final class Democratic4Method
      * This is for controlling democratic play
      *
      * method = (string) 'vote', 'devote', 'playlist', 'play'
-     * oid    = (integer) //optional
+     * oid = (integer) //optional
      *
      * @param array{
      *     method: string,

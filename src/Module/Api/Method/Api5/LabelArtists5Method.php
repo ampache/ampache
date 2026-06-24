@@ -46,7 +46,7 @@ final class LabelArtists5Method
      *
      * This returns all artists attached to a label ID
      *
-     * filter  = (string) UID of label
+     * filter = (string) UID of label
      * include = (array|string) 'albums', 'songs' //optional
      *
      * @param array{

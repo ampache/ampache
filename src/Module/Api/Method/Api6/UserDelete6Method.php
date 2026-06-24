@@ -49,7 +49,7 @@ final class UserDelete6Method
      * Delete an existing user.
      * Takes the username in parameter.
      *
-     * filter   = (integer|string) filter by user id OR username //optional
+     * filter = (integer|string) filter by user id OR username //optional
      * username = (string) $username
      *
      * @param array{

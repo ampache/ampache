@@ -45,14 +45,14 @@ final class Artists5Method
      * This takes a collection of inputs and returns
      * artist objects. This function is deprecated!
      *
-     * filter       = (string) Alpha-numeric search term //optional
-     * exact        = (integer) 0,1, if true filter is exact rather then fuzzy //optional
-     * add          = $browse->set_api_filter(date) //optional
-     * update       = $browse->set_api_filter(date) //optional
-     * include      = (array|string) 'albums', 'songs' //optional
+     * filter = (string) Alpha-numeric search term //optional
+     * exact = (integer) 0,1, if true filter is exact rather then fuzzy //optional
+     * add = $browse->set_api_filter(date) //optional
+     * update = $browse->set_api_filter(date) //optional
+     * include = (array|string) 'albums', 'songs' //optional
      * album_artist = (integer) 0,1, if true filter for album artists only //optional
-     * offset       = (integer) //optional
-     * limit        = (integer) //optional
+     * offset = (integer) //optional
+     * limit = (integer) //optional
      *
      * @param array{
      *     filter?: string,

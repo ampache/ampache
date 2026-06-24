@@ -47,8 +47,8 @@ final class Timeline4Method
      * This gets a user timeline from their username
      *
      * username = (string)
-     * limit    = (integer) //optional
-     * since    = (integer) UNIXTIME() //optional
+     * limit = (integer) //optional
+     * since = (integer) UNIXTIME() //optional
      *
      * @param array{
      *     username: string,

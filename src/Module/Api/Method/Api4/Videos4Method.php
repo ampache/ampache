@@ -42,9 +42,9 @@ final class Videos4Method
      * This returns video objects!
      *
      * filter = (string) Alpha-numeric search term //optional
-     * exact  = (integer) 0,1, Whether to match the exact term or not //optional
+     * exact = (integer) 0,1, Whether to match the exact term or not //optional
      * offset = (integer) //optional
-     * limit  = (integer) //optional
+     * limit = (integer) //optional
      *
      * @param array{
      *     filter?: string,

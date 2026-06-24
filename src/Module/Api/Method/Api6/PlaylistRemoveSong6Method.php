@@ -51,9 +51,9 @@ final class PlaylistRemoveSong6Method
      * 420000+: added clear to allow you to clear a playlist without getting all the tracks.
      *
      * filter = (string) UID of playlist
-     * song   = (string) UID of song to remove from the playlist //optional
-     * track  = (string) track number to remove from the playlist //optional
-     * clear  = (integer) 0,1 Clear the whole playlist //optional, default = 0
+     * song = (string) UID of song to remove from the playlist //optional
+     * track = (string) track number to remove from the playlist //optional
+     * clear = (integer) 0,1 Clear the whole playlist //optional, default = 0
      *
      * @param array{
      *     filter: string,

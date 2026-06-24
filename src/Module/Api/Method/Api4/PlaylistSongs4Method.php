@@ -47,7 +47,7 @@ final class PlaylistSongs4Method
      *
      * filter = (string) UID of playlist
      * offset = (integer) //optional
-     * limit  = (integer) //optional
+     * limit = (integer) //optional
      *
      * @param array{
      *     filter: string,

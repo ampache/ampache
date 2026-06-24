@@ -48,7 +48,7 @@ final class GetLyrics6Method
      *
      * Return Database lyrics or search with plugins by Song id
      *
-     * filter  = (string) song id
+     * filter = (string) song id
      * plugins = (int) 0,1, if false disable plugin lookup (Default: 1)
      *
      * @param array{

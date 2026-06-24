@@ -45,7 +45,7 @@ final class ToggleFollow6Method
      *
      * This will follow/unfollow a user
      *
-     * filter   = (integer|string) filter by user id OR username //optional
+     * filter = (integer|string) filter by user id OR username //optional
      * username = (string) $username
      *
      * @param array{

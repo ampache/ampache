@@ -47,7 +47,7 @@ final class User8Method
      *
      * This get a user's public information
      *
-     * filter   = (integer|string) filter by user id OR username //optional
+     * filter = (integer|string) filter by user id OR username //optional
      * username = (string) $username
      *
      * @param array{

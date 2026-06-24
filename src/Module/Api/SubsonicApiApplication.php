@@ -160,7 +160,7 @@ final class SubsonicApiApplication implements ApiApplicationInterface
 
             // Optional legacy suffix star for non-quoted plain tokens
             if (str_ends_with($part, '*') || str_ends_with($part, '%')) {
-                $part  = substr($part, 0, -1);
+                $part = substr($part, 0, -1);
             }
 
             $value = trim(preg_replace('/\\s+/', ' ', $part) ?? $part);

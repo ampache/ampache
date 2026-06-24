@@ -43,12 +43,12 @@ final class Albums5Method
      *
      * This returns albums based on the provided search filters
      *
-     * filter  = (string) Alpha-numeric search term //optional
-     * exact   = (integer) 0,1, if true filter is exact rather then fuzzy //optional
-     * add     = $browse->set_api_filter(date) //optional
-     * update  = $browse->set_api_filter(date) //optional
-     * offset  = (integer) //optional
-     * limit   = (integer) //optional
+     * filter = (string) Alpha-numeric search term //optional
+     * exact = (integer) 0,1, if true filter is exact rather then fuzzy //optional
+     * add = $browse->set_api_filter(date) //optional
+     * update = $browse->set_api_filter(date) //optional
+     * offset = (integer) //optional
+     * limit = (integer) //optional
      * include = (array|string) 'songs' //optional
      *
      * @param array{

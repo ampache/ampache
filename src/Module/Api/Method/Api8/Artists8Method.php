@@ -45,16 +45,16 @@ final class Artists8Method
      * This takes a collection of inputs and returns
      * artist objects. This function is deprecated!
      *
-     * filter       = (string) Alpha-numeric search term //optional
-     * exact        = (integer) 0,1, if true filter is exact rather then fuzzy //optional
-     * add          = $browse->set_api_filter(date) //optional
-     * update       = $browse->set_api_filter(date) //optional
-     * include      = (array|string) 'albums', 'songs' //optional
+     * filter = (string) Alpha-numeric search term //optional
+     * exact = (integer) 0,1, if true filter is exact rather then fuzzy //optional
+     * add = $browse->set_api_filter(date) //optional
+     * update = $browse->set_api_filter(date) //optional
+     * include = (array|string) 'albums', 'songs' //optional
      * album_artist = (integer) 0,1, if true filter for album artists only //optional
-     * offset       = (integer) //optional
-     * limit        = (integer) //optional
-     * cond         = (string) Apply additional filters to the browse using ';' separated comma string pairs (e.g. 'filter1,value1;filter2,value2') //optional
-     * sort         = (string) sort name or comma separated key pair. Order default 'ASC' (e.g. 'name,ASC' and 'name' are the same) //optional
+     * offset = (integer) //optional
+     * limit = (integer) //optional
+     * cond = (string) Apply additional filters to the browse using ';' separated comma string pairs (e.g. 'filter1,value1;filter2,value2') //optional
+     * sort = (string) sort name or comma separated key pair. Order default 'ASC' (e.g. 'name,ASC' and 'name' are the same) //optional
      *
      * @param array{
      *     filter?: string,

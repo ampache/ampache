@@ -48,10 +48,10 @@ final class Timeline6Method
      *
      * This gets a user timeline from their username
      *
-     * filter   = (integer|string) filter by user id OR username //optional
+     * filter = (integer|string) filter by user id OR username //optional
      * username = (string)
-     * limit    = (integer) //optional
-     * since    = (integer) UNIXTIME() //optional
+     * limit = (integer) //optional
+     * since = (integer) UNIXTIME() //optional
      *
      * @param array{
      *     filter?: int|string,

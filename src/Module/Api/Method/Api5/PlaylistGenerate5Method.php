@@ -52,14 +52,14 @@ final class PlaylistGenerate5Method
      * 'forgotten' will search for tracks played before 'Statistics Day Threshold' days
      * 'unplayed' added in 400002 for searching unplayed tracks.
      *
-     * mode   = (string)  'recent', 'forgotten', 'unplayed', 'random' //optional, default = 'random'
+     * mode = (string)  'recent', 'forgotten', 'unplayed', 'random' //optional, default = 'random'
      * filter = (string)  $filter                       //optional, LIKE matched to song title
-     * album  = (integer) $album_id                     //optional
+     * album = (integer) $album_id                     //optional
      * artist = (integer) $artist_id                    //optional
-     * flag   = (integer) 0,1                           //optional, default = 0
+     * flag = (integer) 0,1                           //optional, default = 0
      * format = (string)  'song', 'index', 'id'         //optional, default = 'song'
      * offset = (integer)                               //optional
-     * limit  = (integer)                               //optional
+     * limit = (integer)                               //optional
      *
      * @param array{
      *     mode?: string,

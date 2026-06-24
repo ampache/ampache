@@ -44,7 +44,7 @@ final class Catalogs4Method
      *
      * filter = (string) set $filter_type 'music', 'video', 'podcast' //optional
      * offset = (integer) //optional
-     * limit  = (integer) //optional
+     * limit = (integer) //optional
      *
      * @param array{
      *     filter?: string,

@@ -303,7 +303,7 @@ class OpenSubsonic_Api
                         'object_id' => $object_id,
                         'object_type' => $type,
                         'comment' => $comment,
-                        'position' => $position
+                        'position' => (int) $position
                     ],
                     $user->id,
                     time()
@@ -3147,7 +3147,7 @@ class OpenSubsonic_Api
         $sub_ids = (is_array($id_list))
             ? $id_list
             : [$id_list];
-        $index    = (int) ($input['currentIndex'] ?? 0);
+        $index = (int) ($input['currentIndex'] ?? 0);
         if ($index < 0 || $index >= count($sub_ids)) {
             self::_errorOutput($input, self::SSERROR_MISSINGPARAM, __FUNCTION__);
 
@@ -3918,8 +3918,8 @@ class OpenSubsonic_Api
             // We use the curl `writefunction` and `headerfunction` callbacks
             // to write the fetched data back to the open stream from the
             // client.
-            $headers      = apache_request_headers();
-            $reqheaders   = [];
+            $headers    = apache_request_headers();
+            $reqheaders = [];
             if (isset($headers['User-Agent'])) {
                 $reqheaders[] = "User-Agent: " . $headers['User-Agent'];
             }

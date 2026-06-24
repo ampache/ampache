@@ -46,12 +46,12 @@ final class Stream4Method
      * Streams a given media file.
      * Takes the file id in parameter with optional max bit rate, file format, time offset, size and estimate content length option.
      *
-     * id      = (string) $song_id|$podcast_episode_id
-     * type    = (string) 'song'|'podcast'
+     * id = (string) $song_id|$podcast_episode_id
+     * type = (string) 'song'|'podcast'
      * bitrate = (integer) max bitrate for transcoding in bytes (e.g 192000=192Kb)
-     * format  = (string) 'mp3'|'ogg', etc use 'raw' to skip transcoding SONG ONLY
-     * offset  = (integer) time offset in seconds
-     * length  = (integer) 0,1
+     * format = (string) 'mp3'|'ogg', etc use 'raw' to skip transcoding SONG ONLY
+     * offset = (integer) time offset in seconds
+     * length = (integer) 0,1
      *
      * @param array{
      *     id: string,

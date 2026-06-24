@@ -44,13 +44,13 @@ final class UserPlaylists8Method
      *
      * This returns playlists based on the specified filter (Does not include searches / smartlists)
      *
-     * filter  = (string) Alpha-numeric search term (match all if missing) //optional
-     * exact   = (integer) 0,1, if true filter is exact rather than fuzzy //optional
+     * filter = (string) Alpha-numeric search term (match all if missing) //optional
+     * exact = (integer) 0,1, if true filter is exact rather than fuzzy //optional
      * include = (integer) 0,1, if true include playlist contents //optional
-     * offset  = (integer) //optional
-     * limit   = (integer) //optional
-     * cond    = (string) Apply additional filters to the browse using ';' separated comma string pairs (e.g. 'filter1,value1;filter2,value2') //optional
-     * sort    = (string) sort name or comma separated key pair. Order default 'ASC' (e.g. 'name,ASC' and 'name' are the same) //optional
+     * offset = (integer) //optional
+     * limit = (integer) //optional
+     * cond = (string) Apply additional filters to the browse using ';' separated comma string pairs (e.g. 'filter1,value1;filter2,value2') //optional
+     * sort = (string) sort name or comma separated key pair. Order default 'ASC' (e.g. 'name,ASC' and 'name' are the same) //optional
      *
      * @param array{
      *     filter?: string,

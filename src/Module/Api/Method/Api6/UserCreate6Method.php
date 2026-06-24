@@ -53,9 +53,9 @@ final class UserCreate6Method
      * username = (string) $username
      * fullname = (string) $fullname //optional
      * password = (string) hash('sha256', $password)
-     * email    = (string) $email
-     * disable  = (integer) 0,1 //optional, default = 0
-     * group    = (integer) Catalog filter group for the new user //optional, default = 0
+     * email = (string) $email
+     * disable = (integer) 0,1 //optional, default = 0
+     * group = (integer) Catalog filter group for the new user //optional, default = 0
      *
      * @param array{
      *     username: string,

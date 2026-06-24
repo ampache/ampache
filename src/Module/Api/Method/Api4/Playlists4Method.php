@@ -45,14 +45,14 @@ final class Playlists4Method
      *
      * This returns playlists based on the specified filter
      *
-     * filter      = (string) Alpha-numeric search term (match all if missing) //optional
+     * filter = (string) Alpha-numeric search term (match all if missing) //optional
      * hide_search = (integer) 0,1, if true do not include searches/smartlists in the result //optional
-     * show_dupes  = (integer) 0,1, if true ignore 'api_hide_dupe_searches' setting //optional
-     * exact       = (integer) 0,1, if true filter is exact rather than fuzzy //optional
-     * add         = $browse->set_api_filter(date) //optional
-     * update      = $browse->set_api_filter(date) //optional
-     * offset      = (integer) //optional
-     * limit       = (integer) //optional
+     * show_dupes = (integer) 0,1, if true ignore 'api_hide_dupe_searches' setting //optional
+     * exact = (integer) 0,1, if true filter is exact rather than fuzzy //optional
+     * add = $browse->set_api_filter(date) //optional
+     * update = $browse->set_api_filter(date) //optional
+     * offset = (integer) //optional
+     * limit = (integer) //optional
      *
      * @param array{
      *     filter?: string,

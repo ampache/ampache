@@ -47,7 +47,7 @@ final class LastShouts8Method
      *
      * This get the latest posted shouts
      *
-     * filter   = (integer|string) filter by user id OR username //optional
+     * filter = (integer|string) filter by user id OR username //optional
      * username = (string) $username //optional
      * limit = (integer) $limit Default: 10 (popular_threshold) //optional
      *

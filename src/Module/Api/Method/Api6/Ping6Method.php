@@ -50,7 +50,7 @@ final class Ping6Method
      * This can be called without being authenticated, it is useful for determining if what the status
      * of the server is, and what version it is running/compatible with
      *
-     * auth    = (string) //optional
+     * auth = (string) //optional
      * version = (string) $version //optional
      *
      * @param array{

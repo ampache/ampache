@@ -49,11 +49,11 @@ final class Download8Method
      * Downloads a given media file. set format=raw to download the full file
      * Search and Playlist will only stream a random object not the whole thing
      *
-     * id      = (string) $song_id|$podcast_episode_id|$search_id|$playlist_id
-     * type    = (string) 'song', 'podcast_episode', 'search', 'playlist'
+     * id = (string) $song_id|$podcast_episode_id|$search_id|$playlist_id
+     * type = (string) 'song', 'podcast_episode', 'search', 'playlist'
      * bitrate = (integer) max bitrate for transcoding in bytes (e.g 192000=192Kb) //optional SONG ONLY
-     * format  = (string) 'mp3', 'ogg', etc use 'raw' to skip transcoding //optional SONG ONLY
-     * stats   = (integer) 0,1, if false disable stat recording when playing the object (default: 1) //optional
+     * format = (string) 'mp3', 'ogg', etc use 'raw' to skip transcoding //optional SONG ONLY
+     * stats = (integer) 0,1, if false disable stat recording when playing the object (default: 1) //optional
      *
      * @param array{
      *     filter?: string,

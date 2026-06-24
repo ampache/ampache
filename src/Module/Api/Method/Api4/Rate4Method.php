@@ -45,8 +45,8 @@ final class Rate4Method
      *
      * This rates a library item
      *
-     * type   = (string) 'song', 'album', 'artist', 'playlist', 'podcast', 'podcast_episode', 'video' $type
-     * id     = (integer) $object_id
+     * type = (string) 'song', 'album', 'artist', 'playlist', 'podcast', 'podcast_episode', 'video' $type
+     * id = (integer) $object_id
      * rating = (integer) 0|1|2|3|4|5 $rating
      *
      * @param array{

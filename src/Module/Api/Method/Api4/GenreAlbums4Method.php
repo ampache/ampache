@@ -46,7 +46,7 @@ final class GenreAlbums4Method
      *
      * filter = (string) UID of Genre
      * offset = (integer) //optional
-     * limit  = (integer) //optional
+     * limit = (integer) //optional
      *
      * @param array{
      *     filter?: string,

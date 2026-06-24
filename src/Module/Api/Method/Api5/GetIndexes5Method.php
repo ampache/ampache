@@ -49,15 +49,15 @@ final class GetIndexes5Method
      * This takes a collection of inputs and returns ID + name for the object type
      * Add 'include' to allow indexing all song tracks (enabled for xml by default)
      *
-     * type        = (string) 'song', 'album', 'artist', 'album_artist', 'playlist', 'podcast', 'podcast_episode', 'share', 'video', 'live_stream'
-     * filter      = (string) //optional
+     * type = (string) 'song', 'album', 'artist', 'album_artist', 'playlist', 'podcast', 'podcast_episode', 'share', 'video', 'live_stream'
+     * filter = (string) //optional
      * hide_search = (integer) 0,1, if true do not include searches/smartlists in the result //optional
-     * exact       = (integer) 0,1, if true filter is exact rather then fuzzy //optional
-     * add         = $browse->set_api_filter(date) //optional
-     * update      = $browse->set_api_filter(date) //optional
-     * include     = (integer) 0,1 include songs if available for that object //optional
-     * offset      = (integer) //optional
-     * limit       = (integer) //optional
+     * exact = (integer) 0,1, if true filter is exact rather then fuzzy //optional
+     * add = $browse->set_api_filter(date) //optional
+     * update = $browse->set_api_filter(date) //optional
+     * include = (integer) 0,1 include songs if available for that object //optional
+     * offset = (integer) //optional
+     * limit = (integer) //optional
      *
      * @param array{
      *     type: string,

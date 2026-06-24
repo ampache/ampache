@@ -53,7 +53,7 @@ final class Register8Method
      * username = (string) $username
      * fullname = (string) $fullname //optional
      * password = (string) hash('sha256', $password)
-     * email    = (string) $email
+     * email = (string) $email
      *
      * @param array{
      *     username: string,

@@ -47,7 +47,7 @@ final class Podcast8Method
      *
      * Get the podcast from it's id.
      *
-     * filter  = (string) Podcast ID number
+     * filter = (string) Podcast ID number
      * include = (string) 'episodes' (include episodes in the response) //optional
      *
      * @param array{
