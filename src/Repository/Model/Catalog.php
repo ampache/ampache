@@ -5041,7 +5041,7 @@ abstract class Catalog extends database_object
     {
         if (count($this->_filecache) == 0) {
             // Get _EVERYTHING_
-            $sql        = 'SELECT `id`, `file` FROM `song` WHERE `catalog` = ? AND `file` IS NOT NULL;';
+            $sql        = 'SELECT `id`, `file` FROM `song` WHERE `catalog` = ? AND `file` IS NOT NULL ORDER BY `id` DESC;';
             $db_results = Dba::read($sql, [$this->id]);
 
             // Populate the filecache
@@ -5049,7 +5049,7 @@ abstract class Catalog extends database_object
                 $this->_filecache[strtolower($results['file'])] = $results['id'];
             }
 
-            $sql        = 'SELECT `id`, `file` FROM `video` WHERE `catalog` = ? AND `file` IS NOT NULL;';
+            $sql        = 'SELECT `id`, `file` FROM `video` WHERE `catalog` = ? AND `file` IS NOT NULL ORDER BY `id` DESC;';
             $db_results = Dba::read($sql, [$this->id]);
 
             while ($results = Dba::fetch_assoc($db_results)) {
