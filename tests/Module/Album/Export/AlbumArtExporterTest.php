@@ -202,7 +202,7 @@ class AlbumArtExporterTest extends MockeryTestCase
         $art->raw_mime = $raw_mime;
         $art->raw      = $raw_art;
 
-        $song->file    = $file_name;
+        $song->file = $file_name;
 
         $metadataWriter->shouldReceive('write')
             ->with(

@@ -170,7 +170,7 @@ class Horde_Browser
         }
 
         /* Content-Length Header. Only send if we are not compressing output. */
-        if (!empty($cLength) && !in_array('ob_gzhandler', ob_list_handlers())) {
+        if (!in_array($cLength, [null, '', '0'], true) && !in_array('ob_gzhandler', ob_list_handlers())) {
             $headers['Content-Length'] = $cLength;
         }
 
@@ -434,8 +434,8 @@ class Horde_Browser
                 // Truly annoying - Safari did not start putting real version
                 // numbers until Version 3.
                 if (preg_match('|Version/([0-9.]+)|', $agent, $version_string)) {
-                    [$this->_majorVersion, $this->_minorVersion]     = explode('.', $version_string[1], 2);
-                    $this->_minorVersion                             = (int) ($this->_minorVersion);
+                    [$this->_majorVersion, $this->_minorVersion] = explode('.', $version_string[1], 2);
+                    $this->_minorVersion                         = (int) ($this->_minorVersion);
                     $this->setFeature('ajax');
                     $this->setFeature('rte');
                 } elseif ($this->_majorVersion >= 412) {

@@ -36,7 +36,7 @@ final class ObjectNotFoundException extends ApplicationException
     #[Override]
     protected $message = 'Object not found';
 
-    public function __construct(private int|string $objectId = 0)
+    public function __construct(private readonly int|string $objectId = 0)
     {
         parent::__construct($this->message);
     }

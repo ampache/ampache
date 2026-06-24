@@ -64,7 +64,7 @@ abstract class AbstractCatalogAction implements ApplicationActionInterface
             : [];
 
         // If only one catalog, check it is ready.
-        if (count($catalogs) == 1) {
+        if (count($catalogs) === 1) {
             // If not ready, display the data to make it ready / stop the action.
             $catalog = Catalog::create_from_id((int) $catalogs[0]);
             if ($catalog !== null && !$catalog->isReady()) {

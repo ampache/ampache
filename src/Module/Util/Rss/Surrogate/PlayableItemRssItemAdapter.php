@@ -91,6 +91,7 @@ final readonly class PlayableItemRssItemAdapter implements RssItemInterface
         if (!$this->playable instanceof container_item) {
             return;
         }
+
         foreach ($this->playable->get_medias() as $media_info) {
             /** @var Song|Podcast_Episode|null $media */
             $media = $this->libraryItemLoader->load(

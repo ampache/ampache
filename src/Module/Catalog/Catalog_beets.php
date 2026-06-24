@@ -49,10 +49,10 @@ class Catalog_beets extends Catalog
     protected string $listCommand = 'ls';
 
     #[Override]
-    protected string $type        = 'beets';
+    protected string $type = 'beets';
 
     #[Override]
-    protected string $version     = '000001';
+    protected string $version = '000001';
 
     /**
      * create_type

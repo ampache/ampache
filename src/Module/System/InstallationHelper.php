@@ -567,7 +567,7 @@ final class InstallationHelper implements InstallationHelperInterface
             $errors  = [];
             for ($count = 0; $count < $p_count; $count++) {
                 $pieces[$count] = trim((string) $pieces[$count]);
-                if (($pieces[$count] !== '' && $pieces[$count] !== '0') && $pieces[$count] != '#' && !Dba::write($pieces[$count])) {
+                if (!in_array($pieces[$count], ['', '0', '#'], true) && !Dba::write($pieces[$count])) {
                     $errors[] = [Dba::error(), $pieces[$count]];
                 }
             }
@@ -704,8 +704,8 @@ final class InstallationHelper implements InstallationHelperInterface
      */
     private function split_sql(string $sql): array
     {
-        $sql       = trim($sql);
-        $sql       = (string) preg_replace("/\n--[^\n]*\n/", "\n", $sql);
+        $sql = trim($sql);
+        $sql = (string) preg_replace("/\n--[^\n]*\n/", "\n", $sql);
 
         $buffer    = [];
         $ret       = [];

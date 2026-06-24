@@ -36,7 +36,7 @@ class AmpError
     /** @var array<string, string> $errors  */
     public static array $errors = []; // Errors array key'd array with errors that have occurred
 
-    private static bool $state  = false; // set to one when an error occurs
+    private static bool $state = false; // set to one when an error occurs
 
     /**
      * add
@@ -50,7 +50,7 @@ class AmpError
             self::$errors[$name]       = $message;
             self::$state               = true;
             $_SESSION['errors'][$name] = $message;
-        } elseif ($clobber) {
+        } elseif ($clobber !== 0) {
             // They want us to clobber it
             self::$state               = true;
             self::$errors[$name]       = $message;

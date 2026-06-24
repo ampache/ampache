@@ -55,13 +55,13 @@ class Catalog_dropbox extends Catalog
     private string $apikey = '';
 
     //private string $authcode;
-    private string $authtoken;
-    private int $catalog_id;
+    private readonly string $authtoken;
+    private readonly int $catalog_id;
     private int $count          = 0;
     private string $description = 'Dropbox Remote Catalog';
-    private string $secret;
-    private string $type        = 'dropbox';
-    private string $version     = '000002';
+    private readonly string $secret;
+    private string $type    = 'dropbox';
+    private string $version = '000002';
 
     /** @var int[] */
     private array $videos_to_gather;
@@ -510,8 +510,8 @@ class Catalog_dropbox extends Catalog
         }
 
         /* Create the vainfo object and get info */
-        $meta     = $dropbox->getMetadata($path);
-        $outfile  = Core::get_tmp_dir() . DIRECTORY_SEPARATOR . $meta->getName();
+        $meta    = $dropbox->getMetadata($path);
+        $outfile = Core::get_tmp_dir() . DIRECTORY_SEPARATOR . $meta->getName();
 
         // Download File
         $res = $this->download($dropbox, $path, 40960, $outfile);

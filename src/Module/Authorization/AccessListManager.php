@@ -143,15 +143,15 @@ final readonly class AccessListManager implements AccessListManagerInterface
      */
     private function verifyRange(string $startIp, string $endIp): void
     {
-        if (!$startIp) {
+        if ($startIp === '' || $startIp === '0') {
             throw new InvalidStartIpException();
         }
 
-        if (!$endIp) {
+        if ($endIp === '' || $endIp === '0') {
             throw new InvalidEndIpException();
         }
 
-        if (strlen(bin2hex((string) $startIp)) !== strlen(bin2hex((string) $endIp))) {
+        if (strlen(bin2hex($startIp)) !== strlen(bin2hex($endIp))) {
             throw new InvalidIpRangeException();
         }
     }

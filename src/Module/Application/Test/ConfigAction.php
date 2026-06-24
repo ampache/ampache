@@ -74,7 +74,7 @@ final readonly class ConfigAction implements ApplicationActionInterface
             $link = __DIR__ . '/../../../../public/test.php?action=config';
         }
 
-        if (!empty($results)) {
+        if ($results !== [] && $results !== false) {
             /* Temp Fixes */
             $results = Preference::fix_preferences($results);
             $this->configContainer->updateConfig($results);

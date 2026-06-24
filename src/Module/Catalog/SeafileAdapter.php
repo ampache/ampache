@@ -48,10 +48,10 @@ class SeafileAdapter
      * SeafileAdapter constructor.
      */
     public function __construct(
-        private ?string $server,
-        private ?string $library_name,
-        private ?int $call_delay,
-        private ?string $api_key,
+        private readonly ?string $server,
+        private readonly ?string $library_name,
+        private readonly ?int $call_delay,
+        private readonly ?string $api_key,
     ) {}
 
     /**
@@ -115,7 +115,7 @@ class SeafileAdapter
 
             $count = 0;
 
-            if ($directoryItems !== null && count($directoryItems) > 0) {
+            if ($directoryItems !== null && $directoryItems !== []) {
                 foreach ($directoryItems as $item) {
                     if ($item->type == 'dir') {
                         $count += $this->for_all_files($func, $path . $item->name . '/');
@@ -258,12 +258,13 @@ class SeafileAdapter
         if (array_key_exists($path, $this->directory_cache)) {
             $directory = $this->directory_cache[$path];
 
-            if ($directory) {
+            if ($directory !== []) {
                 return $directory;
             }
 
             return null;
         }
+
         if (!$this->client || !$this->library) {
             return null;
         }

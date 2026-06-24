@@ -101,6 +101,7 @@ class PodcastDelete8MethodTest extends TestCase
             ->with(sprintf('podcast %d deleted', $podcastId))
             ->willReturn($result);
 
+        /** @noinspection PhpMissingArrayKeyInspection */
         self::assertSame(
             $this->response,
             $this->subject->handle(
@@ -134,6 +135,7 @@ class PodcastDelete8MethodTest extends TestCase
             ->with(AccessTypeEnum::INTERFACE, AccessLevelEnum::MANAGER, $userId)
             ->willReturn(false);
 
+        /** @noinspection PhpMissingArrayKeyInspection */
         $this->subject->handle(
             $this->gatekeeper,
             $this->response,
@@ -164,6 +166,7 @@ class PodcastDelete8MethodTest extends TestCase
             ->with(AccessTypeEnum::INTERFACE, AccessLevelEnum::MANAGER, $userId)
             ->willReturn(true);
 
+        /** @noinspection PhpMissingArrayKeyInspection */
         $this->subject->handle(
             $this->gatekeeper,
             $this->response,
@@ -183,6 +186,7 @@ class PodcastDelete8MethodTest extends TestCase
             ->with(ConfigurationKeyEnum::PODCAST)
             ->willReturn('');
 
+        /** @noinspection PhpMissingArrayKeyInspection */
         $this->subject->handle(
             $this->gatekeeper,
             $this->response,
@@ -219,6 +223,7 @@ class PodcastDelete8MethodTest extends TestCase
             ->with(AccessTypeEnum::INTERFACE, AccessLevelEnum::MANAGER, $userId)
             ->willReturn(true);
 
+        /** @noinspection PhpMissingArrayKeyInspection */
         $this->subject->handle(
             $this->gatekeeper,
             $this->response,

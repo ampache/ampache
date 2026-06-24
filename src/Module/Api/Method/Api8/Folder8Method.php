@@ -46,13 +46,13 @@ final class Folder8Method
      *
      * Return children of a parent object by ID
      *
-     * filter  = (int) object_id default: -1 (root folder) //optional
-     * add     = $browse->set_api_filter(date) //optional
-     * update  = $browse->set_api_filter(date) //optional
-     * offset  = (integer) //optional
-     * limit   = (integer) //optional
-     * cond    = (string) Apply additional filters to the browse using ';' separated comma string pairs (e.g. 'filter1,value1;filter2,value2') //optional
-     * sort    = (string) sort name or comma separated key pair. Order default 'ASC' (e.g. 'name,ASC' and 'name' are the same) //optional
+     * filter = (int) object_id default: -1 (root folder) //optional
+     * add = $browse->set_api_filter(date) //optional
+     * update = $browse->set_api_filter(date) //optional
+     * offset = (integer) //optional
+     * limit = (integer) //optional
+     * cond = (string) Apply additional filters to the browse using ';' separated comma string pairs (e.g. 'filter1,value1;filter2,value2') //optional
+     * sort = (string) sort name or comma separated key pair. Order default 'ASC' (e.g. 'name,ASC' and 'name' are the same) //optional
      *
      * @param array{
      *     filter?: int,

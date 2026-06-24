@@ -40,22 +40,23 @@ use Ratchet\MessageComponentInterface;
 
 class Broadcast_Server implements MessageComponentInterface
 {
-    public const string BROADCAST_AUTH_SID           = "AUTH_SID";
+    public const string BROADCAST_AUTH_SID = "AUTH_SID";
 
-    public const string BROADCAST_ENDED              = "ENDED";
+    public const string BROADCAST_ENDED = "ENDED";
 
-    public const string BROADCAST_INFO               = "INFO";
+    public const string BROADCAST_INFO = "INFO";
 
-    public const string BROADCAST_NB_LISTENERS       = "NB_LISTENERS";
+    public const string BROADCAST_NB_LISTENERS = "NB_LISTENERS";
 
-    public const string BROADCAST_PLAYER_PLAY        = "PLAYER_PLAY";
+    public const string BROADCAST_PLAYER_PLAY = "PLAYER_PLAY";
 
     public const string BROADCAST_REGISTER_BROADCAST = "REGISTER_BROADCAST";
 
-    public const string BROADCAST_REGISTER_LISTENER  = "REGISTER_LISTENER";
-    public const string BROADCAST_SONG               = "SONG";
+    public const string BROADCAST_REGISTER_LISTENER = "REGISTER_LISTENER";
 
-    public const string BROADCAST_SONG_POSITION      = "SONG_POSITION";
+    public const string BROADCAST_SONG = "SONG";
+
+    public const string BROADCAST_SONG_POSITION = "SONG_POSITION";
 
     public bool $verbose = false;
 
@@ -190,15 +191,7 @@ class Broadcast_Server implements MessageComponentInterface
      */
     protected function getRunningBroadcast(int $broadcast_id): ?Broadcast
     {
-        $result = null;
-        foreach ($this->broadcasters as $broadcast) {
-            if ($broadcast->id == $broadcast_id) {
-                $result = $broadcast;
-                break;
-            }
-        }
-
-        return $result;
+        return array_find($this->broadcasters, fn($broadcast) => $broadcast->id == $broadcast_id);
     }
 
     /**
@@ -374,7 +367,7 @@ class Broadcast_Server implements MessageComponentInterface
      */
     protected function unregisterListener(ConnectionInterface $conn): void
     {
-        $listeners = (array) $this->listeners;
+        $listeners = $this->listeners;
         foreach ($listeners as $broadcast_id => $brlisteners) {
             $lindex = array_search($conn, $brlisteners, true);
             if (

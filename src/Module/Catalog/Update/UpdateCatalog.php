@@ -217,7 +217,7 @@ final class UpdateCatalog extends AbstractCatalogUpdater implements UpdateCatalo
                         T_('Start scanning folders'),
                         true
                     );
-                    $changed += $catalog->scan_catalog_folders($interactor, (empty($catalogName)));
+                    $changed += $catalog->scan_catalog_folders($interactor, (in_array($catalogName, [null, '', '0'], true)));
 
                     $buffer = ob_get_contents();
 
@@ -325,9 +325,10 @@ final class UpdateCatalog extends AbstractCatalogUpdater implements UpdateCatalo
             Catalog::clean_empty_albums();
             Album::update_album_artist();
             Catalog::update_counts();
-            if (empty($catalogName)) {
+            if (in_array($catalogName, [null, '', '0'], true)) {
                 $catalog?->count_scan_folders($interactor);
             }
+
             $interactor->info(
                 '------------------',
                 true

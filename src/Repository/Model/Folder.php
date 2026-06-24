@@ -248,7 +248,7 @@ class Folder extends database_object implements
             $sql        = "SELECT `object_id`, `object_type` FROM `folder_map` WHERE `folder_id` = ? ORDER BY `name`;";
             $db_results = Dba::read($sql, [$this->id]);
         }
-        $results    = [];
+        $results = [];
         while ($row = Dba::fetch_assoc($db_results)) {
             $object_type = LibraryItemEnum::tryFrom($row['object_type']);
             if ($object_type !== null) {
@@ -453,7 +453,7 @@ class Folder extends database_object implements
                 $db_results = Dba::read($sql, [$this->getId()]);
             }
 
-            $results    = [];
+            $results = [];
             while ($row = Dba::fetch_assoc($db_results)) {
                 $object_type = LibraryItemEnum::tryFrom($row['object_type']);
                 if ($object_type !== null) {
@@ -562,10 +562,10 @@ class Folder extends database_object implements
      */
     public function update(array $data): ?int
     {
-        $name         = $data['name'] ?? $this->name;
-        $catalog      = $data['catalog'] ?? $this->catalog;
-        $parent       = $data['parent'] ?? $this->parent;
-        $update_time  = filemtime($data['path_name'] ?? $this->path_name);
+        $name        = $data['name'] ?? $this->name;
+        $catalog     = $data['catalog'] ?? $this->catalog;
+        $parent      = $data['parent'] ?? $this->parent;
+        $update_time = filemtime($data['path_name'] ?? $this->path_name);
 
         $sql = "UPDATE `folder` SET `name` = ?, `catalog` = ?, `parent` = ?, `update_time` = ? WHERE `id` = ?";
         Dba::write($sql, [$name, $catalog, $parent, $update_time, $this->id]);

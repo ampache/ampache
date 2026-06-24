@@ -55,7 +55,7 @@ class AmpacheStreamBandwidth extends AmpachePlugin implements PluginStreamContro
     public string $url = '';
 
     #[Override]
-    public string $version      = '000001';
+    public string $version = '000001';
 
     private int $bandwidth_days = 30;
     private int $bandwidth_max  = 1024;

@@ -340,7 +340,7 @@ final class VaInfo implements VaInfoInterface
             $info['publisher'] = (!$info['publisher'] && array_key_exists('publisher', $tags)) ? trim((string) $tags['publisher']) : $info['publisher'];
 
             // genre is an array treat it as one
-            $info['genre'] = (!$info['genre'] && array_key_exists('genre', $tags) && is_array($tags['genre']) && (!empty($tags['genre'])))
+            $info['genre'] = (!$info['genre'] && array_key_exists('genre', $tags) && is_array($tags['genre']) && (isset($tags['genre']) && $tags['genre'] !== []))
                 ? $tags['genre']
                 : $info['genre'];
 
@@ -419,7 +419,7 @@ final class VaInfo implements VaInfoInterface
         }
 
         // Determine the correct file size, do not get fooled by the size which may be returned by id3v2!
-        $size         = $results['general']['size'] ?? Core::get_filesize(Core::conv_lc_file((string) $filename));
+        $size = $results['general']['size'] ?? Core::get_filesize(Core::conv_lc_file((string) $filename));
         $info['size'] ??= $size;
 
         return $info;
@@ -1470,7 +1470,7 @@ final class VaInfo implements VaInfoInterface
         $parsed = [];
 
         foreach ($tags as $tag => $data) {
-            if (in_array($tag, ['unsyncedlyrics', 'unsynced lyrics', 'unsynchronised lyric'])) {
+            if (in_array($tag, ['unsyncedlyrics', 'unsynced lyrics', 'unsynchronised lyric'], true)) {
                 $tag = 'lyrics';
             }
 

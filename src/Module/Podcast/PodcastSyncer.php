@@ -184,7 +184,7 @@ final readonly class PodcastSyncer implements PodcastSyncerInterface
 
                 $this->sync($podcast);
 
-                $episodes        = $podcast->getEpisodeIds(PodcastEpisodeStateEnum::PENDING);
+                $episodes = $podcast->getEpisodeIds(PodcastEpisodeStateEnum::PENDING);
                 $newEpisodeCount += count($episodes);
 
                 // -1 means no downloads

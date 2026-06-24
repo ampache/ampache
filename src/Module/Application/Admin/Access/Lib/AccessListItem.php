@@ -53,7 +53,7 @@ final readonly class AccessListItem implements AccessListItemInterface
      */
     public function getId(): int
     {
-        return (int) $this->access->id;
+        return $this->access->id;
     }
 
     /**

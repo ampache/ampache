@@ -53,7 +53,7 @@ use JsonException;
  */
 class Search extends playlist_object
 {
-    public const array VALID_TYPES      = [
+    public const array VALID_TYPES = [
         'album_artist',
         'album_disk',
         'album',
@@ -646,8 +646,7 @@ class Search extends playlist_object
         if ($translate) {
             foreach ($basetypes as $key => $group) {
                 foreach ($group as $typeKey => $typeValue) {
-                    $basetypes[$key][$typeKey]['description']
-                        = T_($typeValue['description']);
+                    $basetypes[$key][$typeKey]['description'] = T_($typeValue['description']);
                 }
             }
         }

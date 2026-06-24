@@ -960,15 +960,15 @@ abstract class Catalog extends database_object
         $results['disksubtitle'] = $results['disksubtitle'] ?: null;
         $results['isrc']         = (isset($results['isrc']) && is_string($results['isrc'])) ? [$results['isrc']] : $results['isrc'] ?? [];
         $results['title']        = self::check_length(self::check_title($results['title'], $results['file']));
-        //$results['bitrate']      = $results['bitrate'];
-        $results['rate']         = $results['rate'] ?? 0;
+        //$results['bitrate'] = $results['bitrate'];
+        $results['rate'] = $results['rate'] ?? 0;
         if (!in_array($results['mode'], ['vbr', 'cbr', 'abr'])) {
             debug_event(self::class, 'Error analyzing: ' . $results['file'] . ' unknown file bitrate mode: ' . $results['mode'], 2);
         }
-        $results['mode']     = (in_array($results['mode'], ['vbr', 'cbr', 'abr'])) ? $results['mode'] : 'vbr';
+        $results['mode'] = (in_array($results['mode'], ['vbr', 'cbr', 'abr'])) ? $results['mode'] : 'vbr';
         //$results['channels'] = $results['channels'];
-        //$results['size']     = $results['size'];
-        $results['time']     = (strlen((string) $results['time']) > 5)
+        //$results['size'] = $results['size'];
+        $results['time'] = (strlen((string) $results['time']) > 5)
             ? (int) substr((string) $results['time'], -5, 5)
             : (int) ($results['time']);
         if ($results['time'] < 0) {
@@ -979,7 +979,7 @@ abstract class Catalog extends database_object
         $results['track']    = self::check_track((string) $results['track']);
         $results['mbid']     = (!empty($results['mb_trackid'])) ? $results['mb_trackid'] : null;
         $results['composer'] = (!empty($results['composer'])) ? self::check_length($results['composer']) : null;
-        //$results['mime']     = $results['mime']; // UPDATE ONLY (Generated from the filename)
+        //$results['mime'] = $results['mime']; // UPDATE ONLY (Generated from the filename)
 
         // info for the song_data table. used in Song::update_song
         if (!empty($results['license'])) {
@@ -1792,7 +1792,7 @@ abstract class Catalog extends database_object
      */
     public static function get_uploads_sql(string $type, int $user_id = 0): string
     {
-        $sql    = '';
+        $sql = '';
         if ($type == 'album') {
             $where_sql = ($user_id > 0)
                 ? "WHERE `artist`.`user` = '" . $user_id . "' OR `song`.`user_upload` = '" . $user_id . "'"
@@ -2780,8 +2780,8 @@ abstract class Catalog extends database_object
                 ? sprintf('SELECT COUNT(`id`), IFNULL(SUM(`time`), 0), IFNULL(SUM(`size`)/1024/1024, 0) FROM `%s` LEFT JOIN `catalog` ON `%s`.`catalog` = `catalog`.`id` WHERE `catalog`.`enabled` = \'1\' AND `%s`.`enabled` = \'1\'', $table, $table, $table)
                 : sprintf('SELECT COUNT(`id`), IFNULL(SUM(`time`), 0), IFNULL(SUM(`size`)/1024/1024, 0) FROM `%s` WHERE `%s`.`enabled` = \'1\'', $table, $table);
 
-            $db_results  = Dba::read($sql);
-            $row         = Dba::fetch_row($db_results);
+            $db_results = Dba::read($sql);
+            $row        = Dba::fetch_row($db_results);
             // save the object and add to the current size
             $items += (int) ($row[0] ?? 0);
             $time += (int) ($row[1] ?? 0);

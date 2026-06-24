@@ -40,9 +40,11 @@ use SimpleXMLElement;
  */
 class UPnPPlayer
 {
-    private string $_description_url;
-    private ?UPnPDevice $_device     = null;
-    private int $_intState           = 0; // 0 - stopped, 1 - playing
+    private readonly string $_description_url;
+    private ?UPnPDevice $_device = null;
+    private int $_intState       = 0;
+
+    // 0 - stopped, 1 - playing
     private ?UPnPPlaylist $_playlist = null;
     private bool $_shuffle           = false; // 0 - stopped, 1 - playing
 
@@ -367,7 +369,7 @@ class UPnPPlayer
     private function CallAsyncURL(string $url): void
     {
         $curl = curl_init();
-        if ($curl && !empty($url)) {
+        if ($curl && ($url !== '' && $url !== '0')) {
             curl_setopt($curl, CURLOPT_URL, $url);
             curl_setopt($curl, CURLOPT_FRESH_CONNECT, true);
             curl_setopt($curl, CURLOPT_HEADER, false);

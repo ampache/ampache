@@ -47,7 +47,7 @@ final class AddCatalogAction extends AbstractCatalogAction
         private readonly RequestParserInterface $requestParser,
     ) {
         parent::__construct($ui);
-        $this->ui              = $ui;
+        $this->ui = $ui;
     }
 
     /**

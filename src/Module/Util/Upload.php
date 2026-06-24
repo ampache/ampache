@@ -202,7 +202,7 @@ class Upload
         $pathname = realpath($catalog->get_path());
         if (
             is_string($pathname)
-            && !empty($pathname)
+            && ($pathname !== '' && $pathname !== '0')
         ) {
             $rootdir = $pathname;
             if (AmpConfig::get('upload_subdir')) {

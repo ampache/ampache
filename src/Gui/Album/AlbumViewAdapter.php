@@ -142,7 +142,7 @@ final readonly class AlbumViewAdapter implements AlbumViewAdapterInterface
     public function getArt(): string
     {
         $albumId = $this->album->getId();
-        $name    = ($this->album->get_parent_fullname() != "")
+        $name    = ($this->album->get_parent_fullname() !== "")
             ? '[' . $this->album->get_parent_fullname() . '] ' . scrub_out($this->album->get_fullname())
             : scrub_out($this->album->get_fullname());
 
