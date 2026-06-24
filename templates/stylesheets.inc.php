@@ -58,7 +58,7 @@ if (is_string($theme_css_base)) {
 <?php
 if (
     is_rtl(AmpConfig::get('lang', 'en_US'))
-    && is_file(__DIR__ . '/../../public/' . $theme_path . '/rtl.css')
+    && is_file(__DIR__ . '/../' . $theme_path . '/rtl.css')
 ) { ?>
     <link rel="stylesheet" href="<?php echo $web_path . $theme_path; ?>/rtl.css" type="text/css" media="screen">
 <?php } ?>

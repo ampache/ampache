@@ -428,8 +428,8 @@ function check_config_writable(): bool
  */
 function check_htaccess_rest_writable(): bool
 {
-    return ((file_exists(__DIR__ . '/../../public/rest/.htaccess') && is_writeable(__DIR__ . '/../../public/rest/.htaccess'))
-        || (!file_exists(__DIR__ . '/../../public/rest/.htaccess') && is_writeable(__DIR__ . '/../../public/rest/')));
+    return ((file_exists(__DIR__ . '/../../rest/.htaccess') && is_writeable(__DIR__ . '/../../rest/.htaccess'))
+        || (!file_exists(__DIR__ . '/../../rest/.htaccess') && is_writeable(__DIR__ . '/../../rest/')));
 }
 
 /**
@@ -437,8 +437,8 @@ function check_htaccess_rest_writable(): bool
  */
 function check_htaccess_play_writable(): bool
 {
-    return ((file_exists(__DIR__ . '/../../public/play/.htaccess') && is_writeable(__DIR__ . '/../../public/play/.htaccess'))
-        || (!file_exists(__DIR__ . '/../../public/play/.htaccess') && is_writeable(__DIR__ . '/../../public/play/')));
+    return ((file_exists(__DIR__ . '/../../play/.htaccess') && is_writeable(__DIR__ . '/../../play/.htaccess'))
+        || (!file_exists(__DIR__ . '/../../play/.htaccess') && is_writeable(__DIR__ . '/../../play/')));
 }
 
 /**
@@ -975,7 +975,7 @@ function get_themes(): array
 {
     $results = [];
 
-    $lst_files = glob(__DIR__ . '/../../public/themes/*/theme.cfg.php');
+    $lst_files = glob(__DIR__ . '/../../themes/*/theme.cfg.php');
     if (!$lst_files) {
         debug_event('themes', 'Failed to open /themes directory', 2);
 
@@ -1019,7 +1019,7 @@ function get_theme(string $name): ?array
         return $_mapcache[$name];
     }
 
-    $config_file = __DIR__ . "/../../public/themes/" . $name . "/theme.cfg.php";
+    $config_file = __DIR__ . "/../../themes/" . $name . "/theme.cfg.php";
     if (file_exists($config_file)) {
         $results = parse_ini_file($config_file);
         if (is_array($results)) {
