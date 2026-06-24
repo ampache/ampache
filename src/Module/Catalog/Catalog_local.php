@@ -261,7 +261,10 @@ class Catalog_local extends Catalog
         /* see if this is a valid audio file or playlist file */
         if ($is_audio_file || $is_video_file || $is_playlist) {
             /* Now that we're sure its a file get filesize  */
-            $file_size = Core::get_filesize($full_file);
+            $file_size = @filesize($full_file);
+            if ($file_size === false) {
+                $file_size = 0;
+            }
 
             if ($file_size === 0) {
                 $interactor?->info(
@@ -296,31 +299,29 @@ class Catalog_local extends Catalog
                     $lc_charset = AmpConfig::get('lc_charset');
                 }
 
-                $enc_full_file = iconv((string) $lc_charset, (string) $site_charset, $full_file);
-                if ($enc_full_file !== false) {
-                    if ($lc_charset != $site_charset) {
+                if ($lc_charset !== $site_charset) {
+                    $enc_full_file = iconv((string) $lc_charset, (string) $site_charset, $full_file);
+                    if ($enc_full_file !== false) {
                         $convok = (iconv((string) $site_charset, (string) $lc_charset, $enc_full_file) && strcmp($full_file, iconv((string) $site_charset, (string) $lc_charset, $enc_full_file)) === 0);
-                    } else {
-                        $convok = (strcmp($enc_full_file, $full_file) === 0);
-                    }
 
-                    if (!$convok) {
-                        $interactor?->info(
-                            $full_file . ' has non-' . $site_charset . ' characters and can not be indexed, converted filename:' . $enc_full_file,
-                            true
-                        );
-                        debug_event('local.catalog', $full_file . ' has non-' . $site_charset . ' characters and can not be indexed, converted filename:' . $enc_full_file, 1);
-                        /* HINT: FullFile */
-                        AmpError::add('catalog_add', sprintf(T_('"%s" does not match site charset'), $full_file));
+                        if (!$convok) {
+                            $interactor?->info(
+                                $full_file . ' has non-' . $site_charset . ' characters and can not be indexed, converted filename:' . $enc_full_file,
+                                true
+                            );
+                            debug_event('local.catalog', $full_file . ' has non-' . $site_charset . ' characters and can not be indexed, converted filename:' . $enc_full_file, 1);
+                            /* HINT: FullFile */
+                            AmpError::add('catalog_add', sprintf(T_('"%s" does not match site charset'), $full_file));
 
-                        return false;
-                    }
+                            return false;
+                        }
 
-                    $full_file = $enc_full_file;
+                        $full_file = $enc_full_file;
 
-                    // Check again with good encoding
-                    if (isset($this->_filecache[strtolower($full_file)])) {
-                        return false;
+                        // Check again with good encoding
+                        if (isset($this->_filecache[strtolower($full_file)])) {
+                            return false;
+                        }
                     }
                 }
             }
@@ -953,6 +954,24 @@ class Catalog_local extends Catalog
 
         if ($dead_count !== 0) {
             $this->count += $dead_count;
+
+            // Batch archive to deleted tables before deletion (more efficient than per-file)
+            switch ($media_type) {
+                case 'song':
+                    $sql = "REPLACE INTO `deleted_song` (`id`, `addition_time`, `delete_time`, `title`, `file`, `catalog`, `total_count`, `total_skip`, `album`, `artist`) SELECT `id`, `addition_time`, UNIX_TIMESTAMP(), `title`, `file`, `catalog`, `total_count`, `total_skip`, `album`, `artist` FROM `song` WHERE `id` IN (" . implode(',', $dead) . ");";
+                    Dba::write($sql);
+                    break;
+                case 'video':
+                    $sql = "REPLACE INTO `deleted_video` (`id`, `addition_time`, `delete_time`, `title`, `file`, `catalog`, `total_count`, `total_skip`) SELECT `id`, `addition_time`, UNIX_TIMESTAMP(), `title`, `file`, `catalog`, `total_count`, `total_skip` FROM `video` WHERE `id` IN (" . implode(',', $dead) . ");";
+                    Dba::write($sql);
+                    break;
+                case 'podcast_episode':
+                    $sql = "REPLACE INTO `deleted_podcast_episode` (`id`, `addition_time`, `delete_time`, `title`, `file`, `catalog`, `total_count`, `total_skip`, `podcast`) SELECT `id`, `addition_time`, UNIX_TIMESTAMP(), `title`, `file`, `catalog`, `total_count`, `total_skip`, `podcast` FROM `podcast_episode` WHERE `id` IN (" . implode(',', $dead) . ");";
+                    Dba::write($sql);
+                    break;
+            }
+
+            // Batch delete from main table
             $sql = sprintf('DELETE FROM `%s` WHERE `id` IN (', $media_type) . implode(',', $dead) . ")";
             Dba::write($sql);
         }
@@ -971,7 +990,7 @@ class Catalog_local extends Catalog
     public function clean_file(string $file, string $media_type = 'song'): bool
     {
         $file_info = (!is_file($file)) ? 0 : filesize(Core::conv_lc_file($file));
-        if ($file_info < 1) {
+        if (!$file_info) {
             $object_id = Catalog::get_id_from_file($file, $media_type);
             debug_event('local.catalog', 'clean_file: {' . $object_id . '} File not found or empty ' . $file, 5);
             /* HINT: filename (file path) */
@@ -1539,12 +1558,13 @@ class Catalog_local extends Catalog
         foreach ($filecache_chunk as $file => $oid) {
             $count++;
             if (Ui::check_ticker()) {
-                $file = str_replace(['(', ')', "'"], '', $file);
+                $file_display = str_replace(['(', ')', "'"], '', $file);
                 Ui::update_text('clean_count_' . $this->getId(), $count);
-                Ui::update_text('clean_dir_' . $this->getId(), scrub_out($file));
+                Ui::update_text('clean_dir_' . $this->getId(), scrub_out($file_display));
             }
 
-            if ($this->clean_file($file, $media_type)) {
+            $file_info = @filesize(Core::conv_lc_file($file));
+            if ($file_info === false || $file_info < 1) {
                 $interactor?->info(
                     'File removed: ' . $file,
                     true
