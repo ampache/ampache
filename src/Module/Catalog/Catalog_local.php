@@ -905,7 +905,10 @@ class Catalog_local extends Catalog
             $media_type = 'video';
         }
 
-        $total = self::count_table($media_type, $this->getId());
+        // Ensure that we've got our cache
+        $this->_create_filecache(true);
+
+        $total = count($this->_filecache);
         if ($total === 0) {
             return $this->count;
         }
@@ -1527,26 +1530,25 @@ class Catalog_local extends Catalog
      */
     private function _clean_chunk(string $media_type, int $chunk, int $chunk_size, ?Interactor $interactor = null): array
     {
-        $dead  = [];
-        $count = $chunk * $chunk_size;
+        $dead   = [];
+        $offset = $chunk * $chunk_size;
+        $count  = $offset;
 
-        $sql        = sprintf('SELECT `id`, `file` FROM `%s` WHERE `catalog` = ? AND `file` IS NOT NULL LIMIT %d, %d;', $media_type, $count, $chunk_size);
-        $db_results = Dba::read($sql, [$this->getId()]);
-        while ($results = Dba::fetch_assoc($db_results)) {
-            //debug_event('local.catalog', 'Cleaning check on ' . $results['file'] . ' (' . $results['id'] . ')', 5);
+        $filecache_chunk = array_slice($this->_filecache, $offset, $chunk_size, true);
+        foreach ($filecache_chunk as $file => $oid) {
             $count++;
             if (Ui::check_ticker()) {
-                $file = str_replace(['(', ')', "'"], '', $results['file']);
+                $file = str_replace(['(', ')', "'"], '', $file);
                 Ui::update_text('clean_count_' . $this->getId(), $count);
                 Ui::update_text('clean_dir_' . $this->getId(), scrub_out($file));
             }
 
-            if ($this->clean_file($results['file'], $media_type)) {
+            if ($this->clean_file($file, $media_type)) {
                 $interactor?->info(
-                    'File removed: ' . $results['file'],
+                    'File removed: ' . $file,
                     true
                 );
-                $dead[] = $results['id'];
+                $dead[] = $oid;
             }
         }
 
