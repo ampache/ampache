@@ -94,7 +94,6 @@ class Catalog_dropbox extends Catalog
      *     path?: ?string,
      *     getchunk?: string|int|null,
      * } $data
-     * @throws DropboxClientException
      */
     public static function create_type(string $catalog_id, array $data): bool
     {
@@ -104,21 +103,10 @@ class Catalog_dropbox extends Catalog
         $path      = $data['path'] ?? '';
         $getchunk  = (bool) ($data['getchunk'] ?? 0);
 
-        if (!strlen($apikey) || !strlen($secret) || !strlen($authtoken)) {
-            AmpError::add('general', T_('Error: API Key, Secret and Access Token Required for Dropbox Catalogs'));
-
+        $dropbox = self::_connect_dropbox($apikey, $secret, $authtoken);
+        if (!$dropbox) {
             return false;
         }
-
-        try {
-            $app = new DropboxApp($apikey, $secret, $authtoken);
-        } catch (DropboxClientException $dropboxClientException) {
-            AmpError::add('general', T_('Invalid "API key", "secret", or "access token": ' . $dropboxClientException->getMessage()));
-
-            return false;
-        }
-
-        $dropbox = new Dropbox($app);
 
         try {
             $dropbox->listFolder($path);
@@ -147,13 +135,19 @@ class Catalog_dropbox extends Catalog
 
     public function add_file(Dropbox $dropbox, string $path): bool
     {
-        $file = $dropbox->getMetadata(
-            $path,
-            [
-                'include_media_info' => true,
-                'include_deleted' => true
-            ]
-        );
+        try {
+            $file = $dropbox->getMetadata(
+                $path,
+                [
+                    'include_media_info' => true,
+                    'include_deleted' => true
+                ]
+            );
+        } catch (DropboxClientException $dropboxClientException) {
+            debug_event('dropbox.catalog', 'Error: ' . $dropboxClientException->getMessage(), 3);
+
+            return false;
+        }
         $filesize = $file->getDataProperty('size');
         if ($filesize > 0) {
             $is_audio_file = Catalog::is_audio_file($path);
@@ -304,9 +298,12 @@ class Catalog_dropbox extends Catalog
      */
     public function clean_catalog_proc(?Interactor $interactor = null): int
     {
-        $dead    = 0;
-        $app     = new DropboxApp($this->apikey, $this->secret, $this->authtoken);
-        $dropbox = new Dropbox($app);
+        $dead = 0;
+
+        $dropbox = self::_connect_dropbox($this->apikey, $this->secret, $this->authtoken);
+        if (!$dropbox) {
+            return $dead;
+        }
 
         $sql        = 'SELECT `id`, `file` FROM `song` WHERE `catalog` = ?';
         $db_results = Dba::read($sql, [$this->id]);
@@ -314,7 +311,7 @@ class Catalog_dropbox extends Catalog
             debug_event('dropbox.catalog', 'Starting clean on ' . $row['file'] . ' (' . $row['id'] . ')', 5);
             $file = $row['file'];
             try {
-                $metadata = $dropbox->getMetadata($file, ["include_deleted" => true]);
+                $dropbox->getMetadata($file, ["include_deleted" => true]);
             } catch (DropboxClientException $error) {
                 if ($error->getCode() == 409) {
                     $dead++;
@@ -385,9 +382,12 @@ class Catalog_dropbox extends Catalog
             return true;
         }
 
-        $app     = new DropboxApp($this->apikey, $this->secret, $this->authtoken);
-        $dropbox = new Dropbox($app);
-        $songs   = $this->get_songs();
+        $dropbox = self::_connect_dropbox($this->apikey, $this->secret, $this->authtoken);
+        if (!$dropbox) {
+            return false;
+        }
+
+        $songs = $this->get_songs();
 
         // Prevent the script from timing out
         set_time_limit(0);
@@ -619,8 +619,10 @@ class Catalog_dropbox extends Catalog
      */
     public function prepare_media(Podcast_Episode|Video|Song $media): array
     {
-        $app     = new DropboxApp($this->apikey, $this->secret, $this->authtoken);
-        $dropbox = new Dropbox($app);
+        $dropbox = self::_connect_dropbox($this->apikey, $this->secret, $this->authtoken);
+        if (!$dropbox) {
+            throw new DropboxClientException('Could not connect to Dropbox.');
+        }
 
         $file = (string) $media->file;
 
@@ -667,10 +669,15 @@ class Catalog_dropbox extends Catalog
      */
     public function update_remote_catalog(): int
     {
-        $app         = new DropboxApp($this->apikey, $this->secret, $this->authtoken);
-        $dropbox     = new Dropbox($app);
         $this->count = 0;
-        $songsadded  = $this->add_files($dropbox, $this->path);
+
+        $dropbox = self::_connect_dropbox($this->apikey, $this->secret, $this->authtoken);
+        if (!$dropbox) {
+            return 0;
+        }
+
+        $songsadded = $this->add_files($dropbox, $this->path);
+
         /* Update the Catalog last_add */
         $this->update_last_add();
 
@@ -689,8 +696,10 @@ class Catalog_dropbox extends Catalog
         $date           = time();
         $updated        = 0;
         $utilityFactory = $this->getUtilityFactory();
-        $app            = new DropboxApp($this->apikey, $this->secret, $this->authtoken);
-        $dropbox        = new Dropbox($app);
+        $dropbox        = self::_connect_dropbox($this->apikey, $this->secret, $this->authtoken);
+        if (!$dropbox) {
+            return 0;
+        }
         try {
             $sql        = 'SELECT `id`, `file`, `title` FROM `song` WHERE `catalog` = ?';
             $db_results = Dba::read($sql, [$this->id]);
@@ -741,6 +750,26 @@ class Catalog_dropbox extends Catalog
         }
 
         return $updated;
+    }
+
+    private static function _connect_dropbox(string $apikey, string $secret, string $authtoken = ''): ?Dropbox
+    {
+        if (!strlen($apikey) || !strlen($secret) || !strlen($authtoken)) {
+            AmpError::add('general', T_('Error: API Key, Secret and Access Token Required for Dropbox Catalogs'));
+
+            return null;
+        }
+
+        $app = new DropboxApp($apikey, $secret, $authtoken);
+        try {
+            $dropbox = new Dropbox($app);
+        } catch (DropboxClientException $dropboxClientException) {
+            AmpError::add('general', T_('Invalid "API key", "secret", or "access token": ' . $dropboxClientException->getMessage()));
+
+            return null;
+        }
+
+        return $dropbox;
     }
 
     private function getUtilityFactory(): UtilityFactoryInterface
