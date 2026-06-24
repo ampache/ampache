@@ -41,7 +41,19 @@ final readonly class LiveStreamRepository implements LiveStreamRepositoryInterfa
     public function __construct(
         private ModelFactoryInterface $modelFactory,
         private DatabaseConnectionInterface $connection,
-    ) {
+    ) {}
+
+    /**
+     * This deletes the object with the given id from the database
+     */
+    public function delete(Live_Stream $liveStream): void
+    {
+        $this->connection->query(
+            'DELETE FROM `live_stream` WHERE `id` = ?',
+            [$liveStream->getId()]
+        );
+
+        Catalog::count_table('live_stream');
     }
 
     /**
@@ -80,18 +92,5 @@ final readonly class LiveStreamRepository implements LiveStreamRepositoryInterfa
         }
 
         return $result;
-    }
-
-    /**
-     * This deletes the object with the given id from the database
-     */
-    public function delete(Live_Stream $liveStream): void
-    {
-        $this->connection->query(
-            'DELETE FROM `live_stream` WHERE `id` = ?',
-            [$liveStream->getId()]
-        );
-
-        Catalog::count_table('live_stream');
     }
 }

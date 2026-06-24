@@ -49,110 +49,17 @@ use Ampache\Repository\Model\User;
  */
 class Ui implements UiInterface
 {
-    private static int $_ticker = 0;
-
     /** @var array<string, string> $_icon_cache */
     private static array $_icon_cache = [];
 
     /** @var array<string, string> $_image_cache */
     private static array $_image_cache = [];
 
+    private static int $_ticker = 0;
+
     public function __construct(
         private readonly ConfigContainerInterface $configContainer,
-    ) {
-    }
-
-    /**
-     * This dumps out some html and an icon for the type of rss that we specify
-     *
-     * @param array<string, string>|null $params
-     */
-    public static function getRssLink(
-        RssFeedTypeEnum $type,
-        ?User $user = null,
-        string $title = '',
-        ?array $params = null,
-    ): string {
-        $strparams = "";
-        if (is_array($params)) {
-            foreach ($params as $key => $value) {
-                $strparams .= "&" . scrub_out($key) . "=" . scrub_out($value);
-            }
-        }
-
-        $rsstoken = '';
-        if ($user !== null) {
-            $rsstoken = "&rsstoken=" . $user->getRssToken();
-        }
-
-        $string = (
-            '<a class="nohtml" href="' . AmpConfig::get('web_path') .
-            '/rss.php?type=' . $type->value .
-            $rsstoken . $strparams . '" target="_blank">' .
-            self::get_material_symbol(
-                'rss_feed',
-                T_('RSS Feed')
-            )
-        );
-        if ($title !== '' && $title !== '0') {
-            $string .= '&nbsp;' . $title;
-        }
-
-        return $string . '</a>';
-    }
-
-    /**
-     * find_template
-     *
-     * Return the path to the template file wanted. The file can be overwritten
-     * by the theme if it's not a php file, or if it is and if option
-     * allow_php_themes is set to true.
-     */
-    public static function find_template(string $template, bool $extern = false): string
-    {
-        $path      = AmpConfig::get('theme_path', '/themes/reborn') . '/templates/' . $template;
-        $realpath  = __DIR__ . '/../../../public/' . $path;
-        $extension = strtolower(pathinfo($path, PATHINFO_EXTENSION));
-        if (($extension !== 'php' || AmpConfig::get('allow_php_themes')) && file_exists($realpath) && is_file($realpath)) {
-            return $path;
-        }
-
-        if ($extern) {
-            return '/templates/' . $template;
-        }
-
-        return __DIR__ . '/../../../public/templates/' . $template;
-    }
-
-    public function showObjectNotFound(): void
-    {
-        $this->showHeader();
-        echo T_('You have requested an object that does not exist');
-        $this->showQueryStats();
-        $this->showFooter();
-    }
-
-    /**
-     * Displays the default error page
-     */
-    public function accessDenied(string $error = 'Access Denied'): void
-    {
-        // Clear any buffered crap
-        ob_end_clean();
-        header('HTTP/1.1 403 ' . $error);
-        require_once self::find_template('show_denied.inc.php');
-    }
-
-    /**
-     * Displays an error page when you can't write the config
-     */
-    public function permissionDenied(string $fileName): void
-    {
-        // Clear any buffered crap
-        ob_end_clean();
-        header("HTTP/1.1 403 Permission Denied");
-        require_once self::find_template('show_denied_permission.inc.php');
-    }
+    ) {}
 
     /**
      * ajax_include
@@ -218,13 +125,36 @@ class Ui implements UiInterface
             );
 
             if ($clean) {
-                return rtrim((string)$clean);
+                return rtrim((string) $clean);
             }
 
             debug_event(self::class, 'Charset cleanup failed, something might break', 1);
         }
 
         return '';
+    }
+
+    /**
+     * find_template
+     *
+     * Return the path to the template file wanted. The file can be overwritten
+     * by the theme if it's not a php file, or if it is and if option
+     * allow_php_themes is set to true.
+     */
+    public static function find_template(string $template, bool $extern = false): string
+    {
+        $path      = AmpConfig::get('theme_path', '/themes/reborn') . '/templates/' . $template;
+        $realpath  = __DIR__ . '/../../../public/' . $path;
+        $extension = strtolower(pathinfo($path, PATHINFO_EXTENSION));
+        if (($extension !== 'php' || AmpConfig::get('allow_php_themes')) && file_exists($realpath) && is_file($realpath)) {
+            return $path;
+        }
+
+        if ($extern) {
+            return '/templates/' . $template;
+        }
+
+        return __DIR__ . '/../../../public/templates/' . $template;
     }
 
     /**
@@ -241,7 +171,7 @@ class Ui implements UiInterface
             return '';
         }
 
-        while (strlen((string)floor($value)) > 3) {
+        while (strlen((string) floor($value)) > 3) {
             $value /= 1024;
             $pass++;
         }
@@ -256,41 +186,6 @@ class Ui implements UiInterface
         };
 
         return (round($value, $precision)) . ' ' . $unit;
-    }
-
-    /**
-     * unformat_bytes
-     *
-     * Parses a human-readable size
-     * @noinspection PhpMissingBreakStatementInspection
-     */
-    public static function unformat_bytes(int|string $value): string
-    {
-        if (preg_match('/^(\d+) *([[:alpha:]]+)$/', (string)$value, $matches)) {
-            $value = (int)$matches[1];
-            $unit  = strtolower(substr($matches[2], 0, 1));
-        } else {
-            return (string)$value;
-        }
-
-        switch ($unit) {
-            case 'p':
-                $value *= 1024;
-                // Intentional break fall-through
-            case 't':
-                $value *= 1024;
-                // Intentional break fall-through
-            case 'g':
-                $value *= 1024;
-                // Intentional break fall-through
-            case 'm':
-                $value *= 1024;
-                // Intentional break fall-through
-            case 'k':
-                $value *= 1024;
-        }
-
-        return (string)$value;
     }
 
     /**
@@ -330,7 +225,7 @@ class Ui implements UiInterface
 
                 $svgicon->addAttribute('class', $class_attrib);
 
-                $tag = explode("\n", (string)$svgicon->asXML(), 2)[1];
+                $tag = explode("\n", (string) $svgicon->asXML(), 2)[1];
             }
         } else {
             // fall back to png
@@ -349,6 +244,79 @@ class Ui implements UiInterface
         }
 
         return $tag;
+    }
+
+    /**
+     * get_image
+     *
+     * Returns an <img> or <svg> tag for the specified image
+     */
+    public static function get_image(string $name, ?string $title = null, ?string $id_attrib = null, ?string $class_attrib = null): string
+    {
+        $title ??= ucfirst($name);
+        $image_url = self::_find_image($name);
+        $imagetype = pathinfo($image_url, PATHINFO_EXTENSION);
+        $tag       = '';
+        if ($imagetype == 'svg') {
+            // load svg file
+            $svgimage = simplexml_load_file($image_url);
+            if ($svgimage !== false) {
+                if (empty($svgimage->title)) {
+                    $svgimage->addChild('title', $title);
+                } else {
+                    $svgimage->title = $title;
+                }
+
+                if (empty($svgimage->desc)) {
+                    $svgimage->addChild('desc', $title);
+                } else {
+                    $svgimage->desc = $title;
+                }
+
+                if (!in_array($id_attrib, [null, '', '0'], true)) {
+                    $svgimage->addAttribute('id', $id_attrib);
+                }
+
+                $class_attrib ??= 'image image-' . $name;
+                $svgimage->addAttribute('class', $class_attrib);
+
+                $tag = explode("\n", (string) $svgimage->asXML(), 2)[1];
+            }
+        } else {
+            // fall back to png
+            $tag = '<img src="' . $image_url . '" ';
+            $tag .= 'alt="' . $title . '" ';
+            $tag .= 'title="' . $title . '" ';
+            if ($id_attrib !== null) {
+                $tag .= 'id="' . $id_attrib . '" ';
+            }
+
+            if ($class_attrib !== null) {
+                $tag .= 'class="' . $class_attrib . '" ';
+            }
+
+            $tag .= '/>';
+        }
+
+        return $tag;
+    }
+
+    /**
+     * get_logo_url
+     *
+     * Get the custom logo or logo relating to your theme color
+     */
+    public static function get_logo_url(?string $color = null): string
+    {
+        if (AmpConfig::get('custom_logo')) {
+            return AmpConfig::get('custom_logo');
+        }
+
+        if ($color !== null) {
+            return AmpConfig::get_web_path() . AmpConfig::get('theme_path', '/themes/reborn') . '/images/ampache-' . $color . '.png';
+        }
+
+        return AmpConfig::get_web_path() . AmpConfig::get('theme_path', '/themes/reborn') . '/images/ampache-' . AmpConfig::get('theme_color', 'dark') . '.png';
     }
 
     /**
@@ -392,10 +360,202 @@ class Ui implements UiInterface
 
             $svgicon->addAttribute('class', 'material-symbol material-symbol-' . $name . " " . $class_attrib);
 
-            $tag = explode("\n", (string)$svgicon->asXML(), 3)[1];
+            $tag = explode("\n", (string) $svgicon->asXML(), 3)[1];
         }
 
         return $tag;
+    }
+
+    /**
+     * This dumps out some html and an icon for the type of rss that we specify
+     *
+     * @param array<string, string>|null $params
+     */
+    public static function getRssLink(
+        RssFeedTypeEnum $type,
+        ?User $user = null,
+        string $title = '',
+        ?array $params = null,
+    ): string {
+        $strparams = "";
+        if (is_array($params)) {
+            foreach ($params as $key => $value) {
+                $strparams .= "&" . scrub_out($key) . "=" . scrub_out($value);
+            }
+        }
+
+        $rsstoken = '';
+        if ($user !== null) {
+            $rsstoken = "&rsstoken=" . $user->getRssToken();
+        }
+
+        $string = (
+            '<a class="nohtml" href="' . AmpConfig::get('web_path')
+            . '/rss.php?type=' . $type->value
+            . $rsstoken . $strparams . '" target="_blank">'
+            . self::get_material_symbol(
+                'rss_feed',
+                T_('RSS Feed')
+            )
+        );
+        if ($title !== '' && $title !== '0') {
+            $string .= '&nbsp;' . $title;
+        }
+
+        return $string . '</a>';
+    }
+
+    /**
+     * is_grid_view
+     */
+    public static function is_grid_view(string $type): bool
+    {
+        $name = 'browse_' . $type . '_grid_view';
+        if (isset($_COOKIE[$name])) {
+            return ($_COOKIE[$name] == 'true');
+        }
+
+        return false;
+    }
+
+    /**
+     * This function takes a boolean value and then prints out a friendly text
+     * message.
+     */
+    public static function printBool(?bool $value = false): string
+    {
+        return $value ? '<span class="item_on">' . T_('On') . '</span>' : '<span class="item_off">' . T_('Off') . '</span>';
+    }
+
+    /**
+     * show_box_bottom
+     *
+     * This shows the bottom of the box
+     */
+    public static function show_box_bottom(): void
+    {
+        require self::find_template('show_box_bottom.inc.php');
+    }
+
+    /**
+     * show_box_top
+     *
+     * This shows the top of the box.
+     */
+    public static function show_box_top(string $title = '', string $class = ''): void
+    {
+        require self::find_template('show_box_top.inc.php');
+    }
+
+    public static function show_custom_style(): void
+    {
+        if (AmpConfig::get('custom_login_background', false)) {
+            echo "<style> body { background-position: center; background-size: cover; background-image: url('" . AmpConfig::get('custom_login_background') . "') !important; }</style>";
+        }
+
+        if (AmpConfig::get('custom_login_logo', false)) {
+            echo "<style>#loginPage #headerlogo, #registerPage #logo { background-image: url('" . AmpConfig::get('custom_login_logo') . "') !important; }</style>";
+        }
+
+        $favicon = AmpConfig::get('custom_favicon', false) ?: AmpConfig::get_web_path() . "/favicon.ico";
+        echo '<link rel="icon" href="' . $favicon . "\">\n";
+    }
+
+    /**
+     * show_footer
+     *
+     * Shows the footer template and possibly profiling info.
+     */
+    public static function show_footer(): void
+    {
+        if (!defined("TABLE_RENDERED")) {
+            show_table_render();
+        }
+
+        $user = Core::get_global('user');
+        if ($user instanceof User) {
+            $plugins = Plugin::get_plugins(PluginTypeEnum::FOOTER_WIDGET);
+            foreach ($plugins as $plugin_name) {
+                $plugin = new Plugin($plugin_name);
+                if ($plugin->_plugin instanceof PluginDisplayOnFooterInterface && $plugin->load($user)) {
+                    $plugin->_plugin->display_on_footer();
+                }
+            }
+        }
+
+        require_once self::find_template('footer.inc.php');
+        if (Core::get_request('profiling') !== '') {
+            Dba::show_profile();
+        }
+    }
+
+    /**
+     * unformat_bytes
+     *
+     * Parses a human-readable size
+     * @noinspection PhpMissingBreakStatementInspection
+     */
+    public static function unformat_bytes(int|string $value): string
+    {
+        if (preg_match('/^(\d+) *([[:alpha:]]+)$/', (string) $value, $matches)) {
+            $value = (int) $matches[1];
+            $unit  = strtolower(substr($matches[2], 0, 1));
+        } else {
+            return (string) $value;
+        }
+
+        switch ($unit) {
+            case 'p':
+                $value *= 1024;
+                // Intentional break fall-through
+            case 't':
+                $value *= 1024;
+                // Intentional break fall-through
+            case 'g':
+                $value *= 1024;
+                // Intentional break fall-through
+            case 'm':
+                $value *= 1024;
+                // Intentional break fall-through
+            case 'k':
+                $value *= 1024;
+        }
+
+        return (string) $value;
+    }
+
+    /**
+     * update_text
+     *
+     * Convenience function that, if the output is going to a browser,
+     * blarfs JS to do a fancy update. Otherwise it just outputs the text.
+     */
+    public static function update_text(string $field, int|string $value): void
+    {
+        if (defined('API')) {
+            return;
+        }
+
+        if (defined('CLI')) {
+            echo $value . "\n";
+
+            return;
+        }
+
+        static $update_id = 1;
+
+        if (defined('SSE_OUTPUT')) {
+            echo "id: " . $update_id . "\n";
+            echo "data: displayNotification('" . json_encode($value) . "', 5000)\n\n";
+        } elseif ($field !== '' && $field !== '0') {
+            echo "<script>updateText('" . $field . "', '" . json_encode($value) . "');</script>\n";
+        } else {
+            echo "<br />" . $value . "<br /><br />\n";
+        }
+
+        ob_flush();
+        flush();
+        $update_id++;
     }
 
     /**
@@ -453,61 +613,6 @@ class Ui implements UiInterface
     }
 
     /**
-     * get_image
-     *
-     * Returns an <img> or <svg> tag for the specified image
-     */
-    public static function get_image(string $name, ?string $title = null, ?string $id_attrib = null, ?string $class_attrib = null): string
-    {
-        $title ??= ucfirst($name);
-        $image_url = self::_find_image($name);
-        $imagetype = pathinfo($image_url, PATHINFO_EXTENSION);
-        $tag       = '';
-        if ($imagetype == 'svg') {
-            // load svg file
-            $svgimage = simplexml_load_file($image_url);
-            if ($svgimage !== false) {
-                if (empty($svgimage->title)) {
-                    $svgimage->addChild('title', $title);
-                } else {
-                    $svgimage->title = $title;
-                }
-
-                if (empty($svgimage->desc)) {
-                    $svgimage->addChild('desc', $title);
-                } else {
-                    $svgimage->desc = $title;
-                }
-
-                if (!in_array($id_attrib, [null, '', '0'], true)) {
-                    $svgimage->addAttribute('id', $id_attrib);
-                }
-
-                $class_attrib ??= 'image image-' . $name;
-                $svgimage->addAttribute('class', $class_attrib);
-
-                $tag = explode("\n", (string)$svgimage->asXML(), 2)[1];
-            }
-        } else {
-            // fall back to png
-            $tag = '<img src="' . $image_url . '" ';
-            $tag .= 'alt="' . $title . '" ';
-            $tag .= 'title="' . $title . '" ';
-            if ($id_attrib !== null) {
-                $tag .= 'id="' . $id_attrib . '" ';
-            }
-
-            if ($class_attrib !== null) {
-                $tag .= 'class="' . $class_attrib . '" ';
-            }
-
-            $tag .= '/>';
-        }
-
-        return $tag;
-    }
-
-    /**
      * _find_image
      *
      * Does the finding image thing. match svg first over png
@@ -549,8 +654,8 @@ class Ui implements UiInterface
         }
 
         if (
-            $filesearch &&
-            pathinfo($filename, PATHINFO_EXTENSION) === 'svg'
+            $filesearch
+            && pathinfo($filename, PATHINFO_EXTENSION) === 'svg'
         ) {
             $url = $filesearch[0];
         } else {
@@ -564,230 +669,14 @@ class Ui implements UiInterface
     }
 
     /**
-     * Show the requested template file
+     * Displays the default error page
      */
-    public function show(string $template, array $context = []): void
+    public function accessDenied(string $error = 'Access Denied'): void
     {
-        extract($context);
-
-        require_once self::find_template($template);
-    }
-
-    public function showFooter(): void
-    {
-        static::show_footer();
-    }
-
-    public function showHeader(): void
-    {
-        require_once self::find_template('header.inc.php');
-    }
-
-    /**
-     * show_footer
-     *
-     * Shows the footer template and possibly profiling info.
-     */
-    public static function show_footer(): void
-    {
-        if (!defined("TABLE_RENDERED")) {
-            show_table_render();
-        }
-
-        $user = Core::get_global('user');
-        if ($user instanceof User) {
-            $plugins = Plugin::get_plugins(PluginTypeEnum::FOOTER_WIDGET);
-            foreach ($plugins as $plugin_name) {
-                $plugin = new Plugin($plugin_name);
-                if ($plugin->_plugin instanceof PluginDisplayOnFooterInterface && $plugin->load($user)) {
-                    $plugin->_plugin->display_on_footer();
-                }
-            }
-        }
-
-        require_once self::find_template('footer.inc.php');
-        if (Core::get_request('profiling') !== '') {
-            Dba::show_profile();
-        }
-    }
-
-    public function showBoxTop(string $title = '', string $class = ''): void
-    {
-        static::show_box_top($title, $class);
-    }
-
-    public function showBoxBottom(): void
-    {
-        static::show_box_bottom();
-    }
-
-    /**
-     * show_box_top
-     *
-     * This shows the top of the box.
-     */
-    public static function show_box_top(string $title = '', string $class = ''): void
-    {
-        require self::find_template('show_box_top.inc.php');
-    }
-
-    /**
-     * show_box_bottom
-     *
-     * This shows the bottom of the box
-     */
-    public static function show_box_bottom(): void
-    {
-        require self::find_template('show_box_bottom.inc.php');
-    }
-
-    /**
-     * This shows the query stats
-     */
-    public function showQueryStats(): void
-    {
-        require self::find_template('show_query_stats.inc.php');
-    }
-
-    public static function show_custom_style(): void
-    {
-        if (AmpConfig::get('custom_login_background', false)) {
-            echo "<style> body { background-position: center; background-size: cover; background-image: url('" . AmpConfig::get('custom_login_background') . "') !important; }</style>";
-        }
-
-        if (AmpConfig::get('custom_login_logo', false)) {
-            echo "<style>#loginPage #headerlogo, #registerPage #logo { background-image: url('" . AmpConfig::get('custom_login_logo') . "') !important; }</style>";
-        }
-
-        $favicon = AmpConfig::get('custom_favicon', false) ?: AmpConfig::get_web_path() . "/favicon.ico";
-        echo '<link rel="icon" href="' . $favicon . "\">\n";
-    }
-
-    /**
-     * update_text
-     *
-     * Convenience function that, if the output is going to a browser,
-     * blarfs JS to do a fancy update. Otherwise it just outputs the text.
-     */
-    public static function update_text(string $field, int|string $value): void
-    {
-        if (defined('API')) {
-            return;
-        }
-
-        if (defined('CLI')) {
-            echo $value . "\n";
-
-            return;
-        }
-
-        static $update_id = 1;
-
-        if (defined('SSE_OUTPUT')) {
-            echo "id: " . $update_id . "\n";
-            echo "data: displayNotification('" . json_encode($value) . "', 5000)\n\n";
-        } elseif ($field !== '' && $field !== '0') {
-            echo "<script>updateText('" . $field . "', '" . json_encode($value) . "');</script>\n";
-        } else {
-            echo "<br />" . $value . "<br /><br />\n";
-        }
-
-        ob_flush();
-        flush();
-        $update_id++;
-    }
-
-    /**
-     * get_logo_url
-     *
-     * Get the custom logo or logo relating to your theme color
-     */
-    public static function get_logo_url(?string $color = null): string
-    {
-        if (AmpConfig::get('custom_logo')) {
-            return AmpConfig::get('custom_logo');
-        }
-
-        if ($color !== null) {
-            return AmpConfig::get_web_path() . AmpConfig::get('theme_path', '/themes/reborn') . '/images/ampache-' . $color . '.png';
-        }
-
-        return AmpConfig::get_web_path() . AmpConfig::get('theme_path', '/themes/reborn') . '/images/ampache-' . AmpConfig::get('theme_color', 'dark') . '.png';
-    }
-
-    /**
-     * is_grid_view
-     */
-    public static function is_grid_view(string $type): bool
-    {
-        $name = 'browse_' . $type . '_grid_view';
-        if (isset($_COOKIE[$name])) {
-            return ($_COOKIE[$name] == 'true');
-        }
-
-        return false;
-    }
-
-    /**
-     * shows a confirmation of an action
-     */
-    public function showConfirmation(
-        string $title,
-        string $text,
-        string $next_url,
-        ?int $cancel = 0,
-        ?string $form_name = 'confirmation',
-        ?bool $visible = true,
-    ): void {
-        $webPath = $this->configContainer->getWebPath();
-        $path    = substr_count($next_url, $webPath) !== 0 ? $next_url : sprintf('%s/%s', $webPath, $next_url);
-
-        $this->show(
-            'show_confirmation.inc.php',
-            [
-                'title' => $title,
-                'text' => $text,
-                'path' => $path,
-                'form_name' => $form_name,
-                'cancel' => $cancel
-            ]
-        );
-    }
-
-    /**
-     * shows a simple continue button after an action
-     */
-    public function showContinue(
-        string $title,
-        string $text,
-        string $next_url,
-    ): void {
-        $webPath = $this->configContainer->getWebPath();
-
-        $path = substr_count($next_url, $webPath) !== 0 ? $next_url : sprintf('%s/%s', $webPath, $next_url);
-
-        $this->show(
-            'show_continue.inc.php',
-            [
-                'title' => $title,
-                'text' => $text,
-                'path' => $path
-            ]
-        );
-    }
-
-    /**
-     * This function is used to escape user data that is getting redisplayed
-     * onto the page, it htmlentities the mojo
-     * This is the inverse of the scrub_in function
-     */
-    public function scrubOut(?string $string): string
-    {
-        if ($string === null) {
-            return '';
-        }
-
-        return htmlentities($string, ENT_QUOTES, AmpConfig::get('site_charset', 'UTF-8'));
+        // Clear any buffered crap
+        ob_end_clean();
+        header('HTTP/1.1 403 ' . $error);
+        require_once self::find_template('show_denied.inc.php');
     }
 
     /**
@@ -903,6 +792,7 @@ class Ui implements UiInterface
             case 'show_artist':
             case 'show_donate':
             case 'show_header_login':
+            case 'show_folder':
             case 'show_license':
             case 'show_lyrics':
             case 'show_original_year':
@@ -1045,7 +935,6 @@ class Ui implements UiInterface
                     echo sprintf('	<option value="%s" ', $lang) . $selected . ">{$tongue}</option>\n";
                 }
 
-                // end foreach
                 echo "</select>\n";
                 break;
             case 'localplay_controller':
@@ -1065,7 +954,6 @@ class Ui implements UiInterface
                     echo "\t<option value=\"" . $controller . sprintf('" %s>', $is_selected) . ucfirst($controller) . "</option>\n";
                 }
 
-                // end foreach
                 echo "</select>\n";
                 break;
             case 'api_force_version':
@@ -1364,7 +1252,7 @@ class Ui implements UiInterface
                 $plugin      = new Plugin($plugin_name);
                 if ($plugin->_plugin instanceof Ampachelibrefm || $plugin->_plugin instanceof AmpacheLastfm) {
                     $url      = $plugin->_plugin->url;
-                    $api_key  = rawurlencode((string)$plugin->_plugin->api_key);
+                    $api_key  = rawurlencode((string) $plugin->_plugin->api_key);
                     $callback = rawurlencode(AmpConfig::get_web_path() . '/preferences.php?tab=plugins&action=grant&plugin=' . $plugin_name);
                     /* HINT: Plugin Name */
                     echo sprintf('<a href="%s/api/auth/?api_key=%s&cb=%s" target="_blank">', $url, $api_key, $callback) . self::get_material_symbol('extension', sprintf(T_("Click to grant %s access to Ampache"), $plugin_name)) . '</a>';
@@ -1406,17 +1294,155 @@ class Ui implements UiInterface
             case 'stream_control_hits_days':
             case 'stream_control_time_max':
             case 'stream_control_time_days':
-                echo '<input type="number" name="' . $name . '" value="' . (int)$value . '" />';
+                echo '<input type="number" name="' . $name . '" value="' . (int) $value . '" />';
                 break;
             default:
                 if (str_ends_with($name, '_pass')) {
                     echo '<input type="password" name="' . $name . '" value="******" />';
                 } else {
-                    echo '<input type="text" name="' . $name . '" value="' . strip_tags((string)$value) . '" />';
+                    echo '<input type="text" name="' . $name . '" value="' . strip_tags((string) $value) . '" />';
                 }
 
                 break;
         }
+    }
+
+    /**
+     * Displays an error page when you can't write the config
+     */
+    public function permissionDenied(string $fileName): void
+    {
+        // Clear any buffered crap
+        ob_end_clean();
+        header("HTTP/1.1 403 Permission Denied");
+        require_once self::find_template('show_denied_permission.inc.php');
+    }
+
+    /**
+     * This function is used to escape user data that is getting redisplayed
+     * onto the page, it htmlentities the mojo
+     * This is the inverse of the scrub_in function
+     */
+    public function scrubOut(?string $string): string
+    {
+        if ($string === null) {
+            return '';
+        }
+
+        return htmlentities($string, ENT_QUOTES, AmpConfig::get('site_charset', 'UTF-8'));
+    }
+
+    /**
+     * Show the requested template file
+     */
+    public function show(string $template, array $context = []): void
+    {
+        extract($context);
+
+        require_once self::find_template($template);
+    }
+
+    public function showBoxBottom(): void
+    {
+        static::show_box_bottom();
+    }
+
+    public function showBoxTop(string $title = '', string $class = ''): void
+    {
+        static::show_box_top($title, $class);
+    }
+
+    /**
+     * shows a confirmation of an action
+     */
+    public function showConfirmation(
+        string $title,
+        string $text,
+        string $next_url,
+        ?int $cancel = 0,
+        ?string $form_name = 'confirmation',
+        ?bool $visible = true,
+    ): void {
+        $webPath = $this->configContainer->getWebPath();
+        $path    = substr_count($next_url, $webPath) !== 0 ? $next_url : sprintf('%s/%s', $webPath, $next_url);
+
+        $this->show(
+            'show_confirmation.inc.php',
+            [
+                'title' => $title,
+                'text' => $text,
+                'path' => $path,
+                'form_name' => $form_name,
+                'cancel' => $cancel
+            ]
+        );
+    }
+
+    /**
+     * shows a confirmation of an action
+     */
+    public function showConfirmationWithReturn(
+        string $title,
+        string $text,
+        string $return_url,
+        string $cancel_url,
+        ?string $form_name = 'confirmation',
+        ?bool $visible = true,
+    ): void {
+        $webPath = $this->configContainer->getWebPath();
+        $return  = (substr_count($return_url, $webPath) !== 0) ? $return_url : sprintf('%s/%s', $webPath, $return_url);
+        $cancel  = (substr_count($cancel_url, $webPath) !== 0) ? $cancel_url : sprintf('%s/%s', $webPath, $cancel_url);
+
+        $this->show(
+            'show_confirmation_with_return.inc.php',
+            [
+                'title' => $title,
+                'text' => $text,
+                'form_name' => $form_name,
+                'return' => $return,
+                'cancel' => $cancel,
+            ]
+        );
+    }
+
+    /**
+     * shows a simple continue button after an action
+     */
+    public function showContinue(
+        string $title,
+        string $text,
+        string $next_url,
+    ): void {
+        $webPath = $this->configContainer->getWebPath();
+
+        $path = substr_count($next_url, $webPath) !== 0 ? $next_url : sprintf('%s/%s', $webPath, $next_url);
+
+        $this->show(
+            'show_continue.inc.php',
+            [
+                'title' => $title,
+                'text' => $text,
+                'path' => $path
+            ]
+        );
+    }
+
+    public function showFooter(): void
+    {
+        static::show_footer();
+    }
+
+    public function showHeader(): void
+    {
+        require_once self::find_template('header.inc.php');
+    }
+
+    public function showObjectNotFound(): void
+    {
+        $this->showHeader();
+        echo T_('You have requested an object that does not exist');
+        $this->showQueryStats();
+        $this->showFooter();
     }
 
     /**
@@ -1436,12 +1462,11 @@ class Ui implements UiInterface
     }
 
     /**
-     * This function takes a boolean value and then prints out a friendly text
-     * message.
+     * This shows the query stats
      */
-    public static function printBool(?bool $value = false): string
+    public function showQueryStats(): void
     {
-        return $value ? '<span class="item_on">' . T_('On') . '</span>' : '<span class="item_off">' . T_('Off') . '</span>';
+        require self::find_template('show_query_stats.inc.php');
     }
 
     /**

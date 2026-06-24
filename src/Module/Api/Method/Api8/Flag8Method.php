@@ -49,7 +49,7 @@ final class Flag8Method
      * Setting flag to true (1) will set the flag
      * Setting flag to false (0) will remove the flag
      *
-     * id   = (string) $object_id
+     * id = (string) $object_id
      * type = (string) 'song', 'album', 'artist', 'playlist', 'podcast', 'podcast_episode', 'video' $type
      * flag = (integer) 0,1 $flag
      * date = (integer) UNIXTIME() //optional
@@ -81,10 +81,10 @@ final class Flag8Method
         $type      = (string) $input['type'];
         $object_id = (int) $input['filter'];
         $flag      = make_bool($input['flag']);
-        $date      = (int)($input['date'] ?? time());
+        $date      = (int) ($input['date'] ?? time());
 
         // confirm the correct data
-        if (!in_array(strtolower($type), ['song', 'album', 'artist', 'playlist', 'podcast', 'podcast_episode', 'video'])) {
+        if (!Userflag::is_valid(strtolower($type))) {
             Api::error(sprintf('Bad Request: %s', $type), ErrorCodeEnum::BAD_REQUEST, self::ACTION, 'type', $input['api_format']);
 
             return false;
@@ -92,11 +92,11 @@ final class Flag8Method
 
         // searches are playlists but not in the database
         if (
-            $type === 'playlist' &&
-            $object_id === 0
+            $type === 'playlist'
+            && $object_id === 0
         ) {
             $type      = 'search';
-            $object_id = (int) str_replace('smart_', '', (string)$input['filter']);
+            $object_id = (int) str_replace('smart_', '', (string) $input['filter']);
         }
 
         $className = ObjectTypeToClassNameMapper::map($type);

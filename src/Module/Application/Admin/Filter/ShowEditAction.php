@@ -38,8 +38,7 @@ final class ShowEditAction extends AbstractFilterAction
     public function __construct(
         private readonly UiInterface $ui,
         private readonly ConfigContainerInterface $configContainer,
-    ) {
-    }
+    ) {}
 
     protected function handle(ServerRequestInterface $request): ?ResponseInterface
     {

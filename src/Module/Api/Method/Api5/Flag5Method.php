@@ -49,7 +49,7 @@ final class Flag5Method
      * Setting flag to false (0) will remove the flag
      *
      * type = (string) 'song', 'album', 'artist', 'playlist', 'podcast', 'podcast_episode', 'video' $type
-     * id   = (integer) $object_id
+     * id = (integer) $object_id
      * flag = (integer) 0,1 $flag
      *
      * @param array{
@@ -76,7 +76,7 @@ final class Flag5Method
         $object_id = (int) $input['id'];
         $flag      = make_bool($input['flag']);
         // confirm the correct data
-        if (!in_array(strtolower($type), ['song', 'album', 'artist', 'playlist', 'podcast', 'podcast_episode', 'video'])) {
+        if (!Userflag::is_valid(strtolower($type))) {
             Api5::error(sprintf(T_('Bad Request: %s'), $type), ErrorCodeEnum::BAD_REQUEST, self::ACTION, 'type', $input['api_format']);
 
             return false;

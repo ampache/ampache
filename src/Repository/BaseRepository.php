@@ -37,16 +37,20 @@ abstract class BaseRepository
     protected DatabaseConnectionInterface $connection;
 
     /**
-     * @return class-string<TModel>
+     * This function deletes the items entry
+     *
+     * @param TModel $record
      */
-    abstract protected function getModelClass(): string;
-
-    abstract protected function getTableName(): string;
-
-    /**
-     * @return list<mixed>
-     */
-    abstract protected function getPrototypeParameters(): array;
+    public function delete(object $record): void
+    {
+        $this->connection->query(
+            sprintf(
+                'DELETE FROM `%s` WHERE `id` = ?',
+                $this->getTableName()
+            ),
+            [$record->getId()]
+        );
+    }
 
     /**
      * Retrieve a single item by its id
@@ -73,22 +77,6 @@ abstract class BaseRepository
     }
 
     /**
-     * This function deletes the items entry
-     *
-     * @param TModel $record
-     */
-    public function delete(object $record): void
-    {
-        $this->connection->query(
-            sprintf(
-                'DELETE FROM `%s` WHERE `id` = ?',
-                $this->getTableName()
-            ),
-            [$record->getId()]
-        );
-    }
-
-    /**
      * Returns a new item
      *
      * @return TModel
@@ -99,4 +87,16 @@ abstract class BaseRepository
 
         return new $className(...$this->getPrototypeParameters());
     }
+
+    /**
+     * @return class-string<TModel>
+     */
+    abstract protected function getModelClass(): string;
+
+    /**
+     * @return list<mixed>
+     */
+    abstract protected function getPrototypeParameters(): array;
+
+    abstract protected function getTableName(): string;
 }

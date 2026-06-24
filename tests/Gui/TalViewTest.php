@@ -36,30 +36,10 @@ use PhpTal\TranslationServiceInterface;
 
 class TalViewTest extends MockeryTestCase
 {
-    /** @var MockInterface|TalFactoryInterface|null */
-    private MockInterface $talFactory;
-
-    /** @var MockInterface|ConfigContainerInterface|null */
-    private MockInterface $configContainer;
-
-    /** @var MockInterface|GuiFactoryInterface|null */
-    private MockInterface $guiFactory;
-
+    private MockInterface|ConfigContainerInterface|null $configContainer;
+    private MockInterface|GuiFactoryInterface|null $guiFactory;
     private TalView $subject;
-
-    #[Override]
-    protected function setUp(): void
-    {
-        $this->talFactory      = $this->mock(TalFactoryInterface::class);
-        $this->configContainer = $this->mock(ConfigContainerInterface::class);
-        $this->guiFactory      = $this->mock(GuiFactoryInterface::class);
-
-        $this->subject = new TalView(
-            $this->talFactory,
-            $this->configContainer,
-            $this->guiFactory
-        );
-    }
+    private MockInterface|TalFactoryInterface|null $talFactory;
 
     public function testRenderRenders(): void
     {
@@ -131,6 +111,20 @@ class TalViewTest extends MockeryTestCase
             $this->subject->setTemplate($templateFile)
                 ->setContext($contextKey, $context)
                 ->render()
+        );
+    }
+
+    #[Override]
+    protected function setUp(): void
+    {
+        $this->talFactory      = $this->mock(TalFactoryInterface::class);
+        $this->configContainer = $this->mock(ConfigContainerInterface::class);
+        $this->guiFactory      = $this->mock(GuiFactoryInterface::class);
+
+        $this->subject = new TalView(
+            $this->talFactory,
+            $this->configContainer,
+            $this->guiFactory
         );
     }
 }

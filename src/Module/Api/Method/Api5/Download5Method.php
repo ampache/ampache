@@ -46,8 +46,8 @@ final class Download5Method
      *
      * Downloads a given media file. set format=raw to download the full file
      *
-     * id     = (string) $song_id| $podcast_episode_id
-     * type   = (string) 'song', 'podcast_episode', 'search', 'playlist'
+     * id = (string) $song_id| $podcast_episode_id
+     * type = (string) 'song', 'podcast_episode', 'search', 'playlist'
      * format = (string) 'mp3', 'ogg', etc //optional
      *
      * @param array{

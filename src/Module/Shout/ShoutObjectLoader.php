@@ -43,8 +43,7 @@ final readonly class ShoutObjectLoader implements ShoutObjectLoaderInterface
 {
     public function __construct(
         private LibraryItemLoaderInterface $libraryItemLoader,
-    ) {
-    }
+    ) {}
 
     /**
      * Loads a library item by its type and id and check if it may be used

@@ -27,7 +27,7 @@ namespace Ampache\Module\Util;
 
 interface AjaxUriRetrieverInterface
 {
-    public function getAjaxUri(): string;
-
     public function getAjaxServerUri(): string;
+
+    public function getAjaxUri(): string;
 }

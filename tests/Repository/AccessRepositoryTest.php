@@ -38,69 +38,86 @@ use PHPUnit\Framework\TestCase;
 class AccessRepositoryTest extends TestCase
 {
     private DatabaseConnectionInterface&MockObject $connection;
-
     private ModelFactoryInterface&MockObject $modelFactory;
-
     private AccessRepository $subject;
 
-    protected function setUp(): void
+    public function testCreateCreatesItem(): void
     {
-        $this->connection   = $this->createMock(DatabaseConnectionInterface::class);
-        $this->modelFactory = $this->createMock(ModelFactoryInterface::class);
-
-        $this->subject = new AccessRepository(
-            $this->connection,
-            $this->modelFactory,
-        );
-    }
-
-    public function testGetAccessListYieldsData(): void
-    {
-        $accessId = 666;
-
-        $accessItem = $this->createMock(Access::class);
-        $result     = $this->createMock(PDOStatement::class);
-
-        $this->modelFactory->expects(static::once())
-            ->method('createAccess')
-            ->with($accessId)
-            ->willReturn($accessItem);
+        $inAddrStart = 'some-ip-start';
+        $inAddrEnd   = 'some-ip-end';
+        $userId      = 666;
+        $name        = 'some-name';
+        $level       = AccessLevelEnum::USER;
+        $type        = AccessTypeEnum::STREAM;
 
         $this->connection->expects(static::once())
             ->method('query')
-            ->with('SELECT `id` FROM `access_list`')
-            ->willReturn($result);
+            ->with(
+                'INSERT INTO `access_list` (`name`, `level`, `start`, `end`, `user`, `type`) VALUES (?, ?, ?, ?, ?, ?)',
+                [$name, $level->value, $inAddrStart, $inAddrEnd, $userId, $type->value]
+            );
 
-        $result->expects(static::exactly(2))
-            ->method('fetchColumn')
-            ->willReturn((string) $accessId, false);
-
-        self::assertSame(
-            [$accessItem],
-            iterator_to_array($this->subject->getAccessLists())
+        $this->subject->create(
+            $inAddrStart,
+            $inAddrEnd,
+            $name,
+            $userId,
+            $level,
+            $type
         );
     }
 
-    public function testFindByIpReturnsTrueIfEntryForUserExists(): void
+    public function testDeleteDeletesAccessItem(): void
     {
-        $userIp = '1.2.3.4';
-        $level  = AccessLevelEnum::USER;
-        $type   = AccessTypeEnum::STREAM;
-        $userId = 666;
+        $accessId = 123;
+
+        $this->connection->expects(static::once())
+            ->method('query')
+            ->with(
+                'DELETE FROM `access_list` WHERE `id` = ?',
+                [$accessId]
+            );
+
+        $this->subject->delete($accessId);
+    }
+
+    public function testExistsReturnsTrueIfItemDoesNotExist(): void
+    {
+        $inAddrStart = 'some-ip-start';
+        $inAddrEnd   = 'some-ip-end';
+        $type        = AccessTypeEnum::STREAM;
+        $userId      = 666;
 
         $this->connection->expects(static::once())
             ->method('fetchOne')
             ->with(
-                sprintf(
-                    'SELECT COUNT(`id`) FROM `access_list` WHERE `start` <= ? AND `end` >= ? AND `level` >= ? AND `type` = ? AND `user` IN (?, %d)',
-                    User::INTERNAL_SYSTEM_USER_ID,
-                ),
-                [inet_pton($userIp), inet_pton($userIp), $level->value, $type->value, $userId]
+                'SELECT COUNT(`id`) FROM `access_list` WHERE `start` = ? AND `end` = ? AND `type` = ? AND `user` = ?',
+                [$inAddrStart, $inAddrEnd, $type->value, $userId]
+            )
+            ->willReturn(0);
+
+        self::assertFalse(
+            $this->subject->exists($inAddrStart, $inAddrEnd, $type, $userId)
+        );
+    }
+
+    public function testExistsReturnsTrueIfItemExists(): void
+    {
+        $inAddrStart = 'some-ip-start';
+        $inAddrEnd   = 'some-ip-end';
+        $userId      = 666;
+        $type        = AccessTypeEnum::STREAM;
+
+        $this->connection->expects(static::once())
+            ->method('fetchOne')
+            ->with(
+                'SELECT COUNT(`id`) FROM `access_list` WHERE `start` = ? AND `end` = ? AND `type` = ? AND `user` = ?',
+                [$inAddrStart, $inAddrEnd, $type->value, $userId]
             )
             ->willReturn(123);
 
         self::assertTrue(
-            $this->subject->findByIp($userIp, $level, $type, $userId)
+            $this->subject->exists($inAddrStart, $inAddrEnd, $type, $userId)
         );
     }
 
@@ -148,83 +165,53 @@ class AccessRepositoryTest extends TestCase
         );
     }
 
-    public function testDeleteDeletesAccessItem(): void
+    public function testFindByIpReturnsTrueIfEntryForUserExists(): void
     {
-        $accessId = 123;
-
-        $this->connection->expects(static::once())
-            ->method('query')
-            ->with(
-                'DELETE FROM `access_list` WHERE `id` = ?',
-                [$accessId]
-            );
-
-        $this->subject->delete($accessId);
-    }
-
-    public function testExistsReturnsTrueIfItemExists(): void
-    {
-        $inAddrStart = 'some-ip-start';
-        $inAddrEnd   = 'some-ip-end';
-        $userId      = 666;
-        $type        = AccessTypeEnum::STREAM;
+        $userIp = '1.2.3.4';
+        $level  = AccessLevelEnum::USER;
+        $type   = AccessTypeEnum::STREAM;
+        $userId = 666;
 
         $this->connection->expects(static::once())
             ->method('fetchOne')
             ->with(
-                'SELECT COUNT(`id`) FROM `access_list` WHERE `start` = ? AND `end` = ? AND `type` = ? AND `user` = ?',
-                [$inAddrStart, $inAddrEnd, $type->value, $userId]
+                sprintf(
+                    'SELECT COUNT(`id`) FROM `access_list` WHERE `start` <= ? AND `end` >= ? AND `level` >= ? AND `type` = ? AND `user` IN (?, %d)',
+                    User::INTERNAL_SYSTEM_USER_ID,
+                ),
+                [inet_pton($userIp), inet_pton($userIp), $level->value, $type->value, $userId]
             )
             ->willReturn(123);
 
         self::assertTrue(
-            $this->subject->exists($inAddrStart, $inAddrEnd, $type, $userId)
+            $this->subject->findByIp($userIp, $level, $type, $userId)
         );
     }
 
-    public function testExistsReturnsTrueIfItemDoesNotExist(): void
+    public function testGetAccessListYieldsData(): void
     {
-        $inAddrStart = 'some-ip-start';
-        $inAddrEnd   = 'some-ip-end';
-        $type        = AccessTypeEnum::STREAM;
-        $userId      = 666;
+        $accessId = 666;
 
-        $this->connection->expects(static::once())
-            ->method('fetchOne')
-            ->with(
-                'SELECT COUNT(`id`) FROM `access_list` WHERE `start` = ? AND `end` = ? AND `type` = ? AND `user` = ?',
-                [$inAddrStart, $inAddrEnd, $type->value, $userId]
-            )
-            ->willReturn(0);
+        $accessItem = $this->createMock(Access::class);
+        $result     = $this->createMock(PDOStatement::class);
 
-        self::assertFalse(
-            $this->subject->exists($inAddrStart, $inAddrEnd, $type, $userId)
-        );
-    }
-
-    public function testCreateCreatesItem(): void
-    {
-        $inAddrStart = 'some-ip-start';
-        $inAddrEnd   = 'some-ip-end';
-        $userId      = 666;
-        $name        = 'some-name';
-        $level       = AccessLevelEnum::USER;
-        $type        = AccessTypeEnum::STREAM;
+        $this->modelFactory->expects(static::once())
+            ->method('createAccess')
+            ->with($accessId)
+            ->willReturn($accessItem);
 
         $this->connection->expects(static::once())
             ->method('query')
-            ->with(
-                'INSERT INTO `access_list` (`name`, `level`, `start`, `end`, `user`, `type`) VALUES (?, ?, ?, ?, ?, ?)',
-                [$name, $level->value, $inAddrStart, $inAddrEnd, $userId, $type->value]
-            );
+            ->with('SELECT `id` FROM `access_list`')
+            ->willReturn($result);
 
-        $this->subject->create(
-            $inAddrStart,
-            $inAddrEnd,
-            $name,
-            $userId,
-            $level,
-            $type
+        $result->expects(static::exactly(2))
+            ->method('fetchColumn')
+            ->willReturn((string) $accessId, false);
+
+        self::assertSame(
+            [$accessItem],
+            iterator_to_array($this->subject->getAccessLists())
         );
     }
 
@@ -253,6 +240,17 @@ class AccessRepositoryTest extends TestCase
             $userId,
             $level,
             $type
+        );
+    }
+
+    protected function setUp(): void
+    {
+        $this->connection   = $this->createMock(DatabaseConnectionInterface::class);
+        $this->modelFactory = $this->createMock(ModelFactoryInterface::class);
+
+        $this->subject = new AccessRepository(
+            $this->connection,
+            $this->modelFactory,
         );
     }
 }

@@ -46,15 +46,14 @@ final readonly class ShowAction implements ApplicationActionInterface
         private ConfigContainerInterface $configContainer,
         private LoggerInterface $logger,
         private UiInterface $ui,
-    ) {
-    }
+    ) {}
 
     public function run(ServerRequestInterface $request, GuiGatekeeperInterface $gatekeeper): ?ResponseInterface
     {
         /* Check Perms */
         if (
-            $this->configContainer->isFeatureEnabled(ConfigurationKeyEnum::USE_NOW_PLAYING_EMBEDDED) === false ||
-            $this->configContainer->isFeatureEnabled(ConfigurationKeyEnum::DEMO_MODE)
+            $this->configContainer->isFeatureEnabled(ConfigurationKeyEnum::USE_NOW_PLAYING_EMBEDDED) === false
+            || $this->configContainer->isFeatureEnabled(ConfigurationKeyEnum::DEMO_MODE)
         ) {
             $this->logger->warning(
                 'Enable use_now_playing_embedded and disable demo mode for this feature',
@@ -113,7 +112,7 @@ final readonly class ShowAction implements ApplicationActionInterface
             $css,
             $refreshLimit
         );
-        $user_id = (int)$this->requestParser->getFromRequest('user_id');
+        $user_id = (int) $this->requestParser->getFromRequest('user_id');
         $results = Stream::get_now_playing($user_id);
 
         $this->ui->show(

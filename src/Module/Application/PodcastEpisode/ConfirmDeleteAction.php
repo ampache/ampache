@@ -51,8 +51,7 @@ final readonly class ConfirmDeleteAction implements ApplicationActionInterface
         private ModelFactoryInterface $modelFactory,
         private PodcastDeleterInterface $podcastDeleter,
         private LoggerInterface $logger,
-    ) {
-    }
+    ) {}
 
     public function run(ServerRequestInterface $request, GuiGatekeeperInterface $gatekeeper): ?ResponseInterface
     {
@@ -60,7 +59,7 @@ final readonly class ConfirmDeleteAction implements ApplicationActionInterface
             return null;
         }
 
-        $episode_id = (int)$this->requestParser->getFromRequest('podcast_id');
+        $episode_id = (int) $this->requestParser->getFromRequest('podcast_id');
         $episode    = $this->modelFactory->createPodcastEpisode($episode_id);
         if (!Catalog::can_remove($episode)) {
             $this->logger->warning(

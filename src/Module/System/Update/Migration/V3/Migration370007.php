@@ -36,17 +36,6 @@ final class Migration370007 extends AbstractMigration
 {
     protected array $changelog = ['Add DAAP backend preference'];
 
-    public function migrate(): void
-    {
-        $charset = (AmpConfig::get('database_charset', 'utf8mb4'));
-        $engine  = ($charset == 'utf8mb4') ? 'InnoDB' : 'MYISAM';
-
-        $this->updatePreferences('daap_backend', 'Use DAAP backend', '0', AccessLevelEnum::ADMIN->value, 'boolean', 'system');
-        $this->updatePreferences('daap_pass', 'DAAP backend password', '', AccessLevelEnum::ADMIN->value, 'string', 'system');
-
-        $this->updateDatabase("CREATE TABLE IF NOT EXISTS `daap_session` (`id` int(11) unsigned NOT NULL AUTO_INCREMENT, `creationdate` int(11) unsigned NOT NULL, PRIMARY KEY (`id`)) ENGINE=$engine;");
-    }
-
     public function getTableMigrations(
         string $collation,
         string $charset,
@@ -56,5 +45,16 @@ final class Migration370007 extends AbstractMigration
         if ($build > 370007) {
             yield 'daap_session' => "CREATE TABLE IF NOT EXISTS `daap_session` (`id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT, `creationdate` int(11) UNSIGNED NOT NULL, PRIMARY KEY (`id`)) ENGINE=$engine DEFAULT CHARSET=$charset COLLATE=$collation;";
         }
+    }
+
+    public function migrate(): void
+    {
+        $charset = (AmpConfig::get('database_charset', 'utf8mb4'));
+        $engine  = ($charset == 'utf8mb4') ? 'InnoDB' : 'MYISAM';
+
+        $this->updatePreferences('daap_backend', 'Use DAAP backend', '0', AccessLevelEnum::ADMIN->value, 'boolean', 'system');
+        $this->updatePreferences('daap_pass', 'DAAP backend password', '', AccessLevelEnum::ADMIN->value, 'string', 'system');
+
+        $this->updateDatabase("CREATE TABLE IF NOT EXISTS `daap_session` (`id` int(11) unsigned NOT NULL AUTO_INCREMENT, `creationdate` int(11) unsigned NOT NULL, PRIMARY KEY (`id`)) ENGINE=$engine;");
     }
 }

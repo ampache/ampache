@@ -38,9 +38,7 @@ final readonly class AdminAction implements ApplicationActionInterface
 {
     public const string REQUEST_KEY = 'admin';
 
-    public function __construct(private UiInterface $ui)
-    {
-    }
+    public function __construct(private UiInterface $ui) {}
 
     public function run(ServerRequestInterface $request, GuiGatekeeperInterface $gatekeeper): ?ResponseInterface
     {

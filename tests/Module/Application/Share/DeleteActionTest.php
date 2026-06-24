@@ -42,135 +42,13 @@ class DeleteActionTest extends TestCase
 {
     use ConsecutiveParams;
 
-    private RequestParserInterface&MockObject $requestParser;
-
     private ConfigContainerInterface&MockObject $configContainer;
-
-    private UiInterface&MockObject $ui;
-
-    private ShareRepositoryInterface&MockObject $shareRepository;
-
-    private DeleteAction $subject;
-
-    private ServerRequestInterface&MockObject $request;
-
     private GuiGatekeeperInterface&MockObject $gatekeeper;
-
-    protected function setUp(): void
-    {
-        $this->requestParser   = $this->createMock(RequestParserInterface::class);
-        $this->configContainer = $this->createMock(ConfigContainerInterface::class);
-        $this->ui              = $this->createMock(UiInterface::class);
-        $this->shareRepository = $this->createMock(ShareRepositoryInterface::class);
-
-        $this->subject = new DeleteAction(
-            $this->requestParser,
-            $this->configContainer,
-            $this->ui,
-            $this->shareRepository
-        );
-
-        $this->request    = $this->createMock(ServerRequestInterface::class);
-        $this->gatekeeper = $this->createMock(GuiGatekeeperInterface::class);
-    }
-
-    public function testRunThrowsIfSharingIsDisabled(): void
-    {
-        static::expectException(AccessDeniedException::class);
-        static::expectExceptionMessage('Access Denied: sharing features are not enabled.');
-
-        $this->configContainer->expects(static::once())
-            ->method('isFeatureEnabled')
-            ->with(ConfigurationKeyEnum::SHARE)
-            ->willReturn(false);
-
-        $this->subject->run($this->request, $this->gatekeeper);
-    }
-
-    public function testRunThrowsOnDemoMode(): void
-    {
-        static::expectException(AccessDeniedException::class);
-
-        $this->configContainer->expects(static::exactly(2))
-            ->method('isFeatureEnabled')
-            ->with(...self::withConsecutive(
-                [ConfigurationKeyEnum::SHARE],
-                [ConfigurationKeyEnum::DEMO_MODE]
-            ))
-            ->willReturn(true);
-
-        $this->subject->run($this->request, $this->gatekeeper);
-    }
-
-    public function testRunThrowsIfItemWasNotFound(): void
-    {
-        static::expectException(AccessDeniedException::class);
-
-        $shareId = 666;
-
-        $this->configContainer->expects(static::exactly(2))
-            ->method('isFeatureEnabled')
-            ->with(...self::withConsecutive(
-                [ConfigurationKeyEnum::SHARE],
-                [ConfigurationKeyEnum::DEMO_MODE]
-            ))
-            ->willReturn(true, false);
-
-        $this->gatekeeper->expects(static::once())
-            ->method('getUser')
-            ->willReturn($this->createMock(User::class));
-
-        $this->requestParser->expects(static::once())
-            ->method('getFromRequest')
-            ->with('id')
-            ->willReturn((string) $shareId);
-
-        $this->shareRepository->expects(static::once())
-            ->method('findById')
-            ->with($shareId)
-            ->willReturn(null);
-
-        $this->subject->run($this->request, $this->gatekeeper);
-    }
-
-    public function testRunThrowsIfItemIsNotAccessible(): void
-    {
-        static::expectException(AccessDeniedException::class);
-
-        $shareId = 666;
-
-        $user  = $this->createMock(User::class);
-        $share = $this->createMock(Share::class);
-
-        $this->configContainer->expects(static::exactly(2))
-            ->method('isFeatureEnabled')
-            ->with(...self::withConsecutive(
-                [ConfigurationKeyEnum::SHARE],
-                [ConfigurationKeyEnum::DEMO_MODE]
-            ))
-            ->willReturn(true, false);
-
-        $this->gatekeeper->expects(static::once())
-            ->method('getUser')
-            ->willReturn($user);
-
-        $this->requestParser->expects(static::once())
-            ->method('getFromRequest')
-            ->with('id')
-            ->willReturn((string) $shareId);
-
-        $this->shareRepository->expects(static::once())
-            ->method('findById')
-            ->with($shareId)
-            ->willReturn($share);
-
-        $share->expects(static::once())
-            ->method('isAccessible')
-            ->with($user)
-            ->willReturn(false);
-
-        $this->subject->run($this->request, $this->gatekeeper);
-    }
+    private ServerRequestInterface&MockObject $request;
+    private RequestParserInterface&MockObject $requestParser;
+    private ShareRepositoryInterface&MockObject $shareRepository;
+    private DeleteAction $subject;
+    private UiInterface&MockObject $ui;
 
     public function testRunDeletes(): void
     {
@@ -226,5 +104,121 @@ class DeleteActionTest extends TestCase
             ->method('showFooter');
 
         $this->subject->run($this->request, $this->gatekeeper);
+    }
+
+    public function testRunThrowsIfItemIsNotAccessible(): void
+    {
+        static::expectException(AccessDeniedException::class);
+
+        $shareId = 666;
+
+        $user  = $this->createMock(User::class);
+        $share = $this->createMock(Share::class);
+
+        $this->configContainer->expects(static::exactly(2))
+            ->method('isFeatureEnabled')
+            ->with(...self::withConsecutive(
+                [ConfigurationKeyEnum::SHARE],
+                [ConfigurationKeyEnum::DEMO_MODE]
+            ))
+            ->willReturn(true, false);
+
+        $this->gatekeeper->expects(static::once())
+            ->method('getUser')
+            ->willReturn($user);
+
+        $this->requestParser->expects(static::once())
+            ->method('getFromRequest')
+            ->with('id')
+            ->willReturn((string) $shareId);
+
+        $this->shareRepository->expects(static::once())
+            ->method('findById')
+            ->with($shareId)
+            ->willReturn($share);
+
+        $share->expects(static::once())
+            ->method('isAccessible')
+            ->with($user)
+            ->willReturn(false);
+
+        $this->subject->run($this->request, $this->gatekeeper);
+    }
+
+    public function testRunThrowsIfItemWasNotFound(): void
+    {
+        static::expectException(AccessDeniedException::class);
+
+        $shareId = 666;
+
+        $this->configContainer->expects(static::exactly(2))
+            ->method('isFeatureEnabled')
+            ->with(...self::withConsecutive(
+                [ConfigurationKeyEnum::SHARE],
+                [ConfigurationKeyEnum::DEMO_MODE]
+            ))
+            ->willReturn(true, false);
+
+        $this->gatekeeper->expects(static::once())
+            ->method('getUser')
+            ->willReturn($this->createMock(User::class));
+
+        $this->requestParser->expects(static::once())
+            ->method('getFromRequest')
+            ->with('id')
+            ->willReturn((string) $shareId);
+
+        $this->shareRepository->expects(static::once())
+            ->method('findById')
+            ->with($shareId)
+            ->willReturn(null);
+
+        $this->subject->run($this->request, $this->gatekeeper);
+    }
+
+    public function testRunThrowsIfSharingIsDisabled(): void
+    {
+        static::expectException(AccessDeniedException::class);
+        static::expectExceptionMessage('Access Denied: sharing features are not enabled.');
+
+        $this->configContainer->expects(static::once())
+            ->method('isFeatureEnabled')
+            ->with(ConfigurationKeyEnum::SHARE)
+            ->willReturn(false);
+
+        $this->subject->run($this->request, $this->gatekeeper);
+    }
+
+    public function testRunThrowsOnDemoMode(): void
+    {
+        static::expectException(AccessDeniedException::class);
+
+        $this->configContainer->expects(static::exactly(2))
+            ->method('isFeatureEnabled')
+            ->with(...self::withConsecutive(
+                [ConfigurationKeyEnum::SHARE],
+                [ConfigurationKeyEnum::DEMO_MODE]
+            ))
+            ->willReturn(true);
+
+        $this->subject->run($this->request, $this->gatekeeper);
+    }
+
+    protected function setUp(): void
+    {
+        $this->requestParser   = $this->createMock(RequestParserInterface::class);
+        $this->configContainer = $this->createMock(ConfigContainerInterface::class);
+        $this->ui              = $this->createMock(UiInterface::class);
+        $this->shareRepository = $this->createMock(ShareRepositoryInterface::class);
+
+        $this->subject = new DeleteAction(
+            $this->requestParser,
+            $this->configContainer,
+            $this->ui,
+            $this->shareRepository
+        );
+
+        $this->request    = $this->createMock(ServerRequestInterface::class);
+        $this->gatekeeper = $this->createMock(GuiGatekeeperInterface::class);
     }
 }

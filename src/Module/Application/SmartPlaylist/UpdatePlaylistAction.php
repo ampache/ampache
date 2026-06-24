@@ -40,8 +40,7 @@ final readonly class UpdatePlaylistAction implements ApplicationActionInterface
     public function __construct(
         private UiInterface $ui,
         private ModelFactoryInterface $modelFactory,
-    ) {
-    }
+    ) {}
 
     public function run(ServerRequestInterface $request, GuiGatekeeperInterface $gatekeeper): ?ResponseInterface
     {
@@ -51,8 +50,8 @@ final readonly class UpdatePlaylistAction implements ApplicationActionInterface
 
         $data = $request->getParsedBody();
         if (
-            is_array($data) &&
-            $playlist->has_access()
+            is_array($data)
+            && $playlist->has_access()
         ) {
             $playlist->set_rules($data);
             $playlist->update($data);

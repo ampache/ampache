@@ -34,16 +34,16 @@ use Traversable;
 interface LicenseRepositoryInterface extends BaseRepositoryInterface
 {
     /**
+     * Searches for the License by name and external link
+     */
+    public function find(string $searchValue): ?int;
+
+    /**
      * Returns a list of licenses accessible by the current user.
      *
      * @return Traversable<int, string>
      */
     public function getList(bool $show_hidden = true): Traversable;
-
-    /**
-     * Searches for the License by name and external link
-     */
-    public function find(string $searchValue): ?int;
 
     /**
      * Persists the item in the database

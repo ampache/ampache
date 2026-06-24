@@ -23,6 +23,8 @@ declare(strict_types=0);
  *
  */
 
+// show_playtype_switch.inc.php
+
 use Ampache\Config\AmpConfig;
 use Ampache\Module\Api\Ajax;
 use Ampache\Repository\Model\Preference;

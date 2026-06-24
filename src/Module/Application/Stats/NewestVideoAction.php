@@ -45,8 +45,7 @@ final readonly class NewestVideoAction implements ApplicationActionInterface
         private ModelFactoryInterface $modelFactory,
         private ConfigContainerInterface $configContainer,
         private VideoRepositoryInterface $videoRepository,
-    ) {
-    }
+    ) {}
 
     public function run(ServerRequestInterface $request, GuiGatekeeperInterface $gatekeeper): ?ResponseInterface
     {
@@ -61,8 +60,8 @@ final readonly class NewestVideoAction implements ApplicationActionInterface
         define('NO_BROWSE_SORTING', true);
 
         if (
-            $this->configContainer->isFeatureEnabled(ConfigurationKeyEnum::ALLOW_VIDEO) &&
-            $this->videoRepository->getItemCount()
+            $this->configContainer->isFeatureEnabled(ConfigurationKeyEnum::ALLOW_VIDEO)
+            && $this->videoRepository->getItemCount()
         ) {
             $objects = Stats::get_newest('video', -1, 0, 0, $gatekeeper->getUser());
             $browse  = $this->modelFactory->createBrowse();

@@ -23,6 +23,8 @@ declare(strict_types=0);
  *
  */
 
+// javascript_refresh.inc.php
+
 use Ampache\Module\Api\Ajax;
 
 /** @var int $refresh_limit */

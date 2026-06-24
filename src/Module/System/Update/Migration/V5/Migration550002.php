@@ -60,7 +60,7 @@ final class Migration550002 extends AbstractMigration
             if (Dba::num_rows($db_results)) {
                 $sql = "INSERT IGNORE INTO `catalog_filter_group` (`name`) VALUES ('" . Dba::escape($value) . "');";
                 Dba::write($sql);
-                $group_id = (int)Dba::insert_id();
+                $group_id = (int) Dba::insert_id();
             }
             if ($group_id > 0) {
                 $sql        = "SELECT `id`, `filter_user` FROM `catalog`;";
@@ -81,7 +81,7 @@ final class Migration550002 extends AbstractMigration
         $sql        = "SELECT `id` FROM `catalog` WHERE `filter_user` = 0;";
         $db_results = Dba::read($sql);
         while ($row = Dba::fetch_assoc($db_results)) {
-            $catalog = (int)$row['id'];
+            $catalog = (int) $row['id'];
             $this->updateDatabase("INSERT IGNORE INTO `catalog_filter_group_map` (`group_id`, `catalog_id`, `enabled`) VALUES (0, $catalog, 1);");
         }
 

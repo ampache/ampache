@@ -40,32 +40,19 @@ class Access
 {
     protected const string DB_TABLENAME = 'access_list';
 
-    /** @var int $id */
-    public $id;
-
-    /** @var string $name */
-    public $name;
-
-    /** @var string $start */
-    public $start;
-
-    /** @var string $end */
-    public $end;
-
-    /** @var int $level */
-    public $level;
-
-    /** @var int $user */
-    public $user;
-
-    /** @var string $type */
-    public $type;
-
-    /** @var bool $enabled
+    /**
      *
      * @deprecated seems not to be in use
      */
-    public $enabled;
+    public ?bool $enabled = null;
+
+    public string $end;
+    public int $id     = 0;
+    public ?int $level = null;
+    public string $name;
+    public string $start;
+    public string $type;
+    public ?int $user = null;
 
     public function __construct(?int $access_id)
     {
@@ -78,7 +65,41 @@ class Access
             return;
         }
 
-        $this->id = (int)$access_id;
+        $this->id = (int) $access_id;
+    }
+
+    /**
+     * check
+     *
+     * This is the global 'has_access' function. it can check for any 'type'
+     * of object.
+     *
+     * Everything uses the global 0,5,25,50,75,100 stuff. GLOBALS['user'] is
+     * always used.
+     */
+    public static function check(AccessTypeEnum $type, AccessLevelEnum $level, ?int $user_id = null): bool
+    {
+        global $dic;
+
+        return $dic->get(PrivilegeCheckerInterface::class)->check(
+            $type,
+            $level,
+            $user_id
+        );
+    }
+
+    /**
+     * check_function
+     *
+     * This checks if specific functionality is enabled.
+     */
+    public static function check_function(AccessFunctionEnum $type): bool
+    {
+        global $dic;
+
+        return $dic->get(FunctionCheckerInterface::class)->check(
+            $type
+        );
     }
 
     /**
@@ -100,39 +121,5 @@ class Access
         }
 
         return true;
-    }
-
-    /**
-     * check_function
-     *
-     * This checks if specific functionality is enabled.
-     */
-    public static function check_function(AccessFunctionEnum $type): bool
-    {
-        global $dic;
-
-        return $dic->get(FunctionCheckerInterface::class)->check(
-            $type
-        );
-    }
-
-    /**
-     * check
-     *
-     * This is the global 'has_access' function. it can check for any 'type'
-     * of object.
-     *
-     * Everything uses the global 0,5,25,50,75,100 stuff. GLOBALS['user'] is
-     * always used.
-     */
-    public static function check(AccessTypeEnum $type, AccessLevelEnum $level, ?int $user_id = null): bool
-    {
-        global $dic;
-
-        return $dic->get(PrivilegeCheckerInterface::class)->check(
-            $type,
-            $level,
-            $user_id
-        );
     }
 }

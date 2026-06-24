@@ -23,6 +23,8 @@ declare(strict_types=0);
  *
  */
 
+// show_albums.inc.php
+
 use Ampache\Config\AmpConfig;
 use Ampache\Gui\GuiFactoryInterface;
 use Ampache\Gui\TalFactoryInterface;
@@ -47,7 +49,7 @@ $web_path = AmpConfig::get_web_path();
 $access25          = Access::check(AccessTypeEnum::INTERFACE, AccessLevelEnum::USER);
 $show_playlist_add = $access25;
 $show_direct_play  = AmpConfig::get('directplay');
-$directplay_limit  = AmpConfig::get('direct_play_limit', 0);
+$directplay_limit  = AmpConfig::get('direct_play_limit', 500);
 // album_row data and options
 $thcount           = 9;
 $show_ratings      = User::is_registered() && (AmpConfig::get('ratings'));
@@ -178,7 +180,7 @@ foreach ($object_ids as $album_id) {
                 <?php } ?>
             <th class="cel_action"><?php echo $action_text; ?></th>
         </tr>
-    <tfoot>
+    </tfoot>
 </table>
 
 <?php show_table_render(); ?>

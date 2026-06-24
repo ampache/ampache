@@ -23,6 +23,8 @@ declare(strict_types=0);
  *
  */
 
+// sidebar.inc.php
+
 use Ampache\Config\AmpConfig;
 use Ampache\Module\Api\Ajax;
 use Ampache\Module\Authorization\Access;
@@ -81,6 +83,7 @@ $t_popular         = T_('Popular');
 $t_topRated        = T_('Top Rated');
 $t_favorites       = T_('Favorites');
 $t_wanted          = T_('Wanted');
+$t_folders         = T_('Folders');
 $t_shares          = T_('Shares');
 $t_statistics      = T_('Statistics');
 $t_logout          = T_('Log out'); ?>

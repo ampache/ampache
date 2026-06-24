@@ -39,16 +39,6 @@ use Override;
 
 final class AdminUpdateDatabaseCommand extends Command
 {
-    #[Override]
-    protected function defaults(): self
-    {
-        $this->option('-h, --help', T_('Help'))->on($this->showHelp(...));
-
-        $this->onExit(static fn ($exitCode = 0) => exit($exitCode));
-
-        return $this;
-    }
-
     public function __construct(
         private readonly UpdateInfoRepositoryInterface $updateInfoRepository,
         private readonly UpdateHelperInterface $updateHelper,
@@ -97,7 +87,7 @@ final class AdminUpdateDatabaseCommand extends Command
 
         // check tables
         try {
-            $build   = (int)$this->updateInfoRepository->getValueByKey(UpdateInfoEnum::DB_VERSION);
+            $build   = (int) $this->updateInfoRepository->getValueByKey(UpdateInfoEnum::DB_VERSION);
             $missing = $this->updater->checkTables($execute, $build);
             if ($missing->valid()) {
                 $message = ($execute)
@@ -225,6 +215,16 @@ final class AdminUpdateDatabaseCommand extends Command
                 }
             }
         }
+    }
+
+    #[Override]
+    protected function defaults(): self
+    {
+        $this->option('-h, --help', T_('Help'))->on($this->showHelp(...));
+
+        $this->onExit(static fn($exitCode = 0) => exit($exitCode));
+
+        return $this;
     }
 
     private function retrieveVersion(): string

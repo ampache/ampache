@@ -34,15 +34,28 @@ use PHPUnit\Framework\TestCase;
 class SongRepositoryTest extends TestCase
 {
     private DatabaseConnectionInterface&MockObject $connection;
-
     private SongRepository $subject;
 
-    protected function setUp(): void
+    public function testGetByCatalogReturnsAllItems(): void
     {
-        $this->connection = $this->createMock(DatabaseConnectionInterface::class);
+        $songId = 666;
 
-        $this->subject = new SongRepository(
-            $this->connection,
+        $result = $this->createMock(PDOStatement::class);
+
+        $this->connection->expects(static::once())
+            ->method('query')
+            ->with(
+                'SELECT `id` FROM `song` ORDER BY `album`, `track`',
+            )
+            ->willReturn($result);
+
+        $result->expects(static::exactly(2))
+            ->method('fetchColumn')
+            ->willReturn((string) $songId, false);
+
+        self::assertSame(
+            [$songId],
+            iterator_to_array($this->subject->getByCatalog())
         );
     }
 
@@ -76,26 +89,12 @@ class SongRepositoryTest extends TestCase
         );
     }
 
-    public function testGetByCatalogReturnsAllItems(): void
+    protected function setUp(): void
     {
-        $songId = 666;
+        $this->connection = $this->createMock(DatabaseConnectionInterface::class);
 
-        $result = $this->createMock(PDOStatement::class);
-
-        $this->connection->expects(static::once())
-            ->method('query')
-            ->with(
-                'SELECT `id` FROM `song` ORDER BY `album`, `track`',
-            )
-            ->willReturn($result);
-
-        $result->expects(static::exactly(2))
-            ->method('fetchColumn')
-            ->willReturn((string) $songId, false);
-
-        self::assertSame(
-            [$songId],
-            iterator_to_array($this->subject->getByCatalog())
+        $this->subject = new SongRepository(
+            $this->connection,
         );
     }
 }

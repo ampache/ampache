@@ -32,12 +32,6 @@ class TalTranslationServiceTest extends MockeryTestCase
 {
     private TalTranslationService $subject;
 
-    #[Override]
-    protected function setUp(): void
-    {
-        $this->subject = new TalTranslationService();
-    }
-
     public function testSetLanguageReturnsFirstEntry(): void
     {
         $lang1 = 'some-lang1';
@@ -46,13 +40,6 @@ class TalTranslationServiceTest extends MockeryTestCase
         $this->assertSame(
             $lang1,
             $this->subject->setLanguage($lang1, $lang2)
-        );
-    }
-
-    public function testUseDomainReturnsNull(): void
-    {
-        $this->assertNull(
-            $this->subject->useDomain('som-domain')
         );
     }
 
@@ -67,5 +54,18 @@ class TalTranslationServiceTest extends MockeryTestCase
                 false
             )
         );
+    }
+
+    public function testUseDomainReturnsNull(): void
+    {
+        $this->assertNull(
+            $this->subject->useDomain('som-domain')
+        );
+    }
+
+    #[Override]
+    protected function setUp(): void
+    {
+        $this->subject = new TalTranslationService();
     }
 }

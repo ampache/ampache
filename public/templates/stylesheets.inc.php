@@ -23,6 +23,8 @@ declare(strict_types=0);
  *
  */
 
+// stylesheets.inc.php
+
 use Ampache\Config\AmpConfig;
 use Ampache\Module\Util\Ui;
 
@@ -55,8 +57,8 @@ if (is_string($theme_css_base)) {
 <link rel="stylesheet" href="<?php echo $web_path . '/templates/print.css'; ?>" type="text/css" media="print">
 <?php
 if (
-    is_rtl(AmpConfig::get('lang', 'en_US')) &&
-    is_file(__DIR__ . '/../../public/' . $theme_path . '/rtl.css')
+    is_rtl(AmpConfig::get('lang', 'en_US'))
+    && is_file(__DIR__ . '/../../public/' . $theme_path . '/rtl.css')
 ) { ?>
     <link rel="stylesheet" href="<?php echo $web_path . $theme_path; ?>/rtl.css" type="text/css" media="screen">
 <?php } ?>

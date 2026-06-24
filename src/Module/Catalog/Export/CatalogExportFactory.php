@@ -36,7 +36,17 @@ final readonly class CatalogExportFactory implements CatalogExportFactoryInterfa
     public function __construct(
         private SongRepositoryInterface $songRepository,
         private ModelFactoryInterface $modelFactory,
-    ) {
+    ) {}
+
+    /**
+     * Returns the exporter class based on the export type
+     */
+    public function createFromExportType(CatalogExportTypeEnum $type): CatalogExporterInterface
+    {
+        return match ($type) {
+            CatalogExportTypeEnum::ITUNES => $this->createItunesExporter(),
+            default => $this->createCsvExporter(),
+        };
     }
 
     private function createCsvExporter(): CatalogExporterInterface
@@ -52,16 +62,5 @@ final readonly class CatalogExportFactory implements CatalogExportFactoryInterfa
         return new ItunesExporter(
             $this->songRepository
         );
-    }
-
-    /**
-     * Returns the exporter class based on the export type
-     */
-    public function createFromExportType(CatalogExportTypeEnum $type): CatalogExporterInterface
-    {
-        return match ($type) {
-            CatalogExportTypeEnum::ITUNES => $this->createItunesExporter(),
-            default => $this->createCsvExporter(),
-        };
     }
 }

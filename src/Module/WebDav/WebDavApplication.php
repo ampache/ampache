@@ -32,8 +32,7 @@ final readonly class WebDavApplication
     public function __construct(
         private ConfigContainerInterface $configContainer,
         private WebDavFactoryInterface $webDavFactory,
-    ) {
-    }
+    ) {}
 
     public function run(): void
     {

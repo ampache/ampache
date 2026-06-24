@@ -43,8 +43,7 @@ final readonly class ShowEditRecordAction implements ApplicationActionInterface
     public function __construct(
         private UiInterface $ui,
         private ModelFactoryInterface $modelFactory,
-    ) {
-    }
+    ) {}
 
     public function run(ServerRequestInterface $request, GuiGatekeeperInterface $gatekeeper): ?ResponseInterface
     {
@@ -52,7 +51,7 @@ final readonly class ShowEditRecordAction implements ApplicationActionInterface
             throw new AccessDeniedException();
         }
 
-        $accessId = (int)($request->getQueryParams()['access_id'] ?? 0);
+        $accessId = (int) ($request->getQueryParams()['access_id'] ?? 0);
 
         $this->ui->showHeader();
         $this->ui->show(

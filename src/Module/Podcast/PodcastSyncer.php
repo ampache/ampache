@@ -51,7 +51,67 @@ final readonly class PodcastSyncer implements PodcastSyncerInterface
         private PodcastDeleterInterface $podcastDeleter,
         private PodcastEpisodeRepositoryInterface $podcastEpisodeRepository,
         private ConfigContainerInterface $configContainer,
-    ) {
+    ) {}
+
+    /**
+     * Add podcast episodes
+     */
+    public function addEpisodes(
+        Podcast $podcast,
+        SimpleXMLElement $episodes,
+        ?DateTimeInterface $lastSync = null,
+        bool $gather = false,
+    ): void {
+        foreach ($episodes as $episode) {
+            if ($episode) {
+                $this->add_episode($podcast, $episode, $lastSync);
+            }
+        }
+
+        $change   = 0;
+        $syncDate = new DateTime();
+
+        $downloadLimit = (int) $this->configContainer->get(ConfigurationKeyEnum::PODCAST_NEW_DOWNLOAD);
+        // -1 means no downloads
+        if ($downloadLimit < 0) {
+            $downloadLimit = false;
+        }
+
+        // 0 means no limit
+        if ($downloadLimit === 0) {
+            $downloadLimit = null;
+        }
+
+        // Select episodes to download
+        $downloadEpisodes = ($downloadLimit === false)
+            ? []
+            : $this->podcastEpisodeRepository->getEpisodesEligibleForDownload($podcast, $downloadLimit);
+
+        /** @var Podcast_Episode $episode */
+        foreach ($downloadEpisodes as $episode) {
+            $episode->change_state(PodcastEpisodeStateEnum::PENDING);
+            if ($gather) {
+                $this->podcastEpisodeDownloader->fetch($episode);
+
+                $change++;
+            }
+        }
+
+        if ($change > 0) {
+            // cleanup old episodes (if available)
+            $this->podcastDeleter->deleteEpisode(
+                $this->podcastEpisodeRepository->getEpisodesEligibleForDeletion($podcast)
+            );
+
+            $podcast->setEpisodeCount(
+                $this->podcastEpisodeRepository->getEpisodeCount($podcast)
+            );
+            Catalog::update_mapping('podcast');
+            Catalog::update_mapping('podcast_episode');
+        }
+
+        $podcast->setLastSyncDate($syncDate);
+        $podcast->save();
     }
 
     /**
@@ -111,7 +171,7 @@ final readonly class PodcastSyncer implements PodcastSyncerInterface
         iterable $catalogs,
     ): int {
         $newEpisodeCount = 0;
-        $downloadLimit   = (int)$this->configContainer->get(ConfigurationKeyEnum::PODCAST_NEW_DOWNLOAD);
+        $downloadLimit   = (int) $this->configContainer->get(ConfigurationKeyEnum::PODCAST_NEW_DOWNLOAD);
 
         foreach ($catalogs as $catalog) {
             $podcastIds = $catalog->get_podcast_ids();
@@ -124,7 +184,7 @@ final readonly class PodcastSyncer implements PodcastSyncerInterface
 
                 $this->sync($podcast);
 
-                $episodes        = $podcast->getEpisodeIds(PodcastEpisodeStateEnum::PENDING);
+                $episodes = $podcast->getEpisodeIds(PodcastEpisodeStateEnum::PENDING);
                 $newEpisodeCount += count($episodes);
 
                 // -1 means no downloads
@@ -149,67 +209,6 @@ final readonly class PodcastSyncer implements PodcastSyncerInterface
     }
 
     /**
-     * Add podcast episodes
-     */
-    public function addEpisodes(
-        Podcast $podcast,
-        SimpleXMLElement $episodes,
-        ?DateTimeInterface $lastSync = null,
-        bool $gather = false,
-    ): void {
-        foreach ($episodes as $episode) {
-            if ($episode) {
-                $this->add_episode($podcast, $episode, $lastSync);
-            }
-        }
-
-        $change   = 0;
-        $syncDate = new DateTime();
-
-        $downloadLimit = (int)$this->configContainer->get(ConfigurationKeyEnum::PODCAST_NEW_DOWNLOAD);
-        // -1 means no downloads
-        if ($downloadLimit < 0) {
-            $downloadLimit = false;
-        }
-
-        // 0 means no limit
-        if ($downloadLimit === 0) {
-            $downloadLimit = null;
-        }
-
-        // Select episodes to download
-        $downloadEpisodes = ($downloadLimit === false)
-            ? []
-            : $this->podcastEpisodeRepository->getEpisodesEligibleForDownload($podcast, $downloadLimit);
-
-        /** @var Podcast_Episode $episode */
-        foreach ($downloadEpisodes as $episode) {
-            $episode->change_state(PodcastEpisodeStateEnum::PENDING);
-            if ($gather) {
-                $this->podcastEpisodeDownloader->fetch($episode);
-
-                $change++;
-            }
-        }
-
-        if ($change > 0) {
-            // cleanup old episodes (if available)
-            $this->podcastDeleter->deleteEpisode(
-                $this->podcastEpisodeRepository->getEpisodesEligibleForDeletion($podcast)
-            );
-
-            $podcast->setEpisodeCount(
-                $this->podcastEpisodeRepository->getEpisodeCount($podcast)
-            );
-            Catalog::update_mapping('podcast');
-            Catalog::update_mapping('podcast_episode');
-        }
-
-        $podcast->setLastSyncDate($syncDate);
-        $podcast->save();
-    }
-
-    /**
      * Adds the provided xml element as new podcast-episode
      */
     private function add_episode(
@@ -217,15 +216,15 @@ final readonly class PodcastSyncer implements PodcastSyncerInterface
         SimpleXMLElement $episode,
         ?DateTimeInterface $lastSync,
     ): void {
-        $title       = html_entity_decode((string)$episode->title);
-        $website     = (string)$episode->link;
-        $guid        = (string)$episode->guid;
-        $description = html_entity_decode(Dba::check_length((string)$episode->description, 4096));
-        $author      = html_entity_decode(Dba::check_length((string)$episode->author, 64));
-        $category    = html_entity_decode((string)$episode->category);
+        $title       = html_entity_decode((string) $episode->title);
+        $website     = (string) $episode->link;
+        $guid        = (string) $episode->guid;
+        $description = html_entity_decode(Dba::check_length((string) $episode->description, 4096));
+        $author      = html_entity_decode(Dba::check_length((string) $episode->author, 64));
+        $category    = html_entity_decode((string) $episode->category);
         $source      = '';
         if ($episode->enclosure) {
-            $source = (string)$episode->enclosure['url'];
+            $source = (string) $episode->enclosure['url'];
         }
 
         $itunes   = $episode->children('itunes', true);
@@ -245,7 +244,7 @@ final readonly class PodcastSyncer implements PodcastSyncerInterface
             : (int) $ptime;
 
         $pubdate    = 0;
-        $pubdatestr = (string)$episode->pubDate;
+        $pubdatestr = (string) $episode->pubDate;
         if ($pubdatestr !== '' && $pubdatestr !== '0') {
             $pubdate = strtotime($pubdatestr);
         }
@@ -318,23 +317,6 @@ final readonly class PodcastSyncer implements PodcastSyncerInterface
     }
 
     /**
-     * get_id_from_source
-     *
-     * Get episode id from the source url.
-     */
-    private function get_id_from_source(string $url): int
-    {
-        $sql        = "SELECT `id` FROM `podcast_episode` WHERE `source` = ?";
-        $db_results = Dba::read($sql, [$url]);
-
-        if ($results = Dba::fetch_assoc($db_results)) {
-            return (int)$results['id'];
-        }
-
-        return 0;
-    }
-
-    /**
      * get_id_from_guid
      *
      * Get episode id from the guid.
@@ -345,24 +327,7 @@ final readonly class PodcastSyncer implements PodcastSyncerInterface
         $db_results = Dba::read($sql, [$url]);
 
         if ($results = Dba::fetch_assoc($db_results)) {
-            return (int)$results['id'];
-        }
-
-        return 0;
-    }
-
-    /**
-     * get_id_from_title
-     *
-     * Get episode id from the source url.
-     */
-    private function get_id_from_title(int $podcast_id, string $title, int $time): int
-    {
-        $sql        = "SELECT `id` FROM `podcast_episode` WHERE `podcast` = ? AND `title` = ? AND `time` = ?";
-        $db_results = Dba::read($sql, [$podcast_id, $title, $time]);
-
-        if ($results = Dba::fetch_assoc($db_results)) {
-            return (int)$results['id'];
+            return (int) $results['id'];
         }
 
         return 0;
@@ -379,7 +344,41 @@ final readonly class PodcastSyncer implements PodcastSyncerInterface
         $db_results = Dba::read($sql, [$podcast_id, $pubdate]);
 
         if ($results = Dba::fetch_assoc($db_results)) {
-            return (int)$results['id'];
+            return (int) $results['id'];
+        }
+
+        return 0;
+    }
+
+    /**
+     * get_id_from_source
+     *
+     * Get episode id from the source url.
+     */
+    private function get_id_from_source(string $url): int
+    {
+        $sql        = "SELECT `id` FROM `podcast_episode` WHERE `source` = ?";
+        $db_results = Dba::read($sql, [$url]);
+
+        if ($results = Dba::fetch_assoc($db_results)) {
+            return (int) $results['id'];
+        }
+
+        return 0;
+    }
+
+    /**
+     * get_id_from_title
+     *
+     * Get episode id from the source url.
+     */
+    private function get_id_from_title(int $podcast_id, string $title, int $time): int
+    {
+        $sql        = "SELECT `id` FROM `podcast_episode` WHERE `podcast` = ? AND `title` = ? AND `time` = ?";
+        $db_results = Dba::read($sql, [$podcast_id, $title, $time]);
+
+        if ($results = Dba::fetch_assoc($db_results)) {
+            return (int) $results['id'];
         }
 
         return 0;

@@ -32,6 +32,18 @@ use DateTimeInterface;
 interface BookmarkRepositoryInterface
 {
     /**
+     * Remove bookmark for items that no longer exist.
+     */
+    public function collectGarbage(): void;
+
+    public function delete(int $bookmarkId): void;
+
+    /**
+     * Finds a single item by id
+     */
+    public function findById(int $itemId): ?Bookmark;
+
+    /**
      * @return int[]
      */
     public function getByUser(User $user): array;
@@ -41,22 +53,10 @@ interface BookmarkRepositoryInterface
      */
     public function getByUserAndComment(User $user, string $comment): array;
 
-    public function delete(int $bookmarkId): void;
-
-    /**
-     * Remove bookmark for items that no longer exist.
-     */
-    public function collectGarbage(): void;
-
-    public function update(int $bookmarkId, int $position, DateTimeInterface $date): void;
-
     /**
      * Migrate an object associate stats to a new object
      */
     public function migrate(string $objectType, int $oldObjectId, int $newObjectId): void;
 
-    /**
-     * Finds a single item by id
-     */
-    public function findById(int $itemId): ?Bookmark;
+    public function update(int $bookmarkId, int $position, DateTimeInterface $date): void;
 }

@@ -74,8 +74,8 @@ final readonly class ShowAction extends AbstractGraphRendererAction
             $this->ui->showBoxBottom();
 
             if (
-                $this->configContainer->isFeatureEnabled(ConfigurationKeyEnum::STATISTICAL_GRAPHS) &&
-                is_dir(__DIR__ . '/../../../../vendor/szymach/c-pchart/src/Chart/')
+                $this->configContainer->isFeatureEnabled(ConfigurationKeyEnum::STATISTICAL_GRAPHS)
+                && is_dir(__DIR__ . '/../../../../vendor/szymach/c-pchart/src/Chart/')
             ) {
                 $this->renderGraph($gatekeeper);
             }

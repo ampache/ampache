@@ -43,7 +43,7 @@ final class TagSongs4Method
      *
      * filter = (string) UID of Tag
      * offset = (integer) //optional
-     * limit  = (integer) //optional
+     * limit = (integer) //optional
      *
      * @param array{
      *     filter?: string,

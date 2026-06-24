@@ -23,6 +23,8 @@ declare(strict_types=0);
  *
  */
 
+// show_localplay_instances.inc.php
+
 use Ampache\Config\AmpConfig;
 use Ampache\Module\Api\Ajax;
 use Ampache\Module\Playback\Localplay\LocalPlay;
@@ -41,14 +43,14 @@ Ui::show_box_top(T_('Show Localplay Instances'), 'box box_localplay_instances');
     <th><?php echo T_('Action'); ?></th>
 </tr>
 <?php foreach ($instances as $uid => $name) {
-    $instance = $localplay->get_instance((string)$uid); ?>
+    $instance = $localplay->get_instance((string) $uid); ?>
 <tr id="localplay_instance_<?php echo $uid; ?>">
     <?php foreach ($fields as $key => $field) { ?>
     <td>
         <?php
         if (isset($instance[$key])) {
             if ($field["type"] != "password") {
-                echo scrub_out((string)$instance[$key]);
+                echo scrub_out((string) $instance[$key]);
             } else {
                 echo "*****";
             }

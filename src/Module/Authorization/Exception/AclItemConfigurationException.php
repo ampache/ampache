@@ -27,6 +27,4 @@ namespace Ampache\Module\Authorization\Exception;
 
 use Exception;
 
-abstract class AclItemConfigurationException extends Exception
-{
-}
+abstract class AclItemConfigurationException extends Exception {}

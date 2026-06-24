@@ -29,25 +29,9 @@ use Ampache\Module\Authorization\Access;
 
 interface ModelFactoryInterface
 {
-    public function createPlaylist(int $id): Playlist;
-
-    public function createBrowse(
-        ?int $browse_id = null,
-        bool $cached = true,
-    ): Browse;
-
-    public function createSong(
-        ?int $songId = null,
-    ): Song;
-
-    public function createRating(
-        int $objectId,
-        string $typeId,
-    ): Rating;
-
-    public function createUser(
-        ?int $userId = null,
-    ): User;
+    public function createAccess(
+        int $accessId,
+    ): Access;
 
     public function createAlbum(
         ?int $albumId = null,
@@ -57,27 +41,34 @@ interface ModelFactoryInterface
         ?int $albumDiskId = null,
     ): AlbumDisk;
 
-    public function createArtist(
-        ?int $artistId = null,
-    ): Artist;
-
-    public function createWanted(
-        ?int $wantedId = null,
-    ): Wanted;
-
     public function createArt(
         ?int $artId = null,
         string $type = 'album',
         string $kind = 'default',
     ): Art;
 
+    public function createArtist(
+        ?int $artistId = null,
+    ): Artist;
+
     public function createBroadcast(
         int $broadcastId,
     ): Broadcast;
 
+    public function createBrowse(
+        ?int $browse_id = null,
+        bool $cached = true,
+    ): Browse;
+
+    public function createDemocratic(
+        int $democraticId,
+    ): Democratic;
+
     public function createLiveStream(
         int $liveStreamId,
     ): Live_Stream;
+
+    public function createPlaylist(int $id): Playlist;
 
     public function createPodcast(
         int $podcastId,
@@ -91,13 +82,10 @@ interface ModelFactoryInterface
         int $privateMessageId,
     ): PrivateMessageInterface;
 
-    public function createDemocratic(
-        int $democraticId,
-    ): Democratic;
-
-    public function createTmpPlaylist(
-        int $tmpPlaylistId,
-    ): Tmp_Playlist;
+    public function createRating(
+        int $objectId,
+        string $typeId,
+    ): Rating;
 
     public function createSearch(
         ?int $searchId = 0,
@@ -105,11 +93,23 @@ interface ModelFactoryInterface
         ?User $user = null,
     ): Search;
 
-    public function createAccess(
-        int $accessId,
-    ): Access;
+    public function createSong(
+        ?int $songId = null,
+    ): Song;
+
+    public function createTmpPlaylist(
+        int $tmpPlaylistId,
+    ): Tmp_Playlist;
+
+    public function createUser(
+        ?int $userId = null,
+    ): User;
 
     public function createVideo(
         int $videoId,
     ): Video;
+
+    public function createWanted(
+        ?int $wantedId = null,
+    ): Wanted;
 }

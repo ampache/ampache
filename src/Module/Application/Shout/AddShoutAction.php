@@ -54,8 +54,7 @@ final readonly class AddShoutAction implements ApplicationActionInterface
         private ShoutCreatorInterface $shoutCreator,
         private RequestParserInterface $requestParser,
         private ShoutObjectLoaderInterface $shoutObjectLoader,
-    ) {
-    }
+    ) {}
 
     public function run(ServerRequestInterface $request, GuiGatekeeperInterface $gatekeeper): ResponseInterface
     {
@@ -63,14 +62,14 @@ final readonly class AddShoutAction implements ApplicationActionInterface
 
         // Must be at least a user to do this
         if (
-            $gatekeeper->mayAccess(AccessTypeEnum::INTERFACE, AccessLevelEnum::USER) === false ||
-            !$this->requestParser->verifyForm('add_shout') ||
-            $user === null
+            $gatekeeper->mayAccess(AccessTypeEnum::INTERFACE, AccessLevelEnum::USER) === false
+            || !$this->requestParser->verifyForm('add_shout')
+            || $user === null
         ) {
             throw new AccessDeniedException();
         }
 
-        $body       = (array)$request->getParsedBody();
+        $body       = (array) $request->getParsedBody();
         $objectType = LibraryItemEnum::from($body['object_type'] ?? '');
         $objectId   = (int) ($body['object_id'] ?? 0);
         $text       = $body['comment'] ?? '';

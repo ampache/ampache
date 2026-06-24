@@ -35,7 +35,38 @@ final readonly class UserFollowerRepository implements UserFollowerRepositoryInt
 {
     public function __construct(
         private DatabaseConnectionInterface $connection,
-    ) {
+    ) {}
+
+    /**
+     * Adds an entry for a user following another user
+     */
+    public function add(
+        User $user,
+        User $followingUser,
+    ): void {
+        $this->connection->query(
+            'INSERT INTO `user_follower` (`user`, `follow_user`, `follow_date`) VALUES (?, ?, UNIX_TIMESTAMP())',
+            [
+                $followingUser->getId(),
+                $user->getId(),
+            ]
+        );
+    }
+
+    /**
+     * Deletes a user follow-entry
+     */
+    public function delete(
+        User $user,
+        User $followingUser,
+    ): void {
+        $this->connection->query(
+            'DELETE FROM `user_follower` WHERE `user` = ? AND `follow_user` = ?',
+            [
+                $followingUser->getId(),
+                $user->getId(),
+            ]
+        );
     }
 
     /**
@@ -89,37 +120,5 @@ final readonly class UserFollowerRepository implements UserFollowerRepositoryInt
             'SELECT count(`id`) FROM `user_follower` WHERE `user` = ? AND `follow_user` = ?',
             [$followingUser->getId(), $user->getId()]
         ) > 0;
-    }
-
-    /**
-     * Adds an entry for a user following another user
-     */
-    public function add(
-        User $user,
-        User $followingUser,
-    ): void {
-        $this->connection->query(
-            'INSERT INTO `user_follower` (`user`, `follow_user`, `follow_date`) VALUES (?, ?, UNIX_TIMESTAMP())',
-            [
-                $followingUser->getId(),
-                $user->getId(),
-            ]
-        );
-    }
-
-    /**
-     * Deletes a user follow-entry
-     */
-    public function delete(
-        User $user,
-        User $followingUser,
-    ): void {
-        $this->connection->query(
-            'DELETE FROM `user_follower` WHERE `user` = ? AND `follow_user` = ?',
-            [
-                $followingUser->getId(),
-                $user->getId(),
-            ]
-        );
     }
 }

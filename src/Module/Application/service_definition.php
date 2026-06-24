@@ -45,16 +45,16 @@ use Ampache\Module\Application\Admin\Catalog\FullServiceAction;
 use Ampache\Module\Application\Admin\Catalog\GarbageCollectAction;
 use Ampache\Module\Application\Admin\Catalog\GatherMediaArtAction;
 use Ampache\Module\Application\Admin\Catalog\ImportToCatalogAction;
+use Ampache\Module\Application\Admin\Catalog\ScanAllCatalogFoldersActions;
+use Ampache\Module\Application\Admin\Catalog\ScanCatalogFoldersAction;
 use Ampache\Module\Application\Admin\Catalog\ShowAddCatalogAction;
 use Ampache\Module\Application\Admin\Catalog\ShowCatalogsAction;
 use Ampache\Module\Application\Admin\Catalog\ShowCustomizeCatalogAction;
 use Ampache\Module\Application\Admin\Catalog\ShowDeleteCatalogAction;
 use Ampache\Module\Application\Admin\Catalog\ShowDisabledAction;
 use Ampache\Module\Application\Admin\Catalog\UpdateAllCatalogsAction;
-use Ampache\Module\Application\Admin\Catalog\UpdateAllFileTagsActions;
 use Ampache\Module\Application\Admin\Catalog\UpdateCatalogAction;
 use Ampache\Module\Application\Admin\Catalog\UpdateCatalogSettingsAction;
-use Ampache\Module\Application\Admin\Catalog\UpdateFileTagsAction;
 use Ampache\Module\Application\Admin\Catalog\UpdateFromAction;
 use Ampache\Module\Application\Admin\Export\ExportAction;
 use Ampache\Module\Application\Admin\Filter\AbstractFilterAction;
@@ -179,7 +179,6 @@ use Ampache\Module\Application\Share\ExternalShareAction;
 use Ampache\Module\Application\Share\ShowDeleteAction;
 use Ampache\Module\Application\Shout\AddShoutAction;
 use Ampache\Module\Application\Shout\ShowAddShoutAction;
-use Ampache\Module\Application\SmartPlaylist\CreatePlaylistAction;
 use Ampache\Module\Application\SmartPlaylist\DeletePlaylistAction;
 use Ampache\Module\Application\SmartPlaylist\RefreshPlaylistAction;
 use Ampache\Module\Application\SmartPlaylist\UpdatePlaylistAction;
@@ -264,6 +263,9 @@ return [
     Artist\ConfirmDeleteAction::class => autowire(Artist\ConfirmDeleteAction::class),
     Artist\ShowAction::class => autowire(Artist\ShowAction::class),
     ShowAllSongsAction::class => autowire(ShowAllSongsAction::class),
+    Folder\ShowAction::class => autowire(Folder\ShowAction::class),
+    Folder\ConfirmDeleteAction::class => autowire(Folder\ConfirmDeleteAction::class),
+    Folder\DeleteAction::class => autowire(Folder\DeleteAction::class),
     ShowSongsAction::class => autowire(ShowSongsAction::class),
     UpdateFromMusicBrainzAction::class => autowire(UpdateFromMusicBrainzAction::class),
     Artist\UpdateFromTagsAction::class => autowire(Artist\UpdateFromTagsAction::class),
@@ -405,7 +407,6 @@ return [
     RefreshPlaylistAction::class => autowire(RefreshPlaylistAction::class),
     UpdatePlaylistAction::class => autowire(UpdatePlaylistAction::class),
     DeletePlaylistAction::class => autowire(DeletePlaylistAction::class),
-    CreatePlaylistAction::class => autowire(CreatePlaylistAction::class),
     Playlist\ShowAction::class => autowire(Playlist\ShowAction::class),
     SortTrackAction::class => autowire(SortTrackAction::class),
     RemoveDuplicatesAction::class => autowire(RemoveDuplicatesAction::class),
@@ -415,7 +416,6 @@ return [
     ShowImportPlaylistAction::class => autowire(ShowImportPlaylistAction::class),
     Playlist\DeletePlaylistAction::class => autowire(Playlist\DeletePlaylistAction::class),
     Playlist\RefreshPlaylistAction::class => autowire(Playlist\RefreshPlaylistAction::class),
-    Playlist\CreatePlaylistAction::class => autowire(Playlist\CreatePlaylistAction::class),
     Installation\DefaultAction::class => autowire(Installation\DefaultAction::class),
     UpdateUserAction::class => autowire(UpdateUserAction::class),
     UserAction::class => autowire(UserAction::class),
@@ -480,8 +480,8 @@ return [
     CleanAllCatalogsAction::class => autowire(CleanAllCatalogsAction::class),
     CleanCatalogAction::class => autowire(CleanCatalogAction::class),
     GarbageCollectAction::class => autowire(GarbageCollectAction::class),
-    UpdateFileTagsAction::class => autowire(UpdateFileTagsAction::class),
-    UpdateAllFileTagsActions::class => autowire(UpdateAllFileTagsActions::class),
+    ScanCatalogFoldersAction::class => autowire(ScanCatalogFoldersAction::class),
+    ScanAllCatalogFoldersActions::class => autowire(ScanAllCatalogFoldersActions::class),
     GatherMediaArtAction::class => autowire(GatherMediaArtAction::class),
     ImportToCatalogAction::class => autowire(ImportToCatalogAction::class),
     AddCatalogAction::class => autowire(AddCatalogAction::class),

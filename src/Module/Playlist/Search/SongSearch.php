@@ -62,20 +62,20 @@ final class SongSearch implements SearchInterface
         $metadata   = [];
 
         foreach ($search->rules as $rule) {
-            $type     = $search->get_rule_type($rule[0]);
+            $type     = $search->get_rule_type_by_name($rule[0]);
             $operator = [];
             if ($type === null) {
                 continue;
             }
 
-            foreach ($search->basetypes[$type] as $baseOperator) {
+            foreach ($search->get_basetypes()[$type] as $baseOperator) {
                 if ($baseOperator['name'] == $rule[1]) {
                     $operator = $baseOperator;
                     break;
                 }
             }
 
-            $input        = $search->filter_data((string)$rule[2], $type, $operator);
+            $input        = $search->filter_data((string) $rule[2], $type, $operator);
             $operator_sql = $operator['sql'] ?? '';
 
             switch ($rule[0]) {
@@ -193,7 +193,7 @@ final class SongSearch implements SearchInterface
                     $parameters[] = $input;
                     break;
                 case 'time':
-                    $input        = ((int)$input) * 60;
+                    $input        = ((int) $input) * 60;
                     $where[]      = sprintf('`song`.`time` %s ?', $operator_sql);
                     $parameters[] = $input;
                     break;
@@ -314,7 +314,7 @@ final class SongSearch implements SearchInterface
                     $table['last_play'] .= (strpos($table['last_play'], "last_play_" . $my_type . "_" . $search_user_id))
                         ? ""
                         : "LEFT JOIN (SELECT `object_id`, `object_type`, `user`, MAX(`date`) AS `date` FROM `object_count` WHERE `object_count`.`object_type` = '" . $my_type . "' AND `object_count`.`count_type` = 'stream' AND `object_count`.`user` = " . $search_user_id . " GROUP BY `object_id`, `object_type`, `user`) AS `last_play_" . $my_type . "_" . $search_user_id . "` ON `song`.`id` = `last_play_" . $my_type . "_" . $search_user_id . "`.`object_id` AND `last_play_" . $my_type . "_" . $search_user_id . "`.`object_type` = '" . $my_type . "'";
-                    $where[] = "`last_play_" . $my_type . "_" . $search_user_id . sprintf('`.`date` %s (UNIX_TIMESTAMP() - (', $operator_sql) . (int)$input . " * 86400))";
+                    $where[] = "`last_play_" . $my_type . "_" . $search_user_id . sprintf('`.`date` %s (UNIX_TIMESTAMP() - (', $operator_sql) . (int) $input . " * 86400))";
                     break;
                 case 'last_skip':
                     $my_type = 'song';
@@ -325,7 +325,7 @@ final class SongSearch implements SearchInterface
                     $table['last_skip'] .= (strpos($table['last_skip'], "last_skip_" . $my_type . "_" . $search_user_id))
                         ? ""
                         : "LEFT JOIN (SELECT `object_id`, `object_type`, `user`, MAX(`date`) AS `date` FROM `object_count` WHERE `object_count`.`object_type` = '" . $my_type . "' AND `object_count`.`count_type` = 'skip' AND `object_count`.`user` = " . $search_user_id . " GROUP BY `object_id`, `object_type`, `user`) AS `last_skip_" . $my_type . "_" . $search_user_id . "` ON `song`.`id` = `last_skip_" . $my_type . "_" . $search_user_id . "`.`object_id` AND `last_skip_" . $my_type . "_" . $search_user_id . "`.`object_type` = '" . $my_type . "' ";
-                    $where[] = "`last_skip_" . $my_type . "_" . $search_user_id . sprintf('`.`date` %s (UNIX_TIMESTAMP() - (', $operator_sql) . (int)$input . " * 86400))";
+                    $where[] = "`last_skip_" . $my_type . "_" . $search_user_id . sprintf('`.`date` %s (UNIX_TIMESTAMP() - (', $operator_sql) . (int) $input . " * 86400))";
                     break;
                 case 'last_play_or_skip':
                     $my_type = 'song';
@@ -336,13 +336,13 @@ final class SongSearch implements SearchInterface
                     $table['last_play_or_skip'] .= (strpos($table['last_play_or_skip'], "last_play_or_skip_" . $my_type . "_" . $search_user_id))
                         ? ""
                         : "LEFT JOIN (SELECT `object_id`, `object_type`, `user`, MAX(`date`) AS `date` FROM `object_count` WHERE `object_count`.`object_type` = '" . $my_type . "' AND `object_count`.`count_type` IN ('stream', 'skip') AND `object_count`.`user` = " . $search_user_id . " GROUP BY `object_id`, `object_type`, `user`) AS `last_play_or_skip_" . $my_type . "_" . $search_user_id . "` ON `song`.`id` = `last_play_or_skip_" . $my_type . "_" . $search_user_id . "`.`object_id` AND `last_play_or_skip_" . $my_type . "_" . $search_user_id . "`.`object_type` = '" . $my_type . "'";
-                    $where[] = "`last_play_or_skip_" . $my_type . "_" . $search_user_id . sprintf('`.`date` %s (UNIX_TIMESTAMP() - (', $operator_sql) . (int)$input . " * 86400))";
+                    $where[] = "`last_play_or_skip_" . $my_type . "_" . $search_user_id . sprintf('`.`date` %s (UNIX_TIMESTAMP() - (', $operator_sql) . (int) $input . " * 86400))";
                     break;
                 case 'days_added':
-                    $where[] = sprintf('`song`.`addition_time` %s (UNIX_TIMESTAMP() - (', $operator_sql) . (int)$input . " * 86400))";
+                    $where[] = sprintf('`song`.`addition_time` %s (UNIX_TIMESTAMP() - (', $operator_sql) . (int) $input . " * 86400))";
                     break;
                 case 'days_updated':
-                    $where[] = sprintf('`song`.`update_time` %s (UNIX_TIMESTAMP() - (', $operator_sql) . (int)$input . " * 86400))";
+                    $where[] = sprintf('`song`.`update_time` %s (UNIX_TIMESTAMP() - (', $operator_sql) . (int) $input . " * 86400))";
                     break;
                 case 'played_times':
                     $where[]      = sprintf('(`song`.`total_count` %s ?)', $operator_sql);
@@ -417,7 +417,7 @@ final class SongSearch implements SearchInterface
                     $where[] = "`myplayed_" . $my_type . "_" . $search_user_id . ('`.`object_id` ' . $operator_sql);
                     break;
                 case 'bitrate':
-                    $input        = ((int)$input) * 1000;
+                    $input        = ((int) $input) * 1000;
                     $where[]      = sprintf('`song`.`bitrate` %s ?', $operator_sql);
                     $parameters[] = $input;
                     break;
@@ -618,7 +618,7 @@ final class SongSearch implements SearchInterface
                     break;
                 case 'smartplaylist':
                     //debug_event(self::class, '_get_sql_song: SUBSEARCH ' . $input, 5);
-                    $subsearch = new Search((int)$input, 'song', $search->search_user);
+                    $subsearch = new Search((int) $input, 'song', $search->search_user);
                     $results   = $subsearch->get_subsearch('song');
                     $subsearch_count++;
                     $where[] = sprintf('`song`.`id` %s IN (SELECT * FROM (', $operator_sql) . $results['sql'] . ") AS sp_" . $subsearch_count . ")";
@@ -640,17 +640,17 @@ final class SongSearch implements SearchInterface
                 case 'recent_played':
                     $key                     = md5($input . $operator_sql);
                     $where[]                 = sprintf('`played_%s`.`object_id` IS NOT NULL', $key);
-                    $table['played_' . $key] = sprintf("LEFT JOIN (SELECT `object_id` FROM `object_count` WHERE `object_type` = 'song' ORDER BY %s DESC LIMIT ", $operator_sql) . (int)$input . sprintf(') AS `played_%s` ON `song`.`id` = `played_%s`.`object_id`', $key, $key);
+                    $table['played_' . $key] = sprintf("LEFT JOIN (SELECT `object_id` FROM `object_count` WHERE `object_type` = 'song' ORDER BY %s DESC LIMIT ", $operator_sql) . (int) $input . sprintf(') AS `played_%s` ON `song`.`id` = `played_%s`.`object_id`', $key, $key);
                     break;
                 case 'recent_added':
                     $key                       = md5($input . $operator_sql);
                     $where[]                   = sprintf('`addition_time_%s`.`id` IS NOT NULL', $key);
-                    $table['addition_' . $key] = sprintf('LEFT JOIN (SELECT `id` FROM `song` ORDER BY %s DESC LIMIT ', $operator_sql) . (int)$input . sprintf(') AS `addition_time_%s` ON `song`.`id` = `addition_time_%s`.`id`', $key, $key);
+                    $table['addition_' . $key] = sprintf('LEFT JOIN (SELECT `id` FROM `song` ORDER BY %s DESC LIMIT ', $operator_sql) . (int) $input . sprintf(') AS `addition_time_%s` ON `song`.`id` = `addition_time_%s`.`id`', $key, $key);
                     break;
                 case 'recent_updated':
                     $key                     = md5($input . $operator_sql);
                     $where[]                 = sprintf('`update_time_%s`.`id` IS NOT NULL', $key);
-                    $table['update_' . $key] = sprintf('LEFT JOIN (SELECT `id` FROM `song` ORDER BY %s DESC LIMIT ', $operator_sql) . (int)$input . sprintf(') AS `update_time_%s` ON `song`.`id` = `update_time_%s`.`id`', $key, $key);
+                    $table['update_' . $key] = sprintf('LEFT JOIN (SELECT `id` FROM `song` ORDER BY %s DESC LIMIT ', $operator_sql) . (int) $input . sprintf(') AS `update_time_%s` ON `song`.`id` = `update_time_%s`.`id`', $key, $key);
                     break;
                 case 'mbid':
                     if (!$input || $input == '%%' || $input == '%') {
@@ -736,8 +736,8 @@ final class SongSearch implements SearchInterface
                     $where[]           = '`song_data`.`waveform` ' . $operator_sql;
                     break;
                 case 'metadata':
-                    $field = (int)$rule[3];
-                    if ($operator_sql === '=' && (string)$input === '') {
+                    $field = (int) $rule[3];
+                    if ($operator_sql === '=' && (string) $input === '') {
                         $where[] = sprintf('NOT EXISTS (SELECT NULL FROM `metadata` WHERE `metadata`.`object_id` = `song`.`id` AND `metadata`.`field` = %d)', $field);
                     } else {
                         $parsedInput = (is_numeric($input)) ? $input : '"' . $input . '"';

@@ -35,7 +35,7 @@ interface AuthenticatorInterface
      *     name?: string,
      *     email?: string,
      *     error?: string,
-     *      ui_required?: bool
+     *     ui_required?: bool
      * }
      */
     public function auth(string $username, string $password): array;

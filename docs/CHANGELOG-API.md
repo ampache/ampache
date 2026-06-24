@@ -1,5 +1,25 @@
 # API CHANGELOG
 
+## API 6.9.2 Build 2
+
+This version is being released for Ampache7 **only**
+
+To ensure that there are no issues with clients checking for single int versions
+we will keep on 6.9.x and resume build number versioning until Ampache 8
+
+**NOTE** API8 has been added to the code but is not enabled for use.
+
+### Changed (692002)
+
+* ALL
+  * flag: Use the `UserFlag::is_valid()` function for object type validation
+  * rate: Use the `Rating::is_valid()` function for object type validation
+
+### Fixed (692001)
+
+* API6
+  * Version wasn't bumped
+
 ## API 6.9.2 Build 1
 
 This version is being released for Ampache7 **only**

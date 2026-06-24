@@ -39,8 +39,7 @@ class OAuthToken implements Stringable
     public function __construct(
         public $key,
         public $secret,
-    ) {
-    }
+    ) {}
 
     /**
      * generates the basic string serialization of a token that a server

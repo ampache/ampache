@@ -47,7 +47,7 @@ final class AddCatalogAction extends AbstractCatalogAction
         private readonly RequestParserInterface $requestParser,
     ) {
         parent::__construct($ui);
-        $this->ui              = $ui;
+        $this->ui = $ui;
     }
 
     /**
@@ -64,11 +64,11 @@ final class AddCatalogAction extends AbstractCatalogAction
 
         ob_end_flush();
 
-        $body = (array)$request->getParsedBody();
+        $body = (array) $request->getParsedBody();
         $type = filter_input(INPUT_POST, 'type', FILTER_SANITIZE_SPECIAL_CHARS);
         if (
-            empty($type) ||
-            $type == 'none'
+            empty($type)
+            || $type == 'none'
         ) {
             AmpError::add('general', T_('Please select a Catalog type'));
         }

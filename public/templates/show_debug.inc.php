@@ -23,6 +23,8 @@ declare(strict_types=0);
  *
  */
 
+// show_debug.inc.php
+
 use Ampache\Config\AmpConfig;
 use Ampache\Module\System\AutoUpdate;
 use Ampache\Module\Util\EnvironmentInterface;
@@ -32,7 +34,7 @@ use Ampache\Repository\Model\Preference;
 global $dic;
 $environment = $dic->get(EnvironmentInterface::class);
 
-/** @var array $configuration */
+/** @var array<string, mixed> $configuration */
 /** @var string $latest_version */
 /** @var int $lastCronDate */
 
@@ -85,9 +87,9 @@ $current_version = AutoUpdate::get_current_version(); ?>
 <?php if (AmpConfig::get('autoupdate', false)) { ?>
     <div><?php echo T_('Latest Ampache version'); ?>: <?php echo $latest_version; ?></div>
     <?php if ((string) AutoUpdate::is_force_git_branch() !== '') { ?>
-        <?php echo "<div>" . T_('GitHub Branch') . ': ' . (string)AutoUpdate::is_force_git_branch() . '</div>';
+        <?php echo "<div>" . T_('GitHub Branch') . ': ' . (string) AutoUpdate::is_force_git_branch() . '</div>';
     } ?>
-    <?php echo "<div>" . T_('Last Update') . ': ' . (string)((AmpConfig::get('autoupdate_lastcheck', 0)) ? get_datetime(AmpConfig::get('autoupdate_lastcheck', 0)) : T_('Unknown')) . '</div>'; ?>
+    <?php echo "<div>" . T_('Last Update') . ': ' . (string) ((AmpConfig::get('autoupdate_lastcheck', 0)) ? get_datetime(AmpConfig::get('autoupdate_lastcheck', 0)) : T_('Unknown')) . '</div>'; ?>
     <div><a class="nohtml" href="<?php echo $admin_path; ?>/system.php?action=show_debug&autoupdate=force"><?php echo T_('Force check'); ?>...</a></div>
     <?php if ($current_version !== $latest_version || AutoUpdate::is_update_available()) {
         AutoUpdate::show_new_version();
@@ -116,7 +118,7 @@ $current_version = AutoUpdate::get_current_version(); ?>
         <tbody>
         <tr>
             <td><?php echo T_('Version'); ?></td>
-            <td><?php echo (string)phpversion(); ?></td>
+            <td><?php echo (string) phpversion(); ?></td>
         </tr>
         <tr>
             <td><?php echo T_('Memory Limit'); ?></td>

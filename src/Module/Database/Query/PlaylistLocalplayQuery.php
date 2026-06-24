@@ -32,23 +32,12 @@ final class PlaylistLocalplayQuery implements QueryInterface
     public const array FILTERS = [
     ];
 
+    protected string $base   = "";
+    protected string $select = "";
+
     /** @var string[] $sorts */
     protected array $sorts = [
     ];
-
-    protected string $select = "";
-
-    protected string $base = "";
-
-    /**
-     * get_select
-     *
-     * This method returns the columns a query will user for SELECT
-     */
-    public function get_select(): string
-    {
-        return $this->select;
-    }
 
     /**
      * get_base_sql
@@ -58,6 +47,16 @@ final class PlaylistLocalplayQuery implements QueryInterface
     public function get_base_sql(): string
     {
         return $this->base;
+    }
+
+    /**
+     * get_select
+     *
+     * This method returns the columns a query will user for SELECT
+     */
+    public function get_select(): string
+    {
+        return $this->select;
     }
 
     /**
@@ -85,11 +84,8 @@ final class PlaylistLocalplayQuery implements QueryInterface
      * get_sql_sort
      *
      * Sorting SQL for ORDER BY
-     * @param Query $query
-     * @param string|null $field
-     * @param string|null $order
      */
-    public function get_sql_sort($query, $field, $order): string
+    public function get_sql_sort(Query $query, ?string $field, ?string $order): string
     {
         return '';
     }

@@ -46,8 +46,7 @@ final readonly class ShowCreateAction implements ApplicationActionInterface
     public function __construct(
         private ConfigContainerInterface $configContainer,
         private UiInterface $ui,
-    ) {
-    }
+    ) {}
 
     public function run(ServerRequestInterface $request, GuiGatekeeperInterface $gatekeeper): ?ResponseInterface
     {
@@ -59,13 +58,13 @@ final readonly class ShowCreateAction implements ApplicationActionInterface
             throw new AccessDeniedException();
         }
 
-        $data = (array)$request->getParsedBody();
+        $data = (array) $request->getParsedBody();
 
         $this->ui->showHeader();
         $this->ui->show(
             'show_add_podcast.inc.php',
             [
-                'catalog_id' => (int)($data['catalog'] ?? 0),
+                'catalog_id' => (int) ($data['catalog'] ?? 0),
                 'feed' => ($data['feed'] ?? '')
             ]
         );

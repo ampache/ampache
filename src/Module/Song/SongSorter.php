@@ -39,26 +39,19 @@ use RuntimeException;
 
 final class SongSorter implements SongSorterInterface
 {
-    private ?Catalog $catalog = null;
-
-    private int $move_count = 0;
-
-    private int $limit = 0;
-
+    private ?Catalog $catalog      = null;
+    private bool $dryRun           = true;
+    private bool $filesOnly        = false;
+    private int $limit             = 0;
+    private int $move_count        = 0;
     private string $various_artist = '';
-
-    private bool $dryRun = true;
-
-    private bool $filesOnly = false;
-
-    private bool $windowsCompat = false;
+    private bool $windowsCompat    = false;
 
     public function __construct(
         private readonly ConfigContainerInterface $configContainer,
         private readonly LoggerInterface $logger,
         private readonly ModelFactoryInterface $modelFactory,
-    ) {
-    }
+    ) {}
 
     public function sort(
         Interactor $interactor,
@@ -107,13 +100,13 @@ final class SongSorter implements SongSorterInterface
 
             /* HINT: Catalog Name */
             $interactor->info(
-                sprintf(T_('Starting Catalog: %s'), stripslashes((string)$this->catalog->name)),
+                sprintf(T_('Starting Catalog: %s'), stripslashes((string) $this->catalog->name)),
                 true
             );
 
             $stats  = Catalog::get_server_counts(0);
             $total  = $stats['song'];
-            $chunks = (int)floor($total / 10000) + 1;
+            $chunks = (int) floor($total / 10000) + 1;
             foreach (range(1, $chunks) as $chunk) {
                 /* HINT: Catalog Block: 4/120 */
                 $interactor->info(
@@ -286,7 +279,7 @@ final class SongSorter implements SongSorterInterface
         bool $test_mode,
         ?bool $windowsCompat = false,
     ): bool {
-        $old_dir   = dirname((string)$media->file);
+        $old_dir   = dirname((string) $media->file);
         $info      = pathinfo($fullname);
         $directory = ($info['dirname'] ?? '');
         $file      = $info['basename'];
@@ -413,7 +406,7 @@ final class SongSorter implements SongSorterInterface
                 );
 
                 return false;
-            } // end if sum's don't match
+            }
 
             if (!unlink($media->file)) {
                 /* HINT: filename (File path) */
@@ -426,7 +419,7 @@ final class SongSorter implements SongSorterInterface
             // Update the catalog
             $sql = "UPDATE `song` SET `file` = ? WHERE `id` = ?;";
             Dba::write($sql, [$fullname, $media->id]);
-        } // end else
+        }
 
         return true;
     }

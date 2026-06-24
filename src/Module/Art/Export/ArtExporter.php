@@ -44,8 +44,7 @@ final readonly class ArtExporter implements ArtExporterInterface
         private LoggerInterface $logger,
         private ConfigContainerInterface $configContainer,
         private ImageRepositoryInterface $imageRepository,
-    ) {
-    }
+    ) {}
 
     public function export(
         Interactor $interactor,

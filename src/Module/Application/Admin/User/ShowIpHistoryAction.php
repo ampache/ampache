@@ -45,14 +45,13 @@ final class ShowIpHistoryAction extends AbstractUserAction
         private readonly ModelFactoryInterface $modelFactory,
         private readonly IpHistoryRepositoryInterface $ipHistoryRepository,
         private readonly ConfigContainerInterface $configContainer,
-    ) {
-    }
+    ) {}
 
     protected function handle(ServerRequestInterface $request): ?ResponseInterface
     {
         $queryParams = $request->getQueryParams();
-        $userId      = (int)($queryParams['user_id'] ?? 0);
-        $showAll     = (bool)($queryParams['all'] ?? 0);
+        $userId      = (int) ($queryParams['user_id'] ?? 0);
+        $showAll     = (bool) ($queryParams['all'] ?? 0);
 
         $user = $this->modelFactory->createUser($userId);
         if ($user->isNew()) {

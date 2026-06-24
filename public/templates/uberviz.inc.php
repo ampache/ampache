@@ -1,4 +1,7 @@
 <?php
+
+// uberviz.inc.php
+
 use Ampache\Config\AmpConfig;
 
 $web_path = AmpConfig::get_web_path(); ?>

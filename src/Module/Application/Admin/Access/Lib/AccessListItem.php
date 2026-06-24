@@ -33,7 +33,35 @@ final readonly class AccessListItem implements AccessListItemInterface
     public function __construct(
         private ModelFactoryInterface $modelFactory,
         private Access $access,
-    ) {
+    ) {}
+
+    /**
+     * Returns a human readable representation of the end ip
+     */
+    public function getEndIp(): string
+    {
+        $result = @inet_ntop($this->access->end);
+        if ($result === false) {
+            return '';
+        }
+
+        return $result;
+    }
+
+    /**
+     * Returns the acl item id
+     */
+    public function getId(): int
+    {
+        return $this->access->id;
+    }
+
+    /**
+     * Returns the acl item level
+     */
+    public function getLevel(): int
+    {
+        return (int) $this->access->level;
     }
 
     /**
@@ -63,32 +91,11 @@ final readonly class AccessListItem implements AccessListItemInterface
     }
 
     /**
-     * Return a name for the users covered by this ACL.
+     * Returns the acl name
      */
-    public function getUserName(): string
+    public function getName(): string
     {
-        $userId = (int) $this->access->user;
-
-        if ($userId === -1) {
-            return T_('All');
-        }
-
-        $user = $this->modelFactory->createUser($userId);
-
-        return scrub_out($user->getFullDisplayName());
-    }
-
-    /**
-     * This function returns the pretty name for our current type.
-     */
-    public function getTypeName(): string
-    {
-        return match ($this->access->type) {
-            'api', 'rpc' => T_('API/RPC'),
-            'network' => T_('Local Network Definition'),
-            'interface' => T_('Web Interface'),
-            default => T_('Stream Access'),
-        };
+        return $this->access->name;
     }
 
     /**
@@ -105,43 +112,6 @@ final readonly class AccessListItem implements AccessListItemInterface
     }
 
     /**
-     * Returns a human readable representation of the end ip
-     */
-    public function getEndIp(): string
-    {
-        $result = @inet_ntop($this->access->end);
-        if ($result === false) {
-            return '';
-        }
-
-        return $result;
-    }
-
-    /**
-     * Returns the acl name
-     */
-    public function getName(): string
-    {
-        return $this->access->name;
-    }
-
-    /**
-     * Returns the acl item id
-     */
-    public function getId(): int
-    {
-        return (int)$this->access->id;
-    }
-
-    /**
-     * Returns the acl item level
-     */
-    public function getLevel(): int
-    {
-        return (int) $this->access->level;
-    }
-
-    /**
      * Returns the acl item type
      */
     public function getType(): string
@@ -150,10 +120,39 @@ final readonly class AccessListItem implements AccessListItemInterface
     }
 
     /**
+     * This function returns the pretty name for our current type.
+     */
+    public function getTypeName(): string
+    {
+        return match ($this->access->type) {
+            'api', 'rpc' => T_('API/RPC'),
+            'network' => T_('Local Network Definition'),
+            'interface' => T_('Web Interface'),
+            default => T_('Stream Access'),
+        };
+    }
+
+    /**
      * Returns the acl item user id
      */
     public function getUserId(): int
     {
         return (int) $this->access->user;
+    }
+
+    /**
+     * Return a name for the users covered by this ACL.
+     */
+    public function getUserName(): string
+    {
+        $userId = (int) $this->access->user;
+
+        if ($userId === -1) {
+            return T_('All');
+        }
+
+        $user = $this->modelFactory->createUser($userId);
+
+        return scrub_out($user->getFullDisplayName());
     }
 }

@@ -35,8 +35,7 @@ final readonly class InitializationHandlerAuth implements InitializationHandlerI
     public function __construct(
         private EnvironmentInterface $environment,
         private SessionInterface $session,
-    ) {
-    }
+    ) {}
 
     public function init(): void
     {

@@ -38,8 +38,7 @@ abstract class ScrobblerAsync extends Thread
     public function __construct(
         public User $user,
         public Song $song,
-    ) {
-    }
+    ) {}
 
     public function run(): void
     {

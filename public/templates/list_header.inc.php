@@ -23,6 +23,8 @@ declare(strict_types=0);
  *
  */
 
+// list_header.inc.php
+
 /**
  * List Header
  * The default pager widget for moving through a list of many items.
@@ -34,7 +36,11 @@ use Ampache\Config\AmpConfig;
 use Ampache\Module\Api\Ajax;
 use Ampache\Repository\Model\Browse;
 
-/** @var Browse $browse */
+/** @var Browse|null $browse */
+
+if (!$browse) {
+    return;
+}
 
 if (isset($is_header) && $is_header) {
     $is_header = false;

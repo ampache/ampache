@@ -33,12 +33,6 @@ class WebSocketFactoryTest extends MockeryTestCase
 {
     private ?WebSocketFactory $subject;
 
-    #[Override]
-    protected function setUp(): void
-    {
-        $this->subject = new WebSocketFactory();
-    }
-
     public function testCreateBroadcastServerReturnsInstance(): void
     {
         self::assertInstanceOf(
@@ -53,5 +47,11 @@ class WebSocketFactoryTest extends MockeryTestCase
             EchoServer::class,
             $this->subject->createEchoServer()
         );
+    }
+
+    #[Override]
+    protected function setUp(): void
+    {
+        $this->subject = new WebSocketFactory();
     }
 }

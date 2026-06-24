@@ -47,15 +47,238 @@ class AmpacheMpd extends localplay_controller
 {
     protected const string ACTIVE_PREF = 'mpd_active';
 
-    public bool $block_clear = false;
-
-    private string $version = '000003';
-
+    public bool $block_clear    = false;
+    private int $_add_count     = 0;
+    private ?mpd $_mpd          = null;
     private string $description = 'Controls an instance of MPD';
+    private string $version     = '000003';
 
-    private int $_add_count = 0;
+    /**
+     * add_instance
+     * This takes key'd data and inserts a new MPD instance
+     * @param array{
+     *     name?: string,
+     *     host?: string,
+     *     port?: string,
+     *     password?: string,
+     * } $data
+     */
+    public function add_instance(array $data): void
+    {
+        $sql     = "INSERT INTO `localplay_mpd` (`name`, `host`, `port`, `password`, `owner`) VALUES (?, ?, ?, ?, ?)";
+        $user_id = (Core::get_global('user') instanceof User)
+            ? Core::get_global('user')->id
+            : -1;
 
-    private $_mpd;
+        Dba::write($sql, [$data['name'] ?? null, $data['host'] ?? null, $data['port'] ?? null, $data['password'] ?? null, $user_id]);
+    }
+
+    /**
+     * add_url
+     */
+    public function add_url(Stream_Url $url): bool
+    {
+        if (!$this->_mpd instanceof mpd) {
+            return false;
+        }
+
+        // If we haven't added anything then maybe we should clear the playlist.
+        if ($this->_add_count < 1) {
+            $this->_mpd->RefreshInfo();
+            if ($this->block_clear === false
+                && $this->_mpd->status['state'] == mpd::STATE_STOPPED
+            ) {
+                $this->clear_playlist();
+            }
+        }
+
+        if (!$this->_mpd->PlAdd($url->url)) {
+            debug_event(self::class, 'add_url failed to add: ' . json_encode($url), 1);
+
+            return false;
+        }
+
+        $this->_add_count++;
+
+        return true;
+    }
+
+    /**
+     * clear_playlist
+     * This deletes the entire MPD playlist
+     */
+    public function clear_playlist(): bool
+    {
+        if (!$this->_mpd instanceof mpd) {
+            return false;
+        }
+
+        $this->_add_count = 0;
+
+        return $this->_mpd->PLClear() !== false;
+    }
+
+    /**
+     * connect
+     * This functions creates the connection to MPD and returns
+     * a boolean value for the status, to save time this handle
+     * is stored in this class
+     */
+    public function connect(): bool
+    {
+        // Look at the current instance and pull the options for said instance
+        $options = self::get_instance();
+        if ($options === [] || !isset($options['host'], $options['port'])) {
+            return false;
+        }
+
+        $this->_mpd = new mpd($options['host'], $options['port'], $options['password'] ?? null, 'debug_event');
+
+        return $this->_mpd->connected;
+    }
+
+    /**
+     * delete_instance
+     * This takes a UID and deletes the instance in question
+     */
+    public function delete_instance(int $uid): void
+    {
+        $sql = "DELETE FROM `localplay_mpd` WHERE `id` = ?";
+        Dba::write($sql, [$uid]);
+    }
+
+    /**
+     * delete_track
+     * This must take a single ID (as returned by the get function)
+     * and delete it from the current playlist
+     */
+    public function delete_track(int $object_id): bool
+    {
+        if (!$this->_mpd instanceof mpd) {
+            return false;
+        }
+
+        return $this->_mpd->PLRemove($object_id) !== false;
+    }
+
+    /**
+     * get_songs
+     * This functions returns an array containing information about
+     * the songs that MPD currently has in its playlist. This must be
+     * done in a standardized fashion
+     * @return array<int, array{
+     *     id: int,
+     *     raw: string,
+     *     oid?: int,
+     *     name?: string,
+     *     link?: string,
+     *     track: int,
+     * }>
+     */
+    public function get(): array
+    {
+        if (!$this->_mpd instanceof mpd) {
+            return [];
+        }
+
+        // If we don't have the playlist yet, pull it
+        if ($this->_mpd->playlist === null) {
+            $this->_mpd->RefreshInfo();
+        }
+
+        /* Get the Current Playlist */
+        $playlist = $this->_mpd->playlist;
+        $results  = [];
+        // if there isn't anything to return don't do it
+        if (empty($playlist)) {
+            return $results;
+        }
+
+        foreach ($playlist as $entry) {
+            $data = [];
+
+            /* Required Elements */
+            $data['id']  = $entry['Pos'];
+            $data['raw'] = $entry['file'];
+
+            $url_data = $this->parse_url($entry['file']);
+            $url_key  = $url_data['primary_key'] ?? '';
+
+            switch ($url_key) {
+                case 'oid':
+                    $data['oid']  = (int) $url_data['oid'];
+                    $song         = new Song($data['oid']);
+                    $data['name'] = $song->get_fullname() . ' - ' . $song->get_album_fullname($song->album, true) . ' - ' . $song->get_parent_fullname();
+                    $data['link'] = $song->get_f_link();
+                    break;
+                case 'demo_id':
+                    $democratic   = new Democratic($url_data['demo_id']);
+                    $data['name'] = T_('Democratic') . ' - ' . $democratic->name;
+                    $data['link'] = '';
+                    break;
+                case 'random':
+                    $className = ObjectTypeToClassNameMapper::map($url_data['random_type']);
+                    /** @var library_item $random */
+                    $random       = new $className($url_data['random_id']);
+                    $data['name'] = T_('Random') . ' - ' . scrub_out($random->get_fullname());
+                    $data['link'] = '';
+                    break;
+                default:
+                    // If we don't know it, look up by filename
+                    $filename = Dba::escape($entry['file']);
+                    $sql      = "SELECT `id`, 'song' AS `type` FROM `song` WHERE `file` LIKE ? UNION ALL SELECT `id`, 'live_stream' AS `type` FROM `live_stream` WHERE `url` = ? ";
+
+                    $db_results = Dba::read($sql, ['%' . $filename, $filename]);
+                    if ($row = Dba::fetch_assoc($db_results)) {
+                        $className = ObjectTypeToClassNameMapper::map($row['type']);
+                        /** @var Song|Live_Stream $media */
+                        $media = new $className($row['id']);
+                        switch ($row['type']) {
+                            case 'song':
+                                /** @var Song $media */
+                                $data['name'] = $media->get_fullname() . ' - ' . $media->get_album_fullname() . ' - ' . $media->get_parent_fullname();
+                                $data['link'] = $media->get_f_link();
+                                break;
+                            case 'live_stream':
+                                /** @var Live_Stream $media */
+                                $site_url     = ($media->site_url) ? '(' . $media->site_url . ')' : '';
+                                $data['name'] = sprintf('%s %s', $media->name, $site_url);
+                                $data['link'] = (string) $media->site_url;
+                                break;
+                        }
+                    } else {
+                        $title_string = (isset($entry['Title']) && isset($entry['Album']) && isset($entry['Artist']))
+                            ? $entry['Title'] . ' - ' . $entry['Album'] . ' - ' . $entry['Artist']
+                            : T_('Unknown');
+                        $data['name'] = $title_string;
+                        $data['link'] = '';
+                    }
+
+                    break;
+            }
+
+            /* Optional Elements */
+            $data['track'] = $entry['Pos'] + 1;
+
+            $results[] = $data;
+        } // foreach playlist items
+
+        return $results;
+    }
+
+    /**
+     * get_active_instance
+     * This returns the UID of the current active instance
+     * null if none are active
+     */
+    public function get_active_instance(): ?int
+    {
+        if (AmpConfig::get(self::ACTIVE_PREF)) {
+            return (int) AmpConfig::get(self::ACTIVE_PREF);
+        }
+
+        return null;
+    }
 
     /**
      * get_description
@@ -67,24 +290,66 @@ class AmpacheMpd extends localplay_controller
     }
 
     /**
+     * get_instance
+     * This returns the specified instance and all it's pretty variables
+     * If no instance is passed current is used
+     * @return array{
+     *     id?: int,
+     *     name?: string,
+     *     owner?: int,
+     *     host?: string,
+     *     port?: int,
+     *     password?: string,
+     *     access?: int
+     * }
+     */
+    public function get_instance(?string $instance = ''): array
+    {
+        $instance   = (is_numeric($instance)) ? (int) $instance : (int) AmpConfig::get(self::ACTIVE_PREF, 0);
+        $sql        = ($instance > 0) ? "SELECT * FROM `localplay_mpd` WHERE `id` = ?" : "SELECT * FROM `localplay_mpd`";
+        $db_results = ($instance > 0) ? Dba::query($sql, [$instance]) : Dba::query($sql);
+
+        if ($row = Dba::fetch_assoc($db_results)) {
+            return [
+                'id' => (int) $row['id'],
+                'name' => $row['name'],
+                'owner' => (int) $row['owner'],
+                'host' => $row['host'],
+                'port' => (int) $row['port'],
+                'password' => $row['password'],
+                'access' => (int) $row['access'],
+            ];
+        }
+
+        return [];
+    }
+
+    /**
+     * get_instances
+     * This returns a key'd array of the instance information with
+     * [UID]=>[NAME]
+     * @return string[]
+     */
+    public function get_instances(): array
+    {
+        $sql = "SELECT * FROM `localplay_mpd` ORDER BY `name`";
+
+        $db_results = Dba::read($sql);
+        $results    = [];
+        while ($row = Dba::fetch_assoc($db_results)) {
+            $results[(int) $row['id']] = $row['name'];
+        }
+
+        return $results;
+    }
+
+    /**
      * get_version
      * This returns the version information
      */
     public function get_version(): string
     {
         return $this->version;
-    }
-
-    /**
-     * is_installed
-     * This returns true or false if MPD controller is installed
-     */
-    public function is_installed(): bool
-    {
-        $sql        = "SHOW TABLES LIKE 'localplay_mpd'";
-        $db_results = Dba::read($sql);
-
-        return (Dba::num_rows($db_results) > 0);
     }
 
     /**
@@ -117,120 +382,6 @@ class AmpacheMpd extends localplay_controller
     }
 
     /**
-     * uninstall
-     * This removes the Localplay controller
-     */
-    public function uninstall(): bool
-    {
-        $sql = "DROP TABLE `localplay_mpd`";
-        Dba::write($sql);
-
-        Preference::delete(self::ACTIVE_PREF);
-
-        return true;
-    }
-
-    /**
-     * add_instance
-     * This takes key'd data and inserts a new MPD instance
-     * @param array{
-     *     name?: string,
-     *     host?: string,
-     *     port?: string,
-     *     password?: string,
-     * } $data
-     */
-    public function add_instance(array $data): void
-    {
-        $sql     = "INSERT INTO `localplay_mpd` (`name`, `host`, `port`, `password`, `owner`) VALUES (?, ?, ?, ?, ?)";
-        $user_id = (Core::get_global('user') instanceof User)
-            ? Core::get_global('user')->id
-            : -1;
-
-        Dba::write($sql, [$data['name'] ?? null, $data['host'] ?? null, $data['port'] ?? null, $data['password'] ?? null, $user_id]);
-    }
-
-    /**
-     * delete_instance
-     * This takes a UID and deletes the instance in question
-     */
-    public function delete_instance(int $uid): void
-    {
-        $sql = "DELETE FROM `localplay_mpd` WHERE `id` = ?";
-        Dba::write($sql, [$uid]);
-    }
-
-    /**
-     * get_instances
-     * This returns a key'd array of the instance information with
-     * [UID]=>[NAME]
-     * @return string[]
-     */
-    public function get_instances(): array
-    {
-        $sql = "SELECT * FROM `localplay_mpd` ORDER BY `name`";
-
-        $db_results = Dba::read($sql);
-        $results    = [];
-        while ($row = Dba::fetch_assoc($db_results)) {
-            $results[(int)$row['id']] = $row['name'];
-        }
-
-        return $results;
-    }
-
-    /**
-     * get_instance
-     * This returns the specified instance and all it's pretty variables
-     * If no instance is passed current is used
-     * @return array{
-     *     id?: int,
-     *     name?: string,
-     *     owner?: int,
-     *     host?: string,
-     *     port?: int,
-     *     password?: string,
-     *     access?: int
-     * }
-     */
-    public function get_instance(?string $instance = ''): array
-    {
-        $instance   = (is_numeric($instance)) ? (int) $instance : (int) AmpConfig::get(self::ACTIVE_PREF, 0);
-        $sql        = ($instance > 0) ? "SELECT * FROM `localplay_mpd` WHERE `id` = ?" : "SELECT * FROM `localplay_mpd`";
-        $db_results = ($instance > 0) ? Dba::query($sql, [$instance]) : Dba::query($sql);
-
-        if ($row = Dba::fetch_assoc($db_results)) {
-            return [
-                'id' => (int)$row['id'],
-                'name' => $row['name'],
-                'owner' => (int)$row['owner'],
-                'host' => $row['host'],
-                'port' => (int)$row['port'],
-                'password' => $row['password'],
-                'access' => (int)$row['access'],
-            ];
-        }
-
-        return [];
-    }
-
-    /**
-     * update_instance
-     * This takes an ID and an array of data and updates the instance specified
-     * @param array{
-     *     host?: string,
-     *     port?: string,
-     *     name: string,
-     *     password: string,
-     * } $data
-     */
-    public function update_instance(int $uid, array $data): void
-    {
-        $sql = "UPDATE `localplay_mpd` SET `host` = ?, `port` = ?, `name` = ?, `password` = ? WHERE `id` = ?;";
-        Dba::write($sql, [$data['host'] ?? '127.0.0.1', $data['port'] ?? '6600', $data['name'], $data['password'], $uid]);
-    }
-
-    /**
      * instance_fields
      * This returns a key'd array of [NAME]=>array([DESCRIPTION]=>VALUE,[TYPE]=>VALUE) for the
      * fields so that we can on-the-fly generate a form
@@ -242,6 +393,111 @@ class AmpacheMpd extends localplay_controller
     public function instance_fields(): array
     {
         return ['name' => ['description' => T_('Instance Name'), 'type' => 'text'], 'host' => ['description' => T_('Hostname'), 'type' => 'text'], 'port' => ['description' => T_('Port'), 'type' => 'number'], 'password' => ['description' => T_('Password'), 'type' => 'password']];
+    }
+
+    /**
+     * is_installed
+     * This returns true or false if MPD controller is installed
+     */
+    public function is_installed(): bool
+    {
+        $sql        = "SHOW TABLES LIKE 'localplay_mpd'";
+        $db_results = Dba::read($sql);
+
+        return (Dba::num_rows($db_results) > 0);
+    }
+
+    /**
+     * move
+     * This tells MPD to move a song
+     */
+    public function move($source, $destination): bool|string
+    {
+        if (!$this->_mpd instanceof mpd) {
+            return false;
+        }
+
+        return $this->_mpd->PLMoveTrack($source, $destination);
+    }
+
+    /**
+     * next
+     * This just tells MPD to skip to the next song
+     */
+    public function next(): bool
+    {
+        if (!$this->_mpd instanceof mpd) {
+            return false;
+        }
+
+        return $this->_mpd->Next() !== false;
+    }
+
+    /**
+     * pause
+     * This tells MPD to pause the current song
+     */
+    public function pause(): bool
+    {
+        if (!$this->_mpd instanceof mpd) {
+            return false;
+        }
+
+        return $this->_mpd->Pause() !== false;
+    }
+
+    /**
+     * play
+     * This just tells MPD to start playing, it does not
+     * take any arguments
+     */
+    public function play(): bool
+    {
+        if (!$this->_mpd instanceof mpd) {
+            return false;
+        }
+
+        return $this->_mpd->Play() !== false;
+    }
+
+    /**
+     * prev
+     * This just tells MPD to skip to the prev song
+     */
+    public function prev(): bool
+    {
+        if (!$this->_mpd instanceof mpd) {
+            return false;
+        }
+
+        return $this->_mpd->Previous() !== false;
+    }
+
+    /**
+     * random
+     * This tells MPD to turn on or off the playing of songs from the
+     * playlist in random order.
+     */
+    public function random(bool $state): bool
+    {
+        if (!$this->_mpd instanceof mpd) {
+            return false;
+        }
+
+        return $this->_mpd->SetRandom($state) !== false;
+    }
+
+    /**
+     * repeat
+     * This tells MPD to set the repeating the playlist (i.e. loop) to either on or off.
+     */
+    public function repeat(bool $state): bool
+    {
+        if (!$this->_mpd instanceof mpd) {
+            return false;
+        }
+
+        return $this->_mpd->SetRepeat($state) !== false;
     }
 
     /**
@@ -263,93 +519,15 @@ class AmpacheMpd extends localplay_controller
     }
 
     /**
-     * get_active_instance
-     * This returns the UID of the current active instance
-     * null if none are active
-     */
-    public function get_active_instance(): ?int
-    {
-        if (AmpConfig::get(self::ACTIVE_PREF)) {
-            return (int)AmpConfig::get(self::ACTIVE_PREF);
-        }
-
-        return null;
-    }
-
-    /**
-     * add_url
-     */
-    public function add_url(Stream_Url $url): bool
-    {
-        // If we haven't added anything then maybe we should clear the playlist.
-        if ($this->_add_count < 1) {
-            $this->_mpd->RefreshInfo();
-            if ($this->block_clear === false &&
-                $this->_mpd->status['state'] == mpd::STATE_STOPPED
-            ) {
-                $this->clear_playlist();
-            }
-        }
-
-        if (!$this->_mpd->PlAdd($url->url)) {
-            debug_event(self::class, 'add_url failed to add: ' . json_encode($url), 1);
-
-            return false;
-        }
-
-        $this->_add_count++;
-
-        return true;
-    }
-
-    /**
-     * delete_track
-     * This must take a single ID (as returned by the get function)
-     * and delete it from the current playlist
-     */
-    public function delete_track(int $object_id): bool
-    {
-        return $this->_mpd->PLRemove($object_id) !== false;
-    }
-
-    /**
-     * clear_playlist
-     * This deletes the entire MPD playlist
-     */
-    public function clear_playlist(): bool
-    {
-        $this->_add_count = 0;
-
-        return $this->_mpd->PLClear() !== false;
-    }
-
-    /**
-     * play
-     * This just tells MPD to start playing, it does not
-     * take any arguments
-     */
-    public function play(): bool
-    {
-        return $this->_mpd->Play() !== false;
-    }
-
-    /**
-     * stop
-     * This just tells MPD to stop playing, it does not take
-     * any arguments
-     */
-    public function stop(): bool
-    {
-        return $this->_mpd->Stop() !== false;
-    }
-
-    /**
      * skip
      * This tells MPD to skip to the specified song
      */
     public function skip(int $track_id): bool
     {
-        if (!$this->_mpd->SkipTo($track_id)) {
+        if (
+            !$this->_mpd
+            || !$this->_mpd->SkipTo($track_id)
+        ) {
             return false;
         }
 
@@ -362,198 +540,13 @@ class AmpacheMpd extends localplay_controller
     }
 
     /**
-     * This tells MPD to increase the volume by 5
-     */
-    public function volume_up(): bool
-    {
-        return $this->_mpd->AdjustVolume('5') !== false;
-    }
-
-    /**
-     * This tells MPD to decrease the volume by 5
-     */
-    public function volume_down(): bool
-    {
-        return $this->_mpd->AdjustVolume('-5') !== false;
-    }
-
-    /**
-     * next
-     * This just tells MPD to skip to the next song
-     */
-    public function next(): bool
-    {
-        return $this->_mpd->Next() !== false;
-    }
-
-    /**
-     * prev
-     * This just tells MPD to skip to the prev song
-     */
-    public function prev(): bool
-    {
-        return $this->_mpd->Previous() !== false;
-    }
-
-    /**
-     * pause
-     * This tells MPD to pause the current song
-     */
-    public function pause(): bool
-    {
-        return $this->_mpd->Pause() !== false;
-    }
-
-    /**
-     * volume
-     * This tells MPD to set the volume to the parameter
-     */
-    public function volume(int $volume): bool
-    {
-        return $this->_mpd->SetVolume($volume) !== false;
-    }
-
-    /**
-     * repeat
-     * This tells MPD to set the repeating the playlist (i.e. loop) to either on or off.
-     */
-    public function repeat(bool $state): bool
-    {
-        return $this->_mpd->SetRepeat($state) !== false;
-    }
-
-    /**
-     * random
-     * This tells MPD to turn on or off the playing of songs from the
-     * playlist in random order.
-     */
-    public function random(bool $state): bool
-    {
-        return $this->_mpd->SetRandom($state) !== false;
-    }
-
-    /**
-     * move
-     * This tells MPD to move a song
-     */
-    public function move($source, $destination): bool|string
-    {
-        return $this->_mpd->PLMoveTrack($source, $destination);
-    }
-
-    /**
-     * get_songs
-     * This functions returns an array containing information about
-     * the songs that MPD currently has in its playlist. This must be
-     * done in a standardized fashion
-     * @return array<int, array{
-     *     id: int,
-     *     raw: string,
-     *     oid?: int,
-     *     name?: string,
-     *     link?: string,
-     *     track: int,
-     * }>
-     */
-    public function get(): array
-    {
-        if (!$this->_mpd) {
-            return [];
-        }
-
-        // If we don't have the playlist yet, pull it
-        if (!isset($this->_mpd->playlist)) {
-            $this->_mpd->RefreshInfo();
-        }
-
-        /* Get the Current Playlist */
-        $playlist = $this->_mpd->playlist;
-        $results  = [];
-        // if there isn't anything to return don't do it
-        if (empty($playlist)) {
-            return $results;
-        }
-
-        foreach ($playlist as $entry) {
-            $data = [];
-
-            /* Required Elements */
-            $data['id']  = $entry['Pos'];
-            $data['raw'] = $entry['file'];
-
-            $url_data = $this->parse_url($entry['file']);
-            $url_key  = $url_data['primary_key'] ?? '';
-
-            switch ($url_key) {
-                case 'oid':
-                    $data['oid']  = (int)$url_data['oid'];
-                    $song         = new Song($data['oid']);
-                    $data['name'] = $song->get_fullname() . ' - ' . $song->get_album_fullname($song->album, true) . ' - ' . $song->get_artist_fullname();
-                    $data['link'] = $song->get_f_link();
-                    break;
-                case 'demo_id':
-                    $democratic   = new Democratic($url_data['demo_id']);
-                    $data['name'] = T_('Democratic') . ' - ' . $democratic->name;
-                    $data['link'] = '';
-                    break;
-                case 'random':
-                    $className = ObjectTypeToClassNameMapper::map($url_data['random_type']);
-                    /** @var library_item $random */
-                    $random       = new $className($url_data['random_id']);
-                    $data['name'] = T_('Random') . ' - ' . scrub_out($random->get_fullname());
-                    $data['link'] = '';
-                    break;
-                default:
-                    // If we don't know it, look up by filename
-                    $filename = Dba::escape($entry['file']);
-                    $sql      = "SELECT `id`, 'song' AS `type` FROM `song` WHERE `file` LIKE ? UNION ALL SELECT `id`, 'live_stream' AS `type` FROM `live_stream` WHERE `url` = ? ";
-
-                    $db_results = Dba::read($sql, ['%' . $filename, $filename]);
-                    if ($row = Dba::fetch_assoc($db_results)) {
-                        $className = ObjectTypeToClassNameMapper::map($row['type']);
-                        /** @var Song|Live_Stream $media */
-                        $media = new $className($row['id']);
-                        switch ($row['type']) {
-                            case 'song':
-                                /** @var Song $media */
-                                $data['name'] = $media->get_fullname() . ' - ' . $media->get_album_fullname() . ' - ' . $media->get_artist_fullname();
-                                $data['link'] = $media->get_f_link();
-                                break;
-                            case 'live_stream':
-                                /** @var Live_Stream $media */
-                                $site_url     = ($media->site_url) ? '(' . $media->site_url . ')' : '';
-                                $data['name'] = sprintf('%s %s', $media->name, $site_url);
-                                $data['link'] = (string)$media->site_url;
-                                break;
-                        } // end switch on type
-                    } else {
-                        $title_string = (isset($entry['Title']) && isset($entry['Album']) && isset($entry['Artist']))
-                            ? $entry['Title'] . ' - ' . $entry['Album'] . ' - ' . $entry['Artist']
-                            : T_('Unknown');
-                        $data['name'] = $title_string;
-                        $data['link'] = '';
-                    }
-
-                    break;
-            } // end switch on primary key type
-
-            /* Optional Elements */
-            $data['track'] = $entry['Pos'] + 1;
-
-            $results[] = $data;
-        } // foreach playlist items
-
-        return $results;
-    }
-
-    /**
      * get_status
      * This returns bool/int values for features, loop, repeat and any other features that this Localplay method supports.
      */
     public function status(): array
     {
         $array = [];
-        if (!$this->_mpd) {
+        if (!$this->_mpd instanceof mpd) {
             return $array;
         }
 
@@ -588,7 +581,7 @@ class AmpacheMpd extends localplay_controller
                 $array['track_album']  = T_('Unknown');
             } else {
                 $array['track_title']  = $song->title;
-                $array['track_artist'] = $song->get_artist_fullname();
+                $array['track_artist'] = $song->get_parent_fullname();
                 $array['track_album']  = $song->get_album_fullname();
             }
         } elseif (!empty($playlist_item)) {
@@ -613,21 +606,83 @@ class AmpacheMpd extends localplay_controller
     }
 
     /**
-     * connect
-     * This functions creates the connection to MPD and returns
-     * a boolean value for the status, to save time this handle
-     * is stored in this class
+     * stop
+     * This just tells MPD to stop playing, it does not take
+     * any arguments
      */
-    public function connect(): bool
+    public function stop(): bool
     {
-        // Look at the current instance and pull the options for said instance
-        $options = self::get_instance();
-        if ($options === [] || !isset($options['host'], $options['port'])) {
+        if (!$this->_mpd instanceof mpd) {
             return false;
         }
 
-        $this->_mpd = new mpd($options['host'], $options['port'], $options['password'] ?? null, 'debug_event');
+        return $this->_mpd->Stop() !== false;
+    }
 
-        return $this->_mpd->connected;
+    /**
+     * uninstall
+     * This removes the Localplay controller
+     */
+    public function uninstall(): bool
+    {
+        $sql = "DROP TABLE `localplay_mpd`";
+        Dba::write($sql);
+
+        Preference::delete(self::ACTIVE_PREF);
+
+        return true;
+    }
+
+    /**
+     * update_instance
+     * This takes an ID and an array of data and updates the instance specified
+     * @param array{
+     *     host?: string,
+     *     port?: string,
+     *     name: string,
+     *     password: string,
+     * } $data
+     */
+    public function update_instance(int $uid, array $data): void
+    {
+        $sql = "UPDATE `localplay_mpd` SET `host` = ?, `port` = ?, `name` = ?, `password` = ? WHERE `id` = ?;";
+        Dba::write($sql, [$data['host'] ?? '127.0.0.1', $data['port'] ?? '6600', $data['name'], $data['password'], $uid]);
+    }
+
+    /**
+     * volume
+     * This tells MPD to set the volume to the parameter
+     */
+    public function volume(int $volume): bool
+    {
+        if (!$this->_mpd instanceof mpd) {
+            return false;
+        }
+
+        return $this->_mpd->SetVolume($volume) !== false;
+    }
+
+    /**
+     * This tells MPD to decrease the volume by 5
+     */
+    public function volume_down(): bool
+    {
+        if (!$this->_mpd instanceof mpd) {
+            return false;
+        }
+
+        return $this->_mpd->AdjustVolume('-5') !== false;
+    }
+
+    /**
+     * This tells MPD to increase the volume by 5
+     */
+    public function volume_up(): bool
+    {
+        if (!$this->_mpd instanceof mpd) {
+            return false;
+        }
+
+        return $this->_mpd->AdjustVolume('5') !== false;
     }
 }

@@ -44,8 +44,7 @@ final readonly class SongAjaxHandler implements AjaxHandlerInterface
         private RequestParserInterface $requestParser,
         private ShoutRepositoryInterface $shoutRepository,
         private ShoutRendererInterface $shoutRenderer,
-    ) {
-    }
+    ) {}
 
     public function handle(User $user): void
     {

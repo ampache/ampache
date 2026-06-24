@@ -176,8 +176,8 @@ class Waveform
         }
 
         // Create subdirectory based on the 2 last digit of the Song Id. We prevent having thousands of file in one directory.
-        $dir1 = substr((string)$object_id, -1, 1);
-        $dir2 = substr((string)$object_id, -2, 1);
+        $dir1 = substr((string) $object_id, -1, 1);
+        $dir2 = substr((string) $object_id, -2, 1);
         $path .= "/waveform/" . $object_type . '/' . $dir1 . '/' . $dir2 . "/";
         if (!file_exists($path)) {
             mkdir($path, 0775, true);
@@ -223,34 +223,6 @@ class Waveform
     }
 
     /**
-     * findValues
-     */
-    protected static function findValues(string $byte1, string $byte2): float|int
-    {
-        $byte1 = hexdec(bin2hex($byte1));
-        $byte2 = hexdec(bin2hex($byte2));
-
-        return ($byte1 + ($byte2 * 256));
-    }
-
-    /**
-     * Great function slightly modified as posted by Minux at
-     * http://forums.clantemplates.com/showthread.php?t=133805
-     * Converts a hex color string (#RRGGBB or RRGGBB) to its RGB components.
-     * @return array{0: int<0,255>, 1: int<0,255>, 2: int<0,255>} [red, green, blue], each in the range 0–255
-     */
-    protected static function html2rgb(string $input): array
-    {
-        $input = ($input[0] == "#") ? substr($input, 1, 6) : substr($input, 0, 6);
-
-        return [
-            min(255, max(0, (int)hexdec(substr($input, 0, 2)))),
-            min(255, max(0, (int)hexdec(substr($input, 2, 2)))),
-            min(255, max(0, (int)hexdec(substr($input, 4, 2)))),
-        ];
-    }
-
-    /**
      * Create waveform from song file.
      */
     protected static function create_waveform(string $filename): ?string
@@ -271,10 +243,10 @@ class Waveform
         }
 
         $detail     = 5;
-        $width      = (int)AmpConfig::get('waveform_width', 400);
-        $height     = (int)AmpConfig::get('waveform_height', 32);
-        $foreground = (string)AmpConfig::get('waveform_color', '#FF0000');
-        $draw_flat  = (bool)AmpConfig::get('waveform_drawflat', true);
+        $width      = (int) AmpConfig::get('waveform_width', 400);
+        $height     = (int) AmpConfig::get('waveform_height', 32);
+        $foreground = (string) AmpConfig::get('waveform_color', '#FF0000');
+        $draw_flat  = (bool) AmpConfig::get('waveform_drawflat', true);
 
         // generate foreground color
         [$red, $green, $blue] = self::html2rgb($foreground);
@@ -289,22 +261,22 @@ class Waveform
         // wav file header retrieval
         $heading   = [];
         $heading[] = fread($handle, 4);
-        $heading[] = bin2hex((string)fread($handle, 4));
+        $heading[] = bin2hex((string) fread($handle, 4));
         $heading[] = fread($handle, 4);
         $heading[] = fread($handle, 4);
-        $heading[] = bin2hex((string)fread($handle, 4));
-        $heading[] = bin2hex((string)fread($handle, 2));
-        $heading[] = bin2hex((string)fread($handle, 2));
-        $heading[] = bin2hex((string)fread($handle, 4));
-        $heading[] = bin2hex((string)fread($handle, 4));
-        $heading[] = bin2hex((string)fread($handle, 2));
-        $heading[] = bin2hex((string)fread($handle, 2));
+        $heading[] = bin2hex((string) fread($handle, 4));
+        $heading[] = bin2hex((string) fread($handle, 2));
+        $heading[] = bin2hex((string) fread($handle, 2));
+        $heading[] = bin2hex((string) fread($handle, 4));
+        $heading[] = bin2hex((string) fread($handle, 4));
+        $heading[] = bin2hex((string) fread($handle, 2));
+        $heading[] = bin2hex((string) fread($handle, 2));
         $heading[] = fread($handle, 4);
-        $heading[] = bin2hex((string)fread($handle, 4));
+        $heading[] = bin2hex((string) fread($handle, 4));
 
         // wav bitrate
         $peek = hexdec(substr($heading[10], 0, 2));
-        $byte = (int)($peek / 8);
+        $byte = (int) ($peek / 8);
 
         // checking whether a mono or stereo wav
         $channel = hexdec(substr($heading[6], 0, 2));
@@ -334,7 +306,7 @@ class Waveform
         // fill background of image
         // transparent background specified
         imagesavealpha($img, true);
-        $transparentColor = (int)imagecolorallocatealpha($img, 0, 0, 0, 127);
+        $transparentColor = (int) imagecolorallocatealpha($img, 0, 0, 0, 127);
         imagefill($img, 0, 0, $transparentColor);
         while (!feof($handle) && $data_point < $data_size) {
             if ($data_point++ % $detail === 0) {
@@ -342,7 +314,7 @@ class Waveform
 
                 // get number of bytes depending on bitrate
                 for ($count = 0; $count < $byte; $count++) {
-                    $bytes[$count] = (string)fgetc($handle);
+                    $bytes[$count] = (string) fgetc($handle);
                 }
 
                 switch ($byte) {
@@ -368,24 +340,24 @@ class Waveform
                 // draw this data point
                 // relative value based on height of image being generated
                 // data values can range between 0 and 255
-                $value = (int)($data / 255 * $height);
+                $value = (int) ($data / 255 * $height);
 
                 // don't print flat values on the canvas if not necessary
                 if (!($value / $height == 0.5 && !$draw_flat)) {
                     // draw the line on the image using the $value and centering it vertically on the canvas
                     imageline(
                         $img, // x1
-                        (int)($data_point / $detail),
+                        (int) ($data_point / $detail),
                         // y1: height of the image minus as a percentage of the height for the wave amplitude
                         $height - $value, // x2
-                        (int)($data_point / $detail), // y2: same as y1, but from the bottom of the image
+                        (int) ($data_point / $detail), // y2: same as y1, but from the bottom of the image
                         $height - ($height - $value),
-                        (int)imagecolorallocate($img, $red, $green, $blue)
+                        (int) imagecolorallocate($img, $red, $green, $blue)
                     );
                 }
             } else {
                 // skip this one due to lack of detail
-                fseek($handle, (int)($ratio + $byte), SEEK_CUR);
+                fseek($handle, $ratio + $byte, SEEK_CUR);
             }
         }
 
@@ -409,11 +381,38 @@ class Waveform
             imagepng($img);
         }
 
-
         $imgdata = ob_get_contents();
         ob_clean();
 
         return $imgdata ?: null;
+    }
+
+    /**
+     * findValues
+     */
+    protected static function findValues(string $byte1, string $byte2): float|int
+    {
+        $byte1 = hexdec(bin2hex($byte1));
+        $byte2 = hexdec(bin2hex($byte2));
+
+        return ($byte1 + ($byte2 * 256));
+    }
+
+    /**
+     * Great function slightly modified as posted by Minux at
+     * http://forums.clantemplates.com/showthread.php?t=133805
+     * Converts a hex color string (#RRGGBB or RRGGBB) to its RGB components.
+     * @return array{0: int<0,255>, 1: int<0,255>, 2: int<0,255>} [red, green, blue], each in the range 0–255
+     */
+    protected static function html2rgb(string $input): array
+    {
+        $input = ($input[0] == "#") ? substr($input, 1, 6) : substr($input, 0, 6);
+
+        return [
+            min(255, max(0, (int) hexdec(substr($input, 0, 2)))),
+            min(255, max(0, (int) hexdec(substr($input, 2, 2)))),
+            min(255, max(0, (int) hexdec(substr($input, 4, 2)))),
+        ];
     }
 
     /**

@@ -25,6 +25,4 @@ declare(strict_types=1);
 
 namespace Ampache\Module\Authorization\Exception;
 
-final class InvalidIpRangeException extends AclItemConfigurationException
-{
-}
+final class InvalidIpRangeException extends AclItemConfigurationException {}

@@ -51,8 +51,7 @@ class OAuthConsumer implements Stringable
         public $key,
         public $secret,
         public $callback_url = null,
-    ) {
-    }
+    ) {}
 
     /**
      * __toString

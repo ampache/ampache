@@ -46,7 +46,7 @@ final class GenreSongs4Method
      *
      * filter = (string) UID of Genre
      * offset = (integer) //optional
-     * limit  = (integer) //optional
+     * limit = (integer) //optional
      *
      * @param array{
      *     filter?: string,
@@ -63,7 +63,7 @@ final class GenreSongs4Method
         if (!Api4::check_parameter($input, ['filter'], self::ACTION)) {
             return false;
         }
-        $results = Tag::get_tag_objects('song', (int)($input['filter'] ?? 0));
+        $results = Tag::get_tag_objects('song', (int) ($input['filter'] ?? 0));
 
         ob_end_clean();
         if (!empty($results)) {

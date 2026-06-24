@@ -40,6 +40,16 @@ final class SongDelete5Method
     public const string ACTION = 'song_delete';
 
     /**
+     * @deprecated
+     */
+    public static function getSongDeleter(): SongDeleterInterface
+    {
+        global $dic;
+
+        return $dic->get(SongDeleterInterface::class);
+    }
+
+    /**
      * song_delete
      * MINIMUM_API_VERSION=5.0.0
      *
@@ -81,15 +91,5 @@ final class SongDelete5Method
         }
 
         return true;
-    }
-
-    /**
-     * @deprecated
-     */
-    public static function getSongDeleter(): SongDeleterInterface
-    {
-        global $dic;
-
-        return $dic->get(SongDeleterInterface::class);
     }
 }

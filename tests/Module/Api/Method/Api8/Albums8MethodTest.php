@@ -40,25 +40,9 @@ use Psr\Http\Message\StreamInterface;
 
 class Albums8MethodTest extends MockeryTestCase
 {
-    /** @var MockInterface|StreamFactoryInterface|null */
-    private MockInterface $streamFactory;
-
-    /** @var MockInterface|ModelFactoryInterface|null */
-    private MockInterface $modelFactory;
-
+    private MockInterface|ModelFactoryInterface|null $modelFactory;
+    private MockInterface|StreamFactoryInterface|null $streamFactory;
     private Albums8Method $subject;
-
-    #[Override]
-    protected function setUp(): void
-    {
-        $this->streamFactory = $this->mock(StreamFactoryInterface::class);
-        $this->modelFactory  = $this->mock(ModelFactoryInterface::class);
-
-        $this->subject = new Albums8Method(
-            $this->streamFactory,
-            $this->modelFactory
-        );
-    }
 
     public function testHandleEmptyListReturnsResponse(): void
     {
@@ -258,6 +242,18 @@ class Albums8MethodTest extends MockeryTestCase
                 ],
                 $user
             )
+        );
+    }
+
+    #[Override]
+    protected function setUp(): void
+    {
+        $this->streamFactory = $this->mock(StreamFactoryInterface::class);
+        $this->modelFactory  = $this->mock(ModelFactoryInterface::class);
+
+        $this->subject = new Albums8Method(
+            $this->streamFactory,
+            $this->modelFactory
         );
     }
 }

@@ -23,6 +23,8 @@ declare(strict_types=0);
  *
  */
 
+// show_edit_playlist_row.inc.php
+
 use Ampache\Repository\Model\Playlist;
 use Ampache\Repository\Model\User;
 
@@ -68,7 +70,7 @@ if (!empty($users)) {
                     <?php echo T_('Collaborate'); ?><br />
                 </td>
                 <td>
-<?php $ids = explode(',', (string)$libitem->collaborate);
+<?php $ids = explode(',', (string) $libitem->collaborate);
 $options   = [];
 $users     = User::getValidArray();
 if (!empty($users)) {

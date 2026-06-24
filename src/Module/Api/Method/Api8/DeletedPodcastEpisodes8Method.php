@@ -44,7 +44,7 @@ final class DeletedPodcastEpisodes8Method
      * This returns the episodes for a podcast that have been deleted
      *
      * offset = (integer) //optional
-     * limit  = (integer) //optional
+     * limit = (integer) //optional
      *
      * @param array{
      *     limit?: string,

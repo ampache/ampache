@@ -44,7 +44,7 @@ final class Migration700005 extends AbstractMigration
         $db_results = Dba::read($sql, [], true);
         $playlists  = [];
         while ($results = Dba::fetch_assoc($db_results)) {
-            $playlists[(int)$results['id']] = (int)$results['count'];
+            $playlists[(int) $results['id']] = (int) $results['count'];
         }
 
         foreach ($playlists as $playlist_id => $last_count) {

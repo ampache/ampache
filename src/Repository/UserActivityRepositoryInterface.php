@@ -28,22 +28,12 @@ namespace Ampache\Repository;
 interface UserActivityRepositoryInterface
 {
     /**
-     * @return int[]
+     * Remove activities for items that no longer exist.
      */
-    public function getFriendsActivities(
-        int $user_id,
-        int $limit = 0,
-        int $since = 0,
-    ): array;
-
-    /**
-     * @return int[]
-     */
-    public function getActivities(
-        int $user_id,
-        int $limit = 0,
-        int $since = 0,
-    ): array;
+    public function collectGarbage(
+        ?string $object_type = null,
+        ?int $object_id = null,
+    ): void;
 
     /**
      * Delete activity by date
@@ -55,12 +45,22 @@ interface UserActivityRepositoryInterface
     ): void;
 
     /**
-     * Remove activities for items that no longer exist.
+     * @return int[]
      */
-    public function collectGarbage(
-        ?string $object_type = null,
-        ?int $object_id = null,
-    ): void;
+    public function getActivities(
+        int $user_id,
+        int $limit = 0,
+        int $since = 0,
+    ): array;
+
+    /**
+     * @return int[]
+     */
+    public function getFriendsActivities(
+        int $user_id,
+        int $limit = 0,
+        int $since = 0,
+    ): array;
 
     /**
      * Inserts the necessary data to register a generic action on an object

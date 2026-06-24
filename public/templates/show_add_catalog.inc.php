@@ -23,6 +23,8 @@ declare(strict_types=0);
  *
  */
 
+// show_add_catalog.inc.php
+
 use Ampache\Config\AmpConfig;
 use Ampache\Module\Catalog\Catalog_beets;
 use Ampache\Module\Catalog\Catalog_beetsremote;

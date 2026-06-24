@@ -49,15 +49,14 @@ final readonly class DeleteRecordAction implements ApplicationActionInterface
         private AccessRepositoryInterface $accessRepository,
         private ConfigContainerInterface $configContainer,
         private RequestParserInterface $requestParser,
-    ) {
-    }
+    ) {}
 
     public function run(ServerRequestInterface $request, GuiGatekeeperInterface $gatekeeper): ?ResponseInterface
     {
         if (
-            check_http_referer() === false ||
-            $gatekeeper->mayAccess(AccessTypeEnum::INTERFACE, AccessLevelEnum::ADMIN) === false ||
-            $this->requestParser->verifyForm('delete_access') === false
+            check_http_referer() === false
+            || $gatekeeper->mayAccess(AccessTypeEnum::INTERFACE, AccessLevelEnum::ADMIN) === false
+            || $this->requestParser->verifyForm('delete_access') === false
         ) {
             throw new AccessDeniedException();
         }

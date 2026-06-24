@@ -32,7 +32,7 @@ interface TalFactoryInterface
 {
     public function createPhpTal(): PhpTalInterface;
 
-    public function createTalView(): TalViewInterface;
-
     public function createTalTranslationService(): TranslationServiceInterface;
+
+    public function createTalView(): TalViewInterface;
 }

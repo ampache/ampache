@@ -55,8 +55,8 @@ final class CatalogFile5Method
      * Single file versions of catalog add, clean and verify.
      * Make sure you remember to urlencode those file names!
      *
-     * file    = (string) urlencode(FULL path to local file)
-     * task    = (string) 'add', 'clean', 'verify', 'remove' (can be comma separated)
+     * file = (string) urlencode(FULL path to local file)
+     * task = (string) 'add', 'clean', 'verify', 'remove' (can be comma separated)
      * catalog = (integer) $catalog_id
      *
      * @param array{
@@ -76,7 +76,7 @@ final class CatalogFile5Method
             return false;
         }
         $file = html_entity_decode($input['file']);
-        $task = explode(',', html_entity_decode((string)($input['task'])));
+        $task = explode(',', html_entity_decode((string) ($input['task'])));
 
         // confirm that a valid task is going to happen
         if (!AmpConfig::get('delete_from_disk') && in_array('remove', $task)) {

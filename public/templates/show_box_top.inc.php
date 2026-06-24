@@ -23,6 +23,8 @@ declare(strict_types=0);
  *
  */
 
+// show_box_top.inc.php
+
 $class = $class ?? 'box';
 $title = $title ?? ''; ?>
 

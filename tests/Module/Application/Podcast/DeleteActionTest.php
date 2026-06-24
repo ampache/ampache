@@ -42,26 +42,53 @@ class DeleteActionTest extends TestCase
     use ConsecutiveParams;
 
     private ConfigContainerInterface&MockObject $configContainer;
-
+    private GuiGatekeeperInterface&MockObject $gatekeeper;
+    private ServerRequestInterface&MockObject $request;
+    private DeleteAction $subject;
     private UiInterface&MockObject $ui;
 
-    private ServerRequestInterface&MockObject $request;
-
-    private GuiGatekeeperInterface&MockObject $gatekeeper;
-
-    private DeleteAction $subject;
-
-    protected function setUp(): void
+    public function testRunRendersConfirmation(): void
     {
-        $this->configContainer = $this->createMock(ConfigContainerInterface::class);
-        $this->ui              = $this->createMock(UiInterface::class);
+        $podcastId = 666;
 
-        $this->request    = $this->createMock(ServerRequestInterface::class);
-        $this->gatekeeper = $this->createMock(GuiGatekeeperInterface::class);
+        $this->request->expects(static::once())
+            ->method('getQueryParams')
+            ->willReturn(['podcast_id' => (string) $podcastId]);
 
-        $this->subject = new DeleteAction(
-            $this->configContainer,
-            $this->ui
+        $this->configContainer->expects(static::exactly(2))
+            ->method('isFeatureEnabled')
+            ->with(...$this->withConsecutive(
+                [ConfigurationKeyEnum::PODCAST],
+                [ConfigurationKeyEnum::DEMO_MODE]
+            ))
+            ->willReturn(true, false);
+
+        $this->gatekeeper->expects(static::once())
+            ->method('mayAccess')
+            ->with(AccessTypeEnum::INTERFACE, AccessLevelEnum::MANAGER)
+            ->willReturn(true);
+
+        $this->ui->expects(static::once())
+            ->method('showHeader');
+        $this->ui->expects(static::once())
+            ->method('showConfirmation')
+            ->with(
+                'Are You Sure?',
+                'The Podcast will be removed from the database',
+                sprintf(
+                    '/podcast.php?action=confirm_delete&podcast_id=%d',
+                    $podcastId
+                ),
+                1,
+                'delete_podcast'
+            );
+        $this->ui->expects(static::once())
+            ->method('showQueryStats');
+        $this->ui->expects(static::once())
+            ->method('showFooter');
+
+        self::assertNull(
+            $this->subject->run($this->request, $this->gatekeeper)
         );
     }
 
@@ -114,48 +141,17 @@ class DeleteActionTest extends TestCase
         $this->subject->run($this->request, $this->gatekeeper);
     }
 
-    public function testRunRendersConfirmation(): void
+    protected function setUp(): void
     {
-        $podcastId = 666;
+        $this->configContainer = $this->createMock(ConfigContainerInterface::class);
+        $this->ui              = $this->createMock(UiInterface::class);
 
-        $this->request->expects(static::once())
-            ->method('getQueryParams')
-            ->willReturn(['podcast_id' => (string) $podcastId]);
+        $this->request    = $this->createMock(ServerRequestInterface::class);
+        $this->gatekeeper = $this->createMock(GuiGatekeeperInterface::class);
 
-        $this->configContainer->expects(static::exactly(2))
-            ->method('isFeatureEnabled')
-            ->with(...$this->withConsecutive(
-                [ConfigurationKeyEnum::PODCAST],
-                [ConfigurationKeyEnum::DEMO_MODE]
-            ))
-            ->willReturn(true, false);
-
-        $this->gatekeeper->expects(static::once())
-            ->method('mayAccess')
-            ->with(AccessTypeEnum::INTERFACE, AccessLevelEnum::MANAGER)
-            ->willReturn(true);
-
-        $this->ui->expects(static::once())
-            ->method('showHeader');
-        $this->ui->expects(static::once())
-            ->method('showConfirmation')
-            ->with(
-                'Are You Sure?',
-                'The Podcast will be removed from the database',
-                sprintf(
-                    '/podcast.php?action=confirm_delete&podcast_id=%d',
-                    $podcastId
-                ),
-                1,
-                'delete_podcast'
-            );
-        $this->ui->expects(static::once())
-            ->method('showQueryStats');
-        $this->ui->expects(static::once())
-            ->method('showFooter');
-
-        self::assertNull(
-            $this->subject->run($this->request, $this->gatekeeper)
+        $this->subject = new DeleteAction(
+            $this->configContainer,
+            $this->ui
         );
     }
 }

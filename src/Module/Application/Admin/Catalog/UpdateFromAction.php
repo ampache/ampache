@@ -42,7 +42,7 @@ final class UpdateFromAction extends AbstractCatalogAction
         private readonly ConfigContainerInterface $configContainer,
     ) {
         parent::__construct($ui);
-        $this->ui              = $ui;
+        $this->ui = $ui;
     }
 
     /**

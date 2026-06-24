@@ -34,6 +34,19 @@ use Traversable;
 
 interface SongRepositoryInterface
 {
+    public function collectGarbage(Song $song): void;
+
+    public function delete(int $songId): bool;
+
+    /**
+     * gets the songs (including songs where they are the album artist) for this artist
+     *
+     * @return list<int>
+     */
+    public function getAllByArtist(
+        int $artistId,
+    ): array;
+
     /**
      * gets the songs for an album takes an optional limit
      *
@@ -49,6 +62,31 @@ interface SongRepositoryInterface
     public function getByAlbumDisk(int $albumDiskId, int $limit = 0): array;
 
     /**
+     * gets the songs for this artist
+     *
+     * @return list<int>
+     */
+    public function getByArtist(
+        int $artistId,
+    ): array;
+
+    /**
+     * Returns all song ids linked to the provided catalog (or all)
+     *
+     * @return Traversable<int>
+     */
+    public function getByCatalog(?Catalog $catalog = null): Traversable;
+
+    /**
+     * gets the songs for a label, based on label name
+     *
+     * @return list<int>
+     */
+    public function getByFolder(
+        string $folderName,
+    ): array;
+
+    /**
      * gets the songs for a label, based on label name
      *
      * @return list<int>
@@ -56,6 +94,20 @@ interface SongRepositoryInterface
     public function getByLabel(
         string $labelName,
     ): array;
+
+    /**
+     * Returns a list of song ID's attached to a license ID.
+     *
+     * @return list<int>
+     */
+    public function getByLicense(int $licenseId): array;
+
+    /**
+     * Gets a list of the disabled songs for and returns an array of Songs
+     *
+     * @return Iterator<Song>
+     */
+    public function getDisabled(): Iterator;
 
     /**
      * Gets the songs from the artist in a random order
@@ -84,47 +136,4 @@ interface SongRepositoryInterface
         Artist $artist,
         int $count = 50,
     ): array;
-
-    /**
-     * gets the songs for this artist
-     *
-     * @return list<int>
-     */
-    public function getByArtist(
-        int $artistId,
-    ): array;
-
-    /**
-     * gets the songs (including songs where they are the album artist) for this artist
-     *
-     * @return list<int>
-     */
-    public function getAllByArtist(
-        int $artistId,
-    ): array;
-
-    /**
-     * Returns a list of song ID's attached to a license ID.
-     *
-     * @return list<int>
-     */
-    public function getByLicense(int $licenseId): array;
-
-    public function delete(int $songId): bool;
-
-    public function collectGarbage(Song $song): void;
-
-    /**
-     * Returns all song ids linked to the provided catalog (or all)
-     *
-     * @return Traversable<int>
-     */
-    public function getByCatalog(?Catalog $catalog = null): Traversable;
-
-    /**
-     * Gets a list of the disabled songs for and returns an array of Songs
-     *
-     * @return Iterator<Song>
-     */
-    public function getDisabled(): Iterator;
 }

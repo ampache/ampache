@@ -36,8 +36,7 @@ final class AuthenticationManager implements AuthenticationManagerInterface
         private readonly ConfigContainerInterface $configContainer,
         /** @var AuthenticatorInterface[] $authenticatorList */
         private array $authenticatorList,
-    ) {
-    }
+    ) {}
 
     /**
      * @return array{
@@ -71,6 +70,43 @@ final class AuthenticationManager implements AuthenticationManagerInterface
         }
 
         return $result;
+    }
+
+    /**
+     * This is called when you want to log out and nuke your session.
+     * This is the function used for the Ajax logouts, if no id is passed
+     * it tries to find one from the session,
+     */
+    public function logout(string $key = '', bool $relogin = true): void
+    {
+        // If no key is passed try to find the session id
+        $key = ($key === '' || $key === '0')
+            ? session_id()
+            : $key;
+
+        // Nuke the cookie before all else
+        Session::destroy((string) $key);
+        if ((!$relogin) && $this->configContainer->get('logout_redirect')) {
+            $target = $this->configContainer->get('logout_redirect');
+        } else {
+            $target = $this->configContainer->getWebPath() . '/login.php';
+        }
+
+        // Do a quick check to see if this is an AJAXed logout request
+        // if so use the iframe to redirect
+        if (defined('AJAX_INCLUDE')) {
+            ob_end_clean();
+            ob_start();
+
+            xoutput_headers();
+
+            $results             = [];
+            $results['reloader'] = '<script>reloadRedirect("' . $target . '")</script>';
+            echo xoutput_from_array($results);
+        } else {
+            /* Redirect them to the login page */
+            header('Location: ' . $target);
+        }
     }
 
     public function postAuth(string $method): ?array
@@ -118,42 +154,5 @@ final class AuthenticationManager implements AuthenticationManagerInterface
         }
 
         return [];
-    }
-
-    /**
-     * This is called when you want to log out and nuke your session.
-     * This is the function used for the Ajax logouts, if no id is passed
-     * it tries to find one from the session,
-     */
-    public function logout(string $key = '', bool $relogin = true): void
-    {
-        // If no key is passed try to find the session id
-        $key = ($key === '' || $key === '0')
-            ? session_id()
-            : $key;
-
-        // Nuke the cookie before all else
-        Session::destroy((string)$key);
-        if ((!$relogin) && $this->configContainer->get('logout_redirect')) {
-            $target = $this->configContainer->get('logout_redirect');
-        } else {
-            $target = $this->configContainer->getWebPath() . '/login.php';
-        }
-
-        // Do a quick check to see if this is an AJAXed logout request
-        // if so use the iframe to redirect
-        if (defined('AJAX_INCLUDE')) {
-            ob_end_clean();
-            ob_start();
-
-            xoutput_headers();
-
-            $results             = [];
-            $results['reloader'] = '<script>reloadRedirect("' . $target . '")</script>';
-            echo xoutput_from_array($results);
-        } else {
-            /* Redirect them to the login page */
-            header('Location: ' . $target);
-        }
     }
 }

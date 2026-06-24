@@ -39,8 +39,7 @@ final readonly class SpotifyCollectorModule implements CollectorModuleInterface
         private ConfigContainerInterface $configContainer,
         private SpotifyWebAPI $spotifyWebAPI,
         private LoggerInterface $logger,
-    ) {
-    }
+    ) {}
 
     /**
      * This function gathers art from the spotify catalog
@@ -100,8 +99,8 @@ final readonly class SpotifyCollectorModule implements CollectorModuleInterface
         $getType = 'getAlbum';
 
         if (
-            isset($data['artist']) &&
-            $art->object_type === 'artist'
+            isset($data['artist'])
+            && $art->object_type === 'artist'
         ) {
             $this->logger->debug(
                 'gather_spotify artist: ' . $data['artist'],

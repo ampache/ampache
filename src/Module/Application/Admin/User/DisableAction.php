@@ -44,8 +44,7 @@ final class DisableAction extends AbstractUserAction
         private readonly UiInterface $ui,
         private readonly ModelFactoryInterface $modelFactory,
         private readonly ConfigContainerInterface $configContainer,
-    ) {
-    }
+    ) {}
 
     protected function handle(ServerRequestInterface $request): ?ResponseInterface
     {
@@ -53,7 +52,7 @@ final class DisableAction extends AbstractUserAction
             return null;
         }
 
-        $userId = (int)($request->getQueryParams()['user_id'] ?? 0);
+        $userId = (int) ($request->getQueryParams()['user_id'] ?? 0);
         $user   = $this->modelFactory->createUser($userId);
 
         if ($user->isNew()) {

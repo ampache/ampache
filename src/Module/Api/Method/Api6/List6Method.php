@@ -48,16 +48,16 @@ final class List6Method
      *
      * This takes a named array of objects and returning `id`, `name`, `prefix` and `basename`
      *
-     * type        = (string) 'album_artist', 'album', 'artist', 'catalog', 'live_stream', 'playlist', 'podcast_episode', 'podcast', 'share', 'song_artist', 'song', 'video'
-     * filter      = (string) //optional
+     * type = (string) 'album_artist', 'album', 'artist', 'catalog', 'live_stream', 'playlist', 'podcast_episode', 'podcast', 'share', 'song_artist', 'song', 'video'
+     * filter = (string) //optional
      * hide_search = (integer) 0,1, if true do not include searches/smartlists in the result //optional
-     * exact       = (integer) 0,1, if true filter is exact rather then fuzzy //optional
-     * add         = $browse->set_api_filter(date) //optional
-     * update      = $browse->set_api_filter(date) //optional
-     * offset      = (integer) //optional
-     * limit       = (integer) //optional
-     * cond        = (string) Apply additional filters to the browse using ';' separated comma string pairs (e.g. 'filter1,value1;filter2,value2') //optional
-     * sort        = (string) sort name or comma separated key pair. Order default 'ASC' (e.g. 'name,ASC' and 'name' are the same) //optional
+     * exact = (integer) 0,1, if true filter is exact rather then fuzzy //optional
+     * add = $browse->set_api_filter(date) //optional
+     * update = $browse->set_api_filter(date) //optional
+     * offset = (integer) //optional
+     * limit = (integer) //optional
+     * cond = (string) Apply additional filters to the browse using ';' separated comma string pairs (e.g. 'filter1,value1;filter2,value2') //optional
+     * sort = (string) sort name or comma separated key pair. Order default 'ASC' (e.g. 'name,ASC' and 'name' are the same) //optional
      *
      * @param array{
      *     type: string,
@@ -81,7 +81,7 @@ final class List6Method
             return false;
         }
 
-        $type = (string)$input['type'];
+        $type = (string) $input['type'];
         if (!AmpConfig::get('allow_video') && $type == 'video') {
             Api6::error('Enable: video', ErrorCodeEnum::ACCESS_DENIED, self::ACTION, 'system', $input['api_format']);
 
@@ -112,10 +112,10 @@ final class List6Method
         $browse = Api6::getBrowse($user);
 
         $name_type = $type;
-        $hide      = (array_key_exists('hide_search', $input) && (int)$input['hide_search'] == 1) || AmpConfig::get('hide_search', false);
+        $hide      = (array_key_exists('hide_search', $input) && (int) $input['hide_search'] == 1) || AmpConfig::get('hide_search', false);
         if (
-            $type === 'playlist' &&
-            $hide === false
+            $type === 'playlist'
+            && $hide === false
         ) {
             $name_type = 'playlist_search';
             $browse->set_type('playlist_search');
@@ -125,15 +125,15 @@ final class List6Method
 
         // hide playlists starting with the user string (if enabled)
         $hide_string = ($type === 'playlist')
-            ? str_replace('%', '\%', str_replace('_', '\_', (string)Preference::get_by_user($user->id, 'api_hidden_playlists'))) :
-            '';
+            ? str_replace('%', '\%', str_replace('_', '\_', (string) Preference::get_by_user($user->id, 'api_hidden_playlists')))
+            : '';
         if (!empty($hide_string)) {
             $browse->set_filter('not_starts_with', $hide_string);
         }
 
-        $browse->set_sort_order(html_entity_decode((string)($input['sort'] ?? '')), ['name', 'ASC']);
+        $browse->set_sort_order(html_entity_decode((string) ($input['sort'] ?? '')), ['name', 'ASC']);
 
-        $method = (array_key_exists('exact', $input) && (int)$input['exact'] == 1) ? 'exact_match' : 'alpha_match';
+        $method = (array_key_exists('exact', $input) && (int) $input['exact'] == 1) ? 'exact_match' : 'alpha_match';
         $browse->set_api_filter($method, $input['filter'] ?? '');
         $browse->set_api_filter('add', $input['add'] ?? '');
         $browse->set_api_filter('update', $input['update'] ?? '');
@@ -142,14 +142,14 @@ final class List6Method
             $browse->set_filter('playlist_open', $user->getId());
 
             if (
-                $hide === false &&
-                (bool)Preference::get_by_user($user->getId(), 'api_hide_dupe_searches') === true
+                $hide === false
+                && (bool) Preference::get_by_user($user->getId(), 'api_hide_dupe_searches') === true
             ) {
                 $browse->set_filter('hide_dupe_smartlist', 1);
             }
         }
 
-        $browse->set_conditions(html_entity_decode((string)($input['cond'] ?? '')));
+        $browse->set_conditions(html_entity_decode((string) ($input['cond'] ?? '')));
 
         $objects = $browse->get_objects();
         if (empty($objects)) {
@@ -167,13 +167,13 @@ final class List6Method
         ob_end_clean();
         switch ($input['api_format']) {
             case 'json':
-                Json6_Data::set_offset((int)($input['offset'] ?? 0));
+                Json6_Data::set_offset((int) ($input['offset'] ?? 0));
                 Json6_Data::set_limit($input['limit'] ?? 0);
                 Json6_Data::set_count($browse->get_total());
                 echo Json6_Data::lists($results);
                 break;
             default:
-                Xml6_Data::set_offset((int)($input['offset'] ?? 0));
+                Xml6_Data::set_offset((int) ($input['offset'] ?? 0));
                 Xml6_Data::set_limit($input['limit'] ?? 0);
                 Xml6_Data::set_count($browse->get_total());
                 echo Xml6_Data::lists($results);

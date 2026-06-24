@@ -23,6 +23,8 @@ declare(strict_types=0);
  *
  */
 
+// show_lyrics.inc.php
+
 use Ampache\Config\AmpConfig;
 use Ampache\Module\Util\Ui;
 use Ampache\Repository\Model\Art;
@@ -38,7 +40,7 @@ Ui::show_box_top("Song Lyrics", 'box box_lyrics_song');
 // Prepare the variables
 $title  = scrub_out($song->title);
 $album  = scrub_out($song->get_album_fullname());
-$artist = scrub_out($song->get_artist_fullname()); ?>
+$artist = scrub_out($song->get_parent_fullname()); ?>
 <?php
 if ($album != T_('Unknown (Orphaned)')) {
     Art::display('album', $song->album, $album, ['width' => 128, 'height' => 128]);

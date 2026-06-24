@@ -40,8 +40,7 @@ final readonly class PodcastOpmlExporter implements PodcastExporterInterface
     public function __construct(
         private TalFactoryInterface $talFactory,
         private PodcastRepositoryInterface $podcastRepository,
-    ) {
-    }
+    ) {}
 
     /**
      * Exports all podcasts-subscriptions and returns the result

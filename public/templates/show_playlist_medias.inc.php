@@ -23,12 +23,15 @@ declare(strict_types=0);
  *
  */
 
+// show_playlist_medias.inc.php
+
 use Ampache\Config\AmpConfig;
 use Ampache\Module\Util\Ui;
 use Ampache\Repository\Model\Browse;
 use Ampache\Repository\Model\LibraryItemEnum;
 use Ampache\Repository\Model\LibraryItemLoaderInterface;
 use Ampache\Repository\Model\Playlist;
+use Ampache\Repository\Model\Search;
 use Ampache\Repository\Model\Song_Preview;
 use Ampache\Repository\Model\User;
 
@@ -36,7 +39,7 @@ global $dic;
 $libraryItemLoader = $dic->get(LibraryItemLoaderInterface::class);
 
 /** @var Browse $browse */
-/** @var Playlist $playlist */
+/** @var Playlist|Search $playlist */
 /** @var array<int|string>|array<int, array{object_type: LibraryItemEnum|string, object_id: int, track_id: int, track: int}>|array<Song_Preview>|array<int, array{name?: string|null, id: int, track: int, raw: string, link?: string|null, track: int, oid?: int, vlid?: int}>|null $object_ids */
 /** @var bool $argument */
 
@@ -116,7 +119,7 @@ if ($browse->is_show_header()) {
                 }
                 if ($libitem !== null) {
                     $object_type    = $libtype?->value;
-                    $playlist_track = (int)($object['track']); ?>
+                    $playlist_track = (int) ($object['track']); ?>
                     <tr id="track_<?php echo($object['track_id'] ?? 0); ?>">
                         <?php require Ui::find_template('show_playlist_media_row.inc.php'); ?>
                     </tr>

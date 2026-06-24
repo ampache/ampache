@@ -30,6 +30,13 @@ use Ampache\Repository\Model\Query;
 interface QueryInterface
 {
     /**
+     * get_base_sql
+     *
+     * Base SELECT query string without filters or joins
+     */
+    public function get_base_sql(): string;
+
+    /**
      * get_select
      *
      * This method returns the columns a query will user for SELECT
@@ -37,11 +44,12 @@ interface QueryInterface
     public function get_select(): string;
 
     /**
-     * get_base_sql
+     * get_sorts
      *
-     * Base SELECT query string without filters or joins
+     * List of valid sorts for this query
+     * @return string[]
      */
-    public function get_base_sql(): string;
+    public function get_sorts(): array;
 
     /**
      * get_sql_filter
@@ -55,24 +63,13 @@ interface QueryInterface
     ): string;
 
     /**
-     * get_sorts
-     *
-     * List of valid sorts for this query
-     * @return string[]
-     */
-    public function get_sorts(): array;
-
-    /**
      * get_sql_sort
      *
      * Sorting SQL for ORDER BY
-     * @param Query $query
-     * @param string|null $field
-     * @param string|null $order
      */
     public function get_sql_sort(
-        $query,
-        $field,
-        $order,
+        Query   $query,
+        ?string $field,
+        ?string $order,
     ): string;
 }

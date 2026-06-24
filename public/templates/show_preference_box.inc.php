@@ -23,6 +23,8 @@ declare(strict_types=0);
  *
  */
 
+// show_preference_box.inc.php
+
 /* I'm cheating a little here, check to see if we want to show the
  * Apply to All button on this page
  */
@@ -80,7 +82,7 @@ foreach ($preferences['prefs'] as $pref) {
                 if (!$is_system) { ?>
                 <td class="cel_applytoall"><input type="checkbox" name="check_<?php echo $pref['name']; ?>" value="1" /></td>
                 <td class="cel_level">
-                    <?php $name = 'on_' . (string)$pref['level'];
+                    <?php $name = 'on_' . (string) $pref['level'];
                     $on_5       = '';
                     $on_25      = '';
                     $on_50      = '';

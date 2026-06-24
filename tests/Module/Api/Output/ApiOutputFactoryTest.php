@@ -32,12 +32,6 @@ class ApiOutputFactoryTest extends MockeryTestCase
 {
     private ApiOutputFactory $subject;
 
-    #[Override]
-    protected function setUp(): void
-    {
-        $this->subject = new ApiOutputFactory();
-    }
-
     public function testCreateJsonOutputReturnsInstance(): void
     {
         $this->assertInstanceOf(
@@ -52,5 +46,11 @@ class ApiOutputFactoryTest extends MockeryTestCase
             XmlOutput::class,
             $this->subject->createXmlOutput()
         );
+    }
+
+    #[Override]
+    protected function setUp(): void
+    {
+        $this->subject = new ApiOutputFactory();
     }
 }

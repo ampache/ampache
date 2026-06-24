@@ -60,14 +60,14 @@ final class SearchGroup8Method
      * https://ampache.org/api/api-xml-methods
      * https://ampache.org/api/api-json-methods
      *
-     * operator        = (string) 'and', 'or' (whether to match one rule or all)
-     * rule_1          = (string)
+     * operator = (string) 'and', 'or' (whether to match one rule or all)
+     * rule_1 = (string)
      * rule_1_operator = (integer) 0|1|2|3|4|5|6
-     * rule_1_input    = (mixed) The string, date, integer you are searching for
-     * type            = (string) 'all', 'music', 'song_artist', 'album_artist', 'podcast', 'video' (all by default) //optional
-     * random          = (boolean)  0, 1 (random order of results; default to 0) //optional
-     * offset          = (integer) //optional
-     * limit           = (integer) //optional
+     * rule_1_input = (mixed) The string, date, integer you are searching for
+     * type = (string) 'all', 'music', 'song_artist', 'album_artist', 'podcast', 'video' (all by default) //optional
+     * random = (boolean)  0, 1 (random order of results; default to 0) //optional
+     * offset = (integer) //optional
+     * limit = (integer) //optional
      *
      * @param array{
      *     operator: string,
@@ -230,7 +230,7 @@ final class SearchGroup8Method
                 echo json_encode($output, JSON_PRETTY_PRINT);
                 break;
             default:
-                Xml8_Data::set_offset((int)($input['offset'] ?? 0));
+                Xml8_Data::set_offset((int) ($input['offset'] ?? 0));
                 Xml8_Data::set_limit($input['limit'] ?? 0);
                 // don't set count here as each type of object will count themselves
                 echo Xml8_Data::searches($results, $count, $user, $input['auth']);

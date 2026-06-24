@@ -39,9 +39,7 @@ final readonly class ShowCatalogTypesAction implements ApplicationActionInterfac
 {
     public const string REQUEST_KEY = 'show_catalog_types';
 
-    public function __construct(private UiInterface $ui)
-    {
-    }
+    public function __construct(private UiInterface $ui) {}
 
     public function run(ServerRequestInterface $request, GuiGatekeeperInterface $gatekeeper): ?ResponseInterface
     {

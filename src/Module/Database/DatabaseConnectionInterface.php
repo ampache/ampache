@@ -33,6 +33,38 @@ use PDOStatement;
 interface DatabaseConnectionInterface
 {
     /**
+     * Fetches a single column from the query result
+     *
+     * Useful e.g. for counting-queries
+     *
+     * @param list<mixed> $params
+     */
+    public function fetchOne(
+        string $sql,
+        array $params = [],
+    ): mixed;
+
+    /**
+     * Fetches a single whole row and returns it as an associative array
+     *
+     * @param list<mixed> $params
+     *
+     * @return false|array<string, mixed> Will return `false` if row is empty
+     * @throws InsertIdInvalidException
+     */
+    public function fetchRow(
+        string $sql,
+        array $params = [],
+    ): array|bool;
+
+    /**
+     * Returns the most recent inserted id
+     *
+     * @return non-negative-int
+     */
+    public function getLastInsertedId(): int;
+
+    /**
      * Executes the provided sql query
      *
      * If the query fails, a DatabaseException will be thrown
@@ -47,38 +79,4 @@ interface DatabaseConnectionInterface
         bool $silent = false,
         ?Interactor $interactor = null,
     ): PDOStatement;
-
-    /**
-     * Fetches a single column from the query result
-     *
-     * Useful e.g. for counting-queries
-     *
-     * @param list<mixed> $params
-     *
-     * @return mixed Will return `false` on empty row
-     */
-    public function fetchOne(
-        string $sql,
-        array $params = [],
-    );
-
-    /**
-     * Fetches a single whole row and returns it as an associative array
-     *
-     * @param list<mixed> $params
-     *
-     * @return false|array<string, mixed> Will return `false` if row is empty
-     * @throws InsertIdInvalidException
-     */
-    public function fetchRow(
-        string $sql,
-        array $params = [],
-    );
-
-    /**
-     * Returns the most recent inserted id
-     *
-     * @return non-negative-int
-     */
-    public function getLastInsertedId(): int;
 }

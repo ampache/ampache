@@ -23,6 +23,8 @@ declare(strict_types=0);
  *
  */
 
+// sidebar_home.inc.php
+
 use Ampache\Config\AmpConfig;
 use Ampache\Module\Api\Ajax;
 use Ampache\Module\Authorization\Access;
@@ -68,12 +70,14 @@ global $dic;
 /** @var string $t_uploads */
 /** @var string $t_videos */
 /** @var string $t_wanted */
+/** @var string $t_folders */
 $server_allow    = AmpConfig::get('allow_localplay_playback');
 $controller      = AmpConfig::get('localplay_controller');
 $videoRepository = $dic->get(VideoRepositoryInterface::class);
 $allowVideo      = AmpConfig::get('allow_video') && $videoRepository->getItemCount();
 $allowDemocratic = AmpConfig::get('allow_democratic_playback');
 $showAlbumArtist = AmpConfig::get('show_album_artist');
+$showFolder      = AmpConfig::get('show_folder');
 $showArtist      = AmpConfig::get('show_artist');
 $allowLabel      = AmpConfig::get('label');
 $allowPodcast    = AmpConfig::get('podcast');
@@ -102,12 +106,12 @@ $state_home_information = (($_COOKIE['sb_home_information'] ?? 'collapsed') == '
     ? 'expanded'
     : 'collapsed';
 // sidebar CSS order
-$order_browse      = (int)AmpConfig::get('sidebar_order_browse', 10) ?: 10;
-$order_dashboard   = (int)AmpConfig::get('sidebar_order_dashboard', 15) ?: 15;
-$order_video       = (int)AmpConfig::get('sidebar_order_video', 20) ?: 20;
-$order_playlist    = (int)AmpConfig::get('sidebar_order_playlist', 30) ?: 30;
-$order_search      = (int)AmpConfig::get('sidebar_order_search', 40) ?: 40;
-$order_information = (int)AmpConfig::get('sidebar_order_information', 60) ?: 60; ?>
+$order_browse      = (int) AmpConfig::get('sidebar_order_browse', 10) ?: 10;
+$order_dashboard   = (int) AmpConfig::get('sidebar_order_dashboard', 15) ?: 15;
+$order_video       = (int) AmpConfig::get('sidebar_order_video', 20) ?: 20;
+$order_playlist    = (int) AmpConfig::get('sidebar_order_playlist', 30) ?: 30;
+$order_search      = (int) AmpConfig::get('sidebar_order_search', 40) ?: 40;
+$order_information = (int) AmpConfig::get('sidebar_order_information', 60) ?: 60; ?>
 <ul class="sb2" id="sb_home">
 <?php if (AmpConfig::get('browse_filter')) {
     echo "<li>";
@@ -121,7 +125,7 @@ if (!AmpConfig::get('sidebar_hide_browse', false)) { ?>
             <span class="sidebar-header-title"><?php echo $t_browse; ?></span>
             <?php echo Ui::get_material_symbol('chevron_right', $t_expander, 'home_browse', 'header-img ' . $state_home_browse); ?>
         </h4>
-        <?php $text = (string)scrub_in(Core::get_request('action')) . '_ac';
+        <?php $text = (string) scrub_in(Core::get_request('action')) . '_ac';
     if ($text !== '_ac') {
         ${$text} = ' selected="selected"';
     } ?>
@@ -133,6 +137,9 @@ if (!AmpConfig::get('sidebar_hide_browse', false)) { ?>
 <?php } ?>
 <?php if ($showAlbumArtist || !$showArtist) { ?>
                 <li id="sb_home_browse_artist"><a href="<?php echo $web_path; ?>/browse.php?action=album_artist"><?php echo $t_a_artists; ?></a></li>
+<?php } ?>
+<?php if ($showFolder) { ?>
+            <li id="sb_home_browse_folder"><a href="<?php echo $web_path; ?>/folders.php?action=show&folder=-1"><?php echo $t_folders; ?></a></li>
 <?php } ?>
 <?php if ($allowLabel) { ?>
                 <li id="sb_home_browse_label"><a href="<?php echo $web_path; ?>/browse.php?action=label"><?php echo $t_labels; ?></a></li>
@@ -158,8 +165,8 @@ if (!AmpConfig::get('sidebar_hide_browse', false)) { ?>
     </li>
 <?php }
 if (
-    User::is_registered() &&
-    !AmpConfig::get('sidebar_hide_dashboard', false)
+    User::is_registered()
+    && !AmpConfig::get('sidebar_hide_dashboard', false)
 ) { ?>
     <li class="sb2_dashboard" style="order: <?php echo $order_dashboard; ?>">
         <h4 class="header">
@@ -176,8 +183,8 @@ if (
                 <li id="sb_home_dashboard_podcast_episodes"><a href="<?php echo $web_path; ?>/mashup.php?action=podcast_episode"><?php echo $t_podcastEpisodes; ?></a></li>
     <?php } ?>
     <?php if (
-        $allowVideo &&
-        !AmpConfig::get('sidebar_hide_video', false)
+        $allowVideo
+        && !AmpConfig::get('sidebar_hide_video', false)
     ) { ?>
                 <li id="sb_home_dashboard_videos"><a href="<?php echo $web_path; ?>/mashup.php?action=video"><?php echo $t_videos; ?></a></li>
     <?php } ?>
@@ -212,8 +219,8 @@ if (
     </li>
 <?php } ?>
 <?php if (
-    $access25 &&
-    !AmpConfig::get('sidebar_hide_playlist', false)
+    $access25
+    && !AmpConfig::get('sidebar_hide_playlist', false)
 ) { ?>
     <li class="sb2_playlist" style="order: <?php echo $order_playlist; ?>">
         <h4 class="header">

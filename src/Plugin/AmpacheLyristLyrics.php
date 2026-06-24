@@ -36,25 +36,25 @@ use WpOrg\Requests\Requests;
 class AmpacheLyristLyrics extends AmpachePlugin implements PluginGetLyricsInterface
 {
     #[Override]
-    public string $name = 'Lyrist Lyrics';
-
-    #[Override]
     public string $categories = 'lyrics';
 
     #[Override]
     public string $description = 'Get lyrics from a public Lyrist instance';
 
     #[Override]
-    public string $url = 'https://github.com/asrvd/lyrist';
-
-    #[Override]
-    public string $version = '000002';
+    public string $max_ampache = '999999';
 
     #[Override]
     public string $min_ampache = '360022';
 
     #[Override]
-    public string $max_ampache = '999999';
+    public string $name = 'Lyrist Lyrics';
+
+    #[Override]
+    public string $url = 'https://github.com/asrvd/lyrist';
+
+    #[Override]
+    public string $version = '000002';
 
     // These are internal settings used by this class, run this->load to fill them out
     private string $api_host;
@@ -68,30 +68,38 @@ class AmpacheLyristLyrics extends AmpachePlugin implements PluginGetLyricsInterf
     }
 
     /**
+     * get_lyrics
+     * This will look web services for a song lyrics.
+     * @return null|array{'text': string, 'url': string}
+     */
+    public function get_lyrics(Song $song): ?array
+    {
+        $uri     = rtrim((string) preg_replace('/\/api\/?/', '', $this->api_host), '/') . '/api/' . urlencode((string) $song->title) . '/' . urlencode($song->get_parent_fullname());
+        $request = Requests::get($uri, [], Core::requests_options());
+        if ($request->status_code == 200) {
+            $json = json_decode((string) $request->body);
+            if (
+                $json
+                && !empty($json->lyrics)
+                && !empty($json->image)
+            ) {
+                return [
+                    'text' => nl2br((string) $json->lyrics),
+                    'url' => (string) $json->image
+                ];
+            }
+        }
+
+        return null;
+    }
+
+    /**
      * install
      * This is a required plugin function
      */
     public function install(): bool
     {
         return Preference::insert('lyrist_api_url', T_('Lyrist API URL'), '', AccessLevelEnum::USER->value, 'string', 'plugins', $this->name);
-    }
-
-    /**
-     * uninstall
-     * This is a required plugin function
-     */
-    public function uninstall(): bool
-    {
-        return true;
-    }
-
-    /**
-     * upgrade
-     * This is a recommended plugin function
-     */
-    public function upgrade(): bool
-    {
-        return true;
     }
 
     /**
@@ -116,28 +124,20 @@ class AmpacheLyristLyrics extends AmpachePlugin implements PluginGetLyricsInterf
     }
 
     /**
-     * get_lyrics
-     * This will look web services for a song lyrics.
-     * @return null|array{'text': string, 'url': string}
+     * uninstall
+     * This is a required plugin function
      */
-    public function get_lyrics(Song $song): ?array
+    public function uninstall(): bool
     {
-        $uri     = rtrim((string)preg_replace('/\/api\/?/', '', $this->api_host), '/') . '/api/' . urlencode((string)$song->title) . '/' . urlencode($song->get_artist_fullname());
-        $request = Requests::get($uri, [], Core::requests_options());
-        if ($request->status_code == 200) {
-            $json = json_decode((string) $request->body);
-            if (
-                $json &&
-                !empty($json->lyrics) &&
-                !empty($json->image)
-            ) {
-                return [
-                    'text' => nl2br((string)$json->lyrics),
-                    'url' => (string)$json->image
-                ];
-            }
-        }
+        return true;
+    }
 
-        return null;
+    /**
+     * upgrade
+     * This is a recommended plugin function
+     */
+    public function upgrade(): bool
+    {
+        return true;
     }
 }

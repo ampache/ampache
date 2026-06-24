@@ -23,6 +23,8 @@ declare(strict_types=0);
  *
  */
 
+// show_edit_democratic.inc.php
+
 use Ampache\Config\AmpConfig;
 use Ampache\Module\System\Core;
 use Ampache\Module\Util\Ui;
@@ -44,7 +46,7 @@ Ui::show_box_top(T_('Configure Democratic Playlist')); ?>
         </tr>
         <tr>
             <td><?php echo T_('Base Playlist'); ?></td>
-            <td><?php echo Democratic::show_playlist_select('democratic', (string)$democratic->base_playlist); ?></td>
+            <td><?php echo Democratic::show_playlist_select('democratic', (string) $democratic->base_playlist); ?></td>
         </tr>
         <tr>
             <td><?php echo T_('Cooldown Time'); ?></td>

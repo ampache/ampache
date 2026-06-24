@@ -23,6 +23,8 @@ declare(strict_types=0);
  *
  */
 
+// show_get_art.inc.php
+
 use Ampache\Config\AmpConfig;
 use Ampache\Module\Art\Collector\ArtCollector;
 use Ampache\Module\System\Core;
@@ -47,8 +49,8 @@ Ui::show_box_top($art_type, 'box box_get_albumart'); ?>
         <?php
         foreach ($keywords as $key => $word) {
             if ($key == 'year') {
-                $year_str = ((int)$word['value'] > 999)
-                    ? (string)$word['value']
+                $year_str = ((int) $word['value'] > 999)
+                    ? (string) $word['value']
                     : '';
                 continue;
             }
@@ -137,11 +139,11 @@ Ui::show_box_top($art_type, 'box box_get_albumart'); ?>
         <input type="hidden" name="object_id" value="<?php echo $object_id; ?>" />
         <input type="hidden" name="MAX_FILE_SIZE" value="<?php echo AmpConfig::get('max_upload_size'); ?>" />
         <?php if (AmpConfig::get('ajax_load')) {
-            $cancelurl = ((string) $web_path == '')
+            $cancelurl = ($web_path == '')
                 ? $burl
                 : ($web_path . '/' . $ajax_str . $burl);
         } else {
-            $cancelurl = (string) $burl;
+            $cancelurl = $burl;
         }
 ?>
         <input type="button" value="<?php echo T_('Cancel'); ?>" onClick="NavigateTo('<?php echo $cancelurl; ?>');" />

@@ -39,143 +39,46 @@ use Ampache\Repository\Model\Song;
 use Ampache\Repository\Model\Video;
 use Exception;
 use Override;
-use ReflectionException;
+use Seafile\Client\Type\DirectoryItem;
 
 /**
  * This class handles all actual work in regards to remote Seafile catalogs.
  */
 class Catalog_Seafile extends Catalog
 {
-    private static string $version     = '000001';
-
-    private static string $type        = 'seafile';
-
     private static string $description = 'Seafile Remote Catalog';
-
     private static string $table_name  = 'catalog_seafile';
-
-    /** @var SeafileAdapter seafile */
-    private $seafile;
-
-    private int $catalog_id = 0;
-
-    private int $count = 0;
-
-    private $api_key;
-
-    private $api_call_delay;
-
-    public $server_uri;
-
-    public $library_name;
+    private static string $type        = 'seafile';
+    private static string $version     = '000001';
+    public string $library_name;
+    public string $server_uri;
+    private ?int $api_call_delay = null;
+    private ?string $api_key     = null;
+    private int $count           = 0;
+    private SeafileAdapter $seafile;
 
     /**
-     * get_description
-     * This returns the description of this catalog
-     */
-    public function get_description(): string
-    {
-        return self::$description;
-    }
-
-    /**
-     * get_version
-     * This returns the current version
-     */
-    public function get_version(): string
-    {
-        return self::$version;
-    }
-
-    /**
-     * get_path
-     * This returns the current catalog path/uri
-     */
-    public function get_path(): string
-    {
-        return $this->server_uri;
-    }
-
-    /**
-     * get_type
-     * This returns the current catalog type
-     */
-    public function get_type(): string
-    {
-        return self::$type;
-    }
-
-    /**
-     * get_create_help
-     * This returns hints on catalog creation
-     */
-    public function get_create_help(): string
-    {
-        $help = "<ul><li>" . T_("Install a Seafile server as described in the documentation") . "</li><li>" . T_("Enter URL to server (e.g. 'https://seafile.example.com') and library name (e.g. 'Music').") . "</li><li>" . T_("API Call Delay is the delay inserted between repeated requests to Seafile (such as during an Add or Clean action) to accommodate Seafile's Rate Limiting.") . "<br/>" . T_("The default is tuned towards Seafile's default rate limit settings.") . "</li><li>" . T_("After creating the Catalog, you must 'Make it ready' on the Catalog table.") . "</li></ul>";
-
-        return sprintf(
-            $help,
-            "<a target='_blank' href='https://www.seafile.com/'>https://www.seafile.com/</a>",
-            "<a href='https://forum.syncwerk.com/t/too-many-requests-when-using-web-api-status-code-429/2330'>",
-            "</a>"
-        );
-    }
-
-    /**
-     * is_installed
-     * This returns true or false if remote catalog is installed
-     */
-    public function is_installed(): bool
-    {
-        $sql        = "SHOW TABLES LIKE '" . self::$table_name . "'";
-        $db_results = Dba::query($sql);
-
-        return (Dba::num_rows($db_results) > 0);
-    }
-
-    /**
-     * install
-     * This function installs the remote catalog
-     */
-    public function install(): bool
-    {
-        $collation = (AmpConfig::get('database_collation', 'utf8mb4_unicode_ci'));
-        $charset   = (AmpConfig::get('database_charset', 'utf8mb4'));
-        $engine    = (AmpConfig::get('database_engine', 'InnoDB'));
-
-        $sql = "CREATE TABLE `" . self::$table_name . sprintf('` (`id` INT UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY, `server_uri` VARCHAR(255) COLLATE %s NOT NULL, `api_key` VARCHAR(100) COLLATE %s NOT NULL, `library_name` VARCHAR(255) COLLATE %s NOT NULL, `api_call_delay` INT NOT NULL, `catalog_id` INT(11) NOT NULL) ENGINE = %s DEFAULT CHARSET=%s COLLATE=%s', $collation, $collation, $collation, $engine, $charset, $collation);
-        Dba::query($sql);
-
-        return true;
-    }
-
-    /**
-     * catalog_fields
+     * Constructor
      *
-     * Return the necessary settings fields for creating a new Seafile catalog
-     * @return array<
-     *     string,
-     *     array{description: string, type: string, value: scalar}
-     * >
+     * Catalog class constructor, pulls catalog information
      */
-    public function catalog_fields(): array
+    public function __construct(?int $catalog_id = null)
     {
-        return ['server_uri' => [
-            'description' => T_('Server URI'),
-            'type' => 'text',
-            'value' => 'https://seafile.example.org/',
-        ], 'library_name' => ['description' => T_('Library Name'), 'type' => 'text', 'value' => 'Music'], 'api_call_delay' => ['description' => T_('API Call Delay'), 'type' => 'number', 'value' => '250'], 'username' => ['description' => T_('Seafile Username/Email'), 'type' => 'text', 'value' => ''], 'password' => ['description' => T_('Seafile Password'), 'type' => 'password', 'value' => '']];
-    }
+        if ($catalog_id) {
+            $info = $this->get_info($catalog_id, static::DB_TABLENAME);
+            foreach ($info as $key => $value) {
+                if (property_exists($this, $key)) {
+                    $this->$key = $value;
+                }
+            }
 
-    /**
-     * isReady
-     *
-     * Returns whether the catalog is ready for use.
-     */
-    #[Override]
-    public function isReady(): bool
-    {
-        return $this->seafile->ready();
+            $this->seafile = new SeafileAdapter(
+                $this->server_uri,
+                $this->library_name,
+                $this->api_call_delay,
+                $this->api_key
+            );
+        }
     }
 
     /**
@@ -195,7 +98,7 @@ class Catalog_Seafile extends Catalog
     {
         $server_uri     = rtrim(trim($data['server_uri'] ?? ''), '/');
         $library_name   = trim($data['library_name'] ?? '');
-        $api_call_delay = trim((string)($data['api_call_delay'] ?? ''));
+        $api_call_delay = isset($data['api_call_delay']) ? (int) $data['api_call_delay'] : null;
         $username       = trim($data['username'] ?? '');
         $password       = trim($data['password'] ?? '');
 
@@ -232,7 +135,7 @@ class Catalog_Seafile extends Catalog
         try {
             $api_key = SeafileAdapter::request_api_key($server_uri, $username, $password);
             $sql     = "INSERT INTO `catalog_seafile` (`server_uri`, `api_key`, `library_name`, `api_call_delay`, `catalog_id`) VALUES (?, ?, ?, ?, ?)";
-            Dba::write($sql, [$server_uri, $api_key, $library_name, (int)($api_call_delay), $catalog_id]);
+            Dba::write($sql, [$server_uri, $api_key, $library_name, (int) ($api_call_delay), $catalog_id]);
             debug_event('seafile_catalog', 'Retrieved API token for user ' . $username . '.', 1);
 
             return true;
@@ -246,39 +149,6 @@ class Catalog_Seafile extends Catalog
         }
 
         return false;
-    }
-
-    /**
-     * Constructor
-     *
-     * Catalog class constructor, pulls catalog information
-     */
-    public function __construct(?int $catalog_id = null)
-    {
-        if ($catalog_id) {
-            $this->id = (int)$catalog_id;
-            $info     = $this->get_info($catalog_id, static::DB_TABLENAME);
-            foreach ($info as $key => $value) {
-                $this->$key = $value;
-            }
-
-            $this->seafile = new SeafileAdapter(
-                $info['server_uri'],
-                $info['library_name'],
-                $info['api_call_delay'],
-                $info['api_key']
-            );
-        }
-    }
-
-    /**
-     * get_rel_path
-     */
-    public function get_rel_path(string $file_path): string
-    {
-        $arr = $this->seafile->from_virtual_path($file_path);
-
-        return $arr['path'] . '/' . $arr['filename'];
     }
 
     /**
@@ -341,201 +211,77 @@ class Catalog_Seafile extends Catalog
     }
 
     /**
-     * _insert_local_song
+     * cache_catalog_proc
+     */
+    public function cache_catalog_proc(): bool
+    {
+        return false;
+    }
+
+    /**
+     * catalog_fields
      *
-     * Insert a song that isn't already in the database.
+     * Return the necessary settings fields for creating a new Seafile catalog
+     * @return array<
+     *     string,
+     *     array{description: string, type: string, value: scalar}
+     * >
      */
-    private function insert_song($file): ?int
+    public function catalog_fields(): array
     {
-        if ($this->check_remote_song($this->seafile->to_virtual_path($file))) {
-            debug_event('seafile_catalog', 'Skipping existing song ' . $file->name, 5);
-            /* HINT: filename (File path) */
-            Ui::update_text('', sprintf(T_('Skipping existing song: %s'), $file->name));
-        } else {
-            debug_event('seafile_catalog', 'Adding song ' . $file->name, 5);
-            try {
-                $tempfilename = $this->seafile->download($file);
-                $results      = $this->download_metadata($tempfilename, '', '', null, true);
-                /* HINT: filename (File path) */
-                Ui::update_text('', sprintf(T_('Adding a new song: %s'), $file->name));
-                $added = Song::insert($results);
-
-                if ($added) {
-                    parent::gather_art([$added]);
-                    // Restore the Seafile virtual path
-                    $virtpath = $this->seafile->to_virtual_path($file);
-                    Dba::write("UPDATE `song` SET `file` = ? WHERE `id` = ?", [$virtpath, $added]);
-                    $this->count++;
-                }
-
-                return $added;
-            } catch (Exception $error) {
-                /* HINT: %1 filename (File path), %2 error message */
-                debug_event('seafile_catalog', sprintf('Could not add song "%1$s": %2$s', $file->name, $error->getMessage()), 1);
-                /* HINT: filename (File path) */
-                Ui::update_text('', sprintf(T_('Could not add song: %s'), $file->name));
-            } finally {
-                if (isset($tempfilename)) {
-                    $this->clean_tmp_file($tempfilename);
-                }
-            }
-        }
-
-        return null;
+        return [
+            'server_uri' => [
+                'description' => T_('Server URI'),
+                'type' => 'text',
+                'value' => 'https://seafile.example.org/',
+            ],
+            'library_name' => [
+                'description' => T_('Library Name'),
+                'type' => 'text',
+                'value' => 'Music'
+            ],
+            'api_call_delay' => [
+                'description' => T_('API Call Delay'),
+                'type' => 'number',
+                'value' => '250'
+            ],
+            'username' => [
+                'description' => T_('Seafile Username/Email'),
+                'type' => 'text',
+                'value' => ''
+            ],
+            'password' => [
+                'description' => T_('Seafile Password'),
+                'type' => 'password',
+                'value' => ''
+            ]
+        ];
     }
 
     /**
-     * @param string $sort_pattern
-     * @param string $rename_pattern
-     * @param null|string[] $gather_types
-     * @param bool $keep
-     * @return array<string, mixed>
-     * @throws Exception
+     * @return string[]
      */
-    private function download_metadata($file, $sort_pattern = '', $rename_pattern = '', $gather_types = null, $keep = false): array
+    public function check_catalog_proc(?Interactor $interactor = null): array
     {
-        // Check for patterns
-        if (!$sort_pattern || !$rename_pattern) {
-            $sort_pattern   = $this->sort_pattern;
-            $rename_pattern = $this->rename_pattern;
-        }
-
-        $is_cached = (is_string($file) && is_file($file));
-
-        if ($is_cached) {
-            debug_event('seafile_catalog', 'Using tmp file ' . $file, 5);
-            $tempfilename = $file;
-        } else {
-            debug_event('seafile_catalog', 'Downloading partial song ' . $file->name, 5);
-            $tempfilename = $this->seafile->download($file, true);
-        }
-
-        if ($gather_types === null) {
-            $gather_types = $this->get_gather_types('music');
-        }
-
-        $vainfo = $this->getUtilityFactory()->createVaInfo(
-            $tempfilename,
-            $gather_types,
-            '',
-            '',
-            (string) $sort_pattern,
-            (string) $rename_pattern
-        );
-        if (!$is_cached) {
-            $vainfo->forceSize((int)$file->size);
-        }
-
-        $vainfo->gather_tags();
-        $key = VaInfo::get_tag_type($vainfo->tags);
-
-        if (!$is_cached) {
-            $vainfo->tags['general']['size'] = (int)($file->size);
-        }
-
-        $results = ($is_cached)
-            ? VaInfo::clean_tag_info($vainfo->tags, $key, $file)
-            : VaInfo::clean_tag_info($vainfo->tags, $key, $file->name);
-
-        // Set the remote path
-        $results['catalog'] = $this->id;
-        $results['file']    = ($is_cached)
-            ? $file
-            : $this->seafile->to_virtual_path($file);
-
-        // remove the temp file
-        if (!$keep) {
-            $this->clean_tmp_file($tempfilename);
-        }
-
-        return $results;
-    }
-
-    /**
-     * @throws ReflectionException
-     */
-    public function verify_catalog_proc(?int $limit = 0, ?Interactor $interactor = null): int
-    {
-        set_time_limit(0);
-
-        $date    = time();
-        $results = 0;
-        if ($this->seafile->prepare()) {
-            $sql        = 'SELECT `id`, `file`, `title` FROM `song` WHERE `catalog` = ?';
-            $db_results = Dba::read($sql, [$this->id]);
-            while ($row = Dba::fetch_assoc($db_results)) {
-                debug_event('seafile_catalog', 'Verify starting work on ' . $row['file'] . ' (' . $row['id'] . ')', 5);
-                $fileinfo = $this->seafile->from_virtual_path($row['file']);
-                $file     = $this->seafile->get_file($fileinfo['path'], $fileinfo['filename']);
-                $metadata = null;
-                if ($file !== null) {
-                    $metadata = $this->download_metadata($file);
-                }
-
-                if ($metadata !== null) {
-                    debug_event('seafile_catalog', 'Verify updating song', 5);
-                    $song = new Song($row['id']);
-                    $info = ($song->id !== 0) ? self::update_song_from_tags($metadata, $song) : [];
-                    if ($info['change']) {
-                        Ui::update_text('', sprintf(T_('Updated song: "%s"'), $row['title']));
-                        $results++;
-                    } else {
-                        Ui::update_text('', sprintf(T_('Song up to date: "%s"'), $row['title']));
-                    }
-                } else {
-                    debug_event('seafile_catalog', 'Verify removing song', 5);
-                    Ui::update_text('', sprintf(T_('Removing song: "%s"'), $row['title']));
-                    //$dead++;
-                    Dba::write('DELETE FROM `song` WHERE `id` = ?', [$row['id']]);
-                }
-            }
-
-            $this->update_last_update($date);
-        }
-
-        return $results;
-    }
-
-    /**
-     * @param string[] $gather_types
-     * @return array<string, mixed>
-     * @throws Exception
-     */
-    #[Override]
-    public function get_media_tags(Podcast_Episode|Video|Song $media, array $gather_types, string $sort_pattern, string $rename_pattern, ?string $file_override = null): array
-    {
-        // if you have the file it's all good
-        $media_file = $file_override ?? $media->file;
-
-        if (!in_array($media_file, [null, '', '0'], true) && is_file($media_file)) {
-            return $this->download_metadata($media_file, $sort_pattern, $rename_pattern, $gather_types);
-        }
-
-        if ($this->seafile->prepare()) {
-            $fileinfo = $this->seafile->from_virtual_path((string)$media_file);
-
-            $file = $this->seafile->get_file($fileinfo['path'], $fileinfo['filename']);
-
-            if ($file !== null) {
-                return $this->download_metadata($file, $sort_pattern, $rename_pattern, $gather_types);
-            }
-        }
-
         return [];
     }
 
     /**
-     * clean_tmp_file
+     * check_remote_song
      *
-     * Clean up temp files after use.
-     *
-     * @param string|null $tempfilename
+     * checks to see if a remote song exists in the database or not
+     * if it finds a song it returns the ID
      */
-    public function clean_tmp_file($tempfilename): void
+    public function check_remote_song(string $file): ?int
     {
-        if ($tempfilename !== null && file_exists($tempfilename)) {
-            unlink($tempfilename);
+        $sql        = 'SELECT `id` FROM `song` WHERE `file` = ?';
+        $db_results = Dba::read($sql, [$file]);
+
+        if ($results = Dba::fetch_assoc($db_results)) {
+            return (int) $results['id'];
         }
+
+        return null;
     }
 
     /**
@@ -551,7 +297,7 @@ class Catalog_Seafile extends Catalog
 
         if ($this->seafile->prepare()) {
             $sql        = 'SELECT `id`, `file` FROM `song` WHERE `catalog` = ?';
-            $db_results = Dba::read($sql, [$this->id]);
+            $db_results = Dba::read($sql, [$this->getId()]);
             while ($row = Dba::fetch_assoc($db_results)) {
                 debug_event('seafile_catalog', 'Clean starting work on ' . $row['file'] . ' (' . $row['id'] . ')', 5);
                 $file = $this->seafile->from_virtual_path($row['file']);
@@ -593,11 +339,154 @@ class Catalog_Seafile extends Catalog
     }
 
     /**
-     * @return string[]
+     * clean_tmp_file
+     *
+     * Clean up temp files after use.
      */
-    public function check_catalog_proc(?Interactor $interactor = null): array
+    public function clean_tmp_file(?string $tempfilename = null): void
     {
+        if ($tempfilename !== null && file_exists($tempfilename)) {
+            unlink($tempfilename);
+        }
+    }
+
+    public function count_scan_folders(?Interactor $interactor = null): void {}
+
+    /**
+     * get_create_help
+     * This returns hints on catalog creation
+     */
+    public function get_create_help(): string
+    {
+        $help = "<ul><li>" . T_("Install a Seafile server as described in the documentation") . "</li><li>" . T_("Enter URL to server (e.g. 'https://seafile.example.com') and library name (e.g. 'Music').") . "</li><li>" . T_("API Call Delay is the delay inserted between repeated requests to Seafile (such as during an Add or Clean action) to accommodate Seafile's Rate Limiting.") . "<br/>" . T_("The default is tuned towards Seafile's default rate limit settings.") . "</li><li>" . T_("After creating the Catalog, you must 'Make it ready' on the Catalog table.") . "</li></ul>";
+
+        return sprintf(
+            $help,
+            "<a target='_blank' href='https://www.seafile.com/'>https://www.seafile.com/</a>",
+            "<a href='https://forum.syncwerk.com/t/too-many-requests-when-using-web-api-status-code-429/2330'>",
+            "</a>"
+        );
+    }
+
+    /**
+     * get_description
+     * This returns the description of this catalog
+     */
+    public function get_description(): string
+    {
+        return self::$description;
+    }
+
+    /**
+     * get_f_info
+     */
+    public function get_f_info(): string
+    {
+        return $this->seafile->get_format_string();
+    }
+
+    /**
+     * @param string[] $gather_types
+     * @return array<string, mixed>
+     * @throws Exception
+     */
+    #[Override]
+    public function get_media_tags(Podcast_Episode|Video|Song $media, array $gather_types, string $sort_pattern, string $rename_pattern, ?string $file_override = null): array
+    {
+        // if you have the file it's all good
+        $media_file = $file_override ?? $media->file;
+
+        if ($media_file && is_file($media_file)) {
+            return $this->download_metadata($media_file, $sort_pattern, $rename_pattern, $gather_types);
+        }
+
+        if ($this->seafile->prepare()) {
+            $fileinfo = $this->seafile->from_virtual_path((string) $media_file);
+
+            $file = $this->seafile->get_file($fileinfo['path'], $fileinfo['filename']);
+
+            if ($file !== null) {
+                return $this->download_metadata($file, $sort_pattern, $rename_pattern, $gather_types);
+            }
+        }
+
         return [];
+    }
+
+    /**
+     * get_path
+     * This returns the current catalog path/uri
+     */
+    public function get_path(): string
+    {
+        return $this->server_uri;
+    }
+
+    /**
+     * get_rel_path
+     */
+    public function get_rel_path(string $file_path): string
+    {
+        $arr = $this->seafile->from_virtual_path($file_path);
+
+        return $arr['path'] . '/' . $arr['filename'];
+    }
+
+    /**
+     * get_type
+     * This returns the current catalog type
+     */
+    public function get_type(): string
+    {
+        return self::$type;
+    }
+
+    /**
+     * get_version
+     * This returns the current version
+     */
+    public function get_version(): string
+    {
+        return self::$version;
+    }
+
+    /**
+     * install
+     * This function installs the remote catalog
+     */
+    public function install(): bool
+    {
+        $collation = (AmpConfig::get('database_collation', 'utf8mb4_unicode_ci'));
+        $charset   = (AmpConfig::get('database_charset', 'utf8mb4'));
+        $engine    = (AmpConfig::get('database_engine', 'InnoDB'));
+
+        $sql = "CREATE TABLE `" . self::$table_name . sprintf('` (`id` INT UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY, `server_uri` VARCHAR(255) COLLATE %s NOT NULL, `api_key` VARCHAR(100) COLLATE %s NOT NULL, `library_name` VARCHAR(255) COLLATE %s NOT NULL, `api_call_delay` INT NOT NULL, `catalog_id` INT(11) NOT NULL) ENGINE = %s DEFAULT CHARSET=%s COLLATE=%s', $collation, $collation, $collation, $engine, $charset, $collation);
+        Dba::query($sql);
+
+        return true;
+    }
+
+    /**
+     * is_installed
+     * This returns true or false if remote catalog is installed
+     */
+    public function is_installed(): bool
+    {
+        $sql        = "SHOW TABLES LIKE '" . self::$table_name . "'";
+        $db_results = Dba::query($sql);
+
+        return (Dba::num_rows($db_results) > 0);
+    }
+
+    /**
+     * isReady
+     *
+     * Returns whether the catalog is ready for use.
+     */
+    #[Override]
+    public function isReady(): bool
+    {
+        return $this->seafile->ready();
     }
 
     /**
@@ -607,44 +496,6 @@ class Catalog_Seafile extends Catalog
     public function move_catalog_proc(string $new_path): bool
     {
         return false;
-    }
-
-    /**
-     * cache_catalog_proc
-     */
-    public function cache_catalog_proc(): bool
-    {
-        return false;
-    }
-
-    /**
-     * check_remote_song
-     *
-     * checks to see if a remote song exists in the database or not
-     * if it finds a song it returns the ID
-     */
-    public function check_remote_song(string $file): ?int
-    {
-        $sql        = 'SELECT `id` FROM `song` WHERE `file` = ?';
-        $db_results = Dba::read($sql, [$file]);
-
-        if ($results = Dba::fetch_assoc($db_results)) {
-            return (int)$results['id'];
-        }
-
-        return null;
-    }
-
-    /**
-     * get_f_info
-     */
-    public function get_f_info(): string
-    {
-        if ($this->seafile != null) {
-            return $this->seafile->get_format_string();
-        }
-
-        return "Seafile Catalog";
     }
 
     /**
@@ -664,12 +515,14 @@ class Catalog_Seafile extends Catalog
         if ($this->seafile->prepare()) {
             set_time_limit(0);
 
-            $fileinfo = $this->seafile->from_virtual_path((string)$media->file);
+            $fileinfo = $this->seafile->from_virtual_path((string) $media->file);
 
             $file = $this->seafile->get_file($fileinfo['path'], $fileinfo['filename']);
 
-            $stream_path = $this->seafile->download($file);
-            $stream_name = $fileinfo['filename'];
+            if ($file !== null) {
+                $stream_path = $this->seafile->download($file);
+                $stream_name = $fileinfo['filename'];
+            }
 
             // in case this didn't get set for some reason
             if ($size === 0) {
@@ -685,10 +538,176 @@ class Catalog_Seafile extends Catalog
         ];
     }
 
+    /**
+     * scan_catalog_folders
+     */
+    public function scan_catalog_folders(?Interactor $interactor = null, bool $skipCounts = false): int
+    {
+        return 0;
+    }
+
+    public function verify_catalog_proc(?int $limit = 0, ?Interactor $interactor = null): int
+    {
+        set_time_limit(0);
+
+        $date    = time();
+        $results = 0;
+        if ($this->seafile->prepare()) {
+            $sql        = 'SELECT `id`, `file`, `title` FROM `song` WHERE `catalog` = ?';
+            $db_results = Dba::read($sql, [$this->getId()]);
+            while ($row = Dba::fetch_assoc($db_results)) {
+                debug_event('seafile_catalog', 'Verify starting work on ' . $row['file'] . ' (' . $row['id'] . ')', 5);
+                $fileinfo = $this->seafile->from_virtual_path($row['file']);
+                $file     = $this->seafile->get_file($fileinfo['path'], $fileinfo['filename']);
+                $metadata = null;
+                if ($file !== null) {
+                    try {
+                        $metadata = $this->download_metadata($file);
+                    } catch (Exception $error) {
+                        /* HINT: %1 filename (File path), %2 error message */
+                        debug_event('seafile_catalog', sprintf('Could not add song "%1$s": %2$s', $file->name, $error->getMessage()), 1);
+                        /* HINT: filename (File path) */
+                        Ui::update_text('', sprintf(T_('Could not add song: %s'), $file->name));
+                    }
+                }
+
+                if ($metadata !== null) {
+                    debug_event('seafile_catalog', 'Verify updating song', 5);
+                    $song = new Song($row['id']);
+                    $info = ($song->id !== 0) ? self::update_song_from_tags($metadata, $song) : [];
+                    if ($info['change']) {
+                        Ui::update_text('', sprintf(T_('Updated song: "%s"'), $row['title']));
+                        $results++;
+                    } else {
+                        Ui::update_text('', sprintf(T_('Song up to date: "%s"'), $row['title']));
+                    }
+                } else {
+                    debug_event('seafile_catalog', 'Verify removing song', 5);
+                    Ui::update_text('', sprintf(T_('Removing song: "%s"'), $row['title']));
+                    //$dead++;
+                    Dba::write('DELETE FROM `song` WHERE `id` = ?', [$row['id']]);
+                }
+            }
+
+            $this->update_last_update($date);
+        }
+
+        return $results;
+    }
+
+    /**
+     * @param null|string[] $gather_types
+     * @return array<string, mixed>
+     * @throws Exception
+     */
+    private function download_metadata(DirectoryItem|string $file, string $sort_pattern = '', string $rename_pattern = '', ?array $gather_types = null, bool $keep = false): array
+    {
+        // Check for patterns
+        if (!$sort_pattern || !$rename_pattern) {
+            $sort_pattern   = $this->sort_pattern;
+            $rename_pattern = $this->rename_pattern;
+        }
+
+        $is_diritem = ($file instanceof DirectoryItem);
+        $is_cached  = (!$is_diritem && is_file($file));
+
+        if ($is_cached) {
+            debug_event('seafile_catalog', 'Using tmp file ' . $file, 5);
+            $tempfilename = $file;
+        } else {
+            debug_event('seafile_catalog', 'Downloading partial song', 5);
+            $tempfilename = ($file instanceof DirectoryItem)
+                ? $this->seafile->download($file, true)
+                : $file;
+        }
+
+        if ($gather_types === null) {
+            $gather_types = $this->get_gather_types('music');
+        }
+
+        $vainfo = $this->getUtilityFactory()->createVaInfo(
+            $tempfilename,
+            $gather_types,
+            '',
+            '',
+            (string) $sort_pattern,
+            (string) $rename_pattern
+        );
+        if ($is_diritem) {
+            $vainfo->forceSize((int) $file->size);
+        }
+
+        $vainfo->gather_tags();
+        $key = VaInfo::get_tag_type($vainfo->tags);
+
+        if ($is_diritem) {
+            $vainfo->tags['general']['size'] = (int) ($file->size);
+        }
+
+        $results = VaInfo::clean_tag_info($vainfo->tags, $key, $tempfilename);
+
+        // Set the remote path
+        $results['catalog'] = $this->getId();
+        $results['file']    = ($is_diritem)
+            ? $this->seafile->to_virtual_path($file)
+            : $tempfilename;
+
+        // remove the temp file
+        if (!$keep) {
+            $this->clean_tmp_file($tempfilename);
+        }
+
+        return $results;
+    }
+
     private function getUtilityFactory(): UtilityFactoryInterface
     {
         global $dic;
 
         return $dic->get(UtilityFactoryInterface::class);
+    }
+
+    /**
+     * _insert_local_song
+     *
+     * Insert a song that isn't already in the database.
+     */
+    private function insert_song(DirectoryItem $file): ?int
+    {
+        if ($this->check_remote_song($this->seafile->to_virtual_path($file))) {
+            debug_event('seafile_catalog', 'Skipping existing song ' . $file->name, 5);
+            /* HINT: filename (File path) */
+            Ui::update_text('', sprintf(T_('Skipping existing song: %s'), $file->name));
+        } else {
+            debug_event('seafile_catalog', 'Adding song ' . $file->name, 5);
+            try {
+                $tempfilename = $this->seafile->download($file);
+                $results      = $this->download_metadata($tempfilename, '', '', null, true);
+                /* HINT: filename (File path) */
+                Ui::update_text('', sprintf(T_('Adding a new song: %s'), $file->name));
+                $added = Song::insert($results);
+
+                if ($added) {
+                    parent::gather_art([$added]);
+                    // Restore the Seafile virtual path
+                    $virtpath = $this->seafile->to_virtual_path($file);
+                    Dba::write("UPDATE `song` SET `file` = ? WHERE `id` = ?", [$virtpath, $added]);
+                    $this->count++;
+                }
+
+                return $added;
+            } catch (Exception $error) {
+                /* HINT: %1 filename (File path), %2 error message */
+                debug_event('seafile_catalog', sprintf('Could not add song "%1$s": %2$s', $file->name, $error->getMessage()), 1);
+                /* HINT: filename (File path) */
+                Ui::update_text('', sprintf(T_('Could not add song: %s'), $file->name));
+            } finally {
+                if (isset($tempfilename)) {
+                    $this->clean_tmp_file($tempfilename);
+                }
+            }
+        }
+
+        return null;
     }
 }

@@ -39,25 +39,9 @@ use Psr\Log\LoggerInterface;
 class UserTrackerTest extends TestCase
 {
     private ConfigContainerInterface&MockObject $configContainer;
-
     private IpHistoryRepositoryInterface&MockObject $ipHistoryRepository;
-
     private LoggerInterface&MockObject $logger;
-
     private UserTracker $subject;
-
-    protected function setUp(): void
-    {
-        $this->configContainer     = $this->createMock(ConfigContainerInterface::class);
-        $this->ipHistoryRepository = $this->createMock(IpHistoryRepositoryInterface::class);
-        $this->logger              = $this->createMock(LoggerInterface::class);
-
-        $this->subject = new UserTracker(
-            $this->configContainer,
-            $this->ipHistoryRepository,
-            $this->logger
-        );
-    }
 
     public function testTrackIpAddressDoesNothingIfFeatureIsDisabled(): void
     {
@@ -69,6 +53,19 @@ class UserTrackerTest extends TestCase
         $this->subject->trackIpAddress(
             $this->createMock(User::class),
             'login'
+        );
+    }
+
+    protected function setUp(): void
+    {
+        $this->configContainer     = $this->createMock(ConfigContainerInterface::class);
+        $this->ipHistoryRepository = $this->createMock(IpHistoryRepositoryInterface::class);
+        $this->logger              = $this->createMock(LoggerInterface::class);
+
+        $this->subject = new UserTracker(
+            $this->configContainer,
+            $this->ipHistoryRepository,
+            $this->logger
         );
     }
 }

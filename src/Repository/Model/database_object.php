@@ -37,20 +37,107 @@ abstract class database_object
 {
     protected const DB_TABLENAME = null;
 
-    private static $object_cache = [];
-
-    public static int $cache_hit = 0; // Statistics for debugging
-
+    public static int $cache_hit   = 0; // Statistics for debugging
     private static ?bool $_enabled = null;
+
+    /** @var array<string, array<int|string, array<string, mixed>|bool>> */
+    private static array $object_cache = [];
+
+    /**
+     * add_to_cache
+     * This adds the specified object to the specified index in the cache
+     */
+    public static function add_to_cache(string $index, int|string $object_id, array $data): bool
+    {
+        /**
+         * Lazy load the cache setting to avoid some magic auto_init logic
+         */
+        if (self::$_enabled === null) {
+            self::$_enabled = AmpConfig::get('memory_cache', false);
+        }
+
+        if (!self::$_enabled) {
+            return false;
+        }
+
+        $value = false;
+        if (!empty($data)) {
+            $value = $data;
+        }
+
+        self::$object_cache[$index][$object_id] = $value;
+
+        return true;
+    }
+
+    /**
+     * clear_cache
+     */
+    public static function clear_cache(): void
+    {
+        self::$object_cache = [];
+    }
+
+    /**
+     * get_from_cache
+     * This attempts to retrieve the specified object from the cache we've got here
+     */
+    public static function get_from_cache(string $index, int|string $object_id): array
+    {
+        // Check if the object is set
+        if (isset(self::$object_cache[$index][$object_id]) && is_array(self::$object_cache[$index][$object_id])) {
+            ++self::$cache_hit;
+
+            return self::$object_cache[$index][$object_id];
+        }
+
+        return [];
+    }
+
+    /**
+     * is_cached
+     * this checks the cache to see if the specified object is there
+     */
+    public static function is_cached(string $index, int|string $object_id): bool
+    {
+        // Make sure we've got some parents here before we dive below
+        if (!array_key_exists($index, self::$object_cache)) {
+            return false;
+        }
+
+        return (
+            $object_id
+            && array_key_exists((string) $object_id, self::$object_cache[$index])
+            && !empty(self::$object_cache[$index][$object_id])
+        );
+    }
+
+    /**
+     * remove_from_cache
+     * This function clears something from the cache, there are a few places we need to do this
+     * in order to have things display correctly
+     */
+    public static function remove_from_cache(string $index, ?int $object_id = null): void
+    {
+        if (isset(self::$object_cache[$index])) {
+            if (is_null($object_id)) {
+                // unset the whole index
+                unset(self::$object_cache[$index]);
+            } elseif (isset(self::$object_cache[$index][$object_id])) {
+                // unset a single value
+                unset(self::$object_cache[$index][$object_id]);
+            }
+        }
+    }
 
     /**
      * get_info
      * retrieves the info from the database and puts it in the cache
      */
-    public function get_info(int $object_id, ?string $table_name = ''): array
+    protected function get_info(int $object_id, ?string $table_name = null): array
     {
         $table     = $this->getTableName($table_name);
-        $object_id = (int)$object_id;
+        $object_id = (int) $object_id;
 
         // Make sure we've got a real id and table
         if ($table === null || $object_id < 1) {
@@ -93,100 +180,5 @@ abstract class database_object
         }
 
         return Dba::escape($table_name);
-    }
-
-    /**
-     * clear_cache
-     */
-    public static function clear_cache(): void
-    {
-        self::$object_cache = [];
-    }
-
-    /**
-     * is_cached
-     * this checks the cache to see if the specified object is there
-     * @param int|string $object_id
-     */
-    public static function is_cached(string $index, $object_id): bool
-    {
-        // Make sure we've got some parents here before we dive below
-        if (!array_key_exists($index, self::$object_cache)) {
-            return false;
-        }
-
-        return (
-            $object_id &&
-            array_key_exists((string)$object_id, self::$object_cache[$index]) &&
-            !empty(self::$object_cache[$index][$object_id])
-        );
-    }
-
-    /**
-     * get_from_cache
-     * This attempts to retrieve the specified object from the cache we've got here
-     * @param string $index
-     * @param int|string $object_id
-     */
-    public static function get_from_cache($index, $object_id): array
-    {
-        // Check if the object is set
-        if (isset(self::$object_cache[$index][$object_id]) && is_array(self::$object_cache[$index][$object_id])) {
-            ++self::$cache_hit;
-
-            return self::$object_cache[$index][$object_id];
-        }
-
-        return [];
-    }
-
-    /**
-     * add_to_cache
-     * This adds the specified object to the specified index in the cache
-     * @param string $index
-     * @param int|string $object_id
-     * @param array $data
-     */
-    public static function add_to_cache($index, $object_id, $data): bool
-    {
-        /**
-         * Lazy load the cache setting to avoid some magic auto_init logic
-         */
-        if (self::$_enabled === null) {
-            self::$_enabled = AmpConfig::get('memory_cache', false);
-        }
-
-        if (!self::$_enabled) {
-            return false;
-        }
-
-        $value = false;
-        if (!empty($data)) {
-            $value = $data;
-        }
-
-        self::$object_cache[$index][$object_id] = $value;
-
-        return true;
-    }
-
-    /**
-     * remove_from_cache
-     * This function clears something from the cache, there are a few places we need to do this
-     * in order to have things display correctly
-     * @param string $index
-     * @param int|null $object_id
-     */
-    public static function remove_from_cache($index, $object_id = null): void
-    {
-        if (isset(self::$object_cache[$index])) {
-            if (is_null($object_id)) {
-                // unset the whole index
-                unset(self::$object_cache[$index]);
-            } elseif (isset(self::$object_cache[$index][$object_id])) {
-                // unset a single value
-                unset(self::$object_cache[$index][$object_id]);
-            }
-        }
     }
 }

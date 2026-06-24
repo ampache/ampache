@@ -45,8 +45,7 @@ final readonly class WebFetcher implements WebFetcherInterface
         private ConfigContainerInterface $config,
         private UtilityFactoryInterface $utilityFactory,
         private LoggerInterface $logger,
-    ) {
-    }
+    ) {}
 
     /**
      * Fetches and returns the uris content

@@ -23,8 +23,11 @@ declare(strict_types=0);
  *
  */
 
+// show_artist_info.inc.php
+
 use Ampache\Repository\Model\Art;
 use Ampache\Repository\Model\Artist;
+use Ampache\Repository\Model\Wanted;
 
 /** @var Artist|Wanted $artist */
 /** @var array<string, string> $biography */
@@ -41,7 +44,7 @@ use Ampache\Repository\Model\Artist;
 if (array_key_exists('placeformed', $biography) && !empty($biography['placeformed'])) {
     $dcol[] = $biography['placeformed'];
 }
-if (array_key_exists('yearformed', $biography) && (int)$biography['yearformed'] > 0) {
+if (array_key_exists('yearformed', $biography) && (int) $biography['yearformed'] > 0) {
     $dcol[] = $biography['yearformed'];
 }
 if (count($dcol) > 0) {

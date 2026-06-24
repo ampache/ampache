@@ -23,6 +23,8 @@ declare(strict_types=0);
  *
  */
 
+// show_preferences.inc.php
+
 /**
  * This page has a few tabs, as such we need to figure out which tab we are on
  * and display the information accordingly
@@ -45,7 +47,7 @@ if (!empty($tab)) {
     /* HINT: Username FullName */
     Ui::show_box_top(sprintf(T_('Editing %s Preferences'), $fullname), 'box box_preferences');
     if ($tab !== 'account' && $tab !== 'modules') {
-        debug_event('show_preferences.inc', (string) $tab, 5); ?>
+        debug_event('show_preferences.inc', $tab, 5); ?>
 <form method="post" name="preferences" action="<?php echo AmpConfig::get_web_path(); ?>/preferences.php?action=update_preferences" enctype="multipart/form-data">
 <?php $ui->showPreferenceBox(($preferences[$tab] ?? [])); ?>
 <div class="formValidation">

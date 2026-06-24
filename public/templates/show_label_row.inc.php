@@ -23,6 +23,8 @@ declare(strict_types=0);
  *
  */
 
+// show_label_row.inc.php
+
 use Ampache\Config\AmpConfig;
 use Ampache\Module\Authorization\Access;
 use Ampache\Module\Authorization\AccessLevelEnum;
@@ -34,7 +36,7 @@ use Ampache\Repository\Model\Catalog;
 /** @var Ampache\Repository\Model\Label $libitem */
 /** @var string $cel_cover */
 
-$name     = scrub_out((string)$libitem->get_fullname());
+$name     = scrub_out((string) $libitem->get_fullname());
 $web_path = AmpConfig::get_web_path(); ?>
 <td class="<?php echo $cel_cover; ?>">
     <?php Art::display('label', $libitem->id, $name, ['width' => 100, 'height' => 100], $web_path . '/labels.php?action=show&label=' . $libitem->id); ?>

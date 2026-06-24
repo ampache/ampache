@@ -59,8 +59,8 @@ final class BasketAction extends AbstractStreamAction
 
         // Check to see if 'clear' was passed if it was then we need to reset the basket
         if (
-            array_key_exists('playlist_method', $_REQUEST) && $_REQUEST['playlist_method'] == 'clear' ||
-            $this->configContainer->get(ConfigurationKeyEnum::PLAYLIST_METHOD) === 'clear'
+            array_key_exists('playlist_method', $_REQUEST) && $_REQUEST['playlist_method'] == 'clear'
+            || $this->configContainer->get(ConfigurationKeyEnum::PLAYLIST_METHOD) === 'clear'
         ) {
             $user->playlist?->clear() ?? [];
         }

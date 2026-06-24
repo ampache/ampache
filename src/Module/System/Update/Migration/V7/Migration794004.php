@@ -34,13 +34,12 @@ use Ampache\Repository\Model\Catalog;
 final class Migration794004 extends AbstractMigration
 {
     protected array $changelog = ['Fix up Orphan Album Disk objects to be unique and update from tags'];
-
-    protected bool $warning = true;
+    protected bool $warning    = true;
 
     public function migrate(): void
     {
-        // set the original disk id to be the unique album_disk
-        $this->updateDatabase("UPDATE `album_disk` SET `catalog` = 0 WHERE `album_id` IN (SELECT `id` FROM `album` WHERE (`name` = 'Unknown (Orphaned)' OR `name` = ?) AND `catalog` = 0) ORDER BY `id` ASC LIMIT 1;", [T_('Unknown (Orphaned)')]);
+        // set the original disk id to be the unique album_disk (if one already doesn't exist)
+        $this->updateDatabase("UPDATE `album_disk` SET `catalog` = 0 WHERE `album_id` IN (SELECT `id` FROM `album` WHERE (`name` = 'Unknown (Orphaned)' OR `name` = ?) AND `catalog` = 0) AND NOT EXISTS ( SELECT 1 FROM `album_disk` AS `check` WHERE `check`.`album_id` = `album_disk`.`album_id` AND `check`.`catalog` = 0);", [T_('Unknown (Orphaned)')]);
 
         // Find duplicate orphans and remove them
         $tables = [
@@ -56,9 +55,9 @@ final class Migration794004 extends AbstractMigration
         $results    = [];
         while ($row = Dba::fetch_assoc($db_results)) {
             if ($row['catalog'] == 0) {
-                $orphan_id = (int)$row['id'];
+                $orphan_id = (int) $row['id'];
             } else {
-                $results[] = (int)$row['id'];
+                $results[] = (int) $row['id'];
             }
         }
 

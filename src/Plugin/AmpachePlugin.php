@@ -29,25 +29,25 @@ use Ampache\Repository\Model\User;
 
 abstract class AmpachePlugin implements AmpachePluginInterface
 {
-    public string $name;
-
     public string $categories;
-
     public string $description;
-
-    public string $url;
-
-    public string $version;
-
-    public string $min_ampache;
-
     public string $max_ampache;
+    public string $min_ampache;
+    public string $name;
+    public string $url;
+    public string $version;
 
     /**
      * install
      * Inserts plugin preferences into Ampache
      */
     abstract public function install(): bool;
+
+    /**
+     * load
+     * This loads up the data we need into this object, this stuff comes from the preferences.
+     */
+    abstract public function load(User $user): bool;
 
     /**
      * uninstall
@@ -60,10 +60,4 @@ abstract class AmpachePlugin implements AmpachePluginInterface
      * This is a recommended plugin function
      */
     abstract public function upgrade(): bool;
-
-    /**
-     * load
-     * This loads up the data we need into this object, this stuff comes from the preferences.
-     */
-    abstract public function load(User $user): bool;
 }

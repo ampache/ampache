@@ -35,8 +35,7 @@ final readonly class CsvExporter implements CatalogExporterInterface
         private SongRepositoryInterface $songRepository,
         private ModelFactoryInterface $modelFactory,
         private string $filePointer = 'php://output',
-    ) {
-    }
+    ) {}
 
     /**
      * Exports all songs
@@ -67,26 +66,28 @@ final readonly class CsvExporter implements CatalogExporterInterface
                 'Bitrate',
                 'Played',
                 'File'
-            ]
+            ],
+            escape: '\\'
         );
         foreach ($result as $songId) {
-            $song = $this->modelFactory->createSong((int)$songId);
+            $song = $this->modelFactory->createSong((int) $songId);
 
             fputcsv(
                 $stream,
                 [
                     $song->getId(),
                     $song->title,
-                    $song->get_artist_fullname(),
+                    $song->get_parent_fullname(),
                     $song->get_album_fullname(),
                     $song->get_f_time(),
-                    (string)$song->track,
+                    (string) $song->track,
                     $song->year,
                     get_datetime($song->getAdditionTime()),
-                    (int)($song->bitrate / 1024) . "-" . strtoupper((string)$song->mode),
+                    (int) ($song->bitrate / 1024) . "-" . strtoupper((string) $song->mode),
                     $song->played,
                     $song->file
-                ]
+                ],
+                escape: '\\'
             );
         }
     }

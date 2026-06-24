@@ -35,11 +35,6 @@ final class Migration360011 extends AbstractMigration
 {
     protected array $changelog = ['Add table to store stream session playlist'];
 
-    public function migrate(): void
-    {
-        $this->updateDatabase("CREATE TABLE IF NOT EXISTS `stream_playlist` (`id` int(11) unsigned NOT NULL AUTO_INCREMENT, `sid` varchar(64) NOT NULL, `url` text NOT NULL, `info_url` text DEFAULT NULL, `image_url` text DEFAULT NULL, `title` varchar(255) DEFAULT NULL, `author` varchar(255) DEFAULT NULL, `album` varchar(255) DEFAULT NULL, `type` varchar(255) DEFAULT NULL, `time` smallint(5) DEFAULT NULL, PRIMARY KEY (`id`), KEY `sid` (`sid`));");
-    }
-
     public function getTableMigrations(
         string $collation,
         string $charset,
@@ -49,5 +44,10 @@ final class Migration360011 extends AbstractMigration
         if ($build > 360011) {
             yield 'stream_playlist' => "CREATE TABLE IF NOT EXISTS `stream_playlist` (`id` int(11) unsigned NOT NULL AUTO_INCREMENT, `sid` varchar(64) NOT NULL, `url` text NOT NULL, `info_url` text DEFAULT NULL, `image_url` text DEFAULT NULL, `title` varchar(255) DEFAULT NULL, `author` varchar(255) DEFAULT NULL, `album` varchar(255) DEFAULT NULL, `type` varchar(255) DEFAULT NULL, `time` smallint(5) DEFAULT NULL, PRIMARY KEY (`id`), KEY `sid` (`sid`));";
         }
+    }
+
+    public function migrate(): void
+    {
+        $this->updateDatabase("CREATE TABLE IF NOT EXISTS `stream_playlist` (`id` int(11) unsigned NOT NULL AUTO_INCREMENT, `sid` varchar(64) NOT NULL, `url` text NOT NULL, `info_url` text DEFAULT NULL, `image_url` text DEFAULT NULL, `title` varchar(255) DEFAULT NULL, `author` varchar(255) DEFAULT NULL, `album` varchar(255) DEFAULT NULL, `type` varchar(255) DEFAULT NULL, `time` smallint(5) DEFAULT NULL, PRIMARY KEY (`id`), KEY `sid` (`sid`));");
     }
 }

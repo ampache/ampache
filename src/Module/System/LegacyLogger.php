@@ -33,42 +33,28 @@ use Psr\Log\LoggerInterface;
  */
 final readonly class LegacyLogger implements LoggerInterface
 {
+    public const string CONTEXT_TYPE = 'event_type';
+
     /**
      * This emulates the Ampache log levels
      */
     public const int LOG_LEVEL_CRITICAL = 1;
 
-    public const int LOG_LEVEL_ERROR    = 2;
+    public const int LOG_LEVEL_DEBUG = 5;
 
-    public const int LOG_LEVEL_WARNING  = 3;
+    public const int LOG_LEVEL_ERROR = 2;
 
-    public const int LOG_LEVEL_NOTICE   = 4;
+    public const int LOG_LEVEL_NOTICE = 4;
 
-    public const int LOG_LEVEL_DEBUG    = 5;
-
-    public const string CONTEXT_TYPE = 'event_type';
+    public const int LOG_LEVEL_WARNING = 3;
 
     private const string FALLBACK_DATETIME = 'c';
 
     private const string FALLBACK_USERNAME = 'ampache';
 
-    private const string LOG_NAME          = 'ampache';
+    private const string LOG_NAME = 'ampache';
 
-    public function __construct(private ConfigContainerInterface $configContainer)
-    {
-    }
-
-    /**
-     * @see LegacyLogger::critical (Required function to implement LoggerInterface)
-     */
-    public function emergency($message, array $context = []): void
-    {
-        $this->log(
-            self::LOG_LEVEL_CRITICAL,
-            $message,
-            $context
-        );
-    }
+    public function __construct(private ConfigContainerInterface $configContainer) {}
 
     /**
      * @see LegacyLogger::critical (Required function to implement LoggerInterface)
@@ -95,6 +81,30 @@ final readonly class LegacyLogger implements LoggerInterface
     }
 
     /**
+     * debug_level = 5
+     */
+    public function debug($message, array $context = []): void
+    {
+        $this->log(
+            self::LOG_LEVEL_DEBUG,
+            $message,
+            $context
+        );
+    }
+
+    /**
+     * @see LegacyLogger::critical (Required function to implement LoggerInterface)
+     */
+    public function emergency($message, array $context = []): void
+    {
+        $this->log(
+            self::LOG_LEVEL_CRITICAL,
+            $message,
+            $context
+        );
+    }
+
+    /**
      * debug_level = 2
      */
     public function error($message, array $context = []): void
@@ -107,48 +117,12 @@ final readonly class LegacyLogger implements LoggerInterface
     }
 
     /**
-     * debug_level = 3
-     */
-    public function warning($message, array $context = []): void
-    {
-        $this->log(
-            self::LOG_LEVEL_WARNING,
-            $message,
-            $context
-        );
-    }
-
-    /**
-     * debug_level = 4
-     */
-    public function notice($message, array $context = []): void
-    {
-        $this->log(
-            self::LOG_LEVEL_NOTICE,
-            $message,
-            $context
-        );
-    }
-
-    /**
      * @see LegacyLogger::notice (Required function to implement LoggerInterface)
      */
     public function info($message, array $context = []): void
     {
         $this->log(
             self::LOG_LEVEL_NOTICE,
-            $message,
-            $context
-        );
-    }
-
-    /**
-     * debug_level = 5
-     */
-    public function debug($message, array $context = []): void
-    {
-        $this->log(
-            self::LOG_LEVEL_DEBUG,
             $message,
             $context
         );
@@ -206,11 +180,35 @@ final readonly class LegacyLogger implements LoggerInterface
         }
 
         if (
-            !error_log(sprintf('%s [%s] (%s) -> %s%s', $log_time, $username, $event_name, $message, PHP_EOL), 3, $log_filename) &&
-            !defined('SSE_OUTPUT') &&
-            !defined('CLI') && !defined('API')
+            !error_log(sprintf('%s [%s] (%s) -> %s%s', $log_time, $username, $event_name, $message, PHP_EOL), 3, $log_filename)
+            && !defined('SSE_OUTPUT')
+            && !defined('CLI') && !defined('API')
         ) {
             echo sprintf('Warning: Unable to write to log (%s) Please check your log_path variable in ampache.cfg.php', $log_filename);
         }
+    }
+
+    /**
+     * debug_level = 4
+     */
+    public function notice($message, array $context = []): void
+    {
+        $this->log(
+            self::LOG_LEVEL_NOTICE,
+            $message,
+            $context
+        );
+    }
+
+    /**
+     * debug_level = 3
+     */
+    public function warning($message, array $context = []): void
+    {
+        $this->log(
+            self::LOG_LEVEL_WARNING,
+            $message,
+            $context
+        );
     }
 }

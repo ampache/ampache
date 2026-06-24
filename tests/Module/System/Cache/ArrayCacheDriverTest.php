@@ -30,35 +30,36 @@ class ArrayCacheDriverTest extends TestCase
 {
     private ArrayCacheDriver $subject;
 
-    protected function setUp(): void
+    public function testGetMultipleReturnsPartialDataAfterDeletion(): void
     {
-        $this->subject = new ArrayCacheDriver();
-    }
+        $key1 = 'snafu';
+        $key2 = 'foobar';
 
-    public function testGetReturnsDefaultIfNotSet(): void
-    {
-        $default = 'snafu';
+        $value1 = 'foo';
+        $value2 = 'baz';
+
+        $this->subject->setMultiple([$key1 => $value1, $key2 => $value2]);
+        $this->subject->deleteMultiple([$key1]);
 
         self::assertSame(
-            $default,
-            $this->subject->get('booh', $default)
+            [$key1 => null, $key2 => $value2],
+            iterator_to_array($this->subject->getMultiple([$key1, $key2]))
         );
     }
 
-    public function testGetReturnsSetValue(): void
+    public function testGetMultipleReturnsSetData(): void
     {
-        $value = 'some-value';
-        $key   = 'some-key';
+        $key1 = 'snafu';
+        $key2 = 'foobar';
 
-        $this->subject->set($key, $value);
+        $value1 = 'foo';
+        $value2 = 'baz';
 
-        self::assertTrue(
-            $this->subject->has($key)
-        );
+        $this->subject->setMultiple([$key1 => $value1, $key2 => $value2]);
 
         self::assertSame(
-            $value,
-            $this->subject->get($key)
+            [$key1 => $value1, $key2 => $value2],
+            iterator_to_array($this->subject->getMultiple([$key1, $key2]))
         );
     }
 
@@ -94,36 +95,35 @@ class ArrayCacheDriverTest extends TestCase
         );
     }
 
-    public function testGetMultipleReturnsSetData(): void
+    public function testGetReturnsDefaultIfNotSet(): void
     {
-        $key1 = 'snafu';
-        $key2 = 'foobar';
-
-        $value1 = 'foo';
-        $value2 = 'baz';
-
-        $this->subject->setMultiple([$key1 => $value1, $key2 => $value2]);
+        $default = 'snafu';
 
         self::assertSame(
-            [$key1 => $value1, $key2 => $value2],
-            iterator_to_array($this->subject->getMultiple([$key1, $key2]))
+            $default,
+            $this->subject->get('booh', $default)
         );
     }
 
-    public function testGetMultipleReturnsPartialDataAfterDeletion(): void
+    public function testGetReturnsSetValue(): void
     {
-        $key1 = 'snafu';
-        $key2 = 'foobar';
+        $value = 'some-value';
+        $key   = 'some-key';
 
-        $value1 = 'foo';
-        $value2 = 'baz';
+        $this->subject->set($key, $value);
 
-        $this->subject->setMultiple([$key1 => $value1, $key2 => $value2]);
-        $this->subject->deleteMultiple([$key1]);
+        self::assertTrue(
+            $this->subject->has($key)
+        );
 
         self::assertSame(
-            [$key1 => null, $key2 => $value2],
-            iterator_to_array($this->subject->getMultiple([$key1, $key2]))
+            $value,
+            $this->subject->get($key)
         );
+    }
+
+    protected function setUp(): void
+    {
+        $this->subject = new ArrayCacheDriver();
     }
 }

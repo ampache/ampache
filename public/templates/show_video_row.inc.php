@@ -23,6 +23,8 @@ declare(strict_types=0);
  *
  */
 
+// show_video_row.inc.php
+
 use Ampache\Config\AmpConfig;
 use Ampache\Module\Api\Ajax;
 use Ampache\Module\Authorization\Access;
@@ -65,13 +67,13 @@ $web_path = AmpConfig::get_web_path(); ?>
 <td class="<?php echo $cel_cover; ?>">
     <?php $art_showed = false;
 if ($libitem->get_default_art_kind() == 'preview') {
-    $art_showed = Art::display('video', $libitem->id, (string)$libitem->get_fullname(), ['width' => 150, 'height' => 84], $libitem->get_link(), false, true, 'preview');
+    $art_showed = Art::display('video', $libitem->id, (string) $libitem->get_fullname(), ['width' => 150, 'height' => 84], $libitem->get_link(), false, true, 'preview');
 }
 if (!$art_showed) {
     $size = ($browse->is_grid_view())
         ? ['width' => 200, 'height' => 300]
         : ['width' => 100, 'height' => 150];
-    Art::display('video', $libitem->id, (string)$libitem->get_fullname(), $size, $libitem->get_link());
+    Art::display('video', $libitem->id, (string) $libitem->get_fullname(), $size, $libitem->get_link());
 } ?>
 </td>
 <td class="cel_title"><?php echo $libitem->get_f_link(); ?></td>

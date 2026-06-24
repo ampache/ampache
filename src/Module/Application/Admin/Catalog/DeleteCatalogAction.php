@@ -44,16 +44,15 @@ final readonly class DeleteCatalogAction implements ApplicationActionInterface
         private UiInterface $ui,
         private ConfigContainerInterface $configContainer,
         private RequestParserInterface $requestParser,
-    ) {
-    }
+    ) {}
 
     public function run(ServerRequestInterface $request, GuiGatekeeperInterface $gatekeeper): ?ResponseInterface
     {
         if (
-            check_http_referer() === false ||
-            $gatekeeper->mayAccess(AccessTypeEnum::INTERFACE, AccessLevelEnum::MANAGER) === false ||
-            $this->configContainer->isFeatureEnabled(ConfigurationKeyEnum::DEMO_MODE) ||
-            !$this->requestParser->verifyForm('delete_catalog')
+            check_http_referer() === false
+            || $gatekeeper->mayAccess(AccessTypeEnum::INTERFACE, AccessLevelEnum::MANAGER) === false
+            || $this->configContainer->isFeatureEnabled(ConfigurationKeyEnum::DEMO_MODE)
+            || !$this->requestParser->verifyForm('delete_catalog')
         ) {
             throw new AccessDeniedException();
         }
@@ -66,7 +65,7 @@ final readonly class DeleteCatalogAction implements ApplicationActionInterface
             $deleted = true;
             // Delete the sucker, we don't need to check perms as that's done above
             foreach ($catalogs as $catalog_id) {
-                $deleted = Catalog::delete((int)$catalog_id);
+                $deleted = Catalog::delete((int) $catalog_id);
                 if (!$deleted) {
                     break;
                 }

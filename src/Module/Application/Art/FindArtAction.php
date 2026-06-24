@@ -43,12 +43,11 @@ final class FindArtAction extends AbstractArtAction
         private readonly ArtCollectorInterface $artCollector,
         private readonly ModelFactoryInterface $modelFactory,
         private readonly UiInterface $ui,
-    ) {
-    }
+    ) {}
 
     public function run(ServerRequestInterface $request, GuiGatekeeperInterface $gatekeeper): ?ResponseInterface
     {
-        $object_type = (string)filter_input(INPUT_GET, 'object_type', FILTER_SANITIZE_SPECIAL_CHARS);
+        $object_type = (string) filter_input(INPUT_GET, 'object_type', FILTER_SANITIZE_SPECIAL_CHARS);
         $item        = $this->getItem($gatekeeper);
 
         if ($item === null) {
@@ -90,7 +89,7 @@ final class FindArtAction extends AbstractArtAction
         }
 
         if (array_key_exists('search_limit', $_REQUEST)) {
-            $options['search_limit'] = $limit = (int)$_REQUEST['search_limit'];
+            $options['search_limit'] = $limit = (int) $_REQUEST['search_limit'];
         }
 
         if (array_key_exists('year_filter', $_REQUEST) && !empty($_REQUEST['year_filter'])) {
@@ -101,10 +100,10 @@ final class FindArtAction extends AbstractArtAction
 
         // If we've got an upload ignore the rest and just insert it
         if (!empty($_FILES['file']['tmp_name'])) {
-            $path_info      = pathinfo((string) $_FILES['file']['name']);
+            $extension      = pathinfo((string) $_FILES['file']['name'], PATHINFO_EXTENSION);
             $upload         = [];
             $upload['file'] = $_FILES['file']['tmp_name'];
-            $upload['mime'] = 'image/' . ($path_info['extension'] ?? 'jpg');
+            $upload['mime'] = 'image/' . ($extension ?: 'jpg');
             $image_data     = Art::get_from_source($upload, $object_type);
 
             if ($image_data !== '') {
@@ -147,7 +146,8 @@ final class FindArtAction extends AbstractArtAction
                 if (array_key_exists('raw', $image)) {
                     unset($images[$index]['raw']);
                 }
-            } // end foreach
+            }
+
             // Store the results for further use
             $_SESSION['form']['images'] = $images;
             $this->ui->show(

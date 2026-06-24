@@ -1,6 +1,6 @@
 <?php
 
-declare(strict_types=0);
+declare(strict_types=1);
 
 /**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
@@ -23,52 +23,65 @@ declare(strict_types=0);
  *
  */
 
-namespace Ampache\Module\Application\SmartPlaylist;
+namespace Ampache\Module\Application\Folder;
 
+use Ampache\Config\ConfigContainerInterface;
+use Ampache\Config\ConfigurationKeyEnum;
 use Ampache\Module\Application\ApplicationActionInterface;
 use Ampache\Module\Application\Exception\AccessDeniedException;
 use Ampache\Module\Authorization\AccessLevelEnum;
 use Ampache\Module\Authorization\AccessTypeEnum;
 use Ampache\Module\Authorization\GuiGatekeeperInterface;
-use Ampache\Module\System\Dba;
 use Ampache\Module\Util\UiInterface;
-use Ampache\Repository\Model\ModelFactoryInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 
-final readonly class CreatePlaylistAction implements ApplicationActionInterface
+final readonly class DeleteAction implements ApplicationActionInterface
 {
-    public const string REQUEST_KEY = 'create_playlist';
+    public const string REQUEST_KEY = 'delete';
 
     public function __construct(
+        private ConfigContainerInterface $configContainer,
         private UiInterface $ui,
-        private ModelFactoryInterface $modelFactory,
-    ) {
-    }
+    ) {}
 
     public function run(ServerRequestInterface $request, GuiGatekeeperInterface $gatekeeper): ?ResponseInterface
     {
-        if ($gatekeeper->mayAccess(AccessTypeEnum::INTERFACE, AccessLevelEnum::USER) === false) {
-            throw new AccessDeniedException();
+        if ($this->configContainer->isFeatureEnabled(ConfigurationKeyEnum::DEMO_MODE)) {
+            $this->ui->showHeader();
+            $this->ui->showQueryStats();
+            $this->ui->showFooter();
+
+            return null;
         }
+
+        $folderId = (int) ($request->getQueryParams()['folder_id'] ?? 0);
+        $returnId = (int) ($request->getQueryParams()['parent_id'] ?? -1);
+        $webPath  = $this->configContainer->getWebPath();
 
         $this->ui->showHeader();
 
-        foreach ($_REQUEST as $key => $value) {
-            $prefix = substr((string) $key, 0, 4);
-            $value  = trim((string) $value);
-
-            if ($prefix === 'rule' && strlen($value)) {
-                $rules[$key] = Dba::escape($value);
-            }
+        if (
+            $gatekeeper->mayAccess(AccessTypeEnum::INTERFACE, AccessLevelEnum::CONTENT_MANAGER)
+        ) {
+            $this->ui->showConfirmationWithReturn(
+                T_('Are You Sure?'),
+                T_('This Folder will be deleted'),
+                sprintf(
+                    '%s/folders.php?action=confirm_delete&folder_id=%s',
+                    $webPath,
+                    $folderId
+                ),
+                sprintf(
+                    '%s/folders.php?action=show&folder=%s',
+                    $webPath,
+                    $returnId
+                ),
+                'delete_folder'
+            );
+        } else {
+            throw new AccessDeniedException();
         }
-
-        $playlist                 = $this->modelFactory->createSearch(null);
-        $playlist->name           = (isset($_REQUEST['playlist_name'])) ? (string)$_REQUEST['playlist_name'] : '';
-        $playlist->logic_operator = (isset($_REQUEST['operator']) && $_REQUEST['operator'] == 'or')
-            ? 'or'
-            : 'and';
-        $playlist->create();
 
         $this->ui->showQueryStats();
         $this->ui->showFooter();

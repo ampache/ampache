@@ -30,12 +30,9 @@ use Ampache\Repository\Model\User;
 interface GuiGatekeeperInterface
 {
     /**
-     * Checks if the user may access the requested resource
+     * Returns the currently logged-in user
      */
-    public function mayAccess(
-        AccessTypeEnum $type,
-        AccessLevelEnum $level,
-    ): bool;
+    public function getUser(): ?User;
 
     /**
      * Returns the id of the currently logged-in user
@@ -43,7 +40,10 @@ interface GuiGatekeeperInterface
     public function getUserId(): int;
 
     /**
-     * Returns the currently logged-in user
+     * Checks if the user may access the requested resource
      */
-    public function getUser(): ?User;
+    public function mayAccess(
+        AccessTypeEnum $type,
+        AccessLevelEnum $level,
+    ): bool;
 }

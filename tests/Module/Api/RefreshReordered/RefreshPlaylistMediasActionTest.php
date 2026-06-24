@@ -37,25 +37,9 @@ use Psr\Http\Message\ServerRequestInterface;
 
 class RefreshPlaylistMediasActionTest extends MockeryTestCase
 {
-    /** @var MockInterface|RequestParserInterface|null */
-    private MockInterface $requestParser;
-
-    /** @var MockInterface|ModelFactoryInterface|null */
-    private MockInterface $modelFactory;
-
+    private MockInterface|ModelFactoryInterface|null $modelFactory;
+    private MockInterface|RequestParserInterface|null $requestParser;
     private ?RefreshPlaylistMediasAction $subject;
-
-    #[Override]
-    protected function setUp(): void
-    {
-        $this->requestParser = $this->mock(RequestParserInterface::class);
-        $this->modelFactory  = $this->mock(ModelFactoryInterface::class);
-
-        $this->subject = new RefreshPlaylistMediasAction(
-            $this->requestParser,
-            $this->modelFactory
-        );
-    }
 
     public function testRunRendersAndReturnsNull(): void
     {
@@ -89,16 +73,12 @@ class RefreshPlaylistMediasActionTest extends MockeryTestCase
             ->withNoArgs()
             ->once()
             ->andReturn($playlistObjectIds);
-        $playlist->shouldReceive('getId')
-            ->withNoArgs()
-            ->once()
-            ->andReturn((int) $objectId);
 
         $browse->shouldReceive('set_type')
             ->with('playlist_media')
             ->once();
         $browse->shouldReceive('add_supplemental_object')
-            ->with('playlist', (int) $objectId)
+            ->with('playlist', $playlist)
             ->once();
         $browse->shouldReceive('set_static_content')
             ->with(true)
@@ -112,6 +92,18 @@ class RefreshPlaylistMediasActionTest extends MockeryTestCase
 
         $this->assertNull(
             $this->subject->run($request, $gatekeeper)
+        );
+    }
+
+    #[Override]
+    protected function setUp(): void
+    {
+        $this->requestParser = $this->mock(RequestParserInterface::class);
+        $this->modelFactory  = $this->mock(ModelFactoryInterface::class);
+
+        $this->subject = new RefreshPlaylistMediasAction(
+            $this->requestParser,
+            $this->modelFactory
         );
     }
 }

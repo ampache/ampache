@@ -41,42 +41,10 @@ use Psr\Http\Message\ServerRequestInterface;
 
 class ShowActionTest extends MockeryTestCase
 {
-    private UiInterface&MockObject $ui;
-
-    private MockObject&ModelFactoryInterface $modelFactory;
-
     private LicenseRepositoryInterface&MockObject $licenseRepository;
-
+    private MockObject&ModelFactoryInterface $modelFactory;
     private ShowAction $subject;
-
-    #[Override]
-    protected function setUp(): void
-    {
-        $this->ui                = $this->createMock(UiInterface::class);
-        $this->modelFactory      = $this->createMock(ModelFactoryInterface::class);
-        $this->licenseRepository = $this->createMock(LicenseRepositoryInterface::class);
-
-        $this->subject = new ShowAction(
-            $this->ui,
-            $this->modelFactory,
-            $this->licenseRepository,
-        );
-    }
-
-    public function testThrowsExceptionIfAccessIsDenied(): void
-    {
-        $this->expectException(AccessDeniedException::class);
-
-        $request    = $this->mock(ServerRequestInterface::class);
-        $gatekeeper = $this->mock(GuiGatekeeperInterface::class);
-
-        $gatekeeper->shouldReceive('mayAccess')
-            ->with(AccessTypeEnum::INTERFACE, AccessLevelEnum::MANAGER)
-            ->once()
-            ->andReturnFalse();
-
-        $this->subject->run($request, $gatekeeper);
-    }
+    private UiInterface&MockObject $ui;
 
     public function testRunShowsAndReturnsNull(): void
     {
@@ -121,6 +89,35 @@ class ShowActionTest extends MockeryTestCase
 
         $this->assertNull(
             $this->subject->run($request, $gatekeeper)
+        );
+    }
+
+    public function testThrowsExceptionIfAccessIsDenied(): void
+    {
+        $this->expectException(AccessDeniedException::class);
+
+        $request    = $this->mock(ServerRequestInterface::class);
+        $gatekeeper = $this->mock(GuiGatekeeperInterface::class);
+
+        $gatekeeper->shouldReceive('mayAccess')
+            ->with(AccessTypeEnum::INTERFACE, AccessLevelEnum::MANAGER)
+            ->once()
+            ->andReturnFalse();
+
+        $this->subject->run($request, $gatekeeper);
+    }
+
+    #[Override]
+    protected function setUp(): void
+    {
+        $this->ui                = $this->createMock(UiInterface::class);
+        $this->modelFactory      = $this->createMock(ModelFactoryInterface::class);
+        $this->licenseRepository = $this->createMock(LicenseRepositoryInterface::class);
+
+        $this->subject = new ShowAction(
+            $this->ui,
+            $this->modelFactory,
+            $this->licenseRepository,
         );
     }
 }

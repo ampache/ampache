@@ -23,6 +23,8 @@ declare(strict_types=0);
  *
  */
 
+// show_album_disk.inc.php
+
 use Ampache\Config\AmpConfig;
 use Ampache\Module\Api\Ajax;
 use Ampache\Module\Authorization\Access;
@@ -67,7 +69,7 @@ $access50          = Access::check(AccessTypeEnum::INTERFACE, AccessLevelEnum::C
 $access25          = ($access50 || Access::check(AccessTypeEnum::INTERFACE, AccessLevelEnum::USER));
 $show_direct_play  = AmpConfig::get('directplay');
 $show_playlist_add = $access25;
-$directplay_limit  = AmpConfig::get('direct_play_limit');
+$directplay_limit  = AmpConfig::get('direct_play_limit', 500);
 $hide_array        = (AmpConfig::get('hide_single_artist') && $albumDisk->get_artist_count() == 1)
     ? ['cel_artist', 'cel_album', 'cel_year', 'cel_drag']
     : ['cel_album', 'cel_year', 'cel_drag'];
@@ -83,22 +85,22 @@ if ($directplay_limit > 0) {
 <div class="item_right_info">
     <div class="external_links">
 <?php if (AmpConfig::get('external_links_google')) {
-    echo "<a href=\"https://www.google.com/search?q=%22" . rawurlencode((string) $albumDisk->get_artist_fullname()) . "%22+%22" . rawurlencode($simple) . "%22\" target=\"_blank\">" . Ui::get_icon('google', T_('Search on Google ...')) . "</a>";
+    echo "<a href=\"https://www.google.com/search?q=%22" . rawurlencode((string) $albumDisk->get_parent_fullname()) . "%22+%22" . rawurlencode($simple) . "%22\" target=\"_blank\">" . Ui::get_icon('google', T_('Search on Google ...')) . "</a>";
 }
 if (AmpConfig::get('external_links_duckduckgo')) {
-    echo "<a href=\"https://www.duckduckgo.com/?q=" . rawurlencode((string) $albumDisk->get_artist_fullname()) . "+" . rawurlencode($simple) . "\" target=\"_blank\">" . Ui::get_icon('duckduckgo', T_('Search on DuckDuckGo ...')) . "</a>";
+    echo "<a href=\"https://www.duckduckgo.com/?q=" . rawurlencode((string) $albumDisk->get_parent_fullname()) . "+" . rawurlencode($simple) . "\" target=\"_blank\">" . Ui::get_icon('duckduckgo', T_('Search on DuckDuckGo ...')) . "</a>";
 }
 if (AmpConfig::get('external_links_wikipedia')) {
     echo "<a href=\"https://en.wikipedia.org/wiki/Special:Search?search=%22" . rawurlencode($simple) . "%22&go=Go\" target=\"_blank\">" . Ui::get_icon('wikipedia', T_('Search on Wikipedia ...')) . "</a>";
 }
 if (AmpConfig::get('external_links_lastfm')) {
-    echo "<a href=\"https://www.last.fm/search?q=%22" . rawurlencode((string) $albumDisk->get_artist_fullname()) . "%22+%22" . rawurlencode($simple) . "%22&type=album\" target=\"_blank\">" . Ui::get_icon('lastfm', T_('Search on Last.fm ...')) . "</a>";
+    echo "<a href=\"https://www.last.fm/search?q=%22" . rawurlencode((string) $albumDisk->get_parent_fullname()) . "%22+%22" . rawurlencode($simple) . "%22&type=album\" target=\"_blank\">" . Ui::get_icon('lastfm', T_('Search on Last.fm ...')) . "</a>";
 }
 if (AmpConfig::get('external_links_bandcamp')) {
-    echo "<a href=\"https://bandcamp.com/search?q=" . rawurlencode((string) $albumDisk->get_artist_fullname()) . "+" . rawurlencode($simple) . "&item_type=a\" target=\"_blank\">" . Ui::get_icon('bandcamp', T_('Search on Bandcamp ...')) . "</a>";
+    echo "<a href=\"https://bandcamp.com/search?q=" . rawurlencode((string) $albumDisk->get_parent_fullname()) . "+" . rawurlencode($simple) . "&item_type=a\" target=\"_blank\">" . Ui::get_icon('bandcamp', T_('Search on Bandcamp ...')) . "</a>";
 }
 if (AmpConfig::get('external_links_discogs')) {
-    echo "<a href=\"https://www.discogs.com/search/?q=" . rawurlencode(($albumDisk->get_artist_fullname() == 'Various Artists') ? 'Various' : (string)$albumDisk->get_artist_fullname()) . "+" . rawurlencode($simple) . "&type=master\" target=\"_blank\">" . Ui::get_icon('discogs', T_('Search on Discogs ...')) . "</a>";
+    echo "<a href=\"https://www.discogs.com/search/?q=" . rawurlencode(($albumDisk->get_parent_fullname() == 'Various Artists') ? 'Various' : (string) $albumDisk->get_parent_fullname()) . "+" . rawurlencode($simple) . "&type=master\" target=\"_blank\">" . Ui::get_icon('discogs', T_('Search on Discogs ...')) . "</a>";
 }
 if (AmpConfig::get('external_links_musicbrainz')) {
     if ($albumDisk->mbid) {
@@ -108,7 +110,7 @@ if (AmpConfig::get('external_links_musicbrainz')) {
     }
 } ?>
     </div>
-<?php $name = '[' . scrub_out($albumDisk->get_artist_fullname()) . '] ' . scrub_out($f_name);
+<?php $name = '[' . scrub_out($albumDisk->get_parent_fullname()) . '] ' . scrub_out($f_name);
 Art::display('album', $albumDisk->album_id, $name, ['width' => 384, 'height' => 384], null, true, false); ?>
 </div>
 <?php if (User::is_registered() && AmpConfig::get('ratings')) { ?>
@@ -122,9 +124,9 @@ Art::display('album', $albumDisk->album_id, $name, ['width' => 384, 'height' => 
 <?php if (AmpConfig::get('show_played_times')) { ?>
 <br />
 <div style="display:inline;">
-    <?php echo T_('Played') . ' ' .
+    <?php echo T_('Played') . ' '
 /* HINT: Number of times an object has been played */
-sprintf(nT_('%d time', '%d times', $albumDisk->total_count), $albumDisk->total_count); ?>
+. sprintf(nT_('%d time', '%d times', $albumDisk->total_count), $albumDisk->total_count); ?>
 </div>
 <?php } ?>
 
@@ -185,7 +187,7 @@ if (AmpConfig::get('sociable') && !empty($owner_id)) {
                 RssFeedTypeEnum::LIBRARY_ITEM,
                 $current_user,
                 T_('RSS Feed'),
-                ['object_type' => 'album_disk', 'object_id' => (string)$albumDisk->id]
+                ['object_type' => 'album_disk', 'object_id' => (string) $albumDisk->id]
             ); ?>
         </li>
         <?php } ?>

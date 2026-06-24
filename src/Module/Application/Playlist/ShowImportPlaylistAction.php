@@ -35,9 +35,7 @@ final readonly class ShowImportPlaylistAction implements ApplicationActionInterf
 {
     public const string REQUEST_KEY = 'show_import_playlist';
 
-    public function __construct(private UiInterface $ui)
-    {
-    }
+    public function __construct(private UiInterface $ui) {}
 
     public function run(ServerRequestInterface $request, GuiGatekeeperInterface $gatekeeper): ?ResponseInterface
     {

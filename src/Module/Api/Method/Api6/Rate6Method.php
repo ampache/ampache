@@ -47,8 +47,8 @@ final class Rate6Method
      *
      * This rates a library item
      *
-     * type   = (string) 'song', 'album', 'artist', 'playlist', 'podcast', 'podcast_episode', 'video' $type
-     * id     = (string) $object_id
+     * type = (string) 'song', 'album', 'artist', 'playlist', 'podcast', 'podcast_episode', 'video' $type
+     * id = (string) $object_id
      * rating = (integer) 0|1|2|3|4|5 $rating
      *
      * @param array{
@@ -74,10 +74,10 @@ final class Rate6Method
         }
         ob_end_clean();
         $type      = (string) $input['type'];
-        $object_id = (int)$input['id'];
+        $object_id = (int) $input['id'];
         $rating    = (string) $input['rating'];
         // confirm the correct data
-        if (!in_array(strtolower($type), ['song', 'album', 'artist', 'playlist', 'podcast', 'podcast_episode', 'video'])) {
+        if (!Rating::is_valid(strtolower($type))) {
             Api6::error(sprintf('Bad Request: %s', $type), ErrorCodeEnum::BAD_REQUEST, self::ACTION, 'type', $input['api_format']);
 
             return false;
@@ -91,11 +91,11 @@ final class Rate6Method
 
         // searches are playlists but not in the database
         if (
-            $type === 'playlist' &&
-            $object_id === 0
+            $type === 'playlist'
+            && $object_id === 0
         ) {
             $type      = 'search';
-            $object_id = (int) str_replace('smart_', '', (string)$input['id']);
+            $object_id = (int) str_replace('smart_', '', (string) $input['id']);
         }
 
         $className = ObjectTypeToClassNameMapper::map($type);
@@ -111,7 +111,7 @@ final class Rate6Method
                 return false;
             }
             $rate = new Rating($object_id, $type);
-            $rate->set_rating((int)$rating, $user->id);
+            $rate->set_rating((int) $rating, $user->id);
             Api6::message('rating set to ' . $rating . ' for ' . $object_id, $input['api_format']);
         }
 

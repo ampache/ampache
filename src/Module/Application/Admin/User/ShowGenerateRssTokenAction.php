@@ -42,8 +42,7 @@ final class ShowGenerateRssTokenAction extends AbstractUserAction
     public function __construct(
         private UiInterface $ui,
         private ConfigContainerInterface $configContainer,
-    ) {
-    }
+    ) {}
 
     protected function handle(ServerRequestInterface $request): ?ResponseInterface
     {

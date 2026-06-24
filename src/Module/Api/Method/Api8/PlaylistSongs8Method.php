@@ -51,7 +51,7 @@ final class PlaylistSongs8Method
      * filter = (string) UID of playlist
      * random = (integer) 0,1, if true get random songs using limit //optional
      * offset = (integer) //optional
-     * limit  = (integer) //optional
+     * limit = (integer) //optional
      *
      * @param array{
      *     filter: string,
@@ -69,7 +69,7 @@ final class PlaylistSongs8Method
         }
 
         $object_id = $input['filter'];
-        $random    = (array_key_exists('random', $input) && (int)$input['random'] == 1);
+        $random    = (array_key_exists('random', $input) && (int) $input['random'] == 1);
         $playlist  = ((int) $object_id === 0)
             ? new Search((int) str_replace('smart_', '', $object_id), 'song', $user)
             : new Playlist((int) $object_id);
@@ -81,8 +81,8 @@ final class PlaylistSongs8Method
             return false;
         }
         if (
-            $playlist->type !== 'public' &&
-            !$playlist->has_collaborate($user)
+            $playlist->type !== 'public'
+            && !$playlist->has_collaborate($user)
         ) {
             Api::error('Require: 100', ErrorCodeEnum::FAILED_ACCESS_CHECK, self::ACTION, 'account', $input['api_format']);
 
@@ -103,18 +103,18 @@ final class PlaylistSongs8Method
             if ($object['object_type'] === LibraryItemEnum::SONG) {
                 $results[] = $object['object_id'];
             }
-        } // end foreach
+        }
 
         ob_end_clean();
         switch ($input['api_format']) {
             case 'json':
-                Json8_Data::set_offset((int)($input['offset'] ?? 0));
+                Json8_Data::set_offset((int) ($input['offset'] ?? 0));
                 Json8_Data::set_limit($input['limit'] ?? 0);
                 Json8_Data::set_count(count($results));
                 echo Json8_Data::songs($results, $user, $input['auth']);
                 break;
             default:
-                Xml8_Data::set_offset((int)($input['offset'] ?? 0));
+                Xml8_Data::set_offset((int) ($input['offset'] ?? 0));
                 Xml8_Data::set_limit($input['limit'] ?? 0);
                 Xml8_Data::set_count(count($results));
                 echo Xml8_Data::songs($results, $user, $input['auth']);

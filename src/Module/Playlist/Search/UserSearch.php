@@ -54,20 +54,20 @@ final class UserSearch implements SearchInterface
         $parameters = [];
 
         foreach ($search->rules as $rule) {
-            $type     = $search->get_rule_type($rule[0]);
+            $type     = $search->get_rule_type_by_name($rule[0]);
             $operator = [];
             if ($type === null) {
                 continue;
             }
 
-            foreach ($search->basetypes[$type] as $baseOperator) {
+            foreach ($search->get_basetypes()[$type] as $baseOperator) {
                 if ($baseOperator['name'] == $rule[1]) {
                     $operator = $baseOperator;
                     break;
                 }
             }
 
-            $input        = $search->filter_data((string)$rule[2], $type, $operator);
+            $input        = $search->filter_data((string) $rule[2], $type, $operator);
             $operator_sql = $operator['sql'] ?? '';
 
             switch ($rule[0]) {

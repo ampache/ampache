@@ -31,9 +31,7 @@ use PDOStatement;
 
 final readonly class DatabaseCharsetUpdater implements DatabaseCharsetUpdaterInterface
 {
-    public function __construct(private ConfigContainerInterface $configContainer)
-    {
-    }
+    public function __construct(private ConfigContainerInterface $configContainer) {}
 
     public function update(): void
     {
@@ -64,9 +62,9 @@ final readonly class DatabaseCharsetUpdater implements DatabaseCharsetUpdaterInt
             // Iterate through the columns of the table
             while ($table = Dba::fetch_assoc($describe_results)) {
                 if (
-                    (str_contains((string) $table['Type'], 'varchar')) ||
-                    (str_contains((string) $table['Type'], 'enum')) ||
-                    (str_contains((string) $table['Type'], 'text'))
+                    (str_contains((string) $table['Type'], 'varchar'))
+                    || (str_contains((string) $table['Type'], 'enum'))
+                    || (str_contains((string) $table['Type'], 'text'))
                 ) {
                     $sql             = "ALTER TABLE `" . $row['0'] . "` MODIFY `" . $table['Field'] . "` " . $table['Type'] . " CHARACTER SET " . $target_charset . (' COLLATE ' . $target_collation);
                     $charset_results = Dba::write($sql);

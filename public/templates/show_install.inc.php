@@ -23,6 +23,8 @@ declare(strict_types=0);
  *
  */
 
+// show_install.inc.php
+
 use Ampache\Module\System\AmpError;
 
 /** @var string $web_path */

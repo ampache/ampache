@@ -23,6 +23,8 @@ declare(strict_types=0);
  *
  */
 
+// show_edit_live_stream_row.inc.php
+
 /** @var Ampache\Repository\Model\Live_Stream $libitem */
 ?>
 <div>

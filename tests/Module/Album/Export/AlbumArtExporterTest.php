@@ -43,30 +43,10 @@ use Override;
 
 class AlbumArtExporterTest extends MockeryTestCase
 {
-    /** @var ConfigContainerInterface|MockInterface|null */
-    private MockInterface $configContainer;
-
-    /** @var ModelFactoryInterface|MockInterface|null */
-    private MockInterface $modelFactory;
-
-    /** @var MockInterface|SongRepositoryInterface|null */
-    private MockInterface $songRepository;
-
+    private ConfigContainerInterface|MockInterface|null $configContainer;
+    private ModelFactoryInterface|MockInterface|null $modelFactory;
+    private SongRepositoryInterface|MockInterface|null $songRepository;
     private ?AlbumArtExporter $subject;
-
-    #[Override]
-    protected function setUp(): void
-    {
-        $this->configContainer = $this->mock(ConfigContainerInterface::class);
-        $this->modelFactory    = $this->mock(ModelFactoryInterface::class);
-        $this->songRepository  = $this->mock(SongRepositoryInterface::class);
-
-        $this->subject = new AlbumArtExporter(
-            $this->configContainer,
-            $this->modelFactory,
-            $this->songRepository
-        );
-    }
 
     public function testExportDoesNothingIfNoInfoExists(): void
     {
@@ -222,7 +202,7 @@ class AlbumArtExporterTest extends MockeryTestCase
         $art->raw_mime = $raw_mime;
         $art->raw      = $raw_art;
 
-        $song->file    = $file_name;
+        $song->file = $file_name;
 
         $metadataWriter->shouldReceive('write')
             ->with(
@@ -246,6 +226,20 @@ class AlbumArtExporterTest extends MockeryTestCase
         $this->assertSame(
             $raw_art,
             $file->getContent()
+        );
+    }
+
+    #[Override]
+    protected function setUp(): void
+    {
+        $this->configContainer = $this->mock(ConfigContainerInterface::class);
+        $this->modelFactory    = $this->mock(ModelFactoryInterface::class);
+        $this->songRepository  = $this->mock(SongRepositoryInterface::class);
+
+        $this->subject = new AlbumArtExporter(
+            $this->configContainer,
+            $this->modelFactory,
+            $this->songRepository
         );
     }
 }

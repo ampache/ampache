@@ -114,20 +114,20 @@ final class LostPassword8Method
     /**
      * @todo replace by constructor injection
      */
-    private static function getUserRepository(): UserRepositoryInterface
-    {
-        global $dic;
-
-        return $dic->get(UserRepositoryInterface::class);
-    }
-
-    /**
-     * @todo replace by constructor injection
-     */
     private static function getNewPasswordSender(): NewPasswordSenderInterface
     {
         global $dic;
 
         return $dic->get(NewPasswordSenderInterface::class);
+    }
+
+    /**
+     * @todo replace by constructor injection
+     */
+    private static function getUserRepository(): UserRepositoryInterface
+    {
+        global $dic;
+
+        return $dic->get(UserRepositoryInterface::class);
     }
 }

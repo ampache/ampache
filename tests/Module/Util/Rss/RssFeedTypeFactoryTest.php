@@ -32,9 +32,9 @@ use Ampache\Module\Util\Rss\Type\LatestShoutFeed;
 use Ampache\Module\Util\Rss\Type\LibraryItemFeed;
 use Ampache\Module\Util\Rss\Type\NowPlayingFeed;
 use Ampache\Module\Util\Rss\Type\RecentlyPlayedFeed;
+use Ampache\Repository\Model\library_item;
 use Ampache\Repository\Model\LibraryItemLoaderInterface;
 use Ampache\Repository\Model\ModelFactoryInterface;
-use Ampache\Repository\Model\playable_item;
 use Ampache\Repository\Model\User;
 use Ampache\Repository\ShoutRepositoryInterface;
 use PHPUnit\Framework\MockObject\MockObject;
@@ -48,57 +48,7 @@ class RssFeedTypeFactoryTest extends TestCase
     use ConsecutiveParams;
 
     private ContainerInterface&MockObject $dic;
-
     private RssFeedTypeFactory $subject;
-
-    protected function setUp(): void
-    {
-        $this->dic = $this->createMock(ContainerInterface::class);
-
-        $this->subject = new RssFeedTypeFactory(
-            $this->dic,
-        );
-    }
-
-    public function testCreateLibraryItemFeedReturnsInstance(): void
-    {
-        $this->dic->expects(static::exactly(2))
-            ->method('get')
-            ->with(...self::withConsecutive(
-                [ModelFactoryInterface::class],
-                [LibraryItemLoaderInterface::class]
-            ))
-            ->willReturn(
-                $this->createMock(ModelFactoryInterface::class),
-                $this->createMock(LibraryItemLoaderInterface::class),
-            );
-
-        self::assertInstanceOf(
-            LibraryItemFeed::class,
-            $this->subject->createLibraryItemFeed(
-                $this->createMock(User::class),
-                $this->createMock(playable_item::class)
-            )
-        );
-    }
-
-    public function testCreateRecentlyPlayedFeedReturnsItem(): void
-    {
-        self::assertInstanceOf(
-            RecentlyPlayedFeed::class,
-            $this->subject->createRecentlyPlayedFeed(
-                $this->createMock(User::class)
-            )
-        );
-    }
-
-    public function testCreateNowPlayingFeedReturnsInstance(): void
-    {
-        self::assertInstanceOf(
-            NowPlayingFeed::class,
-            $this->subject->createNowPlayingFeed()
-        );
-    }
 
     public function testCreateLatestAlbumFeedReturnsInstance(): void
     {
@@ -137,6 +87,55 @@ class RssFeedTypeFactoryTest extends TestCase
         self::assertInstanceOf(
             LatestShoutFeed::class,
             $this->subject->createLatestShoutFeed()
+        );
+    }
+
+    public function testCreateLibraryItemFeedReturnsInstance(): void
+    {
+        $this->dic->expects(static::exactly(2))
+            ->method('get')
+            ->with(...self::withConsecutive(
+                [ModelFactoryInterface::class],
+                [LibraryItemLoaderInterface::class]
+            ))
+            ->willReturn(
+                $this->createMock(ModelFactoryInterface::class),
+                $this->createMock(LibraryItemLoaderInterface::class),
+            );
+
+        self::assertInstanceOf(
+            LibraryItemFeed::class,
+            $this->subject->createLibraryItemFeed(
+                $this->createMock(User::class),
+                $this->createMock(library_item::class)
+            )
+        );
+    }
+
+    public function testCreateNowPlayingFeedReturnsInstance(): void
+    {
+        self::assertInstanceOf(
+            NowPlayingFeed::class,
+            $this->subject->createNowPlayingFeed()
+        );
+    }
+
+    public function testCreateRecentlyPlayedFeedReturnsItem(): void
+    {
+        self::assertInstanceOf(
+            RecentlyPlayedFeed::class,
+            $this->subject->createRecentlyPlayedFeed(
+                $this->createMock(User::class)
+            )
+        );
+    }
+
+    protected function setUp(): void
+    {
+        $this->dic = $this->createMock(ContainerInterface::class);
+
+        $this->subject = new RssFeedTypeFactory(
+            $this->dic,
         );
     }
 }

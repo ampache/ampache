@@ -57,7 +57,7 @@ final class User4Method
         if (!Api4::check_parameter($input, ['username'], self::ACTION)) {
             return false;
         }
-        $username   = (string)($input['username'] ?? '');
+        $username   = (string) ($input['username'] ?? '');
         $check_user = User::get_from_username($username);
         $valid      = ($check_user instanceof User && $check_user->isNew() === false && in_array($check_user->id, self::getUserRepository()->getValid(true)));
         if (!$valid) {

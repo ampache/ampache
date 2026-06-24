@@ -23,6 +23,8 @@ declare(strict_types=0);
  *
  */
 
+// show_songs.inc.php
+
 use Ampache\Config\AmpConfig;
 use Ampache\Gui\GuiFactoryInterface;
 use Ampache\Gui\TalFactoryInterface;
@@ -39,13 +41,14 @@ use Ampache\Repository\Model\Userflag;
 
 /** @var Ampache\Repository\Model\Browse $browse */
 /** @var list<int> $object_ids */
-/** @var array $hide_columns */
+/** @var string[] $hide_columns */
 /** @var string $argument_param */
 
 $web_path = AmpConfig::get_web_path();
 
 $show_ratings       = User::is_registered() && AmpConfig::get('ratings');
 $show_played_times  = AmpConfig::get('show_played_times');
+$show_skipped_times = AmpConfig::get('show_skipped_times');
 $hide_genres        = AmpConfig::get('hide_genres');
 $thcount            = 7;
 $is_table           = !$browse->is_grid_view();
@@ -112,7 +115,7 @@ if ($browse->is_show_header()) {
             <th class="<?php echo $cel_counter; ?> optional"><?php echo Ajax::text('?page=browse&action=set_sort&browse_id=' . $browse->id . '&sort=total_count' . $argument_param, T_('Played'), 'song_sort_total_count' . $browse->id); ?></th>
             <?php
             } ?>
-            <?php if (AmpConfig::get('show_skipped_times')) {
+            <?php if ($show_skipped_times) {
                 ++$thcount; ?>
             <th class="<?php echo $cel_counter; ?> optional"><?php echo Ajax::text('?page=browse&action=set_sort&browse_id=' . $browse->id . '&sort=total_skip' . $argument_param, T_('Skipped'), 'song_sort_total_skip' . $browse->id); ?></th>
             <?php
@@ -196,7 +199,7 @@ foreach ($object_ids as $song_id) {
             <?php if ($show_played_times) { ?>
             <th class="<?php echo $cel_counter; ?> optional"><?php echo T_('Played'); ?></th>
             <?php } ?>
-            <?php if (AmpConfig::get('show_skipped_times')) { ?>
+            <?php if ($show_skipped_times) { ?>
             <th class="<?php echo $cel_counter; ?> optional"><?php echo T_('Skipped'); ?></th>
             <?php } ?>
             <?php if ($show_ratings) { ?>

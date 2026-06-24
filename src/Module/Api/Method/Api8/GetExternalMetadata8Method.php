@@ -53,7 +53,7 @@ final class GetExternalMetadata8Method
      * Return External plugin metadata searching by object id and type
      *
      * filter = (string) album id, artist id or song id
-     * type   = (string) 'song', 'artist', 'album', 'label'
+     * type = (string) 'song', 'artist', 'album', 'label'
      *
      * @param array{
      *     filter: string,
@@ -86,7 +86,7 @@ final class GetExternalMetadata8Method
             case 'song':
                 $libitem = new Song($object_id);
                 $data    = [
-                    'artist' => $libitem->get_artist_fullname(),
+                    'artist' => $libitem->get_parent_fullname(),
                     'song' => $libitem->get_fullname(),
                     'mb_trackid' => $libitem->mbid,
                 ];
@@ -94,7 +94,7 @@ final class GetExternalMetadata8Method
             case 'album':
                 $libitem = new Album($object_id);
                 $data    = [
-                    'albumartist' => $libitem->get_artist_fullname(),
+                    'albumartist' => $libitem->get_parent_fullname(),
                     'album' => $libitem->get_fullname(true),
                     'mb_albumid_group' => $libitem->mbid_group,
                 ];
@@ -128,9 +128,9 @@ final class GetExternalMetadata8Method
         foreach ($plugin_names as $tag_source) {
             $plugin = new Plugin($tag_source);
             if (
-                $plugin->_plugin instanceof PluginGetMetadataInterface &&
-                Plugin::get_plugin_version($plugin->_plugin->name) > 0 &&
-                $plugin->load($user)
+                $plugin->_plugin instanceof PluginGetMetadataInterface
+                && Plugin::get_plugin_version($plugin->_plugin->name) > 0
+                && $plugin->load($user)
             ) {
                 $results['plugin'][$tag_source] = $plugin->_plugin->get_metadata(
                     ['music', $type],

@@ -32,23 +32,6 @@ final class Migration600075 extends AbstractMigration
 {
     protected array $changelog = ['Create `user_playlist_map` to allow browse access to playlists with collaborate access'];
 
-    public function migrate(): void
-    {
-        $collation = (AmpConfig::get('database_collation', 'utf8mb4_unicode_ci'));
-        $charset   = (AmpConfig::get('database_charset', 'utf8mb4'));
-        $engine    = ($charset == 'utf8mb4') ? 'InnoDB' : 'MYISAM';
-
-        $this->updateDatabase('DROP TABLE IF EXISTS `user_playlist_map`;');
-        $this->updateDatabase(
-            sprintf(
-                "CREATE TABLE IF NOT EXISTS `user_playlist_map` (`playlist_id` int(11) UNSIGNED NOT NULL, `user_id` int(11) UNSIGNED NOT NULL, UNIQUE KEY `playlist_user` (`playlist_id`,`user_id`)) ENGINE=%s DEFAULT CHARSET=%s COLLATE=%s ;",
-                $engine,
-                $charset,
-                $collation
-            )
-        );
-    }
-
     public function getTableMigrations(
         string $collation,
         string $charset,
@@ -58,5 +41,22 @@ final class Migration600075 extends AbstractMigration
         if ($build > 600075) {
             yield 'user_playlist_map' => "CREATE TABLE IF NOT EXISTS `user_playlist_map` (`playlist_id` int(11) UNSIGNED NOT NULL, `user_id` int(11) UNSIGNED NOT NULL, UNIQUE KEY `playlist_user` (`playlist_id`,`user_id`)) ENGINE=$engine DEFAULT CHARSET=$charset COLLATE=$collation;";
         }
+    }
+
+    public function migrate(): void
+    {
+        $collation = (AmpConfig::get('database_collation', 'utf8mb4_unicode_ci'));
+        $charset   = (AmpConfig::get('database_charset', 'utf8mb4'));
+        $engine    = ($charset == 'utf8mb4') ? 'InnoDB' : 'MYISAM';
+
+        $this->updateDatabase('DROP TABLE IF EXISTS `user_playlist_map`;');
+        $this->updateDatabase(
+            sprintf(
+                "CREATE TABLE `user_playlist_map` (`playlist_id` int(11) UNSIGNED NOT NULL, `user_id` int(11) UNSIGNED NOT NULL, UNIQUE KEY `playlist_user` (`playlist_id`,`user_id`)) ENGINE=%s DEFAULT CHARSET=%s COLLATE=%s ;",
+                $engine,
+                $charset,
+                $collation
+            )
+        );
     }
 }

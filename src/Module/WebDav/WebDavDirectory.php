@@ -26,7 +26,8 @@ declare(strict_types=0);
 namespace Ampache\Module\WebDav;
 
 use Ampache\Module\Util\ObjectTypeToClassNameMapper;
-use Ampache\Repository\Model\library_item;
+use Ampache\Repository\Model\Catalog;
+use Ampache\Repository\Model\container_item;
 use Ampache\Repository\Model\LibraryItemEnum;
 use Ampache\Repository\Model\Media;
 use Override;
@@ -39,26 +40,39 @@ use Sabre\DAV\Node;
  */
 class WebDavDirectory extends Collection
 {
-    public function __construct(private readonly library_item $libitem)
+    public function __construct(private readonly WebDavDirectoryInterface $libitem) {}
+
+    /**
+     * @param array{object_type: LibraryItemEnum, object_id: int} $array
+     * @throws NotFound
+     */
+    public static function getChildFromArray(array $array): Node
     {
+        $className = ObjectTypeToClassNameMapper::map($array['object_type']->value);
+        /** @var container_item $libitem */
+        $libitem = new $className($array['object_id']);
+        if ($libitem->isNew()) {
+            throw new NotFound(self::class . ' The library item `' . $array['object_type']->value . '` with id `' . $array['object_id'] . '` could not be found');
+        }
+
+        if ($libitem instanceof Media) {
+            return new WebDavFile($libitem);
+        }
+
+        if ($libitem instanceof WebDavDirectoryInterface) {
+            return new WebDavDirectory($libitem);
+        }
+
+        throw new NotFound(self::class . ' The child with name: ' . $libitem->get_fullname() . ' could not be created');
     }
 
     /**
-     * @return list<Node>
-     * @throws NotFound
+     * @param string $name
      */
-    public function getChildren(): array
+    #[Override]
+    public function childExists($name): bool
     {
-        //debug_event(self::class, 'Directory getChildren', 5);
-        $children = [];
-        $childs   = $this->libitem->get_childrens();
-        foreach ($childs as $child) {
-            foreach ($child as $schild) {
-                $children[] = WebDavDirectory::getChildFromArray($schild);
-            }
-        }
-
-        return $children;
+        return $this->libitem->has_children($name);
     }
 
     /**
@@ -69,45 +83,32 @@ class WebDavDirectory extends Collection
     public function getChild($name): Node
     {
         //debug_event(self::class, 'Directory getChild: ' . unhtmlentities($name), 5);
-        $matches = $this->libitem->get_children(unhtmlentities($name));
-        // Always return first match
-        // Warning: this means that two items with the same name will not be supported for now
-        if ($matches !== []) {
-            return WebDavDirectory::getChildFromArray($matches[0]);
+        $folder = Catalog::get_child(unhtmlentities($name), $this->libitem->getCatalog(), $this->libitem->getId());
+        if ($folder instanceof WebDavDirectoryInterface) {
+            return new WebDavDirectory($folder);
         }
 
-        throw new NotFound('The child with name: ' . $name . ' could not be found');
+        if ($folder !== null) {
+            return new WebDavFile($folder);
+        }
+
+        throw new NotFound(self::class . ' The child with name: ' . $name . ' could not be found');
     }
 
     /**
-     * @param array{object_type: LibraryItemEnum, object_id: int} $array
+     * @return list<Node>
      * @throws NotFound
      */
-    public static function getChildFromArray(array $array): Node
+    public function getChildren(): array
     {
-        $className = ObjectTypeToClassNameMapper::map($array['object_type']->value);
-        /** @var library_item $libitem */
-        $libitem = new $className($array['object_id']);
-        if ($libitem->isNew()) {
-            throw new NotFound('The library item `' . $array['object_type']->value . '` with id `' . $array['object_id'] . '` could not be found');
+        //debug_event(self::class, 'Directory getChildren', 5);
+        $children = [];
+        $items    = $this->libitem->get_childrens();
+        foreach ($items as $child) {
+            $children[] = WebDavDirectory::getChildFromArray($child);
         }
 
-        if ($libitem instanceof Media) {
-            return new WebDavFile($libitem);
-        }
-
-        return new WebDavDirectory($libitem);
-    }
-
-    /**
-     * @param string $name
-     */
-    #[Override]
-    public function childExists($name): bool
-    {
-        $matches = $this->libitem->get_children($name);
-
-        return $matches !== [];
+        return $children;
     }
 
     public function getName(): string

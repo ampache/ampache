@@ -44,8 +44,7 @@ final readonly class SaveAsSmartPlaylistAction implements ApplicationActionInter
         private UiInterface $ui,
         private ConfigContainerInterface $configContainer,
         private ModelFactoryInterface $modelFactory,
-    ) {
-    }
+    ) {}
 
     public function run(ServerRequestInterface $request, GuiGatekeeperInterface $gatekeeper): ?ResponseInterface
     {

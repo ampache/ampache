@@ -33,7 +33,7 @@ use Ampache\Module\Util\InterfaceImplementationChecker;
 use Ampache\Module\Util\ObjectTypeToClassNameMapper;
 use Ampache\Module\Util\RequestParserInterface;
 use Ampache\Repository\Model\Browse;
-use Ampache\Repository\Model\library_item;
+use Ampache\Repository\Model\container_item;
 use Ampache\Repository\Model\Playlist;
 use Ampache\Repository\Model\User;
 
@@ -41,8 +41,7 @@ final readonly class PlaylistAjaxHandler implements AjaxHandlerInterface
 {
     public function __construct(
         private RequestParserInterface $requestParser,
-    ) {
-    }
+    ) {}
 
     public function handle(User $user): void
     {
@@ -64,12 +63,12 @@ final readonly class PlaylistAjaxHandler implements AjaxHandlerInterface
                     $playlist->regenerate_track_numbers();
                 }
 
-                $browse_id  = (int)($_REQUEST['browse_id'] ?? 0);
+                $browse_id  = (int) ($_REQUEST['browse_id'] ?? 0);
                 $object_ids = $playlist->get_items();
                 ob_start();
                 $browse = new Browse($browse_id);
                 $browse->set_type('playlist_media');
-                $browse->add_supplemental_object('playlist', $playlist->id);
+                $browse->add_supplemental_object('playlist', $playlist);
                 $browse->save_objects($object_ids);
                 $browse->show_objects($object_ids);
                 $browse->store();
@@ -89,7 +88,7 @@ final readonly class PlaylistAjaxHandler implements AjaxHandlerInterface
                         $name = $user->username . ' - ' . get_datetime(time());
                     }
 
-                    $playlist_id = (int)Playlist::create($name, 'public');
+                    $playlist_id = (int) Playlist::create($name, 'public');
                     if ($playlist_id < 1) {
                         break;
                     }
@@ -109,12 +108,12 @@ final readonly class PlaylistAjaxHandler implements AjaxHandlerInterface
                 $item_id   = $_REQUEST['item_id'] ?? '';
                 $item_type = $_REQUEST['item_type'] ?? '';
 
-                if (!empty($item_type) && InterfaceImplementationChecker::is_playable_item($item_type)) {
+                if (!empty($item_type) && InterfaceImplementationChecker::is_library_item($item_type)) {
                     debug_event('playlist.ajax', 'Adding all medias of ' . $item_type . '(s) {' . $item_id . '}...', 5);
                     $item_ids = explode(',', (string) $item_id);
                     foreach ($item_ids as $iid) {
                         $className = ObjectTypeToClassNameMapper::map($item_type);
-                        /** @var library_item $libitem */
+                        /** @var container_item $libitem */
                         $libitem = new $className($iid);
                         if ($libitem->isNew() === false) {
                             $medias = array_merge($medias, $libitem->get_medias());
@@ -126,8 +125,8 @@ final readonly class PlaylistAjaxHandler implements AjaxHandlerInterface
                 }
 
                 if (
-                    $medias !== [] &&
-                    $playlist->add_medias($medias)
+                    $medias !== []
+                    && $playlist->add_medias($medias)
                 ) {
                     Ajax::set_include_override(true);
 

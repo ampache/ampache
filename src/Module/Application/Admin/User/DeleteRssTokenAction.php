@@ -47,8 +47,7 @@ final class DeleteRssTokenAction extends AbstractUserAction
         private readonly UiInterface $ui,
         private readonly ModelFactoryInterface $modelFactory,
         private readonly ConfigContainerInterface $configContainer,
-    ) {
-    }
+    ) {}
 
     protected function handle(ServerRequestInterface $request): ?ResponseInterface
     {
@@ -57,8 +56,8 @@ final class DeleteRssTokenAction extends AbstractUserAction
         }
 
         if (
-            check_http_referer() === false ||
-            $this->requestParser->verifyForm('delete_rsstoken') === false
+            check_http_referer() === false
+            || $this->requestParser->verifyForm('delete_rsstoken') === false
         ) {
             throw new AccessDeniedException();
         }

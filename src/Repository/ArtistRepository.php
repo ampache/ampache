@@ -34,48 +34,7 @@ use Ampache\Repository\Model\Catalog;
 
 final readonly class ArtistRepository implements ArtistRepositoryInterface
 {
-    public function __construct(private DatabaseConnectionInterface $connection)
-    {
-    }
-
-    /**
-     * Deletes the artist entry
-     */
-    public function delete(
-        Artist $artist,
-    ): void {
-        $this->connection->query(
-            'DELETE FROM `artist` WHERE `id` = ?',
-            [$artist->getId()]
-        );
-    }
-
-    /**
-     * This returns a number of random artists.
-     *
-     * @return int[]
-     */
-    public function getRandom(
-        int $userId,
-        ?int $count = 1,
-    ): array {
-        $results = [];
-        $sql     = "SELECT DISTINCT `artist_map`.`artist_id` FROM `artist_map` LEFT JOIN `song` ON `song`.`artist` = `artist_map`.`artist_id` WHERE `song`.`catalog` IN (" . implode(',', Catalog::get_catalogs('', $userId, true)) . ") ";
-
-        $rating_filter = AmpConfig::get_rating_filter();
-        if ($rating_filter > 0 && $rating_filter <= 5 && $userId > 0) {
-            $sql .= sprintf("AND `artist_map`.`artist_id` NOT IN (SELECT `object_id` FROM `rating` WHERE `rating`.`object_type` = 'artist' AND `rating`.`rating` <= %d AND `rating`.`user` = ", $rating_filter) . $userId . ") ";
-        }
-
-        $sql .= "ORDER BY RAND() LIMIT " . $count;
-        $db_results = Dba::read($sql);
-
-        while ($row = Dba::fetch_assoc($db_results)) {
-            $results[] = (int) $row['artist_id'];
-        }
-
-        return $results;
-    }
+    public function __construct(private DatabaseConnectionInterface $connection) {}
 
     /**
      * This cleans out unused artists
@@ -103,6 +62,18 @@ final readonly class ArtistRepository implements ArtistRepositoryInterface
     }
 
     /**
+     * Deletes the artist entry
+     */
+    public function delete(
+        Artist $artist,
+    ): void {
+        $this->connection->query(
+            'DELETE FROM `artist` WHERE `id` = ?',
+            [$artist->getId()]
+        );
+    }
+
+    /**
      * This finds an artist based on its name
      */
     public function findByName(string $name): ?Artist
@@ -117,5 +88,32 @@ final readonly class ArtistRepository implements ArtistRepositoryInterface
         }
 
         return new Artist((int) $rowId);
+    }
+
+    /**
+     * This returns a number of random artists.
+     *
+     * @return int[]
+     */
+    public function getRandom(
+        int $userId,
+        ?int $count = 1,
+    ): array {
+        $results = [];
+        $sql     = "SELECT DISTINCT `artist_map`.`artist_id` FROM `artist_map` LEFT JOIN `song` ON `song`.`artist` = `artist_map`.`artist_id` WHERE `song`.`catalog` IN (" . implode(',', Catalog::get_catalogs('', $userId, true)) . ") ";
+
+        $rating_filter = AmpConfig::get_rating_filter();
+        if ($rating_filter > 0 && $rating_filter <= 5 && $userId > 0) {
+            $sql .= sprintf("AND `artist_map`.`artist_id` NOT IN (SELECT `object_id` FROM `rating` WHERE `rating`.`object_type` = 'artist' AND `rating`.`rating` <= %d AND `rating`.`user` = ", $rating_filter) . $userId . ") ";
+        }
+
+        $sql .= "ORDER BY RAND() LIMIT " . $count;
+        $db_results = Dba::read($sql);
+
+        while ($row = Dba::fetch_assoc($db_results)) {
+            $results[] = (int) $row['artist_id'];
+        }
+
+        return $results;
     }
 }

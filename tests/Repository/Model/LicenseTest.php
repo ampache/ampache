@@ -34,64 +34,7 @@ use PHPUnit\Framework\TestCase;
 class LicenseTest extends TestCase
 {
     private LicenseRepositoryInterface&MockObject $licenseRepository;
-
     private License $subject;
-
-    protected function setUp(): void
-    {
-        $this->licenseRepository = $this->createMock(LicenseRepositoryInterface::class);
-
-        $this->subject = new License(
-            $this->licenseRepository,
-        );
-    }
-
-    public function testIsNewReturnsTrueIfIdIsZero(): void
-    {
-        self::assertTrue(
-            $this->subject->isNew()
-        );
-    }
-
-    public function testIsNewReturnsTrueIfIdIsNotZero(): void
-    {
-        $licenseId = 666;
-
-        $this->licenseRepository->expects(static::once())
-            ->method('persist')
-            ->with($this->subject)
-            ->willReturn($licenseId);
-
-        $this->subject->save();
-
-        self::assertFalse(
-            $this->subject->isNew()
-        );
-        self::assertSame(
-            $licenseId,
-            $this->subject->getId()
-        );
-    }
-
-    #[DataProvider(methodName: 'setterGetterDataProvider')]
-    public function testGetterReturnsSetData(
-        string $getterMethod,
-        string $setterMethod,
-        mixed $defaultValue,
-        mixed $setValue,
-    ): void {
-        self::assertSame(
-            $defaultValue,
-            call_user_func_array([$this->subject, $getterMethod], [])
-        );
-
-        call_user_func_array([$this->subject, $setterMethod], [$setValue]);
-
-        self::assertSame(
-            $setValue,
-            call_user_func_array([$this->subject, $getterMethod], [])
-        );
-    }
 
     public static function setterGetterDataProvider(): Generator
     {
@@ -127,6 +70,62 @@ class LicenseTest extends TestCase
         self::assertSame(
             $name,
             $this->subject->getLinkFormatted()
+        );
+    }
+
+    #[DataProvider(methodName: 'setterGetterDataProvider')]
+    public function testGetterReturnsSetData(
+        string $getterMethod,
+        string $setterMethod,
+        mixed $defaultValue,
+        mixed $setValue,
+    ): void {
+        self::assertSame(
+            $defaultValue,
+            call_user_func_array([$this->subject, $getterMethod], [])
+        );
+
+        call_user_func_array([$this->subject, $setterMethod], [$setValue]);
+
+        self::assertSame(
+            $setValue,
+            call_user_func_array([$this->subject, $getterMethod], [])
+        );
+    }
+
+    public function testIsNewReturnsTrueIfIdIsNotZero(): void
+    {
+        $licenseId = 666;
+
+        $this->licenseRepository->expects(static::once())
+            ->method('persist')
+            ->with($this->subject)
+            ->willReturn($licenseId);
+
+        $this->subject->save();
+
+        self::assertFalse(
+            $this->subject->isNew()
+        );
+        self::assertSame(
+            $licenseId,
+            $this->subject->getId()
+        );
+    }
+
+    public function testIsNewReturnsTrueIfIdIsZero(): void
+    {
+        self::assertTrue(
+            $this->subject->isNew()
+        );
+    }
+
+    protected function setUp(): void
+    {
+        $this->licenseRepository = $this->createMock(LicenseRepositoryInterface::class);
+
+        $this->subject = new License(
+            $this->licenseRepository,
         );
     }
 }

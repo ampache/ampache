@@ -54,17 +54,16 @@ abstract readonly class AbstractShowAction implements ApplicationActionInterface
         private ResponseFactoryInterface $responseFactory,
         private StreamFactoryInterface $streamFactory,
         private LoggerInterface $logger,
-    ) {
-    }
+    ) {}
 
     public function run(ServerRequestInterface $request, GuiGatekeeperInterface $gatekeeper): ?ResponseInterface
     {
         $response = $this->responseFactory->createResponse();
 
         if (
-            $this->configContainer->isFeatureEnabled(ConfigurationKeyEnum::PUBLIC_IMAGES) === false &&
-            $this->configContainer->isFeatureEnabled(ConfigurationKeyEnum::USE_AUTH) &&
-            $this->configContainer->isFeatureEnabled(ConfigurationKeyEnum::REQUIRE_SESSION)
+            $this->configContainer->isFeatureEnabled(ConfigurationKeyEnum::PUBLIC_IMAGES) === false
+            && $this->configContainer->isFeatureEnabled(ConfigurationKeyEnum::USE_AUTH)
+            && $this->configContainer->isFeatureEnabled(ConfigurationKeyEnum::REQUIRE_SESSION)
         ) {
             // regular auth
             $auth = $this->requestParser->getFromRequest('auth');
@@ -81,9 +80,9 @@ abstract readonly class AbstractShowAction implements ApplicationActionInterface
 
             // Check to see if they've got an interface session or a valid API session
             if (
-                Session::exists(AccessTypeEnum::INTERFACE->value, $cookie ?? $auth) ||
-                Session::exists(AccessTypeEnum::API->value, ($auth === '' || $auth === '0') ? $apiKey : $auth) ||
-                (isset($token_check['success']) && $token_check['success'])
+                Session::exists(AccessTypeEnum::INTERFACE->value, $cookie ?? $auth)
+                || Session::exists(AccessTypeEnum::API->value, ($auth === '' || $auth === '0') ? $apiKey : $auth)
+                || (isset($token_check['success']) && $token_check['success'])
             ) {
                 // authentication succeeded
             } else {
@@ -105,7 +104,7 @@ abstract readonly class AbstractShowAction implements ApplicationActionInterface
             $_GET['size']  = null;
         }
 
-        $thumb = (int)filter_input(INPUT_GET, 'thumb', FILTER_SANITIZE_NUMBER_INT);
+        $thumb = (int) filter_input(INPUT_GET, 'thumb', FILTER_SANITIZE_NUMBER_INT);
         $size  = ($thumb === 0)
             ? filter_input(INPUT_GET, 'size', FILTER_SANITIZE_SPECIAL_CHARS, FILTER_NULL_ON_FAILURE) ?? 'original'
             : 'original';
@@ -162,11 +161,12 @@ abstract readonly class AbstractShowAction implements ApplicationActionInterface
                 );
 
                 $mime       = 'image/png';
-                $defaultimg = $this->configContainer->get('custom_blankalbum');
+                $defaultimg = ($type === 'folder') ? '' : $this->configContainer->get('custom_blankalbum');
                 if (empty($defaultimg) || (!str_starts_with((string) $defaultimg, "http://") && !str_starts_with((string) $defaultimg, "https://"))) {
+                    $filename   = ($type === 'folder') ? 'folder' : 'blankalbum';
                     $defaultimg = ($has_size && in_array($size, ['128x128', '256x256', '384x384', '768x768']))
-                        ? $rootimg . "blankalbum_" . $size . ".png"
-                        : $rootimg . "blankalbum.png";
+                        ? $rootimg . $filename . "_" . $size . ".png"
+                        : $rootimg . $filename . ".png";
                 }
 
                 $etag = ($has_size && in_array($size, ['128x128', '256x256', '384x384', '768x768']))
@@ -200,7 +200,7 @@ abstract readonly class AbstractShowAction implements ApplicationActionInterface
         }
 
         if (!empty($image)) {
-            $extension = Art::extension((string)$mime);
+            $extension = Art::extension((string) $mime);
             $filename  = scrub_out($filename . '.' . $extension);
 
             // Send the headers and output the image
@@ -223,15 +223,15 @@ abstract readonly class AbstractShowAction implements ApplicationActionInterface
             // That means the client has a cached version of the image
             $reqheaders = getallheaders();
             if (
-                array_key_exists('If-Modified-Since', $reqheaders) &&
-                array_key_exists('If-None-Match', $reqheaders) &&
-                (!array_key_exists('Cache-Control', $reqheaders) || $reqheaders['Cache-Control'] != 'no-cache')
+                array_key_exists('If-Modified-Since', $reqheaders)
+                && array_key_exists('If-None-Match', $reqheaders)
+                && (!array_key_exists('Cache-Control', $reqheaders) || $reqheaders['Cache-Control'] != 'no-cache')
             ) {
                 $cetag = str_replace('"', '', $reqheaders['If-None-Match']);
                 // Same image than the cached one? Use the cache.
                 if (
-                    !is_array($cetag) &&
-                    $cetag === $etag
+                    !is_array($cetag)
+                    && $cetag === $etag
                 ) {
                     return $response->withStatus(304);
                 }

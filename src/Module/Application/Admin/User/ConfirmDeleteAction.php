@@ -47,8 +47,7 @@ final class ConfirmDeleteAction extends AbstractUserAction
         private readonly UiInterface $ui,
         private readonly ModelFactoryInterface $modelFactory,
         private readonly ConfigContainerInterface $configContainer,
-    ) {
-    }
+    ) {}
 
     protected function handle(ServerRequestInterface $request): ?ResponseInterface
     {

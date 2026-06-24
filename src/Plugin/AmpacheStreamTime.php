@@ -37,13 +37,19 @@ use Override;
 class AmpacheStreamTime extends AmpachePlugin implements PluginStreamControlInterface
 {
     #[Override]
-    public string $name = 'Stream Time';
-
-    #[Override]
     public string $categories = 'stream_control';
 
     #[Override]
     public string $description = 'Control time per user';
+
+    #[Override]
+    public string $max_ampache = '999999';
+
+    #[Override]
+    public string $min_ampache = '370024';
+
+    #[Override]
+    public string $name = 'Stream Time';
 
     #[Override]
     public string $url = '';
@@ -51,18 +57,11 @@ class AmpacheStreamTime extends AmpachePlugin implements PluginStreamControlInte
     #[Override]
     public string $version = '000001';
 
-    #[Override]
-    public string $min_ampache = '370024';
-
-    #[Override]
-    public string $max_ampache = '999999';
+    private int $time_days;
+    private int $time_max;
 
     // These are internal settings used by this class, run this->load to fill them out
     private int $user_id;
-
-    private int $time_days;
-
-    private int $time_max;
 
     /**
      * Constructor
@@ -86,23 +85,20 @@ class AmpacheStreamTime extends AmpachePlugin implements PluginStreamControlInte
     }
 
     /**
-     * uninstall
-     * Removes our preferences from the database returning it to its original form
+     * load
+     * This loads up the data we need into this object, this stuff comes from the preferences.
      */
-    public function uninstall(): bool
+    public function load(User $user): bool
     {
-        return (
-            Preference::delete('stream_control_time_max') &&
-            Preference::delete('stream_control_time_days')
-        );
-    }
+        $user->set_preferences();
+        $data = $user->prefs;
 
-    /**
-     * upgrade
-     * This is a recommended plugin function
-     */
-    public function upgrade(): bool
-    {
+        $this->user_id   = $user->id;
+        $this->time_max  = (int) ($data['stream_control_time_max']) ?: 1024;
+        $this->time_days = ((int) ($data['stream_control_time_days']) > 0)
+            ? (int) ($data['stream_control_time_days'])
+            : 30;
+
         return true;
     }
 
@@ -145,20 +141,23 @@ class AmpacheStreamTime extends AmpachePlugin implements PluginStreamControlInte
     }
 
     /**
-     * load
-     * This loads up the data we need into this object, this stuff comes from the preferences.
+     * uninstall
+     * Removes our preferences from the database returning it to its original form
      */
-    public function load(User $user): bool
+    public function uninstall(): bool
     {
-        $user->set_preferences();
-        $data = $user->prefs;
+        return (
+            Preference::delete('stream_control_time_max')
+            && Preference::delete('stream_control_time_days')
+        );
+    }
 
-        $this->user_id   = $user->id;
-        $this->time_max  = (int)($data['stream_control_time_max']) ?: 1024;
-        $this->time_days = ((int)($data['stream_control_time_days']) > 0)
-            ? (int)($data['stream_control_time_days'])
-            : 30;
-
+    /**
+     * upgrade
+     * This is a recommended plugin function
+     */
+    public function upgrade(): bool
+    {
         return true;
     }
 }

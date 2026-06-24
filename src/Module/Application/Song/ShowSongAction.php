@@ -47,8 +47,7 @@ final readonly class ShowSongAction implements ApplicationActionInterface
         private GuiFactoryInterface $guiFactory,
         private TalFactoryInterface $talFactory,
         private LoggerInterface $logger,
-    ) {
-    }
+    ) {}
 
     public function run(
         ServerRequestInterface $request,
@@ -58,7 +57,7 @@ final readonly class ShowSongAction implements ApplicationActionInterface
 
         $user     = $gatekeeper->getUser() ?? $this->modelFactory->createUser(-1);
         $catalogs = $user->catalogs['music'] ?? User::get_user_catalogs($user->id);
-        $song     = $this->modelFactory->createSong((int)($request->getQueryParams()['song_id'] ?? 0));
+        $song     = $this->modelFactory->createSong((int) ($request->getQueryParams()['song_id'] ?? 0));
 
         if ($song->isNew() || !in_array($song->catalog, $catalogs)) {
             $this->logger->warning(
