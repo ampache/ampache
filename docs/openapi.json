@@ -6321,7 +6321,7 @@
         ]
       }
     },
-    "/playlists/{playlist_id}/remove_song": {
+    "/playlists/{playlist_id}/remove-song": {
       "post": {
         "parameters": [
           {
