@@ -88,9 +88,9 @@ class Song extends database_object implements
     public ?string $composer     = null;
     public ?int $disk            = null;
     public ?string $disksubtitle = null;
-    public bool $enabled;
-    public ?string $file = null;
-    public int $id       = 0;
+    public bool $enabled         = true;
+    public ?string $file         = null;
+    public int $id               = 0;
 
     /**
      * Generated data from other areas

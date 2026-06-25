@@ -146,7 +146,7 @@ abstract class Catalog extends database_object
     /* Used in functions */
 
     public ?string $catalog_type = null;
-    public bool $enabled;
+    public bool $enabled         = true;
     public ?string $gather_types = '';
     public int $id               = 0;
     public int $last_add;
