@@ -39,6 +39,23 @@ final class UserPreferences8Method
     public const string REST_ACTION = 'preferences';
 
     /**
+     * @param array{
+     *     filter: string,
+     *     type: string,
+     *     position: string,
+     *     client?: string,
+     *     date?: int,
+     *     include?: int,
+     *     api_format: string,
+     *     auth: string,
+     * } $input
+     */
+    public static function preferences(array $input, User $user): void
+    {
+        self::user_preferences($input, $user);
+    }
+
+    /**
      * user_preferences
      * MINIMUM_API_VERSION=5.0.0
      *
