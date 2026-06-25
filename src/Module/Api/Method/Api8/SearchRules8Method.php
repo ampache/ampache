@@ -37,7 +37,20 @@ use Ampache\Repository\Model\User;
  */
 final class SearchRules8Method
 {
-    public const string ACTION = 'search_rules';
+    public const string ACTION      = 'search_rules';
+    public const string REST_ACTION = 'rules';
+
+    /**
+     * @param array{
+     *     filter: string,
+     *     api_format: string,
+     *     auth: string,
+     * } $input
+     */
+    public static function rules(array $input, User $user): bool
+    {
+        return self::search_rules($input, $user);
+    }
 
     /**
      * search_rules

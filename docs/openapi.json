@@ -2,8 +2,12 @@
   "openapi": "3.0.3",
   "info": {
     "title": "Ampache REST API",
-    "version": "6.9.1",
-    "description": "OpenAPI 3.0 specification for Ampache REST API, based on the official documentation and RESTful path conventions."
+    "version": "8.0.0",
+    "description": "OpenAPI 3.0 specification for Ampache REST API, based on the official documentation and RESTful path conventions.",
+    "license": {
+      "name": "AGPL-3.0",
+      "url": "https://www.gnu.org/licenses/agpl-3.0.html"
+    }
   },
   "servers": [
     {
@@ -18,9 +22,10 @@
             "3",
             "4",
             "5",
-            "6"
+            "6",
+            "8"
           ],
-          "default": "6",
+          "default": "8",
           "description": "Ampache API major version"
         },
         "format": {
@@ -207,6 +212,316 @@
           "error"
         ],
         "additionalProperties": false
+      },
+      "FolderBrowseItem": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "object_type": {
+            "type": "string",
+            "enum": [
+              "folder",
+              "podcast_episode",
+              "song",
+              "video"
+            ]
+          },
+          "title": {
+            "type": "string"
+          },
+          "parent": {
+            "type": "integer"
+          },
+          "path": {
+            "type": "string"
+          },
+          "art": {
+            "type": "string"
+          },
+          "has_art": {
+            "type": "boolean"
+          },
+          "play_url": {
+            "type": "string"
+          },
+          "rating": {
+            "type": "integer"
+          },
+          "averagerating": {
+            "type": "integer",
+            "nullable": true
+          }
+        },
+        "required": [
+          "id",
+          "object_type",
+          "title",
+          "parent",
+          "path",
+          "art",
+          "has_art",
+          "play_url",
+          "rating",
+          "averagerating"
+        ],
+        "additionalProperties": false
+      },
+      "FolderBrowseNode": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "title": {
+            "type": "string"
+          },
+          "parent": {
+            "type": "integer"
+          },
+          "path": {
+            "type": "string"
+          },
+          "catalog": {
+            "type": "integer"
+          },
+          "items": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/FolderBrowseItem"
+            }
+          }
+        },
+        "required": [
+          "id",
+          "title",
+          "parent",
+          "path",
+          "catalog",
+          "items"
+        ],
+        "additionalProperties": false
+      },
+      "FolderBrowseResponse": {
+        "type": "object",
+        "properties": {
+          "total_count": {
+            "type": "integer"
+          },
+          "md5": {
+            "type": "string"
+          },
+          "folder": {
+            "$ref": "#/components/schemas/FolderBrowseNode"
+          }
+        },
+        "required": [
+          "total_count",
+          "md5",
+          "folder"
+        ],
+        "additionalProperties": false
+      }
+    },
+    "responses": {
+      "ErrorResponse": {
+        "description": "Ampache API error response payload.",
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/ErrorResponse"
+            },
+            "examples": {
+              "error4700": {
+                "summary": "4700 Access Control not Enabled",
+                "value": {
+                  "error": {
+                    "errorCode": "4700",
+                    "errorAction": "handshake",
+                    "errorType": "system",
+                    "errorMessage": "Access Denied"
+                  }
+                }
+              },
+              "error4701": {
+                "summary": "4701 Received Invalid Handshake",
+                "value": {
+                  "error": {
+                    "errorCode": "4701",
+                    "errorAction": "handshake",
+                    "errorType": "account",
+                    "errorMessage": "Received Invalid Handshake - Incorrect username or password"
+                  }
+                }
+              },
+              "error4702": {
+                "summary": "4702 Generic Error",
+                "value": {
+                  "error": {
+                    "errorCode": "4702",
+                    "errorAction": "system",
+                    "errorType": "system",
+                    "errorMessage": "Generic Error"
+                  }
+                }
+              },
+              "error4703": {
+                "summary": "4703 Access Denied / Missing Feature",
+                "value": {
+                  "error": {
+                    "errorCode": "4703",
+                    "errorAction": "video",
+                    "errorType": "system",
+                    "errorMessage": "Enable: video"
+                  }
+                }
+              },
+              "error4704": {
+                "summary": "4704 Not Found",
+                "value": {
+                  "error": {
+                    "errorCode": "4704",
+                    "errorAction": "user",
+                    "errorType": "username",
+                    "errorMessage": "Not Found: missing_user"
+                  }
+                }
+              },
+              "error4705": {
+                "summary": "4705 Missing Method",
+                "value": {
+                  "error": {
+                    "errorCode": "4705",
+                    "errorAction": "plafgfylist_create",
+                    "errorType": "system",
+                    "errorMessage": "Invalid Request"
+                  }
+                }
+              },
+              "error4706": {
+                "summary": "4706 Deprecated Method",
+                "value": {
+                  "error": {
+                    "errorCode": "4706",
+                    "errorAction": "tags",
+                    "errorType": "removed",
+                    "errorMessage": "Deprecated"
+                  }
+                }
+              },
+              "error4710": {
+                "summary": "4710 Bad Request",
+                "value": {
+                  "error": {
+                    "errorCode": "4710",
+                    "errorAction": "catalog_action",
+                    "errorType": "task",
+                    "errorMessage": "Bad Request: clean"
+                  }
+                }
+              },
+              "error4742": {
+                "summary": "4742 Failed Access Check",
+                "value": {
+                  "error": {
+                    "errorCode": "4742",
+                    "errorAction": "user_edit",
+                    "errorType": "account",
+                    "errorMessage": "Require: 100"
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "BadRequestErrorResponse": {
+        "description": "HTTP 400 Bad Request (errors 4705, 4710).",
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/ErrorResponse"
+            },
+            "examples": {
+              "error4705": {
+                "$ref": "#/components/responses/ErrorResponse/content/application~1json/examples/error4705"
+              },
+              "error4710": {
+                "$ref": "#/components/responses/ErrorResponse/content/application~1json/examples/error4710"
+              }
+            }
+          }
+        }
+      },
+      "ForbiddenErrorResponse": {
+        "description": "HTTP 403 Forbidden (errors 4700, 4701, 4703, 4742).",
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/ErrorResponse"
+            },
+            "examples": {
+              "error4700": {
+                "$ref": "#/components/responses/ErrorResponse/content/application~1json/examples/error4700"
+              },
+              "error4701": {
+                "$ref": "#/components/responses/ErrorResponse/content/application~1json/examples/error4701"
+              },
+              "error4703": {
+                "$ref": "#/components/responses/ErrorResponse/content/application~1json/examples/error4703"
+              },
+              "error4742": {
+                "$ref": "#/components/responses/ErrorResponse/content/application~1json/examples/error4742"
+              }
+            }
+          }
+        }
+      },
+      "NotFoundErrorResponse": {
+        "description": "HTTP 404 Not Found (error 4704).",
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/ErrorResponse"
+            },
+            "examples": {
+              "error4704": {
+                "$ref": "#/components/responses/ErrorResponse/content/application~1json/examples/error4704"
+              }
+            }
+          }
+        }
+      },
+      "GoneErrorResponse": {
+        "description": "HTTP 410 Gone (error 4706).",
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/ErrorResponse"
+            },
+            "examples": {
+              "error4706": {
+                "$ref": "#/components/responses/ErrorResponse/content/application~1json/examples/error4706"
+              }
+            }
+          }
+        }
+      },
+      "InternalServerErrorResponse": {
+        "description": "HTTP 500 Internal Server Error (error 4702).",
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/ErrorResponse"
+            },
+            "examples": {
+              "error4702": {
+                "$ref": "#/components/responses/ErrorResponse/content/application~1json/examples/error4702"
+              }
+            }
+          }
+        }
       }
     }
   },
@@ -310,6 +625,21 @@
               }
             },
             "description": "Albums list"
+          },
+          "400": {
+            "$ref": "#/components/responses/BadRequestErrorResponse"
+          },
+          "403": {
+            "$ref": "#/components/responses/ForbiddenErrorResponse"
+          },
+          "404": {
+            "$ref": "#/components/responses/NotFoundErrorResponse"
+          },
+          "410": {
+            "$ref": "#/components/responses/GoneErrorResponse"
+          },
+          "500": {
+            "$ref": "#/components/responses/InternalServerErrorResponse"
           }
         },
         "summary": "List albums",
@@ -348,6 +678,21 @@
               }
             },
             "description": "Album details"
+          },
+          "400": {
+            "$ref": "#/components/responses/BadRequestErrorResponse"
+          },
+          "403": {
+            "$ref": "#/components/responses/ForbiddenErrorResponse"
+          },
+          "404": {
+            "$ref": "#/components/responses/NotFoundErrorResponse"
+          },
+          "410": {
+            "$ref": "#/components/responses/GoneErrorResponse"
+          },
+          "500": {
+            "$ref": "#/components/responses/InternalServerErrorResponse"
           }
         },
         "summary": "Get album by ID",
@@ -382,10 +727,43 @@
             "description": "Binary image response"
           },
           "400": {
-            "description": "Bad request"
+            "description": "Bad request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                },
+                "examples": {
+                  "error4710": {
+                    "$ref": "#/components/responses/ErrorResponse/content/application~1json/examples/error4710"
+                  }
+                }
+              }
+            }
           },
           "404": {
-            "description": "Not found"
+            "description": "Not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                },
+                "examples": {
+                  "error4704": {
+                    "$ref": "#/components/responses/ErrorResponse/content/application~1json/examples/error4704"
+                  }
+                }
+              }
+            }
+          },
+          "403": {
+            "$ref": "#/components/responses/ForbiddenErrorResponse"
+          },
+          "410": {
+            "$ref": "#/components/responses/GoneErrorResponse"
+          },
+          "500": {
+            "$ref": "#/components/responses/InternalServerErrorResponse"
           }
         },
         "summary": "Get art image (binary)",
@@ -416,6 +794,21 @@
               }
             },
             "description": "External metadata array"
+          },
+          "400": {
+            "$ref": "#/components/responses/BadRequestErrorResponse"
+          },
+          "403": {
+            "$ref": "#/components/responses/ForbiddenErrorResponse"
+          },
+          "404": {
+            "$ref": "#/components/responses/NotFoundErrorResponse"
+          },
+          "410": {
+            "$ref": "#/components/responses/GoneErrorResponse"
+          },
+          "500": {
+            "$ref": "#/components/responses/InternalServerErrorResponse"
           }
         },
         "summary": "Get external metadata for an album",
@@ -459,6 +852,21 @@
               }
             },
             "description": "Updated"
+          },
+          "400": {
+            "$ref": "#/components/responses/BadRequestErrorResponse"
+          },
+          "403": {
+            "$ref": "#/components/responses/ForbiddenErrorResponse"
+          },
+          "404": {
+            "$ref": "#/components/responses/NotFoundErrorResponse"
+          },
+          "410": {
+            "$ref": "#/components/responses/GoneErrorResponse"
+          },
+          "500": {
+            "$ref": "#/components/responses/InternalServerErrorResponse"
           }
         },
         "summary": "Flag or unflag an item as favourite",
@@ -497,6 +905,21 @@
               }
             },
             "description": "Success"
+          },
+          "400": {
+            "$ref": "#/components/responses/BadRequestErrorResponse"
+          },
+          "403": {
+            "$ref": "#/components/responses/ForbiddenErrorResponse"
+          },
+          "404": {
+            "$ref": "#/components/responses/NotFoundErrorResponse"
+          },
+          "410": {
+            "$ref": "#/components/responses/GoneErrorResponse"
+          },
+          "500": {
+            "$ref": "#/components/responses/InternalServerErrorResponse"
           }
         },
         "summary": "Rate a library item",
@@ -545,6 +968,21 @@
               }
             },
             "description": "Share created"
+          },
+          "400": {
+            "$ref": "#/components/responses/BadRequestErrorResponse"
+          },
+          "403": {
+            "$ref": "#/components/responses/ForbiddenErrorResponse"
+          },
+          "404": {
+            "$ref": "#/components/responses/NotFoundErrorResponse"
+          },
+          "410": {
+            "$ref": "#/components/responses/GoneErrorResponse"
+          },
+          "500": {
+            "$ref": "#/components/responses/InternalServerErrorResponse"
           }
         },
         "summary": "Create a public share URL",
@@ -619,6 +1057,21 @@
               }
             },
             "description": "Song list"
+          },
+          "400": {
+            "$ref": "#/components/responses/BadRequestErrorResponse"
+          },
+          "403": {
+            "$ref": "#/components/responses/ForbiddenErrorResponse"
+          },
+          "404": {
+            "$ref": "#/components/responses/NotFoundErrorResponse"
+          },
+          "410": {
+            "$ref": "#/components/responses/GoneErrorResponse"
+          },
+          "500": {
+            "$ref": "#/components/responses/InternalServerErrorResponse"
           }
         },
         "summary": "Get songs for an album",
@@ -662,6 +1115,21 @@
               }
             },
             "description": "Updated"
+          },
+          "400": {
+            "$ref": "#/components/responses/BadRequestErrorResponse"
+          },
+          "403": {
+            "$ref": "#/components/responses/ForbiddenErrorResponse"
+          },
+          "404": {
+            "$ref": "#/components/responses/NotFoundErrorResponse"
+          },
+          "410": {
+            "$ref": "#/components/responses/GoneErrorResponse"
+          },
+          "500": {
+            "$ref": "#/components/responses/InternalServerErrorResponse"
           }
         },
         "summary": "Update art for an object (Catalog Manager)",
@@ -692,6 +1160,9 @@
               }
             },
             "description": "Updated"
+          },
+          "400": {
+            "$ref": "#/components/responses/ErrorResponse"
           }
         },
         "summary": "Update object metadata from tags",
@@ -838,7 +1309,28 @@
             "description": "Search results"
           },
           "400": {
-            "description": "Invalid request"
+            "description": "Invalid request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                },
+                "examples": {
+                  "error4710": {
+                    "$ref": "#/components/responses/ErrorResponse/content/application~1json/examples/error4710"
+                  }
+                }
+              }
+            }
+          },
+          "403": {
+            "$ref": "#/components/responses/ForbiddenErrorResponse"
+          },
+          "410": {
+            "$ref": "#/components/responses/GoneErrorResponse"
+          },
+          "500": {
+            "$ref": "#/components/responses/InternalServerErrorResponse"
           }
         },
         "summary": "Search for media entities using rule triplets",
@@ -929,6 +1421,21 @@
               }
             },
             "description": "Stats result"
+          },
+          "400": {
+            "$ref": "#/components/responses/BadRequestErrorResponse"
+          },
+          "403": {
+            "$ref": "#/components/responses/ForbiddenErrorResponse"
+          },
+          "404": {
+            "$ref": "#/components/responses/NotFoundErrorResponse"
+          },
+          "410": {
+            "$ref": "#/components/responses/GoneErrorResponse"
+          },
+          "500": {
+            "$ref": "#/components/responses/InternalServerErrorResponse"
           }
         },
         "summary": "Get stats (song/album/artist etc) by type and filter",
@@ -1042,6 +1549,21 @@
               }
             },
             "description": "Artist list"
+          },
+          "400": {
+            "$ref": "#/components/responses/BadRequestErrorResponse"
+          },
+          "403": {
+            "$ref": "#/components/responses/ForbiddenErrorResponse"
+          },
+          "404": {
+            "$ref": "#/components/responses/NotFoundErrorResponse"
+          },
+          "410": {
+            "$ref": "#/components/responses/GoneErrorResponse"
+          },
+          "500": {
+            "$ref": "#/components/responses/InternalServerErrorResponse"
           }
         },
         "summary": "List artists",
@@ -1081,6 +1603,21 @@
               }
             },
             "description": "Artist object"
+          },
+          "400": {
+            "$ref": "#/components/responses/BadRequestErrorResponse"
+          },
+          "403": {
+            "$ref": "#/components/responses/ForbiddenErrorResponse"
+          },
+          "404": {
+            "$ref": "#/components/responses/NotFoundErrorResponse"
+          },
+          "410": {
+            "$ref": "#/components/responses/GoneErrorResponse"
+          },
+          "500": {
+            "$ref": "#/components/responses/InternalServerErrorResponse"
           }
         },
         "summary": "Get artist by ID",
@@ -1155,6 +1692,21 @@
               }
             },
             "description": "Album list"
+          },
+          "400": {
+            "$ref": "#/components/responses/BadRequestErrorResponse"
+          },
+          "403": {
+            "$ref": "#/components/responses/ForbiddenErrorResponse"
+          },
+          "404": {
+            "$ref": "#/components/responses/NotFoundErrorResponse"
+          },
+          "410": {
+            "$ref": "#/components/responses/GoneErrorResponse"
+          },
+          "500": {
+            "$ref": "#/components/responses/InternalServerErrorResponse"
           }
         },
         "summary": "Get albums for an artist",
@@ -1190,10 +1742,43 @@
             "description": "Binary image response"
           },
           "400": {
-            "description": "Bad request"
+            "description": "Bad request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                },
+                "examples": {
+                  "error4710": {
+                    "$ref": "#/components/responses/ErrorResponse/content/application~1json/examples/error4710"
+                  }
+                }
+              }
+            }
           },
           "404": {
-            "description": "Not found"
+            "description": "Not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                },
+                "examples": {
+                  "error4704": {
+                    "$ref": "#/components/responses/ErrorResponse/content/application~1json/examples/error4704"
+                  }
+                }
+              }
+            }
+          },
+          "403": {
+            "$ref": "#/components/responses/ForbiddenErrorResponse"
+          },
+          "410": {
+            "$ref": "#/components/responses/GoneErrorResponse"
+          },
+          "500": {
+            "$ref": "#/components/responses/InternalServerErrorResponse"
           }
         },
         "summary": "Get art image (binary)",
@@ -1224,6 +1809,21 @@
               }
             },
             "description": "Updated"
+          },
+          "400": {
+            "$ref": "#/components/responses/BadRequestErrorResponse"
+          },
+          "403": {
+            "$ref": "#/components/responses/ForbiddenErrorResponse"
+          },
+          "404": {
+            "$ref": "#/components/responses/NotFoundErrorResponse"
+          },
+          "410": {
+            "$ref": "#/components/responses/GoneErrorResponse"
+          },
+          "500": {
+            "$ref": "#/components/responses/InternalServerErrorResponse"
           }
         },
         "summary": "Update artist info and fetch similar artists",
@@ -1254,6 +1854,21 @@
               }
             },
             "description": "External metadata array"
+          },
+          "400": {
+            "$ref": "#/components/responses/BadRequestErrorResponse"
+          },
+          "403": {
+            "$ref": "#/components/responses/ForbiddenErrorResponse"
+          },
+          "404": {
+            "$ref": "#/components/responses/NotFoundErrorResponse"
+          },
+          "410": {
+            "$ref": "#/components/responses/GoneErrorResponse"
+          },
+          "500": {
+            "$ref": "#/components/responses/InternalServerErrorResponse"
           }
         },
         "summary": "Get external metadata for an artist",
@@ -1297,6 +1912,9 @@
               }
             },
             "description": "Updated"
+          },
+          "400": {
+            "$ref": "#/components/responses/ErrorResponse"
           }
         },
         "summary": "Flag or unflag an item as favourite",
@@ -1335,6 +1953,9 @@
               }
             },
             "description": "Success"
+          },
+          "400": {
+            "$ref": "#/components/responses/ErrorResponse"
           }
         },
         "summary": "Rate a library item",
@@ -1383,6 +2004,9 @@
               }
             },
             "description": "Share created"
+          },
+          "400": {
+            "$ref": "#/components/responses/ErrorResponse"
           }
         },
         "summary": "Create a public share URL",
@@ -1429,6 +2053,9 @@
               }
             },
             "description": "Similar list"
+          },
+          "400": {
+            "$ref": "#/components/responses/ErrorResponse"
           }
         },
         "summary": "Get similar artists",
@@ -1503,6 +2130,9 @@
               }
             },
             "description": "Song list"
+          },
+          "400": {
+            "$ref": "#/components/responses/ErrorResponse"
           }
         },
         "summary": "Get songs for an artist",
@@ -1546,6 +2176,9 @@
               }
             },
             "description": "Updated"
+          },
+          "400": {
+            "$ref": "#/components/responses/ErrorResponse"
           }
         },
         "summary": "Update art for an object (Catalog Manager)",
@@ -1576,6 +2209,9 @@
               }
             },
             "description": "Updated"
+          },
+          "400": {
+            "$ref": "#/components/responses/ErrorResponse"
           }
         },
         "summary": "Update object metadata from tags",
@@ -1735,7 +2371,19 @@
             "description": "Search results"
           },
           "400": {
-            "description": "Invalid request"
+            "description": "Invalid request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                },
+                "examples": {
+                  "error4710": {
+                    "$ref": "#/components/responses/ErrorResponse/content/application~1json/examples/error4710"
+                  }
+                }
+              }
+            }
           }
         },
         "summary": "Search for media entities using rule triplets",
@@ -1826,6 +2474,9 @@
               }
             },
             "description": "Stats result"
+          },
+          "400": {
+            "$ref": "#/components/responses/ErrorResponse"
           }
         },
         "summary": "Get stats (song/album/artist etc) by type and filter",
@@ -1868,6 +2519,9 @@
               }
             },
             "description": "Bookmark list"
+          },
+          "400": {
+            "$ref": "#/components/responses/ErrorResponse"
           }
         },
         "summary": "List bookmarks",
@@ -1907,6 +2561,9 @@
               }
             },
             "description": "Success"
+          },
+          "400": {
+            "$ref": "#/components/responses/ErrorResponse"
           }
         },
         "summary": "Delete a bookmark",
@@ -1947,6 +2604,9 @@
               }
             },
             "description": "Bookmark object"
+          },
+          "400": {
+            "$ref": "#/components/responses/ErrorResponse"
           }
         },
         "summary": "Get bookmark by ID",
@@ -2012,6 +2672,9 @@
               }
             },
             "description": "Bookmark array"
+          },
+          "400": {
+            "$ref": "#/components/responses/ErrorResponse"
           }
         },
         "summary": "Edit a bookmark",
@@ -2115,9 +2778,206 @@
               }
             },
             "description": "Browse array"
+          },
+          "400": {
+            "$ref": "#/components/responses/ErrorResponse"
           }
         },
         "summary": "Browse folder-style children",
+        "tags": [
+          "Browsing, Indexes and Lists"
+        ]
+      }
+    },
+    "/folder": {
+      "get": {
+        "parameters": [
+          {
+            "description": "Parent folder object ID. Use -1 for the virtual root folder.",
+            "in": "query",
+            "name": "filter",
+            "required": false,
+            "schema": {
+              "default": -1,
+              "type": "integer"
+            }
+          },
+          {
+            "in": "query",
+            "name": "add",
+            "required": false,
+            "schema": {
+              "format": "date",
+              "type": "string"
+            }
+          },
+          {
+            "in": "query",
+            "name": "update",
+            "required": false,
+            "schema": {
+              "format": "date",
+              "type": "string"
+            }
+          },
+          {
+            "in": "query",
+            "name": "offset",
+            "required": false,
+            "schema": {
+              "type": "integer"
+            }
+          },
+          {
+            "in": "query",
+            "name": "limit",
+            "required": false,
+            "schema": {
+              "type": "integer"
+            }
+          },
+          {
+            "description": "Apply additional browse filters using ';' separated key,value pairs.",
+            "in": "query",
+            "name": "cond",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "description": "Sort key or key,order pair. Example: name or name,ASC.",
+            "in": "query",
+            "name": "sort",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/FolderBrowseResponse"
+                }
+              }
+            },
+            "description": "Children of a parent folder resolved by object ID."
+          },
+          "400": {
+            "$ref": "#/components/responses/ErrorResponse"
+          },
+          "404": {
+            "$ref": "#/components/responses/ErrorResponse"
+          }
+        },
+        "summary": "Get folder children by folder ID",
+        "tags": [
+          "Browsing, Indexes and Lists"
+        ]
+      }
+    },
+    "/folders": {
+      "get": {
+        "parameters": [
+          {
+            "description": "Folder path filter. Use '/' for root traversal.",
+            "in": "query",
+            "name": "filter",
+            "required": false,
+            "schema": {
+              "default": "/",
+              "type": "string"
+            }
+          },
+          {
+            "description": "Set to 0 for fuzzy matching, 1 for exact matching.",
+            "in": "query",
+            "name": "exact",
+            "required": false,
+            "schema": {
+              "default": 1,
+              "enum": [
+                0,
+                1
+              ],
+              "type": "integer"
+            }
+          },
+          {
+            "in": "query",
+            "name": "add",
+            "required": false,
+            "schema": {
+              "format": "date",
+              "type": "string"
+            }
+          },
+          {
+            "in": "query",
+            "name": "update",
+            "required": false,
+            "schema": {
+              "format": "date",
+              "type": "string"
+            }
+          },
+          {
+            "in": "query",
+            "name": "offset",
+            "required": false,
+            "schema": {
+              "type": "integer"
+            }
+          },
+          {
+            "in": "query",
+            "name": "limit",
+            "required": false,
+            "schema": {
+              "type": "integer"
+            }
+          },
+          {
+            "description": "Apply additional browse filters using ';' separated key,value pairs.",
+            "in": "query",
+            "name": "cond",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "description": "Sort key or key,order pair. Example: name or name,ASC.",
+            "in": "query",
+            "name": "sort",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/FolderBrowseResponse"
+                }
+              }
+            },
+            "description": "Children of a parent folder resolved by path traversal."
+          },
+          "400": {
+            "$ref": "#/components/responses/ErrorResponse"
+          },
+          "404": {
+            "$ref": "#/components/responses/ErrorResponse"
+          }
+        },
+        "summary": "Get folder children by folder path",
         "tags": [
           "Browsing, Indexes and Lists"
         ]
@@ -2178,6 +3038,9 @@
               }
             },
             "description": "Catalog list"
+          },
+          "400": {
+            "$ref": "#/components/responses/ErrorResponse"
           }
         },
         "summary": "List catalogs",
@@ -2270,6 +3133,9 @@
               }
             },
             "description": "Catalog object"
+          },
+          "400": {
+            "$ref": "#/components/responses/ErrorResponse"
           }
         },
         "summary": "Create a catalog",
@@ -2300,6 +3166,9 @@
               }
             },
             "description": "Success"
+          },
+          "400": {
+            "$ref": "#/components/responses/ErrorResponse"
           }
         },
         "summary": "Delete a catalog",
@@ -2328,6 +3197,9 @@
               }
             },
             "description": "Catalog object"
+          },
+          "400": {
+            "$ref": "#/components/responses/ErrorResponse"
           }
         },
         "summary": "Get catalog by ID",
@@ -2370,6 +3242,9 @@
               }
             },
             "description": "Success"
+          },
+          "400": {
+            "$ref": "#/components/responses/ErrorResponse"
           }
         },
         "summary": "Run a catalog task",
@@ -2417,6 +3292,9 @@
               }
             },
             "description": "Success"
+          },
+          "400": {
+            "$ref": "#/components/responses/ErrorResponse"
           }
         },
         "summary": "Perform actions on a catalog file",
@@ -2464,6 +3342,9 @@
               }
             },
             "description": "Success"
+          },
+          "400": {
+            "$ref": "#/components/responses/ErrorResponse"
           }
         },
         "summary": "Perform actions on a catalog folder",
@@ -2509,6 +3390,9 @@
               }
             },
             "description": "Democratic response"
+          },
+          "400": {
+            "$ref": "#/components/responses/ErrorResponse"
           }
         },
         "summary": "Control democratic play",
@@ -2580,6 +3464,9 @@
               }
             },
             "description": "Localplay response"
+          },
+          "400": {
+            "$ref": "#/components/responses/ErrorResponse"
           }
         },
         "summary": "Add media to the localplay server",
@@ -2654,6 +3541,9 @@
               }
             },
             "description": "Genre list"
+          },
+          "400": {
+            "$ref": "#/components/responses/ErrorResponse"
           }
         },
         "summary": "List genres",
@@ -2684,6 +3574,9 @@
               }
             },
             "description": "Genre object"
+          },
+          "400": {
+            "$ref": "#/components/responses/ErrorResponse"
           }
         },
         "summary": "Get genre by ID",
@@ -2746,6 +3639,9 @@
               }
             },
             "description": "Album list"
+          },
+          "400": {
+            "$ref": "#/components/responses/ErrorResponse"
           }
         },
         "summary": "Get albums for a genre",
@@ -2809,6 +3705,9 @@
               }
             },
             "description": "Artist list"
+          },
+          "400": {
+            "$ref": "#/components/responses/ErrorResponse"
           }
         },
         "summary": "Get artists for a genre",
@@ -2872,6 +3771,9 @@
               }
             },
             "description": "Song list"
+          },
+          "400": {
+            "$ref": "#/components/responses/ErrorResponse"
           }
         },
         "summary": "Get songs for a genre",
@@ -3019,7 +3921,19 @@
             "description": "Search results"
           },
           "400": {
-            "description": "Invalid request"
+            "description": "Invalid request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                },
+                "examples": {
+                  "error4710": {
+                    "$ref": "#/components/responses/ErrorResponse/content/application~1json/examples/error4710"
+                  }
+                }
+              }
+            }
           }
         },
         "summary": "Search for media entities using rule triplets",
@@ -3053,6 +3967,9 @@
               }
             },
             "description": "Success"
+          },
+          "400": {
+            "$ref": "#/components/responses/ErrorResponse"
           }
         },
         "security": [
@@ -3126,6 +4043,9 @@
               }
             },
             "description": "Session info or error"
+          },
+          "400": {
+            "$ref": "#/components/responses/ErrorResponse"
           }
         },
         "security": [
@@ -3258,6 +4178,9 @@
               }
             },
             "description": "Index response"
+          },
+          "400": {
+            "$ref": "#/components/responses/ErrorResponse"
           }
         },
         "summary": "Index IDs for an object type",
@@ -3350,6 +4273,9 @@
               }
             },
             "description": "Label list"
+          },
+          "400": {
+            "$ref": "#/components/responses/ErrorResponse"
           }
         },
         "summary": "List labels",
@@ -3380,6 +4306,9 @@
               }
             },
             "description": "Label object"
+          },
+          "400": {
+            "$ref": "#/components/responses/ErrorResponse"
           }
         },
         "summary": "Get label by ID",
@@ -3442,6 +4371,9 @@
               }
             },
             "description": "Artist list"
+          },
+          "400": {
+            "$ref": "#/components/responses/ErrorResponse"
           }
         },
         "summary": "Get artists for a label",
@@ -3473,6 +4405,9 @@
               }
             },
             "description": "External metadata array"
+          },
+          "400": {
+            "$ref": "#/components/responses/ErrorResponse"
           }
         },
         "summary": "Get external metadata for a label",
@@ -3620,7 +4555,19 @@
             "description": "Search results"
           },
           "400": {
-            "description": "Invalid request"
+            "description": "Invalid request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                },
+                "examples": {
+                  "error4710": {
+                    "$ref": "#/components/responses/ErrorResponse/content/application~1json/examples/error4710"
+                  }
+                }
+              }
+            }
           }
         },
         "summary": "Search for media entities using rule triplets",
@@ -3714,6 +4661,9 @@
               }
             },
             "description": "License list"
+          },
+          "400": {
+            "$ref": "#/components/responses/ErrorResponse"
           }
         },
         "summary": "List licenses",
@@ -3744,6 +4694,9 @@
               }
             },
             "description": "License object"
+          },
+          "400": {
+            "$ref": "#/components/responses/ErrorResponse"
           }
         },
         "summary": "Get license by ID",
@@ -3806,6 +4759,9 @@
               }
             },
             "description": "Song list"
+          },
+          "400": {
+            "$ref": "#/components/responses/ErrorResponse"
           }
         },
         "summary": "Get songs for a license",
@@ -3907,6 +4863,9 @@
               }
             },
             "description": "List response"
+          },
+          "400": {
+            "$ref": "#/components/responses/ErrorResponse"
           }
         },
         "summary": "List id/name/prefix/basename (replacement for get_indexes)",
@@ -3999,6 +4958,9 @@
               }
             },
             "description": "Live stream list"
+          },
+          "400": {
+            "$ref": "#/components/responses/ErrorResponse"
           }
         },
         "summary": "List live streams",
@@ -4059,6 +5021,9 @@
               }
             },
             "description": "Live stream created"
+          },
+          "400": {
+            "$ref": "#/components/responses/ErrorResponse"
           }
         },
         "summary": "Create a live stream (radio station)",
@@ -4089,6 +5054,9 @@
               }
             },
             "description": "Deleted"
+          },
+          "400": {
+            "$ref": "#/components/responses/ErrorResponse"
           }
         },
         "summary": "Delete a live stream (radio station)",
@@ -4117,6 +5085,9 @@
               }
             },
             "description": "Live stream object"
+          },
+          "400": {
+            "$ref": "#/components/responses/ErrorResponse"
           }
         },
         "summary": "Get live stream by ID",
@@ -4185,6 +5156,9 @@
               }
             },
             "description": "Live stream updated"
+          },
+          "400": {
+            "$ref": "#/components/responses/ErrorResponse"
           }
         },
         "summary": "Edit a live stream (radio station)",
@@ -4256,6 +5230,9 @@
               }
             },
             "description": "Localplay response"
+          },
+          "400": {
+            "$ref": "#/components/responses/ErrorResponse"
           }
         },
         "summary": "Add media to the localplay server",
@@ -4299,6 +5276,9 @@
               }
             },
             "description": "Localplay response"
+          },
+          "400": {
+            "$ref": "#/components/responses/ErrorResponse"
           }
         },
         "summary": "Control localplay",
@@ -4320,6 +5300,9 @@
               }
             },
             "description": "User array"
+          },
+          "400": {
+            "$ref": "#/components/responses/ErrorResponse"
           }
         },
         "summary": "Get information about your own user account",
@@ -4358,6 +5341,9 @@
               }
             },
             "description": "Activity list"
+          },
+          "400": {
+            "$ref": "#/components/responses/ErrorResponse"
           }
         },
         "summary": "Get current user's friends timeline",
@@ -4396,6 +5382,9 @@
               }
             },
             "description": "Shout list"
+          },
+          "400": {
+            "$ref": "#/components/responses/ErrorResponse"
           }
         },
         "summary": "Get latest shouts",
@@ -4416,6 +5405,9 @@
               }
             },
             "description": "Now playing list"
+          },
+          "400": {
+            "$ref": "#/components/responses/ErrorResponse"
           }
         },
         "summary": "Get what is currently being played by all users",
@@ -4520,6 +5512,9 @@
               }
             },
             "description": "Playlist list"
+          },
+          "400": {
+            "$ref": "#/components/responses/ErrorResponse"
           }
         },
         "summary": "List playlists for the current user context",
@@ -4624,6 +5619,9 @@
               }
             },
             "description": "Smartlist list"
+          },
+          "400": {
+            "$ref": "#/components/responses/ErrorResponse"
           }
         },
         "summary": "List smartlists for the current user context",
@@ -4670,6 +5668,9 @@
               }
             },
             "description": "Ping response (contents may vary based on whether authentication is provided)."
+          },
+          "400": {
+            "$ref": "#/components/responses/ErrorResponse"
           }
         },
         "security": [
@@ -4786,6 +5787,9 @@
               }
             },
             "description": "Playlists list"
+          },
+          "400": {
+            "$ref": "#/components/responses/ErrorResponse"
           }
         },
         "summary": "List playlists",
@@ -4826,6 +5830,9 @@
               }
             },
             "description": "Playlist created"
+          },
+          "400": {
+            "$ref": "#/components/responses/ErrorResponse"
           }
         },
         "summary": "Create a new playlist",
@@ -4856,6 +5863,9 @@
               }
             },
             "description": "Success"
+          },
+          "400": {
+            "$ref": "#/components/responses/ErrorResponse"
           }
         },
         "summary": "Delete a playlist",
@@ -4884,6 +5894,9 @@
               }
             },
             "description": "Playlist response"
+          },
+          "400": {
+            "$ref": "#/components/responses/ErrorResponse"
           }
         },
         "summary": "Get a single playlist",
@@ -4959,6 +5972,9 @@
               }
             },
             "description": "Success"
+          },
+          "400": {
+            "$ref": "#/components/responses/ErrorResponse"
           }
         },
         "summary": "Edit playlist metadata and items",
@@ -5012,6 +6028,9 @@
               }
             },
             "description": "Success"
+          },
+          "400": {
+            "$ref": "#/components/responses/ErrorResponse"
           }
         },
         "summary": "Add an item to a playlist",
@@ -5046,10 +6065,34 @@
             "description": "Binary image response"
           },
           "400": {
-            "description": "Bad request"
+            "description": "Bad request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                },
+                "examples": {
+                  "error4710": {
+                    "$ref": "#/components/responses/ErrorResponse/content/application~1json/examples/error4710"
+                  }
+                }
+              }
+            }
           },
           "404": {
-            "description": "Not found"
+            "description": "Not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                },
+                "examples": {
+                  "error4704": {
+                    "$ref": "#/components/responses/ErrorResponse/content/application~1json/examples/error4704"
+                  }
+                }
+              }
+            }
           }
         },
         "summary": "Get art image (binary)",
@@ -5103,13 +6146,49 @@
             "description": "Binary file response"
           },
           "400": {
-            "description": "Bad request"
+            "description": "Bad request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                },
+                "examples": {
+                  "error4710": {
+                    "$ref": "#/components/responses/ErrorResponse/content/application~1json/examples/error4710"
+                  }
+                }
+              }
+            }
           },
           "404": {
-            "description": "Not found"
+            "description": "Not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                },
+                "examples": {
+                  "error4704": {
+                    "$ref": "#/components/responses/ErrorResponse/content/application~1json/examples/error4704"
+                  }
+                }
+              }
+            }
           },
           "416": {
-            "description": "Range not satisfiable"
+            "description": "Range not satisfiable",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                },
+                "examples": {
+                  "error4710": {
+                    "$ref": "#/components/responses/ErrorResponse/content/application~1json/examples/error4710"
+                  }
+                }
+              }
+            }
           }
         },
         "summary": "Download a media file (binary)",
@@ -5152,6 +6231,9 @@
               }
             },
             "description": "Updated"
+          },
+          "400": {
+            "$ref": "#/components/responses/ErrorResponse"
           }
         },
         "summary": "Flag or unflag an item as favourite",
@@ -5187,6 +6269,9 @@
               }
             },
             "description": "MD5 response"
+          },
+          "400": {
+            "$ref": "#/components/responses/ErrorResponse"
           }
         },
         "summary": "Get MD5 hash for playlist songs",
@@ -5225,6 +6310,9 @@
               }
             },
             "description": "Success"
+          },
+          "400": {
+            "$ref": "#/components/responses/ErrorResponse"
           }
         },
         "summary": "Rate a library item",
@@ -5233,7 +6321,7 @@
         ]
       }
     },
-    "/playlists/{playlist_id}/remove_song": {
+    "/playlists/{playlist_id}/remove-song": {
       "post": {
         "parameters": [
           {
@@ -5271,6 +6359,9 @@
               }
             },
             "description": "Success"
+          },
+          "400": {
+            "$ref": "#/components/responses/ErrorResponse"
           }
         },
         "summary": "Remove a song (or track) from a playlist",
@@ -5319,6 +6410,9 @@
               }
             },
             "description": "Share created"
+          },
+          "400": {
+            "$ref": "#/components/responses/ErrorResponse"
           }
         },
         "summary": "Create a public share URL",
@@ -5377,6 +6471,9 @@
               }
             },
             "description": "Song list"
+          },
+          "400": {
+            "$ref": "#/components/responses/ErrorResponse"
           }
         },
         "summary": "Get songs for a playlist",
@@ -5451,13 +6548,49 @@
             "description": "Binary stream response"
           },
           "400": {
-            "description": "Bad request"
+            "description": "Bad request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                },
+                "examples": {
+                  "error4710": {
+                    "$ref": "#/components/responses/ErrorResponse/content/application~1json/examples/error4710"
+                  }
+                }
+              }
+            }
           },
           "404": {
-            "description": "Not found"
+            "description": "Not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                },
+                "examples": {
+                  "error4704": {
+                    "$ref": "#/components/responses/ErrorResponse/content/application~1json/examples/error4704"
+                  }
+                }
+              }
+            }
           },
           "416": {
-            "description": "Range not satisfiable"
+            "description": "Range not satisfiable",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                },
+                "examples": {
+                  "error4710": {
+                    "$ref": "#/components/responses/ErrorResponse/content/application~1json/examples/error4710"
+                  }
+                }
+              }
+            }
           }
         },
         "summary": "Stream a media file (binary)",
@@ -5604,7 +6737,19 @@
             "description": "Search results"
           },
           "400": {
-            "description": "Invalid request"
+            "description": "Invalid request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                },
+                "examples": {
+                  "error4710": {
+                    "$ref": "#/components/responses/ErrorResponse/content/application~1json/examples/error4710"
+                  }
+                }
+              }
+            }
           }
         },
         "summary": "Search for media entities using rule triplets",
@@ -5695,6 +6840,9 @@
               }
             },
             "description": "Stats result"
+          },
+          "400": {
+            "$ref": "#/components/responses/ErrorResponse"
           }
         },
         "summary": "Get stats (song/album/artist etc) by type and filter",
@@ -5757,6 +6905,9 @@
               }
             },
             "description": "Podcast Episode list"
+          },
+          "400": {
+            "$ref": "#/components/responses/ErrorResponse"
           }
         },
         "summary": "List podcast episodes",
@@ -5787,6 +6938,9 @@
               }
             },
             "description": "Deleted"
+          },
+          "400": {
+            "$ref": "#/components/responses/ErrorResponse"
           }
         },
         "summary": "Delete a podcast episode",
@@ -5815,6 +6969,9 @@
               }
             },
             "description": "Podcast episode object"
+          },
+          "400": {
+            "$ref": "#/components/responses/ErrorResponse"
           }
         },
         "summary": "Get podcast episode by ID",
@@ -5854,6 +7011,9 @@
               }
             },
             "description": "Success"
+          },
+          "400": {
+            "$ref": "#/components/responses/ErrorResponse"
           }
         },
         "summary": "Delete a bookmark",
@@ -5894,6 +7054,9 @@
               }
             },
             "description": "Bookmark object"
+          },
+          "400": {
+            "$ref": "#/components/responses/ErrorResponse"
           }
         },
         "summary": "Get bookmark by ID",
@@ -5959,6 +7122,9 @@
               }
             },
             "description": "Bookmark array"
+          },
+          "400": {
+            "$ref": "#/components/responses/ErrorResponse"
           }
         },
         "summary": "Edit a bookmark",
@@ -6024,6 +7190,9 @@
               }
             },
             "description": "Bookmark object"
+          },
+          "400": {
+            "$ref": "#/components/responses/ErrorResponse"
           }
         },
         "summary": "Create a bookmark",
@@ -6077,13 +7246,49 @@
             "description": "Binary file response"
           },
           "400": {
-            "description": "Bad request"
+            "description": "Bad request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                },
+                "examples": {
+                  "error4710": {
+                    "$ref": "#/components/responses/ErrorResponse/content/application~1json/examples/error4710"
+                  }
+                }
+              }
+            }
           },
           "404": {
-            "description": "Not found"
+            "description": "Not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                },
+                "examples": {
+                  "error4704": {
+                    "$ref": "#/components/responses/ErrorResponse/content/application~1json/examples/error4704"
+                  }
+                }
+              }
+            }
           },
           "416": {
-            "description": "Range not satisfiable"
+            "description": "Range not satisfiable",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                },
+                "examples": {
+                  "error4710": {
+                    "$ref": "#/components/responses/ErrorResponse/content/application~1json/examples/error4710"
+                  }
+                }
+              }
+            }
           }
         },
         "summary": "Download a media file (binary)",
@@ -6126,6 +7331,9 @@
               }
             },
             "description": "Updated"
+          },
+          "400": {
+            "$ref": "#/components/responses/ErrorResponse"
           }
         },
         "summary": "Flag or unflag an item as favourite",
@@ -6197,6 +7405,9 @@
               }
             },
             "description": "Localplay response"
+          },
+          "400": {
+            "$ref": "#/components/responses/ErrorResponse"
           }
         },
         "summary": "Add media to the localplay server",
@@ -6268,6 +7479,9 @@
               }
             },
             "description": "Now playing response"
+          },
+          "400": {
+            "$ref": "#/components/responses/ErrorResponse"
           }
         },
         "summary": "Update the server with the client player state",
@@ -6306,6 +7520,9 @@
               }
             },
             "description": "Success"
+          },
+          "400": {
+            "$ref": "#/components/responses/ErrorResponse"
           }
         },
         "summary": "Rate a library item",
@@ -6354,6 +7571,9 @@
               }
             },
             "description": "Share created"
+          },
+          "400": {
+            "$ref": "#/components/responses/ErrorResponse"
           }
         },
         "summary": "Create a public share URL",
@@ -6427,13 +7647,49 @@
             "description": "Binary stream response"
           },
           "400": {
-            "description": "Bad request"
+            "description": "Bad request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                },
+                "examples": {
+                  "error4710": {
+                    "$ref": "#/components/responses/ErrorResponse/content/application~1json/examples/error4710"
+                  }
+                }
+              }
+            }
           },
           "404": {
-            "description": "Not found"
+            "description": "Not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                },
+                "examples": {
+                  "error4704": {
+                    "$ref": "#/components/responses/ErrorResponse/content/application~1json/examples/error4704"
+                  }
+                }
+              }
+            }
           },
           "416": {
-            "description": "Range not satisfiable"
+            "description": "Range not satisfiable",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                },
+                "examples": {
+                  "error4710": {
+                    "$ref": "#/components/responses/ErrorResponse/content/application~1json/examples/error4710"
+                  }
+                }
+              }
+            }
           }
         },
         "summary": "Stream a media file (binary)",
@@ -6472,6 +7728,9 @@
               }
             },
             "description": "Deleted podcast episodes list"
+          },
+          "400": {
+            "$ref": "#/components/responses/ErrorResponse"
           }
         },
         "summary": "List deleted podcast episodes",
@@ -6618,7 +7877,19 @@
             "description": "Search results"
           },
           "400": {
-            "description": "Invalid request"
+            "description": "Invalid request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                },
+                "examples": {
+                  "error4710": {
+                    "$ref": "#/components/responses/ErrorResponse/content/application~1json/examples/error4710"
+                  }
+                }
+              }
+            }
           }
         },
         "summary": "Search for media entities using rule triplets",
@@ -6709,6 +7980,9 @@
               }
             },
             "description": "Stats result"
+          },
+          "400": {
+            "$ref": "#/components/responses/ErrorResponse"
           }
         },
         "summary": "Get stats (song/album/artist etc) by type and filter",
@@ -6782,6 +8056,9 @@
               }
             },
             "description": "Podcast list"
+          },
+          "400": {
+            "$ref": "#/components/responses/ErrorResponse"
           }
         },
         "summary": "List podcasts",
@@ -6820,6 +8097,9 @@
               }
             },
             "description": "Podcast created"
+          },
+          "400": {
+            "$ref": "#/components/responses/ErrorResponse"
           }
         },
         "summary": "Create a podcast",
@@ -6850,6 +8130,9 @@
               }
             },
             "description": "Deleted"
+          },
+          "400": {
+            "$ref": "#/components/responses/ErrorResponse"
           }
         },
         "summary": "Delete a podcast",
@@ -6889,6 +8172,9 @@
               }
             },
             "description": "Podcast object"
+          },
+          "400": {
+            "$ref": "#/components/responses/ErrorResponse"
           }
         },
         "summary": "Get podcast by ID",
@@ -6965,6 +8251,9 @@
               }
             },
             "description": "Updated"
+          },
+          "400": {
+            "$ref": "#/components/responses/ErrorResponse"
           }
         },
         "summary": "Edit an existing podcast",
@@ -6999,10 +8288,34 @@
             "description": "Binary image response"
           },
           "400": {
-            "description": "Bad request"
+            "description": "Bad request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                },
+                "examples": {
+                  "error4710": {
+                    "$ref": "#/components/responses/ErrorResponse/content/application~1json/examples/error4710"
+                  }
+                }
+              }
+            }
           },
           "404": {
-            "description": "Not found"
+            "description": "Not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                },
+                "examples": {
+                  "error4704": {
+                    "$ref": "#/components/responses/ErrorResponse/content/application~1json/examples/error4704"
+                  }
+                }
+              }
+            }
           }
         },
         "summary": "Get art image (binary)",
@@ -7045,6 +8358,9 @@
               }
             },
             "description": "Updated"
+          },
+          "400": {
+            "$ref": "#/components/responses/ErrorResponse"
           }
         },
         "summary": "Flag or unflag an item as favourite",
@@ -7107,6 +8423,9 @@
               }
             },
             "description": "Podcast episode list"
+          },
+          "400": {
+            "$ref": "#/components/responses/ErrorResponse"
           }
         },
         "summary": "List episodes for a podcast",
@@ -7145,6 +8464,9 @@
               }
             },
             "description": "Success"
+          },
+          "400": {
+            "$ref": "#/components/responses/ErrorResponse"
           }
         },
         "summary": "Rate a library item",
@@ -7193,6 +8515,9 @@
               }
             },
             "description": "Share created"
+          },
+          "400": {
+            "$ref": "#/components/responses/ErrorResponse"
           }
         },
         "summary": "Create a public share URL",
@@ -7224,6 +8549,9 @@
               }
             },
             "description": "Sync started"
+          },
+          "400": {
+            "$ref": "#/components/responses/ErrorResponse"
           }
         },
         "summary": "Sync and download new podcast episodes",
@@ -7370,7 +8698,19 @@
             "description": "Search results"
           },
           "400": {
-            "description": "Invalid request"
+            "description": "Invalid request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                },
+                "examples": {
+                  "error4710": {
+                    "$ref": "#/components/responses/ErrorResponse/content/application~1json/examples/error4710"
+                  }
+                }
+              }
+            }
           }
         },
         "summary": "Search for media entities using rule triplets",
@@ -7461,6 +8801,9 @@
               }
             },
             "description": "Stats result"
+          },
+          "400": {
+            "$ref": "#/components/responses/ErrorResponse"
           }
         },
         "summary": "Get stats (song/album/artist etc) by type and filter",
@@ -7540,6 +8883,9 @@
               }
             },
             "description": "Created"
+          },
+          "400": {
+            "$ref": "#/components/responses/ErrorResponse"
           }
         },
         "summary": "Create a server preference (Admin)",
@@ -7570,6 +8916,9 @@
               }
             },
             "description": "Deleted"
+          },
+          "400": {
+            "$ref": "#/components/responses/ErrorResponse"
           }
         },
         "summary": "Delete a non-system preference by name (Admin)",
@@ -7632,6 +8981,9 @@
               }
             },
             "description": "Updated"
+          },
+          "400": {
+            "$ref": "#/components/responses/ErrorResponse"
           }
         },
         "summary": "Edit a preference value",
@@ -7662,6 +9014,9 @@
               }
             },
             "description": "Preference array"
+          },
+          "400": {
+            "$ref": "#/components/responses/ErrorResponse"
           }
         },
         "summary": "Get a server preference by name (Admin)",
@@ -7692,6 +9047,9 @@
               }
             },
             "description": "Preference array"
+          },
+          "400": {
+            "$ref": "#/components/responses/ErrorResponse"
           }
         },
         "summary": "Get a user preference by name",
@@ -7753,6 +9111,9 @@
               }
             },
             "description": "Success or error"
+          },
+          "400": {
+            "$ref": "#/components/responses/ErrorResponse"
           }
         },
         "security": [
@@ -7842,6 +9203,9 @@
               }
             },
             "description": "Recorded"
+          },
+          "400": {
+            "$ref": "#/components/responses/ErrorResponse"
           }
         },
         "summary": "Find a song by metadata and record a play if found",
@@ -7953,6 +9317,9 @@
               }
             },
             "description": "Search results grouped by type"
+          },
+          "400": {
+            "$ref": "#/components/responses/ErrorResponse"
           }
         },
         "summary": "Group search across multiple object types",
@@ -7998,6 +9365,9 @@
               }
             },
             "description": "Rules list"
+          },
+          "400": {
+            "$ref": "#/components/responses/ErrorResponse"
           }
         },
         "summary": "List valid search rules for a search type",
@@ -8073,6 +9443,9 @@
               }
             },
             "description": "Share list"
+          },
+          "400": {
+            "$ref": "#/components/responses/ErrorResponse"
           }
         },
         "summary": "List shares",
@@ -8103,6 +9476,9 @@
               }
             },
             "description": "Deleted"
+          },
+          "400": {
+            "$ref": "#/components/responses/ErrorResponse"
           }
         },
         "summary": "Delete a share",
@@ -8131,6 +9507,9 @@
               }
             },
             "description": "Share object"
+          },
+          "400": {
+            "$ref": "#/components/responses/ErrorResponse"
           }
         },
         "summary": "Get share by ID",
@@ -8199,6 +9578,9 @@
               }
             },
             "description": "Share updated"
+          },
+          "400": {
+            "$ref": "#/components/responses/ErrorResponse"
           }
         },
         "summary": "Edit a share",
@@ -8287,6 +9669,9 @@
               }
             },
             "description": "Playlists list"
+          },
+          "400": {
+            "$ref": "#/components/responses/ErrorResponse"
           }
         },
         "summary": "List smartplaylists",
@@ -8317,6 +9702,9 @@
               }
             },
             "description": "Success"
+          },
+          "400": {
+            "$ref": "#/components/responses/ErrorResponse"
           }
         },
         "summary": "Delete a smartlist",
@@ -8345,6 +9733,9 @@
               }
             },
             "description": "Playlist response"
+          },
+          "400": {
+            "$ref": "#/components/responses/ErrorResponse"
           }
         },
         "summary": "Get a single smartplaylist",
@@ -8379,10 +9770,34 @@
             "description": "Binary image response"
           },
           "400": {
-            "description": "Bad request"
+            "description": "Bad request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                },
+                "examples": {
+                  "error4710": {
+                    "$ref": "#/components/responses/ErrorResponse/content/application~1json/examples/error4710"
+                  }
+                }
+              }
+            }
           },
           "404": {
-            "description": "Not found"
+            "description": "Not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                },
+                "examples": {
+                  "error4704": {
+                    "$ref": "#/components/responses/ErrorResponse/content/application~1json/examples/error4704"
+                  }
+                }
+              }
+            }
           }
         },
         "summary": "Get art image (binary)",
@@ -8436,13 +9851,49 @@
             "description": "Binary file response"
           },
           "400": {
-            "description": "Bad request"
+            "description": "Bad request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                },
+                "examples": {
+                  "error4710": {
+                    "$ref": "#/components/responses/ErrorResponse/content/application~1json/examples/error4710"
+                  }
+                }
+              }
+            }
           },
           "404": {
-            "description": "Not found"
+            "description": "Not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                },
+                "examples": {
+                  "error4704": {
+                    "$ref": "#/components/responses/ErrorResponse/content/application~1json/examples/error4704"
+                  }
+                }
+              }
+            }
           },
           "416": {
-            "description": "Range not satisfiable"
+            "description": "Range not satisfiable",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                },
+                "examples": {
+                  "error4710": {
+                    "$ref": "#/components/responses/ErrorResponse/content/application~1json/examples/error4710"
+                  }
+                }
+              }
+            }
           }
         },
         "summary": "Download a media file (binary)",
@@ -8485,6 +9936,9 @@
               }
             },
             "description": "Updated"
+          },
+          "400": {
+            "$ref": "#/components/responses/ErrorResponse"
           }
         },
         "summary": "Flag or unflag an item as favourite",
@@ -8523,6 +9977,9 @@
               }
             },
             "description": "Success"
+          },
+          "400": {
+            "$ref": "#/components/responses/ErrorResponse"
           }
         },
         "summary": "Rate a library item",
@@ -8571,6 +10028,9 @@
               }
             },
             "description": "Share created"
+          },
+          "400": {
+            "$ref": "#/components/responses/ErrorResponse"
           }
         },
         "summary": "Create a public share URL",
@@ -8629,6 +10089,9 @@
               }
             },
             "description": "Song list"
+          },
+          "400": {
+            "$ref": "#/components/responses/ErrorResponse"
           }
         },
         "summary": "Get songs for a smartlist",
@@ -8703,13 +10166,49 @@
             "description": "Binary stream response"
           },
           "400": {
-            "description": "Bad request"
+            "description": "Bad request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                },
+                "examples": {
+                  "error4710": {
+                    "$ref": "#/components/responses/ErrorResponse/content/application~1json/examples/error4710"
+                  }
+                }
+              }
+            }
           },
           "404": {
-            "description": "Not found"
+            "description": "Not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                },
+                "examples": {
+                  "error4704": {
+                    "$ref": "#/components/responses/ErrorResponse/content/application~1json/examples/error4704"
+                  }
+                }
+              }
+            }
           },
           "416": {
-            "description": "Range not satisfiable"
+            "description": "Range not satisfiable",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                },
+                "examples": {
+                  "error4710": {
+                    "$ref": "#/components/responses/ErrorResponse/content/application~1json/examples/error4710"
+                  }
+                }
+              }
+            }
           }
         },
         "summary": "Stream a media file (binary)",
@@ -8856,7 +10355,19 @@
             "description": "Search results"
           },
           "400": {
-            "description": "Invalid request"
+            "description": "Invalid request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                },
+                "examples": {
+                  "error4710": {
+                    "$ref": "#/components/responses/ErrorResponse/content/application~1json/examples/error4710"
+                  }
+                }
+              }
+            }
           }
         },
         "summary": "Search for media entities using rule triplets",
@@ -8946,6 +10457,9 @@
               }
             },
             "description": "Songs list"
+          },
+          "400": {
+            "$ref": "#/components/responses/ErrorResponse"
           }
         },
         "summary": "List songs",
@@ -8976,6 +10490,9 @@
               }
             },
             "description": "Deleted"
+          },
+          "400": {
+            "$ref": "#/components/responses/ErrorResponse"
           }
         },
         "summary": "Delete a song",
@@ -9004,6 +10521,9 @@
               }
             },
             "description": "Song details"
+          },
+          "400": {
+            "$ref": "#/components/responses/ErrorResponse"
           }
         },
         "summary": "Get song by ID",
@@ -9038,10 +10558,34 @@
             "description": "Binary image response"
           },
           "400": {
-            "description": "Bad request"
+            "description": "Bad request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                },
+                "examples": {
+                  "error4710": {
+                    "$ref": "#/components/responses/ErrorResponse/content/application~1json/examples/error4710"
+                  }
+                }
+              }
+            }
           },
           "404": {
-            "description": "Not found"
+            "description": "Not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                },
+                "examples": {
+                  "error4704": {
+                    "$ref": "#/components/responses/ErrorResponse/content/application~1json/examples/error4704"
+                  }
+                }
+              }
+            }
           }
         },
         "summary": "Get art image (binary)",
@@ -9081,6 +10625,9 @@
               }
             },
             "description": "Success"
+          },
+          "400": {
+            "$ref": "#/components/responses/ErrorResponse"
           }
         },
         "summary": "Delete a bookmark",
@@ -9121,6 +10668,9 @@
               }
             },
             "description": "Bookmark object"
+          },
+          "400": {
+            "$ref": "#/components/responses/ErrorResponse"
           }
         },
         "summary": "Get bookmark by ID",
@@ -9186,6 +10736,9 @@
               }
             },
             "description": "Bookmark array"
+          },
+          "400": {
+            "$ref": "#/components/responses/ErrorResponse"
           }
         },
         "summary": "Edit a bookmark",
@@ -9251,6 +10804,9 @@
               }
             },
             "description": "Bookmark object"
+          },
+          "400": {
+            "$ref": "#/components/responses/ErrorResponse"
           }
         },
         "summary": "Create a bookmark",
@@ -9304,13 +10860,49 @@
             "description": "Binary file response"
           },
           "400": {
-            "description": "Bad request"
+            "description": "Bad request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                },
+                "examples": {
+                  "error4710": {
+                    "$ref": "#/components/responses/ErrorResponse/content/application~1json/examples/error4710"
+                  }
+                }
+              }
+            }
           },
           "404": {
-            "description": "Not found"
+            "description": "Not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                },
+                "examples": {
+                  "error4704": {
+                    "$ref": "#/components/responses/ErrorResponse/content/application~1json/examples/error4704"
+                  }
+                }
+              }
+            }
           },
           "416": {
-            "description": "Range not satisfiable"
+            "description": "Range not satisfiable",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                },
+                "examples": {
+                  "error4710": {
+                    "$ref": "#/components/responses/ErrorResponse/content/application~1json/examples/error4710"
+                  }
+                }
+              }
+            }
           }
         },
         "summary": "Download a media file (binary)",
@@ -9341,6 +10933,9 @@
               }
             },
             "description": "External metadata array"
+          },
+          "400": {
+            "$ref": "#/components/responses/ErrorResponse"
           }
         },
         "summary": "Get external metadata for a song",
@@ -9384,6 +10979,9 @@
               }
             },
             "description": "Updated"
+          },
+          "400": {
+            "$ref": "#/components/responses/ErrorResponse"
           }
         },
         "summary": "Flag or unflag an item as favourite",
@@ -9455,6 +11053,9 @@
               }
             },
             "description": "Localplay response"
+          },
+          "400": {
+            "$ref": "#/components/responses/ErrorResponse"
           }
         },
         "summary": "Add media to the localplay server",
@@ -9498,6 +11099,9 @@
               }
             },
             "description": "Lyrics/plugins response"
+          },
+          "400": {
+            "$ref": "#/components/responses/ErrorResponse"
           }
         },
         "summary": "Get lyrics from DB or plugins by song id",
@@ -9570,6 +11174,9 @@
               }
             },
             "description": "Now playing response"
+          },
+          "400": {
+            "$ref": "#/components/responses/ErrorResponse"
           }
         },
         "summary": "Update the server with the client player state",
@@ -9608,6 +11215,9 @@
               }
             },
             "description": "Success"
+          },
+          "400": {
+            "$ref": "#/components/responses/ErrorResponse"
           }
         },
         "summary": "Rate a library item",
@@ -9662,6 +11272,9 @@
               }
             },
             "description": "Recorded"
+          },
+          "400": {
+            "$ref": "#/components/responses/ErrorResponse"
           }
         },
         "summary": "Record a play for a song",
@@ -9710,6 +11323,9 @@
               }
             },
             "description": "Share created"
+          },
+          "400": {
+            "$ref": "#/components/responses/ErrorResponse"
           }
         },
         "summary": "Create a public share URL",
@@ -9756,6 +11372,9 @@
               }
             },
             "description": "Similar list"
+          },
+          "400": {
+            "$ref": "#/components/responses/ErrorResponse"
           }
         },
         "summary": "Get similar songs",
@@ -9829,13 +11448,49 @@
             "description": "Binary stream response"
           },
           "400": {
-            "description": "Bad request"
+            "description": "Bad request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                },
+                "examples": {
+                  "error4710": {
+                    "$ref": "#/components/responses/ErrorResponse/content/application~1json/examples/error4710"
+                  }
+                }
+              }
+            }
           },
           "404": {
-            "description": "Not found"
+            "description": "Not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                },
+                "examples": {
+                  "error4704": {
+                    "$ref": "#/components/responses/ErrorResponse/content/application~1json/examples/error4704"
+                  }
+                }
+              }
+            }
           },
           "416": {
-            "description": "Range not satisfiable"
+            "description": "Range not satisfiable",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                },
+                "examples": {
+                  "error4710": {
+                    "$ref": "#/components/responses/ErrorResponse/content/application~1json/examples/error4710"
+                  }
+                }
+              }
+            }
           }
         },
         "summary": "Stream a media file (binary)",
@@ -9866,6 +11521,9 @@
               }
             },
             "description": "Song tags"
+          },
+          "400": {
+            "$ref": "#/components/responses/ErrorResponse"
           }
         },
         "summary": "Get full file tags for a song",
@@ -9897,6 +11555,9 @@
               }
             },
             "description": "Updated"
+          },
+          "400": {
+            "$ref": "#/components/responses/ErrorResponse"
           }
         },
         "summary": "Update object metadata from tags",
@@ -9935,6 +11596,9 @@
               }
             },
             "description": "Deleted songs list"
+          },
+          "400": {
+            "$ref": "#/components/responses/ErrorResponse"
           }
         },
         "summary": "List deleted songs",
@@ -9965,6 +11629,9 @@
               }
             },
             "description": "Song object"
+          },
+          "400": {
+            "$ref": "#/components/responses/ErrorResponse"
           }
         },
         "summary": "Convert an Ampache URL back to a song object",
@@ -9973,7 +11640,7 @@
         ]
       }
     },
-    "/songs/playlist_generate": {
+    "/songs/playlist-generate": {
       "get": {
         "parameters": [
           {
@@ -10067,6 +11734,9 @@
               }
             },
             "description": "Generated list"
+          },
+          "400": {
+            "$ref": "#/components/responses/ErrorResponse"
           }
         },
         "summary": "Generate a playlist result set (song, index, or id)",
@@ -10213,7 +11883,19 @@
             "description": "Search results"
           },
           "400": {
-            "description": "Invalid request"
+            "description": "Invalid request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                },
+                "examples": {
+                  "error4710": {
+                    "$ref": "#/components/responses/ErrorResponse/content/application~1json/examples/error4710"
+                  }
+                }
+              }
+            }
           }
         },
         "summary": "Search for media entities using rule triplets",
@@ -10304,6 +11986,9 @@
               }
             },
             "description": "Stats result"
+          },
+          "400": {
+            "$ref": "#/components/responses/ErrorResponse"
           }
         },
         "summary": "Get stats (song/album/artist etc) by type and filter",
@@ -10325,6 +12010,9 @@
               }
             },
             "description": "Update Ampache"
+          },
+          "400": {
+            "$ref": "#/components/responses/ErrorResponse"
           }
         },
         "summary": "Get information about your own user account",
@@ -10379,6 +12067,9 @@
               }
             },
             "description": "User list"
+          },
+          "400": {
+            "$ref": "#/components/responses/ErrorResponse"
           }
         },
         "summary": "List user ID's and Usernames for your site",
@@ -10452,6 +12143,9 @@
               }
             },
             "description": "Created"
+          },
+          "400": {
+            "$ref": "#/components/responses/ErrorResponse"
           }
         },
         "summary": "Create a new user (Admin)",
@@ -10482,6 +12176,9 @@
               }
             },
             "description": "Deleted"
+          },
+          "400": {
+            "$ref": "#/components/responses/ErrorResponse"
           }
         },
         "summary": "Delete a user (Admin)",
@@ -10510,6 +12207,9 @@
               }
             },
             "description": "User array"
+          },
+          "400": {
+            "$ref": "#/components/responses/ErrorResponse"
           }
         },
         "summary": "Get a user's public information by username",
@@ -10662,6 +12362,9 @@
               }
             },
             "description": "Updated"
+          },
+          "400": {
+            "$ref": "#/components/responses/ErrorResponse"
           }
         },
         "summary": "Edit a user (Admin)",
@@ -10692,6 +12395,9 @@
               }
             },
             "description": "Success"
+          },
+          "400": {
+            "$ref": "#/components/responses/ErrorResponse"
           }
         },
         "summary": "Unfollow a user",
@@ -10720,6 +12426,9 @@
               }
             },
             "description": "Success"
+          },
+          "400": {
+            "$ref": "#/components/responses/ErrorResponse"
           }
         },
         "summary": "Follow or unfollow a user (toggle)",
@@ -10748,6 +12457,9 @@
               }
             },
             "description": "Success"
+          },
+          "400": {
+            "$ref": "#/components/responses/ErrorResponse"
           }
         },
         "summary": "Follow a user",
@@ -10810,6 +12522,9 @@
               }
             },
             "description": "User list"
+          },
+          "400": {
+            "$ref": "#/components/responses/ErrorResponse"
           }
         },
         "summary": "Get followers for a username",
@@ -10840,6 +12555,9 @@
               }
             },
             "description": "User list"
+          },
+          "400": {
+            "$ref": "#/components/responses/ErrorResponse"
           }
         },
         "summary": "Get who a user is following",
@@ -10886,6 +12604,9 @@
               }
             },
             "description": "Timeline activity list"
+          },
+          "400": {
+            "$ref": "#/components/responses/ErrorResponse"
           }
         },
         "summary": "Get a user's timeline",
@@ -11032,7 +12753,19 @@
             "description": "Search results"
           },
           "400": {
-            "description": "Invalid request"
+            "description": "Invalid request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                },
+                "examples": {
+                  "error4710": {
+                    "$ref": "#/components/responses/ErrorResponse/content/application~1json/examples/error4710"
+                  }
+                }
+              }
+            }
           }
         },
         "summary": "Search for media entities using rule triplets",
@@ -11108,6 +12841,9 @@
               }
             },
             "description": "Video list"
+          },
+          "400": {
+            "$ref": "#/components/responses/ErrorResponse"
           }
         },
         "summary": "List videos",
@@ -11138,6 +12874,9 @@
               }
             },
             "description": "Video object"
+          },
+          "400": {
+            "$ref": "#/components/responses/ErrorResponse"
           }
         },
         "summary": "Get video by ID",
@@ -11177,6 +12916,9 @@
               }
             },
             "description": "Success"
+          },
+          "400": {
+            "$ref": "#/components/responses/ErrorResponse"
           }
         },
         "summary": "Delete a bookmark",
@@ -11217,6 +12959,9 @@
               }
             },
             "description": "Bookmark object"
+          },
+          "400": {
+            "$ref": "#/components/responses/ErrorResponse"
           }
         },
         "summary": "Get bookmark by ID",
@@ -11282,6 +13027,9 @@
               }
             },
             "description": "Bookmark array"
+          },
+          "400": {
+            "$ref": "#/components/responses/ErrorResponse"
           }
         },
         "summary": "Edit a bookmark",
@@ -11347,6 +13095,9 @@
               }
             },
             "description": "Bookmark object"
+          },
+          "400": {
+            "$ref": "#/components/responses/ErrorResponse"
           }
         },
         "summary": "Create a bookmark",
@@ -11389,6 +13140,9 @@
               }
             },
             "description": "Updated"
+          },
+          "400": {
+            "$ref": "#/components/responses/ErrorResponse"
           }
         },
         "summary": "Flag or unflag an item as favourite",
@@ -11460,6 +13214,9 @@
               }
             },
             "description": "Localplay response"
+          },
+          "400": {
+            "$ref": "#/components/responses/ErrorResponse"
           }
         },
         "summary": "Add media to the localplay server",
@@ -11531,6 +13288,9 @@
               }
             },
             "description": "Now playing response"
+          },
+          "400": {
+            "$ref": "#/components/responses/ErrorResponse"
           }
         },
         "summary": "Update the server with the client player state",
@@ -11569,6 +13329,9 @@
               }
             },
             "description": "Success"
+          },
+          "400": {
+            "$ref": "#/components/responses/ErrorResponse"
           }
         },
         "summary": "Rate a library item",
@@ -11617,6 +13380,9 @@
               }
             },
             "description": "Share created"
+          },
+          "400": {
+            "$ref": "#/components/responses/ErrorResponse"
           }
         },
         "summary": "Create a public share URL",
@@ -11655,6 +13421,9 @@
               }
             },
             "description": "Deleted videos list"
+          },
+          "400": {
+            "$ref": "#/components/responses/ErrorResponse"
           }
         },
         "summary": "List deleted videos",
@@ -11801,7 +13570,19 @@
             "description": "Search results"
           },
           "400": {
-            "description": "Invalid request"
+            "description": "Invalid request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                },
+                "examples": {
+                  "error4710": {
+                    "$ref": "#/components/responses/ErrorResponse/content/application~1json/examples/error4710"
+                  }
+                }
+              }
+            }
           }
         },
         "summary": "Search for media entities using rule triplets",
@@ -11892,6 +13673,9 @@
               }
             },
             "description": "Stats result"
+          },
+          "400": {
+            "$ref": "#/components/responses/ErrorResponse"
           }
         },
         "summary": "Get stats (song/album/artist etc) by type and filter",
