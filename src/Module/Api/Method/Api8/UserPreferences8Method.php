@@ -40,12 +40,6 @@ final class UserPreferences8Method
 
     /**
      * @param array{
-     *     filter: string,
-     *     type: string,
-     *     position: string,
-     *     client?: string,
-     *     date?: int,
-     *     include?: int,
      *     api_format: string,
      *     auth: string,
      * } $input

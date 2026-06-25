@@ -655,6 +655,7 @@ final class ApiHandler implements ApiHandlerInterface
             'smartlists_songs' => 'smartlist_songs',
             'search-songs' => 'search_songs',
             'songs_delete' => 'song_delete',
+            'system-preferences' => 'system_preferences',
             'update-art' => 'update_art',
             'update-tags' => 'update_from_tags',
             'url-to-song' => 'url_to_song',
