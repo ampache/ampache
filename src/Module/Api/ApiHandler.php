@@ -681,6 +681,7 @@ final class ApiHandler implements ApiHandlerInterface
                 'shares' => 'share',
                 'smartlists' => 'smartlist',
                 'songs' => 'song',
+                'system_preferences' => 'system_preference',
                 'users' => 'user',
                 'videos' => 'video',
                 default => $action

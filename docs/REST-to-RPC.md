@@ -175,7 +175,7 @@ Allow you to ID which call you want to make using the old RPC calls
 | GET         | /songs/search                            | action=search&type=song                                       |                    |
 | GET         | /songs/stats                             | action=stats&type=song                                        |                    |
 | GET         | /system-preferences                      | action=system_preferences                                     |                    |
-| GET         | /system-preferences/{preference_name}    | action=system_preferences&filter={preference_name}            |                    |
+| GET         | /system-preferences/{preference_name}    | action=system_preference&filter={preference_name}             |                    |
 | GET         | /update                                  | action=system_update                                          |                    |
 | GET         | /users                                   | action=users                                                  |                    |
 | PUT         | /users                                   | action=user_create                                            |                    |
