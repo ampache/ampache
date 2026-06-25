@@ -704,6 +704,9 @@ final class ApiHandler implements ApiHandlerInterface
             if ($action === 'folder' && $type === 'catalog') {
                 $action = 'catalog_folder';
             }
+            if ($action === 'playlist' && $type === 'remove') {
+                $action = 'playlist_remove';
+            }
 
             if ($action === 'create' && ($type === 'album' || $type === 'artist' || $type === 'playlist' || $type === 'smartlist' || $type === 'podcast' || $type === 'podcast_episode' || $type === 'song' || $type === 'video')) {
                 $action = 'share_create';
