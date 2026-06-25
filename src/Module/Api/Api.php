@@ -290,6 +290,29 @@ class Api
      */
     public static function error(string $message, int|string $error_code, string $method, string $error_type, string $format = 'xml'): void
     {
+        switch ($error_code) {
+            case '4700': // ACCESS_CONTROL_NOT_ENABLED
+            case '4703': // ACCESS_DENIED
+            case '4742': // FAILED_ACCESS_CHECK
+                http_response_code(403);
+                break;
+            case '4710': // BAD_REQUEST
+            case '4705': // MISSING
+                http_response_code(400);
+                break;
+            case '4706': // DEPRECATED
+                http_response_code(410);
+                break;
+            case '4702': // GENERIC_ERROR
+                http_response_code(500);
+                break;
+            case '4701': // INVALID_HANDSHAKE
+                http_response_code(401);
+                break;
+            case '4704': // NOT_FOUND
+                http_response_code(404);
+                break;
+        }
         switch ($format) {
             case 'json':
                 echo Json8_Data::error($error_code, $message, $method, $error_type);
