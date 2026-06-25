@@ -704,7 +704,7 @@ final class ApiHandler implements ApiHandlerInterface
             if ($action === 'folder' && $type === 'catalog') {
                 $action = 'catalog_folder';
             }
-            if ($action === 'playlist' && $type === 'remove') {
+            if ($action === 'remove' && $type === 'playlist') {
                 $action = 'playlist_remove';
             }
 
