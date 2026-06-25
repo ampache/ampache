@@ -296,7 +296,7 @@ class Xml4_Data
     public static function indexes(array $objects, string $object_type, User $user, string $auth, bool $full_xml = true, bool $include = false): string
     {
         if ((count($objects) > self::$limit || self::$offset > 0) && (self::$limit && $full_xml)) {
-            $objects = array_splice($objects, self::$offset, self::$limit);
+            $objects = array_slice($objects, self::$offset, self::$limit);
         }
         $string = ($full_xml) ? "<total_count>" . count($objects) . "</total_count>\n" : '';
 

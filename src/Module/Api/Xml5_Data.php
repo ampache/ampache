@@ -242,7 +242,7 @@ class Xml5_Data
     public static function deleted(string $object_type, array $objects): string
     {
         if ((count($objects) > self::$limit || self::$offset > 0) && self::$limit) {
-            $objects = array_splice($objects, self::$offset, self::$limit);
+            $objects = array_slice($objects, self::$offset, self::$limit);
         }
 
         $string = '';
@@ -396,7 +396,7 @@ class Xml5_Data
     public static function indexes(array $objects, string $object_type, User $user, string $auth, bool $full_xml = true, bool $include = false): string
     {
         if ((count($objects) > self::$limit || self::$offset > 0) && (self::$limit && $full_xml)) {
-            $objects = array_splice($objects, self::$offset, self::$limit);
+            $objects = array_slice($objects, self::$offset, self::$limit);
         }
         // you might not want the joined tables for playlists
         $total_count = (AmpConfig::get('hide_search', false) && $object_type == 'playlist')

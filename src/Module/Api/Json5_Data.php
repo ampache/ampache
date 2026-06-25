@@ -341,7 +341,7 @@ class Json5_Data
     public static function deleted(string $object_type, array $objects): string
     {
         if ((count($objects) > self::$limit || self::$offset > 0) && self::$limit) {
-            $objects = array_splice($objects, self::$offset, self::$limit);
+            $objects = array_slice($objects, self::$offset, self::$limit);
         }
         $JSON = [];
         foreach ($objects as $row) {

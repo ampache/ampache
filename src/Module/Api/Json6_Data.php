@@ -147,13 +147,13 @@ class Json6_Data
      */
     public static function albums_array(array $objects, array $include, User $user, string $auth, bool $encode = true): array
     {
-        $count = self::$count ?? count($objects);
+        self::$count = self::$count ?? count($objects);
 
         // original year (fall back to regular year)
         $original_year = AmpConfig::get('use_original_year');
 
-        if (($count > self::$limit || self::$offset > 0) && (self::$limit && $encode)) {
-            $objects = array_splice($objects, self::$offset, self::$limit);
+        if ((self::$count > self::$limit || self::$offset > 0) && (self::$limit && $encode)) {
+            $objects = array_slice($objects, self::$offset, self::$limit);
         }
         Rating::build_cache('album', $objects);
         $JSON = [];
@@ -377,20 +377,20 @@ class Json6_Data
      */
     public static function bookmarks(array $objects, string $auth, bool $include = false, bool $object = true): string
     {
-        $count  = self::$count ?? count($objects);
-        $output = [
-            "total_count" => $count,
+        self::$count  = self::$count ?? count($objects);
+        $output       = [
+            "total_count" => self::$count,
             "md5" => md5(serialize($objects)),
         ];
 
-        if (($count > self::$limit || self::$offset > 0) && self::$limit) {
-            $objects = array_splice($objects, self::$offset, self::$limit);
+        if ((self::$count > self::$limit || self::$offset > 0) && self::$limit) {
+            $objects = array_slice($objects, self::$offset, self::$limit);
         }
 
         $bookmarkRepository = self::getBookmarkRepository();
 
-        $count = 0;
-        $JSON  = [];
+        self::$count = 0;
+        $JSON        = [];
         foreach ($objects as $bookmark_id) {
             $bookmark = $bookmarkRepository->findById($bookmark_id);
             if ($bookmark === null) {
@@ -423,17 +423,17 @@ class Json6_Data
             ) {
                 switch ($bookmark_object_type) {
                     case 'song':
-                        $JSON[$count]['song'] = self::songs_array([(int) $bookmark_object_id], $user, $auth);
+                        $JSON[self::$count]['song'] = self::songs_array([(int) $bookmark_object_id], $user, $auth);
                         break;
                     case 'podcast_episode':
-                        $JSON[$count]['podcast_episode'] = self::podcast_episodes_array([(int) $bookmark_object_id], $user, $auth, false);
+                        $JSON[self::$count]['podcast_episode'] = self::podcast_episodes_array([(int) $bookmark_object_id], $user, $auth, false);
                         break;
                     case 'video':
-                        $JSON[$count]['video'] = self::videos_array([(int) $bookmark_object_id], $user, $auth);
+                        $JSON[self::$count]['video'] = self::videos_array([(int) $bookmark_object_id], $user, $auth);
                         break;
                 }
             }
-            $count++;
+            self::$count++;
         }
         if ($object) {
             $output["bookmark"] = $JSON;
@@ -453,9 +453,9 @@ class Json6_Data
      */
     public static function browses(array $objects, ?int $parent_id, string $parent_type, string $child_type, ?int $catalog_id): string
     {
-        $count  = self::$count ?? count($objects);
-        $output = [
-            "total_count" => $count,
+        self::$count  = self::$count ?? count($objects);
+        $output       = [
+            "total_count" => self::$count,
             "md5" => md5(serialize($objects)),
             "catalog_id" => (string) $catalog_id,
             "parent_id" => (string) $parent_id,
@@ -464,8 +464,8 @@ class Json6_Data
         ];
         $pattern = '/^(' . implode('\\s|', explode('|', AmpConfig::get('catalog_prefix_pattern', 'The|An|A|Die|Das|Ein|Eine|Les|Le|La'))) . '\\s)(.*)/i';
 
-        if (($count > self::$limit || self::$offset > 0) && self::$limit) {
-            $objects = array_splice($objects, self::$offset, self::$limit);
+        if ((self::$count > self::$limit || self::$offset > 0) && self::$limit) {
+            $objects = array_slice($objects, self::$offset, self::$limit);
         }
 
         $JSON = [];
@@ -495,14 +495,14 @@ class Json6_Data
      */
     public static function catalogs(array $objects, bool $object = true): string
     {
-        $count  = self::$count ?? count($objects);
-        $output = [
-            "total_count" => $count,
+        self::$count  = self::$count ?? count($objects);
+        $output       = [
+            "total_count" => self::$count,
             "md5" => md5(serialize($objects)),
         ];
 
-        if (($count > self::$limit || self::$offset > 0) && self::$limit) {
-            $objects = array_splice($objects, self::$offset, self::$limit);
+        if ((self::$count > self::$limit || self::$offset > 0) && self::$limit) {
+            $objects = array_slice($objects, self::$offset, self::$limit);
         }
 
         $JSON = [];
@@ -568,14 +568,14 @@ class Json6_Data
      */
     public static function deleted(string $object_type, array $objects): string
     {
-        $count  = self::$count ?? count($objects);
-        $output = [
-            "total_count" => $count,
+        self::$count  = self::$count ?? count($objects);
+        $output       = [
+            "total_count" => self::$count,
             "md5" => md5(serialize($objects)),
         ];
 
-        if (($count > self::$limit || self::$offset > 0) && self::$limit) {
-            $objects = array_splice($objects, self::$offset, self::$limit);
+        if ((self::$count > self::$limit || self::$offset > 0) && self::$limit) {
+            $objects = array_slice($objects, self::$offset, self::$limit);
         }
 
         $JSON = [];
@@ -807,9 +807,9 @@ class Json6_Data
      */
     public static function genres_array(array $objects): array
     {
-        $count = self::$count ?? count($objects);
-        if (($count > self::$limit || self::$offset > 0) && self::$limit) {
-            $objects = array_splice($objects, self::$offset, self::$limit);
+        self::$count = self::$count ?? count($objects);
+        if ((self::$count > self::$limit || self::$offset > 0) && self::$limit) {
+            $objects = array_slice($objects, self::$offset, self::$limit);
         }
 
         $JSON = [];
@@ -852,10 +852,10 @@ class Json6_Data
      */
     public static function index(array $objects, string $type, User $user, bool $include = false): string
     {
-        $count  = self::$count ?? count($objects);
-        $output = [];
-        if (($count > self::$limit || self::$offset > 0) && self::$limit) {
-            $objects = array_splice($objects, self::$offset, self::$limit);
+        self::$count  = self::$count ?? count($objects);
+        $output       = [];
+        if ((self::$count > self::$limit || self::$offset > 0) && self::$limit) {
+            $objects = array_slice($objects, self::$offset, self::$limit);
         }
 
         if ($include) {
@@ -1082,9 +1082,9 @@ class Json6_Data
      */
     public static function labels_array(array $objects): array
     {
-        $count = self::$count ?? count($objects);
-        if (($count > self::$limit || self::$offset > 0) && self::$limit) {
-            $objects = array_splice($objects, self::$offset, self::$limit);
+        self::$count = self::$count ?? count($objects);
+        if ((self::$count > self::$limit || self::$offset > 0) && self::$limit) {
+            $objects = array_slice($objects, self::$offset, self::$limit);
         }
 
         $JSON = [];
@@ -1124,14 +1124,14 @@ class Json6_Data
      */
     public static function licenses(array $objects, bool $object = true): string
     {
-        $count  = self::$count ?? count($objects);
-        $output = [
-            "total_count" => $count,
+        self::$count  = self::$count ?? count($objects);
+        $output       = [
+            "total_count" => self::$count,
             "md5" => md5(serialize($objects)),
         ];
 
-        if (($count > self::$limit || self::$offset > 0) && self::$limit) {
-            $objects = array_splice($objects, self::$offset, self::$limit);
+        if ((self::$count > self::$limit || self::$offset > 0) && self::$limit) {
+            $objects = array_slice($objects, self::$offset, self::$limit);
         }
 
         $licenseRepository = self::getLicenseRepository();
@@ -1167,14 +1167,14 @@ class Json6_Data
      */
     public static function lists(array $objects): string
     {
-        $count  = self::$count ?? count($objects);
-        $output = [
-            "total_count" => $count,
+        self::$count  = self::$count ?? count($objects);
+        $output       = [
+            "total_count" => self::$count,
             "md5" => md5(serialize($objects)),
         ];
 
-        if (($count > self::$limit || self::$offset > 0) && self::$limit) {
-            $objects = array_splice($objects, self::$offset, self::$limit);
+        if ((self::$count > self::$limit || self::$offset > 0) && self::$limit) {
+            $objects = array_slice($objects, self::$offset, self::$limit);
         }
 
         $JSON    = [];
@@ -1207,7 +1207,7 @@ class Json6_Data
     {
         self::$count = self::$count ?? count($objects);
         if ((self::$count > self::$limit || self::$offset > 0) && self::$limit) {
-            $objects = array_splice($objects, self::$offset, self::$limit);
+            $objects = array_slice($objects, self::$offset, self::$limit);
         }
 
         $JSON = self::live_streams_array($objects);
@@ -1240,9 +1240,9 @@ class Json6_Data
      */
     public static function live_streams_array(array $objects): array
     {
-        $count = self::$count ?? count($objects);
-        if (($count > self::$limit || self::$offset > 0) && self::$limit) {
-            $objects = array_splice($objects, self::$offset, self::$limit);
+        self::$count = self::$count ?? count($objects);
+        if ((self::$count > self::$limit || self::$offset > 0) && self::$limit) {
+            $objects = array_slice($objects, self::$offset, self::$limit);
         }
 
         $JSON = [];
@@ -1340,7 +1340,7 @@ class Json6_Data
      *     "name": null|string,
      *     "owner": null|string,
      *     "user": array{"id": string, "username": null|string},
-     *     "items": array<int<0, max>, array<string, int|string>>|int,
+     *     "items": array<int, array<string, int|string>>|int,
      *     "type": null|string,
      *     "art": null|string,
      *     "has_access": bool,
@@ -1355,8 +1355,8 @@ class Json6_Data
      */
     public static function playlists_array(array $objects, User $user, string $auth, bool $songs = false): array
     {
-        $count = self::$count ?? count($objects);
-        if (($count > self::$limit || self::$offset > 0) && self::$limit) {
+        self::$count = self::$count ?? count($objects);
+        if ((self::$count > self::$limit || self::$offset > 0) && self::$limit) {
             $objects = array_slice($objects, self::$offset, self::$limit);
         }
 
@@ -1392,10 +1392,10 @@ class Json6_Data
             if ($songs) {
                 $items          = [];
                 $playlisttracks = $playlist->get_items();
-                foreach ($playlisttracks as $objects) {
+                foreach ($playlisttracks as $track) {
                     $items[] = [
-                        "id" => (string) $objects['object_id'],
-                        "playlisttrack" => $objects['track'],
+                        "id" => (string) $track['object_id'],
+                        "playlisttrack" => $track['track'],
                     ];
                 }
 
@@ -1451,7 +1451,7 @@ class Json6_Data
     {
         self::$count = self::$count ?? count($objects);
         if ((self::$count > self::$limit || self::$offset > 0) && (self::$limit && $encode)) {
-            $objects = array_splice($objects, self::$offset, self::$limit);
+            $objects = array_slice($objects, self::$offset, self::$limit);
         }
 
         $JSON = self::podcast_episodes_array($objects, $user, $auth, $encode);
@@ -1510,9 +1510,9 @@ class Json6_Data
      */
     public static function podcast_episodes_array(array $objects, User $user, string $auth, bool $encode = true): array
     {
-        $count = self::$count ?? count($objects);
-        if (($count > self::$limit || self::$offset > 0) && (self::$limit && $encode)) {
-            $objects = array_splice($objects, self::$offset, self::$limit);
+        self::$count = self::$count ?? count($objects);
+        if ((self::$count > self::$limit || self::$offset > 0) && (self::$limit && $encode)) {
+            $objects = array_slice($objects, self::$offset, self::$limit);
         }
 
         $JSON = [];
@@ -1657,9 +1657,9 @@ class Json6_Data
      */
     public static function podcasts_array(array $objects, User $user, string $auth, bool $episodes = false): array
     {
-        $count = self::$count ?? count($objects);
-        if (($count > self::$limit || self::$offset > 0) && self::$limit) {
-            $objects = array_splice($objects, self::$offset, self::$limit);
+        self::$count = self::$count ?? count($objects);
+        if ((self::$count > self::$limit || self::$offset > 0) && self::$limit) {
+            $objects = array_slice($objects, self::$offset, self::$limit);
         }
 
         $podcastRepository = self::getPodcastRepository();
@@ -1724,7 +1724,7 @@ class Json6_Data
      */
     public static function set_count(int|string $count): void
     {
-        self::$count = (int) $count;
+        self::$count = (int) self::$count;
     }
 
     /**
@@ -1767,14 +1767,14 @@ class Json6_Data
      */
     public static function shares(array $objects, User $user, bool $object = true): string
     {
-        $count  = self::$count ?? count($objects);
-        $output = [
-            "total_count" => $count,
+        self::$count  = self::$count ?? count($objects);
+        $output       = [
+            "total_count" => self::$count,
             "md5" => md5(serialize($objects)),
         ];
 
-        if (($count > self::$limit || self::$offset > 0) && self::$limit) {
-            $objects = array_splice($objects, self::$offset, self::$limit);
+        if ((self::$count > self::$limit || self::$offset > 0) && self::$limit) {
+            $objects = array_slice($objects, self::$offset, self::$limit);
         }
 
         $JSON = [];
@@ -1869,9 +1869,9 @@ class Json6_Data
      */
     public static function song_tags(array $objects, string $auth, bool $object = true): string
     {
-        $count  = self::$count ?? count($objects);
-        $output = [
-            "total_count" => $count,
+        self::$count  = self::$count ?? count($objects);
+        $output       = [
+            "total_count" => self::$count,
             "md5" => md5(serialize($objects)),
         ];
 
@@ -2259,9 +2259,9 @@ class Json6_Data
      */
     public static function users_array(array $objects): array
     {
-        $count = self::$count ?? count($objects);
-        if (($count > self::$limit || self::$offset > 0) && self::$limit) {
-            $objects = array_splice($objects, self::$offset, self::$limit);
+        self::$count = self::$count ?? count($objects);
+        if ((self::$count > self::$limit || self::$offset > 0) && self::$limit) {
+            $objects = array_slice($objects, self::$offset, self::$limit);
         }
 
         $JSON = [];
@@ -2328,9 +2328,9 @@ class Json6_Data
      */
     public static function videos_array(array $objects, User $user, string $auth): array
     {
-        $count = self::$count ?? count($objects);
+        self::$count = self::$count ?? count($objects);
 
-        if (($count > self::$limit || self::$offset > 0) && self::$limit) {
+        if ((self::$count > self::$limit || self::$offset > 0) && self::$limit) {
             $objects = array_slice($objects, self::$offset, self::$limit);
         }
 
