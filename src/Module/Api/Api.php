@@ -217,6 +217,7 @@ class Api
         Method\Api8\UserPlaylists8Method::ACTION => Method\Api8\UserPlaylists8Method::class,
         Method\Api8\UserPreference8Method::ACTION => Method\Api8\UserPreference8Method::class,
         Method\Api8\UserPreferences8Method::ACTION => Method\Api8\UserPreferences8Method::class,
+        Method\Api8\UserPreferences8Method::REST_ACTION => Method\Api8\UserPreferences8Method::class,
         Method\Api8\UserSmartlists8Method::ACTION => Method\Api8\UserSmartlists8Method::class,
         Method\Api8\Users8Method::ACTION => Method\Api8\Users8Method::class,
         Method\Api8\Video8Method::ACTION => Method\Api8\Video8Method::class,

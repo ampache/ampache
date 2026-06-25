@@ -207,6 +207,7 @@ class Api6
         Method\Api6\UserPlaylists6Method::ACTION => Method\Api6\UserPlaylists6Method::class,
         Method\Api6\UserPreference6Method::ACTION => Method\Api6\UserPreference6Method::class,
         Method\Api6\UserPreferences6Method::ACTION => Method\Api6\UserPreferences6Method::class,
+        Method\Api6\UserPreferences6Method::REST_ACTION => Method\Api6\UserPreferences6Method::class,
         Method\Api6\UserSmartlists6Method::ACTION => Method\Api6\UserSmartlists6Method::class,
         Method\Api6\Users6Method::ACTION => Method\Api6\Users6Method::class,
         Method\Api6\UserUpdate66Method::ACTION => Method\Api6\UserUpdate66Method::class,
