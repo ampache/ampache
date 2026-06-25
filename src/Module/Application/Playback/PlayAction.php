@@ -491,12 +491,21 @@ final readonly class PlayAction implements ApplicationActionInterface
                 $democratic->delete_from_oid($media->id, $type);
 
                 // If the media is disabled
-                if ((isset($media->enabled) && !make_bool($media->enabled)) || !Core::is_readable(Core::conv_lc_file((string) $media->file))) {
+                if ((isset($media->enabled) && !make_bool($media->enabled))) {
                     $this->logger->warning(
                         "Error: " . $media->file . " is currently disabled, song skipped",
                         [LegacyLogger::CONTEXT_TYPE => self::class]
                     );
                     header('HTTP/1.1 404 File disabled');
+
+                    return null;
+                }
+                if (!Core::is_readable(Core::conv_lc_file((string) $media->file))) {
+                    $this->logger->warning(
+                        "Error: " . $media->file . " is currently unreadable, song skipped",
+                        [LegacyLogger::CONTEXT_TYPE => self::class]
+                    );
+                    header('HTTP/1.1 404 File unreadable');
 
                     return null;
                 }
@@ -539,12 +548,21 @@ final readonly class PlayAction implements ApplicationActionInterface
             $media = new Song($object_id);
             if ($media->id > 0) {
                 // If the media is disabled
-                if ((isset($media->enabled) && !make_bool($media->enabled)) || !Core::is_readable(Core::conv_lc_file((string) $media->file))) {
+                if ((isset($media->enabled) && !make_bool($media->enabled))) {
                     $this->logger->warning(
                         "Error: " . $media->file . " is currently disabled, song skipped",
                         [LegacyLogger::CONTEXT_TYPE => self::class]
                     );
                     header('HTTP/1.1 404 File disabled');
+
+                    return null;
+                }
+                if (!Core::is_readable(Core::conv_lc_file((string) $media->file))) {
+                    $this->logger->warning(
+                        "Error: " . $media->file . " is currently unreadable, song skipped",
+                        [LegacyLogger::CONTEXT_TYPE => self::class]
+                    );
+                    header('HTTP/1.1 404 File unreadable');
 
                     return null;
                 }
