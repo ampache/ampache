@@ -35,7 +35,8 @@ use Ampache\Repository\PreferenceRepositoryInterface;
  */
 final class UserPreferences6Method
 {
-    public const string ACTION = 'user_preferences';
+    public const string ACTION      = 'user_preferences';
+    public const string REST_ACTION = 'preferences';
 
     /**
      * user_preferences

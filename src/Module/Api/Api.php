@@ -77,12 +77,14 @@ class Api
         Method\Api8\Bookmarks8Method::ACTION => Method\Api8\Bookmarks8Method::class,
         Method\Api8\Browse8Method::ACTION => Method\Api8\Browse8Method::class,
         Method\Api8\CatalogAction8Method::ACTION => Method\Api8\CatalogAction8Method::class,
+        Method\Api8\CatalogAction8Method::REST_ACTION => Method\Api8\CatalogAction8Method::class,
         Method\Api8\CatalogAdd8Method::ACTION => Method\Api8\CatalogAdd8Method::class,
         Method\Api8\CatalogCreate8Method::ACTION => Method\Api8\CatalogCreate8Method::class,
         Method\Api8\CatalogCreate8Method::REST_ACTION => Method\Api8\CatalogCreate8Method::class,
         Method\Api8\CatalogDelete8Method::ACTION => Method\Api8\CatalogDelete8Method::class,
         Method\Api8\CatalogDelete8Method::REST_ACTION => Method\Api8\CatalogDelete8Method::class,
         Method\Api8\CatalogFile8Method::ACTION => Method\Api8\CatalogFile8Method::class,
+        Method\Api8\CatalogFile8Method::REST_ACTION => Method\Api8\CatalogFile8Method::class,
         Method\Api8\CatalogFolder8Method::ACTION => Method\Api8\CatalogFolder8Method::class,
         Method\Api8\Catalog8Method::ACTION => Method\Api8\Catalog8Method::class,
         Method\Api8\Catalogs8Method::ACTION => Method\Api8\Catalogs8Method::class,
@@ -168,13 +170,16 @@ class Api
         Method\Api8\PreferenceEdit8Method::ACTION => Method\Api8\PreferenceEdit8Method::class,
         Method\Api8\PreferenceEdit8Method::REST_ACTION => Method\Api8\PreferenceEdit8Method::class,
         Method\Api8\Player8Method::ACTION => Method\Api8\Player8Method::class,
+        Method\Api8\Player8Method::REST_ACTION => Method\Api8\Player8Method::class,
         Method\Api8\Rate8Method::ACTION => Method\Api8\Rate8Method::class,
         Method\Api8\RecordPlay8Method::ACTION => Method\Api8\RecordPlay8Method::class,
         Method\Api8\Register8Method::ACTION => Method\Api8\Register8Method::class,
         Method\Api8\Scrobble8Method::ACTION => Method\Api8\Scrobble8Method::class,
         Method\Api8\Search8Method::ACTION => Method\Api8\Search8Method::class,
         Method\Api8\SearchGroup8Method::ACTION => Method\Api8\SearchGroup8Method::class,
+        Method\Api8\SearchGroup8Method::REST_ACTION => Method\Api8\SearchGroup8Method::class,
         Method\Api8\SearchRules8Method::ACTION => Method\Api8\SearchRules8Method::class,
+        Method\Api8\SearchRules8Method::REST_ACTION => Method\Api8\SearchRules8Method::class,
         Method\Api8\SearchSongs8Method::ACTION => Method\Api8\SearchSongs8Method::class,
         Method\Api8\ShareCreate8Method::ACTION => Method\Api8\ShareCreate8Method::class,
         Method\Api8\ShareCreate8Method::REST_ACTION => Method\Api8\ShareCreate8Method::class,
@@ -217,6 +222,7 @@ class Api
         Method\Api8\UserPlaylists8Method::ACTION => Method\Api8\UserPlaylists8Method::class,
         Method\Api8\UserPreference8Method::ACTION => Method\Api8\UserPreference8Method::class,
         Method\Api8\UserPreferences8Method::ACTION => Method\Api8\UserPreferences8Method::class,
+        Method\Api8\UserPreferences8Method::REST_ACTION => Method\Api8\UserPreferences8Method::class,
         Method\Api8\UserSmartlists8Method::ACTION => Method\Api8\UserSmartlists8Method::class,
         Method\Api8\Users8Method::ACTION => Method\Api8\Users8Method::class,
         Method\Api8\Video8Method::ACTION => Method\Api8\Video8Method::class,
@@ -290,6 +296,29 @@ class Api
      */
     public static function error(string $message, int|string $error_code, string $method, string $error_type, string $format = 'xml'): void
     {
+        switch ($error_code) {
+            case '4700': // ACCESS_CONTROL_NOT_ENABLED
+            case '4703': // ACCESS_DENIED
+            case '4742': // FAILED_ACCESS_CHECK
+                http_response_code(403);
+                break;
+            case '4710': // BAD_REQUEST
+            case '4705': // MISSING
+                http_response_code(400);
+                break;
+            case '4706': // DEPRECATED
+                http_response_code(410);
+                break;
+            case '4702': // GENERIC_ERROR
+                http_response_code(500);
+                break;
+            case '4701': // INVALID_HANDSHAKE
+                http_response_code(401);
+                break;
+            case '4704': // NOT_FOUND
+                http_response_code(404);
+                break;
+        }
         switch ($format) {
             case 'json':
                 echo Json8_Data::error($error_code, $message, $method, $error_type);

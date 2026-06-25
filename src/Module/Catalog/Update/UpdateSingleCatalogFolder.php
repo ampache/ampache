@@ -212,7 +212,6 @@ final class UpdateSingleCatalogFolder extends AbstractCatalogUpdater implements 
                 }
             }
 
-
             if ($scanMode) {
                 ob_start();
 
