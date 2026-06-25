@@ -37,7 +37,16 @@ use Ampache\Repository\Model\User;
  */
 final class SearchRules6Method
 {
-    public const string ACTION = 'search_rules';
+    public const string ACTION      = 'search_rules';
+    public const string REST_ACTION = 'rules';
+
+    /**
+     * @param array<string, mixed> $input
+     */
+    public static function rules(array $input, User $user): bool
+    {
+        return self::search_rules($input, $user);
+    }
 
     /**
      * search_rules

@@ -46,7 +46,8 @@ use Exception;
  */
 final class CatalogFile6Method
 {
-    public const string ACTION = 'catalog_file';
+    public const string ACTION      = 'catalog_file';
+    public const string REST_ACTION = 'file';
 
     /**
      * catalog_file
@@ -180,5 +181,20 @@ final class CatalogFile6Method
         }
 
         return true;
+    }
+
+    /**
+     * @param array{
+     *     file: string,
+     *     task: string,
+     *     filter?: int,
+     *     catalog?: int,
+     *     api_format: string,
+     *     auth: string,
+     * } $input
+     */
+    public static function file(array $input, User $user): bool
+    {
+        return self::catalog_file($input, $user);
     }
 }

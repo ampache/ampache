@@ -198,7 +198,7 @@ class Catalog_local extends Catalog
      * add_file
      * @throws Exception
      */
-    public function add_file(string $full_file, array $options, int $counter = 0, ?Interactor $interactor = null): bool
+    public function add_file(string $full_file, array $options, ?Interactor $interactor = null): bool
     {
         // Ensure that we've got our cache
         $this->_create_filecache();
@@ -230,7 +230,7 @@ class Catalog_local extends Catalog
 
         /* If it's a dir run this function again! */
         if (is_dir($full_file)) {
-            $this->add_files($full_file, $options, $counter);
+            $this->add_files($full_file, $options);
 
             /* Change the dir so is_dir works correctly */
             if (!chdir($full_file)) {
@@ -380,11 +380,6 @@ class Catalog_local extends Catalog
             return true;
         }
 
-        // if it matches the pattern
-        if ($counter % 1000 === 0) {
-            debug_event('local.catalog', $full_file . ' ignored, non-audio file or 0 bytes', 5);
-        }
-
         return false;
         // else not an audio file
     }
@@ -397,7 +392,7 @@ class Catalog_local extends Catalog
      * check id3 information against the db.
      * @param array<string, mixed> $options
      */
-    public function add_files(string $path, array $options, int $counter = 0, ?Interactor $interactor = null): int
+    public function add_files(string $path, array $options, ?Interactor $interactor = null): int
     {
         // See if we want a non-root path for the add
         if (isset($options['subdirectory'])) {
@@ -437,19 +432,10 @@ class Catalog_local extends Catalog
             return 0;
         }
 
-        $songsadded = 0;
         /* Recurse through this dir and create the files array */
         while (false !== ($file = readdir($handle))) {
             if ('.' === $file || '..' === $file) {
                 continue;
-            }
-
-            if ($counter % 5000 === 0) {
-                $interactor?->info(
-                    sprintf('Reading directory: %s (processed %d media files)', $path, $counter),
-                    true
-                );
-                debug_event('local.catalog', sprintf('add_files progress: %s (%d  media files)', $path, $counter), 5);
             }
 
             /* Create the new path */
@@ -472,11 +458,9 @@ class Catalog_local extends Catalog
                 }
             }
 
-            $counter++;
-
             try {
-                if ($this->add_file($full_file, $options, $counter, $interactor)) {
-                    $songsadded++;
+                if ($this->add_file($full_file, $options, $interactor)) {
+                    $this->count++;
                 }
             } catch (Exception $error) {
                 $interactor?->info(
@@ -495,7 +479,7 @@ class Catalog_local extends Catalog
         /* Close the dir handle */
         closedir($handle);
 
-        return $songsadded;
+        return $this->count;
     }
 
     public function add_folder(string $folderName, string $folderPath, string $parentPath): ?Folder
@@ -566,7 +550,7 @@ class Catalog_local extends Catalog
             $this->count += $this->getPodcastSyncer()->syncForCatalogs([$this]);
         } else {
             /* Get the songs and then insert them into the db */
-            $this->count += $this->add_files($this->path, $options, 0, $interactor);
+            $this->count = $this->add_files($this->path, $options, $interactor);
             if ($options['parse_playlist'] && count($this->_playlists)) {
                 // Foreach Playlists we found
                 foreach ($this->_playlists as $full_file) {
@@ -1580,12 +1564,6 @@ class Catalog_local extends Catalog
                     true
                 );
                 $dead[] = (int) $oid;
-            } elseif ($count % 1000 == 0) {
-                $interactor?->info(
-                    'progress: ' . $count . '/' . $total . ' on ' . $this->name,
-                    true
-                );
-                debug_event('local.catalog', 'progress: ' . $count . '/' . $total . ' on ' . $this->name, 5);
             }
         }
 

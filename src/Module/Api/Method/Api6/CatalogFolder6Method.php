@@ -191,4 +191,19 @@ final class CatalogFolder6Method
 
         return true;
     }
+
+    /**
+     * @param array{
+     *     folder: string,
+     *     task: string,
+     *     filter?: int,
+     *     catalog?: int,
+     *     api_format: string,
+     *     auth: string,
+     * } $input
+     */
+    public static function folder(array $input, User $user): bool
+    {
+        return self::catalog_folder($input, $user);
+    }
 }
