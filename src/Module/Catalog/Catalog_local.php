@@ -550,7 +550,7 @@ class Catalog_local extends Catalog
             $this->count += $this->getPodcastSyncer()->syncForCatalogs([$this]);
         } else {
             /* Get the songs and then insert them into the db */
-            $this->add_files($this->path, $options, $interactor);
+            $this->count = $this->add_files($this->path, $options, $interactor);
             if ($options['parse_playlist'] && count($this->_playlists)) {
                 // Foreach Playlists we found
                 foreach ($this->_playlists as $full_file) {

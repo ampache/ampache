@@ -39,7 +39,22 @@ use Ampache\Repository\Model\User;
  */
 final class CatalogAction6Method
 {
-    public const string ACTION = 'catalog_action';
+    public const string ACTION      = 'catalog_action';
+    public const string REST_ACTION = 'action';
+
+    /**
+     * @param array{
+     *     task: string,
+     *     filter?: int,
+     *     catalog?: int,
+     *     api_format: string,
+     *     auth: string,
+     * } $input
+     */
+    public static function action(array $input, User $user): bool
+    {
+        return self::catalog_action($input, $user);
+    }
 
     /**
      * catalog_action

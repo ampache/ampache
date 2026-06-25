@@ -42,7 +42,26 @@ use Ampache\Repository\Model\Video;
  */
 final class Player6Method
 {
-    public const string ACTION = 'player';
+    public const string ACTION      = 'player';
+    public const string REST_ACTION = 'playback';
+
+    /**
+     * @param array{
+     *     filter: string,
+     *     type?: string,
+     *     state?: string,
+     *     time?: int,
+     *     client?: string,
+     *     offset?: int,
+     * limit?: int,
+     * api_format: string,
+     * auth: string,
+     * } $input
+     */
+    public static function playback(array $input, User $user): bool
+    {
+        return self::player($input, $user);
+    }
 
     /**
      * player

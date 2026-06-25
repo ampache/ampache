@@ -629,9 +629,11 @@ final class ApiHandler implements ApiHandlerInterface
             'fetch-info' => 'update_artist_info',
             'fetch-metadata' => 'get_external_metadata',
             'friends-timeline' => 'friends_timeline',
+            'follow' => 'toggle_follow',
             'genres_albums' => 'genre_albums',
             'genres_artists' => 'genre_artists',
             'genres_songs' => 'genre_songs',
+            'groups' => 'search_groups',
             'similar', 'get_similar_artists', 'get-similar_artists', 'similar_artists', 'get_similar_songs', 'get-similar_songs', 'similar_songs' => 'get_similar',
             'labels_artists' => 'label_artists',
             'last-shouts' => 'last_shouts',
@@ -697,12 +699,15 @@ final class ApiHandler implements ApiHandlerInterface
             if ($action === 'preferences' && ($type === 'user' || $type === 'system')) {
                 $action = $type . '_' . $action;
             }
+            if ($action === 'folder' && $type === 'catalog') {
+                $action = 'catalog_folder';
+            }
 
             if ($action === 'create' && ($type === 'album' || $type === 'artist' || $type === 'playlist' || $type === 'smartlist' || $type === 'podcast' || $type === 'podcast_episode' || $type === 'song' || $type === 'video')) {
                 $action = 'share_create';
             }
             if ($action === 'deleted' && ($type === 'podcast_episode' || $type === 'song' || $type === 'video')) {
-                $action = $action . '_' . $type;
+                $action = $action . '_' . $type . 's';
             }
 
             if (

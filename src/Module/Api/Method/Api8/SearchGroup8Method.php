@@ -39,7 +39,26 @@ use Ampache\Repository\Model\User;
  */
 final class SearchGroup8Method
 {
-    public const string ACTION = 'search_group';
+    public const string ACTION      = 'search_group';
+    public const string REST_ACTION = 'groups';
+
+    /**
+     * @param array{
+     *     operator: string,
+     *     rule_1: string,
+     *     rule_1_operator: int,
+     *     rule_1_input: mixed,
+     *     type?: string,
+     *     offset?: int,
+     *     limit?: int,
+     *     api_format: string,
+     *     auth: string,
+     * } $input
+     */
+    public static function groups(array $input, User $user): bool
+    {
+        return self::search_group($input, $user);
+    }
 
     /**
      * search_group
