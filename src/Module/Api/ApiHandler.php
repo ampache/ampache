@@ -633,7 +633,7 @@ final class ApiHandler implements ApiHandlerInterface
             'genres_albums' => 'genre_albums',
             'genres_artists' => 'genre_artists',
             'genres_songs' => 'genre_songs',
-            'groups' => 'search_groups',
+            'groups' => 'search_group',
             'similar', 'get_similar_artists', 'get-similar_artists', 'similar_artists', 'get_similar_songs', 'get-similar_songs', 'similar_songs' => 'get_similar',
             'labels_artists' => 'label_artists',
             'last-shouts' => 'last_shouts',
