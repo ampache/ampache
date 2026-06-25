@@ -647,7 +647,6 @@ final class ApiHandler implements ApiHandlerInterface
             'playlists_songs' => 'playlist_songs',
             'playlists_add' => 'playlist_add',
             'podcast-episodes' => 'podcast_episodes',
-            'preferences' => 'user_preferences',
             'record-play' => 'record_play',
             'remove-song' => 'remove_song',
             'smartlists_delete' => 'smartlist_delete',
