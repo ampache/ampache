@@ -1793,9 +1793,6 @@ class Xml8_Data
      * _filter_objects
      *
      * This filters the objects based on the limit and offset
-     *
-     * @param array<int|string>|array<int, array{id: int|string, name: string}>|array<int, array{ id: int, addition_time: int, delete_time: int, title: string, file: string, catalog: int, total_count: int, total_skip: int, update_time?: int, album?: int, artist?: int, podcast?: int}> $objects
-     * @return array<int|string>
      */
     private static function _filter_objects(array $objects, ?bool $encode = null): array
     {
