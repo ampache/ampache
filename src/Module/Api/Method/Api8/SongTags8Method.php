@@ -65,7 +65,7 @@ final class SongTags8Method
         $song      = new Song($object_id);
         if ($song->isNew()) {
             /* HINT: Requested object string/id/type ("album", "myusername", "some song title", 1298376) */
-            Api::error(sprintf('Not Found: %s', $object_id), ErrorCodeEnum::NOT_FOUND, self::ACTION, 'filter', $input['api_format']);
+            Api::error(ErrorCodeEnum::NOT_FOUND, sprintf('Not Found: %s', $object_id), self::ACTION, 'filter', $input['api_format']);
 
             return false;
         }

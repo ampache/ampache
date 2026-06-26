@@ -61,7 +61,7 @@ Ui::show_box_top($art_type, 'box box_get_albumart'); ?>
                     </td>
                     <td>
                        <input type="text"
-                    id="option_<?php echo $key . '"'; ?>
+                    id="option_<?php echo $key; ?>"
                     name="option_<?php echo $key; ?>"
                     value="<?php echo scrub_out(unhtmlentities($word['value'])); ?>"
                     <?php

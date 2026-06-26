@@ -273,8 +273,8 @@ class Browse extends Query
                 // Check for a range, if no range default to gt
                 if (strpos((string) $value, '/')) {
                     $elements = explode('/', (string) $value);
-                    $this->set_filter('add_lt', strtotime((string) $elements[1]));
-                    $this->set_filter('add_gt', strtotime((string) $elements[0]));
+                    $this->set_filter('add_lt', strtotime($elements[1]));
+                    $this->set_filter('add_gt', strtotime($elements[0]));
                 } else {
                     $this->set_filter('add_gt', strtotime((string) $value));
                 }
@@ -283,8 +283,8 @@ class Browse extends Query
                 // Check for a range, if no range default to gt
                 if (strpos((string) $value, '/')) {
                     $elements = explode('/', (string) $value);
-                    $this->set_filter('update_lt', strtotime((string) $elements[1]));
-                    $this->set_filter('update_gt', strtotime((string) $elements[0]));
+                    $this->set_filter('update_lt', strtotime($elements[1]));
+                    $this->set_filter('update_gt', strtotime($elements[0]));
                 } else {
                     $this->set_filter('update_gt', strtotime((string) $value));
                 }
@@ -306,8 +306,8 @@ class Browse extends Query
      */
     public function set_conditions(string $cond): void
     {
-        foreach ((explode(';', (string) $cond)) as $condition) {
-            $filter = (explode(',', (string) $condition));
+        foreach ((explode(';', $cond)) as $condition) {
+            $filter = (explode(',', $condition));
             if (!empty($filter[0])) {
                 $this->set_filter(strtolower($filter[0]), ($filter[1] ?: null));
             }

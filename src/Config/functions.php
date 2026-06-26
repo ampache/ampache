@@ -96,7 +96,7 @@ function scrub_out(?string $string): string
         return '';
     }
 
-    return htmlentities((string) $string, ENT_QUOTES, AmpConfig::get('site_charset', 'UTF-8'));
+    return htmlentities($string, ENT_QUOTES, AmpConfig::get('site_charset', 'UTF-8'));
 }
 
 /**
@@ -105,7 +105,7 @@ function scrub_out(?string $string): string
  */
 function unhtmlentities(string $string): string
 {
-    return html_entity_decode((string) $string, ENT_QUOTES, AmpConfig::get('site_charset', 'UTF-8'));
+    return html_entity_decode($string, ENT_QUOTES, AmpConfig::get('site_charset', 'UTF-8'));
 }
 
 /**
@@ -395,8 +395,8 @@ function check_config_values(array $conf): bool
  */
 function return_bytes(string $val): int
 {
-    $val  = trim((string) $val);
-    $last = strtolower((string) $val[strlen((string) $val) - 1]);
+    $val  = trim($val);
+    $last = strtolower((string) $val[strlen($val) - 1]);
     switch ($last) {
         case 'g':
             $val = (int) $val * 1024;
@@ -556,7 +556,7 @@ function debug_event(string $type, string $message, int $level, string $username
     $logger = $dic->get(LoggerInterface::class);
 
     // If the message is multiple lines, make multiple log lines
-    foreach (explode("\n", (string) $message) as $line) {
+    foreach (explode("\n", $message) as $line) {
         $logger->log(
             $level,
             $line,
@@ -604,10 +604,10 @@ function return_referer(): string
     } else {
         $file = basename($referer);
         /* Strip off the filename */
-        $referer = substr($referer, 0, strlen((string) $referer) - strlen((string) $file));
+        $referer = substr($referer, 0, strlen($referer) - strlen($file));
     }
 
-    if (substr($referer, strlen((string) $referer) - 6, 6) == 'admin/') {
+    if (substr($referer, strlen($referer) - 6, 6) == 'admin/') {
         $file = 'admin/' . $file;
     }
 
@@ -649,7 +649,7 @@ function show_album_select(string $name, int $album_id = 0, bool $allow_add = fa
 
     while ($row = Dba::fetch_assoc($db_results)) {
         $selected   = '';
-        $album_name = trim((string) $row['prefix'] . " " . $row['name']);
+        $album_name = trim($row['prefix'] . " " . $row['name']);
         if ($row['id'] == $album_id) {
             $selected = "selected=\"selected\"";
         }
@@ -1009,11 +1009,11 @@ function get_theme(string $name): ?array
 {
     static $_mapcache = [];
 
-    if (strlen((string) $name) < 1) {
+    if (strlen($name) < 1) {
         return null;
     }
 
-    $name = strtolower((string) $name);
+    $name = strtolower($name);
 
     if (array_key_exists($name, $_mapcache)) {
         return $_mapcache[$name];

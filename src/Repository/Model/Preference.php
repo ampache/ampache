@@ -746,14 +746,14 @@ class Preference extends database_object
         }
 
         if ($subcategory !== null) {
-            $subcategory = strtolower((string) $subcategory);
+            $subcategory = strtolower($subcategory);
         }
 
         // Work around ampache 5 preference insert < Ampache\Module\System\Update\Migration\V6\Migration600051
         $sql = (Dba::read('SELECT `category` FROM `preference` LIMIT 1;', [], true))
             ? "INSERT INTO `preference` (`name`, `description`, `value`, `level`, `type`, `category`, `subcategory`) VALUES (?, ?, ?, ?, ?, ?, ?)"
             : "INSERT INTO `preference` (`name`, `description`, `value`, `level`, `type`, `catagory`, `subcatagory`) VALUES (?, ?, ?, ?, ?, ?, ?)";
-        $db_results = Dba::write($sql, [$name, $description, $default, (int) $level, $type, $category, $subcategory]);
+        $db_results = Dba::write($sql, [$name, $description, $default, $level, $type, $category, $subcategory]);
         if (!$db_results) {
             return false;
         }

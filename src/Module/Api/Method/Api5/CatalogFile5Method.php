@@ -80,13 +80,13 @@ final class CatalogFile5Method
 
         // confirm that a valid task is going to happen
         if (!AmpConfig::get('delete_from_disk') && in_array('remove', $task)) {
-            Api5::error(T_('Enable: delete_from_disk'), ErrorCodeEnum::ACCESS_DENIED, self::ACTION, 'system', $input['api_format']);
+            Api5::error(ErrorCodeEnum::ACCESS_DENIED, T_('Enable: delete_from_disk'), self::ACTION, 'system', $input['api_format']);
 
             return false;
         }
         if (!file_exists($file) && !in_array('clean', $task)) {
             /* HINT: Requested object string/id/type ("album", "myusername", "some song title", 1298376) */
-            Api5::error(sprintf(T_('Not Found: %s'), $file), ErrorCodeEnum::NOT_FOUND, self::ACTION, 'file', $input['api_format']);
+            Api5::error(ErrorCodeEnum::NOT_FOUND, sprintf(T_('Not Found: %s'), $file), self::ACTION, 'file', $input['api_format']);
 
             return false;
         }
@@ -94,7 +94,7 @@ final class CatalogFile5Method
         foreach ($task as $item) {
             if (!in_array($item, ['add', 'clean', 'verify', 'remove'])) {
                 /* HINT: Requested object string/id/type ("album", "myusername", "some song title", 1298376) */
-                Api5::error(sprintf(T_('Bad Request: %s'), $item), ErrorCodeEnum::BAD_REQUEST, self::ACTION, 'task', $input['api_format']);
+                Api5::error(ErrorCodeEnum::BAD_REQUEST, sprintf(T_('Bad Request: %s'), $item), self::ACTION, 'task', $input['api_format']);
 
                 return false;
             }
@@ -105,7 +105,7 @@ final class CatalogFile5Method
         $catalog     = Catalog::create_from_id($catalog_id);
         if ($catalog === null) {
             /* HINT: Requested object string/id/type ("album", "myusername", "some song title", 1298376) */
-            Api5::error(sprintf(T_('Not Found: %s'), $catalog_id), ErrorCodeEnum::NOT_FOUND, self::ACTION, 'catalog', $input['api_format']);
+            Api5::error(ErrorCodeEnum::NOT_FOUND, sprintf(T_('Not Found: %s'), $catalog_id), self::ACTION, 'catalog', $input['api_format']);
 
             return false;
         }
@@ -162,7 +162,7 @@ final class CatalogFile5Method
             }
             Api5::message('successfully started: ' . $output_task . ' for ' . $file, $input['api_format']);
         } else {
-            Api5::error(T_('Not Found'), ErrorCodeEnum::NOT_FOUND, self::ACTION, 'catalog', $input['api_format']);
+            Api5::error(ErrorCodeEnum::NOT_FOUND, T_('Not Found'), self::ACTION, 'catalog', $input['api_format']);
         }
 
         return true;

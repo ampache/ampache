@@ -102,14 +102,14 @@ final class UserUpdate5Method
         $update_user = User::get_from_username($username);
         if ($update_user === null) {
             /* HINT: Requested object string/id/type ("album", "myusername", "some song title", 1298376) */
-            Api5::error(sprintf(T_('Bad Request: %s'), $username), ErrorCodeEnum::BAD_REQUEST, self::ACTION, 'username', $input['api_format']);
+            Api5::error(ErrorCodeEnum::BAD_REQUEST, sprintf(T_('Bad Request: %s'), $username), self::ACTION, 'username', $input['api_format']);
 
             return false;
         }
 
         if ($password && $update_user->access == 100) {
             /* HINT: Requested object string/id/type ("album", "myusername", "some song title", 1298376) */
-            Api5::error(sprintf(T_('Bad Request: %s'), $username), ErrorCodeEnum::BAD_REQUEST, self::ACTION, 'system', $input['api_format']);
+            Api5::error(ErrorCodeEnum::BAD_REQUEST, sprintf(T_('Bad Request: %s'), $username), self::ACTION, 'system', $input['api_format']);
 
             return false;
         }
@@ -148,7 +148,7 @@ final class UserUpdate5Method
             return true;
         }
         /* HINT: Requested object string/id/type ("album", "myusername", "some song title", 1298376) */
-        Api5::error(sprintf(T_('Bad Request: %s'), $username), ErrorCodeEnum::BAD_REQUEST, self::ACTION, 'system', $input['api_format']);
+        Api5::error(ErrorCodeEnum::BAD_REQUEST, sprintf(T_('Bad Request: %s'), $username), self::ACTION, 'system', $input['api_format']);
 
         return false;
     }

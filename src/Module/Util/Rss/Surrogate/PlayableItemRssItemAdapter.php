@@ -110,7 +110,7 @@ final readonly class PlayableItemRssItemAdapter implements RssItemInterface
                     ? 'https://musicbrainz.org/recording/' . $media->mbid
                     : $media->get_link(),
                 'isPermaLink' => 'true',
-                'length' => (string) $media->get_f_time(),
+                'length' => $media->get_f_time(),
                 'author' => $media->get_parent_fullname(),
                 'pubDate' => null,
                 'type' => null,

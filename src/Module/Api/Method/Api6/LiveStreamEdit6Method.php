@@ -81,7 +81,7 @@ final class LiveStreamEdit6Method
         $item      = new Live_Stream($object_id);
         if ($item->isNew()) {
             /* HINT: Requested object string/id/type ("album", "myusername", "some song title", 1298376) */
-            Api6::error(sprintf('Not Found: %s', $object_id), ErrorCodeEnum::NOT_FOUND, self::ACTION, 'filter', $input['api_format']);
+            Api6::error(ErrorCodeEnum::NOT_FOUND, sprintf('Not Found: %s', $object_id), self::ACTION, 'filter', $input['api_format']);
 
             return false;
         }
@@ -110,7 +110,7 @@ final class LiveStreamEdit6Method
         $catalog = Catalog::create_from_id($catalog_id);
         if ($catalog === null) {
             /* HINT: Requested object string/id/type ("album", "myusername", "some song title", 1298376) */
-            Api6::error(sprintf('Not Found: %s', $catalog_id), ErrorCodeEnum::NOT_FOUND, self::ACTION, 'catalog', $input['api_format']);
+            Api6::error(ErrorCodeEnum::NOT_FOUND, sprintf('Not Found: %s', $catalog_id), self::ACTION, 'catalog', $input['api_format']);
 
             return false;
         }

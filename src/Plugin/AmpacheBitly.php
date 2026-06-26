@@ -56,10 +56,10 @@ class AmpacheBitly extends AmpachePlugin implements PluginShortenerInterface
     #[Override]
     public string $version = '000003';
 
-    private $bitly_group_guid;
+    private string $bitly_group_guid;
 
     // These are internal settings used by this class, run this->load to fill them out
-    private $bitly_token;
+    private string $bitly_token;
 
     /**
      * Constructor
@@ -141,7 +141,7 @@ class AmpacheBitly extends AmpachePlugin implements PluginShortenerInterface
             debug_event('bitly.plugin', 'Bit.ly api call made', 4);
             $request = Requests::post($apiurl, $headers, json_encode($data), Core::requests_options());
 
-            $result = json_decode((string) $request->body);
+            $result = json_decode($request->body);
 
             if ($result->errors) {
                 if ($result->message === "INVALID_ARG_LONG_URL") {

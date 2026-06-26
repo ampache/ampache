@@ -1036,8 +1036,8 @@ class Art extends database_object
 
         imagecopyresampled($thumbnail, $source, 0, 0, $src_x, $src_y, $dst_width, $dst_height, $new_width, $new_height);
 
-        $data = explode('/', (string) $mime);
-        $type = ((string) ($data[1] ?? '') !== '') ? strtolower($data[1]) : 'jpg';
+        $data = explode('/', $mime);
+        $type = (($data[1] ?? '') !== '') ? strtolower($data[1]) : 'jpg';
 
         // Start output buffer
         ob_start();

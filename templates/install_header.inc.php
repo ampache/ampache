@@ -38,11 +38,11 @@ $htmllang = str_replace("_", "-", $lang);
     <!-- Propelled by Ampache | ampache.org -->
     <meta http-equiv="Content-Type" content="text/html; Charset=<?php echo $charset; ?>">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta http-equiv="cache-control" content="max-age=0">
-    <meta http-equiv="cache-control" content="no-cache">
-    <meta http-equiv="expires" content="0">
-    <meta http-equiv="expires" content="Tue, 01 Jan 1980 1:00:00 GMT">
-    <meta http-equiv="pragma" content="no-cache">
+    <meta http-equiv="refresh" content="max-age=0">
+    <meta http-equiv="refresh" content="no-cache">
+    <meta http-equiv="refresh" content="0">
+    <meta http-equiv="refresh" content="Tue, 01 Jan 1980 1:00:00 GMT">
+    <meta http-equiv="refresh" content="no-cache">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
     <title><?php echo T_('Ampache') . ' :: ' . T_('For the Love of Music') . ' - ' . T_('Installation'); ?></title>

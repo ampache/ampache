@@ -176,7 +176,7 @@ class AlbumDisk extends database_object implements
                     Dba::write("UPDATE `song` SET `disk` = ? WHERE `album` = ? AND `disk` = ?;", [$disk, $album_id, $row['disk']]);
                 }
 
-                return (int) $current_id;
+                return $current_id;
             }
         }
 
@@ -197,7 +197,7 @@ class AlbumDisk extends database_object implements
             Dba::write($sql, [$disksubtitle, $album_disk_id]);
         }
 
-        return (int) $album_id;
+        return $album_id;
     }
 
     /**
@@ -382,12 +382,12 @@ class AlbumDisk extends database_object implements
             'artist' => [
                 'important' => true,
                 'label' => T_('Artist'),
-                'value' => (string) $this->get_parent_fullname(),
+                'value' => $this->get_parent_fullname(),
             ],
             'album' => [
                 'important' => true,
                 'label' => T_('Album'),
-                'value' => (string) $this->get_fullname(true),
+                'value' => $this->get_fullname(true),
             ],
             'year' => [
                 'important' => false,

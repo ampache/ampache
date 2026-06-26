@@ -76,14 +76,14 @@ final class GetBookmark8Method
         $include   = make_bool($input['include'] ?? false);
         $all       = make_bool($input['all'] ?? false);
         if (!AmpConfig::get('allow_video') && $type == 'video') {
-            Api::error('Enable: video', ErrorCodeEnum::ACCESS_DENIED, self::ACTION, 'system', $input['api_format']);
+            Api::error(ErrorCodeEnum::ACCESS_DENIED, 'Enable: video', self::ACTION, 'system', $input['api_format']);
 
             return false;
         }
         // confirm the correct data
         if (!in_array(strtolower($type), ['bookmark', 'song', 'video', 'podcast_episode'])) {
             /* HINT: Requested object string/id/type ("album", "myusername", "some song title", 1298376) */
-            Api::error(sprintf('Bad Request: %s', $type), ErrorCodeEnum::BAD_REQUEST, self::ACTION, 'type', $input['api_format']);
+            Api::error(ErrorCodeEnum::BAD_REQUEST, sprintf('Bad Request: %s', $type), self::ACTION, 'type', $input['api_format']);
 
             return false;
         }
@@ -91,7 +91,7 @@ final class GetBookmark8Method
         $className = ObjectTypeToClassNameMapper::map($type);
         if ($className === $type || !$object_id) {
             /* HINT: Requested object string/id/type ("album", "myusername", "some song title", 1298376) */
-            Api::error(sprintf('Bad Request: %s', $type), ErrorCodeEnum::BAD_REQUEST, self::ACTION, 'type', $input['api_format']);
+            Api::error(ErrorCodeEnum::BAD_REQUEST, sprintf('Bad Request: %s', $type), self::ACTION, 'type', $input['api_format']);
 
             return false;
         }
@@ -100,7 +100,7 @@ final class GetBookmark8Method
         $item = new $className($object_id);
         if ($item->isNew()) {
             /* HINT: Requested object string/id/type ("album", "myusername", "some song title", 1298376) */
-            Api::error(sprintf('Not Found: %s', $object_id), ErrorCodeEnum::NOT_FOUND, self::ACTION, 'filter', $input['api_format']);
+            Api::error(ErrorCodeEnum::NOT_FOUND, sprintf('Not Found: %s', $object_id), self::ACTION, 'filter', $input['api_format']);
 
             return false;
         }

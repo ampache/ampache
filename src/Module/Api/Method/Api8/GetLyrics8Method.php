@@ -68,7 +68,7 @@ final class GetLyrics8Method
         $libitem   = new Song($object_id);
 
         if ($libitem->isNew()) {
-            Api::error(sprintf('Bad Request: %s', $object_id), ErrorCodeEnum::BAD_REQUEST, self::ACTION, 'filter', $input['api_format']);
+            Api::error(ErrorCodeEnum::BAD_REQUEST, sprintf('Bad Request: %s', $object_id), self::ACTION, 'filter', $input['api_format']);
 
             return false;
         }

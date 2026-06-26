@@ -82,7 +82,7 @@ final readonly class GoogleCollectorModule implements CollectorModuleInterface
             $query = Requests::get($url, $headers, Core::requests_options());
             $html  = $query->body;
 
-            if (preg_match_all('/"ou":"(http.+?)"/', (string) $html, $matches, PREG_PATTERN_ORDER)) {
+            if (preg_match_all('/"ou":"(http.+?)"/', $html, $matches, PREG_PATTERN_ORDER)) {
                 foreach ($matches[1] as $match) {
                     if (preg_match('/lookaside\.fbsbx\.com/', $match)) {
                         break;

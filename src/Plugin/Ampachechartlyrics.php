@@ -73,7 +73,7 @@ class Ampachechartlyrics extends AmpachePlugin implements PluginGetLyricsInterfa
         $uri     = $base . 'SearchLyricDirect?artist=' . urlencode($song->get_parent_fullname()) . '&song=' . urlencode((string) $song->title);
         $request = Requests::get($uri, [], Core::requests_options());
         if ($request->status_code == 200) {
-            $xml = simplexml_load_string((string) $request->body);
+            $xml = simplexml_load_string($request->body);
             if (
                 $xml
                 && !empty($xml->Lyric)

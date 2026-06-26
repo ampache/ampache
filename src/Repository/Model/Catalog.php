@@ -75,7 +75,6 @@ use Ampache\Repository\WantedRepositoryInterface;
 use DateTime;
 use Exception;
 use Generator;
-use Kunnu\Dropbox\Exceptions\DropboxClientException;
 use RecursiveDirectoryIterator;
 use RecursiveIteratorIterator;
 use RegexIterator;
@@ -146,7 +145,7 @@ abstract class Catalog extends database_object
     /* Used in functions */
 
     public ?string $catalog_type = null;
-    public bool $enabled;
+    public bool $enabled         = true;
     public ?string $gather_types = '';
     public int $id               = 0;
     public int $last_add;
@@ -322,7 +321,7 @@ abstract class Catalog extends database_object
 
                         if (
                             $extension
-                            && !((bool) AmpConfig::get('cache_' . $extension, false))
+                            && !(AmpConfig::get('cache_' . $extension, false))
                         ) {
                             unlink($file);
                             debug_event(self::class, 'cache_catalogs: removed (cache_' . $extension . ' ' . $song->file . ') {' . $file . '}', 4);
@@ -376,7 +375,7 @@ abstract class Catalog extends database_object
                     CURLOPT_FILE => $filehandle,
                     CURLOPT_TIMEOUT => 0,
                     CURLOPT_PIPEWAIT => true,
-                    CURLOPT_URL => (string) $remote_url,
+                    CURLOPT_URL => $remote_url,
                 ]
             );
             curl_exec($curl);
@@ -475,7 +474,7 @@ abstract class Catalog extends database_object
      */
     public static function check_title(string $title, string $file = ''): string
     {
-        if (strlen(trim((string) $title)) < 1) {
+        if (strlen(trim($title)) < 1) {
             $title = Dba::escape($file) ?? '';
         }
 
@@ -740,11 +739,7 @@ abstract class Catalog extends database_object
 
         self::clear_catalog_cache();
 
-        try {
-            $create_type = $classname::create_type($insert_id, $data);
-        } catch (DropboxClientException) {
-            $create_type = false;
-        }
+        $create_type = $classname::create_type($insert_id, $data);
 
         if (!$create_type) {
             $sql = 'DELETE FROM `catalog` WHERE `id` = ?';
@@ -1841,7 +1836,7 @@ abstract class Catalog extends database_object
                 break;
             case 'song_artist':
             case 'song_album':
-                $type = str_replace('song_', '', (string) $type);
+                $type = str_replace('song_', '', $type);
                 $sql  = ($system)
                     ? sprintf(' `song`.`%s` IN (SELECT `catalog_map`.`object_id` FROM `catalog_map` LEFT JOIN `catalog` ON `catalog_map`.`catalog_id` = `catalog`.`id` WHERE `catalog_map`.`object_type` = \'%s\' AND `catalog`.`id` IN (SELECT `catalog_id` FROM `catalog_filter_group_map` WHERE `catalog_filter_group_map`.`group_id` = 0 AND `catalog_filter_group_map`.`enabled`=1) GROUP BY `catalog_map`.`object_id`) ', $type, $type)
                     : sprintf(' `song`.`%s` IN (SELECT `catalog_map`.`object_id` FROM `catalog_map` LEFT JOIN `catalog` ON `catalog_map`.`catalog_id` = `catalog`.`id` WHERE `catalog_map`.`object_type` = \'%s\' AND `catalog`.`id` IN (SELECT `catalog_id` FROM `catalog_filter_group_map` INNER JOIN `user` ON `user`.`catalog_filter_group` = `catalog_filter_group_map`.`group_id` WHERE `user`.`id` = %d AND `catalog_filter_group_map`.`enabled`=1) GROUP BY `catalog_map`.`object_id`) ', $type, $type, $user_id);
@@ -1892,7 +1887,7 @@ abstract class Catalog extends database_object
             case 'object_count_podcast':
             case 'object_count_song':
             case 'object_count_video':
-                $type = str_replace('object_count_', '', (string) $type);
+                $type = str_replace('object_count_', '', $type);
                 $sql  = ($system)
                     ? sprintf(' `object_count`.`object_id` IN (SELECT `catalog_map`.`object_id` FROM `catalog_map` LEFT JOIN `catalog` ON `catalog_map`.`catalog_id` = `catalog`.`id` WHERE `catalog_map`.`object_type` = \'%s\' AND `catalog`.`id` IN (SELECT `catalog_id` FROM `catalog_filter_group_map` WHERE `catalog_filter_group_map`.`group_id` = 0 AND `catalog_filter_group_map`.`enabled`=1) GROUP BY `catalog_map`.`object_id`) ', $type)
                     : sprintf(' `object_count`.`object_id` IN (SELECT `catalog_map`.`object_id` FROM `catalog_map` LEFT JOIN `catalog` ON `catalog_map`.`catalog_id` = `catalog`.`id` WHERE `catalog_map`.`object_type` = \'%s\' AND `catalog`.`id` IN (SELECT `catalog_id` FROM `catalog_filter_group_map` INNER JOIN `user` ON `user`.`catalog_filter_group` = `catalog_filter_group_map`.`group_id` WHERE `user`.`id` = %d AND `catalog_filter_group_map`.`enabled`=1) GROUP BY `catalog_map`.`object_id`) ', $type, $user_id);
@@ -1911,7 +1906,7 @@ abstract class Catalog extends database_object
             case 'rating_song':
             case 'rating_stream':
             case 'rating_video':
-                $type = str_replace('rating_', '', (string) $type);
+                $type = str_replace('rating_', '', $type);
                 $sql  = ($system)
                     ? sprintf(' `rating`.`object_id` IN (SELECT `catalog_map`.`object_id` FROM `catalog_map` LEFT JOIN `catalog` ON `catalog_map`.`catalog_id` = `catalog`.`id` WHERE `catalog_map`.`object_type` = \'%s\' AND `catalog`.`id` IN (SELECT `catalog_id` FROM `catalog_filter_group_map` WHERE `catalog_filter_group_map`.`group_id` = 0 AND `catalog_filter_group_map`.`enabled`=1) GROUP BY `catalog_map`.`object_id`) ', $type)
                     : sprintf(' `rating`.`object_id` IN (SELECT `catalog_map`.`object_id` FROM `catalog_map` LEFT JOIN `catalog` ON `catalog_map`.`catalog_id` = `catalog`.`id` WHERE `catalog_map`.`object_type` = \'%s\' AND `catalog`.`id` IN (SELECT `catalog_id` FROM `catalog_filter_group_map` INNER JOIN `user` ON `user`.`catalog_filter_group` = `catalog_filter_group_map`.`group_id` WHERE `user`.`id` = %d AND `catalog_filter_group_map`.`enabled`=1) GROUP BY `catalog_map`.`object_id`) ', $type, $user_id);
@@ -1926,7 +1921,7 @@ abstract class Catalog extends database_object
             case 'user_flag_podcast_episode':
             case 'user_flag_song':
             case 'user_flag_video':
-                $type = str_replace('user_flag_', '', (string) $type);
+                $type = str_replace('user_flag_', '', $type);
                 $sql  = ($system)
                     ? sprintf(' `user_flag`.`object_id` IN (SELECT `catalog_map`.`object_id` FROM `catalog_map` LEFT JOIN `catalog` ON `catalog_map`.`catalog_id` = `catalog`.`id` WHERE `catalog_map`.`object_type` = \'%s\' AND `catalog`.`id` IN (SELECT `catalog_id` FROM `catalog_filter_group_map` WHERE `catalog_filter_group_map`.`group_id` = 0 AND `catalog_filter_group_map`.`enabled`=1) GROUP BY `catalog_map`.`object_id`) ', $type)
                     : sprintf(' `user_flag`.`object_id` IN (SELECT `catalog_map`.`object_id` FROM `catalog_map` LEFT JOIN `catalog` ON `catalog_map`.`catalog_id` = `catalog`.`id` WHERE `catalog_map`.`object_type` = \'%s\' AND `catalog`.`id` IN (SELECT `catalog_id` FROM `catalog_filter_group_map` INNER JOIN `user` ON `user`.`catalog_filter_group` = `catalog_filter_group_map`.`group_id` WHERE `user`.`id` = %d AND `catalog_filter_group_map`.`enabled`=1) GROUP BY `catalog_map`.`object_id`) ', $type, $user_id);
@@ -4347,7 +4342,7 @@ abstract class Catalog extends database_object
     public function get_f_add(): string
     {
         return ($this->last_add !== 0)
-            ? get_datetime((int) $this->last_add)
+            ? get_datetime($this->last_add)
             : T_('Never');
     }
 
@@ -4385,7 +4380,7 @@ abstract class Catalog extends database_object
     public function get_f_update(): string
     {
         return ($this->last_update !== 0)
-            ? get_datetime((int) $this->last_update)
+            ? get_datetime($this->last_update)
             : T_('Never');
     }
 

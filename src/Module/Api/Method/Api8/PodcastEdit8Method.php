@@ -73,7 +73,7 @@ final class PodcastEdit8Method
     public static function podcast_edit(array $input, User $user): bool
     {
         if (!AmpConfig::get('podcast')) {
-            Api::error('Enable: podcast', ErrorCodeEnum::ACCESS_DENIED, self::ACTION, 'system', $input['api_format']);
+            Api::error(ErrorCodeEnum::ACCESS_DENIED, 'Enable: podcast', self::ACTION, 'system', $input['api_format']);
 
             return false;
         }
@@ -88,7 +88,7 @@ final class PodcastEdit8Method
 
         if ($podcast === null) {
             /* HINT: Requested object string/id/type ("album", "myusername", "some song title", 1298376) */
-            Api::error(sprintf('Not Found: %s', $podcast_id), ErrorCodeEnum::NOT_FOUND, self::ACTION, 'filter', $input['api_format']);
+            Api::error(ErrorCodeEnum::NOT_FOUND, sprintf('Not Found: %s', $podcast_id), self::ACTION, 'filter', $input['api_format']);
 
             return false;
         }

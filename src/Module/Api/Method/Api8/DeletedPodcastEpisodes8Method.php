@@ -57,7 +57,7 @@ final class DeletedPodcastEpisodes8Method
     {
         unset($user);
         if (!AmpConfig::get('podcast')) {
-            Api::error('Enable: podcast', ErrorCodeEnum::ACCESS_DENIED, self::ACTION, 'system', $input['api_format']);
+            Api::error(ErrorCodeEnum::ACCESS_DENIED, 'Enable: podcast', self::ACTION, 'system', $input['api_format']);
 
             return false;
         }

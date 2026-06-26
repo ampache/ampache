@@ -67,7 +67,7 @@ final class SystemPreference8Method
         $preference = Preference::get($pref_name, -1);
         if (empty($preference)) {
             /* HINT: Requested object string/id/type ("album", "myusername", "some song title", 1298376) */
-            Api::error(sprintf('Not Found: %s', $pref_name), ErrorCodeEnum::NOT_FOUND, self::ACTION, 'filter', $input['api_format']);
+            Api::error(ErrorCodeEnum::NOT_FOUND, sprintf('Not Found: %s', $pref_name), self::ACTION, 'filter', $input['api_format']);
 
             return false;
         }

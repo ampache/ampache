@@ -69,7 +69,7 @@ final class Followers8Method
     public static function followers(array $input, User $user): bool
     {
         if (!AmpConfig::get('sociable')) {
-            Api::error('Enable: sociable', ErrorCodeEnum::ACCESS_DENIED, self::ACTION, 'system', $input['api_format']);
+            Api::error(ErrorCodeEnum::ACCESS_DENIED, 'Enable: sociable', self::ACTION, 'system', $input['api_format']);
 
             return false;
         }
@@ -85,7 +85,7 @@ final class Followers8Method
         if ($leadUser === null) {
             debug_event(self::class, 'User `' . $username . '` cannot be found.', 1);
             /* HINT: Requested object string/id/type ("album", "myusername", "some song title", 1298376) */
-            Api::error(sprintf('Not Found: %s', $username), ErrorCodeEnum::NOT_FOUND, self::ACTION, 'username', $input['api_format']);
+            Api::error(ErrorCodeEnum::NOT_FOUND, sprintf('Not Found: %s', $username), self::ACTION, 'username', $input['api_format']);
 
             return false;
         }
@@ -111,13 +111,13 @@ final class Followers8Method
             case 'json':
                 Json8_Data::set_offset((int) ($input['offset'] ?? 0));
                 Json8_Data::set_limit($input['limit'] ?? 0);
-                Json8_Data::set_count($browse->get_total());
+                Json8_Data::set_count(count($results));
                 echo Json8_Data::users($results);
                 break;
             default:
                 Xml8_Data::set_offset((int) ($input['offset'] ?? 0));
                 Xml8_Data::set_limit($input['limit'] ?? 0);
-                Xml8_Data::set_count($browse->get_total());
+                Xml8_Data::set_count(count($results));
                 echo Xml8_Data::users($results);
         }
 

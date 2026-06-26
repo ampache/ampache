@@ -73,7 +73,7 @@ final class Podcasts8Method
     public static function podcasts(array $input, User $user): bool
     {
         if (!AmpConfig::get('podcast')) {
-            Api::error('Enable: podcast', ErrorCodeEnum::ACCESS_DENIED, self::ACTION, 'system', $input['api_format']);
+            Api::error(ErrorCodeEnum::ACCESS_DENIED, 'Enable: podcast', self::ACTION, 'system', $input['api_format']);
 
             return false;
         }
@@ -103,13 +103,13 @@ final class Podcasts8Method
             case 'json':
                 Json8_Data::set_offset((int) ($input['offset'] ?? 0));
                 Json8_Data::set_limit($input['limit'] ?? 0);
-                Json8_Data::set_count($browse->get_total());
+                Json8_Data::set_count(count($results));
                 echo Json8_Data::podcasts($results, $user, $input['auth'], $episodes);
                 break;
             default:
                 Xml8_Data::set_offset((int) ($input['offset'] ?? 0));
                 Xml8_Data::set_limit($input['limit'] ?? 0);
-                Xml8_Data::set_count($browse->get_total());
+                Xml8_Data::set_count(count($results));
                 echo Xml8_Data::podcasts($results, $user, $input['auth'], $episodes);
         }
 

@@ -65,7 +65,7 @@ final class Videos8Method
     public static function videos(array $input, User $user): bool
     {
         if (!AmpConfig::get('allow_video')) {
-            Api::error('Enable: video', ErrorCodeEnum::ACCESS_DENIED, self::ACTION, 'system', $input['api_format']);
+            Api::error(ErrorCodeEnum::ACCESS_DENIED, 'Enable: video', self::ACTION, 'system', $input['api_format']);
 
             return false;
         }
@@ -91,13 +91,13 @@ final class Videos8Method
             case 'json':
                 Json8_Data::set_offset((int) ($input['offset'] ?? 0));
                 Json8_Data::set_limit($input['limit'] ?? 0);
-                Json8_Data::set_count($browse->get_total());
+                Json8_Data::set_count(count($results));
                 echo Json8_Data::videos($results, $user, $input['auth']);
                 break;
             default:
                 Xml8_Data::set_offset((int) ($input['offset'] ?? 0));
                 Xml8_Data::set_limit($input['limit'] ?? 0);
-                Xml8_Data::set_count($browse->get_total());
+                Xml8_Data::set_count(count($results));
                 echo Xml8_Data::videos($results, $user, $input['auth']);
         }
 

@@ -78,13 +78,13 @@ final class AdvancedSearch5Method
 
         $type = (isset($input['type'])) ? (string) $input['type'] : 'song';
         if (!AmpConfig::get('allow_video') && $type == 'video') {
-            Api5::error(T_('Enable: video'), ErrorCodeEnum::ACCESS_DENIED, self::ACTION, 'system', $input['api_format']);
+            Api5::error(ErrorCodeEnum::ACCESS_DENIED, T_('Enable: video'), self::ACTION, 'system', $input['api_format']);
 
             return false;
         }
         // confirm the correct data
         if (!in_array(strtolower($type), Search::VALID_TYPES)) {
-            Api5::error(sprintf(T_('Bad Request: %s'), $type), ErrorCodeEnum::BAD_REQUEST, self::ACTION, 'type', $input['api_format']);
+            Api5::error(ErrorCodeEnum::BAD_REQUEST, sprintf(T_('Bad Request: %s'), $type), self::ACTION, 'type', $input['api_format']);
 
             return false;
         }

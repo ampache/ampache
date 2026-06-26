@@ -353,7 +353,7 @@ abstract class playlist_object extends database_object implements
             ? $user
             : Core::get_global('user');
 
-        return (bool) (
+        return (
             $user instanceof User
             && !empty($this->collaborate)
             && in_array($user->getId(), array_map('intval', explode(',', (string) $this->collaborate)))

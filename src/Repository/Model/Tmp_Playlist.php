@@ -67,7 +67,7 @@ class Tmp_Playlist extends database_object
             return;
         }
 
-        $this->id = (int) $playlist_id;
+        $this->id = $playlist_id;
     }
 
     /**

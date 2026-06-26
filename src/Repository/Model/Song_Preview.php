@@ -78,7 +78,7 @@ class Song_Preview extends database_object implements Media, displayable_item, c
             $this->$key = $value;
         }
 
-        $this->id = (int) $object_id;
+        $this->id = $object_id;
         if ($this->file) {
             $data       = pathinfo($this->file);
             $this->type = (isset($data['extension']))

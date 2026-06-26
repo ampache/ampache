@@ -53,7 +53,7 @@ class AmpacheGoogleAnalytics extends AmpachePlugin implements PluginDisplayOnFoo
     #[Override]
     public string $version = '000001';
 
-    private $tracking_id;
+    private string $tracking_id;
 
     /**
      * Constructor

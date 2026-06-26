@@ -71,7 +71,7 @@ final class GenreArtists8Method
         $genre     = new Tag($object_id);
         if ($genre->isNew()) {
             /* HINT: Requested object string/id/type ("album", "myusername", "some song title", 1298376) */
-            Api::error(sprintf('Not Found: %s', $object_id), ErrorCodeEnum::NOT_FOUND, self::ACTION, 'filter', $input['api_format']);
+            Api::error(ErrorCodeEnum::NOT_FOUND, sprintf('Not Found: %s', $object_id), self::ACTION, 'filter', $input['api_format']);
 
             return false;
         }
@@ -97,13 +97,13 @@ final class GenreArtists8Method
             case 'json':
                 Json8_Data::set_offset((int) ($input['offset'] ?? 0));
                 Json8_Data::set_limit($input['limit'] ?? 0);
-                Json8_Data::set_count($browse->get_total());
+                Json8_Data::set_count(count($results));
                 echo Json8_Data::artists($results, [], $user, $input['auth']);
                 break;
             default:
                 Xml8_Data::set_offset((int) ($input['offset'] ?? 0));
                 Xml8_Data::set_limit($input['limit'] ?? 0);
-                Xml8_Data::set_count($browse->get_total());
+                Xml8_Data::set_count(count($results));
                 echo Xml8_Data::artists($results, [], $user, $input['auth']);
         }
 

@@ -67,19 +67,19 @@ final class SearchRules6Method
         $type = (string) $input['filter'];
         // confirm the correct data
         if (!in_array(strtolower($type), Search::VALID_TYPES)) {
-            Api6::error(sprintf('Bad Request: %s', $type), ErrorCodeEnum::BAD_REQUEST, self::ACTION, 'type', $input['api_format']);
+            Api6::error(ErrorCodeEnum::BAD_REQUEST, sprintf('Bad Request: %s', $type), self::ACTION, 'type', $input['api_format']);
 
             return false;
         }
 
         if (!AmpConfig::get('allow_video') && $type == 'video') {
-            Api6::error('Enable: video', ErrorCodeEnum::ACCESS_DENIED, self::ACTION, 'system', $input['api_format']);
+            Api6::error(ErrorCodeEnum::ACCESS_DENIED, 'Enable: video', self::ACTION, 'system', $input['api_format']);
 
             return false;
         }
 
         if ($type == 'label' && !AmpConfig::get('label')) {
-            Api6::error('Enable: label', ErrorCodeEnum::ACCESS_DENIED, self::ACTION, 'system', $input['api_format']);
+            Api6::error(ErrorCodeEnum::ACCESS_DENIED, 'Enable: label', self::ACTION, 'system', $input['api_format']);
 
             return false;
         }
