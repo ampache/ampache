@@ -86,9 +86,8 @@ class Xml6_Data
     {
         self::$count = self::$count ?? count($objects);
         $md5         = md5(serialize($objects));
-        if ((self::$count > self::$limit || self::$offset > 0) && (self::$limit && $full_xml)) {
-            $objects = array_slice($objects, self::$offset, self::$limit);
-        }
+        $objects     = self::_filter_objects($objects, $full_xml);
+
         $string = ($full_xml) ? "<total_count>" . Catalog::get_update_info('album', $user->id) . "</total_count>\n<md5>" . $md5 . "</md5>\n" : '';
         // original year (fall back to regular year)
         $original_year = AmpConfig::get('use_original_year');
@@ -152,9 +151,8 @@ class Xml6_Data
     {
         self::$count = self::$count ?? count($objects);
         $md5         = md5(serialize($objects));
-        if ((self::$count > self::$limit || self::$offset > 0) && (self::$limit && $full_xml)) {
-            $objects = array_slice($objects, self::$offset, self::$limit);
-        }
+        $objects     = self::_filter_objects($objects, $full_xml);
+
         $string = ($full_xml) ? "<total_count>" . Catalog::get_update_info('artist', $user->id) . "</total_count>\n<md5>" . $md5 . "</md5>\n" : '';
 
         Rating::build_cache('artist', $objects);
@@ -235,11 +233,11 @@ class Xml6_Data
      */
     public static function browses(array $objects, ?int $parent_id, string $parent_type, string $child_type, ?int $catalog_id): string
     {
-        self::$count  = self::$count ?? count($objects);
-        $string       = "<total_count>" . self::$count . "</total_count>\n<md5>" . md5(serialize($objects)) . "</md5>\n";
-        if ((self::$count > self::$limit || self::$offset > 0) && self::$limit) {
-            $objects = array_slice($objects, self::$offset, self::$limit);
-        }
+        self::$count = self::$count ?? count($objects);
+        $md5         = md5(serialize($objects));
+        $objects     = self::_filter_objects($objects);
+        $string      = "<total_count>" . self::$count . "</total_count>\n<md5>" . $md5 . "</md5>\n";
+
         $string .= "<catalog_id>" . $catalog_id . "</catalog_id>\n"
             . "<parent_id>" . $parent_id . "</parent_id>\n"
             . "<parent_type>" . $parent_type . "</parent_type>\n"
@@ -271,9 +269,8 @@ class Xml6_Data
     {
         self::$count = self::$count ?? count($objects);
         $md5         = md5(serialize($objects));
-        if ((self::$count > self::$limit || self::$offset > 0) && self::$limit) {
-            $objects = array_slice($objects, self::$offset, self::$limit);
-        }
+        $objects     = self::_filter_objects($objects, $full_xml);
+
         $string = ($full_xml) ? "<total_count>" . Catalog::get_update_info('catalog', $user->id) . "</total_count>\n<md5>" . $md5 . "</md5>\n" : '';
 
         foreach ($objects as $catalog_id) {
@@ -312,9 +309,7 @@ class Xml6_Data
     public static function deleted(string $object_type, array $objects): string
     {
         self::$count = self::$count ?? count($objects);
-        if ((self::$count > self::$limit || self::$offset > 0) && self::$limit) {
-            $objects = array_slice($objects, self::$offset, self::$limit);
-        }
+        $objects     = self::_filter_objects($objects);
 
         $string = '';
         // here is where we call the object type
@@ -428,9 +423,8 @@ class Xml6_Data
     {
         self::$count = self::$count ?? count($objects);
         $md5         = md5(serialize($objects));
-        if ((self::$count > self::$limit || self::$offset > 0) && self::$limit) {
-            $objects = array_slice($objects, self::$offset, self::$limit);
-        }
+        $objects     = self::_filter_objects($objects);
+
         $string = "<total_count>" . Catalog::get_update_info('tag', $user->id) . "</total_count>\n<md5>" . $md5 . "</md5>\n";
 
         foreach ($objects as $tag_id) {
@@ -465,9 +459,8 @@ class Xml6_Data
     {
         self::$count = self::$count ?? count($objects);
         $md5         = md5(serialize($objects));
-        if ((self::$count > self::$limit || self::$offset > 0) && self::$limit) {
-            $objects = array_slice($objects, self::$offset, self::$limit);
-        }
+        $objects     = self::_filter_objects($objects);
+
         $string = "<total_count>" . self::$count . "</total_count>\n<md5>" . $md5 . "</md5>\n";
 
         switch ($object_type) {
@@ -603,9 +596,8 @@ class Xml6_Data
     {
         self::$count = self::$count ?? count($objects);
         $md5         = md5(serialize($objects));
-        if ((self::$count > self::$limit || self::$offset > 0) && (self::$limit && $full_xml)) {
-            $objects = array_slice($objects, self::$offset, self::$limit);
-        }
+        $objects     = self::_filter_objects($objects, $full_xml);
+
         // you might not want the joined tables for playlists
         $total_count = (AmpConfig::get('hide_search', false) && $object_type == 'playlist')
             ? Catalog::get_update_info('search', $user->id) + Catalog::get_update_info('playlist', $user->id)
@@ -780,9 +772,7 @@ class Xml6_Data
     {
         self::$count = self::$count ?? count($objects);
         $md5         = md5(serialize($objects));
-        if ((self::$count > self::$limit || self::$offset > 0) && self::$limit) {
-            $objects = array_slice($objects, self::$offset, self::$limit);
-        }
+        $objects     = self::_filter_objects($objects);
 
         $string = "<total_count>" . Catalog::get_update_info('label', $user->id) . "</total_count>\n<md5>" . $md5 . "</md5>\n";
 
@@ -811,9 +801,8 @@ class Xml6_Data
     {
         self::$count = self::$count ?? count($objects);
         $md5         = md5(serialize($objects));
-        if ((self::$count > self::$limit || self::$offset > 0) && self::$limit) {
-            $objects = array_slice($objects, self::$offset, self::$limit);
-        }
+        $objects     = self::_filter_objects($objects);
+
         $string = "<total_count>" . Catalog::get_update_info('license', $user->id) . "</total_count>\n<md5>" . $md5 . "</md5>\n";
 
         $licenseRepository = self::getLicenseRepository();
@@ -837,11 +826,11 @@ class Xml6_Data
      */
     public static function lists(array $objects): string
     {
-        self::$count  = self::$count ?? count($objects);
-        $string       = "<total_count>" . self::$count . "</total_count>\n<md5>" . md5(serialize($objects)) . "</md5>\n";
-        if ((self::$count > self::$limit || self::$offset > 0) && self::$limit) {
-            $objects = array_slice($objects, self::$offset, self::$limit);
-        }
+        self::$count = self::$count ?? count($objects);
+        $md5         = md5(serialize($objects));
+        $objects     = self::_filter_objects($objects);
+
+        $string = "<total_count>" . self::$count . "</total_count>\n<md5>" . $md5 . "</md5>\n";
 
         $pattern = '/^(' . implode('\\s|', explode('|', AmpConfig::get('catalog_prefix_pattern', 'The|An|A|Die|Das|Ein|Eine|Les|Le|La'))) . '\\s)(.*)/i';
         foreach ($objects as $object) {
@@ -868,9 +857,8 @@ class Xml6_Data
     {
         self::$count = self::$count ?? count($objects);
         $md5         = md5(serialize($objects));
-        if ((self::$count > self::$limit || self::$offset > 0) && self::$limit) {
-            $objects = array_slice($objects, self::$offset, self::$limit);
-        }
+        $objects     = self::_filter_objects($objects, $full_xml);
+
         $string = ($full_xml) ? "<total_count>" . Catalog::get_update_info('live_stream', $user->id) . "</total_count>\n<md5>" . $md5 . "</md5>\n" : '';
 
         foreach ($objects as $live_stream_id) {
@@ -989,9 +977,7 @@ class Xml6_Data
     {
         self::$count = self::$count ?? count($objects);
         $md5         = md5(serialize($objects));
-        if ((self::$count > self::$limit || self::$offset > 0) && self::$limit) {
-            $objects = array_slice($objects, self::$offset, self::$limit);
-        }
+        $objects     = self::_filter_objects($objects);
 
         $total_count = (AmpConfig::get('hide_search', false))
             ? Catalog::get_update_info('search', $user->id) + Catalog::get_update_info('playlist', $user->id)
@@ -1068,9 +1054,8 @@ class Xml6_Data
     {
         self::$count = self::$count ?? count($objects);
         $md5         = md5(serialize($objects));
-        if ((self::$count > self::$limit || self::$offset > 0) && (self::$limit && $full_xml)) {
-            $objects = array_slice($objects, self::$offset, self::$limit);
-        }
+        $objects     = self::_filter_objects($objects, $full_xml);
+
         $string = ($full_xml) ? "<total_count>" . Catalog::get_update_info('podcast_episode', $user->id) . "</total_count>\n<md5>" . $md5 . "</md5>\n" : '';
 
         foreach ($objects as $episode_id) {
@@ -1101,9 +1086,7 @@ class Xml6_Data
     {
         self::$count = self::$count ?? count($objects);
         $md5         = md5(serialize($objects));
-        if ((self::$count > self::$limit || self::$offset > 0) && self::$limit) {
-            $objects = array_slice($objects, self::$offset, self::$limit);
-        }
+        $objects     = self::_filter_objects($objects);
 
         $podcastRepository = self::getPodcastRepository();
 
@@ -1152,9 +1135,7 @@ class Xml6_Data
                 : count($objects);
             switch ($object_type) {
                 case 'artist':
-                    if ((self::$count > self::$limit || self::$offset > 0) && self::$limit) {
-                        $objects = array_slice($objects, self::$offset, self::$limit);
-                    }
+                    $objects = self::_filter_objects($objects);
                     foreach ($objects as $object_id) {
                         $artist = new Artist((int) $object_id);
                         if ($artist->isNew()) {
@@ -1164,9 +1145,7 @@ class Xml6_Data
                     }
                     break;
                 case 'album':
-                    if ((self::$count > self::$limit || self::$offset > 0) && self::$limit) {
-                        $objects = array_slice($objects, self::$offset, self::$limit);
-                    }
+                    $objects = self::_filter_objects($objects);
                     foreach ($objects as $object_id) {
                         $album = new Album((int) $object_id);
                         $string .= "<$object_type id=\"" . $object_id . "\">\n\t<name><![CDATA[" . $album->get_fullname() . "]]></name>\n\t<prefix><![CDATA[" . $album->prefix . "]]></prefix>\n\t<basename><![CDATA[" . $album->name . "]]></basename>\n";
@@ -1183,9 +1162,7 @@ class Xml6_Data
                     }
                     break;
                 case 'song':
-                    if ((self::$count > self::$limit || self::$offset > 0) && self::$limit) {
-                        $objects = array_slice($objects, self::$offset, self::$limit);
-                    }
+                    $objects = self::_filter_objects($objects);
                     foreach ($objects as $object_id) {
                         $song        = new Song((int) $object_id);
                         $song_album  = self::getAlbumRepository()->getNames($song->album);
@@ -1203,9 +1180,7 @@ class Xml6_Data
                     }
                     break;
                 case 'playlist':
-                    if ((self::$count > self::$limit || self::$offset > 0) && self::$limit) {
-                        $objects = array_slice($objects, self::$offset, self::$limit);
-                    }
+                    $objects = self::_filter_objects($objects);
                     foreach ($objects as $object_id) {
                         if ((int) $object_id === 0) {
                             $playlist       = new Search((int) str_replace('smart_', '', (string) $object_id), 'song', $user);
@@ -1224,9 +1199,7 @@ class Xml6_Data
                     $string .= self::shares($objects, $user, false);
                     break;
                 case 'podcast':
-                    if ((self::$count > self::$limit || self::$offset > 0) && self::$limit) {
-                        $objects = array_slice($objects, self::$offset, self::$limit);
-                    }
+                    $objects = self::_filter_objects($objects);
                     foreach ($objects as $object_id) {
                         $podcast = self::getPodcastRepository()->findById((int) $object_id);
                         if ($podcast !== null) {
@@ -1235,9 +1208,7 @@ class Xml6_Data
                     }
                     break;
                 case 'podcast_episode':
-                    if ((self::$count > self::$limit || self::$offset > 0) && self::$limit) {
-                        $objects = array_slice($objects, self::$offset, self::$limit);
-                    }
+                    $objects = self::_filter_objects($objects);
                     $string .= self::podcast_episodes($objects, $user, $auth, false);
                     break;
                 case 'video':
@@ -1304,9 +1275,8 @@ class Xml6_Data
     {
         self::$count = self::$count ?? count($objects);
         $md5         = md5(serialize($objects));
-        if ((self::$count > self::$limit || self::$offset > 0) && self::$limit) {
-            $objects = array_slice($objects, self::$offset, self::$limit);
-        }
+        $objects     = self::_filter_objects($objects, $full_xml);
+
         $string = ($full_xml) ? "<total_count>" . Catalog::get_update_info('share', $user->id) . "</total_count>\n<md5>" . $md5 . "</md5>\n" : '';
 
         foreach ($objects as $share_id) {
@@ -1353,8 +1323,11 @@ class Xml6_Data
      */
     public static function song_tags(array $objects, string $auth): string
     {
-        self::$count  = self::$count ?? count($objects);
-        $string       = "<total_count>" . self::$count . "</total_count>\n<md5>" . md5(serialize($objects)) . "</md5>\n";
+        self::$count = self::$count ?? count($objects);;
+        $md5         = md5(serialize($objects));
+        $objects     = self::_filter_objects($objects);
+
+        $string = "<total_count>" . self::$count . "</total_count>\n<md5>" . $md5 . "</md5>\n";
 
         Stream::set_session($auth);
 
@@ -1459,9 +1432,8 @@ class Xml6_Data
     {
         self::$count = self::$count ?? count($objects);
         $md5         = md5(serialize($objects));
-        if ((self::$count > self::$limit || self::$offset > 0) && (self::$limit && $full_xml)) {
-            $objects = array_slice($objects, self::$offset, self::$limit);
-        }
+        $objects     = self::_filter_objects($objects, $full_xml);
+
         $string = ($full_xml) ? "<total_count>" . Catalog::get_update_info('song', $user->id) . "</total_count>\n<md5>" . $md5 . "</md5>\n" : '';
 
         Song::build_cache($objects);
@@ -1605,9 +1577,8 @@ class Xml6_Data
     public static function users(array $objects): string
     {
         self::$count = self::$count ?? count($objects);
-        if ((self::$count > self::$limit || self::$offset > 0) && self::$limit) {
-            $objects = array_slice($objects, self::$offset, self::$limit);
-        }
+        $objects     = self::_filter_objects($objects);
+
         $string = "";
         foreach ($objects as $user_id) {
             $user = new User((int) $user_id);
@@ -1630,9 +1601,8 @@ class Xml6_Data
     {
         self::$count = self::$count ?? count($objects);
         $md5         = md5(serialize($objects));
-        if ((self::$count > self::$limit || self::$offset > 0) && self::$limit) {
-            $objects = array_slice($objects, self::$offset, self::$limit);
-        }
+        $objects     = self::_filter_objects($objects, $full_xml);
+
         $string = ($full_xml) ? "<total_count>" . Catalog::get_update_info('video', $user->id) . "</total_count>\n<md5>" . $md5 . "</md5>\n" : '';
 
         foreach ($objects as $video_id) {
@@ -1649,6 +1619,27 @@ class Xml6_Data
         }
 
         return self::output_xml($string, $full_xml);
+    }
+
+    private static function _filter_objects(array $objects, ?bool $encode = null): array
+    {
+        if (
+            $encode !== null
+            && (self::$count > self::$limit || self::$offset > 0)
+            && (self::$limit && $encode)
+        ) {
+            return array_slice($objects, self::$offset, self::$limit);
+        }
+
+        if (
+            $encode === null
+            && (self::$count > self::$limit || self::$offset > 0)
+            && self::$limit
+        ) {
+            return array_slice($objects, self::$offset, self::$limit);
+        }
+
+        return $objects;
     }
 
     /**
