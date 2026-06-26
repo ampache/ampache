@@ -80,7 +80,7 @@ final class RecordPlay6Method
         $valid = ($play_user instanceof User && in_array($play_user->id, self::getUserRepository()->getValid()));
         if ($valid === false) {
             /* HINT: Requested object string/id/type ("album", "myusername", "some song title", 1298376) */
-            Api6::error(sprintf('Not Found: %s', $input['user'] ?? $user->id), ErrorCodeEnum::NOT_FOUND, self::ACTION, 'user', $input['api_format']);
+            Api6::error(ErrorCodeEnum::NOT_FOUND, sprintf('Not Found: %s', $input['user'] ?? $user->id), self::ACTION, 'user', $input['api_format']);
 
             return false;
         }
@@ -98,7 +98,7 @@ final class RecordPlay6Method
         $media = new Song($object_id);
         if ($media->isNew()) {
             /* HINT: Requested object string/id/type ("album", "myusername", "some song title", 1298376) */
-            Api6::error(sprintf('Not Found: %s', $object_id), ErrorCodeEnum::NOT_FOUND, self::ACTION, 'id', $input['api_format']);
+            Api6::error(ErrorCodeEnum::NOT_FOUND, sprintf('Not Found: %s', $object_id), self::ACTION, 'id', $input['api_format']);
 
             return false;
         }

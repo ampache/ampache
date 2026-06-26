@@ -65,7 +65,7 @@ final class LicenseSongs8Method
     public static function license_songs(array $input, User $user): bool
     {
         if (!AmpConfig::get('licensing')) {
-            Api::error('Enable: licensing', ErrorCodeEnum::ACCESS_DENIED, self::ACTION, 'system', $input['api_format']);
+            Api::error(ErrorCodeEnum::ACCESS_DENIED, 'Enable: licensing', self::ACTION, 'system', $input['api_format']);
 
             return false;
         }

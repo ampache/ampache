@@ -83,13 +83,13 @@ final class CatalogFolder6Method
 
         // confirm that a valid task is going to happen
         if (!AmpConfig::get('delete_from_disk') && in_array('remove', $task)) {
-            Api6::error('Enable: delete_from_disk', ErrorCodeEnum::ACCESS_DENIED, self::ACTION, 'system', $input['api_format']);
+            Api6::error(ErrorCodeEnum::ACCESS_DENIED, 'Enable: delete_from_disk', self::ACTION, 'system', $input['api_format']);
 
             return false;
         }
         if (!file_exists($folder) && !in_array('clean', $task)) {
             /* HINT: Requested object string/id/type ("album", "myusername", "some song title", 1298376) */
-            Api6::error(sprintf('Not Found: %s', $folder), ErrorCodeEnum::NOT_FOUND, self::ACTION, 'folder', $input['api_format']);
+            Api6::error(ErrorCodeEnum::NOT_FOUND, sprintf('Not Found: %s', $folder), self::ACTION, 'folder', $input['api_format']);
 
             return false;
         }
@@ -97,7 +97,7 @@ final class CatalogFolder6Method
         foreach ($task as $item) {
             if (!in_array($item, ['add', 'clean', 'verify', 'remove'])) {
                 /* HINT: Requested object string/id/type ("album", "myusername", "some song title", 1298376) */
-                Api6::error(sprintf('Bad Request: %s', $item), ErrorCodeEnum::BAD_REQUEST, self::ACTION, 'task', $input['api_format']);
+                Api6::error(ErrorCodeEnum::BAD_REQUEST, sprintf('Bad Request: %s', $item), self::ACTION, 'task', $input['api_format']);
 
                 return false;
             }
@@ -108,7 +108,7 @@ final class CatalogFolder6Method
         $catalog     = Catalog::create_from_id($catalog_id);
         if ($catalog === null) {
             /* HINT: Requested object string/id/type ("album", "myusername", "some song title", 1298376) */
-            Api6::error(sprintf('Not Found: %s', $catalog_id), ErrorCodeEnum::NOT_FOUND, self::ACTION, 'catalog', $input['api_format']);
+            Api6::error(ErrorCodeEnum::NOT_FOUND, sprintf('Not Found: %s', $catalog_id), self::ACTION, 'catalog', $input['api_format']);
 
             return false;
         }
@@ -186,7 +186,7 @@ final class CatalogFolder6Method
             }
             Api6::message('successfully started: ' . $output_task . ' for ' . $folder, $input['api_format']);
         } else {
-            Api6::error('Not Found', ErrorCodeEnum::NOT_FOUND, self::ACTION, 'catalog', $input['api_format']);
+            Api6::error(ErrorCodeEnum::NOT_FOUND, 'Not Found', self::ACTION, 'catalog', $input['api_format']);
         }
 
         return true;

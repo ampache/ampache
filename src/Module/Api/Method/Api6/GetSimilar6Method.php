@@ -69,7 +69,7 @@ final class GetSimilar6Method
         $object_id = (int) $input['filter'];
         // confirm the correct data
         if (!in_array(strtolower($type), ['song', 'artist'])) {
-            Api6::error(sprintf('Bad Request: %s', $type), ErrorCodeEnum::BAD_REQUEST, self::ACTION, 'type', $input['api_format']);
+            Api6::error(ErrorCodeEnum::BAD_REQUEST, sprintf('Bad Request: %s', $type), self::ACTION, 'type', $input['api_format']);
 
             return false;
         }

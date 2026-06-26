@@ -70,7 +70,7 @@ final class SystemUpdate6Method
             Preference::translate_db();
             // check that the update completed or failed.
             if (AutoUpdate::is_update_available(true)) {
-                Api6::error('Bad Request', ErrorCodeEnum::BAD_REQUEST, self::ACTION, 'system', $input['api_format']);
+                Api6::error(ErrorCodeEnum::BAD_REQUEST, 'Bad Request', self::ACTION, 'system', $input['api_format']);
                 Session::extend($input['auth'], AccessTypeEnum::API->value);
 
                 return false;

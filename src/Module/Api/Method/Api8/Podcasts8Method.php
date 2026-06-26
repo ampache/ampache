@@ -73,7 +73,7 @@ final class Podcasts8Method
     public static function podcasts(array $input, User $user): bool
     {
         if (!AmpConfig::get('podcast')) {
-            Api::error('Enable: podcast', ErrorCodeEnum::ACCESS_DENIED, self::ACTION, 'system', $input['api_format']);
+            Api::error(ErrorCodeEnum::ACCESS_DENIED, 'Enable: podcast', self::ACTION, 'system', $input['api_format']);
 
             return false;
         }

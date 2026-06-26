@@ -79,7 +79,7 @@ final class Localplay5Method
         // Load their Localplay instance
         $localplay = new Localplay(AmpConfig::get('localplay_controller', ''));
         if (empty($localplay->type) || !$localplay->connect()) {
-            Api5::error(T_('Unable to connect to localplay controller'), ErrorCodeEnum::BAD_REQUEST, self::ACTION, 'account', $input['api_format']);
+            Api5::error(ErrorCodeEnum::BAD_REQUEST, T_('Unable to connect to localplay controller'), self::ACTION, 'account', $input['api_format']);
 
             return false;
         }
@@ -94,7 +94,7 @@ final class Localplay5Method
                 $type      = LibraryItemEnum::tryFrom((string) strtolower($input['type'] ?? '')) ?? LibraryItemEnum::SONG;
 
                 if (!AmpConfig::get('allow_video') && $type === LibraryItemEnum::VIDEO) {
-                    Api5::error(T_('Enable: video'), ErrorCodeEnum::ACCESS_DENIED, self::ACTION, 'system', $input['api_format']);
+                    Api5::error(ErrorCodeEnum::ACCESS_DENIED, T_('Enable: video'), self::ACTION, 'system', $input['api_format']);
 
                     return false;
                 }
@@ -154,13 +154,13 @@ final class Localplay5Method
                 break;
             default:
                 // They are doing it wrong
-                Api5::error(T_('Bad Request'), ErrorCodeEnum::BAD_REQUEST, self::ACTION, 'command', $input['api_format']);
+                Api5::error(ErrorCodeEnum::BAD_REQUEST, T_('Bad Request'), self::ACTION, 'command', $input['api_format']);
 
                 return false;
         }
 
         if ($command === 'status' && empty($status)) {
-            Api5::error(T_('Unable to connect to localplay controller'), ErrorCodeEnum::BAD_REQUEST, self::ACTION, 'account', $input['api_format']);
+            Api5::error(ErrorCodeEnum::BAD_REQUEST, T_('Unable to connect to localplay controller'), self::ACTION, 'account', $input['api_format']);
 
             return false;
         }

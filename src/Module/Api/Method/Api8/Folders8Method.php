@@ -81,7 +81,7 @@ final class Folders8Method
 
         if ($folder === null || $folder->isNew()) {
             /* HINT: Requested object string/id/type ("album", "myusername", "some song title", 1298376) */
-            Api::error(sprintf('Not Found: %s', $path_name), ErrorCodeEnum::NOT_FOUND, self::ACTION, 'filter', $input['api_format']);
+            Api::error(ErrorCodeEnum::NOT_FOUND, sprintf('Not Found: %s', $path_name), self::ACTION, 'filter', $input['api_format']);
 
             return false;
         }

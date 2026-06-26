@@ -67,7 +67,7 @@ final class LiveStreams6Method
     public static function live_streams(array $input, User $user): bool
     {
         if (!AmpConfig::get('live_stream')) {
-            Api6::error('Enable: live_stream', ErrorCodeEnum::ACCESS_DENIED, self::ACTION, 'system', $input['api_format']);
+            Api6::error(ErrorCodeEnum::ACCESS_DENIED, 'Enable: live_stream', self::ACTION, 'system', $input['api_format']);
 
             return false;
         }

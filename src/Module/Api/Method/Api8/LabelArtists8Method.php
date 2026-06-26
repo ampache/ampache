@@ -68,7 +68,7 @@ final class LabelArtists8Method
     public static function label_artists(array $input, User $user): bool
     {
         if (!AmpConfig::get('label')) {
-            Api::error('Enable: label', ErrorCodeEnum::ACCESS_DENIED, self::ACTION, 'system', $input['api_format']);
+            Api::error(ErrorCodeEnum::ACCESS_DENIED, 'Enable: label', self::ACTION, 'system', $input['api_format']);
 
             return false;
         }

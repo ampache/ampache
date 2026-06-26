@@ -66,7 +66,7 @@ final class ShareEdit6Method
     public static function share_edit(array $input, User $user): bool
     {
         if (!AmpConfig::get('share')) {
-            Api6::error('Enable: share', ErrorCodeEnum::ACCESS_DENIED, self::ACTION, 'system', $input['api_format']);
+            Api6::error(ErrorCodeEnum::ACCESS_DENIED, 'Enable: share', self::ACTION, 'system', $input['api_format']);
 
             return false;
         }
@@ -82,7 +82,7 @@ final class ShareEdit6Method
             || !$share->isAccessible($user)
         ) {
             /* HINT: Requested object string/id/type ("album", "myusername", "some song title", 1298376) */
-            Api6::error(sprintf('Not Found: %s', $share_id), ErrorCodeEnum::NOT_FOUND, self::ACTION, 'filter', $input['api_format']);
+            Api6::error(ErrorCodeEnum::NOT_FOUND, sprintf('Not Found: %s', $share_id), self::ACTION, 'filter', $input['api_format']);
 
             return true;
         }
@@ -103,7 +103,7 @@ final class ShareEdit6Method
             Api6::message('share ' . $share_id . ' updated', $input['api_format']);
         } else {
             /* HINT: Requested object string/id/type ("album", "myusername", "some song title", 1298376) */
-            Api6::error(sprintf('Bad Request: %s', $share_id), ErrorCodeEnum::BAD_REQUEST, self::ACTION, 'system', $input['api_format']);
+            Api6::error(ErrorCodeEnum::BAD_REQUEST, sprintf('Bad Request: %s', $share_id), self::ACTION, 'system', $input['api_format']);
 
             return false;
         }

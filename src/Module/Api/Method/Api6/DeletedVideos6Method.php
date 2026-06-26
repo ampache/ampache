@@ -58,7 +58,7 @@ final class DeletedVideos6Method
     public static function deleted_videos(array $input, User $user): bool
     {
         if (!AmpConfig::get('allow_video')) {
-            Api6::error('Enable: video', ErrorCodeEnum::ACCESS_DENIED, self::ACTION, 'system', $input['api_format']);
+            Api6::error(ErrorCodeEnum::ACCESS_DENIED, 'Enable: video', self::ACTION, 'system', $input['api_format']);
 
             return false;
         }

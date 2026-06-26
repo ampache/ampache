@@ -65,7 +65,7 @@ final class Licenses5Method
     public static function licenses(array $input, User $user): bool
     {
         if (!AmpConfig::get('licensing')) {
-            Api5::error(T_('Enable: licensing'), ErrorCodeEnum::ACCESS_DENIED, self::ACTION, 'system', $input['api_format']);
+            Api5::error(ErrorCodeEnum::ACCESS_DENIED, T_('Enable: licensing'), self::ACTION, 'system', $input['api_format']);
 
             return false;
         }

@@ -69,7 +69,7 @@ final class Followers6Method
     public static function followers(array $input, User $user): bool
     {
         if (!AmpConfig::get('sociable')) {
-            Api6::error('Enable: sociable', ErrorCodeEnum::ACCESS_DENIED, self::ACTION, 'system', $input['api_format']);
+            Api6::error(ErrorCodeEnum::ACCESS_DENIED, 'Enable: sociable', self::ACTION, 'system', $input['api_format']);
 
             return false;
         }
@@ -85,7 +85,7 @@ final class Followers6Method
         if ($leadUser === null) {
             debug_event(self::class, 'User `' . $username . '` cannot be found.', 1);
             /* HINT: Requested object string/id/type ("album", "myusername", "some song title", 1298376) */
-            Api6::error(sprintf('Not Found: %s', $username), ErrorCodeEnum::NOT_FOUND, self::ACTION, 'username', $input['api_format']);
+            Api6::error(ErrorCodeEnum::NOT_FOUND, sprintf('Not Found: %s', $username), self::ACTION, 'username', $input['api_format']);
 
             return false;
         }

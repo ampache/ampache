@@ -86,14 +86,14 @@ final class Browse8Method
             $object_id = $catalog_id;
         }
         if (!AmpConfig::get('podcast') && $object_type == 'podcast') {
-            Api::error('Enable: podcast', ErrorCodeEnum::ACCESS_DENIED, self::ACTION, 'system', $input['api_format']);
+            Api::error(ErrorCodeEnum::ACCESS_DENIED, 'Enable: podcast', self::ACTION, 'system', $input['api_format']);
 
             return false;
         }
 
         // confirm the correct data
         if (!in_array(strtolower($object_type), ['root', 'catalog', 'album_artist', 'artist', 'album', 'podcast'])) {
-            Api::error(sprintf('Bad Request: %s', $object_type), ErrorCodeEnum::BAD_REQUEST, self::ACTION, 'type', $input['api_format']);
+            Api::error(ErrorCodeEnum::BAD_REQUEST, sprintf('Bad Request: %s', $object_type), self::ACTION, 'type', $input['api_format']);
 
             return false;
         }
@@ -124,7 +124,7 @@ final class Browse8Method
                 : null;
             if ($catalog === null) {
                 /* HINT: Requested object string/id/type ("album", "myusername", "some song title", 1298376) */
-                Api::error(sprintf('Not Found: %s', $object_id), ErrorCodeEnum::NOT_FOUND, self::ACTION, 'filter', $input['api_format']);
+                Api::error(ErrorCodeEnum::NOT_FOUND, sprintf('Not Found: %s', $object_id), self::ACTION, 'filter', $input['api_format']);
 
                 return false;
             }
@@ -147,7 +147,7 @@ final class Browse8Method
                     break;
                 default:
                     /* HINT: Requested object string/id/type ("album", "myusername", "some song title", 1298376) */
-                    Api::error(sprintf('Bad Request: %s', $catalog_id), ErrorCodeEnum::BAD_REQUEST, self::ACTION, 'catalog', $input['api_format']);
+                    Api::error(ErrorCodeEnum::BAD_REQUEST, sprintf('Bad Request: %s', $catalog_id), self::ACTION, 'catalog', $input['api_format']);
 
                     return false;
             }
@@ -166,14 +166,14 @@ final class Browse8Method
                 : null;
             if ($catalog === null) {
                 /* HINT: Requested object string/id/type ("album", "myusername", "some song title", 1298376) */
-                Api::error(sprintf('Not Found: %s', $catalog_id), ErrorCodeEnum::NOT_FOUND, self::ACTION, 'catalog', $input['api_format']);
+                Api::error(ErrorCodeEnum::NOT_FOUND, sprintf('Not Found: %s', $catalog_id), self::ACTION, 'catalog', $input['api_format']);
 
                 return false;
             }
             $className = ObjectTypeToClassNameMapper::map($object_type);
             if ($className === $object_type || !$object_id) {
                 /* HINT: Requested object string/id/type ("album", "myusername", "some song title", 1298376) */
-                Api::error(sprintf('Bad Request: %s', $object_type), ErrorCodeEnum::BAD_REQUEST, self::ACTION, 'type', $input['api_format']);
+                Api::error(ErrorCodeEnum::BAD_REQUEST, sprintf('Bad Request: %s', $object_type), self::ACTION, 'type', $input['api_format']);
 
                 return false;
             }
@@ -182,7 +182,7 @@ final class Browse8Method
             $item = new $className($object_id);
             if ($item->isNew()) {
                 /* HINT: Requested object string/id/type ("album", "myusername", "some song title", 1298376) */
-                Api::error(sprintf('Not Found: %s', $object_id), ErrorCodeEnum::NOT_FOUND, self::ACTION, 'filter', $input['api_format']);
+                Api::error(ErrorCodeEnum::NOT_FOUND, sprintf('Not Found: %s', $object_id), self::ACTION, 'filter', $input['api_format']);
 
                 return false;
             }

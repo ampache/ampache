@@ -71,7 +71,7 @@ final class Shares8Method
     public static function shares(array $input, User $user): bool
     {
         if (!AmpConfig::get('share')) {
-            Api::error('Enable: share', ErrorCodeEnum::ACCESS_DENIED, self::ACTION, 'system', $input['api_format']);
+            Api::error(ErrorCodeEnum::ACCESS_DENIED, 'Enable: share', self::ACTION, 'system', $input['api_format']);
 
             return false;
         }
