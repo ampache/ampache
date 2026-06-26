@@ -141,7 +141,7 @@ final class Player8Method
         if ($state === 'play') {
             // make sure the now_playing state is set
             Stream::garbage_collection();
-            Stream::insert_now_playing((int) $media->id, $user->getId(), ((int) ($media->time) - $position), (string) $user->username, $type, ($time - $position));
+            Stream::insert_now_playing($media->id, $user->getId(), ($media->time - $position), (string) $user->username, $type, ($time - $position));
 
             // internal scrobbling (user_activity and object_count tables)
             if (
@@ -153,7 +153,7 @@ final class Player8Method
             }
         } else {
             // A stop/paused state isn't playing. Remove it.
-            Stream::delete_now_playing((string) $user->username, (int) $media->id, $type, $user->getId());
+            Stream::delete_now_playing((string) $user->username, $media->id, $type, $user->getId());
         }
 
         // return the now playing state for that user

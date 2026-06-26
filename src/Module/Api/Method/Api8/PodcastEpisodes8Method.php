@@ -106,6 +106,10 @@ final class PodcastEpisodes8Method implements MethodInterface
             );
         }
 
+        if ($podcast->isNew()) {
+            throw new ResultEmptyException((string) $podcastId);
+        }
+
         $browse = $this->modelFactory->createBrowse(null, false);
 
         $browse->set_user_id($user);

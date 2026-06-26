@@ -111,7 +111,7 @@ final class BookmarkEdit5Method
             'object_id' => (int) $object_id,
             'object_type' => $type,
             'comment' => $comment,
-            'position' => (int) $position,
+            'position' => $position,
         ];
 
         // check for the bookmark first

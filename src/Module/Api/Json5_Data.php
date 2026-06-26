@@ -126,8 +126,8 @@ class Json5_Data
             $objArray['time']          = (int) $album->time;
             $objArray['year']          = (int) $year;
             $objArray['tracks']        = $songs;
-            $objArray['songcount']     = (int) $album->song_count;
-            $objArray['diskcount']     = (int) $album->disk_count;
+            $objArray['songcount']     = $album->song_count;
+            $objArray['diskcount']     = $album->disk_count;
             $objArray['type']          = $album->release_type;
             $objArray['genre']         = self::genre_array($album->get_tags());
             $objArray['art']           = $art_url;
@@ -446,15 +446,15 @@ class Json5_Data
                 ],
                 "genre" => self::genre_array($song->get_tags()),
                 "track" => (int) $song->track,
-                "time" => (int) $song->time,
+                "time" => $song->time,
                 "mime" => $songMime,
                 "url" => $play_url,
-                "size" => (int) $song->size,
+                "size" => $song->size,
                 "art" => $art_url,
                 "preciserating" => $user_rating,
                 "rating" => $user_rating,
                 "averagerating" => ($rating->get_average_rating() ?? null),
-                "playcount" => (int) $song->total_count,
+                "playcount" => $song->total_count,
                 "vote" => $democratic->get_vote($row_id)
             ];
         }
@@ -761,7 +761,7 @@ class Json5_Data
                     $trackcount++;
                 }
             } else {
-                $items = (int) ($playitem_total ?? 0);
+                $items = $playitem_total ?? 0;
             }
             $rating      = new Rating($playlist->id, $object_type);
             $user_rating = $rating->get_user_rating($user->getId());
@@ -826,8 +826,8 @@ class Json5_Data
                 "filesize" => $episode->getSizeFormatted(),
                 "filename" => $episode->getFileName(),
                 "mime" => $episode->mime,
-                "time" => (int) $episode->time,
-                "size" => (int) $episode->size,
+                "time" => $episode->time,
+                "size" => $episode->size,
                 "public_url" => $episode->get_link(),
                 "url" => $episode->play_url('', 'api', false, $user->getId(), $user->streamtoken),
                 "catalog" => (string) $episode->catalog,
@@ -836,7 +836,7 @@ class Json5_Data
                 "preciserating" => $user_rating,
                 "rating" => $user_rating,
                 "averagerating" => $rating->get_average_rating(),
-                "playcount" => (int) $episode->total_count,
+                "playcount" => $episode->total_count,
                 "played" => (string) $episode->played
             ];
         }
@@ -977,9 +977,9 @@ class Json5_Data
             $share_lastvisit_date = $share->lastvisit_date;
             $share_object_type    = $share->object_type;
             $share_object_id      = (string) $share->object_id;
-            $share_expire_days    = (int) $share->expire_days;
-            $share_max_counter    = (int) $share->max_counter;
-            $share_counter        = (int) $share->counter;
+            $share_expire_days    = $share->expire_days;
+            $share_max_counter    = $share->max_counter;
+            $share_counter        = $share->counter;
             $share_secret         = $share->secret;
             $share_public_url     = $share->public_url;
             $share_description    = $share->description;
@@ -1100,14 +1100,14 @@ class Json5_Data
             $objArray['filename']              = $song->file;
             $objArray['genre']                 = self::genre_array($song->get_tags());
             $objArray['playlisttrack']         = $playlist_track;
-            $objArray['time']                  = (int) $song->time;
-            $objArray['year']                  = (int) $song->year;
+            $objArray['time']                  = $song->time;
+            $objArray['year']                  = $song->year;
             $objArray['bitrate']               = $songBitrate;
-            $objArray['rate']                  = (int) $song->rate;
+            $objArray['rate']                  = $song->rate;
             $objArray['mode']                  = $song->mode;
             $objArray['mime']                  = $songMime;
             $objArray['url']                   = $play_url;
-            $objArray['size']                  = (int) $song->size;
+            $objArray['size']                  = $song->size;
             $objArray['mbid']                  = $song->mbid;
             $objArray['album_mbid']            = $song->get_album_mbid();
             $objArray['artist_mbid']           = $song->get_artist_mbid();
@@ -1117,7 +1117,7 @@ class Json5_Data
             $objArray['preciserating']         = $user_rating;
             $objArray['rating']                = $user_rating;
             $objArray['averagerating']         = $rating->get_average_rating();
-            $objArray['playcount']             = (int) $song->total_count;
+            $objArray['playcount']             = $song->total_count;
             $objArray['catalog']               = $song->getCatalogId();
             $objArray['composer']              = $song->composer;
             $objArray['channels']              = $song->channels;
@@ -1222,12 +1222,12 @@ class Json5_Data
                 "username" => $user->username,
                 "auth" => $user->apikey,
                 "email" => $user->email,
-                "access" => (int) $user->access,
+                "access" => $user->access,
                 "fullname_public" => (int) $user->fullname_public,
                 "validation" => $user->validation,
                 "disabled" => (int) $user->disabled,
                 "create_date" => (int) $user->create_date,
-                "last_seen" => (int) $user->last_seen,
+                "last_seen" => $user->last_seen,
                 "website" => $user->website,
                 "state" => $user->state,
                 "city" => $user->city
@@ -1304,16 +1304,16 @@ class Json5_Data
                 "title" => $video->title,
                 "mime" => $video->mime,
                 "resolution" => $video->get_f_resolution(),
-                "size" => (int) $video->size,
+                "size" => $video->size,
                 "genre" => self::genre_array($video->get_tags()),
-                "time" => (int) $video->time,
+                "time" => $video->time,
                 "url" => $video->play_url('', 'api', false, $user->getId(), $user->streamtoken),
                 "art" => $art_url,
                 "flag" => (!$flag->get_flag($user->getId()) ? 0 : 1),
                 "preciserating" => $user_rating,
                 "rating" => $user_rating,
                 "averagerating" => $rating->get_average_rating(),
-                "playcount" => (int) $video->total_count
+                "playcount" => $video->total_count
             ];
         }
         $output = ($object) ? ["video" => $JSON] : $JSON[0] ?? [];

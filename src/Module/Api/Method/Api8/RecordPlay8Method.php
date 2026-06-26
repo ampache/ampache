@@ -102,7 +102,7 @@ final class RecordPlay8Method
 
             return false;
         }
-        debug_event(self::class, 'record_play: ' . $media->id . ' for ' . $play_user->username . ' using ' . $agent . ' ' . (string) time(), 5);
+        debug_event(self::class, 'record_play: ' . $media->id . ' for ' . $play_user->username . ' using ' . $agent . ' ' . time(), 5);
 
         // internal scrobbling (user_activity and object_count tables)
         if ($media->set_played($play_user->id, $agent, [], $date)) {
