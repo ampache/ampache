@@ -202,7 +202,7 @@ final readonly class DefaultAction implements ApplicationActionInterface
                         sprintf(
                             '%s is already logged in from %s and attempted to login from %s',
                             scrub_out($username),
-                            (string) $session_ip,
+                            $session_ip,
                             $current_ip
                         ),
                         [LegacyLogger::CONTEXT_TYPE => self::class]

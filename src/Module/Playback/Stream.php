@@ -734,7 +734,7 @@ class Stream
             return [];
         }
 
-        return self::_start_process($command, ['format' => $transcode_settings['format']]);
+        return self::_start_process($command, ['format' => (string) $transcode_settings['format']]);
     }
 
     /**

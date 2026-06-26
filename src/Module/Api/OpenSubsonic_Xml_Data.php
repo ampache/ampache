@@ -1350,14 +1350,14 @@ class OpenSubsonic_Xml_Data
         $isAdmin   = ($user->access === 100);
         $xuser->addAttribute('adminRole', ($isAdmin) ? 'true' : 'false');
         $xuser->addAttribute('settingsRole', 'true');
-        $xuser->addAttribute('downloadRole', Preference::get_by_user($user->id, 'download') ? 'true' : 'false');
+        $xuser->addAttribute('downloadRole', (Preference::get_by_user($user->id, 'download')) ? 'true' : 'false');
         $xuser->addAttribute('playlistRole', 'true');
         $xuser->addAttribute('coverArtRole', ($isManager) ? 'true' : 'false');
         $xuser->addAttribute('commentRole', (AmpConfig::get('social')) ? 'true' : 'false');
         $xuser->addAttribute('podcastRole', (AmpConfig::get('podcast')) ? 'true' : 'false');
         $xuser->addAttribute('streamRole', 'true');
         $xuser->addAttribute('jukeboxRole', (AmpConfig::get('allow_localplay_playback') && AmpConfig::get('localplay_controller') && Access::check(AccessTypeEnum::LOCALPLAY, AccessLevelEnum::GUEST, $user->getId())) ? 'true' : 'false');
-        $xuser->addAttribute('shareRole', Preference::get_by_user($user->id, 'share') ? 'true' : 'false');
+        $xuser->addAttribute('shareRole', (Preference::get_by_user($user->id, 'share')) ? 'true' : 'false');
         $xuser->addAttribute('videoConversionRole', 'false');
 
         return $xml;

@@ -106,7 +106,7 @@ final class PodcastEpisodes6Method implements MethodInterface
             );
         }
 
-        if ($podcast->isNew()) {
+        if (isset($input['filter']) && $podcast->isNew()) {
             throw new ResultEmptyException((string) $podcastId);
         }
 

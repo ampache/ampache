@@ -59,7 +59,7 @@ final readonly class AlbumArtExporter implements AlbumArtExporterInterface
 
         // Run through them and get the art!
         foreach ($albums as $albumId) {
-            $albumId = (int) $albumId;
+            $albumId = $albumId;
             $art     = $this->modelFactory->createArt($albumId);
 
             if (!$art->has_db_info()) {
@@ -70,7 +70,7 @@ final readonly class AlbumArtExporter implements AlbumArtExporterInterface
 
             // Get the first song in the album
             $songs = $this->songRepository->getByAlbum($albumId, 1);
-            $song  = $this->modelFactory->createSong((int) $songs[0]);
+            $song  = $this->modelFactory->createSong($songs[0]);
             $dir   = dirname((string) $song->file);
 
             $extension = Art::extension($art->raw_mime);

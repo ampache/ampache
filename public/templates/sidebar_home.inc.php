@@ -125,7 +125,7 @@ if (!AmpConfig::get('sidebar_hide_browse', false)) { ?>
             <span class="sidebar-header-title"><?php echo $t_browse; ?></span>
             <?php echo Ui::get_material_symbol('chevron_right', $t_expander, 'home_browse', 'header-img ' . $state_home_browse); ?>
         </h4>
-        <?php $text = (string) scrub_in(Core::get_request('action')) . '_ac';
+        <?php $text = scrub_in(Core::get_request('action')) . '_ac';
     if ($text !== '_ac') {
         ${$text} = ' selected="selected"';
     } ?>

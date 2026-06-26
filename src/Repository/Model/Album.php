@@ -186,7 +186,7 @@ class Album extends database_object implements
         ?string $version = null,
         bool $readonly = false,
     ): int {
-        $trimmed      = Catalog::trim_prefix(trim((string) $name));
+        $trimmed      = Catalog::trim_prefix(trim($name));
         $name         = $trimmed['string'];
         $prefix       = $trimmed['prefix'];
         $album_artist = (int) $album_artist;
@@ -346,7 +346,7 @@ class Album extends database_object implements
             try {
                 if ($user instanceof User) {
                     self::getWantedManager()->delete(
-                        (string) $mbid,
+                        $mbid,
                         $user
                     );
                 }
@@ -826,12 +826,12 @@ class Album extends database_object implements
             'artist' => [
                 'important' => true,
                 'label' => T_('Artist'),
-                'value' => (string) $this->get_parent_fullname(),
+                'value' => $this->get_parent_fullname(),
             ],
             'album' => [
                 'important' => true,
                 'label' => T_('Album'),
-                'value' => (string) $this->get_fullname(true),
+                'value' => $this->get_fullname(true),
             ],
             'year' => [
                 'important' => false,

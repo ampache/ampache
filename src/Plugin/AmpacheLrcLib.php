@@ -205,7 +205,7 @@ class AmpacheLrcLib extends AmpachePlugin implements PluginGetLyricsInterface
         // sleep for 0.5s
         usleep(500000);
 
-        $response = json_decode((string) $request->body, true);
+        $response = json_decode($request->body, true);
 
         return ($request->success && is_array($response))
             ? $response

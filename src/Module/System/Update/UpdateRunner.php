@@ -143,7 +143,7 @@ final readonly class UpdateRunner implements UpdateRunnerInterface
         set_time_limit(0);
 
         $this->logger->notice(
-            sprintf('Successful rollback to update %s', (string) Versions::MAXIMUM_UPDATABLE_VERSION),
+            sprintf('Successful rollback to update %s', Versions::MAXIMUM_UPDATABLE_VERSION),
             [LegacyLogger::CONTEXT_TYPE => self::class]
         );
 

@@ -540,7 +540,7 @@ class Dba
         }
 
         // Build the data source name
-        $dsn = str_starts_with((string) $hostname, '/') ? 'mysql:unix_socket=' . $hostname : 'mysql:host=' . $hostname;
+        $dsn = (str_starts_with((string) $hostname, '/')) ? 'mysql:unix_socket=' . $hostname : 'mysql:host=' . $hostname;
 
         if ($port) {
             $dsn .= ';port=' . (int) ($port);

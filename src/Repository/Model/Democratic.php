@@ -394,7 +394,7 @@ class Democratic extends Tmp_Playlist
     {
         // FIXME: Shouldn't this return object_type?
 
-        $offset     = (int) ($offset);
+        $offset     = $offset;
         $items      = $this->get_items($offset + 1);
         $use_search = AmpConfig::get('demo_use_search');
 

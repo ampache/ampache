@@ -101,7 +101,7 @@ class Artist extends database_object implements
      */
     public static function add_artist_map(?int $artist_id, string $object_type, int $object_id): void
     {
-        if ((int) $artist_id > 0 && (int) $object_id > 0) {
+        if ((int) $artist_id > 0 && $object_id > 0) {
             debug_event(self::class, "add_artist_map artist_id {" . $artist_id . sprintf('} %s {', $object_type) . $object_id . "}", 5);
             $sql = "INSERT IGNORE INTO `artist_map` (`artist_id`, `object_type`, `object_id`) VALUES (?, ?, ?);";
             Dba::write($sql, [$artist_id, $object_type, $object_id]);
@@ -158,7 +158,7 @@ class Artist extends database_object implements
         $full_name    = ($split_artist && preg_match('/[^ ]' . $split_artist . '[^ ]/', $name))
             ? explode($split_artist, $name)[0]
             : $name;
-        $trimmed = Catalog::trim_prefix(trim((string) $name));
+        $trimmed = Catalog::trim_prefix(trim($name));
         $name    = $trimmed['string'];
         $prefix  = $trimmed['prefix'];
         $trimmed = Catalog::trim_featuring($name);
@@ -551,7 +551,7 @@ class Artist extends database_object implements
      */
     public static function migrate(int $old_object_id, int $new_object_id): void
     {
-        if ((int) $new_object_id > 0) {
+        if ($new_object_id > 0) {
             // migrating to a new artist
             $params = [$new_object_id, $old_object_id];
             $sql    = "UPDATE `song` SET `artist` = ? WHERE `artist` = ?;";
@@ -585,7 +585,7 @@ class Artist extends database_object implements
      */
     public static function remove_artist_map(int $artist_id, string $object_type, int $object_id): void
     {
-        if ((int) $artist_id > 0 && (int) $object_id > 0) {
+        if ($artist_id > 0 && $object_id > 0) {
             debug_event(self::class, "remove_artist_map artist_id {" . $artist_id . sprintf('} %s {', $object_type) . $object_id . "}", 5);
             $sql = "DELETE FROM `artist_map` WHERE `artist_id` = ? AND `object_type` = ? AND `object_id` = ?;";
             Dba::write($sql, [$artist_id, $object_type, $object_id]);
@@ -646,7 +646,7 @@ class Artist extends database_object implements
         $new_name     = ($split_artist && preg_match('/[^ ]' . $split_artist . '[^ ]/', $new_name))
             ? explode($split_artist, $new_name)[0]
             : $new_name;
-        $trimmed = Catalog::trim_prefix(trim((string) $new_name));
+        $trimmed = Catalog::trim_prefix(trim($new_name));
         $name    = $trimmed['string'];
         $prefix  = $trimmed['prefix'];
         $trimmed = Catalog::trim_featuring($name);

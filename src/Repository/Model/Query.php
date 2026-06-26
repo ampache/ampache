@@ -679,7 +679,7 @@ class Query
         string $dest2,
         int $priority,
     ): void {
-        $this->_state['join'][$priority][$table] = strtoupper((string) $type) . sprintf(' JOIN %s ON %s = %s AND %s = %s', $table, $source1, $dest1, $source2, $dest2);
+        $this->_state['join'][$priority][$table] = strtoupper($type) . sprintf(' JOIN %s ON %s = %s AND %s = %s', $table, $source1, $dest1, $source2, $dest2);
     }
 
     /**
@@ -697,7 +697,7 @@ class Query
         string $dest3,
         int $priority,
     ): void {
-        $this->_state['join'][$priority][$table] = strtoupper((string) $type) . sprintf(' JOIN %s ON %s = %s AND %s = %s AND %s = %s', $table, $source1, $dest1, $source2, $dest2, $source3, $dest3);
+        $this->_state['join'][$priority][$table] = strtoupper($type) . sprintf(' JOIN %s ON %s = %s AND %s = %s AND %s = %s', $table, $source1, $dest1, $source2, $dest2, $source3, $dest3);
     }
 
     /**
@@ -1133,10 +1133,10 @@ class Query
         $offset = $this->get_offset();
         if ($this->_state['limit'] > 0) {
             if ($offset > 0) {
-                return ' LIMIT ' . (string) ($this->_state['limit']) . ', ' . (string) ($offset);
+                return ' LIMIT ' . $this->_state['limit'] . ', ' . $offset;
             }
 
-            return ' LIMIT ' . (string) ($this->_state['limit']);
+            return ' LIMIT ' . $this->_state['limit'];
         }
 
         $start = $this->get_start();
@@ -1144,7 +1144,7 @@ class Query
             return '';
         }
 
-        return ' LIMIT ' . (string) ($start) . ', ' . (string) ($offset);
+        return ' LIMIT ' . $start . ', ' . $offset;
     }
 
     /**
@@ -1411,6 +1411,6 @@ class Query
      */
     private function _unserialize(string $data): mixed
     {
-        return json_decode((string) $data, true);
+        return json_decode($data, true);
     }
 }
