@@ -121,13 +121,13 @@ final class GenreAlbums6Method
             case 'json':
                 Json6_Data::set_offset((int) ($input['offset'] ?? 0));
                 Json6_Data::set_limit($input['limit'] ?? 0);
-                Json6_Data::set_count($browse->get_total());
+                Json6_Data::set_count(count($results));
                 echo Json6_Data::albums($results, [], $user, $input['auth']);
                 break;
             default:
                 Xml6_Data::set_offset((int) ($input['offset'] ?? 0));
                 Xml6_Data::set_limit($input['limit'] ?? 0);
-                Xml6_Data::set_count($browse->get_total());
+                Xml6_Data::set_count(count($results));
                 echo Xml6_Data::albums($results, [], $user, $input['auth']);
         }
 

@@ -511,7 +511,7 @@ final readonly class Play2Action implements ApplicationActionInterface
                 $democratic->delete_from_oid($media->id, $type);
 
                 // If the media is disabled
-                if ((isset($media->enabled) && !make_bool($media->enabled))) {
+                if (!$media->enabled) {
                     $this->logger->warning(
                         "Error: " . $media->file . " is currently disabled, song skipped",
                         [LegacyLogger::CONTEXT_TYPE => self::class]
@@ -568,7 +568,7 @@ final readonly class Play2Action implements ApplicationActionInterface
             $media = new Song($object_id);
             if ($media->id > 0) {
                 // If the media is disabled
-                if ((isset($media->enabled) && !make_bool($media->enabled))) {
+                if (!$media->enabled) {
                     $this->logger->warning(
                         "Error: " . $media->file . " is currently disabled, song skipped",
                         [LegacyLogger::CONTEXT_TYPE => self::class]

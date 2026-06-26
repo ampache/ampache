@@ -165,13 +165,13 @@ final class Index8Method
             case 'json':
                 Json8_Data::set_offset((int) ($input['offset'] ?? 0));
                 Json8_Data::set_limit($input['limit'] ?? 0);
-                Json8_Data::set_count($browse->get_total());
+                Json8_Data::set_count(count($results));
                 echo Json8_Data::index($results, $type, $user, $include);
                 break;
             default:
                 Xml8_Data::set_offset((int) ($input['offset'] ?? 0));
                 Xml8_Data::set_limit($input['limit'] ?? 0);
-                Xml8_Data::set_count($browse->get_total());
+                Xml8_Data::set_count(count($results));
                 echo Xml8_Data::index($results, $type, $user, $include);
         }
 

@@ -1323,7 +1323,8 @@ class Xml6_Data
      */
     public static function song_tags(array $objects, string $auth): string
     {
-        self::$count = self::$count ?? count($objects);;
+        self::$count = self::$count ?? count($objects);
+        ;
         $md5         = md5(serialize($objects));
         $objects     = self::_filter_objects($objects);
 
@@ -1621,6 +1622,14 @@ class Xml6_Data
         return self::output_xml($string, $full_xml);
     }
 
+    /**
+     * _filter_objects
+     *
+     * This filters the objects based on the limit and offset
+     *
+     * @param array<int|string> $objects
+     * @return array<int|string>
+     */
     private static function _filter_objects(array $objects, ?bool $encode = null): array
     {
         if (

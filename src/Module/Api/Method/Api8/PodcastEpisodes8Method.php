@@ -131,7 +131,7 @@ final class PodcastEpisodes8Method implements MethodInterface
 
         $output->setOffset($input['offset'] ?? 0);
         $output->setLimit($input['limit'] ?? 0);
-        $output->setCount($browse->get_total());
+        $output->setCount(count($results));
 
         $response->getBody()->write(
             $output->podcastEpisodes($results, $user, $input['auth'])

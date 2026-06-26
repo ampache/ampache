@@ -2334,6 +2334,14 @@ class Json6_Data
         return $JSON;
     }
 
+    /**
+     * _filter_objects
+     *
+     * This filters the objects based on the limit and offset
+     *
+     * @param array<int|string> $objects
+     * @return array<int|string>
+     */
     private static function _filter_objects(array $objects, ?bool $encode = null): array
     {
         if (

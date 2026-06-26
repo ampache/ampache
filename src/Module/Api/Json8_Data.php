@@ -2693,8 +2693,17 @@ class Json8_Data
         return $JSON;
     }
 
+    /**
+     * _filter_objects
+     *
+     * This filters the objects based on the limit and offset
+     *
+     * @param array<int|string> $objects
+     * @return array<int|string>
+     */
     private static function _filter_objects(array $objects, ?bool $encode = null): array
     {
+        debug_event(self::class, 'Filtering objects with count: ' . self::$count . ', limit: ' . self::$limit . ', offset: ' . self::$offset, 5);
         if (
             $encode !== null
             && (self::$count > self::$limit || self::$offset > 0)

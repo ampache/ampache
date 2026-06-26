@@ -235,7 +235,8 @@ class Xml8_Data
      */
     public static function browses(array $objects, ?int $parent_id, string $parent_type, string $child_type, ?int $catalog_id): string
     {
-        self::$count = self::$count ?? count($objects);;
+        self::$count = self::$count ?? count($objects);
+        ;
         $md5         = md5(serialize($objects));
         $objects     = self::_filter_objects($objects);
 
@@ -926,7 +927,8 @@ class Xml8_Data
      */
     public static function lists(array $objects): string
     {
-        self::$count = self::$count ?? count($objects);;
+        self::$count = self::$count ?? count($objects);
+        ;
         $md5         = md5(serialize($objects));
         $objects     = self::_filter_objects($objects);
 
@@ -1789,6 +1791,14 @@ class Xml8_Data
         return self::output_xml($string, $full_xml);
     }
 
+    /**
+     * _filter_objects
+     *
+     * This filters the objects based on the limit and offset
+     *
+     * @param array<int|string> $objects
+     * @return array<int|string>
+     */
     private static function _filter_objects(array $objects, ?bool $encode = null): array
     {
         if (
