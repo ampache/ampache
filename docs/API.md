@@ -15,6 +15,8 @@ All dates in the API calls should be passed as [ISO 8601](http://en.wikipedia.or
 
 Ampache8 will release with a new API (API8) based on API6. Changes will be kept to a minimum to allow using API8 as a drop in replacement for API6
 
+Ampache8 will introduce a fully compatible [RESTful](/rest) API implementation supporting all formats and versions.
+
 As of 7.7.1 (API 6.9.0) Ampache fully supports POST data requests for all API methods.
 
 POST requests offer more privacy than a regular GET request because data is sent in the body, not the URL, avoiding exposure in browser history and logs.
