@@ -86,7 +86,7 @@ class Xml8_Data
      */
     public static function albums(array $objects, array $include, User $user, string $auth, bool $full_xml = true): string
     {
-        self::$count = self::$count ?? count($objects);
+        self::$count = self::$count ?: count($objects);
         $md5         = md5(serialize($objects));
         $objects     = self::_filter_objects($objects, $full_xml);
 
@@ -151,7 +151,7 @@ class Xml8_Data
      */
     public static function artists(array $objects, array $include, User $user, string $auth, bool $full_xml = true): string
     {
-        self::$count = self::$count ?? count($objects);
+        self::$count = self::$count ?: count($objects);
         $md5         = md5(serialize($objects));
         $objects     = self::_filter_objects($objects, $full_xml);
 
@@ -235,7 +235,7 @@ class Xml8_Data
      */
     public static function browses(array $objects, ?int $parent_id, string $parent_type, string $child_type, ?int $catalog_id): string
     {
-        self::$count = self::$count ?? count($objects);
+        self::$count = self::$count ?: count($objects);
         $md5         = md5(serialize($objects));
         $objects     = self::_filter_objects($objects);
 
@@ -270,7 +270,7 @@ class Xml8_Data
      */
     public static function catalogs(array $objects, User $user, bool $full_xml = true): string
     {
-        self::$count = self::$count ?? count($objects);
+        self::$count = self::$count ?: count($objects);
         $md5         = md5(serialize($objects));
         $objects     = self::_filter_objects($objects, $full_xml);
 
@@ -311,7 +311,7 @@ class Xml8_Data
      */
     public static function deleted(string $object_type, array $objects): string
     {
-        self::$count = self::$count ?? count($objects);
+        self::$count = self::$count ?: count($objects);
         $objects     = self::_filter_objects($objects);
 
         $string = '';
@@ -521,7 +521,7 @@ class Xml8_Data
      */
     public static function genres(array $objects, User $user): string
     {
-        self::$count = self::$count ?? count($objects);
+        self::$count = self::$count ?: count($objects);
         $md5         = md5(serialize($objects));
         $objects     = self::_filter_objects($objects);
 
@@ -557,7 +557,7 @@ class Xml8_Data
      */
     public static function index(array $objects, string $object_type, User $user, bool $include = false): string
     {
-        self::$count = self::$count ?? count($objects);
+        self::$count = self::$count ?: count($objects);
         $md5         = md5(serialize($objects));
         $objects     = self::_filter_objects($objects);
 
@@ -694,7 +694,7 @@ class Xml8_Data
      */
     public static function indexes(array $objects, string $object_type, User $user, string $auth, bool $full_xml = true, bool $include = false): string
     {
-        self::$count = self::$count ?? count($objects);
+        self::$count = self::$count ?: count($objects);
         $md5         = md5(serialize($objects));
         $objects     = self::_filter_objects($objects, $full_xml);
 
@@ -870,7 +870,7 @@ class Xml8_Data
      */
     public static function labels(array $objects, User $user): string
     {
-        self::$count = self::$count ?? count($objects);
+        self::$count = self::$count ?: count($objects);
         $md5         = md5(serialize($objects));
         $objects     = self::_filter_objects($objects);
 
@@ -899,7 +899,7 @@ class Xml8_Data
      */
     public static function licenses(array $objects, User $user): string
     {
-        self::$count = self::$count ?? count($objects);
+        self::$count = self::$count ?: count($objects);
         $md5         = md5(serialize($objects));
         $objects     = self::_filter_objects($objects);
 
@@ -926,7 +926,7 @@ class Xml8_Data
      */
     public static function lists(array $objects): string
     {
-        self::$count = self::$count ?? count($objects);
+        self::$count = self::$count ?: count($objects);
         $md5         = md5(serialize($objects));
         $objects     = self::_filter_objects($objects);
 
@@ -955,7 +955,7 @@ class Xml8_Data
      */
     public static function live_streams(array $objects, User $user, bool $full_xml = true): string
     {
-        self::$count = self::$count ?? count($objects);
+        self::$count = self::$count ?: count($objects);
         $md5         = md5(serialize($objects));
         $objects     = self::_filter_objects($objects, $full_xml);
 
@@ -1144,7 +1144,7 @@ class Xml8_Data
      */
     public static function playlists(array $objects, User $user, string $auth, bool $songs = false): string
     {
-        self::$count = self::$count ?? count($objects);
+        self::$count = self::$count ?: count($objects);
         $md5         = md5(serialize($objects));
         $objects     = self::_filter_objects($objects);
 
@@ -1221,7 +1221,7 @@ class Xml8_Data
      */
     public static function podcast_episodes(array $objects, User $user, string $auth, bool $full_xml = true): string
     {
-        self::$count = self::$count ?? count($objects);
+        self::$count = self::$count ?: count($objects);
         $md5         = md5(serialize($objects));
         $objects     = self::_filter_objects($objects, $full_xml);
 
@@ -1253,7 +1253,7 @@ class Xml8_Data
      */
     public static function podcasts(array $objects, User $user, string $auth, bool $episodes = false): string
     {
-        self::$count = self::$count ?? count($objects);
+        self::$count = self::$count ?: count($objects);
         $md5         = md5(serialize($objects));
         $objects     = self::_filter_objects($objects);
 
@@ -1442,7 +1442,7 @@ class Xml8_Data
      */
     public static function shares(array $objects, User $user, bool $full_xml = true): string
     {
-        self::$count = self::$count ?? count($objects);
+        self::$count = self::$count ?: count($objects);
         $md5         = md5(serialize($objects));
         $objects     = self::_filter_objects($objects, $full_xml);
 
@@ -1492,7 +1492,7 @@ class Xml8_Data
      */
     public static function song_tags(array $objects, string $auth): string
     {
-        self::$count = self::$count ?? count($objects);
+        self::$count = self::$count ?: count($objects);
         $md5         = md5(serialize($objects));
 
         $string = "<total_count>" . self::$count . "</total_count>\n<md5>" . $md5 . "</md5>\n";
@@ -1598,7 +1598,7 @@ class Xml8_Data
      */
     public static function songs(array $objects, User $user, string $auth, bool $full_xml = true): string
     {
-        self::$count = self::$count ?? count($objects);
+        self::$count = self::$count ?: count($objects);
         $md5         = md5(serialize($objects));
         $objects     = self::_filter_objects($objects, $full_xml);
 
@@ -1744,7 +1744,7 @@ class Xml8_Data
      */
     public static function users(array $objects): string
     {
-        self::$count = self::$count ?? count($objects);
+        self::$count = self::$count ?: count($objects);
         $objects     = self::_filter_objects($objects);
 
         $string = "";
@@ -1767,7 +1767,7 @@ class Xml8_Data
      */
     public static function videos(array $objects, User $user, string $auth, bool $full_xml = true): string
     {
-        self::$count = self::$count ?? count($objects);
+        self::$count = self::$count ?: count($objects);
         $md5         = md5(serialize($objects));
         $objects     = self::_filter_objects($objects, $full_xml);
 

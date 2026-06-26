@@ -86,7 +86,7 @@ class Json8_Data
      */
     public static function albums(array $objects, array $include, User $user, string $auth, bool $encode = true, bool $object = true): string
     {
-        self::$count = self::$count ?? count($objects);
+        self::$count = self::$count ?: count($objects);
         $md5         = md5(serialize($objects));
 
         $JSON = self::albums_array($objects, $include, $user, $auth, $encode);
@@ -218,7 +218,7 @@ class Json8_Data
      */
     public static function albums_array(array $objects, array $include, User $user, string $auth, bool $encode = true): array
     {
-        self::$count = self::$count ?? count($objects);
+        self::$count = self::$count ?: count($objects);
         $objects     = self::_filter_objects($objects, $encode);
 
         // original year (fall back to regular year)
@@ -301,7 +301,7 @@ class Json8_Data
      */
     public static function artists(array $objects, array $include, User $user, string $auth, bool $object = true): string
     {
-        self::$count = self::$count ?? count($objects);
+        self::$count = self::$count ?: count($objects);
         $md5         = md5(serialize($objects));
 
         $JSON = self::artists_array($objects, $include, $user, $auth);
@@ -521,7 +521,7 @@ class Json8_Data
      */
     public static function artists_array(array $objects, array $include, User $user, string $auth, bool $encode = true): array
     {
-        self::$count = self::$count ?? count($objects);
+        self::$count = self::$count ?: count($objects);
         $objects     = self::_filter_objects($objects, $encode);
 
         Rating::build_cache('artist', $objects);
@@ -584,7 +584,7 @@ class Json8_Data
      */
     public static function bookmarks(array $objects, string $auth, bool $include = false, bool $object = true): string
     {
-        self::$count = self::$count ?? count($objects);
+        self::$count = self::$count ?: count($objects);
         $md5         = md5(serialize($objects));
         $objects     = self::_filter_objects($objects);
 
@@ -659,7 +659,7 @@ class Json8_Data
      */
     public static function browses(array $objects, ?int $parent_id, string $parent_type, string $child_type, ?int $catalog_id): string
     {
-        self::$count = self::$count ?? count($objects);
+        self::$count = self::$count ?: count($objects);
         $md5         = md5(serialize($objects));
         $objects     = self::_filter_objects($objects);
 
@@ -701,7 +701,7 @@ class Json8_Data
      */
     public static function catalogs(array $objects, bool $object = true): string
     {
-        self::$count = self::$count ?? count($objects);
+        self::$count = self::$count ?: count($objects);
         $md5         = md5(serialize($objects));
 
         $output = [
@@ -774,7 +774,7 @@ class Json8_Data
      */
     public static function deleted(string $object_type, array $objects): string
     {
-        self::$count = self::$count ?? count($objects);
+        self::$count = self::$count ?: count($objects);
         $md5         = md5(serialize($objects));
         $objects     = self::_filter_objects($objects);
 
@@ -1055,7 +1055,7 @@ class Json8_Data
      */
     public static function genres(array $objects, bool $object = true): string
     {
-        self::$count = self::$count ?? count($objects);
+        self::$count = self::$count ?: count($objects);
         $md5         = md5(serialize($objects));
 
         $JSON = self::genres_array($objects);
@@ -1095,7 +1095,7 @@ class Json8_Data
      */
     public static function genres_array(array $objects): array
     {
-        self::$count = self::$count ?? count($objects);
+        self::$count = self::$count ?: count($objects);
         $objects     = self::_filter_objects($objects);
 
         $JSON = [];
@@ -1138,7 +1138,7 @@ class Json8_Data
      */
     public static function index(array $objects, string $type, User $user, bool $include = false): string
     {
-        self::$count = self::$count ?? count($objects);
+        self::$count = self::$count ?: count($objects);
         $objects     = self::_filter_objects($objects);
 
         $output = [];
@@ -1332,7 +1332,7 @@ class Json8_Data
      */
     public static function labels(array $objects, bool $object = true): string
     {
-        self::$count = self::$count ?? count($objects);
+        self::$count = self::$count ?: count($objects);
         $md5         = md5(serialize($objects));
 
         $JSON = self::labels_array($objects);
@@ -1369,7 +1369,7 @@ class Json8_Data
      */
     public static function labels_array(array $objects): array
     {
-        self::$count = self::$count ?? count($objects);
+        self::$count = self::$count ?: count($objects);
         $objects     = self::_filter_objects($objects);
 
         $JSON = [];
@@ -1409,7 +1409,7 @@ class Json8_Data
      */
     public static function licenses(array $objects, bool $object = true): string
     {
-        self::$count = self::$count ?? count($objects);
+        self::$count = self::$count ?: count($objects);
         $md5         = md5(serialize($objects));
         $objects     = self::_filter_objects($objects);
 
@@ -1451,7 +1451,7 @@ class Json8_Data
      */
     public static function lists(array $objects): string
     {
-        self::$count = self::$count ?? count($objects);
+        self::$count = self::$count ?: count($objects);
         $md5         = md5(serialize($objects));
         $objects     = self::_filter_objects($objects);
 
@@ -1488,7 +1488,7 @@ class Json8_Data
      */
     public static function live_streams(array $objects, bool $object = true): string
     {
-        self::$count = self::$count ?? count($objects);
+        self::$count = self::$count ?: count($objects);
         $md5         = md5(serialize($objects));
         $objects     = self::_filter_objects($objects);
 
@@ -1522,7 +1522,7 @@ class Json8_Data
      */
     public static function live_streams_array(array $objects): array
     {
-        self::$count = self::$count ?? count($objects);
+        self::$count = self::$count ?: count($objects);
         $objects     = self::_filter_objects($objects);
 
         $JSON = [];
@@ -1594,7 +1594,7 @@ class Json8_Data
      */
     public static function playlists(array $objects, User $user, string $auth, bool $songs = false, bool $object = true): string
     {
-        self::$count = self::$count ?? count($objects);
+        self::$count = self::$count ?: count($objects);
         $md5         = md5(serialize($objects));
 
         $JSON = self::playlists_array($objects, $user, $auth, $songs);
@@ -1636,7 +1636,7 @@ class Json8_Data
      */
     public static function playlists_array(array $objects, User $user, string $auth, bool $songs = false): array
     {
-        self::$count = self::$count ?? count($objects);
+        self::$count = self::$count ?: count($objects);
         $objects     = self::_filter_objects($objects);
 
         $JSON = [];
@@ -1728,7 +1728,7 @@ class Json8_Data
      */
     public static function podcast_episodes(array $objects, User $user, string $auth, bool $encode = true, bool $object = true): string
     {
-        self::$count = self::$count ?? count($objects);
+        self::$count = self::$count ?: count($objects);
         $md5         = md5(serialize($objects));
 
         $JSON = self::podcast_episodes_array($objects, $user, $auth, $encode);
@@ -1787,7 +1787,7 @@ class Json8_Data
      */
     public static function podcast_episodes_array(array $objects, User $user, string $auth, bool $encode = true): array
     {
-        self::$count = self::$count ?? count($objects);
+        self::$count = self::$count ?: count($objects);
         $objects     = self::_filter_objects($objects, $encode);
 
         $JSON = [];
@@ -1856,7 +1856,7 @@ class Json8_Data
      */
     public static function podcasts(array $objects, User $user, string $auth, bool $episodes = false, bool $object = true): string
     {
-        self::$count = self::$count ?? count($objects);
+        self::$count = self::$count ?: count($objects);
         $md5         = md5(serialize($objects));
 
         $JSON = self::podcasts_array($objects, $user, $auth, $episodes);
@@ -1935,7 +1935,7 @@ class Json8_Data
      */
     public static function podcasts_array(array $objects, User $user, string $auth, bool $episodes = false): array
     {
-        self::$count = self::$count ?? count($objects);
+        self::$count = self::$count ?: count($objects);
         $objects     = self::_filter_objects($objects);
 
         $podcastRepository = self::getPodcastRepository();
@@ -2043,7 +2043,7 @@ class Json8_Data
      */
     public static function shares(array $objects, User $user, bool $object = true): string
     {
-        self::$count = self::$count ?? count($objects);
+        self::$count = self::$count ?: count($objects);
         $md5         = md5(serialize($objects));
         $objects     = self::_filter_objects($objects);
 
@@ -2144,7 +2144,7 @@ class Json8_Data
      */
     public static function song_tags(array $objects, string $auth, bool $object = true): string
     {
-        self::$count = self::$count ?? count($objects);
+        self::$count = self::$count ?: count($objects);
         $md5         = md5(serialize($objects));
 
         $output = [
@@ -2249,7 +2249,7 @@ class Json8_Data
      */
     public static function songs(array $objects, User $user, string $auth, bool $encode = true, bool $object = true): string
     {
-        self::$count = self::$count ?? count($objects);
+        self::$count = self::$count ?: count($objects);
         $md5         = md5(serialize($objects));
 
         $JSON = self::songs_array($objects, $user, $auth, $encode);
@@ -2347,7 +2347,7 @@ class Json8_Data
         Stream::set_session($auth);
         $playlist_track = 0;
 
-        self::$count = self::$count ?? count($objects);
+        self::$count = self::$count ?: count($objects);
         $objects     = self::_filter_objects($objects, $encode);
 
         Song::build_cache($objects);
@@ -2591,7 +2591,7 @@ class Json8_Data
      */
     public static function users(array $objects, bool $encode = true, bool $object = true): string
     {
-        self::$count = self::$count ?? count($objects);
+        self::$count = self::$count ?: count($objects);
 
         $JSON = self::users_array($objects, $encode);
 
@@ -2612,7 +2612,7 @@ class Json8_Data
      */
     public static function users_array(array $objects, bool $encode = true): array
     {
-        self::$count = self::$count ?? count($objects);
+        self::$count = self::$count ?: count($objects);
         $objects     = self::_filter_objects($objects, $encode);
 
         $JSON = [];
@@ -2639,7 +2639,7 @@ class Json8_Data
      */
     public static function videos(array $objects, User $user, string $auth, bool $object = true): string
     {
-        self::$count = self::$count ?? count($objects);
+        self::$count = self::$count ?: count($objects);
         $md5         = md5(serialize($objects));
 
         $JSON = self::videos_array($objects, $user, $auth);
@@ -2680,7 +2680,7 @@ class Json8_Data
      */
     public static function videos_array(array $objects, User $user, string $auth): array
     {
-        self::$count = self::$count ?? count($objects);
+        self::$count = self::$count ?: count($objects);
         $objects     = self::_filter_objects($objects);
 
         $JSON = [];
