@@ -65,7 +65,7 @@ final class Timeline6Method
     public static function timeline(array $input, User $user): bool
     {
         if (!AmpConfig::get('sociable')) {
-            Api6::error('Enable: sociable', ErrorCodeEnum::ACCESS_DENIED, self::ACTION, 'system', $input['api_format']);
+            Api6::error(ErrorCodeEnum::ACCESS_DENIED, 'Enable: sociable', self::ACTION, 'system', $input['api_format']);
 
             return false;
         }

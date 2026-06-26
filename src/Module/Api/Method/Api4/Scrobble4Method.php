@@ -108,7 +108,7 @@ final class Scrobble4Method
         } else {
             $agent = 'api';
         }
-        $scrobble_id = Song::can_scrobble($song_name, $artist_name, $album_name, (string) $song_mbid, (string) $artist_mbid, (string) $album_mbid);
+        $scrobble_id = Song::can_scrobble($song_name, $artist_name, $album_name, $song_mbid, $artist_mbid, $album_mbid);
 
         if ($scrobble_id === '') {
             Api4::message('error', T_('Failed to scrobble: No item found!'), '401', $input['api_format']);

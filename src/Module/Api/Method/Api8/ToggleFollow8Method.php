@@ -58,7 +58,7 @@ final class ToggleFollow8Method
     public static function toggle_follow(array $input, User $user): bool
     {
         if (!AmpConfig::get('sociable')) {
-            Api::error('Enable: sociable', ErrorCodeEnum::ACCESS_DENIED, self::ACTION, 'system', $input['api_format']);
+            Api::error(ErrorCodeEnum::ACCESS_DENIED, 'Enable: sociable', self::ACTION, 'system', $input['api_format']);
 
             return false;
         }
@@ -70,7 +70,7 @@ final class ToggleFollow8Method
 
         $username = $input['filter'];
         if (empty($username)) {
-            Api::error(sprintf('Bad Request: %s', 'filter'), ErrorCodeEnum::BAD_REQUEST, self::ACTION, 'username', $input['api_format']);
+            Api::error(ErrorCodeEnum::BAD_REQUEST, sprintf('Bad Request: %s', 'filter'), self::ACTION, 'username', $input['api_format']);
 
             return false;
         }
@@ -91,7 +91,7 @@ final class ToggleFollow8Method
         }
 
         /* HINT: Requested object string/id/type ("album", "myusername", "some song title", 1298376) */
-        Api::error(sprintf('Not Found: %s', $username), ErrorCodeEnum::NOT_FOUND, self::ACTION, 'filter', $input['api_format']);
+        Api::error(ErrorCodeEnum::NOT_FOUND, sprintf('Not Found: %s', $username), self::ACTION, 'filter', $input['api_format']);
 
         return false;
     }

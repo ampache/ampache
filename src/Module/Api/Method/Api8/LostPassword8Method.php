@@ -63,13 +63,13 @@ final class LostPassword8Method
     public static function lost_password(array $input): bool
     {
         if (!Mailer::is_mail_enabled()) {
-            Api::error('Bad Request', ErrorCodeEnum::BAD_REQUEST, self::ACTION, 'system', $input['api_format']);
+            Api::error(ErrorCodeEnum::BAD_REQUEST, 'Bad Request', self::ACTION, 'system', $input['api_format']);
 
             return false;
         }
 
         if (AmpConfig::get('simple_user_mode')) {
-            Api::error('simple_user_mode', ErrorCodeEnum::ACCESS_DENIED, self::ACTION, 'system', $input['api_format']);
+            Api::error(ErrorCodeEnum::ACCESS_DENIED, 'simple_user_mode', self::ACTION, 'system', $input['api_format']);
 
             return false;
         }
@@ -86,13 +86,13 @@ final class LostPassword8Method
             // no resets for admin users
             if ($update_user->access == 100) {
                 /* HINT: Requested object string/id/type ("album", "myusername", "some song title", 1298376) */
-                Api::error(sprintf('Bad Request: %s', $user_id), ErrorCodeEnum::BAD_REQUEST, self::ACTION, 'system', $input['api_format']);
+                Api::error(ErrorCodeEnum::BAD_REQUEST, sprintf('Bad Request: %s', $user_id), self::ACTION, 'system', $input['api_format']);
 
                 return false;
             }
             if (empty($update_user->email)) {
                 /* HINT: Requested object string/id/type ("album", "myusername", "some song title", 1298376) */
-                Api::error(sprintf('Bad Request: %s', $user_id), ErrorCodeEnum::BAD_REQUEST, self::ACTION, 'email', $input['api_format']);
+                Api::error(ErrorCodeEnum::BAD_REQUEST, sprintf('Bad Request: %s', $user_id), self::ACTION, 'email', $input['api_format']);
 
                 return false;
             }
@@ -106,7 +106,7 @@ final class LostPassword8Method
 
             return true;
         }
-        Api::error('Bad Request', ErrorCodeEnum::BAD_REQUEST, self::ACTION, 'input', $input['api_format']);
+        Api::error(ErrorCodeEnum::BAD_REQUEST, 'Bad Request', self::ACTION, 'input', $input['api_format']);
 
         return false;
     }

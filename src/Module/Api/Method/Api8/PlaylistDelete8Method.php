@@ -63,7 +63,7 @@ final class PlaylistDelete8Method
         ob_end_clean();
         $playlist = new Playlist((int) $input['filter']);
         if (!$playlist->has_access($user)) {
-            Api::error('Require: 100', ErrorCodeEnum::FAILED_ACCESS_CHECK, self::ACTION, 'account', $input['api_format']);
+            Api::error(ErrorCodeEnum::FAILED_ACCESS_CHECK, 'Require: 100', self::ACTION, 'account', $input['api_format']);
         } else {
             $playlist->delete();
             Api::message('playlist deleted', $input['api_format']);

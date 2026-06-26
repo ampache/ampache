@@ -63,7 +63,7 @@ final class SmartlistDelete8Method
         ob_end_clean();
         $smartlist = new Search((int) str_replace('smart_', '', $input['filter']), 'song', $user);
         if (!$smartlist->has_access($user)) {
-            Api::error('Require: 100', ErrorCodeEnum::FAILED_ACCESS_CHECK, self::ACTION, 'account', $input['api_format']);
+            Api::error(ErrorCodeEnum::FAILED_ACCESS_CHECK, 'Require: 100', self::ACTION, 'account', $input['api_format']);
         } else {
             $smartlist->delete();
             Api::message('smartlist deleted', $input['api_format']);

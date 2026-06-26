@@ -143,7 +143,7 @@ final class Albums6Method implements MethodInterface
 
         $output->setOffset6($input['offset'] ?? 0);
         $output->setLimit6($input['limit'] ?? 0);
-        $output->setCount6($browse->get_total());
+        $output->setCount6(count($results));
 
         $result = $output->albums6(
             $results,

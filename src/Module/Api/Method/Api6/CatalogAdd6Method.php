@@ -96,19 +96,19 @@ final class CatalogAdd6Method
         // confirm the correct data
         if (!in_array(strtolower($type), ['local', 'beets', 'remote', 'subsonic', 'seafile'])) {
             /* HINT: Requested object string/id/type ("album", "myusername", "some song title", 1298376) */
-            Api6::error(sprintf('Bad Request: %s', $type), ErrorCodeEnum::BAD_REQUEST, self::ACTION, 'type', $input['api_format']);
+            Api6::error(ErrorCodeEnum::BAD_REQUEST, sprintf('Bad Request: %s', $type), self::ACTION, 'type', $input['api_format']);
 
             return false;
         }
         $is_remote = in_array($type, ['remote', 'subsonic', 'beetsremote', 'seafile']);
         if ($is_remote) {
             if (!$username) {
-                Api6::error('Bad Request', ErrorCodeEnum::BAD_REQUEST, self::ACTION, 'username', $input['api_format']);
+                Api6::error(ErrorCodeEnum::BAD_REQUEST, 'Bad Request', self::ACTION, 'username', $input['api_format']);
 
                 return false;
             }
             if (!$password) {
-                Api6::error('Bad Request', ErrorCodeEnum::BAD_REQUEST, self::ACTION, 'password', $input['api_format']);
+                Api6::error(ErrorCodeEnum::BAD_REQUEST, 'Bad Request', self::ACTION, 'password', $input['api_format']);
 
                 return false;
             }
@@ -118,7 +118,7 @@ final class CatalogAdd6Method
             : Catalog_local::check_path($path);
         if (!$path_ok) {
             /* HINT: Requested object string/id/type ("album", "myusername", "some song title", 1298376) */
-            Api6::error(sprintf('Bad Request: %s', $path), ErrorCodeEnum::BAD_REQUEST, self::ACTION, 'path', $input['api_format']);
+            Api6::error(ErrorCodeEnum::BAD_REQUEST, sprintf('Bad Request: %s', $path), self::ACTION, 'path', $input['api_format']);
 
             return false;
         }
@@ -146,7 +146,7 @@ final class CatalogAdd6Method
         // create it then retrieve it
         $catalog_id = Catalog::create($object);
         if ($catalog_id == 0) {
-            Api6::error('Bad Request', ErrorCodeEnum::BAD_REQUEST, self::ACTION, 'system', $input['api_format']);
+            Api6::error(ErrorCodeEnum::BAD_REQUEST, 'Bad Request', self::ACTION, 'system', $input['api_format']);
 
             return false;
         }

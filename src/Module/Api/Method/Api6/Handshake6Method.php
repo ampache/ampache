@@ -94,7 +94,7 @@ final class Handshake6Method
         // Version check shouldn't be soo restrictive... only check with initial version to not break clients compatibility
         if ((int) ($version) < Api6::$auth_version && $data_version !== 6) {
             debug_event(self::class, 'Login Failed: Version too old', 1);
-            Api6::error('Received Invalid Handshake', ErrorCodeEnum::INVALID_HANDSHAKE, self::ACTION, 'version', $input['api_format']);
+            Api6::error(ErrorCodeEnum::INVALID_HANDSHAKE, 'Received Invalid Handshake', self::ACTION, 'version', $input['api_format']);
 
             return false;
         }
@@ -135,7 +135,7 @@ final class Handshake6Method
                 ) {
                     debug_event(self::class, 'Login Failed: timestamp out of range ' . $timestamp . '/' . $now_time, 1);
                     AmpError::add('api', T_('Login failed, timestamp is out of range'));
-                    Api6::error('Received Invalid Handshake - Login failed, timestamp is out of range (timestamp: ' . $timestamp . ' Server: ' . $now_time . ')', ErrorCodeEnum::INVALID_HANDSHAKE, self::ACTION, 'account', $input['api_format']);
+                    Api6::error(ErrorCodeEnum::INVALID_HANDSHAKE, 'Received Invalid Handshake - Login failed, timestamp is out of range (timestamp: ' . $timestamp . ' Server: ' . $now_time . ')', self::ACTION, 'account', $input['api_format']);
 
                     return false;
                 }
@@ -146,7 +146,7 @@ final class Handshake6Method
                 if (!$realpwd) {
                     debug_event(self::class, 'Unable to find user with userid of ' . $user_id, 1);
                     AmpError::add('api', T_('Incorrect username or password'));
-                    Api6::error('Received Invalid Handshake - Login failed, timestamp is out of range', ErrorCodeEnum::INVALID_HANDSHAKE, self::ACTION, 'account', $input['api_format']);
+                    Api6::error(ErrorCodeEnum::INVALID_HANDSHAKE, 'Received Invalid Handshake - Login failed, timestamp is out of range', self::ACTION, 'account', $input['api_format']);
 
                     return false;
                 }
@@ -213,7 +213,7 @@ final class Handshake6Method
         }
 
         debug_event(self::class, 'Login Failed, unable to match passphrase', 1);
-        Api6::error('Received Invalid Handshake - Incorrect username or password', ErrorCodeEnum::INVALID_HANDSHAKE, self::ACTION, 'account', $input['api_format']);
+        Api6::error(ErrorCodeEnum::INVALID_HANDSHAKE, 'Received Invalid Handshake - Incorrect username or password', self::ACTION, 'account', $input['api_format']);
 
         return false;
     }

@@ -124,11 +124,11 @@ class Json4_Data
             }
 
             $objArray['time']          = (int) $album->time;
-            $objArray['year']          = (int) $album->year;
+            $objArray['year']          = $album->year;
             $objArray['tracks']        = $songs;
-            $objArray['songcount']     = (int) $album->song_count;
+            $objArray['songcount']     = $album->song_count;
             $objArray['type']          = $album->release_type;
-            $objArray['disk']          = (int) $album->disk_count;
+            $objArray['disk']          = $album->disk_count;
             $objArray['tag']           = self::_tags_array($album->get_tags());
             $objArray['art']           = $art_url;
             $objArray['flag']          = (!$flag->get_flag($user->getId()) ? 0 : 1);
@@ -314,10 +314,10 @@ class Json4_Data
                 ],
                 "tag" => self::_tags_array($song->get_tags()),
                 "track" => (int) $song->track,
-                "time" => (int) $song->time,
+                "time" => $song->time,
                 "mime" => $songMime,
                 "url" => $play_url,
-                "size" => (int) $song->size,
+                "size" => $song->size,
                 "art" => $art_url,
                 "preciserating" => $user_rating,
                 "rating" => $user_rating,
@@ -335,16 +335,13 @@ class Json4_Data
      *
      * This generates a JSON Error message
      * nothing fancy here...
-     *
-     * @param string $code    Error code
-     * @param string $string    Error message
      */
-    public static function error(string $code, string $string): string
+    public static function error(string $code, string $message): string
     {
         return json_encode([
             "error" => [
                 "code" => $code,
-                "message" => $string
+                "message" => $message
             ]
         ], JSON_PRETTY_PRINT) ?: '';
     }
@@ -816,14 +813,14 @@ class Json4_Data
             $ourSong['filename']              = $song->file;
             $ourSong['tag']                   = self::_tags_array($song->get_tags());
             $ourSong['playlisttrack']         = $playlist_track;
-            $ourSong['time']                  = (int) $song->time;
-            $ourSong['year']                  = (int) $song->year;
-            $ourSong['bitrate']               = (int) $songBitrate;
-            $ourSong['rate']                  = (int) $song->rate;
+            $ourSong['time']                  = $song->time;
+            $ourSong['year']                  = $song->year;
+            $ourSong['bitrate']               = $songBitrate;
+            $ourSong['rate']                  = $song->rate;
             $ourSong['mode']                  = $song->mode;
             $ourSong['mime']                  = $songMime;
             $ourSong['url']                   = $play_url;
-            $ourSong['size']                  = (int) $song->size;
+            $ourSong['size']                  = $song->size;
             $ourSong['mbid']                  = $song->mbid;
             $ourSong['album_mbid']            = $song->get_album_mbid();
             $ourSong['artist_mbid']           = $song->get_artist_mbid();
@@ -1047,9 +1044,9 @@ class Json4_Data
                 "title" => $video->title,
                 "mime" => $video->mime,
                 "resolution" => $video->get_f_resolution(),
-                "size" => (int) $video->size,
+                "size" => $video->size,
                 "tag" => self::_tags_array($video->get_tags()),
-                "time" => (int) $video->time,
+                "time" => $video->time,
                 "url" => $video->play_url('', 'api', false, $user->getId(), $user->streamtoken),
                 "art" => $art_url,
                 "flag" => (!$flag->get_flag($user->getId()) ? 0 : 1),

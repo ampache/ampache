@@ -59,7 +59,7 @@ final class FriendsTimeline8Method
     public static function friends_timeline(array $input, User $user): bool
     {
         if (!AmpConfig::get('sociable')) {
-            Api::error('Enable: sociable', ErrorCodeEnum::ACCESS_DENIED, self::ACTION, 'system', $input['api_format']);
+            Api::error(ErrorCodeEnum::ACCESS_DENIED, 'Enable: sociable', self::ACTION, 'system', $input['api_format']);
 
             return false;
         }
