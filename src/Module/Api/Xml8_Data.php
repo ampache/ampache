@@ -420,12 +420,12 @@ class Xml8_Data
      *
      * This returns folders to the user in an xml document.
      *
-     * @param array<int|string> $folder_ids Folder children id's in object_type-Object_id format.
+     * @param array<int|string> $objects Folder children id's in object_type-Object_id format.
      */
-    public static function folders(array $folder_ids, Folder $folder, User $user, string $auth): string
+    public static function folders(array $objects, Folder $folder, User $user, string $auth): string
     {
-        self::$count = self::$count ?? count($folder_ids);
-        $folder_ids  = self::_filter_objects($folder_ids);
+        self::$count = self::$count ?? count($objects);
+        $objects     = self::_filter_objects($objects);
 
         $xml = new SimpleXMLElement(
             sprintf(
@@ -434,7 +434,7 @@ class Xml8_Data
             )
         );
         $xml->addChild('total_count', (string) self::$count);
-        $xml->addChild('md5', md5(serialize($folder_ids)));
+        $xml->addChild('md5', md5(serialize($objects)));
 
         $xml_folder = $xml->addChild('folder');
         $xml_folder->addAttribute('id', (string) $folder->getId());
@@ -444,7 +444,7 @@ class Xml8_Data
         $xml_folder->addChild('catalog', (string) $folder->catalog);
         $xml_items = $xml_folder->addChild('items');
 
-        foreach ($folder_ids as $object) {
+        foreach ($objects as $object) {
             preg_match('/([a-z_]+)-([0-9]+)/', (string) $object, $matches);
             $object_type = $matches[1] ?? null;
             $object_id   = (int) ($matches[2] ?? 0);

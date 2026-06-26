@@ -86,8 +86,7 @@ class Json6_Data
     {
         self::$count = self::$count ?: count($objects);
         $md5         = md5(serialize($objects));
-
-        $JSON = self::albums_array($objects, $include, $user, $auth, $encode);
+        $JSON        = self::albums_array($objects, $include, $user, $auth, $encode);
 
         if ($object) {
             $output = [
@@ -233,8 +232,7 @@ class Json6_Data
     {
         self::$count = self::$count ?: count($objects);
         $md5         = md5(serialize($objects));
-
-        $JSON = self::artists_array($objects, $include, $user, $auth);
+        $JSON        = self::artists_array($objects, $include, $user, $auth);
 
         if ($object) {
             $output = [
@@ -770,8 +768,7 @@ class Json6_Data
     {
         self::$count = self::$count ?: count($objects);
         $md5         = md5(serialize($objects));
-
-        $JSON = self::genres_array($objects);
+        $JSON        = self::genres_array($objects);
 
         if ($object) {
             $output = [
@@ -1046,8 +1043,7 @@ class Json6_Data
     {
         self::$count = self::$count ?: count($objects);
         $md5         = md5(serialize($objects));
-
-        $JSON = self::labels_array($objects);
+        $JSON        = self::labels_array($objects);
 
         if ($object) {
             $output = [
@@ -1203,9 +1199,7 @@ class Json6_Data
     {
         self::$count = self::$count ?: count($objects);
         $md5         = md5(serialize($objects));
-        $objects     = self::_filter_objects($objects);
-
-        $JSON = self::live_streams_array($objects);
+        $JSON        = self::live_streams_array($objects);
 
         if ($object) {
             $output = [
@@ -1309,8 +1303,7 @@ class Json6_Data
     {
         self::$count = self::$count ?: count($objects);
         $md5         = md5(serialize($objects));
-
-        $JSON = self::playlists_array($objects, $user, $auth, $songs);
+        $JSON        = self::playlists_array($objects, $user, $auth, $songs);
 
         if ($object) {
             $output = [
@@ -1443,8 +1436,7 @@ class Json6_Data
     {
         self::$count = self::$count ?: count($objects);
         $md5         = md5(serialize($objects));
-
-        $JSON = self::podcast_episodes_array($objects, $user, $auth, $encode);
+        $JSON        = self::podcast_episodes_array($objects, $user, $auth, $encode);
 
         if ($object) {
             $output = [
@@ -1570,8 +1562,7 @@ class Json6_Data
     {
         self::$count = self::$count ?: count($objects);
         $md5         = md5(serialize($objects));
-
-        $JSON = self::podcasts_array($objects, $user, $auth, $episodes);
+        $JSON        = self::podcasts_array($objects, $user, $auth, $episodes);
 
         if ($object) {
             $output = [
@@ -1962,8 +1953,7 @@ class Json6_Data
     {
         self::$count = self::$count ?: count($objects);
         $md5         = md5(serialize($objects));
-
-        $JSON = self::songs_array($objects, $user, $auth, $encode);
+        $JSON        = self::songs_array($objects, $user, $auth, $encode);
 
         if ($object) {
             $output = [
@@ -2231,8 +2221,7 @@ class Json6_Data
     public static function users(array $objects, bool $encode = true, bool $object = true): string
     {
         self::$count = self::$count ?: count($objects);
-
-        $JSON = self::users_array($objects, $encode);
+        $JSON        = self::users_array($objects, $encode);
 
         if ($object) {
             $output = ["user" => $JSON];
@@ -2280,8 +2269,7 @@ class Json6_Data
     {
         self::$count = self::$count ?: count($objects);
         $md5         = md5(serialize($objects));
-
-        $JSON = self::videos_array($objects, $user, $auth);
+        $JSON        = self::videos_array($objects, $user, $auth);
 
         if ($object) {
             $output = [
