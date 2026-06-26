@@ -46,7 +46,8 @@ use Exception;
  */
 final class CatalogFile8Method
 {
-    public const ACTION = 'catalog_file';
+    public const ACTION      = 'catalog_file';
+    public const REST_ACTION = 'file';
 
     /**
      * catalog_file
@@ -85,13 +86,13 @@ final class CatalogFile8Method
 
         // confirm that a valid task is going to happen
         if (!AmpConfig::get('delete_from_disk') && in_array('remove', $task)) {
-            Api::error('Enable: delete_from_disk', ErrorCodeEnum::ACCESS_DENIED, self::ACTION, 'system', $input['api_format']);
+            Api::error(ErrorCodeEnum::ACCESS_DENIED, 'Enable: delete_from_disk', self::ACTION, 'system', $input['api_format']);
 
             return false;
         }
         if (!file_exists($file) && !in_array('clean', $task)) {
             /* HINT: Requested object string/id/type ("album", "myusername", "some song title", 1298376) */
-            Api::error(sprintf('Not Found: %s', $file), ErrorCodeEnum::NOT_FOUND, self::ACTION, 'file', $input['api_format']);
+            Api::error(ErrorCodeEnum::NOT_FOUND, sprintf('Not Found: %s', $file), self::ACTION, 'file', $input['api_format']);
 
             return false;
         }
@@ -99,7 +100,7 @@ final class CatalogFile8Method
         foreach ($task as $item) {
             if (!in_array($item, ['add', 'clean', 'verify', 'remove'])) {
                 /* HINT: Requested object string/id/type ("album", "myusername", "some song title", 1298376) */
-                Api::error(sprintf('Bad Request: %s', $item), ErrorCodeEnum::BAD_REQUEST, self::ACTION, 'task', $input['api_format']);
+                Api::error(ErrorCodeEnum::BAD_REQUEST, sprintf('Bad Request: %s', $item), self::ACTION, 'task', $input['api_format']);
 
                 return false;
             }
@@ -110,7 +111,7 @@ final class CatalogFile8Method
         $catalog     = Catalog::create_from_id($catalog_id);
         if ($catalog === null) {
             /* HINT: Requested object string/id/type ("album", "myusername", "some song title", 1298376) */
-            Api::error(sprintf('Not Found: %s', $catalog_id), ErrorCodeEnum::NOT_FOUND, self::ACTION, 'catalog', $input['api_format']);
+            Api::error(ErrorCodeEnum::NOT_FOUND, sprintf('Not Found: %s', $catalog_id), self::ACTION, 'catalog', $input['api_format']);
 
             return false;
         }
@@ -154,7 +155,7 @@ final class CatalogFile8Method
                                 $catalog->add_file($file, []);
                             } catch (Exception) {
                                 /* HINT: Requested object string/id/type ("album", "myusername", "some song title", 1298376) */
-                                Api::error(sprintf('Bad Request: %s', $file), ErrorCodeEnum::GENERIC_ERROR, self::ACTION, 'file', $input['api_format']);
+                                Api::error(ErrorCodeEnum::GENERIC_ERROR, sprintf('Bad Request: %s', $file), self::ACTION, 'file', $input['api_format']);
 
                                 return false;
                             }
@@ -174,11 +175,26 @@ final class CatalogFile8Method
             }
             Api::message('successfully started: ' . $output_task . ' for ' . $file, $input['api_format']);
         } else {
-            Api::error('Not Found', ErrorCodeEnum::NOT_FOUND, self::ACTION, 'catalog', $input['api_format']);
+            Api::error(ErrorCodeEnum::NOT_FOUND, 'Not Found', self::ACTION, 'catalog', $input['api_format']);
 
             return false;
         }
 
         return true;
+    }
+
+    /**
+     * @param array{
+     *     file: string,
+     *     task: string,
+     *     filter?: int,
+     *     catalog?: int,
+     *     api_format: string,
+     *     auth: string,
+     * } $input
+     */
+    public static function file(array $input, User $user): bool
+    {
+        return self::catalog_file($input, $user);
     }
 }

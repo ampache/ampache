@@ -70,7 +70,7 @@ final class XmlRestApiApplication implements ApiApplicationInterface
         $input   = $request->getQueryParams();
 
         // normalize input types (REST paths)
-        $type = (isset($input['type']) && !empty($input['type']))
+        $type = (!empty($input['type']))
             ? $this->apiHandler->normalizeType((string) $input['type'])
             : null;
 

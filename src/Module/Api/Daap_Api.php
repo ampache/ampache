@@ -109,7 +109,7 @@ class Daap_Api
         self::_setHeaders();
 
         if (Core::get_server('REQUEST_METHOD') != 'OPTIONS') {
-            header("Content-length: " . strlen((string) $string));
+            header("Content-length: " . strlen($string));
             echo $string;
         } else {
             header("Content-type: text/plain");
@@ -511,7 +511,7 @@ class Daap_Api
         echo $data;
         ob_flush();
 
-        return strlen((string) $data);
+        return strlen($data);
     }
 
     /**
@@ -519,7 +519,7 @@ class Daap_Api
      */
     public static function output_header($curl, string $header): int
     {
-        $rheader = trim((string) $header);
+        $rheader = trim($header);
         $rhpart  = explode(':', $rheader);
         if (!empty($rheader) && count($rhpart) > 1) {
             if ($rhpart[0] != "Transfer-Encoding") {
@@ -527,7 +527,7 @@ class Daap_Api
             }
         }
 
-        return strlen((string) $header);
+        return strlen($header);
     }
 
     /**

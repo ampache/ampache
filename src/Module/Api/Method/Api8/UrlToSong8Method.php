@@ -66,7 +66,7 @@ final class UrlToSong8Method
         $song_url = html_entity_decode((string) $input['url'], ENT_QUOTES, $charset);
         $url_data = Stream_Url::parse($song_url);
         if (!array_key_exists('id', $url_data)) {
-            Api::error('Bad Request', ErrorCodeEnum::BAD_REQUEST, self::ACTION, 'url', $input['api_format']);
+            Api::error(ErrorCodeEnum::BAD_REQUEST, 'Bad Request', self::ACTION, 'url', $input['api_format']);
 
             return false;
         }
