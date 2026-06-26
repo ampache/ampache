@@ -87,7 +87,7 @@ class Upnp_Api
             ];
         }
         //debug_event(self::class, 'Dumping $search results: '.var_export( $ids, true ), 5);
-        debug_event(self::class, ' ' . (string) count($ids) . ' ids looking for type ' . $data['type'], 5);
+        debug_event(self::class, ' ' . count($ids) . ' ids looking for type ' . $data['type'], 5);
 
         $mediaItems = [];
         $maxCount   = 0;
@@ -109,7 +109,7 @@ class Upnp_Api
                     $song = new Song($song_id);
                     if ($song->isNew() === false) {
                         $song->fill_ext_info();
-                        $parent       = 'amp://music/albums/' . (string) $song->album;
+                        $parent       = 'amp://music/albums/' . $song->album;
                         $mediaItems[] = self::_itemSong($song, $parent);
                     }
                 }
@@ -137,7 +137,7 @@ class Upnp_Api
                 [$maxCount, $ids] = self::_slice($ids, $start, $count);
                 foreach ($ids as $tag_id) {
                     $tag          = new Tag($tag_id);
-                    $mediaItems[] = self::_itemTag($tag, "amp://music/tags");
+                    $mediaItems[] = self::_itemTag($tag);
                 }
                 break;
         }
@@ -1028,7 +1028,7 @@ class Upnp_Api
         }
 
         while ($reader->read()) {
-            debug_event(self::class, $reader->localName . ' ' . $reader->nodeType . ' ' . (string) XMLReader::ELEMENT . ' ' . (string) $reader->isEmptyElement, 5);
+            debug_event(self::class, $reader->localName . ' ' . $reader->nodeType . ' ' . XMLReader::ELEMENT . ' ' . $reader->isEmptyElement, 5);
 
             if (($reader->nodeType == XMLReader::ELEMENT)) {
                 switch ($reader->localName) {
@@ -1343,11 +1343,11 @@ class Upnp_Api
 
     /**
      */
-    private static function _itemTag(Tag $tag, string $parent): array
+    private static function _itemTag(Tag $tag): array
     {
         return [
             'id' => 'amp://music/tags/' . $tag->id,
-            'parentID' => $parent,
+            'parentID' => "amp://music/tags",
             'restricted' => 'false',
             'childCount' => 1,
             'dc:title' => self::_replaceSpecialSymbols(scrub_out($tag->name)),
@@ -1437,8 +1437,7 @@ class Upnp_Api
                     break;
                 case 'upnp:author@role':
                     $term['ruletype'] = $tok[2];
-
-                    return [];
+                    break;
                 default:
                     return [];
             }
@@ -1607,7 +1606,7 @@ class Upnp_Api
                 if ($host == "239.255.255.250") {
                     socket_set_option($socket, SOL_SOCKET, SO_BROADCAST, 1);
                 }
-                socket_sendto($socket, $buf, strlen((string) $buf), 0, $host, $port);
+                socket_sendto($socket, $buf, strlen($buf), 0, $host, $port);
                 socket_close($socket);
             }
         } else {

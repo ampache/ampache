@@ -229,9 +229,6 @@ class Xml3_Data
      * error
      *
      * This generates a standard XML Error message
-     *
-     * @param int $code Error code
-     * @param string $string Error message
      */
     public static function error(int $code, string $string): string
     {

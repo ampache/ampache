@@ -35,7 +35,19 @@ use Ampache\Repository\PreferenceRepositoryInterface;
  */
 final class UserPreferences8Method
 {
-    public const ACTION = 'user_preferences';
+    public const ACTION      = 'user_preferences';
+    public const REST_ACTION = 'preferences';
+
+    /**
+     * @param array{
+     *     api_format: string,
+     *     auth: string,
+     * } $input
+     */
+    public static function preferences(array $input, User $user): void
+    {
+        self::user_preferences($input, $user);
+    }
 
     /**
      * user_preferences

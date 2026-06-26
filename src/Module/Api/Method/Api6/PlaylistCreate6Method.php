@@ -72,7 +72,7 @@ final class PlaylistCreate6Method
 
         $object_id = Playlist::create($name, $type, $user->id, false);
         if (!$object_id) {
-            Api6::error('Bad Request', ErrorCodeEnum::BAD_REQUEST, self::ACTION, 'input', $input['api_format']);
+            Api6::error(ErrorCodeEnum::BAD_REQUEST, 'Bad Request', self::ACTION, 'input', $input['api_format']);
 
             return false;
         }

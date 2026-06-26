@@ -168,7 +168,7 @@ class Api5
         if (!Access::check($type, $level, $user_id)) {
             debug_event(self::class, $type->value . " '" . $level->value . "' required on " . $method . " function call.", 2);
             /* HINT: Access level, eg 75, 100 */
-            self::error(sprintf(T_('Require: %s'), $level->value), '4742', $method, 'account', $format);
+            self::error('4742', sprintf(T_('Require: %s'), $level->value), $method, 'account', $format);
 
             return false;
         }
@@ -195,7 +195,7 @@ class Api5
         debug_event(self::class, "'" . $parameter . "' required on " . $method . " function call.", 2);
 
         /* HINT: Requested object string/id/type ("album", "myusername", "some song title", 1298376) */
-        self::error(sprintf(T_('Bad Request: %s'), $parameter), '4710', $method, 'system', $input['api_format']);
+        self::error('4710', sprintf(T_('Bad Request: %s'), $parameter), $method, 'system', $input['api_format']);
 
         return false;
     }
@@ -219,14 +219,14 @@ class Api5
      * error
      * call the correct error message depending on format
      */
-    public static function error(string $message, int|string $error_code, string $method, string $error_type, string $format = 'xml'): void
+    public static function error(int|string $code, string $message, string $method, string $error_type, string $format = 'xml'): void
     {
         switch ($format) {
             case 'json':
-                echo Json5_Data::error($error_code, $message, $method, $error_type);
+                echo Json5_Data::error($code, $message, $method, $error_type);
                 break;
             default:
-                echo Xml5_Data::error($error_code, $message, $method, $error_type);
+                echo Xml5_Data::error($code, $message, $method, $error_type);
         }
     }
 

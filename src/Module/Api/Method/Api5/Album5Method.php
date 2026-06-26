@@ -62,7 +62,7 @@ final class Album5Method
         $objectId = $input['filter'] ?? null;
 
         if ($objectId === null) {
-            Api5::error(sprintf(T_('Bad Request: %s'), $objectId), ErrorCodeEnum::BAD_REQUEST, self::ACTION, 'type', $input['api_format']);
+            Api5::error(ErrorCodeEnum::BAD_REQUEST, sprintf(T_('Bad Request: %s'), $objectId), self::ACTION, 'type', $input['api_format']);
 
             return false;
         }

@@ -76,7 +76,7 @@ final class User8Method
                 || !in_array($check_user->getId(), $userRepository->getValid(true))
             ) {
                 /* HINT: Requested object string/id/type */
-                Api::error(sprintf('Not Found: %s', $username), ErrorCodeEnum::NOT_FOUND, self::ACTION, 'username', $input['api_format']);
+                Api::error(ErrorCodeEnum::NOT_FOUND, sprintf('Not Found: %s', $username), self::ACTION, 'username', $input['api_format']);
 
                 return false;
             }

@@ -77,12 +77,14 @@ class Api
         Method\Api8\Bookmarks8Method::ACTION => Method\Api8\Bookmarks8Method::class,
         Method\Api8\Browse8Method::ACTION => Method\Api8\Browse8Method::class,
         Method\Api8\CatalogAction8Method::ACTION => Method\Api8\CatalogAction8Method::class,
+        Method\Api8\CatalogAction8Method::REST_ACTION => Method\Api8\CatalogAction8Method::class,
         Method\Api8\CatalogAdd8Method::ACTION => Method\Api8\CatalogAdd8Method::class,
         Method\Api8\CatalogCreate8Method::ACTION => Method\Api8\CatalogCreate8Method::class,
         Method\Api8\CatalogCreate8Method::REST_ACTION => Method\Api8\CatalogCreate8Method::class,
         Method\Api8\CatalogDelete8Method::ACTION => Method\Api8\CatalogDelete8Method::class,
         Method\Api8\CatalogDelete8Method::REST_ACTION => Method\Api8\CatalogDelete8Method::class,
         Method\Api8\CatalogFile8Method::ACTION => Method\Api8\CatalogFile8Method::class,
+        Method\Api8\CatalogFile8Method::REST_ACTION => Method\Api8\CatalogFile8Method::class,
         Method\Api8\CatalogFolder8Method::ACTION => Method\Api8\CatalogFolder8Method::class,
         Method\Api8\Catalog8Method::ACTION => Method\Api8\Catalog8Method::class,
         Method\Api8\Catalogs8Method::ACTION => Method\Api8\Catalogs8Method::class,
@@ -166,13 +168,16 @@ class Api
         Method\Api8\PreferenceEdit8Method::ACTION => Method\Api8\PreferenceEdit8Method::class,
         Method\Api8\PreferenceEdit8Method::REST_ACTION => Method\Api8\PreferenceEdit8Method::class,
         Method\Api8\Player8Method::ACTION => Method\Api8\Player8Method::class,
+        Method\Api8\Player8Method::REST_ACTION => Method\Api8\Player8Method::class,
         Method\Api8\Rate8Method::ACTION => Method\Api8\Rate8Method::class,
         Method\Api8\RecordPlay8Method::ACTION => Method\Api8\RecordPlay8Method::class,
         Method\Api8\Register8Method::ACTION => Method\Api8\Register8Method::class,
         Method\Api8\Scrobble8Method::ACTION => Method\Api8\Scrobble8Method::class,
         Method\Api8\Search8Method::ACTION => Method\Api8\Search8Method::class,
         Method\Api8\SearchGroup8Method::ACTION => Method\Api8\SearchGroup8Method::class,
+        Method\Api8\SearchGroup8Method::REST_ACTION => Method\Api8\SearchGroup8Method::class,
         Method\Api8\SearchRules8Method::ACTION => Method\Api8\SearchRules8Method::class,
+        Method\Api8\SearchRules8Method::REST_ACTION => Method\Api8\SearchRules8Method::class,
         Method\Api8\SearchSongs8Method::ACTION => Method\Api8\SearchSongs8Method::class,
         Method\Api8\ShareCreate8Method::ACTION => Method\Api8\ShareCreate8Method::class,
         Method\Api8\ShareCreate8Method::REST_ACTION => Method\Api8\ShareCreate8Method::class,
@@ -215,6 +220,7 @@ class Api
         Method\Api8\UserPlaylists8Method::ACTION => Method\Api8\UserPlaylists8Method::class,
         Method\Api8\UserPreference8Method::ACTION => Method\Api8\UserPreference8Method::class,
         Method\Api8\UserPreferences8Method::ACTION => Method\Api8\UserPreferences8Method::class,
+        Method\Api8\UserPreferences8Method::REST_ACTION => Method\Api8\UserPreferences8Method::class,
         Method\Api8\UserSmartlists8Method::ACTION => Method\Api8\UserSmartlists8Method::class,
         Method\Api8\Users8Method::ACTION => Method\Api8\Users8Method::class,
         Method\Api8\Video8Method::ACTION => Method\Api8\Video8Method::class,
@@ -236,7 +242,7 @@ class Api
         if (!Access::check($type, $level, $user_id)) {
             debug_event(self::class, $type->value . " '" . $level->value . "' required on " . $method . " function call.", 2);
             /* HINT: Access level, eg 75, 100 */
-            self::error(sprintf(T_('Require: %s'), $level->value), '4742', $method, 'account', $format);
+            self::error('4742', sprintf(T_('Require: %s'), $level->value), $method, 'account', $format);
 
             return false;
         }
@@ -262,7 +268,7 @@ class Api
         debug_event(self::class, "'" . $parameter . "' required on " . $method . " function call.", 2);
 
         /* HINT: Requested object string/id/type ("album", "myusername", "some song title", 1298376) */
-        self::error(sprintf(T_('Bad Request: %s'), $parameter), '4710', $method, 'system', $input['api_format']);
+        self::error('4710', sprintf(T_('Bad Request: %s'), $parameter), $method, 'system', $input['api_format']);
 
         return false;
     }
@@ -286,14 +292,14 @@ class Api
      * error
      * call the correct error message depending on format
      */
-    public static function error(string $message, int|string $error_code, string $method, string $error_type, string $format = 'xml'): void
+    public static function error(int|string $code, string $message, string $method, string $error_type, string $format = 'xml'): void
     {
         switch ($format) {
             case 'json':
-                echo Json8_Data::error($error_code, $message, $method, $error_type);
+                echo Json8_Data::error($code, $message, $method, $error_type);
                 break;
             default:
-                echo Xml8_Data::error($error_code, $message, $method, $error_type);
+                echo Xml8_Data::error($code, $message, $method, $error_type);
         }
     }
 

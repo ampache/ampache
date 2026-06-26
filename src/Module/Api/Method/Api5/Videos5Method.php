@@ -63,7 +63,7 @@ final class Videos5Method
     public static function videos(array $input, User $user): bool
     {
         if (!AmpConfig::get('allow_video')) {
-            Api5::error(T_('Enable: video'), ErrorCodeEnum::ACCESS_DENIED, self::ACTION, 'system', $input['api_format']);
+            Api5::error(ErrorCodeEnum::ACCESS_DENIED, T_('Enable: video'), self::ACTION, 'system', $input['api_format']);
 
             return false;
         }

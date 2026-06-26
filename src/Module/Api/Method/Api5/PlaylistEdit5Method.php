@@ -85,14 +85,14 @@ final class PlaylistEdit5Method
 
         if ($playlist->isNew()) {
             /* HINT: Requested object string/id/type ("album", "myusername", "some song title", 1298376) */
-            Api5::error(sprintf(T_('Not Found: %s'), $object_id), ErrorCodeEnum::NOT_FOUND, self::ACTION, 'filter', $input['api_format']);
+            Api5::error(ErrorCodeEnum::NOT_FOUND, sprintf(T_('Not Found: %s'), $object_id), self::ACTION, 'filter', $input['api_format']);
 
             return false;
         }
 
         // don't continue if you didn't actually get a playlist or the access level
         if (!$playlist->has_access($user)) {
-            Api5::error(T_('Require: 100'), ErrorCodeEnum::FAILED_ACCESS_CHECK, self::ACTION, 'account', $input['api_format']);
+            Api5::error(ErrorCodeEnum::FAILED_ACCESS_CHECK, T_('Require: 100'), self::ACTION, 'account', $input['api_format']);
 
             return false;
         }
@@ -128,7 +128,7 @@ final class PlaylistEdit5Method
         }
         // if you didn't make any changes; tell me
         if (!($name || $type) && !$change_made) {
-            Api5::error(T_('Bad Request'), ErrorCodeEnum::BAD_REQUEST, self::ACTION, 'input', $input['api_format']);
+            Api5::error(ErrorCodeEnum::BAD_REQUEST, T_('Bad Request'), self::ACTION, 'input', $input['api_format']);
 
             return false;
         }

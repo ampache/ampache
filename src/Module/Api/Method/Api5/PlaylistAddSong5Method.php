@@ -65,13 +65,13 @@ final class PlaylistAddSong5Method
         $playlist = new Playlist((int) $input['filter']);
         $song     = (int) $input['song'];
         if (!$playlist->has_collaborate($user)) {
-            Api5::error(T_('Require: 100'), ErrorCodeEnum::FAILED_ACCESS_CHECK, self::ACTION, 'account', $input['api_format']);
+            Api5::error(ErrorCodeEnum::FAILED_ACCESS_CHECK, T_('Require: 100'), self::ACTION, 'account', $input['api_format']);
 
             return false;
         }
         if ((AmpConfig::get('unique_playlist') || (array_key_exists('check', $input) && (int) $input['check'] == 1)) && $playlist->has_item($song)) {
             /* HINT: Requested object string/id/type ("album", "myusername", "some song title", 1298376) */
-            Api5::error(sprintf(T_('Bad Request: %s'), $song), ErrorCodeEnum::BAD_REQUEST, self::ACTION, 'duplicate', $input['api_format']);
+            Api5::error(ErrorCodeEnum::BAD_REQUEST, sprintf(T_('Bad Request: %s'), $song), self::ACTION, 'duplicate', $input['api_format']);
 
             return false;
         }

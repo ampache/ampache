@@ -68,12 +68,14 @@ class Api6
         Method\Api6\Bookmarks6Method::ACTION => Method\Api6\Bookmarks6Method::class,
         Method\Api6\Browse6Method::ACTION => Method\Api6\Browse6Method::class,
         Method\Api6\CatalogAction6Method::ACTION => Method\Api6\CatalogAction6Method::class,
+        Method\Api6\CatalogAction6Method::REST_ACTION => Method\Api6\CatalogAction6Method::class,
         Method\Api6\CatalogAdd6Method::ACTION => Method\Api6\CatalogAdd6Method::class,
         Method\Api6\CatalogCreate6Method::ACTION => Method\Api6\CatalogCreate6Method::class,
         Method\Api6\CatalogCreate6Method::REST_ACTION => Method\Api6\CatalogCreate6Method::class,
         Method\Api6\CatalogDelete6Method::ACTION => Method\Api6\CatalogDelete6Method::class,
         Method\Api6\CatalogDelete6Method::REST_ACTION => Method\Api6\CatalogDelete6Method::class,
         Method\Api6\CatalogFile6Method::ACTION => Method\Api6\CatalogFile6Method::class,
+        Method\Api6\CatalogFile6Method::REST_ACTION => Method\Api6\CatalogFile6Method::class,
         Method\Api6\CatalogFolder6Method::ACTION => Method\Api6\CatalogFolder6Method::class,
         Method\Api6\Catalog6Method::ACTION => Method\Api6\Catalog6Method::class,
         Method\Api6\Catalogs6Method::ACTION => Method\Api6\Catalogs6Method::class,
@@ -158,13 +160,16 @@ class Api6
         Method\Api6\PreferenceEdit6Method::ACTION => Method\Api6\PreferenceEdit6Method::class,
         Method\Api6\PreferenceEdit6Method::REST_ACTION => Method\Api6\PreferenceEdit6Method::class,
         Method\Api6\Player6Method::ACTION => Method\Api6\Player6Method::class,
+        Method\Api6\Player6Method::REST_ACTION => Method\Api6\Player6Method::class,
         Method\Api6\Rate6Method::ACTION => Method\Api6\Rate6Method::class,
         Method\Api6\RecordPlay6Method::ACTION => Method\Api6\RecordPlay6Method::class,
         Method\Api6\Register6Method::ACTION => Method\Api6\Register6Method::class,
         Method\Api6\Scrobble6Method::ACTION => Method\Api6\Scrobble6Method::class,
         Method\Api6\Search6Method::ACTION => Method\Api6\Search6Method::class,
         Method\Api6\SearchGroup6Method::ACTION => Method\Api6\SearchGroup6Method::class,
+        Method\Api6\SearchGroup6Method::REST_ACTION => Method\Api6\SearchGroup6Method::class,
         Method\Api6\SearchRules6Method::ACTION => Method\Api6\SearchRules6Method::class,
+        Method\Api6\SearchRules6Method::REST_ACTION => Method\Api6\SearchRules6Method::class,
         Method\Api6\SearchSongs6Method::ACTION => Method\Api6\SearchSongs6Method::class,
         Method\Api6\ShareCreate6Method::ACTION => Method\Api6\ShareCreate6Method::class,
         Method\Api6\ShareCreate6Method::REST_ACTION => Method\Api6\ShareCreate6Method::class,
@@ -207,6 +212,7 @@ class Api6
         Method\Api6\UserPlaylists6Method::ACTION => Method\Api6\UserPlaylists6Method::class,
         Method\Api6\UserPreference6Method::ACTION => Method\Api6\UserPreference6Method::class,
         Method\Api6\UserPreferences6Method::ACTION => Method\Api6\UserPreferences6Method::class,
+        Method\Api6\UserPreferences6Method::REST_ACTION => Method\Api6\UserPreferences6Method::class,
         Method\Api6\UserSmartlists6Method::ACTION => Method\Api6\UserSmartlists6Method::class,
         Method\Api6\Users6Method::ACTION => Method\Api6\Users6Method::class,
         Method\Api6\UserUpdate66Method::ACTION => Method\Api6\UserUpdate66Method::class,
@@ -230,7 +236,7 @@ class Api6
         if (!Access::check($type, $level, $user_id)) {
             debug_event(self::class, $type->value . " '" . $level->value . "' required on " . $method . " function call.", 2);
             /* HINT: Access level, eg 75, 100 */
-            self::error(sprintf(T_('Require: %s'), $level->value), '4742', $method, 'account', $format);
+            self::error('4742', sprintf(T_('Require: %s'), $level->value), $method, 'account', $format);
 
             return false;
         }
@@ -256,7 +262,7 @@ class Api6
         debug_event(self::class, "'" . $parameter . "' required on " . $method . " function call.", 2);
 
         /* HINT: Requested object string/id/type ("album", "myusername", "some song title", 1298376) */
-        self::error(sprintf(T_('Bad Request: %s'), $parameter), '4710', $method, 'system', $input['api_format']);
+        self::error('4710', sprintf(T_('Bad Request: %s'), $parameter), $method, 'system', $input['api_format']);
 
         return false;
     }
@@ -280,14 +286,14 @@ class Api6
      * error
      * call the correct error message depending on format
      */
-    public static function error(string $message, int|string $error_code, string $method, string $error_type, string $format = 'xml'): void
+    public static function error(int|string $code, string $message, string $method, string $error_type, string $format = 'xml'): void
     {
         switch ($format) {
             case 'json':
-                echo Json6_Data::error($error_code, $message, $method, $error_type);
+                echo Json6_Data::error($code, $message, $method, $error_type);
                 break;
             default:
-                echo Xml6_Data::error($error_code, $message, $method, $error_type);
+                echo Xml6_Data::error($code, $message, $method, $error_type);
         }
     }
 

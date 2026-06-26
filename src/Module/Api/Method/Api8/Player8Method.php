@@ -42,7 +42,26 @@ use Ampache\Repository\Model\Video;
  */
 final class Player8Method
 {
-    public const ACTION = 'player';
+    public const ACTION      = 'player';
+    public const REST_ACTION = 'playback';
+
+    /**
+     * @param array{
+     *     filter: string,
+     *     type?: string,
+     *     state?: string,
+     *     time?: int,
+     *     client?: string,
+     *     offset?: int,
+     * limit?: int,
+     * api_format: string,
+     * auth: string,
+     * } $input
+     */
+    public static function playback(array $input, User $user): bool
+    {
+        return self::player($input, $user);
+    }
 
     /**
      * player
@@ -82,7 +101,7 @@ final class Player8Method
         // confirm the correct data
         if (!in_array(strtolower($type), ['song', 'podcast_episode', 'video'])) {
             /* HINT: Requested object string/id/type ("album", "myusername", "some song title", 1298376) */
-            Api::error(sprintf('Bad Request: %s', $type), ErrorCodeEnum::BAD_REQUEST, self::ACTION, 'type', $input['api_format']);
+            Api::error(ErrorCodeEnum::BAD_REQUEST, sprintf('Bad Request: %s', $type), self::ACTION, 'type', $input['api_format']);
 
             return false;
         }
@@ -90,7 +109,7 @@ final class Player8Method
         $state = $input['state'] ?? 'play';
         if (!in_array(strtolower($state), ['play', 'stop'])) {
             /* HINT: Requested object string/id/type ("album", "myusername", "some song title", 1298376) */
-            Api::error(sprintf('Bad Request: %s', $state), ErrorCodeEnum::BAD_REQUEST, self::ACTION, 'state', $input['api_format']);
+            Api::error(ErrorCodeEnum::BAD_REQUEST, sprintf('Bad Request: %s', $state), self::ACTION, 'state', $input['api_format']);
 
             return false;
         }
@@ -98,7 +117,7 @@ final class Player8Method
         $className = ObjectTypeToClassNameMapper::map($type);
         if ($className === $type || !$object_id) {
             /* HINT: Requested object string/id/type ("album", "myusername", "some song title", 1298376) */
-            Api::error(sprintf('Bad Request: %s', $type), ErrorCodeEnum::BAD_REQUEST, self::ACTION, 'type', $input['api_format']);
+            Api::error(ErrorCodeEnum::BAD_REQUEST, sprintf('Bad Request: %s', $type), self::ACTION, 'type', $input['api_format']);
 
             return false;
         }
@@ -107,7 +126,7 @@ final class Player8Method
         $media = new $className($object_id);
         if ($media->isNew()) {
             /* HINT: Requested object string/id/type ("album", "myusername", "some song title", 1298376) */
-            Api::error(sprintf('Not Found: %s', $object_id), ErrorCodeEnum::NOT_FOUND, self::ACTION, 'id', $input['api_format']);
+            Api::error(ErrorCodeEnum::NOT_FOUND, sprintf('Not Found: %s', $object_id), self::ACTION, 'id', $input['api_format']);
 
             return false;
         }
@@ -122,7 +141,7 @@ final class Player8Method
         if ($state === 'play') {
             // make sure the now_playing state is set
             Stream::garbage_collection();
-            Stream::insert_now_playing((int) $media->id, $user->getId(), ((int) ($media->time) - $position), (string) $user->username, $type, ($time - $position));
+            Stream::insert_now_playing($media->id, $user->getId(), ($media->time - $position), (string) $user->username, $type, ($time - $position));
 
             // internal scrobbling (user_activity and object_count tables)
             if (
@@ -134,7 +153,7 @@ final class Player8Method
             }
         } else {
             // A stop/paused state isn't playing. Remove it.
-            Stream::delete_now_playing((string) $user->username, (int) $media->id, $type, $user->getId());
+            Stream::delete_now_playing((string) $user->username, $media->id, $type, $user->getId());
         }
 
         // return the now playing state for that user

@@ -66,7 +66,7 @@ final class Register8Method
     public static function register(array $input): bool
     {
         if (!AmpConfig::get('allow_public_registration', false)) {
-            Api::error('Enable: allow_public_registration', ErrorCodeEnum::ACCESS_DENIED, self::ACTION, 'system', $input['api_format']);
+            Api::error(ErrorCodeEnum::ACCESS_DENIED, 'Enable: allow_public_registration', self::ACTION, 'system', $input['api_format']);
 
             return false;
         }
@@ -105,17 +105,17 @@ final class Register8Method
 
         if ($userRepository->idByUsername($username) > 0) {
             /* HINT: Requested object string/id/type ("album", "myusername", "some song title", 1298376) */
-            Api::error(sprintf('Bad Request: %s', $username), ErrorCodeEnum::BAD_REQUEST, self::ACTION, 'username', $input['api_format']);
+            Api::error(ErrorCodeEnum::BAD_REQUEST, sprintf('Bad Request: %s', $username), self::ACTION, 'username', $input['api_format']);
 
             return false;
         }
         if ($userRepository->idByEmail($email) > 0) {
             /* HINT: Requested object string/id/type ("album", "myusername", "some song title", 1298376) */
-            Api::error(sprintf('Bad Request: %s', $email), ErrorCodeEnum::BAD_REQUEST, self::ACTION, 'email', $input['api_format']);
+            Api::error(ErrorCodeEnum::BAD_REQUEST, sprintf('Bad Request: %s', $email), self::ACTION, 'email', $input['api_format']);
 
             return false;
         }
-        Api::error('Bad Request', ErrorCodeEnum::BAD_REQUEST, self::ACTION, 'system', $input['api_format']);
+        Api::error(ErrorCodeEnum::BAD_REQUEST, 'Bad Request', self::ACTION, 'system', $input['api_format']);
 
         return false;
     }

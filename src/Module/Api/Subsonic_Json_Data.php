@@ -647,11 +647,11 @@ class Subsonic_Json_Data
 
             $json = [];
             if ($artist) {
-                $json['artist'] = (string) $artist;
+                $json['artist'] = $artist;
             }
 
             if ($title) {
-                $json['title'] = (string) $title;
+                $json['title'] = $title;
             }
 
             $json['value'] = html_entity_decode($text);
@@ -1998,8 +1998,8 @@ class Subsonic_Json_Data
             'position' => $bookmark->position,
             'username' => $bookmark->getUserName(),
             'comment' => (string) $bookmark->comment,
-            'created' => date("c", (int) $bookmark->creation_date),
-            'changed' => date("c", (int) $bookmark->update_date),
+            'created' => date("c", $bookmark->creation_date),
+            'changed' => date("c", $bookmark->update_date),
             'entry' => [],
         ];
 
@@ -2038,7 +2038,7 @@ class Subsonic_Json_Data
         return [
             'username' => ($user->fullname_public) ? (string) $user->fullname : (string) $user->username,
             'time' => $message->getCreationDate() * 1000,
-            'message' => (string) $message->getMessage(),
+            'message' => $message->getMessage(),
         ];
     }
 
@@ -2508,7 +2508,7 @@ class Subsonic_Json_Data
         $album_id = $album->id;
 
         $json = [
-            'id' => (string) Subsonic_Api::getAlbumSubId($album_id)
+            'id' => Subsonic_Api::getAlbumSubId($album_id)
         ];
 
         $album_artist = $album->findAlbumArtist();
@@ -2551,7 +2551,7 @@ class Subsonic_Json_Data
         $artist_id = $artist->id;
 
         $json = [
-            'id' => (string) Subsonic_Api::getArtistSubId($artist_id)
+            'id' => Subsonic_Api::getArtistSubId($artist_id)
         ];
 
         $data = Artist::get_id_array($artist_id);
@@ -3009,7 +3009,7 @@ class Subsonic_Json_Data
             'url' => (string) $share->public_url,
             'description' => (string) $share->description,
             'username' => (string) $user->username,
-            'created' => date('c', (int) $share->creation_date),
+            'created' => date('c', $share->creation_date),
         ];
 
         if ($share->lastvisit_date > 0) {
@@ -3017,7 +3017,7 @@ class Subsonic_Json_Data
         }
 
         if ($share->expire_days > 0) {
-            $json['expires'] = date('c', (int) $share->creation_date + ($share->expire_days * 86400));
+            $json['expires'] = date('c', $share->creation_date + ($share->expire_days * 86400));
         }
 
         $json['visitCount'] = $share->counter;
@@ -3099,7 +3099,7 @@ class Subsonic_Json_Data
                             'value' => $lyricLine,
                         ];
                     } else {
-                        $lines[] = ['value' => (string) $line];
+                        $lines[] = ['value' => $line];
                     }
                 }
             }

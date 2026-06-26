@@ -39,7 +39,26 @@ use Ampache\Repository\Model\User;
  */
 final class SearchGroup8Method
 {
-    public const ACTION = 'search_group';
+    public const ACTION      = 'search_group';
+    public const REST_ACTION = 'groups';
+
+    /**
+     * @param array{
+     *     operator: string,
+     *     rule_1: string,
+     *     rule_1_operator: int,
+     *     rule_1_input: mixed,
+     *     type?: string,
+     *     offset?: int,
+     *     limit?: int,
+     *     api_format: string,
+     *     auth: string,
+     * } $input
+     */
+    public static function groups(array $input, User $user): bool
+    {
+        return self::search_group($input, $user);
+    }
 
     /**
      * search_group
@@ -98,13 +117,13 @@ final class SearchGroup8Method
             ? $input['type']
             : 'all';
         if (!AmpConfig::get('allow_video') && $type == 'video') {
-            Api::error('Enable: video', ErrorCodeEnum::ACCESS_DENIED, self::ACTION, 'system', $input['api_format']);
+            Api::error(ErrorCodeEnum::ACCESS_DENIED, 'Enable: video', self::ACTION, 'system', $input['api_format']);
 
             return false;
         }
         // confirm the correct data
         if (!in_array(strtolower($type), $search_groups)) {
-            Api::error(sprintf('Bad Request: %s', $type), ErrorCodeEnum::BAD_REQUEST, self::ACTION, 'type', $input['api_format']);
+            Api::error(ErrorCodeEnum::BAD_REQUEST, sprintf('Bad Request: %s', $type), self::ACTION, 'type', $input['api_format']);
 
             return false;
         }

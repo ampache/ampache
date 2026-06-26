@@ -37,7 +37,20 @@ use Ampache\Repository\Model\User;
  */
 final class SearchRules8Method
 {
-    public const ACTION = 'search_rules';
+    public const ACTION      = 'search_rules';
+    public const REST_ACTION = 'rules';
+
+    /**
+     * @param array{
+     *     filter: string,
+     *     api_format: string,
+     *     auth: string,
+     * } $input
+     */
+    public static function rules(array $input, User $user): bool
+    {
+        return self::search_rules($input, $user);
+    }
 
     /**
      * search_rules
@@ -62,19 +75,19 @@ final class SearchRules8Method
         $type = (string) $input['filter'];
         // confirm the correct data
         if (!in_array(strtolower($type), Search::VALID_TYPES)) {
-            Api::error(sprintf('Bad Request: %s', $type), ErrorCodeEnum::BAD_REQUEST, self::ACTION, 'type', $input['api_format']);
+            Api::error(ErrorCodeEnum::BAD_REQUEST, sprintf('Bad Request: %s', $type), self::ACTION, 'type', $input['api_format']);
 
             return false;
         }
 
         if (!AmpConfig::get('allow_video') && $type == 'video') {
-            Api::error('Enable: video', ErrorCodeEnum::ACCESS_DENIED, self::ACTION, 'system', $input['api_format']);
+            Api::error(ErrorCodeEnum::ACCESS_DENIED, 'Enable: video', self::ACTION, 'system', $input['api_format']);
 
             return false;
         }
 
         if ($type == 'label' && !AmpConfig::get('label')) {
-            Api::error('Enable: label', ErrorCodeEnum::ACCESS_DENIED, self::ACTION, 'system', $input['api_format']);
+            Api::error(ErrorCodeEnum::ACCESS_DENIED, 'Enable: label', self::ACTION, 'system', $input['api_format']);
 
             return false;
         }
