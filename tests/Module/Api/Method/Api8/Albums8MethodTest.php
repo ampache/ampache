@@ -101,10 +101,6 @@ class Albums8MethodTest extends MockeryTestCase
             ->with($limit)
             ->once();
 
-        $browse->shouldReceive('get_total')
-            ->withNoArgs()
-            ->once()
-            ->andReturn(0);
         $output->shouldReceive('setCount')
             ->with(0)
             ->once();
@@ -200,10 +196,6 @@ class Albums8MethodTest extends MockeryTestCase
             ->with(0)
             ->once();
 
-        $browse->shouldReceive('get_total')
-            ->withNoArgs()
-            ->once()
-            ->andReturn(1);
         $output->shouldReceive('setCount')
             ->with(1)
             ->once();

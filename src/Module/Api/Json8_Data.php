@@ -87,13 +87,14 @@ class Json8_Data
     public static function albums(array $objects, array $include, User $user, string $auth, bool $encode = true, bool $object = true): string
     {
         self::$count = self::$count ?? count($objects);
+        $md5         = md5(serialize($objects));
 
         $JSON = self::albums_array($objects, $include, $user, $auth, $encode);
 
         if ($object) {
             $output = [
                 "total_count" => self::$count,
-                "md5" => md5(serialize($objects)),
+                "md5" => $md5,
                 "album" => $JSON
             ];
         } else {
@@ -301,13 +302,14 @@ class Json8_Data
     public static function artists(array $objects, array $include, User $user, string $auth, bool $object = true): string
     {
         self::$count = self::$count ?? count($objects);
+        $md5         = md5(serialize($objects));
 
         $JSON = self::artists_array($objects, $include, $user, $auth);
 
         if ($object) {
             $output = [
                 "total_count" => self::$count,
-                "md5" => md5(serialize($objects)),
+                "md5" => $md5,
                 "artist" => $JSON
             ];
         } else {
@@ -583,11 +585,12 @@ class Json8_Data
     public static function bookmarks(array $objects, string $auth, bool $include = false, bool $object = true): string
     {
         self::$count = self::$count ?? count($objects);
+        $md5         = md5(serialize($objects));
         $objects     = self::_filter_objects($objects);
 
         $output = [
             "total_count" => self::$count,
-            "md5" => md5(serialize($objects)),
+            "md5" => $md5,
         ];
 
         $bookmarkRepository = self::getBookmarkRepository();
@@ -652,14 +655,17 @@ class Json8_Data
      *
      * This takes a name array of objects and return the data in JSON browse object
      *
-     * @param array{id: int|string, name: string}[] $objects Array of object_ids ["id" => 1, "name" => 'Artist Name']
+     * @param array<int|string>|array<int, array{id: int|string, name: string}> $objects Array of object_ids ["id" => 1, "name" => 'Artist Name']
      */
     public static function browses(array $objects, ?int $parent_id, string $parent_type, string $child_type, ?int $catalog_id): string
     {
         self::$count = self::$count ?? count($objects);
-        $output      = [
+        $md5         = md5(serialize($objects));
+        $objects     = self::_filter_objects($objects);
+
+        $output = [
             "total_count" => self::$count,
-            "md5" => md5(serialize($objects)),
+            "md5" => $md5,
             "catalog_id" => (string) $catalog_id,
             "parent_id" => (string) $parent_id,
             "parent_type" => $parent_type,
@@ -667,7 +673,6 @@ class Json8_Data
         ];
         $pattern = '/^(' . implode('\\s|', explode('|', AmpConfig::get('catalog_prefix_pattern', 'The|An|A|Die|Das|Ein|Eine|Les|Le|La'))) . '\\s)(.*)/i';
 
-        $objects     = self::_filter_objects($objects);
 
         $JSON = [];
         foreach ($objects as $object) {
@@ -697,10 +702,11 @@ class Json8_Data
     public static function catalogs(array $objects, bool $object = true): string
     {
         self::$count = self::$count ?? count($objects);
+        $md5         = md5(serialize($objects));
 
         $output = [
             "total_count" => self::$count,
-            "md5" => md5(serialize($objects)),
+            "md5" => $md5,
         ];
 
         $objects     = self::_filter_objects($objects);
@@ -769,13 +775,14 @@ class Json8_Data
     public static function deleted(string $object_type, array $objects): string
     {
         self::$count = self::$count ?? count($objects);
+        $md5         = md5(serialize($objects));
+        $objects     = self::_filter_objects($objects);
 
         $output = [
             "total_count" => self::$count,
-            "md5" => md5(serialize($objects)),
+            "md5" => $md5,
         ];
 
-        $objects     = self::_filter_objects($objects);
 
         $JSON = [];
         foreach ($objects as $row) {
@@ -1049,13 +1056,14 @@ class Json8_Data
     public static function genres(array $objects, bool $object = true): string
     {
         self::$count = self::$count ?? count($objects);
+        $md5         = md5(serialize($objects));
 
         $JSON = self::genres_array($objects);
 
         if ($object) {
             $output = [
                 "total_count" => self::$count,
-                "md5" => md5(serialize($objects)),
+                "md5" => $md5,
                 "genre" => $JSON
             ];
         } else {
@@ -1325,13 +1333,14 @@ class Json8_Data
     public static function labels(array $objects, bool $object = true): string
     {
         self::$count = self::$count ?? count($objects);
+        $md5         = md5(serialize($objects));
 
         $JSON = self::labels_array($objects);
 
         if ($object) {
             $output = [
                 "total_count" => self::$count,
-                "md5" => md5(serialize($objects)),
+                "md5" => $md5,
                 "label" => $JSON
             ];
         } else {
@@ -1401,11 +1410,12 @@ class Json8_Data
     public static function licenses(array $objects, bool $object = true): string
     {
         self::$count = self::$count ?? count($objects);
+        $md5         = md5(serialize($objects));
         $objects     = self::_filter_objects($objects);
 
         $output = [
             "total_count" => self::$count,
-            "md5" => md5(serialize($objects)),
+            "md5" => $md5,
         ];
 
         $licenseRepository = self::getLicenseRepository();
@@ -1442,11 +1452,12 @@ class Json8_Data
     public static function lists(array $objects): string
     {
         self::$count = self::$count ?? count($objects);
+        $md5         = md5(serialize($objects));
         $objects     = self::_filter_objects($objects);
 
         $output = [
             "total_count" => self::$count,
-            "md5" => md5(serialize($objects)),
+            "md5" => $md5,
         ];
 
         $JSON    = [];
@@ -1478,6 +1489,7 @@ class Json8_Data
     public static function live_streams(array $objects, bool $object = true): string
     {
         self::$count = self::$count ?? count($objects);
+        $md5         = md5(serialize($objects));
         $objects     = self::_filter_objects($objects);
 
         $JSON = self::live_streams_array($objects);
@@ -1485,7 +1497,7 @@ class Json8_Data
         if ($object) {
             $output = [
                 "total_count" => self::$count,
-                "md5" => md5(serialize($objects)),
+                "md5" => $md5,
                 "live_stream" => $JSON
             ];
         } else {
@@ -1583,13 +1595,14 @@ class Json8_Data
     public static function playlists(array $objects, User $user, string $auth, bool $songs = false, bool $object = true): string
     {
         self::$count = self::$count ?? count($objects);
+        $md5         = md5(serialize($objects));
 
         $JSON = self::playlists_array($objects, $user, $auth, $songs);
 
         if ($object) {
             $output = [
                 "total_count" => self::$count,
-                "md5" => md5(serialize($objects)),
+                "md5" => $md5,
                 "playlist" => $JSON
             ];
         } else {
@@ -1716,13 +1729,14 @@ class Json8_Data
     public static function podcast_episodes(array $objects, User $user, string $auth, bool $encode = true, bool $object = true): string
     {
         self::$count = self::$count ?? count($objects);
+        $md5         = md5(serialize($objects));
 
         $JSON = self::podcast_episodes_array($objects, $user, $auth, $encode);
 
         if ($object) {
             $output = [
                 "total_count" => self::$count,
-                "md5" => md5(serialize($objects)),
+                "md5" => $md5,
                 "podcast_episode" => $JSON
             ];
         } else {
@@ -1843,13 +1857,14 @@ class Json8_Data
     public static function podcasts(array $objects, User $user, string $auth, bool $episodes = false, bool $object = true): string
     {
         self::$count = self::$count ?? count($objects);
+        $md5         = md5(serialize($objects));
 
         $JSON = self::podcasts_array($objects, $user, $auth, $episodes);
 
         if ($object) {
             $output = [
                 "total_count" => self::$count,
-                "md5" => md5(serialize($objects)),
+                "md5" => $md5,
                 "podcast" => $JSON
             ];
         } else {
@@ -2029,11 +2044,12 @@ class Json8_Data
     public static function shares(array $objects, User $user, bool $object = true): string
     {
         self::$count = self::$count ?? count($objects);
+        $md5         = md5(serialize($objects));
         $objects     = self::_filter_objects($objects);
 
         $output = [
             "total_count" => self::$count,
-            "md5" => md5(serialize($objects)),
+            "md5" => $md5,
         ];
 
         $JSON = [];
@@ -2129,10 +2145,11 @@ class Json8_Data
     public static function song_tags(array $objects, string $auth, bool $object = true): string
     {
         self::$count = self::$count ?? count($objects);
+        $md5         = md5(serialize($objects));
 
         $output = [
             "total_count" => self::$count,
-            "md5" => md5(serialize($objects)),
+            "md5" => $md5,
         ];
 
         Stream::set_session($auth);
@@ -2233,12 +2250,14 @@ class Json8_Data
     public static function songs(array $objects, User $user, string $auth, bool $encode = true, bool $object = true): string
     {
         self::$count = self::$count ?? count($objects);
-        $output      = [
-            "total_count" => self::$count,
-            "md5" => md5(serialize($objects)),
-        ];
+        $md5         = md5(serialize($objects));
 
         $JSON = self::songs_array($objects, $user, $auth, $encode);
+
+        $output      = [
+            "total_count" => self::$count,
+            "md5" => $md5,
+        ];
 
         if ($object) {
             $output["song"] = $JSON;
@@ -2328,7 +2347,9 @@ class Json8_Data
         Stream::set_session($auth);
         $playlist_track = 0;
 
-        $objects = self::_filter_objects($objects, $encode);
+        self::$count = self::$count ?? count($objects);
+        $objects     = self::_filter_objects($objects, $encode);
+
         Song::build_cache($objects);
 
         $JSON = [];
@@ -2619,13 +2640,14 @@ class Json8_Data
     public static function videos(array $objects, User $user, string $auth, bool $object = true): string
     {
         self::$count = self::$count ?? count($objects);
+        $md5         = md5(serialize($objects));
 
         $JSON = self::videos_array($objects, $user, $auth);
 
         if ($object) {
             $output = [
                 "total_count" => self::$count,
-                "md5" => md5(serialize($objects)),
+                "md5" => $md5,
                 "video" => $JSON
             ];
         } else {
@@ -2659,7 +2681,6 @@ class Json8_Data
     public static function videos_array(array $objects, User $user, string $auth): array
     {
         self::$count = self::$count ?? count($objects);
-
         $objects     = self::_filter_objects($objects);
 
         $JSON = [];
@@ -2698,7 +2719,7 @@ class Json8_Data
      *
      * This filters the objects based on the limit and offset
      *
-     * @param array<int|string> $objects
+     * @param array<int|string>|array<int, array{id: int|string, name: string}>|array<int, array{ id: int, addition_time: int, delete_time: int, title: string, file: string, catalog: int, total_count: int, total_skip: int, update_time?: int, album?: int, artist?: int, podcast?: int}> $objects
      * @return array<int|string>
      */
     private static function _filter_objects(array $objects, ?bool $encode = null): array

@@ -236,7 +236,6 @@ class Xml8_Data
     public static function browses(array $objects, ?int $parent_id, string $parent_type, string $child_type, ?int $catalog_id): string
     {
         self::$count = self::$count ?? count($objects);
-        ;
         $md5         = md5(serialize($objects));
         $objects     = self::_filter_objects($objects);
 
@@ -928,7 +927,6 @@ class Xml8_Data
     public static function lists(array $objects): string
     {
         self::$count = self::$count ?? count($objects);
-        ;
         $md5         = md5(serialize($objects));
         $objects     = self::_filter_objects($objects);
 
@@ -1796,7 +1794,7 @@ class Xml8_Data
      *
      * This filters the objects based on the limit and offset
      *
-     * @param array<int|string> $objects
+     * @param array<int|string>|array<int, array{id: int|string, name: string}>|array<int, array{ id: int, addition_time: int, delete_time: int, title: string, file: string, catalog: int, total_count: int, total_skip: int, update_time?: int, album?: int, artist?: int, podcast?: int}> $objects
      * @return array<int|string>
      */
     private static function _filter_objects(array $objects, ?bool $encode = null): array
