@@ -185,7 +185,7 @@ class AutoUpdate
             }
 
             debug_event(self::class, 'GitHub API request ' . $url, 5);
-            $result = json_decode((string) $request->body);
+            $result = json_decode($request->body);
 
             return (is_object($result))
                 ? $result

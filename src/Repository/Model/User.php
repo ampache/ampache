@@ -94,7 +94,7 @@ class User extends database_object
             return;
         }
 
-        $info = $this->set_info((int) $user_id);
+        $info = $this->set_info($user_id);
         if (!$info) {
             return;
         }
@@ -156,7 +156,7 @@ class User extends database_object
             return 0;
         }
 
-        $website = rtrim((string) $website, "/");
+        $website = rtrim($website, "/");
         if (!$encrypted) {
             $password = hash('sha256', $password);
         }
@@ -1393,7 +1393,7 @@ class User extends database_object
     {
         $new_website = filter_var(urldecode($new_website), FILTER_VALIDATE_URL) ?: null;
         $new_website = (is_string($new_website))
-            ? rtrim((string) $new_website, "/")
+            ? rtrim($new_website, "/")
             : null;
         $sql = "UPDATE `user` SET `website` = ? WHERE `id` = ?";
 

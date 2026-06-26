@@ -100,10 +100,16 @@ final class PodcastEpisodes8Method implements MethodInterface
 
         $podcastId = (int) ($input['filter'] ?? 0);
         $podcast   = $this->podcastRepository->findById($podcastId);
-        if (isset($input['filter']) && $podcast === null) {
-            throw new RequestParamMissingException(
-                sprintf(T_('Bad Request: %s'), 'filter')
-            );
+        if (isset($input['filter'])) {
+            if ($podcast === null) {
+                throw new RequestParamMissingException(
+                    sprintf(T_('Bad Request: %s'), 'filter')
+                );
+            }
+
+            if ($podcast->isNew()) {
+                throw new ResultEmptyException((string) $podcastId);
+            }
         }
 
         $browse = $this->modelFactory->createBrowse(null, false);
@@ -131,7 +137,7 @@ final class PodcastEpisodes8Method implements MethodInterface
 
         $output->setOffset($input['offset'] ?? 0);
         $output->setLimit($input['limit'] ?? 0);
-        $output->setCount($browse->get_total());
+        $output->setCount(count($results));
 
         $response->getBody()->write(
             $output->podcastEpisodes($results, $user, $input['auth'])

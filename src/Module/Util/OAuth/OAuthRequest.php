@@ -268,7 +268,7 @@ class OAuthRequest implements Stringable
         }
 
         foreach ($this->parameters as $key => $value) {
-            if (!str_starts_with((string) $key, "oauth")) {
+            if (!str_starts_with($key, "oauth")) {
                 continue;
             }
 

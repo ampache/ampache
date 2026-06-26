@@ -3076,8 +3076,7 @@ class OpenSubsonic_Api
                 ? self::getAmpacheObject($current)
                 : null;
             if (
-                $media instanceof library_item
-                && $media instanceof Media
+                $media instanceof Media
                 && $media->isNew() === false
                 && isset($media->time)
             ) {
@@ -3169,8 +3168,7 @@ class OpenSubsonic_Api
                 ? self::getAmpacheObject($current)
                 : null;
             if (
-                $media instanceof library_item
-                && $media instanceof Media
+                $media instanceof Media
                 && $media->isNew() === false
                 && isset($media->time)
             ) {
@@ -4252,7 +4250,7 @@ class OpenSubsonic_Api
         bool $public = true,
         bool $clearFirst = false,
     ): void {
-        $playlist                 = new Playlist((int) $playlist_id);
+        $playlist                 = new Playlist($playlist_id);
         $songsIdToAdd_count       = count($songsIdToAdd);
         $newdata                  = [];
         $newdata['name']          = (!empty($name)) ? $name : $playlist->name;

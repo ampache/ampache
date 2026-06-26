@@ -511,12 +511,21 @@ final readonly class Play2Action implements ApplicationActionInterface
                 $democratic->delete_from_oid($media->id, $type);
 
                 // If the media is disabled
-                if ((isset($media->enabled) && !make_bool($media->enabled)) || !Core::is_readable(Core::conv_lc_file((string) $media->file))) {
+                if (!$media->enabled) {
                     $this->logger->warning(
                         "Error: " . $media->file . " is currently disabled, song skipped",
                         [LegacyLogger::CONTEXT_TYPE => self::class]
                     );
                     header('HTTP/1.1 404 File disabled');
+
+                    return null;
+                }
+                if (!Core::is_readable(Core::conv_lc_file((string) $media->file))) {
+                    $this->logger->warning(
+                        "Error: " . $media->file . " is currently unreadable, song skipped",
+                        [LegacyLogger::CONTEXT_TYPE => self::class]
+                    );
+                    header('HTTP/1.1 404 File unreadable');
 
                     return null;
                 }
@@ -559,12 +568,21 @@ final readonly class Play2Action implements ApplicationActionInterface
             $media = new Song($object_id);
             if ($media->id > 0) {
                 // If the media is disabled
-                if ((isset($media->enabled) && !make_bool($media->enabled)) || !Core::is_readable(Core::conv_lc_file((string) $media->file))) {
+                if (!$media->enabled) {
                     $this->logger->warning(
                         "Error: " . $media->file . " is currently disabled, song skipped",
                         [LegacyLogger::CONTEXT_TYPE => self::class]
                     );
                     header('HTTP/1.1 404 File disabled');
+
+                    return null;
+                }
+                if (!Core::is_readable(Core::conv_lc_file((string) $media->file))) {
+                    $this->logger->warning(
+                        "Error: " . $media->file . " is currently unreadable, song skipped",
+                        [LegacyLogger::CONTEXT_TYPE => self::class]
+                    );
+                    header('HTTP/1.1 404 File unreadable');
 
                     return null;
                 }
@@ -656,7 +674,7 @@ final readonly class Play2Action implements ApplicationActionInterface
             if ($catalog && !$has_cache) {
                 if (
                     ($catalog instanceof Catalog_remote || $catalog instanceof Catalog_subsonic)
-                    && (bool) AmpConfig::get('cache_remote', false)
+                    && AmpConfig::get('cache_remote', false)
                 ) {
                     $media_file = $catalog->getRemoteStreamingUrl($media, 'download');
                     if ($file_target && $media_file) {
@@ -667,7 +685,7 @@ final readonly class Play2Action implements ApplicationActionInterface
                 if (
                     $catalog instanceof Catalog_local
                     && $file_target
-                    && (bool) AmpConfig::get('cache_' . $cache_target, false)
+                    && AmpConfig::get('cache_' . $cache_target, false)
                 ) {
                     $catalog->cache_catalog_file($file_target, $media, $cache_target);
                 }
@@ -1051,7 +1069,7 @@ final readonly class Play2Action implements ApplicationActionInterface
 
             // Stats registering must be done before play. Do not move it.
             // It can be slow because of scrobbler plugins (lastfm, ...)
-            if ((int) $start > 0) {
+            if ($start > 0) {
                 $this->logger->debug(
                     "Content-Range doesn't start from 0, stats should already be registered previously; not collecting stats",
                     [LegacyLogger::CONTEXT_TYPE => self::class]

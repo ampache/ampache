@@ -111,7 +111,7 @@ class Upload
                 return null;
             }
 
-            return (int) $album_id;
+            return $album_id;
         }
 
         return null;

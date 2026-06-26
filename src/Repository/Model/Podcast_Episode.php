@@ -57,12 +57,12 @@ class Podcast_Episode extends database_object implements
     public ?string $category    = null;
     public ?int $channels       = null;
     public ?string $description = null;
-    public bool $enabled;
-    public ?string $file = null;
-    public ?string $guid = null;
-    public int $id       = 0;
-    public ?string $mime = null;
-    public ?string $mode = null;
+    public bool $enabled        = true;
+    public ?string $file        = null;
+    public ?string $guid        = null;
+    public int $id              = 0;
+    public ?string $mime        = null;
+    public ?string $mode        = null;
     public bool $played;
     public int $podcast;
     public int $pubdate;

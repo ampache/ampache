@@ -76,7 +76,7 @@ final class GetArt5Method
 
         // confirm the correct data
         if (!in_array(strtolower($type), ['song', 'album', 'artist', 'playlist', 'search', 'podcast'])) {
-            Api5::error(sprintf(T_('Bad Request: %s'), $type), ErrorCodeEnum::BAD_REQUEST, self::ACTION, 'type', $input['api_format']);
+            Api5::error(ErrorCodeEnum::BAD_REQUEST, sprintf(T_('Bad Request: %s'), $type), self::ACTION, 'type', $input['api_format']);
 
             return false;
         }

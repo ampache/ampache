@@ -556,7 +556,7 @@ class Rating extends database_object
 
         // sometimes we're reading the rating so don't always write back
         if ($write_back) {
-            self::save_rating($this->id, $this->type, (int) $rating, (int) $user_id);
+            self::save_rating($this->id, $this->type, $rating, (int) $user_id);
         }
 
         return true;

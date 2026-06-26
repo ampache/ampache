@@ -57,7 +57,7 @@ final class Share6Method
     public static function share(array $input, User $user): bool
     {
         if (!AmpConfig::get('share')) {
-            Api6::error('Enable: share', ErrorCodeEnum::ACCESS_DENIED, self::ACTION, 'system', $input['api_format']);
+            Api6::error(ErrorCodeEnum::ACCESS_DENIED, 'Enable: share', self::ACTION, 'system', $input['api_format']);
 
             return false;
         }

@@ -100,7 +100,7 @@ class Share extends database_object
     {
         if (isset($time)) {
             // 0 is a valid expiry too
-            $expire_days = ((int) $time > 0)
+            $expire_days = ($time > 0)
                 ? round(($time - time()) / 86400, 0, PHP_ROUND_HALF_EVEN)
                 : 0;
         } else {

@@ -258,15 +258,15 @@ class Plugin
         }
 
         /* Check the plugin to make sure it's got the needed vars */
-        if ((string) $this->_plugin->name === '') {
+        if ($this->_plugin->name === '') {
             return false;
         }
 
-        if ((string) $this->_plugin->description === '') {
+        if ($this->_plugin->description === '') {
             return false;
         }
 
-        if ((string) $this->_plugin->version === '') {
+        if ($this->_plugin->version === '') {
             return false;
         }
 

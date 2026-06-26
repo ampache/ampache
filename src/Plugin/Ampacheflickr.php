@@ -56,7 +56,7 @@ class Ampacheflickr extends AmpachePlugin implements PluginGatherArtsInterface
     public string $version = '000001';
 
     // These are internal settings used by this class, run this->load to fill them out
-    private $api_key;
+    private string $api_key;
 
     /**
      * Constructor
@@ -108,7 +108,7 @@ class Ampacheflickr extends AmpachePlugin implements PluginGatherArtsInterface
         debug_event('flickr.plugin', 'Calling ' . $url, 5);
         $request = Requests::get($url, [], Core::requests_options());
         if ($request->status_code == 200) {
-            $xml = simplexml_load_string((string) $request->body);
+            $xml = simplexml_load_string($request->body);
             if ($xml && $xml->photos) {
                 foreach ($xml->photos->photo as $photo) {
                     $photos[] = [
