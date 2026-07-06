@@ -53,7 +53,7 @@ final class UpdatePodcast8Method
      *     api_format: string,
      *     auth: string,
      * } $input
- */
+     */
     public static function sync(array $input, User $user): bool
     {
         return self::update_podcast($input, $user);
