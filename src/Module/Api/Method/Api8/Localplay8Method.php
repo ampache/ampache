@@ -70,6 +70,14 @@ final class Localplay8Method
      */
     public static function localplay(array $input, User $user): bool
     {
+        if (
+            !isset($input['command'])
+            && isset($input['filter'])
+            && in_array($input['filter'], ['next', 'prev', 'stop', 'play', 'pause', 'volume_up', 'volume_down', 'volume_mute', 'delete_all', 'skip', 'status'])
+        ) {
+            $input['command'] = $input['filter'];
+        }
+
         if (!Api::check_parameter($input, ['command'], self::ACTION)) {
             return false;
         }
