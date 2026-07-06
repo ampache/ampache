@@ -58,7 +58,7 @@ final class Localplay6Method
      * track = (integer) used in conjunction with skip to skip to the track id (use localplay_songs to get your track list) //optional
      *
      * @param array{
-     *     command: string,
+     *     command?: string,
      *     filter?: string,
      *     oid?: string,
      *     type?: string,
@@ -96,7 +96,7 @@ final class Localplay6Method
 
         $result  = false;
         $status  = null;
-        $command = strtolower($input['command']);
+        $command = strtolower($input['command'] ?? '');
         switch ($command) {
             case 'add':
                 // for add commands get the object details
@@ -183,8 +183,8 @@ final class Localplay6Method
         }
 
         $results = (!empty($status))
-            ? ['localplay' => ['command' => [$input['command'] => $status]]]
-            : ['localplay' => ['command' => [$input['command'] => $result]]];
+            ? ['localplay' => ['command' => [$command => $status]]]
+            : ['localplay' => ['command' => [$command => $result]]];
         switch ($input['api_format']) {
             case 'json':
                 echo json_encode($results, JSON_PRETTY_PRINT);
