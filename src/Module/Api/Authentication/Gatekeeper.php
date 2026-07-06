@@ -63,22 +63,43 @@ final class Gatekeeper implements GatekeeperInterface
     public function getAuth(string $requestKey = 'auth'): string
     {
         if ($this->auth === null) {
-            $auth = $this->request->getHeaderLine('Authorization');
+            // Read headers separately: Authorization (preferred) and auth (alternate api-key header)
+            $authorization = $this->request->getHeaderLine('Authorization');
+            $authHeader    = $this->request->getHeaderLine('auth');
 
             $matches = [];
+            $token   = '';
 
-            // Retrieve auth token from header
-            preg_match('/Bearer ([0-9a-f].*)/', $auth, $matches);
+            // Retrieve auth token from Authorization: Bearer <token>
+            if ($authorization !== '') {
+                if (preg_match('/Bearer\s+(\S+)/i', $authorization, $matches)) {
+                    $token = (string) $matches[1];
+                    $this->logger->notice(
+                        'API session using Bearer token',
+                        [LegacyLogger::CONTEXT_TYPE => self::class]
+                    );
+                } elseif (preg_match('/ApiKey\s+(\S+)/i', $authorization, $matches)) {
+                    // Support Authorization: ApiKey <token>
+                    $token = (string) $matches[1];
+                    $this->logger->notice(
+                        'API session using ApiKey in Authorization header',
+                        [LegacyLogger::CONTEXT_TYPE => self::class]
+                    );
+                }
+            }
 
-            if ($matches !== []) {
-                $token = (string) $matches[1];
+            if ($token === '' && $authHeader !== '') {
+                // Accept API key passed directly in the 'auth' header (ApiKeyAuthHeader)
+                $token = (string) $authHeader;
                 $this->logger->notice(
-                    'API session using Bearer token',
+                    'API session using auth header',
                     [LegacyLogger::CONTEXT_TYPE => self::class]
                 );
-            } else {
+            }
+
+            if ($token === '') {
                 /**
-                 * Fallback to legacy get/post parameter. (prefer POST array over GET))
+                 * Fallback to legacy get/post parameter. (prefer POST array over GET)
                  * Remove some day when backwards compatability isn't a problem
                  */
                 $post = ($this->request->getMethod() === 'POST')

@@ -9,6 +9,12 @@ we will keep on 6.9.x and resume build number versioning until Ampache 8
 
 **NOTE** API8 has been added to the code but is not enabled for use.
 
+### Added (692002)
+
+* ALL
+  * Allow APIKey Authorization header
+  * REST command and path changes
+
 ### Changed (692002)
 
 * ALL
