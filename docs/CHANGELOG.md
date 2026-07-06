@@ -9,6 +9,8 @@ Check out the new library on GitHub at [Gregwar/Captcha](https://github.com/Greg
 
 ### Added (7.10.0)
 
+* Database
+  * Downgrade support from Ampache 8
 * Search
   * Allow filtering by Catalog ID outside of search rules
 
@@ -34,7 +36,7 @@ Check out the new library on GitHub at [Gregwar/Captcha](https://github.com/Greg
 * Possible error on FileSystem scan
 * Closing HTML tags missing on a couple of templates
 * Verify Podcast URL is a http url on set
-* DB
+* Database
   * Database update 794004 - Error with more left over bad data
 * CLI
   * Table checks column typo with DatabaseCharsetUpdater
