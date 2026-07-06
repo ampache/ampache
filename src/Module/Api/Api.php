@@ -88,7 +88,6 @@ class Api
         Method\Api8\CatalogFolder8Method::ACTION => Method\Api8\CatalogFolder8Method::class,
         Method\Api8\Catalog8Method::ACTION => Method\Api8\Catalog8Method::class,
         Method\Api8\Catalogs8Method::ACTION => Method\Api8\Catalogs8Method::class,
-        Method\Api8\Commands8Method::ACTION => Method\Api8\Commands8Method::class,
         Method\Api8\DeletedPodcastEpisodes8Method::ACTION => Method\Api8\DeletedPodcastEpisodes8Method::class,
         Method\Api8\DeletedSongs8Method::ACTION => Method\Api8\DeletedSongs8Method::class,
         Method\Api8\DeletedVideos8Method::ACTION => Method\Api8\DeletedVideos8Method::class,
