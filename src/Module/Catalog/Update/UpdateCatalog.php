@@ -356,7 +356,7 @@ final class UpdateCatalog extends AbstractCatalogUpdater implements UpdateCatalo
                 }
             }
 
-            $catalog->count_scan_folders($interactor);
+            $catalog?->count_scan_folders($interactor);
 
             Catalog::garbage_collect_filters();
             $interactor->info(

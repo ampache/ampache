@@ -1018,7 +1018,6 @@ class Catalog_local extends Catalog
 
     public function count_scan_folders(?Interactor $interactor = null): void
     {
-
         // insert object mapping after scanning new folders
         $interactor?->info(
             'local.catalog: update_folder_map',
