@@ -54,7 +54,7 @@ final class UpdatePodcast8Method
      *     auth: string,
      * } $input
  */
-    public static function refresh(array $input, User $user): bool
+    public static function sync(array $input, User $user): bool
     {
         return self::update_podcast($input, $user);
     }
