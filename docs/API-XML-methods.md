@@ -2,9 +2,27 @@
 
 Let's go through come calls and examples that you can do for each XML method.
 
-With the exception of Binary methods, all responses will return a HTTP 200 response.
+Valid responses will always return a HTTP 200 response.
 
-Also remember that Binary data methods will not return xml; just the file/data you have requested.
+Error responses return codes based on the error type:
+
+* HTTP 400
+  * Error '4710': BAD_REQUEST
+  * Error '4705': MISSING
+* HTTP 401
+  * Error '4701': INVALID_HANDSHAKE
+* HTTP 403
+  * Error '4700': ACCESS_CONTROL_NOT_ENABLED
+  * Error '4703': ACCESS_DENIED
+  * Error '4742': FAILED_ACCESS_CHECK
+* HTTP 404
+  * Error '4704': NOT_FOUND
+* HTTP 410
+  * Error '4706': DEPRECATED
+* HTTP 500
+  * Error '4702': GENERIC_ERROR
+
+Binary data methods will not return JSON; just the file/data you have requested.
 
 Binary methods will also return:
 

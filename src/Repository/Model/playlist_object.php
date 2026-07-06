@@ -461,7 +461,6 @@ abstract class playlist_object extends database_object implements
 
         $collaborate = implode(',', $ids);
         if ($this->update_item('collaborate', $collaborate)) {
-
             $sql = (empty($collaborate))
                 ? "DELETE FROM `user_playlist_map` WHERE `playlist_id` = ?;"
                 : "DELETE FROM `user_playlist_map` WHERE `playlist_id` = ? AND `user_id` NOT IN (" . $collaborate . ");";

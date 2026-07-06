@@ -42,6 +42,8 @@ final class UpdatePodcast6Method
 {
     public const string ACTION = 'update_podcast';
 
+    public const string REST_ACTION = 'sync';
+
     /**
      * update_podcast
      * MINIMUM_API_VERSION=420000

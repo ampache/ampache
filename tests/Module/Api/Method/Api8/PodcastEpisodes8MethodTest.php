@@ -258,6 +258,92 @@ class PodcastEpisodes8MethodTest extends TestCase
         );
     }
 
+    public function testHandleLimitReturnsResponse(): void
+    {
+        $stream  = $this->createMock(StreamInterface::class);
+        $podcast = $this->createMock(Podcast::class);
+        $browse  = $this->createMock(Browse::class);
+
+        $podcastId = 666;
+        $episodes  = [1, 2, 3, 4, 5];
+        $result    = '';
+
+        $this->configContainer->expects(static::once())
+            ->method('get')
+            ->with(ConfigurationKeyEnum::PODCAST)
+            ->willReturn('1');
+
+        $this->response->expects(static::once())
+            ->method('getBody')
+            ->willReturn($stream);
+
+        $this->modelFactory->expects(static::once())
+            ->method('createBrowse')
+            ->with(null, false)
+            ->willReturn($browse);
+
+        $browse->expects(static::once())
+            ->method('set_user_id')
+            ->with($this->user);
+        $browse->expects(static::once())
+            ->method('set_type')
+            ->with('podcast_episode');
+        $browse->expects(static::once())
+            ->method('set_sort_order')
+            ->with('', ['pubdate', 'DESC']);
+        $browse->expects(static::once())
+            ->method('set_filter')
+            ->with('podcast', $podcastId);
+        $browse->expects(static::once())
+            ->method('set_conditions')
+            ->with('');
+        $browse->expects(static::once())
+            ->method('get_objects')
+            ->willReturn($episodes);
+
+        $this->podcastRepository->expects(static::once())
+            ->method('findById')
+            ->with($podcastId)
+            ->willReturn($podcast);
+
+        $stream->expects(static::once())
+            ->method('write')
+            ->with($result);
+
+        $this->output->expects(static::once())
+            ->method('setOffset')
+            ->with(0);
+
+        $this->output->expects(static::once())
+            ->method('setLimit')
+            ->with(1);
+
+        $this->output->expects(static::once())
+            ->method('setCount')
+            ->with(5);
+
+        $this->output->expects(static::once())
+            ->method('podcastEpisodes')
+            ->with($episodes, $this->user, 'string')
+            ->willReturn($result);
+
+        self::assertSame(
+            $this->response,
+            $this->subject->handle(
+                $this->gatekeeper,
+                $this->response,
+                $this->output,
+                [
+                    'filter' => (string) $podcastId,
+                    'auth' => 'string',
+                    'limit' => '1',
+                    'api_format' => 'xml'
+                ],
+                $this->user
+            )
+        );
+    }
+
     protected function setUp(): void
     {
         $this->modelFactory      = $this->createMock(ModelFactoryInterface::class);

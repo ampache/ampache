@@ -119,7 +119,6 @@ final readonly class ShareCreator implements ShareCreatorInterface
         // Get a shortener url if any available
         foreach ($this->pluginRetriever->retrieveByType(PluginTypeEnum::URL_SHORTENER, $user) as $plugin) {
             try {
-
                 $short_url = ($plugin->_plugin instanceof PluginShortenerInterface)
                     ? $plugin->_plugin->shortener($url)
                     : null;

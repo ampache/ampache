@@ -1,12 +1,15 @@
 # Subsonic API Support
 
+**NOTE** Ampache8 will force all user preferences to the OpenSubsonic implementation by updating preferences to use the new version.
+
 Ampache implements the [OpenSubsonic](https://opensubsonic.netlify.app/docs/) API as well as a pure [Subsonic](http://www.subsonic.org/pages/api.jsp) API.
 
-Each user can enable OpenSubsonic by disabling the `Enable legacy Subsonic API responses for compatibility issues` preference on the Options page. (`preferences.php?tab=options`)
+Users who want to use a pure Subsonic implementation can enable the `Enable legacy Subsonic API responses for compatibility issues` preference on the Options page. (`preferences.php?tab=options`)
 
 **Compatible Versions:**
 
-* Ampache7.6.0 => Separated OpenSubsonic [docs](https://opensubsonic.netlify.app/docs/) & Subsonic API's [1.16.1](http://www.subsonic.org/pages/inc/api/schema/subsonic-rest-api-1.16.1.xsd)
+* Ampache 8.0.0 => Force default to OpenSubsonic and clean up Subsonic to a pure 1.16.1 implementation
+* Ampache 7.6.0 => Separated OpenSubsonic [docs](https://opensubsonic.netlify.app/docs/) & Subsonic API's [1.16.1](http://www.subsonic.org/pages/inc/api/schema/subsonic-rest-api-1.16.1.xsd)
 * Ampache7 => OpenSubsonic extensions & Subsonic [1.16.1](http://www.subsonic.org/pages/inc/api/schema/subsonic-rest-api-1.16.1.xsd)
 * Ampache6 => Subsonic [1.16.1](http://www.subsonic.org/pages/inc/api/schema/subsonic-rest-api-1.16.1.xsd)
 * Ampache5 => Subsonic [1.13.0](http://www.subsonic.org/pages/inc/api/schema/subsonic-rest-api-1.13.0.xsd)

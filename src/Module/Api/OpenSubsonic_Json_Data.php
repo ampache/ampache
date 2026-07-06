@@ -1720,7 +1720,6 @@ class OpenSubsonic_Json_Data
      */
     private static function _createResponse(): array
     {
-
         return [
             'subsonic-response' => [
                 'status' => 'ok',
@@ -3487,7 +3486,6 @@ class OpenSubsonic_Json_Data
      */
     private static function _getPodcast(Podcast $podcast, bool $includeEpisodes, ?string $sub_id = null): array
     {
-
         $sub_id = (!empty($sub_id))
             ? $sub_id
             : Subsonic_Api::getPodcastSubId($podcast->getId());

@@ -33,7 +33,7 @@ use Ampache\Repository\Model\Folder;
 use Ampache\Repository\Model\User;
 
 /**
- * Class List8Method
+ * Class Folder8Method
  * @package Lib\Api8Methods
  */
 final class Folder8Method

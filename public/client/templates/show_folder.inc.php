@@ -69,6 +69,7 @@ if ($directplay_limit > 0) {
         $show_direct_play = $show_playlist_add;
     }
 } ?>
+<?php require_once Ui::find_template('show_form_browse.inc.php'); ?>
 <?php Ui::show_box_top($title, 'info-box'); ?>
 
 <div class="item_right_info">
