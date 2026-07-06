@@ -38,7 +38,7 @@ use Ampache\Repository\Model\Podcast;
 use Ampache\Repository\Model\User;
 
 /**
- * Class List8Method
+ * Class Browse8Method
  * @package Lib\Api8Methods
  */
 final class Browse8Method
