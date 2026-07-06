@@ -68,7 +68,7 @@ class Wanted extends database_object
             return;
         }
 
-        $info = self::getWantedRepository()->getById((int) $wanted_id);
+        $info = self::getWantedRepository()->getById($wanted_id);
         if ($info === null) {
             return;
         }

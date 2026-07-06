@@ -90,7 +90,7 @@ final class CatalogAction8Method
         // confirm the correct data
         if (!in_array($task, ['add_to_catalog', 'clean_catalog', 'verify_catalog', 'gather_art', 'garbage_collect'])) {
             /* HINT: Requested object string/id/type ("album", "myusername", "some song title", 1298376) */
-            Api::error(sprintf('Bad Request: %s', $task), ErrorCodeEnum::BAD_REQUEST, self::ACTION, 'task', $input['api_format']);
+            Api::error(ErrorCodeEnum::BAD_REQUEST, sprintf('Bad Request: %s', $task), self::ACTION, 'task', $input['api_format']);
 
             return false;
         }
@@ -130,7 +130,7 @@ final class CatalogAction8Method
 
             Api::message('successfully started: ' . $task, $input['api_format']);
         } else {
-            Api::error('Not Found', ErrorCodeEnum::NOT_FOUND, self::ACTION, 'catalog', $input['api_format']);
+            Api::error(ErrorCodeEnum::NOT_FOUND, 'Not Found', self::ACTION, 'catalog', $input['api_format']);
 
             return false;
         }

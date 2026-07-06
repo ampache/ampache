@@ -353,7 +353,7 @@ abstract class playlist_object extends database_object implements
             ? $user
             : Core::get_global('user');
 
-        return (bool) (
+        return (
             $user instanceof User
             && !empty($this->collaborate)
             && in_array($user->getId(), array_map('intval', explode(',', (string) $this->collaborate)))
@@ -461,7 +461,6 @@ abstract class playlist_object extends database_object implements
 
         $collaborate = implode(',', $ids);
         if ($this->update_item('collaborate', $collaborate)) {
-
             $sql = (empty($collaborate))
                 ? "DELETE FROM `user_playlist_map` WHERE `playlist_id` = ?;"
                 : "DELETE FROM `user_playlist_map` WHERE `playlist_id` = ? AND `user_id` NOT IN (" . $collaborate . ");";

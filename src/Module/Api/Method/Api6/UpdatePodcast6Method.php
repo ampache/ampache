@@ -42,6 +42,8 @@ final class UpdatePodcast6Method
 {
     public const string ACTION = 'update_podcast';
 
+    public const string REST_ACTION = 'sync';
+
     /**
      * update_podcast
      * MINIMUM_API_VERSION=420000
@@ -78,10 +80,10 @@ final class UpdatePodcast6Method
                 Session::extend($input['auth'], AccessTypeEnum::API->value);
             } else {
                 /* HINT: Requested object string/id/type ("album", "myusername", "some song title", 1298376) */
-                Api6::error(sprintf('Bad Request: %s', $object_id), ErrorCodeEnum::BAD_REQUEST, self::ACTION, 'podcast', $input['api_format']);
+                Api6::error(ErrorCodeEnum::BAD_REQUEST, sprintf('Bad Request: %s', $object_id), self::ACTION, 'podcast', $input['api_format']);
             }
         } else {
-            Api6::error(sprintf('Not Found: %s', $object_id), ErrorCodeEnum::NOT_FOUND, self::ACTION, 'filter', $input['api_format']);
+            Api6::error(ErrorCodeEnum::NOT_FOUND, sprintf('Not Found: %s', $object_id), self::ACTION, 'filter', $input['api_format']);
 
             return false;
         }

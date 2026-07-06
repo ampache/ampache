@@ -125,42 +125,42 @@ if (!AmpConfig::get('sidebar_hide_browse', false)) { ?>
             <span class="sidebar-header-title"><?php echo $t_browse; ?></span>
             <?php echo Ui::get_material_symbol('chevron_right', $t_expander, 'home_browse', 'header-img ' . $state_home_browse); ?>
         </h4>
-        <?php $text = (string) scrub_in(Core::get_request('action')) . '_ac';
+        <?php $text = scrub_in(Core::get_request('action')) . '_ac';
     if ($text !== '_ac') {
         ${$text} = ' selected="selected"';
     } ?>
         <ul class="sb3" id="sb_home_browse" <?php echo ($state_home_browse == 'collapsed') ? 'style="display: none;"' : ''; ?>>
+    <?php if ($showFolder) { ?>
+            <li id="sb_home_browse_folder"><a href="<?php echo $web_path; ?>/folders.php?action=show&folder=-1"><?php echo $t_folders; ?></a></li>
+    <?php } ?>
             <li id="sb_home_browse_songTitle"><a href="<?php echo $web_path; ?>/browse.php?action=song"><?php echo $t_songs; ?></a></li>
             <li id="sb_home_browse_album"><a href="<?php echo $web_path; ?>/browse.php?action=<?php echo $albumString; ?>"><?php echo $t_albums; ?></a></li>
-<?php if ($showArtist) { ?>
-                <li id="sb_home_browse_artist"><a href="<?php echo $web_path; ?>/browse.php?action=artist"><?php echo $t_artists; ?></a></li>
-<?php } ?>
-<?php if ($showAlbumArtist || !$showArtist) { ?>
-                <li id="sb_home_browse_artist"><a href="<?php echo $web_path; ?>/browse.php?action=album_artist"><?php echo $t_a_artists; ?></a></li>
-<?php } ?>
-<?php if ($showFolder) { ?>
-            <li id="sb_home_browse_folder"><a href="<?php echo $web_path; ?>/folders.php?action=show&folder=-1"><?php echo $t_folders; ?></a></li>
-<?php } ?>
-<?php if ($allowLabel) { ?>
-                <li id="sb_home_browse_label"><a href="<?php echo $web_path; ?>/browse.php?action=label"><?php echo $t_labels; ?></a></li>
-<?php } ?>
-<?php if (AmpConfig::get('broadcast')) { ?>
-                <li id="sb_home_browse_broadcast"><a href="<?php echo $web_path; ?>/browse.php?action=broadcast"><?php echo $t_broadcasts; ?></a></li>
-<?php } ?>
-<?php if (AmpConfig::get('live_stream')) { ?>
-                <li id="sb_home_browse_radioStation"><a href="<?php echo $web_path; ?>/browse.php?action=live_stream"><?php echo $t_radioStations; ?></a></li>
-<?php } ?>
-<?php if ($allowPodcast) { ?>
-                <li id="sb_home_browse_podcast"><a href="<?php echo $web_path; ?>/browse.php?action=podcast"><?php echo $t_podcasts; ?></a></li>
-                <li id="sb_home_browse_podcast"><a href="<?php echo $web_path; ?>/browse.php?action=podcast_episode"><?php echo $t_podcastEpisodes; ?></a></li>
-<?php } ?>
-<?php if ($allowVideo) { ?>
-                <li id="sb_home_browse_video"><a href="<?php echo $web_path; ?>/browse.php?action=video"><?php echo $t_videos; ?></a></li>
-                <?php } ?>
-        <li id="sb_home_browse_tags"><a href="<?php echo $web_path; ?>/browse.php?action=tag&type=<?php echo $albumString; ?>"><?php echo $t_genres; ?></a></li>
-<?php if ($allow_upload) { ?>
-              <li id="sb_home_browse_upload"><a href="<?php echo $web_path; ?>/stats.php?action=upload"><?php echo $t_uploads; ?></a></li>
-<?php } ?>
+    <?php if ($showArtist) { ?>
+            <li id="sb_home_browse_artist"><a href="<?php echo $web_path; ?>/browse.php?action=artist"><?php echo $t_artists; ?></a></li>
+    <?php } ?>
+    <?php if ($showAlbumArtist || !$showArtist) { ?>
+            <li id="sb_home_browse_artist"><a href="<?php echo $web_path; ?>/browse.php?action=album_artist"><?php echo $t_a_artists; ?></a></li>
+    <?php } ?>
+    <?php if ($allowLabel) { ?>
+            <li id="sb_home_browse_label"><a href="<?php echo $web_path; ?>/browse.php?action=label"><?php echo $t_labels; ?></a></li>
+    <?php } ?>
+    <?php if (AmpConfig::get('broadcast')) { ?>
+            <li id="sb_home_browse_broadcast"><a href="<?php echo $web_path; ?>/browse.php?action=broadcast"><?php echo $t_broadcasts; ?></a></li>
+    <?php } ?>
+    <?php if (AmpConfig::get('live_stream')) { ?>
+            <li id="sb_home_browse_radioStation"><a href="<?php echo $web_path; ?>/browse.php?action=live_stream"><?php echo $t_radioStations; ?></a></li>
+    <?php } ?>
+    <?php if ($allowPodcast) { ?>
+            <li id="sb_home_browse_podcast"><a href="<?php echo $web_path; ?>/browse.php?action=podcast"><?php echo $t_podcasts; ?></a></li>
+            <li id="sb_home_browse_podcast"><a href="<?php echo $web_path; ?>/browse.php?action=podcast_episode"><?php echo $t_podcastEpisodes; ?></a></li>
+    <?php } ?>
+    <?php if ($allowVideo) { ?>
+            <li id="sb_home_browse_video"><a href="<?php echo $web_path; ?>/browse.php?action=video"><?php echo $t_videos; ?></a></li>
+    <?php } ?>
+            <li id="sb_home_browse_tags"><a href="<?php echo $web_path; ?>/browse.php?action=tag&type=<?php echo $albumString; ?>"><?php echo $t_genres; ?></a></li>
+    <?php if ($allow_upload) { ?>
+            <li id="sb_home_browse_upload"><a href="<?php echo $web_path; ?>/stats.php?action=upload"><?php echo $t_uploads; ?></a></li>
+    <?php } ?>
         </ul>
     </li>
 <?php }

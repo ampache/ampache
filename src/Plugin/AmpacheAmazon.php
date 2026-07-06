@@ -56,11 +56,11 @@ class AmpacheAmazon extends AmpachePlugin implements PluginGatherArtsInterface
     public string $version = '000001';
 
     // These are internal settings used by this class, run this->load to fill them out
-    private $amazon_base_url;
-    private $amazon_developer_associate_tag;
-    private $amazon_developer_private_api_key;
-    private $amazon_developer_public_key;
-    private $amazon_max_results_pages;
+    private string $amazon_base_url;
+    private string $amazon_developer_associate_tag;
+    private string $amazon_developer_private_api_key;
+    private string $amazon_developer_public_key;
+    private int $amazon_max_results_pages;
 
     /**
      * Constructor

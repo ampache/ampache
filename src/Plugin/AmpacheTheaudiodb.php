@@ -325,7 +325,7 @@ class AmpacheTheaudiodb extends AmpachePlugin implements PluginGatherArtsInterfa
             return null;
         }
 
-        return json_decode((string) $request->body);
+        return json_decode($request->body);
     }
 
     private function get_album(string $mbid): mixed

@@ -70,6 +70,14 @@ final class Localplay6Method
      */
     public static function localplay(array $input, User $user): bool
     {
+        if (
+            !isset($input['command'])
+            && isset($input['filter'])
+            && in_array($input['filter'], ['next', 'prev', 'stop', 'play', 'pause', 'volume_up', 'volume_down', 'volume_mute', 'delete_all', 'skip', 'status'])
+        ) {
+            $input['command'] = $input['filter'];
+        }
+
         if (!Api6::check_parameter($input, ['command'], self::ACTION)) {
             return false;
         }
@@ -81,7 +89,7 @@ final class Localplay6Method
         // Load their Localplay instance
         $localplay = new Localplay(AmpConfig::get('localplay_controller', ''));
         if (empty($localplay->type) || !$localplay->connect()) {
-            Api6::error('Unable to connect to localplay controller', ErrorCodeEnum::BAD_REQUEST, self::ACTION, 'account', $input['api_format']);
+            Api6::error(ErrorCodeEnum::BAD_REQUEST, 'Unable to connect to localplay controller', self::ACTION, 'account', $input['api_format']);
 
             return false;
         }
@@ -93,10 +101,10 @@ final class Localplay6Method
             case 'add':
                 // for add commands get the object details
                 $object_id = (int) ($input['filter'] ?? $input['oid'] ?? 0);
-                $type      = LibraryItemEnum::tryFrom((string) strtolower($input['type'] ?? '')) ?? LibraryItemEnum::SONG;
+                $type      = LibraryItemEnum::tryFrom(strtolower($input['type'] ?? '')) ?? LibraryItemEnum::SONG;
 
                 if (!AmpConfig::get('allow_video') && $type === LibraryItemEnum::VIDEO) {
-                    Api6::error('Enable: video', ErrorCodeEnum::ACCESS_DENIED, self::ACTION, 'system', $input['api_format']);
+                    Api6::error(ErrorCodeEnum::ACCESS_DENIED, 'Enable: video', self::ACTION, 'system', $input['api_format']);
 
                     return false;
                 }
@@ -163,13 +171,13 @@ final class Localplay6Method
                 break;
             default:
                 // They are doing it wrong
-                Api6::error('Bad Request', ErrorCodeEnum::BAD_REQUEST, self::ACTION, 'command', $input['api_format']);
+                Api6::error(ErrorCodeEnum::BAD_REQUEST, 'Bad Request', self::ACTION, 'command', $input['api_format']);
 
                 return false;
         }
 
         if ($command === 'status' && empty($status)) {
-            Api6::error('Unable to connect to localplay controller', ErrorCodeEnum::BAD_REQUEST, self::ACTION, 'account', $input['api_format']);
+            Api6::error(ErrorCodeEnum::BAD_REQUEST, 'Unable to connect to localplay controller', self::ACTION, 'account', $input['api_format']);
 
             return false;
         }

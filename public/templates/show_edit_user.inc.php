@@ -98,7 +98,7 @@ $access100  = Access::check(AccessTypeEnum::INTERFACE, AccessLevelEnum::ADMIN); 
         <tr>
             <td><?php echo T_('User Access Level'); ?></td>
             <td>
-                <?php $user_access = 'on_' . (string) $client->access;
+                <?php $user_access = 'on_' . $client->access;
 $on_5                              = '';
 $on_25                             = '';
 $on_50                             = '';

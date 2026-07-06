@@ -101,10 +101,6 @@ class Albums8MethodTest extends MockeryTestCase
             ->with($limit)
             ->once();
 
-        $browse->shouldReceive('get_total')
-            ->withNoArgs()
-            ->once()
-            ->andReturn(0);
         $output->shouldReceive('setCount')
             ->with(0)
             ->once();
@@ -200,10 +196,6 @@ class Albums8MethodTest extends MockeryTestCase
             ->with(0)
             ->once();
 
-        $browse->shouldReceive('get_total')
-            ->withNoArgs()
-            ->once()
-            ->andReturn(1);
         $output->shouldReceive('setCount')
             ->with(1)
             ->once();
@@ -239,6 +231,109 @@ class Albums8MethodTest extends MockeryTestCase
                     'exact' => true,
                     'api_format' => 'json',
                     'auth' => 'stringauth',
+                ],
+                $user
+            )
+        );
+    }
+
+    public function testHandleLimitReturnsResponse(): void
+    {
+        ob_start();
+
+        $gatekeeper = $this->mock(GatekeeperInterface::class);
+        $response   = $this->mock(ResponseInterface::class);
+        $output     = $this->mock(ApiOutputInterface::class);
+        $browse     = $this->mock(Browse::class);
+        $user       = $this->mock(User::class);
+        $stream     = $this->mock(StreamInterface::class);
+
+        $result  = 'some-result';
+        $include = [];
+
+        // Create 5 album mocks to simulate a larger result set
+        $albums = [];
+        for ($i = 0; $i < 5; $i++) {
+            $albums[] = $this->mock(Album::class);
+        }
+
+        $this->modelFactory->shouldReceive('createBrowse')
+            ->with(null, false)
+            ->once()
+            ->andReturn($browse);
+
+        $browse->shouldReceive('set_user_id')
+            ->with($user)
+            ->once();
+        $browse->shouldReceive('set_type')
+            ->with('album')
+            ->once();
+        $browse->shouldReceive('set_sort_order')
+            ->with('', ['name_year', 'ASC'])
+            ->once();
+        $browse->shouldReceive('set_api_filter')
+            ->with('exact_match', '')
+            ->once();
+        $browse->shouldReceive('set_api_filter')
+            ->with('add', '')
+            ->once();
+        $browse->shouldReceive('set_api_filter')
+            ->with('update', '')
+            ->once();
+        $browse->shouldReceive('set_conditions')
+            ->with('')
+            ->once();
+        $browse->shouldReceive('get_objects')
+            ->withNoArgs()
+            ->once()
+            ->andReturn($albums);
+
+        $output->shouldReceive('setOffset')
+            ->with(0)
+            ->once();
+
+        // Expect the method to set the requested limit of 1
+        $output->shouldReceive('setLimit')
+            ->with(1)
+            ->once();
+
+        // Now that a limit of 1 was requested, the returned payload should contain only 1 album
+        $output->shouldReceive('setCount')
+            ->with(5)
+            ->once();
+
+        $output->shouldReceive('albums')
+            ->with(
+                $albums,
+                $include,
+                $user,
+                'stringauth',
+            )
+            ->once()
+            ->andReturn($result);
+
+        $this->streamFactory->shouldReceive('createStream')
+            ->with($result)
+            ->once()
+            ->andReturn($stream);
+
+        $response->shouldReceive('withBody')
+            ->with($stream)
+            ->once()
+            ->andReturnSelf();
+
+        $this->assertSame(
+            $response,
+            $this->subject->handle(
+                $gatekeeper,
+                $response,
+                $output,
+                [
+                    'include' => $include,
+                    'exact' => true,
+                    'api_format' => 'json',
+                    'auth' => 'stringauth',
+                    'limit' => 1,
                 ],
                 $user
             )

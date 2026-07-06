@@ -685,11 +685,11 @@ class OpenSubsonic_Json_Data
 
             $json = [];
             if ($artist) {
-                $json['artist'] = (string) $artist;
+                $json['artist'] = $artist;
             }
 
             if ($title) {
-                $json['title'] = (string) $title;
+                $json['title'] = $title;
             }
 
             $json['value'] = html_entity_decode($text);
@@ -1720,7 +1720,6 @@ class OpenSubsonic_Json_Data
      */
     private static function _createResponse(): array
     {
-
         return [
             'subsonic-response' => [
                 'status' => 'ok',
@@ -1818,7 +1817,7 @@ class OpenSubsonic_Json_Data
         $sub_id       = OpenSubsonic_Api::getAlbumSubId($album->id);
         $album_artist = $album->findAlbumArtist();
         $subParent    = ($album_artist) ? OpenSubsonic_Api::getArtistSubId($album_artist) : false;
-        $f_name       = (string) $album->get_fullname();
+        $f_name       = $album->get_fullname();
 
         $json = [
             'id' => $sub_id,
@@ -1847,7 +1846,7 @@ class OpenSubsonic_Json_Data
         if ($subParent) {
             $json['artistId'] = $subParent;
         }
-        $json['artist'] = (string) $album->get_parent_fullname();
+        $json['artist'] = $album->get_parent_fullname();
         // original year (fall back to regular year)
         $original_year = AmpConfig::get('use_original_year');
         $year          = ($original_year && $album->original_year)
@@ -2122,7 +2121,7 @@ class OpenSubsonic_Json_Data
                 }
             } else {
                 $json['similarArtist'][] = [
-                    'id' => (string) ('-' . $unknownCount++),
+                    'id' => '-' . $unknownCount++,
                     'name' => (string) $similar['name'],
                 ];
             }
@@ -2245,8 +2244,8 @@ class OpenSubsonic_Json_Data
             'position' => $bookmark->position,
             'username' => $bookmark->getUserName(),
             'comment' => (string) $bookmark->comment,
-            'created' => date("c", (int) $bookmark->creation_date),
-            'changed' => date("c", (int) $bookmark->update_date),
+            'created' => date("c", $bookmark->creation_date),
+            'changed' => date("c", $bookmark->update_date),
             'entry' => [],
         ];
 
@@ -2286,7 +2285,7 @@ class OpenSubsonic_Json_Data
         return [
             'username' => ($user->fullname_public) ? (string) $user->fullname : (string) $user->username,
             'time' => $message->getCreationDate() * 1000,
-            'message' => (string) $message->getMessage(),
+            'message' => $message->getMessage(),
         ];
     }
 
@@ -2408,7 +2407,7 @@ class OpenSubsonic_Json_Data
             'isVideo' => false,
             'type' => 'music',
             'artistId' => $subParent,
-            'artist' => (string) $album->get_parent_fullname(),
+            'artist' => $album->get_parent_fullname(),
         ];
 
         if ($album->has_art()) {
@@ -2622,7 +2621,7 @@ class OpenSubsonic_Json_Data
         }
 
         $json['playCount'] = $episode->total_count;
-        $json['created']   = date("Y-m-d\TH:i:s\Z", (int) $episode->addition_time);
+        $json['created']   = date("Y-m-d\TH:i:s\Z", $episode->addition_time);
 
         $starred = new Userflag($episode->id, 'podcast_episode');
         $result  = $starred->get_flag(null, true);
@@ -2770,9 +2769,9 @@ class OpenSubsonic_Json_Data
             'isVideo' => false,
             'type' => 'music',
             'albumId' => $subParent,
-            'album' => (string) $song->get_album_fullname(),
+            'album' => $song->get_album_fullname(),
             'artistId' => ($song->artist) ? OpenSubsonic_Api::getArtistSubId($song->artist) : '',
-            'artist' => (string) $song->get_parent_fullname(),
+            'artist' => $song->get_parent_fullname(),
         ];
 
         if ($song->has_art()) {
@@ -3369,8 +3368,8 @@ class OpenSubsonic_Json_Data
             'public' => ($playlist->type != 'private'),
             'songCount' => $songcount,
             'duration' => $duration,
-            'created' => (string) date('c', $playlist->date),
-            'changed' => (string) date('c', (int) $playlist->last_update),
+            'created' => date('c', $playlist->date),
+            'changed' => date('c', (int) $playlist->last_update),
         ];
 
         if ($playlist->has_art()) {
@@ -3382,7 +3381,7 @@ class OpenSubsonic_Json_Data
         try {
             $date = new DateTime(date("Y-m-d H:i:s", time() + 300));
             $date->setTimezone(new DateTimeZone('UTC'));
-            $validUntil         = (string) $date->format('c');
+            $validUntil         = $date->format('c');
             $json['validUntil'] = $validUntil;
         } catch (Exception $error) {
             debug_event(self::class, 'DateTime error: ' . $error->getMessage(), 5);
@@ -3435,8 +3434,8 @@ class OpenSubsonic_Json_Data
             'public' => ($search->type != 'private'),
             'songCount' => (int) $search->last_count,
             'duration' => (int) $search->last_duration,
-            'created' => (string) date('c', $search->date),
-            'changed' => (string) date('c', time()),
+            'created' => date('c', $search->date),
+            'changed' => date('c', time()),
         ];
 
         if ($search->has_art()) {
@@ -3448,7 +3447,7 @@ class OpenSubsonic_Json_Data
         try {
             $date = new DateTime(date("Y-m-d H:i:s", time() + 300));
             $date->setTimezone(new DateTimeZone('UTC'));
-            $validUntil         = (string) $date->format('c');
+            $validUntil         = $date->format('c');
             $json['validUntil'] = $validUntil;
         } catch (Exception $error) {
             debug_event(self::class, 'DateTime error: ' . $error->getMessage(), 5);
@@ -3487,7 +3486,6 @@ class OpenSubsonic_Json_Data
      */
     private static function _getPodcast(Podcast $podcast, bool $includeEpisodes, ?string $sub_id = null): array
     {
-
         $sub_id = (!empty($sub_id))
             ? $sub_id
             : Subsonic_Api::getPodcastSubId($podcast->getId());
@@ -3614,7 +3612,7 @@ class OpenSubsonic_Json_Data
             'url' => (string) $share->public_url,
             'description' => (string) $share->description,
             'username' => (string) $user->username,
-            'created' => date('c', (int) $share->creation_date),
+            'created' => date('c', $share->creation_date),
         ];
 
         if ($share->lastvisit_date > 0) {
@@ -3622,7 +3620,7 @@ class OpenSubsonic_Json_Data
         }
 
         if ($share->expire_days > 0) {
-            $json['expires'] = date('c', (int) $share->creation_date + ($share->expire_days * 86400));
+            $json['expires'] = date('c', $share->creation_date + ($share->expire_days * 86400));
         }
 
         $json['visitCount'] = $share->counter;
@@ -3680,7 +3678,7 @@ class OpenSubsonic_Json_Data
             $text = str_replace("\r", '', (string) $text);
 
             $json = [
-                'displayArtist' => (string) $song->get_parent_fullname(),
+                'displayArtist' => $song->get_parent_fullname(),
                 'displayTitle' => (string) $song->title,
                 'lang' => 'xxx',
                 'synced' => false,
@@ -3705,7 +3703,7 @@ class OpenSubsonic_Json_Data
                             'value' => $lyricLine,
                         ];
                     } else {
-                        $lines[] = ['value' => (string) $line];
+                        $lines[] = ['value' => $line];
                     }
                 }
             }

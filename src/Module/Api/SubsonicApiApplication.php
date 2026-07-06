@@ -411,7 +411,7 @@ final class SubsonicApiApplication implements ApiApplicationInterface
         foreach ($query as $param) {
             $decname  = false;
             $decvalue = false;
-            if (strpos((string) $param, '=')) {
+            if (strpos($param, '=')) {
                 [$name, $value] = explode('=', $param);
                 $decname        = urldecode($name);
                 $decvalue       = urldecode($value);

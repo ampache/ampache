@@ -62,7 +62,7 @@ final class Song5Method
         $song      = new Song($object_id);
         if ($song->isNew()) {
             /* HINT: Requested object string/id/type ("album", "myusername", "some song title", 1298376) */
-            Api5::error(sprintf(T_('Not Found: %s'), $object_id), ErrorCodeEnum::NOT_FOUND, self::ACTION, 'filter', $input['api_format']);
+            Api5::error(ErrorCodeEnum::NOT_FOUND, sprintf(T_('Not Found: %s'), $object_id), self::ACTION, 'filter', $input['api_format']);
 
             return false;
         }
@@ -70,10 +70,10 @@ final class Song5Method
         ob_end_clean();
         switch ($input['api_format']) {
             case 'json':
-                echo Json5_Data::songs([(int) $object_id], $user, $input['auth'], true, false);
+                echo Json5_Data::songs([$object_id], $user, $input['auth'], true, false);
                 break;
             default:
-                echo Xml5_Data::songs([(int) $object_id], $user, $input['auth']);
+                echo Xml5_Data::songs([$object_id], $user, $input['auth']);
         }
 
         return true;

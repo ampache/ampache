@@ -817,7 +817,7 @@ final readonly class Session implements SessionInterface
                 $GLOBALS['user']           = new User(-1);
                 $GLOBALS['user']->username = $auth['username'];
                 $GLOBALS['user']->fullname = $auth['fullname'];
-                $GLOBALS['user']->access   = (int) ($auth['access']);
+                $GLOBALS['user']->access   = $auth['access'];
             } else {
                 self::check();
                 if (array_key_exists('userdata', $_SESSION) && array_key_exists('username', $_SESSION['userdata'])) {
@@ -827,7 +827,7 @@ final readonly class Session implements SessionInterface
                     $GLOBALS['user']->id       = -1;
                     $GLOBALS['user']->username = $auth['username'];
                     $GLOBALS['user']->fullname = $auth['fullname'];
-                    $GLOBALS['user']->access   = (int) $auth['access'];
+                    $GLOBALS['user']->access   = $auth['access'];
                 }
 
                 $user_id = Core::get_global('user')?->getId();

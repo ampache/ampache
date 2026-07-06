@@ -57,7 +57,7 @@ class AmpacheGoogleMaps extends AmpachePlugin implements PluginLocationInterface
     public string $version = '000001';
 
     // These are internal settings used by this class, run this->load to fill them out
-    private $api_key;
+    private string $api_key;
 
     /**
      * Constructor
@@ -132,7 +132,7 @@ class AmpacheGoogleMaps extends AmpachePlugin implements PluginLocationInterface
             $url     = "http://maps.googleapis.com/maps/api/geocode/json?latlng=" . $latitude . "," . $longitude . "&sensor=false";
             $request = Requests::get($url, [], Core::requests_options());
 
-            $place = json_decode((string) $request->body, true);
+            $place = json_decode($request->body, true);
             if (count($place['results']) > 0) {
                 $name = $place['results'][0]['formatted_address'];
             }

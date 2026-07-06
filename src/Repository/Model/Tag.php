@@ -110,7 +110,7 @@ class Tag extends database_object implements library_item, displayable_item, con
      */
     public static function add_tag(string $value): ?int
     {
-        if ((string) $value === '') {
+        if ($value === '') {
             return null;
         }
 
@@ -481,7 +481,7 @@ class Tag extends database_object implements library_item, displayable_item, con
                 $limit_sql .= $offset . ', ';
             }
 
-            $limit_sql .= (string) ($count);
+            $limit_sql .= $count;
         }
 
         $sql = sprintf('SELECT DISTINCT `tag_map`.`object_id` FROM `tag_map` WHERE %s `tag_map`.`object_type` = ?', $tag_sql);
@@ -578,7 +578,7 @@ class Tag extends database_object implements library_item, displayable_item, con
             return [];
         }
 
-        $object_id  = (int) ($object_id);
+        $object_id  = $object_id;
         $limit_text = ($limit == 0)
             ? ''
             : 'LIMIT ' . $limit;
@@ -680,7 +680,7 @@ class Tag extends database_object implements library_item, displayable_item, con
         $db_results = Dba::read($sql, [$tag_id, 0, $object_id, $type]);
         $results    = Dba::fetch_assoc($db_results);
 
-        return (bool) (array_key_exists('id', $results));
+        return array_key_exists('id', $results);
     }
 
     /**
@@ -690,7 +690,7 @@ class Tag extends database_object implements library_item, displayable_item, con
      */
     public static function update_tag_list(string $tags_comma, string $object_type, int $object_id, bool $overwrite): bool
     {
-        if (!strlen((string) $tags_comma) > 0) {
+        if (!strlen($tags_comma) > 0) {
             return self::remove_all_maps($object_type, $object_id);
         }
 

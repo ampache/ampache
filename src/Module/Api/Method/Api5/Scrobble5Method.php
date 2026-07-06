@@ -91,7 +91,7 @@ final class Scrobble5Method
         // validate supplied user
         if ($valid === false) {
             /* HINT: Requested object string/id/type ("album", "myusername", "some song title", 1298376) */
-            Api5::error(sprintf(T_('Not Found: %s'), $user_id), ErrorCodeEnum::NOT_FOUND, self::ACTION, 'empty', $input['api_format']);
+            Api5::error(ErrorCodeEnum::NOT_FOUND, sprintf(T_('Not Found: %s'), $user_id), self::ACTION, 'empty', $input['api_format']);
 
             return false;
         }
@@ -99,7 +99,7 @@ final class Scrobble5Method
         // validate minimum required options
         debug_event(self::class, 'scrobble searching for:' . $song_name . ' - ' . $artist_name . ' - ' . $album_name, 4);
         if (!$song_name || !$album_name || !$artist_name) {
-            Api5::error(T_('Bad Request'), ErrorCodeEnum::BAD_REQUEST, self::ACTION, 'input', $input['api_format']);
+            Api5::error(ErrorCodeEnum::BAD_REQUEST, T_('Bad Request'), self::ACTION, 'input', $input['api_format']);
 
             return false;
         }
@@ -109,12 +109,12 @@ final class Scrobble5Method
         $scrobble_id = Song::can_scrobble($song_name, $artist_name, $album_name, $song_mbid, $artist_mbid, $album_mbid);
 
         if ($scrobble_id === '') {
-            Api5::error(T_('Not Found'), ErrorCodeEnum::NOT_FOUND, self::ACTION, 'song', $input['api_format']);
+            Api5::error(ErrorCodeEnum::NOT_FOUND, T_('Not Found'), self::ACTION, 'song', $input['api_format']);
         } else {
             $media = new Song((int) $scrobble_id);
             if ($media->isNew()) {
                 /* HINT: Requested object string/id/type ("album", "myusername", "some song title", 1298376) */
-                Api5::error(sprintf(T_('Not Found: %s'), $scrobble_id), ErrorCodeEnum::NOT_FOUND, self::ACTION, 'song', $input['api_format']);
+                Api5::error(ErrorCodeEnum::NOT_FOUND, sprintf(T_('Not Found: %s'), $scrobble_id), self::ACTION, 'song', $input['api_format']);
 
                 return false;
             }

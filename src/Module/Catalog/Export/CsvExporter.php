@@ -66,8 +66,7 @@ final readonly class CsvExporter implements CatalogExporterInterface
                 'Bitrate',
                 'Played',
                 'File'
-            ],
-            escape: '\\'
+            ]
         );
         foreach ($result as $songId) {
             $song = $this->modelFactory->createSong((int) $songId);
@@ -86,8 +85,7 @@ final readonly class CsvExporter implements CatalogExporterInterface
                     (int) ($song->bitrate / 1024) . "-" . strtoupper((string) $song->mode),
                     $song->played,
                     $song->file
-                ],
-                escape: '\\'
+                ]
             );
         }
     }

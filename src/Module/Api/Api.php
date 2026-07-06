@@ -211,6 +211,7 @@ class Api
         Method\Api8\UpdateArt8Method::ACTION => Method\Api8\UpdateArt8Method::class,
         Method\Api8\UpdateFromTags8Method::ACTION => Method\Api8\UpdateFromTags8Method::class,
         Method\Api8\UpdatePodcast8Method::ACTION => Method\Api8\UpdatePodcast8Method::class,
+        Method\Api8\UpdatePodcast8Method::REST_ACTION => Method\Api8\UpdatePodcast8Method::class,
         Method\Api8\UrlToSong8Method::ACTION => Method\Api8\UrlToSong8Method::class,
         Method\Api8\UserCreate8Method::ACTION => Method\Api8\UserCreate8Method::class,
         Method\Api8\UserCreate8Method::REST_ACTION => Method\Api8\UserCreate8Method::class,
@@ -244,7 +245,7 @@ class Api
         if (!Access::check($type, $level, $user_id)) {
             debug_event(self::class, $type->value . " '" . $level->value . "' required on " . $method . " function call.", 2);
             /* HINT: Access level, eg 75, 100 */
-            self::error(sprintf(T_('Require: %s'), $level->value), '4742', $method, 'account', $format);
+            self::error('4742', sprintf(T_('Require: %s'), $level->value), $method, 'account', $format);
 
             return false;
         }
@@ -270,7 +271,7 @@ class Api
         debug_event(self::class, "'" . $parameter . "' required on " . $method . " function call.", 2);
 
         /* HINT: Requested object string/id/type ("album", "myusername", "some song title", 1298376) */
-        self::error(sprintf(T_('Bad Request: %s'), $parameter), '4710', $method, 'system', $input['api_format']);
+        self::error('4710', sprintf(T_('Bad Request: %s'), $parameter), $method, 'system', $input['api_format']);
 
         return false;
     }
@@ -294,37 +295,14 @@ class Api
      * error
      * call the correct error message depending on format
      */
-    public static function error(string $message, int|string $error_code, string $method, string $error_type, string $format = 'xml'): void
+    public static function error(int|string $code, string $message, string $method, string $error_type, string $format = 'xml'): void
     {
-        switch ($error_code) {
-            case '4700': // ACCESS_CONTROL_NOT_ENABLED
-            case '4703': // ACCESS_DENIED
-            case '4742': // FAILED_ACCESS_CHECK
-                http_response_code(403);
-                break;
-            case '4710': // BAD_REQUEST
-            case '4705': // MISSING
-                http_response_code(400);
-                break;
-            case '4706': // DEPRECATED
-                http_response_code(410);
-                break;
-            case '4702': // GENERIC_ERROR
-                http_response_code(500);
-                break;
-            case '4701': // INVALID_HANDSHAKE
-                http_response_code(401);
-                break;
-            case '4704': // NOT_FOUND
-                http_response_code(404);
-                break;
-        }
         switch ($format) {
             case 'json':
-                echo Json8_Data::error($error_code, $message, $method, $error_type);
+                echo Json8_Data::error($code, $message, $method, $error_type);
                 break;
             default:
-                echo Xml8_Data::error($error_code, $message, $method, $error_type);
+                echo Xml8_Data::error($code, $message, $method, $error_type);
         }
     }
 
