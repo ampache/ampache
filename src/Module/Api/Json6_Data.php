@@ -386,7 +386,6 @@ class Json6_Data
             "md5" => $md5,
         ];
 
-
         $bookmarkRepository = self::getBookmarkRepository();
 
         self::$count = 0;
@@ -466,7 +465,6 @@ class Json6_Data
             "child_type" => $child_type,
         ];
         $pattern = '/^(' . implode('\\s|', explode('|', AmpConfig::get('catalog_prefix_pattern', 'The|An|A|Die|Das|Ein|Eine|Les|Le|La'))) . '\\s)(.*)/i';
-
 
         $JSON = [];
         foreach ($objects as $object) {
@@ -575,7 +573,6 @@ class Json6_Data
             "total_count" => self::$count,
             "md5" => $md5,
         ];
-
 
         $JSON = [];
         foreach ($objects as $row) {
@@ -1126,7 +1123,6 @@ class Json6_Data
             "total_count" => self::$count,
             "md5" => $md5,
         ];
-
 
         $licenseRepository = self::getLicenseRepository();
 

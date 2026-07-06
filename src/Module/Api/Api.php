@@ -209,6 +209,7 @@ class Api
         Method\Api8\UpdateArt8Method::ACTION => Method\Api8\UpdateArt8Method::class,
         Method\Api8\UpdateFromTags8Method::ACTION => Method\Api8\UpdateFromTags8Method::class,
         Method\Api8\UpdatePodcast8Method::ACTION => Method\Api8\UpdatePodcast8Method::class,
+        Method\Api8\UpdatePodcast8Method::REST_ACTION => Method\Api8\UpdatePodcast8Method::class,
         Method\Api8\UrlToSong8Method::ACTION => Method\Api8\UrlToSong8Method::class,
         Method\Api8\UserCreate8Method::ACTION => Method\Api8\UserCreate8Method::class,
         Method\Api8\UserCreate8Method::REST_ACTION => Method\Api8\UserCreate8Method::class,
