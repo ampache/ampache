@@ -536,6 +536,202 @@
       "ApiKeyAuthQuery": []
     }
   ],
+  "x-rpc-mappings": {
+    "/albums": "action=albums",
+    "/albums/{album_id}": "action=album&filter={album_id}",
+    "/albums/{album_id}/art": "action=get_art&filter={album_id}&type=album",
+    "/albums/{album_id}/fetch-metadata": "action=get_external_metadata&filter={album_id}&type=album",
+    "/albums/{album_id}/flag": "action=flag&filter={album_id}&type=album",
+    "/albums/{album_id}/rate": "action=rate&filter={album_id}&type=album",
+    "/albums/{album_id}/share": "action=share&filter={album_id}&type=album",
+    "/albums/{album_id}/songs": "action=album_songs&filter={album_id}&type=album",
+    "/albums/{album_id}/update-art": "action=update_art&filter={album_id}&type=album",
+    "/albums/{album_id}/update-tags": "action=update_from_tags&filter={album_id}&type=album",
+    "/albums/search": "action=search&type=album",
+    "/albums/stats": "action=stats&type=album",
+    "/artists": "action=artists",
+    "/artists/{artist_id}": "action=artist&filter={artist_id}",
+    "/artists/{artist_id}/albums": "action=artist_albums&filter={artist_id}",
+    "/artists/{artist_id}/art": "action=get_art&filter={artist_id}&type=artist",
+    "/artists/{artist_id}/fetch-info": "action=update_artist_info&filter={artist_id}&type=artist",
+    "/artists/{artist_id}/fetch-metadata": "action=get_external_metadata&filter={artist_id}&type=artist",
+    "/artists/{artist_id}/flag": "action=flag&filter={artist_id}&type=artist",
+    "/artists/{artist_id}/rate": "action=rate&filter={artist_id}&type=artist",
+    "/artists/{artist_id}/share": "action=share&filter={artist_id}&type=artist",
+    "/artists/{artist_id}/similar": "action=get_similar&filter={artist_id}&type=artist",
+    "/artists/{artist_id}/songs": "action=artist_songs&filter={artist_id}&type=artist",
+    "/artists/{artist_id}/update-art": "action=update_art&filter={artist_id}&type=artist",
+    "/artists/{artist_id}/update-tags": "action=update_from_tags&filter={artist_id}&type=artist",
+    "/artists/search": "action=search&type=artist",
+    "/artists/stats": "action=stats&type=artist",
+    "/bookmarks": "action=bookmarks",
+    "/bookmarks/{bookmark_id}": "action=bookmark&filter={bookmark_id}",
+    "/bookmarks/{bookmark_id}/edit": "action=bookmark_edit&filter={bookmark_id}",
+    "/browse": "action=browse",
+    "/catalogs": "action=catalogs",
+    "/catalogs/{catalog_id}": "action=catalog&filter={catalog_id}",
+    "/catalogs/{catalog_id}/file": "action=catalog_file&filter={catalog_id}",
+    "/catalogs/{catalog_id}/folder": "action=catalog_folder&filter={catalog_id}",
+    "/catalogs/{catalog_id}/action": "action=catalog_action&filter={catalog_id}",
+    "/catalogs/{catalog_id}/add": "action=catalog_action&filter={catalog_id}&task=add_to_catalog",
+    "/catalogs/{catalog_id}/clean": "action=catalog_action&filter={catalog_id}&task=clean_catalog",
+    "/catalogs/{catalog_id}/update": "action=catalog_action&filter={catalog_id}&task=update_catalog",
+    "/catalogs/{catalog_id}/verify": "action=catalog_action&filter={catalog_id}&task=verify_catalog",
+    "/catalogs/{catalog_id}/browse": "action=browse&filter={catalog_id}&type=catalog",
+    "/catalogs/{catalog_id}/browse/albums/{album_id}": "action=browse&filter={album_id}&type=album&catalog={catalog_id}",
+    "/catalogs/{catalog_id}/browse/artists/{artist_id}": "action=browse&filter={artist_id}&type=artist&catalog={catalog_id}",
+    "/catalogs/{catalog_id}/browse/podcasts/{podcast_id}": "action=browse&filter={podcast_id}&type=podcast&catalog={catalog_id}",
+    "/democratic/{object_id}": "action=democratic&filter={object_id}",
+    "/democratic/{object_id}/localplay": "action=localplay&filter={object_id}&type=democratic",
+    "/folder": "action=folder",
+    "/folders": "action=folders",
+    "/genres": "action=genres",
+    "/genres/{genre_id}": "action=genre&filter={genre_id}",
+    "/genres/{genre_id}/albums": "action=genre_albums&filter={genre_id}",
+    "/genres/{genre_id}/artists": "action=genre_artists&filter={genre_id}",
+    "/genres/{genre_id}/songs": "action=genre_songs&filter={genre_id}",
+    "/genres/search": "action=search&type=genre",
+    "/goodbye": "action=goodbye",
+    "/handshake": "action=handshake",
+    "/index": "action=index",
+    "/labels": "action=labels",
+    "/labels/{label_id}": "action=label&filter={label_id}",
+    "/labels/{label_id}/artists": "action=label_artists&filter={label_id}",
+    "/labels/{label_id}/fetch-metadata": "action=get_external_metadata&filter={label_id}&type=label",
+    "/labels/search": "action=search&type=label",
+    "/licenses": "action=licenses",
+    "/licenses/{license_id}": "action=license&filter={license_id}",
+    "/licenses/{license_id}/songs": "action=license_songs&filter={license_id}",
+    "/list": "action=list",
+    "/live-streams": "action=live_streams",
+    "/live-streams/{live_stream_id}": "action=live_stream&filter={live_stream_id}",
+    "/live-streams/{live_stream_id}/localplay": "action=localplay&command=add&filter={live_stream_id}&type=live_stream",
+    "/live-streams/{live_stream_id}/clean": "action=live_stream_clean&filter={live_stream_id}",
+    "/localplay/add": "action=localplay&command=add&filter={object_id}&type={object_type}",
+    "/localplay/delete-all": "action=localplay&command=delete_all",
+    "/localplay/next": "action=localplay&command=next",
+    "/localplay/pause": "action=localplay&command=pause",
+    "/localplay/play": "action=localplay&command=play",
+    "/localplay/prev": "action=localplay&command=prev",
+    "/localplay/skip": "action=localplay&command=skip",
+    "/localplay/status": "action=localplay&command=status",
+    "/localplay/stop": "action=localplay&command=stop",
+    "/localplay/volume-down": "action=localplay&command=volume_down",
+    "/localplay/volume-mute": "action=localplay&command=volume_mute",
+    "/localplay/volume-up": "action=localplay&command=volume_up",
+    "/me": "action=user",
+    "/me/friends-timeline": "action=friends_timeline",
+    "/me/last-shouts": "action=last_shouts",
+    "/me/lost-password": "action=lost_password",
+    "/me/now-playing": "action=now_playing",
+    "/me/playlists": "action=user_playlists",
+    "/me/smartlists": "action=user_smartlists",
+    "/ping": "action=ping",
+    "/playlists": "action=playlists",
+    "/playlists/{playlist_id}": "action=playlist&filter={playlist_id}",
+    "/playlists/{playlist_id}/add": "action=playlist_add&filter={playlist_id}",
+    "/playlists/{playlist_id}/art": "action=get_art&filter={playlist_id}&type=playlist",
+    "/playlists/{playlist_id}/download": "action=download&filter={playlist_id}&type=playlist",
+    "/playlists/{playlist_id}/flag": "action=flag&filter={playlist_id}",
+    "/playlists/{playlist_id}/hash": "action=playlist_hash&filter={playlist_id}",
+    "/playlists/{playlist_id}/rate": "action=rate&filter={playlist_id}",
+    "/playlists/{playlist_id}/remove-song": "action=playlist_remove_song&filter={playlist_id}&song={song_id}",
+    "/playlists/{playlist_id}/remove": "action=playlist_remove&filter={playlist_id}&id={object_id}&type={object_type}",
+    "/playlists/{playlist_id}/share": "action=share&filter={playlist_id}",
+    "/playlists/{playlist_id}/songs": "action=playlist_songs&filter={playlist_id}",
+    "/playlists/{playlist_id}/stream": "action=stream&filter={playlist_id}&type=playlist",
+    "/playlists/search": "action=search&type=playlist",
+    "/playlists/stats": "action=stats&type=playlist",
+    "/podcast-episodes": "action=podcast_episodes",
+    "/podcast-episodes/{episode_id}": "action=podcast_episode&filter={episode_id}",
+    "/podcast-episodes/{episode_id}/bookmark": "action=bookmark_create&filter={episode_id}&type=podcast_episode",
+    "/podcast-episodes/{episode_id}/download": "action=download&filter={episode_id}&type=podcast_episode",
+    "/podcast-episodes/{episode_id}/flag": "action=flag&filter={episode_id}&type=podcast_episode",
+    "/podcast-episodes/{episode_id}/localplay": "action=localplay&command=add&filter={episode_id}&type=podcast_episode",
+    "/podcast-episodes/{episode_id}/playback": "action=player&filter={episode_id}&type=podcast_episode",
+    "/podcast-episodes/{episode_id}/rate": "action=rate&filter={episode_id}&type=podcast_episode",
+    "/podcast-episodes/{episode_id}/share": "action=share&filter={episode_id}&type=podcast_episode",
+    "/podcast-episodes/{episode_id}/stream": "action=stream&filter={episode_id}&type=podcast_episode",
+    "/podcast-episodes/deleted": "action=deleted_podcast_episodes",
+    "/podcast-episodes/search": "action=search&type=podcast_episode",
+    "/podcast-episodes/stats": "action=stats&type=podcast_episode",
+    "/podcasts": "action=podcasts",
+    "/podcasts/{podcast_id}": "action=podcast&filter={podcast_id}",
+    "/podcasts/{podcast_id}/art": "action=get_art&filter={podcast_id}&type=podcast",
+    "/podcasts/{podcast_id}/flag": "action=flag&filter={podcast_id}",
+    "/podcasts/{podcast_id}/podcast-episodes": "action=podcast_episodes&filter={podcast_id}",
+    "/podcasts/{podcast_id}/rate": "action=rate&filter={podcast_id}",
+    "/podcasts/{podcast_id}/share": "action=share&filter={podcast_id}",
+    "/podcasts/{podcast_id}/refresh": "action=podcast_update&filter={podcast_id}",
+    "/podcasts/search": "action=search&type=podcast",
+    "/podcasts/stats": "action=stats&type=podcast",
+    "/podcasts/{podcast_id}/sync": "action=podcast_sync&filter={podcast_id}",
+    "/preferences": "action=user_preferences",
+    "/preferences/{preference_name}": "action=user_preference&filter={preference_name}",
+    "/preferences/{preference_name}/system": "action=system_preference&filter={preference_name}",
+    "/preferences/{preference_name}/user": "action=user_preference&filter={preference_name}",
+    "/register": "action=register",
+    "/scrobble": "action=scrobble",
+    "/search/{search_type}/groups": "action=search_group&filter={search_type}",
+    "/search/{search_type}/rules": "action=search_rules&filter={search_type}",
+    "/shares": "action=shares",
+    "/shares/{share_id}": "action=share&filter={share_id}",
+    "/shares/{share_id}/edit": "action=share_edit&filter={share_id}",
+    "/smartlists": "action=smartlists",
+    "/smartlists/{smartlist_id}": "action=smartlist&filter={smartlist_id}",
+    "/smartlists/{smartlist_id}/art": "action=get_art&filter={smartlist_id}&type=smartlist",
+    "/smartlists/{smartlist_id}/download": "action=download&filter={smartlist_id}&type=smartlist",
+    "/smartlists/{smartlist_id}/flag": "action=flag&filter={smartlist_id}&type=smartlist",
+    "/smartlists/{smartlist_id}/rate": "action=rate&filter={smartlist_id}&type=smartlist",
+    "/smartlists/{smartlist_id}/share": "action=share&filter={smartlist_id}&type=smartlist",
+    "/smartlists/{smartlist_id}/songs": "action=smartlist_songs&filter={smartlist_id}",
+    "/smartlists/{smartlist_id}/stream": "action=stream&filter={smartlist_id}&type=smartlist",
+    "/smartlists/search": "action=search&type=smartlist",
+    "/songs": "action=songs",
+    "/songs/{song_id}": "action=song&filter={song_id}",
+    "/songs/{song_id}/art": "action=get_art&filter={song_id}&type=song",
+    "/songs/{song_id}/bookmark": "action=bookmark_create&filter={song_id}&type=song",
+    "/songs/{song_id}/download": "action=download&filter={song_id}",
+    "/songs/{song_id}/fetch-metadata": "action=get_external_metadata&filter={song_id}&type=song",
+    "/songs/{song_id}/flag": "action=flag&filter={song_id}",
+    "/songs/{song_id}/localplay": "action=localplay&command=add&filter={song_id}&type=song",
+    "/songs/{song_id}/lyrics": "action=get_lyrics&filter={song_id}",
+    "/songs/{song_id}/playback": "action=player&filter={song_id}&type=song",
+    "/songs/{song_id}/rate": "action=rate&filter={song_id}",
+    "/songs/{song_id}/record-play": "action=record_play&filter={song_id}",
+    "/songs/{song_id}/share": "action=share&filter={song_id}",
+    "/songs/{song_id}/similar": "action=get_similar&filter={song_id}&type=song",
+    "/songs/{song_id}/stream": "action=stream&filter={song_id}&type=song",
+    "/songs/{song_id}/tags": "action=song_tags&filter={song_id}",
+    "/songs/{song_id}/update-tags": "action=update_from_tags&filter={song_id}&type=song",
+    "/songs/deleted": "action=deleted_songs",
+    "/songs/lookup/url-to-song": "action=url_to_song",
+    "/songs/playlist-generate": "action=playlist_generate",
+    "/songs/search": "action=search&type=song",
+    "/songs/stats": "action=stats&type=song",
+    "/system-preferences": "action=system_preferences",
+    "/system-preferences/{preference_name}": "action=system_preference&filter={preference_name}",
+    "/update": "action=system_update",
+    "/users": "action=users",
+    "/users/{user_id}": "action=user&filter={user_id}",
+    "/users/{user_id}/follow": "action=toggle_follow&filter={user_id}",
+    "/users/{user_id}/followers": "action=followers&filter={user_id}",
+    "/users/{user_id}/following": "action=following&filter={user_id}",
+    "/users/{user_id}/timeline": "action=timeline&filter={user_id}",
+    "/users/search": "action=search&type=user",
+    "/users/{user_id}/edit": "action=user_edit&filter={user_id}",
+    "/videos": "action=videos",
+    "/videos/{video_id}": "action=video&filter={video_id}",
+    "/videos/{video_id}/bookmark": "action=bookmark_create&filter={video_id}&type=video",
+    "/videos/{video_id}/flag": "action=flag&filter={video_id}&type=video",
+    "/videos/{video_id}/localplay": "action=localplay&command=add&filter={video_id}&type=video",
+    "/videos/{video_id}/playback": "action=player&filter={video_id}&type=video",
+    "/videos/{video_id}/rate": "action=rate&filter={video_id}&type=video",
+    "/videos/{video_id}/share": "action=share&filter={video_id}&type=video",
+    "/videos/deleted": "action=deleted_videos",
+    "/videos/search": "action=search&type=video",
+    "/videos/stats": "action=stats&type=video"
+  },
   "paths": {
     "/albums": {
       "get": {
@@ -3208,51 +3404,6 @@
         ]
       }
     },
-    "/catalogs/{catalog_id}/action": {
-      "post": {
-        "parameters": [
-          {
-            "in": "path",
-            "name": "catalog_id",
-            "required": true,
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "in": "query",
-            "name": "task",
-            "required": true,
-            "schema": {
-              "enum": [
-                "add_to_catalog",
-                "clean_catalog"
-              ],
-              "type": "string"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/SuccessResponse"
-                }
-              }
-            },
-            "description": "Success"
-          },
-          "400": {
-            "$ref": "#/components/responses/ErrorResponse"
-          }
-        },
-        "summary": "Run a catalog task",
-        "tags": [
-          "Catalogs"
-        ]
-      }
-    },
     "/catalogs/{catalog_id}/file": {
       "post": {
         "parameters": [
@@ -4049,6 +4200,7 @@
           }
         },
         "security": [
+          {},
           {
             "ApiKeyAuthHeader": []
           },
@@ -5241,31 +5393,9 @@
         ]
       }
     },
-    "/localplay": {
+    "/localplay/next": {
       "post": {
-        "parameters": [
-          {
-            "in": "query",
-            "name": "command",
-            "required": true,
-            "schema": {
-              "enum": [
-                "next",
-                "prev",
-                "stop",
-                "play",
-                "pause",
-                "volume_up",
-                "volume_down",
-                "volume_mute",
-                "delete_all",
-                "skip",
-                "status"
-              ],
-              "type": "string"
-            }
-          }
-        ],
+        "parameters": [],
         "responses": {
           "200": {
             "content": {
@@ -5281,7 +5411,247 @@
             "$ref": "#/components/responses/ErrorResponse"
           }
         },
-        "summary": "Control localplay",
+        "summary": "Send next command to localplay",
+        "tags": [
+          "Playback Control"
+        ]
+      }
+    },
+    "/localplay/prev": {
+      "post": {
+        "parameters": [],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object"
+                }
+              }
+            },
+            "description": "Localplay response"
+          },
+          "400": {
+            "$ref": "#/components/responses/ErrorResponse"
+          }
+        },
+        "summary": "Send previous command to localplay",
+        "tags": [
+          "Playback Control"
+        ]
+      }
+    },
+    "/localplay/stop": {
+      "post": {
+        "parameters": [],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object"
+                }
+              }
+            },
+            "description": "Localplay response"
+          },
+          "400": {
+            "$ref": "#/components/responses/ErrorResponse"
+          }
+        },
+        "summary": "Send stop command to localplay",
+        "tags": [
+          "Playback Control"
+        ]
+      }
+    },
+    "/localplay/play": {
+      "post": {
+        "parameters": [],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object"
+                }
+              }
+            },
+            "description": "Localplay response"
+          },
+          "400": {
+            "$ref": "#/components/responses/ErrorResponse"
+          }
+        },
+        "summary": "Send play command to localplay",
+        "tags": [
+          "Playback Control"
+        ]
+      }
+    },
+    "/localplay/pause": {
+      "post": {
+        "parameters": [],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object"
+                }
+              }
+            },
+            "description": "Localplay response"
+          },
+          "400": {
+            "$ref": "#/components/responses/ErrorResponse"
+          }
+        },
+        "summary": "Send pause command to localplay",
+        "tags": [
+          "Playback Control"
+        ]
+      }
+    },
+    "/localplay/volume-up": {
+      "post": {
+        "parameters": [],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object"
+                }
+              }
+            },
+            "description": "Localplay response"
+          },
+          "400": {
+            "$ref": "#/components/responses/ErrorResponse"
+          }
+        },
+        "summary": "Send volume up command to localplay",
+        "tags": [
+          "Playback Control"
+        ]
+      }
+    },
+    "/localplay/volume-down": {
+      "post": {
+        "parameters": [],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object"
+                }
+              }
+            },
+            "description": "Localplay response"
+          },
+          "400": {
+            "$ref": "#/components/responses/ErrorResponse"
+          }
+        },
+        "summary": "Send volume down command to localplay",
+        "tags": [
+          "Playback Control"
+        ]
+      }
+    },
+    "/localplay/volume-mute": {
+      "post": {
+        "parameters": [],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object"
+                }
+              }
+            },
+            "description": "Localplay response"
+          },
+          "400": {
+            "$ref": "#/components/responses/ErrorResponse"
+          }
+        },
+        "summary": "Send volume mute command to localplay",
+        "tags": [
+          "Playback Control"
+        ]
+      }
+    },
+    "/localplay/delete-all": {
+      "post": {
+        "parameters": [],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object"
+                }
+              }
+            },
+            "description": "Localplay response"
+          },
+          "400": {
+            "$ref": "#/components/responses/ErrorResponse"
+          }
+        },
+        "summary": "Send delete all command to localplay",
+        "tags": [
+          "Playback Control"
+        ]
+      }
+    },
+    "/localplay/skip": {
+      "post": {
+        "parameters": [],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object"
+                }
+              }
+            },
+            "description": "Localplay response"
+          },
+          "400": {
+            "$ref": "#/components/responses/ErrorResponse"
+          }
+        },
+        "summary": "Send skip command to localplay",
+        "tags": [
+          "Playback Control"
+        ]
+      }
+    },
+    "/localplay/status": {
+      "get": {
+        "parameters": [],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object"
+                }
+              }
+            },
+            "description": "Localplay status response"
+          },
+          "400": {
+            "$ref": "#/components/responses/ErrorResponse"
+          }
+        },
+        "summary": "Get localplay status",
         "tags": [
           "Playback Control"
         ]
@@ -5390,6 +5760,39 @@
         "summary": "Get latest shouts",
         "tags": [
           "Social"
+        ]
+      }
+    },
+    "/me/lost-password": {
+      "get": {
+        "parameters": [
+          {
+            "in": "query",
+            "name": "auth",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SuccessResponse"
+                }
+              }
+            },
+            "description": "Success"
+          },
+          "400": {
+            "$ref": "#/components/responses/ErrorResponse"
+          }
+        },
+        "summary": "Allows a non-admin user to reset their password without web access to the main site",
+        "tags": [
+          "Authentication"
         ]
       }
     },
@@ -8526,7 +8929,7 @@
         ]
       }
     },
-    "/podcasts/{podcast_id}/update": {
+    "/podcasts/{podcast_id}/sync": {
       "post": {
         "parameters": [
           {
