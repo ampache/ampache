@@ -58,6 +58,7 @@ final class UpdatePodcast8Method
     {
         return self::update_podcast($input, $user);
     }
+
     /**
      * update_podcast
      * MINIMUM_API_VERSION=420000

@@ -65,10 +65,10 @@ final class Gatekeeper implements GatekeeperInterface
         if ($this->auth === null) {
             // Read headers separately: Authorization (preferred) and auth (alternate api-key header)
             $authorization = $this->request->getHeaderLine('Authorization');
-            $authHeader = $this->request->getHeaderLine('auth');
+            $authHeader    = $this->request->getHeaderLine('auth');
 
             $matches = [];
-            $token = '';
+            $token   = '';
 
             // Retrieve auth token from Authorization: Bearer <token>
             if ($authorization !== '') {
