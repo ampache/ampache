@@ -201,6 +201,7 @@ class Api6
         Method\Api6\UpdateArt6Method::ACTION => Method\Api6\UpdateArt6Method::class,
         Method\Api6\UpdateFromTags6Method::ACTION => Method\Api6\UpdateFromTags6Method::class,
         Method\Api6\UpdatePodcast6Method::ACTION => Method\Api6\UpdatePodcast6Method::class,
+        Method\Api6\UpdatePodcast6Method::REST_ACTION => Method\Api6\UpdatePodcast6Method::class,
         Method\Api6\UrlToSong6Method::ACTION => Method\Api6\UrlToSong6Method::class,
         Method\Api6\UserCreate6Method::ACTION => Method\Api6\UserCreate6Method::class,
         Method\Api6\UserCreate6Method::REST_ACTION => Method\Api6\UserCreate6Method::class,
