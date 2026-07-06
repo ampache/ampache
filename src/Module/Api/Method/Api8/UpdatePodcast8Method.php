@@ -42,6 +42,23 @@ final class UpdatePodcast8Method
 {
     public const ACTION = 'update_podcast';
 
+    public const REST_ACTION = 'sync';
+
+    /**
+     * @param array{
+     *     filter?: string,
+     *     id?: string,
+     *     type: string,
+     *     overwrite: int,
+     *     api_format: string,
+     *     auth: string,
+     * } $input
+     */
+    public static function sync(array $input, User $user): bool
+    {
+        return self::update_podcast($input, $user);
+    }
+
     /**
      * update_podcast
      * MINIMUM_API_VERSION=420000

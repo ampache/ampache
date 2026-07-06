@@ -670,7 +670,6 @@ class Json8_Data
         ];
         $pattern = '/^(' . implode('\\s|', explode('|', AmpConfig::get('catalog_prefix_pattern', 'The|An|A|Die|Das|Ein|Eine|Les|Le|La'))) . '\\s)(.*)/i';
 
-
         $JSON = [];
         foreach ($objects as $object) {
             $trimmed  = Catalog::trim_prefix(trim((string) $object['name']), $pattern);
@@ -778,7 +777,6 @@ class Json8_Data
             "total_count" => self::$count,
             "md5" => $md5,
         ];
-
 
         $JSON = [];
         foreach ($objects as $row) {
