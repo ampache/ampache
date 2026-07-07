@@ -98,9 +98,9 @@ class Catalog_remote extends Catalog
             $this->sort_pattern   = $info['sort_pattern'] ?? '';
             $this->gather_types   = $info['gather_types'] ?? '';
 
-            $this->uri      = $info['uri'] ?? '';
-            $this->username = $info['username'] ?? '';
-            $this->password = $info['password'] ?? '';
+            $this->uri      = (string) ($info['uri'] ?? '');
+            $this->username = (string) ($info['username'] ?? '');
+            $this->password = (string) ($info['password'] ?? '');
         }
     }
 

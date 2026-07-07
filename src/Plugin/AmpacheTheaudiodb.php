@@ -116,7 +116,7 @@ class AmpacheTheaudiodb extends AmpachePlugin implements PluginGatherArtsInterfa
 
                 if ($release !== null) {
                     debug_event('theaudiodb.plugin', sprintf('Updating %s: ', $object_type) . $object->get_fullname(), 3);
-                    $data['name'] = $release->strArtist ?? null;
+                        $data['name'] = $release->strArtist ?? null;
                     // get the biography based on your locale
                     $locale          = explode('_', (string) AmpConfig::get('lang', 'en_US'))[0] ?: 'en';
                     $data['summary'] = match ($locale) {
@@ -144,9 +144,10 @@ class AmpacheTheaudiodb extends AmpachePlugin implements PluginGatherArtsInterfa
                         $this->overwrite_name
                         && $object->mbid !== null
                         && MusicBrainz::isMBID($object->mbid)
-                        && strtolower($data['name'] ?? '') !== strtolower((string) $object->get_fullname())
+                        && $data['name'] !== null
+                        && strtolower((string)$data['name']) !== strtolower((string) $object->get_fullname())
                     ) {
-                        $name_check = Artist::update_name_from_mbid($data['name'], $object->mbid);
+                        $name_check = Artist::update_name_from_mbid((string)$data['name'], $object->mbid);
                         if ($object->prefix !== null) {
                             $object->prefix = $name_check['prefix'];
                         }

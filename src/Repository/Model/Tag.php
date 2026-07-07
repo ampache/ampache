@@ -582,7 +582,6 @@ class Tag extends database_object implements library_item, displayable_item, con
             return [];
         }
 
-        $object_id  = $object_id;
         $limit_text = ($limit == 0)
             ? ''
             : 'LIMIT ' . $limit;

@@ -41,6 +41,8 @@ final class Migration770001 extends AbstractMigration
         string $engine,
         int $build,
     ): Generator {
+        yield from parent::getTableMigrations($collation, $charset, $engine, $build);
+
         if ($build > 770001) {
             yield 'song_map' => "CREATE TABLE IF NOT EXISTS `song_map` (`song_id` int(11) UNSIGNED NOT NULL, `object_id` int(11) UNSIGNED NOT NULL, `object_type` varchar(16) CHARACTER SET utf8 COLLATE utf8_unicode_ci DEFAULT NULL, UNIQUE KEY `unique_song_map` (`object_id`, `object_type`, `song_id`), INDEX `object_id_index` (`object_id`), INDEX `song_id_type_index` (`song_id`, `object_type`), INDEX `object_id_type_index` (`object_id`, `object_type`)) ENGINE=$engine DEFAULT CHARSET=$charset COLLATE=$collation;";
         }

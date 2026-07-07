@@ -90,7 +90,7 @@ class Catalog_local extends Catalog
             $this->sort_pattern   = $info['sort_pattern'] ?? '';
             $this->gather_types   = $info['gather_types'] ?? '';
 
-            $this->path = $info['path'] ?? '';
+            $this->path = (string) ($info['path'] ?? '');
         }
     }
 

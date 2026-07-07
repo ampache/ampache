@@ -59,7 +59,6 @@ final readonly class AlbumArtExporter implements AlbumArtExporterInterface
 
         // Run through them and get the art!
         foreach ($albums as $albumId) {
-            $albumId = $albumId;
             $art     = $this->modelFactory->createArt($albumId);
 
             if (!$art->has_db_info()) {

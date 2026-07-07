@@ -42,6 +42,8 @@ final class Migration370009 extends AbstractMigration
         string $engine,
         int $build,
     ): Generator {
+        yield from parent::getTableMigrations($collation, $charset, $engine, $build);
+
         if (
             $build > 370009
             && $build < 700011
