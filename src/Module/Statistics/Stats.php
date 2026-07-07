@@ -660,7 +660,7 @@ class Stats
     public static function get_top(
         string $input_type,
         int $count,
-        int $threshold,
+        int $threshold = 0,
         int $offset = 0,
         ?User $user = null,
         bool $random = false,
@@ -701,7 +701,7 @@ class Stats
      */
     public static function get_top_sql(
         string $input_type,
-        int $threshold,
+        int $threshold = 0,
         string $count_type = 'stream',
         ?User $user = null,
         bool $random = false,
