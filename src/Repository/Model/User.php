@@ -65,7 +65,7 @@ class User extends database_object
     public bool $disabled        = true;
     public ?string $email        = null;
     public ?string $fullname     = null;
-    public bool $fullname_public = false;
+    public int $fullname_public = 0;
 
     // Basic Components
     public int $id = 0;
