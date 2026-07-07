@@ -53,7 +53,7 @@ abstract class database_object
          * Lazy load the cache setting to avoid some magic auto_init logic
          */
         if (self::$_enabled === null) {
-            self::$_enabled = AmpConfig::get('memory_cache', false);
+            self::$_enabled = (bool) AmpConfig::get('memory_cache', false);
         }
 
         if (!self::$_enabled) {
