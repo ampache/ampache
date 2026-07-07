@@ -958,7 +958,7 @@ function T_(string $msgid): string
 function nT_(string $original, string $plural, float|int|string $value): string
 {
     if (function_exists('n__')) {
-        return n__($original, $plural, (string) $value);
+        return n__($original, $plural, (int) $value);
     }
 
     return $plural;
