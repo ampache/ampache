@@ -817,6 +817,11 @@
               "application/json": {
                 "schema": {
                   "type": "object"
+                },
+                "examples": {
+                  "success": {
+                    "value": {}
+                  }
                 }
               }
             },
@@ -870,6 +875,11 @@
               "application/json": {
                 "schema": {
                   "type": "object"
+                },
+                "examples": {
+                  "success": {
+                    "value": {}
+                  }
                 }
               }
             },
@@ -986,6 +996,11 @@
               "application/json": {
                 "schema": {
                   "type": "object"
+                },
+                "examples": {
+                  "success": {
+                    "value": {}
+                  }
                 }
               }
             },
@@ -1044,6 +1059,11 @@
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/SuccessResponse"
+                },
+                "examples": {
+                  "success": {
+                    "value": {}
+                  }
                 }
               }
             },
@@ -1097,6 +1117,11 @@
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/SuccessResponse"
+                },
+                "examples": {
+                  "success": {
+                    "value": {}
+                  }
                 }
               }
             },
@@ -1160,6 +1185,11 @@
               "application/json": {
                 "schema": {
                   "type": "object"
+                },
+                "examples": {
+                  "success": {
+                    "value": {}
+                  }
                 }
               }
             },
@@ -1249,6 +1279,11 @@
               "application/json": {
                 "schema": {
                   "type": "object"
+                },
+                "examples": {
+                  "success": {
+                    "value": {}
+                  }
                 }
               }
             },
@@ -1307,6 +1342,11 @@
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/SuccessResponse"
+                },
+                "examples": {
+                  "success": {
+                    "value": {}
+                  }
                 }
               }
             },
@@ -1352,6 +1392,11 @@
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/SuccessResponse"
+                },
+                "examples": {
+                  "success": {
+                    "value": {}
+                  }
                 }
               }
             },
@@ -1613,6 +1658,11 @@
               "application/json": {
                 "schema": {
                   "type": "object"
+                },
+                "examples": {
+                  "success": {
+                    "value": {}
+                  }
                 }
               }
             },
@@ -1741,6 +1791,11 @@
               "application/json": {
                 "schema": {
                   "type": "object"
+                },
+                "examples": {
+                  "success": {
+                    "value": {}
+                  }
                 }
               }
             },
@@ -1795,6 +1850,11 @@
               "application/json": {
                 "schema": {
                   "type": "object"
+                },
+                "examples": {
+                  "success": {
+                    "value": {}
+                  }
                 }
               }
             },
@@ -1884,6 +1944,11 @@
               "application/json": {
                 "schema": {
                   "type": "object"
+                },
+                "examples": {
+                  "success": {
+                    "value": {}
+                  }
                 }
               }
             },
@@ -2001,6 +2066,11 @@
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/SuccessResponse"
+                },
+                "examples": {
+                  "success": {
+                    "value": {}
+                  }
                 }
               }
             },
@@ -2046,6 +2116,11 @@
               "application/json": {
                 "schema": {
                   "type": "object"
+                },
+                "examples": {
+                  "success": {
+                    "value": {}
+                  }
                 }
               }
             },
@@ -2104,6 +2179,11 @@
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/SuccessResponse"
+                },
+                "examples": {
+                  "success": {
+                    "value": {}
+                  }
                 }
               }
             },
@@ -2145,6 +2225,11 @@
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/SuccessResponse"
+                },
+                "examples": {
+                  "success": {
+                    "value": {}
+                  }
                 }
               }
             },
@@ -2196,6 +2281,11 @@
               "application/json": {
                 "schema": {
                   "type": "object"
+                },
+                "examples": {
+                  "success": {
+                    "value": {}
+                  }
                 }
               }
             },
@@ -2245,6 +2335,11 @@
               "application/json": {
                 "schema": {
                   "type": "object"
+                },
+                "examples": {
+                  "success": {
+                    "value": {}
+                  }
                 }
               }
             },
@@ -2322,6 +2417,11 @@
               "application/json": {
                 "schema": {
                   "type": "object"
+                },
+                "examples": {
+                  "success": {
+                    "value": {}
+                  }
                 }
               }
             },
@@ -2368,6 +2468,11 @@
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/SuccessResponse"
+                },
+                "examples": {
+                  "success": {
+                    "value": {}
+                  }
                 }
               }
             },
@@ -2401,6 +2506,11 @@
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/SuccessResponse"
+                },
+                "examples": {
+                  "success": {
+                    "value": {}
+                  }
                 }
               }
             },
@@ -2666,6 +2776,11 @@
               "application/json": {
                 "schema": {
                   "type": "object"
+                },
+                "examples": {
+                  "success": {
+                    "value": {}
+                  }
                 }
               }
             },
@@ -2711,6 +2826,11 @@
               "application/json": {
                 "schema": {
                   "type": "object"
+                },
+                "examples": {
+                  "success": {
+                    "value": {}
+                  }
                 }
               }
             },
@@ -2753,6 +2873,11 @@
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/SuccessResponse"
+                },
+                "examples": {
+                  "success": {
+                    "value": {}
+                  }
                 }
               }
             },
@@ -2796,6 +2921,11 @@
               "application/json": {
                 "schema": {
                   "type": "object"
+                },
+                "examples": {
+                  "success": {
+                    "value": {}
+                  }
                 }
               }
             },
@@ -2864,6 +2994,11 @@
               "application/json": {
                 "schema": {
                   "type": "object"
+                },
+                "examples": {
+                  "success": {
+                    "value": {}
+                  }
                 }
               }
             },
@@ -2970,6 +3105,11 @@
               "application/json": {
                 "schema": {
                   "type": "object"
+                },
+                "examples": {
+                  "success": {
+                    "value": {}
+                  }
                 }
               }
             },
@@ -3033,7 +3173,7 @@
             }
           },
           {
-            "description": "Apply additional browse filters using ';' separated key,value pairs.",
+            "description": "Apply additional browse filters using \u0027;\u0027 separated key,value pairs.",
             "in": "query",
             "name": "cond",
             "required": false,
@@ -3057,6 +3197,11 @@
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/FolderBrowseResponse"
+                },
+                "examples": {
+                  "success": {
+                    "value": {}
+                  }
                 }
               }
             },
@@ -3079,7 +3224,7 @@
       "get": {
         "parameters": [
           {
-            "description": "Folder path filter. Use '/' for root traversal.",
+            "description": "Folder path filter. Use \u0027/\u0027 for root traversal.",
             "in": "query",
             "name": "filter",
             "required": false,
@@ -3137,7 +3282,7 @@
             }
           },
           {
-            "description": "Apply additional browse filters using ';' separated key,value pairs.",
+            "description": "Apply additional browse filters using \u0027;\u0027 separated key,value pairs.",
             "in": "query",
             "name": "cond",
             "required": false,
@@ -3161,6 +3306,59 @@
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/FolderBrowseResponse"
+                },
+                "examples": {
+                  "success": {
+                    "value": {
+                      "total_count": 3,
+                      "md5": "abc123def456ghi789jkl012mno345pqr",
+                      "folder": {
+                        "id": "1",
+                        "title": "Music",
+                        "parent": 0,
+                        "path": "/music",
+                        "catalog": 1,
+                        "items": [
+                          {
+                            "id": "2",
+                            "object_type": "folder",
+                            "title": "Rock",
+                            "parent": 1,
+                            "path": "/music/rock",
+                            "art": "https://develop.ampache.dev/rest/8/json/art?id=2&object_type=folder&auth=token123",
+                            "has_art": false,
+                            "play_url": "",
+                            "rating": 0,
+                            "averagerating": null
+                          },
+                          {
+                            "id": "12345",
+                            "object_type": "song",
+                            "title": "Example Song.mp3",
+                            "parent": 1,
+                            "path": "/music",
+                            "art": "https://develop.ampache.dev/rest/8/json/art?id=12345&object_type=song&auth=token123",
+                            "has_art": true,
+                            "play_url": "https://develop.ampache.dev/rest/8/json/stream?id=song-12345&auth=token123",
+                            "rating": 3,
+                            "averagerating": 4
+                          },
+                          {
+                            "id": "54321",
+                            "object_type": "video",
+                            "title": "Example Video.mp4",
+                            "parent": 1,
+                            "path": "/music",
+                            "art": "https://develop.ampache.dev/rest/8/json/art?id=54321&object_type=video&auth=token123",
+                            "has_art": true,
+                            "play_url": "https://develop.ampache.dev/rest/8/json/stream?id=video-54321&auth=token123",
+                            "rating": 5,
+                            "averagerating": 4
+                          }
+                        ]
+                      }
+                    }
+                  }
                 }
               }
             },
@@ -3230,6 +3428,11 @@
               "application/json": {
                 "schema": {
                   "type": "object"
+                },
+                "examples": {
+                  "success": {
+                    "value": {}
+                  }
                 }
               }
             },
@@ -3325,6 +3528,11 @@
               "application/json": {
                 "schema": {
                   "type": "object"
+                },
+                "examples": {
+                  "success": {
+                    "value": {}
+                  }
                 }
               }
             },
@@ -3358,6 +3566,11 @@
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/SuccessResponse"
+                },
+                "examples": {
+                  "success": {
+                    "value": {}
+                  }
                 }
               }
             },
@@ -3389,6 +3602,11 @@
               "application/json": {
                 "schema": {
                   "type": "object"
+                },
+                "examples": {
+                  "success": {
+                    "value": {}
+                  }
                 }
               }
             },
@@ -3439,6 +3657,11 @@
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/SuccessResponse"
+                },
+                "examples": {
+                  "success": {
+                    "value": {}
+                  }
                 }
               }
             },
@@ -3489,6 +3712,11 @@
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/SuccessResponse"
+                },
+                "examples": {
+                  "success": {
+                    "value": {}
+                  }
                 }
               }
             },
@@ -3537,6 +3765,11 @@
               "application/json": {
                 "schema": {
                   "type": "object"
+                },
+                "examples": {
+                  "success": {
+                    "value": {}
+                  }
                 }
               }
             },
@@ -3611,6 +3844,11 @@
               "application/json": {
                 "schema": {
                   "type": "object"
+                },
+                "examples": {
+                  "success": {
+                    "value": {}
+                  }
                 }
               }
             },
@@ -3688,6 +3926,11 @@
               "application/json": {
                 "schema": {
                   "type": "object"
+                },
+                "examples": {
+                  "success": {
+                    "value": {}
+                  }
                 }
               }
             },
@@ -3721,6 +3964,11 @@
               "application/json": {
                 "schema": {
                   "type": "object"
+                },
+                "examples": {
+                  "success": {
+                    "value": {}
+                  }
                 }
               }
             },
@@ -3786,6 +4034,11 @@
               "application/json": {
                 "schema": {
                   "type": "object"
+                },
+                "examples": {
+                  "success": {
+                    "value": {}
+                  }
                 }
               }
             },
@@ -3852,6 +4105,11 @@
               "application/json": {
                 "schema": {
                   "type": "object"
+                },
+                "examples": {
+                  "success": {
+                    "value": {}
+                  }
                 }
               }
             },
@@ -3918,6 +4176,11 @@
               "application/json": {
                 "schema": {
                   "type": "object"
+                },
+                "examples": {
+                  "success": {
+                    "value": {}
+                  }
                 }
               }
             },
@@ -4114,6 +4377,11 @@
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/SuccessResponse"
+                },
+                "examples": {
+                  "success": {
+                    "value": {}
+                  }
                 }
               }
             },
@@ -4185,6 +4453,11 @@
               "application/json": {
                 "schema": {
                   "type": "object"
+                },
+                "examples": {
+                  "success": {
+                    "value": {}
+                  }
                 }
               },
               "application/xml": {
@@ -4326,6 +4599,11 @@
               "application/json": {
                 "schema": {
                   "type": "object"
+                },
+                "examples": {
+                  "success": {
+                    "value": {}
+                  }
                 }
               }
             },
@@ -4421,6 +4699,11 @@
               "application/json": {
                 "schema": {
                   "type": "object"
+                },
+                "examples": {
+                  "success": {
+                    "value": {}
+                  }
                 }
               }
             },
@@ -4454,6 +4737,11 @@
               "application/json": {
                 "schema": {
                   "type": "object"
+                },
+                "examples": {
+                  "success": {
+                    "value": {}
+                  }
                 }
               }
             },
@@ -4519,6 +4807,11 @@
               "application/json": {
                 "schema": {
                   "type": "object"
+                },
+                "examples": {
+                  "success": {
+                    "value": {}
+                  }
                 }
               }
             },
@@ -4553,6 +4846,11 @@
               "application/json": {
                 "schema": {
                   "type": "object"
+                },
+                "examples": {
+                  "success": {
+                    "value": {}
+                  }
                 }
               }
             },
@@ -4809,6 +5107,11 @@
               "application/json": {
                 "schema": {
                   "type": "object"
+                },
+                "examples": {
+                  "success": {
+                    "value": {}
+                  }
                 }
               }
             },
@@ -4842,6 +5145,11 @@
               "application/json": {
                 "schema": {
                   "type": "object"
+                },
+                "examples": {
+                  "success": {
+                    "value": {}
+                  }
                 }
               }
             },
@@ -4907,6 +5215,11 @@
               "application/json": {
                 "schema": {
                   "type": "object"
+                },
+                "examples": {
+                  "success": {
+                    "value": {}
+                  }
                 }
               }
             },
@@ -5011,6 +5324,11 @@
               "application/json": {
                 "schema": {
                   "type": "object"
+                },
+                "examples": {
+                  "success": {
+                    "value": {}
+                  }
                 }
               }
             },
@@ -5106,6 +5424,11 @@
               "application/json": {
                 "schema": {
                   "type": "object"
+                },
+                "examples": {
+                  "success": {
+                    "value": {}
+                  }
                 }
               }
             },
@@ -5169,6 +5492,11 @@
               "application/json": {
                 "schema": {
                   "type": "object"
+                },
+                "examples": {
+                  "success": {
+                    "value": {}
+                  }
                 }
               }
             },
@@ -5202,6 +5530,11 @@
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/SuccessResponse"
+                },
+                "examples": {
+                  "success": {
+                    "value": {}
+                  }
                 }
               }
             },
@@ -5233,6 +5566,11 @@
               "application/json": {
                 "schema": {
                   "type": "object"
+                },
+                "examples": {
+                  "success": {
+                    "value": {}
+                  }
                 }
               }
             },
@@ -5304,6 +5642,11 @@
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/SuccessResponse"
+                },
+                "examples": {
+                  "success": {
+                    "value": {}
+                  }
                 }
               }
             },
@@ -5378,6 +5721,11 @@
               "application/json": {
                 "schema": {
                   "type": "object"
+                },
+                "examples": {
+                  "success": {
+                    "value": {}
+                  }
                 }
               }
             },
@@ -5402,6 +5750,11 @@
               "application/json": {
                 "schema": {
                   "type": "object"
+                },
+                "examples": {
+                  "success": {
+                    "value": {}
+                  }
                 }
               }
             },
@@ -5426,6 +5779,11 @@
               "application/json": {
                 "schema": {
                   "type": "object"
+                },
+                "examples": {
+                  "success": {
+                    "value": {}
+                  }
                 }
               }
             },
@@ -5450,6 +5808,11 @@
               "application/json": {
                 "schema": {
                   "type": "object"
+                },
+                "examples": {
+                  "success": {
+                    "value": {}
+                  }
                 }
               }
             },
@@ -5474,6 +5837,11 @@
               "application/json": {
                 "schema": {
                   "type": "object"
+                },
+                "examples": {
+                  "success": {
+                    "value": {}
+                  }
                 }
               }
             },
@@ -5498,6 +5866,11 @@
               "application/json": {
                 "schema": {
                   "type": "object"
+                },
+                "examples": {
+                  "success": {
+                    "value": {}
+                  }
                 }
               }
             },
@@ -5522,6 +5895,11 @@
               "application/json": {
                 "schema": {
                   "type": "object"
+                },
+                "examples": {
+                  "success": {
+                    "value": {}
+                  }
                 }
               }
             },
@@ -5546,6 +5924,11 @@
               "application/json": {
                 "schema": {
                   "type": "object"
+                },
+                "examples": {
+                  "success": {
+                    "value": {}
+                  }
                 }
               }
             },
@@ -5570,6 +5953,11 @@
               "application/json": {
                 "schema": {
                   "type": "object"
+                },
+                "examples": {
+                  "success": {
+                    "value": {}
+                  }
                 }
               }
             },
@@ -5594,6 +5982,11 @@
               "application/json": {
                 "schema": {
                   "type": "object"
+                },
+                "examples": {
+                  "success": {
+                    "value": {}
+                  }
                 }
               }
             },
@@ -5618,6 +6011,11 @@
               "application/json": {
                 "schema": {
                   "type": "object"
+                },
+                "examples": {
+                  "success": {
+                    "value": {}
+                  }
                 }
               }
             },
@@ -5642,6 +6040,11 @@
               "application/json": {
                 "schema": {
                   "type": "object"
+                },
+                "examples": {
+                  "success": {
+                    "value": {}
+                  }
                 }
               }
             },
@@ -5666,6 +6069,11 @@
               "application/json": {
                 "schema": {
                   "type": "object"
+                },
+                "examples": {
+                  "success": {
+                    "value": {}
+                  }
                 }
               }
             },
@@ -5707,6 +6115,11 @@
               "application/json": {
                 "schema": {
                   "type": "object"
+                },
+                "examples": {
+                  "success": {
+                    "value": {}
+                  }
                 }
               }
             },
@@ -5716,7 +6129,7 @@
             "$ref": "#/components/responses/ErrorResponse"
           }
         },
-        "summary": "Get current user's friends timeline",
+        "summary": "Get current user\u0027s friends timeline",
         "tags": [
           "Social"
         ]
@@ -5748,6 +6161,11 @@
               "application/json": {
                 "schema": {
                   "type": "object"
+                },
+                "examples": {
+                  "success": {
+                    "value": {}
+                  }
                 }
               }
             },
@@ -5781,6 +6199,11 @@
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/SuccessResponse"
+                },
+                "examples": {
+                  "success": {
+                    "value": {}
+                  }
                 }
               }
             },
@@ -5804,6 +6227,11 @@
               "application/json": {
                 "schema": {
                   "type": "object"
+                },
+                "examples": {
+                  "success": {
+                    "value": {}
+                  }
                 }
               }
             },
@@ -5911,6 +6339,11 @@
               "application/json": {
                 "schema": {
                   "type": "object"
+                },
+                "examples": {
+                  "success": {
+                    "value": {}
+                  }
                 }
               }
             },
@@ -6018,6 +6451,11 @@
               "application/json": {
                 "schema": {
                   "type": "object"
+                },
+                "examples": {
+                  "success": {
+                    "value": {}
+                  }
                 }
               }
             },
@@ -6062,6 +6500,11 @@
               "application/json": {
                 "schema": {
                   "type": "object"
+                },
+                "examples": {
+                  "success": {
+                    "value": {}
+                  }
                 }
               },
               "application/xml": {
@@ -6186,6 +6629,11 @@
               "application/json": {
                 "schema": {
                   "type": "object"
+                },
+                "examples": {
+                  "success": {
+                    "value": {}
+                  }
                 }
               }
             },
@@ -6229,6 +6677,11 @@
               "application/json": {
                 "schema": {
                   "type": "object"
+                },
+                "examples": {
+                  "success": {
+                    "value": {}
+                  }
                 }
               }
             },
@@ -6262,6 +6715,11 @@
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/SuccessResponse"
+                },
+                "examples": {
+                  "success": {
+                    "value": {}
+                  }
                 }
               }
             },
@@ -6293,6 +6751,11 @@
               "application/json": {
                 "schema": {
                   "type": "object"
+                },
+                "examples": {
+                  "success": {
+                    "value": {}
+                  }
                 }
               }
             },
@@ -6371,6 +6834,11 @@
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/SuccessResponse"
+                },
+                "examples": {
+                  "success": {
+                    "value": {}
+                  }
                 }
               }
             },
@@ -6427,6 +6895,11 @@
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/SuccessResponse"
+                },
+                "examples": {
+                  "success": {
+                    "value": {}
+                  }
                 }
               }
             },
@@ -6630,6 +7103,11 @@
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/SuccessResponse"
+                },
+                "examples": {
+                  "success": {
+                    "value": {}
+                  }
                 }
               }
             },
@@ -6668,6 +7146,13 @@
                     }
                   },
                   "type": "object"
+                },
+                "examples": {
+                  "success": {
+                    "value": {
+                      "md5": "example_md5"
+                    }
+                  }
                 }
               }
             },
@@ -6709,6 +7194,11 @@
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/SuccessResponse"
+                },
+                "examples": {
+                  "success": {
+                    "value": {}
+                  }
                 }
               }
             },
@@ -6758,6 +7248,11 @@
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/SuccessResponse"
+                },
+                "examples": {
+                  "success": {
+                    "value": {}
+                  }
                 }
               }
             },
@@ -6809,6 +7304,11 @@
               "application/json": {
                 "schema": {
                   "type": "object"
+                },
+                "examples": {
+                  "success": {
+                    "value": {}
+                  }
                 }
               }
             },
@@ -6870,6 +7370,11 @@
               "application/json": {
                 "schema": {
                   "type": "object"
+                },
+                "examples": {
+                  "success": {
+                    "value": {}
+                  }
                 }
               }
             },
@@ -7239,6 +7744,11 @@
               "application/json": {
                 "schema": {
                   "type": "object"
+                },
+                "examples": {
+                  "success": {
+                    "value": {}
+                  }
                 }
               }
             },
@@ -7304,6 +7814,11 @@
               "application/json": {
                 "schema": {
                   "type": "object"
+                },
+                "examples": {
+                  "success": {
+                    "value": {}
+                  }
                 }
               }
             },
@@ -7337,6 +7852,11 @@
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/SuccessResponse"
+                },
+                "examples": {
+                  "success": {
+                    "value": {}
+                  }
                 }
               }
             },
@@ -7368,6 +7888,11 @@
               "application/json": {
                 "schema": {
                   "type": "object"
+                },
+                "examples": {
+                  "success": {
+                    "value": {}
+                  }
                 }
               }
             },
@@ -7410,6 +7935,11 @@
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/SuccessResponse"
+                },
+                "examples": {
+                  "success": {
+                    "value": {}
+                  }
                 }
               }
             },
@@ -7453,6 +7983,11 @@
               "application/json": {
                 "schema": {
                   "type": "object"
+                },
+                "examples": {
+                  "success": {
+                    "value": {}
+                  }
                 }
               }
             },
@@ -7521,6 +8056,11 @@
               "application/json": {
                 "schema": {
                   "type": "object"
+                },
+                "examples": {
+                  "success": {
+                    "value": {}
+                  }
                 }
               }
             },
@@ -7589,6 +8129,11 @@
               "application/json": {
                 "schema": {
                   "type": "object"
+                },
+                "examples": {
+                  "success": {
+                    "value": {}
+                  }
                 }
               }
             },
@@ -7730,6 +8275,11 @@
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/SuccessResponse"
+                },
+                "examples": {
+                  "success": {
+                    "value": {}
+                  }
                 }
               }
             },
@@ -7804,6 +8354,11 @@
               "application/json": {
                 "schema": {
                   "type": "object"
+                },
+                "examples": {
+                  "success": {
+                    "value": {}
+                  }
                 }
               }
             },
@@ -7878,6 +8433,11 @@
               "application/json": {
                 "schema": {
                   "type": "object"
+                },
+                "examples": {
+                  "success": {
+                    "value": {}
+                  }
                 }
               }
             },
@@ -7919,6 +8479,11 @@
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/SuccessResponse"
+                },
+                "examples": {
+                  "success": {
+                    "value": {}
+                  }
                 }
               }
             },
@@ -7970,6 +8535,11 @@
               "application/json": {
                 "schema": {
                   "type": "object"
+                },
+                "examples": {
+                  "success": {
+                    "value": {}
+                  }
                 }
               }
             },
@@ -8127,6 +8697,11 @@
               "application/json": {
                 "schema": {
                   "type": "object"
+                },
+                "examples": {
+                  "success": {
+                    "value": {}
+                  }
                 }
               }
             },
@@ -8379,6 +8954,11 @@
               "application/json": {
                 "schema": {
                   "type": "object"
+                },
+                "examples": {
+                  "success": {
+                    "value": {}
+                  }
                 }
               }
             },
@@ -8455,6 +9035,11 @@
               "application/json": {
                 "schema": {
                   "type": "object"
+                },
+                "examples": {
+                  "success": {
+                    "value": {}
+                  }
                 }
               }
             },
@@ -8496,6 +9081,11 @@
               "application/json": {
                 "schema": {
                   "type": "object"
+                },
+                "examples": {
+                  "success": {
+                    "value": {}
+                  }
                 }
               }
             },
@@ -8529,6 +9119,11 @@
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/SuccessResponse"
+                },
+                "examples": {
+                  "success": {
+                    "value": {}
+                  }
                 }
               }
             },
@@ -8571,6 +9166,11 @@
               "application/json": {
                 "schema": {
                   "type": "object"
+                },
+                "examples": {
+                  "success": {
+                    "value": {}
+                  }
                 }
               }
             },
@@ -8650,6 +9250,11 @@
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/SuccessResponse"
+                },
+                "examples": {
+                  "success": {
+                    "value": {}
+                  }
                 }
               }
             },
@@ -8757,6 +9362,11 @@
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/SuccessResponse"
+                },
+                "examples": {
+                  "success": {
+                    "value": {}
+                  }
                 }
               }
             },
@@ -8822,6 +9432,11 @@
               "application/json": {
                 "schema": {
                   "type": "object"
+                },
+                "examples": {
+                  "success": {
+                    "value": {}
+                  }
                 }
               }
             },
@@ -8863,6 +9478,11 @@
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/SuccessResponse"
+                },
+                "examples": {
+                  "success": {
+                    "value": {}
+                  }
                 }
               }
             },
@@ -8914,6 +9534,11 @@
               "application/json": {
                 "schema": {
                   "type": "object"
+                },
+                "examples": {
+                  "success": {
+                    "value": {}
+                  }
                 }
               }
             },
@@ -8948,6 +9573,11 @@
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/SuccessResponse"
+                },
+                "examples": {
+                  "success": {
+                    "value": {}
+                  }
                 }
               }
             },
@@ -9200,6 +9830,11 @@
               "application/json": {
                 "schema": {
                   "type": "object"
+                },
+                "examples": {
+                  "success": {
+                    "value": {}
+                  }
                 }
               }
             },
@@ -9282,6 +9917,11 @@
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/SuccessResponse"
+                },
+                "examples": {
+                  "success": {
+                    "value": {}
+                  }
                 }
               }
             },
@@ -9315,6 +9955,11 @@
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/SuccessResponse"
+                },
+                "examples": {
+                  "success": {
+                    "value": {}
+                  }
                 }
               }
             },
@@ -9380,6 +10025,11 @@
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/SuccessResponse"
+                },
+                "examples": {
+                  "success": {
+                    "value": {}
+                  }
                 }
               }
             },
@@ -9413,6 +10063,11 @@
               "application/json": {
                 "schema": {
                   "type": "object"
+                },
+                "examples": {
+                  "success": {
+                    "value": {}
+                  }
                 }
               }
             },
@@ -9446,6 +10101,11 @@
               "application/json": {
                 "schema": {
                   "type": "object"
+                },
+                "examples": {
+                  "success": {
+                    "value": {}
+                  }
                 }
               }
             },
@@ -9474,7 +10134,7 @@
             }
           },
           {
-            "description": "hash('sha256', password)",
+            "description": "hash(\u0027sha256\u0027, password)",
             "in": "query",
             "name": "password",
             "required": true,
@@ -9505,6 +10165,11 @@
               "application/json": {
                 "schema": {
                   "type": "object"
+                },
+                "examples": {
+                  "success": {
+                    "value": {}
+                  }
                 }
               },
               "application/xml": {
@@ -9602,6 +10267,11 @@
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/SuccessResponse"
+                },
+                "examples": {
+                  "success": {
+                    "value": {}
+                  }
                 }
               }
             },
@@ -9716,6 +10386,11 @@
               "application/json": {
                 "schema": {
                   "type": "object"
+                },
+                "examples": {
+                  "success": {
+                    "value": {}
+                  }
                 }
               }
             },
@@ -9764,6 +10439,11 @@
               "application/json": {
                 "schema": {
                   "type": "object"
+                },
+                "examples": {
+                  "success": {
+                    "value": {}
+                  }
                 }
               }
             },
@@ -9842,6 +10522,11 @@
               "application/json": {
                 "schema": {
                   "type": "object"
+                },
+                "examples": {
+                  "success": {
+                    "value": {}
+                  }
                 }
               }
             },
@@ -9875,6 +10560,11 @@
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/SuccessResponse"
+                },
+                "examples": {
+                  "success": {
+                    "value": {}
+                  }
                 }
               }
             },
@@ -9906,6 +10596,11 @@
               "application/json": {
                 "schema": {
                   "type": "object"
+                },
+                "examples": {
+                  "success": {
+                    "value": {}
+                  }
                 }
               }
             },
@@ -9977,6 +10672,11 @@
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/SuccessResponse"
+                },
+                "examples": {
+                  "success": {
+                    "value": {}
+                  }
                 }
               }
             },
@@ -10068,6 +10768,11 @@
               "application/json": {
                 "schema": {
                   "type": "object"
+                },
+                "examples": {
+                  "success": {
+                    "value": {}
+                  }
                 }
               }
             },
@@ -10101,6 +10806,11 @@
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/SuccessResponse"
+                },
+                "examples": {
+                  "success": {
+                    "value": {}
+                  }
                 }
               }
             },
@@ -10132,6 +10842,11 @@
               "application/json": {
                 "schema": {
                   "type": "object"
+                },
+                "examples": {
+                  "success": {
+                    "value": {}
+                  }
                 }
               }
             },
@@ -10335,6 +11050,11 @@
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/SuccessResponse"
+                },
+                "examples": {
+                  "success": {
+                    "value": {}
+                  }
                 }
               }
             },
@@ -10376,6 +11096,11 @@
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/SuccessResponse"
+                },
+                "examples": {
+                  "success": {
+                    "value": {}
+                  }
                 }
               }
             },
@@ -10427,6 +11152,11 @@
               "application/json": {
                 "schema": {
                   "type": "object"
+                },
+                "examples": {
+                  "success": {
+                    "value": {}
+                  }
                 }
               }
             },
@@ -10488,6 +11218,11 @@
               "application/json": {
                 "schema": {
                   "type": "object"
+                },
+                "examples": {
+                  "success": {
+                    "value": {}
+                  }
                 }
               }
             },
@@ -10856,6 +11591,11 @@
               "application/json": {
                 "schema": {
                   "type": "object"
+                },
+                "examples": {
+                  "success": {
+                    "value": {}
+                  }
                 }
               }
             },
@@ -10889,6 +11629,11 @@
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/SuccessResponse"
+                },
+                "examples": {
+                  "success": {
+                    "value": {}
+                  }
                 }
               }
             },
@@ -10920,6 +11665,11 @@
               "application/json": {
                 "schema": {
                   "type": "object"
+                },
+                "examples": {
+                  "success": {
+                    "value": {}
+                  }
                 }
               }
             },
@@ -11024,6 +11774,11 @@
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/SuccessResponse"
+                },
+                "examples": {
+                  "success": {
+                    "value": {}
+                  }
                 }
               }
             },
@@ -11067,6 +11822,11 @@
               "application/json": {
                 "schema": {
                   "type": "object"
+                },
+                "examples": {
+                  "success": {
+                    "value": {}
+                  }
                 }
               }
             },
@@ -11135,6 +11895,11 @@
               "application/json": {
                 "schema": {
                   "type": "object"
+                },
+                "examples": {
+                  "success": {
+                    "value": {}
+                  }
                 }
               }
             },
@@ -11203,6 +11968,11 @@
               "application/json": {
                 "schema": {
                   "type": "object"
+                },
+                "examples": {
+                  "success": {
+                    "value": {}
+                  }
                 }
               }
             },
@@ -11332,6 +12102,11 @@
               "application/json": {
                 "schema": {
                   "type": "object"
+                },
+                "examples": {
+                  "success": {
+                    "value": {}
+                  }
                 }
               }
             },
@@ -11378,6 +12153,11 @@
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/SuccessResponse"
+                },
+                "examples": {
+                  "success": {
+                    "value": {}
+                  }
                 }
               }
             },
@@ -11452,6 +12232,11 @@
               "application/json": {
                 "schema": {
                   "type": "object"
+                },
+                "examples": {
+                  "success": {
+                    "value": {}
+                  }
                 }
               }
             },
@@ -11498,6 +12283,11 @@
               "application/json": {
                 "schema": {
                   "type": "object"
+                },
+                "examples": {
+                  "success": {
+                    "value": {}
+                  }
                 }
               }
             },
@@ -11573,6 +12363,11 @@
               "application/json": {
                 "schema": {
                   "type": "object"
+                },
+                "examples": {
+                  "success": {
+                    "value": {}
+                  }
                 }
               }
             },
@@ -11614,6 +12409,11 @@
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/SuccessResponse"
+                },
+                "examples": {
+                  "success": {
+                    "value": {}
+                  }
                 }
               }
             },
@@ -11671,6 +12471,11 @@
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/SuccessResponse"
+                },
+                "examples": {
+                  "success": {
+                    "value": {}
+                  }
                 }
               }
             },
@@ -11722,6 +12527,11 @@
               "application/json": {
                 "schema": {
                   "type": "object"
+                },
+                "examples": {
+                  "success": {
+                    "value": {}
+                  }
                 }
               }
             },
@@ -11771,6 +12581,11 @@
               "application/json": {
                 "schema": {
                   "type": "object"
+                },
+                "examples": {
+                  "success": {
+                    "value": {}
+                  }
                 }
               }
             },
@@ -11920,6 +12735,11 @@
               "application/json": {
                 "schema": {
                   "type": "object"
+                },
+                "examples": {
+                  "success": {
+                    "value": {}
+                  }
                 }
               }
             },
@@ -11954,6 +12774,11 @@
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/SuccessResponse"
+                },
+                "examples": {
+                  "success": {
+                    "value": {}
+                  }
                 }
               }
             },
@@ -11995,6 +12820,11 @@
               "application/json": {
                 "schema": {
                   "type": "object"
+                },
+                "examples": {
+                  "success": {
+                    "value": {}
+                  }
                 }
               }
             },
@@ -12028,6 +12858,11 @@
               "application/json": {
                 "schema": {
                   "type": "object"
+                },
+                "examples": {
+                  "success": {
+                    "value": {}
+                  }
                 }
               }
             },
@@ -12133,6 +12968,11 @@
               "application/json": {
                 "schema": {
                   "type": "object"
+                },
+                "examples": {
+                  "success": {
+                    "value": {}
+                  }
                 }
               }
             },
@@ -12385,6 +13225,11 @@
               "application/json": {
                 "schema": {
                   "type": "object"
+                },
+                "examples": {
+                  "success": {
+                    "value": {}
+                  }
                 }
               }
             },
@@ -12409,6 +13254,11 @@
               "application/json": {
                 "schema": {
                   "type": "object"
+                },
+                "examples": {
+                  "success": {
+                    "value": {}
+                  }
                 }
               }
             },
@@ -12466,6 +13316,11 @@
               "application/json": {
                 "schema": {
                   "type": "object"
+                },
+                "examples": {
+                  "success": {
+                    "value": {}
+                  }
                 }
               }
             },
@@ -12475,7 +13330,7 @@
             "$ref": "#/components/responses/ErrorResponse"
           }
         },
-        "summary": "List user ID's and Usernames for your site",
+        "summary": "List user ID\u0027s and Usernames for your site",
         "tags": [
           "Users"
         ]
@@ -12542,6 +13397,11 @@
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/SuccessResponse"
+                },
+                "examples": {
+                  "success": {
+                    "value": {}
+                  }
                 }
               }
             },
@@ -12575,6 +13435,11 @@
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/SuccessResponse"
+                },
+                "examples": {
+                  "success": {
+                    "value": {}
+                  }
                 }
               }
             },
@@ -12606,6 +13471,11 @@
               "application/json": {
                 "schema": {
                   "type": "object"
+                },
+                "examples": {
+                  "success": {
+                    "value": {}
+                  }
                 }
               }
             },
@@ -12615,7 +13485,7 @@
             "$ref": "#/components/responses/ErrorResponse"
           }
         },
-        "summary": "Get a user's public information by username",
+        "summary": "Get a user\u0027s public information by username",
         "tags": [
           "Users"
         ]
@@ -12761,6 +13631,11 @@
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/SuccessResponse"
+                },
+                "examples": {
+                  "success": {
+                    "value": {}
+                  }
                 }
               }
             },
@@ -12794,6 +13669,11 @@
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/SuccessResponse"
+                },
+                "examples": {
+                  "success": {
+                    "value": {}
+                  }
                 }
               }
             },
@@ -12825,6 +13705,11 @@
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/SuccessResponse"
+                },
+                "examples": {
+                  "success": {
+                    "value": {}
+                  }
                 }
               }
             },
@@ -12856,6 +13741,11 @@
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/SuccessResponse"
+                },
+                "examples": {
+                  "success": {
+                    "value": {}
+                  }
                 }
               }
             },
@@ -12921,6 +13811,11 @@
               "application/json": {
                 "schema": {
                   "type": "object"
+                },
+                "examples": {
+                  "success": {
+                    "value": {}
+                  }
                 }
               }
             },
@@ -12954,6 +13849,11 @@
               "application/json": {
                 "schema": {
                   "type": "object"
+                },
+                "examples": {
+                  "success": {
+                    "value": {}
+                  }
                 }
               }
             },
@@ -13003,6 +13903,11 @@
               "application/json": {
                 "schema": {
                   "type": "object"
+                },
+                "examples": {
+                  "success": {
+                    "value": {}
+                  }
                 }
               }
             },
@@ -13012,7 +13917,7 @@
             "$ref": "#/components/responses/ErrorResponse"
           }
         },
-        "summary": "Get a user's timeline",
+        "summary": "Get a user\u0027s timeline",
         "tags": [
           "Social"
         ]
@@ -13240,6 +14145,11 @@
               "application/json": {
                 "schema": {
                   "type": "object"
+                },
+                "examples": {
+                  "success": {
+                    "value": {}
+                  }
                 }
               }
             },
@@ -13273,6 +14183,11 @@
               "application/json": {
                 "schema": {
                   "type": "object"
+                },
+                "examples": {
+                  "success": {
+                    "value": {}
+                  }
                 }
               }
             },
@@ -13315,6 +14230,11 @@
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/SuccessResponse"
+                },
+                "examples": {
+                  "success": {
+                    "value": {}
+                  }
                 }
               }
             },
@@ -13358,6 +14278,11 @@
               "application/json": {
                 "schema": {
                   "type": "object"
+                },
+                "examples": {
+                  "success": {
+                    "value": {}
+                  }
                 }
               }
             },
@@ -13426,6 +14351,11 @@
               "application/json": {
                 "schema": {
                   "type": "object"
+                },
+                "examples": {
+                  "success": {
+                    "value": {}
+                  }
                 }
               }
             },
@@ -13494,6 +14424,11 @@
               "application/json": {
                 "schema": {
                   "type": "object"
+                },
+                "examples": {
+                  "success": {
+                    "value": {}
+                  }
                 }
               }
             },
@@ -13539,6 +14474,11 @@
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/SuccessResponse"
+                },
+                "examples": {
+                  "success": {
+                    "value": {}
+                  }
                 }
               }
             },
@@ -13613,6 +14553,11 @@
               "application/json": {
                 "schema": {
                   "type": "object"
+                },
+                "examples": {
+                  "success": {
+                    "value": {}
+                  }
                 }
               }
             },
@@ -13687,6 +14632,11 @@
               "application/json": {
                 "schema": {
                   "type": "object"
+                },
+                "examples": {
+                  "success": {
+                    "value": {}
+                  }
                 }
               }
             },
@@ -13728,6 +14678,11 @@
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/SuccessResponse"
+                },
+                "examples": {
+                  "success": {
+                    "value": {}
+                  }
                 }
               }
             },
@@ -13779,6 +14734,11 @@
               "application/json": {
                 "schema": {
                   "type": "object"
+                },
+                "examples": {
+                  "success": {
+                    "value": {}
+                  }
                 }
               }
             },
@@ -13820,6 +14780,11 @@
               "application/json": {
                 "schema": {
                   "type": "object"
+                },
+                "examples": {
+                  "success": {
+                    "value": {}
+                  }
                 }
               }
             },
@@ -14072,6 +15037,11 @@
               "application/json": {
                 "schema": {
                   "type": "object"
+                },
+                "examples": {
+                  "success": {
+                    "value": {}
+                  }
                 }
               }
             },
