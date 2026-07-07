@@ -202,7 +202,7 @@ foreach ($data as $row) {
     <?php
 $user_id_a = '';
 if ($user_id > 0) {
-    $user_id_a = "&user_id=" . scrub_out($user_id);
+    $user_id_a = "&user_id=" . $user_id;
 } ?>
     <a href="<?php echo $web_path; ?>/stats.php?action=recent_song<?php echo $user_id_a; ?>"><?php echo T_('More'); ?></a>
 </div>
