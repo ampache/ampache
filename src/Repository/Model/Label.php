@@ -71,10 +71,19 @@ class Label extends database_object implements
             return;
         }
 
-        $info = $this->get_info($label_id, static::DB_TABLENAME);
-        foreach ($info as $key => $value) {
-            $this->$key = $value;
-        }
+        $info                = $this->get_info($label_id, static::DB_TABLENAME);
+        $this->id            = (int) ($info['id'] ?? 0);
+        $this->name          = $info['name'] ?? null;
+        $this->mbid          = $info['mbid'] ?? null;
+        $this->category      = $info['category'] ?? null;
+        $this->summary       = $info['summary'] ?? null;
+        $this->address       = $info['address'] ?? null;
+        $this->country       = $info['country'] ?? null;
+        $this->email         = $info['email'] ?? null;
+        $this->website       = $info['website'] ?? null;
+        $this->active        = (bool) ($info['active'] ?? false);
+        $this->user          = isset($info['user']) ? (int) $info['user'] : null;
+        $this->creation_date = isset($info['creation_date']) ? (int) $info['creation_date'] : null;
     }
 
     /**

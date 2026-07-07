@@ -204,7 +204,50 @@ class Search extends playlist_object
                         $this->rules = [];
                     }
                 } else {
-                    $this->$key = $value;
+                    switch ($key) {
+                        case 'id':
+                            $this->id = (int) $value;
+                            break;
+                        case 'name':
+                            $this->name = (string) $value;
+                            break;
+                        case 'type':
+                            $this->type = (string) $value;
+                            break;
+                        case 'user':
+                            $this->user = (int) $value;
+                            break;
+                        case 'username':
+                            $this->username = (string) $value;
+                            break;
+                        case 'date':
+                            $this->date = (int) $value;
+                            break;
+                        case 'last_update':
+                            $this->last_update = ($value === null) ? null : (int) $value;
+                            break;
+                        case 'last_count':
+                            $this->last_count = ($value === null) ? null : (int) $value;
+                            break;
+                        case 'last_duration':
+                            $this->last_duration = ($value === null) ? null : (int) $value;
+                            break;
+                        case 'collaborate':
+                            $this->collaborate = ($value === null) ? null : (string) $value;
+                            break;
+                        case 'catalog_id':
+                            $this->catalog_id = ($value === null) ? null : (int) $value;
+                            break;
+                        case 'limit':
+                            $this->limit = (int) $value;
+                            break;
+                        case 'logic_operator':
+                            $this->logic_operator = ($value === null) ? null : (string) $value;
+                            break;
+                        case 'random':
+                            $this->random = ($value === null) ? null : (int) $value;
+                            break;
+                    }
                 }
             }
 

@@ -62,10 +62,14 @@ class Live_Stream extends database_object implements Media, displayable_item, co
             return;
         }
 
-        $info = $this->get_info($stream_id, static::DB_TABLENAME);
-        foreach ($info as $key => $value) {
-            $this->$key = $value;
-        }
+        $info           = $this->get_info($stream_id, static::DB_TABLENAME);
+        $this->id       = (int) ($info['id'] ?? 0);
+        $this->catalog  = (int) ($info['catalog'] ?? 0);
+        $this->genre    = (int) ($info['genre'] ?? 0);
+        $this->name     = $info['name'] ?? null;
+        $this->codec    = $info['codec'] ?? null;
+        $this->site_url = $info['site_url'] ?? null;
+        $this->url      = $info['url'] ?? null;
     }
 
     /**

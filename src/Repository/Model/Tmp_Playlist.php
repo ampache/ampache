@@ -321,9 +321,10 @@ class Tmp_Playlist extends database_object
             return false;
         }
 
-        foreach ($data as $key => $value) {
-            $this->$key = $value;
-        }
+        $this->id          = (int) ($data['id'] ?? 0);
+        $this->session     = $data['session'] ?? null;
+        $this->type        = $data['type'] ?? null;
+        $this->object_type = $data['object_type'] ?? null;
 
         return true;
     }

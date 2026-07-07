@@ -50,37 +50,37 @@ class Album extends database_object implements
 {
     protected const string DB_TABLENAME = 'album';
 
-    private static array $_mapcache = [];
-    public ?int $addition_time     = null;
-    public ?int $album_artist      = null;
-    public int $artist_count      = 0;
+    private static array $_mapcache   = [];
+    public ?int $addition_time        = null;
+    public ?int $album_artist         = null;
+    public int $artist_count          = 0;
     public ?string $artist_name       = null;
     public ?string $artist_prefix     = null;
     public ?string $barcode           = null;
-    public int $catalog           = 0;
-    public int $catalog_id        = 0;
+    public int $catalog               = 0;
+    public int $catalog_id            = 0;
     public ?string $catalog_number    = null;
-    public int $disk_count        = 0;
-    public int $id                = 0;
+    public int $disk_count            = 0;
+    public int $id                    = 0;
     public ?string $link              = null;
     public ?string $mbid              = null; // MusicBrainz ID
     public ?string $mbid_group        = null; // MusicBrainz Release Group ID
     public ?string $name              = null;
-    public ?int $original_year     = null;
+    public ?int $original_year        = null;
     public ?string $prefix            = null;
     public ?string $release_status    = null;
     public ?string $release_type      = null;
-    public int $song_artist_count  = 0;
+    public int $song_artist_count     = 0;
 
     /** @var int[] $song_artists */
     public ?array $song_artists = null;
 
-    public int $song_count        = 0;
-    public ?int $time              = null;
-    public int $total_count       = 0;
-    public int $total_skip        = 0;
+    public int $song_count            = 0;
+    public ?int $time                 = null;
+    public int $total_count           = 0;
+    public int $total_skip            = 0;
     public ?string $version           = null;
-    public int $year              = 0;
+    public int $year                  = 0;
 
     // cached information
 

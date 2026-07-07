@@ -65,10 +65,15 @@ class Democratic extends Tmp_Playlist
 
         parent::__construct($democratic_id);
 
-        $info = $this->get_info($democratic_id, static::DB_TABLENAME);
-        foreach ($info as $key => $value) {
-            $this->$key = $value;
-        }
+        $info                = $this->get_info($democratic_id, static::DB_TABLENAME);
+        $this->id            = (int) ($info['id'] ?? 0);
+        $this->name          = $info['name'] ?? null;
+        $this->base_playlist = (int) ($info['base_playlist'] ?? 0);
+        $this->cooldown      = isset($info['cooldown']) ? (int) $info['cooldown'] : null;
+        $this->level         = (int) ($info['level'] ?? 0);
+        $this->user          = (int) ($info['user'] ?? 0);
+        $this->primary       = (bool) ($info['primary'] ?? false);
+        $this->tmp_playlist  = isset($info['tmp_playlist']) ? (int) $info['tmp_playlist'] : null;
     }
 
     /**

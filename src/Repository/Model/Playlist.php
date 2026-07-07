@@ -60,7 +60,7 @@ class Playlist extends playlist_object
             return;
         }
 
-        $info = $this->get_info($object_id, static::DB_TABLENAME);
+        $info                = $this->get_info($object_id, static::DB_TABLENAME);
         $this->id            = (int) ($info['id'] ?? 0);
         $this->name          = $info['name'] ?? null;
         $this->user          = isset($info['user']) ? (int) $info['user'] : null;

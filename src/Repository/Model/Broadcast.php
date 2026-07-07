@@ -58,10 +58,17 @@ class Broadcast extends database_object implements library_item, displayable_ite
             return;
         }
 
-        $info = $this->get_info($broadcast_id, static::DB_TABLENAME);
-        foreach ($info as $key => $value) {
-            $this->$key = $value;
-        }
+        $info                = $this->get_info($broadcast_id, static::DB_TABLENAME);
+        $this->id            = (int) ($info['id'] ?? 0);
+        $this->user          = (int) ($info['user'] ?? 0);
+        $this->name          = $info['name'] ?? null;
+        $this->description   = $info['description'] ?? null;
+        $this->is_private    = (bool) ($info['is_private'] ?? false);
+        $this->song          = (int) ($info['song'] ?? 0);
+        $this->listeners     = (int) ($info['listeners'] ?? 0);
+        $this->key           = $info['key'] ?? null;
+        $this->started       = (int) ($info['started'] ?? 0);
+        $this->song_position = (int) ($info['song_position'] ?? 0);
     }
 
     /**

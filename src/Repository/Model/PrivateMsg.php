@@ -49,7 +49,7 @@ class PrivateMsg extends database_object implements PrivateMessageInterface
             return;
         }
 
-        $info = $this->get_info($pm_id, static::DB_TABLENAME);
+        $info                = $this->get_info($pm_id, static::DB_TABLENAME);
         $this->creation_date = isset($info['creation_date']) ? (int) $info['creation_date'] : null;
         $this->from_user     = (int) ($info['from_user'] ?? 0);
         $this->id            = (int) ($info['id'] ?? 0);

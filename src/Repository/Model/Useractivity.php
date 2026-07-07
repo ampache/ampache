@@ -49,7 +49,7 @@ class Useractivity extends database_object
             return;
         }
 
-        $info = $this->get_info($useract_id, static::DB_TABLENAME);
+        $info                = $this->get_info($useract_id, static::DB_TABLENAME);
         $this->action        = (string) ($info['action'] ?? '');
         $this->activity_date = (int) ($info['activity_date'] ?? 0);
         $this->id            = (int) ($info['id'] ?? 0);
