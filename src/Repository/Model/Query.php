@@ -462,7 +462,7 @@ class Query
         $this->set_static_content(false);
         $this->set_is_simple(false);
         $this->set_start(0);
-        $this->set_offset((int)AmpConfig::get('offset_limit', 50));
+        $this->set_offset((int) AmpConfig::get('offset_limit', 50));
     }
 
     /**
