@@ -65,7 +65,7 @@ class User extends database_object
     public bool $disabled        = true;
     public ?string $email        = null;
     public ?string $fullname     = null;
-    public int $fullname_public = 0;
+    public bool $fullname_public = false;
 
     // Basic Components
     public int $id = 0;
@@ -1482,9 +1482,23 @@ class User extends database_object
         }
 
         self::add_to_cache('user', $user_id, $data);
-        foreach ($data as $key => $value) {
-            $this->$key = $value;
-        }
+        $this->id                   = $data['id'];
+        $this->username             = $data['username'];
+        $this->fullname             = $data['fullname'];
+        $this->email                = $data['email'];
+        $this->website              = $data['website'];
+        $this->apikey               = $data['apikey'];
+        $this->access               = $data['access'];
+        $this->disabled             = (bool) $data['disabled'];
+        $this->last_seen            = $data['last_seen'];
+        $this->create_date          = $data['create_date'];
+        $this->validation           = $data['validation'];
+        $this->state                = $data['state'];
+        $this->city                 = $data['city'];
+        $this->fullname_public      = (bool) $data['fullname_public'];
+        $this->rsstoken             = $data['rsstoken'];
+        $this->streamtoken          = $data['streamtoken'];
+        $this->catalog_filter_group = $data['catalog_filter_group'];
 
         return true;
     }
