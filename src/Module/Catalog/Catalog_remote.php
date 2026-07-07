@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
@@ -900,8 +902,8 @@ class Catalog_remote extends Catalog
         }
 
         $total = ($remote_catalog_info->songs > 0)
-            ? $remote_catalog_info->songs
-            : $remote_catalog_info->max_song;
+            ? (string) $remote_catalog_info->songs
+            : (string) $remote_catalog_info->max_song;
         debug_event('remote.catalog', sprintf(nT_('%s song was found', '%s songs were found', $total), $total), 4);
 
         Ui::update_text(
@@ -948,8 +950,8 @@ class Catalog_remote extends Catalog
                         $remote_id = (string) $song->attributes()->id;
 
                         // Update URLS to the current format for remote catalogs
-                        $old_url = (string) preg_replace('/ssid=[0-9a-z]*&/', '', $song->url);
-                        $db_url  = (string) preg_replace('/ssid=[0-9a-z]*&/', 'client=' . urlencode($web_path) . '&', $song->url);
+                        $old_url = (string) preg_replace('/ssid=[0-9a-z]*&/', '', (string) $song->url);
+                        $db_url  = (string) preg_replace('/ssid=[0-9a-z]*&/', 'client=' . urlencode($web_path) . '&', (string) $song->url);
                         $db_file = (string) $song->filename;
 
                         if ($db_file === '' || $db_file === '0') {
@@ -1054,7 +1056,7 @@ class Catalog_remote extends Catalog
                                 $current_song = new Song($song_id);
                                 $art          = new Art($current_song->album, 'album');
                                 if (!$art->has_db_info()) {
-                                    $art->insert_url($song->art);
+                                    $art->insert_url((string) $song->art);
                                 }
                             }
                         }
@@ -1106,7 +1108,7 @@ class Catalog_remote extends Catalog
                         ) {
                             $art = new Art($artist_id, 'artist');
                             if (!$art->has_db_info()) {
-                                $art->insert_url($artist->art);
+                                $art->insert_url((string) $artist->art);
                             }
                         }
                     }

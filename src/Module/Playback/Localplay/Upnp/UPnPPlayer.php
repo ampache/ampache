@@ -1,6 +1,6 @@
 <?php
 
-declare(strict_types=0);
+declare(strict_types=1);
 
 /**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
@@ -194,7 +194,7 @@ class UPnPPlayer
             $item = $this->Playlist()->CurrentItem();
         }
 
-        $currentSongArgs = $this->prepareURIRequest($item, "Current") ?? [];
+        $currentSongArgs = $this->prepareURIRequest($item) ?? [];
         $this->Device()->sendRequestToDevice('SetAVTransportURI', $currentSongArgs, 'AVTransport');
 
         $args = [
@@ -401,14 +401,18 @@ class UPnPPlayer
         return $this->_playlist;
     }
 
-    private function prepareURIRequest($song, $prefix): ?array
+    /**
+     * @param array{name?: string, link?: string} $song
+     * @return array{InstanceID: int, CurrentURI: string, CurrentURIMetaData: string}|null
+     */
+    private function prepareURIRequest(array $song): ?array
     {
-        if ($song == null) {
+        if ($song == [] || !isset($song['link']) || !isset($song['name']) || $song['link'] == '' || $song['name'] == '') {
             return null;
         }
 
-        $songUrl = $song['link'];
-        $songId  = (int) preg_replace('/(.+)\/oid\/(\d+)\/(.+)/i', '${2}', (string) $songUrl);
+        $songUrl = (string) $song['link'];
+        $songId  = (int) preg_replace('/(.+)\/oid\/(\d+)\/(.+)/i', '${2}', $songUrl);
 
         $song     = new Song($songId);
         $songItem = Upnp_Api::_itemSong($song, '');
@@ -417,8 +421,8 @@ class UPnPPlayer
 
         return [
             'InstanceID' => 0,
-            $prefix . 'URI' => $songUrl,
-            $prefix . 'URIMetaData' => htmlentities($xmlDIDL),
+            'CurrentURI' => $songUrl,
+            'CurrentURIMetaData' => htmlentities($xmlDIDL),
         ];
     }
 

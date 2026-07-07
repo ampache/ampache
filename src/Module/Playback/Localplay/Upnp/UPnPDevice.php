@@ -1,6 +1,6 @@
 <?php
 
-declare(strict_types=0);
+declare(strict_types=1);
 
 /**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
@@ -142,8 +142,11 @@ class UPnPDevice
         $responseXML = simplexml_load_string((string) $response);
         $services    = $responseXML->device->serviceList->service ?? [];
         foreach ($services as $service) {
-            $serviceType                                      = $service->serviceType;
-            $serviceTypeNames                                 = explode(":", $serviceType);
+            if (!isset($service->serviceType) || !isset($service->controlURL) || !isset($service->eventSubURL)) {
+                continue;
+            }
+            $serviceType                                      = (string) $service->serviceType;
+            $serviceTypeNames                                 = explode(':', $serviceType);
             $serviceTypeName                                  = $serviceTypeNames[3];
             $this->_settings['controlURLs'][$serviceTypeName] = (string) $service->controlURL;
             $this->_settings['eventURLs'][$serviceTypeName]   = (string) $service->eventSubURL;

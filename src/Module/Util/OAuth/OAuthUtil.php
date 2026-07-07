@@ -1,6 +1,6 @@
 <?php
 
-declare(strict_types=0);
+declare(strict_types=1);
 
 /**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
@@ -32,7 +32,10 @@ use Ampache\Module\System\Core;
  */
 class OAuthUtil
 {
-    public static function build_http_query($params): string
+    /**
+     * @param array<string, string|string[]> $params
+     */
+    public static function build_http_query(array $params): string
     {
         if (!$params) {
             return '';

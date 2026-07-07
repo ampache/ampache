@@ -1,6 +1,6 @@
 <?php
 
-declare(strict_types=0);
+declare(strict_types=1);
 
 /**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
@@ -2917,7 +2917,7 @@ abstract class Catalog extends database_object
             return $array;
         }
 
-        if ($catalog instanceof Catalog_Remote || $catalog instanceof Catalog_subsonic) {
+        if ($catalog instanceof Catalog_remote || $catalog instanceof Catalog_subsonic) {
             // remote files are read using the API and not the file
             $results = $catalog->get_media_tags($media, $gather_types, '', '');
         } else {

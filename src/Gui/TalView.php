@@ -1,6 +1,6 @@
 <?php
 
-declare(strict_types=0);
+declare(strict_types=1);
 
 /**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
@@ -50,7 +50,7 @@ final class TalView implements TalViewInterface
         return $engine->execute();
     }
 
-    public function setContext(string $key, $context): TalViewInterface
+    public function setContext(string $key, mixed $context): TalViewInterface
     {
         $this->getEngine()->set($key, $context);
 
