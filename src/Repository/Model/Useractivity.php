@@ -50,9 +50,12 @@ class Useractivity extends database_object
         }
 
         $info = $this->get_info($useract_id, static::DB_TABLENAME);
-        foreach ($info as $key => $value) {
-            $this->$key = $value;
-        }
+        $this->action        = (string) ($info['action'] ?? '');
+        $this->activity_date = (int) ($info['activity_date'] ?? 0);
+        $this->id            = (int) ($info['id'] ?? 0);
+        $this->object_id     = (int) ($info['object_id'] ?? 0);
+        $this->object_type   = (string) ($info['object_type'] ?? '');
+        $this->user          = (int) ($info['user'] ?? 0);
     }
 
     /**

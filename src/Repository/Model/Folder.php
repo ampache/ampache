@@ -94,9 +94,22 @@ class Folder extends database_object implements
         } else {
             $info = $this->get_info($folder_id, static::DB_TABLENAME);
         }
-        foreach ($info as $key => $value) {
-            $this->$key = $value;
-        }
+        $this->addition_time = isset($info['addition_time']) ? (int) $info['addition_time'] : null;
+        $this->catalog       = (int) ($info['catalog'] ?? 0);
+        $this->id            = (int) ($info['id'] ?? 0);
+        $this->link          = $info['link'] ?? null;
+        $this->name          = $info['name'] ?? null;
+        $this->object_count  = isset($info['object_count']) ? (int) $info['object_count'] : null;
+        $this->parent        = isset($info['parent']) ? (int) $info['parent'] : null;
+        $this->parent_link   = $info['parent_link'] ?? null;
+        $this->path          = $info['path'] ?? null;
+        $this->path_name     = $info['path_name'] ?? null;
+        $this->playable      = (bool) ($info['playable'] ?? false);
+        $this->total_count   = (int) ($info['total_count'] ?? 0);
+        $this->total_skip    = (int) ($info['total_skip'] ?? 0);
+        $this->update_time   = isset($info['update_time']) ? (int) $info['update_time'] : null;
+        $this->user          = isset($info['user']) ? (int) $info['user'] : null;
+        $this->weight        = (int) ($info['weight'] ?? $this->weight);
     }
 
     /**

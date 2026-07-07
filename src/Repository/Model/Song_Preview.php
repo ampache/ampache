@@ -74,11 +74,19 @@ class Song_Preview extends database_object implements Media, displayable_item, c
             return;
         }
 
-        foreach ($info as $key => $value) {
-            $this->$key = $value;
-        }
+        $this->album_mbid  = $info['album_mbid'] ?? null;
+        $this->artist      = isset($info['artist']) ? (int) $info['artist'] : null;
+        $this->artist_mbid = $info['artist_mbid'] ?? null;
+        $this->disk        = isset($info['disk']) ? (int) $info['disk'] : null;
+        $this->enabled     = (bool) ($info['enabled'] ?? true);
+        $this->file        = $info['file'] ?? null;
+        $this->id          = (int) ($info['id'] ?? 0);
+        $this->link        = $info['link'] ?? null;
+        $this->mbid        = $info['mbid'] ?? null;
+        $this->session     = $info['session'] ?? null;
+        $this->title       = $info['title'] ?? null;
+        $this->track       = isset($info['track']) ? (int) $info['track'] : null;
 
-        $this->id = $object_id;
         if ($this->file) {
             $data       = pathinfo($this->file);
             $this->type = (isset($data['extension']))

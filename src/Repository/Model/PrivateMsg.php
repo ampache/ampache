@@ -50,9 +50,13 @@ class PrivateMsg extends database_object implements PrivateMessageInterface
         }
 
         $info = $this->get_info($pm_id, static::DB_TABLENAME);
-        foreach ($info as $key => $value) {
-            $this->$key = $value;
-        }
+        $this->creation_date = isset($info['creation_date']) ? (int) $info['creation_date'] : null;
+        $this->from_user     = (int) ($info['from_user'] ?? 0);
+        $this->id            = (int) ($info['id'] ?? 0);
+        $this->is_read       = (bool) ($info['is_read'] ?? false);
+        $this->message       = $info['message'] ?? null;
+        $this->subject       = $info['subject'] ?? null;
+        $this->to_user       = (int) ($info['to_user'] ?? 0);
     }
 
     public function getCreationDate(): int

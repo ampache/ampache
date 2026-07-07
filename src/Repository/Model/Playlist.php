@@ -61,9 +61,16 @@ class Playlist extends playlist_object
         }
 
         $info = $this->get_info($object_id, static::DB_TABLENAME);
-        foreach ($info as $key => $value) {
-            $this->$key = $value;
-        }
+        $this->id            = (int) ($info['id'] ?? 0);
+        $this->name          = $info['name'] ?? null;
+        $this->user          = isset($info['user']) ? (int) $info['user'] : null;
+        $this->username      = $info['username'] ?? null;
+        $this->type          = $info['type'] ?? null;
+        $this->date          = (int) ($info['date'] ?? 0);
+        $this->last_update   = isset($info['last_update']) ? (int) $info['last_update'] : 0;
+        $this->last_count    = isset($info['last_count']) ? (int) $info['last_count'] : 0;
+        $this->last_duration = isset($info['last_duration']) ? (int) $info['last_duration'] : 0;
+        $this->collaborate   = $info['collaborate'] ?? '';
     }
 
     /**

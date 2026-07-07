@@ -83,9 +83,14 @@ class Bookmark extends database_object
             $info = Dba::fetch_assoc($db_results);
         }
 
-        foreach ($info as $key => $value) {
-            $this->$key = $value;
-        }
+        $this->comment       = $info['comment'] ?? null;
+        $this->creation_date = (int) ($info['creation_date'] ?? 0);
+        $this->id            = (int) ($info['id'] ?? 0);
+        $this->object_id     = (int) ($info['object_id'] ?? 0);
+        $this->object_type   = $info['object_type'] ?? null;
+        $this->position      = (int) ($info['position'] ?? 0);
+        $this->update_date   = (int) ($info['update_date'] ?? 0);
+        $this->user          = (int) ($info['user'] ?? 0);
     }
 
     /**

@@ -2527,9 +2527,36 @@ class Song extends database_object implements
         $results    = Dba::fetch_assoc($db_results);
         if (isset($results['id'])) {
             parent::add_to_cache('song', $song_id, $results);
-            foreach ($results as $key => $value) {
-                $this->$key = $value;
-            }
+            $this->id                   = (int) $results['id'];
+            $this->file                 = $results['file'];
+            $this->catalog              = (int) $results['catalog'];
+            $this->album                = (int) $results['album'];
+            $this->album_disk           = (int) $results['album_disk'];
+            $this->disk                 = (int) $results['disk'];
+            $this->year                 = (int) $results['year'];
+            $this->artist               = (int) $results['artist'];
+            $this->title                = $results['title'];
+            $this->bitrate              = (int) $results['bitrate'];
+            $this->rate                 = (int) $results['rate'];
+            $this->mode                 = $results['mode'];
+            $this->size                 = (int) $results['size'];
+            $this->time                 = (int) $results['time'];
+            $this->track                = (int) $results['track'];
+            $this->mbid                 = $results['mbid'];
+            $this->played               = (bool) $results['played'];
+            $this->enabled              = (bool) $results['enabled'];
+            $this->update_time          = $results['update_time'];
+            $this->addition_time        = $results['addition_time'];
+            $this->user_upload          = (int) $results['user_upload'];
+            $this->license              = (int) $results['license'];
+            $this->composer             = $results['composer'];
+            $this->channels             = (int) $results['channels'];
+            $this->total_count          = (int) $results['total_count'];
+            $this->total_skip           = (int) $results['total_skip'];
+            $this->albumartist          = $results['albumartist'];
+            $this->album_mbid           = $results['album_mbid'];
+            $this->artist_mbid          = $results['artist_mbid'];
+            $this->albumartist_mbid     = $results['albumartist_mbid'];
 
             return true;
         }

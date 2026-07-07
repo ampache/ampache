@@ -101,11 +101,36 @@ class Podcast_Episode extends database_object implements
             return;
         }
 
-        foreach ($info as $key => $value) {
-            $this->$key = $value;
-        }
+        $this->addition_time = (int) ($info['addition_time'] ?? 0);
+        $this->author        = $info['author'] ?? null;
+        $this->bitrate       = (int) ($info['bitrate'] ?? 0);
+        $this->catalog       = (int) ($info['catalog'] ?? 0);
+        $this->category      = $info['category'] ?? null;
+        $this->channels      = isset($info['channels']) ? (int) $info['channels'] : null;
+        $this->description   = $info['description'] ?? null;
+        $this->enabled       = (bool) ($info['enabled'] ?? true);
+        $this->file          = $info['file'] ?? null;
+        $this->guid          = $info['guid'] ?? null;
+        $this->id            = (int) ($info['id'] ?? 0);
+        $this->mime          = $info['mime'] ?? null;
+        $this->mode          = $info['mode'] ?? null;
+        $this->played        = (bool) ($info['played'] ?? false);
+        $this->podcast       = (int) ($info['podcast'] ?? 0);
+        $this->pubdate       = (int) ($info['pubdate'] ?? 0);
+        $this->rate          = (int) ($info['rate'] ?? 0);
+        $this->size          = (int) ($info['size'] ?? 0);
+        $this->source        = $info['source'] ?? null;
+        $this->state         = $info['state'] ?? null;
+        $this->time          = (int) ($info['time'] ?? 0);
+        $this->title         = $info['title'] ?? null;
+        $this->total_count   = (int) ($info['total_count'] ?? 0);
+        $this->total_skip    = (int) ($info['total_skip'] ?? 0);
+        $this->type          = $info['type'] ?? '';
+        $this->update_time   = (int) ($info['update_time'] ?? 0);
+        $this->waveform      = $info['waveform'] ?? null;
+        $this->website       = $info['website'] ?? null;
+        $this->weight        = (int) ($info['weight'] ?? $this->weight);
 
-        $this->id = $episode_id;
         if (
             $this->file !== null
             && $this->file !== ''

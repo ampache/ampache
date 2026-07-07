@@ -63,9 +63,13 @@ class Tag extends database_object implements library_item, displayable_item, con
             return;
         }
 
-        foreach ($info as $key => $value) {
-            $this->$key = $value;
-        }
+        $this->album     = (int) ($info['album'] ?? 0);
+        $this->artist    = (int) ($info['artist'] ?? 0);
+        $this->id        = (int) ($info['id'] ?? 0);
+        $this->is_hidden = (int) ($info['is_hidden'] ?? 0);
+        $this->name      = $info['name'] ?? null;
+        $this->song      = (int) ($info['song'] ?? 0);
+        $this->video     = (int) ($info['video'] ?? 0);
     }
 
     /**
