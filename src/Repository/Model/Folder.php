@@ -72,7 +72,6 @@ class Folder extends database_object implements
     /** @var int[] $videos */
     public array $videos = [];
 
-    public int $weight             = 0;
     private ?string $f_link        = null;
     private ?string $f_parent_link = null;
 
@@ -109,7 +108,6 @@ class Folder extends database_object implements
         $this->total_skip    = (int) ($info['total_skip'] ?? 0);
         $this->update_time   = isset($info['update_time']) ? (int) $info['update_time'] : null;
         $this->user          = isset($info['user']) ? (int) $info['user'] : null;
-        $this->weight        = (int) ($info['weight'] ?? $this->weight);
     }
 
     /**

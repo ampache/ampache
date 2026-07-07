@@ -65,7 +65,6 @@ class Podcast extends database_object implements
     private int $total_count     = 0;
     private int $total_skip      = 0;
     private ?string $website     = null;
-    private int $weight          = 0;
 
     /**
      * Podcast
@@ -97,7 +96,6 @@ class Podcast extends database_object implements
         $this->total_count   = (int) ($info['total_count'] ?? 0);
         $this->total_skip    = (int) ($info['total_skip'] ?? 0);
         $this->website       = $info['website'] ?? null;
-        $this->weight        = (int) ($info['weight'] ?? $this->weight);
     }
 
     /**

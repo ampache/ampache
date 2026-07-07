@@ -82,8 +82,6 @@ class Video extends database_object implements
     /** @var array<int, array{id: int, name: string, is_hidden: int, count: int}> $tags */
     private ?array $tags = null;
 
-    private int $weight = 0;
-
     /**
      * Constructor
      * This pulls the information from the database and returns

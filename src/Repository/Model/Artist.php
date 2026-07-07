@@ -71,8 +71,6 @@ class Artist extends database_object implements
     /** @var array<int, array{id: int, name: string, is_hidden: int, count: int}> $tags */
     private ?array $tags = null;
 
-    private int $weight = 0;
-
     /**
      * Artist class, for modifying an artist
      * Takes the ID of the artist and pulls the info from the db
@@ -338,31 +336,43 @@ class Artist extends database_object implements
      *     id: int,
      *     name: ?string,
      *     prefix: ?string,
+     *     mbid: ?string,
      *     summary: ?string,
+     *     placeformed: ?string,
+     *     yearformed: ?string,
+     *     last_update: ?string,
+     *     user: ?string,
+     *     manual_update: ?string,
+     *     time: ?string,
      *     album_count: int,
-     *     album_count: int
+     *     song_count: int,
+     *     album_disk_count: int,
+     *     total_count: int,
+     *     total_skip: int,
+     *     addition_time: ?string,
+     *     weight: ?string
      * } $data
      */
     public static function construct_from_array(array $data): Artist
     {
         $artist                   = new Artist(0);
-        $artist->id               = (int) ($data['id'] ?? 0);
+        $artist->id               = (int) $data['id'];
         $artist->name             = $data['name'] ?? null;
         $artist->prefix           = $data['prefix'] ?? null;
         $artist->summary          = $data['summary'] ?? null;
         $artist->mbid             = $data['mbid'] ?? null;
-        $artist->album_count      = (int) ($data['album_count'] ?? 0);
-        $artist->album_disk_count = (int) ($data['album_disk_count'] ?? 0);
-        $artist->song_count       = (int) ($data['song_count'] ?? 0);
-        $artist->time             = isset($data['time']) ? (int) $data['time'] : null;
-        $artist->total_count      = (int) ($data['total_count'] ?? 0);
-        $artist->total_skip       = (int) ($data['total_skip'] ?? 0);
-        $artist->yearformed       = isset($data['yearformed']) ? (int) $data['yearformed'] : null;
+        $artist->album_count      = ($data['album_count']) ? (int) $data['album_count'] : 0;
+        $artist->album_disk_count = ($data['album_disk_count']) ? (int) $data['album_disk_count'] : 0;
+        $artist->song_count       = ($data['song_count']) ? (int) $data['song_count'] : 0;
+        $artist->time             = ($data['time']) ? (int) $data['time'] : null;
+        $artist->total_count      = ($data['total_count']) ? (int) $data['total_count'] : 0;
+        $artist->total_skip       = ($data['total_skip']) ? (int) $data['total_skip'] : 0;
+        $artist->yearformed       = ($data['yearformed']) ? (int) $data['yearformed'] : null;
         $artist->placeformed      = $data['placeformed'] ?? null;
-        $artist->user             = isset($data['user']) ? (int) $data['user'] : null;
-        $artist->addition_time    = isset($data['addition_time']) ? (int) $data['addition_time'] : null;
-        $artist->last_update      = (int) ($data['last_update'] ?? 0);
-        $artist->manual_update    = (bool) ($data['manual_update'] ?? false);
+        $artist->user             = ($data['user']) ? (int) $data['user'] : null;
+        $artist->addition_time    = ($data['addition_time']) ? (int) $data['addition_time'] : null;
+        $artist->last_update      = ($data['last_update']) ? (int) $data['last_update'] : 0;
+        $artist->manual_update    = ($data['manual_update']) ? (bool) $data['manual_update'] : false;
 
         return $artist;
     }

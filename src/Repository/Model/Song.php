@@ -144,7 +144,6 @@ class Song extends database_object implements
     private ?bool $has_art              = null;
     private ?License $licenseObj        = null;
     private bool $song_data_loaded      = false;
-    private int $weight                 = 0;
 
     /**
      * Constructor

@@ -98,8 +98,6 @@ class Album extends database_object implements
     /** @var array<int, array{id: int, name: string, is_hidden: int, count: int}> $tags */
     private ?array $tags = null;
 
-    private int $weight = 0;
-
     /**
      * __construct
      * Album constructor it loads everything relating
@@ -144,7 +142,6 @@ class Album extends database_object implements
         $this->total_skip        = (int) ($info['total_skip'] ?? 0);
         $this->version           = $info['version'] ?? null;
         $this->year              = (int) ($info['year'] ?? 0);
-        $this->weight            = (int) ($info['weight'] ?? $this->weight);
 
         // Little bit of formatting here
         if ($this->album_artist === null && $this->song_artist_count > 1) {

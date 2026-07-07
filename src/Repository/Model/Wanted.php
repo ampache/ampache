@@ -73,16 +73,15 @@ class Wanted extends database_object
             return;
         }
 
-        $this->id          = (int) ($info['id'] ?? 0);
-        $this->accepted    = (int) ($info['accepted'] ?? 0);
-        $this->date        = (int) ($info['date'] ?? 0);
+        $this->id          = (int) $info['id'];
+        $this->accepted    = (int) $info['accepted'];
+        $this->date        = (int) $info['date'];
         $this->mbid        = $info['mbid'] ?? null;
         $this->name        = $info['name'] ?? null;
         $this->artist      = isset($info['artist']) ? (int) $info['artist'] : null;
         $this->artist_mbid = $info['artist_mbid'] ?? null;
-        $this->user        = isset($info['user']) ? (int) $info['user'] : null;
+        $this->user        = (int) $info['user'];
         $this->year        = isset($info['year']) ? (int) $info['year'] : null;
-        $this->link        = $info['link'] ?? null;
     }
 
     /**

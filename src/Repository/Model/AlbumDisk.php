@@ -89,8 +89,6 @@ class AlbumDisk extends database_object implements
     /** @var array<int, array{id: int, name: string, is_hidden: int, count: int}> $tags */
     private ?array $tags = null;
 
-    private int $weight = 0;
-
     /**
      * __construct
      * Album constructor it loads everything relating

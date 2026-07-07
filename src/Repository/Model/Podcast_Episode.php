@@ -83,7 +83,6 @@ class Podcast_Episode extends database_object implements
     private ?string $link_formatted = null;
     private ?string $podcast_link   = null;
     private ?string $podcast_name   = null;
-    private int $weight             = 0;
 
     /**
      * Constructor
@@ -129,7 +128,6 @@ class Podcast_Episode extends database_object implements
         $this->update_time   = (int) ($info['update_time'] ?? 0);
         $this->waveform      = $info['waveform'] ?? null;
         $this->website       = $info['website'] ?? null;
-        $this->weight        = (int) ($info['weight'] ?? $this->weight);
 
         if (
             $this->file !== null
