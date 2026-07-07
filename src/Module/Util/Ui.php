@@ -161,7 +161,7 @@ class Ui implements UiInterface
      * format_bytes
      *
      * Turns a size in bytes into the best human-readable value
-     * @param int|float $value Size in bytes
+     * @param int|float|string $value Size in bytes
      * @param int $precision Number of decimal places to show
      * @param int $pass Internal counter for recursion
      */

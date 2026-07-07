@@ -778,7 +778,7 @@ abstract class Catalog extends database_object
         $db_results = Dba::read($sql, [$catalog->id]);
 
         while ($results = Dba::fetch_assoc($db_results)) {
-            $catalog->enabled = $results['enabled'];
+            $catalog->enabled = (bool) $results['enabled'];
         }
 
         return $catalog;
