@@ -171,6 +171,10 @@ class Ui implements UiInterface
             return '';
         }
 
+        if (is_string($value)) {
+            $value = (float) $value;
+        }
+
         while (strlen((string) floor($value)) > 3) {
             $value /= 1024;
             $pass++;
