@@ -1490,7 +1490,7 @@ class User extends database_object
         $this->apikey               = $data['apikey'];
         $this->access               = $data['access'];
         $this->disabled             = (bool) $data['disabled'];
-        $this->last_seen            = $data['last_seen'];
+        $this->last_seen            = (int) $data['last_seen'];
         $this->create_date          = $data['create_date'];
         $this->validation           = $data['validation'];
         $this->state                = $data['state'];
@@ -1498,7 +1498,7 @@ class User extends database_object
         $this->fullname_public      = (bool) $data['fullname_public'];
         $this->rsstoken             = $data['rsstoken'];
         $this->streamtoken          = $data['streamtoken'];
-        $this->catalog_filter_group = $data['catalog_filter_group'];
+        $this->catalog_filter_group = (int) $data['catalog_filter_group'];
 
         return true;
     }
