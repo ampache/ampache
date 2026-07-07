@@ -165,7 +165,7 @@ class Ui implements UiInterface
      * @param int $precision Number of decimal places to show
      * @param int $pass Internal counter for recursion
      */
-    public static function format_bytes(int|float $value, int $precision = 2, int $pass = 0): string
+    public static function format_bytes(int|float|string $value, int $precision = 2, int $pass = 0): string
     {
         if (!$value) {
             return '';
