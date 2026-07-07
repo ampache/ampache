@@ -1469,6 +1469,11 @@ class User extends database_object
                 'apikey' => null,
                 'rsstoken' => null,
                 'streamtoken' => null,
+                'last_seen' => null,
+                'create_date' => null,
+                'validation' => null,
+                'state' => null,
+                'city' => null
             ];
         } else {
             $sql        = "SELECT `id`, `username`, `fullname`, `email`, `website`, `apikey`, `access`, `disabled`, `last_seen`, `create_date`, `validation`, `state`, `city`, `fullname_public`, `rsstoken`, `streamtoken`, `catalog_filter_group` FROM `user` WHERE `id` = ?;";
