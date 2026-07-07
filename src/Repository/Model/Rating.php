@@ -108,7 +108,7 @@ class Rating extends database_object
         $db_results = Dba::read($sql, [$type]);
 
         while ($row = Dba::fetch_assoc($db_results)) {
-            $ratings[$row['object_id']] = $row['rating'];
+            $ratings[$row['object_id']] = (float) $row['rating'];
         }
 
         foreach ($ids as $object_id) {
