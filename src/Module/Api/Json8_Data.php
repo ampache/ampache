@@ -988,7 +988,7 @@ class Json8_Data
      *
      * @param array<int|string> $objects Folder children id's in object_type-Object_id format.
      */
-    public static function folders(array $objects, Folder $folder, User $user, string $auth): string
+    public static function folders(array $objects, Folder $folder, User $user, string $auth, bool $object = true): string
     {
         self::$count = self::$count ?? count($objects);
         $objects     = self::_filter_objects($objects);
@@ -1053,11 +1053,15 @@ class Json8_Data
             ];
         }
 
-        $output = [
-            "total_count" => self::$count,
-            "md5" => md5(serialize($objects)),
-            "folder" => $JSON
-        ];
+        if ($object) {
+            $output = [
+                "total_count" => self::$count,
+                "md5" => md5(serialize($objects)),
+                "folder" => $JSON
+            ];
+        } else {
+            $output = $JSON[0] ?? [];
+        }
 
         return json_encode($output, JSON_PRETTY_PRINT) ?: '';
     }
