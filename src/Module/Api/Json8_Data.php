@@ -1048,13 +1048,12 @@ class Json8_Data
                 $filename = $p_info['basename'];
                 $dirname  = $p_info['dirname'] ?? '';
             } else {
-                /** @var Catalog $libitem */
                 $filename = $libitem->get_fullname();
-                $dirname  = $libitem->get_path();
+                $dirname  = $object_type . '-' . $object_id;
             }
 
             $JSON["items"][] = [
-                "id" => $object_type . '-' . $libitem->getId(),
+                "id" => $object_type . '-' . $object_id,
                 "object_type" => $object_type,
                 "title" => $filename,
                 "parent" => $parent['id'],

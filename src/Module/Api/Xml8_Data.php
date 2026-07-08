@@ -511,13 +511,12 @@ class Xml8_Data
                 $filename = $p_info['basename'];
                 $dirname  = $p_info['dirname'] ?? '';
             } else {
-                /** @var Catalog $libitem */
                 $filename = $libitem->get_fullname();
-                $dirname  = $libitem->get_path();
+                $dirname  = $object_type . '-' . $object_id;
             }
 
             $item = $xml_items->addChild('item');
-            $item->addAttribute('id', $object_type . '-' . $libitem->getId());
+            $item->addAttribute('id', $object_type . '-' . $object_id);
             $item->addChild('object_type', $object_type);
             $item->addChild('title', (string) $filename);
             $item->addChild('parent', (string) $parent['id']);
