@@ -88,7 +88,7 @@ final class Folder8Method
 
         $results = $browse->get_objects();
         if (empty($results)) {
-            Api::empty('browse', $input['api_format']);
+            Api::empty('folder', $input['api_format']);
 
             return false;
         }
