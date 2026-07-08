@@ -160,7 +160,7 @@ final class List6Method
         $sort    = $browse->get_sort();
         $results = Catalog::get_name_array($objects, $name_type, $sort['name'] ?? 'name', $sort['order'] ?? 'ASC');
         if (empty($results)) {
-            Api6::empty('browse', $input['api_format']);
+            Api6::empty('list', $input['api_format']);
 
             return false;
         }
