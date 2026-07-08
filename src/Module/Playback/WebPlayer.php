@@ -201,7 +201,7 @@ class WebPlayer
         if (array_key_exists('id', $urlinfo) && InterfaceImplementationChecker::is_media($urlinfo['type'])) {
             $className = ObjectTypeToClassNameMapper::map($urlinfo['type']);
             /** @var Media $media */
-            $media = new $className($urlinfo['id']);
+            $media = new $className((int) $urlinfo['id']);
 
             return $media;
         }
