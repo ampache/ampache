@@ -1419,7 +1419,7 @@ class Xml8_Data
      */
     public static function set_count(int|string $count): void
     {
-        self::$count = (int) self::$count;
+        self::$count = (int) $count;
     }
 
     /**
