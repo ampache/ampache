@@ -215,7 +215,8 @@ abstract class playlist_object extends database_object implements
      *     object_type: LibraryItemEnum,
      *     object_id: int,
      *     track: int,
-     *     track_id: int
+     *     track_id: int,
+     *     time: int
      * }>
      */
     abstract public function get_items(): array;
@@ -251,7 +252,8 @@ abstract class playlist_object extends database_object implements
      *     object_type: LibraryItemEnum,
      *     object_id: int,
      *     track: int,
-     *     track_id: int
+     *     track_id: int,
+     *     time: int
      * }>
      */
     public function get_medias(?string $filter_type = null): array

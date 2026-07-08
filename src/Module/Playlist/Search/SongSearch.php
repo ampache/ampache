@@ -822,7 +822,7 @@ final class SongSearch implements SearchInterface
         $having_sql = implode(sprintf(' %s ', $sql_logic_operator), $having);
 
         return [
-            'base' => 'SELECT `song`.`id`, `song`.`file` FROM `song`',
+            'base' => 'SELECT `song`.`id`, `song`.`file`, `song`.`time` FROM `song`',
             'join' => $join,
             'where' => $where,
             'where_sql' => $where_sql,

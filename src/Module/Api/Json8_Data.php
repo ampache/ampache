@@ -1684,11 +1684,15 @@ class Json8_Data
             $playlist_username = $playlist->username;
             $playlist_type     = $playlist->type;
             $last_update       = $playlist->last_update;
+            $last_duration     = $playlist->last_duration;
+            $duration          = 0;
 
             if ($songs) {
                 $items          = [];
                 $playlisttracks = $playlist->get_items();
                 foreach ($playlisttracks as $track) {
+                    $duration += $track['time'] ?? 0;
+
                     $items[] = [
                         "id" => (string) $track['object_id'],
                         "playlisttrack" => $track['track'],
@@ -1728,6 +1732,7 @@ class Json8_Data
                 "averagerating" => $rating->get_average_rating(),
                 "md5" => $md5,
                 "last_update" => $last_update,
+                "time" => $duration ?: $last_duration,
             ];
         }
 
