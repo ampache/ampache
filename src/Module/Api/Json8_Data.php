@@ -1001,8 +1001,8 @@ class Json8_Data
             "catalog" => $folder->catalog,
             "items" => []
         ];
-        foreach ($objects as $object) {
-            preg_match('/([a-z_]+)-([0-9]+)/', (string) $object, $matches);
+        foreach ($objects as $item) {
+            preg_match('/([a-z_]+)-([0-9]+)/', (string) $item, $matches);
             $object_type = $matches[1] ?? null;
             $object_id   = (int) ($matches[2] ?? 0);
             $libitem     = null;
@@ -1060,7 +1060,7 @@ class Json8_Data
                 "folder" => $JSON
             ];
         } else {
-            $output = $JSON[0] ?? [];
+            $output = $JSON ?? [];
         }
 
         return json_encode($output, JSON_PRETTY_PRINT) ?: '';
