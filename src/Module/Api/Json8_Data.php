@@ -1060,7 +1060,7 @@ class Json8_Data
                 "folder" => $JSON
             ];
         } else {
-            $output = $JSON ?? [];
+            $output = $JSON;
         }
 
         return json_encode($output, JSON_PRETTY_PRINT) ?: '';

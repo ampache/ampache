@@ -1053,12 +1053,12 @@ class Artist extends database_object implements
         $this->name   = $name;
         $this->mbid   = $mbid;
 
-        if (isset($data['user'])) {
-            $user = ((int) $data['user'] == 0) ? null : (int) $data['user'];
-            if ($this->user != (int) $data['user']) {
-                $sql = 'UPDATE `artist` SET `user` = ? WHERE `id` = ?';
-                Dba::write($sql, [$user, $current_id]);
-            }
+        if (
+            $user
+            && $this->user != $user
+        ) {
+            $sql = 'UPDATE `artist` SET `user` = ? WHERE `id` = ?';
+            Dba::write($sql, [$user, $current_id]);
         }
 
         $override_childs = false;

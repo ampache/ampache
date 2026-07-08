@@ -1727,7 +1727,7 @@ abstract class Catalog extends database_object
         $counts         = array_merge(self::getUserRepository()->getStatistics(), $counts);
         $counts['tags'] = ($catalog_id) ? 0 : self::count_tags();
 
-        $counts['formatted_size'] = Ui::format_bytes($counts['size'], 2, 2);
+        $counts['formatted_size'] = Ui::format_bytes((int) $counts['size'], 2, 2);
 
         $hours = floor((int) $counts['time'] / 3600);
         $days  = (int) floor($hours / 24);
