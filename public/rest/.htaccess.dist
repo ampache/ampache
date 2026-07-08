@@ -15,6 +15,8 @@
     RewriteRule ^(3|4|5|6|8)/(json|xml)/([^/]+)/(deleted|stats|search|system|user)/?$ /server/$2.rest.php?version=$1&action=$4&type=$3 [L,QSA]
     # /{version}/{format}/folders/{integer}
     RewriteRule ^(3|4|5|6|8)/(json|xml)/folders/(-?[0-9]+)/?$ /server/$2.rest.php?version=$1&action=folder&filter=$3 [L,QSA]
+    # /{version}/{format}/folders{path}
+    RewriteRule ^(3|4|5|6|8)/(json|xml)/folders(.+)/?$ /server/$2.rest.php?version=$1&action=folders&filter=$3 [L,QSA,B]
     # /{version}/{format}/{type}/{filter}/{action}
     RewriteRule ^(3|4|5|6|8)/(json|xml)/([^/]+)/([^/]+)/([^/]+)/?$ /server/$2.rest.php?version=$1&action=$5&type=$3&filter=$4 [L,QSA]
     # /{version}/{format}/{action}/{filter}
