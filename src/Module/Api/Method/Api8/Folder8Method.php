@@ -110,8 +110,23 @@ final class Folder8Method
                     $libitem   = Catalog::create_from_id($object_id);
                     $parentId  = -1;
                     $path      = '/catalog-' . $object_id;
-                    $item_type = 'artist';
-                    $browse->set_filter('catalog', $path_catalog_id ?? $object_id);
+                    $catalogId = $object_id;
+                    switch ($libitem?->gather_types) {
+                        case 'music':
+                            $item_type = 'artist';
+                            break;
+                        case 'podcast':
+                            $item_type = 'podcast';
+                            break;
+                        case 'video':
+                            $item_type = 'video';
+                            break;
+                        default:
+                            Api::empty('folder', $input['api_format']);
+
+                            return false;
+                    }
+                    $browse->set_type($item_type);
                     break;
                 case 'artist':
                     $libitem   = new Artist($object_id);
@@ -165,6 +180,9 @@ final class Folder8Method
         }
 
         $browse->set_type($item_type);
+        if (isset($catalogId)) {
+            $browse->set_filter('catalog', $catalogId);
+        }
         $browse->set_api_filter('add', $input['add'] ?? '');
         $browse->set_api_filter('update', $input['update'] ?? '');
 

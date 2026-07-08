@@ -110,9 +110,22 @@ final class Folders8Method
                     $libitem   = Catalog::create_from_id($object_id);
                     $parentId  = -1;
                     $path      = '/catalog-' . $object_id;
-                    $item_type = 'artist';
+                    switch ($libitem?->gather_types) {
+                        case 'music':
+                            $item_type = 'artist';
+                            break;
+                        case 'podcast':
+                            $item_type = 'podcast';
+                            break;
+                        case 'video':
+                            $item_type = 'video';
+                            break;
+                        default:
+                            Api::empty('folder', $input['api_format']);
+
+                            return false;
+                    }
                     $browse->set_type($item_type);
-                    $browse->set_filter('catalog', $path_catalog_id ?? $object_id);
                     break;
                 case 'artist':
                     $libitem   = new Artist($object_id);
@@ -122,7 +135,6 @@ final class Folders8Method
                     $item_type = 'album';
                     $browse->set_type($item_type);
                     $browse->set_filter('album_artist', $object_id);
-                    $browse->set_filter('catalog', $path_catalog_id);
                     break;
                 case 'album':
                     $libitem   = new Album($object_id);
@@ -132,7 +144,6 @@ final class Folders8Method
                     $item_type = 'song';
                     $browse->set_type($item_type);
                     $browse->set_filter('album', $object_id);
-                    $browse->set_filter('catalog', $path_catalog_id);
                     break;
                 case 'podcast':
                     $libitem   = new Podcast($object_id);
@@ -141,7 +152,6 @@ final class Folders8Method
                     $path      = '/catalog-' . $catalogId . '/podcast-' . $object_id;
                     $item_type = 'podcast_episode';
                     $browse->set_filter('podcast', $object_id);
-                    $browse->set_filter('catalog', $path_catalog_id);
                     break;
                 case 'podcast_episode':
                 case 'song':
@@ -170,6 +180,9 @@ final class Folders8Method
         }
 
         $browse->set_type($item_type);
+        if (isset($catalogId)) {
+            $browse->set_filter('catalog', $catalogId);
+        }
         $browse->set_api_filter('add', $input['add'] ?? '');
         $browse->set_api_filter('update', $input['update'] ?? '');
 
