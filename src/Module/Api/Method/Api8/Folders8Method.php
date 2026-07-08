@@ -125,7 +125,6 @@ final class Folders8Method
 
                             return false;
                     }
-                    $browse->set_type($item_type);
                     break;
                 case 'artist':
                     $libitem   = new Artist($object_id);
@@ -133,7 +132,6 @@ final class Folders8Method
                     $catalogId = $path_catalog_id ?? $libitem->getCatalogId();
                     $path      = '/catalog-' . $catalogId . '/artist-' . $object_id;
                     $item_type = 'album';
-                    $browse->set_type($item_type);
                     $browse->set_filter('album_artist', $object_id);
                     break;
                 case 'album':
@@ -142,7 +140,6 @@ final class Folders8Method
                     $catalogId = $libitem->getCatalogId();
                     $path      = '/catalog-' . $catalogId . '/artist-' . $parentId . '/album-' . $object_id;
                     $item_type = 'song';
-                    $browse->set_type($item_type);
                     $browse->set_filter('album', $object_id);
                     break;
                 case 'podcast':
@@ -180,6 +177,9 @@ final class Folders8Method
         }
 
         $browse->set_type($item_type);
+        if ($item_type === 'artist') {
+            $browse->set_filter('album_artist', 1);
+        }
         if (isset($catalogId) && $catalogId > 0) {
             $browse->set_filter('catalog', $catalogId);
         }
