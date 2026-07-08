@@ -130,7 +130,7 @@ final class Folders8Method
                 case 'artist':
                     $libitem   = new Artist($object_id);
                     $parentId  = $path_catalog_id ?? $libitem->getCatalogId() ?: null;
-                    $catalogId = $libitem->getCatalogId();
+                    $catalogId = $path_catalog_id ?? $libitem->getCatalogId();
                     $path      = '/catalog-' . $catalogId . '/artist-' . $object_id;
                     $item_type = 'album';
                     $browse->set_type($item_type);
@@ -180,7 +180,7 @@ final class Folders8Method
         }
 
         $browse->set_type($item_type);
-        if (isset($catalogId)) {
+        if (isset($catalogId) && $catalogId > 0) {
             $browse->set_filter('catalog', $catalogId);
         }
         $browse->set_api_filter('add', $input['add'] ?? '');
