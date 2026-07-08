@@ -77,7 +77,7 @@ final class Folders8Method
         $path_name = $input['filter'] ?? '/';
         $folder    = ($path_name === '/')
             ? new Folder(-1)
-            : self::getFolderRepository()->getByPathName($path_name);
+            : self::getFolderRepository()->getByPathName($path_name, 0, dirname($path_name));
 
         if ($folder === null || $folder->isNew()) {
             /* HINT: Requested object string/id/type ("album", "myusername", "some song title", 1298376) */
@@ -92,7 +92,11 @@ final class Folders8Method
                 $browse->set_filter('int_id', $folder->getId());
             }
         } else {
-            $browse->set_api_filter($method, $path_name);
+            if ($method === 'exact_match') {
+                $browse->set_filter('int_id', $folder->getId());
+            } else {
+                $browse->set_api_filter($method, $path_name);
+            }
         }
 
         $browse->set_filter('catalog', User::get_user_catalogs($user->getId()));
