@@ -1005,10 +1005,14 @@ class Xml6_Data
                 $object_type    = 'playlist';
                 $playitem_total = $playlist->get_media_count('song');
             }
+
+            $duration = 0;
             if ($songs) {
                 $items          = '';
                 $playlisttracks = $playlist->get_items();
                 foreach ($playlisttracks as $track) {
+                    $duration += $track['time'] ?? 0;
+
                     if ($track['object_type'] === LibraryItemEnum::SONG) {
                         $items .= "\t\t<playlisttrack id=\"" . $track['object_id'] . "\">" . $track['track'] . "</playlisttrack>\n";
                     }
@@ -1027,6 +1031,7 @@ class Xml6_Data
             $playlist_username = $playlist->username;
             $playlist_type     = $playlist->type;
             $last_update       = $playlist->last_update;
+            $last_duration     = $playlist->last_duration;
 
             $rating          = new Rating($playlist->id, $object_type);
             $user_rating     = $rating->get_user_rating($user->getId());
@@ -1035,7 +1040,7 @@ class Xml6_Data
             $has_collaborate = $has_access ?: $playlist->has_collaborate($user);
 
             // Build this element
-            $string .= "<playlist id=\"" . $playlist_id . "\">\n\t<name><![CDATA[" . $playlist_name . "]]></name>\n\t<owner><![CDATA[" . $playlist_username . "]]></owner>\n\t<user id=\"" . $playlist_user . "\">\n\t\t<username><![CDATA[" . $playlist_username . "]]></username>\n\t</user>\n\t<items>" . $items . "</items>\n\t<type>" . $playlist_type . "</type>\n\t<art><![CDATA[" . $art_url . "]]></art>\n\t<has_access>" . (($has_access) ? 1 : 0) . "</has_access>\n\t<has_collaborate>" . (($has_collaborate) ? 1 : 0) . "</has_collaborate>\n\t<has_art>" . ($playlist->has_art() ? 1 : 0) . "</has_art>\n\t<flag>" . (!$flag->get_flag($user->getId()) ? 0 : 1) . "</flag>\n\t<rating>" . $user_rating . "</rating>\n\t<averagerating>" . $rating->get_average_rating() . "</averagerating>\n\t<md5>" . $md5 . "</md5>\n\t<last_update>" . $last_update . "</last_update>\n</playlist>\n";
+            $string .= "<playlist id=\"" . $playlist_id . "\">\n\t<name><![CDATA[" . $playlist_name . "]]></name>\n\t<owner><![CDATA[" . $playlist_username . "]]></owner>\n\t<user id=\"" . $playlist_user . "\">\n\t\t<username><![CDATA[" . $playlist_username . "]]></username>\n\t</user>\n\t<items>" . $items . "</items>\n\t<type>" . $playlist_type . "</type>\n\t<art><![CDATA[" . $art_url . "]]></art>\n\t<has_access>" . (($has_access) ? 1 : 0) . "</has_access>\n\t<has_collaborate>" . (($has_collaborate) ? 1 : 0) . "</has_collaborate>\n\t<has_art>" . ($playlist->has_art() ? 1 : 0) . "</has_art>\n\t<flag>" . (!$flag->get_flag($user->getId()) ? 0 : 1) . "</flag>\n\t<rating>" . $user_rating . "</rating>\n\t<averagerating>" . $rating->get_average_rating() . "</averagerating>\n\t<md5>" . $md5 . "</md5>\n\t<last_update>" . $last_update . "</last_update>\n\t<time>" . ($duration ?: $last_duration) . "</time>\n</playlist>\n";
         }
 
         return self::output_xml($string);
