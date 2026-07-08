@@ -441,7 +441,7 @@ class Xml8_Data
      *
      * This returns folders to the user in an xml document.
      *
-     * @param array<int|string> $objects Folder children id's in object_type-Object_id format.
+     * @param array<int|string> $object_ids
      * @param array{
      *      id: string,
      *      title: string|null,
@@ -450,10 +450,10 @@ class Xml8_Data
      *      catalog: int|null,
      *  } $parent
      */
-    public static function folders(array $objects, array $parent, User $user, string $auth): string
+    public static function folders(array $object_ids, string $object_type, array $parent, User $user, string $auth): string
     {
-        self::$count = self::$count ?? count($objects);
-        $objects     = self::_filter_objects($objects);
+        self::$count = self::$count ?? count($object_ids);
+        $objects     = self::_filter_objects($object_ids);
 
         $xml = new SimpleXMLElement(
             sprintf(
@@ -472,13 +472,10 @@ class Xml8_Data
         $xml_folder->addChild('catalog', (string) $parent['catalog']);
         $xml_items = $xml_folder->addChild('items');
 
-        foreach ($objects as $object) {
-            preg_match('/([a-z_]+)-([0-9]+)/', (string) $object, $matches);
-            $object_type = $matches[1] ?? null;
-            $object_id   = (int) ($matches[2] ?? 0);
-            $libitem     = null;
+        foreach ($object_ids as $object_id) {
+            $libitem = null;
             switch ($object_type) {
-                case 'root':
+                case 'catalog':
                     $libitem = Catalog::create_from_id($object_id);
                     break;
                 case 'artist':
@@ -501,7 +498,7 @@ class Xml8_Data
                     break;
             }
 
-            if ($libitem === null || $object_type === null) {
+            if ($libitem === null) {
                 continue;
             }
 
@@ -520,7 +517,7 @@ class Xml8_Data
             }
 
             $item = $xml_items->addChild('item');
-            $item->addAttribute('id', (string) $libitem->getId());
+            $item->addAttribute('id', $object_type . '-' . $libitem->getId());
             $item->addChild('object_type', $object_type);
             $item->addChild('title', (string) $filename);
             $item->addChild('parent', (string) $parent['id']);

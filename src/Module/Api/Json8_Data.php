@@ -58,7 +58,6 @@ use Ampache\Repository\Model\Userflag;
 use Ampache\Repository\Model\Video;
 use Ampache\Repository\PodcastRepositoryInterface;
 use Ampache\Repository\SongRepositoryInterface;
-use DateMalformedStringException;
 
 /**
  * Json8_Data Class
@@ -987,7 +986,7 @@ class Json8_Data
      *
      * This returns folders to the user in a JSON document.
      *
-     * @param array<int|string> $objects Folder children id's in object_type-Object_id format.
+     * @param array<int|string> $object_ids
      * @param array{
      *     id: string,
      *     title: string|null,
@@ -996,10 +995,10 @@ class Json8_Data
      *     catalog: int|null,
      * } $parent
      */
-    public static function folders(array $objects, array $parent, User $user, string $auth, bool $object = true): string
+    public static function folders(array $object_ids, string $object_type, array $parent, User $user, string $auth, bool $object = true): string
     {
-        self::$count = self::$count ?? count($objects);
-        $objects     = self::_filter_objects($objects);
+        self::$count = self::$count ?? count($object_ids);
+        $objects     = self::_filter_objects($object_ids);
 
         $JSON = [
             "id" => $parent['id'],
@@ -1009,13 +1008,11 @@ class Json8_Data
             "catalog" => $parent['catalog'],
             "items" => []
         ];
-        foreach ($objects as $item) {
-            preg_match('/([a-z_]+)-([0-9]+)/', (string) $item, $matches);
-            $object_type = $matches[1] ?? null;
-            $object_id   = (int) ($matches[2] ?? 0);
+
+        foreach ($object_ids as $object_id) {
             $libitem     = null;
             switch ($object_type) {
-                case 'root':
+                case 'catalog':
                     $libitem = Catalog::create_from_id($object_id);
                     break;
                 case 'artist':
@@ -1038,7 +1035,7 @@ class Json8_Data
                     break;
             }
 
-            if ($libitem === null || $object_type === null) {
+            if ($libitem === null) {
                 continue;
             }
 
@@ -1057,7 +1054,7 @@ class Json8_Data
             }
 
             $JSON["items"][] = [
-                "id" => (string) $libitem->getId(),
+                "id" => $object_type . '-' . $libitem->getId(),
                 "object_type" => $object_type,
                 "title" => $filename,
                 "parent" => $parent['id'],
@@ -1313,7 +1310,6 @@ class Json8_Data
      * @param string $type 'album_artist'|'album'|'artist'|'catalog'|'live_stream'|'playlist'|'podcast_episode'|'podcast'|'share'|'song_artist'|'song'|'video'
      * @param bool $include (add the extra songs details if a playlist or podcast_episodes if a podcast)
      * @return string JSON Object "artist"|"album"|"song"|"playlist"|"share"|"podcast"|"podcast_episode"|"video"|"live_stream"
-     * @throws DateMalformedStringException
      */
     public static function indexes(array $objects, string $type, User $user, string $auth, bool $include = false): string
     {
@@ -1885,7 +1881,6 @@ class Json8_Data
      * @param bool $episodes include the episodes of the podcast
      * @param bool $object (whether to return as a named object array or regular array)
      * @return string JSON Object "podcast"
-     * @throws DateMalformedStringException
      */
     public static function podcasts(array $objects, User $user, string $auth, bool $episodes = false, bool $object = true): string
     {
@@ -1963,7 +1958,6 @@ class Json8_Data
      *         "played": string
      *     }>
      * }>
-     * @throws DateMalformedStringException
      */
     public static function podcasts_array(array $objects, User $user, string $auth, bool $episodes = false): array
     {
@@ -2750,7 +2744,6 @@ class Json8_Data
      */
     private static function _filter_objects(array $objects, ?bool $encode = null): array
     {
-        debug_event(self::class, 'Filtering objects with count: ' . self::$count . ', limit: ' . self::$limit . ', offset: ' . self::$offset, 5);
         if (
             $encode !== null
             && (self::$count > self::$limit || self::$offset > 0)

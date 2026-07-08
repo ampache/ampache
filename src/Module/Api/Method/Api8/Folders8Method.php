@@ -73,19 +73,19 @@ final class Folders8Method
      */
     public static function folders(array $input, User $user): bool
     {
-        $browse   = Api::getBrowse($user);
-        $object   = (isset($input['filter'])) ? $input['filter'] : '/';
-        $libitem  = null;
-        $parentId = null;
-        $path     = '/';
-        if ($object === '/') {
-            $browse->set_type('catalog');
-            $parent      = [
-                'id' => 'root',
+        $browse    = Api::getBrowse($user);
+        $object    = (isset($input['filter'])) ? $input['filter'] : '/';
+        $parentId  = null;
+        $path      = '/';
+        $item_type = 'catalog';
+        if ($object === '/' || (int) $object === -1) {
+            $parent = [
+                'id' => '-1',
                 'title' => T_('Home'),
                 'parent' => $parentId,
                 'path' => $path,
-                'catalog' => null
+                'catalog' => null,
+                'item_type' => $item_type,
             ];
         } else {
             preg_match('~(?:^|/)([a-z_]+)-([0-9]+)/?$~', (string) $object, $matches);
@@ -107,10 +107,11 @@ final class Folders8Method
             $catalogId = null;
             switch ($object_type) {
                 case 'catalog':
-                    $libitem  = Catalog::create_from_id($object_id);
-                    $parentId = -1;
-                    $path     = '/catalog-' . $object_id;
-                    $browse->set_type('artist');
+                    $libitem   = Catalog::create_from_id($object_id);
+                    $parentId  = -1;
+                    $path      = '/catalog-' . $object_id;
+                    $item_type = 'artist';
+                    $browse->set_type($item_type);
                     $browse->set_filter('catalog', $path_catalog_id ?? $object_id);
                     break;
                 case 'artist':
@@ -118,7 +119,8 @@ final class Folders8Method
                     $parentId  = $libitem->getCatalogId();
                     $catalogId = $libitem->getCatalogId();
                     $path      = '/catalog-' . $catalogId . '/artist-' . $object_id;
-                    $browse->set_type('album');
+                    $item_type = 'album';
+                    $browse->set_type($item_type);
                     $browse->set_filter('album_artist', $object_id);
                     $browse->set_filter('catalog', $path_catalog_id);
                     break;
@@ -127,7 +129,8 @@ final class Folders8Method
                     $parentId  = $libitem->getAlbumArtist();
                     $catalogId = $libitem->getCatalogId();
                     $path      = '/catalog-' . $catalogId . '/artist-' . $parentId . '/album-' . $object_id;
-                    $browse->set_type('song');
+                    $item_type = 'song';
+                    $browse->set_type($item_type);
                     $browse->set_filter('album', $object_id);
                     $browse->set_filter('catalog', $path_catalog_id);
                     break;
@@ -136,13 +139,14 @@ final class Folders8Method
                     $parentId  = $libitem->getCatalogId();
                     $catalogId = $libitem->getCatalogId();
                     $path      = '/catalog-' . $catalogId . '/podcast-' . $object_id;
-                    $browse->set_type('podcast_episode');
+                    $item_type = 'podcast_episode';
                     $browse->set_filter('podcast', $object_id);
                     $browse->set_filter('catalog', $path_catalog_id);
                     break;
                 case 'podcast_episode':
                 case 'song':
                 case 'video':
+                default:
                     Api::empty('folder', $input['api_format']);
 
                     return false;
@@ -161,9 +165,11 @@ final class Folders8Method
                 'parent' => $parentId,
                 'path' => $path,
                 'catalog' => $catalogId,
+                'item_type' => $item_type,
             ];
         }
 
+        $browse->set_type($item_type);
         $browse->set_api_filter('add', $input['add'] ?? '');
         $browse->set_api_filter('update', $input['update'] ?? '');
 
@@ -182,13 +188,13 @@ final class Folders8Method
                 Json8_Data::set_offset((int) ($input['offset'] ?? 0));
                 Json8_Data::set_limit($input['limit'] ?? 0);
                 Json8_Data::set_count(count($results));
-                echo Json8_Data::folders($results, $parent, $user, $input['auth']);
+                echo Json8_Data::folders($results, $item_type, $parent, $user, $input['auth']);
                 break;
             default:
                 Xml8_Data::set_offset((int) ($input['offset'] ?? 0));
                 Xml8_Data::set_limit($input['limit'] ?? 0);
                 Xml8_Data::set_count(count($results));
-                echo Xml8_Data::folders($results, $parent, $user, $input['auth']);
+                echo Xml8_Data::folders($results, $item_type, $parent, $user, $input['auth']);
         }
 
         return true;
