@@ -759,7 +759,7 @@ class Song extends database_object implements
             $artist_id = (int) ($results['artist_id']);
         } elseif ($artist !== null && $artist !== '' && $artist !== '0') {
             $artist_mbid = Catalog::trim_slashed_list($artist_mbid);
-            $artist_id   = (int) Artist::check($artist, $artist_mbid);
+            $artist_id   = (int) Artist::check($artist, $artist_mbid, $user_upload);
         }
 
         if (isset($results['album_id'])) {
