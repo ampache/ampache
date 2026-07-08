@@ -1670,7 +1670,7 @@ class Json8_Data
                 $items          = [];
                 $playlisttracks = $playlist->get_items();
                 foreach ($playlisttracks as $track) {
-                    $duration += $track['time'] ?? 0;
+                    $duration += $track['time'];
 
                     $items[] = [
                         "id" => (string) $track['object_id'],
@@ -2717,7 +2717,6 @@ class Json8_Data
      */
     private static function _filter_objects(array $objects, ?bool $encode = null): array
     {
-        debug_event(self::class, 'Filtering objects with count: ' . self::$count . ', limit: ' . self::$limit . ', offset: ' . self::$offset, 5);
         if (
             $encode !== null
             && (self::$count > self::$limit || self::$offset > 0)

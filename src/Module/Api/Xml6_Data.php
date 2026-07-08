@@ -1011,7 +1011,7 @@ class Xml6_Data
                 $items          = '';
                 $playlisttracks = $playlist->get_items();
                 foreach ($playlisttracks as $track) {
-                    $duration += $track['time'] ?? 0;
+                    $duration += $track['time'];
 
                     if ($track['object_type'] === LibraryItemEnum::SONG) {
                         $items .= "\t\t<playlisttrack id=\"" . $track['object_id'] . "\">" . $track['track'] . "</playlisttrack>\n";

@@ -1376,7 +1376,7 @@ class Json6_Data
                 $items          = [];
                 $playlisttracks = $playlist->get_items();
                 foreach ($playlisttracks as $track) {
-                    $duration += $track['time'] ?? 0;
+                    $duration += $track['time'];
 
                     $items[] = [
                         "id" => (string) $track['object_id'],
