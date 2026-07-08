@@ -498,7 +498,7 @@ class Xml8_Data
                     break;
             }
 
-            if ($libitem === null) {
+            if ($libitem === null || ($libitem instanceof Media && $libitem->isNew())) {
                 continue;
             }
 
