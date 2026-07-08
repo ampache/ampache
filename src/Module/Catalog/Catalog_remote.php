@@ -801,7 +801,7 @@ class Catalog_remote extends Catalog
                             continue;
                         }
 
-                        $artist_id = Artist::check((string)$artist->name, (string)$artist->mbid, true);
+                        $artist_id = Artist::check((string)$artist->name, (string)$artist->mbid, null, true);
                         if (
                             $artist_id &&
                             (int)$artist->has_art === 1 &&
