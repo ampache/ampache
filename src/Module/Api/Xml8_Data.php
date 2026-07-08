@@ -512,7 +512,9 @@ class Xml8_Data
                 $dirname  = $p_info['dirname'] ?? '';
             } else {
                 $filename = $libitem->get_fullname();
-                $dirname  = $object_type . '-' . $object_id;
+                $dirname  = ($parent['path'] === '/')
+                    ? $parent['path'] . $object_type . '-' . $object_id
+                    : $parent['path'] . '/' . $object_type . '-' . $object_id;
             }
 
             $item = $xml_items->addChild('item');
