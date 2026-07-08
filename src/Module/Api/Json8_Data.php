@@ -41,8 +41,10 @@ use Ampache\Repository\Model\Democratic;
 use Ampache\Repository\Model\library_item;
 use Ampache\Repository\Model\LibraryItemEnum;
 use Ampache\Repository\Model\Live_Stream;
+use Ampache\Repository\Model\Media;
 use Ampache\Repository\Model\Metadata;
 use Ampache\Repository\Model\Playlist;
+use Ampache\Repository\Model\Podcast;
 use Ampache\Repository\Model\Podcast_Episode;
 use Ampache\Repository\Model\Rating;
 use Ampache\Repository\Model\Search;
@@ -978,6 +980,107 @@ class Json8_Data
         ];
 
         return json_encode($message, JSON_PRETTY_PRINT) ?: '';
+    }
+
+    /**
+     * folders
+     *
+     * This returns folders to the user in a JSON document.
+     *
+     * @param array<int|string> $objects Folder children id's in object_type-Object_id format.
+     * @param array{
+     *     id: string,
+     *     title: string|null,
+     *     parent: int|null,
+     *     path: string,
+     *     catalog: int|null,
+     * } $parent
+     */
+    public static function folders(array $objects, array $parent, User $user, string $auth, bool $object = true): string
+    {
+        self::$count = self::$count ?? count($objects);
+        $objects     = self::_filter_objects($objects);
+
+        $JSON = [
+            "id" => $parent['id'],
+            "title" => $parent['title'],
+            "parent" => $parent['parent'],
+            "path" => $parent['path'],
+            "catalog" => $parent['catalog'],
+            "items" => []
+        ];
+        foreach ($objects as $item) {
+            preg_match('/([a-z_]+)-([0-9]+)/', (string) $item, $matches);
+            $object_type = $matches[1] ?? null;
+            $object_id   = (int) ($matches[2] ?? 0);
+            $libitem     = null;
+            switch ($object_type) {
+                case 'root':
+                    $libitem = Catalog::create_from_id($object_id);
+                    break;
+                case 'artist':
+                    $libitem = new Artist($object_id);
+                    break;
+                case 'album':
+                    $libitem = new Album($object_id);
+                    break;
+                case 'podcast':
+                    $libitem = new Podcast($object_id);
+                    break;
+                case 'podcast_episode':
+                    $libitem = new Podcast_Episode($object_id);
+                    break;
+                case 'song':
+                    $libitem = new Song($object_id);
+                    break;
+                case 'video':
+                    $libitem = new Video($object_id);
+                    break;
+            }
+
+            if ($libitem === null || $object_type === null) {
+                continue;
+            }
+
+            $rating      = new Rating($libitem->getId(), $object_type);
+            $user_rating = $rating->get_user_rating($user->getId());
+            $art_url     = Art::url($libitem->getId(), $object_type, $auth);
+            $play_url    = ($libitem instanceof Media) ? $libitem->play_url('', 'api', false, $user->id, $user->streamtoken) : '';
+            if (property_exists($libitem, 'file')) {
+                $p_info   = pathinfo((string) $libitem->file);
+                $filename = $p_info['basename'];
+                $dirname  = $p_info['dirname'] ?? '';
+            } else {
+                /** @var Catalog $libitem */
+                $filename = $libitem->get_fullname();
+                $dirname  = $libitem->get_path();
+            }
+
+            $JSON["items"][] = [
+                "id" => (string) $libitem->getId(),
+                "object_type" => $object_type,
+                "title" => $filename,
+                "parent" => $parent['id'],
+                "path" => $dirname,
+                "art" => $art_url,
+                "has_art" => ($libitem instanceof Catalog) ? false : $libitem->has_art(),
+                "play_url" => $play_url,
+                "rating" => $user_rating,
+                "averagerating" => ($rating->get_average_rating() ?? null),
+            ];
+        }
+
+        if ($object) {
+            $output = [
+                "total_count" => self::$count,
+                "md5" => md5(serialize($objects)),
+                "folder" => $JSON
+            ];
+        } else {
+            $output = $JSON;
+        }
+
+        return json_encode($output, JSON_PRETTY_PRINT) ?: '';
     }
 
     /**

@@ -94,6 +94,8 @@ class Api
         Method\Api8\Democratic8Method::ACTION => Method\Api8\Democratic8Method::class,
         Method\Api8\Download8Method::ACTION => Method\Api8\Download8Method::class,
         Method\Api8\Flag8Method::ACTION => Method\Api8\Flag8Method::class,
+        Method\Api8\Folder8Method::ACTION => Method\Api8\Folder8Method::class,
+        Method\Api8\Folders8Method::ACTION => Method\Api8\Folders8Method::class,
         Method\Api8\Followers8Method::ACTION => Method\Api8\Followers8Method::class,
         Method\Api8\Following8Method::ACTION => Method\Api8\Following8Method::class,
         Method\Api8\LostPassword8Method::ACTION => Method\Api8\LostPassword8Method::class,
