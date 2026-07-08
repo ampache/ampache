@@ -119,15 +119,15 @@ final class ApiHandler implements ApiHandlerInterface
             return $response
                 ->withStatus(403)
                 ->withBody(
-                $this->streamFactory->createStream(
-                    $output->error(
-                        ErrorCodeEnum::ACCESS_CONTROL_NOT_ENABLED,
-                        T_('Access Denied'),
-                        $action,
-                        'system'
+                    $this->streamFactory->createStream(
+                        $output->error(
+                            ErrorCodeEnum::ACCESS_CONTROL_NOT_ENABLED,
+                            T_('Access Denied'),
+                            $action,
+                            'system'
+                        )
                     )
-                )
-            );
+                );
         }
         $is_handshake = $action == Handshake8Method::ACTION;
         $is_ping      = $action == Ping8Method::ACTION;
@@ -367,29 +367,29 @@ final class ApiHandler implements ApiHandlerInterface
                     return $response
                         ->withStatus(401)
                         ->withBody(
-                        $this->streamFactory->createStream(
-                            $output->error6(
-                                ErrorCodeEnum::INVALID_HANDSHAKE,
-                                T_('Session Expired'),
-                                $action,
-                                'account'
+                            $this->streamFactory->createStream(
+                                $output->error6(
+                                    ErrorCodeEnum::INVALID_HANDSHAKE,
+                                    T_('Session Expired'),
+                                    $action,
+                                    'account'
+                                )
                             )
-                        )
-                    );
+                        );
                 case 8:
                 default:
                     return $response
                         ->withStatus(401)
                         ->withBody(
-                        $this->streamFactory->createStream(
-                            $output->error(
-                                ErrorCodeEnum::INVALID_HANDSHAKE,
-                                T_('Session Expired'),
-                                $action,
-                                'account'
+                            $this->streamFactory->createStream(
+                                $output->error(
+                                    ErrorCodeEnum::INVALID_HANDSHAKE,
+                                    T_('Session Expired'),
+                                    $action,
+                                    'account'
+                                )
                             )
-                        )
-                    );
+                        );
             }
         }
 
@@ -543,15 +543,15 @@ final class ApiHandler implements ApiHandlerInterface
                     return $response
                         ->withStatus(410)
                         ->withBody(
-                        $this->streamFactory->createStream(
-                            $output->error6(
-                                ErrorCodeEnum::DEPRECATED,
-                                T_('Deprecated'),
-                                $action,
-                                'removed'
+                            $this->streamFactory->createStream(
+                                $output->error6(
+                                    ErrorCodeEnum::DEPRECATED,
+                                    T_('Deprecated'),
+                                    $action,
+                                    'removed'
+                                )
                             )
-                        )
-                    );
+                        );
                 }
                 $handlerClassName = Api6::METHOD_LIST[$action] ?? null;
                 if ($handlerClassName === null) {
@@ -560,15 +560,15 @@ final class ApiHandler implements ApiHandlerInterface
                     return $response
                         ->withStatus(400)
                         ->withBody(
-                        $this->streamFactory->createStream(
-                            $output->error6(
-                                ErrorCodeEnum::MISSING,
-                                T_('Invalid Request'),
-                                $action,
-                                'system'
+                            $this->streamFactory->createStream(
+                                $output->error6(
+                                    ErrorCodeEnum::MISSING,
+                                    T_('Invalid Request'),
+                                    $action,
+                                    'system'
+                                )
                             )
-                        )
-                    );
+                        );
                 }
                 break;
             case 8:
@@ -579,15 +579,15 @@ final class ApiHandler implements ApiHandlerInterface
                     return $response
                         ->withStatus(410)
                         ->withBody(
-                        $this->streamFactory->createStream(
-                            $output->error(
-                                ErrorCodeEnum::DEPRECATED,
-                                T_('Deprecated'),
-                                $action,
-                                'removed'
+                            $this->streamFactory->createStream(
+                                $output->error(
+                                    ErrorCodeEnum::DEPRECATED,
+                                    T_('Deprecated'),
+                                    $action,
+                                    'removed'
+                                )
                             )
-                        )
-                    );
+                        );
                 }
                 $handlerClassName = Api::METHOD_LIST[$action] ?? null;
                 if ($handlerClassName === null) {
@@ -596,15 +596,15 @@ final class ApiHandler implements ApiHandlerInterface
                     return $response
                         ->withStatus(400)
                         ->withBody(
-                        $this->streamFactory->createStream(
-                            $output->error(
-                                ErrorCodeEnum::MISSING,
-                                T_('Invalid Request'),
-                                $action,
-                                'system'
+                            $this->streamFactory->createStream(
+                                $output->error(
+                                    ErrorCodeEnum::MISSING,
+                                    T_('Invalid Request'),
+                                    $action,
+                                    'system'
+                                )
                             )
-                        )
-                    );
+                        );
                 }
         }
 
