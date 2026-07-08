@@ -88,7 +88,7 @@ final class Folders8Method
                 'item_type' => $item_type,
             ];
         } else {
-            preg_match('~(?:^|/)([a-z_]+)-([0-9]+)/?$~', (string) $object, $matches);
+            preg_match('~(?:^|/)([a-z_]+)-([0-9]+)/?$~', html_entity_decode((string) $object), $matches);
             $object_type = $matches[1] ?? null;
             if (!in_array($object_type, ['catalog', 'artist', 'album', 'podcast', 'podcast_episode', 'song', 'video'], true)) {
                 /* HINT: Requested object string/id/type ("album", "myusername", "some song title", 1298376) */
@@ -98,7 +98,7 @@ final class Folders8Method
             }
 
             $path_catalog_id = null;
-            if (preg_match('/(?:^|\/)catalog-([0-9]+)(?:\/|$)/', (string)$object, $catalogMatches)) {
+            if (preg_match('/(?:^|\/)catalog-([0-9]+)(?:\/|$)/', html_entity_decode((string) $object), $catalogMatches)) {
                 $path_catalog_id = (int)$catalogMatches[1];
             }
 
