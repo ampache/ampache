@@ -324,6 +324,31 @@ class Api
         return self::$browse;
     }
 
+    public static function getHttpCode(int|string $code): int
+    {
+        switch ((string) $code) {
+            case '4700': // ACCESS_CONTROL_NOT_ENABLED
+            case '4703': // ACCESS_DENIED
+            case '4742': // FAILED_ACCESS_CHECK
+                return 403;
+            case '4710': // BAD_REQUEST
+            case '4705': // MISSING
+                return 400;
+            case '4706': // DEPRECATED
+                return 410;
+            case '4702': // GENERIC_ERROR
+                return 500;
+            case '4701': // INVALID_HANDSHAKE
+                return 401;
+            case '4704': // NOT_FOUND
+                return 404;
+        }
+
+        debug_event(self::class, "Unknown error code: $code", 3);
+
+        return 500;
+    }
+
     /**
      * message
      * call the correct success message depending on format
