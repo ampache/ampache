@@ -115,7 +115,7 @@ final class Folder8Method
                     break;
                 case 'artist':
                     $libitem   = new Artist($object_id);
-                    $parentId  = $libitem->getCatalogId();
+                    $parentId  = $path_catalog_id ?? $libitem->getCatalogId() ?: null;
                     $catalogId = $libitem->getCatalogId();
                     $path      = '/catalog-' . $catalogId . '/artist-' . $object_id;
                     $item_type = 'album';
@@ -147,7 +147,7 @@ final class Folder8Method
 
                     return false;
             }
-            if ($libitem === null || $object_id === 0 || !$parentId) {
+            if ($libitem === null || $object_id === 0 || $parentId === 0) {
                 /* HINT: Requested object string/id/type ("album", "myusername", "some song title", 1298376) */
                 Api::error(ErrorCodeEnum::NOT_FOUND, sprintf('Not Found: %s', $object), self::ACTION, 'filter', $input['api_format']);
 
