@@ -72,12 +72,12 @@ final class Folder8Method
     public static function folder(array $input, User $user): bool
     {
         $browse    = Api::getBrowse($user);
-        $object_id = (isset($input['filter'])) ? $input['filter'] : -1;
+        $object    = (isset($input['filter'])) ? $input['filter'] : -1;
         $libitem   = null;
         $parentId  = null;
         $path      = '/';
         $item_type = 'catalog';
-        if ((int) $object_id === -1) {
+        if ((int) $object === -1) {
             $parent      = [
                 'id' => '-1',
                 'title' => T_('Home'),
@@ -87,8 +87,9 @@ final class Folder8Method
                 'item_type' => $item_type,
             ];
         } else {
-            preg_match('~(?:^|/)([a-z_]+)-([0-9]+)/?$~', html_entity_decode((string) $object_id), $matches);
+            preg_match('~(?:^|/)([a-z_]+)-([0-9]+)/?$~', html_entity_decode((string) $object), $matches);
             $object_type = $matches[1] ?? null;
+            $object_id   = (int) ($matches[2] ?? 0);
             if (!in_array($object_type, ['catalog', 'artist', 'album', 'podcast', 'podcast_episode', 'song', 'video'], true)) {
                 /* HINT: Requested object string/id/type ("album", "myusername", "some song title", 1298376) */
                 Api::error(ErrorCodeEnum::BAD_REQUEST, sprintf('Bad Request: %s', $object_id), self::ACTION, 'type', $input['api_format']);
@@ -148,7 +149,7 @@ final class Folder8Method
             }
             if ($libitem === null || $object_id === 0 || !$parentId) {
                 /* HINT: Requested object string/id/type ("album", "myusername", "some song title", 1298376) */
-                Api::error(ErrorCodeEnum::NOT_FOUND, sprintf('Not Found: %s', $object_id), self::ACTION, 'filter', $input['api_format']);
+                Api::error(ErrorCodeEnum::NOT_FOUND, sprintf('Not Found: %s', $object), self::ACTION, 'filter', $input['api_format']);
 
                 return false;
             }

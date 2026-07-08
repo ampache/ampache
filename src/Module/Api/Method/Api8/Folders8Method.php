@@ -154,7 +154,7 @@ final class Folders8Method
 
             if ($libitem === null || $object_id === 0 || !$parentId) {
                 /* HINT: Requested object string/id/type ("album", "myusername", "some song title", 1298376) */
-                Api::error(ErrorCodeEnum::NOT_FOUND, sprintf('Not Found: %s', $object_id), self::ACTION, 'filter', $input['api_format']);
+                Api::error(ErrorCodeEnum::NOT_FOUND, sprintf('Not Found: %s', $object), self::ACTION, 'filter', $input['api_format']);
 
                 return false;
             }
