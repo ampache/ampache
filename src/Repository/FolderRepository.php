@@ -173,6 +173,8 @@ final readonly class FolderRepository implements FolderRepositoryInterface
         if ($parentPath) {
             $sql .= 'AND `folder`.`parent` = (SELECT `id` FROM `folder` WHERE `path_name` = ?);';
             $params[] = $parentPath;
+        } else {
+            $sql .= 'AND `folder`.`parent` IS NULL;';
         }
 
         //debug_event(self::class, 'getByPathName ' . sprintf('SQL %s', $sql) . print_r($params, true), 5);

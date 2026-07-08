@@ -77,7 +77,7 @@ final class Folders8Method
         $path_name = $input['filter'] ?? '/';
         $folder    = ($path_name === '/')
             ? new Folder(-1)
-            : self::getFolderRepository()->getByPathName($path_name, 0, dirname($path_name));
+            : self::getFolderRepository()->getByPathName(rtrim($path_name, '/'));
 
         if ($folder === null || $folder->isNew()) {
             /* HINT: Requested object string/id/type ("album", "myusername", "some song title", 1298376) */
