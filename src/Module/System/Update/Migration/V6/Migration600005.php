@@ -68,7 +68,7 @@ final class Migration600005 extends AbstractMigration
         foreach ($album_list as $album_id) {
             $album  = new Album((int) $album_id);
             $f_name = trim(trim($album->prefix ?? '') . ' ' . trim($album->name ?? ''));
-            $where  = " WHERE (`album`.`name` = ? OR LTRIM(CONCAT(COALESCE(`album`.`prefix`, ''), ' ', `album`.`name`)) = ? ) ";
+            $where  = " WHERE (`album`.`name` = ? OR LTRIM(CONCAT(COALESCE(`album`.`prefix`, ''), ' ', `album`.`name`)) = ?) ";
             $params = [$f_name, $f_name];
             if ($album->mbid) {
                 $where .= 'AND `album`.`mbid` = ? ';
