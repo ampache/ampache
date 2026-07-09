@@ -25,7 +25,7 @@ declare(strict_types=1);
 
 namespace Ampache\Module\Api\Method\Api6;
 
-use Ampache\Module\Api\Xml6_Data;
+use Ampache\Module\Api\Api;
 use Ampache\Repository\Model\User;
 use Ampache\Repository\PreferenceRepositoryInterface;
 
@@ -62,7 +62,7 @@ final class UserPreferences6Method
                 echo json_encode($results, JSON_PRETTY_PRINT);
                 break;
             default:
-                echo Xml6_Data::object_array($results['preference'], 'preference');
+                echo Api::object_array($results['preference'], 'preference');
         }
     }
 

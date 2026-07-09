@@ -26,9 +26,9 @@ declare(strict_types=1);
 namespace Ampache\Module\Api\Method\Api5;
 
 use Ampache\Config\AmpConfig;
+use Ampache\Module\Api\Api;
 use Ampache\Module\Api\Api5;
 use Ampache\Module\Api\Exception\ErrorCodeEnum;
-use Ampache\Module\Api\Xml5_Data;
 use Ampache\Module\Authorization\AccessLevelEnum;
 use Ampache\Module\Authorization\AccessTypeEnum;
 use Ampache\Module\Playback\Localplay\LocalPlay;
@@ -173,7 +173,7 @@ final class Localplay5Method
                 echo json_encode($results, JSON_PRETTY_PRINT);
                 break;
             default:
-                echo Xml5_Data::keyed_array($results);
+                echo Api::keyed_array($results);
         }
 
         return true;

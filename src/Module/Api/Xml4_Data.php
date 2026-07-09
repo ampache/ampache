@@ -25,7 +25,6 @@ declare(strict_types=1);
 
 namespace Ampache\Module\Api;
 
-use Ampache\Config\AmpConfig;
 use Ampache\Module\Playback\Stream;
 use Ampache\Module\Util\ObjectTypeToClassNameMapper;
 use Ampache\Repository\AlbumRepositoryInterface;
@@ -65,7 +64,6 @@ class Xml4_Data
     private static ?int $count  = null;
     private static ?int $limit  = 5000;
     private static int $offset  = 0;
-    private static string $type = '';
 
     /**
      * constructor
@@ -86,7 +84,7 @@ class Xml4_Data
     public static function albums(array $objects, array $include, User $user, string $auth, bool $full_xml = true): string
     {
         self::$count = self::$count ?: count($objects);
-        $objects     = self::_filter_objects($objects, $full_xml);
+        $objects     = Api::filter_objects($objects, self::$count, self::$offset, self::$limit, $full_xml);
 
         $string = ($full_xml) ? "<total_count>" . self::$count . "</total_count>\n" : '';
 
@@ -120,7 +118,7 @@ class Xml4_Data
             $string .= "\t<time>" . $album->time . "</time>\n\t<year>" . $album->year . "</year>\n\t<tracks>" . $songs . "</tracks>\n\t<songcount>" . $album->song_count . "</songcount>\n\t<type>" . $album->release_type . "</type>\n\t<disk>" . $album->disk_count . "</disk>\n" . self::_tags_string($album->get_tags()) . "\t<art><![CDATA[" . $art_url . "]]></art>\n\t<flag>" . (!$flag->get_flag($user->getId()) ? 0 : 1) . "</flag>\n\t<preciserating>" . $user_rating . "</preciserating>\n\t<rating>" . $user_rating . "</rating>\n\t<averagerating>" . ($rating->get_average_rating() ?? null) . "</averagerating>\n\t<mbid><![CDATA[" . $album->mbid . "]]></mbid>\n</album>\n";
         }
 
-        return Xml8_Data::output_xml($string, $full_xml);
+        return Api::output_xml($string, $full_xml);
     }
 
     /**
@@ -136,7 +134,7 @@ class Xml4_Data
     public static function artists(array $objects, array $include, User $user, string $auth, bool $full_xml = true): string
     {
         self::$count = self::$count ?: count($objects);
-        $objects     = self::_filter_objects($objects, $full_xml);
+        $objects     = Api::filter_objects($objects, self::$count, self::$offset, self::$limit, $full_xml);
 
         $string = ($full_xml) ? "<total_count>" . self::$count . "</total_count>\n" : '';
 
@@ -171,7 +169,7 @@ class Xml4_Data
             $string .= "<artist id=\"" . $artist->id . "\">\n\t<name><![CDATA[" . $artist->get_fullname() . "]]></name>\n" . $tag_string . "\t<albums>" . $albums . "</albums>\n\t<albumcount>" . $artist->album_count . "</albumcount>\n\t<songs>" . $songs . "</songs>\n\t<songcount>" . $artist->song_count . "</songcount>\n\t<art><![CDATA[" . $art_url . "]]></art>\n\t<flag>" . (!$flag->get_flag($user->id) ? 0 : 1) . "</flag>\n\t<preciserating>" . $user_rating . "</preciserating>\n\t<rating>" . $user_rating . "</rating>\n\t<averagerating>" . ($rating->get_average_rating() ?? null) . "</averagerating>\n\t<mbid><![CDATA[" . $artist->mbid . "]]></mbid>\n\t<summary><![CDATA[" . $artist->summary . "]]></summary>\n\t<time><![CDATA[" . $artist->time . "]]></time>\n\t<yearformed>" . $artist->yearformed . "</yearformed>\n\t<placeformed><![CDATA[" . $artist->placeformed . "]]></placeformed>\n</artist>\n";
         }
 
-        return Xml8_Data::output_xml($string, $full_xml);
+        return Api::output_xml($string, $full_xml);
     }
 
     /**
@@ -184,7 +182,7 @@ class Xml4_Data
     public static function catalogs(array $objects): string
     {
         self::$count = self::$count ?: count($objects);
-        $objects     = self::_filter_objects($objects);
+        $objects     = Api::filter_objects($objects, self::$count, self::$offset, self::$limit);
 
         $string = "<total_count>" . self::$count . "</total_count>\n";
 
@@ -196,7 +194,7 @@ class Xml4_Data
             $string .= "<catalog id=\"$catalog_id\">\n\t<name><![CDATA[" . $catalog->name . "]]></name>\n\t<type><![CDATA[" . $catalog->catalog_type . "]]></type>\n\t<gather_types><![CDATA[" . $catalog->gather_types . "]]></gather_types>\n\t<enabled>" . $catalog->enabled . "</enabled>\n\t<last_add><![CDATA[" . $catalog->get_f_add() . "]]></last_add>\n\t<last_clean><![CDATA[" . $catalog->get_f_clean() . "]]></last_clean>\n\t<last_update><![CDATA[" . $catalog->get_f_update() . "]]></last_update>\n\t<path><![CDATA[" . $catalog->get_f_info() . "]]></path>\n\t<rename_pattern><![CDATA[" . $catalog->rename_pattern . "]]></rename_pattern>\n\t<sort_pattern><![CDATA[" . $catalog->sort_pattern . "]]></sort_pattern>\n</catalog>\n";
         }
 
-        return Xml8_Data::output_xml($string);
+        return Api::output_xml($string);
     }
 
     /**
@@ -240,7 +238,7 @@ class Xml4_Data
                 . "\t<genre id=\"" . ($tag->id ?: '') . "\"><![CDATA[" . ($tag->name ?: '') . "]]></genre>\n" . $tag_string . "\t<track>" . $song->track . "</track>\n\t<time><![CDATA[" . $song->time . "]]></time>\n\t<mime><![CDATA[" . $songMime . "]]></mime>\n\t<url><![CDATA[" . $play_url . "]]></url>\n\t<size>" . $song->size . "</size>\n\t<art><![CDATA[" . $art_url . "]]></art>\n\t<preciserating>" . ($rating->get_user_rating($user->id) ?? null) . "</preciserating>\n\t<rating>" . ($rating->get_user_rating($user->id) ?? null) . "</rating>\n\t<averagerating>" . ($rating->get_average_rating() ?? null) . "</averagerating>\n\t<vote>" . $democratic->get_vote($row_id) . "</vote>\n</song>\n";
         }
 
-        return Xml8_Data::output_xml($string);
+        return Api::output_xml($string);
     }
 
     /**
@@ -252,7 +250,7 @@ class Xml4_Data
     {
         $xml_string = "\t<error code=\"$code\"><![CDATA[" . $message . "]]></error>";
 
-        return Xml8_Data::output_xml($xml_string);
+        return Api::output_xml($xml_string);
     }
 
     /**
@@ -269,7 +267,7 @@ class Xml4_Data
     public static function indexes(array $objects, string $object_type, User $user, string $auth, bool $full_xml = true, bool $include = false): string
     {
         self::$count = self::$count ?: count($objects);
-        $objects     = self::_filter_objects($objects, $full_xml);
+        $objects     = Api::filter_objects($objects, self::$count, self::$offset, self::$limit, $full_xml);
 
         $string = ($full_xml) ? "<total_count>" . self::$count . "</total_count>\n" : '';
 
@@ -377,45 +375,7 @@ class Xml4_Data
                 break;
         }
 
-        return Xml8_Data::output_xml($string, $full_xml);
-    }
-
-    /**
-     * keyed_array
-     *
-     * This will build an xml document from a key'd array,
-     *
-     * @param bool $callback (don't output xml when true)
-     */
-    public static function keyed_array(array $array, bool $callback = false, bool|string $object = false): string
-    {
-        $string = '';
-        // Foreach it
-        foreach ($array as $key => $value) {
-            $attribute = '';
-            if (is_object($value)) {
-                $value = (array) $value;
-            }
-            // See if the key has attributes
-            if (is_array($value) && isset($value['attributes'])) {
-                $attribute = ' ' . $value['attributes'];
-                $key       = $value['value'];
-            }
-
-            // If it's an array, run again
-            if (is_array($value)) {
-                $value = self::keyed_array($value, true);
-                $string .= ($object) ? "<$object>\n$value\n</$object>\n" : "<$key$attribute>\n$value\n</$key>\n";
-            } else {
-                $string .= ($object) ? "\t<$object index=\"" . $key . "\">$value</$object>\n" : "\t<$key$attribute><![CDATA[" . $value . "]]></$key>\n";
-            }
-        }
-
-        if (!$callback) {
-            $string = Xml8_Data::output_xml($string);
-        }
-
-        return $string;
+        return Api::output_xml($string, $full_xml);
     }
 
     /**
@@ -428,7 +388,7 @@ class Xml4_Data
     public static function licenses(array $objects): string
     {
         self::$count = self::$count ?: count($objects);
-        $objects     = self::_filter_objects($objects);
+        $objects     = Api::filter_objects($objects, self::$count, self::$offset, self::$limit);
 
         $string = "<total_count>" . self::$count . "</total_count>\n";
 
@@ -441,7 +401,7 @@ class Xml4_Data
             }
         }
 
-        return Xml8_Data::output_xml($string);
+        return Api::output_xml($string);
     }
 
     /**
@@ -454,7 +414,7 @@ class Xml4_Data
     public static function playlists(array $objects, User $user, string $auth): string
     {
         self::$count = self::$count ?: count($objects);
-        $objects     = self::_filter_objects($objects);
+        $objects     = Api::filter_objects($objects, self::$count, self::$offset, self::$limit);
 
         $string = "<total_count>" . self::$count . "</total_count>\n";
 
@@ -493,7 +453,7 @@ class Xml4_Data
             $string .= "<playlist id=\"" . $playlist_id . "\">\n\t<name><![CDATA[" . $playlist_name . "]]></name>\n\t<owner><![CDATA[" . $playlist_user . "]]></owner>\n\t<items>" . (int) $playitem_total . "</items>\n\t<type>" . $playlist_type . "</type>\n\t<art><![CDATA[" . $art_url . "]]></art>\n\t<flag>" . (!$flag->get_flag($user->getId()) ? 0 : 1) . "</flag>\n\t<preciserating>" . $user_rating . "</preciserating>\n\t<rating>" . $user_rating . "</rating>\n\t<averagerating>" . ($rating->get_average_rating() ?? null) . "</averagerating>\n</playlist>\n";
         }
 
-        return Xml8_Data::output_xml($string);
+        return Api::output_xml($string);
     }
 
     /**
@@ -507,7 +467,7 @@ class Xml4_Data
     public static function podcast_episodes(array $objects, User $user, string $auth, bool $full_xml = true): string
     {
         self::$count = self::$count ?: count($objects);
-        $objects     = self::_filter_objects($objects, $full_xml);
+        $objects     = Api::filter_objects($objects, self::$count, self::$offset, self::$limit, $full_xml);
 
         $string = ($full_xml) ? "<total_count>" . self::$count . "</total_count>\n" : '';
 
@@ -524,7 +484,7 @@ class Xml4_Data
             $string .= "\t<podcast_episode id=\"$episode_id\">\n\t\t<title><![CDATA[" . $episode->get_fullname() . "]]></title>\n\t\t<name><![CDATA[" . $episode->get_fullname() . "]]></name>\n\t\t<description><![CDATA[" . $episode->get_description() . "]]></description>\n\t\t<category><![CDATA[" . $episode->getCategory() . "]]></category>\n\t\t<author><![CDATA[" . $episode->getAuthor() . "]]></author>\n\t\t<author_full><![CDATA[" . $episode->getAuthor() . "]]></author_full>\n\t\t<website><![CDATA[" . $episode->getWebsite() . "]]></website>\n\t\t<pubdate><![CDATA[" . $episode->getPubDate()->format(DATE_ATOM) . "]]></pubdate>\n\t\t<state><![CDATA[" . $episode->getState()->toDescription() . "]]></state>\n\t\t<filelength><![CDATA[" . $episode->get_f_time(true) . "]]></filelength>\n\t\t<filesize><![CDATA[" . $episode->getSizeFormatted() . "]]></filesize>\n\t\t<filename><![CDATA[" . $episode->getFileName() . "]]></filename>\n\t\t<mime><![CDATA[" . ((isset($episode->mime)) ? $episode->mime : '') . "]]></mime>\n\t\t<public_url><![CDATA[" . $episode->get_link() . "]]></public_url>\n\t\t<url><![CDATA[" . $episode->play_url('', 'api', false, $user->getId(), $user->streamtoken) . "]]></url>\n\t\t<catalog>" . $episode->catalog . "</catalog>\n\t\t<art><![CDATA[" . $art_url . "]]></art>\n\t\t<flag>" . (!$flag->get_flag($user->getId()) ? 0 : 1) . "</flag>\n\t\t<preciserating>" . $user_rating . "</preciserating>\n\t\t<rating>" . $user_rating . "</rating>\n\t\t<averagerating>" . ($rating->get_average_rating() ?? null) . "</averagerating>\n\t\t<played>" . $episode->played . "</played>\n\t</podcast_episode>\n";
         }
 
-        return Xml8_Data::output_xml($string, $full_xml);
+        return Api::output_xml($string, $full_xml);
     }
 
     /**
@@ -539,7 +499,7 @@ class Xml4_Data
     public static function podcasts(array $objects, User $user, string $auth, bool $episodes = false, bool $full_xml = true): string
     {
         self::$count = self::$count ?: count($objects);
-        $objects     = self::_filter_objects($objects, $full_xml);
+        $objects     = Api::filter_objects($objects, self::$count, self::$offset, self::$limit, $full_xml);
 
         $string = ($full_xml) ? "<total_count>" . self::$count . "</total_count>\n" : '';
 
@@ -564,7 +524,7 @@ class Xml4_Data
             $string .= "\t</podcast>\n";
         }
 
-        return Xml8_Data::output_xml($string, $full_xml);
+        return Api::output_xml($string, $full_xml);
     }
 
     /**
@@ -598,24 +558,6 @@ class Xml4_Data
     }
 
     /**
-     * set_type
-     *
-     * This sets the type of Xml4_Data we are working on
-     *
-     * @param string $type Xml4_Data type
-     */
-    public static function set_type(string $type): bool
-    {
-        if (!in_array(strtolower($type), ['rss', 'xspf', 'itunes'])) {
-            return false;
-        }
-
-        self::$type = $type;
-
-        return true;
-    }
-
-    /**
      * shares
      *
      * This returns shares to the user, in a pretty xml document with the information
@@ -626,7 +568,7 @@ class Xml4_Data
     public static function shares(array $objects, User $user, bool $full_xml = true): string
     {
         self::$count = self::$count ?: count($objects);
-        $objects     = self::_filter_objects($objects, $full_xml);
+        $objects     = Api::filter_objects($objects, self::$count, self::$offset, self::$limit, $full_xml);
 
         $string = ($full_xml) ? "<total_count>" . self::$count . "</total_count>\n" : '';
 
@@ -639,7 +581,7 @@ class Xml4_Data
             $string .= "<share id=\"$share_id\">\n\t<name><![CDATA[" . $share->getObjectName() . "]]></name>\n\t<user><![CDATA[" . $share->getUserName() . "]]></user>\n\t<allow_stream>" . (int) $share->allow_stream . "</allow_stream>\n\t<allow_download>" . (int) $share->allow_download . "</allow_download>\n\t<creation_date><![CDATA[" . $share->creation_date . "]]></creation_date>\n\t<lastvisit_date><![CDATA[" . $share->lastvisit_date . "]]></lastvisit_date>\n\t<object_type><![CDATA[" . $share->object_type . "]]></object_type>\n\t<object_id>" . $share->object_id . "</object_id>\n\t<expire_days>" . $share->expire_days . "</expire_days>\n\t<max_counter>" . $share->max_counter . "</max_counter>\n\t<counter>" . $share->counter . "</counter>\n\t<secret><![CDATA[" . $share->secret . "]]></secret>\n\t<public_url><![CDATA[" . $share->public_url . "]]></public_url>\n\t<description><![CDATA[" . $share->description . "]]></description>\n</share>\n";
         }
 
-        return Xml8_Data::output_xml($string, $full_xml);
+        return Api::output_xml($string, $full_xml);
     }
 
     /**
@@ -663,7 +605,7 @@ class Xml4_Data
         }
         $string .= "</shouts>\n";
 
-        return Xml8_Data::output_xml($string);
+        return Api::output_xml($string);
     }
 
     /**
@@ -675,7 +617,7 @@ class Xml4_Data
     public static function songs(array $objects, User $user, string $auth, bool $full_xml = true): string
     {
         self::$count = self::$count ?: count($objects);
-        $objects     = self::_filter_objects($objects, $full_xml);
+        $objects     = Api::filter_objects($objects, self::$count, self::$offset, self::$limit, $full_xml);
 
         $string = ($full_xml) ? "<total_count>" . self::$count . "</total_count>\n" : '';
 
@@ -729,7 +671,7 @@ class Xml4_Data
             $string .= "</song>\n";
         }
 
-        return Xml8_Data::output_xml($string, $full_xml);
+        return Api::output_xml($string, $full_xml);
     }
 
     /**
@@ -743,7 +685,7 @@ class Xml4_Data
     {
         $xml_string = "\t<success code=\"1\"><![CDATA[" . $string . "]]></success>";
 
-        return Xml8_Data::output_xml($xml_string);
+        return Api::output_xml($xml_string);
     }
 
     /**
@@ -756,7 +698,7 @@ class Xml4_Data
     public static function tags(array $objects): string
     {
         self::$count = self::$count ?: count($objects);
-        $objects     = self::_filter_objects($objects);
+        $objects     = Api::filter_objects($objects, self::$count, self::$offset, self::$limit);
 
         $string = "<total_count>" . self::$count . "</total_count>\n";
 
@@ -765,7 +707,7 @@ class Xml4_Data
             $string .= "<tag id=\"$tag_id\">\n\t<name><![CDATA[" . $tag->name . "]]></name>\n\t<albums>" . $tag->album . "</albums>\n\t<artists>" . $tag->artist . "</artists>\n\t<songs>" . $tag->song . "</songs>\n\t<videos>" . $tag->video . "</videos>\n\t<playlists>0</playlists>\n\t<stream>0</stream>\n</tag>\n";
         }
 
-        return Xml8_Data::output_xml($string);
+        return Api::output_xml($string);
     }
 
     /**
@@ -789,7 +731,7 @@ class Xml4_Data
         }
         $string .= "</timeline>";
 
-        return self::_header() . $string . self::_footer();
+        return Api::header() . $string . Api::footer();
     }
 
     /**
@@ -809,7 +751,7 @@ class Xml4_Data
         }
         $string .= "</user>\n";
 
-        return Xml8_Data::output_xml($string);
+        return Api::output_xml($string);
     }
 
     /**
@@ -830,7 +772,7 @@ class Xml4_Data
         }
         $string .= "</users>\n";
 
-        return Xml8_Data::output_xml($string);
+        return Api::output_xml($string);
     }
 
     /**
@@ -844,7 +786,7 @@ class Xml4_Data
     public static function videos(array $objects, User $user, string $auth, bool $full_xml = true): string
     {
         self::$count = self::$count ?: count($objects);
-        $objects     = self::_filter_objects($objects, $full_xml);
+        $objects     = Api::filter_objects($objects, self::$count, self::$offset, self::$limit, $full_xml);
 
         $string = ($full_xml) ? "<total_count>" . self::$count . "</total_count>\n" : '';
 
@@ -861,78 +803,7 @@ class Xml4_Data
             $string .= "<video id=\"" . $video->id . "\">\n\t<title><![CDATA[" . $video->title . "]]></title>\n\t<name><![CDATA[" . $video->title . "]]></name>\n\t<mime><![CDATA[" . $video->mime . "]]></mime>\n\t<resolution><![CDATA[" . $video->get_f_resolution() . "]]></resolution>\n\t<size>" . $video->size . "</size>\n" . self::_tags_string($video->get_tags()) . "\t<time><![CDATA[" . $video->time . "]]></time>\n\t<url><![CDATA[" . $video->play_url('', 'api', false, $user->getId(), $user->streamtoken) . "]]></url>\n\t<art><![CDATA[" . $art_url . "]]></art>\n\t<flag>" . (!$flag->get_flag($user->getId()) ? 0 : 1) . "</flag>\n\t<preciserating>" . $user_rating . "</preciserating>\n\t<rating>" . $user_rating . "</rating>\n\t<averagerating>" . ($rating->get_average_rating() ?? null) . "</averagerating>\n</video>\n";
         }
 
-        return Xml8_Data::output_xml($string, $full_xml);
-    }
-
-    /**
-     * _filter_objects
-     *
-     * This filters the objects based on the limit and offset
-     * @param array<int, mixed> $objects
-     * @return array<int, mixed>
-     */
-    private static function _filter_objects(array $objects, ?bool $encode = null): array
-    {
-        if (
-            $encode !== false
-            && (self::$limit)
-            && (self::$count > self::$limit || self::$offset > 0)
-        ) {
-            return array_slice($objects, self::$offset, self::$limit);
-        }
-
-        return $objects;
-    }
-
-    /**
-     * _footer
-     *
-     * this returns the footer for this document, these are pretty boring
-     */
-    private static function _footer(): string
-    {
-        switch (self::$type) {
-            case 'itunes':
-                $footer = "\t\t</dict>\t\n</dict>\n</plist>\n";
-                break;
-            case 'xspf':
-                $footer = "</trackList>\n</playlist>\n";
-                break;
-            case 'rss':
-                $footer = "\n</channel>\n</rss>\n";
-                break;
-            default:
-                $footer = "\n</root>\n";
-                break;
-        }
-
-        return $footer;
-    }
-
-    /**
-     * _header
-     *
-     * this returns a standard header, there are a few types
-     * so we allow them to pass a type if they want to
-     */
-    private static function _header(): string
-    {
-        switch (self::$type) {
-            case 'xspf':
-                $header = "<?xml version=\"1.0\" encoding=\"utf-8\" ?>\n<playlist version = \"1\" xmlns=\"http://xspf.org/ns/0/\">\n<title>" . ($title ?? T_("Ampache XSPF Playlist")) . "</title>\n<creator>" . scrub_out(AmpConfig::get('site_title')) . "</creator>\n<annotation>" . scrub_out(AmpConfig::get('site_title')) . "</annotation>\n<info>" . AmpConfig::get_web_path() . "</info>\n<trackList>\n";
-                break;
-            case 'itunes':
-                $header = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<!-- XML Generated by Ampache v." . AmpConfig::get('version') . " -->\n";
-                break;
-            case 'rss':
-                $header = "<?xml version=\"1.0\" encoding=\"" . AmpConfig::get('site_charset', 'UTF-8') . "\" ?>\n <!-- RSS Generated by Ampache v." . AmpConfig::get('version') . " on " . date("r", time()) . "-->\n<rss version=\"2.0\">\n<channel>\n";
-                break;
-            default:
-                $header = "<?xml version=\"1.0\" encoding=\"" . AmpConfig::get('site_charset', 'UTF-8') . "\" ?>\n<root>\n";
-                break;
-        }
-
-        return $header;
+        return Api::output_xml($string, $full_xml);
     }
 
     /**

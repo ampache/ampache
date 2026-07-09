@@ -25,9 +25,9 @@ declare(strict_types=1);
 
 namespace Ampache\Module\Api\Method\Api6;
 
+use Ampache\Module\Api\Api;
 use Ampache\Module\Api\Api6;
 use Ampache\Module\Api\Exception\ErrorCodeEnum;
-use Ampache\Module\Api\Xml6_Data;
 use Ampache\Repository\Model\Preference;
 use Ampache\Repository\Model\User;
 
@@ -95,7 +95,7 @@ final class UserPreference6Method
                 echo json_encode($results[0], JSON_PRETTY_PRINT);
                 break;
             default:
-                echo Xml6_Data::object_array($results, 'preference');
+                echo Api::object_array($results, 'preference');
         }
 
         return true;

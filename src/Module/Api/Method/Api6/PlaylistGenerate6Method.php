@@ -26,6 +26,7 @@ declare(strict_types=1);
 namespace Ampache\Module\Api\Method\Api6;
 
 use Ampache\Config\AmpConfig;
+use Ampache\Module\Api\Api;
 use Ampache\Module\Api\Api6;
 use Ampache\Module\Api\Exception\ErrorCodeEnum;
 use Ampache\Module\Api\Json6_Data;
@@ -183,7 +184,7 @@ final class PlaylistGenerate6Method
                         echo json_encode($results, JSON_PRETTY_PRINT);
                         break;
                     default:
-                        echo Xml6_Data::keyed_array($results, false, 'id');
+                        echo Api::keyed_array($results, false, 'id');
                 }
                 break;
             case 'index':

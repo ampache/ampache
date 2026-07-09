@@ -27,7 +27,6 @@ namespace Ampache\Module\Api\Method\Api8;
 
 use Ampache\Module\Api\Api;
 use Ampache\Module\Api\Exception\ErrorCodeEnum;
-use Ampache\Module\Api\Xml8_Data;
 use Ampache\Repository\Model\Playlist;
 use Ampache\Repository\Model\Search;
 use Ampache\Repository\Model\User;
@@ -99,7 +98,7 @@ final class PlaylistHash8Method
                 echo json_encode($results, JSON_PRETTY_PRINT);
                 break;
             default:
-                echo Xml8_Data::keyed_array($results);
+                echo Api::keyed_array($results);
         }
 
         return true;

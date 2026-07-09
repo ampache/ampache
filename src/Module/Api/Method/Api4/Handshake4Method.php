@@ -26,8 +26,8 @@ declare(strict_types=1);
 namespace Ampache\Module\Api\Method\Api4;
 
 use Ampache\Config\AmpConfig;
+use Ampache\Module\Api\Api;
 use Ampache\Module\Api\Api4;
-use Ampache\Module\Api\Xml4_Data;
 use Ampache\Module\Authorization\AccessLevelEnum;
 use Ampache\Module\Authorization\AccessTypeEnum;
 use Ampache\Module\Authorization\Check\NetworkCheckerInterface;
@@ -233,7 +233,7 @@ final class Handshake4Method
                         echo json_encode($results, JSON_PRETTY_PRINT);
                         break;
                     default:
-                        echo Xml4_Data::keyed_array($results);
+                        echo Api::keyed_array($results);
                 }
 
                 return true;

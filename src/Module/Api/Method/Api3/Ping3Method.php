@@ -28,7 +28,6 @@ namespace Ampache\Module\Api\Method\Api3;
 use Ampache\Config\AmpConfig;
 use Ampache\Module\Api\Api;
 use Ampache\Module\Api\Api3;
-use Ampache\Module\Api\Xml3_Data;
 use Ampache\Module\Authorization\AccessTypeEnum;
 use Ampache\Module\System\Session;
 use Ampache\Module\User\Tracking\UserTrackerInterface;
@@ -90,7 +89,7 @@ final class Ping3Method
         debug_event(self::class, "Ping$data_version Received from " . filter_var($_SERVER['REMOTE_ADDR'], FILTER_VALIDATE_IP), 5);
 
         ob_end_clean();
-        echo Xml3_Data::keyed_array($results);
+        echo Api::keyed_array($results);
     }
 
     /**

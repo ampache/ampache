@@ -26,6 +26,7 @@ declare(strict_types=1);
 namespace Ampache\Module\Api\Method\Api3;
 
 use Ampache\Config\AmpConfig;
+use Ampache\Module\Api\Api;
 use Ampache\Module\Api\Xml3_Data;
 use Ampache\Module\Playback\Localplay\LocalPlay;
 use Ampache\Repository\Model\User;
@@ -84,7 +85,7 @@ final class Localplay3Method
 
         $results = ['localplay' => ['command' => [$input['command'] => $result]]];
 
-        echo Xml3_Data::keyed_array($results);
+        echo Api::keyed_array($results);
 
         return true;
     }

@@ -26,6 +26,7 @@ declare(strict_types=1);
 namespace Ampache\Module\Api\Method\Api5;
 
 use Ampache\Config\AmpConfig;
+use Ampache\Module\Api\Api;
 use Ampache\Module\Api\Api5;
 use Ampache\Module\Api\Exception\ErrorCodeEnum;
 use Ampache\Module\Api\Json5_Data;
@@ -182,7 +183,7 @@ final class PlaylistGenerate5Method
                         echo json_encode($results, JSON_PRETTY_PRINT);
                         break;
                     default:
-                        echo Xml5_Data::keyed_array($results, false, 'id');
+                        echo Api::keyed_array($results, false, 'id');
                 }
                 break;
             case 'index':

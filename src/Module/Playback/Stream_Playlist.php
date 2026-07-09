@@ -26,7 +26,7 @@ declare(strict_types=1);
 namespace Ampache\Module\Playback;
 
 use Ampache\Config\AmpConfig;
-use Ampache\Module\Api\Xml8_Data;
+use Ampache\Module\Api\Api;
 use Ampache\Module\Authorization\AccessTypeEnum;
 use Ampache\Module\Playback\Localplay\LocalPlay;
 use Ampache\Module\System\Core;
@@ -680,7 +680,7 @@ class Stream_Playlist
                 $xml['track']['trackNum'] = $url->track_num;
             }
 
-            $result .= Xml8_Data::keyed_array($xml, true);
+            $result .= Api::keyed_array($xml, true);
         }
 
         $ret = "<?xml version=\"1.0\" encoding=\"utf-8\" ?>\n<playlist version = \"1\" xmlns=\"http://xspf.org/ns/0/\">\n<title>" . $this->title . "</title>\n<creator>" . scrub_out(AmpConfig::get('site_title')) . "</creator>\n<annotation>" . scrub_out(AmpConfig::get('site_title')) . "</annotation>\n<info>" . AmpConfig::get_web_path() . "</info>\n<trackList>\n";

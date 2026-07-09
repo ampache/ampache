@@ -26,6 +26,7 @@ declare(strict_types=1);
 namespace Ampache\Module\Api\Method\Api3;
 
 use Ampache\Config\AmpConfig;
+use Ampache\Module\Api\Api;
 use Ampache\Module\Api\Api3;
 use Ampache\Module\Api\Xml3_Data;
 use Ampache\Module\Authorization\AccessLevelEnum;
@@ -215,7 +216,7 @@ final class Handshake3Method
                     'videos' => $counts['video'],
                     'catalogs' => $counts['catalog']
                 ];
-                echo Xml3_Data::keyed_array($results);
+                echo Api::keyed_array($results);
 
                 return true;
             } // match

@@ -28,7 +28,6 @@ namespace Ampache\Module\Api\Method\Api8;
 use Ampache\Config\AmpConfig;
 use Ampache\Module\Api\Api;
 use Ampache\Module\Api\Exception\ErrorCodeEnum;
-use Ampache\Module\Api\Xml8_Data;
 use Ampache\Module\Authorization\AccessLevelEnum;
 use Ampache\Module\Authorization\AccessTypeEnum;
 use Ampache\Module\Playback\Localplay\LocalPlay;
@@ -190,7 +189,7 @@ final class Localplay8Method
                 echo json_encode($results, JSON_PRETTY_PRINT);
                 break;
             default:
-                echo Xml8_Data::keyed_array($results);
+                echo Api::keyed_array($results);
         }
 
         return true;

@@ -27,7 +27,6 @@ namespace Ampache\Module\Api\Method\Api8;
 
 use Ampache\Module\Api\Api;
 use Ampache\Module\Api\Exception\ErrorCodeEnum;
-use Ampache\Module\Api\Xml8_Data;
 use Ampache\Module\Authorization\AccessLevelEnum;
 use Ampache\Module\Authorization\AccessTypeEnum;
 use Ampache\Repository\Model\Preference;
@@ -108,7 +107,7 @@ final class PreferenceEdit8Method
                 echo json_encode($results[0], JSON_PRETTY_PRINT);
                 break;
             default:
-                echo Xml8_Data::object_array($results, 'preference');
+                echo Api::object_array($results, 'preference');
         }
 
         return true;
