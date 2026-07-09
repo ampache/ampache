@@ -87,7 +87,7 @@ final class Handshake5Method
         // set the version to the old string for old api clients
         $version       = (isset($input['version'])) ? $input['version'] : Api5::$version;
         Api5::$version = ((int) $version >= 350001) ? Api5::$version_numeric : Api5::$version;
-        $data_version  = (int) substr($version, 0, 1);
+        $data_version  = (int) substr((string) $version, 0, 1);
 
         // Version check shouldn't be soo restrictive... only check with initial version to not break clients compatibility
         if ((int) ($version) < Api5::$auth_version && $data_version !== 5) {

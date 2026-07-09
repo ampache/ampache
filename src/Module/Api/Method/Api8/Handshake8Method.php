@@ -87,7 +87,7 @@ final class Handshake8Method
         // set the version to the old string for old api clients
         $version      = (isset($input['version'])) ? $input['version'] : Api::$version;
         Api::$version = ((int) $version >= 350001) ? Api::$version_numeric : Api::$version;
-        $data_version = (int) substr($version, 0, 1);
+        $data_version = (int) substr((string) $version, 0, 1);
 
         if ($data_version < 8) {
             debug_event(self::class, 'Login Failed: Version too old', 1);

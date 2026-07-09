@@ -61,7 +61,7 @@ final class Ping8Method
     {
         $version      = (isset($input['version'])) ? $input['version'] : Api::$version;
         Api::$version = ((int) $version >= 350001) ? Api::$version_numeric : Api::$version;
-        $data_version = (int) substr($version, 0, 1);
+        $data_version = (int) substr((string) $version, 0, 1);
         $results      = [
             'server' => AmpConfig::get('version'),
             'version' => Api::$version,

@@ -61,7 +61,7 @@ final class Ping4Method
     public static function ping(array $input): void
     {
         $version      = (isset($input['version'])) ? $input['version'] : Api4::$version;
-        $data_version = (int) substr($version, 0, 1);
+        $data_version = (int) substr((string) $version, 0, 1);
         $results      = [
             'server' => AmpConfig::get('version'),
             'version' => Api4::$version,

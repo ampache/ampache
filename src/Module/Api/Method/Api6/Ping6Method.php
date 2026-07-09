@@ -62,7 +62,7 @@ final class Ping6Method
     {
         $version       = (isset($input['version'])) ? $input['version'] : Api6::$version;
         Api6::$version = ((int) $version >= 350001) ? Api6::$version_numeric : Api6::$version;
-        $data_version  = (int) substr($version, 0, 1);
+        $data_version  = (int) substr((string) $version, 0, 1);
         $results       = [
             'server' => AmpConfig::get('version'),
             'version' => Api6::$version,

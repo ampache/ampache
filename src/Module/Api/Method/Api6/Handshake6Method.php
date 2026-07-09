@@ -88,7 +88,7 @@ final class Handshake6Method
         // set the version to the old string for old api clients
         $version       = (isset($input['version'])) ? $input['version'] : Api6::$version;
         Api6::$version = ((int) $version >= 350001) ? Api6::$version_numeric : Api6::$version;
-        $data_version  = (int) substr($version, 0, 1);
+        $data_version  = (int) substr((string) $version, 0, 1);
         $data_version  = ($data_version == 7) ? 6 : $data_version;
 
         // Version check shouldn't be soo restrictive... only check with initial version to not break clients compatibility

@@ -61,7 +61,7 @@ final class Ping5Method
     {
         $version       = (isset($input['version'])) ? $input['version'] : Api5::$version;
         Api5::$version = ((int) $version >= 350001) ? Api5::$version_numeric : Api5::$version;
-        $data_version  = (int) substr($version, 0, 1);
+        $data_version  = (int) substr((string) $version, 0, 1);
         $results       = [
             'server' => AmpConfig::get('version'),
             'version' => Api5::$version,

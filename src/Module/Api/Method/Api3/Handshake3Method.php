@@ -81,7 +81,7 @@ final class Handshake3Method
         $username     = trim((string) ($input['user'] ?? Session::username($passphrase)));
         $user_ip      = Core::get_user_ip();
         $version      = (isset($input['version'])) ? (string) $input['version'] : Api3::$version;
-        $data_version = (int) substr($version, 0, 1);
+        $data_version = (int) substr((string) $version, 0, 1);
 
         // Version check shouldn't be soo restrictive... only check with initial version to not break clients compatibility
         if ((int) $version < Api3::$auth_version) {
