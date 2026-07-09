@@ -33,6 +33,6 @@ final class Migration800006 extends AbstractMigration
 
     public function migrate(): void
     {
-        $this->updatePreferences('show_folder', 'Show \'Folders\' link in the main sidebar', '0', AccessLevelEnum::USER->value, 'boolean', 'interface', 'sidebar');
+        $this->updatePreferences('show_folder', 'Show \'Folders\' link in the main sidebar', '1', AccessLevelEnum::USER->value, 'boolean', 'interface', 'sidebar');
     }
 }
