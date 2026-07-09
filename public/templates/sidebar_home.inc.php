@@ -34,6 +34,7 @@ use Ampache\Module\Playback\Localplay\LocalPlay;
 use Ampache\Module\System\Core;
 use Ampache\Module\Util\Ui;
 use Ampache\Module\Util\Upload;
+use Ampache\Repository\FolderRepositoryInterface;
 use Ampache\Repository\Model\User;
 use Ampache\Repository\VideoRepositoryInterface;
 
@@ -71,21 +72,22 @@ global $dic;
 /** @var string $t_videos */
 /** @var string $t_wanted */
 /** @var string $t_folders */
-$server_allow    = AmpConfig::get('allow_localplay_playback');
-$controller      = AmpConfig::get('localplay_controller');
-$videoRepository = $dic->get(VideoRepositoryInterface::class);
-$allowVideo      = AmpConfig::get('allow_video') && $videoRepository->getItemCount();
-$allowDemocratic = AmpConfig::get('allow_democratic_playback');
-$showAlbumArtist = AmpConfig::get('show_album_artist');
-$showFolder      = AmpConfig::get('show_folder');
-$showArtist      = AmpConfig::get('show_artist');
-$allowLabel      = AmpConfig::get('label');
-$allowPodcast    = AmpConfig::get('podcast');
-$access50        = Access::check(AccessTypeEnum::INTERFACE, AccessLevelEnum::CONTENT_MANAGER);
-$access25        = ($access50 || Access::check(AccessTypeEnum::INTERFACE, AccessLevelEnum::USER));
-$current_user    = $current_user ?? Core::get_global('user');
-$allow_upload    = $allow_upload ?? $access25 && Upload::can_upload($current_user);
-$albumString     = (AmpConfig::get('album_group'))
+$server_allow     = AmpConfig::get('allow_localplay_playback');
+$controller       = AmpConfig::get('localplay_controller');
+$videoRepository  = $dic->get(VideoRepositoryInterface::class);
+$folderRepository = $dic->get(FolderRepositoryInterface::class);
+$allowVideo       = AmpConfig::get('allow_video') && $videoRepository->getItemCount();
+$allowDemocratic  = AmpConfig::get('allow_democratic_playback');
+$showAlbumArtist  = AmpConfig::get('show_album_artist');
+$showFolder       = AmpConfig::get('show_folder') && $folderRepository->getItemCount();
+$showArtist       = AmpConfig::get('show_artist');
+$allowLabel       = AmpConfig::get('label');
+$allowPodcast     = AmpConfig::get('podcast');
+$access50         = Access::check(AccessTypeEnum::INTERFACE, AccessLevelEnum::CONTENT_MANAGER);
+$access25         = ($access50 || Access::check(AccessTypeEnum::INTERFACE, AccessLevelEnum::USER));
+$current_user     = $current_user ?? Core::get_global('user');
+$allow_upload     = $allow_upload ?? $access25 && Upload::can_upload($current_user);
+$albumString      = (AmpConfig::get('album_group'))
     ? 'album'
     : 'album_disk';
 // expanded by default

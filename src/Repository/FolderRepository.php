@@ -27,6 +27,7 @@ namespace Ampache\Repository;
 
 use Ampache\Module\Database\DatabaseConnectionInterface;
 use Ampache\Module\Database\Exception\DatabaseException;
+use Ampache\Module\System\Dba;
 use Ampache\Repository\Model\Folder;
 use Ampache\Repository\Model\Podcast_Episode;
 use Ampache\Repository\Model\Song;
@@ -35,6 +36,19 @@ use PDO;
 
 final readonly class FolderRepository implements FolderRepositoryInterface
 {
+    /**
+     * Return the number of entries in the database...
+     */
+    public function getItemCount(): int
+    {
+        $db_results = $this->connection->query('SELECT COUNT(*) AS `count` FROM `video`;');
+        if (($results = $db_results->fetch(PDO::FETCH_ASSOC)) && array_key_exists('count', $results)) {
+            return (int) $results['count'];
+        }
+
+        return 0;
+    }
+
     public function __construct(private DatabaseConnectionInterface $connection) {}
 
     /**

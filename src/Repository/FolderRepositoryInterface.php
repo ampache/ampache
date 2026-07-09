@@ -33,6 +33,11 @@ use Ampache\Repository\Model\Video;
 interface FolderRepositoryInterface
 {
     /**
+     * Return the number of entries in the database...
+     */
+    public function getItemCount(): int;
+
+    /**
      * This cleans out unused folders
      */
     public function collectGarbage(): void;
