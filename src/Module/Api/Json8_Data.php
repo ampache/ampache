@@ -2718,17 +2718,9 @@ class Json8_Data
     private static function _filter_objects(array $objects, ?bool $encode = null): array
     {
         if (
-            $encode !== null
+            $encode !== false
+            && (self::$limit)
             && (self::$count > self::$limit || self::$offset > 0)
-            && (self::$limit && $encode)
-        ) {
-            return array_slice($objects, self::$offset, self::$limit);
-        }
-
-        if (
-            $encode === null
-            && (self::$count > self::$limit || self::$offset > 0)
-            && self::$limit
         ) {
             return array_slice($objects, self::$offset, self::$limit);
         }

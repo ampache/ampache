@@ -90,7 +90,7 @@ final class Gatekeeper implements GatekeeperInterface
 
             if ($token === '' && $authHeader !== '') {
                 // Accept API key passed directly in the 'auth' header (ApiKeyAuthHeader)
-                $token = (string) $authHeader;
+                $token = $authHeader;
                 $this->logger->notice(
                     'API session using auth header',
                     [LegacyLogger::CONTEXT_TYPE => self::class]
