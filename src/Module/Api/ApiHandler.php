@@ -153,7 +153,7 @@ final class ApiHandler implements ApiHandlerInterface
         if (!in_array($api_version, Api::API_VERSIONS)) {
             $api_session = Session::get_api_version($input['auth']);
             $api_version = ($is_public || (isset($input['version']) && $header_auth))
-                ? (int) substr($version, 0, 1)
+                ? (int) substr((string) $version, 0, 1)
                 : $api_session;
 
             // If you call api3 from json you don't get anything so change back to the latest version
