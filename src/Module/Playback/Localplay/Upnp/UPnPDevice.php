@@ -152,7 +152,11 @@ class UPnPDevice
             $this->_settings['eventURLs'][$serviceTypeName]   = (string) $service->eventSubURL;
         }
 
-        $urldata                 = parse_url($descriptionUrl);
+        $urldata = parse_url($descriptionUrl);
+        if (!isset($urldata['scheme']) || !isset($urldata['host']) || !isset($urldata['port'])) {
+            return;
+        }
+
         $this->_settings['host'] = $urldata['scheme'] . '://' . $urldata['host'] . ':' . $urldata['port'];
 
         $this->_settings['descriptionURL'] = $descriptionUrl;

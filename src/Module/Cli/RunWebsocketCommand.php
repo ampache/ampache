@@ -51,7 +51,7 @@ final class RunWebsocketCommand extends Command
         $port    = $this->values()['port'];
 
         $urlinfo = parse_url($this->configContainer->get('websocket_address') ?? '');
-        $host    = $urlinfo['host'];
+        $host    = $urlinfo['host'] ?? '';
         if (empty($host)) {
             $host = 'localhost';
         }

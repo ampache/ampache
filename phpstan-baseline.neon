@@ -355,12 +355,6 @@ parameters:
 			path: src/Module/Api/Method/Api4/LicenseSongs4Method.php
 
 		-
-			message: '#^Comparison operation "\>" between int\<1, max\> and 0 is always true\.$#'
-			identifier: greater.alwaysTrue
-			count: 1
-			path: src/Module/Api/Method/Api4/PlaylistEdit4Method.php
-
-		-
 			message: '#^Parameter \#1 \(array\|string\) of echo cannot be converted to string\.$#'
 			identifier: echo.nonString
 			count: 1
@@ -511,12 +505,6 @@ parameters:
 			path: src/Module/Api/Method/Api5/LicenseSongs5Method.php
 
 		-
-			message: '#^Comparison operation "\>" between int\<1, max\> and 0 is always true\.$#'
-			identifier: greater.alwaysTrue
-			count: 1
-			path: src/Module/Api/Method/Api5/PlaylistEdit5Method.php
-
-		-
 			message: '#^Parameter \#1 \(array\|string\) of echo cannot be converted to string\.$#'
 			identifier: echo.nonString
 			count: 1
@@ -565,18 +553,6 @@ parameters:
 			path: src/Module/Api/Method/Api5/Stats5Method.php
 
 		-
-			message: '#^If condition is always true\.$#'
-			identifier: if.alwaysTrue
-			count: 1
-			path: src/Module/Api/Method/Api5/SystemUpdate5Method.php
-
-		-
-			message: '#^Unreachable statement \- code above always terminates\.$#'
-			identifier: deadCode.unreachable
-			count: 1
-			path: src/Module/Api/Method/Api5/SystemUpdate5Method.php
-
-		-
 			message: '#^Parameter \#1 \(array\|string\) of echo cannot be converted to string\.$#'
 			identifier: echo.nonString
 			count: 1
@@ -601,18 +577,6 @@ parameters:
 			path: src/Module/Api/Method/Api6/CatalogFolder6Method.php
 
 		-
-			message: '#^If condition is always true\.$#'
-			identifier: if.alwaysTrue
-			count: 1
-			path: src/Module/Api/Method/Api6/SystemUpdate6Method.php
-
-		-
-			message: '#^Unreachable statement \- code above always terminates\.$#'
-			identifier: deadCode.unreachable
-			count: 1
-			path: src/Module/Api/Method/Api6/SystemUpdate6Method.php
-
-		-
 			message: '#^Call to function unset\(\) contains undefined variable \$SSE_OUTPUT\.$#'
 			identifier: unset.variable
 			count: 1
@@ -629,18 +593,6 @@ parameters:
 			identifier: unset.variable
 			count: 1
 			path: src/Module/Api/Method/Api8/CatalogFolder8Method.php
-
-		-
-			message: '#^If condition is always true\.$#'
-			identifier: if.alwaysTrue
-			count: 1
-			path: src/Module/Api/Method/Api8/SystemUpdate8Method.php
-
-		-
-			message: '#^Unreachable statement \- code above always terminates\.$#'
-			identifier: deadCode.unreachable
-			count: 1
-			path: src/Module/Api/Method/Api8/SystemUpdate8Method.php
 
 		-
 			message: '#^Method Ampache\\Module\\Api\\Method\\MethodInterface\:\:handle\(\) has parameter \$input with no value type specified in iterable type array\.$#'
@@ -1381,12 +1333,6 @@ parameters:
 			path: src/Module/Catalog/SubsonicClient.php
 
 		-
-			message: '#^Cannot access offset ''host'' on array\{scheme\?\: string, host\?\: string, port\?\: int\<0, 65535\>, user\?\: string, pass\?\: string, path\?\: string, query\?\: string, fragment\?\: string\}\|false\.$#'
-			identifier: offsetAccess.nonOffsetAccessible
-			count: 1
-			path: src/Module/Cli/RunWebsocketCommand.php
-
-		-
 			message: '#^Method Ampache\\Module\\Playback\\Localplay\\HttpQ\\AmpacheHttpq\:\:status\(\) return type has no value type specified in iterable type array\.$#'
 			identifier: missingType.iterableValue
 			count: 1
@@ -1547,24 +1493,6 @@ parameters:
 			identifier: missingType.iterableValue
 			count: 1
 			path: src/Module/Playback/Localplay/Upnp/AmpacheUPnP.php
-
-		-
-			message: '#^Cannot access offset ''host'' on array\{scheme\?\: string, host\?\: string, port\?\: int\<0, 65535\>, user\?\: string, pass\?\: string, path\?\: string, query\?\: string, fragment\?\: string\}\|false\.$#'
-			identifier: offsetAccess.nonOffsetAccessible
-			count: 1
-			path: src/Module/Playback/Localplay/Upnp/UPnPDevice.php
-
-		-
-			message: '#^Cannot access offset ''port'' on array\{scheme\?\: string, host\?\: string, port\?\: int\<0, 65535\>, user\?\: string, pass\?\: string, path\?\: string, query\?\: string, fragment\?\: string\}\|false\.$#'
-			identifier: offsetAccess.nonOffsetAccessible
-			count: 1
-			path: src/Module/Playback/Localplay/Upnp/UPnPDevice.php
-
-		-
-			message: '#^Cannot access offset ''scheme'' on array\{scheme\?\: string, host\?\: string, port\?\: int\<0, 65535\>, user\?\: string, pass\?\: string, path\?\: string, query\?\: string, fragment\?\: string\}\|false\.$#'
-			identifier: offsetAccess.nonOffsetAccessible
-			count: 1
-			path: src/Module/Playback/Localplay/Upnp/UPnPDevice.php
 
 		-
 			message: '#^Method Ampache\\Module\\Playback\\Localplay\\Upnp\\UPnPDevice\:\:instanceOnly\(\) has parameter \$command with no type specified\.$#'
@@ -2668,12 +2596,6 @@ parameters:
 			message: '#^PHPDoc tag @var for variable \$release has no value type specified in iterable type array\.$#'
 			identifier: missingType.iterableValue
 			count: 2
-			path: src/Repository/Model/Wanted.php
-
-		-
-			message: '#^Variable \$martist in empty\(\) always exists and is not falsy\.$#'
-			identifier: empty.variable
-			count: 1
 			path: src/Repository/Model/Wanted.php
 
 		-
