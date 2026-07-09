@@ -758,7 +758,7 @@ class Search extends playlist_object
 
         $this->date = time();
         $this->set_last($count ?: count($results), 'last_count');
-        $this->set_last($duration ?: self::get_total_duration($results), 'last_duration');
+        $this->set_last((int) ($duration ?: self::get_total_duration($results)), 'last_duration');
 
         return $results;
     }
