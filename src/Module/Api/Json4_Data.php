@@ -25,6 +25,7 @@ declare(strict_types=1);
 
 namespace Ampache\Module\Api;
 
+use Ampache\Config\AmpConfig;
 use Ampache\Module\Playback\Stream;
 use Ampache\Module\Util\ObjectTypeToClassNameMapper;
 use Ampache\Repository\AlbumRepositoryInterface;
@@ -80,10 +81,10 @@ class Json4_Data
      * @param array<int|string> $objects
      * @param string[] $include
      */
-    public static function albums(array $objects, array $include, User $user, string $auth, bool $encode = true): array|string
+    public static function albums(array $objects, array $include, User $user, string $auth): string
     {
         self::$count = self::$count ?: count($objects);
-        $objects     = Api::filter_objects($objects, self::$count, self::$offset, self::$limit, $encode);
+        $objects     = Api::filter_objects($objects, self::$count, self::$offset, self::$limit);
 
         Rating::build_cache('album', $objects);
 
@@ -115,7 +116,7 @@ class Json4_Data
 
             // Handle includes
             if (in_array("songs", $include)) {
-                $songs = self::songs(self::getAlbumRepository()->getSongs($album->id), $user, $auth, false);
+                $songs = self::songs_array(self::getAlbumRepository()->getSongs($album->id), $user, $auth, false);
             } else {
                 $songs = $album->song_count;
             }
@@ -131,14 +132,108 @@ class Json4_Data
             $objArray['flag']          = (!$flag->get_flag($user->getId()) ? 0 : 1);
             $objArray['preciserating'] = $user_rating;
             $objArray['rating']        = $user_rating;
-            $objArray['averagerating'] = ($rating->get_average_rating() ?? null);
+            $objArray['averagerating'] = $rating->get_average_rating() ?? null;
             $objArray['mbid']          = $album->mbid;
 
             $JSON[] = $objArray;
         }
 
-        if ($encode) {
-            return json_encode($JSON, JSON_PRETTY_PRINT) ?: '';
+        return json_encode($JSON, JSON_PRETTY_PRINT) ?: '';
+    }
+
+    /**
+     * albums_array
+     *
+     * @param array<int|string> $objects Album id's to include
+     * @param string[] $include
+     * @return array<int, array{
+     *     "id": string,
+     *     "name": null|string,
+     *     "artist"?: array{
+     *         "id": string,
+     *         "name": null|string,
+     *     }|null,
+     *     "artists"?: array<int, array{
+     *         "id": string,
+     *         "name": null|string,
+     *     }>,
+     *     "songartists"?: array<int, array{
+     *         "id": string,
+     *         "name": null|string,
+     *     }>,
+     *     "time": int,
+     *     "year": int,
+     *     "tracks": array<int, array<string, mixed>>|string,
+     *     "songcount": int,
+     *     "diskcount": int,
+     *     "type": null|string,
+     *     "tag": array<int, array{id: string, name: string}>,
+     *     "art": null|string,
+     *     "flag": int,
+     *     "preciserating": int|null,
+     *     "rating": int|null,
+     *     "averagerating": float|null,
+     *     "mbid": null|string,
+     * }> JSON Object "album"
+     */
+    public static function albums_array(array $objects, array $include, User $user, string $auth, bool $encode = true): array
+    {
+        self::$count = self::$count ?: count($objects);
+        $objects     = Api::filter_objects($objects, self::$count, self::$offset, self::$limit, $encode);
+
+        // original year (fall back to regular year)
+        $original_year = AmpConfig::get('use_original_year');
+
+        Rating::build_cache('album', $objects);
+        $JSON = [];
+        foreach ($objects as $album_id) {
+            $album = new Album((int) $album_id);
+            if ($album->isNew()) {
+                continue;
+            }
+
+            $rating      = new Rating($album->id, 'album');
+            $user_rating = $rating->get_user_rating($user->getId());
+            $flag        = new Userflag($album->id, 'album');
+            $year        = ($original_year && $album->original_year)
+                ? $album->original_year
+                : $album->year;
+
+            // Build the Art URL, include session
+            $art_url = Art::url($album->id, 'album', $auth);
+
+            $objArray = [];
+
+            $objArray["id"]   = (string) $album->id;
+            $objArray["name"] = $album->get_fullname();
+
+            if ($album->get_parent_fullname() != "") {
+                $objArray['artist'] = [
+                    "id" => (string) $album->findAlbumArtist(),
+                    "name" => $album->get_parent_fullname()
+                ];
+            }
+
+            // Handle includes
+            $songs = (in_array("songs", $include))
+                ? self::songs_array(self::getSongRepository()->getByAlbum($album->id), $user, $auth, false)
+                : [];
+
+            $objArray['time']          = (int) $album->time;
+            $objArray['year']          = (int) $year;
+            $objArray['tracks']        = $songs;
+            $objArray['songcount']     = $album->song_count;
+            $objArray['diskcount']     = $album->disk_count;
+            $objArray['type']          = $album->release_type;
+            $objArray['tag']           = self::_genre_array($album->get_tags());
+            $objArray['art']           = $art_url;
+            $objArray['flag']          = (!$flag->get_flag($user->getId()) ? 0 : 1);
+            $objArray['preciserating'] = $user_rating;
+            $objArray['rating']        = $user_rating;
+            $objArray['averagerating'] = $rating->get_average_rating();
+            $objArray['mbid']          = $album->mbid;
+
+            $JSON[] = $objArray;
         }
 
         return $JSON;
@@ -152,9 +247,70 @@ class Json4_Data
      *
      * @param array<int|string> $objects
      * @param string[] $include
-     * @return array|string return JSON
+     * @return string return JSON
      */
-    public static function artists(array $objects, array $include, User $user, string $auth, bool $encode = true): array|string
+    public static function artists(array $objects, array $include, User $user, string $auth): string
+    {
+        self::$count = self::$count ?: count($objects);
+        $JSON        = self::artists_array($objects, $include, $user, $auth);
+
+        return json_encode($JSON, JSON_PRETTY_PRINT) ?: '';
+    }
+
+    /**
+     * artists_array
+     *
+     * @param array<int|string> $objects Artist id's to include
+     * @param string[] $include
+     * @return array <int, array{
+     *     "id": string,
+     *     "name": null|string,
+     *     "albums": array<int, array{
+     *         "id": string,
+     *         "name": null|string,
+     *         "artist"?: array{
+     *             "id": string,
+     *             "name": null|string,
+     *         }|null,
+     *         "artists"?: array<int, array{
+     *             "id": string,
+     *             "name": null|string,
+     *         }>,
+     *         "songartists"?: array<int, array{
+     *             "id": string,
+     *             "name": null|string,
+     *         }>,
+     *         "time": int,
+     *         "year": int,
+     *         "tracks": array<int, array<string, mixed>>|string,
+     *         "songcount": int,
+     *         "diskcount": int,
+     *         "type": null|string,
+     *         "tag": array<int, array{id: string, name: string}>,
+     *         "art": null|string,
+     *         "flag": int,
+     *         "preciserating": int|null,
+     *         "rating": int|null,
+     *         "averagerating": float|null,
+     *         "mbid": null|string,
+     *     }>|int,
+     *     "albumcount": int,
+     *     "songs": array<int, array<string, mixed>>|int,
+     *     "songcount": int,
+     *     "tag": array<int, array{id: string, name: string}>,
+     *     "art": null|string,
+     *     "flag": int,
+     *     "preciserating": int|null,
+     *     "rating": int|null,
+     *     "averagerating": float|null,
+     *     "mbid": null|string,
+     *     "summary": null|string,
+     *     "time": int,
+     *     "yearformed": int,
+     *     "placeformed": null|string,
+     * }>
+     */
+    public static function artists_array(array $objects, array $include, User $user, string $auth, bool $encode = true): array
     {
         self::$count = self::$count ?: count($objects);
         $objects     = Api::filter_objects($objects, self::$count, self::$offset, self::$limit, $encode);
@@ -178,12 +334,12 @@ class Json4_Data
 
             // Handle includes
             if (in_array("albums", $include)) {
-                $albums = self::albums(self::getAlbumRepository()->getAlbumByArtist($artist->id), [], $user, $auth, false);
+                $albums = self::albums_array(self::getAlbumRepository()->getAlbumByArtist($artist->id), [], $user, $auth, false);
             } else {
                 $albums = $artist->album_count;
             }
             if (in_array("songs", $include)) {
-                $songs = self::songs(self::getSongRepository()->getByArtist($artist->id), $user, $auth, false);
+                $songs = self::songs_array(self::getSongRepository()->getByArtist($artist->id), $user, $auth, false);
             } else {
                 $songs = $artist->song_count;
             }
@@ -200,17 +356,13 @@ class Json4_Data
                 "flag" => (!$flag->get_flag($user->getId()) ? 0 : 1),
                 "preciserating" => $user_rating,
                 "rating" => $user_rating,
-                "averagerating" => ($rating->get_average_rating() ?? null),
+                "averagerating" => $rating->get_average_rating() ?? null,
                 "mbid" => $artist->mbid,
                 "summary" => $artist->summary,
                 "time" => (int) $artist->time,
                 "yearformed" => (int) $artist->yearformed,
                 "placeformed" => $artist->placeformed
             ];
-        }
-
-        if ($encode) {
-            return json_encode($JSON, JSON_PRETTY_PRINT) ?: '';
         }
 
         return $JSON;
@@ -316,9 +468,9 @@ class Json4_Data
                 "art" => $art_url,
                 "preciserating" => $user_rating,
                 "rating" => $user_rating,
-                "averagerating" => ($rating->get_average_rating() ?? null),
+                "averagerating" => $rating->get_average_rating() ?? null,
                 "vote" => $democratic->get_vote($row_id),
-                "genre" => self::_genre_array($song->get_tags(), true)
+                "genre" => self::_simple_genre_array($song->get_tags())
             ];
         }
 
@@ -385,7 +537,7 @@ class Json4_Data
                 break;
             case 'podcast_episode':
                 /** @var string $results */
-                $results = self::podcast_episodes($objects, $user, $auth, true, false);
+                $results = self::podcast_episodes($objects, $user, $auth, false);
                 break;
             case 'video':
                 /** @var string $results */
@@ -435,6 +587,31 @@ class Json4_Data
      * @param array<int|string> $objects Playlist id's to include
      */
     public static function playlists(array $objects, User $user, string $auth, bool $songs = false): string
+    {
+        self::$count = self::$count ?: count($objects);
+        $JSON        = self::playlists_array($objects, $user, $auth, $songs);
+
+        return json_encode($JSON, JSON_PRETTY_PRINT) ?: '';
+    }
+
+    /**
+     * playlists_array
+     *
+     * @param array<int|string> $objects Playlist id's to include
+     * @return array<int, array{
+     *     "id": string,
+     *     "name": null|string,
+     *     "owner": null|string,
+     *     "items": array<int, array<string, int|string>>|int,
+     *     "type": null|string,
+     *     "art": null|string,
+     *     "flag": int,
+     *     "preciserating": int|null,
+     *     "rating": int|null,
+     *     "averagerating": float|null
+     * }>
+     */
+    public static function playlists_array(array $objects, User $user, string $auth, bool $songs = false): array
     {
         self::$count = self::$count ?: count($objects);
         $objects     = Api::filter_objects($objects, self::$count, self::$offset, self::$limit);
@@ -497,10 +674,10 @@ class Json4_Data
                 "flag" => (!$flag->get_flag($user->getId()) ? 0 : 1),
                 "preciserating" => $user_rating,
                 "rating" => $user_rating,
-                "averagerating" => (string) ($rating->get_average_rating() ?? null)];
+                "averagerating" => $rating->get_average_rating() ?? null];
         }
 
-        return json_encode($JSON, JSON_PRETTY_PRINT) ?: '';
+        return $JSON;
     }
 
     /**
@@ -510,9 +687,48 @@ class Json4_Data
      *
      * @param array<int|string> $objects Podcast_Episode id's to include
      * @param bool $object (whether to return as a named object array or regular array)
-     * @return array|string JSON Object "podcast_episode"
+     * @return string JSON Object "podcast_episode"
      */
-    public static function podcast_episodes(array $objects, User $user, string $auth, bool $encode = true, bool $object = true): array|string
+    public static function podcast_episodes(array $objects, User $user, string $auth, bool $object = true): string
+    {
+        self::$count = self::$count ?: count($objects);
+        $JSON        = self::podcast_episodes_array($objects, $user, $auth);
+
+        $output = ($object) ? ["podcast_episode" => $JSON] : $JSON;
+
+        return json_encode($output, JSON_PRETTY_PRINT) ?: '';
+    }
+
+    /**
+     * podcast_episodes_array
+     *
+     * @param array<int|string> $objects Podcast_Episode id's to include
+     * @return array<int, array{
+     *     "id": string,
+     *     "name": null|string,
+     *     "description": null|string,
+     *     "category": null|string,
+     *     "author": null|string,
+     *     "author_full": null|string,
+     *     "website": null|string,
+     *     "pubdate": null|string,
+     *     "state": string,
+     *     "filelength": string,
+     *     "filesize": string,
+     *     "filename": string,
+     *     "mime": null|string,
+     *     "public_url": string,
+     *     "url": string,
+     *     "catalog": string,
+     *     "art": null|string,
+     *     "flag": int,
+     *     "preciserating": int|null,
+     *     "rating": int|null,
+     *     "averagerating": float|null,
+     *     "played": string
+     * }>
+     */
+    public static function podcast_episodes_array(array $objects, User $user, string $auth, bool $encode = true): array
     {
         self::$count = self::$count ?: count($objects);
         $objects     = Api::filter_objects($objects, self::$count, self::$offset, self::$limit, $encode);
@@ -549,16 +765,12 @@ class Json4_Data
                 "flag" => (!$flag->get_flag($user->getId()) ? 0 : 1),
                 "preciserating" => $user_rating,
                 "rating" => $user_rating,
-                "averagerating" => (string) ($rating->get_average_rating() ?? null),
+                "averagerating" => $rating->get_average_rating() ?? null,
                 "played" => (string) $episode->played
             ];
         }
-        if (!$encode) {
-            return $JSON;
-        }
-        $output = ($object) ? ["podcast_episode" => $JSON] : $JSON;
 
-        return json_encode($output, JSON_PRETTY_PRINT) ?: '';
+        return $JSON;
     }
 
     /**
@@ -572,11 +784,67 @@ class Json4_Data
     public static function podcasts(array $objects, User $user, string $auth, bool $episodes = false): string
     {
         self::$count = self::$count ?: count($objects);
+        $JSON        = self::podcasts_array($objects, $user, $auth, $episodes);
+
+        return json_encode($JSON, JSON_PRETTY_PRINT) ?: '';
+    }
+
+    /**
+     * podcasts_array
+     *
+     * @param array<int|string> $objects Podcast id's to include
+     * @param bool $episodes include the episodes of the podcast
+     * @return array<int, array{
+     *     "id": string,
+     *     "name": null|string,
+     *     "description": string,
+     *     "language": string,
+     *     "copyright": string,
+     *     "feed_url": string,
+     *     "generator": string,
+     *     "website": string,
+     *     "build_date": string,
+     *     "sync_date": string,
+     *     "public_url": string,
+     *     "art": null|string,
+     *     "flag": int,
+     *     "preciserating": int|null,
+     *     "rating": int|null,
+     *     "averagerating": float|null,
+     *     "podcast_episode": array<int, array{
+     *         "id": string,
+     *         "name": null|string,
+     *         "description": null|string,
+     *         "category": null|string,
+     *         "author": null|string,
+     *         "author_full": null|string,
+     *         "website": null|string,
+     *         "pubdate": null|string,
+     *         "state": string,
+     *         "filelength": string,
+     *         "filesize": string,
+     *         "filename": string,
+     *         "mime": null|string,
+     *         "public_url": string,
+     *         "url": string,
+     *         "catalog": string,
+     *         "art": null|string,
+     *         "flag": int,
+     *         "preciserating": int|null,
+     *         "rating": int|null,
+     *         "averagerating": float|null,
+     *         "played": string
+     *     }>
+     * }>
+     */
+    public static function podcasts_array(array $objects, User $user, string $auth, bool $episodes = false): array
+    {
+        self::$count = self::$count ?: count($objects);
         $objects     = Api::filter_objects($objects, self::$count, self::$offset, self::$limit);
 
         $podcastRepository = self::getPodcastRepository();
 
-        $allPodcasts = [];
+        $JSON = [];
         foreach ($objects as $podcast_id) {
             $podcast = $podcastRepository->findById((int) $podcast_id);
 
@@ -601,10 +869,10 @@ class Json4_Data
             $podcast_episodes    = [];
             if ($episodes) {
                 $results          = $podcast->getEpisodeIds();
-                $podcast_episodes = self::podcast_episodes($results, $user, $auth, false);
+                $podcast_episodes = self::podcast_episodes_array($results, $user, $auth, false);
             }
             // Build this element
-            $allPodcasts[] = [
+            $JSON[] = [
                 "id" => (string) $podcast_id,
                 "name" => $podcast_name,
                 "description" => $podcast_description,
@@ -620,12 +888,12 @@ class Json4_Data
                 "flag" => (!$flag->get_flag($user->getId()) ? 0 : 1),
                 "preciserating" => $user_rating,
                 "rating" => $user_rating,
-                "averagerating" => (string) ($rating->get_average_rating() ?? null),
+                "averagerating" => $rating->get_average_rating() ?? null,
                 "podcast_episode" => $podcast_episodes
             ];
         }
 
-        return json_encode($allPodcasts, JSON_PRETTY_PRINT) ?: '';
+        return $JSON;
     }
 
     /**
@@ -750,7 +1018,21 @@ class Json4_Data
      * @param array<int|string> $objects
      * @param bool $encode return JSON encoded string
      */
-    public static function songs(array $objects, User $user, string $auth, bool $encode = true): array|string
+    public static function songs(array $objects, User $user, string $auth, bool $encode = true): string
+    {
+        self::$count = self::$count ?: count($objects);
+        $JSON        = self::songs_array($objects, $user, $auth, $encode);
+
+        return json_encode($JSON, JSON_PRETTY_PRINT) ?: '';
+    }
+
+    /**
+     * songs_array
+     *
+     * @param array<int|string> $objects
+     * @return array<int, array<string, mixed>>
+     */
+    public static function songs_array(array $objects, User $user, string $auth, bool $encode = true): array
     {
         self::$count = self::$count ?: count($objects);
         $objects     = Api::filter_objects($objects, self::$count, self::$offset, self::$limit, $encode);
@@ -819,7 +1101,7 @@ class Json4_Data
             $ourSong['flag']                  = (!$flag->get_flag($user->getId()) ? 0 : 1);
             $ourSong['preciserating']         = $user_rating;
             $ourSong['rating']                = $user_rating;
-            $ourSong['averagerating']         = ($rating->get_average_rating() ?? null);
+            $ourSong['averagerating']         = $rating->get_average_rating() ?? null;
             $ourSong['playcount']             = (int) $song->played;
             $ourSong['catalog']               = $song->getCatalogId();
             $ourSong['composer']              = $song->composer;
@@ -832,7 +1114,7 @@ class Json4_Data
             $ourSong['replaygain_album_peak'] = $song->replaygain_album_peak;
             $ourSong['replaygain_track_gain'] = $song->replaygain_track_gain;
             $ourSong['replaygain_track_peak'] = $song->replaygain_track_peak;
-            $ourSong['genre']                 = self::_genre_array($song->get_tags(), true);
+            $ourSong['genre']                 = self::_simple_genre_array($song->get_tags());
 
             /** @var Metadata $metadata */
             foreach ($song->getMetadata() as $metadata) {
@@ -846,10 +1128,6 @@ class Json4_Data
             }
 
             $JSON[] = $ourSong;
-        }
-
-        if ($encode) {
-            return json_encode($JSON, JSON_PRETTY_PRINT) ?: '';
         }
 
         return $JSON;
@@ -878,6 +1156,32 @@ class Json4_Data
     public static function tags(array $objects): string
     {
         self::$count = self::$count ?: count($objects);
+        $JSON        = self::tags_array($objects);
+
+
+        return json_encode($JSON, JSON_PRETTY_PRINT) ?: '';
+    }
+
+    /**
+     * tags_array
+     *
+     * @param array<int|string> $objects
+     * @return array{
+     *     tag: array<int, array{
+     *         "id": string,
+     *         "name": null|string,
+     *         "albums": int,
+     *         "artists": int,
+     *         "songs": int,
+     *         "videos": int,
+     *         "playlists": int,
+     *         "stream": int
+     *     }>
+     * } JSON Object "genre"
+     */
+    public static function tags_array(array $objects): array
+    {
+        self::$count = self::$count ?: count($objects);
         $objects     = Api::filter_objects($objects, self::$count, self::$offset, self::$limit);
 
         $JSON = [];
@@ -898,9 +1202,9 @@ class Json4_Data
         }
 
         // return a tag object
-        $JSON[] = ["tag" => $TAGS];
+        $JSON["tag"] = $TAGS;
 
-        return json_encode($JSON, JSON_PRETTY_PRINT) ?: '';
+        return $JSON;
     }
 
     /**
@@ -989,6 +1293,26 @@ class Json4_Data
      */
     public static function users(array $objects): string
     {
+        $JSON = self::users_array($objects);
+
+        return json_encode($JSON, JSON_PRETTY_PRINT) ?: '';
+    }
+
+    /**
+     * users_array
+     *
+     * @param array<int|string> $objects User id list
+     * @return array{
+     *     user: array<int, array{
+     *         id: string, username: null|string
+     *     }>
+     * }
+     */
+    public static function users_array(array $objects, bool $encode = true): array
+    {
+        self::$count = self::$count ?: count($objects);
+        $objects     = Api::filter_objects($objects, self::$count, self::$offset, self::$limit, $encode);
+
         $JSON       = [];
         $user_array = [];
         foreach ($objects as $user_id) {
@@ -999,10 +1323,9 @@ class Json4_Data
             ];
         }
 
-        // return a user object
-        $JSON[] = ["user" => $user_array];
+        $JSON["user"] = $user_array;
 
-        return json_encode($JSON, JSON_PRETTY_PRINT) ?: '';
+        return $JSON;
     }
 
     /**
@@ -1013,6 +1336,34 @@ class Json4_Data
      * @param int[]|string[] $objects
      */
     public static function videos(array $objects, User $user, string $auth): string
+    {
+        self::$count = self::$count ?: count($objects);
+        $JSON        = self::videos_array($objects, $user, $auth);
+
+        return json_encode($JSON, JSON_PRETTY_PRINT) ?: '';
+    }
+
+    /**
+     * videos_array
+     *
+     * @param array<int|string> $objects Video id's to include
+     * @return array<int, array{
+     *     "id": string,
+     *     "title": null|string,
+     *     "mime": null|string,
+     *     "resolution": null|string,
+     *     "size": int,
+     *     "tag": array<int, array{id: string, name: string}>,
+     *     "time": int,
+     *     "url": string,
+     *     "art": null|string,
+     *     "flag": int,
+     *     "preciserating": int|null,
+     *     "rating": int|null,
+     *     "averagerating": float|null
+     * }>
+     */
+    public static function videos_array(array $objects, User $user, string $auth): array
     {
         self::$count = self::$count ?: count($objects);
         $objects     = Api::filter_objects($objects, self::$count, self::$offset, self::$limit);
@@ -1040,21 +1391,21 @@ class Json4_Data
                 "flag" => (!$flag->get_flag($user->getId()) ? 0 : 1),
                 "preciserating" => $user_rating,
                 "rating" => $user_rating,
-                "averagerating" => (string) ($rating->get_average_rating() ?? null)
+                "averagerating" => $rating->get_average_rating() ?? null
             ];
         }
 
-        return json_encode($JSON, JSON_PRETTY_PRINT) ?: '';
+        return $JSON;
     }
 
     /**
-     * tags_array
+     * _genre_array
      *
      * This returns the formatted 'tags' array for a JSON document
      * @param array<int, array{id: int, name: string, is_hidden: int, count: int}> $tags
-     * @return array<array{id?: string, name?: string}>
+     * @return array<int, array{id: string, name: string}>
      */
-    private static function _genre_array(array $tags, bool $simple = false): array
+    private static function _genre_array(array $tags): array
     {
         $JSON = [];
 
@@ -1071,14 +1422,40 @@ class Json4_Data
         }
 
         foreach ($atags as $tag_id => $data) {
-            if ($simple) {
-                $JSON[] = ["name" => $data['name']];
+            $JSON[] = [
+                "id" => (string) $tag_id,
+                "name" => $data['name']
+            ];
+        }
+
+        return $JSON;
+    }
+
+    /**
+     * _genre_array
+     *
+     * This returns the formatted 'tags' array for a JSON document
+     * @param array<int, array{id: int, name: string, is_hidden: int, count: int}> $tags
+     * @return array<int, array{name: string}>
+     */
+    private static function _simple_genre_array(array $tags): array
+    {
+        $JSON = [];
+
+        $atags = [];
+        foreach ($tags as $tag) {
+            if (array_key_exists($tag['id'], $atags)) {
+                $atags[$tag['id']]['count']++;
             } else {
-                $JSON[] = [
-                    "id" => (string) $tag_id,
-                    "name" => $data['name']
+                $atags[$tag['id']] = [
+                    'name' => $tag['name'],
+                    'count' => 1
                 ];
             }
+        }
+
+        foreach ($atags as $data) {
+            $JSON[] = ["name" => $data['name']];
         }
 
         return $JSON;

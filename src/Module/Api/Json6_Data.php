@@ -2341,7 +2341,7 @@ class Json6_Data
     }
 
     /**
-     * genre_array
+     * _genre_array
      *
      * @param array<int, array{id: int, name: string, is_hidden: int, count: int}> $tags
      * @return array<int, array{id: string, name: string}>
