@@ -37,12 +37,6 @@ parameters:
 			path: src/Gui/Playlist/NewPlaylistDialogAdapterInterface.php
 
 		-
-			message: '#^Method Ampache\\Gui\\TalView\:\:setContext\(\) has parameter \$context with no type specified\.$#'
-			identifier: missingType.parameter
-			count: 1
-			path: src/Gui/TalView.php
-
-		-
 			message: '#^Method Ampache\\Module\\Api\\ApiHandler\:\:_executeDebugHandler\(\) has parameter \$input with no value type specified in iterable type array\.$#'
 			identifier: missingType.iterableValue
 			count: 1
@@ -53,12 +47,6 @@ parameters:
 			identifier: missingType.iterableValue
 			count: 1
 			path: src/Module/Api/ApiHandler.php
-
-		-
-			message: '#^Parameter \#1 \$callback of function call_user_func expects callable\(\)\: mixed, array\{''Ampache\\\\Module\\\\Api\\\\Daap_Api'', non\-falsy\-string\} given\.$#'
-			identifier: argument.type
-			count: 1
-			path: src/Module/Api/DaapApiApplication.php
 
 		-
 			message: '#^Method Ampache\\Module\\Api\\Daap_Api\:\:_get_type_id\(\) has parameter \$type with no type specified\.$#'
@@ -1087,18 +1075,6 @@ parameters:
 			path: src/Module/Application/Admin/Catalog/AbstractCatalogAction.php
 
 		-
-			message: '#^Parameter \#2 \$length of function fread expects int\<1, max\>, int given\.$#'
-			identifier: argument.type
-			count: 1
-			path: src/Module/Application/Playback/Play2Action.php
-
-		-
-			message: '#^Parameter \#2 \$length of function fread expects int\<1, max\>, int given\.$#'
-			identifier: argument.type
-			count: 1
-			path: src/Module/Application/Playback/PlayAction.php
-
-		-
 			message: '#^Method Ampache\\Module\\Application\\SearchData\\ShowAction\:\:arrayToJSON\(\) has parameter \$array with no type specified\.$#'
 			identifier: missingType.parameter
 			count: 1
@@ -1243,12 +1219,6 @@ parameters:
 			path: src/Module/Authentication/Ldap/Ldap.php
 
 		-
-			message: '#^Parameter \#2 \$result of function ldap_get_entries expects LDAP\\Result, array\|LDAP\\Result given\.$#'
-			identifier: argument.type
-			count: 2
-			path: src/Module/Authentication/Ldap/Ldap.php
-
-		-
 			message: '#^Method Ampache\\Module\\Beets\\Catalog\:\:addSong\(\) has parameter \$song with no value type specified in iterable type array\.$#'
 			identifier: missingType.iterableValue
 			count: 1
@@ -1297,12 +1267,6 @@ parameters:
 			path: src/Module/Beets/CliHandler.php
 
 		-
-			message: '#^Parameter \#1 \$separator of function explode expects non\-empty\-string, string given\.$#'
-			identifier: argument.type
-			count: 1
-			path: src/Module/Beets/CliHandler.php
-
-		-
 			message: '#^Property Ampache\\Module\\Beets\\CliHandler\:\:\$fieldMapping type has no value type specified in iterable type array\.$#'
 			identifier: missingType.iterableValue
 			count: 1
@@ -1329,12 +1293,6 @@ parameters:
 		-
 			message: '#^Method Ampache\\Module\\Beets\\Handler\:\:mapFields\(\) return type has no value type specified in iterable type array\.$#'
 			identifier: missingType.iterableValue
-			count: 1
-			path: src/Module/Beets/Handler.php
-
-		-
-			message: '#^Parameter \#1 \$callback of function call_user_func expects callable\(\)\: mixed, array\{Ampache\\Module\\Beets\\Catalog, string\} given\.$#'
-			identifier: argument.type
 			count: 1
 			path: src/Module/Beets/Handler.php
 
@@ -1379,12 +1337,6 @@ parameters:
 			identifier: missingType.iterableValue
 			count: 1
 			path: src/Module/Catalog/Catalog_beetsremote.php
-
-		-
-			message: '#^Parameter \#2 \$offset of function substr expects int, int\<1, max\>\|false given\.$#'
-			identifier: argument.type
-			count: 1
-			path: src/Module/Catalog/Catalog_dropbox.php
 
 		-
 			message: '#^Method Ampache\\Module\\Catalog\\Catalog_local\:\:add_file\(\) has parameter \$options with no value type specified in iterable type array\.$#'
@@ -1641,30 +1593,6 @@ parameters:
 		-
 			message: '#^Method Ampache\\Module\\Playback\\Localplay\\Upnp\\UPnPPlayer\:\:GetPlaylistItems\(\) return type has no value type specified in iterable type array\.$#'
 			identifier: missingType.iterableValue
-			count: 1
-			path: src/Module/Playback/Localplay/Upnp/UPnPPlayer.php
-
-		-
-			message: '#^Method Ampache\\Module\\Playback\\Localplay\\Upnp\\UPnPPlayer\:\:prepareURIRequest\(\) has parameter \$prefix with no type specified\.$#'
-			identifier: missingType.parameter
-			count: 1
-			path: src/Module/Playback/Localplay/Upnp/UPnPPlayer.php
-
-		-
-			message: '#^Method Ampache\\Module\\Playback\\Localplay\\Upnp\\UPnPPlayer\:\:prepareURIRequest\(\) has parameter \$song with no type specified\.$#'
-			identifier: missingType.parameter
-			count: 1
-			path: src/Module/Playback/Localplay/Upnp/UPnPPlayer.php
-
-		-
-			message: '#^Method Ampache\\Module\\Playback\\Localplay\\Upnp\\UPnPPlayer\:\:prepareURIRequest\(\) return type has no value type specified in iterable type array\.$#'
-			identifier: missingType.iterableValue
-			count: 1
-			path: src/Module/Playback/Localplay/Upnp/UPnPPlayer.php
-
-		-
-			message: '#^Parameter \#1 \$string of function htmlentities expects string, string\|false given\.$#'
-			identifier: argument.type
 			count: 1
 			path: src/Module/Playback/Localplay/Upnp/UPnPPlayer.php
 
@@ -2239,12 +2167,6 @@ parameters:
 			path: src/Module/Util/OAuth/OAuthToken.php
 
 		-
-			message: '#^Method Ampache\\Module\\Util\\OAuth\\OAuthUtil\:\:build_http_query\(\) has parameter \$params with no type specified\.$#'
-			identifier: missingType.parameter
-			count: 1
-			path: src/Module/Util/OAuth/OAuthUtil.php
-
-		-
 			message: '#^Method Ampache\\Module\\Util\\OAuth\\OAuthUtil\:\:parse_parameters\(\) has parameter \$input with no type specified\.$#'
 			identifier: missingType.parameter
 			count: 1
@@ -2259,24 +2181,6 @@ parameters:
 		-
 			message: '#^Method Ampache\\Module\\Util\\OAuth\\OAuthUtil\:\:urlencode_rfc3986\(\) should return array\<string\>\|string but returns array\<array\<string\>\|string\>\.$#'
 			identifier: return.type
-			count: 1
-			path: src/Module/Util/OAuth/OAuthUtil.php
-
-		-
-			message: '#^Parameter \#1 \$keys of function array_combine expects array\<int\|string\>, array\<string\>\|string given\.$#'
-			identifier: argument.type
-			count: 1
-			path: src/Module/Util/OAuth/OAuthUtil.php
-
-		-
-			message: '#^Parameter \#1 \$string of function rawurlencode expects string, bool\|float\|int\|string given\.$#'
-			identifier: argument.type
-			count: 1
-			path: src/Module/Util/OAuth/OAuthUtil.php
-
-		-
-			message: '#^Parameter \#2 \$values of function array_combine expects array, array\<string\>\|string given\.$#'
-			identifier: argument.type
 			count: 1
 			path: src/Module/Util/OAuth/OAuthUtil.php
 

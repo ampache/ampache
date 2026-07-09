@@ -42,26 +42,28 @@ class OAuthUtil
         }
 
         // Urlencode both keys and values
-        $keys   = OAuthUtil::urlencode_rfc3986(array_keys($params));
-        $values = OAuthUtil::urlencode_rfc3986(array_values($params));
-        $params = array_combine($keys, $values);
+        $params = OAuthUtil::urlencode_rfc3986($params);
+        if (is_string($params)) {
+            return $params;
+        }
+
 
         // Parameters are sorted by name, using lexicographical byte value ordering.
         // Ref: Spec: 9.1.1 (1)
         uksort($params, strcmp(...));
 
         $pairs = [];
+        /** @var array<string, string|string[]> $params */
         foreach ($params as $parameter => $value) {
-            if (is_array($value)) {
-                // If two or more parameters share the same name, they are sorted by their value
-                // Ref: Spec: 9.1.1 (1)
-                // June 12th, 2010 - changed to sort because of issue 164 by hidetaka
-                sort($value, SORT_STRING);
-                foreach ($value as $duplicate_value) {
-                    $pairs[] = $parameter . '=' . $duplicate_value;
-                }
-            } else {
+            if (!is_array($value)) {
                 $pairs[] = $parameter . '=' . $value;
+                continue;
+            }
+
+            sort($value, SORT_STRING);
+
+            foreach ($value as $duplicate_value) {
+                $pairs[] = $parameter . '=' . $duplicate_value;
             }
         }
 
@@ -196,7 +198,7 @@ class OAuthUtil
     }
 
     /**
-     * @return array|string|string[]
+     * @return array<string, string|string[]>|string|string[]
      */
     public static function urlencode_rfc3986($input): array|string
     {
@@ -206,7 +208,7 @@ class OAuthUtil
                 $input
             );
         } elseif (is_scalar($input)) {
-            return str_replace('+', ' ', str_replace('%7E', '~', rawurlencode($input)));
+            return str_replace('+', ' ', str_replace('%7E', '~', rawurlencode((string) $input)));
         }
 
         return '';

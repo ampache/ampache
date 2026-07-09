@@ -417,7 +417,7 @@ class UPnPPlayer
         $song     = new Song($songId);
         $songItem = Upnp_Api::_itemSong($song, '');
         $domDIDL  = Upnp_Api::createDIDL($songItem, '');
-        $xmlDIDL  = $domDIDL->saveXML();
+        $xmlDIDL  = $domDIDL->saveXML() ?: '';
 
         return [
             'InstanceID' => 0,

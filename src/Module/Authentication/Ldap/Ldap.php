@@ -27,6 +27,7 @@ namespace Ampache\Module\Authentication\Ldap;
 
 use Ampache\Config\AmpConfig;
 use LDAP\Connection;
+use LDAP\Result;
 
 /**
  * This class handles all the contacts with a LDAP server
@@ -250,7 +251,8 @@ class Ldap
         $attrs_json = json_encode($attrs);
         debug_event(self::class, sprintf('reading attributes %s in `%s`', $attrs_json, $base_dn), 5);
 
-        if (!$result = ldap_read($link, $base_dn, $filter, $attrs)) {
+        $result = ldap_read($link, $base_dn, $filter, $attrs);
+        if (!$result instanceof Result) {
             throw new LdapException(sprintf('Could not read attributes `%s` for dn `%s`', $attrs_json, $base_dn));
         }
 
@@ -269,7 +271,8 @@ class Ldap
     {
         debug_event(self::class, sprintf('searching in `%s` for `%s`', $base_dn, $filter), 5);
 
-        if (!$result = ldap_search($link, $base_dn, $filter)) {
+        $result = ldap_search($link, $base_dn, $filter);
+        if (!$result instanceof Result) {
             throw new LdapException(ldap_errno($link));
         }
 

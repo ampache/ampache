@@ -75,7 +75,9 @@ abstract class Handler
      */
     protected function dispatch(array $data): void
     {
-        call_user_func([$this->handler, $this->handlerCommand], $data);
+        if (is_callable([$this->handler, $this->handlerCommand])) {
+            call_user_func([$this->handler, $this->handlerCommand], $data);
+        }
     }
 
     /**
