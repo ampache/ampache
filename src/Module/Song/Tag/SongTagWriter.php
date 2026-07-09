@@ -49,7 +49,7 @@ final readonly class SongTagWriter implements SongTagWriterInterface
 
     /**
      * @param array<int, array{data: string, description: null|string, mime: null|string, picturetypeid: int}> $apics
-     * @param array<string, array<int, array{data: string, description: null|string, mime: null|string, picturetypeid: int}>> $ndata
+     * @param array<string,mixed> $ndata
      * @param array{data: string, description: null|string, mime: null|string, picturetypeid: int, encodingid: int} $new_pic
      */
     public function check_for_duplicate(array $apics, array $new_pic, array &$ndata, string $apic_typeid): ?int
@@ -156,7 +156,7 @@ final readonly class SongTagWriter implements SongTagWriterInterface
             if (!empty($txxxData)) {
                 foreach ($txxxData as $key => $value) {
                     $idx = $this->search_txxx($key, $songMeta['text']);
-                    if ($idx) {
+                    if ($idx && isset($songMeta['text'][$idx])) {
                         $ndata['text'][] = [
                             'data' => $songMeta['text'][$idx]['data'],
                             'description' => $key,
@@ -468,6 +468,35 @@ final readonly class SongTagWriter implements SongTagWriterInterface
 
     /**
      * Get an array of metadata for writing id3 file tags.
+     * @return array{
+     *     year: int|null,
+     *     time: int|null,
+     *     title: string|null,
+     *     comment: string|null,
+     *     album: string,
+     *     artist: string,
+     *     band: string|null,
+     *     composer: string|null,
+     *     publisher: string|null,
+     *     track_number: int|null,
+     *     part_of_a_set: int|null,
+     *     unique_file_identifier?:  array{
+     *         data: string,
+     *         ownerid: string
+     *     },
+     *     Popularimeter?:  array{
+     *         email: string,
+     *         rating: int|float,
+     *         data: int
+     *     },
+     *     genre: string,
+     *     original_year: int|null,
+     *     text: list<array{
+     *         data: string,
+     *         description: string,
+     *         encodingid: int
+     *     }>
+     *  }
      */
     private function getId3Metadata(
         Song $song,
