@@ -235,36 +235,6 @@ parameters:
 			path: src/Module/Api/Json5_Data.php
 
 		-
-			message: '#^Method Ampache\\Module\\Api\\Json6_Data\:\:_filter_objects\(\) has parameter \$objects with no value type specified in iterable type array\.$#'
-			identifier: missingType.iterableValue
-			count: 1
-			path: src/Module/Api/Json6_Data.php
-
-		-
-			message: '#^Method Ampache\\Module\\Api\\Json6_Data\:\:_filter_objects\(\) return type has no value type specified in iterable type array\.$#'
-			identifier: missingType.iterableValue
-			count: 1
-			path: src/Module/Api/Json6_Data.php
-
-		-
-			message: '#^Method Ampache\\Module\\Api\\Json8_Data\:\:_filter_objects\(\) has parameter \$objects with no value type specified in iterable type array\.$#'
-			identifier: missingType.iterableValue
-			count: 1
-			path: src/Module/Api/Json8_Data.php
-
-		-
-			message: '#^Method Ampache\\Module\\Api\\Json8_Data\:\:_filter_objects\(\) return type has no value type specified in iterable type array\.$#'
-			identifier: missingType.iterableValue
-			count: 1
-			path: src/Module/Api/Json8_Data.php
-
-		-
-			message: '#^Cannot call method getId\(\) on Ampache\\Repository\\Model\\User\|null\.$#'
-			identifier: method.nonObject
-			count: 1
-			path: src/Module/Api/Method/Api3/Handshake3Method.php
-
-		-
 			message: '#^Parameter \#1 \(array\|string\) of echo cannot be converted to string\.$#'
 			identifier: echo.nonString
 			count: 3
@@ -341,12 +311,6 @@ parameters:
 			identifier: echo.nonString
 			count: 1
 			path: src/Module/Api/Method/Api4/GenreSongs4Method.php
-
-		-
-			message: '#^Cannot call method getId\(\) on Ampache\\Repository\\Model\\User\|null\.$#'
-			identifier: method.nonObject
-			count: 1
-			path: src/Module/Api/Method/Api4/Handshake4Method.php
 
 		-
 			message: '#^Parameter \#1 \(array\|string\) of echo cannot be converted to string\.$#'
@@ -485,12 +449,6 @@ parameters:
 			identifier: echo.nonString
 			count: 1
 			path: src/Module/Api/Method/Api5/GenreSongs5Method.php
-
-		-
-			message: '#^Cannot call method getId\(\) on Ampache\\Repository\\Model\\User\|null\.$#'
-			identifier: method.nonObject
-			count: 1
-			path: src/Module/Api/Method/Api5/Handshake5Method.php
 
 		-
 			message: '#^Parameter \#1 \(array\|string\) of echo cannot be converted to string\.$#'
@@ -973,34 +931,10 @@ parameters:
 			path: src/Module/Api/Xml5_Data.php
 
 		-
-			message: '#^Method Ampache\\Module\\Api\\Xml6_Data\:\:_filter_objects\(\) has parameter \$objects with no value type specified in iterable type array\.$#'
-			identifier: missingType.iterableValue
-			count: 1
-			path: src/Module/Api/Xml6_Data.php
-
-		-
-			message: '#^Method Ampache\\Module\\Api\\Xml6_Data\:\:_filter_objects\(\) return type has no value type specified in iterable type array\.$#'
-			identifier: missingType.iterableValue
-			count: 1
-			path: src/Module/Api/Xml6_Data.php
-
-		-
 			message: '#^Method Ampache\\Module\\Api\\Xml6_Data\:\:keyed_array\(\) has parameter \$array with no value type specified in iterable type array\.$#'
 			identifier: missingType.iterableValue
 			count: 1
 			path: src/Module/Api/Xml6_Data.php
-
-		-
-			message: '#^Method Ampache\\Module\\Api\\Xml8_Data\:\:_filter_objects\(\) has parameter \$objects with no value type specified in iterable type array\.$#'
-			identifier: missingType.iterableValue
-			count: 1
-			path: src/Module/Api/Xml8_Data.php
-
-		-
-			message: '#^Method Ampache\\Module\\Api\\Xml8_Data\:\:_filter_objects\(\) return type has no value type specified in iterable type array\.$#'
-			identifier: missingType.iterableValue
-			count: 1
-			path: src/Module/Api/Xml8_Data.php
 
 		-
 			message: '#^Method Ampache\\Module\\Api\\Xml8_Data\:\:keyed_array\(\) has parameter \$array with no value type specified in iterable type array\.$#'
@@ -1595,12 +1529,6 @@ parameters:
 			identifier: missingType.iterableValue
 			count: 1
 			path: src/Module/Playback/Stream.php
-
-		-
-			message: '#^Method Ampache\\Module\\Song\\Tag\\SongTagWriter\:\:getId3Metadata\(\) return type has no value type specified in iterable type array\.$#'
-			identifier: missingType.iterableValue
-			count: 1
-			path: src/Module/Song/Tag/SongTagWriter.php
 
 		-
 			message: '#^Method Ampache\\Module\\Song\\Tag\\SongTagWriter\:\:getVorbisMetadata\(\) return type has no value type specified in iterable type array\.$#'

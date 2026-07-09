@@ -66,9 +66,7 @@ use Ampache\Repository\SongRepositoryInterface;
  */
 class Json6_Data
 {
-    private static ?int $count = null;
-
-    // This is added so that we don't pop any webservers
+    private static int $count  = 0;
     private static ?int $limit = 5000;
     private static int $offset = 0;
 
@@ -2346,6 +2344,8 @@ class Json6_Data
      * _filter_objects
      *
      * This filters the objects based on the limit and offset
+     * @param array<int, mixed> $objects
+     * @return array<int, mixed>
      */
     private static function _filter_objects(array $objects, ?bool $encode = null): array
     {

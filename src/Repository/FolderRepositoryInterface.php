@@ -33,11 +33,6 @@ use Ampache\Repository\Model\Video;
 interface FolderRepositoryInterface
 {
     /**
-     * Return the number of entries in the database...
-     */
-    public function getItemCount(): int;
-
-    /**
      * This cleans out unused folders
      */
     public function collectGarbage(): void;
@@ -58,6 +53,11 @@ interface FolderRepositoryInterface
     public function getByName(string $folderName, ?int $catalogId = null, ?int $parent = null): Folder|Podcast_Episode|Song|Video|null;
 
     public function getByPathName(string $folderPath, int $catalogId = 0, ?string $parentPath = null): ?Folder;
+
+    /**
+     * Return the number of entries in the database...
+     */
+    public function getItemCount(): int;
 
     public function lookup(string $folderName, int $catalogId = 0, ?int $parent_id = null): int;
 

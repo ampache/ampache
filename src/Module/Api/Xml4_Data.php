@@ -62,7 +62,7 @@ use Traversable;
  */
 class Xml4_Data
 {
-    // This is added so that we don't pop any webservers
+    private static ?int $count  = null;
     private static ?int $limit  = 5000;
     private static int $offset  = 0;
     private static string $type = '';
@@ -79,20 +79,20 @@ class Xml4_Data
      *
      * This echos out a standard albums XML document, it pays attention to the limit
      *
-     * @param array<int|string> $albums
+     * @param array<int|string> $objects
      * @param string[] $include Array of other items to include
      * @param bool $full_xml whether to return a full XML document or just the node
      */
-    public static function albums(array $albums, array $include, User $user, string $auth, bool $full_xml = true): string
+    public static function albums(array $objects, array $include, User $user, string $auth, bool $full_xml = true): string
     {
-        if ((count($albums) > self::$limit || self::$offset > 0) && (self::$limit && $full_xml)) {
-            $albums = array_splice($albums, self::$offset, self::$limit);
-        }
-        $string = ($full_xml) ? "<total_count>" . count($albums) . "</total_count>\n" : '';
+        self::$count = self::$count ?: count($objects);
+        $objects     = self::_filter_objects($objects, $full_xml);
 
-        Rating::build_cache('album', $albums);
+        $string = ($full_xml) ? "<total_count>" . self::$count . "</total_count>\n" : '';
 
-        foreach ($albums as $album_id) {
+        Rating::build_cache('album', $objects);
+
+        foreach ($objects as $album_id) {
             $album = new Album((int) $album_id);
             if ($album->isNew()) {
                 continue;
@@ -129,20 +129,20 @@ class Xml4_Data
      * This takes an array of artists and then returns a pretty xml document with the information
      * we want
      *
-     * @param array<int|string> $artists
+     * @param array<int|string> $objects
      * @param string[] $include Array of other items to include
      * @param bool $full_xml whether to return a full XML document or just the node
      */
-    public static function artists(array $artists, array $include, User $user, string $auth, bool $full_xml = true): string
+    public static function artists(array $objects, array $include, User $user, string $auth, bool $full_xml = true): string
     {
-        if ((count($artists) > self::$limit || self::$offset > 0) && (self::$limit && $full_xml)) {
-            $artists = array_splice($artists, self::$offset, self::$limit);
-        }
-        $string = ($full_xml) ? "<total_count>" . count($artists) . "</total_count>\n" : '';
+        self::$count = self::$count ?: count($objects);
+        $objects     = self::_filter_objects($objects, $full_xml);
 
-        Rating::build_cache('artist', $artists);
+        $string = ($full_xml) ? "<total_count>" . self::$count . "</total_count>\n" : '';
 
-        foreach ($artists as $artist_id) {
+        Rating::build_cache('artist', $objects);
+
+        foreach ($objects as $artist_id) {
             $artist = new Artist((int) $artist_id);
             if ($artist->isNew()) {
                 continue;
@@ -179,16 +179,16 @@ class Xml4_Data
      *
      * This returns catalogs to the user, in a pretty xml document with the information
      *
-     * @param int[] $catalogs group of catalog id's
+     * @param int[] $objects group of catalog id's
      */
-    public static function catalogs(array $catalogs): string
+    public static function catalogs(array $objects): string
     {
-        if ((count($catalogs) > self::$limit || self::$offset > 0) && self::$limit) {
-            $catalogs = array_splice($catalogs, self::$offset, self::$limit);
-        }
-        $string = "<total_count>" . count($catalogs) . "</total_count>\n";
+        self::$count = self::$count ?: count($objects);
+        $objects     = self::_filter_objects($objects);
 
-        foreach ($catalogs as $catalog_id) {
+        $string = "<total_count>" . self::$count . "</total_count>\n";
+
+        foreach ($objects as $catalog_id) {
             $catalog = Catalog::create_from_id($catalog_id);
             if ($catalog === null) {
                 break;
@@ -256,30 +256,6 @@ class Xml4_Data
     }
 
     /**
-     * footer
-     *
-     * This returns the footer
-     *
-     * @see _footer()
-     */
-    public static function footer(): string
-    {
-        return self::_footer();
-    }
-
-    /**
-     * header
-     *
-     * This returns the header
-     *
-     * @see _header()
-     */
-    public static function header(?string $title = null): string
-    {
-        return self::_header($title);
-    }
-
-    /**
      * indexes
      *
      * This takes an array of object_ids and return XML based on the type of object
@@ -292,10 +268,10 @@ class Xml4_Data
      */
     public static function indexes(array $objects, string $object_type, User $user, string $auth, bool $full_xml = true, bool $include = false): string
     {
-        if ((count($objects) > self::$limit || self::$offset > 0) && (self::$limit && $full_xml)) {
-            $objects = array_slice($objects, self::$offset, self::$limit);
-        }
-        $string = ($full_xml) ? "<total_count>" . count($objects) . "</total_count>\n" : '';
+        self::$count = self::$count ?: count($objects);
+        $objects     = self::_filter_objects($objects, $full_xml);
+
+        $string = ($full_xml) ? "<total_count>" . self::$count . "</total_count>\n" : '';
 
         // here is where we call the object type
         switch ($object_type) {
@@ -447,18 +423,18 @@ class Xml4_Data
      *
      * This returns licenses to the user, in a pretty xml document with the information
      *
-     * @param array<int|string> $licenses
+     * @param array<int|string> $objects
      */
-    public static function licenses(array $licenses): string
+    public static function licenses(array $objects): string
     {
-        if ((count($licenses) > self::$limit || self::$offset > 0) && self::$limit) {
-            $licenses = array_splice($licenses, self::$offset, self::$limit);
-        }
-        $string = "<total_count>" . count($licenses) . "</total_count>\n";
+        self::$count = self::$count ?: count($objects);
+        $objects     = self::_filter_objects($objects);
+
+        $string = "<total_count>" . self::$count . "</total_count>\n";
 
         $licenseRepository = self::getLicenseRepository();
 
-        foreach ($licenses as $license_id) {
+        foreach ($objects as $license_id) {
             $license = $licenseRepository->findById((int) $license_id);
             if ($license !== null) {
                 $string .= "<license id=\"$license_id\">\n\t<name><![CDATA[" . $license->getName() . "]]></name>\n\t<description><![CDATA[" . $license->getDescription() . "]]></description>\n\t<external_link><![CDATA[" . $license->getExternalLink() . "]]></external_link>\n</license>\n";
@@ -473,18 +449,17 @@ class Xml4_Data
      *
      * This takes an array of playlist ids and then returns a nice pretty XML document
      *
-     * @param array<int|string> $playlists Playlist id's to include
+     * @param array<int|string> $objects Playlist id's to include
      */
-    public static function playlists(array $playlists, User $user, string $auth): string
+    public static function playlists(array $objects, User $user, string $auth): string
     {
-        if ((count($playlists) > self::$limit || self::$offset > 0) && self::$limit) {
-            $playlists = array_slice($playlists, self::$offset, self::$limit);
-        }
+        self::$count = self::$count ?: count($objects);
+        $objects     = self::_filter_objects($objects);
 
-        $string = "<total_count>" . count($playlists) . "</total_count>\n";
+        $string = "<total_count>" . self::$count . "</total_count>\n";
 
         // Foreach the playlist ids
-        foreach ($playlists as $playlist_id) {
+        foreach ($objects as $playlist_id) {
             /**
              * Strip smart_ from playlist id and compare to original
              * smartlist = 'smart_1'
@@ -526,17 +501,17 @@ class Xml4_Data
      *
      * This returns podcasts to the user, in a pretty xml document with the information
      *
-     * @param array<int|string> $podcast_episodes Podcast_Episode id's to include
+     * @param array<int|string> $objects Podcast_Episode id's to include
      * @param bool $full_xml whether to return a full XML document or just the node
      */
-    public static function podcast_episodes(array $podcast_episodes, User $user, string $auth, bool $full_xml = true): string
+    public static function podcast_episodes(array $objects, User $user, string $auth, bool $full_xml = true): string
     {
-        if ((count($podcast_episodes) > self::$limit || self::$offset > 0) && (self::$limit && $full_xml)) {
-            $podcast_episodes = array_splice($podcast_episodes, self::$offset, self::$limit);
-        }
-        $string = ($full_xml) ? "<total_count>" . count($podcast_episodes) . "</total_count>\n" : '';
+        self::$count = self::$count ?: count($objects);
+        $objects     = self::_filter_objects($objects, $full_xml);
 
-        foreach ($podcast_episodes as $episode_id) {
+        $string = ($full_xml) ? "<total_count>" . self::$count . "</total_count>\n" : '';
+
+        foreach ($objects as $episode_id) {
             $episode = new Podcast_Episode((int) $episode_id);
             if ($episode->isNew()) {
                 continue;
@@ -557,20 +532,20 @@ class Xml4_Data
      *
      * This returns podcasts to the user, in a pretty xml document with the information
      *
-     * @param array<int|string> $podcasts
+     * @param array<int|string> $objects
      * @param bool $episodes include the episodes of the podcast //optional
      * @param bool $full_xml whether to return a full XML document or just the node
      */
-    public static function podcasts(array $podcasts, User $user, string $auth, bool $episodes = false, bool $full_xml = true): string
+    public static function podcasts(array $objects, User $user, string $auth, bool $episodes = false, bool $full_xml = true): string
     {
-        if ((count($podcasts) > self::$limit || self::$offset > 0) && self::$limit) {
-            $podcasts = array_splice($podcasts, self::$offset, self::$limit);
-        }
-        $string = ($full_xml) ? "<total_count>" . count($podcasts) . "</total_count>\n" : '';
+        self::$count = self::$count ?: count($objects);
+        $objects     = self::_filter_objects($objects, $full_xml);
+
+        $string = ($full_xml) ? "<total_count>" . self::$count . "</total_count>\n" : '';
 
         $podcastRepository = self::getPodcastRepository();
 
-        foreach ($podcasts as $podcast_id) {
+        foreach ($objects as $podcast_id) {
             $podcast = $podcastRepository->findById((int) $podcast_id);
             if ($podcast === null) {
                 continue;
@@ -645,17 +620,17 @@ class Xml4_Data
      *
      * This returns shares to the user, in a pretty xml document with the information
      *
-     * @param array<int|string> $shares
+     * @param array<int|string> $objects
      * @param bool $full_xml whether to return a full XML document or just the node, bool $full_xml = true
      */
-    public static function shares(array $shares, User $user, bool $full_xml = true): string
+    public static function shares(array $objects, User $user, bool $full_xml = true): string
     {
-        if ((count($shares) > self::$limit || self::$offset > 0) && self::$limit) {
-            $shares = array_splice($shares, self::$offset, self::$limit);
-        }
-        $string = ($full_xml) ? "<total_count>" . count($shares) . "</total_count>\n" : '';
+        self::$count = self::$count ?: count($objects);
+        $objects     = self::_filter_objects($objects, $full_xml);
 
-        foreach ($shares as $share_id) {
+        $string = ($full_xml) ? "<total_count>" . self::$count . "</total_count>\n" : '';
+
+        foreach ($objects as $share_id) {
             $share = new Share((int) $share_id);
             if ($share->isNew() || !$share->isAccessible($user)) {
                 continue;
@@ -672,13 +647,13 @@ class Xml4_Data
      *
      * This handles creating a xml document for a shout list
      *
-     * @param Traversable<Shoutbox> $shouts Shout identifier list
+     * @param Traversable<Shoutbox> $objects Shout identifier list
      */
-    public static function shouts(Traversable $shouts): string
+    public static function shouts(Traversable $objects): string
     {
         $string = "<shouts>\n";
         /** @var Shoutbox $shout */
-        foreach ($shouts as $shout) {
+        foreach ($objects as $shout) {
             $user = $shout->getUser();
             $string .= "\t<shout id=\"" . $shout->getId() . "\">\n\t\t<date>" . $shout->getDate()->getTimestamp() . "</date>\n\t\t<text><![CDATA[" . $shout->getText() . "]]></text>\n";
             if ($user !== null) {
@@ -695,22 +670,22 @@ class Xml4_Data
      * songs
      *
      * This returns an xml document from an array of song ids. (Spiffy isn't it!)
-     * @param array<int|string> $songs
+     * @param array<int|string> $objects
      */
-    public static function songs(array $songs, User $user, string $auth, bool $full_xml = true): string
+    public static function songs(array $objects, User $user, string $auth, bool $full_xml = true): string
     {
-        if ((count($songs) > self::$limit || self::$offset > 0) && (self::$limit && $full_xml)) {
-            $songs = array_slice($songs, self::$offset, self::$limit);
-        }
-        $string = ($full_xml) ? "<total_count>" . count($songs) . "</total_count>\n" : '';
+        self::$count = self::$count ?: count($objects);
+        $objects     = self::_filter_objects($objects, $full_xml);
 
-        Song::build_cache($songs);
+        $string = ($full_xml) ? "<total_count>" . self::$count . "</total_count>\n" : '';
+
+        Song::build_cache($objects);
         Stream::set_session($auth);
 
         $playlist_track = 0;
 
         // Foreach the ids!
-        foreach ($songs as $song_id) {
+        foreach ($objects as $song_id) {
             $song = new Song((int) $song_id);
 
             // If the song id is invalid/null
@@ -776,16 +751,16 @@ class Xml4_Data
      *
      * This returns tags to the user, in a pretty xml document with the information
      *
-     * @param array<int|string> $tags
+     * @param array<int|string> $objects
      */
-    public static function tags(array $tags): string
+    public static function tags(array $objects): string
     {
-        if ((count($tags) > self::$limit || self::$offset > 0) && self::$limit) {
-            $tags = array_splice($tags, self::$offset, self::$limit);
-        }
-        $string = "<total_count>" . count($tags) . "</total_count>\n";
+        self::$count = self::$count ?: count($objects);
+        $objects     = self::_filter_objects($objects);
 
-        foreach ($tags as $tag_id) {
+        $string = "<total_count>" . self::$count . "</total_count>\n";
+
+        foreach ($objects as $tag_id) {
             $tag = new Tag((int) $tag_id);
             $string .= "<tag id=\"$tag_id\">\n\t<name><![CDATA[" . $tag->name . "]]></name>\n\t<albums>" . $tag->album . "</albums>\n\t<artists>" . $tag->artist . "</artists>\n\t<songs>" . $tag->song . "</songs>\n\t<videos>" . $tag->video . "</videos>\n\t<playlists>0</playlists>\n\t<stream>0</stream>\n</tag>\n";
         }
@@ -798,12 +773,12 @@ class Xml4_Data
      *
      * This handles creating an xml document for an activity list
      *
-     * @param int[] $activities    Activity identifier list
+     * @param int[] $objects    Activity identifier list
      */
-    public static function timeline(array $activities): string
+    public static function timeline(array $objects): string
     {
         $string = "<timeline>\n";
-        foreach ($activities as $activity_id) {
+        foreach ($objects as $activity_id) {
             $activity = new Useractivity($activity_id);
             $user     = new User($activity->user);
             $string .= "\t<activity id=\"" . $activity_id . "\">\n\t\t<date>" . $activity->activity_date . "</date>\n\t\t<object_type><![CDATA[" . $activity->object_type . "]]></object_type>\n\t\t<object_id>" . $activity->object_id . "</object_id>\n\t\t<action><![CDATA[" . $activity->action . "]]></action>\n";
@@ -842,12 +817,12 @@ class Xml4_Data
      *
      * This handles creating an xml document for a user list
      *
-     * @param array<int|string> $users    User identifier list
+     * @param array<int|string> $objects    User identifier list
      */
-    public static function users(array $users): string
+    public static function users(array $objects): string
     {
         $string = "<users>\n";
-        foreach ($users as $user_id) {
+        foreach ($objects as $user_id) {
             $user = new User((int) $user_id);
             if ($user->isNew() === false) {
                 $string .= "<user id=\"" . $user->id . "\">\n\t<username><![CDATA[" . $user->username . "]]></username>\n</user>\n";
@@ -863,17 +838,17 @@ class Xml4_Data
      *
      * This builds the xml document for displaying video objects
      *
-     * @param array<int|string> $videos
+     * @param array<int|string> $objects
      * @param bool $full_xml whether to return a full XML document or just the node
      */
-    public static function videos(array $videos, User $user, string $auth, bool $full_xml = true): string
+    public static function videos(array $objects, User $user, string $auth, bool $full_xml = true): string
     {
-        if ((count($videos) > self::$limit || self::$offset > 0) && self::$limit) {
-            $videos = array_slice($videos, self::$offset, self::$limit);
-        }
-        $string = ($full_xml) ? "<total_count>" . count($videos) . "</total_count>\n" : '';
+        self::$count = self::$count ?: count($objects);
+        $objects     = self::_filter_objects($objects, $full_xml);
 
-        foreach ($videos as $video_id) {
+        $string = ($full_xml) ? "<total_count>" . self::$count . "</total_count>\n" : '';
+
+        foreach ($objects as $video_id) {
             $video = new Video((int) $video_id);
             if ($video->isNew()) {
                 continue;
@@ -887,6 +862,34 @@ class Xml4_Data
         }
 
         return Xml8_Data::output_xml($string, $full_xml);
+    }
+
+    /**
+     * _filter_objects
+     *
+     * This filters the objects based on the limit and offset
+     * @param array<int, mixed> $objects
+     * @return array<int, mixed>
+     */
+    private static function _filter_objects(array $objects, ?bool $encode = null): array
+    {
+        if (
+            $encode !== null
+            && (self::$count > self::$limit || self::$offset > 0)
+            && (self::$limit && $encode)
+        ) {
+            return array_slice($objects, self::$offset, self::$limit);
+        }
+
+        if (
+            $encode === null
+            && (self::$count > self::$limit || self::$offset > 0)
+            && self::$limit
+        ) {
+            return array_slice($objects, self::$offset, self::$limit);
+        }
+
+        return $objects;
     }
 
     /**

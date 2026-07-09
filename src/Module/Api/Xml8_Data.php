@@ -69,9 +69,7 @@ use SimpleXMLElement;
  */
 class Xml8_Data
 {
-    private static ?int $count = null;
-
-    // This is added so that we don't pop any webservers
+    private static int $count  = 0;
     private static ?int $limit = 5000;
     private static int $offset = 0;
 
@@ -423,7 +421,7 @@ class Xml8_Data
      */
     public static function folders(array $objects, Folder $folder, User $user, string $auth): string
     {
-        self::$count = self::$count ?? count($objects);
+        self::$count = self::$count ?: count($objects);
         $objects     = self::_filter_objects($objects);
 
         $xml = new SimpleXMLElement(
@@ -1797,6 +1795,8 @@ class Xml8_Data
      * _filter_objects
      *
      * This filters the objects based on the limit and offset
+     * @param array<int, mixed> $objects
+     * @return array<int, mixed>
      */
     private static function _filter_objects(array $objects, ?bool $encode = null): array
     {

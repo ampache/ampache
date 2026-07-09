@@ -98,13 +98,11 @@ final class Folder8Method
             case 'json':
                 Json8_Data::set_offset((int) ($input['offset'] ?? 0));
                 Json8_Data::set_limit($input['limit'] ?? 0);
-                Json8_Data::set_count(count($results));
                 echo Json8_Data::folders($results, $folder, $user, $input['auth'], false);
                 break;
             default:
                 Xml8_Data::set_offset((int) ($input['offset'] ?? 0));
                 Xml8_Data::set_limit($input['limit'] ?? 0);
-                Xml8_Data::set_count(count($results));
                 echo Xml8_Data::folders($results, $folder, $user, $input['auth']);
         }
 

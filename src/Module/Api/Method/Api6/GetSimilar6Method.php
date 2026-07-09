@@ -97,7 +97,6 @@ final class GetSimilar6Method
             case 'json':
                 Json6_Data::set_offset((int) ($input['offset'] ?? 0));
                 Json6_Data::set_limit($input['limit'] ?? 0);
-                Json6_Data::set_count(count($results));
                 switch ($type) {
                     case 'artist':
                         echo Json6_Data::artists($results, [], $user, $input['auth']);
@@ -109,7 +108,6 @@ final class GetSimilar6Method
             default:
                 Xml6_Data::set_offset((int) ($input['offset'] ?? 0));
                 Xml6_Data::set_limit($input['limit'] ?? 0);
-                Xml6_Data::set_count(count($results));
                 switch ($type) {
                     case 'artist':
                         echo Xml6_Data::artists($results, [], $user, $input['auth']);
