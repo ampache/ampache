@@ -41,77 +41,10 @@ use Psr\Http\Message\StreamInterface;
 
 class Album6MethodTest extends MockeryTestCase
 {
-<<<<<<<< HEAD:tests/Module/Api/Method/Api8/Album8MethodTest.php
     private ModelFactoryInterface|MockInterface|null $modelFactory;
     private StreamFactoryInterface|MockInterface|null $streamFactory;
-    private ?Album8Method $subject;
-
-========
-    /** @var ModelFactoryInterface|MockInterface|null */
-    private MockInterface $modelFactory;
-
-    /** @var StreamFactoryInterface|MockInterface|null */
-    private MockInterface $streamFactory;
-
     private ?Album6Method $subject;
 
-    protected function setUp(): void
-    {
-        $this->modelFactory  = $this->mock(ModelFactoryInterface::class);
-        $this->streamFactory = $this->mock(StreamFactoryInterface::class);
-
-        $this->subject = new Album6Method(
-            $this->modelFactory,
-            $this->streamFactory
-        );
-    }
-
-    public function testHandleThrowsExceptionIfFilterIsMissing(): void
-    {
-        $gatekeeper = $this->mock(GatekeeperInterface::class);
-        $response   = $this->mock(ResponseInterface::class);
-        $output     = $this->mock(ApiOutputInterface::class);
-        $user       = $this->mock(User::class);
-
-        $this->expectException(RequestParamMissingException::class);
-        $this->expectExceptionMessage(sprintf(T_('Bad Request: %s'), 'filter'));
-
-        $this->subject->handle($gatekeeper, $response, $output, [], $user);
-    }
-
-    public function testHandleThrowsExceptionIfAlbumDoesNotExist(): void
-    {
-        $gatekeeper = $this->mock(GatekeeperInterface::class);
-        $response   = $this->mock(ResponseInterface::class);
-        $output     = $this->mock(ApiOutputInterface::class);
-        $album      = $this->mock(Album::class);
-        $user       = $this->mock(User::class);
-
-        $albumId = 666;
-
-        $this->modelFactory->shouldReceive('createAlbum')
-            ->with($albumId)
-            ->once()
-            ->andReturn($album);
-
-        $album->shouldReceive('isNew')
-            ->withNoArgs()
-            ->once()
-            ->andReturnTrue();
-
-        $this->expectException(ResultEmptyException::class);
-        $this->expectExceptionMessage((string) $albumId);
-
-        $this->subject->handle(
-            $gatekeeper,
-            $response,
-            $output,
-            ['filter' => (string) $albumId],
-            $user
-        );
-    }
-
->>>>>>>> develop:tests/Module/Api/Method/Album6MethodTest.php
     public function testHandleReturnsOutput(): void
     {
         $gatekeeper = $this->mock(GatekeeperInterface::class);
@@ -231,7 +164,7 @@ class Album6MethodTest extends MockeryTestCase
         $this->modelFactory  = $this->mock(ModelFactoryInterface::class);
         $this->streamFactory = $this->mock(StreamFactoryInterface::class);
 
-        $this->subject = new Album8Method(
+        $this->subject = new Album6Method(
             $this->modelFactory,
             $this->streamFactory
         );

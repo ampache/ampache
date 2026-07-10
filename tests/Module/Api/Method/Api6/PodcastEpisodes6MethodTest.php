@@ -44,18 +44,12 @@ use Psr\Http\Message\StreamInterface;
 class PodcastEpisodes6MethodTest extends TestCase
 {
     private ConfigContainerInterface&MockObject $configContainer;
-<<<<<<<< HEAD:tests/Module/Api/Method/Api8/PodcastEpisodes8MethodTest.php
-========
-
-    private PodcastEpisodes6Method $subject;
-
->>>>>>>> develop:tests/Module/Api/Method/PodcastEpisodes6MethodTest.php
     private GatekeeperInterface&MockObject $gatekeeper;
     private ModelFactoryInterface&MockObject $modelFactory;
     private ApiOutputInterface&MockObject $output;
     private PodcastRepositoryInterface&MockObject $podcastRepository;
     private ResponseInterface&MockObject $response;
-    private PodcastEpisodes8Method $subject;
+    private PodcastEpisodes6Method $subject;
     private User $user;
 
     public function testHandleLimitReturnsResponse(): void
@@ -64,77 +58,9 @@ class PodcastEpisodes6MethodTest extends TestCase
         $podcast = $this->createMock(Podcast::class);
         $browse  = $this->createMock(Browse::class);
 
-<<<<<<<< HEAD:tests/Module/Api/Method/Api8/PodcastEpisodes8MethodTest.php
         $podcastId = 666;
         $episodes  = [1, 2, 3, 4, 5];
         $result    = '';
-========
-        $this->subject = new PodcastEpisodes6Method(
-            $this->modelFactory,
-            $this->podcastRepository,
-            $this->configContainer,
-        );
-
-        $this->gatekeeper = $this->createMock(GatekeeperInterface::class);
-        $this->response   = $this->createMock(ResponseInterface::class);
-        $this->output     = $this->createMock(ApiOutputInterface::class);
-        $this->user       = $this->createMock(User::class);
-    }
-
-    public function testHandleThrowsIfPodcastsDisabled(): void
-    {
-        $podcastId = 666;
-
-        $stream = $this->createMock(StreamInterface::class);
-
-        $result = 'some-error';
-
-        $this->configContainer->expects(static::once())
-            ->method('get')
-            ->with(ConfigurationKeyEnum::PODCAST)
-            ->willReturn(0);
-
-        $this->response->expects(static::once())
-            ->method('getBody')
-            ->willReturn($stream);
-
-        $stream->expects(static::once())
-            ->method('write')
-            ->with($result);
-
-        $this->output->expects(static::once())
-            ->method('error6')
-            ->with(
-                ErrorCodeEnum::ACCESS_DENIED,
-                'Enable: podcast',
-                PodcastEpisodes6Method::ACTION,
-                'system'
-            )
-            ->willReturn($result);
-
-        static::assertSame(
-            $this->response,
-            $this->subject->handle(
-                $this->gatekeeper,
-                $this->response,
-                $this->output,
-                [
-                    'filter' => (string) $podcastId,
-                    'auth' => 'string',
-                    'api_format' => 'xml'
-                ],
-                $this->user
-            )
-        );
-    }
-
-    public function testHandleThrowsIfPodcastIsNew(): void
-    {
-        $podcastId = 666;
-
-        static::expectException(RequestParamMissingException::class);
-        static::expectExceptionMessage('Bad Request: filter');
->>>>>>>> develop:tests/Module/Api/Method/PodcastEpisodes6MethodTest.php
 
         $this->configContainer->expects(static::once())
             ->method('get')
@@ -179,19 +105,19 @@ class PodcastEpisodes6MethodTest extends TestCase
             ->with($result);
 
         $this->output->expects(static::once())
-            ->method('setOffset')
+            ->method('setOffset6')
             ->with(0);
 
         $this->output->expects(static::once())
-            ->method('setLimit')
+            ->method('setLimit6')
             ->with(1);
 
         $this->output->expects(static::once())
-            ->method('setCount')
+            ->method('setCount6')
             ->with(5);
 
         $this->output->expects(static::once())
-            ->method('podcastEpisodes')
+            ->method('podcastEpisodes6')
             ->with($episodes, $this->user, 'string')
             ->willReturn($result);
 
@@ -393,11 +319,11 @@ class PodcastEpisodes6MethodTest extends TestCase
             ->with($result);
 
         $this->output->expects(static::once())
-            ->method('error')
+            ->method('error6')
             ->with(
                 ErrorCodeEnum::ACCESS_DENIED,
                 'Enable: podcast',
-                PodcastEpisodes8Method::ACTION,
+                PodcastEpisodes6Method::ACTION,
                 'system'
             )
             ->willReturn($result);
@@ -424,7 +350,7 @@ class PodcastEpisodes6MethodTest extends TestCase
         $this->podcastRepository = $this->createMock(PodcastRepositoryInterface::class);
         $this->configContainer   = $this->createMock(ConfigContainerInterface::class);
 
-        $this->subject = new PodcastEpisodes8Method(
+        $this->subject = new PodcastEpisodes6Method(
             $this->modelFactory,
             $this->podcastRepository,
             $this->configContainer,

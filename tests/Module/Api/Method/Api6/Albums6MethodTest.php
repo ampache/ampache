@@ -40,32 +40,10 @@ use Psr\Http\Message\StreamInterface;
 
 class Albums6MethodTest extends MockeryTestCase
 {
-<<<<<<<< HEAD:tests/Module/Api/Method/Api8/Albums8MethodTest.php
     private MockInterface|ModelFactoryInterface|null $modelFactory;
     private MockInterface|StreamFactoryInterface|null $streamFactory;
-    private Albums8Method $subject;
-
-========
-    /** @var MockInterface|StreamFactoryInterface|null */
-    private MockInterface $streamFactory;
-
-    /** @var MockInterface|ModelFactoryInterface|null */
-    private MockInterface $modelFactory;
-
     private Albums6Method $subject;
 
-    protected function setUp(): void
-    {
-        $this->streamFactory = $this->mock(StreamFactoryInterface::class);
-        $this->modelFactory  = $this->mock(ModelFactoryInterface::class);
-
-        $this->subject = new Albums6Method(
-            $this->streamFactory,
-            $this->modelFactory
-        );
-    }
-
->>>>>>>> develop:tests/Module/Api/Method/Albums6MethodTest.php
     public function testHandleEmptyListReturnsResponse(): void
     {
         ob_start();
@@ -123,11 +101,7 @@ class Albums6MethodTest extends MockeryTestCase
             ->with($limit)
             ->once();
 
-<<<<<<<< HEAD:tests/Module/Api/Method/Api8/Albums8MethodTest.php
-        $output->shouldReceive('setCount')
-========
         $output->shouldReceive('setCount6')
->>>>>>>> develop:tests/Module/Api/Method/Albums6MethodTest.php
             ->with(0)
             ->once();
 
@@ -219,21 +193,21 @@ class Albums6MethodTest extends MockeryTestCase
             ->once()
             ->andReturn($albums);
 
-        $output->shouldReceive('setOffset')
+        $output->shouldReceive('setOffset6')
             ->with(0)
             ->once();
 
         // Expect the method to set the requested limit of 1
-        $output->shouldReceive('setLimit')
+        $output->shouldReceive('setLimit6')
             ->with(1)
             ->once();
 
         // Now that a limit of 1 was requested, the returned payload should contain only 1 album
-        $output->shouldReceive('setCount')
+        $output->shouldReceive('setCount6')
             ->with(5)
             ->once();
 
-        $output->shouldReceive('albums')
+        $output->shouldReceive('albums6')
             ->with(
                 $albums,
                 $include,
@@ -325,11 +299,7 @@ class Albums6MethodTest extends MockeryTestCase
             ->with(0)
             ->once();
 
-<<<<<<<< HEAD:tests/Module/Api/Method/Api8/Albums8MethodTest.php
-        $output->shouldReceive('setCount')
-========
         $output->shouldReceive('setCount6')
->>>>>>>> develop:tests/Module/Api/Method/Albums6MethodTest.php
             ->with(1)
             ->once();
 
@@ -376,7 +346,7 @@ class Albums6MethodTest extends MockeryTestCase
         $this->streamFactory = $this->mock(StreamFactoryInterface::class);
         $this->modelFactory  = $this->mock(ModelFactoryInterface::class);
 
-        $this->subject = new Albums8Method(
+        $this->subject = new Albums6Method(
             $this->streamFactory,
             $this->modelFactory
         );
