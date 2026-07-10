@@ -917,6 +917,8 @@ class Json8_Data
      */
     public static function empty(?string $type = null): string
     {
+        http_response_code(404);
+
         if (empty($type)) {
             return json_encode([], JSON_PRETTY_PRINT) ?: '';
         }

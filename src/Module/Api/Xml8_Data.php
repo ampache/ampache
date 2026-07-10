@@ -394,6 +394,8 @@ class Xml8_Data
      */
     public static function empty(): string
     {
+        http_response_code(404);
+
         return "<?xml version=\"1.0\" encoding=\"" . AmpConfig::get('site_charset', 'UTF-8') . "\" ?>\n<root>\n</root>\n";
     }
 
