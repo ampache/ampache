@@ -395,6 +395,8 @@ class Xml8_Data
     public static function empty(): string
     {
         http_response_code(404);
+        header(sprintf('Content-type: text/xml; charset=%s', AmpConfig::get('site_charset')));
+        header('Content-Disposition: attachment; filename=information.xml');
 
         return "<?xml version=\"1.0\" encoding=\"" . AmpConfig::get('site_charset', 'UTF-8') . "\" ?>\n<root>\n</root>\n";
     }
@@ -408,6 +410,8 @@ class Xml8_Data
     public static function error(int|string $code, string $string, string $action, string $type): string
     {
         http_response_code(Api::getHttpCode($code));
+        header(sprintf('Content-type: text/xml; charset=%s', AmpConfig::get('site_charset')));
+        header('Content-Disposition: attachment; filename=information.xml');
 
         $xml_string = "\t<error errorCode=\"$code\">\n\t\t<errorAction><![CDATA[" . $action . "]]></errorAction>\n\t\t<errorType><![CDATA[" . $type . "]]></errorType>\n\t\t<errorMessage><![CDATA[" . $string . "]]></errorMessage>\n\t</error>";
 
