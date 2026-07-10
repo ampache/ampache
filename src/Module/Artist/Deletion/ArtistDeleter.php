@@ -69,7 +69,7 @@ final readonly class ArtistDeleter implements ArtistDeleterInterface
             $album = $this->modelFactory->createAlbum($albumId);
 
             try {
-                $this->albumDeleter->delete($album);
+                $this->albumDeleter->delete($album, true);
             } catch (AlbumDeletionException) {
                 $this->logger->critical(
                     sprintf(
@@ -82,6 +82,11 @@ final readonly class ArtistDeleter implements ArtistDeleterInterface
                 throw new ArtistDeletionException();
             }
         }
+
+        Userflag::garbage_collection('album');
+        Rating::garbage_collection('album');
+        $this->shoutRepository->collectGarbage('album');
+        $this->useractivityRepository->collectGarbage('album');
 
         $artistId = $artist->getId();
 

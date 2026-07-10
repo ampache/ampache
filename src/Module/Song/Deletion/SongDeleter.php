@@ -47,7 +47,7 @@ final readonly class SongDeleter implements SongDeleterInterface
         private FolderRepositoryInterface $folderRepository,
     ) {}
 
-    public function delete(Song $song): bool
+    public function delete(Song $song, bool $parent = false): bool
     {
         $deleted = !(!in_array($song->file, [null, '', '0'], true) && file_exists($song->file)) || unlink($song->file);
 
@@ -56,10 +56,12 @@ final readonly class SongDeleter implements SongDeleterInterface
             $deleted = $this->songRepository->delete($songId);
             if ($deleted) {
                 $this->artCleanup->collectGarbageForObject('song', $songId);
-                Userflag::garbage_collection('song', $songId);
-                Rating::garbage_collection('song', $songId);
-                $this->shoutRepository->collectGarbage('song', $songId);
-                $this->userActivityRepository->collectGarbage('song', $songId);
+                if (!$parent) {
+                    Userflag::garbage_collection('song', $songId);
+                    Rating::garbage_collection('song', $songId);
+                    $this->shoutRepository->collectGarbage('song', $songId);
+                    $this->useractivityRepository->collectGarbage('song', $songId);
+                }
                 $this->songRepository->collectGarbage($song);
                 $this->folderRepository->collectGarbage();
             }
