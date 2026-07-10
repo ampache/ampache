@@ -69,7 +69,7 @@ final class Rate3Method
             } else {
                 $rate = new Rating($object_id, $type);
                 $rate->set_rating($rating, $user->id);
-                echo Xml3_Data::single_string('success');
+                echo Xml3_Data::success();
             }
         }
     }

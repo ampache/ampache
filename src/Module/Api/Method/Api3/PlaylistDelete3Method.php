@@ -55,7 +55,7 @@ final class PlaylistDelete3Method
             echo Xml3_Data::error(401, T_('Access denied to this playlist.'));
         } else {
             $playlist->delete();
-            echo Xml3_Data::single_string('success');
+            echo Xml3_Data::success();
         }
     }
 }
