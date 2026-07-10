@@ -937,7 +937,7 @@ class Query
     /**
      * sql_sort_video
      */
-    public function sql_sort_video(?string $field, ?string $order, ?string $table = 'video'): string
+    public function sql_sort_video(?string $field, ?string $order = null, ?string $table = 'video'): string
     {
         $sql = "";
         switch ($field) {
@@ -1383,7 +1383,7 @@ class Query
      * a logic based sort that will come later as that's
      * a lot more complicated
      */
-    private function _sql_sort(?string $field, ?string $order): string
+    private function _sql_sort(?string $field, ?string $order = null): string
     {
         if ($order != 'DESC') {
             $order = 'ASC';

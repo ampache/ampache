@@ -58,20 +58,16 @@ use XMLReader;
  *
  * This class is a derived work from UMSP project (http://wiki.wdlxtv.com/UMSP).
  *
+ * UPnP classes:
+ * object.item.audioItem
+ * object.item.imageItem
+ * object.item.videoItem
+ * object.item.playlistItem
+ * object.item.textItem
+ * object.container
  */
 class Upnp_Api
 {
-    /**
-     * UPnP classes:
-     * object.item.audioItem
-     * object.item.imageItem
-     * object.item.videoItem
-     * object.item.playlistItem
-     * object.item.textItem
-     * object.container
-     */
-    public const false SSDP_DEBUG = false;
-
     public static function _callSearch($criteria, $filter, $start, $count): array
     {
         $type = self::_parse_upnp_filter($filter);
@@ -904,10 +900,8 @@ class Upnp_Api
     {
         // Process a discovery request.  The response must be sent to the address specified by $remote
         $headers = self::get_headers($data);
-        if (self::SSDP_DEBUG) {
-            debug_event(self::class, 'Discovery request from ' . $address, 5);
-            debug_event(self::class, 'HEADERS:' . var_export($headers, true), 5);
-        }
+        //debug_event(self::class, 'Discovery request from ' . $address, 5);
+        //debug_event(self::class, 'HEADERS:' . var_export($headers, true), 5);
 
         $new_usn = 'uuid:' . self::get_uuidStr();
         $actst   = $headers['st'];
@@ -933,11 +927,11 @@ class Upnp_Api
                 self::sendResponse($delaytime, 'urn:schemas-upnp-org:service:ContentDirectory:1', $address);
                 # And one that MiniDLNA advertises
                 self::sendResponse($delaytime, 'urn:microsoft.com:service:X_MS_MediaReceiverRegistrar:1', $address);
-            } elseif (self::SSDP_DEBUG) {
-                debug_event(self::class, 'ST header not for a service we provide [' . $actst . ']', 5);
+            } else {
+                //debug_event(self::class, 'ST header not for a service we provide [' . $actst . ']', 5);
             }
-        } elseif (self::SSDP_DEBUG) {
-            debug_event(self::class, 'M-SEARCH MAN header not understood [' . $headers['man'] . ']', 5);
+        } else {
+            //debug_event(self::class, 'M-SEARCH MAN header not understood [' . $headers['man'] . ']', 5);
         }
     }
 
@@ -1011,9 +1005,7 @@ class Upnp_Api
         $headers = self::get_headers($unpacked);
         $str     = 'Notify ' . $remote . ' ' . $headers['nts'] . ' for ' . $headers['nt'];
         // We don't do anything with notifications except log them to check rx working
-        if (self::SSDP_DEBUG) {
-            debug_event(self::class, $str, 5);
-        }
+            //debug_event(self::class, $str, 5);
     }
 
     /* ================================== End SSDP functions ================================== */
@@ -1165,14 +1157,10 @@ class Upnp_Api
         $delay = random_int(15, $delaytime * 1000);
 
         $addr = explode(":", $address);
-        if (self::SSDP_DEBUG) {
-            debug_event(self::class, 'Sending response to: ' . $addr[0] . ':' . $addr[1] . PHP_EOL . $response, 5);
-        }
+        //debug_event(self::class, 'Sending response to: ' . $addr[0] . ':' . $addr[1] . PHP_EOL . $response, 5);
+
         self::_udpSend($response, $delay, $addr[0], (int) $addr[1]);
-        if (self::SSDP_DEBUG) {
-            // for timing
-            debug_event(self::class, '(Sent)', 5);
-        }
+        //debug_event(self::class, '(Sent)', 5);
     }
 
     private static function _getFileTypes(): array
@@ -1549,7 +1537,7 @@ class Upnp_Api
         $rule_num = 1;
         $size     = sizeof($tokens);
         for ($i = 0; $i < $size; $i++) {
-            if ($tokens[$i] != '') {
+            if (!empty($tokens[$i])) {
                 $rule = 'rule_' . $rule_num;
                 $term = self::_parse_upnp_search_term($tokens[$i], $data['type']);
                 if (!empty($term)) {

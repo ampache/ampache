@@ -92,7 +92,7 @@ final class WantedQuery implements QueryInterface
      *
      * Sorting SQL for ORDER BY
      */
-    public function get_sql_sort(Query $query, ?string $field, ?string $order): string
+    public function get_sql_sort(Query $query, ?string $field = null, ?string $order = null): string
     {
         $sql = match ($field) {
             'name', 'title' => "`wanted`.`name`",

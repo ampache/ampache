@@ -95,7 +95,7 @@ class Upload
     /**
      * check_album
      */
-    public static function check_album(string $album_name, ?int $artist_id): ?int
+    public static function check_album(string $album_name, ?int $artist_id = null): ?int
     {
         debug_event(self::class, 'check_album: looking for ' . $album_name, 5);
         if ($album_name !== '') {

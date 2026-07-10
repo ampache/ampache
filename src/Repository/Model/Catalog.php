@@ -2199,7 +2199,7 @@ abstract class Catalog extends database_object
      * @param null|array<string, bool> $options
      * @noinspection PhpMissingBreakStatementInspection
      */
-    public static function process_action(string $action, ?array $catalogs, ?array $options = null): void
+    public static function process_action(string $action, ?array $catalogs = null, ?array $options = null): void
     {
         if (empty($options)) {
             $options = ['gather_art' => false, 'parse_playlist' => false];

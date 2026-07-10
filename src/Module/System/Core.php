@@ -141,14 +141,14 @@ class Core
      * get_filesize
      * Get a file size. This because filesize() doesn't work on 32-bit OS with files > 2GB
      */
-    public static function get_filesize(?string $filename): int
+    public static function get_filesize(?string $filename = null): int
     {
         if (!$filename || !file_exists($filename)) {
             return 0;
         }
 
         $size = filesize($filename);
-        if ($size === false) {
+        if (!$size) {
             $filepointer = fopen($filename, 'rb');
             if (!$filepointer) {
                 return 0;
@@ -164,9 +164,6 @@ class Core
             while (!feof($filepointer)) {
                 $size += strlen((string) fread($filepointer, $chunksize));
             }
-        } elseif ($size < 0) {
-            // Handle overflowed integer...
-            $size = sprintf("%u", $size);
         }
 
         return (int) $size;

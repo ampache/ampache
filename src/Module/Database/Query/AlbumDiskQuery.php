@@ -271,7 +271,7 @@ final class AlbumDiskQuery implements QueryInterface
      *
      * Sorting SQL for ORDER BY
      */
-    public function get_sql_sort(Query $query, ?string $field, ?string $order): string
+    public function get_sql_sort(Query $query, ?string $field = null, ?string $order = null): string
     {
         $query->set_join('LEFT', '`album`', '`album_disk`.`album_id`', '`album`.`id`', 10);
         switch ($field) {

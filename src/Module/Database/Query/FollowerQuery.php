@@ -95,7 +95,7 @@ final class FollowerQuery implements QueryInterface
      *
      * Sorting SQL for ORDER BY
      */
-    public function get_sql_sort(Query $query, ?string $field, ?string $order): string
+    public function get_sql_sort(Query $query, ?string $field = null, ?string $order = null): string
     {
         $sql = match ($field) {
             'user', 'follow_user', 'follow_date' => sprintf('`user_follower`.`%s`', $field),

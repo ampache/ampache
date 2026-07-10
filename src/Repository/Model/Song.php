@@ -1022,7 +1022,7 @@ class Song extends database_object implements
      * update_artist
      * updates the artist field
      */
-    public static function update_artist(int $new_artist, int $song_id, ?int $old_artist, bool $update_counts = true): bool
+    public static function update_artist(int $new_artist, int $song_id, ?int $old_artist = null, bool $update_counts = true): bool
     {
         if ($old_artist != $new_artist && self::_update_item('artist', $new_artist, $song_id, AccessLevelEnum::CONTENT_MANAGER) !== false) {
             if ($update_counts && $old_artist) {

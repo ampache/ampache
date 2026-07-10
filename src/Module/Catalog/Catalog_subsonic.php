@@ -437,7 +437,7 @@ class Catalog_subsonic extends Catalog
     /**
      * @param array<string, mixed> $data
      */
-    public function insertArt(array $data, ?int $song_Id): bool
+    public function insertArt(array $data, ?int $song_Id = null): bool
     {
         $this->_createClient();
         if (!$this->subsonic instanceof SubsonicClient) {

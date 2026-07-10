@@ -89,7 +89,7 @@ final class ShoutboxQuery implements QueryInterface
      *
      * Sorting SQL for ORDER BY
      */
-    public function get_sql_sort(Query $query, ?string $field, ?string $order): string
+    public function get_sql_sort(Query $query, ?string $field = null, ?string $order = null): string
     {
         $sql = match ($field) {
             'date', 'id', 'object_type', 'sticky', 'user' => sprintf('`user_shout`.`%s`', $field),

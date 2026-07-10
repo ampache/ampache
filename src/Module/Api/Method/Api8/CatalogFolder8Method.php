@@ -149,9 +149,6 @@ final class CatalogFolder8Method
                     continue;
                 }
                 foreach ($task as $item) {
-                    if (defined('SSE_OUTPUT')) {
-                        unset($SSE_OUTPUT);
-                    }
                     switch ($item) {
                         case 'clean':
                             if ($media->file) {

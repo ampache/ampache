@@ -37,12 +37,6 @@ parameters:
 			path: src/Gui/Playlist/NewPlaylistDialogAdapterInterface.php
 
 		-
-			message: '#^Method Ampache\\Module\\Api\\ApiHandler\:\:_executeDebugHandler\(\) has parameter \$input with no value type specified in iterable type array\.$#'
-			identifier: missingType.iterableValue
-			count: 1
-			path: src/Module/Api/ApiHandler.php
-
-		-
 			message: '#^Method Ampache\\Module\\Api\\ApiHandler\:\:_executeHandler\(\) has parameter \$input with no value type specified in iterable type array\.$#'
 			identifier: missingType.iterableValue
 			count: 1
@@ -181,66 +175,6 @@ parameters:
 			path: src/Module/Api/Daap_Api.php
 
 		-
-			message: '#^Call to function unset\(\) contains undefined variable \$SSE_OUTPUT\.$#'
-			identifier: unset.variable
-			count: 1
-			path: src/Module/Api/Method/Api4/CatalogAction4Method.php
-
-		-
-			message: '#^Call to function unset\(\) contains undefined variable \$SSE_OUTPUT\.$#'
-			identifier: unset.variable
-			count: 1
-			path: src/Module/Api/Method/Api4/CatalogFile4Method.php
-
-		-
-			message: '#^Call to function unset\(\) contains undefined variable \$SSE_OUTPUT\.$#'
-			identifier: unset.variable
-			count: 1
-			path: src/Module/Api/Method/Api5/CatalogAction5Method.php
-
-		-
-			message: '#^Call to function unset\(\) contains undefined variable \$SSE_OUTPUT\.$#'
-			identifier: unset.variable
-			count: 1
-			path: src/Module/Api/Method/Api5/CatalogFile5Method.php
-
-		-
-			message: '#^Call to function unset\(\) contains undefined variable \$SSE_OUTPUT\.$#'
-			identifier: unset.variable
-			count: 1
-			path: src/Module/Api/Method/Api6/CatalogAction6Method.php
-
-		-
-			message: '#^Call to function unset\(\) contains undefined variable \$SSE_OUTPUT\.$#'
-			identifier: unset.variable
-			count: 1
-			path: src/Module/Api/Method/Api6/CatalogFile6Method.php
-
-		-
-			message: '#^Call to function unset\(\) contains undefined variable \$SSE_OUTPUT\.$#'
-			identifier: unset.variable
-			count: 1
-			path: src/Module/Api/Method/Api6/CatalogFolder6Method.php
-
-		-
-			message: '#^Call to function unset\(\) contains undefined variable \$SSE_OUTPUT\.$#'
-			identifier: unset.variable
-			count: 1
-			path: src/Module/Api/Method/Api8/CatalogAction8Method.php
-
-		-
-			message: '#^Call to function unset\(\) contains undefined variable \$SSE_OUTPUT\.$#'
-			identifier: unset.variable
-			count: 1
-			path: src/Module/Api/Method/Api8/CatalogFile8Method.php
-
-		-
-			message: '#^Call to function unset\(\) contains undefined variable \$SSE_OUTPUT\.$#'
-			identifier: unset.variable
-			count: 1
-			path: src/Module/Api/Method/Api8/CatalogFolder8Method.php
-
-		-
 			message: '#^Method Ampache\\Module\\Api\\Method\\MethodInterface\:\:handle\(\) has parameter \$input with no value type specified in iterable type array\.$#'
 			identifier: missingType.iterableValue
 			count: 1
@@ -256,18 +190,6 @@ parameters:
 			message: '#^Comparison operation "\>" between int\<1, max\> and 0 is always true\.$#'
 			identifier: greater.alwaysTrue
 			count: 1
-			path: src/Module/Api/Upnp_Api.php
-
-		-
-			message: '#^Elseif condition is always false\.$#'
-			identifier: elseif.alwaysFalse
-			count: 2
-			path: src/Module/Api/Upnp_Api.php
-
-		-
-			message: '#^If condition is always false\.$#'
-			identifier: if.alwaysFalse
-			count: 4
 			path: src/Module/Api/Upnp_Api.php
 
 		-
@@ -1201,12 +1123,6 @@ parameters:
 			path: src/Module/System/AutoUpdate.php
 
 		-
-			message: '#^Comparison operation "\<" between int\<0, max\> and 0 is always false\.$#'
-			identifier: smaller.alwaysFalse
-			count: 1
-			path: src/Module/System/Core.php
-
-		-
 			message: '#^Method Ampache\\Module\\System\\Dba\:\:_query\(\) has parameter \$params with no value type specified in iterable type array\.$#'
 			identifier: missingType.iterableValue
 			count: 1
@@ -1345,12 +1261,6 @@ parameters:
 			path: src/Module/System/LegacyLogger.php
 
 		-
-			message: '#^Call to function is_array\(\) with string will always evaluate to false\.$#'
-			identifier: function.impossibleType
-			count: 1
-			path: src/Module/Util/AmazonSearch.php
-
-		-
 			message: '#^Method Ampache\\Module\\Util\\AmazonSearch\:\:__construct\(\) has parameter \$associate_tag with no type specified\.$#'
 			identifier: missingType.parameter
 			count: 1
@@ -1394,6 +1304,12 @@ parameters:
 
 		-
 			message: '#^Method Ampache\\Module\\Util\\AmazonSearch\:\:getProxyConfig\(\) return type has no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/Module/Util/AmazonSearch.php
+
+		-
+			message: '#^Method Ampache\\Module\\Util\\AmazonSearch\:\:lookup\(\) has parameter \$asin with no value type specified in iterable type array\.$#'
 			identifier: missingType.iterableValue
 			count: 1
 			path: src/Module/Util/AmazonSearch.php
@@ -1643,12 +1559,6 @@ parameters:
 			identifier: missingType.parameter
 			count: 1
 			path: src/Module/Util/OAuth/OAuthRequest.php
-
-		-
-			message: '#^Ternary operator condition is always true\.$#'
-			identifier: ternary.alwaysTrue
-			count: 1
-			path: src/Module/Util/OAuth/OAuthSignatureMethod_HMAC_SHA1.php
 
 		-
 			message: '#^Binary operation "\." between ''oauth_token\='' and array\<string\>\|string results in an error\.$#'

@@ -759,7 +759,7 @@ class Subsonic_Xml_Data
      * return playlists object with nested playlist itemsSubsoniSubsoni
      * @param int[]|string[] $playlists
      */
-    public static function addPlaylists(SimpleXMLElement $xml, ?User $user, array $playlists): SimpleXMLElement
+    public static function addPlaylists(SimpleXMLElement $xml, User $user, array $playlists): SimpleXMLElement
     {
         $xplaylists = self::_addChildToResultXml($xml, 'playlists');
         foreach ($playlists as $playlist_id) {

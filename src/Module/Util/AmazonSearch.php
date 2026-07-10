@@ -203,10 +203,10 @@ class AmazonSearch
     /**
      * Lookup the selected item by the 'Amazon Standard Identification Number'
      *
-     * @param string $asin The 'Amazon standard Identification Number'
+     * @param string|array $asin The 'Amazon standard Identification Number'
      * @param string $type The category of results desired from the web service.
      */
-    public function lookup(string $asin, string $type = 'Music'): array
+    public function lookup(string|array $asin, string $type = 'Music'): array
     {
         if (is_array($asin)) {
             foreach (array_keys($asin) as $key) {

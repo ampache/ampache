@@ -1095,7 +1095,7 @@ class Artist extends database_object implements
     /**
      * Update artist information.
      */
-    public function update_artist_info(?string $summary, ?string $placeformed, ?int $yearformed, bool $manual = false): void
+    public function update_artist_info(?string $summary, ?string $placeformed = null, ?int $yearformed = null, bool $manual = false): void
     {
         // set null values if missing
         $summary     = (empty($summary)) ? null : $summary;
@@ -1120,7 +1120,7 @@ class Artist extends database_object implements
     /**
      * Update artist associated user.
      */
-    public function update_artist_name(string $name, ?string $prefix): void
+    public function update_artist_name(string $name, ?string $prefix = null): void
     {
         $sql = "UPDATE `artist` SET `prefix` = ?, `name` = ? WHERE `id` = ?";
         Dba::write($sql, [$prefix, $name, $this->id]);

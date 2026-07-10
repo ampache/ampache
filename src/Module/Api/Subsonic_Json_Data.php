@@ -816,7 +816,7 @@ class Subsonic_Json_Data
      * @param int[]|string[] $playlists
      * @return array{'subsonic-response': array<string, mixed>}
      */
-    public static function addPlaylists(array $response, ?User $user, array $playlists): array
+    public static function addPlaylists(array $response, User $user, array $playlists): array
     {
         $json = ['playlist' => []];
         foreach ($playlists as $playlist_id) {
