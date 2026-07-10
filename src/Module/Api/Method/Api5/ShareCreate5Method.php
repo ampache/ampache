@@ -87,7 +87,7 @@ final class ShareCreate5Method
         $object_id   = $input['filter'];
         $object_type = $input['type'];
         $description = $input['description'] ?? null;
-        $expire_days = (isset($input['expires'])) ? filter_var($input['expires'], FILTER_SANITIZE_NUMBER_INT) : (int) AmpConfig::get('share_expire', 7);
+        $expire_days = (isset($input['expires'])) ? filter_var($input['expires'], FILTER_SANITIZE_NUMBER_INT) : AmpConfig::get('share_expire', 7);
         // confirm the correct data
         if (!in_array(strtolower($object_type), ['song', 'album', 'artist'])) {
             /* HINT: Requested object string/id/type ("album", "myusername", "some song title", 1298376) */
@@ -123,7 +123,7 @@ final class ShareCreate5Method
                 (int) $object_id,
                 true,
                 $functionChecker->check(AccessFunctionEnum::FUNCTION_DOWNLOAD),
-                $expire_days,
+                (int) $expire_days,
                 $passwordGenerator->generate_token(),
                 0,
                 $description
