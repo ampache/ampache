@@ -186,7 +186,7 @@ class Stats
                     ? "UPDATE `folder` INNER JOIN `folder_map` ON  `folder_map`.`folder_id` =  `folder`.`id` SET  `folder`.`total_count` = CASE WHEN  `folder`.`total_count` > 0 THEN  `folder`.`total_count` - 1 ELSE  `folder`.`total_count` END,  `folder`.`total_skip` = CASE WHEN  `folder`.`total_count` > 0 THEN  `folder`.`total_skip` + 1 ELSE  `folder`.`total_skip` END WHERE  `folder_map`.`object_id` = ? AND  `folder_map`.`object_type` = ?;"
                     : "UPDATE `folder` INNER JOIN `folder_map` ON  `folder_map`.`folder_id` =  `folder`.`id` SET  `folder`.`total_count` =  `folder`.`total_count` + 1,  `folder`.`total_skip` = CASE WHEN  `folder`.`total_skip` > 0 THEN  `folder`.`total_skip` - 1 ELSE 0 END WHERE  `folder_map`.`object_id` = ? AND  `folder_map`.`object_type` = ?;";
                 Dba::write($sql, [$object_id, $type]);
-            break;
+                break;
             case 'album_disk':
             case 'album':
             case 'artist':
