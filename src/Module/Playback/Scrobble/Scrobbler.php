@@ -1,6 +1,6 @@
 <?php
 
-declare(strict_types=0);
+declare(strict_types=1);
 
 /**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
@@ -169,7 +169,7 @@ class Scrobbler
                     return null;
                 }
 
-                $this->error_msg = $xml->error;
+                $this->error_msg = (string) $xml->error;
 
                 return null;
             }
@@ -214,7 +214,7 @@ class Scrobbler
                 return true;
             }
 
-            $this->error_msg = $xml->error;
+            $this->error_msg = (string) $xml->error;
 
             return false;
         }
@@ -308,7 +308,7 @@ class Scrobbler
                 return true;
             }
 
-            $this->error_msg = $xml->error;
+            $this->error_msg = (string) $xml->error;
 
             return false;
         }

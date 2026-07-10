@@ -1,6 +1,6 @@
 <?php
 
-declare(strict_types=0);
+declare(strict_types=1);
 
 /**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
@@ -125,7 +125,7 @@ foreach ($object_ids as $object) {
     }
 
     if ($directplay_limit > 0 && property_exists($libitem, 'object_count')) {
-        $show_playlist_add = $access25 && ($libitem->object_count > 0 && $libitem->object_count <= $directplay_limit);
+        $show_playlist_add = $access25 && $libitem->playable && ($libitem->object_count > 0 && $libitem->object_count <= $directplay_limit);
     } ?>
             <tr id="<?php echo $object_type . '_' . $libitem->getId(); ?>" class="libitem_menu">
     <?php $content = $talFactory->createTalView()

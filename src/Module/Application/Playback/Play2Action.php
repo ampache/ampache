@@ -1,6 +1,6 @@
 <?php
 
-declare(strict_types=0);
+declare(strict_types=1);
 
 /**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
@@ -831,9 +831,10 @@ final readonly class Play2Action implements ApplicationActionInterface
             }
 
             // Check to see if we should be throttling because we can get away with it
-            if (AmpConfig::get('rate_limit') > 0) {
+            $rate_limit = (AmpConfig::get('rate_limit', 0)) ? (int) (round(AmpConfig::get('rate_limit') * 1024)) : 0;
+            if ($rate_limit > 0) {
                 while (!feof($filepointer)) {
-                    echo fread($filepointer, (int) (round(AmpConfig::get('rate_limit', 8192) * 1024)));
+                    echo fread($filepointer, $rate_limit);
                     flush();
                     sleep(1);
                 }
@@ -1163,7 +1164,7 @@ final readonly class Play2Action implements ApplicationActionInterface
                 ? 2048
                 : min(2048, max(0, $stream_size - $bytes_streamed));
 
-            if ($read_size === 0) {
+            if ($read_size <= 0) {
                 break;
             }
 

@@ -1,6 +1,6 @@
 <?php
 
-declare(strict_types=0);
+declare(strict_types=1);
 
 /**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
@@ -660,7 +660,7 @@ class Stats
     public static function get_top(
         string $input_type,
         int $count,
-        int $threshold,
+        int|string $threshold = 0,
         int $offset = 0,
         ?User $user = null,
         bool $random = false,
@@ -677,7 +677,7 @@ class Stats
             $offset = 0;
         }
 
-        $sql   = self::get_top_sql($input_type, $threshold, 'stream', $user, $random, $since, $before, false, $by_user);
+        $sql   = self::get_top_sql($input_type, (int) $threshold, 'stream', $user, $random, $since, $before, false, $by_user);
         $limit = ($offset < 1)
             ? $count
             : $offset . "," . $count;
@@ -701,7 +701,7 @@ class Stats
      */
     public static function get_top_sql(
         string $input_type,
-        int $threshold,
+        int $threshold = 0,
         string $count_type = 'stream',
         ?User $user = null,
         bool $random = false,

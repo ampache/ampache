@@ -1,6 +1,6 @@
 <?php
 
-declare(strict_types=0);
+declare(strict_types=1);
 
 /**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
@@ -27,7 +27,6 @@ namespace Ampache\Module\Api\Method\Api8;
 
 use Ampache\Config\AmpConfig;
 use Ampache\Module\Api\Api;
-use Ampache\Module\Api\Xml8_Data;
 use Ampache\Module\Authorization\AccessTypeEnum;
 use Ampache\Module\System\Session;
 use Ampache\Module\User\Tracking\UserTrackerInterface;
@@ -62,7 +61,7 @@ final class Ping8Method
     {
         $version      = (isset($input['version'])) ? $input['version'] : Api::$version;
         Api::$version = ((int) $version >= 350001) ? Api::$version_numeric : Api::$version;
-        $data_version = (int) substr($version, 0, 1);
+        $data_version = (int) substr((string) $version, 0, 1);
         $results      = [
             'server' => AmpConfig::get('version'),
             'version' => Api::$version,
@@ -105,7 +104,7 @@ final class Ping8Method
                 echo json_encode($results, JSON_PRETTY_PRINT);
                 break;
             default:
-                echo Xml8_Data::keyed_array($results);
+                echo Api::keyed_array($results);
         }
     }
 

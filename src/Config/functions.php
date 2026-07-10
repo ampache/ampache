@@ -1,6 +1,6 @@
 <?php
 
-declare(strict_types=0);
+declare(strict_types=1);
 
 /**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
@@ -24,7 +24,7 @@ declare(strict_types=0);
  */
 
 use Ampache\Config\AmpConfig;
-use Ampache\Module\Api\Xml8_Data;
+use Ampache\Module\Api\Api;
 use Ampache\Module\Authorization\AccessLevelEnum;
 use Ampache\Module\Authorization\AccessTypeEnum;
 use Ampache\Module\Authorization\Check\PrivilegeCheckerInterface;
@@ -863,7 +863,7 @@ function xoutput_from_array(array $array, bool $callback = false, string $type =
 {
     $output = (Core::get_request('xoutput') !== '') ? Core::get_request('xoutput') : 'xml';
     if ($output == 'xml') {
-        return Xml8_Data::output_xml_from_array($array, $callback, $type);
+        return Api::output_xml_from_array($array, $callback, $type);
     } elseif ($output == 'raw') {
         $outputnode = Core::get_request('xoutputnode');
 
@@ -958,7 +958,7 @@ function T_(string $msgid): string
 function nT_(string $original, string $plural, float|int|string $value): string
 {
     if (function_exists('n__')) {
-        return n__($original, $plural, (string) $value);
+        return n__($original, $plural, (int) $value);
     }
 
     return $plural;

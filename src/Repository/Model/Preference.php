@@ -1,6 +1,6 @@
 <?php
 
-declare(strict_types=0);
+declare(strict_types=1);
 
 /**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
@@ -834,7 +834,6 @@ class Preference extends database_object
             'allow_video',
             'allow_zip_download',
             'api_always_download',
-            'api_debug_handler',
             'api_enable_3',
             'api_enable_4',
             'api_enable_5',

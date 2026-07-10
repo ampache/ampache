@@ -1,6 +1,6 @@
 <?php
 
-declare(strict_types=0);
+declare(strict_types=1);
 
 /**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
@@ -110,13 +110,11 @@ final class PlaylistSongs6Method
             case 'json':
                 Json6_Data::set_offset((int) ($input['offset'] ?? 0));
                 Json6_Data::set_limit($input['limit'] ?? 0);
-                Json6_Data::set_count(count($results));
                 echo Json6_Data::songs($results, $user, $input['auth']);
                 break;
             default:
                 Xml6_Data::set_offset((int) ($input['offset'] ?? 0));
                 Xml6_Data::set_limit($input['limit'] ?? 0);
-                Xml6_Data::set_count(count($results));
                 echo Xml6_Data::songs($results, $user, $input['auth']);
         }
 

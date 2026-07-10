@@ -1,6 +1,6 @@
 <?php
 
-declare(strict_types=0);
+declare(strict_types=1);
 
 /**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
@@ -43,7 +43,7 @@ class OAuthSignatureMethod_HMAC_SHA1 extends OAuthSignatureMethod
 
         $key_parts = [
             $consumer->secret,
-            ($token) ? $token->secret : "",
+            $token->secret ?? "",
         ];
 
         $key_parts = OAuthUtil::urlencode_rfc3986($key_parts);

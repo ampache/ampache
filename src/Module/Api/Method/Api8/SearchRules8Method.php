@@ -1,6 +1,6 @@
 <?php
 
-declare(strict_types=0);
+declare(strict_types=1);
 
 /**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
@@ -28,7 +28,6 @@ namespace Ampache\Module\Api\Method\Api8;
 use Ampache\Config\AmpConfig;
 use Ampache\Module\Api\Api;
 use Ampache\Module\Api\Exception\ErrorCodeEnum;
-use Ampache\Module\Api\Xml8_Data;
 use Ampache\Repository\Model\Search;
 use Ampache\Repository\Model\User;
 
@@ -100,7 +99,7 @@ final class SearchRules8Method
                 echo json_encode(['rule' => $results], JSON_PRETTY_PRINT);
                 break;
             default:
-                echo Xml8_Data::object_array($results, 'rule');
+                echo Api::object_array($results, 'rule');
         }
 
         return true;

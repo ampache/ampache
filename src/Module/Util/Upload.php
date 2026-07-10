@@ -1,6 +1,6 @@
 <?php
 
-declare(strict_types=0);
+declare(strict_types=1);
 
 /**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
@@ -95,7 +95,7 @@ class Upload
     /**
      * check_album
      */
-    public static function check_album(string $album_name, ?int $artist_id): ?int
+    public static function check_album(string $album_name, ?int $artist_id = null): ?int
     {
         debug_event(self::class, 'check_album: looking for ' . $album_name, 5);
         if ($album_name !== '') {
@@ -124,21 +124,18 @@ class Upload
     {
         debug_event(self::class, 'check_artist: looking for ' . $artist_name, 5);
         if ($artist_name !== '') {
-            if (Artist::check($artist_name, '', true) !== null) {
+            if (Artist::check($artist_name, '', $user_id, true)) {
                 debug_event(self::class, 'An artist with the name "' . $artist_name . '" already exists, uploaded song skipped.', 3);
 
                 return null;
             }
 
-            $artist_id = (int) Artist::check($artist_name);
-            if ($artist_id === 0) {
+            $artist_id = (int) Artist::check($artist_name, '', $user_id);
+            if (!$artist_id) {
                 debug_event(self::class, 'Artist information required, uploaded song skipped.', 3);
 
                 return null;
             }
-
-            $artist = new Artist($artist_id);
-            $artist->update_artist_user($user_id); // take ownership of the new artist
 
             return $artist_id;
         }

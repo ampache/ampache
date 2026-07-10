@@ -1,6 +1,6 @@
 <?php
 
-declare(strict_types=0);
+declare(strict_types=1);
 
 /**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
@@ -63,9 +63,13 @@ class Tag extends database_object implements library_item, displayable_item, con
             return;
         }
 
-        foreach ($info as $key => $value) {
-            $this->$key = $value;
-        }
+        $this->album     = (int) ($info['album'] ?? 0);
+        $this->artist    = (int) ($info['artist'] ?? 0);
+        $this->id        = (int) ($info['id'] ?? 0);
+        $this->is_hidden = (int) ($info['is_hidden'] ?? 0);
+        $this->name      = $info['name'] ?? null;
+        $this->song      = (int) ($info['song'] ?? 0);
+        $this->video     = (int) ($info['video'] ?? 0);
     }
 
     /**
@@ -517,7 +521,7 @@ class Tag extends database_object implements library_item, displayable_item, con
 
         $results = [];
         if ($type == 'tag_hidden') {
-            $sql = "SELECT `tag`.`id`, `tag`.`name`, `tag`.`is_hidden`, 0 AS `count` FROM `tag` WHERE (`tag`.`is_hidden` = 1 OR (`tag`.`album` = 0 AND `tag`.`artist` = 0 AND `tag`.`song` = 0 AND `tag`.`video` = 0 )) ";
+            $sql = "SELECT `tag`.`id`, `tag`.`name`, `tag`.`is_hidden`, 0 AS `count` FROM `tag` WHERE (`tag`.`is_hidden` = 1 OR (`tag`.`album` = 0 AND `tag`.`artist` = 0 AND `tag`.`song` = 0 AND `tag`.`video` = 0)) ";
         } else {
             $type_select = (empty($type) || $type == 'all_hidden')
                 ? ', (SUM(`tag`.`artist`)+SUM(`tag`.`album`)+SUM(`tag`.`song`)) AS `count`'
@@ -578,7 +582,6 @@ class Tag extends database_object implements library_item, displayable_item, con
             return [];
         }
 
-        $object_id  = $object_id;
         $limit_text = ($limit == 0)
             ? ''
             : 'LIMIT ' . $limit;

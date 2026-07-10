@@ -1,6 +1,6 @@
 <?php
 
-declare(strict_types=0);
+declare(strict_types=1);
 
 /**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
@@ -116,9 +116,14 @@ class Access
             return false;
         }
 
-        foreach ($data as $key => $value) {
-            $this->$key = $value;
-        }
+        $this->id      = (int) ($data['id'] ?? 0);
+        $this->name    = (string) ($data['name'] ?? '');
+        $this->type    = (string) ($data['type'] ?? '');
+        $this->start   = (string) ($data['start'] ?? '');
+        $this->end     = (string) ($data['end'] ?? '');
+        $this->level   = isset($data['level']) ? (int) $data['level'] : null;
+        $this->user    = isset($data['user']) ? (int) $data['user'] : null;
+        $this->enabled = isset($data['enabled']) ? (bool) $data['enabled'] : null;
 
         return true;
     }

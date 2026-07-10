@@ -1,6 +1,6 @@
 <?php
 
-declare(strict_types=0);
+declare(strict_types=1);
 
 /**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
@@ -274,14 +274,12 @@ final class Browse6Method
             case 'json':
                 Json6_Data::set_offset((int) ($input['offset'] ?? 0));
                 Json6_Data::set_limit($input['limit'] ?? 0);
-                Json6_Data::set_count(count($results));
-                echo Json6_Data::browses($results, $object_id, $object_type, $child_type, $catalog_id);
+                echo Json6_Data::browses($results, $object_type, $child_type, $object_id, $catalog_id);
                 break;
             default:
                 Xml6_Data::set_offset((int) ($input['offset'] ?? 0));
                 Xml6_Data::set_limit($input['limit'] ?? 0);
-                Xml6_Data::set_count(count($results));
-                echo Xml6_Data::browses($results, $object_id, $object_type, $child_type, $catalog_id);
+                echo Xml6_Data::browses($results, $object_type, $child_type, $object_id, $catalog_id);
         }
 
         return true;

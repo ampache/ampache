@@ -31,7 +31,7 @@ use Generator;
 /**
  * Create `folder_map` table for browsing Folder\'s and items together
  */
-final class Migration800008 extends AbstractMigration
+final class Migration800010 extends AbstractMigration
 {
     protected array $changelog = ['Create `folder_map` table for browsing Folder\'s and items together'];
 
@@ -41,7 +41,9 @@ final class Migration800008 extends AbstractMigration
         string $engine,
         int $build,
     ): Generator {
-        if ($build > 800008) {
+        yield from parent::getTableMigrations($collation, $charset, $engine, $build);
+
+        if ($build > 800010) {
             yield 'folder_map' => "CREATE TABLE `folder_map` (`folder_id` int(11) UNSIGNED NULL, `object_id` int(11) UNSIGNED NOT NULL, `object_type` varchar(16) DEFAULT NULL, `name` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL NULL, `catalog` int(11) DEFAULT 0 NOT NULL, `path_name` varchar(512) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL NULL, UNIQUE KEY `unique_folder_map` (`object_id`,`object_type`,`folder_id`), KEY `folder_catalog_IDX` (`catalog`,`path_name`), KEY `object_id_index` (`object_id`), KEY `folder_id_type_index` (`folder_id`,`object_type`), KEY `object_id_type_index` (`object_id`,`object_type`), KEY `object_type_IDX` (`object_type`) USING BTREE, KEY `object_type_id_IDX` (`object_type`,`object_id`) USING BTREE) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_unicode_ci;ENGINE=$engine DEFAULT CHARSET=$charset COLLATE=$collation;";
         }
     }
@@ -55,6 +57,11 @@ final class Migration800008 extends AbstractMigration
         $this->updateDatabase("DROP TABLE IF EXISTS `folder_map`;");
 
         // create the table
-        $this->updateDatabase("CREATE TABLE `folder_map` (`folder_id` int(11) UNSIGNED NULL, `object_id` int(11) UNSIGNED NOT NULL, `object_type` varchar(16) DEFAULT NULL, `name` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL NULL, `catalog` int(11) DEFAULT 0 NOT NULL, `path_name` varchar(512) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL NULL, UNIQUE KEY `unique_folder_map` (`object_id`,`object_type`,`folder_id`), KEY `folder_catalog_IDX` (`catalog`,`path_name`), KEY `object_id_index` (`object_id`), KEY `folder_id_type_index` (`folder_id`,`object_type`), KEY `object_id_type_index` (`object_id`,`object_type`), KEY `object_type_IDX` (`object_type`) USING BTREE, KEY `object_type_id_IDX` (`object_type`,`object_id`) USING BTREE) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_unicode_ci;ENGINE=$engine DEFAULT CHARSET=$charset COLLATE=$collation;");
+        $this->updateDatabase("CREATE TABLE `folder_map` (`folder_id` int(11) UNSIGNED NULL, `object_id` int(11) UNSIGNED NOT NULL, `object_type` varchar(16) DEFAULT NULL, `name` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL NULL, `catalog` int(11) DEFAULT 0 NOT NULL, `path_name` varchar(512) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL NULL, UNIQUE KEY `unique_folder_map` (`object_id`,`object_type`), KEY `folder_catalog_IDX` (`catalog`,`path_name`), KEY `object_id_index` (`object_id`), KEY `folder_id_type_index` (`folder_id`,`object_type`), KEY `object_id_type_index` (`object_id`,`object_type`), KEY `object_type_IDX` (`object_type`) USING BTREE, KEY `object_type_id_IDX` (`object_type`,`object_id`) USING BTREE) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_unicode_ci;ENGINE=$engine DEFAULT CHARSET=$charset COLLATE=$collation;");
+
+        // folder
+        $this->updateDatabase("INSERT INTO `folder_map` (`object_id`, `folder_id`, `object_type`, `name`, `catalog`, `path_name`) SELECT `id`, `parent`, 'folder', `name`, `catalog`, `path_name` FROM `folder` WHERE `id` NOT IN (SELECT `object_id` FROM `folder_map` WHERE `object_type` = 'folder');");
+        // song, podcast_episode, video
+        $this->updateDatabase("INSERT INTO folder_map (folder_id, object_id, object_type, name, catalog, path_name) SELECT f.id, s.id, 'song', SUBSTRING_INDEX(s.file, '/', -1), s.catalog, REGEXP_REPLACE(s.file, '/[^/]+$', '') FROM song s INNER JOIN folder f ON f.catalog = s.catalog AND f.path_name = REGEXP_REPLACE(s.file, '/[^/]+$', '') LEFT JOIN folder_map fm ON fm.object_id = s.id AND fm.object_type = 'song' WHERE fm.object_id IS NULL;");
     }
 }

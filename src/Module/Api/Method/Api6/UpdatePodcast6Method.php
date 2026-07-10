@@ -1,6 +1,6 @@
 <?php
 
-declare(strict_types=0);
+declare(strict_types=1);
 
 /**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
@@ -43,6 +43,21 @@ final class UpdatePodcast6Method
     public const string ACTION = 'update_podcast';
 
     public const string REST_ACTION = 'sync';
+
+    /**
+     * @param array{
+     *     filter?: string,
+     *     id?: string,
+     *     type: string,
+     *     overwrite: int,
+     *     api_format: string,
+     *     auth: string,
+     * } $input
+     */
+    public static function sync(array $input, User $user): bool
+    {
+        return self::update_podcast($input, $user);
+    }
 
     /**
      * update_podcast

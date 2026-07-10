@@ -1,6 +1,6 @@
 <?php
 
-declare(strict_types=0);
+declare(strict_types=1);
 
 /**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
@@ -77,7 +77,7 @@ final class Folders8Method
         $path_name = $input['filter'] ?? '/';
         $folder    = ($path_name === '/')
             ? new Folder(-1)
-            : self::getFolderRepository()->getByPathName($path_name);
+            : self::getFolderRepository()->getByPathName(rtrim($path_name, '/'));
 
         if ($folder === null || $folder->isNew()) {
             /* HINT: Requested object string/id/type ("album", "myusername", "some song title", 1298376) */
@@ -92,7 +92,11 @@ final class Folders8Method
                 $browse->set_filter('int_id', $folder->getId());
             }
         } else {
-            $browse->set_api_filter($method, $path_name);
+            if ($method === 'exact_match') {
+                $browse->set_filter('int_id', $folder->getId());
+            } else {
+                $browse->set_api_filter($method, $path_name);
+            }
         }
 
         $browse->set_filter('catalog', User::get_user_catalogs($user->getId()));
@@ -103,7 +107,7 @@ final class Folders8Method
 
         $results = $browse->get_objects();
         if (empty($results)) {
-            Api::empty('browse', $input['api_format']);
+            Api::empty('folder', $input['api_format']);
 
             return false;
         }
@@ -113,13 +117,11 @@ final class Folders8Method
             case 'json':
                 Json8_Data::set_offset((int) ($input['offset'] ?? 0));
                 Json8_Data::set_limit($input['limit'] ?? 0);
-                Json8_Data::set_count(count($results));
                 echo Json8_Data::folders($results, $folder, $user, $input['auth']);
                 break;
             default:
                 Xml8_Data::set_offset((int) ($input['offset'] ?? 0));
                 Xml8_Data::set_limit($input['limit'] ?? 0);
-                Xml8_Data::set_count(count($results));
                 echo Xml8_Data::folders($results, $folder, $user, $input['auth']);
         }
 

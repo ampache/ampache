@@ -1,6 +1,6 @@
 <?php
 
-declare(strict_types=0);
+declare(strict_types=1);
 
 /**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
@@ -59,7 +59,6 @@ final readonly class AlbumArtExporter implements AlbumArtExporterInterface
 
         // Run through them and get the art!
         foreach ($albums as $albumId) {
-            $albumId = $albumId;
             $art     = $this->modelFactory->createArt($albumId);
 
             if (!$art->has_db_info()) {

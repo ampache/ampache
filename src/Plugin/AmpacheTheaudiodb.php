@@ -1,6 +1,6 @@
 <?php
 
-declare(strict_types=0);
+declare(strict_types=1);
 
 /**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
@@ -144,9 +144,10 @@ class AmpacheTheaudiodb extends AmpachePlugin implements PluginGatherArtsInterfa
                         $this->overwrite_name
                         && $object->mbid !== null
                         && MusicBrainz::isMBID($object->mbid)
-                        && strtolower($data['name'] ?? '') !== strtolower((string) $object->get_fullname())
+                        && $data['name'] !== null
+                        && strtolower((string) $data['name']) !== strtolower((string) $object->get_fullname())
                     ) {
-                        $name_check = Artist::update_name_from_mbid($data['name'], $object->mbid);
+                        $name_check = Artist::update_name_from_mbid((string) $data['name'], $object->mbid);
                         if ($object->prefix !== null) {
                             $object->prefix = $name_check['prefix'];
                         }
