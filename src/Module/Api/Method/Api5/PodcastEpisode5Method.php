@@ -1,6 +1,6 @@
 <?php
 
-declare(strict_types=0);
+declare(strict_types=1);
 
 /**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
@@ -77,7 +77,7 @@ final class PodcastEpisode5Method
         ob_end_clean();
         switch ($input['api_format']) {
             case 'json':
-                echo Json5_Data::podcast_episodes($results, $user, $input['auth'], true, false);
+                echo Json5_Data::podcast_episodes($results, $user, $input['auth'], false);
                 break;
             default:
                 echo Xml5_Data::podcast_episodes($results, $user, $input['auth']);

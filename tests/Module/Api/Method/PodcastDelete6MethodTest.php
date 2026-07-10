@@ -23,7 +23,7 @@ declare(strict_types=1);
  *
  */
 
-namespace Ampache\Module\Api\Method\Api8;
+namespace Ampache\Module\Api\Method\Api6;
 
 use Ampache\Config\ConfigContainerInterface;
 use Ampache\Config\ConfigurationKeyEnum;
@@ -44,7 +44,7 @@ use PHPUnit\Framework\TestCase;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\StreamInterface;
 
-class PodcastDelete8MethodTest extends TestCase
+class PodcastDelete6MethodTest extends TestCase
 {
     private PodcastDeleterInterface&MockObject $podcastDeleter;
 
@@ -54,7 +54,7 @@ class PodcastDelete8MethodTest extends TestCase
 
     private PodcastRepositoryInterface&MockObject $podcastRepository;
 
-    private PodcastDelete8Method $subject;
+    private PodcastDelete6Method $subject;
 
     private GatekeeperInterface&MockObject $gatekeeper;
 
@@ -71,7 +71,7 @@ class PodcastDelete8MethodTest extends TestCase
         $this->privilegeChecker  = $this->createMock(PrivilegeCheckerInterface::class);
         $this->podcastRepository = $this->createMock(PodcastRepositoryInterface::class);
 
-        $this->subject = new PodcastDelete8Method(
+        $this->subject = new PodcastDelete6Method(
             $this->podcastDeleter,
             $this->configContainer,
             $this->privilegeChecker,
@@ -240,7 +240,7 @@ class PodcastDelete8MethodTest extends TestCase
             ->with($result);
 
         $this->output->expects(static::once())
-            ->method('success')
+            ->method('success6')
             ->with(sprintf('podcast %d deleted', $podcastId))
             ->willReturn($result);
 
