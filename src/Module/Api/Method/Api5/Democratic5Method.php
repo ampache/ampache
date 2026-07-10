@@ -1,6 +1,6 @@
 <?php
 
-declare(strict_types=0);
+declare(strict_types=1);
 
 /**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
@@ -25,6 +25,7 @@ declare(strict_types=0);
 
 namespace Ampache\Module\Api\Method\Api5;
 
+use Ampache\Module\Api\Api;
 use Ampache\Module\Api\Api5;
 use Ampache\Module\Api\Exception\ErrorCodeEnum;
 use Ampache\Module\Api\Json5_Data;
@@ -94,7 +95,7 @@ final class Democratic5Method
                         echo json_encode($results, JSON_PRETTY_PRINT);
                         break;
                     default:
-                        echo Xml5_Data::keyed_array($results);
+                        echo Api::keyed_array($results);
                 }
                 break;
             case 'devote':
@@ -122,7 +123,7 @@ final class Democratic5Method
                         echo json_encode($results, JSON_PRETTY_PRINT);
                         break;
                     default:
-                        echo Xml5_Data::keyed_array($results);
+                        echo Api::keyed_array($results);
                 }
                 break;
             case 'playlist':
@@ -145,7 +146,7 @@ final class Democratic5Method
                         echo json_encode($results, JSON_PRETTY_PRINT);
                         break;
                     default:
-                        echo Xml5_Data::keyed_array($results);
+                        echo Api::keyed_array($results);
                 }
                 break;
             default:

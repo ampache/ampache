@@ -23,7 +23,7 @@ declare(strict_types=1);
  *
  */
 
-namespace Ampache\Module\Api\Method\Api8;
+namespace Ampache\Module\Api\Method\Api6;
 
 use Ampache\MockeryTestCase;
 use Ampache\Module\Api\Authentication\GatekeeperInterface;
@@ -37,7 +37,7 @@ use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\StreamFactoryInterface;
 use Psr\Http\Message\StreamInterface;
 
-class Albums8MethodTest extends MockeryTestCase
+class Albums6MethodTest extends MockeryTestCase
 {
     /** @var MockInterface|StreamFactoryInterface|null */
     private MockInterface $streamFactory;
@@ -45,14 +45,14 @@ class Albums8MethodTest extends MockeryTestCase
     /** @var MockInterface|ModelFactoryInterface|null */
     private MockInterface $modelFactory;
 
-    private Albums8Method $subject;
+    private Albums6Method $subject;
 
     protected function setUp(): void
     {
         $this->streamFactory = $this->mock(StreamFactoryInterface::class);
         $this->modelFactory  = $this->mock(ModelFactoryInterface::class);
 
-        $this->subject = new Albums8Method(
+        $this->subject = new Albums6Method(
             $this->streamFactory,
             $this->modelFactory
         );
@@ -107,19 +107,19 @@ class Albums8MethodTest extends MockeryTestCase
             ->once()
             ->andReturn([]);
 
-        $output->shouldReceive('setOffset')
+        $output->shouldReceive('setOffset6')
             ->with($offset)
             ->once();
 
-        $output->shouldReceive('setLimit')
+        $output->shouldReceive('setLimit6')
             ->with($limit)
             ->once();
 
-        $output->shouldReceive('setCount')
+        $output->shouldReceive('setCount6')
             ->with(0)
             ->once();
 
-        $output->shouldReceive('albums')
+        $output->shouldReceive('albums6')
             ->with(
                 [],
                 $include,
@@ -202,19 +202,19 @@ class Albums8MethodTest extends MockeryTestCase
             ->once()
             ->andReturn([$album]);
 
-        $output->shouldReceive('setOffset')
+        $output->shouldReceive('setOffset6')
             ->with(0)
             ->once();
 
-        $output->shouldReceive('setLimit')
+        $output->shouldReceive('setLimit6')
             ->with(0)
             ->once();
 
-        $output->shouldReceive('setCount')
+        $output->shouldReceive('setCount6')
             ->with(1)
             ->once();
 
-        $output->shouldReceive('albums')
+        $output->shouldReceive('albums6')
             ->with(
                 [$album],
                 $include,

@@ -1,6 +1,6 @@
 <?php
 
-declare(strict_types=0);
+declare(strict_types=1);
 
 /**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
@@ -100,7 +100,7 @@ class OpenSubsonic_Xml_Data
         if ($album_artist) {
             $xalbum->addAttribute('artistId', OpenSubsonic_Api::getArtistSubId($album_artist));
         }
-        $xalbum->addAttribute('artist', (string) $album->get_parent_fullname());
+        $xalbum->addAttribute('artist', $album->get_parent_fullname());
         // original year (fall back to regular year)
         $original_year = AmpConfig::get('use_original_year');
         $year          = ($original_year && $album->original_year)
@@ -178,7 +178,7 @@ class OpenSubsonic_Xml_Data
         if ($album_artist) {
             $xalbum->addAttribute('artistId', OpenSubsonic_Api::getArtistSubId($album_artist));
         }
-        $xalbum->addAttribute('artist', (string) $album->get_parent_fullname());
+        $xalbum->addAttribute('artist', $album->get_parent_fullname());
         // original year (fall back to regular year)
         $original_year = AmpConfig::get('use_original_year');
         $year          = ($original_year && $album->original_year)
@@ -840,7 +840,7 @@ class OpenSubsonic_Xml_Data
             $xml = self::_addPlaylist_Playlist($xml, $playlist, $user, $songs);
         }
         if ($playlist instanceof Search && $playlist->isNew() === false) {
-            $xml = self::_addPlaylist_Search($xml, $playlist, $user, $songs);
+            $xml = self::_addPlaylist_Search($xml, $playlist, $songs);
         }
 
         return $xml;
@@ -1803,7 +1803,7 @@ class OpenSubsonic_Xml_Data
      * https://opensubsonic.netlify.app/docs/responses/playlist/
      * https://opensubsonic.netlify.app/docs/responses/playlistwithsongs/
      */
-    private static function _addPlaylist_Search(SimpleXMLElement $xml, Search $search, User $user, bool $songs = false): SimpleXMLElement
+    private static function _addPlaylist_Search(SimpleXMLElement $xml, Search $search, bool $songs = false): SimpleXMLElement
     {
         $sub_id    = OpenSubsonic_Api::getSmartPlaylistSubId($search->id);
         $xplaylist = self::_addChildToResultXml($xml, 'playlist');

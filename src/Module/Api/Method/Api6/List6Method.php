@@ -1,6 +1,6 @@
 <?php
 
-declare(strict_types=0);
+declare(strict_types=1);
 
 /**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
@@ -160,7 +160,7 @@ final class List6Method
         $sort    = $browse->get_sort();
         $results = Catalog::get_name_array($objects, $name_type, $sort['name'] ?? 'name', $sort['order'] ?? 'ASC');
         if (empty($results)) {
-            Api6::empty('browse', $input['api_format']);
+            Api6::empty('list', $input['api_format']);
 
             return false;
         }
@@ -169,13 +169,11 @@ final class List6Method
             case 'json':
                 Json6_Data::set_offset((int) ($input['offset'] ?? 0));
                 Json6_Data::set_limit($input['limit'] ?? 0);
-                Json6_Data::set_count(count($results));
                 echo Json6_Data::lists($results);
                 break;
             default:
                 Xml6_Data::set_offset((int) ($input['offset'] ?? 0));
                 Xml6_Data::set_limit($input['limit'] ?? 0);
-                Xml6_Data::set_count(count($results));
                 echo Xml6_Data::lists($results);
         }
 

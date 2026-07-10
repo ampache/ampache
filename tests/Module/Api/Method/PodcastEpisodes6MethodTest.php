@@ -23,7 +23,7 @@ declare(strict_types=1);
  *
  */
 
-namespace Ampache\Module\Api\Method\Api8;
+namespace Ampache\Module\Api\Method\Api6;
 
 use Ampache\Config\ConfigContainerInterface;
 use Ampache\Config\ConfigurationKeyEnum;
@@ -41,7 +41,7 @@ use PHPUnit\Framework\TestCase;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\StreamInterface;
 
-class PodcastEpisodes8MethodTest extends TestCase
+class PodcastEpisodes6MethodTest extends TestCase
 {
     private ModelFactoryInterface&MockObject $modelFactory;
 
@@ -49,7 +49,7 @@ class PodcastEpisodes8MethodTest extends TestCase
 
     private ConfigContainerInterface&MockObject $configContainer;
 
-    private PodcastEpisodes8Method $subject;
+    private PodcastEpisodes6Method $subject;
 
     private GatekeeperInterface&MockObject $gatekeeper;
 
@@ -65,7 +65,7 @@ class PodcastEpisodes8MethodTest extends TestCase
         $this->podcastRepository = $this->createMock(PodcastRepositoryInterface::class);
         $this->configContainer   = $this->createMock(ConfigContainerInterface::class);
 
-        $this->subject = new PodcastEpisodes8Method(
+        $this->subject = new PodcastEpisodes6Method(
             $this->modelFactory,
             $this->podcastRepository,
             $this->configContainer,
@@ -99,11 +99,11 @@ class PodcastEpisodes8MethodTest extends TestCase
             ->with($result);
 
         $this->output->expects(static::once())
-            ->method('error')
+            ->method('error6')
             ->with(
                 ErrorCodeEnum::ACCESS_DENIED,
                 'Enable: podcast',
-                PodcastEpisodes8Method::ACTION,
+                PodcastEpisodes6Method::ACTION,
                 'system'
             )
             ->willReturn($result);
@@ -184,7 +184,7 @@ class PodcastEpisodes8MethodTest extends TestCase
             ->with($result);
 
         $this->output->expects(static::once())
-            ->method('writeEmpty')
+            ->method('writeEmpty6')
             ->with('podcast_episode')
             ->willReturn($result);
 
@@ -261,7 +261,7 @@ class PodcastEpisodes8MethodTest extends TestCase
             ->willReturn($podcast);
 
         $this->output->expects(static::once())
-            ->method('podcastEpisodes')
+            ->method('podcastEpisodes6')
             ->with([$episodeId], $this->user, 'string')
             ->willReturn($result);
 

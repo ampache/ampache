@@ -1,6 +1,6 @@
 <?php
 
-declare(strict_types=0);
+declare(strict_types=1);
 
 /**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
@@ -26,9 +26,9 @@ declare(strict_types=0);
 namespace Ampache\Module\Api\Method\Api6;
 
 use Ampache\Config\AmpConfig;
+use Ampache\Module\Api\Api;
 use Ampache\Module\Api\Api6;
 use Ampache\Module\Api\Exception\ErrorCodeEnum;
-use Ampache\Module\Api\Xml6_Data;
 use Ampache\Module\Authorization\AccessLevelEnum;
 use Ampache\Module\Authorization\AccessTypeEnum;
 use Ampache\Module\Authorization\Check\NetworkCheckerInterface;
@@ -88,7 +88,7 @@ final class Handshake6Method
         // set the version to the old string for old api clients
         $version       = (isset($input['version'])) ? $input['version'] : Api6::$version;
         Api6::$version = ((int) $version >= 350001) ? Api6::$version_numeric : Api6::$version;
-        $data_version  = (int) substr($version, 0, 1);
+        $data_version  = (int) substr((string) $version, 0, 1);
         $data_version  = ($data_version == 7) ? 6 : $data_version;
 
         // Version check shouldn't be soo restrictive... only check with initial version to not break clients compatibility
@@ -205,7 +205,7 @@ final class Handshake6Method
                         echo json_encode($results, JSON_PRETTY_PRINT);
                         break;
                     default:
-                        echo Xml6_Data::keyed_array($results);
+                        echo Api::keyed_array($results);
                 }
 
                 return true;

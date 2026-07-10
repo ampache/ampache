@@ -523,7 +523,7 @@ class OpenSubsonic_Api
                     $object->getId(),
                     true,
                     Access::check_function(AccessFunctionEnum::FUNCTION_DOWNLOAD),
-                    $expire_days,
+                    (int) $expire_days,
                     $passwordGenerator->generate_token(),
                     0,
                     $description
@@ -3076,8 +3076,7 @@ class OpenSubsonic_Api
                 ? self::getAmpacheObject($current)
                 : null;
             if (
-                $media instanceof library_item
-                && $media instanceof Media
+                $media instanceof Media
                 && $media->isNew() === false
                 && isset($media->time)
             ) {
@@ -3169,8 +3168,7 @@ class OpenSubsonic_Api
                 ? self::getAmpacheObject($current)
                 : null;
             if (
-                $media instanceof library_item
-                && $media instanceof Media
+                $media instanceof Media
                 && $media->isNew() === false
                 && isset($media->time)
             ) {
@@ -3249,7 +3247,7 @@ class OpenSubsonic_Api
         foreach ($sub_ids as $sub_id) {
             $object      = self::getAmpacheObject((string) $sub_id);
             $object_type = self::getAmpacheType($sub_id);
-            if ($object_type === "" || !($object instanceof library_item && $object instanceof Media) || $object->isNew() || !isset($object->time) || !isset($object->id)) {
+            if ($object_type === "" || !$object instanceof Media || $object->isNew() || !isset($object->time) || !isset($object->id)) {
                 continue;
             }
 

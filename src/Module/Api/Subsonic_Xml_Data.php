@@ -1,6 +1,6 @@
 <?php
 
-declare(strict_types=0);
+declare(strict_types=1);
 
 /**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
@@ -99,7 +99,7 @@ class Subsonic_Xml_Data
         if ($album_artist) {
             $xalbum->addAttribute('artistId', Subsonic_Api::getArtistSubId($album_artist));
         }
-        $xalbum->addAttribute('artist', (string) $album->get_parent_fullname());
+        $xalbum->addAttribute('artist', $album->get_parent_fullname());
         // original year (fall back to regular year)
         $original_year = AmpConfig::get('use_original_year');
         $year          = ($original_year && $album->original_year)
@@ -170,7 +170,7 @@ class Subsonic_Xml_Data
         if ($album_artist) {
             $xalbum->addAttribute('artistId', Subsonic_Api::getArtistSubId($album_artist));
         }
-        $xalbum->addAttribute('artist', (string) $album->get_parent_fullname());
+        $xalbum->addAttribute('artist', $album->get_parent_fullname());
         // original year (fall back to regular year)
         $original_year = AmpConfig::get('use_original_year');
         $year          = ($original_year && $album->original_year)

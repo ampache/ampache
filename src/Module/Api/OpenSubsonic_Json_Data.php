@@ -1,6 +1,6 @@
 <?php
 
-declare(strict_types=0);
+declare(strict_types=1);
 
 /**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
@@ -872,7 +872,7 @@ class OpenSubsonic_Json_Data
             $json = self::_getPlaylist_Playlist($playlist, $user, $songs);
         }
         if ($playlist instanceof Search && $playlist->isNew() === false) {
-            $json = self::_getPlaylist_Search($playlist, $user, $songs);
+            $json = self::_getPlaylist_Search($playlist, $songs);
         }
 
         $response['subsonic-response']['playlist'] = $json;
@@ -904,7 +904,7 @@ class OpenSubsonic_Json_Data
                 if ($playlist->isNew()) {
                     continue;
                 }
-                $json['playlist'][] = self::_getPlaylist_Search($playlist, $user);
+                $json['playlist'][] = self::_getPlaylist_Search($playlist);
             } else {
                 $playlist = new Playlist((int) $playlist_id);
                 if ($playlist->isNew()) {
@@ -1817,7 +1817,7 @@ class OpenSubsonic_Json_Data
         $sub_id       = OpenSubsonic_Api::getAlbumSubId($album->id);
         $album_artist = $album->findAlbumArtist();
         $subParent    = ($album_artist) ? OpenSubsonic_Api::getArtistSubId($album_artist) : false;
-        $f_name       = (string) $album->get_fullname();
+        $f_name       = $album->get_fullname();
 
         $json = [
             'id' => $sub_id,
@@ -1846,7 +1846,7 @@ class OpenSubsonic_Json_Data
         if ($subParent) {
             $json['artistId'] = $subParent;
         }
-        $json['artist'] = (string) $album->get_parent_fullname();
+        $json['artist'] = $album->get_parent_fullname();
         // original year (fall back to regular year)
         $original_year = AmpConfig::get('use_original_year');
         $year          = ($original_year && $album->original_year)
@@ -2407,7 +2407,7 @@ class OpenSubsonic_Json_Data
             'isVideo' => false,
             'type' => 'music',
             'artistId' => $subParent,
-            'artist' => (string) $album->get_parent_fullname(),
+            'artist' => $album->get_parent_fullname(),
         ];
 
         if ($album->has_art()) {
@@ -2769,9 +2769,9 @@ class OpenSubsonic_Json_Data
             'isVideo' => false,
             'type' => 'music',
             'albumId' => $subParent,
-            'album' => (string) $song->get_album_fullname(),
+            'album' => $song->get_album_fullname(),
             'artistId' => ($song->artist) ? OpenSubsonic_Api::getArtistSubId($song->artist) : '',
-            'artist' => (string) $song->get_parent_fullname(),
+            'artist' => $song->get_parent_fullname(),
         ];
 
         if ($song->has_art()) {
@@ -3423,7 +3423,7 @@ class OpenSubsonic_Json_Data
      *     'entry'?: array<int, array<string, mixed>>
      * } // todo add allowedUser Array of string
      */
-    private static function _getPlaylist_Search(Search $search, User $user, bool $songs = false): array
+    private static function _getPlaylist_Search(Search $search, bool $songs = false): array
     {
         $sub_id = OpenSubsonic_Api::getSmartPlaylistSubId($search->id);
 
@@ -3678,7 +3678,7 @@ class OpenSubsonic_Json_Data
             $text = str_replace("\r", '', (string) $text);
 
             $json = [
-                'displayArtist' => (string) $song->get_parent_fullname(),
+                'displayArtist' => $song->get_parent_fullname(),
                 'displayTitle' => (string) $song->title,
                 'lang' => 'xxx',
                 'synced' => false,

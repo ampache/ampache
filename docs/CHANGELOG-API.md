@@ -7,7 +7,7 @@ This version is being released for Ampache7 **only**
 To ensure that there are no issues with clients checking for single int versions
 we will keep on 6.9.x and resume build number versioning until Ampache 8
 
-**NOTE** API8 has been added to the code but is not enabled for use.
+**NOTE** API8 has been removed from the codebase for Ampache 7.
 
 ### Added (692002)
 
