@@ -2,48 +2,64 @@
 
 ## Ampache 7.10.0
 
-This release replaces the old captcha which includes OCR testing on image generation!
+This release replaces the old captcha implementation (including OCR/image testing behavior) with the new `gregwar/captcha` library.
 
-Check out the new library on GitHub at [Gregwar/Captcha](https://github.com/Gregwar/Captcha)
-
+See: [Gregwar/Captcha](https://github.com/Gregwar/Captcha)
 
 ### Added (7.10.0)
 
+* Database
+  * Allow downgrade path from Ampache8
 * Search
   * Allow filtering by Catalog ID outside of search rules
+* Ampache Remote Catalogs
+  * Added support for Ampache8 servers
+  * Default remote API version set to API6
+* API / Authentication
+  * Allow API key authorization via request headers
 
 ### Changed (7.10.0)
 
-* Backport `gregwar/captcha` from Ampache8 to replace the old `easy_captcha` classes
+* Backport `gregwar/captcha` from Ampache8 to replace legacy `easy_captcha`
 * Update Composer and NPM packages
+* Update Vite to address known security issues
 * Rename function `get_artist_fullname` to `get_parent_fullname`
 * Subsonic
-  * Search3 rules and grouping style changed to match Subsonic expectations
+  * Search3 rules and grouping behavior updated to better match Subsonic client expectations
+* API
+  * REST command/path handling updates
+  * Validation for `flag` now uses `UserFlag::is_valid()`
+  * Validation for `rate` now uses `Rating::is_valid()`
 
-### Removed (7.7.0)
+### Removed (7.10.0)
 
 * Remove `easy_captcha` classes and files
+* Remove API8 from Ampache 7 codebase
+* Do not count map tables in `Catalog::update_counts()` calls
+* Delete `scrutinizer.yml` and other external integration remnants
 
 ### Fixed (7.10.0)
 
-* Broadcasts couldn't play becuase they are not Media
-* Update Vite for security issues
-* Throw exception to login on missing auth (when required)
-* Possible error on FileSystem scan
-* DB
-  * Database update 794004 - Error with more left over bad data
+* Broadcasts could not play because broadcasts are not `Media`
+* Throw login exception on missing auth when authentication is required
+* Potential error during filesystem scan
+* Missing closing HTML tags in templates
+* Validate Podcast URL is HTTP(S) when set
+* Database
+  * Database update `794004`: handle additional leftover bad data
 * CLI
-  * Table checks column typo with DatabaseCharsetUpdater
+  * Fix table-check column typo in `DatabaseCharsetUpdater`
 * Search
-  * Joining by `catalog_id` not set on some searches
+  * Fix joins where `catalog_id` was not set for some search paths
 * Ampache Remote Catalogs
-  * Scanning tags on new file import
-  * Playing songs using the stream action
-  * Added support for Ampache8 servers and set default to API6
-  * Catch errors when the XML can't find the Song
+  * Scan tags correctly on new file import
+  * Fix playback for songs using stream action
+  * Catch XML parsing/object resolution errors when Song cannot be found
 * Subsonic
-  * Errors when missing `fromYear` and `toYear`
-  * Remove HTML encoding on ArtistInfo calls
+  * Fix errors when `fromYear` and `toYear` are missing
+  * Remove HTML encoding in `ArtistInfo` calls
+* API6
+  * Correct version bump handling
 
 ## Ampache 7.9.8
 
