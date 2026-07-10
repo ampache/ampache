@@ -120,7 +120,7 @@ final class ShareCreate5Method
             $share = $shareCreator->create(
                 $user,
                 LibraryItemEnum::from($object_type),
-                $object_id,
+                (int) $object_id,
                 true,
                 $functionChecker->check(AccessFunctionEnum::FUNCTION_DOWNLOAD),
                 $expire_days,
