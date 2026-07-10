@@ -318,7 +318,7 @@ class Song extends database_object implements
             $albumartist !== '0'
         ) {
             $albumartist_mbid = Catalog::trim_slashed_list($albumartist_mbid);
-            $albumartist_id   = Artist::check($albumartist, $albumartist_mbid);
+            $albumartist_id   = Artist::check($albumartist, $albumartist_mbid, $user_upload);
         }
 
         // song artist text is the same as album artist so don't worry about looking up id's if they match
@@ -333,7 +333,7 @@ class Song extends database_object implements
             $artist_id = (int)($results['artist_id']);
         } elseif ($artist !== null && $artist !== '' && $artist !== '0') {
             $artist_mbid = Catalog::trim_slashed_list($artist_mbid);
-            $artist_id   = (int)Artist::check($artist, $artist_mbid);
+            $artist_id   = (int)Artist::check($artist, $artist_mbid, $user_upload);
         }
 
         if (isset($results['album_id'])) {
@@ -385,7 +385,7 @@ class Song extends database_object implements
         // add song artists found by name to the list (Ignore artist names when we have the same amount of MBID's)
         if (!empty($artists_array) && !count($artists_array) == count($artist_mbid_array)) {
             foreach ($artists_array as $artist_name) {
-                $song_artist_id = (int)Artist::check($artist_name);
+                $song_artist_id = (int)Artist::check($artist_name, '', $user_upload);
                 if ($song_artist_id > 0) {
                     $artists[] = $song_artist_id;
                     if ($song_artist_id != $artist_id) {

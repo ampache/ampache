@@ -1,6 +1,6 @@
 <?php
 
-declare(strict_types=0);
+declare(strict_types=1);
 
 /**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
@@ -25,6 +25,7 @@ declare(strict_types=0);
 
 namespace Ampache\Module\Api\Method\Api3;
 
+use Ampache\Module\Api\Api;
 use Ampache\Module\Api\Xml3_Data;
 use Ampache\Repository\Model\Democratic;
 use Ampache\Repository\Model\Song;
@@ -75,7 +76,7 @@ final class Democratic3Method
                     'method' => $input['method'],
                     'result' => true
                 ];
-                echo Xml3_Data::keyed_array($results);
+                echo Api::keyed_array($results);
                 break;
             case 'devote':
                 $media = new Song($input['oid'] ?? 0);
@@ -93,7 +94,7 @@ final class Democratic3Method
                     'method' => $input['method'],
                     'result' => true
                 ];
-                echo Xml3_Data::keyed_array($results);
+                echo Api::keyed_array($results);
                 break;
             case 'playlist':
                 $results = $democratic->get_items();
@@ -104,7 +105,7 @@ final class Democratic3Method
             case 'play':
                 $url     = $democratic->play_url($user);
                 $results = ['url' => $url];
-                echo Xml3_Data::keyed_array($results);
+                echo Api::keyed_array($results);
                 break;
             default:
                 echo Xml3_Data::error(405, T_('Invalid Request'));

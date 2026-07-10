@@ -29,29 +29,10 @@ use Ampache\Module\Api\Xml3_Data;
 use Ampache\Module\Api\Xml4_Data;
 use Ampache\Module\Api\Xml5_Data;
 use Ampache\Module\Api\Xml6_Data;
-use Ampache\Module\Api\Xml8_Data;
 use Ampache\Repository\Model\User;
 
 final class XmlOutput implements ApiOutputInterface
 {
-    /**
-     * At the moment, this method just acts as a proxy
-     *
-     * @param array<int|string> $albums
-     * @param string[] $include
-     *
-     */
-    public function albums(
-        array $albums,
-        array $include,
-        User $user,
-        string $auth,
-        bool $encode = true,
-        bool $asObject = true,
-    ): string {
-        return Xml8_Data::albums($albums, $include, $user, $auth, $encode);
-    }
-
     /**
      * At the moment, this method just acts as a proxy
      *
@@ -68,19 +49,6 @@ final class XmlOutput implements ApiOutputInterface
         bool $asObject = true,
     ): string {
         return Xml6_Data::albums($albums, $include, $user, $auth, $encode);
-    }
-
-    /**
-     * At the moment, this method just acts a proxy
-     */
-    public function error(int $code, string $message, string $action, string $type): string
-    {
-        return Xml8_Data::error(
-            $code,
-            $message,
-            $action,
-            $type
-        );
     }
 
     /**
@@ -134,22 +102,9 @@ final class XmlOutput implements ApiOutputInterface
     /**
      * @param array<int|string> $result
      */
-    public function podcastEpisodes(array $result, User $user, string $auth): string
-    {
-        return Xml8_Data::podcast_episodes($result, $user, $auth);
-    }
-
-    /**
-     * @param array<int|string> $result
-     */
     public function podcastEpisodes6(array $result, User $user, string $auth): string
     {
         return Xml6_Data::podcast_episodes($result, $user, $auth);
-    }
-
-    public function setCount(int|string $count): void
-    {
-        Xml8_Data::set_count($count);
     }
 
     public function setCount6(int|string $count): void
@@ -157,19 +112,9 @@ final class XmlOutput implements ApiOutputInterface
         Xml6_Data::set_count($count);
     }
 
-    public function setLimit(int|string $limit): void
-    {
-        Xml8_Data::set_limit($limit);
-    }
-
     public function setLimit6(int|string $limit): void
     {
         Xml6_Data::set_limit($limit);
-    }
-
-    public function setOffset(int|string $offset): void
-    {
-        Xml8_Data::set_offset($offset);
     }
 
     public function setOffset6(int|string $offset): void
@@ -184,29 +129,9 @@ final class XmlOutput implements ApiOutputInterface
      * @param string $string success message
      * @param array<string, string> $return_data
      */
-    public function success(string $string, array $return_data = []): string
-    {
-        return Xml8_Data::success($string, $return_data);
-    }
-
-    /**
-     * This generates a standard XML Success message
-     * nothing fancy here...
-     *
-     * @param string $string success message
-     * @param array<string, string> $return_data
-     */
     public function success6(string $string, array $return_data = []): string
     {
         return Xml6_Data::success($string, $return_data);
-    }
-
-    /**
-     * Generate an empty api result
-     */
-    public function writeEmpty(string $emptyType): string
-    {
-        return Xml8_Data::empty();
     }
 
     /**

@@ -1,6 +1,6 @@
 <?php
 
-declare(strict_types=0);
+declare(strict_types=1);
 
 /**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
@@ -25,6 +25,7 @@ declare(strict_types=0);
 
 namespace Ampache\Module\Api\Method\Api4;
 
+use Ampache\Module\Api\Api;
 use Ampache\Module\Api\Api4;
 use Ampache\Module\Api\Json4_Data;
 use Ampache\Module\Api\Xml4_Data;
@@ -92,7 +93,7 @@ final class Democratic4Method
                         echo json_encode($results, JSON_PRETTY_PRINT);
                         break;
                     default:
-                        echo Xml4_Data::keyed_array($results);
+                        echo Api::keyed_array($results);
                 }
                 break;
             case 'devote':
@@ -119,7 +120,7 @@ final class Democratic4Method
                         echo json_encode($results, JSON_PRETTY_PRINT);
                         break;
                     default:
-                        echo Xml4_Data::keyed_array($results);
+                        echo Api::keyed_array($results);
                 }
                 break;
             case 'playlist':
@@ -142,7 +143,7 @@ final class Democratic4Method
                         echo json_encode($results, JSON_PRETTY_PRINT);
                         break;
                     default:
-                        echo Xml4_Data::keyed_array($results);
+                        echo Api::keyed_array($results);
                 }
                 break;
             default:

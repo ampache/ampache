@@ -1470,11 +1470,12 @@ class Search extends playlist_object
      *
      * Return an array of the items output by our search
      * (part of the playlist interface).
-     * @return list<array{
+     * @return array<int, array{
      *     object_type: LibraryItemEnum,
      *     object_id: int,
      *     track_id: int,
-     *     track: int
+     *     track: int,
+     *     time: int
      * }>
      */
     public function get_items(): array
@@ -1505,20 +1506,25 @@ class Search extends playlist_object
 
         //debug_event(self::class, 'SQL get_items: ' . $sql . "\n" . print_r($sqltbl['parameters'], true), 5);
 
-        $count      = 1;
+        $duration   = 0;
+        $count      = 0;
         $db_results = Dba::read($sql, $sqltbl['parameters']);
         while ($row = Dba::fetch_assoc($db_results)) {
+            $duration += $row['time'] ?? 0;
+            $count++;
+
             $results[] = [
                 'object_id' => $row['id'],
                 'object_type' => LibraryItemEnum::from($this->objectType),
                 'track_id' => $row['id'],
-                'track' => $count++
+                'track' => $count,
+                'time' => $row['time'] ?? 0,
             ];
         }
 
         $this->date = time();
-        $this->set_last(count($results), 'last_count');
-        $this->set_last(self::get_total_duration($results), 'last_duration');
+        $this->set_last($count ?: count($results), 'last_count');
+        $this->set_last((int) ($duration ?: self::get_total_duration($results)), 'last_duration');
 
         return $results;
     }

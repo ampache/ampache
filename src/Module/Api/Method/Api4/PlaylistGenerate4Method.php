@@ -1,6 +1,6 @@
 <?php
 
-declare(strict_types=0);
+declare(strict_types=1);
 
 /**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
@@ -26,6 +26,7 @@ declare(strict_types=0);
 namespace Ampache\Module\Api\Method\Api4;
 
 use Ampache\Config\AmpConfig;
+use Ampache\Module\Api\Api;
 use Ampache\Module\Api\Json4_Data;
 use Ampache\Module\Api\Xml4_Data;
 use Ampache\Repository\Model\Album;
@@ -164,7 +165,7 @@ final class PlaylistGenerate4Method
                     default:
                         Xml4_Data::set_offset($offset);
                         Xml4_Data::set_limit($limit);
-                        echo Xml4_Data::keyed_array($results, false, 'id');
+                        echo Api::keyed_array($results, false, 'id');
                 }
                 break;
             case 'index':

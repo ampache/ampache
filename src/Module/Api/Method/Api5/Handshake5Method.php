@@ -1,6 +1,6 @@
 <?php
 
-declare(strict_types=0);
+declare(strict_types=1);
 
 /**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
@@ -26,9 +26,9 @@ declare(strict_types=0);
 namespace Ampache\Module\Api\Method\Api5;
 
 use Ampache\Config\AmpConfig;
+use Ampache\Module\Api\Api;
 use Ampache\Module\Api\Api5;
 use Ampache\Module\Api\Exception\ErrorCodeEnum;
-use Ampache\Module\Api\Xml5_Data;
 use Ampache\Module\Authorization\AccessLevelEnum;
 use Ampache\Module\Authorization\AccessTypeEnum;
 use Ampache\Module\Authorization\Check\NetworkCheckerInterface;
@@ -87,7 +87,7 @@ final class Handshake5Method
         // set the version to the old string for old api clients
         $version       = (isset($input['version'])) ? $input['version'] : Api5::$version;
         Api5::$version = ((int) $version >= 350001) ? Api5::$version_numeric : Api5::$version;
-        $data_version  = (int) substr($version, 0, 1);
+        $data_version  = (int) substr((string) $version, 0, 1);
 
         // Version check shouldn't be soo restrictive... only check with initial version to not break clients compatibility
         if ((int) ($version) < Api5::$auth_version && $data_version !== 5) {
@@ -139,7 +139,7 @@ final class Handshake5Method
                 }
 
                 // Now we're sure that there is an ACL line that matches this user or ALL USERS, pull the user's password and then see what we come out with
-                $realpwd = self::getUserRepository()->retrievePasswordFromUser($client->getId());
+                $realpwd = self::getUserRepository()->retrievePasswordFromUser($client?->getId() ?? 0);
 
                 if (!$realpwd) {
                     debug_event(self::class, 'Unable to find user with userid of ' . $user_id, 1);
@@ -202,7 +202,7 @@ final class Handshake5Method
                         echo json_encode($results, JSON_PRETTY_PRINT);
                         break;
                     default:
-                        echo Xml5_Data::keyed_array($results);
+                        echo Api::keyed_array($results);
                 }
 
                 return true;

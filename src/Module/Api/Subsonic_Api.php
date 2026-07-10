@@ -512,7 +512,7 @@ class Subsonic_Api
                     $object->getId(),
                     true,
                     Access::check_function(AccessFunctionEnum::FUNCTION_DOWNLOAD),
-                    $expire_days,
+                    (int) $expire_days,
                     $passwordGenerator->generate_token(),
                     0,
                     $description
@@ -2956,8 +2956,7 @@ class Subsonic_Api
                 ? self::getAmpacheObject($current)
                 : null;
             if (
-                $media instanceof library_item
-                && $media instanceof Media
+                $media instanceof Media
                 && $media->isNew() === false
                 && isset($media->time)
             ) {

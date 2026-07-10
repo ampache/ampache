@@ -1,6 +1,6 @@
 <?php
 
-declare(strict_types=0);
+declare(strict_types=1);
 
 /**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
@@ -1653,7 +1653,7 @@ class Subsonic_Json_Data
         $sub_id       = Subsonic_Api::getAlbumSubId($album->id);
         $album_artist = $album->findAlbumArtist();
         $subParent    = ($album_artist) ? Subsonic_Api::getArtistSubId($album_artist) : false;
-        $f_name       = (string) $album->get_fullname();
+        $f_name       = $album->get_fullname();
 
         $json = [
             'id' => $sub_id,
@@ -1681,7 +1681,7 @@ class Subsonic_Json_Data
         if ($subParent) {
             $json['artistId'] = $subParent;
         }
-        $json['artist'] = (string) $album->get_parent_fullname();
+        $json['artist'] = $album->get_parent_fullname();
         // original year (fall back to regular year)
         $original_year = AmpConfig::get('use_original_year');
         $year          = ($original_year && $album->original_year)
@@ -2096,7 +2096,7 @@ class Subsonic_Json_Data
             'isVideo' => false,
             'type' => 'music',
             'artistId' => $subParent,
-            'artist' => (string) $album->get_parent_fullname(),
+            'artist' => $album->get_parent_fullname(),
         ];
 
         if ($album->has_art()) {
@@ -2314,9 +2314,9 @@ class Subsonic_Json_Data
             'isVideo' => false,
             'type' => 'music',
             'albumId' => $subParent,
-            'album' => (string) $song->get_album_fullname(),
+            'album' => $song->get_album_fullname(),
             'artistId' => ($song->artist) ? Subsonic_Api::getArtistSubId($song->artist) : '',
-            'artist' => (string) $song->get_parent_fullname(),
+            'artist' => $song->get_parent_fullname(),
         ];
 
         if ($song->has_art()) {
@@ -3072,7 +3072,7 @@ class Subsonic_Json_Data
             $text = str_replace("\r", '', (string) $text);
 
             $json = [
-                'displayArtist' => (string) $song->get_parent_fullname(),
+                'displayArtist' => $song->get_parent_fullname(),
                 'displayTitle' => (string) $song->title,
                 'lang' => 'xxx',
                 'synced' => false,
