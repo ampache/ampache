@@ -966,12 +966,6 @@ log_filename = "%name.%Y%m%d.log"
 ; DEFAULT: c (ISO 8601 date)
 log_time_format = "c"
 
-; API Debug Handler
-; If this is enabled Ampache will not catch exceptions during API calls.
-; Used for development and not recommended for regular use.
-; DEFAULT: "false"
-;api_debug_handler = "true"
-
 ; Load the debug webplayer
 ; This will load the *.js player instead of the *.min.js player
 ; The unminified player has a lot of console.log() statements in the code.

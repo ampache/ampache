@@ -608,21 +608,6 @@ final class ApiHandler implements ApiHandlerInterface
                 }
         }
 
-        $debugHandler = $this->configContainer->get('api_debug_handler');
-        if ($debugHandler) {
-            /** @noinspection PhpUnhandledExceptionInspection */
-            return $this->_executeDebugHandler(
-                $gatekeeper,
-                $is_public,
-                $action,
-                $handlerClassName,
-                $input,
-                $user,
-                $response,
-                $output
-            );
-        }
-
         return $this->_executeHandler(
             $gatekeeper,
             $api_version,
@@ -794,70 +779,6 @@ final class ApiHandler implements ApiHandlerInterface
             'videos' => 'video',
             default => $type,
         };
-    }
-
-    /**
-     * Run the DEBUG API handler with NO exception handling!
-     * @throws ApiException|Throwable
-     */
-    private function _executeDebugHandler(
-        Gatekeeper $gatekeeper,
-        bool $is_public,
-        string $action,
-        string $handlerClassName,
-        array $input,
-        ?User $user,
-        ResponseInterface $response,
-        ApiOutputInterface $output,
-    ): ?ResponseInterface {
-        /**
-         * This condition allows the `new` approach and the legacy one to co-exist.
-         * After implementing the MethodInterface in all api methods, the condition will be removed
-         *
-         * @todo cleanup
-         */
-        $this->logger->notice(
-            sprintf('DebugHandler: API function [%s]', $handlerClassName),
-            [LegacyLogger::CONTEXT_TYPE => self::class]
-        );
-
-        if (
-            $user instanceof User
-            && $this->dic->has($handlerClassName)
-            && $this->dic->get($handlerClassName) instanceof MethodInterface
-        ) {
-            /** @var MethodInterface $handler */
-            $handler = $this->dic->get($handlerClassName);
-
-            $response = $handler->handle(
-                $gatekeeper,
-                $response,
-                $output,
-                $input,
-                $user
-            );
-
-            $gatekeeper->extendSession($input['auth']);
-
-            return $response;
-        }
-        $params = [$input];
-
-        /** @var callable $callback */
-        $callback = [$handlerClassName, $action];
-
-        if (!$is_public) {
-            $params[] = $user;
-        }
-
-        call_user_func_array(
-            $callback,
-            $params
-        );
-
-        $gatekeeper->extendSession($input['auth']);
-
-        return null;
     }
 
     /**
