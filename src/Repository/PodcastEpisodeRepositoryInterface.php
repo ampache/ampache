@@ -83,7 +83,7 @@ interface PodcastEpisodeRepositoryInterface
      *
      * @return Traversable<Podcast_Episode>
      */
-    public function getEpisodesEligibleForDownload(Podcast $podcast, ?int $downloadLimit): Traversable;
+    public function getEpisodesEligibleForDownload(Podcast $podcast, ?int $downloadLimit = null): Traversable;
 
     /**
      * Updates the state of an episode

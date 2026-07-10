@@ -1,6 +1,6 @@
 <?php
 
-declare(strict_types=0);
+declare(strict_types=1);
 
 /**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
@@ -816,7 +816,7 @@ class Subsonic_Json_Data
      * @param int[]|string[] $playlists
      * @return array{'subsonic-response': array<string, mixed>}
      */
-    public static function addPlaylists(array $response, ?User $user, array $playlists): array
+    public static function addPlaylists(array $response, User $user, array $playlists): array
     {
         $json = ['playlist' => []];
         foreach ($playlists as $playlist_id) {

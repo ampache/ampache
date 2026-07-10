@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
@@ -58,12 +60,21 @@ class Catalog_subsonic extends Catalog
     public function __construct(?int $catalog_id = null)
     {
         if ($catalog_id) {
-            $info = $this->get_info($catalog_id, static::DB_TABLENAME);
-            foreach ($info as $key => $value) {
-                if (property_exists($this, $key)) {
-                    $this->$key = $value;
-                }
-            }
+            $info                 = $this->get_info($catalog_id, static::DB_TABLENAME);
+            $this->id             = (int) ($info['id'] ?? 0);
+            $this->name           = $info['name'] ?? null;
+            $this->catalog_type   = $info['catalog_type'] ?? null;
+            $this->enabled        = (bool) ($info['enabled'] ?? false);
+            $this->last_update    = (int) ($info['last_update'] ?? 0);
+            $this->last_add       = (int) ($info['last_add'] ?? 0);
+            $this->last_clean     = (int) ($info['last_clean'] ?? 0);
+            $this->rename_pattern = $info['rename_pattern'] ?? '';
+            $this->sort_pattern   = $info['sort_pattern'] ?? '';
+            $this->gather_types   = $info['gather_types'] ?? '';
+
+            $this->uri      = $info['uri'] ?? '';
+            $this->username = $info['username'] ?? '';
+            $this->password = $info['password'] ?? '';
         }
     }
 
@@ -426,7 +437,7 @@ class Catalog_subsonic extends Catalog
     /**
      * @param array<string, mixed> $data
      */
-    public function insertArt(array $data, ?int $song_Id): bool
+    public function insertArt(array $data, ?int $song_Id = null): bool
     {
         $this->_createClient();
         if (!$this->subsonic instanceof SubsonicClient) {

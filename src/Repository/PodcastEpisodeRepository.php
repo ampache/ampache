@@ -190,7 +190,7 @@ final readonly class PodcastEpisodeRepository implements PodcastEpisodeRepositor
      *
      * @return Generator<Podcast_Episode>
      */
-    public function getEpisodesEligibleForDownload(Podcast $podcast, ?int $downloadLimit): Generator
+    public function getEpisodesEligibleForDownload(Podcast $podcast, ?int $downloadLimit = null): Generator
     {
         $limitSql = '';
         if ($downloadLimit !== null) {

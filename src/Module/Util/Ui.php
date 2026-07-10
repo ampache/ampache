@@ -1,6 +1,6 @@
 <?php
 
-declare(strict_types=0);
+declare(strict_types=1);
 
 /**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
@@ -161,14 +161,18 @@ class Ui implements UiInterface
      * format_bytes
      *
      * Turns a size in bytes into the best human-readable value
-     * @param int|float $value Size in bytes
+     * @param int|float|string $value Size in bytes
      * @param int $precision Number of decimal places to show
      * @param int $pass Internal counter for recursion
      */
-    public static function format_bytes(int|float $value, int $precision = 2, int $pass = 0): string
+    public static function format_bytes(int|float|string $value, int $precision = 2, int $pass = 0): string
     {
         if (!$value) {
             return '';
+        }
+
+        if (is_string($value)) {
+            $value = (float) $value;
         }
 
         while (strlen((string) floor($value)) > 3) {

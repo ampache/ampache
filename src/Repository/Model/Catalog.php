@@ -1,6 +1,6 @@
 <?php
 
-declare(strict_types=0);
+declare(strict_types=1);
 
 /**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
@@ -778,7 +778,7 @@ abstract class Catalog extends database_object
         $db_results = Dba::read($sql, [$catalog->id]);
 
         while ($results = Dba::fetch_assoc($db_results)) {
-            $catalog->enabled = $results['enabled'];
+            $catalog->enabled = (bool) $results['enabled'];
         }
 
         return $catalog;
@@ -1374,11 +1374,11 @@ abstract class Catalog extends database_object
             $sql_limit = "LIMIT " . $offset . ", 18446744073709551615";
         }
 
-        $sql        = sprintf('SELECT `artist`.`id`, `artist`.`name`, `artist`.`prefix`, `artist`.`summary`, `artist`.`album_count`, `artist`.`album_disk_count` FROM `song` LEFT JOIN `artist` ON `artist`.`id` = `song`.`artist` %s GROUP BY `artist`.`id`, `artist`.`name`, `artist`.`prefix`, `artist`.`summary`, `song`.`artist`, `artist`.`album_count` ORDER BY `artist`.`name` ', $sql_where) . $sql_limit;
+        $sql        = sprintf('SELECT `artist`.`id`, `artist`.`name`, `artist`.`prefix`, `artist`.`mbid`, `artist`.`summary`, `artist`.`placeformed`, `artist`.`yearformed`, `artist`.`last_update`, `artist`.`user`, `artist`.`manual_update`, `artist`.`time`, `artist`.`album_count`, `artist`.`song_count`, `artist`.`album_disk_count`, `artist`.`total_count`, `artist`.`total_skip`, `artist`.`addition_time`, `artist`.`weight` FROM `song` LEFT JOIN `artist` ON `artist`.`id` = `song`.`artist` %s GROUP BY `artist`.`id`, `artist`.`name`, `artist`.`prefix`, `artist`.`summary`, `song`.`artist`, `artist`.`album_count` ORDER BY `artist`.`name` ', $sql_where) . $sql_limit;
         $db_results = Dba::read($sql);
         $results    = [];
         while ($row = Dba::fetch_assoc($db_results)) {
-            /** @var array{id: int, name: ?string, prefix: ?string, summary: ?string, album_count: int, album_disk_count: int} $row */
+            /** @var array{id: int, name: ?string, prefix: ?string, mbid: ?string, summary: ?string, placeformed: ?string, yearformed: ?string, last_update: ?string, user: ?string, manual_update: ?string, time: ?string, album_count: int, song_count: int, album_disk_count: int, total_count: int, total_skip: int, addition_time: ?string, weight: ?string} $row */
             $results[] = Artist::construct_from_array($row);
         }
 
@@ -1727,7 +1727,7 @@ abstract class Catalog extends database_object
         $counts         = array_merge(self::getUserRepository()->getStatistics(), $counts);
         $counts['tags'] = ($catalog_id) ? 0 : self::count_tags();
 
-        $counts['formatted_size'] = Ui::format_bytes($counts['size'], 2, 2);
+        $counts['formatted_size'] = Ui::format_bytes((int) $counts['size'], 2, 2);
 
         $hours = floor((int) $counts['time'] / 3600);
         $days  = (int) floor($hours / 24);
@@ -2199,7 +2199,7 @@ abstract class Catalog extends database_object
      * @param null|array<string, bool> $options
      * @noinspection PhpMissingBreakStatementInspection
      */
-    public static function process_action(string $action, ?array $catalogs, ?array $options = null): void
+    public static function process_action(string $action, ?array $catalogs = null, ?array $options = null): void
     {
         if (empty($options)) {
             $options = ['gather_art' => false, 'parse_playlist' => false];
@@ -2917,7 +2917,7 @@ abstract class Catalog extends database_object
             return $array;
         }
 
-        if ($catalog instanceof Catalog_Remote || $catalog instanceof Catalog_subsonic) {
+        if ($catalog instanceof Catalog_remote || $catalog instanceof Catalog_subsonic) {
             // remote files are read using the API and not the file
             $results = $catalog->get_media_tags($media, $gather_types, '', '');
         } else {
@@ -4423,19 +4423,20 @@ abstract class Catalog extends database_object
     /**
      * Get catalog info from table.
      * @return array{
-     *     id: int,
-     *     name: ?string,
-     *     catalog_type: ?string,
-     *     last_update: int,
-     *     last_clean: int,
-     *     last_add: int,
-     *     enabled: bool,
-     *     rename_pattern: ?string,
-     *     sort_pattern: ?string,
-     *     gather_types: ?string,
+     *     id?: int,
+     *     name?: ?string,
+     *     catalog_type?: ?string,
+     *     last_update?: int,
+     *     last_clean?: int,
+     *     last_add?: int,
+     *     enabled?: bool,
+     *     rename_pattern?: ?string,
+     *     sort_pattern?: ?string,
+     *     gather_types?: ?string,
      *     catalog_id?: int,
      *     beetsdb?: string,
      *     uri?: string,
+     *     server_uri?: string,
      *     path?: string,
      *     apikey?: string,
      *     api_key?: string,
@@ -4450,14 +4451,14 @@ abstract class Catalog extends database_object
      */
     public function get_info(int $object_id, ?string $table_name = 'catalog'): array
     {
-        /** @var array{id: int, name: ?string, catalog_type: ?string, last_update: int, last_clean: int, last_add: int, enabled: bool, rename_pattern: ?string, sort_pattern: ?string, gather_types: ?string} $info */
+        /** @var array{id?: int, name?: ?string, catalog_type?: ?string, last_update?: int, last_clean?: int, last_add?: int, enabled?: bool, rename_pattern?: ?string, sort_pattern?: ?string, gather_types?: ?string} $info */
         $info = parent::get_info($object_id, $table_name);
 
         $table      = 'catalog_' . $this->get_type();
         $sql        = sprintf('SELECT `id` FROM `%s` WHERE `catalog_id` = ?', $table);
         $db_results = Dba::read($sql, [$object_id]);
         if ($results = Dba::fetch_assoc($db_results)) {
-            /** @var array{id:int, catalog_id: int, beetsdb?: string, uri?: string, path?: string, apikey?:string, secret?: string, authtoken?: string, getchunk?: bool, username?: string, password?: string, api_key?: string, api_call_delay?: int|null, secret?: string, library_name?: string} $info_type */
+            /** @var array{id?: int, catalog_id?: int, beetsdb?: string, uri?: string, server_uri?: string, path?: string, apikey?:string, secret?: string, authtoken?: string, getchunk?: bool, username?: string, password?: string, api_key?: string, api_call_delay?: int|null, secret?: string, library_name?: string} $info_type */
             $info_type = parent::get_info($results['id'], $table);
             foreach ($info_type as $key => $value) {
                 if (!array_key_exists($key, $info) || !$info[$key]) {

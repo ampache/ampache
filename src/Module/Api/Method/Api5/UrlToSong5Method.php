@@ -1,6 +1,6 @@
 <?php
 
-declare(strict_types=0);
+declare(strict_types=1);
 
 /**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
@@ -70,7 +70,7 @@ final class UrlToSong5Method
         ob_end_clean();
         switch ($input['api_format']) {
             case 'json':
-                echo Json5_Data::songs([(int) $url_data['id']], $user, $input['auth'], true, false);
+                echo Json5_Data::songs([(int) $url_data['id']], $user, $input['auth'], false);
                 break;
             default:
                 echo Xml5_Data::songs([(int) $url_data['id']], $user, $input['auth']);

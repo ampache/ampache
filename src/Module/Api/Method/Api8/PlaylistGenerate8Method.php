@@ -1,6 +1,6 @@
 <?php
 
-declare(strict_types=0);
+declare(strict_types=1);
 
 /**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
@@ -183,7 +183,7 @@ final class PlaylistGenerate8Method
                         echo json_encode($results, JSON_PRETTY_PRINT);
                         break;
                     default:
-                        echo Xml8_Data::keyed_array($results, false, 'id');
+                        echo Api::keyed_array($results, false, 'id');
                 }
                 break;
             case 'index':

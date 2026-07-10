@@ -1,6 +1,6 @@
 <?php
 
-declare(strict_types=0);
+declare(strict_types=1);
 
 /**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
@@ -69,9 +69,7 @@ use SimpleXMLElement;
  */
 class Xml8_Data
 {
-    private static ?int $count = null;
-
-    // This is added so that we don't pop any webservers
+    private static int $count  = 0;
     private static ?int $limit = 5000;
     private static int $offset = 0;
 
@@ -88,7 +86,7 @@ class Xml8_Data
     {
         self::$count = self::$count ?: count($objects);
         $md5         = md5(serialize($objects));
-        $objects     = self::_filter_objects($objects, $full_xml);
+        $objects     = Api::filter_objects($objects, self::$count, self::$offset, self::$limit, $full_xml);
 
         $string = ($full_xml) ? "<total_count>" . Catalog::get_update_info('album', $user->id) . "</total_count>\n<md5>" . $md5 . "</md5>\n" : '';
         // original year (fall back to regular year)
@@ -133,10 +131,10 @@ class Xml8_Data
 
             // Build the Art URL, include session
             $art_url = Art::url($album->id, 'album', $auth);
-            $string .= "\t<time>" . $album->time . "</time>\n\t<year>" . $year . "</year>\n\t<tracks>" . $songs . "</tracks>\n\t<songcount>" . $album->song_count . "</songcount>\n\t<diskcount>" . $album->disk_count . "</diskcount>\n\t<type>" . $album->release_type . "</type>\n" . self::genre_string($album->get_tags()) . "\t<art><![CDATA[" . $art_url . "]]></art>\n\t<has_art>" . ($album->has_art() ? 1 : 0) . "</has_art>\n\t<flag>" . (!$flag->get_flag($user->getId()) ? 0 : 1) . "</flag>\n\t<rating>" . $user_rating . "</rating>\n\t<averagerating>" . $rating->get_average_rating() . "</averagerating>\n\t<mbid><![CDATA[" . $album->mbid . "]]></mbid>\n\t<mbid_group><![CDATA[" . $album->mbid_group . "]]></mbid_group>\n</album>\n";
+            $string .= "\t<time>" . $album->time . "</time>\n\t<year>" . $year . "</year>\n\t<tracks>" . $songs . "</tracks>\n\t<songcount>" . $album->song_count . "</songcount>\n\t<diskcount>" . $album->disk_count . "</diskcount>\n\t<type>" . $album->release_type . "</type>\n" . self::_genre_string($album->get_tags()) . "\t<art><![CDATA[" . $art_url . "]]></art>\n\t<has_art>" . ($album->has_art() ? 1 : 0) . "</has_art>\n\t<flag>" . (!$flag->get_flag($user->getId()) ? 0 : 1) . "</flag>\n\t<rating>" . $user_rating . "</rating>\n\t<averagerating>" . $rating->get_average_rating() . "</averagerating>\n\t<mbid><![CDATA[" . $album->mbid . "]]></mbid>\n\t<mbid_group><![CDATA[" . $album->mbid_group . "]]></mbid_group>\n</album>\n";
         }
 
-        return self::output_xml($string, $full_xml);
+        return Api::output_xml($string, $full_xml);
     }
 
     /**
@@ -153,7 +151,7 @@ class Xml8_Data
     {
         self::$count = self::$count ?: count($objects);
         $md5         = md5(serialize($objects));
-        $objects     = self::_filter_objects($objects, $full_xml);
+        $objects     = Api::filter_objects($objects, self::$count, self::$offset, self::$limit, $full_xml);
 
         $string = ($full_xml) ? "<total_count>" . Catalog::get_update_info('artist', $user->id) . "</total_count>\n<md5>" . $md5 . "</md5>\n" : '';
 
@@ -168,7 +166,7 @@ class Xml8_Data
             $rating      = new Rating($artist->id, 'artist');
             $user_rating = $rating->get_user_rating($user->getId());
             $flag        = new Userflag($artist->id, 'artist');
-            $tag_string  = self::genre_string($artist->get_tags());
+            $tag_string  = self::_genre_string($artist->get_tags());
 
             // Build the Art URL, include session
             $art_url = Art::url($artist->id, 'artist', $auth);
@@ -180,7 +178,7 @@ class Xml8_Data
             $string .= "<artist id=\"" . $artist->id . "\">\n\t<name><![CDATA[" . $artist->get_fullname() . "]]></name>\n\t<prefix><![CDATA[" . $artist->prefix . "]]></prefix>\n\t<basename><![CDATA[" . $artist->name . "]]></basename>\n" . $tag_string . "\t<albums>" . $albums . "</albums>\n\t<albumcount>" . $artist->album_count . "</albumcount>\n\t<songs>" . $songs . "</songs>\n\t<songcount>" . $artist->song_count . "</songcount>\n\t<art><![CDATA[" . $art_url . "]]></art>\n\t<has_art>" . ($artist->has_art() ? 1 : 0) . "</has_art>\n\t<flag>" . (!$flag->get_flag($user->getId()) ? 0 : 1) . "</flag>\n\t<rating>" . $user_rating . "</rating>\n\t<averagerating>" . $rating->get_average_rating() . "</averagerating>\n\t<mbid><![CDATA[" . $artist->mbid . "]]></mbid>\n\t<summary><![CDATA[" . $artist->summary . "]]></summary>\n\t<time><![CDATA[" . $artist->time . "]]></time>\n\t<yearformed>" . (int) $artist->yearformed . "</yearformed>\n\t<placeformed><![CDATA[" . $artist->placeformed . "]]></placeformed>\n</artist>\n";
         }
 
-        return self::output_xml($string, $full_xml);
+        return Api::output_xml($string, $full_xml);
     }
 
     /**
@@ -223,7 +221,7 @@ class Xml8_Data
             $string .= "</bookmark>\n";
         }
 
-        return self::output_xml($string);
+        return Api::output_xml($string);
     }
 
     /**
@@ -233,11 +231,11 @@ class Xml8_Data
      *
      * @param array<int, array{id: int|string, name: string}> $objects Array of object_ids ["id" => 1, "name" => 'Artist Name']
      */
-    public static function browses(array $objects, ?int $parent_id, string $parent_type, string $child_type, ?int $catalog_id): string
+    public static function browses(array $objects, string $parent_type, string $child_type, ?int $parent_id = null, ?int $catalog_id = null): string
     {
         self::$count = self::$count ?: count($objects);
         $md5         = md5(serialize($objects));
-        $objects     = self::_filter_objects($objects);
+        $objects     = Api::filter_objects($objects, self::$count, self::$offset, self::$limit);
 
         $string = "<total_count>" . self::$count . "</total_count>\n<md5>" . $md5 . "</md5>\n";
 
@@ -257,7 +255,7 @@ class Xml8_Data
                 . "\t<basename><![CDATA[" . $basename . "]]></basename>\n</browse>\n";
         }
 
-        return self::output_xml($string);
+        return Api::output_xml($string);
     }
 
     /**
@@ -272,7 +270,7 @@ class Xml8_Data
     {
         self::$count = self::$count ?: count($objects);
         $md5         = md5(serialize($objects));
-        $objects     = self::_filter_objects($objects, $full_xml);
+        $objects     = Api::filter_objects($objects, self::$count, self::$offset, self::$limit, $full_xml);
 
         $string = ($full_xml) ? "<total_count>" . Catalog::get_update_info('catalog', $user->id) . "</total_count>\n<md5>" . $md5 . "</md5>\n" : '';
 
@@ -284,7 +282,7 @@ class Xml8_Data
             $string .= "<catalog id=\"$catalog_id\">\n\t<name><![CDATA[" . $catalog->name . "]]></name>\n\t<type><![CDATA[" . $catalog->catalog_type . "]]></type>\n\t<gather_types><![CDATA[" . $catalog->gather_types . "]]></gather_types>\n\t<enabled>" . $catalog->enabled . "</enabled>\n\t<last_add>" . $catalog->last_add . "</last_add>\n\t<last_clean>" . $catalog->last_clean . "</last_clean>\n\t<last_update>" . $catalog->last_update . "</last_update>\n\t<path><![CDATA[" . $catalog->get_f_info() . "]]></path>\n\t<rename_pattern><![CDATA[" . $catalog->rename_pattern . "]]></rename_pattern>\n\t<sort_pattern><![CDATA[" . $catalog->sort_pattern . "]]></sort_pattern>\n</catalog>\n";
         }
 
-        return self::output_xml($string, $full_xml);
+        return Api::output_xml($string, $full_xml);
     }
 
     /**
@@ -312,7 +310,7 @@ class Xml8_Data
     public static function deleted(string $object_type, array $objects): string
     {
         self::$count = self::$count ?: count($objects);
-        $objects     = self::_filter_objects($objects);
+        $objects     = Api::filter_objects($objects, self::$count, self::$offset, self::$limit);
 
         $string = '';
         // here is where we call the object type
@@ -336,7 +334,7 @@ class Xml8_Data
             }
         }
 
-        return self::output_xml($string);
+        return Api::output_xml($string);
     }
 
     /**
@@ -370,7 +368,7 @@ class Xml8_Data
             $tag         = new Tag((int) ($song->get_tags()[0]['id'] ?? 0));
             $song_album  = self::getAlbumRepository()->getNames($song->album);
             $song_artist = Artist::get_name_array_by_id($song->artist);
-            $tag_string  = self::genre_string($song->get_tags());
+            $tag_string  = self::_genre_string($song->get_tags());
             $rating      = new Rating($song->id, 'song');
             $user_rating = $rating->get_user_rating($user->getId());
             $art_url     = Art::url($song->album, 'album', $auth);
@@ -386,7 +384,7 @@ class Xml8_Data
             $string .= $tag_string . "\t<track>" . $song->track . "</track>\n\t<time><![CDATA[" . $song->time . "]]></time>\n\t<format>" . $songType . "</format>\n\t<bitrate>" . $songBitrate . "</bitrate>\n\t<mime><![CDATA[" . $songMime . "]]></mime>\n\t<url><![CDATA[" . $play_url . "]]></url>\n\t<size>" . $song->size . "</size>\n\t<art><![CDATA[" . $art_url . "]]></art>\n\t<has_art>" . ($song->has_art() ? 1 : 0) . "</has_art>\n\t<rating>" . $user_rating . "</rating>\n\t<averagerating>" . $rating->get_average_rating() . "</averagerating>\n<playcount>" . $song->total_count . "</playcount>\n\t<vote>" . $democratic->get_vote($row_id) . "</vote>\n</song>\n";
         }
 
-        return self::output_xml($string);
+        return Api::output_xml($string);
     }
 
     /**
@@ -396,6 +394,10 @@ class Xml8_Data
      */
     public static function empty(): string
     {
+        http_response_code(404);
+        header(sprintf('Content-type: text/xml; charset=%s', AmpConfig::get('site_charset')));
+        header('Content-Disposition: inline; filename=information.xml');
+
         return "<?xml version=\"1.0\" encoding=\"" . AmpConfig::get('site_charset', 'UTF-8') . "\" ?>\n<root>\n</root>\n";
     }
 
@@ -407,32 +409,13 @@ class Xml8_Data
      */
     public static function error(int|string $code, string $string, string $action, string $type): string
     {
-        switch ((string) $code) {
-            case '4700': // ACCESS_CONTROL_NOT_ENABLED
-            case '4703': // ACCESS_DENIED
-            case '4742': // FAILED_ACCESS_CHECK
-                http_response_code(403);
-                break;
-            case '4710': // BAD_REQUEST
-            case '4705': // MISSING
-                http_response_code(400);
-                break;
-            case '4706': // DEPRECATED
-                http_response_code(410);
-                break;
-            case '4702': // GENERIC_ERROR
-                http_response_code(500);
-                break;
-            case '4701': // INVALID_HANDSHAKE
-                http_response_code(401);
-                break;
-            case '4704': // NOT_FOUND
-                http_response_code(404);
-                break;
-        }
+        http_response_code(Api::getHttpCode($code));
+        header(sprintf('Content-type: text/xml; charset=%s', AmpConfig::get('site_charset')));
+        header('Content-Disposition: inline; filename=information.xml');
+
         $xml_string = "\t<error errorCode=\"$code\">\n\t\t<errorAction><![CDATA[" . $action . "]]></errorAction>\n\t\t<errorType><![CDATA[" . $type . "]]></errorType>\n\t\t<errorMessage><![CDATA[" . $string . "]]></errorMessage>\n\t</error>";
 
-        return self::output_xml($xml_string);
+        return Api::output_xml($xml_string);
     }
 
     /**
@@ -444,8 +427,8 @@ class Xml8_Data
      */
     public static function folders(array $objects, Folder $folder, User $user, string $auth): string
     {
-        self::$count = self::$count ?? count($objects);
-        $objects     = self::_filter_objects($objects);
+        self::$count = self::$count ?: count($objects);
+        $objects     = Api::filter_objects($objects, self::$count, self::$offset, self::$limit);
 
         $xml = new SimpleXMLElement(
             sprintf(
@@ -543,7 +526,7 @@ class Xml8_Data
     {
         self::$count = self::$count ?: count($objects);
         $md5         = md5(serialize($objects));
-        $objects     = self::_filter_objects($objects);
+        $objects     = Api::filter_objects($objects, self::$count, self::$offset, self::$limit);
 
         $string = "<total_count>" . Catalog::get_update_info('tag', $user->id) . "</total_count>\n<md5>" . $md5 . "</md5>\n";
 
@@ -562,7 +545,7 @@ class Xml8_Data
             $string .= "\n</genre>\n";
         }
 
-        return self::output_xml($string);
+        return Api::output_xml($string);
     }
 
     /**
@@ -579,7 +562,7 @@ class Xml8_Data
     {
         self::$count = self::$count ?: count($objects);
         $md5         = md5(serialize($objects));
-        $objects     = self::_filter_objects($objects);
+        $objects     = Api::filter_objects($objects, self::$count, self::$offset, self::$limit);
 
         $string = "<total_count>" . self::$count . "</total_count>\n<md5>" . $md5 . "</md5>\n";
 
@@ -698,7 +681,7 @@ class Xml8_Data
                 break;
         }
 
-        return self::output_xml($string);
+        return Api::output_xml($string);
     }
 
     /**
@@ -716,7 +699,7 @@ class Xml8_Data
     {
         self::$count = self::$count ?: count($objects);
         $md5         = md5(serialize($objects));
-        $objects     = self::_filter_objects($objects, $full_xml);
+        $objects     = Api::filter_objects($objects, self::$count, self::$offset, self::$limit, $full_xml);
 
         // you might not want the joined tables for playlists
         $total_count = (AmpConfig::get('hide_search', false) && $object_type == 'playlist')
@@ -840,45 +823,7 @@ class Xml8_Data
                 $string .= self::live_streams($objects, $user, false);
         }
 
-        return self::output_xml($string, $full_xml);
-    }
-
-    /**
-     * keyed_array
-     *
-     * This will build an xml document from a key'd array,
-     */
-    public static function keyed_array(array $array, bool $callback = false, bool|string $object = false): string
-    {
-        $string = '';
-        // Foreach it
-        foreach ($array as $key => $value) {
-            $attribute = '';
-            if (is_object($value)) {
-                $value = (array) $value;
-            }
-            // See if the key has attributes
-            if (is_array($value) && isset($value['attributes'])) {
-                $attribute = ' ' . $value['attributes'];
-                $key       = $value['value'];
-            }
-
-            // If it's an array, run again
-            if (is_array($value)) {
-                $value = (isset($value[0]))
-                    ? self::keyed_array($value, true, $key)
-                    : self::keyed_array($value, true);
-                $string .= ($object) ? "<$object>\n$value\n</$object>\n" : "<$key$attribute>\n$value\n</$key>\n";
-            } else {
-                $string .= ($object) ? "\t<$object index=\"" . $key . "\"><![CDATA[" . $value . "]]></$object>\n" : "\t<$key$attribute><![CDATA[" . $value . "]]></$key>\n";
-            }
-        }
-
-        if (!$callback) {
-            $string = self::output_xml($string);
-        }
-
-        return $string;
+        return Api::output_xml($string, $full_xml);
     }
 
     /**
@@ -892,7 +837,7 @@ class Xml8_Data
     {
         self::$count = self::$count ?: count($objects);
         $md5         = md5(serialize($objects));
-        $objects     = self::_filter_objects($objects);
+        $objects     = Api::filter_objects($objects, self::$count, self::$offset, self::$limit);
 
         $string = "<total_count>" . Catalog::get_update_info('label', $user->id) . "</total_count>\n<md5>" . $md5 . "</md5>\n";
 
@@ -907,7 +852,7 @@ class Xml8_Data
             $string .= "<license id=\"$label_id\">\n\t<name><![CDATA[" . $label->get_fullname() . "]]></name>\n\t<artists><![CDATA[" . $label->get_artist_count() . "]]></artists>\n\t<summary><![CDATA[" . $label->summary . "]]></summary>\n\t<external_link><![CDATA[" . $label->get_link() . "]]></external_link>\n\t<address><![CDATA[" . $label->address . "]]></address>\n\t<category><![CDATA[" . $label->category . "]]></category>\n\t<email><![CDATA[" . $label->email . "]]></email>\n\t<website><![CDATA[" . $label->website . "]]></website>\n\t<user><![CDATA[" . $label->user . "]]></user>\n</license>\n";
         }
 
-        return self::output_xml($string);
+        return Api::output_xml($string);
     }
 
     /**
@@ -921,7 +866,7 @@ class Xml8_Data
     {
         self::$count = self::$count ?: count($objects);
         $md5         = md5(serialize($objects));
-        $objects     = self::_filter_objects($objects);
+        $objects     = Api::filter_objects($objects, self::$count, self::$offset, self::$limit);
 
         $string = "<total_count>" . Catalog::get_update_info('license', $user->id) . "</total_count>\n<md5>" . $md5 . "</md5>\n";
 
@@ -934,7 +879,7 @@ class Xml8_Data
             }
         }
 
-        return self::output_xml($string);
+        return Api::output_xml($string);
     }
 
     /**
@@ -948,7 +893,7 @@ class Xml8_Data
     {
         self::$count = self::$count ?: count($objects);
         $md5         = md5(serialize($objects));
-        $objects     = self::_filter_objects($objects);
+        $objects     = Api::filter_objects($objects, self::$count, self::$offset, self::$limit);
 
         $string = "<total_count>" . self::$count . "</total_count>\n<md5>" . $md5 . "</md5>\n";
 
@@ -963,7 +908,7 @@ class Xml8_Data
                 . "\t<basename><![CDATA[" . $basename . "]]></basename>\n</list>\n";
         }
 
-        return self::output_xml($string);
+        return Api::output_xml($string);
     }
 
     /**
@@ -977,7 +922,7 @@ class Xml8_Data
     {
         self::$count = self::$count ?: count($objects);
         $md5         = md5(serialize($objects));
-        $objects     = self::_filter_objects($objects, $full_xml);
+        $objects     = Api::filter_objects($objects, self::$count, self::$offset, self::$limit, $full_xml);
 
         $string = ($full_xml) ? "<total_count>" . Catalog::get_update_info('live_stream', $user->id) . "</total_count>\n<md5>" . $md5 . "</md5>\n" : '';
 
@@ -987,7 +932,7 @@ class Xml8_Data
             $string .= "<live_stream id=\"" . $live_stream_id . "\">\n\t<name><![CDATA[" . $live_stream->get_fullname() . "]]></name>\n\t<url><![CDATA[" . $live_stream->url . "]]></url>\n\t<codec><![CDATA[" . $live_stream->codec . "]]></codec>\n\t<catalog>" . $live_stream->catalog . "</catalog>\n\t<site_url><![CDATA[" . $live_stream->site_url . "]]></site_url>\n</live_stream>\n";
         }
 
-        return self::output_xml($string, $full_xml);
+        return Api::output_xml($string, $full_xml);
     }
 
     /**
@@ -1015,144 +960,7 @@ class Xml8_Data
             $string .= "\t<now_playing id=\"" . $media->getId() . "\">\n" . "\t\t<type><![CDATA[" . $media->getMediaType()->value . "]]></type>\n" . "\t\t<client><![CDATA[" . $now_playing['agent'] . "]]></client>\n" . "\t\t<expire>" . (int) $now_playing['expire'] . "</expire>\n" . "\t\t<user id=\"" . $user->getId() . "\">\n\t\t\t<username><![CDATA[" . $user->getUsername() . "]]></username>\n\t\t</user>\n" . "\t</now_playing>\n";
         }
 
-        return self::output_xml($string);
-    }
-
-    /**
-     * object_array
-     *
-     * This will build an xml document from an array of arrays, an id is required for the array data
-     * <root>
-     *   <$object_type> //optional
-     *     <$item id="123">
-     *       <data></data>
-     * @param array<int, array<string, mixed>> $array
-     */
-    public static function object_array(array $array, string $item, string $object_type = ''): string
-    {
-        $string = ($object_type == '') ? '' : "<$object_type>\n";
-        // Foreach it
-        foreach ($array as $object) {
-            $string .= "\t<$item id=\"" . ($object['id'] ?? $object['name']) . "\">\n";
-            foreach ($object as $name => $value) {
-                if ($name === 'widget') {
-                    $widget_type = $value[0];
-                    $filter      = '';
-                    if (is_array($value[1])) {
-                        foreach ($value[1] as $key => $val) {
-                            $filter .= "\t\t<$widget_type id=\"$key\"><![CDATA[" . $val . "]]></$widget_type>\n";
-                        }
-                    }
-                } elseif (($name === 'values' || $name === 'subtypes') && is_array($value)) {
-                    $filter = '';
-                    foreach ($value as $key => $val) {
-                        $filter .= "\t\t<value id=\"$key\"><![CDATA[" . $val . "]]></value>\n";
-                    }
-                } else {
-                    $filter = (is_numeric($value)) ? $value : "<![CDATA[" . $value . "]]>";
-                }
-                $string .= ($name !== 'id') ? "\t\t<$name>$filter</$name>\n" : '';
-            }
-            $string .= "\t</$item>\n";
-        }
-        $string .= ($object_type == '') ? '' : "</$object_type>";
-
-        return self::output_xml($string);
-    }
-
-    public static function output_xml(string $string, bool $full_xml = true): string
-    {
-        $xml = "";
-        if ($full_xml) {
-            $xml .= self::_header();
-        }
-        $xml .= Ui::clean_utf8($string);
-        if ($full_xml) {
-            $xml .= self::_footer();
-        }
-        // return formatted xml when asking for full_xml
-        if ($full_xml) {
-            $dom = new DOMDocument();
-            // format the string
-            $dom->preserveWhiteSpace = false;
-            if (!$dom->loadXML($xml)) {
-                return $xml;
-            }
-            $dom->formatOutput = true;
-
-            return $dom->saveXML() ?: '';
-        }
-
-        return $xml;
-    }
-
-    /**
-     * output_xml_from_array
-     * This takes a one dimensional array and creates a XML document from it. For
-     * use primarily by the ajax mojo.
-     */
-    public static function output_xml_from_array(array $array, bool $callback = false, string $type = ''): string
-    {
-        $string = '';
-
-        // The type is used for the different XML docs we pass
-        switch ($type) {
-            case 'itunes':
-                foreach ($array as $key => $value) {
-                    if (is_array($value)) {
-                        $value = xoutput_from_array($value, true, $type);
-                        $string .= "\t\t<$key>\n$value\t\t</$key>\n";
-                    } elseif ($key == "key") {
-                        $string .= "\t\t<$key>$value</$key>\n";
-                    } elseif (is_int($value)) {
-                        $string .= "\t\t\t<key>$key</key><integer>$value</integer>\n";
-                    } elseif ($key == "Date Added") {
-                        $string .= "\t\t\t<key>$key</key><date>$value</date>\n";
-                    } elseif (is_string($value)) {
-                        /* We need to escape the value */
-                        $string .= "\t\t\t<key>$key</key><string><![CDATA[" . $value . "]]></string>\n";
-                    }
-                }
-
-                return $string;
-            case 'xspf':
-                foreach ($array as $key => $value) {
-                    if (is_array($value)) {
-                        $value = xoutput_from_array($value, true, $type);
-                        $string .= "\t\t<$key>\n$value\t\t</$key>\n";
-                    } elseif ($key == "key") {
-                        $string .= "\t\t<$key>$value</$key>\n";
-                    } elseif (is_numeric($value)) {
-                        $string .= "\t\t\t<$key>$value</$key>\n";
-                    } elseif (is_string($value)) {
-                        /* We need to escape the value */
-                        $string .= "\t\t\t<$key><![CDATA[" . $value . "]]></$key>\n";
-                    }
-                }
-
-                return $string;
-            default:
-                foreach ($array as $key => $value) {
-                    // No numeric keys
-                    if (is_numeric($key)) {
-                        $key = 'item';
-                    }
-
-                    if (is_array($value)) {
-                        // Call ourself
-                        $value = xoutput_from_array($value, true);
-                        $string .= "\t<content div=\"$key\">$value</content>\n";
-                    } else {
-                        /* We need to escape the value */
-                        $string .= "\t<content div=\"$key\"><![CDATA[" . $value . "]]></content>\n";
-                    }
-                }
-                if (!$callback) {
-                    $string = "<?xml version=\"1.0\" encoding=\"utf-8\" ?>\n<root>\n" . $string . "</root>\n";
-                }
-
-                return Ui::clean_utf8($string);
-        }
+        return Api::output_xml($string);
     }
 
     /**
@@ -1166,7 +974,7 @@ class Xml8_Data
     {
         self::$count = self::$count ?: count($objects);
         $md5         = md5(serialize($objects));
-        $objects     = self::_filter_objects($objects);
+        $objects     = Api::filter_objects($objects, self::$count, self::$offset, self::$limit);
 
         $total_count = (AmpConfig::get('hide_search', false))
             ? Catalog::get_update_info('search', $user->id) + Catalog::get_update_info('playlist', $user->id)
@@ -1195,10 +1003,14 @@ class Xml8_Data
                 $object_type    = 'playlist';
                 $playitem_total = $playlist->get_media_count('song');
             }
+
+            $duration = 0;
             if ($songs) {
                 $items          = '';
                 $playlisttracks = $playlist->get_items();
                 foreach ($playlisttracks as $track) {
+                    $duration += $track['time'];
+
                     if ($track['object_type'] === LibraryItemEnum::SONG) {
                         $items .= "\t\t<playlisttrack id=\"" . $track['object_id'] . "\">" . $track['track'] . "</playlisttrack>\n";
                     }
@@ -1217,6 +1029,7 @@ class Xml8_Data
             $playlist_username = $playlist->username;
             $playlist_type     = $playlist->type;
             $last_update       = $playlist->last_update;
+            $last_duration     = $playlist->last_duration;
 
             $rating          = new Rating($playlist->id, $object_type);
             $user_rating     = $rating->get_user_rating($user->getId());
@@ -1225,10 +1038,10 @@ class Xml8_Data
             $has_collaborate = $has_access ?: $playlist->has_collaborate($user);
 
             // Build this element
-            $string .= "<playlist id=\"" . $playlist_id . "\">\n\t<name><![CDATA[" . $playlist_name . "]]></name>\n\t<owner><![CDATA[" . $playlist_username . "]]></owner>\n\t<user id=\"" . $playlist_user . "\">\n\t\t<username><![CDATA[" . $playlist_username . "]]></username>\n\t</user>\n\t<items>" . $items . "</items>\n\t<type>" . $playlist_type . "</type>\n\t<art><![CDATA[" . $art_url . "]]></art>\n\t<has_access>" . (($has_access) ? 1 : 0) . "</has_access>\n\t<has_collaborate>" . (($has_collaborate) ? 1 : 0) . "</has_collaborate>\n\t<has_art>" . ($playlist->has_art() ? 1 : 0) . "</has_art>\n\t<flag>" . (!$flag->get_flag($user->getId()) ? 0 : 1) . "</flag>\n\t<rating>" . $user_rating . "</rating>\n\t<averagerating>" . $rating->get_average_rating() . "</averagerating>\n\t<md5>" . $md5 . "</md5>\n\t<last_update>" . $last_update . "</last_update>\n</playlist>\n";
+            $string .= "<playlist id=\"" . $playlist_id . "\">\n\t<name><![CDATA[" . $playlist_name . "]]></name>\n\t<owner><![CDATA[" . $playlist_username . "]]></owner>\n\t<user id=\"" . $playlist_user . "\">\n\t\t<username><![CDATA[" . $playlist_username . "]]></username>\n\t</user>\n\t<items>" . $items . "</items>\n\t<type>" . $playlist_type . "</type>\n\t<art><![CDATA[" . $art_url . "]]></art>\n\t<has_access>" . (($has_access) ? 1 : 0) . "</has_access>\n\t<has_collaborate>" . (($has_collaborate) ? 1 : 0) . "</has_collaborate>\n\t<has_art>" . ($playlist->has_art() ? 1 : 0) . "</has_art>\n\t<flag>" . (!$flag->get_flag($user->getId()) ? 0 : 1) . "</flag>\n\t<rating>" . $user_rating . "</rating>\n\t<averagerating>" . $rating->get_average_rating() . "</averagerating>\n\t<md5>" . $md5 . "</md5>\n\t<last_update>" . $last_update . "</last_update>\n\t<time>" . ($duration ?: $last_duration) . "</time>\n</playlist>\n";
         }
 
-        return self::output_xml($string);
+        return Api::output_xml($string);
     }
 
     /**
@@ -1243,7 +1056,7 @@ class Xml8_Data
     {
         self::$count = self::$count ?: count($objects);
         $md5         = md5(serialize($objects));
-        $objects     = self::_filter_objects($objects, $full_xml);
+        $objects     = Api::filter_objects($objects, self::$count, self::$offset, self::$limit, $full_xml);
 
         $string = ($full_xml) ? "<total_count>" . Catalog::get_update_info('podcast_episode', $user->id) . "</total_count>\n<md5>" . $md5 . "</md5>\n" : '';
 
@@ -1260,7 +1073,7 @@ class Xml8_Data
             $string .= "\t<podcast_episode id=\"$episode_id\">\n\t\t<title><![CDATA[" . $episode->get_fullname() . "]]></title>\n\t\t<name><![CDATA[" . $episode->get_fullname() . "]]></name>\n\t\t<podcast id=\"$episode->podcast\">\n\t\t\t<name><![CDATA[" . $episode->getPodcastName() . "]]></name></podcast>\n\t\t<description><![CDATA[" . $episode->get_description() . "]]></description>\n\t\t<category><![CDATA[" . $episode->getCategory() . "]]></category>\n\t\t<author><![CDATA[" . $episode->getAuthor() . "]]></author>\n\t\t<author_full><![CDATA[" . $episode->getAuthor() . "]]></author_full>\n\t\t<website><![CDATA[" . $episode->getWebsite() . "]]></website>\n\t\t<pubdate><![CDATA[" . $episode->getPubDate()->format(DATE_ATOM) . "]]></pubdate>\n\t\t<state><![CDATA[" . $episode->getState()->toDescription() . "]]></state>\n\t\t<filelength><![CDATA[" . $episode->get_f_time(true) . "]]></filelength>\n\t\t<filesize><![CDATA[" . $episode->getSizeFormatted() . "]]></filesize>\n\t\t<filename><![CDATA[" . $episode->getFileName() . "]]></filename>\n\t\t<mime><![CDATA[" . ((isset($episode->mime)) ? $episode->mime : '') . "]]></mime>\n\t\t<time>" . $episode->time . "</time>\n\t\t<size>" . $episode->size . "</size>\n\t<bitrate>" . $episode->bitrate . "</bitrate>\n\t<stream_bitrate>" . $episode->bitrate . "</stream_bitrate>\n\t<rate>" . $episode->rate . "</rate>\n\t<mode><![CDATA[" . $episode->mode . "]]></mode>\n\t<channels>" . $episode->channels . "</channels>\n\t\t<public_url><![CDATA[" . $episode->get_link() . "]]></public_url>\n\t\t<url><![CDATA[" . $episode->play_url('', 'api', false, $user->getId(), $user->streamtoken) . "]]></url>\n\t\t<catalog>" . $episode->catalog . "</catalog>\n\t\t<art><![CDATA[" . $art_url . "]]></art>\n\t<has_art>" . ($episode->has_art() ? 1 : 0) . "</has_art>\n\t\t<flag>" . (!$flag->get_flag($user->getId()) ? 0 : 1) . "</flag>\n\t\t\t<rating>" . $user_rating . "</rating>\n\t\t<averagerating>" . $rating->get_average_rating() . "</averagerating>\n\t\t<playcount>" . $episode->total_count . "</playcount>\n\t\t<played>" . $episode->played . "</played>\n\t</podcast_episode>\n";
         }
 
-        return self::output_xml($string, $full_xml);
+        return Api::output_xml($string, $full_xml);
     }
 
     /**
@@ -1275,7 +1088,7 @@ class Xml8_Data
     {
         self::$count = self::$count ?: count($objects);
         $md5         = md5(serialize($objects));
-        $objects     = self::_filter_objects($objects);
+        $objects     = Api::filter_objects($objects, self::$count, self::$offset, self::$limit);
 
         $podcastRepository = self::getPodcastRepository();
 
@@ -1301,7 +1114,7 @@ class Xml8_Data
             $string .= "\t</podcast>\n";
         }
 
-        return self::output_xml($string);
+        return Api::output_xml($string);
     }
 
     /**
@@ -1324,7 +1137,7 @@ class Xml8_Data
                 : count($objects);
             switch ($object_type) {
                 case 'artist':
-                    $objects = self::_filter_objects($objects);
+                    $objects = Api::filter_objects($objects, self::$count, self::$offset, self::$limit);
                     foreach ($objects as $object_id) {
                         $artist = new Artist((int) $object_id);
                         if ($artist->isNew()) {
@@ -1334,7 +1147,7 @@ class Xml8_Data
                     }
                     break;
                 case 'album':
-                    $objects = self::_filter_objects($objects);
+                    $objects = Api::filter_objects($objects, self::$count, self::$offset, self::$limit);
                     foreach ($objects as $object_id) {
                         $album = new Album((int) $object_id);
                         $string .= "<$object_type id=\"" . $object_id . "\">\n\t<name><![CDATA[" . $album->get_fullname() . "]]></name>\n\t<prefix><![CDATA[" . $album->prefix . "]]></prefix>\n\t<basename><![CDATA[" . $album->name . "]]></basename>\n";
@@ -1351,7 +1164,7 @@ class Xml8_Data
                     }
                     break;
                 case 'song':
-                    $objects = self::_filter_objects($objects);
+                    $objects = Api::filter_objects($objects, self::$count, self::$offset, self::$limit);
                     foreach ($objects as $object_id) {
                         $song        = new Song((int) $object_id);
                         $song_album  = self::getAlbumRepository()->getNames($song->album);
@@ -1369,7 +1182,7 @@ class Xml8_Data
                     }
                     break;
                 case 'playlist':
-                    $objects = self::_filter_objects($objects);
+                    $objects = Api::filter_objects($objects, self::$count, self::$offset, self::$limit);
                     foreach ($objects as $object_id) {
                         if ((int) $object_id === 0) {
                             $playlist       = new Search((int) str_replace('smart_', '', (string) $object_id), 'song', $user);
@@ -1388,7 +1201,7 @@ class Xml8_Data
                     $string .= self::shares($objects, $user, false);
                     break;
                 case 'podcast':
-                    $objects = self::_filter_objects($objects);
+                    $objects = Api::filter_objects($objects, self::$count, self::$offset, self::$limit);
                     foreach ($objects as $object_id) {
                         $podcast = self::getPodcastRepository()->findById((int) $object_id);
                         if ($podcast !== null) {
@@ -1397,7 +1210,7 @@ class Xml8_Data
                     }
                     break;
                 case 'podcast_episode':
-                    $objects = self::_filter_objects($objects);
+                    $objects = Api::filter_objects($objects, self::$count, self::$offset, self::$limit);
                     $string .= self::podcast_episodes($objects, $user, $auth, false);
                     break;
                 case 'video':
@@ -1409,7 +1222,7 @@ class Xml8_Data
         }
         $string .= "</search>";
 
-        return self::output_xml($string);
+        return Api::output_xml($string);
     }
 
     /**
@@ -1419,7 +1232,7 @@ class Xml8_Data
      */
     public static function set_count(int|string $count): void
     {
-        self::$count = (int) self::$count;
+        self::$count = (int) $count;
     }
 
     /**
@@ -1464,7 +1277,7 @@ class Xml8_Data
     {
         self::$count = self::$count ?: count($objects);
         $md5         = md5(serialize($objects));
-        $objects     = self::_filter_objects($objects, $full_xml);
+        $objects     = Api::filter_objects($objects, self::$count, self::$offset, self::$limit, $full_xml);
 
         $string = ($full_xml) ? "<total_count>" . Catalog::get_update_info('share', $user->id) . "</total_count>\n<md5>" . $md5 . "</md5>\n" : '';
 
@@ -1477,7 +1290,7 @@ class Xml8_Data
             $string .= "<share id=\"$share_id\">\n\t<name><![CDATA[" . $share->getObjectName() . "]]></name>\n\t<user><![CDATA[" . $share->getUserName() . "]]></user>\n\t<allow_stream>" . $share->allow_stream . "</allow_stream>\n\t<allow_download>" . $share->allow_download . "</allow_download>\n\t<creation_date>" . $share->creation_date . "</creation_date>\n\t<lastvisit_date>" . $share->lastvisit_date . "</lastvisit_date>\n\t<object_type><![CDATA[" . $share->object_type . "]]></object_type>\n\t<object_id>" . $share->object_id . "</object_id>\n\t<expire_days>" . $share->expire_days . "</expire_days>\n\t<max_counter>" . $share->max_counter . "</max_counter>\n\t<counter>" . $share->counter . "</counter>\n\t<secret><![CDATA[" . $share->secret . "]]></secret>\n\t<public_url><![CDATA[" . $share->public_url . "]]></public_url>\n\t<description><![CDATA[" . $share->description . "]]></description>\n</share>\n";
         }
 
-        return self::output_xml($string, $full_xml);
+        return Api::output_xml($string, $full_xml);
     }
 
     /**
@@ -1500,7 +1313,7 @@ class Xml8_Data
             $string .= "\t</shout>\n";
         }
 
-        return self::output_xml($string);
+        return Api::output_xml($string);
     }
 
     /**
@@ -1606,7 +1419,7 @@ class Xml8_Data
             $string .= "</song_tag>\n";
         }
 
-        return self::output_xml($string);
+        return Api::output_xml($string);
     }
 
     /**
@@ -1620,7 +1433,7 @@ class Xml8_Data
     {
         self::$count = self::$count ?: count($objects);
         $md5         = md5(serialize($objects));
-        $objects     = self::_filter_objects($objects, $full_xml);
+        $objects     = Api::filter_objects($objects, self::$count, self::$offset, self::$limit, $full_xml);
 
         $string = ($full_xml) ? "<total_count>" . Catalog::get_update_info('song', $user->id) . "</total_count>\n<md5>" . $md5 . "</md5>\n" : '';
 
@@ -1645,7 +1458,7 @@ class Xml8_Data
             foreach ($song->get_artists() as $artist_id) {
                 $song_artists[] = Artist::get_name_array_by_id($artist_id);
             }
-            $tag_string    = self::genre_string(Tag::get_top_tags('song', $song->id));
+            $tag_string    = self::_genre_string(Tag::get_top_tags('song', $song->id));
             $rating        = new Rating($song->id, 'song');
             $user_rating   = $rating->get_user_rating($user->getId());
             $flag          = new Userflag($song->id, 'song');
@@ -1689,7 +1502,7 @@ class Xml8_Data
             $string .= "</song>\n";
         }
 
-        return self::output_xml($string, $full_xml);
+        return Api::output_xml($string, $full_xml);
     }
 
     /**
@@ -1708,7 +1521,7 @@ class Xml8_Data
             $xml_string .= "\n\t<$title><![CDATA[" . $data . "]]></$title>";
         }
 
-        return self::output_xml($xml_string);
+        return Api::output_xml($xml_string);
     }
 
     /**
@@ -1731,7 +1544,7 @@ class Xml8_Data
             $string .= "\t</activity>\n";
         }
 
-        return self::_header() . $string . self::_footer();
+        return Api::header() . $string . Api::footer();
     }
 
     /**
@@ -1752,7 +1565,7 @@ class Xml8_Data
         }
         $string .= "</user>\n";
 
-        return self::output_xml($string);
+        return Api::output_xml($string);
     }
 
     /**
@@ -1765,7 +1578,7 @@ class Xml8_Data
     public static function users(array $objects): string
     {
         self::$count = self::$count ?: count($objects);
-        $objects     = self::_filter_objects($objects);
+        $objects     = Api::filter_objects($objects, self::$count, self::$offset, self::$limit);
 
         $string = "";
         foreach ($objects as $user_id) {
@@ -1775,7 +1588,7 @@ class Xml8_Data
             }
         }
 
-        return self::output_xml($string);
+        return Api::output_xml($string);
     }
 
     /**
@@ -1789,7 +1602,7 @@ class Xml8_Data
     {
         self::$count = self::$count ?: count($objects);
         $md5         = md5(serialize($objects));
-        $objects     = self::_filter_objects($objects, $full_xml);
+        $objects     = Api::filter_objects($objects, self::$count, self::$offset, self::$limit, $full_xml);
 
         $string = ($full_xml) ? "<total_count>" . Catalog::get_update_info('video', $user->id) . "</total_count>\n<md5>" . $md5 . "</md5>\n" : '';
 
@@ -1803,57 +1616,10 @@ class Xml8_Data
             $flag        = new Userflag($video->id, 'video');
             $art_url     = Art::url($video->id, 'video', $auth);
 
-            $string .= "<video id=\"" . $video->id . "\">\n\t<name><![CDATA[" . $video->title . "]]></name>\n\t<title><![CDATA[" . $video->title . "]]></title>\n\t<mime><![CDATA[" . $video->mime . "]]></mime>\n\t<resolution><![CDATA[" . $video->get_f_resolution() . "]]></resolution>\n\t<size>" . $video->size . "</size>\n" . self::genre_string($video->get_tags()) . "\t<time><![CDATA[" . $video->time . "]]></time>\n\t<url><![CDATA[" . $video->play_url('', 'api', false, $user->getId(), $user->streamtoken) . "]]></url>\n\t<art><![CDATA[" . $art_url . "]]></art>\n\t<has_art>" . ($video->has_art() ? 1 : 0) . "</has_art>\n\t<flag>" . (!$flag->get_flag($user->getId()) ? 0 : 1) . "</flag>\n\t<rating>" . $user_rating . "</rating>\n\t<averagerating>" . $rating->get_average_rating() . "</averagerating>\n\t<playcount>" . $video->total_count . "</playcount>\n</video>\n";
+            $string .= "<video id=\"" . $video->id . "\">\n\t<name><![CDATA[" . $video->title . "]]></name>\n\t<title><![CDATA[" . $video->title . "]]></title>\n\t<mime><![CDATA[" . $video->mime . "]]></mime>\n\t<resolution><![CDATA[" . $video->get_f_resolution() . "]]></resolution>\n\t<size>" . $video->size . "</size>\n" . self::_genre_string($video->get_tags()) . "\t<time><![CDATA[" . $video->time . "]]></time>\n\t<url><![CDATA[" . $video->play_url('', 'api', false, $user->getId(), $user->streamtoken) . "]]></url>\n\t<art><![CDATA[" . $art_url . "]]></art>\n\t<has_art>" . ($video->has_art() ? 1 : 0) . "</has_art>\n\t<flag>" . (!$flag->get_flag($user->getId()) ? 0 : 1) . "</flag>\n\t<rating>" . $user_rating . "</rating>\n\t<averagerating>" . $rating->get_average_rating() . "</averagerating>\n\t<playcount>" . $video->total_count . "</playcount>\n</video>\n";
         }
 
-        return self::output_xml($string, $full_xml);
-    }
-
-    /**
-     * _filter_objects
-     *
-     * This filters the objects based on the limit and offset
-     */
-    private static function _filter_objects(array $objects, ?bool $encode = null): array
-    {
-        if (
-            $encode !== null
-            && (self::$count > self::$limit || self::$offset > 0)
-            && (self::$limit && $encode)
-        ) {
-            return array_slice($objects, self::$offset, self::$limit);
-        }
-
-        if (
-            $encode === null
-            && (self::$count > self::$limit || self::$offset > 0)
-            && self::$limit
-        ) {
-            return array_slice($objects, self::$offset, self::$limit);
-        }
-
-        return $objects;
-    }
-
-    /**
-     * _footer
-     *
-     * this returns the footer for this document, these are pretty boring
-     */
-    private static function _footer(): string
-    {
-        return "\n</root>\n";
-    }
-
-    /**
-     * _header
-     *
-     * this returns a standard header, there are a few types
-     * so we allow them to pass a type if they want to
-     */
-    private static function _header(): string
-    {
-        return "<?xml version=\"1.0\" encoding=\"" . AmpConfig::get('site_charset', 'UTF-8') . "\" ?>\n<root>\n";
+        return Api::output_xml($string, $full_xml);
     }
 
     /**
@@ -1862,7 +1628,7 @@ class Xml8_Data
      * This returns the formatted 'genre' string for an xml document
      * @param array<int, array{id: int, name: string, is_hidden: int, count: int}> $tags
      */
-    private static function genre_string(array $tags): string
+    private static function _genre_string(array $tags): string
     {
         $string = '';
 

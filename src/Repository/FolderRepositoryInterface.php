@@ -54,6 +54,11 @@ interface FolderRepositoryInterface
 
     public function getByPathName(string $folderPath, int $catalogId = 0, ?string $parentPath = null): ?Folder;
 
+    /**
+     * Return the number of entries in the database...
+     */
+    public function getItemCount(): int;
+
     public function lookup(string $folderName, int $catalogId = 0, ?int $parent_id = null): int;
 
     public function lookupByPathName(string $folderPath, int $catalogId = 0): int;

@@ -1,6 +1,6 @@
 <?php
 
-declare(strict_types=0);
+declare(strict_types=1);
 
 /**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
@@ -80,7 +80,7 @@ class AmpacheRSSView extends AmpachePlugin implements PluginDisplayHomeInterface
             ? simplexml_load_string($xmlstr)
             : false;
         if ($xml && $xml->channel) {
-            Ui::show_box_top($xml->channel->title);
+            Ui::show_box_top((string) $xml->channel->title);
             $count     = 0;
             $divString = ($this->order > 0)
                 ? '<div class="home_plugin" style="order: ' . $this->order . '"><table class="tabledata striped-rows">'
@@ -90,7 +90,7 @@ class AmpacheRSSView extends AmpachePlugin implements PluginDisplayHomeInterface
                 echo '<tr><td>';
                 echo '<div>';
                 echo '<div style="float: left; font-weight: bold;"><a href="' . $item->link . '" target="_blank">' . $item->title . '</a></div>';
-                echo '<div style="float: right;">' . get_datetime((int) strtotime($item->pubDate), 'short', 'short', "m/d/Y H:i") . '</div>';
+                echo '<div style="float: right;">' . get_datetime((int) strtotime((string) $item->pubDate), 'short', 'short', "m/d/Y H:i") . '</div>';
                 echo '</div><br />';
                 echo '<div style="margin-left: 30px;">';
                 if (property_exists($item, 'image') && $item->image !== null) {

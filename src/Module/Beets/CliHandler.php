@@ -1,6 +1,6 @@
 <?php
 
-declare(strict_types=0);
+declare(strict_types=1);
 
 /**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
@@ -141,7 +141,7 @@ class CliHandler extends Handler
     {
         if ($this->fieldFormat !== '' && $this->fieldFormat !== '0') {
             $this->fields      = $this->getFields();
-            $this->fieldFormat = '$' . implode($this->seperator . '$', $this->fields) . $this->itemEnd;
+            $this->fieldFormat = '$' . implode(($this->seperator ?: '###') . '$', $this->fields) . $this->itemEnd;
         }
 
         return $this->fieldFormat;
@@ -185,7 +185,7 @@ class CliHandler extends Handler
     protected function parse(string $item): array
     {
         $item               = str_replace($this->itemEnd, '', $item);
-        $values             = explode($this->seperator, $item);
+        $values             = explode(($this->seperator ?: '###'), $item);
         $song               = array_combine($this->fields, $values);
         $mappedSong         = $this->mapFields($song);
         $mappedSong['size'] = Core::get_filesize($mappedSong['file']);

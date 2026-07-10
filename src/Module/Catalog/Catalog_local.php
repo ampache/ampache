@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
@@ -76,12 +78,19 @@ class Catalog_local extends Catalog
     public function __construct(?int $catalog_id = null)
     {
         if ($catalog_id) {
-            $info = $this->get_info($catalog_id, static::DB_TABLENAME);
-            foreach ($info as $key => $value) {
-                if (property_exists($this, $key)) {
-                    $this->$key = $value;
-                }
-            }
+            $info                 = $this->get_info($catalog_id, static::DB_TABLENAME);
+            $this->id             = (int) ($info['id'] ?? 0);
+            $this->name           = $info['name'] ?? null;
+            $this->catalog_type   = $info['catalog_type'] ?? null;
+            $this->enabled        = (bool) ($info['enabled'] ?? false);
+            $this->last_update    = (int) ($info['last_update'] ?? 0);
+            $this->last_add       = (int) ($info['last_add'] ?? 0);
+            $this->last_clean     = (int) ($info['last_clean'] ?? 0);
+            $this->rename_pattern = $info['rename_pattern'] ?? '';
+            $this->sort_pattern   = $info['sort_pattern'] ?? '';
+            $this->gather_types   = $info['gather_types'] ?? '';
+
+            $this->path = (string) ($info['path'] ?? '');
         }
     }
 
@@ -922,7 +931,7 @@ class Catalog_local extends Catalog
                 true
             );
             debug_event('local.catalog', "catalog " . $this->name . " Starting clean " . $media_type . sprintf(' on chunk %d/%d', $count, $chunks), 5);
-            $dead = array_merge($dead, $this->_clean_chunk($media_type, $chunk, 10000, $interactor));
+            $dead = array_merge($dead, $this->_clean_chunk($chunk, 10000, $interactor));
             $chunk++;
             $count++;
         }
@@ -1540,12 +1549,11 @@ class Catalog_local extends Catalog
      * This is the clean function and is broken into chunks to try to save a little memory
      * @return int[]
      */
-    private function _clean_chunk(string $media_type, int $chunk, int $chunk_size, ?Interactor $interactor = null): array
+    private function _clean_chunk(int $chunk, int $chunk_size, ?Interactor $interactor = null): array
     {
         $dead   = [];
         $offset = $chunk * $chunk_size;
         $count  = $offset;
-        $total  = count($this->_filecache);
 
         $filecache_chunk = array_slice($this->_filecache, $offset, $chunk_size, true);
         foreach ($filecache_chunk as $file => $oid) {

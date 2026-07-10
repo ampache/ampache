@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
@@ -70,12 +72,23 @@ class Catalog_dropbox extends Catalog
     public function __construct(?int $catalog_id = null)
     {
         if ($catalog_id) {
-            $info = $this->get_info($catalog_id, static::DB_TABLENAME);
-            foreach ($info as $key => $value) {
-                if (property_exists($this, $key)) {
-                    $this->$key = $value;
-                }
-            }
+            $info                 = $this->get_info($catalog_id, static::DB_TABLENAME);
+            $this->id             = (int) ($info['id'] ?? 0);
+            $this->name           = $info['name'] ?? null;
+            $this->catalog_type   = $info['catalog_type'] ?? null;
+            $this->enabled        = (bool) ($info['enabled'] ?? false);
+            $this->last_update    = (int) ($info['last_update'] ?? 0);
+            $this->last_add       = (int) ($info['last_add'] ?? 0);
+            $this->last_clean     = (int) ($info['last_clean'] ?? 0);
+            $this->rename_pattern = $info['rename_pattern'] ?? '';
+            $this->sort_pattern   = $info['sort_pattern'] ?? '';
+            $this->gather_types   = $info['gather_types'] ?? '';
+
+            $this->getchunk       = (bool) ($info['getchunk'] ?? false);
+            $this->path           = $info['path'] ?? '';
+            $this->apikey         = $info['apikey'] ?? '';
+            $this->authtoken      = $info['authtoken'] ?? '';
+            $this->secret         = $info['secret'] ?? '';
         }
     }
 
@@ -479,11 +492,12 @@ class Catalog_dropbox extends Catalog
     public function get_rel_path(string $file_path): string
     {
         $path = strpos($file_path, "|");
-        if ($path !== false) {
-            $path++;
+
+        if ($path === false) {
+            return $file_path;
         }
 
-        return substr($file_path, $path);
+        return substr($file_path, $path + 1);
     }
 
     /**

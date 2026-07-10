@@ -1,6 +1,6 @@
 <?php
 
-declare(strict_types=0);
+declare(strict_types=1);
 
 /**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
@@ -89,8 +89,6 @@ class AlbumDisk extends database_object implements
     /** @var array<int, array{id: int, name: string, is_hidden: int, count: int}> $tags */
     private ?array $tags = null;
 
-    private int $weight = 0;
-
     /**
      * __construct
      * Album constructor it loads everything relating
@@ -119,9 +117,15 @@ class AlbumDisk extends database_object implements
             return;
         }
 
-        foreach ($info as $key => $value) {
-            $this->$key = $value;
-        }
+        $this->id           = (int) ($info['id'] ?? 0);
+        $this->album_id     = (int) ($info['album_id'] ?? 0);
+        $this->catalog      = (int) ($info['catalog'] ?? 0);
+        $this->disk         = (int) ($info['disk'] ?? 0);
+        $this->disksubtitle = $info['disksubtitle'] ?? null;
+        $this->song_count   = (int) ($info['song_count'] ?? 0);
+        $this->time         = isset($info['time']) ? (int) $info['time'] : null;
+        $this->total_count  = (int) ($info['total_count'] ?? 0);
+        $this->total_skip   = (int) ($info['total_skip'] ?? 0);
 
         // set the album variables just in case
         $this->name              = $this->album->name;

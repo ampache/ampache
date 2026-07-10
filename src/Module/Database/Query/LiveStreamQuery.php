@@ -1,6 +1,6 @@
 <?php
 
-declare(strict_types=0);
+declare(strict_types=1);
 
 /**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
@@ -179,7 +179,7 @@ final class LiveStreamQuery implements QueryInterface
      *
      * Sorting SQL for ORDER BY
      */
-    public function get_sql_sort(Query $query, ?string $field, ?string $order): string
+    public function get_sql_sort(Query $query, ?string $field = null, ?string $order = null): string
     {
         switch ($field) {
             case 'name':

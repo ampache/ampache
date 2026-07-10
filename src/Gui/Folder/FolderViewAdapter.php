@@ -1,6 +1,6 @@
 <?php
 
-declare(strict_types=0);
+declare(strict_types=1);
 
 /**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
@@ -299,7 +299,9 @@ final readonly class FolderViewAdapter implements FolderViewAdapterInterface
 
     public function getPlayedTimes(): ?int
     {
-        return (property_exists($this->object, 'total_count')) ? $this->object->total_count : null;
+        return (property_exists($this->object, 'total_count') && (!property_exists($this->object, 'playable') || $this->object->playable))
+            ? $this->object->total_count
+            : null;
     }
 
     public function getPostShoutIcon(): string

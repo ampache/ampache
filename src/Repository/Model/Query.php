@@ -1,6 +1,6 @@
 <?php
 
-declare(strict_types=0);
+declare(strict_types=1);
 
 /**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
@@ -462,7 +462,7 @@ class Query
         $this->set_static_content(false);
         $this->set_is_simple(false);
         $this->set_start(0);
-        $this->set_offset(AmpConfig::get('offset_limit', 50));
+        $this->set_offset((int) AmpConfig::get('offset_limit', 50));
     }
 
     /**
@@ -937,7 +937,7 @@ class Query
     /**
      * sql_sort_video
      */
-    public function sql_sort_video(?string $field, ?string $order, ?string $table = 'video'): string
+    public function sql_sort_video(?string $field, ?string $order = null, ?string $table = 'video'): string
     {
         $sql = "";
         switch ($field) {
@@ -1383,7 +1383,7 @@ class Query
      * a logic based sort that will come later as that's
      * a lot more complicated
      */
-    private function _sql_sort(?string $field, ?string $order): string
+    private function _sql_sort(?string $field, ?string $order = null): string
     {
         if ($order != 'DESC') {
             $order = 'ASC';

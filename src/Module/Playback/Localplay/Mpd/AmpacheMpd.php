@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
@@ -92,7 +94,7 @@ class AmpacheMpd extends localplay_controller
             }
         }
 
-        if (!$this->_mpd->PlAdd($url->url)) {
+        if (!$this->_mpd->PLAdd($url->url)) {
             debug_event(self::class, 'add_url failed to add: ' . json_encode($url), 1);
 
             return false;
