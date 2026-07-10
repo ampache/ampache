@@ -84,13 +84,14 @@ final class AlbumDeleter implements AlbumDeleterInterface
      * @throws AlbumDeletionException
      */
     public function delete(
-        Album $album
+        Album $album,
+        bool $parent = false
     ): void {
         $albumId = $album->getId();
         $songIds = $this->songRepository->getByAlbum($albumId);
         foreach ($songIds as $songId) {
             $song    = $this->modelFactory->createSong($songId);
-            $deleted = $this->songDeleter->delete($song);
+            $deleted = $this->songDeleter->delete($song, true);
             if (!$deleted) {
                 $this->logger->critical(
                     sprintf('Error when deleting the song `%d`.', $songId),
@@ -104,9 +105,18 @@ final class AlbumDeleter implements AlbumDeleterInterface
         $this->albumRepository->delete($album);
 
         $this->artCleanup->collectGarbageForObject('album', $albumId);
-        Userflag::garbage_collection('album', $albumId);
-        Rating::garbage_collection('album', $albumId);
-        $this->shoutRepository->collectGarbage('album', $albumId);
-        $this->useractivityRepository->collectGarbage('album', $albumId);
+
+        if (!$parent) {
+            // collect song garbage once
+            Userflag::garbage_collection('song');
+            Rating::garbage_collection('song');
+            $this->shoutRepository->collectGarbage('song');
+            $this->useractivityRepository->collectGarbage('song');
+
+            Userflag::garbage_collection('album', $albumId);
+            Rating::garbage_collection('album', $albumId);
+            $this->shoutRepository->collectGarbage('album', $albumId);
+            $this->useractivityRepository->collectGarbage('album', $albumId);
+        }
     }
 }
