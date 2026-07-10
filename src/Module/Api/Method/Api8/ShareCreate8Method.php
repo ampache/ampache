@@ -96,7 +96,7 @@ final class ShareCreate8Method
         $object_id   = $input['filter'];
         $object_type = $input['type'];
         $description = $input['description'] ?? null;
-        $expire_days = (isset($input['expires'])) ? filter_var($input['expires'], FILTER_SANITIZE_NUMBER_INT) : AmpConfig::get('share_expire', 7);
+        $expire_days = (isset($input['expires'])) ? filter_var($input['expires'], FILTER_SANITIZE_NUMBER_INT) : (int) AmpConfig::get('share_expire', 7);
         // confirm the correct data
         if (!in_array(strtolower($object_type), ['album', 'artist', 'playlist', 'podcast', 'podcast_episode', 'song', 'video'])) {
             /* HINT: Requested object string/id/type ("album", "myusername", "some song title", 1298376) */
