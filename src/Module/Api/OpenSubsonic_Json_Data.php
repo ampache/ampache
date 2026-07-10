@@ -1,6 +1,6 @@
 <?php
 
-declare(strict_types=0);
+declare(strict_types=1);
 
 /**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
@@ -872,7 +872,7 @@ class OpenSubsonic_Json_Data
             $json = self::_getPlaylist_Playlist($playlist, $user, $songs);
         }
         if ($playlist instanceof Search && $playlist->isNew() === false) {
-            $json = self::_getPlaylist_Search($playlist, $user, $songs);
+            $json = self::_getPlaylist_Search($playlist, $songs);
         }
 
         $response['subsonic-response']['playlist'] = $json;
@@ -904,7 +904,7 @@ class OpenSubsonic_Json_Data
                 if ($playlist->isNew()) {
                     continue;
                 }
-                $json['playlist'][] = self::_getPlaylist_Search($playlist, $user);
+                $json['playlist'][] = self::_getPlaylist_Search($playlist);
             } else {
                 $playlist = new Playlist((int) $playlist_id);
                 if ($playlist->isNew()) {
@@ -3423,7 +3423,7 @@ class OpenSubsonic_Json_Data
      *     'entry'?: array<int, array<string, mixed>>
      * } // todo add allowedUser Array of string
      */
-    private static function _getPlaylist_Search(Search $search, User $user, bool $songs = false): array
+    private static function _getPlaylist_Search(Search $search, bool $songs = false): array
     {
         $sub_id = OpenSubsonic_Api::getSmartPlaylistSubId($search->id);
 

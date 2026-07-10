@@ -1,6 +1,6 @@
 <?php
 
-declare(strict_types=0);
+declare(strict_types=1);
 
 /**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
@@ -1469,6 +1469,11 @@ class User extends database_object
                 'apikey' => null,
                 'rsstoken' => null,
                 'streamtoken' => null,
+                'last_seen' => null,
+                'create_date' => null,
+                'validation' => null,
+                'state' => null,
+                'city' => null
             ];
         } else {
             $sql        = "SELECT `id`, `username`, `fullname`, `email`, `website`, `apikey`, `access`, `disabled`, `last_seen`, `create_date`, `validation`, `state`, `city`, `fullname_public`, `rsstoken`, `streamtoken`, `catalog_filter_group` FROM `user` WHERE `id` = ?;";
@@ -1482,9 +1487,23 @@ class User extends database_object
         }
 
         self::add_to_cache('user', $user_id, $data);
-        foreach ($data as $key => $value) {
-            $this->$key = $value;
-        }
+        $this->id                   = $data['id'];
+        $this->username             = $data['username'];
+        $this->fullname             = $data['fullname'];
+        $this->email                = $data['email'];
+        $this->website              = $data['website'];
+        $this->apikey               = $data['apikey'];
+        $this->access               = $data['access'];
+        $this->disabled             = (bool) $data['disabled'];
+        $this->last_seen            = (int) $data['last_seen'];
+        $this->create_date          = $data['create_date'];
+        $this->validation           = $data['validation'];
+        $this->state                = $data['state'];
+        $this->city                 = $data['city'];
+        $this->fullname_public      = (bool) $data['fullname_public'];
+        $this->rsstoken             = $data['rsstoken'];
+        $this->streamtoken          = $data['streamtoken'];
+        $this->catalog_filter_group = (int) $data['catalog_filter_group'];
 
         return true;
     }

@@ -1,6 +1,6 @@
 <?php
 
-declare(strict_types=0);
+declare(strict_types=1);
 
 /**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
@@ -53,11 +53,12 @@ final class UpdatePodcast8Method
      *     api_format: string,
      *     auth: string,
      * } $input
- */
-    public static function refresh(array $input, User $user): bool
+     */
+    public static function sync(array $input, User $user): bool
     {
         return self::update_podcast($input, $user);
     }
+
     /**
      * update_podcast
      * MINIMUM_API_VERSION=420000

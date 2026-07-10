@@ -1,6 +1,6 @@
 <?php
 
-declare(strict_types=0);
+declare(strict_types=1);
 
 /**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
@@ -135,10 +135,10 @@ final class ShareCreate8Method
             $share = $shareCreator->create(
                 $user,
                 LibraryItemEnum::from($object_type),
-                $object_id,
+                (int) $object_id,
                 true,
                 $functionChecker->check(AccessFunctionEnum::FUNCTION_DOWNLOAD),
-                $expire_days,
+                (int) $expire_days,
                 $passwordGenerator->generate_token(),
                 0,
                 $description

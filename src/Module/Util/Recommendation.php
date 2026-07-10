@@ -1,6 +1,6 @@
 <?php
 
-declare(strict_types=0);
+declare(strict_types=1);
 
 /**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
@@ -97,7 +97,7 @@ class Recommendation
             (string) preg_replace(
                 "#<a href=([^<]*)Last\.fm</a>.#",
                 "",
-                ($xml->album->wiki->summary ?? '')
+                (string) $xml->album->wiki->summary
             )
         );
         $results['summary'] = str_replace("Read more on Last.fm", "", $results['summary']);
@@ -165,7 +165,7 @@ class Recommendation
             (string) preg_replace(
                 "#<a href=([^<]*)Last\.fm</a>.#",
                 "",
-                ($xml->artist->bio->summary ?? '')
+                (string) $xml->artist->bio->summary
             )
         );
         $results['summary']     = str_replace("Read more on Last.fm", "", $results['summary']);

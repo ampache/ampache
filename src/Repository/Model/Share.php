@@ -1,6 +1,6 @@
 <?php
 
-declare(strict_types=0);
+declare(strict_types=1);
 
 /**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
@@ -70,10 +70,20 @@ class Share extends database_object
             return;
         }
 
-        $info = $this->get_info($share_id, static::DB_TABLENAME);
-        foreach ($info as $key => $value) {
-            $this->$key = $value;
-        }
+        $info                 = $this->get_info($share_id, static::DB_TABLENAME);
+        $this->id             = (int) ($info['id'] ?? 0);
+        $this->user           = (int) ($info['user'] ?? 0);
+        $this->object_id      = (int) ($info['object_id'] ?? 0);
+        $this->object_type    = $info['object_type'] ?? null;
+        $this->creation_date  = (int) ($info['creation_date'] ?? 0);
+        $this->lastvisit_date = (int) ($info['lastvisit_date'] ?? 0);
+        $this->expire_days    = (int) ($info['expire_days'] ?? 0);
+        $this->counter        = (int) ($info['counter'] ?? 0);
+        $this->max_counter    = (int) ($info['max_counter'] ?? 0);
+        $this->allow_stream   = (bool) ($info['allow_stream'] ?? false);
+        $this->allow_download = (bool) ($info['allow_download'] ?? false);
+        $this->secret         = $info['secret'] ?? null;
+        $this->description    = $info['description'] ?? null;
     }
 
     public static function display_ui(string $object_type, int $object_id, bool $show_text = true): string

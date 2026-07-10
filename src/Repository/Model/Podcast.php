@@ -1,6 +1,6 @@
 <?php
 
-declare(strict_types=0);
+declare(strict_types=1);
 
 /**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
@@ -65,7 +65,6 @@ class Podcast extends database_object implements
     private int $total_count     = 0;
     private int $total_skip      = 0;
     private ?string $website     = null;
-    private int $weight          = 0;
 
     /**
      * Podcast
@@ -78,9 +77,25 @@ class Podcast extends database_object implements
         }
 
         $info = $this->get_info($podcast_id, static::DB_TABLENAME);
-        foreach ($info as $key => $value) {
-            $this->$key = $value;
+        if ($info === []) {
+            return;
         }
+
+        $this->catalog       = (int) ($info['catalog'] ?? 0);
+        $this->copyright     = $info['copyright'] ?? null;
+        $this->description   = $info['description'] ?? null;
+        $this->episodes      = (int) ($info['episodes'] ?? 0);
+        $this->feed          = $info['feed'] ?? null;
+        $this->generator     = $info['generator'] ?? null;
+        $this->id            = (int) ($info['id'] ?? 0);
+        $this->language      = $info['language'] ?? null;
+        $this->lastbuilddate = (int) ($info['lastbuilddate'] ?? 0);
+        $this->lastsync      = (int) ($info['lastsync'] ?? 0);
+        $this->link          = $info['link'] ?? null;
+        $this->title         = $info['title'] ?? null;
+        $this->total_count   = (int) ($info['total_count'] ?? 0);
+        $this->total_skip    = (int) ($info['total_skip'] ?? 0);
+        $this->website       = $info['website'] ?? null;
     }
 
     /**

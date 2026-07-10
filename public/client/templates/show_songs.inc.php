@@ -1,6 +1,6 @@
 <?php
 
-declare(strict_types=0);
+declare(strict_types=1);
 
 /**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
@@ -213,7 +213,7 @@ foreach ($object_ids as $song_id) {
     </tfoot>
 </table>
 
-<?php show_table_render($argument ?? false); ?>
+<?php show_table_render((isset($argument) && is_bool($argument) ? $argument : false)); ?>
 <?php if ($browse->is_show_header()) {
     require Ui::find_template('list_header.inc.php');
 } ?>

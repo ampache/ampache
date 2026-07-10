@@ -6,7 +6,7 @@
 ; This value is used to detect if this config file is up to date
 ; this is compared against a constant called CONFIG_VERSION
 ; that is located in src/Config/Init/InitializationHandlerConfig.php
-config_version = 87
+config_version = 88
 
 ; Defines the default timezone used by the date functions
 ; Uses the same strings as the default date.timezone (https://php.net/date.timezone)
@@ -965,12 +965,6 @@ log_filename = "%name.%Y%m%d.log"
 ; See https://www.php.net/manual/en/function.date.php for possible formats.
 ; DEFAULT: c (ISO 8601 date)
 log_time_format = "c"
-
-; API Debug Handler
-; If this is enabled Ampache will not catch exceptions during API calls.
-; Used for development and not recommended for regular use.
-; DEFAULT: "false"
-;api_debug_handler = "true"
 
 ; Load the debug webplayer
 ; This will load the *.js player instead of the *.min.js player

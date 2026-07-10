@@ -1,6 +1,6 @@
 <?php
 
-declare(strict_types=0);
+declare(strict_types=1);
 
 /**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
@@ -50,37 +50,37 @@ class Album extends database_object implements
 {
     protected const string DB_TABLENAME = 'album';
 
-    private static array $_mapcache = [];
-    public ?int $addition_time      = null;
-    public ?int $album_artist       = null;
-    public int $artist_count        = 0;
-    public ?string $artist_name     = null;
-    public ?string $artist_prefix   = null;
-    public ?string $barcode         = null;
-    public int $catalog;
-    public int $catalog_id         = 0;
-    public ?string $catalog_number = null;
-    public int $disk_count         = 0;
-    public int $id                 = 0;
-    public ?string $link           = null;
-    public ?string $mbid           = null; // MusicBrainz ID
-    public ?string $mbid_group     = null; // MusicBrainz Release Group ID
-    public ?string $name           = null;
-    public ?int $original_year     = null;
-    public ?string $prefix         = null;
-    public ?string $release_status = null;
-    public ?string $release_type   = null;
-    public int $song_artist_count  = 0;
+    private static array $_mapcache   = [];
+    public ?int $addition_time        = null;
+    public ?int $album_artist         = null;
+    public int $artist_count          = 0;
+    public ?string $artist_name       = null;
+    public ?string $artist_prefix     = null;
+    public ?string $barcode           = null;
+    public int $catalog               = 0;
+    public int $catalog_id            = 0;
+    public ?string $catalog_number    = null;
+    public int $disk_count            = 0;
+    public int $id                    = 0;
+    public ?string $link              = null;
+    public ?string $mbid              = null; // MusicBrainz ID
+    public ?string $mbid_group        = null; // MusicBrainz Release Group ID
+    public ?string $name              = null;
+    public ?int $original_year        = null;
+    public ?string $prefix            = null;
+    public ?string $release_status    = null;
+    public ?string $release_type      = null;
+    public int $song_artist_count     = 0;
 
     /** @var int[] $song_artists */
     public ?array $song_artists = null;
 
-    public int $song_count  = 0;
-    public ?int $time       = null;
-    public int $total_count = 0;
-    public int $total_skip  = 0;
-    public ?string $version = null;
-    public int $year;
+    public int $song_count            = 0;
+    public ?int $time                 = null;
+    public int $total_count           = 0;
+    public int $total_skip            = 0;
+    public ?string $version           = null;
+    public int $year                  = 0;
 
     // cached information
 
@@ -97,8 +97,6 @@ class Album extends database_object implements
 
     /** @var array<int, array{id: int, name: string, is_hidden: int, count: int}> $tags */
     private ?array $tags = null;
-
-    private int $weight = 0;
 
     /**
      * __construct
@@ -118,9 +116,32 @@ class Album extends database_object implements
             return;
         }
 
-        foreach ($info as $key => $value) {
-            $this->$key = $value;
-        }
+        $this->addition_time     = isset($info['addition_time']) ? (int) $info['addition_time'] : null;
+        $this->album_artist      = isset($info['album_artist']) ? (int) $info['album_artist'] : null;
+        $this->artist_count      = (int) ($info['artist_count'] ?? 0);
+        $this->artist_name       = $info['artist_name'] ?? null;
+        $this->artist_prefix     = $info['artist_prefix'] ?? null;
+        $this->barcode           = $info['barcode'] ?? null;
+        $this->catalog           = (int) ($info['catalog'] ?? 0);
+        $this->catalog_id        = (int) ($info['catalog_id'] ?? 0);
+        $this->catalog_number    = $info['catalog_number'] ?? null;
+        $this->disk_count        = (int) ($info['disk_count'] ?? 0);
+        $this->id                = (int) ($info['id'] ?? 0);
+        $this->link              = $info['link'] ?? null;
+        $this->mbid              = $info['mbid'] ?? null;
+        $this->mbid_group        = $info['mbid_group'] ?? null;
+        $this->name              = $info['name'] ?? null;
+        $this->original_year     = isset($info['original_year']) ? (int) $info['original_year'] : null;
+        $this->prefix            = $info['prefix'] ?? null;
+        $this->release_status    = $info['release_status'] ?? null;
+        $this->release_type      = $info['release_type'] ?? null;
+        $this->song_artist_count = (int) ($info['song_artist_count'] ?? 0);
+        $this->song_count        = (int) ($info['song_count'] ?? 0);
+        $this->time              = isset($info['time']) ? (int) $info['time'] : null;
+        $this->total_count       = (int) ($info['total_count'] ?? 0);
+        $this->total_skip        = (int) ($info['total_skip'] ?? 0);
+        $this->version           = $info['version'] ?? null;
+        $this->year              = (int) ($info['year'] ?? 0);
 
         // Little bit of formatting here
         if ($this->album_artist === null && $this->song_artist_count > 1) {

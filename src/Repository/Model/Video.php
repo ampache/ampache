@@ -1,6 +1,6 @@
 <?php
 
-declare(strict_types=0);
+declare(strict_types=1);
 
 /**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
@@ -82,8 +82,6 @@ class Video extends database_object implements
     /** @var array<int, array{id: int, name: string, is_hidden: int, count: int}> $tags */
     private ?array $tags = null;
 
-    private int $weight = 0;
-
     /**
      * Constructor
      * This pulls the information from the database and returns
@@ -100,9 +98,31 @@ class Video extends database_object implements
             return;
         }
 
-        foreach ($info as $key => $value) {
-            $this->$key = $value;
-        }
+        $this->id            = (int) ($info['id'] ?? 0);
+        $this->catalog       = (int) ($info['catalog'] ?? 0);
+        $this->title         = $info['title'] ?? null;
+        $this->file          = $info['file'] ?? null;
+        $this->size          = (int) ($info['size'] ?? 0);
+        $this->time          = (int) ($info['time'] ?? 0);
+        $this->mime          = $info['mime'] ?? null;
+        $this->enabled       = (int) ($info['enabled'] ?? 0);
+        $this->played        = (bool) ($info['played'] ?? false);
+        $this->update_time   = isset($info['update_time']) ? (int) $info['update_time'] : null;
+        $this->addition_time = isset($info['addition_time']) ? (int) $info['addition_time'] : null;
+        $this->bitrate       = isset($info['bitrate']) ? (int) $info['bitrate'] : null;
+        $this->mode          = $info['mode'] ?? null;
+        $this->channels      = isset($info['channels']) ? (int) $info['channels'] : null;
+        $this->resolution_x  = (int) ($info['resolution_x'] ?? 0);
+        $this->resolution_y  = (int) ($info['resolution_y'] ?? 0);
+        $this->display_x     = isset($info['display_x']) ? (int) $info['display_x'] : null;
+        $this->display_y     = isset($info['display_y']) ? (int) $info['display_y'] : null;
+        $this->video_codec   = $info['video_codec'] ?? null;
+        $this->audio_codec   = $info['audio_codec'] ?? null;
+        $this->frame_rate    = isset($info['frame_rate']) ? (float) $info['frame_rate'] : null;
+        $this->video_bitrate = isset($info['video_bitrate']) ? (float) $info['video_bitrate'] : null;
+        $this->release_date  = isset($info['release_date']) ? (int) $info['release_date'] : null;
+        $this->total_count   = (int) ($info['total_count'] ?? 0);
+        $this->total_skip    = (int) ($info['total_skip'] ?? 0);
 
         $this->type = ($this->file) ? strtolower(pathinfo($this->file, PATHINFO_EXTENSION)) : '';
     }

@@ -69,7 +69,7 @@ final class AdminListUsersCommand extends Command
                 ? $user->apikey ?? ''
                 : sprintf(
                     T_('%s (%d)'),
-                    $user->getusername(),
+                    $user->getUsername(),
                     $user->getId()
                 );
 

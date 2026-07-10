@@ -1,6 +1,6 @@
 <?php
 
-declare(strict_types=0);
+declare(strict_types=1);
 
 /**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
@@ -49,10 +49,14 @@ class PrivateMsg extends database_object implements PrivateMessageInterface
             return;
         }
 
-        $info = $this->get_info($pm_id, static::DB_TABLENAME);
-        foreach ($info as $key => $value) {
-            $this->$key = $value;
-        }
+        $info                = $this->get_info($pm_id, static::DB_TABLENAME);
+        $this->creation_date = isset($info['creation_date']) ? (int) $info['creation_date'] : null;
+        $this->from_user     = (int) ($info['from_user'] ?? 0);
+        $this->id            = (int) ($info['id'] ?? 0);
+        $this->is_read       = (bool) ($info['is_read'] ?? false);
+        $this->message       = $info['message'] ?? null;
+        $this->subject       = $info['subject'] ?? null;
+        $this->to_user       = (int) ($info['to_user'] ?? 0);
     }
 
     public function getCreationDate(): int

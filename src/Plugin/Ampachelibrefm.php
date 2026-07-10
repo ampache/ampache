@@ -1,6 +1,6 @@
 <?php
 
-declare(strict_types=0);
+declare(strict_types=1);
 
 /**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
@@ -94,10 +94,10 @@ class Ampachelibrefm extends AmpachePlugin implements PluginSaveMediaplayInterfa
             return false;
         }
 
-        $this->challenge = $session_key;
+        $this->challenge = (string) $session_key;
 
         // Update the preferences
-        Preference::update('librefm_challenge', $this->user_id, $session_key);
+        Preference::update('librefm_challenge', $this->user_id, (string) $session_key);
         debug_event(self::class, 'getSession Successful', 3);
 
         return true;

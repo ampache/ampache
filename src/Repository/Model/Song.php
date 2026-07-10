@@ -1,6 +1,6 @@
 <?php
 
-declare(strict_types=0);
+declare(strict_types=1);
 
 /**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
@@ -144,7 +144,6 @@ class Song extends database_object implements
     private ?bool $has_art              = null;
     private ?License $licenseObj        = null;
     private bool $song_data_loaded      = false;
-    private int $weight                 = 0;
 
     /**
      * Constructor
@@ -745,7 +744,7 @@ class Song extends database_object implements
             && $albumartist !== '0'
         ) {
             $albumartist_mbid = Catalog::trim_slashed_list($albumartist_mbid);
-            $albumartist_id   = Artist::check($albumartist, $albumartist_mbid);
+            $albumartist_id   = Artist::check($albumartist, $albumartist_mbid, $user_upload);
         }
 
         // song artist text is the same as album artist so don't worry about looking up id's if they match
@@ -760,7 +759,7 @@ class Song extends database_object implements
             $artist_id = (int) ($results['artist_id']);
         } elseif ($artist !== null && $artist !== '' && $artist !== '0') {
             $artist_mbid = Catalog::trim_slashed_list($artist_mbid);
-            $artist_id   = (int) Artist::check($artist, $artist_mbid);
+            $artist_id   = (int) Artist::check($artist, $artist_mbid, $user_upload);
         }
 
         if (isset($results['album_id'])) {
@@ -812,7 +811,7 @@ class Song extends database_object implements
         // add song artists found by name to the list (Ignore artist names when we have the same amount of MBID's)
         if (!empty($artists_array) && !count($artists_array) == count($artist_mbid_array)) {
             foreach ($artists_array as $artist_name) {
-                $song_artist_id = (int) Artist::check($artist_name);
+                $song_artist_id = (int) Artist::check($artist_name, '', $user_upload);
                 if ($song_artist_id > 0) {
                     $artists[] = $song_artist_id;
                     if ($song_artist_id != $artist_id) {
@@ -1023,7 +1022,7 @@ class Song extends database_object implements
      * update_artist
      * updates the artist field
      */
-    public static function update_artist(int $new_artist, int $song_id, ?int $old_artist, bool $update_counts = true): bool
+    public static function update_artist(int $new_artist, int $song_id, ?int $old_artist = null, bool $update_counts = true): bool
     {
         if ($old_artist != $new_artist && self::_update_item('artist', $new_artist, $song_id, AccessLevelEnum::CONTENT_MANAGER) !== false) {
             if ($update_counts && $old_artist) {
@@ -1429,7 +1428,7 @@ class Song extends database_object implements
         }
 
         foreach ($info as $key => $value) {
-            $this->$key = $value;
+            $this->setSongDataProperty($key, $value);
         }
 
         // don't repeat this process if you've got it all
@@ -2368,7 +2367,7 @@ class Song extends database_object implements
                          */
                         $function = 'update_' . $key;
                         self::$function($value, $this->id);
-                        $this->$key = $value;
+                        $this->setUpdatedFieldValue($key, $value);
                     }
                     break;
                 case 'edit_tags':
@@ -2515,9 +2514,7 @@ class Song extends database_object implements
     {
         if (parent::is_cached('song', $song_id)) {
             $results = parent::get_from_cache('song', $song_id);
-            foreach ($results as $key => $value) {
-                $this->$key = $value;
-            }
+            $this->setSongInfoFromArray($results);
 
             return true;
         }
@@ -2527,13 +2524,198 @@ class Song extends database_object implements
         $results    = Dba::fetch_assoc($db_results);
         if (isset($results['id'])) {
             parent::add_to_cache('song', $song_id, $results);
-            foreach ($results as $key => $value) {
-                $this->$key = $value;
-            }
+            $this->setSongInfoFromArray($results);
 
             return true;
         }
 
         return false;
+    }
+
+    private function setSongDataProperty(string $key, mixed $value): void
+    {
+        switch ($key) {
+            case 'comment':
+                $this->comment = $value !== null ? (string) $value : null;
+                break;
+            case 'lyrics':
+                $this->lyrics = $value !== null ? (string) $value : null;
+                break;
+            case 'label':
+                $this->label = $value !== null ? (string) $value : null;
+                break;
+            case 'language':
+                $this->language = $value !== null ? (string) $value : null;
+                break;
+            case 'waveform':
+                $this->waveform = $value !== null ? (string) $value : null;
+                break;
+            case 'replaygain_track_gain':
+                $this->replaygain_track_gain = $value === null ? null : (float) $value;
+                break;
+            case 'replaygain_track_peak':
+                $this->replaygain_track_peak = $value === null ? null : (float) $value;
+                break;
+            case 'replaygain_album_gain':
+                $this->replaygain_album_gain = $value === null ? null : (float) $value;
+                break;
+            case 'replaygain_album_peak':
+                $this->replaygain_album_peak = $value === null ? null : (float) $value;
+                break;
+            case 'r128_track_gain':
+                $this->r128_track_gain = $value === null ? null : (int) $value;
+                break;
+            case 'r128_album_gain':
+                $this->r128_album_gain = $value === null ? null : (int) $value;
+                break;
+            case 'disksubtitle':
+                $this->disksubtitle = $value !== null ? (string) $value : null;
+                break;
+        }
+    }
+
+    /**
+     * @param array<string, mixed> $results
+     */
+    private function setSongInfoFromArray(array $results): void
+    {
+        if (array_key_exists('id', $results)) {
+            $this->id = (int) $results['id'];
+        }
+        if (array_key_exists('file', $results)) {
+            $this->file = $results['file'] !== null ? (string) $results['file'] : null;
+        }
+        if (array_key_exists('catalog', $results)) {
+            $this->catalog = (int) $results['catalog'];
+        }
+        if (array_key_exists('album', $results)) {
+            $this->album = (int) $results['album'];
+        }
+        if (array_key_exists('album_disk', $results)) {
+            $this->album_disk = (int) $results['album_disk'];
+        }
+        if (array_key_exists('disk', $results)) {
+            $this->disk = $results['disk'] === null ? null : (int) $results['disk'];
+        }
+        if (array_key_exists('year', $results)) {
+            $this->year = (int) $results['year'];
+        }
+        if (array_key_exists('artist', $results)) {
+            $this->artist = $results['artist'] === null ? null : (int) $results['artist'];
+        }
+        if (array_key_exists('title', $results)) {
+            $this->title = $results['title'] !== null ? (string) $results['title'] : null;
+        }
+        if (array_key_exists('bitrate', $results)) {
+            $this->bitrate = (int) $results['bitrate'];
+        }
+        if (array_key_exists('rate', $results)) {
+            $this->rate = (int) $results['rate'];
+        }
+        if (array_key_exists('mode', $results)) {
+            $this->mode = $results['mode'] !== null ? (string) $results['mode'] : null;
+        }
+        if (array_key_exists('size', $results)) {
+            $this->size = (int) $results['size'];
+        }
+        if (array_key_exists('time', $results)) {
+            $this->time = (int) $results['time'];
+        }
+        if (array_key_exists('track', $results)) {
+            $this->track = $results['track'] === null ? null : (int) $results['track'];
+        }
+        if (array_key_exists('mbid', $results)) {
+            $this->mbid = $results['mbid'] !== null ? (string) $results['mbid'] : null;
+        }
+        if (array_key_exists('played', $results)) {
+            $this->played = (bool) $results['played'];
+        }
+        if (array_key_exists('enabled', $results)) {
+            $this->enabled = (bool) $results['enabled'];
+        }
+        if (array_key_exists('update_time', $results)) {
+            $this->update_time = $results['update_time'] === null ? null : (int) $results['update_time'];
+        }
+        if (array_key_exists('addition_time', $results)) {
+            $this->addition_time = $results['addition_time'] === null ? null : (int) $results['addition_time'];
+        }
+        if (array_key_exists('user_upload', $results)) {
+            $this->user_upload = $results['user_upload'] === null ? null : (int) $results['user_upload'];
+        }
+        if (array_key_exists('license', $results)) {
+            $this->license = $results['license'] === null ? null : (int) $results['license'];
+        }
+        if (array_key_exists('composer', $results)) {
+            $this->composer = $results['composer'] !== null ? (string) $results['composer'] : null;
+        }
+        if (array_key_exists('channels', $results)) {
+            $this->channels = $results['channels'] === null ? null : (int) $results['channels'];
+        }
+        if (array_key_exists('total_count', $results)) {
+            $this->total_count = (int) $results['total_count'];
+        }
+        if (array_key_exists('total_skip', $results)) {
+            $this->total_skip = (int) $results['total_skip'];
+        }
+        if (array_key_exists('albumartist', $results)) {
+            $this->albumartist = $results['albumartist'] === null ? null : (int) $results['albumartist'];
+        }
+        if (array_key_exists('album_mbid', $results)) {
+            $this->album_mbid = $results['album_mbid'] !== null ? (string) $results['album_mbid'] : null;
+        }
+        if (array_key_exists('artist_mbid', $results)) {
+            $this->artist_mbid = $results['artist_mbid'] !== null ? (string) $results['artist_mbid'] : null;
+        }
+        if (array_key_exists('albumartist_mbid', $results)) {
+            $this->albumartist_mbid = $results['albumartist_mbid'] !== null ? (string) $results['albumartist_mbid'] : null;
+        }
+    }
+
+    private function setUpdatedFieldValue(string $key, mixed $value): void
+    {
+        switch ($key) {
+            case 'bitrate':
+                $this->bitrate = (int) $value;
+                break;
+            case 'comment':
+                $this->comment = $value !== null ? (string) $value : null;
+                break;
+            case 'composer':
+                $this->composer = $value !== null ? (string) $value : null;
+                break;
+            case 'label':
+                $this->label = $value !== null ? (string) $value : null;
+                break;
+            case 'language':
+                $this->language = $value !== null ? (string) $value : null;
+                break;
+            case 'license':
+                $this->license = $value === null ? null : (int) $value;
+                break;
+            case 'mbid':
+                $this->mbid = $value !== null ? (string) $value : null;
+                break;
+            case 'mode':
+                $this->mode = $value !== null ? (string) $value : null;
+                break;
+            case 'rate':
+                $this->rate = (int) $value;
+                break;
+            case 'size':
+                $this->size = (int) $value;
+                break;
+            case 'title':
+                $this->title = $value !== null ? (string) $value : null;
+                break;
+            case 'track':
+                $this->track = $value === null ? null : (int) $value;
+                break;
+            case 'user_upload':
+                $this->user_upload = $value === null ? null : (int) $value;
+                break;
+            case 'year':
+                $this->year = (int) $value;
+                break;
+        }
     }
 }

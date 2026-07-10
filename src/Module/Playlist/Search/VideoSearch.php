@@ -1,6 +1,6 @@
 <?php
 
-declare(strict_types=0);
+declare(strict_types=1);
 
 /**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
@@ -129,7 +129,7 @@ final class VideoSearch implements SearchInterface
         $having_sql = implode(sprintf(' %s ', $sql_logic_operator), $having);
 
         return [
-            'base' => 'SELECT DISTINCT(`video`.`id`), `video`.`file` FROM `video`',
+            'base' => 'SELECT DISTINCT(`video`.`id`), `video`.`file`, `video`.`time` FROM `video`',
             'join' => $join,
             'where' => $where,
             'where_sql' => $where_sql,

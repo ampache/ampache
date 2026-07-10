@@ -512,7 +512,7 @@ class Subsonic_Api
                     $object->getId(),
                     true,
                     Access::check_function(AccessFunctionEnum::FUNCTION_DOWNLOAD),
-                    $expire_days,
+                    (int) $expire_days,
                     $passwordGenerator->generate_token(),
                     0,
                     $description

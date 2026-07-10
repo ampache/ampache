@@ -1,6 +1,6 @@
 <?php
 
-declare(strict_types=0);
+declare(strict_types=1);
 
 /**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
@@ -71,8 +71,6 @@ class Artist extends database_object implements
     /** @var array<int, array{id: int, name: string, is_hidden: int, count: int}> $tags */
     private ?array $tags = null;
 
-    private int $weight = 0;
-
     /**
      * Artist class, for modifying an artist
      * Takes the ID of the artist and pulls the info from the db
@@ -89,9 +87,23 @@ class Artist extends database_object implements
             return;
         }
 
-        foreach ($info as $key => $value) {
-            $this->$key = $value;
-        }
+        $this->id               = (int) ($info['id'] ?? 0);
+        $this->name             = $info['name'] ?? null;
+        $this->prefix           = $info['prefix'] ?? null;
+        $this->summary          = $info['summary'] ?? null;
+        $this->mbid             = $info['mbid'] ?? null;
+        $this->album_count      = (int) ($info['album_count'] ?? 0);
+        $this->album_disk_count = (int) ($info['album_disk_count'] ?? 0);
+        $this->song_count       = (int) ($info['song_count'] ?? 0);
+        $this->time             = isset($info['time']) ? (int) $info['time'] : null;
+        $this->total_count      = (int) ($info['total_count'] ?? 0);
+        $this->total_skip       = (int) ($info['total_skip'] ?? 0);
+        $this->yearformed       = isset($info['yearformed']) ? (int) $info['yearformed'] : null;
+        $this->placeformed      = $info['placeformed'] ?? null;
+        $this->user             = isset($info['user']) ? (int) $info['user'] : null;
+        $this->addition_time    = isset($info['addition_time']) ? (int) $info['addition_time'] : null;
+        $this->last_update      = (int) ($info['last_update'] ?? 0);
+        $this->manual_update    = (bool) ($info['manual_update'] ?? false);
 
         $this->time = (int) $this->time;
     }
@@ -152,7 +164,7 @@ class Artist extends database_object implements
      *
      * Checks for an existing artist; if none exists, insert one.
      */
-    public static function check(string $name, ?string $mbid = '', bool $readonly = false): ?int
+    public static function check(string $name, ?string $mbid = '', ?int $user = null, bool $readonly = false): ?int
     {
         $split_artist = AmpConfig::get('split_artist_regex', false);
         $full_name    = ($split_artist && preg_match('/[^ ]' . $split_artist . '[^ ]/', $name))
@@ -250,12 +262,12 @@ class Artist extends database_object implements
         }
 
         // if all else fails, insert a new artist, cache it and return the id
-        $sql  = 'INSERT INTO `artist` (`name`, `prefix`, `mbid`) VALUES(?, ?, ?)';
+        $sql  = 'INSERT INTO `artist` (`name`, `prefix`, `mbid`, `user`) VALUES(?, ?, ?, ?)';
         $mbid = ($mbid === null || $mbid === '' || $mbid === '0')
             ? null
             : $mbid;
 
-        $db_results = Dba::write($sql, [$name, $prefix, $mbid]);
+        $db_results = Dba::write($sql, [$name, $prefix, $mbid, $user]);
         if (!$db_results) {
             return null;
         }
@@ -324,17 +336,43 @@ class Artist extends database_object implements
      *     id: int,
      *     name: ?string,
      *     prefix: ?string,
+     *     mbid: ?string,
      *     summary: ?string,
+     *     placeformed: ?string,
+     *     yearformed: ?string,
+     *     last_update: ?string,
+     *     user: ?string,
+     *     manual_update: ?string,
+     *     time: ?string,
      *     album_count: int,
-     *     album_count: int
+     *     song_count: int,
+     *     album_disk_count: int,
+     *     total_count: int,
+     *     total_skip: int,
+     *     addition_time: ?string,
+     *     weight: ?string
      * } $data
      */
     public static function construct_from_array(array $data): Artist
     {
-        $artist = new Artist(0);
-        foreach ($data as $key => $value) {
-            $artist->$key = $value;
-        }
+        $artist                   = new Artist(0);
+        $artist->id               = (int) $data['id'];
+        $artist->name             = $data['name'] ?? null;
+        $artist->prefix           = $data['prefix'] ?? null;
+        $artist->summary          = $data['summary'] ?? null;
+        $artist->mbid             = $data['mbid'] ?? null;
+        $artist->album_count      = ($data['album_count']) ? (int) $data['album_count'] : 0;
+        $artist->album_disk_count = ($data['album_disk_count']) ? (int) $data['album_disk_count'] : 0;
+        $artist->song_count       = ($data['song_count']) ? (int) $data['song_count'] : 0;
+        $artist->time             = ($data['time']) ? (int) $data['time'] : null;
+        $artist->total_count      = ($data['total_count']) ? (int) $data['total_count'] : 0;
+        $artist->total_skip       = ($data['total_skip']) ? (int) $data['total_skip'] : 0;
+        $artist->yearformed       = ($data['yearformed']) ? (int) $data['yearformed'] : null;
+        $artist->placeformed      = $data['placeformed'] ?? null;
+        $artist->user             = ($data['user']) ? (int) $data['user'] : null;
+        $artist->addition_time    = ($data['addition_time']) ? (int) $data['addition_time'] : null;
+        $artist->last_update      = ($data['last_update']) ? (int) $data['last_update'] : 0;
+        $artist->manual_update    = ($data['manual_update']) ? (bool) $data['manual_update'] : false;
 
         return $artist;
     }
@@ -969,7 +1007,7 @@ class Artist extends database_object implements
         // Check if name is different than the current name
         if ($this->prefix != $prefix || $this->name != $name) {
             $updated   = false;
-            $artist_id = (int) self::check($name, $mbid, true);
+            $artist_id = (int) self::check($name, $mbid, $user, true);
 
             // If you couldn't find an artist OR you found the current one, just rename it and move on
             if ($artist_id == 0 || ($artist_id > 0 && $artist_id == $current_id)) {
@@ -1015,12 +1053,12 @@ class Artist extends database_object implements
         $this->name   = $name;
         $this->mbid   = $mbid;
 
-        if (isset($data['user'])) {
-            $user = ((int) $data['user'] == 0) ? null : (int) $data['user'];
-            if ($this->user != (int) $data['user']) {
-                $sql = 'UPDATE `artist` SET `user` = ? WHERE `id` = ?';
-                Dba::write($sql, [$user, $current_id]);
-            }
+        if (
+            $user
+            && $this->user != $user
+        ) {
+            $sql = 'UPDATE `artist` SET `user` = ? WHERE `id` = ?';
+            Dba::write($sql, [$user, $current_id]);
         }
 
         $override_childs = false;
@@ -1057,7 +1095,7 @@ class Artist extends database_object implements
     /**
      * Update artist information.
      */
-    public function update_artist_info(?string $summary, ?string $placeformed, ?int $yearformed, bool $manual = false): void
+    public function update_artist_info(?string $summary, ?string $placeformed = null, ?int $yearformed = null, bool $manual = false): void
     {
         // set null values if missing
         $summary     = (empty($summary)) ? null : $summary;
@@ -1082,19 +1120,10 @@ class Artist extends database_object implements
     /**
      * Update artist associated user.
      */
-    public function update_artist_name(string $name, ?string $prefix): void
+    public function update_artist_name(string $name, ?string $prefix = null): void
     {
         $sql = "UPDATE `artist` SET `prefix` = ?, `name` = ? WHERE `id` = ?";
         Dba::write($sql, [$prefix, $name, $this->id]);
-    }
-
-    /**
-     * Update artist associated user_id.
-     */
-    public function update_artist_user(int $user_id): void
-    {
-        $sql = "UPDATE `artist` SET `user` = ? WHERE `id` = ?";
-        Dba::write($sql, [$user_id, $this->id]);
     }
 
     /**

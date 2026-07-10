@@ -1,6 +1,6 @@
 <?php
 
-declare(strict_types=0);
+declare(strict_types=1);
 
 /**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
@@ -97,9 +97,6 @@ final class CatalogAction8Method
 
         $catalog = Catalog::create_from_id((int) $input['filter']);
         if ($catalog !== null) {
-            if (defined('SSE_OUTPUT')) {
-                unset($SSE_OUTPUT);
-            }
             switch ($task) {
                 case 'clean_catalog':
                     $catalog->clean_catalog_proc();

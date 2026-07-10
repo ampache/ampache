@@ -91,7 +91,7 @@ final class PrintDuplicatesCommand extends Command
 
             $allowedKeys = match ($type) {
                 'album', 'album_disk' => ['prefix', 'name', 'mbid', 'year', 'disk_count', 'mbid_group', 'release_type', 'album_artist', 'original_year', 'barcode', 'catalog_number', 'version', 'release_status'],
-                'artist', ['prefix', 'name', 'mbid'],
+                'artist' => ['prefix', 'name', 'mbid'],
                 'song' => ['prefix', 'name', 'mbid', 'f_album_full', 'artist_full_name'],
                 default => null,
             };

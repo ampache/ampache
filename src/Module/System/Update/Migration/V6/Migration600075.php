@@ -38,6 +38,8 @@ final class Migration600075 extends AbstractMigration
         string $engine,
         int $build,
     ): Generator {
+        yield from parent::getTableMigrations($collation, $charset, $engine, $build);
+
         if ($build > 600075) {
             yield 'user_playlist_map' => "CREATE TABLE IF NOT EXISTS `user_playlist_map` (`playlist_id` int(11) UNSIGNED NOT NULL, `user_id` int(11) UNSIGNED NOT NULL, UNIQUE KEY `playlist_user` (`playlist_id`,`user_id`)) ENGINE=$engine DEFAULT CHARSET=$charset COLLATE=$collation;";
         }

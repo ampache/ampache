@@ -1,6 +1,6 @@
 <?php
 
-declare(strict_types=0);
+declare(strict_types=1);
 
 /**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
@@ -116,16 +116,18 @@ final class ApiHandler implements ApiHandlerInterface
                 [LegacyLogger::CONTEXT_TYPE => self::class]
             );
 
-            return $response->withBody(
-                $this->streamFactory->createStream(
-                    $output->error(
-                        ErrorCodeEnum::ACCESS_CONTROL_NOT_ENABLED,
-                        T_('Access Denied'),
-                        $action,
-                        'system'
+            return $response
+                ->withStatus(403)
+                ->withBody(
+                    $this->streamFactory->createStream(
+                        $output->error(
+                            ErrorCodeEnum::ACCESS_CONTROL_NOT_ENABLED,
+                            T_('Access Denied'),
+                            $action,
+                            'system'
+                        )
                     )
-                )
-            );
+                );
         }
         $is_handshake = $action == Handshake8Method::ACTION;
         $is_ping      = $action == Ping8Method::ACTION;
@@ -151,7 +153,7 @@ final class ApiHandler implements ApiHandlerInterface
         if (!in_array($api_version, Api::API_VERSIONS)) {
             $api_session = Session::get_api_version($input['auth']);
             $api_version = ($is_public || (isset($input['version']) && $header_auth))
-                ? (int) substr($version, 0, 1)
+                ? (int) substr((string) $version, 0, 1)
                 : $api_session;
 
             // If you call api3 from json you don't get anything so change back to the latest version
@@ -182,16 +184,18 @@ final class ApiHandler implements ApiHandlerInterface
                     [LegacyLogger::CONTEXT_TYPE => self::class]
                 );
 
-                return $response->withBody(
-                    $this->streamFactory->createStream(
-                        $output->error(
-                            ErrorCodeEnum::ACCESS_CONTROL_NOT_ENABLED,
-                            T_('Access Denied'),
-                            $action,
-                            'system'
+                return $response
+                    ->withStatus(403)
+                    ->withBody(
+                        $this->streamFactory->createStream(
+                            $output->error(
+                                ErrorCodeEnum::ACCESS_CONTROL_NOT_ENABLED,
+                                T_('Access Denied'),
+                                $action,
+                                'system'
+                            )
                         )
-                    )
-                );
+                    );
             }
         }
 
@@ -279,28 +283,32 @@ final class ApiHandler implements ApiHandlerInterface
                         )
                     );
                 case 6:
-                    return $response->withBody(
-                        $this->streamFactory->createStream(
-                            $output->error6(
-                                ErrorCodeEnum::ACCESS_CONTROL_NOT_ENABLED,
-                                T_('Access Denied'),
-                                $action,
-                                'system'
+                    return $response
+                        ->withStatus(403)
+                        ->withBody(
+                            $this->streamFactory->createStream(
+                                $output->error6(
+                                    ErrorCodeEnum::ACCESS_CONTROL_NOT_ENABLED,
+                                    T_('Access Denied'),
+                                    $action,
+                                    'system'
+                                )
                             )
-                        )
-                    );
+                        );
                 case 8:
                 default:
-                    return $response->withBody(
-                        $this->streamFactory->createStream(
-                            $output->error(
-                                ErrorCodeEnum::ACCESS_CONTROL_NOT_ENABLED,
-                                T_('Access Denied'),
-                                $action,
-                                'system'
+                    return $response
+                        ->withStatus(403)
+                        ->withBody(
+                            $this->streamFactory->createStream(
+                                $output->error(
+                                    ErrorCodeEnum::ACCESS_CONTROL_NOT_ENABLED,
+                                    T_('Access Denied'),
+                                    $action,
+                                    'system'
+                                )
                             )
-                        )
-                    );
+                        );
             }
         }
 
@@ -356,28 +364,32 @@ final class ApiHandler implements ApiHandlerInterface
                         )
                     );
                 case 6:
-                    return $response->withBody(
-                        $this->streamFactory->createStream(
-                            $output->error6(
-                                ErrorCodeEnum::INVALID_HANDSHAKE,
-                                T_('Session Expired'),
-                                $action,
-                                'account'
+                    return $response
+                        ->withStatus(401)
+                        ->withBody(
+                            $this->streamFactory->createStream(
+                                $output->error6(
+                                    ErrorCodeEnum::INVALID_HANDSHAKE,
+                                    T_('Session Expired'),
+                                    $action,
+                                    'account'
+                                )
                             )
-                        )
-                    );
+                        );
                 case 8:
                 default:
-                    return $response->withBody(
-                        $this->streamFactory->createStream(
-                            $output->error(
-                                ErrorCodeEnum::INVALID_HANDSHAKE,
-                                T_('Session Expired'),
-                                $action,
-                                'account'
+                    return $response
+                        ->withStatus(401)
+                        ->withBody(
+                            $this->streamFactory->createStream(
+                                $output->error(
+                                    ErrorCodeEnum::INVALID_HANDSHAKE,
+                                    T_('Session Expired'),
+                                    $action,
+                                    'account'
+                                )
                             )
-                        )
-                    );
+                        );
             }
         }
 
@@ -419,28 +431,32 @@ final class ApiHandler implements ApiHandlerInterface
                         )
                     );
                 case 6:
-                    return $response->withBody(
-                        $this->streamFactory->createStream(
-                            $output->error6(
-                                ErrorCodeEnum::FAILED_ACCESS_CHECK,
-                                T_('Unauthorized access attempt to API - ACL Error'),
-                                $action,
-                                'account'
+                    return $response
+                        ->withStatus(403)
+                        ->withBody(
+                            $this->streamFactory->createStream(
+                                $output->error6(
+                                    ErrorCodeEnum::FAILED_ACCESS_CHECK,
+                                    T_('Unauthorized access attempt to API - ACL Error'),
+                                    $action,
+                                    'account'
+                                )
                             )
-                        )
-                    );
+                        );
                 case 8:
                 default:
-                    return $response->withBody(
-                        $this->streamFactory->createStream(
-                            $output->error(
-                                ErrorCodeEnum::FAILED_ACCESS_CHECK,
-                                T_('Unauthorized access attempt to API - ACL Error'),
-                                $action,
-                                'account'
+                    return $response
+                        ->withStatus(403)
+                        ->withBody(
+                            $this->streamFactory->createStream(
+                                $output->error(
+                                    ErrorCodeEnum::FAILED_ACCESS_CHECK,
+                                    T_('Unauthorized access attempt to API - ACL Error'),
+                                    $action,
+                                    'account'
+                                )
                             )
-                        )
-                    );
+                        );
             }
         }
 
@@ -524,31 +540,35 @@ final class ApiHandler implements ApiHandlerInterface
                 if (in_array($action, $this->deprecated)) {
                     ob_end_clean();
 
-                    return $response->withBody(
-                        $this->streamFactory->createStream(
-                            $output->error6(
-                                ErrorCodeEnum::DEPRECATED,
-                                T_('Deprecated'),
-                                $action,
-                                'removed'
+                    return $response
+                        ->withStatus(410)
+                        ->withBody(
+                            $this->streamFactory->createStream(
+                                $output->error6(
+                                    ErrorCodeEnum::DEPRECATED,
+                                    T_('Deprecated'),
+                                    $action,
+                                    'removed'
+                                )
                             )
-                        )
-                    );
+                        );
                 }
                 $handlerClassName = Api6::METHOD_LIST[$action] ?? null;
                 if ($handlerClassName === null) {
                     ob_end_clean();
 
-                    return $response->withBody(
-                        $this->streamFactory->createStream(
-                            $output->error6(
-                                ErrorCodeEnum::MISSING,
-                                T_('Invalid Request'),
-                                $action,
-                                'system'
+                    return $response
+                        ->withStatus(400)
+                        ->withBody(
+                            $this->streamFactory->createStream(
+                                $output->error6(
+                                    ErrorCodeEnum::MISSING,
+                                    T_('Invalid Request'),
+                                    $action,
+                                    'system'
+                                )
                             )
-                        )
-                    );
+                        );
                 }
                 break;
             case 8:
@@ -556,47 +576,36 @@ final class ApiHandler implements ApiHandlerInterface
                 if (in_array($action, $this->deprecated8)) {
                     ob_end_clean();
 
-                    return $response->withBody(
-                        $this->streamFactory->createStream(
-                            $output->error(
-                                ErrorCodeEnum::DEPRECATED,
-                                T_('Deprecated'),
-                                $action,
-                                'removed'
+                    return $response
+                        ->withStatus(410)
+                        ->withBody(
+                            $this->streamFactory->createStream(
+                                $output->error(
+                                    ErrorCodeEnum::DEPRECATED,
+                                    T_('Deprecated'),
+                                    $action,
+                                    'removed'
+                                )
                             )
-                        )
-                    );
+                        );
                 }
                 $handlerClassName = Api::METHOD_LIST[$action] ?? null;
                 if ($handlerClassName === null) {
                     ob_end_clean();
 
-                    return $response->withBody(
-                        $this->streamFactory->createStream(
-                            $output->error(
-                                ErrorCodeEnum::MISSING,
-                                T_('Invalid Request'),
-                                $action,
-                                'system'
+                    return $response
+                        ->withStatus(400)
+                        ->withBody(
+                            $this->streamFactory->createStream(
+                                $output->error(
+                                    ErrorCodeEnum::MISSING,
+                                    T_('Invalid Request'),
+                                    $action,
+                                    'system'
+                                )
                             )
-                        )
-                    );
+                        );
                 }
-        }
-
-        $debugHandler = $this->configContainer->get('api_debug_handler');
-        if ($debugHandler) {
-            /** @noinspection PhpUnhandledExceptionInspection */
-            return $this->_executeDebugHandler(
-                $gatekeeper,
-                $is_public,
-                $action,
-                $handlerClassName,
-                $input,
-                $user,
-                $response,
-                $output
-            );
         }
 
         return $this->_executeHandler(
@@ -773,70 +782,6 @@ final class ApiHandler implements ApiHandlerInterface
     }
 
     /**
-     * Run the DEBUG API handler with NO exception handling!
-     * @throws ApiException|Throwable
-     */
-    private function _executeDebugHandler(
-        Gatekeeper $gatekeeper,
-        bool $is_public,
-        string $action,
-        string $handlerClassName,
-        array $input,
-        ?User $user,
-        ResponseInterface $response,
-        ApiOutputInterface $output,
-    ): ?ResponseInterface {
-        /**
-         * This condition allows the `new` approach and the legacy one to co-exist.
-         * After implementing the MethodInterface in all api methods, the condition will be removed
-         *
-         * @todo cleanup
-         */
-        $this->logger->notice(
-            sprintf('DebugHandler: API function [%s]', $handlerClassName),
-            [LegacyLogger::CONTEXT_TYPE => self::class]
-        );
-
-        if (
-            $user instanceof User
-            && $this->dic->has($handlerClassName)
-            && $this->dic->get($handlerClassName) instanceof MethodInterface
-        ) {
-            /** @var MethodInterface $handler */
-            $handler = $this->dic->get($handlerClassName);
-
-            $response = $handler->handle(
-                $gatekeeper,
-                $response,
-                $output,
-                $input,
-                $user
-            );
-
-            $gatekeeper->extendSession($input['auth']);
-
-            return $response;
-        }
-        $params = [$input];
-
-        /** @var callable $callback */
-        $callback = [$handlerClassName, $action];
-
-        if (!$is_public) {
-            $params[] = $user;
-        }
-
-        call_user_func_array(
-            $callback,
-            $params
-        );
-
-        $gatekeeper->extendSession($input['auth']);
-
-        return null;
-    }
-
-    /**
      * Run the default API handler with exception handling
      */
     private function _executeHandler(
@@ -931,28 +876,32 @@ final class ApiHandler implements ApiHandlerInterface
                         )
                     );
                 case 6:
-                    return $response->withBody(
-                        $this->streamFactory->createStream(
-                            $output->error6(
-                                $error->getCode(),
-                                $error->getMessage(),
-                                $action,
-                                $error->getType()
+                    return $response
+                        ->withStatus(Api::getHttpCode($error->getCode()))
+                        ->withBody(
+                            $this->streamFactory->createStream(
+                                $output->error6(
+                                    $error->getCode(),
+                                    $error->getMessage(),
+                                    $action,
+                                    $error->getType()
+                                )
                             )
-                        )
-                    );
+                        );
                 case 8:
                 default:
-                    return $response->withBody(
-                        $this->streamFactory->createStream(
-                            $output->error(
-                                $error->getCode(),
-                                $error->getMessage(),
-                                $action,
-                                $error->getType()
+                    return $response
+                        ->withStatus(Api::getHttpCode($error->getCode()))
+                        ->withBody(
+                            $this->streamFactory->createStream(
+                                $output->error(
+                                    $error->getCode(),
+                                    $error->getMessage(),
+                                    $action,
+                                    $error->getType()
+                                )
                             )
-                        )
-                    );
+                        );
             }
         } catch (Throwable $error) {
             $this->logger->error(
@@ -994,28 +943,32 @@ final class ApiHandler implements ApiHandlerInterface
                         )
                     );
                 case 6:
-                    return $response->withBody(
-                        $this->streamFactory->createStream(
-                            $output->error6(
-                                ErrorCodeEnum::GENERIC_ERROR,
-                                'Generic error',
-                                $action,
-                                'system'
+                    return $response
+                        ->withStatus(500)
+                        ->withBody(
+                            $this->streamFactory->createStream(
+                                $output->error6(
+                                    ErrorCodeEnum::GENERIC_ERROR,
+                                    'Generic error',
+                                    $action,
+                                    'system'
+                                )
                             )
-                        )
-                    );
+                        );
                 case 8:
                 default:
-                    return $response->withBody(
-                        $this->streamFactory->createStream(
-                            $output->error(
-                                ErrorCodeEnum::GENERIC_ERROR,
-                                'Generic error',
-                                $action,
-                                'system'
+                    return $response
+                        ->withStatus(500)
+                        ->withBody(
+                            $this->streamFactory->createStream(
+                                $output->error(
+                                    ErrorCodeEnum::GENERIC_ERROR,
+                                    'Generic error',
+                                    $action,
+                                    'system'
+                                )
                             )
-                        )
-                    );
+                        );
             }
         }
     }

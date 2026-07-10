@@ -1,6 +1,6 @@
 <?php
 
-declare(strict_types=0);
+declare(strict_types=1);
 
 /**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
@@ -116,9 +116,6 @@ final class CatalogFile4Method
         }
 
         if ($catalog->catalog_type == 'local') {
-            if (defined('SSE_OUTPUT')) {
-                unset($SSE_OUTPUT);
-            }
             switch ($task) {
                 case 'clean':
                     /** @var Catalog_local $catalog */

@@ -1,6 +1,6 @@
 <?php
 
-declare(strict_types=0);
+declare(strict_types=1);
 
 /**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
@@ -67,9 +67,7 @@ use Ampache\Repository\SongRepositoryInterface;
  */
 class Json6_Data
 {
-    private static ?int $count = null;
-
-    // This is added so that we don't pop any webservers
+    private static int $count  = 0;
     private static ?int $limit = 5000;
     private static int $offset = 0;
 
@@ -149,7 +147,7 @@ class Json6_Data
     public static function albums_array(array $objects, array $include, User $user, string $auth, bool $encode = true): array
     {
         self::$count = self::$count ?: count($objects);
-        $objects     = self::_filter_objects($objects, $encode);
+        $objects     = Api::filter_objects($objects, self::$count, self::$offset, self::$limit, $encode);
 
         // original year (fall back to regular year)
         $original_year = AmpConfig::get('use_original_year');
@@ -208,7 +206,7 @@ class Json6_Data
             $objArray['songcount']     = $album->song_count;
             $objArray['diskcount']     = $album->disk_count;
             $objArray['type']          = $album->release_type;
-            $objArray['genre']         = self::genre_array($album->get_tags());
+            $objArray['genre']         = self::_genre_array($album->get_tags());
             $objArray['art']           = $art_url;
             $objArray['has_art']       = $album->has_art();
             $objArray['flag']          = (bool) $flag->get_flag($user->getId());
@@ -315,7 +313,7 @@ class Json6_Data
     public static function artists_array(array $objects, array $include, User $user, string $auth, bool $encode = true): array
     {
         self::$count = self::$count ?: count($objects);
-        $objects     = self::_filter_objects($objects, $encode);
+        $objects     = Api::filter_objects($objects, self::$count, self::$offset, self::$limit, $encode);
 
         Rating::build_cache('artist', $objects);
         $JSON = [];
@@ -349,7 +347,7 @@ class Json6_Data
                 "albumcount" => $artist->album_count,
                 "songs" => $songs,
                 "songcount" => $artist->song_count,
-                "genre" => self::genre_array($artist->get_tags()),
+                "genre" => self::_genre_array($artist->get_tags()),
                 "art" => $art_url,
                 "has_art" => $artist->has_art(),
                 "flag" => (bool) $flag->get_flag($user->getId()),
@@ -379,7 +377,7 @@ class Json6_Data
     {
         self::$count = self::$count ?: count($objects);
         $md5         = md5(serialize($objects));
-        $objects     = self::_filter_objects($objects);
+        $objects     = Api::filter_objects($objects, self::$count, self::$offset, self::$limit);
 
         $output = [
             "total_count" => self::$count,
@@ -450,11 +448,11 @@ class Json6_Data
      *
      * @param array<int|string>|array<int, array{id: int|string, name: string}> $objects Array of object_ids ["id" => 1, "name" => 'Artist Name']
      */
-    public static function browses(array $objects, ?int $parent_id, string $parent_type, string $child_type, ?int $catalog_id): string
+    public static function browses(array $objects, string $parent_type, string $child_type, ?int $parent_id = null, ?int $catalog_id = null): string
     {
         self::$count = self::$count ?: count($objects);
         $md5         = md5(serialize($objects));
-        $objects     = self::_filter_objects($objects);
+        $objects     = Api::filter_objects($objects, self::$count, self::$offset, self::$limit);
 
         $output = [
             "total_count" => self::$count,
@@ -495,7 +493,7 @@ class Json6_Data
     {
         self::$count = self::$count ?: count($objects);
         $md5         = md5(serialize($objects));
-        $objects     = self::_filter_objects($objects);
+        $objects     = Api::filter_objects($objects, self::$count, self::$offset, self::$limit);
 
         $output = [
             "total_count" => self::$count,
@@ -567,7 +565,7 @@ class Json6_Data
     {
         self::$count = self::$count ?: count($objects);
         $md5         = md5(serialize($objects));
-        $objects     = self::_filter_objects($objects);
+        $objects     = Api::filter_objects($objects, self::$count, self::$offset, self::$limit);
 
         $output = [
             "total_count" => self::$count,
@@ -683,7 +681,7 @@ class Json6_Data
                     "prefix" => $song_album['prefix'],
                     "basename" => $song_album['basename']
                 ],
-                "genre" => self::genre_array($song->get_tags()),
+                "genre" => self::_genre_array($song->get_tags()),
                 "track" => (int) $song->track,
                 "time" => $song->time,
                 "format" => $songType,
@@ -804,7 +802,7 @@ class Json6_Data
     public static function genres_array(array $objects): array
     {
         self::$count = self::$count ?: count($objects);
-        $objects     = self::_filter_objects($objects);
+        $objects     = Api::filter_objects($objects, self::$count, self::$offset, self::$limit);
 
         $JSON = [];
         foreach ($objects as $tag_id) {
@@ -847,7 +845,7 @@ class Json6_Data
     public static function index(array $objects, string $type, User $user, bool $include = false): string
     {
         self::$count = self::$count ?: count($objects);
-        $objects     = self::_filter_objects($objects);
+        $objects     = Api::filter_objects($objects, self::$count, self::$offset, self::$limit);
 
         $output = [];
 
@@ -1076,7 +1074,7 @@ class Json6_Data
     public static function labels_array(array $objects): array
     {
         self::$count = self::$count ?: count($objects);
-        $objects     = self::_filter_objects($objects);
+        $objects     = Api::filter_objects($objects, self::$count, self::$offset, self::$limit);
 
         $JSON = [];
 
@@ -1117,7 +1115,7 @@ class Json6_Data
     {
         self::$count = self::$count ?: count($objects);
         $md5         = md5(serialize($objects));
-        $objects     = self::_filter_objects($objects);
+        $objects     = Api::filter_objects($objects, self::$count, self::$offset, self::$limit);
 
         $output = [
             "total_count" => self::$count,
@@ -1159,7 +1157,7 @@ class Json6_Data
     {
         self::$count = self::$count ?: count($objects);
         $md5         = md5(serialize($objects));
-        $objects     = self::_filter_objects($objects);
+        $objects     = Api::filter_objects($objects, self::$count, self::$offset, self::$limit);
 
         $output = [
             "total_count" => self::$count,
@@ -1227,7 +1225,7 @@ class Json6_Data
     public static function live_streams_array(array $objects): array
     {
         self::$count = self::$count ?: count($objects);
-        $objects     = self::_filter_objects($objects);
+        $objects     = Api::filter_objects($objects, self::$count, self::$offset, self::$limit);
 
         $JSON = [];
         foreach ($objects as $live_stream_id) {
@@ -1340,7 +1338,7 @@ class Json6_Data
     public static function playlists_array(array $objects, User $user, string $auth, bool $songs = false): array
     {
         self::$count = self::$count ?: count($objects);
-        $objects     = self::_filter_objects($objects);
+        $objects     = Api::filter_objects($objects, self::$count, self::$offset, self::$limit);
 
         $JSON = [];
         foreach ($objects as $playlist_id) {
@@ -1370,11 +1368,15 @@ class Json6_Data
             $playlist_username = $playlist->username;
             $playlist_type     = $playlist->type;
             $last_update       = $playlist->last_update;
+            $last_duration     = $playlist->last_duration;
+            $duration          = 0;
 
             if ($songs) {
                 $items          = [];
                 $playlisttracks = $playlist->get_items();
                 foreach ($playlisttracks as $track) {
+                    $duration += $track['time'];
+
                     $items[] = [
                         "id" => (string) $track['object_id'],
                         "playlisttrack" => $track['track'],
@@ -1414,6 +1416,7 @@ class Json6_Data
                 "averagerating" => $rating->get_average_rating(),
                 "md5" => $md5,
                 "last_update" => $last_update,
+                "time" => $duration ?: $last_duration,
             ];
         }
 
@@ -1490,7 +1493,7 @@ class Json6_Data
     public static function podcast_episodes_array(array $objects, User $user, string $auth, bool $encode = true): array
     {
         self::$count = self::$count ?: count($objects);
-        $objects     = self::_filter_objects($objects, $encode);
+        $objects     = Api::filter_objects($objects, self::$count, self::$offset, self::$limit, $encode);
 
         $JSON = [];
         foreach ($objects as $episode_id) {
@@ -1635,7 +1638,7 @@ class Json6_Data
     public static function podcasts_array(array $objects, User $user, string $auth, bool $episodes = false): array
     {
         self::$count = self::$count ?: count($objects);
-        $objects     = self::_filter_objects($objects);
+        $objects     = Api::filter_objects($objects, self::$count, self::$offset, self::$limit);
 
         $podcastRepository = self::getPodcastRepository();
 
@@ -1699,7 +1702,7 @@ class Json6_Data
      */
     public static function set_count(int|string $count): void
     {
-        self::$count = (int) self::$count;
+        self::$count = (int) $count;
     }
 
     /**
@@ -1744,7 +1747,7 @@ class Json6_Data
     {
         self::$count = self::$count ?: count($objects);
         $md5         = md5(serialize($objects));
-        $objects     = self::_filter_objects($objects);
+        $objects     = Api::filter_objects($objects, self::$count, self::$offset, self::$limit);
 
         $output = [
             "total_count" => self::$count,
@@ -1977,7 +1980,7 @@ class Json6_Data
         $playlist_track = 0;
 
         self::$count = self::$count ?: count($objects);
-        $objects     = self::_filter_objects($objects, $encode);
+        $objects     = Api::filter_objects($objects, self::$count, self::$offset, self::$limit, $encode);
 
         Song::build_cache($objects);
 
@@ -2051,7 +2054,7 @@ class Json6_Data
             $objArray['disksubtitle']          = $song->disksubtitle;
             $objArray['track']                 = (int) $song->track;
             $objArray['filename']              = $song->file;
-            $objArray['genre']                 = self::genre_array($song->get_tags());
+            $objArray['genre']                 = self::_genre_array($song->get_tags());
             $objArray['playlisttrack']         = $playlist_track;
             $objArray['time']                  = $song->time;
             $objArray['year']                  = $song->year;
@@ -2238,7 +2241,7 @@ class Json6_Data
     public static function users_array(array $objects, bool $encode = true): array
     {
         self::$count = self::$count ?: count($objects);
-        $objects     = self::_filter_objects($objects, $encode);
+        $objects     = Api::filter_objects($objects, self::$count, self::$offset, self::$limit, $encode);
 
         $JSON = [];
         foreach ($objects as $user_id) {
@@ -2305,7 +2308,7 @@ class Json6_Data
     public static function videos_array(array $objects, User $user, string $auth): array
     {
         self::$count = self::$count ?: count($objects);
-        $objects     = self::_filter_objects($objects);
+        $objects     = Api::filter_objects($objects, self::$count, self::$offset, self::$limit);
 
         $JSON = [];
         foreach ($objects as $video_id) {
@@ -2323,7 +2326,7 @@ class Json6_Data
                 "mime" => $video->mime,
                 "resolution" => $video->get_f_resolution(),
                 "size" => $video->size,
-                "genre" => self::genre_array($video->get_tags()),
+                "genre" => self::_genre_array($video->get_tags()),
                 "time" => $video->time,
                 "url" => $video->play_url('', 'api', false, $user->getId(), $user->streamtoken),
                 "art" => $art_url,
@@ -2339,38 +2342,12 @@ class Json6_Data
     }
 
     /**
-     * _filter_objects
-     *
-     * This filters the objects based on the limit and offset
-     */
-    private static function _filter_objects(array $objects, ?bool $encode = null): array
-    {
-        if (
-            $encode !== null
-            && (self::$count > self::$limit || self::$offset > 0)
-            && (self::$limit && $encode)
-        ) {
-            return array_slice($objects, self::$offset, self::$limit);
-        }
-
-        if (
-            $encode === null
-            && (self::$count > self::$limit || self::$offset > 0)
-            && self::$limit
-        ) {
-            return array_slice($objects, self::$offset, self::$limit);
-        }
-
-        return $objects;
-    }
-
-    /**
-     * genre_array
+     * _genre_array
      *
      * @param array<int, array{id: int, name: string, is_hidden: int, count: int}> $tags
      * @return array<int, array{id: string, name: string}>
      */
-    private static function genre_array(array $tags): array
+    private static function _genre_array(array $tags): array
     {
         $JSON = [];
 

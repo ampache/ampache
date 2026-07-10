@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
@@ -84,12 +86,21 @@ class Catalog_remote extends Catalog
     public function __construct(?int $catalog_id = null)
     {
         if ($catalog_id) {
-            $info = $this->get_info($catalog_id, static::DB_TABLENAME);
-            foreach ($info as $key => $value) {
-                if (property_exists($this, $key)) {
-                    $this->$key = $value;
-                }
-            }
+            $info                 = $this->get_info($catalog_id, static::DB_TABLENAME);
+            $this->id             = (int) ($info['id'] ?? 0);
+            $this->name           = $info['name'] ?? null;
+            $this->catalog_type   = $info['catalog_type'] ?? null;
+            $this->enabled        = (bool) ($info['enabled'] ?? false);
+            $this->last_update    = (int) ($info['last_update'] ?? 0);
+            $this->last_add       = (int) ($info['last_add'] ?? 0);
+            $this->last_clean     = (int) ($info['last_clean'] ?? 0);
+            $this->rename_pattern = $info['rename_pattern'] ?? '';
+            $this->sort_pattern   = $info['sort_pattern'] ?? '';
+            $this->gather_types   = $info['gather_types'] ?? '';
+
+            $this->uri      = (string) ($info['uri'] ?? '');
+            $this->username = (string) ($info['username'] ?? '');
+            $this->password = (string) ($info['password'] ?? '');
         }
     }
 
@@ -900,8 +911,8 @@ class Catalog_remote extends Catalog
         }
 
         $total = ($remote_catalog_info->songs > 0)
-            ? $remote_catalog_info->songs
-            : $remote_catalog_info->max_song;
+            ? (string) $remote_catalog_info->songs
+            : (string) $remote_catalog_info->max_song;
         debug_event('remote.catalog', sprintf(nT_('%s song was found', '%s songs were found', $total), $total), 4);
 
         Ui::update_text(
@@ -948,8 +959,8 @@ class Catalog_remote extends Catalog
                         $remote_id = (string) $song->attributes()->id;
 
                         // Update URLS to the current format for remote catalogs
-                        $old_url = (string) preg_replace('/ssid=[0-9a-z]*&/', '', $song->url);
-                        $db_url  = (string) preg_replace('/ssid=[0-9a-z]*&/', 'client=' . urlencode($web_path) . '&', $song->url);
+                        $old_url = (string) preg_replace('/ssid=[0-9a-z]*&/', '', (string) $song->url);
+                        $db_url  = (string) preg_replace('/ssid=[0-9a-z]*&/', 'client=' . urlencode($web_path) . '&', (string) $song->url);
                         $db_file = (string) $song->filename;
 
                         if ($db_file === '' || $db_file === '0') {
@@ -1054,7 +1065,7 @@ class Catalog_remote extends Catalog
                                 $current_song = new Song($song_id);
                                 $art          = new Art($current_song->album, 'album');
                                 if (!$art->has_db_info()) {
-                                    $art->insert_url($song->art);
+                                    $art->insert_url((string) $song->art);
                                 }
                             }
                         }
@@ -1098,7 +1109,7 @@ class Catalog_remote extends Catalog
                             continue;
                         }
 
-                        $artist_id = Artist::check((string) $artist->name, (string) $artist->mbid, true);
+                        $artist_id = Artist::check((string) $artist->name, (string) $artist->mbid, null, true);
                         if (
                             $artist_id
                             && (int) $artist->has_art === 1
@@ -1106,7 +1117,7 @@ class Catalog_remote extends Catalog
                         ) {
                             $art = new Art($artist_id, 'artist');
                             if (!$art->has_db_info()) {
-                                $art->insert_url($artist->art);
+                                $art->insert_url((string) $artist->art);
                             }
                         }
                     }

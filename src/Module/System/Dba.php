@@ -1,6 +1,6 @@
 <?php
 
-declare(strict_types=0);
+declare(strict_types=1);
 
 /**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
@@ -226,7 +226,7 @@ class Dba
             return '';
         }
 
-        $out_var = $dbh->quote($var);
+        $out_var = $dbh->quote((string) $var);
 
         // This is slightly less ugly than it was, but still ugly
         return substr($out_var, 1, -1);

@@ -1,6 +1,6 @@
 <?php
 
-declare(strict_types=0);
+declare(strict_types=1);
 
 /**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
@@ -53,7 +53,7 @@ abstract class database_object
          * Lazy load the cache setting to avoid some magic auto_init logic
          */
         if (self::$_enabled === null) {
-            self::$_enabled = AmpConfig::get('memory_cache', false);
+            self::$_enabled = (bool) AmpConfig::get('memory_cache', false);
         }
 
         if (!self::$_enabled) {
@@ -136,8 +136,7 @@ abstract class database_object
      */
     protected function get_info(int $object_id, ?string $table_name = null): array
     {
-        $table     = $this->getTableName($table_name);
-        $object_id = $object_id;
+        $table = $this->getTableName($table_name);
 
         // Make sure we've got a real id and table
         if ($table === null || $object_id < 1) {

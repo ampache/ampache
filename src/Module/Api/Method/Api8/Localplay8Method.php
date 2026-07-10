@@ -1,6 +1,6 @@
 <?php
 
-declare(strict_types=0);
+declare(strict_types=1);
 
 /**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
@@ -28,7 +28,6 @@ namespace Ampache\Module\Api\Method\Api8;
 use Ampache\Config\AmpConfig;
 use Ampache\Module\Api\Api;
 use Ampache\Module\Api\Exception\ErrorCodeEnum;
-use Ampache\Module\Api\Xml8_Data;
 use Ampache\Module\Authorization\AccessLevelEnum;
 use Ampache\Module\Authorization\AccessTypeEnum;
 use Ampache\Module\Playback\Localplay\LocalPlay;
@@ -58,7 +57,7 @@ final class Localplay8Method
      * track = (integer) used in conjunction with skip to skip to the track id (use localplay_songs to get your track list) //optional
      *
      * @param array{
-     *     command: string,
+     *     command?: string,
      *     filter?: string,
      *     oid?: string,
      *     type?: string,
@@ -96,7 +95,7 @@ final class Localplay8Method
 
         $result  = false;
         $status  = null;
-        $command = strtolower($input['command']);
+        $command = strtolower($input['command'] ?? '');
         switch ($command) {
             case 'add':
                 // for add commands get the object details
@@ -183,14 +182,14 @@ final class Localplay8Method
         }
 
         $results = (!empty($status))
-            ? ['localplay' => ['command' => [$input['command'] => $status]]]
-            : ['localplay' => ['command' => [$input['command'] => $result]]];
+            ? ['localplay' => ['command' => [$command => $status]]]
+            : ['localplay' => ['command' => [$command => $result]]];
         switch ($input['api_format']) {
             case 'json':
                 echo json_encode($results, JSON_PRETTY_PRINT);
                 break;
             default:
-                echo Xml8_Data::keyed_array($results);
+                echo Api::keyed_array($results);
         }
 
         return true;

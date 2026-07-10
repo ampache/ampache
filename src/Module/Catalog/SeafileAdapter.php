@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
@@ -300,7 +302,7 @@ class SeafileAdapter
 
                 $resp = $error->getResponse()->getBody();
 
-                $error = json_decode($resp)->detail;
+                $error = json_decode((string) $resp)->detail;
 
                 preg_match('/(\d+) sec/', (string) $error, $matches);
 
