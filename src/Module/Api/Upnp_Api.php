@@ -927,12 +927,12 @@ class Upnp_Api
                 self::sendResponse($delaytime, 'urn:schemas-upnp-org:service:ContentDirectory:1', $address);
                 # And one that MiniDLNA advertises
                 self::sendResponse($delaytime, 'urn:microsoft.com:service:X_MS_MediaReceiverRegistrar:1', $address);
-            } else {
-                //debug_event(self::class, 'ST header not for a service we provide [' . $actst . ']', 5);
             }
-        } else {
-            //debug_event(self::class, 'M-SEARCH MAN header not understood [' . $headers['man'] . ']', 5);
+            //debug_event(self::class, 'ST header not for a service we provide [' . $actst . ']', 5);
+
         }
+        //debug_event(self::class, 'M-SEARCH MAN header not understood [' . $headers['man'] . ']', 5);
+
     }
 
     /**
@@ -1005,7 +1005,7 @@ class Upnp_Api
         $headers = self::get_headers($unpacked);
         $str     = 'Notify ' . $remote . ' ' . $headers['nts'] . ' for ' . $headers['nt'];
         // We don't do anything with notifications except log them to check rx working
-            //debug_event(self::class, $str, 5);
+        //debug_event(self::class, $str, 5);
     }
 
     /* ================================== End SSDP functions ================================== */
