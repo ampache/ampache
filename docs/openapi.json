@@ -662,14 +662,11 @@
     "/podcasts/{podcast_id}/podcast-episodes": "action=podcast_episodes&filter={podcast_id}",
     "/podcasts/{podcast_id}/rate": "action=rate&filter={podcast_id}",
     "/podcasts/{podcast_id}/share": "action=share&filter={podcast_id}",
-    "/podcasts/{podcast_id}/refresh": "action=podcast_update&filter={podcast_id}",
     "/podcasts/search": "action=search&type=podcast",
     "/podcasts/stats": "action=stats&type=podcast",
-    "/podcasts/{podcast_id}/sync": "action=podcast_sync&filter={podcast_id}",
+    "/podcasts/{podcast_id}/sync": "action=update_podcast&filter={podcast_id}",
     "/preferences": "action=user_preferences",
     "/preferences/{preference_name}": "action=user_preference&filter={preference_name}",
-    "/preferences/{preference_name}/system": "action=system_preference&filter={preference_name}",
-    "/preferences/{preference_name}/user": "action=user_preference&filter={preference_name}",
     "/register": "action=register",
     "/scrobble": "action=scrobble",
     "/search/{search_type}/groups": "action=search_group&filter={search_type}",
@@ -4057,6 +4054,108 @@
           }
         },
         "summary": "List bookmarks",
+        "tags": [
+          "Bookmarks"
+        ]
+      },
+      "put": {
+        "parameters": [
+          {
+            "in": "query",
+            "name": "filter",
+            "description": "Object id",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "in": "query",
+            "name": "type",
+            "required": true,
+            "schema": {
+              "enum": [
+                "song",
+                "video",
+                "podcast_episode"
+              ],
+              "type": "string"
+            }
+          },
+          {
+            "in": "query",
+            "name": "position",
+            "description": "Current track time in seconds",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            }
+          },
+          {
+            "in": "query",
+            "name": "client",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "in": "query",
+            "name": "date",
+            "description": "UNIXTIME()",
+            "required": false,
+            "schema": {
+              "type": "integer"
+            }
+          },
+          {
+            "in": "query",
+            "name": "include",
+            "required": false,
+            "schema": {
+              "enum": [
+                0,
+                1
+              ],
+              "type": "integer"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object"
+                },
+                "examples": {
+                  "bookmark": {
+                    "summary": "bookmark created",
+                    "value": {
+                      "bookmark": [
+                        {
+                          "id": "9",
+                          "owner": "user",
+                          "object_type": "song",
+                          "object_id": "115",
+                          "position": 0,
+                          "client": "AmpacheAPI",
+                          "creation_date": 1670202706,
+                          "update_date": 1698974919
+                        }
+                      ]
+                    }
+                  }
+                }
+              }
+            },
+            "description": "Bookmark created"
+          },
+          "400": {
+            "$ref": "#/components/responses/ErrorResponse"
+          }
+        },
+        "summary": "Create a bookmark",
         "tags": [
           "Bookmarks"
         ]
@@ -9466,6 +9565,79 @@
         ]
       }
     },
+    "/localplay/add": {
+      "post": {
+        "parameters": [
+          {
+            "in": "query",
+            "name": "filter",
+            "description": "Object id",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "in": "query",
+            "name": "type",
+            "required": false,
+            "schema": {
+              "enum": [
+                "song",
+                "video",
+                "podcast_episode"
+              ],
+              "type": "string",
+              "default": "song"
+            }
+          },
+          {
+            "in": "query",
+            "name": "clear",
+            "description": "Clear the current playlist before adding",
+            "required": false,
+            "schema": {
+              "enum": [
+                0,
+                1
+              ],
+              "type": "integer"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object"
+                },
+                "examples": {
+                  "localplay": {
+                    "summary": "localplay",
+                    "value": {
+                      "localplay": {
+                        "command": {
+                          "add": true
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            },
+            "description": "Localplay response"
+          },
+          "400": {
+            "$ref": "#/components/responses/ErrorResponse"
+          }
+        },
+        "summary": "Add an object to the localplay server",
+        "tags": [
+          "Playback Control"
+        ]
+      }
+    },
     "/localplay/next": {
       "post": {
         "parameters": [],
@@ -11601,6 +11773,93 @@
           }
         },
         "summary": "Remove a song (or track) from a playlist",
+        "tags": [
+          "Playlists"
+        ]
+      }
+    },
+    "/playlists/{playlist_id}/remove": {
+      "post": {
+        "parameters": [
+          {
+            "in": "path",
+            "name": "playlist_id",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "in": "query",
+            "name": "id",
+            "description": "Object id",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "in": "query",
+            "name": "type",
+            "required": false,
+            "schema": {
+              "enum": [
+                "song",
+                "album",
+                "artist",
+                "playlist"
+              ],
+              "type": "string",
+              "default": "song"
+            }
+          },
+          {
+            "in": "query",
+            "name": "track",
+            "description": "Track number to remove from the playlist",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "in": "query",
+            "name": "clear",
+            "description": "Clear the whole playlist",
+            "required": false,
+            "schema": {
+              "enum": [
+                0,
+                1
+              ],
+              "type": "integer"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SuccessResponse"
+                },
+                "examples": {
+                  "success": {
+                    "summary": "playlist remove",
+                    "value": {
+                      "success": "song removed from playlist"
+                    }
+                  }
+                }
+              }
+            },
+            "description": "Success"
+          },
+          "400": {
+            "$ref": "#/components/responses/ErrorResponse"
+          }
+        },
+        "summary": "Remove an object (by id and type, or track number, or clear) from a playlist",
         "tags": [
           "Playlists"
         ]
@@ -15864,6 +16123,48 @@
       }
     },
     "/preferences": {
+      "get": {
+        "parameters": [],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object"
+                },
+                "examples": {
+                  "user_preferences": {
+                    "summary": "user preferences",
+                    "value": {
+                      "preference": [
+                        {
+                          "id": 123,
+                          "name": "ajax_load",
+                          "level": 25,
+                          "description": "Ajax page load",
+                          "value": "1",
+                          "type": "boolean",
+                          "category": "interface",
+                          "subcategory": null,
+                          "has_access": true
+                        }
+                      ]
+                    }
+                  }
+                }
+              }
+            },
+            "description": "Preference list"
+          },
+          "400": {
+            "$ref": "#/components/responses/ErrorResponse"
+          }
+        },
+        "summary": "Get your user preferences",
+        "tags": [
+          "Preferences"
+        ]
+      },
       "put": {
         "parameters": [
           {
@@ -17354,6 +17655,53 @@
       }
     },
     "/preferences/{preference_name}": {
+      "get": {
+        "parameters": [
+          {
+            "in": "path",
+            "name": "preference_name",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object"
+                },
+                "examples": {
+                  "user_preference": {
+                    "summary": "user preference",
+                    "value": {
+                      "id": 123,
+                      "name": "ajax_load",
+                      "level": 25,
+                      "description": "Ajax page load",
+                      "value": "1",
+                      "type": "boolean",
+                      "category": "interface",
+                      "subcategory": null,
+                      "has_access": true
+                    }
+                  }
+                }
+              }
+            },
+            "description": "Preference array"
+          },
+          "400": {
+            "$ref": "#/components/responses/ErrorResponse"
+          }
+        },
+        "summary": "Get a user preference by name",
+        "tags": [
+          "Preferences"
+        ]
+      },
       "delete": {
         "parameters": [
           {
@@ -17483,7 +17831,51 @@
         ]
       }
     },
-    "/preferences/{preference_name}/system": {
+    "/system-preferences": {
+      "get": {
+        "parameters": [],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object"
+                },
+                "examples": {
+                  "system_preferences": {
+                    "summary": "system preferences",
+                    "value": {
+                      "preference": [
+                        {
+                          "id": 123,
+                          "name": "ajax_load",
+                          "level": 25,
+                          "description": "Ajax page load",
+                          "value": "1",
+                          "type": "boolean",
+                          "category": "interface",
+                          "subcategory": null,
+                          "has_access": true
+                        }
+                      ]
+                    }
+                  }
+                }
+              }
+            },
+            "description": "Preference list"
+          },
+          "400": {
+            "$ref": "#/components/responses/ErrorResponse"
+          }
+        },
+        "summary": "Get your system preferences (Admin)",
+        "tags": [
+          "Preferences"
+        ]
+      }
+    },
+    "/system-preferences/{preference_name}": {
       "get": {
         "parameters": [
           {
@@ -17527,55 +17919,6 @@
           }
         },
         "summary": "Get a server preference by name (Admin)",
-        "tags": [
-          "Preferences"
-        ]
-      }
-    },
-    "/preferences/{preference_name}/user": {
-      "get": {
-        "parameters": [
-          {
-            "in": "path",
-            "name": "preference_name",
-            "required": true,
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "object"
-                },
-                "examples": {
-                  "user_preference": {
-                    "summary": "user preference",
-                    "value": {
-                      "id": 123,
-                      "name": "ajax_load",
-                      "level": 25,
-                      "description": "Ajax page load",
-                      "value": "1",
-                      "type": "boolean",
-                      "category": "interface",
-                      "subcategory": null,
-                      "has_access": true
-                    }
-                  }
-                }
-              }
-            },
-            "description": "Preference array"
-          },
-          "400": {
-            "$ref": "#/components/responses/ErrorResponse"
-          }
-        },
-        "summary": "Get a user preference by name",
         "tags": [
           "Preferences"
         ]
@@ -22514,6 +22857,99 @@
           }
         },
         "summary": "List shares",
+        "tags": [
+          "Shares"
+        ]
+      },
+      "put": {
+        "parameters": [
+          {
+            "in": "query",
+            "name": "filter",
+            "description": "Object id",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "in": "query",
+            "name": "type",
+            "required": true,
+            "schema": {
+              "enum": [
+                "album",
+                "artist",
+                "playlist",
+                "podcast",
+                "podcast_episode",
+                "song",
+                "video"
+              ],
+              "type": "string"
+            }
+          },
+          {
+            "in": "query",
+            "name": "description",
+            "description": "Filled in for you if empty",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "in": "query",
+            "name": "expires",
+            "description": "Days to keep active",
+            "required": false,
+            "schema": {
+              "type": "integer"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object"
+                },
+                "examples": {
+                  "share": {
+                    "summary": "share created",
+                    "value": {
+                      "share": [
+                        {
+                          "id": "8",
+                          "name": "Creeping Lawler 2",
+                          "owner": "user",
+                          "allow_stream": true,
+                          "allow_download": false,
+                          "creation_date": 1670202706,
+                          "lastvisit_date": 0,
+                          "object_type": "album",
+                          "object_id": "9",
+                          "expire_days": 7,
+                          "max_counter": 0,
+                          "counter": 0,
+                          "secret": "GJ7EzBPT",
+                          "public_url": "https://music.com.au/share.php?id=8&secret=GJ7EzBPT",
+                          "description": "Creeping Lawler 2 (Warfare 3.0)"
+                        }
+                      ]
+                    }
+                  }
+                }
+              }
+            },
+            "description": "Share created"
+          },
+          "400": {
+            "$ref": "#/components/responses/ErrorResponse"
+          }
+        },
+        "summary": "Create a share",
         "tags": [
           "Shares"
         ]
@@ -27722,45 +28158,6 @@
       }
     },
     "/users/{user_id}/follow": {
-      "delete": {
-        "parameters": [
-          {
-            "in": "path",
-            "name": "user_id",
-            "required": true,
-            "schema": {
-              "type": "integer"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/SuccessResponse"
-                },
-                "examples": {
-                  "success": {
-                    "summary": "toggle follow",
-                    "value": {
-                      "success": "follow toggled for: 4"
-                    }
-                  }
-                }
-              }
-            },
-            "description": "Success"
-          },
-          "400": {
-            "$ref": "#/components/responses/ErrorResponse"
-          }
-        },
-        "summary": "Unfollow a user",
-        "tags": [
-          "Social"
-        ]
-      },
       "post": {
         "parameters": [
           {
@@ -27796,45 +28193,6 @@
           }
         },
         "summary": "Follow or unfollow a user (toggle)",
-        "tags": [
-          "Social"
-        ]
-      },
-      "put": {
-        "parameters": [
-          {
-            "in": "path",
-            "name": "user_id",
-            "required": true,
-            "schema": {
-              "type": "integer"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/SuccessResponse"
-                },
-                "examples": {
-                  "success": {
-                    "summary": "toggle follow",
-                    "value": {
-                      "success": "follow toggled for: 4"
-                    }
-                  }
-                }
-              }
-            },
-            "description": "Success"
-          },
-          "400": {
-            "$ref": "#/components/responses/ErrorResponse"
-          }
-        },
-        "summary": "Follow a user",
         "tags": [
           "Social"
         ]

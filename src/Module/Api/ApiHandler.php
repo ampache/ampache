@@ -690,6 +690,7 @@ final class ApiHandler implements ApiHandlerInterface
                 'playlists' => 'playlist',
                 'podcast_episodes' => 'podcast_episode',
                 'podcasts' => 'podcast',
+                'preferences' => 'user_preference',
                 'searches' => 'search',
                 'shares' => 'share',
                 'smartlists' => 'smartlist',
