@@ -66,7 +66,7 @@ e.g. To make a REST call for 10 random albums your URL would be `https://demo.am
 | POST   | `albums/{album_id}/update-art`                       | `?action=update_art&filter={album_id}&type=album`                                |                    |
 | POST   | `albums/{album_id}/update-tags`                      | `?action=update_from_tags&filter={album_id}&type=album`                          |                    |
 | GET    | `albums/{album_id}`                                  | `?action=album&filter={album_id}`                                                |                    |
-| GET    | `albums/search`                                      | `?action=search&type=album`                                           `          | `advanced_search`  |
+| GET    | `albums/search`                                      | `?action=search&type=album`                                                      | `advanced_search`  |
 | GET    | `albums/stats`                                       | `?action=stats&type=album`                                                       |                    |
 | GET    | `albums`                                             | `?action=albums`                                                                 |                    |
 | GET    | `artists/{artist_id}/albums`                         | `?action=artist_albums&filter={artist_id}`                                       |                    |
@@ -104,7 +104,7 @@ e.g. To make a REST call for 10 random albums your URL would be `https://demo.am
 | GET    | `catalogs/{catalog_id}`                              | `?action=catalog&filter={catalog_id}`                                            |                    |
 | DELETE | `catalogs/{catalog_id}`                              | `?action=catalog_delete&filter={catalog_id}`                                     |                    |
 | GET    | `catalogs`                                           | `?action=catalogs`                                                               |                    |
-| PUT    | `catalogs`                                           | `?action=catalog_create`                                              `          | `catalog_add`      |
+| PUT    | `catalogs`                                           | `?action=catalog_create`                                                         | `catalog_add`      |
 | POST   | `democratic/{object_id}/localplay`                   | `?action=localplay&command=add&filter={object_id}&type=democratic`               |                    |
 | POST   | `democratic/{object_id}`                             | `?action=democratic&filter={object_id}`                                          |                    |
 | GET    | `folder`                                             | `?action=folder`                                                                 |                    |
