@@ -164,9 +164,8 @@ class SongDeleterTest extends TestCase
         $this->userActivityRepository->expects(static::never())
             ->method('collectGarbage');
 
-        $this->songRepository->expects(static::once())
-            ->method('collectGarbage')
-            ->with($song);
+        $this->songRepository->expects(static::never())
+            ->method('collectGarbage');
 
         $this->folderRepository->expects(static::once())
             ->method('collectGarbage');

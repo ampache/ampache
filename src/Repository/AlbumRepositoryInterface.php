@@ -35,6 +35,11 @@ interface AlbumRepositoryInterface
     public function collectGarbage(): void;
 
     /**
+     * @param int[] $albumIds
+     */
+    public function collectGarbageForAlbums(array $albumIds): void;
+
+    /**
      * Deletes the album entry
      */
     public function delete(

@@ -37,6 +37,7 @@ use Ampache\Repository\Model\Album;
 use Ampache\Repository\Model\Artist;
 use Ampache\Repository\Model\ModelFactoryInterface;
 use Ampache\Repository\ShoutRepositoryInterface;
+use Ampache\Repository\SongRepositoryInterface;
 use Ampache\Repository\UserActivityRepositoryInterface;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
@@ -53,6 +54,7 @@ class ArtistDeleterTest extends TestCase
     private LoggerInterface&MockObject $logger;
     private ModelFactoryInterface&MockObject $modelFactory;
     private ShoutRepositoryInterface&MockObject $shoutRepository;
+    private SongRepositoryInterface&MockObject $songRepository;
     private ArtistDeleter $subject;
     private UserActivityRepositoryInterface&MockObject $userActivityRepository;
 
@@ -67,6 +69,8 @@ class ArtistDeleterTest extends TestCase
         $artist->method('getId')
             ->willReturn($artistId);
 
+        $songId = 84;
+
         $this->albumRepository->expects(static::once())
             ->method('getAlbumByArtist')
             ->with(21)
@@ -77,6 +81,11 @@ class ArtistDeleterTest extends TestCase
             ->with($albumId)
             ->willReturn($album);
 
+        $this->songRepository->expects(static::once())
+            ->method('getByAlbum')
+            ->with($albumId)
+            ->willReturn([$songId]);
+
         $this->albumDeleter->expects(static::once())
             ->method('delete')
             ->with($album, true);
@@ -84,6 +93,18 @@ class ArtistDeleterTest extends TestCase
         $this->artistRepository->expects(static::once())
             ->method('delete')
             ->with($artist);
+
+        $this->songRepository->expects(static::once())
+            ->method('collectGarbageForSongs')
+            ->with([$songId]);
+
+        $this->albumRepository->expects(static::once())
+            ->method('collectGarbageForAlbums')
+            ->with([$albumId]);
+
+        $this->artistRepository->expects(static::once())
+            ->method('collectGarbageForArtist')
+            ->with($artistId);
 
         $this->artCleanup->expects(static::once())
             ->method('collectGarbageForObject')
@@ -138,6 +159,11 @@ class ArtistDeleterTest extends TestCase
             ->with($albumId)
             ->willReturn($album);
 
+        $this->songRepository->expects(static::once())
+            ->method('getByAlbum')
+            ->with($albumId)
+            ->willReturn([]);
+
         $this->albumDeleter->expects(static::once())
             ->method('delete')
             ->with($album, true)
@@ -166,11 +192,13 @@ class ArtistDeleterTest extends TestCase
         $this->labelRepository        = $this->createMock(LabelRepositoryInterface::class);
         $this->artCleanup             = $this->createMock(ArtCleanupInterface::class);
         $this->folderRepository       = $this->createMock(FolderRepositoryInterface::class);
+        $this->songRepository         = $this->createMock(SongRepositoryInterface::class);
 
         $this->subject = new ArtistDeleter(
             $this->albumDeleter,
             $this->artistRepository,
             $this->albumRepository,
+            $this->songRepository,
             $this->modelFactory,
             $this->logger,
             $this->shoutRepository,

@@ -36,6 +36,11 @@ interface SongRepositoryInterface
 {
     public function collectGarbage(Song $song): void;
 
+    /**
+     * @param int[] $songIds
+     */
+    public function collectGarbageForSongs(array $songIds): void;
+
     public function delete(int $songId): bool;
 
     /**

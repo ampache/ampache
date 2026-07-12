@@ -61,8 +61,8 @@ final readonly class SongDeleter implements SongDeleterInterface
                     Rating::garbage_collection('song', $songId);
                     $this->shoutRepository->collectGarbage('song', $songId);
                     $this->userActivityRepository->collectGarbage('song', $songId);
+                    $this->songRepository->collectGarbage($song);
                 }
-                $this->songRepository->collectGarbage($song);
                 $this->folderRepository->collectGarbage();
             }
         } else {

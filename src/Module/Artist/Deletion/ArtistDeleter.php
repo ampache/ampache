@@ -39,6 +39,7 @@ use Ampache\Repository\Model\ModelFactoryInterface;
 use Ampache\Repository\Model\Rating;
 use Ampache\Repository\Model\Userflag;
 use Ampache\Repository\ShoutRepositoryInterface;
+use Ampache\Repository\SongRepositoryInterface;
 use Ampache\Repository\UserActivityRepositoryInterface;
 use Psr\Log\LoggerInterface;
 
@@ -48,6 +49,7 @@ final readonly class ArtistDeleter implements ArtistDeleterInterface
         private AlbumDeleterInterface $albumDeleter,
         private ArtistRepositoryInterface $artistRepository,
         private AlbumRepositoryInterface $albumRepository,
+        private SongRepositoryInterface $songRepository,
         private ModelFactoryInterface $modelFactory,
         private LoggerInterface $logger,
         private ShoutRepositoryInterface $shoutRepository,
@@ -65,8 +67,10 @@ final readonly class ArtistDeleter implements ArtistDeleterInterface
     ): void {
         $album_ids = $this->albumRepository->getAlbumByArtist($artist->id);
 
+        $song_ids = [];
         foreach ($album_ids as $albumId) {
-            $album = $this->modelFactory->createAlbum($albumId);
+            $album    = $this->modelFactory->createAlbum($albumId);
+            $song_ids = [...$song_ids, ...$this->songRepository->getByAlbum($albumId)];
 
             try {
                 $this->albumDeleter->delete($album, true);
@@ -91,6 +95,11 @@ final readonly class ArtistDeleter implements ArtistDeleterInterface
         $artistId = $artist->getId();
 
         $this->artistRepository->delete($artist);
+
+        // every song/album belonging to this artist is gone, so clean up their map table rows
+        $this->songRepository->collectGarbageForSongs($song_ids);
+        $this->albumRepository->collectGarbageForAlbums($album_ids);
+        $this->artistRepository->collectGarbageForArtist($artistId);
 
         $this->artCleanup->collectGarbageForObject('artist', $artistId);
         Userflag::garbage_collection('artist', $artistId);
