@@ -62,8 +62,8 @@ final readonly class SongDeleter implements SongDeleterInterface
                     $this->shoutRepository->collectGarbage('song', $songId);
                     $this->userActivityRepository->collectGarbage('song', $songId);
                     $this->songRepository->collectGarbage($song);
+                    $this->folderRepository->collectGarbage();
                 }
-                $this->folderRepository->collectGarbage();
             }
         } else {
             $this->logger->critical(
