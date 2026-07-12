@@ -44,6 +44,7 @@ use Ampache\Repository\Model\Playlist;
 use Ampache\Repository\Model\Podcast;
 use Ampache\Repository\Model\Podcast_Episode;
 use Ampache\Repository\Model\Search;
+use Ampache\Repository\Model\Share;
 use Ampache\Repository\Model\Song;
 use Ampache\Repository\Model\User;
 use Ampache\Repository\Model\Video;
@@ -67,7 +68,7 @@ final class ShareCreate6Method
      * Takes the file id with optional description and expires parameters.
      *
      * filter = (string) object_id
-     * type = (string) object_type ('album', 'artist', 'playlist', 'podcast', 'podcast_episode', 'smartlist', 'song', 'video')
+     * type = (string) object_type ('album', 'artist', 'playlist', 'podcast', 'podcast_episode', 'smartlist', 'song', 'video') @see Share::VALID_TYPES
      * description = (string) description (will be filled for you if empty) //optional
      * expires = (integer) days to keep active //optional
      *
@@ -97,17 +98,20 @@ final class ShareCreate6Method
         $object_type = $input['type'];
         $description = $input['description'] ?? null;
         $expire_days = (isset($input['expires'])) ? filter_var($input['expires'], FILTER_SANITIZE_NUMBER_INT) : AmpConfig::get('share_expire', 7);
-        // confirm the correct data
-        if (!in_array(strtolower($object_type), ['album', 'artist', 'playlist', 'podcast', 'podcast_episode', 'song', 'video'])) {
-            /* HINT: Requested object string/id/type ("album", "myusername", "some song title", 1298376) */
-            Api6::error(ErrorCodeEnum::BAD_REQUEST, sprintf('Bad Request: %s', $object_type), self::ACTION, 'type', $input['api_format']);
 
-            return false;
-        }
         // searches are playlists but not in the database
         if (($object_type === 'playlist' || $object_type === 'smartlist') && ((int) $object_id) === 0) {
             $object_id   = str_replace('smart_', '', (string) $object_id);
             $object_type = 'search';
+        }
+
+        // confirm the correct data
+        $objectTypeEnum = LibraryItemEnum::tryFrom(strtolower($object_type));
+        if ($objectTypeEnum === null || !in_array($objectTypeEnum, Share::VALID_TYPES, true)) {
+            /* HINT: Requested object string/id/type ("album", "myusername", "some song title", 1298376) */
+            Api6::error(ErrorCodeEnum::BAD_REQUEST, sprintf('Bad Request: %s', $object_type), self::ACTION, 'type', $input['api_format']);
+
+            return false;
         }
 
         $className = ObjectTypeToClassNameMapper::map($object_type);
