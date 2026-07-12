@@ -62,7 +62,7 @@ final readonly class AlbumDeleter implements AlbumDeleterInterface
      */
     public function delete(
         Album $album,
-        bool $parent = false
+        bool $parent = false,
     ): void {
         $albumId = $album->getId();
         $songIds = $this->songRepository->getByAlbum($albumId);
@@ -91,12 +91,12 @@ final readonly class AlbumDeleter implements AlbumDeleterInterface
             Userflag::garbage_collection('song');
             Rating::garbage_collection('song');
             $this->shoutRepository->collectGarbage('song');
-            $this->useractivityRepository->collectGarbage('song');
+            $this->userActivityRepository->collectGarbage('song');
 
             Userflag::garbage_collection('album', $albumId);
             Rating::garbage_collection('album', $albumId);
             $this->shoutRepository->collectGarbage('album', $albumId);
-            $this->useractivityRepository->collectGarbage('album', $albumId);
+            $this->userActivityRepository->collectGarbage('album', $albumId);
         }
     }
 }
