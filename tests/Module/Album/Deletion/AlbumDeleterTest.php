@@ -89,6 +89,9 @@ class AlbumDeleterTest extends TestCase
         $this->artCleanup->expects(static::never())
             ->method('collectGarbage');
 
+        $this->folderRepository->expects(static::once())
+            ->method('collectGarbage');
+
         $shoutGarbageCalls = [];
         $this->shoutRepository->expects(static::exactly(2))
             ->method('collectGarbage')
@@ -139,6 +142,9 @@ class AlbumDeleterTest extends TestCase
         $this->artCleanup->expects(static::never())
             ->method('collectGarbage');
 
+        $this->folderRepository->expects(static::once())
+            ->method('collectGarbage');
+
         $this->shoutRepository->expects(static::never())
             ->method('collectGarbage');
 
@@ -177,6 +183,9 @@ class AlbumDeleterTest extends TestCase
 
         $this->albumRepository->expects(static::never())
             ->method('delete');
+
+        $this->folderRepository->expects(static::never())
+            ->method('collectGarbage');
 
         $this->expectException(AlbumDeletionException::class);
 

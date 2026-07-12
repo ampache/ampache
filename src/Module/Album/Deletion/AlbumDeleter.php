@@ -85,6 +85,7 @@ final readonly class AlbumDeleter implements AlbumDeleterInterface
         $this->albumRepository->delete($album);
 
         $this->artCleanup->collectGarbageForObject('album', $albumId);
+        $this->folderRepository->collectGarbage();
 
         if (!$parent) {
             // collect song garbage once

@@ -85,9 +85,8 @@ class Stats
 
     /**
      * update the play_count for an object
-     * @param int[] $params
      */
-    public static function count(string $type, array $params, string $count_type): void
+    public static function count(string $type, int $object_id, string $count_type): void
     {
         switch ($type) {
             case 'podcast_episode':
@@ -109,7 +108,7 @@ class Stats
                 $sql = ($count_type === 'down')
                     ? sprintf('UPDATE `%s` SET `weight` = `weight` - 1, `total_count` = CASE WHEN `total_count` > 0 THEN `total_count` - 1 ELSE `total_count` END, `total_skip` = CASE WHEN `total_count` > 0 THEN `total_skip` + 1 ELSE `total_skip` END WHERE `id` = ?;', $type)
                     : sprintf('UPDATE `%s` SET `total_count` = `total_count` + 1, `weight` = `weight` + 1 WHERE `id` = ?;', $type);
-                Dba::write($sql, $params);
+                Dba::write($sql, [$object_id]);
                 break;
         }
 
@@ -118,7 +117,7 @@ class Stats
             && in_array($type, ['song', 'podcast_episode', 'video'], true)
         ) {
             $sql = sprintf('UPDATE `%s` SET `played` = 0 WHERE `id` = ? AND `total_count` = 0 and `played` = 1;', $type);
-            Dba::write($sql, $params);
+            Dba::write($sql, [$object_id]);
         }
     }
 
@@ -137,7 +136,7 @@ class Stats
                 while ($row = Dba::fetch_assoc($db_results)) {
                     // reduce the counts for these objects too
                     if (in_array($row['object_type'], ['song', 'album', 'artist', 'video', 'podcast', 'podcast_episode'])) {
-                        self::count($row['object_type'], $row['object_id'], 'down');
+                        self::count($row['object_type'], (int) $row['object_id'], 'down');
                     }
                 }
 
