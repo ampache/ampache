@@ -86,7 +86,7 @@ final readonly class ArtistDeleter implements ArtistDeleterInterface
         Userflag::garbage_collection('album');
         Rating::garbage_collection('album');
         $this->shoutRepository->collectGarbage('album');
-        $this->useractivityRepository->collectGarbage('album');
+        $this->userActivityRepository->collectGarbage('album');
 
         $artistId = $artist->getId();
 

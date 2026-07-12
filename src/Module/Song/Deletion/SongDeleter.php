@@ -60,7 +60,7 @@ final readonly class SongDeleter implements SongDeleterInterface
                     Userflag::garbage_collection('song', $songId);
                     Rating::garbage_collection('song', $songId);
                     $this->shoutRepository->collectGarbage('song', $songId);
-                    $this->useractivityRepository->collectGarbage('song', $songId);
+                    $this->userActivityRepository->collectGarbage('song', $songId);
                 }
                 $this->songRepository->collectGarbage($song);
                 $this->folderRepository->collectGarbage();
