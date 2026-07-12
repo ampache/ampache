@@ -722,7 +722,7 @@ final class ApiHandler implements ApiHandlerInterface
                 $action = 'playlist_remove';
             }
 
-            if ($action === 'create' && ($type === 'album' || $type === 'artist' || $type === 'playlist' || $type === 'smartlist' || $type === 'podcast' || $type === 'podcast_episode' || $type === 'song' || $type === 'video')) {
+            if (($action === 'create' || $action === 'share') && ($type === 'album' || $type === 'artist' || $type === 'playlist' || $type === 'smartlist' || $type === 'podcast' || $type === 'podcast_episode' || $type === 'song' || $type === 'video')) {
                 $action = 'share_create';
             }
             if ($action === 'deleted' && ($type === 'podcast_episode' || $type === 'song' || $type === 'video')) {
