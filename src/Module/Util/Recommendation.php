@@ -154,6 +154,19 @@ class Recommendation
             ];
         }
 
+        if (!isset($xml->artist->bio)) {
+            return [
+                'id' => $artist_id,
+                'summary' => null,
+                'placeformed' => null,
+                'yearformed' => null,
+                'largephoto' => null,
+                'smallphoto' => null,
+                'mediumphoto' => null,
+                'megaphoto' => null,
+            ];
+        }
+
         $results = [
             'id' => null,
             'largephoto' => null,
