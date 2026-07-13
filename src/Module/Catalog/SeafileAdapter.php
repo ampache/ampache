@@ -290,7 +290,7 @@ class SeafileAdapter
 
     // run a function that hits the Seafile API, but catch throttling errors and retry
 
-    private function throttle_check(callable $func)
+    private function throttle_check(callable $func): mixed
     {
         while (true) {
             try {

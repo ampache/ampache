@@ -691,10 +691,8 @@ final class InstallationHelper implements InstallationHelperInterface
     /**
      * Escape a value used for inserting into an ini file.
      * Won't quote ', like addslashes does.
-     * @param string|string[] $str
-     * @return string|string[]
      */
-    private function escape_ini(array|string $str): array|string
+    private function escape_ini(string $str): string
     {
         return str_replace('"', '\"', $str);
     }

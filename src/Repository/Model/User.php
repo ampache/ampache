@@ -1225,7 +1225,7 @@ class User extends database_object
         foreach ($data as $name => $value) {
             if ($name == 'password1') {
                 $name = 'password';
-            } else {
+            } elseif ($name !== 'fullname_public') {
                 $value = scrub_in($value);
             }
 

@@ -1,12 +1,6 @@
 parameters:
 	ignoreErrors:
 		-
-			message: '#^Method Ampache\\Config\\ConfigContainerInterface\:\:get\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: src/Config/ConfigContainerInterface.php
-
-		-
 			message: '#^Method Ampache\\Config\\ConfigContainerInterface\:\:updateConfig\(\) has parameter \$configuration with no value type specified in iterable type array\.$#'
 			identifier: missingType.iterableValue
 			count: 1
@@ -15,18 +9,6 @@ parameters:
 		-
 			message: '#^Function pGraph_Yformat_bytes\(\) has parameter \$value with no type specified\.$#'
 			identifier: missingType.parameter
-			count: 1
-			path: src/Config/functions.php
-
-		-
-			message: '#^Function scrub_in\(\) should return TType of array\|string but returns list\<string\>\.$#'
-			identifier: return.type
-			count: 1
-			path: src/Config/functions.php
-
-		-
-			message: '#^Function scrub_in\(\) should return TType of array\|string but returns string\.$#'
-			identifier: return.type
 			count: 1
 			path: src/Config/functions.php
 
@@ -185,12 +167,6 @@ parameters:
 			identifier: identical.alwaysTrue
 			count: 1
 			path: src/Module/Api/SubsonicApiApplication.php
-
-		-
-			message: '#^Comparison operation "\>" between int\<1, max\> and 0 is always true\.$#'
-			identifier: greater.alwaysTrue
-			count: 1
-			path: src/Module/Api/Upnp_Api.php
 
 		-
 			message: '#^Method Ampache\\Module\\Api\\Upnp_Api\:\:_callSearch\(\) has parameter \$count with no type specified\.$#'
@@ -637,12 +613,6 @@ parameters:
 			path: src/Module/Authentication/Ldap/Ldap.php
 
 		-
-			message: '#^Method Ampache\\Module\\Authentication\\Ldap\\Ldap\:\:_read\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: src/Module/Authentication/Ldap/Ldap.php
-
-		-
 			message: '#^Method Ampache\\Module\\Authentication\\Ldap\\Ldap\:\:_read\(\) has parameter \$attrs with no value type specified in iterable type array\.$#'
 			identifier: missingType.iterableValue
 			count: 1
@@ -807,12 +777,6 @@ parameters:
 		-
 			message: '#^Method Ampache\\Module\\Catalog\\SeafileAdapter\:\:for_all_files\(\) has parameter \$func with no type specified\.$#'
 			identifier: missingType.parameter
-			count: 1
-			path: src/Module/Catalog/SeafileAdapter.php
-
-		-
-			message: '#^Method Ampache\\Module\\Catalog\\SeafileAdapter\:\:throttle_check\(\) has no return type specified\.$#'
-			identifier: missingType.return
 			count: 1
 			path: src/Module/Catalog/SeafileAdapter.php
 
@@ -1015,18 +979,6 @@ parameters:
 			path: src/Module/Playback/Localplay/Upnp/UPnPDevice.php
 
 		-
-			message: '#^Binary operation "\+" between SimpleXMLElement\|string and 2 results in an error\.$#'
-			identifier: binaryOp.invalid
-			count: 1
-			path: src/Module/Playback/Localplay/Upnp/UPnPPlayer.php
-
-		-
-			message: '#^Binary operation "\-" between SimpleXMLElement\|string and 2 results in an error\.$#'
-			identifier: binaryOp.invalid
-			count: 1
-			path: src/Module/Playback/Localplay/Upnp/UPnPPlayer.php
-
-		-
 			message: '#^Method Ampache\\Module\\Playback\\Localplay\\Upnp\\UPnPPlayer\:\:GetPlaylistItems\(\) return type has no value type specified in iterable type array\.$#'
 			identifier: missingType.iterableValue
 			count: 1
@@ -1117,12 +1069,6 @@ parameters:
 			path: src/Module/Song/Tag/SongTagWriter.php
 
 		-
-			message: '#^Argument of an invalid type object supplied for foreach, only iterables are supported\.$#'
-			identifier: foreach.nonIterable
-			count: 1
-			path: src/Module/System/AutoUpdate.php
-
-		-
 			message: '#^Method Ampache\\Module\\System\\Dba\:\:_query\(\) has parameter \$params with no value type specified in iterable type array\.$#'
 			identifier: missingType.iterableValue
 			count: 1
@@ -1169,24 +1115,6 @@ parameters:
 			identifier: missingType.iterableValue
 			count: 1
 			path: src/Module/System/Dba.php
-
-		-
-			message: '#^Binary operation "\." between ''config_version \= '' and array\<string\>\|string results in an error\.$#'
-			identifier: binaryOp.invalid
-			count: 1
-			path: src/Module/System/InstallationHelper.php
-
-		-
-			message: '#^Binary operation "\." between ''secret_key \= "'' and array\<string\>\|string results in an error\.$#'
-			identifier: binaryOp.invalid
-			count: 1
-			path: src/Module/System/InstallationHelper.php
-
-		-
-			message: '#^Binary operation "\." between non\-falsy\-string and array\<string\>\|string results in an error\.$#'
-			identifier: binaryOp.invalid
-			count: 1
-			path: src/Module/System/InstallationHelper.php
 
 		-
 			message: '#^Method Ampache\\Module\\System\\InstallationHelper\:\:generate_config\(\) has parameter \$current with no value type specified in iterable type array\.$#'
@@ -2055,12 +1983,6 @@ parameters:
 		-
 			message: '#^Method Ampache\\Repository\\Model\\User\:\:update\(\) has parameter \$data with no value type specified in iterable type array\.$#'
 			identifier: missingType.iterableValue
-			count: 1
-			path: src/Repository/Model/User.php
-
-		-
-			message: '#^Unable to resolve the template type TType in call to function scrub_in$#'
-			identifier: argument.templateType
 			count: 1
 			path: src/Repository/Model/User.php
 

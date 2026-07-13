@@ -244,9 +244,10 @@ class Ldap
 
     /**
      * Read attributes for a DN from the LDAP
+     * @return array<array-key, mixed>
      * @throws LdapException
      */
-    private static function _read($link, string $base_dn, array $attrs = [], string $filter = 'objectClass=*')
+    private static function _read($link, string $base_dn, array $attrs = [], string $filter = 'objectClass=*'): array
     {
         $attrs_json = json_encode($attrs);
         debug_event(self::class, sprintf('reading attributes %s in `%s`', $attrs_json, $base_dn), 5);
@@ -260,7 +261,12 @@ class Ldap
             throw new LdapException(sprintf('Empty search result for dn `%s`', $base_dn));
         }
 
-        return $infos[0];
+        $entry = $infos[0];
+        if (!is_array($entry)) {
+            throw new LdapException(sprintf('Malformed search result for dn `%s`', $base_dn));
+        }
+
+        return $entry;
     }
 
     /**

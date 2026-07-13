@@ -1526,7 +1526,7 @@ class Upnp_Api
             $data['operator'] = 'and';
         } elseif ($num_and <= 1 && $num_or > 0) {
             $data['operator'] = 'or';
-        } elseif ($num_and > 0 && $num_or == 0) {
+        } elseif ($num_or == 0) {
             $data['operator'] = 'and';
         } else {
             $data['operator'] = 'error'; // Should really be an error operator/return
