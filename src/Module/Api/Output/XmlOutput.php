@@ -165,6 +165,20 @@ final class XmlOutput implements ApiOutputInterface
      * At the moment, this method just acts as a proxy
      *
      * @param 6|8 $apiVersion
+     * @param array<int|string> $objects
+     */
+    public function index(int $apiVersion, array $objects, string $objectType, User $user, bool $include = false): string
+    {
+        return match ($apiVersion) {
+            6 => Xml6_Data::index($objects, $objectType, $user, $include),
+            8 => Xml8_Data::index($objects, $objectType, $user, $include),
+        };
+    }
+
+    /**
+     * At the moment, this method just acts as a proxy
+     *
+     * @param 6|8 $apiVersion
      * @param array<int|string> $labels
      */
     public function labels(int $apiVersion, array $labels, User $user, bool $asObject = true): string
@@ -186,6 +200,19 @@ final class XmlOutput implements ApiOutputInterface
         return match ($apiVersion) {
             6 => Xml6_Data::licenses($licenses, $user),
             8 => Xml8_Data::licenses($licenses, $user),
+        };
+    }
+
+    /**
+     * At the moment, this method just acts as a proxy
+     *
+     * @param 6|8 $apiVersion
+     */
+    public function lists(int $apiVersion, array $objects): string
+    {
+        return match ($apiVersion) {
+            6 => Xml6_Data::lists($objects),
+            8 => Xml8_Data::lists($objects),
         };
     }
 
@@ -332,6 +359,19 @@ final class XmlOutput implements ApiOutputInterface
     }
 
     /**
+     * At the moment, this method just acts as a proxy
+     *
+     * @param 6|8 $apiVersion
+     */
+    public function songTags(int $apiVersion, array $objects, string $auth, bool $asObject = true): string
+    {
+        return match ($apiVersion) {
+            6 => Xml6_Data::song_tags($objects, $auth),
+            8 => Xml8_Data::song_tags($objects, $auth),
+        };
+    }
+
+    /**
      * This generates a standard XML Success message
      * nothing fancy here...
      *
@@ -347,6 +387,20 @@ final class XmlOutput implements ApiOutputInterface
             5 => Xml5_Data::success($string, $return_data),
             6 => Xml6_Data::success($string, $return_data),
             8 => Xml8_Data::success($string, $return_data),
+        };
+    }
+
+    /**
+     * At the moment, this method just acts as a proxy
+     *
+     * @param 6|8 $apiVersion
+     * @param int[] $activities Activity id list
+     */
+    public function timeline(int $apiVersion, array $activities): string
+    {
+        return match ($apiVersion) {
+            6 => Xml6_Data::timeline($activities),
+            8 => Xml8_Data::timeline($activities),
         };
     }
 

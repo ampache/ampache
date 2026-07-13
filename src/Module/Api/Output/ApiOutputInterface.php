@@ -125,6 +125,19 @@ interface ApiOutputInterface
     ): string;
 
     /**
+     * Generate an index of object ids for a single object type
+     *
+     * @param array<int|string> $objects
+     */
+    public function index(
+        int $apiVersion,
+        array $objects,
+        string $objectType,
+        User $user,
+        bool $include = false,
+    ): string;
+
+    /**
      * @param array<int|string> $labels
      */
     public function labels(
@@ -142,6 +155,16 @@ interface ApiOutputInterface
         array $licenses,
         User $user,
         bool $asObject = true,
+    ): string;
+
+    /**
+     * Generate a name/id list result
+     *
+     * @param array<int, array{id: int|string, name: string}> $objects
+     */
+    public function lists(
+        int $apiVersion,
+        array $objects,
     ): string;
 
     /**
@@ -232,6 +255,16 @@ interface ApiOutputInterface
     ): string;
 
     /**
+     * @param array<int|string> $objects
+     */
+    public function songTags(
+        int $apiVersion,
+        array $objects,
+        string $auth,
+        bool $asObject = true,
+    ): string;
+
+    /**
      * This generates a standard JSON Success message
      * nothing fancy here...
      *
@@ -239,6 +272,16 @@ interface ApiOutputInterface
      * @param array<string, string> $return_data
      */
     public function success(int $apiVersion, string $string, array $return_data = []): string;
+
+    /**
+     * Generate a user activity timeline
+     *
+     * @param int[] $activities Activity id list
+     */
+    public function timeline(
+        int $apiVersion,
+        array $activities,
+    ): string;
 
     /**
      * Generate a single user result

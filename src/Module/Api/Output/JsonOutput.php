@@ -163,6 +163,20 @@ final class JsonOutput implements ApiOutputInterface
      * At the moment, this method just acts as a proxy
      *
      * @param 6|8 $apiVersion
+     * @param array<int|string> $objects
+     */
+    public function index(int $apiVersion, array $objects, string $objectType, User $user, bool $include = false): string
+    {
+        return match ($apiVersion) {
+            6 => Json6_Data::index($objects, $objectType, $user, $include),
+            8 => Json8_Data::index($objects, $objectType, $user, $include),
+        };
+    }
+
+    /**
+     * At the moment, this method just acts as a proxy
+     *
+     * @param 6|8 $apiVersion
      * @param array<int|string> $labels
      */
     public function labels(int $apiVersion, array $labels, User $user, bool $asObject = true): string
@@ -184,6 +198,19 @@ final class JsonOutput implements ApiOutputInterface
         return match ($apiVersion) {
             6 => Json6_Data::licenses($licenses, $asObject),
             8 => Json8_Data::licenses($licenses, $asObject),
+        };
+    }
+
+    /**
+     * At the moment, this method just acts as a proxy
+     *
+     * @param 6|8 $apiVersion
+     */
+    public function lists(int $apiVersion, array $objects): string
+    {
+        return match ($apiVersion) {
+            6 => Json6_Data::lists($objects),
+            8 => Json8_Data::lists($objects),
         };
     }
 
@@ -328,6 +355,20 @@ final class JsonOutput implements ApiOutputInterface
     }
 
     /**
+     * At the moment, this method just acts as a proxy
+     *
+     * @param 6|8 $apiVersion
+     * @param array<int|string> $objects
+     */
+    public function songTags(int $apiVersion, array $objects, string $auth, bool $asObject = true): string
+    {
+        return match ($apiVersion) {
+            6 => Json6_Data::song_tags($objects, $auth, $asObject),
+            8 => Json8_Data::song_tags($objects, $auth, $asObject),
+        };
+    }
+
+    /**
      * This generates a standard JSON Success message
      * nothing fancy here...
      *
@@ -342,6 +383,20 @@ final class JsonOutput implements ApiOutputInterface
             5 => Json5_Data::success($string, $return_data),
             6 => Json6_Data::success($string, $return_data),
             8 => Json8_Data::success($string, $return_data),
+        };
+    }
+
+    /**
+     * At the moment, this method just acts as a proxy
+     *
+     * @param 6|8 $apiVersion
+     * @param int[] $activities Activity id list
+     */
+    public function timeline(int $apiVersion, array $activities): string
+    {
+        return match ($apiVersion) {
+            6 => Json6_Data::timeline($activities),
+            8 => Json8_Data::timeline($activities),
         };
     }
 

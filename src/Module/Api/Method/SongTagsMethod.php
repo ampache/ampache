@@ -25,10 +25,7 @@ declare(strict_types=1);
 
 namespace Ampache\Module\Api\Method;
 
-use Ampache\Config\ConfigContainerInterface;
-use Ampache\Config\ConfigurationKeyEnum;
 use Ampache\Module\Api\Authentication\GatekeeperInterface;
-use Ampache\Module\Api\Exception\ErrorCodeEnum;
 use Ampache\Module\Api\Method\Exception\RequestParamMissingException;
 use Ampache\Module\Api\Method\Exception\ResultEmptyException;
 use Ampache\Module\Api\Output\ApiOutputInterface;
@@ -37,26 +34,25 @@ use Ampache\Repository\Model\User;
 use Psr\Http\Message\ResponseInterface;
 
 /**
- * Returns a single podcast episode based on the UID of said episode.
+ * Returns the raw file tags of a song.
  *
  * The parameters and checks are identical for api versions 6 and 8, so a single method serves
  * both. Only the output data is version specific and that is resolved by the ApiOutputInterface.
  */
-final class PodcastEpisodeMethod implements MethodInterface
+final class SongTagsMethod implements MethodInterface
 {
-    public const string ACTION = 'podcast_episode';
+    public const string ACTION = 'song_tags';
 
     public function __construct(
-        private ConfigContainerInterface $configContainer,
         private ModelFactoryInterface $modelFactory,
     ) {}
 
     /**
-     * MINIMUM_API_VERSION=420000
+     * MINIMUM_API_VERSION=6.0.0
      *
-     * This returns a single podcast episode
+     * This returns the tags of a song from the file
      *
-     * filter = (string) UID of podcast episode
+     * filter = (string) UID of song
      *
      * @param array{
      *     filter?: string,
@@ -74,20 +70,6 @@ final class PodcastEpisodeMethod implements MethodInterface
         User $user,
         int $apiVersion,
     ): ResponseInterface {
-        if (!$this->configContainer->get(ConfigurationKeyEnum::PODCAST)) {
-            $response->getBody()->write(
-                $output->error(
-                    $apiVersion,
-                    ErrorCodeEnum::ACCESS_DENIED,
-                    T_('Enable: podcast'),
-                    self::ACTION,
-                    'system'
-                )
-            );
-
-            return $response;
-        }
-
         if (!array_key_exists('filter', $input)) {
             throw new RequestParamMissingException(
                 sprintf(T_('Bad Request: %s'), 'filter')
@@ -96,13 +78,13 @@ final class PodcastEpisodeMethod implements MethodInterface
 
         $objectId = (int) $input['filter'];
 
-        $episode = $this->modelFactory->createPodcastEpisode($objectId);
-        if ($episode->isNew()) {
+        $song = $this->modelFactory->createSong($objectId);
+        if ($song->isNew()) {
             throw new ResultEmptyException((string) $objectId);
         }
 
         $response->getBody()->write(
-            $output->podcastEpisodes($apiVersion, [$objectId], $user, $input['auth'], true, false)
+            $output->songTags($apiVersion, [$objectId], $input['auth'], false)
         );
 
         return $response;

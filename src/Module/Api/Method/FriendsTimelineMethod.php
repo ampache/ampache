@@ -29,42 +29,41 @@ use Ampache\Config\ConfigContainerInterface;
 use Ampache\Config\ConfigurationKeyEnum;
 use Ampache\Module\Api\Authentication\GatekeeperInterface;
 use Ampache\Module\Api\Exception\ErrorCodeEnum;
-use Ampache\Module\Api\Method\Exception\RequestParamMissingException;
-use Ampache\Module\Api\Method\Exception\ResultEmptyException;
 use Ampache\Module\Api\Output\ApiOutputInterface;
-use Ampache\Repository\Model\ModelFactoryInterface;
 use Ampache\Repository\Model\User;
+use Ampache\Repository\UserActivityRepositoryInterface;
 use Psr\Http\Message\ResponseInterface;
 
 /**
- * Returns a single podcast episode based on the UID of said episode.
+ * Returns the activity of the users a user is following.
  *
  * The parameters and checks are identical for api versions 6 and 8, so a single method serves
  * both. Only the output data is version specific and that is resolved by the ApiOutputInterface.
  */
-final class PodcastEpisodeMethod implements MethodInterface
+final class FriendsTimelineMethod implements MethodInterface
 {
-    public const string ACTION = 'podcast_episode';
+    public const string ACTION = 'friends_timeline';
 
     public function __construct(
         private ConfigContainerInterface $configContainer,
-        private ModelFactoryInterface $modelFactory,
+        private UserActivityRepositoryInterface $userActivityRepository,
     ) {}
 
     /**
-     * MINIMUM_API_VERSION=420000
+     * MINIMUM_API_VERSION=380001
      *
-     * This returns a single podcast episode
+     * This get current user friends timeline
      *
-     * filter = (string) UID of podcast episode
+     * limit = (integer) //optional
+     * since = (integer) UNIXTIME() //optional
      *
      * @param array{
-     *     filter?: string,
+     *     limit?: int,
+     *     since?: int,
      *     api_format: string,
      *     auth: string,
      * } $input
      * @param 6|8 $apiVersion
-     * @throws RequestParamMissingException|ResultEmptyException
      */
     public function handle(
         GatekeeperInterface $gatekeeper,
@@ -74,12 +73,12 @@ final class PodcastEpisodeMethod implements MethodInterface
         User $user,
         int $apiVersion,
     ): ResponseInterface {
-        if (!$this->configContainer->get(ConfigurationKeyEnum::PODCAST)) {
+        if (!$this->configContainer->get(ConfigurationKeyEnum::SOCIABLE)) {
             $response->getBody()->write(
                 $output->error(
                     $apiVersion,
                     ErrorCodeEnum::ACCESS_DENIED,
-                    T_('Enable: podcast'),
+                    T_('Enable: sociable'),
                     self::ACTION,
                     'system'
                 )
@@ -88,21 +87,22 @@ final class PodcastEpisodeMethod implements MethodInterface
             return $response;
         }
 
-        if (!array_key_exists('filter', $input)) {
-            throw new RequestParamMissingException(
-                sprintf(T_('Bad Request: %s'), 'filter')
+        $results = $this->userActivityRepository->getFriendsActivities(
+            $user->getId(),
+            (int) ($input['limit'] ?? 0),
+            (int) ($input['since'] ?? 0)
+        );
+
+        if ($results === []) {
+            $response->getBody()->write(
+                $output->writeEmpty($apiVersion, 'activity')
             );
-        }
 
-        $objectId = (int) $input['filter'];
-
-        $episode = $this->modelFactory->createPodcastEpisode($objectId);
-        if ($episode->isNew()) {
-            throw new ResultEmptyException((string) $objectId);
+            return $response;
         }
 
         $response->getBody()->write(
-            $output->podcastEpisodes($apiVersion, [$objectId], $user, $input['auth'], true, false)
+            $output->timeline($apiVersion, $results)
         );
 
         return $response;

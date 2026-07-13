@@ -25,8 +25,6 @@ declare(strict_types=1);
 
 namespace Ampache\Module\Api\Method;
 
-use Ampache\Config\ConfigContainerInterface;
-use Ampache\Config\ConfigurationKeyEnum;
 use Ampache\MockeryTestCase;
 use Ampache\Module\Api\Authentication\GatekeeperInterface;
 use Ampache\Module\Api\Exception\ErrorCodeEnum;
@@ -34,7 +32,7 @@ use Ampache\Module\Api\Method\Exception\RequestParamMissingException;
 use Ampache\Module\Api\Method\Exception\ResultEmptyException;
 use Ampache\Module\Api\Output\ApiOutputInterface;
 use Ampache\Repository\Model\ModelFactoryInterface;
-use Ampache\Repository\Model\Podcast_Episode;
+use Ampache\Repository\Model\Song;
 use Ampache\Repository\Model\User;
 use Mockery\MockInterface;
 use Override;
@@ -42,11 +40,14 @@ use PHPUnit\Framework\Attributes\DataProvider;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\StreamInterface;
 
-class PodcastEpisodeMethodTest extends MockeryTestCase
+/**
+ * Recording the playback state goes through the Stream::* database statics, so only the guards can
+ * be exercised without a database fixture.
+ */
+class PlayerMethodTest extends MockeryTestCase
 {
-    private ConfigContainerInterface|MockInterface|null $configContainer;
     private ModelFactoryInterface|MockInterface|null $modelFactory;
-    private ?PodcastEpisodeMethod $subject;
+    private ?PlayerMethod $subject;
 
     /**
      * The same method serves both api versions; the version is only handed to the output
@@ -62,7 +63,7 @@ class PodcastEpisodeMethodTest extends MockeryTestCase
     }
 
     #[DataProvider(methodName: 'apiVersionProvider')]
-    public function testHandleReturnsErrorIfDisabled(int $apiVersion): void
+    public function testHandleReturnsErrorIfStateIsNotSupported(int $apiVersion): void
     {
         $gatekeeper = $this->mock(GatekeeperInterface::class);
         $response   = $this->mock(ResponseInterface::class);
@@ -72,18 +73,13 @@ class PodcastEpisodeMethodTest extends MockeryTestCase
 
         $result = 'error-result';
 
-        $this->configContainer->shouldReceive('get')
-            ->with(ConfigurationKeyEnum::PODCAST)
-            ->once()
-            ->andReturnFalse();
-
         $output->shouldReceive('error')
             ->with(
                 $apiVersion,
-                ErrorCodeEnum::ACCESS_DENIED,
-                'Enable: podcast',
-                PodcastEpisodeMethod::ACTION,
-                'system'
+                ErrorCodeEnum::BAD_REQUEST,
+                'Bad Request: pause',
+                PlayerMethod::ACTION,
+                'state'
             )
             ->once()
             ->andReturn($result);
@@ -102,7 +98,13 @@ class PodcastEpisodeMethodTest extends MockeryTestCase
                 $gatekeeper,
                 $response,
                 $output,
-                ['filter' => '666', 'api_format' => 'json', 'auth' => 'some-auth'],
+                [
+                    'filter' => '666',
+                    'type' => 'song',
+                    'state' => 'pause',
+                    'api_format' => 'json',
+                    'auth' => 'some-auth',
+                ],
                 $user,
                 $apiVersion
             )
@@ -110,36 +112,24 @@ class PodcastEpisodeMethodTest extends MockeryTestCase
     }
 
     #[DataProvider(methodName: 'apiVersionProvider')]
-    public function testHandleReturnsResult(int $apiVersion): void
+    public function testHandleReturnsErrorIfTypeIsNotSupported(int $apiVersion): void
     {
         $gatekeeper = $this->mock(GatekeeperInterface::class);
         $response   = $this->mock(ResponseInterface::class);
         $output     = $this->mock(ApiOutputInterface::class);
         $user       = $this->mock(User::class);
         $stream     = $this->mock(StreamInterface::class);
-        $item       = $this->mock(Podcast_Episode::class);
 
-        $objectId = 666;
-        $result   = 'some-result';
+        $result = 'error-result';
 
-        $this->configContainer->shouldReceive('get')
-            ->with(ConfigurationKeyEnum::PODCAST)
-            ->once()
-            ->andReturnTrue();
-
-        $this->modelFactory->shouldReceive('createPodcastEpisode')
-            ->with($objectId)
-            ->once()
-            ->andReturn($item);
-
-        $item->shouldReceive('isNew')
-            ->withNoArgs()
-            ->once()
-            ->andReturnFalse();
-
-        // the resolved api version must reach the output untouched
-        $output->shouldReceive('podcastEpisodes')
-            ->with($apiVersion, [$objectId], $user, 'some-auth', true, false)
+        $output->shouldReceive('error')
+            ->with(
+                $apiVersion,
+                ErrorCodeEnum::BAD_REQUEST,
+                'Bad Request: album',
+                PlayerMethod::ACTION,
+                'type'
+            )
             ->once()
             ->andReturn($result);
 
@@ -157,7 +147,12 @@ class PodcastEpisodeMethodTest extends MockeryTestCase
                 $gatekeeper,
                 $response,
                 $output,
-                ['filter' => (string) $objectId, 'api_format' => 'json', 'auth' => 'some-auth'],
+                [
+                    'filter' => '666',
+                    'type' => 'album',
+                    'api_format' => 'json',
+                    'auth' => 'some-auth',
+                ],
                 $user,
                 $apiVersion
             )
@@ -171,11 +166,6 @@ class PodcastEpisodeMethodTest extends MockeryTestCase
         $response   = $this->mock(ResponseInterface::class);
         $output     = $this->mock(ApiOutputInterface::class);
         $user       = $this->mock(User::class);
-
-        $this->configContainer->shouldReceive('get')
-            ->with(ConfigurationKeyEnum::PODCAST)
-            ->once()
-            ->andReturnTrue();
 
         $this->expectException(RequestParamMissingException::class);
         $this->expectExceptionMessage(sprintf(T_('Bad Request: %s'), 'filter'));
@@ -191,27 +181,22 @@ class PodcastEpisodeMethodTest extends MockeryTestCase
     }
 
     #[DataProvider(methodName: 'apiVersionProvider')]
-    public function testHandleThrowsIfNotFound(int $apiVersion): void
+    public function testHandleThrowsIfMediaIsNotFound(int $apiVersion): void
     {
         $gatekeeper = $this->mock(GatekeeperInterface::class);
         $response   = $this->mock(ResponseInterface::class);
         $output     = $this->mock(ApiOutputInterface::class);
         $user       = $this->mock(User::class);
-        $item       = $this->mock(Podcast_Episode::class);
+        $song       = $this->mock(Song::class);
 
         $objectId = 666;
 
-        $this->configContainer->shouldReceive('get')
-            ->with(ConfigurationKeyEnum::PODCAST)
-            ->once()
-            ->andReturnTrue();
-
-        $this->modelFactory->shouldReceive('createPodcastEpisode')
+        $this->modelFactory->shouldReceive('createSong')
             ->with($objectId)
             ->once()
-            ->andReturn($item);
+            ->andReturn($song);
 
-        $item->shouldReceive('isNew')
+        $song->shouldReceive('isNew')
             ->withNoArgs()
             ->once()
             ->andReturnTrue();
@@ -223,7 +208,12 @@ class PodcastEpisodeMethodTest extends MockeryTestCase
             $gatekeeper,
             $response,
             $output,
-            ['filter' => (string) $objectId, 'api_format' => 'json', 'auth' => 'some-auth'],
+            [
+                'filter' => (string) $objectId,
+                'type' => 'song',
+                'api_format' => 'json',
+                'auth' => 'some-auth',
+            ],
             $user,
             $apiVersion
         );
@@ -232,11 +222,9 @@ class PodcastEpisodeMethodTest extends MockeryTestCase
     #[Override]
     protected function setUp(): void
     {
-        $this->configContainer = $this->mock(ConfigContainerInterface::class);
-        $this->modelFactory    = $this->mock(ModelFactoryInterface::class);
+        $this->modelFactory = $this->mock(ModelFactoryInterface::class);
 
-        $this->subject = new PodcastEpisodeMethod(
-            $this->configContainer,
+        $this->subject = new PlayerMethod(
             $this->modelFactory
         );
     }
