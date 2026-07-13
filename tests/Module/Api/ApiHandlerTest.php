@@ -43,6 +43,21 @@ class ApiHandlerTest extends TestCase
 {
     private ApiHandler $subject;
 
+    /**
+     * REST path suffix => the `task` the REST applications derive from it
+     *
+     * @return array<string, array{0: string}>
+     */
+    public static function catalogTaskProvider(): array
+    {
+        return [
+            'add => add_to_catalog' => ['add'],
+            'clean => clean_catalog' => ['clean'],
+            'update => update_catalog' => ['update'],
+            'verify => verify_catalog' => ['verify'],
+        ];
+    }
+
     public static function shareableTypeProvider(): array
     {
         return [
@@ -59,8 +74,6 @@ class ApiHandlerTest extends TestCase
 
     public function testNormalizeActionLeavesShareUnchangedForNonShareableTypes(): void
     {
-        // 'label' is not one of the shareable object types, so plain `share`
-        // (get a share by its id) must still apply
         static::assertSame(
             'share',
             $this->subject->normalizeAction('share', 'label', true)
@@ -75,16 +88,46 @@ class ApiHandlerTest extends TestCase
         );
     }
 
+    public function testNormalizeActionLeavesUpdateUnchangedWithoutType(): void
+    {
+        // plain `update` (no type) is the system_update alias and must not be remapped
+        static::assertSame(
+            'update',
+            $this->subject->normalizeAction('update', null, false)
+        );
+    }
+
+    #[DataProvider(methodName: 'catalogTaskProvider')]
+    public function testNormalizeActionRoutesCatalogTaskShortcutsToCatalogAction(string $action): void
+    {
+        static::assertSame(
+            'catalog_action',
+            $this->subject->normalizeAction($action, 'catalog', true)
+        );
+    }
+
     #[DataProvider(methodName: 'shareableTypeProvider')]
     public function testNormalizeActionRoutesRestShareToShareCreate(string $type): void
     {
-        // REST path `POST {resource}/{id}/share` reaches normalizeAction() with
-        // action='share' (the literal REST path segment), not 'create' -- this
-        // was previously unrewritten, misrouting to the plain `share` (get by id)
-        // action instead of `share_create`.
         static::assertSame(
             'share_create',
             $this->subject->normalizeAction('share', $type, true)
+        );
+    }
+
+    public function testNormalizeActionStillRoutesCatalogAddWithoutFilterToCatalogCreate(): void
+    {
+        static::assertSame(
+            'catalog_create',
+            $this->subject->normalizeAction('add', 'catalog', false)
+        );
+    }
+
+    public function testNormalizeActionStillRoutesCatalogCreateToCatalogCreate(): void
+    {
+        static::assertSame(
+            'catalog_create',
+            $this->subject->normalizeAction('create', 'catalog', true)
         );
     }
 

@@ -60,11 +60,13 @@ final class CatalogAction8Method
      * catalog_action
      * MINIMUM_API_VERSION=400001
      * CHANGED_IN_API_VERSION=420000
+     * CHANGED_IN_API_VERSION=800000
      *
      * Kick off a catalog update or clean for the selected catalog
      * Added 'verify_catalog', 'gather_art'
+     * 800000+: added 'update_catalog' (full update; runs clean, verify then add in that order)
      *
-     * task = (string) 'add_to_catalog', 'clean_catalog', 'verify_catalog', 'gather_art', 'garbage_collect'
+     * task = (string) 'add_to_catalog', 'clean_catalog', 'verify_catalog', 'update_catalog', 'gather_art', 'garbage_collect'
      * catalog = (integer) $catalog_id
      *
      * @param array{
@@ -88,7 +90,7 @@ final class CatalogAction8Method
 
         $task = (string) $input['task'];
         // confirm the correct data
-        if (!in_array($task, ['add_to_catalog', 'clean_catalog', 'verify_catalog', 'gather_art', 'garbage_collect'])) {
+        if (!in_array($task, ['add_to_catalog', 'clean_catalog', 'verify_catalog', 'update_catalog', 'gather_art', 'garbage_collect'])) {
             /* HINT: Requested object string/id/type ("album", "myusername", "some song title", 1298376) */
             Api::error(ErrorCodeEnum::BAD_REQUEST, sprintf('Bad Request: %s', $task), self::ACTION, 'task', $input['api_format']);
 
@@ -112,6 +114,16 @@ final class CatalogAction8Method
                         'gather_art' => true,
                         'parse_playlist' => false
                     ];
+                    $catalog->add_to_catalog($options);
+                    break;
+                case 'update_catalog':
+                    // full update; runs clean, verify then add in that order
+                    $options = [
+                        'gather_art' => true,
+                        'parse_playlist' => false
+                    ];
+                    $catalog->clean_catalog_proc();
+                    $catalog->verify_catalog_proc();
                     $catalog->add_to_catalog($options);
                     break;
                 case 'garbage_collect':

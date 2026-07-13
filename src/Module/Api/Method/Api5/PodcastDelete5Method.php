@@ -25,21 +25,35 @@ declare(strict_types=1);
 
 namespace Ampache\Module\Api\Method\Api5;
 
-use Ampache\Config\AmpConfig;
-use Ampache\Module\Api\Api5;
-use Ampache\Module\Api\Exception\ErrorCodeEnum;
+use Ampache\Config\ConfigContainerInterface;
+use Ampache\Config\ConfigurationKeyEnum;
+use Ampache\Module\Api\Authentication\GatekeeperInterface;
+use Ampache\Module\Api\Method\Exception\AccessDeniedException;
+use Ampache\Module\Api\Method\Exception\RequestParamMissingException;
+use Ampache\Module\Api\Method\Exception\ResultEmptyException;
+use Ampache\Module\Api\Method\MethodInterface;
+use Ampache\Module\Api\Output\ApiOutputInterface;
 use Ampache\Module\Authorization\AccessLevelEnum;
 use Ampache\Module\Authorization\AccessTypeEnum;
+use Ampache\Module\Authorization\Check\PrivilegeCheckerInterface;
 use Ampache\Module\Podcast\PodcastDeleterInterface;
 use Ampache\Repository\Model\User;
 use Ampache\Repository\PodcastRepositoryInterface;
+use Psr\Http\Message\ResponseInterface;
 
 /**
- * Class PodcastDelete5Method
+ * Deletes a podcast
  */
-final class PodcastDelete5Method
+final class PodcastDelete5Method implements MethodInterface
 {
     public const string ACTION = 'podcast_delete';
+
+    public function __construct(
+        private PodcastDeleterInterface $podcastDeleter,
+        private ConfigContainerInterface $configContainer,
+        private PrivilegeCheckerInterface $privilegeChecker,
+        private PodcastRepositoryInterface $podcastRepository,
+    ) {}
 
     /**
      * podcast_delete
@@ -54,54 +68,49 @@ final class PodcastDelete5Method
      *     api_format: string,
      *     auth: string,
      * } $input
+     * @throws AccessDeniedException|RequestParamMissingException|ResultEmptyException
      */
-    public static function podcast_delete(array $input, User $user): bool
-    {
-        if (!AmpConfig::get('podcast')) {
-            Api5::error(ErrorCodeEnum::ACCESS_DENIED, T_('Enable: podcast'), self::ACTION, 'system', $input['api_format']);
+    public function handle(
+        GatekeeperInterface $gatekeeper,
+        ResponseInterface $response,
+        ApiOutputInterface $output,
+        array $input,
+        User $user,
+        int $apiVersion,
+    ): ResponseInterface {
+        if (!$this->configContainer->get(ConfigurationKeyEnum::PODCAST)) {
+            throw new AccessDeniedException(
+                T_('Enable: podcast')
+            );
+        }
 
-            return false;
+        if (!$this->privilegeChecker->check(AccessTypeEnum::INTERFACE, AccessLevelEnum::MANAGER, $user->getId())) {
+            throw new AccessDeniedException(
+                T_('Access denied')
+            );
         }
-        if (!Api5::check_access(AccessTypeEnum::INTERFACE, AccessLevelEnum::MANAGER, $user->id, self::ACTION, $input['api_format'])) {
-            return false;
+
+        $podcastId = (int) ($input['filter'] ?? 0);
+        if ($podcastId === 0) {
+            throw new RequestParamMissingException(
+                sprintf(T_('Bad Request: %s'), 'filter')
+            );
         }
-        if (!Api5::check_parameter($input, ['filter'], self::ACTION)) {
-            return false;
-        }
-        $object_id = (int) ($input['filter'] ?? 0);
-        $podcast   = self::getPodcastRepository()->findById($object_id);
+
+        $podcast = $this->podcastRepository->findById($podcastId);
 
         if ($podcast === null) {
-            /* HINT: Requested object string/id/type ("album", "myusername", "some song title", 1298376) */
-            Api5::error(ErrorCodeEnum::NOT_FOUND, sprintf(T_('Not Found: %s'), $object_id), self::ACTION, 'filter', $input['api_format']);
-
-            return false;
+            throw new ResultEmptyException(
+                (string) $podcastId
+            );
         }
 
-        self::getPodcastDeleter()->delete($podcast);
+        $this->podcastDeleter->delete($podcast);
 
-        Api5::message('podcast ' . $object_id . ' deleted', $input['api_format']);
+        $response->getBody()->write(
+            $output->success($apiVersion, sprintf('podcast %d deleted', $podcastId))
+        );
 
-        return true;
-    }
-
-    /**
-     * @deprecated inject dependency
-     */
-    private static function getPodcastDeleter(): PodcastDeleterInterface
-    {
-        global $dic;
-
-        return $dic->get(PodcastDeleterInterface::class);
-    }
-
-    /**
-     * @deprecated Inject by constructor
-     */
-    private static function getPodcastRepository(): PodcastRepositoryInterface
-    {
-        global $dic;
-
-        return $dic->get(PodcastRepositoryInterface::class);
+        return $response;
     }
 }

@@ -36,9 +36,7 @@ class NewPasswordSenderTest extends TestCase
 
     public function testSendReturnsFalseForAdministrators(): void
     {
-        // NOTE: the "email sent" success path is not covered here -- it
-        // directly instantiates `new Mailer()` and calls the static
-        // Mailer::is_mail_enabled() with no injectable seam.
+        // NOTE: Mailer calls Mailer::is_mail_enabled() with no injectable.
         $user = $this->createMock(User::class);
 
         $user->method('has_access')

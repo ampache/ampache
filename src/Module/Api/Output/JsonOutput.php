@@ -29,6 +29,7 @@ use Ampache\Module\Api\Json4_Data;
 use Ampache\Module\Api\Json5_Data;
 use Ampache\Module\Api\Json6_Data;
 use Ampache\Module\Api\Json8_Data;
+use Ampache\Repository\Model\library_item;
 use Ampache\Repository\Model\User;
 
 final class JsonOutput implements ApiOutputInterface
@@ -36,11 +37,13 @@ final class JsonOutput implements ApiOutputInterface
     /**
      * At the moment, this method just acts as a proxy
      *
+     * @param 4|5|6|8 $apiVersion
      * @param array<int|string> $albums
      * @param string[] $include
      *
      */
     public function albums(
+        int $apiVersion,
         array $albums,
         array $include,
         User $user,
@@ -48,168 +51,351 @@ final class JsonOutput implements ApiOutputInterface
         bool $encode = true,
         bool $asObject = true,
     ): string {
-        return Json8_Data::albums($albums, $include, $user, $auth, $encode, $asObject);
+        return match ($apiVersion) {
+            4 => Json4_Data::albums($albums, $include, $user, $auth),
+            5 => Json5_Data::albums($albums, $include, $user, $auth),
+            6 => Json6_Data::albums($albums, $include, $user, $auth, $encode, $asObject),
+            8 => Json8_Data::albums($albums, $include, $user, $auth, $encode, $asObject),
+        };
     }
 
     /**
      * At the moment, this method just acts as a proxy
      *
-     * @param array<int|string> $albums
+     * @param 6|8 $apiVersion
+     * @param array<int|string> $artists
      * @param string[] $include
+     */
+    public function artists(int $apiVersion, array $artists, array $include, User $user, string $auth, bool $asObject = true): string
+    {
+        return match ($apiVersion) {
+            6 => Json6_Data::artists($artists, $include, $user, $auth, $asObject),
+            8 => Json8_Data::artists($artists, $include, $user, $auth, $asObject),
+        };
+    }
+
+    /**
+     * At the moment, this method just acts as a proxy
      *
+     * @param 6|8 $apiVersion
+     * @param int[] $bookmarks Bookmark id's to include
      */
-    public function albums6(
-        array $albums,
-        array $include,
-        User $user,
-        string $auth,
-        bool $encode = true,
-        bool $asObject = true,
-    ): string {
-        return Json6_Data::albums($albums, $include, $user, $auth, $encode, $asObject);
+    public function bookmarks(int $apiVersion, array $bookmarks, string $auth, bool $include = false, bool $asObject = true): string
+    {
+        return match ($apiVersion) {
+            6 => Json6_Data::bookmarks($bookmarks, $auth, $include, $asObject),
+            8 => Json8_Data::bookmarks($bookmarks, $auth, $include, $asObject),
+        };
     }
 
     /**
      * At the moment, this method just acts as a proxy
+     *
+     * @param 6|8 $apiVersion
+     * @param array<int|string> $catalogs
      */
-    public function error(int $code, string $message, string $action, string $type): string
+    public function catalogs(int $apiVersion, array $catalogs, User $user, bool $asObject = true): string
     {
-        return Json8_Data::error(
-            $code,
-            $message,
-            $action,
-            $type
-        );
+        return match ($apiVersion) {
+            6 => Json6_Data::catalogs($catalogs, $asObject),
+            8 => Json8_Data::catalogs($catalogs, $asObject),
+        };
     }
 
     /**
      * At the moment, this method just acts as a proxy
+     *
+     * @param 6|8 $apiVersion
+     * @param array<int, array{
+     *     id: int,
+     *     addition_time: int,
+     *     delete_time: int,
+     *     title: string,
+     *     file: string,
+     *     catalog: int,
+     *     total_count: int,
+     *     total_skip: int,
+     *     update_time?: int,
+     *     album?: int,
+     *     artist?: int,
+     *     podcast?: int,
+     * }> $objects deleted object list
      */
-    public function error3(int $code, string $message): string
+    public function deleted(int $apiVersion, string $objectType, array $objects): string
     {
-        return '';
+        return match ($apiVersion) {
+            6 => Json6_Data::deleted($objectType, $objects),
+            8 => Json8_Data::deleted($objectType, $objects),
+        };
     }
 
     /**
      * At the moment, this method just acts as a proxy
+     *
+     * @param 3|4|5|6|8 $apiVersion
      */
-    public function error4(int $code, string $message): string
+    public function error(int $apiVersion, int $code, string $message, string $action = '', string $type = ''): string
     {
-        return Json4_Data::error(
-            (string) $code,
-            $message
-        );
+        return match ($apiVersion) {
+            3 => '',
+            4 => Json4_Data::error((string) $code, $message),
+            5 => Json5_Data::error($code, $message, $action, $type),
+            6 => Json6_Data::error($code, $message, $action, $type),
+            8 => Json8_Data::error($code, $message, $action, $type),
+        };
     }
 
     /**
      * At the moment, this method just acts as a proxy
+     *
+     * @param 6|8 $apiVersion
+     * @param array<int|string> $genres
      */
-    public function error5(int $code, string $message, string $action, string $type): string
+    public function genres(int $apiVersion, array $genres, User $user, bool $asObject = true): string
     {
-        return Json5_Data::error(
-            $code,
-            $message,
-            $action,
-            $type
-        );
+        return match ($apiVersion) {
+            6 => Json6_Data::genres($genres, $asObject),
+            8 => Json8_Data::genres($genres, $asObject),
+        };
     }
 
     /**
      * At the moment, this method just acts as a proxy
+     *
+     * @param 6|8 $apiVersion
+     * @param array<int|string> $labels
      */
-    public function error6(int $code, string $message, string $action, string $type): string
+    public function labels(int $apiVersion, array $labels, User $user, bool $asObject = true): string
     {
-        return Json6_Data::error(
-            $code,
-            $message,
-            $action,
-            $type
-        );
+        return match ($apiVersion) {
+            6 => Json6_Data::labels($labels, $asObject),
+            8 => Json8_Data::labels($labels, $asObject),
+        };
     }
 
     /**
+     * At the moment, this method just acts as a proxy
+     *
+     * @param 6|8 $apiVersion
+     * @param array<int|string> $licenses
+     */
+    public function licenses(int $apiVersion, array $licenses, User $user, bool $asObject = true): string
+    {
+        return match ($apiVersion) {
+            6 => Json6_Data::licenses($licenses, $asObject),
+            8 => Json8_Data::licenses($licenses, $asObject),
+        };
+    }
+
+    /**
+     * At the moment, this method just acts as a proxy
+     *
+     * @param 6|8 $apiVersion
+     * @param array<int|string> $liveStreams
+     */
+    public function liveStreams(int $apiVersion, array $liveStreams, User $user, bool $asObject = true): string
+    {
+        return match ($apiVersion) {
+            6 => Json6_Data::live_streams($liveStreams, $asObject),
+            8 => Json8_Data::live_streams($liveStreams, $asObject),
+        };
+    }
+
+    /**
+     * At the moment, this method just acts as a proxy
+     *
+     * @param 6|8 $apiVersion
+     * @param array<int, array{
+     *     media: library_item,
+     *     client: User,
+     *     agent: string,
+     *     expire: int
+     * }> $results
+     */
+    public function nowPlaying(int $apiVersion, array $results): string
+    {
+        return match ($apiVersion) {
+            6 => Json6_Data::now_playing($results),
+            8 => Json8_Data::now_playing($results),
+        };
+    }
+
+    /**
+     * At the moment, this method just acts as a proxy
+     *
+     * @param 6|8 $apiVersion
+     * @param array<int|string> $playlists
+     */
+    public function playlists(int $apiVersion, array $playlists, User $user, string $auth, bool $songs = false, bool $asObject = true): string
+    {
+        return match ($apiVersion) {
+            6 => Json6_Data::playlists($playlists, $user, $auth, $songs, $asObject),
+            8 => Json8_Data::playlists($playlists, $user, $auth, $songs, $asObject),
+        };
+    }
+
+    /**
+     * @param 4|5|6|8 $apiVersion
      * @param array<int|string> $result
      */
-    public function podcastEpisodes(array $result, User $user, string $auth): string
+    public function podcastEpisodes(int $apiVersion, array $result, User $user, string $auth, bool $encode = true, bool $asObject = true): string
     {
-        return Json8_Data::podcast_episodes($result, $user, $auth);
+        return match ($apiVersion) {
+            4 => Json4_Data::podcast_episodes($result, $user, $auth),
+            5 => Json5_Data::podcast_episodes($result, $user, $auth),
+            6 => Json6_Data::podcast_episodes($result, $user, $auth, $encode, $asObject),
+            8 => Json8_Data::podcast_episodes($result, $user, $auth, $encode, $asObject),
+        };
     }
 
     /**
-     * @param array<int|string> $result
+     * At the moment, this method just acts as a proxy
+     *
+     * @param 6|8 $apiVersion
+     * @param array<int|string> $podcasts
      */
-    public function podcastEpisodes6(array $result, User $user, string $auth): string
+    public function podcasts(int $apiVersion, array $podcasts, User $user, string $auth, bool $episodes = false, bool $asObject = true): string
     {
-        return Json6_Data::podcast_episodes($result, $user, $auth);
+        return match ($apiVersion) {
+            6 => Json6_Data::podcasts($podcasts, $user, $auth, $episodes, $asObject),
+            8 => Json8_Data::podcasts($podcasts, $user, $auth, $episodes, $asObject),
+        };
     }
 
-    public function setCount(int|string $count): void
+    /**
+     * @param 6|8 $apiVersion
+     */
+    public function setCount(int $apiVersion, int|string $count): void
     {
-        Json8_Data::set_count($count);
+        match ($apiVersion) {
+            6 => Json6_Data::set_count($count),
+            8 => Json8_Data::set_count($count),
+        };
     }
 
-    public function setCount6(int|string $count): void
+    /**
+     * @param 4|5|6|8 $apiVersion
+     */
+    public function setLimit(int $apiVersion, int|string $limit): void
     {
-        Json6_Data::set_count($count);
+        match ($apiVersion) {
+            4 => Json4_Data::set_limit($limit),
+            5 => Json5_Data::set_limit($limit),
+            6 => Json6_Data::set_limit($limit),
+            8 => Json8_Data::set_limit($limit),
+        };
     }
 
-    public function setLimit(int|string $limit): void
+    /**
+     * @param 4|5|6|8 $apiVersion
+     */
+    public function setOffset(int $apiVersion, int|string $offset): void
     {
-        Json8_Data::set_limit($limit);
+        match ($apiVersion) {
+            4 => Json4_Data::set_offset($offset),
+            5 => Json5_Data::set_offset($offset),
+            6 => Json6_Data::set_offset($offset),
+            8 => Json8_Data::set_offset($offset),
+        };
     }
 
-    public function setLimit6(int|string $limit): void
+    /**
+     * At the moment, this method just acts as a proxy
+     *
+     * @param 6|8 $apiVersion
+     * @param array<int|string> $shares
+     */
+    public function shares(int $apiVersion, array $shares, User $user, bool $asObject = true): string
     {
-        Json6_Data::set_limit($limit);
+        return match ($apiVersion) {
+            6 => Json6_Data::shares($shares, $user, $asObject),
+            8 => Json8_Data::shares($shares, $user, $asObject),
+        };
     }
 
-    public function setOffset(int|string $offset): void
+    /**
+     * At the moment, this method just acts as a proxy
+     *
+     * @param 6|8 $apiVersion
+     * @param array<int|string> $songs
+     */
+    public function songs(int $apiVersion, array $songs, User $user, string $auth, bool $encode = true, bool $asObject = true): string
     {
-        Json8_Data::set_offset($offset);
-    }
-
-    public function setOffset6(int|string $offset): void
-    {
-        Json6_Data::set_offset($offset);
+        return match ($apiVersion) {
+            6 => Json6_Data::songs($songs, $user, $auth, $encode, $asObject),
+            8 => Json8_Data::songs($songs, $user, $auth, $encode, $asObject),
+        };
     }
 
     /**
      * This generates a standard JSON Success message
      * nothing fancy here...
      *
+     * @param 4|5|6|8 $apiVersion
      * @param string $string success message
      * @param array<string, string> $return_data
      */
-    public function success(string $string, array $return_data = []): string
+    public function success(int $apiVersion, string $string, array $return_data = []): string
     {
-        return Json8_Data::success($string, $return_data);
+        return match ($apiVersion) {
+            4 => Json4_Data::success($string),
+            5 => Json5_Data::success($string, $return_data),
+            6 => Json6_Data::success($string, $return_data),
+            8 => Json8_Data::success($string, $return_data),
+        };
     }
 
     /**
-     * This generates a standard JSON Success message
-     * nothing fancy here...
+     * At the moment, this method just acts as a proxy
      *
-     * @param string $string success message
-     * @param array<string, string> $return_data
+     * @param 6|8 $apiVersion
      */
-    public function success6(string $string, array $return_data = []): string
+    public function user(int $apiVersion, User $user, bool $fullInfo, string $auth, bool $asObject = true): string
     {
-        return Json6_Data::success($string, $return_data);
+        return match ($apiVersion) {
+            6 => Json6_Data::user($user, $fullInfo, $auth, $asObject),
+            8 => Json8_Data::user($user, $fullInfo, $auth, $asObject),
+        };
+    }
+
+    /**
+     * At the moment, this method just acts as a proxy
+     *
+     * @param 6|8 $apiVersion
+     * @param array<int|string> $users
+     */
+    public function users(int $apiVersion, array $users): string
+    {
+        return match ($apiVersion) {
+            6 => Json6_Data::users($users),
+            8 => Json8_Data::users($users),
+        };
+    }
+
+    /**
+     * At the moment, this method just acts as a proxy
+     *
+     * @param 6|8 $apiVersion
+     * @param array<int|string> $videos
+     */
+    public function videos(int $apiVersion, array $videos, User $user, string $auth, bool $asObject = true): string
+    {
+        return match ($apiVersion) {
+            6 => Json6_Data::videos($videos, $user, $auth, $asObject),
+            8 => Json8_Data::videos($videos, $user, $auth, $asObject),
+        };
     }
 
     /**
      * Generate an empty api result
+     *
+     * @param 6|8 $apiVersion
      */
-    public function writeEmpty(string $emptyType): string
+    public function writeEmpty(int $apiVersion, ?string $emptyType): string
     {
-        return Json8_Data::empty($emptyType);
-    }
-
-    /**
-     * Generate an empty api result
-     */
-    public function writeEmpty6(string $emptyType): string
-    {
-        return Json6_Data::empty($emptyType);
+        return match ($apiVersion) {
+            6 => Json6_Data::empty($emptyType),
+            8 => Json8_Data::empty($emptyType),
+        };
     }
 }

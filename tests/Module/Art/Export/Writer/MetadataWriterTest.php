@@ -32,8 +32,6 @@ class MetadataWriterTest extends TestCase
 
     public function testWriteCreatesButLeavesEmptyFileWhenArtHasNoRawData(): void
     {
-        // fopen(..., 'w') creates/truncates the file as a side effect even
-        // when nothing ends up being written to it.
         $root     = vfsStream::setup();
         $art      = $this->createMock(Art::class);
         $art->raw = null;
@@ -48,15 +46,6 @@ class MetadataWriterTest extends TestCase
 
     public function testWriteWritesRawArtToDirNamePath(): void
     {
-        // NOTE: $dirName is used directly as the full write path and
-        // $fileName is unused in the method body -- this is not a
-        // dirName+fileName join bug like in Album's Linux/WindowsMetadataWriter
-        // (an unrelated interface of the same name that writes a folder-icon
-        // descriptor file and does use both params). This class's write()
-        // has no production caller at all currently: ArtExporter::export()
-        // accepts a MetadataWriterInterface but never invokes write() on it.
-        // Covered here as the actual, current (if currently unreachable)
-        // behavior of the method in isolation.
         $root     = vfsStream::setup();
         $art      = $this->createMock(Art::class);
         $art->raw = 'some-raw-bytes';

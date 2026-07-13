@@ -121,6 +121,7 @@ final class ApiHandler implements ApiHandlerInterface
                 ->withBody(
                     $this->streamFactory->createStream(
                         $output->error(
+                            Api::DEFAULT_VERSION,
                             ErrorCodeEnum::ACCESS_CONTROL_NOT_ENABLED,
                             T_('Access Denied'),
                             $action,
@@ -162,6 +163,9 @@ final class ApiHandler implements ApiHandlerInterface
             }
 
             // roll up the version if you haven't enabled the older versions
+            if ($api_version < 3) {
+                $api_version = 3;
+            }
             if ($api_version == 3 && !Preference::get_by_user($userId, 'api_enable_3')) {
                 $api_version = 4;
             }
@@ -178,6 +182,7 @@ final class ApiHandler implements ApiHandlerInterface
             if (
                 $api_version == 7
                 || ($api_version == 8 && !Preference::get_by_user($userId, 'api_enable_8'))
+                || $api_version > 8
             ) {
                 $this->logger->warning(
                     'No API version available; check your options!',
@@ -189,6 +194,7 @@ final class ApiHandler implements ApiHandlerInterface
                     ->withBody(
                         $this->streamFactory->createStream(
                             $output->error(
+                                Api::DEFAULT_VERSION,
                                 ErrorCodeEnum::ACCESS_CONTROL_NOT_ENABLED,
                                 T_('Access Denied'),
                                 $action,
@@ -256,7 +262,8 @@ final class ApiHandler implements ApiHandlerInterface
                 case 3:
                     return $response->withBody(
                         $this->streamFactory->createStream(
-                            $output->error3(
+                            $output->error(
+                                $api_version,
                                 501,
                                 T_('Access Control not Enabled')
                             )
@@ -265,7 +272,8 @@ final class ApiHandler implements ApiHandlerInterface
                 case 4:
                     return $response->withBody(
                         $this->streamFactory->createStream(
-                            $output->error4(
+                            $output->error(
+                                $api_version,
                                 501,
                                 T_('Access Control not Enabled')
                             )
@@ -274,7 +282,8 @@ final class ApiHandler implements ApiHandlerInterface
                 case 5:
                     return $response->withBody(
                         $this->streamFactory->createStream(
-                            $output->error5(
+                            $output->error(
+                                $api_version,
                                 ErrorCodeEnum::ACCESS_CONTROL_NOT_ENABLED,
                                 T_('Access Denied'),
                                 $action,
@@ -287,7 +296,8 @@ final class ApiHandler implements ApiHandlerInterface
                         ->withStatus(403)
                         ->withBody(
                             $this->streamFactory->createStream(
-                                $output->error6(
+                                $output->error(
+                                    $api_version,
                                     ErrorCodeEnum::ACCESS_CONTROL_NOT_ENABLED,
                                     T_('Access Denied'),
                                     $action,
@@ -302,6 +312,7 @@ final class ApiHandler implements ApiHandlerInterface
                         ->withBody(
                             $this->streamFactory->createStream(
                                 $output->error(
+                                    $api_version,
                                     ErrorCodeEnum::ACCESS_CONTROL_NOT_ENABLED,
                                     T_('Access Denied'),
                                     $action,
@@ -337,7 +348,8 @@ final class ApiHandler implements ApiHandlerInterface
                 case 3:
                     return $response->withBody(
                         $this->streamFactory->createStream(
-                            $output->error3(
+                            $output->error(
+                                $api_version,
                                 401,
                                 T_('Session Expired')
                             )
@@ -346,7 +358,8 @@ final class ApiHandler implements ApiHandlerInterface
                 case 4:
                     return $response->withBody(
                         $this->streamFactory->createStream(
-                            $output->error4(
+                            $output->error(
+                                $api_version,
                                 401,
                                 T_('Session Expired')
                             )
@@ -355,7 +368,8 @@ final class ApiHandler implements ApiHandlerInterface
                 case 5:
                     return $response->withBody(
                         $this->streamFactory->createStream(
-                            $output->error5(
+                            $output->error(
+                                $api_version,
                                 ErrorCodeEnum::INVALID_HANDSHAKE,
                                 T_('Session Expired'),
                                 $action,
@@ -368,7 +382,8 @@ final class ApiHandler implements ApiHandlerInterface
                         ->withStatus(401)
                         ->withBody(
                             $this->streamFactory->createStream(
-                                $output->error6(
+                                $output->error(
+                                    $api_version,
                                     ErrorCodeEnum::INVALID_HANDSHAKE,
                                     T_('Session Expired'),
                                     $action,
@@ -383,6 +398,7 @@ final class ApiHandler implements ApiHandlerInterface
                         ->withBody(
                             $this->streamFactory->createStream(
                                 $output->error(
+                                    $api_version,
                                     ErrorCodeEnum::INVALID_HANDSHAKE,
                                     T_('Session Expired'),
                                     $action,
@@ -404,7 +420,8 @@ final class ApiHandler implements ApiHandlerInterface
                 case 3:
                     return $response->withBody(
                         $this->streamFactory->createStream(
-                            $output->error3(
+                            $output->error(
+                                $api_version,
                                 403,
                                 T_('Unauthorized access attempt to API - ACL Error')
                             )
@@ -413,7 +430,8 @@ final class ApiHandler implements ApiHandlerInterface
                 case 4:
                     return $response->withBody(
                         $this->streamFactory->createStream(
-                            $output->error4(
+                            $output->error(
+                                $api_version,
                                 403,
                                 T_('Unauthorized access attempt to API - ACL Error')
                             )
@@ -422,7 +440,8 @@ final class ApiHandler implements ApiHandlerInterface
                 case 5:
                     return $response->withBody(
                         $this->streamFactory->createStream(
-                            $output->error5(
+                            $output->error(
+                                $api_version,
                                 ErrorCodeEnum::FAILED_ACCESS_CHECK,
                                 T_('Unauthorized access attempt to API - ACL Error'),
                                 $action,
@@ -435,7 +454,8 @@ final class ApiHandler implements ApiHandlerInterface
                         ->withStatus(403)
                         ->withBody(
                             $this->streamFactory->createStream(
-                                $output->error6(
+                                $output->error(
+                                    $api_version,
                                     ErrorCodeEnum::FAILED_ACCESS_CHECK,
                                     T_('Unauthorized access attempt to API - ACL Error'),
                                     $action,
@@ -450,6 +470,7 @@ final class ApiHandler implements ApiHandlerInterface
                         ->withBody(
                             $this->streamFactory->createStream(
                                 $output->error(
+                                    $api_version,
                                     ErrorCodeEnum::FAILED_ACCESS_CHECK,
                                     T_('Unauthorized access attempt to API - ACL Error'),
                                     $action,
@@ -482,7 +503,8 @@ final class ApiHandler implements ApiHandlerInterface
 
                     return $response->withBody(
                         $this->streamFactory->createStream(
-                            $output->error3(
+                            $output->error(
+                                $api_version,
                                 405,
                                 T_('Invalid Request')
                             )
@@ -497,7 +519,8 @@ final class ApiHandler implements ApiHandlerInterface
 
                     return $response->withBody(
                         $this->streamFactory->createStream(
-                            $output->error4(
+                            $output->error(
+                                $api_version,
                                 405,
                                 T_('Invalid Request')
                             )
@@ -511,7 +534,8 @@ final class ApiHandler implements ApiHandlerInterface
 
                     return $response->withBody(
                         $this->streamFactory->createStream(
-                            $output->error5(
+                            $output->error(
+                                $api_version,
                                 ErrorCodeEnum::DEPRECATED,
                                 T_('Deprecated'),
                                 $action,
@@ -526,7 +550,8 @@ final class ApiHandler implements ApiHandlerInterface
 
                     return $response->withBody(
                         $this->streamFactory->createStream(
-                            $output->error5(
+                            $output->error(
+                                $api_version,
                                 ErrorCodeEnum::MISSING,
                                 T_('Invalid Request'),
                                 $action,
@@ -544,7 +569,8 @@ final class ApiHandler implements ApiHandlerInterface
                         ->withStatus(410)
                         ->withBody(
                             $this->streamFactory->createStream(
-                                $output->error6(
+                                $output->error(
+                                    $api_version,
                                     ErrorCodeEnum::DEPRECATED,
                                     T_('Deprecated'),
                                     $action,
@@ -561,7 +587,8 @@ final class ApiHandler implements ApiHandlerInterface
                         ->withStatus(400)
                         ->withBody(
                             $this->streamFactory->createStream(
-                                $output->error6(
+                                $output->error(
+                                    $api_version,
                                     ErrorCodeEnum::MISSING,
                                     T_('Invalid Request'),
                                     $action,
@@ -581,6 +608,7 @@ final class ApiHandler implements ApiHandlerInterface
                         ->withBody(
                             $this->streamFactory->createStream(
                                 $output->error(
+                                    $api_version,
                                     ErrorCodeEnum::DEPRECATED,
                                     T_('Deprecated'),
                                     $action,
@@ -598,6 +626,7 @@ final class ApiHandler implements ApiHandlerInterface
                         ->withBody(
                             $this->streamFactory->createStream(
                                 $output->error(
+                                    $api_version,
                                     ErrorCodeEnum::MISSING,
                                     T_('Invalid Request'),
                                     $action,
@@ -703,9 +732,22 @@ final class ApiHandler implements ApiHandlerInterface
         }
 
         if ($type !== null && $type !== '') {
-            if ($type === 'catalog' && ($action === 'create' || $action === 'add')) {
-                $action = 'catalog_create';
+            if ($type === 'catalog') {
+                if ($action === 'create' || ($action === 'add' && !$hasFilter)) {
+                    $action = 'catalog_create';
+                }
+
+                // `catalogs/{catalog_id}/(add|clean|update|verify)` are undocumented aliases of
+                // `catalogs/{catalog_id}/action`; the matching task is derived from the path by
+                // the REST applications. (`add` without a filter keeps its `catalog_create` meaning)
+                if (
+                    $hasFilter
+                    && ($action === 'add' || $action === 'clean' || $action === 'update' || $action === 'verify')
+                ) {
+                    $action = 'catalog_action';
+                }
             }
+
             if ($type === 'song' && $action === 'lyrics') {
                 $action = 'get_lyrics';
             }
@@ -784,6 +826,8 @@ final class ApiHandler implements ApiHandlerInterface
 
     /**
      * Run the default API handler with exception handling
+     *
+     * @param 3|4|5|6|8 $api_version resolved and validated against Api::API_VERSIONS by the caller
      */
     private function _executeHandler(
         Gatekeeper $gatekeeper,
@@ -797,6 +841,15 @@ final class ApiHandler implements ApiHandlerInterface
         ApiOutputInterface $output,
     ): ?ResponseInterface {
         try {
+            /**
+             * Legacy (static) api methods only receive the input, so the resolved version is put
+             * there for them. `ApiMessage::resolveVersion()` reads it back out. Methods
+             * implementing MethodInterface are handed the version as an argument instead.
+             *
+             * @todo cleanup once every method implements MethodInterface
+             */
+            $input['api_version'] = $api_version;
+
             /**
              * This condition allows the `new` approach and the legacy one to co-exist.
              * After implementing the MethodInterface in all api methods, the condition will be removed
@@ -821,7 +874,8 @@ final class ApiHandler implements ApiHandlerInterface
                     $response,
                     $output,
                     $input,
-                    $user
+                    $user,
+                    $api_version
                 );
 
                 $gatekeeper->extendSession($input['auth']);
@@ -850,7 +904,8 @@ final class ApiHandler implements ApiHandlerInterface
                 case 3:
                     return $response->withBody(
                         $this->streamFactory->createStream(
-                            $output->error3(
+                            $output->error(
+                                $api_version,
                                 $error->getCode(),
                                 $error->getMessage()
                             )
@@ -859,7 +914,8 @@ final class ApiHandler implements ApiHandlerInterface
                 case 4:
                     return $response->withBody(
                         $this->streamFactory->createStream(
-                            $output->error4(
+                            $output->error(
+                                $api_version,
                                 $error->getCode(),
                                 $error->getMessage()
                             )
@@ -868,7 +924,8 @@ final class ApiHandler implements ApiHandlerInterface
                 case 5:
                     return $response->withBody(
                         $this->streamFactory->createStream(
-                            $output->error5(
+                            $output->error(
+                                $api_version,
                                 $error->getCode(),
                                 $error->getMessage(),
                                 $action,
@@ -881,7 +938,8 @@ final class ApiHandler implements ApiHandlerInterface
                         ->withStatus(Api::getHttpCode($error->getCode()))
                         ->withBody(
                             $this->streamFactory->createStream(
-                                $output->error6(
+                                $output->error(
+                                    $api_version,
                                     $error->getCode(),
                                     $error->getMessage(),
                                     $action,
@@ -896,6 +954,7 @@ final class ApiHandler implements ApiHandlerInterface
                         ->withBody(
                             $this->streamFactory->createStream(
                                 $output->error(
+                                    $api_version,
                                     $error->getCode(),
                                     $error->getMessage(),
                                     $action,
@@ -917,7 +976,8 @@ final class ApiHandler implements ApiHandlerInterface
                 case 3:
                     return $response->withBody(
                         $this->streamFactory->createStream(
-                            $output->error3(
+                            $output->error(
+                                $api_version,
                                 405,
                                 T_('Invalid Request')
                             )
@@ -926,7 +986,8 @@ final class ApiHandler implements ApiHandlerInterface
                 case 4:
                     return $response->withBody(
                         $this->streamFactory->createStream(
-                            $output->error4(
+                            $output->error(
+                                $api_version,
                                 405,
                                 T_('Invalid Request')
                             )
@@ -935,7 +996,8 @@ final class ApiHandler implements ApiHandlerInterface
                 case 5:
                     return $response->withBody(
                         $this->streamFactory->createStream(
-                            $output->error5(
+                            $output->error(
+                                $api_version,
                                 ErrorCodeEnum::GENERIC_ERROR,
                                 'Generic error',
                                 $action,
@@ -948,7 +1010,8 @@ final class ApiHandler implements ApiHandlerInterface
                         ->withStatus(500)
                         ->withBody(
                             $this->streamFactory->createStream(
-                                $output->error6(
+                                $output->error(
+                                    $api_version,
                                     ErrorCodeEnum::GENERIC_ERROR,
                                     'Generic error',
                                     $action,
@@ -963,6 +1026,7 @@ final class ApiHandler implements ApiHandlerInterface
                         ->withBody(
                             $this->streamFactory->createStream(
                                 $output->error(
+                                    $api_version,
                                     ErrorCodeEnum::GENERIC_ERROR,
                                     'Generic error',
                                     $action,

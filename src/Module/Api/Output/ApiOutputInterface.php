@@ -25,6 +25,7 @@ declare(strict_types=1);
 
 namespace Ampache\Module\Api\Output;
 
+use Ampache\Repository\Model\library_item;
 use Ampache\Repository\Model\User;
 
 interface ApiOutputInterface
@@ -35,6 +36,7 @@ interface ApiOutputInterface
      *
      */
     public function albums(
+        int $apiVersion,
         array $albums,
         array $include,
         User $user,
@@ -44,94 +46,190 @@ interface ApiOutputInterface
     ): string;
 
     /**
-     * @param array<int|string> $albums
+     * @param array<int|string> $artists
      * @param string[] $include
-     *
      */
-    public function albums6(
-        array $albums,
+    public function artists(
+        int $apiVersion,
+        array $artists,
         array $include,
         User $user,
         string $auth,
-        bool $encode = true,
         bool $asObject = true,
+    ): string;
+
+    /**
+     * @param int[] $bookmarks Bookmark id's to include
+     */
+    public function bookmarks(
+        int $apiVersion,
+        array $bookmarks,
+        string $auth,
+        bool $include = false,
+        bool $asObject = true,
+    ): string;
+
+    /**
+     * @param array<int|string> $catalogs
+     */
+    public function catalogs(
+        int $apiVersion,
+        array $catalogs,
+        User $user,
+        bool $asObject = true,
+    ): string;
+
+    /**
+     * Generate a list of deleted objects
+     *
+     * @param array<int, array{
+     *     id: int,
+     *     addition_time: int,
+     *     delete_time: int,
+     *     title: string,
+     *     file: string,
+     *     catalog: int,
+     *     total_count: int,
+     *     total_skip: int,
+     *     update_time?: int,
+     *     album?: int,
+     *     artist?: int,
+     *     podcast?: int,
+     * }> $objects deleted object list
+     */
+    public function deleted(
+        int $apiVersion,
+        string $objectType,
+        array $objects,
     ): string;
 
     /**
      * This generates an error message
      */
     public function error(
+        int $apiVersion,
         int $code,
         string $message,
-        string $action,
-        string $type,
+        string $action = '',
+        string $type = '',
     ): string;
 
     /**
-     * This generates an error message
+     * @param array<int|string> $genres
      */
-    public function error3(
-        int $code,
-        string $message,
+    public function genres(
+        int $apiVersion,
+        array $genres,
+        User $user,
+        bool $asObject = true,
     ): string;
 
     /**
-     * This generates an error message
+     * @param array<int|string> $labels
      */
-    public function error4(
-        int $code,
-        string $message,
+    public function labels(
+        int $apiVersion,
+        array $labels,
+        User $user,
+        bool $asObject = true,
     ): string;
 
     /**
-     * This generates an error message
+     * @param array<int|string> $licenses
      */
-    public function error5(
-        int $code,
-        string $message,
-        string $action,
-        string $type,
+    public function licenses(
+        int $apiVersion,
+        array $licenses,
+        User $user,
+        bool $asObject = true,
     ): string;
 
     /**
-     * This generates an error message
+     * @param array<int|string> $liveStreams
      */
-    public function error6(
-        int $code,
-        string $message,
-        string $action,
-        string $type,
+    public function liveStreams(
+        int $apiVersion,
+        array $liveStreams,
+        User $user,
+        bool $asObject = true,
+    ): string;
+
+    /**
+     * @param array<int, array{
+     *     media: library_item,
+     *     client: User,
+     *     agent: string,
+     *     expire: int
+     * }> $results
+     */
+    public function nowPlaying(
+        int $apiVersion,
+        array $results,
+    ): string;
+
+    /**
+     * @param array<int|string> $playlists
+     */
+    public function playlists(
+        int $apiVersion,
+        array $playlists,
+        User $user,
+        string $auth,
+        bool $songs = false,
+        bool $asObject = true,
     ): string;
 
     /**
      * @param array<int|string> $result
      */
     public function podcastEpisodes(
+        int $apiVersion,
         array $result,
         User $user,
         string $auth,
+        bool $encode = true,
+        bool $asObject = true,
     ): string;
 
     /**
-     * @param array<int|string> $result
+     * @param array<int|string> $podcasts
      */
-    public function podcastEpisodes6(
-        array $result,
+    public function podcasts(
+        int $apiVersion,
+        array $podcasts,
         User $user,
         string $auth,
+        bool $episodes = false,
+        bool $asObject = true,
     ): string;
 
-    public function setCount(int|string $count): void;
+    public function setCount(int $apiVersion, int|string $count): void;
 
-    public function setCount6(int|string $count): void;
+    public function setLimit(int $apiVersion, int|string $limit): void;
 
-    public function setLimit(int|string $limit): void;
+    public function setOffset(int $apiVersion, int|string $offset): void;
 
-    public function setLimit6(int|string $limit): void;
+    /**
+     * @param array<int|string> $shares
+     */
+    public function shares(
+        int $apiVersion,
+        array $shares,
+        User $user,
+        bool $asObject = true,
+    ): string;
 
-    public function setOffset(int|string $offset): void;
-
-    public function setOffset6(int|string $offset): void;
+    /**
+     * @param array<int|string> $songs
+     */
+    public function songs(
+        int $apiVersion,
+        array $songs,
+        User $user,
+        string $auth,
+        bool $encode = true,
+        bool $asObject = true,
+    ): string;
 
     /**
      * This generates a standard JSON Success message
@@ -140,28 +238,43 @@ interface ApiOutputInterface
      * @param string $string success message
      * @param array<string, string> $return_data
      */
-    public function success(string $string, array $return_data = []): string;
+    public function success(int $apiVersion, string $string, array $return_data = []): string;
 
     /**
-     * This generates a standard JSON Success message
-     * nothing fancy here...
-     *
-     * @param string $string success message
-     * @param array<string, string> $return_data
+     * Generate a single user result
      */
-    public function success6(string $string, array $return_data = []): string;
+    public function user(
+        int $apiVersion,
+        User $user,
+        bool $fullInfo,
+        string $auth,
+        bool $asObject = true,
+    ): string;
+
+    /**
+     * @param array<int|string> $users
+     */
+    public function users(
+        int $apiVersion,
+        array $users,
+    ): string;
+
+    /**
+     * @param array<int|string> $videos
+     */
+    public function videos(
+        int $apiVersion,
+        array $videos,
+        User $user,
+        string $auth,
+        bool $asObject = true,
+    ): string;
 
     /**
      * Generate an empty api result
      */
     public function writeEmpty(
-        string $emptyType,
-    ): string;
-
-    /**
-     * Generate an empty api result
-     */
-    public function writeEmpty6(
-        string $emptyType,
+        int $apiVersion,
+        ?string $emptyType,
     ): string;
 }
