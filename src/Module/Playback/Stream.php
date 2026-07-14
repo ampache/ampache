@@ -679,7 +679,7 @@ class Stream
         }
 
         $song_file = self::_scrub_arg($media->file);
-        $bit_rate = isset($options['bitrate'])
+        $bit_rate  = isset($options['bitrate'])
             ? (int) $options['bitrate']
             : self::get_max_bitrate($media, $transcode_settings, $options) * 1000;
         debug_event(self::class, 'Final transcode bitrate is ' . $bit_rate, 4);
