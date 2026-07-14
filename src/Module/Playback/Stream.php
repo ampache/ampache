@@ -157,9 +157,6 @@ class Stream
     public static function get_base_url(bool $local = false, ?string $streamToken = null): string
     {
         $base_url = '/play/index.php?';
-        if (AmpConfig::get('use_play2')) {
-            $base_url .= 'action=play2&';
-        }
 
         if (AmpConfig::get('use_auth') && AmpConfig::get('require_session')) {
             $session_id = (in_array($streamToken, [null, '', '0'], true))
