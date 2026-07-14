@@ -178,6 +178,9 @@ class Xml5_Data
      */
     public static function bookmarks(array $objects): string
     {
+        self::$count = self::$count ?: count($objects);
+        $objects     = Api::filter_objects($objects, self::$count, self::$offset, self::$limit);
+
         $bookmarkRepository = self::getBookmarkRepository();
 
         $string = "";
@@ -915,6 +918,9 @@ class Xml5_Data
      */
     public static function users(array $objects): string
     {
+        self::$count = self::$count ?: count($objects);
+        $objects     = Api::filter_objects($objects, self::$count, self::$offset, self::$limit);
+
         $string = "";
         foreach ($objects as $user_id) {
             $user = new User((int) $user_id);
