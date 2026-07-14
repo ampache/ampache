@@ -104,13 +104,13 @@ abstract class AbstractStreamMethod implements MethodInterface
         $filter = $input[static::FILTER_ALIAS] ?? $input[static::FILTER_KEY] ?? null;
         if ($filter === null) {
             throw new RequestParamMissingException(
-                sprintf(T_('Bad Request: %s'), static::FILTER_KEY)
+                sprintf('Bad Request: %s', static::FILTER_KEY)
             );
         }
 
         if (!array_key_exists('type', $input)) {
             throw new RequestParamMissingException(
-                sprintf(T_('Bad Request: %s'), 'type')
+                sprintf('Bad Request: %s', 'type')
             );
         }
 

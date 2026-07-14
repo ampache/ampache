@@ -81,7 +81,7 @@ final class LocalplaySongsMethod implements MethodInterface
 
         if (!$this->privilegeChecker->check(AccessTypeEnum::LOCALPLAY, $level, $user->getId())) {
             throw new AccessFailedException(
-                sprintf(T_('Require: %s'), $level->value)
+                sprintf('Require: %s', $level->value)
             );
         }
 

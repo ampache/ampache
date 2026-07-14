@@ -91,7 +91,7 @@ final class PlaylistEditMethod implements MethodInterface
     ): ResponseInterface {
         if (!array_key_exists('filter', $input)) {
             throw new RequestParamMissingException(
-                sprintf(T_('Bad Request: %s'), 'filter')
+                sprintf('Bad Request: %s', 'filter')
             );
         }
 
@@ -143,7 +143,7 @@ final class PlaylistEditMethod implements MethodInterface
 
             // you didn't have edit access
             throw new AccessFailedException(
-                sprintf(T_('Require: %s'), AccessLevelEnum::ADMIN->value)
+                sprintf('Require: %s', AccessLevelEnum::ADMIN->value)
             );
         }
 

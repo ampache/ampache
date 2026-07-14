@@ -112,13 +112,13 @@ abstract class AbstractGetArtMethod implements MethodInterface
         $filter = $input[static::FILTER_ALIAS] ?? $input[static::FILTER_KEY] ?? null;
         if ($filter === null) {
             throw new RequestParamMissingException(
-                sprintf(T_('Bad Request: %s'), static::FILTER_KEY)
+                sprintf('Bad Request: %s', static::FILTER_KEY)
             );
         }
 
         if (!array_key_exists('type', $input)) {
             throw new RequestParamMissingException(
-                sprintf(T_('Bad Request: %s'), 'type')
+                sprintf('Bad Request: %s', 'type')
             );
         }
 
@@ -136,8 +136,7 @@ abstract class AbstractGetArtMethod implements MethodInterface
                 $output->error(
                     $apiVersion,
                     ErrorCodeEnum::BAD_REQUEST,
-                    /* HINT: Requested object string/id/type ("album", "myusername", "some song title", 1298376) */
-                    sprintf(T_('Bad Request: %s'), $type),
+                    sprintf('Bad Request: %s', $type),
                     static::ACTION,
                     'type'
                 )
@@ -178,7 +177,7 @@ abstract class AbstractGetArtMethod implements MethodInterface
 
         if ($key !== null && !$this->configContainer->get($key)) {
             throw new AccessDeniedException(
-                sprintf(T_('Enable: %s'), $type)
+                sprintf('Enable: %s', $type)
             );
         }
     }

@@ -86,7 +86,7 @@ final class PreferenceEditMethod implements MethodInterface
         foreach (['filter', 'value'] as $parameter) {
             if (!array_key_exists($parameter, $input)) {
                 throw new RequestParamMissingException(
-                    sprintf(T_('Bad Request: %s'), $parameter)
+                    sprintf('Bad Request: %s', $parameter)
                 );
             }
         }
@@ -104,7 +104,7 @@ final class PreferenceEditMethod implements MethodInterface
             )
         ) {
             throw new AccessFailedException(
-                sprintf(T_('Require: %s'), AccessLevelEnum::ADMIN->value)
+                sprintf('Require: %s', AccessLevelEnum::ADMIN->value)
             );
         }
 

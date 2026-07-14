@@ -85,7 +85,7 @@ final class CatalogAction5Method implements MethodInterface
         foreach (['catalog', 'task'] as $parameter) {
             if (!array_key_exists($parameter, $input)) {
                 throw new RequestParamMissingException(
-                    sprintf(T_('Bad Request: %s'), $parameter)
+                    sprintf('Bad Request: %s', $parameter)
                 );
             }
         }
@@ -98,7 +98,7 @@ final class CatalogAction5Method implements MethodInterface
             )
         ) {
             throw new AccessFailedException(
-                sprintf(T_('Require: %s'), AccessLevelEnum::MANAGER->value)
+                sprintf('Require: %s', AccessLevelEnum::MANAGER->value)
             );
         }
 
@@ -111,8 +111,7 @@ final class CatalogAction5Method implements MethodInterface
                     $output->error(
                         $apiVersion,
                         ErrorCodeEnum::BAD_REQUEST,
-                        /* HINT: Requested object string/id/type ("album", "myusername", "some song title", 1298376) */
-                        sprintf(T_('Bad Request: %s'), $task),
+                        sprintf('Bad Request: %s', $task),
                         self::ACTION,
                         'task'
                     )
@@ -127,7 +126,7 @@ final class CatalogAction5Method implements MethodInterface
                     $output->error(
                         $apiVersion,
                         ErrorCodeEnum::NOT_FOUND,
-                        T_('Not Found'),
+                        'Not Found',
                         self::ACTION,
                         'catalog'
                     )

@@ -78,7 +78,7 @@ final class PlaylistCreate5Method implements MethodInterface
     ): ResponseInterface {
         if (!array_key_exists('name', $input)) {
             throw new RequestParamMissingException(
-                sprintf(T_('Bad Request: %s'), 'name')
+                sprintf('Bad Request: %s', 'name')
             );
         }
 
@@ -95,7 +95,7 @@ final class PlaylistCreate5Method implements MethodInterface
                     $output->error(
                         $apiVersion,
                         ErrorCodeEnum::BAD_REQUEST,
-                        T_('Bad Request'),
+                        'Bad Request',
                         self::ACTION,
                         'input'
                     )

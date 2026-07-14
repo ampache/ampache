@@ -77,7 +77,7 @@ final class UrlToSongMethod implements MethodInterface
         $url = $input['filter'] ?? $input['url'] ?? null;
         if ($url === null) {
             throw new RequestParamMissingException(
-                sprintf(T_('Bad Request: %s'), 'url')
+                sprintf('Bad Request: %s', 'url')
             );
         }
 

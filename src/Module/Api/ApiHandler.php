@@ -123,7 +123,7 @@ final class ApiHandler implements ApiHandlerInterface
                         $output->error(
                             Api::DEFAULT_VERSION,
                             ErrorCodeEnum::ACCESS_CONTROL_NOT_ENABLED,
-                            T_('Access Denied'),
+                            'Access Denied',
                             $action,
                             'system'
                         )
@@ -196,7 +196,7 @@ final class ApiHandler implements ApiHandlerInterface
                             $output->error(
                                 Api::DEFAULT_VERSION,
                                 ErrorCodeEnum::ACCESS_CONTROL_NOT_ENABLED,
-                                T_('Access Denied'),
+                                'Access Denied',
                                 $action,
                                 'system'
                             )
@@ -265,7 +265,7 @@ final class ApiHandler implements ApiHandlerInterface
                             $output->error(
                                 $api_version,
                                 501,
-                                T_('Access Control not Enabled')
+                                'Access Control not Enabled'
                             )
                         )
                     );
@@ -275,7 +275,7 @@ final class ApiHandler implements ApiHandlerInterface
                             $output->error(
                                 $api_version,
                                 501,
-                                T_('Access Control not Enabled')
+                                'Access Control not Enabled'
                             )
                         )
                     );
@@ -285,7 +285,7 @@ final class ApiHandler implements ApiHandlerInterface
                             $output->error(
                                 $api_version,
                                 ErrorCodeEnum::ACCESS_CONTROL_NOT_ENABLED,
-                                T_('Access Denied'),
+                                'Access Denied',
                                 $action,
                                 'system'
                             )
@@ -299,7 +299,7 @@ final class ApiHandler implements ApiHandlerInterface
                                 $output->error(
                                     $api_version,
                                     ErrorCodeEnum::ACCESS_CONTROL_NOT_ENABLED,
-                                    T_('Access Denied'),
+                                    'Access Denied',
                                     $action,
                                     'system'
                                 )
@@ -314,7 +314,7 @@ final class ApiHandler implements ApiHandlerInterface
                                 $output->error(
                                     $api_version,
                                     ErrorCodeEnum::ACCESS_CONTROL_NOT_ENABLED,
-                                    T_('Access Denied'),
+                                    'Access Denied',
                                     $action,
                                     'system'
                                 )
@@ -351,7 +351,7 @@ final class ApiHandler implements ApiHandlerInterface
                             $output->error(
                                 $api_version,
                                 401,
-                                T_('Session Expired')
+                                'Session Expired'
                             )
                         )
                     );
@@ -361,7 +361,7 @@ final class ApiHandler implements ApiHandlerInterface
                             $output->error(
                                 $api_version,
                                 401,
-                                T_('Session Expired')
+                                'Session Expired'
                             )
                         )
                     );
@@ -371,7 +371,7 @@ final class ApiHandler implements ApiHandlerInterface
                             $output->error(
                                 $api_version,
                                 ErrorCodeEnum::INVALID_HANDSHAKE,
-                                T_('Session Expired'),
+                                'Session Expired',
                                 $action,
                                 'account'
                             )
@@ -385,7 +385,7 @@ final class ApiHandler implements ApiHandlerInterface
                                 $output->error(
                                     $api_version,
                                     ErrorCodeEnum::INVALID_HANDSHAKE,
-                                    T_('Session Expired'),
+                                    'Session Expired',
                                     $action,
                                     'account'
                                 )
@@ -400,7 +400,7 @@ final class ApiHandler implements ApiHandlerInterface
                                 $output->error(
                                     $api_version,
                                     ErrorCodeEnum::INVALID_HANDSHAKE,
-                                    T_('Session Expired'),
+                                    'Session Expired',
                                     $action,
                                     'account'
                                 )
@@ -423,7 +423,7 @@ final class ApiHandler implements ApiHandlerInterface
                             $output->error(
                                 $api_version,
                                 403,
-                                T_('Unauthorized access attempt to API - ACL Error')
+                                'Unauthorized access attempt to API - ACL Error'
                             )
                         )
                     );
@@ -433,7 +433,7 @@ final class ApiHandler implements ApiHandlerInterface
                             $output->error(
                                 $api_version,
                                 403,
-                                T_('Unauthorized access attempt to API - ACL Error')
+                                'Unauthorized access attempt to API - ACL Error'
                             )
                         )
                     );
@@ -443,7 +443,7 @@ final class ApiHandler implements ApiHandlerInterface
                             $output->error(
                                 $api_version,
                                 ErrorCodeEnum::FAILED_ACCESS_CHECK,
-                                T_('Unauthorized access attempt to API - ACL Error'),
+                                'Unauthorized access attempt to API - ACL Error',
                                 $action,
                                 'account'
                             )
@@ -457,7 +457,7 @@ final class ApiHandler implements ApiHandlerInterface
                                 $output->error(
                                     $api_version,
                                     ErrorCodeEnum::FAILED_ACCESS_CHECK,
-                                    T_('Unauthorized access attempt to API - ACL Error'),
+                                    'Unauthorized access attempt to API - ACL Error',
                                     $action,
                                     'account'
                                 )
@@ -472,7 +472,7 @@ final class ApiHandler implements ApiHandlerInterface
                                 $output->error(
                                     $api_version,
                                     ErrorCodeEnum::FAILED_ACCESS_CHECK,
-                                    T_('Unauthorized access attempt to API - ACL Error'),
+                                    'Unauthorized access attempt to API - ACL Error',
                                     $action,
                                     'account'
                                 )
@@ -506,7 +506,7 @@ final class ApiHandler implements ApiHandlerInterface
                             $output->error(
                                 $api_version,
                                 405,
-                                T_('Invalid Request')
+                                'Invalid Request'
                             )
                         )
                     );
@@ -522,7 +522,7 @@ final class ApiHandler implements ApiHandlerInterface
                             $output->error(
                                 $api_version,
                                 405,
-                                T_('Invalid Request')
+                                'Invalid Request'
                             )
                         )
                     );
@@ -537,7 +537,7 @@ final class ApiHandler implements ApiHandlerInterface
                             $output->error(
                                 $api_version,
                                 ErrorCodeEnum::DEPRECATED,
-                                T_('Deprecated'),
+                                'Deprecated',
                                 $action,
                                 'removed'
                             )
@@ -553,7 +553,7 @@ final class ApiHandler implements ApiHandlerInterface
                             $output->error(
                                 $api_version,
                                 ErrorCodeEnum::MISSING,
-                                T_('Invalid Request'),
+                                'Invalid Request',
                                 $action,
                                 'system'
                             )
@@ -572,7 +572,7 @@ final class ApiHandler implements ApiHandlerInterface
                                 $output->error(
                                     $api_version,
                                     ErrorCodeEnum::DEPRECATED,
-                                    T_('Deprecated'),
+                                    'Deprecated',
                                     $action,
                                     'removed'
                                 )
@@ -590,7 +590,7 @@ final class ApiHandler implements ApiHandlerInterface
                                 $output->error(
                                     $api_version,
                                     ErrorCodeEnum::MISSING,
-                                    T_('Invalid Request'),
+                                    'Invalid Request',
                                     $action,
                                     'system'
                                 )
@@ -610,7 +610,7 @@ final class ApiHandler implements ApiHandlerInterface
                                 $output->error(
                                     $api_version,
                                     ErrorCodeEnum::DEPRECATED,
-                                    T_('Deprecated'),
+                                    'Deprecated',
                                     $action,
                                     'removed'
                                 )
@@ -628,7 +628,7 @@ final class ApiHandler implements ApiHandlerInterface
                                 $output->error(
                                     $api_version,
                                     ErrorCodeEnum::MISSING,
-                                    T_('Invalid Request'),
+                                    'Invalid Request',
                                     $action,
                                     'system'
                                 )
@@ -984,7 +984,7 @@ final class ApiHandler implements ApiHandlerInterface
                             $output->error(
                                 $api_version,
                                 405,
-                                T_('Invalid Request')
+                                'Invalid Request'
                             )
                         )
                     );
@@ -994,7 +994,7 @@ final class ApiHandler implements ApiHandlerInterface
                             $output->error(
                                 $api_version,
                                 405,
-                                T_('Invalid Request')
+                                'Invalid Request'
                             )
                         )
                     );

@@ -83,13 +83,13 @@ final class LicenseSongs5Method implements MethodInterface
     ): ResponseInterface {
         if (!$this->configContainer->get(ConfigurationKeyEnum::LICENSING)) {
             throw new AccessDeniedException(
-                T_('Enable: licensing')
+                'Enable: licensing'
             );
         }
 
         if (!array_key_exists('filter', $input)) {
             throw new RequestParamMissingException(
-                sprintf(T_('Bad Request: %s'), 'filter')
+                sprintf('Bad Request: %s', 'filter')
             );
         }
 

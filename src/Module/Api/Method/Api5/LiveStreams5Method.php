@@ -87,7 +87,7 @@ final class LiveStreams5Method implements MethodInterface
     ): ResponseInterface {
         if (!$this->configContainer->get(ConfigurationKeyEnum::RADIO)) {
             throw new AccessDeniedException(
-                T_('Enable: live_stream')
+                'Enable: live_stream'
             );
         }
 

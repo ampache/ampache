@@ -86,7 +86,7 @@ final class LiveStreamsMethod implements MethodInterface
                 $output->error(
                     $apiVersion,
                     ErrorCodeEnum::ACCESS_DENIED,
-                    T_('Enable: live_stream'),
+                    'Enable: live_stream',
                     self::ACTION,
                     'system'
                 )

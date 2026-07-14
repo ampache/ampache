@@ -80,13 +80,13 @@ final class ToggleFollow5Method implements MethodInterface
     ): ResponseInterface {
         if (!$this->configContainer->get(ConfigurationKeyEnum::SOCIABLE)) {
             throw new AccessDeniedException(
-                T_('Enable: sociable')
+                'Enable: sociable'
             );
         }
 
         if (!array_key_exists('username', $input)) {
             throw new RequestParamMissingException(
-                sprintf(T_('Bad Request: %s'), 'username')
+                sprintf('Bad Request: %s', 'username')
             );
         }
 
@@ -111,8 +111,7 @@ final class ToggleFollow5Method implements MethodInterface
                     $output->error(
                         $apiVersion,
                         ErrorCodeEnum::NOT_FOUND,
-                        /* HINT: Requested object string/id/type ("album", "myusername", "some song title", 1298376) */
-                        sprintf(T_('Not Found: %s'), $username),
+                        sprintf('Not Found: %s', $username),
                         self::ACTION,
                         'filter'
                     )
@@ -125,7 +124,7 @@ final class ToggleFollow5Method implements MethodInterface
                 $output->error(
                     $apiVersion,
                     ErrorCodeEnum::BAD_REQUEST,
-                    sprintf(T_('Bad Request: %s'), 'username'),
+                    sprintf('Bad Request: %s', 'username'),
                     self::ACTION,
                     'username'
                 )

@@ -115,21 +115,21 @@ abstract class AbstractCatalogFileMethod implements MethodInterface
             )
         ) {
             throw new AccessFailedException(
-                sprintf(T_('Require: %s'), AccessLevelEnum::CONTENT_MANAGER->value)
+                sprintf('Require: %s', AccessLevelEnum::CONTENT_MANAGER->value)
             );
         }
 
         $filter = $input[static::FILTER_ALIAS] ?? $input[static::FILTER_KEY] ?? null;
         if ($filter === null) {
             throw new RequestParamMissingException(
-                sprintf(T_('Bad Request: %s'), static::FILTER_KEY)
+                sprintf('Bad Request: %s', static::FILTER_KEY)
             );
         }
 
         foreach (['file', 'task'] as $parameter) {
             if (!array_key_exists($parameter, $input)) {
                 throw new RequestParamMissingException(
-                    sprintf(T_('Bad Request: %s'), $parameter)
+                    sprintf('Bad Request: %s', $parameter)
                 );
             }
         }
@@ -143,7 +143,7 @@ abstract class AbstractCatalogFileMethod implements MethodInterface
             && !$this->configContainer->get(ConfigurationKeyEnum::DELETE_FROM_DISK)
         ) {
             throw new AccessDeniedException(
-                T_('Enable: delete_from_disk')
+                'Enable: delete_from_disk'
             );
         }
 
@@ -160,8 +160,7 @@ abstract class AbstractCatalogFileMethod implements MethodInterface
                     $output->error(
                         $apiVersion,
                         ErrorCodeEnum::BAD_REQUEST,
-                        /* HINT: Requested object string/id/type ("album", "myusername", "some song title", 1298376) */
-                        sprintf(T_('Bad Request: %s'), $item),
+                        sprintf('Bad Request: %s', $item),
                         static::ACTION,
                         'task'
                     )
@@ -224,8 +223,7 @@ abstract class AbstractCatalogFileMethod implements MethodInterface
                                 $output->error(
                                     $apiVersion,
                                     ErrorCodeEnum::GENERIC_ERROR,
-                                    /* HINT: Requested object string/id/type ("album", "myusername", "some song title", 1298376) */
-                                    sprintf(T_('Bad Request: %s'), $file),
+                                    sprintf('Bad Request: %s', $file),
                                     static::ACTION,
                                     'file'
                                 )

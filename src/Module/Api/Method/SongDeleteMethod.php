@@ -82,7 +82,7 @@ final class SongDeleteMethod implements MethodInterface
     ): ResponseInterface {
         if (!array_key_exists('filter', $input)) {
             throw new RequestParamMissingException(
-                sprintf(T_('Bad Request: %s'), 'filter')
+                sprintf('Bad Request: %s', 'filter')
             );
         }
 
@@ -97,7 +97,7 @@ final class SongDeleteMethod implements MethodInterface
 
         if (!Catalog::can_remove($song, $user->getId())) {
             throw new AccessFailedException(
-                sprintf(T_('Require: %s'), AccessLevelEnum::MANAGER->value)
+                sprintf('Require: %s', AccessLevelEnum::MANAGER->value)
             );
         }
 

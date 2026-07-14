@@ -78,7 +78,7 @@ final class FriendsTimelineMethod implements MethodInterface
                 $output->error(
                     $apiVersion,
                     ErrorCodeEnum::ACCESS_DENIED,
-                    T_('Enable: sociable'),
+                    'Enable: sociable',
                     self::ACTION,
                     'system'
                 )

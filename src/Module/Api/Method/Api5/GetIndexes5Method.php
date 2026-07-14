@@ -101,7 +101,7 @@ final class GetIndexes5Method implements MethodInterface
     ): ResponseInterface {
         if (!array_key_exists('type', $input)) {
             throw new RequestParamMissingException(
-                sprintf(T_('Bad Request: %s'), 'type')
+                sprintf('Bad Request: %s', 'type')
             );
         }
 
@@ -113,7 +113,7 @@ final class GetIndexes5Method implements MethodInterface
             && $type == 'video'
         ) {
             throw new AccessDeniedException(
-                T_('Enable: video')
+                'Enable: video'
             );
         }
 
@@ -122,7 +122,7 @@ final class GetIndexes5Method implements MethodInterface
             && ($type == 'podcast' || $type == 'podcast_episode')
         ) {
             throw new AccessDeniedException(
-                T_('Enable: podcast')
+                'Enable: podcast'
             );
         }
 
@@ -131,7 +131,7 @@ final class GetIndexes5Method implements MethodInterface
             && $type == 'share'
         ) {
             throw new AccessDeniedException(
-                T_('Enable: share')
+                'Enable: share'
             );
         }
 
@@ -140,7 +140,7 @@ final class GetIndexes5Method implements MethodInterface
             && $type == 'live_stream'
         ) {
             throw new AccessDeniedException(
-                T_('Enable: live_stream')
+                'Enable: live_stream'
             );
         }
 
@@ -155,7 +155,7 @@ final class GetIndexes5Method implements MethodInterface
                     $output->error(
                         $apiVersion,
                         ErrorCodeEnum::BAD_REQUEST,
-                        sprintf(T_('Bad Request: %s'), $type),
+                        sprintf('Bad Request: %s', $type),
                         self::ACTION,
                         'type'
                     )

@@ -113,7 +113,7 @@ final class LostPasswordMethod implements MethodInterface
 
         if (!array_key_exists('auth', $input)) {
             throw new RequestParamMissingException(
-                sprintf(T_('Bad Request: %s'), 'auth')
+                sprintf('Bad Request: %s', 'auth')
             );
         }
 
@@ -165,8 +165,7 @@ final class LostPasswordMethod implements MethodInterface
             $output->error(
                 $apiVersion,
                 ErrorCodeEnum::BAD_REQUEST,
-                /* HINT: Requested object string/id/type ("album", "myusername", "some song title", 1298376) */
-                sprintf(T_('Bad Request: %s'), $userId),
+                sprintf('Bad Request: %s', $userId),
                 self::ACTION,
                 $type
             )

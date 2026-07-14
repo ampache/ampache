@@ -94,20 +94,20 @@ abstract class AbstractPlaylistAddMethod implements MethodInterface
     ): ResponseInterface {
         if (!array_key_exists('filter', $input)) {
             throw new RequestParamMissingException(
-                sprintf(T_('Bad Request: %s'), 'filter')
+                sprintf('Bad Request: %s', 'filter')
             );
         }
 
         $objectId = $input['song'] ?? $input['id'] ?? null;
         if ($objectId === null) {
             throw new RequestParamMissingException(
-                sprintf(T_('Bad Request: %s'), 'id')
+                sprintf('Bad Request: %s', 'id')
             );
         }
 
         if (static::TYPE_REQUIRED && !array_key_exists('type', $input)) {
             throw new RequestParamMissingException(
-                sprintf(T_('Bad Request: %s'), 'type')
+                sprintf('Bad Request: %s', 'type')
             );
         }
 
@@ -117,7 +117,7 @@ abstract class AbstractPlaylistAddMethod implements MethodInterface
         // confirm the correct data
         if (!$playlist->has_collaborate($user)) {
             throw new AccessFailedException(
-                sprintf(T_('Require: %s'), AccessLevelEnum::ADMIN->value)
+                sprintf('Require: %s', AccessLevelEnum::ADMIN->value)
             );
         }
 
@@ -126,8 +126,7 @@ abstract class AbstractPlaylistAddMethod implements MethodInterface
                 $output->error(
                     $apiVersion,
                     ErrorCodeEnum::BAD_REQUEST,
-                    /* HINT: Requested object string/id/type ("album", "myusername", "some song title", 1298376) */
-                    sprintf(T_('Bad Request: %s'), $objectType),
+                    sprintf('Bad Request: %s', $objectType),
                     static::ACTION,
                     'type'
                 )
@@ -172,8 +171,7 @@ abstract class AbstractPlaylistAddMethod implements MethodInterface
                 $output->error(
                     $apiVersion,
                     ErrorCodeEnum::BAD_REQUEST,
-                    /* HINT: Requested object string/id/type ("album", "myusername", "some song title", 1298376) */
-                    sprintf(T_('Bad Request: %s'), $objectId),
+                    sprintf('Bad Request: %s', $objectId),
                     static::ACTION,
                     'system'
                 )

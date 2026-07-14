@@ -83,7 +83,7 @@ final class GetSimilar5Method implements MethodInterface
         foreach (['type', 'filter'] as $parameter) {
             if (!array_key_exists($parameter, $input)) {
                 throw new RequestParamMissingException(
-                    sprintf(T_('Bad Request: %s'), $parameter)
+                    sprintf('Bad Request: %s', $parameter)
                 );
             }
         }
@@ -101,7 +101,7 @@ final class GetSimilar5Method implements MethodInterface
                     $output->error(
                         $apiVersion,
                         ErrorCodeEnum::BAD_REQUEST,
-                        sprintf(T_('Bad Request: %s'), $requestedType),
+                        sprintf('Bad Request: %s', $requestedType),
                         self::ACTION,
                         'type'
                     )

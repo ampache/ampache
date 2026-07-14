@@ -85,13 +85,13 @@ final class LabelArtists5Method implements MethodInterface
     ): ResponseInterface {
         if (!$this->configContainer->get(ConfigurationKeyEnum::LABEL)) {
             throw new AccessDeniedException(
-                T_('Enable: label')
+                'Enable: label'
             );
         }
 
         if (!array_key_exists('filter', $input)) {
             throw new RequestParamMissingException(
-                sprintf(T_('Bad Request: %s'), 'filter')
+                sprintf('Bad Request: %s', 'filter')
             );
         }
 

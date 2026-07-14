@@ -72,7 +72,7 @@ final class SongTagsMethod implements MethodInterface
     ): ResponseInterface {
         if (!array_key_exists('filter', $input)) {
             throw new RequestParamMissingException(
-                sprintf(T_('Bad Request: %s'), 'filter')
+                sprintf('Bad Request: %s', 'filter')
             );
         }
 

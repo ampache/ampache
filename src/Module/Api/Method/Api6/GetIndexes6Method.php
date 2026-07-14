@@ -102,7 +102,7 @@ final class GetIndexes6Method implements MethodInterface
     ): ResponseInterface {
         if (!array_key_exists('type', $input)) {
             throw new RequestParamMissingException(
-                sprintf(T_('Bad Request: %s'), 'type')
+                sprintf('Bad Request: %s', 'type')
             );
         }
 
@@ -119,8 +119,7 @@ final class GetIndexes6Method implements MethodInterface
                 $output->error(
                     $apiVersion,
                     ErrorCodeEnum::BAD_REQUEST,
-                    /* HINT: Requested object string/id/type ("album", "myusername", "some song title", 1298376) */
-                    sprintf(T_('Bad Request: %s'), $type),
+                    sprintf('Bad Request: %s', $type),
                     self::ACTION,
                     'type'
                 )

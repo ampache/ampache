@@ -114,7 +114,7 @@ final class BrowseMethod implements MethodInterface
             && !$this->configContainer->get(ConfigurationKeyEnum::PODCAST)
         ) {
             throw new AccessDeniedException(
-                T_('Enable: podcast')
+                'Enable: podcast'
             );
         }
 
@@ -145,7 +145,7 @@ final class BrowseMethod implements MethodInterface
         } elseif ($objectType === 'catalog') {
             if ($objectId === null) {
                 throw new RequestParamMissingException(
-                    sprintf(T_('Bad Request: %s'), 'filter')
+                    sprintf('Bad Request: %s', 'filter')
                 );
             }
 
@@ -177,8 +177,7 @@ final class BrowseMethod implements MethodInterface
                         $output->error(
                             $apiVersion,
                             ErrorCodeEnum::BAD_REQUEST,
-                            /* HINT: Requested object string/id/type ("album", "myusername", "some song title", 1298376) */
-                            sprintf(T_('Bad Request: %s'), $catalogId),
+                            sprintf('Bad Request: %s', $catalogId),
                             self::ACTION,
                             'catalog'
                         )
@@ -196,7 +195,7 @@ final class BrowseMethod implements MethodInterface
             foreach (['filter', 'catalog'] as $parameter) {
                 if (!array_key_exists($parameter, $input)) {
                     throw new RequestParamMissingException(
-                        sprintf(T_('Bad Request: %s'), $parameter)
+                        sprintf('Bad Request: %s', $parameter)
                     );
                 }
             }
@@ -324,8 +323,7 @@ final class BrowseMethod implements MethodInterface
             $output->error(
                 $apiVersion,
                 ErrorCodeEnum::BAD_REQUEST,
-                /* HINT: Requested object string/id/type ("album", "myusername", "some song title", 1298376) */
-                sprintf(T_('Bad Request: %s'), $objectType),
+                sprintf('Bad Request: %s', $objectType),
                 self::ACTION,
                 'type'
             )

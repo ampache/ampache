@@ -99,14 +99,14 @@ final class ShareCreate5Method implements MethodInterface
     ): ResponseInterface {
         if (!$this->configContainer->get(ConfigurationKeyEnum::SHARE)) {
             throw new AccessDeniedException(
-                T_('Enable: share')
+                'Enable: share'
             );
         }
 
         foreach (['type', 'filter'] as $parameter) {
             if (!array_key_exists($parameter, $input)) {
                 throw new RequestParamMissingException(
-                    sprintf(T_('Bad Request: %s'), $parameter)
+                    sprintf('Bad Request: %s', $parameter)
                 );
             }
         }
@@ -164,7 +164,7 @@ final class ShareCreate5Method implements MethodInterface
                     $output->error(
                         $apiVersion,
                         ErrorCodeEnum::BAD_REQUEST,
-                        T_('Bad Request'),
+                        'Bad Request',
                         self::ACTION,
                         'system'
                     )
@@ -189,8 +189,7 @@ final class ShareCreate5Method implements MethodInterface
         return $output->error(
             $apiVersion,
             ErrorCodeEnum::BAD_REQUEST,
-            /* HINT: Requested object string/id/type ("album", "myusername", "some song title", 1298376) */
-            sprintf(T_('Bad Request: %s'), $objectType),
+            sprintf('Bad Request: %s', $objectType),
             self::ACTION,
             'type'
         );

@@ -90,13 +90,13 @@ final class ShareEditMethod implements MethodInterface
     ): ResponseInterface {
         if (!$this->configContainer->get(ConfigurationKeyEnum::SHARE)) {
             throw new AccessDeniedException(
-                T_('Enable: share')
+                'Enable: share'
             );
         }
 
         if (!array_key_exists('filter', $input)) {
             throw new RequestParamMissingException(
-                sprintf(T_('Bad Request: %s'), 'filter')
+                sprintf('Bad Request: %s', 'filter')
             );
         }
 
@@ -130,8 +130,7 @@ final class ShareEditMethod implements MethodInterface
                 $output->error(
                     $apiVersion,
                     ErrorCodeEnum::BAD_REQUEST,
-                    /* HINT: Requested object string/id/type ("album", "myusername", "some song title", 1298376) */
-                    sprintf(T_('Bad Request: %s'), $shareId),
+                    sprintf('Bad Request: %s', $shareId),
                     self::ACTION,
                     'system'
                 )

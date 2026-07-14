@@ -92,7 +92,7 @@ final class PodcastsMethod implements MethodInterface
                 $output->error(
                     $apiVersion,
                     ErrorCodeEnum::ACCESS_DENIED,
-                    T_('Enable: podcast'),
+                    'Enable: podcast',
                     self::ACTION,
                     'system'
                 )

@@ -86,7 +86,7 @@ final class LicensesMethod implements MethodInterface
                 $output->error(
                     $apiVersion,
                     ErrorCodeEnum::ACCESS_DENIED,
-                    T_('Enable: licensing'),
+                    'Enable: licensing',
                     self::ACTION,
                     'system'
                 )

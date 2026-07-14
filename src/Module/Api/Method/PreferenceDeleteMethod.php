@@ -79,7 +79,7 @@ final class PreferenceDeleteMethod implements MethodInterface
     ): ResponseInterface {
         if (!array_key_exists('filter', $input)) {
             throw new RequestParamMissingException(
-                sprintf(T_('Bad Request: %s'), 'filter')
+                sprintf('Bad Request: %s', 'filter')
             );
         }
 
@@ -91,7 +91,7 @@ final class PreferenceDeleteMethod implements MethodInterface
             )
         ) {
             throw new AccessFailedException(
-                sprintf(T_('Require: %s'), AccessLevelEnum::ADMIN->value)
+                sprintf('Require: %s', AccessLevelEnum::ADMIN->value)
             );
         }
 
@@ -110,8 +110,7 @@ final class PreferenceDeleteMethod implements MethodInterface
                 $output->error(
                     $apiVersion,
                     ErrorCodeEnum::BAD_REQUEST,
-                    /* HINT: Requested object string/id/type ("album", "myusername", "some song title", 1298376) */
-                    sprintf(T_('Bad Request: %s'), $prefName),
+                    sprintf('Bad Request: %s', $prefName),
                     self::ACTION,
                     'filter'
                 )

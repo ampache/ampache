@@ -84,7 +84,7 @@ final class RandomMethod implements MethodInterface
         $object_type = (string) ($input['type'] ?? 'song');
         if (!in_array($object_type, ['artist', 'album', 'playlist', 'podcast_episode', 'search', 'song', 'video'], true)) {
             throw new RequestParamMissingException(
-                sprintf(T_('Bad Request: %s'), 'type')
+                sprintf('Bad Request: %s', 'type')
             );
         }
 

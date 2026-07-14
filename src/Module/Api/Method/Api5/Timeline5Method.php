@@ -84,13 +84,13 @@ final class Timeline5Method implements MethodInterface
     ): ResponseInterface {
         if (!$this->configContainer->get(ConfigurationKeyEnum::SOCIABLE)) {
             throw new AccessDeniedException(
-                T_('Enable: sociable')
+                'Enable: sociable'
             );
         }
 
         if (!array_key_exists('username', $input)) {
             throw new RequestParamMissingException(
-                sprintf(T_('Bad Request: %s'), 'username')
+                sprintf('Bad Request: %s', 'username')
             );
         }
 

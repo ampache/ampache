@@ -77,7 +77,7 @@ final class DemocraticMethod implements MethodInterface
     ): ResponseInterface {
         if (!array_key_exists('method', $input)) {
             throw new RequestParamMissingException(
-                sprintf(T_('Bad Request: %s'), 'method')
+                sprintf('Bad Request: %s', 'method')
             );
         }
 

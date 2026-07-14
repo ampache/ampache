@@ -102,7 +102,7 @@ final class ScrobbleMethod implements MethodInterface
         foreach (['song', 'artist', 'album'] as $parameter) {
             if (!array_key_exists($parameter, $input)) {
                 throw new RequestParamMissingException(
-                    sprintf(T_('Bad Request: %s'), $parameter)
+                    sprintf('Bad Request: %s', $parameter)
                 );
             }
         }
@@ -165,8 +165,7 @@ final class ScrobbleMethod implements MethodInterface
                 $output->error(
                     $apiVersion,
                     ErrorCodeEnum::NOT_FOUND,
-                    /* HINT: Requested object string/id/type ("album", "myusername", "some song title", 1298376) */
-                    sprintf(T_('Not Found: %s'), $scrobbleId),
+                    sprintf('Not Found: %s', $scrobbleId),
                     self::ACTION,
                     'song'
                 )

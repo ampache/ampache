@@ -80,7 +80,7 @@ final class SystemPreferencesMethod implements MethodInterface
             )
         ) {
             throw new AccessFailedException(
-                sprintf(T_('Require: %s'), AccessLevelEnum::ADMIN->value)
+                sprintf('Require: %s', AccessLevelEnum::ADMIN->value)
             );
         }
 

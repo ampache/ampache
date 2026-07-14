@@ -67,7 +67,7 @@ final class GetSimilar4Method
         $filter = (int) $input['filter'];
         // confirm the correct data
         if (!in_array(strtolower($type), ['song', 'artist'])) {
-            Api4::message('error', T_('Incorrect object type') . ' ' . $type, '401', $input['api_format']);
+            Api4::message('error', 'Incorrect object type' . ' ' . $type, '401', $input['api_format']);
 
             return false;
         }

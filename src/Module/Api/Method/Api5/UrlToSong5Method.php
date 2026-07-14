@@ -75,7 +75,7 @@ final class UrlToSong5Method implements MethodInterface
     ): ResponseInterface {
         if (!array_key_exists('url', $input)) {
             throw new RequestParamMissingException(
-                sprintf(T_('Bad Request: %s'), 'url')
+                sprintf('Bad Request: %s', 'url')
             );
         }
 
@@ -88,7 +88,7 @@ final class UrlToSong5Method implements MethodInterface
                     $output->error(
                         $apiVersion,
                         ErrorCodeEnum::BAD_REQUEST,
-                        T_('Bad Request'),
+                        'Bad Request',
                         self::ACTION,
                         'url'
                     )

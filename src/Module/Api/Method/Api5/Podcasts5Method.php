@@ -90,7 +90,7 @@ final class Podcasts5Method implements MethodInterface
     ): ResponseInterface {
         if (!$this->configContainer->get(ConfigurationKeyEnum::PODCAST)) {
             throw new AccessDeniedException(
-                T_('Enable: podcast')
+                'Enable: podcast'
             );
         }
 

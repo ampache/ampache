@@ -92,7 +92,7 @@ final class UpdatePodcastMethod implements MethodInterface
         $filter = $input['filter'] ?? $input['id'] ?? null;
         if ($filter === null) {
             throw new RequestParamMissingException(
-                sprintf(T_('Bad Request: %s'), 'filter')
+                sprintf('Bad Request: %s', 'filter')
             );
         }
 
@@ -104,7 +104,7 @@ final class UpdatePodcastMethod implements MethodInterface
             )
         ) {
             throw new AccessFailedException(
-                sprintf(T_('Require: %s'), AccessLevelEnum::CONTENT_MANAGER->value)
+                sprintf('Require: %s', AccessLevelEnum::CONTENT_MANAGER->value)
             );
         }
 
@@ -122,8 +122,7 @@ final class UpdatePodcastMethod implements MethodInterface
                 $output->error(
                     $apiVersion,
                     ErrorCodeEnum::BAD_REQUEST,
-                    /* HINT: Requested object string/id/type ("album", "myusername", "some song title", 1298376) */
-                    sprintf(T_('Bad Request: %s'), $objectId),
+                    sprintf('Bad Request: %s', $objectId),
                     self::ACTION,
                     'podcast'
                 )

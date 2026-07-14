@@ -81,13 +81,13 @@ final class ShareDeleteMethod implements MethodInterface
     ): ResponseInterface {
         if (!$this->configContainer->get(ConfigurationKeyEnum::SHARE)) {
             throw new AccessDeniedException(
-                T_('Enable: share')
+                'Enable: share'
             );
         }
 
         if (!array_key_exists('filter', $input)) {
             throw new RequestParamMissingException(
-                sprintf(T_('Bad Request: %s'), 'filter')
+                sprintf('Bad Request: %s', 'filter')
             );
         }
 

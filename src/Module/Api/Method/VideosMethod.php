@@ -84,7 +84,7 @@ final class VideosMethod implements MethodInterface
                 $output->error(
                     $apiVersion,
                     ErrorCodeEnum::ACCESS_DENIED,
-                    T_('Enable: video'),
+                    'Enable: video',
                     self::ACTION,
                     'system'
                 )

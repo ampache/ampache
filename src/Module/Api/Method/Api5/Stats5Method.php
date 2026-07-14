@@ -105,7 +105,7 @@ final class Stats5Method implements MethodInterface
     ): ResponseInterface {
         if (!array_key_exists('type', $input)) {
             throw new RequestParamMissingException(
-                sprintf(T_('Bad Request: %s'), 'type')
+                sprintf('Bad Request: %s', 'type')
             );
         }
 
@@ -125,7 +125,7 @@ final class Stats5Method implements MethodInterface
             && $type == 'video'
         ) {
             throw new AccessDeniedException(
-                T_('Enable: video')
+                'Enable: video'
             );
         }
 
@@ -134,7 +134,7 @@ final class Stats5Method implements MethodInterface
             && ($type == 'podcast' || $type == 'podcast_episode')
         ) {
             throw new AccessDeniedException(
-                T_('Enable: podcast')
+                'Enable: podcast'
             );
         }
 
@@ -145,8 +145,7 @@ final class Stats5Method implements MethodInterface
                     $output->error(
                         $apiVersion,
                         ErrorCodeEnum::BAD_REQUEST,
-                        /* HINT: Requested object string/id/type ("album", "myusername", "some song title", 1298376) */
-                        sprintf(T_('Bad Request: %s'), $requested_type),
+                        sprintf('Bad Request: %s', $requested_type),
                         self::ACTION,
                         'type'
                     )

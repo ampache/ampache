@@ -75,14 +75,14 @@ abstract class AbstractSearchSongsMethod implements MethodInterface
     ): ResponseInterface {
         if (!static::ALIAS_SATISFIES_FILTER && !array_key_exists('filter', $input)) {
             throw new RequestParamMissingException(
-                sprintf(T_('Bad Request: %s'), 'filter')
+                sprintf('Bad Request: %s', 'filter')
             );
         }
 
         $filter = $input['rule_1_input'] ?? $input['filter'] ?? null;
         if ($filter === null) {
             throw new RequestParamMissingException(
-                sprintf(T_('Bad Request: %s'), 'filter')
+                sprintf('Bad Request: %s', 'filter')
             );
         }
 

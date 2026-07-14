@@ -95,7 +95,7 @@ final class ListMethod implements MethodInterface
     ): ResponseInterface {
         if (!array_key_exists('type', $input)) {
             throw new RequestParamMissingException(
-                sprintf(T_('Bad Request: %s'), 'type')
+                sprintf('Bad Request: %s', 'type')
             );
         }
 
@@ -118,8 +118,7 @@ final class ListMethod implements MethodInterface
                 $output->error(
                     $apiVersion,
                     ErrorCodeEnum::BAD_REQUEST,
-                    /* HINT: Requested object string/id/type ("album", "myusername", "some song title", 1298376) */
-                    sprintf(T_('Bad Request: %s'), $requestedType),
+                    sprintf('Bad Request: %s', $requestedType),
                     self::ACTION,
                     'type'
                 )

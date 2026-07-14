@@ -117,7 +117,7 @@ final class Search5Method implements MethodInterface
                     $output->error(
                         $apiVersion,
                         ErrorCodeEnum::BAD_REQUEST,
-                        sprintf(T_('Bad Request: %s'), $type),
+                        sprintf('Bad Request: %s', $type),
                         self::ACTION,
                         'type'
                     )

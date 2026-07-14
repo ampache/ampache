@@ -247,8 +247,7 @@ class Api
     {
         if (!Access::check($type, $level, $user_id)) {
             debug_event(self::class, $type->value . " '" . $level->value . "' required on " . $method . " function call.", 2);
-            /* HINT: Access level, eg 75, 100 */
-            self::error('4742', sprintf(T_('Require: %s'), $level->value), $method, 'account', $format);
+            self::error('4742', sprintf('Require: %s', $level->value), $method, 'account', $format);
 
             return false;
         }
@@ -273,8 +272,7 @@ class Api
 
         debug_event(self::class, "'" . $parameter . "' required on " . $method . " function call.", 2);
 
-        /* HINT: Requested object string/id/type ("album", "myusername", "some song title", 1298376) */
-        self::error('4710', sprintf(T_('Bad Request: %s'), $parameter), $method, 'system', $input['api_format']);
+        self::error('4710', sprintf('Bad Request: %s', $parameter), $method, 'system', $input['api_format']);
 
         return false;
     }

@@ -88,7 +88,7 @@ final class GetExternalMetadataMethod implements MethodInterface
         foreach (['type', 'filter'] as $parameter) {
             if (!array_key_exists($parameter, $input)) {
                 throw new RequestParamMissingException(
-                    sprintf(T_('Bad Request: %s'), $parameter)
+                    sprintf('Bad Request: %s', $parameter)
                 );
             }
         }
@@ -102,8 +102,7 @@ final class GetExternalMetadataMethod implements MethodInterface
                 $output->error(
                     $apiVersion,
                     ErrorCodeEnum::BAD_REQUEST,
-                    /* HINT: Requested object string/id/type ("album", "myusername", "some song title", 1298376) */
-                    sprintf(T_('Bad Request: %s'), $type),
+                    sprintf('Bad Request: %s', $type),
                     self::ACTION,
                     'type'
                 )
@@ -117,7 +116,7 @@ final class GetExternalMetadataMethod implements MethodInterface
             && !$this->configContainer->get(ConfigurationKeyEnum::LABEL)
         ) {
             throw new AccessDeniedException(
-                T_('Enable: label')
+                'Enable: label'
             );
         }
 
@@ -160,8 +159,7 @@ final class GetExternalMetadataMethod implements MethodInterface
                 $output->error(
                     $apiVersion,
                     ErrorCodeEnum::BAD_REQUEST,
-                    /* HINT: Requested object string/id/type ("album", "myusername", "some song title", 1298376) */
-                    sprintf(T_('Bad Request: %s'), $type),
+                    sprintf('Bad Request: %s', $type),
                     self::ACTION,
                     'filter'
                 )

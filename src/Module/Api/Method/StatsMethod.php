@@ -109,7 +109,7 @@ final class StatsMethod implements MethodInterface
     ): ResponseInterface {
         if (!array_key_exists('type', $input)) {
             throw new RequestParamMissingException(
-                sprintf(T_('Bad Request: %s'), 'type')
+                sprintf('Bad Request: %s', 'type')
             );
         }
 
@@ -126,7 +126,7 @@ final class StatsMethod implements MethodInterface
             && !$this->configContainer->get(ConfigurationKeyEnum::ALLOW_VIDEO)
         ) {
             throw new AccessDeniedException(
-                T_('Enable: video')
+                'Enable: video'
             );
         }
 
@@ -135,7 +135,7 @@ final class StatsMethod implements MethodInterface
             && !$this->configContainer->get(ConfigurationKeyEnum::PODCAST)
         ) {
             throw new AccessDeniedException(
-                T_('Enable: podcast')
+                'Enable: podcast'
             );
         }
 
@@ -145,8 +145,7 @@ final class StatsMethod implements MethodInterface
                 $output->error(
                     $apiVersion,
                     ErrorCodeEnum::BAD_REQUEST,
-                    /* HINT: Requested object string/id/type ("album", "myusername", "some song title", 1298376) */
-                    sprintf(T_('Bad Request: %s'), $type),
+                    sprintf('Bad Request: %s', $type),
                     self::ACTION,
                     'type'
                 )
@@ -170,8 +169,7 @@ final class StatsMethod implements MethodInterface
                 $output->error(
                     $apiVersion,
                     ErrorCodeEnum::BAD_REQUEST,
-                    /* HINT: Requested object string/id/type ("album", "myusername", "some song title", 1298376) */
-                    sprintf(T_('Bad Request: %s'), 'user'),
+                    sprintf('Bad Request: %s', 'user'),
                     self::ACTION,
                     'type'
                 )

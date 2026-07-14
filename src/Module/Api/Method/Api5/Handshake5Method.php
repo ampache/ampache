@@ -113,14 +113,14 @@ final class Handshake5Method implements MethodInterface
         // Version check shouldn't be soo restrictive... only check with initial version to not break clients compatibility
         if ((int) ($version) < Api5::$auth_version && $data_version !== 5) {
             debug_event(self::class, 'Login Failed: Version too old', 1);
-            AmpError::add('api', T_('Login failed, API version is too old'));
+            AmpError::add('api', 'Login failed, API version is too old');
 
             return $response->withBody(
                 $this->streamFactory->createStream(
                     $output->error(
                         $apiVersion,
                         ErrorCodeEnum::INVALID_HANDSHAKE,
-                        T_('Received Invalid Handshake') . ' - ' . T_('Login failed, API version is too old'),
+                        'Received Invalid Handshake' . ' - ' . 'Login failed, API version is too old',
                         self::ACTION,
                         'version'
                     )
@@ -161,14 +161,14 @@ final class Handshake5Method implements MethodInterface
                     || ($timestamp > ($now_time + 1800))
                 ) {
                     debug_event(self::class, 'Login Failed: timestamp out of range ' . $timestamp . '/' . $now_time, 1);
-                    AmpError::add('api', T_('Login failed, timestamp is out of range'));
+                    AmpError::add('api', 'Login failed, timestamp is out of range');
 
                     return $response->withBody(
                         $this->streamFactory->createStream(
                             $output->error(
                                 $apiVersion,
                                 ErrorCodeEnum::INVALID_HANDSHAKE,
-                                T_('Received Invalid Handshake') . ' - ' . T_('Login failed, timestamp is out of range') . ' (timestamp: ' . $timestamp . ' ' . T_('Server') . ': ' . $now_time . ')',
+                                'Received Invalid Handshake' . ' - ' . 'Login failed, timestamp is out of range' . ' (timestamp: ' . $timestamp . ' ' . 'Server' . ': ' . $now_time . ')',
                                 self::ACTION,
                                 'account'
                             )
@@ -181,14 +181,14 @@ final class Handshake5Method implements MethodInterface
 
                 if (!$realpwd) {
                     debug_event(self::class, 'Unable to find user with userid of ' . $user_id, 1);
-                    AmpError::add('api', T_('Incorrect username or password'));
+                    AmpError::add('api', 'Incorrect username or password');
 
                     return $response->withBody(
                         $this->streamFactory->createStream(
                             $output->error(
                                 $apiVersion,
                                 ErrorCodeEnum::INVALID_HANDSHAKE,
-                                T_('Received Invalid Handshake') . ' - ' . T_('Incorrect username or password'),
+                                'Received Invalid Handshake' . ' - ' . 'Incorrect username or password',
                                 self::ACTION,
                                 'account'
                             )
@@ -233,7 +233,7 @@ final class Handshake5Method implements MethodInterface
                 $output->error(
                     $apiVersion,
                     ErrorCodeEnum::INVALID_HANDSHAKE,
-                    T_('Received Invalid Handshake') . ' - ' . T_('Incorrect username or password'),
+                    'Received Invalid Handshake' . ' - ' . 'Incorrect username or password',
                     self::ACTION,
                     'account'
                 )

@@ -86,14 +86,14 @@ final class Rate5Method implements MethodInterface
     ): ResponseInterface {
         if (!$this->configContainer->get(ConfigurationKeyEnum::RATINGS)) {
             throw new AccessDeniedException(
-                T_('Enable: ratings')
+                'Enable: ratings'
             );
         }
 
         foreach (['type', 'id', 'rating'] as $parameter) {
             if (!array_key_exists($parameter, $input)) {
                 throw new RequestParamMissingException(
-                    sprintf(T_('Bad Request: %s'), $parameter)
+                    sprintf('Bad Request: %s', $parameter)
                 );
             }
         }
@@ -113,8 +113,7 @@ final class Rate5Method implements MethodInterface
                     $output->error(
                         $apiVersion,
                         ErrorCodeEnum::BAD_REQUEST,
-                        /* HINT: Requested object string/id/type ("album", "myusername", "some song title", 1298376) */
-                        sprintf(T_('Bad Request: %s'), $rating),
+                        sprintf('Bad Request: %s', $rating),
                         self::ACTION,
                         'rating'
                     )
@@ -157,8 +156,7 @@ final class Rate5Method implements MethodInterface
                 $output->error(
                     $apiVersion,
                     ErrorCodeEnum::BAD_REQUEST,
-                    /* HINT: Requested object string/id/type ("album", "myusername", "some song title", 1298376) */
-                    sprintf(T_('Bad Request: %s'), $type),
+                    sprintf('Bad Request: %s', $type),
                     self::ACTION,
                     'type'
                 )

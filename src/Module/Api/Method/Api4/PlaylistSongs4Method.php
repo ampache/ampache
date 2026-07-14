@@ -73,7 +73,7 @@ final class PlaylistSongs4Method
             $playlist = new Search((int) str_replace('smart_', '', $uid), 'song', $user);
         }
         if ($playlist->isNew()) {
-            Api4::message('error', T_('Library item not found'), '404', $input['api_format']);
+            Api4::message('error', 'Library item not found', '404', $input['api_format']);
 
             return false;
         }
@@ -81,7 +81,7 @@ final class PlaylistSongs4Method
             $playlist->type !== 'public'
             && !$playlist->has_collaborate($user)
         ) {
-            Api4::message('error', T_('Access denied to this playlist'), '401', $input['api_format']);
+            Api4::message('error', 'Access denied to this playlist', '401', $input['api_format']);
 
             return false;
         }

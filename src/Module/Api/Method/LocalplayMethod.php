@@ -119,7 +119,7 @@ final class LocalplayMethod implements MethodInterface
 
         if (!array_key_exists('command', $input)) {
             throw new RequestParamMissingException(
-                sprintf(T_('Bad Request: %s'), 'command')
+                sprintf('Bad Request: %s', 'command')
             );
         }
 
@@ -130,7 +130,7 @@ final class LocalplayMethod implements MethodInterface
 
         if (!$this->privilegeChecker->check(AccessTypeEnum::LOCALPLAY, $level, $user->getId())) {
             throw new AccessFailedException(
-                sprintf(T_('Require: %s'), $level->value)
+                sprintf('Require: %s', $level->value)
             );
         }
 
@@ -155,7 +155,7 @@ final class LocalplayMethod implements MethodInterface
                     && !$this->configContainer->get(ConfigurationKeyEnum::ALLOW_VIDEO)
                 ) {
                     throw new AccessDeniedException(
-                        T_('Enable: video')
+                        'Enable: video'
                     );
                 }
 
@@ -182,7 +182,7 @@ final class LocalplayMethod implements MethodInterface
             case 'skip':
                 if (!array_key_exists('track', $input)) {
                     throw new RequestParamMissingException(
-                        sprintf(T_('Bad Request: %s'), 'track')
+                        sprintf('Bad Request: %s', 'track')
                     );
                 }
 

@@ -86,7 +86,7 @@ final class LabelsMethod implements MethodInterface
                 $output->error(
                     $apiVersion,
                     ErrorCodeEnum::ACCESS_DENIED,
-                    T_('Enable: label'),
+                    'Enable: label',
                     self::ACTION,
                     'system'
                 )

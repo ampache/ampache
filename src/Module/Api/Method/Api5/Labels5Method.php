@@ -87,7 +87,7 @@ final class Labels5Method implements MethodInterface
     ): ResponseInterface {
         if (!$this->configContainer->get(ConfigurationKeyEnum::LABEL)) {
             throw new AccessDeniedException(
-                T_('Enable: label')
+                'Enable: label'
             );
         }
 

@@ -99,7 +99,7 @@ final class RegisterMethod implements MethodInterface
         foreach (['username', 'password', 'email'] as $parameter) {
             if (!array_key_exists($parameter, $input)) {
                 throw new RequestParamMissingException(
-                    sprintf(T_('Bad Request: %s'), $parameter)
+                    sprintf('Bad Request: %s', $parameter)
                 );
             }
         }
@@ -137,7 +137,7 @@ final class RegisterMethod implements MethodInterface
             }
 
             $text = ($adminRequired)
-                ? T_('Please wait for an administrator to activate your account')
+                ? 'Please wait for an administrator to activate your account'
                 : 'successfully created: ' . $username;
 
             Catalog::count_table('user');
@@ -181,8 +181,7 @@ final class RegisterMethod implements MethodInterface
             $output->error(
                 $apiVersion,
                 ErrorCodeEnum::BAD_REQUEST,
-                /* HINT: Requested object string/id/type ("album", "myusername", "some song title", 1298376) */
-                sprintf(T_('Bad Request: %s'), $value),
+                sprintf('Bad Request: %s', $value),
                 self::ACTION,
                 $type
             )

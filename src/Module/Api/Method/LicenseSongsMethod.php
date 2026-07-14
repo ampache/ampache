@@ -86,7 +86,7 @@ final class LicenseSongsMethod implements MethodInterface
                 $output->error(
                     $apiVersion,
                     ErrorCodeEnum::ACCESS_DENIED,
-                    T_('Enable: licensing'),
+                    'Enable: licensing',
                     self::ACTION,
                     'system'
                 )
@@ -97,7 +97,7 @@ final class LicenseSongsMethod implements MethodInterface
 
         if (!array_key_exists('filter', $input)) {
             throw new RequestParamMissingException(
-                sprintf(T_('Bad Request: %s'), 'filter')
+                sprintf('Bad Request: %s', 'filter')
             );
         }
 

@@ -80,7 +80,7 @@ final class LastShouts5Method implements MethodInterface
     ): ResponseInterface {
         if (!$this->configContainer->get(ConfigurationKeyEnum::SOCIABLE)) {
             throw new AccessDeniedException(
-                T_('Enable: sociable')
+                'Enable: sociable'
             );
         }
 

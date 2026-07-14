@@ -85,7 +85,7 @@ final class PlaylistAddSong5Method implements MethodInterface
         foreach (['filter', 'song'] as $parameter) {
             if (!array_key_exists($parameter, $input)) {
                 throw new RequestParamMissingException(
-                    sprintf(T_('Bad Request: %s'), $parameter)
+                    sprintf('Bad Request: %s', $parameter)
                 );
             }
         }
@@ -95,7 +95,7 @@ final class PlaylistAddSong5Method implements MethodInterface
 
         if (!$playlist->has_collaborate($user)) {
             throw new AccessFailedException(
-                T_('Require: 100')
+                'Require: 100'
             );
         }
 
@@ -111,8 +111,7 @@ final class PlaylistAddSong5Method implements MethodInterface
                     $output->error(
                         $apiVersion,
                         ErrorCodeEnum::BAD_REQUEST,
-                        /* HINT: Requested object string/id/type ("album", "myusername", "some song title", 1298376) */
-                        sprintf(T_('Bad Request: %s'), $song),
+                        sprintf('Bad Request: %s', $song),
                         self::ACTION,
                         'duplicate'
                     )

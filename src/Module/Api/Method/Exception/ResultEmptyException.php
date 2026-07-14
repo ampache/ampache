@@ -47,8 +47,7 @@ final class ResultEmptyException extends ApiMethodException
      */
     public function __construct(string $identifier, string $type = self::DEFAULT_TYPE)
     {
-        /* HINT: Requested object string/id/type ("album", "myusername", "some song title", 1298376) */
-        parent::__construct(sprintf(T_('Not Found: %s'), $identifier));
+        parent::__construct(sprintf('Not Found: %s', $identifier));
 
         $this->type = $type;
     }

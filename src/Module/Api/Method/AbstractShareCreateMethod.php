@@ -113,14 +113,14 @@ abstract class AbstractShareCreateMethod implements MethodInterface
     ): ResponseInterface {
         if (!$this->configContainer->get(ConfigurationKeyEnum::SHARE)) {
             throw new AccessDeniedException(
-                T_('Enable: share')
+                'Enable: share'
             );
         }
 
         foreach (['type', 'filter'] as $parameter) {
             if (!array_key_exists($parameter, $input)) {
                 throw new RequestParamMissingException(
-                    sprintf(T_('Bad Request: %s'), $parameter)
+                    sprintf('Bad Request: %s', $parameter)
                 );
             }
         }
@@ -215,8 +215,7 @@ abstract class AbstractShareCreateMethod implements MethodInterface
             $output->error(
                 $apiVersion,
                 ErrorCodeEnum::BAD_REQUEST,
-                /* HINT: Requested object string/id/type ("album", "myusername", "some song title", 1298376) */
-                sprintf(T_('Bad Request: %s'), $this->reportedType($input, $objectType)),
+                sprintf('Bad Request: %s', $this->reportedType($input, $objectType)),
                 static::ACTION,
                 'type'
             )

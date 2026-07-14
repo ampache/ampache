@@ -88,7 +88,7 @@ final class FollowersMethod implements MethodInterface
                 $output->error(
                     $apiVersion,
                     ErrorCodeEnum::ACCESS_DENIED,
-                    T_('Enable: sociable'),
+                    'Enable: sociable',
                     self::ACTION,
                     'system'
                 )
@@ -112,8 +112,7 @@ final class FollowersMethod implements MethodInterface
                 $output->error(
                     $apiVersion,
                     ErrorCodeEnum::NOT_FOUND,
-                    /* HINT: Requested object string/id/type ("album", "myusername", "some song title", 1298376) */
-                    sprintf(T_('Not Found: %s'), $username),
+                    sprintf('Not Found: %s', $username),
                     self::ACTION,
                     'username'
                 )

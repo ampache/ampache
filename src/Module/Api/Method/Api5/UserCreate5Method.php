@@ -97,14 +97,14 @@ final class UserCreate5Method implements MethodInterface
             )
         ) {
             throw new AccessFailedException(
-                sprintf(T_('Require: %s'), AccessLevelEnum::ADMIN->value)
+                sprintf('Require: %s', AccessLevelEnum::ADMIN->value)
             );
         }
 
         foreach (['username', 'password', 'email'] as $parameter) {
             if (!array_key_exists($parameter, $input)) {
                 throw new RequestParamMissingException(
-                    sprintf(T_('Bad Request: %s'), $parameter)
+                    sprintf('Bad Request: %s', $parameter)
                 );
             }
         }
@@ -152,7 +152,7 @@ final class UserCreate5Method implements MethodInterface
                 $output->error(
                     $apiVersion,
                     ErrorCodeEnum::BAD_REQUEST,
-                    T_('Bad Request'),
+                    'Bad Request',
                     self::ACTION,
                     'system'
                 )
@@ -175,8 +175,7 @@ final class UserCreate5Method implements MethodInterface
                 $output->error(
                     $apiVersion,
                     ErrorCodeEnum::BAD_REQUEST,
-                    /* HINT: Requested object string/id/type ("album", "myusername", "some song title", 1298376) */
-                    sprintf(T_('Bad Request: %s'), $value),
+                    sprintf('Bad Request: %s', $value),
                     self::ACTION,
                     $type
                 )

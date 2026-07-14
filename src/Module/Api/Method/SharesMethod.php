@@ -90,7 +90,7 @@ final class SharesMethod implements MethodInterface
                 $output->error(
                     $apiVersion,
                     ErrorCodeEnum::ACCESS_DENIED,
-                    T_('Enable: share'),
+                    'Enable: share',
                     self::ACTION,
                     'system'
                 )

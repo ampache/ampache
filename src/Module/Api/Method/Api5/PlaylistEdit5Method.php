@@ -92,7 +92,7 @@ final class PlaylistEdit5Method implements MethodInterface
     ): ResponseInterface {
         if (!array_key_exists('filter', $input)) {
             throw new RequestParamMissingException(
-                sprintf(T_('Bad Request: %s'), 'filter')
+                sprintf('Bad Request: %s', 'filter')
             );
         }
 
@@ -118,7 +118,7 @@ final class PlaylistEdit5Method implements MethodInterface
         // don't continue if you didn't actually get a playlist or the access level
         if (!$playlist->has_access($user)) {
             throw new AccessFailedException(
-                T_('Require: 100')
+                'Require: 100'
             );
         }
 
@@ -163,7 +163,7 @@ final class PlaylistEdit5Method implements MethodInterface
                     $output->error(
                         $apiVersion,
                         ErrorCodeEnum::BAD_REQUEST,
-                        T_('Bad Request'),
+                        'Bad Request',
                         self::ACTION,
                         'input'
                     )

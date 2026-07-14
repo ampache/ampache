@@ -84,7 +84,7 @@ final class UpdateArtistInfo5Method implements MethodInterface
     ): ResponseInterface {
         if (!array_key_exists('id', $input)) {
             throw new RequestParamMissingException(
-                sprintf(T_('Bad Request: %s'), 'id')
+                sprintf('Bad Request: %s', 'id')
             );
         }
 
@@ -96,7 +96,7 @@ final class UpdateArtistInfo5Method implements MethodInterface
             )
         ) {
             throw new AccessFailedException(
-                sprintf(T_('Require: %s'), AccessLevelEnum::MANAGER->value)
+                sprintf('Require: %s', AccessLevelEnum::MANAGER->value)
             );
         }
 
@@ -129,8 +129,7 @@ final class UpdateArtistInfo5Method implements MethodInterface
                 $output->error(
                     $apiVersion,
                     ErrorCodeEnum::BAD_REQUEST,
-                    /* HINT: Requested object string/id/type ("album", "myusername", "some song title", 1298376) */
-                    sprintf(T_('Bad Request: %s'), $object_id),
+                    sprintf('Bad Request: %s', $object_id),
                     self::ACTION,
                     'system'
                 )

@@ -95,7 +95,7 @@ final class Localplay5Method implements MethodInterface
     ): ResponseInterface {
         if (!array_key_exists('command', $input)) {
             throw new RequestParamMissingException(
-                sprintf(T_('Bad Request: %s'), 'command')
+                sprintf('Bad Request: %s', 'command')
             );
         }
 
@@ -106,7 +106,7 @@ final class Localplay5Method implements MethodInterface
 
         if (!$this->privilegeChecker->check(AccessTypeEnum::LOCALPLAY, $level, $user->id)) {
             throw new AccessFailedException(
-                sprintf(T_('Require: %s'), $level->value)
+                sprintf('Require: %s', $level->value)
             );
         }
 
@@ -130,7 +130,7 @@ final class Localplay5Method implements MethodInterface
                     && $type === LibraryItemEnum::VIDEO
                 ) {
                     throw new AccessDeniedException(
-                        T_('Enable: video')
+                        'Enable: video'
                     );
                 }
 
@@ -195,7 +195,7 @@ final class Localplay5Method implements MethodInterface
                         $output->error(
                             $apiVersion,
                             ErrorCodeEnum::BAD_REQUEST,
-                            T_('Bad Request'),
+                            'Bad Request',
                             self::ACTION,
                             'command'
                         )
@@ -231,7 +231,7 @@ final class Localplay5Method implements MethodInterface
                 $output->error(
                     $apiVersion,
                     ErrorCodeEnum::BAD_REQUEST,
-                    T_('Unable to connect to localplay controller'),
+                    'Unable to connect to localplay controller',
                     self::ACTION,
                     'account'
                 )

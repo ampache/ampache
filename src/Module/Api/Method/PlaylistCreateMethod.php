@@ -69,7 +69,7 @@ final class PlaylistCreateMethod implements MethodInterface
     ): ResponseInterface {
         if (!array_key_exists('name', $input)) {
             throw new RequestParamMissingException(
-                sprintf(T_('Bad Request: %s'), 'name')
+                sprintf('Bad Request: %s', 'name')
             );
         }
 

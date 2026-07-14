@@ -65,7 +65,7 @@ final class AdvancedSearch5Method implements MethodInterface
         foreach (['rule_1', 'rule_1_operator', 'rule_1_input'] as $parameter) {
             if (!array_key_exists($parameter, $input)) {
                 throw new RequestParamMissingException(
-                    sprintf(T_('Bad Request: %s'), $parameter)
+                    sprintf('Bad Request: %s', $parameter)
                 );
             }
         }
@@ -83,7 +83,7 @@ final class AdvancedSearch5Method implements MethodInterface
             && !$this->configContainer->get(ConfigurationKeyEnum::ALLOW_VIDEO)
         ) {
             throw new AccessDeniedException(
-                T_('Enable: video')
+                'Enable: video'
             );
         }
     }
@@ -154,7 +154,7 @@ final class AdvancedSearch5Method implements MethodInterface
                     $output->error(
                         $apiVersion,
                         ErrorCodeEnum::BAD_REQUEST,
-                        sprintf(T_('Bad Request: %s'), $type),
+                        sprintf('Bad Request: %s', $type),
                         self::ACTION,
                         'type'
                     )

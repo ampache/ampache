@@ -167,7 +167,7 @@ abstract class AbstractHandshakeMethod implements MethodInterface
                     || ($timestamp > ($nowTime + 1800))
                 ) {
                     debug_event(static::class, 'Login Failed: timestamp out of range ' . $timestamp . '/' . $nowTime, 1);
-                    AmpError::add('api', T_('Login failed, timestamp is out of range'));
+                    AmpError::add('api', 'Login failed, timestamp is out of range');
 
                     return $this->writeInvalidHandshake(
                         $response,
@@ -182,7 +182,7 @@ abstract class AbstractHandshakeMethod implements MethodInterface
                 $realpwd = $this->userRepository->retrievePasswordFromUser($client?->getId() ?? 0);
                 if (!$realpwd) {
                     debug_event(static::class, 'Unable to find user with userid of ' . $userId, 1);
-                    AmpError::add('api', T_('Incorrect username or password'));
+                    AmpError::add('api', 'Incorrect username or password');
 
                     return $this->writeInvalidHandshake(
                         $response,

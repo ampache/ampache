@@ -75,7 +75,7 @@ final class ArtistMethod implements MethodInterface
         $objectId = (int) ($input['filter'] ?? 0);
         if (!array_key_exists('filter', $input)) {
             throw new RequestParamMissingException(
-                sprintf(T_('Bad Request: %s'), 'filter')
+                sprintf('Bad Request: %s', 'filter')
             );
         }
 

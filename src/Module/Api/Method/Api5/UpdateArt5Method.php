@@ -91,7 +91,7 @@ final class UpdateArt5Method implements MethodInterface
         foreach (['type', 'id'] as $parameter) {
             if (!array_key_exists($parameter, $input)) {
                 throw new RequestParamMissingException(
-                    sprintf(T_('Bad Request: %s'), $parameter)
+                    sprintf('Bad Request: %s', $parameter)
                 );
             }
         }
@@ -104,7 +104,7 @@ final class UpdateArt5Method implements MethodInterface
             )
         ) {
             throw new AccessFailedException(
-                sprintf(T_('Require: %s'), AccessLevelEnum::MANAGER->value)
+                sprintf('Require: %s', AccessLevelEnum::MANAGER->value)
             );
         }
 
@@ -121,8 +121,7 @@ final class UpdateArt5Method implements MethodInterface
                     $output->error(
                         $apiVersion,
                         ErrorCodeEnum::BAD_REQUEST,
-                        /* HINT: Requested object string/id/type ("album", "myusername", "some song title", 1298376) */
-                        sprintf(T_('Bad Request: %s'), $type),
+                        sprintf('Bad Request: %s', $type),
                         self::ACTION,
                         'type'
                     )
@@ -148,8 +147,7 @@ final class UpdateArt5Method implements MethodInterface
                     $output->error(
                         $apiVersion,
                         ErrorCodeEnum::BAD_REQUEST,
-                        /* HINT: Requested object string/id/type ("album", "myusername", "some song title", 1298376) */
-                        sprintf(T_('Bad Request: %s'), $object_id),
+                        sprintf('Bad Request: %s', $object_id),
                         self::ACTION,
                         'system'
                     )

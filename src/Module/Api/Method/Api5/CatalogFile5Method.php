@@ -103,14 +103,14 @@ final class CatalogFile5Method implements MethodInterface
             )
         ) {
             throw new AccessFailedException(
-                sprintf(T_('Require: %s'), AccessLevelEnum::CONTENT_MANAGER->value)
+                sprintf('Require: %s', AccessLevelEnum::CONTENT_MANAGER->value)
             );
         }
 
         foreach (['catalog', 'file', 'task'] as $parameter) {
             if (!array_key_exists($parameter, $input)) {
                 throw new RequestParamMissingException(
-                    sprintf(T_('Bad Request: %s'), $parameter)
+                    sprintf('Bad Request: %s', $parameter)
                 );
             }
         }
@@ -124,7 +124,7 @@ final class CatalogFile5Method implements MethodInterface
             && in_array('remove', $task)
         ) {
             throw new AccessDeniedException(
-                T_('Enable: delete_from_disk')
+                'Enable: delete_from_disk'
             );
         }
 
@@ -143,8 +143,7 @@ final class CatalogFile5Method implements MethodInterface
                         $output->error(
                             $apiVersion,
                             ErrorCodeEnum::BAD_REQUEST,
-                            /* HINT: Requested object string/id/type ("album", "myusername", "some song title", 1298376) */
-                            sprintf(T_('Bad Request: %s'), $item),
+                            sprintf('Bad Request: %s', $item),
                             self::ACTION,
                             'task'
                         )
@@ -187,7 +186,7 @@ final class CatalogFile5Method implements MethodInterface
                     $output->error(
                         $apiVersion,
                         ErrorCodeEnum::NOT_FOUND,
-                        T_('Not Found'),
+                        'Not Found',
                         self::ACTION,
                         'catalog'
                     )

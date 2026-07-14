@@ -73,7 +73,7 @@ final class PlaylistMethod implements MethodInterface
     ): ResponseInterface {
         if (!array_key_exists('filter', $input)) {
             throw new RequestParamMissingException(
-                sprintf(T_('Bad Request: %s'), 'filter')
+                sprintf('Bad Request: %s', 'filter')
             );
         }
 
@@ -96,7 +96,7 @@ final class PlaylistMethod implements MethodInterface
                 $output->error(
                     $apiVersion,
                     ErrorCodeEnum::FAILED_ACCESS_CHECK,
-                    T_('Require: 100'),
+                    'Require: 100',
                     self::ACTION,
                     'account'
                 )

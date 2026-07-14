@@ -76,7 +76,7 @@ final class User5Method implements MethodInterface
     ): ResponseInterface {
         if (!array_key_exists('username', $input)) {
             throw new RequestParamMissingException(
-                sprintf(T_('Bad Request: %s'), 'username')
+                sprintf('Bad Request: %s', 'username')
             );
         }
 

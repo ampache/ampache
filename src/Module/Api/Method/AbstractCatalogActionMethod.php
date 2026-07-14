@@ -113,20 +113,20 @@ abstract class AbstractCatalogActionMethod implements MethodInterface
             )
         ) {
             throw new AccessFailedException(
-                sprintf(T_('Require: %s'), AccessLevelEnum::MANAGER->value)
+                sprintf('Require: %s', AccessLevelEnum::MANAGER->value)
             );
         }
 
         $filter = $input[static::FILTER_ALIAS] ?? $input[static::FILTER_KEY] ?? null;
         if ($filter === null) {
             throw new RequestParamMissingException(
-                sprintf(T_('Bad Request: %s'), static::FILTER_KEY)
+                sprintf('Bad Request: %s', static::FILTER_KEY)
             );
         }
 
         if (!array_key_exists('task', $input)) {
             throw new RequestParamMissingException(
-                sprintf(T_('Bad Request: %s'), 'task')
+                sprintf('Bad Request: %s', 'task')
             );
         }
 
@@ -138,8 +138,7 @@ abstract class AbstractCatalogActionMethod implements MethodInterface
                 $output->error(
                     $apiVersion,
                     ErrorCodeEnum::BAD_REQUEST,
-                    /* HINT: Requested object string/id/type ("album", "myusername", "some song title", 1298376) */
-                    sprintf(T_('Bad Request: %s'), $task),
+                    sprintf('Bad Request: %s', $task),
                     static::ACTION,
                     'task'
                 )

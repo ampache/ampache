@@ -79,7 +79,7 @@ final class ShareMethod implements MethodInterface
                 $output->error(
                     $apiVersion,
                     ErrorCodeEnum::ACCESS_DENIED,
-                    T_('Enable: share'),
+                    'Enable: share',
                     self::ACTION,
                     'system'
                 )
@@ -90,7 +90,7 @@ final class ShareMethod implements MethodInterface
 
         if (!array_key_exists('filter', $input)) {
             throw new RequestParamMissingException(
-                sprintf(T_('Bad Request: %s'), 'filter')
+                sprintf('Bad Request: %s', 'filter')
             );
         }
 

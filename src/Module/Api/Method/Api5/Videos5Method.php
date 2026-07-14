@@ -85,7 +85,7 @@ final class Videos5Method implements MethodInterface
     ): ResponseInterface {
         if (!$this->configContainer->get(ConfigurationKeyEnum::ALLOW_VIDEO)) {
             throw new AccessDeniedException(
-                T_('Enable: video')
+                'Enable: video'
             );
         }
 

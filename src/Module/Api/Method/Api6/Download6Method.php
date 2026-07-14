@@ -92,13 +92,13 @@ final class Download6Method implements MethodInterface
         $filter = $input['filter'] ?? $input['id'] ?? null;
         if ($filter === null) {
             throw new RequestParamMissingException(
-                sprintf(T_('Bad Request: %s'), 'id')
+                sprintf('Bad Request: %s', 'id')
             );
         }
 
         if (!array_key_exists('type', $input)) {
             throw new RequestParamMissingException(
-                sprintf(T_('Bad Request: %s'), 'type')
+                sprintf('Bad Request: %s', 'type')
             );
         }
 

@@ -96,7 +96,7 @@ final class GetArt5Method implements MethodInterface
         foreach (['id', 'type'] as $parameter) {
             if (!array_key_exists($parameter, $input)) {
                 throw new RequestParamMissingException(
-                    sprintf(T_('Bad Request: %s'), $parameter)
+                    sprintf('Bad Request: %s', $parameter)
                 );
             }
         }
@@ -116,8 +116,7 @@ final class GetArt5Method implements MethodInterface
                     $output->error(
                         $apiVersion,
                         ErrorCodeEnum::BAD_REQUEST,
-                        /* HINT: Requested object string/id/type ("album", "myusername", "some song title", 1298376) */
-                        sprintf(T_('Bad Request: %s'), $requested_type),
+                        sprintf('Bad Request: %s', $requested_type),
                         self::ACTION,
                         'type'
                     )

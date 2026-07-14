@@ -90,7 +90,7 @@ final class RecordPlay5Method implements MethodInterface
     ): ResponseInterface {
         if (!array_key_exists('id', $input)) {
             throw new RequestParamMissingException(
-                sprintf(T_('Bad Request: %s'), 'id')
+                sprintf('Bad Request: %s', 'id')
             );
         }
 
@@ -122,7 +122,7 @@ final class RecordPlay5Method implements MethodInterface
             )
         ) {
             throw new AccessFailedException(
-                sprintf(T_('Require: %s'), AccessLevelEnum::ADMIN->value)
+                sprintf('Require: %s', AccessLevelEnum::ADMIN->value)
             );
         }
 

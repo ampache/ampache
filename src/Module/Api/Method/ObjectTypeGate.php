@@ -56,22 +56,22 @@ final class ObjectTypeGate
     public static function check(ConfigContainerInterface $configContainer, string $type): ?string
     {
         if ($type === 'video' && !$configContainer->get(ConfigurationKeyEnum::ALLOW_VIDEO)) {
-            return T_('Enable: video');
+            return 'Enable: video';
         }
 
         if (
             ($type === 'podcast' || $type === 'podcast_episode')
             && !$configContainer->get(ConfigurationKeyEnum::PODCAST)
         ) {
-            return T_('Enable: podcast');
+            return 'Enable: podcast';
         }
 
         if ($type === 'share' && !$configContainer->get(ConfigurationKeyEnum::SHARE)) {
-            return T_('Enable: share');
+            return 'Enable: share';
         }
 
         if ($type === 'live_stream' && !$configContainer->get(ConfigurationKeyEnum::RADIO)) {
-            return T_('Enable: live_stream');
+            return 'Enable: live_stream';
         }
 
         return null;

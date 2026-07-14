@@ -103,7 +103,7 @@ abstract class AbstractRecordPlayMethod implements MethodInterface
         $filter = $input[static::FILTER_ALIAS] ?? $input[static::FILTER_KEY] ?? null;
         if ($filter === null) {
             throw new RequestParamMissingException(
-                sprintf(T_('Bad Request: %s'), static::FILTER_KEY)
+                sprintf('Bad Request: %s', static::FILTER_KEY)
             );
         }
 
@@ -135,7 +135,7 @@ abstract class AbstractRecordPlayMethod implements MethodInterface
             )
         ) {
             throw new AccessFailedException(
-                sprintf(T_('Require: %s'), AccessLevelEnum::ADMIN->value)
+                sprintf('Require: %s', AccessLevelEnum::ADMIN->value)
             );
         }
 

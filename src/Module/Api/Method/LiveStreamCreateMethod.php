@@ -94,14 +94,14 @@ final class LiveStreamCreateMethod implements MethodInterface
             )
         ) {
             throw new AccessFailedException(
-                sprintf(T_('Require: %s'), AccessLevelEnum::CONTENT_MANAGER->value)
+                sprintf('Require: %s', AccessLevelEnum::CONTENT_MANAGER->value)
             );
         }
 
         foreach (['name', 'codec', 'url', 'catalog'] as $parameter) {
             if (!array_key_exists($parameter, $input)) {
                 throw new RequestParamMissingException(
-                    sprintf(T_('Bad Request: %s'), $parameter)
+                    sprintf('Bad Request: %s', $parameter)
                 );
             }
         }
@@ -125,8 +125,7 @@ final class LiveStreamCreateMethod implements MethodInterface
                 $output->error(
                     $apiVersion,
                     ErrorCodeEnum::BAD_REQUEST,
-                    /* HINT: Requested object string/id/type ("album", "myusername", "some song title", 1298376) */
-                    sprintf(T_('Bad Request: %s'), $url),
+                    sprintf('Bad Request: %s', $url),
                     self::ACTION,
                     'url'
                 )

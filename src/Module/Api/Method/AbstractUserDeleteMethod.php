@@ -97,14 +97,14 @@ abstract class AbstractUserDeleteMethod implements MethodInterface
             )
         ) {
             throw new AccessFailedException(
-                sprintf(T_('Require: %s'), AccessLevelEnum::ADMIN->value)
+                sprintf('Require: %s', AccessLevelEnum::ADMIN->value)
             );
         }
 
         $username = $input[static::FILTER_ALIAS] ?? $input[static::FILTER_KEY] ?? null;
         if ($username === null) {
             throw new RequestParamMissingException(
-                sprintf(T_('Bad Request: %s'), static::FILTER_KEY)
+                sprintf('Bad Request: %s', static::FILTER_KEY)
             );
         }
 
@@ -123,8 +123,7 @@ abstract class AbstractUserDeleteMethod implements MethodInterface
                 $output->error(
                     $apiVersion,
                     ErrorCodeEnum::BAD_REQUEST,
-                    /* HINT: Requested object string/id/type ("album", "myusername", "some song title", 1298376) */
-                    sprintf(T_('Bad Request: %s'), $username),
+                    sprintf('Bad Request: %s', $username),
                     static::ACTION,
                     'system'
                 )

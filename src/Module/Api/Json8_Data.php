@@ -1262,8 +1262,7 @@ class Json8_Data
             return $output;
         }
 
-        /* HINT: Requested object string/id/type ("album", "myusername", "some song title", 1298376) */
-        return self::error('4710', sprintf(T_('Bad Request: %s'), $type), 'indexes', 'type');
+        return self::error('4710', sprintf('Bad Request: %s', $type), 'indexes', 'type');
     }
 
     /**
@@ -1316,8 +1315,7 @@ class Json8_Data
                 $results = self::live_streams($objects);
                 break;
             default:
-                /* HINT: Requested object string/id/type ("album", "myusername", "some song title", 1298376) */
-                $results = self::error('4710', sprintf(T_('Bad Request: %s'), $type), 'indexes', 'type');
+                $results = self::error('4710', sprintf('Bad Request: %s', $type), 'indexes', 'type');
         }
 
         return $results;

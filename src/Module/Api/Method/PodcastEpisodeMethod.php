@@ -79,7 +79,7 @@ final class PodcastEpisodeMethod implements MethodInterface
                 $output->error(
                     $apiVersion,
                     ErrorCodeEnum::ACCESS_DENIED,
-                    T_('Enable: podcast'),
+                    'Enable: podcast',
                     self::ACTION,
                     'system'
                 )
@@ -90,7 +90,7 @@ final class PodcastEpisodeMethod implements MethodInterface
 
         if (!array_key_exists('filter', $input)) {
             throw new RequestParamMissingException(
-                sprintf(T_('Bad Request: %s'), 'filter')
+                sprintf('Bad Request: %s', 'filter')
             );
         }
 

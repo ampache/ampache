@@ -91,14 +91,14 @@ abstract class AbstractLastShoutsMethod implements MethodInterface
     ): ResponseInterface {
         if (!$this->configContainer->get(ConfigurationKeyEnum::SOCIABLE)) {
             throw new AccessDeniedException(
-                T_('Enable: sociable')
+                'Enable: sociable'
             );
         }
 
         $filter = $input[static::FILTER_ALIAS] ?? $input[static::FILTER_KEY] ?? null;
         if ($filter === null) {
             throw new RequestParamMissingException(
-                sprintf(T_('Bad Request: %s'), static::FILTER_KEY)
+                sprintf('Bad Request: %s', static::FILTER_KEY)
             );
         }
 

@@ -77,7 +77,7 @@ final class VideoMethod implements MethodInterface
                 $output->error(
                     $apiVersion,
                     ErrorCodeEnum::ACCESS_DENIED,
-                    T_('Enable: video'),
+                    'Enable: video',
                     self::ACTION,
                     'system'
                 )
@@ -88,7 +88,7 @@ final class VideoMethod implements MethodInterface
 
         if (!array_key_exists('filter', $input)) {
             throw new RequestParamMissingException(
-                sprintf(T_('Bad Request: %s'), 'filter')
+                sprintf('Bad Request: %s', 'filter')
             );
         }
 

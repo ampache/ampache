@@ -91,14 +91,14 @@ abstract class AbstractToggleFollowMethod implements MethodInterface
     ): ResponseInterface {
         if (!$this->configContainer->get(ConfigurationKeyEnum::SOCIABLE)) {
             throw new AccessDeniedException(
-                T_('Enable: sociable')
+                'Enable: sociable'
             );
         }
 
         $username = $input[static::FILTER_ALIAS] ?? $input[static::FILTER_KEY] ?? null;
         if ($username === null) {
             throw new RequestParamMissingException(
-                sprintf(T_('Bad Request: %s'), static::FILTER_KEY)
+                sprintf('Bad Request: %s', static::FILTER_KEY)
             );
         }
 
@@ -107,7 +107,7 @@ abstract class AbstractToggleFollowMethod implements MethodInterface
                 $output->error(
                     $apiVersion,
                     ErrorCodeEnum::BAD_REQUEST,
-                    sprintf(T_('Bad Request: %s'), static::FILTER_KEY),
+                    sprintf('Bad Request: %s', static::FILTER_KEY),
                     static::ACTION,
                     'username'
                 )

@@ -79,7 +79,7 @@ final class Album4Method implements MethodInterface
 
         if ($objectId === null) {
             throw new RequestParamMissingException(
-                sprintf(T_('Bad Request: %s'), 'filter')
+                sprintf('Bad Request: %s', 'filter')
             );
         }
 

@@ -87,7 +87,7 @@ final class Licenses5Method implements MethodInterface
     ): ResponseInterface {
         if (!$this->configContainer->get(ConfigurationKeyEnum::LICENSING)) {
             throw new AccessDeniedException(
-                T_('Enable: licensing')
+                'Enable: licensing'
             );
         }
 

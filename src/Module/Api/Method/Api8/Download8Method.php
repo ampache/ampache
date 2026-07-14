@@ -97,7 +97,7 @@ final class Download8Method implements MethodInterface
         $filter = $input['id'] ?? $input['filter'] ?? null;
         if ($filter === null || !isset($input['type'])) {
             throw new RequestParamMissingException(
-                sprintf(T_('Bad Request: %s'), 'filter/type')
+                sprintf('Bad Request: %s', 'filter/type')
             );
         }
 
