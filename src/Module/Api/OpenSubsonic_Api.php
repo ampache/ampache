@@ -2868,7 +2868,8 @@ class OpenSubsonic_Api
         $stream             = new Stream_Playlist();
         $additional_params  = '';
         if ($bitRate) {
-            $additional_params .= '&bitrate=' . $bitRate;
+            // OpenSubsonic bitRate is kbps, convert to bps
+            $additional_params .= '&bitrate=' . ($bitRate * 1000);
         }
 
         $stream->add($medias, $additional_params);

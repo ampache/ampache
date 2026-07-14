@@ -682,17 +682,18 @@ class Stream
         }
 
         $song_file = self::_scrub_arg($media->file);
-        $bit_rate  = $options['bitrate'] ?? self::get_max_bitrate($media, $transcode_settings, $options);
+        $bit_rate = isset($options['bitrate'])
+            ? (int) $options['bitrate']
+            : self::get_max_bitrate($media, $transcode_settings, $options) * 1000;
         debug_event(self::class, 'Final transcode bitrate is ' . $bit_rate, 4);
+
+        $max_bit_rate = ((int) ($options['maxbitrate'] ?? 8000)) * 1000;
 
         // Finalise the command line
         $command    = $transcode_settings['command'];
         $string_map = [
             '%FILE%' => $song_file,
-            '%SAMPLE%' => $bit_rate, // Deprecated
-            '%BITRATE%' => $bit_rate
         ];
-        $string_map['%MAXBITRATE%'] = $options['maxbitrate'] ?? 8000;
         if ($media instanceof Video) {
             $string_map['%RESOLUTION%'] = $options['resolution'] ?? $media->get_f_resolution() ?? '1280x720';
             $string_map['%QUALITY%']    = (isset($options['quality']))
@@ -718,6 +719,19 @@ class Stream
         foreach ($string_map as $search => $replace) {
             $command = str_replace($search, (string) $replace, $command, $ret);
             if ($ret === 0) {
+                debug_event(self::class, $search . ' not in transcode command', 5);
+            }
+        }
+
+        $bitrate_map = [
+            '%SAMPLE%' => $bit_rate,
+            '%BITRATE%' => $bit_rate,
+            '%MAXBITRATE%' => $max_bit_rate,
+        ];
+        foreach ($bitrate_map as $search => $replace) {
+            $command = str_replace($search . 'k', (string) $replace, $command, $retK);
+            $command = str_replace($search, (string) $replace, $command, $ret);
+            if ($retK === 0 && $ret === 0) {
                 debug_event(self::class, $search . ' not in transcode command', 5);
             }
         }
