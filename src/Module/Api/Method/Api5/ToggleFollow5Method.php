@@ -77,12 +77,13 @@ final class ToggleFollow5Method
             }
 
             /* HINT: Requested object string/id/type ("album", "myusername", "some song title", 1298376) */
-            Api5::error(ErrorCodeEnum::NOT_FOUND, sprintf('Not Found: %s', $username), self::ACTION, 'filter', $input['api_format']);
+            Api5::error(ErrorCodeEnum::NOT_FOUND, sprintf(T_('Not Found: %s'), $username), self::ACTION, 'filter', $input['api_format']);
 
             return false;
         }
 
-        Api5::error(ErrorCodeEnum::BAD_REQUEST, sprintf('Bad Request: %s', 'username'), self::ACTION, 'username', $input['api_format']);
+        /* HINT: Requested object string/id/type ("album", "myusername", "some song title", 1298376) */
+        Api5::error(ErrorCodeEnum::BAD_REQUEST, sprintf(T_('Bad Request: %s'), 'username'), self::ACTION, 'username', $input['api_format']);
 
         return false;
     }

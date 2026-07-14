@@ -105,7 +105,8 @@ final class GetIndexes5Method
         $include = (array_key_exists('include', $input) && (int) $input['include'] == 1);
         $hide    = (array_key_exists('hide_search', $input) && (int) $input['hide_search'] == 1) || AmpConfig::get('hide_search', false);
         // confirm the correct data
-        if (!in_array(strtolower($type), ['song', 'album', 'artist', 'album_artist', 'playlist', 'podcast', 'podcast_episode', 'video', 'live_stream'])) {
+        if (!in_array(strtolower($type), ['song', 'album', 'artist', 'album_artist', 'playlist', 'podcast', 'podcast_episode', 'share', 'video', 'live_stream'])) {
+            /* HINT: Requested object string/id/type ("album", "myusername", "some song title", 1298376) */
             Api5::error(ErrorCodeEnum::BAD_REQUEST, sprintf(T_('Bad Request: %s'), $type), self::ACTION, 'type', $input['api_format']);
 
             return false;

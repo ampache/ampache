@@ -336,6 +336,7 @@ class Api6
      * parameter_exists
      *
      * This function checks the $input actually has the parameter.
+     * A parameter sent with an empty value (e.g. 'filter=') doesn't count as sent.
      * Parameters must be an array of required elements as a string
      *
      * @param array<string, mixed> $input
@@ -344,7 +345,12 @@ class Api6
     public static function parameter_exists(array $input, array $parameters): bool|string
     {
         foreach ($parameters as $parameter) {
-            if (array_key_exists($parameter, $input)) {
+            if (
+                array_key_exists($parameter, $input)
+                && $input[$parameter] !== null
+                && $input[$parameter] !== ''
+                && $input[$parameter] !== []
+            ) {
                 continue;
             }
 

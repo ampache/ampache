@@ -93,6 +93,7 @@ final class Handshake5Method
         if ((int) ($version) < Api5::$auth_version && $data_version !== 5) {
             debug_event(self::class, 'Login Failed: Version too old', 1);
             AmpError::add('api', T_('Login failed, API version is too old'));
+            Api5::error(ErrorCodeEnum::INVALID_HANDSHAKE, T_('Received Invalid Handshake') . ' - ' . T_('Login failed, API version is too old'), self::ACTION, 'version', $input['api_format']);
 
             return false;
         }
@@ -144,7 +145,7 @@ final class Handshake5Method
                 if (!$realpwd) {
                     debug_event(self::class, 'Unable to find user with userid of ' . $user_id, 1);
                     AmpError::add('api', T_('Incorrect username or password'));
-                    Api5::error(ErrorCodeEnum::INVALID_HANDSHAKE, T_('Received Invalid Handshake') . ' - ' . T_('Login failed, timestamp is out of range'), self::ACTION, 'account', $input['api_format']);
+                    Api5::error(ErrorCodeEnum::INVALID_HANDSHAKE, T_('Received Invalid Handshake') . ' - ' . T_('Incorrect username or password'), self::ACTION, 'account', $input['api_format']);
 
                     return false;
                 }

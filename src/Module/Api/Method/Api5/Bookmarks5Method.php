@@ -44,9 +44,14 @@ final class Bookmarks5Method
      *
      * Get information about bookmarked media this user is allowed to manage.
      *
+     * offset = (integer) //optional
+     * limit = (integer) //optional
+     *
      * @param array{
      *     client?: string,
      *     include?: int,
+     *     offset?: int,
+     *     limit?: int,
      *     api_format: string,
      *     auth: string,
      * } $input
@@ -63,9 +68,13 @@ final class Bookmarks5Method
         ob_end_clean();
         switch ($input['api_format']) {
             case 'json':
+                Json5_Data::set_offset($input['offset'] ?? 0);
+                Json5_Data::set_limit($input['limit'] ?? 0);
                 echo Json5_Data::bookmarks($results);
                 break;
             default:
+                Xml5_Data::set_offset($input['offset'] ?? 0);
+                Xml5_Data::set_limit($input['limit'] ?? 0);
                 echo Xml5_Data::bookmarks($results);
         }
 

@@ -64,10 +64,11 @@ final class GetSimilar5Method
         if (!Api5::check_parameter($input, ['type', 'filter'], self::ACTION)) {
             return false;
         }
-        $type      = (string) $input['type'];
+        $type      = strtolower((string) $input['type']);
         $object_id = (int) $input['filter'];
         // confirm the correct data
-        if (!in_array(strtolower($type), ['song', 'artist'])) {
+        if (!in_array($type, ['song', 'artist'])) {
+            /* HINT: Requested object string/id/type ("album", "myusername", "some song title", 1298376) */
             Api5::error(ErrorCodeEnum::BAD_REQUEST, sprintf(T_('Bad Request: %s'), $type), self::ACTION, 'type', $input['api_format']);
 
             return false;

@@ -69,19 +69,23 @@ final class Timeline5Method
         if (!Api5::check_parameter($input, ['username'], self::ACTION)) {
             return false;
         }
-        unset($user);
         $username = $input['username'];
         $limit    = (int) ($input['limit'] ?? 0);
         $since    = (int) ($input['since'] ?? 0);
 
         if (!empty($username)) {
-            $user = User::get_from_username($username);
+            $leadUser = User::get_from_username($username);
+            // an unknown user, or one who keeps their activity private, renders nothing.
+            // you can always see your own timeline
             if (
-                $user instanceof User
-                && Preference::get_by_user($user->id, 'allow_personal_info_recent')
+                $leadUser instanceof User
+                && (
+                    $leadUser->getId() === $user->getId()
+                    || Preference::get_by_user($leadUser->getId(), 'allow_personal_info_recent')
+                )
             ) {
                 $results = self::getUseractivityRepository()->getActivities(
-                    $user->getId(),
+                    $leadUser->getId(),
                     $limit,
                     $since
                 );

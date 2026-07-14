@@ -63,9 +63,6 @@ final class LastShouts5Method
 
             return false;
         }
-        if (!Api5::check_parameter($input, ['username'], self::ACTION)) {
-            return false;
-        }
         unset($user);
         $limit = (int) ($input['limit'] ?? 0);
         if ($limit < 1) {

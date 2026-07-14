@@ -70,13 +70,15 @@ final class PodcastDelete4Method
         $object_id = (int) $input['filter'];
         $podcast   = self::getPodcastRepository()->findById($object_id);
 
-        if ($podcast !== null) {
-            self::getPodcastDeleter()->delete($podcast);
-
-            Api4::message('success', 'podcast ' . $object_id . ' deleted', null, $input['api_format']);
-        } else {
+        if ($podcast === null) {
             Api4::message('error', 'podcast ' . $object_id . ' was not found', '404', $input['api_format']);
+
+            return false;
         }
+
+        self::getPodcastDeleter()->delete($podcast);
+
+        Api4::message('success', 'podcast ' . $object_id . ' deleted', null, $input['api_format']);
 
         return true;
     }
