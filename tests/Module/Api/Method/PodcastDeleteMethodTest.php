@@ -29,6 +29,7 @@ use Ampache\Config\ConfigContainerInterface;
 use Ampache\Config\ConfigurationKeyEnum;
 use Ampache\Module\Api\Authentication\GatekeeperInterface;
 use Ampache\Module\Api\Method\Exception\AccessDeniedException;
+use Ampache\Module\Api\Method\Exception\AccessFailedException;
 use Ampache\Module\Api\Method\Exception\RequestParamMissingException;
 use Ampache\Module\Api\Method\Exception\ResultEmptyException;
 use Ampache\Module\Api\Output\ApiOutputInterface;
@@ -133,8 +134,9 @@ class PodcastDeleteMethodTest extends TestCase
     #[DataProvider(methodName: 'apiVersionProvider')]
     public function testHandleThrowsIfAccessIsDenied(int $apiVersion): void
     {
-        static::expectException(AccessDeniedException::class);
-        static::expectExceptionMessage('Access denied');
+        // a failed access-level check reports 4742/'account', not the 4703/'system' of a config gate
+        static::expectException(AccessFailedException::class);
+        static::expectExceptionMessage(sprintf('Require: %s', AccessLevelEnum::MANAGER->value));
 
         $userId = 666;
 

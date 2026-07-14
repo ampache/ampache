@@ -101,7 +101,8 @@ final class PodcastEpisodes4Method implements MethodInterface
         $output->setLimit($apiVersion, $input['limit'] ?? 0);
 
         $response->getBody()->write(
-            $output->podcastEpisodes($apiVersion, $results, $user, $input['auth'])
+            // version 4 json returns the bare episode list, without the object wrapper
+            $output->podcastEpisodes($apiVersion, $results, $user, $input['auth'], true, false)
         );
 
         return $response;

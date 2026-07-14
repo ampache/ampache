@@ -25,13 +25,18 @@ declare(strict_types=1);
 
 namespace Ampache\Module\Api\Output;
 
+use Ampache\Module\Api\Api;
 use Ampache\Module\Api\Xml3_Data;
 use Ampache\Module\Api\Xml4_Data;
 use Ampache\Module\Api\Xml5_Data;
 use Ampache\Module\Api\Xml6_Data;
 use Ampache\Module\Api\Xml8_Data;
+use Ampache\Repository\Model\Folder;
 use Ampache\Repository\Model\library_item;
+use Ampache\Repository\Model\LibraryItemEnum;
+use Ampache\Repository\Model\Shoutbox;
 use Ampache\Repository\Model\User;
+use ArrayIterator;
 
 final class XmlOutput implements ApiOutputInterface
 {
@@ -64,13 +69,14 @@ final class XmlOutput implements ApiOutputInterface
     /**
      * At the moment, this method just acts as a proxy
      *
-     * @param 6|8 $apiVersion
+     * @param 5|6|8 $apiVersion
      * @param array<int|string> $artists
      * @param string[] $include
      */
     public function artists(int $apiVersion, array $artists, array $include, User $user, string $auth, bool $asObject = true): string
     {
         return match ($apiVersion) {
+            5 => Xml5_Data::artists($artists, $include, $user, $auth),
             6 => Xml6_Data::artists($artists, $include, $user, $auth),
             8 => Xml8_Data::artists($artists, $include, $user, $auth),
         };
@@ -79,12 +85,13 @@ final class XmlOutput implements ApiOutputInterface
     /**
      * At the moment, this method just acts as a proxy
      *
-     * @param 6|8 $apiVersion
+     * @param 5|6|8 $apiVersion
      * @param int[] $bookmarks Bookmark id's to include
      */
     public function bookmarks(int $apiVersion, array $bookmarks, string $auth, bool $include = false, bool $asObject = true): string
     {
         return match ($apiVersion) {
+            5 => Xml5_Data::bookmarks($bookmarks),
             6 => Xml6_Data::bookmarks($bookmarks, $auth, $include),
             8 => Xml8_Data::bookmarks($bookmarks, $auth, $include),
         };
@@ -94,11 +101,33 @@ final class XmlOutput implements ApiOutputInterface
      * At the moment, this method just acts as a proxy
      *
      * @param 6|8 $apiVersion
+     * @param array<int, array{id: int|string, name: string}> $objects
+     */
+    public function browses(
+        int $apiVersion,
+        array $objects,
+        string $parentType,
+        string $childType,
+        ?int $parentId = null,
+        ?int $catalogId = null,
+    ): string {
+        return match ($apiVersion) {
+            6 => Xml6_Data::browses($objects, $parentType, $childType, $parentId, $catalogId),
+            8 => Xml8_Data::browses($objects, $parentType, $childType, $parentId, $catalogId),
+        };
+    }
+
+    /**
+     * At the moment, this method just acts as a proxy
+     *
+     * @param 5|6|8 $apiVersion
      * @param array<int|string> $catalogs
      */
     public function catalogs(int $apiVersion, array $catalogs, User $user, bool $asObject = true): string
     {
         return match ($apiVersion) {
+            // the version 5 builder only ever took integer ids
+            5 => Xml5_Data::catalogs(array_map(intval(...), $catalogs), $user),
             6 => Xml6_Data::catalogs($catalogs, $user),
             8 => Xml8_Data::catalogs($catalogs, $user),
         };
@@ -107,7 +136,7 @@ final class XmlOutput implements ApiOutputInterface
     /**
      * At the moment, this method just acts as a proxy
      *
-     * @param 6|8 $apiVersion
+     * @param 5|6|8 $apiVersion
      * @param array<int, array{
      *     id: int,
      *     addition_time: int,
@@ -126,8 +155,36 @@ final class XmlOutput implements ApiOutputInterface
     public function deleted(int $apiVersion, string $objectType, array $objects): string
     {
         return match ($apiVersion) {
+            5 => Xml5_Data::deleted($objectType, $objects),
             6 => Xml6_Data::deleted($objectType, $objects),
             8 => Xml8_Data::deleted($objectType, $objects),
+        };
+    }
+
+    /**
+     * At the moment, this method just acts as a proxy
+     *
+     * The json-only object flag does not apply to xml.
+     *
+     * @param 5|6|8 $apiVersion
+     * @param array<int, array{
+     *    object_type: LibraryItemEnum,
+     *    object_id: int,
+     *    track_id: int,
+     *    track: int
+     * }> $objectIds
+     */
+    public function democratic(
+        int $apiVersion,
+        array $objectIds,
+        User $user,
+        string $auth,
+        bool $asObject = true,
+    ): string {
+        return match ($apiVersion) {
+            5 => Xml5_Data::democratic($objectIds, $user, $auth),
+            6 => Xml6_Data::democratic($objectIds, $user, $auth),
+            8 => Xml8_Data::democratic($objectIds, $user, $auth),
         };
     }
 
@@ -150,12 +207,30 @@ final class XmlOutput implements ApiOutputInterface
     /**
      * At the moment, this method just acts as a proxy
      *
-     * @param 6|8 $apiVersion
+     * @param 8 $apiVersion only api version 8 knows about folders
+     * @param array<int|string> $objects
+     */
+    public function folders(
+        int $apiVersion,
+        array $objects,
+        Folder $folder,
+        User $user,
+        string $auth,
+        bool $asObject = true,
+    ): string {
+        return Xml8_Data::folders($objects, $folder, $user, $auth);
+    }
+
+    /**
+     * At the moment, this method just acts as a proxy
+     *
+     * @param 5|6|8 $apiVersion
      * @param array<int|string> $genres
      */
     public function genres(int $apiVersion, array $genres, User $user, bool $asObject = true): string
     {
         return match ($apiVersion) {
+            5 => Xml5_Data::genres($genres, $user),
             6 => Xml6_Data::genres($genres, $user),
             8 => Xml8_Data::genres($genres, $user),
         };
@@ -178,12 +253,50 @@ final class XmlOutput implements ApiOutputInterface
     /**
      * At the moment, this method just acts as a proxy
      *
+     * @param 5|6|8 $apiVersion
+     * @param array<int|string> $objects
+     */
+    public function indexes(
+        int $apiVersion,
+        array $objects,
+        string $objectType,
+        User $user,
+        string $auth,
+        bool $fullXml = true,
+        bool $include = false,
+    ): string {
+        return match ($apiVersion) {
+            5 => Xml5_Data::indexes($objects, $objectType, $user, $auth, $fullXml, $include),
+            6 => Xml6_Data::indexes($objects, $objectType, $user, $auth, $fullXml, $include),
+            8 => Xml8_Data::indexes($objects, $objectType, $user, $auth, $fullXml, $include),
+        };
+    }
+
+    /**
+     * The keyed-array builder is version agnostic and shared by both api versions
+     *
      * @param 6|8 $apiVersion
+     * @param array<array-key, mixed> $array
+     */
+    public function keyedArray(
+        int $apiVersion,
+        array $array,
+        bool $callback = false,
+        bool|string $object = false,
+    ): string {
+        return Api::keyed_array($array, $callback, $object);
+    }
+
+    /**
+     * At the moment, this method just acts as a proxy
+     *
+     * @param 5|6|8 $apiVersion
      * @param array<int|string> $labels
      */
     public function labels(int $apiVersion, array $labels, User $user, bool $asObject = true): string
     {
         return match ($apiVersion) {
+            5 => Xml5_Data::labels($labels, $user),
             6 => Xml6_Data::labels($labels, $user),
             8 => Xml8_Data::labels($labels, $user),
         };
@@ -192,12 +305,13 @@ final class XmlOutput implements ApiOutputInterface
     /**
      * At the moment, this method just acts as a proxy
      *
-     * @param 6|8 $apiVersion
+     * @param 5|6|8 $apiVersion
      * @param array<int|string> $licenses
      */
     public function licenses(int $apiVersion, array $licenses, User $user, bool $asObject = true): string
     {
         return match ($apiVersion) {
+            5 => Xml5_Data::licenses($licenses, $user),
             6 => Xml6_Data::licenses($licenses, $user),
             8 => Xml8_Data::licenses($licenses, $user),
         };
@@ -219,15 +333,31 @@ final class XmlOutput implements ApiOutputInterface
     /**
      * At the moment, this method just acts as a proxy
      *
-     * @param 6|8 $apiVersion
+     * @param 5|6|8 $apiVersion
      * @param array<int|string> $liveStreams
      */
     public function liveStreams(int $apiVersion, array $liveStreams, User $user, bool $asObject = true): string
     {
         return match ($apiVersion) {
+            5 => Xml5_Data::live_streams($liveStreams, $user),
             6 => Xml6_Data::live_streams($liveStreams, $user),
             8 => Xml8_Data::live_streams($liveStreams, $user),
         };
+    }
+
+    /**
+     * Render the result of a localplay command
+     *
+     * Unlike json, the xml status leaves `repeat`/`random` exactly as the controller returned them.
+     *
+     * @param array<string, mixed>|bool $result
+     */
+    public function localplayResult(
+        int $apiVersion,
+        string $command,
+        array|bool $result,
+    ): string {
+        return Api::keyed_array(['localplay' => ['command' => [$command => $result]]]);
     }
 
     /**
@@ -250,14 +380,34 @@ final class XmlOutput implements ApiOutputInterface
     }
 
     /**
-     * At the moment, this method just acts as a proxy
+     * Builds the item document from $xmlItems; the json payload does not apply here
+     *
+     * The object-array builder is version agnostic and shared by both api versions.
      *
      * @param 6|8 $apiVersion
+     * @param array<mixed> $jsonPayload
+     * @param array<int, array<string, mixed>> $xmlItems
+     */
+    public function objectArray(
+        int $apiVersion,
+        array $jsonPayload,
+        array $xmlItems,
+        string $item,
+        string $objectType = '',
+    ): string {
+        return Api::object_array($xmlItems, $item, $objectType);
+    }
+
+    /**
+     * At the moment, this method just acts as a proxy
+     *
+     * @param 5|6|8 $apiVersion
      * @param array<int|string> $playlists
      */
     public function playlists(int $apiVersion, array $playlists, User $user, string $auth, bool $songs = false, bool $asObject = true): string
     {
         return match ($apiVersion) {
+            5 => Xml5_Data::playlists($playlists, $user, $auth),
             6 => Xml6_Data::playlists($playlists, $user, $auth, $songs),
             8 => Xml8_Data::playlists($playlists, $user, $auth, $songs),
         };
@@ -280,23 +430,85 @@ final class XmlOutput implements ApiOutputInterface
     /**
      * At the moment, this method just acts as a proxy
      *
-     * @param 6|8 $apiVersion
+     * @param 5|6|8 $apiVersion
      * @param array<int|string> $podcasts
      */
     public function podcasts(int $apiVersion, array $podcasts, User $user, string $auth, bool $episodes = false, bool $asObject = true): string
     {
         return match ($apiVersion) {
+            5 => Xml5_Data::podcasts($podcasts, $user, $auth, $episodes),
             6 => Xml6_Data::podcasts($podcasts, $user, $auth, $episodes),
             8 => Xml8_Data::podcasts($podcasts, $user, $auth, $episodes),
         };
     }
 
     /**
+     * The xml format renders a grouped search as a single searches document
+     *
      * @param 6|8 $apiVersion
+     * @param array<string, array<int|string>> $results
+     * @param array<string, int> $counts
+     */
+    public function searchGroup(
+        int $apiVersion,
+        array $results,
+        array $counts,
+        User $user,
+        string $auth,
+        int $offset,
+        int $limit,
+    ): string {
+        $this->setOffset($apiVersion, $offset);
+        $this->setLimit($apiVersion, $limit);
+
+        // don't set count here as each type of object will count themselves
+        return match ($apiVersion) {
+            6 => Xml6_Data::searches($results, $counts, $user, $auth),
+            8 => Xml8_Data::searches($results, $counts, $user, $auth),
+        };
+    }
+
+    /**
+     * Render a search result for a single object type
+     *
+     * @param 6|8 $apiVersion
+     * @param array<int|string> $results
+     */
+    public function searchResult(
+        int $apiVersion,
+        string $type,
+        array $results,
+        User $user,
+        string $auth,
+        int $offset,
+        int $limit,
+        int $count,
+    ): string {
+        $this->setOffset($apiVersion, $offset);
+        $this->setLimit($apiVersion, $limit);
+        $this->setCount($apiVersion, $count);
+
+        return match ($type) {
+            'album' => $this->albums($apiVersion, $results, [], $user, $auth),
+            'song_artist', 'album_artist', 'artist' => $this->artists($apiVersion, $results, [], $user, $auth),
+            'label' => $this->labels($apiVersion, $results, $user),
+            'playlist' => $this->playlists($apiVersion, $results, $user, $auth),
+            'podcast' => $this->podcasts($apiVersion, $results, $user, $auth),
+            'podcast_episode' => $this->podcastEpisodes($apiVersion, $results, $user, $auth),
+            'genre', 'tag' => $this->genres($apiVersion, $results, $user),
+            'user' => $this->users($apiVersion, $results),
+            'video' => $this->videos($apiVersion, $results, $user, $auth),
+            default => $this->songs($apiVersion, $results, $user, $auth),
+        };
+    }
+
+    /**
+     * @param 5|6|8 $apiVersion
      */
     public function setCount(int $apiVersion, int|string $count): void
     {
         match ($apiVersion) {
+            5 => Xml5_Data::set_count($count),
             6 => Xml6_Data::set_count($count),
             8 => Xml8_Data::set_count($count),
         };
@@ -333,12 +545,13 @@ final class XmlOutput implements ApiOutputInterface
     /**
      * At the moment, this method just acts as a proxy
      *
-     * @param 6|8 $apiVersion
+     * @param 5|6|8 $apiVersion
      * @param array<int|string> $shares
      */
     public function shares(int $apiVersion, array $shares, User $user, bool $asObject = true): string
     {
         return match ($apiVersion) {
+            5 => Xml5_Data::shares($shares, $user),
             6 => Xml6_Data::shares($shares, $user),
             8 => Xml8_Data::shares($shares, $user),
         };
@@ -347,12 +560,33 @@ final class XmlOutput implements ApiOutputInterface
     /**
      * At the moment, this method just acts as a proxy
      *
-     * @param 6|8 $apiVersion
+     * The json-only object flag does not apply to xml.
+     *
+     * @param 5|6|8 $apiVersion
+     * @param array<Shoutbox> $shouts
+     */
+    public function shouts(
+        int $apiVersion,
+        array $shouts,
+        bool $asObject = true,
+    ): string {
+        return match ($apiVersion) {
+            5 => Xml5_Data::shouts(new ArrayIterator($shouts)),
+            6 => Xml6_Data::shouts($shouts),
+            8 => Xml8_Data::shouts($shouts),
+        };
+    }
+
+    /**
+     * At the moment, this method just acts as a proxy
+     *
+     * @param 5|6|8 $apiVersion
      * @param array<int|string> $songs
      */
     public function songs(int $apiVersion, array $songs, User $user, string $auth, bool $encode = true, bool $asObject = true): string
     {
         return match ($apiVersion) {
+            5 => Xml5_Data::songs($songs, $user, $auth),
             6 => Xml6_Data::songs($songs, $user, $auth),
             8 => Xml8_Data::songs($songs, $user, $auth),
         };
@@ -393,12 +627,13 @@ final class XmlOutput implements ApiOutputInterface
     /**
      * At the moment, this method just acts as a proxy
      *
-     * @param 6|8 $apiVersion
+     * @param 5|6|8 $apiVersion
      * @param int[] $activities Activity id list
      */
     public function timeline(int $apiVersion, array $activities): string
     {
         return match ($apiVersion) {
+            5 => Xml5_Data::timeline($activities),
             6 => Xml6_Data::timeline($activities),
             8 => Xml8_Data::timeline($activities),
         };
@@ -407,11 +642,12 @@ final class XmlOutput implements ApiOutputInterface
     /**
      * At the moment, this method just acts as a proxy
      *
-     * @param 6|8 $apiVersion
+     * @param 5|6|8 $apiVersion
      */
     public function user(int $apiVersion, User $user, bool $fullInfo, string $auth, bool $asObject = true): string
     {
         return match ($apiVersion) {
+            5 => Xml5_Data::user($user, $fullInfo),
             6 => Xml6_Data::user($user, $fullInfo, $auth),
             8 => Xml8_Data::user($user, $fullInfo, $auth),
         };
@@ -420,12 +656,13 @@ final class XmlOutput implements ApiOutputInterface
     /**
      * At the moment, this method just acts as a proxy
      *
-     * @param 6|8 $apiVersion
+     * @param 5|6|8 $apiVersion
      * @param array<int|string> $users
      */
     public function users(int $apiVersion, array $users): string
     {
         return match ($apiVersion) {
+            5 => Xml5_Data::users($users),
             6 => Xml6_Data::users($users),
             8 => Xml8_Data::users($users),
         };
@@ -434,12 +671,13 @@ final class XmlOutput implements ApiOutputInterface
     /**
      * At the moment, this method just acts as a proxy
      *
-     * @param 6|8 $apiVersion
+     * @param 5|6|8 $apiVersion
      * @param array<int|string> $videos
      */
     public function videos(int $apiVersion, array $videos, User $user, string $auth, bool $asObject = true): string
     {
         return match ($apiVersion) {
+            5 => Xml5_Data::videos($videos, $user, $auth),
             6 => Xml6_Data::videos($videos, $user, $auth),
             8 => Xml8_Data::videos($videos, $user, $auth),
         };
@@ -448,11 +686,12 @@ final class XmlOutput implements ApiOutputInterface
     /**
      * Generate an empty api result
      *
-     * @param 6|8 $apiVersion
+     * @param 5|6|8 $apiVersion
      */
     public function writeEmpty(int $apiVersion, ?string $emptyType): string
     {
         return match ($apiVersion) {
+            5 => Xml5_Data::empty(),
             6 => Xml6_Data::empty(),
             8 => Xml8_Data::empty(),
         };

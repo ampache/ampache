@@ -29,6 +29,7 @@ use Ampache\Config\ConfigContainerInterface;
 use Ampache\Config\ConfigurationKeyEnum;
 use Ampache\Module\Api\Authentication\GatekeeperInterface;
 use Ampache\Module\Api\Method\Exception\AccessDeniedException;
+use Ampache\Module\Api\Method\Exception\AccessFailedException;
 use Ampache\Module\Api\Method\Exception\RequestParamMissingException;
 use Ampache\Module\Api\Method\Exception\ResultEmptyException;
 use Ampache\Module\Api\Output\ApiOutputInterface;
@@ -78,7 +79,7 @@ final class PodcastDeleteMethod implements MethodInterface
      *     api_format: string,
      *     auth: string,
      * } $input
-     * @throws AccessDeniedException|RequestParamMissingException|ResultEmptyException
+     * @throws AccessDeniedException|AccessFailedException|RequestParamMissingException|ResultEmptyException
      */
     public function handle(
         GatekeeperInterface $gatekeeper,
@@ -95,8 +96,8 @@ final class PodcastDeleteMethod implements MethodInterface
         }
 
         if (!$this->privilegeChecker->check(AccessTypeEnum::INTERFACE, AccessLevelEnum::MANAGER, $user->getId())) {
-            throw new AccessDeniedException(
-                T_('Access denied')
+            throw new AccessFailedException(
+                sprintf(T_('Require: %s'), AccessLevelEnum::MANAGER->value)
             );
         }
 

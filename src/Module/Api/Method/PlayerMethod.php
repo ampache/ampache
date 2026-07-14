@@ -93,17 +93,21 @@ final class PlayerMethod implements MethodInterface
         }
 
         $objectId = (int) $input['filter'];
-        $type     = (string) ($input['type'] ?? 'song');
-        $state    = (string) ($input['state'] ?? 'play');
+
+        // both are matched case insensitively, so everything below works on the normalized names
+        $requestedType  = (string) ($input['type'] ?? 'song');
+        $requestedState = (string) ($input['state'] ?? 'play');
+        $type           = strtolower($requestedType);
+        $state          = strtolower($requestedState);
 
         // confirm the correct data
-        if (!in_array(strtolower($type), ['song', 'podcast_episode', 'video'])) {
+        if (!in_array($type, ['song', 'podcast_episode', 'video'])) {
             $response->getBody()->write(
                 $output->error(
                     $apiVersion,
                     ErrorCodeEnum::BAD_REQUEST,
                     /* HINT: Requested object string/id/type ("album", "myusername", "some song title", 1298376) */
-                    sprintf(T_('Bad Request: %s'), $type),
+                    sprintf(T_('Bad Request: %s'), $requestedType),
                     self::ACTION,
                     'type'
                 )
@@ -112,13 +116,13 @@ final class PlayerMethod implements MethodInterface
             return $response;
         }
 
-        if (!in_array(strtolower($state), ['play', 'stop'])) {
+        if (!in_array($state, ['play', 'stop'])) {
             $response->getBody()->write(
                 $output->error(
                     $apiVersion,
                     ErrorCodeEnum::BAD_REQUEST,
                     /* HINT: Requested object string/id/type ("album", "myusername", "some song title", 1298376) */
-                    sprintf(T_('Bad Request: %s'), $state),
+                    sprintf(T_('Bad Request: %s'), $requestedState),
                     self::ACTION,
                     'state'
                 )
@@ -143,18 +147,13 @@ final class PlayerMethod implements MethodInterface
             return $response;
         }
 
-        // the mapper check above guarantees a canonically named type, so the default is unreachable
         $media = match ($type) {
             'song' => $this->modelFactory->createSong($objectId),
             'podcast_episode' => $this->modelFactory->createPodcastEpisode($objectId),
             'video' => $this->modelFactory->createVideo($objectId),
-            default => null,
         };
 
-        if (
-            $media === null
-            || $media->isNew()
-        ) {
+        if ($media->isNew()) {
             throw new ResultEmptyException((string) $objectId);
         }
 

@@ -25,125 +25,29 @@ declare(strict_types=1);
 
 namespace Ampache\Module\Api\Method\Api8;
 
-use Ampache\Module\Api\Api;
-use Ampache\Module\Api\Exception\ErrorCodeEnum;
-use Ampache\Module\Authorization\AccessLevelEnum;
-use Ampache\Module\Authorization\AccessTypeEnum;
-use Ampache\Repository\Model\Album;
-use Ampache\Repository\Model\Catalog;
-use Ampache\Repository\Model\User;
+use Ampache\Module\Api\Method\AbstractCatalogActionMethod;
 
 /**
- * Class CatalogAction8Method
- * @package Lib\Api8Methods
+ * Kicks off a catalog update or clean for the selected catalog
+ *
+ * CHANGED_IN_API_VERSION=800000
+ *
+ * Api version 8 reports the catalog id as `filter` and accepts `catalog` as an alias. It also adds
+ * the `update_catalog` task, which runs clean, verify then add in that order.
  */
-final class CatalogAction8Method
+final class CatalogAction8Method extends AbstractCatalogActionMethod
 {
-    public const string ACTION      = 'catalog_action';
-    public const string REST_ACTION = 'action';
+    protected const string FILTER_ALIAS = 'catalog';
 
-    /**
-     * @param array{
-     *     task: string,
-     *     filter?: int,
-     *     catalog?: int,
-     *     api_format: string,
-     *     auth: string,
-     * } $input
-     */
-    public static function action(array $input, User $user): bool
-    {
-        return self::catalog_action($input, $user);
-    }
+    protected const string FILTER_KEY = 'filter';
 
-    /**
-     * catalog_action
-     * MINIMUM_API_VERSION=400001
-     * CHANGED_IN_API_VERSION=420000
-     * CHANGED_IN_API_VERSION=800000
-     *
-     * Kick off a catalog update or clean for the selected catalog
-     * Added 'verify_catalog', 'gather_art'
-     * 800000+: added 'update_catalog' (full update; runs clean, verify then add in that order)
-     *
-     * task = (string) 'add_to_catalog', 'clean_catalog', 'verify_catalog', 'update_catalog', 'gather_art', 'garbage_collect'
-     * catalog = (integer) $catalog_id
-     *
-     * @param array{
-     *     task: string,
-     *     filter?: int,
-     *     catalog?: int,
-     *     api_format: string,
-     *     auth: string,
-     * } $input
-     */
-    public static function catalog_action(array $input, User $user): bool
-    {
-        if (!Api::check_access(AccessTypeEnum::INTERFACE, AccessLevelEnum::MANAGER, $user->id, self::ACTION, $input['api_format'])) {
-            return false;
-        }
-
-        $input['filter'] = $input['catalog'] ?? $input['filter'] ?? null;
-        if (!Api::check_parameter($input, ['filter', 'task'], self::ACTION)) {
-            return false;
-        }
-
-        $task = (string) $input['task'];
-        // confirm the correct data
-        if (!in_array($task, ['add_to_catalog', 'clean_catalog', 'verify_catalog', 'update_catalog', 'gather_art', 'garbage_collect'])) {
-            /* HINT: Requested object string/id/type ("album", "myusername", "some song title", 1298376) */
-            Api::error(ErrorCodeEnum::BAD_REQUEST, sprintf('Bad Request: %s', $task), self::ACTION, 'task', $input['api_format']);
-
-            return false;
-        }
-
-        $catalog = Catalog::create_from_id((int) $input['filter']);
-        if ($catalog !== null) {
-            switch ($task) {
-                case 'clean_catalog':
-                    $catalog->clean_catalog_proc();
-                    break;
-                case 'verify_catalog':
-                    $catalog->verify_catalog_proc();
-                    break;
-                case 'gather_art':
-                    $catalog->gather_art();
-                    break;
-                case 'add_to_catalog':
-                    $options = [
-                        'gather_art' => true,
-                        'parse_playlist' => false
-                    ];
-                    $catalog->add_to_catalog($options);
-                    break;
-                case 'update_catalog':
-                    // full update; runs clean, verify then add in that order
-                    $options = [
-                        'gather_art' => true,
-                        'parse_playlist' => false
-                    ];
-                    $catalog->clean_catalog_proc();
-                    $catalog->verify_catalog_proc();
-                    $catalog->add_to_catalog($options);
-                    break;
-                case 'garbage_collect':
-                    $catalog_media_type = $catalog->gather_types;
-                    if ($catalog_media_type == 'music') {
-                        Catalog::clean_empty_albums();
-                        Album::update_album_artist();
-                    }
-                    Catalog::update_catalog_map($catalog_media_type);
-                    Catalog::update_counts();
-                    break;
-            }
-
-            Api::message('successfully started: ' . $task, $input['api_format']);
-        } else {
-            Api::error(ErrorCodeEnum::NOT_FOUND, 'Not Found', self::ACTION, 'catalog', $input['api_format']);
-
-            return false;
-        }
-
-        return true;
-    }
+    /** @var string[] */
+    protected const array TASKS = [
+        'add_to_catalog',
+        'clean_catalog',
+        'verify_catalog',
+        'update_catalog',
+        'gather_art',
+        'garbage_collect',
+    ];
 }

@@ -25,7 +25,10 @@ declare(strict_types=1);
 
 namespace Ampache\Module\Api\Output;
 
+use Ampache\Repository\Model\Folder;
 use Ampache\Repository\Model\library_item;
+use Ampache\Repository\Model\LibraryItemEnum;
+use Ampache\Repository\Model\Shoutbox;
 use Ampache\Repository\Model\User;
 
 interface ApiOutputInterface
@@ -70,6 +73,20 @@ interface ApiOutputInterface
     ): string;
 
     /**
+     * Generate a browse result for a parent object and its children
+     *
+     * @param array<int, array{id: int|string, name: string}> $objects
+     */
+    public function browses(
+        int $apiVersion,
+        array $objects,
+        string $parentType,
+        string $childType,
+        ?int $parentId = null,
+        ?int $catalogId = null,
+    ): string;
+
+    /**
      * @param array<int|string> $catalogs
      */
     public function catalogs(
@@ -104,6 +121,24 @@ interface ApiOutputInterface
     ): string;
 
     /**
+     * Generate the democratic playlist
+     *
+     * @param array<int, array{
+     *    object_type: LibraryItemEnum,
+     *    object_id: int,
+     *    track_id: int,
+     *    track: int
+     * }> $objectIds
+     */
+    public function democratic(
+        int $apiVersion,
+        array $objectIds,
+        User $user,
+        string $auth,
+        bool $asObject = true,
+    ): string;
+
+    /**
      * This generates an error message
      */
     public function error(
@@ -112,6 +147,22 @@ interface ApiOutputInterface
         string $message,
         string $action = '',
         string $type = '',
+    ): string;
+
+    /**
+     * Generate a folder listing
+     *
+     * Only api version 8 knows about folders.
+     *
+     * @param array<int|string> $objects
+     */
+    public function folders(
+        int $apiVersion,
+        array $objects,
+        Folder $folder,
+        User $user,
+        string $auth,
+        bool $asObject = true,
     ): string;
 
     /**
@@ -135,6 +186,36 @@ interface ApiOutputInterface
         string $objectType,
         User $user,
         bool $include = false,
+    ): string;
+
+    /**
+     * Generate an index of objects
+     *
+     * @param array<int|string> $objects
+     */
+    public function indexes(
+        int $apiVersion,
+        array $objects,
+        string $objectType,
+        User $user,
+        string $auth,
+        bool $fullXml = true,
+        bool $include = false,
+    ): string;
+
+    /**
+     * Render a plain key/value structure
+     *
+     * Json encodes the array as-is, xml builds a keyed document from it. The array is not always
+     * string-keyed: playlist_generate hands over a plain list of ids with $object set to 'id'.
+     *
+     * @param array<array-key, mixed> $array
+     */
+    public function keyedArray(
+        int $apiVersion,
+        array $array,
+        bool $callback = false,
+        bool|string $object = false,
     ): string;
 
     /**
@@ -178,6 +259,20 @@ interface ApiOutputInterface
     ): string;
 
     /**
+     * Render the result of a localplay command
+     *
+     * The formats disagree on the status payload: json reports `repeat`/`random` as booleans, xml
+     * leaves them as they came back from the controller. That difference is preserved.
+     *
+     * @param array<string, mixed>|bool $result the status array for `status`, otherwise a bool
+     */
+    public function localplayResult(
+        int $apiVersion,
+        string $command,
+        array|bool $result,
+    ): string;
+
+    /**
      * @param array<int, array{
      *     media: library_item,
      *     client: User,
@@ -188,6 +283,23 @@ interface ApiOutputInterface
     public function nowPlaying(
         int $apiVersion,
         array $results,
+    ): string;
+
+    /**
+     * Render a list of identified items
+     *
+     * The two formats do not wrap the payload the same way, so each one is handed the structure it
+     * needs: json encodes $jsonPayload verbatim, xml builds an item document from $xmlItems.
+     *
+     * @param array<mixed> $jsonPayload
+     * @param array<int, array<string, mixed>> $xmlItems
+     */
+    public function objectArray(
+        int $apiVersion,
+        array $jsonPayload,
+        array $xmlItems,
+        string $item,
+        string $objectType = '',
     ): string;
 
     /**
@@ -226,6 +338,41 @@ interface ApiOutputInterface
         bool $asObject = true,
     ): string;
 
+    /**
+     * Generate a grouped search result
+     *
+     * The formats differ structurally here: json builds a keyed 'search' map from the per-type
+     * arrays, xml renders a single searches document.
+     *
+     * @param array<string, array<int|string>> $results
+     * @param array<string, int> $counts
+     */
+    public function searchGroup(
+        int $apiVersion,
+        array $results,
+        array $counts,
+        User $user,
+        string $auth,
+        int $offset,
+        int $limit,
+    ): string;
+
+    /**
+     * Render a search result for a single object type
+     *
+     * @param array<int|string> $results
+     */
+    public function searchResult(
+        int $apiVersion,
+        string $type,
+        array $results,
+        User $user,
+        string $auth,
+        int $offset,
+        int $limit,
+        int $count,
+    ): string;
+
     public function setCount(int $apiVersion, int|string $count): void;
 
     public function setLimit(int $apiVersion, int|string $limit): void;
@@ -239,6 +386,17 @@ interface ApiOutputInterface
         int $apiVersion,
         array $shares,
         User $user,
+        bool $asObject = true,
+    ): string;
+
+    /**
+     * Generate a list of shouts
+     *
+     * @param array<Shoutbox> $shouts
+     */
+    public function shouts(
+        int $apiVersion,
+        array $shouts,
         bool $asObject = true,
     ): string;
 

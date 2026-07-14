@@ -99,7 +99,10 @@ final class ListMethod implements MethodInterface
             );
         }
 
-        $type = (string) $input['type'];
+        // the type is matched case insensitively, so the gate, the browse and the empty response
+        // all work on the normalized name
+        $requestedType = (string) $input['type'];
+        $type          = strtolower($requestedType);
 
         $gate = ObjectTypeGate::check($this->configContainer, $type);
         if ($gate !== null) {
@@ -110,13 +113,13 @@ final class ListMethod implements MethodInterface
             return $response;
         }
 
-        if (!in_array(strtolower($type), ObjectTypeGate::INDEX_TYPES)) {
+        if (!in_array($type, ObjectTypeGate::INDEX_TYPES)) {
             $response->getBody()->write(
                 $output->error(
                     $apiVersion,
                     ErrorCodeEnum::BAD_REQUEST,
                     /* HINT: Requested object string/id/type ("album", "myusername", "some song title", 1298376) */
-                    sprintf(T_('Bad Request: %s'), $type),
+                    sprintf(T_('Bad Request: %s'), $requestedType),
                     self::ACTION,
                     'type'
                 )

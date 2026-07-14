@@ -30,8 +30,10 @@ use Ampache\Config\ConfigurationKeyEnum;
 use Ampache\Module\Api\Authentication\GatekeeperInterface;
 use Ampache\Module\Api\Exception\ErrorCodeEnum;
 use Ampache\Module\Api\Method\Exception\RequestParamMissingException;
+use Ampache\Module\Api\Method\Exception\ResultEmptyException;
 use Ampache\Module\Api\Output\ApiOutputInterface;
 use Ampache\Repository\Model\User;
+use Ampache\Repository\ShareRepositoryInterface;
 use Psr\Http\Message\ResponseInterface;
 
 /**
@@ -46,6 +48,7 @@ final class ShareMethod implements MethodInterface
 
     public function __construct(
         private ConfigContainerInterface $configContainer,
+        private ShareRepositoryInterface $shareRepository,
     ) {}
 
     /**
@@ -61,7 +64,7 @@ final class ShareMethod implements MethodInterface
      *     auth: string,
      * } $input
      * @param 6|8 $apiVersion
-     * @throws RequestParamMissingException
+     * @throws RequestParamMissingException|ResultEmptyException
      */
     public function handle(
         GatekeeperInterface $gatekeeper,
@@ -91,8 +94,15 @@ final class ShareMethod implements MethodInterface
             );
         }
 
+        $objectId = (int) $input['filter'];
+        if ($this->shareRepository->findById($objectId) === null) {
+            throw new ResultEmptyException(
+                (string) $objectId
+            );
+        }
+
         $response->getBody()->write(
-            $output->shares($apiVersion, [(int) $input['filter']], $user, false)
+            $output->shares($apiVersion, [$objectId], $user, false)
         );
 
         return $response;

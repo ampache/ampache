@@ -31,8 +31,11 @@ use Ampache\MockeryTestCase;
 use Ampache\Module\Api\Authentication\GatekeeperInterface;
 use Ampache\Module\Api\Exception\ErrorCodeEnum;
 use Ampache\Module\Api\Method\Exception\RequestParamMissingException;
+use Ampache\Module\Api\Method\Exception\ResultEmptyException;
 use Ampache\Module\Api\Output\ApiOutputInterface;
+use Ampache\Repository\Model\Share;
 use Ampache\Repository\Model\User;
+use Ampache\Repository\ShareRepositoryInterface;
 use Mockery\MockInterface;
 use Override;
 use PHPUnit\Framework\Attributes\DataProvider;
@@ -42,6 +45,7 @@ use Psr\Http\Message\StreamInterface;
 class ShareMethodTest extends MockeryTestCase
 {
     private ConfigContainerInterface|MockInterface|null $configContainer;
+    private MockInterface|ShareRepositoryInterface|null $shareRepository;
     private ?ShareMethod $subject;
 
     /**
@@ -122,6 +126,11 @@ class ShareMethodTest extends MockeryTestCase
             ->once()
             ->andReturnTrue();
 
+        $this->shareRepository->shouldReceive('findById')
+            ->with($objectId)
+            ->once()
+            ->andReturn($this->mock(Share::class));
+
         // the resolved api version must reach the output untouched
         $output->shouldReceive('shares')
             ->with($apiVersion, [$objectId], $user, false)
@@ -175,13 +184,48 @@ class ShareMethodTest extends MockeryTestCase
         );
     }
 
+    #[DataProvider(methodName: 'apiVersionProvider')]
+    public function testHandleThrowsIfShareWasNotFound(int $apiVersion): void
+    {
+        $gatekeeper = $this->mock(GatekeeperInterface::class);
+        $response   = $this->mock(ResponseInterface::class);
+        $output     = $this->mock(ApiOutputInterface::class);
+        $user       = $this->mock(User::class);
+
+        $objectId = 666;
+
+        $this->configContainer->shouldReceive('get')
+            ->with(ConfigurationKeyEnum::SHARE)
+            ->once()
+            ->andReturnTrue();
+
+        $this->shareRepository->shouldReceive('findById')
+            ->with($objectId)
+            ->once()
+            ->andReturnNull();
+
+        $this->expectException(ResultEmptyException::class);
+        $this->expectExceptionMessage(sprintf(T_('Not Found: %s'), $objectId));
+
+        $this->subject->handle(
+            $gatekeeper,
+            $response,
+            $output,
+            ['filter' => (string) $objectId, 'api_format' => 'json', 'auth' => 'some-auth'],
+            $user,
+            $apiVersion
+        );
+    }
+
     #[Override]
     protected function setUp(): void
     {
         $this->configContainer = $this->mock(ConfigContainerInterface::class);
+        $this->shareRepository = $this->mock(ShareRepositoryInterface::class);
 
         $this->subject = new ShareMethod(
-            $this->configContainer
+            $this->configContainer,
+            $this->shareRepository
         );
     }
 }

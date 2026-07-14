@@ -32,10 +32,10 @@ use Ampache\Module\Api\Authentication\Gatekeeper;
 use Ampache\Module\Api\Exception\ApiException;
 use Ampache\Module\Api\Exception\ErrorCodeEnum;
 use Ampache\Module\Api\Method\Api8\Handshake8Method;
-use Ampache\Module\Api\Method\Api8\LostPassword8Method;
-use Ampache\Module\Api\Method\Api8\Ping8Method;
-use Ampache\Module\Api\Method\Api8\Register8Method;
+use Ampache\Module\Api\Method\LostPasswordMethod;
 use Ampache\Module\Api\Method\MethodInterface;
+use Ampache\Module\Api\Method\PingMethod;
+use Ampache\Module\Api\Method\RegisterMethod;
 use Ampache\Module\Api\Output\ApiOutputInterface;
 use Ampache\Module\Authorization\AccessLevelEnum;
 use Ampache\Module\Authorization\AccessTypeEnum;
@@ -131,9 +131,9 @@ final class ApiHandler implements ApiHandlerInterface
                 );
         }
         $is_handshake = $action == Handshake8Method::ACTION;
-        $is_ping      = $action == Ping8Method::ACTION;
-        $is_register  = $action == Register8Method::ACTION;
-        $is_forgotten = $action == LostPassword8Method::ACTION;
+        $is_ping      = $action == PingMethod::ACTION;
+        $is_register  = $action == RegisterMethod::ACTION;
+        $is_forgotten = $action == LostPasswordMethod::ACTION;
         $is_public    = ($is_handshake || $is_ping || $is_register || $is_forgotten);
         $header_auth  = false;
         if (!isset($input['auth'])) {
@@ -862,19 +862,24 @@ final class ApiHandler implements ApiHandlerInterface
             );
 
             if (
-                $user instanceof User
+                ($user instanceof User || $is_public)
                 && $this->dic->has($handlerClassName)
                 && $this->dic->get($handlerClassName) instanceof MethodInterface
             ) {
                 /** @var MethodInterface $handler */
                 $handler = $this->dic->get($handlerClassName);
 
+                /**
+                 * The public actions (handshake, ping, register, lost_password) resolve no user, but
+                 * MethodInterface always hands one over. They are given the same anonymous user the
+                 * version lookup above falls back to; none of them read it.
+                 */
                 $response = $handler->handle(
                     $gatekeeper,
                     $response,
                     $output,
                     $input,
-                    $user,
+                    $user ?? new User(-1),
                     $api_version
                 );
 
@@ -934,19 +939,19 @@ final class ApiHandler implements ApiHandlerInterface
                         )
                     );
                 case 6:
-                    return $response
-                        ->withStatus(Api::getHttpCode($error->getCode()))
-                        ->withBody(
-                            $this->streamFactory->createStream(
-                                $output->error(
-                                    $api_version,
-                                    $error->getCode(),
-                                    $error->getMessage(),
-                                    $action,
-                                    $error->getType()
-                                )
+                    // versions up to 6 always answered 200 and put the failure in the body; only
+                    // version 8 and later report the failure in the http status as well
+                    return $response->withBody(
+                        $this->streamFactory->createStream(
+                            $output->error(
+                                $api_version,
+                                $error->getCode(),
+                                $error->getMessage(),
+                                $action,
+                                $error->getType()
                             )
-                        );
+                        )
+                    );
                 case 8:
                 default:
                     return $response
