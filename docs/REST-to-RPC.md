@@ -206,6 +206,7 @@ e.g. To make a REST call for 10 random albums your URL would be `https://demo.am
 | DELETE | `preferences/{preference_name}`                      | `?action=preference_delete&filter={preference_name}`                             |                    |
 | GET    | `preferences`                                        | `?action=user_preferences`                                                       | `preferences`      |
 | PUT    | `preferences`                                        | `?action=preference_create`                                                      |                    |
+| GET    | `random`                                             | `?action=random&type={type}`                                                     |                    |
 | POST   | `register`                                           | `?action=register`                                                               |                    |
 | POST   | `scrobble`                                           | `?action=scrobble`                                                               |                    |
 | GET    | `search/{search_type}/groups`                        | `?action=search_group&filter={search_type}`                                      |                    |

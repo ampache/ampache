@@ -9,7 +9,7 @@ An API6 error has the following parts:
 * errorCode: numeric code
 * errorAction: method that caused the error
 * errorType: further information such as the type of data missing or access level required
-* errorMessage: error message (US English string Ampache 6.4.0+ **OR** Translated string Ampache 6.0.0 => 6.3.1)
+* errorMessage: error message (US English string Ampache 6.4.0+)
 
 **NOTE** Prior to Ampache 6.4.0 the API errorMessage text was translated into the server locale. All future versions will not translate the string.
 
@@ -22,7 +22,7 @@ An API6 error has the following parts:
 * Use errorType 'system' for things users can't change / server config
 * Use errorType 'account' for user issues (password, perms, auth, etc)
 * All other errorTypes should return the parameter name that caused the error. (type, filter, email, etc)
-* errorMessage must be a translated string to allow devs to show things for the user in their language.
+* errorMessage is written in US English only
 
 ## Error Codes
 

@@ -2006,6 +2006,66 @@
         ],
         "responses": {
           "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object"
+                },
+                "examples": {
+                  "albums": {
+                    "summary": "albums (search results)",
+                    "value": {
+                      "total_count": 1,
+                      "md5": "c8bde69a9f79ca24059e3807f9a3bcf8",
+                      "album": [
+                        {
+                          "id": "10",
+                          "name": "CARNÚN - MALKUTH (Demo 1996)",
+                          "prefix": null,
+                          "basename": "CARNÚN - MALKUTH (Demo 1996)",
+                          "artist": {
+                            "id": "16",
+                            "name": "CARNÚN",
+                            "prefix": null,
+                            "basename": "CARNÚN"
+                          },
+                          "artists": [
+                            {
+                              "id": "16",
+                              "name": "CARNÚN",
+                              "prefix": null,
+                              "basename": "CARNÚN"
+                            }
+                          ],
+                          "songartists": [
+                            {
+                              "id": "16",
+                              "name": "CARNÚN",
+                              "prefix": null,
+                              "basename": "CARNÚN"
+                            }
+                          ],
+                          "time": 3873,
+                          "year": 1996,
+                          "tracks": [],
+                          "songcount": 9,
+                          "diskcount": 1,
+                          "type": null,
+                          "genre": [],
+                          "art": "https://music.com.au/image.php?object_id=10&object_type=album&id=63&name=art.jpg",
+                          "has_art": true,
+                          "flag": false,
+                          "rating": null,
+                          "averagerating": null,
+                          "mbid": null,
+                          "mbid_group": null
+                        }
+                      ]
+                    }
+                  }
+                }
+              }
+            },
             "description": "Search results"
           },
           "400": {
@@ -3779,6 +3839,113 @@
         ],
         "responses": {
           "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object"
+                },
+                "examples": {
+                  "artists": {
+                    "summary": "artists (search results)",
+                    "value": {
+                      "total_count": 19,
+                      "md5": "8aabc723b14c64e990f0c5bce2459d9e",
+                      "artist": [
+                        {
+                          "id": "16",
+                          "name": "CARNÚN",
+                          "prefix": null,
+                          "basename": "CARNÚN",
+                          "albums": [],
+                          "albumcount": 1,
+                          "songs": [],
+                          "songcount": 9,
+                          "genre": [],
+                          "art": "https://music.com.au/image.php?object_id=16&object_type=artist&id=134&name=art.jpg",
+                          "has_art": true,
+                          "flag": false,
+                          "rating": null,
+                          "averagerating": null,
+                          "mbid": null,
+                          "summary": "Formerly called DEFY CHRIST. CARNÚN were formed in 1995. Incorporating a mix of Black, Doom and Death Metal, and influenced by bands like BURZUM, DARKTHRONE, BATHORY, THOU ART LORD, IN THE WOODS…, early KATATONIA and PRIMORDIAL, who Mick would eventually go on to join full-time.\n\nThey released one demo, ‘Malkuth’, which was recorded in Connolly’s Of Leap, 4th January 1996 by Paddy McNicholl. The line-up for this recording was Marc (Bard Nocturnus) on Vocals, Damien on keyboards and Mick playing guitars, bass and drums. ",
+                          "time": 3873,
+                          "yearformed": 0,
+                          "placeformed": null
+                        },
+                        {
+                          "id": "27",
+                          "name": "Chi.Otic",
+                          "prefix": null,
+                          "basename": "Chi.Otic",
+                          "albums": [],
+                          "albumcount": 0,
+                          "songs": [],
+                          "songcount": 1,
+                          "genre": [],
+                          "art": "https://music.com.au/image.php?object_id=27&object_type=artist&id=136&name=art.jpg",
+                          "has_art": true,
+                          "flag": false,
+                          "rating": null,
+                          "averagerating": null,
+                          "mbid": "7",
+                          "summary": null,
+                          "time": 433,
+                          "yearformed": 0,
+                          "placeformed": null
+                        },
+                        {
+                          "id": "34",
+                          "name": "Comedown Kid",
+                          "prefix": null,
+                          "basename": "Comedown Kid",
+                          "albums": [],
+                          "albumcount": 0,
+                          "songs": [],
+                          "songcount": 1,
+                          "genre": [],
+                          "art": "https://music.com.au/image.php?object_id=34&object_type=artist&id=288&name=art.jpg",
+                          "has_art": true,
+                          "flag": false,
+                          "rating": null,
+                          "averagerating": null,
+                          "mbid": null,
+                          "summary": null,
+                          "time": 116,
+                          "yearformed": 0,
+                          "placeformed": null
+                        },
+                        {
+                          "id": "36",
+                          "name": "Comfort Fit",
+                          "prefix": null,
+                          "basename": "Comfort Fit",
+                          "albums": [],
+                          "albumcount": 1,
+                          "songs": [],
+                          "songcount": 20,
+                          "genre": [
+                            {
+                              "id": "8",
+                              "name": "Hip-Hop"
+                            }
+                          ],
+                          "art": "https://music.com.au/image.php?object_id=36&object_type=artist&id=320&name=art.jpg",
+                          "has_art": true,
+                          "flag": false,
+                          "rating": null,
+                          "averagerating": null,
+                          "mbid": "e6e2b787-0b4c-4267-8161-310399b101a5",
+                          "summary": "Comfort Fit’s(Boris Mezga) versatile influences range from early detroit techno and minimal electronica to jazz, broken beats and hip-hop. This makes it easy for him to invisibly switch between musical styles within a fingersnap, taking the listener onto long and exciting journies.\n\nWisely using music codes of genres such as hip-hop, dubstep and techno as a mere comic template, Comfort Fit has inspired hip-hop and techno artists around the world with his heavy beat techniques. ",
+                          "time": 4248,
+                          "yearformed": 0,
+                          "placeformed": null
+                        }
+                      ]
+                    }
+                  }
+                }
+              }
+            },
             "description": "Search results"
           },
           "400": {
@@ -5698,6 +5865,611 @@
         ]
       }
     },
+    "/catalogs/{catalog_id}/action": {
+      "post": {
+        "parameters": [
+          {
+            "in": "path",
+            "name": "catalog_id",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "description": "Catalog task to run",
+            "in": "query",
+            "name": "task",
+            "required": true,
+            "schema": {
+              "enum": [
+                "add_to_catalog",
+                "clean_catalog",
+                "verify_catalog",
+                "gather_art",
+                "garbage_collect"
+              ],
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SuccessResponse"
+                },
+                "examples": {
+                  "success": {
+                    "summary": "catalog action",
+                    "value": {
+                      "success": "successfully started: add_to_catalog for music"
+                    }
+                  }
+                }
+              }
+            },
+            "description": "Success"
+          },
+          "400": {
+            "$ref": "#/components/responses/BadRequestErrorResponse"
+          },
+          "403": {
+            "$ref": "#/components/responses/ForbiddenErrorResponse"
+          },
+          "404": {
+            "$ref": "#/components/responses/NotFoundErrorResponse"
+          },
+          "410": {
+            "$ref": "#/components/responses/GoneErrorResponse"
+          },
+          "500": {
+            "$ref": "#/components/responses/InternalServerErrorResponse"
+          }
+        },
+        "summary": "Kick off a catalog task (add/clean/verify/gather art) for the selected catalog",
+        "tags": [
+          "Catalogs"
+        ]
+      }
+    },
+    "/catalogs/{catalog_id}/browse": {
+      "get": {
+        "parameters": [
+          {
+            "in": "path",
+            "name": "catalog_id",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "in": "query",
+            "name": "add",
+            "required": false,
+            "schema": {
+              "format": "date",
+              "type": "string"
+            }
+          },
+          {
+            "in": "query",
+            "name": "update",
+            "required": false,
+            "schema": {
+              "format": "date",
+              "type": "string"
+            }
+          },
+          {
+            "in": "query",
+            "name": "offset",
+            "required": false,
+            "schema": {
+              "type": "integer"
+            }
+          },
+          {
+            "in": "query",
+            "name": "limit",
+            "required": false,
+            "schema": {
+              "type": "integer"
+            }
+          },
+          {
+            "in": "query",
+            "name": "cond",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "in": "query",
+            "name": "sort",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object"
+                },
+                "examples": {
+                  "browse": {
+                    "summary": "browse",
+                    "value": {
+                      "total_count": 8,
+                      "md5": "8c61d460940e9a9fc333207277d105cd",
+                      "catalog_id": "",
+                      "parent_id": "1",
+                      "parent_type": "catalog",
+                      "child_type": "artist",
+                      "browse": [
+                        {
+                          "id": "16",
+                          "name": "CARNÚN",
+                          "prefix": null,
+                          "basename": "CARNÚN"
+                        },
+                        {
+                          "id": "13",
+                          "name": "IOK-1",
+                          "prefix": null,
+                          "basename": "IOK-1"
+                        },
+                        {
+                          "id": "14",
+                          "name": "Nofi/found.",
+                          "prefix": null,
+                          "basename": "Nofi/found."
+                        },
+                        {
+                          "id": "11",
+                          "name": "structura",
+                          "prefix": null,
+                          "basename": "structura"
+                        }
+                      ]
+                    }
+                  }
+                }
+              }
+            },
+            "description": "Browse results"
+          },
+          "400": {
+            "$ref": "#/components/responses/BadRequestErrorResponse"
+          },
+          "403": {
+            "$ref": "#/components/responses/ForbiddenErrorResponse"
+          },
+          "404": {
+            "$ref": "#/components/responses/NotFoundErrorResponse"
+          },
+          "410": {
+            "$ref": "#/components/responses/GoneErrorResponse"
+          },
+          "500": {
+            "$ref": "#/components/responses/InternalServerErrorResponse"
+          }
+        },
+        "summary": "Browse children of a catalog (root of the catalog)",
+        "tags": [
+          "Catalogs"
+        ]
+      }
+    },
+    "/catalogs/{catalog_id}/browse/albums/{album_id}": {
+      "get": {
+        "parameters": [
+          {
+            "in": "path",
+            "name": "catalog_id",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "in": "path",
+            "name": "album_id",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "in": "query",
+            "name": "add",
+            "required": false,
+            "schema": {
+              "format": "date",
+              "type": "string"
+            }
+          },
+          {
+            "in": "query",
+            "name": "update",
+            "required": false,
+            "schema": {
+              "format": "date",
+              "type": "string"
+            }
+          },
+          {
+            "in": "query",
+            "name": "offset",
+            "required": false,
+            "schema": {
+              "type": "integer"
+            }
+          },
+          {
+            "in": "query",
+            "name": "limit",
+            "required": false,
+            "schema": {
+              "type": "integer"
+            }
+          },
+          {
+            "in": "query",
+            "name": "cond",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "in": "query",
+            "name": "sort",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object"
+                },
+                "examples": {
+                  "browse_album": {
+                    "summary": "browse (album)",
+                    "value": {
+                      "total_count": 12,
+                      "md5": "875e32d0f6b4fd47ddb46863f224c972",
+                      "catalog_id": "1",
+                      "parent_id": "2",
+                      "parent_type": "album",
+                      "child_type": "song",
+                      "browse": [
+                        {
+                          "id": "54",
+                          "name": "Red&GreenSmoke",
+                          "prefix": null,
+                          "basename": "Red&GreenSmoke"
+                        },
+                        {
+                          "id": "64",
+                          "name": "Black&BlueSmoke",
+                          "prefix": null,
+                          "basename": "Black&BlueSmoke"
+                        },
+                        {
+                          "id": "63",
+                          "name": "Red&GreenSmoke",
+                          "prefix": null,
+                          "basename": "Red&GreenSmoke"
+                        },
+                        {
+                          "id": "62",
+                          "name": "PurpleSmoke",
+                          "prefix": null,
+                          "basename": "PurpleSmoke"
+                        }
+                      ]
+                    }
+                  }
+                }
+              }
+            },
+            "description": "Browse results"
+          },
+          "400": {
+            "$ref": "#/components/responses/BadRequestErrorResponse"
+          },
+          "403": {
+            "$ref": "#/components/responses/ForbiddenErrorResponse"
+          },
+          "404": {
+            "$ref": "#/components/responses/NotFoundErrorResponse"
+          },
+          "410": {
+            "$ref": "#/components/responses/GoneErrorResponse"
+          },
+          "500": {
+            "$ref": "#/components/responses/InternalServerErrorResponse"
+          }
+        },
+        "summary": "Browse songs of an album within a catalog",
+        "tags": [
+          "Catalogs"
+        ]
+      }
+    },
+    "/catalogs/{catalog_id}/browse/artists/{artist_id}": {
+      "get": {
+        "parameters": [
+          {
+            "in": "path",
+            "name": "catalog_id",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "in": "path",
+            "name": "artist_id",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "in": "query",
+            "name": "add",
+            "required": false,
+            "schema": {
+              "format": "date",
+              "type": "string"
+            }
+          },
+          {
+            "in": "query",
+            "name": "update",
+            "required": false,
+            "schema": {
+              "format": "date",
+              "type": "string"
+            }
+          },
+          {
+            "in": "query",
+            "name": "offset",
+            "required": false,
+            "schema": {
+              "type": "integer"
+            }
+          },
+          {
+            "in": "query",
+            "name": "limit",
+            "required": false,
+            "schema": {
+              "type": "integer"
+            }
+          },
+          {
+            "in": "query",
+            "name": "cond",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "in": "query",
+            "name": "sort",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object"
+                },
+                "examples": {
+                  "browse_artist": {
+                    "summary": "browse (artist)",
+                    "value": {
+                      "total_count": 1,
+                      "md5": "60334ae78fb1c335adb0602a19c90946",
+                      "catalog_id": "1",
+                      "parent_id": "12",
+                      "parent_type": "artist",
+                      "child_type": "album",
+                      "browse": [
+                        {
+                          "id": "6",
+                          "name": "Хикки Найди Свою Тян (Single)",
+                          "prefix": null,
+                          "basename": "Хикки Найди Свою Тян (Single)"
+                        }
+                      ]
+                    }
+                  }
+                }
+              }
+            },
+            "description": "Browse results"
+          },
+          "400": {
+            "$ref": "#/components/responses/BadRequestErrorResponse"
+          },
+          "403": {
+            "$ref": "#/components/responses/ForbiddenErrorResponse"
+          },
+          "404": {
+            "$ref": "#/components/responses/NotFoundErrorResponse"
+          },
+          "410": {
+            "$ref": "#/components/responses/GoneErrorResponse"
+          },
+          "500": {
+            "$ref": "#/components/responses/InternalServerErrorResponse"
+          }
+        },
+        "summary": "Browse albums of an artist within a catalog",
+        "tags": [
+          "Catalogs"
+        ]
+      }
+    },
+    "/catalogs/{catalog_id}/browse/podcasts/{podcast_id}": {
+      "get": {
+        "parameters": [
+          {
+            "in": "path",
+            "name": "catalog_id",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "in": "path",
+            "name": "podcast_id",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "in": "query",
+            "name": "add",
+            "required": false,
+            "schema": {
+              "format": "date",
+              "type": "string"
+            }
+          },
+          {
+            "in": "query",
+            "name": "update",
+            "required": false,
+            "schema": {
+              "format": "date",
+              "type": "string"
+            }
+          },
+          {
+            "in": "query",
+            "name": "offset",
+            "required": false,
+            "schema": {
+              "type": "integer"
+            }
+          },
+          {
+            "in": "query",
+            "name": "limit",
+            "required": false,
+            "schema": {
+              "type": "integer"
+            }
+          },
+          {
+            "in": "query",
+            "name": "cond",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "in": "query",
+            "name": "sort",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object"
+                },
+                "examples": {
+                  "browse_podcast": {
+                    "summary": "browse (podcast)",
+                    "value": {
+                      "total_count": 3,
+                      "md5": "8467c1b7b44644e447396e82f11cc16b",
+                      "catalog_id": "3",
+                      "parent_id": "2",
+                      "parent_type": "podcast",
+                      "child_type": "podcast_episode",
+                      "browse": [
+                        {
+                          "id": "22",
+                          "name": "What Do an Army of Ants and an Online Encyclopedia Have in Common?",
+                          "prefix": null,
+                          "basename": "What Do an Army of Ants and an Online Encyclopedia Have in Common?"
+                        },
+                        {
+                          "id": "23",
+                          "name": "I Laughed So Hard I Cried",
+                          "prefix": null,
+                          "basename": "I Laughed So Hard I Cried"
+                        },
+                        {
+                          "id": "24",
+                          "name": "Coming Soon",
+                          "prefix": null,
+                          "basename": "Coming Soon"
+                        }
+                      ]
+                    }
+                  }
+                }
+              }
+            },
+            "description": "Browse results"
+          },
+          "400": {
+            "$ref": "#/components/responses/BadRequestErrorResponse"
+          },
+          "403": {
+            "$ref": "#/components/responses/ForbiddenErrorResponse"
+          },
+          "404": {
+            "$ref": "#/components/responses/NotFoundErrorResponse"
+          },
+          "410": {
+            "$ref": "#/components/responses/GoneErrorResponse"
+          },
+          "500": {
+            "$ref": "#/components/responses/InternalServerErrorResponse"
+          }
+        },
+        "summary": "Browse episodes of a podcast within a catalog",
+        "tags": [
+          "Catalogs"
+        ]
+      }
+    },
     "/catalogs/{catalog_id}/file": {
       "post": {
         "parameters": [
@@ -6959,6 +7731,48 @@
         ],
         "responses": {
           "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object"
+                },
+                "examples": {
+                  "genres": {
+                    "summary": "genres (search results)",
+                    "value": {
+                      "total_count": 2,
+                      "md5": "b688a32fb7bee1397de8fa6f5e517ce2",
+                      "genre": [
+                        {
+                          "id": "6",
+                          "name": "Dance",
+                          "albums": 1,
+                          "artists": 1,
+                          "songs": 11,
+                          "videos": 0,
+                          "playlists": 0,
+                          "live_streams": 0,
+                          "is_hidden": false,
+                          "merge": []
+                        },
+                        {
+                          "id": "4",
+                          "name": "Dark Ambient",
+                          "albums": 1,
+                          "artists": 1,
+                          "songs": 4,
+                          "videos": 0,
+                          "playlists": 0,
+                          "live_streams": 0,
+                          "is_hidden": false,
+                          "merge": []
+                        }
+                      ]
+                    }
+                  }
+                }
+              }
+            },
             "description": "Search results"
           },
           "400": {
@@ -8272,6 +9086,60 @@
         ],
         "responses": {
           "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object"
+                },
+                "examples": {
+                  "labels": {
+                    "summary": "labels (search results)",
+                    "value": {
+                      "total_count": 3,
+                      "md5": "792262bb4849f60fc25f9662c62b3848",
+                      "label": [
+                        {
+                          "id": "2",
+                          "name": "20kbps rec.",
+                          "artists": 1,
+                          "summary": null,
+                          "external_link": "https://music.com.au/labels.php?action=show&label=2",
+                          "address": null,
+                          "category": "tag_generated",
+                          "email": null,
+                          "website": null,
+                          "user": "4"
+                        },
+                        {
+                          "id": "1",
+                          "name": "archive.org",
+                          "artists": 8,
+                          "summary": null,
+                          "external_link": "https://music.com.au/labels.php?action=show&label=1",
+                          "address": null,
+                          "category": "tag_generated",
+                          "email": null,
+                          "website": null,
+                          "user": "4"
+                        },
+                        {
+                          "id": "3",
+                          "name": "DNA Production",
+                          "artists": 1,
+                          "summary": null,
+                          "external_link": "https://music.com.au/labels.php?action=show&label=3",
+                          "address": null,
+                          "category": "tag_generated",
+                          "email": null,
+                          "website": null,
+                          "user": "4"
+                        }
+                      ]
+                    }
+                  }
+                }
+              }
+            },
             "description": "Search results"
           },
           "400": {
@@ -12596,6 +13464,44 @@
         ],
         "responses": {
           "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object"
+                },
+                "examples": {
+                  "playlists": {
+                    "summary": "playlists (search results)",
+                    "value": {
+                      "total_count": 1,
+                      "md5": "944a9f4dea178d87e8cc3bd19b9fecc6",
+                      "playlist": [
+                        {
+                          "id": "4",
+                          "name": "random - user - private",
+                          "owner": "user",
+                          "user": {
+                            "id": "4",
+                            "username": "user"
+                          },
+                          "items": 43,
+                          "type": "private",
+                          "art": "https://music.com.au/image.php?object_id=4&object_type=playlist&name=art.jpg",
+                          "has_access": true,
+                          "has_collaborate": true,
+                          "has_art": false,
+                          "flag": false,
+                          "rating": null,
+                          "averagerating": null,
+                          "md5": null,
+                          "last_update": 1614054938
+                        }
+                      ]
+                    }
+                  }
+                }
+              }
+            },
             "description": "Search results"
           },
           "400": {
@@ -14833,6 +15739,172 @@
         ],
         "responses": {
           "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object"
+                },
+                "examples": {
+                  "podcast_episodes": {
+                    "summary": "podcast_episodes (search results)",
+                    "value": {
+                      "total_count": 10,
+                      "md5": "8d22bf750030084b13d7afa0f442d4c4",
+                      "podcast_episode": [
+                        {
+                          "id": "3715",
+                          "title": "Talking to the Host of Drilled about the Legal Battles around Standing Rock",
+                          "name": "Talking to the Host of Drilled about the Legal Battles around Standing Rock",
+                          "podcast": {
+                            "id": 1,
+                            "name": "60-Second Science"
+                          },
+                          "description": "Protests around the construction of the now complete Dakota Access Pipeline brought national attention to Energy Transfer, the company that built and owns the pipeline and funded private security against the protestors. Energy Transfer sued the nonprofit Greenpeace for hundreds of millions of dollars. The company claimed that the Standing Rock movement was not Indigenous-led environmental activism but a conspiratorial effort by Greenpeace. Reporter Alleen Brown is spending this season of her podcast, Drilled, looking into the lawsuit and the message that legal actions like this send to activists.&nbsp;\n\nRecommended reading:\n\nListen to Drilled\n\nRead Alleen Brown&rsquo;s newsletter\n\nE-mail us at sciencequickly@sciam.com if you have any questions, comments or ideas for stories we should cover!\n\nDiscover something new every day: subscribe to Scientific American and sign up for Today in Science, our daily newsletter.&nbsp;\n\nScience Quickly is produced by Rachel Feltman, Fonda Mwangi, Kelso Harper, Naeem Amarsy and Jeff DelViscio. This episode was hosted by Rachel Feltman. Our show is edited by Alex Sugiura with fact-checking by Shayna Posses and Aaron Shattuck.&nbsp;\n\nThe theme music was composed by Dominic Smith.\n\n\nLearn more about your ad choices. Visit megaphone.fm/adchoices",
+                          "category": "",
+                          "author": "",
+                          "author_full": "",
+                          "website": "",
+                          "pubdate": "2025-06-30T09:55:00+00:00",
+                          "state": "completed",
+                          "filelength": "00:12:06",
+                          "filesize": "17 MB",
+                          "filename": "60-Second Science - Talking to the Host of Drilled about the Legal Battles around Standing Rock.mp3",
+                          "mime": "audio/mpeg",
+                          "time": 726,
+                          "size": 17827745,
+                          "bitrate": 192000,
+                          "stream_bitrate": 192000,
+                          "rate": 44100,
+                          "mode": "cbr",
+                          "channels": 2,
+                          "public_url": "https://music.com.au/podcast_episode.php?action=show&podcast_episode=3715",
+                          "url": "https://music.com.au/play/index.php?ssid=cfj3f237d563f479f5223k23189dbb34&type=podcast_episode&oid=3715&uid=4&format=raw&player=api&name=60-Second%20Science%20-%20Talking%20to%20the%20Host%20of%20Drilled%20about%20the%20Legal%20Battles%20around%20Standing%20Rock.mp3",
+                          "catalog": "3",
+                          "art": "https://music.com.au/image.php?object_id=1&object_type=podcast&id=42&name=art.jpg",
+                          "has_art": true,
+                          "flag": false,
+                          "rating": null,
+                          "averagerating": null,
+                          "playcount": 0,
+                          "played": ""
+                        },
+                        {
+                          "id": "127",
+                          "title": "How to Fight Bird Flu If It Becomes the Next Human Pandemic (Part 3)",
+                          "name": "How to Fight Bird Flu If It Becomes the Next Human Pandemic (Part 3)",
+                          "podcast": {
+                            "id": 1,
+                            "name": "60-Second Science"
+                          },
+                          "description": "Creating a bird flu vaccine requires several layers of bioprotective clothing and typically a whole lot of eggs. H5N1 avian influenza infections have gone from flocks of chickens to herds of cattle and humans. Scientists at the Texas Biomedical Research Institute are taking their best guess at the strains of the virus that could spread and are creating critical vaccine candidates.\n\nMultimedia journalist and Scientific American multimedia intern Naeem Amarsy suited up and went to San Antonio, Tex., to visit a &ldquo;biosafety level three&rdquo; (BSL-3) lab at the institute.&nbsp;\n\nThis is the third and final episode of our series about bird flu.\n\nYou can listen to episode one:\n\nhttps://www.scientificamerican.com/podcast/episode/how-h5n1-went-from-an-illness-in-wild-birds-to-a-global-pandemic-threat/&nbsp;\n\nAnd episode two:\n\nhttps://www.scientificamerican.com/podcast/episode/how-bird-flu-went-from-devastating-poultry-farms-to-infecting-dairy-herds/&nbsp;\n\nAnd read more of our health coverage:\n\nhttps://www.scientificamerican.com/health/&nbsp;\n\nE-mail us at sciencequickly@sciam.com if you have any questions, comments or ideas for stories we should cover!\n\nDiscover something new every day: subscribe to Scientific American and sign up for Today in Science, our daily newsletter.&nbsp;\n\nScience Quickly is produced by Rachel Feltman, Fonda Mwangi, Kelso Harper, Naeem Amarsy and Jeff DelViscio. This episode was hosted and reported by Naeem Amarsy. This series was reported and produced by Lauren Young, Meghan Bartels, Fonda Mwangi and Jeff DelViscio. Special thanks to Laura Petersen and Catie Corcoran at the Texas Biomedical Research Institute, Jane Deng and Elizabeth Dowling at the Icahn School of Medicine at Mount Sinai, and Kimberly Lau, Dean Visser and Jeanna Bryner at Scientific American. Our show is edited by Alex Sugiura with fact-checking by Shayna Posses and Aaron Shattuck. The theme music was composed by Dominic Smith.\n\n\nLearn more about your ad choices. Visit megaphone.fm/adchoices",
+                          "category": "",
+                          "author": "",
+                          "author_full": "",
+                          "website": "",
+                          "pubdate": "2025-06-27T09:55:00+00:00",
+                          "state": "completed",
+                          "filelength": "00:32:06",
+                          "filesize": "44.48 MB",
+                          "filename": "60-Second Science - How to Fight Bird Flu If It Becomes the Next Human Pandemic (Part 3).mp3",
+                          "mime": "audio/mpeg",
+                          "time": 1926,
+                          "size": 46635577,
+                          "bitrate": 192000,
+                          "stream_bitrate": 192000,
+                          "rate": 44100,
+                          "mode": "cbr",
+                          "channels": 2,
+                          "public_url": "https://music.com.au/podcast_episode.php?action=show&podcast_episode=127",
+                          "url": "https://music.com.au/play/index.php?ssid=cfj3f237d563f479f5223k23189dbb34&type=podcast_episode&oid=127&uid=4&format=raw&player=api&name=60-Second%20Science%20-%20How%20to%20Fight%20Bird%20Flu%20If%20It%20Becomes%20the%20Next%20Human%20Pandemic%20-Part%203-.mp3",
+                          "catalog": "3",
+                          "art": "https://music.com.au/image.php?object_id=1&object_type=podcast&id=42&name=art.jpg",
+                          "has_art": true,
+                          "flag": false,
+                          "rating": null,
+                          "averagerating": null,
+                          "playcount": 0,
+                          "played": ""
+                        },
+                        {
+                          "id": "128",
+                          "title": " Bird Flu’s Jump to Cattle Took Dairy Farmers by Surprise (Part 2)",
+                          "name": " Bird Flu’s Jump to Cattle Took Dairy Farmers by Surprise (Part 2)",
+                          "podcast": {
+                            "id": 1,
+                            "name": "60-Second Science"
+                          },
+                          "description": "Dairy cattle have become an intermediary between avian influenza found in wild birds and the handful of recorded H5N1 bird flu cases in humans. Senior news reporter Meghan Bartels took a trip upstate to Cornell University&rsquo;s Teaching Dairy Barn. Early last year Texas dairy farmers noticed lethargic cows producing off-color milk. One of them sent Cornell researchers a sample, which genetic sequencing determined to contain a strain of H5N1. That strain traces its roots to the H5N1 virus that emerged in China in the late 1990s&mdash;which spread around the world thanks to migrating wild birds, such as those found on the beach that associate health and medicine editor Lauren Young visited in episode one of our three-part series about bird flu. And outbreak of H5N1 has been running through poultry farms since the early 2020s. Poultry farmers have been forced to cull flocks, reinforce biosecurity protocols and change the prices of eggs as a result. Dairy farms were less prepared for the spillover and its unexpected transition into raw-milk-drinking barn cats. While pasteurization makes milk safe for human consumption, there&rsquo;s no easy way to prevent the spread between herds of cattle. In the next episode, multimedia intern and producer Naeem Amarsy looks at how the virus made yet another hop&mdash;this time into humans.\n\n\n\nRecommended reading:\n\nHow the U.S. Lost Control of Bird Flu, Setting the Stage for Another Pandemic\n\nhttps://www.scientificamerican.com/article/bird-flu-has-spread-out-of-control-after-mistakes-by-u-s-government-and/&nbsp;\n\nBird Flu Vaccine for Cows Passes Early Test\n\nhttps://www.scientificamerican.com/article/bird-flu-vaccine-for-cows-passes-early-test/&nbsp;\n\n\n\nE-mail us at sciencequickly@sciam.com if you have any questions, comments or ideas for stories we should cover!\n\nDiscover something new every day: subscribe to Scientific American and sign up for Today in Science, our daily newsletter.&nbsp;\n\n\n\nScience Quickly is produced by Rachel Feltman, Fonda Mwangi, Kelso Harper, Naeem Amarsy and Jeff DelViscio. This episode was reported and hosted by Meghan Bartels. This series is reported and produced by Lauren Young, Meghan Bartels, Naeem Amarsy, Fonda Mwangi and Jeff DelViscio. Special thanks to Becka Bowyer and Kaitlyn Serrao at Cornell University and to Kimberly Lau, Dean Visser and Jeanna Bryner at Scientific American. Our show is edited by Alex Sugiura with fact-checking by Shayna Posses and Aaron Shattuck. The theme music was composed by Dominic Smith.\n\n\nLearn more about your ad choices. Visit megaphone.fm/adchoices",
+                          "category": "",
+                          "author": "",
+                          "author_full": "",
+                          "website": "",
+                          "pubdate": "2025-06-25T09:50:00+00:00",
+                          "state": "completed",
+                          "filelength": "00:22:13",
+                          "filesize": "30.9 MB",
+                          "filename": "60-Second Science -  Bird Flu’s Jump to Cattle Took Dairy Farmers by Surprise (Part 2).mp3",
+                          "mime": "audio/mpeg",
+                          "time": 1333,
+                          "size": 32403851,
+                          "bitrate": 192000,
+                          "stream_bitrate": 192000,
+                          "rate": 44100,
+                          "mode": "cbr",
+                          "channels": 2,
+                          "public_url": "https://music.com.au/podcast_episode.php?action=show&podcast_episode=128",
+                          "url": "https://music.com.au/play/index.php?ssid=cfj3f237d563f479f5223k23189dbb34&type=podcast_episode&oid=128&uid=4&format=raw&player=api&name=60-Second%20Science%20-%20%20Bird%20Flu-s%20Jump%20to%20Cattle%20Took%20Dairy%20Farmers%20by%20Surprise%20-Part%202-.mp3",
+                          "catalog": "3",
+                          "art": "https://music.com.au/image.php?object_id=1&object_type=podcast&id=42&name=art.jpg",
+                          "has_art": true,
+                          "flag": false,
+                          "rating": null,
+                          "averagerating": null,
+                          "playcount": 0,
+                          "played": ""
+                        },
+                        {
+                          "id": "129",
+                          "title": "How Bird Flu Went from an Isolated Avian Illness to a Human Pandemic Threat (Part 1)",
+                          "name": "How Bird Flu Went from an Isolated Avian Illness to a Human Pandemic Threat (Part 1)",
+                          "podcast": {
+                            "id": 1,
+                            "name": "60-Second Science"
+                          },
+                          "description": "Bird flu outbreaks in poultry and cattle have caused concern for public health officials. There have been few reported cases of human transmission, but the growing risks of H5N1 avian influenza have virologists on alert.\n\n\n\nResearchers at the St. Jude Center of Excellence for Influenza Research and Response take an annual visit to Delaware Bay to collect samples of bird poop for analysis. These samples give the researchers a look at emerging avian illnesses. While spillover of H5N1 into domestic birds has been known for a while, the first case of spillover into humans was only identified during a 1997 outbreak in Hong Kong. Since then H5N1 has gone global and moved from transmitting from bird to bird to spreading from bird to mammal and from mammal to mammal.\n\n\n\nAssociate health and medicine editor Lauren Young takes a sample collection walk on the beach and speaks with virus detectives about how H5N1 evolved in episode one of our three-part series about bird flu.\n\nJoin us on Wednesday to learn how bird flu jumped from poultry to cattle.\n\n\n\nRecommended reading:\n\nRFK, Jr., Wants to Let Bird Flu Spread on Poultry Farms. Why Experts Are Concerned https://www.scientificamerican.com/article/rfk-jr-wants-to-let-bird-flu-spread-on-poultry-farms-why-experts-are/&nbsp;\n\nBird Flu Detected in Humans in the U.S.: What We Know So Far https://www.scientificamerican.com/article/bird-flu-detected-in-a-person-in-texas-what-we-know-so-far/&nbsp;\n\n\n\nE-mail us at sciencequickly@sciam.com if you have any questions, comments or ideas for stories we should cover!\n\nDiscover something new every day: subscribe to Scientific American and sign up for Today in Science, our daily newsletter.&nbsp;\n\n\n\nScience Quickly is produced by Rachel Feltman, Fonda Mwangi, Kelso Harper, Naeem Amarsy and Jeff DelViscio. This episode was hosted by Rachel Feltman with guest Lauren Young. This series was reported and produced by Lauren Young, Meghan Bartels, Naeem Amarsy, Fonda Mwangi and Jeff DelViscio. And special thanks to Kimberly Lau and Dean Visser at Scientific American for making it possible and to Michael Sheffield at St. Jude for assistance in the field. Our show is edited by Alex Sugiura with fact-checking by Shayna Posses and Aaron Shattuck. The theme music was composed by Dominic Smith.\nLearn more about your ad choices. Visit megaphone.fm/adchoices",
+                          "category": "",
+                          "author": "",
+                          "author_full": "",
+                          "website": "",
+                          "pubdate": "2025-06-23T09:50:00+00:00",
+                          "state": "completed",
+                          "filelength": "00:30:17",
+                          "filesize": "41.98 MB",
+                          "filename": "60-Second Science - How Bird Flu Went from an Isolated Avian Illness to a Human Pandemic Threat (Part 1).mp3",
+                          "mime": "audio/mpeg",
+                          "time": 1817,
+                          "size": 44015861,
+                          "bitrate": 192000,
+                          "stream_bitrate": 192000,
+                          "rate": 44100,
+                          "mode": "cbr",
+                          "channels": 2,
+                          "public_url": "https://music.com.au/podcast_episode.php?action=show&podcast_episode=129",
+                          "url": "https://music.com.au/play/index.php?ssid=cfj3f237d563f479f5223k23189dbb34&type=podcast_episode&oid=129&uid=4&format=raw&player=api&name=60-Second%20Science%20-%20How%20Bird%20Flu%20Went%20from%20an%20Isolated%20Avian%20Illness%20to%20a%20Human%20Pandemic%20Threat%20-Part%201-.mp3",
+                          "catalog": "3",
+                          "art": "https://music.com.au/image.php?object_id=1&object_type=podcast&id=42&name=art.jpg",
+                          "has_art": true,
+                          "flag": false,
+                          "rating": null,
+                          "averagerating": null,
+                          "playcount": 0,
+                          "played": ""
+                        }
+                      ]
+                    }
+                  }
+                }
+              }
+            },
             "description": "Search results"
           },
           "400": {
@@ -16031,6 +17103,62 @@
         ],
         "responses": {
           "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object"
+                },
+                "examples": {
+                  "podcasts": {
+                    "summary": "podcasts (search results)",
+                    "value": {
+                      "total_count": 2,
+                      "md5": "89fefb193877ee62e29d1da5975dcc47",
+                      "podcast": [
+                        {
+                          "id": "1",
+                          "name": "60-Second Science",
+                          "description": "Tune in every weekday for quick reports and commentaries on the world of science&mdash;it&#039;ll just take a minute",
+                          "language": "en-us",
+                          "copyright": "False",
+                          "feed_url": "http://rss.sciam.com/sciam/60secsciencepodcast",
+                          "generator": "",
+                          "website": "https://www.scientificamerican.com/podcast/60-second-science/",
+                          "build_date": "1970-01-01T00:00:00+00:00",
+                          "sync_date": "2022-08-17T05:07:11+00:00",
+                          "public_url": "https://music.com.au/podcast.php?action=show&podcast=1",
+                          "art": "https://music.com.au/image.php?object_id=1&object_type=podcast&id=42&name=art.jpg",
+                          "has_art": true,
+                          "flag": false,
+                          "rating": null,
+                          "averagerating": null,
+                          "podcast_episode": []
+                        },
+                        {
+                          "id": "2",
+                          "name": "Plays Well with Others",
+                          "description": "From Creative Commons, a podcast about the art and science of collaboration. With a focus on the tools, techniques, and mechanics of collaboration, we explore how today&#039;s most interesting collaborators are making new things, solving old problems, and getting things done &mdash; together. Hosted by Creative Commons CEO Ryan Merkley. ",
+                          "language": "en",
+                          "copyright": "Creative Commons",
+                          "feed_url": "https://anchor.fm/s/90932e8/podcast/rss",
+                          "generator": "Anchor Podcasts",
+                          "website": "playswellwithothers.org",
+                          "build_date": "2021-02-23T04:18:58+00:00",
+                          "sync_date": "2022-08-17T05:07:11+00:00",
+                          "public_url": "https://music.com.au/podcast.php?action=show&podcast=2",
+                          "art": "https://music.com.au/image.php?object_id=2&object_type=podcast&id=45&name=art.jpg",
+                          "has_art": true,
+                          "flag": false,
+                          "rating": null,
+                          "averagerating": null,
+                          "podcast_episode": []
+                        }
+                      ]
+                    }
+                  }
+                }
+              }
+            },
             "description": "Search results"
           },
           "400": {
@@ -17952,6 +19080,99 @@
         "summary": "Get a server preference by name (Admin)",
         "tags": [
           "Preferences"
+        ]
+      }
+    },
+    "/random": {
+      "get": {
+        "parameters": [
+          {
+            "description": "Object type to pick a random item from (default: song)",
+            "in": "query",
+            "name": "type",
+            "required": false,
+            "schema": {
+              "default": "song",
+              "enum": [
+                "song",
+                "podcast_episode",
+                "video"
+              ],
+              "type": "string"
+            }
+          },
+          {
+            "description": "Max bitrate for transcoding in bytes (e.g 192000=192Kb). Song only",
+            "in": "query",
+            "name": "bitrate",
+            "required": false,
+            "schema": {
+              "type": "integer"
+            }
+          },
+          {
+            "description": "Target stream format e.g. 'mp3', 'ogg'; use 'raw' to skip transcoding. Song only",
+            "in": "query",
+            "name": "format",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "description": "Time offset in seconds",
+            "in": "query",
+            "name": "offset",
+            "required": false,
+            "schema": {
+              "type": "integer"
+            }
+          },
+          {
+            "description": "If 0, disable stat recording when playing the object (default: 1)",
+            "in": "query",
+            "name": "stats",
+            "required": false,
+            "schema": {
+              "enum": [
+                0,
+                1
+              ],
+              "type": "integer"
+            }
+          }
+        ],
+        "responses": {
+          "302": {
+            "description": "Redirect to the stream url of the randomly picked object",
+            "headers": {
+              "Location": {
+                "description": "Stream url of the random media object",
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/BadRequestErrorResponse"
+          },
+          "403": {
+            "$ref": "#/components/responses/ForbiddenErrorResponse"
+          },
+          "404": {
+            "$ref": "#/components/responses/NotFoundErrorResponse"
+          },
+          "410": {
+            "$ref": "#/components/responses/GoneErrorResponse"
+          },
+          "500": {
+            "$ref": "#/components/responses/InternalServerErrorResponse"
+          }
+        },
+        "summary": "Pick a random song, podcast episode or video and redirect (302) to its stream url",
+        "tags": [
+          "Streaming and Downloads"
         ]
       }
     },
@@ -24456,6 +25677,104 @@
         ],
         "responses": {
           "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object"
+                },
+                "examples": {
+                  "smartlists": {
+                    "summary": "smartlists (search results)",
+                    "value": {
+                      "total_count": 18,
+                      "md5": "1be86703f3041143eac23a8a6a30b176",
+                      "playlist": [
+                        {
+                          "id": "smart_21",
+                          "name": "admin - 02/23/2021 14:36:44 (admin)",
+                          "owner": "admin",
+                          "user": {
+                            "id": "2",
+                            "username": "admin"
+                          },
+                          "items": 1,
+                          "type": "public",
+                          "art": "https://music.com.au/image.php?object_id=21&object_type=search&name=art.jpg",
+                          "has_access": true,
+                          "has_collaborate": true,
+                          "has_art": false,
+                          "flag": false,
+                          "rating": null,
+                          "averagerating": null,
+                          "md5": null,
+                          "last_update": 0
+                        },
+                        {
+                          "id": "smart_14",
+                          "name": "Album 1* (System)",
+                          "owner": "System",
+                          "user": {
+                            "id": "-1",
+                            "username": "System"
+                          },
+                          "items": 2,
+                          "type": "public",
+                          "art": "https://music.com.au/image.php?object_id=14&object_type=search&name=art.jpg",
+                          "has_access": true,
+                          "has_collaborate": true,
+                          "has_art": false,
+                          "flag": false,
+                          "rating": null,
+                          "averagerating": null,
+                          "md5": null,
+                          "last_update": 0
+                        },
+                        {
+                          "id": "smart_13",
+                          "name": "Album 2* (System)",
+                          "owner": "System",
+                          "user": {
+                            "id": "-1",
+                            "username": "System"
+                          },
+                          "items": 11,
+                          "type": "public",
+                          "art": "https://music.com.au/image.php?object_id=13&object_type=search&name=art.jpg",
+                          "has_access": true,
+                          "has_collaborate": true,
+                          "has_art": false,
+                          "flag": false,
+                          "rating": null,
+                          "averagerating": null,
+                          "md5": null,
+                          "last_update": 0
+                        },
+                        {
+                          "id": "smart_12",
+                          "name": "Album 3* (System)",
+                          "owner": "System",
+                          "user": {
+                            "id": "-1",
+                            "username": "System"
+                          },
+                          "items": 2,
+                          "type": "public",
+                          "art": "https://music.com.au/image.php?object_id=12&object_type=search&name=art.jpg",
+                          "has_access": true,
+                          "has_collaborate": true,
+                          "has_art": false,
+                          "flag": false,
+                          "rating": null,
+                          "averagerating": null,
+                          "md5": null,
+                          "last_update": 0
+                        }
+                      ]
+                    }
+                  }
+                }
+              }
+            },
             "description": "Search results"
           },
           "400": {
@@ -27407,6 +28726,323 @@
         ],
         "responses": {
           "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object"
+                },
+                "examples": {
+                  "songs": {
+                    "summary": "songs (search results)",
+                    "value": {
+                      "total_count": 75,
+                      "md5": "c776c28ee7bb4e7f46fd3bbfbf34c5ff",
+                      "song": [
+                        {
+                          "id": "115",
+                          "title": "Are we going Crazy",
+                          "name": "Are we going Crazy",
+                          "artist": {
+                            "id": "27",
+                            "name": "Chi.Otic",
+                            "prefix": null,
+                            "basename": "Chi.Otic"
+                          },
+                          "artists": [
+                            {
+                              "id": "27",
+                              "name": "Chi.Otic",
+                              "prefix": null,
+                              "basename": "Chi.Otic"
+                            }
+                          ],
+                          "album": {
+                            "id": "12",
+                            "name": "Buried in Nausea",
+                            "prefix": null,
+                            "basename": "Buried in Nausea"
+                          },
+                          "albumartist": {
+                            "id": "19",
+                            "name": "Various Artists",
+                            "prefix": null,
+                            "basename": "Various Artists"
+                          },
+                          "disk": 1,
+                          "disksubtitle": null,
+                          "track": 7,
+                          "filename": "/mnt/files-music/ampache-test/music/Various Artists/Buried In Nausea/07Chi.otic-AreWeGoingCrazy.wma",
+                          "genre": [],
+                          "playlisttrack": 1,
+                          "time": 433,
+                          "year": 2012,
+                          "format": "wma",
+                          "stream_format": "mp3",
+                          "bitrate": 32582,
+                          "stream_bitrate": 32000,
+                          "rate": 44100,
+                          "mode": "cbr",
+                          "mime": "audio/x-ms-wma",
+                          "stream_mime": "audio/mpeg",
+                          "url": "https://music.com.au/play/index.php?ssid=cfj3f237d563f479f5223k23189dbb34&type=song&oid=115&uid=4&transcode_to=mp3&bitrate=32000&player=api&name=Chi.Otic%20-%20Are%20we%20going%20Crazy.mp3",
+                          "size": 1776580,
+                          "mbid": null,
+                          "art": "https://music.com.au/image.php?object_id=12&object_type=album&id=66&name=art.jpg",
+                          "has_art": true,
+                          "flag": false,
+                          "rating": null,
+                          "averagerating": null,
+                          "playcount": 0,
+                          "catalog": 1,
+                          "composer": null,
+                          "channels": 1,
+                          "comment": null,
+                          "license": null,
+                          "publisher": null,
+                          "language": null,
+                          "lyrics": null,
+                          "replaygain_album_gain": null,
+                          "replaygain_album_peak": null,
+                          "replaygain_track_gain": null,
+                          "replaygain_track_peak": null,
+                          "r128_album_gain": null,
+                          "r128_track_gain": null
+                        },
+                        {
+                          "id": "107",
+                          "title": "Arrest Me",
+                          "name": "Arrest Me",
+                          "artist": {
+                            "id": "20",
+                            "name": "R/B",
+                            "prefix": null,
+                            "basename": "R/B"
+                          },
+                          "artists": [
+                            {
+                              "id": "20",
+                              "name": "R/B",
+                              "prefix": null,
+                              "basename": "R/B"
+                            }
+                          ],
+                          "album": {
+                            "id": "12",
+                            "name": "Buried in Nausea",
+                            "prefix": null,
+                            "basename": "Buried in Nausea"
+                          },
+                          "albumartist": {
+                            "id": "19",
+                            "name": "Various Artists",
+                            "prefix": null,
+                            "basename": "Various Artists"
+                          },
+                          "disk": 1,
+                          "disksubtitle": null,
+                          "track": 9,
+                          "filename": "/mnt/files-music/ampache-test/music/Various Artists/Buried In Nausea/09R_b-ArrestMe.m4a",
+                          "genre": [
+                            {
+                              "id": "7",
+                              "name": "Punk"
+                            }
+                          ],
+                          "playlisttrack": 2,
+                          "time": 96,
+                          "year": 2012,
+                          "format": "m4a",
+                          "stream_format": "mp3",
+                          "bitrate": 252864,
+                          "stream_bitrate": 32000,
+                          "rate": 44100,
+                          "mode": "vbr",
+                          "mime": "audio/mp4",
+                          "stream_mime": "audio/mpeg",
+                          "url": "https://music.com.au/play/index.php?ssid=cfj3f237d563f479f5223k23189dbb34&type=song&oid=107&uid=4&transcode_to=mp3&bitrate=32000&player=api&name=R-B%20-%20Arrest%20Me.mp3",
+                          "size": 3091727,
+                          "mbid": null,
+                          "art": "https://music.com.au/image.php?object_id=12&object_type=album&id=66&name=art.jpg",
+                          "has_art": true,
+                          "flag": false,
+                          "rating": null,
+                          "averagerating": null,
+                          "playcount": 0,
+                          "catalog": 1,
+                          "composer": null,
+                          "channels": 2,
+                          "comment": null,
+                          "license": null,
+                          "publisher": null,
+                          "language": null,
+                          "lyrics": null,
+                          "replaygain_album_gain": null,
+                          "replaygain_album_peak": null,
+                          "replaygain_track_gain": -1.35,
+                          "replaygain_track_peak": 0.881,
+                          "r128_album_gain": null,
+                          "r128_track_gain": null
+                        },
+                        {
+                          "id": "118",
+                          "title": "As Pure as Possible",
+                          "name": "As Pure as Possible",
+                          "artist": {
+                            "id": "36",
+                            "name": "Comfort Fit",
+                            "prefix": null,
+                            "basename": "Comfort Fit"
+                          },
+                          "artists": [
+                            {
+                              "id": "36",
+                              "name": "Comfort Fit",
+                              "prefix": null,
+                              "basename": "Comfort Fit"
+                            }
+                          ],
+                          "album": {
+                            "id": "21",
+                            "name": "Forget and Remember",
+                            "prefix": null,
+                            "basename": "Forget and Remember"
+                          },
+                          "albumartist": {
+                            "id": "36",
+                            "name": "Comfort Fit",
+                            "prefix": null,
+                            "basename": "Comfort Fit"
+                          },
+                          "disk": 1,
+                          "disksubtitle": null,
+                          "track": 9,
+                          "filename": "/mnt/files-music/ampache-test/upload/user/Comfort Fit/Forget And Remember/9 - As Pure as Possible.mp3",
+                          "genre": [
+                            {
+                              "id": "8",
+                              "name": "Hip-Hop"
+                            }
+                          ],
+                          "playlisttrack": 3,
+                          "time": 128,
+                          "year": 2005,
+                          "format": "mp3",
+                          "stream_format": "mp3",
+                          "bitrate": 234690,
+                          "stream_bitrate": 32000,
+                          "rate": 44100,
+                          "mode": "vbr",
+                          "mime": "audio/mpeg",
+                          "stream_mime": "audio/mpeg",
+                          "url": "https://music.com.au/play/index.php?ssid=cfj3f237d563f479f5223k23189dbb34&type=song&oid=118&uid=4&transcode_to=mp3&bitrate=32000&player=api&name=Comfort%20Fit%20-%20As%20Pure%20as%20Possible.mp3",
+                          "size": 3789410,
+                          "mbid": "7a3d740d-5546-4900-88af-b97b42c3344e",
+                          "art": "https://music.com.au/image.php?object_id=21&object_type=album&id=334&name=art.jpg",
+                          "has_art": true,
+                          "flag": false,
+                          "rating": null,
+                          "averagerating": null,
+                          "playcount": 0,
+                          "catalog": 4,
+                          "composer": null,
+                          "channels": 2,
+                          "comment": "URL: http://freemusicarchive.org/music/Comfort_Fit/Forget_And_Remember/tdrlp02-09-comfort_fit-as_pure_as_possible\r\nComments: http://freemusicarchive.org/\r\nCurator: WFMU\r\nCopyright: Attribution-Noncommercial-No Derivative Works 3.0 Germany: http://creativecommons.org/licenses/by-nc-nd/3.0/de/",
+                          "license": null,
+                          "publisher": "Tokyo Dawn Records",
+                          "language": null,
+                          "lyrics": null,
+                          "replaygain_album_gain": null,
+                          "replaygain_album_peak": null,
+                          "replaygain_track_gain": null,
+                          "replaygain_track_peak": null,
+                          "r128_album_gain": null,
+                          "r128_track_gain": null
+                        },
+                        {
+                          "id": "85",
+                          "title": "Beq Ultra Fat",
+                          "name": "Beq Ultra Fat",
+                          "artist": {
+                            "id": "14",
+                            "name": "Nofi/found.",
+                            "prefix": null,
+                            "basename": "Nofi/found."
+                          },
+                          "artists": [
+                            {
+                              "id": "14",
+                              "name": "Nofi/found.",
+                              "prefix": null,
+                              "basename": "Nofi/found."
+                            }
+                          ],
+                          "album": {
+                            "id": "8",
+                            "name": "Nofi Devices",
+                            "prefix": null,
+                            "basename": "Nofi Devices"
+                          },
+                          "albumartist": {
+                            "id": "14",
+                            "name": "Nofi/found.",
+                            "prefix": null,
+                            "basename": "Nofi/found."
+                          },
+                          "disk": 1,
+                          "disksubtitle": null,
+                          "track": 4,
+                          "filename": "/mnt/files-music/ampache-test/music/Nofi_found/Nofi Devices LP/04_Beq_Ultra_Fat.mp3",
+                          "genre": [
+                            {
+                              "id": "5",
+                              "name": "Electronica"
+                            },
+                            {
+                              "id": "6",
+                              "name": "Dance"
+                            }
+                          ],
+                          "playlisttrack": 4,
+                          "time": 413,
+                          "year": 0,
+                          "format": "mp3",
+                          "stream_format": "mp3",
+                          "bitrate": 192000,
+                          "stream_bitrate": 32000,
+                          "rate": 44100,
+                          "mode": "cbr",
+                          "mime": "audio/mpeg",
+                          "stream_mime": "audio/mpeg",
+                          "url": "https://music.com.au/play/index.php?ssid=cfj3f237d563f479f5223k23189dbb34&type=song&oid=85&uid=4&transcode_to=mp3&bitrate=32000&player=api&name=Nofi-found.%20-%20Beq%20Ultra%20Fat.mp3",
+                          "size": 9935896,
+                          "mbid": null,
+                          "art": "https://music.com.au/image.php?object_id=8&object_type=album&id=70&name=art.jpg",
+                          "has_art": true,
+                          "flag": false,
+                          "rating": null,
+                          "averagerating": null,
+                          "playcount": 0,
+                          "catalog": 1,
+                          "composer": "Jeffrey Melton",
+                          "channels": 2,
+                          "comment": "8A114B0B+332232+11+150+3703+28283+76364+107382+132131+156082+177051+217892+239975+285087",
+                          "license": null,
+                          "publisher": "archive.org",
+                          "language": null,
+                          "lyrics": null,
+                          "replaygain_album_gain": null,
+                          "replaygain_album_peak": null,
+                          "replaygain_track_gain": 0.94,
+                          "replaygain_track_peak": 0.989,
+                          "r128_album_gain": null,
+                          "r128_track_gain": null
+                        }
+                      ]
+                    }
+                  }
+                }
+              }
+            },
             "description": "Search results"
           },
           "400": {
@@ -28664,6 +30300,38 @@
         ],
         "responses": {
           "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object"
+                },
+                "examples": {
+                  "users": {
+                    "summary": "users (search results)",
+                    "value": {
+                      "user": [
+                        {
+                          "id": "2",
+                          "username": "admin"
+                        },
+                        {
+                          "id": "3",
+                          "username": "demo"
+                        },
+                        {
+                          "id": "4",
+                          "username": "user"
+                        },
+                        {
+                          "id": "10",
+                          "username": "generic"
+                        }
+                      ]
+                    }
+                  }
+                }
+              }
+            },
             "description": "Search results"
           },
           "400": {
@@ -29731,6 +31399,72 @@
         ],
         "responses": {
           "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object"
+                },
+                "examples": {
+                  "videos": {
+                    "summary": "videos (search results)",
+                    "value": {
+                      "total_count": 3,
+                      "md5": "e0f2b57f7886bad0b1a33447e187fae7",
+                      "video": [
+                        {
+                          "id": "5",
+                          "title": "Lisa Simpson playing a Beer Jug as her new instrument-fTGVV_4DNYI",
+                          "mime": "video/mp4",
+                          "resolution": "1920x1080",
+                          "size": 16967352,
+                          "genre": [],
+                          "time": 32,
+                          "url": "https://music.com.au/play/index.php?ssid=cfj3f237d563f479f5223k23189dbb34&type=video&oid=5&uid=4&player=api&name=Lisa%20Simpson%20playing%20a%20Beer%20Jug%20as%20her%20new%20instrument-fTGVV-4DNYI.mp4",
+                          "art": "https://music.com.au/image.php?object_id=5&object_type=video&id=414&name=art.png",
+                          "has_art": false,
+                          "flag": false,
+                          "rating": null,
+                          "averagerating": null,
+                          "playcount": 0
+                        },
+                        {
+                          "id": "2",
+                          "title": "Magic Fly",
+                          "mime": "video/ogg",
+                          "resolution": "400x300",
+                          "size": 14950742,
+                          "genre": [],
+                          "time": 0,
+                          "url": "https://music.com.au/play/index.php?ssid=cfj3f237d563f479f5223k23189dbb34&type=video&oid=2&uid=4&player=api&name=Magic%20Fly.ogv",
+                          "art": "https://music.com.au/image.php?object_id=2&object_type=video&id=36&name=art.png",
+                          "has_art": false,
+                          "flag": false,
+                          "rating": null,
+                          "averagerating": null,
+                          "playcount": 1
+                        },
+                        {
+                          "id": "1",
+                          "title": "SPACE   Magic Fly (1977) - https://archive.org/details/SPACE_Magic_Fly_1977",
+                          "mime": "video/mp4",
+                          "resolution": "640x480",
+                          "size": 20084777,
+                          "genre": [],
+                          "time": 193,
+                          "url": "https://music.com.au/play/index.php?ssid=cfj3f237d563f479f5223k23189dbb34&type=video&oid=1&uid=4&player=api&name=SPACE%20%20%20Magic%20Fly%20-1977-%20-%20https-archive.org-details-SPACE-Magic-Fly-1977.mp4",
+                          "art": "https://music.com.au/image.php?object_id=1&object_type=video&id=35&name=art.png",
+                          "has_art": false,
+                          "flag": false,
+                          "rating": null,
+                          "averagerating": null,
+                          "playcount": 3
+                        }
+                      ]
+                    }
+                  }
+                }
+              }
+            },
             "description": "Search results"
           },
           "400": {
