@@ -482,7 +482,7 @@ class Xml8_Data
             } else {
                 /** @var Folder $libitem */
                 $filename = $libitem->get_fullname();
-                $dirname  = $libitem->path_name;
+                $dirname  = $libitem->path_name ?? '';
             }
 
             $item = $xml_items->addChild('item');

@@ -1200,6 +1200,59 @@ class Art extends database_object
     }
 
     /**
+     * Resolve the art file for a size, without emitting it
+     *
+     * This is the same selection `show()` performs, but it hands the image back instead of writing
+     * it straight to the output, so a caller can build a response from it.
+     *
+     * @return array{data: string, mime: string}|null null when there is no art to show
+     */
+    public function getImage(string $size, bool $fallback): ?array
+    {
+        if (!$this->has_db_info($size, $fallback)) {
+            return null;
+        }
+
+        if (
+            $size
+            && preg_match('/^[0-9]+x[0-9]+$/', $size)
+        ) {
+            if ($this->thumb && $this->thumb_mime) {
+                // found the thumb by looking up the size
+                return [
+                    'data' => (string) $this->thumb,
+                    'mime' => (string) $this->thumb_mime,
+                ];
+            }
+
+            if (self::_hasGD()) {
+                // resize the image if requested
+                $dimensions = explode('x', $size);
+                $width      = (int) $dimensions[0];
+                $height     = (int) $dimensions[1];
+                if ($width === 0 || $height === 0) {
+                    return null;
+                }
+
+                $thumb = $this->get_thumb(['width' => $width, 'height' => $height]);
+                if (!empty($thumb) && isset($thumb['thumb'], $thumb['thumb_mime'])) {
+                    return [
+                        'data' => (string) $thumb['thumb'],
+                        'mime' => (string) $thumb['thumb_mime'],
+                    ];
+                }
+
+                return null;
+            }
+        }
+
+        return [
+            'data' => (string) $this->raw,
+            'mime' => (string) $this->raw_mime,
+        ];
+    }
+
+    /**
      * has_db_info
      * This pulls the information out from the database, depending
      * on if we want to resize and if there is not a thumbnail go
