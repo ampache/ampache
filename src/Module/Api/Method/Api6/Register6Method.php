@@ -93,7 +93,7 @@ final class Register6Method
             }
             $text = 'successfully created: ' . $username;
             if (AmpConfig::get('admin_enable_required')) {
-                $text = T_('Please wait for an administrator to activate your account');
+                $text = 'Please wait for an administrator to activate your account';
             }
             Api6::message($text, $input['api_format']);
             Catalog::count_table('user');
