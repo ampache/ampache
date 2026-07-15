@@ -82,7 +82,7 @@ class FolderRepositoryTest extends TestCase
 
         $this->connection->expects(static::once())
             ->method('query')
-            ->with('SELECT COUNT(*) AS `count` FROM `video`;')
+            ->with('SELECT COUNT(*) AS `count` FROM `folder`;')
             ->willReturn($result);
 
         $result->expects(static::once())
