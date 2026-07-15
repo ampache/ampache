@@ -2476,6 +2476,7 @@ abstract class Catalog extends database_object
                     self::garbage_collect_filters();
                     self::update_counts();
                 }
+                break;
             case 'scan_all_catalog_folders':
                 $catalogs = self::get_catalogs();
                 // Intentional break fall-through
