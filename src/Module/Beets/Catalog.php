@@ -44,7 +44,6 @@ use Ampache\Repository\Model\Video;
 abstract class Catalog extends \Ampache\Repository\Model\Catalog
 {
     protected int $addedSongs = 0;
-
     protected string $description;
 
     // command which provides the list of all songs
@@ -57,9 +56,7 @@ abstract class Catalog extends \Ampache\Repository\Model\Catalog
     protected array $songs = [];
 
     protected string $type;
-
     protected int $verifiedSongs = 0;
-
     protected string $version;
 
     /**

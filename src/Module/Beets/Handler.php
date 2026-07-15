@@ -34,7 +34,6 @@ abstract class Handler
 {
     // Seperator between command and arguments
     protected string $commandSeperator;
-
     protected array $fieldMapping = [];
     private Catalog $handler;
     private string $handlerCommand;
