@@ -187,6 +187,7 @@ final class ConfigurationKeyEnum
     public const SOCIABLE                              = 'sociable';
     public const SONG_PAGE_TITLE                       = 'song_page_title';
     public const STATISTICAL_GRAPHS                    = 'statistical_graphs';
+    public const STATS_CONSOLIDATE_THRESHOLD           = 'stats_consolidate_threshold';
     public const STATS_THRESHOLD                       = 'stats_threshold';
     public const STREAM_BEAUTIFUL_URL                  = 'stream_beautiful_url';
     public const SUBSONIC_ALWAYS_DOWNLOAD              = 'subsonic_always_download';

@@ -38,6 +38,7 @@ use Ampache\Repository\Model\Song;
 use Ampache\Repository\Model\User;
 use Ampache\Repository\Model\Video;
 use Ampache\Repository\UserActivityRepositoryInterface;
+use RuntimeException;
 
 /**
  * Stats Class
@@ -66,14 +67,16 @@ class Stats
     {
         if ($user_id > 0) {
             Dba::write("DELETE FROM `object_count` WHERE `user` = ?;", [$user_id]);
+            Dba::write("DELETE FROM `object_count_summary` WHERE `user` = ?;", [$user_id]);
         } else {
             Dba::write("TRUNCATE `object_count`;");
+            Dba::write("TRUNCATE `object_count_summary`;");
         }
         // song.total_count
-        $sql = "UPDATE `song`, (SELECT COUNT(`object_count`.`object_id`) AS `total_count`, `object_id` FROM `object_count` WHERE `object_count`.`object_type` = 'song' AND `object_count`.`count_type` = 'stream' GROUP BY `object_count`.`object_id`) AS `object_count` SET `song`.`total_count` = `object_count`.`total_count` WHERE `song`.`total_count` != `object_count`.`total_count` AND `song`.`id` = `object_count`.`object_id`;";
+        $sql = "UPDATE `song`, (SELECT SUM(`total`) AS `total_count`, `object_id` FROM (SELECT COUNT(`object_count`.`object_id`) AS `total`, `object_id` FROM `object_count` WHERE `object_count`.`object_type` = 'song' AND `object_count`.`count_type` = 'stream' GROUP BY `object_count`.`object_id` UNION ALL SELECT `count` AS `total`, `object_id` FROM `object_count_summary` WHERE `object_type` = 'song' AND `count_type` = 'stream') AS `combined_count` GROUP BY `object_id`) AS `object_count` SET `song`.`total_count` = `object_count`.`total_count` WHERE `song`.`total_count` != `object_count`.`total_count` AND `song`.`id` = `object_count`.`object_id`;";
         Dba::write($sql);
         // song.total_skip
-        $sql = "UPDATE `song`, (SELECT COUNT(`object_count`.`object_id`) AS `total_skip`, `object_id` FROM `object_count` WHERE `object_count`.`object_type` = 'song' AND `object_count`.`count_type` = 'skip' GROUP BY `object_count`.`object_id`) AS `object_count` SET `song`.`total_skip` = `object_count`.`total_skip` WHERE `song`.`total_skip` != `object_count`.`total_skip` AND `song`.`id` = `object_count`.`object_id`;";
+        $sql = "UPDATE `song`, (SELECT SUM(`total`) AS `total_skip`, `object_id` FROM (SELECT COUNT(`object_count`.`object_id`) AS `total`, `object_id` FROM `object_count` WHERE `object_count`.`object_type` = 'song' AND `object_count`.`count_type` = 'skip' GROUP BY `object_count`.`object_id` UNION ALL SELECT `count` AS `total`, `object_id` FROM `object_count_summary` WHERE `object_type` = 'song' AND `count_type` = 'skip') AS `combined_count` GROUP BY `object_id`) AS `object_count` SET `song`.`total_skip` = `object_count`.`total_skip` WHERE `song`.`total_skip` != `object_count`.`total_skip` AND `song`.`id` = `object_count`.`object_id`;";
         Dba::write($sql);
         // song.played
         $sql = "UPDATE `song` SET `played` = 0 WHERE `total_count` = 0 and `played` = 1;";
@@ -89,9 +92,71 @@ class Stats
     {
         foreach (['album', 'artist', 'song', 'playlist', 'tag', 'live_stream', 'video', 'podcast', 'podcast_episode'] as $object_type) {
             Dba::write("DELETE FROM `object_count` WHERE `object_type` = '$object_type' AND `object_count`.`object_id` NOT IN (SELECT `$object_type`.`id` FROM `$object_type`);");
+            Dba::write("DELETE FROM `object_count_summary` WHERE `object_type` = '$object_type' AND `object_count_summary`.`object_id` NOT IN (SELECT `$object_type`.`id` FROM `$object_type`);");
         }
         // if deletes are copmleted you can have left over stuff
         Dba::write("DELETE FROM `object_count` WHERE `object_type` IN ('album', 'artist', 'podcast') AND `count_type` = ('skip');");
+        Dba::write("DELETE FROM `object_count_summary` WHERE `object_type` IN ('album', 'artist', 'podcast') AND `count_type` = 'skip';");
+    }
+
+    /**
+     * consolidate
+     *
+     * Consolidate play history older than $older_than days into `object_count_summary`
+     * and delete the detail rows, inside a transaction.
+     * Stored counters stay exact: the rebuild queries (Catalog::update_counts,
+     * Album/Artist::update_table_counts, Video::update_video_counts, Stats::clear)
+     * combine both tables, and all-time readers (Stats::get_object_count,
+     * User::get_play_size, rating match plugin) include the summary table.
+     * Readers that inspect individual plays only evaluate the retained window:
+     * period-based statistics (trending, recent, graphs, Last.fm export),
+     * all-time top charts (Stats::get_top_sql with a 0 threshold, including the
+     * cron cache), smart playlist play-history rules and play count sorting.
+     * @return array{rows: int, groups: int, executed: bool}
+     */
+    public static function consolidate(int $older_than, ?string $count_type = null, bool $dry_run = true): array
+    {
+        $threshold = time() - ($older_than * 86400);
+        $where     = "`date` < ? AND `count_type` IS NOT NULL";
+        $params    = [$threshold];
+        if ($count_type !== null) {
+            $where .= " AND `count_type` = ?";
+            $params[] = $count_type;
+        }
+
+        $db_results = Dba::read("SELECT COUNT(*) AS `rows`, COUNT(DISTINCT CONCAT_WS('|', `object_type`, `object_id`, `user`, `count_type`)) AS `groups` FROM `object_count` WHERE " . $where . ";", $params);
+        $row        = Dba::fetch_assoc($db_results);
+        $rows       = (int)($row['rows'] ?? 0);
+        $groups     = (int)($row['groups'] ?? 0);
+
+        if ($dry_run || $rows === 0) {
+            return ['rows' => $rows, 'groups' => $groups, 'executed' => false];
+        }
+
+        // aggregate then purge inside a transaction so an interruption
+        // cannot double count rows on the next run
+        // NOTE: VALUES() in ON DUPLICATE KEY UPDATE is deprecated on MySQL 8 but
+        // the replacement alias syntax is not supported by MariaDB, so VALUES()
+        // remains the only portable form (also used in Playlist::update_map)
+        $dbh            = Dba::dbh();
+        $in_transaction = ($dbh !== null && $dbh->beginTransaction());
+        $insert         = Dba::write("INSERT INTO `object_count_summary` (`object_type`, `object_id`, `user`, `count_type`, `count`, `date_from`, `date_to`) SELECT `object_type`, `object_id`, `user`, `count_type`, COUNT(*), MIN(`date`), MAX(`date`) FROM `object_count` WHERE " . $where . " GROUP BY `object_type`, `object_id`, `user`, `count_type` ON DUPLICATE KEY UPDATE `count` = `object_count_summary`.`count` + VALUES(`count`), `date_from` = LEAST(`object_count_summary`.`date_from`, VALUES(`date_from`)), `date_to` = GREATEST(`object_count_summary`.`date_to`, VALUES(`date_to`));", $params);
+        $delete         = ($insert !== null)
+            ? Dba::write("DELETE FROM `object_count` WHERE " . $where . ";", $params)
+            : null;
+        if ($insert === null || $delete === null) {
+            if ($in_transaction && $dbh !== null && $dbh->inTransaction()) {
+                $dbh->rollBack();
+            }
+
+            throw new RuntimeException('Stats consolidation failed and was rolled back');
+        }
+
+        if ($in_transaction && $dbh !== null && $dbh->inTransaction()) {
+            $dbh->commit();
+        }
+
+        return ['rows' => $rows, 'groups' => $groups, 'executed' => true];
     }
 
     /**
@@ -110,6 +175,12 @@ class Stats
         }
 
         Dba::write($sql, $params);
+
+        if ((int)$child_id === 0) {
+            // move consolidated history as well (merge counts on conflict)
+            Dba::write("INSERT INTO `object_count_summary` (`object_type`, `object_id`, `user`, `count_type`, `count`, `date_from`, `date_to`) SELECT `old_summary`.`object_type`, ?, `old_summary`.`user`, `old_summary`.`count_type`, `old_summary`.`count`, `old_summary`.`date_from`, `old_summary`.`date_to` FROM `object_count_summary` AS `old_summary` WHERE `old_summary`.`object_type` = ? AND `old_summary`.`object_id` = ? ON DUPLICATE KEY UPDATE `count` = `object_count_summary`.`count` + VALUES(`count`), `date_from` = LEAST(`object_count_summary`.`date_from`, VALUES(`date_from`)), `date_to` = GREATEST(`object_count_summary`.`date_to`, VALUES(`date_to`));", [$new_object_id, $object_type, $old_object_id]);
+            Dba::write("DELETE FROM `object_count_summary` WHERE `object_type` = ? AND `object_id` = ?;", [$object_type, $old_object_id]);
+        }
     }
 
     /**
@@ -325,8 +396,16 @@ class Stats
 
         $db_results = Dba::read($sql, [$object_type, $object_id, $count_type]);
         $results    = Dba::fetch_assoc($db_results);
+        $total      = (int)($results['total_count'] ?? 0);
 
-        return (int)($results['total_count'] ?? 0);
+        // all-time counts must include consolidated history
+        if (!AmpConfig::get('cron_cache') && (int)$threshold === 0) {
+            $db_results = Dba::read("SELECT COALESCE(SUM(`count`), 0) AS `total_count` FROM `object_count_summary` WHERE `object_type` = ? AND `object_id` = ? AND `count_type` = ?;", [$object_type, $object_id, $count_type]);
+            $results    = Dba::fetch_assoc($db_results);
+            $total += (int)($results['total_count'] ?? 0);
+        }
+
+        return $total;
     }
 
     /**

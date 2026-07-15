@@ -876,6 +876,9 @@ class Playlist extends playlist_object
 
         $sql = "DELETE FROM `object_count` WHERE `object_type`='playlist' AND `object_id` = ?";
         Dba::write($sql, [$this->id]);
+
+        $sql = "DELETE FROM `object_count_summary` WHERE `object_type`='playlist' AND `object_id` = ?";
+        Dba::write($sql, [$this->id]);
         Catalog::count_table('playlist');
 
         return true;
