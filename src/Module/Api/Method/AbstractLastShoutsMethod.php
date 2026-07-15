@@ -46,10 +46,10 @@ abstract class AbstractLastShoutsMethod implements MethodInterface
 {
     public const string ACTION = 'last_shouts';
 
-    /** the alias the version prefers when both names are supplied; overridden per version */
+    // the alias the version prefers when both names are supplied; overridden per version
     protected const string FILTER_ALIAS = 'username';
 
-    /** the name the version reports the user under; overridden per version */
+    // the name the version reports the user under; overridden per version
     protected const string FILTER_KEY = 'filter';
 
     private ConfigContainerInterface $configContainer;

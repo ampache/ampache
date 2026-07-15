@@ -45,7 +45,7 @@ use Psr\Http\Message\ResponseInterface;
  */
 abstract class AbstractFolderMethod implements MethodInterface
 {
-    /** whether the folder listing wraps as a named object; overridden per method */
+    // whether the folder listing wraps as a named object; overridden per method
     protected const bool AS_OBJECT = true;
 
     private ModelFactoryInterface $modelFactory;

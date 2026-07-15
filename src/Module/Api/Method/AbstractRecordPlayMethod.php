@@ -49,10 +49,10 @@ abstract class AbstractRecordPlayMethod implements MethodInterface
 {
     public const string ACTION = 'record_play';
 
-    /** the alias the version prefers when both names are supplied; overridden per version */
+    // the alias the version prefers when both names are supplied; overridden per version
     protected const string FILTER_ALIAS = 'id';
 
-    /** the name the version reports the object id under; overridden per version */
+    // the name the version reports the object id under; overridden per version
     protected const string FILTER_KEY = 'filter';
 
     private ModelFactoryInterface $modelFactory;

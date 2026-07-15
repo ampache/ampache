@@ -61,10 +61,10 @@ abstract class AbstractCatalogFileMethod implements MethodInterface
 
     public const string REST_ACTION = 'file';
 
-    /** the alias the version prefers when both names are supplied; overridden per version */
+    // the alias the version prefers when both names are supplied; overridden per version
     protected const string FILTER_ALIAS = 'catalog';
 
-    /** the name the version reports the catalog id under; overridden per version */
+    // the name the version reports the catalog id under; overridden per version
     protected const string FILTER_KEY = 'filter';
 
     private ConfigContainerInterface $configContainer;

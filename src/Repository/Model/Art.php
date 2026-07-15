@@ -1384,10 +1384,10 @@ class Art extends database_object
             $songs  = [];
             debug_event(self::class, 'Inserting ' . $this->object_type . ' image' . $object->get_fullname() . ' for song files.', 5);
             if ($this->object_type === 'album') {
-                /** Use special treatment for albums */
+                // Use special treatment for albums
                 $songs = $this->getSongRepository()->getByAlbum($object->getId());
             } elseif ($this->object_type === 'artist') {
-                /** Use special treatment for artists */
+                // Use special treatment for artists
                 $songs = $this->getSongRepository()->getByArtist($object->getId());
             }
 
@@ -1440,10 +1440,6 @@ class Art extends database_object
                             break;
                         case 2:
                             $idx = $this->check_for_duplicate($apics, $ndata, $new_pic, $apic_typeid);
-                            /* If $idx is null, it means both images are of opposite types
-                             * of the new image. Either image could be replaced to have
-                             * one cover and one artist image.
-                             */
                             if (is_null($idx)) {
                                 $ndata['attached_picture'][0] = $new_pic;
                             } else {

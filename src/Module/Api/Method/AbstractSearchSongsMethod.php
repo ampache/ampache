@@ -43,7 +43,7 @@ abstract class AbstractSearchSongsMethod implements MethodInterface
 {
     public const string ACTION = 'search_songs';
 
-    /** whether `rule_1_input` alone satisfies the search term; overridden per version */
+    // whether `rule_1_input` alone satisfies the search term; overridden per version
     protected const bool ALIAS_SATISFIES_FILTER = true;
 
     /**

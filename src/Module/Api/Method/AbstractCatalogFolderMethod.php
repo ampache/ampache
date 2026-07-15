@@ -58,10 +58,10 @@ abstract class AbstractCatalogFolderMethod implements MethodInterface
 {
     public const string ACTION = 'catalog_folder';
 
-    /** the alias the version prefers when both names are supplied; overridden per version */
+    // the alias the version prefers when both names are supplied; overridden per version
     protected const string FILTER_ALIAS = 'catalog';
 
-    /** the name the version reports the catalog id under; overridden per version */
+    // the name the version reports the catalog id under; overridden per version
     protected const string FILTER_KEY = 'filter';
 
     private ConfigContainerInterface $configContainer;

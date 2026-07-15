@@ -45,12 +45,12 @@ use Psr\Http\Message\ResponseInterface;
  */
 abstract class AbstractPlaylistRemoveMethod implements MethodInterface
 {
-    /** the action reported in errors; overridden per method */
+    // the action reported in errors; overridden per method
     public const string ACTION = 'playlist_remove_song';
 
-    /** what the response calls the items when the whole playlist is cleared; overridden per method */
+    // what the response calls the items when the whole playlist is cleared; overridden per method
     protected const string CLEARED_MESSAGE = 'all songs removed from playlist';
-    /** the parameter carrying the item to remove; overridden per method */
+    // the parameter carrying the item to remove; overridden per method
     protected const string ITEM_KEY = 'song';
 
     private ModelFactoryInterface $modelFactory;

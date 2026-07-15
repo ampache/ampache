@@ -182,8 +182,6 @@ class Ldap
         }
     }
 
-    /** Utility functions */
-
     /**
      * clean_search_results
      *
@@ -210,8 +208,6 @@ class Ldap
 
         return $sr_clean;
     }
-
-    /** Actual LDAP functions */
 
     /**
      * Connect to the LDAP

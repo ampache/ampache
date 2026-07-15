@@ -54,7 +54,7 @@ abstract class AbstractPlaylistAddMethod implements MethodInterface
 
     public const string REST_ACTION = 'playlist_add_edit';
 
-    /** whether the version insists on a `type`; overridden per version */
+    // whether the version insists on a `type`; overridden per version
     protected const bool TYPE_REQUIRED = false;
 
     private ModelFactoryInterface $modelFactory;
