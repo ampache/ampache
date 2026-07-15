@@ -93,13 +93,13 @@ class Stats
             case 'song':
             case 'video':
                 $sql = ($count_type == 'down')
-                    ? "UPDATE `$type` SET `weight` = `weight` - 1, `total_count` = CASE WHEN `total_count` > 0 THEN `total_count` - 1 ELSE `total_count` END, `total_skip` = CASE WHEN `total_count` > 0 THEN `total_skip` + 1 ELSE `total_skip` END WHERE `id` = ?;"
+                    ? "UPDATE `$type` SET `weight` = `weight` - 1, `total_count` = CASE WHEN `total_count` > 0 THEN `total_count` - 1 ELSE `total_count` END, `total_skip` = `total_skip` + 1 WHERE `id` = ?;"
                     : "UPDATE `$type` SET `total_count` = `total_count` + 1, `weight` = `weight` + 1 WHERE `id` = ?;";
                 Dba::write($sql, [$object_id]);
                 // update the folder the object lives in AND every ancestor folder (via `folder`.`path`, the comma-separated chain of parent ids).
                 $sql = ($count_type == 'down')
-                    ? "UPDATE `folder` INNER JOIN (SELECT DISTINCT `folder`.`id`, `folder`.`path` FROM `folder_map` INNER JOIN `folder` ON `folder`.`id` = `folder_map`.`folder_id` WHERE `folder_map`.`object_id` = ? AND `folder_map`.`object_type` = ?) AS `mapped` ON `folder`.`id` = `mapped`.`id` OR FIND_IN_SET(`folder`.`id`, `mapped`.`path`) SET `folder`.`total_count` = CASE WHEN `folder`.`total_count` > 0 THEN `folder`.`total_count` - 1 ELSE `folder`.`total_count` END, `folder`.`total_skip` = CASE WHEN `folder`.`total_count` > 0 THEN `folder`.`total_skip` + 1 ELSE `folder`.`total_skip` END;"
-                    : "UPDATE `folder` INNER JOIN (SELECT DISTINCT `folder`.`id`, `folder`.`path` FROM `folder_map` INNER JOIN `folder` ON `folder`.`id` = `folder_map`.`folder_id` WHERE `folder_map`.`object_id` = ? AND `folder_map`.`object_type` = ?) AS `mapped` ON `folder`.`id` = `mapped`.`id` OR FIND_IN_SET(`folder`.`id`, `mapped`.`path`) SET `folder`.`total_count` = `folder`.`total_count` + 1, `folder`.`total_skip` = CASE WHEN `folder`.`total_skip` > 0 THEN `folder`.`total_skip` - 1 ELSE 0 END;";
+                    ? "UPDATE `folder` INNER JOIN (SELECT DISTINCT `folder`.`id`, `folder`.`path` FROM `folder_map` INNER JOIN `folder` ON `folder`.`id` = `folder_map`.`folder_id` WHERE `folder_map`.`object_id` = ? AND `folder_map`.`object_type` = ?) AS `mapped` ON `folder`.`id` = `mapped`.`id` OR FIND_IN_SET(`folder`.`id`, `mapped`.`path`) SET `folder`.`total_count` = CASE WHEN `folder`.`total_count` > 0 THEN `folder`.`total_count` - 1 ELSE `folder`.`total_count` END, `folder`.`total_skip` = `folder`.`total_skip` + 1;"
+                    : "UPDATE `folder` INNER JOIN (SELECT DISTINCT `folder`.`id`, `folder`.`path` FROM `folder_map` INNER JOIN `folder` ON `folder`.`id` = `folder_map`.`folder_id` WHERE `folder_map`.`object_id` = ? AND `folder_map`.`object_type` = ?) AS `mapped` ON `folder`.`id` = `mapped`.`id` OR FIND_IN_SET(`folder`.`id`, `mapped`.`path`) SET `folder`.`total_count` = `folder`.`total_count` + 1;";
                 Dba::write($sql, [$object_id, $type]);
                 break;
             case 'album_disk':
@@ -107,7 +107,7 @@ class Stats
             case 'artist':
             case 'podcast':
                 $sql = ($count_type === 'down')
-                    ? sprintf('UPDATE `%s` SET `weight` = `weight` - 1, `total_count` = CASE WHEN `total_count` > 0 THEN `total_count` - 1 ELSE `total_count` END, `total_skip` = CASE WHEN `total_count` > 0 THEN `total_skip` + 1 ELSE `total_skip` END WHERE `id` = ?;', $type)
+                    ? sprintf('UPDATE `%s` SET `weight` = `weight` - 1, `total_count` = CASE WHEN `total_count` > 0 THEN `total_count` - 1 ELSE `total_count` END, `total_skip` = `total_skip` + 1 WHERE `id` = ?;', $type)
                     : sprintf('UPDATE `%s` SET `total_count` = `total_count` + 1, `weight` = `weight` + 1 WHERE `id` = ?;', $type);
                 Dba::write($sql, [$object_id]);
                 break;
