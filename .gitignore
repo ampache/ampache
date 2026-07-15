@@ -22,6 +22,7 @@ log/
 logs/
 nbproject/
 node_modules/
+public/.htaccess
 public/.maintenance
 public/play/.htaccess
 public/rest/.htaccess
