@@ -77,7 +77,7 @@ final readonly class OidcAction implements ApplicationActionInterface
         Session::create_cookie();
         Preference::init();
 
-        Session::create(['type' => 'mysql']);
+        Session::create(['type' => 'oidc_pending']);
 
         try {
             // sends a Location header and terminates the request
