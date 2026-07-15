@@ -23,22 +23,31 @@ declare(strict_types=1);
  *
  */
 
+/**
+ * Redirect uri of the OpenID Connect login. It is a directory of its own so the uri
+ * registered at the identity provider carries no query string; some providers refuse
+ * to allow-list one. The provider appends its own `code` and `state` parameters here.
+ */
+
 use Ampache\Module\Application\ApplicationRunner;
 use Ampache\Module\Application\Login\DefaultAction;
-use Ampache\Module\Application\Login\OidcAction;
 use Nyholm\Psr7Server\ServerRequestCreatorInterface;
 use Psr\Container\ContainerInterface;
 
 define('NO_SESSION', '1');
 
+/**
+ * The second step of DefaultAction reads these through RequestParser, which reads $_REQUEST.
+ * They have to be set before Init.php runs, because Bootstrap.php builds $_REQUEST from $_GET and $_POST.
+ */
+$_GET['auth_mod'] = 'oidc';
+$_GET['step']     = '2';
+
 /** @var ContainerInterface $dic */
-$dic = require __DIR__ . '/../src/Config/Init.php';
+$dic = require __DIR__ . '/../../src/Config/Init.php';
 
 $dic->get(ApplicationRunner::class)->run(
     $dic->get(ServerRequestCreatorInterface::class)->fromGlobals(),
-    [
-        DefaultAction::REQUEST_KEY => DefaultAction::class,
-        OidcAction::REQUEST_KEY => OidcAction::class,
-    ],
+    [DefaultAction::REQUEST_KEY => DefaultAction::class],
     DefaultAction::REQUEST_KEY
 );

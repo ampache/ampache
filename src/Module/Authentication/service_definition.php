@@ -30,13 +30,21 @@ use Ampache\Module\Authentication\Authenticator\DatabaseAuthenticator;
 use Ampache\Module\Authentication\Authenticator\ExternalAuthenticator;
 use Ampache\Module\Authentication\Authenticator\HttpAuthenticator;
 use Ampache\Module\Authentication\Authenticator\LdapAuthenticator;
+use Ampache\Module\Authentication\Authenticator\OidcAuthenticator;
 use Ampache\Module\Authentication\Authenticator\PamAuthenticator;
+use Ampache\Module\Authentication\Oidc\OidcAuthenticationService;
+use Ampache\Module\Authentication\Oidc\OidcAuthenticationServiceInterface;
+use Ampache\Module\Authentication\Oidc\OidcClientFactory;
+use Ampache\Module\Authentication\Oidc\OidcClientFactoryInterface;
 
+use function DI\autowire;
 use function DI\factory;
 
 use Psr\Container\ContainerInterface;
 
 return [
+    OidcAuthenticationServiceInterface::class => autowire(OidcAuthenticationService::class),
+    OidcClientFactoryInterface::class => autowire(OidcClientFactory::class),
     AuthenticationManagerInterface::class => factory(static fn(ContainerInterface $dic): AuthenticationManagerInterface => new AuthenticationManager(
         $dic->get(ConfigContainerInterface::class),
         [
@@ -45,6 +53,7 @@ return [
             'external' => $dic->get(ExternalAuthenticator::class),
             'http' => $dic->get(HttpAuthenticator::class),
             'ldap' => $dic->get(LdapAuthenticator::class),
+            'oidc' => $dic->get(OidcAuthenticator::class),
         ]
     )),
 ];

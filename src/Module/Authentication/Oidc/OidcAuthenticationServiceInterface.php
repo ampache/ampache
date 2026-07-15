@@ -23,22 +23,32 @@ declare(strict_types=1);
  *
  */
 
-use Ampache\Module\Application\ApplicationRunner;
-use Ampache\Module\Application\Login\DefaultAction;
-use Ampache\Module\Application\Login\OidcAction;
-use Nyholm\Psr7Server\ServerRequestCreatorInterface;
-use Psr\Container\ContainerInterface;
+namespace Ampache\Module\Authentication\Oidc;
 
-define('NO_SESSION', '1');
+use Ampache\Module\Authentication\Oidc\Exception\OidcException;
 
-/** @var ContainerInterface $dic */
-$dic = require __DIR__ . '/../src/Config/Init.php';
+/**
+ * Drives the OpenID Connect authorization code round-trip
+ */
+interface OidcAuthenticationServiceInterface
+{
+    /**
+     * @return array{
+     *     success: bool,
+     *     type?: string,
+     *     username?: string,
+     *     name?: string,
+     *     email?: string,
+     *     website?: string,
+     *     state?: string,
+     *     city?: string,
+     *     error?: string
+     * }
+     */
+    public function handleCallback(): array;
 
-$dic->get(ApplicationRunner::class)->run(
-    $dic->get(ServerRequestCreatorInterface::class)->fromGlobals(),
-    [
-        DefaultAction::REQUEST_KEY => DefaultAction::class,
-        OidcAction::REQUEST_KEY => OidcAction::class,
-    ],
-    DefaultAction::REQUEST_KEY
-);
+    /**
+     * @throws OidcException
+     */
+    public function redirectToProvider(string $referrer = ''): void;
+}

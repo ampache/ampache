@@ -426,6 +426,7 @@ return [
     UpdatePreferencesAction::class => autowire(UpdatePreferencesAction::class),
     GrantAction::class => autowire(GrantAction::class),
     Login\DefaultAction::class => autowire(Login\DefaultAction::class),
+    Login\OidcAction::class => autowire(Login\OidcAction::class),
     ShowAddInstanceAction::class => autowire(ShowAddInstanceAction::class),
     LocalPlay\ShowPlaylistAction::class => autowire(LocalPlay\ShowPlaylistAction::class),
     AddInstanceAction::class => autowire(AddInstanceAction::class),

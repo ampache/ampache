@@ -45,8 +45,10 @@ $admin_path = AmpConfig::get_web_path('/admin');
 // don't share the database password and unset additional variables
 unset(
     $configuration['database_password'],
+    $configuration['ldap_password'],
     $configuration['load_time_begin'],
     $configuration['mail_auth_pass'],
+    $configuration['oidc_client_secret'],
     $configuration['phpversion'],
 );
 

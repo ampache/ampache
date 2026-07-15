@@ -55,6 +55,21 @@ if (!$logo_url) {
     $logo_url = Ui::get_logo_url();
 }
 
+$auth_methods = AmpConfig::get('auth_methods', []);
+$oidc_enabled = is_array($auth_methods) && in_array('oidc', $auth_methods, true);
+
+if (
+    $oidc_enabled
+    && AmpConfig::get('oidc_auto_redirect')
+    && !isset($_GET['force_display'])
+    && !AmpError::occurred()
+    && !headers_sent()
+) {
+    header('Location: ' . $web_path . '/login.php?action=oidc');
+
+    return;
+}
+
 define('TABLE_RENDERED', 1);
 if (!AmpConfig::get('disable_xframe_sameorigin', false)) {
     header("X-Frame-Options: SAMEORIGIN");
@@ -108,6 +123,9 @@ $_SESSION['login'] = true; ?>
                 <?php } ?>
                 <?php if (Mailer::is_mail_enabled()) { ?>
                         <a class="button nohtml" id="lostpasswordbutton" href="<?php echo $web_path; ?>/lostpassword.php"><?php echo T_('Lost Password'); ?></a>
+                <?php } ?>
+                <?php if ($oidc_enabled) { ?>
+                        <a class="button nohtml" id="oidcbutton" href="<?php echo $web_path; ?>/login.php?action=oidc"><?php echo scrub_out(AmpConfig::get('oidc_button_text', T_('Sign in with OpenID Connect'))); ?></a>
                 <?php } ?>
                 </div>
             </form>
