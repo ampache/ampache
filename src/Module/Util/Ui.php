@@ -856,7 +856,7 @@ class Ui implements UiInterface
                 echo "</select>\n";
                 break;
             case 'upload_catalog':
-                show_catalog_select('upload_catalog', $value, '', true, 'music', 'local');
+                show_catalog_select('upload_catalog', (int) $value, '', true, 'music', 'local');
                 break;
             case 'play_type':
                 $is_stream     = '';
