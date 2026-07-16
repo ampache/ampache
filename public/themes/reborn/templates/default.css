@@ -2311,8 +2311,9 @@ a.option-list:hover {
         overflow-x: visible;
     }
 
-    /* Zoomed grid cards keep name + artist + ratings; drop only the genre line (shown on artist cards). */
-    table.gridview td.grid_tags {
+    /* Zoomed grid cards keep name + artist; drop the genre line (shown on artist cards) and ratings so both text lines fit. */
+    table.gridview td.grid_tags,
+    table.gridview td.cel_ratings {
         display: none !important;
     }
 
