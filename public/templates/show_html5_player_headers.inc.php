@@ -13,7 +13,7 @@ global $dic;
 $web_path        = AmpConfig::get_web_path();
 $ampache_version = AmpConfig::get('version');
 // Cache-bust the skin CSS by file mtime so edits load immediately (falls back to app version).
-$cssBust = static fn (string $file): string => is_file(__DIR__ . '/' . $file) ? (string) filemtime(__DIR__ . '/' . $file) : $ampache_version;
+$cssBust = static fn(string $file): string => is_file(__DIR__ . '/' . $file) ? (string) filemtime(__DIR__ . '/' . $file) : $ampache_version;
 
 $ajaxUriRetriever = $dic->get(AjaxUriRetrieverInterface::class);
 $webplayer_debug  = (AmpConfig::get('webplayer_debug'))

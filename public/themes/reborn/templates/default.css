@@ -2311,6 +2311,11 @@ a.option-list:hover {
         overflow-x: visible;
     }
 
+    /* Zoomed grid cards keep name + artist + ratings; drop only the genre line (shown on artist cards). */
+    table.gridview td.grid_tags {
+        display: none !important;
+    }
+
     /* The 140px right gutter on the browse header is desktop-only space -- reclaim it. */
     #browse_header {
         margin-right: 0;

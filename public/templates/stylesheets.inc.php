@@ -42,7 +42,7 @@ if (is_string($theme_css_base)) {
 }
 // Cache-bust CSS by file mtime so edits load immediately (falls back to the app version).
 $themeFsPath = __DIR__ . '/..' . $theme_path;
-$cssBust     = static fn (string $fsPath): string => is_file($fsPath) ? (string) filemtime($fsPath) : $ampache_version; ?>
+$cssBust     = static fn(string $fsPath): string => is_file($fsPath) ? (string) filemtime($fsPath) : $ampache_version; ?>
 <link rel="stylesheet" href="<?php echo $web_path; ?>/lib/modules/prettyphoto/css/prettyPhoto.min.css" type="text/css" media="screen">
 <link rel="stylesheet" href="<?php echo $web_path; ?>/templates/jquery-ui.custom.css" type="text/css" media="screen">
 <link rel="stylesheet" href="<?php echo $web_path; ?>/templates/jquery-editdialog.css" type="text/css" media="screen">
