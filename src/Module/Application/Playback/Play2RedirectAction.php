@@ -34,9 +34,8 @@ use Psr\Http\Message\ServerRequestInterface;
 use Teapot\StatusCode\RFC\RFC7231;
 
 /**
- * `play2` was a `use_play2`-gated alternative to PlayAction and has been merged into it and
- * removed. This redirects any lingering `action=play2` links (bookmarked/cached stream URLs,
- * old clients) to the equivalent `play` action instead of failing.
+ * The `play2` action was a preference gated alternative to PlayAction and has been merged into it and removed.
+ * Redirect any lingering `action=play2` links (bookmarked/cached stream URLs to the equivalent `play` action instead of failing.
  */
 final readonly class Play2RedirectAction implements ApplicationActionInterface
 {

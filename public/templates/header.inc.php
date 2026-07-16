@@ -120,6 +120,7 @@ $albumString = (AmpConfig::get('album_group'))
         <div id="notification" class="notification-out"><?php echo Ui::get_material_symbol('info', T_('Information')); ?><span id="notification-content"></span></div>
         <div id="maincontainer">
             <div id="header" class="header-<?php echo ($ui_fixed) ? 'fixed' : 'float'; ?>"><!-- This is the header -->
+                <a id="mobile-menu-toggle" href="javascript:ToggleMobileSidebar();" aria-label="<?php echo T_('Menu'); ?>"><?php echo Ui::get_material_symbol('menu', T_('Menu')); ?></a>
                 <h1 id="headerlogo">
                   <a href="<?php echo $web_path; ?>/index.php">
                     <img src="<?php echo $logo_url; ?>" title="<?php echo $site_title; ?>" alt="<?php echo $site_title; ?>">
@@ -210,6 +211,7 @@ $isCollapsed  = (
     || (isset($_COOKIE['sidebar_state']) && $_COOKIE['sidebar_state'] == "collapsed")
 ); ?>
             <div id="sidebar" class="sidebar-<?php echo ($ui_fixed) ? 'fixed' : 'float'; ?>">
+                <a id="mobile-drawer-close" href="javascript:CloseMobileNav();" aria-label="<?php echo T_('Close'); ?>"><?php echo Ui::get_material_symbol('close', T_('Close')); ?></a>
             <?php if (!$hideSwitcher) {
                 echo '<div id="sidebar-header" class="' . (($isCollapsed) ? 'sidebar-header-collapsed' : '') . '" >';
                 echo '<span id="sidebar-header-content"></span>';

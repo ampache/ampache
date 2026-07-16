@@ -2015,3 +2015,320 @@ a.option-list:hover {
 .find-duplicates strong {
     display: block;
 }
+
+/* The hamburger selector is scoped to #header to outrank `#header a`. */
+#header #mobile-menu-toggle,
+#sidebar #mobile-drawer-close,
+#mobile-nav-backdrop {
+    display: none;
+}
+
+/* --------------------------
+   Mobile layout (<= 768px) -- off-canvas navigation
+   --------------------------
+   The reborn theme is desktop-only: body#main-page forces min-width:1024px and the shell is positioned with floated/fixed
+   offsets. On a phone that overflows the viewport width, so mobile browsers shrink-to-fit (zoom out) the whole page
+   A zoomed page pins position:fixed (the webplayer) to the zoomed document instead of the visible screen, which is why
+   the player looked stuck to the bottom of the content.
+   Scoped to <=768px, so desktop is untouched. */
+@media (max-width: 768px) {
+    /* Fit the device width instead of forcing a 1024px page (kills the zoom). */
+    body#main-page {
+        min-width: 0;
+        padding-bottom: 110px; /* clearance for the fixed 100px player */
+    }
+
+    /* Drop #maincontainer's stacking context so the fixed drawers sit above the backdrop. */
+    #maincontainer {
+        position: static;
+        z-index: auto;
+    }
+
+    /* Topmenu (if enabled) flows normally below the header. */
+    #topmenu_container,
+    .topmenu_container-float,
+    .topmenu_container-fixed {
+        position: static;
+        float: none;
+        width: auto;
+        max-width: none;
+        margin: 5px;
+        box-sizing: border-box;
+    }
+
+    /* Sticky compact top bar: hamburger + logo + search + play-type on one wrapping row. */
+    #header,
+    .header-float,
+    .header-fixed {
+        position: sticky;
+        top: 0;
+        z-index: 100;
+        float: none;
+        width: auto;
+        max-width: none;
+        height: auto;
+        margin: 0;
+        padding: 4px 6px;
+        box-sizing: border-box;
+        display: flex;
+        flex-wrap: wrap;
+        align-items: center;
+        gap: 4px 8px;
+    }
+
+    /* Hamburger opens the nav drawer; first item in the bar. */
+    #header #mobile-menu-toggle {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        flex: 0 0 auto;
+        margin: 0;
+        padding: 2px;
+        font-size: 26px;
+        line-height: 1;
+        cursor: pointer;
+    }
+
+    #header #headerlogo {
+        float: none;
+        width: auto;
+        height: auto;
+        overflow: visible;
+        margin: 0;
+        flex: 0 0 auto;
+    }
+
+    #header #headerlogo img {
+        height: 40px;
+        width: 40px;
+    }
+
+    /* The search/play-type box takes the rest of the row (wraps to line 2). */
+    #header #headerbox {
+        float: none;
+        width: auto;
+        height: auto;
+        overflow: visible;
+        flex: 1 1 100%;
+    }
+
+    #header .box-inside {
+        float: none;
+        width: auto;
+        text-align: left;
+    }
+
+    #header .box-content {
+        justify-content: flex-start;
+        flex-wrap: wrap;
+        gap: 4px 6px;
+    }
+
+    /* Put the login info (admin/message count) right next to the logo on the top row. */
+    #header #loginInfo {
+        position: absolute;
+        top: 13px;
+        left: 95px;
+        right: auto;
+    }
+
+    #header #rightbar-minimize {
+        position: static;
+        top: auto;
+        right: auto;
+        margin-left: auto;
+    }
+
+    #header #play_type_switch {
+        margin-left: 0;
+    }
+
+    /* Trim the widgets so they fit a phone row. */
+    #header #sb_Subsearch input[type="text"] {
+        width: 130px;
+    }
+
+    #header #headerbox select {
+        min-width: 0;
+    }
+
+    /* Content takes the full width -- the drawers slide OVER it. */
+    #content,
+    .content-float,
+    .content-fixed,
+    .content-fixed-topmenu,
+    .content-left-wild,
+    .content-right-wild {
+        margin: 5px !important;
+        max-height: none;
+    }
+
+    /* Off-canvas sidebar (slides in from the left) */
+    #sidebar {
+        position: fixed;
+        top: 0;
+        left: 0;
+        height: 100%;
+        width: 185px;
+        max-width: 80%;
+        margin: 0;
+        float: none;
+        transform: translateX(-100%);
+        transition: transform 0.25s ease;
+        overflow-y: auto;
+        -webkit-overflow-scrolling: touch;
+        z-index: 10001;
+    }
+
+    body.sidebar-open #sidebar {
+        transform: translateX(0);
+    }
+
+    /* Close (X) at the drawer's top-LEFT so it lands where the hamburger and open and close share the same spot. */
+    #sidebar #mobile-drawer-close {
+        display: block;
+        position: sticky;
+        top: 0;
+        margin-left: 0;
+        margin-right: auto;
+        width: -moz-fit-content;
+        width: fit-content;
+        padding: 6px 8px;
+        font-size: 26px;
+        line-height: 1;
+        cursor: pointer;
+        z-index: 2;
+    }
+
+    #sidebar-header,
+    #sidebar-header.sidebar-header-collapsed {
+        display: block;
+        position: static !important;
+        width: auto !important;
+        margin: 5px 5px 0;
+        text-align: center;
+        box-sizing: border-box;
+    }
+
+    #sidebar-header span#sidebar-header-content {
+        display: block;
+        width: 100%;
+        text-align: center;
+    }
+
+    #sidebar-header span#sidebar-header-content::after,
+    #sidebar-header.sidebar-header-collapsed > span#sidebar-header-content::after {
+        position: static;
+        left: auto;
+    }
+
+    /* Let the <<< / >>> toggle switch between the full menu and the light menu. */
+    #sidebar-content,
+    #sidebar-content-light {
+        width: auto;
+        margin: 5px;
+        box-sizing: border-box;
+    }
+
+    /* Light sidebar  */
+    #sidebar-light,
+    #sidebar-light-default {
+        position: static;
+        width: auto;
+        margin: 0;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 12px;
+    }
+
+    #sidebar-light li,
+    #sidebar-light-default li {
+        list-style: none;
+        text-align: center;
+    }
+
+    #sidebar-page,
+    .sidebar-page-float {
+        position: absolute;
+        left: 5px;
+        width: 165px;
+        margin: 0;
+        box-sizing: border-box;
+    }
+
+    /* Temp-playlist: drops DOWN from the header toggle button (no off-canvas slide, no backdrop). Shown/hidden by ToggleRightbarVisibility  */
+    #rightbar,
+    #rightbar.fixedrightbar {
+        position: fixed !important;
+        top: 116px !important; /* just below the ~114px sticky header */
+        right: 5px !important;
+        left: auto !important;
+        bottom: auto;
+        width: 260px;
+        min-width: 0;
+        max-width: 90%;
+        max-height: calc(100vh - 230px);
+        margin: 0;
+        transform: none;
+        overflow-y: auto;
+        -webkit-overflow-scrolling: touch;
+        z-index: 10005;
+    }
+
+    /* Dim/close backdrop -- sidebar drawer only (the temp-playlist drops down inline without an overlay). */
+    body.sidebar-open #mobile-nav-backdrop {
+        display: block;
+        position: fixed;
+        inset: 0;
+        background: rgba(0, 0, 0, 0.5);
+        z-index: 10000;
+    }
+
+    /* AJAX "Loading..." indicator */
+    #ajax-loading {
+        position: fixed;
+        top: 8px;
+        right: 10px;
+        left: auto;
+        width: auto;
+        padding: 3px 10px;
+        border-radius: 2px;
+        background-image: none !important;
+        z-index: 10006;
+    }
+
+    /* Wide data tables scroll sideways inside their box so they don't widen the page. */
+    table.tabledata {
+        display: block;
+        max-width: 100%;
+        overflow-x: auto;
+    }
+
+    /* Let the browse type switcher (Songs/Albums/...) wrap instead of overflow. */
+    .category_options {
+        flex-wrap: wrap;
+    }
+
+    /* Art block (.item_right_info) floats right and overlaps the Actions list on a phone. Stack it */
+    .item_right_info {
+        float: none;
+        max-width: 100%;
+        display: flow-root;
+    }
+
+    .item_right_info img {
+        max-width: 100%;
+        height: auto;
+    }
+
+    /* art floats right by default. Pull it to the left edge  when collapsed. */
+    #content .info-box .box-content .item_art {
+        float: left;
+    }
+
+    /* The external-links row is right-aligned by default; pull it left to match the art. */
+    .external_links {
+        text-align: left;
+    }
+}

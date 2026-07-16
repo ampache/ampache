@@ -59,5 +59,17 @@ if (!isset($_SESSION['login']) || !$_SESSION['login']) {
         <div id="webplayer"></div>
         <?php require_once Ui::find_template('uberviz.inc.php');
         } ?>
+        <div id="mobile-nav-backdrop" onclick="CloseMobileNav();"></div>
+        <script>
+            // Off-canvas sidebar drawer for small screens (<=768px). The
+            // temp-playlist is a plain slideDown dropdown (ToggleRightbarVisibility),
+            // so it needs no class here.
+            function ToggleMobileSidebar() {
+                document.body.classList.toggle('sidebar-open');
+            }
+            function CloseMobileNav() {
+                document.body.classList.remove('sidebar-open');
+            }
+        </script>
     </body>
 </html>

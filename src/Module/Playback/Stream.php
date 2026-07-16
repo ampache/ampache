@@ -230,6 +230,37 @@ class Stream
     }
 
     /**
+     * get_latest_now_playing
+     *
+     * Return the most recently registered now-playing song/video for one of the given streaming session keys.
+     * Used by the web player to resolve the real internal media that a random or democratic stream is actually playing
+     * (those items only carry a placeholder in the client playlist).
+     *
+     * @param list<string> $session_ids
+     * @return array{object_id: int, object_type: string}|null
+     */
+    public static function get_latest_now_playing(array $session_ids): ?array
+    {
+        $session_ids = array_values(array_filter($session_ids, static fn(string $sid): bool => $sid !== ''));
+        if ($session_ids === []) {
+            return null;
+        }
+
+        $placeholders = implode(', ', array_fill(0, count($session_ids), '?'));
+        $sql          = "SELECT `object_id`, `object_type` FROM `now_playing` WHERE `id` IN ($placeholders) AND `object_type` IN ('song', 'video') ORDER BY `insertion` DESC LIMIT 1";
+        $db_results   = Dba::read($sql, $session_ids);
+        $row          = Dba::fetch_assoc($db_results);
+        if ($row === []) {
+            return null;
+        }
+
+        return [
+            'object_id' => (int) $row['object_id'],
+            'object_type' => (string) $row['object_type'],
+        ];
+    }
+
+    /**
      * get_max_bitrate
      *
      * get the transcoded bitrate for players that require a bit of guessing and without actually transcoding

@@ -25,12 +25,19 @@ declare(strict_types=1);
 
 namespace Ampache\Application\Api\Ajax\Handler;
 
+use Ampache\Config\AmpConfig;
+use Ampache\Module\Playback\Stream;
 use Ampache\Module\System\Core;
 use Ampache\Module\Util\AjaxUriRetrieverInterface;
+use Ampache\Module\Util\ObjectTypeToClassNameMapper;
 use Ampache\Module\Util\RequestParserInterface;
 use Ampache\Module\Util\UiInterface;
+use Ampache\Repository\Model\Art;
+use Ampache\Repository\Model\Artist;
 use Ampache\Repository\Model\Broadcast;
+use Ampache\Repository\Model\Song;
 use Ampache\Repository\Model\User;
+use Ampache\Repository\Model\Video;
 
 final readonly class PlayerAjaxHandler implements AjaxHandlerInterface
 {
@@ -47,6 +54,51 @@ final readonly class PlayerAjaxHandler implements AjaxHandlerInterface
 
         // Switch on the actions
         switch ($action) {
+            case 'now_playing':
+                // Resolve the real internal song a random/democratic stream is
+                // playing (the client playlist only holds a placeholder for those).
+                // Match by the streaming session keys this client would register
+                // under: the interface session (public / -1 users) and the user's
+                // streamtoken (authenticated users) — not the user id, which is
+                // shared by all -1 public users.
+                $data       = ['found' => false];
+                $sessionIds = array_values(array_filter(
+                    [(string) session_id(), (string) ($user->streamtoken ?? '')],
+                    static fn(string $sid): bool => $sid !== ''
+                ));
+                $current = Stream::get_latest_now_playing($sessionIds);
+                if ($current !== null) {
+                    $className = ObjectTypeToClassNameMapper::map($current['object_type']);
+                    /** @var Song|Video $media */
+                    $media = new $className($current['object_id']);
+                    if (!$media->isNew() && $media instanceof Song) {
+                        $web_path   = (string) AmpConfig::get_web_path();
+                        $artistId   = (int) $media->artist;
+                        $albumId    = (int) $media->album;
+                        $titleText  = scrub_out((string) $media->get_fullname());
+                        $artistText = scrub_out(Artist::get_fullname_by_id($artistId));
+                        $albumText  = scrub_out((string) $media->get_album_fullname());
+
+                        $data = [
+                            'found' => true,
+                            'object_type' => $current['object_type'],
+                            'object_id' => $current['object_id'],
+                            'title' => '<a href="javascript:NavigateTo(\'' . $web_path . '/song.php?action=show_song&song_id=' . $media->id . '\')" title="' . $titleText . '">' . $titleText . '</a>',
+                            'artist' => ($artistId > 0)
+                                ? '<a href="javascript:NavigateTo(\'' . $web_path . '/artists.php?action=show&artist=' . $artistId . '\')">' . $artistText . '</a>'
+                                : $artistText,
+                            'album' => ($albumId > 0)
+                                ? '<a href="javascript:NavigateTo(\'' . $web_path . '/albums.php?action=show&album=' . $albumId . '\')">' . $albumText . '</a>'
+                                : $albumText,
+                            'art' => (string) (Art::url($albumId, 'album', null) ?? ''),
+                        ];
+                    }
+                }
+
+                header('Content-Type: application/json');
+                echo json_encode($data);
+
+                return;
             case 'show_broadcasts':
                 ob_start();
                 $ajaxUri = $this->ajaxUriRetriever->getAjaxUri();

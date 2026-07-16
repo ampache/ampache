@@ -35,9 +35,7 @@ a:focus {
 .jp-audio,
 .jp-audio-stream,
 .jp-video {
-    /* Edit the font-size to counteract inherited font sizing.
-     * Eg. 1.25em = 1 / 0.8em
-     */
+    /* Edit the font-size to counteract inherited font sizing. Eg. 1.25em = 1 / 0.8em */
     font-size: 1.25em; /* 1.25em for testing in site pages */ /* No parent CSS that can effect the size in the demos ZIP */
     font-family: 'Verdana', Arial, sans-serif;
     line-height: 1.6;
@@ -815,6 +813,105 @@ a.jp-shuffle-off:hover {
 
 .broadcast-action {
     display: inline;
+}
+
+/* @end */
+
+/* @group Ampache modern player: compact mode, responsive, visualizer */
+
+#jp_container_1.jp-playlist-collapsed .jp-playlist {
+    display: none;
+}
+
+#jp_container_1.jp-nowplaying-hidden .playing_info {
+    display: none;
+}
+
+/* Now-playing artwork/album for internal random & democratic streams */
+.playing_art {
+    float: left;
+    max-width: 48px;
+    max-height: 48px;
+    margin-right: 8px;
+    border-radius: 3px;
+}
+
+.playing_album {
+    font-size: 0.5em;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.playing_album a {
+    text-decoration: none;
+}
+
+#visualizer {
+    position: fixed;
+    left: 0;
+    right: 0;
+    top: 0;
+    bottom: 100px;
+    z-index: 9998;
+    background-color: #000;
+    pointer-events: none;
+}
+
+#visualizer:fullscreen {
+    bottom: 0;
+}
+
+#viz-canvas {
+    display: block;
+    width: 100%;
+    height: 100%;
+}
+
+#webplayer.viz-active {
+    background-color: #000 !important;
+}
+
+/* Video always scales down to its container / the viewport (all screen sizes) */
+.jp-video-270p,
+.jp-video-360p {
+    max-width: 100%;
+}
+
+.jp-jplayer video {
+    max-width: 100%;
+    height: auto;
+}
+
+@media (max-width: 768px) {
+    .jp-area,
+    .jp-audio {
+        width: 100% !important;
+        max-width: 100% !important;
+        min-width: 0 !important;
+    }
+
+    .jp-video-360p,
+    .jp-video-270p {
+        width: 100% !important;
+    }
+
+    .jp-jplayer video {
+        max-width: 100%;
+        height: auto;
+    }
+
+    .jp-title,
+    .jp-playlist {
+        width: 55%;
+    }
+
+    /* Fluidize the video control bar so it fits narrow screens */
+    .jp-video .jp-type-single ul.jp-controls,
+    .jp-video .jp-type-playlist ul.jp-controls {
+        margin-left: 0;
+        width: auto;
+    }
 }
 
 /* @end */
