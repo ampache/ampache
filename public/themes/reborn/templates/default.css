@@ -2305,6 +2305,31 @@ a.option-list:hover {
         overflow-x: auto;
     }
 
+    /* Grid-view cards don't scroll -- zoom them down so more blocks fit per row (zoom reflows, transform wouldn't). */
+    table.tabledata.gridview {
+        zoom: 0.8;
+        overflow-x: visible;
+    }
+
+    /* The 140px right gutter on the browse header is desktop-only space -- reclaim it. */
+    #browse_header {
+        margin-right: 0;
+    }
+
+    /* Detail lists (song/podcast pages): the 200px label column + 250px dd indent overflow a phone -- compact them. */
+    dl.media_details dt {
+        width: 90px;
+    }
+
+    dl.media_details dd {
+        margin-left: 100px;
+    }
+
+    /* Waveform image (song/podcast detail): squash to the available width instead of overflowing the page. */
+    div[id^="waveform_"] img {
+        max-width: 100%;
+    }
+
     /* Let the browse type switcher (Songs/Albums/...) wrap instead of overflow. */
     .category_options {
         flex-wrap: wrap;
