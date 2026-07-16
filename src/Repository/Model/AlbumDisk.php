@@ -166,6 +166,8 @@ class AlbumDisk extends database_object implements
             $db_results = Dba::read("SELECT * FROM `album_disk` WHERE `id` = ?;", [$current_id]);
             $row        = Dba::fetch_assoc($db_results);
             if (isset($row['id'])) {
+                // remember the current disk before a collision re-fetch can clobber $row
+                $old_disk = (int) $row['disk'];
                 // alter the existing disk after editing
                 if (!Dba::write("UPDATE `album_disk` SET `album_id` = ?, `disk` = ?, `catalog` = ?, `disksubtitle` = ? WHERE `id` = ?;", [$album_id, $disk, $catalog_id, $disksubtitle, $current_id])) {
                     // Duplicates might collide here
@@ -176,8 +178,8 @@ class AlbumDisk extends database_object implements
                 }
 
                 // Update songs when you edit an album_disk object
-                if ($row['disk'] !== $disk) {
-                    Dba::write("UPDATE `song` SET `disk` = ? WHERE `album` = ? AND `disk` = ?;", [$disk, $album_id, $row['disk']]);
+                if ($old_disk !== $disk) {
+                    Dba::write("UPDATE `song` SET `disk` = ? WHERE `album` = ? AND `disk` = ?;", [$disk, $album_id, $old_disk]);
                 }
 
                 return $current_id;
