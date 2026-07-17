@@ -15,7 +15,7 @@ See: [Gregwar/Captcha](https://github.com/Gregwar/Captcha)
 * Ampache Remote Catalogs
   * Added support for Ampache8 servers
   * Default remote API version set to API6
-* API / Authentication
+* API
   * Allow API key authorization via request headers
   * Backport strict typing in API classes
 
@@ -26,12 +26,18 @@ See: [Gregwar/Captcha](https://github.com/Gregwar/Captcha)
 * Update Vite to address known security issues
 * Rename function `get_artist_fullname` to `get_parent_fullname`
 * Updated REST htaccess rules
+* Rework the media deletion process to speed up Catalog cleaning
+* Log playback attempts for disabled media
+* Ampache Remote Catalogs
+  * Don't verify remote songs on every catalog update
 * Subsonic
   * Search3 rules and grouping behavior updated to better match Subsonic client expectations
 * API
   * REST command/path handling updates
   * Validation for `flag` now uses `UserFlag::is_valid()`
   * Validation for `rate` now uses `Rating::is_valid()`
+  * update_art: Existing art is replaced unless you send `overwrite=0`
+  * Parameters sent with an empty value (e.g. `filter=`) are treated as missing
 
 ### Removed (7.10.0)
 
@@ -47,12 +53,16 @@ See: [Gregwar/Captcha](https://github.com/Gregwar/Captcha)
 * Potential error during filesystem scan
 * Missing closing HTML tags in templates
 * Validate Podcast URL is HTTP(S) when set
+* SQL error in `Playlist::get_items()` when the playlist contains non-song objects
+* Set stream type and handle missing catalog when building stream URLs
 * Database
   * Database update `794004`: handle additional leftover bad data
 * CLI
   * Fix table-check column typo in `DatabaseCharsetUpdater`
 * Search
   * Fix joins where `catalog_id` was not set for some search paths
+* Upload
+  * Check upload Artist against the upload user and create the Artist when missing
 * Ampache Remote Catalogs
   * Scan tags correctly on new file import
   * Fix playback for songs using stream action
@@ -60,8 +70,11 @@ See: [Gregwar/Captcha](https://github.com/Gregwar/Captcha)
 * Subsonic
   * Fix errors when `fromYear` and `toYear` are missing
   * Remove HTML encoding in `ArtistInfo` calls
-* API6
-  * Correct version bump handling
+  * HTML decode image URLs in OpenSubsonic responses
+* API
+  * API6: Correct version bump handling
+  * List responses were not sliced by `offset` and `limit` in some XML/JSON methods
+  * Version and response inconsistencies between API versions
 
 ## Ampache 7.9.8
 

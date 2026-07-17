@@ -22,15 +22,31 @@ we will keep on 6.9.x and resume build number versioning until Ampache 8
 * ALL
   * flag: Use the `UserFlag::is_valid()` function for object type validation
   * rate: Use the `Rating::is_valid()` function for object type validation
-
-### Fixed (692001)
-
+  * parameter_exists: Parameters sent with an empty value (e.g. `filter=`) are treated as missing
+* `update_art` (API4, API5 and API6)
+  * Existing art is replaced unless you send `overwrite=0`
 * API6
-  * Version wasn't bumped
+  * Error messages are no longer translated
 
-### Removed (692001)
+### Removed (692002)
 
 * API8 will not be used in Ampache 7 releases
+
+### Fixed (692002)
+
+* ALL
+  * Version and docstring inconsistencies between API versions
+  * Empty object lookups now report the parameter that failed instead of `empty`
+* API4
+  * update_from_tags: Not found check was inverted so valid objects returned an error
+  * XML list responses were not sliced by `offset` and `limit` (e.g. `users`)
+* API5
+  * get_bookmark: Not found check was inverted so valid objects returned an error
+  * XML list responses were not sliced by `offset` and `limit` (e.g. `bookmarks`, `users`)
+* API6
+  * Version wasn't bumped
+  * podcast_episode: JSON response was missing the full episode object
+  * XML and JSON list responses were not sliced by `offset` and `limit`
 
 ## API 6.9.2 Build 1
 
