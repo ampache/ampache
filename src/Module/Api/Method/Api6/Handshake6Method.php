@@ -146,7 +146,7 @@ final class Handshake6Method
                 if (!$realpwd) {
                     debug_event(self::class, 'Unable to find user with userid of ' . $user_id, 1);
                     AmpError::add('api', T_('Incorrect username or password'));
-                    Api6::error(ErrorCodeEnum::INVALID_HANDSHAKE, 'Received Invalid Handshake - Login failed, timestamp is out of range', self::ACTION, 'account', $input['api_format']);
+                    Api6::error(ErrorCodeEnum::INVALID_HANDSHAKE, 'Received Invalid Handshake - Incorrect username or password', self::ACTION, 'account', $input['api_format']);
 
                     return false;
                 }

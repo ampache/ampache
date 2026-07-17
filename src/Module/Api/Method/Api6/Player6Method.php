@@ -96,18 +96,18 @@ final class Player6Method
 
         ob_end_clean();
         $object_id = (int) $input['filter'];
-        $type      = $input['type'] ?? 'song';
+        $type      = strtolower((string) ($input['type'] ?? 'song'));
 
         // confirm the correct data
-        if (!in_array(strtolower($type), ['song', 'podcast_episode', 'video'])) {
+        if (!in_array($type, ['song', 'podcast_episode', 'video'])) {
             /* HINT: Requested object string/id/type ("album", "myusername", "some song title", 1298376) */
             Api6::error(ErrorCodeEnum::BAD_REQUEST, sprintf('Bad Request: %s', $type), self::ACTION, 'type', $input['api_format']);
 
             return false;
         }
 
-        $state = $input['state'] ?? 'play';
-        if (!in_array(strtolower($state), ['play', 'stop'])) {
+        $state = strtolower((string) ($input['state'] ?? 'play'));
+        if (!in_array($state, ['play', 'stop'])) {
             /* HINT: Requested object string/id/type ("album", "myusername", "some song title", 1298376) */
             Api6::error(ErrorCodeEnum::BAD_REQUEST, sprintf('Bad Request: %s', $state), self::ACTION, 'state', $input['api_format']);
 
@@ -126,7 +126,7 @@ final class Player6Method
         $media = new $className($object_id);
         if ($media->isNew()) {
             /* HINT: Requested object string/id/type ("album", "myusername", "some song title", 1298376) */
-            Api6::error(ErrorCodeEnum::NOT_FOUND, sprintf('Not Found: %s', $object_id), self::ACTION, 'id', $input['api_format']);
+            Api6::error(ErrorCodeEnum::NOT_FOUND, sprintf('Not Found: %s', $object_id), self::ACTION, 'filter', $input['api_format']);
 
             return false;
         }

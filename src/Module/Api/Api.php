@@ -26,9 +26,6 @@ declare(strict_types=1);
 namespace Ampache\Module\Api;
 
 use Ampache\Config\AmpConfig;
-use Ampache\Module\Authorization\Access;
-use Ampache\Module\Authorization\AccessLevelEnum;
-use Ampache\Module\Authorization\AccessTypeEnum;
 use Ampache\Module\System\Dba;
 use Ampache\Module\Util\Ui;
 use Ampache\Repository\Model\Browse;
@@ -57,48 +54,6 @@ class Api
     public static ?Browse $browse         = null;
     public static string $version         = '8.0.0'; // AMPACHE_VERSION
     public static string $version_numeric = '800000'; // AMPACHE_VERSION
-
-    /**
-     * check_access
-     *
-     * This function checks the user can perform the function requested
-     * 'interface', 100, $user->id
-     */
-    public static function check_access(AccessTypeEnum $type, AccessLevelEnum $level, int $user_id, string $method, string $format = 'xml'): bool
-    {
-        if (!Access::check($type, $level, $user_id)) {
-            debug_event(self::class, $type->value . " '" . $level->value . "' required on " . $method . " function call.", 2);
-            /* HINT: Access level, eg 75, 100 */
-            self::error('4742', sprintf(T_('Require: %s'), $level->value), $method, 'account', $format);
-
-            return false;
-        }
-
-        return true;
-    }
-
-    /**
-     * check_parameter
-     *
-     * Return an error for missing parameters for API6
-     *
-     * @param array<string, mixed> $input
-     * @param string[] $parameters e.g. array('auth', type')
-     */
-    public static function check_parameter(array $input, array $parameters, string $method): bool
-    {
-        $parameter = self::parameter_exists($input, $parameters);
-        if ($parameter === true) {
-            return true;
-        }
-
-        debug_event(self::class, "'" . $parameter . "' required on " . $method . " function call.", 2);
-
-        /* HINT: Requested object string/id/type ("album", "myusername", "some song title", 1298376) */
-        self::error('4710', sprintf(T_('Bad Request: %s'), $parameter), $method, 'system', $input['api_format']);
-
-        return false;
-    }
 
     /**
      * filter_objects
@@ -365,6 +320,7 @@ class Api
      * parameter_exists
      *
      * This function checks the $input actually has the parameter.
+     * A parameter sent with an empty value (e.g. 'filter=') doesn't count as sent.
      * Parameters must be an array of required elements as a string
      *
      * @param array<string, mixed> $input
@@ -373,7 +329,12 @@ class Api
     public static function parameter_exists(array $input, array $parameters): bool|string
     {
         foreach ($parameters as $parameter) {
-            if (array_key_exists($parameter, $input)) {
+            if (
+                array_key_exists($parameter, $input)
+                && $input[$parameter] !== null
+                && $input[$parameter] !== ''
+                && $input[$parameter] !== []
+            ) {
                 continue;
             }
 

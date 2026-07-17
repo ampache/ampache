@@ -82,7 +82,7 @@ final class Index6Method
             return false;
         }
 
-        $type = (string) $input['type'];
+        $type = strtolower((string) $input['type']);
         if (!AmpConfig::get('allow_video') && $type == 'video') {
             Api6::error(ErrorCodeEnum::ACCESS_DENIED, 'Enable: video', self::ACTION, 'system', $input['api_format']);
 
@@ -106,7 +106,8 @@ final class Index6Method
         $include = (array_key_exists('include', $input) && (int) $input['include'] == 1);
         $hide    = (array_key_exists('hide_search', $input) && (int) $input['hide_search'] == 1) || AmpConfig::get('hide_search', false);
         // confirm the correct data
-        if (!in_array(strtolower($type), ['album_artist', 'album', 'artist', 'catalog', 'live_stream', 'playlist', 'podcast_episode', 'podcast', 'share', 'song_artist', 'song', 'video'])) {
+        if (!in_array($type, ['album_artist', 'album', 'artist', 'catalog', 'live_stream', 'playlist', 'podcast_episode', 'podcast', 'share', 'song_artist', 'song', 'video'])) {
+            /* HINT: Requested object string/id/type ("album", "myusername", "some song title", 1298376) */
             Api6::error(ErrorCodeEnum::BAD_REQUEST, sprintf('Bad Request: %s', $type), self::ACTION, 'type', $input['api_format']);
 
             return false;

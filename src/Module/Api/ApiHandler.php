@@ -66,13 +66,6 @@ final class ApiHandler implements ApiHandlerInterface
         'tags',
     ];
 
-    /** @var string[] */
-    private array $deprecated8 = [
-        'get_indexes',
-        'playlist_add_song',
-        'user_update',
-    ];
-
     private ContainerInterface $dic;
     private LoggerInterface $logger;
     private NetworkCheckerInterface $networkChecker;
@@ -122,7 +115,7 @@ final class ApiHandler implements ApiHandlerInterface
                     $this->streamFactory->createStream(
                         $output->error6(
                             ErrorCodeEnum::ACCESS_CONTROL_NOT_ENABLED,
-                            T_('Access Denied'),
+                            'Access Denied',
                             $action,
                             'system'
                         )
@@ -187,7 +180,7 @@ final class ApiHandler implements ApiHandlerInterface
                         $this->streamFactory->createStream(
                             $output->error6(
                                 ErrorCodeEnum::ACCESS_CONTROL_NOT_ENABLED,
-                                T_('Access Denied'),
+                                'Access Denied',
                                 $action,
                                 'system'
                             )
@@ -287,7 +280,7 @@ final class ApiHandler implements ApiHandlerInterface
                             $this->streamFactory->createStream(
                                 $output->error6(
                                     ErrorCodeEnum::ACCESS_CONTROL_NOT_ENABLED,
-                                    T_('Access Denied'),
+                                    'Access Denied',
                                     $action,
                                     'system'
                                 )
@@ -355,7 +348,7 @@ final class ApiHandler implements ApiHandlerInterface
                             $this->streamFactory->createStream(
                                 $output->error6(
                                     ErrorCodeEnum::INVALID_HANDSHAKE,
-                                    T_('Session Expired'),
+                                    'Session Expired',
                                     $action,
                                     'account'
                                 )
@@ -409,7 +402,7 @@ final class ApiHandler implements ApiHandlerInterface
                             $this->streamFactory->createStream(
                                 $output->error6(
                                     ErrorCodeEnum::FAILED_ACCESS_CHECK,
-                                    T_('Unauthorized access attempt to API - ACL Error'),
+                                    'Unauthorized access attempt to API - ACL Error',
                                     $action,
                                     'account'
                                 )
@@ -504,7 +497,7 @@ final class ApiHandler implements ApiHandlerInterface
                             $this->streamFactory->createStream(
                                 $output->error6(
                                     ErrorCodeEnum::DEPRECATED,
-                                    T_('Deprecated'),
+                                    'Deprecated',
                                     $action,
                                     'removed'
                                 )
@@ -521,7 +514,7 @@ final class ApiHandler implements ApiHandlerInterface
                             $this->streamFactory->createStream(
                                 $output->error6(
                                     ErrorCodeEnum::MISSING,
-                                    T_('Invalid Request'),
+                                    'Invalid Request',
                                     $action,
                                     'system'
                                 )
@@ -529,41 +522,22 @@ final class ApiHandler implements ApiHandlerInterface
                         );
                 }
                 break;
-            case 8:
             default:
-                if (in_array($action, $this->deprecated8)) {
-                    ob_end_clean();
+                // Api::API_VERSIONS is the list we support; anything else can't be dispatched
+                ob_end_clean();
 
-                    return $response
-                        ->withStatus(410)
-                        ->withBody(
-                            $this->streamFactory->createStream(
-                                $output->error(
-                                    ErrorCodeEnum::DEPRECATED,
-                                    T_('Deprecated'),
-                                    $action,
-                                    'removed'
-                                )
+                return $response
+                    ->withStatus(400)
+                    ->withBody(
+                        $this->streamFactory->createStream(
+                            $output->error6(
+                                ErrorCodeEnum::MISSING,
+                                'Invalid Request',
+                                $action,
+                                'system'
                             )
-                        );
-                }
-                $handlerClassName = Api::METHOD_LIST[$action] ?? null;
-                if ($handlerClassName === null) {
-                    ob_end_clean();
-
-                    return $response
-                        ->withStatus(400)
-                        ->withBody(
-                            $this->streamFactory->createStream(
-                                $output->error(
-                                    ErrorCodeEnum::MISSING,
-                                    T_('Invalid Request'),
-                                    $action,
-                                    'system'
-                                )
-                            )
-                        );
-                }
+                        )
+                    );
         }
 
         $debugHandler = $this->configContainer->get('api_debug_handler');

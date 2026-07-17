@@ -292,7 +292,7 @@ class Playlist extends playlist_object
                     $sql .= 'ORDER BY `playlist_data`.`track`';
                     break;
                 default:
-                    $sql = "SELECT `id`, `object_id`, `object_type`, `track` 0 AS `time` FROM `playlist_data` WHERE `playlist` = ? AND `playlist_data`.`object_type` != 'song' AND `playlist_data`.`object_type` != 'podcast_episode' ORDER BY `track`";
+                    $sql = "SELECT `id`, `object_id`, `object_type`, `track`, 0 AS `time` FROM `playlist_data` WHERE `playlist` = ? AND `playlist_data`.`object_type` != 'song' AND `playlist_data`.`object_type` != 'podcast_episode' ORDER BY `track`";
                     debug_event(self::class, sprintf('get_items(): %s not handled', $object_type->value), 5);
             }
 

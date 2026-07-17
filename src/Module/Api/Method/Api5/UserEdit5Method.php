@@ -25,7 +25,7 @@ declare(strict_types=1);
 
 namespace Ampache\Module\Api\Method\Api5;
 
-use Ampache\Module\Api\Api;
+use Ampache\Module\Api\Api5;
 use Ampache\Repository\Model\User;
 
 /**
@@ -78,7 +78,7 @@ final class UserEdit5Method
      */
     public static function user_edit(array $input, User $user): bool
     {
-        if (!Api::check_parameter($input, ['username'], self::ACTION)) {
+        if (!Api5::check_parameter($input, ['username'], self::ACTION)) {
             return false;
         }
 

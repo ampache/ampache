@@ -82,7 +82,7 @@ final class Shares5Method
 
         $results = $browse->get_objects();
         if (empty($results)) {
-            Api5::empty('shares', $input['api_format']);
+            Api5::empty('share', $input['api_format']);
 
             return false;
         }

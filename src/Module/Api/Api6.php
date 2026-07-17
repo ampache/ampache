@@ -237,7 +237,7 @@ class Api6
         if (!Access::check($type, $level, $user_id)) {
             debug_event(self::class, $type->value . " '" . $level->value . "' required on " . $method . " function call.", 2);
             /* HINT: Access level, eg 75, 100 */
-            self::error('4742', sprintf(T_('Require: %s'), $level->value), $method, 'account', $format);
+            self::error('4742', sprintf('Require: %s', $level->value), $method, 'account', $format);
 
             return false;
         }
@@ -263,7 +263,7 @@ class Api6
         debug_event(self::class, "'" . $parameter . "' required on " . $method . " function call.", 2);
 
         /* HINT: Requested object string/id/type ("album", "myusername", "some song title", 1298376) */
-        self::error('4710', sprintf(T_('Bad Request: %s'), $parameter), $method, 'system', $input['api_format']);
+        self::error('4710', sprintf('Bad Request: %s', $parameter), $method, 'system', $input['api_format']);
 
         return false;
     }
@@ -336,6 +336,7 @@ class Api6
      * parameter_exists
      *
      * This function checks the $input actually has the parameter.
+     * A parameter sent with an empty value (e.g. 'filter=') doesn't count as sent.
      * Parameters must be an array of required elements as a string
      *
      * @param array<string, mixed> $input
@@ -344,7 +345,12 @@ class Api6
     public static function parameter_exists(array $input, array $parameters): bool|string
     {
         foreach ($parameters as $parameter) {
-            if (array_key_exists($parameter, $input)) {
+            if (
+                array_key_exists($parameter, $input)
+                && $input[$parameter] !== null
+                && $input[$parameter] !== ''
+                && $input[$parameter] !== []
+            ) {
                 continue;
             }
 

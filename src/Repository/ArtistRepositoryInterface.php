@@ -49,6 +49,8 @@ interface ArtistRepositoryInterface
      */
     public function collectGarbage(): void;
 
+    public function collectGarbageForArtist(int $artistId): void;
+
     /**
      * This finds an artist based on its name
      */

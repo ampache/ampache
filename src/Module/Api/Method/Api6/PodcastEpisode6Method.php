@@ -77,7 +77,7 @@ final class PodcastEpisode6Method
         ob_end_clean();
         switch ($input['api_format']) {
             case 'json':
-                echo Json6_Data::podcast_episodes([$object_id], $user, $input['auth'], false);
+                echo Json6_Data::podcast_episodes([$object_id], $user, $input['auth'], true, false);
                 break;
             default:
                 echo Xml6_Data::podcast_episodes([$object_id], $user, $input['auth']);

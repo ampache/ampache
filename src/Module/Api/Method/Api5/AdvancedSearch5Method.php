@@ -148,6 +148,8 @@ final class AdvancedSearch5Method
                     case 'album':
                         echo Xml5_Data::albums($results, [], $user, $input['auth']);
                         break;
+                    case 'song_artist':
+                    case 'album_artist':
                     case 'artist':
                         echo Xml5_Data::artists($results, [], $user, $input['auth']);
                         break;

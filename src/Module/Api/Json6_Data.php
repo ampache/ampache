@@ -1848,6 +1848,7 @@ class Json6_Data
     {
         self::$count = self::$count ?: count($objects);
         $md5         = md5(serialize($objects));
+        $objects     = Api::filter_objects($objects, self::$count, self::$offset, self::$limit);
 
         $output = [
             "total_count" => self::$count,

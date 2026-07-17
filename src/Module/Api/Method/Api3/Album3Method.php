@@ -26,6 +26,7 @@ declare(strict_types=1);
 namespace Ampache\Module\Api\Method\Api3;
 
 use Ampache\Module\Api\Xml3_Data;
+use Ampache\Repository\Model\Album;
 use Ampache\Repository\Model\User;
 
 /**
@@ -48,7 +49,20 @@ final class Album3Method
      */
     public static function album(array $input, User $user): void
     {
-        $uid     = scrub_in((string) $input['filter']);
+        if (!array_key_exists('filter', $input) || (string) $input['filter'] === '') {
+            /* HINT: Requested object string/id/type ("album", "myusername", "some song title", 1298376) */
+            echo Xml3_Data::error(400, sprintf(T_('Bad Request: %s'), 'filter'));
+
+            return;
+        }
+        $uid   = (int) scrub_in((string) $input['filter']);
+        $album = new Album($uid);
+        if ($album->isNew()) {
+            /* HINT: Requested object string/id/type ("album", "myusername", "some song title", 1298376) */
+            echo Xml3_Data::error(404, sprintf(T_('Not Found: %s'), $uid));
+
+            return;
+        }
         $include = [];
         if (array_key_exists('include', $input)) {
             if (is_array($input['include'])) {

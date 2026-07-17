@@ -113,6 +113,11 @@ interface SongRepositoryInterface
     public function collectGarbage(Song $song): void;
 
     /**
+     * @param int[] $songIds
+     */
+    public function collectGarbageForSongs(array $songIds): void;
+
+    /**
      * Returns all song ids linked to the provided catalog (or all)
      *
      * @return Traversable<int>
