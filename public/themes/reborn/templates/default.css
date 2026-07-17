@@ -1341,7 +1341,7 @@ table.gridview td.cel_ratings {
 .homedash table.gridview tbody,
 .personalfav table.gridview tbody {
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(170px, 1fr));
+    grid-template-columns: repeat(auto-fit, minmax(170px, 200px));
     grid-template-rows: repeat(2, auto);
     grid-auto-rows: 0;
     align-content: start;
