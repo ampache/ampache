@@ -836,9 +836,7 @@ class Ui implements UiInterface
             case 'use_original_year':
             case 'use_play2':
             case 'webdav_backend':
-            case 'webplayer_aurora':
             case 'webplayer_confirmclose':
-            case 'webplayer_flash':
             case 'webplayer_html5':
             case 'webplayer_pausetabs':
             case 'xml_rpc':
