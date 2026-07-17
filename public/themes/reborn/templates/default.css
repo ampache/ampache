@@ -663,7 +663,7 @@ div.registerfield.center {
 
 #sidebar-light {
     width: 70px;
-    position: fixed;
+    position: static;
     left: 0;
     margin: 17px auto 5px 5px;
     padding: 5px 0 10px 0;
@@ -675,7 +675,7 @@ div.registerfield.center {
     border-radius: 2px;
     box-sizing: border-box;
     width: 70px;
-    position: fixed;
+    position: static;
     left: 0;
     margin: 0 auto 5px 5px;
     padding: 5px 0 10px 0;
@@ -1322,6 +1322,34 @@ table.gridview td.cel_ratings {
     min-width: initial !important;
     justify-content: center;
     gap: 10px;
+}
+
+/* Home dashboard + personal favorites: keep each grid on a single row instead of wrapping. */
+.homedash table.gridview,
+.personalfav table.gridview {
+    display: block;
+}
+
+.homedash table.gridview tbody,
+.personalfav table.gridview tbody {
+    display: flex;
+    flex-wrap: nowrap;
+}
+
+.homedash table.gridview tbody tr,
+.personalfav table.gridview tbody tr {
+    float: none;
+    flex: 0 0 auto;
+}
+
+/* Home dashboard: clip anything past the edge. */
+.homedash table.gridview {
+    overflow-x: hidden;
+}
+
+/* Personal favorites: scroll horizontally instead of clipping. */
+.personalfav table.gridview {
+    overflow-x: auto;
 }
 
 .tableform {
