@@ -5,6 +5,7 @@
 .vscode/
 .buildpath
 .env
+.htaccess
 .pc
 .project
 .phpunit.*
@@ -17,6 +18,7 @@ config/ampache.cfg.php.backup
 config/ampache.cfg *.php
 config/registration_agreement.php
 docker/media/
+docs/api-responses/
 locale/base/locale/
 log/
 logs/
@@ -35,6 +37,8 @@ public/develop
 public/master
 public/foam
 public/ample
+public/dist/
+public/lib/
 resources/images/material-symbols
 storage/
 tmp/
@@ -59,4 +63,3 @@ web.config
 *.v11.suo
 *~
 .npmrc
-/public/lib
