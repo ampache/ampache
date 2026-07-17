@@ -280,11 +280,8 @@ class Preference extends database_object
         'upload_user_artist',
         'upnp_backend',
         'use_original_year',
-        'use_play2',
         'webdav_backend',
-        'webplayer_aurora',
         'webplayer_confirmclose',
-        'webplayer_flash',
         'webplayer_html5',
         'webplayer_pausetabs',
         'webplayer_removeplayed',
@@ -944,6 +941,9 @@ class Preference extends database_object
             'no_symlinks',
             'notify_email',
             'now_playing_per_user',
+            'oidc_auto_redirect',
+            'oidc_disable_ssl_verify',
+            'oidc_use_userinfo',
             'perpetual_api_session',
             'personalfav_display',
             'playlist_art',
@@ -1015,7 +1015,6 @@ class Preference extends database_object
             'use_auth',
             'use_now_playing_embedded',
             'use_original_year',
-            'use_play2',
             'use_rss',
             'user_agreement',
             'user_create_streamtoken',
@@ -1025,10 +1024,8 @@ class Preference extends database_object
             'wanted',
             'waveform',
             'webdav_backend',
-            'webplayer_aurora',
             'webplayer_confirmclose',
             'webplayer_debug',
-            'webplayer_flash',
             'webplayer_html5',
             'webplayer_pausetabs',
             'write_tags',
@@ -1193,9 +1190,6 @@ class Preference extends database_object
                 case 'subsonic_backend':
                     Dba::write($pref_sql, ['subsonic_backend', '1', 'Use Subsonic backend', AccessLevelEnum::ADMIN->value, 'boolean', 'system', 'backend']);
                     break;
-                case 'webplayer_flash':
-                    Dba::write($pref_sql, ['webplayer_flash', '1', 'Authorize Flash Web Player', AccessLevelEnum::USER->value, 'boolean', 'streaming', 'player']);
-                    break;
                 case 'webplayer_html5':
                     Dba::write($pref_sql, ['webplayer_html5', '1', 'Authorize HTML5 Web Player', AccessLevelEnum::USER->value, 'boolean', 'streaming', 'player']);
                     break;
@@ -1324,9 +1318,6 @@ class Preference extends database_object
                     break;
                 case 'geolocation':
                     Dba::write($pref_sql, ['geolocation', '0', 'Allow Geolocation', AccessLevelEnum::USER->value, 'integer', 'options', 'feature']);
-                    break;
-                case 'webplayer_aurora':
-                    Dba::write($pref_sql, ['webplayer_aurora', '1', 'Authorize JavaScript decoder (Aurora.js) in Web Player', AccessLevelEnum::USER->value, 'boolean', 'streaming', 'player']);
                     break;
                 case 'upload_allow_remove':
                     Dba::write($pref_sql, ['upload_allow_remove', '1', 'Allow users to remove uploaded songs', AccessLevelEnum::ADMIN->value, 'boolean', 'system', 'upload']);
@@ -1463,9 +1454,6 @@ class Preference extends database_object
                 case 'show_header_login':
                     Dba::write($pref_sql, ['show_header_login', '1', 'Show the login / registration links in the site header', AccessLevelEnum::ADMIN->value, 'boolean', 'system', 'interface']);
                     break;
-                case 'use_play2':
-                    Dba::write($pref_sql, ['use_play2', '0', 'Use an alternative playback action for streaming if you have issues with playing music', AccessLevelEnum::USER->value, 'boolean', 'streaming', 'player']);
-                    break;
                 case 'custom_timezone':
                     Dba::write($pref_sql, ['custom_timezone', '', 'Custom timezone (Override PHP date.timezone)', AccessLevelEnum::USER->value, 'string', 'interface', 'custom']);
                     break;
@@ -1596,10 +1584,10 @@ class Preference extends database_object
                     Dba::write($pref_sql, ['subsonic_single_user_data', '1', 'Use single user data for Subsonic API responses', AccessLevelEnum::USER->value, 'boolean', 'options', 'api']);
                     break;
                 case 'api_enable_8':
-                    Dba::write($pref_sql, ['api_enable_8', '1', 'Allow Ampache API8 responses', AccessLevelEnum::USER->value, 'boolean', 'options', null]);
+                    Dba::write($pref_sql, ['api_enable_8', '1', 'Allow Ampache API8 responses', AccessLevelEnum::USER->value, 'boolean', 'options', 'api']);
                     break;
                 case 'show_folder':
-                    Dba::write($pref_sql, ['show_folder', '1', 'Show \'Folders\' link in the main sidebar', AccessLevelEnum::USER->value, 'boolean', 'interface', 'theme']);
+                    Dba::write($pref_sql, ['show_folder', '1', 'Show \'Folders\' link in the main sidebar', AccessLevelEnum::USER->value, 'boolean', 'interface', 'sidebar']);
                     break;
                 default:
                     debug_event(self::class, 'ERROR: missing preference insert code for: ' . $row['item'], 1);
@@ -1658,8 +1646,8 @@ class Preference extends database_object
                         . " 'sidebar_light', 'sidebar_order_browse', 'sidebar_order_dashboard', 'sidebar_order_information'"
                         . " 'sidebar_order_playlist', 'sidebar_order_search', 'sidebar_order_video', 'slideshow_time'"
                         . " 'song_page_title', 'subsonic_always_download', 'topmenu', 'transcode_bitrate', 'transcode'"
-                        . " 'ui_fixed', 'unique_playlist', 'use_original_year', 'use_play2', 'webplayer_aurora'"
-                        . " 'webplayer_confirmclose', 'webplayer_flash', 'webplayer_html5', 'webplayer_pausetabs'"
+                        . " 'ui_fixed', 'unique_playlist', 'use_original_year'"
+                        . " 'webplayer_confirmclose', 'webplayer_html5', 'webplayer_pausetabs'"
                         . " 'webplayer_removeplayed', 'subsonic_force_album_artist', 'subsonic_single_user_data'"
                         . ");",
                         [AccessLevelEnum::USER->value]
@@ -1744,7 +1732,7 @@ class Preference extends database_object
                         . " 'sidebar_hide_browse', 'sidebar_hide_dashboard', 'sidebar_hide_information', 'sidebar_hide_playlist',"
                         . " 'sidebar_hide_search', 'sidebar_hide_switcher', 'sidebar_hide_video', 'sidebar_light', 'slideshow_time', 'stream_beautiful_url',"
                         . " 'subsonic_always_download', 'topmenu', 'ui_fixed', 'unique_playlist', 'upload_catalog_pattern', 'upload_user_artist', 'upnp_backend',"
-                        . " 'use_original_year', 'use_play2', 'webdav_backend', 'webplayer_confirmclose', 'webplayer_removeplayed', 'api_always_download') AND `user` = ?;",
+                        . " 'use_original_year', 'webdav_backend', 'webplayer_confirmclose', 'webplayer_removeplayed', 'api_always_download') AND `user` = ?;",
                         [$user->getId()]
                     ) !== null
                     && Dba::write(
@@ -1756,7 +1744,7 @@ class Preference extends database_object
                         . " 'home_now_playing', 'home_recently_played_all', 'home_recently_played', 'libitem_contextmenu', 'now_playing_per_user',"
                         . " 'podcast_new_download', 'show_artist', 'show_donate', 'show_folder', 'show_header_login', 'show_license', 'show_original_year',"
                         . " 'show_subtitle', 'show_wrapped', 'song_page_title', 'subsonic_backend', 'upload_allow_edit', 'upload_allow_remove', 'upload_subdir',"
-                        . " 'webplayer_aurora', 'webplayer_flash', 'webplayer_html5', 'webplayer_pausetabs') AND `user` = ?;",
+                        . " 'webplayer_html5', 'webplayer_pausetabs') AND `user` = ?;",
                         [$user->getId()]
                     ) !== null
                     && Dba::write("UPDATE `user_preference` SET `value` = '10' WHERE `name` IN ('browser_notify_timeout', 'podcast_keep', 'popular_threshold', 'sidebar_order_browse') AND `user` = ?;", [$user->getId()]) !== null
@@ -1803,7 +1791,7 @@ class Preference extends database_object
                         . " 'show_playlist_media_parent', 'show_playlist_username', 'show_skipped_times', 'show_wrapped', 'sidebar_hide_browse', 'sidebar_hide_dashboard', 'sidebar_hide_information',"
                         . " 'sidebar_hide_playlist', 'sidebar_hide_search', 'sidebar_hide_switcher', 'sidebar_hide_video', 'sidebar_light', 'slideshow_time',"
                         . " 'stream_beautiful_url', 'subsonic_always_download', 'topmenu', 'ui_fixed', 'unique_playlist', 'upload_catalog_pattern', 'upload_user_artist',"
-                        . " 'upnp_backend', 'use_original_year', 'use_play2', 'webdav_backend', 'webplayer_confirmclose', 'webplayer_removeplayed',"
+                        . " 'upnp_backend', 'use_original_year', 'webdav_backend', 'webplayer_confirmclose', 'webplayer_removeplayed',"
                         . " 'api_always_download') AND `user` = ?;",
                         [$user->getId()]
                     ) !== null
@@ -1815,7 +1803,7 @@ class Preference extends database_object
                         . " 'home_moment_albums', 'home_now_playing', 'home_recently_played_all', 'home_recently_played',"
                         . " 'libitem_contextmenu', 'now_playing_per_user', 'podcast_new_download', 'show_artist', 'show_donate', 'show_folder', 'show_header_login',"
                         . " 'show_license', 'show_original_year', 'show_subtitle', 'song_page_title', 'subsonic_backend', 'upload_allow_edit', 'upload_allow_remove',"
-                        . " 'upload_subdir', 'webplayer_aurora', 'webplayer_flash', 'webplayer_html5', 'webplayer_pausetabs') AND `user` = ?;",
+                        . " 'upload_subdir', 'webplayer_html5', 'webplayer_pausetabs') AND `user` = ?;",
                         [$user->getId()]
                     ) !== null
                     && Dba::write("UPDATE `user_preference` SET `value` = '10' WHERE `name` IN ('browser_notify_timeout', 'podcast_keep', 'popular_threshold', 'sidebar_order_browse') AND `user` = ?;", [$user->getId()]) !== null
@@ -1862,7 +1850,7 @@ class Preference extends database_object
                         . " 'show_playlist_media_parent', 'show_playlist_username', 'show_skipped_times', 'show_wrapped', 'sidebar_hide_browse', 'sidebar_hide_dashboard', 'sidebar_hide_information',"
                         . " 'sidebar_hide_playlist', 'sidebar_hide_search', 'sidebar_hide_switcher', 'sidebar_hide_video', 'sidebar_light', 'slideshow_time', 'stream_beautiful_url',"
                         . " 'subsonic_always_download', 'topmenu', 'ui_fixed', 'unique_playlist', 'upload_catalog_pattern', 'upload_user_artist', 'upnp_backend', 'use_original_year',"
-                        . " 'use_play2', 'webdav_backend', 'webplayer_confirmclose', 'webplayer_removeplayed', 'api_always_download') AND `user` = ?;",
+                        . " 'webdav_backend', 'webplayer_confirmclose', 'webplayer_removeplayed', 'api_always_download') AND `user` = ?;",
                         [$user->getId()]
                     ) !== null
                     && Dba::write(
@@ -1872,7 +1860,7 @@ class Preference extends database_object
                         . " 'api_enable_5', 'api_enable_6', 'autoupdate', 'browser_notify', 'home_moment_albums',"
                         . " 'libitem_contextmenu', 'now_playing_per_user', 'podcast_new_download', 'share', 'show_artist', 'show_donate', 'show_folder',"
                         . " 'show_header_login', 'show_license', 'show_original_year', 'show_subtitle', 'song_page_title', 'subsonic_backend', 'upload_allow_edit',"
-                        . " 'upload_allow_remove', 'upload_subdir', 'webplayer_aurora', 'webplayer_flash', 'webplayer_html5', 'webplayer_pausetabs') AND `user` = ?;",
+                        . " 'upload_allow_remove', 'upload_subdir', 'webplayer_html5', 'webplayer_pausetabs') AND `user` = ?;",
                         [$user->getId()]
                     ) !== null
                     && Dba::write("UPDATE `user_preference` SET `value` = '10' WHERE `name` IN ('browser_notify_timeout', 'podcast_keep', 'popular_threshold', 'sidebar_order_browse') AND `user` = ?;", [$user->getId()]) !== null
@@ -2131,12 +2119,9 @@ class Preference extends database_object
             'upnp_active' => 'UPnP Active Instance',
             'upnp_backend' => 'Use UPnP backend',
             'use_original_year' => 'Browse by Original Year for albums (falls back to Year)',
-            'use_play2' => 'Use an alternative playback action for streaming if you have issues with playing music',
             'vlc_active' => 'VLC Active Instance',
             'webdav_backend' => 'Use WebDAV backend',
-            'webplayer_aurora' => 'Authorize JavaScript decoder (Aurora.js) in Web Player',
             'webplayer_confirmclose' => 'Confirmation when closing current playing window',
-            'webplayer_flash' => 'Authorize Flash Web Player',
             'webplayer_html5' => 'Authorize HTML5 Web Player',
             'webplayer_pausetabs' => 'Auto-pause between tabs',
             'webplayer_removeplayed' => 'Remove tracks before the current playlist item in the webplayer when played',

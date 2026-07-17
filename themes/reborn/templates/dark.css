@@ -588,8 +588,22 @@ div.jp-playlist {
     background-color: #191919 !important;
 }
 
+.jp-type-playlist {
+    background-color: #191919;
+}
+
+#equalizer {
+    background-color: rgba(25, 25, 25, 0.96);
+}
+
+#equalizer .eq-band {
+    color: #ccc;
+}
+
+.playing_info,
 div.playing_title a,
 div.playing_artist a,
+div.playing_album a,
 div.playing_lyrics a {
     color: #eee;
 }
@@ -691,4 +705,19 @@ a.option-list:hover {
 
 #tabs li.tab_active a {
     color: #fff;
+}
+
+/* Mobile off-canvas drawers need a solid (opaque) panel background so the
+   dim backdrop behind them doesn't show through. See the off-canvas block in
+   default.css. */
+@media (max-width: 768px) {
+    #sidebar,
+    #rightbar {
+        background-color: #222;
+    }
+
+    /* Loading toast blends into the header (matches #header bg). */
+    #ajax-loading {
+        background-color: #000;
+    }
 }

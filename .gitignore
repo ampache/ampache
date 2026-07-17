@@ -1,23 +1,23 @@
+.buildpath
+.env
+.npmrc
+.pc
+.php-cs-fixer.cache
+.phpunit.*
+.project
 .fleet/
 .idea/
 .settings/
 .tx/config_*.bak
 .vscode/
-.buildpath
-.env
 .maintenance
-.pc
-.php-cs-fixer.cache
 .phpunit.result.cache
-.project
-.phpunit.*
-.php-cs-fixer.cache
 bootstrap/
 build/
 config/ampache-doped.cfg.php
+config/ampache.cfg *.php
 config/ampache.cfg.php
 config/ampache.cfg.php.backup
-config/ampache.cfg *.php
 config/registration_agreement.php
 docker/media/
 docs/api-responses/
@@ -39,6 +39,7 @@ develop
 master
 foam
 ample
+.htaccess
 resources/images/material-symbols
 storage/
 tmp/
@@ -53,7 +54,6 @@ phpstorm_*
 phpunit.*
 robots.txt
 web.config
-*#
 *.log
 *.phpproj
 *.save
@@ -61,6 +61,6 @@ web.config
 *.suo
 *.swp
 *.v11.suo
+*#
 *~
-.npmrc
 /public

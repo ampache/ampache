@@ -157,9 +157,6 @@ class Stream
     public static function get_base_url(bool $local = false, ?string $streamToken = null): string
     {
         $base_url = '/play/index.php?';
-        if (AmpConfig::get('use_play2')) {
-            $base_url .= 'action=play2&';
-        }
 
         if (AmpConfig::get('use_auth') && AmpConfig::get('require_session')) {
             $session_id = (in_array($streamToken, [null, '', '0'], true))
@@ -230,6 +227,37 @@ class Stream
         }
 
         return $image;
+    }
+
+    /**
+     * get_latest_now_playing
+     *
+     * Return the most recently registered now-playing song/video for one of the given streaming session keys.
+     * Used by the web player to resolve the real internal media that a random or democratic stream is actually playing
+     * (those items only carry a placeholder in the client playlist).
+     *
+     * @param list<string> $session_ids
+     * @return array{object_id: int, object_type: string}|null
+     */
+    public static function get_latest_now_playing(array $session_ids): ?array
+    {
+        $session_ids = array_values(array_filter($session_ids, static fn(string $sid): bool => $sid !== ''));
+        if ($session_ids === []) {
+            return null;
+        }
+
+        $placeholders = implode(', ', array_fill(0, count($session_ids), '?'));
+        $sql          = "SELECT `object_id`, `object_type` FROM `now_playing` WHERE `id` IN ($placeholders) AND `object_type` IN ('song', 'video') ORDER BY `insertion` DESC LIMIT 1";
+        $db_results   = Dba::read($sql, $session_ids);
+        $row          = Dba::fetch_assoc($db_results);
+        if ($row === []) {
+            return null;
+        }
+
+        return [
+            'object_id' => (int) $row['object_id'],
+            'object_type' => (string) $row['object_type'],
+        ];
     }
 
     /**
@@ -682,17 +710,18 @@ class Stream
         }
 
         $song_file = self::_scrub_arg($media->file);
-        $bit_rate  = $options['bitrate'] ?? self::get_max_bitrate($media, $transcode_settings, $options);
+        $bit_rate  = isset($options['bitrate'])
+            ? (int) $options['bitrate']
+            : self::get_max_bitrate($media, $transcode_settings, $options) * 1000;
         debug_event(self::class, 'Final transcode bitrate is ' . $bit_rate, 4);
+
+        $max_bit_rate = ((int) ($options['maxbitrate'] ?? 8000)) * 1000;
 
         // Finalise the command line
         $command    = $transcode_settings['command'];
         $string_map = [
             '%FILE%' => $song_file,
-            '%SAMPLE%' => $bit_rate, // Deprecated
-            '%BITRATE%' => $bit_rate
         ];
-        $string_map['%MAXBITRATE%'] = $options['maxbitrate'] ?? 8000;
         if ($media instanceof Video) {
             $string_map['%RESOLUTION%'] = $options['resolution'] ?? $media->get_f_resolution() ?? '1280x720';
             $string_map['%QUALITY%']    = (isset($options['quality']))
@@ -718,6 +747,19 @@ class Stream
         foreach ($string_map as $search => $replace) {
             $command = str_replace($search, (string) $replace, $command, $ret);
             if ($ret === 0) {
+                debug_event(self::class, $search . ' not in transcode command', 5);
+            }
+        }
+
+        $bitrate_map = [
+            '%SAMPLE%' => $bit_rate,
+            '%BITRATE%' => $bit_rate,
+            '%MAXBITRATE%' => $max_bit_rate,
+        ];
+        foreach ($bitrate_map as $search => $replace) {
+            $command = str_replace($search . 'k', (string) $replace, $command, $retK);
+            $command = str_replace($search, (string) $replace, $command, $ret);
+            if ($retK === 0 && $ret === 0) {
                 debug_event(self::class, $search . ' not in transcode command', 5);
             }
         }

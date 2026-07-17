@@ -43,12 +43,10 @@ use Ampache\Repository\Model\Video;
  */
 abstract class Catalog extends \Ampache\Repository\Model\Catalog
 {
-    /** Added Songs counter */
     protected int $addedSongs = 0;
-
     protected string $description;
 
-    /** command which provides the list of all songs */
+    // command which provides the list of all songs
     protected string $listCommand;
 
     /**
@@ -58,10 +56,7 @@ abstract class Catalog extends \Ampache\Repository\Model\Catalog
     protected array $songs = [];
 
     protected string $type;
-
-    /** Verified Songs counter */
     protected int $verifiedSongs = 0;
-
     protected string $version;
 
     /**

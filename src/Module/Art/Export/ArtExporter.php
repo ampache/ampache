@@ -87,24 +87,15 @@ final readonly class ArtExporter implements ArtExporterInterface
             }
 
             $target_file = $folder . $filename;
-            $file_handle = fopen($target_file, 'w');
-            $is_file     = is_file($target_file);
-            if (!$is_file) {
-                if ($file_handle === false) {
+            if (!is_file($target_file)) {
+                $art      = new Art();
+                $art->raw = (string) $this->imageRepository->getRawImage($artId, $artType, $artSize, $artMime);
+
+                $metadataWriter->write($art, $target_file, $filename);
+
+                if (!is_file($target_file)) {
                     throw new ArtExportException(
                         sprintf(T_('Unable to open `%s` for writing'), $target_file)
-                    );
-                }
-
-                $write_result = fwrite(
-                    $file_handle,
-                    (string) $this->imageRepository->getRawImage($artId, $artType, $artSize, $artMime)
-                );
-                fclose($file_handle);
-
-                if ($write_result === false) {
-                    throw new ArtExportException(
-                        sprintf(T_('Unable to write to `%s`'), $target_file)
                     );
                 }
 
@@ -118,7 +109,7 @@ final readonly class ArtExporter implements ArtExporterInterface
             }
 
             // require a really good reason to clear this art
-            if ($clearData && $is_file) {
+            if ($clearData) {
                 //The file is out so clear the table as well
                 $this->logger->critical(
                     'Clearing database image for ' . $artRow['id'],

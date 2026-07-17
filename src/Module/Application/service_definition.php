@@ -148,6 +148,7 @@ use Ampache\Module\Application\LocalPlay\UpdateInstanceAction;
 use Ampache\Module\Application\Logout\LogoutAction;
 use Ampache\Module\Application\LostPassword\SendAction;
 use Ampache\Module\Application\Mashup\WrappedAction;
+use Ampache\Module\Application\Playback\Play2RedirectAction;
 use Ampache\Module\Application\Playback\PlayAction;
 use Ampache\Module\Application\Playlist\AddSongAction;
 use Ampache\Module\Application\Playlist\ImportPlaylistAction;
@@ -425,6 +426,7 @@ return [
     UpdatePreferencesAction::class => autowire(UpdatePreferencesAction::class),
     GrantAction::class => autowire(GrantAction::class),
     Login\DefaultAction::class => autowire(Login\DefaultAction::class),
+    Login\OidcAction::class => autowire(Login\OidcAction::class),
     ShowAddInstanceAction::class => autowire(ShowAddInstanceAction::class),
     LocalPlay\ShowPlaylistAction::class => autowire(LocalPlay\ShowPlaylistAction::class),
     AddInstanceAction::class => autowire(AddInstanceAction::class),
@@ -453,6 +455,7 @@ return [
     UploadArtAction::class => autowire(UploadArtAction::class),
     SelectArtAction::class => autowire(SelectArtAction::class),
     PlayAction::class => autowire(PlayAction::class),
+    Play2RedirectAction::class => autowire(Play2RedirectAction::class),
     Admin\Mail\ShowAction::class => autowire(Admin\Mail\ShowAction::class),
     SendMailAction::class => autowire(SendMailAction::class),
     Admin\Export\ShowAction::class => autowire(Admin\Export\ShowAction::class),

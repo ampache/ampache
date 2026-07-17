@@ -1086,6 +1086,81 @@ This flags a library item as a favorite
 
 [Example](https://raw.githubusercontent.com/ampache/python3-ampache/api6/docs/xml-responses/flag.xml)
 
+### folder
+
+Return children of a parent folder object by ID **Ampache 8.0.0+**
+
+| Input    | Type       | Description                                                                                        | Optional |
+|----------|------------|----------------------------------------------------------------------------------------------------|---------:|
+| 'filter' | integer    | UID of the folder object (Default: -1, the root folder)                                            |      YES |
+| 'add'    | set_filter | ISO 8601 Date Format (2020-09-16) Find objects with an 'add' date newer than the specified date    |      YES |
+| 'update' | set_filter | ISO 8601 Date Format (2020-09-16) Find objects with an 'update' time newer than the specified date |      YES |
+| 'offset' | integer    | Return results starting from this index position                                                   |      YES |
+| 'limit'  | integer    | Maximum number of results to return                                                                |      YES |
+| 'cond'   | string     | Apply additional filters to the browse using `;` separated comma string pairs                      |      YES |
+|          |            | (e.g. 'filter1,value1;filter2,value2')                                                             |          |
+| 'sort'   | string     | Sort name or comma-separated key pair. (e.g. 'name,order')                                         |      YES |
+|          |            | Default order 'ASC' (e.g. 'name,ASC' == 'name')                                                    |          |
+
+* return
+
+```XML
+<root>
+    <total_count>
+    <folder id="">
+        <title>
+        <parent>
+        <path>
+        <catalog>
+        <items>
+    </folder>
+</root>
+```
+
+* throws
+
+```XML
+<root><error></root>
+```
+
+### folders
+
+Return children of a parent object in a folder traversal style **Ampache 8.0.0+**
+
+| Input    | Type       | Description                                                                                        | Optional |
+|----------|------------|----------------------------------------------------------------------------------------------------|---------:|
+| 'filter' | string     | Path name filter (Default: '/', the root folder)                                                   |      YES |
+| 'exact'  | boolean    | `0`, `1` (if true filter is exact rather than fuzzy; default: 1)                                   |      YES |
+| 'add'    | set_filter | ISO 8601 Date Format (2020-09-16) Find objects with an 'add' date newer than the specified date    |      YES |
+| 'update' | set_filter | ISO 8601 Date Format (2020-09-16) Find objects with an 'update' time newer than the specified date |      YES |
+| 'offset' | integer    | Return results starting from this index position                                                   |      YES |
+| 'limit'  | integer    | Maximum number of results to return                                                                |      YES |
+| 'cond'   | string     | Apply additional filters to the browse using `;` separated comma string pairs                      |      YES |
+|          |            | (e.g. 'filter1,value1;filter2,value2')                                                             |          |
+| 'sort'   | string     | Sort name or comma-separated key pair. (e.g. 'name,order')                                         |      YES |
+|          |            | Default order 'ASC' (e.g. 'name,ASC' == 'name')                                                    |          |
+
+* return
+
+```XML
+<root>
+    <total_count>
+    <folder id="">
+        <title>
+        <parent>
+        <path>
+        <catalog>
+        <items>
+    </folder>
+</root>
+```
+
+* throws
+
+```XML
+<root><error></root>
+```
+
 ### followers
 
 This gets the followers for the requested username
@@ -1374,7 +1449,7 @@ Return External plugin metadata searching by object id and type
 
 This takes a collection of inputs and returns ID + name for the object type
 
-**NOTE** This method is depreciated and will be removed in **API7** (Use list)
+**NOTE** This method was **removed** in **API8** (Use list)
 
 | Input         | Type       | Description                                                                                        | Optional |
 |---------------|------------|----------------------------------------------------------------------------------------------------|---------:|
@@ -2050,7 +2125,7 @@ This adds a song to a playlist. setting check=1 will not add duplicates to the p
 
 This adds a song to a playlist. setting check=1 will not add duplicates to the playlist
 
-**NOTE** This method is depreciated and will be removed in **API7** (Use playlist_add)
+**NOTE** This method was **removed** in **API8** (Use playlist_add)
 
 | Input    | Type    | Description                                                   | Optional |
 |----------|---------|---------------------------------------------------------------|---------:|
@@ -2684,6 +2759,46 @@ Search for a song using text info and then record a play if found. This allows o
 
 [Example](https://raw.githubusercontent.com/ampache/python3-ampache/api6/docs/xml-responses/scrobble.xml)
 
+### search
+
+Perform an advanced search given passed rules. This works in a similar way to the web/UI search pages. **Ampache 6.3.0+**
+
+This is the current name for the [advanced_search](#advanced_search) method; parameters and results are identical.
+
+Refer to the [Advanced Search](https://ampache.org/api/api-advanced-search) page for details about creating searches.
+
+| Input    | Type    | Description                                            | Optional |
+|----------|---------|--------------------------------------------------------|---------:|
+| operator | string  | and, or (whether to match one rule or all)             |       NO |
+| rule_*   | array   | [`rule_1`, `rule_1_operator`, `rule_1_input`]          |       NO |
+| rule_*   | array   | [`rule_2`, `rule_2_operator`, `rule_2_input`], [etc]   |      YES |
+| type     | string  | `song`, `album`, `artist`, `label`, `playlist`         |       NO |
+|          |         | `podcast`, `podcast_episode`, `genre`, `user`, `video` |          |
+| random   | boolean | `0`, `1` (random order of results; default to 0)       |      YES |
+| 'offset' | integer | Return results starting from this index position       |      YES |
+| 'limit'  | integer | Maximum number of results to return                    |      YES |
+
+* return
+
+```XML
+<root>
+    <total_count>
+    <song>|<album>|<artist>|<playlist>|<label>|<user>|<video>
+</root>
+```
+
+* throws
+
+```XML
+<root><error></root>
+```
+
+SONG [Example](https://raw.githubusercontent.com/ampache/python3-ampache/api6/docs/xml-responses/advanced_search%20\(song\).xml)
+
+ARTIST [Example](https://raw.githubusercontent.com/ampache/python3-ampache/api6/docs/xml-responses/advanced_search%20\(artist\).xml)
+
+ALBUM [Example](https://raw.githubusercontent.com/ampache/python3-ampache/api6/docs/xml-responses/advanced_search%20\(album\).xml)
+
 ### search_group
 
 Perform a group search given passed rules. This function will return multiple object types if the rule names match the object type.
@@ -3313,7 +3428,7 @@ This follow/unfollow a user
 ### update_art
 
 Updates a single album, artist, song running the gather_art process
-Doesn't overwrite existing art by default.
+Existing art is replaced unless you send overwrite=0, which keeps whatever is already there.
 
 **ACCESS REQUIRED:** 75 (Catalog Manager)
 
@@ -3797,6 +3912,25 @@ Get an art image.
 | 12    | 300   | 300    |
 | 999   | 400   | 400    |
 
+### random
+
+Picks a random song, podcast episode or video from the whole library and redirects (302) to its stream url. **Ampache 8.0.0+**
+
+Mirrors [stream](#stream)'s transcode parameters but takes no `filter`/`id`; only single-file media types are supported.
+Picking a random item from a container (album, artist, playlist, search) is what the search/browse/playlist methods are for.
+
+| Input     | Type    | Description                                                                    | Optional |
+|-----------|---------|--------------------------------------------------------------------------------|---------:|
+| 'type'    | string  | `song`, `podcast_episode`, `video` (default: song)                             |      YES |
+| 'bitrate' | integer | max bitrate for transcoding in bytes (e.g 192000=192Kb) **song only**          |      YES |
+| 'format'  | string  | `mp3`, `ogg`, `raw`, etc (raw returns the original format) **song only**       |      YES |
+| 'offset'  | integer | time offset in seconds                                                         |      YES |
+| 'stats'   | boolean | `0`, `1`, if false disable stat recording when playing the object (default: 1) |      YES |
+
+* return file (HTTP 302 Found; redirects to the stream url)
+* throws (HTTP 400 Bad Request)
+* throws (HTTP 404 Not Found)
+
 ### stream
 
 Streams a given media file. Takes the file id in parameter with optional max bit rate, file format, time offset, size and estimate content length option.
@@ -3856,6 +3990,28 @@ This is for controlling localplay
 [Example](https://raw.githubusercontent.com/ampache/python3-ampache/api6/docs/xml-responses/localplay.xml)
 
 [Example (status)](https://raw.githubusercontent.com/ampache/python3-ampache/api6/docs/xml-responses/localplay%20\(status\).xml)
+
+### localplay_songs
+
+Get the list of songs in your localplay instance
+
+This method takes no additional parameters.
+
+* return
+
+```XML
+<root>
+    <localplay_songs>
+</root>
+```
+
+* throws
+
+```XML
+<root><error></root>
+```
+
+[Example](https://raw.githubusercontent.com/ampache/python3-ampache/api6/docs/xml-responses/localplay_songs.xml)
 
 ### democratic
 

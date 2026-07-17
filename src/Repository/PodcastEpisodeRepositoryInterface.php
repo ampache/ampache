@@ -86,6 +86,20 @@ interface PodcastEpisodeRepositoryInterface
     public function getEpisodesEligibleForDownload(Podcast $podcast, ?int $downloadLimit = null): Traversable;
 
     /**
+     * Returns a number of random, completed podcast episodes from the whole library
+     *
+     * @return list<int>
+     */
+    public function getRandom(int $userId, ?int $count = 1): array;
+
+    /**
+     * Returns a number of random, completed episodes from a single podcast
+     *
+     * @return list<int>
+     */
+    public function getRandomByPodcast(int $podcastId, int $userId, ?int $count = 1): array;
+
+    /**
      * Updates the state of an episode
      */
     public function updateState(

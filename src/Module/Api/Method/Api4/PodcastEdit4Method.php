@@ -68,7 +68,7 @@ final class PodcastEdit4Method
     public static function podcast_edit(array $input, User $user): bool
     {
         if (!AmpConfig::get('podcast')) {
-            Api4::message('error', T_('Access Denied: podcast features are not enabled.'), '400', $input['api_format']);
+            Api4::message('error', 'Access Denied: podcast features are not enabled.', '400', $input['api_format']);
 
             return false;
         }

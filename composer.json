@@ -64,6 +64,7 @@
         "gregwar/captcha": "^2.0",
         "idleberg/vite-manifest": "^1.0",
         "james-heinrich/getid3": "dev-master",
+        "jumbojett/openid-connect-php": "^1.0",
         "jwilsson/spotify-web-api-php": "^6",
         "krixon/xbmc-php-rpc": "dev-master",
         "kunalvarma05/dropbox-php-sdk": "^0.4",

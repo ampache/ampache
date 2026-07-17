@@ -5,40 +5,53 @@ declare(strict_types=1);
 /**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
- * LICENSE: GNU Affero General Public Label, version 3 (AGPL-3.0-or-later)
+ * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
  * Copyright Ampache.org, 2001-2026
  *
  * This program is free software: you can redistribute it and/or modify
- * it under the terms of the GNU Affero General Public Label as published by
- * the Free Software Foundation, either version 3 of the Label, or
+ * it under the terms of the GNU Affero General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
  * (at your option) any later version.
  *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU Affero General Public Label for more details.
+ * GNU Affero General Public License for more details.
  *
- * You should have received a copy of the GNU Affero General Public Label
- * along with this program.  If not, see <https://www.gnu.org/labels/>.
+ * You should have received a copy of the GNU Affero General Public License
+ * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  *
  */
 
 namespace Ampache\Module\Api\Method\Api5;
 
-use Ampache\Config\AmpConfig;
-use Ampache\Module\Api\Api5;
-use Ampache\Module\Api\Exception\ErrorCodeEnum;
-use Ampache\Module\Api\Json5_Data;
-use Ampache\Module\Api\Xml5_Data;
+use Ampache\Config\ConfigContainerInterface;
+use Ampache\Config\ConfigurationKeyEnum;
+use Ampache\Module\Api\Authentication\GatekeeperInterface;
+use Ampache\Module\Api\Method\Exception\AccessDeniedException;
+use Ampache\Module\Api\Method\Exception\RequestParamMissingException;
+use Ampache\Module\Api\Method\MethodInterface;
+use Ampache\Module\Api\Output\ApiOutputInterface;
 use Ampache\Repository\LabelRepositoryInterface;
 use Ampache\Repository\Model\User;
+use Psr\Http\Message\ResponseInterface;
+use Psr\Http\Message\StreamFactoryInterface;
 
 /**
- * Class LabelArtists5Method
+ * Returns all artists attached to a label.
+ *
+ * Version 5 reads the artists from the label itself and does not paginate the result, so it keeps
+ * a method of its own.
  */
-final class LabelArtists5Method
+final class LabelArtists5Method implements MethodInterface
 {
     public const string ACTION = 'label_artists';
+
+    public function __construct(
+        private ConfigContainerInterface $configContainer,
+        private LabelRepositoryInterface $labelRepository,
+        private StreamFactoryInterface $streamFactory,
+    ) {}
 
     /**
      * label_artists
@@ -50,75 +63,80 @@ final class LabelArtists5Method
      * include = (array|string) 'albums', 'songs' //optional
      *
      * @param array{
-     *     filter: string,
+     *     filter?: string,
      *     include?: string|string[],
      *     offset?: int,
      *     limit?: int,
-     *     cond?: string,
-     *     sort?: string,
      *     api_format: string,
      *     auth: string,
      * } $input
+     * @param 5 $apiVersion
+     *
+     * @throws AccessDeniedException
+     * @throws RequestParamMissingException
      */
-    public static function label_artists(array $input, User $user): bool
-    {
-        if (!AmpConfig::get('label')) {
-            Api5::error(ErrorCodeEnum::ACCESS_DENIED, T_('Enable: label'), self::ACTION, 'system', $input['api_format']);
+    public function handle(
+        GatekeeperInterface $gatekeeper,
+        ResponseInterface $response,
+        ApiOutputInterface $output,
+        array $input,
+        User $user,
+        int $apiVersion,
+    ): ResponseInterface {
+        if (!$this->configContainer->get(ConfigurationKeyEnum::LABEL)) {
+            throw new AccessDeniedException(
+                'Enable: label'
+            );
+        }
 
-            return false;
+        if (!array_key_exists('filter', $input)) {
+            throw new RequestParamMissingException(
+                sprintf('Bad Request: %s', 'filter')
+            );
         }
-        if (!Api5::check_parameter($input, ['filter'], self::ACTION)) {
-            return false;
-        }
+
         $include = [];
         if (array_key_exists('include', $input)) {
             if (!is_array($input['include'])) {
-                $input['include'] = explode(',', html_entity_decode((string) ($input['include'])));
+                $input['include'] = explode(',', html_entity_decode((string) $input['include']));
             }
+
             foreach ($input['include'] as $item) {
                 if ($item === 'songs' || $item == '1') {
                     $include[] = 'songs';
                 }
+
                 if ($item === 'albums' || $item == '1') {
                     $include[] = 'albums';
                 }
             }
         }
 
-        $label = self::getLabelRepository()->findById((int) $input['filter']);
-
+        $label = $this->labelRepository->findById((int) $input['filter']);
         if ($label === null) {
-            Api5::empty('artist', $input['api_format']);
-
-            return false;
+            return $response->withBody(
+                $this->streamFactory->createStream(
+                    $output->writeEmpty($apiVersion, 'artist')
+                )
+            );
         }
 
         $results = $label->get_artists();
-        if (empty($results)) {
-            Api5::empty('artist', $input['api_format']);
-
-            return false;
+        if ($results === []) {
+            return $response->withBody(
+                $this->streamFactory->createStream(
+                    $output->writeEmpty($apiVersion, 'artist')
+                )
+            );
         }
 
-        ob_end_clean();
-        switch ($input['api_format']) {
-            case 'json':
-                echo Json5_Data::artists($results, $include, $user, $input['auth']);
-                break;
-            default:
-                echo Xml5_Data::artists($results, $include, $user, $input['auth']);
-        }
+        $output->setOffset($apiVersion, $input['offset'] ?? 0);
+        $output->setLimit($apiVersion, $input['limit'] ?? 0);
 
-        return true;
-    }
-
-    /**
-     * @deprecated Inject dependency
-     */
-    private static function getLabelRepository(): LabelRepositoryInterface
-    {
-        global $dic;
-
-        return $dic->get(LabelRepositoryInterface::class);
+        return $response->withBody(
+            $this->streamFactory->createStream(
+                $output->artists($apiVersion, $results, $include, $user, $input['auth'])
+            )
+        );
     }
 }

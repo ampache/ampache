@@ -25,96 +25,16 @@ declare(strict_types=1);
 
 namespace Ampache\Module\Api\Method\Api8;
 
-use Ampache\Config\AmpConfig;
-use Ampache\Module\Api\Api;
-use Ampache\Module\Api\Exception\ErrorCodeEnum;
-use Ampache\Module\Util\ObjectTypeToClassNameMapper;
-use Ampache\Repository\Model\library_item;
-use Ampache\Repository\Model\Rating;
-use Ampache\Repository\Model\User;
+use Ampache\Module\Api\Method\AbstractRateMethod;
 
 /**
- * Class Rate8Method
- * @package Lib\Api8Methods
+ * Rates a library item
+ *
+ * Api version 8 reports the object id as `filter` and accepts `id` as an alias.
  */
-final class Rate8Method
+final class Rate8Method extends AbstractRateMethod
 {
-    public const string ACTION = 'rate';
+    protected const string FILTER_ALIAS = 'id';
 
-    /**
-     * rate
-     * MINIMUM_API_VERSION=380001
-     *
-     * This rates a library item
-     *
-     * type = (string) 'song', 'album', 'artist', 'playlist', 'podcast', 'podcast_episode', 'video' $type
-     * id = (string) $object_id
-     * rating = (integer) 0|1|2|3|4|5 $rating
-     *
-     * @param array{
-     *     filter?: string,
-     *     id?: string,
-     *     type: string,
-     *     rating: int,
-     *     api_format: string,
-     *     auth: string,
-     * } $input
-     */
-    public static function rate(array $input, User $user): bool
-    {
-        if (!AmpConfig::get('ratings')) {
-            Api::error(ErrorCodeEnum::ACCESS_DENIED, 'Enable: ratings', self::ACTION, 'system', $input['api_format']);
-
-            return false;
-        }
-
-        $input['filter'] = $input['id'] ?? $input['filter'] ?? null;
-        if (!Api::check_parameter($input, ['type', 'filter', 'rating'], self::ACTION)) {
-            return false;
-        }
-        ob_end_clean();
-        $type      = (string) $input['type'];
-        $object_id = (int) $input['filter'];
-        $rating    = (string) $input['rating'];
-        // confirm the correct data
-        if (!Rating::is_valid(strtolower($type))) {
-            Api::error(ErrorCodeEnum::BAD_REQUEST, sprintf('Bad Request: %s', $type), self::ACTION, 'type', $input['api_format']);
-
-            return false;
-        }
-        if (!in_array($rating, ['0', '1', '2', '3', '4', '5'])) {
-            /* HINT: Requested object string/id/type ("album", "myusername", "some song title", 1298376) */
-            Api::error(ErrorCodeEnum::BAD_REQUEST, sprintf('Bad Request: %s', $rating), self::ACTION, 'rating', $input['api_format']);
-
-            return false;
-        }
-
-        // searches are playlists but not in the database
-        if (
-            $type === 'playlist'
-            && $object_id === 0
-        ) {
-            $type      = 'search';
-            $object_id = (int) str_replace('smart_', '', (string) $input['filter']);
-        }
-
-        $className = ObjectTypeToClassNameMapper::map($type);
-        if (!$className || !$object_id) {
-            Api::error(ErrorCodeEnum::BAD_REQUEST, sprintf('Bad Request: %s', $type), self::ACTION, 'type', $input['api_format']);
-        } else {
-            /** @var library_item $item */
-            $item = new $className($object_id);
-            if ($item->isNew()) {
-                /* HINT: Requested object string/id/type ("album", "myusername", "some song title", 1298376) */
-                Api::error(ErrorCodeEnum::NOT_FOUND, sprintf('Not Found: %s', $object_id), self::ACTION, 'id', $input['api_format']);
-
-                return false;
-            }
-            $rate = new Rating($object_id, $type);
-            $rate->set_rating((int) $rating, $user->id);
-            Api::message('rating set to ' . $rating . ' for ' . $object_id, $input['api_format']);
-        }
-
-        return true;
-    }
+    protected const string FILTER_KEY = 'filter';
 }

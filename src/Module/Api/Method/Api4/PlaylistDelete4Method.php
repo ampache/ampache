@@ -58,7 +58,7 @@ final class PlaylistDelete4Method
         ob_end_clean();
         $playlist = new Playlist((int) $input['filter']);
         if (!$playlist->has_access($user)) {
-            Api4::message('error', T_('Access denied to this playlist'), '401', $input['api_format']);
+            Api4::message('error', 'Access denied to this playlist', '401', $input['api_format']);
         } else {
             $playlist->delete();
             Api4::message('success', 'playlist deleted', null, $input['api_format']);

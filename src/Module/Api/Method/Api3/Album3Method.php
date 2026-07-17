@@ -25,30 +25,66 @@ declare(strict_types=1);
 
 namespace Ampache\Module\Api\Method\Api3;
 
-use Ampache\Module\Api\Xml3_Data;
+use Ampache\Module\Api\Authentication\GatekeeperInterface;
+use Ampache\Module\Api\Method\Exception\RequestParamMissingException;
+use Ampache\Module\Api\Method\Exception\ResultEmptyException;
+use Ampache\Module\Api\Method\MethodInterface;
+use Ampache\Module\Api\Output\ApiOutputInterface;
+use Ampache\Repository\Model\ModelFactoryInterface;
 use Ampache\Repository\Model\User;
+use Psr\Http\Message\ResponseInterface;
+use Psr\Http\Message\StreamFactoryInterface;
 
 /**
  * Class Album3Method
+ * @package Lib\Api3Methods
  */
-final class Album3Method
+final class Album3Method implements MethodInterface
 {
     public const string ACTION = 'album';
+
+    public function __construct(
+        private ModelFactoryInterface $modelFactory,
+        private StreamFactoryInterface $streamFactory,
+    ) {}
 
     /**
      * album
      * This returns a single album based on the UID provided
      *
+     * filter = (string) UID of Album
+     * include = (array|string) 'songs' //optional
+     *
      * @param array{
-     *     filter: string,
+     *     filter?: string,
      *     include?: string|string[],
      *     api_format: string,
      *     auth: string,
      * } $input
+     *
+     * @throws RequestParamMissingException
+     * @throws ResultEmptyException
      */
-    public static function album(array $input, User $user): void
-    {
-        $uid     = scrub_in((string) $input['filter']);
+    public function handle(
+        GatekeeperInterface $gatekeeper,
+        ResponseInterface $response,
+        ApiOutputInterface $output,
+        array $input,
+        User $user,
+        int $apiVersion,
+    ): ResponseInterface {
+        $objectId = $input['filter'] ?? null;
+
+        if ($objectId === null) {
+            throw new RequestParamMissingException(
+                sprintf('Bad Request: %s', 'filter')
+            );
+        }
+
+        $album = $this->modelFactory->createAlbum((int) $objectId);
+        if ($album->isNew()) {
+            throw new ResultEmptyException((string) $objectId);
+        }
         $include = [];
         if (array_key_exists('include', $input)) {
             if (is_array($input['include'])) {
@@ -61,6 +97,19 @@ final class Album3Method
                 $include[] = 'songs';
             }
         }
-        echo Xml3_Data::albums([$uid], $include, $user, $input['auth']);
+
+        $result = $output->albums(
+            $apiVersion,
+            [$album->getId()],
+            $include,
+            $user,
+            $input['auth'],
+        );
+
+        return $response->withBody(
+            $this->streamFactory->createStream(
+                $result
+            )
+        );
     }
 }

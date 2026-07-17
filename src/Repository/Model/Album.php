@@ -353,7 +353,7 @@ class Album extends database_object implements
             return 0;
         }
 
-        $album_id = Dba::insert_id();
+        $album_id = (int) Dba::insert_id();
         if (!$album_id) {
             return 0;
         }

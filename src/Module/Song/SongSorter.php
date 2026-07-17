@@ -210,9 +210,7 @@ final class SongSorter implements SongSorterInterface
             $fullpath = rtrim($directory, "\/") . '/' . ltrim($filename, "\/") . "." . (pathinfo($media->file, PATHINFO_EXTENSION));
         }
 
-        /* We need to actually do the moving (fake it if we are testing)
-         * Don't try to move it, if it's already the same friggin thing!
-         */
+        // We need to actually do the moving (fake it if we are testing)
         if ($media->file != $fullpath && $fullpath !== '/.') {
             /* HINT: filename (File path) */
             $interactor->info(
@@ -264,12 +262,9 @@ final class SongSorter implements SongSorterInterface
     }
 
     /**
-     * All this function does is, move the friggin file and then update the database
-     * We can't use the rename() function of PHP because it's functionality depends on the
-     * current phase of the moon, the alignment of the planets and my current BAL
-     * Instead we cheeseball it and walk through the new dir structure and make
-     * sure that the directories exist, once the dirs exist then we do a copy
-     * and unlink. This is a little unsafe, and as such it verifies the copy
+     * All this function does is, move the  file and then update the database
+     * Walk through the new dir structure and make sure that the directories exist
+     * Then we do a copy and unlink. This is a little unsafe, and as such it verifies the copy
      * worked by doing a filesize() before unlinking.
      */
     private function sort_move_file(

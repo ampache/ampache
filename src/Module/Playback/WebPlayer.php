@@ -76,7 +76,7 @@ class WebPlayer
 
         // Check transcode is required
         $valid_types = Stream::get_stream_types_for_type($file_type);
-        if (($transcode_cfg === 'always' || $force_type !== '' && $force_type !== '0' || !in_array('native', $valid_types) || $types['real'] != $file_type && (!AmpConfig::get('webplayer_flash') || $urlinfo['type'] != 'song')) && ($transcode_cfg === 'always' || $transcode_cfg !== 'never' && in_array('transcode', $valid_types))) {
+        if (($transcode_cfg === 'always' || $force_type !== '' && $force_type !== '0' || !in_array('native', $valid_types) || $types['real'] != $file_type) && ($transcode_cfg === 'always' || $transcode_cfg !== 'never' && in_array('transcode', $valid_types))) {
             // Transcode forced from client side
             if ($force_type !== '' && $force_type !== '0' && AmpConfig::get('transcode_player_customize')) {
                 debug_event(self::class, sprintf('Forcing type to {%s}', $force_type), 5);

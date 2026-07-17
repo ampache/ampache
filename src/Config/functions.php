@@ -65,10 +65,8 @@ function set_memory_limit(int|string $new_limit): void
  * scrub_in
  * Run on inputs, stuff that might get stuck in our db
  *
- * @template TType of string|array
- *
- * @param TType $input
- * @return TType
+ * @param array<array-key, mixed>|string $input
+ * @return ($input is array ? list<string> : string)
  */
 function scrub_in(array|string $input): array|string
 {
@@ -366,10 +364,6 @@ function check_config_values(array $conf): bool
     if (!$conf['database_username']) {
         return false;
     }
-    /* Don't check for password to support mysql socket auth
-     * if (!$conf['database_password']) {
-        return false;
-    }*/
     if (!$conf['session_length']) {
         return false;
     }

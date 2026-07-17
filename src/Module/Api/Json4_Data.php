@@ -544,7 +544,7 @@ class Json4_Data
                 $results = self::videos($objects, $user, $auth);
                 break;
             default:
-                return self::error('401', T_('Wrong object type ' . $object_type));
+                return self::error('401', 'Wrong object type ' . $object_type);
         }
 
         return $results;

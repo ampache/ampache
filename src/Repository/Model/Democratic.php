@@ -168,13 +168,13 @@ class Democratic extends Tmp_Playlist
             $user = Core::get_global('user');
         }
 
-        $democratic_id = AmpConfig::get('democratic_id', false);
+        $democratic_id = AmpConfig::get('democratic_id', null);
         if (!$democratic_id) {
             $sql        = "SELECT `id` FROM `democratic` WHERE `level` <= ? ORDER BY `level` DESC, `primary` DESC";
             $db_results = Dba::read($sql, [$user->access ?? 0]);
             $row        = Dba::fetch_assoc($db_results);
             if ($row !== []) {
-                $democratic_id = $row['id'];
+                $democratic_id = (int) $row['id'];
             }
         }
 
