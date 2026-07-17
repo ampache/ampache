@@ -539,7 +539,7 @@ if ($isVideo === false) {
                             <?php } else { ?>
                                 <span style="opacity: 0.25;"><?php echo Ui::get_material_symbol('playlist_add', addslashes(T_('Add All to playlist'))); ?></span>
                             <?php }
-                        } ?>
+                            } ?>
                             </div>
                         <div id="playlistloopbtn" class="action_button">
                             <?php if ($playlistEditable) { ?>
