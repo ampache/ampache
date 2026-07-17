@@ -37,12 +37,21 @@
 * `playable_item` interface split into `displayable_item` and `container_item` as part of a large interface cleanup
 * API version 8 has been added to the list of API versions
 * Docker: build using `docker/Dockerfilephp85`
+* Reborn theme
+  * Home Dashboard (`homedash`) rows stay on a single line and clip at the edge instead of wrapping to new lines
+  * Personal Favorites (`personalfav`) list scrolls horizontally instead of wrapping
+* `composer syntax` now runs a cross-platform PHP linter (`resources/scripts/tests/syntax.php`) so the check works on Windows (replaces `syntax.sh`)
 
 ### Removed 8.0.0
 
 * `api_debug_handler` configuration option and its handling removed entirely
 * Unused legacy OAuth implementation deleted (`OAuthDataStore`, `OAuthServer`, `OAuthSignatureMethod_PLAINTEXT`, `OAuthSignatureMethod_RSA_SHA1`)
 * `docker/Dockerfilephp82`, `Dockerfilephp83`, `Dockerfilephp84` removed (replaced by `Dockerfilephp85`)
+
+### Fixed 8.0.0
+
+* Light sidebar can scroll to reach its bottom entries on short screens in the `reborn` theme
+* Player equalizer now works when the visualizer is turned off
 
 ## Ampache 7.10.0
 
