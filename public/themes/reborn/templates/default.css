@@ -1330,32 +1330,30 @@ table.gridview td.cel_ratings {
     gap: 10px;
 }
 
-/* Home dashboard + personal favorites: keep each grid on a single row instead of wrapping. */
+/* Home dashboard + personal favorites: responsive card grid that fills the box width, */
+/* capped at two rows; extra rows are clipped instead of wrapping or scrolling. */
 .homedash table.gridview,
 .personalfav table.gridview {
     display: block;
+    overflow: hidden;
 }
 
 .homedash table.gridview tbody,
 .personalfav table.gridview tbody {
-    display: flex;
-    flex-wrap: nowrap;
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(170px, 1fr));
+    grid-template-rows: repeat(2, auto);
+    grid-auto-rows: 0;
+    align-content: start;
+    overflow: hidden;
 }
 
 .homedash table.gridview tbody tr,
 .personalfav table.gridview tbody tr {
     float: none;
-    flex: 0 0 auto;
-}
-
-/* Home dashboard: clip anything past the edge. */
-.homedash table.gridview {
-    overflow-x: hidden;
-}
-
-/* Personal favorites: scroll horizontally instead of clipping. */
-.personalfav table.gridview {
-    overflow-x: auto;
+    width: auto;
+    min-width: 0;
+    max-width: none;
 }
 
 .tableform {
