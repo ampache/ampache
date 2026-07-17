@@ -2445,7 +2445,7 @@ a.option-list:hover {
 
     .item_properties {
         max-width: none;
-        text-align: left;
+        text-align: end;
     }
 
     /* hide artist summary on mobile */
