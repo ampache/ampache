@@ -1356,6 +1356,31 @@ table.gridview td.cel_ratings {
     max-width: none;
 }
 
+/* Personal favorites: box each list so its title and play buttons read as a single card. */
+.personalfav table.gridview tbody {
+    column-gap: 10px;
+}
+
+.personalfav table.gridview tbody tr {
+    box-sizing: border-box;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    margin-bottom: 10px;
+    padding: 12px 8px;
+    border: 1px solid rgba(127, 127, 127, 0.35);
+    border-radius: 6px;
+}
+
+/* Drop the forced td heights and side margins so title + buttons sit together, centered in the box. */
+.personalfav table.gridview tbody td {
+    height: auto !important;
+    margin: 0 !important;
+    text-align: center;
+}
+
 .tableform {
     border-collapse: separate;
     border-spacing: 5px 0;
