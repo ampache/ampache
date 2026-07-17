@@ -1584,10 +1584,10 @@ class Preference extends database_object
                     Dba::write($pref_sql, ['subsonic_single_user_data', '1', 'Use single user data for Subsonic API responses', AccessLevelEnum::USER->value, 'boolean', 'options', 'api']);
                     break;
                 case 'api_enable_8':
-                    Dba::write($pref_sql, ['api_enable_8', '1', 'Allow Ampache API8 responses', AccessLevelEnum::USER->value, 'boolean', 'options', null]);
+                    Dba::write($pref_sql, ['api_enable_8', '1', 'Allow Ampache API8 responses', AccessLevelEnum::USER->value, 'boolean', 'options', 'api']);
                     break;
                 case 'show_folder':
-                    Dba::write($pref_sql, ['show_folder', '1', 'Show \'Folders\' link in the main sidebar', AccessLevelEnum::USER->value, 'boolean', 'interface', 'theme']);
+                    Dba::write($pref_sql, ['show_folder', '1', 'Show \'Folders\' link in the main sidebar', AccessLevelEnum::USER->value, 'boolean', 'interface', 'sidebar']);
                     break;
                 default:
                     debug_event(self::class, 'ERROR: missing preference insert code for: ' . $row['item'], 1);

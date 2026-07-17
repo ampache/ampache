@@ -834,7 +834,6 @@ class Ui implements UiInterface
             case 'upnp_backend':
             case 'use_auth':
             case 'use_original_year':
-            case 'use_play2':
             case 'webdav_backend':
             case 'webplayer_confirmclose':
             case 'webplayer_html5':
