@@ -663,11 +663,14 @@ div.registerfield.center {
 
 #sidebar-light {
     width: 70px;
-    position: static;
+    position: fixed;
     left: 0;
     margin: 17px auto 5px 5px;
     padding: 5px 0 10px 0;
     text-align: center;
+    max-height: calc(100vh - 120px);
+    overflow-y: auto;
+    overflow-x: hidden;
 }
 
 #sidebar-light-default {
@@ -675,11 +678,14 @@ div.registerfield.center {
     border-radius: 2px;
     box-sizing: border-box;
     width: 70px;
-    position: static;
+    position: fixed;
     left: 0;
     margin: 0 auto 5px 5px;
     padding: 5px 0 10px 0;
     text-align: center;
+    max-height: calc(100vh - 120px);
+    overflow-y: auto;
+    overflow-x: hidden;
 }
 
 #sidebar-light li {
