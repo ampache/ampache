@@ -1125,6 +1125,12 @@ body.webplayer-hidden #visualizer {
     color: #4db8ff !important;
 }
 
+/* Visualizer active: keep the action buttons fully lit (they default to opacity
+   0.4 and are hard to see against the black bar) as if permanently hovered. */
+#webplayer.viz-active .player_actions {
+    opacity: 1 !important;
+}
+
 /* Video always scales down to its container / the viewport (all screen sizes) */
 .jp-video-270p,
 .jp-video-360p {
