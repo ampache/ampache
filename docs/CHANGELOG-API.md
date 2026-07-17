@@ -14,6 +14,8 @@ we will keep on 6.9.x and resume build number versioning until Ampache 8
 * ALL
   * Allow APIKey Authorization header
   * REST command and path changes
+* API6
+  * Add `time` to all Playlist and Smartlist responses
 
 ### Changed (692002)
 
@@ -25,6 +27,10 @@ we will keep on 6.9.x and resume build number versioning until Ampache 8
 
 * API6
   * Version wasn't bumped
+
+### Removed (692001)
+
+* API8 will not be used in Ampache 7 releases
 
 ## API 6.9.2 Build 1
 

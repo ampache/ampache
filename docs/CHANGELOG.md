@@ -17,6 +17,7 @@ See: [Gregwar/Captcha](https://github.com/Gregwar/Captcha)
   * Default remote API version set to API6
 * API / Authentication
   * Allow API key authorization via request headers
+  * Backport strict typing in API classes
 
 ### Changed (7.10.0)
 
@@ -24,6 +25,7 @@ See: [Gregwar/Captcha](https://github.com/Gregwar/Captcha)
 * Update Composer and NPM packages
 * Update Vite to address known security issues
 * Rename function `get_artist_fullname` to `get_parent_fullname`
+* Updated REST htaccess rules
 * Subsonic
   * Search3 rules and grouping behavior updated to better match Subsonic client expectations
 * API
