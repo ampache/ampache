@@ -27,17 +27,17 @@ namespace Ampache\Module\System\Update\Migration\V8;
 use Ampache\Module\System\Update\Migration\AbstractMigration;
 
 /**
- * Remove the obsolete `webplayer_flash`, `webplayer_aurora` and `play2` preferences.
+ * Remove the obsolete `webplayer_flash`, `webplayer_aurora` and `use_play2` preferences.
  *
  * The web player no longer ships a Flash fallback or the Aurora.js JavaScript decoders and play2 was removed
  */
 final class Migration800011 extends AbstractMigration
 {
-    protected array $changelog = ['Remove obsolete `webplayer_flash`, `webplayer_aurora` and `play2` preferences'];
+    protected array $changelog = ['Remove obsolete `webplayer_flash`, `webplayer_aurora` and `use_play2` preferences'];
 
     public function migrate(): void
     {
-        $this->updateDatabase("DELETE FROM `user_preference` WHERE `preference` IN (SELECT `id` FROM `preference` WHERE `name` IN ('webplayer_flash', 'webplayer_aurora', 'play2'));");
-        $this->updateDatabase("DELETE FROM `preference` WHERE `name` IN ('webplayer_flash', 'webplayer_aurora', 'play2');");
+        $this->updateDatabase("DELETE FROM `user_preference` WHERE `preference` IN (SELECT `id` FROM `preference` WHERE `name` IN ('webplayer_flash', 'webplayer_aurora', 'use_play2'));");
+        $this->updateDatabase("DELETE FROM `preference` WHERE `name` IN ('webplayer_flash', 'webplayer_aurora', 'use_play2');");
     }
 }
