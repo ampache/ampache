@@ -693,17 +693,49 @@ class Json8_Data
      *
      * @param array<int|string> $objects group of catalog id's
      * @param bool $object (whether to return as a named object array or regular array)
+     * @return string JSON Object "catalog"
      */
     public static function catalogs(array $objects, bool $object = true): string
     {
         self::$count = self::$count ?: count($objects);
         $md5         = md5(serialize($objects));
-        $objects     = Api::filter_objects($objects, self::$count, self::$offset, self::$limit);
+        $JSON        = self::catalogs_array($objects);
 
-        $output = [
-            "total_count" => self::$count,
-            "md5" => $md5,
-        ];
+        if ($object) {
+            $output = [
+                "total_count" => self::$count,
+                "md5" => $md5,
+                "catalog" => $JSON
+            ];
+        } else {
+            $output = $JSON[0] ?? [];
+        }
+
+        return json_encode($output, JSON_PRETTY_PRINT) ?: '';
+    }
+
+    /**
+     * catalogs_array
+     *
+     * @param array<int|string> $objects group of catalog id's
+     * @return array<int, array{
+     *     id: string,
+     *     name: null|string,
+     *     type: null|string,
+     *     gather_types: null|string,
+     *     enabled: bool,
+     *     last_add: int,
+     *     last_clean: int|null,
+     *     last_update: int,
+     *     path: string,
+     *     rename_pattern: null|string,
+     *     sort_pattern: null|string
+     * }>
+     */
+    public static function catalogs_array(array $objects): array
+    {
+        self::$count = self::$count ?: count($objects);
+        $objects     = Api::filter_objects($objects, self::$count, self::$offset, self::$limit);
 
         $JSON = [];
         foreach ($objects as $catalog_id) {
@@ -711,38 +743,23 @@ class Json8_Data
             if ($catalog === null) {
                 break;
             }
-            $catalog_name           = $catalog->name;
-            $catalog_type           = $catalog->catalog_type;
-            $catalog_gather_types   = $catalog->gather_types;
-            $catalog_enabled        = $catalog->enabled;
-            $catalog_last_add       = $catalog->last_add;
-            $catalog_last_clean     = $catalog->last_clean;
-            $catalog_last_update    = $catalog->last_update;
-            $catalog_path           = $catalog->get_f_info();
-            $catalog_rename_pattern = $catalog->rename_pattern;
-            $catalog_sort_pattern   = $catalog->sort_pattern;
             // Build this element
             $JSON[] = [
                 "id" => (string) $catalog_id,
-                "name" => $catalog_name,
-                "type" => $catalog_type,
-                "gather_types" => $catalog_gather_types,
-                "enabled" => $catalog_enabled,
-                "last_add" => $catalog_last_add,
-                "last_clean" => $catalog_last_clean,
-                "last_update" => $catalog_last_update,
-                "path" => $catalog_path,
-                "rename_pattern" => $catalog_rename_pattern,
-                "sort_pattern" => $catalog_sort_pattern
+                "name" => $catalog->name,
+                "type" => $catalog->catalog_type,
+                "gather_types" => $catalog->gather_types,
+                "enabled" => $catalog->enabled,
+                "last_add" => $catalog->last_add,
+                "last_clean" => $catalog->last_clean,
+                "last_update" => $catalog->last_update,
+                "path" => $catalog->get_f_info(),
+                "rename_pattern" => $catalog->rename_pattern,
+                "sort_pattern" => $catalog->sort_pattern
             ];
         }
-        if ($object) {
-            $output["catalog"] = $JSON;
-        } else {
-            $output = $JSON[0] ?? [];
-        }
 
-        return json_encode($output, JSON_PRETTY_PRINT) ?: '';
+        return $JSON;
     }
 
     /**
