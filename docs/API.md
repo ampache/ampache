@@ -261,6 +261,8 @@ All Data methods return HTTP 200 responses
 * deleted_songs
 * deleted_videos
 * flag
+* folder **Ampache 8.0.0+**
+* folders **Ampache 8.0.0+**
 * followers
 * following
 * friends_timeline
@@ -292,15 +294,15 @@ All Data methods return HTTP 200 responses
 * player **Ampache 6.4.0+**
 * playlists
 * playlist
-* playlist_add **Ampache 6.3.0+**
-* playlist_add_song
+* playlist_add **Ampache 6.3.0+** (Replaces playlist_add_song)
+* playlist_add_song (**Removed** in Ampache 8.0.0+)
 * playlist_create
 * playlist_delete
 * playlist_edit
 * playlist_generate
 * playlist_hash **Ampache 6.6.0+**
 * playlist_remove (Replaces playlist_remove_song) **Ampache 8.0.0**
-* playlist_remove_song (**Removed** in Ampache 8.0.0+)
+* playlist_remove_song (**Deprecated**, will be removed in **API9** — use playlist_remove)
 * playlist_songs
 * podcasts
 * podcast
@@ -325,6 +327,10 @@ All Data methods return HTTP 200 responses
 * share_create
 * share_delete
 * share_edit
+* smartlists **Ampache 7.8.0+**
+* smartlist **Ampache 7.8.0+**
+* smartlist_songs **Ampache 7.8.0+**
+* smartlist_delete **Ampache 7.8.0+**
 * songs
 * song
 * song_delete
@@ -366,6 +372,7 @@ For information about about how playback works and what a client can expect from
 
 * download
 * get_art
+* random **Ampache 8.0.0+**
 * stream
 
 ### Control Methods

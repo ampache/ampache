@@ -59,7 +59,7 @@ final class ToggleFollow3Method
                         $user
                     );
                     ob_end_clean();
-                    echo Xml3_Data::single_string('success');
+                    echo Xml3_Data::success();
                 }
             } else {
                 debug_event(self::class, 'Username to toggle required on follow function call.', 1);

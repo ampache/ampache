@@ -441,9 +441,9 @@ class Xml8_Data
 
         $xml_folder = $xml->addChild('folder');
         $xml_folder->addAttribute('id', (string) $folder->getId());
-        $xml_folder->addChild('title', (string) $folder->get_fullname());
+        $xml_folder->addChild('title', str_replace('&', '&amp;', (string) $folder->get_fullname()));
         $xml_folder->addChild('parent', (string) $folder->parent);
-        $xml_folder->addChild('path', (string) $folder->path_name);
+        $xml_folder->addChild('path', str_replace('&', '&amp;', (string) $folder->path_name));
         $xml_folder->addChild('catalog', (string) $folder->catalog);
         $xml_items = $xml_folder->addChild('items');
 
@@ -482,18 +482,19 @@ class Xml8_Data
             } else {
                 /** @var Folder $libitem */
                 $filename = $libitem->get_fullname();
-                $dirname  = $libitem->path_name;
+                $dirname  = $libitem->path_name ?? '';
             }
 
             $item = $xml_items->addChild('item');
             $item->addAttribute('id', (string) $libitem->id);
             $item->addChild('object_type', $object_type);
-            $item->addChild('title', (string) $filename);
+            // addChild() escapes '<' and '>' but not '&', so escape ampersands to keep the XML valid.
+            $item->addChild('title', str_replace('&', '&amp;', (string) $filename));
             $item->addChild('parent', (string) $folder->getId());
-            $item->addChild('path', $dirname);
-            $item->addChild('art', (string) $art_url);
+            $item->addChild('path', str_replace('&', '&amp;', $dirname));
+            $item->addChild('art', str_replace('&', '&amp;', (string) $art_url));
             $item->addChild('has_art', $libitem->has_art() ? '1' : '0');
-            $item->addChild('play_url', (string) $play_url);
+            $item->addChild('play_url', str_replace('&', '&amp;', (string) $play_url));
             $item->addChild('rating', (string) $user_rating);
             $item->addChild('averagerating', (string) ($rating->get_average_rating() ?? ''));
         }

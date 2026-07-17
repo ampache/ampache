@@ -190,7 +190,7 @@ class AlbumDisk extends database_object implements
             return 0;
         }
 
-        $album_disk_id = Dba::insert_id();
+        $album_disk_id = (int) Dba::insert_id();
 
         // count a new song on the new disk right away
         $sql = "UPDATE `album_disk` SET `song_count` = `song_count` + 1 WHERE `id` = ?;";
@@ -201,7 +201,7 @@ class AlbumDisk extends database_object implements
             Dba::write($sql, [$disksubtitle, $album_disk_id]);
         }
 
-        return $album_id;
+        return $album_disk_id;
     }
 
     /**

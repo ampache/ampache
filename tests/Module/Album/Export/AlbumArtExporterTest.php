@@ -60,7 +60,7 @@ class AlbumArtExporterTest extends MockeryTestCase
         $catalog->shouldReceive('get_album_ids')
             ->withNoArgs()
             ->once()
-            ->andReturn([(string) $albumId]);
+            ->andReturn([$albumId]);
 
         $this->modelFactory->shouldReceive('createArt')
             ->with($albumId)
@@ -104,7 +104,7 @@ class AlbumArtExporterTest extends MockeryTestCase
         $catalog->shouldReceive('get_album_ids')
             ->withNoArgs()
             ->once()
-            ->andReturn([(string) $albumId]);
+            ->andReturn([$albumId]);
 
         $this->modelFactory->shouldReceive('createArt')
             ->with($albumId)
@@ -159,7 +159,7 @@ class AlbumArtExporterTest extends MockeryTestCase
 
         $albumId   = 666;
         $songId    = 42;
-        $file_name = $fs_root->url() . DIRECTORY_SEPARATOR . 'some-file.png';
+        $file_name = $fs_root->url() . '/some-file.png';
         $raw_mime  = 'image/png';
         $raw_art   = 'some-raw-bytes';
         $fileName  = 'some-file.png';
@@ -169,7 +169,7 @@ class AlbumArtExporterTest extends MockeryTestCase
         $catalog->shouldReceive('get_album_ids')
             ->withNoArgs()
             ->once()
-            ->andReturn([(string) $albumId]);
+            ->andReturn([$albumId]);
 
         $this->modelFactory->shouldReceive('createArt')
             ->with($albumId)

@@ -34,6 +34,8 @@ interface ArtistRepositoryInterface
      */
     public function collectGarbage(): void;
 
+    public function collectGarbageForArtist(int $artistId): void;
+
     /**
      * Deletes the artist entry
      */

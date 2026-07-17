@@ -25,87 +25,58 @@ declare(strict_types=1);
 
 namespace Ampache\Module\Api\Method\Api8;
 
-use Ampache\Module\Api\Api;
-use Ampache\Module\Api\Exception\ErrorCodeEnum;
-use Ampache\Module\Api\Json8_Data;
-use Ampache\Module\Api\Xml8_Data;
+use Ampache\Module\Api\Method\AbstractFolderMethod;
+use Ampache\Repository\Model\Browse;
 use Ampache\Repository\Model\Folder;
-use Ampache\Repository\Model\User;
+use Override;
 
 /**
- * Class Folder8Method
- * @package Lib\Api8Methods
+ * Returns the children of a folder, found by its id
+ *
+ * Only api version 8 knows about folders.
  */
-final class Folder8Method
+final class Folder8Method extends AbstractFolderMethod
 {
     public const string ACTION = 'folder';
 
+    protected const bool AS_OBJECT = false;
+
     /**
-     * folder
-     * MINIMUM_API_VERSION=8.0.0
-     *
-     * Return children of a parent object by ID
-     *
-     * filter = (int) object_id default: -1 (root folder) //optional
-     * add = $browse->set_api_filter(date) //optional
-     * update = $browse->set_api_filter(date) //optional
-     * offset = (integer) //optional
-     * limit = (integer) //optional
-     * cond = (string) Apply additional filters to the browse using ';' separated comma string pairs (e.g. 'filter1,value1;filter2,value2') //optional
-     * sort = (string) sort name or comma separated key pair. Order default 'ASC' (e.g. 'name,ASC' and 'name' are the same) //optional
-     *
-     * @param array{
-     *     filter?: int,
-     *     add?: string,
-     *     update?: string,
-     *     offset?: int,
-     *     limit?: int,
-     *     cond?: string,
-     *     sort?: string,
-     *     api_format: string,
-     *     auth: string,
-     * } $input
+     * @param array<string, mixed> $input
      */
-    public static function folder(array $input, User $user): bool
+    #[Override]
+    protected function narrowBrowse(Browse $browse, Folder $folder, array $input): void
     {
-        $object_id = (isset($input['filter'])) ? (int) $input['filter'] : -1;
-        $folder    = new Folder($object_id);
-        if ($folder->isNew()) {
-            /* HINT: Requested object string/id/type ("album", "myusername", "some song title", 1298376) */
-            Api::error(ErrorCodeEnum::NOT_FOUND, sprintf('Not Found: %s', $object_id), self::ACTION, 'filter', $input['api_format']);
+        $browse->set_filter('int_id', $this->objectId($input));
+    }
 
-            return false;
-        }
+    /**
+     * @param array<string, mixed> $input
+     */
+    #[Override]
+    protected function requestedFolder(array $input): string
+    {
+        return (string) $this->objectId($input);
+    }
 
-        $browse = Api::getBrowse($user);
-        $browse->set_type('folder');
-        $browse->set_filter('int_id', $object_id);
-        $browse->set_filter('catalog', User::get_user_catalogs($user->getId()));
-        $browse->set_api_filter('add', $input['add'] ?? '');
-        $browse->set_api_filter('update', $input['update'] ?? '');
+    /**
+     * Always hands back a folder; the base checks whether it actually exists
+     *
+     * @param array<string, mixed> $input
+     */
+    #[Override]
+    protected function resolveFolder(array $input): Folder
+    {
+        return new Folder($this->objectId($input));
+    }
 
-        $browse->set_conditions(html_entity_decode((string) ($input['cond'] ?? '')));
-
-        $results = $browse->get_objects();
-        if (empty($results)) {
-            Api::empty('folder', $input['api_format']);
-
-            return false;
-        }
-
-        ob_end_clean();
-        switch ($input['api_format']) {
-            case 'json':
-                Json8_Data::set_offset((int) ($input['offset'] ?? 0));
-                Json8_Data::set_limit($input['limit'] ?? 0);
-                echo Json8_Data::folders($results, $folder, $user, $input['auth'], false);
-                break;
-            default:
-                Xml8_Data::set_offset((int) ($input['offset'] ?? 0));
-                Xml8_Data::set_limit($input['limit'] ?? 0);
-                echo Xml8_Data::folders($results, $folder, $user, $input['auth']);
-        }
-
-        return true;
+    /**
+     * The root folder is -1
+     *
+     * @param array<string, mixed> $input
+     */
+    private function objectId(array $input): int
+    {
+        return (isset($input['filter'])) ? (int) $input['filter'] : -1;
     }
 }

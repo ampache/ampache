@@ -1262,8 +1262,7 @@ class Json8_Data
             return $output;
         }
 
-        /* HINT: Requested object string/id/type ("album", "myusername", "some song title", 1298376) */
-        return self::error('4710', sprintf(T_('Bad Request: %s'), $type), 'indexes', 'type');
+        return self::error('4710', sprintf('Bad Request: %s', $type), 'indexes', 'type');
     }
 
     /**
@@ -1316,8 +1315,7 @@ class Json8_Data
                 $results = self::live_streams($objects);
                 break;
             default:
-                /* HINT: Requested object string/id/type ("album", "myusername", "some song title", 1298376) */
-                $results = self::error('4710', sprintf(T_('Bad Request: %s'), $type), 'indexes', 'type');
+                $results = self::error('4710', sprintf('Bad Request: %s', $type), 'indexes', 'type');
         }
 
         return $results;
@@ -1628,6 +1626,7 @@ class Json8_Data
      *     "averagerating": float|null,
      *     "md5": null|string,
      *     "last_update": int|null,
+     *     "time": int,
      * }>
      */
     public static function playlists_array(array $objects, User $user, string $auth, bool $songs = false): array
@@ -1663,14 +1662,14 @@ class Json8_Data
             $playlist_username = $playlist->username;
             $playlist_type     = $playlist->type;
             $last_update       = $playlist->last_update;
-            $last_duration     = $playlist->last_duration;
+            $last_duration     = (int) $playlist->last_duration;
             $duration          = 0;
 
             if ($songs) {
                 $items          = [];
                 $playlisttracks = $playlist->get_items();
                 foreach ($playlisttracks as $track) {
-                    $duration += $track['time'];
+                    $duration += (int) $track['time'];
 
                     $items[] = [
                         "id" => (string) $track['object_id'],

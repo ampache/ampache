@@ -88,7 +88,7 @@ final readonly class DemocraticPlaybackAjaxHandler implements AjaxHandlerInterfa
                     return;
                 }
 
-                $democratic = new Democratic($_REQUEST['democratic_id']);
+                $democratic = new Democratic((int) $_REQUEST['democratic_id']);
                 $democratic->set_parent();
                 $democratic->clear();
 

@@ -110,7 +110,7 @@ class UPnPPlayer
     /**
      * GetVolume
      */
-    public function GetVolume(): SimpleXMLElement|string
+    public function GetVolume(): int
     {
         $instanceId = 0;
         $channel    = 'Master';
@@ -119,14 +119,14 @@ class UPnPPlayer
             'Channel' => $channel,
         ];
 
-        $volume      = '';
+        $volume      = 0;
         $response    = $this->Device()->sendRequestToDevice('GetVolume', $arguments);
         $responseXML = simplexml_load_string($response);
 
         if ($responseXML instanceof SimpleXMLElement) {
             $xpath = $responseXML->xpath('//CurrentVolume');
-            if (is_array($xpath)) {
-                [$volume] = $xpath;
+            if (is_array($xpath) && isset($xpath[0])) {
+                $volume = (int) (string) $xpath[0];
             }
         }
 

@@ -316,7 +316,7 @@ export function showEditDialog(edit_type, edit_id, edit_form_id, edit_title, ref
             modal: true,
             dialogClass: "editdialogstyle",
             resizable: false,
-            width: 666,
+            width: Math.min(666, $(window).width() - 20),
             autoOpen: false,
             show: { effect: "fade", duration: 400 },
             open() {

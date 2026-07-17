@@ -67,15 +67,15 @@ final class UpdateFromTags4Method
 
         // confirm the correct data
         if (!in_array(strtolower($type), ['artist', 'album', 'song'])) {
-            Api4::message('error', T_('Incorrect object type') . ' ' . $type, '401', $input['api_format']);
+            Api4::message('error', 'Incorrect object type' . ' ' . $type, '401', $input['api_format']);
 
             return false;
         }
         $className = ObjectTypeToClassNameMapper::map($type);
         /** @var Artist|Album|Song $item */
         $item = new $className($object_id);
-        if (!$item->isNew()) {
-            Api4::message('error', T_('The requested item was not found'), '404', $input['api_format']);
+        if ($item->isNew()) {
+            Api4::message('error', 'The requested item was not found', '404', $input['api_format']);
 
             return false;
         }

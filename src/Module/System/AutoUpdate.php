@@ -120,7 +120,7 @@ class AutoUpdate
             }
 
             if (
-                !empty($commits)
+                $commits instanceof \stdClass
                 && isset($commits->sha)
             ) {
                 $lastversion = $commits->sha;
@@ -133,7 +133,7 @@ class AutoUpdate
 
         // Otherwise it is stable version, get latest tag
         $tags = self::github_request('/tags');
-        if ($tags === null) {
+        if (!is_array($tags)) {
             return $lastversion;
         }
 
@@ -169,8 +169,9 @@ class AutoUpdate
 
     /**
      * Perform a GitHub request.
+     * @return array<int, \stdClass>|\stdClass|null
      */
-    public static function github_request(string $action): ?object
+    public static function github_request(string $action): array|\stdClass|null
     {
         try {
             // https is mandatory
@@ -187,7 +188,7 @@ class AutoUpdate
             debug_event(self::class, 'GitHub API request ' . $url, 5);
             $result = json_decode($request->body);
 
-            return (is_object($result))
+            return ($result instanceof \stdClass || is_array($result))
                 ? $result
                 : null;
         } catch (Exception $exception) {

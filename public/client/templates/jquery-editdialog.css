@@ -285,3 +285,15 @@
 .sharedialogstyle.ui-dialog .ui-dialog-buttonset button:focus:active {
     display: none;
 }
+
+/* ------------------------------
+   Mobile: fit the edit dialog to the viewport
+   ------------------------------ */
+@media (max-width: 768px) {
+    .edit_dialog_content input[type=text],
+    .edit_dialog_content select {
+        width: 100%;
+        max-width: 430px;
+        box-sizing: border-box;
+    }
+}

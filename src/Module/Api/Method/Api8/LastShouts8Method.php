@@ -25,98 +25,16 @@ declare(strict_types=1);
 
 namespace Ampache\Module\Api\Method\Api8;
 
-use Ampache\Config\AmpConfig;
-use Ampache\Module\Api\Api;
-use Ampache\Module\Api\Exception\ErrorCodeEnum;
-use Ampache\Module\Api\Json8_Data;
-use Ampache\Module\Api\Xml8_Data;
-use Ampache\Repository\Model\User;
-use Ampache\Repository\ShoutRepositoryInterface;
+use Ampache\Module\Api\Method\AbstractLastShoutsMethod;
 
 /**
- * Class LastShouts8Method
- * @package Lib\Api8Methods
+ * Returns the latest posted shouts
+ *
+ * Api version 8 reports the user as `filter` and accepts `username` as an alias.
  */
-final class LastShouts8Method
+final class LastShouts8Method extends AbstractLastShoutsMethod
 {
-    public const string ACTION = 'last_shouts';
+    protected const string FILTER_ALIAS = 'username';
 
-    /**
-     * last_shouts
-     * MINIMUM_API_VERSION=380001
-     *
-     * This get the latest posted shouts
-     *
-     * filter = (integer|string) filter by user id OR username //optional
-     * username = (string) $username //optional
-     * limit = (integer) $limit Default: 10 (popular_threshold) //optional
-     *
-     * @param array{
-     *     filter?: int|string,
-     *     username?: string,
-     *     limit?: int,
-     *     api_format: string,
-     *     auth: string,
-     * } $input
-     */
-    public static function last_shouts(array $input, User $user): bool
-    {
-        if (!AmpConfig::get('sociable')) {
-            Api::error(ErrorCodeEnum::ACCESS_DENIED, 'Enable: sociable', self::ACTION, 'system', $input['api_format']);
-
-            return false;
-        }
-
-        $input['filter'] = $input['username'] ?? $input['filter'] ?? null;
-        if (!Api::check_parameter($input, ['filter'], self::ACTION)) {
-            return false;
-        }
-
-        unset($user);
-        $limit = (int) ($input['limit'] ?? 0);
-        if ($limit < 1) {
-            $limit = AmpConfig::get('popular_threshold', 10);
-        }
-
-        $username = (!empty($input['filter']))
-            ? $input['filter']
-            : null;
-
-        if (is_numeric($username)) {
-            $results = iterator_to_array(
-                self::getShoutRepository()->getTopById($limit, (int) $username)
-            );
-        } else {
-            $results = iterator_to_array(
-                self::getShoutRepository()->getTop($limit, $username)
-            );
-        }
-
-        if (empty($results)) {
-            Api::empty('shout', $input['api_format']);
-
-            return false;
-        }
-
-        ob_end_clean();
-        switch ($input['api_format']) {
-            case 'json':
-                echo Json8_Data::shouts($results);
-                break;
-            default:
-                echo Xml8_Data::shouts($results);
-        }
-
-        return true;
-    }
-
-    /**
-     * @todo inject by constructor
-     */
-    private static function getShoutRepository(): ShoutRepositoryInterface
-    {
-        global $dic;
-
-        return $dic->get(ShoutRepositoryInterface::class);
-    }
+    protected const string FILTER_KEY = 'filter';
 }

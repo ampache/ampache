@@ -25,103 +25,16 @@ declare(strict_types=1);
 
 namespace Ampache\Module\Api\Method\Api8;
 
-use Ampache\Module\Api\Api;
-use Ampache\Module\Api\Exception\ErrorCodeEnum;
-use Ampache\Module\Authorization\AccessLevelEnum;
-use Ampache\Module\Authorization\AccessTypeEnum;
-use Ampache\Repository\Model\Song;
-use Ampache\Repository\Model\User;
-use Ampache\Repository\UserRepositoryInterface;
+use Ampache\Module\Api\Method\AbstractRecordPlayMethod;
 
 /**
- * Class RecordPlay8Method
- * @package Lib\Api8Methods
+ * Records a play against a song for a user
+ *
+ * Api version 8 reports the object id as `filter` and accepts `id` as an alias.
  */
-final class RecordPlay8Method
+final class RecordPlay8Method extends AbstractRecordPlayMethod
 {
-    public const string ACTION = 'record_play';
+    protected const string FILTER_ALIAS = 'id';
 
-    /**
-     * record_play
-     * MINIMUM_API_VERSION=400001
-     *
-     * Take a song_id and update the object_count and user_activity table with a play
-     * This allows other sources to record play history to Ampache.
-     * Require 100 (Admin) permission to change other user's play history
-     *
-     * id = (string) $object_id
-     * user = (integer|string) $user_id OR $username //optional
-     * client = (string) $agent Default: 'api' //optional
-     * date = (integer) UNIXTIME() //optional
-     *
-     * @param array{
-     *     filter?: string,
-     *     id?: string,
-     *     user?: int|string,
-     *     client?: string,
-     *     date?: int,
-     *     api_format: string,
-     *     auth: string,
-     * } $input
-     */
-    public static function record_play(array $input, User $user): bool
-    {
-        $input['filter'] = $input['id'] ?? $input['filter'] ?? null;
-        if (!Api::check_parameter($input, ['filter'], self::ACTION)) {
-            return false;
-        }
-        $play_user = $user;
-        if (isset($input['user'])) {
-            $play_user = ((int) $input['user'] > 0)
-                ? new User((int) $input['user'])
-                : User::get_from_username((string) $input['user']);
-        }
-        // validate supplied user
-        $valid = ($play_user instanceof User && in_array($play_user->id, self::getUserRepository()->getValid()));
-        if ($valid === false) {
-            /* HINT: Requested object string/id/type ("album", "myusername", "some song title", 1298376) */
-            Api::error(ErrorCodeEnum::NOT_FOUND, sprintf('Not Found: %s', $input['user'] ?? $user->id), self::ACTION, 'user', $input['api_format']);
-
-            return false;
-        }
-        // If you are setting plays for other users make sure we have an admin
-        if ($play_user->id !== $user->id && !Api::check_access(AccessTypeEnum::INTERFACE, AccessLevelEnum::ADMIN, $user->id, self::ACTION, $input['api_format'])) {
-            return false;
-        }
-        ob_end_clean();
-        $object_id = (int) $input['filter'];
-        $date      = (array_key_exists('date', $input)) ? (int) scrub_in((string) $input['date']) : time(); //optional
-
-        // validate client string or fall back to 'api'
-        $agent = scrub_in((string) ($input['client'] ?? 'api'));
-
-        $media = new Song($object_id);
-        if ($media->isNew()) {
-            /* HINT: Requested object string/id/type ("album", "myusername", "some song title", 1298376) */
-            Api::error(ErrorCodeEnum::NOT_FOUND, sprintf('Not Found: %s', $object_id), self::ACTION, 'id', $input['api_format']);
-
-            return false;
-        }
-        debug_event(self::class, 'record_play: ' . $media->id . ' for ' . $play_user->username . ' using ' . $agent . ' ' . time(), 5);
-
-        // internal scrobbling (user_activity and object_count tables)
-        if ($media->set_played($play_user->id, $agent, [], $date)) {
-            // scrobble plugins
-            User::save_mediaplay($play_user, $media);
-        }
-
-        Api::message('successfully recorded play: ' . $media->id . ' for: ' . $play_user->username, $input['api_format']);
-
-        return true;
-    }
-
-    /**
-     * @deprecated inject dependency
-     */
-    private static function getUserRepository(): UserRepositoryInterface
-    {
-        global $dic;
-
-        return $dic->get(UserRepositoryInterface::class);
-    }
+    protected const string FILTER_KEY = 'filter';
 }

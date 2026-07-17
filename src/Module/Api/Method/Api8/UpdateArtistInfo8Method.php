@@ -25,72 +25,16 @@ declare(strict_types=1);
 
 namespace Ampache\Module\Api\Method\Api8;
 
-use Ampache\Module\Api\Api;
-use Ampache\Module\Api\Exception\ErrorCodeEnum;
-use Ampache\Module\Authorization\AccessLevelEnum;
-use Ampache\Module\Authorization\AccessTypeEnum;
-use Ampache\Module\Util\Recommendation;
-use Ampache\Repository\Model\Artist;
-use Ampache\Repository\Model\User;
+use Ampache\Module\Api\Method\AbstractUpdateArtistInfoMethod;
 
 /**
- * Class UpdateArtistInfo8Method
- * @package Lib\Api8Methods
+ * Updates artist information and fetches similar artists from last.fm
+ *
+ * Api version 8 reports the object id as `filter` and accepts `id` as an alias.
  */
-final class UpdateArtistInfo8Method
+final class UpdateArtistInfo8Method extends AbstractUpdateArtistInfoMethod
 {
-    public const string ACTION = 'update_artist_info';
+    protected const string FILTER_ALIAS = 'id';
 
-    /**
-     * update_artist_info
-     * MINIMUM_API_VERSION=400001
-     *
-     * Update artist information and fetch similar artists from last.fm
-     * Make sure lastfm_api_key is set in your configuration file
-     *
-     * id = (string) $artist_id
-     *
-     * @param array{
-     *     filter?: string,
-     *     id?: string,
-     *     api_format: string,
-     *     auth: string,
-     * } $input
-     */
-    public static function update_artist_info(array $input, User $user): bool
-    {
-        if (!Api::check_access(AccessTypeEnum::INTERFACE, AccessLevelEnum::MANAGER, $user->id, self::ACTION, $input['api_format'])) {
-            return false;
-        }
-
-        $input['filter'] = $input['id'] ?? $input['filter'] ?? null;
-        if (!Api::check_parameter($input, ['filter'], self::ACTION)) {
-            return false;
-        }
-
-        $object_id = (int) $input['filter'];
-        $item      = new Artist($object_id);
-        if ($item->isNew()) {
-            /* HINT: Requested object string/id/type ("album", "myusername", "some song title", 1298376) */
-            Api::error(ErrorCodeEnum::NOT_FOUND, sprintf('Not Found: %s', $object_id), self::ACTION, 'id', $input['api_format']);
-
-            return false;
-        }
-
-        $info = Recommendation::get_artist_info($object_id);
-        $like = Recommendation::get_artists_like($object_id);
-        // update your object, you need at least catalog_manager access to the db
-        if (
-            $info['id'] !== null
-            || count($like) > 0
-        ) {
-            Api::message('Updated artist info: ' . $object_id, $input['api_format']);
-
-            return true;
-        }
-        /* HINT: Requested object string/id/type ("album", "myusername", "some song title", 1298376) */
-        Api::error(ErrorCodeEnum::BAD_REQUEST, sprintf('Bad Request: %s', $object_id), self::ACTION, 'system', $input['api_format']);
-
-        return true;
-    }
+    protected const string FILTER_KEY = 'filter';
 }

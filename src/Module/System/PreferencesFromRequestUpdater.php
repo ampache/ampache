@@ -113,7 +113,7 @@ final readonly class PreferencesFromRequestUpdater implements PreferencesFromReq
 
             // Run the update for this preference only if it's set
             if (array_key_exists($name, $_REQUEST) || in_array($name, $null_allowed, true)) {
-                $applyToAll = $_REQUEST[$apply_to_all] ?? null;
+                $applyToAll = (isset($_REQUEST[$apply_to_all])) ? (bool) $_REQUEST[$apply_to_all] : null;
                 Preference::update($pref_id, $user_id, $value, $applyToAll);
             }
 

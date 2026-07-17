@@ -25,120 +25,16 @@ declare(strict_types=1);
 
 namespace Ampache\Module\Api\Method\Api8;
 
-use Ampache\Config\AmpConfig;
-use Ampache\Module\Api\Api;
-use Ampache\Module\Api\Exception\ErrorCodeEnum;
-use Ampache\Module\Authorization\AccessTypeEnum;
-use Ampache\Module\System\Session;
-use Ampache\Repository\Model\Art;
-use Ampache\Repository\Model\Playlist;
-use Ampache\Repository\Model\Search;
-use Ampache\Repository\Model\Song;
-use Ampache\Repository\Model\User;
+use Ampache\Module\Api\Method\AbstractGetArtMethod;
 
 /**
- * Class GetArt8Method
- * @package Lib\Api8Methods
+ * Returns the art image for an object
+ *
+ * Api version 8 reports the object id as `filter` and accepts `id` as an alias.
  */
-final class GetArt8Method
+final class GetArt8Method extends AbstractGetArtMethod
 {
-    public const string ACTION = 'get_art';
+    protected const string FILTER_ALIAS = 'id';
 
-    /**
-     * get_art
-     * MINIMUM_API_VERSION=400001
-     *
-     * Get an art image.
-     *
-     * id = (string) $object_id
-     * type = (string) 'song', 'artist', 'album', 'label', 'live_stream', 'playlist', 'podcast', 'search', 'smartlist', 'user', 'video'
-     * fallback = (integer) 0,1, if true return default art ('blankalbum.png') //optional
-     * size = (string) width x height ('640x480', 'original') //optional
-     *
-     * @param array{
-     *     filter?: string,
-     *     id?: string,
-     *     type: string,
-     *     fallback?: int,
-     *     size?: string,
-     *     api_format: string,
-     *     auth: string,
-     * } $input
-     */
-    public static function get_art(array $input, User $user): bool
-    {
-        $input['filter'] = $input['id'] ?? $input['filter'] ?? null;
-        if (!Api::check_parameter($input, ['filter', 'type'], self::ACTION)) {
-            http_response_code(400);
-
-            return false;
-        }
-
-        $type = (string) $input['type'];
-        if ($type == 'video' && !AmpConfig::get('allow_video')) {
-            Api::error(ErrorCodeEnum::ACCESS_DENIED, 'Enable: video', self::ACTION, 'system', $input['api_format']);
-
-            return false;
-        }
-
-        if ($type == 'label' && !AmpConfig::get('label')) {
-            Api::error(ErrorCodeEnum::ACCESS_DENIED, 'Enable: label', self::ACTION, 'system', $input['api_format']);
-
-            return false;
-        }
-
-        if ($type == 'podcast' && !AmpConfig::get('podcast')) {
-            Api::error(ErrorCodeEnum::ACCESS_DENIED, 'Enable: podcast', self::ACTION, 'system', $input['api_format']);
-
-            return false;
-        }
-
-        $object_id = (int) $input['filter'];
-        $size      = (string) ($input['size'] ?? 'original');
-        $fallback  = (array_key_exists('fallback', $input) && (int) $input['fallback'] == 1);
-
-        // confirm the correct data
-        if (!in_array(strtolower($type), ['song', 'artist', 'album', 'label', 'live_stream', 'playlist', 'podcast', 'search', 'smartlist', 'user', 'video'])) {
-            Api::error(ErrorCodeEnum::BAD_REQUEST, sprintf('Bad Request: %s', $type), self::ACTION, 'type', $input['api_format']);
-
-            return false;
-        }
-
-        $art = new Art($object_id, $type);
-        if ($type == 'song') {
-            if (!Art::has_db($object_id, $type)) {
-                // in most cases the song doesn't have a picture, but the album where it belongs to has
-                // if this is the case, we take the album art
-                $song = new Song($object_id);
-                $art  = new Art($song->album, 'album');
-            }
-        } elseif ($type == 'search' || $type == 'smartlist') {
-            $object_id = (int) str_replace('smart_', '', (string) $object_id);
-            $smartlist = new Search($object_id, 'song', $user);
-            $listitems = $smartlist->get_items();
-            $item      = $listitems[array_rand($listitems)];
-            $art       = new Art($item['object_id'], $item['object_type']->value);
-            if (!Art::has_db($object_id, 'song')) {
-                $song = new Song($item['object_id']);
-                $art  = new Art($song->album, 'album');
-            }
-        } elseif ($type == 'playlist' && !Art::has_db($object_id, $type)) {
-            $playlist  = new Playlist($object_id);
-            $listitems = $playlist->get_items();
-            $item      = $listitems[array_rand($listitems)];
-            $song      = new Song($item['object_id']);
-            $art       = new Art($song->album, 'album');
-        }
-
-        Session::extend($input['auth'], AccessTypeEnum::API->value);
-
-        if (
-            preg_match('/^[0-9]+x[0-9]+$/', $size)
-            && !$art->has_db_info($size, $fallback)
-        ) {
-            $size = 'original';
-        }
-
-        return $art->show($size, $fallback);
-    }
+    protected const string FILTER_KEY = 'filter';
 }

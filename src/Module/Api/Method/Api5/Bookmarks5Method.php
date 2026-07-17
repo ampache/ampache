@@ -25,18 +25,28 @@ declare(strict_types=1);
 
 namespace Ampache\Module\Api\Method\Api5;
 
-use Ampache\Module\Api\Api5;
-use Ampache\Module\Api\Json5_Data;
-use Ampache\Module\Api\Xml5_Data;
+use Ampache\Module\Api\Authentication\GatekeeperInterface;
+use Ampache\Module\Api\Method\MethodInterface;
+use Ampache\Module\Api\Output\ApiOutputInterface;
 use Ampache\Repository\BookmarkRepositoryInterface;
 use Ampache\Repository\Model\User;
+use Psr\Http\Message\ResponseInterface;
+use Psr\Http\Message\StreamFactoryInterface;
 
 /**
- * Class Bookmarks5Method
+ * Returns the bookmarked media this user is allowed to manage.
+ *
+ * Version 5 always renders the bare bookmarks and ignores the `include` parameter that the later
+ * versions understand, so it keeps a method of its own.
  */
-final class Bookmarks5Method
+final class Bookmarks5Method implements MethodInterface
 {
     public const string ACTION = 'bookmarks';
+
+    public function __construct(
+        private BookmarkRepositoryInterface $bookmarkRepository,
+        private StreamFactoryInterface $streamFactory,
+    ) {}
 
     /**
      * bookmarks
@@ -47,35 +57,37 @@ final class Bookmarks5Method
      * @param array{
      *     client?: string,
      *     include?: int,
+     *     offset?: int,
+     *     limit?: int,
      *     api_format: string,
      *     auth: string,
      * } $input
+     * @param 5 $apiVersion
      */
-    public static function bookmarks(array $input, User $user): bool
-    {
-        $results = self::getBookmarkRepository()->getByUser($user);
-        if (empty($results)) {
-            Api5::empty('bookmark', $input['api_format']);
-
-            return false;
+    public function handle(
+        GatekeeperInterface $gatekeeper,
+        ResponseInterface $response,
+        ApiOutputInterface $output,
+        array $input,
+        User $user,
+        int $apiVersion,
+    ): ResponseInterface {
+        $results = $this->bookmarkRepository->getByUser($user);
+        if ($results === []) {
+            return $response->withBody(
+                $this->streamFactory->createStream(
+                    $output->writeEmpty($apiVersion, 'bookmark')
+                )
+            );
         }
 
-        ob_end_clean();
-        switch ($input['api_format']) {
-            case 'json':
-                echo Json5_Data::bookmarks($results);
-                break;
-            default:
-                echo Xml5_Data::bookmarks($results);
-        }
+        $output->setOffset($apiVersion, $input['offset'] ?? 0);
+        $output->setLimit($apiVersion, $input['limit'] ?? 0);
 
-        return true;
-    }
-
-    private static function getBookmarkRepository(): BookmarkRepositoryInterface
-    {
-        global $dic;
-
-        return $dic->get(BookmarkRepositoryInterface::class);
+        return $response->withBody(
+            $this->streamFactory->createStream(
+                $output->bookmarks($apiVersion, $results, $input['auth'])
+            )
+        );
     }
 }
