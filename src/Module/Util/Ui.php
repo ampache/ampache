@@ -550,7 +550,7 @@ class Ui implements UiInterface
 
         if (defined('SSE_OUTPUT')) {
             echo "id: " . $update_id . "\n";
-            echo "data: displayNotification('" . json_encode($value) . "', 5000)\n\n";
+            echo "data: " . json_encode(['fn' => 'displayNotification', 'args' => [$value, 5000]]) . "\n\n";
         } elseif ($field !== '' && $field !== '0') {
             echo "<script>updateText('" . $field . "', '" . json_encode($value) . "');</script>\n";
         } else {

@@ -154,8 +154,12 @@ export function toggleVisible(element) {
 // delayRun
 // This function delays the run of another function by X milliseconds
 export function delayRun(element, time, method, page, source) {
-    var function_string = method + "(\'" + page + "\',\'" + source + "\')";
-    var action = function () { eval(function_string); };
+    // method is a global function name (e.g. "ajaxState"); look it up instead of eval-ing a code string
+    var action = function () {
+        if (typeof window[method] === "function") {
+            window[method](page, source);
+        }
+    };
 
     if (element.zid) {
         clearTimeout(element.zid);
