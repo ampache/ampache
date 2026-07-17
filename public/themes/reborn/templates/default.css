@@ -1357,6 +1357,12 @@ table.gridview td.cel_ratings {
     max-width: none;
 }
 
+/* Home dashboard: pack the covers left in fixed-width cells so there are no centre gaps. */
+.homedash table.gridview tbody {
+    grid-template-columns: repeat(auto-fill, 170px);
+    justify-content: start;
+}
+
 /* Personal favorites: box each list so its title and play buttons read as a single card. */
 .personalfav table.gridview tbody {
     column-gap: 10px;
