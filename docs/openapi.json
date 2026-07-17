@@ -7800,7 +7800,6 @@
     },
     "/goodbye": {
       "post": {
-        "deprecated": true,
         "description": "Destroy auth session.",
         "parameters": [
           {
@@ -7851,8 +7850,7 @@
     },
     "/handshake": {
       "post": {
-        "deprecated": true,
-        "description": "Deprecated in this spec as per implementation guidance. You should provide either Bearer authentication, or auth token parameters.",
+        "description": "When you do not have an API key you can request a session token using handshake which can then be used as your authentication token.",
         "parameters": [
           {
             "description": "Passphrase (timestamp + password hash) or API key. Required unless using BearerAuth.",
