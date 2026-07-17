@@ -988,17 +988,24 @@ body.webplayer-hidden #jp_container_1.jp-playlist-expanded .jp-playlist {
     z-index: 10001;
 }
 
-body.jp-nowplaying-hidden .playing_info {
+body.jp-nowplaying-hidden .playing_info,
+body.jp-nowplaying-hidden .jp-jplayer-audio {
     display: none;
 }
 
 /* Now-playing artwork/album for internal random & democratic streams */
 .playing_art {
-    float: left;
-    max-width: 48px;
-    max-height: 48px;
-    margin-right: 8px;
+    position: absolute;
+    top: -10px;
+    left: -110px;
+    width: 80px;
+    height: 80px;
+    max-width: none;
+    max-height: none;
+    object-fit: cover;
+    margin: 0;
     border-radius: 3px;
+    z-index: 10000;
 }
 
 .playing_album {

@@ -1165,7 +1165,6 @@ table.tabledata tbody .grid_cover img,
 table.tabledata tbody .cel_cover img {
     vertical-align: middle;
     border-radius: 2px;
-    -o-object-fit: cover;
     object-fit: cover;
 }
 
@@ -2298,8 +2297,15 @@ a.option-list:hover {
         z-index: 10006;
     }
 
+    /* With the nav drawer open, the loading pill drops below the backdrop (10000) so the drawer owns the screen. */
+    body.sidebar-open #ajax-loading {
+        z-index: 9999;
+    }
+
     /* Wide data tables scroll sideways inside their box so they don't widen the page. */
-    table.tabledata {
+    table.tabledata,
+    table.tabledata2,
+    table.table-data {
         display: block;
         max-width: 100%;
         overflow-x: auto;
@@ -2344,13 +2350,34 @@ a.option-list:hover {
     /* Art block (.item_right_info) floats right and overlaps the Actions list on a phone. Stack it */
     .item_right_info {
         float: none;
+        width: 100%;
         max-width: 100%;
         display: flow-root;
+        box-sizing: border-box;
     }
 
     .item_right_info img {
         max-width: 100%;
         height: auto;
+    }
+
+    /* AJAX artist/label biography floats its art block right and shrink-wraps the column tall and narrow. Unfloat. */
+    .item_info {
+        float: none;
+    }
+
+    .item_info img {
+        max-width: 100%;
+        height: auto;
+    }
+
+    .item_properties {
+        max-width: none;
+        text-align: left;
+    }
+
+    #item_summary {
+        margin-right: 0;
     }
 
     /* art floats right by default. Pull it to the left edge  when collapsed. */
@@ -2361,5 +2388,56 @@ a.option-list:hover {
     /* The external-links row is right-aligned by default; pull it left to match the art. */
     .external_links {
         text-align: left;
+    }
+
+    /* Detail pages: reclaim the 140px desktop gutter and let the Actions list size itself. */
+    #content .info-box {
+        margin-right: 0;
+    }
+
+    #information_actions {
+        width: auto;
+    }
+
+    /* Tab strip wraps on a phone: add row spacing so the active tab's underline doesn't strike the row below. */
+    #tabs_container ul#tabs li {
+        line-height: 2;
+        margin-right: 16px;
+    }
+
+    /* Hide update-available notice on a phone. */
+    #update_notify {
+        display: none;
+    }
+
+    /* Footer: drop the 250px desktop right gutter. */
+    #footer {
+        margin: 15px 5px 0 0;
+    }
+
+    /* Home page shoutbox widget is a fixed 400px + 40px padding on desktop. */
+    .shout {
+        width: auto;
+        max-width: 100%;
+        padding-right: 0;
+    }
+
+    /* Textareas rendered with cols="44"-"70" are 400-600px intrinsic (shout/pvmsg/label/license forms). */
+    #content textarea {
+        max-width: 100%;
+        box-sizing: border-box;
+    }
+
+    /* Home plugin widgets (RSS view etc.) emit inline-floated title/date rows and indents; stack and wrap them. */
+    .home_plugin td div[style*="float"] {
+        float: none !important;
+    }
+
+    .home_plugin td div[style*="margin-left"] {
+        margin-left: 0 !important;
+    }
+
+    .home_plugin td {
+        overflow-wrap: anywhere;
     }
 }

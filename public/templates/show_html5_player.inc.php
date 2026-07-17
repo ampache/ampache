@@ -75,8 +75,9 @@ $replaygain = (AmpConfig::get('theme_color', 'dark') == 'light')
 
     // Random/democratic streams only carry a placeholder in the client playlist.
     // Poll the server for the real internal song that is currently playing and
-    // fill in its title / artist / album / artwork.
+    // fill in its title / artist / album / artwork / action buttons.
     var nowPlayingPoll = null;
+    var nowPlayingObjectId = null;
 
     function pollNowPlaying()
     {
@@ -90,6 +91,12 @@ $replaygain = (AmpConfig::get('theme_color', 'dark') == 'light')
                 $('.playing_album').html(data.album || '');
                 if (data.art) {
                     $('.playing_art').attr('src', data.art).show();
+                }
+                // only rebuild the action row when the song changes (it hosts the rating widget)
+                if (data.actions && data.object_id && data.object_id !== nowPlayingObjectId) {
+                    nowPlayingObjectId = data.object_id;
+                    $('.playing_actions').html(data.actions);
+                    ajaxPut(jsAjaxUrl + '?action=action_buttons&object_type=' + data.object_type + '&object_id=' + data.object_id);
                 }
             }
         });
@@ -324,11 +331,8 @@ $replaygain = (AmpConfig::get('theme_color', 'dark') == 'light')
                         } ?>
                     $('.playing_title').html(titleobj);
                     $('.playing_artist').html(artistobj);
-                    <?php if (
-                        $iframed
-                        && $isRandom === false
-                        && $isDemocratic === false
-                    ) { ?>
+                    <?php // random/democratic still play regular songs, so the per-song actions (album, shout, rating) apply
+                    if ($iframed) { ?>
                     $('.playing_actions').html(actionsobj);
                     <?php if (AmpConfig::get('show_lyrics')) { ?>
                     $('.playing_lyrics').html(lyricsobj);
@@ -425,7 +429,7 @@ $shareStyle = ($isShare || $isRandom)
 if ($isVideo === false) {
     $containerClass = "jp-audio";
     $playerClass    = "jp-jplayer-audio"; ?>
-    <div class="playing_info"<?php echo ($isRandom) ? ' style="left: 10px;"' : '' ?>>
+    <div class="playing_info">
         <img class="playing_art" alt="" style="display: none;">
         <div class="playing_artist"></div>
         <div class="playing_title"></div>
@@ -524,16 +528,21 @@ if ($isVideo === false) {
             </div>
             <?php if ($isShare === false) { ?>
                 <div class="player_actions">
-                    <?php if ($iframed && ($isRandom === false && $isDemocratic === false)) { ?>
+                    <?php if ($iframed) { ?>
+                        <?php // playlist-editing buttons make no sense when random/democratic drives the playlist,
+                              // but keep their blocks so the action grid layout doesn't shift
+                        $playlistEditable = ($isRandom === false && $isDemocratic === false); ?>
                             <div class="action_button">
-                        <?php if (Access::check(AccessTypeEnum::INTERFACE, AccessLevelEnum::USER)) { ?>
+                        <?php if ($playlistEditable && Access::check(AccessTypeEnum::INTERFACE, AccessLevelEnum::USER)) { ?>
                                 <a href="javascript:SaveToExistingPlaylist(event);">
                                     <?php echo Ui::get_material_symbol('playlist_add', addslashes(T_('Add All to playlist'))); ?>
                                 </a>
                         <?php } ?>
                             </div>
                         <div id="playlistloopbtn" class="action_button">
+                            <?php if ($playlistEditable) { ?>
                             <a href="javascript:TogglePlaylistLoop();"><?php echo Ui::get_material_symbol('laps', addslashes(T_('Loop Playlist'))); ?></a>
+                            <?php } ?>
                         </div>
                         <div id="expandplaylistbtn" class="action_button">
                             <a href="javascript:TogglePlaylistExpand();"><?php echo Ui::get_material_symbol('expand_all', addslashes(T_('Expand/Collapse playlist'))); ?></a>
