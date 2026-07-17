@@ -167,7 +167,6 @@ $replaygain = (AmpConfig::get('theme_color', 'dark') == 'light')
                 removeTime: 'fast',
                 shuffleTime: 'slow'
             },
-            swfPath: "<?php echo $web_path; ?>/lib/modules/jplayer",
             preload: 'auto',
             loop: <?php echo ($loop) ? 'true' : 'false'; ?>, // this is the jplayer loop status
             audioFullScreen: true,
