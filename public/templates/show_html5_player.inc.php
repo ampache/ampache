@@ -88,7 +88,6 @@ $replaygain = (AmpConfig::get('theme_color', 'dark') == 'light')
             if (data && data.found) {
                 $('.playing_title').html(data.title);
                 $('.playing_artist').html(data.artist);
-                $('.playing_album').html(data.album || '');
                 if (data.art) {
                     $('.playing_art').attr('src', data.art).show();
                 }
@@ -529,19 +528,25 @@ if ($isVideo === false) {
             <?php if ($isShare === false) { ?>
                 <div class="player_actions">
                     <?php if ($iframed) { ?>
-                        <?php // playlist-editing buttons make no sense when random/democratic drives the playlist,
-                              // but keep their blocks so the action grid layout doesn't shift
+                        <?php // playlist-editing buttons make no sense when random/democratic drives the playlist;
+                              // show them dimmed and inert there so the action layout matches the regular player
                         $playlistEditable = ($isRandom === false && $isDemocratic === false); ?>
                             <div class="action_button">
-                        <?php if ($playlistEditable && Access::check(AccessTypeEnum::INTERFACE, AccessLevelEnum::USER)) { ?>
+                        <?php if (Access::check(AccessTypeEnum::INTERFACE, AccessLevelEnum::USER)) {
+                            if ($playlistEditable) { ?>
                                 <a href="javascript:SaveToExistingPlaylist(event);">
                                     <?php echo Ui::get_material_symbol('playlist_add', addslashes(T_('Add All to playlist'))); ?>
                                 </a>
-                        <?php } ?>
+                            <?php } else { ?>
+                                <span style="opacity: 0.25;"><?php echo Ui::get_material_symbol('playlist_add', addslashes(T_('Add All to playlist'))); ?></span>
+                            <?php }
+                        } ?>
                             </div>
                         <div id="playlistloopbtn" class="action_button">
                             <?php if ($playlistEditable) { ?>
                             <a href="javascript:TogglePlaylistLoop();"><?php echo Ui::get_material_symbol('laps', addslashes(T_('Loop Playlist'))); ?></a>
+                            <?php } else { ?>
+                            <span style="opacity: 0.25;"><?php echo Ui::get_material_symbol('laps', addslashes(T_('Loop Playlist'))); ?></span>
                             <?php } ?>
                         </div>
                         <div id="expandplaylistbtn" class="action_button">

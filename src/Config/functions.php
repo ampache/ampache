@@ -364,10 +364,6 @@ function check_config_values(array $conf): bool
     if (!$conf['database_username']) {
         return false;
     }
-    /* Don't check for password to support mysql socket auth
-     * if (!$conf['database_password']) {
-        return false;
-    }*/
     if (!$conf['session_length']) {
         return false;
     }

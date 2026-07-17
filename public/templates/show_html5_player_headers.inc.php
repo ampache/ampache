@@ -150,10 +150,10 @@ if ($iframed || $isShare) { ?>
 
     function updatePlaylistControls()
     {
-        // Expand only applies while the playlist shows; hide via visibility so the
-        // slot stays put and the buttons don't shift (avoids mis-presses).
-        var collapsed = $('#jp_container_1').hasClass('jp-playlist-collapsed');
-        $('#expandplaylistbtn').css('visibility', collapsed ? 'hidden' : 'visible');
+        // Expand stays available even while the in-bar playlist is hidden: the
+        // expanded side panel out-cascades .jp-playlist-collapsed, so it can pop
+        // out over a hidden playlist and closing it returns to the hidden state.
+        $('#expandplaylistbtn').css('visibility', 'visible');
     }
 
     function ToggleNowPlaying()

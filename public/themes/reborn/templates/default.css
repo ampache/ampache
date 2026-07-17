@@ -909,8 +909,13 @@ span#sidebar-header-content::after {
     background-repeat: repeat-x;
 }
 
-#rightbar li:hover .submenu {
+/* Submenus open/close by clicking their trigger (class toggled in footer.inc.php); */
+#rightbar li.submenu-open .submenu {
     display: block;
+}
+
+#rightbar li:has(> .submenu) {
+    cursor: pointer;
 }
 
 #rightbar .submenu {
@@ -2273,6 +2278,15 @@ a.option-list:hover {
         overflow-y: auto;
         -webkit-overflow-scrolling: touch;
         z-index: 10005;
+    }
+
+    /* Rightbar submenus (add-to-playlist / random items). Open/close is click-toggled globally (footer.inc.php). */
+    #rightbar .submenu,
+    #rightbar .submenu.fixedrightbarsubmenu {
+        top: 160px !important;
+        right: 10px !important;
+        max-width: 90%;
+        max-height: calc(100vh - 280px);
     }
 
     /* Dim/close backdrop -- sidebar drawer only (the temp-playlist drops down inline without an overlay). */

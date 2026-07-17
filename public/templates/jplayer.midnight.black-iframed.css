@@ -993,11 +993,11 @@ body.jp-nowplaying-hidden .jp-jplayer-audio {
     display: none;
 }
 
-/* Now-playing artwork/album for internal random & democratic streams */
+/* Now-playing artwork for internal random & democratic streams */
 .playing_art {
     position: absolute;
-    top: -10px;
-    left: -110px;
+    top: 0;
+    left: -90px;
     width: 80px;
     height: 80px;
     max-width: none;
@@ -1331,8 +1331,8 @@ body.webplayer-hidden #visualizer {
    but keep it visible (don't collapse it) so the album art still shows. */
 #jp_container_1.jp-audio .jp-jplayer {
     position: absolute;
-    top: 0;
-    left: 0;
+    top: 10px;
+    left: 20px;
     /* keep the album-art poster above the interface's opaque themed background
        (both default to z-index:9999, and the interface comes later in the DOM,
        so full-width small-screen layouts would otherwise paint over the art) */
