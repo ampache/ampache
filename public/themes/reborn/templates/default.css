@@ -2290,7 +2290,8 @@ a.option-list:hover {
     .sidebar-page-float {
         position: absolute;
         left: 5px;
-        width: 165px;
+        right: 5px;
+        width: auto;
         margin: 0;
         box-sizing: border-box;
     }
