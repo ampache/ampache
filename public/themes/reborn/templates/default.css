@@ -1345,6 +1345,7 @@ table.gridview td.cel_ratings {
     grid-template-rows: repeat(2, auto);
     grid-auto-rows: 0;
     align-content: start;
+    justify-content: center;
     overflow: hidden;
 }
 
