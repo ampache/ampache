@@ -75,6 +75,12 @@ interface Media extends library_item
     public function getYear(): string;
 
     /**
+     * isNew
+     * Whether the object failed to load from the database
+     */
+    public function isNew(): bool;
+
+    /**
      * play_url
      *
      * Returns the url to stream the specified object

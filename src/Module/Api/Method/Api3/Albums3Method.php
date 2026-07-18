@@ -81,12 +81,14 @@ final class Albums3Method implements MethodInterface
         $browse = $this->modelFactory->createBrowse(null, false);
         $browse->set_user_id($user);
         $browse->set_type('album');
-        $browse->set_sort('name', 'ASC', false);
+        $browse->set_sort_order(html_entity_decode((string) ($input['sort'] ?? '')), ['name', 'ASC']);
         $method = (array_key_exists('exact', $input) && (int) $input['exact'] == 1) ? 'exact_match' : 'alpha_match';
 
         $browse->set_api_filter($method, $input['filter'] ?? '');
         $browse->set_api_filter('add', $input['add'] ?? '');
         $browse->set_api_filter('update', $input['update'] ?? '');
+
+        $browse->set_conditions(html_entity_decode((string) ($input['cond'] ?? '')));
 
         $results = $browse->get_objects();
         $include = [];

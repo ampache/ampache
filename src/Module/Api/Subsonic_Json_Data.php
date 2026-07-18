@@ -1681,7 +1681,7 @@ class Subsonic_Json_Data
         if ($subParent) {
             $json['artistId'] = $subParent;
         }
-        $json['artist'] = $album->get_parent_fullname();
+        $json['artist'] = (string) $album->get_parent_fullname();
         // original year (fall back to regular year)
         $original_year = AmpConfig::get('use_original_year');
         $year          = ($original_year && $album->original_year)
@@ -2096,7 +2096,7 @@ class Subsonic_Json_Data
             'isVideo' => false,
             'type' => 'music',
             'artistId' => $subParent,
-            'artist' => $album->get_parent_fullname(),
+            'artist' => (string) $album->get_parent_fullname(),
         ];
 
         if ($album->has_art()) {
