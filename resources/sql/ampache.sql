@@ -787,6 +787,24 @@ CREATE TABLE IF NOT EXISTS `object_count` (
 -- --------------------------------------------------------
 
 --
+--
+-- Table structure for table `object_count_summary`
+--
+
+CREATE TABLE IF NOT EXISTS `object_count_summary` (
+  `id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT,
+  `object_type` enum('album','album_disk','artist','catalog','tag','label','live_stream','playlist','podcast','podcast_episode','search','song','user','video') CHARACTER SET utf8mb3 COLLATE utf8mb3_unicode_ci NOT NULL,
+  `object_id` int(11) UNSIGNED NOT NULL DEFAULT 0,
+  `user` int(11) NOT NULL,
+  `count_type` enum('download','stream','skip') CHARACTER SET utf8mb3 COLLATE utf8mb3_unicode_ci NOT NULL,
+  `count` int(11) UNSIGNED NOT NULL DEFAULT 0,
+  `date_from` int(11) UNSIGNED NOT NULL DEFAULT 0,
+  `date_to` int(11) UNSIGNED NOT NULL DEFAULT 0,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `object_count_summary_UNIQUE_IDX` (`object_type`,`object_id`,`user`,`count_type`),
+  KEY `object_count_summary_type_IDX` (`object_type`,`count_type`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
 -- Table structure for table `player_control`
 --
 

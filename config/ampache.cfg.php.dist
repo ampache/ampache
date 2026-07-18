@@ -6,7 +6,7 @@
 ; This value is used to detect if this config file is up to date
 ; this is compared against a constant called CONFIG_VERSION
 ; that is located in src/Config/Init/InitializationHandlerConfig.php
-config_version = 89
+config_version = 90
 
 ; Defines the default timezone used by the date functions
 ; Uses the same strings as the default date.timezone (https://php.net/date.timezone)
@@ -728,6 +728,23 @@ playlist_art = "true"
 ;  composer require szymach/c-pchart "3.*"
 ; DEFAULT: "false"
 ;statistical_graphs = "true"
+
+; Stats Consolidation Threshold
+; Number of days of detailed play history to keep in the object_count table.
+; When set to a value greater than 0, the cleanup:consolidateStats CLI command
+; will aggregate older rows into the object_count_summary table and delete them,
+; keeping the table size under control on long-running servers.
+; Stored counters stay exact (total/skip counts, played flags, all-time
+; per-object and per-user counts, streamed data size, auto-rating plugin).
+; The following only evaluate the retained detail window after consolidation:
+; period-based statistics (trending, recent, graphs, Last.fm export) which are
+; windowed by design, live all-time "top" charts computed without cron_cache
+; (the cron cache merges consolidated counts into its 0 threshold entries),
+; smart playlist rules based on play history, and browsing sorted by play
+; count.
+; When set to 0 (or unset) consolidation is disabled.
+; DEFAULT: 0
+;stats_consolidate_threshold = 730
 
 ; Art Gather Order
 ; Simply arrange the following in the order you would like
