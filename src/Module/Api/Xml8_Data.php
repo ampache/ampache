@@ -1404,10 +1404,8 @@ class Xml8_Data
             $results = $catalog->get_media_tags($song, ['music'], '', '');
             $string .= "<song_tag id=\"" . $song_id . "\">\n";
 
-            foreach ($results as $tag => $value) {
-                if (!in_array($tag, $valid_tags, true)) {
-                    continue;
-                }
+            foreach ($valid_tags as $tag) {
+                $value = $results[$tag] ?? null;
                 if (is_array($value)) {
                     foreach ($value as $item) {
                         $string .= "\t<" . $tag . "><![CDATA[" . $item . "]]></" . $tag . ">\n";
