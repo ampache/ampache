@@ -2098,8 +2098,11 @@ a.option-list:hover {
    offsets. On a phone that overflows the viewport width, so mobile browsers shrink-to-fit (zoom out) the whole page
    A zoomed page pins position:fixed (the webplayer) to the zoomed document instead of the visible screen, which is why
    the player looked stuck to the bottom of the content.
-   Scoped to <=768px, so desktop is untouched. */
-@media (max-width: 768px) {
+   Scoped to <=768px (portrait phones) plus short landscape viewports (phones rotated: wider than 768px but
+   only ~400-500px tall, which would otherwise fall back to the desktop min-width:1024px and re-trigger the zoom).
+   Tablets/desktop in landscape are >540px tall, so they stay on the desktop layout.
+   @see //REBORN_MEDIA and keep in sync with dark.css light.css */
+@media (max-width: 768px), (orientation: landscape) and (max-height: 540px) {
     /* Fit the device width instead of forcing a 1024px page (kills the zoom). */
     body#main-page {
         min-width: 0;
