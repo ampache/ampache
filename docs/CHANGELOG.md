@@ -4,6 +4,8 @@
 
 **NOTE** Work in progress
 
+**NOTE** AI Contribution standards are documented in `CLAUDE.md` (repository structures, branch model, architecture and coding rules); read and follow it before submitting changes that are AI-assisted ones
+
 * Ampache 8 requires **PHP 8.5+**
 * This version adds a new **Folder** domain which functions as a virtual filesystem browsing layer over catalog files.
 * A very major PHPStan level 8 / Rector / PER-CS3x0 hardening pass across the code.
