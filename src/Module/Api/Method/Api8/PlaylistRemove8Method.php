@@ -25,100 +25,32 @@ declare(strict_types=1);
 
 namespace Ampache\Module\Api\Method\Api8;
 
-use Ampache\Module\Api\Api;
-use Ampache\Module\Api\Exception\ErrorCodeEnum;
+use Ampache\Module\Api\Method\AbstractPlaylistRemoveMethod;
 use Ampache\Repository\Model\Playlist;
-use Ampache\Repository\Model\User;
+use Override;
 
 /**
- * Class PlaylistRemove8Method
- * @package Lib\Api8Methods
+ * Removes an object from a playlist by object id and type, or by track number
+ *
+ * This replaces playlist_remove_song and only exists in api version 8. It names the item `id`, is
+ * type aware, and speaks of items rather than songs when clearing.
  */
-final class PlaylistRemove8Method
+final class PlaylistRemove8Method extends AbstractPlaylistRemoveMethod
 {
     public const string ACTION = 'playlist_remove';
 
     public const string REST_ACTION = 'playlist_remove_edit';
 
-    /**
-     * playlist_remove
-     * MINIMUM_API_VERSION=380001
-     * CHANGED_IN_API_VERSION=400001
-     * CHANGED_IN_API_VERSION=420000
-     *
-     * This removes an object from a playlist using track number in the list or object id and type
-     *
-     * filter = (string) UID of playlist
-     * id = (string) $object_id
-     * type = (string) 'song', 'album', 'artist', 'playlist' //optional, default = song
-     * track = (string) track number to remove from the playlist //optional
-     * clear = (integer) 0,1 Clear the whole playlist //optional, default = 0
-     *
-     * @param array{
-     *     filter: string,
-     *     id?: string,
-     *     type?: string,
-     *     track?: string,
-     *     clear?: int,
-     *     api_format: string,
-     *     auth: string,
-     * } $input
-     */
-    public static function playlist_remove(array $input, User $user): bool
-    {
-        if (!Api::check_parameter($input, ['filter'], self::ACTION)) {
-            return false;
-        }
-        ob_end_clean();
-        $playlist = new Playlist((int) $input['filter']);
-        if (!$playlist->has_collaborate($user)) {
-            Api::error(ErrorCodeEnum::FAILED_ACCESS_CHECK, 'Require: 100', self::ACTION, 'account', $input['api_format']);
+    protected const string CLEARED_MESSAGE = 'all items removed from playlist';
 
-            return false;
-        }
-
-        if (array_key_exists('clear', $input) && (int) $input['clear'] === 1) {
-            $playlist->delete_all();
-            Api::message('all items removed from playlist', $input['api_format']);
-        } elseif (array_key_exists('id', $input)) {
-            $track = (int) scrub_in((string) $input['id']);
-            if (!$playlist->has_item($track, null, (string) ($input['type'] ?? 'song'))) {
-                Api::error(ErrorCodeEnum::NOT_FOUND, 'Not Found', self::ACTION, 'song', $input['api_format']);
-
-                return false;
-            }
-
-            $playlist->delete_song($track);
-            $playlist->regenerate_track_numbers();
-            Api::message('song removed from playlist', $input['api_format']);
-        } elseif (array_key_exists('track', $input)) {
-            $track = (int) scrub_in((string) $input['track']);
-            if (!$playlist->has_item(null, $track)) {
-                Api::error(ErrorCodeEnum::NOT_FOUND, 'Not Found', self::ACTION, 'track', $input['api_format']);
-
-                return false;
-            }
-            $playlist->delete_track_number($track);
-            $playlist->regenerate_track_numbers();
-            Api::message('song removed from playlist', $input['api_format']);
-        }
-
-        return true;
-    }
+    protected const string ITEM_KEY = 'id';
 
     /**
-     * @param array{
-     *     filter: string,
-     *     song?: string,
-     *     type: string,
-     *     track?: string,
-     *     clear?: int,
-     *     api_format: string,
-     *     auth: string,
-     * } $input
+     * @param array<string, mixed> $input
      */
-    public static function playlist_remove_edit(array $input, User $user): bool
+    #[Override]
+    protected function hasItem(Playlist $playlist, int $track, array $input): bool
     {
-        return self::playlist_remove($input, $user);
+        return $playlist->has_item($track, null, (string) ($input['type'] ?? 'song'));
     }
 }

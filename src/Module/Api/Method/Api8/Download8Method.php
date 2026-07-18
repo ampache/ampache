@@ -26,68 +26,100 @@ declare(strict_types=1);
 namespace Ampache\Module\Api\Method\Api8;
 
 use Ampache\Config\AmpConfig;
-use Ampache\Module\Api\Api;
-use Ampache\Module\Authorization\AccessTypeEnum;
-use Ampache\Module\System\Session;
-use Ampache\Repository\Model\Podcast_Episode;
+use Ampache\Module\Api\Authentication\GatekeeperInterface;
+use Ampache\Module\Api\Method\Exception\AccessDeniedException;
+use Ampache\Module\Api\Method\Exception\RequestParamMissingException;
+use Ampache\Module\Api\Method\Exception\ResultEmptyException;
+use Ampache\Module\Api\Method\MethodInterface;
+use Ampache\Module\Api\Output\ApiOutputInterface;
+use Ampache\Module\Authorization\AccessFunctionEnum;
+use Ampache\Module\Authorization\Check\FunctionCheckerInterface;
+use Ampache\Module\System\Core;
+use Ampache\Module\Util\ObjectTypeToClassNameMapper;
+use Ampache\Module\Util\ZipHandlerInterface;
+use Ampache\Repository\Model\container_item;
+use Ampache\Repository\Model\library_item;
+use Ampache\Repository\Model\LibraryItemEnum;
+use Ampache\Repository\Model\LibraryItemLoaderInterface;
+use Ampache\Repository\Model\ModelFactoryInterface;
 use Ampache\Repository\Model\Random;
-use Ampache\Repository\Model\Song;
 use Ampache\Repository\Model\User;
+use Psr\Http\Message\ResponseInterface;
 
 /**
- * Class Download8Method
- * @package Lib\Api8Methods
+ * Downloads a given media file, or a zip of a whole container object.
  */
-final class Download8Method
+final class Download8Method implements MethodInterface
 {
     public const string ACTION = 'download';
 
+    public function __construct(
+        private ModelFactoryInterface $modelFactory,
+        private LibraryItemLoaderInterface $libraryItemLoader,
+        private ZipHandlerInterface $zipHandler,
+        private FunctionCheckerInterface $functionChecker,
+    ) {}
+
     /**
-     * download
      * MINIMUM_API_VERSION=400001
      *
      * Downloads a given media file. set format=raw to download the full file
-     * Search and Playlist will only stream a random object not the whole thing
+     * Search and Playlist will only stream a random object not the whole thing, unless zip=1
      *
      * id = (string) $song_id|$podcast_episode_id|$search_id|$playlist_id
      * type = (string) 'song', 'podcast_episode', 'search', 'playlist'
      * bitrate = (integer) max bitrate for transcoding in bytes (e.g 192000=192Kb) //optional SONG ONLY
      * format = (string) 'mp3', 'ogg', etc use 'raw' to skip transcoding //optional SONG ONLY
      * stats = (integer) 0,1, if false disable stat recording when playing the object (default: 1) //optional
+     * zip = (integer) 0,1, download as a zip if the type/id is a container object and zipping is enabled //optional, API8 only
      *
      * @param array{
      *     filter?: string,
      *     id?: string,
-     *     type: string,
+     *     type?: string,
      *     bitrate?: int,
      *     format?: string,
      *     stats?: string,
+     *     zip?: string,
      *     api_format: string,
      *     auth: string,
      * } $input
+     * @throws AccessDeniedException|RequestParamMissingException|ResultEmptyException
      */
-    public static function download(array $input, User $user): bool
-    {
-        $input['filter'] = $input['id'] ?? $input['filter'] ?? null;
-        if (!Api::check_parameter($input, ['filter', 'type'], self::ACTION)) {
-            http_response_code(400);
-
-            return false;
+    public function handle(
+        GatekeeperInterface $gatekeeper,
+        ResponseInterface $response,
+        ApiOutputInterface $output,
+        array $input,
+        User $user,
+        int $apiVersion,
+    ): ResponseInterface {
+        $filter = $input['id'] ?? $input['filter'] ?? null;
+        if ($filter === null || !isset($input['type'])) {
+            throw new RequestParamMissingException(
+                sprintf('Bad Request: %s', 'filter/type')
+            );
         }
 
-        $object_id = (int) $input['filter'];
-        $type      = (string) $input['type'];
+        $objectId = (int) $filter;
+        $type     = (string) $input['type'];
 
         if (
-            $object_id === 0
+            $objectId === 0
             && (
-                $type == 'playlist'
-                || $type == 'search'
+                $type === 'playlist'
+                || $type === 'search'
             )
         ) {
             // The API can use searches as playlists so check for those too
-            $object_id = (int) str_replace('smart_', '', ($input['filter'] ?? '0'));
-            $type      = 'search';
+            $objectId = (int) str_replace('smart_', '', (string) $filter);
+            $type     = 'search';
+        }
+
+        $wantsZip = ((int) ($input['zip'] ?? 0)) === 1;
+
+        if ($wantsZip && LibraryItemEnum::tryFrom($type) !== null && $this->zipHandler->isZipable($type)) {
+            return $this->downloadZip($response, $type, $objectId, $user);
         }
 
         $maxBitRate  = (int) ($input['bitrate'] ?? 0);
@@ -105,30 +137,118 @@ final class Download8Method
         if ($format != 'raw' && $maxBitRate > 0 && in_array($type, ['song', 'search', 'playlist'])) {
             $params .= '&bitrate=' . $maxBitRate;
         }
-        $url = '';
-        if ($type == 'song') {
-            $media = new Song($object_id);
-            $url   = $media->play_url($params, 'api', false, $user->id, $user->streamtoken);
-        }
-        if ($type == 'podcast_episode' || $type == 'podcast') {
-            $media = new Podcast_Episode($object_id);
-            $url   = $media->play_url($params, 'api', false, $user->id, $user->streamtoken);
-        }
-        if ($type == 'search' || $type == 'playlist') {
-            $song_id = Random::get_single_song($type, $user, $object_id);
-            $media   = new Song($song_id);
-            $url     = $media->play_url($params, 'api', false, $user->id, $user->streamtoken);
-        }
-        if (!empty($url)) {
-            Session::extend($input['auth'], AccessTypeEnum::API->value);
-            header('Location: ' . str_replace(':443/play', '/play', $url));
 
-            return true;
+        $media = null;
+        if ($type === 'song') {
+            $media = $this->modelFactory->createSong($objectId);
+        }
+        if ($type === 'podcast_episode' || $type === 'podcast') {
+            $media = $this->modelFactory->createPodcastEpisode($objectId);
+        }
+        if ($type === 'search' || $type === 'playlist') {
+            $songId = Random::get_single_song($type, $user, $objectId);
+            $media  = $this->modelFactory->createSong($songId);
         }
 
-        // download not found
-        http_response_code(404);
+        $url = $media?->play_url($params, 'api', false, $user->getId(), $user->streamtoken) ?? '';
+        if ($url === '') {
+            throw new ResultEmptyException((string) $objectId);
+        }
 
-        return false;
+        return $response
+            ->withStatus(302)
+            ->withHeader('Location', str_replace(':443/play', '/play', $url));
+    }
+
+    /**
+     * Builds a zip response for a whole container object (album, artist, playlist, podcast, ...)
+     *
+     * @throws AccessDeniedException|ResultEmptyException
+     */
+    private function downloadZip(
+        ResponseInterface $response,
+        string $type,
+        int $objectId,
+        User $user,
+    ): ResponseInterface {
+        if (!$this->functionChecker->check(AccessFunctionEnum::FUNCTION_BATCH_DOWNLOAD)) {
+            throw new AccessDeniedException();
+        }
+
+        $libItem = $this->libraryItemLoader->load(
+            LibraryItemEnum::from($type),
+            $objectId,
+        );
+
+        if (!$libItem instanceof container_item) {
+            throw new ResultEmptyException((string) $objectId);
+        }
+
+        $mediaIds = $libItem->get_medias();
+
+        if (!User::stream_control($mediaIds, $user)) {
+            throw new AccessDeniedException();
+        }
+
+        return $this->zipHandler->zip(
+            $response,
+            (string) $libItem->get_fullname(),
+            $this->getMediaFiles($mediaIds),
+            $type === LibraryItemEnum::PLAYLIST->value,
+        );
+    }
+
+    /**
+     * Takes an array of media ids (as returned by container_item::get_medias()) and returns
+     * the actual filenames, grouped by their parent's name
+     *
+     * @param array<int, array{object_type: LibraryItemEnum, object_id: int}> $medias
+     * @return array{
+     *     files: array<string, list<string>>,
+     *     total_size: int
+     * }
+     */
+    private function getMediaFiles(array $medias): array
+    {
+        $mediaFiles = [];
+        $totalSize  = 0;
+        foreach ($medias as $element) {
+            $media = $this->libraryItemLoader->load(
+                $element['object_type'],
+                $element['object_id'],
+            );
+
+            if ($media === null) {
+                continue;
+            }
+
+            if (
+                $media instanceof container_item
+                && property_exists($media, 'enabled')
+                && $media->enabled
+                && !empty($media->file)
+            ) {
+                $totalSize += $media->size ?? 0;
+                $dirname = '';
+                $parent  = $media->get_parent();
+                if ($parent !== null) {
+                    $className = ObjectTypeToClassNameMapper::map($parent['object_type']->value);
+                    /** @var class-string<library_item> $className */
+                    $pobj    = new $className($parent['object_id']);
+                    $dirname = (string) $pobj->get_fullname();
+                }
+
+                if ($dirname !== '' && $dirname !== '0' && !array_key_exists($dirname, $mediaFiles)) {
+                    $mediaFiles[$dirname] = [];
+                }
+
+                $mediaFiles[$dirname][] = Core::conv_lc_file($media->file);
+            }
+        }
+
+        return [
+            'files' => $mediaFiles,
+            'total_size' => $totalSize,
+        ];
     }
 }

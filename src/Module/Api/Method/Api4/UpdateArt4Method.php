@@ -46,7 +46,7 @@ final class UpdateArt4Method
      * MINIMUM_API_VERSION=400001
      *
      * updates a single album, artist, song running the gather_art process
-     * Doesn't overwrite existing art by default.
+     * Existing art is replaced unless you send overwrite=0, which keeps whatever is already there.
      *
      * type = (string) 'artist'|'album'
      * id = (integer) $artist_id, $album_id
@@ -70,11 +70,12 @@ final class UpdateArt4Method
         }
         $type      = (string) $input['type'];
         $object_id = (int) $input['id'];
-        $overwrite = array_key_exists('overwrite', $input) && (int) $input['overwrite'] == 0;
+        // Catalog::gather_art_item() takes `db_art_first`, i.e. the inverse: keep the art we already have
+        $db_art_first = array_key_exists('overwrite', $input) && (int) $input['overwrite'] == 0;
 
         // confirm the correct data
         if (!in_array(strtolower($type), ['artist', 'album'])) {
-            Api4::message('error', T_('Incorrect object type') . ' ' . $type, '401', $input['api_format']);
+            Api4::message('error', 'Incorrect object type' . ' ' . $type, '401', $input['api_format']);
 
             return true;
         }
@@ -82,17 +83,17 @@ final class UpdateArt4Method
         /** @var Artist|Album $item */
         $item = new $className($object_id);
         if ($item->isNew()) {
-            Api4::message('error', T_('The requested item was not found'), '404', $input['api_format']);
+            Api4::message('error', 'The requested item was not found', '404', $input['api_format']);
 
             return true;
         }
         // update your object
-        if (Catalog::gather_art_item($type, $object_id, $overwrite, true)) {
+        if (Catalog::gather_art_item($type, $object_id, $db_art_first, true)) {
             Api4::message('success', 'Gathered new art for: ' . $object_id . ' (' . $type . ')', null, $input['api_format']);
 
             return true;
         }
-        Api4::message('error', T_('Failed to update_art for ' . $object_id), '400', $input['api_format']);
+        Api4::message('error', 'Failed to update_art for ' . $object_id, '400', $input['api_format']);
 
         return true;
     }

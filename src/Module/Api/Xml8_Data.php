@@ -200,7 +200,7 @@ class Xml8_Data
                 continue;
             }
 
-            $string .= "<bookmark id=\"$bookmark_id\">\n\t<user><![CDATA[" . $bookmark->getUserName() . "]]></user>\n\t<object_type><![CDATA[" . $bookmark->object_type . "]]></object_type>\n\t<object_id>" . $bookmark->object_id . "</object_id>\n\t<position>" . $bookmark->position . "</position>\n\t<client><![CDATA[" . $bookmark->comment . "]]></client>\n\t<creation_date>" . $bookmark->creation_date . "</creation_date>\n\t<update_date><![CDATA[" . $bookmark->update_date . "]]></update_date>\n";
+            $string .= "<bookmark id=\"$bookmark_id\">\n\t<owner><![CDATA[" . $bookmark->getUserName() . "]]></owner>\n\t<object_type><![CDATA[" . $bookmark->object_type . "]]></object_type>\n\t<object_id>" . $bookmark->object_id . "</object_id>\n\t<position>" . $bookmark->position . "</position>\n\t<client><![CDATA[" . $bookmark->comment . "]]></client>\n\t<creation_date>" . $bookmark->creation_date . "</creation_date>\n\t<update_date><![CDATA[" . $bookmark->update_date . "]]></update_date>\n";
             $user = User::get_from_username($bookmark->getUserName());
             if (
                 $include
@@ -325,7 +325,7 @@ class Xml8_Data
                 case 'podcast_episode':
                     if (isset($row['podcast'])) {
                         // id, addition_time, delete_time, title, file, `catalog`, total_count, total_skip, podcast
-                        $string .= "\t<deleted_podcast_episode id=\"" . $row['id'] . "\">\n\t<addition_time>" . $row['addition_time'] . "</addition_time>\n\t<delete_time>" . $row['delete_time'] . "</delete_time>\n\t<title><![CDATA[" . $row['title'] . "]]></title>\n\t<file><![CDATA[" . $row['file'] . "]]></file>\n\t<catalog>" . $row['catalog'] . "</catalog>\n\t<total_count>" . $row['total_count'] . "</total_count>\n\t<total_skip>" . $row['total_skip'] . "</total_skip>\n\t<played>" . $row['podcast'] . "</played>\n\t</deleted_podcast_episode>\n";
+                        $string .= "\t<deleted_podcast_episode id=\"" . $row['id'] . "\">\n\t<addition_time>" . $row['addition_time'] . "</addition_time>\n\t<delete_time>" . $row['delete_time'] . "</delete_time>\n\t<title><![CDATA[" . $row['title'] . "]]></title>\n\t<file><![CDATA[" . $row['file'] . "]]></file>\n\t<catalog>" . $row['catalog'] . "</catalog>\n\t<total_count>" . $row['total_count'] . "</total_count>\n\t<total_skip>" . $row['total_skip'] . "</total_skip>\n\t<podcast>" . $row['podcast'] . "</podcast>\n\t</deleted_podcast_episode>\n";
                     }
                     break;
                 case 'video':
@@ -441,9 +441,9 @@ class Xml8_Data
 
         $xml_folder = $xml->addChild('folder');
         $xml_folder->addAttribute('id', (string) $folder->getId());
-        $xml_folder->addChild('title', (string) $folder->get_fullname());
+        $xml_folder->addChild('title', str_replace('&', '&amp;', (string) $folder->get_fullname()));
         $xml_folder->addChild('parent', (string) $folder->parent);
-        $xml_folder->addChild('path', (string) $folder->path_name);
+        $xml_folder->addChild('path', str_replace('&', '&amp;', (string) $folder->path_name));
         $xml_folder->addChild('catalog', (string) $folder->catalog);
         $xml_items = $xml_folder->addChild('items');
 
@@ -482,18 +482,19 @@ class Xml8_Data
             } else {
                 /** @var Folder $libitem */
                 $filename = $libitem->get_fullname();
-                $dirname  = $libitem->path_name;
+                $dirname  = $libitem->path_name ?? '';
             }
 
             $item = $xml_items->addChild('item');
             $item->addAttribute('id', (string) $libitem->id);
             $item->addChild('object_type', $object_type);
-            $item->addChild('title', (string) $filename);
+            // addChild() escapes '<' and '>' but not '&', so escape ampersands to keep the XML valid.
+            $item->addChild('title', str_replace('&', '&amp;', (string) $filename));
             $item->addChild('parent', (string) $folder->getId());
-            $item->addChild('path', $dirname);
-            $item->addChild('art', (string) $art_url);
+            $item->addChild('path', str_replace('&', '&amp;', $dirname));
+            $item->addChild('art', str_replace('&', '&amp;', (string) $art_url));
             $item->addChild('has_art', $libitem->has_art() ? '1' : '0');
-            $item->addChild('play_url', (string) $play_url);
+            $item->addChild('play_url', str_replace('&', '&amp;', (string) $play_url));
             $item->addChild('rating', (string) $user_rating);
             $item->addChild('averagerating', (string) ($rating->get_average_rating() ?? ''));
         }
@@ -1287,7 +1288,7 @@ class Xml8_Data
                 continue;
             }
 
-            $string .= "<share id=\"$share_id\">\n\t<name><![CDATA[" . $share->getObjectName() . "]]></name>\n\t<user><![CDATA[" . $share->getUserName() . "]]></user>\n\t<allow_stream>" . $share->allow_stream . "</allow_stream>\n\t<allow_download>" . $share->allow_download . "</allow_download>\n\t<creation_date>" . $share->creation_date . "</creation_date>\n\t<lastvisit_date>" . $share->lastvisit_date . "</lastvisit_date>\n\t<object_type><![CDATA[" . $share->object_type . "]]></object_type>\n\t<object_id>" . $share->object_id . "</object_id>\n\t<expire_days>" . $share->expire_days . "</expire_days>\n\t<max_counter>" . $share->max_counter . "</max_counter>\n\t<counter>" . $share->counter . "</counter>\n\t<secret><![CDATA[" . $share->secret . "]]></secret>\n\t<public_url><![CDATA[" . $share->public_url . "]]></public_url>\n\t<description><![CDATA[" . $share->description . "]]></description>\n</share>\n";
+            $string .= "<share id=\"$share_id\">\n\t<name><![CDATA[" . $share->getObjectName() . "]]></name>\n\t<owner><![CDATA[" . $share->getUserName() . "]]></owner>\n\t<allow_stream>" . $share->allow_stream . "</allow_stream>\n\t<allow_download>" . $share->allow_download . "</allow_download>\n\t<creation_date>" . $share->creation_date . "</creation_date>\n\t<lastvisit_date>" . $share->lastvisit_date . "</lastvisit_date>\n\t<object_type><![CDATA[" . $share->object_type . "]]></object_type>\n\t<object_id>" . $share->object_id . "</object_id>\n\t<expire_days>" . $share->expire_days . "</expire_days>\n\t<max_counter>" . $share->max_counter . "</max_counter>\n\t<counter>" . $share->counter . "</counter>\n\t<secret><![CDATA[" . $share->secret . "]]></secret>\n\t<public_url><![CDATA[" . $share->public_url . "]]></public_url>\n\t<description><![CDATA[" . $share->description . "]]></description>\n</share>\n";
         }
 
         return Api::output_xml($string, $full_xml);
@@ -1403,10 +1404,8 @@ class Xml8_Data
             $results = $catalog->get_media_tags($song, ['music'], '', '');
             $string .= "<song_tag id=\"" . $song_id . "\">\n";
 
-            foreach ($results as $tag => $value) {
-                if (!in_array($tag, $valid_tags, true)) {
-                    continue;
-                }
+            foreach ($valid_tags as $tag) {
+                $value = $results[$tag] ?? null;
                 if (is_array($value)) {
                     foreach ($value as $item) {
                         $string .= "\t<" . $tag . "><![CDATA[" . $item . "]]></" . $tag . ">\n";
@@ -1616,7 +1615,7 @@ class Xml8_Data
             $flag        = new Userflag($video->id, 'video');
             $art_url     = Art::url($video->id, 'video', $auth);
 
-            $string .= "<video id=\"" . $video->id . "\">\n\t<name><![CDATA[" . $video->title . "]]></name>\n\t<title><![CDATA[" . $video->title . "]]></title>\n\t<mime><![CDATA[" . $video->mime . "]]></mime>\n\t<resolution><![CDATA[" . $video->get_f_resolution() . "]]></resolution>\n\t<size>" . $video->size . "</size>\n" . self::_genre_string($video->get_tags()) . "\t<time><![CDATA[" . $video->time . "]]></time>\n\t<url><![CDATA[" . $video->play_url('', 'api', false, $user->getId(), $user->streamtoken) . "]]></url>\n\t<art><![CDATA[" . $art_url . "]]></art>\n\t<has_art>" . ($video->has_art() ? 1 : 0) . "</has_art>\n\t<flag>" . (!$flag->get_flag($user->getId()) ? 0 : 1) . "</flag>\n\t<rating>" . $user_rating . "</rating>\n\t<averagerating>" . $rating->get_average_rating() . "</averagerating>\n\t<playcount>" . $video->total_count . "</playcount>\n</video>\n";
+            $string .= "<video id=\"" . $video->id . "\">\n\t<title><![CDATA[" . $video->title . "]]></title>\n\t<mime><![CDATA[" . $video->mime . "]]></mime>\n\t<resolution><![CDATA[" . $video->get_f_resolution() . "]]></resolution>\n\t<size>" . $video->size . "</size>\n" . self::_genre_string($video->get_tags()) . "\t<time><![CDATA[" . $video->time . "]]></time>\n\t<url><![CDATA[" . $video->play_url('', 'api', false, $user->getId(), $user->streamtoken) . "]]></url>\n\t<art><![CDATA[" . $art_url . "]]></art>\n\t<has_art>" . ($video->has_art() ? 1 : 0) . "</has_art>\n\t<flag>" . (!$flag->get_flag($user->getId()) ? 0 : 1) . "</flag>\n\t<rating>" . $user_rating . "</rating>\n\t<averagerating>" . $rating->get_average_rating() . "</averagerating>\n\t<playcount>" . $video->total_count . "</playcount>\n</video>\n";
         }
 
         return Api::output_xml($string, $full_xml);

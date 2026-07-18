@@ -103,9 +103,50 @@ class Random
     }
 
     /**
+     * get_album
+     * Randomly picks a song from the album
+     * @return int[]
+     */
+    public static function get_album(int $limit, ?User $user = null): array
+    {
+        $results = [];
+
+        if (empty($user)) {
+            $user = Core::get_global('user');
+        }
+
+        if (!$user instanceof User) {
+            return [];
+        }
+
+        $sql       = "SELECT `song`.`id` FROM `song` ";
+        $user_id   = $user->id;
+        $where_sql = "";
+
+        if (AmpConfig::get('catalog_disable') || AmpConfig::get('catalog_filter')) {
+            $where_sql .= "WHERE `song`.`catalog` IN (" . implode(',', Catalog::get_catalogs('', $user_id, true)) . ") ";
+        }
+
+        $rating_filter = AmpConfig::get_rating_filter();
+        if ($rating_filter > 0 && $rating_filter <= 5) {
+            $where_sql .= ($where_sql == "")
+                ? sprintf('WHERE `song`.`album` NOT IN (SELECT `object_id` FROM `rating` WHERE `rating`.`object_type` = \'album\' AND `rating`.`rating` <=%d AND `rating`.`user` = %d) ', $rating_filter, $user_id)
+                : sprintf('AND `song`.`album` NOT IN (SELECT `object_id` FROM `rating` WHERE `rating`.`object_type` = \'album\' AND `rating`.`rating` <=%d AND `rating`.`user` = %d) ', $rating_filter, $user_id);
+        }
+
+        $sql .= sprintf('%s ORDER BY RAND() LIMIT %d', $where_sql, $limit);
+        $db_results = Dba::read($sql);
+
+        while ($row = Dba::fetch_assoc($db_results)) {
+            $results[] = (int) $row['id'];
+        }
+
+        return $results;
+    }
+
+    /**
      * get_artist
-     * This looks at the last artist played and then randomly picks a song from the
-     * same artist
+     * Randomly picks a song from the artist
      * @return int[]
      */
     public static function get_artist(int $limit, ?User $user = null): array
@@ -122,15 +163,10 @@ class Random
 
         $sql       = "SELECT `song`.`id` FROM `song` ";
         $user_id   = $user->id;
-        $data      = $user->get_recently_played('artist', 1);
-        $where_sql = ($data[0])
-            ? "WHERE `song`.`artist`='" . $data[0] . "' "
-            : "";
+        $where_sql = "";
 
         if (AmpConfig::get('catalog_disable') || AmpConfig::get('catalog_filter')) {
-            $where_sql .= ($where_sql == "")
-                ? "WHERE `song`.`catalog` IN (" . implode(',', Catalog::get_catalogs('', $user_id, true)) . ") "
-                : "AND `song`.`catalog` IN (" . implode(',', Catalog::get_catalogs('', $user_id, true)) . ") ";
+            $where_sql .= "WHERE `song`.`catalog` IN (" . implode(',', Catalog::get_catalogs('', $user_id, true)) . ") ";
         }
 
         $rating_filter = AmpConfig::get_rating_filter();
@@ -252,12 +288,13 @@ class Random
      * get_single_song
      * This returns a single song pulled based on the passed random method
      */
-    public static function get_single_song(string $random_type, User $user, int $object_id = 0): int
+    public static function get_single_song(string $random_type, User $user, ?int $object_id = 0): int
     {
         $song_ids = match ($random_type) {
+            'album' => self::get_album(1, $user),
             'artist' => self::get_artist(1, $user),
-            'playlist' => self::get_playlist($user, $object_id),
-            'search' => self::get_search($user, $object_id),
+            'playlist' => self::get_playlist($user, (int) $object_id),
+            'search' => self::get_search($user, (int) $object_id),
             default => self::get_default(1, $user),
         };
         $song = array_pop($song_ids);

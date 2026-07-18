@@ -30,6 +30,7 @@ use Ampache\Config\ConfigurationKeyEnum;
 use Ampache\Module\Database\DatabaseConnectionInterface;
 use Ampache\Module\Database\Exception\DatabaseException;
 use Ampache\Module\Podcast\PodcastEpisodeStateEnum;
+use Ampache\Repository\Model\Catalog;
 use Ampache\Repository\Model\ModelFactoryInterface;
 use Ampache\Repository\Model\Podcast;
 use Ampache\Repository\Model\Podcast_Episode;
@@ -226,6 +227,52 @@ final readonly class PodcastEpisodeRepository implements PodcastEpisodeRepositor
         while ($episodeId = $result->fetchColumn()) {
             yield $this->modelFactory->createPodcastEpisode((int) $episodeId);
         }
+    }
+
+    /**
+     * Returns a number of random, completed podcast episodes from the whole library
+     *
+     * @return list<int>
+     */
+    public function getRandom(int $userId, ?int $count = 1): array
+    {
+        $sql = 'SELECT `podcast_episode`.`id` FROM `podcast_episode` '
+            . 'LEFT JOIN `catalog` ON `catalog`.`id` = `podcast_episode`.`catalog` '
+            . 'WHERE `podcast_episode`.`state` = ? '
+            . 'AND `catalog`.`id` IN (' . implode(',', Catalog::get_catalogs('', $userId, true)) . ') '
+            . 'ORDER BY RAND() LIMIT ' . $count;
+
+        $result = $this->connection->query($sql, [PodcastEpisodeStateEnum::COMPLETED->value]);
+
+        $episodeIds = [];
+        while ($episodeId = $result->fetchColumn()) {
+            $episodeIds[] = (int) $episodeId;
+        }
+
+        return $episodeIds;
+    }
+
+    /**
+     * Returns a number of random, completed episodes from a single podcast
+     *
+     * @return list<int>
+     */
+    public function getRandomByPodcast(int $podcastId, int $userId, ?int $count = 1): array
+    {
+        $sql = 'SELECT `podcast_episode`.`id` FROM `podcast_episode` '
+            . 'LEFT JOIN `catalog` ON `catalog`.`id` = `podcast_episode`.`catalog` '
+            . 'WHERE `podcast_episode`.`podcast` = ? AND `podcast_episode`.`state` = ? '
+            . 'AND `catalog`.`id` IN (' . implode(',', Catalog::get_catalogs('', $userId, true)) . ') '
+            . 'ORDER BY RAND() LIMIT ' . $count;
+
+        $result = $this->connection->query($sql, [$podcastId, PodcastEpisodeStateEnum::COMPLETED->value]);
+
+        $episodeIds = [];
+        while ($episodeId = $result->fetchColumn()) {
+            $episodeIds[] = (int) $episodeId;
+        }
+
+        return $episodeIds;
     }
 
     /**

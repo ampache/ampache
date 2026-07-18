@@ -213,12 +213,11 @@ final readonly class PlayAction implements ApplicationActionInterface
             $record_stats = false;
         }
 
-        $is_download   = ($action === 'download');
-        $maxbitrate    = 0;
-        $media_bitrate = 0;
-        $resolution    = '';
-        $quality       = 0;
-        $time          = time();
+        $is_download = ($action === 'download');
+        $maxbitrate  = 0;
+        $resolution  = '';
+        $quality     = 0;
+        $time        = time();
 
         if ($player_customize && !$original) {
             // Trick to avoid LimitInternalRecursion reconfiguration
@@ -698,7 +697,10 @@ final readonly class PlayAction implements ApplicationActionInterface
                 $streamConfiguration = [
                     'file_path' => $file_target,
                     'file_name' => $media->getFileName(),
-                    'file_size' => (($media->file && preg_match('/^https?:\/\//i', $media->file)) || time() - filemtime($file_target) < 30) ? $media->size : Core::get_filesize($file_target),
+                    // Only a remote URL lacks a local file to stat; a local cache file always has a
+                    // real, just-stabilized size on disk, which must never be replaced by the
+                    // original (pre-transcode) media size.
+                    'file_size' => ($media->file && preg_match('/^https?:\/\//i', $media->file)) ? $media->size : Core::get_filesize($file_target),
                     'file_type' => $cache_target,
                 ];
             } elseif (($catalog instanceof Catalog_remote || $catalog instanceof Catalog_subsonic)) {
@@ -876,9 +878,11 @@ final readonly class PlayAction implements ApplicationActionInterface
                     );
                 } else {
                     /** @var Song|Video $media */
+                    // $bitrate is bps (the stream URL/API convention); $maxbitrate and $media->bitrate
+                    // (scaled down) are kbps, so compare $bitrate against the real bps media bitrate directly.
                     $media_bitrate = floor($media->bitrate / 1024);
-                    //$this->logger->debug("requested bitrate $bitrate <=> $media_bitrate ({$media->bitrate}) media bitrate", [LegacyLogger::CONTEXT_TYPE => self::class]);
-                    if (($bitrate > 0 && $bitrate < $media_bitrate) || ($maxbitrate > 0 && $maxbitrate < $media_bitrate)) {
+                    //$this->logger->debug("requested bitrate $bitrate <=> {$media->bitrate} media bitrate", [LegacyLogger::CONTEXT_TYPE => self::class]);
+                    if (($bitrate > 0 && $bitrate < $media->bitrate) || ($maxbitrate > 0 && $maxbitrate < $media_bitrate)) {
                         $transcode = true;
                         $this->logger->debug(
                             'Transcoding because explicit bitrate request',
@@ -1043,22 +1047,28 @@ final readonly class PlayAction implements ApplicationActionInterface
 
             $stream_size = (int) ($end - ((int) $start)) + 1;
 
-            if ($stream_size === 0) {
-                $this->logger->error(
-                    'Content-Range header received, which we cannot fulfill due to unknown final length (transcoding?)',
-                    [LegacyLogger::CONTEXT_TYPE => self::class]
-                );
-            } else {
+            if ($stream_size <= 0 || $start > $streamConfiguration['file_size'] - 1) {
+                // The requested range is outside the real, known size of this resource
                 $this->logger->debug(
-                    'Content-Range header received, skipping ' . $start . ' bytes out of ' . $streamConfiguration['file_size'],
+                    'Content-Range header received but out of bounds for a ' . $streamConfiguration['file_size'] . ' byte file',
                     [LegacyLogger::CONTEXT_TYPE => self::class]
                 );
-                fseek($filepointer, (int) $start);
+                fclose($filepointer);
+                header('HTTP/1.1 416 Range Not Satisfiable');
+                header('Content-Range: bytes */' . $streamConfiguration['file_size']);
 
-                $range = $start . '-' . $end . '/' . $streamConfiguration['file_size'];
-                header('HTTP/1.1 206 Partial Content');
-                header('Content-Range: bytes ' . $range);
+                return null;
             }
+
+            $this->logger->debug(
+                'Content-Range header received, skipping ' . $start . ' bytes out of ' . $streamConfiguration['file_size'],
+                [LegacyLogger::CONTEXT_TYPE => self::class]
+            );
+            fseek($filepointer, (int) $start);
+
+            $range = $start . '-' . $end . '/' . $streamConfiguration['file_size'];
+            header('HTTP/1.1 206 Partial Content');
+            header('Content-Range: bytes ' . $range);
         }
 
         if (!isset($_REQUEST['segment'])) {
@@ -1194,13 +1204,13 @@ final readonly class PlayAction implements ApplicationActionInterface
                     $bytes_streamed += strlen($buf);
                 }
             } while (
-                !feof($filepointer)
+                connection_status() === 0
                 && (
-                    connection_status() === 0
-                    && (
-                        $transcode
-                        || $bytes_streamed < $stream_size
-                    )
+                    $transcode
+                        // Keep reading until the pipe is genuinely drained, or a little longer still
+                        // if the transcoder process hasn't reported exiting yet.
+                        ? (!feof($filepointer) || (!empty($transcoder['process']) && is_resource($transcoder['process']) && proc_get_status($transcoder['process'])['running']))
+                        : (!feof($filepointer) && $bytes_streamed < $stream_size)
                 )
             );
         }
@@ -1213,8 +1223,9 @@ final readonly class PlayAction implements ApplicationActionInterface
         }
 
         $real_bytes_streamed = $bytes_streamed;
-        // Need to make sure enough bytes were sent.
-        if ($bytes_streamed < $stream_size && (connection_status() === 0)) {
+        // A transcode's declared length is always a guess and must never be topped up with filler
+        // bytes or treated as a promise we have to keep; only a direct stream has a real, known size.
+        if (!$transcode && $bytes_streamed < $stream_size && (connection_status() === 0)) {
             // This stop's a client requesting the same content-range repeatedly
             print(str_repeat(' ', $stream_size - $bytes_streamed));
             $bytes_streamed = $stream_size;
@@ -1228,7 +1239,7 @@ final readonly class PlayAction implements ApplicationActionInterface
             Stream::kill_process($transcoder);
         }
 
-        if ($bytes_streamed === 0 && $stream_size === 0) {
+        if (!$transcode && $bytes_streamed === 0 && $stream_size === 0) {
             http_response_code(416);
             $this->logger->debug(
                 'Stream ended: No bytes left to stream',

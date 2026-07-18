@@ -25,90 +25,16 @@ declare(strict_types=1);
 
 namespace Ampache\Module\Api\Method\Api8;
 
-use Ampache\Config\AmpConfig;
-use Ampache\Module\Api\Api;
-use Ampache\Module\Api\Exception\ErrorCodeEnum;
-use Ampache\Module\Api\Json8_Data;
-use Ampache\Module\Api\Xml8_Data;
-use Ampache\Repository\Model\Preference;
-use Ampache\Repository\Model\User;
-use Ampache\Repository\UserActivityRepositoryInterface;
+use Ampache\Module\Api\Method\AbstractTimelineMethod;
 
 /**
- * Class Timeline8Method
- * @package Lib\Api8Methods
+ * Returns a user's timeline
+ *
+ * Api version 8 reports the user as `filter` and accepts `username` as an alias.
  */
-final class Timeline8Method
+final class Timeline8Method extends AbstractTimelineMethod
 {
-    public const string ACTION = 'timeline';
+    protected const string FILTER_ALIAS = 'username';
 
-    /**
-     * timeline
-     * MINIMUM_API_VERSION=380001
-     *
-     * This gets a user timeline from their username
-     *
-     * filter = (integer|string) filter by user id OR username //optional
-     * username = (string)
-     * limit = (integer) //optional
-     * since = (integer) UNIXTIME() //optional
-     *
-     * @param array{
-     *     filter?: int|string,
-     *     username?: string,
-     *     limit?: int,
-     *     since?: int,
-     *     api_format: string,
-     *     auth: string,
-     * } $input
-     */
-    public static function timeline(array $input, User $user): bool
-    {
-        if (!AmpConfig::get('sociable')) {
-            Api::error(ErrorCodeEnum::ACCESS_DENIED, 'Enable: sociable', self::ACTION, 'system', $input['api_format']);
-
-            return false;
-        }
-
-        $input['filter'] = $input['username'] ?? $input['filter'] ?? null;
-        if (!Api::check_parameter($input, ['filter'], self::ACTION)) {
-            return false;
-        }
-
-        $username = $input['filter'];
-        $leadUser = (is_numeric($username))
-            ? User::get_from_id((int) $username)
-            : User::get_from_username((string) $username);
-        if (!empty($leadUser)) {
-            $limit = (int) ($input['limit'] ?? 0);
-            $since = (int) ($input['since'] ?? 0);
-            if (
-                $leadUser->getId() === $user->getId()
-                || Preference::get_by_user($leadUser->getId(), 'allow_personal_info_recent')
-            ) {
-                $results = self::getUseractivityRepository()->getActivities(
-                    $leadUser->getId(),
-                    $limit,
-                    $since
-                );
-                ob_end_clean();
-                switch ($input['api_format']) {
-                    case 'json':
-                        echo Json8_Data::timeline($results);
-                        break;
-                    default:
-                        echo Xml8_Data::timeline($results);
-                }
-            }
-        }
-
-        return true;
-    }
-
-    private static function getUseractivityRepository(): UserActivityRepositoryInterface
-    {
-        global $dic;
-
-        return $dic->get(UserActivityRepositoryInterface::class);
-    }
+    protected const string FILTER_KEY = 'filter';
 }

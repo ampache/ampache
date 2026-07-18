@@ -45,7 +45,7 @@ use Psr\Log\LoggerInterface;
 
 abstract class AbstractStreamAction implements ApplicationActionInterface
 {
-    protected function __construct(
+    public function __construct(
         private readonly LoggerInterface $logger,
         private readonly ConfigContainerInterface $configContainer,
     ) {}

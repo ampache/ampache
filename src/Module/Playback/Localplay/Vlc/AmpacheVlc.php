@@ -428,9 +428,7 @@ class AmpacheVlc extends localplay_controller
      */
     public function play(): bool
     {
-        /* A play when it's already playing causes a track restart
-         * which we don't want to doublecheck its state
-         */
+        // A play when it's already playing causes a track restart which we don't want
         if ($this->_vlc->state() == 'play') {
             return true;
         }

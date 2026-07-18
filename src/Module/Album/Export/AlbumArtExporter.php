@@ -80,7 +80,7 @@ final readonly class AlbumArtExporter implements AlbumArtExporterInterface
                 $preferred_filename = sprintf('folder.%s', $extension);
             }
 
-            $file = $dir . DIRECTORY_SEPARATOR . $preferred_filename;
+            $file = $dir . '/' . $preferred_filename;
 
             $file_handle = @fopen($file, 'w');
 

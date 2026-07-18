@@ -36,7 +36,7 @@ final readonly class InitializationHandlerConfig implements InitializationHandle
 {
     public const string CONFIG_FILE_PATH = __DIR__ . '/../../../config/ampache.cfg.php';
 
-    private const string CONFIG_VERSION = '88';
+    private const string CONFIG_VERSION = '89';
 
     private const string STRUCTURE = 'public';
 
@@ -58,7 +58,6 @@ final readonly class InitializationHandlerConfig implements InitializationHandle
             throw new ConfigFileNotParsableException();
         }
 
-        /** This is the version... fluff nothing more... */
         $results['version']            = self::VERSION;
         $results['int_config_version'] = self::CONFIG_VERSION;
         $results['structure']          = self::STRUCTURE;

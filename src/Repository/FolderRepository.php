@@ -190,7 +190,7 @@ final readonly class FolderRepository implements FolderRepositoryInterface
      */
     public function getItemCount(): int
     {
-        $db_results = $this->connection->query('SELECT COUNT(*) AS `count` FROM `video`;');
+        $db_results = $this->connection->query('SELECT COUNT(*) AS `count` FROM `folder`;');
         if (($results = $db_results->fetch(PDO::FETCH_ASSOC)) && array_key_exists('count', $results)) {
             return (int) $results['count'];
         }

@@ -322,6 +322,2587 @@
           "folder"
         ],
         "additionalProperties": false
+      },
+      "AlbumObject": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "name": {
+            "type": "string",
+            "nullable": true
+          },
+          "prefix": {
+            "type": "string",
+            "nullable": true
+          },
+          "basename": {
+            "type": "string",
+            "nullable": true
+          },
+          "artist": {
+            "type": "object",
+            "properties": {
+              "id": {
+                "type": "string"
+              },
+              "name": {
+                "type": "string",
+                "nullable": true
+              },
+              "prefix": {
+                "type": "string",
+                "nullable": true
+              },
+              "basename": {
+                "type": "string",
+                "nullable": true
+              }
+            },
+            "required": [
+              "id",
+              "name",
+              "prefix",
+              "basename"
+            ],
+            "additionalProperties": false,
+            "nullable": true
+          },
+          "artists": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "id": {
+                  "type": "string"
+                },
+                "name": {
+                  "type": "string",
+                  "nullable": true
+                },
+                "prefix": {
+                  "type": "string",
+                  "nullable": true
+                },
+                "basename": {
+                  "type": "string",
+                  "nullable": true
+                }
+              },
+              "required": [
+                "id",
+                "name",
+                "prefix",
+                "basename"
+              ],
+              "additionalProperties": false
+            }
+          },
+          "songartists": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "id": {
+                  "type": "string"
+                },
+                "name": {
+                  "type": "string",
+                  "nullable": true
+                },
+                "prefix": {
+                  "type": "string",
+                  "nullable": true
+                },
+                "basename": {
+                  "type": "string",
+                  "nullable": true
+                }
+              },
+              "required": [
+                "id",
+                "name",
+                "prefix",
+                "basename"
+              ],
+              "additionalProperties": false
+            }
+          },
+          "time": {
+            "type": "integer"
+          },
+          "year": {
+            "type": "integer"
+          },
+          "tracks": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/SongObject"
+            }
+          },
+          "songcount": {
+            "type": "integer"
+          },
+          "diskcount": {
+            "type": "integer"
+          },
+          "type": {
+            "type": "string",
+            "nullable": true
+          },
+          "genre": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "id": {
+                  "type": "string"
+                },
+                "name": {
+                  "type": "string"
+                }
+              },
+              "required": [
+                "id",
+                "name"
+              ],
+              "additionalProperties": false
+            }
+          },
+          "art": {
+            "type": "string",
+            "nullable": true
+          },
+          "has_art": {
+            "type": "boolean"
+          },
+          "flag": {
+            "type": "boolean"
+          },
+          "rating": {
+            "type": "integer",
+            "nullable": true
+          },
+          "averagerating": {
+            "type": "number",
+            "nullable": true
+          },
+          "mbid": {
+            "type": "string",
+            "nullable": true
+          },
+          "mbid_group": {
+            "type": "string",
+            "nullable": true
+          }
+        },
+        "required": [
+          "id",
+          "name",
+          "prefix",
+          "basename",
+          "time",
+          "year",
+          "tracks",
+          "songcount",
+          "diskcount",
+          "type",
+          "genre",
+          "art",
+          "has_art",
+          "flag",
+          "rating",
+          "averagerating",
+          "mbid",
+          "mbid_group"
+        ],
+        "additionalProperties": false
+      },
+      "SongObject": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "title": {
+            "type": "string",
+            "nullable": true
+          },
+          "name": {
+            "type": "string",
+            "nullable": true
+          },
+          "artist": {
+            "type": "object",
+            "properties": {
+              "id": {
+                "type": "string"
+              },
+              "name": {
+                "type": "string"
+              },
+              "prefix": {
+                "type": "string"
+              },
+              "basename": {
+                "type": "string"
+              }
+            },
+            "required": [
+              "id",
+              "name",
+              "prefix",
+              "basename"
+            ],
+            "additionalProperties": false
+          },
+          "artists": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "id": {
+                  "type": "string"
+                },
+                "name": {
+                  "type": "string"
+                },
+                "prefix": {
+                  "type": "string"
+                },
+                "basename": {
+                  "type": "string"
+                }
+              },
+              "required": [
+                "id",
+                "name",
+                "prefix",
+                "basename"
+              ],
+              "additionalProperties": false
+            }
+          },
+          "album": {
+            "type": "object",
+            "properties": {
+              "id": {
+                "type": "string"
+              },
+              "name": {
+                "type": "string"
+              },
+              "prefix": {
+                "type": "string"
+              },
+              "basename": {
+                "type": "string"
+              }
+            },
+            "required": [
+              "id",
+              "name",
+              "prefix",
+              "basename"
+            ],
+            "additionalProperties": false
+          },
+          "albumartist": {
+            "type": "object",
+            "properties": {
+              "id": {
+                "type": "string"
+              },
+              "name": {
+                "type": "string"
+              },
+              "prefix": {
+                "type": "string"
+              },
+              "basename": {
+                "type": "string"
+              }
+            },
+            "required": [
+              "id",
+              "name",
+              "prefix",
+              "basename"
+            ],
+            "additionalProperties": false
+          },
+          "disk": {
+            "type": "integer"
+          },
+          "disksubtitle": {
+            "type": "string",
+            "nullable": true
+          },
+          "track": {
+            "type": "integer"
+          },
+          "filename": {
+            "type": "string",
+            "nullable": true
+          },
+          "genre": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "id": {
+                  "type": "string"
+                },
+                "name": {
+                  "type": "string"
+                }
+              },
+              "required": [
+                "id",
+                "name"
+              ],
+              "additionalProperties": false
+            }
+          },
+          "playlisttrack": {
+            "type": "integer"
+          },
+          "time": {
+            "type": "integer"
+          },
+          "year": {
+            "type": "integer"
+          },
+          "format": {
+            "type": "string",
+            "nullable": true
+          },
+          "stream_format": {
+            "type": "string",
+            "nullable": true
+          },
+          "bitrate": {
+            "type": "integer",
+            "nullable": true
+          },
+          "stream_bitrate": {
+            "type": "integer",
+            "nullable": true
+          },
+          "rate": {
+            "type": "integer"
+          },
+          "mode": {
+            "type": "string",
+            "nullable": true
+          },
+          "mime": {
+            "type": "string",
+            "nullable": true
+          },
+          "stream_mime": {
+            "type": "string",
+            "nullable": true
+          },
+          "url": {
+            "type": "string"
+          },
+          "size": {
+            "type": "integer"
+          },
+          "mbid": {
+            "type": "string",
+            "nullable": true
+          },
+          "art": {
+            "type": "string",
+            "nullable": true
+          },
+          "has_art": {
+            "type": "boolean"
+          },
+          "flag": {
+            "type": "boolean"
+          },
+          "rating": {
+            "type": "integer",
+            "nullable": true
+          },
+          "averagerating": {
+            "type": "number",
+            "nullable": true
+          },
+          "playcount": {
+            "type": "integer"
+          },
+          "catalog": {
+            "type": "string"
+          },
+          "composer": {
+            "type": "string",
+            "nullable": true
+          },
+          "channels": {
+            "type": "integer",
+            "nullable": true
+          },
+          "comment": {
+            "type": "string",
+            "nullable": true
+          },
+          "license": {
+            "type": "string",
+            "nullable": true
+          },
+          "publisher": {
+            "type": "string",
+            "nullable": true
+          },
+          "language": {
+            "type": "string",
+            "nullable": true
+          },
+          "lyrics": {
+            "type": "string",
+            "nullable": true
+          },
+          "replaygain_album_gain": {
+            "type": "number",
+            "nullable": true
+          },
+          "replaygain_album_peak": {
+            "type": "number",
+            "nullable": true
+          },
+          "replaygain_track_gain": {
+            "type": "number",
+            "nullable": true
+          },
+          "replaygain_track_peak": {
+            "type": "number",
+            "nullable": true
+          },
+          "r128_album_gain": {
+            "type": "number",
+            "nullable": true
+          },
+          "r128_track_gain": {
+            "type": "number",
+            "nullable": true
+          },
+          "metadata": {
+            "type": "object",
+            "additionalProperties": {
+              "type": "string"
+            }
+          }
+        },
+        "required": [
+          "id",
+          "title",
+          "name",
+          "artist",
+          "artists",
+          "album",
+          "disk",
+          "disksubtitle",
+          "track",
+          "filename",
+          "genre",
+          "playlisttrack",
+          "time",
+          "year",
+          "format",
+          "stream_format",
+          "bitrate",
+          "stream_bitrate",
+          "rate",
+          "mode",
+          "mime",
+          "stream_mime",
+          "url",
+          "size",
+          "mbid",
+          "art",
+          "has_art",
+          "flag",
+          "rating",
+          "averagerating",
+          "playcount",
+          "catalog",
+          "composer",
+          "channels",
+          "comment",
+          "license",
+          "publisher",
+          "language",
+          "lyrics",
+          "replaygain_album_gain",
+          "replaygain_album_peak",
+          "replaygain_track_gain",
+          "replaygain_track_peak",
+          "r128_album_gain",
+          "r128_track_gain"
+        ],
+        "additionalProperties": false
+      },
+      "AlbumsResponse": {
+        "type": "object",
+        "properties": {
+          "total_count": {
+            "type": "integer"
+          },
+          "md5": {
+            "type": "string"
+          },
+          "album": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/AlbumObject"
+            }
+          }
+        },
+        "required": [
+          "total_count",
+          "md5",
+          "album"
+        ],
+        "additionalProperties": false
+      },
+      "SongsResponse": {
+        "type": "object",
+        "properties": {
+          "total_count": {
+            "type": "integer"
+          },
+          "md5": {
+            "type": "string"
+          },
+          "song": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/SongObject"
+            }
+          }
+        },
+        "required": [
+          "total_count",
+          "md5",
+          "song"
+        ],
+        "additionalProperties": false
+      },
+      "ArtistObject": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "name": {
+            "type": "string",
+            "nullable": true
+          },
+          "prefix": {
+            "type": "string",
+            "nullable": true
+          },
+          "basename": {
+            "type": "string",
+            "nullable": true
+          },
+          "albums": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/AlbumObject"
+            }
+          },
+          "albumcount": {
+            "type": "integer"
+          },
+          "songs": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/SongObject"
+            }
+          },
+          "songcount": {
+            "type": "integer"
+          },
+          "genre": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "id": {
+                  "type": "string"
+                },
+                "name": {
+                  "type": "string"
+                }
+              },
+              "required": [
+                "id",
+                "name"
+              ],
+              "additionalProperties": false
+            }
+          },
+          "art": {
+            "type": "string",
+            "nullable": true
+          },
+          "has_art": {
+            "type": "boolean"
+          },
+          "flag": {
+            "type": "boolean"
+          },
+          "rating": {
+            "type": "integer",
+            "nullable": true
+          },
+          "averagerating": {
+            "type": "number",
+            "nullable": true
+          },
+          "mbid": {
+            "type": "string",
+            "nullable": true
+          },
+          "summary": {
+            "type": "string",
+            "nullable": true
+          },
+          "time": {
+            "type": "integer"
+          },
+          "yearformed": {
+            "type": "integer"
+          },
+          "placeformed": {
+            "type": "string",
+            "nullable": true
+          }
+        },
+        "required": [
+          "id",
+          "name",
+          "prefix",
+          "basename",
+          "albums",
+          "albumcount",
+          "songs",
+          "songcount",
+          "genre",
+          "art",
+          "has_art",
+          "flag",
+          "rating",
+          "averagerating",
+          "mbid",
+          "summary",
+          "time",
+          "yearformed",
+          "placeformed"
+        ],
+        "additionalProperties": false
+      },
+      "GenreObject": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "name": {
+            "type": "string",
+            "nullable": true
+          },
+          "albums": {
+            "type": "integer"
+          },
+          "artists": {
+            "type": "integer"
+          },
+          "songs": {
+            "type": "integer"
+          },
+          "videos": {
+            "type": "integer"
+          },
+          "playlists": {
+            "type": "integer"
+          },
+          "live_streams": {
+            "type": "integer"
+          },
+          "is_hidden": {
+            "type": "boolean"
+          },
+          "merge": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "id": {
+                  "type": "string"
+                },
+                "name": {
+                  "type": "string"
+                }
+              },
+              "required": [
+                "id",
+                "name"
+              ],
+              "additionalProperties": false
+            }
+          }
+        },
+        "required": [
+          "id",
+          "name",
+          "albums",
+          "artists",
+          "songs",
+          "videos",
+          "playlists",
+          "live_streams",
+          "is_hidden",
+          "merge"
+        ],
+        "additionalProperties": false
+      },
+      "LabelObject": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "name": {
+            "type": "string",
+            "nullable": true
+          },
+          "artists": {
+            "type": "integer"
+          },
+          "summary": {
+            "type": "string",
+            "nullable": true
+          },
+          "external_link": {
+            "type": "string"
+          },
+          "address": {
+            "type": "string",
+            "nullable": true
+          },
+          "category": {
+            "type": "string",
+            "nullable": true
+          },
+          "email": {
+            "type": "string",
+            "nullable": true
+          },
+          "website": {
+            "type": "string",
+            "nullable": true
+          },
+          "user": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "id",
+          "name",
+          "artists",
+          "summary",
+          "external_link",
+          "address",
+          "category",
+          "email",
+          "website",
+          "user"
+        ],
+        "additionalProperties": false
+      },
+      "LiveStreamObject": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "name": {
+            "type": "string",
+            "nullable": true
+          },
+          "url": {
+            "type": "string",
+            "nullable": true
+          },
+          "codec": {
+            "type": "string",
+            "nullable": true
+          },
+          "catalog": {
+            "type": "string"
+          },
+          "site_url": {
+            "type": "string",
+            "nullable": true
+          }
+        },
+        "required": [
+          "id",
+          "name",
+          "url",
+          "codec",
+          "catalog",
+          "site_url"
+        ],
+        "additionalProperties": false
+      },
+      "PlaylistObject": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "name": {
+            "type": "string",
+            "nullable": true
+          },
+          "owner": {
+            "type": "string",
+            "nullable": true
+          },
+          "user": {
+            "type": "object",
+            "properties": {
+              "id": {
+                "type": "string"
+              },
+              "username": {
+                "type": "string",
+                "nullable": true
+              }
+            },
+            "required": [
+              "id",
+              "username"
+            ],
+            "additionalProperties": false
+          },
+          "items": {
+            "oneOf": [
+              {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "additionalProperties": {
+                    "oneOf": [
+                      {
+                        "type": "integer"
+                      },
+                      {
+                        "type": "string"
+                      }
+                    ]
+                  }
+                }
+              },
+              {
+                "type": "integer"
+              }
+            ]
+          },
+          "type": {
+            "type": "string",
+            "nullable": true
+          },
+          "art": {
+            "type": "string",
+            "nullable": true
+          },
+          "has_access": {
+            "type": "boolean"
+          },
+          "has_collaborate": {
+            "type": "boolean"
+          },
+          "has_art": {
+            "type": "boolean"
+          },
+          "flag": {
+            "type": "boolean"
+          },
+          "rating": {
+            "type": "integer",
+            "nullable": true
+          },
+          "averagerating": {
+            "type": "number",
+            "nullable": true
+          },
+          "md5": {
+            "type": "string",
+            "nullable": true
+          },
+          "last_update": {
+            "type": "integer",
+            "nullable": true
+          },
+          "time": {
+            "type": "integer"
+          }
+        },
+        "required": [
+          "id",
+          "name",
+          "owner",
+          "user",
+          "items",
+          "type",
+          "art",
+          "has_access",
+          "has_collaborate",
+          "has_art",
+          "flag",
+          "rating",
+          "averagerating",
+          "md5",
+          "last_update",
+          "time"
+        ],
+        "additionalProperties": false
+      },
+      "PodcastEpisodeObject": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "title": {
+            "type": "string",
+            "nullable": true
+          },
+          "name": {
+            "type": "string",
+            "nullable": true
+          },
+          "podcast": {
+            "type": "object",
+            "properties": {
+              "id": {
+                "type": "string"
+              },
+              "name": {
+                "type": "string"
+              }
+            },
+            "required": [
+              "id",
+              "name"
+            ],
+            "additionalProperties": false
+          },
+          "description": {
+            "type": "string",
+            "nullable": true
+          },
+          "category": {
+            "type": "string",
+            "nullable": true
+          },
+          "author": {
+            "type": "string",
+            "nullable": true
+          },
+          "author_full": {
+            "type": "string",
+            "nullable": true
+          },
+          "website": {
+            "type": "string",
+            "nullable": true
+          },
+          "pubdate": {
+            "type": "string",
+            "nullable": true
+          },
+          "state": {
+            "type": "string"
+          },
+          "filelength": {
+            "type": "string"
+          },
+          "filesize": {
+            "type": "string"
+          },
+          "filename": {
+            "type": "string"
+          },
+          "mime": {
+            "type": "string",
+            "nullable": true
+          },
+          "time": {
+            "type": "integer"
+          },
+          "size": {
+            "type": "integer"
+          },
+          "bitrate": {
+            "type": "integer"
+          },
+          "stream_bitrate": {
+            "type": "integer"
+          },
+          "rate": {
+            "type": "integer"
+          },
+          "mode": {
+            "type": "string",
+            "nullable": true
+          },
+          "channels": {
+            "type": "integer",
+            "nullable": true
+          },
+          "public_url": {
+            "type": "string"
+          },
+          "url": {
+            "type": "string"
+          },
+          "catalog": {
+            "type": "string"
+          },
+          "art": {
+            "type": "string",
+            "nullable": true
+          },
+          "has_art": {
+            "type": "boolean"
+          },
+          "flag": {
+            "type": "boolean"
+          },
+          "rating": {
+            "type": "integer",
+            "nullable": true
+          },
+          "averagerating": {
+            "type": "number",
+            "nullable": true
+          },
+          "playcount": {
+            "type": "integer"
+          },
+          "played": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "id",
+          "title",
+          "name",
+          "podcast",
+          "description",
+          "category",
+          "author",
+          "author_full",
+          "website",
+          "pubdate",
+          "state",
+          "filelength",
+          "filesize",
+          "filename",
+          "mime",
+          "time",
+          "size",
+          "bitrate",
+          "stream_bitrate",
+          "rate",
+          "mode",
+          "channels",
+          "public_url",
+          "url",
+          "catalog",
+          "art",
+          "has_art",
+          "flag",
+          "rating",
+          "averagerating",
+          "playcount",
+          "played"
+        ],
+        "additionalProperties": false
+      },
+      "PodcastObject": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "name": {
+            "type": "string",
+            "nullable": true
+          },
+          "description": {
+            "type": "string"
+          },
+          "language": {
+            "type": "string"
+          },
+          "copyright": {
+            "type": "string"
+          },
+          "feed_url": {
+            "type": "string"
+          },
+          "generator": {
+            "type": "string"
+          },
+          "website": {
+            "type": "string"
+          },
+          "build_date": {
+            "type": "string"
+          },
+          "sync_date": {
+            "type": "string"
+          },
+          "public_url": {
+            "type": "string"
+          },
+          "art": {
+            "type": "string",
+            "nullable": true
+          },
+          "has_art": {
+            "type": "boolean"
+          },
+          "flag": {
+            "type": "boolean"
+          },
+          "rating": {
+            "type": "integer",
+            "nullable": true
+          },
+          "averagerating": {
+            "type": "number",
+            "nullable": true
+          },
+          "podcast_episode": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/PodcastEpisodeObject"
+            }
+          }
+        },
+        "required": [
+          "id",
+          "name",
+          "description",
+          "language",
+          "copyright",
+          "feed_url",
+          "generator",
+          "website",
+          "build_date",
+          "sync_date",
+          "public_url",
+          "art",
+          "has_art",
+          "flag",
+          "rating",
+          "averagerating",
+          "podcast_episode"
+        ],
+        "additionalProperties": false
+      },
+      "VideoObject": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "title": {
+            "type": "string",
+            "nullable": true
+          },
+          "mime": {
+            "type": "string",
+            "nullable": true
+          },
+          "resolution": {
+            "type": "string",
+            "nullable": true
+          },
+          "size": {
+            "type": "integer"
+          },
+          "genre": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "id": {
+                  "type": "string"
+                },
+                "name": {
+                  "type": "string"
+                }
+              },
+              "required": [
+                "id",
+                "name"
+              ],
+              "additionalProperties": false
+            }
+          },
+          "time": {
+            "type": "integer"
+          },
+          "url": {
+            "type": "string"
+          },
+          "art": {
+            "type": "string",
+            "nullable": true
+          },
+          "has_art": {
+            "type": "boolean"
+          },
+          "flag": {
+            "type": "boolean"
+          },
+          "rating": {
+            "type": "integer",
+            "nullable": true
+          },
+          "averagerating": {
+            "type": "number",
+            "nullable": true
+          },
+          "playcount": {
+            "type": "integer"
+          }
+        },
+        "required": [
+          "id",
+          "title",
+          "mime",
+          "resolution",
+          "size",
+          "genre",
+          "time",
+          "url",
+          "art",
+          "has_art",
+          "flag",
+          "rating",
+          "averagerating",
+          "playcount"
+        ],
+        "additionalProperties": false
+      },
+      "ArtistsResponse": {
+        "type": "object",
+        "properties": {
+          "total_count": {
+            "type": "integer"
+          },
+          "md5": {
+            "type": "string"
+          },
+          "artist": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ArtistObject"
+            }
+          }
+        },
+        "required": [
+          "total_count",
+          "md5",
+          "artist"
+        ],
+        "additionalProperties": false
+      },
+      "GenresResponse": {
+        "type": "object",
+        "properties": {
+          "total_count": {
+            "type": "integer"
+          },
+          "md5": {
+            "type": "string"
+          },
+          "genre": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/GenreObject"
+            }
+          }
+        },
+        "required": [
+          "total_count",
+          "md5",
+          "genre"
+        ],
+        "additionalProperties": false
+      },
+      "LabelsResponse": {
+        "type": "object",
+        "properties": {
+          "total_count": {
+            "type": "integer"
+          },
+          "md5": {
+            "type": "string"
+          },
+          "label": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/LabelObject"
+            }
+          }
+        },
+        "required": [
+          "total_count",
+          "md5",
+          "label"
+        ],
+        "additionalProperties": false
+      },
+      "LiveStreamsResponse": {
+        "type": "object",
+        "properties": {
+          "total_count": {
+            "type": "integer"
+          },
+          "md5": {
+            "type": "string"
+          },
+          "live_stream": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/LiveStreamObject"
+            }
+          }
+        },
+        "required": [
+          "total_count",
+          "md5",
+          "live_stream"
+        ],
+        "additionalProperties": false
+      },
+      "PlaylistsResponse": {
+        "type": "object",
+        "properties": {
+          "total_count": {
+            "type": "integer"
+          },
+          "md5": {
+            "type": "string"
+          },
+          "playlist": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/PlaylistObject"
+            }
+          }
+        },
+        "required": [
+          "total_count",
+          "md5",
+          "playlist"
+        ],
+        "additionalProperties": false
+      },
+      "PodcastEpisodesResponse": {
+        "type": "object",
+        "properties": {
+          "total_count": {
+            "type": "integer"
+          },
+          "md5": {
+            "type": "string"
+          },
+          "podcast_episode": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/PodcastEpisodeObject"
+            }
+          }
+        },
+        "required": [
+          "total_count",
+          "md5",
+          "podcast_episode"
+        ],
+        "additionalProperties": false
+      },
+      "PodcastsResponse": {
+        "type": "object",
+        "properties": {
+          "total_count": {
+            "type": "integer"
+          },
+          "md5": {
+            "type": "string"
+          },
+          "podcast": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/PodcastObject"
+            }
+          }
+        },
+        "required": [
+          "total_count",
+          "md5",
+          "podcast"
+        ],
+        "additionalProperties": false
+      },
+      "VideosResponse": {
+        "type": "object",
+        "properties": {
+          "total_count": {
+            "type": "integer"
+          },
+          "md5": {
+            "type": "string"
+          },
+          "video": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/VideoObject"
+            }
+          }
+        },
+        "required": [
+          "total_count",
+          "md5",
+          "video"
+        ],
+        "additionalProperties": false
+      },
+      "CatalogObject": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "name": {
+            "type": "string",
+            "nullable": true
+          },
+          "type": {
+            "type": "string",
+            "nullable": true
+          },
+          "gather_types": {
+            "type": "string",
+            "nullable": true
+          },
+          "enabled": {
+            "type": "boolean"
+          },
+          "last_add": {
+            "type": "integer"
+          },
+          "last_clean": {
+            "type": "integer",
+            "nullable": true
+          },
+          "last_update": {
+            "type": "integer"
+          },
+          "path": {
+            "type": "string"
+          },
+          "rename_pattern": {
+            "type": "string",
+            "nullable": true
+          },
+          "sort_pattern": {
+            "type": "string",
+            "nullable": true
+          }
+        },
+        "required": [
+          "id",
+          "name",
+          "type",
+          "gather_types",
+          "enabled",
+          "last_add",
+          "last_clean",
+          "last_update",
+          "path",
+          "rename_pattern",
+          "sort_pattern"
+        ],
+        "additionalProperties": false
+      },
+      "CatalogsResponse": {
+        "type": "object",
+        "properties": {
+          "total_count": {
+            "type": "integer"
+          },
+          "md5": {
+            "type": "string"
+          },
+          "catalog": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/CatalogObject"
+            }
+          }
+        },
+        "required": [
+          "total_count",
+          "md5",
+          "catalog"
+        ],
+        "additionalProperties": false
+      },
+      "LicenseObject": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "name": {
+            "type": "string"
+          },
+          "description": {
+            "type": "string"
+          },
+          "external_link": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "id",
+          "name",
+          "description",
+          "external_link"
+        ],
+        "additionalProperties": false
+      },
+      "ShareObject": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "name": {
+            "type": "string"
+          },
+          "owner": {
+            "type": "string"
+          },
+          "allow_stream": {
+            "type": "boolean"
+          },
+          "allow_download": {
+            "type": "boolean"
+          },
+          "creation_date": {
+            "type": "integer"
+          },
+          "lastvisit_date": {
+            "type": "integer"
+          },
+          "object_type": {
+            "type": "string",
+            "nullable": true
+          },
+          "object_id": {
+            "type": "string"
+          },
+          "expire_days": {
+            "type": "integer"
+          },
+          "max_counter": {
+            "type": "integer"
+          },
+          "counter": {
+            "type": "integer"
+          },
+          "secret": {
+            "type": "string",
+            "nullable": true
+          },
+          "public_url": {
+            "type": "string",
+            "nullable": true
+          },
+          "description": {
+            "type": "string",
+            "nullable": true
+          }
+        },
+        "required": [
+          "id",
+          "name",
+          "owner",
+          "allow_stream",
+          "allow_download",
+          "creation_date",
+          "lastvisit_date",
+          "object_type",
+          "object_id",
+          "expire_days",
+          "max_counter",
+          "counter",
+          "secret",
+          "public_url",
+          "description"
+        ],
+        "additionalProperties": false
+      },
+      "BookmarkObject": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "owner": {
+            "type": "string"
+          },
+          "object_type": {
+            "type": "string",
+            "nullable": true
+          },
+          "object_id": {
+            "type": "string"
+          },
+          "position": {
+            "type": "integer"
+          },
+          "client": {
+            "type": "string",
+            "nullable": true
+          },
+          "creation_date": {
+            "type": "integer"
+          },
+          "update_date": {
+            "type": "integer"
+          },
+          "song": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/SongObject"
+            }
+          },
+          "podcast_episode": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/PodcastEpisodeObject"
+            }
+          },
+          "video": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/VideoObject"
+            }
+          }
+        },
+        "required": [
+          "id",
+          "owner",
+          "object_type",
+          "object_id",
+          "position",
+          "client",
+          "creation_date",
+          "update_date"
+        ],
+        "additionalProperties": false
+      },
+      "UserSummaryObject": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "username": {
+            "type": "string",
+            "nullable": true
+          }
+        },
+        "required": [
+          "id",
+          "username"
+        ],
+        "additionalProperties": false
+      },
+      "UserObject": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "username": {
+            "type": "string",
+            "nullable": true
+          },
+          "create_date": {
+            "type": "integer",
+            "nullable": true
+          },
+          "last_seen": {
+            "type": "integer"
+          },
+          "link": {
+            "type": "string"
+          },
+          "website": {
+            "type": "string",
+            "nullable": true
+          },
+          "state": {
+            "type": "string",
+            "nullable": true
+          },
+          "city": {
+            "type": "string",
+            "nullable": true
+          },
+          "art": {
+            "type": "string",
+            "nullable": true
+          },
+          "has_art": {
+            "type": "boolean"
+          },
+          "auth": {
+            "type": "string",
+            "nullable": true
+          },
+          "email": {
+            "type": "string",
+            "nullable": true
+          },
+          "access": {
+            "type": "integer"
+          },
+          "streamtoken": {
+            "type": "string",
+            "nullable": true
+          },
+          "fullname_public": {
+            "type": "boolean"
+          },
+          "validation": {
+            "type": "string",
+            "nullable": true
+          },
+          "disabled": {
+            "type": "boolean"
+          },
+          "fullname": {
+            "type": "string",
+            "nullable": true
+          }
+        },
+        "required": [
+          "id",
+          "username",
+          "create_date",
+          "last_seen",
+          "link",
+          "website",
+          "state",
+          "city",
+          "art",
+          "has_art"
+        ],
+        "additionalProperties": false
+      },
+      "LicensesResponse": {
+        "type": "object",
+        "properties": {
+          "total_count": {
+            "type": "integer"
+          },
+          "md5": {
+            "type": "string"
+          },
+          "license": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/LicenseObject"
+            }
+          }
+        },
+        "required": [
+          "total_count",
+          "md5",
+          "license"
+        ],
+        "additionalProperties": false
+      },
+      "SharesResponse": {
+        "type": "object",
+        "properties": {
+          "total_count": {
+            "type": "integer"
+          },
+          "md5": {
+            "type": "string"
+          },
+          "share": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ShareObject"
+            }
+          }
+        },
+        "required": [
+          "total_count",
+          "md5",
+          "share"
+        ],
+        "additionalProperties": false
+      },
+      "BookmarksResponse": {
+        "type": "object",
+        "properties": {
+          "total_count": {
+            "type": "integer"
+          },
+          "md5": {
+            "type": "string"
+          },
+          "bookmark": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/BookmarkObject"
+            }
+          }
+        },
+        "required": [
+          "total_count",
+          "md5",
+          "bookmark"
+        ],
+        "additionalProperties": false
+      },
+      "UsersResponse": {
+        "type": "object",
+        "properties": {
+          "user": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/UserSummaryObject"
+            }
+          }
+        },
+        "required": [
+          "user"
+        ],
+        "additionalProperties": false
+      },
+      "SongTagObject": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "albumartist": {},
+          "album": {},
+          "artist": {},
+          "artists": {},
+          "art": {},
+          "audio_codec": {},
+          "barcode": {},
+          "bitrate": {},
+          "catalog": {},
+          "catalog_number": {},
+          "channels": {},
+          "comment": {},
+          "composer": {},
+          "description": {},
+          "disk": {},
+          "disksubtitle": {},
+          "display_x": {},
+          "display_y": {},
+          "encoding": {},
+          "file": {},
+          "frame_rate": {},
+          "genre": {},
+          "isrc": {},
+          "language": {},
+          "lyrics": {},
+          "mb_albumartistid": {},
+          "mb_albumartistid_array": {},
+          "mb_albumid_group": {},
+          "mb_albumid": {},
+          "mb_artistid": {},
+          "mb_artistid_array": {},
+          "mb_trackid": {},
+          "mime": {},
+          "mode": {},
+          "original_name": {},
+          "original_year": {},
+          "publisher": {},
+          "r128_album_gain": {},
+          "r128_track_gain": {},
+          "rate": {},
+          "rating": {},
+          "release_date": {},
+          "release_status": {},
+          "release_type": {},
+          "replaygain_album_gain": {},
+          "replaygain_album_peak": {},
+          "replaygain_track_gain": {},
+          "replaygain_track_peak": {},
+          "size": {},
+          "version": {},
+          "summary": {},
+          "time": {},
+          "title": {},
+          "totaldisks": {},
+          "totaltracks": {},
+          "track": {},
+          "year": {}
+        },
+        "required": [
+          "id",
+          "albumartist",
+          "album",
+          "artist",
+          "artists",
+          "art",
+          "audio_codec",
+          "barcode",
+          "bitrate",
+          "catalog",
+          "catalog_number",
+          "channels",
+          "comment",
+          "composer",
+          "description",
+          "disk",
+          "disksubtitle",
+          "display_x",
+          "display_y",
+          "encoding",
+          "file",
+          "frame_rate",
+          "genre",
+          "isrc",
+          "language",
+          "lyrics",
+          "mb_albumartistid",
+          "mb_albumartistid_array",
+          "mb_albumid_group",
+          "mb_albumid",
+          "mb_artistid",
+          "mb_artistid_array",
+          "mb_trackid",
+          "mime",
+          "mode",
+          "original_name",
+          "original_year",
+          "publisher",
+          "r128_album_gain",
+          "r128_track_gain",
+          "rate",
+          "rating",
+          "release_date",
+          "release_status",
+          "release_type",
+          "replaygain_album_gain",
+          "replaygain_album_peak",
+          "replaygain_track_gain",
+          "replaygain_track_peak",
+          "size",
+          "version",
+          "summary",
+          "time",
+          "title",
+          "totaldisks",
+          "totaltracks",
+          "track",
+          "year"
+        ],
+        "additionalProperties": false
+      },
+      "SongTagsResponse": {
+        "type": "object",
+        "properties": {
+          "total_count": {
+            "type": "integer"
+          },
+          "md5": {
+            "type": "string"
+          },
+          "song_tag": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/SongTagObject"
+            }
+          }
+        },
+        "required": [
+          "total_count",
+          "md5",
+          "song_tag"
+        ],
+        "additionalProperties": false
+      },
+      "ListObject": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "name": {
+            "type": "string"
+          },
+          "prefix": {
+            "type": "string",
+            "nullable": true
+          },
+          "basename": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "id",
+          "name",
+          "prefix",
+          "basename"
+        ],
+        "additionalProperties": false
+      },
+      "BrowseObject": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "name": {
+            "type": "string"
+          },
+          "prefix": {
+            "type": "string",
+            "nullable": true
+          },
+          "basename": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "id",
+          "name",
+          "prefix",
+          "basename"
+        ],
+        "additionalProperties": false
+      },
+      "NowPlayingObject": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "type": {
+            "type": "string"
+          },
+          "client": {
+            "type": "string"
+          },
+          "expire": {
+            "type": "integer"
+          },
+          "user": {
+            "type": "object",
+            "properties": {
+              "id": {
+                "type": "string"
+              },
+              "username": {
+                "type": "string",
+                "nullable": true
+              }
+            },
+            "required": [
+              "id",
+              "username"
+            ],
+            "additionalProperties": false
+          }
+        },
+        "required": [
+          "id",
+          "type",
+          "client",
+          "expire",
+          "user"
+        ],
+        "additionalProperties": false
+      },
+      "ActivityObject": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "date": {
+            "type": "integer"
+          },
+          "object_type": {
+            "type": "string",
+            "nullable": true
+          },
+          "object_id": {
+            "type": "string"
+          },
+          "action": {
+            "type": "string"
+          },
+          "user": {
+            "type": "object",
+            "properties": {
+              "id": {
+                "type": "string"
+              },
+              "username": {
+                "type": "string",
+                "nullable": true
+              }
+            },
+            "required": [
+              "id",
+              "username"
+            ],
+            "additionalProperties": false
+          }
+        },
+        "required": [
+          "id",
+          "date",
+          "object_type",
+          "object_id",
+          "action",
+          "user"
+        ],
+        "additionalProperties": false
+      },
+      "ShoutObject": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "date": {
+            "type": "integer"
+          },
+          "text": {
+            "type": "string"
+          },
+          "object_type": {
+            "type": "string"
+          },
+          "object_id": {
+            "type": "integer"
+          },
+          "user": {
+            "type": "object",
+            "properties": {
+              "id": {
+                "type": "string"
+              },
+              "username": {
+                "type": "string"
+              }
+            },
+            "required": [
+              "id",
+              "username"
+            ],
+            "additionalProperties": false
+          }
+        },
+        "required": [
+          "id",
+          "date",
+          "text",
+          "object_type",
+          "object_id",
+          "user"
+        ],
+        "additionalProperties": false
+      },
+      "ListsResponse": {
+        "type": "object",
+        "properties": {
+          "total_count": {
+            "type": "integer"
+          },
+          "md5": {
+            "type": "string"
+          },
+          "list": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ListObject"
+            }
+          }
+        },
+        "required": [
+          "total_count",
+          "md5",
+          "list"
+        ],
+        "additionalProperties": false
+      },
+      "BrowseResponse": {
+        "type": "object",
+        "properties": {
+          "total_count": {
+            "type": "integer"
+          },
+          "md5": {
+            "type": "string"
+          },
+          "catalog_id": {
+            "type": "string"
+          },
+          "parent_id": {
+            "type": "string"
+          },
+          "parent_type": {
+            "type": "string"
+          },
+          "child_type": {
+            "type": "string"
+          },
+          "browse": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/BrowseObject"
+            }
+          }
+        },
+        "required": [
+          "total_count",
+          "md5",
+          "catalog_id",
+          "parent_id",
+          "parent_type",
+          "child_type",
+          "browse"
+        ],
+        "additionalProperties": false
+      },
+      "NowPlayingResponse": {
+        "type": "object",
+        "properties": {
+          "now_playing": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/NowPlayingObject"
+            }
+          }
+        },
+        "required": [
+          "now_playing"
+        ],
+        "additionalProperties": false
+      },
+      "TimelineResponse": {
+        "type": "object",
+        "properties": {
+          "activity": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ActivityObject"
+            }
+          }
+        },
+        "required": [
+          "activity"
+        ],
+        "additionalProperties": false
+      },
+      "ShoutsResponse": {
+        "type": "object",
+        "properties": {
+          "shout": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ShoutObject"
+            }
+          }
+        },
+        "required": [
+          "shout"
+        ],
+        "additionalProperties": false
+      },
+      "DeletedSongObject": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "addition_time": {
+            "type": "integer"
+          },
+          "delete_time": {
+            "type": "integer"
+          },
+          "title": {
+            "type": "string"
+          },
+          "file": {
+            "type": "string"
+          },
+          "catalog": {
+            "type": "string"
+          },
+          "total_count": {
+            "type": "integer"
+          },
+          "total_skip": {
+            "type": "integer"
+          },
+          "update_time": {
+            "type": "integer"
+          },
+          "album": {
+            "type": "string"
+          },
+          "artist": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "id",
+          "addition_time",
+          "delete_time",
+          "title",
+          "file",
+          "catalog",
+          "total_count",
+          "total_skip",
+          "update_time",
+          "album",
+          "artist"
+        ],
+        "additionalProperties": false
+      },
+      "DeletedSongsResponse": {
+        "type": "object",
+        "properties": {
+          "total_count": {
+            "type": "integer"
+          },
+          "md5": {
+            "type": "string"
+          },
+          "deleted_song": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/DeletedSongObject"
+            }
+          }
+        },
+        "required": [
+          "total_count",
+          "md5",
+          "deleted_song"
+        ],
+        "additionalProperties": false
+      },
+      "DeletedPodcastEpisodeObject": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "addition_time": {
+            "type": "integer"
+          },
+          "delete_time": {
+            "type": "integer"
+          },
+          "title": {
+            "type": "string"
+          },
+          "file": {
+            "type": "string"
+          },
+          "catalog": {
+            "type": "string"
+          },
+          "total_count": {
+            "type": "integer"
+          },
+          "total_skip": {
+            "type": "integer"
+          },
+          "podcast": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "id",
+          "addition_time",
+          "delete_time",
+          "title",
+          "file",
+          "catalog",
+          "total_count",
+          "total_skip",
+          "podcast"
+        ],
+        "additionalProperties": false
+      },
+      "DeletedPodcastEpisodesResponse": {
+        "type": "object",
+        "properties": {
+          "total_count": {
+            "type": "integer"
+          },
+          "md5": {
+            "type": "string"
+          },
+          "deleted_podcast_episode": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/DeletedPodcastEpisodeObject"
+            }
+          }
+        },
+        "required": [
+          "total_count",
+          "md5",
+          "deleted_podcast_episode"
+        ],
+        "additionalProperties": false
+      },
+      "DeletedVideoObject": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "addition_time": {
+            "type": "integer"
+          },
+          "delete_time": {
+            "type": "integer"
+          },
+          "title": {
+            "type": "string"
+          },
+          "file": {
+            "type": "string"
+          },
+          "catalog": {
+            "type": "string"
+          },
+          "total_count": {
+            "type": "integer"
+          },
+          "total_skip": {
+            "type": "integer"
+          }
+        },
+        "required": [
+          "id",
+          "addition_time",
+          "delete_time",
+          "title",
+          "file",
+          "catalog",
+          "total_count",
+          "total_skip"
+        ],
+        "additionalProperties": false
+      },
+      "DeletedVideosResponse": {
+        "type": "object",
+        "properties": {
+          "total_count": {
+            "type": "integer"
+          },
+          "md5": {
+            "type": "string"
+          },
+          "deleted_video": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/DeletedVideoObject"
+            }
+          }
+        },
+        "required": [
+          "total_count",
+          "md5",
+          "deleted_video"
+        ],
+        "additionalProperties": false
+      },
+      "IndexReferenceObject": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "type": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "id",
+          "type"
+        ],
+        "additionalProperties": false
+      },
+      "IndexResponse": {
+        "type": "object",
+        "description": "Keyed by the requested `type` (e.g. `album`, `artist`, `song`). Without `include` the value is an array of object ids; with `include` it is an array of `{id, type}` references, or a map of parent id -> reference array for parent types such as playlists.",
+        "additionalProperties": {
+          "oneOf": [
+            {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            },
+            {
+              "type": "array",
+              "items": {
+                "$ref": "#/components/schemas/IndexReferenceObject"
+              }
+            },
+            {
+              "type": "object",
+              "additionalProperties": {
+                "type": "array",
+                "items": {
+                  "$ref": "#/components/schemas/IndexReferenceObject"
+                }
+              }
+            }
+          ]
+        }
       }
     },
     "responses": {
@@ -565,11 +3146,15 @@
     "/artists/search": "action=search&type=artist",
     "/artists/stats": "action=stats&type=artist",
     "/bookmarks": "action=bookmarks",
+    "PUT /bookmarks": "action=bookmark_create&filter={object_id}&type={object_type}",
     "/bookmarks/{bookmark_id}": "action=bookmark&filter={bookmark_id}",
-    "/bookmarks/{bookmark_id}/edit": "action=bookmark_edit&filter={bookmark_id}",
+    "DELETE /bookmarks/{bookmark_id}": "action=bookmark_delete&filter={bookmark_id}",
+    "PATCH /bookmarks/{bookmark_id}": "action=bookmark_edit&filter={bookmark_id}",
     "/browse": "action=browse",
     "/catalogs": "action=catalogs",
+    "PUT /catalogs": "action=catalog_create",
     "/catalogs/{catalog_id}": "action=catalog&filter={catalog_id}",
+    "DELETE /catalogs/{catalog_id}": "action=catalog_delete&filter={catalog_id}",
     "/catalogs/{catalog_id}/file": "action=catalog_file&filter={catalog_id}",
     "/catalogs/{catalog_id}/folder": "action=catalog_folder&filter={catalog_id}",
     "/catalogs/{catalog_id}/action": "action=catalog_action&filter={catalog_id}",
@@ -604,9 +3189,11 @@
     "/licenses/{license_id}/songs": "action=license_songs&filter={license_id}",
     "/list": "action=list",
     "/live-streams": "action=live_streams",
+    "PUT /live-streams": "action=live_stream_create",
     "/live-streams/{live_stream_id}": "action=live_stream&filter={live_stream_id}",
+    "PATCH /live-streams/{live_stream_id}": "action=live_stream_edit&filter={live_stream_id}",
+    "DELETE /live-streams/{live_stream_id}": "action=live_stream_delete&filter={live_stream_id}",
     "/live-streams/{live_stream_id}/localplay": "action=localplay&command=add&filter={live_stream_id}&type=live_stream",
-    "/live-streams/{live_stream_id}/clean": "action=live_stream_clean&filter={live_stream_id}",
     "/localplay/add": "action=localplay&command=add&filter={object_id}&type={object_type}",
     "/localplay/delete-all": "action=localplay&command=delete_all",
     "/localplay/next": "action=localplay&command=next",
@@ -628,7 +3215,10 @@
     "/me/smartlists": "action=user_smartlists",
     "/ping": "action=ping",
     "/playlists": "action=playlists",
+    "PUT /playlists": "action=playlist_create",
     "/playlists/{playlist_id}": "action=playlist&filter={playlist_id}",
+    "PATCH /playlists/{playlist_id}": "action=playlist_edit&filter={playlist_id}",
+    "DELETE /playlists/{playlist_id}": "action=playlist_delete&filter={playlist_id}",
     "/playlists/{playlist_id}/add": "action=playlist_add&filter={playlist_id}",
     "/playlists/{playlist_id}/art": "action=get_art&filter={playlist_id}&type=playlist",
     "/playlists/{playlist_id}/download": "action=download&filter={playlist_id}&type=playlist",
@@ -644,7 +3234,11 @@
     "/playlists/stats": "action=stats&type=playlist",
     "/podcast-episodes": "action=podcast_episodes",
     "/podcast-episodes/{episode_id}": "action=podcast_episode&filter={episode_id}",
+    "DELETE /podcast-episodes/{episode_id}": "action=podcast_episode_delete&filter={episode_id}",
     "/podcast-episodes/{episode_id}/bookmark": "action=bookmark_create&filter={episode_id}&type=podcast_episode",
+    "GET /podcast-episodes/{episode_id}/bookmark": "action=bookmark&filter={episode_id}&type=podcast_episode",
+    "PATCH /podcast-episodes/{episode_id}/bookmark": "action=bookmark_edit&filter={episode_id}&type=podcast_episode",
+    "DELETE /podcast-episodes/{episode_id}/bookmark": "action=bookmark_delete&filter={episode_id}&type=podcast_episode",
     "/podcast-episodes/{episode_id}/download": "action=download&filter={episode_id}&type=podcast_episode",
     "/podcast-episodes/{episode_id}/flag": "action=flag&filter={episode_id}&type=podcast_episode",
     "/podcast-episodes/{episode_id}/localplay": "action=localplay&command=add&filter={episode_id}&type=podcast_episode",
@@ -656,29 +3250,35 @@
     "/podcast-episodes/search": "action=search&type=podcast_episode",
     "/podcast-episodes/stats": "action=stats&type=podcast_episode",
     "/podcasts": "action=podcasts",
+    "PUT /podcasts": "action=podcast_create",
     "/podcasts/{podcast_id}": "action=podcast&filter={podcast_id}",
+    "PATCH /podcasts/{podcast_id}": "action=podcast_edit&filter={podcast_id}",
+    "DELETE /podcasts/{podcast_id}": "action=podcast_delete&filter={podcast_id}",
     "/podcasts/{podcast_id}/art": "action=get_art&filter={podcast_id}&type=podcast",
     "/podcasts/{podcast_id}/flag": "action=flag&filter={podcast_id}",
     "/podcasts/{podcast_id}/podcast-episodes": "action=podcast_episodes&filter={podcast_id}",
     "/podcasts/{podcast_id}/rate": "action=rate&filter={podcast_id}",
     "/podcasts/{podcast_id}/share": "action=share&filter={podcast_id}",
-    "/podcasts/{podcast_id}/refresh": "action=podcast_update&filter={podcast_id}",
     "/podcasts/search": "action=search&type=podcast",
     "/podcasts/stats": "action=stats&type=podcast",
-    "/podcasts/{podcast_id}/sync": "action=podcast_sync&filter={podcast_id}",
+    "/podcasts/{podcast_id}/sync": "action=update_podcast&filter={podcast_id}",
     "/preferences": "action=user_preferences",
+    "PUT /preferences": "action=preference_create",
     "/preferences/{preference_name}": "action=user_preference&filter={preference_name}",
-    "/preferences/{preference_name}/system": "action=system_preference&filter={preference_name}",
-    "/preferences/{preference_name}/user": "action=user_preference&filter={preference_name}",
+    "PATCH /preferences/{preference_name}": "action=preference_edit&filter={preference_name}",
+    "DELETE /preferences/{preference_name}": "action=preference_delete&filter={preference_name}",
     "/register": "action=register",
     "/scrobble": "action=scrobble",
     "/search/{search_type}/groups": "action=search_group&filter={search_type}",
     "/search/{search_type}/rules": "action=search_rules&filter={search_type}",
     "/shares": "action=shares",
+    "PUT /shares": "action=share_create",
     "/shares/{share_id}": "action=share&filter={share_id}",
-    "/shares/{share_id}/edit": "action=share_edit&filter={share_id}",
+    "DELETE /shares/{share_id}": "action=share_delete&filter={share_id}",
+    "PATCH /shares/{share_id}": "action=share_edit&filter={share_id}",
     "/smartlists": "action=smartlists",
     "/smartlists/{smartlist_id}": "action=smartlist&filter={smartlist_id}",
+    "DELETE /smartlists/{smartlist_id}": "action=smartlist_delete&filter={smartlist_id}",
     "/smartlists/{smartlist_id}/art": "action=get_art&filter={smartlist_id}&type=smartlist",
     "/smartlists/{smartlist_id}/download": "action=download&filter={smartlist_id}&type=smartlist",
     "/smartlists/{smartlist_id}/flag": "action=flag&filter={smartlist_id}&type=smartlist",
@@ -689,8 +3289,12 @@
     "/smartlists/search": "action=search&type=smartlist",
     "/songs": "action=songs",
     "/songs/{song_id}": "action=song&filter={song_id}",
+    "DELETE /songs/{song_id}": "action=song_delete&filter={song_id}",
     "/songs/{song_id}/art": "action=get_art&filter={song_id}&type=song",
     "/songs/{song_id}/bookmark": "action=bookmark_create&filter={song_id}&type=song",
+    "GET /songs/{song_id}/bookmark": "action=bookmark&filter={song_id}&type=song",
+    "PATCH /songs/{song_id}/bookmark": "action=bookmark_edit&filter={song_id}&type=song",
+    "DELETE /songs/{song_id}/bookmark": "action=bookmark_delete&filter={song_id}&type=song",
     "/songs/{song_id}/download": "action=download&filter={song_id}",
     "/songs/{song_id}/fetch-metadata": "action=get_external_metadata&filter={song_id}&type=song",
     "/songs/{song_id}/flag": "action=flag&filter={song_id}",
@@ -713,16 +3317,21 @@
     "/system-preferences/{preference_name}": "action=system_preference&filter={preference_name}",
     "/update": "action=system_update",
     "/users": "action=users",
+    "PUT /users": "action=user_create",
     "/users/{user_id}": "action=user&filter={user_id}",
+    "DELETE /users/{user_id}": "action=user_delete&filter={user_id}",
     "/users/{user_id}/follow": "action=toggle_follow&filter={user_id}",
     "/users/{user_id}/followers": "action=followers&filter={user_id}",
     "/users/{user_id}/following": "action=following&filter={user_id}",
     "/users/{user_id}/timeline": "action=timeline&filter={user_id}",
     "/users/search": "action=search&type=user",
-    "/users/{user_id}/edit": "action=user_edit&filter={user_id}",
+    "PATCH /users/{user_id}": "action=user_edit&filter={user_id}",
     "/videos": "action=videos",
     "/videos/{video_id}": "action=video&filter={video_id}",
     "/videos/{video_id}/bookmark": "action=bookmark_create&filter={video_id}&type=video",
+    "GET /videos/{video_id}/bookmark": "action=bookmark&filter={video_id}&type=video",
+    "PATCH /videos/{video_id}/bookmark": "action=bookmark_edit&filter={video_id}&type=video",
+    "DELETE /videos/{video_id}/bookmark": "action=bookmark_delete&filter={video_id}&type=video",
     "/videos/{video_id}/flag": "action=flag&filter={video_id}&type=video",
     "/videos/{video_id}/localplay": "action=localplay&command=add&filter={video_id}&type=video",
     "/videos/{video_id}/playback": "action=player&filter={video_id}&type=video",
@@ -816,7 +3425,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "type": "object"
+                  "$ref": "#/components/schemas/AlbumsResponse"
                 },
                 "examples": {
                   "albums": {
@@ -922,7 +3531,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "type": "object"
+                  "$ref": "#/components/schemas/AlbumObject"
                 },
                 "examples": {
                   "album": {
@@ -1396,7 +4005,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "type": "object"
+                  "$ref": "#/components/schemas/SongsResponse"
                 },
                 "examples": {
                   "album_songs": {
@@ -1978,6 +4587,66 @@
         ],
         "responses": {
           "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object"
+                },
+                "examples": {
+                  "albums": {
+                    "summary": "albums (search results)",
+                    "value": {
+                      "total_count": 1,
+                      "md5": "c8bde69a9f79ca24059e3807f9a3bcf8",
+                      "album": [
+                        {
+                          "id": "10",
+                          "name": "CARNÚN - MALKUTH (Demo 1996)",
+                          "prefix": null,
+                          "basename": "CARNÚN - MALKUTH (Demo 1996)",
+                          "artist": {
+                            "id": "16",
+                            "name": "CARNÚN",
+                            "prefix": null,
+                            "basename": "CARNÚN"
+                          },
+                          "artists": [
+                            {
+                              "id": "16",
+                              "name": "CARNÚN",
+                              "prefix": null,
+                              "basename": "CARNÚN"
+                            }
+                          ],
+                          "songartists": [
+                            {
+                              "id": "16",
+                              "name": "CARNÚN",
+                              "prefix": null,
+                              "basename": "CARNÚN"
+                            }
+                          ],
+                          "time": 3873,
+                          "year": 1996,
+                          "tracks": [],
+                          "songcount": 9,
+                          "diskcount": 1,
+                          "type": null,
+                          "genre": [],
+                          "art": "https://music.com.au/image.php?object_id=10&object_type=album&id=63&name=art.jpg",
+                          "has_art": true,
+                          "flag": false,
+                          "rating": null,
+                          "averagerating": null,
+                          "mbid": null,
+                          "mbid_group": null
+                        }
+                      ]
+                    }
+                  }
+                }
+              }
+            },
             "description": "Search results"
           },
           "400": {
@@ -2369,7 +5038,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "type": "object"
+                  "$ref": "#/components/schemas/ArtistsResponse"
                 },
                 "examples": {
                   "artists": {
@@ -2523,7 +5192,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "type": "object"
+                  "$ref": "#/components/schemas/ArtistObject"
                 },
                 "examples": {
                   "artist": {
@@ -2643,7 +5312,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "type": "object"
+                  "$ref": "#/components/schemas/AlbumsResponse"
                 },
                 "examples": {
                   "artist_albums": {
@@ -3200,7 +5869,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "type": "object"
+                  "$ref": "#/components/schemas/SongsResponse"
                 },
                 "examples": {
                   "artist_songs": {
@@ -3751,6 +6420,113 @@
         ],
         "responses": {
           "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object"
+                },
+                "examples": {
+                  "artists": {
+                    "summary": "artists (search results)",
+                    "value": {
+                      "total_count": 19,
+                      "md5": "8aabc723b14c64e990f0c5bce2459d9e",
+                      "artist": [
+                        {
+                          "id": "16",
+                          "name": "CARNÚN",
+                          "prefix": null,
+                          "basename": "CARNÚN",
+                          "albums": [],
+                          "albumcount": 1,
+                          "songs": [],
+                          "songcount": 9,
+                          "genre": [],
+                          "art": "https://music.com.au/image.php?object_id=16&object_type=artist&id=134&name=art.jpg",
+                          "has_art": true,
+                          "flag": false,
+                          "rating": null,
+                          "averagerating": null,
+                          "mbid": null,
+                          "summary": "Formerly called DEFY CHRIST. CARNÚN were formed in 1995. Incorporating a mix of Black, Doom and Death Metal, and influenced by bands like BURZUM, DARKTHRONE, BATHORY, THOU ART LORD, IN THE WOODS…, early KATATONIA and PRIMORDIAL, who Mick would eventually go on to join full-time.\n\nThey released one demo, ‘Malkuth’, which was recorded in Connolly’s Of Leap, 4th January 1996 by Paddy McNicholl. The line-up for this recording was Marc (Bard Nocturnus) on Vocals, Damien on keyboards and Mick playing guitars, bass and drums. ",
+                          "time": 3873,
+                          "yearformed": 0,
+                          "placeformed": null
+                        },
+                        {
+                          "id": "27",
+                          "name": "Chi.Otic",
+                          "prefix": null,
+                          "basename": "Chi.Otic",
+                          "albums": [],
+                          "albumcount": 0,
+                          "songs": [],
+                          "songcount": 1,
+                          "genre": [],
+                          "art": "https://music.com.au/image.php?object_id=27&object_type=artist&id=136&name=art.jpg",
+                          "has_art": true,
+                          "flag": false,
+                          "rating": null,
+                          "averagerating": null,
+                          "mbid": "7",
+                          "summary": null,
+                          "time": 433,
+                          "yearformed": 0,
+                          "placeformed": null
+                        },
+                        {
+                          "id": "34",
+                          "name": "Comedown Kid",
+                          "prefix": null,
+                          "basename": "Comedown Kid",
+                          "albums": [],
+                          "albumcount": 0,
+                          "songs": [],
+                          "songcount": 1,
+                          "genre": [],
+                          "art": "https://music.com.au/image.php?object_id=34&object_type=artist&id=288&name=art.jpg",
+                          "has_art": true,
+                          "flag": false,
+                          "rating": null,
+                          "averagerating": null,
+                          "mbid": null,
+                          "summary": null,
+                          "time": 116,
+                          "yearformed": 0,
+                          "placeformed": null
+                        },
+                        {
+                          "id": "36",
+                          "name": "Comfort Fit",
+                          "prefix": null,
+                          "basename": "Comfort Fit",
+                          "albums": [],
+                          "albumcount": 1,
+                          "songs": [],
+                          "songcount": 20,
+                          "genre": [
+                            {
+                              "id": "8",
+                              "name": "Hip-Hop"
+                            }
+                          ],
+                          "art": "https://music.com.au/image.php?object_id=36&object_type=artist&id=320&name=art.jpg",
+                          "has_art": true,
+                          "flag": false,
+                          "rating": null,
+                          "averagerating": null,
+                          "mbid": "e6e2b787-0b4c-4267-8161-310399b101a5",
+                          "summary": "Comfort Fit’s(Boris Mezga) versatile influences range from early detroit techno and minimal electronica to jazz, broken beats and hip-hop. This makes it easy for him to invisibly switch between musical styles within a fingersnap, taking the listener onto long and exciting journies.\n\nWisely using music codes of genres such as hip-hop, dubstep and techno as a mere comic template, Comfort Fit has inspired hip-hop and techno artists around the world with his heavy beat techniques. ",
+                          "time": 4248,
+                          "yearformed": 0,
+                          "placeformed": null
+                        }
+                      ]
+                    }
+                  }
+                }
+              }
+            },
             "description": "Search results"
           },
           "400": {
@@ -3955,7 +6731,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "type": "object"
+                  "$ref": "#/components/schemas/BookmarksResponse"
                 },
                 "examples": {
                   "bookmarks": {
@@ -4057,6 +6833,108 @@
           }
         },
         "summary": "List bookmarks",
+        "tags": [
+          "Bookmarks"
+        ]
+      },
+      "put": {
+        "parameters": [
+          {
+            "in": "query",
+            "name": "filter",
+            "description": "Object id",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "in": "query",
+            "name": "type",
+            "required": true,
+            "schema": {
+              "enum": [
+                "song",
+                "video",
+                "podcast_episode"
+              ],
+              "type": "string"
+            }
+          },
+          {
+            "in": "query",
+            "name": "position",
+            "description": "Current track time in seconds",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            }
+          },
+          {
+            "in": "query",
+            "name": "client",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "in": "query",
+            "name": "date",
+            "description": "UNIXTIME()",
+            "required": false,
+            "schema": {
+              "type": "integer"
+            }
+          },
+          {
+            "in": "query",
+            "name": "include",
+            "required": false,
+            "schema": {
+              "enum": [
+                0,
+                1
+              ],
+              "type": "integer"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object"
+                },
+                "examples": {
+                  "bookmark": {
+                    "summary": "bookmark created",
+                    "value": {
+                      "bookmark": [
+                        {
+                          "id": "9",
+                          "owner": "user",
+                          "object_type": "song",
+                          "object_id": "115",
+                          "position": 0,
+                          "client": "AmpacheAPI",
+                          "creation_date": 1670202706,
+                          "update_date": 1698974919
+                        }
+                      ]
+                    }
+                  }
+                }
+              }
+            },
+            "description": "Bookmark created"
+          },
+          "400": {
+            "$ref": "#/components/responses/ErrorResponse"
+          }
+        },
+        "summary": "Create a bookmark",
         "tags": [
           "Bookmarks"
         ]
@@ -4240,7 +7118,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "type": "object"
+                  "$ref": "#/components/schemas/BookmarkObject"
                 },
                 "examples": {
                   "bookmark": {
@@ -4632,7 +7510,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "type": "object"
+                  "$ref": "#/components/schemas/BrowseResponse"
                 },
                 "examples": {
                   "browse": {
@@ -5000,7 +7878,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/FolderBrowseResponse"
+                  "$ref": "#/components/schemas/FolderBrowseNode"
                 },
                 "examples": {
                   "success": {
@@ -5231,7 +8109,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "type": "object"
+                  "$ref": "#/components/schemas/CatalogsResponse"
                 },
                 "examples": {
                   "catalogs": {
@@ -5534,7 +8412,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "type": "object"
+                  "$ref": "#/components/schemas/CatalogObject"
                 },
                 "examples": {
                   "catalog": {
@@ -5563,6 +8441,611 @@
           }
         },
         "summary": "Get catalog by ID",
+        "tags": [
+          "Catalogs"
+        ]
+      }
+    },
+    "/catalogs/{catalog_id}/action": {
+      "post": {
+        "parameters": [
+          {
+            "in": "path",
+            "name": "catalog_id",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "description": "Catalog task to run",
+            "in": "query",
+            "name": "task",
+            "required": true,
+            "schema": {
+              "enum": [
+                "add_to_catalog",
+                "clean_catalog",
+                "verify_catalog",
+                "gather_art",
+                "garbage_collect"
+              ],
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SuccessResponse"
+                },
+                "examples": {
+                  "success": {
+                    "summary": "catalog action",
+                    "value": {
+                      "success": "successfully started: add_to_catalog for music"
+                    }
+                  }
+                }
+              }
+            },
+            "description": "Success"
+          },
+          "400": {
+            "$ref": "#/components/responses/BadRequestErrorResponse"
+          },
+          "403": {
+            "$ref": "#/components/responses/ForbiddenErrorResponse"
+          },
+          "404": {
+            "$ref": "#/components/responses/NotFoundErrorResponse"
+          },
+          "410": {
+            "$ref": "#/components/responses/GoneErrorResponse"
+          },
+          "500": {
+            "$ref": "#/components/responses/InternalServerErrorResponse"
+          }
+        },
+        "summary": "Kick off a catalog task (add/clean/verify/gather art) for the selected catalog",
+        "tags": [
+          "Catalogs"
+        ]
+      }
+    },
+    "/catalogs/{catalog_id}/browse": {
+      "get": {
+        "parameters": [
+          {
+            "in": "path",
+            "name": "catalog_id",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "in": "query",
+            "name": "add",
+            "required": false,
+            "schema": {
+              "format": "date",
+              "type": "string"
+            }
+          },
+          {
+            "in": "query",
+            "name": "update",
+            "required": false,
+            "schema": {
+              "format": "date",
+              "type": "string"
+            }
+          },
+          {
+            "in": "query",
+            "name": "offset",
+            "required": false,
+            "schema": {
+              "type": "integer"
+            }
+          },
+          {
+            "in": "query",
+            "name": "limit",
+            "required": false,
+            "schema": {
+              "type": "integer"
+            }
+          },
+          {
+            "in": "query",
+            "name": "cond",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "in": "query",
+            "name": "sort",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/BrowseResponse"
+                },
+                "examples": {
+                  "browse": {
+                    "summary": "browse",
+                    "value": {
+                      "total_count": 8,
+                      "md5": "8c61d460940e9a9fc333207277d105cd",
+                      "catalog_id": "",
+                      "parent_id": "1",
+                      "parent_type": "catalog",
+                      "child_type": "artist",
+                      "browse": [
+                        {
+                          "id": "16",
+                          "name": "CARNÚN",
+                          "prefix": null,
+                          "basename": "CARNÚN"
+                        },
+                        {
+                          "id": "13",
+                          "name": "IOK-1",
+                          "prefix": null,
+                          "basename": "IOK-1"
+                        },
+                        {
+                          "id": "14",
+                          "name": "Nofi/found.",
+                          "prefix": null,
+                          "basename": "Nofi/found."
+                        },
+                        {
+                          "id": "11",
+                          "name": "structura",
+                          "prefix": null,
+                          "basename": "structura"
+                        }
+                      ]
+                    }
+                  }
+                }
+              }
+            },
+            "description": "Browse results"
+          },
+          "400": {
+            "$ref": "#/components/responses/BadRequestErrorResponse"
+          },
+          "403": {
+            "$ref": "#/components/responses/ForbiddenErrorResponse"
+          },
+          "404": {
+            "$ref": "#/components/responses/NotFoundErrorResponse"
+          },
+          "410": {
+            "$ref": "#/components/responses/GoneErrorResponse"
+          },
+          "500": {
+            "$ref": "#/components/responses/InternalServerErrorResponse"
+          }
+        },
+        "summary": "Browse children of a catalog (root of the catalog)",
+        "tags": [
+          "Catalogs"
+        ]
+      }
+    },
+    "/catalogs/{catalog_id}/browse/albums/{album_id}": {
+      "get": {
+        "parameters": [
+          {
+            "in": "path",
+            "name": "catalog_id",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "in": "path",
+            "name": "album_id",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "in": "query",
+            "name": "add",
+            "required": false,
+            "schema": {
+              "format": "date",
+              "type": "string"
+            }
+          },
+          {
+            "in": "query",
+            "name": "update",
+            "required": false,
+            "schema": {
+              "format": "date",
+              "type": "string"
+            }
+          },
+          {
+            "in": "query",
+            "name": "offset",
+            "required": false,
+            "schema": {
+              "type": "integer"
+            }
+          },
+          {
+            "in": "query",
+            "name": "limit",
+            "required": false,
+            "schema": {
+              "type": "integer"
+            }
+          },
+          {
+            "in": "query",
+            "name": "cond",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "in": "query",
+            "name": "sort",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/BrowseResponse"
+                },
+                "examples": {
+                  "browse_album": {
+                    "summary": "browse (album)",
+                    "value": {
+                      "total_count": 12,
+                      "md5": "875e32d0f6b4fd47ddb46863f224c972",
+                      "catalog_id": "1",
+                      "parent_id": "2",
+                      "parent_type": "album",
+                      "child_type": "song",
+                      "browse": [
+                        {
+                          "id": "54",
+                          "name": "Red&GreenSmoke",
+                          "prefix": null,
+                          "basename": "Red&GreenSmoke"
+                        },
+                        {
+                          "id": "64",
+                          "name": "Black&BlueSmoke",
+                          "prefix": null,
+                          "basename": "Black&BlueSmoke"
+                        },
+                        {
+                          "id": "63",
+                          "name": "Red&GreenSmoke",
+                          "prefix": null,
+                          "basename": "Red&GreenSmoke"
+                        },
+                        {
+                          "id": "62",
+                          "name": "PurpleSmoke",
+                          "prefix": null,
+                          "basename": "PurpleSmoke"
+                        }
+                      ]
+                    }
+                  }
+                }
+              }
+            },
+            "description": "Browse results"
+          },
+          "400": {
+            "$ref": "#/components/responses/BadRequestErrorResponse"
+          },
+          "403": {
+            "$ref": "#/components/responses/ForbiddenErrorResponse"
+          },
+          "404": {
+            "$ref": "#/components/responses/NotFoundErrorResponse"
+          },
+          "410": {
+            "$ref": "#/components/responses/GoneErrorResponse"
+          },
+          "500": {
+            "$ref": "#/components/responses/InternalServerErrorResponse"
+          }
+        },
+        "summary": "Browse songs of an album within a catalog",
+        "tags": [
+          "Catalogs"
+        ]
+      }
+    },
+    "/catalogs/{catalog_id}/browse/artists/{artist_id}": {
+      "get": {
+        "parameters": [
+          {
+            "in": "path",
+            "name": "catalog_id",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "in": "path",
+            "name": "artist_id",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "in": "query",
+            "name": "add",
+            "required": false,
+            "schema": {
+              "format": "date",
+              "type": "string"
+            }
+          },
+          {
+            "in": "query",
+            "name": "update",
+            "required": false,
+            "schema": {
+              "format": "date",
+              "type": "string"
+            }
+          },
+          {
+            "in": "query",
+            "name": "offset",
+            "required": false,
+            "schema": {
+              "type": "integer"
+            }
+          },
+          {
+            "in": "query",
+            "name": "limit",
+            "required": false,
+            "schema": {
+              "type": "integer"
+            }
+          },
+          {
+            "in": "query",
+            "name": "cond",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "in": "query",
+            "name": "sort",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/BrowseResponse"
+                },
+                "examples": {
+                  "browse_artist": {
+                    "summary": "browse (artist)",
+                    "value": {
+                      "total_count": 1,
+                      "md5": "60334ae78fb1c335adb0602a19c90946",
+                      "catalog_id": "1",
+                      "parent_id": "12",
+                      "parent_type": "artist",
+                      "child_type": "album",
+                      "browse": [
+                        {
+                          "id": "6",
+                          "name": "Хикки Найди Свою Тян (Single)",
+                          "prefix": null,
+                          "basename": "Хикки Найди Свою Тян (Single)"
+                        }
+                      ]
+                    }
+                  }
+                }
+              }
+            },
+            "description": "Browse results"
+          },
+          "400": {
+            "$ref": "#/components/responses/BadRequestErrorResponse"
+          },
+          "403": {
+            "$ref": "#/components/responses/ForbiddenErrorResponse"
+          },
+          "404": {
+            "$ref": "#/components/responses/NotFoundErrorResponse"
+          },
+          "410": {
+            "$ref": "#/components/responses/GoneErrorResponse"
+          },
+          "500": {
+            "$ref": "#/components/responses/InternalServerErrorResponse"
+          }
+        },
+        "summary": "Browse albums of an artist within a catalog",
+        "tags": [
+          "Catalogs"
+        ]
+      }
+    },
+    "/catalogs/{catalog_id}/browse/podcasts/{podcast_id}": {
+      "get": {
+        "parameters": [
+          {
+            "in": "path",
+            "name": "catalog_id",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "in": "path",
+            "name": "podcast_id",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "in": "query",
+            "name": "add",
+            "required": false,
+            "schema": {
+              "format": "date",
+              "type": "string"
+            }
+          },
+          {
+            "in": "query",
+            "name": "update",
+            "required": false,
+            "schema": {
+              "format": "date",
+              "type": "string"
+            }
+          },
+          {
+            "in": "query",
+            "name": "offset",
+            "required": false,
+            "schema": {
+              "type": "integer"
+            }
+          },
+          {
+            "in": "query",
+            "name": "limit",
+            "required": false,
+            "schema": {
+              "type": "integer"
+            }
+          },
+          {
+            "in": "query",
+            "name": "cond",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "in": "query",
+            "name": "sort",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/BrowseResponse"
+                },
+                "examples": {
+                  "browse_podcast": {
+                    "summary": "browse (podcast)",
+                    "value": {
+                      "total_count": 3,
+                      "md5": "8467c1b7b44644e447396e82f11cc16b",
+                      "catalog_id": "3",
+                      "parent_id": "2",
+                      "parent_type": "podcast",
+                      "child_type": "podcast_episode",
+                      "browse": [
+                        {
+                          "id": "22",
+                          "name": "What Do an Army of Ants and an Online Encyclopedia Have in Common?",
+                          "prefix": null,
+                          "basename": "What Do an Army of Ants and an Online Encyclopedia Have in Common?"
+                        },
+                        {
+                          "id": "23",
+                          "name": "I Laughed So Hard I Cried",
+                          "prefix": null,
+                          "basename": "I Laughed So Hard I Cried"
+                        },
+                        {
+                          "id": "24",
+                          "name": "Coming Soon",
+                          "prefix": null,
+                          "basename": "Coming Soon"
+                        }
+                      ]
+                    }
+                  }
+                }
+              }
+            },
+            "description": "Browse results"
+          },
+          "400": {
+            "$ref": "#/components/responses/BadRequestErrorResponse"
+          },
+          "403": {
+            "$ref": "#/components/responses/ForbiddenErrorResponse"
+          },
+          "404": {
+            "$ref": "#/components/responses/NotFoundErrorResponse"
+          },
+          "410": {
+            "$ref": "#/components/responses/GoneErrorResponse"
+          },
+          "500": {
+            "$ref": "#/components/responses/InternalServerErrorResponse"
+          }
+        },
+        "summary": "Browse episodes of a podcast within a catalog",
         "tags": [
           "Catalogs"
         ]
@@ -6202,7 +9685,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "type": "object"
+                  "$ref": "#/components/schemas/GenresResponse"
                 },
                 "examples": {
                   "genres": {
@@ -6270,7 +9753,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "type": "object"
+                  "$ref": "#/components/schemas/GenreObject"
                 },
                 "examples": {
                   "genre": {
@@ -6352,7 +9835,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "type": "object"
+                  "$ref": "#/components/schemas/AlbumsResponse"
                 },
                 "examples": {
                   "genre_albums": {
@@ -6480,7 +9963,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "type": "object"
+                  "$ref": "#/components/schemas/ArtistsResponse"
                 },
                 "examples": {
                   "genre_artists": {
@@ -6587,7 +10070,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "type": "object"
+                  "$ref": "#/components/schemas/SongsResponse"
                 },
                 "examples": {
                   "genre_songs": {
@@ -6829,6 +10312,48 @@
         ],
         "responses": {
           "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object"
+                },
+                "examples": {
+                  "genres": {
+                    "summary": "genres (search results)",
+                    "value": {
+                      "total_count": 2,
+                      "md5": "b688a32fb7bee1397de8fa6f5e517ce2",
+                      "genre": [
+                        {
+                          "id": "6",
+                          "name": "Dance",
+                          "albums": 1,
+                          "artists": 1,
+                          "songs": 11,
+                          "videos": 0,
+                          "playlists": 0,
+                          "live_streams": 0,
+                          "is_hidden": false,
+                          "merge": []
+                        },
+                        {
+                          "id": "4",
+                          "name": "Dark Ambient",
+                          "albums": 1,
+                          "artists": 1,
+                          "songs": 4,
+                          "videos": 0,
+                          "playlists": 0,
+                          "live_streams": 0,
+                          "is_hidden": false,
+                          "merge": []
+                        }
+                      ]
+                    }
+                  }
+                }
+              }
+            },
             "description": "Search results"
           },
           "400": {
@@ -6856,7 +10381,6 @@
     },
     "/goodbye": {
       "post": {
-        "deprecated": true,
         "description": "Destroy auth session.",
         "parameters": [
           {
@@ -6907,8 +10431,7 @@
     },
     "/handshake": {
       "post": {
-        "deprecated": true,
-        "description": "Deprecated in this spec as per implementation guidance. You should provide either Bearer authentication, or auth token parameters.",
+        "description": "When you do not have an API key you can request a session token using handshake which can then be used as your authentication token.",
         "parameters": [
           {
             "description": "Passphrase (timestamp + password hash) or API key. Required unless using BearerAuth.",
@@ -7130,7 +10653,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "type": "object"
+                  "$ref": "#/components/schemas/IndexResponse"
                 },
                 "examples": {
                   "index_album_with_include": {
@@ -7752,7 +11275,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "type": "object"
+                  "$ref": "#/components/schemas/LabelsResponse"
                 },
                 "examples": {
                   "labels": {
@@ -7832,7 +11355,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "type": "object"
+                  "$ref": "#/components/schemas/LabelObject"
                 },
                 "examples": {
                   "label": {
@@ -7914,7 +11437,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "type": "object"
+                  "$ref": "#/components/schemas/ArtistsResponse"
                 },
                 "examples": {
                   "label_artists": {
@@ -8142,6 +11665,60 @@
         ],
         "responses": {
           "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object"
+                },
+                "examples": {
+                  "labels": {
+                    "summary": "labels (search results)",
+                    "value": {
+                      "total_count": 3,
+                      "md5": "792262bb4849f60fc25f9662c62b3848",
+                      "label": [
+                        {
+                          "id": "2",
+                          "name": "20kbps rec.",
+                          "artists": 1,
+                          "summary": null,
+                          "external_link": "https://music.com.au/labels.php?action=show&label=2",
+                          "address": null,
+                          "category": "tag_generated",
+                          "email": null,
+                          "website": null,
+                          "user": "4"
+                        },
+                        {
+                          "id": "1",
+                          "name": "archive.org",
+                          "artists": 8,
+                          "summary": null,
+                          "external_link": "https://music.com.au/labels.php?action=show&label=1",
+                          "address": null,
+                          "category": "tag_generated",
+                          "email": null,
+                          "website": null,
+                          "user": "4"
+                        },
+                        {
+                          "id": "3",
+                          "name": "DNA Production",
+                          "artists": 1,
+                          "summary": null,
+                          "external_link": "https://music.com.au/labels.php?action=show&label=3",
+                          "address": null,
+                          "category": "tag_generated",
+                          "email": null,
+                          "website": null,
+                          "user": "4"
+                        }
+                      ]
+                    }
+                  }
+                }
+              }
+            },
             "description": "Search results"
           },
           "400": {
@@ -8246,7 +11823,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "type": "object"
+                  "$ref": "#/components/schemas/LicensesResponse"
                 },
                 "examples": {
                   "licenses": {
@@ -8374,7 +11951,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "type": "object"
+                  "$ref": "#/components/schemas/LicenseObject"
                 },
                 "examples": {
                   "license": {
@@ -8450,7 +12027,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "type": "object"
+                  "$ref": "#/components/schemas/SongsResponse"
                 },
                 "examples": {
                   "license_songs": {
@@ -8564,7 +12141,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "type": "object"
+                  "$ref": "#/components/schemas/ListsResponse"
                 },
                 "examples": {
                   "list": {
@@ -9054,7 +12631,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "type": "object"
+                  "$ref": "#/components/schemas/LiveStreamsResponse"
                 },
                 "examples": {
                   "live_streams": {
@@ -9248,7 +12825,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "type": "object"
+                  "$ref": "#/components/schemas/LiveStreamObject"
                 },
                 "examples": {
                   "live_stream": {
@@ -9461,6 +13038,79 @@
           }
         },
         "summary": "Add media to the localplay server",
+        "tags": [
+          "Playback Control"
+        ]
+      }
+    },
+    "/localplay/add": {
+      "post": {
+        "parameters": [
+          {
+            "in": "query",
+            "name": "filter",
+            "description": "Object id",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "in": "query",
+            "name": "type",
+            "required": false,
+            "schema": {
+              "enum": [
+                "song",
+                "video",
+                "podcast_episode"
+              ],
+              "type": "string",
+              "default": "song"
+            }
+          },
+          {
+            "in": "query",
+            "name": "clear",
+            "description": "Clear the current playlist before adding",
+            "required": false,
+            "schema": {
+              "enum": [
+                0,
+                1
+              ],
+              "type": "integer"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object"
+                },
+                "examples": {
+                  "localplay": {
+                    "summary": "localplay",
+                    "value": {
+                      "localplay": {
+                        "command": {
+                          "add": true
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            },
+            "description": "Localplay response"
+          },
+          "400": {
+            "$ref": "#/components/responses/ErrorResponse"
+          }
+        },
+        "summary": "Add an object to the localplay server",
         "tags": [
           "Playback Control"
         ]
@@ -10079,7 +13729,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "type": "object"
+                  "$ref": "#/components/schemas/UserObject"
                 },
                 "examples": {
                   "user": {
@@ -10143,7 +13793,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "type": "object"
+                  "$ref": "#/components/schemas/TimelineResponse"
                 },
                 "examples": {
                   "friends_timeline": {
@@ -10237,7 +13887,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "type": "object"
+                  "$ref": "#/components/schemas/ShoutsResponse"
                 },
                 "examples": {
                   "last_shouts": {
@@ -10318,7 +13968,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "type": "object"
+                  "$ref": "#/components/schemas/NowPlayingResponse"
                 },
                 "examples": {
                   "now_playing": {
@@ -10444,7 +14094,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "type": "object"
+                  "$ref": "#/components/schemas/PlaylistsResponse"
                 },
                 "examples": {
                   "user_playlists": {
@@ -10602,7 +14252,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "type": "object"
+                  "$ref": "#/components/schemas/PlaylistsResponse"
                 },
                 "examples": {
                   "user_smartlists": {
@@ -10841,7 +14491,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "type": "object"
+                  "$ref": "#/components/schemas/PlaylistsResponse"
                 },
                 "examples": {
                   "playlists": {
@@ -11035,7 +14685,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "type": "object"
+                  "$ref": "#/components/schemas/PlaylistObject"
                 },
                 "examples": {
                   "playlist": {
@@ -11606,6 +15256,93 @@
         ]
       }
     },
+    "/playlists/{playlist_id}/remove": {
+      "post": {
+        "parameters": [
+          {
+            "in": "path",
+            "name": "playlist_id",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "in": "query",
+            "name": "id",
+            "description": "Object id",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "in": "query",
+            "name": "type",
+            "required": false,
+            "schema": {
+              "enum": [
+                "song",
+                "album",
+                "artist",
+                "playlist"
+              ],
+              "type": "string",
+              "default": "song"
+            }
+          },
+          {
+            "in": "query",
+            "name": "track",
+            "description": "Track number to remove from the playlist",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "in": "query",
+            "name": "clear",
+            "description": "Clear the whole playlist",
+            "required": false,
+            "schema": {
+              "enum": [
+                0,
+                1
+              ],
+              "type": "integer"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SuccessResponse"
+                },
+                "examples": {
+                  "success": {
+                    "summary": "playlist remove",
+                    "value": {
+                      "success": "song removed from playlist"
+                    }
+                  }
+                }
+              }
+            },
+            "description": "Success"
+          },
+          "400": {
+            "$ref": "#/components/responses/ErrorResponse"
+          }
+        },
+        "summary": "Remove an object (by id and type, or track number, or clear) from a playlist",
+        "tags": [
+          "Playlists"
+        ]
+      }
+    },
     "/playlists/{playlist_id}/share": {
       "post": {
         "parameters": [
@@ -11724,7 +15461,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "type": "object"
+                  "$ref": "#/components/schemas/SongsResponse"
                 },
                 "examples": {
                   "playlist_songs": {
@@ -12306,6 +16043,44 @@
         ],
         "responses": {
           "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object"
+                },
+                "examples": {
+                  "playlists": {
+                    "summary": "playlists (search results)",
+                    "value": {
+                      "total_count": 1,
+                      "md5": "944a9f4dea178d87e8cc3bd19b9fecc6",
+                      "playlist": [
+                        {
+                          "id": "4",
+                          "name": "random - user - private",
+                          "owner": "user",
+                          "user": {
+                            "id": "4",
+                            "username": "user"
+                          },
+                          "items": 43,
+                          "type": "private",
+                          "art": "https://music.com.au/image.php?object_id=4&object_type=playlist&name=art.jpg",
+                          "has_access": true,
+                          "has_collaborate": true,
+                          "has_art": false,
+                          "flag": false,
+                          "rating": null,
+                          "averagerating": null,
+                          "md5": null,
+                          "last_update": 1614054938
+                        }
+                      ]
+                    }
+                  }
+                }
+              }
+            },
             "description": "Search results"
           },
           "400": {
@@ -12477,7 +16252,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "type": "object"
+                  "$ref": "#/components/schemas/PodcastEpisodesResponse"
                 },
                 "examples": {
                   "podcast_episodes": {
@@ -12742,7 +16517,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "type": "object"
+                  "$ref": "#/components/schemas/PodcastEpisodeObject"
                 },
                 "examples": {
                   "podcast_episode": {
@@ -13677,7 +17452,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "type": "object"
+                  "$ref": "#/components/schemas/DeletedPodcastEpisodesResponse"
                 },
                 "examples": {
                   "deleted_podcast_episodes": {
@@ -14543,6 +18318,172 @@
         ],
         "responses": {
           "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object"
+                },
+                "examples": {
+                  "podcast_episodes": {
+                    "summary": "podcast_episodes (search results)",
+                    "value": {
+                      "total_count": 10,
+                      "md5": "8d22bf750030084b13d7afa0f442d4c4",
+                      "podcast_episode": [
+                        {
+                          "id": "3715",
+                          "title": "Talking to the Host of Drilled about the Legal Battles around Standing Rock",
+                          "name": "Talking to the Host of Drilled about the Legal Battles around Standing Rock",
+                          "podcast": {
+                            "id": 1,
+                            "name": "60-Second Science"
+                          },
+                          "description": "Protests around the construction of the now complete Dakota Access Pipeline brought national attention to Energy Transfer, the company that built and owns the pipeline and funded private security against the protestors. Energy Transfer sued the nonprofit Greenpeace for hundreds of millions of dollars. The company claimed that the Standing Rock movement was not Indigenous-led environmental activism but a conspiratorial effort by Greenpeace. Reporter Alleen Brown is spending this season of her podcast, Drilled, looking into the lawsuit and the message that legal actions like this send to activists.&nbsp;\n\nRecommended reading:\n\nListen to Drilled\n\nRead Alleen Brown&rsquo;s newsletter\n\nE-mail us at sciencequickly@sciam.com if you have any questions, comments or ideas for stories we should cover!\n\nDiscover something new every day: subscribe to Scientific American and sign up for Today in Science, our daily newsletter.&nbsp;\n\nScience Quickly is produced by Rachel Feltman, Fonda Mwangi, Kelso Harper, Naeem Amarsy and Jeff DelViscio. This episode was hosted by Rachel Feltman. Our show is edited by Alex Sugiura with fact-checking by Shayna Posses and Aaron Shattuck.&nbsp;\n\nThe theme music was composed by Dominic Smith.\n\n\nLearn more about your ad choices. Visit megaphone.fm/adchoices",
+                          "category": "",
+                          "author": "",
+                          "author_full": "",
+                          "website": "",
+                          "pubdate": "2025-06-30T09:55:00+00:00",
+                          "state": "completed",
+                          "filelength": "00:12:06",
+                          "filesize": "17 MB",
+                          "filename": "60-Second Science - Talking to the Host of Drilled about the Legal Battles around Standing Rock.mp3",
+                          "mime": "audio/mpeg",
+                          "time": 726,
+                          "size": 17827745,
+                          "bitrate": 192000,
+                          "stream_bitrate": 192000,
+                          "rate": 44100,
+                          "mode": "cbr",
+                          "channels": 2,
+                          "public_url": "https://music.com.au/podcast_episode.php?action=show&podcast_episode=3715",
+                          "url": "https://music.com.au/play/index.php?ssid=cfj3f237d563f479f5223k23189dbb34&type=podcast_episode&oid=3715&uid=4&format=raw&player=api&name=60-Second%20Science%20-%20Talking%20to%20the%20Host%20of%20Drilled%20about%20the%20Legal%20Battles%20around%20Standing%20Rock.mp3",
+                          "catalog": "3",
+                          "art": "https://music.com.au/image.php?object_id=1&object_type=podcast&id=42&name=art.jpg",
+                          "has_art": true,
+                          "flag": false,
+                          "rating": null,
+                          "averagerating": null,
+                          "playcount": 0,
+                          "played": ""
+                        },
+                        {
+                          "id": "127",
+                          "title": "How to Fight Bird Flu If It Becomes the Next Human Pandemic (Part 3)",
+                          "name": "How to Fight Bird Flu If It Becomes the Next Human Pandemic (Part 3)",
+                          "podcast": {
+                            "id": 1,
+                            "name": "60-Second Science"
+                          },
+                          "description": "Creating a bird flu vaccine requires several layers of bioprotective clothing and typically a whole lot of eggs. H5N1 avian influenza infections have gone from flocks of chickens to herds of cattle and humans. Scientists at the Texas Biomedical Research Institute are taking their best guess at the strains of the virus that could spread and are creating critical vaccine candidates.\n\nMultimedia journalist and Scientific American multimedia intern Naeem Amarsy suited up and went to San Antonio, Tex., to visit a &ldquo;biosafety level three&rdquo; (BSL-3) lab at the institute.&nbsp;\n\nThis is the third and final episode of our series about bird flu.\n\nYou can listen to episode one:\n\nhttps://www.scientificamerican.com/podcast/episode/how-h5n1-went-from-an-illness-in-wild-birds-to-a-global-pandemic-threat/&nbsp;\n\nAnd episode two:\n\nhttps://www.scientificamerican.com/podcast/episode/how-bird-flu-went-from-devastating-poultry-farms-to-infecting-dairy-herds/&nbsp;\n\nAnd read more of our health coverage:\n\nhttps://www.scientificamerican.com/health/&nbsp;\n\nE-mail us at sciencequickly@sciam.com if you have any questions, comments or ideas for stories we should cover!\n\nDiscover something new every day: subscribe to Scientific American and sign up for Today in Science, our daily newsletter.&nbsp;\n\nScience Quickly is produced by Rachel Feltman, Fonda Mwangi, Kelso Harper, Naeem Amarsy and Jeff DelViscio. This episode was hosted and reported by Naeem Amarsy. This series was reported and produced by Lauren Young, Meghan Bartels, Fonda Mwangi and Jeff DelViscio. Special thanks to Laura Petersen and Catie Corcoran at the Texas Biomedical Research Institute, Jane Deng and Elizabeth Dowling at the Icahn School of Medicine at Mount Sinai, and Kimberly Lau, Dean Visser and Jeanna Bryner at Scientific American. Our show is edited by Alex Sugiura with fact-checking by Shayna Posses and Aaron Shattuck. The theme music was composed by Dominic Smith.\n\n\nLearn more about your ad choices. Visit megaphone.fm/adchoices",
+                          "category": "",
+                          "author": "",
+                          "author_full": "",
+                          "website": "",
+                          "pubdate": "2025-06-27T09:55:00+00:00",
+                          "state": "completed",
+                          "filelength": "00:32:06",
+                          "filesize": "44.48 MB",
+                          "filename": "60-Second Science - How to Fight Bird Flu If It Becomes the Next Human Pandemic (Part 3).mp3",
+                          "mime": "audio/mpeg",
+                          "time": 1926,
+                          "size": 46635577,
+                          "bitrate": 192000,
+                          "stream_bitrate": 192000,
+                          "rate": 44100,
+                          "mode": "cbr",
+                          "channels": 2,
+                          "public_url": "https://music.com.au/podcast_episode.php?action=show&podcast_episode=127",
+                          "url": "https://music.com.au/play/index.php?ssid=cfj3f237d563f479f5223k23189dbb34&type=podcast_episode&oid=127&uid=4&format=raw&player=api&name=60-Second%20Science%20-%20How%20to%20Fight%20Bird%20Flu%20If%20It%20Becomes%20the%20Next%20Human%20Pandemic%20-Part%203-.mp3",
+                          "catalog": "3",
+                          "art": "https://music.com.au/image.php?object_id=1&object_type=podcast&id=42&name=art.jpg",
+                          "has_art": true,
+                          "flag": false,
+                          "rating": null,
+                          "averagerating": null,
+                          "playcount": 0,
+                          "played": ""
+                        },
+                        {
+                          "id": "128",
+                          "title": " Bird Flu’s Jump to Cattle Took Dairy Farmers by Surprise (Part 2)",
+                          "name": " Bird Flu’s Jump to Cattle Took Dairy Farmers by Surprise (Part 2)",
+                          "podcast": {
+                            "id": 1,
+                            "name": "60-Second Science"
+                          },
+                          "description": "Dairy cattle have become an intermediary between avian influenza found in wild birds and the handful of recorded H5N1 bird flu cases in humans. Senior news reporter Meghan Bartels took a trip upstate to Cornell University&rsquo;s Teaching Dairy Barn. Early last year Texas dairy farmers noticed lethargic cows producing off-color milk. One of them sent Cornell researchers a sample, which genetic sequencing determined to contain a strain of H5N1. That strain traces its roots to the H5N1 virus that emerged in China in the late 1990s&mdash;which spread around the world thanks to migrating wild birds, such as those found on the beach that associate health and medicine editor Lauren Young visited in episode one of our three-part series about bird flu. And outbreak of H5N1 has been running through poultry farms since the early 2020s. Poultry farmers have been forced to cull flocks, reinforce biosecurity protocols and change the prices of eggs as a result. Dairy farms were less prepared for the spillover and its unexpected transition into raw-milk-drinking barn cats. While pasteurization makes milk safe for human consumption, there&rsquo;s no easy way to prevent the spread between herds of cattle. In the next episode, multimedia intern and producer Naeem Amarsy looks at how the virus made yet another hop&mdash;this time into humans.\n\n\n\nRecommended reading:\n\nHow the U.S. Lost Control of Bird Flu, Setting the Stage for Another Pandemic\n\nhttps://www.scientificamerican.com/article/bird-flu-has-spread-out-of-control-after-mistakes-by-u-s-government-and/&nbsp;\n\nBird Flu Vaccine for Cows Passes Early Test\n\nhttps://www.scientificamerican.com/article/bird-flu-vaccine-for-cows-passes-early-test/&nbsp;\n\n\n\nE-mail us at sciencequickly@sciam.com if you have any questions, comments or ideas for stories we should cover!\n\nDiscover something new every day: subscribe to Scientific American and sign up for Today in Science, our daily newsletter.&nbsp;\n\n\n\nScience Quickly is produced by Rachel Feltman, Fonda Mwangi, Kelso Harper, Naeem Amarsy and Jeff DelViscio. This episode was reported and hosted by Meghan Bartels. This series is reported and produced by Lauren Young, Meghan Bartels, Naeem Amarsy, Fonda Mwangi and Jeff DelViscio. Special thanks to Becka Bowyer and Kaitlyn Serrao at Cornell University and to Kimberly Lau, Dean Visser and Jeanna Bryner at Scientific American. Our show is edited by Alex Sugiura with fact-checking by Shayna Posses and Aaron Shattuck. The theme music was composed by Dominic Smith.\n\n\nLearn more about your ad choices. Visit megaphone.fm/adchoices",
+                          "category": "",
+                          "author": "",
+                          "author_full": "",
+                          "website": "",
+                          "pubdate": "2025-06-25T09:50:00+00:00",
+                          "state": "completed",
+                          "filelength": "00:22:13",
+                          "filesize": "30.9 MB",
+                          "filename": "60-Second Science -  Bird Flu’s Jump to Cattle Took Dairy Farmers by Surprise (Part 2).mp3",
+                          "mime": "audio/mpeg",
+                          "time": 1333,
+                          "size": 32403851,
+                          "bitrate": 192000,
+                          "stream_bitrate": 192000,
+                          "rate": 44100,
+                          "mode": "cbr",
+                          "channels": 2,
+                          "public_url": "https://music.com.au/podcast_episode.php?action=show&podcast_episode=128",
+                          "url": "https://music.com.au/play/index.php?ssid=cfj3f237d563f479f5223k23189dbb34&type=podcast_episode&oid=128&uid=4&format=raw&player=api&name=60-Second%20Science%20-%20%20Bird%20Flu-s%20Jump%20to%20Cattle%20Took%20Dairy%20Farmers%20by%20Surprise%20-Part%202-.mp3",
+                          "catalog": "3",
+                          "art": "https://music.com.au/image.php?object_id=1&object_type=podcast&id=42&name=art.jpg",
+                          "has_art": true,
+                          "flag": false,
+                          "rating": null,
+                          "averagerating": null,
+                          "playcount": 0,
+                          "played": ""
+                        },
+                        {
+                          "id": "129",
+                          "title": "How Bird Flu Went from an Isolated Avian Illness to a Human Pandemic Threat (Part 1)",
+                          "name": "How Bird Flu Went from an Isolated Avian Illness to a Human Pandemic Threat (Part 1)",
+                          "podcast": {
+                            "id": 1,
+                            "name": "60-Second Science"
+                          },
+                          "description": "Bird flu outbreaks in poultry and cattle have caused concern for public health officials. There have been few reported cases of human transmission, but the growing risks of H5N1 avian influenza have virologists on alert.\n\n\n\nResearchers at the St. Jude Center of Excellence for Influenza Research and Response take an annual visit to Delaware Bay to collect samples of bird poop for analysis. These samples give the researchers a look at emerging avian illnesses. While spillover of H5N1 into domestic birds has been known for a while, the first case of spillover into humans was only identified during a 1997 outbreak in Hong Kong. Since then H5N1 has gone global and moved from transmitting from bird to bird to spreading from bird to mammal and from mammal to mammal.\n\n\n\nAssociate health and medicine editor Lauren Young takes a sample collection walk on the beach and speaks with virus detectives about how H5N1 evolved in episode one of our three-part series about bird flu.\n\nJoin us on Wednesday to learn how bird flu jumped from poultry to cattle.\n\n\n\nRecommended reading:\n\nRFK, Jr., Wants to Let Bird Flu Spread on Poultry Farms. Why Experts Are Concerned https://www.scientificamerican.com/article/rfk-jr-wants-to-let-bird-flu-spread-on-poultry-farms-why-experts-are/&nbsp;\n\nBird Flu Detected in Humans in the U.S.: What We Know So Far https://www.scientificamerican.com/article/bird-flu-detected-in-a-person-in-texas-what-we-know-so-far/&nbsp;\n\n\n\nE-mail us at sciencequickly@sciam.com if you have any questions, comments or ideas for stories we should cover!\n\nDiscover something new every day: subscribe to Scientific American and sign up for Today in Science, our daily newsletter.&nbsp;\n\n\n\nScience Quickly is produced by Rachel Feltman, Fonda Mwangi, Kelso Harper, Naeem Amarsy and Jeff DelViscio. This episode was hosted by Rachel Feltman with guest Lauren Young. This series was reported and produced by Lauren Young, Meghan Bartels, Naeem Amarsy, Fonda Mwangi and Jeff DelViscio. And special thanks to Kimberly Lau and Dean Visser at Scientific American for making it possible and to Michael Sheffield at St. Jude for assistance in the field. Our show is edited by Alex Sugiura with fact-checking by Shayna Posses and Aaron Shattuck. The theme music was composed by Dominic Smith.\nLearn more about your ad choices. Visit megaphone.fm/adchoices",
+                          "category": "",
+                          "author": "",
+                          "author_full": "",
+                          "website": "",
+                          "pubdate": "2025-06-23T09:50:00+00:00",
+                          "state": "completed",
+                          "filelength": "00:30:17",
+                          "filesize": "41.98 MB",
+                          "filename": "60-Second Science - How Bird Flu Went from an Isolated Avian Illness to a Human Pandemic Threat (Part 1).mp3",
+                          "mime": "audio/mpeg",
+                          "time": 1817,
+                          "size": 44015861,
+                          "bitrate": 192000,
+                          "stream_bitrate": 192000,
+                          "rate": 44100,
+                          "mode": "cbr",
+                          "channels": 2,
+                          "public_url": "https://music.com.au/podcast_episode.php?action=show&podcast_episode=129",
+                          "url": "https://music.com.au/play/index.php?ssid=cfj3f237d563f479f5223k23189dbb34&type=podcast_episode&oid=129&uid=4&format=raw&player=api&name=60-Second%20Science%20-%20How%20Bird%20Flu%20Went%20from%20an%20Isolated%20Avian%20Illness%20to%20a%20Human%20Pandemic%20Threat%20-Part%201-.mp3",
+                          "catalog": "3",
+                          "art": "https://music.com.au/image.php?object_id=1&object_type=podcast&id=42&name=art.jpg",
+                          "has_art": true,
+                          "flag": false,
+                          "rating": null,
+                          "averagerating": null,
+                          "playcount": 0,
+                          "played": ""
+                        }
+                      ]
+                    }
+                  }
+                }
+              }
+            },
             "description": "Search results"
           },
           "400": {
@@ -14725,7 +18666,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "type": "object"
+                  "$ref": "#/components/schemas/PodcastsResponse"
                 },
                 "examples": {
                   "podcasts": {
@@ -14963,7 +18904,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "type": "object"
+                  "$ref": "#/components/schemas/PodcastObject"
                 },
                 "examples": {
                   "podcast": {
@@ -15270,7 +19211,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "type": "object"
+                  "$ref": "#/components/schemas/PodcastEpisodesResponse"
                 },
                 "examples": {
                   "podcast_episodes": {
@@ -15741,6 +19682,62 @@
         ],
         "responses": {
           "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object"
+                },
+                "examples": {
+                  "podcasts": {
+                    "summary": "podcasts (search results)",
+                    "value": {
+                      "total_count": 2,
+                      "md5": "89fefb193877ee62e29d1da5975dcc47",
+                      "podcast": [
+                        {
+                          "id": "1",
+                          "name": "60-Second Science",
+                          "description": "Tune in every weekday for quick reports and commentaries on the world of science&mdash;it&#039;ll just take a minute",
+                          "language": "en-us",
+                          "copyright": "False",
+                          "feed_url": "http://rss.sciam.com/sciam/60secsciencepodcast",
+                          "generator": "",
+                          "website": "https://www.scientificamerican.com/podcast/60-second-science/",
+                          "build_date": "1970-01-01T00:00:00+00:00",
+                          "sync_date": "2022-08-17T05:07:11+00:00",
+                          "public_url": "https://music.com.au/podcast.php?action=show&podcast=1",
+                          "art": "https://music.com.au/image.php?object_id=1&object_type=podcast&id=42&name=art.jpg",
+                          "has_art": true,
+                          "flag": false,
+                          "rating": null,
+                          "averagerating": null,
+                          "podcast_episode": []
+                        },
+                        {
+                          "id": "2",
+                          "name": "Plays Well with Others",
+                          "description": "From Creative Commons, a podcast about the art and science of collaboration. With a focus on the tools, techniques, and mechanics of collaboration, we explore how today&#039;s most interesting collaborators are making new things, solving old problems, and getting things done &mdash; together. Hosted by Creative Commons CEO Ryan Merkley. ",
+                          "language": "en",
+                          "copyright": "Creative Commons",
+                          "feed_url": "https://anchor.fm/s/90932e8/podcast/rss",
+                          "generator": "Anchor Podcasts",
+                          "website": "playswellwithothers.org",
+                          "build_date": "2021-02-23T04:18:58+00:00",
+                          "sync_date": "2022-08-17T05:07:11+00:00",
+                          "public_url": "https://music.com.au/podcast.php?action=show&podcast=2",
+                          "art": "https://music.com.au/image.php?object_id=2&object_type=podcast&id=45&name=art.jpg",
+                          "has_art": true,
+                          "flag": false,
+                          "rating": null,
+                          "averagerating": null,
+                          "podcast_episode": []
+                        }
+                      ]
+                    }
+                  }
+                }
+              }
+            },
             "description": "Search results"
           },
           "400": {
@@ -15864,6 +19861,48 @@
       }
     },
     "/preferences": {
+      "get": {
+        "parameters": [],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object"
+                },
+                "examples": {
+                  "user_preferences": {
+                    "summary": "user preferences",
+                    "value": {
+                      "preference": [
+                        {
+                          "id": 123,
+                          "name": "ajax_load",
+                          "level": 25,
+                          "description": "Ajax page load",
+                          "value": "1",
+                          "type": "boolean",
+                          "category": "interface",
+                          "subcategory": null,
+                          "has_access": true
+                        }
+                      ]
+                    }
+                  }
+                }
+              }
+            },
+            "description": "Preference list"
+          },
+          "400": {
+            "$ref": "#/components/responses/ErrorResponse"
+          }
+        },
+        "summary": "Get your user preferences",
+        "tags": [
+          "Preferences"
+        ]
+      },
       "put": {
         "parameters": [
           {
@@ -17354,6 +21393,53 @@
       }
     },
     "/preferences/{preference_name}": {
+      "get": {
+        "parameters": [
+          {
+            "in": "path",
+            "name": "preference_name",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object"
+                },
+                "examples": {
+                  "user_preference": {
+                    "summary": "user preference",
+                    "value": {
+                      "id": 123,
+                      "name": "ajax_load",
+                      "level": 25,
+                      "description": "Ajax page load",
+                      "value": "1",
+                      "type": "boolean",
+                      "category": "interface",
+                      "subcategory": null,
+                      "has_access": true
+                    }
+                  }
+                }
+              }
+            },
+            "description": "Preference array"
+          },
+          "400": {
+            "$ref": "#/components/responses/ErrorResponse"
+          }
+        },
+        "summary": "Get a user preference by name",
+        "tags": [
+          "Preferences"
+        ]
+      },
       "delete": {
         "parameters": [
           {
@@ -17483,7 +21569,51 @@
         ]
       }
     },
-    "/preferences/{preference_name}/system": {
+    "/system-preferences": {
+      "get": {
+        "parameters": [],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object"
+                },
+                "examples": {
+                  "system_preferences": {
+                    "summary": "system preferences",
+                    "value": {
+                      "preference": [
+                        {
+                          "id": 123,
+                          "name": "ajax_load",
+                          "level": 25,
+                          "description": "Ajax page load",
+                          "value": "1",
+                          "type": "boolean",
+                          "category": "interface",
+                          "subcategory": null,
+                          "has_access": true
+                        }
+                      ]
+                    }
+                  }
+                }
+              }
+            },
+            "description": "Preference list"
+          },
+          "400": {
+            "$ref": "#/components/responses/ErrorResponse"
+          }
+        },
+        "summary": "Get your system preferences (Admin)",
+        "tags": [
+          "Preferences"
+        ]
+      }
+    },
+    "/system-preferences/{preference_name}": {
       "get": {
         "parameters": [
           {
@@ -17532,52 +21662,96 @@
         ]
       }
     },
-    "/preferences/{preference_name}/user": {
+    "/random": {
       "get": {
         "parameters": [
           {
-            "in": "path",
-            "name": "preference_name",
-            "required": true,
+            "description": "Object type to pick a random item from (default: song)",
+            "in": "query",
+            "name": "type",
+            "required": false,
+            "schema": {
+              "default": "song",
+              "enum": [
+                "song",
+                "podcast_episode",
+                "video"
+              ],
+              "type": "string"
+            }
+          },
+          {
+            "description": "Max bitrate for transcoding in bytes (e.g 192000=192Kb). Song only",
+            "in": "query",
+            "name": "bitrate",
+            "required": false,
+            "schema": {
+              "type": "integer"
+            }
+          },
+          {
+            "description": "Target stream format e.g. 'mp3', 'ogg'; use 'raw' to skip transcoding. Song only",
+            "in": "query",
+            "name": "format",
+            "required": false,
             "schema": {
               "type": "string"
+            }
+          },
+          {
+            "description": "Time offset in seconds",
+            "in": "query",
+            "name": "offset",
+            "required": false,
+            "schema": {
+              "type": "integer"
+            }
+          },
+          {
+            "description": "If 0, disable stat recording when playing the object (default: 1)",
+            "in": "query",
+            "name": "stats",
+            "required": false,
+            "schema": {
+              "enum": [
+                0,
+                1
+              ],
+              "type": "integer"
             }
           }
         ],
         "responses": {
-          "200": {
-            "content": {
-              "application/json": {
+          "302": {
+            "description": "Redirect to the stream url of the randomly picked object",
+            "headers": {
+              "Location": {
+                "description": "Stream url of the random media object",
                 "schema": {
-                  "type": "object"
-                },
-                "examples": {
-                  "user_preference": {
-                    "summary": "user preference",
-                    "value": {
-                      "id": 123,
-                      "name": "ajax_load",
-                      "level": 25,
-                      "description": "Ajax page load",
-                      "value": "1",
-                      "type": "boolean",
-                      "category": "interface",
-                      "subcategory": null,
-                      "has_access": true
-                    }
-                  }
+                  "type": "string"
                 }
               }
-            },
-            "description": "Preference array"
+            }
           },
           "400": {
-            "$ref": "#/components/responses/ErrorResponse"
+            "$ref": "#/components/responses/BadRequestErrorResponse"
+          },
+          "403": {
+            "$ref": "#/components/responses/ForbiddenErrorResponse"
+          },
+          "404": {
+            "$ref": "#/components/responses/NotFoundErrorResponse"
+          },
+          "410": {
+            "$ref": "#/components/responses/GoneErrorResponse"
+          },
+          "500": {
+            "$ref": "#/components/responses/InternalServerErrorResponse"
           }
         },
-        "summary": "Get a user preference by name",
+        "summary": "Pick a random song, podcast episode or video and redirect (302) to its stream url",
         "tags": [
-          "Preferences"
+          "Streaming and Downloads"
         ]
       }
     },
@@ -22441,7 +26615,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "type": "object"
+                  "$ref": "#/components/schemas/SharesResponse"
                 },
                 "examples": {
                   "shares": {
@@ -22517,6 +26691,99 @@
         "tags": [
           "Shares"
         ]
+      },
+      "put": {
+        "parameters": [
+          {
+            "in": "query",
+            "name": "filter",
+            "description": "Object id",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "in": "query",
+            "name": "type",
+            "required": true,
+            "schema": {
+              "enum": [
+                "album",
+                "artist",
+                "playlist",
+                "podcast",
+                "podcast_episode",
+                "song",
+                "video"
+              ],
+              "type": "string"
+            }
+          },
+          {
+            "in": "query",
+            "name": "description",
+            "description": "Filled in for you if empty",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "in": "query",
+            "name": "expires",
+            "description": "Days to keep active",
+            "required": false,
+            "schema": {
+              "type": "integer"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object"
+                },
+                "examples": {
+                  "share": {
+                    "summary": "share created",
+                    "value": {
+                      "share": [
+                        {
+                          "id": "8",
+                          "name": "Creeping Lawler 2",
+                          "owner": "user",
+                          "allow_stream": true,
+                          "allow_download": false,
+                          "creation_date": 1670202706,
+                          "lastvisit_date": 0,
+                          "object_type": "album",
+                          "object_id": "9",
+                          "expire_days": 7,
+                          "max_counter": 0,
+                          "counter": 0,
+                          "secret": "GJ7EzBPT",
+                          "public_url": "https://music.com.au/share.php?id=8&secret=GJ7EzBPT",
+                          "description": "Creeping Lawler 2 (Warfare 3.0)"
+                        }
+                      ]
+                    }
+                  }
+                }
+              }
+            },
+            "description": "Share created"
+          },
+          "400": {
+            "$ref": "#/components/responses/ErrorResponse"
+          }
+        },
+        "summary": "Create a share",
+        "tags": [
+          "Shares"
+        ]
       }
     },
     "/shares/{share_id}": {
@@ -22589,7 +26856,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "type": "object"
+                  "$ref": "#/components/schemas/ShareObject"
                 },
                 "examples": {
                   "share": {
@@ -22795,7 +27062,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "type": "object"
+                  "$ref": "#/components/schemas/PlaylistsResponse"
                 },
                 "examples": {
                   "smartlists": {
@@ -22975,7 +27242,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "type": "object"
+                  "$ref": "#/components/schemas/PlaylistObject"
                 },
                 "examples": {
                   "smartlist": {
@@ -23394,7 +27661,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "type": "object"
+                  "$ref": "#/components/schemas/SongsResponse"
                 },
                 "examples": {
                   "smartlist_songs": {
@@ -23989,6 +28256,104 @@
         ],
         "responses": {
           "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object"
+                },
+                "examples": {
+                  "smartlists": {
+                    "summary": "smartlists (search results)",
+                    "value": {
+                      "total_count": 18,
+                      "md5": "1be86703f3041143eac23a8a6a30b176",
+                      "playlist": [
+                        {
+                          "id": "smart_21",
+                          "name": "admin - 02/23/2021 14:36:44 (admin)",
+                          "owner": "admin",
+                          "user": {
+                            "id": "2",
+                            "username": "admin"
+                          },
+                          "items": 1,
+                          "type": "public",
+                          "art": "https://music.com.au/image.php?object_id=21&object_type=search&name=art.jpg",
+                          "has_access": true,
+                          "has_collaborate": true,
+                          "has_art": false,
+                          "flag": false,
+                          "rating": null,
+                          "averagerating": null,
+                          "md5": null,
+                          "last_update": 0
+                        },
+                        {
+                          "id": "smart_14",
+                          "name": "Album 1* (System)",
+                          "owner": "System",
+                          "user": {
+                            "id": "-1",
+                            "username": "System"
+                          },
+                          "items": 2,
+                          "type": "public",
+                          "art": "https://music.com.au/image.php?object_id=14&object_type=search&name=art.jpg",
+                          "has_access": true,
+                          "has_collaborate": true,
+                          "has_art": false,
+                          "flag": false,
+                          "rating": null,
+                          "averagerating": null,
+                          "md5": null,
+                          "last_update": 0
+                        },
+                        {
+                          "id": "smart_13",
+                          "name": "Album 2* (System)",
+                          "owner": "System",
+                          "user": {
+                            "id": "-1",
+                            "username": "System"
+                          },
+                          "items": 11,
+                          "type": "public",
+                          "art": "https://music.com.au/image.php?object_id=13&object_type=search&name=art.jpg",
+                          "has_access": true,
+                          "has_collaborate": true,
+                          "has_art": false,
+                          "flag": false,
+                          "rating": null,
+                          "averagerating": null,
+                          "md5": null,
+                          "last_update": 0
+                        },
+                        {
+                          "id": "smart_12",
+                          "name": "Album 3* (System)",
+                          "owner": "System",
+                          "user": {
+                            "id": "-1",
+                            "username": "System"
+                          },
+                          "items": 2,
+                          "type": "public",
+                          "art": "https://music.com.au/image.php?object_id=12&object_type=search&name=art.jpg",
+                          "has_access": true,
+                          "has_collaborate": true,
+                          "has_art": false,
+                          "flag": false,
+                          "rating": null,
+                          "averagerating": null,
+                          "md5": null,
+                          "last_update": 0
+                        }
+                      ]
+                    }
+                  }
+                }
+              }
+            },
             "description": "Search results"
           },
           "400": {
@@ -24089,7 +28454,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "type": "object"
+                  "$ref": "#/components/schemas/SongsResponse"
                 },
                 "examples": {
                   "songs": {
@@ -24547,7 +28912,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "type": "object"
+                  "$ref": "#/components/schemas/SongObject"
                 },
                 "examples": {
                   "song": {
@@ -25793,7 +30158,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "type": "object"
+                  "$ref": "#/components/schemas/SongTagObject"
                 },
                 "examples": {
                   "song_tags": {
@@ -25943,7 +30308,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "type": "object"
+                  "$ref": "#/components/schemas/DeletedSongsResponse"
                 },
                 "examples": {
                   "deleted_songs": {
@@ -26940,6 +31305,323 @@
         ],
         "responses": {
           "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object"
+                },
+                "examples": {
+                  "songs": {
+                    "summary": "songs (search results)",
+                    "value": {
+                      "total_count": 75,
+                      "md5": "c776c28ee7bb4e7f46fd3bbfbf34c5ff",
+                      "song": [
+                        {
+                          "id": "115",
+                          "title": "Are we going Crazy",
+                          "name": "Are we going Crazy",
+                          "artist": {
+                            "id": "27",
+                            "name": "Chi.Otic",
+                            "prefix": null,
+                            "basename": "Chi.Otic"
+                          },
+                          "artists": [
+                            {
+                              "id": "27",
+                              "name": "Chi.Otic",
+                              "prefix": null,
+                              "basename": "Chi.Otic"
+                            }
+                          ],
+                          "album": {
+                            "id": "12",
+                            "name": "Buried in Nausea",
+                            "prefix": null,
+                            "basename": "Buried in Nausea"
+                          },
+                          "albumartist": {
+                            "id": "19",
+                            "name": "Various Artists",
+                            "prefix": null,
+                            "basename": "Various Artists"
+                          },
+                          "disk": 1,
+                          "disksubtitle": null,
+                          "track": 7,
+                          "filename": "/mnt/files-music/ampache-test/music/Various Artists/Buried In Nausea/07Chi.otic-AreWeGoingCrazy.wma",
+                          "genre": [],
+                          "playlisttrack": 1,
+                          "time": 433,
+                          "year": 2012,
+                          "format": "wma",
+                          "stream_format": "mp3",
+                          "bitrate": 32582,
+                          "stream_bitrate": 32000,
+                          "rate": 44100,
+                          "mode": "cbr",
+                          "mime": "audio/x-ms-wma",
+                          "stream_mime": "audio/mpeg",
+                          "url": "https://music.com.au/play/index.php?ssid=cfj3f237d563f479f5223k23189dbb34&type=song&oid=115&uid=4&transcode_to=mp3&bitrate=32000&player=api&name=Chi.Otic%20-%20Are%20we%20going%20Crazy.mp3",
+                          "size": 1776580,
+                          "mbid": null,
+                          "art": "https://music.com.au/image.php?object_id=12&object_type=album&id=66&name=art.jpg",
+                          "has_art": true,
+                          "flag": false,
+                          "rating": null,
+                          "averagerating": null,
+                          "playcount": 0,
+                          "catalog": 1,
+                          "composer": null,
+                          "channels": 1,
+                          "comment": null,
+                          "license": null,
+                          "publisher": null,
+                          "language": null,
+                          "lyrics": null,
+                          "replaygain_album_gain": null,
+                          "replaygain_album_peak": null,
+                          "replaygain_track_gain": null,
+                          "replaygain_track_peak": null,
+                          "r128_album_gain": null,
+                          "r128_track_gain": null
+                        },
+                        {
+                          "id": "107",
+                          "title": "Arrest Me",
+                          "name": "Arrest Me",
+                          "artist": {
+                            "id": "20",
+                            "name": "R/B",
+                            "prefix": null,
+                            "basename": "R/B"
+                          },
+                          "artists": [
+                            {
+                              "id": "20",
+                              "name": "R/B",
+                              "prefix": null,
+                              "basename": "R/B"
+                            }
+                          ],
+                          "album": {
+                            "id": "12",
+                            "name": "Buried in Nausea",
+                            "prefix": null,
+                            "basename": "Buried in Nausea"
+                          },
+                          "albumartist": {
+                            "id": "19",
+                            "name": "Various Artists",
+                            "prefix": null,
+                            "basename": "Various Artists"
+                          },
+                          "disk": 1,
+                          "disksubtitle": null,
+                          "track": 9,
+                          "filename": "/mnt/files-music/ampache-test/music/Various Artists/Buried In Nausea/09R_b-ArrestMe.m4a",
+                          "genre": [
+                            {
+                              "id": "7",
+                              "name": "Punk"
+                            }
+                          ],
+                          "playlisttrack": 2,
+                          "time": 96,
+                          "year": 2012,
+                          "format": "m4a",
+                          "stream_format": "mp3",
+                          "bitrate": 252864,
+                          "stream_bitrate": 32000,
+                          "rate": 44100,
+                          "mode": "vbr",
+                          "mime": "audio/mp4",
+                          "stream_mime": "audio/mpeg",
+                          "url": "https://music.com.au/play/index.php?ssid=cfj3f237d563f479f5223k23189dbb34&type=song&oid=107&uid=4&transcode_to=mp3&bitrate=32000&player=api&name=R-B%20-%20Arrest%20Me.mp3",
+                          "size": 3091727,
+                          "mbid": null,
+                          "art": "https://music.com.au/image.php?object_id=12&object_type=album&id=66&name=art.jpg",
+                          "has_art": true,
+                          "flag": false,
+                          "rating": null,
+                          "averagerating": null,
+                          "playcount": 0,
+                          "catalog": 1,
+                          "composer": null,
+                          "channels": 2,
+                          "comment": null,
+                          "license": null,
+                          "publisher": null,
+                          "language": null,
+                          "lyrics": null,
+                          "replaygain_album_gain": null,
+                          "replaygain_album_peak": null,
+                          "replaygain_track_gain": -1.35,
+                          "replaygain_track_peak": 0.881,
+                          "r128_album_gain": null,
+                          "r128_track_gain": null
+                        },
+                        {
+                          "id": "118",
+                          "title": "As Pure as Possible",
+                          "name": "As Pure as Possible",
+                          "artist": {
+                            "id": "36",
+                            "name": "Comfort Fit",
+                            "prefix": null,
+                            "basename": "Comfort Fit"
+                          },
+                          "artists": [
+                            {
+                              "id": "36",
+                              "name": "Comfort Fit",
+                              "prefix": null,
+                              "basename": "Comfort Fit"
+                            }
+                          ],
+                          "album": {
+                            "id": "21",
+                            "name": "Forget and Remember",
+                            "prefix": null,
+                            "basename": "Forget and Remember"
+                          },
+                          "albumartist": {
+                            "id": "36",
+                            "name": "Comfort Fit",
+                            "prefix": null,
+                            "basename": "Comfort Fit"
+                          },
+                          "disk": 1,
+                          "disksubtitle": null,
+                          "track": 9,
+                          "filename": "/mnt/files-music/ampache-test/upload/user/Comfort Fit/Forget And Remember/9 - As Pure as Possible.mp3",
+                          "genre": [
+                            {
+                              "id": "8",
+                              "name": "Hip-Hop"
+                            }
+                          ],
+                          "playlisttrack": 3,
+                          "time": 128,
+                          "year": 2005,
+                          "format": "mp3",
+                          "stream_format": "mp3",
+                          "bitrate": 234690,
+                          "stream_bitrate": 32000,
+                          "rate": 44100,
+                          "mode": "vbr",
+                          "mime": "audio/mpeg",
+                          "stream_mime": "audio/mpeg",
+                          "url": "https://music.com.au/play/index.php?ssid=cfj3f237d563f479f5223k23189dbb34&type=song&oid=118&uid=4&transcode_to=mp3&bitrate=32000&player=api&name=Comfort%20Fit%20-%20As%20Pure%20as%20Possible.mp3",
+                          "size": 3789410,
+                          "mbid": "7a3d740d-5546-4900-88af-b97b42c3344e",
+                          "art": "https://music.com.au/image.php?object_id=21&object_type=album&id=334&name=art.jpg",
+                          "has_art": true,
+                          "flag": false,
+                          "rating": null,
+                          "averagerating": null,
+                          "playcount": 0,
+                          "catalog": 4,
+                          "composer": null,
+                          "channels": 2,
+                          "comment": "URL: http://freemusicarchive.org/music/Comfort_Fit/Forget_And_Remember/tdrlp02-09-comfort_fit-as_pure_as_possible\r\nComments: http://freemusicarchive.org/\r\nCurator: WFMU\r\nCopyright: Attribution-Noncommercial-No Derivative Works 3.0 Germany: http://creativecommons.org/licenses/by-nc-nd/3.0/de/",
+                          "license": null,
+                          "publisher": "Tokyo Dawn Records",
+                          "language": null,
+                          "lyrics": null,
+                          "replaygain_album_gain": null,
+                          "replaygain_album_peak": null,
+                          "replaygain_track_gain": null,
+                          "replaygain_track_peak": null,
+                          "r128_album_gain": null,
+                          "r128_track_gain": null
+                        },
+                        {
+                          "id": "85",
+                          "title": "Beq Ultra Fat",
+                          "name": "Beq Ultra Fat",
+                          "artist": {
+                            "id": "14",
+                            "name": "Nofi/found.",
+                            "prefix": null,
+                            "basename": "Nofi/found."
+                          },
+                          "artists": [
+                            {
+                              "id": "14",
+                              "name": "Nofi/found.",
+                              "prefix": null,
+                              "basename": "Nofi/found."
+                            }
+                          ],
+                          "album": {
+                            "id": "8",
+                            "name": "Nofi Devices",
+                            "prefix": null,
+                            "basename": "Nofi Devices"
+                          },
+                          "albumartist": {
+                            "id": "14",
+                            "name": "Nofi/found.",
+                            "prefix": null,
+                            "basename": "Nofi/found."
+                          },
+                          "disk": 1,
+                          "disksubtitle": null,
+                          "track": 4,
+                          "filename": "/mnt/files-music/ampache-test/music/Nofi_found/Nofi Devices LP/04_Beq_Ultra_Fat.mp3",
+                          "genre": [
+                            {
+                              "id": "5",
+                              "name": "Electronica"
+                            },
+                            {
+                              "id": "6",
+                              "name": "Dance"
+                            }
+                          ],
+                          "playlisttrack": 4,
+                          "time": 413,
+                          "year": 0,
+                          "format": "mp3",
+                          "stream_format": "mp3",
+                          "bitrate": 192000,
+                          "stream_bitrate": 32000,
+                          "rate": 44100,
+                          "mode": "cbr",
+                          "mime": "audio/mpeg",
+                          "stream_mime": "audio/mpeg",
+                          "url": "https://music.com.au/play/index.php?ssid=cfj3f237d563f479f5223k23189dbb34&type=song&oid=85&uid=4&transcode_to=mp3&bitrate=32000&player=api&name=Nofi-found.%20-%20Beq%20Ultra%20Fat.mp3",
+                          "size": 9935896,
+                          "mbid": null,
+                          "art": "https://music.com.au/image.php?object_id=8&object_type=album&id=70&name=art.jpg",
+                          "has_art": true,
+                          "flag": false,
+                          "rating": null,
+                          "averagerating": null,
+                          "playcount": 0,
+                          "catalog": 1,
+                          "composer": "Jeffrey Melton",
+                          "channels": 2,
+                          "comment": "8A114B0B+332232+11+150+3703+28283+76364+107382+132131+156082+177051+217892+239975+285087",
+                          "license": null,
+                          "publisher": "archive.org",
+                          "language": null,
+                          "lyrics": null,
+                          "replaygain_album_gain": null,
+                          "replaygain_album_peak": null,
+                          "replaygain_track_gain": 0.94,
+                          "replaygain_track_peak": 0.989,
+                          "r128_album_gain": null,
+                          "r128_track_gain": null
+                        }
+                      ]
+                    }
+                  }
+                }
+              }
+            },
             "description": "Search results"
           },
           "400": {
@@ -27291,7 +31973,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "type": "object"
+                  "$ref": "#/components/schemas/UsersResponse"
                 },
                 "examples": {
                   "users": {
@@ -27504,7 +32186,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "type": "object"
+                  "$ref": "#/components/schemas/UserObject"
                 },
                 "examples": {
                   "user": {
@@ -27722,45 +32404,6 @@
       }
     },
     "/users/{user_id}/follow": {
-      "delete": {
-        "parameters": [
-          {
-            "in": "path",
-            "name": "user_id",
-            "required": true,
-            "schema": {
-              "type": "integer"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/SuccessResponse"
-                },
-                "examples": {
-                  "success": {
-                    "summary": "toggle follow",
-                    "value": {
-                      "success": "follow toggled for: 4"
-                    }
-                  }
-                }
-              }
-            },
-            "description": "Success"
-          },
-          "400": {
-            "$ref": "#/components/responses/ErrorResponse"
-          }
-        },
-        "summary": "Unfollow a user",
-        "tags": [
-          "Social"
-        ]
-      },
       "post": {
         "parameters": [
           {
@@ -27796,45 +32439,6 @@
           }
         },
         "summary": "Follow or unfollow a user (toggle)",
-        "tags": [
-          "Social"
-        ]
-      },
-      "put": {
-        "parameters": [
-          {
-            "in": "path",
-            "name": "user_id",
-            "required": true,
-            "schema": {
-              "type": "integer"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/SuccessResponse"
-                },
-                "examples": {
-                  "success": {
-                    "summary": "toggle follow",
-                    "value": {
-                      "success": "follow toggled for: 4"
-                    }
-                  }
-                }
-              }
-            },
-            "description": "Success"
-          },
-          "400": {
-            "$ref": "#/components/responses/ErrorResponse"
-          }
-        },
-        "summary": "Follow a user",
         "tags": [
           "Social"
         ]
@@ -28005,7 +32609,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "type": "object"
+                  "$ref": "#/components/schemas/TimelineResponse"
                 },
                 "examples": {
                   "timeline": {
@@ -28275,6 +32879,38 @@
         ],
         "responses": {
           "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object"
+                },
+                "examples": {
+                  "users": {
+                    "summary": "users (search results)",
+                    "value": {
+                      "user": [
+                        {
+                          "id": "2",
+                          "username": "admin"
+                        },
+                        {
+                          "id": "3",
+                          "username": "demo"
+                        },
+                        {
+                          "id": "4",
+                          "username": "user"
+                        },
+                        {
+                          "id": "10",
+                          "username": "generic"
+                        }
+                      ]
+                    }
+                  }
+                }
+              }
+            },
             "description": "Search results"
           },
           "400": {
@@ -28361,7 +32997,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "type": "object"
+                  "$ref": "#/components/schemas/VideosResponse"
                 },
                 "examples": {
                   "videos": {
@@ -28453,7 +33089,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "type": "object"
+                  "$ref": "#/components/schemas/VideoObject"
                 },
                 "examples": {
                   "video": {
@@ -29181,7 +33817,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "type": "object"
+                  "$ref": "#/components/schemas/DeletedVideosResponse"
                 },
                 "examples": {
                   "deleted_videos": {
@@ -29342,6 +33978,72 @@
         ],
         "responses": {
           "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object"
+                },
+                "examples": {
+                  "videos": {
+                    "summary": "videos (search results)",
+                    "value": {
+                      "total_count": 3,
+                      "md5": "e0f2b57f7886bad0b1a33447e187fae7",
+                      "video": [
+                        {
+                          "id": "5",
+                          "title": "Lisa Simpson playing a Beer Jug as her new instrument-fTGVV_4DNYI",
+                          "mime": "video/mp4",
+                          "resolution": "1920x1080",
+                          "size": 16967352,
+                          "genre": [],
+                          "time": 32,
+                          "url": "https://music.com.au/play/index.php?ssid=cfj3f237d563f479f5223k23189dbb34&type=video&oid=5&uid=4&player=api&name=Lisa%20Simpson%20playing%20a%20Beer%20Jug%20as%20her%20new%20instrument-fTGVV-4DNYI.mp4",
+                          "art": "https://music.com.au/image.php?object_id=5&object_type=video&id=414&name=art.png",
+                          "has_art": false,
+                          "flag": false,
+                          "rating": null,
+                          "averagerating": null,
+                          "playcount": 0
+                        },
+                        {
+                          "id": "2",
+                          "title": "Magic Fly",
+                          "mime": "video/ogg",
+                          "resolution": "400x300",
+                          "size": 14950742,
+                          "genre": [],
+                          "time": 0,
+                          "url": "https://music.com.au/play/index.php?ssid=cfj3f237d563f479f5223k23189dbb34&type=video&oid=2&uid=4&player=api&name=Magic%20Fly.ogv",
+                          "art": "https://music.com.au/image.php?object_id=2&object_type=video&id=36&name=art.png",
+                          "has_art": false,
+                          "flag": false,
+                          "rating": null,
+                          "averagerating": null,
+                          "playcount": 1
+                        },
+                        {
+                          "id": "1",
+                          "title": "SPACE   Magic Fly (1977) - https://archive.org/details/SPACE_Magic_Fly_1977",
+                          "mime": "video/mp4",
+                          "resolution": "640x480",
+                          "size": 20084777,
+                          "genre": [],
+                          "time": 193,
+                          "url": "https://music.com.au/play/index.php?ssid=cfj3f237d563f479f5223k23189dbb34&type=video&oid=1&uid=4&player=api&name=SPACE%20%20%20Magic%20Fly%20-1977-%20-%20https-archive.org-details-SPACE-Magic-Fly-1977.mp4",
+                          "art": "https://music.com.au/image.php?object_id=1&object_type=video&id=35&name=art.png",
+                          "has_art": false,
+                          "flag": false,
+                          "rating": null,
+                          "averagerating": null,
+                          "playcount": 3
+                        }
+                      ]
+                    }
+                  }
+                }
+              }
+            },
             "description": "Search results"
           },
           "400": {

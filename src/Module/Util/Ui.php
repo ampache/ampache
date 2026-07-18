@@ -550,7 +550,7 @@ class Ui implements UiInterface
 
         if (defined('SSE_OUTPUT')) {
             echo "id: " . $update_id . "\n";
-            echo "data: displayNotification('" . json_encode($value) . "', 5000)\n\n";
+            echo "data: " . json_encode(['fn' => 'displayNotification', 'args' => [$value, 5000]]) . "\n\n";
         } elseif ($field !== '' && $field !== '0') {
             echo "<script>updateText('" . $field . "', '" . json_encode($value) . "');</script>\n";
         } else {
@@ -834,11 +834,8 @@ class Ui implements UiInterface
             case 'upnp_backend':
             case 'use_auth':
             case 'use_original_year':
-            case 'use_play2':
             case 'webdav_backend':
-            case 'webplayer_aurora':
             case 'webplayer_confirmclose':
-            case 'webplayer_flash':
             case 'webplayer_html5':
             case 'webplayer_pausetabs':
             case 'xml_rpc':
@@ -856,7 +853,7 @@ class Ui implements UiInterface
                 echo "</select>\n";
                 break;
             case 'upload_catalog':
-                show_catalog_select('upload_catalog', $value, '', true, 'music', 'local');
+                show_catalog_select('upload_catalog', (int) $value, '', true, 'music', 'local');
                 break;
             case 'play_type':
                 $is_stream     = '';

@@ -577,17 +577,50 @@ class Json8_Data
      * @param int[] $objects Bookmark id's to include
      * @param bool $include if true include the object in the bookmark
      * @param bool $object (whether to return as a named object array or regular array)
+     * @return string JSON Object "bookmark"
      */
     public static function bookmarks(array $objects, string $auth, bool $include = false, bool $object = true): string
     {
         self::$count = self::$count ?: count($objects);
         $md5         = md5(serialize($objects));
-        $objects     = Api::filter_objects($objects, self::$count, self::$offset, self::$limit);
+        $JSON        = self::bookmarks_array($objects, $auth, $include);
 
-        $output = [
-            "total_count" => self::$count,
-            "md5" => $md5,
-        ];
+        if ($object) {
+            $output = [
+                "total_count" => self::$count,
+                "md5" => $md5,
+                "bookmark" => $JSON
+            ];
+        } else {
+            $output = $JSON[0] ?? [];
+        }
+
+        return json_encode($output, JSON_PRETTY_PRINT) ?: '';
+    }
+
+    /**
+     * bookmarks_array
+     *
+     * @param int[] $objects Bookmark id's to include
+     * @param bool $include if true include the object in the bookmark
+     * @return array<int, array{
+     *     id: string,
+     *     owner: string,
+     *     object_type: null|string,
+     *     object_id: string,
+     *     position: int,
+     *     client: null|string,
+     *     creation_date: int,
+     *     update_date: int,
+     *     song?: array<int, array<string, mixed>>,
+     *     podcast_episode?: array<int, array<string, mixed>>,
+     *     video?: array<int, array<string, mixed>>
+     * }>
+     */
+    public static function bookmarks_array(array $objects, string $auth, bool $include = false): array
+    {
+        self::$count = self::$count ?: count($objects);
+        $objects     = Api::filter_objects($objects, self::$count, self::$offset, self::$limit);
 
         $bookmarkRepository = self::getBookmarkRepository();
 
@@ -637,13 +670,8 @@ class Json8_Data
             }
             self::$count++;
         }
-        if ($object) {
-            $output["bookmark"] = $JSON;
-        } else {
-            $output = $JSON[0] ?? [];
-        }
 
-        return json_encode($output, JSON_PRETTY_PRINT) ?: '';
+        return $JSON;
     }
 
     /**
@@ -652,12 +680,13 @@ class Json8_Data
      * This takes a name array of objects and return the data in JSON browse object
      *
      * @param array<int|string>|array<int, array{id: int|string, name: string}> $objects Array of object_ids ["id" => 1, "name" => 'Artist Name']
+     * @return string JSON Object "browse"
      */
     public static function browses(array $objects, string $parent_type, string $child_type, ?int $parent_id = null, ?int $catalog_id = null): string
     {
         self::$count = self::$count ?: count($objects);
         $md5         = md5(serialize($objects));
-        $objects     = Api::filter_objects($objects, self::$count, self::$offset, self::$limit);
+        $JSON        = self::browses_array($objects);
 
         $output = [
             "total_count" => self::$count,
@@ -666,7 +695,28 @@ class Json8_Data
             "parent_id" => (string) $parent_id,
             "parent_type" => $parent_type,
             "child_type" => $child_type,
+            "browse" => $JSON,
         ];
+
+        return json_encode($output, JSON_PRETTY_PRINT) ?: '';
+    }
+
+    /**
+     * browses_array
+     *
+     * @param array<int|string>|array<int, array{id: int|string, name: string}> $objects Array of object_ids ["id" => 1, "name" => 'Artist Name']
+     * @return array<int, array{
+     *     id: string,
+     *     name: string,
+     *     prefix: null|string,
+     *     basename: string
+     * }>
+     */
+    public static function browses_array(array $objects): array
+    {
+        self::$count = self::$count ?: count($objects);
+        $objects     = Api::filter_objects($objects, self::$count, self::$offset, self::$limit);
+
         $pattern = '/^(' . implode('\\s|', explode('|', AmpConfig::get('catalog_prefix_pattern', 'The|An|A|Die|Das|Ein|Eine|Les|Le|La'))) . '\\s)(.*)/i';
 
         $JSON = [];
@@ -681,9 +731,8 @@ class Json8_Data
                 "basename" => $basename
             ];
         }
-        $output["browse"] = $JSON;
 
-        return json_encode($output, JSON_PRETTY_PRINT) ?: '';
+        return $JSON;
     }
 
     /**
@@ -693,17 +742,49 @@ class Json8_Data
      *
      * @param array<int|string> $objects group of catalog id's
      * @param bool $object (whether to return as a named object array or regular array)
+     * @return string JSON Object "catalog"
      */
     public static function catalogs(array $objects, bool $object = true): string
     {
         self::$count = self::$count ?: count($objects);
         $md5         = md5(serialize($objects));
-        $objects     = Api::filter_objects($objects, self::$count, self::$offset, self::$limit);
+        $JSON        = self::catalogs_array($objects);
 
-        $output = [
-            "total_count" => self::$count,
-            "md5" => $md5,
-        ];
+        if ($object) {
+            $output = [
+                "total_count" => self::$count,
+                "md5" => $md5,
+                "catalog" => $JSON
+            ];
+        } else {
+            $output = $JSON[0] ?? [];
+        }
+
+        return json_encode($output, JSON_PRETTY_PRINT) ?: '';
+    }
+
+    /**
+     * catalogs_array
+     *
+     * @param array<int|string> $objects group of catalog id's
+     * @return array<int, array{
+     *     id: string,
+     *     name: null|string,
+     *     type: null|string,
+     *     gather_types: null|string,
+     *     enabled: bool,
+     *     last_add: int,
+     *     last_clean: int|null,
+     *     last_update: int,
+     *     path: string,
+     *     rename_pattern: null|string,
+     *     sort_pattern: null|string
+     * }>
+     */
+    public static function catalogs_array(array $objects): array
+    {
+        self::$count = self::$count ?: count($objects);
+        $objects     = Api::filter_objects($objects, self::$count, self::$offset, self::$limit);
 
         $JSON = [];
         foreach ($objects as $catalog_id) {
@@ -711,38 +792,23 @@ class Json8_Data
             if ($catalog === null) {
                 break;
             }
-            $catalog_name           = $catalog->name;
-            $catalog_type           = $catalog->catalog_type;
-            $catalog_gather_types   = $catalog->gather_types;
-            $catalog_enabled        = $catalog->enabled;
-            $catalog_last_add       = $catalog->last_add;
-            $catalog_last_clean     = $catalog->last_clean;
-            $catalog_last_update    = $catalog->last_update;
-            $catalog_path           = $catalog->get_f_info();
-            $catalog_rename_pattern = $catalog->rename_pattern;
-            $catalog_sort_pattern   = $catalog->sort_pattern;
             // Build this element
             $JSON[] = [
                 "id" => (string) $catalog_id,
-                "name" => $catalog_name,
-                "type" => $catalog_type,
-                "gather_types" => $catalog_gather_types,
-                "enabled" => $catalog_enabled,
-                "last_add" => $catalog_last_add,
-                "last_clean" => $catalog_last_clean,
-                "last_update" => $catalog_last_update,
-                "path" => $catalog_path,
-                "rename_pattern" => $catalog_rename_pattern,
-                "sort_pattern" => $catalog_sort_pattern
+                "name" => $catalog->name,
+                "type" => $catalog->catalog_type,
+                "gather_types" => $catalog->gather_types,
+                "enabled" => $catalog->enabled,
+                "last_add" => $catalog->last_add,
+                "last_clean" => $catalog->last_clean,
+                "last_update" => $catalog->last_update,
+                "path" => $catalog->get_f_info(),
+                "rename_pattern" => $catalog->rename_pattern,
+                "sort_pattern" => $catalog->sort_pattern
             ];
         }
-        if ($object) {
-            $output["catalog"] = $JSON;
-        } else {
-            $output = $JSON[0] ?? [];
-        }
 
-        return json_encode($output, JSON_PRETTY_PRINT) ?: '';
+        return $JSON;
     }
 
     /**
@@ -770,12 +836,76 @@ class Json8_Data
     {
         self::$count = self::$count ?: count($objects);
         $md5         = md5(serialize($objects));
-        $objects     = Api::filter_objects($objects, self::$count, self::$offset, self::$limit);
+        $JSON        = self::deleted_array($object_type, $objects);
 
         $output = [
             "total_count" => self::$count,
             "md5" => $md5,
         ];
+        $output["deleted_" . $object_type] = $JSON;
+
+        return json_encode($output, JSON_PRETTY_PRINT) ?: '';
+    }
+
+    /**
+     * deleted_array
+     *
+     * The element shape depends on $object_type: deleted songs carry
+     * update_time/album/artist, deleted podcast episodes carry podcast, deleted
+     * videos carry neither.
+     *
+     * @param string $object_type ('song', 'podcast_episode', 'video')
+     * @param array<int, array{
+     *     id: int,
+     *     addition_time: int,
+     *     delete_time: int,
+     *     title: string,
+     *     file: string,
+     *     catalog: int,
+     *     total_count: int,
+     *     total_skip: int,
+     *     update_time?: int,
+     *     album?: int,
+     *     artist?: int,
+     *     podcast?: int,
+     * }> $objects deleted object list
+     * @return array<int, array{
+     *     id: string,
+     *     addition_time: int,
+     *     delete_time: int,
+     *     title: string,
+     *     file: string,
+     *     catalog: string,
+     *     total_count: int,
+     *     total_skip: int,
+     *     update_time: int,
+     *     album: string,
+     *     artist: string
+     * }|array{
+     *     id: string,
+     *     addition_time: int,
+     *     delete_time: int,
+     *     title: string,
+     *     file: string,
+     *     catalog: string,
+     *     total_count: int,
+     *     total_skip: int,
+     *     podcast: string
+     * }|array{
+     *     id: string,
+     *     addition_time: int,
+     *     delete_time: int,
+     *     title: string,
+     *     file: string,
+     *     catalog: string,
+     *     total_count: int,
+     *     total_skip: int
+     * }>
+     */
+    public static function deleted_array(string $object_type, array $objects): array
+    {
+        self::$count = self::$count ?: count($objects);
+        $objects     = Api::filter_objects($objects, self::$count, self::$offset, self::$limit);
 
         $JSON = [];
         foreach ($objects as $row) {
@@ -828,9 +958,8 @@ class Json8_Data
                     $JSON[] = $objArray;
             }
         }
-        $output["deleted_" . $object_type] = $JSON;
 
-        return json_encode($output, JSON_PRETTY_PRINT) ?: '';
+        return $JSON;
     }
 
     /**
@@ -1262,8 +1391,7 @@ class Json8_Data
             return $output;
         }
 
-        /* HINT: Requested object string/id/type ("album", "myusername", "some song title", 1298376) */
-        return self::error('4710', sprintf(T_('Bad Request: %s'), $type), 'indexes', 'type');
+        return self::error('4710', sprintf('Bad Request: %s', $type), 'indexes', 'type');
     }
 
     /**
@@ -1316,8 +1444,7 @@ class Json8_Data
                 $results = self::live_streams($objects);
                 break;
             default:
-                /* HINT: Requested object string/id/type ("album", "myusername", "some song title", 1298376) */
-                $results = self::error('4710', sprintf(T_('Bad Request: %s'), $type), 'indexes', 'type');
+                $results = self::error('4710', sprintf('Bad Request: %s', $type), 'indexes', 'type');
         }
 
         return $results;
@@ -1405,17 +1532,42 @@ class Json8_Data
      *
      * @param array<int|string> $objects Licence id's assigned to songs and artists
      * @param bool $object (whether to return as a named object array or regular array)
+     * @return string JSON Object "license"
      */
     public static function licenses(array $objects, bool $object = true): string
     {
         self::$count = self::$count ?: count($objects);
         $md5         = md5(serialize($objects));
-        $objects     = Api::filter_objects($objects, self::$count, self::$offset, self::$limit);
+        $JSON        = self::licenses_array($objects);
 
-        $output = [
-            "total_count" => self::$count,
-            "md5" => $md5,
-        ];
+        if ($object) {
+            $output = [
+                "total_count" => self::$count,
+                "md5" => $md5,
+                "license" => $JSON
+            ];
+        } else {
+            $output = $JSON[0] ?? [];
+        }
+
+        return json_encode($output, JSON_PRETTY_PRINT) ?: '';
+    }
+
+    /**
+     * licenses_array
+     *
+     * @param array<int|string> $objects Licence id's assigned to songs and artists
+     * @return array<int, array{
+     *     id: string,
+     *     name: string,
+     *     description: string,
+     *     external_link: string
+     * }>
+     */
+    public static function licenses_array(array $objects): array
+    {
+        self::$count = self::$count ?: count($objects);
+        $objects     = Api::filter_objects($objects, self::$count, self::$offset, self::$limit);
 
         $licenseRepository = self::getLicenseRepository();
 
@@ -1432,13 +1584,8 @@ class Json8_Data
                 ];
             }
         }
-        if ($object) {
-            $output["license"] = $JSON;
-        } else {
-            $output = $JSON[0] ?? [];
-        }
 
-        return json_encode($output, JSON_PRETTY_PRINT) ?: '';
+        return $JSON;
     }
 
     /**
@@ -1447,17 +1594,38 @@ class Json8_Data
      * This takes a name array of objects and return the data in JSON list object
      *
      * @param array{id: int|string, name: string}[] $objects Array of object_ids ["id" => 1, "name" => 'Artist Name']
+     * @return string JSON Object "list"
      */
     public static function lists(array $objects): string
     {
         self::$count = self::$count ?: count($objects);
         $md5         = md5(serialize($objects));
-        $objects     = Api::filter_objects($objects, self::$count, self::$offset, self::$limit);
+        $JSON        = self::lists_array($objects);
 
         $output = [
             "total_count" => self::$count,
             "md5" => $md5,
+            "list" => $JSON,
         ];
+
+        return json_encode($output, JSON_PRETTY_PRINT) ?: '';
+    }
+
+    /**
+     * lists_array
+     *
+     * @param array{id: int|string, name: string}[] $objects Array of object_ids ["id" => 1, "name" => 'Artist Name']
+     * @return array<int, array{
+     *     id: string,
+     *     name: string,
+     *     prefix: null|string,
+     *     basename: string
+     * }>
+     */
+    public static function lists_array(array $objects): array
+    {
+        self::$count = self::$count ?: count($objects);
+        $objects     = Api::filter_objects($objects, self::$count, self::$offset, self::$limit);
 
         $JSON    = [];
         $pattern = '/^(' . implode('\\s|', explode('|', AmpConfig::get('catalog_prefix_pattern', 'The|An|A|Die|Das|Ein|Eine|Les|Le|La'))) . '\\s)(.*)/i';
@@ -1472,9 +1640,8 @@ class Json8_Data
                 "basename" => $basename,
             ];
         }
-        $output["list"] = $JSON;
 
-        return json_encode($output, JSON_PRETTY_PRINT) ?: '';
+        return $JSON;
     }
 
     /**
@@ -1556,6 +1723,30 @@ class Json8_Data
      */
     public static function now_playing(array $results): string
     {
+        $output = ["now_playing" => self::now_playing_array($results)];
+
+        return json_encode($output, JSON_PRETTY_PRINT) ?: '';
+    }
+
+    /**
+     * now_playing_array
+     *
+     * @param array<int, array{
+     *     media: library_item,
+     *     client: User,
+     *     agent: string,
+     *     expire: int
+     * }> $results
+     * @return array<int, array{
+     *     id: string,
+     *     type: string,
+     *     client: string,
+     *     expire: int,
+     *     user: array{id: string, username: null|string}
+     * }>
+     */
+    public static function now_playing_array(array $results): array
+    {
         $JSON = [];
         foreach ($results as $now_playing) {
             $user = $now_playing['client'];
@@ -1575,9 +1766,8 @@ class Json8_Data
                 ]
             ];
         }
-        $output = ["now_playing" => $JSON];
 
-        return json_encode($output, JSON_PRETTY_PRINT) ?: '';
+        return $JSON;
     }
 
     /**
@@ -1628,6 +1818,7 @@ class Json8_Data
      *     "averagerating": float|null,
      *     "md5": null|string,
      *     "last_update": int|null,
+     *     "time": int,
      * }>
      */
     public static function playlists_array(array $objects, User $user, string $auth, bool $songs = false): array
@@ -1663,14 +1854,14 @@ class Json8_Data
             $playlist_username = $playlist->username;
             $playlist_type     = $playlist->type;
             $last_update       = $playlist->last_update;
-            $last_duration     = $playlist->last_duration;
+            $last_duration     = (int) $playlist->last_duration;
             $duration          = 0;
 
             if ($songs) {
                 $items          = [];
                 $playlisttracks = $playlist->get_items();
                 foreach ($playlisttracks as $track) {
-                    $duration += $track['time'];
+                    $duration += (int) $track['time'];
 
                     $items[] = [
                         "id" => (string) $track['object_id'],
@@ -2044,12 +2235,47 @@ class Json8_Data
     {
         self::$count = self::$count ?: count($objects);
         $md5         = md5(serialize($objects));
-        $objects     = Api::filter_objects($objects, self::$count, self::$offset, self::$limit);
+        $JSON        = self::shares_array($objects, $user);
 
-        $output = [
-            "total_count" => self::$count,
-            "md5" => $md5,
-        ];
+        if ($object) {
+            $output = [
+                "total_count" => self::$count,
+                "md5" => $md5,
+                "share" => $JSON
+            ];
+        } else {
+            $output = $JSON[0] ?? [];
+        }
+
+        return json_encode($output, JSON_PRETTY_PRINT) ?: '';
+    }
+
+    /**
+     * shares_array
+     *
+     * @param array<int|string> $objects Share id's to include
+     * @return array<int, array{
+     *     id: string,
+     *     name: string,
+     *     owner: string,
+     *     allow_stream: bool,
+     *     allow_download: bool,
+     *     creation_date: int,
+     *     lastvisit_date: int,
+     *     object_type: null|string,
+     *     object_id: string,
+     *     expire_days: int,
+     *     max_counter: int,
+     *     counter: int,
+     *     secret: null|string,
+     *     public_url: null|string,
+     *     description: null|string
+     * }>
+     */
+    public static function shares_array(array $objects, User $user): array
+    {
+        self::$count = self::$count ?: count($objects);
+        $objects     = Api::filter_objects($objects, self::$count, self::$offset, self::$limit);
 
         $JSON = [];
         foreach ($objects as $share_id) {
@@ -2058,46 +2284,27 @@ class Json8_Data
                 continue;
             }
 
-            $share_name           = $share->getObjectName();
-            $share_user           = $share->getUserName();
-            $share_allow_stream   = $share->allow_stream;
-            $share_allow_download = $share->allow_download;
-            $share_creation_date  = $share->creation_date;
-            $share_lastvisit_date = $share->lastvisit_date;
-            $share_object_type    = $share->object_type;
-            $share_object_id      = (string) $share->object_id;
-            $share_expire_days    = $share->expire_days;
-            $share_max_counter    = $share->max_counter;
-            $share_counter        = $share->counter;
-            $share_secret         = $share->secret;
-            $share_public_url     = $share->public_url;
-            $share_description    = $share->description;
             // Build this element
             $JSON[] = [
                 "id" => (string) $share_id,
-                "name" => $share_name,
-                "owner" => $share_user,
-                "allow_stream" => $share_allow_stream,
-                "allow_download" => $share_allow_download,
-                "creation_date" => $share_creation_date,
-                "lastvisit_date" => $share_lastvisit_date,
-                "object_type" => $share_object_type,
-                "object_id" => $share_object_id,
-                "expire_days" => $share_expire_days,
-                "max_counter" => $share_max_counter,
-                "counter" => $share_counter,
-                "secret" => $share_secret,
-                "public_url" => $share_public_url,
-                "description" => $share_description
+                "name" => $share->getObjectName(),
+                "owner" => $share->getUserName(),
+                "allow_stream" => $share->allow_stream,
+                "allow_download" => $share->allow_download,
+                "creation_date" => $share->creation_date,
+                "lastvisit_date" => $share->lastvisit_date,
+                "object_type" => $share->object_type,
+                "object_id" => (string) $share->object_id,
+                "expire_days" => $share->expire_days,
+                "max_counter" => $share->max_counter,
+                "counter" => $share->counter,
+                "secret" => $share->secret,
+                "public_url" => $share->public_url,
+                "description" => $share->description
             ];
         }
-        if ($object) {
-            $output["share"] = $JSON;
-        } else {
-            $output = $JSON[0] ?? [];
-        }
 
-        return json_encode($output, JSON_PRETTY_PRINT) ?: '';
+        return $JSON;
     }
 
     /**
@@ -2107,8 +2314,30 @@ class Json8_Data
      *
      * @param array<Shoutbox> $shouts Shout id list
      * @param bool $object (whether to return as a named object array or regular array)
+     * @return string JSON Object "shout"
      */
     public static function shouts(array $shouts, bool $object = true): string
+    {
+        $JSON   = self::shouts_array($shouts);
+        $output = ($object) ? ["shout" => $JSON] : $JSON[0] ?? [];
+
+        return json_encode($output, JSON_PRETTY_PRINT) ?: '';
+    }
+
+    /**
+     * shouts_array
+     *
+     * @param array<Shoutbox> $shouts Shout id list
+     * @return array<int, array{
+     *     id: string,
+     *     date: int,
+     *     text: string,
+     *     object_type: LibraryItemEnum,
+     *     object_id: int,
+     *     user: array{id: string, username: string}
+     * }>
+     */
+    public static function shouts_array(array $shouts): array
     {
         $JSON = [];
 
@@ -2127,9 +2356,8 @@ class Json8_Data
                 ]
             ];
         }
-        $output = ($object) ? ["shout" => $JSON] : $JSON[0] ?? [];
 
-        return json_encode($output, JSON_PRETTY_PRINT) ?: '';
+        return $JSON;
     }
 
     /**
@@ -2139,17 +2367,99 @@ class Json8_Data
      *
      * @param array<int|string> $objects
      * @param bool $object (whether to return as a named object array or regular array)
-     * @return string JSON Object "song"
+     * @return string JSON Object "song_tag"
      */
     public static function song_tags(array $objects, string $auth, bool $object = true): string
     {
         self::$count = self::$count ?: count($objects);
         $md5         = md5(serialize($objects));
+        $JSON        = self::song_tags_array($objects, $auth);
 
-        $output = [
-            "total_count" => self::$count,
-            "md5" => $md5,
-        ];
+        if ($object) {
+            $output = [
+                "total_count" => self::$count,
+                "md5" => $md5,
+                "song_tag" => $JSON
+            ];
+        } else {
+            $output = $JSON[0] ?? [];
+        }
+
+        return json_encode($output, JSON_PRETTY_PRINT) ?: '';
+    }
+
+    /**
+     * song_tags_array
+     *
+     * Raw file tag metadata read from the catalog for each song. Values come
+     * from the untyped catalog tag reader (`Catalog::get_media_tags()`), so each
+     * field is `mixed` and may be null when the tag is absent.
+     *
+     * @param array<int|string> $objects
+     * @return array<int, array{
+     *     id: string,
+     *     albumartist: mixed,
+     *     album: mixed,
+     *     artist: mixed,
+     *     artists: mixed,
+     *     art: mixed,
+     *     audio_codec: mixed,
+     *     barcode: mixed,
+     *     bitrate: mixed,
+     *     catalog: mixed,
+     *     catalog_number: mixed,
+     *     channels: mixed,
+     *     comment: mixed,
+     *     composer: mixed,
+     *     description: mixed,
+     *     disk: mixed,
+     *     disksubtitle: mixed,
+     *     display_x: mixed,
+     *     display_y: mixed,
+     *     encoding: mixed,
+     *     file: mixed,
+     *     frame_rate: mixed,
+     *     genre: mixed,
+     *     isrc: mixed,
+     *     language: mixed,
+     *     lyrics: mixed,
+     *     mb_albumartistid: mixed,
+     *     mb_albumartistid_array: mixed,
+     *     mb_albumid_group: mixed,
+     *     mb_albumid: mixed,
+     *     mb_artistid: mixed,
+     *     mb_artistid_array: mixed,
+     *     mb_trackid: mixed,
+     *     mime: mixed,
+     *     mode: mixed,
+     *     original_name: mixed,
+     *     original_year: mixed,
+     *     publisher: mixed,
+     *     r128_album_gain: mixed,
+     *     r128_track_gain: mixed,
+     *     rate: mixed,
+     *     rating: mixed,
+     *     release_date: mixed,
+     *     release_status: mixed,
+     *     release_type: mixed,
+     *     replaygain_album_gain: mixed,
+     *     replaygain_album_peak: mixed,
+     *     replaygain_track_gain: mixed,
+     *     replaygain_track_peak: mixed,
+     *     size: mixed,
+     *     version: mixed,
+     *     summary: mixed,
+     *     time: mixed,
+     *     title: mixed,
+     *     totaldisks: mixed,
+     *     totaltracks: mixed,
+     *     track: mixed,
+     *     year: mixed
+     * }>
+     */
+    public static function song_tags_array(array $objects, string $auth): array
+    {
+        self::$count = self::$count ?: count($objects);
 
         Stream::set_session($auth);
 
@@ -2166,6 +2476,7 @@ class Json8_Data
             }
             $results  = $catalog->get_media_tags($song, ['music'], '', '');
             $objArray = [
+                'id' => (string) $song_id,
                 'albumartist' => $results['albumartist'] ?? null,
                 'album' => $results['album'] ?? null,
                 'artist' => $results['artist'] ?? null,
@@ -2228,13 +2539,7 @@ class Json8_Data
             $JSON[] = $objArray;
         }
 
-        if ($object) {
-            $output["song_tag"] = $JSON;
-        } else {
-            $output = $JSON[0] ?? [];
-        }
-
-        return json_encode($output, JSON_PRETTY_PRINT) ?: '';
+        return $JSON;
     }
 
     /**
@@ -2504,8 +2809,30 @@ class Json8_Data
      *
      * @param int[] $activities Activity id list
      * @param bool $object (whether to return as a named object array or regular array)
+     * @return string JSON Object "activity"
      */
     public static function timeline(array $activities, bool $object = true): string
+    {
+        $JSON   = self::timeline_array($activities);
+        $output = ($object) ? ["activity" => $JSON] : $JSON[0] ?? [];
+
+        return json_encode($output, JSON_PRETTY_PRINT) ?: '';
+    }
+
+    /**
+     * timeline_array
+     *
+     * @param int[] $activities Activity id list
+     * @return array<int, array{
+     *     id: string,
+     *     date: int,
+     *     object_type: null|string,
+     *     object_id: string,
+     *     action: string,
+     *     user: array{id: string, username: null|string}
+     * }>
+     */
+    public static function timeline_array(array $activities): array
     {
         $JSON = [];
         foreach ($activities as $activity_id) {
@@ -2524,9 +2851,8 @@ class Json8_Data
             ];
             $JSON[] = $objArray;
         }
-        $output = ($object) ? ["activity" => $JSON] : $JSON[0] ?? [];
 
-        return json_encode($output, JSON_PRETTY_PRINT) ?: '';
+        return $JSON;
     }
 
     /**
@@ -2535,6 +2861,41 @@ class Json8_Data
      * This handles creating an JSON document for a user
      */
     public static function user(User $user, bool $fullinfo, string $auth, ?bool $object = true): string
+    {
+        $JSON   = self::user_array($user, $fullinfo, $auth);
+        $output = ($object) ? ["user" => $JSON] : $JSON;
+
+        return json_encode($output, JSON_PRETTY_PRINT) ?: '';
+    }
+
+    /**
+     * user_array
+     *
+     * The extended fields (auth, email, access, ...) are only returned when
+     * $fullinfo is true; fullname only when the user made it public.
+     *
+     * @return array{
+     *     id: string,
+     *     username: null|string,
+     *     create_date: int|null,
+     *     last_seen: int,
+     *     link: string,
+     *     website: null|string,
+     *     state: null|string,
+     *     city: null|string,
+     *     art: null|string,
+     *     has_art: bool,
+     *     auth?: null|string,
+     *     email?: null|string,
+     *     access?: int,
+     *     streamtoken?: null|string,
+     *     fullname_public?: bool,
+     *     validation?: null|string,
+     *     disabled?: bool,
+     *     fullname?: null|string
+     * }
+     */
+    public static function user_array(User $user, bool $fullinfo, string $auth): array
     {
         $art_url = Art::url($user->id, 'user', $auth);
         if ($fullinfo) {
@@ -2550,6 +2911,7 @@ class Json8_Data
                 "disabled" => $user->disabled,
                 "create_date" => (int) $user->create_date,
                 "last_seen" => $user->last_seen,
+                "link" => $user->get_link(),
                 "website" => $user->website,
                 "state" => $user->state,
                 "city" => $user->city,
@@ -2562,6 +2924,7 @@ class Json8_Data
                 "username" => $user->username,
                 "create_date" => $user->create_date,
                 "last_seen" => $user->last_seen,
+                "link" => $user->get_link(),
                 "website" => $user->website,
                 "state" => $user->state,
                 "city" => $user->city,
@@ -2569,12 +2932,11 @@ class Json8_Data
                 "has_art" => $user->has_art()
             ];
         }
-        if ($user->fullname_public) {
+        if ($user->fullname_public || $fullinfo) {
             $JSON['fullname'] = $user->fullname;
         }
-        $output = ($object) ? ["user" => $JSON] : $JSON;
 
-        return json_encode($output, JSON_PRETTY_PRINT) ?: '';
+        return $JSON;
     }
 
     /**

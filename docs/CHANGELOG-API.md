@@ -1,5 +1,46 @@
 # API CHANGELOG
 
+## API 8.0.0
+
+This version is being developed for Ampache8 (`develop8` branch) **only** and is not yet released.
+
+API version **8** joins the concurrent live surfaces (3/4/5/6 — version 7 remains unused/unsupported), built on the `MethodInterface`/DI method pattern.
+
+### Added (800000)
+
+* ALL
+  * New API version `8` added to `Api::API_VERSIONS`; `Api::DEFAULT_VERSION` bumped `6` → `8`
+  * New `Api8` method surface (132 methods) under `src/Module/Api/Method/Api8/`, implemented against `MethodInterface` with dedicated `Json8_Data`/`Xml8_Data` output classes
+  * `ApiOutputInterface` (and its `JsonOutput`/`XmlOutput` implementations) reworked onto a single version-parameterized method per concept — `albums(int $apiVersion, ...)`, `error(int $apiVersion, ...)`, `podcastEpisodes()`, `setCount()`, `setLimit()`, `setOffset()`, `success()`, `writeEmpty()` — replacing the previous pattern of a separate `xxx()`/`xxx6()` method pair per API version
+* `album`/`albums`/`podcast_delete`/`podcast_episodes` (API3, API4, API5)
+  * Converted from legacy static methods to the `MethodInterface` pattern (matching the API6/API8 conversion above); v3 gains its first parameter validation (`filter` presence, album-exists checks) where none existed before, v4 gains an album-exists check it was previously missing — both are correctness fixes, not new features
+* REST
+  * New `folder`/`folders` actions (`Folder8Method`/`Folders8Method`) for browsing the catalog's virtual folder tree
+  * New `playlist_remove` action (`PlaylistRemove8Method`)
+* `random` (API6 and API8)
+  * New action (`Random6Method`/`Random8Method`) that picks a random `song`, `podcast_episode`, or `video` from the whole library and redirects (302) to its stream url — mirrors `stream`'s params (`bitrate`/`format`/`offset`/`stats`, song only) but takes no `filter`/`id`
+* `download` (API8 only)
+  * New `zip` parameter: when `type`/`filter` identify a container object (`album`, `artist`, `playlist`, `podcast`) and zipping is enabled (`ZipHandlerInterface::isZipable()`), downloads the whole container as a zip instead of a single stream redirect — reuses the same `ZipHandlerInterface` used by the `batch.php` GUI download
+* `share_create` (API8)
+  * Object `type` validated via `LibraryItemEnum::tryFrom()` against `Share::VALID_TYPES`, checked after the `playlist`/`smartlist` → `search` remap
+* OpenAPI / response schemas
+  * `docs/openapi.json` now defines `components.schemas` for every v8 data type (`album`, `song`, `artist`, `playlist`, `podcast`, `podcast_episode`, `video`, `genre`, `label`, `live_stream`, `catalog`, `license`, `share`, `bookmark`, `user`, `song_tag`, the per-type `deleted_*` items, and the `browse`/`list`/`now_playing`/`activity`/`shout` wrappers) and wires each into its `200` response, replacing the placeholder `type: object`; every field documents its type and whether it is optional/nullable
+  * `docs/API-JSON-methods.md` and `docs/API-XML-methods.md` gain a generated per-method response field table (field, type, nullable, optional) with links between related objects
+
+### Changed (800000)
+
+* ALL
+  * Version rollover logic reworked for the new 5-version lineup: requests pinned to a disabled API6 now roll forward to API8 (version 7 is explicitly rejected as unsupported)
+  * API8 JSON/XML output now sets real HTTP status codes for errors and empty results (`404` for empty, `Api::getHttpCode()`-mapped codes for errors) — API3–6 always returned HTTP 200 with the error embedded in the response body
+  * API8 uses updated action names for a few methods present under legacy naming in API3/4: `index`/`list` (not `get_indexes`), `playlist_add` (not `playlist_add_song`), `user_edit` (not `user_update`)
+* `download` (API8 only)
+  * Converted from a legacy static method to the `MethodInterface` pattern to support the new zip response; existing `song`/`podcast_episode`/`search`/`playlist` single-item redirect behavior is unchanged
+* ALL (internal)
+  * `JsonOutput`/`XmlOutput` no longer fall back to API8 formatting for an unrecognized API version/method/format combination (e.g. JSON for API3, which was never supported) — this now throws instead of silently rendering as API8. Some v3/v4 error paths that used ad-hoc numeric error codes now use the same `ErrorCodeEnum`-based codes API5/6/8 already use, for consistency
+* API8 (JSON/XML parity)
+  * v8 JSON and XML now return a matching field set for each object; several inconsistencies were unified: XML `bookmark`/`share` owner is now `<owner>` (was `<user>`), `video` no longer emits a duplicate `<name>` (use `<title>`), deleted podcast episodes use `<podcast>` (was a mislabeled `<played>`), and `song_tags` emits the full fixed field set in both formats
+  * JSON `user` adds `link` (profile url, already present in XML) and returns `fullname` on your own `/me` request; JSON `song_tags` adds the song `id`; the `users` list uses a bare `{ "user": [...] }` envelope with no `total_count`/`md5`
+
 ## API 6.9.2 Build 2
 
 This version is being released for Ampache7 **only**
@@ -14,17 +55,39 @@ we will keep on 6.9.x and resume build number versioning until Ampache 8
 * ALL
   * Allow APIKey Authorization header
   * REST command and path changes
+* API6
+  * Add `time` to all Playlist and Smartlist responses
 
 ### Changed (692002)
 
 * ALL
   * flag: Use the `UserFlag::is_valid()` function for object type validation
   * rate: Use the `Rating::is_valid()` function for object type validation
+  * parameter_exists: Parameters sent with an empty value (e.g. `filter=`) are treated as missing
+* `update_art` (API4, API5 and API6)
+  * Existing art is replaced unless you send `overwrite=0`
+* API6
+  * Error messages are no longer translated
 
-### Fixed (692001)
+### Removed (692002)
 
+* API8 will not be used in Ampache 7 releases
+
+### Fixed (692002)
+
+* ALL
+  * Version and docstring inconsistencies between API versions
+  * Empty object lookups now report the parameter that failed instead of `empty`
+* API4
+  * update_from_tags: Not found check was inverted so valid objects returned an error
+  * XML list responses were not sliced by `offset` and `limit` (e.g. `users`)
+* API5
+  * get_bookmark: Not found check was inverted so valid objects returned an error
+  * XML list responses were not sliced by `offset` and `limit` (e.g. `bookmarks`, `users`)
 * API6
   * Version wasn't bumped
+  * podcast_episode: JSON response was missing the full episode object
+  * XML and JSON list responses were not sliced by `offset` and `limit`
 
 ## API 6.9.2 Build 1
 

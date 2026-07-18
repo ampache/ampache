@@ -30,6 +30,7 @@ use Ampache\Config\ConfigurationKeyEnum;
 use Ampache\Module\Application\ApplicationActionInterface;
 use Ampache\Module\Application\Exception\AccessDeniedException;
 use Ampache\Module\Authentication\AuthenticationManagerInterface;
+use Ampache\Module\Authentication\Oidc\OidcAuthenticationService;
 use Ampache\Module\Authorization\AccessLevelEnum;
 use Ampache\Module\Authorization\AccessTypeEnum;
 use Ampache\Module\Authorization\Check\NetworkCheckerInterface;
@@ -319,24 +320,25 @@ final readonly class DefaultAction implements ApplicationActionInterface
                 AutoUpdate::is_update_available();
             }
 
-            /* Make sure they are actually trying to get to this site and don't try
-             * to redirect them back into an admin section
-             */
             $web_path = $this->configContainer->getWebPath();
+            $referrer = (string) ($_POST['referrer'] ?? $_SESSION[OidcAuthenticationService::SESSION_REFERRER_KEY] ?? '');
+            unset($_SESSION[OidcAuthenticationService::SESSION_REFERRER_KEY]);
+
             if (
-                (str_starts_with((string) $_POST['referrer'], $web_path))
-                && !str_contains((string) $_POST['referrer'], 'install.php')
-                && !str_contains((string) $_POST['referrer'], 'login.php')
-                && !str_contains((string) $_POST['referrer'], 'logout.php')
-                && !str_contains((string) $_POST['referrer'], 'update.php')
-                && !str_contains((string) $_POST['referrer'], 'activate.php')
-                && !str_contains((string) $_POST['referrer'], 'admin')
+                $referrer !== ''
+                && str_starts_with($referrer, $web_path)
+                && !str_contains($referrer, 'install.php')
+                && !str_contains($referrer, 'login.php')
+                && !str_contains($referrer, 'logout.php')
+                && !str_contains($referrer, 'update.php')
+                && !str_contains($referrer, 'activate.php')
+                && !str_contains($referrer, 'admin')
             ) {
                 return $this->responseFactory
                     ->createResponse(RFC7231::FOUND)
                     ->withHeader(
                         'Location',
-                        $_POST['referrer']
+                        $referrer
                     );
             } // if we've got a referrer
 

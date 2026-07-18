@@ -212,9 +212,7 @@ class Catalog_local extends Catalog
         // Ensure that we've got our cache
         $this->_create_filecache();
 
-        /* First thing first, check if file is already in catalog.
-         * This check is very quick, so it should be performed before any other checks to save time
-         */
+        // First thing first, check if file is already in catalog. This check is quick, so do it before any other checks
         if (isset($this->_filecache[strtolower($full_file)])) {
             return false;
         }
@@ -603,7 +601,9 @@ class Catalog_local extends Catalog
                     flush();
                 }
 
-                $this->gather_art($this->songs_to_gather, $this->videos_to_gather);
+                if (!empty($this->songs_to_gather) || !empty($this->videos_to_gather)) {
+                    $this->gather_art($this->songs_to_gather, $this->videos_to_gather);
+                }
             }
         }
 
