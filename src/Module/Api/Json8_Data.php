@@ -2397,6 +2397,7 @@ class Json8_Data
      *
      * @param array<int|string> $objects
      * @return array<int, array{
+     *     id: string,
      *     albumartist: mixed,
      *     album: mixed,
      *     artist: mixed,
@@ -2475,6 +2476,7 @@ class Json8_Data
             }
             $results  = $catalog->get_media_tags($song, ['music'], '', '');
             $objArray = [
+                'id' => (string) $song_id,
                 'albumartist' => $results['albumartist'] ?? null,
                 'album' => $results['album'] ?? null,
                 'artist' => $results['artist'] ?? null,
