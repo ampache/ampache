@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: https://www.transifex.com/projects/p/ampache/\n"
-"POT-Creation-Date: 2026-05-12 13:02+1000\n"
+"POT-Creation-Date: 2026-07-18 15:26+1000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -167,6 +167,9 @@ msgstr ""
 msgid "Information"
 msgstr ""
 
+msgid "Menu"
+msgstr ""
+
 msgid "New messages"
 msgstr ""
 
@@ -180,6 +183,9 @@ msgid "Show/Hide Playlist"
 msgstr ""
 
 msgid "Loading"
+msgstr ""
+
+msgid "Close"
 msgstr ""
 
 msgid "Your Ampache config file is out of date!"
@@ -1110,6 +1116,9 @@ msgstr ""
 msgid "Clean"
 msgstr ""
 
+msgid "Scan Folders"
+msgstr ""
+
 msgid "Update"
 msgstr ""
 
@@ -1508,7 +1517,14 @@ msgstr ""
 msgid "Export"
 msgstr ""
 
+#. HINT: Number of items in a playlist
+msgid "# Items"
+msgstr ""
+
 msgid "Browse Ampache..."
+msgstr ""
+
+msgid "Folders"
 msgstr ""
 
 msgid "Album Artists"
@@ -1664,9 +1680,6 @@ msgstr ""
 msgid "Show Lyrics"
 msgstr ""
 
-msgid "Double click to post a new shout"
-msgstr ""
-
 msgid "Add All to playlist"
 msgstr ""
 
@@ -1676,22 +1689,25 @@ msgstr ""
 msgid "Expand/Collapse playlist"
 msgstr ""
 
+msgid "Visualizer"
+msgstr ""
+
 msgid "Slideshow"
 msgstr ""
 
 msgid "My Broadcast"
 msgstr ""
 
-msgid "Visualizer"
+msgid "Show/Hide Now Playing"
 msgstr ""
 
 msgid "ReplayGain"
 msgstr ""
 
-msgid "Visualizer full-screen"
+msgid "Equalizer"
 msgstr ""
 
-msgid "Equalizer"
+msgid "Visualizer full-screen"
 msgstr ""
 
 msgid "Unsupported"
@@ -2053,6 +2069,9 @@ msgstr ""
 msgid "Lost Password"
 msgstr ""
 
+msgid "Sign in with OpenID Connect"
+msgstr ""
+
 msgid ""
 "Ampache places cookies on your computer to help make this website better."
 msgstr ""
@@ -2117,6 +2136,9 @@ msgid "Verify All"
 msgstr ""
 
 msgid "Clean All"
+msgstr ""
+
+msgid "Scan All Folders"
 msgstr ""
 
 msgid "Update All"
@@ -2214,10 +2236,6 @@ msgid "Reorder"
 msgstr ""
 
 msgid "Playlist Name"
-msgstr ""
-
-#. HINT: Number of items in a playlist
-msgid "# Items"
 msgstr ""
 
 msgid "No playlist found"
@@ -2473,7 +2491,8 @@ msgstr ""
 msgid "Public URL"
 msgstr ""
 
-msgid "Shared by"
+#, php-format
+msgid "Shared by %s"
 msgstr ""
 
 msgid "Skipped"
@@ -2782,6 +2801,9 @@ msgstr ""
 msgid "Required fields"
 msgstr ""
 
+msgid "Captcha is required"
+msgstr ""
+
 msgid "I Accept"
 msgstr ""
 
@@ -2995,7 +3017,13 @@ msgstr ""
 msgid "View License"
 msgstr ""
 
+msgid "Folder Edit"
+msgstr ""
+
 msgid "Song Edit"
+msgstr ""
+
+msgid "Song Information"
 msgstr ""
 
 msgid "Links"
@@ -3034,14 +3062,11 @@ msgstr ""
 msgid "Licensing"
 msgstr ""
 
-msgid "Song Information"
+msgid "Ampache :: For the Love of Music - Installation"
 msgstr ""
 
 #, php-format
 msgid "%s - Update"
-msgstr ""
-
-msgid "Ampache :: For the Love of Music - Installation"
 msgstr ""
 
 #, php-format
@@ -3060,221 +3085,6 @@ msgstr ""
 
 #, php-format
 msgid "Art files written: %d"
-msgstr ""
-
-msgid "Missing mandatory parameter"
-msgstr ""
-
-#. HINT: Requested object string/id/type ("album", "myusername", "some song title", 1298376)
-#, php-format
-msgid "Bad Request: %s"
-msgstr ""
-
-#. HINT: Access level, eg 75, 100
-#, php-format
-msgid "Require: %s"
-msgstr ""
-
-msgid "Access Control not Enabled"
-msgstr ""
-
-msgid "Session Expired"
-msgstr ""
-
-msgid "Unauthorized access attempt to API - ACL Error"
-msgstr ""
-
-msgid "Invalid Request"
-msgstr ""
-
-msgid "Deprecated"
-msgstr ""
-
-msgid "Wrong object type "
-msgstr ""
-
-msgid "Media Object Invalid or Not Specified"
-msgstr ""
-
-msgid "Login Failed: version too old"
-msgstr ""
-
-msgid "Login Failed: timestamp out of range"
-msgstr ""
-
-msgid "Error Invalid Handshake - "
-msgstr ""
-
-msgid "Invalid Username/Password"
-msgstr ""
-
-msgid "Access denied to this playlist."
-msgstr ""
-
-msgid "Wrong library item type."
-msgstr ""
-
-msgid "Library item not found."
-msgstr ""
-
-msgid "Incorrect catalog task"
-msgstr ""
-
-msgid "The requested item was not found"
-msgstr ""
-
-msgid "Access Denied: delete from disk is not enabled."
-msgstr ""
-
-msgid "Incorrect file task"
-msgstr ""
-
-msgid "File not found"
-msgstr ""
-
-msgid "Catalog not found"
-msgstr ""
-
-msgid "The requested catalog was not found"
-msgstr ""
-
-msgid "Media object invalid or not specified"
-msgstr ""
-
-msgid "Invalid request"
-msgstr ""
-
-msgid "Access Denied: Rating features are not enabled."
-msgstr ""
-
-msgid "Incorrect object type"
-msgstr ""
-
-msgid "Wrong library item type"
-msgstr ""
-
-msgid "Library item not found"
-msgstr ""
-
-msgid "Access Denied: social features are not enabled."
-msgstr ""
-
-msgid "Access Denied: allow_video is not enabled."
-msgstr ""
-
-msgid "Access Denied: podcast features are not enabled."
-msgstr ""
-
-msgid "Access Denied: sharing features are not enabled."
-msgstr ""
-
-msgid "Login failed, API version is too old"
-msgstr ""
-
-msgid "Login Failed, timestamp is out of range"
-msgstr ""
-
-msgid "Received Invalid Handshake"
-msgstr ""
-
-msgid "Login failed, timestamp is out of range"
-msgstr ""
-
-msgid "Server"
-msgstr ""
-
-msgid "Incorrect username or password"
-msgstr ""
-
-msgid "Access Denied: licensing features are not enabled."
-msgstr ""
-
-msgid "Error Unable to connect to localplay controller"
-msgstr ""
-
-msgid "Access denied to this playlist"
-msgstr ""
-
-msgid "Can't add a duplicate item when check is enabled"
-msgstr ""
-
-msgid "Nothing was changed"
-msgstr ""
-
-msgid "Song not found in playlist"
-msgstr ""
-
-msgid "Track ID not found in playlist"
-msgstr ""
-
-msgid "Bad Request"
-msgstr ""
-
-#. HINT: Requested object string/id/type ("album", "myusername", "some song title", 1298376)
-msgid "Ratings must be between [0-5]. "
-msgstr ""
-
-msgid "User_id not found"
-msgstr ""
-
-msgid "Invalid input options"
-msgstr ""
-
-msgid "Failed to scrobble: No item found!"
-msgstr ""
-
-msgid "Failed to update_art for "
-msgstr ""
-
-msgid "Failed to update_artist_info or recommendations for "
-msgstr ""
-
-msgid "Failed to sync episodes for podcast: "
-msgstr ""
-
-msgid "Enable: video"
-msgstr ""
-
-msgid "Not Found"
-msgstr ""
-
-msgid "Enable: delete_from_disk"
-msgstr ""
-
-msgid "Enable: podcast"
-msgstr ""
-
-msgid "Enable: ratings"
-msgstr ""
-
-msgid "Enable: sociable"
-msgstr ""
-
-msgid "Enable: share"
-msgstr ""
-
-msgid "Enable: live_stream"
-msgstr ""
-
-msgid "Enable: label"
-msgstr ""
-
-msgid "Enable: licensing"
-msgstr ""
-
-msgid "Unable to connect to localplay controller"
-msgstr ""
-
-msgid "Require: 100"
-msgstr ""
-
-msgid "Require: 75"
-msgstr ""
-
-msgid "Access denied"
-msgstr ""
-
-msgid "Ampache XSPF Playlist"
 msgstr ""
 
 msgid "IP Address version mismatch"
@@ -3350,6 +3160,9 @@ msgid "Finished Processing Disabled Songs"
 msgstr ""
 
 msgid "The Catalog art search has started"
+msgstr ""
+
+msgid "The Catalog folder scan has started"
 msgstr ""
 
 msgid "This will permanently delete your Catalog"
@@ -3619,6 +3432,9 @@ msgstr ""
 msgid "Art file failed to insert, check the size does not exceed the limit."
 msgstr ""
 
+msgid "Failed to update_art for "
+msgstr ""
+
 msgid "Broadcast has been deleted"
 msgstr ""
 
@@ -3626,6 +3442,12 @@ msgid "This Broadcast will be deleted"
 msgstr ""
 
 msgid "The Playlist has been deleted"
+msgstr ""
+
+msgid "The Folder has been deleted"
+msgstr ""
+
+msgid "This Folder will be deleted"
 msgstr ""
 
 msgid "The Ampache database username or password is missing"
@@ -3646,6 +3468,9 @@ msgstr ""
 msgid "The Label cannot be found"
 msgstr ""
 
+msgid "Incorrect username or password"
+msgstr ""
+
 msgid "Account is disabled, please contact the administrator"
 msgstr ""
 
@@ -3655,16 +3480,11 @@ msgstr ""
 msgid "Unable to create a local account"
 msgstr ""
 
+msgid "OpenID Connect is not configured correctly"
+msgstr ""
+
 #, php-format
 msgid "%s - Now Playing"
-msgstr ""
-
-msgid "Playlist created"
-msgstr ""
-
-#. HINT: %1 playlist name, %2 playlist type
-#, php-format
-msgid "%1$s (%2$s) has been created"
 msgstr ""
 
 #. HINT: Number of songs
@@ -3687,6 +3507,9 @@ msgid "No valid songs found in playlist file"
 msgstr ""
 
 msgid "Podcast has been deleted"
+msgstr ""
+
+msgid "Catalog not found"
 msgstr ""
 
 msgid "Feed URL is invalid"
@@ -3724,6 +3547,9 @@ msgid "Invalid catalog type"
 msgstr ""
 
 msgid "Import Podcasts"
+msgstr ""
+
+msgid "Server"
 msgstr ""
 
 msgid "Your account has been updated"
@@ -3779,9 +3605,6 @@ msgid "RE"
 msgstr ""
 
 msgid "Radio Station created"
-msgstr ""
-
-msgid "Captcha is required"
 msgstr ""
 
 msgid "Captcha failed"
@@ -3872,15 +3695,21 @@ msgstr ""
 msgid "local_metadata_dir setting is required to store art on disk"
 msgstr ""
 
+msgid "OpenID Connect requires an interactive browser login"
+msgstr ""
+
+msgid "OpenID Connect authentication failed"
+msgstr ""
+
+msgid "The identity provider did not return a username"
+msgstr ""
+
 msgid "Running Beets Update"
 msgstr ""
 
 #. HINT: filename (file path)
 #, php-format
 msgid "Unable to add Song - %s"
-msgstr ""
-
-msgid "Beets Database File"
 msgstr ""
 
 msgid "Beets Catalog was selected, but no Beets DB file was provided"
@@ -3890,10 +3719,38 @@ msgstr ""
 msgid "This path belongs to an existing Beets Catalog: %s"
 msgstr ""
 
-msgid "Beets Server URI"
+msgid "Beets Database File"
 msgstr ""
 
 msgid "Remote Catalog type was selected, but the path is not a URL"
+msgstr ""
+
+msgid "Beets Server URI"
+msgstr ""
+
+msgid "Invalid \"dropbox-path\": "
+msgstr ""
+
+#, php-format
+msgid "Error: Catalog with %s already exists"
+msgstr ""
+
+msgid "Error: API Key, Secret and Access Token Required for Dropbox Catalogs"
+msgstr ""
+
+msgid "Invalid \"API key\", \"secret\", or \"access token\": "
+msgstr ""
+
+msgid "Running Dropbox Remote Update"
+msgstr ""
+
+msgid "Access Token"
+msgstr ""
+
+msgid "Get chunked files on analyze"
+msgstr ""
+
+msgid "API Error: cannot connect to Dropbox."
 msgstr ""
 
 msgid "Go to https://www.dropbox.com/developers/apps/create"
@@ -3915,28 +3772,6 @@ msgid ""
 "Copy your App key and App secret and Access Token into the following fields."
 msgstr ""
 
-msgid "Access Token"
-msgstr ""
-
-msgid "Get chunked files on analyze"
-msgstr ""
-
-msgid "Error: API Key, Secret and Access Token Required for Dropbox Catalogs"
-msgstr ""
-
-msgid "Invalid \"API key\", \"secret\", or \"access token\": "
-msgstr ""
-
-msgid "Invalid \"dropbox-path\": "
-msgstr ""
-
-#, php-format
-msgid "Error: Catalog with %s already exists"
-msgstr ""
-
-msgid "Running Dropbox Remote Update"
-msgstr ""
-
 #, php-format
 msgid "Catalog Update Finished.  Total Media: [%s]"
 msgstr ""
@@ -3954,20 +3789,20 @@ msgstr ""
 msgid "Removing song: \"%s\""
 msgstr ""
 
-msgid "API Error: cannot connect to Dropbox."
+msgid "Path was not specified"
 msgstr ""
 
-msgid "Path was not specified"
+msgid "Specified path is inside an existing catalog"
+msgstr ""
+
+#. HINT: directory (file path)
+#, php-format
+msgid "The folder couldn't be read. Does it exist? %s"
 msgstr ""
 
 #. HINT: directory (file path)
 #, php-format
 msgid "This path belongs to an existing local Catalog: %s"
-msgstr ""
-
-#. HINT: directory (file path)
-#, php-format
-msgid "Unable to open: %s"
 msgstr ""
 
 #. HINT: directory (file path)
@@ -3990,6 +3825,11 @@ msgstr ""
 msgid "\"%s\" does not match site charset"
 msgstr ""
 
+#. HINT: directory (file path)
+#, php-format
+msgid "Unable to open: %s"
+msgstr ""
+
 msgid "N/A"
 msgstr ""
 
@@ -4000,8 +3840,7 @@ msgstr ""
 msgid "Total Time: [%s] Total Media: [%s] Media Per Second: [%s]"
 msgstr ""
 
-#, php-format
-msgid "File count: %d"
+msgid "Catalog root unreadable, stopping check"
 msgstr ""
 
 msgid "Catalog root unreadable, stopping clean"
@@ -4010,15 +3849,24 @@ msgstr ""
 msgid "All files would be removed. Doing nothing"
 msgstr ""
 
+#. HINT: filename (file path)
+#, php-format
+msgid "File was not found or is 0 Bytes: %s"
+msgstr ""
+
+#, php-format
+msgid "File count: %d"
+msgstr ""
+
+#, php-format
+msgid "Create directory \"%s\""
+msgstr ""
+
 msgid "File already exists"
 msgstr ""
 
 #, php-format
 msgid "Copying \"%1$s\" to \"%2$s\""
-msgstr ""
-
-#, php-format
-msgid "Create directory \"%s\""
 msgstr ""
 
 #, php-format
@@ -4033,25 +3881,6 @@ msgstr ""
 msgid "There was an error trying to delete \"%s\""
 msgstr ""
 
-#. HINT: filename (file path)
-#, php-format
-msgid "File was not found or is 0 Bytes: %s"
-msgstr ""
-
-msgid "Specified path is inside an existing catalog"
-msgstr ""
-
-#. HINT: directory (file path)
-#, php-format
-msgid "The folder couldn't be read. Does it exist? %s"
-msgstr ""
-
-msgid "Catalog root unreadable, stopping check"
-msgstr ""
-
-msgid "URI"
-msgstr ""
-
 msgid "No username or password was specified"
 msgstr ""
 
@@ -4061,6 +3890,9 @@ msgid "This path belongs to an existing remote Catalog: %s"
 msgstr ""
 
 msgid "Running Remote Update"
+msgstr ""
+
+msgid "URI"
 msgstr ""
 
 msgid "Failed to connect to the remote server"
@@ -4080,42 +3912,6 @@ msgid "Updated"
 msgstr ""
 
 msgid "Completed updating remote Catalog(s)."
-msgstr ""
-
-msgid "Install a Seafile server as described in the documentation"
-msgstr ""
-
-msgid ""
-"Enter URL to server (e.g. 'https://seafile.example.com') and library name "
-"(e.g. 'Music')."
-msgstr ""
-
-msgid ""
-"API Call Delay is the delay inserted between repeated requests to Seafile "
-"(such as during an Add or Clean action) to accommodate Seafile's Rate "
-"Limiting."
-msgstr ""
-
-msgid "The default is tuned towards Seafile's default rate limit settings."
-msgstr ""
-
-msgid ""
-"After creating the Catalog, you must 'Make it ready' on the Catalog table."
-msgstr ""
-
-msgid "Server URI"
-msgstr ""
-
-msgid "Library Name"
-msgstr ""
-
-msgid "API Call Delay"
-msgstr ""
-
-msgid "Seafile Username/Email"
-msgstr ""
-
-msgid "Seafile Password"
 msgstr ""
 
 msgid "Seafile server URL is required"
@@ -4148,19 +3944,19 @@ msgstr ""
 msgid "No media was updated, did you respect the patterns?"
 msgstr ""
 
-#. HINT: filename (File path)
-#, php-format
-msgid "Skipping existing song: %s"
+msgid "Server URI"
 msgstr ""
 
-#. HINT: filename (File path)
-#, php-format
-msgid "Adding a new song: %s"
+msgid "Library Name"
 msgstr ""
 
-#. HINT: filename (File path)
-#, php-format
-msgid "Could not add song: %s"
+msgid "API Call Delay"
+msgstr ""
+
+msgid "Seafile Username/Email"
+msgstr ""
+
+msgid "Seafile Password"
 msgstr ""
 
 #, php-format
@@ -4170,6 +3966,42 @@ msgstr ""
 #. HINT: filename (File path)
 #, php-format
 msgid "Keeping song: %s"
+msgstr ""
+
+msgid "Install a Seafile server as described in the documentation"
+msgstr ""
+
+msgid ""
+"Enter URL to server (e.g. 'https://seafile.example.com') and library name "
+"(e.g. 'Music')."
+msgstr ""
+
+msgid ""
+"API Call Delay is the delay inserted between repeated requests to Seafile "
+"(such as during an Add or Clean action) to accommodate Seafile's Rate "
+"Limiting."
+msgstr ""
+
+msgid "The default is tuned towards Seafile's default rate limit settings."
+msgstr ""
+
+msgid ""
+"After creating the Catalog, you must 'Make it ready' on the Catalog table."
+msgstr ""
+
+#. HINT: filename (File path)
+#, php-format
+msgid "Could not add song: %s"
+msgstr ""
+
+#. HINT: filename (File path)
+#, php-format
+msgid "Skipping existing song: %s"
+msgstr ""
+
+#. HINT: filename (File path)
+#, php-format
+msgid "Adding a new song: %s"
 msgstr ""
 
 #. HINT: subsonic catalog URI
@@ -4231,6 +4063,9 @@ msgstr ""
 msgid "Start verifying media related to Catalog entries"
 msgstr ""
 
+msgid "Start scanning folders"
+msgstr ""
+
 msgid "Start searching new media art"
 msgstr ""
 
@@ -4260,6 +4095,9 @@ msgstr ""
 
 #, php-format
 msgid "Catalog `%s` not found"
+msgstr ""
+
+msgid "File not found"
 msgstr ""
 
 #. HINT: Requested object string/id/type ("album", "myusername", "some song title", 1298376)
@@ -4331,6 +4169,9 @@ msgstr ""
 msgid "Running in Test Mode. Use -e|--execute to update"
 msgstr ""
 
+msgid "Missing mandatory parameter"
+msgstr ""
+
 msgid "No changes have been made"
 msgstr ""
 
@@ -4397,6 +4238,10 @@ msgid "Update Preference Access Level"
 msgstr ""
 
 msgid "Update API key for user with the name `some-user`"
+msgstr ""
+
+#, php-format
+msgid "Bad Request: %s"
 msgstr ""
 
 msgid "Remove art which does not fit to the settings"
@@ -4594,6 +4439,9 @@ msgstr ""
 msgid "Possible Duplicate Albums"
 msgstr ""
 
+msgid "Invalid Request"
+msgstr ""
+
 msgid "Print file tags"
 msgstr ""
 
@@ -4683,6 +4531,9 @@ msgid "Adds new media files and imports playlist files"
 msgstr ""
 
 msgid "Optimizes database tables"
+msgstr ""
+
+msgid "Scan Local Catalog folders for folder browsing"
 msgstr ""
 
 msgid "Temporarily deactivates PHP memory limit"
@@ -4858,13 +4709,13 @@ msgstr ""
 msgid "View changes"
 msgstr ""
 
-msgid "Updating Ampache sources with `"
-msgstr ""
-
 msgid "Updating dependencies with `"
 msgstr ""
 
 msgid "Updating npm build with `"
+msgstr ""
+
+msgid "Updating Ampache sources with `"
 msgstr ""
 
 msgid "Invalid configuration settings"
@@ -4879,7 +4730,29 @@ msgstr ""
 msgid "Existing database was detected, unable to continue the installation"
 msgstr ""
 
+#. HINT: Database error message
+#, php-format
+msgid "Connection to the database failed: %s"
+msgstr ""
+
+#. HINT: Database error message
+#, php-format
+msgid "Database select failed: %s"
+msgstr ""
+
+#. HINT: Database error message
+#, php-format
+msgid "Administrative user creation failed: %s"
+msgstr ""
+
+msgid ""
+"Connection to the database failed: Check hostname, username and password"
+msgstr ""
+
 msgid "Config file is not writable"
+msgstr ""
+
+msgid "Failed writing config file"
 msgstr ""
 
 msgid "Database name is invalid"
@@ -4913,28 +4786,6 @@ msgid ""
 msgstr ""
 
 msgid "Unable to open ampache.sql"
-msgstr ""
-
-msgid ""
-"Connection to the database failed: Check hostname, username and password"
-msgstr ""
-
-msgid "Failed writing config file"
-msgstr ""
-
-#. HINT: Database error message
-#, php-format
-msgid "Connection to the database failed: %s"
-msgstr ""
-
-#. HINT: Database error message
-#, php-format
-msgid "Database select failed: %s"
-msgstr ""
-
-#. HINT: Database error message
-#, php-format
-msgid "Administrative user creation failed: %s"
 msgstr ""
 
 msgid "commented on"
@@ -5023,6 +4874,9 @@ msgstr ""
 msgid "Finished checking file names for valid characters"
 msgstr ""
 
+msgid "There was an error trying to check the file names for valid characters"
+msgstr ""
+
 #, php-format
 msgid "There was an error trying to open \"%s\""
 msgstr ""
@@ -5073,13 +4927,13 @@ msgstr ""
 msgid "Play date"
 msgstr ""
 
-msgid "Enabled"
-msgstr ""
-
 msgid "On"
 msgstr ""
 
 msgid "Off"
+msgstr ""
+
+msgid "Enabled"
 msgstr ""
 
 msgid "M3U"
@@ -5212,6 +5066,9 @@ msgstr ""
 msgid "Catalog favorites on homepage"
 msgstr ""
 
+msgid "Highlight"
+msgstr ""
+
 msgid "Catalog favorites max items"
 msgstr ""
 
@@ -5222,9 +5079,6 @@ msgid "Plugin CSS order"
 msgstr ""
 
 msgid "Catalog favorites media row display"
-msgstr ""
-
-msgid "Highlight"
 msgstr ""
 
 msgid "Get lyrics from ChartLyrics"
@@ -5251,10 +5105,10 @@ msgstr ""
 msgid "Friend's Timeline on homepage"
 msgstr ""
 
-msgid "Friends timeline max items"
+msgid "Friends Timeline"
 msgstr ""
 
-msgid "Friends Timeline"
+msgid "Friends timeline max items"
 msgstr ""
 
 msgid "Google Analytics statistics"
@@ -5266,13 +5120,13 @@ msgstr ""
 msgid "Show user's location with Google Maps"
 msgstr ""
 
-msgid "Google Maps API key"
-msgstr ""
-
 msgid "Hits"
 msgstr ""
 
 msgid "Last activity"
+msgstr ""
+
+msgid "Google Maps API key"
 msgstr ""
 
 msgid "User's avatars from Gravatar"
@@ -5353,19 +5207,22 @@ msgstr ""
 msgid "PayPal donation button on user page"
 msgstr ""
 
-msgid "PayPal ID"
-msgstr ""
-
-msgid "PayPal Currency Code"
-msgstr ""
-
 msgid "on"
 msgstr ""
 
 msgid "PayPal - The safer, easier way to pay online!"
 msgstr ""
 
+msgid "PayPal ID"
+msgstr ""
+
+msgid "PayPal Currency Code"
+msgstr ""
+
 msgid "Personal favorites on homepage"
+msgstr ""
+
+msgid "Favorite Lists"
 msgstr ""
 
 msgid "Personal favorites on the homepage"
@@ -5375,9 +5232,6 @@ msgid "Favorite Playlists"
 msgstr ""
 
 msgid "Favorite Smartlists"
-msgstr ""
-
-msgid "Favorite Lists"
 msgstr ""
 
 msgid "Piwik statistics"
@@ -5500,13 +5354,13 @@ msgstr ""
 msgid "Reset Art"
 msgstr ""
 
-msgid "Broadcast Edit"
-msgstr ""
-
 msgid "Broadcast"
 msgstr ""
 
 msgid "Unbroadcast"
+msgstr ""
+
+msgid "Broadcast Edit"
 msgstr ""
 
 msgid "Playlist Items"
@@ -5534,6 +5388,11 @@ msgid_plural "hours"
 msgstr[0] ""
 msgstr[1] ""
 
+msgid ""
+"This subdirectory is not inside an existing Catalog. The update can not be "
+"processed."
+msgstr ""
+
 msgid "No Update Needed"
 msgstr ""
 
@@ -5549,24 +5408,22 @@ msgstr[1] ""
 msgid "Catalog Verified"
 msgstr ""
 
-msgid ""
-"This subdirectory is not inside an existing Catalog. The update can not be "
-"processed."
+msgid "Folder"
 msgstr ""
 
 msgid "Name is required"
 msgstr ""
 
-msgid "URL is invalid, must be mms://, https:// or http://"
+msgid "Codec is required (e.g. MP3, OGG...)"
 msgstr ""
 
 msgid "URL is invalid, must be http:// or https://"
 msgstr ""
 
-msgid "Codec is required (e.g. MP3, OGG...)"
+msgid "Catalog is invalid"
 msgstr ""
 
-msgid "Catalog is invalid"
+msgid "URL is invalid, must be mms://, https:// or http://"
 msgstr ""
 
 msgid "You have Plugins that need an update!"
@@ -5594,103 +5451,16 @@ msgstr ""
 msgid "Current rating"
 msgstr ""
 
-msgid "is greater than or equal to"
-msgstr ""
-
-msgid "is less than or equal to"
-msgstr ""
-
-msgid "equals"
-msgstr ""
-
-msgid "does not equal"
-msgstr ""
-
-msgid "is greater than"
-msgstr ""
-
-msgid "is less than"
-msgstr ""
-
-msgid "is true"
-msgstr ""
-
-msgid "is false"
-msgstr ""
-
-msgid "contains"
-msgstr ""
-
-msgid "does not contain"
-msgstr ""
-
-msgid "starts with"
-msgstr ""
-
-msgid "ends with"
-msgstr ""
-
-msgid "is"
-msgstr ""
-
-msgid "is not"
-msgstr ""
-
-msgid "sounds like"
-msgstr ""
-
-msgid "does not sound like"
-msgstr ""
-
-msgid "matches regular expression"
-msgstr ""
-
-msgid "does not match regular expression"
-msgstr ""
-
-msgid "before"
-msgstr ""
-
-msgid "after"
-msgstr ""
-
-msgid "before (x) days ago"
-msgstr ""
-
-msgid "after (x) days ago"
-msgstr ""
-
-msgid "has loved"
-msgstr ""
-
-msgid "has rated 5 stars"
-msgstr ""
-
-msgid "has rated 4 stars"
-msgstr ""
-
-msgid "has rated 3 stars"
-msgstr ""
-
-msgid "has rated 2 stars"
-msgstr ""
-
-msgid "has rated 1 star"
-msgstr ""
-
-msgid "has not rated"
-msgstr ""
-
-msgid "Any searchable text"
-msgstr ""
-
-msgid "Song Data"
-msgstr ""
-
-msgid "Album Title"
+msgid "Album Data"
 msgstr ""
 
 msgid "Length (in minutes)"
+msgstr ""
+
+msgid "Disk Count"
+msgstr ""
+
+msgid "Song Count"
 msgstr ""
 
 msgid "Database ID"
@@ -5702,7 +5472,7 @@ msgstr ""
 msgid "Rating (Average)"
 msgstr ""
 
-msgid "My Rating (Album)"
+msgid "My Rating (Song)"
 msgstr ""
 
 msgid "My Rating (Artist)"
@@ -5717,12 +5487,6 @@ msgstr ""
 msgid "My Favorite Artists"
 msgstr ""
 
-msgid "Favorites (Album)"
-msgstr ""
-
-msgid "Favorites (Artist)"
-msgstr ""
-
 msgid "Song popularity score"
 msgstr ""
 
@@ -5733,12 +5497,6 @@ msgid "Artist popularity score"
 msgstr ""
 
 msgid "Another User"
-msgstr ""
-
-msgid "Another User (Album)"
-msgstr ""
-
-msgid "Another User (Artist)"
 msgstr ""
 
 msgid "Play History"
@@ -5756,10 +5514,6 @@ msgstr ""
 msgid "# Played or Skipped"
 msgstr ""
 
-#. HINT: Percentage of (Times Played / Times skipped) * 100
-msgid "Played/Skipped ratio"
-msgstr ""
-
 msgid "My Last Play"
 msgstr ""
 
@@ -5770,9 +5524,6 @@ msgid "My Last Play or Skip"
 msgstr ""
 
 msgid "Played by Me"
-msgstr ""
-
-msgid "Played by Me (Album)"
 msgstr ""
 
 msgid "Played by Me (Artist)"
@@ -5790,13 +5541,7 @@ msgstr ""
 msgid "# Played or Skipped by Me"
 msgstr ""
 
-msgid "Album Genre"
-msgstr ""
-
-msgid "Artist Genre"
-msgstr ""
-
-msgid "Song Count"
+msgid "Song Genre"
 msgstr ""
 
 msgid "Album Count"
@@ -5811,58 +5556,43 @@ msgstr ""
 msgid "Date Updated"
 msgstr ""
 
-msgid "No Music License"
-msgstr ""
-
-msgid "Recently Added"
-msgstr ""
-
-msgid "Recently Updated"
-msgstr ""
-
-msgid "Duplicate Album Tracks"
-msgstr ""
-
-msgid "Orphaned Album"
-msgstr ""
-
-msgid "MusicBrainz"
-msgstr ""
-
-msgid "MusicBrainz ID (Album)"
-msgstr ""
-
-msgid "MusicBrainz ID (Artist)"
-msgstr ""
-
-msgid "Metadata"
-msgstr ""
-
-msgid "Artist Data"
-msgstr ""
-
-msgid "My Rating (Song)"
-msgstr ""
-
-msgid "Song Genre"
-msgstr ""
-
 msgid "Image Width"
 msgstr ""
 
 msgid "Image Height"
 msgstr ""
 
-msgid "MusicBrainz ID (Song)"
+msgid "Recently Added"
 msgstr ""
 
-msgid "Album Data"
-msgstr ""
-
-msgid "Disk Count"
+msgid "Duplicate Album Tracks"
 msgstr ""
 
 msgid "Duplicate MusicBrainz Release Group"
+msgstr ""
+
+msgid "MusicBrainz"
+msgstr ""
+
+msgid "MusicBrainz ID (Artist)"
+msgstr ""
+
+msgid "MusicBrainz ID (Song)"
+msgstr ""
+
+msgid "Artist Data"
+msgstr ""
+
+msgid "Album Title"
+msgstr ""
+
+msgid "My Rating (Album)"
+msgstr ""
+
+msgid "Musicbrainz"
+msgstr ""
+
+msgid "MusicBrainz ID (Album)"
 msgstr ""
 
 msgid "public"
@@ -5892,6 +5622,46 @@ msgstr ""
 msgid "Podcast Episode popularity score"
 msgstr ""
 
+msgid "Any searchable text"
+msgstr ""
+
+msgid "Song Data"
+msgstr ""
+
+msgid "Favorites (Album)"
+msgstr ""
+
+msgid "Favorites (Artist)"
+msgstr ""
+
+msgid "Another User (Album)"
+msgstr ""
+
+msgid "Another User (Artist)"
+msgstr ""
+
+#. HINT: Percentage of (Times Played / Times skipped) * 100
+msgid "Played/Skipped ratio"
+msgstr ""
+
+msgid "Played by Me (Album)"
+msgstr ""
+
+msgid "Album Genre"
+msgstr ""
+
+msgid "Artist Genre"
+msgstr ""
+
+msgid "No Music License"
+msgstr ""
+
+msgid "Recently Updated"
+msgstr ""
+
+msgid "Orphaned Album"
+msgstr ""
+
 msgid "Video Count"
 msgstr ""
 
@@ -5907,10 +5677,10 @@ msgstr ""
 msgid "Favorite"
 msgstr ""
 
-msgid "Username is required"
+msgid "User avatar"
 msgstr ""
 
-msgid "User avatar"
+msgid "Username is required"
 msgstr ""
 
 msgid "Afar"

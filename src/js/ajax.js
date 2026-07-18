@@ -19,6 +19,12 @@
  *
  */
 
+function hasScriptableUrlScheme(url) {
+    var scheme = String(url).replace(/[\u0000-\u0020\u00a0\u1680\u2000-\u200d\u2028\u2029\u202f\u205f\u3000\ufeff]/g, "");
+
+    return /^(?:javascript|data|vbscript):/i.test(scheme);
+}
+
 // Some cutesy flashing thing while we run
 $(document).ajaxSend(function () {
     $("#ajax-loading").show();
@@ -33,7 +39,7 @@ $(function() {
 
     $("body").delegate("a", "click", function() {
         var link = $(this).attr("href");
-        if (typeof link !== "undefined" && link !== "" && link.indexOf("javascript:") !== 0 && link !== "#" && typeof link !== "undefined" && typeof $(this).attr("onclick") === "undefined" && !$(this).hasClass("nohtml") && $(this).attr("target") !== "_blank") {
+        if (typeof link !== "undefined" && link !== "" && !hasScriptableUrlScheme(link) && link !== "#" && typeof link !== "undefined" && typeof $(this).attr("onclick") === "undefined" && !$(this).hasClass("nohtml") && $(this).attr("target") !== "_blank") {
             if ($(this).attr("rel") !== "prettyPhoto") {
                 // Ajax load Ampache pages only
                 if (link.indexOf(jsWebPath) > -1) {
@@ -54,7 +60,7 @@ $(function() {
             var postData = $(this).serializeArray();
             var formURL = $(this).attr("action");
 
-            if (formURL.indexOf("javascript:") !== 0) {
+            if (typeof formURL === "string" && formURL !== "" && !hasScriptableUrlScheme(formURL)) {
                 $.ajax(
                     {
                         url: formURL,

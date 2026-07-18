@@ -73,18 +73,6 @@ final readonly class ArtistRepository implements ArtistRepositoryInterface
         );
     }
 
-    public function collectGarbageForArtist(int $artistId): void
-    {
-        if ($artistId <= 0) {
-            return;
-        }
-
-        $this->connection->query(
-            'DELETE FROM `artist_map` WHERE `artist_map`.`artist_id` = ?',
-            [$artistId]
-        );
-    }
-
     /**
      * Deletes the artist entry
      */
