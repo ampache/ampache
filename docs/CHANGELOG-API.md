@@ -14,6 +14,8 @@ we will keep on 6.9.x and resume build number versioning until Ampache 8
 * ALL
   * Allow APIKey Authorization header
   * REST command and path changes
+* REST
+  * `catalogs/{catalog_id}/add`, `clean`, `update` and `verify` as aliases of `catalog_action` with the matching `task`
 * API6
   * Add `time` to all Playlist and Smartlist responses
 
@@ -37,16 +39,26 @@ we will keep on 6.9.x and resume build number versioning until Ampache 8
 * ALL
   * Version and docstring inconsistencies between API versions
   * Empty object lookups now report the parameter that failed instead of `empty`
+  * A `version` lower than 3 (e.g. `version=2`) rolled up to no version at all instead of the oldest enabled one
+* REST
+  * `preferences/{preference_name}` returned the whole preference list and ignored the name
+  * `POST {type}/{id}/share` resolved to `share` (fetch a share) instead of `share_create`
 * API4
   * update_from_tags: Not found check was inverted so valid objects returned an error
   * XML list responses were not sliced by `offset` and `limit` (e.g. `users`)
 * API5
   * get_bookmark: Not found check was inverted so valid objects returned an error
   * XML list responses were not sliced by `offset` and `limit` (e.g. `bookmarks`, `users`)
+  * album: A missing or empty `filter` reported an empty `Bad Request:` message with the wrong error type
 * API6
   * Version wasn't bumped
   * podcast_episode: JSON response was missing the full episode object
   * XML and JSON list responses were not sliced by `offset` and `limit`
+  * user_preference: Returned the system value instead of the calling user's preference
+  * catalog_action: Not found error didn't name the catalog id
+  * localplay: `status` could fail on controllers that don't report `repeat` and `random`
+  * playlists, smartlists: `api_hidden_playlists` was ignored when set to `0`
+  * playlists: JSON `time` could be a string instead of an integer
 
 ## API 6.9.2 Build 1
 

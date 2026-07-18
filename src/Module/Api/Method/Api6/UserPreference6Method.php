@@ -59,7 +59,7 @@ final class UserPreference6Method
         User::fix_preferences($user->id);
 
         $pref_name  = (string) ($input['filter'] ?? '');
-        $preference = Preference::get($pref_name, -1);
+        $preference = Preference::get($pref_name, $user->id);
         if (empty($preference)) {
             /* HINT: Requested object string/id/type ("album", "myusername", "some song title", 1298376) */
             Api6::error(ErrorCodeEnum::NOT_FOUND, sprintf('Not Found: %s', $pref_name), self::ACTION, 'filter', $input['api_format']);

@@ -155,6 +155,9 @@ final class ApiHandler implements ApiHandlerInterface
             }
 
             // roll up the version if you haven't enabled the older versions
+            if ($api_version < 3) {
+                $api_version = 3;
+            }
             if ($api_version == 3 && !Preference::get_by_user($userId, 'api_enable_3')) {
                 $api_version = 4;
             }
@@ -637,6 +640,7 @@ final class ApiHandler implements ApiHandlerInterface
                 'playlists' => 'playlist',
                 'podcast_episodes' => 'podcast_episode',
                 'podcasts' => 'podcast',
+                'preferences' => 'user_preference',
                 'searches' => 'search',
                 'shares' => 'share',
                 'smartlists' => 'smartlist',
@@ -649,8 +653,20 @@ final class ApiHandler implements ApiHandlerInterface
         }
 
         if ($type !== null && $type !== '') {
-            if ($type === 'catalog' && ($action === 'create' || $action === 'add')) {
-                $action = 'catalog_create';
+            if ($type === 'catalog') {
+                if ($action === 'create' || ($action === 'add' && !$hasFilter)) {
+                    $action = 'catalog_create';
+                }
+
+                // `catalogs/{catalog_id}/(add|clean|update|verify)` are undocumented aliases of
+                // `catalogs/{catalog_id}/action`; the matching task is derived from the path by
+                // the REST applications. (`add` without a filter keeps its `catalog_create` meaning)
+                if (
+                    $hasFilter
+                    && ($action === 'add' || $action === 'clean' || $action === 'update' || $action === 'verify')
+                ) {
+                    $action = 'catalog_action';
+                }
             }
             if ($type === 'song' && $action === 'lyrics') {
                 $action = 'get_lyrics';
@@ -668,7 +684,7 @@ final class ApiHandler implements ApiHandlerInterface
                 $action = 'playlist_remove';
             }
 
-            if ($action === 'create' && ($type === 'album' || $type === 'artist' || $type === 'playlist' || $type === 'smartlist' || $type === 'podcast' || $type === 'podcast_episode' || $type === 'song' || $type === 'video')) {
+            if (($action === 'create' || $action === 'share') && ($type === 'album' || $type === 'artist' || $type === 'playlist' || $type === 'smartlist' || $type === 'podcast' || $type === 'podcast_episode' || $type === 'song' || $type === 'video')) {
                 $action = 'share_create';
             }
             if ($action === 'deleted' && ($type === 'podcast_episode' || $type === 'song' || $type === 'video')) {
