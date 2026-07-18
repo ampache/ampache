@@ -43,12 +43,6 @@ interface Media extends library_item
     public function get_stream_name(): string;
 
     /**
-     * isNew
-     * Whether the object failed to load from the database
-     */
-    public function isNew(): bool;
-
-    /**
      * get_stream_types
      *
      * Returns an array of strings
@@ -79,6 +73,12 @@ interface Media extends library_item
      * getYear
      */
     public function getYear(): string;
+
+    /**
+     * isNew
+     * Whether the object failed to load from the database
+     */
+    public function isNew(): bool;
 
     /**
      * play_url
