@@ -70,8 +70,8 @@ class Albums4MethodTest extends MockeryTestCase
         $browse->shouldReceive('set_type')
             ->with('album')
             ->once();
-        $browse->shouldReceive('set_sort')
-            ->with('name', 'ASC', false)
+        $browse->shouldReceive('set_sort_order')
+            ->with('', ['name', 'ASC'])
             ->once();
         $browse->shouldReceive('set_api_filter')
             ->with('alpha_match', '')
@@ -81,6 +81,9 @@ class Albums4MethodTest extends MockeryTestCase
             ->once();
         $browse->shouldReceive('set_api_filter')
             ->with('update', '')
+            ->once();
+        $browse->shouldReceive('set_conditions')
+            ->with('')
             ->once();
         $browse->shouldReceive('get_objects')
             ->withNoArgs()
