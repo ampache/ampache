@@ -627,7 +627,9 @@ class Catalog_local extends Catalog
                     require Ui::find_template('show_gather_art.inc.php');
                     flush();
                 }
-                $this->gather_art($this->songs_to_gather, $this->videos_to_gather);
+                if (!empty($this->songs_to_gather) || !empty($this->videos_to_gather)) {
+                    $this->gather_art($this->songs_to_gather, $this->videos_to_gather);
+                }
             }
         }
         if ($this->count > 0) {
