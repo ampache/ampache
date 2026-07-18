@@ -322,6 +322,2587 @@
           "folder"
         ],
         "additionalProperties": false
+      },
+      "AlbumObject": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "name": {
+            "type": "string",
+            "nullable": true
+          },
+          "prefix": {
+            "type": "string",
+            "nullable": true
+          },
+          "basename": {
+            "type": "string",
+            "nullable": true
+          },
+          "artist": {
+            "type": "object",
+            "properties": {
+              "id": {
+                "type": "string"
+              },
+              "name": {
+                "type": "string",
+                "nullable": true
+              },
+              "prefix": {
+                "type": "string",
+                "nullable": true
+              },
+              "basename": {
+                "type": "string",
+                "nullable": true
+              }
+            },
+            "required": [
+              "id",
+              "name",
+              "prefix",
+              "basename"
+            ],
+            "additionalProperties": false,
+            "nullable": true
+          },
+          "artists": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "id": {
+                  "type": "string"
+                },
+                "name": {
+                  "type": "string",
+                  "nullable": true
+                },
+                "prefix": {
+                  "type": "string",
+                  "nullable": true
+                },
+                "basename": {
+                  "type": "string",
+                  "nullable": true
+                }
+              },
+              "required": [
+                "id",
+                "name",
+                "prefix",
+                "basename"
+              ],
+              "additionalProperties": false
+            }
+          },
+          "songartists": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "id": {
+                  "type": "string"
+                },
+                "name": {
+                  "type": "string",
+                  "nullable": true
+                },
+                "prefix": {
+                  "type": "string",
+                  "nullable": true
+                },
+                "basename": {
+                  "type": "string",
+                  "nullable": true
+                }
+              },
+              "required": [
+                "id",
+                "name",
+                "prefix",
+                "basename"
+              ],
+              "additionalProperties": false
+            }
+          },
+          "time": {
+            "type": "integer"
+          },
+          "year": {
+            "type": "integer"
+          },
+          "tracks": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/SongObject"
+            }
+          },
+          "songcount": {
+            "type": "integer"
+          },
+          "diskcount": {
+            "type": "integer"
+          },
+          "type": {
+            "type": "string",
+            "nullable": true
+          },
+          "genre": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "id": {
+                  "type": "string"
+                },
+                "name": {
+                  "type": "string"
+                }
+              },
+              "required": [
+                "id",
+                "name"
+              ],
+              "additionalProperties": false
+            }
+          },
+          "art": {
+            "type": "string",
+            "nullable": true
+          },
+          "has_art": {
+            "type": "boolean"
+          },
+          "flag": {
+            "type": "boolean"
+          },
+          "rating": {
+            "type": "integer",
+            "nullable": true
+          },
+          "averagerating": {
+            "type": "number",
+            "nullable": true
+          },
+          "mbid": {
+            "type": "string",
+            "nullable": true
+          },
+          "mbid_group": {
+            "type": "string",
+            "nullable": true
+          }
+        },
+        "required": [
+          "id",
+          "name",
+          "prefix",
+          "basename",
+          "time",
+          "year",
+          "tracks",
+          "songcount",
+          "diskcount",
+          "type",
+          "genre",
+          "art",
+          "has_art",
+          "flag",
+          "rating",
+          "averagerating",
+          "mbid",
+          "mbid_group"
+        ],
+        "additionalProperties": false
+      },
+      "SongObject": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "title": {
+            "type": "string",
+            "nullable": true
+          },
+          "name": {
+            "type": "string",
+            "nullable": true
+          },
+          "artist": {
+            "type": "object",
+            "properties": {
+              "id": {
+                "type": "string"
+              },
+              "name": {
+                "type": "string"
+              },
+              "prefix": {
+                "type": "string"
+              },
+              "basename": {
+                "type": "string"
+              }
+            },
+            "required": [
+              "id",
+              "name",
+              "prefix",
+              "basename"
+            ],
+            "additionalProperties": false
+          },
+          "artists": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "id": {
+                  "type": "string"
+                },
+                "name": {
+                  "type": "string"
+                },
+                "prefix": {
+                  "type": "string"
+                },
+                "basename": {
+                  "type": "string"
+                }
+              },
+              "required": [
+                "id",
+                "name",
+                "prefix",
+                "basename"
+              ],
+              "additionalProperties": false
+            }
+          },
+          "album": {
+            "type": "object",
+            "properties": {
+              "id": {
+                "type": "string"
+              },
+              "name": {
+                "type": "string"
+              },
+              "prefix": {
+                "type": "string"
+              },
+              "basename": {
+                "type": "string"
+              }
+            },
+            "required": [
+              "id",
+              "name",
+              "prefix",
+              "basename"
+            ],
+            "additionalProperties": false
+          },
+          "albumartist": {
+            "type": "object",
+            "properties": {
+              "id": {
+                "type": "string"
+              },
+              "name": {
+                "type": "string"
+              },
+              "prefix": {
+                "type": "string"
+              },
+              "basename": {
+                "type": "string"
+              }
+            },
+            "required": [
+              "id",
+              "name",
+              "prefix",
+              "basename"
+            ],
+            "additionalProperties": false
+          },
+          "disk": {
+            "type": "integer"
+          },
+          "disksubtitle": {
+            "type": "string",
+            "nullable": true
+          },
+          "track": {
+            "type": "integer"
+          },
+          "filename": {
+            "type": "string",
+            "nullable": true
+          },
+          "genre": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "id": {
+                  "type": "string"
+                },
+                "name": {
+                  "type": "string"
+                }
+              },
+              "required": [
+                "id",
+                "name"
+              ],
+              "additionalProperties": false
+            }
+          },
+          "playlisttrack": {
+            "type": "integer"
+          },
+          "time": {
+            "type": "integer"
+          },
+          "year": {
+            "type": "integer"
+          },
+          "format": {
+            "type": "string",
+            "nullable": true
+          },
+          "stream_format": {
+            "type": "string",
+            "nullable": true
+          },
+          "bitrate": {
+            "type": "integer",
+            "nullable": true
+          },
+          "stream_bitrate": {
+            "type": "integer",
+            "nullable": true
+          },
+          "rate": {
+            "type": "integer"
+          },
+          "mode": {
+            "type": "string",
+            "nullable": true
+          },
+          "mime": {
+            "type": "string",
+            "nullable": true
+          },
+          "stream_mime": {
+            "type": "string",
+            "nullable": true
+          },
+          "url": {
+            "type": "string"
+          },
+          "size": {
+            "type": "integer"
+          },
+          "mbid": {
+            "type": "string",
+            "nullable": true
+          },
+          "art": {
+            "type": "string",
+            "nullable": true
+          },
+          "has_art": {
+            "type": "boolean"
+          },
+          "flag": {
+            "type": "boolean"
+          },
+          "rating": {
+            "type": "integer",
+            "nullable": true
+          },
+          "averagerating": {
+            "type": "number",
+            "nullable": true
+          },
+          "playcount": {
+            "type": "integer"
+          },
+          "catalog": {
+            "type": "string"
+          },
+          "composer": {
+            "type": "string",
+            "nullable": true
+          },
+          "channels": {
+            "type": "integer",
+            "nullable": true
+          },
+          "comment": {
+            "type": "string",
+            "nullable": true
+          },
+          "license": {
+            "type": "string",
+            "nullable": true
+          },
+          "publisher": {
+            "type": "string",
+            "nullable": true
+          },
+          "language": {
+            "type": "string",
+            "nullable": true
+          },
+          "lyrics": {
+            "type": "string",
+            "nullable": true
+          },
+          "replaygain_album_gain": {
+            "type": "number",
+            "nullable": true
+          },
+          "replaygain_album_peak": {
+            "type": "number",
+            "nullable": true
+          },
+          "replaygain_track_gain": {
+            "type": "number",
+            "nullable": true
+          },
+          "replaygain_track_peak": {
+            "type": "number",
+            "nullable": true
+          },
+          "r128_album_gain": {
+            "type": "number",
+            "nullable": true
+          },
+          "r128_track_gain": {
+            "type": "number",
+            "nullable": true
+          },
+          "metadata": {
+            "type": "object",
+            "additionalProperties": {
+              "type": "string"
+            }
+          }
+        },
+        "required": [
+          "id",
+          "title",
+          "name",
+          "artist",
+          "artists",
+          "album",
+          "disk",
+          "disksubtitle",
+          "track",
+          "filename",
+          "genre",
+          "playlisttrack",
+          "time",
+          "year",
+          "format",
+          "stream_format",
+          "bitrate",
+          "stream_bitrate",
+          "rate",
+          "mode",
+          "mime",
+          "stream_mime",
+          "url",
+          "size",
+          "mbid",
+          "art",
+          "has_art",
+          "flag",
+          "rating",
+          "averagerating",
+          "playcount",
+          "catalog",
+          "composer",
+          "channels",
+          "comment",
+          "license",
+          "publisher",
+          "language",
+          "lyrics",
+          "replaygain_album_gain",
+          "replaygain_album_peak",
+          "replaygain_track_gain",
+          "replaygain_track_peak",
+          "r128_album_gain",
+          "r128_track_gain"
+        ],
+        "additionalProperties": false
+      },
+      "AlbumsResponse": {
+        "type": "object",
+        "properties": {
+          "total_count": {
+            "type": "integer"
+          },
+          "md5": {
+            "type": "string"
+          },
+          "album": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/AlbumObject"
+            }
+          }
+        },
+        "required": [
+          "total_count",
+          "md5",
+          "album"
+        ],
+        "additionalProperties": false
+      },
+      "SongsResponse": {
+        "type": "object",
+        "properties": {
+          "total_count": {
+            "type": "integer"
+          },
+          "md5": {
+            "type": "string"
+          },
+          "song": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/SongObject"
+            }
+          }
+        },
+        "required": [
+          "total_count",
+          "md5",
+          "song"
+        ],
+        "additionalProperties": false
+      },
+      "ArtistObject": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "name": {
+            "type": "string",
+            "nullable": true
+          },
+          "prefix": {
+            "type": "string",
+            "nullable": true
+          },
+          "basename": {
+            "type": "string",
+            "nullable": true
+          },
+          "albums": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/AlbumObject"
+            }
+          },
+          "albumcount": {
+            "type": "integer"
+          },
+          "songs": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/SongObject"
+            }
+          },
+          "songcount": {
+            "type": "integer"
+          },
+          "genre": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "id": {
+                  "type": "string"
+                },
+                "name": {
+                  "type": "string"
+                }
+              },
+              "required": [
+                "id",
+                "name"
+              ],
+              "additionalProperties": false
+            }
+          },
+          "art": {
+            "type": "string",
+            "nullable": true
+          },
+          "has_art": {
+            "type": "boolean"
+          },
+          "flag": {
+            "type": "boolean"
+          },
+          "rating": {
+            "type": "integer",
+            "nullable": true
+          },
+          "averagerating": {
+            "type": "number",
+            "nullable": true
+          },
+          "mbid": {
+            "type": "string",
+            "nullable": true
+          },
+          "summary": {
+            "type": "string",
+            "nullable": true
+          },
+          "time": {
+            "type": "integer"
+          },
+          "yearformed": {
+            "type": "integer"
+          },
+          "placeformed": {
+            "type": "string",
+            "nullable": true
+          }
+        },
+        "required": [
+          "id",
+          "name",
+          "prefix",
+          "basename",
+          "albums",
+          "albumcount",
+          "songs",
+          "songcount",
+          "genre",
+          "art",
+          "has_art",
+          "flag",
+          "rating",
+          "averagerating",
+          "mbid",
+          "summary",
+          "time",
+          "yearformed",
+          "placeformed"
+        ],
+        "additionalProperties": false
+      },
+      "GenreObject": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "name": {
+            "type": "string",
+            "nullable": true
+          },
+          "albums": {
+            "type": "integer"
+          },
+          "artists": {
+            "type": "integer"
+          },
+          "songs": {
+            "type": "integer"
+          },
+          "videos": {
+            "type": "integer"
+          },
+          "playlists": {
+            "type": "integer"
+          },
+          "live_streams": {
+            "type": "integer"
+          },
+          "is_hidden": {
+            "type": "boolean"
+          },
+          "merge": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "id": {
+                  "type": "string"
+                },
+                "name": {
+                  "type": "string"
+                }
+              },
+              "required": [
+                "id",
+                "name"
+              ],
+              "additionalProperties": false
+            }
+          }
+        },
+        "required": [
+          "id",
+          "name",
+          "albums",
+          "artists",
+          "songs",
+          "videos",
+          "playlists",
+          "live_streams",
+          "is_hidden",
+          "merge"
+        ],
+        "additionalProperties": false
+      },
+      "LabelObject": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "name": {
+            "type": "string",
+            "nullable": true
+          },
+          "artists": {
+            "type": "integer"
+          },
+          "summary": {
+            "type": "string",
+            "nullable": true
+          },
+          "external_link": {
+            "type": "string"
+          },
+          "address": {
+            "type": "string",
+            "nullable": true
+          },
+          "category": {
+            "type": "string",
+            "nullable": true
+          },
+          "email": {
+            "type": "string",
+            "nullable": true
+          },
+          "website": {
+            "type": "string",
+            "nullable": true
+          },
+          "user": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "id",
+          "name",
+          "artists",
+          "summary",
+          "external_link",
+          "address",
+          "category",
+          "email",
+          "website",
+          "user"
+        ],
+        "additionalProperties": false
+      },
+      "LiveStreamObject": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "name": {
+            "type": "string",
+            "nullable": true
+          },
+          "url": {
+            "type": "string",
+            "nullable": true
+          },
+          "codec": {
+            "type": "string",
+            "nullable": true
+          },
+          "catalog": {
+            "type": "string"
+          },
+          "site_url": {
+            "type": "string",
+            "nullable": true
+          }
+        },
+        "required": [
+          "id",
+          "name",
+          "url",
+          "codec",
+          "catalog",
+          "site_url"
+        ],
+        "additionalProperties": false
+      },
+      "PlaylistObject": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "name": {
+            "type": "string",
+            "nullable": true
+          },
+          "owner": {
+            "type": "string",
+            "nullable": true
+          },
+          "user": {
+            "type": "object",
+            "properties": {
+              "id": {
+                "type": "string"
+              },
+              "username": {
+                "type": "string",
+                "nullable": true
+              }
+            },
+            "required": [
+              "id",
+              "username"
+            ],
+            "additionalProperties": false
+          },
+          "items": {
+            "oneOf": [
+              {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "additionalProperties": {
+                    "oneOf": [
+                      {
+                        "type": "integer"
+                      },
+                      {
+                        "type": "string"
+                      }
+                    ]
+                  }
+                }
+              },
+              {
+                "type": "integer"
+              }
+            ]
+          },
+          "type": {
+            "type": "string",
+            "nullable": true
+          },
+          "art": {
+            "type": "string",
+            "nullable": true
+          },
+          "has_access": {
+            "type": "boolean"
+          },
+          "has_collaborate": {
+            "type": "boolean"
+          },
+          "has_art": {
+            "type": "boolean"
+          },
+          "flag": {
+            "type": "boolean"
+          },
+          "rating": {
+            "type": "integer",
+            "nullable": true
+          },
+          "averagerating": {
+            "type": "number",
+            "nullable": true
+          },
+          "md5": {
+            "type": "string",
+            "nullable": true
+          },
+          "last_update": {
+            "type": "integer",
+            "nullable": true
+          },
+          "time": {
+            "type": "integer"
+          }
+        },
+        "required": [
+          "id",
+          "name",
+          "owner",
+          "user",
+          "items",
+          "type",
+          "art",
+          "has_access",
+          "has_collaborate",
+          "has_art",
+          "flag",
+          "rating",
+          "averagerating",
+          "md5",
+          "last_update",
+          "time"
+        ],
+        "additionalProperties": false
+      },
+      "PodcastEpisodeObject": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "title": {
+            "type": "string",
+            "nullable": true
+          },
+          "name": {
+            "type": "string",
+            "nullable": true
+          },
+          "podcast": {
+            "type": "object",
+            "properties": {
+              "id": {
+                "type": "string"
+              },
+              "name": {
+                "type": "string"
+              }
+            },
+            "required": [
+              "id",
+              "name"
+            ],
+            "additionalProperties": false
+          },
+          "description": {
+            "type": "string",
+            "nullable": true
+          },
+          "category": {
+            "type": "string",
+            "nullable": true
+          },
+          "author": {
+            "type": "string",
+            "nullable": true
+          },
+          "author_full": {
+            "type": "string",
+            "nullable": true
+          },
+          "website": {
+            "type": "string",
+            "nullable": true
+          },
+          "pubdate": {
+            "type": "string",
+            "nullable": true
+          },
+          "state": {
+            "type": "string"
+          },
+          "filelength": {
+            "type": "string"
+          },
+          "filesize": {
+            "type": "string"
+          },
+          "filename": {
+            "type": "string"
+          },
+          "mime": {
+            "type": "string",
+            "nullable": true
+          },
+          "time": {
+            "type": "integer"
+          },
+          "size": {
+            "type": "integer"
+          },
+          "bitrate": {
+            "type": "integer"
+          },
+          "stream_bitrate": {
+            "type": "integer"
+          },
+          "rate": {
+            "type": "integer"
+          },
+          "mode": {
+            "type": "string",
+            "nullable": true
+          },
+          "channels": {
+            "type": "integer",
+            "nullable": true
+          },
+          "public_url": {
+            "type": "string"
+          },
+          "url": {
+            "type": "string"
+          },
+          "catalog": {
+            "type": "string"
+          },
+          "art": {
+            "type": "string",
+            "nullable": true
+          },
+          "has_art": {
+            "type": "boolean"
+          },
+          "flag": {
+            "type": "boolean"
+          },
+          "rating": {
+            "type": "integer",
+            "nullable": true
+          },
+          "averagerating": {
+            "type": "number",
+            "nullable": true
+          },
+          "playcount": {
+            "type": "integer"
+          },
+          "played": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "id",
+          "title",
+          "name",
+          "podcast",
+          "description",
+          "category",
+          "author",
+          "author_full",
+          "website",
+          "pubdate",
+          "state",
+          "filelength",
+          "filesize",
+          "filename",
+          "mime",
+          "time",
+          "size",
+          "bitrate",
+          "stream_bitrate",
+          "rate",
+          "mode",
+          "channels",
+          "public_url",
+          "url",
+          "catalog",
+          "art",
+          "has_art",
+          "flag",
+          "rating",
+          "averagerating",
+          "playcount",
+          "played"
+        ],
+        "additionalProperties": false
+      },
+      "PodcastObject": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "name": {
+            "type": "string",
+            "nullable": true
+          },
+          "description": {
+            "type": "string"
+          },
+          "language": {
+            "type": "string"
+          },
+          "copyright": {
+            "type": "string"
+          },
+          "feed_url": {
+            "type": "string"
+          },
+          "generator": {
+            "type": "string"
+          },
+          "website": {
+            "type": "string"
+          },
+          "build_date": {
+            "type": "string"
+          },
+          "sync_date": {
+            "type": "string"
+          },
+          "public_url": {
+            "type": "string"
+          },
+          "art": {
+            "type": "string",
+            "nullable": true
+          },
+          "has_art": {
+            "type": "boolean"
+          },
+          "flag": {
+            "type": "boolean"
+          },
+          "rating": {
+            "type": "integer",
+            "nullable": true
+          },
+          "averagerating": {
+            "type": "number",
+            "nullable": true
+          },
+          "podcast_episode": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/PodcastEpisodeObject"
+            }
+          }
+        },
+        "required": [
+          "id",
+          "name",
+          "description",
+          "language",
+          "copyright",
+          "feed_url",
+          "generator",
+          "website",
+          "build_date",
+          "sync_date",
+          "public_url",
+          "art",
+          "has_art",
+          "flag",
+          "rating",
+          "averagerating",
+          "podcast_episode"
+        ],
+        "additionalProperties": false
+      },
+      "VideoObject": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "title": {
+            "type": "string",
+            "nullable": true
+          },
+          "mime": {
+            "type": "string",
+            "nullable": true
+          },
+          "resolution": {
+            "type": "string",
+            "nullable": true
+          },
+          "size": {
+            "type": "integer"
+          },
+          "genre": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "id": {
+                  "type": "string"
+                },
+                "name": {
+                  "type": "string"
+                }
+              },
+              "required": [
+                "id",
+                "name"
+              ],
+              "additionalProperties": false
+            }
+          },
+          "time": {
+            "type": "integer"
+          },
+          "url": {
+            "type": "string"
+          },
+          "art": {
+            "type": "string",
+            "nullable": true
+          },
+          "has_art": {
+            "type": "boolean"
+          },
+          "flag": {
+            "type": "boolean"
+          },
+          "rating": {
+            "type": "integer",
+            "nullable": true
+          },
+          "averagerating": {
+            "type": "number",
+            "nullable": true
+          },
+          "playcount": {
+            "type": "integer"
+          }
+        },
+        "required": [
+          "id",
+          "title",
+          "mime",
+          "resolution",
+          "size",
+          "genre",
+          "time",
+          "url",
+          "art",
+          "has_art",
+          "flag",
+          "rating",
+          "averagerating",
+          "playcount"
+        ],
+        "additionalProperties": false
+      },
+      "ArtistsResponse": {
+        "type": "object",
+        "properties": {
+          "total_count": {
+            "type": "integer"
+          },
+          "md5": {
+            "type": "string"
+          },
+          "artist": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ArtistObject"
+            }
+          }
+        },
+        "required": [
+          "total_count",
+          "md5",
+          "artist"
+        ],
+        "additionalProperties": false
+      },
+      "GenresResponse": {
+        "type": "object",
+        "properties": {
+          "total_count": {
+            "type": "integer"
+          },
+          "md5": {
+            "type": "string"
+          },
+          "genre": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/GenreObject"
+            }
+          }
+        },
+        "required": [
+          "total_count",
+          "md5",
+          "genre"
+        ],
+        "additionalProperties": false
+      },
+      "LabelsResponse": {
+        "type": "object",
+        "properties": {
+          "total_count": {
+            "type": "integer"
+          },
+          "md5": {
+            "type": "string"
+          },
+          "label": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/LabelObject"
+            }
+          }
+        },
+        "required": [
+          "total_count",
+          "md5",
+          "label"
+        ],
+        "additionalProperties": false
+      },
+      "LiveStreamsResponse": {
+        "type": "object",
+        "properties": {
+          "total_count": {
+            "type": "integer"
+          },
+          "md5": {
+            "type": "string"
+          },
+          "live_stream": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/LiveStreamObject"
+            }
+          }
+        },
+        "required": [
+          "total_count",
+          "md5",
+          "live_stream"
+        ],
+        "additionalProperties": false
+      },
+      "PlaylistsResponse": {
+        "type": "object",
+        "properties": {
+          "total_count": {
+            "type": "integer"
+          },
+          "md5": {
+            "type": "string"
+          },
+          "playlist": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/PlaylistObject"
+            }
+          }
+        },
+        "required": [
+          "total_count",
+          "md5",
+          "playlist"
+        ],
+        "additionalProperties": false
+      },
+      "PodcastEpisodesResponse": {
+        "type": "object",
+        "properties": {
+          "total_count": {
+            "type": "integer"
+          },
+          "md5": {
+            "type": "string"
+          },
+          "podcast_episode": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/PodcastEpisodeObject"
+            }
+          }
+        },
+        "required": [
+          "total_count",
+          "md5",
+          "podcast_episode"
+        ],
+        "additionalProperties": false
+      },
+      "PodcastsResponse": {
+        "type": "object",
+        "properties": {
+          "total_count": {
+            "type": "integer"
+          },
+          "md5": {
+            "type": "string"
+          },
+          "podcast": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/PodcastObject"
+            }
+          }
+        },
+        "required": [
+          "total_count",
+          "md5",
+          "podcast"
+        ],
+        "additionalProperties": false
+      },
+      "VideosResponse": {
+        "type": "object",
+        "properties": {
+          "total_count": {
+            "type": "integer"
+          },
+          "md5": {
+            "type": "string"
+          },
+          "video": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/VideoObject"
+            }
+          }
+        },
+        "required": [
+          "total_count",
+          "md5",
+          "video"
+        ],
+        "additionalProperties": false
+      },
+      "CatalogObject": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "name": {
+            "type": "string",
+            "nullable": true
+          },
+          "type": {
+            "type": "string",
+            "nullable": true
+          },
+          "gather_types": {
+            "type": "string",
+            "nullable": true
+          },
+          "enabled": {
+            "type": "boolean"
+          },
+          "last_add": {
+            "type": "integer"
+          },
+          "last_clean": {
+            "type": "integer",
+            "nullable": true
+          },
+          "last_update": {
+            "type": "integer"
+          },
+          "path": {
+            "type": "string"
+          },
+          "rename_pattern": {
+            "type": "string",
+            "nullable": true
+          },
+          "sort_pattern": {
+            "type": "string",
+            "nullable": true
+          }
+        },
+        "required": [
+          "id",
+          "name",
+          "type",
+          "gather_types",
+          "enabled",
+          "last_add",
+          "last_clean",
+          "last_update",
+          "path",
+          "rename_pattern",
+          "sort_pattern"
+        ],
+        "additionalProperties": false
+      },
+      "CatalogsResponse": {
+        "type": "object",
+        "properties": {
+          "total_count": {
+            "type": "integer"
+          },
+          "md5": {
+            "type": "string"
+          },
+          "catalog": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/CatalogObject"
+            }
+          }
+        },
+        "required": [
+          "total_count",
+          "md5",
+          "catalog"
+        ],
+        "additionalProperties": false
+      },
+      "LicenseObject": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "name": {
+            "type": "string"
+          },
+          "description": {
+            "type": "string"
+          },
+          "external_link": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "id",
+          "name",
+          "description",
+          "external_link"
+        ],
+        "additionalProperties": false
+      },
+      "ShareObject": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "name": {
+            "type": "string"
+          },
+          "owner": {
+            "type": "string"
+          },
+          "allow_stream": {
+            "type": "boolean"
+          },
+          "allow_download": {
+            "type": "boolean"
+          },
+          "creation_date": {
+            "type": "integer"
+          },
+          "lastvisit_date": {
+            "type": "integer"
+          },
+          "object_type": {
+            "type": "string",
+            "nullable": true
+          },
+          "object_id": {
+            "type": "string"
+          },
+          "expire_days": {
+            "type": "integer"
+          },
+          "max_counter": {
+            "type": "integer"
+          },
+          "counter": {
+            "type": "integer"
+          },
+          "secret": {
+            "type": "string",
+            "nullable": true
+          },
+          "public_url": {
+            "type": "string",
+            "nullable": true
+          },
+          "description": {
+            "type": "string",
+            "nullable": true
+          }
+        },
+        "required": [
+          "id",
+          "name",
+          "owner",
+          "allow_stream",
+          "allow_download",
+          "creation_date",
+          "lastvisit_date",
+          "object_type",
+          "object_id",
+          "expire_days",
+          "max_counter",
+          "counter",
+          "secret",
+          "public_url",
+          "description"
+        ],
+        "additionalProperties": false
+      },
+      "BookmarkObject": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "owner": {
+            "type": "string"
+          },
+          "object_type": {
+            "type": "string",
+            "nullable": true
+          },
+          "object_id": {
+            "type": "string"
+          },
+          "position": {
+            "type": "integer"
+          },
+          "client": {
+            "type": "string",
+            "nullable": true
+          },
+          "creation_date": {
+            "type": "integer"
+          },
+          "update_date": {
+            "type": "integer"
+          },
+          "song": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/SongObject"
+            }
+          },
+          "podcast_episode": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/PodcastEpisodeObject"
+            }
+          },
+          "video": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/VideoObject"
+            }
+          }
+        },
+        "required": [
+          "id",
+          "owner",
+          "object_type",
+          "object_id",
+          "position",
+          "client",
+          "creation_date",
+          "update_date"
+        ],
+        "additionalProperties": false
+      },
+      "UserSummaryObject": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "username": {
+            "type": "string",
+            "nullable": true
+          }
+        },
+        "required": [
+          "id",
+          "username"
+        ],
+        "additionalProperties": false
+      },
+      "UserObject": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "username": {
+            "type": "string",
+            "nullable": true
+          },
+          "create_date": {
+            "type": "integer",
+            "nullable": true
+          },
+          "last_seen": {
+            "type": "integer"
+          },
+          "link": {
+            "type": "string"
+          },
+          "website": {
+            "type": "string",
+            "nullable": true
+          },
+          "state": {
+            "type": "string",
+            "nullable": true
+          },
+          "city": {
+            "type": "string",
+            "nullable": true
+          },
+          "art": {
+            "type": "string",
+            "nullable": true
+          },
+          "has_art": {
+            "type": "boolean"
+          },
+          "auth": {
+            "type": "string",
+            "nullable": true
+          },
+          "email": {
+            "type": "string",
+            "nullable": true
+          },
+          "access": {
+            "type": "integer"
+          },
+          "streamtoken": {
+            "type": "string",
+            "nullable": true
+          },
+          "fullname_public": {
+            "type": "boolean"
+          },
+          "validation": {
+            "type": "string",
+            "nullable": true
+          },
+          "disabled": {
+            "type": "boolean"
+          },
+          "fullname": {
+            "type": "string",
+            "nullable": true
+          }
+        },
+        "required": [
+          "id",
+          "username",
+          "create_date",
+          "last_seen",
+          "link",
+          "website",
+          "state",
+          "city",
+          "art",
+          "has_art"
+        ],
+        "additionalProperties": false
+      },
+      "LicensesResponse": {
+        "type": "object",
+        "properties": {
+          "total_count": {
+            "type": "integer"
+          },
+          "md5": {
+            "type": "string"
+          },
+          "license": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/LicenseObject"
+            }
+          }
+        },
+        "required": [
+          "total_count",
+          "md5",
+          "license"
+        ],
+        "additionalProperties": false
+      },
+      "SharesResponse": {
+        "type": "object",
+        "properties": {
+          "total_count": {
+            "type": "integer"
+          },
+          "md5": {
+            "type": "string"
+          },
+          "share": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ShareObject"
+            }
+          }
+        },
+        "required": [
+          "total_count",
+          "md5",
+          "share"
+        ],
+        "additionalProperties": false
+      },
+      "BookmarksResponse": {
+        "type": "object",
+        "properties": {
+          "total_count": {
+            "type": "integer"
+          },
+          "md5": {
+            "type": "string"
+          },
+          "bookmark": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/BookmarkObject"
+            }
+          }
+        },
+        "required": [
+          "total_count",
+          "md5",
+          "bookmark"
+        ],
+        "additionalProperties": false
+      },
+      "UsersResponse": {
+        "type": "object",
+        "properties": {
+          "user": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/UserSummaryObject"
+            }
+          }
+        },
+        "required": [
+          "user"
+        ],
+        "additionalProperties": false
+      },
+      "SongTagObject": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "albumartist": {},
+          "album": {},
+          "artist": {},
+          "artists": {},
+          "art": {},
+          "audio_codec": {},
+          "barcode": {},
+          "bitrate": {},
+          "catalog": {},
+          "catalog_number": {},
+          "channels": {},
+          "comment": {},
+          "composer": {},
+          "description": {},
+          "disk": {},
+          "disksubtitle": {},
+          "display_x": {},
+          "display_y": {},
+          "encoding": {},
+          "file": {},
+          "frame_rate": {},
+          "genre": {},
+          "isrc": {},
+          "language": {},
+          "lyrics": {},
+          "mb_albumartistid": {},
+          "mb_albumartistid_array": {},
+          "mb_albumid_group": {},
+          "mb_albumid": {},
+          "mb_artistid": {},
+          "mb_artistid_array": {},
+          "mb_trackid": {},
+          "mime": {},
+          "mode": {},
+          "original_name": {},
+          "original_year": {},
+          "publisher": {},
+          "r128_album_gain": {},
+          "r128_track_gain": {},
+          "rate": {},
+          "rating": {},
+          "release_date": {},
+          "release_status": {},
+          "release_type": {},
+          "replaygain_album_gain": {},
+          "replaygain_album_peak": {},
+          "replaygain_track_gain": {},
+          "replaygain_track_peak": {},
+          "size": {},
+          "version": {},
+          "summary": {},
+          "time": {},
+          "title": {},
+          "totaldisks": {},
+          "totaltracks": {},
+          "track": {},
+          "year": {}
+        },
+        "required": [
+          "id",
+          "albumartist",
+          "album",
+          "artist",
+          "artists",
+          "art",
+          "audio_codec",
+          "barcode",
+          "bitrate",
+          "catalog",
+          "catalog_number",
+          "channels",
+          "comment",
+          "composer",
+          "description",
+          "disk",
+          "disksubtitle",
+          "display_x",
+          "display_y",
+          "encoding",
+          "file",
+          "frame_rate",
+          "genre",
+          "isrc",
+          "language",
+          "lyrics",
+          "mb_albumartistid",
+          "mb_albumartistid_array",
+          "mb_albumid_group",
+          "mb_albumid",
+          "mb_artistid",
+          "mb_artistid_array",
+          "mb_trackid",
+          "mime",
+          "mode",
+          "original_name",
+          "original_year",
+          "publisher",
+          "r128_album_gain",
+          "r128_track_gain",
+          "rate",
+          "rating",
+          "release_date",
+          "release_status",
+          "release_type",
+          "replaygain_album_gain",
+          "replaygain_album_peak",
+          "replaygain_track_gain",
+          "replaygain_track_peak",
+          "size",
+          "version",
+          "summary",
+          "time",
+          "title",
+          "totaldisks",
+          "totaltracks",
+          "track",
+          "year"
+        ],
+        "additionalProperties": false
+      },
+      "SongTagsResponse": {
+        "type": "object",
+        "properties": {
+          "total_count": {
+            "type": "integer"
+          },
+          "md5": {
+            "type": "string"
+          },
+          "song_tag": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/SongTagObject"
+            }
+          }
+        },
+        "required": [
+          "total_count",
+          "md5",
+          "song_tag"
+        ],
+        "additionalProperties": false
+      },
+      "ListObject": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "name": {
+            "type": "string"
+          },
+          "prefix": {
+            "type": "string",
+            "nullable": true
+          },
+          "basename": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "id",
+          "name",
+          "prefix",
+          "basename"
+        ],
+        "additionalProperties": false
+      },
+      "BrowseObject": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "name": {
+            "type": "string"
+          },
+          "prefix": {
+            "type": "string",
+            "nullable": true
+          },
+          "basename": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "id",
+          "name",
+          "prefix",
+          "basename"
+        ],
+        "additionalProperties": false
+      },
+      "NowPlayingObject": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "type": {
+            "type": "string"
+          },
+          "client": {
+            "type": "string"
+          },
+          "expire": {
+            "type": "integer"
+          },
+          "user": {
+            "type": "object",
+            "properties": {
+              "id": {
+                "type": "string"
+              },
+              "username": {
+                "type": "string",
+                "nullable": true
+              }
+            },
+            "required": [
+              "id",
+              "username"
+            ],
+            "additionalProperties": false
+          }
+        },
+        "required": [
+          "id",
+          "type",
+          "client",
+          "expire",
+          "user"
+        ],
+        "additionalProperties": false
+      },
+      "ActivityObject": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "date": {
+            "type": "integer"
+          },
+          "object_type": {
+            "type": "string",
+            "nullable": true
+          },
+          "object_id": {
+            "type": "string"
+          },
+          "action": {
+            "type": "string"
+          },
+          "user": {
+            "type": "object",
+            "properties": {
+              "id": {
+                "type": "string"
+              },
+              "username": {
+                "type": "string",
+                "nullable": true
+              }
+            },
+            "required": [
+              "id",
+              "username"
+            ],
+            "additionalProperties": false
+          }
+        },
+        "required": [
+          "id",
+          "date",
+          "object_type",
+          "object_id",
+          "action",
+          "user"
+        ],
+        "additionalProperties": false
+      },
+      "ShoutObject": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "date": {
+            "type": "integer"
+          },
+          "text": {
+            "type": "string"
+          },
+          "object_type": {
+            "type": "string"
+          },
+          "object_id": {
+            "type": "integer"
+          },
+          "user": {
+            "type": "object",
+            "properties": {
+              "id": {
+                "type": "string"
+              },
+              "username": {
+                "type": "string"
+              }
+            },
+            "required": [
+              "id",
+              "username"
+            ],
+            "additionalProperties": false
+          }
+        },
+        "required": [
+          "id",
+          "date",
+          "text",
+          "object_type",
+          "object_id",
+          "user"
+        ],
+        "additionalProperties": false
+      },
+      "ListsResponse": {
+        "type": "object",
+        "properties": {
+          "total_count": {
+            "type": "integer"
+          },
+          "md5": {
+            "type": "string"
+          },
+          "list": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ListObject"
+            }
+          }
+        },
+        "required": [
+          "total_count",
+          "md5",
+          "list"
+        ],
+        "additionalProperties": false
+      },
+      "BrowseResponse": {
+        "type": "object",
+        "properties": {
+          "total_count": {
+            "type": "integer"
+          },
+          "md5": {
+            "type": "string"
+          },
+          "catalog_id": {
+            "type": "string"
+          },
+          "parent_id": {
+            "type": "string"
+          },
+          "parent_type": {
+            "type": "string"
+          },
+          "child_type": {
+            "type": "string"
+          },
+          "browse": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/BrowseObject"
+            }
+          }
+        },
+        "required": [
+          "total_count",
+          "md5",
+          "catalog_id",
+          "parent_id",
+          "parent_type",
+          "child_type",
+          "browse"
+        ],
+        "additionalProperties": false
+      },
+      "NowPlayingResponse": {
+        "type": "object",
+        "properties": {
+          "now_playing": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/NowPlayingObject"
+            }
+          }
+        },
+        "required": [
+          "now_playing"
+        ],
+        "additionalProperties": false
+      },
+      "TimelineResponse": {
+        "type": "object",
+        "properties": {
+          "activity": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ActivityObject"
+            }
+          }
+        },
+        "required": [
+          "activity"
+        ],
+        "additionalProperties": false
+      },
+      "ShoutsResponse": {
+        "type": "object",
+        "properties": {
+          "shout": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ShoutObject"
+            }
+          }
+        },
+        "required": [
+          "shout"
+        ],
+        "additionalProperties": false
+      },
+      "DeletedSongObject": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "addition_time": {
+            "type": "integer"
+          },
+          "delete_time": {
+            "type": "integer"
+          },
+          "title": {
+            "type": "string"
+          },
+          "file": {
+            "type": "string"
+          },
+          "catalog": {
+            "type": "string"
+          },
+          "total_count": {
+            "type": "integer"
+          },
+          "total_skip": {
+            "type": "integer"
+          },
+          "update_time": {
+            "type": "integer"
+          },
+          "album": {
+            "type": "string"
+          },
+          "artist": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "id",
+          "addition_time",
+          "delete_time",
+          "title",
+          "file",
+          "catalog",
+          "total_count",
+          "total_skip",
+          "update_time",
+          "album",
+          "artist"
+        ],
+        "additionalProperties": false
+      },
+      "DeletedSongsResponse": {
+        "type": "object",
+        "properties": {
+          "total_count": {
+            "type": "integer"
+          },
+          "md5": {
+            "type": "string"
+          },
+          "deleted_song": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/DeletedSongObject"
+            }
+          }
+        },
+        "required": [
+          "total_count",
+          "md5",
+          "deleted_song"
+        ],
+        "additionalProperties": false
+      },
+      "DeletedPodcastEpisodeObject": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "addition_time": {
+            "type": "integer"
+          },
+          "delete_time": {
+            "type": "integer"
+          },
+          "title": {
+            "type": "string"
+          },
+          "file": {
+            "type": "string"
+          },
+          "catalog": {
+            "type": "string"
+          },
+          "total_count": {
+            "type": "integer"
+          },
+          "total_skip": {
+            "type": "integer"
+          },
+          "podcast": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "id",
+          "addition_time",
+          "delete_time",
+          "title",
+          "file",
+          "catalog",
+          "total_count",
+          "total_skip",
+          "podcast"
+        ],
+        "additionalProperties": false
+      },
+      "DeletedPodcastEpisodesResponse": {
+        "type": "object",
+        "properties": {
+          "total_count": {
+            "type": "integer"
+          },
+          "md5": {
+            "type": "string"
+          },
+          "deleted_podcast_episode": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/DeletedPodcastEpisodeObject"
+            }
+          }
+        },
+        "required": [
+          "total_count",
+          "md5",
+          "deleted_podcast_episode"
+        ],
+        "additionalProperties": false
+      },
+      "DeletedVideoObject": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "addition_time": {
+            "type": "integer"
+          },
+          "delete_time": {
+            "type": "integer"
+          },
+          "title": {
+            "type": "string"
+          },
+          "file": {
+            "type": "string"
+          },
+          "catalog": {
+            "type": "string"
+          },
+          "total_count": {
+            "type": "integer"
+          },
+          "total_skip": {
+            "type": "integer"
+          }
+        },
+        "required": [
+          "id",
+          "addition_time",
+          "delete_time",
+          "title",
+          "file",
+          "catalog",
+          "total_count",
+          "total_skip"
+        ],
+        "additionalProperties": false
+      },
+      "DeletedVideosResponse": {
+        "type": "object",
+        "properties": {
+          "total_count": {
+            "type": "integer"
+          },
+          "md5": {
+            "type": "string"
+          },
+          "deleted_video": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/DeletedVideoObject"
+            }
+          }
+        },
+        "required": [
+          "total_count",
+          "md5",
+          "deleted_video"
+        ],
+        "additionalProperties": false
+      },
+      "IndexReferenceObject": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "type": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "id",
+          "type"
+        ],
+        "additionalProperties": false
+      },
+      "IndexResponse": {
+        "type": "object",
+        "description": "Keyed by the requested `type` (e.g. `album`, `artist`, `song`). Without `include` the value is an array of object ids; with `include` it is an array of `{id, type}` references, or a map of parent id -> reference array for parent types such as playlists.",
+        "additionalProperties": {
+          "oneOf": [
+            {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            },
+            {
+              "type": "array",
+              "items": {
+                "$ref": "#/components/schemas/IndexReferenceObject"
+              }
+            },
+            {
+              "type": "object",
+              "additionalProperties": {
+                "type": "array",
+                "items": {
+                  "$ref": "#/components/schemas/IndexReferenceObject"
+                }
+              }
+            }
+          ]
+        }
       }
     },
     "responses": {
@@ -844,7 +3425,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "type": "object"
+                  "$ref": "#/components/schemas/AlbumsResponse"
                 },
                 "examples": {
                   "albums": {
@@ -950,7 +3531,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "type": "object"
+                  "$ref": "#/components/schemas/AlbumObject"
                 },
                 "examples": {
                   "album": {
@@ -1424,7 +4005,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "type": "object"
+                  "$ref": "#/components/schemas/SongsResponse"
                 },
                 "examples": {
                   "album_songs": {
@@ -2457,7 +5038,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "type": "object"
+                  "$ref": "#/components/schemas/ArtistsResponse"
                 },
                 "examples": {
                   "artists": {
@@ -2611,7 +5192,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "type": "object"
+                  "$ref": "#/components/schemas/ArtistObject"
                 },
                 "examples": {
                   "artist": {
@@ -2731,7 +5312,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "type": "object"
+                  "$ref": "#/components/schemas/AlbumsResponse"
                 },
                 "examples": {
                   "artist_albums": {
@@ -3288,7 +5869,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "type": "object"
+                  "$ref": "#/components/schemas/SongsResponse"
                 },
                 "examples": {
                   "artist_songs": {
@@ -4150,7 +6731,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "type": "object"
+                  "$ref": "#/components/schemas/BookmarksResponse"
                 },
                 "examples": {
                   "bookmarks": {
@@ -4537,7 +7118,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "type": "object"
+                  "$ref": "#/components/schemas/BookmarkObject"
                 },
                 "examples": {
                   "bookmark": {
@@ -4929,7 +7510,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "type": "object"
+                  "$ref": "#/components/schemas/BrowseResponse"
                 },
                 "examples": {
                   "browse": {
@@ -5297,7 +7878,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/FolderBrowseResponse"
+                  "$ref": "#/components/schemas/FolderBrowseNode"
                 },
                 "examples": {
                   "success": {
@@ -5528,7 +8109,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "type": "object"
+                  "$ref": "#/components/schemas/CatalogsResponse"
                 },
                 "examples": {
                   "catalogs": {
@@ -5831,7 +8412,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "type": "object"
+                  "$ref": "#/components/schemas/CatalogObject"
                 },
                 "examples": {
                   "catalog": {
@@ -6001,7 +8582,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "type": "object"
+                  "$ref": "#/components/schemas/BrowseResponse"
                 },
                 "examples": {
                   "browse": {
@@ -6143,7 +8724,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "type": "object"
+                  "$ref": "#/components/schemas/BrowseResponse"
                 },
                 "examples": {
                   "browse_album": {
@@ -6285,7 +8866,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "type": "object"
+                  "$ref": "#/components/schemas/BrowseResponse"
                 },
                 "examples": {
                   "browse_artist": {
@@ -6409,7 +8990,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "type": "object"
+                  "$ref": "#/components/schemas/BrowseResponse"
                 },
                 "examples": {
                   "browse_podcast": {
@@ -7104,7 +9685,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "type": "object"
+                  "$ref": "#/components/schemas/GenresResponse"
                 },
                 "examples": {
                   "genres": {
@@ -7172,7 +9753,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "type": "object"
+                  "$ref": "#/components/schemas/GenreObject"
                 },
                 "examples": {
                   "genre": {
@@ -7254,7 +9835,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "type": "object"
+                  "$ref": "#/components/schemas/AlbumsResponse"
                 },
                 "examples": {
                   "genre_albums": {
@@ -7382,7 +9963,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "type": "object"
+                  "$ref": "#/components/schemas/ArtistsResponse"
                 },
                 "examples": {
                   "genre_artists": {
@@ -7489,7 +10070,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "type": "object"
+                  "$ref": "#/components/schemas/SongsResponse"
                 },
                 "examples": {
                   "genre_songs": {
@@ -8072,7 +10653,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "type": "object"
+                  "$ref": "#/components/schemas/IndexResponse"
                 },
                 "examples": {
                   "index_album_with_include": {
@@ -8694,7 +11275,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "type": "object"
+                  "$ref": "#/components/schemas/LabelsResponse"
                 },
                 "examples": {
                   "labels": {
@@ -8774,7 +11355,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "type": "object"
+                  "$ref": "#/components/schemas/LabelObject"
                 },
                 "examples": {
                   "label": {
@@ -8856,7 +11437,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "type": "object"
+                  "$ref": "#/components/schemas/ArtistsResponse"
                 },
                 "examples": {
                   "label_artists": {
@@ -9242,7 +11823,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "type": "object"
+                  "$ref": "#/components/schemas/LicensesResponse"
                 },
                 "examples": {
                   "licenses": {
@@ -9370,7 +11951,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "type": "object"
+                  "$ref": "#/components/schemas/LicenseObject"
                 },
                 "examples": {
                   "license": {
@@ -9446,7 +12027,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "type": "object"
+                  "$ref": "#/components/schemas/SongsResponse"
                 },
                 "examples": {
                   "license_songs": {
@@ -9560,7 +12141,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "type": "object"
+                  "$ref": "#/components/schemas/ListsResponse"
                 },
                 "examples": {
                   "list": {
@@ -10050,7 +12631,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "type": "object"
+                  "$ref": "#/components/schemas/LiveStreamsResponse"
                 },
                 "examples": {
                   "live_streams": {
@@ -10244,7 +12825,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "type": "object"
+                  "$ref": "#/components/schemas/LiveStreamObject"
                 },
                 "examples": {
                   "live_stream": {
@@ -11148,7 +13729,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "type": "object"
+                  "$ref": "#/components/schemas/UserObject"
                 },
                 "examples": {
                   "user": {
@@ -11212,7 +13793,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "type": "object"
+                  "$ref": "#/components/schemas/TimelineResponse"
                 },
                 "examples": {
                   "friends_timeline": {
@@ -11306,7 +13887,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "type": "object"
+                  "$ref": "#/components/schemas/ShoutsResponse"
                 },
                 "examples": {
                   "last_shouts": {
@@ -11387,7 +13968,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "type": "object"
+                  "$ref": "#/components/schemas/NowPlayingResponse"
                 },
                 "examples": {
                   "now_playing": {
@@ -11513,7 +14094,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "type": "object"
+                  "$ref": "#/components/schemas/PlaylistsResponse"
                 },
                 "examples": {
                   "user_playlists": {
@@ -11671,7 +14252,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "type": "object"
+                  "$ref": "#/components/schemas/PlaylistsResponse"
                 },
                 "examples": {
                   "user_smartlists": {
@@ -11910,7 +14491,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "type": "object"
+                  "$ref": "#/components/schemas/PlaylistsResponse"
                 },
                 "examples": {
                   "playlists": {
@@ -12104,7 +14685,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "type": "object"
+                  "$ref": "#/components/schemas/PlaylistObject"
                 },
                 "examples": {
                   "playlist": {
@@ -12880,7 +15461,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "type": "object"
+                  "$ref": "#/components/schemas/SongsResponse"
                 },
                 "examples": {
                   "playlist_songs": {
@@ -13671,7 +16252,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "type": "object"
+                  "$ref": "#/components/schemas/PodcastEpisodesResponse"
                 },
                 "examples": {
                   "podcast_episodes": {
@@ -13936,7 +16517,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "type": "object"
+                  "$ref": "#/components/schemas/PodcastEpisodeObject"
                 },
                 "examples": {
                   "podcast_episode": {
@@ -14871,7 +17452,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "type": "object"
+                  "$ref": "#/components/schemas/DeletedPodcastEpisodesResponse"
                 },
                 "examples": {
                   "deleted_podcast_episodes": {
@@ -16085,7 +18666,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "type": "object"
+                  "$ref": "#/components/schemas/PodcastsResponse"
                 },
                 "examples": {
                   "podcasts": {
@@ -16323,7 +18904,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "type": "object"
+                  "$ref": "#/components/schemas/PodcastObject"
                 },
                 "examples": {
                   "podcast": {
@@ -16630,7 +19211,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "type": "object"
+                  "$ref": "#/components/schemas/PodcastEpisodesResponse"
                 },
                 "examples": {
                   "podcast_episodes": {
@@ -24034,7 +26615,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "type": "object"
+                  "$ref": "#/components/schemas/SharesResponse"
                 },
                 "examples": {
                   "shares": {
@@ -24275,7 +26856,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "type": "object"
+                  "$ref": "#/components/schemas/ShareObject"
                 },
                 "examples": {
                   "share": {
@@ -24481,7 +27062,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "type": "object"
+                  "$ref": "#/components/schemas/PlaylistsResponse"
                 },
                 "examples": {
                   "smartlists": {
@@ -24661,7 +27242,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "type": "object"
+                  "$ref": "#/components/schemas/PlaylistObject"
                 },
                 "examples": {
                   "smartlist": {
@@ -25080,7 +27661,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "type": "object"
+                  "$ref": "#/components/schemas/SongsResponse"
                 },
                 "examples": {
                   "smartlist_songs": {
@@ -25873,7 +28454,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "type": "object"
+                  "$ref": "#/components/schemas/SongsResponse"
                 },
                 "examples": {
                   "songs": {
@@ -26331,7 +28912,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "type": "object"
+                  "$ref": "#/components/schemas/SongObject"
                 },
                 "examples": {
                   "song": {
@@ -27577,7 +30158,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "type": "object"
+                  "$ref": "#/components/schemas/SongTagObject"
                 },
                 "examples": {
                   "song_tags": {
@@ -27727,7 +30308,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "type": "object"
+                  "$ref": "#/components/schemas/DeletedSongsResponse"
                 },
                 "examples": {
                   "deleted_songs": {
@@ -29392,7 +31973,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "type": "object"
+                  "$ref": "#/components/schemas/UsersResponse"
                 },
                 "examples": {
                   "users": {
@@ -29605,7 +32186,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "type": "object"
+                  "$ref": "#/components/schemas/UserObject"
                 },
                 "examples": {
                   "user": {
@@ -30028,7 +32609,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "type": "object"
+                  "$ref": "#/components/schemas/TimelineResponse"
                 },
                 "examples": {
                   "timeline": {
@@ -30416,7 +32997,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "type": "object"
+                  "$ref": "#/components/schemas/VideosResponse"
                 },
                 "examples": {
                   "videos": {
@@ -30508,7 +33089,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "type": "object"
+                  "$ref": "#/components/schemas/VideoObject"
                 },
                 "examples": {
                   "video": {
@@ -31236,7 +33817,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "type": "object"
+                  "$ref": "#/components/schemas/DeletedVideosResponse"
                 },
                 "examples": {
                   "deleted_videos": {
