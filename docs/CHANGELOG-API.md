@@ -23,6 +23,9 @@ API version **8** joins the concurrent live surfaces (3/4/5/6 — version 7 rema
   * New `zip` parameter: when `type`/`filter` identify a container object (`album`, `artist`, `playlist`, `podcast`) and zipping is enabled (`ZipHandlerInterface::isZipable()`), downloads the whole container as a zip instead of a single stream redirect — reuses the same `ZipHandlerInterface` used by the `batch.php` GUI download
 * `share_create` (API8)
   * Object `type` validated via `LibraryItemEnum::tryFrom()` against `Share::VALID_TYPES`, checked after the `playlist`/`smartlist` → `search` remap
+* OpenAPI / response schemas
+  * `docs/openapi.json` now defines `components.schemas` for every v8 data type (`album`, `song`, `artist`, `playlist`, `podcast`, `podcast_episode`, `video`, `genre`, `label`, `live_stream`, `catalog`, `license`, `share`, `bookmark`, `user`, `song_tag`, the per-type `deleted_*` items, and the `browse`/`list`/`now_playing`/`activity`/`shout` wrappers) and wires each into its `200` response, replacing the placeholder `type: object`; every field documents its type and whether it is optional/nullable
+  * `docs/API-JSON-methods.md` and `docs/API-XML-methods.md` gain a generated per-method response field table (field, type, nullable, optional) with links between related objects
 
 ### Changed (800000)
 
@@ -34,6 +37,9 @@ API version **8** joins the concurrent live surfaces (3/4/5/6 — version 7 rema
   * Converted from a legacy static method to the `MethodInterface` pattern to support the new zip response; existing `song`/`podcast_episode`/`search`/`playlist` single-item redirect behavior is unchanged
 * ALL (internal)
   * `JsonOutput`/`XmlOutput` no longer fall back to API8 formatting for an unrecognized API version/method/format combination (e.g. JSON for API3, which was never supported) — this now throws instead of silently rendering as API8. Some v3/v4 error paths that used ad-hoc numeric error codes now use the same `ErrorCodeEnum`-based codes API5/6/8 already use, for consistency
+* API8 (JSON/XML parity)
+  * v8 JSON and XML now return a matching field set for each object; several inconsistencies were unified: XML `bookmark`/`share` owner is now `<owner>` (was `<user>`), `video` no longer emits a duplicate `<name>` (use `<title>`), deleted podcast episodes use `<podcast>` (was a mislabeled `<played>`), and `song_tags` emits the full fixed field set in both formats
+  * JSON `user` adds `link` (profile url, already present in XML) and returns `fullname` on your own `/me` request; JSON `song_tags` adds the song `id`; the `users` list uses a bare `{ "user": [...] }` envelope with no `total_count`/`md5`
 
 ## API 6.9.2 Build 2
 

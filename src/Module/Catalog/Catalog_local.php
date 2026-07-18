@@ -601,7 +601,9 @@ class Catalog_local extends Catalog
                     flush();
                 }
 
-                $this->gather_art($this->songs_to_gather, $this->videos_to_gather);
+                if (!empty($this->songs_to_gather) || !empty($this->videos_to_gather)) {
+                    $this->gather_art($this->songs_to_gather, $this->videos_to_gather);
+                }
             }
         }
 

@@ -519,6 +519,9 @@ if ($iframed) { ?>
         function ShowEqualizer()
         {
             ensureAudioGraph();
+            if (audioContext && audioContext.state === 'suspended') {
+                audioContext.resume();
+            }
             var eq = $('#equalizer');
             eq.css('visibility', (eq.css('visibility') === 'visible') ? 'hidden' : 'visible');
         }

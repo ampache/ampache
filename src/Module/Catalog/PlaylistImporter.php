@@ -39,7 +39,11 @@ final class PlaylistImporter
      * @return null|array{
      *     count: int,
      *     id: int,
-     *     results: array<int, array{track: int, file: string, found: int}>
+     *     results: array<int, array{
+     *         track: int,
+     *         file: string,
+     *         found: int
+     *     }>
      * }
      */
     public static function import_playlist(string $playlist_file, int $user_id, string $playlist_type): ?array

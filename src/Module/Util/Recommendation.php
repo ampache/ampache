@@ -520,7 +520,12 @@ class Recommendation
      * @return null|array{
      *     id: int,
      *     last_update: string,
-     *     items?: array<int, array{id: ?int, name: string, rel: ?string, mbid: ?string}>
+     *     items?: array<int, array{
+     *         id: ?int,
+     *         name: string,
+     *         rel: ?string,
+     *         mbid: ?string
+     *     }>
      * }
      */
     protected static function get_recommendation_cache(string $type, int $object_id, bool $get_items = false): ?array

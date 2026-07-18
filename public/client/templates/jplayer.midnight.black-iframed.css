@@ -902,7 +902,9 @@ a.jp-shuffle-off:hover {
     height: 95px;
     text-align: right;
     display: inline;
-    opacity: 0.4;
+    /* keep the action buttons clearly visible and above the in-bar playlist */
+    opacity: 1;
+    z-index: 9995;
 }
 
 .player_actions:hover {
@@ -1419,6 +1421,40 @@ body.webplayer-hidden #visualizer {
     #jp_container_1.jp-audio .jp-controls-holder a.jp-shuffle,
     #jp_container_1.jp-audio .jp-controls-holder a.jp-shuffle-off {
         margin-left: 8px;
+    }
+}
+
+/* @end */
+
+@media (min-width: 769px) and (max-width: 1150px) {
+    #jp_container_1:not(.jp-playlist-expanded) .jp-playlist {
+        display: none;
+    }
+
+    .player_actions {
+        right: 4px;
+        opacity: 1;
+    }
+
+    .playing_info {
+        display: none;
+    }
+}
+
+/* @end */
+
+/* @group Modern player: very narrow -- the album art (80px on the left) would
+   overlap the leftmost control once the control strip fills the width. Hide it
+   (controls take priority, matching the info/playlist behaviour above) and
+   reclaim its left padding. Audio keeps playing: display:none doesn't stop the
+   <audio> element inside .jp-jplayer. */
+@media (max-width: 540px) {
+    #jp_container_1.jp-audio .jp-jplayer {
+        display: none;
+    }
+
+    #jp_container_1 .jp-interface {
+        padding-left: 8px;
     }
 }
 
