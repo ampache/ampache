@@ -2930,7 +2930,7 @@ class Json8_Data
                 "has_art" => $user->has_art()
             ];
         }
-        if ($user->fullname_public) {
+        if ($user->fullname_public || $fullinfo) {
             $JSON['fullname'] = $user->fullname;
         }
 
