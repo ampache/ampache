@@ -168,10 +168,7 @@ class AlbumDisk extends database_object implements
             if (isset($row['id'])) {
                 // alter the existing disk after editing
                 if (!Dba::write("UPDATE `album_disk` SET `album_id` = ?, `disk` = ?, `catalog` = ?, `disksubtitle` = ? WHERE `id` = ?;", [$album_id, $disk, $catalog_id, $disksubtitle, $current_id])) {
-                    // Duplicates might collide here. The blocking row is keyed on
-                    // (album_id, disk, catalog) by unique_album_disk and may carry any
-                    // disksubtitle, so match on the unique key alone (filtering by
-                    // disksubtitle here matched nothing when it was empty/null).
+                    // Duplicates might collide here. Match on the unique key alone (filtering by disksubtitle/null.
                     $db_results = Dba::read("SELECT `album_disk`.`id` FROM `album_disk` INNER JOIN `album` ON `album`.`id` = `album_disk`.`album_id` WHERE `album_disk`.`album_id` = ? AND `album_disk`.`disk` = ? AND `album_disk`.`catalog` = CASE WHEN `album`.`catalog` = 0 THEN 0 ELSE ? END;", [$album_id, $disk, $catalog_id]);
                     if ($row = Dba::fetch_assoc($db_results)) {
                         $current_id = (int) $row['id'];
