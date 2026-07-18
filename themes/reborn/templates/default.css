@@ -668,6 +668,9 @@ div.registerfield.center {
     margin: 17px auto 5px 5px;
     padding: 5px 0 10px 0;
     text-align: center;
+    max-height: calc(100vh - 120px);
+    overflow-y: auto;
+    overflow-x: hidden;
 }
 
 #sidebar-light-default {
@@ -680,6 +683,9 @@ div.registerfield.center {
     margin: 0 auto 5px 5px;
     padding: 5px 0 10px 0;
     text-align: center;
+    max-height: calc(100vh - 120px);
+    overflow-y: auto;
+    overflow-x: hidden;
 }
 
 #sidebar-light li {
@@ -1322,6 +1328,64 @@ table.gridview td.cel_ratings {
     min-width: initial !important;
     justify-content: center;
     gap: 10px;
+}
+
+/* Home dashboard + personal favorites: responsive card grid that fills the box width, */
+/* capped at two rows; extra rows are clipped instead of wrapping or scrolling. */
+.homedash table.gridview,
+.personalfav table.gridview {
+    display: block;
+    overflow: hidden;
+}
+
+.homedash table.gridview tbody,
+.personalfav table.gridview tbody {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(170px, 200px));
+    grid-template-rows: repeat(2, auto);
+    grid-auto-rows: 0;
+    align-content: start;
+    justify-content: center;
+    overflow: hidden;
+}
+
+.homedash table.gridview tbody tr,
+.personalfav table.gridview tbody tr {
+    float: none;
+    width: auto;
+    min-width: 0;
+    max-width: none;
+}
+
+/* Home dashboard: pack the covers left in fixed-width cells so there are no centre gaps. */
+.homedash table.gridview tbody {
+    grid-template-columns: repeat(auto-fill, 170px);
+    justify-content: start;
+}
+
+/* Personal favorites: box each list so its title and play buttons read as a single card. */
+.personalfav table.gridview tbody {
+    column-gap: 10px;
+}
+
+.personalfav table.gridview tbody tr {
+    box-sizing: border-box;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    margin-bottom: 10px;
+    padding: 12px 8px;
+    border: 1px solid rgba(127, 127, 127, 0.35);
+    border-radius: 6px;
+}
+
+/* Drop the forced td heights and side margins so title + buttons sit together, centered in the box. */
+.personalfav table.gridview tbody td {
+    height: auto !important;
+    margin: 0 !important;
+    text-align: center;
 }
 
 .tableform {
@@ -2034,8 +2098,11 @@ a.option-list:hover {
    offsets. On a phone that overflows the viewport width, so mobile browsers shrink-to-fit (zoom out) the whole page
    A zoomed page pins position:fixed (the webplayer) to the zoomed document instead of the visible screen, which is why
    the player looked stuck to the bottom of the content.
-   Scoped to <=768px, so desktop is untouched. */
-@media (max-width: 768px) {
+   Scoped to <=768px (portrait phones) plus short landscape viewports (phones rotated: wider than 768px but
+   only ~400-500px tall, which would otherwise fall back to the desktop min-width:1024px and re-trigger the zoom).
+   Tablets/desktop in landscape are >540px tall, so they stay on the desktop layout.
+   @see //REBORN_MEDIA and keep in sync with dark.css light.css */
+@media (max-width: 768px), (orientation: landscape) and (max-height: 540px) {
     /* Fit the device width instead of forcing a 1024px page (kills the zoom). */
     body#main-page {
         min-width: 0;
@@ -2256,7 +2323,8 @@ a.option-list:hover {
     .sidebar-page-float {
         position: absolute;
         left: 5px;
-        width: 165px;
+        right: 5px;
+        width: auto;
         margin: 0;
         box-sizing: border-box;
     }
@@ -2387,11 +2455,12 @@ a.option-list:hover {
 
     .item_properties {
         max-width: none;
-        text-align: left;
+        text-align: end;
     }
 
+    /* hide artist summary on mobile */
     #item_summary {
-        margin-right: 0;
+        display: none;
     }
 
     /* art floats right by default. Pull it to the left edge  when collapsed. */

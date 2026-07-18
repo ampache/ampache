@@ -214,6 +214,10 @@ $replaygain = (AmpConfig::get('theme_color', 'dark') == 'light')
             <?php if ($isRandom || $isDemocratic) { ?>
             startNowPlayingPoll();
             <?php } ?>
+            // Splice the shared audio graph (EQ + ReplayGain) in as soon as playback starts so the equalizer is active.
+            if (typeof ensureAudioGraph === 'function' && ensureAudioGraph() && audioContext && audioContext.state === 'suspended') {
+                audioContext.resume();
+            }
             if (replaygainPersist === 'true' && replaygainEnabled === false && typeof ToggleReplayGain === 'function') {
                 ToggleReplayGain();
             }

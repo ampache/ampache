@@ -4,6 +4,8 @@
 
 **NOTE** Work in progress
 
+**NOTE** AI Contribution standards are documented in `CLAUDE.md` (repository structures, branch model, architecture and coding rules); read and follow it before submitting changes that are AI-assisted ones
+
 * Ampache 8 requires **PHP 8.5+**
 * This version adds a new **Folder** domain which functions as a virtual filesystem browsing layer over catalog files.
 * A very major PHPStan level 8 / Rector / PER-CS3x0 hardening pass across the code.
@@ -23,6 +25,8 @@
   * New `api_enable_8` preference to enable/disable API v8 responses per user
   * New database tables `folder` and `folder_map`
   * `folder` added to the `object_type` enum on several tables (`cache_object_count`, `cache_object_count_run`, `image`, `object_count`, and others)
+* API
+  * v8 API responses are now fully documented: `docs/openapi.json` carries response schemas for every data type, and `docs/API-JSON-methods.md`/`docs/API-XML-methods.md` show per-method response field tables (type, nullable, optional)
 * Testing
   * Test suite significantly expanded with dozens of new test files under `tests/Module` and `tests/Repository`
 
@@ -37,12 +41,20 @@
 * `playable_item` interface split into `displayable_item` and `container_item` as part of a large interface cleanup
 * API version 8 has been added to the list of API versions
 * Docker: build using `docker/Dockerfilephp85`
+* Theme
+  * Home Dashboard (`homedash`) rows stay on a single line and clip at the edge instead of wrapping to new lines
+  * Personal Favorites (`personalfav`) list scrolls horizontally instead of wrapping
+* `composer syntax` now runs a cross-platform PHP linter (`resources/scripts/tests/syntax.php`) so the check works on Windows (replaces `syntax.sh`)
 
 ### Removed 8.0.0
 
 * `api_debug_handler` configuration option and its handling removed entirely
 * Unused legacy OAuth implementation deleted (`OAuthDataStore`, `OAuthServer`, `OAuthSignatureMethod_PLAINTEXT`, `OAuthSignatureMethod_RSA_SHA1`)
 * `docker/Dockerfilephp82`, `Dockerfilephp83`, `Dockerfilephp84` removed (replaced by `Dockerfilephp85`)
+
+### Fixed 8.0.0
+
+* Light sidebar can scroll to reach its bottom entries on short screens
 
 ## Ampache 7.10.0
 

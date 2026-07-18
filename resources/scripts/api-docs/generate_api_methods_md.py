@@ -1,0 +1,317 @@
+#!/usr/bin/env python3
+"""Enrich the response sections of docs/API-JSON-methods.md and
+docs/API-XML-methods.md with per-field tables generated from the response
+schemas in docs/openapi.json.
+
+For every ``### <action>`` method whose GET 200 response has been wired to a
+``$ref`` schema (see generate_openapi_schemas.py), this replaces ONLY the block
+between the ``* return`` marker and the ``* throws`` marker with a
+``Field | Type | Nullable | Optional | Notes`` table describing exactly what the
+endpoint returns and which fields are optional / nullable. The block is wrapped
+in ``<!-- GENERATED:RESPONSE ... -->`` anchors and regenerated deterministically,
+so re-runs are idempotent.
+
+The hand-written input-parameter tables, prose, ``* throws`` blocks and
+``[Example]`` links are left untouched. Actions whose response has no schema yet
+are skipped (so MD coverage grows automatically as more schemas are added).
+
+XML method tables are derived from the same JSON schema for now (the field set is
+identical; only serialisation differs) until Xml8_Data carries its own docblocks.
+
+Usage:
+    python resources/scripts/api-docs/generate_api_methods_md.py [--check]
+"""
+from __future__ import annotations
+
+import argparse
+import json
+import re
+import sys
+from pathlib import Path
+
+import format_md_tables
+
+REPO_ROOT = Path(__file__).resolve().parents[3]
+OPENAPI = REPO_ROOT / "docs" / "openapi.json"
+JSON_MD = REPO_ROOT / "docs" / "API-JSON-methods.md"
+XML_MD = REPO_ROOT / "docs" / "API-XML-methods.md"
+
+BEGIN = "<!-- GENERATED:RESPONSE:BEGIN -->"
+END = "<!-- GENERATED:RESPONSE:END -->"
+
+_ACTION_RE = re.compile(r"action=([A-Za-z0-9_]+)")
+
+# schema name -> MD method anchor (a `### <action>` heading, GitHub-slugged) that
+# documents that schema, so ref names in tables can link to it. Populated in main.
+SCHEMA_ANCHOR: dict[str, str] = {}
+
+
+# ---------------------------------------------------------------------------
+# openapi helpers
+# ---------------------------------------------------------------------------
+
+
+def load_spec() -> dict:
+    return json.loads(OPENAPI.read_text(encoding="utf-8"))
+
+
+def resolve_ref(spec: dict, ref: str) -> dict:
+    node = spec
+    for part in ref.lstrip("#/").split("/"):
+        node = node[part.replace("~1", "/").replace("~0", "~")]
+    return node
+
+
+def action_to_schema_ref(spec: dict) -> dict[str, str]:
+    """Map RPC action -> the $ref set on its GET 200 response (only where one
+    exists and points into components/schemas)."""
+    out: dict[str, str] = {}
+    for path, rpc in spec.get("x-rpc-mappings", {}).items():
+        match = _ACTION_RE.search(rpc)
+        if not match:
+            continue
+        op = spec.get("paths", {}).get(path, {}).get("get")
+        if not op:
+            continue
+        schema = (
+            op.get("responses", {})
+            .get("200", {})
+            .get("content", {})
+            .get("application/json", {})
+            .get("schema", {})
+        )
+        ref = schema.get("$ref", "")
+        if ref.startswith("#/components/schemas/"):
+            out[match.group(1)] = ref
+    return out
+
+
+# ---------------------------------------------------------------------------
+# schema -> markdown
+# ---------------------------------------------------------------------------
+
+
+def ref_name(ref: str) -> str:
+    return ref.rsplit("/", 1)[-1]
+
+
+def link_ref(name: str) -> str:
+    """Render a schema name as a link to the method that documents it, or as
+    inline code when no such method exists."""
+    anchor = SCHEMA_ANCHOR.get(name)
+    return f"[{name}](#{anchor})" if anchor else f"`{name}`"
+
+
+def type_str(schema: dict) -> str:
+    if "$ref" in schema:
+        return link_ref(ref_name(schema["$ref"]))
+    if "oneOf" in schema:
+        return " \\| ".join(type_str(s) for s in schema["oneOf"])
+    kind = schema.get("type")
+    if kind == "array":
+        return f"array&lt;{type_str(schema.get('items', {}))}&gt;"
+    if kind == "object":
+        ap = schema.get("additionalProperties")
+        if isinstance(ap, dict):
+            return f"object&lt;string, {type_str(ap)}&gt;"
+        return "object"
+    return kind or "mixed"
+
+
+def notes_for(schema: dict) -> str:
+    """Compact one-level shape hint for inline objects / arrays of objects."""
+    target = schema
+    if schema.get("type") == "array":
+        target = schema.get("items", {})
+    if "$ref" in target:
+        return f"see {link_ref(ref_name(target['$ref']))} fields"
+    if target.get("type") == "object" and "properties" in target:
+        return "`{" + ", ".join(target["properties"]) + "}`"
+    return ""
+
+
+def yn(flag: bool) -> str:
+    return "YES" if flag else "NO"
+
+
+def object_table(obj: dict) -> list[str]:
+    required = set(obj.get("required", []))
+    rows = [
+        "| Field | Type | Nullable | Optional | Notes |",
+        "|-------|------|:--------:|:--------:|-------|",
+    ]
+    for field, sub in obj.get("properties", {}).items():
+        nullable = bool(sub.get("nullable"))
+        optional = field not in required
+        rows.append(
+            f"| {field} | {type_str(sub)} | {yn(nullable)} | {yn(optional)} | {notes_for(sub)} |"
+        )
+    return rows
+
+
+# Envelope metadata fields that wrap a list payload (standard, bare and browse
+# envelopes). A wrapper is an object whose only non-meta property is the array.
+_ENVELOPE_META = {"total_count", "md5", "catalog_id", "parent_id", "parent_type", "child_type"}
+
+
+def describe_freeform(schema: dict) -> list[str]:
+    """Render a schema that has no fixed properties (a free-form/polymorphic map)
+    as prose rather than an empty table."""
+    lines: list[str] = []
+    desc = schema.get("description")
+    if desc:
+        lines.append(desc)
+        lines.append("")
+    ap = schema.get("additionalProperties")
+    if isinstance(ap, dict):
+        lines.append(f"Open map — each value is: {type_str(ap)}.")
+    elif not lines:
+        lines.append("Free-form object.")
+    return lines
+
+
+def is_list_envelope(schema: dict) -> tuple[bool, str | None]:
+    """Detect a list envelope ({...meta, <key>: [items]}) and return the item
+    array's property key. Handles standard, bare and browse envelopes."""
+    props = schema.get("properties", {})
+    data = [(k, v) for k, v in props.items() if k not in _ENVELOPE_META]
+    if len(data) == 1 and data[0][1].get("type") == "array":
+        return True, data[0][0]
+    return False, None
+
+
+# Xml8_Data emits XML by string concatenation (no array intermediate to document),
+# so the XML field list is derived from the JSON data model. This note keeps the XML
+# docs honest about how that model maps onto XML structure.
+XML_NOTE = [
+    "> **XML structure:** serialised inside a `<root>` element. Each object is an element",
+    "> (e.g. `<song>`) with `id` as an *attribute*; nested objects are child elements (also",
+    "> carrying an `id` attribute), array/list fields are emitted as *repeated* elements,",
+    "> booleans are `0`/`1`, and text values are wrapped in CDATA. Field names match the JSON",
+    "> model below, but element nesting/repetition differs from the JSON representation.",
+]
+
+
+def render_body(spec: dict, ref: str, fmt: str) -> tuple[str, list[str]]:
+    """Return (marker, body_lines) for the response block. ``fmt`` is 'json' or
+    'xml' (controls the `* return` marker wording and adds an XML-structure note)."""
+    schema = resolve_ref(spec, ref)
+    is_list, key = is_list_envelope(schema)
+    lines: list[str] = []
+    if fmt == "xml":
+        lines.extend(XML_NOTE)
+        lines.append("")
+    if is_list and key is not None:
+        marker = "* return array" if fmt == "json" else "* return"
+        lines.append(f"Returns a `{key}` list.")
+        lines.append("")
+        lines.extend(object_table(schema))
+        item = schema["properties"][key].get("items", {})
+        if "$ref" in item:
+            item_name = ref_name(item["$ref"])
+            item_schema = resolve_ref(spec, item["$ref"])
+            lines.append("")
+            lines.append(f"Each `{key}` entry ({link_ref(item_name)}):")
+            lines.append("")
+            lines.extend(object_table(item_schema))
+    elif schema.get("properties"):
+        marker = "* return object" if fmt == "json" else "* return"
+        lines.append("Returns a single object.")
+        lines.append("")
+        lines.extend(object_table(schema))
+    else:
+        marker = "* return object" if fmt == "json" else "* return"
+        lines.extend(describe_freeform(schema))
+    return marker, lines
+
+
+# ---------------------------------------------------------------------------
+# markdown surgery
+# ---------------------------------------------------------------------------
+
+_HEADING_RE = re.compile(r"^### (\S+)\s*$")
+
+
+def replace_return_block(section: str, marker: str, body: list[str]) -> str | None:
+    """Within one method section, replace the region from the `* return` marker
+    up to (excluding) the `* throws` marker with the generated block. Returns the
+    new section, or None if the anchors/markers were not found."""
+    lines = section.splitlines()
+    start = next((i for i, l in enumerate(lines) if l.strip().startswith("* return")), None)
+    throws = next((i for i, l in enumerate(lines) if l.strip().startswith("* throws")), None)
+    if start is None or throws is None or throws < start:
+        return None
+    block = [marker, "", BEGIN, *body, END, ""]
+    new_lines = lines[:start] + block + lines[throws:]
+    return "\n".join(new_lines) + ("\n" if section.endswith("\n") else "")
+
+
+def enrich(text: str, spec: dict, action_ref: dict[str, str], fmt: str) -> tuple[str, list[str]]:
+    """Split the file into `### ` sections and rewrite the return block of any
+    section whose action has a schema. Returns (new_text, touched_actions)."""
+    parts = re.split(r"(?m)^(### \S+\s*)$", text)
+    # parts = [pre, heading1, body1, heading2, body2, ...]
+    touched: list[str] = []
+    out = [parts[0]]
+    for i in range(1, len(parts), 2):
+        heading = parts[i]
+        body = parts[i + 1] if i + 1 < len(parts) else ""
+        action = heading[4:].strip()
+        ref = action_ref.get(action)
+        if ref:
+            marker, block = render_body(spec, ref, fmt)
+            new_body = replace_return_block(body, marker, block)
+            if new_body is not None:
+                body = new_body
+                touched.append(action)
+        out.append(heading)
+        out.append(body)
+    return "".join(out), touched
+
+
+def build_schema_anchors(action_ref: dict[str, str]) -> dict[str, str]:
+    """First action that returns a given schema wins as its documentation anchor
+    (e.g. AlbumObject -> album, SongObject -> song). GitHub slugs a `### album`
+    heading to `#album`, and actions are already lowercase snake_case."""
+    anchors: dict[str, str] = {}
+    for action, ref in action_ref.items():
+        name = ref_name(ref)
+        anchors.setdefault(name, action)
+    return anchors
+
+
+def process_file(path: Path, spec: dict, action_ref: dict[str, str], fmt: str, check: bool) -> bool:
+    original = path.read_text(encoding="utf-8")
+    updated, touched = enrich(original, spec, action_ref, fmt)
+    # Lint/align all GFM tables so the generated tables match the hand-written style.
+    updated = format_md_tables.format_tables(updated)
+    changed = updated != original
+    rel = path.relative_to(REPO_ROOT)
+    print(f"{rel}: {'CHANGED' if changed else 'up to date'} ({len(touched)} methods: {', '.join(touched) or '-'})")
+    if changed and not check:
+        path.write_text(updated, encoding="utf-8", newline="\n")
+    return changed
+
+
+def main() -> int:
+    ap = argparse.ArgumentParser(description=__doc__)
+    ap.add_argument("--check", action="store_true", help="exit 1 if a file would change")
+    args = ap.parse_args()
+
+    spec = load_spec()
+    action_ref = action_to_schema_ref(spec)
+    SCHEMA_ANCHOR.clear()
+    SCHEMA_ANCHOR.update(build_schema_anchors(action_ref))
+    print(f"actions with response schemas: {', '.join(sorted(action_ref)) or '-'}")
+
+    changed = False
+    changed |= process_file(JSON_MD, spec, action_ref, "json", args.check)
+    changed |= process_file(XML_MD, spec, action_ref, "xml", args.check)
+
+    if args.check:
+        return 1 if changed else 0
+    return 0
+
+
+if __name__ == "__main__":
+    sys.exit(main())
