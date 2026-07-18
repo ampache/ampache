@@ -26,6 +26,7 @@ namespace Ampache\Module\System\Update;
 
 use Ahc\Cli\IO\Interactor;
 use Ampache\Config\ConfigContainerInterface;
+use Ampache\Module\Authorization\AccessLevelEnum;
 use Ampache\Module\Database\DatabaseConnectionInterface;
 use Ampache\Module\Database\Exception\DatabaseException;
 use Ampache\Module\System\Dba;
@@ -86,8 +87,19 @@ final class UpdateRunner implements UpdateRunnerInterface
         // Prevent the script from timing out, which could be bad
         set_time_limit(0);
 
+        if ($currentVersion >= 800011) {
+            // Migration\V8\Migration800011 (restore the preferences deleted by the migration)
+            if (
+                !Preference::insert('webplayer_flash', 'Authorize Flash Web Player', '1', AccessLevelEnum::USER->value, 'boolean', 'streaming', 'player') ||
+                !Preference::insert('webplayer_aurora', 'Authorize JavaScript decoder (Aurora.js) in Web Player', '1', AccessLevelEnum::USER->value, 'boolean', 'streaming', 'player') ||
+                !Preference::insert('use_play2', 'Use an alternative playback action for streaming if you have issues with playing music', '0', AccessLevelEnum::USER->value, 'boolean', 'streaming', 'player')
+            ) {
+                throw new UpdateFailedException();
+            }
+        }
+
         if ($currentVersion >= 800008) {
-            // Migration\V8\Migration800008
+            // Migration\V8\Migration800010 (`folder_map` was created by Migration800008 in older develop8 builds)
             if (
                 !Dba::write("DROP TABLE IF EXISTS `folder_map`;")
             ) {

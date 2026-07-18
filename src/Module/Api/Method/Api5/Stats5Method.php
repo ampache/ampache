@@ -82,7 +82,7 @@ final class Stats5Method
         if (!Api5::check_parameter($input, ['type'], self::ACTION)) {
             return false;
         }
-        $type   = (string) $input['type'];
+        $type   = strtolower((string) $input['type']);
         $offset = (int) ($input['offset'] ?? 0);
         $limit  = (int) ($input['limit'] ?? 0);
         if ($limit < 1) {
@@ -100,25 +100,31 @@ final class Stats5Method
             return false;
         }
         // confirm the correct data
-        if (!in_array(strtolower($type), ['song', 'album', 'artist', 'video', 'playlist', 'podcast', 'podcast_episode'])) {
+        if (!in_array($type, ['song', 'album', 'artist', 'video', 'playlist', 'podcast', 'podcast_episode'])) {
             /* HINT: Requested object string/id/type ("album", "myusername", "some song title", 1298376) */
             Api5::error(ErrorCodeEnum::BAD_REQUEST, sprintf(T_('Bad Request: %s'), $type), self::ACTION, 'type', $input['api_format']);
 
             return false;
         }
 
-        $user_id = $user->id;
         // override your user if you're looking at others
         if (array_key_exists('username', $input) && User::get_from_username($input['username'])) {
-            $user    = User::get_from_username($input['username']);
-            $user_id = $user->id;
+            $user = User::get_from_username($input['username']);
         } elseif (array_key_exists('user_id', $input)) {
-            $userTwo = new User($user_id);
+            $userTwo = new User((int) $input['user_id']);
             if (!$userTwo->isNew()) {
-                $user_id = (int) $input['user_id'];
-                $user    = new User($user_id);
+                $user = $userTwo;
             }
         }
+
+        if ($user->isNew()) {
+            /* HINT: Requested object string/id/type ("album", "myusername", "some song title", 1298376) */
+            Api5::error(ErrorCodeEnum::BAD_REQUEST, sprintf(T_('Bad Request: %s'), 'user'), self::ACTION, 'type', $input['api_format']);
+
+            return false;
+        }
+
+        $user_id = $user->id;
 
         $results = [];
         $filter  = $input['filter'] ?? '';

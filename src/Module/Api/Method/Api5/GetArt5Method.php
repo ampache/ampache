@@ -70,12 +70,13 @@ final class GetArt5Method
             return false;
         }
         $object_id = (int) $input['id'];
-        $type      = (string) $input['type'];
+        $type      = strtolower((string) $input['type']);
         $size      = (string) ($input['size'] ?? 'original');
         $fallback  = (array_key_exists('fallback', $input) && (int) $input['fallback'] == 1);
 
         // confirm the correct data
-        if (!in_array(strtolower($type), ['song', 'album', 'artist', 'playlist', 'search', 'podcast'])) {
+        if (!in_array($type, ['song', 'album', 'artist', 'playlist', 'search', 'podcast'])) {
+            /* HINT: Requested object string/id/type ("album", "myusername", "some song title", 1298376) */
             Api5::error(ErrorCodeEnum::BAD_REQUEST, sprintf(T_('Bad Request: %s'), $type), self::ACTION, 'type', $input['api_format']);
 
             return false;
@@ -92,18 +93,30 @@ final class GetArt5Method
         } elseif ($type == 'search') {
             $smartlist = new Search($object_id, 'song', $user);
             $listitems = $smartlist->get_items();
-            $item      = $listitems[array_rand($listitems)];
-            $art       = new Art($item['object_id'], $item['object_type']->value);
-            if (!Art::has_db($object_id, 'song')) {
+            if (empty($listitems)) {
+                Api5::empty('art', $input['api_format']);
+
+                return false;
+            }
+            $item = $listitems[array_rand($listitems)];
+            // check the art of the item we picked, not the smartlist it came from
+            if (Art::has_db($item['object_id'], $item['object_type']->value)) {
+                $art = new Art($item['object_id'], $item['object_type']->value);
+            } else {
                 $song = new Song($item['object_id']);
                 $art  = new Art($song->album, 'album');
             }
         } elseif ($type == 'playlist' && !Art::has_db($object_id, $type)) {
             $playlist  = new Playlist($object_id);
             $listitems = $playlist->get_items();
-            $item      = $listitems[array_rand($listitems)];
-            $song      = new Song($item['object_id']);
-            $art       = new Art($song->album, 'album');
+            if (empty($listitems)) {
+                Api5::empty('art', $input['api_format']);
+
+                return false;
+            }
+            $item = $listitems[array_rand($listitems)];
+            $song = new Song($item['object_id']);
+            $art  = new Art($song->album, 'album');
         }
 
         Session::extend($input['auth'], AccessTypeEnum::API->value);

@@ -72,8 +72,8 @@ final class BookmarkCreate5Method
         if (!Api5::check_parameter($input, ['filter', 'type', 'position'], self::ACTION)) {
             return false;
         }
-        $object_id = $input['filter'];
-        $type      = $input['type'];
+        $object_id = (string) $input['filter'];
+        $type      = strtolower((string) $input['type']);
         $position  = $input['position'];
         $comment   = (isset($input['client'])) ? scrub_in((string) $input['client']) : 'AmpacheAPI';
         $time      = (isset($input['date'])) ? (int) $input['date'] : time();
@@ -83,7 +83,7 @@ final class BookmarkCreate5Method
             return false;
         }
         // confirm the correct data
-        if (!in_array(strtolower($type), ['song', 'video', 'podcast_episode'])) {
+        if (!in_array($type, ['song', 'video', 'podcast_episode'])) {
             /* HINT: Requested object string/id/type ("album", "myusername", "some song title", 1298376) */
             Api5::error(ErrorCodeEnum::BAD_REQUEST, sprintf(T_('Bad Request: %s'), $type), self::ACTION, 'type', $input['api_format']);
 
@@ -99,7 +99,7 @@ final class BookmarkCreate5Method
         }
 
         /** @var Song|Podcast_Episode|Video $item */
-        $item = new $className($object_id);
+        $item = new $className((int) $object_id);
         if ($item->isNew()) {
             /* HINT: Requested object string/id/type ("album", "myusername", "some song title", 1298376) */
             Api5::error(ErrorCodeEnum::NOT_FOUND, sprintf(T_('Not Found: %s'), $object_id), self::ACTION, 'filter', $input['api_format']);

@@ -30,6 +30,7 @@ use Ampache\Module\Api\Api6;
 use Ampache\Module\Api\Exception\ErrorCodeEnum;
 use Ampache\Module\Api\Json6_Data;
 use Ampache\Module\Api\Xml6_Data;
+use Ampache\Repository\Model\Share;
 use Ampache\Repository\Model\User;
 
 /**
@@ -64,7 +65,15 @@ final class Share6Method
         if (!Api6::check_parameter($input, ['filter'], self::ACTION)) {
             return false;
         }
-        $results = [(int) $input['filter']];
+        $object_id = (int) $input['filter'];
+        $share     = new Share($object_id);
+        if ($share->isNew()) {
+            /* HINT: Requested object string/id/type ("album", "myusername", "some song title", 1298376) */
+            Api6::error(ErrorCodeEnum::NOT_FOUND, sprintf('Not Found: %s', $object_id), self::ACTION, 'filter', $input['api_format']);
+
+            return false;
+        }
+        $results = [$object_id];
 
         ob_end_clean();
         switch ($input['api_format']) {

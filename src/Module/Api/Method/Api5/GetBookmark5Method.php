@@ -92,7 +92,7 @@ final class GetBookmark5Method
 
         /** @var Song|Podcast_Episode|Video $item */
         $item = new $className($object_id);
-        if (!$item->isNew()) {
+        if ($item->isNew()) {
             /* HINT: Requested object string/id/type ("album", "myusername", "some song title", 1298376) */
             Api5::error(ErrorCodeEnum::NOT_FOUND, sprintf(T_('Not Found: %s'), $object_id), self::ACTION, 'filter', $input['api_format']);
 

@@ -96,6 +96,11 @@ interface AlbumRepositoryInterface
     public function collectGarbage(): void;
 
     /**
+     * @param int[] $albumIds
+     */
+    public function collectGarbageForAlbums(array $albumIds): void;
+
+    /**
      * gets the album ids that this artist is a part of
      * Return Album or AlbumDisk based on album_group preference
      *

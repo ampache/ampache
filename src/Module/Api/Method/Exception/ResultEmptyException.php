@@ -29,8 +29,26 @@ use Ampache\Module\Api\Exception\ErrorCodeEnum;
 
 final class ResultEmptyException extends ApiMethodException
 {
+    /**
+     * most lookups fail on the object the `filter` asked for, so that is the type unless told otherwise
+     */
+    private const DEFAULT_TYPE = 'filter';
+
     /** @var int $code */
     protected $code = ErrorCodeEnum::NOT_FOUND;
 
-    protected string $type = 'empty';
+    protected string $type = self::DEFAULT_TYPE;
+
+    /**
+     * Takes the identifier that could not be resolved, and which request parameter it belonged to
+     *
+     * @param string $identifier the object id, name or path that was not found
+     * @param string $type the parameter the lookup failed on, e.g. 'filter', 'id', 'catalog'
+     */
+    public function __construct(string $identifier, string $type = self::DEFAULT_TYPE)
+    {
+        parent::__construct(sprintf('Not Found: %s', $identifier));
+
+        $this->type = $type;
+    }
 }

@@ -37,6 +37,12 @@ interface Media
     public function getId(): int;
 
     /**
+     * isNew
+     * Whether the object failed to load from the database
+     */
+    public function isNew(): bool;
+
+    /**
      * get_stream_types
      *
      * Returns an array of strings

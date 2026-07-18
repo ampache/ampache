@@ -160,6 +160,8 @@ final class AdvancedSearch6Method
                     case 'album':
                         echo Xml6_Data::albums($results, [], $user, $input['auth']);
                         break;
+                    case 'song_artist':
+                    case 'album_artist':
                     case 'artist':
                         echo Xml6_Data::artists($results, [], $user, $input['auth']);
                         break;

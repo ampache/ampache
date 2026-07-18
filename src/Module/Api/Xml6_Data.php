@@ -188,6 +188,9 @@ class Xml6_Data
      */
     public static function bookmarks(array $bookmarks, string $auth, bool $include = false): string
     {
+        self::$count = self::$count ?: count($bookmarks);
+        $bookmarks   = Api::filter_objects($bookmarks, self::$count, self::$offset, self::$limit);
+
         $bookmarkRepository = self::getBookmarkRepository();
 
         $string = "";

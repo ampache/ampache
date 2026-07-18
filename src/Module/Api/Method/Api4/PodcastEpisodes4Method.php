@@ -26,6 +26,7 @@ declare(strict_types=1);
 namespace Ampache\Module\Api\Method\Api4;
 
 use Ampache\Config\AmpConfig;
+use Ampache\Module\Api\Api;
 use Ampache\Module\Api\Api4;
 use Ampache\Module\Api\Json4_Data;
 use Ampache\Module\Api\Xml4_Data;
@@ -80,7 +81,14 @@ final class PodcastEpisodes4Method
             return false;
         }
 
-        $results = $podcast->getEpisodeIds();
+        $browse = Api::getBrowse($user);
+        $browse->set_type('podcast_episode');
+        $browse->set_sort_order(html_entity_decode((string) ($input['sort'] ?? '')), ['pubdate', 'DESC']);
+        $browse->set_filter('podcast', $podcast_id);
+
+        $browse->set_conditions(html_entity_decode((string) ($input['cond'] ?? '')));
+
+        $results = $browse->get_objects();
 
         ob_end_clean();
         switch ($input['api_format']) {
