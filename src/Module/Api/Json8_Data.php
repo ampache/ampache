@@ -680,12 +680,13 @@ class Json8_Data
      * This takes a name array of objects and return the data in JSON browse object
      *
      * @param array<int|string>|array<int, array{id: int|string, name: string}> $objects Array of object_ids ["id" => 1, "name" => 'Artist Name']
+     * @return string JSON Object "browse"
      */
     public static function browses(array $objects, string $parent_type, string $child_type, ?int $parent_id = null, ?int $catalog_id = null): string
     {
         self::$count = self::$count ?: count($objects);
         $md5         = md5(serialize($objects));
-        $objects     = Api::filter_objects($objects, self::$count, self::$offset, self::$limit);
+        $JSON        = self::browses_array($objects);
 
         $output = [
             "total_count" => self::$count,
@@ -694,7 +695,28 @@ class Json8_Data
             "parent_id" => (string) $parent_id,
             "parent_type" => $parent_type,
             "child_type" => $child_type,
+            "browse" => $JSON,
         ];
+
+        return json_encode($output, JSON_PRETTY_PRINT) ?: '';
+    }
+
+    /**
+     * browses_array
+     *
+     * @param array<int|string>|array<int, array{id: int|string, name: string}> $objects Array of object_ids ["id" => 1, "name" => 'Artist Name']
+     * @return array<int, array{
+     *     id: string,
+     *     name: string,
+     *     prefix: null|string,
+     *     basename: string
+     * }>
+     */
+    public static function browses_array(array $objects): array
+    {
+        self::$count = self::$count ?: count($objects);
+        $objects     = Api::filter_objects($objects, self::$count, self::$offset, self::$limit);
+
         $pattern = '/^(' . implode('\\s|', explode('|', AmpConfig::get('catalog_prefix_pattern', 'The|An|A|Die|Das|Ein|Eine|Les|Le|La'))) . '\\s)(.*)/i';
 
         $JSON = [];
@@ -709,9 +731,8 @@ class Json8_Data
                 "basename" => $basename
             ];
         }
-        $output["browse"] = $JSON;
 
-        return json_encode($output, JSON_PRETTY_PRINT) ?: '';
+        return $JSON;
     }
 
     /**
@@ -815,12 +836,76 @@ class Json8_Data
     {
         self::$count = self::$count ?: count($objects);
         $md5         = md5(serialize($objects));
-        $objects     = Api::filter_objects($objects, self::$count, self::$offset, self::$limit);
+        $JSON        = self::deleted_array($object_type, $objects);
 
         $output = [
             "total_count" => self::$count,
             "md5" => $md5,
         ];
+        $output["deleted_" . $object_type] = $JSON;
+
+        return json_encode($output, JSON_PRETTY_PRINT) ?: '';
+    }
+
+    /**
+     * deleted_array
+     *
+     * The element shape depends on $object_type: deleted songs carry
+     * update_time/album/artist, deleted podcast episodes carry podcast, deleted
+     * videos carry neither.
+     *
+     * @param string $object_type ('song', 'podcast_episode', 'video')
+     * @param array<int, array{
+     *     id: int,
+     *     addition_time: int,
+     *     delete_time: int,
+     *     title: string,
+     *     file: string,
+     *     catalog: int,
+     *     total_count: int,
+     *     total_skip: int,
+     *     update_time?: int,
+     *     album?: int,
+     *     artist?: int,
+     *     podcast?: int,
+     * }> $objects deleted object list
+     * @return array<int, array{
+     *     id: string,
+     *     addition_time: int,
+     *     delete_time: int,
+     *     title: string,
+     *     file: string,
+     *     catalog: string,
+     *     total_count: int,
+     *     total_skip: int,
+     *     update_time: int,
+     *     album: string,
+     *     artist: string
+     * }|array{
+     *     id: string,
+     *     addition_time: int,
+     *     delete_time: int,
+     *     title: string,
+     *     file: string,
+     *     catalog: string,
+     *     total_count: int,
+     *     total_skip: int,
+     *     podcast: string
+     * }|array{
+     *     id: string,
+     *     addition_time: int,
+     *     delete_time: int,
+     *     title: string,
+     *     file: string,
+     *     catalog: string,
+     *     total_count: int,
+     *     total_skip: int
+     * }>
+     */
+    public static function deleted_array(string $object_type, array $objects): array
+    {
+        self::$count = self::$count ?: count($objects);
+        $objects     = Api::filter_objects($objects, self::$count, self::$offset, self::$limit);
 
         $JSON = [];
         foreach ($objects as $row) {
@@ -873,9 +958,8 @@ class Json8_Data
                     $JSON[] = $objArray;
             }
         }
-        $output["deleted_" . $object_type] = $JSON;
 
-        return json_encode($output, JSON_PRETTY_PRINT) ?: '';
+        return $JSON;
     }
 
     /**
@@ -1510,17 +1594,38 @@ class Json8_Data
      * This takes a name array of objects and return the data in JSON list object
      *
      * @param array{id: int|string, name: string}[] $objects Array of object_ids ["id" => 1, "name" => 'Artist Name']
+     * @return string JSON Object "list"
      */
     public static function lists(array $objects): string
     {
         self::$count = self::$count ?: count($objects);
         $md5         = md5(serialize($objects));
-        $objects     = Api::filter_objects($objects, self::$count, self::$offset, self::$limit);
+        $JSON        = self::lists_array($objects);
 
         $output = [
             "total_count" => self::$count,
             "md5" => $md5,
+            "list" => $JSON,
         ];
+
+        return json_encode($output, JSON_PRETTY_PRINT) ?: '';
+    }
+
+    /**
+     * lists_array
+     *
+     * @param array{id: int|string, name: string}[] $objects Array of object_ids ["id" => 1, "name" => 'Artist Name']
+     * @return array<int, array{
+     *     id: string,
+     *     name: string,
+     *     prefix: null|string,
+     *     basename: string
+     * }>
+     */
+    public static function lists_array(array $objects): array
+    {
+        self::$count = self::$count ?: count($objects);
+        $objects     = Api::filter_objects($objects, self::$count, self::$offset, self::$limit);
 
         $JSON    = [];
         $pattern = '/^(' . implode('\\s|', explode('|', AmpConfig::get('catalog_prefix_pattern', 'The|An|A|Die|Das|Ein|Eine|Les|Le|La'))) . '\\s)(.*)/i';
@@ -1535,9 +1640,8 @@ class Json8_Data
                 "basename" => $basename,
             ];
         }
-        $output["list"] = $JSON;
 
-        return json_encode($output, JSON_PRETTY_PRINT) ?: '';
+        return $JSON;
     }
 
     /**
@@ -1619,6 +1723,30 @@ class Json8_Data
      */
     public static function now_playing(array $results): string
     {
+        $output = ["now_playing" => self::now_playing_array($results)];
+
+        return json_encode($output, JSON_PRETTY_PRINT) ?: '';
+    }
+
+    /**
+     * now_playing_array
+     *
+     * @param array<int, array{
+     *     media: library_item,
+     *     client: User,
+     *     agent: string,
+     *     expire: int
+     * }> $results
+     * @return array<int, array{
+     *     id: string,
+     *     type: string,
+     *     client: string,
+     *     expire: int,
+     *     user: array{id: string, username: null|string}
+     * }>
+     */
+    public static function now_playing_array(array $results): array
+    {
         $JSON = [];
         foreach ($results as $now_playing) {
             $user = $now_playing['client'];
@@ -1638,9 +1766,8 @@ class Json8_Data
                 ]
             ];
         }
-        $output = ["now_playing" => $JSON];
 
-        return json_encode($output, JSON_PRETTY_PRINT) ?: '';
+        return $JSON;
     }
 
     /**
@@ -2187,8 +2314,30 @@ class Json8_Data
      *
      * @param array<Shoutbox> $shouts Shout id list
      * @param bool $object (whether to return as a named object array or regular array)
+     * @return string JSON Object "shout"
      */
     public static function shouts(array $shouts, bool $object = true): string
+    {
+        $JSON   = self::shouts_array($shouts);
+        $output = ($object) ? ["shout" => $JSON] : $JSON[0] ?? [];
+
+        return json_encode($output, JSON_PRETTY_PRINT) ?: '';
+    }
+
+    /**
+     * shouts_array
+     *
+     * @param array<Shoutbox> $shouts Shout id list
+     * @return array<int, array{
+     *     id: string,
+     *     date: int,
+     *     text: string,
+     *     object_type: LibraryItemEnum,
+     *     object_id: int,
+     *     user: array{id: string, username: string}
+     * }>
+     */
+    public static function shouts_array(array $shouts): array
     {
         $JSON = [];
 
@@ -2207,9 +2356,8 @@ class Json8_Data
                 ]
             ];
         }
-        $output = ($object) ? ["shout" => $JSON] : $JSON[0] ?? [];
 
-        return json_encode($output, JSON_PRETTY_PRINT) ?: '';
+        return $JSON;
     }
 
     /**
@@ -2659,8 +2807,30 @@ class Json8_Data
      *
      * @param int[] $activities Activity id list
      * @param bool $object (whether to return as a named object array or regular array)
+     * @return string JSON Object "activity"
      */
     public static function timeline(array $activities, bool $object = true): string
+    {
+        $JSON   = self::timeline_array($activities);
+        $output = ($object) ? ["activity" => $JSON] : $JSON[0] ?? [];
+
+        return json_encode($output, JSON_PRETTY_PRINT) ?: '';
+    }
+
+    /**
+     * timeline_array
+     *
+     * @param int[] $activities Activity id list
+     * @return array<int, array{
+     *     id: string,
+     *     date: int,
+     *     object_type: null|string,
+     *     object_id: string,
+     *     action: string,
+     *     user: array{id: string, username: null|string}
+     * }>
+     */
+    public static function timeline_array(array $activities): array
     {
         $JSON = [];
         foreach ($activities as $activity_id) {
@@ -2679,9 +2849,8 @@ class Json8_Data
             ];
             $JSON[] = $objArray;
         }
-        $output = ($object) ? ["activity" => $JSON] : $JSON[0] ?? [];
 
-        return json_encode($output, JSON_PRETTY_PRINT) ?: '';
+        return $JSON;
     }
 
     /**
