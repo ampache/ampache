@@ -763,6 +763,9 @@ class Xml4_Data
      */
     public static function users(array $objects): string
     {
+        self::$count = self::$count ?: count($objects);
+        $objects     = Api::filter_objects($objects, self::$count, self::$offset, self::$limit);
+
         $string = "<users>\n";
         foreach ($objects as $user_id) {
             $user = new User((int) $user_id);

@@ -4,6 +4,7 @@
 * text=auto
 
 *.neon eol=lf
+*.md eol=lf
 *.php eol=lf
 *.xhtml eol=lf
 
