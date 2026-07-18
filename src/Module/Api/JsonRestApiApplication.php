@@ -73,6 +73,18 @@ final class JsonRestApiApplication implements ApiApplicationInterface
             ? $this->apiHandler->normalizeType((string) $input['type'])
             : null;
 
+        // catalog task shortcuts (e.g. `POST catalogs/{catalog_id}/clean`) are aliases of
+        // catalog_action, so derive the task from the path before the action is normalized
+        $task = ($type === 'catalog' && isset($input['filter']))
+            ? match ((string) $input['action']) {
+                'add' => 'add_to_catalog',
+                'clean' => 'clean_catalog',
+                'update' => 'update_catalog',
+                'verify' => 'verify_catalog',
+                default => null,
+            }
+        : null;
+
         // normalize input actions (REST paths)
         $action = $this->apiHandler->normalizeAction((string) $input['action'], $type, isset($input['filter']));
         $action = match ($method) {
@@ -94,6 +106,10 @@ final class JsonRestApiApplication implements ApiApplicationInterface
 
         if ($type !== null && $type !== '') {
             $parameters['type'] = $type;
+        }
+
+        if ($task !== null) {
+            $parameters['task'] = $task;
         }
 
         $post = (in_array($method, ['POST', 'PATCH', 'PUT', 'DELETE']))

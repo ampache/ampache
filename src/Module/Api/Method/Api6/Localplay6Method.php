@@ -165,8 +165,8 @@ final class Localplay6Method
             case 'status':
                 $status = $localplay->status();
                 if (is_array($status) && $input['api_format'] == 'json') {
-                    $status['repeat'] = (bool) $status['repeat'];
-                    $status['random'] = (bool) $status['random'];
+                    $status['repeat'] = (bool) ($status['repeat'] ?? false);
+                    $status['random'] = (bool) ($status['random'] ?? false);
                 }
                 break;
             default:

@@ -127,7 +127,7 @@ final class CatalogAction6Method
 
             Api6::message('successfully started: ' . $task, $input['api_format']);
         } else {
-            Api6::error(ErrorCodeEnum::NOT_FOUND, 'Not Found', self::ACTION, 'catalog', $input['api_format']);
+            Api6::error(ErrorCodeEnum::NOT_FOUND, sprintf('Not Found: %s', $input['catalog']), self::ACTION, 'catalog', $input['api_format']);
 
             return false;
         }

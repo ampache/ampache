@@ -75,6 +75,7 @@ See: [Gregwar/Captcha](https://github.com/Gregwar/Captcha)
   * API6: Correct version bump handling
   * List responses were not sliced by `offset` and `limit` in some XML/JSON methods
   * Version and response inconsistencies between API versions
+  * Backport API3-6 fixes from Ampache8 (REST path resolution, `user_preference`, `localplay` and version rollover)
 
 ## Ampache 7.9.8
 
