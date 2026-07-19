@@ -2351,12 +2351,7 @@ a.option-list:hover {
         padding: 3px 10px;
         border-radius: 2px;
         background-image: none !important;
-        z-index: 10006;
-    }
-
-    /* With the nav drawer open, the loading pill drops below the backdrop (10000) so the drawer owns the screen. */
-    body.sidebar-open #ajax-loading {
-        z-index: 9999;
+        z-index: 9997;
     }
 
     /* Wide data tables scroll sideways inside their box so they don't widen the page. */
