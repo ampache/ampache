@@ -127,6 +127,7 @@ $replaygain = (AmpConfig::get('theme_color', 'dark') == 'light')
 
         var replaygainPersist = Cookies.get('replaygain');
 
+        if ($isShare === false) { ?>
         // Compact mode: default to collapsed on small screens, expanded on desktop.
         // A saved cookie (set by the toggle buttons) overrides the breakpoint default.
         var isSmallScreen = (window.innerWidth <= 768);
@@ -150,6 +151,7 @@ $replaygain = (AmpConfig::get('theme_color', 'dark') == 'light')
         if (nowPlayingHidden === 'true') {
             $('body').addClass('jp-nowplaying-hidden');
         }
+        <?php } ?>
 
         jplaylist = new jPlayerPlaylist({
             jPlayer: "#jquery_jplayer_1",
@@ -161,13 +163,13 @@ $replaygain = (AmpConfig::get('theme_color', 'dark') == 'light')
                 removeCount: <?php echo $removeCount; ?>, // shift the index back to keep x items BEFORE the current index
                 loopBack: false, // repeat a finished playlist from the start
                 shuffleOnLoop: false,
-                enableRemoveControls: true,
+                enableRemoveControls: <?php echo ($isShare) ? 'false' : 'true'; ?>, // a share visitor has no business editing the tracklist
                 displayTime: 'slow',
                 addTime: 'fast',
                 removeTime: 'fast',
                 shuffleTime: 'slow'
             },
-            preload: 'auto',
+            preload: '<?php echo ($isShare) ? 'none' : 'auto'; ?>',
             loop: <?php echo ($loop) ? 'true' : 'false'; ?>, // this is the jplayer loop status
             audioFullScreen: true,
             smoothPlayBar: true,
@@ -430,7 +432,9 @@ $shareStyle = ($isShare || $isRandom)
 
 if ($isVideo === false) {
     $containerClass = "jp-audio";
-    $playerClass    = "jp-jplayer-audio"; ?>
+    $playerClass    = "jp-jplayer-audio";
+    // .playing_info absolutely into the popup player's side gutter, so skip it entirely there.
+    if ($isShare === false) { ?>
     <div class="playing_info">
         <img class="playing_art" alt="" style="display: none;">
         <div class="playing_artist"></div>
@@ -441,7 +445,7 @@ if ($isVideo === false) {
             <div class="playing_actions"></div>
         </div>
     </div>
-    <?php
+    <?php }
 } else {
     $areaClass .= " jp-area-video";
     $containerClass = "jp-video jp-video-float jp-video-360p";
@@ -619,7 +623,7 @@ if ($isVideo === false) {
         </div>
     </div>
 </div>
-<?php if ($iframed === false || $isShare) {
+if ($iframed === false && $isShare === false) {
     require_once Ui::find_template('uberviz.inc.php');
 } ?>
 <?php if ($isShare === false) { ?>

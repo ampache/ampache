@@ -29,7 +29,7 @@ $highlight = ($isLight)
     ? 'blue'
     : 'orange';
 
-if ($iframed || $isShare) { ?>
+if ($iframed) { ?>
     <link rel="stylesheet" href="<?php echo $web_path . Ui::find_template('jplayer.midnight.black-iframed.css', true) . '?v=' . $cssBust('jplayer.midnight.black-iframed.css'); ?>" type="text/css">
 <?php } else { ?>
     <link rel="stylesheet" href="<?php echo $web_path . Ui::find_template('jplayer.midnight.black.css', true) . '?v=' . $cssBust('jplayer.midnight.black.css'); ?>" type="text/css">
