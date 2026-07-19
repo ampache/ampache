@@ -1,0 +1,33 @@
+{
+    "subsonic-response": {
+        "status": "ok",
+        "version": "1.16.1",
+        "randomSongs": {
+            "song": [
+                {
+                    "id": "300000001",
+                    "parent": "200000002",
+                    "title": "Pasadinha",
+                    "isDir": false,
+                    "isVideo": false,
+                    "type": "music",
+                    "albumId": "200000002",
+                    "album": "CC Affiliates Mixtape #1",
+                    "artistId": "100000003",
+                    "artist": "Mendes Brothers",
+                    "coverArt": "200000002",
+                    "duration": 266,
+                    "bitRate": 197,
+                    "userRating": 5,
+                    "track": 4,
+                    "year": 2015,
+                    "size": 7234398,
+                    "discNumber": 1,
+                    "suffix": "mp3",
+                    "contentType": "audio/mpeg",
+                    "path": "/media/music/Mendes Brothers - Pasadinha.mp3"
+                }
+            ]
+        }
+    }
+}

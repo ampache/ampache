@@ -77,7 +77,7 @@ final class Album4Method implements MethodInterface
     ): ResponseInterface {
         $objectId = $input['filter'] ?? null;
 
-        if ($objectId === null) {
+        if ($objectId === null || $objectId === '') {
             throw new RequestParamMissingException(
                 sprintf('Bad Request: %s', 'filter')
             );

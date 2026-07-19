@@ -343,7 +343,12 @@ class Api6
     public static function parameter_exists(array $input, array $parameters): bool|string
     {
         foreach ($parameters as $parameter) {
-            if (array_key_exists($parameter, $input)) {
+            if (
+                array_key_exists($parameter, $input)
+                && $input[$parameter] !== null
+                && $input[$parameter] !== ''
+                && $input[$parameter] !== []
+            ) {
                 continue;
             }
 

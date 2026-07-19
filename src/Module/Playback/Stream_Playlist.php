@@ -234,11 +234,11 @@ class Stream_Playlist
      * }> $media
      * @return list<Stream_Url>
      */
-    public static function media_to_urlarray(array $media, string $additional_params = ''): array
+    public static function media_to_urlarray(array $media, string $additional_params = '', ?User $user = null): array
     {
         $urls = [];
         foreach ($media as $medium) {
-            $surl = self::media_to_url($medium, $additional_params);
+            $surl = self::media_to_url($medium, $additional_params, 'web', $user);
             if ($surl != null) {
                 $urls[] = $surl;
             }
@@ -387,9 +387,9 @@ class Stream_Playlist
      *     custom_play_action?: string
      * }> $media
      */
-    public function add(array $media = [], string $additional_params = ''): void
+    public function add(array $media = [], string $additional_params = '', ?User $user = null): void
     {
-        $urls = self::media_to_urlarray($media, $additional_params);
+        $urls = self::media_to_urlarray($media, $additional_params, $user);
         $this->_add_urls($urls);
     }
 

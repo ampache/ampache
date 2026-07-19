@@ -1,0 +1,30 @@
+{
+    "subsonic-response": {
+        "status": "ok",
+        "version": "1.16.1",
+        "indexes": {
+            "index": [
+                {
+                    "name": "M",
+                    "artist": [
+                        {
+                            "id": "100000003",
+                            "name": "Mendes Brothers"
+                        }
+                    ]
+                },
+                {
+                    "name": "V",
+                    "artist": [
+                        {
+                            "id": "100000002",
+                            "name": "Various Artists"
+                        }
+                    ]
+                }
+            ],
+            "lastModified": 1784097304000,
+            "ignoredArticles": "The An A Die Das Ein Eine Les Le La"
+        }
+    }
+}

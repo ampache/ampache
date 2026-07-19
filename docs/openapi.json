@@ -229,16 +229,19 @@
             ]
           },
           "title": {
-            "type": "string"
+            "type": "string",
+            "nullable": true
           },
           "parent": {
             "type": "integer"
           },
           "path": {
-            "type": "string"
+            "type": "string",
+            "nullable": true
           },
           "art": {
-            "type": "string"
+            "type": "string",
+            "nullable": true
           },
           "has_art": {
             "type": "boolean"
@@ -247,7 +250,8 @@
             "type": "string"
           },
           "rating": {
-            "type": "integer"
+            "type": "integer",
+            "nullable": true
           },
           "averagerating": {
             "type": "integer",
@@ -275,13 +279,16 @@
             "type": "string"
           },
           "title": {
-            "type": "string"
+            "type": "string",
+            "nullable": true
           },
           "parent": {
-            "type": "integer"
+            "type": "integer",
+            "nullable": true
           },
           "path": {
-            "type": "string"
+            "type": "string",
+            "nullable": true
           },
           "catalog": {
             "type": "integer"
@@ -540,13 +547,16 @@
                 "type": "string"
               },
               "name": {
-                "type": "string"
+                "type": "string",
+                "nullable": true
               },
               "prefix": {
-                "type": "string"
+                "type": "string",
+                "nullable": true
               },
               "basename": {
-                "type": "string"
+                "type": "string",
+                "nullable": true
               }
             },
             "required": [
@@ -566,13 +576,16 @@
                   "type": "string"
                 },
                 "name": {
-                  "type": "string"
+                  "type": "string",
+                  "nullable": true
                 },
                 "prefix": {
-                  "type": "string"
+                  "type": "string",
+                  "nullable": true
                 },
                 "basename": {
-                  "type": "string"
+                  "type": "string",
+                  "nullable": true
                 }
               },
               "required": [
@@ -591,13 +604,16 @@
                 "type": "string"
               },
               "name": {
-                "type": "string"
+                "type": "string",
+                "nullable": true
               },
               "prefix": {
-                "type": "string"
+                "type": "string",
+                "nullable": true
               },
               "basename": {
-                "type": "string"
+                "type": "string",
+                "nullable": true
               }
             },
             "required": [
@@ -615,13 +631,16 @@
                 "type": "string"
               },
               "name": {
-                "type": "string"
+                "type": "string",
+                "nullable": true
               },
               "prefix": {
-                "type": "string"
+                "type": "string",
+                "nullable": true
               },
               "basename": {
-                "type": "string"
+                "type": "string",
+                "nullable": true
               }
             },
             "required": [
@@ -1308,8 +1327,7 @@
             "additionalProperties": false
           },
           "description": {
-            "type": "string",
-            "nullable": true
+            "type": "string"
           },
           "category": {
             "type": "string",
@@ -1324,8 +1342,7 @@
             "nullable": true
           },
           "website": {
-            "type": "string",
-            "nullable": true
+            "type": "string"
           },
           "pubdate": {
             "type": "string",
@@ -2370,14 +2387,16 @@
             "type": "string"
           },
           "name": {
-            "type": "string"
+            "type": "string",
+            "nullable": true
           },
           "prefix": {
             "type": "string",
             "nullable": true
           },
           "basename": {
-            "type": "string"
+            "type": "string",
+            "nullable": true
           }
         },
         "required": [
@@ -2395,14 +2414,16 @@
             "type": "string"
           },
           "name": {
-            "type": "string"
+            "type": "string",
+            "nullable": true
           },
           "prefix": {
             "type": "string",
             "nullable": true
           },
           "basename": {
-            "type": "string"
+            "type": "string",
+            "nullable": true
           }
         },
         "required": [
@@ -2435,8 +2456,7 @@
                 "type": "string"
               },
               "username": {
-                "type": "string",
-                "nullable": true
+                "type": "string"
               }
             },
             "required": [
@@ -2667,7 +2687,8 @@
             "type": "integer"
           },
           "title": {
-            "type": "string"
+            "type": "string",
+            "nullable": true
           },
           "file": {
             "type": "string"
@@ -2742,7 +2763,8 @@
             "type": "integer"
           },
           "title": {
-            "type": "string"
+            "type": "string",
+            "nullable": true
           },
           "file": {
             "type": "string"
@@ -2809,7 +2831,8 @@
             "type": "integer"
           },
           "title": {
-            "type": "string"
+            "type": "string",
+            "nullable": true
           },
           "file": {
             "type": "string"
@@ -9110,6 +9133,63 @@
       }
     },
     "/catalogs/{catalog_id}/folder": {
+      "get": {
+        "parameters": [
+          {
+            "in": "path",
+            "name": "catalog_id",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "in": "query",
+            "name": "folder",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "description": "add,clean,verify,remove (comma-separated allowed)",
+            "in": "query",
+            "name": "task",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SuccessResponse"
+                },
+                "examples": {
+                  "success": {
+                    "summary": "catalog folder",
+                    "value": {
+                      "success": "successfully started: clean for /mnt/files-music/ampache-test/music/Nofi_found/Nofi Devices LP"
+                    }
+                  }
+                }
+              }
+            },
+            "description": "Success"
+          },
+          "400": {
+            "$ref": "#/components/responses/ErrorResponse"
+          }
+        },
+        "summary": "Perform actions on a catalog folder",
+        "tags": [
+          "Catalogs"
+        ],
+        "description": "Resolves to the same `catalog_folder` action as POST; the REST layer only suffixes DELETE, PATCH and PUT."
+      },
       "post": {
         "parameters": [
           {

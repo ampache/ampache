@@ -53,7 +53,7 @@ final readonly class DemocraticPlaybackAjaxHandler implements AjaxHandlerInterfa
         // Switch on the actions
         switch ($action) {
             case 'delete_vote':
-                $democratic->remove_vote((int) $_REQUEST['row_id']);
+                $democratic->remove_vote((int) ($_REQUEST['row_id'] ?? 0));
                 $show_browse = true;
                 break;
             case 'add_vote':
@@ -68,11 +68,11 @@ final readonly class DemocraticPlaybackAjaxHandler implements AjaxHandlerInterfa
                 $show_browse = true;
                 break;
             case 'delete':
-                if ($user->has_access(AccessLevelEnum::MANAGER)) {
+                if (!$user->has_access(AccessLevelEnum::MANAGER)) {
                     return;
                 }
 
-                $democratic->delete_votes($_REQUEST['row_id']);
+                $democratic->delete_votes((int) ($_REQUEST['row_id'] ?? 0));
                 $show_browse = true;
                 break;
             case 'send_playlist':
@@ -80,7 +80,7 @@ final readonly class DemocraticPlaybackAjaxHandler implements AjaxHandlerInterfa
                     return;
                 }
 
-                $_SESSION['iframe']['target'] = AmpConfig::get_web_path('/client') . '/stream.php?action=democratic&democratic_id=' . scrub_out($_REQUEST['democratic_id']);
+                $_SESSION['iframe']['target'] = AmpConfig::get_web_path('/client') . '/stream.php?action=democratic&democratic_id=' . scrub_out($_REQUEST['democratic_id'] ?? '');
                 $results['reloader']          = '<script>' . Core::get_reloadutil() . '("' . $_SESSION['iframe']['target'] . '")</script>';
                 break;
             case 'clear_playlist':
@@ -88,7 +88,7 @@ final readonly class DemocraticPlaybackAjaxHandler implements AjaxHandlerInterfa
                     return;
                 }
 
-                $democratic = new Democratic((int) $_REQUEST['democratic_id']);
+                $democratic = new Democratic((int) ($_REQUEST['democratic_id'] ?? 0));
                 $democratic->set_parent();
                 $democratic->clear();
 

@@ -52,7 +52,7 @@ final readonly class StreamAjaxHandler implements AjaxHandlerInterface
                     break;
                 }
 
-                switch ($_POST['type']) {
+                switch ($_POST['type'] ?? '') {
                     case 'stream':
                     case 'localplay':
                     case 'democratic':

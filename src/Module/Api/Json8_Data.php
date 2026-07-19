@@ -137,27 +137,27 @@ class Json8_Data
      *         name: string|null,
      *         artist: array{
      *             id: string,
-     *             name: string,
-     *             prefix: string,
-     *             basename: string
+     *             name: string|null,
+     *             prefix: string|null,
+     *             basename: string|null
      *         },
      *         artists: array<int, array{
      *             id: string,
-     *             name: string,
-     *             prefix: string,
-     *             basename: string
+     *             name: string|null,
+     *             prefix: string|null,
+     *             basename: string|null
      *         }>,
      *         album: array{
      *             id: string,
-     *             name: string,
-     *             prefix: string,
-     *             basename: string
+     *             name: string|null,
+     *             prefix: string|null,
+     *             basename: string|null
      *         },
      *         albumartist?: array{
      *             id: string,
-     *             name: string,
-     *             prefix: string,
-     *             basename: string
+     *             name: string|null,
+     *             prefix: string|null,
+     *             basename: string|null
      *         },
      *         disk: int,
      *         disksubtitle: string|null,
@@ -356,27 +356,27 @@ class Json8_Data
      *             name: string|null,
      *             artist: array{
      *                 id: string,
-     *                 name: string,
-     *                 prefix: string,
-     *                 basename: string
+     *                 name: string|null,
+     *                 prefix: string|null,
+     *                 basename: string|null
      *             },
      *             artists: array<int, array{
      *                 id: string,
-     *                 name: string,
-     *                 prefix: string,
-     *                 basename: string
+     *                 name: string|null,
+     *                 prefix: string|null,
+     *                 basename: string|null
      *             }>,
      *             album: array{
      *                 id: string,
-     *                 name: string,
-     *                 prefix: string,
-     *                 basename: string
+     *                 name: string|null,
+     *                 prefix: string|null,
+     *                 basename: string|null
      *             },
      *             albumartist?: array{
      *                 id: string,
-     *                 name: string,
-     *                 prefix: string,
-     *                 basename: string
+     *                 name: string|null,
+     *                 prefix: string|null,
+     *                 basename: string|null
      *             },
      *             disk: int,
      *             disksubtitle: string|null,
@@ -438,27 +438,27 @@ class Json8_Data
      *         name: string|null,
      *         artist: array{
      *             id: string,
-     *             name: string,
-     *             prefix: string,
-     *             basename: string
+     *             name: string|null,
+     *             prefix: string|null,
+     *             basename: string|null
      *         },
      *         artists: array<int, array{
      *             id: string,
-     *             name: string,
-     *             prefix: string,
-     *             basename: string
+     *             name: string|null,
+     *             prefix: string|null,
+     *             basename: string|null
      *         }>,
      *         album: array{
      *             id: string,
-     *             name: string,
-     *             prefix: string,
-     *             basename: string
+     *             name: string|null,
+     *             prefix: string|null,
+     *             basename: string|null
      *         },
      *         albumartist?: array{
      *             id: string,
-     *             name: string,
-     *             prefix: string,
-     *             basename: string
+     *             name: string|null,
+     *             prefix: string|null,
+     *             basename: string|null
      *         },
      *         disk: int,
      *         disksubtitle: string|null,
@@ -873,7 +873,7 @@ class Json8_Data
      *     id: string,
      *     addition_time: int,
      *     delete_time: int,
-     *     title: string,
+     *     title: string|null,
      *     file: string,
      *     catalog: string,
      *     total_count: int,
@@ -885,7 +885,7 @@ class Json8_Data
      *     id: string,
      *     addition_time: int,
      *     delete_time: int,
-     *     title: string,
+     *     title: string|null,
      *     file: string,
      *     catalog: string,
      *     total_count: int,
@@ -895,7 +895,7 @@ class Json8_Data
      *     id: string,
      *     addition_time: int,
      *     delete_time: int,
-     *     title: string,
+     *     title: string|null,
      *     file: string,
      *     catalog: string,
      *     total_count: int,
@@ -1742,7 +1742,7 @@ class Json8_Data
      *     type: string,
      *     client: string,
      *     expire: int,
-     *     user: array{id: string, username: null|string}
+     *     user: array{id: string, username: string}
      * }>
      */
     public static function now_playing_array(array $results): array
@@ -1946,11 +1946,11 @@ class Json8_Data
      *     "title": null|string,
      *     "name": null|string,
      *     "podcast": array{"id": string, "name": string},
-     *     "description": null|string,
+     *     "description": string,
      *     "category": null|string,
      *     "author": null|string,
      *     "author_full": null|string,
-     *     "website": null|string,
+     *     "website": string,
      *     "pubdate": null|string,
      *     "state": string,
      *     "filelength": string,
@@ -2581,27 +2581,27 @@ class Json8_Data
      *     name: string|null,
      *     artist: array{
      *         id: string,
-     *         name: string,
-     *         prefix: string,
-     *         basename: string
+     *         name: string|null,
+     *         prefix: string|null,
+     *         basename: string|null
      *     },
      *     artists: array<int, array{
      *         id: string,
-     *         name: string,
-     *         prefix: string,
-     *         basename: string
+     *         name: string|null,
+     *         prefix: string|null,
+     *         basename: string|null
      *     }>,
      *     album: array{
      *         id: string,
-     *         name: string,
-     *         prefix: string,
-     *         basename: string
+     *         name: string|null,
+     *         prefix: string|null,
+     *         basename: string|null
      *     },
      *     albumartist?: array{
      *         id: string,
-     *         name: string,
-     *         prefix: string,
-     *         basename: string
+     *         name: string|null,
+     *         prefix: string|null,
+     *         basename: string|null
      *     },
      *     disk: int,
      *     disksubtitle: string|null,
