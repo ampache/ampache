@@ -28,6 +28,7 @@ use Ampache\Module\System\Core;
 use Ampache\Module\Util\Ui;
 
 ?>
+                <?php echo Ui::material_symbol_sprite(); ?>
                 </div>
                 <div style="clear:both;">
                 </div>

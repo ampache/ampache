@@ -63,6 +63,9 @@ class Ui implements UiInterface
     /** @var array<string, bool> material symbols referenced on the current page (sprite content) */
     private static array $_used_symbols = [];
 
+    /** @var array<string, bool> material symbols already emitted in a sprite for the current page */
+    private static array $_emitted_symbols = [];
+
     public function __construct(
         private readonly ConfigContainerInterface $configContainer
     ) {
@@ -406,13 +409,21 @@ class Ui implements UiInterface
      */
     public static function material_symbol_sprite(): string
     {
-        if (self::$_used_symbols === []) {
+        // Incremental: only emit symbols that were not part of a previous
+        // sprite. The main layout calls this twice: once at the end of
+        // #guts (so the sprite travels with the content extracted by the
+        // hash-based AJAX navigation, see loadContentData in src/js/ajax.js)
+        // and once before </body> to catch icons rendered after #guts
+        // (footer, web player controls).
+        $pending = array_diff_key(self::$_used_symbols, self::$_emitted_symbols);
+        if ($pending === []) {
             return '';
         }
 
         $sprite = '<svg xmlns="http://www.w3.org/2000/svg" width="0" height="0" style="position:absolute" aria-hidden="true">';
-        foreach (array_keys(self::$_used_symbols) as $symbol_key) {
-            $symbol = self::$_symbol_cache[$symbol_key] ?? null;
+        foreach (array_keys($pending) as $symbol_key) {
+            self::$_emitted_symbols[$symbol_key] = true;
+            $symbol                              = self::$_symbol_cache[$symbol_key] ?? null;
             if ($symbol === null) {
                 continue;
             }
