@@ -47,6 +47,7 @@ if (empty($embed)) {
 if (!empty($embed)) {
     Ui::show_box_bottom();
 } else { ?>
+<?php echo Ui::material_symbol_sprite(); ?>
 </body>
 </html>
 <?php }

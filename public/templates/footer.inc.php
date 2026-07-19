@@ -57,5 +57,6 @@ if (!isset($_SESSION['login']) || !$_SESSION['login']) {
         <div id="webplayer"></div>
         <?php require_once Ui::find_template('uberviz.inc.php');
         } ?>
+        <?php echo Ui::material_symbol_sprite(); ?>
     </body>
 </html>

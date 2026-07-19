@@ -13,5 +13,6 @@
                 echo $js;
             }
         } ?>
+    <?php echo \Ampache\Module\Util\Ui::material_symbol_sprite(); ?>
     </body>
 </html>
