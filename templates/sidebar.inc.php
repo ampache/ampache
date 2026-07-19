@@ -35,7 +35,7 @@ use Ampache\Module\System\Session;
 use Ampache\Module\Util\Ui;
 use Ampache\Repository\Model\User;
 
-/** require@ public/templates/header.inc.php */
+/** require@ templates/header.inc.php */
 /** require@ src/Application/Api/Ajax/Handler/IndexAjaxHandler.php */
 /** require@ src/Application/Api/Ajax/Handler/LocalPlayAjaxHandler.php */
 

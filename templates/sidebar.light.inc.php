@@ -32,7 +32,7 @@ use Ampache\Module\Util\Ui;
 use Ampache\Module\Util\Upload;
 use Ampache\Repository\Model\User;
 
-/** require@ public/templates/header.inc.php */
+/** require@ templates/header.inc.php */
 /** @var string $web_path */
 /** @var string $admin_path */
 /** @var string $t_artists */
