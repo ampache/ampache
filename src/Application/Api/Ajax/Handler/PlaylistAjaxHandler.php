@@ -95,7 +95,7 @@ final readonly class PlaylistAjaxHandler implements AjaxHandlerInterface
 
                     $playlist = new Playlist($playlist_id);
                 } else {
-                    $playlist = new Playlist((int) ($_REQUEST['playlist_id'] ?? 0));
+                    $playlist = new Playlist((int) $_REQUEST['playlist_id']);
                 }
 
                 if (!$playlist->has_collaborate()) {
