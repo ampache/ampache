@@ -115,7 +115,7 @@ final readonly class BrowseAjaxHandler implements AjaxHandlerInterface
                 }
 
                 if (array_key_exists('catalog_key', $_REQUEST) && $_REQUEST['catalog_key']) {
-                    $_SESSION['catalog'] = $_REQUEST['catalog_key'];
+                    $_SESSION['catalog'] = (int) $_REQUEST['catalog_key'];
                     $browse->set_filter('catalog', $_REQUEST['catalog_key']);
                     $filter = true;
                 } else {

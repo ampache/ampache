@@ -60,7 +60,7 @@ final readonly class SongAjaxHandler implements AjaxHandlerInterface
                     return;
                 }
 
-                $song        = new Song($_REQUEST['song_id']);
+                $song        = new Song((int) ($_REQUEST['song_id'] ?? 0));
                 $new_enabled = !$song->enabled;
                 Song::update_enabled($new_enabled, $song->id);
                 $song->enabled = $new_enabled;
