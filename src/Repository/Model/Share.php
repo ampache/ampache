@@ -164,7 +164,11 @@ class Share extends database_object
         }
 
         if (!empty($medias)) {
-            $playlist->add($medias, '&share_id=' . $this->id . '&share_secret=' . $this->secret);
+            $playlist->add(
+                $medias,
+                '&share_id=' . $this->id . '&share_secret=' . $this->secret,
+                new User(User::INTERNAL_SYSTEM_USER_ID)
+            );
         }
 
         return $playlist;
