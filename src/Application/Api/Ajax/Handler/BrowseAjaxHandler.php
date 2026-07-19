@@ -120,7 +120,7 @@ final readonly class BrowseAjaxHandler implements AjaxHandlerInterface
                     $filter = true;
                 } else {
                     $_SESSION['catalog'] = null;
-                    if (!in_array($browse->get_filter('catalog'), [null, '', '0'], true)) {
+                    if ((int) $browse->get_filter('catalog') !== 0) {
                         $browse->set_filter('catalog', null);
                         $filter = true;
                     }
