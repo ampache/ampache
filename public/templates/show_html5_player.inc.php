@@ -127,7 +127,7 @@ $replaygain = (AmpConfig::get('theme_color', 'dark') == 'light')
 
         var replaygainPersist = Cookies.get('replaygain');
 
-        if ($isShare === false) { ?>
+        <?php if ($isShare === false) { ?>
         // Compact mode: default to collapsed on small screens, expanded on desktop.
         // A saved cookie (set by the toggle buttons) overrides the breakpoint default.
         var isSmallScreen = (window.innerWidth <= 768);
@@ -163,7 +163,7 @@ $replaygain = (AmpConfig::get('theme_color', 'dark') == 'light')
                 removeCount: <?php echo $removeCount; ?>, // shift the index back to keep x items BEFORE the current index
                 loopBack: false, // repeat a finished playlist from the start
                 shuffleOnLoop: false,
-                enableRemoveControls: <?php echo ($isShare) ? 'false' : 'true'; ?>, // a share visitor has no business editing the tracklist
+                enableRemoveControls: <?php echo ($isShare) ? 'false' : 'true'; ?>,
                 displayTime: 'slow',
                 addTime: 'fast',
                 removeTime: 'fast',
@@ -433,7 +433,6 @@ $shareStyle = ($isShare || $isRandom)
 if ($isVideo === false) {
     $containerClass = "jp-audio";
     $playerClass    = "jp-jplayer-audio";
-    // .playing_info absolutely into the popup player's side gutter, so skip it entirely there.
     if ($isShare === false) { ?>
     <div class="playing_info">
         <img class="playing_art" alt="" style="display: none;">
@@ -623,7 +622,7 @@ if ($isVideo === false) {
         </div>
     </div>
 </div>
-if ($iframed === false && $isShare === false) {
+<?php if ($iframed === false && $isShare === false) {
     require_once Ui::find_template('uberviz.inc.php');
 } ?>
 <?php if ($isShare === false) { ?>
