@@ -563,18 +563,40 @@ div.registerfield.center {
 .loginoptions {
     padding: 15px 0 15px;
     text-align: center;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
 }
 
 .loginoptions a {
     font-size: 15px;
 }
 
-#registerbutton {
-    float: left;
+#registerbutton,
+#lostpasswordbutton {
+    flex: 0 0 auto;
 }
 
+/* Push the lost-password link to the right even when it is the only link on the row. */
 #lostpasswordbutton {
-    float: right;
+    margin-left: auto;
+}
+
+/* `oidc_button_text` is admin configurable, so the label can be any length. Give it its own row and a real
+   button footprint instead of letting it run into the links either side of it, and clip anything oversized. */
+#oidcbutton {
+    flex: 0 0 100%;
+    order: 1;
+    box-sizing: border-box;
+    max-width: 100%;
+    padding: 6px 12px;
+    border: 1px solid transparent;
+    border-radius: 3px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
 }
 
 #submit-lostpassword {
