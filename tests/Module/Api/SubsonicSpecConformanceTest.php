@@ -56,6 +56,16 @@ class SubsonicSpecConformanceTest extends TestCase
         'json:getPlayQueue' => 'no play queue is saved, and an empty PlayQueue cannot satisfy its own required fields',
     ];
 
+    /**
+     * Endpoints the OpenSubsonic spec declares no response schema for, so there is nothing to validate against and
+     * no value in generating a case. Drop an entry once the spec documents that endpoint.
+     *
+     * @var string[]
+     */
+    private const array UNSCHEMAED_JSON_ACTIONS = [
+        'ping',
+    ];
+
     private static string $fixtureRoot = __DIR__ . '/../../Fixtures/Api';
 
     /**
@@ -63,7 +73,10 @@ class SubsonicSpecConformanceTest extends TestCase
      */
     public static function openSubsonicJsonProvider(): array
     {
-        return self::collect('opensubsonic', 'json');
+        return array_diff_key(
+            self::collect('opensubsonic', 'json'),
+            array_flip(self::UNSCHEMAED_JSON_ACTIONS)
+        );
     }
 
     /**
