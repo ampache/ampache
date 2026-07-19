@@ -181,6 +181,17 @@ input[type=submit]:focus:active {
     color: #000;
 }
 
+/* the openid link is presented as a button, see #oidcbutton in default.css */
+#loginPage #oidcbutton {
+    border-color: #1473af;
+}
+
+#loginPage #oidcbutton:hover,
+#loginPage #oidcbutton:focus {
+    background-color: #1473af;
+    color: #fff;
+}
+
 .formValidation input {
     color: #fff;
 }

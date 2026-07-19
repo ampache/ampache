@@ -1069,6 +1069,8 @@ class Subsonic_Api
             if ($int_id >= self::OLD_SUBID_PLAYLIST && $int_id < 900000000) {
                 return $int_id - self::OLD_SUBID_PLAYLIST;
             }
+
+            return $int_id;
         }
 
         // everything else is a string prefix
@@ -1132,6 +1134,8 @@ class Subsonic_Api
             if ($int_id >= self::OLD_SUBID_PLAYLIST && $int_id < 900000000) {
                 return new Playlist($int_id - self::OLD_SUBID_PLAYLIST);
             }
+
+            return Catalog::create_from_id($int_id);
         }
 
         // everything else is a string prefix
@@ -1210,6 +1214,8 @@ class Subsonic_Api
             if ($int_id >= self::OLD_SUBID_PLAYLIST && $int_id < 900000000) {
                 return "playlist";
             }
+
+            return "catalog";
         }
 
         // everything else is a string prefix
@@ -1279,7 +1285,7 @@ class Subsonic_Api
         $format = (string) ($input['f'] ?? 'xml');
         if ($format === 'xml') {
             $response = self::_addXmlResponse(__FUNCTION__);
-            $response = Subsonic_Xml_Data::addArtist($response, $artist, true);
+            $response = Subsonic_Xml_Data::addArtistID3($response, $artist, true);
         } else {
             $response = self::_addJsonResponse(__FUNCTION__);
             $response = Subsonic_Json_Data::addArtistWithAlbumsID3($response, $artist);
@@ -1485,7 +1491,8 @@ class Subsonic_Api
 
     public static function getCatalogSubId(int|string $ampache_id): string
     {
-        return self::SUBID_CATALOG . $ampache_id;
+        // `musicFolder/@id` is an integer in both the Subsonic XSD and the OpenSubsonic spec
+        return (string) $ampache_id;
     }
 
     /**

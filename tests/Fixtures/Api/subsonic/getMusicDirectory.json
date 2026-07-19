@@ -1,0 +1,28 @@
+{
+    "subsonic-response": {
+        "status": "ok",
+        "version": "1.16.1",
+        "directory": {
+            "id": "100000003",
+            "parent": "1",
+            "name": "Mendes Brothers",
+            "child": [
+                {
+                    "id": "200000002",
+                    "parent": "100000002",
+                    "title": "CC Affiliates Mixtape #1",
+                    "album": "CC Affiliates Mixtape #1",
+                    "isDir": false,
+                    "isVideo": false,
+                    "type": "music",
+                    "artistId": "100000002",
+                    "artist": "Various Artists",
+                    "coverArt": "200000002",
+                    "duration": 266,
+                    "userRating": 5,
+                    "year": 2015
+                }
+            ]
+        }
+    }
+}

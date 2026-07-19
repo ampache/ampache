@@ -1,0 +1,30 @@
+{
+    "total_count": 730,
+    "md5": "da7b5261127bda3fe237bd515ad4be76",
+    "genre": [
+        {
+            "id": "5037",
+            "name": "80s",
+            "albums": 1,
+            "artists": 1,
+            "songs": 3,
+            "videos": 0,
+            "playlists": 0,
+            "live_streams": 0,
+            "is_hidden": false,
+            "merge": []
+        },
+        {
+            "id": "4525",
+            "name": "Aboriginal",
+            "albums": 4,
+            "artists": 8,
+            "songs": 54,
+            "videos": 0,
+            "playlists": 0,
+            "live_streams": 0,
+            "is_hidden": false,
+            "merge": []
+        }
+    ]
+}

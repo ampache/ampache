@@ -12,6 +12,7 @@
 .vscode/
 .maintenance
 .phpunit.result.cache
+__pycache__/
 bootstrap/
 build/
 config/ampache-doped.cfg.php
@@ -53,9 +54,11 @@ phpcs*
 phpstorm_*
 phpunit.*
 robots.txt
+verify.env
 web.config
 *.log
 *.phpproj
+*.pyc
 *.save
 *.sln
 *.suo

@@ -13,7 +13,7 @@ API version **8** joins the concurrent live surfaces (3/4/5/6 — version 7 rema
   * New `Api8` method surface (132 methods) under `src/Module/Api/Method/Api8/`, implemented against `MethodInterface` with dedicated `Json8_Data`/`Xml8_Data` output classes
   * `ApiOutputInterface` (and its `JsonOutput`/`XmlOutput` implementations) reworked onto a single version-parameterized method per concept — `albums(int $apiVersion, ...)`, `error(int $apiVersion, ...)`, `podcastEpisodes()`, `setCount()`, `setLimit()`, `setOffset()`, `success()`, `writeEmpty()` — replacing the previous pattern of a separate `xxx()`/`xxx6()` method pair per API version
 * `album`/`albums`/`podcast_delete`/`podcast_episodes` (API3, API4, API5)
-  * Converted from legacy static methods to the `MethodInterface` pattern (matching the API6/API8 conversion above); v3 gains its first parameter validation (`filter` presence, album-exists checks) where none existed before, v4 gains an album-exists check it was previously missing — both are correctness fixes, not new features
+  * Converted from legacy static methods to the `MethodInterface` pattern (matching the API6/API8 conversion above); the existing `filter` presence and object-exists checks are preserved, only the error codes changed (see `ALL (internal)` under Changed)
 * REST
   * New `folder`/`folders` actions (`Folder8Method`/`Folders8Method`) for browsing the catalog's virtual folder tree
   * New `playlist_remove` action (`PlaylistRemove8Method`)
