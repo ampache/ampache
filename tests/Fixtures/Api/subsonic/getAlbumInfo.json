@@ -1,0 +1,13 @@
+{
+    "subsonic-response": {
+        "status": "ok",
+        "version": "1.16.1",
+        "albumInfo": {
+            "notes": "",
+            "musicBrainzId": "4ff00c1b-d9ee-40dc-aa1d-cd8ec4540667",
+            "smallImageUrl": "https://music.com.au/image.php?object_id=2&amp;object_type=album&amp;id=1&amp;name=art.jpg",
+            "mediumImageUrl": "https://music.com.au/image.php?object_id=2&amp;object_type=album&amp;id=1&amp;name=art.jpg",
+            "largeImageUrl": "https://music.com.au/image.php?object_id=2&amp;object_type=album&amp;id=1&amp;name=art.jpg"
+        }
+    }
+}

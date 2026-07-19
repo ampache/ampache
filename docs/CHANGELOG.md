@@ -55,6 +55,13 @@
 ### Fixed 8.0.0
 
 * Light sidebar can scroll to reach its bottom entries on short screens
+* Beets catalog clean removed the first song in the catalog even when its file still existed
+* AJAX actions returned a server error instead of updating the page
+  * Setting a favorite
+  * Selecting a catalog in the browse filter box
+  * Deleting a genre
+  * Removing a track from a playlist, and adding items to an existing playlist
+  * Enabling or disabling a song
 
 ## Ampache 7.10.0
 

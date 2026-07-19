@@ -130,6 +130,11 @@ a:focus {
     overflow: hidden;
 }
 
+.jp-audio .jp-controls-holder {
+    position: static;
+    overflow: visible;
+}
+
 .jp-audio ul.jp-controls {
     position: absolute;
     top: 15px;

@@ -199,7 +199,7 @@ final readonly class DefaultAjaxHandler implements AjaxHandlerInterface
                     $flagtype = Core::get_get('userflag_type');
                     $flag_id  = filter_input(INPUT_GET, 'object_id', FILTER_SANITIZE_NUMBER_INT);
                     $userflag = new Userflag((int) $flag_id, $flagtype);
-                    $userflag->set_flag($_GET['userflag']);
+                    $userflag->set_flag(make_bool($_GET['userflag'] ?? null));
                     echo Userflag::show((int) $flag_id, $flagtype);
                     $key           = "userflag_" . $flag_id . "_" . $flagtype;
                     $results[$key] = ob_get_contents();

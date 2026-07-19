@@ -1,0 +1,34 @@
+{
+    "id": "5770",
+    "name": "_ and The Secret Formula",
+    "prefix": null,
+    "basename": "_ and The Secret Formula",
+    "albums": [],
+    "albumcount": 1,
+    "songs": [],
+    "songcount": 1,
+    "genre": [
+        {
+            "id": "4",
+            "name": "Electronic"
+        },
+        {
+            "id": "163",
+            "name": "Downtempo"
+        },
+        {
+            "id": "854",
+            "name": "Broken Beat"
+        }
+    ],
+    "art": "https:\/\/music.com.au\/image.php?object_id=5770&object_type=artist&id=870069&name=art.jpg",
+    "has_art": true,
+    "flag": false,
+    "rating": null,
+    "averagerating": null,
+    "mbid": "4c0f0923-f1da-4a36-b4d5-59dd04660334",
+    "summary": null,
+    "time": 279,
+    "yearformed": 0,
+    "placeformed": null
+}

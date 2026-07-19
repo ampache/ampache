@@ -261,7 +261,7 @@ final readonly class IndexAjaxHandler implements AjaxHandlerInterface
                 if (AmpConfig::get('wanted') && array_key_exists('mbid', $_REQUEST)) {
                     $mbid = $this->requestParser->getFromRequest('mbid');
                     if (!array_key_exists('artist', $_REQUEST)) {
-                        $artist_mbid = $_REQUEST['artist_mbid'];
+                        $artist_mbid = $_REQUEST['artist_mbid'] ?? null;
                         $artist      = null;
                     } else {
                         $artist      = (int) $this->requestParser->getFromRequest('artist');
@@ -379,9 +379,9 @@ final readonly class IndexAjaxHandler implements AjaxHandlerInterface
             case 'dashboard_random':
             case 'dashboard_recent':
             case 'dashboard_trending':
-                $limit       = $_REQUEST['limit'];
-                $object_type = $_REQUEST['object_type'];
-                $threshold   = $_REQUEST['threshold'];
+                $limit       = (int) ($_REQUEST['limit'] ?? 0);
+                $object_type = (string) ($_REQUEST['object_type'] ?? '');
+                $threshold   = (int) ($_REQUEST['threshold'] ?? 0);
                 ob_start();
                 $object_ids = [];
                 if ($action === 'dashboard_random') {
@@ -457,7 +457,7 @@ final readonly class IndexAjaxHandler implements AjaxHandlerInterface
                 $results[$action] = ob_get_clean();
                 break;
             case 'sidebar':
-                switch ($_REQUEST['button']) {
+                switch ($_REQUEST['button'] ?? '') {
                     case 'home':
                     case 'modules':
                     case 'localplay':
@@ -514,7 +514,7 @@ final readonly class IndexAjaxHandler implements AjaxHandlerInterface
                 $results['fslider_script'] = ob_get_clean();
                 break;
             case 'songs':
-                $label_id = (int) ($_REQUEST['label']);
+                $label_id = (int) ($_REQUEST['label'] ?? 0);
 
                 ob_start();
                 if ($label_id > 0) {

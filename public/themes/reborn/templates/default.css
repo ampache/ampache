@@ -563,18 +563,40 @@ div.registerfield.center {
 .loginoptions {
     padding: 15px 0 15px;
     text-align: center;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
 }
 
 .loginoptions a {
     font-size: 15px;
 }
 
-#registerbutton {
-    float: left;
+#registerbutton,
+#lostpasswordbutton {
+    flex: 0 0 auto;
 }
 
+/* Push the lost-password link to the right even when it is the only link on the row. */
 #lostpasswordbutton {
-    float: right;
+    margin-left: auto;
+}
+
+/* `oidc_button_text` is admin configurable, so the label can be any length. Give it its own row and a real
+   button footprint instead of letting it run into the links either side of it, and clip anything oversized. */
+#oidcbutton {
+    flex: 0 0 100%;
+    order: 1;
+    box-sizing: border-box;
+    max-width: 100%;
+    padding: 6px 12px;
+    border: 1px solid transparent;
+    border-radius: 3px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
 }
 
 #submit-lostpassword {
@@ -1345,7 +1367,7 @@ table.gridview td.cel_ratings {
     grid-template-rows: repeat(2, auto);
     grid-auto-rows: 0;
     align-content: start;
-    justify-content: center;
+    justify-content: start;
     overflow: hidden;
 }
 
@@ -1361,31 +1383,6 @@ table.gridview td.cel_ratings {
 .homedash table.gridview tbody {
     grid-template-columns: repeat(auto-fill, 170px);
     justify-content: start;
-}
-
-/* Personal favorites: box each list so its title and play buttons read as a single card. */
-.personalfav table.gridview tbody {
-    column-gap: 10px;
-}
-
-.personalfav table.gridview tbody tr {
-    box-sizing: border-box;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    gap: 8px;
-    margin-bottom: 10px;
-    padding: 12px 8px;
-    border: 1px solid rgba(127, 127, 127, 0.35);
-    border-radius: 6px;
-}
-
-/* Drop the forced td heights and side margins so title + buttons sit together, centered in the box. */
-.personalfav table.gridview tbody td {
-    height: auto !important;
-    margin: 0 !important;
-    text-align: center;
 }
 
 .tableform {
@@ -2376,12 +2373,7 @@ a.option-list:hover {
         padding: 3px 10px;
         border-radius: 2px;
         background-image: none !important;
-        z-index: 10006;
-    }
-
-    /* With the nav drawer open, the loading pill drops below the backdrop (10000) so the drawer owns the screen. */
-    body.sidebar-open #ajax-loading {
-        z-index: 9999;
+        z-index: 9997;
     }
 
     /* Wide data tables scroll sideways inside their box so they don't widen the page. */

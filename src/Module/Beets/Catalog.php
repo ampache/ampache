@@ -285,7 +285,7 @@ abstract class Catalog extends \Ampache\Repository\Model\Catalog
     {
         $key = array_search($song['file'], $this->songs, true);
         $this->updateUi('clean', ++$this->cleanCounter, $song);
-        if ($key) {
+        if ($key !== false) {
             unset($this->songs[$key]);
         }
     }
