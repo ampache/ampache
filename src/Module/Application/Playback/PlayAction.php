@@ -393,7 +393,7 @@ final readonly class PlayAction implements ApplicationActionInterface
             // Update the users last seen information
             $this->userRepository->updateLastSeen($user->id);
         } else {
-            $user_id = 0;
+            $user_id = User::INTERNAL_SYSTEM_USER_ID;
             $share   = new Share($share_id);
 
             if (!$share->is_valid($secret, 'stream')) {
@@ -1111,7 +1111,7 @@ final readonly class PlayAction implements ApplicationActionInterface
                         }
                     } elseif ($share_id > 0) {
                         // shares are people too
-                        $media->set_played(0, 'share.php', [], $time);
+                        $media->set_played($user_id, 'share.php', [], $time);
                     }
                 }
             }

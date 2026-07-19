@@ -445,11 +445,11 @@ if ($isVideo === false) {
         </div>
     </div>
     <?php }
-} else {
-    $areaClass .= " jp-area-video";
-    $containerClass = "jp-video jp-video-float jp-video-360p";
-    $playerClass    = "jp-jplayer-video";
-} ?>
+    } else {
+        $areaClass .= " jp-area-video";
+        $containerClass = "jp-video jp-video-float jp-video-360p";
+        $playerClass    = "jp-jplayer-video";
+    } ?>
 <div id="shouts_data"></div>
 <div class="jp-area<?php echo $areaClass; ?>">
     <div id="jp_container_1" class="<?php echo $containerClass; ?>">
@@ -535,8 +535,8 @@ if ($isVideo === false) {
                 <div class="player_actions">
                     <?php if ($iframed) { ?>
                         <?php // playlist-editing buttons make no sense when random/democratic drives the playlist;
-                              // show them dimmed and inert there so the action layout matches the regular player
-                        $playlistEditable = ($isRandom === false && $isDemocratic === false); ?>
+                                  // show them dimmed and inert there so the action layout matches the regular player
+                            $playlistEditable = ($isRandom === false && $isDemocratic === false); ?>
                             <div class="action_button">
                         <?php if (Access::check(AccessTypeEnum::INTERFACE, AccessLevelEnum::USER)) {
                             if ($playlistEditable) { ?>
