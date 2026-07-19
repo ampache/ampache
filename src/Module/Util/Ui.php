@@ -1231,14 +1231,15 @@ class Ui implements UiInterface
                 break;
             case 'personalfav_playlist':
             case 'personalfav_smartlist':
-                $ids       = explode(',', (string) $value);
+                // array keys are cast to int by php so the stored comma separated string ids need the same treatment
+                $ids       = array_map('intval', array_filter(explode(',', (string) $value), 'is_numeric'));
                 $options   = [];
                 $playlists = ($name === 'personalfav_smartlist')
                     ? Search::get_search_array()
                     : Playlist::get_playlist_array();
                 if ($playlists !== []) {
                     foreach ($playlists as $list_id => $list_name) {
-                        $selected  = (in_array($list_id, $ids, true)) ? ' selected="selected"' : '';
+                        $selected  = (in_array((int) $list_id, $ids, true)) ? ' selected="selected"' : '';
                         $options[] = '<option value="' . $list_id . '"' . $selected . '>' . scrub_out($list_name) . '</option>';
                     }
 
