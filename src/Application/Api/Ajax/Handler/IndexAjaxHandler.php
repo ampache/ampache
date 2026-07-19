@@ -379,9 +379,9 @@ final readonly class IndexAjaxHandler implements AjaxHandlerInterface
             case 'dashboard_random':
             case 'dashboard_recent':
             case 'dashboard_trending':
-                $limit       = $_REQUEST['limit'];
-                $object_type = $_REQUEST['object_type'];
-                $threshold   = $_REQUEST['threshold'];
+                $limit       = (int) ($_REQUEST['limit'] ?? 0);
+                $object_type = (string) ($_REQUEST['object_type'] ?? '');
+                $threshold   = (int) ($_REQUEST['threshold'] ?? 0);
                 ob_start();
                 $object_ids = [];
                 if ($action === 'dashboard_random') {
