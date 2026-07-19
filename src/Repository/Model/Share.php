@@ -82,6 +82,7 @@ class Share extends database_object
         $this->max_counter    = (int) ($info['max_counter'] ?? 0);
         $this->allow_stream   = (bool) ($info['allow_stream'] ?? false);
         $this->allow_download = (bool) ($info['allow_download'] ?? false);
+        $this->public_url     = $info['public_url'] ?? null;
         $this->secret         = $info['secret'] ?? null;
         $this->description    = $info['description'] ?? null;
     }
@@ -210,6 +211,21 @@ class Share extends database_object
             : '';
     }
 
+    /**
+     * The stored public url may be empty on rows created before it was recorded, or when a url shortener plugin failed.
+     * Fall back to the canonical share url so the link is never blank.
+     */
+    public function getPublicUrl(): string
+    {
+        if (!empty($this->public_url)) {
+            return $this->public_url;
+        }
+
+        return ($this->isNew())
+            ? ''
+            : self::get_url($this->id, (string) $this->secret);
+    }
+
     public function getUserName(): string
     {
         return User::get_username($this->user);
@@ -330,7 +346,7 @@ class Share extends database_object
             )
         ) {
             if ($this->allow_download) {
-                echo "<a class=\"nohtml\" href=\"" . $this->public_url . "&action=download\" rel=\"nofollow\">" . Ui::get_material_symbol('download', T_('Download')) . "</a>";
+                echo "<a class=\"nohtml\" href=\"" . $this->getPublicUrl() . "&action=download\" rel=\"nofollow\">" . Ui::get_material_symbol('download', T_('Download')) . "</a>";
             }
 
             echo "<a id=\"edit_share_ " . $this->id . "\" onclick=\"showEditDialog('share_row', '" . $this->id . "', 'edit_share_" . $this->id . "', '" . T_('Share Edit') . "', 'share_')\">" . Ui::get_material_symbol('edit', T_('Edit')) . "</a>";
