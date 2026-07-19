@@ -55,6 +55,8 @@
 ### Fixed 8.0.0
 
 * Light sidebar can scroll to reach its bottom entries on short screens
+* Beets catalog clean removed the first song in the catalog even when its file still existed
+* Setting a favorite from the interface returned a server error instead of saving the flag
 
 ## Ampache 7.10.0
 
