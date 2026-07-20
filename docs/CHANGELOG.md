@@ -48,6 +48,18 @@ See: [Gregwar/Captcha](https://github.com/Gregwar/Captcha)
 
 ### Fixed (7.10.0)
 
+* `AlbumDisk::check()` returned the album id instead of the new album_disk id, so new songs stored the wrong `song`.`album_disk`
+* `AlbumDisk::check()` read `disk` from a collision lookup that never selected it, so songs kept the old disk number when edited
+* `AlbumDisk::check()` matched `disksubtitle` in the collision lookup, which never matches a null and returned the wrong id
+* Beets catalog clean deleted the first song of the list even though the file still existed
+* Art export truncated art files that had already been exported
+* Album art export left an empty art file in the album folder when there was no image to write
+* Skips were not counted on media that had never been fully played
+* Debug page printed `secret_key`, api secrets and additional passwords in plain text
+* Last.fm error responses were treated as a success, causing a runtime error when reading artist or album info
+* Web player controls were clipped out of view and unclickable outside the embedded player
+* Browser notifications stopped the play handler outside the embedded player, skipping media session and ReplayGain
+* Share `Public URL` column was empty for shares that only allow streaming
 * Broadcasts could not play because broadcasts are not `Media`
 * Throw login exception on missing auth when authentication is required
 * Potential error during filesystem scan

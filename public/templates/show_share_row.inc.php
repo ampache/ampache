@@ -37,7 +37,7 @@ use Ampache\Repository\Model\Share;
 <td class="cel_allow_stream"><?php echo $libitem->allow_stream; ?></td>
 <td class="cel_allow_download"><?php echo $libitem->allow_download; ?></td>
 <td class="cel_expire"><?php echo $libitem->expire_days; ?></td>
-<td class="cel_public_url"><?php echo ($libitem->secret && $libitem->is_valid($libitem->secret, 'all')) ? '<a href="' . $libitem->public_url . '" target="_blank">' . $libitem->public_url . '</a>' : ''; ?></td>
+<td class="cel_public_url"><?php if (!empty($libitem->public_url)) { ?><a href="<?php echo scrub_out($libitem->public_url); ?>" target="_blank" rel="noopener"><?php echo scrub_out($libitem->public_url); ?></a><?php } ?></td>
 <td class="cel_action">
     <div id="share_action_<?php echo $libitem->id; ?>">
     <?php $libitem->show_action_buttons(); ?>
