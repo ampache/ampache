@@ -31,7 +31,7 @@ use Ampache\Module\System\Update\Migration\AbstractMigration;
 /**
  * Add `object_count_summary` to store consolidated play history
  */
-final class Migration800012 extends AbstractMigration
+final class Migration800013 extends AbstractMigration
 {
     protected array $changelog = ['Add `object_count_summary` table to allow consolidating old play history'];
 
