@@ -16465,11 +16465,22 @@
         "parameters": [
           {
             "in": "query",
+            "name": "filter",
+            "required": false,
+            "description": "Username to filter shouts by",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "in": "query",
             "name": "username",
             "required": false,
             "schema": {
               "type": "string"
-            }
+            },
+            "deprecated": true,
+            "description": "Deprecated: use `filter` instead. Removed in API9."
           },
           {
             "in": "query",
