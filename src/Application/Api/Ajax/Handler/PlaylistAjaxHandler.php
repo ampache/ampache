@@ -52,13 +52,13 @@ final readonly class PlaylistAjaxHandler implements AjaxHandlerInterface
         switch ($action) {
             case 'delete_track':
                 // Create the object and remove the track
-                $playlist = new Playlist($_REQUEST['playlist_id']);
+                $playlist = new Playlist((int) ($_REQUEST['playlist_id'] ?? 0));
                 if ($playlist->isNew()) {
                     break;
                 }
 
                 if ($playlist->has_collaborate()) {
-                    $playlist->delete_track($_REQUEST['track_id']);
+                    $playlist->delete_track((int) ($_REQUEST['track_id'] ?? 0));
                     // This could have performance issues
                     $playlist->regenerate_track_numbers();
                 }
@@ -95,7 +95,7 @@ final readonly class PlaylistAjaxHandler implements AjaxHandlerInterface
 
                     $playlist = new Playlist($playlist_id);
                 } else {
-                    $playlist = new Playlist($_REQUEST['playlist_id']);
+                    $playlist = new Playlist((int) $_REQUEST['playlist_id']);
                 }
 
                 if (!$playlist->has_collaborate()) {
@@ -114,7 +114,7 @@ final readonly class PlaylistAjaxHandler implements AjaxHandlerInterface
                     foreach ($item_ids as $iid) {
                         $className = ObjectTypeToClassNameMapper::map($item_type);
                         /** @var container_item $libitem */
-                        $libitem = new $className($iid);
+                        $libitem = new $className((int) $iid);
                         if ($libitem->isNew() === false) {
                             $medias = array_merge($medias, $libitem->get_medias());
                         }

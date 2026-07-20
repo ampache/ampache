@@ -929,10 +929,6 @@ class Stats
      */
     public static function has_played_history(string $object_type, Podcast_Episode|Video|Song $object, int $user_id, string $agent, int $date): bool
     {
-        if (AmpConfig::get('use_auth') && $user_id === -1) {
-            return false;
-        }
-
         // if it's already recorded (but from a different agent), don't do it again
         if (self::is_already_inserted($object_type, $object->id, $user_id, '', $date, true)) {
             return false;
@@ -987,7 +983,7 @@ class Stats
         string $count_type = 'stream',
         ?int $date = null,
     ): bool {
-        if (AmpConfig::get('use_auth') && $user_id < 0) {
+        if (AmpConfig::get('use_auth') && $user_id < User::INTERNAL_SYSTEM_USER_ID) {
             debug_event(self::class, 'Invalid user given ' . $user_id, 3);
 
             return false;
@@ -1012,7 +1008,7 @@ class Stats
         if ($db_results instanceof PDOStatement) {
             if (
                 in_array($type, ['song', 'album', 'album_disk', 'artist', 'video', 'podcast', 'podcast_episode'], true)
-                && $count_type === 'stream' && $user_id > 0
+                && $count_type === 'stream' && $user_id !== 0
                 && $agent !== 'debug'
             ) {
                 self::count($type, $object_id, 'up');

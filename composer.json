@@ -85,6 +85,7 @@
     },
     "require-dev": {
         "friendsofphp/php-cs-fixer": "^3.49",
+        "justinrainbow/json-schema": "^6",
         "mikey179/vfsstream": "^1.6",
         "mockery/mockery": "^1.3",
         "phpstan/extension-installer": "^1.3",
@@ -129,6 +130,7 @@
         "stan": "vendor/bin/phpstan analyse",
         "stan-baseline": "vendor/bin/phpstan --generate-baseline",
         "tests": "vendor/bin/phpunit -c phpunit.xml",
+        "spec": "vendor/bin/phpunit --filter SpecConformanceTest",
         "syntax": "@php resources/scripts/tests/syntax.php",
         "cs:fix": "vendor/bin/php-cs-fixer fix",
         "cs:check": "vendor/bin/php-cs-fixer fix --dry-run -vv",
@@ -144,6 +146,7 @@
         "stan": "Performs static analysis",
         "stan-baseline": "Regenerate phpstan baseline",
         "tests": "Executes the unit tests",
+        "spec": "Validates the captured Ampache REST, Subsonic and OpenSubsonic responses against the published specifications",
         "syntax": "Performs php syntax checks",
         "cs:fix": "Performs code-style corrections on the whole codebase",
         "cs:check": "Performs a code-style dry-run on the whole codebase",

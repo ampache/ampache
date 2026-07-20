@@ -16,10 +16,7 @@ $ampache_version = AmpConfig::get('version');
 $cssBust = static fn(string $file): string => is_file(__DIR__ . '/' . $file) ? (string) filemtime(__DIR__ . '/' . $file) : $ampache_version;
 
 $ajaxUriRetriever = $dic->get(AjaxUriRetrieverInterface::class);
-$webplayer_debug  = (AmpConfig::get('webplayer_debug'))
-    ? 'js'
-    : 'min.js';
-$cookie_string = (make_bool(AmpConfig::get('cookie_secure')))
+$cookie_string    = (make_bool(AmpConfig::get('cookie_secure')))
     ? "path: '/', secure: true, samesite: 'Strict'"
     : "path: '/', samesite: 'Strict'";
 $iframed   = $iframed ?? false;
@@ -29,7 +26,7 @@ $highlight = ($isLight)
     ? 'blue'
     : 'orange';
 
-if ($iframed || $isShare) { ?>
+if ($iframed) { ?>
     <link rel="stylesheet" href="<?php echo $web_path . Ui::find_template('jplayer.midnight.black-iframed.css', true) . '?v=' . $cssBust('jplayer.midnight.black-iframed.css'); ?>" type="text/css">
 <?php } else { ?>
     <link rel="stylesheet" href="<?php echo $web_path . Ui::find_template('jplayer.midnight.black.css', true) . '?v=' . $cssBust('jplayer.midnight.black.css'); ?>" type="text/css">
@@ -51,8 +48,11 @@ if ($iframed || $isShare) { ?>
     </script>
     <?php  require_once Ui::find_template('stylesheets.inc.php');
 } ?>
-<script src="<?php echo $web_path; ?>/lib/modules/jplayer/jquery.jplayer.<?php echo $webplayer_debug; ?>"></script>
-<script src="<?php echo $web_path; ?>/lib/modules/jplayer/jplayer.playlist.<?php echo $webplayer_debug; ?>"></script>
+<script>
+    window.jpDebug = <?php echo (AmpConfig::get('webplayer_debug')) ? 'true' : 'false'; ?>;
+</script>
+<script src="<?php echo $web_path; ?>/lib/modules/jplayer/jquery.jplayer.min.js"></script>
+<script src="<?php echo $web_path; ?>/lib/modules/jplayer/jplayer.playlist.min.js"></script>
 
 <script>
     var jplaylist = new Array();

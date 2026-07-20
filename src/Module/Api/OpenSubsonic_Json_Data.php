@@ -537,8 +537,8 @@ class OpenSubsonic_Json_Data
     public static function addIndexes(array $response, array $artists, int $lastModified = 0): array
     {
         $json = [
-            'index' => self::_getIndex($artists),
-            'lastModified' => number_format($lastModified * 1000, 0, '.', ''),
+            'index' => self::_getIndex($artists, false),
+            'lastModified' => $lastModified * 1000,
         ];
 
         $ignored = self::_getIgnoredArticles();
@@ -751,7 +751,7 @@ class OpenSubsonic_Json_Data
             $catalog = Catalog::create_from_id($folder_id);
             if ($catalog instanceof Catalog) {
                 $json['musicFolder'][] = [
-                    'id' => OpenSubsonic_Api::getCatalogSubId($folder_id),
+                    'id' => $folder_id,
                     'name' => (string) $catalog->name,
                 ];
             }
@@ -808,7 +808,7 @@ class OpenSubsonic_Json_Data
             ) {
                 $track               = self::_getChildSong($row['media']);
                 $track['username']   = (string) $row['client']->username;
-                $track['minutesAgo'] = (string) (abs((time() - ($row['expire'] - $row['media']->time)) / 60));
+                $track['minutesAgo'] = (int) abs((time() - ($row['expire'] - $row['media']->time)) / 60);
                 $track['playerId']   = 0;
                 $track['playerName'] = (string) $row['agent'];
 
@@ -816,7 +816,8 @@ class OpenSubsonic_Json_Data
             }
         }
 
-        $response['subsonic-response']['nowPlaying'] = (empty($json['entry'])) ? (object) [] : $json;
+        // `entry` is required on `nowPlaying`, so an idle server sends an empty list rather than {}
+        $response['subsonic-response']['nowPlaying'] = $json;
 
         return $response;
     }
@@ -1819,21 +1820,12 @@ class OpenSubsonic_Json_Data
         $subParent    = ($album_artist) ? OpenSubsonic_Api::getArtistSubId($album_artist) : false;
         $f_name       = $album->get_fullname();
 
+        // `parent`, `album`, `title` and `isDir` belong to `Child` only, see self::_getChildAlbum()
         $json = [
             'id' => $sub_id,
-            'parent' => '',
-            'album' => $f_name,
-            'title' => $f_name,
             'name' => $f_name,
             'version' => (string) $album->version,
-            'isDir' => true,
         ];
-
-        if ($subParent) {
-            $json['parent'] = $subParent;
-        } else {
-            unset($json['parent']);
-        }
 
         if ($album->has_art()) {
             $json['coverArt'] = $sub_id;
@@ -1873,10 +1865,7 @@ class OpenSubsonic_Json_Data
             $json['userRating'] = (int) ceil($user_rating);
         }
 
-        $avg_rating = $rating->get_average_rating();
-        if ($avg_rating > 0) {
-            $json['averageRating'] = $avg_rating;
-        }
+        // `averageRating` is not part of the `AlbumID3` response, unlike `Child`.
 
         $starred = new Userflag($album->id, 'album');
         $result  = $starred->get_flag(null, true);
@@ -1933,26 +1922,32 @@ class OpenSubsonic_Json_Data
             'name' => (string) $artist->get_fullname(),
         ];
 
-        if ($artist->has_art()) {
-            $json['coverArt'] = $sub_id;
-        }
+        // `coverArt`/`albumCount` are `ArtistID3` only; `userRating`/`averageRating` are plain `Artist` only.
+        if ($AlbumID3) {
+            if ($artist->has_art()) {
+                $json['coverArt'] = $sub_id;
+            }
 
-        $json['albumCount'] = $artist->album_count;
+            $json['albumCount'] = $artist->album_count;
+        }
 
         $starred = new Userflag($artist->id, 'artist');
         $result  = $starred->get_flag(null, true);
         if (is_array($result)) {
             $json['starred'] = date("Y-m-d\TH:i:s\Z", $result[1]);
         }
-        $rating      = new Rating($artist->id, 'artist');
-        $user_rating = ($rating->get_user_rating() ?? 0);
-        if ($user_rating > 0) {
-            $json['userRating'] = (int) ceil($user_rating);
-        }
 
-        $avg_rating = $rating->get_average_rating();
-        if ($avg_rating > 0) {
-            $json['averageRating'] = $avg_rating;
+        if (!$AlbumID3) {
+            $rating      = new Rating($artist->id, 'artist');
+            $user_rating = ($rating->get_user_rating() ?? 0);
+            if ($user_rating > 0) {
+                $json['userRating'] = (int) ceil($user_rating);
+            }
+
+            $avg_rating = $rating->get_average_rating();
+            if ($avg_rating > 0) {
+                $json['averageRating'] = $avg_rating;
+            }
         }
 
         if ($AlbumID3) {
@@ -1976,7 +1971,7 @@ class OpenSubsonic_Json_Data
      *     'id': string,
      *     'name': string,
      *     'coverArt'?: string,
-     *     'albumCount': int,
+     *     'albumCount'?: int,
      *     'starred'?: string
      * }> $artist_list
      * @param array{
@@ -1991,11 +1986,11 @@ class OpenSubsonic_Json_Data
      *     'id': string,
      *     'name': string,
      *     'coverArt'?: string,
-     *     'albumCount': int,
+     *     'albumCount'?: int,
      *     'starred'?: string
      * }>
      */
-    private static function _getArtistArray(array $artist_list, array $artist): array
+    private static function _getArtistArray(array $artist_list, array $artist, bool $id3 = true): array
     {
         $sub_id = OpenSubsonic_Api::getArtistSubId($artist['id']);
 
@@ -2004,11 +1999,13 @@ class OpenSubsonic_Json_Data
             'name' => (string) $artist['f_name'],
         ];
 
-        if ($artist['has_art']) {
-            $json['coverArt'] = $sub_id;
+        // `coverArt` and `albumCount` are `ArtistID3` only; a plain `Index` holds the `Artist` type.
+        if ($id3) {
+            if ($artist['has_art']) {
+                $json['coverArt'] = $sub_id;
+            }
+            $json['albumCount'] = $artist['album_count'];
         }
-
-        $json['albumCount'] = $artist['album_count'];
 
         $starred = new Userflag($artist['id'], 'artist');
         $result  = $starred->get_flag(null, true);
@@ -3171,7 +3168,7 @@ class OpenSubsonic_Json_Data
      * @param array{id: int, name: string, is_hidden: int, count: int} $genre
      * @return array{
      *     'songCount': int,
-     *     'albumCount': int,
+     *     'albumCount'?: int,
      *     'value': string
      * }
      */
@@ -3214,7 +3211,7 @@ class OpenSubsonic_Json_Data
      * }> $artists
      * @return array<int, mixed>
      */
-    private static function _getIndex(array $artists): array
+    private static function _getIndex(array $artists, bool $id3 = true): array
     {
         $sharpartists = [];
         $json         = [];
@@ -3234,7 +3231,7 @@ class OpenSubsonic_Json_Data
                     $index[$letter] = [];
                 }
 
-                $index[$letter] = self::_getArtistArray($index[$letter], $artist);
+                $index[$letter] = self::_getArtistArray($index[$letter], $artist, $id3);
             }
         }
 
@@ -3249,7 +3246,7 @@ class OpenSubsonic_Json_Data
         if (count($sharpartists) > 0) {
             $index = [];
             foreach ($sharpartists as $artist) {
-                $index = self::_getArtistArray($index, $artist);
+                $index = self::_getArtistArray($index, $artist, $id3);
             }
 
             if (!empty($index)) {
@@ -3732,6 +3729,7 @@ class OpenSubsonic_Json_Data
      *     'adminRole': bool,
      *     'settingsRole': bool,
      *     'downloadRole': bool,
+     *     'uploadRole': bool,
      *     'playlistRole': bool,
      *     'coverArtRole': bool,
      *     'commentRole': bool,
@@ -3754,6 +3752,7 @@ class OpenSubsonic_Json_Data
             'adminRole' => $isAdmin,
             'settingsRole' => true,
             'downloadRole' => (bool) Preference::get_by_user($user->id, 'download'),
+            'uploadRole' => (bool) Preference::get_by_user($user->id, 'allow_upload'),
             'playlistRole' => true,
             'coverArtRole' => $isManager,
             'commentRole' => (bool) AmpConfig::get('social'),

@@ -60,7 +60,7 @@ final readonly class LocalPlayAjaxHandler implements AjaxHandlerInterface
                 $type = (isset($_REQUEST['instance'])) ? 'localplay' : 'stream';
 
                 $localplay = new LocalPlay(AmpConfig::get('localplay_controller', ''));
-                $localplay->set_active_instance((int) $_REQUEST['instance']);
+                $localplay->set_active_instance((int) ($_REQUEST['instance'] ?? 0));
                 Preference::update('play_type', $user->getId(), $type);
 
                 // We should also refresh the sidebar
@@ -81,7 +81,7 @@ final readonly class LocalPlayAjaxHandler implements AjaxHandlerInterface
                 $localplay->connect();
 
                 // Switch on valid commands
-                switch ($_REQUEST['command']) {
+                switch ($_REQUEST['command'] ?? '') {
                     case 'refresh':
                         ob_start();
                         $objects = $localplay->get();
@@ -190,10 +190,11 @@ final readonly class LocalPlayAjaxHandler implements AjaxHandlerInterface
                 }
 
                 // Scrub it in
+                $instance  = (int) ($_REQUEST['instance'] ?? 0);
                 $localplay = new LocalPlay(AmpConfig::get('localplay_controller', ''));
-                $localplay->delete_instance((int) $_REQUEST['instance']);
+                $localplay->delete_instance($instance);
 
-                $key           = 'localplay_instance_' . $_REQUEST['instance'];
+                $key           = 'localplay_instance_' . $instance;
                 $results[$key] = '';
                 break;
             case 'repeat':

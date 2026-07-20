@@ -1,0 +1,45 @@
+{
+    "subsonic-response": {
+        "status": "ok",
+        "version": "1.16.1",
+        "type": "ampache",
+        "serverVersion": "8.0.0",
+        "openSubsonic": true,
+        "artists": {
+            "ignoredArticles": "The An A Die Das Ein Eine Les Le La",
+            "index": [
+                {
+                    "name": "M",
+                    "artist": [
+                        {
+                            "id": "ar-3",
+                            "name": "Mendes Brothers",
+                            "coverArt": "ar-3",
+                            "albumCount": 0
+                        }
+                    ]
+                },
+                {
+                    "name": "U",
+                    "artist": [
+                        {
+                            "id": "ar-1",
+                            "name": "Unknown (Orphaned)",
+                            "albumCount": 0
+                        }
+                    ]
+                },
+                {
+                    "name": "V",
+                    "artist": [
+                        {
+                            "id": "ar-2",
+                            "name": "Various Artists",
+                            "albumCount": 1
+                        }
+                    ]
+                }
+            ]
+        }
+    }
+}

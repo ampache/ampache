@@ -1,0 +1,16 @@
+{
+    "total_count": 1,
+    "md5": "d9fcb60bfd69c8a8c23be4b7a96ca112",
+    "deleted_video": [
+        {
+            "id": "1112",
+            "addition_time": 1627601339,
+            "delete_time": 1627621371,
+            "title": "pointy",
+            "file": "\/mnt\/video\/pointy.webm",
+            "catalog": "2",
+            "total_count": 0,
+            "total_skip": 0
+        }
+    ]
+}

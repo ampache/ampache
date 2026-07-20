@@ -127,6 +127,7 @@ $replaygain = (AmpConfig::get('theme_color', 'dark') == 'light')
 
         var replaygainPersist = Cookies.get('replaygain');
 
+        <?php if ($isShare === false) { ?>
         // Compact mode: default to collapsed on small screens, expanded on desktop.
         // A saved cookie (set by the toggle buttons) overrides the breakpoint default.
         var isSmallScreen = (window.innerWidth <= 768);
@@ -150,6 +151,7 @@ $replaygain = (AmpConfig::get('theme_color', 'dark') == 'light')
         if (nowPlayingHidden === 'true') {
             $('body').addClass('jp-nowplaying-hidden');
         }
+        <?php } ?>
 
         jplaylist = new jPlayerPlaylist({
             jPlayer: "#jquery_jplayer_1",
@@ -161,13 +163,13 @@ $replaygain = (AmpConfig::get('theme_color', 'dark') == 'light')
                 removeCount: <?php echo $removeCount; ?>, // shift the index back to keep x items BEFORE the current index
                 loopBack: false, // repeat a finished playlist from the start
                 shuffleOnLoop: false,
-                enableRemoveControls: true,
+                enableRemoveControls: <?php echo ($isShare) ? 'false' : 'true'; ?>,
                 displayTime: 'slow',
                 addTime: 'fast',
                 removeTime: 'fast',
                 shuffleTime: 'slow'
             },
-            preload: 'auto',
+            preload: '<?php echo ($isShare) ? 'none' : 'auto'; ?>',
             loop: <?php echo ($loop) ? 'true' : 'false'; ?>, // this is the jplayer loop status
             audioFullScreen: true,
             smoothPlayBar: true,
@@ -243,7 +245,7 @@ $replaygain = (AmpConfig::get('theme_color', 'dark') == 'light')
                             NotifyOfNewArtist();
                         }
                         <?php } ?>
-                        <?php if (AmpConfig::get('browser_notify')) { ?>
+                        <?php if ($iframed && AmpConfig::get('browser_notify')) { ?>
                         NotifyOfNewSong(obj.title, obj.artist, currentjpitem.attr("data-poster"));
                         <?php } ?>
                         if ("mediaSession" in navigator) {
@@ -430,7 +432,8 @@ $shareStyle = ($isShare || $isRandom)
 
 if ($isVideo === false) {
     $containerClass = "jp-audio";
-    $playerClass    = "jp-jplayer-audio"; ?>
+    $playerClass    = "jp-jplayer-audio";
+    if ($isShare === false) { ?>
     <div class="playing_info">
         <img class="playing_art" alt="" style="display: none;">
         <div class="playing_artist"></div>
@@ -441,12 +444,12 @@ if ($isVideo === false) {
             <div class="playing_actions"></div>
         </div>
     </div>
-    <?php
-} else {
-    $areaClass .= " jp-area-video";
-    $containerClass = "jp-video jp-video-float jp-video-360p";
-    $playerClass    = "jp-jplayer-video";
-} ?>
+    <?php }
+    } else {
+        $areaClass .= " jp-area-video";
+        $containerClass = "jp-video jp-video-float jp-video-360p";
+        $playerClass    = "jp-jplayer-video";
+    } ?>
 <div id="shouts_data"></div>
 <div class="jp-area<?php echo $areaClass; ?>">
     <div id="jp_container_1" class="<?php echo $containerClass; ?>">
@@ -532,8 +535,8 @@ if ($isVideo === false) {
                 <div class="player_actions">
                     <?php if ($iframed) { ?>
                         <?php // playlist-editing buttons make no sense when random/democratic drives the playlist;
-                              // show them dimmed and inert there so the action layout matches the regular player
-                        $playlistEditable = ($isRandom === false && $isDemocratic === false); ?>
+                                  // show them dimmed and inert there so the action layout matches the regular player
+                            $playlistEditable = ($isRandom === false && $isDemocratic === false); ?>
                             <div class="action_button">
                         <?php if (Access::check(AccessTypeEnum::INTERFACE, AccessLevelEnum::USER)) {
                             if ($playlistEditable) { ?>
@@ -619,7 +622,7 @@ if ($isVideo === false) {
         </div>
     </div>
 </div>
-<?php if ($iframed === false || $isShare) {
+<?php if ($iframed === false && $isShare === false) {
     require_once Ui::find_template('uberviz.inc.php');
 } ?>
 <?php if ($isShare === false) { ?>

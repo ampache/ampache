@@ -58,6 +58,18 @@ class ApiHandlerTest extends TestCase
         ];
     }
 
+    /**
+     * @return array<string, array{0: string, 1: string}>
+     */
+    public static function deletedAliasProvider(): array
+    {
+        return [
+            'songs' => ['deleted-songs', 'deleted_songs'],
+            'videos' => ['deleted-videos', 'deleted_videos'],
+            'podcast episodes' => ['deleted-podcast-episodes', 'deleted_podcast_episodes'],
+        ];
+    }
+
     public static function shareableTypeProvider(): array
     {
         return [
@@ -103,6 +115,19 @@ class ApiHandlerTest extends TestCase
         static::assertSame(
             'catalog_action',
             $this->subject->normalizeAction($action, 'catalog', true)
+        );
+    }
+
+    /**
+     * The canonical REST path is `{type}/deleted`, but the flat hyphenated resource name is a plausible client
+     * guess and every other hyphenated alias is accepted, so it has to resolve to the same action.
+     */
+    #[DataProvider(methodName: 'deletedAliasProvider')]
+    public function testNormalizeActionRoutesHyphenatedDeletedAliases(string $action, string $expected): void
+    {
+        static::assertSame(
+            $expected,
+            $this->subject->normalizeAction($action, null, false)
         );
     }
 

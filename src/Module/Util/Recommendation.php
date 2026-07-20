@@ -93,6 +93,11 @@ class Recommendation
             return $results;
         }
 
+        // last.fm omits the wiki element entirely for albums without a description
+        if (!isset($xml->album->wiki)) {
+            return $results;
+        }
+
         $results['summary'] = strip_tags(
             (string) preg_replace(
                 "#<a href=([^<]*)Last\.fm</a>.#",
@@ -227,6 +232,10 @@ class Recommendation
         try {
             $xml = self::get_lastfm_results('artist.getinfo', $query);
         } catch (LastFmQueryFailedException) {
+            return $results;
+        }
+
+        if (!isset($xml->artist->bio)) {
             return $results;
         }
 
