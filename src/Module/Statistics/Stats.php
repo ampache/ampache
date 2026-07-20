@@ -1144,7 +1144,7 @@ class Stats
 
         // subtract the restored detail from the summary, then drop any row that is fully accounted for
         $subtract = ($restore !== null)
-            ? Dba::write("UPDATE `object_count_summary` AS `summary` INNER JOIN (SELECT `object_type`, `object_id`, `user`, `count_type`, COUNT(*) AS `restored` FROM `object_count_archive` GROUP BY `object_type`, `object_id`, `user`, `count_type` UNION ALL " . self::derivedAggregateSelect() . ") AS `restored` ON `restored`.`object_type` = `summary`.`object_type` AND `restored`.`object_id` = `summary`.`object_id` AND `restored`.`user` = `summary`.`user` AND `restored`.`count_type` = `summary`.`count_type` SET `summary`.`count` = GREATEST(0, `summary`.`count` - `restored`.`restored`);")
+            ? Dba::write("UPDATE `object_count_summary` AS `summary` INNER JOIN (SELECT `object_type`, `object_id`, `user`, `count_type`, COUNT(*) AS `restored` FROM `object_count_archive` GROUP BY `object_type`, `object_id`, `user`, `count_type` UNION ALL " . self::derivedAggregateSelect() . ") AS `restored` ON `restored`.`object_type` = `summary`.`object_type` AND `restored`.`object_id` = `summary`.`object_id` AND `restored`.`user` = `summary`.`user` AND `restored`.`count_type` = `summary`.`count_type` SET `summary`.`count` = GREATEST(0, CAST(`summary`.`count` AS SIGNED) - CAST(`restored`.`restored` AS SIGNED));")
             : null;
         $cleanup = ($subtract !== null)
             ? Dba::write("DELETE FROM `object_count_summary` WHERE `count` <= 0;")
@@ -1296,7 +1296,7 @@ class Stats
 
         return [
             'album' => "SELECT DISTINCT `song`.`album` AS `derived_id`, " . $columns . " " . $song . " WHERE " . $is_song . " AND `song`.`album` > 0 AND " . $played,
-            'album_disk' => "SELECT DISTINCT `album_disk`.`id` AS `derived_id`, " . $columns . " " . $song . " INNER JOIN `album_disk` ON `album_disk`.`album_id` = `song`.`album` AND `album_disk`.`disk` = `song`.`disk` WHERE " . $is_song . " AND " . $played,
+            'album_disk' => "SELECT DISTINCT `album_disk`.`id` AS `derived_id`, " . $columns . " " . $song . " INNER JOIN `album_disk` ON `album_disk`.`album_id` = `song`.`album` AND `album_disk`.`disk` = `song`.`disk` WHERE " . $is_song . " AND `song`.`album` > 0 AND " . $played,
             'artist' => "SELECT DISTINCT `artist_map`.`artist_id` AS `derived_id`, " . $columns . " " . $song . " INNER JOIN `artist_map` ON (`artist_map`.`object_type` = 'song' AND `artist_map`.`object_id` = `song`.`id`) OR (`artist_map`.`object_type` = 'album' AND `artist_map`.`object_id` = `song`.`album`) WHERE " . $is_song . " AND `artist_map`.`artist_id` > 0 AND " . $played,
             'podcast' => "SELECT DISTINCT `podcast_episode`.`podcast` AS `derived_id`, " . $columns . " " . $episode . " WHERE `" . $alias . "`.`object_type` = 'podcast_episode' AND `podcast_episode`.`podcast` > 0 AND " . $played,
         ];
