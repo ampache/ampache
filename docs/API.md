@@ -21,6 +21,20 @@ As of 7.7.1 (API 6.9.0) Ampache fully supports POST data requests for all API me
 
 POST requests offer more privacy than a regular GET request because data is sent in the body, not the URL, avoiding exposure in browser history and logs.
 
+Parameters for `POST`, `PUT`, `PATCH` and `DELETE` requests may be supplied in any of three ways, and may be mixed with query-string parameters (the body takes precedence on conflicts):
+
+* a query string (as with `GET`)
+* a form-encoded body (`Content-Type: application/x-www-form-urlencoded`)
+* a JSON body (`Content-Type: application/json`)
+
+For example, these are equivalent:
+
+```shell
+curl "https://music.com.au/server/json.server.php?action=song&filter=54&auth=API_SESSION"
+curl -X POST "https://music.com.au/server/json.server.php" -d "action=song&filter=54&auth=API_SESSION"
+curl -X POST "https://music.com.au/server/json.server.php" -H "Content-Type: application/json" -d '{"action":"song","filter":"54","auth":"API_SESSION"}'
+```
+
 ## Archived Version Documentation
 
 After each release, a documentation page will be created to allow pruning old features from the current version.

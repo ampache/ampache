@@ -9,6 +9,7 @@ API version **8** joins the concurrent live surfaces (3/4/5/6 — version 7 rema
 ### Added (800000)
 
 * ALL
+  * Request parameters for `POST`/`PUT`/`PATCH`/`DELETE` may now be supplied in a JSON body (`Content-Type: application/json`), in addition to the existing query-string and form-encoded (`application/x-www-form-urlencoded`) support
   * New API version `8` added to `Api::API_VERSIONS`; `Api::DEFAULT_VERSION` bumped `6` → `8`
   * New `Api8` method surface (132 methods) under `src/Module/Api/Method/Api8/`, implemented against `MethodInterface` with dedicated `Json8_Data`/`Xml8_Data` output classes
   * `ApiOutputInterface` (and its `JsonOutput`/`XmlOutput` implementations) reworked onto a single version-parameterized method per concept — `albums(int $apiVersion, ...)`, `error(int $apiVersion, ...)`, `podcastEpisodes()`, `setCount()`, `setLimit()`, `setOffset()`, `success()`, `writeEmpty()` — replacing the previous pattern of a separate `xxx()`/`xxx6()` method pair per API version
@@ -30,6 +31,7 @@ API version **8** joins the concurrent live surfaces (3/4/5/6 — version 7 rema
 ### Changed (800000)
 
 * ALL
+  * Passing secrets in the query string is deprecated for privacy (query values leak into server/proxy logs and browser history): the `password` on `register`/`user_create`/`user_edit`/`catalog_add` and the `handshake` `auth` key should be sent in a request body (or, for `auth`, the `Authorization: Bearer` header) — query-string support for these will be removed in **API9**
   * Version rollover logic reworked for the new 5-version lineup: requests pinned to a disabled API6 now roll forward to API8 (version 7 is explicitly rejected as unsupported)
   * API8 JSON/XML output now sets real HTTP status codes for errors and empty results (`404` for empty, `Api::getHttpCode()`-mapped codes for errors) — API3–6 always returned HTTP 200 with the error embedded in the response body
   * API8 uses updated action names for a few methods present under legacy naming in API3/4: `index`/`list` (not `get_indexes`), `playlist_add` (not `playlist_add_song`), `user_edit` (not `user_update`)
