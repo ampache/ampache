@@ -732,8 +732,15 @@ playlist_art = "true"
 ; Stats Consolidation Threshold
 ; Number of days of detailed play history to keep in the object_count table.
 ; When set to a value greater than 0, the cleanup:consolidateStats CLI command
-; will aggregate older rows into the object_count_summary table and delete them,
-; keeping the table size under control on long-running servers.
+; will aggregate older rows into the object_count_summary table and move the
+; detail rows to the object_count_archive table, keeping object_count small on
+; long-running servers. Nothing is deleted: the archive keeps every media row
+; (song, video, podcast_episode, playlist, live_stream) with its exact date,
+; agent and location, for streams, skips and downloads alike. Parent rows
+; (album, album_disk, artist, podcast) are not archived because
+; cleanup:restoreStats regenerates them from the media rows, which resolves the
+; parent that is correct now rather than a stored id that a merge or a re-tag
+; may have moved. Run cleanup:restoreStats to put it all back.
 ; Stored counters stay exact (total/skip counts, played flags, all-time
 ; per-object and per-user counts, streamed data size, auto-rating plugin).
 ; The following only evaluate the retained detail window after consolidation:

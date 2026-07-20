@@ -53,6 +53,7 @@ final readonly class UserRepository implements UserRepositoryInterface
             'democratic',
             'ip_history',
             'object_count',
+            'object_count_archive',
             'object_count_summary',
             'playlist',
             'rating',
