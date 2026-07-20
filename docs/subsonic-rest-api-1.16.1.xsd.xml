@@ -1,0 +1,635 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:sub="http://subsonic.org/restapi" targetNamespace="http://subsonic.org/restapi" attributeFormDefault="unqualified" elementFormDefault="qualified" version="1.16.1">
+
+    <xs:element name="subsonic-response" type="sub:Response"/>
+
+    <xs:complexType name="Response">
+        <xs:choice minOccurs="0" maxOccurs="1">
+            <xs:element name="musicFolders" type="sub:MusicFolders" minOccurs="1" maxOccurs="1"/>
+            <xs:element name="indexes" type="sub:Indexes" minOccurs="1" maxOccurs="1"/>
+            <xs:element name="directory" type="sub:Directory" minOccurs="1" maxOccurs="1"/>
+            <xs:element name="genres" type="sub:Genres" minOccurs="1" maxOccurs="1"/>
+            <xs:element name="artists" type="sub:ArtistsID3" minOccurs="1" maxOccurs="1"/>
+            <xs:element name="artist" type="sub:ArtistWithAlbumsID3" minOccurs="1" maxOccurs="1"/>
+            <xs:element name="album" type="sub:AlbumWithSongsID3" minOccurs="1" maxOccurs="1"/>
+            <xs:element name="song" type="sub:Child" minOccurs="1" maxOccurs="1"/>
+            <xs:element name="videos" type="sub:Videos" minOccurs="1" maxOccurs="1"/>
+            <xs:element name="videoInfo" type="sub:VideoInfo" minOccurs="1" maxOccurs="1"/>
+            <xs:element name="nowPlaying" type="sub:NowPlaying" minOccurs="1" maxOccurs="1"/>
+            <xs:element name="searchResult" type="sub:SearchResult" minOccurs="1" maxOccurs="1"/>
+            <xs:element name="searchResult2" type="sub:SearchResult2" minOccurs="1" maxOccurs="1"/>
+            <xs:element name="searchResult3" type="sub:SearchResult3" minOccurs="1" maxOccurs="1"/>
+            <xs:element name="playlists" type="sub:Playlists" minOccurs="1" maxOccurs="1"/>
+            <xs:element name="playlist" type="sub:PlaylistWithSongs" minOccurs="1" maxOccurs="1"/>
+            <xs:element name="jukeboxStatus" type="sub:JukeboxStatus" minOccurs="1" maxOccurs="1"/>
+            <xs:element name="jukeboxPlaylist" type="sub:JukeboxPlaylist" minOccurs="1" maxOccurs="1"/>
+            <xs:element name="license" type="sub:License" minOccurs="1" maxOccurs="1"/>
+            <xs:element name="users" type="sub:Users" minOccurs="1" maxOccurs="1"/>
+            <xs:element name="user" type="sub:User" minOccurs="1" maxOccurs="1"/>
+            <xs:element name="chatMessages" type="sub:ChatMessages" minOccurs="1" maxOccurs="1"/>
+            <xs:element name="albumList" type="sub:AlbumList" minOccurs="1" maxOccurs="1"/>
+            <xs:element name="albumList2" type="sub:AlbumList2" minOccurs="1" maxOccurs="1"/>
+            <xs:element name="randomSongs" type="sub:Songs" minOccurs="1" maxOccurs="1"/>
+            <xs:element name="songsByGenre" type="sub:Songs" minOccurs="1" maxOccurs="1"/>
+            <xs:element name="lyrics" type="sub:Lyrics" minOccurs="1" maxOccurs="1"/>
+            <xs:element name="podcasts" type="sub:Podcasts" minOccurs="1" maxOccurs="1"/>
+            <xs:element name="newestPodcasts" type="sub:NewestPodcasts" minOccurs="1" maxOccurs="1"/>
+            <xs:element name="internetRadioStations" type="sub:InternetRadioStations" minOccurs="1" maxOccurs="1"/>
+            <xs:element name="bookmarks" type="sub:Bookmarks" minOccurs="1" maxOccurs="1"/>
+            <xs:element name="playQueue" type="sub:PlayQueue" minOccurs="1" maxOccurs="1"/>
+            <xs:element name="shares" type="sub:Shares" minOccurs="1" maxOccurs="1"/>
+            <xs:element name="starred" type="sub:Starred" minOccurs="1" maxOccurs="1"/>
+            <xs:element name="starred2" type="sub:Starred2" minOccurs="1" maxOccurs="1"/>
+            <xs:element name="albumInfo" type="sub:AlbumInfo" minOccurs="1" maxOccurs="1"/>
+            <xs:element name="artistInfo" type="sub:ArtistInfo" minOccurs="1" maxOccurs="1"/>
+            <xs:element name="artistInfo2" type="sub:ArtistInfo2" minOccurs="1" maxOccurs="1"/>
+            <xs:element name="similarSongs" type="sub:SimilarSongs" minOccurs="1" maxOccurs="1"/>
+            <xs:element name="similarSongs2" type="sub:SimilarSongs2" minOccurs="1" maxOccurs="1"/>
+            <xs:element name="topSongs" type="sub:TopSongs" minOccurs="1" maxOccurs="1"/>
+            <xs:element name="scanStatus" type="sub:ScanStatus" minOccurs="1" maxOccurs="1"/>
+            <xs:element name="error" type="sub:Error" minOccurs="1" maxOccurs="1"/>
+        </xs:choice>
+        <xs:attribute name="status" type="sub:ResponseStatus" use="required"/>
+        <xs:attribute name="version" type="sub:Version" use="required"/>
+    </xs:complexType>
+
+    <xs:simpleType name="ResponseStatus">
+        <xs:restriction base="xs:string">
+            <xs:enumeration value="ok"/>
+            <xs:enumeration value="failed"/>
+        </xs:restriction>
+    </xs:simpleType>
+
+    <xs:simpleType name="Version">
+        <xs:restriction base="xs:string">
+            <xs:pattern value="\d+\.\d+\.\d+"/>
+        </xs:restriction>
+    </xs:simpleType>
+
+    <xs:complexType name="MusicFolders">
+        <xs:sequence>
+            <xs:element name="musicFolder" type="sub:MusicFolder" minOccurs="0" maxOccurs="unbounded"/>
+        </xs:sequence>
+    </xs:complexType>
+
+    <xs:complexType name="MusicFolder">
+        <xs:attribute name="id" type="xs:int" use="required"/>
+        <xs:attribute name="name" type="xs:string" use="optional"/>
+    </xs:complexType>
+
+    <xs:complexType name="Indexes">
+        <xs:sequence>
+            <xs:element name="shortcut" type="sub:Artist" minOccurs="0" maxOccurs="unbounded"/>
+            <xs:element name="index" type="sub:Index" minOccurs="0" maxOccurs="unbounded"/>
+            <xs:element name="child" type="sub:Child" minOccurs="0" maxOccurs="unbounded"/> <!-- Added in 1.7.0 -->
+        </xs:sequence>
+        <xs:attribute name="lastModified" type="xs:long" use="required"/>
+        <xs:attribute name="ignoredArticles" type="xs:string" use="required"/> <!-- Added in 1.10.0 -->
+    </xs:complexType>
+
+    <xs:complexType name="Index">
+        <xs:sequence>
+            <xs:element name="artist" type="sub:Artist" minOccurs="0" maxOccurs="unbounded"/>
+        </xs:sequence>
+        <xs:attribute name="name" type="xs:string" use="required"/>
+    </xs:complexType>
+
+    <xs:complexType name="Artist">
+        <xs:attribute name="id" type="xs:string" use="required"/>
+        <xs:attribute name="name" type="xs:string" use="required"/>
+        <xs:attribute name="artistImageUrl" type="xs:string" use="optional"/>  <!-- Added in 1.16.1 -->
+        <xs:attribute name="starred" type="xs:dateTime" use="optional"/> <!-- Added in 1.10.1 -->
+        <xs:attribute name="userRating" type="sub:UserRating" use="optional"/>  <!-- Added in 1.13.0 -->
+        <xs:attribute name="averageRating" type="sub:AverageRating" use="optional"/>  <!-- Added in 1.13.0 -->
+    </xs:complexType>
+
+    <xs:complexType name="Genres">
+        <xs:sequence>
+            <xs:element name="genre" type="sub:Genre" minOccurs="0" maxOccurs="unbounded"/>
+        </xs:sequence>
+    </xs:complexType>
+
+    <xs:complexType name="Genre" mixed="true">
+        <xs:attribute name="songCount" type="xs:int" use="required"/>  <!-- Added in 1.10.2 -->
+        <xs:attribute name="albumCount" type="xs:int" use="required"/> <!-- Added in 1.10.2 -->
+    </xs:complexType>
+
+    <xs:complexType name="ArtistsID3">
+        <xs:sequence>
+            <xs:element name="index" type="sub:IndexID3" minOccurs="0" maxOccurs="unbounded"/>
+        </xs:sequence>
+        <xs:attribute name="ignoredArticles" type="xs:string" use="required"/> <!-- Added in 1.10.0 -->
+    </xs:complexType>
+
+    <xs:complexType name="IndexID3">
+        <xs:sequence>
+            <xs:element name="artist" type="sub:ArtistID3" minOccurs="0" maxOccurs="unbounded"/>
+        </xs:sequence>
+        <xs:attribute name="name" type="xs:string" use="required"/>
+    </xs:complexType>
+
+    <xs:complexType name="ArtistID3">
+        <xs:attribute name="id" type="xs:string" use="required"/>
+        <xs:attribute name="name" type="xs:string" use="required"/>
+        <xs:attribute name="coverArt" type="xs:string" use="optional"/>
+        <xs:attribute name="artistImageUrl" type="xs:string" use="optional"/>  <!-- Added in 1.16.1 -->
+        <xs:attribute name="albumCount" type="xs:int" use="required"/>
+        <xs:attribute name="starred" type="xs:dateTime" use="optional"/>
+    </xs:complexType>
+
+    <xs:complexType name="ArtistWithAlbumsID3">
+        <xs:complexContent>
+            <xs:extension base="sub:ArtistID3">
+                <xs:sequence>
+                    <xs:element name="album" type="sub:AlbumID3" minOccurs="0" maxOccurs="unbounded"/>
+                </xs:sequence>
+            </xs:extension>
+        </xs:complexContent>
+    </xs:complexType>
+
+    <xs:complexType name="AlbumID3">
+        <xs:attribute name="id" type="xs:string" use="required"/>
+        <xs:attribute name="name" type="xs:string" use="required"/>
+        <xs:attribute name="artist" type="xs:string" use="optional"/>
+        <xs:attribute name="artistId" type="xs:string" use="optional"/>
+        <xs:attribute name="coverArt" type="xs:string" use="optional"/>
+        <xs:attribute name="songCount" type="xs:int" use="required"/>
+        <xs:attribute name="duration" type="xs:int" use="required"/>
+        <xs:attribute name="playCount" type="xs:long" use="optional"/>  <!-- Added in 1.14.0 -->
+        <xs:attribute name="created" type="xs:dateTime" use="required"/>
+        <xs:attribute name="starred" type="xs:dateTime" use="optional"/>
+        <xs:attribute name="year" type="xs:int" use="optional"/>     <!-- Added in 1.10.1 -->
+        <xs:attribute name="genre" type="xs:string" use="optional"/> <!-- Added in 1.10.1 -->
+    </xs:complexType>
+
+    <xs:complexType name="AlbumWithSongsID3">
+        <xs:complexContent>
+            <xs:extension base="sub:AlbumID3">
+                <xs:sequence>
+                    <xs:element name="song" type="sub:Child" minOccurs="0" maxOccurs="unbounded"/>
+                </xs:sequence>
+            </xs:extension>
+        </xs:complexContent>
+    </xs:complexType>
+
+    <xs:complexType name="Videos">
+        <xs:sequence>
+            <xs:element name="video" type="sub:Child" minOccurs="0" maxOccurs="unbounded"/>
+        </xs:sequence>
+    </xs:complexType>
+
+    <xs:complexType name="VideoInfo">
+        <xs:sequence>
+            <xs:element name="captions" type="sub:Captions" minOccurs="0" maxOccurs="unbounded"/>
+            <xs:element name="audioTrack" type="sub:AudioTrack" minOccurs="0" maxOccurs="unbounded"/>
+            <xs:element name="conversion" type="sub:VideoConversion" minOccurs="0" maxOccurs="unbounded"/>
+        </xs:sequence>
+        <xs:attribute name="id" type="xs:string" use="required"/>
+    </xs:complexType>
+
+    <xs:complexType name="Captions">
+        <xs:attribute name="id" type="xs:string" use="required"/>
+        <xs:attribute name="name" type="xs:string" use="optional"/>
+    </xs:complexType>
+
+    <xs:complexType name="AudioTrack">
+        <xs:attribute name="id" type="xs:string" use="required"/>
+        <xs:attribute name="name" type="xs:string" use="optional"/>
+        <xs:attribute name="languageCode" type="xs:string" use="optional"/>
+    </xs:complexType>
+
+    <xs:complexType name="VideoConversion">
+        <xs:attribute name="id" type="xs:string" use="required"/>
+        <xs:attribute name="bitRate" type="xs:int" use="optional"/> <!-- In Kbps -->
+        <xs:attribute name="audioTrackId" type="xs:int" use="optional"/>
+    </xs:complexType>
+
+    <xs:complexType name="Directory">
+        <xs:sequence>
+            <xs:element name="child" type="sub:Child" minOccurs="0" maxOccurs="unbounded"/>
+        </xs:sequence>
+        <xs:attribute name="id" type="xs:string" use="required"/>
+        <xs:attribute name="parent" type="xs:string" use="optional"/>
+        <xs:attribute name="name" type="xs:string" use="required"/>
+        <xs:attribute name="starred" type="xs:dateTime" use="optional"/> <!-- Added in 1.10.1 -->
+        <xs:attribute name="userRating" type="sub:UserRating" use="optional"/>  <!-- Added in 1.13.0 -->
+        <xs:attribute name="averageRating" type="sub:AverageRating" use="optional"/>  <!-- Added in 1.13.0 -->
+        <xs:attribute name="playCount" type="xs:long" use="optional"/>  <!-- Added in 1.14.0 -->
+    </xs:complexType>
+
+    <xs:complexType name="Child">
+        <xs:attribute name="id" type="xs:string" use="required"/>
+        <xs:attribute name="parent" type="xs:string" use="optional"/>
+        <xs:attribute name="isDir" type="xs:boolean" use="required"/>
+        <xs:attribute name="title" type="xs:string" use="required"/>
+        <xs:attribute name="album" type="xs:string" use="optional"/>
+        <xs:attribute name="artist" type="xs:string" use="optional"/>
+        <xs:attribute name="track" type="xs:int" use="optional"/>
+        <xs:attribute name="year" type="xs:int" use="optional"/>
+        <xs:attribute name="genre" type="xs:string" use="optional"/>
+        <xs:attribute name="coverArt" type="xs:string" use="optional"/>
+        <xs:attribute name="size" type="xs:long" use="optional"/>
+        <xs:attribute name="contentType" type="xs:string" use="optional"/>
+        <xs:attribute name="suffix" type="xs:string" use="optional"/>
+        <xs:attribute name="transcodedContentType" type="xs:string" use="optional"/>
+        <xs:attribute name="transcodedSuffix" type="xs:string" use="optional"/>
+        <xs:attribute name="duration" type="xs:int" use="optional"/>
+        <xs:attribute name="bitRate" type="xs:int" use="optional"/>
+        <xs:attribute name="path" type="xs:string" use="optional"/>
+        <xs:attribute name="isVideo" type="xs:boolean" use="optional"/>  <!-- Added in 1.4.1 -->
+        <xs:attribute name="userRating" type="sub:UserRating" use="optional"/>  <!-- Added in 1.6.0 -->
+        <xs:attribute name="averageRating" type="sub:AverageRating" use="optional"/>  <!-- Added in 1.6.0 -->
+        <xs:attribute name="playCount" type="xs:long" use="optional"/>  <!-- Added in 1.14.0 -->
+        <xs:attribute name="discNumber" type="xs:int" use="optional"/>  <!-- Added in 1.8.0 -->
+        <xs:attribute name="created" type="xs:dateTime" use="optional"/>  <!-- Added in 1.8.0 -->
+        <xs:attribute name="starred" type="xs:dateTime" use="optional"/>  <!-- Added in 1.8.0 -->
+        <xs:attribute name="albumId" type="xs:string" use="optional"/>  <!-- Added in 1.8.0 -->
+        <xs:attribute name="artistId" type="xs:string" use="optional"/>  <!-- Added in 1.8.0 -->
+        <xs:attribute name="type" type="sub:MediaType" use="optional"/>  <!-- Added in 1.8.0 -->
+        <xs:attribute name="bookmarkPosition" type="xs:long" use="optional"/>  <!-- In millis. Added in 1.10.1 -->
+        <xs:attribute name="originalWidth" type="xs:int" use="optional"/>  <!-- Added in 1.13.0 -->
+        <xs:attribute name="originalHeight" type="xs:int" use="optional"/>  <!-- Added in 1.13.0 -->
+    </xs:complexType>
+
+    <xs:simpleType name="MediaType">
+        <xs:restriction base="xs:string">
+            <xs:enumeration value="music"/>
+            <xs:enumeration value="podcast"/>
+            <xs:enumeration value="audiobook"/>
+            <xs:enumeration value="video"/>
+        </xs:restriction>
+    </xs:simpleType>
+
+    <xs:simpleType name="UserRating">
+        <xs:restriction base="xs:int">
+            <xs:minInclusive value="1"/>
+            <xs:maxInclusive value="5"/>
+        </xs:restriction>
+    </xs:simpleType>
+
+    <xs:simpleType name="AverageRating">
+        <xs:restriction base="xs:double">
+            <xs:minInclusive value="1.0"/>
+            <xs:maxInclusive value="5.0"/>
+        </xs:restriction>
+    </xs:simpleType>
+
+    <xs:complexType name="NowPlaying">
+        <xs:sequence>
+            <xs:element name="entry" type="sub:NowPlayingEntry" minOccurs="0" maxOccurs="unbounded"/>
+        </xs:sequence>
+    </xs:complexType>
+
+    <xs:complexType name="NowPlayingEntry">
+        <xs:complexContent>
+            <xs:extension base="sub:Child">
+                <xs:attribute name="username" type="xs:string" use="required"/>
+                <xs:attribute name="minutesAgo" type="xs:int" use="required"/>
+                <xs:attribute name="playerId" type="xs:int" use="required"/>
+                <xs:attribute name="playerName" type="xs:string" use="optional"/>
+            </xs:extension>
+        </xs:complexContent>
+    </xs:complexType>
+
+    <!--Deprecated-->
+    <xs:complexType name="SearchResult">
+        <xs:sequence>
+            <xs:element name="match" type="sub:Child" minOccurs="0" maxOccurs="unbounded"/>
+        </xs:sequence>
+        <xs:attribute name="offset" type="xs:int" use="required"/>
+        <xs:attribute name="totalHits" type="xs:int" use="required"/>
+    </xs:complexType>
+
+    <xs:complexType name="SearchResult2">
+        <xs:sequence>
+            <xs:element name="artist" type="sub:Artist" minOccurs="0" maxOccurs="unbounded"/>
+            <xs:element name="album" type="sub:Child" minOccurs="0" maxOccurs="unbounded"/>
+            <xs:element name="song" type="sub:Child" minOccurs="0" maxOccurs="unbounded"/>
+        </xs:sequence>
+    </xs:complexType>
+
+    <xs:complexType name="SearchResult3">
+        <xs:sequence>
+            <xs:element name="artist" type="sub:ArtistID3" minOccurs="0" maxOccurs="unbounded"/>
+            <xs:element name="album" type="sub:AlbumID3" minOccurs="0" maxOccurs="unbounded"/>
+            <xs:element name="song" type="sub:Child" minOccurs="0" maxOccurs="unbounded"/>
+        </xs:sequence>
+    </xs:complexType>
+
+    <xs:complexType name="Playlists">
+        <xs:sequence>
+            <xs:element name="playlist" type="sub:Playlist" minOccurs="0" maxOccurs="unbounded"/>
+        </xs:sequence>
+    </xs:complexType>
+
+    <xs:complexType name="Playlist">
+        <xs:sequence>
+            <xs:element name="allowedUser" type="xs:string" minOccurs="0" maxOccurs="unbounded"/> <!--Added in 1.8.0-->
+        </xs:sequence>
+        <xs:attribute name="id" type="xs:string" use="required"/>
+        <xs:attribute name="name" type="xs:string" use="required"/>
+        <xs:attribute name="comment" type="xs:string" use="optional"/>   <!--Added in 1.8.0-->
+        <xs:attribute name="owner" type="xs:string" use="optional"/>     <!--Added in 1.8.0-->
+        <xs:attribute name="public" type="xs:boolean" use="optional"/>   <!--Added in 1.8.0-->
+        <xs:attribute name="songCount" type="xs:int" use="required"/>    <!--Added in 1.8.0-->
+        <xs:attribute name="duration" type="xs:int" use="required"/>     <!--Added in 1.8.0-->
+        <xs:attribute name="created" type="xs:dateTime" use="required"/> <!--Added in 1.8.0-->
+        <xs:attribute name="changed" type="xs:dateTime" use="required"/> <!--Added in 1.13.0-->
+        <xs:attribute name="coverArt" type="xs:string" use="optional"/>  <!--Added in 1.11.0-->
+    </xs:complexType>
+
+    <xs:complexType name="PlaylistWithSongs">
+        <xs:complexContent>
+            <xs:extension base="sub:Playlist">
+                <xs:sequence>
+                    <xs:element name="entry" type="sub:Child" minOccurs="0" maxOccurs="unbounded"/>
+                </xs:sequence>
+            </xs:extension>
+        </xs:complexContent>
+    </xs:complexType>
+
+    <xs:complexType name="JukeboxStatus">
+        <xs:attribute name="currentIndex" type="xs:int" use="required"/>
+        <xs:attribute name="playing" type="xs:boolean" use="required"/>
+        <xs:attribute name="gain" type="xs:float" use="required"/>
+        <xs:attribute name="position" type="xs:int" use="optional"/> <!--Added in 1.7.0-->
+    </xs:complexType>
+
+    <xs:complexType name="JukeboxPlaylist">
+        <xs:complexContent>
+            <xs:extension base="sub:JukeboxStatus">
+                <xs:sequence>
+                    <xs:element name="entry" type="sub:Child" minOccurs="0" maxOccurs="unbounded"/>
+                </xs:sequence>
+            </xs:extension>
+        </xs:complexContent>
+    </xs:complexType>
+
+    <xs:complexType name="ChatMessages">
+        <xs:sequence>
+            <xs:element name="chatMessage" type="sub:ChatMessage" minOccurs="0" maxOccurs="unbounded"/>
+        </xs:sequence>
+    </xs:complexType>
+
+    <xs:complexType name="ChatMessage">
+        <xs:attribute name="username" type="xs:string" use="required"/>
+        <xs:attribute name="time" type="xs:long" use="required"/>
+        <xs:attribute name="message" type="xs:string" use="required"/>
+    </xs:complexType>
+
+    <xs:complexType name="AlbumList">
+        <xs:sequence>
+            <xs:element name="album" type="sub:Child" minOccurs="0" maxOccurs="unbounded"/>
+        </xs:sequence>
+    </xs:complexType>
+
+    <xs:complexType name="AlbumList2">
+        <xs:sequence>
+            <xs:element name="album" type="sub:AlbumID3" minOccurs="0" maxOccurs="unbounded"/>
+        </xs:sequence>
+    </xs:complexType>
+
+    <xs:complexType name="Songs">
+        <xs:sequence>
+            <xs:element name="song" type="sub:Child" minOccurs="0" maxOccurs="unbounded"/>
+        </xs:sequence>
+    </xs:complexType>
+
+    <xs:complexType name="Lyrics" mixed="true">
+        <xs:attribute name="artist" type="xs:string" use="optional"/>
+        <xs:attribute name="title" type="xs:string" use="optional"/>
+    </xs:complexType>
+
+    <xs:complexType name="Podcasts">
+        <xs:sequence>
+            <xs:element name="channel" type="sub:PodcastChannel" minOccurs="0" maxOccurs="unbounded"/>
+        </xs:sequence>
+    </xs:complexType>
+
+    <xs:complexType name="PodcastChannel">
+        <xs:sequence>
+            <xs:element name="episode" type="sub:PodcastEpisode" minOccurs="0" maxOccurs="unbounded"/>
+        </xs:sequence>
+        <xs:attribute name="id" type="xs:string" use="required"/>
+        <xs:attribute name="url" type="xs:string" use="required"/>
+        <xs:attribute name="title" type="xs:string" use="optional"/>
+        <xs:attribute name="description" type="xs:string" use="optional"/>
+        <xs:attribute name="coverArt" type="xs:string" use="optional"/> <!-- Added in 1.13.0 -->
+        <xs:attribute name="originalImageUrl" type="xs:string" use="optional"/> <!-- Added in 1.13.0 -->
+        <xs:attribute name="status" type="sub:PodcastStatus" use="required"/>
+        <xs:attribute name="errorMessage" type="xs:string" use="optional"/>
+    </xs:complexType>
+
+    <xs:complexType name="NewestPodcasts">
+        <xs:sequence>
+            <xs:element name="episode" type="sub:PodcastEpisode" minOccurs="0" maxOccurs="unbounded"/>
+        </xs:sequence>
+    </xs:complexType>
+
+    <xs:complexType name="PodcastEpisode">
+        <xs:complexContent>
+            <xs:extension base="sub:Child">
+                <xs:attribute name="streamId" type="xs:string" use="optional"/> <!-- Use this ID for streaming the podcast. -->
+                <xs:attribute name="channelId" type="xs:string" use="required"/> <!-- Added in 1.13.0 -->
+                <xs:attribute name="description" type="xs:string" use="optional"/>
+                <xs:attribute name="status" type="sub:PodcastStatus" use="required"/>
+                <xs:attribute name="publishDate" type="xs:dateTime" use="optional"/>
+            </xs:extension>
+        </xs:complexContent>
+    </xs:complexType>
+
+    <xs:simpleType name="PodcastStatus">
+        <xs:restriction base="xs:string">
+            <xs:enumeration value="new"/>
+            <xs:enumeration value="downloading"/>
+            <xs:enumeration value="completed"/>
+            <xs:enumeration value="error"/>
+            <xs:enumeration value="deleted"/>
+            <xs:enumeration value="skipped"/>
+        </xs:restriction>
+    </xs:simpleType>
+
+    <xs:complexType name="InternetRadioStations">
+        <xs:sequence>
+            <xs:element name="internetRadioStation" type="sub:InternetRadioStation" minOccurs="0" maxOccurs="unbounded"/>
+        </xs:sequence>
+    </xs:complexType>
+
+    <xs:complexType name="InternetRadioStation">
+        <xs:attribute name="id" type="xs:string" use="required"/>
+        <xs:attribute name="name" type="xs:string" use="required"/>
+        <xs:attribute name="streamUrl" type="xs:string" use="required"/>
+        <xs:attribute name="homePageUrl" type="xs:string" use="optional"/>
+    </xs:complexType>
+
+    <xs:complexType name="Bookmarks">
+        <xs:sequence>
+            <xs:element name="bookmark" type="sub:Bookmark" minOccurs="0" maxOccurs="unbounded"/>
+        </xs:sequence>
+    </xs:complexType>
+
+    <xs:complexType name="Bookmark">
+        <xs:sequence>
+            <xs:element name="entry" type="sub:Child" minOccurs="1" maxOccurs="1"/>
+        </xs:sequence>
+        <xs:attribute name="position" type="xs:long" use="required"/> <!-- In milliseconds -->
+        <xs:attribute name="username" type="xs:string" use="required"/>
+        <xs:attribute name="comment" type="xs:string" use="optional"/>
+        <xs:attribute name="created" type="xs:dateTime" use="required"/>
+        <xs:attribute name="changed" type="xs:dateTime" use="required"/>
+    </xs:complexType>
+
+    <xs:complexType name="PlayQueue">
+        <xs:sequence>
+            <xs:element name="entry" type="sub:Child" minOccurs="0" maxOccurs="unbounded"/>
+        </xs:sequence>
+        <xs:attribute name="current" type="xs:int" use="optional"/>   <!-- ID of currently playing track -->
+        <xs:attribute name="position" type="xs:long" use="optional"/> <!-- Position in milliseconds of currently playing track -->
+        <xs:attribute name="username" type="xs:string" use="required"/>
+        <xs:attribute name="changed" type="xs:dateTime" use="required"/>
+        <xs:attribute name="changedBy" type="xs:string" use="required"/> <!-- Name of client app -->
+    </xs:complexType>
+
+    <xs:complexType name="Shares">
+        <xs:sequence>
+            <xs:element name="share" type="sub:Share" minOccurs="0" maxOccurs="unbounded"/>
+        </xs:sequence>
+    </xs:complexType>
+
+    <xs:complexType name="Share">
+        <xs:sequence>
+            <xs:element name="entry" type="sub:Child" minOccurs="0" maxOccurs="unbounded"/>
+        </xs:sequence>
+        <xs:attribute name="id" type="xs:string" use="required"/>
+        <xs:attribute name="url" type="xs:string" use="required"/>
+        <xs:attribute name="description" type="xs:string" use="optional"/>
+        <xs:attribute name="username" type="xs:string" use="required"/>
+        <xs:attribute name="created" type="xs:dateTime" use="required"/>
+        <xs:attribute name="expires" type="xs:dateTime" use="optional"/>
+        <xs:attribute name="lastVisited" type="xs:dateTime" use="optional"/>
+        <xs:attribute name="visitCount" type="xs:int" use="required"/>
+    </xs:complexType>
+
+    <xs:complexType name="Starred">
+        <xs:sequence>
+            <xs:element name="artist" type="sub:Artist" minOccurs="0" maxOccurs="unbounded"/>
+            <xs:element name="album" type="sub:Child" minOccurs="0" maxOccurs="unbounded"/>
+            <xs:element name="song" type="sub:Child" minOccurs="0" maxOccurs="unbounded"/>
+        </xs:sequence>
+    </xs:complexType>
+
+    <xs:complexType name="AlbumInfo">
+        <xs:sequence>
+            <xs:element name="notes" type="xs:string" minOccurs="0" maxOccurs="1"/>
+            <xs:element name="musicBrainzId" type="xs:string" minOccurs="0" maxOccurs="1"/>
+            <xs:element name="lastFmUrl" type="xs:string" minOccurs="0" maxOccurs="1"/>
+            <xs:element name="smallImageUrl" type="xs:string" minOccurs="0" maxOccurs="1"/>
+            <xs:element name="mediumImageUrl" type="xs:string" minOccurs="0" maxOccurs="1"/>
+            <xs:element name="largeImageUrl" type="xs:string" minOccurs="0" maxOccurs="1"/>
+        </xs:sequence>
+    </xs:complexType>
+
+    <xs:complexType name="ArtistInfoBase">
+        <xs:sequence>
+            <xs:element name="biography" type="xs:string" minOccurs="0" maxOccurs="1"/>
+            <xs:element name="musicBrainzId" type="xs:string" minOccurs="0" maxOccurs="1"/>
+            <xs:element name="lastFmUrl" type="xs:string" minOccurs="0" maxOccurs="1"/>
+            <xs:element name="smallImageUrl" type="xs:string" minOccurs="0" maxOccurs="1"/>
+            <xs:element name="mediumImageUrl" type="xs:string" minOccurs="0" maxOccurs="1"/>
+            <xs:element name="largeImageUrl" type="xs:string" minOccurs="0" maxOccurs="1"/>
+        </xs:sequence>
+    </xs:complexType>
+
+    <xs:complexType name="ArtistInfo">
+        <xs:complexContent>
+            <xs:extension base="sub:ArtistInfoBase">
+                <xs:sequence>
+                    <xs:element name="similarArtist" type="sub:Artist" minOccurs="0" maxOccurs="unbounded"/>
+                </xs:sequence>
+            </xs:extension>
+        </xs:complexContent>
+    </xs:complexType>
+
+    <xs:complexType name="ArtistInfo2">
+        <xs:complexContent>
+            <xs:extension base="sub:ArtistInfoBase">
+                <xs:sequence>
+                    <xs:element name="similarArtist" type="sub:ArtistID3" minOccurs="0" maxOccurs="unbounded"/>
+                </xs:sequence>
+            </xs:extension>
+        </xs:complexContent>
+    </xs:complexType>
+
+    <xs:complexType name="SimilarSongs">
+        <xs:sequence>
+            <xs:element name="song" type="sub:Child" minOccurs="0" maxOccurs="unbounded"/>
+        </xs:sequence>
+    </xs:complexType>
+
+    <xs:complexType name="SimilarSongs2">
+        <xs:sequence>
+            <xs:element name="song" type="sub:Child" minOccurs="0" maxOccurs="unbounded"/>
+        </xs:sequence>
+    </xs:complexType>
+
+    <xs:complexType name="TopSongs">
+        <xs:sequence>
+            <xs:element name="song" type="sub:Child" minOccurs="0" maxOccurs="unbounded"/>
+        </xs:sequence>
+    </xs:complexType>
+
+    <xs:complexType name="Starred2">
+        <xs:sequence>
+            <xs:element name="artist" type="sub:ArtistID3" minOccurs="0" maxOccurs="unbounded"/>
+            <xs:element name="album" type="sub:AlbumID3" minOccurs="0" maxOccurs="unbounded"/>
+            <xs:element name="song" type="sub:Child" minOccurs="0" maxOccurs="unbounded"/>
+        </xs:sequence>
+    </xs:complexType>
+
+    <xs:complexType name="License">
+        <xs:attribute name="valid" type="xs:boolean" use="required"/>
+        <xs:attribute name="email" type="xs:string" use="optional"/>
+        <xs:attribute name="licenseExpires" type="xs:dateTime" use="optional"/>
+        <xs:attribute name="trialExpires" type="xs:dateTime" use="optional"/>
+    </xs:complexType>
+
+    <xs:complexType name="ScanStatus">
+        <xs:attribute name="scanning" type="xs:boolean" use="required"/>
+        <xs:attribute name="count" type="xs:long" use="optional"/>
+    </xs:complexType>
+
+    <xs:complexType name="Users">
+        <xs:sequence>
+            <xs:element name="user" type="sub:User" minOccurs="0" maxOccurs="unbounded"/>
+        </xs:sequence>
+    </xs:complexType>
+
+    <xs:complexType name="User">
+        <xs:sequence>
+            <xs:element name="folder" type="xs:int" minOccurs="0" maxOccurs="unbounded"/> <!-- Added in 1.12.0 -->
+        </xs:sequence>
+        <xs:attribute name="username" type="xs:string" use="required"/>
+        <xs:attribute name="email" type="xs:string" use="optional"/> <!-- Added in 1.6.0 -->
+        <xs:attribute name="scrobblingEnabled" type="xs:boolean" use="required"/> <!-- Added in 1.7.0 -->
+        <xs:attribute name="maxBitRate" type="xs:int" use="optional"/> <!-- In Kbps, added in 1.13.0 -->
+        <xs:attribute name="adminRole" type="xs:boolean" use="required"/>
+        <xs:attribute name="settingsRole" type="xs:boolean" use="required"/>
+        <xs:attribute name="downloadRole" type="xs:boolean" use="required"/>
+        <xs:attribute name="uploadRole" type="xs:boolean" use="required"/>
+        <xs:attribute name="playlistRole" type="xs:boolean" use="required"/>
+        <xs:attribute name="coverArtRole" type="xs:boolean" use="required"/>
+        <xs:attribute name="commentRole" type="xs:boolean" use="required"/>
+        <xs:attribute name="podcastRole" type="xs:boolean" use="required"/>
+        <xs:attribute name="streamRole" type="xs:boolean" use="required"/>
+        <xs:attribute name="jukeboxRole" type="xs:boolean" use="required"/>
+        <xs:attribute name="shareRole" type="xs:boolean" use="required"/> <!-- Added in 1.7.0 -->
+        <xs:attribute name="videoConversionRole" type="xs:boolean" use="required"/> <!-- Added in 1.14.0 -->
+        <xs:attribute name="avatarLastChanged" type="xs:dateTime" use="optional"/> <!-- Added in 1.14.0 -->
+    </xs:complexType>
+
+    <xs:complexType name="Error">
+        <xs:attribute name="code" type="xs:int" use="required"/>
+        <xs:attribute name="message" type="xs:string" use="optional"/>
+    </xs:complexType>
+
+</xs:schema>

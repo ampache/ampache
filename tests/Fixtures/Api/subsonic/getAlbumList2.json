@@ -1,0 +1,22 @@
+{
+    "subsonic-response": {
+        "status": "ok",
+        "version": "1.16.1",
+        "albumList2": {
+            "album": [
+                {
+                    "id": "200000002",
+                    "name": "CC Affiliates Mixtape #1",
+                    "coverArt": "200000002",
+                    "songCount": 1,
+                    "created": "2026-07-15T06:35:01+00:00",
+                    "duration": 266,
+                    "playCount": 71,
+                    "artistId": "100000002",
+                    "artist": "Various Artists",
+                    "year": 2015
+                }
+            ]
+        }
+    }
+}

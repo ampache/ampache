@@ -31,6 +31,7 @@ use Ampache\Module\System\Core;
 use Ampache\Module\Util\AjaxUriRetrieverInterface;
 use Ampache\Module\Util\ObjectTypeToClassNameMapper;
 use Ampache\Module\Util\RequestParserInterface;
+use Ampache\Module\Util\Ui;
 use Ampache\Module\Util\UiInterface;
 use Ampache\Repository\Model\Art;
 use Ampache\Repository\Model\Artist;
@@ -79,6 +80,14 @@ final readonly class PlayerAjaxHandler implements AjaxHandlerInterface
                         $artistText = scrub_out(Artist::get_fullname_by_id($artistId));
                         $albumText  = scrub_out((string) $media->get_album_fullname());
 
+                        // per-song action row (album button + rating/flag placeholder) mirroring the regular
+                        // playlist flow in show_html5_player.inc.php, which random/democratic streams skip
+                        $showAlbum = T_('Show Album');
+                        $actions   = ($albumId > 0)
+                            ? '<a href="javascript:NavigateTo(\'' . $web_path . '/albums.php?action=show&album=' . $albumId . '\')" title="' . $showAlbum . '">' . Ui::get_material_symbol('album', $showAlbum) . '</a> | '
+                            : '';
+                        $actions .= "<div id='action_buttons'></div>";
+
                         $data = [
                             'found' => true,
                             'object_type' => $current['object_type'],
@@ -91,6 +100,7 @@ final readonly class PlayerAjaxHandler implements AjaxHandlerInterface
                                 ? '<a href="javascript:NavigateTo(\'' . $web_path . '/albums.php?action=show&album=' . $albumId . '\')">' . $albumText . '</a>'
                                 : $albumText,
                             'art' => (string) (Art::url($albumId, 'album', null) ?? ''),
+                            'actions' => $actions,
                         ];
                     }
                 }

@@ -1,0 +1,48 @@
+{
+    "total_count": 57,
+    "md5": "d01d99fed8e72720ed852ac7ffed4c30",
+    "playlist": [
+        {
+            "id": "smart_21",
+            "name": "!Played for 5yrs (System)",
+            "owner": "System",
+            "user": {
+                "id": "-1",
+                "username": "System"
+            },
+            "items": 50,
+            "type": "public",
+            "art": "https:\/\/music.com.au\/image.php?object_id=21&object_type=search&name=art.jpg",
+            "has_access": true,
+            "has_collaborate": true,
+            "has_art": false,
+            "flag": false,
+            "rating": null,
+            "averagerating": null,
+            "md5": null,
+            "last_update": 0,
+            "time": 14381
+        },
+        {
+            "id": "smart_210",
+            "name": "<script>alert(\"Hello, world!\");<\/script>",
+            "owner": "apiuser",
+            "user": {
+                "id": "2",
+                "username": "apiuser"
+            },
+            "items": 50,
+            "type": "public",
+            "art": "https:\/\/music.com.au\/image.php?object_id=210&object_type=search&name=art.jpg",
+            "has_access": true,
+            "has_collaborate": true,
+            "has_art": false,
+            "flag": false,
+            "rating": null,
+            "averagerating": null,
+            "md5": null,
+            "last_update": 1766102132,
+            "time": 15515
+        }
+    ]
+}

@@ -166,20 +166,21 @@ class AlbumDisk extends database_object implements
             $db_results = Dba::read("SELECT * FROM `album_disk` WHERE `id` = ?;", [$current_id]);
             $row        = Dba::fetch_assoc($db_results);
             if (isset($row['id'])) {
-                // alter the existing disk after editing. Derive catalog the same way the
-                // lookup and create paths do (album_disk.catalog is 0 for a catalog=0
-                // album); writing the raw catalog id here made later lookups miss the row.
+                // remember the current disk before a collision re-fetch can clobber $row
+                $old_disk = (int) $row['disk'];
+                // alter the existing disk after editing. Derive catalog the way the lookup and create paths do
+                // (album_disk.catalog is 0 for a catalog=0 album) or later lookups miss the row
                 if (!Dba::write("UPDATE `album_disk` SET `album_id` = ?, `disk` = ?, `catalog` = CASE WHEN (SELECT `catalog` FROM `album` WHERE `id` = ?) = 0 THEN 0 ELSE ? END, `disksubtitle` = ? WHERE `id` = ?;", [$album_id, $disk, $album_id, $catalog_id, $disksubtitle, $current_id])) {
-                    // Duplicates might collide here
-                    $db_results = Dba::read("SELECT `album_disk`.`id` FROM `album_disk` INNER JOIN `album` ON `album`.`id` = `album_disk`.`album_id` WHERE `album_disk`.`album_id` = ? AND `album_disk`.`disk` = ? AND `album_disk`.`catalog` = CASE WHEN `album`.`catalog` = 0 THEN 0 ELSE ? END AND `album_disk`.`disksubtitle` = ?;", [$album_id, $disk, $catalog_id, ($disksubtitle ?: null)]);
+                    // Duplicates might collide here. Match the unique key (album_id, disk, catalog) alone
+                    $db_results = Dba::read("SELECT `album_disk`.`id` FROM `album_disk` INNER JOIN `album` ON `album`.`id` = `album_disk`.`album_id` WHERE `album_disk`.`album_id` = ? AND `album_disk`.`disk` = ? AND `album_disk`.`catalog` = CASE WHEN `album`.`catalog` = 0 THEN 0 ELSE ? END;", [$album_id, $disk, $catalog_id]);
                     if ($row = Dba::fetch_assoc($db_results)) {
                         $current_id = (int) $row['id'];
                     }
                 }
 
                 // Update songs when you edit an album_disk object
-                if ($row['disk'] !== $disk) {
-                    Dba::write("UPDATE `song` SET `disk` = ? WHERE `album` = ? AND `disk` = ?;", [$disk, $album_id, $row['disk']]);
+                if ($old_disk !== $disk) {
+                    Dba::write("UPDATE `song` SET `disk` = ? WHERE `album` = ? AND `disk` = ?;", [$disk, $album_id, $old_disk]);
                 }
 
                 return $current_id;

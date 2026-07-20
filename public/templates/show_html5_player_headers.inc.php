@@ -13,13 +13,10 @@ global $dic;
 $web_path        = AmpConfig::get_web_path();
 $ampache_version = AmpConfig::get('version');
 // Cache-bust the skin CSS by file mtime so edits load immediately (falls back to app version).
-$cssBust = static fn (string $file): string => is_file(__DIR__ . '/' . $file) ? (string) filemtime(__DIR__ . '/' . $file) : $ampache_version;
+$cssBust = static fn(string $file): string => is_file(__DIR__ . '/' . $file) ? (string) filemtime(__DIR__ . '/' . $file) : $ampache_version;
 
 $ajaxUriRetriever = $dic->get(AjaxUriRetrieverInterface::class);
-$webplayer_debug  = (AmpConfig::get('webplayer_debug'))
-    ? 'js'
-    : 'min.js';
-$cookie_string = (make_bool(AmpConfig::get('cookie_secure')))
+$cookie_string    = (make_bool(AmpConfig::get('cookie_secure')))
     ? "path: '/', secure: true, samesite: 'Strict'"
     : "path: '/', samesite: 'Strict'";
 $iframed   = $iframed ?? false;
@@ -29,7 +26,7 @@ $highlight = ($isLight)
     ? 'blue'
     : 'orange';
 
-if ($iframed || $isShare) { ?>
+if ($iframed) { ?>
     <link rel="stylesheet" href="<?php echo $web_path . Ui::find_template('jplayer.midnight.black-iframed.css', true) . '?v=' . $cssBust('jplayer.midnight.black-iframed.css'); ?>" type="text/css">
 <?php } else { ?>
     <link rel="stylesheet" href="<?php echo $web_path . Ui::find_template('jplayer.midnight.black.css', true) . '?v=' . $cssBust('jplayer.midnight.black.css'); ?>" type="text/css">
@@ -51,8 +48,11 @@ if ($iframed || $isShare) { ?>
     </script>
     <?php  require_once Ui::find_template('stylesheets.inc.php');
 } ?>
-<script src="<?php echo $web_path; ?>/lib/modules/jplayer/jquery.jplayer.<?php echo $webplayer_debug; ?>"></script>
-<script src="<?php echo $web_path; ?>/lib/modules/jplayer/jplayer.playlist.<?php echo $webplayer_debug; ?>"></script>
+<script>
+    window.jpDebug = <?php echo (AmpConfig::get('webplayer_debug')) ? 'true' : 'false'; ?>;
+</script>
+<script src="<?php echo $web_path; ?>/lib/modules/jplayer/jquery.jplayer.min.js"></script>
+<script src="<?php echo $web_path; ?>/lib/modules/jplayer/jplayer.playlist.min.js"></script>
 
 <script>
     var jplaylist = new Array();
@@ -150,10 +150,10 @@ if ($iframed || $isShare) { ?>
 
     function updatePlaylistControls()
     {
-        // Expand only applies while the playlist shows; hide via visibility so the
-        // slot stays put and the buttons don't shift (avoids mis-presses).
-        var collapsed = $('#jp_container_1').hasClass('jp-playlist-collapsed');
-        $('#expandplaylistbtn').css('visibility', collapsed ? 'hidden' : 'visible');
+        // Expand stays available even while the in-bar playlist is hidden: the
+        // expanded side panel out-cascades .jp-playlist-collapsed, so it can pop
+        // out over a hidden playlist and closing it returns to the hidden state.
+        $('#expandplaylistbtn').css('visibility', 'visible');
     }
 
     function ToggleNowPlaying()
@@ -235,6 +235,9 @@ if ($iframed) { ?>
 
         var vizRAF = null;
         var vizTick = 0;
+        var vizBassPrev = 0;
+        // sparkle particles spawned on beats: {x, y, vx, vy, life, hue}
+        var vizParticles = [];
         // per-spoke random seeds so the radial bars vary in hue/length/angle
         var vizSeeds = [];
         for (var vs = 0; vs < 160; vs++) {
@@ -261,35 +264,108 @@ if ($iframed) { ?>
             for (var s = 0; s < bins; s++) { sum += data[s]; }
             var avg = sum / bins / 255;
 
+            // bass energy (lowest ~8% of bins) drives beat detection + core glow
+            var bassBins = Math.max(1, Math.floor(bins * 0.08));
+            var bassSum = 0;
+            for (var b = 0; b < bassBins; b++) { bassSum += data[b]; }
+            var bass = bassSum / bassBins / 255;
+
             var cx = width / 2, cy = height / 2;
-            var baseR = Math.min(width, height) * 0.06 * (1 + avg * 0.8);
-            var maxLen = Math.min(width, height) * 0.44;
+            var minDim = Math.min(width, height);
+            var baseR = minDim * 0.11 * (1 + avg * 0.9);
+            var maxLen = minDim * 0.46;
             var spokes = 120;
             var stride = Math.max(1, Math.floor(bins / spokes));
             vizTick += 0.004;
+            var hueShift = (vizTick * 40) % 360;   // slow global colour drift
             ctx.lineCap = 'round';
+            // additive blending so overlapping bars, glow and sparkles bloom
+            ctx.globalCompositeOperation = 'lighter';
 
+            // soft radial core glow that swells with the bass
+            var coreR = baseR * (2.4 + bass * 2.2);
+            var core = ctx.createRadialGradient(cx, cy, 0, cx, cy, coreR);
+            core.addColorStop(0, 'hsla(' + Math.round(190 + hueShift) % 360 + ', 95%, 65%, ' + (0.35 + bass * 0.5) + ')');
+            core.addColorStop(1, 'hsla(' + Math.round(190 + hueShift) % 360 + ', 95%, 55%, 0)');
+            ctx.fillStyle = core;
+            ctx.beginPath();
+            ctx.arc(cx, cy, coreR, 0, Math.PI * 2);
+            ctx.fill();
+
+            ctx.shadowBlur = 8 + avg * 22;
             for (var i = 0; i < spokes; i++) {
                 var value = data[(i * stride) % bins] / 255;
                 var seed = vizSeeds[i % vizSeeds.length];
                 // random per-spoke angle offset, length scale and hue
                 var angle = (i / spokes) * Math.PI * 2 + vizTick + seed * 0.4;
                 var len = baseR + value * maxLen * (0.5 + seed * 0.9);
-                ctx.strokeStyle = 'hsl(' + Math.round(150 + seed * 130 + value * 50) + ', 90%, ' + Math.round(45 + value * 30) + '%)';
-                ctx.lineWidth = 1.5 + value * 4;
+                var hue = Math.round(150 + seed * 130 + value * 50 + hueShift) % 360;
+                var col = 'hsl(' + hue + ', 90%, ' + Math.round(50 + value * 30) + '%)';
+                var tipX = cx + Math.cos(angle) * len, tipY = cy + Math.sin(angle) * len;
+                ctx.strokeStyle = col;
+                ctx.shadowColor = col;
+                ctx.lineWidth = 3 + value * 9;
                 ctx.beginPath();
                 ctx.moveTo(cx + Math.cos(angle) * baseR, cy + Math.sin(angle) * baseR);
-                ctx.lineTo(cx + Math.cos(angle) * len, cy + Math.sin(angle) * len);
+                ctx.lineTo(tipX, tipY);
                 ctx.stroke();
+                // bright dot on the tip of the loudest spokes
+                if (value > 0.35) {
+                    ctx.fillStyle = 'hsl(' + hue + ', 95%, 75%)';
+                    ctx.beginPath();
+                    ctx.arc(tipX, tipY, 2 + value * 4, 0, Math.PI * 2);
+                    ctx.fill();
+                }
             }
+            ctx.shadowBlur = 0;
 
             // reactive ring pulsing with loudness
             ctx.beginPath();
-            ctx.arc(cx, cy, baseR * (1.1 + avg * 0.6), 0, Math.PI * 2);
-            ctx.strokeStyle = 'hsla(190, 90%, 65%, ' + (0.25 + avg * 0.5) + ')';
-            ctx.lineWidth = 1.5 + avg * 4;
+            ctx.arc(cx, cy, baseR * (1.15 + avg * 0.7), 0, Math.PI * 2);
+            ctx.strokeStyle = 'hsla(' + Math.round(190 + hueShift) % 360 + ', 90%, 70%, ' + (0.3 + avg * 0.5) + ')';
+            ctx.lineWidth = 2 + avg * 6;
             ctx.stroke();
 
+            // on a bass hit, burst out a ring of sparkle particles
+            if (bass - vizBassPrev > 0.10 && bass > 0.35) {
+                var burst = 6 + Math.floor(bass * 12);
+                for (var p = 0; p < burst; p++) {
+                    var pa = (p / burst) * Math.PI * 2 + Math.random() * 0.4;
+                    var sp = (2 + Math.random() * 3) * (1 + bass);
+                    vizParticles.push({
+                        x: cx + Math.cos(pa) * baseR,
+                        y: cy + Math.sin(pa) * baseR,
+                        vx: Math.cos(pa) * sp,
+                        vy: Math.sin(pa) * sp,
+                        life: 1,
+                        hue: Math.round(150 + Math.random() * 160 + hueShift) % 360
+                    });
+                }
+            }
+            vizBassPrev = bass;
+
+            // advance + draw sparkles (fade and drift outward), cap the pool
+            for (var q = vizParticles.length - 1; q >= 0; q--) {
+                var pt = vizParticles[q];
+                pt.x += pt.vx;
+                pt.y += pt.vy;
+                pt.vx *= 0.96;
+                pt.vy *= 0.96;
+                pt.life -= 0.02;
+                if (pt.life <= 0) {
+                    vizParticles.splice(q, 1);
+                    continue;
+                }
+                ctx.fillStyle = 'hsla(' + pt.hue + ', 95%, 70%, ' + pt.life + ')';
+                ctx.beginPath();
+                ctx.arc(pt.x, pt.y, 1 + pt.life * 2.5, 0, Math.PI * 2);
+                ctx.fill();
+            }
+            if (vizParticles.length > 400) {
+                vizParticles.splice(0, vizParticles.length - 400);
+            }
+
+            ctx.globalCompositeOperation = 'source-over';
             vizRAF = requestAnimationFrame(drawVisualizer);
         }
 
@@ -443,6 +519,9 @@ if ($iframed) { ?>
         function ShowEqualizer()
         {
             ensureAudioGraph();
+            if (audioContext && audioContext.state === 'suspended') {
+                audioContext.resume();
+            }
             var eq = $('#equalizer');
             eq.css('visibility', (eq.css('visibility') === 'visible') ? 'hidden' : 'visible');
         }

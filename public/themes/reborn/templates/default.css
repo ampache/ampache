@@ -563,18 +563,40 @@ div.registerfield.center {
 .loginoptions {
     padding: 15px 0 15px;
     text-align: center;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
 }
 
 .loginoptions a {
     font-size: 15px;
 }
 
-#registerbutton {
-    float: left;
+#registerbutton,
+#lostpasswordbutton {
+    flex: 0 0 auto;
 }
 
+/* Push the lost-password link to the right even when it is the only link on the row. */
 #lostpasswordbutton {
-    float: right;
+    margin-left: auto;
+}
+
+/* `oidc_button_text` is admin configurable, so the label can be any length. Give it its own row and a real
+   button footprint instead of letting it run into the links either side of it, and clip anything oversized. */
+#oidcbutton {
+    flex: 0 0 100%;
+    order: 1;
+    box-sizing: border-box;
+    max-width: 100%;
+    padding: 6px 12px;
+    border: 1px solid transparent;
+    border-radius: 3px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
 }
 
 #submit-lostpassword {
@@ -668,6 +690,9 @@ div.registerfield.center {
     margin: 17px auto 5px 5px;
     padding: 5px 0 10px 0;
     text-align: center;
+    max-height: calc(100vh - 120px);
+    overflow-y: auto;
+    overflow-x: hidden;
 }
 
 #sidebar-light-default {
@@ -680,6 +705,9 @@ div.registerfield.center {
     margin: 0 auto 5px 5px;
     padding: 5px 0 10px 0;
     text-align: center;
+    max-height: calc(100vh - 120px);
+    overflow-y: auto;
+    overflow-x: hidden;
 }
 
 #sidebar-light li {
@@ -909,8 +937,13 @@ span#sidebar-header-content::after {
     background-repeat: repeat-x;
 }
 
-#rightbar li:hover .submenu {
+/* Submenus open/close by clicking their trigger (class toggled in footer.inc.php); */
+#rightbar li.submenu-open .submenu {
     display: block;
+}
+
+#rightbar li:has(> .submenu) {
+    cursor: pointer;
 }
 
 #rightbar .submenu {
@@ -1165,7 +1198,6 @@ table.tabledata tbody .grid_cover img,
 table.tabledata tbody .cel_cover img {
     vertical-align: middle;
     border-radius: 2px;
-    -o-object-fit: cover;
     object-fit: cover;
 }
 
@@ -1318,6 +1350,88 @@ table.gridview td.cel_ratings {
     min-width: initial !important;
     justify-content: center;
     gap: 10px;
+}
+
+/* Home dashboard + personal favorites: responsive card grid that fills the box width, */
+/* capped at two rows; extra rows are clipped instead of wrapping or scrolling. */
+.homedash table.gridview,
+.personalfav table.gridview {
+    display: block;
+    overflow: hidden;
+}
+
+.homedash table.gridview tbody,
+.personalfav table.gridview tbody {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(170px, 200px));
+    grid-template-rows: repeat(2, auto);
+    grid-auto-rows: 0;
+    align-content: start;
+    justify-content: start;
+    overflow: hidden;
+}
+
+.homedash table.gridview tbody tr,
+.personalfav table.gridview tbody tr {
+    float: none;
+    width: auto;
+    min-width: 0;
+    max-width: none;
+}
+
+/* Home dashboard: pack the covers left in fixed-width cells so there are no centre gaps. */
+.homedash table.gridview tbody {
+    grid-template-columns: repeat(auto-fill, 170px);
+    justify-content: start;
+}
+
+.personalfav table.gridview tbody {
+    grid-template-columns: repeat(auto-fill, 160px);
+    gap: 10px;
+    justify-content: start;
+}
+
+.personalfav table.gridview tbody tr {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    box-sizing: border-box;
+    width: 160px;
+    height: 145px;
+    padding: 8px;
+    border: 1px solid rgba(128, 128, 128, 0.3);
+    border-radius: 4px;
+    overflow: hidden;
+}
+
+.personalfav table.gridview tbody td {
+    width: 100%;
+    height: auto !important;
+    margin: 0 !important;
+    overflow: hidden;
+}
+
+.personalfav table.gridview tbody td:first-child a {
+    display: -webkit-box;
+    overflow: hidden;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 2;
+    overflow-wrap: anywhere;
+}
+
+.personalfav table.gridview tbody td span {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 2px;
+    margin-right: 0 !important;
+}
+
+.personalfav table.gridview tbody td span a {
+    display: inline-flex;
+    width: auto;
 }
 
 .tableform {
@@ -2030,8 +2144,11 @@ a.option-list:hover {
    offsets. On a phone that overflows the viewport width, so mobile browsers shrink-to-fit (zoom out) the whole page
    A zoomed page pins position:fixed (the webplayer) to the zoomed document instead of the visible screen, which is why
    the player looked stuck to the bottom of the content.
-   Scoped to <=768px, so desktop is untouched. */
-@media (max-width: 768px) {
+   Scoped to <=768px (portrait phones) plus short landscape viewports (phones rotated: wider than 768px but
+   only ~400-500px tall, which would otherwise fall back to the desktop min-width:1024px and re-trigger the zoom).
+   Tablets/desktop in landscape are >540px tall, so they stay on the desktop layout.
+   @see //REBORN_MEDIA and keep in sync with dark.css light.css */
+@media (max-width: 768px), (orientation: landscape) and (max-height: 540px) {
     /* Fit the device width instead of forcing a 1024px page (kills the zoom). */
     body#main-page {
         min-width: 0;
@@ -2252,7 +2369,8 @@ a.option-list:hover {
     .sidebar-page-float {
         position: absolute;
         left: 5px;
-        width: 165px;
+        right: 5px;
+        width: auto;
         margin: 0;
         box-sizing: border-box;
     }
@@ -2276,6 +2394,15 @@ a.option-list:hover {
         z-index: 10005;
     }
 
+    /* Rightbar submenus (add-to-playlist / random items). Open/close is click-toggled globally (footer.inc.php). */
+    #rightbar .submenu,
+    #rightbar .submenu.fixedrightbarsubmenu {
+        top: 160px !important;
+        right: 10px !important;
+        max-width: 90%;
+        max-height: calc(100vh - 280px);
+    }
+
     /* Dim/close backdrop -- sidebar drawer only (the temp-playlist drops down inline without an overlay). */
     body.sidebar-open #mobile-nav-backdrop {
         display: block;
@@ -2295,14 +2422,47 @@ a.option-list:hover {
         padding: 3px 10px;
         border-radius: 2px;
         background-image: none !important;
-        z-index: 10006;
+        z-index: 9997;
     }
 
     /* Wide data tables scroll sideways inside their box so they don't widen the page. */
-    table.tabledata {
+    table.tabledata,
+    table.tabledata2,
+    table.table-data {
         display: block;
         max-width: 100%;
         overflow-x: auto;
+    }
+
+    /* Grid-view cards don't scroll -- zoom them down so more blocks fit per row (zoom reflows, transform wouldn't). */
+    table.tabledata.gridview {
+        zoom: 0.8;
+        overflow-x: visible;
+    }
+
+    /* Zoomed grid cards keep name + artist; drop the genre line (shown on artist cards) and ratings so both text lines fit. */
+    table.gridview td.grid_tags,
+    table.gridview td.cel_ratings {
+        display: none !important;
+    }
+
+    /* The 140px right gutter on the browse header is desktop-only space -- reclaim it. */
+    #browse_header {
+        margin-right: 0;
+    }
+
+    /* Detail lists (song/podcast pages): the 200px label column + 250px dd indent overflow a phone -- compact them. */
+    dl.media_details dt {
+        width: 90px;
+    }
+
+    dl.media_details dd {
+        margin-left: 100px;
+    }
+
+    /* Waveform image (song/podcast detail): squash to the available width instead of overflowing the page. */
+    div[id^="waveform_"] img {
+        max-width: 100%;
     }
 
     /* Let the browse type switcher (Songs/Albums/...) wrap instead of overflow. */
@@ -2313,13 +2473,35 @@ a.option-list:hover {
     /* Art block (.item_right_info) floats right and overlaps the Actions list on a phone. Stack it */
     .item_right_info {
         float: none;
+        width: 100%;
         max-width: 100%;
         display: flow-root;
+        box-sizing: border-box;
     }
 
     .item_right_info img {
         max-width: 100%;
         height: auto;
+    }
+
+    /* AJAX artist/label biography floats its art block right and shrink-wraps the column tall and narrow. Unfloat. */
+    .item_info {
+        float: none;
+    }
+
+    .item_info img {
+        max-width: 100%;
+        height: auto;
+    }
+
+    .item_properties {
+        max-width: none;
+        text-align: end;
+    }
+
+    /* hide artist summary on mobile */
+    #item_summary {
+        display: none;
     }
 
     /* art floats right by default. Pull it to the left edge  when collapsed. */
@@ -2330,5 +2512,56 @@ a.option-list:hover {
     /* The external-links row is right-aligned by default; pull it left to match the art. */
     .external_links {
         text-align: left;
+    }
+
+    /* Detail pages: reclaim the 140px desktop gutter and let the Actions list size itself. */
+    #content .info-box {
+        margin-right: 0;
+    }
+
+    #information_actions {
+        width: auto;
+    }
+
+    /* Tab strip wraps on a phone: add row spacing so the active tab's underline doesn't strike the row below. */
+    #tabs_container ul#tabs li {
+        line-height: 2;
+        margin-right: 16px;
+    }
+
+    /* Hide update-available notice on a phone. */
+    #update_notify {
+        display: none;
+    }
+
+    /* Footer: drop the 250px desktop right gutter. */
+    #footer {
+        margin: 15px 5px 0 0;
+    }
+
+    /* Home page shoutbox widget is a fixed 400px + 40px padding on desktop. */
+    .shout {
+        width: auto;
+        max-width: 100%;
+        padding-right: 0;
+    }
+
+    /* Textareas rendered with cols="44"-"70" are 400-600px intrinsic (shout/pvmsg/label/license forms). */
+    #content textarea {
+        max-width: 100%;
+        box-sizing: border-box;
+    }
+
+    /* Home plugin widgets (RSS view etc.) emit inline-floated title/date rows and indents; stack and wrap them. */
+    .home_plugin td div[style*="float"] {
+        float: none !important;
+    }
+
+    .home_plugin td div[style*="margin-left"] {
+        margin-left: 0 !important;
+    }
+
+    .home_plugin td {
+        overflow-wrap: anywhere;
     }
 }

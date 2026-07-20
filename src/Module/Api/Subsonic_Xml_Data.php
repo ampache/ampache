@@ -69,6 +69,9 @@ class Subsonic_Xml_Data
 {
     /**
      * addAlbum
+     *
+     * An album in the browsing hierarchy, serialized as the `Child` type.
+     * `name` and `songCount` belong to `AlbumID3` only, so they are not emitted here.
      */
     public static function addAlbum(SimpleXMLElement $xml, Album $album, bool $songs = false, string $elementName = 'album'): void
     {
@@ -86,20 +89,18 @@ class Subsonic_Xml_Data
         $f_name = $album->get_fullname();
         $xalbum->addAttribute('album', $f_name);
         $xalbum->addAttribute('title', $f_name);
-        $xalbum->addAttribute('name', $f_name);
         $xalbum->addAttribute('isDir', 'true');
         //$xalbum->addAttribute('discNumber', (string)$album->disk);
         if ($album->has_art()) {
             $xalbum->addAttribute('coverArt', $sub_id);
         }
-        $xalbum->addAttribute('songCount', (string) $album->song_count);
         $xalbum->addAttribute('created', date('c', (int) $album->addition_time));
         $xalbum->addAttribute('duration', (string) $album->time);
         $xalbum->addAttribute('playCount', (string) $album->total_count);
         if ($album_artist) {
             $xalbum->addAttribute('artistId', Subsonic_Api::getArtistSubId($album_artist));
         }
-        $xalbum->addAttribute('artist', $album->get_parent_fullname());
+        $xalbum->addAttribute('artist', (string) $album->get_parent_fullname());
         // original year (fall back to regular year)
         $original_year = AmpConfig::get('use_original_year');
         $year          = ($original_year && $album->original_year)
@@ -139,7 +140,8 @@ class Subsonic_Xml_Data
     /**
      * addAlbumID3
      *
-     * An album from ID3 tags.
+     * An album from ID3 tags, serialized as the `AlbumID3` type.
+     * `parent`, `album`, `title` and `isDir` belong to `Child` only, so they are not emitted here.
      */
     public static function addAlbumID3(SimpleXMLElement $xml, Album $album, bool $songs = false, string $elementName = 'album'): SimpleXMLElement
     {
@@ -151,15 +153,8 @@ class Subsonic_Xml_Data
         $xalbum = self::_addChildToResultXml($xml, htmlspecialchars($elementName));
         $xalbum->addAttribute('id', $sub_id);
         $album_artist = $album->findAlbumArtist();
-        if ($album_artist) {
-            $xalbum->addAttribute('parent', Subsonic_Api::getArtistSubId($album_artist));
-        }
-        $f_name = $album->get_fullname();
-        $xalbum->addAttribute('album', $f_name);
-        $xalbum->addAttribute('title', $f_name);
+        $f_name       = $album->get_fullname();
         $xalbum->addAttribute('name', $f_name);
-        $xalbum->addAttribute('isDir', 'true');
-        //$xalbum->addAttribute('discNumber', (string)$album->disk);
         if ($album->has_art()) {
             $xalbum->addAttribute('coverArt', $sub_id);
         }
@@ -170,7 +165,7 @@ class Subsonic_Xml_Data
         if ($album_artist) {
             $xalbum->addAttribute('artistId', Subsonic_Api::getArtistSubId($album_artist));
         }
-        $xalbum->addAttribute('artist', $album->get_parent_fullname());
+        $xalbum->addAttribute('artist', (string) $album->get_parent_fullname());
         // original year (fall back to regular year)
         $original_year = AmpConfig::get('use_original_year');
         $year          = ($original_year && $album->original_year)
@@ -184,15 +179,7 @@ class Subsonic_Xml_Data
             $xalbum->addAttribute('genre', implode(',', array_column($tags, 'name')));
         }
 
-        $rating      = new Rating($album->id, 'album');
-        $user_rating = ($rating->get_user_rating() ?? 0);
-        if ($user_rating > 0) {
-            $xalbum->addAttribute('userRating', (string) ceil($user_rating));
-        }
-        $avg_rating = $rating->get_average_rating();
-        if ($avg_rating > 0) {
-            $xalbum->addAttribute('averageRating', (string) $avg_rating);
-        }
+        // `userRating` and `averageRating` are not part of the 1.16.1 `AlbumID3` type.
         self::_setIfStarred($xalbum, 'album', $album->id);
 
         if ($songs) {
@@ -242,7 +229,8 @@ class Subsonic_Xml_Data
         $xlist = self::_addChildToResultXml($xml, htmlspecialchars('albumList'));
         foreach ($albums as $album_id) {
             $album = new Album($album_id);
-            self::addAlbumID3($xlist, $album);
+            // `AlbumList` holds `Child` albums; `AlbumList2` is the ID3 variant.
+            self::addAlbum($xlist, $album);
         }
 
         return $xml;
@@ -266,7 +254,28 @@ class Subsonic_Xml_Data
     /**
      * addArtist
      */
-    public static function addArtist(SimpleXMLElement $xml, Artist $artist, bool $albums = false): SimpleXMLElement
+    public static function addArtist(SimpleXMLElement $xml, Artist $artist): SimpleXMLElement
+    {
+        if ($artist->isNew()) {
+            return $xml;
+        }
+
+        $sub_id  = Subsonic_Api::getArtistSubId($artist->id);
+        $xartist = self::_addChildToResultXml($xml, 'artist');
+        $xartist->addAttribute('id', $sub_id);
+        $xartist->addAttribute('name', (string) $artist->get_fullname());
+        // `coverArt` and `albumCount` belong to `ArtistID3` only, see self::addArtistID3()
+        self::_setIfStarred($xartist, 'artist', $artist->id);
+
+        return $xml;
+    }
+
+    /**
+     * addArtistID3
+     *
+     * An artist from ID3 tags, serialized as the `ArtistID3` type.
+     */
+    public static function addArtistID3(SimpleXMLElement $xml, Artist $artist, bool $albums = false): SimpleXMLElement
     {
         if ($artist->isNew()) {
             return $xml;
@@ -505,7 +514,8 @@ class Subsonic_Xml_Data
         $xindexes = self::_addChildToResultXml($xml, 'indexes');
         $xindexes->addAttribute('lastModified', number_format($lastModified * 1000, 0, '.', ''));
         self::_addIgnoredArticles($xindexes);
-        self::_addIndex($xindexes, $artists);
+        // `Indexes` holds the plain `Artist` type; `ArtistsID3` (addArtists) is the ID3 variant.
+        self::_addIndex($xindexes, $artists, false);
 
         return $xml;
     }
@@ -727,7 +737,7 @@ class Subsonic_Xml_Data
             ) {
                 $attributes = [
                     'username' => (string) $row['client']->username,
-                    'minutesAgo' => (string) (abs((time() - ($row['expire'] - $row['media']->time)) / 60)),
+                    'minutesAgo' => (string) ((int) abs((time() - ($row['expire'] - $row['media']->time)) / 60)),
                     'playerId' => '0',
                     'playerName' => (string) $row['agent'],
                 ];
@@ -1007,7 +1017,7 @@ class Subsonic_Xml_Data
         $xresult = self::_addChildToResultXml($xml, htmlspecialchars('searchResult3'));
         foreach ($artists as $artist_id) {
             $artist = new Artist($artist_id);
-            self::addArtist($xresult, $artist);
+            self::addArtistID3($xresult, $artist);
         }
         foreach ($albums as $album_id) {
             $album = new Album($album_id);
@@ -1203,7 +1213,8 @@ class Subsonic_Xml_Data
 
         foreach ($albums as $album_id) {
             $album = new Album($album_id);
-            self::addAlbumID3($xstarred, $album);
+            // `Starred` holds `Child` albums; `Starred2` is the ID3 variant.
+            self::addAlbum($xstarred, $album);
         }
 
         foreach ($songs as $song_id) {
@@ -1229,7 +1240,7 @@ class Subsonic_Xml_Data
 
         foreach ($artists as $artist_id) {
             $artist = new Artist($artist_id);
-            self::addArtist($xstarred, $artist);
+            self::addArtistID3($xstarred, $artist);
         }
 
         foreach ($albums as $album_id) {
@@ -1291,6 +1302,7 @@ class Subsonic_Xml_Data
         $xuser->addAttribute('adminRole', ($isAdmin) ? 'true' : 'false');
         $xuser->addAttribute('settingsRole', 'true');
         $xuser->addAttribute('downloadRole', (Preference::get_by_user($user->id, 'download')) ? 'true' : 'false');
+        $xuser->addAttribute('uploadRole', (Preference::get_by_user($user->id, 'allow_upload')) ? 'true' : 'false');
         $xuser->addAttribute('playlistRole', 'true');
         $xuser->addAttribute('coverArtRole', ($isManager) ? 'true' : 'false');
         $xuser->addAttribute('commentRole', (AmpConfig::get('social')) ? 'true' : 'false');
@@ -1325,7 +1337,7 @@ class Subsonic_Xml_Data
      */
     public static function addVideoInfo(SimpleXMLElement $xml, int $video_id): SimpleXMLElement
     {
-        $xvideoinfo = self::_addChildToResultXml($xml, 'videoinfo');
+        $xvideoinfo = self::_addChildToResultXml($xml, 'videoInfo');
         $xvideoinfo->addAttribute('id', Subsonic_Api::getVideoSubId($video_id));
 
         return $xml;
@@ -1356,16 +1368,19 @@ class Subsonic_Xml_Data
      *     has_art: int
      * } $artist
      */
-    private static function _addArtistArray(SimpleXMLElement $xml, array $artist): void
+    private static function _addArtistArray(SimpleXMLElement $xml, array $artist, bool $id3 = true): void
     {
         $sub_id  = Subsonic_Api::getArtistSubId($artist['id']);
         $xartist = self::_addChildToResultXml($xml, 'artist');
         $xartist->addAttribute('id', $sub_id);
         $xartist->addAttribute('name', $artist['f_name']);
-        if ($artist['has_art']) {
-            $xartist->addAttribute('coverArt', $sub_id);
+        // `coverArt` and `albumCount` are `ArtistID3` only; a plain `Index` holds the `Artist` type.
+        if ($id3) {
+            if ($artist['has_art']) {
+                $xartist->addAttribute('coverArt', $sub_id);
+            }
+            $xartist->addAttribute('albumCount', (string) $artist['album_count']);
         }
-        $xartist->addAttribute('albumCount', (string) $artist['album_count']);
         self::_setIfStarred($xartist, 'artist', $artist['id']);
     }
 
@@ -1474,7 +1489,7 @@ class Subsonic_Xml_Data
         foreach ($allalbums as $album_id) {
             $album = new Album($album_id);
             // TODO addChild || use addChildArray
-            self::addAlbumID3($xdir, $album, false, 'child');
+            self::addAlbum($xdir, $album, false, 'child');
         }
     }
 
@@ -1516,7 +1531,7 @@ class Subsonic_Xml_Data
      *     has_art: int
      * }> $artists
      */
-    private static function _addIndex(SimpleXMLElement $xml, array $artists): void
+    private static function _addIndex(SimpleXMLElement $xml, array $artists, bool $id3 = true): void
     {
         $xlastcat     = null;
         $sharpartists = [];
@@ -1539,7 +1554,7 @@ class Subsonic_Xml_Data
             }
 
             if ($xlastcat != null) {
-                self::_addArtistArray($xlastcat, $artist);
+                self::_addArtistArray($xlastcat, $artist, $id3);
             }
         }
 
@@ -1549,7 +1564,7 @@ class Subsonic_Xml_Data
             $xsharpcat->addAttribute('name', '#');
 
             foreach ($sharpartists as $artist) {
-                self::_addArtistArray($xsharpcat, $artist);
+                self::_addArtistArray($xsharpcat, $artist, $id3);
             }
         }
     }
@@ -1645,8 +1660,9 @@ class Subsonic_Xml_Data
                 self::addSong($xplaylist, $song, 'entry');
             }
         } else {
-            $xplaylist->addAttribute('songCount', (string) $search->last_count);
-            $xplaylist->addAttribute('duration', (string) $search->last_duration);
+            // both are xs:int in the schema, so an unset counter must serialize as 0 rather than ''
+            $xplaylist->addAttribute('songCount', (string) ((int) $search->last_count));
+            $xplaylist->addAttribute('duration', (string) ((int) $search->last_duration));
             $xplaylist->addAttribute('coverArt', $sub_id);
         }
 

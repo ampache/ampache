@@ -1,0 +1,14 @@
+{
+    "subsonic-response": {
+        "status": "ok",
+        "version": "1.16.1",
+        "musicFolders": {
+            "musicFolder": [
+                {
+                    "id": 1,
+                    "name": "music"
+                }
+            ]
+        }
+    }
+}

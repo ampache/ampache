@@ -76,7 +76,7 @@ final readonly class TagAjaxHandler implements AjaxHandlerInterface
                 }
 
                 debug_event('tag.ajax', 'Deleting tag...', 5);
-                $tag = new Tag($_GET['tag_id']);
+                $tag = new Tag((int) ($_GET['tag_id'] ?? 0));
                 $tag->delete();
                 header('Location: ' . AmpConfig::get_web_path() . '/browse.php?action=tag&type=artist');
 

@@ -130,6 +130,11 @@ a:focus {
     overflow: hidden;
 }
 
+.jp-audio .jp-controls-holder {
+    position: static;
+    overflow: visible;
+}
+
 .jp-audio ul.jp-controls {
     position: absolute;
     top: 15px;
@@ -889,6 +894,12 @@ a.jp-shuffle-off:hover {
         width: 100% !important;
         max-width: 100% !important;
         min-width: 0 !important;
+        margin-left: 0; /* desktop reserves a 230px gutter for the absolutely-positioned .playing_info */
+    }
+
+    .jp-controls-holder {
+        width: auto;
+        max-width: 100%;
     }
 
     .jp-video-360p,

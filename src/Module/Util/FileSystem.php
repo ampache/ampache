@@ -135,11 +135,19 @@ class FileSystem
     /**
      * @return array<int, array{
      *     title: string,
-     *     children?: array<array{title: string, key: string, lazy: bool}>,
+     *     children?: array<array{
+     *         title: string,
+     *         key: string,
+     *         lazy: bool
+     *     }>,
      *     key: string,
      *     expanded?: bool,
      *     lazy: bool,
-     * }>|array<array{title: string, key: string, lazy: bool}>
+     * }>|array<array{
+     *     title: string,
+     *     key: string,
+     *     lazy: bool
+     * }>
      * @throws Exception
      */
     public function lst(string $fs_id, bool $with_root = false): array

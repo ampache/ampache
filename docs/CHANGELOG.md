@@ -1,5 +1,71 @@
 # CHANGELOG
 
+## Ampache 8.0.0
+
+**NOTE** Work in progress
+
+**NOTE** AI Contribution standards are documented in `CLAUDE.md` (repository structures, branch model, architecture and coding rules); read and follow it before submitting changes that are AI-assisted ones
+
+* Ampache 8 requires **PHP 8.5+**
+* This version adds a new **Folder** domain which functions as a virtual filesystem browsing layer over catalog files.
+* A very major PHPStan level 8 / Rector / PER-CS3x0 hardening pass across the code.
+
+### Added 8.0.0
+
+* OpenID Connect (OIDC) login
+  * New `oidc` auth method; add it to `auth_methods` to enable it (keep `mysql` so local accounts can still log in)
+  * Configure a single provider (Keycloak, Entra ID, Authentik, Google, Okta, ...) with the new `oidc_*` config keys
+  * Authorization code flow with PKCE (S256); users are matched by the `oidc_username_claim` claim and provisioned through the existing `auto_create` / `auto_user` / `external_auto_update` settings, exactly like LDAP
+  * The redirect uri to register with the provider is `<web_path>/oidc/`; it carries no query string and needs no webserver configuration
+  * Point `logout_redirect` at the provider's `end_session_endpoint` to sign out of the provider as well
+* Folder Browsing
+  * `Folder` domain/model for browsing the catalog as a virtual folder tree
+  * New `show_folder` preference to show/hide the "Folders" link in the sidebar
+* Database
+  * New `api_enable_8` preference to enable/disable API v8 responses per user
+  * New database tables `folder` and `folder_map`
+  * `folder` added to the `object_type` enum on several tables (`cache_object_count`, `cache_object_count_run`, `image`, `object_count`, and others)
+* API
+  * v8 API responses are now fully documented: `docs/openapi.json` carries response schemas for every data type, and `docs/API-JSON-methods.md`/`docs/API-XML-methods.md` show per-method response field tables (type, nullable, optional)
+* Testing
+  * Test suite significantly expanded with dozens of new test files under `tests/Module` and `tests/Repository`
+
+### Changed 8.0.0
+
+* Requires PHP 8.5+ (was 8.2+); `ext-fileinfo` added as a required extension
+* CI now tests PHP 8.5 only (dropped the 8.2/8.3/8.4 matrix); branch triggers repointed to `patch8`/`release8`
+* `phpstan/phpstan` and `phpstan/phpstan-mockery` ^1 → ^2; `rector/rector` ^1 → ^2, retargeted to the PHP 8.5 rule set and now also covering `src/Config/Init` and `src/Module` (skip list gained `src/Module/Api` and `src/Module/System/Update/Migration`, alongside the existing `src/Repository/Model` skip)
+* Subsonic
+  * OpenSubsonic is now used by default — any user with `subsonic_legacy` enabled has it disabled for them
+* `direct_play_limit`: any existing "unlimited" (`0`) value is reset to a default cap of `500` tracks
+* `playable_item` interface split into `displayable_item` and `container_item` as part of a large interface cleanup
+* API version 8 has been added to the list of API versions
+* Docker: build using `docker/Dockerfilephp85`
+* Theme
+  * Home Dashboard (`homedash`) rows stay on a single line and clip at the edge instead of wrapping to new lines
+  * Personal Favorites (`personalfav`) list scrolls horizontally instead of wrapping
+* `composer syntax` now runs a cross-platform PHP linter (`resources/scripts/tests/syntax.php`) so the check works on Windows (replaces `syntax.sh`)
+
+### Removed 8.0.0
+
+* `api_debug_handler` configuration option and its handling removed entirely
+* Unused legacy OAuth implementation deleted (`OAuthDataStore`, `OAuthServer`, `OAuthSignatureMethod_PLAINTEXT`, `OAuthSignatureMethod_RSA_SHA1`)
+* `docker/Dockerfilephp82`, `Dockerfilephp83`, `Dockerfilephp84` removed (replaced by `Dockerfilephp85`)
+
+### Fixed 8.0.0
+
+* Light sidebar can scroll to reach its bottom entries on short screens
+* Beets catalog clean removed the first song in the catalog even when its file still existed
+* AJAX actions returned a server error instead of updating the page
+  * Setting a favorite
+  * Selecting a catalog in the browse filter box
+  * Deleting a genre
+  * Removing a track from a playlist, and adding items to an existing playlist
+  * Enabling or disabling a song
+* Database 800012
+  * `user` on `object_count`, `user_activity`, `user_data` and `now_playing` could still be `UNSIGNED` on upgraded databases, so the system user (`-1`) was stored as `0`
+  * Plays from a share recorded against user `0` are moved to the system user (`-1`) so they appear in Recently Played
+
 ## Ampache 7.10.0
 
 This release replaces the old captcha implementation (including OCR/image testing behavior) with the new `gregwar/captcha` library.
@@ -15,8 +81,9 @@ See: [Gregwar/Captcha](https://github.com/Gregwar/Captcha)
 * Ampache Remote Catalogs
   * Added support for Ampache8 servers
   * Default remote API version set to API6
-* API / Authentication
+* API
   * Allow API key authorization via request headers
+  * Backport strict typing in API classes
 
 ### Changed (7.10.0)
 
@@ -24,12 +91,19 @@ See: [Gregwar/Captcha](https://github.com/Gregwar/Captcha)
 * Update Composer and NPM packages
 * Update Vite to address known security issues
 * Rename function `get_artist_fullname` to `get_parent_fullname`
+* Updated REST htaccess rules
+* Rework the media deletion process to speed up Catalog cleaning
+* Log playback attempts for disabled media
+* Ampache Remote Catalogs
+  * Don't verify remote songs on every catalog update
 * Subsonic
   * Search3 rules and grouping behavior updated to better match Subsonic client expectations
 * API
   * REST command/path handling updates
   * Validation for `flag` now uses `UserFlag::is_valid()`
   * Validation for `rate` now uses `Rating::is_valid()`
+  * update_art: Existing art is replaced unless you send `overwrite=0`
+  * Parameters sent with an empty value (e.g. `filter=`) are treated as missing
 
 ### Removed (7.10.0)
 
@@ -45,12 +119,16 @@ See: [Gregwar/Captcha](https://github.com/Gregwar/Captcha)
 * Potential error during filesystem scan
 * Missing closing HTML tags in templates
 * Validate Podcast URL is HTTP(S) when set
+* SQL error in `Playlist::get_items()` when the playlist contains non-song objects
+* Set stream type and handle missing catalog when building stream URLs
 * Database
   * Database update `794004`: handle additional leftover bad data
 * CLI
   * Fix table-check column typo in `DatabaseCharsetUpdater`
 * Search
   * Fix joins where `catalog_id` was not set for some search paths
+* Upload
+  * Check upload Artist against the upload user and create the Artist when missing
 * Ampache Remote Catalogs
   * Scan tags correctly on new file import
   * Fix playback for songs using stream action
@@ -58,8 +136,11 @@ See: [Gregwar/Captcha](https://github.com/Gregwar/Captcha)
 * Subsonic
   * Fix errors when `fromYear` and `toYear` are missing
   * Remove HTML encoding in `ArtistInfo` calls
-* API6
-  * Correct version bump handling
+  * HTML decode image URLs in OpenSubsonic responses
+* API
+  * API6: Correct version bump handling
+  * List responses were not sliced by `offset` and `limit` in some XML/JSON methods
+  * Version and response inconsistencies between API versions
 
 ## Ampache 7.9.8
 

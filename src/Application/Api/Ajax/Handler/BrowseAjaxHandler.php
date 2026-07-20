@@ -111,16 +111,16 @@ final readonly class BrowseAjaxHandler implements AjaxHandlerInterface
 
                 // filter box Catalog select
                 if (isset($_REQUEST['catalog'])) {
-                    $browse->set_catalog($_SESSION['catalog']);
+                    $browse->set_catalog($_SESSION['catalog'] ?? null);
                 }
 
                 if (array_key_exists('catalog_key', $_REQUEST) && $_REQUEST['catalog_key']) {
-                    $_SESSION['catalog'] = $_REQUEST['catalog_key'];
+                    $_SESSION['catalog'] = (int) $_REQUEST['catalog_key'];
                     $browse->set_filter('catalog', $_REQUEST['catalog_key']);
                     $filter = true;
                 } else {
                     $_SESSION['catalog'] = null;
-                    if (!in_array($browse->get_filter('catalog'), [null, '', '0'], true)) {
+                    if ((int) $browse->get_filter('catalog') !== 0) {
                         $browse->set_filter('catalog', null);
                         $filter = true;
                     }
@@ -155,7 +155,7 @@ final readonly class BrowseAjaxHandler implements AjaxHandlerInterface
                     return;
                 }
 
-                switch ($_REQUEST['type']) {
+                switch ($_REQUEST['type'] ?? '') {
                     case 'playlist':
                         // Check the perms we need to on this
                         $playlist = new Playlist((int) Core::get_request('id'));

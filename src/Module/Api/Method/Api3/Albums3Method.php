@@ -57,6 +57,8 @@ final class Albums3Method implements MethodInterface
      * update = $browse->set_api_filter(date) //optional
      * offset = (integer) //optional
      * limit = (integer) //optional
+     * cond = (string) Apply additional filters to the browse using ';' separated comma string pairs (e.g. 'filter1,value1;filter2,value2') //optional
+     * sort = (string) sort name or comma separated key pair. Order default 'ASC' (e.g. 'name,ASC' and 'name' are the same) //optional
      *
      * @param array{
      *     filter?: string,
@@ -66,6 +68,8 @@ final class Albums3Method implements MethodInterface
      *     update?: string,
      *     offset?: int,
      *     limit?: int,
+     *     cond?: string,
+     *     sort?: string,
      *     api_format: string,
      *     auth: string,
      * } $input
@@ -81,12 +85,14 @@ final class Albums3Method implements MethodInterface
         $browse = $this->modelFactory->createBrowse(null, false);
         $browse->set_user_id($user);
         $browse->set_type('album');
-        $browse->set_sort('name', 'ASC', false);
+        $browse->set_sort_order(html_entity_decode((string) ($input['sort'] ?? '')), ['name', 'ASC']);
         $method = (array_key_exists('exact', $input) && (int) $input['exact'] == 1) ? 'exact_match' : 'alpha_match';
 
         $browse->set_api_filter($method, $input['filter'] ?? '');
         $browse->set_api_filter('add', $input['add'] ?? '');
         $browse->set_api_filter('update', $input['update'] ?? '');
+
+        $browse->set_conditions(html_entity_decode((string) ($input['cond'] ?? '')));
 
         $results = $browse->get_objects();
         $include = [];

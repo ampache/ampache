@@ -19,6 +19,12 @@
  *
  */
 
+function hasScriptableUrlScheme(url) {
+    var scheme = String(url).replace(/[\u0000-\u0020\u00a0\u1680\u2000-\u200d\u2028\u2029\u202f\u205f\u3000\ufeff]/g, "");
+
+    return /^(?:javascript|data|vbscript):/i.test(scheme);
+}
+
 // Some cutesy flashing thing while we run
 $(document).ajaxSend(function () {
     $("#ajax-loading").show();
@@ -33,7 +39,7 @@ $(function() {
 
     $("body").delegate("a", "click", function() {
         var link = $(this).attr("href");
-        if (typeof link !== "undefined" && link !== "" && link.indexOf("javascript:") !== 0 && link !== "#" && typeof link !== "undefined" && typeof $(this).attr("onclick") === "undefined" && !$(this).hasClass("nohtml") && $(this).attr("target") !== "_blank") {
+        if (typeof link !== "undefined" && link !== "" && !hasScriptableUrlScheme(link) && link !== "#" && typeof link !== "undefined" && typeof $(this).attr("onclick") === "undefined" && !$(this).hasClass("nohtml") && $(this).attr("target") !== "_blank") {
             if ($(this).attr("rel") !== "prettyPhoto") {
                 // Ajax load Ampache pages only
                 if (link.indexOf(jsWebPath) > -1) {
@@ -54,7 +60,7 @@ $(function() {
             var postData = $(this).serializeArray();
             var formURL = $(this).attr("action");
 
-            if (formURL.indexOf("javascript:") !== 0) {
+            if (typeof formURL === "string" && formURL !== "" && !hasScriptableUrlScheme(formURL)) {
                 $.ajax(
                     {
                         url: formURL,
@@ -236,11 +242,29 @@ export function loadContentPage(url)
 }
 
 var sseSource = null;
+
+// Whitelist of functions the SSE stream may invoke; messages are JSON {"fn": "...", "args": [...]}
+// (emitted by SseApiApplication, Ui::update_text and AmpError::add). Lookups are deferred to call time
+var sseHandlers = {
+    "toggleVisible": function (element) { toggleVisible(element); },
+    "displayNotification": function (message, timeout) { displayNotification(message, timeout); },
+    "display_sse_error": function (error) { display_sse_error(error); },
+    "stop_sse_worker": function () { stop_sse_worker(); }
+};
+
 export function sse_worker(url) {
     if(typeof(EventSource) !== "undefined") {
         sseSource = new EventSource(url);
         sseSource.onmessage = function(event) {
-            eval(event.data);
+            var message;
+            try {
+                message = JSON.parse(event.data);
+            } catch (e) {
+                return;
+            }
+            if (message && Object.prototype.hasOwnProperty.call(sseHandlers, message.fn)) {
+                sseHandlers[message.fn].apply(null, message.args || []);
+            }
         };
         sseSource.onopen = function() {
             displayNotification("Connected through Server-Sent Events, processing...", 5000);

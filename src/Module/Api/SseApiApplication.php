@@ -86,7 +86,7 @@ final class SseApiApplication implements ApiApplicationInterface
 
         if ($worker == 'catalog') {
             if (defined('SSE_OUTPUT')) {
-                echo "data: toggleVisible('ajax-loading')\n\n";
+                echo "data: " . json_encode(['fn' => 'toggleVisible', 'args' => ['ajax-loading']]) . "\n\n";
                 ob_flush();
                 flush();
             }
@@ -94,11 +94,11 @@ final class SseApiApplication implements ApiApplicationInterface
             Catalog::process_action(Core::get_request('action'), $catalogs, $options);
 
             if (defined('SSE_OUTPUT')) {
-                echo "data: toggleVisible('ajax-loading')\n\n";
+                echo "data: " . json_encode(['fn' => 'toggleVisible', 'args' => ['ajax-loading']]) . "\n\n";
                 ob_flush();
                 flush();
 
-                echo "data: stop_sse_worker()\n\n";
+                echo "data: " . json_encode(['fn' => 'stop_sse_worker', 'args' => []]) . "\n\n";
                 ob_flush();
                 flush();
             } else {
