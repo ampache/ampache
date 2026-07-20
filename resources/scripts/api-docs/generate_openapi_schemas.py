@@ -68,7 +68,7 @@ TYPES: dict[str, dict[str, str]] = {
     "browse": {"builder": "browses_array", "object": "BrowseObject", "list": "BrowseResponse", "key": "browse", "envelope": "browse"},
     "now_playing": {"builder": "now_playing_array", "object": "NowPlayingObject", "list": "NowPlayingResponse", "key": "now_playing", "envelope": "bare"},
     "activity": {"builder": "timeline_array", "object": "ActivityObject", "list": "TimelineResponse", "key": "activity", "envelope": "bare"},
-    "shout": {"builder": "shouts_array", "object": "ShoutObject", "list": "ShoutsResponse", "key": "shout", "envelope": "bare"},
+    "shout": {"builder": "shouts_array", "object": "ShoutObject", "list": "ShoutsResponse", "key": "shout"},
 }
 
 # Within a generated object schema, replace a property's item/value subtree with
