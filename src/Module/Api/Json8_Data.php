@@ -2335,7 +2335,7 @@ class Json8_Data
      *     date: int,
      *     text: string,
      *     object_type: LibraryItemEnum,
-     *     object_id: int,
+     *     object_id: string,
      *     user: array{id: string, username: string}
      * }>
      */

@@ -85,6 +85,11 @@ final class SystemPreferencesMethod implements MethodInterface
         }
 
         $preferences = $this->preferenceRepository->getAll(null, true);
+        if ($apiVersion >= 8) {
+            foreach ($preferences as $index => $preference) {
+                $preferences[$index]['id'] = (string) $preference['id'];
+            }
+        }
 
         $response->getBody()->write(
             $output->objectArray(

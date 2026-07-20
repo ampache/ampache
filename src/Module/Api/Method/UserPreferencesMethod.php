@@ -71,6 +71,11 @@ final class UserPreferencesMethod implements MethodInterface
         $user->get_preferences();
 
         $preferences = $this->preferenceRepository->getAll($user, true);
+        if ($apiVersion >= 8) {
+            foreach ($preferences as $index => $preference) {
+                $preferences[$index]['id'] = (string) $preference['id'];
+            }
+        }
 
         $response->getBody()->write(
             $output->objectArray(
