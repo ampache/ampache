@@ -82,23 +82,29 @@ final readonly class AlbumArtExporter implements AlbumArtExporterInterface
 
             $file = $dir . '/' . $preferred_filename;
 
+            // check the image before opening the file; 'w' would leave an empty one behind on failure
+            if (!$art->raw) {
+                throw new AlbumArtExportException(
+                    sprintf(T_('Unable to open `%s` for writing'), $file)
+                );
+            }
+
             $file_handle = @fopen($file, 'w');
 
-            if ($file_handle === false || !$art->raw) {
+            if ($file_handle === false) {
                 throw new AlbumArtExportException(
                     sprintf(T_('Unable to open `%s` for writing'), $file)
                 );
             }
 
             $write_result = @fwrite($file_handle, $art->raw);
+            fclose($file_handle);
 
             if ($write_result === false) {
                 throw new AlbumArtExportException(
                     sprintf(T_('Unable to write to `%s`'), $file)
                 );
             }
-
-            fclose($file_handle);
 
             $fileName = $album->get_fullname(true);
 

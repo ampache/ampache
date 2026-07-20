@@ -55,7 +55,6 @@
 ### Fixed 8.0.0
 
 * Light sidebar can scroll to reach its bottom entries on short screens
-* Beets catalog clean removed the first song in the catalog even when its file still existed
 * AJAX actions returned a server error instead of updating the page
   * Setting a favorite
   * Selecting a catalog in the browse filter box
