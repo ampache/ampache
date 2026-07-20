@@ -1386,7 +1386,7 @@ table.gridview td.cel_ratings {
 }
 
 .personalfav table.gridview tbody {
-    grid-template-columns: repeat(auto-fill, 125px);
+    grid-template-columns: repeat(auto-fill, 160px);
     gap: 10px;
     justify-content: start;
 }
@@ -1398,8 +1398,8 @@ table.gridview td.cel_ratings {
     justify-content: center;
     gap: 8px;
     box-sizing: border-box;
-    width: 125px;
-    height: 125px;
+    width: 160px;
+    height: 145px;
     padding: 8px;
     border: 1px solid rgba(128, 128, 128, 0.3);
     border-radius: 4px;
