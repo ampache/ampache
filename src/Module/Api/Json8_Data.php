@@ -620,12 +620,12 @@ class Json8_Data
     public static function bookmarks_array(array $objects, string $auth, bool $include = false): array
     {
         self::$count = self::$count ?: count($objects);
+        $total_count = self::$count;
         $objects     = Api::filter_objects($objects, self::$count, self::$offset, self::$limit);
 
         $bookmarkRepository = self::getBookmarkRepository();
 
-        self::$count = 0;
-        $JSON        = [];
+        $JSON = [];
         foreach ($objects as $bookmark_id) {
             $bookmark = $bookmarkRepository->findById($bookmark_id);
             if ($bookmark === null) {
@@ -640,7 +640,7 @@ class Json8_Data
             $bookmark_creation_date = $bookmark->creation_date;
             $bookmark_update_date   = $bookmark->update_date;
             // Build this element
-            $JSON[] = [
+            $element = [
                 "id" => (string) $bookmark_id,
                 "owner" => $bookmark_username,
                 "object_type" => $bookmark_object_type,
@@ -658,18 +658,20 @@ class Json8_Data
             ) {
                 switch ($bookmark_object_type) {
                     case 'song':
-                        $JSON[self::$count]['song'] = self::songs_array([(int) $bookmark_object_id], $user, $auth);
+                        $element['song'] = self::songs_array([(int) $bookmark_object_id], $user, $auth);
                         break;
                     case 'podcast_episode':
-                        $JSON[self::$count]['podcast_episode'] = self::podcast_episodes_array([(int) $bookmark_object_id], $user, $auth, false);
+                        $element['podcast_episode'] = self::podcast_episodes_array([(int) $bookmark_object_id], $user, $auth, false);
                         break;
                     case 'video':
-                        $JSON[self::$count]['video'] = self::videos_array([(int) $bookmark_object_id], $user, $auth);
+                        $element['video'] = self::videos_array([(int) $bookmark_object_id], $user, $auth);
                         break;
                 }
             }
-            self::$count++;
+            $JSON[] = $element;
         }
+        // The nested *_array builders above overwrite self::$count; restore the real total for the wrapper.
+        self::$count = $total_count;
 
         return $JSON;
     }
@@ -1282,7 +1284,7 @@ class Json8_Data
                         $db_results = Dba::read($sql, [$object_id]);
                         while ($row = Dba::fetch_assoc($db_results)) {
                             $output[$object_id][] = [
-                                "id" => $row['album_id'],
+                                "id" => (string) $row['album_id'],
                                 "type" => 'album'
                             ];
                         }
@@ -1296,7 +1298,7 @@ class Json8_Data
                         $db_results = Dba::read($sql, [$object_id]);
                         while ($row = Dba::fetch_assoc($db_results)) {
                             $output[$object_id][] = [
-                                "id" => $row['album_id'],
+                                "id" => (string) $row['album_id'],
                                 "type" => 'album'
                             ];
                         }
@@ -1310,7 +1312,7 @@ class Json8_Data
                         $db_results = Dba::read($sql, [$object_id]);
                         while ($row = Dba::fetch_assoc($db_results)) {
                             $output[$object_id][] = [
-                                "id" => $row['album_id'],
+                                "id" => (string) $row['album_id'],
                                 "type" => 'album'
                             ];
                         }
@@ -1324,7 +1326,7 @@ class Json8_Data
                         $db_results = Dba::read($sql, [$object_id]);
                         while ($row = Dba::fetch_assoc($db_results)) {
                             $output[$object_id][] = [
-                                "id" => $row['id'],
+                                "id" => (string) $row['id'],
                                 "type" => 'song'
                             ];
                         }
@@ -1343,7 +1345,7 @@ class Json8_Data
                             $playlist = new Search((int) str_replace('smart_', '', (string) $object_id), 'song', $user);
                             foreach ($playlist->get_items() as $song) {
                                 $output[$object_id][] = [
-                                    "id" => $song['object_id'],
+                                    "id" => (string) $song['object_id'],
                                     "type" => 'song'
                                 ];
                             }
@@ -1352,7 +1354,7 @@ class Json8_Data
                             $db_results = Dba::read($sql, [$object_id]);
                             while ($row = Dba::fetch_assoc($db_results)) {
                                 $output[$object_id][] = [
-                                    "id" => $row['object_id'],
+                                    "id" => (string) $row['object_id'],
                                     "type" => $row['object_type']
                                 ];
                             }
@@ -1367,7 +1369,7 @@ class Json8_Data
                         $db_results = Dba::read($sql, [$object_id]);
                         while ($row = Dba::fetch_assoc($db_results)) {
                             $output[$object_id][] = [
-                                "id" => $row['id'],
+                                "id" => (string) $row['id'],
                                 "type" => 'podcast_episode'
                             ];
                         }
@@ -1380,11 +1382,11 @@ class Json8_Data
                 case 'song':
                 case 'video':
                     // These objects don't have children
-                    $output = $objects;
+                    $output = array_map('strval', $objects);
                     break;
             }
         } else {
-            $output = $objects;
+            $output = array_map('strval', $objects);
         }
         $output = json_encode([$type => $output], JSON_PRETTY_PRINT);
         if ($output !== false) {

@@ -90,7 +90,7 @@ final class DeletedPodcastEpisodesMethod implements MethodInterface
         $items = iterator_to_array($this->deletedPodcastEpisodeRepository->findAll());
         if ($items === []) {
             $response->getBody()->write(
-                $output->writeEmpty($apiVersion, 'deleted_podcast_episodes')
+                $output->writeEmpty($apiVersion, 'deleted_podcast_episode')
             );
 
             return $response;

@@ -125,7 +125,7 @@ final class PlaylistGenerateMethod implements MethodInterface
 
         $response->getBody()->write(
             match ($format) {
-                'id' => $output->keyedArray($apiVersion, $results, false, 'id'),
+                'id' => $output->keyedArray($apiVersion, ($apiVersion >= 8) ? array_map('strval', $results) : $results, false, 'id'),
                 'index' => $output->indexes($apiVersion, $results, 'song', $user, $input['auth']),
                 default => $output->songs($apiVersion, $results, $user, $input['auth']),
             }
