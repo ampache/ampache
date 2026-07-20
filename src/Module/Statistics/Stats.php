@@ -89,18 +89,18 @@ class Stats
     /**
      * consolidate
      *
-     * Consolidate play history older than $older_than days into `object_count_summary`
-     * and delete the detail rows, inside a transaction.
-     * Stored counters stay exact: the rebuild queries (Catalog::update_counts,
-     * Album/Artist::update_table_counts, Video::update_video_counts, Stats::clear)
-     * combine both tables, and all-time readers (Stats::get_object_count,
-     * User::get_play_size, rating match plugin) include the summary table.
-     * The cron cache (ObjectCache) merges consolidated counts into its
-     * threshold 0 entries so cached all-time counts stay exact.
-     * Readers that inspect individual plays only evaluate the retained window:
-     * period-based statistics (trending, recent, graphs, Last.fm export),
-     * live all-time top charts (Stats::get_top_sql with a 0 threshold without
+     * Consolidate play history older than $older_than days into `object_count_summary` and delete the detail rows,
+     * inside a transaction.
+     *
+     * Stored counters stay exact: the rebuild queries (Catalog::update_counts, Album/Artist::update_table_counts,
+     * Video::update_video_counts, Stats::clear) combine both tables, all-time readers (Stats::get_object_count,
+     * User::get_play_size, rating match plugin) include the summary table, and the cron cache (ObjectCache) merges
+     * consolidated counts into its threshold 0 entries.
+     *
+     * Readers that inspect individual plays only evaluate the retained window: period-based statistics (trending,
+     * recent, graphs, Last.fm export), live all-time top charts (Stats::get_top_sql with a 0 threshold without
      * cron_cache), smart playlist play-history rules and play count sorting.
+     *
      * @return array{rows: int, groups: int, executed: bool}
      */
     public static function consolidate(int $older_than, ?string $count_type = null, bool $dry_run = true): array
@@ -122,11 +122,8 @@ class Stats
             return ['rows' => $rows, 'groups' => $groups, 'executed' => false];
         }
 
-        // aggregate then purge inside a transaction so an interruption
-        // cannot double count rows on the next run
-        // NOTE: VALUES() in ON DUPLICATE KEY UPDATE is deprecated on MySQL 8 but
-        // the replacement alias syntax is not supported by MariaDB, so VALUES()
-        // remains the only portable form (also used in Playlist::update_map)
+        // aggregate then purge inside a transaction so an interruption cannot double count rows on the next run.
+        // VALUES() is deprecated on MySQL 8 but its replacement isn't in MariaDB, so it stays (as in Playlist::update_map)
         $dbh            = Dba::dbh();
         $in_transaction = ($dbh !== null && $dbh->beginTransaction());
         $insert         = Dba::write("INSERT INTO `object_count_summary` (`object_type`, `object_id`, `user`, `count_type`, `count`, `date_from`, `date_to`) SELECT `object_type`, `object_id`, `user`, `count_type`, COUNT(*), MIN(`date`), MAX(`date`) FROM `object_count` WHERE " . $where . " GROUP BY `object_type`, `object_id`, `user`, `count_type` ON DUPLICATE KEY UPDATE `count` = `object_count_summary`.`count` + VALUES(`count`), `date_from` = LEAST(`object_count_summary`.`date_from`, VALUES(`date_from`)), `date_to` = GREATEST(`object_count_summary`.`date_to`, VALUES(`date_to`));", $params);
@@ -259,7 +256,6 @@ class Stats
 
         // if deletes are copmleted you can have left over stuff
         Dba::write("DELETE FROM `object_count` WHERE `object_type` IN ('album', 'artist', 'podcast') AND `count_type` = ('skip');");
-        Dba::write("DELETE FROM `object_count_summary` WHERE `object_type` IN ('album', 'artist', 'podcast') AND `count_type` = 'skip';");
         Dba::write("DELETE FROM `object_count_summary` WHERE `object_type` IN ('album', 'artist', 'podcast') AND `count_type` = 'skip';");
     }
 

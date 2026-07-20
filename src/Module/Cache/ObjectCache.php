@@ -71,10 +71,8 @@ final class ObjectCache implements ObjectCacheInterface
             }
         }
 
-        // Merge consolidated play history into the all-time (threshold 0) counts.
-        // Types mirror the aggregation shapes of Stats::get_top_sql: plain types
-        // count their own object_count_summary rows, podcast and album_disk are
-        // rolled up from podcast_episode / song plays.
+        // Merge consolidated play history into the all-time (threshold 0) counts, mirroring the aggregation shapes of
+        // Stats::get_top_sql: plain types count their own rows, podcast and album_disk roll up episode / song plays.
         $summary_types = [
             'album',
             'artist',
