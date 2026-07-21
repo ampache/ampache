@@ -56,8 +56,8 @@ final class HtaccessCommand extends Command
             return;
         }
 
-        $htaccess_play_file = __DIR__ . '/../../../public/client/play/.htaccess';
-        $htaccess_rest_file = __DIR__ . '/../../../public/client/rest/.htaccess';
+        $htaccess_play_file = __DIR__ . '/../../../public/client/client/play/.htaccess';
+        $htaccess_rest_file = __DIR__ . '/../../../public/client/client/rest/.htaccess';
 
         // check permissions
         if (!check_htaccess_play_writable()) {

@@ -33,7 +33,7 @@ use Psr\Container\ContainerInterface;
 define('NO_SESSION', '1');
 
 /** @var ContainerInterface $dic */
-$dic = require __DIR__ . '/../../../src/Config/Init.php';
+$dic = require __DIR__ . '/../../../../src/Config/Init.php';
 
 $dic->get(ApplicationRunner::class)->run(
     $dic->get(ServerRequestCreatorInterface::class)->fromGlobals(),

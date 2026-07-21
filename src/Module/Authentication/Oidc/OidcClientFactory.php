@@ -77,7 +77,7 @@ final readonly class OidcClientFactory implements OidcClientFactoryInterface
             ($issuer === '') ? null : $issuer
         );
 
-        $client->setRedirectURL($this->configContainer->getWebPath() . self::CALLBACK_PATH);
+        $client->setRedirectURL($this->configContainer->getWebPath('/client') . self::CALLBACK_PATH);
         $client->setCodeChallengeMethod('S256');
 
         // the client always requests the `openid` scope itself, so passing it along would duplicate it
