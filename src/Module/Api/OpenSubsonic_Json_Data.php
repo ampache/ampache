@@ -751,7 +751,7 @@ class OpenSubsonic_Json_Data
             $catalog = Catalog::create_from_id($folder_id);
             if ($catalog instanceof Catalog) {
                 $json['musicFolder'][] = [
-                    'id' => $folder_id,
+                    'id' => OpenSubsonic_Api::getCatalogSubId($folder_id),
                     'name' => (string) $catalog->name,
                 ];
             }
@@ -3069,7 +3069,7 @@ class OpenSubsonic_Json_Data
         if ($album_artist) {
             $json['parent'] = OpenSubsonic_Api::getArtistSubId($album_artist);
         } else {
-            $json['parent'] = (string) $album->catalog;
+            $json['parent'] = OpenSubsonic_Api::getCatalogSubId($album->catalog);
         }
 
         $json['name'] = $album->get_fullname();

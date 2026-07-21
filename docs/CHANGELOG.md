@@ -55,6 +55,8 @@
 * `phpstan/phpstan` and `phpstan/phpstan-mockery` ^1 → ^2; `rector/rector` ^1 → ^2, retargeted to the PHP 8.5 rule set and now also covering `src/Config/Init` and `src/Module` (skip list gained `src/Module/Api` and `src/Module/System/Update/Migration`, alongside the existing `src/Repository/Model` skip)
 * Subsonic
   * OpenSubsonic is now used by default — any user with `subsonic_legacy` enabled has it disabled for them
+  * Catalog ids carry the `mf-` prefix used by every other object id, everywhere they appear (`musicFolder.id`, and the `parent` of a directory or child); unprefixed ids are still accepted on input
+  * JSON `getMusicFolders` sent `musicFolder.id` as an integer while XML sent a string; both now send the prefixed string
 * `direct_play_limit`: any existing "unlimited" (`0`) value is reset to a default cap of `500` tracks
 * `playable_item` interface split into `displayable_item` and `container_item` as part of a large interface cleanup
 * API version 8 has been added to the list of API versions
@@ -90,6 +92,11 @@
 * Database 800012
   * `user` on `object_count`, `user_activity`, `user_data` and `now_playing` could still be `UNSIGNED` on upgraded databases, so the system user (`-1`) was stored as `0`
   * Plays from a share recorded against user `0` are moved to the system user (`-1`) so they appear in Recently Played
+* Subsonic
+  * `getArtists` ignored the user's catalogs entirely and returned every artist on the server
+  * `musicFolderId` was ignored by `getStarred`, `getStarred2` and `getSongsByGenre`
+  * `musicFolderId` was ignored by `getAlbumList`/`getAlbumList2` for the `random`, `highest`, `frequent`, `recent`, `starred`, `byYear` and `byGenre` types
+  * A `musicFolderId` naming a catalog the user can't browse returned everything instead of nothing
 
 ## Ampache 7.10.0
 
