@@ -1503,7 +1503,7 @@ class Ui implements UiInterface
             && !Access::check(AccessTypeEnum::INTERFACE, AccessLevelEnum::ADMIN)
             && Preference::get_by_user($user->getId(), 'mini_player')
         ) {
-            header('Location: ' . AmpConfig::get_web_path() . '/m/');
+            header('Location: ' . AmpConfig::get_web_path('/client') . '/m/');
 
             exit;
         }

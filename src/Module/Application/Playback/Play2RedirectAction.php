@@ -55,7 +55,7 @@ final readonly class Play2RedirectAction implements ApplicationActionInterface
             ->createResponse(RFC7231::MOVED_PERMANENTLY)
             ->withHeader(
                 'Location',
-                $this->configContainer->getWebPath() . '/play/index.php?' . http_build_query($params)
+                $this->configContainer->getWebPath('/client') . '/play/index.php?' . http_build_query($params)
             );
     }
 }

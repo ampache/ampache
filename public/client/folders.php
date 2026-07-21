@@ -24,15 +24,21 @@ declare(strict_types=1);
  */
 
 use Ampache\Module\Application\ApplicationRunner;
-use Ampache\Module\Application\MiniPlayer\ShowAction;
+use Ampache\Module\Application\Folder\ConfirmDeleteAction;
+use Ampache\Module\Application\Folder\DeleteAction;
+use Ampache\Module\Application\Folder\ShowAction;
 use Nyholm\Psr7Server\ServerRequestCreatorInterface;
 use Psr\Container\ContainerInterface;
 
 /** @var ContainerInterface $dic */
-$dic = require __DIR__ . '/../../../src/Config/Init.php';
+$dic = require __DIR__ . '/../../src/Config/Init.php';
 
 $dic->get(ApplicationRunner::class)->run(
     $dic->get(ServerRequestCreatorInterface::class)->fromGlobals(),
-    [ShowAction::REQUEST_KEY => ShowAction::class],
+    [
+        DeleteAction::REQUEST_KEY => DeleteAction::class,
+        ConfirmDeleteAction::REQUEST_KEY => ConfirmDeleteAction::class,
+        ShowAction::REQUEST_KEY => ShowAction::class,
+    ],
     ShowAction::REQUEST_KEY
 );

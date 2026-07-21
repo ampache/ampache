@@ -224,7 +224,7 @@ if ($access25 && $can_share) { ?>
     </li>
 <?php }
     if ((!empty($owner_id) && $owner_id == $current_user?->getId()) || $access50) {
-        if (AmpConfig::get('statistical_graphs') && is_dir(__DIR__ . '/../../../../vendor/szymach/c-pchart/src/Chart/')) { ?>
+        if (AmpConfig::get('statistical_graphs') && is_dir(__DIR__ . '/../../../vendor/szymach/c-pchart/src/Chart/')) { ?>
             <li>
                 <a href="<?php echo $web_path; ?>/stats.php?action=graph&object_type=album&object_id=<?php echo $album->id; ?>">
                     <?php echo Ui::get_material_symbol('bar_chart', T_('Graphs'));

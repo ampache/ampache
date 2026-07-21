@@ -24,30 +24,29 @@ declare(strict_types=1);
  */
 
 /**
- * Redirect uri of the OpenID Connect login. It is a directory of its own so the uri
- * registered at the identity provider carries no query string; some providers refuse
- * to allow-list one. The provider appends its own `code` and `state` parameters here.
+ * This is the wrapper for opening music streams from this server.  This script
+ * will play the local version or redirect to the remote server if that be
+ * the case.  Also this will update local statistics for songs as well.
+ * This is also where it decides if you need to be downsampled.
  */
 
 use Ampache\Module\Application\ApplicationRunner;
-use Ampache\Module\Application\Login\DefaultAction;
+use Ampache\Module\Application\Playback\Play2RedirectAction;
+use Ampache\Module\Application\Playback\PlayAction;
 use Nyholm\Psr7Server\ServerRequestCreatorInterface;
 use Psr\Container\ContainerInterface;
 
 define('NO_SESSION', '1');
-
-/**
- * The second step of DefaultAction reads these through RequestParser, which reads $_REQUEST.
- * They have to be set before Init.php runs, because Bootstrap.php builds $_REQUEST from $_GET and $_POST.
- */
-$_GET['auth_mod'] = 'oidc';
-$_GET['step']     = '2';
+define('OUTDATED_DATABASE_OK', 1);
 
 /** @var ContainerInterface $dic */
-$dic = require __DIR__ . '/../../src/Config/Init.php';
+$dic = require __DIR__ . '/../../../src/Config/Init.php';
 
 $dic->get(ApplicationRunner::class)->run(
     $dic->get(ServerRequestCreatorInterface::class)->fromGlobals(),
-    [DefaultAction::REQUEST_KEY => DefaultAction::class],
-    DefaultAction::REQUEST_KEY
+    [
+        PlayAction::REQUEST_KEY => PlayAction::class,
+        Play2RedirectAction::REQUEST_KEY => Play2RedirectAction::class,
+    ],
+    PlayAction::REQUEST_KEY
 );

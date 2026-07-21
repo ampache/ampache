@@ -421,8 +421,8 @@ function check_config_writable(): bool
  */
 function check_htaccess_rest_writable(): bool
 {
-    return ((file_exists(__DIR__ . '/../../public/client/rest/.htaccess') && is_writeable(__DIR__ . '/../../public/client/rest/.htaccess'))
-        || (!file_exists(__DIR__ . '/../../public/client/rest/.htaccess') && is_writeable(__DIR__ . '/../../public/client/rest/')));
+    return ((file_exists(__DIR__ . '/../../public/rest/.htaccess') && is_writeable(__DIR__ . '/../../public/rest/.htaccess'))
+        || (!file_exists(__DIR__ . '/../../public/rest/.htaccess') && is_writeable(__DIR__ . '/../../public/rest/')));
 }
 
 /**
@@ -569,7 +569,7 @@ function debug_event(string $type, string $message, int $level, string $username
  */
 function catalog_worker(string $action, ?array $catalogs = null, ?array $options = null): void
 {
-    $sse_url = AmpConfig::get_web_path('/client') . "/server/sse.server.php?worker=catalog&action=" . $action . "&catalogs=" . urlencode(json_encode($catalogs) ?: '');
+    $sse_url = AmpConfig::get_web_path() . "/server/sse.server.php?worker=catalog&action=" . $action . "&catalogs=" . urlencode(json_encode($catalogs) ?: '');
     if ($options) {
         $sse_url .= "&options=" . urlencode(json_encode($_POST) ?: '');
     }
@@ -964,7 +964,7 @@ function get_themes(): array
 {
     $results = [];
 
-    $lst_files = glob(__DIR__ . '/../../public/client/client/themes/*/theme.cfg.php');
+    $lst_files = glob(__DIR__ . '/../../public/client/themes/*/theme.cfg.php');
     if (!$lst_files) {
         debug_event('themes', 'Failed to open /themes directory', 2);
 
@@ -1008,7 +1008,7 @@ function get_theme(string $name): ?array
         return $_mapcache[$name];
     }
 
-    $config_file = __DIR__ . "/../../public/client/client/themes/" . $name . "/theme.cfg.php";
+    $config_file = __DIR__ . "/../../public/client/themes/" . $name . "/theme.cfg.php";
     if (file_exists($config_file)) {
         $results = parse_ini_file($config_file);
         if (is_array($results)) {

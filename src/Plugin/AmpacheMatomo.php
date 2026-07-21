@@ -106,7 +106,7 @@ class AmpacheMatomo extends AmpachePlugin implements PluginDisplayOnFooterInterf
             return false;
         }
 
-        return Preference::insert('matomo_url', T_('Matomo URL'), AmpConfig::get_web_path('/client') . '/matomo/', AccessLevelEnum::ADMIN->value, 'string', 'plugins', $this->name);
+        return Preference::insert('matomo_url', T_('Matomo URL'), AmpConfig::get_web_path() . '/matomo/', AccessLevelEnum::ADMIN->value, 'string', 'plugins', $this->name);
     }
 
     /**

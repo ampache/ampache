@@ -40,12 +40,3 @@ final class Migration800021 extends AbstractMigration
         $this->updatePreferences('mini_player', 'Lock this user into the mini player interface', '0', AccessLevelEnum::ADMIN->value, 'boolean', 'interface', 'theme');
     }
 }
-<<<<<<<< HEAD:public/client/templates/create_web_player.inc.php
-// end -->
-</script>
-</head>
-<body onLoad="javascript:PlayerPopUp('<?php echo AmpConfig::get_web_path('/client'); ?>/web_player.php<?php echo '?playlist_id=' . $this->id; ?>')">
-</body>
-</html>
-========
->>>>>>>> origin/develop8:src/Module/System/Update/Migration/V8/Migration800021.php

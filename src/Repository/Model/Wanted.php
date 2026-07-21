@@ -187,7 +187,7 @@ class Wanted extends database_object
                         }
 
                         $wanted->accepted = 0;
-                        $wanted->link     = AmpConfig::get_web_path() . "/albums.php?action=show_missing&mbid=" . $group->id;
+                        $wanted->link     = AmpConfig::get_web_path('/client') . "/albums.php?action=show_missing&mbid=" . $group->id;
                         if ($artist !== null) {
                             $wanted->link .= "&artist=" . $wanted->artist;
                         } else {

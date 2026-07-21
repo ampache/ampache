@@ -34,7 +34,7 @@ use Ampache\Plugin\PluginDisplayHomeInterface;
 use Ampache\Repository\Model\Plugin;
 use Ampache\Repository\Model\User;
 
-$web_path   = AmpConfig::get_web_path();
+$web_path   = AmpConfig::get_web_path('/client');
 $site_lang  = AmpConfig::get('lang', 'en_US');
 $site_title = scrub_out(AmpConfig::get('site_title'));
 $htmllang   = str_replace("_", "-", $site_lang);

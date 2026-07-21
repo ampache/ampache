@@ -106,7 +106,7 @@ class AmpachePiwik extends AmpachePlugin implements PluginDisplayOnFooterInterfa
             return false;
         }
 
-        return Preference::insert('piwik_url', T_('Piwik URL'), AmpConfig::get_web_path('/client') . '/piwik/', AccessLevelEnum::ADMIN->value, 'string', 'plugins', $this->name);
+        return Preference::insert('piwik_url', T_('Piwik URL'), AmpConfig::get_web_path() . '/piwik/', AccessLevelEnum::ADMIN->value, 'string', 'plugins', $this->name);
     }
 
     /**

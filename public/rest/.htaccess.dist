@@ -27,5 +27,5 @@
     RewriteRule ^([^/]+)\.view$ index.php?ssaction=$1 [L,QSA]
     # some subsonic clients don't use *.view
     RewriteRule ^([^/]+)/?$ index.php?ssaction=$1 [L,QSA]
-    RewriteRule ^fake/(.+)$ /play/$1 [L,QSA]
+    RewriteRule ^fake/(.+)$ /client/play/$1 [L,QSA]
 </IfModule>

@@ -38,7 +38,7 @@ if (!array_key_exists('type', $_REQUEST) || (string) filter_input(INPUT_GET, 'ty
 }
 
 /** @var ContainerInterface $dic */
-$dic = require __DIR__ . '/../../../src/Config/Init.php';
+$dic = require __DIR__ . '/../../src/Config/Init.php';
 
 $dic->get(ApplicationRunner::class)->run(
     $dic->get(ServerRequestCreatorInterface::class)->fromGlobals(),

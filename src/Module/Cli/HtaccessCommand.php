@@ -57,7 +57,7 @@ final class HtaccessCommand extends Command
         }
 
         $htaccess_play_file = __DIR__ . '/../../../public/client/play/.htaccess';
-        $htaccess_rest_file = __DIR__ . '/../../../public/client/rest/.htaccess';
+        $htaccess_rest_file = __DIR__ . '/../../../public/rest/.htaccess';
 
         // check permissions
         if (!check_htaccess_play_writable()) {
@@ -90,7 +90,7 @@ final class HtaccessCommand extends Command
         unlink($htaccess_rest_file);
 
         // create the files
-        if (!$this->installationHelper->install_rewrite_rules($htaccess_play_file, $this->configContainer->getWebPath('/client'), false)) {
+        if (!$this->installationHelper->install_rewrite_rules($htaccess_play_file, $this->configContainer->getWebPath(), false)) {
             $interactor->error(
                 T_('Failed to write config file') . ": " . $htaccess_play_file,
                 true
@@ -103,7 +103,7 @@ final class HtaccessCommand extends Command
             return;
         }
 
-        if (!$this->installationHelper->install_rewrite_rules($htaccess_rest_file, $this->configContainer->getWebPath('/client'), false)) {
+        if (!$this->installationHelper->install_rewrite_rules($htaccess_rest_file, $this->configContainer->getWebPath(), false)) {
             $interactor->error(
                 T_('Failed to write config file') . ": " . $htaccess_rest_file,
                 true
