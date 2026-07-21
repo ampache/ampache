@@ -1,6 +1,6 @@
 <?php
 
-declare(strict_types=0);
+declare(strict_types=1);
 
 /**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
@@ -43,10 +43,10 @@ final class ShareEdit4Method
      * Update the description and/or expiration date for an existing share.
      * Takes the share id to update with optional description and expires parameters.
      *
-     * filter      = (string) Alpha-numeric search term
-     * stream      = (boolean) 0,1 //optional
-     * download    = (boolean) 0,1 //optional
-     * expires     = (integer) number of whole days before expiry //optional
+     * filter = (string) Alpha-numeric search term
+     * stream = (boolean) 0,1 //optional
+     * download = (boolean) 0,1 //optional
+     * expires = (integer) number of whole days before expiry //optional
      * description = (string) update description //optional
      *
      * @param array{
@@ -74,8 +74,8 @@ final class ShareEdit4Method
         $share = self::getShareRepository()->findById((int) $share_id);
 
         if (
-            $share === null ||
-            !$share->isAccessible($user)
+            $share === null
+            || !$share->isAccessible($user)
         ) {
             Api4::message('error', 'share ' . $share_id . ' was not found', '404', $input['api_format']);
 

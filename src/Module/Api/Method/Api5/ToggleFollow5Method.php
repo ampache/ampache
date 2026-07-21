@@ -1,6 +1,6 @@
 <?php
 
-declare(strict_types=0);
+declare(strict_types=1);
 
 /**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
@@ -55,7 +55,7 @@ final class ToggleFollow5Method
     public static function toggle_follow(array $input, User $user): bool
     {
         if (!AmpConfig::get('sociable')) {
-            Api5::error(T_('Enable: sociable'), ErrorCodeEnum::ACCESS_DENIED, self::ACTION, 'system', $input['api_format']);
+            Api5::error(ErrorCodeEnum::ACCESS_DENIED, T_('Enable: sociable'), self::ACTION, 'system', $input['api_format']);
 
             return false;
         }
@@ -77,12 +77,13 @@ final class ToggleFollow5Method
             }
 
             /* HINT: Requested object string/id/type ("album", "myusername", "some song title", 1298376) */
-            Api5::error(sprintf('Not Found: %s', $username), ErrorCodeEnum::NOT_FOUND, self::ACTION, 'filter', $input['api_format']);
+            Api5::error(ErrorCodeEnum::NOT_FOUND, sprintf(T_('Not Found: %s'), $username), self::ACTION, 'filter', $input['api_format']);
 
             return false;
         }
 
-        Api5::error(sprintf('Bad Request: %s', 'username'), ErrorCodeEnum::BAD_REQUEST, self::ACTION, 'username', $input['api_format']);
+        /* HINT: Requested object string/id/type ("album", "myusername", "some song title", 1298376) */
+        Api5::error(ErrorCodeEnum::BAD_REQUEST, sprintf(T_('Bad Request: %s'), 'username'), self::ACTION, 'username', $input['api_format']);
 
         return false;
     }

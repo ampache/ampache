@@ -1,6 +1,6 @@
 <?php
 
-declare(strict_types=0);
+declare(strict_types=1);
 
 /**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
@@ -49,7 +49,7 @@ final class Flag6Method
      * Setting flag to true (1) will set the flag
      * Setting flag to false (0) will remove the flag
      *
-     * id   = (string) $object_id
+     * id = (string) $object_id
      * type = (string) 'song', 'album', 'artist', 'playlist', 'podcast', 'podcast_episode', 'video' $type
      * flag = (integer) 0,1 $flag
      * date = (integer) UNIXTIME() //optional
@@ -67,7 +67,7 @@ final class Flag6Method
     public static function flag(array $input, User $user): bool
     {
         if (!AmpConfig::get('ratings')) {
-            Api6::error('Enable: ratings', ErrorCodeEnum::ACCESS_DENIED, self::ACTION, 'system', $input['api_format']);
+            Api6::error(ErrorCodeEnum::ACCESS_DENIED, 'Enable: ratings', self::ACTION, 'system', $input['api_format']);
 
             return false;
         }
@@ -81,34 +81,34 @@ final class Flag6Method
         $type      = (string) $input['type'];
         $object_id = (int) $input['id'];
         $flag      = make_bool($input['flag']);
-        $date      = (int)($input['date'] ?? time());
+        $date      = (int) ($input['date'] ?? time());
 
         // confirm the correct data
-        if (!in_array(strtolower($type), ['song', 'album', 'artist', 'playlist', 'podcast', 'podcast_episode', 'video'])) {
-            Api6::error(sprintf('Bad Request: %s', $type), ErrorCodeEnum::BAD_REQUEST, self::ACTION, 'type', $input['api_format']);
+        if (!Userflag::is_valid(strtolower($type))) {
+            Api6::error(ErrorCodeEnum::BAD_REQUEST, sprintf('Bad Request: %s', $type), self::ACTION, 'type', $input['api_format']);
 
             return false;
         }
 
         // searches are playlists but not in the database
         if (
-            $type === 'playlist' &&
-            $object_id === 0
+            $type === 'playlist'
+            && $object_id === 0
         ) {
             $type      = 'search';
-            $object_id = (int) str_replace('smart_', '', (string)$input['id']);
+            $object_id = (int) str_replace('smart_', '', (string) $input['id']);
         }
 
         $className = ObjectTypeToClassNameMapper::map($type);
 
         if (!$className || !$object_id) {
-            Api6::error(sprintf('Bad Request: %s', $type), ErrorCodeEnum::BAD_REQUEST, self::ACTION, 'type', $input['api_format']);
+            Api6::error(ErrorCodeEnum::BAD_REQUEST, sprintf('Bad Request: %s', $type), self::ACTION, 'type', $input['api_format']);
         } else {
             /** @var library_item $item */
             $item = new $className($object_id);
             if ($item->isNew()) {
                 /* HINT: Requested object string/id/type ("album", "myusername", "some song title", 1298376) */
-                Api6::error(sprintf('Not Found: %s', $object_id), ErrorCodeEnum::NOT_FOUND, self::ACTION, 'id', $input['api_format']);
+                Api6::error(ErrorCodeEnum::NOT_FOUND, sprintf('Not Found: %s', $object_id), self::ACTION, 'id', $input['api_format']);
 
                 return false;
             }
@@ -119,7 +119,7 @@ final class Flag6Method
 
                 return true;
             }
-            Api6::error('flag failed ' . $object_id, ErrorCodeEnum::BAD_REQUEST, self::ACTION, 'system', $input['api_format']);
+            Api6::error(ErrorCodeEnum::BAD_REQUEST, 'flag failed ' . $object_id, self::ACTION, 'system', $input['api_format']);
 
             return false;
         }

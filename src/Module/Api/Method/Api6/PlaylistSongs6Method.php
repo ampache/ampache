@@ -1,6 +1,6 @@
 <?php
 
-declare(strict_types=0);
+declare(strict_types=1);
 
 /**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
@@ -51,7 +51,7 @@ final class PlaylistSongs6Method
      * filter = (string) UID of playlist
      * random = (integer) 0,1, if true get random songs using limit //optional
      * offset = (integer) //optional
-     * limit  = (integer) //optional
+     * limit = (integer) //optional
      *
      * @param array{
      *     filter: string,
@@ -69,22 +69,22 @@ final class PlaylistSongs6Method
         }
 
         $object_id = $input['filter'];
-        $random    = (array_key_exists('random', $input) && (int)$input['random'] == 1);
+        $random    = (array_key_exists('random', $input) && (int) $input['random'] == 1);
         $playlist  = ((int) $object_id === 0)
             ? new Search((int) str_replace('smart_', '', $object_id), 'song', $user)
             : new Playlist((int) $object_id);
 
         if ($playlist->isNew()) {
             /* HINT: Requested object string/id/type ("album", "myusername", "some song title", 1298376) */
-            Api6::error(sprintf('Not Found: %s', $object_id), ErrorCodeEnum::NOT_FOUND, self::ACTION, 'filter', $input['api_format']);
+            Api6::error(ErrorCodeEnum::NOT_FOUND, sprintf('Not Found: %s', $object_id), self::ACTION, 'filter', $input['api_format']);
 
             return false;
         }
         if (
-            $playlist->type !== 'public' &&
-            !$playlist->has_collaborate($user)
+            $playlist->type !== 'public'
+            && !$playlist->has_collaborate($user)
         ) {
-            Api6::error('Require: 100', ErrorCodeEnum::FAILED_ACCESS_CHECK, self::ACTION, 'account', $input['api_format']);
+            Api6::error(ErrorCodeEnum::FAILED_ACCESS_CHECK, 'Require: 100', self::ACTION, 'account', $input['api_format']);
 
             return false;
         }
@@ -103,20 +103,18 @@ final class PlaylistSongs6Method
             if ($object['object_type'] === LibraryItemEnum::SONG) {
                 $results[] = $object['object_id'];
             }
-        } // end foreach
+        }
 
         ob_end_clean();
         switch ($input['api_format']) {
             case 'json':
-                Json6_Data::set_offset((int)($input['offset'] ?? 0));
+                Json6_Data::set_offset((int) ($input['offset'] ?? 0));
                 Json6_Data::set_limit($input['limit'] ?? 0);
-                Json6_Data::set_count(count($results));
                 echo Json6_Data::songs($results, $user, $input['auth']);
                 break;
             default:
-                Xml6_Data::set_offset((int)($input['offset'] ?? 0));
+                Xml6_Data::set_offset((int) ($input['offset'] ?? 0));
                 Xml6_Data::set_limit($input['limit'] ?? 0);
-                Xml6_Data::set_count(count($results));
                 echo Xml6_Data::songs($results, $user, $input['auth']);
         }
 

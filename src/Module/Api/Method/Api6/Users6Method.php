@@ -1,6 +1,6 @@
 <?php
 
-declare(strict_types=0);
+declare(strict_types=1);
 
 /**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
@@ -58,11 +58,11 @@ final class Users6Method
         $browse = Api6::getBrowse($user);
         $browse->set_type('user');
 
-        $browse->set_sort_order(html_entity_decode((string)($input['sort'] ?? '')), ['id', 'ASC']);
+        $browse->set_sort_order(html_entity_decode((string) ($input['sort'] ?? '')), ['id', 'ASC']);
 
         $browse->set_filter('disabled', 0);
 
-        $browse->set_conditions(html_entity_decode((string)($input['cond'] ?? '')));
+        $browse->set_conditions(html_entity_decode((string) ($input['cond'] ?? '')));
 
         $results = $browse->get_objects();
         if (empty($results)) {
@@ -74,15 +74,13 @@ final class Users6Method
         ob_end_clean();
         switch ($input['api_format']) {
             case 'json':
-                Json6_Data::set_offset((int)($input['offset'] ?? 0));
+                Json6_Data::set_offset((int) ($input['offset'] ?? 0));
                 Json6_Data::set_limit($input['limit'] ?? 0);
-                Json6_Data::set_count($browse->get_total());
                 echo Json6_Data::users($results);
                 break;
             default:
-                Xml6_Data::set_offset((int)($input['offset'] ?? 0));
+                Xml6_Data::set_offset((int) ($input['offset'] ?? 0));
                 Xml6_Data::set_limit($input['limit'] ?? 0);
-                Xml6_Data::set_count($browse->get_total());
                 echo Xml6_Data::users($results);
         }
 

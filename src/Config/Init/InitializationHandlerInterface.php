@@ -30,6 +30,7 @@ use Ampache\Config\Init\Exception\ConfigFileNotParsableException;
 use Ampache\Config\Init\Exception\DatabaseOutdatedException;
 use Ampache\Config\Init\Exception\EnvironmentNotSuitableException;
 use Ampache\Config\Init\Exception\GetTextNotAvailableException;
+use Ampache\Config\Init\Exception\RequireAuthException;
 
 interface InitializationHandlerInterface
 {
@@ -39,6 +40,7 @@ interface InitializationHandlerInterface
      * @throws EnvironmentNotSuitableException
      * @throws DatabaseOutdatedException
      * @throws GetTextNotAvailableException
+     * @throws RequireAuthException
      */
     public function init(): void;
 }

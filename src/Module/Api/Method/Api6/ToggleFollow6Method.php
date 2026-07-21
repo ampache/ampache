@@ -1,6 +1,6 @@
 <?php
 
-declare(strict_types=0);
+declare(strict_types=1);
 
 /**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
@@ -45,7 +45,7 @@ final class ToggleFollow6Method
      *
      * This will follow/unfollow a user
      *
-     * filter   = (integer|string) filter by user id OR username //optional
+     * filter = (integer|string) filter by user id OR username //optional
      * username = (string) $username
      *
      * @param array{
@@ -58,7 +58,7 @@ final class ToggleFollow6Method
     public static function toggle_follow(array $input, User $user): bool
     {
         if (!AmpConfig::get('sociable')) {
-            Api6::error('Enable: sociable', ErrorCodeEnum::ACCESS_DENIED, self::ACTION, 'system', $input['api_format']);
+            Api6::error(ErrorCodeEnum::ACCESS_DENIED, 'Enable: sociable', self::ACTION, 'system', $input['api_format']);
 
             return false;
         }
@@ -70,14 +70,14 @@ final class ToggleFollow6Method
 
         $username = $input['username'];
         if (empty($username)) {
-            Api6::error(sprintf('Bad Request: %s', 'username'), ErrorCodeEnum::BAD_REQUEST, self::ACTION, 'username', $input['api_format']);
+            Api6::error(ErrorCodeEnum::BAD_REQUEST, sprintf('Bad Request: %s', 'username'), self::ACTION, 'username', $input['api_format']);
 
             return false;
         }
 
         $leader = (is_numeric($username))
-            ? User::get_from_id((int)$username)
-            : User::get_from_username((string)$username);
+            ? User::get_from_id((int) $username)
+            : User::get_from_username((string) $username);
 
         if ($leader instanceof User) {
             self::getUserFollowToggler()->toggle(
@@ -91,7 +91,7 @@ final class ToggleFollow6Method
         }
 
         /* HINT: Requested object string/id/type ("album", "myusername", "some song title", 1298376) */
-        Api6::error(sprintf('Not Found: %s', $username), ErrorCodeEnum::NOT_FOUND, self::ACTION, 'filter', $input['api_format']);
+        Api6::error(ErrorCodeEnum::NOT_FOUND, sprintf('Not Found: %s', $username), self::ACTION, 'filter', $input['api_format']);
 
         return false;
     }

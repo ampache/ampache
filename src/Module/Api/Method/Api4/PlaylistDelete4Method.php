@@ -1,6 +1,6 @@
 <?php
 
-declare(strict_types=0);
+declare(strict_types=1);
 
 /**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
@@ -56,7 +56,7 @@ final class PlaylistDelete4Method
             return false;
         }
         ob_end_clean();
-        $playlist = new Playlist((int)$input['filter']);
+        $playlist = new Playlist((int) $input['filter']);
         if (!$playlist->has_access($user)) {
             Api4::message('error', T_('Access denied to this playlist'), '401', $input['api_format']);
         } else {

@@ -1,6 +1,6 @@
 <?php
 
-declare(strict_types=0);
+declare(strict_types=1);
 
 /**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
@@ -47,7 +47,7 @@ final class LastShouts6Method
      *
      * This get the latest posted shouts
      *
-     * filter   = (integer|string) filter by user id OR username //optional
+     * filter = (integer|string) filter by user id OR username //optional
      * username = (string) $username //optional
      * limit = (integer) $limit Default: 10 (popular_threshold) //optional
      *
@@ -62,7 +62,7 @@ final class LastShouts6Method
     public static function last_shouts(array $input, User $user): bool
     {
         if (!AmpConfig::get('sociable')) {
-            Api6::error('Enable: sociable', ErrorCodeEnum::ACCESS_DENIED, self::ACTION, 'system', $input['api_format']);
+            Api6::error(ErrorCodeEnum::ACCESS_DENIED, 'Enable: sociable', self::ACTION, 'system', $input['api_format']);
 
             return false;
         }
@@ -72,7 +72,7 @@ final class LastShouts6Method
             return false;
         }
         unset($user);
-        $limit = (int)($input['limit'] ?? 0);
+        $limit = (int) ($input['limit'] ?? 0);
         if ($limit < 1) {
             $limit = AmpConfig::get('popular_threshold', 10);
         }
@@ -83,7 +83,7 @@ final class LastShouts6Method
 
         if (is_numeric($username)) {
             $results = iterator_to_array(
-                self::getShoutRepository()->getTopById($limit, (int)$username)
+                self::getShoutRepository()->getTopById($limit, (int) $username)
             );
         } else {
             $results = iterator_to_array(
@@ -91,12 +91,7 @@ final class LastShouts6Method
             );
         }
 
-        if (empty($results)) {
-            Api6::empty('shout', $input['api_format']);
-
-            return false;
-        }
-
+        // no empty-envelope short circuit: the populated response is a bare `shout: []` too
         ob_end_clean();
         switch ($input['api_format']) {
             case 'json':

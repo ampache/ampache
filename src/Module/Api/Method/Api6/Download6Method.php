@@ -1,6 +1,6 @@
 <?php
 
-declare(strict_types=0);
+declare(strict_types=1);
 
 /**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
@@ -49,11 +49,11 @@ final class Download6Method
      * Downloads a given media file. set format=raw to download the full file
      * Search and Playlist will only stream a random object not the whole thing
      *
-     * id      = (string) $song_id|$podcast_episode_id|$search_id|$playlist_id
-     * type    = (string) 'song', 'podcast_episode', 'search', 'playlist'
+     * id = (string) $song_id|$podcast_episode_id|$search_id|$playlist_id
+     * type = (string) 'song', 'podcast_episode', 'search', 'playlist'
      * bitrate = (integer) max bitrate for transcoding in bytes (e.g 192000=192Kb) //optional SONG ONLY
-     * format  = (string) 'mp3', 'ogg', etc use 'raw' to skip transcoding //optional SONG ONLY
-     * stats   = (integer) 0,1, if false disable stat recording when playing the object (default: 1) //optional
+     * format = (string) 'mp3', 'ogg', etc use 'raw' to skip transcoding //optional SONG ONLY
+     * stats = (integer) 0,1, if false disable stat recording when playing the object (default: 1) //optional
      *
      * @param array{
      *     filter?: string,
@@ -79,21 +79,21 @@ final class Download6Method
         $type      = (string) $input['type'];
 
         if (
-            $object_id === 0 &&
-            (
-                $type == 'playlist' ||
-                $type == 'search'
+            $object_id === 0
+            && (
+                $type == 'playlist'
+                || $type == 'search'
             )
         ) {
             // The API can use searches as playlists so check for those too
-            $object_id = (int)str_replace('smart_', '', ($input['id'] ?? '0'));
+            $object_id = (int) str_replace('smart_', '', ($input['id'] ?? '0'));
             $type      = 'search';
         }
 
-        $maxBitRate  = (int)($input['bitrate'] ?? 0);
+        $maxBitRate  = (int) ($input['bitrate'] ?? 0);
         $format      = $input['format'] ?? null; // mp3, flv or raw
         $params      = '&client=api&action=download';
-        $recordStats = (int)($input['stats'] ?? 1);
+        $recordStats = (int) ($input['stats'] ?? 1);
 
         if (AmpConfig::get('api_always_download') || $recordStats == 0) {
             $params .= '&cache=1';

@@ -1,6 +1,6 @@
 <?php
 
-declare(strict_types=0);
+declare(strict_types=1);
 
 /**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
@@ -37,31 +37,6 @@ final class TagSongs3Method
     public const ACTION = 'tag_songs';
 
     /**
-     * tag_songs
-     * returns the songs for this tag
-     *
-     * @param array{
-     *     filter?: string,
-     *     offset?: int,
-     *     limit?: int,
-     *     cond?: string,
-     *     sort?: string,
-     *     api_format: string,
-     *     auth: string,
-     * } $input
-     */
-    public static function tag_songs(array $input, User $user): void
-    {
-        $results = Tag::get_tag_objects('song', (int)($input['filter'] ?? 0));
-
-        Xml3_Data::set_offset($input['offset'] ?? 0);
-        Xml3_Data::set_limit($input['limit'] ?? 0);
-
-        ob_end_clean();
-        echo Xml3_Data::songs($results, $user, $input['auth']);
-    }
-
-    /**
      * genre_songs
      * returns the songs for this tag
      *
@@ -78,5 +53,30 @@ final class TagSongs3Method
     public static function genre_songs(array $input, User $user): void
     {
         self::tag_songs($input, $user);
+    }
+
+    /**
+     * tag_songs
+     * returns the songs for this tag
+     *
+     * @param array{
+     *     filter?: string,
+     *     offset?: int,
+     *     limit?: int,
+     *     cond?: string,
+     *     sort?: string,
+     *     api_format: string,
+     *     auth: string,
+     * } $input
+     */
+    public static function tag_songs(array $input, User $user): void
+    {
+        $results = Tag::get_tag_objects('song', (int) ($input['filter'] ?? 0));
+
+        Xml3_Data::set_offset($input['offset'] ?? 0);
+        Xml3_Data::set_limit($input['limit'] ?? 0);
+
+        ob_end_clean();
+        echo Xml3_Data::songs($results, $user, $input['auth']);
     }
 }

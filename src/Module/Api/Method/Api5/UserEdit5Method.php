@@ -1,6 +1,6 @@
 <?php
 
-declare(strict_types=0);
+declare(strict_types=1);
 
 /**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
@@ -25,7 +25,7 @@ declare(strict_types=0);
 
 namespace Ampache\Module\Api\Method\Api5;
 
-use Ampache\Module\Api\Api;
+use Ampache\Module\Api\Api5;
 use Ampache\Repository\Model\User;
 
 /**
@@ -42,20 +42,20 @@ final class UserEdit5Method
      * Update an existing user.
      * Takes the username with optional parameters.
      *
-     * username          = (string) $username
-     * password          = (string) hash('sha256', $password)) //optional
-     * fullname          = (string) $fullname //optional
-     * email             = (string) $email //optional
-     * website           = (string) $website //optional
-     * state             = (string) $state //optional
-     * city              = (string) $city //optional
-     * disable           = (integer) 0,1 true to disable, false to enable //optional
-     * group             = (integer) Catalog filter group for the new user //optional, default = 0
-     * maxbitrate        = (integer) $maxbitrate //optional
-     * fullname_public   = (integer) 0,1 true to enable, false to disable using fullname in public display //optional
-     * reset_apikey      = (integer) 0,1 true to reset a user Api Key //optional
+     * username = (string) $username
+     * password = (string) hash('sha256', $password)) //optional
+     * fullname = (string) $fullname //optional
+     * email = (string) $email //optional
+     * website = (string) $website //optional
+     * state = (string) $state //optional
+     * city = (string) $city //optional
+     * disable = (integer) 0,1 true to disable, false to enable //optional
+     * group = (integer) Catalog filter group for the new user //optional, default = 0
+     * maxbitrate = (integer) $maxbitrate //optional
+     * fullname_public = (integer) 0,1 true to enable, false to disable using fullname in public display //optional
+     * reset_apikey = (integer) 0,1 true to reset a user Api Key //optional
      * reset_streamtoken = (integer) 0,1 true to reset a user Stream Token //optional
-     * clear_stats       = (integer) 0,1 true reset all stats for this user //optional
+     * clear_stats = (integer) 0,1 true reset all stats for this user //optional
      *
      * @param array{
      *     username: string,
@@ -78,7 +78,7 @@ final class UserEdit5Method
      */
     public static function user_edit(array $input, User $user): bool
     {
-        if (!Api::check_parameter($input, ['username'], self::ACTION)) {
+        if (!Api5::check_parameter($input, ['username'], self::ACTION)) {
             return false;
         }
 

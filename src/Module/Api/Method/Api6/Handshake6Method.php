@@ -1,6 +1,6 @@
 <?php
 
-declare(strict_types=0);
+declare(strict_types=1);
 
 /**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
@@ -26,9 +26,9 @@ declare(strict_types=0);
 namespace Ampache\Module\Api\Method\Api6;
 
 use Ampache\Config\AmpConfig;
+use Ampache\Module\Api\Api;
 use Ampache\Module\Api\Api6;
 use Ampache\Module\Api\Exception\ErrorCodeEnum;
-use Ampache\Module\Api\Xml6_Data;
 use Ampache\Module\Authorization\AccessLevelEnum;
 use Ampache\Module\Authorization\AccessTypeEnum;
 use Ampache\Module\Authorization\Check\NetworkCheckerInterface;
@@ -56,10 +56,10 @@ final class Handshake6Method
      * This is the function that handles verifying a new handshake
      * Takes a timestamp, auth key, and username.
      *
-     * auth      = (string) $passphrase
-     * user      = (string) $username //optional
+     * auth = (string) $passphrase
+     * user = (string) $username //optional
      * timestamp = (integer) UNIXTIME() //Required if login/password authentication
-     * version   = (string) $version //optional
+     * version = (string) $version //optional
      *
      * @param array{
      *     user?: string,
@@ -78,7 +78,7 @@ final class Handshake6Method
     public static function handshake(array $input): bool
     {
         $now_time   = time();
-        $timestamp  = (int)preg_replace('/[^0-9]/', '', (string)($input['timestamp'] ?? $now_time));
+        $timestamp  = (int) preg_replace('/[^0-9]/', '', (string) ($input['timestamp'] ?? $now_time));
         $passphrase = $input['auth'];
         if (empty($passphrase)) {
             $passphrase = Core::get_post('auth');
@@ -87,14 +87,14 @@ final class Handshake6Method
         $user_ip  = Core::get_user_ip();
         // set the version to the old string for old api clients
         $version       = (isset($input['version'])) ? $input['version'] : Api6::$version;
-        Api6::$version = ((int)$version >= 350001) ? Api6::$version_numeric : Api6::$version;
-        $data_version  = (int)substr($version, 0, 1);
+        Api6::$version = ((int) $version >= 350001) ? Api6::$version_numeric : Api6::$version;
+        $data_version  = (int) substr((string) $version, 0, 1);
         $data_version  = ($data_version == 7) ? 6 : $data_version;
 
         // Version check shouldn't be soo restrictive... only check with initial version to not break clients compatibility
-        if ((int)($version) < Api6::$auth_version && $data_version !== 6) {
+        if ((int) ($version) < Api6::$auth_version && $data_version !== 6) {
             debug_event(self::class, 'Login Failed: Version too old', 1);
-            Api6::error('Received Invalid Handshake', ErrorCodeEnum::INVALID_HANDSHAKE, self::ACTION, 'version', $input['api_format']);
+            Api6::error(ErrorCodeEnum::INVALID_HANDSHAKE, 'Received Invalid Handshake', self::ACTION, 'version', $input['api_format']);
 
             return false;
         }
@@ -130,12 +130,12 @@ final class Handshake6Method
             if ($username) {
                 // If the timestamp isn't within 30 minutes sucks to be them
                 if (
-                    ($timestamp < ($now_time - 1800)) ||
-                    ($timestamp > ($now_time + 1800))
+                    ($timestamp < ($now_time - 1800))
+                    || ($timestamp > ($now_time + 1800))
                 ) {
                     debug_event(self::class, 'Login Failed: timestamp out of range ' . $timestamp . '/' . $now_time, 1);
                     AmpError::add('api', T_('Login failed, timestamp is out of range'));
-                    Api6::error('Received Invalid Handshake - Login failed, timestamp is out of range (timestamp: ' . $timestamp . ' Server: ' . $now_time . ')', ErrorCodeEnum::INVALID_HANDSHAKE, self::ACTION, 'account', $input['api_format']);
+                    Api6::error(ErrorCodeEnum::INVALID_HANDSHAKE, 'Received Invalid Handshake - Login failed, timestamp is out of range (timestamp: ' . $timestamp . ' Server: ' . $now_time . ')', self::ACTION, 'account', $input['api_format']);
 
                     return false;
                 }
@@ -146,7 +146,7 @@ final class Handshake6Method
                 if (!$realpwd) {
                     debug_event(self::class, 'Unable to find user with userid of ' . $user_id, 1);
                     AmpError::add('api', T_('Incorrect username or password'));
-                    Api6::error('Received Invalid Handshake - Login failed, timestamp is out of range', ErrorCodeEnum::INVALID_HANDSHAKE, self::ACTION, 'account', $input['api_format']);
+                    Api6::error(ErrorCodeEnum::INVALID_HANDSHAKE, 'Received Invalid Handshake - Incorrect username or password', self::ACTION, 'account', $input['api_format']);
 
                     return false;
                 }
@@ -165,19 +165,19 @@ final class Handshake6Method
                 } else {
                     // Create the session
                     $data                = [];
-                    $data['username']    = (string)$client->username;
+                    $data['username']    = (string) $client->username;
                     $data['type']        = 'api';
-                    $data['apikey']      = (string)$client->apikey;
-                    $data['streamtoken'] = (string)$client->streamtoken;
+                    $data['apikey']      = (string) $client->apikey;
+                    $data['streamtoken'] = (string) $client->streamtoken;
                     $data['value']       = $data_version;
                     if (isset($input['client'])) {
-                        $data['agent'] = scrub_in((string)$input['client']);
+                        $data['agent'] = scrub_in((string) $input['client']);
                     }
                     if (isset($input['geo_latitude'])) {
-                        $data['geo_latitude'] = (float)$input['geo_latitude'];
+                        $data['geo_latitude'] = (float) $input['geo_latitude'];
                     }
                     if (isset($input['geo_longitude'])) {
-                        $data['geo_longitude'] = (float)$input['geo_longitude'];
+                        $data['geo_longitude'] = (float) $input['geo_longitude'];
                     }
                     if (isset($input['geo_name'])) {
                         $data['geo_name'] = $input['geo_name'];
@@ -205,15 +205,15 @@ final class Handshake6Method
                         echo json_encode($results, JSON_PRETTY_PRINT);
                         break;
                     default:
-                        echo Xml6_Data::keyed_array($results);
+                        echo Api::keyed_array($results);
                 }
 
                 return true;
             } // match
-        } // end while
+        }
 
         debug_event(self::class, 'Login Failed, unable to match passphrase', 1);
-        Api6::error('Received Invalid Handshake - Incorrect username or password', ErrorCodeEnum::INVALID_HANDSHAKE, self::ACTION, 'account', $input['api_format']);
+        Api6::error(ErrorCodeEnum::INVALID_HANDSHAKE, 'Received Invalid Handshake - Incorrect username or password', self::ACTION, 'account', $input['api_format']);
 
         return false;
     }

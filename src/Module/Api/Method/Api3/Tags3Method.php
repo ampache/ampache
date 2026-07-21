@@ -1,6 +1,6 @@
 <?php
 
-declare(strict_types=0);
+declare(strict_types=1);
 
 /**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
@@ -37,6 +37,26 @@ final class Tags3Method
     public const ACTION = 'tags';
 
     /**
+     * genres
+     * This returns the tags based on the specified filter
+     *
+     * @param array{
+     *     filter?: string,
+     *     exact?: int,
+     *     offset?: int,
+     *     limit?: int,
+     *     cond?: string,
+     *     sort?: string,
+     *     api_format: string,
+     *     auth: string,
+     * } $input
+     */
+    public static function genres(array $input, User $user): void
+    {
+        self::tags($input, $user);
+    }
+
+    /**
      * tags
      * This returns the tags based on the specified filter
      *
@@ -57,7 +77,7 @@ final class Tags3Method
         $browse->set_type('tag');
         $browse->set_sort('name', 'ASC', false);
 
-        $method = (array_key_exists('exact', $input) && (int)$input['exact'] == 1) ? 'exact_match' : 'alpha_match';
+        $method = (array_key_exists('exact', $input) && (int) $input['exact'] == 1) ? 'exact_match' : 'alpha_match';
         $browse->set_api_filter($method, $input['filter'] ?? '');
         $results = $browse->get_objects();
 
@@ -67,25 +87,5 @@ final class Tags3Method
 
         ob_end_clean();
         echo Xml3_Data::tags($results);
-    }
-
-    /**
-     * genres
-     * This returns the tags based on the specified filter
-     *
-     * @param array{
-     *     filter?: string,
-     *     exact?: int,
-     *     offset?: int,
-     *     limit?: int,
-     *     cond?: string,
-     *     sort?: string,
-     *     api_format: string,
-     *     auth: string,
-     * } $input
-     */
-    public static function genres(array $input, User $user): void
-    {
-        self::tags($input, $user);
     }
 }

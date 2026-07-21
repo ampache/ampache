@@ -1,6 +1,6 @@
 <?php
 
-declare(strict_types=0);
+declare(strict_types=1);
 
 /**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
@@ -48,10 +48,10 @@ final class Timeline6Method
      *
      * This gets a user timeline from their username
      *
-     * filter   = (integer|string) filter by user id OR username //optional
+     * filter = (integer|string) filter by user id OR username //optional
      * username = (string)
-     * limit    = (integer) //optional
-     * since    = (integer) UNIXTIME() //optional
+     * limit = (integer) //optional
+     * since = (integer) UNIXTIME() //optional
      *
      * @param array{
      *     filter?: int|string,
@@ -65,7 +65,7 @@ final class Timeline6Method
     public static function timeline(array $input, User $user): bool
     {
         if (!AmpConfig::get('sociable')) {
-            Api6::error('Enable: sociable', ErrorCodeEnum::ACCESS_DENIED, self::ACTION, 'system', $input['api_format']);
+            Api6::error(ErrorCodeEnum::ACCESS_DENIED, 'Enable: sociable', self::ACTION, 'system', $input['api_format']);
 
             return false;
         }
@@ -77,14 +77,14 @@ final class Timeline6Method
 
         $username = $input['username'];
         $leadUser = (is_numeric($username))
-            ? User::get_from_id((int)$username)
-            : User::get_from_username((string)$username);
+            ? User::get_from_id((int) $username)
+            : User::get_from_username((string) $username);
         if (!empty($leadUser)) {
-            $limit = (int)($input['limit'] ?? 0);
-            $since = (int)($input['since'] ?? 0);
+            $limit = (int) ($input['limit'] ?? 0);
+            $since = (int) ($input['since'] ?? 0);
             if (
-                $leadUser->getId() === $user->getId() ||
-                Preference::get_by_user($leadUser->getId(), 'allow_personal_info_recent')
+                $leadUser->getId() === $user->getId()
+                || Preference::get_by_user($leadUser->getId(), 'allow_personal_info_recent')
             ) {
                 $results = self::getUseractivityRepository()->getActivities(
                     $leadUser->getId(),

@@ -1,6 +1,6 @@
 <?php
 
-declare(strict_types=0);
+declare(strict_types=1);
 
 /**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
@@ -47,7 +47,7 @@ final class User6Method
      *
      * This get a user's public information
      *
-     * filter   = (integer|string) filter by user id OR username //optional
+     * filter = (integer|string) filter by user id OR username //optional
      * username = (string) $username
      *
      * @param array{
@@ -69,14 +69,14 @@ final class User6Method
         } else {
             $userRepository = self::getUserRepository();
             $check_user     = (is_numeric($username))
-                ? $userRepository->findById((int)$username)
+                ? $userRepository->findById((int) $username)
                 : $userRepository->findByUsername((string) $username);
             if (
-                $check_user === null ||
-                !in_array($check_user->getId(), $userRepository->getValid(true))
+                $check_user === null
+                || !in_array($check_user->getId(), $userRepository->getValid(true))
             ) {
                 /* HINT: Requested object string/id/type */
-                Api6::error(sprintf('Not Found: %s', $username), ErrorCodeEnum::NOT_FOUND, self::ACTION, 'username', $input['api_format']);
+                Api6::error(ErrorCodeEnum::NOT_FOUND, sprintf('Not Found: %s', $username), self::ACTION, 'username', $input['api_format']);
 
                 return false;
             }

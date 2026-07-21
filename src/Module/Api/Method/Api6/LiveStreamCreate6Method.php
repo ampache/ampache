@@ -1,6 +1,6 @@
 <?php
 
-declare(strict_types=0);
+declare(strict_types=1);
 
 /**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
@@ -51,10 +51,10 @@ final class LiveStreamCreate6Method
      *
      * Create a live_stream (radio station) object.
      *
-     * name     = (string) Stream title
-     * url      = (string) URL of the http/s stream
-     * codec    = (string) stream codec ('mp3', 'flac', 'ogg', 'vorbis', 'opus', 'aac', 'alac')
-     * catalog  = (int) Catalog ID to associate with this stream
+     * name = (string) Stream title
+     * url = (string) URL of the http/s stream
+     * codec = (string) stream codec ('mp3', 'flac', 'ogg', 'vorbis', 'opus', 'aac', 'alac')
+     * catalog = (int) Catalog ID to associate with this stream
      * site_url = (string) Homepage URL of the stream //optional
      *
      * @param array{
@@ -77,21 +77,21 @@ final class LiveStreamCreate6Method
         }
         $name       = $input['name'];
         $url        = filter_var(urldecode($input['url']), FILTER_VALIDATE_URL) ?: null;
-        $codec      = (string)preg_replace("/[^a-z]/", "", strtolower($input['codec']));
+        $codec      = (string) preg_replace("/[^a-z]/", "", strtolower($input['codec']));
         $site_url   = (isset($input['site_url'])) ? filter_var(urldecode($input['site_url']), FILTER_VALIDATE_URL) : null;
-        $catalog_id = (int)filter_var($input['catalog'], FILTER_SANITIZE_NUMBER_INT);
+        $catalog_id = (int) filter_var($input['catalog'], FILTER_SANITIZE_NUMBER_INT);
 
         // Make sure it's a real catalog
         $catalog = Catalog::create_from_id($catalog_id);
         if ($catalog === null) {
             /* HINT: Requested object string/id/type ("album", "myusername", "some song title", 1298376) */
-            Api6::error(sprintf('Not Found: %s', $catalog_id), ErrorCodeEnum::NOT_FOUND, self::ACTION, 'catalog', $input['api_format']);
+            Api6::error(ErrorCodeEnum::NOT_FOUND, sprintf('Not Found: %s', $catalog_id), self::ACTION, 'catalog', $input['api_format']);
 
             return false;
         }
         if (!$url) {
             /* HINT: Requested object string/id/type ("album", "myusername", "some song title", 1298376) */
-            Api6::error(sprintf('Bad Request: %s', $url), ErrorCodeEnum::BAD_REQUEST, self::ACTION, 'url', $input['api_format']);
+            Api6::error(ErrorCodeEnum::BAD_REQUEST, sprintf('Bad Request: %s', $url), self::ACTION, 'url', $input['api_format']);
 
             return false;
         }
@@ -114,10 +114,10 @@ final class LiveStreamCreate6Method
         ob_end_clean();
         switch ($input['api_format']) {
             case 'json':
-                echo Json6_Data::live_streams([(int)$results], false);
+                echo Json6_Data::live_streams([(int) $results], false);
                 break;
             default:
-                echo Xml6_Data::live_streams([(int)$results], $user);
+                echo Xml6_Data::live_streams([(int) $results], $user);
         }
 
         return true;

@@ -486,7 +486,7 @@ class AmpacheUPnP extends localplay_controller
             if (array_key_exists('id', $url_data)) {
                 $song = new Song((int)$url_data['id']);
                 if ($song->isNew() === false) {
-                    $data['name'] = $song->get_artist_fullname() . ' - ' . $song->title;
+                    $data['name'] = $song->get_parent_fullname() . ' - ' . $song->title;
                 }
             }
             if (empty($data['name'])) {
@@ -526,7 +526,7 @@ class AmpacheUPnP extends localplay_controller
         if (array_key_exists('id', $url_data)) {
             $song = new Song((int)$url_data['id']);
             if ($song->isNew() === false) {
-                $array['track_artist'] = $song->get_artist_fullname();
+                $array['track_artist'] = $song->get_parent_fullname();
                 $array['track_album']  = $song->get_album_fullname();
             }
         }

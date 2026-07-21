@@ -1,6 +1,6 @@
 <?php
 
-declare(strict_types=0);
+declare(strict_types=1);
 
 /**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
@@ -58,8 +58,12 @@ final class Bookmarks6Method
     public static function bookmarks(array $input, User $user): bool
     {
         $include = make_bool($input['include'] ?? false);
-        $results = (!empty($input['client']))
-            ? self::getBookmarkRepository()->getByUserAndComment($user, scrub_in((string) $input['client']))
+        // don't treat a falsy but valid client name (e.g. '0') as "no filter"
+        $client  = (isset($input['client']) && (string) $input['client'] !== '')
+            ? scrub_in((string) $input['client'])
+            : null;
+        $results = ($client !== null)
+            ? self::getBookmarkRepository()->getByUserAndComment($user, $client)
             : self::getBookmarkRepository()->getByUser($user);
         if (empty($results)) {
             Api6::empty('bookmark', $input['api_format']);

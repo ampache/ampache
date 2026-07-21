@@ -1,6 +1,6 @@
 <?php
 
-declare(strict_types=0);
+declare(strict_types=1);
 
 /**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
@@ -36,9 +36,8 @@ final class RefreshPlaylistMediasAction implements ApplicationActionInterface
 {
     public const REQUEST_KEY = 'refresh_playlist_medias';
 
-    private RequestParserInterface $requestParser;
-
     private ModelFactoryInterface $modelFactory;
+    private RequestParserInterface $requestParser;
 
     public function __construct(
         RequestParserInterface $requestParser,

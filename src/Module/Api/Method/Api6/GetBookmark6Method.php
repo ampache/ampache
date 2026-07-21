@@ -1,6 +1,6 @@
 <?php
 
-declare(strict_types=0);
+declare(strict_types=1);
 
 /**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
@@ -52,10 +52,10 @@ final class GetBookmark6Method
      * Get the bookmark from it's object_id and object_type.
      * By default; get only the most recent bookmark. (use all to retrieve all media bookmarks for the object)
      *
-     * filter  = (string) object_id to find
-     * type    = (string) object_type ('bookmark', 'song', 'video', 'podcast_episode')
+     * filter = (string) object_id to find
+     * type = (string) object_type ('bookmark', 'song', 'video', 'podcast_episode')
      * include = (integer) 0,1, if true include the object in the bookmark //optional
-     * all     = (integer) 0,1, if true every bookmark related to the object //optional
+     * all = (integer) 0,1, if true every bookmark related to the object //optional
      *
      * @param array{
      *     filter: string,
@@ -71,19 +71,19 @@ final class GetBookmark6Method
         if (!Api6::check_parameter($input, ['filter', 'type'], self::ACTION)) {
             return false;
         }
-        $object_id = (int)$input['filter'];
+        $object_id = (int) $input['filter'];
         $type      = $input['type'];
         $include   = make_bool($input['include'] ?? false);
         $all       = make_bool($input['all'] ?? false);
         if (!AmpConfig::get('allow_video') && $type == 'video') {
-            Api6::error('Enable: video', ErrorCodeEnum::ACCESS_DENIED, self::ACTION, 'system', $input['api_format']);
+            Api6::error(ErrorCodeEnum::ACCESS_DENIED, 'Enable: video', self::ACTION, 'system', $input['api_format']);
 
             return false;
         }
         // confirm the correct data
         if (!in_array(strtolower($type), ['bookmark', 'song', 'video', 'podcast_episode'])) {
             /* HINT: Requested object string/id/type ("album", "myusername", "some song title", 1298376) */
-            Api6::error(sprintf('Bad Request: %s', $type), ErrorCodeEnum::BAD_REQUEST, self::ACTION, 'type', $input['api_format']);
+            Api6::error(ErrorCodeEnum::BAD_REQUEST, sprintf('Bad Request: %s', $type), self::ACTION, 'type', $input['api_format']);
 
             return false;
         }
@@ -91,7 +91,7 @@ final class GetBookmark6Method
         $className = ObjectTypeToClassNameMapper::map($type);
         if ($className === $type || !$object_id) {
             /* HINT: Requested object string/id/type ("album", "myusername", "some song title", 1298376) */
-            Api6::error(sprintf('Bad Request: %s', $type), ErrorCodeEnum::BAD_REQUEST, self::ACTION, 'type', $input['api_format']);
+            Api6::error(ErrorCodeEnum::BAD_REQUEST, sprintf('Bad Request: %s', $type), self::ACTION, 'type', $input['api_format']);
 
             return false;
         }
@@ -100,7 +100,7 @@ final class GetBookmark6Method
         $item = new $className($object_id);
         if ($item->isNew()) {
             /* HINT: Requested object string/id/type ("album", "myusername", "some song title", 1298376) */
-            Api6::error(sprintf('Not Found: %s', $object_id), ErrorCodeEnum::NOT_FOUND, self::ACTION, 'filter', $input['api_format']);
+            Api6::error(ErrorCodeEnum::NOT_FOUND, sprintf('Not Found: %s', $object_id), self::ACTION, 'filter', $input['api_format']);
 
             return false;
         }
@@ -113,8 +113,8 @@ final class GetBookmark6Method
         ];
         $results = Bookmark::getBookmarks($object);
         if (
-            empty($results) &&
-            !$all
+            empty($results)
+            && !$all
         ) {
             Api6::empty(null, $input['api_format']);
 

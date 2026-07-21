@@ -1,5 +1,72 @@
 # API CHANGELOG
 
+## API 6.9.2 Build 2
+
+This version is being released for Ampache7 **only**
+
+To ensure that there are no issues with clients checking for single int versions
+we will keep on 6.9.x and resume build number versioning until Ampache 8
+
+**NOTE** API8 has been removed from the codebase for Ampache 7.
+
+### Added (692002)
+
+* ALL
+  * Allow APIKey Authorization header
+  * REST command and path changes
+* REST
+  * `catalogs/{catalog_id}/add`, `clean`, `update` and `verify` as aliases of `catalog_action` with the matching `task`
+* API6
+  * Add `time` to all Playlist and Smartlist responses
+
+### Changed (692002)
+
+* ALL
+  * flag: Use the `UserFlag::is_valid()` function for object type validation
+  * rate: Use the `Rating::is_valid()` function for object type validation
+  * parameter_exists: Parameters sent with an empty value (e.g. `filter=`) are treated as missing
+* `update_art` (API4, API5 and API6)
+  * Existing art is replaced unless you send `overwrite=0`
+* API6
+  * Error messages are no longer translated
+
+### Removed (692002)
+
+* API8 will not be used in Ampache 7 releases
+
+### Fixed (692002)
+
+* ALL
+  * Version and docstring inconsistencies between API versions
+  * Empty object lookups now report the parameter that failed instead of `empty`
+  * A `version` lower than 3 (e.g. `version=2`) rolled up to no version at all instead of the oldest enabled one
+  * democratic: `vote` returns the real vote count for each song. It was counted from the item's position in the response instead of its `track_id`, so the number was meaningless
+  * friends_timeline: An empty result returned a `total_count`/`md5` envelope that neither the populated response nor `timeline` uses. It now returns `activity: []`
+* API5 and API6
+  * labels, label: XML serialised each item as `<license>` instead of `<label>`
+  * search_rules: XML emitted an empty `<widget/>` for every rule that isn't a select, dropping the control type the JSON response carries
+* REST
+  * `preferences/{preference_name}` returned the whole preference list and ignored the name
+  * `POST {type}/{id}/share` resolved to `share` (fetch a share) instead of `share_create`
+* API4
+  * update_from_tags: Not found check was inverted so valid objects returned an error
+  * XML list responses were not sliced by `offset` and `limit` (e.g. `users`)
+* API5
+  * get_bookmark: Not found check was inverted so valid objects returned an error
+  * XML list responses were not sliced by `offset` and `limit` (e.g. `bookmarks`, `users`)
+  * album: A missing or empty `filter` reported an empty `Bad Request:` message with the wrong error type
+* API6
+  * Version wasn't bumped
+  * podcast_episode: JSON response was missing the full episode object
+  * XML and JSON list responses were not sliced by `offset` and `limit`
+  * user_preference: Returned the system value instead of the calling user's preference
+  * catalog_action: Not found error didn't name the catalog id
+  * localplay: `status` could fail on controllers that don't report `repeat` and `random`
+  * playlists, smartlists: `api_hidden_playlists` was ignored when set to `0`
+  * playlists: JSON `time` could be a string instead of an integer
+  * shares: An empty result was keyed `shares` instead of `share` like the populated response (API5 was already correct)
+  * last_shouts: An empty result returned a `total_count`/`md5` envelope the populated response does not use. It now returns `shout: []` (API5 was already correct)
+
 ## API 6.9.2 Build 1
 
 This version is being released for Ampache7 **only**

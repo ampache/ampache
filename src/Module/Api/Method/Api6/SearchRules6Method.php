@@ -1,6 +1,6 @@
 <?php
 
-declare(strict_types=0);
+declare(strict_types=1);
 
 /**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
@@ -26,9 +26,9 @@ declare(strict_types=0);
 namespace Ampache\Module\Api\Method\Api6;
 
 use Ampache\Config\AmpConfig;
+use Ampache\Module\Api\Api;
 use Ampache\Module\Api\Api6;
 use Ampache\Module\Api\Exception\ErrorCodeEnum;
-use Ampache\Module\Api\Xml6_Data;
 use Ampache\Repository\Model\Search;
 use Ampache\Repository\Model\User;
 
@@ -37,7 +37,16 @@ use Ampache\Repository\Model\User;
  */
 final class SearchRules6Method
 {
-    public const ACTION = 'search_rules';
+    public const ACTION      = 'search_rules';
+    public const REST_ACTION = 'rules';
+
+    /**
+     * @param array<string, mixed> $input
+     */
+    public static function rules(array $input, User $user): bool
+    {
+        return self::search_rules($input, $user);
+    }
 
     /**
      * search_rules
@@ -55,22 +64,22 @@ final class SearchRules6Method
             return false;
         }
 
-        $type = $input['filter'];
+        $type = (string) $input['filter'];
         // confirm the correct data
         if (!in_array(strtolower($type), Search::VALID_TYPES)) {
-            Api6::error(sprintf('Bad Request: %s', $type), ErrorCodeEnum::BAD_REQUEST, self::ACTION, 'type', $input['api_format']);
+            Api6::error(ErrorCodeEnum::BAD_REQUEST, sprintf('Bad Request: %s', $type), self::ACTION, 'type', $input['api_format']);
 
             return false;
         }
 
         if (!AmpConfig::get('allow_video') && $type == 'video') {
-            Api6::error('Enable: video', ErrorCodeEnum::ACCESS_DENIED, self::ACTION, 'system', $input['api_format']);
+            Api6::error(ErrorCodeEnum::ACCESS_DENIED, 'Enable: video', self::ACTION, 'system', $input['api_format']);
 
             return false;
         }
 
         if ($type == 'label' && !AmpConfig::get('label')) {
-            Api6::error('Enable: label', ErrorCodeEnum::ACCESS_DENIED, self::ACTION, 'system', $input['api_format']);
+            Api6::error(ErrorCodeEnum::ACCESS_DENIED, 'Enable: label', self::ACTION, 'system', $input['api_format']);
 
             return false;
         }
@@ -83,7 +92,7 @@ final class SearchRules6Method
                 echo json_encode(['rule' => $results], JSON_PRETTY_PRINT);
                 break;
             default:
-                echo Xml6_Data::object_array($results, 'rule');
+                echo Api::object_array($results, 'rule');
         }
 
         return true;

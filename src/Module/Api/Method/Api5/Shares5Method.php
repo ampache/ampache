@@ -1,6 +1,6 @@
 <?php
 
-declare(strict_types=0);
+declare(strict_types=1);
 
 /**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
@@ -48,7 +48,7 @@ final class Shares5Method
      *
      * filter = (string) Alpha-numeric search term //optional
      * offset = (integer) //optional
-     * limit  = (integer) //optional
+     * limit = (integer) //optional
      *
      * @param array{
      *     filter?: string,
@@ -66,7 +66,7 @@ final class Shares5Method
     public static function shares(array $input, User $user): bool
     {
         if (!AmpConfig::get('share')) {
-            Api5::error(T_('Enable: share'), ErrorCodeEnum::ACCESS_DENIED, self::ACTION, 'system', $input['api_format']);
+            Api5::error(ErrorCodeEnum::ACCESS_DENIED, T_('Enable: share'), self::ACTION, 'system', $input['api_format']);
 
             return false;
         }
@@ -75,14 +75,14 @@ final class Shares5Method
         $browse->set_type('share');
         $browse->set_sort('title', 'ASC', false);
 
-        $method = (array_key_exists('exact', $input) && (int)$input['exact'] == 1) ? 'exact_match' : 'alpha_match';
+        $method = (array_key_exists('exact', $input) && (int) $input['exact'] == 1) ? 'exact_match' : 'alpha_match';
         $browse->set_api_filter($method, $input['filter'] ?? '');
         $browse->set_api_filter('add', $input['add'] ?? '');
         $browse->set_api_filter('update', $input['update'] ?? '');
 
         $results = $browse->get_objects();
         if (empty($results)) {
-            Api5::empty('shares', $input['api_format']);
+            Api5::empty('share', $input['api_format']);
 
             return false;
         }
@@ -92,7 +92,7 @@ final class Shares5Method
             case 'json':
                 Json5_Data::set_offset($input['offset'] ?? 0);
                 Json5_Data::set_limit($input['limit'] ?? 0);
-                echo Json5_Data::shares($results);
+                echo Json5_Data::shares($results, $user);
                 break;
             default:
                 Xml5_Data::set_offset($input['offset'] ?? 0);

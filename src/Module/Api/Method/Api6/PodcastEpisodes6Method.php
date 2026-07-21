@@ -1,6 +1,6 @@
 <?php
 
-declare(strict_types=0);
+declare(strict_types=1);
 
 /**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
@@ -42,11 +42,9 @@ final class PodcastEpisodes6Method implements MethodInterface
 {
     public const ACTION = 'podcast_episodes';
 
-    private ModelFactoryInterface $modelFactory;
-
-    private PodcastRepositoryInterface $podcastRepository;
-
     private ConfigContainerInterface $configContainer;
+    private ModelFactoryInterface $modelFactory;
+    private PodcastRepositoryInterface $podcastRepository;
 
     public function __construct(
         ModelFactoryInterface $modelFactory,
@@ -65,9 +63,9 @@ final class PodcastEpisodes6Method implements MethodInterface
      *
      * filter = (string) ID of the podcast //optional
      * offset = (integer) //optional
-     * limit  = (integer) //optional
-     * cond    = (string) Apply additional filters to the browse using ';' separated comma string pairs (e.g. 'filter1,value1;filter2,value2') //optional
-     * sort    = (string) sort name or comma separated key pair. Order default 'ASC' (e.g. 'name,ASC' and 'name' are the same) //optional
+     * limit = (integer) //optional
+     * cond = (string) Apply additional filters to the browse using ';' separated comma string pairs (e.g. 'filter1,value1;filter2,value2') //optional
+     * sort = (string) sort name or comma separated key pair. Order default 'ASC' (e.g. 'name,ASC' and 'name' are the same) //optional
      *
      * @param array{
      *     filter?: string,
@@ -91,7 +89,7 @@ final class PodcastEpisodes6Method implements MethodInterface
             $response->getBody()->write(
                 $output->error6(
                     ErrorCodeEnum::ACCESS_DENIED,
-                    T_('Enable: podcast'),
+                    'Enable: podcast',
                     self::ACTION,
                     'system'
                 )
@@ -100,12 +98,18 @@ final class PodcastEpisodes6Method implements MethodInterface
             return $response;
         }
 
-        $podcastId = (int)($input['filter'] ?? 0);
+        $podcastId = (int) ($input['filter'] ?? 0);
         $podcast   = $this->podcastRepository->findById($podcastId);
-        if (isset($input['filter']) && $podcast === null) {
-            throw new RequestParamMissingException(
-                sprintf(T_('Bad Request: %s'), 'filter')
-            );
+        if (isset($input['filter'])) {
+            if ($podcast === null) {
+                throw new RequestParamMissingException(
+                    sprintf('Bad Request: %s', 'filter')
+                );
+            }
+
+            if ($podcast->isNew()) {
+                throw new ResultEmptyException((string) $podcastId);
+            }
         }
 
         $browse = $this->modelFactory->createBrowse(null, false);
@@ -114,13 +118,13 @@ final class PodcastEpisodes6Method implements MethodInterface
 
         $browse->set_type('podcast_episode');
 
-        $browse->set_sort_order(html_entity_decode((string)($input['sort'] ?? '')), ['pubdate','DESC']);
+        $browse->set_sort_order(html_entity_decode((string) ($input['sort'] ?? '')), ['pubdate','DESC']);
 
         if ($podcast !== null) {
             $browse->set_filter('podcast', $podcastId);
         }
 
-        $browse->set_conditions(html_entity_decode((string)($input['cond'] ?? '')));
+        $browse->set_conditions(html_entity_decode((string) ($input['cond'] ?? '')));
 
         $results = $browse->get_objects();
         if ($results === []) {
@@ -133,7 +137,7 @@ final class PodcastEpisodes6Method implements MethodInterface
 
         $output->setOffset6($input['offset'] ?? 0);
         $output->setLimit6($input['limit'] ?? 0);
-        $output->setCount6($browse->get_total());
+        $output->setCount6(count($results));
 
         $response->getBody()->write(
             $output->podcastEpisodes6($results, $user, $input['auth'])

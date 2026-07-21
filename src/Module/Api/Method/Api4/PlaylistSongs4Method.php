@@ -1,6 +1,6 @@
 <?php
 
-declare(strict_types=0);
+declare(strict_types=1);
 
 /**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
@@ -47,7 +47,7 @@ final class PlaylistSongs4Method
      *
      * filter = (string) UID of playlist
      * offset = (integer) //optional
-     * limit  = (integer) //optional
+     * limit = (integer) //optional
      *
      * @param array{
      *     filter: string,
@@ -78,8 +78,8 @@ final class PlaylistSongs4Method
             return false;
         }
         if (
-            $playlist->type !== 'public' &&
-            !$playlist->has_collaborate($user)
+            $playlist->type !== 'public'
+            && !$playlist->has_collaborate($user)
         ) {
             Api4::message('error', T_('Access denied to this playlist'), '401', $input['api_format']);
 
@@ -92,7 +92,7 @@ final class PlaylistSongs4Method
             if ($object['object_type']->value == 'song') {
                 $results[] = $object['object_id'];
             }
-        } // end foreach
+        }
 
         ob_end_clean();
         switch ($input['api_format']) {

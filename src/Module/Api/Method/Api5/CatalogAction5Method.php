@@ -1,6 +1,6 @@
 <?php
 
-declare(strict_types=0);
+declare(strict_types=1);
 
 /**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
@@ -48,7 +48,7 @@ final class CatalogAction5Method
      * Kick off a catalog update or clean for the selected catalog
      * Added 'verify_catalog', 'gather_art'
      *
-     * task    = (string) 'add_to_catalog', 'clean_catalog', 'verify_catalog', 'gather_art'
+     * task = (string) 'add_to_catalog', 'clean_catalog', 'verify_catalog', 'gather_art'
      * catalog = (integer) $catalog_id
      *
      * @param array{
@@ -70,16 +70,13 @@ final class CatalogAction5Method
         // confirm the correct data
         if (!in_array($task, ['add_to_catalog', 'clean_catalog', 'verify_catalog', 'gather_art'])) {
             /* HINT: Requested object string/id/type ("album", "myusername", "some song title", 1298376) */
-            Api5::error(sprintf(T_('Bad Request: %s'), $task), ErrorCodeEnum::BAD_REQUEST, self::ACTION, 'task', $input['api_format']);
+            Api5::error(ErrorCodeEnum::BAD_REQUEST, sprintf(T_('Bad Request: %s'), $task), self::ACTION, 'task', $input['api_format']);
 
             return false;
         }
 
         $catalog = Catalog::create_from_id((int) $input['catalog']);
         if ($catalog !== null) {
-            if (defined('SSE_OUTPUT')) {
-                unset($SSE_OUTPUT);
-            }
             switch ($task) {
                 case 'clean_catalog':
                     $catalog->clean_catalog_proc();
@@ -109,7 +106,7 @@ final class CatalogAction5Method
 
             Api5::message('successfully started: ' . $task, $input['api_format']);
         } else {
-            Api5::error(T_('Not Found'), ErrorCodeEnum::NOT_FOUND, self::ACTION, 'catalog', $input['api_format']);
+            Api5::error(ErrorCodeEnum::NOT_FOUND, T_('Not Found'), self::ACTION, 'catalog', $input['api_format']);
         }
 
         return true;

@@ -1,6 +1,6 @@
 <?php
 
-declare(strict_types=0);
+declare(strict_types=1);
 
 /**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
@@ -49,7 +49,7 @@ final class Flag4Method
      * Setting flag to false (0) will remove the flag
      *
      * type = (string) 'song', 'album', 'artist', 'playlist', 'podcast', 'podcast_episode', 'video' $type
-     * id   = (integer) $object_id
+     * id = (integer) $object_id
      * flag = (integer) 0,1 $flag
      *
      * @param array{
@@ -74,13 +74,13 @@ final class Flag4Method
         ob_end_clean();
         $type      = (string) $input['type'];
         $object_id = $input['id'];
-        $flag      = (bool)$input['flag'];
+        $flag      = (bool) $input['flag'];
         $user_id   = null;
         if ($user->id > 0) {
             $user_id = $user->id;
         }
         // confirm the correct data
-        if (!in_array(strtolower($type), ['song', 'album', 'artist', 'playlist', 'podcast', 'podcast_episode', 'video'])) {
+        if (!Userflag::is_valid(strtolower($type))) {
             Api4::message('error', T_('Incorrect object type') . ' ' . $type, '401', $input['api_format']);
 
             return false;
@@ -91,13 +91,13 @@ final class Flag4Method
         } else {
             $className = ObjectTypeToClassNameMapper::map($type);
             /** @var library_item $item */
-            $item = new $className((int)$object_id);
+            $item = new $className((int) $object_id);
             if ($item->getId() === 0) {
                 Api4::message('error', T_('Library item not found'), '404', $input['api_format']);
 
                 return false;
             }
-            $userflag = new Userflag((int)$object_id, $type);
+            $userflag = new Userflag((int) $object_id, $type);
             if ($userflag->set_flag($flag, $user_id)) {
                 $message = ($flag) ? 'flag ADDED to ' : 'flag REMOVED from ';
                 Api4::message('success', $message . $object_id, null, $input['api_format']);

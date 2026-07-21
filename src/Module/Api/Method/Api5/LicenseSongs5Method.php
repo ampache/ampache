@@ -1,6 +1,6 @@
 <?php
 
-declare(strict_types=0);
+declare(strict_types=1);
 
 /**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
@@ -61,7 +61,7 @@ final class LicenseSongs5Method
     public static function license_songs(array $input, User $user): bool
     {
         if (!AmpConfig::get('licensing')) {
-            Api5::error(T_('Enable: licensing'), ErrorCodeEnum::ACCESS_DENIED, self::ACTION, 'system', $input['api_format']);
+            Api5::error(ErrorCodeEnum::ACCESS_DENIED, T_('Enable: licensing'), self::ACTION, 'system', $input['api_format']);
 
             return false;
         }
@@ -78,9 +78,13 @@ final class LicenseSongs5Method
         ob_end_clean();
         switch ($input['api_format']) {
             case 'json':
+                Json5_Data::set_offset($input['offset'] ?? 0);
+                Json5_Data::set_limit($input['limit'] ?? 0);
                 echo Json5_Data::songs($results, $user, $input['auth']);
                 break;
             default:
+                Xml5_Data::set_offset($input['offset'] ?? 0);
+                Xml5_Data::set_limit($input['limit'] ?? 0);
                 echo Xml5_Data::songs($results, $user, $input['auth']);
         }
 

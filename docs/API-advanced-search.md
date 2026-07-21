@@ -89,26 +89,26 @@ Searching 'anywhere' searches song title, song filename, song genre, album title
 | summary               | Summary                                 | text              |                                artist                                 |
 | yearformed            | Year Formed                             | numeric           |                                artist                                 |
 | placeformed           | Place Formed                            | text              |                                artist                                 |
-| release_type          | Release Type                            | text              |                                album                                  |
-| release_status        | Release Status                          | text              |                                album                                  |
-| barcode               | Barcode                                 | text              |                                album                                  |
-| catalog_number        | Catalog Number                          | text              |                                album                                  |
-| version               | Release Version                         | text              |                                album                                  |
+| release_type          | Release Type                            | text              |                                 album                                 |
+| release_status        | Release Status                          | text              |                                 album                                 |
+| barcode               | Barcode                                 | text              |                                 album                                 |
+| catalog_number        | Catalog Number                          | text              |                                 album                                 |
+| version               | Release Version                         | text              |                                 album                                 |
 | release_comment       | (*Alias of version)                     |                   |                                                                       |
 | subtitle              | (*Alias of version)                     |                   |                                                                       |
-| album_count           | Album Count                             | numeric           |                              artist, genre                            |
-| artist_count          | Artist Count                            | numeric           |                              artist, genre                            |
-| song_count            | Song Count                              | numeric           |                           album, artist, genre                        |
-| disk_count            | Disk Count                              | numeric           |                                album                                  |
+| album_count           | Album Count                             | numeric           |                             artist, genre                             |
+| artist_count          | Artist Count                            | numeric           |                             artist, genre                             |
+| song_count            | Song Count                              | numeric           |                         album, artist, genre                          |
+| disk_count            | Disk Count                              | numeric           |                                 album                                 |
 | episode_count         | Episode Count                           | numeric           |                               podcasts                                |
-| time                  | Length (in minutes)                     | numeric           |            song, album, artist, podcast, podcast_episode              |
+| time                  | Length (in minutes)                     | numeric           |             song, album, artist, podcast, podcast_episode             |
 | label                 | Label                                   | text              |                                 song                                  |
 | comment               | Comment                                 | text              |                                 song                                  |
 | lyrics                | Lyrics                                  | text              |                                 song                                  |
 | type                  | Playlist Type (private, public)         | boolean_numeric   |                               playlist                                |
 | state                 | File state (completed, pending skipped) | boolean_numeric   |                       podcast, podcast_episode                        |
 | status                | (*Alias of state)                       |                   |                                                                       |
-| category              | Category                                | text              |                               label                                   |
+| category              | Category                                | text              |                                 label                                 |
 
 | Rating Rules      | Title                 | Operator Type     |                              Valid Types                              |
 |-------------------|-----------------------|-------------------|:---------------------------------------------------------------------:|
@@ -143,13 +143,13 @@ Searching 'anywhere' searches song title, song filename, song genre, album title
 | myplayed_times            | # Played by Me            | numeric           | song, album, artist, podcast, podcast_episode |
 | myskipped_times           | # Skipped by Me           | numeric           | song, album, artist, podcast, podcast_episode |
 | myplayed_or_skipped_times | # Played or Skipped by Me | numeric           | song, album, artist, podcast, podcast_episode |
-| recent_played             | Recently Played           | numeric_limit     |               song, album, artist             |
+| recent_played             | Recently Played           | numeric_limit     |              song, album, artist              |
 
 | Genre Rules        | Title                          | Operator Type |     Valid Types     |
 |--------------------|--------------------------------|---------------|:-------------------:|
 | genre              | Genre                          | tags          | song, album, artist |
 | tag                | (*Alias of genre)              |               |                     |
-| album_genre        | Album Genre                    | tags          |    song, album      |
+| album_genre        | Album Genre                    | tags          |     song, album     |
 | album_tag          | (*Alias of album_genre)        |               |                     |
 | artist_genre       | Artist Genre                   | tags          |    song, artist     |
 | artist_tag         | (*Alias of artist_genre)       |               |                     |
@@ -167,7 +167,7 @@ Searching 'anywhere' searches song title, song filename, song genre, album title
 | smartplaylist  | Smart Playlist | boolean_subsearch |     song, album     |
 | playlist_name  | Playlist Name  | text              | song, album, artist |
 
-| File Data                | Title                               | Operator Type    |                      Valid Types                     |
+| File Data                | Title                               | Operator Type    |                     Valid Types                      |
 |--------------------------|-------------------------------------|------------------|:----------------------------------------------------:|
 | file                     | Filename                            | text             | song, album, artist, video, podcast, podcast_episode |
 | bitrate                  | Bitrate                             | numeric          |                         song                         |
@@ -176,19 +176,19 @@ Searching 'anywhere' searches song title, song filename, song genre, album title
 | pubdate                  | Publication Date                    | date             |               podcast, podcast_episode               |
 | license                  | Music License                       | boolean_numeric  |                         song                         |
 | no_license               | No License                          | is_true          |                         song                         |
-| recent_added             | Recently Added                      | numeric_limit    |                      song, album                     |
+| recent_added             | Recently Added                      | numeric_limit    |                     song, album                      |
 | recent_updated           | Recently Updated                    | numeric_limit    |                         song                         |
-| days_added               | Added                               | days             |     song, album, artist, podcast, podcast_episode    |
-| days_updated             | Updated                             | days             |     song, album, artist, podcast, podcast_episode    |
-| possible_duplicate       | Possible Duplicate                  | is_true          |                  song, album, artist                 |
+| days_added               | Added                               | days             |    song, album, artist, podcast, podcast_episode     |
+| days_updated             | Updated                             | days             |    song, album, artist, podcast, podcast_episode     |
+| possible_duplicate       | Possible Duplicate                  | is_true          |                 song, album, artist                  |
 | duplicate_tracks         | Duplicate Album Tracks              | is_true          |                     song, album                      |
-| duplicate_mbid_group     | Duplicate MusicBrainz Release Group | is_true          |                         album                        |
-| possible_duplicate_album | Possible Duplicate Albums           | is_true          |                  song, album, artist                 |
+| duplicate_mbid_group     | Duplicate MusicBrainz Release Group | is_true          |                        album                         |
+| possible_duplicate_album | Possible Duplicate Albums           | is_true          |                 song, album, artist                  |
 | orphaned_album           | Orphaned Album                      | is_true          |                         song                         |
-| catalog                  | Catalog                             | boolean_numeric  |                  song, album, artist                 |
-| has_image                | Local Image                         | boolean          |                     album, artist                    |
-| image_height             | Image Height                        | numeric          |                     album, artist                    |
-| image_width              | Image Width                         | numeric          |                     album, artist                    |
+| catalog                  | Catalog                             | boolean_numeric  |                 song, album, artist                  |
+| has_image                | Local Image                         | boolean          |                    album, artist                     |
+| image_height             | Image Height                        | numeric          |                    album, artist                     |
+| image_width              | Image Width                         | numeric          |                    album, artist                     |
 | metadata                 | Metadata                            | metadata (mixed) |                         song                         |
 | waveform                 | Song has a saved waveform           | boolean          |                         song                         |
 

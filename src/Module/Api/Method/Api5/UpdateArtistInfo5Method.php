@@ -1,6 +1,6 @@
 <?php
 
-declare(strict_types=0);
+declare(strict_types=1);
 
 /**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
@@ -68,7 +68,7 @@ final class UpdateArtistInfo5Method
         $item      = new Artist($object_id);
         if ($item->isNew()) {
             /* HINT: Requested object string/id/type ("album", "myusername", "some song title", 1298376) */
-            Api5::error(sprintf(T_('Not Found: %s'), $object_id), ErrorCodeEnum::NOT_FOUND, self::ACTION, 'id', $input['api_format']);
+            Api5::error(ErrorCodeEnum::NOT_FOUND, sprintf(T_('Not Found: %s'), $object_id), self::ACTION, 'id', $input['api_format']);
 
             return false;
         }
@@ -77,15 +77,15 @@ final class UpdateArtistInfo5Method
         $like = Recommendation::get_artists_like($object_id);
         // update your object, you need at least catalog_manager access to the db
         if (
-            $info['id'] !== null ||
-            count($like) > 0
+            $info['id'] !== null
+            || count($like) > 0
         ) {
             Api5::message('Updated artist info: ' . $object_id, $input['api_format']);
 
             return true;
         }
         /* HINT: Requested object string/id/type ("album", "myusername", "some song title", 1298376) */
-        Api5::error(sprintf(T_('Bad Request: %s'), $object_id), ErrorCodeEnum::BAD_REQUEST, self::ACTION, 'system', $input['api_format']);
+        Api5::error(ErrorCodeEnum::BAD_REQUEST, sprintf(T_('Bad Request: %s'), $object_id), self::ACTION, 'system', $input['api_format']);
 
         return true;
     }

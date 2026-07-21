@@ -1,6 +1,6 @@
 <?php
 
-declare(strict_types=0);
+declare(strict_types=1);
 
 /**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
@@ -48,10 +48,10 @@ final class UpdateArt5Method
      * MINIMUM_API_VERSION=400001
      *
      * updates a single album, artist, song running the gather_art process
-     * Doesn't overwrite existing art by default.
+     * Existing art is replaced unless you send overwrite=0, which keeps whatever is already there.
      *
-     * type      = (string) 'artist', 'album'
-     * id        = (integer) $artist_id, $album_id
+     * type = (string) 'artist', 'album'
+     * id = (integer) $artist_id, $album_id
      * overwrite = (integer) 0,1 //optional
      *
      * @param array{
@@ -71,14 +71,15 @@ final class UpdateArt5Method
         if (!Api5::check_access(AccessTypeEnum::INTERFACE, AccessLevelEnum::MANAGER, $user->id, self::ACTION, $input['api_format'])) {
             return false;
         }
-        $type      = (string)$input['type'];
-        $object_id = (int)$input['id'];
-        $overwrite = array_key_exists('overwrite', $input) && (int)$input['overwrite'] == 0;
-        $art_url   = Art::url($object_id, $type, $input['auth']);
+        $type      = (string) $input['type'];
+        $object_id = (int) $input['id'];
+        // Catalog::gather_art_item() takes `db_art_first`, i.e. the inverse: keep the art we already have
+        $db_art_first = array_key_exists('overwrite', $input) && (int) $input['overwrite'] === 0;
+        $art_url      = Art::url($object_id, $type, $input['auth']);
 
         // confirm the correct data
         if (!in_array(strtolower($type), ['artist', 'album'])) {
-            Api5::error(sprintf(T_('Bad Request: %s'), $type), ErrorCodeEnum::BAD_REQUEST, self::ACTION, 'type', $input['api_format']);
+            Api5::error(ErrorCodeEnum::BAD_REQUEST, sprintf(T_('Bad Request: %s'), $type), self::ACTION, 'type', $input['api_format']);
 
             return true;
         }
@@ -88,19 +89,19 @@ final class UpdateArt5Method
         $item = new $className($object_id);
         if ($item->isNew() || $art_url === null) {
             /* HINT: Requested object string/id/type ("album", "myusername", "some song title", 1298376) */
-            Api5::error(sprintf(T_('Not Found: %s'), $object_id), ErrorCodeEnum::NOT_FOUND, self::ACTION, 'id', $input['api_format']);
+            Api5::error(ErrorCodeEnum::NOT_FOUND, sprintf(T_('Not Found: %s'), $object_id), self::ACTION, 'id', $input['api_format']);
 
             return false;
         }
         // update your object
 
-        if (Catalog::gather_art_item($type, $object_id, $overwrite, true)) {
+        if (Catalog::gather_art_item($type, $object_id, $db_art_first, true)) {
             Api5::message('Gathered new art for: ' . $object_id . ' (' . $type . ')', $input['api_format'], ['art' => $art_url]);
 
             return true;
         }
         /* HINT: Requested object string/id/type ("album", "myusername", "some song title", 1298376) */
-        Api5::error(sprintf(T_('Bad Request: %s'), $object_id), ErrorCodeEnum::BAD_REQUEST, self::ACTION, 'system', $input['api_format']);
+        Api5::error(ErrorCodeEnum::BAD_REQUEST, sprintf(T_('Bad Request: %s'), $object_id), self::ACTION, 'system', $input['api_format']);
 
         return true;
     }

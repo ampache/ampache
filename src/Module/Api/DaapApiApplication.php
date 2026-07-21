@@ -1,6 +1,6 @@
 <?php
 
-declare(strict_types=0);
+declare(strict_types=1);
 
 /**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
@@ -70,13 +70,13 @@ final class DaapApiApplication implements ApiApplicationInterface
 
                     // If the method is the same as the action being called
                     // Then let's call this function!
-                    if ($act == $method) {
+                    if ($act == $method && is_callable([Daap_Api::class, $method])) {
                         call_user_func([Daap_Api::class, $method], array_slice($params, $i, $p_count - $i));
 
                         // We only allow a single function to be called, and we assume it's cleaned up!
                         return;
                     }
-                } // end foreach methods in API
+                }
             }
         }
 

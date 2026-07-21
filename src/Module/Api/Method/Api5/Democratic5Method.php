@@ -1,6 +1,6 @@
 <?php
 
-declare(strict_types=0);
+declare(strict_types=1);
 
 /**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
@@ -25,6 +25,7 @@ declare(strict_types=0);
 
 namespace Ampache\Module\Api\Method\Api5;
 
+use Ampache\Module\Api\Api;
 use Ampache\Module\Api\Api5;
 use Ampache\Module\Api\Exception\ErrorCodeEnum;
 use Ampache\Module\Api\Json5_Data;
@@ -47,7 +48,7 @@ final class Democratic5Method
      * This is for controlling democratic play
      *
      * method = (string) 'vote', 'devote', 'playlist', 'play'
-     * oid    = (integer) //optional
+     * oid = (integer) //optional
      *
      * @param array{
      *     method: string,
@@ -68,11 +69,11 @@ final class Democratic5Method
         switch ($input['method']) {
             case 'vote':
                 $type      = 'song';
-                $object_id = (int)($input['oid'] ?? 0);
+                $object_id = (int) ($input['oid'] ?? 0);
                 $media     = new Song($object_id);
                 if ($media->isNew()) {
                     /* HINT: Requested object string/id/type ("album", "myusername", "some song title", 1298376) */
-                    Api5::error(sprintf(T_('Not Found: %s'), $object_id), ErrorCodeEnum::NOT_FOUND, self::ACTION, 'oid', $input['api_format']);
+                    Api5::error(ErrorCodeEnum::NOT_FOUND, sprintf(T_('Not Found: %s'), $object_id), self::ACTION, 'oid', $input['api_format']);
                     break;
                 }
                 $democratic->add_vote(
@@ -94,16 +95,16 @@ final class Democratic5Method
                         echo json_encode($results, JSON_PRETTY_PRINT);
                         break;
                     default:
-                        echo Xml5_Data::keyed_array($results);
+                        echo Api::keyed_array($results);
                 }
                 break;
             case 'devote':
                 $type      = 'song';
-                $object_id = (int)($input['oid'] ?? 0);
+                $object_id = (int) ($input['oid'] ?? 0);
                 $media     = new Song($object_id);
                 if ($media->isNew()) {
                     /* HINT: Requested object string/id/type ("album", "myusername", "some song title", 1298376) */
-                    Api5::error(sprintf(T_('Not Found: %s'), $object_id), ErrorCodeEnum::NOT_FOUND, self::ACTION, 'oid', $input['api_format']);
+                    Api5::error(ErrorCodeEnum::NOT_FOUND, sprintf(T_('Not Found: %s'), $object_id), self::ACTION, 'oid', $input['api_format']);
                     break;
                 }
 
@@ -122,7 +123,7 @@ final class Democratic5Method
                         echo json_encode($results, JSON_PRETTY_PRINT);
                         break;
                     default:
-                        echo Xml5_Data::keyed_array($results);
+                        echo Api::keyed_array($results);
                 }
                 break;
             case 'playlist':
@@ -145,11 +146,11 @@ final class Democratic5Method
                         echo json_encode($results, JSON_PRETTY_PRINT);
                         break;
                     default:
-                        echo Xml5_Data::keyed_array($results);
+                        echo Api::keyed_array($results);
                 }
                 break;
             default:
-                Api5::error(T_('Invalid Request'), ErrorCodeEnum::BAD_REQUEST, self::ACTION, 'method', $input['api_format']);
+                Api5::error(ErrorCodeEnum::BAD_REQUEST, T_('Invalid Request'), self::ACTION, 'method', $input['api_format']);
                 break;
         }
 

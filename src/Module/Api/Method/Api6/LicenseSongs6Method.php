@@ -1,6 +1,6 @@
 <?php
 
-declare(strict_types=0);
+declare(strict_types=1);
 
 /**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
@@ -48,9 +48,9 @@ final class LicenseSongs6Method
      *
      * filter = (string) UID of license
      * offset = (integer) //optional
-     * limit  = (integer) //optional
-     * cond   = (string) Apply additional filters to the browse using ';' separated comma string pairs (e.g. 'filter1,value1;filter2,value2') //optional
-     * sort   = (string) sort name or comma separated key pair. Order default 'ASC' (e.g. 'name,ASC' and 'name' are the same) //optional
+     * limit = (integer) //optional
+     * cond = (string) Apply additional filters to the browse using ';' separated comma string pairs (e.g. 'filter1,value1;filter2,value2') //optional
+     * sort = (string) sort name or comma separated key pair. Order default 'ASC' (e.g. 'name,ASC' and 'name' are the same) //optional
      *
      * @param array{
      *     filter: string,
@@ -65,7 +65,7 @@ final class LicenseSongs6Method
     public static function license_songs(array $input, User $user): bool
     {
         if (!AmpConfig::get('licensing')) {
-            Api6::error('Enable: licensing', ErrorCodeEnum::ACCESS_DENIED, self::ACTION, 'system', $input['api_format']);
+            Api6::error(ErrorCodeEnum::ACCESS_DENIED, 'Enable: licensing', self::ACTION, 'system', $input['api_format']);
 
             return false;
         }
@@ -76,11 +76,11 @@ final class LicenseSongs6Method
         $browse = Api6::getBrowse($user);
         $browse->set_type('song');
 
-        $browse->set_sort_order(html_entity_decode((string)($input['sort'] ?? '')), ['name', 'ASC']);
+        $browse->set_sort_order(html_entity_decode((string) ($input['sort'] ?? '')), ['name', 'ASC']);
 
-        $browse->set_filter('license', (int)$input['filter']);
+        $browse->set_filter('license', (int) $input['filter']);
 
-        $browse->set_conditions(html_entity_decode((string)($input['cond'] ?? '')));
+        $browse->set_conditions(html_entity_decode((string) ($input['cond'] ?? '')));
 
         $results = $browse->get_objects();
         if (empty($results)) {
@@ -92,15 +92,13 @@ final class LicenseSongs6Method
         ob_end_clean();
         switch ($input['api_format']) {
             case 'json':
-                Json6_Data::set_offset((int)($input['offset'] ?? 0));
+                Json6_Data::set_offset((int) ($input['offset'] ?? 0));
                 Json6_Data::set_limit($input['limit'] ?? 0);
-                Json6_Data::set_count($browse->get_total());
                 echo Json6_Data::songs($results, $user, $input['auth']);
                 break;
             default:
-                Xml6_Data::set_offset((int)($input['offset'] ?? 0));
+                Xml6_Data::set_offset((int) ($input['offset'] ?? 0));
                 Xml6_Data::set_limit($input['limit'] ?? 0);
-                Xml6_Data::set_count($browse->get_total());
                 echo Xml6_Data::songs($results, $user, $input['auth']);
         }
 

@@ -1,6 +1,6 @@
 <?php
 
-declare(strict_types=0);
+declare(strict_types=1);
 
 /**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
@@ -57,7 +57,7 @@ final class License5Method
     public static function license(array $input, User $user): bool
     {
         if (!AmpConfig::get('licensing')) {
-            Api5::error(T_('Enable: licensing'), ErrorCodeEnum::ACCESS_DENIED, self::ACTION, 'system', $input['api_format']);
+            Api5::error(ErrorCodeEnum::ACCESS_DENIED, T_('Enable: licensing'), self::ACTION, 'system', $input['api_format']);
 
             return false;
         }
@@ -68,7 +68,7 @@ final class License5Method
         $license   = self::getLicenseRepository()->findById($object_id);
         if ($license === null) {
             /* HINT: Requested object string/id/type ("album", "myusername", "some song title", 1298376) */
-            Api5::error(sprintf(T_('Not Found: %s'), $object_id), ErrorCodeEnum::NOT_FOUND, self::ACTION, 'filter', $input['api_format']);
+            Api5::error(ErrorCodeEnum::NOT_FOUND, sprintf(T_('Not Found: %s'), $object_id), self::ACTION, 'filter', $input['api_format']);
 
             return false;
         }

@@ -1,6 +1,6 @@
 <?php
 
-declare(strict_types=0);
+declare(strict_types=1);
 
 /**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
@@ -45,11 +45,11 @@ final class PlaylistEdit4Method
      * Changed name and type to optional and the playlist id is mandatory
      *
      * filter = (string) UID of playlist
-     * name   = (string) 'new playlist name' //optional
-     * type   = (string) 'public', 'private' //optional
-     * items  = (string) comma-separated song_id's (replace existing items with a new object_id) //optional
+     * name = (string) 'new playlist name' //optional
+     * type = (string) 'public', 'private' //optional
+     * items = (string) comma-separated song_id's (replace existing items with a new object_id) //optional
      * tracks = (string) comma-separated playlisttrack numbers matched to items in order //optional
-     * sort   = (integer) 0,1 sort the playlist by 'Artist, Album, Song' //optional
+     * sort = (integer) 0,1 sort the playlist by 'Artist, Album, Song' //optional
      *
      * @param array{
      *     filter: string,
@@ -68,17 +68,17 @@ final class PlaylistEdit4Method
         if (!Api4::check_parameter($input, ['filter'], self::ACTION)) {
             return false;
         }
-        $items = explode(',', html_entity_decode((string)($input['items'] ?? '')));
-        $order = explode(',', html_entity_decode((string)($input['tracks'] ?? '')));
-        $sort  = (int)($input['sort'] ?? 0);
+        $items = explode(',', html_entity_decode((string) ($input['items'] ?? '')));
+        $order = explode(',', html_entity_decode((string) ($input['tracks'] ?? '')));
+        $sort  = (int) ($input['sort'] ?? 0);
         // calculate whether we are editing the track order too
         $playlist_edit = [];
-        if (count($items) == count($order) && count($items) > 0) {
+        if (count($items) == count($order)) {
             $playlist_edit = array_combine($order, $items);
         }
 
         ob_end_clean();
-        $object_id = (int)$input['filter'];
+        $object_id = (int) $input['filter'];
         $playlist  = new Playlist($object_id);
 
         if ($playlist->isNew()) {

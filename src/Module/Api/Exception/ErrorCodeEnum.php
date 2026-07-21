@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
@@ -26,12 +28,12 @@ namespace Ampache\Module\Api\Exception;
 final class ErrorCodeEnum
 {
     public const ACCESS_CONTROL_NOT_ENABLED = 4700;
-    public const INVALID_HANDSHAKE          = 4701;
-    public const GENERIC_ERROR              = 4702;
     public const ACCESS_DENIED              = 4703;
-    public const NOT_FOUND                  = 4704;
-    public const MISSING                    = 4705;
-    public const DEPRECATED                 = 4706;
     public const BAD_REQUEST                = 4710;
+    public const DEPRECATED                 = 4706;
     public const FAILED_ACCESS_CHECK        = 4742;
+    public const GENERIC_ERROR              = 4702;
+    public const INVALID_HANDSHAKE          = 4701;
+    public const MISSING                    = 4705;
+    public const NOT_FOUND                  = 4704;
 }

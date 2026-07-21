@@ -1,6 +1,6 @@
 <?php
 
-declare(strict_types=0);
+declare(strict_types=1);
 
 /**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
@@ -62,16 +62,16 @@ final class Share4Method
         if (!Api4::check_parameter($input, ['filter'], self::ACTION)) {
             return false;
         }
-        unset($user);
+
         $results = [(int) $input['filter']];
 
         ob_end_clean();
         switch ($input['api_format']) {
             case 'json':
-                echo Json4_Data::shares($results);
+                echo Json4_Data::shares($results, $user);
                 break;
             default:
-                echo Xml4_Data::shares($results);
+                echo Xml4_Data::shares($results, $user);
         }
 
         return true;

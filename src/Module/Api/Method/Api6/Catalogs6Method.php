@@ -1,6 +1,6 @@
 <?php
 
-declare(strict_types=0);
+declare(strict_types=1);
 
 /**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
@@ -46,9 +46,9 @@ final class Catalogs6Method
      *
      * filter = (string) set $filter_type 'music', 'video', 'podcast' //optional
      * offset = (integer) //optional
-     * limit  = (integer) //optional
-     * cond   = (string) Apply additional filters to the browse using ';' separated comma string pairs (e.g. 'filter1,value1;filter2,value2') //optional
-     * sort   = (string) sort name or comma separated key pair. Order default 'ASC' (e.g. 'name,ASC' and 'name' are the same) //optional
+     * limit = (integer) //optional
+     * cond = (string) Apply additional filters to the browse using ';' separated comma string pairs (e.g. 'filter1,value1;filter2,value2') //optional
+     * sort = (string) sort name or comma separated key pair. Order default 'ASC' (e.g. 'name,ASC' and 'name' are the same) //optional
      *
      * @param array{
      *     filter?: string,
@@ -66,8 +66,8 @@ final class Catalogs6Method
         $browse->set_type('catalog');
         $browse->set_filter('user', $user->getId());
         if (
-            isset($input['filter']) &&
-            in_array($input['filter'], ['music', 'clip', 'tvshow', 'movie', 'personal_video', 'video', 'podcast'])
+            isset($input['filter'])
+            && in_array($input['filter'], ['music', 'clip', 'tvshow', 'movie', 'personal_video', 'video', 'podcast'])
         ) {
             if (in_array($input['filter'], ['clip', 'tvshow', 'movie', 'personal_video'])) {
                 $input['filter'] = 'video';
@@ -77,7 +77,7 @@ final class Catalogs6Method
             $browse->set_filter('gather_type', $input['filter']);
         }
 
-        $browse->set_conditions(html_entity_decode((string)($input['cond'] ?? '')));
+        $browse->set_conditions(html_entity_decode((string) ($input['cond'] ?? '')));
 
         $results = $browse->get_objects();
         if (empty($results)) {
@@ -89,15 +89,13 @@ final class Catalogs6Method
         ob_end_clean();
         switch ($input['api_format']) {
             case 'json':
-                Json6_Data::set_offset((int)($input['offset'] ?? 0));
+                Json6_Data::set_offset((int) ($input['offset'] ?? 0));
                 Json6_Data::set_limit($input['limit'] ?? 0);
-                Json6_Data::set_count($browse->get_total());
                 echo Json6_Data::catalogs($results);
                 break;
             default:
-                Xml6_Data::set_offset((int)($input['offset'] ?? 0));
+                Xml6_Data::set_offset((int) ($input['offset'] ?? 0));
                 Xml6_Data::set_limit($input['limit'] ?? 0);
-                Xml6_Data::set_count($browse->get_total());
                 echo Xml6_Data::catalogs($results, $user);
         }
 

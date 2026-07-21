@@ -33,16 +33,11 @@ use Slim\ResponseEmitter;
 
 final class XmlRestApiApplication implements ApiApplicationInterface
 {
-    private ApiOutputFactoryInterface $apiOutputFactory;
-
     private ApiHandlerInterface $apiHandler;
-
+    private ApiOutputFactoryInterface $apiOutputFactory;
     private ConfigContainerInterface $configContainer;
-
     private ResponseFactoryInterface $responseFactory;
-
     private ResponseEmitter $sapiEmitter;
-
     private ServerRequestCreatorInterface $serverRequestCreator;
 
     public function __construct(
@@ -75,12 +70,24 @@ final class XmlRestApiApplication implements ApiApplicationInterface
         $input   = $request->getQueryParams();
 
         // normalize input types (REST paths)
-        $type = (isset($input['type']) && !empty($input['type']))
-            ? $this->apiHandler->normalizeType((string)$input['type'])
+        $type = (!empty($input['type']))
+            ? $this->apiHandler->normalizeType((string) $input['type'])
             : null;
 
+        // catalog task shortcuts (e.g. `POST catalogs/{catalog_id}/clean`) are aliases of
+        // catalog_action, so derive the task from the path before the action is normalized
+        $task = ($type === 'catalog' && isset($input['filter']))
+            ? match ((string) $input['action']) {
+                'add' => 'add_to_catalog',
+                'clean' => 'clean_catalog',
+                'update' => 'update_catalog',
+                'verify' => 'verify_catalog',
+                default => null,
+            }
+        : null;
+
         // normalize input actions (REST paths)
-        $action = $this->apiHandler->normalizeAction((string)$input['action'], $type, isset($input['filter']));
+        $action = $this->apiHandler->normalizeAction((string) $input['action'], $type, isset($input['filter']));
         $action = match ($method) {
             'DELETE' => $action . '_delete',
             'PATCH' => $action . '_edit',
@@ -102,8 +109,12 @@ final class XmlRestApiApplication implements ApiApplicationInterface
             $parameters['type'] = $type;
         }
 
+        if ($task !== null) {
+            $parameters['task'] = $task;
+        }
+
         $post = (in_array($method, ['POST', 'PATCH', 'PUT', 'DELETE']))
-            ? (array)$request->getParsedBody()
+            ? (array) $request->getParsedBody()
             : [];
 
         $request = $request->withQueryParams(

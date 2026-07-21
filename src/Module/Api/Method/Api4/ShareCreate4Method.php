@@ -1,6 +1,6 @@
 <?php
 
-declare(strict_types=0);
+declare(strict_types=1);
 
 /**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
@@ -55,10 +55,10 @@ final class ShareCreate4Method
      * Create a public url that can be used by anyone to stream media.
      * Takes the file id with optional description and expires parameters.
      *
-     * filter      = (string) object_id
-     * type        = (string) object_type
+     * filter = (string) object_id
+     * type = (string) object_type
      * description = (string) description (will be filled for you if empty) //optional
-     * expires     = (integer) days to keep active //optional
+     * expires = (integer) days to keep active //optional
      *
      * @param array{
      *     filter: string,
@@ -113,10 +113,10 @@ final class ShareCreate4Method
             $results[] = $shareCreator->create(
                 $user,
                 LibraryItemEnum::from($object_type),
-                $object_id,
+                (int) $object_id,
                 true,
                 $functionChecker->check(AccessFunctionEnum::FUNCTION_DOWNLOAD),
-                $expire_days,
+                (int) $expire_days,
                 $passwordGenerator->generate_token(),
                 0,
                 $description
@@ -126,10 +126,10 @@ final class ShareCreate4Method
         ob_end_clean();
         switch ($input['api_format']) {
             case 'json':
-                echo Json4_Data::shares($results);
+                echo Json4_Data::shares($results, $user);
                 break;
             default:
-                echo Xml4_Data::shares($results);
+                echo Xml4_Data::shares($results, $user);
         }
 
         return true;

@@ -1,6 +1,6 @@
 <?php
 
-declare(strict_types=0);
+declare(strict_types=1);
 
 /**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
@@ -43,7 +43,7 @@ final class TagAlbums4Method
      *
      * filter = (string) UID of Tag
      * offset = (integer) //optional
-     * limit  = (integer) //optional
+     * limit = (integer) //optional
      *
      * @param array{
      *     filter?: string,

@@ -1,6 +1,6 @@
 <?php
 
-declare(strict_types=0);
+declare(strict_types=1);
 
 /**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
@@ -45,13 +45,13 @@ final class PodcastEdit4Method
      * Update the description and/or expiration date for an existing podcast.
      * Takes the podcast id to update with optional description and expires parameters.
      *
-     * filter      = (string) Alpha-numeric search term
-     * feed        = (string) feed url (xml!) //optional
-     * title       = (string) title string //optional
-     * website     = (string) source website url //optional
+     * filter = (string) Alpha-numeric search term
+     * feed = (string) feed url (xml!) //optional
+     * title = (string) title string //optional
+     * website = (string) source website url //optional
      * description = (string) //optional
-     * generator   = (string) //optional
-     * copyright   = (string) //optional
+     * generator = (string) //optional
+     * copyright = (string) //optional
      *
      * @param array{
      *     filter: string,

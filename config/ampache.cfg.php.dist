@@ -804,6 +804,10 @@ lastfm_api_secret = ""
 ; Spotify client id
 ; Set this to your Spotify client id to actually use Spotify for
 ; accessing their catalog API. (https://developer.spotify.com/dashboard/)
+; NOTE: Since 2026-03-09 Spotify restricts Web API access to accounts with a
+; Spotify Premium subscription. Art collection through Spotify no longer works
+; with a free account; use another art source (e.g. musicbrainz) instead.
+; https://developer.spotify.com/blog/2026-02-06-update-on-developer-access-and-platform-security
 ; DEFAULT: none
 ;spotify_client_id = ""
 

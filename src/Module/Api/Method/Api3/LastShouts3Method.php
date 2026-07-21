@@ -1,6 +1,6 @@
 <?php
 
-declare(strict_types=0);
+declare(strict_types=1);
 
 /**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
@@ -51,7 +51,7 @@ final class LastShouts3Method
     public static function last_shouts(array $input, User $user): void
     {
         unset($user);
-        $limit = (int)($input['limit'] ?? 0);
+        $limit = (int) ($input['limit'] ?? 0);
         if ($limit < 1) {
             $limit = (int) AmpConfig::get('popular_threshold');
         }

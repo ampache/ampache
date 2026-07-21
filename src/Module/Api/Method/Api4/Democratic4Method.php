@@ -1,6 +1,6 @@
 <?php
 
-declare(strict_types=0);
+declare(strict_types=1);
 
 /**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
@@ -25,6 +25,7 @@ declare(strict_types=0);
 
 namespace Ampache\Module\Api\Method\Api4;
 
+use Ampache\Module\Api\Api;
 use Ampache\Module\Api\Api4;
 use Ampache\Module\Api\Json4_Data;
 use Ampache\Module\Api\Xml4_Data;
@@ -46,7 +47,7 @@ final class Democratic4Method
      * This is for controlling democratic play
      *
      * method = (string) 'vote', 'devote', 'playlist', 'play'
-     * oid    = (integer) //optional
+     * oid = (integer) //optional
      *
      * @param array{
      *     method: string,
@@ -67,7 +68,7 @@ final class Democratic4Method
         switch ($input['method']) {
             case 'vote':
                 $type      = 'song';
-                $object_id = (int)($input['oid'] ?? 0);
+                $object_id = (int) ($input['oid'] ?? 0);
                 $media     = new Song($object_id);
                 if ($media->isNew()) {
                     Api4::message('error', T_('Media object invalid or not specified'), '400', $input['api_format']);
@@ -92,12 +93,12 @@ final class Democratic4Method
                         echo json_encode($results, JSON_PRETTY_PRINT);
                         break;
                     default:
-                        echo Xml4_Data::keyed_array($results);
+                        echo Api::keyed_array($results);
                 }
                 break;
             case 'devote':
                 $type      = 'song';
-                $object_id = (int)($input['oid'] ?? 0);
+                $object_id = (int) ($input['oid'] ?? 0);
                 $media     = new Song($object_id);
                 if ($media->isNew()) {
                     Api4::message('error', T_('Media object invalid or not specified'), '400', $input['api_format']);
@@ -119,7 +120,7 @@ final class Democratic4Method
                         echo json_encode($results, JSON_PRETTY_PRINT);
                         break;
                     default:
-                        echo Xml4_Data::keyed_array($results);
+                        echo Api::keyed_array($results);
                 }
                 break;
             case 'playlist':
@@ -142,7 +143,7 @@ final class Democratic4Method
                         echo json_encode($results, JSON_PRETTY_PRINT);
                         break;
                     default:
-                        echo Xml4_Data::keyed_array($results);
+                        echo Api::keyed_array($results);
                 }
                 break;
             default:

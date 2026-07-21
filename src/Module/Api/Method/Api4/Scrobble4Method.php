@@ -1,6 +1,6 @@
 <?php
 
-declare(strict_types=0);
+declare(strict_types=1);
 
 /**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
@@ -45,14 +45,14 @@ final class Scrobble4Method
      * Search for a song using text info and then record a play if found.
      * This allows other sources to record play history to Ampache
      *
-     * song       = (string)  $song_name
-     * artist     = (string)  $artist_name
-     * album      = (string)  $album_name
-     * songmbid   = (string)  $song_mbid //optional
+     * song = (string)  $song_name
+     * artist = (string)  $artist_name
+     * album = (string)  $album_name
+     * songmbid = (string)  $song_mbid //optional
      * artistmbid = (string)  $artist_mbid //optional
-     * albummbid  = (string)  $album_mbid //optional
-     * date       = (integer) UNIXTIME() //optional
-     * client     = (string)  $agent //optional
+     * albummbid = (string)  $album_mbid //optional
+     * date = (integer) UNIXTIME() //optional
+     * client = (string)  $agent //optional
      *
      * @param array{
      *     song: string,
@@ -108,7 +108,7 @@ final class Scrobble4Method
         } else {
             $agent = 'api';
         }
-        $scrobble_id = Song::can_scrobble($song_name, $artist_name, $album_name, (string) $song_mbid, (string) $artist_mbid, (string) $album_mbid);
+        $scrobble_id = Song::can_scrobble($song_name, $artist_name, $album_name, $song_mbid, $artist_mbid, $album_mbid);
 
         if ($scrobble_id === '') {
             Api4::message('error', T_('Failed to scrobble: No item found!'), '401', $input['api_format']);

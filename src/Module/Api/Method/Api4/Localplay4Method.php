@@ -1,6 +1,6 @@
 <?php
 
-declare(strict_types=0);
+declare(strict_types=1);
 
 /**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
@@ -26,8 +26,8 @@ declare(strict_types=0);
 namespace Ampache\Module\Api\Method\Api4;
 
 use Ampache\Config\AmpConfig;
+use Ampache\Module\Api\Api;
 use Ampache\Module\Api\Api4;
-use Ampache\Module\Api\Xml4_Data;
 use Ampache\Module\Playback\Localplay\LocalPlay;
 use Ampache\Module\Playback\Stream_Playlist;
 use Ampache\Repository\Model\LibraryItemEnum;
@@ -47,9 +47,9 @@ final class Localplay4Method
      * This is for controlling Localplay
      *
      * command = (string) 'next', 'prev', 'stop', 'play', 'pause', 'add', 'volume_up', 'volume_down', 'volume_mute', 'delete_all', 'skip', 'status'
-     * oid     = (integer) object_id //optional
-     * type    = (string) 'Song', 'Video', 'Podcast_Episode', 'Broadcast', 'Democratic', 'Live_Stream' //optional
-     * clear   = (integer) 0,1 Clear the current playlist before adding //optional
+     * oid = (integer) object_id //optional
+     * type = (string) 'Song', 'Video', 'Podcast_Episode', 'Broadcast', 'Democratic', 'Live_Stream' //optional
+     * clear = (integer) 0,1 Clear the current playlist before adding //optional
      *
      * @param array{
      *     command: string,
@@ -81,8 +81,8 @@ final class Localplay4Method
         switch ($command) {
             case 'add':
                 // for add commands get the object details
-                $object_id = (int)($input['oid'] ?? 0);
-                $type      = LibraryItemEnum::tryFrom((string) strtolower($input['type'] ?? '')) ?? LibraryItemEnum::SONG;
+                $object_id = (int) ($input['oid'] ?? 0);
+                $type      = LibraryItemEnum::tryFrom(strtolower($input['type'] ?? '')) ?? LibraryItemEnum::SONG;
 
                 if (!AmpConfig::get('allow_video') && $type === LibraryItemEnum::VIDEO) {
                     Api4::message('error', T_('Access Denied: allow_video is not enabled.'), '400', $input['api_format']);
@@ -90,9 +90,9 @@ final class Localplay4Method
                     return false;
                 }
 
-                $clear = (int)($input['clear'] ?? 0);
+                $clear = (int) ($input['clear'] ?? 0);
                 if ($localplay->type === 'mpd') {
-                    $localplay->set_block_clear(make_bool((string)$clear));
+                    $localplay->set_block_clear(make_bool((string) $clear));
                 }
 
                 // clear before the add
@@ -145,7 +145,7 @@ final class Localplay4Method
                 Api4::message('error', T_('Invalid request'), '405', $input['api_format']);
 
                 return false;
-        } // end switch on command
+        }
 
         // bad status calls can happen
         if ($command === 'status' && empty($status)) {
@@ -162,7 +162,7 @@ final class Localplay4Method
                 echo json_encode($results, JSON_PRETTY_PRINT);
                 break;
             default:
-                echo Xml4_Data::keyed_array($results);
+                echo Api::keyed_array($results);
         }
 
         return true;

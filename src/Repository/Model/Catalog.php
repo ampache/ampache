@@ -2213,7 +2213,7 @@ abstract class Catalog extends database_object
 
         $search_count = 0;
         $searches     = [];
-        if ($songs == null) {
+        if ($songs === null) {
             $searches['album']    = $this->get_album_ids('art');
             $searches['artist']   = $this->get_artist_ids('art');
             $searches['playlist'] = $this->get_playlist_ids('art');
@@ -2814,7 +2814,7 @@ abstract class Catalog extends database_object
         if (empty($results['albumartist'])) {
             $results['albumartist_id'] = ($song && $song->get_album_artist() > 0 && T_(($song->get_album_artist_fullname()) ?? T_('Unknown (Orphaned)')) !== T_('Unknown (Orphaned)'))
                 ? $song->get_album_artist()
-                : Artist::check($song?->get_artist_fullname() ?? $results['artist'], $results['albumartist_mbid']);
+                : Artist::check($song?->get_parent_fullname() ?? $results['artist'], $results['albumartist_mbid']);
         }
 
         if (empty($results['albumartist']) && $results['albumartist_id'] > 0) {
@@ -3521,12 +3521,12 @@ abstract class Catalog extends database_object
         self::set_update_info('update_counts', $now_time);
         debug_event(self::class, 'update_counts after catalog changes', 5);
         // missing map tables are pretty important
-        $sql = "INSERT IGNORE INTO `artist_map` (`artist_id`, `object_type`, `object_id`) SELECT DISTINCT `song`.`artist` AS `artist_id`, 'song', `song`.`id` FROM `song` WHERE `song`.`artist` > 0 AND `song`.`artist` IS NOT NULL UNION SELECT DISTINCT `album`.`album_artist` AS `artist_id`, 'album', `album`.`id` FROM `album` WHERE `album`.`album_artist` > 0 AND `album`.`album_artist` IS NOT NULL;";
-        Dba::write($sql);
-        $sql = "INSERT IGNORE INTO `album_map` (`album_id`, `object_type`, `object_id`) SELECT DISTINCT `artist_map`.`object_id` AS `album_id`, 'album' AS `object_type`, `artist_map`.`artist_id` AS `object_id` FROM `artist_map` WHERE `artist_map`.`object_type` = 'album' AND `artist_map`.`object_id` IS NOT NULL UNION SELECT DISTINCT `song`.`album` AS `album_id`, 'song' AS `object_type`, `song`.`artist` AS `object_id` FROM `song` WHERE `song`.`album` IS NOT NULL UNION SELECT DISTINCT `song`.`album` AS `album_id`, 'song' AS `object_type`, `artist_map`.`artist_id` AS `object_id` FROM `artist_map` LEFT JOIN `song` ON `artist_map`.`object_type` = 'song' AND `artist_map`.`object_id` = `song`.`id` WHERE `song`.`album` IS NOT NULL AND `artist_map`.`object_type` = 'song';";
-        Dba::write($sql);
-        $sql = "INSERT IGNORE INTO `album_disk` (`album_id`, `disk`, `catalog`, `disksubtitle`) SELECT DISTINCT `song`.`album` AS `album_id`, `song`.`disk` AS `disk`, `song`.`catalog` AS `catalog`, NULLIF(`song_data`.`disksubtitle`, '') AS `disksubtitle` FROM `song` LEFT JOIN `song_data` ON `song_data`.`song_id` = `song`.`id`;";
-        Dba::write($sql);
+        //$sql = "INSERT IGNORE INTO `artist_map` (`artist_id`, `object_type`, `object_id`) SELECT DISTINCT `song`.`artist` AS `artist_id`, 'song', `song`.`id` FROM `song` WHERE `song`.`artist` > 0 AND `song`.`artist` IS NOT NULL UNION SELECT DISTINCT `album`.`album_artist` AS `artist_id`, 'album', `album`.`id` FROM `album` WHERE `album`.`album_artist` > 0 AND `album`.`album_artist` IS NOT NULL;";
+        //Dba::write($sql);
+        //$sql = "INSERT IGNORE INTO `album_map` (`album_id`, `object_type`, `object_id`) SELECT DISTINCT `artist_map`.`object_id` AS `album_id`, 'album' AS `object_type`, `artist_map`.`artist_id` AS `object_id` FROM `artist_map` WHERE `artist_map`.`object_type` = 'album' AND `artist_map`.`object_id` IS NOT NULL UNION SELECT DISTINCT `song`.`album` AS `album_id`, 'song' AS `object_type`, `song`.`artist` AS `object_id` FROM `song` WHERE `song`.`album` IS NOT NULL UNION SELECT DISTINCT `song`.`album` AS `album_id`, 'song' AS `object_type`, `artist_map`.`artist_id` AS `object_id` FROM `artist_map` LEFT JOIN `song` ON `artist_map`.`object_type` = 'song' AND `artist_map`.`object_id` = `song`.`id` WHERE `song`.`album` IS NOT NULL AND `artist_map`.`object_type` = 'song';";
+        //Dba::write($sql);
+        //$sql = "INSERT IGNORE INTO `album_disk` (`album_id`, `disk`, `catalog`, `disksubtitle`) SELECT DISTINCT `song`.`album` AS `album_id`, `song`.`disk` AS `disk`, `song`.`catalog` AS `catalog`, NULLIF(`song_data`.`disksubtitle`, '') AS `disksubtitle` FROM `song` LEFT JOIN `song_data` ON `song_data`.`song_id` = `song`.`id`;";
+        //Dba::write($sql);
         // do the longer updates over a larger stretch of time
         if ($update_time !== 0 && $update_time < ($now_time - 86400)) {
             // delete old maps in album_map table
@@ -4731,10 +4731,10 @@ abstract class Catalog extends database_object
         // Do the various check
         $album = new Album($song->album);
 
-        $song_artist_name  = self::sort_clean_name($song->get_artist_fullname(), '%a', $windowsCompat);
-        $album_artist_name = (empty($album->get_artist_fullname()))
+        $song_artist_name  = self::sort_clean_name($song->get_parent_fullname(), '%a', $windowsCompat);
+        $album_artist_name = (empty($album->get_parent_fullname()))
             ? $various_artist
-            : self::sort_clean_name($album->get_artist_fullname(), '%a', $windowsCompat);
+            : self::sort_clean_name($album->get_parent_fullname(), '%a', $windowsCompat);
         $disk           = self::sort_clean_name($song->disk, '%d');
         $catalog_number = self::sort_clean_name($album->catalog_number, '%C');
         $barcode        = self::sort_clean_name($album->barcode, '%b');

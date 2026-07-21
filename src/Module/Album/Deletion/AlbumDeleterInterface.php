@@ -31,5 +31,5 @@ interface AlbumDeleterInterface
     /**
      * @throws AlbumDeletionException
      */
-    public function delete(Album $album): void;
+    public function delete(Album $album, bool $parent = false): void;
 }

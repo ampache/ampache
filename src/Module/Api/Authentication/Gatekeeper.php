@@ -1,6 +1,6 @@
 <?php
 
-declare(strict_types=0);
+declare(strict_types=1);
 
 /**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
@@ -40,13 +40,10 @@ use Psr\Log\LoggerInterface;
  */
 final class Gatekeeper implements GatekeeperInterface
 {
-    private UserRepositoryInterface $userRepository;
-
-    private ServerRequestInterface $request;
-
-    private LoggerInterface $logger;
-
     private ?string $auth = null;
+    private LoggerInterface $logger;
+    private ServerRequestInterface $request;
+    private UserRepositoryInterface $userRepository;
 
     public function __construct(
         UserRepositoryInterface $userRepository,
@@ -58,51 +55,55 @@ final class Gatekeeper implements GatekeeperInterface
         $this->request        = $request;
     }
 
-    public function getUser(string $requestKey = 'auth'): ?User
-    {
-        return $this->userRepository->findByApiKey($this->getAuth($requestKey)) ?? $this->userRepository->findByUsername($this->request->getQueryParams()['user'] ?? '');
-    }
-
-    public function sessionExists(string $auth): bool
-    {
-        return Session::exists(AccessTypeEnum::API->value, $auth);
-    }
-
     public function extendSession(string $auth): void
     {
         Session::extend($auth, AccessTypeEnum::API->value);
     }
 
-    public function getUserName(string $requestKey = 'auth'): string
-    {
-        return (isset($this->request->getQueryParams()['user']))
-            ? $this->request->getQueryParams()['user']
-            : Session::username($this->getAuth($requestKey));
-    }
-
     public function getAuth(string $requestKey = 'auth'): string
     {
         if ($this->auth === null) {
-            $auth = $this->request->getHeaderLine('Authorization');
+            // Read headers separately: Authorization (preferred) and auth (alternate api-key header)
+            $authorization = $this->request->getHeaderLine('Authorization');
+            $authHeader    = $this->request->getHeaderLine('auth');
 
             $matches = [];
+            $token   = '';
 
-            // Retrieve auth token from header
-            preg_match('/Bearer ([0-9a-f].*)/', $auth, $matches);
+            // Retrieve auth token from Authorization: Bearer <token>
+            if ($authorization !== '') {
+                if (preg_match('/Bearer\s+(\S+)/i', $authorization, $matches)) {
+                    $token = (string) $matches[1];
+                    $this->logger->notice(
+                        'API session using Bearer token',
+                        [LegacyLogger::CONTEXT_TYPE => self::class]
+                    );
+                } elseif (preg_match('/ApiKey\s+(\S+)/i', $authorization, $matches)) {
+                    // Support Authorization: ApiKey <token>
+                    $token = (string) $matches[1];
+                    $this->logger->notice(
+                        'API session using ApiKey in Authorization header',
+                        [LegacyLogger::CONTEXT_TYPE => self::class]
+                    );
+                }
+            }
 
-            if ($matches !== []) {
-                $token = (string)$matches[1];
+            if ($token === '' && $authHeader !== '') {
+                // Accept API key passed directly in the 'auth' header (ApiKeyAuthHeader)
+                $token = $authHeader;
                 $this->logger->notice(
-                    'API session using Bearer token',
+                    'API session using auth header',
                     [LegacyLogger::CONTEXT_TYPE => self::class]
                 );
-            } else {
+            }
+
+            if ($token === '') {
                 /**
-                 * Fallback to legacy get/post parameter. (prefer POST array over GET))
+                 * Fallback to legacy get/post parameter. (prefer POST array over GET)
                  * Remove some day when backwards compatability isn't a problem
                  */
                 $post = ($this->request->getMethod() === 'POST')
-                    ? (array)$this->request->getParsedBody()
+                    ? (array) $this->request->getParsedBody()
                     : [];
                 $query = array_merge($this->request->getQueryParams(), $post);
                 $token = $query[$requestKey] ?? '';
@@ -118,5 +119,22 @@ final class Gatekeeper implements GatekeeperInterface
         }
 
         return $this->auth ?? '';
+    }
+
+    public function getUser(string $requestKey = 'auth'): ?User
+    {
+        return $this->userRepository->findByApiKey($this->getAuth($requestKey)) ?? $this->userRepository->findByUsername($this->request->getQueryParams()['user'] ?? '');
+    }
+
+    public function getUserName(string $requestKey = 'auth'): string
+    {
+        return (isset($this->request->getQueryParams()['user']))
+            ? $this->request->getQueryParams()['user']
+            : Session::username($this->getAuth($requestKey));
+    }
+
+    public function sessionExists(string $auth): bool
+    {
+        return Session::exists(AccessTypeEnum::API->value, $auth);
     }
 }

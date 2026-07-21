@@ -1,6 +1,6 @@
 <?php
 
-declare(strict_types=0);
+declare(strict_types=1);
 
 /**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
@@ -46,7 +46,7 @@ final class UpdateArtistInfo4Method
      * Update artist information and fetch similar artists from last.fm
      * Make sure lastfm_api_key is set in your configuration file
      *
-     * id   = (integer) $artist_id
+     * id = (integer) $artist_id
      *
      * @param array{
      *     id: string,
@@ -74,8 +74,8 @@ final class UpdateArtistInfo4Method
         $like = Recommendation::get_artists_like($object_id);
         // update your object, you need at least catalog_manager access to the db
         if (
-            $info['id'] !== null ||
-            count($like) > 0
+            $info['id'] !== null
+            || count($like) > 0
         ) {
             Api4::message('success', 'Updated artist info: ' . $object_id, null, $input['api_format']);
 

@@ -1,6 +1,6 @@
 <?php
 
-declare(strict_types=0);
+declare(strict_types=1);
 
 /**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
@@ -51,7 +51,7 @@ final class ArtistAlbums3Method
      */
     public static function artist_albums(array $input, User $user): void
     {
-        $artist  = new Artist((int)$input['filter']);
+        $artist  = new Artist((int) $input['filter']);
         $results = [];
         if ($artist->isNew() === false) {
             $results = self::getAlbumRepository()->getAlbumByArtist($artist->id);

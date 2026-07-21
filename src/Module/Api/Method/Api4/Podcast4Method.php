@@ -1,6 +1,6 @@
 <?php
 
-declare(strict_types=0);
+declare(strict_types=1);
 
 /**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
@@ -45,7 +45,7 @@ final class Podcast4Method
      *
      * Get the podcast from it's id.
      *
-     * filter  = (integer) Podcast ID number
+     * filter = (integer) Podcast ID number
      * include = (string) 'episodes' (include episodes in the response) //optional
      *
      * @param array{

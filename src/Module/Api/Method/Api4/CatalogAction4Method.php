@@ -1,6 +1,6 @@
 <?php
 
-declare(strict_types=0);
+declare(strict_types=1);
 
 /**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
@@ -47,7 +47,7 @@ final class CatalogAction4Method
      * Kick off a catalog update or clean for the selected catalog
      * Added 'verify_catalog', 'gather_art'
      *
-     * task    = (string) 'add_to_catalog'|'clean_catalog'
+     * task = (string) 'add_to_catalog'|'clean_catalog'
      * catalog = (integer) $catalog_id
      *
      * @param array{
@@ -75,9 +75,6 @@ final class CatalogAction4Method
         $catalog = Catalog::create_from_id((int) $input['catalog']);
 
         if ($catalog !== null) {
-            if (defined('SSE_OUTPUT')) {
-                unset($SSE_OUTPUT);
-            }
             switch ($task) {
                 case 'clean_catalog':
                     $catalog->clean_catalog_proc();

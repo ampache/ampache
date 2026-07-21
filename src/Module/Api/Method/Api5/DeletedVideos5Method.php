@@ -1,6 +1,6 @@
 <?php
 
-declare(strict_types=0);
+declare(strict_types=1);
 
 /**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
@@ -45,7 +45,7 @@ final class DeletedVideos5Method
      * This returns video objects that have been deleted
      *
      * offset = (integer) //optional
-     * limit  = (integer) //optional
+     * limit = (integer) //optional
      *
      * @param array{
      *     limit?: string,
@@ -57,7 +57,7 @@ final class DeletedVideos5Method
     public static function deleted_videos(array $input, User $user): bool
     {
         if (!AmpConfig::get('allow_video')) {
-            Api5::error(T_('Enable: video'), ErrorCodeEnum::ACCESS_DENIED, self::ACTION, 'system', $input['api_format']);
+            Api5::error(ErrorCodeEnum::ACCESS_DENIED, T_('Enable: video'), self::ACTION, 'system', $input['api_format']);
 
             return false;
         }

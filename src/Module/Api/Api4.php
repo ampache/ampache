@@ -1,6 +1,7 @@
 <?php
 
-declare(strict_types=0);
+declare(strict_types=1);
+
 /**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
@@ -139,7 +140,46 @@ class Api4
      */
     private function __construct()
     {
-        // Rien a faire
+    }
+
+    /**
+     * check_access
+     *
+     * This function checks the user can perform the function requested
+     * 'interface', 100, $user->id
+     */
+    public static function check_access(AccessTypeEnum $type, AccessLevelEnum $level, int $user_id, string $method = '', string $format = 'xml'): bool
+    {
+        if (!Access::check($type, $level, $user_id)) {
+            debug_event(self::class, $type->value . " '" . $level->value . "' required on " . $method . " function call.", 2);
+            Api4::message('error', 'User does not have access to this function', '400', $format);
+
+            return false;
+        }
+
+        return true;
+    }
+
+    /**
+     * check_parameter
+     *
+     * This function checks the $input actually has the parameter.
+     * Parameters must be an array of required elements as a string
+     *
+     * @param array<string, mixed> $input
+     * @param string[] $parameters e.g. array('auth', type')
+     */
+    public static function check_parameter(array $input, array $parameters, string $method = ''): bool
+    {
+        $parameter = Api::parameter_exists($input, $parameters);
+        if ($parameter === true) {
+            return true;
+        }
+
+        debug_event(self::class, "'" . $parameter . "' required on " . $method . " function call.", 2);
+        self::message('error', T_('Missing mandatory parameter') . " '" . $parameter . "'", '401', $input['api_format']);
+
+        return false;
     }
 
     /**
@@ -166,45 +206,5 @@ class Api4
                     echo Xml4_Data::success($message);
             }
         }
-    }
-
-    /**
-     * check_parameter
-     *
-     * This function checks the $input actually has the parameter.
-     * Parameters must be an array of required elements as a string
-     *
-     * @param array<string, mixed> $input
-     * @param string[] $parameters e.g. array('auth', type')
-     */
-    public static function check_parameter(array $input, array $parameters, string $method = ''): bool
-    {
-        $parameter = Api::parameter_exists($input, $parameters);
-        if ($parameter === true) {
-            return true;
-        }
-
-        debug_event(self::class, "'" . $parameter . "' required on " . $method . " function call.", 2);
-        self::message('error', T_('Missing mandatory parameter') . " '" . $parameter . "'", '401', $input['api_format']);
-
-        return false;
-    }
-
-    /**
-     * check_access
-     *
-     * This function checks the user can perform the function requested
-     * 'interface', 100, $user->id
-     */
-    public static function check_access(AccessTypeEnum $type, AccessLevelEnum $level, int $user_id, string $method = '', string $format = 'xml'): bool
-    {
-        if (!Access::check($type, $level, $user_id)) {
-            debug_event(self::class, $type->value . " '" . $level->value . "' required on " . $method . " function call.", 2);
-            Api4::message('error', 'User does not have access to this function', '400', $format);
-
-            return false;
-        }
-
-        return true;
     }
 }

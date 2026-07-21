@@ -1,6 +1,6 @@
 <?php
 
-declare(strict_types=0);
+declare(strict_types=1);
 
 /**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
@@ -47,7 +47,7 @@ final class UpdateFromTags4Method
      * updates a single album, artist, song from the tag data
      *
      * type = (string) 'artist'|'album'|'song'
-     * id   = (integer) $artist_id, $album_id, $song_id
+     * id = (integer) $artist_id, $album_id, $song_id
      *
      * @param array{
      *     id: string,
@@ -74,7 +74,7 @@ final class UpdateFromTags4Method
         $className = ObjectTypeToClassNameMapper::map($type);
         /** @var Artist|Album|Song $item */
         $item = new $className($object_id);
-        if (!$item->isNew()) {
+        if ($item->isNew()) {
             Api4::message('error', T_('The requested item was not found'), '404', $input['api_format']);
 
             return false;

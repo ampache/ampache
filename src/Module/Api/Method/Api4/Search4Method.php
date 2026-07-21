@@ -1,6 +1,6 @@
 <?php
 
-declare(strict_types=0);
+declare(strict_types=1);
 
 /**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
@@ -41,9 +41,9 @@ final class Search4Method
      * This returns the tags (Genres) based on the specified filter
      *
      * filter = (string) Alpha-numeric search term //optional
-     * exact  = (integer) 0,1, if true filter is exact rather then fuzzy //optional
+     * exact = (integer) 0,1, if true filter is exact rather then fuzzy //optional
      * offset = (integer) //optional
-     * limit  = (integer) //optional
+     * limit = (integer) //optional
      *
      * @param array{
      *     filter?: string,

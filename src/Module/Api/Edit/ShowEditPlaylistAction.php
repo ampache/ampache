@@ -1,6 +1,6 @@
 <?php
 
-declare(strict_types=0);
+declare(strict_types=1);
 
 /**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
@@ -41,13 +41,10 @@ final class ShowEditPlaylistAction extends AbstractEditAction
 {
     public const REQUEST_KEY = 'show_edit_playlist';
 
-    private ResponseFactoryInterface $responseFactory;
-
-    private StreamFactoryInterface $streamFactory;
-
-    private TalFactoryInterface $talFactory;
-
     private GuiFactoryInterface $guiFactory;
+    private ResponseFactoryInterface $responseFactory;
+    private StreamFactoryInterface $streamFactory;
+    private TalFactoryInterface $talFactory;
 
     public function __construct(
         ResponseFactoryInterface $responseFactory,

@@ -1,6 +1,6 @@
 <?php
 
-declare(strict_types=0);
+declare(strict_types=1);
 
 /**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
@@ -46,10 +46,10 @@ final class UpdateArt4Method
      * MINIMUM_API_VERSION=400001
      *
      * updates a single album, artist, song running the gather_art process
-     * Doesn't overwrite existing art by default.
+     * Existing art is replaced unless you send overwrite=0, which keeps whatever is already there.
      *
-     * type      = (string) 'artist'|'album'
-     * id        = (integer) $artist_id, $album_id
+     * type = (string) 'artist'|'album'
+     * id = (integer) $artist_id, $album_id
      * overwrite = (integer) 0,1 //optional
      *
      * @param array{
@@ -70,7 +70,8 @@ final class UpdateArt4Method
         }
         $type      = (string) $input['type'];
         $object_id = (int) $input['id'];
-        $overwrite = array_key_exists('overwrite', $input) && (int)$input['overwrite'] == 0;
+        // Catalog::gather_art_item() takes `db_art_first`, i.e. the inverse: keep the art we already have
+        $db_art_first = array_key_exists('overwrite', $input) && (int) $input['overwrite'] === 0;
 
         // confirm the correct data
         if (!in_array(strtolower($type), ['artist', 'album'])) {
@@ -87,7 +88,7 @@ final class UpdateArt4Method
             return true;
         }
         // update your object
-        if (Catalog::gather_art_item($type, $object_id, $overwrite, true)) {
+        if (Catalog::gather_art_item($type, $object_id, $db_art_first, true)) {
             Api4::message('success', 'Gathered new art for: ' . $object_id . ' (' . $type . ')', null, $input['api_format']);
 
             return true;

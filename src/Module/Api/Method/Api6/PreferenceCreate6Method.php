@@ -1,6 +1,6 @@
 <?php
 
-declare(strict_types=0);
+declare(strict_types=1);
 
 /**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
@@ -25,9 +25,9 @@ declare(strict_types=0);
 
 namespace Ampache\Module\Api\Method\Api6;
 
+use Ampache\Module\Api\Api;
 use Ampache\Module\Api\Api6;
 use Ampache\Module\Api\Exception\ErrorCodeEnum;
-use Ampache\Module\Api\Xml6_Data;
 use Ampache\Module\Authorization\AccessLevelEnum;
 use Ampache\Module\Authorization\AccessTypeEnum;
 use Ampache\Repository\Model\Preference;
@@ -51,13 +51,13 @@ final class PreferenceCreate6Method
      *
      * This inserts a new preference into the preference table
      *
-     * filter      = (string) preference name
-     * type        = (string) 'boolean', 'integer', 'string', 'special'
-     * default     = (string|integer) default value
-     * category    = (string) 'interface', 'internal', 'options', 'playlist', 'plugins', 'streaming'
+     * filter = (string) preference name
+     * type = (string) 'boolean', 'integer', 'string', 'special'
+     * default = (string|integer) default value
+     * category = (string) 'interface', 'internal', 'options', 'playlist', 'plugins', 'streaming'
      * description = (string) description of preference //optional
      * subcategory = (string) $subcategory //optional
-     * level       = (integer) access level required to change the value (default 100) //optional
+     * level = (integer) access level required to change the value (default 100) //optional
      *
      * @param array{
      *     filter: string,
@@ -84,33 +84,33 @@ final class PreferenceCreate6Method
         // if you found the preference or it's a system preference; don't add it.
         if (!empty($pref_list) || in_array($pref_name, array_merge(Preference::SYSTEM_LIST, Preference::PLUGIN_LIST))) {
             /* HINT: Requested object string/id/type ("album", "myusername", "some song title", 1298376) */
-            Api6::error(sprintf('Bad Request: %s', $pref_name), ErrorCodeEnum::BAD_REQUEST, self::ACTION, 'filter', $input['api_format']);
+            Api6::error(ErrorCodeEnum::BAD_REQUEST, sprintf('Bad Request: %s', $pref_name), self::ACTION, 'filter', $input['api_format']);
 
             return false;
         }
         $type = (string) $input['type'];
         if (!in_array(strtolower($type), ['boolean', 'integer', 'string', 'special'])) {
-            Api6::error(sprintf('Bad Request: %s', $type), ErrorCodeEnum::BAD_REQUEST, self::ACTION, 'type', $input['api_format']);
+            Api6::error(ErrorCodeEnum::BAD_REQUEST, sprintf('Bad Request: %s', $type), self::ACTION, 'type', $input['api_format']);
 
             return false;
         }
         $category = (string) $input['category'];
         if (!in_array($category, ['interface', 'internal', 'options', 'playlist', 'plugins', 'streaming'])) {
-            Api6::error(sprintf('Bad Request: %s', $type), ErrorCodeEnum::BAD_REQUEST, self::ACTION, 'category', $input['api_format']);
+            Api6::error(ErrorCodeEnum::BAD_REQUEST, sprintf('Bad Request: %s', $type), self::ACTION, 'category', $input['api_format']);
 
             return false;
         }
         $level       = (isset($input['level'])) ? (int) $input['level'] : 100;
         $default     = ($type == 'boolean' || $type == 'integer') ? (int) $input['default'] : (string) $input['default'];
-        $description = (string)($input['description'] ?? '');
-        $subcategory = (string)($input['subcategory'] ?? '');
+        $description = (string) ($input['description'] ?? '');
+        $subcategory = (string) ($input['subcategory'] ?? '');
 
         // insert and return the new preference
         Preference::insert($pref_name, $description, $default, $level, $type, $category, $subcategory);
         $results = Preference::get($pref_name, -1);
         if (empty($results)) {
             /* HINT: Requested object string/id/type ("album", "myusername", "some song title", 1298376) */
-            Api6::error(sprintf('Not Found: %s', $pref_name), ErrorCodeEnum::NOT_FOUND, self::ACTION, 'system', $input['api_format']);
+            Api6::error(ErrorCodeEnum::NOT_FOUND, sprintf('Not Found: %s', $pref_name), self::ACTION, 'system', $input['api_format']);
 
             return false;
         }
@@ -119,7 +119,7 @@ final class PreferenceCreate6Method
                 echo json_encode($results[0], JSON_PRETTY_PRINT);
                 break;
             default:
-                echo Xml6_Data::object_array($results, 'preference');
+                echo Api::object_array($results, 'preference');
         }
         // fix preferences that are missing for user
         User::fix_preferences($user->id);

@@ -1,6 +1,6 @@
 <?php
 
-declare(strict_types=0);
+declare(strict_types=1);
 
 /**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
@@ -45,10 +45,10 @@ final class Podcasts4Method
      *
      * Get information about podcasts.
      *
-     * filter  = (string) Alpha-numeric search term
+     * filter = (string) Alpha-numeric search term
      * include = (string) 'episodes' (include episodes in the response) //optional
-     * offset  = (integer) //optional
-     * limit   = (integer) //optional
+     * offset = (integer) //optional
+     * limit = (integer) //optional
      *
      * @param array{
      *     filter?: string,
@@ -75,7 +75,7 @@ final class Podcasts4Method
         $browse->set_type('podcast');
         $browse->set_sort('title', 'ASC', false);
 
-        $method = (array_key_exists('exact', $input) && (int)$input['exact'] == 1) ? 'exact_match' : 'alpha_match';
+        $method = (array_key_exists('exact', $input) && (int) $input['exact'] == 1) ? 'exact_match' : 'alpha_match';
         $browse->set_api_filter($method, $input['filter'] ?? '');
         $browse->set_api_filter('add', $input['add'] ?? '');
         $browse->set_api_filter('update', $input['update'] ?? '');

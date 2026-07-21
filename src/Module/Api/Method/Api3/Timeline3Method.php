@@ -1,6 +1,6 @@
 <?php
 
-declare(strict_types=0);
+declare(strict_types=1);
 
 /**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
@@ -55,21 +55,22 @@ final class Timeline3Method
         unset($user);
         if (AmpConfig::get('sociable')) {
             $username = $input['username'];
-            $limit    = (int)($input['limit'] ?? 0);
-            $since    = (int)($input['since'] ?? 0);
+            $limit    = (int) ($input['limit'] ?? 0);
+            $since    = (int) ($input['since'] ?? 0);
 
             if (!empty($username)) {
                 $user = User::get_from_username($username);
-                if ($user instanceof User) {
-                    if (Preference::get_by_user($user->id, 'allow_personal_info_recent')) {
-                        $results = self::getUseractivityRepository()->getActivities(
-                            $user->id,
-                            $limit,
-                            $since
-                        );
-                        ob_end_clean();
-                        echo Xml3_Data::timeline($results);
-                    }
+                if (
+                    $user instanceof User
+                    && Preference::get_by_user($user->id, 'allow_personal_info_recent')
+                ) {
+                    $results = self::getUseractivityRepository()->getActivities(
+                        $user->id,
+                        $limit,
+                        $since
+                    );
+                    ob_end_clean();
+                    echo Xml3_Data::timeline($results);
                 }
             } else {
                 debug_event(self::class, 'Username required on timeline function call.', 1);

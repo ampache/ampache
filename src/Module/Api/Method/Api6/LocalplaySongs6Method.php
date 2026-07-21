@@ -1,6 +1,6 @@
 <?php
 
-declare(strict_types=0);
+declare(strict_types=1);
 
 /**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
@@ -26,9 +26,9 @@ declare(strict_types=0);
 namespace Ampache\Module\Api\Method\Api6;
 
 use Ampache\Config\AmpConfig;
+use Ampache\Module\Api\Api;
 use Ampache\Module\Api\Api6;
 use Ampache\Module\Api\Exception\ErrorCodeEnum;
-use Ampache\Module\Api\Xml6_Data;
 use Ampache\Module\Authorization\AccessLevelEnum;
 use Ampache\Module\Authorization\AccessTypeEnum;
 use Ampache\Module\Playback\Localplay\LocalPlay;
@@ -63,7 +63,7 @@ final class LocalplaySongs6Method
         // Load their Localplay instance
         $localplay = new Localplay(AmpConfig::get('localplay_controller', ''));
         if (empty($localplay->type) || !$localplay->connect()) {
-            Api6::error('Unable to connect to localplay controller', ErrorCodeEnum::BAD_REQUEST, self::ACTION, 'account', $input['api_format']);
+            Api6::error(ErrorCodeEnum::BAD_REQUEST, 'Unable to connect to localplay controller', self::ACTION, 'account', $input['api_format']);
 
             return false;
         }
@@ -82,7 +82,7 @@ final class LocalplaySongs6Method
                 echo json_encode($results, JSON_PRETTY_PRINT);
                 break;
             default:
-                echo Xml6_Data::object_array($results['localplay_songs'], 'localplay_songs');
+                echo Api::object_array($results['localplay_songs'], 'localplay_songs');
         }
 
         return true;

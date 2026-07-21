@@ -1,6 +1,6 @@
 <?php
 
-declare(strict_types=0);
+declare(strict_types=1);
 
 /**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
@@ -71,7 +71,7 @@ final class Goodbye5Method
         }
         ob_end_clean();
         /* HINT: Requested object string/id/type ("album", "myusername", "some song title", 1298376) */
-        Api5::error(sprintf(T_('Bad Request: %s'), $input['auth']), ErrorCodeEnum::BAD_REQUEST, self::ACTION, 'account', $input['api_format']);
+        Api5::error(ErrorCodeEnum::BAD_REQUEST, sprintf(T_('Bad Request: %s'), $input['auth']), self::ACTION, 'account', $input['api_format']);
 
         return false;
     }

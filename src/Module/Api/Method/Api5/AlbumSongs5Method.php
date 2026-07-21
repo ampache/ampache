@@ -1,6 +1,6 @@
 <?php
 
-declare(strict_types=0);
+declare(strict_types=1);
 
 /**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
@@ -47,9 +47,9 @@ class AlbumSongs5Method
      * This returns the songs of a specified album
      *
      * filter = (string) UID of Album
-     * exact  = (integer) 0,1, if true don't group songs from different disks //optional
+     * exact = (integer) 0,1, if true don't group songs from different disks //optional
      * offset = (integer) //optional
-     * limit  = (integer) //optional
+     * limit = (integer) //optional
      *
      * @param array{
      *     filter: string,
@@ -70,7 +70,7 @@ class AlbumSongs5Method
         $album     = new Album($object_id);
         if ($album->isNew()) {
             /* HINT: Requested object string/id/type ("album", "myusername", "some song title", 1298376) */
-            Api5::error(sprintf(T_('Not Found: %s'), $object_id), ErrorCodeEnum::NOT_FOUND, self::ACTION, 'filter', $input['api_format']);
+            Api5::error(ErrorCodeEnum::NOT_FOUND, sprintf(T_('Not Found: %s'), $object_id), self::ACTION, 'filter', $input['api_format']);
 
             return false;
         }

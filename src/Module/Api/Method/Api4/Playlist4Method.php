@@ -1,6 +1,6 @@
 <?php
 
-declare(strict_types=0);
+declare(strict_types=1);
 
 /**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
@@ -73,8 +73,8 @@ final class Playlist4Method
             return false;
         }
         if (
-            $playlist->type !== 'public' &&
-            !$playlist->has_collaborate($user)
+            $playlist->type !== 'public'
+            && !$playlist->has_collaborate($user)
         ) {
             Api4::message('error', T_('Access denied to this playlist'), '401', $input['api_format']);
 

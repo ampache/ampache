@@ -1,6 +1,6 @@
 <?php
 
-declare(strict_types=0);
+declare(strict_types=1);
 
 /**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
@@ -45,14 +45,14 @@ final class Artists5Method
      * This takes a collection of inputs and returns
      * artist objects. This function is deprecated!
      *
-     * filter       = (string) Alpha-numeric search term //optional
-     * exact        = (integer) 0,1, if true filter is exact rather then fuzzy //optional
-     * add          = $browse->set_api_filter(date) //optional
-     * update       = $browse->set_api_filter(date) //optional
-     * include      = (array|string) 'albums', 'songs' //optional
+     * filter = (string) Alpha-numeric search term //optional
+     * exact = (integer) 0,1, if true filter is exact rather then fuzzy //optional
+     * add = $browse->set_api_filter(date) //optional
+     * update = $browse->set_api_filter(date) //optional
+     * include = (array|string) 'albums', 'songs' //optional
      * album_artist = (integer) 0,1, if true filter for album artists only //optional
-     * offset       = (integer) //optional
-     * limit        = (integer) //optional
+     * offset = (integer) //optional
+     * limit = (integer) //optional
      *
      * @param array{
      *     filter?: string,
@@ -71,7 +71,7 @@ final class Artists5Method
      */
     public static function artists(array $input, User $user): bool
     {
-        $album_artist = (array_key_exists('album_artist', $input) && (int)$input['album_artist'] == 1);
+        $album_artist = (array_key_exists('album_artist', $input) && (int) $input['album_artist'] == 1);
         $browse       = Api::getBrowse($user);
         if ($album_artist) {
             $browse->set_type('album_artist');
@@ -80,7 +80,7 @@ final class Artists5Method
         }
         $browse->set_sort('name', 'ASC', false);
 
-        $method = (array_key_exists('exact', $input) && (int)$input['exact'] == 1) ? 'exact_match' : 'alpha_match';
+        $method = (array_key_exists('exact', $input) && (int) $input['exact'] == 1) ? 'exact_match' : 'alpha_match';
         $browse->set_api_filter($method, $input['filter'] ?? '');
         $browse->set_api_filter('add', $input['add'] ?? '');
         $browse->set_api_filter('update', $input['update'] ?? '');
@@ -96,7 +96,7 @@ final class Artists5Method
         $include = [];
         if (array_key_exists('include', $input)) {
             if (!is_array($input['include'])) {
-                $input['include'] = explode(',', html_entity_decode((string)($input['include'])));
+                $input['include'] = explode(',', html_entity_decode((string) ($input['include'])));
             }
             foreach ($input['include'] as $item) {
                 if ($item === 'songs' || $item == '1') {

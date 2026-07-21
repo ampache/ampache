@@ -1,6 +1,6 @@
 <?php
 
-declare(strict_types=0);
+declare(strict_types=1);
 
 /**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
@@ -50,7 +50,7 @@ final class PlaylistDelete3Method
     {
         unset($user);
         ob_end_clean();
-        $playlist = new Playlist((int)$input['filter']);
+        $playlist = new Playlist((int) $input['filter']);
         if (!$playlist->has_access()) {
             echo Xml3_Data::error(401, T_('Access denied to this playlist.'));
         } else {

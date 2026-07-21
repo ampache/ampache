@@ -1,6 +1,6 @@
 <?php
 
-declare(strict_types=0);
+declare(strict_types=1);
 
 /**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
@@ -58,12 +58,12 @@ final class FriendsTimeline5Method
     public static function friends_timeline(array $input, User $user): bool
     {
         if (!AmpConfig::get('sociable')) {
-            Api5::error(T_('Enable: sociable'), ErrorCodeEnum::ACCESS_DENIED, self::ACTION, 'system', $input['api_format']);
+            Api5::error(ErrorCodeEnum::ACCESS_DENIED, T_('Enable: sociable'), self::ACTION, 'system', $input['api_format']);
 
             return false;
         }
-        $limit = (int)($input['limit'] ?? 0);
-        $since = (int)($input['since'] ?? 0);
+        $limit = (int) ($input['limit'] ?? 0);
+        $since = (int) ($input['since'] ?? 0);
         $user  = $user->getId();
 
         $results = self::getUseractivityRepository()->getFriendsActivities(
@@ -71,12 +71,7 @@ final class FriendsTimeline5Method
             $limit,
             $since
         );
-        if (empty($results)) {
-            Api5::empty('activity', $input['api_format']);
-
-            return false;
-        }
-
+        // no empty-envelope short circuit: an empty result renders as `activity: []`, matching `timeline`
         ob_end_clean();
         switch ($input['api_format']) {
             case 'json':

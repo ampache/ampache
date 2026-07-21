@@ -1,6 +1,6 @@
 <?php
 
-declare(strict_types=0);
+declare(strict_types=1);
 
 /**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
@@ -54,7 +54,7 @@ final class ArtistSongs3Method
      */
     public static function artist_songs(array $input, User $user): void
     {
-        $artist  = new Artist((int)$input['filter']);
+        $artist  = new Artist((int) $input['filter']);
         $results = self::getSongRepository()->getByArtist($artist->id);
 
         // Set the offset

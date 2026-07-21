@@ -1,6 +1,6 @@
 <?php
 
-declare(strict_types=0);
+declare(strict_types=1);
 
 /**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
@@ -57,14 +57,14 @@ final class Search5Method
      * https://ampache.org/api/api-xml-methods
      * https://ampache.org/api/api-json-methods
      *
-     * operator        = (string) 'and', 'or' (whether to match one rule or all)
-     * rule_1          = (string)
+     * operator = (string) 'and', 'or' (whether to match one rule or all)
+     * rule_1 = (string)
      * rule_1_operator = (integer) 0|1|2|3|4|5|6
-     * rule_1_input    = (mixed) The string, date, integer you are searching for
-     * type            = (string) 'song', 'album', 'song_artist', 'album_artist', 'artist', 'label', 'playlist', 'podcast', 'podcast_episode', 'genre', 'user', 'video' (song by default) //optional
-     * random          = (boolean)  0, 1 (random order of results; default to 0) //optional
-     * offset          = (integer) //optional
-     * limit           = (integer) //optional
+     * rule_1_input = (mixed) The string, date, integer you are searching for
+     * type = (string) 'song', 'album', 'song_artist', 'album_artist', 'artist', 'label', 'playlist', 'podcast', 'podcast_episode', 'genre', 'user', 'video' (song by default) //optional
+     * random = (boolean)  0, 1 (random order of results; default to 0) //optional
+     * offset = (integer) //optional
+     * limit = (integer) //optional
      *
      * @param array<string, mixed> $input
      */
@@ -76,13 +76,13 @@ final class Search5Method
 
         $type = (isset($input['type'])) ? (string) $input['type'] : 'song';
         if (!AmpConfig::get('allow_video') && $type == 'video') {
-            Api5::error(T_('Enable: video'), ErrorCodeEnum::ACCESS_DENIED, self::ACTION, 'system', $input['api_format']);
+            Api5::error(ErrorCodeEnum::ACCESS_DENIED, T_('Enable: video'), self::ACTION, 'system', $input['api_format']);
 
             return false;
         }
         // confirm the correct data
         if (!in_array(strtolower($type), Search::VALID_TYPES)) {
-            Api5::error(sprintf(T_('Bad Request: %s'), $type), ErrorCodeEnum::BAD_REQUEST, self::ACTION, 'type', $input['api_format']);
+            Api5::error(ErrorCodeEnum::BAD_REQUEST, sprintf(T_('Bad Request: %s'), $type), self::ACTION, 'type', $input['api_format']);
 
             return false;
         }

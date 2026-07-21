@@ -41,13 +41,10 @@ return [
     ApiOutputFactoryInterface::class => autowire(ApiOutputFactory::class),
     ApiHandlerInterface::class => autowire(ApiHandler::class),
     Method\Api6\Albums6Method::class => autowire(),
-    Method\Api8\Albums8Method::class => autowire(),
     Method\Api6\Album6Method::class => autowire(),
-    Method\Api8\Album8Method::class => autowire(),
     Edit\EditObjectAction::class => autowire(),
     Edit\RefreshUpdatedAction::class => autowire(),
     Edit\ShowEditObjectAction::class => autowire(),
     Edit\ShowEditPlaylistAction::class => autowire(),
     Method\Api6\PodcastEpisodes6Method::class => autowire(),
-    Method\Api8\PodcastEpisodes8Method::class => autowire(),
 ];

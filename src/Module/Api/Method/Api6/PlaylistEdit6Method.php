@@ -1,6 +1,6 @@
 <?php
 
-declare(strict_types=0);
+declare(strict_types=1);
 
 /**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
@@ -49,12 +49,12 @@ final class PlaylistEdit6Method
      * Changed name and type to optional and the playlist id is mandatory
      *
      * filter = (string) UID of playlist
-     * name   = (string) 'new playlist name' //optional
-     * type   = (string) 'public', 'private' //optional
-     * owner  = (integer) Change playlist owner to the user id (-1 = System playlist) //optional
-     * items  = (string) comma-separated song_id's (replace existing items with a new object_id) //optional
+     * name = (string) 'new playlist name' //optional
+     * type = (string) 'public', 'private' //optional
+     * owner = (integer) Change playlist owner to the user id (-1 = System playlist) //optional
+     * items = (string) comma-separated song_id's (replace existing items with a new object_id) //optional
      * tracks = (string) comma-separated playlisttrack numbers matched to items in order //optional
-     * sort   = (integer) 0,1 sort the playlist by 'Artist, Album, Song' //optional
+     * sort = (integer) 0,1 sort the playlist by 'Artist, Album, Song' //optional
      *
      * @param array{
      *     filter: string,
@@ -73,9 +73,9 @@ final class PlaylistEdit6Method
         if (!Api6::check_parameter($input, ['filter'], self::ACTION)) {
             return false;
         }
-        $items = explode(',', html_entity_decode((string)($input['items'] ?? '')));
-        $order = explode(',', html_entity_decode((string)($input['tracks'] ?? '')));
-        $sort  = (int)($input['sort'] ?? 0);
+        $items = explode(',', html_entity_decode((string) ($input['items'] ?? '')));
+        $order = explode(',', html_entity_decode((string) ($input['tracks'] ?? '')));
+        $sort  = (int) ($input['sort'] ?? 0);
         // calculate whether we are editing the track order too
         $playlist_edit = [];
         if (count($items) == count($order)) {
@@ -83,12 +83,12 @@ final class PlaylistEdit6Method
         }
 
         ob_end_clean();
-        $object_id = (int)$input['filter'];
+        $object_id = (int) $input['filter'];
         $playlist  = new Playlist($object_id);
 
         if ($playlist->isNew()) {
             /* HINT: Requested object string/id/type ("album", "myusername", "some song title", 1298376) */
-            Api6::error(sprintf('Not Found: %s', $object_id), ErrorCodeEnum::NOT_FOUND, self::ACTION, 'filter', $input['api_format']);
+            Api6::error(ErrorCodeEnum::NOT_FOUND, sprintf('Not Found: %s', $object_id), self::ACTION, 'filter', $input['api_format']);
 
             return false;
         }
@@ -98,8 +98,8 @@ final class PlaylistEdit6Method
 
         $change_made = false;
         if (
-            $has_collab &&
-            !empty($playlist_edit)
+            $has_collab
+            && !empty($playlist_edit)
         ) {
             foreach ($playlist_edit as $track => $song) {
                 if ($song > 0 && $track > 0) {
@@ -118,7 +118,7 @@ final class PlaylistEdit6Method
                 return true;
             }
             // you didn't have edit access
-            Api6::error('Require: 100', ErrorCodeEnum::FAILED_ACCESS_CHECK, self::ACTION, 'account', $input['api_format']);
+            Api6::error(ErrorCodeEnum::FAILED_ACCESS_CHECK, 'Require: 100', self::ACTION, 'account', $input['api_format']);
 
             return false;
         }
@@ -126,21 +126,21 @@ final class PlaylistEdit6Method
         $name  = $input['name'] ?? $playlist->name;
         $type  = $input['type'] ?? $playlist->type;
         $owner = $input['owner'] ?? $playlist->user;
-        if ((int)$owner === 0) {
-            $lookup = User::get_from_username((string)$owner);
+        if ((int) $owner === 0) {
+            $lookup = User::get_from_username((string) $owner);
             $owner  = $lookup->id ?? $playlist->user;
         }
 
         // update name/type
         if (
-            $name !== $playlist->name ||
-            $type !== $playlist->type ||
-            $owner !== $playlist->user
+            $name !== $playlist->name
+            || $type !== $playlist->type
+            || $owner !== $playlist->user
         ) {
             $array = [
                 "name" => $name,
                 "playlist_type" => $type,
-                "playlist_user" => (int)$owner,
+                "playlist_user" => (int) $owner,
             ];
             $playlist->update($array);
             $change_made = true;
@@ -153,7 +153,7 @@ final class PlaylistEdit6Method
 
         // if you didn't make any changes; tell me
         if (!$change_made) {
-            Api6::error('Bad Request', ErrorCodeEnum::BAD_REQUEST, self::ACTION, 'input', $input['api_format']);
+            Api6::error(ErrorCodeEnum::BAD_REQUEST, 'Bad Request', self::ACTION, 'input', $input['api_format']);
 
             return false;
         }

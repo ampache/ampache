@@ -1,6 +1,6 @@
 <?php
 
-declare(strict_types=0);
+declare(strict_types=1);
 
 /**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
@@ -25,9 +25,9 @@ declare(strict_types=0);
 
 namespace Ampache\Module\Api\Method\Api6;
 
+use Ampache\Module\Api\Api;
 use Ampache\Module\Api\Api6;
 use Ampache\Module\Api\Exception\ErrorCodeEnum;
-use Ampache\Module\Api\Xml6_Data;
 use Ampache\Module\Authorization\AccessLevelEnum;
 use Ampache\Module\Authorization\AccessTypeEnum;
 use Ampache\Repository\Model\Preference;
@@ -49,9 +49,9 @@ final class PreferenceEdit6Method
      *
      * Edit a preference value and apply to all users if allowed
      *
-     * filter  = (string) Preference name e.g ('notify_email', 'ajax_load')
-     * value   = (string|integer) Preference value
-     * all     = (integer) 0,1 if true apply to all users //optional
+     * filter = (string) Preference name e.g ('notify_email', 'ajax_load')
+     * value = (string|integer) Preference value
+     * all = (integer) 0,1 if true apply to all users //optional
      * default = (integer) 0,1 if true set as system default (New and public users) //optional
      *
      * @param array{
@@ -69,12 +69,12 @@ final class PreferenceEdit6Method
             return false;
         }
 
-        $all     = (array_key_exists('all', $input) && (int)$input['all'] == 1);
-        $default = (array_key_exists('default', $input) && (int)$input['default'] == 1);
+        $all     = (array_key_exists('all', $input) && (int) $input['all'] == 1);
+        $default = (array_key_exists('default', $input) && (int) $input['default'] == 1);
         // don't apply to all or set default when you aren't an admin
         if (
-            ($all || $default) &&
-            !Api6::check_access(AccessTypeEnum::INTERFACE, AccessLevelEnum::ADMIN, $user->id, self::ACTION, $input['api_format'])
+            ($all || $default)
+            && !Api6::check_access(AccessTypeEnum::INTERFACE, AccessLevelEnum::ADMIN, $user->id, self::ACTION, $input['api_format'])
         ) {
             return false;
         }
@@ -92,13 +92,13 @@ final class PreferenceEdit6Method
 
         if (empty($preference)) {
             /* HINT: Requested object string/id/type ("album", "myusername", "some song title", 1298376) */
-            Api6::error(sprintf('Not Found: %s', $pref_name), ErrorCodeEnum::NOT_FOUND, self::ACTION, 'filter', $input['api_format']);
+            Api6::error(ErrorCodeEnum::NOT_FOUND, sprintf('Not Found: %s', $pref_name), self::ACTION, 'filter', $input['api_format']);
 
             return false;
         }
         $value = $input['value'];
         if (!Preference::update($pref_name, $user->id, $value, $all)) {
-            Api6::error('Bad Request', ErrorCodeEnum::BAD_REQUEST, self::ACTION, 'system', $input['api_format']);
+            Api6::error(ErrorCodeEnum::BAD_REQUEST, 'Bad Request', self::ACTION, 'system', $input['api_format']);
 
             return false;
         }
@@ -108,7 +108,7 @@ final class PreferenceEdit6Method
                 echo json_encode($results[0], JSON_PRETTY_PRINT);
                 break;
             default:
-                echo Xml6_Data::object_array($results, 'preference');
+                echo Api::object_array($results, 'preference');
         }
 
         return true;

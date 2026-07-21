@@ -1,6 +1,6 @@
 <?php
 
-declare(strict_types=0);
+declare(strict_types=1);
 
 /**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
@@ -46,17 +46,17 @@ final class Playlists6Method
      *
      * This returns playlists based on the specified filter
      *
-     * filter      = (string) Alpha-numeric search term (match all if missing) //optional
+     * filter = (string) Alpha-numeric search term (match all if missing) //optional
      * hide_search = (integer) 0,1, if true do not include searches/smartlists in the result //optional
-     * show_dupes  = (integer) 0,1, if true ignore 'api_hide_dupe_searches' setting //optional
-     * include     = (integer) 0,1, if true include playlist contents //optional
-     * exact       = (integer) 0,1, if true filter is exact rather than fuzzy //optional
-     * add         = $browse->set_api_filter(date) //optional
-     * update      = $browse->set_api_filter(date) //optional
-     * offset      = (integer) //optional
-     * limit       = (integer) //optional
-     * cond        = (string) Apply additional filters to the browse using ';' separated comma string pairs (e.g. 'filter1,value1;filter2,value2') //optional
-     * sort        = (string) sort name or comma separated key pair. Order default 'ASC' (e.g. 'name,ASC' and 'name' are the same) //optional
+     * show_dupes = (integer) 0,1, if true ignore 'api_hide_dupe_searches' setting //optional
+     * include = (integer) 0,1, if true include playlist contents //optional
+     * exact = (integer) 0,1, if true filter is exact rather than fuzzy //optional
+     * add = $browse->set_api_filter(date) //optional
+     * update = $browse->set_api_filter(date) //optional
+     * offset = (integer) //optional
+     * limit = (integer) //optional
+     * cond = (string) Apply additional filters to the browse using ';' separated comma string pairs (e.g. 'filter1,value1;filter2,value2') //optional
+     * sort = (string) sort name or comma separated key pair. Order default 'ASC' (e.g. 'name,ASC' and 'name' are the same) //optional
      *
      * @param array{
      *     filter?: string,
@@ -76,11 +76,11 @@ final class Playlists6Method
      */
     public static function playlists(array $input, User $user): bool
     {
-        $include    = (isset($input['include']) && ((int)$input['include'] === 1 || $input['include'] === 'songs'));
-        $hide       = (array_key_exists('hide_search', $input) && (int)$input['hide_search'] == 1) || AmpConfig::get('hide_search', false);
+        $include    = (isset($input['include']) && ((int) $input['include'] === 1 || $input['include'] === 'songs'));
+        $hide       = (array_key_exists('hide_search', $input) && (int) $input['hide_search'] == 1) || AmpConfig::get('hide_search', false);
         $show_dupes = (array_key_exists('show_dupes', $input))
             ? make_bool($input['show_dupes'])
-            : (bool)Preference::get_by_user($user->getId(), 'api_hide_dupe_searches') === false;
+            : (bool) Preference::get_by_user($user->getId(), 'api_hide_dupe_searches') === false;
 
         $browse = Api6::getBrowse($user);
         if ($hide === false) {
@@ -90,25 +90,25 @@ final class Playlists6Method
         }
 
         // hide playlists starting with the user string (if enabled)
-        $hide_string = str_replace('%', '\%', str_replace('_', '\_', (string)Preference::get_by_user($user->id, 'api_hidden_playlists')));
-        if (!empty($hide_string)) {
+        $hide_string = str_replace('%', '\%', str_replace('_', '\_', (string) Preference::get_by_user($user->id, 'api_hidden_playlists')));
+        if ($hide_string !== '') {
             $browse->set_filter('not_starts_with', $hide_string);
         }
 
-        $browse->set_sort_order(html_entity_decode((string)($input['sort'] ?? '')), ['name', 'ASC']);
+        $browse->set_sort_order(html_entity_decode((string) ($input['sort'] ?? '')), ['name', 'ASC']);
 
-        $method = (array_key_exists('exact', $input) && (int)$input['exact'] == 1) ? 'exact_match' : 'alpha_match';
+        $method = (array_key_exists('exact', $input) && (int) $input['exact'] == 1) ? 'exact_match' : 'alpha_match';
         $browse->set_api_filter($method, $input['filter'] ?? '');
         $browse->set_filter('playlist_open', $user->getId());
 
         if (
-            $hide === false &&
-            $show_dupes === false
+            $hide === false
+            && $show_dupes === false
         ) {
             $browse->set_filter('hide_dupe_smartlist', 1);
         }
 
-        $browse->set_conditions(html_entity_decode((string)($input['cond'] ?? '')));
+        $browse->set_conditions(html_entity_decode((string) ($input['cond'] ?? '')));
 
         $results = $browse->get_objects();
         if (empty($results)) {
@@ -120,15 +120,13 @@ final class Playlists6Method
         ob_end_clean();
         switch ($input['api_format']) {
             case 'json':
-                Json6_Data::set_offset((int)($input['offset'] ?? 0));
+                Json6_Data::set_offset((int) ($input['offset'] ?? 0));
                 Json6_Data::set_limit($input['limit'] ?? 0);
-                Json6_Data::set_count($browse->get_total());
                 echo Json6_Data::playlists($results, $user, $input['auth'], $include);
                 break;
             default:
-                Xml6_Data::set_offset((int)($input['offset'] ?? 0));
+                Xml6_Data::set_offset((int) ($input['offset'] ?? 0));
                 Xml6_Data::set_limit($input['limit'] ?? 0);
-                Xml6_Data::set_count($browse->get_total());
                 echo Xml6_Data::playlists($results, $user, $input['auth'], $include);
         }
 

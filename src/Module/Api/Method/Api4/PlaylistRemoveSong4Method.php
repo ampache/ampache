@@ -1,6 +1,6 @@
 <?php
 
-declare(strict_types=0);
+declare(strict_types=1);
 
 /**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
@@ -47,9 +47,9 @@ final class PlaylistRemoveSong4Method
      * 420000+: added clear to allow you to clear a playlist without getting all the tracks.
      *
      * filter = (string) UID of playlist
-     * song   = (string) UID of song to remove from the playlist //optional
-     * track  = (string) track number to remove from the playlist //optional
-     * clear  = (integer) 0,1 Clear the whole playlist //optional, default = 0
+     * song = (string) UID of song to remove from the playlist //optional
+     * track = (string) track number to remove from the playlist //optional
+     * clear = (integer) 0,1 Clear the whole playlist //optional, default = 0
      *
      * @param array{
      *     filter: string,
@@ -66,14 +66,14 @@ final class PlaylistRemoveSong4Method
             return false;
         }
         ob_end_clean();
-        $playlist = new Playlist((int)$input['filter']);
+        $playlist = new Playlist((int) $input['filter']);
         if (!$playlist->has_collaborate($user)) {
             Api4::message('error', T_('Access denied to this playlist'), '401', $input['api_format']);
 
             return false;
         }
 
-        if (array_key_exists('clear', $input) && (int)$input['clear'] === 1) {
+        if (array_key_exists('clear', $input) && (int) $input['clear'] === 1) {
             $playlist->delete_all();
             Api4::message('success', 'all songs removed from playlist', null, $input['api_format']);
         } elseif (array_key_exists('song', $input)) {

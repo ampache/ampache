@@ -1,6 +1,6 @@
 <?php
 
-declare(strict_types=0);
+declare(strict_types=1);
 
 /**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
@@ -59,19 +59,19 @@ final class Smartlist6Method
         if (!Api6::check_parameter($input, ['filter'], self::ACTION)) {
             return false;
         }
-        $object_id = (string)$input['filter'];
+        $object_id = (string) $input['filter'];
         $smartlist = new Search((int) str_replace('smart_', '', $object_id), 'song', $user);
         if ($smartlist->isNew()) {
             /* HINT: Requested object string/id/type ("album", "myusername", "some song title", 1298376) */
-            Api6::error(sprintf('Not Found: %s', $object_id), ErrorCodeEnum::NOT_FOUND, self::ACTION, 'filter', $input['api_format']);
+            Api6::error(ErrorCodeEnum::NOT_FOUND, sprintf('Not Found: %s', $object_id), self::ACTION, 'filter', $input['api_format']);
 
             return false;
         }
         if (
-            $smartlist->type !== 'public' &&
-            !$smartlist->has_collaborate($user)
+            $smartlist->type !== 'public'
+            && !$smartlist->has_collaborate($user)
         ) {
-            Api6::error('Require: 100', ErrorCodeEnum::FAILED_ACCESS_CHECK, self::ACTION, 'account', $input['api_format']);
+            Api6::error(ErrorCodeEnum::FAILED_ACCESS_CHECK, 'Require: 100', self::ACTION, 'account', $input['api_format']);
 
             return false;
         }

@@ -1,6 +1,6 @@
 <?php
 
-declare(strict_types=0);
+declare(strict_types=1);
 
 /**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
@@ -47,7 +47,7 @@ final class DeletedPodcastEpisodes5Method
      * This returns the episodes for a podcast that have been deleted
      *
      * offset = (integer) //optional
-     * limit  = (integer) //optional
+     * limit = (integer) //optional
      *
      * @param array{
      *     limit?: string,
@@ -60,7 +60,7 @@ final class DeletedPodcastEpisodes5Method
     {
         unset($user);
         if (!AmpConfig::get('podcast')) {
-            Api5::error(T_('Enable: podcast'), ErrorCodeEnum::ACCESS_DENIED, self::ACTION, 'system', $input['api_format']);
+            Api5::error(ErrorCodeEnum::ACCESS_DENIED, T_('Enable: podcast'), self::ACTION, 'system', $input['api_format']);
 
             return false;
         }

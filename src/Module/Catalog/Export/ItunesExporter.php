@@ -69,7 +69,7 @@ final class ItunesExporter implements CatalogExporterInterface
             $xml['key']                  = $songId;
             $xml['dict']['Track ID']     = $songId;
             $xml['dict']['Name']         = $song->title;
-            $xml['dict']['Artist']       = $song->get_artist_fullname();
+            $xml['dict']['Artist']       = $song->get_parent_fullname();
             $xml['dict']['Album']        = $song->get_album_fullname();
             $xml['dict']['Total Time']   = $song->time * 1000; // iTunes uses milliseconds
             $xml['dict']['Track Number'] = (int) $song->track;

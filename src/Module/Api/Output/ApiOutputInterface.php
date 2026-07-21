@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
@@ -27,58 +29,18 @@ use Ampache\Repository\Model\User;
 
 interface ApiOutputInterface
 {
-    public function setOffset6(int|string $offset): void;
-
-    public function setOffset(int|string $offset): void;
-
-    public function setLimit6(int|string $limit): void;
-
-    public function setLimit(int|string $limit): void;
-
-    public function setCount6(int|string $count): void;
-
-    public function setCount(int|string $count): void;
-
     /**
-     * @param array<int|string> $result
+     * @param array<int|string> $albums
+     * @param string[] $include
+     *
      */
-    public function podcastEpisodes6(
-        array $result,
+    public function albums6(
+        array $albums,
+        array $include,
         User $user,
         string $auth,
-    ): string;
-
-    /**
-     * @param array<int|string> $result
-     */
-    public function podcastEpisodes(
-        array $result,
-        User $user,
-        string $auth,
-    ): string;
-
-    /**
-     * Generate an empty api result
-     */
-    public function writeEmpty6(
-        string $emptyType,
-    ): string;
-
-    /**
-     * Generate an empty api result
-     */
-    public function writeEmpty(
-        string $emptyType,
-    ): string;
-
-    /**
-     * This generates an error message
-     */
-    public function error(
-        int $code,
-        string $message,
-        string $action,
-        string $type,
+        bool $encode = true,
+        bool $asObject = true,
     ): string;
 
     /**
@@ -118,32 +80,19 @@ interface ApiOutputInterface
     ): string;
 
     /**
-     * @param array<int|string> $albums
-     * @param string[] $include
-     *
+     * @param array<int|string> $result
      */
-    public function albums6(
-        array $albums,
-        array $include,
+    public function podcastEpisodes6(
+        array $result,
         User $user,
         string $auth,
-        bool $encode = true,
-        bool $asObject = true,
     ): string;
 
-    /**
-     * @param array<int|string> $albums
-     * @param string[] $include
-     *
-     */
-    public function albums(
-        array $albums,
-        array $include,
-        User $user,
-        string $auth,
-        bool $encode = true,
-        bool $asObject = true,
-    ): string;
+    public function setCount6(int|string $count): void;
+
+    public function setLimit6(int|string $limit): void;
+
+    public function setOffset6(int|string $offset): void;
 
     /**
      * This generates a standard JSON Success message
@@ -155,11 +104,9 @@ interface ApiOutputInterface
     public function success6(string $string, array $return_data = []): string;
 
     /**
-     * This generates a standard JSON Success message
-     * nothing fancy here...
-     *
-     * @param string $string success message
-     * @param array<string, string> $return_data
+     * Generate an empty api result
      */
-    public function success(string $string, array $return_data = []): string;
+    public function writeEmpty6(
+        string $emptyType,
+    ): string;
 }

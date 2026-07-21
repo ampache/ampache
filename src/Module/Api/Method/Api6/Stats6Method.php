@@ -1,6 +1,6 @@
 <?php
 
-declare(strict_types=0);
+declare(strict_types=1);
 
 /**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
@@ -57,14 +57,14 @@ final class Stats6Method
      * Get some items based on some simple search types and filters. (Random by default)
      * This method HAD partial backwards compatibility with older api versions but it has now been removed
      *
-     * type     = (string)  'song', 'album', 'artist', 'video', 'playlist', 'podcast', 'podcast_episode'
-     * filter   = (string)  'newest', 'highest', 'frequent', 'recent', 'forgotten', 'flagged', 'random' (Default: random) //optional
-     * user_id  = (string) //optional
+     * type = (string)  'song', 'album', 'artist', 'video', 'playlist', 'podcast', 'podcast_episode'
+     * filter = (string)  'newest', 'highest', 'frequent', 'recent', 'forgotten', 'flagged', 'random' (Default: random) //optional
+     * user_id = (string) //optional
      * username = (string)  //optional
-     * offset   = (integer) //optional
-     * limit    = (integer) Default: 10 (popular_threshold) //optional
-     * cond     = (string) Apply additional filters to the browse using ';' separated comma string pairs (e.g. 'filter1,value1;filter2,value2') //optional
-     * sort     = (string) sort name or comma separated key pair. Order default 'ASC' (e.g. 'name,ASC' and 'name' are the same) //optional
+     * offset = (integer) //optional
+     * limit = (integer) Default: 10 (popular_threshold) //optional
+     * cond = (string) Apply additional filters to the browse using ';' separated comma string pairs (e.g. 'filter1,value1;filter2,value2') //optional
+     * sort = (string) sort name or comma separated key pair. Order default 'ASC' (e.g. 'name,ASC' and 'name' are the same) //optional
      *
      * @param array{
      *     type: string,
@@ -88,16 +88,16 @@ final class Stats6Method
         $offset = (int) ($input['offset'] ?? 0);
         $limit  = (int) ($input['limit'] ?? 0);
         if ($limit === 0) {
-            $limit = (int)AmpConfig::get('popular_threshold', 10);
+            $limit = (int) AmpConfig::get('popular_threshold', 10);
         }
         // do you allow video?
         if (!AmpConfig::get('allow_video') && $type == 'video') {
-            Api6::error('Enable: video', ErrorCodeEnum::ACCESS_DENIED, self::ACTION, 'system', $input['api_format']);
+            Api6::error(ErrorCodeEnum::ACCESS_DENIED, 'Enable: video', self::ACTION, 'system', $input['api_format']);
 
             return false;
         }
         if (!AmpConfig::get('podcast') && ($type == 'podcast' || $type == 'podcast_episode')) {
-            Api6::error('Enable: podcast', ErrorCodeEnum::ACCESS_DENIED, self::ACTION, 'system', $input['api_format']);
+            Api6::error(ErrorCodeEnum::ACCESS_DENIED, 'Enable: podcast', self::ACTION, 'system', $input['api_format']);
 
             return false;
         }
@@ -105,7 +105,7 @@ final class Stats6Method
         // confirm the correct data
         if (!in_array(strtolower($type), ['song', 'album', 'artist', 'video', 'playlist', 'podcast', 'podcast_episode'])) {
             /* HINT: Requested object string/id/type ("album", "myusername", "some song title", 1298376) */
-            Api6::error(sprintf('Bad Request: %s', $type), ErrorCodeEnum::BAD_REQUEST, self::ACTION, 'type', $input['api_format']);
+            Api6::error(ErrorCodeEnum::BAD_REQUEST, sprintf('Bad Request: %s', $type), self::ACTION, 'type', $input['api_format']);
 
             return false;
         }
@@ -116,16 +116,16 @@ final class Stats6Method
             $user    = User::get_from_username($input['username']);
             $user_id = $user->id;
         } elseif (array_key_exists('user_id', $input)) {
-            $userTwo = new User((int)$input['user_id']);
+            $userTwo = new User((int) $input['user_id']);
             if (!$userTwo->isNew()) {
-                $user_id = (int)$input['user_id'];
+                $user_id = (int) $input['user_id'];
                 $user    = new User($user_id);
             }
         }
 
         if ($user->isNew()) {
             /* HINT: Requested object string/id/type ("album", "myusername", "some song title", 1298376) */
-            Api6::error(sprintf('Bad Request: %s', 'user'), ErrorCodeEnum::BAD_REQUEST, self::ACTION, 'type', $input['api_format']);
+            Api6::error(ErrorCodeEnum::BAD_REQUEST, sprintf('Bad Request: %s', 'user'), self::ACTION, 'type', $input['api_format']);
 
             return false;
         }
@@ -144,7 +144,7 @@ final class Stats6Method
                 $limit   = 0;
                 break;
             case 'frequent':
-                $threshold = (int)AmpConfig::get('stats_threshold', 7);
+                $threshold = (int) AmpConfig::get('stats_threshold', 7);
                 $results   = Stats::get_top($type, $limit, $threshold, $offset);
                 $offset    = 0;
                 $limit     = 0;
@@ -187,7 +187,7 @@ final class Stats6Method
                         $browse->set_sort('rand', null, false);
                         $browse->set_filter('playlist_open', $user->getId());
 
-                        $hide_string = str_replace('%', '\%', str_replace('_', '\_', (string)Preference::get_by_user($user->getId(), 'api_hidden_playlists')));
+                        $hide_string = str_replace('%', '\%', str_replace('_', '\_', (string) Preference::get_by_user($user->getId(), 'api_hidden_playlists')));
                         if (!empty($hide_string)) {
                             $browse->set_filter('not_starts_with', $hide_string);
                         }
@@ -201,7 +201,7 @@ final class Stats6Method
                         $browse->set_type($type);
                         $browse->set_sort('rand', null, false);
 
-                        $browse->set_conditions(html_entity_decode((string)($input['cond'] ?? '')));
+                        $browse->set_conditions(html_entity_decode((string) ($input['cond'] ?? '')));
 
                         $results = $browse->get_objects();
                 }
@@ -218,11 +218,11 @@ final class Stats6Method
             $outputBrowse->set_type($type);
             $outputBrowse->set_filter('id', $results);
             if (isset($input['sort'])) {
-                $outputBrowse->set_sort_order(html_entity_decode((string)$input['sort']), ['', '']);
+                $outputBrowse->set_sort_order(html_entity_decode((string) $input['sort']), ['', '']);
             }
 
             if (isset($input['cond'])) {
-                $outputBrowse->set_conditions(html_entity_decode((string)$input['cond']));
+                $outputBrowse->set_conditions(html_entity_decode((string) $input['cond']));
             }
 
             $results = $outputBrowse->get_objects();

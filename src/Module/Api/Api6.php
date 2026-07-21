@@ -1,6 +1,6 @@
 <?php
 
-declare(strict_types=0);
+declare(strict_types=1);
 
 /**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
@@ -68,12 +68,14 @@ class Api6
         Method\Api6\Bookmarks6Method::ACTION => Method\Api6\Bookmarks6Method::class,
         Method\Api6\Browse6Method::ACTION => Method\Api6\Browse6Method::class,
         Method\Api6\CatalogAction6Method::ACTION => Method\Api6\CatalogAction6Method::class,
+        Method\Api6\CatalogAction6Method::REST_ACTION => Method\Api6\CatalogAction6Method::class,
         Method\Api6\CatalogAdd6Method::ACTION => Method\Api6\CatalogAdd6Method::class,
         Method\Api6\CatalogCreate6Method::ACTION => Method\Api6\CatalogCreate6Method::class,
         Method\Api6\CatalogCreate6Method::REST_ACTION => Method\Api6\CatalogCreate6Method::class,
         Method\Api6\CatalogDelete6Method::ACTION => Method\Api6\CatalogDelete6Method::class,
         Method\Api6\CatalogDelete6Method::REST_ACTION => Method\Api6\CatalogDelete6Method::class,
         Method\Api6\CatalogFile6Method::ACTION => Method\Api6\CatalogFile6Method::class,
+        Method\Api6\CatalogFile6Method::REST_ACTION => Method\Api6\CatalogFile6Method::class,
         Method\Api6\CatalogFolder6Method::ACTION => Method\Api6\CatalogFolder6Method::class,
         Method\Api6\Catalog6Method::ACTION => Method\Api6\Catalog6Method::class,
         Method\Api6\Catalogs6Method::ACTION => Method\Api6\Catalogs6Method::class,
@@ -158,13 +160,16 @@ class Api6
         Method\Api6\PreferenceEdit6Method::ACTION => Method\Api6\PreferenceEdit6Method::class,
         Method\Api6\PreferenceEdit6Method::REST_ACTION => Method\Api6\PreferenceEdit6Method::class,
         Method\Api6\Player6Method::ACTION => Method\Api6\Player6Method::class,
+        Method\Api6\Player6Method::REST_ACTION => Method\Api6\Player6Method::class,
         Method\Api6\Rate6Method::ACTION => Method\Api6\Rate6Method::class,
         Method\Api6\RecordPlay6Method::ACTION => Method\Api6\RecordPlay6Method::class,
         Method\Api6\Register6Method::ACTION => Method\Api6\Register6Method::class,
         Method\Api6\Scrobble6Method::ACTION => Method\Api6\Scrobble6Method::class,
         Method\Api6\Search6Method::ACTION => Method\Api6\Search6Method::class,
         Method\Api6\SearchGroup6Method::ACTION => Method\Api6\SearchGroup6Method::class,
+        Method\Api6\SearchGroup6Method::REST_ACTION => Method\Api6\SearchGroup6Method::class,
         Method\Api6\SearchRules6Method::ACTION => Method\Api6\SearchRules6Method::class,
+        Method\Api6\SearchRules6Method::REST_ACTION => Method\Api6\SearchRules6Method::class,
         Method\Api6\SearchSongs6Method::ACTION => Method\Api6\SearchSongs6Method::class,
         Method\Api6\ShareCreate6Method::ACTION => Method\Api6\ShareCreate6Method::class,
         Method\Api6\ShareCreate6Method::REST_ACTION => Method\Api6\ShareCreate6Method::class,
@@ -196,6 +201,7 @@ class Api6
         Method\Api6\UpdateArt6Method::ACTION => Method\Api6\UpdateArt6Method::class,
         Method\Api6\UpdateFromTags6Method::ACTION => Method\Api6\UpdateFromTags6Method::class,
         Method\Api6\UpdatePodcast6Method::ACTION => Method\Api6\UpdatePodcast6Method::class,
+        Method\Api6\UpdatePodcast6Method::REST_ACTION => Method\Api6\UpdatePodcast6Method::class,
         Method\Api6\UrlToSong6Method::ACTION => Method\Api6\UrlToSong6Method::class,
         Method\Api6\UserCreate6Method::ACTION => Method\Api6\UserCreate6Method::class,
         Method\Api6\UserCreate6Method::REST_ACTION => Method\Api6\UserCreate6Method::class,
@@ -207,6 +213,7 @@ class Api6
         Method\Api6\UserPlaylists6Method::ACTION => Method\Api6\UserPlaylists6Method::class,
         Method\Api6\UserPreference6Method::ACTION => Method\Api6\UserPreference6Method::class,
         Method\Api6\UserPreferences6Method::ACTION => Method\Api6\UserPreferences6Method::class,
+        Method\Api6\UserPreferences6Method::REST_ACTION => Method\Api6\UserPreferences6Method::class,
         Method\Api6\UserSmartlists6Method::ACTION => Method\Api6\UserSmartlists6Method::class,
         Method\Api6\Users6Method::ACTION => Method\Api6\Users6Method::class,
         Method\Api6\UserUpdate66Method::ACTION => Method\Api6\UserUpdate66Method::class,
@@ -214,13 +221,82 @@ class Api6
         Method\Api6\Videos6Method::ACTION => Method\Api6\Videos6Method::class,
     ];
 
-    public static string $auth_version = '350001';
+    public static string $auth_version    = '350001';
+    public static ?Browse $browse         = null;
+    public static string $version         = '6.9.2'; // AMPACHE_VERSION
+    public static string $version_numeric = '692002'; // AMPACHE_VERSION
 
-    public static string $version = '6.9.1'; // AMPACHE_VERSION
+    /**
+     * check_access
+     *
+     * This function checks the user can perform the function requested
+     * 'interface', 100, $user->id
+     */
+    public static function check_access(AccessTypeEnum $type, AccessLevelEnum $level, int $user_id, string $method, string $format = 'xml'): bool
+    {
+        if (!Access::check($type, $level, $user_id)) {
+            debug_event(self::class, $type->value . " '" . $level->value . "' required on " . $method . " function call.", 2);
+            /* HINT: Access level, eg 75, 100 */
+            self::error('4742', sprintf('Require: %s', $level->value), $method, 'account', $format);
 
-    public static string $version_numeric = '691015'; // AMPACHE_VERSION
+            return false;
+        }
 
-    public static ?Browse $browse = null;
+        return true;
+    }
+
+    /**
+     * check_parameter
+     *
+     * Return an error for missing parameters for API6
+     *
+     * @param array<string, mixed> $input
+     * @param string[] $parameters e.g. array('auth', type')
+     */
+    public static function check_parameter(array $input, array $parameters, string $method): bool
+    {
+        $parameter = self::parameter_exists($input, $parameters);
+        if ($parameter === true) {
+            return true;
+        }
+
+        debug_event(self::class, "'" . $parameter . "' required on " . $method . " function call.", 2);
+
+        /* HINT: Requested object string/id/type ("album", "myusername", "some song title", 1298376) */
+        self::error('4710', sprintf('Bad Request: %s', $parameter), $method, 'system', $input['api_format']);
+
+        return false;
+    }
+
+    /**
+     * empty
+     * call the correct empty message depending on format
+     */
+    public static function empty(?string $empty_type, string $format = 'xml'): void
+    {
+        switch ($format) {
+            case 'json':
+                echo Json6_Data::empty($empty_type);
+                break;
+            default:
+                echo Xml6_Data::empty();
+        }
+    }
+
+    /**
+     * error
+     * call the correct error message depending on format
+     */
+    public static function error(int|string $code, string $message, string $method, string $error_type, string $format = 'xml'): void
+    {
+        switch ($format) {
+            case 'json':
+                echo Json6_Data::error($code, $message, $method, $error_type);
+                break;
+            default:
+                echo Xml6_Data::error($code, $message, $method, $error_type);
+        }
+    }
 
     public static function getBrowse(User $user): Browse
     {
@@ -257,39 +333,10 @@ class Api6
     }
 
     /**
-     * error
-     * call the correct error message depending on format
-     */
-    public static function error(string $message, int|string $error_code, string $method, string $error_type, string $format = 'xml'): void
-    {
-        switch ($format) {
-            case 'json':
-                echo Json6_Data::error($error_code, $message, $method, $error_type);
-                break;
-            default:
-                echo Xml6_Data::error($error_code, $message, $method, $error_type);
-        }
-    }
-
-    /**
-     * empty
-     * call the correct empty message depending on format
-     */
-    public static function empty(?string $empty_type, string $format = 'xml'): void
-    {
-        switch ($format) {
-            case 'json':
-                echo Json6_Data::empty($empty_type);
-                break;
-            default:
-                echo Xml6_Data::empty();
-        }
-    }
-
-    /**
      * parameter_exists
      *
      * This function checks the $input actually has the parameter.
+     * A parameter sent with an empty value (e.g. 'filter=') doesn't count as sent.
      * Parameters must be an array of required elements as a string
      *
      * @param array<string, mixed> $input
@@ -298,53 +345,16 @@ class Api6
     public static function parameter_exists(array $input, array $parameters): bool|string
     {
         foreach ($parameters as $parameter) {
-            if (array_key_exists($parameter, $input)) {
+            if (
+                array_key_exists($parameter, $input)
+                && $input[$parameter] !== null
+                && $input[$parameter] !== ''
+                && $input[$parameter] !== []
+            ) {
                 continue;
             }
 
             return $parameter;
-        }
-
-        return true;
-    }
-
-    /**
-     * check_parameter
-     *
-     * Return an error for missing parameters for API6
-     *
-     * @param array<string, mixed> $input
-     * @param string[] $parameters e.g. array('auth', type')
-     */
-    public static function check_parameter(array $input, array $parameters, string $method): bool
-    {
-        $parameter = self::parameter_exists($input, $parameters);
-        if ($parameter === true) {
-            return true;
-        }
-
-        debug_event(self::class, "'" . $parameter . "' required on " . $method . " function call.", 2);
-
-        /* HINT: Requested object string/id/type ("album", "myusername", "some song title", 1298376) */
-        self::error(sprintf(T_('Bad Request: %s'), $parameter), '4710', $method, 'system', $input['api_format']);
-
-        return false;
-    }
-
-    /**
-     * check_access
-     *
-     * This function checks the user can perform the function requested
-     * 'interface', 100, $user->id
-     */
-    public static function check_access(AccessTypeEnum $type, AccessLevelEnum $level, int $user_id, string $method, string $format = 'xml'): bool
-    {
-        if (!Access::check($type, $level, $user_id)) {
-            debug_event(self::class, $type->value . " '" . $level->value . "' required on " . $method . " function call.", 2);
-            /* HINT: Access level, eg 75, 100 */
-            self::error(sprintf(T_('Require: %s'), $level->value), '4742', $method, 'account', $format);
-
-            return false;
         }
 
         return true;
@@ -427,7 +437,7 @@ class Api6
             ]
             : [];
         // perpetual sessions do not expire
-        $perpetual      = (bool)AmpConfig::get('perpetual_api_session', false);
+        $perpetual      = (bool) AmpConfig::get('perpetual_api_session', false);
         $session_expire = ($perpetual)
             ? 0
             : date("c", time() + AmpConfig::get('session_length', 3600) - 60);
@@ -436,15 +446,15 @@ class Api6
         $outarray = [
             'api' => self::$version,
             'session_expire' => $session_expire,
-            'update' => date("c", (int)$details['update']),
-            'add' => date("c", (int)$details['add']),
-            'clean' => date("c", (int)$details['clean']),
-            'max_song' => (int)$details['max_song'],
-            'max_album' => (int)$details['max_album'],
-            'max_artist' => (int)$details['max_artist'],
-            'max_video' => (int)$details['max_video'],
-            'max_podcast' => (int)$details['max_podcast'],
-            'max_podcast_episode' => (int)$details['max_podcast_episode'],
+            'update' => date("c", (int) $details['update']),
+            'add' => date("c", (int) $details['add']),
+            'clean' => date("c", (int) $details['clean']),
+            'max_song' => (int) $details['max_song'],
+            'max_album' => (int) $details['max_album'],
+            'max_artist' => (int) $details['max_artist'],
+            'max_video' => (int) $details['max_video'],
+            'max_podcast' => (int) $details['max_podcast'],
+            'max_podcast_episode' => (int) $details['max_podcast_episode'],
             'songs' => $counts['song'],
             'albums' => $counts['album'],
             'artists' => $counts['artist'],

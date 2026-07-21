@@ -1,6 +1,6 @@
 <?php
 
-declare(strict_types=0);
+declare(strict_types=1);
 
 /**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
@@ -45,9 +45,9 @@ final class Videos5Method
      * This returns video objects!
      *
      * filter = (string) Alpha-numeric search term //optional
-     * exact  = (integer) 0,1, Whether to match the exact term or not //optional
+     * exact = (integer) 0,1, Whether to match the exact term or not //optional
      * offset = (integer) //optional
-     * limit  = (integer) //optional
+     * limit = (integer) //optional
      *
      * @param array{
      *     filter?: string,
@@ -63,7 +63,7 @@ final class Videos5Method
     public static function videos(array $input, User $user): bool
     {
         if (!AmpConfig::get('allow_video')) {
-            Api5::error(T_('Enable: video'), ErrorCodeEnum::ACCESS_DENIED, self::ACTION, 'system', $input['api_format']);
+            Api5::error(ErrorCodeEnum::ACCESS_DENIED, T_('Enable: video'), self::ACTION, 'system', $input['api_format']);
 
             return false;
         }
@@ -71,7 +71,7 @@ final class Videos5Method
         $browse->set_type('video');
         $browse->set_sort('title', 'ASC', false);
 
-        $method = (array_key_exists('exact', $input) && (int)$input['exact'] == 1) ? 'exact_match' : 'alpha_match';
+        $method = (array_key_exists('exact', $input) && (int) $input['exact'] == 1) ? 'exact_match' : 'alpha_match';
         $browse->set_api_filter($method, $input['filter'] ?? '');
 
         $results = $browse->get_objects();

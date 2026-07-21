@@ -1,6 +1,6 @@
 <?php
 
-declare(strict_types=0);
+declare(strict_types=1);
 
 /**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
@@ -30,6 +30,7 @@ use Ampache\Module\Api\Api6;
 use Ampache\Module\Api\Exception\ErrorCodeEnum;
 use Ampache\Module\Api\Json6_Data;
 use Ampache\Module\Api\Xml6_Data;
+use Ampache\Repository\Model\Share;
 use Ampache\Repository\Model\User;
 
 /**
@@ -57,19 +58,27 @@ final class Share6Method
     public static function share(array $input, User $user): bool
     {
         if (!AmpConfig::get('share')) {
-            Api6::error('Enable: share', ErrorCodeEnum::ACCESS_DENIED, self::ACTION, 'system', $input['api_format']);
+            Api6::error(ErrorCodeEnum::ACCESS_DENIED, 'Enable: share', self::ACTION, 'system', $input['api_format']);
 
             return false;
         }
         if (!Api6::check_parameter($input, ['filter'], self::ACTION)) {
             return false;
         }
-        $results = [(int) $input['filter']];
+        $object_id = (int) $input['filter'];
+        $share     = new Share($object_id);
+        if ($share->isNew()) {
+            /* HINT: Requested object string/id/type ("album", "myusername", "some song title", 1298376) */
+            Api6::error(ErrorCodeEnum::NOT_FOUND, sprintf('Not Found: %s', $object_id), self::ACTION, 'filter', $input['api_format']);
+
+            return false;
+        }
+        $results = [$object_id];
 
         ob_end_clean();
         switch ($input['api_format']) {
             case 'json':
-                echo Json6_Data::shares($results, false);
+                echo Json6_Data::shares($results, $user, false);
                 break;
             default:
                 echo Xml6_Data::shares($results, $user);

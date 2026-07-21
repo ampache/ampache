@@ -145,11 +145,9 @@ class AmazonSearch
 
         xml_parser_set_option($this->_parser, XML_OPTION_CASE_FOLDING, 0);
 
-        xml_set_object($this->_parser, $this);
+        xml_set_element_handler($this->_parser, [$this, 'startElement'], [$this, 'endElement']);
 
-        xml_set_element_handler($this->_parser, 'startElement', 'endElement');
-
-        xml_set_character_data_handler($this->_parser, 'cdata');
+        xml_set_character_data_handler($this->_parser, [$this, 'cdata']);
     }
 
     /**

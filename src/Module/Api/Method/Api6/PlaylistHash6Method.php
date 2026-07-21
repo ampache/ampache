@@ -1,6 +1,6 @@
 <?php
 
-declare(strict_types=0);
+declare(strict_types=1);
 
 /**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
@@ -25,9 +25,9 @@ declare(strict_types=0);
 
 namespace Ampache\Module\Api\Method\Api6;
 
+use Ampache\Module\Api\Api;
 use Ampache\Module\Api\Api6;
 use Ampache\Module\Api\Exception\ErrorCodeEnum;
-use Ampache\Module\Api\Xml6_Data;
 use Ampache\Repository\Model\Playlist;
 use Ampache\Repository\Model\Search;
 use Ampache\Repository\Model\User;
@@ -67,16 +67,16 @@ final class PlaylistHash6Method
 
         if ($playlist->isNew()) {
             /* HINT: Requested object string/id/type ("album", "myusername", "some song title", 1298376) */
-            Api6::error(sprintf('Not Found: %s', $object_id), ErrorCodeEnum::NOT_FOUND, self::ACTION, 'filter', $input['api_format']);
+            Api6::error(ErrorCodeEnum::NOT_FOUND, sprintf('Not Found: %s', $object_id), self::ACTION, 'filter', $input['api_format']);
 
             return false;
         }
 
         if (
-            $playlist->type !== 'public' &&
-            !$playlist->has_collaborate($user)
+            $playlist->type !== 'public'
+            && !$playlist->has_collaborate($user)
         ) {
-            Api6::error('Require: 100', ErrorCodeEnum::FAILED_ACCESS_CHECK, self::ACTION, 'account', $input['api_format']);
+            Api6::error(ErrorCodeEnum::FAILED_ACCESS_CHECK, 'Require: 100', self::ACTION, 'account', $input['api_format']);
 
             return false;
         }
@@ -99,7 +99,7 @@ final class PlaylistHash6Method
                 echo json_encode($results, JSON_PRETTY_PRINT);
                 break;
             default:
-                echo Xml6_Data::keyed_array($results);
+                echo Api::keyed_array($results);
         }
 
         return true;

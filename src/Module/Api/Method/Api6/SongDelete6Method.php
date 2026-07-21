@@ -1,6 +1,6 @@
 <?php
 
-declare(strict_types=0);
+declare(strict_types=1);
 
 /**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
@@ -43,6 +43,16 @@ final class SongDelete6Method
     public const REST_ACTION = 'songs_delete';
 
     /**
+     * @deprecated
+     */
+    public static function getSongDeleter(): SongDeleterInterface
+    {
+        global $dic;
+
+        return $dic->get(SongDeleterInterface::class);
+    }
+
+    /**
      * song_delete
      * MINIMUM_API_VERSION=5.0.0
      *
@@ -66,12 +76,12 @@ final class SongDelete6Method
 
         if ($song->isNew()) {
             /* HINT: Requested object string/id/type ("album", "myusername", "some song title", 1298376) */
-            Api6::error(sprintf('Not Found: %s', $object_id), ErrorCodeEnum::NOT_FOUND, self::ACTION, 'filter', $input['api_format']);
+            Api6::error(ErrorCodeEnum::NOT_FOUND, sprintf('Not Found: %s', $object_id), self::ACTION, 'filter', $input['api_format']);
 
             return false;
         }
         if (!Catalog::can_remove($song, $user->id)) {
-            Api6::error('Require: 75', ErrorCodeEnum::FAILED_ACCESS_CHECK, self::ACTION, 'account', $input['api_format']);
+            Api6::error(ErrorCodeEnum::FAILED_ACCESS_CHECK, 'Require: 75', self::ACTION, 'account', $input['api_format']);
 
             return false;
         }
@@ -80,7 +90,7 @@ final class SongDelete6Method
             Catalog::count_table('song');
         } else {
             /* HINT: Requested object string/id/type ("album", "myusername", "some song title", 1298376) */
-            Api6::error(sprintf('Bad Request: %s', $object_id), ErrorCodeEnum::BAD_REQUEST, self::ACTION, 'system', $input['api_format']);
+            Api6::error(ErrorCodeEnum::BAD_REQUEST, sprintf('Bad Request: %s', $object_id), self::ACTION, 'system', $input['api_format']);
 
             return false;
         }
@@ -98,15 +108,5 @@ final class SongDelete6Method
     public static function songs_delete(array $input, User $user): bool
     {
         return self::song_delete($input, $user);
-    }
-
-    /**
-     * @deprecated
-     */
-    public static function getSongDeleter(): SongDeleterInterface
-    {
-        global $dic;
-
-        return $dic->get(SongDeleterInterface::class);
     }
 }

@@ -1,6 +1,6 @@
 <?php
 
-declare(strict_types=0);
+declare(strict_types=1);
 
 /**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
@@ -42,6 +42,23 @@ final class UpdatePodcast6Method
 {
     public const ACTION = 'update_podcast';
 
+    public const REST_ACTION = 'sync';
+
+    /**
+     * @param array{
+     *     filter?: string,
+     *     id?: string,
+     *     type: string,
+     *     overwrite: int,
+     *     api_format: string,
+     *     auth: string,
+     * } $input
+     */
+    public static function sync(array $input, User $user): bool
+    {
+        return self::update_podcast($input, $user);
+    }
+
     /**
      * update_podcast
      * MINIMUM_API_VERSION=420000
@@ -78,25 +95,15 @@ final class UpdatePodcast6Method
                 Session::extend($input['auth'], AccessTypeEnum::API->value);
             } else {
                 /* HINT: Requested object string/id/type ("album", "myusername", "some song title", 1298376) */
-                Api6::error(sprintf('Bad Request: %s', $object_id), ErrorCodeEnum::BAD_REQUEST, self::ACTION, 'podcast', $input['api_format']);
+                Api6::error(ErrorCodeEnum::BAD_REQUEST, sprintf('Bad Request: %s', $object_id), self::ACTION, 'podcast', $input['api_format']);
             }
         } else {
-            Api6::error(sprintf('Not Found: %s', $object_id), ErrorCodeEnum::NOT_FOUND, self::ACTION, 'filter', $input['api_format']);
+            Api6::error(ErrorCodeEnum::NOT_FOUND, sprintf('Not Found: %s', $object_id), self::ACTION, 'filter', $input['api_format']);
 
             return false;
         }
 
         return true;
-    }
-
-    /**
-     * @deprecated Inject by constructor
-     */
-    private static function getPodcastSyncer(): PodcastSyncerInterface
-    {
-        global $dic;
-
-        return $dic->get(PodcastSyncerInterface::class);
     }
 
     /**
@@ -107,5 +114,15 @@ final class UpdatePodcast6Method
         global $dic;
 
         return $dic->get(PodcastRepositoryInterface::class);
+    }
+
+    /**
+     * @deprecated Inject by constructor
+     */
+    private static function getPodcastSyncer(): PodcastSyncerInterface
+    {
+        global $dic;
+
+        return $dic->get(PodcastSyncerInterface::class);
     }
 }

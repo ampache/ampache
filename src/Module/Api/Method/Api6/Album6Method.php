@@ -44,7 +44,6 @@ final class Album6Method implements MethodInterface
     public const ACTION = 'album';
 
     private ModelFactoryInterface $modelFactory;
-
     private StreamFactoryInterface $streamFactory;
 
     public function __construct(
@@ -61,7 +60,7 @@ final class Album6Method implements MethodInterface
      *
      * This returns a single album based on the UID provided
      *
-     * filter  = (string) UID of Album
+     * filter = (string) UID of Album
      * include = (array|string) 'songs' //optional
      *
      * @param array{
@@ -85,7 +84,7 @@ final class Album6Method implements MethodInterface
 
         if ($objectId === null) {
             throw new RequestParamMissingException(
-                sprintf(T_('Bad Request: %s'), 'filter')
+                sprintf('Bad Request: %s', 'filter')
             );
         }
 

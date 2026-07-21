@@ -188,6 +188,7 @@ final class Mailer implements MailerInterface
     public function send(?PHPMailer $phpmailer = null): bool
     {
         $mailtype = AmpConfig::get('mail_type', 'php');
+        debug_event(self::class, 'Trying to send email. Entering the send() function', 5);
 
         if ($phpmailer == null) {
             $mail = new PHPMailer();
@@ -222,6 +223,8 @@ final class Mailer implements MailerInterface
         $mailauth = AmpConfig::get('mail_auth');
         $mailuser = AmpConfig::get('mail_auth_user', '');
         $mailpass = AmpConfig::get('mail_auth_pass', '');
+
+        debug_event(self::class, 'Trying to send email. To: ' . implode(',', array_keys($mail->getAllRecipientAddresses())) . ' - Subject: ' . $mail->Subject, 1);
 
         switch ($mailtype) {
             case 'smtp':

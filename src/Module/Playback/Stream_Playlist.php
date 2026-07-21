@@ -26,7 +26,7 @@ declare(strict_types=0);
 namespace Ampache\Module\Playback;
 
 use Ampache\Config\AmpConfig;
-use Ampache\Module\Api\Xml8_Data;
+use Ampache\Module\Api\Api;
 use Ampache\Module\Authorization\AccessTypeEnum;
 use Ampache\Module\Playback\Localplay\LocalPlay;
 use Ampache\Module\System\Core;
@@ -35,6 +35,7 @@ use Ampache\Module\System\Session;
 use Ampache\Module\Util\ObjectTypeToClassNameMapper;
 use Ampache\Module\Util\Ui;
 use Ampache\Repository\Model\Art;
+use Ampache\Repository\Model\Broadcast;
 use Ampache\Repository\Model\Democratic;
 use Ampache\Repository\Model\library_item;
 use Ampache\Repository\Model\LibraryItemEnum;
@@ -284,14 +285,35 @@ class Stream_Playlist
 
         if ($object instanceof Media) {
             return self::media_object_to_url($object, $additional_params, $urltype, $user);
+        } elseif ($object instanceof Broadcast) {
+            return self::broadcast_object_to_url($object);
         }
 
         return null;
     }
 
+    private static function broadcast_object_to_url(Broadcast $object): ?Stream_Url
+    {
+        if (!$object->started) {
+            return null;
+        }
+
+        $url  = self::STREAM_PLAYLIST_ROW;
+        $type = $object->getMediaType();
+
+        $url['type']      = $type->value;
+        $url['url']       = (string)$object->id;
+        $url['author']    = 'Ampache';
+        $url['info_url']  = $object->get_f_link();
+        $url['title']     = Stream_Url::get_title($url['url']);
+        $url['time']      = -1;
+        $surl             = new Stream_Url($url);
+
+        return $surl;
+    }
+
     private static function media_object_to_url(Media $object, string $additional_params = '', string $urltype = 'web', ?User $user = null): ?Stream_Url
     {
-        $surl = null;
         $url  = self::STREAM_PLAYLIST_ROW;
         if (!$user) {
             $user = Core::get_global('user');
@@ -303,93 +325,95 @@ class Stream_Playlist
 
         // Don't add disabled media objects to the stream playlist
         // Playing a disabled media return a 404 error that could make failed the player (mpd ...)
-        if (!isset($object->enabled) || make_bool($object->enabled)) {
-            if (
-                $urltype == 'file' &&
-                isset($object->file)
-            ) {
-                $url['url'] = $object->file;
-                // Relative path
-                if (!empty($additional_params) && strpos($url['url'], $additional_params) === 0) {
-                    $url['url'] = substr($url['url'], strlen((string)$additional_params));
-                    if (strlen((string)$url['url']) < 1) {
-                        return null;
-                    }
-                    if ($url['url'][0] == DIRECTORY_SEPARATOR) {
-                        $url['url'] = substr($url['url'], 1);
-                    }
-                }
-            } elseif (in_array($type, [LibraryItemEnum::SONG, LibraryItemEnum::PODCAST_EPISODE, LibraryItemEnum::VIDEO])) {
-                /** @var Song|Podcast_Episode|Video $object */
-                $url['url'] = (!empty($user))
-                    ? $object->play_url($additional_params, '', false, $user->id, $user->streamtoken)
-                    : $object->play_url($additional_params);
-            } else {
-                $url['url'] = $object->play_url($additional_params);
-            }
+        if (isset($object->enabled) && make_bool($object->enabled) === false) {
+            debug_event(self::class, 'media_object_to_url: SKIP {' . $object->getId() . '} of type {' . $type->value . '} is disabled', 5);
 
-            $api_session = (AmpConfig::get('require_session')) ? Stream::get_session() : null;
-
-            // Set a default which can be overridden
-            $url['author'] = 'Ampache';
-            $url['time']   = (isset($object->time)) ? $object->time : 0;
-            switch ($type) {
-                case LibraryItemEnum::SONG:
-                    /** @var Song $object */
-                    $url['title']     = $object->title;
-                    $url['author']    = $object->get_artist_fullname();
-                    $url['info_url']  = $object->get_f_link();
-                    $show_song_art    = AmpConfig::get('show_song_art', false);
-                    $has_art          = Art::has_db($object->id, 'song');
-                    $art_object       = ($show_song_art && $has_art) ? $object->id : $object->album;
-                    $art_type         = ($show_song_art && $has_art) ? 'song' : 'album';
-                    $url['image_url'] = Art::url($art_object, $art_type, $api_session, (AmpConfig::get('ajax_load') ? 3 : 4));
-                    //$url['album']     = $object->get_album_fullname();
-                    $url['codec']     = $object->type;
-                    $url['track_num'] = (string)$object->track;
-                    break;
-                case LibraryItemEnum::VIDEO:
-                    /** @var Video $object */
-                    $url['title']     = 'Video - ' . $object->title;
-                    $url['author']    = $object->get_artist_fullname();
-                    $url['info_url']  = $object->get_f_link();
-                    $url['image_url'] = Art::url($object->id, 'video', $api_session, (AmpConfig::get('ajax_load') ? 3 : 4));
-                    $url['codec']     = $object->type;
-                    break;
-                case LibraryItemEnum::LIVE_STREAM:
-                    /** @var Live_Stream $object */
-                    $url['title'] = 'Radio - ' . $object->name;
-                    if (!empty($object->site_url)) {
-                        $url['title'] .= ' (' . $object->site_url . ')';
-                    }
-                    $url['info_url']  = $object->get_f_link();
-                    $url['image_url'] = Art::url($object->id, 'live_stream', $api_session, (AmpConfig::get('ajax_load') ? 3 : 4));
-                    $url['codec']     = $object->codec;
-                    break;
-                case LibraryItemEnum::SONG_PREVIEW:
-                    /** @var Song_Preview $object */
-                    $url['title']  = $object->title;
-                    $url['author'] = $object->get_artist_fullname();
-                    $url['codec']  = $object->type;
-                    break;
-                case LibraryItemEnum::PODCAST_EPISODE:
-                    /** @var Podcast_Episode $object */
-                    $url['title']     = $object->title;
-                    $url['author']    = $object->getPodcastName();
-                    $url['info_url']  = $object->get_f_link();
-                    $url['image_url'] = Art::url($object->podcast, 'podcast', $api_session, (AmpConfig::get('ajax_load') ? 3 : 4));
-                    $url['codec']     = $object->type;
-                    break;
-                default:
-                    $url['title'] = Stream_Url::get_title($url['url']);
-                    $url['time']  = -1;
-                    break;
-            }
-
-            $surl = new Stream_Url($url);
+            return null;
         }
 
-        return $surl;
+        if (
+            $urltype == 'file' &&
+            isset($object->file)
+        ) {
+            $url['url'] = $object->file;
+            // Relative path
+            if (!empty($additional_params) && strpos($url['url'], $additional_params) === 0) {
+                $url['url'] = substr($url['url'], strlen((string)$additional_params));
+                if (strlen((string)$url['url']) < 1) {
+                    return null;
+                }
+                if ($url['url'][0] == DIRECTORY_SEPARATOR) {
+                    $url['url'] = substr($url['url'], 1);
+                }
+            }
+        } elseif (in_array($type, [LibraryItemEnum::SONG, LibraryItemEnum::PODCAST_EPISODE, LibraryItemEnum::VIDEO])) {
+            /** @var Song|Podcast_Episode|Video $object */
+            $url['url'] = (!empty($user))
+                ? $object->play_url($additional_params, '', false, $user->id, $user->streamtoken)
+                : $object->play_url($additional_params);
+        } else {
+            $url['url'] = $object->play_url($additional_params);
+        }
+
+        $api_session = (AmpConfig::get('require_session')) ? Stream::get_session() : null;
+
+        // Set a default which can be overridden
+        $url['author'] = 'Ampache';
+        $url['time']   = (isset($object->time)) ? $object->time : 0;
+        switch ($type) {
+            case LibraryItemEnum::SONG:
+                /** @var Song $object */
+                $url['title']     = $object->title;
+                $url['author']    = $object->get_parent_fullname();
+                $url['info_url']  = $object->get_f_link();
+                $show_song_art    = AmpConfig::get('show_song_art', false);
+                $has_art          = Art::has_db($object->id, 'song');
+                $art_object       = ($show_song_art && $has_art) ? $object->id : $object->album;
+                $art_type         = ($show_song_art && $has_art) ? 'song' : 'album';
+                $url['image_url'] = Art::url($art_object, $art_type, $api_session, (AmpConfig::get('ajax_load') ? 3 : 4));
+                //$url['album']     = $object->get_album_fullname();
+                $url['codec']     = $object->type;
+                $url['track_num'] = (string)$object->track;
+                break;
+            case LibraryItemEnum::VIDEO:
+                /** @var Video $object */
+                $url['title']     = 'Video - ' . $object->title;
+                $url['author']    = $object->get_parent_fullname();
+                $url['info_url']  = $object->get_f_link();
+                $url['image_url'] = Art::url($object->id, 'video', $api_session, (AmpConfig::get('ajax_load') ? 3 : 4));
+                $url['codec']     = $object->type;
+                break;
+            case LibraryItemEnum::LIVE_STREAM:
+                /** @var Live_Stream $object */
+                $url['title'] = 'Radio - ' . $object->name;
+                if (!empty($object->site_url)) {
+                    $url['title'] .= ' (' . $object->site_url . ')';
+                }
+                $url['info_url']  = $object->get_f_link();
+                $url['image_url'] = Art::url($object->id, 'live_stream', $api_session, (AmpConfig::get('ajax_load') ? 3 : 4));
+                $url['codec']     = $object->codec;
+                break;
+            case LibraryItemEnum::SONG_PREVIEW:
+                /** @var Song_Preview $object */
+                $url['title']  = $object->title;
+                $url['author'] = $object->get_parent_fullname();
+                $url['codec']  = $object->type;
+                break;
+            case LibraryItemEnum::PODCAST_EPISODE:
+                /** @var Podcast_Episode $object */
+                $url['title']     = $object->title;
+                $url['author']    = $object->getPodcastName();
+                $url['info_url']  = $object->get_f_link();
+                $url['image_url'] = Art::url($object->podcast, 'podcast', $api_session, (AmpConfig::get('ajax_load') ? 3 : 4));
+                $url['codec']     = $object->type;
+                break;
+            default:
+                $url['title'] = Stream_Url::get_title($url['url']);
+                $url['time']  = -1;
+                break;
+        }
+
+        return new Stream_Url($url);
     }
 
     /**
@@ -679,7 +703,7 @@ class Stream_Playlist
                 $xml['track']['trackNum'] = $url->track_num;
             }
 
-            $result .= Xml8_Data::keyed_array($xml, true);
+            $result .= Api::keyed_array($xml, true);
         } // end foreach
 
         $ret = "<?xml version=\"1.0\" encoding=\"utf-8\" ?>\n<playlist version = \"1\" xmlns=\"http://xspf.org/ns/0/\">\n<title>" . $this->title . "</title>\n<creator>" . scrub_out(AmpConfig::get('site_title')) . "</creator>\n<annotation>" . scrub_out(AmpConfig::get('site_title')) . "</annotation>\n<info>" . AmpConfig::get_web_path() . "</info>\n<trackList>\n";

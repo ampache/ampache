@@ -26,8 +26,10 @@ namespace Ampache\Module\System\Update;
 
 use Ahc\Cli\IO\Interactor;
 use Ampache\Config\ConfigContainerInterface;
+use Ampache\Module\Authorization\AccessLevelEnum;
 use Ampache\Module\Database\DatabaseConnectionInterface;
 use Ampache\Module\Database\Exception\DatabaseException;
+use Ampache\Module\System\Dba;
 use Ampache\Module\System\LegacyLogger;
 use Ampache\Module\System\Update\Exception\UpdateFailedException;
 use Ampache\Module\System\Update\Migration\MigrationInterface;
@@ -84,6 +86,177 @@ final class UpdateRunner implements UpdateRunnerInterface
 
         // Prevent the script from timing out, which could be bad
         set_time_limit(0);
+
+        // Migration\V8\Migration800023 needs no rollback. It corrected art mime types that had been
+        // built from the uploaded filename (`image/jpg`, which is not a registered type, and
+        // `image/JPG` for an upper case name) to the type read from the image data itself. Ampache7
+        // reads the stored value and serves it as the Content-Type, and `image/jpeg` is exactly what
+        // its own art gathering writes, so restoring the old values would only reintroduce the bug.
+
+        if ($currentVersion >= 800022) {
+            // Migration\V8\Migration800022 (restore the preference deleted by the migration)
+            // Ampache7 still gates the embedded web player on this preference -- without it playback
+            // falls back to the popup window -- along with autoplay next/append and the SSE catalog worker
+            if (!Preference::insert('ajax_load', 'Ajax page load', '1', AccessLevelEnum::USER->value, 'boolean', 'interface')) {
+                throw new UpdateFailedException();
+            }
+        }
+
+        if ($currentVersion >= 800021) {
+            // Migration\V8\Migration800021 (Ampache7 has no mini player interface)
+            if (!Preference::delete('mini_player')) {
+                throw new UpdateFailedException();
+            }
+        }
+
+        if ($currentVersion >= 800020) {
+            // Migration\V8\Migration800020 (restore the preference deleted by the migration)
+            // Ampache7's web player is gated on this preference; without it jPlayer gets no solution at all
+            if (!Preference::insert('webplayer_html5', 'Authorize HTML5 Web Player', '1', AccessLevelEnum::USER->value, 'boolean', 'streaming', 'player')) {
+                throw new UpdateFailedException();
+            }
+        }
+
+        if ($currentVersion >= 800019) {
+            // Migration\V8\Migration800019 (Ampache7 has no per-format bitrate overrides)
+            if (!Preference::delete('transcode_bitrate_formats')) {
+                throw new UpdateFailedException();
+            }
+        }
+
+        if ($currentVersion >= 800018) {
+            // Migration\V8\Migration800018 (Ampache7 stores `transcode_bitrate` in kilobits, not bits)
+            if (
+                !Dba::write("UPDATE `user_preference` SET `value` = GREATEST(CAST(`value` AS UNSIGNED) DIV 1000, 1) WHERE `name` = 'transcode_bitrate' AND CAST(`value` AS UNSIGNED) >= 1000;") ||
+                !Dba::write("UPDATE `preference` SET `value` = '128', `type` = 'string', `description` = 'Transcode Bitrate' WHERE `name` = 'transcode_bitrate';")
+            ) {
+                throw new UpdateFailedException();
+            }
+        }
+
+        if ($currentVersion >= 800017) {
+            // Migration\V8\Migration800017 (Ampache7 reads these from ampache.cfg.php, not preferences)
+            if (
+                !Preference::delete('max_bit_rate') ||
+                !Preference::delete('min_bit_rate')
+            ) {
+                throw new UpdateFailedException();
+            }
+        }
+
+        if ($currentVersion >= 800016) {
+            // Migration\V8\Migration800016 (Ampache7 reads these from ampache.cfg.php, not preferences)
+            if (
+                !Preference::delete('encode_target') ||
+                !Preference::delete('encode_video_target') ||
+                !Preference::delete('encode_player_webplayer_target') ||
+                !Preference::delete('encode_player_api_target')
+            ) {
+                throw new UpdateFailedException();
+            }
+        }
+
+        if ($currentVersion >= 800015) {
+            // Migration\V8\Migration800015 (put the consolidated play history back before dropping the archive)
+            // Ampache7 only reads `object_count`, so anything left in the archive would be invisible. The derived
+            // album/artist rows consolidation removed are rebuilt by Catalog::update_counts() on the next run.
+            if (
+                !Dba::write("INSERT IGNORE INTO `object_count` (`object_type`, `object_id`, `count_type`, `date`, `user`, `agent`, `geo_latitude`, `geo_longitude`, `geo_name`) SELECT `object_type`, `object_id`, `count_type`, `date`, `user`, `agent`, `geo_latitude`, `geo_longitude`, `geo_name` FROM `object_count_archive`;") ||
+                !Dba::write("DROP TABLE IF EXISTS `object_count_archive`;")
+            ) {
+                throw new UpdateFailedException();
+            }
+        }
+
+        if ($currentVersion >= 800014) {
+            // Migration\V8\Migration800014 (restore the indexes the migration dropped as redundant)
+            Dba::write("ALTER TABLE `object_count` ADD KEY `object_count_full_index` (`object_type`, `object_id`, `date`, `user`, `agent`, `count_type`) USING BTREE;", [], true);
+            Dba::write("ALTER TABLE `object_count` ADD KEY `object_type` (`object_type`);", [], true);
+            Dba::write("ALTER TABLE `object_count` ADD KEY `object_count_type_IDX` (`object_type`, `object_id`) USING BTREE;", [], true);
+            Dba::write("ALTER TABLE `object_count` ADD KEY `date` (`date`);", [], true);
+        }
+
+        if ($currentVersion >= 800013) {
+            // Migration\V8\Migration800013 (the detail was restored by the 800015 block above)
+            if (!Dba::write("DROP TABLE IF EXISTS `object_count_summary`;")) {
+                throw new UpdateFailedException();
+            }
+        }
+
+        if ($currentVersion >= 800012) {
+            // Migration\V8\Migration800012 (Ampache7 has no system user, hand the share.php plays back to user 0).
+            // The `user` columns are left signed: Ampache7's own schema already declares them int(11) signed
+            if (!Dba::write("UPDATE IGNORE `object_count` SET `user` = 0 WHERE `user` = -1 AND `agent` = 'share.php';")) {
+                throw new UpdateFailedException();
+            }
+        }
+
+        if ($currentVersion >= 800011) {
+            // Migration\V8\Migration800011 (restore the preferences deleted by the migration)
+            if (
+                !Preference::insert('webplayer_flash', 'Authorize Flash Web Player', '1', AccessLevelEnum::USER->value, 'boolean', 'streaming', 'player') ||
+                !Preference::insert('webplayer_aurora', 'Authorize JavaScript decoder (Aurora.js) in Web Player', '1', AccessLevelEnum::USER->value, 'boolean', 'streaming', 'player') ||
+                !Preference::insert('use_play2', 'Use an alternative playback action for streaming if you have issues with playing music', '0', AccessLevelEnum::USER->value, 'boolean', 'streaming', 'player')
+            ) {
+                throw new UpdateFailedException();
+            }
+        }
+
+        if ($currentVersion >= 800008) {
+            // Migration\V8\Migration800010 (`folder_map` was created by Migration800008 in older develop8 builds)
+            if (
+                !Dba::write("DROP TABLE IF EXISTS `folder_map`;")
+            ) {
+                throw new UpdateFailedException();
+            }
+        }
+
+        if ($currentVersion >= 800007) {
+            // Migration\V8\Migration800007
+            if (
+                !Dba::write("DROP TABLE IF EXISTS `folder`;")
+            ) {
+                throw new UpdateFailedException();
+            }
+        }
+
+        if ($currentVersion >= 800006) {
+            // Migration\V8\Migration800006
+            if (!Preference::delete('show_folder')) {
+                throw new UpdateFailedException();
+            }
+        }
+
+        if ($currentVersion >= 800004) {
+            // Migration\V8\Migration800004
+            if (
+                !Dba::write('DELETE FROM `cache_object_count` WHERE `object_type` IS NULL OR `object_type` NOT IN (\'album\', \'album_disk\', \'artist\', \'catalog\', \'tag\', \'label\', \'live_stream\', \'playlist\', \'podcast\', \'podcast_episode\', \'search\', \'song\', \'user\', \'video\');') ||
+                !Dba::write('ALTER TABLE `cache_object_count` MODIFY COLUMN `object_type` enum(\'album\', \'album_disk\', \'artist\', \'catalog\', \'tag\', \'label\', \'live_stream\', \'playlist\', \'podcast\', \'podcast_episode\', \'search\', \'song\', \'tvshow\', \'tvshow_season\', \'user\', \'video\') CHARACTER SET utf8 COLLATE utf8_unicode_ci NOT NULL;') ||
+                !Dba::write('DELETE FROM `cache_object_count_run` WHERE `object_type` IS NULL OR `object_type` NOT IN (\'album\', \'album_disk\', \'artist\', \'catalog\', \'tag\', \'label\', \'live_stream\', \'playlist\', \'podcast\', \'podcast_episode\', \'search\', \'song\', \'user\', \'video\');') ||
+                !Dba::write('ALTER TABLE `cache_object_count_run` MODIFY COLUMN `object_type` enum(\'album\', \'album_disk\', \'artist\', \'catalog\', \'tag\', \'label\', \'live_stream\', \'playlist\', \'podcast\', \'podcast_episode\', \'search\', \'song\', \'tvshow\', \'tvshow_season\', \'user\', \'video\') CHARACTER SET utf8 COLLATE utf8_unicode_ci NOT NULL;') ||
+                !Dba::write('DELETE FROM `image` WHERE `object_type` IS NULL OR `object_type` NOT IN (\'album\', \'album_disk\', \'artist\', \'catalog\', \'tag\', \'label\', \'live_stream\', \'playlist\', \'podcast\', \'podcast_episode\', \'search\', \'song\', \'user\', \'video\');') ||
+                !Dba::write('ALTER TABLE `image` MODIFY COLUMN `object_type` enum(\'album\', \'album_disk\', \'artist\', \'catalog\', \'tag\', \'label\', \'live_stream\', \'playlist\', \'podcast\', \'podcast_episode\', \'search\', \'song\', \'tvshow\', \'tvshow_season\', \'user\', \'video\') CHARACTER SET utf8 COLLATE utf8_unicode_ci NOT NULL;') ||
+                !Dba::write('DELETE FROM `object_count` WHERE `object_type` IS NULL OR `object_type` NOT IN (\'album\', \'album_disk\', \'artist\', \'catalog\', \'tag\', \'label\', \'live_stream\', \'playlist\', \'podcast\', \'podcast_episode\', \'search\', \'song\', \'user\', \'video\');') ||
+                !Dba::write('ALTER TABLE `object_count` MODIFY COLUMN `object_type` enum(\'album\', \'album_disk\', \'artist\', \'catalog\', \'tag\', \'label\', \'live_stream\', \'playlist\', \'podcast\', \'podcast_episode\', \'search\', \'song\', \'tvshow\', \'tvshow_season\', \'user\', \'video\') CHARACTER SET utf8 COLLATE utf8_unicode_ci NOT NULL;') ||
+                !Dba::write('DELETE FROM `rating` WHERE `object_type` IS NULL OR `object_type` NOT IN (\'album\', \'album_disk\', \'artist\', \'catalog\', \'tag\', \'label\', \'live_stream\', \'playlist\', \'podcast\', \'podcast_episode\', \'search\', \'song\', \'user\', \'video\');') ||
+                !Dba::write('ALTER TABLE `rating` MODIFY COLUMN `object_type` enum(\'album\', \'album_disk\', \'artist\', \'catalog\', \'tag\', \'label\', \'live_stream\', \'playlist\', \'podcast\', \'podcast_episode\', \'search\', \'song\', \'tvshow\', \'tvshow_season\', \'user\', \'video\') CHARACTER SET utf8 COLLATE utf8_unicode_ci NOT NULL;') ||
+                !Dba::write('DELETE FROM `tag_map` WHERE `object_type` IS NULL OR `object_type` NOT IN (\'album\', \'album_disk\', \'artist\', \'catalog\', \'tag\', \'label\', \'live_stream\', \'playlist\', \'podcast\', \'podcast_episode\', \'search\', \'song\', \'user\', \'video\');') ||
+                !Dba::write('ALTER TABLE `tag_map` MODIFY COLUMN `object_type` enum(\'album\', \'album_disk\', \'artist\', \'catalog\', \'tag\', \'label\', \'live_stream\', \'playlist\', \'podcast\', \'podcast_episode\', \'search\', \'song\', \'tvshow\', \'tvshow_season\', \'user\', \'video\') CHARACTER SET utf8 COLLATE utf8_unicode_ci NOT NULL;') ||
+                !Dba::write('DELETE FROM `user_activity` WHERE `object_type` IS NULL OR `object_type` NOT IN (\'album\', \'album_disk\', \'artist\', \'catalog\', \'tag\', \'label\', \'live_stream\', \'playlist\', \'podcast\', \'podcast_episode\', \'search\', \'song\', \'user\', \'video\');') ||
+                !Dba::write('ALTER TABLE `user_activity` MODIFY COLUMN `object_type` enum(\'album\', \'album_disk\', \'artist\', \'catalog\', \'tag\', \'label\', \'live_stream\', \'playlist\', \'podcast\', \'podcast_episode\', \'search\', \'song\', \'tvshow\', \'tvshow_season\', \'user\', \'video\') CHARACTER SET utf8 COLLATE utf8_unicode_ci NOT NULL;') ||
+                !Dba::write('DELETE FROM `user_flag` WHERE `object_type` IS NULL OR `object_type` NOT IN (\'album\', \'album_disk\', \'artist\', \'catalog\', \'tag\', \'label\', \'live_stream\', \'playlist\', \'podcast\', \'podcast_episode\', \'search\', \'song\', \'user\', \'video\');') ||
+                !Dba::write('ALTER TABLE `user_flag` MODIFY COLUMN `object_type` enum(\'album\', \'album_disk\', \'artist\', \'catalog\', \'tag\', \'label\', \'live_stream\', \'playlist\', \'podcast\', \'podcast_episode\', \'search\', \'song\', \'tvshow\', \'tvshow_season\', \'user\', \'video\') CHARACTER SET utf8 COLLATE utf8_unicode_ci NOT NULL;')
+            ) {
+                throw new UpdateFailedException();
+            }
+        }
+
+        if ($currentVersion >= 800000) {
+            // Migration\V8\Migration800000
+            if (!Preference::delete('api_enable_8')) {
+                throw new UpdateFailedException();
+            }
+        }
 
         $this->logger->notice(
             sprintf('Successful rollback to update %s', (string)Versions::MAXIMUM_UPDATABLE_VERSION),

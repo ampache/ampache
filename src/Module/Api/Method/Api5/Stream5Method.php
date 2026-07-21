@@ -1,6 +1,6 @@
 <?php
 
-declare(strict_types=0);
+declare(strict_types=1);
 
 /**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
@@ -48,12 +48,12 @@ final class Stream5Method
      * Takes the file id in parameter with optional max bit rate, file format, time offset, size and estimate content length option.
      * Search and Playlist will only stream a random object not the whole thing
      *
-     * id      = (string) $song_id|$podcast_episode_id
-     * type    = (string) 'song', 'podcast_episode', 'search', 'playlist', 'podcast'
+     * id = (string) $song_id|$podcast_episode_id
+     * type = (string) 'song', 'podcast_episode', 'search', 'playlist', 'podcast'
      * bitrate = (integer) max bitrate for transcoding in bytes (e.g 192000=192Kb) // Song only
-     * format  = (string) 'mp3', 'ogg', etc use 'raw' to skip transcoding // Song only
-     * offset  = (integer) time offset in seconds
-     * length  = (integer) 0,1
+     * format = (string) 'mp3', 'ogg', etc use 'raw' to skip transcoding // Song only
+     * offset = (integer) time offset in seconds
+     * length = (integer) 0,1
      *
      * @param array{
      *     id: string,
@@ -77,11 +77,11 @@ final class Stream5Method
         $type      = (string) $input['type'];
         $object_id = (int) $input['id'];
 
-        $maxBitRate    = (int)($input['bitrate'] ?? 0);
+        $maxBitRate    = (int) ($input['bitrate'] ?? 0);
         $format        = $input['format'] ?? null; // mp3, flv or raw
         $transcode_to  = $format && $format != 'raw';
         $timeOffset    = $input['offset'] ?? null;
-        $contentLength = (int)($input['length'] ?? 0); // Force content-length guessing if transcode
+        $contentLength = (int) ($input['length'] ?? 0); // Force content-length guessing if transcode
 
         $params = '&client=api';
         if ($contentLength == 1) {

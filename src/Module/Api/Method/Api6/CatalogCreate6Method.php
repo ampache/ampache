@@ -1,6 +1,6 @@
 <?php
 
-declare(strict_types=0);
+declare(strict_types=1);
 
 /**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
@@ -43,14 +43,14 @@ final class CatalogCreate6Method
      *
      * Create a new catalog
      *
-     * name           = (string) catalog_name
-     * path           = (string) URL or folder path for your catalog
-     * type           = (string) catalog_type default: local ('local', 'beets', 'remote', 'subsonic', 'seafile', 'beetsremote') //optional
-     * media_type     = (string) Default: 'music' ('music', 'podcast', 'video') //optional
-     * file_pattern   = (string) Pattern used identify tags from the file name. Default '%T - %t' //optional
+     * name = (string) catalog_name
+     * path = (string) URL or folder path for your catalog
+     * type = (string) catalog_type default: local ('local', 'beets', 'remote', 'subsonic', 'seafile', 'beetsremote') //optional
+     * media_type = (string) Default: 'music' ('music', 'podcast', 'video') //optional
+     * file_pattern = (string) Pattern used identify tags from the file name. Default '%T - %t' //optional
      * folder_pattern = (string) Pattern used identify tags from the folder name. Default '%a/%A' //optional
-     * username       = (string) login to remote catalog ('remote', 'subsonic', 'seafile') //optional
-     * password       = (string) password to remote catalog ('remote', 'subsonic', 'seafile', 'beetsremote') //optional
+     * username = (string) login to remote catalog ('remote', 'subsonic', 'seafile') //optional
+     * password = (string) password to remote catalog ('remote', 'subsonic', 'seafile', 'beetsremote') //optional
      *
      * @param array{
      *     name: string,

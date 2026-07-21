@@ -318,7 +318,7 @@ class Song extends database_object implements
             $albumartist !== '0'
         ) {
             $albumartist_mbid = Catalog::trim_slashed_list($albumartist_mbid);
-            $albumartist_id   = Artist::check($albumartist, $albumartist_mbid);
+            $albumartist_id   = Artist::check($albumartist, $albumartist_mbid, $user_upload);
         }
 
         // song artist text is the same as album artist so don't worry about looking up id's if they match
@@ -333,7 +333,7 @@ class Song extends database_object implements
             $artist_id = (int)($results['artist_id']);
         } elseif ($artist !== null && $artist !== '' && $artist !== '0') {
             $artist_mbid = Catalog::trim_slashed_list($artist_mbid);
-            $artist_id   = (int)Artist::check($artist, $artist_mbid);
+            $artist_id   = (int)Artist::check($artist, $artist_mbid, $user_upload);
         }
 
         if (isset($results['album_id'])) {
@@ -385,7 +385,7 @@ class Song extends database_object implements
         // add song artists found by name to the list (Ignore artist names when we have the same amount of MBID's)
         if (!empty($artists_array) && !count($artists_array) == count($artist_mbid_array)) {
             foreach ($artists_array as $artist_name) {
-                $song_artist_id = (int)Artist::check($artist_name);
+                $song_artist_id = (int)Artist::check($artist_name, '', $user_upload);
                 if ($song_artist_id > 0) {
                     $artists[] = $song_artist_id;
                     if ($song_artist_id != $artist_id) {
@@ -861,10 +861,10 @@ class Song extends database_object implements
     }
 
     /**
-     * get_artist_fullname
+     * get_parent_fullname
      * gets the name of $this->artist, allows passing of id
      */
-    public function get_artist_fullname(): string
+    public function get_parent_fullname(): string
     {
         if ($this->artist_full_name === null) {
             $this->artist_full_name = Artist::get_fullname_by_id($this->artist);
@@ -992,7 +992,7 @@ class Song extends database_object implements
             // followup on some stats too
             Stats::insert('album', $this->album, $user_id, $agent, $location, 'stream', $date);
             if ($this->album_disk) {
-                Stats::count('album_disk', [$this->album_disk], 'up');
+                Stats::count('album_disk', $this->album_disk, 'up');
             }
             // insert plays for song and album artists
             $artists = array_unique(array_merge(self::get_parent_array($this->id), self::get_parent_array($this->album, 'album')));
@@ -1619,7 +1619,7 @@ class Song extends database_object implements
      */
     public function getFileName(): string
     {
-        $value = $this->get_artist_fullname() . ' - ';
+        $value = $this->get_parent_fullname() . ' - ';
         if ($this->track) {
             $value .= $this->track . ' - ';
         }
@@ -1654,7 +1654,7 @@ class Song extends database_object implements
             'artist' => [
                 'important' => true,
                 'label' => T_('Artist'),
-                'value' => $this->get_artist_fullname(),
+                'value' => $this->get_parent_fullname(),
             ],
             'title' => [
                 'important' => true,
@@ -1723,7 +1723,7 @@ class Song extends database_object implements
     {
         // don't do anything if it's formatted
         if ($this->f_link === null) {
-            $this->f_link = "<a href=\"" . scrub_out($this->get_link()) . "\" title=\"" . scrub_out($this->get_artist_fullname()) . " - " . scrub_out($this->get_fullname()) . "\"> " . scrub_out($this->get_fullname()) . "</a>";
+            $this->f_link = "<a href=\"" . scrub_out($this->get_link()) . "\" title=\"" . scrub_out($this->get_parent_fullname()) . " - " . scrub_out($this->get_fullname()) . "\"> " . scrub_out($this->get_fullname()) . "</a>";
         }
 
         return $this->f_link;
@@ -2123,7 +2123,7 @@ class Song extends database_object implements
      */
     public function get_stream_name(): string
     {
-        return $this->get_artist_fullname() . " - " . $this->title;
+        return $this->get_parent_fullname() . " - " . $this->title;
     }
 
     /**
@@ -2210,7 +2210,7 @@ class Song extends database_object implements
 
             $run = str_replace("%f", $this->file ?? '%f', (string) $action['run']);
             $run = str_replace("%c", $codec, $run);
-            $run = str_replace("%a", (empty($this->get_artist_fullname())) ? '%a' : $this->get_artist_fullname(), $run);
+            $run = str_replace("%a", (empty($this->get_parent_fullname())) ? '%a' : $this->get_parent_fullname(), $run);
             $run = str_replace("%A", (empty($this->get_album_fullname())) ? '%A' : $this->get_album_fullname(), $run);
             $run = str_replace("%t", $this->get_fullname() ?? '%t', $run);
 

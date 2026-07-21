@@ -1,6 +1,6 @@
 <?php
 
-declare(strict_types=0);
+declare(strict_types=1);
 
 /**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
@@ -55,13 +55,13 @@ final class AdvancedSearch4Method
      * Refer to the wiki for further information on rule_* types and data
      * https://ampache.org/api/api-xml-methods
      *
-     * operator        = (string) 'and'|'or' (whether to match one rule or all)
-     * rule_1          = (string)
+     * operator = (string) 'and'|'or' (whether to match one rule or all)
+     * rule_1 = (string)
      * rule_1_operator = (integer) 0|1|2|3|4|5|6
-     * rule_1_input    = (mixed) The string, date, integer you are searching for
-     * type            = (string) 'song', 'album', 'song_artist', 'album_artist', 'artist', 'playlist', 'label', 'user', 'video' (song by default)
-     * offset          = (integer)
-     * limit           = (integer)
+     * rule_1_input = (mixed) The string, date, integer you are searching for
+     * type = (string) 'song', 'album', 'song_artist', 'album_artist', 'artist', 'playlist', 'label', 'user', 'video' (song by default)
+     * offset = (integer)
+     * limit = (integer)
      *
      * @param array<string, mixed> $input
      */

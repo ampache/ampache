@@ -1,6 +1,6 @@
 <?php
 
-declare(strict_types=0);
+declare(strict_types=1);
 
 /**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
@@ -48,7 +48,7 @@ final class UpdateFromTags5Method
      * updates a single album, artist, song from the tag data
      *
      * type = (string) 'artist', 'album', 'song'
-     * id   = (integer) $artist_id, $album_id, $song_id
+     * id = (integer) $artist_id, $album_id, $song_id
      *
      * @param array{
      *     id: string,
@@ -68,7 +68,7 @@ final class UpdateFromTags5Method
 
         // confirm the correct data
         if (!in_array(strtolower($type), ['artist', 'album', 'song'])) {
-            Api5::error(sprintf(T_('Bad Request: %s'), $type), ErrorCodeEnum::BAD_REQUEST, self::ACTION, 'type', $input['api_format']);
+            Api5::error(ErrorCodeEnum::BAD_REQUEST, sprintf(T_('Bad Request: %s'), $type), self::ACTION, 'type', $input['api_format']);
 
             return false;
         }
@@ -78,7 +78,7 @@ final class UpdateFromTags5Method
         $item = new $className($object_id);
         if ($item->isNew()) {
             /* HINT: Requested object string/id/type ("album", "myusername", "some song title", 1298376) */
-            Api5::error(sprintf(T_('Not Found: %s'), $object_id), ErrorCodeEnum::NOT_FOUND, self::ACTION, 'id', $input['api_format']);
+            Api5::error(ErrorCodeEnum::NOT_FOUND, sprintf(T_('Not Found: %s'), $object_id), self::ACTION, 'id', $input['api_format']);
 
             return false;
         }

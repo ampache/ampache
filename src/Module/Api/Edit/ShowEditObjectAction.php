@@ -1,6 +1,6 @@
 <?php
 
-declare(strict_types=0);
+declare(strict_types=1);
 
 /**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
@@ -43,9 +43,7 @@ final class ShowEditObjectAction extends AbstractEditAction
     public const REQUEST_KEY = 'show_edit_object';
 
     private ResponseFactoryInterface $responseFactory;
-
     private StreamFactoryInterface $streamFactory;
-
     private UiInterface $ui;
 
     public function __construct(
@@ -59,6 +57,16 @@ final class ShowEditObjectAction extends AbstractEditAction
         $this->responseFactory = $responseFactory;
         $this->streamFactory   = $streamFactory;
         $this->ui              = $ui;
+    }
+
+    /**
+     * @deprecated inject dependency
+     */
+    private static function getUserRepository(): UserRepositoryInterface
+    {
+        global $dic;
+
+        return $dic->get(UserRepositoryInterface::class);
     }
 
     protected function handle(
@@ -87,17 +95,7 @@ final class ShowEditObjectAction extends AbstractEditAction
 
         return $this->responseFactory->createResponse()
             ->withBody(
-                $this->streamFactory->createStream((string)$results)
+                $this->streamFactory->createStream((string) $results)
             );
-    }
-
-    /**
-     * @deprecated inject dependency
-     */
-    private static function getUserRepository(): UserRepositoryInterface
-    {
-        global $dic;
-
-        return $dic->get(UserRepositoryInterface::class);
     }
 }

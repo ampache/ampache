@@ -265,13 +265,22 @@ final readonly class SongRepository implements SongRepositoryInterface
     public function collectGarbage(Song $song): void
     {
         foreach (Song::get_parent_array($song->id) as $song_artist_id) {
-            Artist::remove_artist_map($song_artist_id, 'song', $song->id);
             Album::check_album_map($song->album, 'song', $song_artist_id);
         }
 
-        Dba::write("DELETE FROM `artist_map` WHERE `artist_map`.`object_type` = 'album' AND `artist_map`.`object_id` IN (SELECT `id` FROM `album` WHERE `album_artist` IS NULL);", [], true);
-        Dba::write("DELETE FROM `artist_map` WHERE `artist_map`.`object_type` = 'album' AND `artist_map`.`object_id` NOT IN (SELECT `album` FROM `song`);", [], true);
-        Dba::write("DELETE FROM `artist_map` WHERE `artist_map`.`object_type` = 'song' AND `artist_map`.`object_id` NOT IN (SELECT `id` FROM `song`);", [], true);
+        Dba::write("DELETE FROM `artist_map` WHERE `artist_map`.`object_type` = 'album' AND `artist_map`.`object_id` = ? AND (EXISTS (SELECT 1 FROM `album` WHERE `album`.`id` = ? AND `album`.`album_artist` IS NULL) OR NOT EXISTS (SELECT 1 FROM `song` WHERE `song`.`album` = ?));", [$song->album, $song->album, $song->album], true);
+        Dba::write("DELETE FROM `artist_map` WHERE `artist_map`.`object_type` = 'song' AND `artist_map`.`object_id` = ?;", [$song->id], true);
+    }
+
+    public function collectGarbageForSongs(array $songIds): void
+    {
+        if ($songIds === []) {
+            return;
+        }
+
+        $idList = implode(',', array_map('intval', $songIds));
+
+        Dba::write("DELETE FROM `artist_map` WHERE `artist_map`.`object_type` = 'song' AND `artist_map`.`object_id` IN ($idList);");
     }
 
     /**

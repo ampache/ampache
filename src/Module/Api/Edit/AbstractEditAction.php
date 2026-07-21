@@ -1,6 +1,6 @@
 <?php
 
-declare(strict_types=0);
+declare(strict_types=1);
 
 /**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
@@ -47,7 +47,6 @@ use Psr\Log\LoggerInterface;
 abstract class AbstractEditAction implements ApplicationActionInterface
 {
     private ConfigContainerInterface $configContainer;
-
     private LoggerInterface $logger;
 
     public function __construct(
@@ -68,10 +67,10 @@ abstract class AbstractEditAction implements ApplicationActionInterface
         );
 
         // Post first
-        $object_type = (string)($_POST['type'] ?? filter_input(INPUT_GET, 'type', FILTER_SANITIZE_SPECIAL_CHARS));
+        $object_type = (string) ($_POST['type'] ?? filter_input(INPUT_GET, 'type', FILTER_SANITIZE_SPECIAL_CHARS));
         $object_id   = (int) Core::get_get('id');
         if (empty($object_type)) {
-            $object_type = $source_object_type = (string)filter_input(
+            $object_type = $source_object_type = (string) filter_input(
                 INPUT_GET,
                 'object_type',
                 FILTER_SANITIZE_SPECIAL_CHARS
@@ -81,7 +80,7 @@ abstract class AbstractEditAction implements ApplicationActionInterface
             $object_type        = implode('_', explode('_', $object_type, -1));
         }
         // source Browse
-        $browse_id = (int)Core::get_get('browse_id');
+        $browse_id = (int) Core::get_get('browse_id');
         $browse    = ($browse_id > 0)
             ? new Browse($browse_id)
             : null;

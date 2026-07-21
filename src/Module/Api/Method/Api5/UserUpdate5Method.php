@@ -1,6 +1,6 @@
 <?php
 
-declare(strict_types=0);
+declare(strict_types=1);
 
 /**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
@@ -49,14 +49,14 @@ final class UserUpdate5Method
      * Update an existing user.
      * Takes the username with optional parameters.
      *
-     * username   = (string) $username
-     * password   = (string) hash('sha256', $password)) //optional
-     * fullname   = (string) $fullname //optional
-     * email      = (string) $email //optional
-     * website    = (string) $website //optional
-     * state      = (string) $state //optional
-     * city       = (string) $city //optional
-     * disable    = (integer) 0,1 true to disable, false to enable //optional
+     * username = (string) $username
+     * password = (string) hash('sha256', $password)) //optional
+     * fullname = (string) $fullname //optional
+     * email = (string) $email //optional
+     * website = (string) $website //optional
+     * state = (string) $state //optional
+     * city = (string) $city //optional
+     * disable = (integer) 0,1 true to disable, false to enable //optional
      * maxbitrate = (integer) $maxbitrate //optional
      *
      * @param array{
@@ -95,21 +95,21 @@ final class UserUpdate5Method
             : null;
         $state      = $input['state'] ?? null;
         $city       = $input['city'] ?? null;
-        $disable    = (isset($input['disable'])) ? (int)$input['disable'] : null;
-        $maxbitrate = (int)($input['maxbitrate'] ?? 0);
+        $disable    = (isset($input['disable'])) ? (int) $input['disable'] : null;
+        $maxbitrate = (int) ($input['maxbitrate'] ?? 0);
 
         // identify the user to modify
         $update_user = User::get_from_username($username);
         if ($update_user === null) {
             /* HINT: Requested object string/id/type ("album", "myusername", "some song title", 1298376) */
-            Api5::error(sprintf(T_('Bad Request: %s'), $username), ErrorCodeEnum::BAD_REQUEST, self::ACTION, 'username', $input['api_format']);
+            Api5::error(ErrorCodeEnum::BAD_REQUEST, sprintf(T_('Bad Request: %s'), $username), self::ACTION, 'username', $input['api_format']);
 
             return false;
         }
 
         if ($password && $update_user->access == 100) {
             /* HINT: Requested object string/id/type ("album", "myusername", "some song title", 1298376) */
-            Api5::error(sprintf(T_('Bad Request: %s'), $username), ErrorCodeEnum::BAD_REQUEST, self::ACTION, 'system', $input['api_format']);
+            Api5::error(ErrorCodeEnum::BAD_REQUEST, sprintf(T_('Bad Request: %s'), $username), self::ACTION, 'system', $input['api_format']);
 
             return false;
         }
@@ -148,7 +148,7 @@ final class UserUpdate5Method
             return true;
         }
         /* HINT: Requested object string/id/type ("album", "myusername", "some song title", 1298376) */
-        Api5::error(sprintf(T_('Bad Request: %s'), $username), ErrorCodeEnum::BAD_REQUEST, self::ACTION, 'system', $input['api_format']);
+        Api5::error(ErrorCodeEnum::BAD_REQUEST, sprintf(T_('Bad Request: %s'), $username), self::ACTION, 'system', $input['api_format']);
 
         return false;
     }

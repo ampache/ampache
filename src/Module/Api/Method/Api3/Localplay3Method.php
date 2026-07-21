@@ -1,6 +1,6 @@
 <?php
 
-declare(strict_types=0);
+declare(strict_types=1);
 
 /**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
@@ -26,6 +26,7 @@ declare(strict_types=0);
 namespace Ampache\Module\Api\Method\Api3;
 
 use Ampache\Config\AmpConfig;
+use Ampache\Module\Api\Api;
 use Ampache\Module\Api\Xml3_Data;
 use Ampache\Module\Playback\Localplay\LocalPlay;
 use Ampache\Repository\Model\User;
@@ -80,11 +81,11 @@ final class Localplay3Method
                 echo Xml3_Data::error(405, T_('Invalid Request'));
 
                 return false;
-        } // end switch on command
+        }
 
         $results = ['localplay' => ['command' => [$input['command'] => $result]]];
 
-        echo Xml3_Data::keyed_array($results);
+        echo Api::keyed_array($results);
 
         return true;
     }

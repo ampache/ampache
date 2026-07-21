@@ -1,6 +1,6 @@
 <?php
 
-declare(strict_types=0);
+declare(strict_types=1);
 
 /**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
@@ -57,10 +57,10 @@ final class ShareCreate5Method
      * Create a public url that can be used by anyone to stream media.
      * Takes the file id with optional description and expires parameters.
      *
-     * filter      = (string) object_id
-     * type        = (string) object_type ('song', 'album', 'artist')
+     * filter = (string) object_id
+     * type = (string) object_type ('song', 'album', 'artist')
      * description = (string) description (will be filled for you if empty) //optional
-     * expires     = (integer) days to keep active //optional
+     * expires = (integer) days to keep active //optional
      *
      * @param array{
      *     filter: string,
@@ -76,7 +76,7 @@ final class ShareCreate5Method
     public static function share_create(array $input, User $user): bool
     {
         if (!AmpConfig::get('share')) {
-            Api5::error(T_('Enable: share'), ErrorCodeEnum::ACCESS_DENIED, self::ACTION, 'system', $input['api_format']);
+            Api5::error(ErrorCodeEnum::ACCESS_DENIED, T_('Enable: share'), self::ACTION, 'system', $input['api_format']);
 
             return false;
         }
@@ -84,65 +84,65 @@ final class ShareCreate5Method
             return false;
         }
 
-        $object_id   = $input['filter'];
-        $object_type = $input['type'];
+        $object_id   = (string) $input['filter'];
+        $object_type = strtolower((string) $input['type']);
         $description = $input['description'] ?? null;
         $expire_days = (isset($input['expires'])) ? filter_var($input['expires'], FILTER_SANITIZE_NUMBER_INT) : AmpConfig::get('share_expire', 7);
         // confirm the correct data
-        if (!in_array(strtolower($object_type), ['song', 'album', 'artist'])) {
+        if (!in_array($object_type, ['song', 'album', 'artist'])) {
             /* HINT: Requested object string/id/type ("album", "myusername", "some song title", 1298376) */
-            Api5::error(sprintf(T_('Bad Request: %s'), $object_type), ErrorCodeEnum::BAD_REQUEST, self::ACTION, 'type', $input['api_format']);
+            Api5::error(ErrorCodeEnum::BAD_REQUEST, sprintf(T_('Bad Request: %s'), $object_type), self::ACTION, 'type', $input['api_format']);
 
             return false;
         }
 
         $className = ObjectTypeToClassNameMapper::map($object_type);
-
-        $results = [];
         if (!$className || !$object_id) {
             /* HINT: Requested object string/id/type ("album", "myusername", "some song title", 1298376) */
-            Api5::error(sprintf(T_('Bad Request: %s'), $object_type), ErrorCodeEnum::BAD_REQUEST, self::ACTION, 'type', $input['api_format']);
-        } else {
-            /** @var Song|Album|Artist $item */
-            $item = new $className($object_id);
-            if ($item->isNew()) {
-                /* HINT: Requested object string/id/type ("album", "myusername", "some song title", 1298376) */
-                Api5::error(sprintf(T_('Not Found: %s'), $object_id), ErrorCodeEnum::NOT_FOUND, self::ACTION, 'filter', $input['api_format']);
-
-                return false;
-            }
-            // @todo Replace by constructor injection
-            global $dic;
-            $functionChecker   = $dic->get(FunctionCheckerInterface::class);
-            $passwordGenerator = $dic->get(PasswordGeneratorInterface::class);
-            $shareCreator      = $dic->get(ShareCreatorInterface::class);
-
-            $share = $shareCreator->create(
-                $user,
-                LibraryItemEnum::from($object_type),
-                $object_id,
-                true,
-                $functionChecker->check(AccessFunctionEnum::FUNCTION_DOWNLOAD),
-                $expire_days,
-                $passwordGenerator->generate_token(),
-                0,
-                $description
-            );
-            if ($share !== null) {
-                $results[] = $share;
-            }
-        }
-        if (empty($results)) {
-            Api5::error(T_('Bad Request'), ErrorCodeEnum::BAD_REQUEST, self::ACTION, 'system', $input['api_format']);
+            Api5::error(ErrorCodeEnum::BAD_REQUEST, sprintf(T_('Bad Request: %s'), $object_type), self::ACTION, 'type', $input['api_format']);
 
             return false;
         }
+
+        /** @var Song|Album|Artist $item */
+        $item = new $className((int) $object_id);
+        if ($item->isNew()) {
+            /* HINT: Requested object string/id/type ("album", "myusername", "some song title", 1298376) */
+            Api5::error(ErrorCodeEnum::NOT_FOUND, sprintf(T_('Not Found: %s'), $object_id), self::ACTION, 'filter', $input['api_format']);
+
+            return false;
+        }
+
+        // @todo Replace by constructor injection
+        global $dic;
+        $functionChecker   = $dic->get(FunctionCheckerInterface::class);
+        $passwordGenerator = $dic->get(PasswordGeneratorInterface::class);
+        $shareCreator      = $dic->get(ShareCreatorInterface::class);
+
+        $share = $shareCreator->create(
+            $user,
+            LibraryItemEnum::from($object_type),
+            (int) $object_id,
+            true,
+            $functionChecker->check(AccessFunctionEnum::FUNCTION_DOWNLOAD),
+            (int) $expire_days,
+            $passwordGenerator->generate_token(),
+            0,
+            $description
+        );
+        if ($share === null) {
+            Api5::error(ErrorCodeEnum::BAD_REQUEST, T_('Bad Request'), self::ACTION, 'system', $input['api_format']);
+
+            return false;
+        }
+
+        $results = [$share];
 
         Catalog::count_table('share');
         ob_end_clean();
         switch ($input['api_format']) {
             case 'json':
-                echo Json5_Data::shares($results, false);
+                echo Json5_Data::shares($results, $user, false);
                 break;
             default:
                 echo Xml5_Data::shares($results, $user);

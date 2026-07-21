@@ -1,6 +1,6 @@
 <?php
 
-declare(strict_types=0);
+declare(strict_types=1);
 
 /**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
@@ -47,13 +47,13 @@ final class PodcastEdit5Method
      * Update the description and/or expiration date for an existing podcast.
      * Takes the podcast id to update with optional description and expires parameters.
      *
-     * filter      = (string) Alpha-numeric search term
-     * feed        = (string) feed url (xml!) //optional
-     * title       = (string) title string //optional
-     * website     = (string) source website url //optional
+     * filter = (string) Alpha-numeric search term
+     * feed = (string) feed url (xml!) //optional
+     * title = (string) title string //optional
+     * website = (string) source website url //optional
      * description = (string) //optional
-     * generator   = (string) //optional
-     * copyright   = (string) //optional
+     * generator = (string) //optional
+     * copyright = (string) //optional
      *
      * @param array{
      *     filter: string,
@@ -70,7 +70,7 @@ final class PodcastEdit5Method
     public static function podcast_edit(array $input, User $user): bool
     {
         if (!AmpConfig::get('podcast')) {
-            Api5::error(T_('Enable: podcast'), ErrorCodeEnum::ACCESS_DENIED, self::ACTION, 'system', $input['api_format']);
+            Api5::error(ErrorCodeEnum::ACCESS_DENIED, T_('Enable: podcast'), self::ACTION, 'system', $input['api_format']);
 
             return false;
         }
@@ -85,7 +85,7 @@ final class PodcastEdit5Method
 
         if ($podcast === null) {
             /* HINT: Requested object string/id/type ("album", "myusername", "some song title", 1298376) */
-            Api5::error(sprintf(T_('Not Found: %s'), $podcast_id), ErrorCodeEnum::NOT_FOUND, self::ACTION, 'filter', $input['api_format']);
+            Api5::error(ErrorCodeEnum::NOT_FOUND, sprintf(T_('Not Found: %s'), $podcast_id), self::ACTION, 'filter', $input['api_format']);
 
             return false;
         }

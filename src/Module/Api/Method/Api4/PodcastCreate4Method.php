@@ -1,6 +1,6 @@
 <?php
 
-declare(strict_types=0);
+declare(strict_types=1);
 
 /**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
@@ -49,7 +49,7 @@ final class PodcastCreate4Method
      * Create a public url that can be used by anyone to stream media.
      * Takes the file id with optional description and expires parameters.
      *
-     * url     = (string) rss url for podcast
+     * url = (string) rss url for podcast
      * catalog = (string) podcast catalog
      *
      * @param array{
@@ -73,7 +73,7 @@ final class PodcastCreate4Method
             return false;
         }
 
-        $catalog = Catalog::create_from_id((int)$input['catalog']);
+        $catalog = Catalog::create_from_id((int) $input['catalog']);
 
         if ($catalog === null) {
             Api4::message('error', T_('Catalog not found'), '401', $input['api_format']);

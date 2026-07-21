@@ -1,6 +1,6 @@
 <?php
 
-declare(strict_types=0);
+declare(strict_types=1);
 
 /**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
@@ -26,6 +26,7 @@ declare(strict_types=0);
 namespace Ampache\Module\Api\Method\Api6;
 
 use Ampache\Config\AmpConfig;
+use Ampache\Module\Api\Api;
 use Ampache\Module\Api\Api6;
 use Ampache\Module\Api\Exception\ErrorCodeEnum;
 use Ampache\Module\Api\Json6_Data;
@@ -53,14 +54,14 @@ final class PlaylistGenerate6Method
      * 'forgotten' will search for tracks played before 'Statistics Day Threshold' days
      * 'unplayed' added in 400002 for searching unplayed tracks.
      *
-     * mode   = (string)  'recent', 'forgotten', 'unplayed', 'random' //optional, default = 'random'
+     * mode = (string)  'recent', 'forgotten', 'unplayed', 'random' //optional, default = 'random'
      * filter = (string)  $filter                       //optional, LIKE matched to song title
-     * album  = (string) $album_id                     //optional
+     * album = (string) $album_id                     //optional
      * artist = (string) $artist_id                    //optional
-     * flag   = (integer) 0,1                           //optional, default = 0
+     * flag = (integer) 0,1                           //optional, default = 0
      * format = (string)  'song', 'index', 'id'         //optional, default = 'song'
      * offset = (integer)                               //optional
-     * limit  = (integer)                               //optional
+     * limit = (integer)                               //optional
      *
      * @param array{
      *     mode?: string,
@@ -86,12 +87,12 @@ final class PlaylistGenerate6Method
             : 'song';
         // confirm the correct data
         if (!in_array($format, ['song', 'index', 'id'])) {
-            Api6::error(sprintf('Bad Request: %s', $format), ErrorCodeEnum::BAD_REQUEST, self::ACTION, 'type', $input['api_format']);
+            Api6::error(ErrorCodeEnum::BAD_REQUEST, sprintf('Bad Request: %s', $format), self::ACTION, 'type', $input['api_format']);
 
             return false;
         }
-        $offset     = (int)($input['offset'] ?? 0);
-        $limit      = (int)($input['limit'] ?? 0);
+        $offset     = (int) ($input['offset'] ?? 0);
+        $limit      = (int) ($input['limit'] ?? 0);
         $rule_count = 1;
         $data       = ['type' => 'song'];
         debug_event(self::class, 'playlist_generate ' . $mode, 5);
@@ -119,7 +120,7 @@ final class PlaylistGenerate6Method
             $rule_count++;
         }
         // additional rules
-        if (array_key_exists('flag', $input) && (int)$input['flag'] == 1) {
+        if (array_key_exists('flag', $input) && (int) $input['flag'] == 1) {
             $data['rule_' . $rule_count]               = 'favorite';
             $data['rule_' . $rule_count . '_input']    = '%';
             $data['rule_' . $rule_count . '_operator'] = 0;
@@ -127,11 +128,11 @@ final class PlaylistGenerate6Method
         }
         if (array_key_exists('filter', $input)) {
             $data['rule_' . $rule_count]               = 'title';
-            $data['rule_' . $rule_count . '_input']    = (string)$input['filter'];
+            $data['rule_' . $rule_count . '_input']    = (string) $input['filter'];
             $data['rule_' . $rule_count . '_operator'] = 0;
             $rule_count++;
         }
-        $album = new Album((int)($input['album'] ?? 0));
+        $album = new Album((int) ($input['album'] ?? 0));
         if ((array_key_exists('album', $input)) && ($album->id == $input['album'])) {
             // set rule
             $data['rule_' . $rule_count]               = 'album';
@@ -139,7 +140,7 @@ final class PlaylistGenerate6Method
             $data['rule_' . $rule_count . '_operator'] = 4;
             $rule_count++;
         }
-        $artist = new Artist((int)($input['artist'] ?? 0));
+        $artist = new Artist((int) ($input['artist'] ?? 0));
         if ((array_key_exists('artist', $input)) && ($artist->id == $input['artist'])) {
             // set rule
             $data['rule_' . $rule_count]               = 'artist';
@@ -183,7 +184,7 @@ final class PlaylistGenerate6Method
                         echo json_encode($results, JSON_PRETTY_PRINT);
                         break;
                     default:
-                        echo Xml6_Data::keyed_array($results, false, 'id');
+                        echo Api::keyed_array($results, false, 'id');
                 }
                 break;
             case 'index':

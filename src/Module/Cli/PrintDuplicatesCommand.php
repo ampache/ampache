@@ -115,7 +115,7 @@ final class PrintDuplicatesCommand extends Command
             // songs are missing some data
             if ($object instanceof Song) {
                 $object->get_album_fullname();
-                $object->get_artist_fullname();
+                $object->get_parent_fullname();
             }
 
             $props = get_object_vars($object);

@@ -1,6 +1,6 @@
 <?php
 
-declare(strict_types=0);
+declare(strict_types=1);
 
 /**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
@@ -66,10 +66,10 @@ final class ShareCreate6Method
      * Create a public url that can be used by anyone to stream media.
      * Takes the file id with optional description and expires parameters.
      *
-     * filter      = (string) object_id
-     * type        = (string) object_type ('album', 'artist', 'playlist', 'podcast', 'podcast_episode', 'smartlist', 'song', 'video')
+     * filter = (string) object_id
+     * type = (string) object_type ('album', 'artist', 'playlist', 'podcast', 'podcast_episode', 'smartlist', 'song', 'video')
      * description = (string) description (will be filled for you if empty) //optional
-     * expires     = (integer) days to keep active //optional
+     * expires = (integer) days to keep active //optional
      *
      * @param array{
      *     filter: string,
@@ -85,7 +85,7 @@ final class ShareCreate6Method
     public static function share_create(array $input, User $user): bool
     {
         if (!AmpConfig::get('share')) {
-            Api6::error('Enable: share', ErrorCodeEnum::ACCESS_DENIED, self::ACTION, 'system', $input['api_format']);
+            Api6::error(ErrorCodeEnum::ACCESS_DENIED, 'Enable: share', self::ACTION, 'system', $input['api_format']);
 
             return false;
         }
@@ -93,71 +93,71 @@ final class ShareCreate6Method
             return false;
         }
 
-        $object_id   = $input['filter'];
-        $object_type = $input['type'];
+        $object_id   = (string) $input['filter'];
+        $object_type = strtolower((string) $input['type']);
         $description = $input['description'] ?? null;
         $expire_days = (isset($input['expires'])) ? filter_var($input['expires'], FILTER_SANITIZE_NUMBER_INT) : AmpConfig::get('share_expire', 7);
         // confirm the correct data
-        if (!in_array(strtolower($object_type), ['album', 'artist', 'playlist', 'podcast', 'podcast_episode', 'song', 'video'])) {
+        if (!in_array($object_type, ['album', 'artist', 'playlist', 'podcast', 'podcast_episode', 'smartlist', 'song', 'video'])) {
             /* HINT: Requested object string/id/type ("album", "myusername", "some song title", 1298376) */
-            Api6::error(sprintf('Bad Request: %s', $object_type), ErrorCodeEnum::BAD_REQUEST, self::ACTION, 'type', $input['api_format']);
+            Api6::error(ErrorCodeEnum::BAD_REQUEST, sprintf('Bad Request: %s', $object_type), self::ACTION, 'type', $input['api_format']);
 
             return false;
         }
-        // searches are playlists but not in the database
-        if (($object_type === 'playlist' || $object_type === 'smartlist') && ((int)$object_id) === 0) {
-            $object_id   = str_replace('smart_', '', (string) $object_id);
+        // searches are playlists but not in the database. 'smartlist' is always a search
+        if ($object_type === 'smartlist' || ($object_type === 'playlist' && ((int) $object_id) === 0)) {
+            $object_id   = str_replace('smart_', '', $object_id);
             $object_type = 'search';
         }
 
         $className = ObjectTypeToClassNameMapper::map($object_type);
-
-        $results = [];
         if (!$className || !$object_id) {
             debug_event(self::class, 'ERROR ' . $object_type . ' className: ' . $className . ' object_id: ' . $object_id, 5);
             /* HINT: Requested object string/id/type ("album", "myusername", "some song title", 1298376) */
-            Api6::error(sprintf('Bad Request: %s', $object_type), ErrorCodeEnum::BAD_REQUEST, self::ACTION, 'type', $input['api_format']);
-        } else {
-            /** @var Album|Artist|Live_stream|Playlist|Podcast|Podcast_episode|Search|Song|Video $item */
-            $item = new $className((int)$object_id);
-            if ($item->isNew()) {
-                /* HINT: Requested object string/id/type ("album", "myusername", "some song title", 1298376) */
-                Api6::error(sprintf('Not Found: %s', $object_id), ErrorCodeEnum::NOT_FOUND, self::ACTION, 'filter', $input['api_format']);
-
-                return false;
-            }
-            // @todo Replace by constructor injection
-            global $dic;
-            $functionChecker   = $dic->get(FunctionCheckerInterface::class);
-            $passwordGenerator = $dic->get(PasswordGeneratorInterface::class);
-            $shareCreator      = $dic->get(ShareCreatorInterface::class);
-
-            $share = $shareCreator->create(
-                $user,
-                LibraryItemEnum::from($object_type),
-                $object_id,
-                true,
-                $functionChecker->check(AccessFunctionEnum::FUNCTION_DOWNLOAD),
-                $expire_days,
-                $passwordGenerator->generate_token(),
-                0,
-                $description
-            );
-            if ($share !== null) {
-                $results[] = $share;
-            }
-        }
-        if (empty($results)) {
-            Api6::error('Bad Request', ErrorCodeEnum::BAD_REQUEST, self::ACTION, 'system', $input['api_format']);
+            Api6::error(ErrorCodeEnum::BAD_REQUEST, sprintf('Bad Request: %s', $object_type), self::ACTION, 'type', $input['api_format']);
 
             return false;
         }
+
+        /** @var Album|Artist|Live_stream|Playlist|Podcast|Podcast_episode|Search|Song|Video $item */
+        $item = new $className((int) $object_id);
+        if ($item->isNew()) {
+            /* HINT: Requested object string/id/type ("album", "myusername", "some song title", 1298376) */
+            Api6::error(ErrorCodeEnum::NOT_FOUND, sprintf('Not Found: %s', $object_id), self::ACTION, 'filter', $input['api_format']);
+
+            return false;
+        }
+
+        // @todo Replace by constructor injection
+        global $dic;
+        $functionChecker   = $dic->get(FunctionCheckerInterface::class);
+        $passwordGenerator = $dic->get(PasswordGeneratorInterface::class);
+        $shareCreator      = $dic->get(ShareCreatorInterface::class);
+
+        $share = $shareCreator->create(
+            $user,
+            LibraryItemEnum::from($object_type),
+            (int) $object_id,
+            true,
+            $functionChecker->check(AccessFunctionEnum::FUNCTION_DOWNLOAD),
+            (int) $expire_days,
+            $passwordGenerator->generate_token(),
+            0,
+            $description
+        );
+        if ($share === null) {
+            Api6::error(ErrorCodeEnum::BAD_REQUEST, 'Bad Request', self::ACTION, 'system', $input['api_format']);
+
+            return false;
+        }
+
+        $results = [$share];
 
         Catalog::count_table('share');
         ob_end_clean();
         switch ($input['api_format']) {
             case 'json':
-                echo Json6_Data::shares($results, false);
+                echo Json6_Data::shares($results, $user, false);
                 break;
             default:
                 echo Xml6_Data::shares($results, $user);

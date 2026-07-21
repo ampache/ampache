@@ -1,6 +1,6 @@
 <?php
 
-declare(strict_types=0);
+declare(strict_types=1);
 
 /**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
@@ -158,49 +158,22 @@ class Api5
     public static string $version_numeric = '556000'; // AMPACHE_VERSION
 
     /**
-     * message
-     * call the correct success message depending on format
-     * @param array<string, string> $return_data
+     * check_access
+     *
+     * This function checks the user can perform the function requested
+     * 'interface', 100, $user->id
      */
-    public static function message(string $message, string $format = 'xml', array $return_data = []): void
+    public static function check_access(AccessTypeEnum $type, AccessLevelEnum $level, int $user_id, string $method, string $format = 'xml'): bool
     {
-        switch ($format) {
-            case 'json':
-                echo Json5_Data::success($message, $return_data);
-                break;
-            default:
-                echo Xml5_Data::success($message, $return_data);
-        }
-    }
+        if (!Access::check($type, $level, $user_id)) {
+            debug_event(self::class, $type->value . " '" . $level->value . "' required on " . $method . " function call.", 2);
+            /* HINT: Access level, eg 75, 100 */
+            self::error('4742', sprintf(T_('Require: %s'), $level->value), $method, 'account', $format);
 
-    /**
-     * error
-     * call the correct error message depending on format
-     */
-    public static function error(string $message, int|string $error_code, string $method, string $error_type, string $format = 'xml'): void
-    {
-        switch ($format) {
-            case 'json':
-                echo Json5_Data::error($error_code, $message, $method, $error_type);
-                break;
-            default:
-                echo Xml5_Data::error($error_code, $message, $method, $error_type);
+            return false;
         }
-    }
 
-    /**
-     * empty
-     * call the correct empty message depending on format
-     */
-    public static function empty(string $empty_type, string $format = 'xml'): void
-    {
-        switch ($format) {
-            case 'json':
-                echo Json5_Data::empty($empty_type);
-                break;
-            default:
-                echo Xml5_Data::empty();
-        }
+        return true;
     }
 
     /**
@@ -222,28 +195,55 @@ class Api5
         debug_event(self::class, "'" . $parameter . "' required on " . $method . " function call.", 2);
 
         /* HINT: Requested object string/id/type ("album", "myusername", "some song title", 1298376) */
-        self::error(sprintf(T_('Bad Request: %s'), $parameter), '4710', $method, 'system', $input['api_format']);
+        self::error('4710', sprintf(T_('Bad Request: %s'), $parameter), $method, 'system', $input['api_format']);
 
         return false;
     }
 
     /**
-     * check_access
-     *
-     * This function checks the user can perform the function requested
-     * 'interface', 100, $user->id
+     * empty
+     * call the correct empty message depending on format
      */
-    public static function check_access(AccessTypeEnum $type, AccessLevelEnum $level, int $user_id, string $method, string $format = 'xml'): bool
+    public static function empty(string $empty_type, string $format = 'xml'): void
     {
-        if (!Access::check($type, $level, $user_id)) {
-            debug_event(self::class, $type->value . " '" . $level->value . "' required on " . $method . " function call.", 2);
-            /* HINT: Access level, eg 75, 100 */
-            self::error(sprintf(T_('Require: %s'), $level->value), '4742', $method, 'account', $format);
-
-            return false;
+        switch ($format) {
+            case 'json':
+                echo Json5_Data::empty($empty_type);
+                break;
+            default:
+                echo Xml5_Data::empty();
         }
+    }
 
-        return true;
+    /**
+     * error
+     * call the correct error message depending on format
+     */
+    public static function error(int|string $code, string $message, string $method, string $error_type, string $format = 'xml'): void
+    {
+        switch ($format) {
+            case 'json':
+                echo Json5_Data::error($code, $message, $method, $error_type);
+                break;
+            default:
+                echo Xml5_Data::error($code, $message, $method, $error_type);
+        }
+    }
+
+    /**
+     * message
+     * call the correct success message depending on format
+     * @param array<string, string> $return_data
+     */
+    public static function message(string $message, string $format = 'xml', array $return_data = []): void
+    {
+        switch ($format) {
+            case 'json':
+                echo Json5_Data::success($message, $return_data);
+                break;
+            default:
+                echo Xml5_Data::success($message, $return_data);
+        }
     }
 
     /**
@@ -291,7 +291,7 @@ class Api5
             : ($counts['playlist'] + $counts['search']);
         $autharray = (!empty($token)) ? ['auth' => $token] : [];
         // perpetual sessions do not expire
-        $perpetual      = (bool)AmpConfig::get('perpetual_api_session', false);
+        $perpetual      = (bool) AmpConfig::get('perpetual_api_session', false);
         $session_expire = ($perpetual)
             ? 0
             : date("c", time() + AmpConfig::get('session_length', 3600) - 60);
@@ -300,9 +300,9 @@ class Api5
         $outarray = [
             'api' => self::$version,
             'session_expire' => $session_expire,
-            'update' => date("c", (int)$details['update']),
-            'add' => date("c", (int)$details['add']),
-            'clean' => date("c", (int)$details['clean']),
+            'update' => date("c", (int) $details['update']),
+            'add' => date("c", (int) $details['add']),
+            'clean' => date("c", (int) $details['clean']),
             'songs' => $counts['song'],
             'albums' => $counts['album'],
             'artists' => $counts['artist'],

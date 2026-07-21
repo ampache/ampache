@@ -1,6 +1,6 @@
 <?php
 
-declare(strict_types=0);
+declare(strict_types=1);
 
 /**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
@@ -46,7 +46,7 @@ final class Podcast5Method
      *
      * Get the podcast from it's id.
      *
-     * filter  = (integer) Podcast ID number
+     * filter = (integer) Podcast ID number
      * include = (string) 'episodes' (include episodes in the response) //optional
      *
      * @param array{
@@ -59,7 +59,7 @@ final class Podcast5Method
     public static function podcast(array $input, User $user): bool
     {
         if (!AmpConfig::get('podcast')) {
-            Api5::error(T_('Enable: podcast'), ErrorCodeEnum::ACCESS_DENIED, self::ACTION, 'system', $input['api_format']);
+            Api5::error(ErrorCodeEnum::ACCESS_DENIED, T_('Enable: podcast'), self::ACTION, 'system', $input['api_format']);
 
             return false;
         }
@@ -72,13 +72,13 @@ final class Podcast5Method
 
         if ($podcast === null) {
             /* HINT: Requested object string/id/type ("album", "myusername", "some song title", 1298376) */
-            Api5::error(sprintf(T_('Not Found: %s'), $object_id), ErrorCodeEnum::NOT_FOUND, self::ACTION, 'filter', $input['api_format']);
+            Api5::error(ErrorCodeEnum::NOT_FOUND, sprintf(T_('Not Found: %s'), $object_id), self::ACTION, 'filter', $input['api_format']);
 
             return false;
         }
 
         ob_end_clean();
-        $episodes = ($include == 'episodes' || (int)$include == 1);
+        $episodes = ($include == 'episodes' || (int) $include == 1);
         switch ($input['api_format']) {
             case 'json':
                 echo Json5_Data::podcasts([$object_id], $user, $input['auth'], $episodes, false);

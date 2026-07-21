@@ -1,6 +1,6 @@
 <?php
 
-declare(strict_types=0);
+declare(strict_types=1);
 
 /**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
@@ -67,14 +67,14 @@ final class PreferenceDelete6Method
         $pref_name  = $input['filter'];
         $preference = Preference::get($pref_name, -1);
         if (empty($preference)) {
-            Api6::error(sprintf('Not Found: %s', $pref_name), ErrorCodeEnum::NOT_FOUND, self::ACTION, 'filter', $input['api_format']);
+            Api6::error(ErrorCodeEnum::NOT_FOUND, sprintf('Not Found: %s', $pref_name), self::ACTION, 'filter', $input['api_format']);
 
             return false;
         }
         // Might be a good idea to not delete system preferences
         if (in_array($pref_name, array_merge(Preference::SYSTEM_LIST, Preference::PLUGIN_LIST))) {
             /* HINT: Requested object string/id/type ("album", "myusername", "some song title", 1298376) */
-            Api6::error(sprintf('Bad Request: %s', $pref_name), ErrorCodeEnum::BAD_REQUEST, self::ACTION, 'filter', $input['api_format']);
+            Api6::error(ErrorCodeEnum::BAD_REQUEST, sprintf('Bad Request: %s', $pref_name), self::ACTION, 'filter', $input['api_format']);
 
             return false;
         }

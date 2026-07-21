@@ -1,6 +1,6 @@
 <?php
 
-declare(strict_types=0);
+declare(strict_types=1);
 
 /**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
@@ -44,10 +44,10 @@ final class ShareEdit5Method
      * Update the description and/or expiration date for an existing share.
      * Takes the share id to update with optional description and expires parameters.
      *
-     * filter      = (string) Alpha-numeric search term
-     * stream      = (boolean) 0,1 //optional
-     * download    = (boolean) 0,1 //optional
-     * expires     = (integer) number of whole days before expiry //optional
+     * filter = (string) Alpha-numeric search term
+     * stream = (boolean) 0,1 //optional
+     * download = (boolean) 0,1 //optional
+     * expires = (integer) number of whole days before expiry //optional
      * description = (string) update description //optional
      *
      * @param array{
@@ -63,7 +63,7 @@ final class ShareEdit5Method
     public static function share_edit(array $input, User $user): bool
     {
         if (!AmpConfig::get('share')) {
-            Api5::error(T_('Enable: share'), ErrorCodeEnum::ACCESS_DENIED, self::ACTION, 'system', $input['api_format']);
+            Api5::error(ErrorCodeEnum::ACCESS_DENIED, T_('Enable: share'), self::ACTION, 'system', $input['api_format']);
 
             return false;
         }
@@ -75,11 +75,11 @@ final class ShareEdit5Method
         $share = self::getShareRepository()->findById((int) $share_id);
 
         if (
-            $share === null ||
-            !$share->isAccessible($user)
+            $share === null
+            || !$share->isAccessible($user)
         ) {
             /* HINT: Requested object string/id/type ("album", "myusername", "some song title", 1298376) */
-            Api5::error(sprintf(T_('Not Found: %s'), $share_id), ErrorCodeEnum::NOT_FOUND, self::ACTION, 'filter', $input['api_format']);
+            Api5::error(ErrorCodeEnum::NOT_FOUND, sprintf(T_('Not Found: %s'), $share_id), self::ACTION, 'filter', $input['api_format']);
 
             return true;
         }
@@ -100,7 +100,7 @@ final class ShareEdit5Method
             Api5::message('share ' . $share_id . ' updated', $input['api_format']);
         } else {
             /* HINT: Requested object string/id/type ("album", "myusername", "some song title", 1298376) */
-            Api5::error(sprintf(T_('Bad Request: %s'), $share_id), ErrorCodeEnum::BAD_REQUEST, self::ACTION, 'system', $input['api_format']);
+            Api5::error(ErrorCodeEnum::BAD_REQUEST, sprintf(T_('Bad Request: %s'), $share_id), self::ACTION, 'system', $input['api_format']);
         }
 
         return true;

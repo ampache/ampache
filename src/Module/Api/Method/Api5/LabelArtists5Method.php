@@ -1,25 +1,25 @@
 <?php
 
-declare(strict_types=0);
+declare(strict_types=1);
 
 /**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
- * LICENSE: GNU Affero General Public Label, version 3 (AGPL-3.0-or-later)
+ * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
  * Copyright Ampache.org, 2001-2026
  *
  * This program is free software: you can redistribute it and/or modify
- * it under the terms of the GNU Affero General Public Label as published by
- * the Free Software Foundation, either version 3 of the Label, or
+ * it under the terms of the GNU Affero General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
  * (at your option) any later version.
  *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU Affero General Public Label for more details.
+ * GNU Affero General Public License for more details.
  *
- * You should have received a copy of the GNU Affero General Public Label
- * along with this program.  If not, see <https://www.gnu.org/labels/>.
+ * You should have received a copy of the GNU Affero General Public License
+ * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  *
  */
 
@@ -46,7 +46,7 @@ final class LabelArtists5Method
      *
      * This returns all artists attached to a label ID
      *
-     * filter  = (string) UID of label
+     * filter = (string) UID of label
      * include = (array|string) 'albums', 'songs' //optional
      *
      * @param array{
@@ -63,7 +63,7 @@ final class LabelArtists5Method
     public static function label_artists(array $input, User $user): bool
     {
         if (!AmpConfig::get('label')) {
-            Api5::error(T_('Enable: label'), ErrorCodeEnum::ACCESS_DENIED, self::ACTION, 'system', $input['api_format']);
+            Api5::error(ErrorCodeEnum::ACCESS_DENIED, T_('Enable: label'), self::ACTION, 'system', $input['api_format']);
 
             return false;
         }
@@ -73,7 +73,7 @@ final class LabelArtists5Method
         $include = [];
         if (array_key_exists('include', $input)) {
             if (!is_array($input['include'])) {
-                $input['include'] = explode(',', html_entity_decode((string)($input['include'])));
+                $input['include'] = explode(',', html_entity_decode((string) ($input['include'])));
             }
             foreach ($input['include'] as $item) {
                 if ($item === 'songs' || $item == '1') {
@@ -103,9 +103,13 @@ final class LabelArtists5Method
         ob_end_clean();
         switch ($input['api_format']) {
             case 'json':
+                Json5_Data::set_offset($input['offset'] ?? 0);
+                Json5_Data::set_limit($input['limit'] ?? 0);
                 echo Json5_Data::artists($results, $include, $user, $input['auth']);
                 break;
             default:
+                Xml5_Data::set_offset($input['offset'] ?? 0);
+                Xml5_Data::set_limit($input['limit'] ?? 0);
                 echo Xml5_Data::artists($results, $include, $user, $input['auth']);
         }
 

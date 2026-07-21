@@ -1,6 +1,6 @@
 <?php
 
-declare(strict_types=0);
+declare(strict_types=1);
 
 /**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
@@ -49,7 +49,7 @@ final class UserDelete6Method
      * Delete an existing user.
      * Takes the username in parameter.
      *
-     * filter   = (integer|string) filter by user id OR username //optional
+     * filter = (integer|string) filter by user id OR username //optional
      * username = (string) $username
      *
      * @param array{
@@ -72,12 +72,12 @@ final class UserDelete6Method
 
         $username = $input['username'];
         $del_user = (is_numeric($username))
-            ? User::get_from_id((int)$username)
-            : User::get_from_username((string)$username);
+            ? User::get_from_id((int) $username)
+            : User::get_from_username((string) $username);
 
         if ($del_user === null) {
             /* HINT: Requested object string/id/type ("album", "myusername", "some song title", 1298376) */
-            Api6::error(sprintf('Bad Request: %s', $username), ErrorCodeEnum::BAD_REQUEST, self::ACTION, 'system', $input['api_format']);
+            Api6::error(ErrorCodeEnum::BAD_REQUEST, sprintf('Bad Request: %s', $username), self::ACTION, 'system', $input['api_format']);
 
             return false;
         }
@@ -90,7 +90,7 @@ final class UserDelete6Method
             return true;
         }
         /* HINT: Requested object string/id/type ("album", "myusername", "some song title", 1298376) */
-        Api6::error(sprintf('Bad Request: %s', $username), ErrorCodeEnum::BAD_REQUEST, self::ACTION, 'system', $input['api_format']);
+        Api6::error(ErrorCodeEnum::BAD_REQUEST, sprintf('Bad Request: %s', $username), self::ACTION, 'system', $input['api_format']);
 
         return false;
     }

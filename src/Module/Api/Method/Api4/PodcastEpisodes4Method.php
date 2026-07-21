@@ -1,6 +1,6 @@
 <?php
 
-declare(strict_types=0);
+declare(strict_types=1);
 
 /**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
@@ -26,6 +26,7 @@ declare(strict_types=0);
 namespace Ampache\Module\Api\Method\Api4;
 
 use Ampache\Config\AmpConfig;
+use Ampache\Module\Api\Api;
 use Ampache\Module\Api\Api4;
 use Ampache\Module\Api\Json4_Data;
 use Ampache\Module\Api\Xml4_Data;
@@ -47,7 +48,7 @@ final class PodcastEpisodes4Method
      *
      * filter = (string) UID of podcast
      * offset = (integer) //optional
-     * limit  = (integer) //optional
+     * limit = (integer) //optional
      *
      * @param array{
      *     filter: string,
@@ -69,7 +70,7 @@ final class PodcastEpisodes4Method
         if (!Api4::check_parameter($input, ['filter'], self::ACTION)) {
             return false;
         }
-        $podcast_id = (int)$input['filter'];
+        $podcast_id = (int) $input['filter'];
         debug_event(self::class, 'User ' . $user->id . ' loading podcast: ' . $podcast_id, 5);
         $podcastRepository = self::getPodcastRepository();
         $podcast           = $podcastRepository->findById($podcast_id);
@@ -80,14 +81,21 @@ final class PodcastEpisodes4Method
             return false;
         }
 
-        $results = $podcast->getEpisodeIds();
+        $browse = Api::getBrowse($user);
+        $browse->set_type('podcast_episode');
+        $browse->set_sort_order(html_entity_decode((string) ($input['sort'] ?? '')), ['pubdate', 'DESC']);
+        $browse->set_filter('podcast', $podcast_id);
+
+        $browse->set_conditions(html_entity_decode((string) ($input['cond'] ?? '')));
+
+        $results = $browse->get_objects();
 
         ob_end_clean();
         switch ($input['api_format']) {
             case 'json':
                 Json4_Data::set_offset($input['offset'] ?? 0);
                 Json4_Data::set_limit($input['limit'] ?? 0);
-                echo Json4_Data::podcast_episodes($results, $user, $input['auth'], true, false);
+                echo Json4_Data::podcast_episodes($results, $user, $input['auth'], false);
                 break;
             default:
                 Xml4_Data::set_offset($input['offset'] ?? 0);

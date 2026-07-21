@@ -59,7 +59,7 @@ final class SongDeleter implements SongDeleterInterface
         $this->artCleanup             = $artCleanup;
     }
 
-    public function delete(Song $song): bool
+    public function delete(Song $song, bool $parent = false): bool
     {
         if (!empty($song->file) && file_exists($song->file)) {
             $deleted = unlink($song->file);
@@ -71,11 +71,13 @@ final class SongDeleter implements SongDeleterInterface
             $deleted = $this->songRepository->delete($songId);
             if ($deleted) {
                 $this->artCleanup->collectGarbageForObject('song', $songId);
-                Userflag::garbage_collection('song', $songId);
-                Rating::garbage_collection('song', $songId);
-                $this->shoutRepository->collectGarbage('song', $songId);
-                $this->useractivityRepository->collectGarbage('song', $songId);
-                $this->songRepository->collectGarbage($song);
+                if (!$parent) {
+                    Userflag::garbage_collection('song', $songId);
+                    Rating::garbage_collection('song', $songId);
+                    $this->shoutRepository->collectGarbage('song', $songId);
+                    $this->useractivityRepository->collectGarbage('song', $songId);
+                    $this->songRepository->collectGarbage($song);
+                }
             }
         } else {
             $this->logger->critical(

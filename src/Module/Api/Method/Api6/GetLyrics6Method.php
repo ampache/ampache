@@ -1,6 +1,6 @@
 <?php
 
-declare(strict_types=0);
+declare(strict_types=1);
 
 /**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
@@ -25,9 +25,9 @@ declare(strict_types=0);
 
 namespace Ampache\Module\Api\Method\Api6;
 
+use Ampache\Module\Api\Api;
 use Ampache\Module\Api\Api6;
 use Ampache\Module\Api\Exception\ErrorCodeEnum;
-use Ampache\Module\Api\Xml6_Data;
 use Ampache\Module\System\Plugin\PluginTypeEnum;
 use Ampache\Plugin\PluginGetLyricsInterface;
 use Ampache\Repository\Model\Plugin;
@@ -48,7 +48,7 @@ final class GetLyrics6Method
      *
      * Return Database lyrics or search with plugins by Song id
      *
-     * filter  = (string) song id
+     * filter = (string) song id
      * plugins = (int) 0,1, if false disable plugin lookup (Default: 1)
      *
      * @param array{
@@ -68,7 +68,7 @@ final class GetLyrics6Method
         $libitem   = new Song($object_id);
 
         if ($libitem->isNew()) {
-            Api6::error(sprintf('Bad Request: %s', $object_id), ErrorCodeEnum::BAD_REQUEST, self::ACTION, 'filter', $input['api_format']);
+            Api6::error(ErrorCodeEnum::BAD_REQUEST, sprintf('Bad Request: %s', $object_id), self::ACTION, 'filter', $input['api_format']);
 
             return false;
         }
@@ -84,7 +84,7 @@ final class GetLyrics6Method
             $results['plugin']['database'] = $database_lyrics;
         }
 
-        if ((int)($input['plugins'] ?? 1) === 1) {
+        if ((int) ($input['plugins'] ?? 1) === 1) {
             foreach (Plugin::get_plugins(PluginTypeEnum::LYRIC_RETRIEVER) as $plugin_name) {
                 $plugin = new Plugin($plugin_name);
                 if ($plugin->_plugin instanceof PluginGetLyricsInterface && $plugin->load($user)) {
@@ -103,7 +103,7 @@ final class GetLyrics6Method
                 echo json_encode($results, JSON_PRETTY_PRINT);
                 break;
             default:
-                echo Xml6_Data::keyed_array($results);
+                echo Api::keyed_array($results);
         }
 
         return true;

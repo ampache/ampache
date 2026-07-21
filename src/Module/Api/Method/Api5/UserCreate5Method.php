@@ -1,6 +1,6 @@
 <?php
 
-declare(strict_types=0);
+declare(strict_types=1);
 
 /**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
@@ -50,8 +50,8 @@ final class UserCreate5Method
      * username = (string) $username
      * fullname = (string) $fullname //optional
      * password = (string) hash('sha256', $password)
-     * email    = (string) $email
-     * disable  = (integer) 0,1 //optional, default = 0
+     * email = (string) $email
+     * disable = (integer) 0,1 //optional, default = 0
      *
      * @param array{
      *     username: string,
@@ -103,17 +103,17 @@ final class UserCreate5Method
 
         if ($userRepository->idByUsername($username) > 0) {
             /* HINT: Requested object string/id/type ("album", "myusername", "some song title", 1298376) */
-            Api5::error(sprintf(T_('Bad Request: %s'), $username), ErrorCodeEnum::BAD_REQUEST, self::ACTION, 'username', $input['api_format']);
+            Api5::error(ErrorCodeEnum::BAD_REQUEST, sprintf(T_('Bad Request: %s'), $username), self::ACTION, 'username', $input['api_format']);
 
             return false;
         }
         if ($userRepository->idByEmail($email) > 0) {
             /* HINT: Requested object string/id/type ("album", "myusername", "some song title", 1298376) */
-            Api5::error(sprintf(T_('Bad Request: %s'), $email), ErrorCodeEnum::BAD_REQUEST, self::ACTION, 'email', $input['api_format']);
+            Api5::error(ErrorCodeEnum::BAD_REQUEST, sprintf(T_('Bad Request: %s'), $email), self::ACTION, 'email', $input['api_format']);
 
             return false;
         }
-        Api5::error(T_('Bad Request'), ErrorCodeEnum::BAD_REQUEST, self::ACTION, 'system', $input['api_format']);
+        Api5::error(ErrorCodeEnum::BAD_REQUEST, T_('Bad Request'), self::ACTION, 'system', $input['api_format']);
 
         return false;
     }

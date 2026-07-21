@@ -1,6 +1,6 @@
 <?php
 
-declare(strict_types=0);
+declare(strict_types=1);
 
 /**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
@@ -63,17 +63,17 @@ final class UrlToSong5Method
         $song_url = html_entity_decode($input['url'], ENT_QUOTES, $charset);
         $url_data = Stream_Url::parse($song_url);
         if (!array_key_exists('id', $url_data)) {
-            Api5::error(T_('Bad Request'), ErrorCodeEnum::BAD_REQUEST, self::ACTION, 'url', $input['api_format']);
+            Api5::error(ErrorCodeEnum::BAD_REQUEST, T_('Bad Request'), self::ACTION, 'url', $input['api_format']);
 
             return false;
         }
         ob_end_clean();
         switch ($input['api_format']) {
             case 'json':
-                echo Json5_Data::songs([(int)$url_data['id']], $user, $input['auth'], true, false);
+                echo Json5_Data::songs([(int) $url_data['id']], $user, $input['auth'], false);
                 break;
             default:
-                echo Xml5_Data::songs([(int)$url_data['id']], $user, $input['auth']);
+                echo Xml5_Data::songs([(int) $url_data['id']], $user, $input['auth']);
         }
 
         return true;

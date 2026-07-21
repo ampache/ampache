@@ -1,6 +1,6 @@
 <?php
 
-declare(strict_types=0);
+declare(strict_types=1);
 
 /**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
@@ -43,12 +43,12 @@ final class Albums4Method
      *
      * This returns albums based on the provided search filters
      *
-     * filter  = (string) Alpha-numeric search term //optional
-     * exact   = (integer) 0,1, if true filter is exact rather then fuzzy //optional
-     * add     = $browse->set_api_filter(date) //optional
-     * update  = $browse->set_api_filter(date) //optional
-     * offset  = (integer) //optional
-     * limit   = (integer) //optional
+     * filter = (string) Alpha-numeric search term //optional
+     * exact = (integer) 0,1, if true filter is exact rather then fuzzy //optional
+     * add = $browse->set_api_filter(date) //optional
+     * update = $browse->set_api_filter(date) //optional
+     * offset = (integer) //optional
+     * limit = (integer) //optional
      * include = (array) 'songs' //optional
      *
      * @param array{
@@ -69,11 +69,13 @@ final class Albums4Method
     {
         $browse = Api::getBrowse($user);
         $browse->set_type('album');
-        $browse->set_sort('name', 'ASC', false);
-        $method = (array_key_exists('exact', $input) && (int)$input['exact'] == 1) ? 'exact_match' : 'alpha_match';
+        $browse->set_sort_order(html_entity_decode((string) ($input['sort'] ?? '')), ['name', 'ASC']);
+        $method = (array_key_exists('exact', $input) && (int) $input['exact'] == 1) ? 'exact_match' : 'alpha_match';
         $browse->set_api_filter($method, $input['filter'] ?? '');
         $browse->set_api_filter('add', $input['add'] ?? '');
         $browse->set_api_filter('update', $input['update'] ?? '');
+
+        $browse->set_conditions(html_entity_decode((string) ($input['cond'] ?? '')));
 
         $results = $browse->get_objects();
         $include = [];

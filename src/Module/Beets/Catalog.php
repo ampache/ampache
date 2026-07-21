@@ -76,8 +76,7 @@ abstract class Catalog extends \Ampache\Repository\Model\Catalog
     {
         // TODO: Basic constructor should be provided from parent
         if ($catalog_id) {
-            $this->id = (int) $catalog_id;
-            $info     = $this->get_info($catalog_id, static::DB_TABLENAME);
+            $info = $this->get_info($catalog_id, static::DB_TABLENAME);
             foreach ($info as $key => $value) {
                 $this->$key = $value;
             }
@@ -315,7 +314,8 @@ abstract class Catalog extends \Ampache\Repository\Model\Catalog
     {
         $key = array_search($song['file'], $this->songs, true);
         $this->updateUi('clean', ++$this->cleanCounter, $song);
-        if ($key) {
+        // a falsey key 0 is still a valid match for the first song
+        if ($key !== false) {
             unset($this->songs[$key]);
         }
     }

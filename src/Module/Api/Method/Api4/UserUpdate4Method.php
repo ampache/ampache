@@ -1,6 +1,6 @@
 <?php
 
-declare(strict_types=0);
+declare(strict_types=1);
 
 /**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
@@ -48,14 +48,14 @@ final class UserUpdate4Method
      * Update an existing user.
      * Takes the username with optional parameters.
      *
-     * username   = (string) $username
-     * password   = (string) hash('sha256', $password)) //optional
-     * fullname   = (string) $fullname //optional
-     * email      = (string) $email //optional
-     * website    = (string) $website //optional
-     * state      = (string) $state //optional
-     * city       = (string) $city //optional
-     * disable    = (integer) 0,1 true to disable, false to enable //optional
+     * username = (string) $username
+     * password = (string) hash('sha256', $password)) //optional
+     * fullname = (string) $fullname //optional
+     * email = (string) $email //optional
+     * website = (string) $website //optional
+     * state = (string) $state //optional
+     * city = (string) $city //optional
+     * disable = (integer) 0,1 true to disable, false to enable //optional
      * maxbitrate = (integer) $maxbitrate //optional
      *
      * @param array{
@@ -108,8 +108,8 @@ final class UserUpdate4Method
             : null;
         $state      = $input['state'] ?? null;
         $city       = $input['city'] ?? null;
-        $disable    = (isset($input['disable'])) ? (int)$input['disable'] : null;
-        $maxbitrate = (int)($input['maxbitrate'] ?? 0);
+        $disable    = (isset($input['disable'])) ? (int) $input['disable'] : null;
+        $maxbitrate = (int) ($input['maxbitrate'] ?? 0);
 
         $user_id = $update_user->id;
         if ($user_id > 0) {

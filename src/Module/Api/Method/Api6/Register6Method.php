@@ -1,6 +1,6 @@
 <?php
 
-declare(strict_types=0);
+declare(strict_types=1);
 
 /**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
@@ -29,6 +29,7 @@ use Ampache\Config\AmpConfig;
 use Ampache\Module\Api\Api6;
 use Ampache\Module\Api\Exception\ErrorCodeEnum;
 use Ampache\Module\Authorization\AccessLevelEnum;
+use Ampache\Module\System\Core;
 use Ampache\Module\User\Registration;
 use Ampache\Repository\Model\Catalog;
 use Ampache\Repository\Model\User;
@@ -52,7 +53,7 @@ final class Register6Method
      * username = (string) $username
      * fullname = (string) $fullname //optional
      * password = (string) hash('sha256', $password)
-     * email    = (string) $email
+     * email = (string) $email
      *
      * @param array{
      *     username: string,
@@ -65,7 +66,7 @@ final class Register6Method
     public static function register(array $input): bool
     {
         if (!AmpConfig::get('allow_public_registration', false)) {
-            Api6::error('Enable: allow_public_registration', ErrorCodeEnum::ACCESS_DENIED, self::ACTION, 'system', $input['api_format']);
+            Api6::error(ErrorCodeEnum::ACCESS_DENIED, 'Enable: allow_public_registration', self::ACTION, 'system', $input['api_format']);
 
             return false;
         }
@@ -76,7 +77,7 @@ final class Register6Method
         $fullname             = $input['fullname'] ?? $username;
         $email                = urldecode($input['email']);
         $password             = $input['password'];
-        $disable              = (bool)AmpConfig::get('admin_enable_required');
+        $disable              = (bool) AmpConfig::get('admin_enable_required');
         $access               = AccessLevelEnum::fromTextual(AmpConfig::get('auto_user', 'guest'));
         $catalog_filter_group = 0;
         $user_id              = User::create($username, $fullname, $email, '', $password, $access, $catalog_filter_group, '', '', $disable, true);
@@ -84,7 +85,7 @@ final class Register6Method
         if ($user_id > 0) {
             if (!AmpConfig::get('user_no_email_confirm', false)) {
                 $client     = new User($user_id);
-                $validation = md5(uniqid((string) mt_rand(), true));
+                $validation = Core::generate_random_key();
                 $client->update_validation($validation);
 
                 // Notify user and/or admins
@@ -92,7 +93,7 @@ final class Register6Method
             }
             $text = 'successfully created: ' . $username;
             if (AmpConfig::get('admin_enable_required')) {
-                $text = T_('Please wait for an administrator to activate your account');
+                $text = 'Please wait for an administrator to activate your account';
             }
             Api6::message($text, $input['api_format']);
             Catalog::count_table('user');
@@ -104,17 +105,17 @@ final class Register6Method
 
         if ($userRepository->idByUsername($username) > 0) {
             /* HINT: Requested object string/id/type ("album", "myusername", "some song title", 1298376) */
-            Api6::error(sprintf('Bad Request: %s', $username), ErrorCodeEnum::BAD_REQUEST, self::ACTION, 'username', $input['api_format']);
+            Api6::error(ErrorCodeEnum::BAD_REQUEST, sprintf('Bad Request: %s', $username), self::ACTION, 'username', $input['api_format']);
 
             return false;
         }
         if ($userRepository->idByEmail($email) > 0) {
             /* HINT: Requested object string/id/type ("album", "myusername", "some song title", 1298376) */
-            Api6::error(sprintf('Bad Request: %s', $email), ErrorCodeEnum::BAD_REQUEST, self::ACTION, 'email', $input['api_format']);
+            Api6::error(ErrorCodeEnum::BAD_REQUEST, sprintf('Bad Request: %s', $email), self::ACTION, 'email', $input['api_format']);
 
             return false;
         }
-        Api6::error('Bad Request', ErrorCodeEnum::BAD_REQUEST, self::ACTION, 'system', $input['api_format']);
+        Api6::error(ErrorCodeEnum::BAD_REQUEST, 'Bad Request', self::ACTION, 'system', $input['api_format']);
 
         return false;
     }

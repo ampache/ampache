@@ -1,6 +1,6 @@
 <?php
 
-declare(strict_types=0);
+declare(strict_types=1);
 
 /**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
@@ -53,7 +53,7 @@ final class PodcastCreate6Method
      * Create a public url that can be used by anyone to stream media.
      * Takes the file id with optional description and expires parameters.
      *
-     * url     = (string) rss url for podcast
+     * url = (string) rss url for podcast
      * catalog = (string) podcast catalog
      *
      * @param array{
@@ -66,7 +66,7 @@ final class PodcastCreate6Method
     public static function podcast_create(array $input, User $user): bool
     {
         if (!AmpConfig::get('podcast')) {
-            Api6::error('Enable: podcast', ErrorCodeEnum::ACCESS_DENIED, self::ACTION, 'system', $input['api_format']);
+            Api6::error(ErrorCodeEnum::ACCESS_DENIED, 'Enable: podcast', self::ACTION, 'system', $input['api_format']);
 
             return false;
         }
@@ -77,10 +77,10 @@ final class PodcastCreate6Method
             return false;
         }
 
-        $catalog = Catalog::create_from_id((int)$input['catalog']);
+        $catalog = Catalog::create_from_id((int) $input['catalog']);
 
         if ($catalog === null) {
-            Api6::error('Bad Request', ErrorCodeEnum::BAD_REQUEST, self::ACTION, 'system', $input['api_format']);
+            Api6::error(ErrorCodeEnum::BAD_REQUEST, 'Bad Request', self::ACTION, 'system', $input['api_format']);
 
             return false;
         }
@@ -91,7 +91,7 @@ final class PodcastCreate6Method
                 $catalog
             );
         } catch (PodcastCreationException) {
-            Api6::error('Bad Request', '4710', self::ACTION, 'system', $input['api_format']);
+            Api6::error('4710', 'Bad Request', self::ACTION, 'system', $input['api_format']);
 
             return false;
         }

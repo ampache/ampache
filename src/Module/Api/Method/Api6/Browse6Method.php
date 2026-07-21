@@ -1,6 +1,6 @@
 <?php
 
-declare(strict_types=0);
+declare(strict_types=1);
 
 /**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
@@ -53,15 +53,15 @@ final class Browse6Method
      * If you don't send any parameters you'll get a catalog list (the 'root' path)
      * Catalog ID is required on 'artist', 'album', 'podcast' so you can filter the browse correctly
      *
-     * filter  = (string) object_id //optional
-     * type    = (string) 'root', 'catalog', 'artist', 'album', 'podcast' // optional
+     * filter = (string) object_id //optional
+     * type = (string) 'root', 'catalog', 'artist', 'album', 'podcast' // optional
      * catalog = (integer) catalog ID you are browsing // optional
-     * add     = $browse->set_api_filter(date) //optional
-     * update  = $browse->set_api_filter(date) //optional
-     * offset  = (integer) //optional
-     * limit   = (integer) //optional
-     * cond    = (string) Apply additional filters to the browse using ';' separated comma string pairs (e.g. 'filter1,value1;filter2,value2') //optional
-     * sort    = (string) sort name or comma separated key pair. Order default 'ASC' (e.g. 'name,ASC' and 'name' are the same) //optional
+     * add = $browse->set_api_filter(date) //optional
+     * update = $browse->set_api_filter(date) //optional
+     * offset = (integer) //optional
+     * limit = (integer) //optional
+     * cond = (string) Apply additional filters to the browse using ';' separated comma string pairs (e.g. 'filter1,value1;filter2,value2') //optional
+     * sort = (string) sort name or comma separated key pair. Order default 'ASC' (e.g. 'name,ASC' and 'name' are the same) //optional
      *
      * @param array{
      *     filter?: string,
@@ -79,21 +79,21 @@ final class Browse6Method
      */
     public static function browse(array $input, User $user): bool
     {
-        $catalog_id  = (isset($input['catalog'])) ? (int)$input['catalog'] : null;
-        $object_id   = (isset($input['filter'])) ? (int)$input['filter'] : null;
+        $catalog_id  = (isset($input['catalog'])) ? (int) $input['catalog'] : null;
+        $object_id   = (isset($input['filter'])) ? (int) $input['filter'] : null;
         $object_type = $input['type'] ?? 'root';
         if (!$object_id && $object_type == 'catalog') {
             $object_id = $catalog_id;
         }
         if (!AmpConfig::get('podcast') && $object_type == 'podcast') {
-            Api6::error('Enable: podcast', ErrorCodeEnum::ACCESS_DENIED, self::ACTION, 'system', $input['api_format']);
+            Api6::error(ErrorCodeEnum::ACCESS_DENIED, 'Enable: podcast', self::ACTION, 'system', $input['api_format']);
 
             return false;
         }
 
         // confirm the correct data
         if (!in_array(strtolower($object_type), ['root', 'catalog', 'album_artist', 'artist', 'album', 'podcast'])) {
-            Api6::error(sprintf('Bad Request: %s', $object_type), ErrorCodeEnum::BAD_REQUEST, self::ACTION, 'type', $input['api_format']);
+            Api6::error(ErrorCodeEnum::BAD_REQUEST, sprintf('Bad Request: %s', $object_type), self::ACTION, 'type', $input['api_format']);
 
             return false;
         }
@@ -124,12 +124,12 @@ final class Browse6Method
                 : null;
             if ($catalog === null) {
                 /* HINT: Requested object string/id/type ("album", "myusername", "some song title", 1298376) */
-                Api6::error(sprintf('Not Found: %s', $object_id), ErrorCodeEnum::NOT_FOUND, self::ACTION, 'filter', $input['api_format']);
+                Api6::error(ErrorCodeEnum::NOT_FOUND, sprintf('Not Found: %s', $object_id), self::ACTION, 'filter', $input['api_format']);
 
                 return false;
             }
 
-            switch ((string)$catalog->gather_types) {
+            switch ((string) $catalog->gather_types) {
                 case 'video':
                     $output_type = 'video';
                     $gather_type = 'video';
@@ -147,13 +147,13 @@ final class Browse6Method
                     break;
                 default:
                     /* HINT: Requested object string/id/type ("album", "myusername", "some song title", 1298376) */
-                    Api6::error(sprintf('Bad Request: %s', $catalog_id), ErrorCodeEnum::BAD_REQUEST, self::ACTION, 'catalog', $input['api_format']);
+                    Api6::error(ErrorCodeEnum::BAD_REQUEST, sprintf('Bad Request: %s', $catalog_id), self::ACTION, 'catalog', $input['api_format']);
 
                     return false;
             }
             $child_type = $output_type;
 
-            $browse->set_sort_order(html_entity_decode((string)($input['sort'] ?? '')), ['name', 'ASC']);
+            $browse->set_sort_order(html_entity_decode((string) ($input['sort'] ?? '')), ['name', 'ASC']);
 
             $browse->set_filter('gather_type', $gather_type);
             $browse->set_filter('catalog', $catalog->id);
@@ -166,14 +166,14 @@ final class Browse6Method
                 : null;
             if ($catalog === null) {
                 /* HINT: Requested object string/id/type ("album", "myusername", "some song title", 1298376) */
-                Api6::error(sprintf('Not Found: %s', $catalog_id), ErrorCodeEnum::NOT_FOUND, self::ACTION, 'catalog', $input['api_format']);
+                Api6::error(ErrorCodeEnum::NOT_FOUND, sprintf('Not Found: %s', $catalog_id), self::ACTION, 'catalog', $input['api_format']);
 
                 return false;
             }
             $className = ObjectTypeToClassNameMapper::map($object_type);
             if ($className === $object_type || !$object_id) {
                 /* HINT: Requested object string/id/type ("album", "myusername", "some song title", 1298376) */
-                Api6::error(sprintf('Bad Request: %s', $object_type), ErrorCodeEnum::BAD_REQUEST, self::ACTION, 'type', $input['api_format']);
+                Api6::error(ErrorCodeEnum::BAD_REQUEST, sprintf('Bad Request: %s', $object_type), self::ACTION, 'type', $input['api_format']);
 
                 return false;
             }
@@ -182,7 +182,7 @@ final class Browse6Method
             $item = new $className($object_id);
             if ($item->isNew()) {
                 /* HINT: Requested object string/id/type ("album", "myusername", "some song title", 1298376) */
-                Api6::error(sprintf('Not Found: %s', $object_id), ErrorCodeEnum::NOT_FOUND, self::ACTION, 'filter', $input['api_format']);
+                Api6::error(ErrorCodeEnum::NOT_FOUND, sprintf('Not Found: %s', $object_id), self::ACTION, 'filter', $input['api_format']);
 
                 return false;
             }
@@ -242,7 +242,7 @@ final class Browse6Method
             }
             $child_type = $output_type;
 
-            $browse->set_sort_order(html_entity_decode((string)($input['sort'] ?? '')), [$sort, $order]);
+            $browse->set_sort_order(html_entity_decode((string) ($input['sort'] ?? '')), [$sort, $order]);
 
             if (!empty($filter_type)) {
                 $browse->set_filter($filter_type, $item->getId());
@@ -253,7 +253,7 @@ final class Browse6Method
         $browse->set_api_filter('add', $input['add'] ?? '');
         $browse->set_api_filter('update', $input['update'] ?? '');
 
-        $browse->set_conditions(html_entity_decode((string)($input['cond'] ?? '')));
+        $browse->set_conditions(html_entity_decode((string) ($input['cond'] ?? '')));
 
         $objects = $browse->get_objects();
         if (empty($objects)) {
@@ -272,15 +272,13 @@ final class Browse6Method
         ob_end_clean();
         switch ($input['api_format']) {
             case 'json':
-                Json6_Data::set_offset((int)($input['offset'] ?? 0));
+                Json6_Data::set_offset((int) ($input['offset'] ?? 0));
                 Json6_Data::set_limit($input['limit'] ?? 0);
-                Json6_Data::set_count($browse->get_total());
                 echo Json6_Data::browses($results, $object_id, $object_type, $child_type, $catalog_id);
                 break;
             default:
-                Xml6_Data::set_offset((int)($input['offset'] ?? 0));
+                Xml6_Data::set_offset((int) ($input['offset'] ?? 0));
                 Xml6_Data::set_limit($input['limit'] ?? 0);
-                Xml6_Data::set_count($browse->get_total());
                 echo Xml6_Data::browses($results, $object_id, $object_type, $child_type, $catalog_id);
         }
 

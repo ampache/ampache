@@ -1,6 +1,6 @@
 <?php
 
-declare(strict_types=0);
+declare(strict_types=1);
 
 /**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
@@ -46,12 +46,12 @@ final class PlaylistEdit5Method
      * Changed name and type to optional and the playlist id is mandatory
      *
      * filter = (string) UID of playlist
-     * name   = (string) 'new playlist name' //optional
-     * type   = (string) 'public', 'private' //optional
-     * owner  = (integer) Change playlist owner to the user id (-1 = System playlist) //optional
-     * items  = (string) comma-separated song_id's (replace existing items with a new object_id) //optional
+     * name = (string) 'new playlist name' //optional
+     * type = (string) 'public', 'private' //optional
+     * owner = (integer) Change playlist owner to the user id (-1 = System playlist) //optional
+     * items = (string) comma-separated song_id's (replace existing items with a new object_id) //optional
      * tracks = (string) comma-separated playlisttrack numbers matched to items in order //optional
-     * sort   = (integer) 0,1 sort the playlist by 'Artist, Album, Song' //optional
+     * sort = (integer) 0,1 sort the playlist by 'Artist, Album, Song' //optional
      *
      * @param array{
      *     filter: string,
@@ -70,37 +70,37 @@ final class PlaylistEdit5Method
         if (!Api5::check_parameter($input, ['filter'], self::ACTION)) {
             return false;
         }
-        $items = explode(',', html_entity_decode((string)($input['items'] ?? '')));
-        $order = explode(',', html_entity_decode((string)($input['tracks'] ?? '')));
-        $sort  = (int)($input['sort'] ?? 0);
+        $items = explode(',', html_entity_decode((string) ($input['items'] ?? '')));
+        $order = explode(',', html_entity_decode((string) ($input['tracks'] ?? '')));
+        $sort  = (int) ($input['sort'] ?? 0);
         // calculate whether we are editing the track order too
         $playlist_edit = [];
-        if (count($items) == count($order) && count($items) > 0) {
+        if (count($items) == count($order)) {
             $playlist_edit = array_combine($order, $items);
         }
 
         ob_end_clean();
-        $object_id = (int)$input['filter'];
+        $object_id = (int) $input['filter'];
         $playlist  = new Playlist($object_id);
 
         if ($playlist->isNew()) {
             /* HINT: Requested object string/id/type ("album", "myusername", "some song title", 1298376) */
-            Api5::error(sprintf(T_('Not Found: %s'), $object_id), ErrorCodeEnum::NOT_FOUND, self::ACTION, 'filter', $input['api_format']);
+            Api5::error(ErrorCodeEnum::NOT_FOUND, sprintf(T_('Not Found: %s'), $object_id), self::ACTION, 'filter', $input['api_format']);
 
             return false;
         }
 
         // don't continue if you didn't actually get a playlist or the access level
         if (!$playlist->has_access($user)) {
-            Api5::error(T_('Require: 100'), ErrorCodeEnum::FAILED_ACCESS_CHECK, self::ACTION, 'account', $input['api_format']);
+            Api5::error(ErrorCodeEnum::FAILED_ACCESS_CHECK, T_('Require: 100'), self::ACTION, 'account', $input['api_format']);
 
             return false;
         }
         $name  = $input['name'] ?? $playlist->name;
         $type  = $input['type'] ?? $playlist->type;
         $owner = $input['owner'] ?? $playlist->user;
-        if ((int)$owner === 0) {
-            $lookup = User::get_from_username((string)$owner);
+        if ((int) $owner === 0) {
+            $lookup = User::get_from_username((string) $owner);
             $owner  = $lookup->id ?? $playlist->user;
         }
         // update name/type
@@ -108,7 +108,7 @@ final class PlaylistEdit5Method
             $array = [
                 "name" => $name,
                 "playlist_type" => $type,
-                "playlist_user" => (int)$owner,
+                "playlist_user" => (int) $owner,
             ];
             $playlist->update($array);
         }
@@ -128,7 +128,7 @@ final class PlaylistEdit5Method
         }
         // if you didn't make any changes; tell me
         if (!($name || $type) && !$change_made) {
-            Api5::error(T_('Bad Request'), ErrorCodeEnum::BAD_REQUEST, self::ACTION, 'input', $input['api_format']);
+            Api5::error(ErrorCodeEnum::BAD_REQUEST, T_('Bad Request'), self::ACTION, 'input', $input['api_format']);
 
             return false;
         }

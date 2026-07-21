@@ -1,6 +1,6 @@
 <?php
 
-declare(strict_types=0);
+declare(strict_types=1);
 
 /**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
@@ -49,7 +49,7 @@ final class UpdateFromTags6Method
      * updates a single album, artist, song from the tag data
      *
      * type = (string) 'artist', 'album', 'song'
-     * id   = (string) $artist_id, $album_id, $song_id
+     * id = (string) $artist_id, $album_id, $song_id
      *
      * @param array{
      *     filter?: string,
@@ -71,7 +71,7 @@ final class UpdateFromTags6Method
 
         // confirm the correct data
         if (!in_array(strtolower($type), ['artist', 'album', 'song'])) {
-            Api6::error(sprintf('Bad Request: %s', $type), ErrorCodeEnum::BAD_REQUEST, self::ACTION, 'type', $input['api_format']);
+            Api6::error(ErrorCodeEnum::BAD_REQUEST, sprintf('Bad Request: %s', $type), self::ACTION, 'type', $input['api_format']);
 
             return false;
         }
@@ -81,7 +81,7 @@ final class UpdateFromTags6Method
         $item = new $className($object_id);
         if ($item->isNew()) {
             /* HINT: Requested object string/id/type ("album", "myusername", "some song title", 1298376) */
-            Api6::error(sprintf('Not Found: %s', $object_id), ErrorCodeEnum::NOT_FOUND, self::ACTION, 'id', $input['api_format']);
+            Api6::error(ErrorCodeEnum::NOT_FOUND, sprintf('Not Found: %s', $object_id), self::ACTION, 'id', $input['api_format']);
 
             return false;
         }

@@ -1,6 +1,6 @@
 <?php
 
-declare(strict_types=0);
+declare(strict_types=1);
 
 /**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
@@ -48,7 +48,6 @@ final class EditObjectAction extends AbstractEditAction
     public const REQUEST_KEY = 'edit_object';
 
     private LabelRepositoryInterface $labelRepository;
-
     private LoggerInterface $logger;
 
     public function __construct(
@@ -74,7 +73,7 @@ final class EditObjectAction extends AbstractEditAction
             foreach ($data as $key => $value) {
                 $data[$key] = (is_array($value))
                     ? $entities($value)
-                    : unhtmlentities((string)scrub_in((string) $value));
+                    : unhtmlentities((string) scrub_in((string) $value));
             }
 
             return $data;
@@ -99,13 +98,13 @@ final class EditObjectAction extends AbstractEditAction
             'edit_object: {' . $object_type . '} {' . $object_id . '}',
             [LegacyLogger::CONTEXT_TYPE => self::class]
         );
-        $className = ObjectTypeToClassNameMapper::map((string)$object_type);
+        $className = ObjectTypeToClassNameMapper::map((string) $object_type);
         /** @var library_item|Share $libitem */
         $libitem = new $className($_POST['id']);
         if (
-            $libitem->get_user_owner() === $userId &&
-            AmpConfig::get('upload_allow_edit') &&
-            !$gatekeeper->mayAccess(AccessTypeEnum::INTERFACE, AccessLevelEnum::CONTENT_MANAGER)
+            $libitem->get_user_owner() === $userId
+            && AmpConfig::get('upload_allow_edit')
+            && !$gatekeeper->mayAccess(AccessTypeEnum::INTERFACE, AccessLevelEnum::CONTENT_MANAGER)
         ) {
             // TODO: improve this uniqueness check
             if (isset($_POST['user'])) {
@@ -186,7 +185,7 @@ final class EditObjectAction extends AbstractEditAction
         $ret   = [];
         if ($array !== false) {
             foreach ($array as $label) {
-                $label = trim((string)$label);
+                $label = trim((string) $label);
                 if (!empty($label)) {
                     if ($this->labelRepository->lookup($label) > 0) {
                         $ret[] = $label;

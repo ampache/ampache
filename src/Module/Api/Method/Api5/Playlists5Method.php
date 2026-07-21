@@ -1,6 +1,6 @@
 <?php
 
-declare(strict_types=0);
+declare(strict_types=1);
 
 /**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
@@ -46,15 +46,15 @@ final class Playlists5Method
      *
      * This returns playlists based on the specified filter
      *
-     * filter      = (string) Alpha-numeric search term (match all if missing) //optional
+     * filter = (string) Alpha-numeric search term (match all if missing) //optional
      * hide_search = (integer) 0,1, if true do not include searches/smartlists in the result //optional
-     * show_dupes  = (integer) 0,1, if true ignore 'api_hide_dupe_searches' setting //optional
-     * include     = (integer) 0,1, if true include playlist contents //optional
-     * exact       = (integer) 0,1, if true filter is exact rather than fuzzy //optional
-     * add         = $browse->set_api_filter(date) //optional
-     * update      = $browse->set_api_filter(date) //optional
-     * offset      = (integer) //optional
-     * limit       = (integer) //optional
+     * show_dupes = (integer) 0,1, if true ignore 'api_hide_dupe_searches' setting //optional
+     * include = (integer) 0,1, if true include playlist contents //optional
+     * exact = (integer) 0,1, if true filter is exact rather than fuzzy //optional
+     * add = $browse->set_api_filter(date) //optional
+     * update = $browse->set_api_filter(date) //optional
+     * offset = (integer) //optional
+     * limit = (integer) //optional
      *
      * @param array{
      *     filter?: string,
@@ -74,10 +74,10 @@ final class Playlists5Method
      */
     public static function playlists(array $input, User $user): bool
     {
-        $hide       = (array_key_exists('hide_search', $input) && (int)$input['hide_search'] == 1) || AmpConfig::get('hide_search', false);
+        $hide       = (array_key_exists('hide_search', $input) && (int) $input['hide_search'] == 1) || AmpConfig::get('hide_search', false);
         $show_dupes = (array_key_exists('show_dupes', $input))
             ? make_bool($input['show_dupes'])
-            : (bool)Preference::get_by_user($user->getId(), 'api_hide_dupe_searches') === false;
+            : (bool) Preference::get_by_user($user->getId(), 'api_hide_dupe_searches') === false;
 
         $browse = Api::getBrowse($user);
         if ($hide === false) {
@@ -87,20 +87,20 @@ final class Playlists5Method
         }
 
         // hide playlists starting with the user string (if enabled)
-        $hide_string = str_replace('%', '\%', str_replace('_', '\_', (string)Preference::get_by_user($user->id, 'api_hidden_playlists')));
+        $hide_string = str_replace('%', '\%', str_replace('_', '\_', (string) Preference::get_by_user($user->id, 'api_hidden_playlists')));
         if (!empty($hide_string)) {
             $browse->set_filter('not_starts_with', $hide_string);
         }
 
         $browse->set_sort('name', 'ASC', false);
 
-        $method = (array_key_exists('exact', $input) && (int)$input['exact'] == 1) ? 'exact_match' : 'alpha_match';
+        $method = (array_key_exists('exact', $input) && (int) $input['exact'] == 1) ? 'exact_match' : 'alpha_match';
         $browse->set_api_filter($method, $input['filter'] ?? '');
         $browse->set_filter('playlist_open', $user->getId());
 
         if (
-            $hide === false &&
-            $show_dupes === false
+            $hide === false
+            && $show_dupes === false
         ) {
             $browse->set_filter('hide_dupe_smartlist', 1);
         }
@@ -115,12 +115,12 @@ final class Playlists5Method
         ob_end_clean();
         switch ($input['api_format']) {
             case 'json':
-                Json5_Data::set_offset((int)($input['offset'] ?? 0));
+                Json5_Data::set_offset((int) ($input['offset'] ?? 0));
                 Json5_Data::set_limit($input['limit'] ?? 0);
                 echo Json5_Data::playlists($results, $user, $input['auth']);
                 break;
             default:
-                Xml5_Data::set_offset((int)($input['offset'] ?? 0));
+                Xml5_Data::set_offset((int) ($input['offset'] ?? 0));
                 Xml5_Data::set_limit($input['limit'] ?? 0);
                 echo Xml5_Data::playlists($results, $user, $input['auth']);
         }

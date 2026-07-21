@@ -1,6 +1,6 @@
 <?php
 
-declare(strict_types=0);
+declare(strict_types=1);
 
 /**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
@@ -25,8 +25,8 @@ declare(strict_types=0);
 
 namespace Ampache\Module\Api\Method\Api5;
 
+use Ampache\Module\Api\Api;
 use Ampache\Module\Api\Api5;
-use Ampache\Module\Api\Xml5_Data;
 use Ampache\Module\Authorization\AccessLevelEnum;
 use Ampache\Module\Authorization\AccessTypeEnum;
 use Ampache\Repository\Model\User;
@@ -63,7 +63,7 @@ final class SystemPreferences5Method
                 echo json_encode($results, JSON_PRETTY_PRINT);
                 break;
             default:
-                echo Xml5_Data::object_array($results['preference'], 'preference');
+                echo Api::object_array($results['preference'], 'preference');
         }
 
         return true;

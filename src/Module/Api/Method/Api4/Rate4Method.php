@@ -1,6 +1,6 @@
 <?php
 
-declare(strict_types=0);
+declare(strict_types=1);
 
 /**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
@@ -45,8 +45,8 @@ final class Rate4Method
      *
      * This rates a library item
      *
-     * type   = (string) 'song', 'album', 'artist', 'playlist', 'podcast', 'podcast_episode', 'video' $type
-     * id     = (integer) $object_id
+     * type = (string) 'song', 'album', 'artist', 'playlist', 'podcast', 'podcast_episode', 'video' $type
+     * id = (integer) $object_id
      * rating = (integer) 0|1|2|3|4|5 $rating
      *
      * @param array{
@@ -72,7 +72,7 @@ final class Rate4Method
         $object_id = (int) $input['id'];
         $rating    = (string) $input['rating'];
         // confirm the correct data
-        if (!in_array(strtolower($type), ['song', 'album', 'artist', 'playlist', 'podcast', 'podcast_episode', 'video'])) {
+        if (!Rating::is_valid(strtolower($type))) {
             Api4::message('error', T_('Incorrect object type') . ' ' . $type, '401', $input['api_format']);
 
             return false;
@@ -96,7 +96,7 @@ final class Rate4Method
                 return false;
             }
             $rate = new Rating($object_id, $type);
-            $rate->set_rating((int)$rating, $user->id);
+            $rate->set_rating((int) $rating, $user->id);
             Api4::message('success', 'rating set to ' . $rating . ' for ' . $object_id, null, $input['api_format']);
         }
 

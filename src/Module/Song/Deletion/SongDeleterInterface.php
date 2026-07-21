@@ -27,5 +27,5 @@ use Ampache\Repository\Model\Song;
 
 interface SongDeleterInterface
 {
-    public function delete(Song $song): bool;
+    public function delete(Song $song, bool $parent = false): bool;
 }

@@ -1,6 +1,6 @@
 <?php
 
-declare(strict_types=0);
+declare(strict_types=1);
 
 /**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
@@ -63,14 +63,17 @@ final class SystemUpdate6Method
         if (!Api6::check_access(AccessTypeEnum::INTERFACE, AccessLevelEnum::ADMIN, $user->id, self::ACTION, $input['api_format'])) {
             return false;
         }
-        if (AutoUpdate::is_update_available(true)) {
+
+        $has_update = AutoUpdate::is_update_available(true);
+        if ($has_update) {
             // run the update
             AutoUpdate::update_files(true);
             AutoUpdate::update_dependencies(self::getConfigContainer(), true);
             Preference::translate_db();
             // check that the update completed or failed.
-            if (AutoUpdate::is_update_available(true)) {
-                Api6::error('Bad Request', ErrorCodeEnum::BAD_REQUEST, self::ACTION, 'system', $input['api_format']);
+            $has_update = AutoUpdate::is_update_available(true);
+            if ($has_update) {
+                Api6::error(ErrorCodeEnum::BAD_REQUEST, 'Bad Request', self::ACTION, 'system', $input['api_format']);
                 Session::extend($input['auth'], AccessTypeEnum::API->value);
 
                 return false;

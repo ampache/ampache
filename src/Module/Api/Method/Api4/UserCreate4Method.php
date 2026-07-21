@@ -1,6 +1,6 @@
 <?php
 
-declare(strict_types=0);
+declare(strict_types=1);
 
 /**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
@@ -49,8 +49,8 @@ final class UserCreate4Method
      * username = (string) $username
      * fullname = (string) $fullname //optional
      * password = (string) hash('sha256', $password)
-     * email    = (string) $email
-     * disable  = (integer) 0,1 //optional, default = 0
+     * email = (string) $email
+     * disable = (integer) 0,1 //optional, default = 0
      *
      * @param array{
      *     username: string,

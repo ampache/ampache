@@ -1,6 +1,6 @@
 <?php
 
-declare(strict_types=0);
+declare(strict_types=1);
 
 /**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
@@ -50,6 +50,6 @@ final class Song3Method
         $uid = scrub_in((string) $input['filter']);
 
         ob_end_clean();
-        echo Xml3_Data::songs([(int)$uid], $user, $input['auth']);
+        echo Xml3_Data::songs([(int) $uid], $user, $input['auth']);
     }
 }

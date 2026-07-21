@@ -1,6 +1,6 @@
 <?php
 
-declare(strict_types=0);
+declare(strict_types=1);
 
 /**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
@@ -50,13 +50,10 @@ final class PodcastDelete6Method implements MethodInterface
 
     public const REST_ACTION = 'podcasts_delete';
 
-    private PodcastDeleterInterface $podcastDeleter;
-
     private ConfigContainerInterface $configContainer;
-
-    private PrivilegeCheckerInterface $privilegeChecker;
-
+    private PodcastDeleterInterface $podcastDeleter;
     private PodcastRepositoryInterface $podcastRepository;
+    private PrivilegeCheckerInterface $privilegeChecker;
 
     public function __construct(
         PodcastDeleterInterface $podcastDeleter,
@@ -93,20 +90,20 @@ final class PodcastDelete6Method implements MethodInterface
     ): ResponseInterface {
         if (!$this->configContainer->get(ConfigurationKeyEnum::PODCAST)) {
             throw new AccessDeniedException(
-                T_('Enable: podcast')
+                'Enable: podcast'
             );
         }
 
         if (!$this->privilegeChecker->check(AccessTypeEnum::INTERFACE, AccessLevelEnum::MANAGER, $user->getId())) {
             throw new AccessDeniedException(
-                T_('Access denied')
+                'Access denied'
             );
         }
 
-        $podcastId = (int)($input['filter'] ?? 0);
+        $podcastId = (int) ($input['filter'] ?? 0);
         if ($podcastId === 0) {
             throw new RequestParamMissingException(
-                sprintf(T_('Bad Request: %s'), 'filter')
+                sprintf('Bad Request: %s', 'filter')
             );
         }
 

@@ -1,6 +1,6 @@
 <?php
 
-declare(strict_types=0);
+declare(strict_types=1);
 
 /**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
@@ -47,9 +47,9 @@ final class GetSimilar6Method
      * Return similar artist id's or similar song ids compared to the input filter
      *
      * filter = (string) artist id or song id
-     * type   = (string) 'song', 'artist'
+     * type = (string) 'song', 'artist'
      * offset = (integer) //optional
-     * limit  = (integer) //optional
+     * limit = (integer) //optional
      *
      * @param array{
      *     filter: string,
@@ -69,7 +69,7 @@ final class GetSimilar6Method
         $object_id = (int) $input['filter'];
         // confirm the correct data
         if (!in_array(strtolower($type), ['song', 'artist'])) {
-            Api6::error(sprintf('Bad Request: %s', $type), ErrorCodeEnum::BAD_REQUEST, self::ACTION, 'type', $input['api_format']);
+            Api6::error(ErrorCodeEnum::BAD_REQUEST, sprintf('Bad Request: %s', $type), self::ACTION, 'type', $input['api_format']);
 
             return false;
         }
@@ -84,7 +84,7 @@ final class GetSimilar6Method
                 $similar = Recommendation::get_songs_like($object_id);
         }
         foreach ($similar as $child) {
-            $results[] = (int)$child['id'];
+            $results[] = (int) $child['id'];
         }
         if (empty($results)) {
             Api6::empty($type, $input['api_format']);
@@ -95,9 +95,8 @@ final class GetSimilar6Method
         ob_end_clean();
         switch ($input['api_format']) {
             case 'json':
-                Json6_Data::set_offset((int)($input['offset'] ?? 0));
+                Json6_Data::set_offset((int) ($input['offset'] ?? 0));
                 Json6_Data::set_limit($input['limit'] ?? 0);
-                Json6_Data::set_count(count($results));
                 switch ($type) {
                     case 'artist':
                         echo Json6_Data::artists($results, [], $user, $input['auth']);
@@ -107,9 +106,8 @@ final class GetSimilar6Method
                 }
                 break;
             default:
-                Xml6_Data::set_offset((int)($input['offset'] ?? 0));
+                Xml6_Data::set_offset((int) ($input['offset'] ?? 0));
                 Xml6_Data::set_limit($input['limit'] ?? 0);
-                Xml6_Data::set_count(count($results));
                 switch ($type) {
                     case 'artist':
                         echo Xml6_Data::artists($results, [], $user, $input['auth']);

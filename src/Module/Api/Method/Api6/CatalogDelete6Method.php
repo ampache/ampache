@@ -1,6 +1,6 @@
 <?php
 
-declare(strict_types=0);
+declare(strict_types=1);
 
 /**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
@@ -65,17 +65,17 @@ final class CatalogDelete6Method
             return false;
         }
 
-        $catalog_id = (int)$input['filter'];
+        $catalog_id = (int) $input['filter'];
         $catalog    = Catalog::create_from_id($catalog_id);
         if ($catalog === null) {
             /* HINT: Requested object string/id/type ("album", "myusername", "some song title", 1298376) */
-            Api6::error(sprintf('Not Found: %s', $catalog_id), ErrorCodeEnum::NOT_FOUND, self::ACTION, 'filter', $input['api_format']);
+            Api6::error(ErrorCodeEnum::NOT_FOUND, sprintf('Not Found: %s', $catalog_id), self::ACTION, 'filter', $input['api_format']);
 
             return false;
         }
 
         if (!Catalog::delete($catalog_id)) {
-            Api6::error('Bad Request', ErrorCodeEnum::BAD_REQUEST, self::ACTION, 'system', $input['api_format']);
+            Api6::error(ErrorCodeEnum::BAD_REQUEST, 'Bad Request', self::ACTION, 'system', $input['api_format']);
 
             return false;
         }

@@ -643,7 +643,7 @@ class Podcast_Episode extends database_object implements
         $this->getPodcastEpisodeRepository()->updateState($this, $state);
     }
 
-    public function get_artist_fullname(): string
+    public function get_parent_fullname(): string
     {
         return $this->getAuthor();
     }

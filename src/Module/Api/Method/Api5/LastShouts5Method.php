@@ -1,6 +1,6 @@
 <?php
 
-declare(strict_types=0);
+declare(strict_types=1);
 
 /**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
@@ -59,15 +59,12 @@ final class LastShouts5Method
     public static function last_shouts(array $input, User $user): bool
     {
         if (!AmpConfig::get('sociable')) {
-            Api5::error(T_('Enable: sociable'), ErrorCodeEnum::ACCESS_DENIED, self::ACTION, 'system', $input['api_format']);
+            Api5::error(ErrorCodeEnum::ACCESS_DENIED, T_('Enable: sociable'), self::ACTION, 'system', $input['api_format']);
 
             return false;
         }
-        if (!Api5::check_parameter($input, ['username'], self::ACTION)) {
-            return false;
-        }
         unset($user);
-        $limit = (int)($input['limit'] ?? 0);
+        $limit = (int) ($input['limit'] ?? 0);
         if ($limit < 1) {
             $limit = (int) AmpConfig::get('popular_threshold', 10);
         }

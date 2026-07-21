@@ -1,25 +1,25 @@
 <?php
 
-declare(strict_types=0);
+declare(strict_types=1);
 
 /**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
- * LICENSE: GNU Affero General Public Label, version 3 (AGPL-3.0-or-later)
+ * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
  * Copyright Ampache.org, 2001-2026
  *
  * This program is free software: you can redistribute it and/or modify
- * it under the terms of the GNU Affero General Public Label as published by
- * the Free Software Foundation, either version 3 of the Label, or
+ * it under the terms of the GNU Affero General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
  * (at your option) any later version.
  *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU Affero General Public Label for more details.
+ * GNU Affero General Public License for more details.
  *
- * You should have received a copy of the GNU Affero General Public Label
- * along with this program.  If not, see <https://www.gnu.org/labels/>.
+ * You should have received a copy of the GNU Affero General Public License
+ * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  *
  */
 
@@ -47,9 +47,9 @@ final class Labels5Method
      * This returns the labels based on the specified filter
      *
      * filter = (string) Alpha-numeric search term //optional
-     * exact  = (integer) 0,1, if true filter is exact rather then fuzzy //optional
+     * exact = (integer) 0,1, if true filter is exact rather then fuzzy //optional
      * offset = (integer) //optional
-     * limit  = (integer) //optional
+     * limit = (integer) //optional
      *
      * @param array{
      *     filter?: string,
@@ -65,7 +65,7 @@ final class Labels5Method
     public static function labels(array $input, User $user): bool
     {
         if (!AmpConfig::get('label')) {
-            Api5::error(T_('Enable: label'), ErrorCodeEnum::ACCESS_DENIED, self::ACTION, 'system', $input['api_format']);
+            Api5::error(ErrorCodeEnum::ACCESS_DENIED, T_('Enable: label'), self::ACTION, 'system', $input['api_format']);
 
             return false;
         }
@@ -74,7 +74,7 @@ final class Labels5Method
         $browse->set_type('label');
         $browse->set_sort('name', 'ASC', false);
 
-        $method = (array_key_exists('exact', $input) && (int)$input['exact'] == 1) ? 'exact_match' : 'alpha_match';
+        $method = (array_key_exists('exact', $input) && (int) $input['exact'] == 1) ? 'exact_match' : 'alpha_match';
         $browse->set_api_filter($method, $input['filter'] ?? '');
         $results = $browse->get_objects();
         if (empty($results)) {

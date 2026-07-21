@@ -1,6 +1,6 @@
 <?php
 
-declare(strict_types=0);
+declare(strict_types=1);
 
 /**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
@@ -46,7 +46,7 @@ final class PodcastEpisode5Method
      *
      * Get the podcast_episode from it's id.
      *
-     * filter  = (integer) podcast_episode ID number
+     * filter = (integer) podcast_episode ID number
      *
      * @param array{
      *     filter: string,
@@ -57,7 +57,7 @@ final class PodcastEpisode5Method
     public static function podcast_episode(array $input, User $user): bool
     {
         if (!AmpConfig::get('podcast')) {
-            Api5::error(T_('Enable: podcast'), ErrorCodeEnum::ACCESS_DENIED, self::ACTION, 'system', $input['api_format']);
+            Api5::error(ErrorCodeEnum::ACCESS_DENIED, T_('Enable: podcast'), self::ACTION, 'system', $input['api_format']);
 
             return false;
         }
@@ -68,7 +68,7 @@ final class PodcastEpisode5Method
         $episode   = new Podcast_Episode($object_id);
         if ($episode->isNew()) {
             /* HINT: Requested object string/id/type ("album", "myusername", "some song title", 1298376) */
-            Api5::error(sprintf(T_('Not Found: %s'), $object_id), ErrorCodeEnum::NOT_FOUND, self::ACTION, 'filter', $input['api_format']);
+            Api5::error(ErrorCodeEnum::NOT_FOUND, sprintf(T_('Not Found: %s'), $object_id), self::ACTION, 'filter', $input['api_format']);
 
             return false;
         }
@@ -77,7 +77,7 @@ final class PodcastEpisode5Method
         ob_end_clean();
         switch ($input['api_format']) {
             case 'json':
-                echo Json5_Data::podcast_episodes($results, $user, $input['auth'], true, false);
+                echo Json5_Data::podcast_episodes($results, $user, $input['auth'], false);
                 break;
             default:
                 echo Xml5_Data::podcast_episodes($results, $user, $input['auth']);

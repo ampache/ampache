@@ -1,6 +1,6 @@
 <?php
 
-declare(strict_types=0);
+declare(strict_types=1);
 
 /**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
@@ -53,12 +53,12 @@ final class BookmarkEdit6Method
      *
      * Edit a placeholder for the current media that you can return to later.
      *
-     * filter   = (string) object_id
-     * type     = (string) object_type ('bookmark', 'song', 'video', 'podcast_episode')
+     * filter = (string) object_id
+     * type = (string) object_type ('bookmark', 'song', 'video', 'podcast_episode')
      * position = (integer) current track time in seconds
-     * client   = (string) Agent string //optional
-     * date     = (integer) UNIXTIME() //optional
-     * include  = (integer) 0,1, if true include the object in the bookmark //optional
+     * client = (string) Agent string //optional
+     * date = (integer) UNIXTIME() //optional
+     * include = (integer) 0,1, if true include the object in the bookmark //optional
      *
      * @param array{
      *     filter: string,
@@ -76,21 +76,21 @@ final class BookmarkEdit6Method
         if (!Api6::check_parameter($input, ['filter', 'type', 'position'], self::ACTION)) {
             return false;
         }
-        $object_id = (int)$input['filter'];
+        $object_id = (int) $input['filter'];
         $type      = $input['type'];
-        $position  = (int)filter_var($input['position'], FILTER_SANITIZE_NUMBER_INT);
+        $position  = (int) filter_var($input['position'], FILTER_SANITIZE_NUMBER_INT);
         $comment   = (isset($input['client'])) ? scrub_in((string) $input['client']) : null;
         $time      = (isset($input['date'])) ? (int) $input['date'] : time();
         $include   = make_bool($input['include'] ?? false);
         if (!AmpConfig::get('allow_video') && $type == 'video') {
-            Api6::error('Enable: video', ErrorCodeEnum::ACCESS_DENIED, self::ACTION, 'system', $input['api_format']);
+            Api6::error(ErrorCodeEnum::ACCESS_DENIED, 'Enable: video', self::ACTION, 'system', $input['api_format']);
 
             return false;
         }
         // confirm the correct data
         if (!in_array(strtolower($type), ['bookmark', 'song', 'video', 'podcast_episode'])) {
             /* HINT: Requested object string/id/type ("album", "myusername", "some song title", 1298376) */
-            Api6::error(sprintf('Bad Request: %s', $type), ErrorCodeEnum::BAD_REQUEST, self::ACTION, 'type', $input['api_format']);
+            Api6::error(ErrorCodeEnum::BAD_REQUEST, sprintf('Bad Request: %s', $type), self::ACTION, 'type', $input['api_format']);
 
             return false;
         }
@@ -98,7 +98,7 @@ final class BookmarkEdit6Method
             $className = ObjectTypeToClassNameMapper::map($type);
             if ($className === $type || !$object_id) {
                 /* HINT: Requested object string/id/type ("album", "myusername", "some song title", 1298376) */
-                Api6::error(sprintf('Bad Request: %s', $type), ErrorCodeEnum::BAD_REQUEST, self::ACTION, 'type', $input['api_format']);
+                Api6::error(ErrorCodeEnum::BAD_REQUEST, sprintf('Bad Request: %s', $type), self::ACTION, 'type', $input['api_format']);
 
                 return false;
             }
@@ -107,7 +107,7 @@ final class BookmarkEdit6Method
             $item = new $className($object_id);
             if ($item->getId() === 0) {
                 /* HINT: Requested object string/id/type ("album", "myusername", "some song title", 1298376) */
-                Api6::error(sprintf('Not Found: %s', $object_id), ErrorCodeEnum::NOT_FOUND, self::ACTION, 'filter', $input['api_format']);
+                Api6::error(ErrorCodeEnum::NOT_FOUND, sprintf('Not Found: %s', $object_id), self::ACTION, 'filter', $input['api_format']);
 
                 return false;
             }
@@ -124,7 +124,7 @@ final class BookmarkEdit6Method
         $results = Bookmark::getBookmarks($object);
         if (empty($results)) {
             /* HINT: Requested object string/id/type ("album", "myusername", "some song title", 1298376) */
-            Api6::error(sprintf('Not Found: %s', $object_id), ErrorCodeEnum::NOT_FOUND, self::ACTION, 'bookmark', $input['api_format']);
+            Api6::error(ErrorCodeEnum::NOT_FOUND, sprintf('Not Found: %s', $object_id), self::ACTION, 'bookmark', $input['api_format']);
 
             return false;
         }

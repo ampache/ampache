@@ -1,6 +1,6 @@
 <?php
 
-declare(strict_types=0);
+declare(strict_types=1);
 
 /**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
@@ -44,10 +44,10 @@ final class GetSimilar4Method
      *
      * Return similar artist id's or similar song ids compared to the input filter
      *
-     * type   = (string) 'song'|'artist'
+     * type = (string) 'song'|'artist'
      * filter = (integer) artist id or song id
      * offset = (integer) //optional
-     * limit  = (integer) //optional
+     * limit = (integer) //optional
      *
      * @param array{
      *     filter: string,
@@ -82,7 +82,7 @@ final class GetSimilar4Method
                 $similar = Recommendation::get_songs_like($filter);
         }
         foreach ($similar as $child) {
-            $results[] = (int)$child['id'];
+            $results[] = (int) $child['id'];
         }
 
         ob_end_clean();

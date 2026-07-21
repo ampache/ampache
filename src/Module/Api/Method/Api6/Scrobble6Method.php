@@ -1,6 +1,6 @@
 <?php
 
-declare(strict_types=0);
+declare(strict_types=1);
 
 /**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
@@ -47,14 +47,14 @@ final class Scrobble6Method
      * Search for a song using text info and then record a play if found.
      * This allows other sources to record play history to Ampache
      *
-     * song       = (string)  $song_name
-     * artist     = (string)  $artist_name
-     * album      = (string)  $album_name
-     * songmbid   = (string)  $song_mbid //optional
+     * song = (string)  $song_name
+     * artist = (string)  $artist_name
+     * album = (string)  $album_name
+     * songmbid = (string)  $song_mbid //optional
      * artistmbid = (string)  $artist_mbid //optional
-     * albummbid  = (string)  $album_mbid //optional
-     * date       = (integer) UNIXTIME() //optional
-     * client     = (string)  $agent //optional
+     * albummbid = (string)  $album_mbid //optional
+     * date = (integer) UNIXTIME() //optional
+     * client = (string)  $agent //optional
      *
      * @param array{
      *     song: string,
@@ -92,7 +92,7 @@ final class Scrobble6Method
         // validate supplied user
         if ($valid === false) {
             /* HINT: Requested object string/id/type ("album", "myusername", "some song title", 1298376) */
-            Api6::error(sprintf('Not Found: %s', $user_id), ErrorCodeEnum::NOT_FOUND, self::ACTION, 'empty', $input['api_format']);
+            Api6::error(ErrorCodeEnum::NOT_FOUND, sprintf('Not Found: %s', $user_id), self::ACTION, 'empty', $input['api_format']);
 
             return false;
         }
@@ -100,22 +100,22 @@ final class Scrobble6Method
         // validate minimum required options
         debug_event(self::class, 'scrobble searching for:' . $song_name . ' - ' . $artist_name . ' - ' . $album_name, 4);
         if (!$song_name || !$album_name || !$artist_name) {
-            Api6::error('Bad Request', ErrorCodeEnum::BAD_REQUEST, self::ACTION, 'input', $input['api_format']);
+            Api6::error(ErrorCodeEnum::BAD_REQUEST, 'Bad Request', self::ACTION, 'input', $input['api_format']);
 
             return false;
         }
 
         // validate client string or fall back to 'api'
-        $agent       = scrub_in((string)($input['client'] ?? 'api'));
+        $agent       = scrub_in((string) ($input['client'] ?? 'api'));
         $scrobble_id = Song::can_scrobble($song_name, $artist_name, $album_name, $song_mbid, $artist_mbid, $album_mbid);
 
         if ($scrobble_id === '') {
-            Api6::error('Not Found', ErrorCodeEnum::NOT_FOUND, self::ACTION, 'song', $input['api_format']);
+            Api6::error(ErrorCodeEnum::NOT_FOUND, 'Not Found', self::ACTION, 'song', $input['api_format']);
         } else {
             $media = new Song((int) $scrobble_id);
             if ($media->isNew()) {
                 /* HINT: Requested object string/id/type ("album", "myusername", "some song title", 1298376) */
-                Api6::error(sprintf('Not Found: %s', $scrobble_id), ErrorCodeEnum::NOT_FOUND, self::ACTION, 'song', $input['api_format']);
+                Api6::error(ErrorCodeEnum::NOT_FOUND, sprintf('Not Found: %s', $scrobble_id), self::ACTION, 'song', $input['api_format']);
 
                 return false;
             }

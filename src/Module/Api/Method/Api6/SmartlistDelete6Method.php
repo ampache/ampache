@@ -1,6 +1,6 @@
 <?php
 
-declare(strict_types=0);
+declare(strict_types=1);
 
 /**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
@@ -63,7 +63,7 @@ final class SmartlistDelete6Method
         ob_end_clean();
         $smartlist = new Search((int) str_replace('smart_', '', $input['filter']), 'song', $user);
         if (!$smartlist->has_access($user)) {
-            Api6::error('Require: 100', ErrorCodeEnum::FAILED_ACCESS_CHECK, self::ACTION, 'account', $input['api_format']);
+            Api6::error(ErrorCodeEnum::FAILED_ACCESS_CHECK, 'Require: 100', self::ACTION, 'account', $input['api_format']);
         } else {
             $smartlist->delete();
             Api6::message('smartlist deleted', $input['api_format']);

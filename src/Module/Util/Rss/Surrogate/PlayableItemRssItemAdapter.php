@@ -167,7 +167,7 @@ final readonly class PlayableItemRssItemAdapter implements RssItemInterface
                     : $media->get_link(),
                 'isPermaLink' => 'true',
                 'length' => (string)$media->get_f_time(),
-                'author' => $media->get_artist_fullname(),
+                'author' => $media->get_parent_fullname(),
                 'pubDate' => null,
                 'type' => null,
                 'size' => null,

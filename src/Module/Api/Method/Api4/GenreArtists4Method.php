@@ -1,6 +1,6 @@
 <?php
 
-declare(strict_types=0);
+declare(strict_types=1);
 
 /**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
@@ -46,7 +46,7 @@ final class GenreArtists4Method
      *
      * filter = (string) UID of Album
      * offset = (integer) //optional
-     * limit  = (integer) //optional
+     * limit = (integer) //optional
      *
      * @param array{
      *     filter?: string,
@@ -63,7 +63,7 @@ final class GenreArtists4Method
         if (!Api4::check_parameter($input, ['filter'], self::ACTION)) {
             return false;
         }
-        $results = Tag::get_tag_objects('artist', (int)($input['filter'] ?? 0));
+        $results = Tag::get_tag_objects('artist', (int) ($input['filter'] ?? 0));
         if (!empty($results)) {
             ob_end_clean();
             switch ($input['api_format']) {

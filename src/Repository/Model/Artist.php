@@ -644,7 +644,7 @@ class Artist extends database_object implements library_item, CatalogItemInterfa
      *
      * Checks for an existing artist; if none exists, insert one.
      */
-    public static function check(string $name, ?string $mbid = '', bool $readonly = false): ?int
+    public static function check(string $name, ?string $mbid = '', ?int $user = null, bool $readonly = false): ?int
     {
         $split_artist = AmpConfig::get('split_artist_regex', false);
         $full_name    = ($split_artist && preg_match('/[^ ]' . $split_artist . '[^ ]/', $name))
@@ -742,12 +742,12 @@ class Artist extends database_object implements library_item, CatalogItemInterfa
         }
 
         // if all else fails, insert a new artist, cache it and return the id
-        $sql  = 'INSERT INTO `artist` (`name`, `prefix`, `mbid`) VALUES(?, ?, ?)';
+        $sql  = 'INSERT INTO `artist` (`name`, `prefix`, `mbid`, `user`) VALUES(?, ?, ?, ?)';
         $mbid = ($mbid === null || $mbid === '' || $mbid === '0')
             ? null
             : $mbid;
 
-        $db_results = Dba::write($sql, [$name, $prefix, $mbid]);
+        $db_results = Dba::write($sql, [$name, $prefix, $mbid, $user]);
         if (!$db_results) {
             return null;
         }
@@ -912,7 +912,7 @@ class Artist extends database_object implements library_item, CatalogItemInterfa
         // Check if name is different than the current name
         if ($this->prefix != $prefix || $this->name != $name) {
             $updated   = false;
-            $artist_id = (int)self::check($name, $mbid, true);
+            $artist_id = (int)self::check($name, $mbid, $user, true);
 
             // If you couldn't find an artist OR you found the current one, just rename it and move on
             if ($artist_id == 0 || ($artist_id > 0 && $artist_id == $current_id)) {
@@ -958,12 +958,12 @@ class Artist extends database_object implements library_item, CatalogItemInterfa
         $this->name   = $name;
         $this->mbid   = $mbid;
 
-        if (isset($data['user'])) {
-            $user = ((int)$data['user'] == 0) ? null : (int)$data['user'];
-            if ($this->user != (int)$data['user']) {
-                $sql = 'UPDATE `artist` SET `user` = ? WHERE `id` = ?';
-                Dba::write($sql, [$user, $current_id]);
-            }
+        if (
+            $user
+            && $this->user != $user
+        ) {
+            $sql = 'UPDATE `artist` SET `user` = ? WHERE `id` = ?';
+            Dba::write($sql, [$user, $current_id]);
         }
 
         $override_childs = false;
@@ -1020,15 +1020,6 @@ class Artist extends database_object implements library_item, CatalogItemInterfa
         $this->summary     = $summary;
         $this->placeformed = $placeformed;
         $this->yearformed  = $yearformed;
-    }
-
-    /**
-     * Update artist associated user_id.
-     */
-    public function update_artist_user(int $user_id): void
-    {
-        $sql = "UPDATE `artist` SET `user` = ? WHERE `id` = ?";
-        Dba::write($sql, [$user_id, $this->id]);
     }
 
     /**

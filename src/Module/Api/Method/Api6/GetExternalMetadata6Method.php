@@ -1,6 +1,6 @@
 <?php
 
-declare(strict_types=0);
+declare(strict_types=1);
 
 /**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
@@ -26,9 +26,9 @@ declare(strict_types=0);
 namespace Ampache\Module\Api\Method\Api6;
 
 use Ampache\Config\AmpConfig;
+use Ampache\Module\Api\Api;
 use Ampache\Module\Api\Api6;
 use Ampache\Module\Api\Exception\ErrorCodeEnum;
-use Ampache\Module\Api\Xml6_Data;
 use Ampache\Module\System\Plugin\PluginTypeEnum;
 use Ampache\Plugin\PluginGetMetadataInterface;
 use Ampache\Repository\Model\Album;
@@ -53,7 +53,7 @@ final class GetExternalMetadata6Method
      * Return External plugin metadata searching by object id and type
      *
      * filter = (string) album id, artist id or song id
-     * type   = (string) 'song', 'artist', 'album', 'label'
+     * type = (string) 'song', 'artist', 'album', 'label'
      *
      * @param array{
      *     filter: string,
@@ -71,13 +71,13 @@ final class GetExternalMetadata6Method
         $object_id = (int) $input['filter'];
         // confirm the correct data
         if (!in_array(strtolower($type), ['song', 'album', 'artist', 'label'])) {
-            Api6::error(sprintf('Bad Request: %s', $type), ErrorCodeEnum::BAD_REQUEST, self::ACTION, 'type', $input['api_format']);
+            Api6::error(ErrorCodeEnum::BAD_REQUEST, sprintf('Bad Request: %s', $type), self::ACTION, 'type', $input['api_format']);
 
             return false;
         }
 
         if ($type == 'label' && !AmpConfig::get('label')) {
-            Api6::error('Enable: label', ErrorCodeEnum::ACCESS_DENIED, self::ACTION, 'system', $input['api_format']);
+            Api6::error(ErrorCodeEnum::ACCESS_DENIED, 'Enable: label', self::ACTION, 'system', $input['api_format']);
 
             return false;
         }
@@ -86,7 +86,7 @@ final class GetExternalMetadata6Method
             case 'song':
                 $libitem = new Song($object_id);
                 $data    = [
-                    'artist' => $libitem->get_artist_fullname(),
+                    'artist' => $libitem->get_parent_fullname(),
                     'song' => $libitem->get_fullname(),
                     'mb_trackid' => $libitem->mbid,
                 ];
@@ -94,7 +94,7 @@ final class GetExternalMetadata6Method
             case 'album':
                 $libitem = new Album($object_id);
                 $data    = [
-                    'albumartist' => $libitem->get_artist_fullname(),
+                    'albumartist' => $libitem->get_parent_fullname(),
                     'album' => $libitem->get_fullname(true),
                     'mb_albumid_group' => $libitem->mbid_group,
                 ];
@@ -114,7 +114,7 @@ final class GetExternalMetadata6Method
                 ];
         }
         if (!isset($data) || !isset($libitem) || $libitem->isNew()) {
-            Api6::error(sprintf('Bad Request: %s', $type), ErrorCodeEnum::BAD_REQUEST, self::ACTION, 'filter', $input['api_format']);
+            Api6::error(ErrorCodeEnum::BAD_REQUEST, sprintf('Bad Request: %s', $type), self::ACTION, 'filter', $input['api_format']);
 
             return false;
         }
@@ -128,9 +128,9 @@ final class GetExternalMetadata6Method
         foreach ($plugin_names as $tag_source) {
             $plugin = new Plugin($tag_source);
             if (
-                $plugin->_plugin instanceof PluginGetMetadataInterface &&
-                Plugin::get_plugin_version($plugin->_plugin->name) > 0 &&
-                $plugin->load($user)
+                $plugin->_plugin instanceof PluginGetMetadataInterface
+                && Plugin::get_plugin_version($plugin->_plugin->name) > 0
+                && $plugin->load($user)
             ) {
                 $results['plugin'][$tag_source] = $plugin->_plugin->get_metadata(
                     ['music', $type],
@@ -153,7 +153,7 @@ final class GetExternalMetadata6Method
                 echo json_encode($results, JSON_PRETTY_PRINT);
                 break;
             default:
-                echo Xml6_Data::keyed_array($results);
+                echo Api::keyed_array($results);
         }
 
         return true;

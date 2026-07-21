@@ -34,6 +34,14 @@ namespace Ampache\Repository\Model;
  */
 interface Media
 {
+    public function getId(): int;
+
+    /**
+     * isNew
+     * Whether the object failed to load from the database
+     */
+    public function isNew(): bool;
+
     /**
      * get_stream_types
      *
@@ -99,7 +107,7 @@ interface Media
     /**
      * Returns the full/formatted name of the media items artist/author
      */
-    public function get_artist_fullname(): string;
+    public function get_parent_fullname(): string;
 
     /**
      * Returns the filename of the media-item

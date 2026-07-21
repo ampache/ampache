@@ -1,6 +1,6 @@
 <?php
 
-declare(strict_types=0);
+declare(strict_types=1);
 
 /**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
@@ -26,14 +26,13 @@ declare(strict_types=0);
 namespace Ampache\Module\Api;
 
 use Ampache\Config\AmpConfig;
-use Ampache\Module\Authorization\Access;
-use Ampache\Module\Authorization\AccessLevelEnum;
-use Ampache\Module\Authorization\AccessTypeEnum;
 use Ampache\Module\System\Dba;
+use Ampache\Module\Util\Ui;
 use Ampache\Repository\Model\Browse;
 use Ampache\Repository\Model\Catalog;
 use Ampache\Repository\Model\User;
 use Ampache\Repository\UserRepositoryInterface;
+use DOMDocument;
 
 /**
  * Api Class
@@ -44,189 +43,47 @@ use Ampache\Repository\UserRepositoryInterface;
  */
 class Api
 {
-    /**
-     * This dict contains all known api-methods (key) and their respective handler (value)
-     *
-     * @var array<string, class-string<object>>
-     */
-    public const METHOD_LIST = [
-        Method\Api8\AdvancedSearch8Method::ACTION => Method\Api8\AdvancedSearch8Method::class,
-        Method\Api8\Album8Method::ACTION => Method\Api8\Album8Method::class,
-        Method\Api8\Albums8Method::ACTION => Method\Api8\Albums8Method::class,
-        Method\Api8\AlbumSongs8Method::ACTION => Method\Api8\AlbumSongs8Method::class,
-        Method\Api8\ArtistAlbums8Method::ACTION => Method\Api8\ArtistAlbums8Method::class,
-        Method\Api8\Artist8Method::ACTION => Method\Api8\Artist8Method::class,
-        Method\Api8\Artists8Method::ACTION => Method\Api8\Artists8Method::class,
-        Method\Api8\ArtistSongs8Method::ACTION => Method\Api8\ArtistSongs8Method::class,
-        Method\Api8\BookmarkCreate8Method::ACTION => Method\Api8\BookmarkCreate8Method::class,
-        Method\Api8\BookmarkCreate8Method::REST_ACTION => Method\Api8\BookmarkCreate8Method::class,
-        Method\Api8\BookmarkDelete8Method::ACTION => Method\Api8\BookmarkDelete8Method::class,
-        Method\Api8\BookmarkDelete8Method::REST_ACTION => Method\Api8\BookmarkDelete8Method::class,
-        Method\Api8\BookmarkEdit8Method::ACTION => Method\Api8\BookmarkEdit8Method::class,
-        Method\Api8\BookmarkEdit8Method::REST_ACTION => Method\Api8\BookmarkEdit8Method::class,
-        Method\Api8\Bookmark8Method::ACTION => Method\Api8\Bookmark8Method::class,
-        Method\Api8\Bookmarks8Method::ACTION => Method\Api8\Bookmarks8Method::class,
-        Method\Api8\Browse8Method::ACTION => Method\Api8\Browse8Method::class,
-        Method\Api8\CatalogAction8Method::ACTION => Method\Api8\CatalogAction8Method::class,
-        Method\Api8\CatalogAdd8Method::ACTION => Method\Api8\CatalogAdd8Method::class,
-        Method\Api8\CatalogCreate8Method::ACTION => Method\Api8\CatalogCreate8Method::class,
-        Method\Api8\CatalogCreate8Method::REST_ACTION => Method\Api8\CatalogCreate8Method::class,
-        Method\Api8\CatalogDelete8Method::ACTION => Method\Api8\CatalogDelete8Method::class,
-        Method\Api8\CatalogDelete8Method::REST_ACTION => Method\Api8\CatalogDelete8Method::class,
-        Method\Api8\CatalogFile8Method::ACTION => Method\Api8\CatalogFile8Method::class,
-        Method\Api8\CatalogFolder8Method::ACTION => Method\Api8\CatalogFolder8Method::class,
-        Method\Api8\Catalog8Method::ACTION => Method\Api8\Catalog8Method::class,
-        Method\Api8\Catalogs8Method::ACTION => Method\Api8\Catalogs8Method::class,
-        Method\Api8\DeletedPodcastEpisodes8Method::ACTION => Method\Api8\DeletedPodcastEpisodes8Method::class,
-        Method\Api8\DeletedSongs8Method::ACTION => Method\Api8\DeletedSongs8Method::class,
-        Method\Api8\DeletedVideos8Method::ACTION => Method\Api8\DeletedVideos8Method::class,
-        Method\Api8\Democratic8Method::ACTION => Method\Api8\Democratic8Method::class,
-        Method\Api8\Download8Method::ACTION => Method\Api8\Download8Method::class,
-        Method\Api8\Flag8Method::ACTION => Method\Api8\Flag8Method::class,
-        Method\Api8\Followers8Method::ACTION => Method\Api8\Followers8Method::class,
-        Method\Api8\Following8Method::ACTION => Method\Api8\Following8Method::class,
-        Method\Api8\LostPassword8Method::ACTION => Method\Api8\LostPassword8Method::class,
-        Method\Api8\FriendsTimeline8Method::ACTION => Method\Api8\FriendsTimeline8Method::class,
-        Method\Api8\GenreAlbums8Method::ACTION => Method\Api8\GenreAlbums8Method::class,
-        Method\Api8\GenreArtists8Method::ACTION => Method\Api8\GenreArtists8Method::class,
-        Method\Api8\Genre8Method::ACTION => Method\Api8\Genre8Method::class,
-        Method\Api8\Genres8Method::ACTION => Method\Api8\Genres8Method::class,
-        Method\Api8\GenreSongs8Method::ACTION => Method\Api8\GenreSongs8Method::class,
-        Method\Api8\GetArt8Method::ACTION => Method\Api8\GetArt8Method::class,
-        Method\Api8\GetBookmark8Method::ACTION => Method\Api8\GetBookmark8Method::class,
-        Method\Api8\GetExternalMetadata8Method::ACTION => Method\Api8\GetExternalMetadata8Method::class,
-        Method\Api8\GetLyrics8Method::ACTION => Method\Api8\GetLyrics8Method::class,
-        Method\Api8\GetSimilar8Method::ACTION => Method\Api8\GetSimilar8Method::class,
-        Method\Api8\Goodbye8Method::ACTION => Method\Api8\Goodbye8Method::class,
-        Method\Api8\Handshake8Method::ACTION => Method\Api8\Handshake8Method::class,
-        Method\Api8\Index8Method::ACTION => Method\Api8\Index8Method::class,
-        Method\Api8\LabelArtists8Method::ACTION => Method\Api8\LabelArtists8Method::class,
-        Method\Api8\Label8Method::ACTION => Method\Api8\Label8Method::class,
-        Method\Api8\Labels8Method::ACTION => Method\Api8\Labels8Method::class,
-        Method\Api8\LastShouts8Method::ACTION => Method\Api8\LastShouts8Method::class,
-        Method\Api8\License8Method::ACTION => Method\Api8\License8Method::class,
-        Method\Api8\Licenses8Method::ACTION => Method\Api8\Licenses8Method::class,
-        Method\Api8\LicenseSongs8Method::ACTION => Method\Api8\LicenseSongs8Method::class,
-        Method\Api8\List8Method::ACTION => Method\Api8\List8Method::class,
-        Method\Api8\LiveStream8Method::ACTION => Method\Api8\LiveStream8Method::class,
-        Method\Api8\LiveStreamCreate8Method::ACTION => Method\Api8\LiveStreamCreate8Method::class,
-        Method\Api8\LiveStreamCreate8Method::REST_ACTION => Method\Api8\LiveStreamCreate8Method::class,
-        Method\Api8\LiveStreamDelete8Method::ACTION => Method\Api8\LiveStreamDelete8Method::class,
-        Method\Api8\LiveStreamDelete8Method::REST_ACTION => Method\Api8\LiveStreamDelete8Method::class,
-        Method\Api8\LiveStreamEdit8Method::ACTION => Method\Api8\LiveStreamEdit8Method::class,
-        Method\Api8\LiveStreamEdit8Method::REST_ACTION => Method\Api8\LiveStreamEdit8Method::class,
-        Method\Api8\LiveStreams8Method::ACTION => Method\Api8\LiveStreams8Method::class,
-        Method\Api8\Localplay8Method::ACTION => Method\Api8\Localplay8Method::class,
-        Method\Api8\LocalplaySongs8Method::ACTION => Method\Api8\LocalplaySongs8Method::class,
-        Method\Api8\NowPlaying8Method::ACTION => Method\Api8\NowPlaying8Method::class,
-        Method\Api8\Ping8Method::ACTION => Method\Api8\Ping8Method::class,
-        Method\Api8\PlaylistAdd8Method::ACTION => Method\Api8\PlaylistAdd8Method::class,
-        Method\Api8\PlaylistAdd8Method::REST_ACTION => Method\Api8\PlaylistAdd8Method::class,
-        Method\Api8\PlaylistCreate8Method::ACTION => Method\Api8\PlaylistCreate8Method::class,
-        Method\Api8\PlaylistCreate8Method::REST_ACTION => Method\Api8\PlaylistCreate8Method::class,
-        Method\Api8\PlaylistDelete8Method::ACTION => Method\Api8\PlaylistDelete8Method::class,
-        Method\Api8\PlaylistDelete8Method::REST_ACTION => Method\Api8\PlaylistDelete8Method::class,
-        Method\Api8\PlaylistEdit8Method::ACTION => Method\Api8\PlaylistEdit8Method::class,
-        Method\Api8\PlaylistEdit8Method::REST_ACTION => Method\Api8\PlaylistEdit8Method::class,
-        Method\Api8\PlaylistGenerate8Method::ACTION => Method\Api8\PlaylistGenerate8Method::class,
-        Method\Api8\PlaylistHash8Method::ACTION => Method\Api8\PlaylistHash8Method::class,
-        Method\Api8\Playlist8Method::ACTION => Method\Api8\Playlist8Method::class,
-        Method\Api8\PlaylistRemove8Method::ACTION => Method\Api8\PlaylistRemove8Method::class,
-        Method\Api8\PlaylistRemove8Method::REST_ACTION => Method\Api8\PlaylistRemove8Method::class,
-        Method\Api8\PlaylistRemoveSong8Method::ACTION => Method\Api8\PlaylistRemoveSong8Method::class,
-        Method\Api8\PlaylistRemoveSong8Method::REST_ACTION => Method\Api8\PlaylistRemoveSong8Method::class,
-        Method\Api8\Playlists8Method::ACTION => Method\Api8\Playlists8Method::class,
-        Method\Api8\PlaylistSongs8Method::ACTION => Method\Api8\PlaylistSongs8Method::class,
-        Method\Api8\PodcastCreate8Method::ACTION => Method\Api8\PodcastCreate8Method::class,
-        Method\Api8\PodcastCreate8Method::REST_ACTION => Method\Api8\PodcastCreate8Method::class,
-        Method\Api8\PodcastDelete8Method::ACTION => Method\Api8\PodcastDelete8Method::class,
-        Method\Api8\PodcastDelete8Method::REST_ACTION => Method\Api8\PodcastDelete8Method::class,
-        Method\Api8\PodcastEdit8Method::ACTION => Method\Api8\PodcastEdit8Method::class,
-        Method\Api8\PodcastEdit8Method::REST_ACTION => Method\Api8\PodcastEdit8Method::class,
-        Method\Api8\PodcastUpdate8Method::ACTION => Method\Api8\PodcastUpdate8Method::class,
-        Method\Api8\PodcastEpisodeDelete8Method::ACTION => Method\Api8\PodcastEpisodeDelete8Method::class,
-        Method\Api8\PodcastEpisodeDelete8Method::REST_ACTION => Method\Api8\PodcastEpisodeDelete8Method::class,
-        Method\Api8\PodcastEpisode8Method::ACTION => Method\Api8\PodcastEpisode8Method::class,
-        Method\Api8\PodcastEpisodes8Method::ACTION => Method\Api8\PodcastEpisodes8Method::class,
-        Method\Api8\Podcast8Method::ACTION => Method\Api8\Podcast8Method::class,
-        Method\Api8\Podcasts8Method::ACTION => Method\Api8\Podcasts8Method::class,
-        Method\Api8\PreferenceCreate8Method::ACTION => Method\Api8\PreferenceCreate8Method::class,
-        Method\Api8\PreferenceCreate8Method::REST_ACTION => Method\Api8\PreferenceCreate8Method::class,
-        Method\Api8\PreferenceDelete8Method::ACTION => Method\Api8\PreferenceDelete8Method::class,
-        Method\Api8\PreferenceDelete8Method::REST_ACTION => Method\Api8\PreferenceDelete8Method::class,
-        Method\Api8\PreferenceEdit8Method::ACTION => Method\Api8\PreferenceEdit8Method::class,
-        Method\Api8\PreferenceEdit8Method::REST_ACTION => Method\Api8\PreferenceEdit8Method::class,
-        Method\Api8\Player8Method::ACTION => Method\Api8\Player8Method::class,
-        Method\Api8\Rate8Method::ACTION => Method\Api8\Rate8Method::class,
-        Method\Api8\RecordPlay8Method::ACTION => Method\Api8\RecordPlay8Method::class,
-        Method\Api8\Register8Method::ACTION => Method\Api8\Register8Method::class,
-        Method\Api8\Scrobble8Method::ACTION => Method\Api8\Scrobble8Method::class,
-        Method\Api8\Search8Method::ACTION => Method\Api8\Search8Method::class,
-        Method\Api8\SearchGroup8Method::ACTION => Method\Api8\SearchGroup8Method::class,
-        Method\Api8\SearchRules8Method::ACTION => Method\Api8\SearchRules8Method::class,
-        Method\Api8\SearchSongs8Method::ACTION => Method\Api8\SearchSongs8Method::class,
-        Method\Api8\ShareCreate8Method::ACTION => Method\Api8\ShareCreate8Method::class,
-        Method\Api8\ShareCreate8Method::REST_ACTION => Method\Api8\ShareCreate8Method::class,
-        Method\Api8\ShareDelete8Method::ACTION => Method\Api8\ShareDelete8Method::class,
-        Method\Api8\ShareDelete8Method::REST_ACTION => Method\Api8\ShareDelete8Method::class,
-        Method\Api8\ShareEdit8Method::ACTION => Method\Api8\ShareEdit8Method::class,
-        Method\Api8\ShareEdit8Method::REST_ACTION => Method\Api8\ShareEdit8Method::class,
-        Method\Api8\Share8Method::ACTION => Method\Api8\Share8Method::class,
-        Method\Api8\Shares8Method::ACTION => Method\Api8\Shares8Method::class,
-        Method\Api8\SmartlistDelete8Method::ACTION => Method\Api8\SmartlistDelete8Method::class,
-        Method\Api8\SmartlistDelete8Method::REST_ACTION => Method\Api8\SmartlistDelete8Method::class,
-        Method\Api8\Smartlist8Method::ACTION => Method\Api8\Smartlist8Method::class,
-        Method\Api8\Smartlists8Method::ACTION => Method\Api8\Smartlists8Method::class,
-        Method\Api8\SmartlistSongs8Method::ACTION => Method\Api8\SmartlistSongs8Method::class,
-        Method\Api8\SongDelete8Method::ACTION => Method\Api8\SongDelete8Method::class,
-        Method\Api8\SongDelete8Method::REST_ACTION => Method\Api8\SongDelete8Method::class,
-        Method\Api8\Song8Method::ACTION => Method\Api8\Song8Method::class,
-        Method\Api8\SongTags8Method::ACTION => Method\Api8\SongTags8Method::class,
-        Method\Api8\Songs8Method::ACTION => Method\Api8\Songs8Method::class,
-        Method\Api8\Stats8Method::ACTION => Method\Api8\Stats8Method::class,
-        Method\Api8\Stream8Method::ACTION => Method\Api8\Stream8Method::class,
-        Method\Api8\SystemPreference8Method::ACTION => Method\Api8\SystemPreference8Method::class,
-        Method\Api8\SystemPreferences8Method::ACTION => Method\Api8\SystemPreferences8Method::class,
-        Method\Api8\SystemUpdate8Method::ACTION => Method\Api8\SystemUpdate8Method::class,
-        Method\Api8\Timeline8Method::ACTION => Method\Api8\Timeline8Method::class,
-        Method\Api8\ToggleFollow8Method::ACTION => Method\Api8\ToggleFollow8Method::class,
-        Method\Api8\SystemUpdate8Method::REST_ACTION => Method\Api8\SystemUpdate8Method::class,
-        Method\Api8\UpdateArtistInfo8Method::ACTION => Method\Api8\UpdateArtistInfo8Method::class,
-        Method\Api8\UpdateArt8Method::ACTION => Method\Api8\UpdateArt8Method::class,
-        Method\Api8\UpdateFromTags8Method::ACTION => Method\Api8\UpdateFromTags8Method::class,
-        Method\Api8\UpdatePodcast8Method::ACTION => Method\Api8\UpdatePodcast8Method::class,
-        Method\Api8\UrlToSong8Method::ACTION => Method\Api8\UrlToSong8Method::class,
-        Method\Api8\UserCreate8Method::ACTION => Method\Api8\UserCreate8Method::class,
-        Method\Api8\UserCreate8Method::REST_ACTION => Method\Api8\UserCreate8Method::class,
-        Method\Api8\UserEdit8Method::ACTION => Method\Api8\UserEdit8Method::class,
-        Method\Api8\UserEdit8Method::REST_ACTION => Method\Api8\UserEdit8Method::class,
-        Method\Api8\UserDelete8Method::ACTION => Method\Api8\UserDelete8Method::class,
-        Method\Api8\UserDelete8Method::REST_ACTION => Method\Api8\UserDelete8Method::class,
-        Method\Api8\User8Method::ACTION => Method\Api8\User8Method::class,
-        Method\Api8\UserPlaylists8Method::ACTION => Method\Api8\UserPlaylists8Method::class,
-        Method\Api8\UserPreference8Method::ACTION => Method\Api8\UserPreference8Method::class,
-        Method\Api8\UserPreferences8Method::ACTION => Method\Api8\UserPreferences8Method::class,
-        Method\Api8\UserSmartlists8Method::ACTION => Method\Api8\UserSmartlists8Method::class,
-        Method\Api8\Users8Method::ACTION => Method\Api8\Users8Method::class,
-        Method\Api8\Video8Method::ACTION => Method\Api8\Video8Method::class,
-        Method\Api8\Videos8Method::ACTION => Method\Api8\Videos8Method::class,
-    ];
-
     public const API_VERSIONS = [
         3,
         4,
         5,
-        6,
-        8
+        6
     ];
 
-    public const DEFAULT_VERSION = 6; // AMPACHE_VERSION
-
-    public static string $version = '8.0.0'; // AMPACHE_VERSION
-
+    public const DEFAULT_VERSION          = 6; // AMPACHE_VERSION
+    public static ?Browse $browse         = null;
+    public static string $version         = '8.0.0'; // AMPACHE_VERSION
     public static string $version_numeric = '800000'; // AMPACHE_VERSION
 
-    public static ?Browse $browse = null;
+    /**
+     * filter_objects
+     *
+     * This filters the objects based on the limit and offset
+     * @param array<int, mixed> $objects
+     * @return array<int, mixed>
+     */
+    public static function filter_objects(array $objects, int $count = 0, int $offset = 0, ?int $limit = null, ?bool $encode = null): array
+    {
+        if (
+            $encode !== false
+            && ($limit !== null)
+            && ($count > $limit || $offset > 0)
+        ) {
+            return array_slice($objects, $offset, $limit);
+        }
+
+        return $objects;
+    }
+
+    /**
+     * footer
+     *
+     * this returns the footer for this document, these are pretty boring
+     */
+    public static function footer(): string
+    {
+        return "\n</root>\n";
+    }
 
     public static function getBrowse(User $user): Browse
     {
@@ -246,49 +103,218 @@ class Api
         return self::$browse;
     }
 
-    /**
-     * message
-     * call the correct success message depending on format
-     * @param array<string, string> $return_data
-     */
-    public static function message(string $message, string $format = 'xml', array $return_data = []): void
+    public static function getHttpCode(int|string $code): int
     {
-        switch ($format) {
-            case 'json':
-                echo Json8_Data::success($message, $return_data);
-                break;
-            default:
-                echo Xml8_Data::success($message, $return_data);
+        switch ((string) $code) {
+            case '4700': // ACCESS_CONTROL_NOT_ENABLED
+            case '4703': // ACCESS_DENIED
+            case '4742': // FAILED_ACCESS_CHECK
+                return 403;
+            case '4710': // BAD_REQUEST
+            case '4705': // MISSING
+                return 400;
+            case '4706': // DEPRECATED
+                return 410;
+            case '4702': // GENERIC_ERROR
+                return 500;
+            case '4701': // INVALID_HANDSHAKE
+                return 401;
+            case '4704': // NOT_FOUND
+                return 404;
         }
+
+        debug_event(self::class, "Unknown error code: $code", 3);
+
+        return 500;
     }
 
     /**
-     * error
-     * call the correct error message depending on format
+     * header
+     *
+     * this returns a standard header, there are a few types
+     * so we allow them to pass a type if they want to
      */
-    public static function error(string $message, int|string $error_code, string $method, string $error_type, string $format = 'xml'): void
+    public static function header(): string
     {
-        switch ($format) {
-            case 'json':
-                echo Json8_Data::error($error_code, $message, $method, $error_type);
-                break;
-            default:
-                echo Xml8_Data::error($error_code, $message, $method, $error_type);
-        }
+        return "<?xml version=\"1.0\" encoding=\"" . AmpConfig::get('site_charset', 'UTF-8') . "\" ?>\n<root>\n";
     }
 
     /**
-     * empty
-     * call the correct empty message depending on format
+     * keyed_array
+     *
+     * This will build an xml document from a key'd array,
+     * @param array<int|string, mixed> $array
      */
-    public static function empty(?string $empty_type, string $format = 'xml'): void
+    public static function keyed_array(array $array, bool $callback = false, bool|string $object = false): string
     {
-        switch ($format) {
-            case 'json':
-                echo Json8_Data::empty($empty_type);
-                break;
+        $string = '';
+        // Foreach it
+        foreach ($array as $key => $value) {
+            $attribute = '';
+            if (is_object($value)) {
+                $value = (array) $value;
+            }
+            // See if the key has attributes
+            if (is_array($value) && isset($value['attributes'])) {
+                $attribute = ' ' . $value['attributes'];
+                $key       = $value['value'];
+            }
+
+            // If it's an array, run again
+            if (is_array($value)) {
+                $value = (isset($value[0]))
+                    ? self::keyed_array($value, true, $key)
+                    : self::keyed_array($value, true);
+                $string .= ($object) ? "<$object>\n$value\n</$object>\n" : "<$key$attribute>\n$value\n</$key>\n";
+            } else {
+                $string .= ($object) ? "\t<$object index=\"" . $key . "\"><![CDATA[" . $value . "]]></$object>\n" : "\t<$key$attribute><![CDATA[" . $value . "]]></$key>\n";
+            }
+        }
+
+        if (!$callback) {
+            $string = self::output_xml($string);
+        }
+
+        return $string;
+    }
+
+    /**
+     * object_array
+     *
+     * This will build an xml document from an array of arrays, an id is required for the array data
+     * <root>
+     *   <$object_type> //optional
+     *     <$item id="123">
+     *       <data></data>
+     * @param array<int, array<string, mixed>> $array
+     */
+    public static function object_array(array $array, string $item, string $object_type = ''): string
+    {
+        $string = ($object_type == '') ? '' : "<$object_type>\n";
+        // Foreach it
+        foreach ($array as $object) {
+            $string .= "\t<$item id=\"" . ($object['id'] ?? $object['name']) . "\">\n";
+            foreach ($object as $name => $value) {
+                if ($name === 'widget') {
+                    $widget_type = $value[0];
+                    $filter      = '';
+                    if (is_array($value[1])) {
+                        foreach ($value[1] as $key => $val) {
+                            $filter .= "\t\t<$widget_type id=\"$key\"><![CDATA[" . $val . "]]></$widget_type>\n";
+                        }
+                    } else {
+                        $filter = "\t\t<$widget_type><![CDATA[" . $value[1] . "]]></$widget_type>\n";
+                    }
+                } elseif (($name === 'values' || $name === 'subtypes') && is_array($value)) {
+                    $filter = '';
+                    foreach ($value as $key => $val) {
+                        $filter .= "\t\t<value id=\"$key\"><![CDATA[" . $val . "]]></value>\n";
+                    }
+                } else {
+                    $filter = (is_numeric($value)) ? $value : "<![CDATA[" . $value . "]]>";
+                }
+                $string .= ($name !== 'id') ? "\t\t<$name>$filter</$name>\n" : '';
+            }
+            $string .= "\t</$item>\n";
+        }
+        $string .= ($object_type == '') ? '' : "</$object_type>";
+
+        return self::output_xml($string);
+    }
+
+    public static function output_xml(string $string, bool $full_xml = true): string
+    {
+        $xml = "";
+        if ($full_xml) {
+            $xml .= self::header();
+        }
+        $xml .= Ui::clean_utf8($string);
+        if ($full_xml) {
+            $xml .= self::footer();
+        }
+        // return formatted xml when asking for full_xml
+        if ($full_xml) {
+            $dom = new DOMDocument();
+            // format the string
+            $dom->preserveWhiteSpace = false;
+            if (!$dom->loadXML($xml)) {
+                return $xml;
+            }
+            $dom->formatOutput = true;
+
+            return $dom->saveXML() ?: '';
+        }
+
+        return $xml;
+    }
+
+    /**
+     * output_xml_from_array
+     * This takes a one dimensional array and creates a XML document from it. For
+     * use primarily by the ajax mojo.
+     * @param array<int|string, mixed> $array
+     */
+    public static function output_xml_from_array(array $array, bool $callback = false, string $type = ''): string
+    {
+        $string = '';
+
+        // The type is used for the different XML docs we pass
+        switch ($type) {
+            case 'itunes':
+                foreach ($array as $key => $value) {
+                    if (is_array($value)) {
+                        $value = xoutput_from_array($value, true, $type);
+                        $string .= "\t\t<$key>\n$value\t\t</$key>\n";
+                    } elseif ($key == "key") {
+                        $string .= "\t\t<$key>$value</$key>\n";
+                    } elseif (is_int($value)) {
+                        $string .= "\t\t\t<key>$key</key><integer>$value</integer>\n";
+                    } elseif ($key == "Date Added") {
+                        $string .= "\t\t\t<key>$key</key><date>$value</date>\n";
+                    } elseif (is_string($value)) {
+                        /* We need to escape the value */
+                        $string .= "\t\t\t<key>$key</key><string><![CDATA[" . $value . "]]></string>\n";
+                    }
+                }
+
+                return $string;
+            case 'xspf':
+                foreach ($array as $key => $value) {
+                    if (is_array($value)) {
+                        $value = xoutput_from_array($value, true, $type);
+                        $string .= "\t\t<$key>\n$value\t\t</$key>\n";
+                    } elseif ($key == "key") {
+                        $string .= "\t\t<$key>$value</$key>\n";
+                    } elseif (is_numeric($value)) {
+                        $string .= "\t\t\t<$key>$value</$key>\n";
+                    } elseif (is_string($value)) {
+                        /* We need to escape the value */
+                        $string .= "\t\t\t<$key><![CDATA[" . $value . "]]></$key>\n";
+                    }
+                }
+
+                return $string;
             default:
-                echo Xml8_Data::empty();
+                foreach ($array as $key => $value) {
+                    // No numeric keys
+                    if (is_numeric($key)) {
+                        $key = 'item';
+                    }
+
+                    if (is_array($value)) {
+                        // Call ourself
+                        $value = xoutput_from_array($value, true);
+                        $string .= "\t<content div=\"$key\">$value</content>\n";
+                    } else {
+                        /* We need to escape the value */
+                        $string .= "\t<content div=\"$key\"><![CDATA[" . $value . "]]></content>\n";
+                    }
+                }
+                if (!$callback) {
+                    $string = "<?xml version=\"1.0\" encoding=\"utf-8\" ?>\n<root>\n" . $string . "</root>\n";
+                }
+
+                return Ui::clean_utf8($string);
         }
     }
 
@@ -296,6 +322,7 @@ class Api
      * parameter_exists
      *
      * This function checks the $input actually has the parameter.
+     * A parameter sent with an empty value (e.g. 'filter=') doesn't count as sent.
      * Parameters must be an array of required elements as a string
      *
      * @param array<string, mixed> $input
@@ -304,53 +331,16 @@ class Api
     public static function parameter_exists(array $input, array $parameters): bool|string
     {
         foreach ($parameters as $parameter) {
-            if (array_key_exists($parameter, $input)) {
+            if (
+                array_key_exists($parameter, $input)
+                && $input[$parameter] !== null
+                && $input[$parameter] !== ''
+                && $input[$parameter] !== []
+            ) {
                 continue;
             }
 
             return $parameter;
-        }
-
-        return true;
-    }
-
-    /**
-     * check_parameter
-     *
-     * Return an error for missing parameters for API6
-     *
-     * @param array<string, mixed> $input
-     * @param string[] $parameters e.g. array('auth', type')
-     */
-    public static function check_parameter(array $input, array $parameters, string $method): bool
-    {
-        $parameter = self::parameter_exists($input, $parameters);
-        if ($parameter === true) {
-            return true;
-        }
-
-        debug_event(self::class, "'" . $parameter . "' required on " . $method . " function call.", 2);
-
-        /* HINT: Requested object string/id/type ("album", "myusername", "some song title", 1298376) */
-        self::error(sprintf(T_('Bad Request: %s'), $parameter), '4710', $method, 'system', $input['api_format']);
-
-        return false;
-    }
-
-    /**
-     * check_access
-     *
-     * This function checks the user can perform the function requested
-     * 'interface', 100, $user->id
-     */
-    public static function check_access(AccessTypeEnum $type, AccessLevelEnum $level, int $user_id, string $method, string $format = 'xml'): bool
-    {
-        if (!Access::check($type, $level, $user_id)) {
-            debug_event(self::class, $type->value . " '" . $level->value . "' required on " . $method . " function call.", 2);
-            /* HINT: Access level, eg 75, 100 */
-            self::error(sprintf(T_('Require: %s'), $level->value), '4742', $method, 'account', $format);
-
-            return false;
         }
 
         return true;
@@ -433,7 +423,7 @@ class Api
             ]
             : [];
         // perpetual sessions do not expire
-        $perpetual      = (bool)AmpConfig::get('perpetual_api_session', false);
+        $perpetual      = (bool) AmpConfig::get('perpetual_api_session', false);
         $session_expire = ($perpetual)
             ? 0
             : date("c", time() + AmpConfig::get('session_length', 3600) - 60);
@@ -442,15 +432,15 @@ class Api
         $outarray = [
             'api' => self::$version,
             'session_expire' => $session_expire,
-            'update' => date("c", (int)$details['update']),
-            'add' => date("c", (int)$details['add']),
-            'clean' => date("c", (int)$details['clean']),
-            'max_song' => (int)$details['max_song'],
-            'max_album' => (int)$details['max_album'],
-            'max_artist' => (int)$details['max_artist'],
-            'max_video' => (int)$details['max_video'],
-            'max_podcast' => (int)$details['max_podcast'],
-            'max_podcast_episode' => (int)$details['max_podcast_episode'],
+            'update' => date("c", (int) $details['update']),
+            'add' => date("c", (int) $details['add']),
+            'clean' => date("c", (int) $details['clean']),
+            'max_song' => (int) $details['max_song'],
+            'max_album' => (int) $details['max_album'],
+            'max_artist' => (int) $details['max_artist'],
+            'max_video' => (int) $details['max_video'],
+            'max_podcast' => (int) $details['max_podcast'],
+            'max_podcast_episode' => (int) $details['max_podcast_episode'],
             'songs' => $counts['song'],
             'albums' => $counts['album'],
             'artists' => $counts['artist'],

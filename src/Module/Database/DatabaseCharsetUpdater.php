@@ -68,7 +68,7 @@ final class DatabaseCharsetUpdater implements DatabaseCharsetUpdaterInterface
                 if (
                     (strpos($table['Type'], 'varchar') !== false) ||
                     (strpos($table['Type'], 'enum') !== false) ||
-                    (strpos($table['Table'], 'text') !== false)
+                    (strpos($table['Type'], 'text') !== false)
                 ) {
                     $sql             = "ALTER TABLE `" . $row['0'] . "` MODIFY `" . $table['Field'] . "` " . $table['Type'] . " CHARACTER SET " . $target_charset . " COLLATE $target_collation";
                     $charset_results = Dba::write($sql);

@@ -1,6 +1,6 @@
 <?php
 
-declare(strict_types=0);
+declare(strict_types=1);
 
 /**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
@@ -49,14 +49,14 @@ final class SearchSongs6Method
      * https://ampache.org/api/api-xml-methods
      * https://ampache.org/api/api-json-methods
      *
-     * operator        = (string) 'and', 'or' (whether to match one rule or all)
-     * rule_1          = (string)
+     * operator = (string) 'and', 'or' (whether to match one rule or all)
+     * rule_1 = (string)
      * rule_1_operator = (integer) 0|1|2|3|4|5|6
-     * rule_1_input    = (mixed) The string, date, integer you are searching for
-     * type            = (string) 'song', 'album', 'song_artist', 'album_artist', 'artist', 'label', 'playlist', 'podcast', 'podcast_episode', 'genre', 'user', 'video' (song by default) //optional
-     * random          = (boolean)  0, 1 (random order of results; default to 0) //optional
-     * offset          = (integer) //optional
-     * limit           = (integer) //optional
+     * rule_1_input = (mixed) The string, date, integer you are searching for
+     * type = (string) 'song', 'album', 'song_artist', 'album_artist', 'artist', 'label', 'playlist', 'podcast', 'podcast_episode', 'genre', 'user', 'video' (song by default) //optional
+     * random = (boolean)  0, 1 (random order of results; default to 0) //optional
+     * offset = (integer) //optional
+     * limit = (integer) //optional
      *
      * @param array<string, mixed> $input
      */
@@ -84,13 +84,13 @@ final class SearchSongs6Method
         ob_end_clean();
         switch ($input['api_format']) {
             case 'json':
-                Json6_Data::set_offset((int)($input['offset'] ?? 0));
+                Json6_Data::set_offset((int) ($input['offset'] ?? 0));
                 Json6_Data::set_limit($input['limit'] ?? 0);
                 Json6_Data::set_count($count);
                 echo Json6_Data::songs($results, $user, $input['auth']);
                 break;
             default:
-                Xml6_Data::set_offset((int)($input['offset'] ?? 0));
+                Xml6_Data::set_offset((int) ($input['offset'] ?? 0));
                 Xml6_Data::set_limit($input['limit'] ?? 0);
                 Xml6_Data::set_count($count);
                 echo Xml6_Data::songs($results, $user, $input['auth']);

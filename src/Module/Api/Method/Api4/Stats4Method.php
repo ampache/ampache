@@ -1,6 +1,6 @@
 <?php
 
-declare(strict_types=0);
+declare(strict_types=1);
 
 /**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
@@ -53,12 +53,12 @@ final class Stats4Method
      * This method has partial backwards compatibility with older api versions
      * but should be updated to follow the current input values
      *
-     * type     = (string)  'song'|'album'|'artist'
-     * filter   = (string)  'newest'|'highest'|'frequent'|'recent'|'forgotten'|'flagged'|'random'
-     * user_id  = (integer) //optional
+     * type = (string)  'song'|'album'|'artist'
+     * filter = (string)  'newest'|'highest'|'frequent'|'recent'|'forgotten'|'flagged'|'random'
+     * user_id = (integer) //optional
      * username = (string)  //optional
-     * offset   = (integer) //optional
-     * limit    = (integer)Default: 10 (popular_threshold) //optional
+     * offset = (integer) //optional
+     * limit = (integer)Default: 10 (popular_threshold) //optional
      *
      * @param array{
      *     type: string,
@@ -86,14 +86,14 @@ final class Stats4Method
         } elseif (array_key_exists('user_id', $input)) {
             $userTwo = new User($user_id);
             if (!$userTwo->isNew()) {
-                $user_id = (int)$input['user_id'];
+                $user_id = (int) $input['user_id'];
                 $user    = new User($user_id);
             }
         }
         // moved type to filter and allowed multiple type selection
         $type   = $input['type'];
-        $offset = (int)($input['offset'] ?? 0);
-        $limit  = (int)($input['limit'] ?? 0);
+        $offset = (int) ($input['offset'] ?? 0);
+        $limit  = (int) ($input['limit'] ?? 0);
         // original method only searched albums and had poor method inputs
         if (in_array($type, ['newest', 'highest', 'frequent', 'recent', 'forgotten', 'flagged'])) {
             $type            = 'album';

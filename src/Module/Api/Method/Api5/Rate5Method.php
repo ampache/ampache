@@ -1,6 +1,6 @@
 <?php
 
-declare(strict_types=0);
+declare(strict_types=1);
 
 /**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
@@ -46,8 +46,8 @@ final class Rate5Method
      *
      * This rates a library item
      *
-     * type   = (string) 'song', 'album', 'artist', 'playlist', 'podcast', 'podcast_episode', 'video' $type
-     * id     = (integer) $object_id
+     * type = (string) 'song', 'album', 'artist', 'playlist', 'podcast', 'podcast_episode', 'video' $type
+     * id = (integer) $object_id
      * rating = (integer) 0|1|2|3|4|5 $rating
      *
      * @param array{
@@ -61,7 +61,7 @@ final class Rate5Method
     public static function rate(array $input, User $user): bool
     {
         if (!AmpConfig::get('ratings')) {
-            Api5::error(T_('Enable: ratings'), ErrorCodeEnum::ACCESS_DENIED, self::ACTION, 'system', $input['api_format']);
+            Api5::error(ErrorCodeEnum::ACCESS_DENIED, T_('Enable: ratings'), self::ACTION, 'system', $input['api_format']);
 
             return false;
         }
@@ -73,32 +73,32 @@ final class Rate5Method
         $object_id = (int) $input['id'];
         $rating    = (string) $input['rating'];
         // confirm the correct data
-        if (!in_array(strtolower($type), ['song', 'album', 'artist', 'playlist', 'podcast', 'podcast_episode', 'video'])) {
-            Api5::error(sprintf(T_('Bad Request: %s'), $type), ErrorCodeEnum::BAD_REQUEST, self::ACTION, 'type', $input['api_format']);
+        if (!Rating::is_valid(strtolower($type))) {
+            Api5::error(ErrorCodeEnum::BAD_REQUEST, sprintf(T_('Bad Request: %s'), $type), self::ACTION, 'type', $input['api_format']);
 
             return false;
         }
         if (!in_array($rating, ['0', '1', '2', '3', '4', '5'])) {
             /* HINT: Requested object string/id/type ("album", "myusername", "some song title", 1298376) */
-            Api5::error(sprintf(T_('Bad Request: %s'), $rating), ErrorCodeEnum::BAD_REQUEST, self::ACTION, 'rating', $input['api_format']);
+            Api5::error(ErrorCodeEnum::BAD_REQUEST, sprintf(T_('Bad Request: %s'), $rating), self::ACTION, 'rating', $input['api_format']);
 
             return false;
         }
 
         $className = ObjectTypeToClassNameMapper::map($type);
         if (!$className || !$object_id) {
-            Api5::error(sprintf(T_('Bad Request: %s'), $type), ErrorCodeEnum::BAD_REQUEST, self::ACTION, 'type', $input['api_format']);
+            Api5::error(ErrorCodeEnum::BAD_REQUEST, sprintf(T_('Bad Request: %s'), $type), self::ACTION, 'type', $input['api_format']);
         } else {
             /** @var library_item $item */
             $item = new $className($object_id);
             if ($item->isNew()) {
                 /* HINT: Requested object string/id/type ("album", "myusername", "some song title", 1298376) */
-                Api5::error(sprintf(T_('Not Found: %s'), $object_id), ErrorCodeEnum::NOT_FOUND, self::ACTION, 'id', $input['api_format']);
+                Api5::error(ErrorCodeEnum::NOT_FOUND, sprintf(T_('Not Found: %s'), $object_id), self::ACTION, 'id', $input['api_format']);
 
                 return false;
             }
             $rate = new Rating($object_id, $type);
-            $rate->set_rating((int)$rating, $user->id);
+            $rate->set_rating((int) $rating, $user->id);
             Api5::message('rating set to ' . $rating . ' for ' . $object_id, $input['api_format']);
         }
 

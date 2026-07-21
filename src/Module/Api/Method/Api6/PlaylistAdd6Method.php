@@ -1,6 +1,6 @@
 <?php
 
-declare(strict_types=0);
+declare(strict_types=1);
 
 /**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
@@ -52,8 +52,8 @@ final class PlaylistAdd6Method
      * This adds a song to a playlist, allowing different song parent types
      *
      * filter = (string) UID of playlist
-     * id     = (string) $object_id
-     * type   = (string) 'song', 'album', 'artist', 'playlist'
+     * id = (string) $object_id
+     * type = (string) 'song', 'album', 'artist', 'playlist'
      *
      * @param array{
      *     filter: string,
@@ -71,34 +71,34 @@ final class PlaylistAdd6Method
             return false;
         }
         ob_end_clean();
-        $playlist    = new Playlist((int)$input['filter']);
+        $playlist    = new Playlist((int) $input['filter']);
         $object_id   = $input['id'];
         $object_type = $input['type'];
 
         // confirm the correct data
         if (!$playlist->has_collaborate($user)) {
-            Api6::error('Require: 100', ErrorCodeEnum::FAILED_ACCESS_CHECK, self::ACTION, 'account', $input['api_format']);
+            Api6::error(ErrorCodeEnum::FAILED_ACCESS_CHECK, 'Require: 100', self::ACTION, 'account', $input['api_format']);
 
             return false;
         }
 
         if (!in_array(strtolower($object_type), ['song', 'album', 'artist', 'playlist'])) {
-            Api6::error(sprintf('Bad Request: %s', $object_type), ErrorCodeEnum::BAD_REQUEST, self::ACTION, 'type', $input['api_format']);
+            Api6::error(ErrorCodeEnum::BAD_REQUEST, sprintf('Bad Request: %s', $object_type), self::ACTION, 'type', $input['api_format']);
 
             return false;
         }
 
-        if ($object_type === 'playlist' && ((int)$object_id) === 0) {
+        if ($object_type === 'playlist' && ((int) $object_id) === 0) {
             $object_id   = str_replace('smart_', '', (string) $object_id);
             $object_type = 'search';
         }
 
         $className = ObjectTypeToClassNameMapper::map($object_type);
         /** @var Artist|Album|Song|Playlist|Search $item */
-        $item = new $className((int)$object_id);
+        $item = new $className((int) $object_id);
         if ($item->isNew()) {
             /* HINT: Requested object string/id/type ("album", "myusername", "some song title", 1298376) */
-            Api6::error(sprintf('Not Found: %s', $object_id), ErrorCodeEnum::NOT_FOUND, self::ACTION, 'id', $input['api_format']);
+            Api6::error(ErrorCodeEnum::NOT_FOUND, sprintf('Not Found: %s', $object_id), self::ACTION, 'id', $input['api_format']);
 
             return false;
         }
@@ -119,7 +119,7 @@ final class PlaylistAdd6Method
         }
         if ($results === []) {
             /* HINT: Requested object string/id/type ("album", "myusername", "some song title", 1298376) */
-            Api6::error(sprintf('Bad Request: %s', $object_id), ErrorCodeEnum::BAD_REQUEST, self::ACTION, 'system', $input['api_format']);
+            Api6::error(ErrorCodeEnum::BAD_REQUEST, sprintf('Bad Request: %s', $object_id), self::ACTION, 'system', $input['api_format']);
 
             return false;
         }

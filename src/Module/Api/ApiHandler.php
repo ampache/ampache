@@ -1,6 +1,6 @@
 <?php
 
-declare(strict_types=0);
+declare(strict_types=1);
 
 /**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
@@ -31,10 +31,10 @@ use Ampache\Config\ConfigurationKeyEnum;
 use Ampache\Module\Api\Authentication\Gatekeeper;
 use Ampache\Module\Api\Exception\ApiException;
 use Ampache\Module\Api\Exception\ErrorCodeEnum;
-use Ampache\Module\Api\Method\Api8\Handshake8Method;
-use Ampache\Module\Api\Method\Api8\LostPassword8Method;
-use Ampache\Module\Api\Method\Api8\Ping8Method;
-use Ampache\Module\Api\Method\Api8\Register8Method;
+use Ampache\Module\Api\Method\Api6\Handshake6Method;
+use Ampache\Module\Api\Method\Api6\LostPassword6Method;
+use Ampache\Module\Api\Method\Api6\Ping6Method;
+use Ampache\Module\Api\Method\Api6\Register6Method;
 use Ampache\Module\Api\Method\MethodInterface;
 use Ampache\Module\Api\Output\ApiOutputInterface;
 use Ampache\Module\Authorization\AccessLevelEnum;
@@ -54,19 +54,8 @@ use Throwable;
 
 final class ApiHandler implements ApiHandlerInterface
 {
-    private StreamFactoryInterface $streamFactory;
-
-    private LoggerInterface $logger;
-
-    private ConfigContainerInterface $configContainer;
-
-    private NetworkCheckerInterface $networkChecker;
-
-    private ContainerInterface $dic;
-
-    private UserRepositoryInterface $userRepository;
-
     private static int $default = 6;
+    private ConfigContainerInterface $configContainer;
 
     /** @var string[] */
     private array $deprecated = [
@@ -77,12 +66,11 @@ final class ApiHandler implements ApiHandlerInterface
         'tags',
     ];
 
-    /** @var string[] */
-    private array $deprecated8 = [
-        'get_indexes',
-        'playlist_add_song',
-        'user_update',
-    ];
+    private ContainerInterface $dic;
+    private LoggerInterface $logger;
+    private NetworkCheckerInterface $networkChecker;
+    private StreamFactoryInterface $streamFactory;
+    private UserRepositoryInterface $userRepository;
 
     public function __construct(
         StreamFactoryInterface $streamFactory,
@@ -113,29 +101,31 @@ final class ApiHandler implements ApiHandlerInterface
         // block html and visual output
         define('API', true);
 
-        $input        = $request->getQueryParams();
-        $action       = $input['action'];
+        $input  = $request->getQueryParams();
+        $action = $input['action'];
         if ($action == 'bad_request') {
             $this->logger->warning(
                 'Bad API request, check your HTTP Method is correct for your action',
                 [LegacyLogger::CONTEXT_TYPE => self::class]
             );
 
-            return $response->withBody(
-                $this->streamFactory->createStream(
-                    $output->error(
-                        ErrorCodeEnum::ACCESS_CONTROL_NOT_ENABLED,
-                        T_('Access Denied'),
-                        $action,
-                        'system'
+            return $response
+                ->withStatus(403)
+                ->withBody(
+                    $this->streamFactory->createStream(
+                        $output->error6(
+                            ErrorCodeEnum::ACCESS_CONTROL_NOT_ENABLED,
+                            'Access Denied',
+                            $action,
+                            'system'
+                        )
                     )
-                )
-            );
+                );
         }
-        $is_handshake = $action == Handshake8Method::ACTION;
-        $is_ping      = $action == Ping8Method::ACTION;
-        $is_register  = $action == Register8Method::ACTION;
-        $is_forgotten = $action == LostPassword8Method::ACTION;
+        $is_handshake = $action == Handshake6Method::ACTION;
+        $is_ping      = $action == Ping6Method::ACTION;
+        $is_register  = $action == Register6Method::ACTION;
+        $is_forgotten = $action == LostPassword6Method::ACTION;
         $is_public    = ($is_handshake || $is_ping || $is_register || $is_forgotten);
         $header_auth  = false;
         if (!isset($input['auth'])) {
@@ -152,11 +142,11 @@ final class ApiHandler implements ApiHandlerInterface
             ? $gatekeeper->getUser()
             : null;
         $userId      = $user->id ?? -1;
-        $api_version = (int)Preference::get_by_user($userId, 'api_force_version');
+        $api_version = (int) Preference::get_by_user($userId, 'api_force_version');
         if (!in_array($api_version, Api::API_VERSIONS)) {
             $api_session = Session::get_api_version($input['auth']);
             $api_version = ($is_public || (isset($input['version']) && $header_auth))
-                ? (int)substr($version, 0, 1)
+                ? (int) substr((string) $version, 0, 1)
                 : $api_session;
 
             // If you call api3 from json you don't get anything so change back to the latest version
@@ -165,6 +155,9 @@ final class ApiHandler implements ApiHandlerInterface
             }
 
             // roll up the version if you haven't enabled the older versions
+            if ($api_version < 3) {
+                $api_version = 3;
+            }
             if ($api_version == 3 && !Preference::get_by_user($userId, 'api_enable_3')) {
                 $api_version = 4;
             }
@@ -174,29 +167,28 @@ final class ApiHandler implements ApiHandlerInterface
             if ($api_version == 5 && !Preference::get_by_user($userId, 'api_enable_5')) {
                 $api_version = 6;
             }
-            if ($api_version == 6 && !Preference::get_by_user($userId, 'api_enable_6')) {
-                $api_version = 8;
-            }
 
             if (
-                $api_version == 7 ||
-                $api_version == 8 //|| ($api_version == 8 && !Preference::get_by_user($userId, 'api_enable_8'))
+                $api_version > self::$default
+                || ($api_version == 6 && !Preference::get_by_user($userId, 'api_enable_6'))
             ) {
                 $this->logger->warning(
                     'No API version available; check your options!',
                     [LegacyLogger::CONTEXT_TYPE => self::class]
                 );
 
-                return $response->withBody(
-                    $this->streamFactory->createStream(
-                        $output->error(
-                            ErrorCodeEnum::ACCESS_CONTROL_NOT_ENABLED,
-                            T_('Access Denied'),
-                            $action,
-                            'system'
+                return $response
+                    ->withStatus(403)
+                    ->withBody(
+                        $this->streamFactory->createStream(
+                            $output->error6(
+                                ErrorCodeEnum::ACCESS_CONTROL_NOT_ENABLED,
+                                'Access Denied',
+                                $action,
+                                'system'
+                            )
                         )
-                    )
-                );
+                    );
             }
         }
 
@@ -206,8 +198,8 @@ final class ApiHandler implements ApiHandlerInterface
          * If you are doing anything else, you hide the session behind an MD5 hash of the username
          */
         if (
-            $header_auth &&
-            $user instanceof User
+            $header_auth
+            && $user instanceof User
         ) {
             $data             = [];
             $data['username'] = $user->username;
@@ -215,15 +207,15 @@ final class ApiHandler implements ApiHandlerInterface
             if ($is_handshake || $is_ping) {
                 // for a handshake there needs to be a valid auth response (ping when sent needs one)
                 if (
-                    $input['auth'] !== md5((string)$user->username) &&
-                    !Session::read($input['auth'])
+                    $input['auth'] !== md5((string) $user->username)
+                    && !Session::read($input['auth'])
                 ) {
                     $data['type']  = 'api';
                     $input['auth'] = Session::create($data);
                 }
             } else {
                 $data['type']   = 'header';
-                $data['apikey'] = md5((string)$user->username);
+                $data['apikey'] = md5((string) $user->username);
                 // Session might not exist or has expired
                 if (!Session::read($data['apikey'])) {
                     Session::destroy($data['apikey']);
@@ -284,28 +276,19 @@ final class ApiHandler implements ApiHandlerInterface
                         )
                     );
                 case 6:
-                    return $response->withBody(
-                        $this->streamFactory->createStream(
-                            $output->error6(
-                                ErrorCodeEnum::ACCESS_CONTROL_NOT_ENABLED,
-                                T_('Access Denied'),
-                                $action,
-                                'system'
-                            )
-                        )
-                    );
-                case 8:
                 default:
-                    return $response->withBody(
-                        $this->streamFactory->createStream(
-                            $output->error(
-                                ErrorCodeEnum::ACCESS_CONTROL_NOT_ENABLED,
-                                T_('Access Denied'),
-                                $action,
-                                'system'
+                    return $response
+                        ->withStatus(403)
+                        ->withBody(
+                            $this->streamFactory->createStream(
+                                $output->error6(
+                                    ErrorCodeEnum::ACCESS_CONTROL_NOT_ENABLED,
+                                    'Access Denied',
+                                    $action,
+                                    'system'
+                                )
                             )
-                        )
-                    );
+                        );
             }
         }
 
@@ -314,14 +297,14 @@ final class ApiHandler implements ApiHandlerInterface
          * login via this interface so we do have an exception for action=login
          */
         if (
-            !$is_public &&
-            (
-                !$user instanceof User || // User is required for non-public methods
-                (
-                    !$header_auth &&
-                    $input['auth'] === md5((string)$user->username)
-                ) || // require header auth for simplified session
-                $gatekeeper->sessionExists($input['auth']) === false // no valid session
+            !$is_public
+            && (
+                !$user instanceof User // User is required for non-public methods
+                || (
+                    !$header_auth
+                    && $input['auth'] === md5((string) $user->username)
+                ) // require header auth for simplified session
+                || $gatekeeper->sessionExists($input['auth']) === false // no valid session
             )
         ) {
             $this->logger->warning(
@@ -361,28 +344,19 @@ final class ApiHandler implements ApiHandlerInterface
                         )
                     );
                 case 6:
-                    return $response->withBody(
-                        $this->streamFactory->createStream(
-                            $output->error6(
-                                ErrorCodeEnum::INVALID_HANDSHAKE,
-                                T_('Session Expired'),
-                                $action,
-                                'account'
-                            )
-                        )
-                    );
-                case 8:
                 default:
-                    return $response->withBody(
-                        $this->streamFactory->createStream(
-                            $output->error(
-                                ErrorCodeEnum::INVALID_HANDSHAKE,
-                                T_('Session Expired'),
-                                $action,
-                                'account'
+                    return $response
+                        ->withStatus(401)
+                        ->withBody(
+                            $this->streamFactory->createStream(
+                                $output->error6(
+                                    ErrorCodeEnum::INVALID_HANDSHAKE,
+                                    'Session Expired',
+                                    $action,
+                                    'account'
+                                )
                             )
-                        )
-                    );
+                        );
             }
         }
 
@@ -424,35 +398,23 @@ final class ApiHandler implements ApiHandlerInterface
                         )
                     );
                 case 6:
-                    return $response->withBody(
-                        $this->streamFactory->createStream(
-                            $output->error6(
-                                ErrorCodeEnum::FAILED_ACCESS_CHECK,
-                                T_('Unauthorized access attempt to API - ACL Error'),
-                                $action,
-                                'account'
-                            )
-                        )
-                    );
-                case 8:
                 default:
-                    return $response->withBody(
-                        $this->streamFactory->createStream(
-                            $output->error(
-                                ErrorCodeEnum::FAILED_ACCESS_CHECK,
-                                T_('Unauthorized access attempt to API - ACL Error'),
-                                $action,
-                                'account'
+                    return $response
+                        ->withStatus(403)
+                        ->withBody(
+                            $this->streamFactory->createStream(
+                                $output->error6(
+                                    ErrorCodeEnum::FAILED_ACCESS_CHECK,
+                                    'Unauthorized access attempt to API - ACL Error',
+                                    $action,
+                                    'account'
+                                )
                             )
-                        )
-                    );
+                        );
             }
         }
 
-        if (
-            !$is_public &&
-            $user instanceof User
-        ) {
+        if (!$is_public) {
             /**
              * @todo get rid of implicit user registration and pass the user explicitly
              */
@@ -532,64 +494,53 @@ final class ApiHandler implements ApiHandlerInterface
                 if (in_array($action, $this->deprecated)) {
                     ob_end_clean();
 
-                    return $response->withBody(
-                        $this->streamFactory->createStream(
-                            $output->error6(
-                                ErrorCodeEnum::DEPRECATED,
-                                T_('Deprecated'),
-                                $action,
-                                'removed'
+                    return $response
+                        ->withStatus(410)
+                        ->withBody(
+                            $this->streamFactory->createStream(
+                                $output->error6(
+                                    ErrorCodeEnum::DEPRECATED,
+                                    'Deprecated',
+                                    $action,
+                                    'removed'
+                                )
                             )
-                        )
-                    );
+                        );
                 }
                 $handlerClassName = Api6::METHOD_LIST[$action] ?? null;
                 if ($handlerClassName === null) {
                     ob_end_clean();
 
-                    return $response->withBody(
+                    return $response
+                        ->withStatus(400)
+                        ->withBody(
+                            $this->streamFactory->createStream(
+                                $output->error6(
+                                    ErrorCodeEnum::MISSING,
+                                    'Invalid Request',
+                                    $action,
+                                    'system'
+                                )
+                            )
+                        );
+                }
+                break;
+            default:
+                // Api::API_VERSIONS is the list we support; anything else can't be dispatched
+                ob_end_clean();
+
+                return $response
+                    ->withStatus(400)
+                    ->withBody(
                         $this->streamFactory->createStream(
                             $output->error6(
                                 ErrorCodeEnum::MISSING,
-                                T_('Invalid Request'),
+                                'Invalid Request',
                                 $action,
                                 'system'
                             )
                         )
                     );
-                }
-                break;
-            case 8:
-            default:
-                if (in_array($action, $this->deprecated8)) {
-                    ob_end_clean();
-
-                    return $response->withBody(
-                        $this->streamFactory->createStream(
-                            $output->error(
-                                ErrorCodeEnum::DEPRECATED,
-                                T_('Deprecated'),
-                                $action,
-                                'removed'
-                            )
-                        )
-                    );
-                }
-                $handlerClassName = Api::METHOD_LIST[$action] ?? null;
-                if ($handlerClassName === null) {
-                    ob_end_clean();
-
-                    return $response->withBody(
-                        $this->streamFactory->createStream(
-                            $output->error(
-                                ErrorCodeEnum::MISSING,
-                                T_('Invalid Request'),
-                                $action,
-                                'system'
-                            )
-                        )
-                    );
-                }
         }
 
         $debugHandler = $this->configContainer->get('api_debug_handler');
@@ -634,13 +585,16 @@ final class ApiHandler implements ApiHandlerInterface
             'artists_albums' => 'artist_albums',
             'artists_songs' => 'artist_songs',
             'bookmark-create' => 'bookmark_create',
+            'delete-all' => 'delete_all',
             'fetch-info' => 'update_artist_info',
             'fetch-metadata' => 'get_external_metadata',
+            'follow' => 'toggle_follow',
             'friends-timeline' => 'friends_timeline',
             'genres_albums' => 'genre_albums',
             'genres_artists' => 'genre_artists',
             'genres_songs' => 'genre_songs',
-            'similar', 'get_similar_artists', 'get-similar_artists', 'similar_artists', 'get_similar_songs', 'get-similar_songs', 'similar_songs' => 'get_similar',
+            'get-art', 'art' => 'get_art',
+            'groups' => 'search_group',
             'labels_artists' => 'label_artists',
             'last-shouts' => 'last_shouts',
             'licenses_songs' => 'license_songs',
@@ -648,25 +602,29 @@ final class ApiHandler implements ApiHandlerInterface
             'me' => 'user',
             'now-playing' => 'now_playing',
             'playlist-create' => 'playlist_create',
-            'playlists_generate', 'playlists-generate', 'playlist-generate' => 'playlist_generate',
+            'playlists_add' => 'playlist_add',
             'playlists_delete' => 'playlist_delete',
             'playlists_edit' => 'playlist_edit',
+            'playlists_generate', 'playlists-generate', 'playlist-generate' => 'playlist_generate',
             'playlists_hash', 'hash' => 'playlist_hash',
             'playlists_songs' => 'playlist_songs',
-            'playlists_add' => 'playlist_add',
             'podcast-episodes' => 'podcast_episodes',
             'record-play' => 'record_play',
             'remove-song' => 'remove_song',
+            'search-songs' => 'search_songs',
+            'similar', 'get_similar_artists', 'get-similar_artists', 'similar_artists', 'get_similar_songs', 'get-similar_songs', 'similar_songs' => 'get_similar',
             'smartlists_delete' => 'smartlist_delete',
             'smartlists_songs' => 'smartlist_songs',
-            'search-songs' => 'search_songs',
             'songs_delete' => 'song_delete',
+            'system-preferences' => 'system_preferences',
             'update-art' => 'update_art',
             'update-tags' => 'update_from_tags',
             'url-to-song' => 'url_to_song',
-            'get-art', 'art' => 'get_art',
             'users_playlists' => 'user_playlists',
             'users_smartlists' => 'user_smartlists',
+            'volume-down' => 'volume_down',
+            'volume-mute' => 'volume_mute',
+            'volume-up' => 'volume_up',
             default => $action,
         };
 
@@ -682,10 +640,12 @@ final class ApiHandler implements ApiHandlerInterface
                 'playlists' => 'playlist',
                 'podcast_episodes' => 'podcast_episode',
                 'podcasts' => 'podcast',
+                'preferences' => 'user_preference',
                 'searches' => 'search',
                 'shares' => 'share',
                 'smartlists' => 'smartlist',
                 'songs' => 'song',
+                'system_preferences' => 'system_preference',
                 'users' => 'user',
                 'videos' => 'video',
                 default => $action
@@ -693,8 +653,20 @@ final class ApiHandler implements ApiHandlerInterface
         }
 
         if ($type !== null && $type !== '') {
-            if ($type === 'catalog' && ($action === 'create' || $action === 'add')) {
-                $action = 'catalog_create';
+            if ($type === 'catalog') {
+                if ($action === 'create' || ($action === 'add' && !$hasFilter)) {
+                    $action = 'catalog_create';
+                }
+
+                // `catalogs/{catalog_id}/(add|clean|update|verify)` are undocumented aliases of
+                // `catalogs/{catalog_id}/action`; the matching task is derived from the path by
+                // the REST applications. (`add` without a filter keeps its `catalog_create` meaning)
+                if (
+                    $hasFilter
+                    && ($action === 'add' || $action === 'clean' || $action === 'update' || $action === 'verify')
+                ) {
+                    $action = 'catalog_action';
+                }
             }
             if ($type === 'song' && $action === 'lyrics') {
                 $action = 'get_lyrics';
@@ -705,18 +677,24 @@ final class ApiHandler implements ApiHandlerInterface
             if ($action === 'preferences' && ($type === 'user' || $type === 'system')) {
                 $action = $type . '_' . $action;
             }
+            if ($action === 'folder' && $type === 'catalog') {
+                $action = 'catalog_folder';
+            }
+            if ($action === 'remove' && $type === 'playlist') {
+                $action = 'playlist_remove';
+            }
 
-            if ($action === 'create' && ($type === 'album' || $type === 'artist' || $type === 'playlist' || $type === 'smartlist' || $type === 'podcast' || $type === 'podcast_episode' || $type === 'song' || $type === 'video')) {
+            if (($action === 'create' || $action === 'share') && ($type === 'album' || $type === 'artist' || $type === 'playlist' || $type === 'smartlist' || $type === 'podcast' || $type === 'podcast_episode' || $type === 'song' || $type === 'video')) {
                 $action = 'share_create';
             }
             if ($action === 'deleted' && ($type === 'podcast_episode' || $type === 'song' || $type === 'video')) {
-                $action = $action . '_' . $type;
+                $action = $action . '_' . $type . 's';
             }
 
             if (
-                $action === 'song' && ($type === 'playlist' || $type === 'smartlist' || $type === 'album' || $type === 'artist' || $type === 'genre' || $type === 'license' || $type === 'get_similar') ||
-                $action === 'album' && ($type === 'artist' || $type === 'genre') ||
-                $action === 'artist' && ($type === 'genre' || $type === 'get_similar' || $type === 'label')
+                $action === 'song' && ($type === 'playlist' || $type === 'smartlist' || $type === 'album' || $type === 'artist' || $type === 'genre' || $type === 'license' || $type === 'get_similar')
+                || $action === 'album' && ($type === 'artist' || $type === 'genre')
+                || $action === 'artist' && ($type === 'genre' || $type === 'get_similar' || $type === 'label')
             ) {
                 $action = $type . '_' . $action . 's';
             }
@@ -725,11 +703,11 @@ final class ApiHandler implements ApiHandlerInterface
                 $action = $type . '_' . $action . 's';
             }
             if (
-                ($type === 'playlist' && ($action === 'create' || $action === 'delete' || $action === 'add' || $action === 'add_song' || $action === 'remove_song')) ||
-                ($type === 'smartlist' && $action === 'delete') ||
-                ($type === 'bookmark' && $action === 'create') ||
-                ($type === 'podcast' && $action === 'update') ||
-                ($type === 'song' && $action === 'tags')
+                ($type === 'playlist' && ($action === 'create' || $action === 'delete' || $action === 'add' || $action === 'add_song' || $action === 'remove_song'))
+                || ($type === 'smartlist' && $action === 'delete')
+                || ($type === 'bookmark' && $action === 'create')
+                || ($type === 'podcast' && $action === 'update')
+                || ($type === 'song' && $action === 'tags')
             ) {
                 $action = $type . '_' . $action;
             }
@@ -767,6 +745,70 @@ final class ApiHandler implements ApiHandlerInterface
     }
 
     /**
+     * Run the DEBUG API handler with NO exception handling!
+     * @throws ApiException|Throwable
+     */
+    private function _executeDebugHandler(
+        Gatekeeper $gatekeeper,
+        bool $is_public,
+        string $action,
+        string $handlerClassName,
+        array $input,
+        ?User $user,
+        ResponseInterface $response,
+        ApiOutputInterface $output,
+    ): ?ResponseInterface {
+        /**
+         * This condition allows the `new` approach and the legacy one to co-exist.
+         * After implementing the MethodInterface in all api methods, the condition will be removed
+         *
+         * @todo cleanup
+         */
+        $this->logger->notice(
+            sprintf('DebugHandler: API function [%s]', $handlerClassName),
+            [LegacyLogger::CONTEXT_TYPE => self::class]
+        );
+
+        if (
+            $user instanceof User
+            && $this->dic->has($handlerClassName)
+            && $this->dic->get($handlerClassName) instanceof MethodInterface
+        ) {
+            /** @var MethodInterface $handler */
+            $handler = $this->dic->get($handlerClassName);
+
+            $response = $handler->handle(
+                $gatekeeper,
+                $response,
+                $output,
+                $input,
+                $user
+            );
+
+            $gatekeeper->extendSession($input['auth']);
+
+            return $response;
+        }
+        $params = [$input];
+
+        /** @var callable $callback */
+        $callback = [$handlerClassName, $action];
+
+        if (!$is_public) {
+            $params[] = $user;
+        }
+
+        call_user_func_array(
+            $callback,
+            $params
+        );
+
+        $gatekeeper->extendSession($input['auth']);
+
+        return null;
+    }
+
+    /**
      * Run the default API handler with exception handling
      */
     private function _executeHandler(
@@ -793,9 +835,9 @@ final class ApiHandler implements ApiHandlerInterface
             );
 
             if (
-                $user instanceof User &&
-                $this->dic->has($handlerClassName) &&
-                $this->dic->get($handlerClassName) instanceof MethodInterface
+                $user instanceof User
+                && $this->dic->has($handlerClassName)
+                && $this->dic->get($handlerClassName) instanceof MethodInterface
             ) {
                 /** @var MethodInterface $handler */
                 $handler = $this->dic->get($handlerClassName);
@@ -861,28 +903,19 @@ final class ApiHandler implements ApiHandlerInterface
                         )
                     );
                 case 6:
-                    return $response->withBody(
-                        $this->streamFactory->createStream(
-                            $output->error6(
-                                $error->getCode(),
-                                $error->getMessage(),
-                                $action,
-                                $error->getType()
-                            )
-                        )
-                    );
-                case 8:
                 default:
-                    return $response->withBody(
-                        $this->streamFactory->createStream(
-                            $output->error(
-                                $error->getCode(),
-                                $error->getMessage(),
-                                $action,
-                                $error->getType()
+                    return $response
+                        ->withStatus(Api::getHttpCode($error->getCode()))
+                        ->withBody(
+                            $this->streamFactory->createStream(
+                                $output->error6(
+                                    $error->getCode(),
+                                    $error->getMessage(),
+                                    $action,
+                                    $error->getType()
+                                )
                             )
-                        )
-                    );
+                        );
             }
         } catch (Throwable $error) {
             $this->logger->error(
@@ -924,93 +957,20 @@ final class ApiHandler implements ApiHandlerInterface
                         )
                     );
                 case 6:
-                    return $response->withBody(
-                        $this->streamFactory->createStream(
-                            $output->error6(
-                                ErrorCodeEnum::GENERIC_ERROR,
-                                'Generic error',
-                                $action,
-                                'system'
-                            )
-                        )
-                    );
-                case 8:
                 default:
-                    return $response->withBody(
-                        $this->streamFactory->createStream(
-                            $output->error(
-                                ErrorCodeEnum::GENERIC_ERROR,
-                                'Generic error',
-                                $action,
-                                'system'
+                    return $response
+                        ->withStatus(500)
+                        ->withBody(
+                            $this->streamFactory->createStream(
+                                $output->error6(
+                                    ErrorCodeEnum::GENERIC_ERROR,
+                                    'Generic error',
+                                    $action,
+                                    'system'
+                                )
                             )
-                        )
-                    );
+                        );
             }
         }
-    }
-
-    /**
-     * Run the DEBUG API handler with NO exception handling!
-     * @throws ApiException|Throwable
-     */
-    private function _executeDebugHandler(
-        Gatekeeper $gatekeeper,
-        bool $is_public,
-        string $action,
-        string $handlerClassName,
-        array $input,
-        ?User $user,
-        ResponseInterface $response,
-        ApiOutputInterface $output,
-    ): ?ResponseInterface {
-        /**
-         * This condition allows the `new` approach and the legacy one to co-exist.
-         * After implementing the MethodInterface in all api methods, the condition will be removed
-         *
-         * @todo cleanup
-         */
-        $this->logger->notice(
-            sprintf('DebugHandler: API function [%s]', $handlerClassName),
-            [LegacyLogger::CONTEXT_TYPE => self::class]
-        );
-
-        if (
-            $user instanceof User &&
-            $this->dic->has($handlerClassName) &&
-            $this->dic->get($handlerClassName) instanceof MethodInterface
-        ) {
-            /** @var MethodInterface $handler */
-            $handler = $this->dic->get($handlerClassName);
-
-            $response = $handler->handle(
-                $gatekeeper,
-                $response,
-                $output,
-                $input,
-                $user
-            );
-
-            $gatekeeper->extendSession($input['auth']);
-
-            return $response;
-        }
-        $params = [$input];
-
-        /** @var callable $callback */
-        $callback = [$handlerClassName, $action];
-
-        if (!$is_public) {
-            $params[] = $user;
-        }
-
-        call_user_func_array(
-            $callback,
-            $params
-        );
-
-        $gatekeeper->extendSession($input['auth']);
-
-        return null;
     }
 }

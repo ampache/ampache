@@ -1,6 +1,6 @@
 <?php
 
-declare(strict_types=0);
+declare(strict_types=1);
 
 /**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
@@ -58,7 +58,7 @@ final class PodcastEpisode6Method
     public static function podcast_episode(array $input, User $user): bool
     {
         if (!AmpConfig::get('podcast')) {
-            Api6::error('Enable: podcast', ErrorCodeEnum::ACCESS_DENIED, self::ACTION, 'system', $input['api_format']);
+            Api6::error(ErrorCodeEnum::ACCESS_DENIED, 'Enable: podcast', self::ACTION, 'system', $input['api_format']);
 
             return false;
         }
@@ -69,7 +69,7 @@ final class PodcastEpisode6Method
         $episode   = new Podcast_Episode($object_id);
         if ($episode->isNew()) {
             /* HINT: Requested object string/id/type ("album", "myusername", "some song title", 1298376) */
-            Api6::error(sprintf('Not Found: %s', $object_id), ErrorCodeEnum::NOT_FOUND, self::ACTION, 'filter', $input['api_format']);
+            Api6::error(ErrorCodeEnum::NOT_FOUND, sprintf('Not Found: %s', $object_id), self::ACTION, 'filter', $input['api_format']);
 
             return false;
         }
@@ -77,7 +77,7 @@ final class PodcastEpisode6Method
         ob_end_clean();
         switch ($input['api_format']) {
             case 'json':
-                echo Json6_Data::podcast_episodes([$object_id], $user, $input['auth'], false);
+                echo Json6_Data::podcast_episodes([$object_id], $user, $input['auth'], true, false);
                 break;
             default:
                 echo Xml6_Data::podcast_episodes([$object_id], $user, $input['auth']);

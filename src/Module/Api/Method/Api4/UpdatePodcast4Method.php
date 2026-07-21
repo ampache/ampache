@@ -1,6 +1,6 @@
 <?php
 
-declare(strict_types=0);
+declare(strict_types=1);
 
 /**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
@@ -86,20 +86,20 @@ final class UpdatePodcast4Method
     /**
      * @deprecated Inject by constructor
      */
-    private static function getPodcastSyncer(): PodcastSyncerInterface
-    {
-        global $dic;
-
-        return $dic->get(PodcastSyncerInterface::class);
-    }
-
-    /**
-     * @deprecated Inject by constructor
-     */
     private static function getPodcastRepository(): PodcastRepositoryInterface
     {
         global $dic;
 
         return $dic->get(PodcastRepositoryInterface::class);
+    }
+
+    /**
+     * @deprecated Inject by constructor
+     */
+    private static function getPodcastSyncer(): PodcastSyncerInterface
+    {
+        global $dic;
+
+        return $dic->get(PodcastSyncerInterface::class);
     }
 }

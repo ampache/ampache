@@ -132,6 +132,14 @@ a:focus {
     overflow: hidden;
 }
 
+/* The audio controls, volume bar and toggles are absolutely positioned against .jp-interface, but they sit inside
+   .jp-controls-holder, which is relative + overflow:hidden and collapses to zero height once its children leave the
+   flow -- so it clipped all of them away. Video keeps the holder, its controls are in-flow floats. */
+.jp-audio .jp-controls-holder {
+    position: static;
+    overflow: visible;
+}
+
 .jp-audio ul.jp-controls {
     position: absolute;
     top: 15px;

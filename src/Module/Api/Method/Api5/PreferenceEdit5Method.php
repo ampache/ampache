@@ -1,6 +1,6 @@
 <?php
 
-declare(strict_types=0);
+declare(strict_types=1);
 
 /**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
@@ -25,9 +25,9 @@ declare(strict_types=0);
 
 namespace Ampache\Module\Api\Method\Api5;
 
+use Ampache\Module\Api\Api;
 use Ampache\Module\Api\Api5;
 use Ampache\Module\Api\Exception\ErrorCodeEnum;
-use Ampache\Module\Api\Xml5_Data;
 use Ampache\Module\Authorization\AccessLevelEnum;
 use Ampache\Module\Authorization\AccessTypeEnum;
 use Ampache\Repository\Model\Preference;
@@ -47,8 +47,8 @@ final class PreferenceEdit5Method
      * Edit a preference value and apply to all users if allowed
      *
      * filter = (string) Preference name e.g ('notify_email', 'ajax_load')
-     * value  = (string|integer) Preference value
-     * all    = (boolean) apply to all users //optional
+     * value = (string|integer) Preference value
+     * all = (boolean) apply to all users //optional
      *
      * @param array{
      *     filter: string,
@@ -63,7 +63,7 @@ final class PreferenceEdit5Method
         if (!Api5::check_parameter($input, ['filter', 'value'], self::ACTION)) {
             return false;
         }
-        $all = array_key_exists('all', $input) && (int)$input['all'] == 1;
+        $all = array_key_exists('all', $input) && (int) $input['all'] == 1;
         // don't apply to all when you aren't an admin
         if ($all && !Api5::check_access(AccessTypeEnum::INTERFACE, AccessLevelEnum::ADMIN, $user->id, self::ACTION, $input['api_format'])) {
             return false;
@@ -76,17 +76,17 @@ final class PreferenceEdit5Method
             ? User::INTERNAL_SYSTEM_USER_ID
             : $user->id;
 
-        $pref_name  = (string)$input['filter'];
+        $pref_name  = (string) $input['filter'];
         $preference = Preference::get($pref_name, $user_id);
         if (empty($preference)) {
             /* HINT: Requested object string/id/type ("album", "myusername", "some song title", 1298376) */
-            Api5::error(sprintf(T_('Not Found: %s'), $pref_name), ErrorCodeEnum::NOT_FOUND, self::ACTION, 'filter', $input['api_format']);
+            Api5::error(ErrorCodeEnum::NOT_FOUND, sprintf(T_('Not Found: %s'), $pref_name), self::ACTION, 'filter', $input['api_format']);
 
             return false;
         }
         $value = $input['value'];
         if (!Preference::update($pref_name, $user->id, $value, $all)) {
-            Api5::error(T_('Bad Request'), ErrorCodeEnum::BAD_REQUEST, self::ACTION, 'system', $input['api_format']);
+            Api5::error(ErrorCodeEnum::BAD_REQUEST, T_('Bad Request'), self::ACTION, 'system', $input['api_format']);
 
             return false;
         }
@@ -97,7 +97,7 @@ final class PreferenceEdit5Method
                 echo json_encode($results, JSON_PRETTY_PRINT);
                 break;
             default:
-                echo Xml5_Data::object_array($results['preference'], 'preference');
+                echo Api::object_array($results['preference'], 'preference');
         }
 
         return true;

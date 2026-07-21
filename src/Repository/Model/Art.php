@@ -473,7 +473,7 @@ class Art extends database_object
 
             foreach ($songs as $song_id) {
                 $song        = new Song($song_id);
-                $description = ($this->object_type == 'artist') ? $song->get_artist_fullname() : $object->get_fullname();
+                $description = ($this->object_type == 'artist') ? $song->get_parent_fullname() : $object->get_fullname();
                 $vainfo      = $utilityFactory->createVaInfo(
                     $song->file
                 );

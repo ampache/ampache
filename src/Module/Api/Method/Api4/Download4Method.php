@@ -1,6 +1,6 @@
 <?php
 
-declare(strict_types=0);
+declare(strict_types=1);
 
 /**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
@@ -43,8 +43,8 @@ final class Download4Method
      *
      * Downloads a given media file. set format=raw to download the full file
      *
-     * id     = (string) $song_id| $podcast_episode_id
-     * type   = (string) 'song'|'podcast'
+     * id = (string) $song_id| $podcast_episode_id
+     * type = (string) 'song'|'podcast'
      * format = (string) 'mp3'|'ogg', etc //optional SONG ONLY
      *
      * @param array{
@@ -62,7 +62,7 @@ final class Download4Method
         if (!Api4::check_parameter($input, ['id', 'type'], self::ACTION)) {
             return false;
         }
-        $fileid       = (int)$input['id'];
+        $fileid       = (int) $input['id'];
         $type         = $input['type'];
         $format       = $input['format'] ?? null; // mp3, flv or raw
         $transcode_to = $format && $format != 'raw';

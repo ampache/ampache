@@ -1,6 +1,6 @@
 <?php
 
-declare(strict_types=0);
+declare(strict_types=1);
 
 /**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
@@ -26,9 +26,9 @@ declare(strict_types=0);
 namespace Ampache\Module\Api\Method\Api5;
 
 use Ampache\Config\AmpConfig;
+use Ampache\Module\Api\Api;
 use Ampache\Module\Api\Api5;
 use Ampache\Module\Api\Exception\ErrorCodeEnum;
-use Ampache\Module\Api\Xml5_Data;
 use Ampache\Module\Authorization\AccessLevelEnum;
 use Ampache\Module\Authorization\AccessTypeEnum;
 use Ampache\Module\Playback\Localplay\LocalPlay;
@@ -51,10 +51,10 @@ final class Localplay5Method
      * This is for controlling Localplay
      *
      * command = (string) 'next', 'prev', 'stop', 'play', 'pause', 'add', 'volume_up', 'volume_down', 'volume_mute', 'delete_all', 'skip', 'status'
-     * oid     = (integer) object_id //optional
-     * type    = (string) 'Song', 'Video', 'Podcast_Episode', 'Broadcast', 'Democratic', 'Live_Stream' //optional
-     * clear   = (integer) 0,1 Clear the current playlist before adding //optional
-     * track   = (integer) used in conjunction with skip to skip to the track id (use localplay_songs to get your track list) //optional
+     * oid = (integer) object_id //optional
+     * type = (string) 'Song', 'Video', 'Podcast_Episode', 'Broadcast', 'Democratic', 'Live_Stream' //optional
+     * clear = (integer) 0,1 Clear the current playlist before adding //optional
+     * track = (integer) used in conjunction with skip to skip to the track id (use localplay_songs to get your track list) //optional
      *
      * @param array{
      *     command: string,
@@ -79,7 +79,7 @@ final class Localplay5Method
         // Load their Localplay instance
         $localplay = new Localplay(AmpConfig::get('localplay_controller', ''));
         if (empty($localplay->type) || !$localplay->connect()) {
-            Api5::error(T_('Unable to connect to localplay controller'), ErrorCodeEnum::BAD_REQUEST, self::ACTION, 'account', $input['api_format']);
+            Api5::error(ErrorCodeEnum::BAD_REQUEST, T_('Unable to connect to localplay controller'), self::ACTION, 'account', $input['api_format']);
 
             return false;
         }
@@ -90,18 +90,18 @@ final class Localplay5Method
         switch ($command) {
             case 'add':
                 // for add commands get the object details
-                $object_id = (int)($input['oid'] ?? 0);
-                $type      = LibraryItemEnum::tryFrom((string) strtolower($input['type'] ?? '')) ?? LibraryItemEnum::SONG;
+                $object_id = (int) ($input['oid'] ?? 0);
+                $type      = LibraryItemEnum::tryFrom(strtolower($input['type'] ?? '')) ?? LibraryItemEnum::SONG;
 
                 if (!AmpConfig::get('allow_video') && $type === LibraryItemEnum::VIDEO) {
-                    Api5::error(T_('Enable: video'), ErrorCodeEnum::ACCESS_DENIED, self::ACTION, 'system', $input['api_format']);
+                    Api5::error(ErrorCodeEnum::ACCESS_DENIED, T_('Enable: video'), self::ACTION, 'system', $input['api_format']);
 
                     return false;
                 }
 
-                $clear = (int)($input['clear'] ?? 0);
+                $clear = (int) ($input['clear'] ?? 0);
                 if ($localplay->type === 'mpd') {
-                    $localplay->set_block_clear(make_bool((string)$clear));
+                    $localplay->set_block_clear(make_bool((string) $clear));
                 }
 
                 // clear before the add
@@ -120,7 +120,7 @@ final class Localplay5Method
                 break;
             case 'skip':
                 // localplay_songs 'track' starts at 1 but localplay starts at 0 behind the scenes
-                $result = $localplay->skip((int)($input['track'] ?? 1) - 1);
+                $result = $localplay->skip((int) ($input['track'] ?? 1) - 1);
                 break;
             case 'next':
                 $result = $localplay->next();
@@ -154,13 +154,13 @@ final class Localplay5Method
                 break;
             default:
                 // They are doing it wrong
-                Api5::error(T_('Bad Request'), ErrorCodeEnum::BAD_REQUEST, self::ACTION, 'command', $input['api_format']);
+                Api5::error(ErrorCodeEnum::BAD_REQUEST, T_('Bad Request'), self::ACTION, 'command', $input['api_format']);
 
                 return false;
-        } // end switch on command
+        }
 
         if ($command === 'status' && empty($status)) {
-            Api5::error(T_('Unable to connect to localplay controller'), ErrorCodeEnum::BAD_REQUEST, self::ACTION, 'account', $input['api_format']);
+            Api5::error(ErrorCodeEnum::BAD_REQUEST, T_('Unable to connect to localplay controller'), self::ACTION, 'account', $input['api_format']);
 
             return false;
         }
@@ -173,7 +173,7 @@ final class Localplay5Method
                 echo json_encode($results, JSON_PRETTY_PRINT);
                 break;
             default:
-                echo Xml5_Data::keyed_array($results);
+                echo Api::keyed_array($results);
         }
 
         return true;

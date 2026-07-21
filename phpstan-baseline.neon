@@ -51,489 +51,119 @@ parameters:
 			path: src/Module/Api/DaapApiApplication.php
 
 		-
+			message: "#^Method Ampache\\\\Module\\\\Api\\\\Daap_Api\\:\\:_get_type_id\\(\\) has parameter \\$type with no type specified\\.$#"
+			count: 1
+			path: src/Module/Api/Daap_Api.php
+
+		-
+			message: "#^Method Ampache\\\\Module\\\\Api\\\\Daap_Api\\:\\:_tlv\\(\\) has parameter \\$tag with no type specified\\.$#"
+			count: 1
+			path: src/Module/Api/Daap_Api.php
+
+		-
+			message: "#^Method Ampache\\\\Module\\\\Api\\\\Daap_Api\\:\\:_tlv\\(\\) has parameter \\$value with no type specified\\.$#"
+			count: 1
+			path: src/Module/Api/Daap_Api.php
+
+		-
+			message: "#^Method Ampache\\\\Module\\\\Api\\\\Daap_Api\\:\\:_tlv_byte\\(\\) has parameter \\$tag with no type specified\\.$#"
+			count: 1
+			path: src/Module/Api/Daap_Api.php
+
+		-
+			message: "#^Method Ampache\\\\Module\\\\Api\\\\Daap_Api\\:\\:_tlv_byte\\(\\) has parameter \\$value with no type specified\\.$#"
+			count: 1
+			path: src/Module/Api/Daap_Api.php
+
+		-
+			message: "#^Method Ampache\\\\Module\\\\Api\\\\Daap_Api\\:\\:_tlv_date\\(\\) has parameter \\$tag with no type specified\\.$#"
+			count: 1
+			path: src/Module/Api/Daap_Api.php
+
+		-
+			message: "#^Method Ampache\\\\Module\\\\Api\\\\Daap_Api\\:\\:_tlv_date\\(\\) has parameter \\$value with no type specified\\.$#"
+			count: 1
+			path: src/Module/Api/Daap_Api.php
+
+		-
+			message: "#^Method Ampache\\\\Module\\\\Api\\\\Daap_Api\\:\\:_tlv_int\\(\\) has parameter \\$tag with no type specified\\.$#"
+			count: 1
+			path: src/Module/Api/Daap_Api.php
+
+		-
+			message: "#^Method Ampache\\\\Module\\\\Api\\\\Daap_Api\\:\\:_tlv_int\\(\\) has parameter \\$value with no type specified\\.$#"
+			count: 1
+			path: src/Module/Api/Daap_Api.php
+
+		-
+			message: "#^Method Ampache\\\\Module\\\\Api\\\\Daap_Api\\:\\:_tlv_list\\(\\) has parameter \\$tag with no type specified\\.$#"
+			count: 1
+			path: src/Module/Api/Daap_Api.php
+
+		-
+			message: "#^Method Ampache\\\\Module\\\\Api\\\\Daap_Api\\:\\:_tlv_list\\(\\) has parameter \\$value with no type specified\\.$#"
+			count: 1
+			path: src/Module/Api/Daap_Api.php
+
+		-
+			message: "#^Method Ampache\\\\Module\\\\Api\\\\Daap_Api\\:\\:_tlv_long\\(\\) has parameter \\$tag with no type specified\\.$#"
+			count: 1
+			path: src/Module/Api/Daap_Api.php
+
+		-
+			message: "#^Method Ampache\\\\Module\\\\Api\\\\Daap_Api\\:\\:_tlv_long\\(\\) has parameter \\$value with no type specified\\.$#"
+			count: 1
+			path: src/Module/Api/Daap_Api.php
+
+		-
+			message: "#^Method Ampache\\\\Module\\\\Api\\\\Daap_Api\\:\\:_tlv_short\\(\\) has parameter \\$tag with no type specified\\.$#"
+			count: 1
+			path: src/Module/Api/Daap_Api.php
+
+		-
+			message: "#^Method Ampache\\\\Module\\\\Api\\\\Daap_Api\\:\\:_tlv_short\\(\\) has parameter \\$value with no type specified\\.$#"
+			count: 1
+			path: src/Module/Api/Daap_Api.php
+
+		-
+			message: "#^Method Ampache\\\\Module\\\\Api\\\\Daap_Api\\:\\:_tlv_songs\\(\\) has parameter \\$meta with no type specified\\.$#"
+			count: 1
+			path: src/Module/Api/Daap_Api.php
+
+		-
+			message: "#^Method Ampache\\\\Module\\\\Api\\\\Daap_Api\\:\\:_tlv_songs\\(\\) has parameter \\$songs with no type specified\\.$#"
+			count: 1
+			path: src/Module/Api/Daap_Api.php
+
+		-
+			message: "#^Method Ampache\\\\Module\\\\Api\\\\Daap_Api\\:\\:_tlv_string\\(\\) has parameter \\$tag with no type specified\\.$#"
+			count: 1
+			path: src/Module/Api/Daap_Api.php
+
+		-
+			message: "#^Method Ampache\\\\Module\\\\Api\\\\Daap_Api\\:\\:_tlv_string\\(\\) has parameter \\$value with no type specified\\.$#"
+			count: 1
+			path: src/Module/Api/Daap_Api.php
+
+		-
+			message: "#^Method Ampache\\\\Module\\\\Api\\\\Daap_Api\\:\\:_tlv_version\\(\\) has parameter \\$tag with no type specified\\.$#"
+			count: 1
+			path: src/Module/Api/Daap_Api.php
+
+		-
+			message: "#^Method Ampache\\\\Module\\\\Api\\\\Daap_Api\\:\\:_tlv_version\\(\\) has parameter \\$value with no type specified\\.$#"
+			count: 1
+			path: src/Module/Api/Daap_Api.php
+
+		-
 			message: "#^Method Ampache\\\\Module\\\\Api\\\\Daap_Api\\:\\:createError\\(\\) has parameter \\$code with no type specified\\.$#"
 			count: 1
 			path: src/Module/Api/Daap_Api.php
 
 		-
-			message: "#^Method Ampache\\\\Module\\\\Api\\\\Daap_Api\\:\\:get_type_id\\(\\) has parameter \\$type with no type specified\\.$#"
-			count: 1
-			path: src/Module/Api/Daap_Api.php
-
-		-
-			message: "#^Method Ampache\\\\Module\\\\Api\\\\Daap_Api\\:\\:tlv\\(\\) has parameter \\$tag with no type specified\\.$#"
-			count: 1
-			path: src/Module/Api/Daap_Api.php
-
-		-
-			message: "#^Method Ampache\\\\Module\\\\Api\\\\Daap_Api\\:\\:tlv\\(\\) has parameter \\$value with no type specified\\.$#"
-			count: 1
-			path: src/Module/Api/Daap_Api.php
-
-		-
-			message: "#^Method Ampache\\\\Module\\\\Api\\\\Daap_Api\\:\\:tlv_byte\\(\\) has parameter \\$tag with no type specified\\.$#"
-			count: 1
-			path: src/Module/Api/Daap_Api.php
-
-		-
-			message: "#^Method Ampache\\\\Module\\\\Api\\\\Daap_Api\\:\\:tlv_byte\\(\\) has parameter \\$value with no type specified\\.$#"
-			count: 1
-			path: src/Module/Api/Daap_Api.php
-
-		-
-			message: "#^Method Ampache\\\\Module\\\\Api\\\\Daap_Api\\:\\:tlv_date\\(\\) has parameter \\$tag with no type specified\\.$#"
-			count: 1
-			path: src/Module/Api/Daap_Api.php
-
-		-
-			message: "#^Method Ampache\\\\Module\\\\Api\\\\Daap_Api\\:\\:tlv_date\\(\\) has parameter \\$value with no type specified\\.$#"
-			count: 1
-			path: src/Module/Api/Daap_Api.php
-
-		-
-			message: "#^Method Ampache\\\\Module\\\\Api\\\\Daap_Api\\:\\:tlv_int\\(\\) has parameter \\$tag with no type specified\\.$#"
-			count: 1
-			path: src/Module/Api/Daap_Api.php
-
-		-
-			message: "#^Method Ampache\\\\Module\\\\Api\\\\Daap_Api\\:\\:tlv_int\\(\\) has parameter \\$value with no type specified\\.$#"
-			count: 1
-			path: src/Module/Api/Daap_Api.php
-
-		-
-			message: "#^Method Ampache\\\\Module\\\\Api\\\\Daap_Api\\:\\:tlv_list\\(\\) has parameter \\$tag with no type specified\\.$#"
-			count: 1
-			path: src/Module/Api/Daap_Api.php
-
-		-
-			message: "#^Method Ampache\\\\Module\\\\Api\\\\Daap_Api\\:\\:tlv_list\\(\\) has parameter \\$value with no type specified\\.$#"
-			count: 1
-			path: src/Module/Api/Daap_Api.php
-
-		-
-			message: "#^Method Ampache\\\\Module\\\\Api\\\\Daap_Api\\:\\:tlv_long\\(\\) has parameter \\$tag with no type specified\\.$#"
-			count: 1
-			path: src/Module/Api/Daap_Api.php
-
-		-
-			message: "#^Method Ampache\\\\Module\\\\Api\\\\Daap_Api\\:\\:tlv_long\\(\\) has parameter \\$value with no type specified\\.$#"
-			count: 1
-			path: src/Module/Api/Daap_Api.php
-
-		-
-			message: "#^Method Ampache\\\\Module\\\\Api\\\\Daap_Api\\:\\:tlv_short\\(\\) has parameter \\$tag with no type specified\\.$#"
-			count: 1
-			path: src/Module/Api/Daap_Api.php
-
-		-
-			message: "#^Method Ampache\\\\Module\\\\Api\\\\Daap_Api\\:\\:tlv_short\\(\\) has parameter \\$value with no type specified\\.$#"
-			count: 1
-			path: src/Module/Api/Daap_Api.php
-
-		-
-			message: "#^Method Ampache\\\\Module\\\\Api\\\\Daap_Api\\:\\:tlv_songs\\(\\) has parameter \\$meta with no type specified\\.$#"
-			count: 1
-			path: src/Module/Api/Daap_Api.php
-
-		-
-			message: "#^Method Ampache\\\\Module\\\\Api\\\\Daap_Api\\:\\:tlv_songs\\(\\) has parameter \\$songs with no type specified\\.$#"
-			count: 1
-			path: src/Module/Api/Daap_Api.php
-
-		-
-			message: "#^Method Ampache\\\\Module\\\\Api\\\\Daap_Api\\:\\:tlv_string\\(\\) has parameter \\$tag with no type specified\\.$#"
-			count: 1
-			path: src/Module/Api/Daap_Api.php
-
-		-
-			message: "#^Method Ampache\\\\Module\\\\Api\\\\Daap_Api\\:\\:tlv_string\\(\\) has parameter \\$value with no type specified\\.$#"
-			count: 1
-			path: src/Module/Api/Daap_Api.php
-
-		-
-			message: "#^Method Ampache\\\\Module\\\\Api\\\\Daap_Api\\:\\:tlv_version\\(\\) has parameter \\$tag with no type specified\\.$#"
-			count: 1
-			path: src/Module/Api/Daap_Api.php
-
-		-
-			message: "#^Method Ampache\\\\Module\\\\Api\\\\Daap_Api\\:\\:tlv_version\\(\\) has parameter \\$value with no type specified\\.$#"
-			count: 1
-			path: src/Module/Api/Daap_Api.php
-
-		-
-			message: "#^Method Ampache\\\\Module\\\\Api\\\\Json4_Data\\:\\:albums\\(\\) return type has no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Module/Api/Json4_Data.php
-
-		-
-			message: "#^Method Ampache\\\\Module\\\\Api\\\\Json4_Data\\:\\:artists\\(\\) return type has no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Module/Api/Json4_Data.php
-
-		-
-			message: "#^Method Ampache\\\\Module\\\\Api\\\\Json4_Data\\:\\:podcast_episodes\\(\\) return type has no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Module/Api/Json4_Data.php
-
-		-
-			message: "#^Method Ampache\\\\Module\\\\Api\\\\Json4_Data\\:\\:songs\\(\\) return type has no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Module/Api/Json4_Data.php
-
-		-
-			message: "#^Method Ampache\\\\Module\\\\Api\\\\Json5_Data\\:\\:albums\\(\\) return type has no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Module/Api/Json5_Data.php
-
-		-
-			message: "#^Method Ampache\\\\Module\\\\Api\\\\Json5_Data\\:\\:artists\\(\\) return type has no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Module/Api/Json5_Data.php
-
-		-
-			message: "#^Method Ampache\\\\Module\\\\Api\\\\Json5_Data\\:\\:genre_array\\(\\) return type has no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Module/Api/Json5_Data.php
-
-		-
-			message: "#^Method Ampache\\\\Module\\\\Api\\\\Json5_Data\\:\\:podcast_episodes\\(\\) return type has no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Module/Api/Json5_Data.php
-
-		-
-			message: "#^Method Ampache\\\\Module\\\\Api\\\\Json5_Data\\:\\:songs\\(\\) return type has no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Module/Api/Json5_Data.php
-
-		-
-			message: "#^Cannot call method getId\\(\\) on Ampache\\\\Repository\\\\Model\\\\User\\|null\\.$#"
-			count: 1
-			path: src/Module/Api/Method/Api3/Handshake3Method.php
-
-		-
-			message: "#^Parameter \\#1 \\(array\\|string\\) of echo cannot be converted to string\\.$#"
-			count: 3
-			path: src/Module/Api/Method/Api4/AdvancedSearch4Method.php
-
-		-
-			message: "#^Parameter \\#1 \\(array\\|string\\) of echo cannot be converted to string\\.$#"
-			count: 1
-			path: src/Module/Api/Method/Api4/Album4Method.php
-
-		-
-			message: "#^Parameter \\#1 \\(array\\|string\\) of echo cannot be converted to string\\.$#"
-			count: 1
-			path: src/Module/Api/Method/Api4/AlbumSongs4Method.php
-
-		-
-			message: "#^Parameter \\#1 \\(array\\|string\\) of echo cannot be converted to string\\.$#"
-			count: 1
-			path: src/Module/Api/Method/Api4/Albums4Method.php
-
-		-
-			message: "#^Parameter \\#1 \\(array\\|string\\) of echo cannot be converted to string\\.$#"
-			count: 1
-			path: src/Module/Api/Method/Api4/Artist4Method.php
-
-		-
-			message: "#^Parameter \\#1 \\(array\\|string\\) of echo cannot be converted to string\\.$#"
-			count: 1
-			path: src/Module/Api/Method/Api4/ArtistAlbums4Method.php
-
-		-
-			message: "#^Parameter \\#1 \\(array\\|string\\) of echo cannot be converted to string\\.$#"
-			count: 1
-			path: src/Module/Api/Method/Api4/ArtistSongs4Method.php
-
-		-
-			message: "#^Parameter \\#1 \\(array\\|string\\) of echo cannot be converted to string\\.$#"
-			count: 1
-			path: src/Module/Api/Method/Api4/Artists4Method.php
-
-		-
-			message: "#^Call to function unset\\(\\) contains undefined variable \\$SSE_OUTPUT\\.$#"
-			count: 1
-			path: src/Module/Api/Method/Api4/CatalogAction4Method.php
-
-		-
-			message: "#^Call to function unset\\(\\) contains undefined variable \\$SSE_OUTPUT\\.$#"
-			count: 1
-			path: src/Module/Api/Method/Api4/CatalogFile4Method.php
-
-		-
-			message: "#^Parameter \\#1 \\(array\\|string\\) of echo cannot be converted to string\\.$#"
-			count: 1
-			path: src/Module/Api/Method/Api4/GenreAlbums4Method.php
-
-		-
-			message: "#^Parameter \\#1 \\(array\\|string\\) of echo cannot be converted to string\\.$#"
-			count: 1
-			path: src/Module/Api/Method/Api4/GenreArtists4Method.php
-
-		-
-			message: "#^Parameter \\#1 \\(array\\|string\\) of echo cannot be converted to string\\.$#"
-			count: 1
-			path: src/Module/Api/Method/Api4/GenreSongs4Method.php
-
-		-
-			message: "#^Cannot call method getId\\(\\) on Ampache\\\\Repository\\\\Model\\\\User\\|null\\.$#"
-			count: 1
-			path: src/Module/Api/Method/Api4/Handshake4Method.php
-
-		-
-			message: "#^Parameter \\#1 \\(array\\|string\\) of echo cannot be converted to string\\.$#"
-			count: 1
-			path: src/Module/Api/Method/Api4/LicenseSongs4Method.php
-
-		-
-			message: "#^Comparison operation \"\\>\" between int\\<1, max\\> and 0 is always true\\.$#"
-			count: 1
-			path: src/Module/Api/Method/Api4/PlaylistEdit4Method.php
-
-		-
-			message: "#^Parameter \\#1 \\(array\\|string\\) of echo cannot be converted to string\\.$#"
-			count: 1
-			path: src/Module/Api/Method/Api4/PlaylistGenerate4Method.php
-
-		-
-			message: "#^Parameter \\#1 \\(array\\|string\\) of echo cannot be converted to string\\.$#"
-			count: 1
-			path: src/Module/Api/Method/Api4/PlaylistSongs4Method.php
-
-		-
-			message: "#^Parameter \\#1 \\(array\\|string\\) of echo cannot be converted to string\\.$#"
-			count: 1
-			path: src/Module/Api/Method/Api4/PodcastEpisode4Method.php
-
-		-
-			message: "#^Parameter \\#1 \\(array\\|string\\) of echo cannot be converted to string\\.$#"
-			count: 1
-			path: src/Module/Api/Method/Api4/PodcastEpisodes4Method.php
-
-		-
-			message: "#^Parameter \\#1 \\(array\\|string\\) of echo cannot be converted to string\\.$#"
-			count: 1
-			path: src/Module/Api/Method/Api4/SearchSongs4Method.php
-
-		-
-			message: "#^Parameter \\#1 \\(array\\|string\\) of echo cannot be converted to string\\.$#"
-			count: 1
-			path: src/Module/Api/Method/Api4/Song4Method.php
-
-		-
-			message: "#^Parameter \\#1 \\(array\\|string\\) of echo cannot be converted to string\\.$#"
-			count: 1
-			path: src/Module/Api/Method/Api4/Songs4Method.php
-
-		-
-			message: "#^Parameter \\#1 \\(array\\|string\\) of echo cannot be converted to string\\.$#"
-			count: 3
-			path: src/Module/Api/Method/Api4/Stats4Method.php
-
-		-
-			message: "#^Parameter \\#1 \\(array\\|string\\) of echo cannot be converted to string\\.$#"
-			count: 1
-			path: src/Module/Api/Method/Api4/UrlToSong4Method.php
-
-		-
-			message: "#^Parameter \\#1 \\(array\\|string\\) of echo cannot be converted to string\\.$#"
-			count: 4
-			path: src/Module/Api/Method/Api5/AdvancedSearch5Method.php
-
-		-
-			message: "#^Parameter \\#1 \\(array\\|string\\) of echo cannot be converted to string\\.$#"
-			count: 1
-			path: src/Module/Api/Method/Api5/Album5Method.php
-
-		-
-			message: "#^Parameter \\#1 \\(array\\|string\\) of echo cannot be converted to string\\.$#"
-			count: 1
-			path: src/Module/Api/Method/Api5/AlbumSongs5Method.php
-
-		-
-			message: "#^Parameter \\#1 \\(array\\|string\\) of echo cannot be converted to string\\.$#"
-			count: 1
-			path: src/Module/Api/Method/Api5/Albums5Method.php
-
-		-
-			message: "#^Parameter \\#1 \\(array\\|string\\) of echo cannot be converted to string\\.$#"
-			count: 1
-			path: src/Module/Api/Method/Api5/Artist5Method.php
-
-		-
-			message: "#^Parameter \\#1 \\(array\\|string\\) of echo cannot be converted to string\\.$#"
-			count: 1
-			path: src/Module/Api/Method/Api5/ArtistAlbums5Method.php
-
-		-
-			message: "#^Parameter \\#1 \\(array\\|string\\) of echo cannot be converted to string\\.$#"
-			count: 1
-			path: src/Module/Api/Method/Api5/ArtistSongs5Method.php
-
-		-
-			message: "#^Parameter \\#1 \\(array\\|string\\) of echo cannot be converted to string\\.$#"
-			count: 1
-			path: src/Module/Api/Method/Api5/Artists5Method.php
-
-		-
-			message: "#^Call to function unset\\(\\) contains undefined variable \\$SSE_OUTPUT\\.$#"
-			count: 1
-			path: src/Module/Api/Method/Api5/CatalogAction5Method.php
-
-		-
-			message: "#^Call to function unset\\(\\) contains undefined variable \\$SSE_OUTPUT\\.$#"
-			count: 1
-			path: src/Module/Api/Method/Api5/CatalogFile5Method.php
-
-		-
-			message: "#^Parameter \\#1 \\(array\\|string\\) of echo cannot be converted to string\\.$#"
-			count: 1
-			path: src/Module/Api/Method/Api5/GenreAlbums5Method.php
-
-		-
-			message: "#^Parameter \\#1 \\(array\\|string\\) of echo cannot be converted to string\\.$#"
-			count: 1
-			path: src/Module/Api/Method/Api5/GenreArtists5Method.php
-
-		-
-			message: "#^Parameter \\#1 \\(array\\|string\\) of echo cannot be converted to string\\.$#"
-			count: 1
-			path: src/Module/Api/Method/Api5/GenreSongs5Method.php
-
-		-
-			message: "#^Cannot call method getId\\(\\) on Ampache\\\\Repository\\\\Model\\\\User\\|null\\.$#"
-			count: 1
-			path: src/Module/Api/Method/Api5/Handshake5Method.php
-
-		-
-			message: "#^Parameter \\#1 \\(array\\|string\\) of echo cannot be converted to string\\.$#"
-			count: 1
-			path: src/Module/Api/Method/Api5/LabelArtists5Method.php
-
-		-
-			message: "#^Parameter \\#1 \\(array\\|string\\) of echo cannot be converted to string\\.$#"
-			count: 1
-			path: src/Module/Api/Method/Api5/LicenseSongs5Method.php
-
-		-
-			message: "#^Comparison operation \"\\>\" between int\\<1, max\\> and 0 is always true\\.$#"
-			count: 1
-			path: src/Module/Api/Method/Api5/PlaylistEdit5Method.php
-
-		-
-			message: "#^Parameter \\#1 \\(array\\|string\\) of echo cannot be converted to string\\.$#"
-			count: 1
-			path: src/Module/Api/Method/Api5/PlaylistGenerate5Method.php
-
-		-
-			message: "#^Parameter \\#1 \\(array\\|string\\) of echo cannot be converted to string\\.$#"
-			count: 1
-			path: src/Module/Api/Method/Api5/PlaylistSongs5Method.php
-
-		-
-			message: "#^Parameter \\#1 \\(array\\|string\\) of echo cannot be converted to string\\.$#"
-			count: 1
-			path: src/Module/Api/Method/Api5/PodcastEpisode5Method.php
-
-		-
-			message: "#^Parameter \\#1 \\(array\\|string\\) of echo cannot be converted to string\\.$#"
-			count: 1
-			path: src/Module/Api/Method/Api5/PodcastEpisodes5Method.php
-
-		-
-			message: "#^Parameter \\#1 \\(array\\|string\\) of echo cannot be converted to string\\.$#"
-			count: 1
-			path: src/Module/Api/Method/Api5/SearchSongs5Method.php
-
-		-
-			message: "#^Parameter \\#1 \\(array\\|string\\) of echo cannot be converted to string\\.$#"
-			count: 1
-			path: src/Module/Api/Method/Api5/Song5Method.php
-
-		-
-			message: "#^Parameter \\#1 \\(array\\|string\\) of echo cannot be converted to string\\.$#"
-			count: 1
-			path: src/Module/Api/Method/Api5/Songs5Method.php
-
-		-
-			message: "#^Parameter \\#1 \\(array\\|string\\) of echo cannot be converted to string\\.$#"
-			count: 4
-			path: src/Module/Api/Method/Api5/Stats5Method.php
-
-		-
-			message: "#^If condition is always true\\.$#"
-			count: 1
-			path: src/Module/Api/Method/Api5/SystemUpdate5Method.php
-
-		-
-			message: "#^Unreachable statement \\- code above always terminates\\.$#"
-			count: 1
-			path: src/Module/Api/Method/Api5/SystemUpdate5Method.php
-
-		-
-			message: "#^Parameter \\#1 \\(array\\|string\\) of echo cannot be converted to string\\.$#"
-			count: 1
-			path: src/Module/Api/Method/Api5/UrlToSong5Method.php
-
-		-
-			message: "#^Call to function unset\\(\\) contains undefined variable \\$SSE_OUTPUT\\.$#"
-			count: 1
-			path: src/Module/Api/Method/Api6/CatalogAction6Method.php
-
-		-
-			message: "#^Call to function unset\\(\\) contains undefined variable \\$SSE_OUTPUT\\.$#"
-			count: 1
-			path: src/Module/Api/Method/Api6/CatalogFile6Method.php
-
-		-
-			message: "#^Call to function unset\\(\\) contains undefined variable \\$SSE_OUTPUT\\.$#"
-			count: 1
-			path: src/Module/Api/Method/Api6/CatalogFolder6Method.php
-
-		-
-			message: "#^If condition is always true\\.$#"
-			count: 1
-			path: src/Module/Api/Method/Api6/SystemUpdate6Method.php
-
-		-
-			message: "#^Unreachable statement \\- code above always terminates\\.$#"
-			count: 1
-			path: src/Module/Api/Method/Api6/SystemUpdate6Method.php
-
-		-
-			message: "#^Call to function unset\\(\\) contains undefined variable \\$SSE_OUTPUT\\.$#"
-			count: 1
-			path: src/Module/Api/Method/Api8/CatalogAction8Method.php
-
-		-
-			message: "#^Call to function unset\\(\\) contains undefined variable \\$SSE_OUTPUT\\.$#"
-			count: 1
-			path: src/Module/Api/Method/Api8/CatalogFile8Method.php
-
-		-
-			message: "#^Call to function unset\\(\\) contains undefined variable \\$SSE_OUTPUT\\.$#"
-			count: 1
-			path: src/Module/Api/Method/Api8/CatalogFolder8Method.php
-
-		-
-			message: "#^If condition is always true\\.$#"
-			count: 1
-			path: src/Module/Api/Method/Api8/SystemUpdate8Method.php
-
-		-
-			message: "#^Unreachable statement \\- code above always terminates\\.$#"
-			count: 1
-			path: src/Module/Api/Method/Api8/SystemUpdate8Method.php
-
-		-
 			message: "#^Method Ampache\\\\Module\\\\Api\\\\Method\\\\MethodInterface\\:\\:handle\\(\\) has parameter \\$input with no value type specified in iterable type array\\.$#"
 			count: 1
 			path: src/Module/Api/Method/MethodInterface.php
-
-		-
-			message: "#^Comparison operation \"\\>\" between int\\<1, max\\> and 0 is always true\\.$#"
-			count: 4
-			path: src/Module/Api/Upnp_Api.php
 
 		-
 			message: "#^Elseif condition is always false\\.$#"
@@ -666,6 +296,31 @@ parameters:
 			path: src/Module/Api/Upnp_Api.php
 
 		-
+			message: "#^Method Ampache\\\\Module\\\\Api\\\\Upnp_Api\\:\\:_parse_upnp_filter\\(\\) has parameter \\$filter with no type specified\\.$#"
+			count: 1
+			path: src/Module/Api/Upnp_Api.php
+
+		-
+			message: "#^Method Ampache\\\\Module\\\\Api\\\\Upnp_Api\\:\\:_parse_upnp_search_term\\(\\) return type has no value type specified in iterable type array\\.$#"
+			count: 1
+			path: src/Module/Api/Upnp_Api.php
+
+		-
+			message: "#^Method Ampache\\\\Module\\\\Api\\\\Upnp_Api\\:\\:_parse_upnp_searchcriteria\\(\\) has parameter \\$query with no type specified\\.$#"
+			count: 1
+			path: src/Module/Api/Upnp_Api.php
+
+		-
+			message: "#^Method Ampache\\\\Module\\\\Api\\\\Upnp_Api\\:\\:_parse_upnp_searchcriteria\\(\\) has parameter \\$type with no type specified\\.$#"
+			count: 1
+			path: src/Module/Api/Upnp_Api.php
+
+		-
+			message: "#^Method Ampache\\\\Module\\\\Api\\\\Upnp_Api\\:\\:_parse_upnp_searchcriteria\\(\\) return type has no value type specified in iterable type array\\.$#"
+			count: 1
+			path: src/Module/Api/Upnp_Api.php
+
+		-
 			message: "#^Method Ampache\\\\Module\\\\Api\\\\Upnp_Api\\:\\:_slice\\(\\) has parameter \\$count with no type specified\\.$#"
 			count: 1
 			path: src/Module/Api/Upnp_Api.php
@@ -781,31 +436,6 @@ parameters:
 			path: src/Module/Api/Upnp_Api.php
 
 		-
-			message: "#^Method Ampache\\\\Module\\\\Api\\\\Upnp_Api\\:\\:parse_upnp_filter\\(\\) has parameter \\$filter with no type specified\\.$#"
-			count: 1
-			path: src/Module/Api/Upnp_Api.php
-
-		-
-			message: "#^Method Ampache\\\\Module\\\\Api\\\\Upnp_Api\\:\\:parse_upnp_search_term\\(\\) return type has no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Module/Api/Upnp_Api.php
-
-		-
-			message: "#^Method Ampache\\\\Module\\\\Api\\\\Upnp_Api\\:\\:parse_upnp_searchcriteria\\(\\) has parameter \\$query with no type specified\\.$#"
-			count: 1
-			path: src/Module/Api/Upnp_Api.php
-
-		-
-			message: "#^Method Ampache\\\\Module\\\\Api\\\\Upnp_Api\\:\\:parse_upnp_searchcriteria\\(\\) has parameter \\$type with no type specified\\.$#"
-			count: 1
-			path: src/Module/Api/Upnp_Api.php
-
-		-
-			message: "#^Method Ampache\\\\Module\\\\Api\\\\Upnp_Api\\:\\:parse_upnp_searchcriteria\\(\\) return type has no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Module/Api/Upnp_Api.php
-
-		-
 			message: "#^Method Ampache\\\\Module\\\\Api\\\\Upnp_Api\\:\\:sendResponse\\(\\) has parameter \\$actst with no type specified\\.$#"
 			count: 1
 			path: src/Module/Api/Upnp_Api.php
@@ -819,51 +449,6 @@ parameters:
 			message: "#^Method Ampache\\\\Module\\\\Api\\\\Upnp_Api\\:\\:sendResponse\\(\\) has parameter \\$delaytime with no type specified\\.$#"
 			count: 1
 			path: src/Module/Api/Upnp_Api.php
-
-		-
-			message: "#^Method Ampache\\\\Module\\\\Api\\\\Xml3_Data\\:\\:keyed_array\\(\\) has parameter \\$array with no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Module/Api/Xml3_Data.php
-
-		-
-			message: "#^Method Ampache\\\\Module\\\\Api\\\\Xml4_Data\\:\\:keyed_array\\(\\) has parameter \\$array with no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Module/Api/Xml4_Data.php
-
-		-
-			message: "#^Method Ampache\\\\Module\\\\Api\\\\Xml5_Data\\:\\:keyed_array\\(\\) has parameter \\$array with no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Module/Api/Xml5_Data.php
-
-		-
-			message: "#^Method Ampache\\\\Module\\\\Api\\\\Xml5_Data\\:\\:object_array\\(\\) has parameter \\$array with no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Module/Api/Xml5_Data.php
-
-		-
-			message: "#^Method Ampache\\\\Module\\\\Api\\\\Xml6_Data\\:\\:keyed_array\\(\\) has parameter \\$array with no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Module/Api/Xml6_Data.php
-
-		-
-			message: "#^Method Ampache\\\\Module\\\\Api\\\\Xml6_Data\\:\\:object_array\\(\\) has parameter \\$array with no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Module/Api/Xml6_Data.php
-
-		-
-			message: "#^Method Ampache\\\\Module\\\\Api\\\\Xml8_Data\\:\\:keyed_array\\(\\) has parameter \\$array with no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Module/Api/Xml8_Data.php
-
-		-
-			message: "#^Method Ampache\\\\Module\\\\Api\\\\Xml8_Data\\:\\:object_array\\(\\) has parameter \\$array with no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Module/Api/Xml8_Data.php
-
-		-
-			message: "#^Method Ampache\\\\Module\\\\Api\\\\Xml8_Data\\:\\:output_xml_from_array\\(\\) has parameter \\$array with no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Module/Api/Xml8_Data.php
 
 		-
 			message: "#^Method Ampache\\\\Module\\\\Application\\\\Admin\\\\Catalog\\\\AbstractCatalogAction\\:\\:getCatalogIds\\(\\) return type has no value type specified in iterable type array\\.$#"
@@ -2001,21 +1586,6 @@ parameters:
 			path: src/Module/Util/AmazonSearch.php
 
 		-
-			message: "#^Parameter \\#2 \\$handler of function xml_set_character_data_handler expects callable\\(\\)\\: mixed, 'cdata' given\\.$#"
-			count: 1
-			path: src/Module/Util/AmazonSearch.php
-
-		-
-			message: "#^Parameter \\#2 \\$start_handler of function xml_set_element_handler expects callable\\(\\)\\: mixed, 'startElement' given\\.$#"
-			count: 1
-			path: src/Module/Util/AmazonSearch.php
-
-		-
-			message: "#^Parameter \\#3 \\$end_handler of function xml_set_element_handler expects callable\\(\\)\\: mixed, 'endElement' given\\.$#"
-			count: 1
-			path: src/Module/Util/AmazonSearch.php
-
-		-
 			message: "#^Property Ampache\\\\Module\\\\Util\\\\AmazonSearch\\:\\:\\$_currentPage has no type specified\\.$#"
 			count: 1
 			path: src/Module/Util/AmazonSearch.php
@@ -2119,666 +1689,6 @@ parameters:
 			message: "#^Property Ampache\\\\Module\\\\Util\\\\AmazonSearch\\:\\:\\$url_suffix has no type specified\\.$#"
 			count: 1
 			path: src/Module/Util/AmazonSearch.php
-
-		-
-			message: "#^Comparison operation \"\\<\\=\" between 1 and 1 is always true\\.$#"
-			count: 1
-			path: src/Module/Util/Captcha/easy_captcha.php
-
-		-
-			message: "#^Comparison operation \"\\>\\=\" between 0 and 1 is always false\\.$#"
-			count: 1
-			path: src/Module/Util/Captcha/easy_captcha.php
-
-		-
-			message: "#^Else branch is unreachable because ternary operator condition is always true\\.$#"
-			count: 1
-			path: src/Module/Util/Captcha/easy_captcha.php
-
-		-
-			message: "#^If condition is always false\\.$#"
-			count: 2
-			path: src/Module/Util/Captcha/easy_captcha.php
-
-		-
-			message: "#^If condition is always true\\.$#"
-			count: 2
-			path: src/Module/Util/Captcha/easy_captcha.php
-
-		-
-			message: "#^Method Ampache\\\\Module\\\\Util\\\\Captcha\\\\easy_captcha\\:\\:__construct\\(\\) has parameter \\$captcha_id with no type specified\\.$#"
-			count: 1
-			path: src/Module/Util/Captcha/easy_captcha.php
-
-		-
-			message: "#^Method Ampache\\\\Module\\\\Util\\\\Captcha\\\\easy_captcha\\:\\:hash\\(\\) has parameter \\$text with no type specified\\.$#"
-			count: 1
-			path: src/Module/Util/Captcha/easy_captcha.php
-
-		-
-			message: "#^Method Ampache\\\\Module\\\\Util\\\\Captcha\\\\easy_captcha\\:\\:load\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Module/Util/Captcha/easy_captcha.php
-
-		-
-			message: "#^Method Ampache\\\\Module\\\\Util\\\\Captcha\\\\easy_captcha\\:\\:log\\(\\) has parameter \\$category with no type specified\\.$#"
-			count: 1
-			path: src/Module/Util/Captcha/easy_captcha.php
-
-		-
-			message: "#^Method Ampache\\\\Module\\\\Util\\\\Captcha\\\\easy_captcha\\:\\:log\\(\\) has parameter \\$error with no type specified\\.$#"
-			count: 1
-			path: src/Module/Util/Captcha/easy_captcha.php
-
-		-
-			message: "#^Method Ampache\\\\Module\\\\Util\\\\Captcha\\\\easy_captcha\\:\\:log\\(\\) has parameter \\$message with no type specified\\.$#"
-			count: 1
-			path: src/Module/Util/Captcha/easy_captcha.php
-
-		-
-			message: "#^Method Ampache\\\\Module\\\\Util\\\\Captcha\\\\easy_captcha\\:\\:save\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Module/Util/Captcha/easy_captcha.php
-
-		-
-			message: "#^Method Ampache\\\\Module\\\\Util\\\\Captcha\\\\easy_captcha\\:\\:solved\\(\\) has parameter \\$input with no type specified\\.$#"
-			count: 1
-			path: src/Module/Util/Captcha/easy_captcha.php
-
-		-
-			message: "#^Method Ampache\\\\Module\\\\Util\\\\Captcha\\\\easy_captcha\\:\\:straighten_temp_dir\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Module/Util/Captcha/easy_captcha.php
-
-		-
-			message: "#^Parameter \\#1 \\$data of function unserialize expects string, string\\|false given\\.$#"
-			count: 1
-			path: src/Module/Util/Captcha/easy_captcha.php
-
-		-
-			message: "#^Parameter \\#1 \\$stream of function fread expects resource, resource\\|false given\\.$#"
-			count: 1
-			path: src/Module/Util/Captcha/easy_captcha.php
-
-		-
-			message: "#^Property Ampache\\\\Module\\\\Util\\\\Captcha\\\\easy_captcha\\:\\:\\$ajax_tries has no type specified\\.$#"
-			count: 1
-			path: src/Module/Util/Captcha/easy_captcha.php
-
-		-
-			message: "#^Property Ampache\\\\Module\\\\Util\\\\Captcha\\\\easy_captcha\\:\\:\\$created has no type specified\\.$#"
-			count: 1
-			path: src/Module/Util/Captcha/easy_captcha.php
-
-		-
-			message: "#^Property Ampache\\\\Module\\\\Util\\\\Captcha\\\\easy_captcha\\:\\:\\$expires has no type specified\\.$#"
-			count: 1
-			path: src/Module/Util/Captcha/easy_captcha.php
-
-		-
-			message: "#^Property Ampache\\\\Module\\\\Util\\\\Captcha\\\\easy_captcha\\:\\:\\$failures has no type specified\\.$#"
-			count: 1
-			path: src/Module/Util/Captcha/easy_captcha.php
-
-		-
-			message: "#^Property Ampache\\\\Module\\\\Util\\\\Captcha\\\\easy_captcha\\:\\:\\$grant has no type specified\\.$#"
-			count: 1
-			path: src/Module/Util/Captcha/easy_captcha.php
-
-		-
-			message: "#^Property Ampache\\\\Module\\\\Util\\\\Captcha\\\\easy_captcha\\:\\:\\$id has no type specified\\.$#"
-			count: 1
-			path: src/Module/Util/Captcha/easy_captcha.php
-
-		-
-			message: "#^Property Ampache\\\\Module\\\\Util\\\\Captcha\\\\easy_captcha\\:\\:\\$image has no type specified\\.$#"
-			count: 1
-			path: src/Module/Util/Captcha/easy_captcha.php
-
-		-
-			message: "#^Property Ampache\\\\Module\\\\Util\\\\Captcha\\\\easy_captcha\\:\\:\\$maxpasses has no type specified\\.$#"
-			count: 1
-			path: src/Module/Util/Captcha/easy_captcha.php
-
-		-
-			message: "#^Property Ampache\\\\Module\\\\Util\\\\Captcha\\\\easy_captcha\\:\\:\\$passed has no type specified\\.$#"
-			count: 1
-			path: src/Module/Util/Captcha/easy_captcha.php
-
-		-
-			message: "#^Property Ampache\\\\Module\\\\Util\\\\Captcha\\\\easy_captcha\\:\\:\\$saved has no type specified\\.$#"
-			count: 1
-			path: src/Module/Util/Captcha/easy_captcha.php
-
-		-
-			message: "#^Property Ampache\\\\Module\\\\Util\\\\Captcha\\\\easy_captcha\\:\\:\\$sent has no type specified\\.$#"
-			count: 1
-			path: src/Module/Util/Captcha/easy_captcha.php
-
-		-
-			message: "#^Property Ampache\\\\Module\\\\Util\\\\Captcha\\\\easy_captcha\\:\\:\\$shortcut has no type specified\\.$#"
-			count: 1
-			path: src/Module/Util/Captcha/easy_captcha.php
-
-		-
-			message: "#^Property Ampache\\\\Module\\\\Util\\\\Captcha\\\\easy_captcha\\:\\:\\$text has no type specified\\.$#"
-			count: 1
-			path: src/Module/Util/Captcha/easy_captcha.php
-
-		-
-			message: "#^Property Ampache\\\\Module\\\\Util\\\\Captcha\\\\easy_captcha\\:\\:\\$tries has no type specified\\.$#"
-			count: 1
-			path: src/Module/Util/Captcha/easy_captcha.php
-
-		-
-			message: "#^Right side of && is always false\\.$#"
-			count: 1
-			path: src/Module/Util/Captcha/easy_captcha.php
-
-		-
-			message: "#^Ternary operator condition is always false\\.$#"
-			count: 1
-			path: src/Module/Util/Captcha/easy_captcha.php
-
-		-
-			message: "#^Ternary operator condition is always true\\.$#"
-			count: 3
-			path: src/Module/Util/Captcha/easy_captcha.php
-
-		-
-			message: "#^Method Ampache\\\\Module\\\\Util\\\\Captcha\\\\easy_captcha_dxy_spike\\:\\:dxy\\(\\) has parameter \\$x with no type specified\\.$#"
-			count: 1
-			path: src/Module/Util/Captcha/easy_captcha_dxy_spike.php
-
-		-
-			message: "#^Method Ampache\\\\Module\\\\Util\\\\Captcha\\\\easy_captcha_dxy_spike\\:\\:dxy\\(\\) has parameter \\$y with no type specified\\.$#"
-			count: 1
-			path: src/Module/Util/Captcha/easy_captcha_dxy_spike.php
-
-		-
-			message: "#^Method Ampache\\\\Module\\\\Util\\\\Captcha\\\\easy_captcha_dxy_spike\\:\\:dxy\\(\\) return type has no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Module/Util/Captcha/easy_captcha_dxy_spike.php
-
-		-
-			message: "#^Constructor of class Ampache\\\\Module\\\\Util\\\\Captcha\\\\easy_captcha_dxy_wave has an unused parameter \\$max_x\\.$#"
-			count: 1
-			path: src/Module/Util/Captcha/easy_captcha_dxy_wave.php
-
-		-
-			message: "#^Constructor of class Ampache\\\\Module\\\\Util\\\\Captcha\\\\easy_captcha_dxy_wave has an unused parameter \\$max_y\\.$#"
-			count: 1
-			path: src/Module/Util/Captcha/easy_captcha_dxy_wave.php
-
-		-
-			message: "#^Method Ampache\\\\Module\\\\Util\\\\Captcha\\\\easy_captcha_dxy_wave\\:\\:__construct\\(\\) has parameter \\$max_x with no type specified\\.$#"
-			count: 1
-			path: src/Module/Util/Captcha/easy_captcha_dxy_wave.php
-
-		-
-			message: "#^Method Ampache\\\\Module\\\\Util\\\\Captcha\\\\easy_captcha_dxy_wave\\:\\:__construct\\(\\) has parameter \\$max_y with no type specified\\.$#"
-			count: 1
-			path: src/Module/Util/Captcha/easy_captcha_dxy_wave.php
-
-		-
-			message: "#^Method Ampache\\\\Module\\\\Util\\\\Captcha\\\\easy_captcha_dxy_wave\\:\\:dxy\\(\\) has parameter \\$x with no type specified\\.$#"
-			count: 1
-			path: src/Module/Util/Captcha/easy_captcha_dxy_wave.php
-
-		-
-			message: "#^Method Ampache\\\\Module\\\\Util\\\\Captcha\\\\easy_captcha_dxy_wave\\:\\:dxy\\(\\) has parameter \\$y with no type specified\\.$#"
-			count: 1
-			path: src/Module/Util/Captcha/easy_captcha_dxy_wave.php
-
-		-
-			message: "#^Method Ampache\\\\Module\\\\Util\\\\Captcha\\\\easy_captcha_dxy_wave\\:\\:dxy\\(\\) return type has no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Module/Util/Captcha/easy_captcha_dxy_wave.php
-
-		-
-			message: "#^Method Ampache\\\\Module\\\\Util\\\\Captcha\\\\easy_captcha_dxy_wave\\:\\:from_to_rand\\(\\) has parameter \\$a with no type specified\\.$#"
-			count: 1
-			path: src/Module/Util/Captcha/easy_captcha_dxy_wave.php
-
-		-
-			message: "#^Method Ampache\\\\Module\\\\Util\\\\Captcha\\\\easy_captcha_dxy_wave\\:\\:from_to_rand\\(\\) has parameter \\$b with no type specified\\.$#"
-			count: 1
-			path: src/Module/Util/Captcha/easy_captcha_dxy_wave.php
-
-		-
-			message: "#^Method Ampache\\\\Module\\\\Util\\\\Captcha\\\\easy_captcha_dxy_wave\\:\\:from_to_rand\\(\\) has parameter \\$max with no type specified\\.$#"
-			count: 1
-			path: src/Module/Util/Captcha/easy_captcha_dxy_wave.php
-
-		-
-			message: "#^Method Ampache\\\\Module\\\\Util\\\\Captcha\\\\easy_captcha_dxy_wave\\:\\:from_to_rand\\(\\) return type has no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Module/Util/Captcha/easy_captcha_dxy_wave.php
-
-		-
-			message: "#^Method Ampache\\\\Module\\\\Util\\\\Captcha\\\\easy_captcha_dxy_wave\\:\\:real_rand\\(\\) has parameter \\$a with no type specified\\.$#"
-			count: 1
-			path: src/Module/Util/Captcha/easy_captcha_dxy_wave.php
-
-		-
-			message: "#^Method Ampache\\\\Module\\\\Util\\\\Captcha\\\\easy_captcha_dxy_wave\\:\\:real_rand\\(\\) has parameter \\$b with no type specified\\.$#"
-			count: 1
-			path: src/Module/Util/Captcha/easy_captcha_dxy_wave.php
-
-		-
-			message: "#^Access to an undefined property Ampache\\\\Module\\\\Util\\\\Captcha\\\\easy_captcha_fuzzy\\:\\:\\$solution\\.$#"
-			count: 1
-			path: src/Module/Util/Captcha/easy_captcha_fuzzy.php
-
-		-
-			message: "#^Method Ampache\\\\Module\\\\Util\\\\Captcha\\\\easy_captcha_fuzzy\\:\\:solved\\(\\) has parameter \\$input with no type specified\\.$#"
-			count: 1
-			path: src/Module/Util/Captcha/easy_captcha_fuzzy.php
-
-		-
-			message: "#^Property Ampache\\\\Module\\\\Util\\\\Captcha\\\\easy_captcha_fuzzy\\:\\:\\$fuzzy has no type specified\\.$#"
-			count: 1
-			path: src/Module/Util/Captcha/easy_captcha_fuzzy.php
-
-		-
-			message: "#^Access to an undefined property Ampache\\\\Module\\\\Util\\\\Captcha\\\\easy_captcha_graphic\\:\\:\\$img\\.$#"
-			count: 4
-			path: src/Module/Util/Captcha/easy_captcha_graphic.php
-
-		-
-			message: "#^Method Ampache\\\\Module\\\\Util\\\\Captcha\\\\easy_captcha_graphic\\:\\:__construct\\(\\) has parameter \\$x with no type specified\\.$#"
-			count: 1
-			path: src/Module/Util/Captcha/easy_captcha_graphic.php
-
-		-
-			message: "#^Method Ampache\\\\Module\\\\Util\\\\Captcha\\\\easy_captcha_graphic\\:\\:__construct\\(\\) has parameter \\$y with no type specified\\.$#"
-			count: 1
-			path: src/Module/Util/Captcha/easy_captcha_graphic.php
-
-		-
-			message: "#^Method Ampache\\\\Module\\\\Util\\\\Captcha\\\\easy_captcha_graphic\\:\\:font\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Module/Util/Captcha/easy_captcha_graphic.php
-
-		-
-			message: "#^Method Ampache\\\\Module\\\\Util\\\\Captcha\\\\easy_captcha_graphic\\:\\:random_color\\(\\) has parameter \\$a with no type specified\\.$#"
-			count: 1
-			path: src/Module/Util/Captcha/easy_captcha_graphic.php
-
-		-
-			message: "#^Method Ampache\\\\Module\\\\Util\\\\Captcha\\\\easy_captcha_graphic\\:\\:random_color\\(\\) has parameter \\$b with no type specified\\.$#"
-			count: 1
-			path: src/Module/Util/Captcha/easy_captcha_graphic.php
-
-		-
-			message: "#^Method Ampache\\\\Module\\\\Util\\\\Captcha\\\\easy_captcha_graphic\\:\\:rgb\\(\\) has parameter \\$b with no type specified\\.$#"
-			count: 1
-			path: src/Module/Util/Captcha/easy_captcha_graphic.php
-
-		-
-			message: "#^Method Ampache\\\\Module\\\\Util\\\\Captcha\\\\easy_captcha_graphic\\:\\:rgb\\(\\) has parameter \\$g with no type specified\\.$#"
-			count: 1
-			path: src/Module/Util/Captcha/easy_captcha_graphic.php
-
-		-
-			message: "#^Method Ampache\\\\Module\\\\Util\\\\Captcha\\\\easy_captcha_graphic\\:\\:rgb\\(\\) has parameter \\$r with no type specified\\.$#"
-			count: 1
-			path: src/Module/Util/Captcha/easy_captcha_graphic.php
-
-		-
-			message: "#^Parameter \\#1 \\$enable of function ob_implicit_flush expects bool, int given\\.$#"
-			count: 1
-			path: src/Module/Util/Captcha/easy_captcha_graphic.php
-
-		-
-			message: "#^Parameter \\#1 \\$min of function rand expects int, float given\\.$#"
-			count: 1
-			path: src/Module/Util/Captcha/easy_captcha_graphic.php
-
-		-
-			message: "#^Parameter \\#2 \\$max of function rand expects int, float given\\.$#"
-			count: 1
-			path: src/Module/Util/Captcha/easy_captcha_graphic.php
-
-		-
-			message: "#^Property Ampache\\\\Module\\\\Util\\\\Captcha\\\\easy_captcha_graphic\\:\\:\\$bg has no type specified\\.$#"
-			count: 1
-			path: src/Module/Util/Captcha/easy_captcha_graphic.php
-
-		-
-			message: "#^Property Ampache\\\\Module\\\\Util\\\\Captcha\\\\easy_captcha_graphic\\:\\:\\$height has no type specified\\.$#"
-			count: 1
-			path: src/Module/Util/Captcha/easy_captcha_graphic.php
-
-		-
-			message: "#^Property Ampache\\\\Module\\\\Util\\\\Captcha\\\\easy_captcha_graphic\\:\\:\\$inverse has no type specified\\.$#"
-			count: 1
-			path: src/Module/Util/Captcha/easy_captcha_graphic.php
-
-		-
-			message: "#^Property Ampache\\\\Module\\\\Util\\\\Captcha\\\\easy_captcha_graphic\\:\\:\\$maxsize has no type specified\\.$#"
-			count: 1
-			path: src/Module/Util/Captcha/easy_captcha_graphic.php
-
-		-
-			message: "#^Property Ampache\\\\Module\\\\Util\\\\Captcha\\\\easy_captcha_graphic\\:\\:\\$quality has no type specified\\.$#"
-			count: 1
-			path: src/Module/Util/Captcha/easy_captcha_graphic.php
-
-		-
-			message: "#^Property Ampache\\\\Module\\\\Util\\\\Captcha\\\\easy_captcha_graphic\\:\\:\\$solution has no type specified\\.$#"
-			count: 1
-			path: src/Module/Util/Captcha/easy_captcha_graphic.php
-
-		-
-			message: "#^Property Ampache\\\\Module\\\\Util\\\\Captcha\\\\easy_captcha_graphic\\:\\:\\$width has no type specified\\.$#"
-			count: 1
-			path: src/Module/Util/Captcha/easy_captcha_graphic.php
-
-		-
-			message: "#^Method Ampache\\\\Module\\\\Util\\\\Captcha\\\\easy_captcha_graphic_image_disturbed\\:\\:background_letters\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Module/Util/Captcha/easy_captcha_graphic_image_disturbed.php
-
-		-
-			message: "#^Method Ampache\\\\Module\\\\Util\\\\Captcha\\\\easy_captcha_graphic_image_disturbed\\:\\:background_lines\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Module/Util/Captcha/easy_captcha_graphic_image_disturbed.php
-
-		-
-			message: "#^Method Ampache\\\\Module\\\\Util\\\\Captcha\\\\easy_captcha_graphic_image_disturbed\\:\\:create\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Module/Util/Captcha/easy_captcha_graphic_image_disturbed.php
-
-		-
-			message: "#^Method Ampache\\\\Module\\\\Util\\\\Captcha\\\\easy_captcha_graphic_image_disturbed\\:\\:text\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Module/Util/Captcha/easy_captcha_graphic_image_disturbed.php
-
-		-
-			message: "#^Parameter \\#1 \\$min of function rand expects int, float\\|int given\\.$#"
-			count: 1
-			path: src/Module/Util/Captcha/easy_captcha_graphic_image_disturbed.php
-
-		-
-			message: "#^Parameter \\#2 \\$max of function rand expects int, float given\\.$#"
-			count: 1
-			path: src/Module/Util/Captcha/easy_captcha_graphic_image_disturbed.php
-
-		-
-			message: "#^Parameter \\#6 \\$color of function imagefilledrectangle expects int, int\\|false given\\.$#"
-			count: 2
-			path: src/Module/Util/Captcha/easy_captcha_graphic_image_disturbed.php
-
-		-
-			message: "#^Parameter \\#6 \\$color of function imageline expects int, int\\|false given\\.$#"
-			count: 2
-			path: src/Module/Util/Captcha/easy_captcha_graphic_image_disturbed.php
-
-		-
-			message: "#^Parameter \\#6 \\$color of function imagettftext expects int, int\\|false given\\.$#"
-			count: 3
-			path: src/Module/Util/Captcha/easy_captcha_graphic_image_disturbed.php
-
-		-
-			message: "#^Undefined variable\\: \\$y$#"
-			count: 1
-			path: src/Module/Util/Captcha/easy_captcha_graphic_image_disturbed.php
-
-		-
-			message: "#^Comparison operation \"\\<\\=\" between 1 and 1 is always true\\.$#"
-			count: 1
-			path: src/Module/Util/Captcha/easy_captcha_graphic_image_waved.php
-
-		-
-			message: "#^Comparison operation \"\\<\\=\" between 1 and 2 is always true\\.$#"
-			count: 1
-			path: src/Module/Util/Captcha/easy_captcha_graphic_image_waved.php
-
-		-
-			message: "#^Elseif condition is always true\\.$#"
-			count: 1
-			path: src/Module/Util/Captcha/easy_captcha_graphic_image_waved.php
-
-		-
-			message: "#^Method Ampache\\\\Module\\\\Util\\\\Captcha\\\\easy_captcha_graphic_image_waved\\:\\:debug_grid\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Module/Util/Captcha/easy_captcha_graphic_image_waved.php
-
-		-
-			message: "#^Method Ampache\\\\Module\\\\Util\\\\Captcha\\\\easy_captcha_graphic_image_waved\\:\\:distort\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Module/Util/Captcha/easy_captcha_graphic_image_waved.php
-
-		-
-			message: "#^Method Ampache\\\\Module\\\\Util\\\\Captcha\\\\easy_captcha_graphic_image_waved\\:\\:fog\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Module/Util/Captcha/easy_captcha_graphic_image_waved.php
-
-		-
-			message: "#^Method Ampache\\\\Module\\\\Util\\\\Captcha\\\\easy_captcha_graphic_image_waved\\:\\:get_2x2_greyscale\\(\\) has parameter \\$image with no type specified\\.$#"
-			count: 1
-			path: src/Module/Util/Captcha/easy_captcha_graphic_image_waved.php
-
-		-
-			message: "#^Method Ampache\\\\Module\\\\Util\\\\Captcha\\\\easy_captcha_graphic_image_waved\\:\\:get_2x2_greyscale\\(\\) has parameter \\$xaxis with no type specified\\.$#"
-			count: 1
-			path: src/Module/Util/Captcha/easy_captcha_graphic_image_waved.php
-
-		-
-			message: "#^Method Ampache\\\\Module\\\\Util\\\\Captcha\\\\easy_captcha_graphic_image_waved\\:\\:get_2x2_greyscale\\(\\) has parameter \\$yaxis with no type specified\\.$#"
-			count: 1
-			path: src/Module/Util/Captcha/easy_captcha_graphic_image_waved.php
-
-		-
-			message: "#^Method Ampache\\\\Module\\\\Util\\\\Captcha\\\\easy_captcha_graphic_image_waved\\:\\:get_2x2_smooth\\(\\) has parameter \\$i with no type specified\\.$#"
-			count: 1
-			path: src/Module/Util/Captcha/easy_captcha_graphic_image_waved.php
-
-		-
-			message: "#^Method Ampache\\\\Module\\\\Util\\\\Captcha\\\\easy_captcha_graphic_image_waved\\:\\:get_2x2_smooth\\(\\) has parameter \\$x with no type specified\\.$#"
-			count: 1
-			path: src/Module/Util/Captcha/easy_captcha_graphic_image_waved.php
-
-		-
-			message: "#^Method Ampache\\\\Module\\\\Util\\\\Captcha\\\\easy_captcha_graphic_image_waved\\:\\:get_2x2_smooth\\(\\) has parameter \\$y with no type specified\\.$#"
-			count: 1
-			path: src/Module/Util/Captcha/easy_captcha_graphic_image_waved.php
-
-		-
-			message: "#^Method Ampache\\\\Module\\\\Util\\\\Captcha\\\\easy_captcha_graphic_image_waved\\:\\:get_2x2_smooth\\(\\) return type has no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Module/Util/Captcha/easy_captcha_graphic_image_waved.php
-
-		-
-			message: "#^Method Ampache\\\\Module\\\\Util\\\\Captcha\\\\easy_captcha_graphic_image_waved\\:\\:get_RGB\\(\\) has parameter \\$img with no type specified\\.$#"
-			count: 1
-			path: src/Module/Util/Captcha/easy_captcha_graphic_image_waved.php
-
-		-
-			message: "#^Method Ampache\\\\Module\\\\Util\\\\Captcha\\\\easy_captcha_graphic_image_waved\\:\\:get_RGB\\(\\) has parameter \\$x with no type specified\\.$#"
-			count: 1
-			path: src/Module/Util/Captcha/easy_captcha_graphic_image_waved.php
-
-		-
-			message: "#^Method Ampache\\\\Module\\\\Util\\\\Captcha\\\\easy_captcha_graphic_image_waved\\:\\:get_RGB\\(\\) has parameter \\$y with no type specified\\.$#"
-			count: 1
-			path: src/Module/Util/Captcha/easy_captcha_graphic_image_waved.php
-
-		-
-			message: "#^Method Ampache\\\\Module\\\\Util\\\\Captcha\\\\easy_captcha_graphic_image_waved\\:\\:get_RGB\\(\\) return type has no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Module/Util/Captcha/easy_captcha_graphic_image_waved.php
-
-		-
-			message: "#^Method Ampache\\\\Module\\\\Util\\\\Captcha\\\\easy_captcha_graphic_image_waved\\:\\:text\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Module/Util/Captcha/easy_captcha_graphic_image_waved.php
-
-		-
-			message: "#^Parameter \\#1 \\$image of function imagecolorallocate expects GdImage, resource\\|false given\\.$#"
-			count: 2
-			path: src/Module/Util/Captcha/easy_captcha_graphic_image_waved.php
-
-		-
-			message: "#^Parameter \\#1 \\$image of function imagesetpixel expects GdImage, resource\\|false given\\.$#"
-			count: 3
-			path: src/Module/Util/Captcha/easy_captcha_graphic_image_waved.php
-
-		-
-			message: "#^Parameter \\#4 \\$color of function imagesetpixel expects int, int\\<0, max\\>\\|false given\\.$#"
-			count: 3
-			path: src/Module/Util/Captcha/easy_captcha_graphic_image_waved.php
-
-		-
-			message: "#^Parameter \\#6 \\$color of function imagettftext expects int, int\\|false given\\.$#"
-			count: 1
-			path: src/Module/Util/Captcha/easy_captcha_graphic_image_waved.php
-
-		-
-			message: "#^Property Ampache\\\\Module\\\\Util\\\\Captcha\\\\easy_captcha_graphic_image_waved\\:\\:\\$img has no type specified\\.$#"
-			count: 1
-			path: src/Module/Util/Captcha/easy_captcha_graphic_image_waved.php
-
-		-
-			message: "#^Constructor of class Ampache\\\\Module\\\\Util\\\\Captcha\\\\easy_captcha_persistent_grant has an unused parameter \\$captcha_id\\.$#"
-			count: 1
-			path: src/Module/Util/Captcha/easy_captcha_persistent_grant.php
-
-		-
-			message: "#^Constructor of class Ampache\\\\Module\\\\Util\\\\Captcha\\\\easy_captcha_persistent_grant has an unused parameter \\$ignore_expiration\\.$#"
-			count: 1
-			path: src/Module/Util/Captcha/easy_captcha_persistent_grant.php
-
-		-
-			message: "#^Left side of && is always true\\.$#"
-			count: 1
-			path: src/Module/Util/Captcha/easy_captcha_persistent_grant.php
-
-		-
-			message: "#^Method Ampache\\\\Module\\\\Util\\\\Captcha\\\\easy_captcha_persistent_grant\\:\\:__construct\\(\\) has parameter \\$captcha_id with no type specified\\.$#"
-			count: 1
-			path: src/Module/Util/Captcha/easy_captcha_persistent_grant.php
-
-		-
-			message: "#^Method Ampache\\\\Module\\\\Util\\\\Captcha\\\\easy_captcha_persistent_grant\\:\\:grant\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Module/Util/Captcha/easy_captcha_persistent_grant.php
-
-		-
-			message: "#^Method Ampache\\\\Module\\\\Util\\\\Captcha\\\\easy_captcha_text_disable\\:\\:solved\\(\\) has parameter \\$input with no type specified\\.$#"
-			count: 1
-			path: src/Module/Util/Captcha/easy_captcha_text_disable.php
-
-		-
-			message: "#^Property Ampache\\\\Module\\\\Util\\\\Captcha\\\\easy_captcha_text_disable\\:\\:\\$question has no type specified\\.$#"
-			count: 1
-			path: src/Module/Util/Captcha/easy_captcha_text_disable.php
-
-		-
-			message: "#^Binary operation \"\\*\" between non\\-empty\\-string and non\\-falsy\\-string results in an error\\.$#"
-			count: 2
-			path: src/Module/Util/Captcha/easy_captcha_text_math_formula.php
-
-		-
-			message: "#^Binary operation \"\\+\" between non\\-empty\\-string and non\\-falsy\\-string results in an error\\.$#"
-			count: 2
-			path: src/Module/Util/Captcha/easy_captcha_text_math_formula.php
-
-		-
-			message: "#^Binary operation \"\\-\" between non\\-empty\\-string and non\\-falsy\\-string results in an error\\.$#"
-			count: 1
-			path: src/Module/Util/Captcha/easy_captcha_text_math_formula.php
-
-		-
-			message: "#^Binary operation \"/\" between non\\-empty\\-string and non\\-falsy\\-string results in an error\\.$#"
-			count: 2
-			path: src/Module/Util/Captcha/easy_captcha_text_math_formula.php
-
-		-
-			message: "#^Method Ampache\\\\Module\\\\Util\\\\Captcha\\\\easy_captcha_text_math_formula\\:\\:calculate_formula\\(\\) has parameter \\$formula with no type specified\\.$#"
-			count: 1
-			path: src/Module/Util/Captcha/easy_captcha_text_math_formula.php
-
-		-
-			message: "#^Method Ampache\\\\Module\\\\Util\\\\Captcha\\\\easy_captcha_text_math_formula\\:\\:solved\\(\\) has parameter \\$input with no type specified\\.$#"
-			count: 1
-			path: src/Module/Util/Captcha/easy_captcha_text_math_formula.php
-
-		-
-			message: "#^Offset 0 does not exist on array\\{0\\?\\: string, 1\\?\\: numeric\\-string, 2\\?\\: '\\*'\\|'\\+'\\|'\\-'\\|'/', 3\\?\\: numeric\\-string, 4\\?\\: ''\\|'\\*'\\|'\\+'\\|'\\-'\\|'/', 5\\?\\: numeric\\-string\\}\\.$#"
-			count: 1
-			path: src/Module/Util/Captcha/easy_captcha_text_math_formula.php
-
-		-
-			message: "#^Offset 1 does not exist on array\\{0\\?\\: string, 1\\?\\: numeric\\-string, 2\\?\\: '\\*'\\|'\\+'\\|'\\-'\\|'/', 3\\?\\: numeric\\-string, 4\\?\\: ''\\|'\\*'\\|'\\+'\\|'\\-'\\|'/', 5\\?\\: numeric\\-string\\}\\.$#"
-			count: 1
-			path: src/Module/Util/Captcha/easy_captcha_text_math_formula.php
-
-		-
-			message: "#^Offset 2 does not exist on array\\{0\\?\\: string, 1\\?\\: numeric\\-string, 2\\?\\: '\\*'\\|'\\+'\\|'\\-'\\|'/', 3\\?\\: numeric\\-string, 4\\?\\: ''\\|'\\*'\\|'\\+'\\|'\\-'\\|'/', 5\\?\\: numeric\\-string\\}\\.$#"
-			count: 1
-			path: src/Module/Util/Captcha/easy_captcha_text_math_formula.php
-
-		-
-			message: "#^Offset 3 does not exist on array\\{0\\?\\: string, 1\\?\\: numeric\\-string, 2\\?\\: '\\*'\\|'\\+'\\|'\\-'\\|'/', 3\\?\\: numeric\\-string, 4\\?\\: ''\\|'\\*'\\|'\\+'\\|'\\-'\\|'/', 5\\?\\: numeric\\-string\\}\\.$#"
-			count: 1
-			path: src/Module/Util/Captcha/easy_captcha_text_math_formula.php
-
-		-
-			message: "#^Offset 4 does not exist on array\\{0\\?\\: string, 1\\?\\: numeric\\-string, 2\\?\\: '\\*'\\|'\\+'\\|'\\-'\\|'/', 3\\?\\: numeric\\-string, 4\\?\\: ''\\|'\\*'\\|'\\+'\\|'\\-'\\|'/', 5\\?\\: numeric\\-string\\}\\.$#"
-			count: 1
-			path: src/Module/Util/Captcha/easy_captcha_text_math_formula.php
-
-		-
-			message: "#^Offset 5 does not exist on array\\{0\\?\\: string, 1\\?\\: numeric\\-string, 2\\?\\: '\\*'\\|'\\+'\\|'\\-'\\|'/', 3\\?\\: numeric\\-string, 4\\?\\: ''\\|'\\*'\\|'\\+'\\|'\\-'\\|'/', 5\\?\\: numeric\\-string\\}\\.$#"
-			count: 1
-			path: src/Module/Util/Captcha/easy_captcha_text_math_formula.php
-
-		-
-			message: "#^Parameter \\#2 \\$subject of function preg_match expects string, array\\<string\\>\\|string\\|null given\\.$#"
-			count: 1
-			path: src/Module/Util/Captcha/easy_captcha_text_math_formula.php
-
-		-
-			message: "#^Property Ampache\\\\Module\\\\Util\\\\Captcha\\\\easy_captcha_text_math_formula\\:\\:\\$question has no type specified\\.$#"
-			count: 1
-			path: src/Module/Util/Captcha/easy_captcha_text_math_formula.php
-
-		-
-			message: "#^Property Ampache\\\\Module\\\\Util\\\\Captcha\\\\easy_captcha_text_math_formula\\:\\:\\$solution has no type specified\\.$#"
-			count: 1
-			path: src/Module/Util/Captcha/easy_captcha_text_math_formula.php
-
-		-
-			message: "#^Method Ampache\\\\Module\\\\Util\\\\Captcha\\\\easy_captcha_utility\\:\\:canonical_path\\(\\) has parameter \\$url with no type specified\\.$#"
-			count: 1
-			path: src/Module/Util/Captcha/easy_captcha_utility.php
-
-		-
-			message: "#^Method Ampache\\\\Module\\\\Util\\\\Captcha\\\\easy_captcha_utility\\:\\:js_base\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Module/Util/Captcha/easy_captcha_utility.php
-
-		-
-			message: "#^Method Ampache\\\\Module\\\\Util\\\\Captcha\\\\easy_captcha_utility\\:\\:js_rpc\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Module/Util/Captcha/easy_captcha_utility.php
-
-		-
-			message: "#^Method Ampache\\\\Module\\\\Util\\\\Captcha\\\\easy_captcha_utility\\:\\:js_rpc\\(\\) has parameter \\$yes with no type specified\\.$#"
-			count: 1
-			path: src/Module/Util/Captcha/easy_captcha_utility.php
-
-		-
-			message: "#^Method Ampache\\\\Module\\\\Util\\\\Captcha\\\\easy_captcha_utility\\:\\:tmp\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Module/Util/Captcha/easy_captcha_utility.php
-
-		-
-			message: "#^Parameter \\#1 \\$array of function array_diff expects array, array\\<int, string\\>\\|false given\\.$#"
-			count: 1
-			path: src/Module/Util/FileSystem.php
 
 		-
 			message: "#^Strict comparison using \\=\\=\\= between string and null will always evaluate to false\\.$#"

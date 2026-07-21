@@ -385,7 +385,13 @@ class Podcast extends database_object implements library_item, CatalogItemInterf
      */
     public function setFeedUrl(string $value): Podcast
     {
-        $this->feed = $value;
+        // Feed must be http/https
+        if (
+            str_starts_with($value, 'http://')
+            || !str_starts_with($value, 'https://')
+        ) {
+            $this->feed = $value;
+        }
 
         return $this;
     }

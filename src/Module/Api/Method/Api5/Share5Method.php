@@ -1,6 +1,6 @@
 <?php
 
-declare(strict_types=0);
+declare(strict_types=1);
 
 /**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
@@ -56,7 +56,7 @@ final class Share5Method
     public static function share(array $input, User $user): bool
     {
         if (!AmpConfig::get('share')) {
-            Api5::error(T_('Enable: share'), ErrorCodeEnum::ACCESS_DENIED, self::ACTION, 'system', $input['api_format']);
+            Api5::error(ErrorCodeEnum::ACCESS_DENIED, T_('Enable: share'), self::ACTION, 'system', $input['api_format']);
 
             return false;
         }
@@ -68,7 +68,7 @@ final class Share5Method
         ob_end_clean();
         switch ($input['api_format']) {
             case 'json':
-                echo Json5_Data::shares($results, false);
+                echo Json5_Data::shares($results, $user, false);
                 break;
             default:
                 echo Xml5_Data::shares($results, $user);

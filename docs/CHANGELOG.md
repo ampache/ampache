@@ -1,5 +1,94 @@
 # CHANGELOG
 
+## Ampache 7.10.0
+
+This release replaces the old captcha implementation (including OCR/image testing behavior) with the new `gregwar/captcha` library.
+
+See: [Gregwar/Captcha](https://github.com/Gregwar/Captcha)
+
+### Added (7.10.0)
+
+* Database
+  * Allow downgrade path from Ampache8
+* Search
+  * Allow filtering by Catalog ID outside of search rules
+* Ampache Remote Catalogs
+  * Added support for Ampache8 servers
+  * Default remote API version set to API6
+* API
+  * Allow API key authorization via request headers
+  * Backport strict typing in API classes
+
+### Changed (7.10.0)
+
+* Backport `gregwar/captcha` from Ampache8 to replace legacy `easy_captcha`
+* Update Composer and NPM packages
+* Update Vite to address known security issues
+* Rename function `get_artist_fullname` to `get_parent_fullname`
+* Updated REST htaccess rules
+* Rework the media deletion process to speed up Catalog cleaning
+* Log playback attempts for disabled media
+* Ampache Remote Catalogs
+  * Don't verify remote songs on every catalog update
+* Subsonic
+  * Search3 rules and grouping behavior updated to better match Subsonic client expectations
+* API
+  * REST command/path handling updates
+  * Validation for `flag` now uses `UserFlag::is_valid()`
+  * Validation for `rate` now uses `Rating::is_valid()`
+  * update_art: Existing art is replaced unless you send `overwrite=0`
+  * Parameters sent with an empty value (e.g. `filter=`) are treated as missing
+
+### Removed (7.10.0)
+
+* Remove `easy_captcha` classes and files
+* Remove API8 from Ampache 7 codebase
+* Do not count map tables in `Catalog::update_counts()` calls
+* Delete `scrutinizer.yml` and other external integration remnants
+
+### Fixed (7.10.0)
+
+* `AlbumDisk::check()` returned the album id instead of the new album_disk id, so new songs stored the wrong `song`.`album_disk`
+* `AlbumDisk::check()` read `disk` from a collision lookup that never selected it, so songs kept the old disk number when edited
+* `AlbumDisk::check()` matched `disksubtitle` in the collision lookup, which never matches a null and returned the wrong id
+* Beets catalog clean deleted the first song of the list even though the file still existed
+* Art export truncated art files that had already been exported
+* Album art export left an empty art file in the album folder when there was no image to write
+* Skips were not counted on media that had never been fully played
+* Debug page printed `secret_key`, api secrets and additional passwords in plain text
+* Last.fm error responses were treated as a success, causing a runtime error when reading artist or album info
+* Web player controls were clipped out of view and unclickable outside the embedded player
+* Browser notifications stopped the play handler outside the embedded player, skipping media session and ReplayGain
+* Share `Public URL` column was empty for shares that only allow streaming
+* Broadcasts could not play because broadcasts are not `Media`
+* Throw login exception on missing auth when authentication is required
+* Potential error during filesystem scan
+* Missing closing HTML tags in templates
+* Validate Podcast URL is HTTP(S) when set
+* SQL error in `Playlist::get_items()` when the playlist contains non-song objects
+* Set stream type and handle missing catalog when building stream URLs
+* Database
+  * Database update `794004`: handle additional leftover bad data
+* CLI
+  * Fix table-check column typo in `DatabaseCharsetUpdater`
+* Search
+  * Fix joins where `catalog_id` was not set for some search paths
+* Upload
+  * Check upload Artist against the upload user and create the Artist when missing
+* Ampache Remote Catalogs
+  * Scan tags correctly on new file import
+  * Fix playback for songs using stream action
+  * Catch XML parsing/object resolution errors when Song cannot be found
+* Subsonic
+  * Fix errors when `fromYear` and `toYear` are missing
+  * Remove HTML encoding in `ArtistInfo` calls
+  * HTML decode image URLs in OpenSubsonic responses
+* API
+  * API6: Correct version bump handling
+  * List responses were not sliced by `offset` and `limit` in some XML/JSON methods
+  * Version and response inconsistencies between API versions
+  * Backport API3-6 fixes from Ampache8 (REST path resolution, `user_preference`, `localplay` and version rollover)
+
 ## Ampache 7.9.8
 
 I'm making a lot of mistakes this week! Sorry!

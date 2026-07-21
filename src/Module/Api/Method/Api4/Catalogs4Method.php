@@ -1,6 +1,6 @@
 <?php
 
-declare(strict_types=0);
+declare(strict_types=1);
 
 /**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
@@ -44,7 +44,7 @@ final class Catalogs4Method
      *
      * filter = (string) set $filter_type 'music', 'video', 'podcast' //optional
      * offset = (integer) //optional
-     * limit  = (integer) //optional
+     * limit = (integer) //optional
      *
      * @param array{
      *     filter?: string,
@@ -66,7 +66,7 @@ final class Catalogs4Method
             $filter = 'video';
         }
 
-        $results = $user->get_catalogs((string)$filter);
+        $results = $user->get_catalogs((string) $filter);
 
         ob_end_clean();
         switch ($input['api_format']) {

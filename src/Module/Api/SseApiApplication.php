@@ -1,6 +1,6 @@
 <?php
 
-declare(strict_types=0);
+declare(strict_types=1);
 
 /**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
@@ -74,7 +74,7 @@ final class SseApiApplication implements ApiApplicationInterface
         if (array_key_exists('catalogs', $_REQUEST)) {
             $catalogs = array_map(
                 'intval',
-                (array)json_decode(urldecode($_REQUEST['catalogs']), true)
+                (array) json_decode(urldecode($_REQUEST['catalogs']), true)
             );
         } else {
             $catalogs = null;
@@ -84,29 +84,26 @@ final class SseApiApplication implements ApiApplicationInterface
         // Warning: Do not change any session variable after this call
         session_write_close();
 
-        switch ($worker) {
-            case 'catalog':
-                if (defined('SSE_OUTPUT')) {
-                    echo "data: toggleVisible('ajax-loading')\n\n";
-                    ob_flush();
-                    flush();
-                }
+        if ($worker == 'catalog') {
+            if (defined('SSE_OUTPUT')) {
+                echo "data: toggleVisible('ajax-loading')\n\n";
+                ob_flush();
+                flush();
+            }
 
-                Catalog::process_action(Core::get_request('action'), $catalogs, $options);
+            Catalog::process_action(Core::get_request('action'), $catalogs, $options);
 
-                if (defined('SSE_OUTPUT')) {
-                    echo "data: toggleVisible('ajax-loading')\n\n";
-                    ob_flush();
-                    flush();
+            if (defined('SSE_OUTPUT')) {
+                echo "data: toggleVisible('ajax-loading')\n\n";
+                ob_flush();
+                flush();
 
-                    echo "data: stop_sse_worker()\n\n";
-                    ob_flush();
-                    flush();
-                } else {
-                    echo AmpError::display('general');
-                }
-
-                break;
+                echo "data: stop_sse_worker()\n\n";
+                ob_flush();
+                flush();
+            } else {
+                echo AmpError::display('general');
+            }
         }
     }
 }

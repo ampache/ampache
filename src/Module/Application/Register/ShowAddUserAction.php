@@ -73,21 +73,6 @@ final class ShowAddUserAction implements ApplicationActionInterface
             throw new AccessDeniedException('Error `mail_enable` failed. Enable `user_no_email_confirm` to disable mail requirements');
         }
 
-        /* Don't even include it if we aren't going to use it */
-        if ($this->configContainer->isFeatureEnabled(ConfigurationKeyEnum::CAPTCHA_PUBLIC_REG) === true) {
-            define('CAPTCHA_INVERSE', 1);
-            /**
-             * @todo broken, the path does not exist any longer
-             */
-            define(
-                'CAPTCHA_BASE_URL',
-                sprintf(
-                    '%s/modules/captcha/captcha.php',
-                    $this->configContainer->getWebPath()
-                )
-            );
-        }
-
         $this->ui->show(
             'show_user_registration.inc.php',
             ['registrationAgreementRenderer' => $this->registrationAgreementRenderer]

@@ -69,7 +69,7 @@ final readonly class DemocraticPlaybackAjaxHandler implements AjaxHandlerInterfa
                 $show_browse = true;
                 break;
             case 'delete':
-                if ($user->has_access(AccessLevelEnum::MANAGER)) {
+                if (!$user->has_access(AccessLevelEnum::MANAGER)) {
                     return;
                 }
 

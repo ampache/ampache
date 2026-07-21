@@ -1,6 +1,6 @@
 <?php
 
-declare(strict_types=0);
+declare(strict_types=1);
 
 /**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
@@ -25,9 +25,9 @@ declare(strict_types=0);
 
 namespace Ampache\Module\Api\Method\Api6;
 
+use Ampache\Module\Api\Api;
 use Ampache\Module\Api\Api6;
 use Ampache\Module\Api\Exception\ErrorCodeEnum;
-use Ampache\Module\Api\Xml6_Data;
 use Ampache\Repository\Model\Preference;
 use Ampache\Repository\Model\User;
 
@@ -58,18 +58,18 @@ final class UserPreference6Method
         // fix preferences that are missing for user
         User::fix_preferences($user->id);
 
-        $pref_name  = (string)($input['filter'] ?? '');
-        $preference = Preference::get($pref_name, -1);
+        $pref_name  = (string) ($input['filter'] ?? '');
+        $preference = Preference::get($pref_name, $user->id);
         if (empty($preference)) {
             /* HINT: Requested object string/id/type ("album", "myusername", "some song title", 1298376) */
-            Api6::error(sprintf('Not Found: %s', $pref_name), ErrorCodeEnum::NOT_FOUND, self::ACTION, 'filter', $input['api_format']);
+            Api6::error(ErrorCodeEnum::NOT_FOUND, sprintf('Not Found: %s', $pref_name), self::ACTION, 'filter', $input['api_format']);
 
             return false;
         }
 
         $results   = [];
         $results[] = [
-            "id" => (string)$preference[0]['id'],
+            "id" => (string) $preference[0]['id'],
             "name" => $preference[0]['name'],
             "level" => $preference[0]['level'],
             "description" => $preference[0]['description'],
@@ -77,7 +77,7 @@ final class UserPreference6Method
             "type" => $preference[0]['type'],
             "category" => $preference[0]['category'],
             "subcategory" => $preference[0]['subcategory'],
-            "has_access" => (((int)$preference[0]['level']) <= $user->access),
+            "has_access" => (((int) $preference[0]['level']) <= $user->access),
             "values" => [],
         ];
 
@@ -95,7 +95,7 @@ final class UserPreference6Method
                 echo json_encode($results[0], JSON_PRETTY_PRINT);
                 break;
             default:
-                echo Xml6_Data::object_array($results, 'preference');
+                echo Api::object_array($results, 'preference');
         }
 
         return true;

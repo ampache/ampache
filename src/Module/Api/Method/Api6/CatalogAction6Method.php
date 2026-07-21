@@ -1,6 +1,6 @@
 <?php
 
-declare(strict_types=0);
+declare(strict_types=1);
 
 /**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
@@ -39,7 +39,22 @@ use Ampache\Repository\Model\User;
  */
 final class CatalogAction6Method
 {
-    public const ACTION = 'catalog_action';
+    public const ACTION      = 'catalog_action';
+    public const REST_ACTION = 'action';
+
+    /**
+     * @param array{
+     *     task: string,
+     *     filter?: int,
+     *     catalog?: int,
+     *     api_format: string,
+     *     auth: string,
+     * } $input
+     */
+    public static function action(array $input, User $user): bool
+    {
+        return self::catalog_action($input, $user);
+    }
 
     /**
      * catalog_action
@@ -49,7 +64,7 @@ final class CatalogAction6Method
      * Kick off a catalog update or clean for the selected catalog
      * Added 'verify_catalog', 'gather_art'
      *
-     * task    = (string) 'add_to_catalog', 'clean_catalog', 'verify_catalog', 'gather_art', 'garbage_collect'
+     * task = (string) 'add_to_catalog', 'clean_catalog', 'verify_catalog', 'gather_art', 'garbage_collect'
      * catalog = (integer) $catalog_id
      *
      * @param array{
@@ -75,16 +90,13 @@ final class CatalogAction6Method
         // confirm the correct data
         if (!in_array($task, ['add_to_catalog', 'clean_catalog', 'verify_catalog', 'gather_art', 'garbage_collect'])) {
             /* HINT: Requested object string/id/type ("album", "myusername", "some song title", 1298376) */
-            Api6::error(sprintf('Bad Request: %s', $task), ErrorCodeEnum::BAD_REQUEST, self::ACTION, 'task', $input['api_format']);
+            Api6::error(ErrorCodeEnum::BAD_REQUEST, sprintf('Bad Request: %s', $task), self::ACTION, 'task', $input['api_format']);
 
             return false;
         }
 
         $catalog = Catalog::create_from_id((int) $input['catalog']);
         if ($catalog !== null) {
-            if (defined('SSE_OUTPUT')) {
-                unset($SSE_OUTPUT);
-            }
             switch ($task) {
                 case 'clean_catalog':
                     $catalog->clean_catalog_proc();
@@ -115,7 +127,7 @@ final class CatalogAction6Method
 
             Api6::message('successfully started: ' . $task, $input['api_format']);
         } else {
-            Api6::error('Not Found', ErrorCodeEnum::NOT_FOUND, self::ACTION, 'catalog', $input['api_format']);
+            Api6::error(ErrorCodeEnum::NOT_FOUND, sprintf('Not Found: %s', $input['catalog']), self::ACTION, 'catalog', $input['api_format']);
 
             return false;
         }

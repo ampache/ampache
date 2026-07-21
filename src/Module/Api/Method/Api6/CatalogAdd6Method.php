@@ -1,6 +1,6 @@
 <?php
 
-declare(strict_types=0);
+declare(strict_types=1);
 
 /**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
@@ -49,14 +49,14 @@ final class CatalogAdd6Method
      *
      * Create a new catalog
      *
-     * name           = (string) catalog_name
-     * path           = (string) URL or folder path for your catalog
-     * type           = (string) catalog_type default: local ('local', 'beets', 'remote', 'subsonic', 'seafile', 'beetsremote') //optional
-     * media_type     = (string) Default: 'music' ('music', 'podcast', 'video') //optional
-     * file_pattern   = (string) Pattern used identify tags from the file name. Default '%T - %t' //optional
+     * name = (string) catalog_name
+     * path = (string) URL or folder path for your catalog
+     * type = (string) catalog_type default: local ('local', 'beets', 'remote', 'subsonic', 'seafile', 'beetsremote') //optional
+     * media_type = (string) Default: 'music' ('music', 'podcast', 'video') //optional
+     * file_pattern = (string) Pattern used identify tags from the file name. Default '%T - %t' //optional
      * folder_pattern = (string) Pattern used identify tags from the folder name. Default '%a/%A' //optional
-     * username       = (string) login to remote catalog ('remote', 'subsonic', 'seafile') //optional
-     * password       = (string) password to remote catalog ('remote', 'subsonic', 'seafile', 'beetsremote') //optional
+     * username = (string) login to remote catalog ('remote', 'subsonic', 'seafile') //optional
+     * password = (string) password to remote catalog ('remote', 'subsonic', 'seafile', 'beetsremote') //optional
      *
      * @param array{
      *     name: string,
@@ -81,14 +81,14 @@ final class CatalogAdd6Method
             return false;
         }
 
-        $path           = (string)$input['path'];
-        $name           = (string)$input['name'];
-        $type           = (string)($input['type'] ?? 'local');
-        $rename_pattern = (string)($input['file_pattern'] ?? '%T - %t');
-        $sort_pattern   = (string)($input['folder_pattern'] ?? '%a/%A');
-        $username       = (isset($input['username'])) ? (string)$input['username'] : null;
-        $password       = (isset($input['password'])) ? (string)$input['password'] : null;
-        $gather_types   = (string)($input['media_type'] ?? 'music');
+        $path           = (string) $input['path'];
+        $name           = (string) $input['name'];
+        $type           = (string) ($input['type'] ?? 'local');
+        $rename_pattern = (string) ($input['file_pattern'] ?? '%T - %t');
+        $sort_pattern   = (string) ($input['folder_pattern'] ?? '%a/%A');
+        $username       = (isset($input['username'])) ? (string) $input['username'] : null;
+        $password       = (isset($input['password'])) ? (string) $input['password'] : null;
+        $gather_types   = (string) ($input['media_type'] ?? 'music');
         if (in_array($gather_types, ['clip', 'tvshow', 'movie', 'personal_video'])) {
             $gather_types = 'video';
         }
@@ -96,19 +96,19 @@ final class CatalogAdd6Method
         // confirm the correct data
         if (!in_array(strtolower($type), ['local', 'beets', 'remote', 'subsonic', 'seafile'])) {
             /* HINT: Requested object string/id/type ("album", "myusername", "some song title", 1298376) */
-            Api6::error(sprintf('Bad Request: %s', $type), ErrorCodeEnum::BAD_REQUEST, self::ACTION, 'type', $input['api_format']);
+            Api6::error(ErrorCodeEnum::BAD_REQUEST, sprintf('Bad Request: %s', $type), self::ACTION, 'type', $input['api_format']);
 
             return false;
         }
         $is_remote = in_array($type, ['remote', 'subsonic', 'beetsremote', 'seafile']);
         if ($is_remote) {
             if (!$username) {
-                Api6::error('Bad Request', ErrorCodeEnum::BAD_REQUEST, self::ACTION, 'username', $input['api_format']);
+                Api6::error(ErrorCodeEnum::BAD_REQUEST, 'Bad Request', self::ACTION, 'username', $input['api_format']);
 
                 return false;
             }
             if (!$password) {
-                Api6::error('Bad Request', ErrorCodeEnum::BAD_REQUEST, self::ACTION, 'password', $input['api_format']);
+                Api6::error(ErrorCodeEnum::BAD_REQUEST, 'Bad Request', self::ACTION, 'password', $input['api_format']);
 
                 return false;
             }
@@ -118,7 +118,7 @@ final class CatalogAdd6Method
             : Catalog_local::check_path($path);
         if (!$path_ok) {
             /* HINT: Requested object string/id/type ("album", "myusername", "some song title", 1298376) */
-            Api6::error(sprintf('Bad Request: %s', $path), ErrorCodeEnum::BAD_REQUEST, self::ACTION, 'path', $input['api_format']);
+            Api6::error(ErrorCodeEnum::BAD_REQUEST, sprintf('Bad Request: %s', $path), self::ACTION, 'path', $input['api_format']);
 
             return false;
         }
@@ -140,13 +140,13 @@ final class CatalogAdd6Method
             $object['api_call_delay'] = 250;
         }
         if ($type == 'beetsdb') {
-            $object['beetsdb'] = (string)($input['beetsdb'] ?? '');
+            $object['beetsdb'] = (string) ($input['beetsdb'] ?? '');
         }
 
         // create it then retrieve it
         $catalog_id = Catalog::create($object);
         if ($catalog_id == 0) {
-            Api6::error('Bad Request', ErrorCodeEnum::BAD_REQUEST, self::ACTION, 'system', $input['api_format']);
+            Api6::error(ErrorCodeEnum::BAD_REQUEST, 'Bad Request', self::ACTION, 'system', $input['api_format']);
 
             return false;
         }

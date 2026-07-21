@@ -1,6 +1,6 @@
 <?php
 
-declare(strict_types=0);
+declare(strict_types=1);
 
 /**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
@@ -44,8 +44,8 @@ final class PlaylistAddSong4Method
      * This adds a song to a playlist
      *
      * filter = (string) UID of playlist
-     * song   = (string) UID of song to add to playlist
-     * check  = (integer) 0,1 Check for duplicates //optional, default = 0
+     * song = (string) UID of song to add to playlist
+     * check = (integer) 0,1 Check for duplicates //optional, default = 0
      *
      * @param array{
      *     filter: string,
@@ -61,14 +61,14 @@ final class PlaylistAddSong4Method
             return false;
         }
         ob_end_clean();
-        $playlist = new Playlist((int)$input['filter']);
-        $song     = (int)$input['song'];
+        $playlist = new Playlist((int) $input['filter']);
+        $song     = (int) $input['song'];
         if (!$playlist->has_collaborate($user)) {
             Api4::message('error', T_('Access denied to this playlist'), '401', $input['api_format']);
 
             return false;
         }
-        if ((AmpConfig::get('unique_playlist') || (array_key_exists('check', $input) && (int)$input['check'] == 1)) && $playlist->has_item($song)) {
+        if ((AmpConfig::get('unique_playlist') || (array_key_exists('check', $input) && (int) $input['check'] == 1)) && $playlist->has_item($song)) {
             Api4::message('error', T_("Can't add a duplicate item when check is enabled"), '400', $input['api_format']);
 
             return false;

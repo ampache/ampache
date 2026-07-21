@@ -1,6 +1,6 @@
 <?php
 
-declare(strict_types=0);
+declare(strict_types=1);
 
 /**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
@@ -63,13 +63,13 @@ final class LostPassword6Method
     public static function lost_password(array $input): bool
     {
         if (!Mailer::is_mail_enabled()) {
-            Api6::error('Bad Request', ErrorCodeEnum::BAD_REQUEST, self::ACTION, 'system', $input['api_format']);
+            Api6::error(ErrorCodeEnum::BAD_REQUEST, 'Bad Request', self::ACTION, 'system', $input['api_format']);
 
             return false;
         }
 
         if (AmpConfig::get('simple_user_mode')) {
-            Api6::error('simple_user_mode', ErrorCodeEnum::ACCESS_DENIED, self::ACTION, 'system', $input['api_format']);
+            Api6::error(ErrorCodeEnum::ACCESS_DENIED, 'simple_user_mode', self::ACTION, 'system', $input['api_format']);
 
             return false;
         }
@@ -86,13 +86,13 @@ final class LostPassword6Method
             // no resets for admin users
             if ($update_user->access == 100) {
                 /* HINT: Requested object string/id/type ("album", "myusername", "some song title", 1298376) */
-                Api6::error(sprintf('Bad Request: %s', $user_id), ErrorCodeEnum::BAD_REQUEST, self::ACTION, 'system', $input['api_format']);
+                Api6::error(ErrorCodeEnum::BAD_REQUEST, sprintf('Bad Request: %s', $user_id), self::ACTION, 'system', $input['api_format']);
 
                 return false;
             }
             if (empty($update_user->email)) {
                 /* HINT: Requested object string/id/type ("album", "myusername", "some song title", 1298376) */
-                Api6::error(sprintf('Bad Request: %s', $user_id), ErrorCodeEnum::BAD_REQUEST, self::ACTION, 'email', $input['api_format']);
+                Api6::error(ErrorCodeEnum::BAD_REQUEST, sprintf('Bad Request: %s', $user_id), self::ACTION, 'email', $input['api_format']);
 
                 return false;
             }
@@ -106,19 +106,9 @@ final class LostPassword6Method
 
             return true;
         }
-        Api6::error('Bad Request', ErrorCodeEnum::BAD_REQUEST, self::ACTION, 'input', $input['api_format']);
+        Api6::error(ErrorCodeEnum::BAD_REQUEST, 'Bad Request', self::ACTION, 'input', $input['api_format']);
 
         return false;
-    }
-
-    /**
-     * @todo replace by constructor injection
-     */
-    private static function getUserRepository(): UserRepositoryInterface
-    {
-        global $dic;
-
-        return $dic->get(UserRepositoryInterface::class);
     }
 
     /**
@@ -129,5 +119,15 @@ final class LostPassword6Method
         global $dic;
 
         return $dic->get(NewPasswordSenderInterface::class);
+    }
+
+    /**
+     * @todo replace by constructor injection
+     */
+    private static function getUserRepository(): UserRepositoryInterface
+    {
+        global $dic;
+
+        return $dic->get(UserRepositoryInterface::class);
     }
 }

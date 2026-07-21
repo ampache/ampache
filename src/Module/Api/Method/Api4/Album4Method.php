@@ -28,6 +28,7 @@ namespace Ampache\Module\Api\Method\Api4;
 use Ampache\Module\Api\Api4;
 use Ampache\Module\Api\Json4_Data;
 use Ampache\Module\Api\Xml4_Data;
+use Ampache\Repository\Model\Album;
 use Ampache\Repository\Model\User;
 
 /**
@@ -43,7 +44,7 @@ final class Album4Method
      *
      * This returns a single album based on the UID provided
      *
-     * filter  = (string) UID of Album
+     * filter = (string) UID of Album
      * include = (array) 'songs' //optional
      *
      * @param array{
@@ -58,7 +59,14 @@ final class Album4Method
         if (!Api4::check_parameter($input, ['filter'], self::ACTION)) {
             return false;
         }
-        $uid     = (int) scrub_in((string) $input['filter']);
+        $uid   = (int) scrub_in((string) $input['filter']);
+        $album = new Album($uid);
+        if ($album->isNew()) {
+            /* HINT: Requested object string/id/type ("album", "myusername", "some song title", 1298376) */
+            Api4::message('error', sprintf(T_('Not Found: %s'), $uid), '404', $input['api_format']);
+
+            return false;
+        }
         $include = [];
         if (array_key_exists('include', $input)) {
             if (is_array($input['include'])) {

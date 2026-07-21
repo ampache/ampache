@@ -1,6 +1,6 @@
 <?php
 
-declare(strict_types=0);
+declare(strict_types=1);
 
 /**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
@@ -26,9 +26,9 @@ declare(strict_types=0);
 namespace Ampache\Module\Api\Method\Api6;
 
 use Ampache\Config\AmpConfig;
+use Ampache\Module\Api\Api;
 use Ampache\Module\Api\Api6;
 use Ampache\Module\Api\Exception\ErrorCodeEnum;
-use Ampache\Module\Api\Xml6_Data;
 use Ampache\Module\Authorization\AccessLevelEnum;
 use Ampache\Module\Authorization\AccessTypeEnum;
 use Ampache\Module\Playback\Localplay\LocalPlay;
@@ -52,13 +52,13 @@ final class Localplay6Method
      * This is for controlling Localplay
      *
      * command = (string) 'next', 'prev', 'stop', 'play', 'pause', 'add', 'volume_up', 'volume_down', 'volume_mute', 'delete_all', 'skip', 'status'
-     * oid     = (string) object_id //optional
-     * type    = (string) 'Song', 'Video', 'Podcast_Episode', 'Broadcast', 'Democratic', 'Live_Stream' //optional
-     * clear   = (integer) 0,1 Clear the current playlist before adding //optional
-     * track   = (integer) used in conjunction with skip to skip to the track id (use localplay_songs to get your track list) //optional
+     * oid = (string) object_id //optional
+     * type = (string) 'Song', 'Video', 'Podcast_Episode', 'Broadcast', 'Democratic', 'Live_Stream' //optional
+     * clear = (integer) 0,1 Clear the current playlist before adding //optional
+     * track = (integer) used in conjunction with skip to skip to the track id (use localplay_songs to get your track list) //optional
      *
      * @param array{
-     *     command: string,
+     *     command?: string,
      *     filter?: string,
      *     oid?: string,
      *     type?: string,
@@ -70,6 +70,14 @@ final class Localplay6Method
      */
     public static function localplay(array $input, User $user): bool
     {
+        if (
+            !isset($input['command'])
+            && isset($input['filter'])
+            && in_array($input['filter'], ['next', 'prev', 'stop', 'play', 'pause', 'volume_up', 'volume_down', 'volume_mute', 'delete_all', 'skip', 'status'])
+        ) {
+            $input['command'] = $input['filter'];
+        }
+
         if (!Api6::check_parameter($input, ['command'], self::ACTION)) {
             return false;
         }
@@ -81,29 +89,29 @@ final class Localplay6Method
         // Load their Localplay instance
         $localplay = new Localplay(AmpConfig::get('localplay_controller', ''));
         if (empty($localplay->type) || !$localplay->connect()) {
-            Api6::error('Unable to connect to localplay controller', ErrorCodeEnum::BAD_REQUEST, self::ACTION, 'account', $input['api_format']);
+            Api6::error(ErrorCodeEnum::BAD_REQUEST, 'Unable to connect to localplay controller', self::ACTION, 'account', $input['api_format']);
 
             return false;
         }
 
         $result  = false;
         $status  = null;
-        $command = strtolower($input['command']);
+        $command = strtolower($input['command'] ?? '');
         switch ($command) {
             case 'add':
                 // for add commands get the object details
-                $object_id = (int)($input['filter'] ?? $input['oid'] ?? 0);
-                $type      = LibraryItemEnum::tryFrom((string) strtolower($input['type'] ?? '')) ?? LibraryItemEnum::SONG;
+                $object_id = (int) ($input['filter'] ?? $input['oid'] ?? 0);
+                $type      = LibraryItemEnum::tryFrom(strtolower($input['type'] ?? '')) ?? LibraryItemEnum::SONG;
 
                 if (!AmpConfig::get('allow_video') && $type === LibraryItemEnum::VIDEO) {
-                    Api6::error('Enable: video', ErrorCodeEnum::ACCESS_DENIED, self::ACTION, 'system', $input['api_format']);
+                    Api6::error(ErrorCodeEnum::ACCESS_DENIED, 'Enable: video', self::ACTION, 'system', $input['api_format']);
 
                     return false;
                 }
 
-                $clear = (int)($input['clear'] ?? 0);
+                $clear = (int) ($input['clear'] ?? 0);
                 if ($localplay->type === 'mpd') {
-                    $localplay->set_block_clear(make_bool((string)$clear));
+                    $localplay->set_block_clear(make_bool((string) $clear));
                 }
 
                 // clear before the add
@@ -125,7 +133,7 @@ final class Localplay6Method
                     return false;
                 }
                 // localplay_songs 'track' starts at 1 but localplay starts at 0 behind the scenes
-                $result = $localplay->skip((int)($input['track'] ?? 1) - 1);
+                $result = $localplay->skip((int) ($input['track'] ?? 1) - 1);
                 break;
             case 'next':
                 $result = $localplay->next();
@@ -157,32 +165,32 @@ final class Localplay6Method
             case 'status':
                 $status = $localplay->status();
                 if (is_array($status) && $input['api_format'] == 'json') {
-                    $status['repeat'] = (bool)$status['repeat'];
-                    $status['random'] = (bool)$status['random'];
+                    $status['repeat'] = (bool) ($status['repeat'] ?? false);
+                    $status['random'] = (bool) ($status['random'] ?? false);
                 }
                 break;
             default:
                 // They are doing it wrong
-                Api6::error('Bad Request', ErrorCodeEnum::BAD_REQUEST, self::ACTION, 'command', $input['api_format']);
+                Api6::error(ErrorCodeEnum::BAD_REQUEST, 'Bad Request', self::ACTION, 'command', $input['api_format']);
 
                 return false;
-        } // end switch on command
+        }
 
         if ($command === 'status' && empty($status)) {
-            Api6::error('Unable to connect to localplay controller', ErrorCodeEnum::BAD_REQUEST, self::ACTION, 'account', $input['api_format']);
+            Api6::error(ErrorCodeEnum::BAD_REQUEST, 'Unable to connect to localplay controller', self::ACTION, 'account', $input['api_format']);
 
             return false;
         }
 
         $results = (!empty($status))
-            ? ['localplay' => ['command' => [$input['command'] => $status]]]
-            : ['localplay' => ['command' => [$input['command'] => $result]]];
+            ? ['localplay' => ['command' => [$command => $status]]]
+            : ['localplay' => ['command' => [$command => $result]]];
         switch ($input['api_format']) {
             case 'json':
                 echo json_encode($results, JSON_PRETTY_PRINT);
                 break;
             default:
-                echo Xml6_Data::keyed_array($results);
+                echo Api::keyed_array($results);
         }
 
         return true;

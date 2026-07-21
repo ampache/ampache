@@ -1,6 +1,6 @@
 <?php
 
-declare(strict_types=0);
+declare(strict_types=1);
 
 /**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
@@ -54,21 +54,21 @@ final class UserEdit6Method
      * Update an existing user.
      * Takes the username with optional parameters.
      *
-     * filter            = (integer|string) filter by user id OR username //optional
-     * username          = (string) $username
-     * fullname          = (string) $fullname //optional
-     * password          = (string) hash('sha256', $password) //optional
-     * email             = (string) $email //optional
-     * website           = (string) $website //optional
-     * state             = (string) $state //optional
-     * city              = (string) $city //optional
-     * disable           = (integer) 0,1 true to disable, false to enable //optional
-     * group             = (integer) Catalog filter group for the new user //optional, default = 0
-     * maxbitrate        = (integer) $maxbitrate //optional
-     * fullname_public   = (integer) 0,1 true to enable, false to disable using fullname in public display //optional
-     * reset_apikey      = (integer) 0,1 true to reset a user Api Key //optional
+     * filter = (integer|string) filter by user id OR username //optional
+     * username = (string) $username
+     * fullname = (string) $fullname //optional
+     * password = (string) hash('sha256', $password) //optional
+     * email = (string) $email //optional
+     * website = (string) $website //optional
+     * state = (string) $state //optional
+     * city = (string) $city //optional
+     * disable = (integer) 0,1 true to disable, false to enable //optional
+     * group = (integer) Catalog filter group for the new user //optional, default = 0
+     * maxbitrate = (integer) $maxbitrate //optional
+     * fullname_public = (integer) 0,1 true to enable, false to disable using fullname in public display //optional
+     * reset_apikey = (integer) 0,1 true to reset a user Api Key //optional
      * reset_streamtoken = (integer) 0,1 true to reset a user Stream Token //optional
-     * clear_stats       = (integer) 0,1 true reset all stats for this user //optional
+     * clear_stats = (integer) 0,1 true reset all stats for this user //optional
      *
      * @param array{
      *     filter?: int|string,
@@ -104,11 +104,11 @@ final class UserEdit6Method
         // identify the user to modify
         $username    = $input['username'];
         $update_user = (is_numeric($username))
-            ? User::get_from_id((int)$username)
-            : User::get_from_username((string)$username);
+            ? User::get_from_id((int) $username)
+            : User::get_from_username((string) $username);
         if ($update_user === null) {
             /* HINT: Requested object string/id/type ("album", "myusername", "some song title", 1298376) */
-            Api6::error(sprintf('Bad Request: %s', $username), ErrorCodeEnum::BAD_REQUEST, self::ACTION, 'system', $input['api_format']);
+            Api6::error(ErrorCodeEnum::BAD_REQUEST, sprintf('Bad Request: %s', $username), self::ACTION, 'system', $input['api_format']);
 
             return false;
         }
@@ -116,7 +116,7 @@ final class UserEdit6Method
         $password = $input['password'] ?? null;
         if ($password && $update_user->access == 100) {
             /* HINT: Requested object string/id/type ("album", "myusername", "some song title", 1298376) */
-            Api6::error(sprintf('Bad Request: %s', $username), ErrorCodeEnum::BAD_REQUEST, self::ACTION, 'system', $input['api_format']);
+            Api6::error(ErrorCodeEnum::BAD_REQUEST, sprintf('Bad Request: %s', $username), self::ACTION, 'system', $input['api_format']);
 
             return false;
         }
@@ -128,10 +128,10 @@ final class UserEdit6Method
             : null;
         $state                = $input['state'] ?? null;
         $city                 = $input['city'] ?? null;
-        $disable              = (isset($input['disable'])) ? (int)$input['disable'] : null;
+        $disable              = (isset($input['disable'])) ? (int) $input['disable'] : null;
         $catalog_filter_group = $input['group'] ?? null;
-        $maxbitrate           = (int)($input['maxbitrate'] ?? 0);
-        $fullname_public      = (isset($input['fullname_public'])) ? (bool)$input['fullname_public'] : null;
+        $maxbitrate           = (int) ($input['maxbitrate'] ?? 0);
+        $fullname_public      = (isset($input['fullname_public'])) ? (bool) $input['fullname_public'] : null;
         $reset_apikey         = $input['reset_apikey'] ?? null;
         $reset_streamtoken    = $input['reset_streamtoken'] ?? null;
         $clear_stats          = $input['clear_stats'] ?? null;
@@ -157,13 +157,13 @@ final class UserEdit6Method
                 $update_user->update_city($city);
             }
             $userStateToggler = self::getUserStateToggler();
-            if ((int)$user->disabled === 0 && $disable === 1) {
+            if ((int) $user->disabled === 0 && $disable === 1) {
                 $userStateToggler->disable($update_user);
-            } elseif ((int)$user->disabled === 1 && $disable === 0) {
+            } elseif ((int) $user->disabled === 1 && $disable === 0) {
                 $userStateToggler->enable($update_user);
             }
             if ($catalog_filter_group !== null) {
-                $update_user->update_catalog_filter_group((int)$catalog_filter_group);
+                $update_user->update_catalog_filter_group((int) $catalog_filter_group);
             }
             if ($maxbitrate > 0) {
                 Preference::update('transcode_bitrate', $user_id, $maxbitrate);
@@ -185,7 +185,7 @@ final class UserEdit6Method
             return true;
         }
         /* HINT: Requested object string/id/type ("album", "myusername", "some song title", 1298376) */
-        Api6::error(sprintf('Bad Request: %s', $username), ErrorCodeEnum::BAD_REQUEST, self::ACTION, 'system', $input['api_format']);
+        Api6::error(ErrorCodeEnum::BAD_REQUEST, sprintf('Bad Request: %s', $username), self::ACTION, 'system', $input['api_format']);
 
         return false;
     }
@@ -219,20 +219,20 @@ final class UserEdit6Method
     /**
      * @deprecated Inject by constructor
      */
-    private static function getUserStateToggler(): UserStateTogglerInterface
-    {
-        global $dic;
-
-        return $dic->get(UserStateTogglerInterface::class);
-    }
-
-    /**
-     * @deprecated Inject by constructor
-     */
     private static function getUserKeyGenerator(): UserKeyGeneratorInterface
     {
         global $dic;
 
         return $dic->get(UserKeyGeneratorInterface::class);
+    }
+
+    /**
+     * @deprecated Inject by constructor
+     */
+    private static function getUserStateToggler(): UserStateTogglerInterface
+    {
+        global $dic;
+
+        return $dic->get(UserStateTogglerInterface::class);
     }
 }

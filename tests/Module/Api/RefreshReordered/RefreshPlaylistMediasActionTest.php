@@ -60,10 +60,11 @@ class RefreshPlaylistMediasActionTest extends MockeryTestCase
         $objectId          = '666';
         $playlistObjectIds = [1, 2, 42];
 
-        $request    = $this->mock(ServerRequestInterface::class);
-        $gatekeeper = $this->mock(GuiGatekeeperInterface::class);
-        $playlist   = $this->mock(Playlist::class);
-        $browse     = $this->mock(Browse::class);
+        $request      = $this->mock(ServerRequestInterface::class);
+        $gatekeeper   = $this->mock(GuiGatekeeperInterface::class);
+        $playlist     = $this->mock(Playlist::class);
+        $playlist->id = (int) $objectId;
+        $browse       = $this->mock(Browse::class);
 
         $this->requestParser->shouldReceive('getFromRequest')
             ->with('id')

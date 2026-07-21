@@ -1,6 +1,6 @@
 <?php
 
-declare(strict_types=0);
+declare(strict_types=1);
 
 /**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
@@ -53,7 +53,7 @@ final class BookmarkDelete6Method
      * Delete an existing bookmark. (if it exists)
      *
      * filter = (string) object_id to delete
-     * type   = (string) object_type  ('bookmark', 'song', 'video', 'podcast_episode') //optional default: bookmark
+     * type = (string) object_type  ('bookmark', 'song', 'video', 'podcast_episode') //optional default: bookmark
      * client = (string) Agent string //optional
      *
      * @param array{
@@ -69,18 +69,18 @@ final class BookmarkDelete6Method
         if (!Api6::check_parameter($input, ['filter'], self::ACTION)) {
             return false;
         }
-        $object_id = (int)$input['filter'];
+        $object_id = (int) $input['filter'];
         $type      = $input['type'] ?? 'bookmark';
         $comment   = (isset($input['client'])) ? scrub_in((string) $input['client']) : null;
         if (!AmpConfig::get('allow_video') && $type == 'video') {
-            Api6::error('Enable: video', ErrorCodeEnum::ACCESS_DENIED, self::ACTION, 'system', $input['api_format']);
+            Api6::error(ErrorCodeEnum::ACCESS_DENIED, 'Enable: video', self::ACTION, 'system', $input['api_format']);
 
             return false;
         }
         // confirm the correct data
         if (!in_array(strtolower($type), ['bookmark', 'song', 'video', 'podcast_episode'])) {
             /* HINT: Requested object string/id/type ("album", "myusername", "some song title", 1298376) */
-            Api6::error(sprintf('Bad Request: %s', $type), ErrorCodeEnum::BAD_REQUEST, self::ACTION, 'type', $input['api_format']);
+            Api6::error(ErrorCodeEnum::BAD_REQUEST, sprintf('Bad Request: %s', $type), self::ACTION, 'type', $input['api_format']);
 
             return false;
         }
@@ -89,7 +89,7 @@ final class BookmarkDelete6Method
             $className = ObjectTypeToClassNameMapper::map($type);
             if ($className === $type || !$object_id) {
                 /* HINT: Requested object string/id/type ("album", "myusername", "some song title", 1298376) */
-                Api6::error(sprintf('Bad Request: %s', $type), ErrorCodeEnum::BAD_REQUEST, self::ACTION, 'type', $input['api_format']);
+                Api6::error(ErrorCodeEnum::BAD_REQUEST, sprintf('Bad Request: %s', $type), self::ACTION, 'type', $input['api_format']);
 
                 return false;
             }
@@ -98,7 +98,7 @@ final class BookmarkDelete6Method
             $item = new $className($object_id);
             if ($item->isNew()) {
                 /* HINT: Requested object string/id/type ("album", "myusername", "some song title", 1298376) */
-                Api6::error(sprintf('Not Found: %s', $object_id), ErrorCodeEnum::NOT_FOUND, self::ACTION, 'filter', $input['api_format']);
+                Api6::error(ErrorCodeEnum::NOT_FOUND, sprintf('Not Found: %s', $object_id), self::ACTION, 'filter', $input['api_format']);
 
                 return false;
             }
@@ -113,7 +113,7 @@ final class BookmarkDelete6Method
         $find = Bookmark::getBookmarks($object);
         if (empty($find)) {
             /* HINT: Requested object string/id/type ("album", "myusername", "some song title", 1298376) */
-            Api6::error(sprintf('Not Found: %s', $object_id), ErrorCodeEnum::NOT_FOUND, self::ACTION, 'bookmark', $input['api_format']);
+            Api6::error(ErrorCodeEnum::NOT_FOUND, sprintf('Not Found: %s', $object_id), self::ACTION, 'bookmark', $input['api_format']);
 
             return false;
         }

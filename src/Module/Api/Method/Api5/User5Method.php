@@ -1,6 +1,6 @@
 <?php
 
-declare(strict_types=0);
+declare(strict_types=1);
 
 /**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
@@ -58,11 +58,11 @@ final class User5Method
         if (!Api5::check_parameter($input, ['username'], self::ACTION)) {
             return false;
         }
-        $username = (string)$input['username'];
+        $username = (string) $input['username'];
         if (empty($username)) {
             debug_event(self::class, 'User `' . $username . '` cannot be found.', 1);
             /* HINT: Requested object string/id/type ("album", "myusername", "some song title", 1298376) */
-            Api5::error(sprintf(T_('Not Found: %s'), $username), ErrorCodeEnum::NOT_FOUND, self::ACTION, 'username', $input['api_format']);
+            Api5::error(ErrorCodeEnum::NOT_FOUND, sprintf(T_('Not Found: %s'), $username), self::ACTION, 'username', $input['api_format']);
 
             return false;
         }
@@ -71,7 +71,7 @@ final class User5Method
         $valid      = ($check_user instanceof User && $check_user->isNew() === false && in_array($check_user->id, self::getUserRepository()->getValid(true)));
         if (!$valid) {
             /* HINT: Requested object string/id/type ("album", "myusername", "some song title", 1298376) */
-            Api5::error(sprintf(T_('Not Found: %s'), $username), ErrorCodeEnum::NOT_FOUND, self::ACTION, 'username', $input['api_format']);
+            Api5::error(ErrorCodeEnum::NOT_FOUND, sprintf(T_('Not Found: %s'), $username), self::ACTION, 'username', $input['api_format']);
 
             return false;
         }

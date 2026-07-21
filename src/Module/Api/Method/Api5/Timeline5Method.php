@@ -1,6 +1,6 @@
 <?php
 
-declare(strict_types=0);
+declare(strict_types=1);
 
 /**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
@@ -48,8 +48,8 @@ final class Timeline5Method
      * This gets a user timeline from their username
      *
      * username = (string)
-     * limit    = (integer) //optional
-     * since    = (integer) UNIXTIME() //optional
+     * limit = (integer) //optional
+     * since = (integer) UNIXTIME() //optional
      *
      * @param array{
      *     username: string,
@@ -62,35 +62,40 @@ final class Timeline5Method
     public static function timeline(array $input, User $user): bool
     {
         if (!AmpConfig::get('sociable')) {
-            Api5::error(T_('Enable: sociable'), ErrorCodeEnum::ACCESS_DENIED, self::ACTION, 'system', $input['api_format']);
+            Api5::error(ErrorCodeEnum::ACCESS_DENIED, T_('Enable: sociable'), self::ACTION, 'system', $input['api_format']);
 
             return false;
         }
         if (!Api5::check_parameter($input, ['username'], self::ACTION)) {
             return false;
         }
-        unset($user);
         $username = $input['username'];
-        $limit    = (int)($input['limit'] ?? 0);
-        $since    = (int)($input['since'] ?? 0);
+        $limit    = (int) ($input['limit'] ?? 0);
+        $since    = (int) ($input['since'] ?? 0);
 
         if (!empty($username)) {
-            $user = User::get_from_username($username);
-            if ($user instanceof User) {
-                if (Preference::get_by_user($user->id, 'allow_personal_info_recent')) {
-                    $results = self::getUseractivityRepository()->getActivities(
-                        $user->getId(),
-                        $limit,
-                        $since
-                    );
-                    ob_end_clean();
-                    switch ($input['api_format']) {
-                        case 'json':
-                            echo Json5_Data::timeline($results);
-                            break;
-                        default:
-                            echo Xml5_Data::timeline($results);
-                    }
+            $leadUser = User::get_from_username($username);
+            // an unknown user, or one who keeps their activity private, renders nothing.
+            // you can always see your own timeline
+            if (
+                $leadUser instanceof User
+                && (
+                    $leadUser->getId() === $user->getId()
+                    || Preference::get_by_user($leadUser->getId(), 'allow_personal_info_recent')
+                )
+            ) {
+                $results = self::getUseractivityRepository()->getActivities(
+                    $leadUser->getId(),
+                    $limit,
+                    $since
+                );
+                ob_end_clean();
+                switch ($input['api_format']) {
+                    case 'json':
+                        echo Json5_Data::timeline($results);
+                        break;
+                    default:
+                        echo Xml5_Data::timeline($results);
                 }
             }
         }
