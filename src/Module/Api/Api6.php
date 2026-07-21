@@ -161,7 +161,6 @@ class Api6
         Method\PreferenceEditMethod::REST_ACTION => Method\PreferenceEditMethod::class,
         Method\PlayerMethod::ACTION => Method\PlayerMethod::class,
         Method\PlayerMethod::REST_ACTION => Method\PlayerMethod::class,
-        Method\RandomMethod::ACTION => Method\RandomMethod::class,
         Method\Api6\Rate6Method::ACTION => Method\Api6\Rate6Method::class,
         Method\Api6\RecordPlay6Method::ACTION => Method\Api6\RecordPlay6Method::class,
         Method\RegisterMethod::ACTION => Method\RegisterMethod::class,

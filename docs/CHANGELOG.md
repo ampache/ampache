@@ -37,6 +37,14 @@
   * v8 API responses are now fully documented: `docs/openapi.json` carries response schemas for every data type, and `docs/API-JSON-methods.md`/`docs/API-XML-methods.md` show per-method response field tables (type, nullable, optional)
 * Testing
   * Test suite significantly expanded with dozens of new test files under `tests/Module` and `tests/Repository`
+* Transcoding
+  * Per-user output-format preferences under Streaming -> Transcoding: `encode_target`, `encode_video_target`, `encode_player_webplayer_target` and `encode_player_api_target` (explicit `format=` requests always take priority)
+  * Per-user dynamic downsampling with new `max_bit_rate`/`min_bit_rate` preferences
+  * Per-format bitrate overrides with the new `transcode_bitrate_formats` preference, so a user can set (for example) a lower bitrate for `opus` than for `mp3`; formats without an override use `transcode_bitrate`
+  * New ReplayGain output profiles `mp3_rg`, `mp3_car`, `opus_rg` and `opus_car`, plus a fragmented-MP4 `m4a` profile; `_rg`/`_car` output is never written to the transcode cache
+* Config version 91
+  * New `encode_args_mp3_rg`, `encode_args_mp3_car`, `encode_args_opus_rg` and `encode_args_opus_car` transcode commands; `encode_args_m4a` now produces a fragmented MP4
+  * `%MAXBITRATE%` is documented alongside `%BITRATE%` and both are substituted as plain bits per second
 
 ### Changed 8.0.0
 
@@ -55,12 +63,20 @@
   * Home Dashboard (`homedash`) rows stay on a single line and clip at the edge instead of wrapping to new lines
   * Personal Favorites (`personalfav`) list scrolls horizontally instead of wrapping
 * `composer syntax` now runs a cross-platform PHP linter (`resources/scripts/tests/syntax.php`) so the check works on Windows (replaces `syntax.sh`)
+* Transcoding
+  * Bitrate preferences (`transcode_bitrate`, `max_bit_rate`, `min_bit_rate`) are stored and shown in bits per second (bps); existing `transcode_bitrate` values are migrated on database update 800018
+  * Every rate value is now bits per second. The `maxbitrate` stream URL argument and the API8 `user_edit` `maxbitrate` parameter were previously kbps while everything around them was bps; API6 and older keep kbps, and Subsonic `maxBitRate` stays kbps as its specification requires
+  * `encode_args_ts` drops the `k` suffix from `-maxrate %MAXBITRATE%` to suit. **NOTE** update `encode_args_ts` if you have overridden it in your own `ampache.cfg.php`
+  * Bitrate units are now documented in `docs/openapi.json` and the API method tables; none of the `bitrate`/`maxbitrate` arguments previously stated a unit
+  * `encode_target`, `encode_video_target` and the per-player `encode_player_*_target` settings moved from `ampache.cfg.php` to per-user preferences (config values now only seed the default on upgrade)
 
 ### Removed 8.0.0
 
 * `api_debug_handler` configuration option and its handling removed entirely
 * Unused legacy OAuth implementation deleted (`OAuthDataStore`, `OAuthServer`, `OAuthSignatureMethod_PLAINTEXT`, `OAuthSignatureMethod_RSA_SHA1`)
 * `docker/Dockerfilephp82`, `Dockerfilephp83`, `Dockerfilephp84` removed (replaced by `Dockerfilephp85`)
+* Database 800020
+  * The `webplayer_html5` preference is removed; HTML5 is the only remaining web player
 
 ### Fixed 8.0.0
 
