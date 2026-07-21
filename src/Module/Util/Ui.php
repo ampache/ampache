@@ -1471,7 +1471,8 @@ class Ui implements UiInterface
     ): void {
         $webPath = $this->configContainer->getWebPath();
 
-        $path = substr_count($next_url, $webPath) !== 0 ? $next_url : sprintf('%s/%s', $webPath, $next_url);
+        // callers pass both absolute urls and bare page paths; only prefix the relative ones
+        $path = str_starts_with($next_url, $webPath) ? $next_url : sprintf('%s/%s', $webPath, $next_url);
 
         $this->show(
             'show_continue.inc.php',
