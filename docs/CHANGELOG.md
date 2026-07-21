@@ -29,6 +29,9 @@
   * v8 API responses are now fully documented: `docs/openapi.json` carries response schemas for every data type, and `docs/API-JSON-methods.md`/`docs/API-XML-methods.md` show per-method response field tables (type, nullable, optional)
 * Testing
   * Test suite significantly expanded with dozens of new test files under `tests/Module` and `tests/Repository`
+* Playlist art mosaic
+  * Automatically generated playlist cover art can now be a mosaic of up to nine covers from the playlist instead of a single random cover
+  * New `playlist_art_mosaic` config option (`config_version` 90); set it to `false` to keep the single-cover behaviour
 
 ### Changed 8.0.0
 

@@ -6,7 +6,7 @@
 ; This value is used to detect if this config file is up to date
 ; this is compared against a constant called CONFIG_VERSION
 ; that is located in src/Config/Init/InitializationHandlerConfig.php
-config_version = 89
+config_version = 90
 
 ; Defines the default timezone used by the date functions
 ; Uses the same strings as the default date.timezone (https://php.net/date.timezone)
@@ -715,6 +715,13 @@ public_images = "true"
 ; the content.
 ; DEFAULT: "true"
 playlist_art = "true"
+
+; Playlist Cover Art Mosaic * Requires PHP-GD *
+; When playlist_art is enabled, stitch up to nine covers from the
+; playlist into a single grid image instead of picking one at random.
+; Playlists with fewer than four distinct covers fall back to a single cover.
+; DEFAULT: "true"
+playlist_art_mosaic = "true"
 
 ; Statistical Graphs * Requires PHP-GD *
 ; Set this to true if you want Ampache to generate statistical graphs on usages / users.

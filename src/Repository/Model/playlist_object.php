@@ -26,6 +26,7 @@ declare(strict_types=1);
 namespace Ampache\Repository\Model;
 
 use Ampache\Config\AmpConfig;
+use Ampache\Module\Art\Mosaic\PlaylistArtBuilderInterface;
 use Ampache\Module\Authorization\Access;
 use Ampache\Module\Authorization\AccessLevelEnum;
 use Ampache\Module\Authorization\AccessTypeEnum;
@@ -88,11 +89,16 @@ abstract class playlist_object extends database_object implements
         $medias = $this->get_medias();
         $count  = 0;
         $images = [];
+        $tiles  = [];
+        $seen   = [];
         $title  = T_('Playlist Items');
+        $mosaic = in_array(AmpConfig::get('playlist_art_mosaic', 'true'), ['true', true, 1, '1'], true);
+        // A mosaic never uses more than 9 covers; otherwise honour the caller's limit.
+        $max = ($mosaic) ? min($limit, 9) : $limit;
         shuffle($medias);
         foreach ($medias as $media) {
-            if ($count >= $limit) {
-                return $images;
+            if ($count >= $max) {
+                break;
             }
 
             if (InterfaceImplementationChecker::is_library_item($media['object_type']->value)) {
@@ -106,17 +112,39 @@ abstract class playlist_object extends database_object implements
                     }
                 }
 
+                // Skip covers we've already taken so a single-album playlist doesn't repeat one tile.
+                $key = $media['object_type']->value . '-' . $media['object_id'];
+                if (isset($seen[$key])) {
+                    continue;
+                }
+
                 $art = new Art($media['object_id'], $media['object_type']->value);
                 if ($art->has_db_info()) {
-                    $link     = $web_path . "/image.php?object_id=" . $media['object_id'] . "&object_type=" . $media['object_type']->value;
-                    $images[] = [
+                    $seen[$key] = true;
+                    $link       = $web_path . "/image.php?object_id=" . $media['object_id'] . "&object_type=" . $media['object_type']->value;
+                    $images[]   = [
                         'url' => $link,
                         'mime' => $art->raw_mime,
                         'title' => $title
                     ];
+                    if ($mosaic && $art->raw !== null && $art->raw !== '') {
+                        $tiles[] = $art->raw;
+                    }
 
                     ++$count;
                 }
+            }
+        }
+
+        if ($mosaic && count($tiles) >= 4) {
+            global $dic;
+            $stitched = $dic->get(PlaylistArtBuilderInterface::class)->build($tiles);
+            if ($stitched !== null) {
+                return [[
+                    'raw' => $stitched,
+                    'mime' => 'image/png',
+                    'title' => $title,
+                ]];
             }
         }
 

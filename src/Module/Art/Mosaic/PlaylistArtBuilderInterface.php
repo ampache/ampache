@@ -23,22 +23,15 @@ declare(strict_types=1);
  *
  */
 
-namespace Ampache\Module\Art;
+namespace Ampache\Module\Art\Mosaic;
 
-use Ampache\Module\Art\Collector\ArtCollector;
-use Ampache\Module\Art\Collector\ArtCollectorInterface;
-use Ampache\Module\Art\Export\ArtExporter;
-use Ampache\Module\Art\Export\ArtExporterInterface;
-use Ampache\Module\Art\Export\Writer\MetadataWriter;
-use Ampache\Module\Art\Mosaic\PlaylistArtBuilder;
-use Ampache\Module\Art\Mosaic\PlaylistArtBuilderInterface;
-
-use function DI\autowire;
-
-return [
-    ArtCleanupInterface::class => autowire(ArtCleanup::class),
-    ArtCollectorInterface::class => autowire(ArtCollector::class),
-    ArtExporterInterface::class => autowire(ArtExporter::class),
-    MetadataWriter::class => autowire(),
-    PlaylistArtBuilderInterface::class => autowire(PlaylistArtBuilder::class),
-];
+interface PlaylistArtBuilderInterface
+{
+    /**
+     * Composite cover images into a square grid mosaic (2x2 or 3x3).
+     *
+     * @param list<string> $images raw image byte-strings, ordered by preference
+     * @return string|null raw PNG bytes, or null when a mosaic can't be built
+     */
+    public function build(array $images): ?string;
+}
