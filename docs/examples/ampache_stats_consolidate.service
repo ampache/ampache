@@ -1,0 +1,25 @@
+[Unit]
+Description=ampache_stats_consolidate
+After=network.target remote-fs.target nss-lookup.target
+Documentation=https://ampache.org/docs/
+
+[Service]
+PrivateTmp=true
+KillMode=mixed
+Type=oneshot
+User=www-data
+Group=www-data
+# Consolidate old play history into summary counts. The retention window is
+# read from stats_consolidate_threshold in ampache.cfg.php (days of detailed
+# history to keep); consolidation is disabled while that option is unset or 0.
+# Remove -e to preview what would be consolidated (dry-run) before enabling.
+# Detail rows are moved to object_count_archive, not deleted, and
+# cleanup:restoreStats puts them back. Play counts stay exact either way, but
+# per-period statistics (trending, recent, Last.fm export) only cover the
+# retained window until you restore.
+ExecStart=php bin/cli cleanup:consolidateStats -e
+WorkingDirectory=/var/www/html
+ProtectSystem=yes
+
+[Install]
+WantedBy=multi-user.target

@@ -6,7 +6,7 @@
 ; This value is used to detect if this config file is up to date
 ; this is compared against a constant called CONFIG_VERSION
 ; that is located in src/Config/Init/InitializationHandlerConfig.php
-config_version = 89
+config_version = 90
 
 ; Defines the default timezone used by the date functions
 ; Uses the same strings as the default date.timezone (https://php.net/date.timezone)
@@ -728,6 +728,37 @@ playlist_art = "true"
 ;  composer require szymach/c-pchart "3.*"
 ; DEFAULT: "false"
 ;statistical_graphs = "true"
+
+; Stats Consolidation Threshold
+; Number of days of detailed play history to keep in the object_count table.
+; When set to a value greater than 0, the cleanup:consolidateStats CLI command
+; will aggregate older rows into the object_count_summary table and move the
+; detail rows to the object_count_archive table, keeping object_count small on
+; long-running servers. Nothing is deleted: the archive keeps every media row
+; (song, video, podcast_episode, playlist, live_stream) with its exact date,
+; agent and location, for streams, skips and downloads alike. Parent rows
+; (album, album_disk, artist, podcast) are not archived because
+; cleanup:restoreStats regenerates them from the media rows, which resolves the
+; parent that is correct now rather than a stored id that a merge or a re-tag
+; may have moved. Run cleanup:restoreStats to put it all back.
+; Stored counters stay exact (total/skip counts, played flags, all-time
+; per-object and per-user counts, streamed data size, auto-rating plugin).
+; Smart playlist / search play-history rules (Played, Played by Me, My Last
+; Play/Skip, # Played/Skipped by Me, ...) also stay accurate: once consolidation
+; is enabled they read object_count_summary alongside object_count.
+; The following only evaluate the retained detail window after consolidation:
+; period-based statistics (trending, recent, graphs, Last.fm export) which are
+; windowed by design, live all-time "top" charts computed without cron_cache
+; (the cron cache merges consolidated counts into its 0 threshold entries),
+; browsing sorted by play count, and the "Recently Played" smart playlist rule.
+; "Recently Played" is the one exception that cannot be made exact: it orders by
+; individual play timestamps, and consolidation archives those older detail rows
+; (into object_count_archive) rather than keeping them in object_count, so it
+; only reaches back as far as your retained window until you run
+; cleanup:restoreStats.
+; When set to 0 (or unset) consolidation is disabled.
+; DEFAULT: 0
+;stats_consolidate_threshold = 730
 
 ; Art Gather Order
 ; Simply arrange the following in the order you would like

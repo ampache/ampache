@@ -71,6 +71,29 @@ final class ObjectCache implements ObjectCacheInterface
             }
         }
 
+        // Merge consolidated play history into the all-time (threshold 0) counts, mirroring the aggregation shapes of
+        // Stats::get_top_sql: plain types count their own rows, podcast and album_disk roll up episode / song plays.
+        $summary_types = [
+            'album',
+            'artist',
+            'live_stream',
+            'playlist',
+            'podcast_episode',
+            'song',
+            'tag',
+            'video',
+        ];
+        foreach ($count_types as $count_type) {
+            foreach ($summary_types as $object_type) {
+                $sql = "INSERT INTO `cache_object_count_run` (`object_id`, `count`, `object_type`, `count_type`, `threshold`) SELECT `object_id`, SUM(`count`), `object_type`, `count_type`, 0 FROM `object_count_summary` WHERE `object_type` = '" . $object_type . "' AND `count_type` = '" . $count_type . "' GROUP BY `object_id`, `object_type`, `count_type` ON DUPLICATE KEY UPDATE `count` = `cache_object_count_run`.`count` + VALUES(`count`);";
+                Dba::write($sql);
+            }
+            $sql = "INSERT INTO `cache_object_count_run` (`object_id`, `count`, `object_type`, `count_type`, `threshold`) SELECT `album_disk`.`id`, SUM(`object_count_summary`.`count`), 'album_disk', `object_count_summary`.`count_type`, 0 FROM `object_count_summary` LEFT JOIN `song` ON `song`.`id` = `object_count_summary`.`object_id` LEFT JOIN `album_disk` ON `album_disk`.`album_id` = `song`.`album` AND `album_disk`.`disk` = `song`.`disk` WHERE `object_count_summary`.`object_type` = 'song' AND `object_count_summary`.`count_type` = '" . $count_type . "' AND `album_disk`.`id` IS NOT NULL GROUP BY `album_disk`.`id`, `object_count_summary`.`count_type` ON DUPLICATE KEY UPDATE `count` = `cache_object_count_run`.`count` + VALUES(`count`);";
+            Dba::write($sql);
+            $sql = "INSERT INTO `cache_object_count_run` (`object_id`, `count`, `object_type`, `count_type`, `threshold`) SELECT `podcast_episode`.`podcast`, SUM(`object_count_summary`.`count`), 'podcast', `object_count_summary`.`count_type`, 0 FROM `object_count_summary` LEFT JOIN `podcast_episode` ON `podcast_episode`.`id` = `object_count_summary`.`object_id` WHERE `object_count_summary`.`object_type` = 'podcast_episode' AND `object_count_summary`.`count_type` = '" . $count_type . "' AND `podcast_episode`.`podcast` IS NOT NULL GROUP BY `podcast_episode`.`podcast`, `object_count_summary`.`count_type` ON DUPLICATE KEY UPDATE `count` = `cache_object_count_run`.`count` + VALUES(`count`);";
+            Dba::write($sql);
+        }
+
         $sql = "RENAME TABLE `cache_object_count_run` TO `cache_object_count_tmp`, `cache_object_count` TO `cache_object_count_run`, `cache_object_count_tmp` TO `cache_object_count`";
         Dba::write($sql);
         $sql = "TRUNCATE `cache_object_count_run`";

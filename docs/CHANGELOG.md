@@ -21,9 +21,17 @@
 * Folder Browsing
   * `Folder` domain/model for browsing the catalog as a virtual folder tree
   * New `show_folder` preference to show/hide the "Folders" link in the sidebar
+* Play history consolidation
+  * New `stats_consolidate_threshold` config option; the number of days of detailed play history to keep in `object_count` (`0`, the default, disables consolidation)
+  * New `cleanup:consolidateStats` CLI command aggregates older plays into `object_count_summary` and moves the detail rows to `object_count_archive`; dry-run unless `-e` is given
+  * New `cleanup:restoreStats` CLI command puts the archived detail back and regenerates the `album`, `album_disk`, `artist` and `podcast` rows from it
+  * Nothing is discarded: media rows keep their exact `date`, `agent` and location for streams, skips and downloads, so a consolidate/restore cycle is lossless
+  * Play counts, `played` flags and streamed data size stay exact while consolidated; period-based statistics (trending, recent, graphs, Last.fm export), smart playlist play-history rules and play count sorting only see the retained window
+  * Example systemd unit and timer in `docs/examples`
 * Database
   * New `api_enable_8` preference to enable/disable API v8 responses per user
   * New database tables `folder` and `folder_map`
+  * New database tables `object_count_summary` and `object_count_archive`
   * `folder` added to the `object_type` enum on several tables (`cache_object_count`, `cache_object_count_run`, `image`, `object_count`, and others)
 * API
   * v8 API responses are now fully documented: `docs/openapi.json` carries response schemas for every data type, and `docs/API-JSON-methods.md`/`docs/API-XML-methods.md` show per-method response field tables (type, nullable, optional)
@@ -32,6 +40,8 @@
 
 ### Changed 8.0.0
 
+* Database 800014
+  * Dropped four redundant `object_count` indexes: `object_count_full_index` (an exact duplicate of `object_count_UNIQUE_IDX`), `object_type` and `object_count_type_IDX` (leading-column prefixes of that key), and `date` (a prefix of `object_count_date_IDX`)
 * Requires PHP 8.5+ (was 8.2+); `ext-fileinfo` added as a required extension
 * CI now tests PHP 8.5 only (dropped the 8.2/8.3/8.4 matrix); branch triggers repointed to `patch8`/`release8`
 * `phpstan/phpstan` and `phpstan/phpstan-mockery` ^1 → ^2; `rector/rector` ^1 → ^2, retargeted to the PHP 8.5 rule set and now also covering `src/Config/Init` and `src/Module` (skip list gained `src/Module/Api` and `src/Module/System/Update/Migration`, alongside the existing `src/Repository/Model` skip)
