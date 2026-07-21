@@ -87,6 +87,13 @@ final class UpdateRunner implements UpdateRunnerInterface
         // Prevent the script from timing out, which could be bad
         set_time_limit(0);
 
+        if ($currentVersion >= 800021) {
+            // Migration\V8\Migration800021 (Ampache7 has no mini player interface)
+            if (!Preference::delete('mini_player')) {
+                throw new UpdateFailedException();
+            }
+        }
+
         if ($currentVersion >= 800020) {
             // Migration\V8\Migration800020 (restore the preference deleted by the migration)
             // Ampache7's web player is gated on this preference; without it jPlayer gets no solution at all
