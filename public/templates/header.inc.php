@@ -51,7 +51,6 @@ $access25          = ($access100 || Access::check(AccessTypeEnum::INTERFACE, Acc
 $site_lang         = AmpConfig::get('lang', 'en_US');
 $site_title        = scrub_out(AmpConfig::get('site_title'));
 $site_social       = AmpConfig::get('sociable');
-$site_ajax         = AmpConfig::get('ajax_load');
 $htmllang          = str_replace("_", "-", $site_lang);
 $ui_fixed          = AmpConfig::get('ui_fixed');
 $_SESSION['login'] = false;
@@ -101,10 +100,8 @@ $albumString = (AmpConfig::get('album_group'))
         <?php require_once Ui::find_template('stylesheets.inc.php'); ?>
         <?php require_once Ui::find_template('scripts.inc.php'); ?>
 
-        <?php if ($site_ajax) {
-            $iframed = true;
-            require_once Ui::find_template('show_html5_player_headers.inc.php');
-        } ?>
+        <?php $iframed = true;
+require_once Ui::find_template('show_html5_player_headers.inc.php'); ?>
     </head>
     <body id="main-page">
         <div id="aslideshow">
@@ -147,11 +144,9 @@ if ($is_session) {
                         <?php } ?>
                         </span>
 <?php } ?>
-<?php if ($site_ajax) { ?>
                         <div id="rightbar-minimize">
                             <a href="javascript:ToggleRightbarVisibility();"><?php echo Ui::get_material_symbol('dock_to_left', T_('Show/Hide Playlist')); ?></a>
                         </div>
-<?php } ?>
 <?php Ui::show_box_bottom(); ?>
                 </div> <!-- End headerbox -->
                 <?php echo ($ui_fixed) ? '<div id="ajax-loading">' . T_('Loading') . ' . . .</div>' : ''; ?>
@@ -273,7 +268,5 @@ echo ($isCollapsed) ? ' content-left-wild' : ''; ?>">
                 <?php }
                     echo '</div>';
                 }
-if ($site_ajax) {
-    require Ui::find_template('show_web_player_embedded.inc.php');
-} ?>
+require Ui::find_template('show_web_player_embedded.inc.php'); ?>
                 <div id="guts">

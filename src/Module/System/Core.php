@@ -211,7 +211,7 @@ class Core
     {
         $play_type = AmpConfig::get('play_type');
 
-        return ($play_type == "stream" || $play_type == "democratic" || !AmpConfig::get('ajax_load'))
+        return ($play_type == "stream" || $play_type == "democratic")
             ? "reloadUtil"
             : "reloadDivUtil";
     }

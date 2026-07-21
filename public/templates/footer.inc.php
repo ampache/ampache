@@ -52,7 +52,7 @@ if (!isset($_SESSION['login']) || !$_SESSION['login']) {
             <a id="ampache_link" href="https://github.com/ampache/ampache#readme" target="_blank" title="<?php echo T_('Copyright'); ?> © Ampache.org, 2001-2026"><?php echo T_('Ampache') . ' ' . AmpConfig::get('version'); ?></a>
         <?php } ?>
         </div>
-        <?php if (AmpConfig::get('ajax_load') && (!isset($_SESSION['login']) || !$_SESSION['login'])) { ?>
+        <?php if (!isset($_SESSION['login']) || !$_SESSION['login']) { ?>
         <div id="webplayer-minimize">
           <a href="javascript:TogglePlayerVisibility();"><?php echo Ui::get_material_symbol('dock_to_bottom', T_('Show/Hide Player')); ?></a>
         </div>

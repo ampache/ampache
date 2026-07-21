@@ -333,7 +333,6 @@ return [
     CreateAction::class => autowire(CreateAction::class),
     ManagePlaylistsAction::class => autowire(ManagePlaylistsAction::class),
     ShowPlaylistAction::class => autowire(ShowPlaylistAction::class),
-    WebPlayer\ShowAction::class => autowire(WebPlayer\ShowAction::class),
     ShowEmbeddedAction::class => autowire(ShowEmbeddedAction::class),
     Index\ShowAction::class => autowire(Index\ShowAction::class),
     MiniPlayer\ShowAction::class => autowire(MiniPlayer\ShowAction::class),

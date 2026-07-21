@@ -760,7 +760,6 @@ class Ui implements UiInterface
                 break;
             case 'access_control':
             case 'access_list':
-            case 'ajax_load':
             case 'album_group':
             case 'album_release_type':
             case 'allow_democratic_playback':

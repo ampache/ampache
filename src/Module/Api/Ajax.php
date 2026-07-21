@@ -25,7 +25,6 @@ declare(strict_types=1);
 
 namespace Ampache\Module\Api;
 
-use Ampache\Config\AmpConfig;
 use Ampache\Module\Util\AjaxUriRetrieverInterface;
 use Ampache\Module\Util\Ui;
 
@@ -179,7 +178,7 @@ class Ajax
 
         $observe   = "<script>";
         $methodact = ($method == 'click') ? "update_action();" : "";
-        if (AmpConfig::get('ajax_load') && $method == 'load') {
+        if ($method == 'load') {
             $source_txt = "$( document ).ready(";
         } else {
             $source_txt = "$(" . $source_txt . ").on('" . $method . "', ";

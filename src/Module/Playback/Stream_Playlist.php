@@ -121,8 +121,8 @@ class Stream_Playlist
      */
     public static function check_autoplay_append(): bool
     {
-        // For now, only iframed web player support media append in the currently played playlist
-        return ((AmpConfig::get('ajax_load') && AmpConfig::get('play_type') == 'web_player') || AmpConfig::get('play_type') == 'localplay');
+        // only the embedded web player supports appending to the playlist being played
+        return (AmpConfig::get('play_type') == 'web_player' || AmpConfig::get('play_type') == 'localplay');
     }
 
     /**
@@ -131,7 +131,7 @@ class Stream_Playlist
     public static function check_autoplay_next(): bool
     {
         // Currently only supported for web player
-        return (AmpConfig::get('ajax_load') && AmpConfig::get('play_type') == 'web_player');
+        return (AmpConfig::get('play_type') == 'web_player');
     }
 
     /**
@@ -325,7 +325,7 @@ class Stream_Playlist
                 $has_art          = Art::has_db($object->id, 'song');
                 $art_object       = ($show_song_art && $has_art) ? $object->id : $object->album;
                 $art_type         = ($show_song_art && $has_art) ? 'song' : 'album';
-                $url['image_url'] = Art::url($art_object, $art_type, $api_session, (AmpConfig::get('ajax_load') ? 3 : 4));
+                $url['image_url'] = Art::url($art_object, $art_type, $api_session, 3);
                 //$url['album'] = $object->get_album_fullname();
                 $url['codec']     = $object->type;
                 $url['track_num'] = (string) $object->track;
@@ -335,7 +335,7 @@ class Stream_Playlist
                 $url['title']     = 'Video - ' . $object->title;
                 $url['author']    = $object->get_parent_fullname();
                 $url['info_url']  = $object->get_f_link();
-                $url['image_url'] = Art::url($object->id, 'video', $api_session, (AmpConfig::get('ajax_load') ? 3 : 4));
+                $url['image_url'] = Art::url($object->id, 'video', $api_session, 3);
                 $url['codec']     = $object->type;
                 break;
             case LibraryItemEnum::LIVE_STREAM:
@@ -346,7 +346,7 @@ class Stream_Playlist
                 }
 
                 $url['info_url']  = $object->get_f_link();
-                $url['image_url'] = Art::url($object->id, 'live_stream', $api_session, (AmpConfig::get('ajax_load') ? 3 : 4));
+                $url['image_url'] = Art::url($object->id, 'live_stream', $api_session, 3);
                 $url['codec']     = $object->codec;
                 break;
             case LibraryItemEnum::SONG_PREVIEW:
@@ -360,7 +360,7 @@ class Stream_Playlist
                 $url['title']     = $object->title;
                 $url['author']    = $object->getPodcastName();
                 $url['info_url']  = $object->get_f_link();
-                $url['image_url'] = Art::url($object->podcast, 'podcast', $api_session, (AmpConfig::get('ajax_load') ? 3 : 4));
+                $url['image_url'] = Art::url($object->podcast, 'podcast', $api_session, 3);
                 $url['codec']     = $object->type;
                 break;
             default:
@@ -637,11 +637,7 @@ class Stream_Playlist
      */
     public function create_web_player(): void
     {
-        if (AmpConfig::get('ajax_load')) {
-            require Ui::find_template('create_web_player_embedded.inc.php');
-        } else {
-            require Ui::find_template('create_web_player.inc.php');
-        }
+        require Ui::find_template('create_web_player_embedded.inc.php');
     }
 
     public function create_xspf(): void

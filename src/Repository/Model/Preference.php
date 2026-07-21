@@ -124,7 +124,6 @@ class Preference extends database_object
      * This array contains System preferences that can (should) not be edited or deleted from the api
      */
     public const array SYSTEM_LIST = [
-        'ajax_load',
         'album_group',
         'album_release_type_sort',
         'album_release_type',
@@ -820,7 +819,6 @@ class Preference extends database_object
             'access_list',
             'admin_enable_required',
             'admin_notify_reg',
-            'ajax_load',
             'album_art_store_disk',
             'album_group',
             'album_release_type',
@@ -1290,9 +1288,6 @@ class Preference extends database_object
                 case 'album_release_type':
                     Dba::write($pref_sql, ['album_release_type', '1', 'Album - Group per release type', AccessLevelEnum::USER->value, 'boolean', 'interface', 'library']);
                     break;
-                case 'ajax_load':
-                    Dba::write($pref_sql, ['ajax_load', '1', 'Ajax page load', AccessLevelEnum::USER->value, 'boolean', 'interface', null]);
-                    break;
                 case 'direct_play_limit':
                     Dba::write($pref_sql, ['direct_play_limit', '500', 'Limit direct play to maximum media count', AccessLevelEnum::USER->value, 'integer', 'interface', 'player']);
                     break;
@@ -1634,7 +1629,7 @@ class Preference extends database_object
                     ) !== null
                     && Dba::write(
                         "UPDATE `preference` SET `level` = ? WHERE `name` IN ("
-                        . "'ajax_load', 'album_group', 'album_release_type', 'album_release_type_sort', 'album_sort',"
+                        . "'album_group', 'album_release_type', 'album_release_type_sort', 'album_sort',"
                         . " 'allow_personal_info_agent', 'allow_personal_info_now', 'allow_personal_info_recent'"
                         . " 'allow_personal_info_time', 'api_always_download', 'api_enable_3', 'api_enable_4'"
                         . " 'api_enable_5', 'api_enable_6', 'api_enable_8', 'api_force_version', 'api_hidden_playlists'"
@@ -1744,7 +1739,7 @@ class Preference extends database_object
                     ) !== null
                     && Dba::write(
                         "UPDATE `user_preference` SET `value` = '1' WHERE `name` IN ("
-                        . "'ajax_load', 'album_group', 'album_release_type', 'allow_democratic_playback', 'allow_localplay_playback',"
+                        . "'album_group', 'album_release_type', 'allow_democratic_playback', 'allow_localplay_playback',"
                         . " 'allow_personal_info_agent', 'allow_personal_info_now', 'allow_personal_info_recent', 'allow_personal_info_time',"
                         . " 'allow_stream_playback', 'api_enable_3', 'api_enable_4', 'api_enable_5', 'api_enable_6',"
                         . " 'autoupdate', 'browser_notify', 'download', 'home_moment_albums',"
@@ -1804,7 +1799,7 @@ class Preference extends database_object
                     ) !== null
                     && Dba::write(
                         "UPDATE `user_preference` SET `value` = '1' WHERE `name` IN ("
-                        . "'ajax_load', 'album_group', 'album_release_type', 'allow_democratic_playback', 'allow_localplay_playback', 'allow_personal_info_agent',"
+                        . "'album_group', 'album_release_type', 'allow_democratic_playback', 'allow_localplay_playback', 'allow_personal_info_agent',"
                         . " 'allow_personal_info_now', 'allow_personal_info_recent', 'allow_personal_info_time', 'allow_stream_playback', 'api_enable_3',"
                         . " 'api_enable_4', 'api_enable_5', 'api_enable_6', 'autoupdate', 'browser_notify',"
                         . " 'home_moment_albums', 'home_now_playing', 'home_recently_played_all', 'home_recently_played',"
@@ -1862,7 +1857,7 @@ class Preference extends database_object
                     ) !== null
                     && Dba::write(
                         "UPDATE `user_preference` SET `value` = '1' WHERE `name` IN ("
-                        . "'ajax_load', 'album_group', 'album_release_type', 'allow_democratic_playback', 'allow_localplay_playback', 'allow_personal_info_agent',"
+                        . "'album_group', 'album_release_type', 'allow_democratic_playback', 'allow_localplay_playback', 'allow_personal_info_agent',"
                         . " 'allow_personal_info_now', 'allow_personal_info_recent', 'allow_personal_info_time', 'allow_stream_playback', 'api_enable_3', 'api_enable_4',"
                         . " 'api_enable_5', 'api_enable_6', 'autoupdate', 'browser_notify', 'home_moment_albums',"
                         . " 'libitem_contextmenu', 'now_playing_per_user', 'podcast_new_download', 'share', 'show_artist', 'show_donate', 'show_folder',"
@@ -1908,7 +1903,6 @@ class Preference extends database_object
         $pref_array = [
             '7digital_api_key' => '7digital consumer key',
             '7digital_secret_api_key' => '7digital secret',
-            'ajax_load' => 'Ajax page load',
             'album_group' => 'Album - Group multiple disks',
             'album_release_type_sort' => 'Album - Group per release type sort',
             'album_release_type' => 'Album - Group per release type',

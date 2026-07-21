@@ -47,18 +47,13 @@ final readonly class ShowAction implements ApplicationActionInterface
         $user = Core::get_global('user');
 
         // Users locked into this page can't reach their preferences to fix a play type that doesn't
-        // load the web player, so make sure the two settings the in-page player depends on are set.
-        // Core::get_reloadutil() only returns the in-page loader when both of these are correct.
+        // load the web player, so make sure it is set. Core::get_reloadutil() only returns the
+        // in-page loader for the web player play type.
         if (
             $user instanceof User
             && $user->getId() > 0
             && Preference::get_by_user($user->getId(), 'mini_player')
         ) {
-            if (!AmpConfig::get('ajax_load')) {
-                Preference::update('ajax_load', $user->getId(), '1');
-                AmpConfig::set('ajax_load', '1', true);
-            }
-
             if (AmpConfig::get('play_type') !== 'web_player') {
                 Preference::update('play_type', $user->getId(), 'web_player');
                 AmpConfig::set('play_type', 'web_player', true);

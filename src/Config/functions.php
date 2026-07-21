@@ -34,7 +34,6 @@ use Ampache\Module\System\Dba;
 use Ampache\Module\System\Session;
 use Ampache\Module\Util\Ui;
 use Ampache\Repository\Model\Artist;
-use Ampache\Repository\Model\Catalog;
 use Ampache\Repository\Model\User;
 use Gettext\Loader\MoLoader;
 use Gettext\Translator;
@@ -570,18 +569,14 @@ function debug_event(string $type, string $message, int $level, string $username
  */
 function catalog_worker(string $action, ?array $catalogs = null, ?array $options = null): void
 {
-    if (AmpConfig::get('ajax_load')) {
-        $sse_url = AmpConfig::get_web_path() . "/server/sse.server.php?worker=catalog&action=" . $action . "&catalogs=" . urlencode(json_encode($catalogs) ?: '');
-        if ($options) {
-            $sse_url .= "&options=" . urlencode(json_encode($_POST) ?: '');
-        }
-
-        echo '<script>';
-        echo "sse_worker('$sse_url');";
-        echo "</script>\n";
-    } else {
-        Catalog::process_action($action, $catalogs, $options);
+    $sse_url = AmpConfig::get_web_path() . "/server/sse.server.php?worker=catalog&action=" . $action . "&catalogs=" . urlencode(json_encode($catalogs) ?: '');
+    if ($options) {
+        $sse_url .= "&options=" . urlencode(json_encode($_POST) ?: '');
     }
+
+    echo '<script>';
+    echo "sse_worker('$sse_url');";
+    echo "</script>\n";
 }
 
 /**
