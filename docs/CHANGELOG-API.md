@@ -44,6 +44,7 @@ we will keep on 6.9.x and resume build number versioning until Ampache 8
   * friends_timeline: An empty result returned a `total_count`/`md5` envelope that neither the populated response nor `timeline` uses. It now returns `activity: []`
 * API5 and API6
   * labels, label: XML serialised each item as `<license>` instead of `<label>`
+  * search_rules: XML emitted an empty `<widget/>` for every rule that isn't a select, dropping the control type the JSON response carries
 * REST
   * `preferences/{preference_name}` returned the whole preference list and ignored the name
   * `POST {type}/{id}/share` resolved to `share` (fetch a share) instead of `share_create`
