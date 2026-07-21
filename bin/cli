@@ -74,6 +74,8 @@ $app->add($dic->get(Cli\PrintTagsCommand::class));
 $app->add($dic->get(Cli\RunWebsocketCommand::class));
 $app->add($dic->get(Cli\ShowVersionCommand::class));
 $app->add($dic->get(Cli\SongCleanupCommand::class));
+$app->add($dic->get(Cli\StatsConsolidateCommand::class));
+$app->add($dic->get(Cli\StatsRestoreCommand::class));
 $app->add($dic->get(Cli\SortFilesCommand::class));
 $app->add($dic->get(Cli\UpdateCatalogCommand::class));
 $app->add($dic->get(Cli\UpdateCatalogFileCommand::class));

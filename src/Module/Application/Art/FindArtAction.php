@@ -100,14 +100,14 @@ final class FindArtAction extends AbstractArtAction
 
         // If we've got an upload ignore the rest and just insert it
         if (!empty($_FILES['file']['tmp_name'])) {
-            $extension      = pathinfo((string) $_FILES['file']['name'], PATHINFO_EXTENSION);
             $upload         = [];
             $upload['file'] = $_FILES['file']['tmp_name'];
-            $upload['mime'] = 'image/' . ($extension ?: 'jpg');
             $image_data     = Art::get_from_source($upload, $object_type);
 
             if ($image_data !== '') {
-                if ($art->insert($image_data, $upload['mime'])) {
+                // no mime passed: the uploaded filename is user supplied and says nothing reliable
+                // about the bytes, so let insert() read the real type out of the image itself
+                if ($art->insert($image_data)) {
                     $this->ui->showContinue(
                         T_('No Problem'),
                         T_('Art has been added'),

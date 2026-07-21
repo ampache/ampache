@@ -34,9 +34,29 @@ use Ampache\Repository\Model\User;
 final class PreferenceItemBuilder
 {
     /**
-     * @param array<int, array<string, mixed>> $preference the row returned by Preference::get()
+     * @param array<int, array{
+     *     id: int,
+     *     name: string,
+     *     level: int,
+     *     description: string,
+     *     value: mixed,
+     *     type: string,
+     *     category: string,
+     *     subcategory: ?string
+     * }> $preference the row returned by Preference::get()
      *
-     * @return array<string, mixed>
+     * @return array{
+     *     id: string,
+     *     name: string,
+     *     level: int,
+     *     description: string,
+     *     value: mixed,
+     *     type: string,
+     *     category: string,
+     *     subcategory: string|null,
+     *     has_access: bool,
+     *     values?: array<int|string>
+     * }
      */
     public function build(array $preference, User $user): array
     {
@@ -60,5 +80,47 @@ final class PreferenceItemBuilder
         }
 
         return $item;
+    }
+
+    /**
+     * Apply the API8 shape to a preference list; the only change from the repository row is the string id
+     *
+     * @param array<int, array{
+     *     id: int,
+     *     name: string,
+     *     value: string,
+     *     description: string,
+     *     level: int,
+     *     type: string,
+     *     category: string,
+     *     subcategory: ?string,
+     *     has_access?: bool,
+     *     values?: string[]|int[]
+     * }> $preferences the rows returned by PreferenceRepositoryInterface::getAll()
+     *
+     * @return array<int, array{
+     *     id: string,
+     *     name: string,
+     *     value: string,
+     *     description: string,
+     *     level: int,
+     *     type: string,
+     *     category: string,
+     *     subcategory: string|null,
+     *     has_access?: bool,
+     *     values?: string[]|int[]
+     * }>
+     */
+    public function buildList(array $preferences): array
+    {
+        $items = [];
+        foreach ($preferences as $preference) {
+            $items[] = [
+                ...$preference,
+                'id' => (string) $preference['id'],
+            ];
+        }
+
+        return $items;
     }
 }

@@ -74,7 +74,7 @@ final class UserUpdate5Method implements MethodInterface
      * state = (string) $state //optional
      * city = (string) $city //optional
      * disable = (integer) 0,1 true to disable, false to enable //optional
-     * maxbitrate = (integer) $maxbitrate //optional
+     * maxbitrate = (integer) $maxbitrate in kbps //optional
      *
      * @param array{
      *     username?: string,
@@ -178,7 +178,8 @@ final class UserUpdate5Method implements MethodInterface
             }
 
             if ($maxbitrate > 0) {
-                Preference::update('transcode_bitrate', $user_id, $maxbitrate);
+                // maxbitrate has always been kbps here by convention (it was never documented); transcode_bitrate is bps
+                Preference::update('transcode_bitrate', $user_id, $maxbitrate * 1000);
             }
 
             return $response->withBody(

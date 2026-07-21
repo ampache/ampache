@@ -68,7 +68,7 @@ final class DeletedSongsMethod implements MethodInterface
         $results = Song::get_deleted();
         if ($results === []) {
             $response->getBody()->write(
-                $output->writeEmpty($apiVersion, 'deleted_songs')
+                $output->writeEmpty($apiVersion, 'deleted_song')
             );
 
             return $response;

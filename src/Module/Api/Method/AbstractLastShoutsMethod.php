@@ -115,14 +115,7 @@ abstract class AbstractLastShoutsMethod implements MethodInterface
             ? iterator_to_array($this->shoutRepository->getTopById($limit, (int) $username))
             : iterator_to_array($this->shoutRepository->getTop($limit, $username));
 
-        if ($results === []) {
-            $response->getBody()->write(
-                $output->writeEmpty($apiVersion, 'shout')
-            );
-
-            return $response;
-        }
-
+        // no empty-envelope short circuit: the populated response is a bare `shout: []` too
         $response->getBody()->write(
             $output->shouts($apiVersion, $results)
         );

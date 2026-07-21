@@ -771,12 +771,8 @@ CREATE TABLE IF NOT EXISTS `object_count` (
   `count_type` enum('download','stream','skip') CHARACTER SET utf8mb3 COLLATE utf8mb3_unicode_ci DEFAULT NULL,
   PRIMARY KEY (`id`),
   UNIQUE KEY `object_count_UNIQUE_IDX` (`object_type`,`object_id`,`date`,`user`,`agent`,`count_type`) USING BTREE,
-  KEY `object_type` (`object_type`),
   KEY `object_id` (`object_id`),
   KEY `userid` (`user`),
-  KEY `date` (`date`),
-  KEY `object_count_full_index` (`object_type`,`object_id`,`date`,`user`,`agent`,`count_type`) USING BTREE,
-  KEY `object_count_type_IDX` (`object_type`,`object_id`) USING BTREE,
   KEY `object_count_date_IDX` (`date`,`count_type`) USING BTREE,
   KEY `object_count_user_IDX` (`object_type`,`object_id`,`user`,`count_type`) USING BTREE,
   KEY `object_type_date_IDX` (`object_type`,`date`) USING BTREE,
@@ -787,6 +783,43 @@ CREATE TABLE IF NOT EXISTS `object_count` (
 -- --------------------------------------------------------
 
 --
+--
+-- Table structure for table `object_count_summary`
+--
+
+CREATE TABLE IF NOT EXISTS `object_count_archive` (
+  `object_type` enum('album','album_disk','artist','catalog','tag','label','live_stream','playlist','podcast','podcast_episode','search','song','user','video') CHARACTER SET utf8mb3 COLLATE utf8mb3_unicode_ci NOT NULL,
+  `object_id` int(11) UNSIGNED NOT NULL DEFAULT 0,
+  `date` int(11) UNSIGNED NOT NULL DEFAULT 0,
+  `user` int(11) NOT NULL,
+  `agent` varchar(255) CHARACTER SET utf8mb3 COLLATE utf8mb3_unicode_ci DEFAULT NULL,
+  `geo_latitude` decimal(10,6) DEFAULT NULL,
+  `geo_longitude` decimal(10,6) DEFAULT NULL,
+  `geo_name` varchar(255) CHARACTER SET utf8mb3 COLLATE utf8mb3_unicode_ci DEFAULT NULL,
+  `count_type` enum('download','stream','skip') CHARACTER SET utf8mb3 COLLATE utf8mb3_unicode_ci NOT NULL,
+  KEY `object_count_archive_IDX` (`object_type`,`object_id`)
+) ENGINE=InnoDB ROW_FORMAT=COMPRESSED DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `object_count_summary`
+--
+
+CREATE TABLE IF NOT EXISTS `object_count_summary` (
+  `id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT,
+  `object_type` enum('album','album_disk','artist','catalog','tag','label','live_stream','playlist','podcast','podcast_episode','search','song','user','video') CHARACTER SET utf8mb3 COLLATE utf8mb3_unicode_ci NOT NULL,
+  `object_id` int(11) UNSIGNED NOT NULL DEFAULT 0,
+  `user` int(11) NOT NULL,
+  `count_type` enum('download','stream','skip') CHARACTER SET utf8mb3 COLLATE utf8mb3_unicode_ci NOT NULL,
+  `count` int(11) UNSIGNED NOT NULL DEFAULT 0,
+  `date_from` int(11) UNSIGNED NOT NULL DEFAULT 0,
+  `date_to` int(11) UNSIGNED NOT NULL DEFAULT 0,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `object_count_summary_UNIQUE_IDX` (`object_type`,`object_id`,`user`,`count_type`),
+  KEY `object_count_summary_type_IDX` (`object_type`,`count_type`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
 -- Table structure for table `player_control`
 --
 

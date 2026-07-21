@@ -38,7 +38,6 @@ $ajaxUriRetriever = $dic->get(AjaxUriRetrieverInterface::class);
     // Using the following workaround to set global variable available from any javascript script.
 
     // AmpConfig values
-    var jsAmpConfigAjaxLoad = "<?php echo make_bool(AmpConfig::get('ajax_load')); ?>";
     var jsAmpConfigCookieSecure = "<?php echo make_bool(AmpConfig::get('cookie_secure')); ?>";
     var jsAmpConfigGeolocation = "<?php echo make_bool(AmpConfig::get('geolocation')); ?>";
     var jsAmpConfigLibitemContextmenu = "<?php echo make_bool(AmpConfig::get('libitem_contextmenu')); ?>";

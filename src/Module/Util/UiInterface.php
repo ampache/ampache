@@ -38,6 +38,7 @@ interface UiInterface
     public function createPreferenceInput(
         string $name,
         $value,
+        ?string $type = null,
     ): void;
 
     /**

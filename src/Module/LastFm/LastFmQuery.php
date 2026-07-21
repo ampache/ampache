@@ -65,6 +65,10 @@ final readonly class LastFmQuery implements LastFmQueryInterface
             throw new LastFmQueryFailedException();
         }
 
+        if ((string) $result['status'] !== 'ok') {
+            throw new LastFmQueryFailedException(trim((string) $result->error));
+        }
+
         return $result;
     }
 }

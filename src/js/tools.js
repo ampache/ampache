@@ -294,12 +294,7 @@ export function showEditDialog(edit_type, edit_id, edit_form_id, edit_title, ref
                             $("#" + parent.refreshRowPrefix + parent.editId).attr("id", parent.refreshRowPrefix + new_id);
                         });
                     } else {
-                        var reloadp = window.location;
-                        var hash = window.location.hash.substring(1);
-                        if (hash && hash.indexOf(".php") > -1) {
-                            reloadp = jsWebPath + "/" + hash;
-                        }
-                        loadContentPage(reloadp);
+                        loadContentPage(window.location.href);
                     }
                 },
                 error(resp) {
