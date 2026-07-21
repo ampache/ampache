@@ -189,6 +189,18 @@ require_once Ui::find_template('show_html5_player_headers.inc.php'); ?>
         #mini-content {
             padding: 5px;
         }
+
+    }
+
+    @media (max-width: 600px) {
+        #mini-page #jp_container_1.jp-audio .jp-jplayer,
+        #mini-page #webplayer .playing_art {
+            display: none;
+        }
+
+        #mini-page #jp_container_1 .jp-interface {
+            padding-left: 8px;
+        }
     }
 </style>
     </head>
