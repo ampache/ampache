@@ -41,8 +41,25 @@ final class Migration800023 extends AbstractMigration
 
     public function migrate(): void
     {
-        // LIKE is case insensitive under the default collation, so this catches `image/JPG` too,
-        // and rewriting an already correct value to the same string is harmless
-        $this->updateDatabase("UPDATE `image` SET `mime` = 'image/jpeg' WHERE `mime` LIKE 'image/jpg' OR `mime` LIKE 'image/jpeg';");
+        // `unique_image` covers (width, height, mime, size, object_type, object_id, kind), so where the
+        // same artwork was stored twice with the two spellings, rewriting the `image/jpg` row would
+        // collide with its `image/jpeg` twin. Those rows are left alone rather than deleting artwork
+        // during an upgrade; everything without a twin is corrected. The join is NULL safe because
+        // width, height, size and kind are all nullable, and the comparisons are case insensitive
+        // under the default collation, so `image/JPG` is covered too.
+        $this->updateDatabase(
+            "UPDATE `image` AS `fix` "
+            . "LEFT JOIN `image` AS `clash` "
+            . "ON `clash`.`object_type` = `fix`.`object_type` "
+            . "AND `clash`.`object_id` = `fix`.`object_id` "
+            . "AND `clash`.`width` <=> `fix`.`width` "
+            . "AND `clash`.`height` <=> `fix`.`height` "
+            . "AND `clash`.`size` <=> `fix`.`size` "
+            . "AND `clash`.`kind` <=> `fix`.`kind` "
+            . "AND `clash`.`mime` = 'image/jpeg' "
+            . "AND `clash`.`id` <> `fix`.`id` "
+            . "SET `fix`.`mime` = 'image/jpeg' "
+            . "WHERE `fix`.`mime` = 'image/jpg' AND `clash`.`id` IS NULL;"
+        );
     }
 }
