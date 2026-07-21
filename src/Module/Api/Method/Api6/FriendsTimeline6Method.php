@@ -71,12 +71,7 @@ final class FriendsTimeline6Method
             $limit,
             $since
         );
-        if (empty($results)) {
-            Api6::empty('activity', $input['api_format']);
-
-            return false;
-        }
-
+        // no empty-envelope short circuit: an empty result renders as `activity: []`, matching `timeline`
         ob_end_clean();
         switch ($input['api_format']) {
             case 'json':

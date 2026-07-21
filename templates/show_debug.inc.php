@@ -40,12 +40,19 @@ $web_path = AmpConfig::get_web_path();
 
 $admin_path = AmpConfig::get_web_path('/admin');
 
-// don't share the database password and unset additional variables
+// don't share passwords, api secrets and unset additional variables
 unset(
+    $configuration['daap_pass'],
     $configuration['database_password'],
+    $configuration['lastfm_api_secret'],
+    $configuration['ldap_password'],
     $configuration['load_time_begin'],
     $configuration['mail_auth_pass'],
+    $configuration['musicbrainz_password'],
     $configuration['phpversion'],
+    $configuration['proxy_pass'],
+    $configuration['secret_key'],
+    $configuration['spotify_client_secret'],
 );
 
 // check your versions

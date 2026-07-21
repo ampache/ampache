@@ -94,9 +94,10 @@ final class ArtExporter implements ArtExporterInterface
                 );
             }
             $target_file = $folder . $filename;
-            $file_handle = fopen($target_file, 'w');
-            $is_file     = is_file($target_file);
+            // check before opening; fopen in 'w' mode would truncate art that has already been exported
+            $is_file = is_file($target_file);
             if (!$is_file) {
+                $file_handle = fopen($target_file, 'w');
                 if ($file_handle === false) {
                     throw new Export\Exception\ArtExportException(
                         sprintf(T_('Unable to open `%s` for writing'), $target_file)
@@ -122,8 +123,9 @@ final class ArtExporter implements ArtExporterInterface
                     );
                 }
             }
+            // the art is on disk by now, either it already was or it was just written (a failure throws above)
             // require a really good reason to clear this art
-            if ($clearData && $is_file) {
+            if ($clearData) {
                 //The file is out so clear the table as well
                 $this->logger->critical(
                     'Clearing database image for ' . $artRow['id'],

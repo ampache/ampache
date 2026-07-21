@@ -90,24 +90,31 @@ final class AlbumArtExporter implements AlbumArtExporterInterface
                 $preferred_filename = sprintf('folder.%s', $extension);
             }
 
-            $file = $dir . DIRECTORY_SEPARATOR . $preferred_filename;
+            $file = $dir . '/' . $preferred_filename;
 
-            $file_handle = @fopen($file, 'w');
-
-            if ($file_handle === false || !$art->raw) {
+            // check the image before opening the file; 'w' would leave an empty one behind on failure
+            if (!$art->raw) {
                 throw new Export\Exception\AlbumArtExportException(
                     sprintf(T_('Unable to open `%s` for writing'), $file)
                 );
             }
+
+            $file_handle = @fopen($file, 'w');
+
+            if ($file_handle === false) {
+                throw new Export\Exception\AlbumArtExportException(
+                    sprintf(T_('Unable to open `%s` for writing'), $file)
+                );
+            }
+
             $write_result = @fwrite($file_handle, $art->raw);
+            fclose($file_handle);
 
             if ($write_result === false) {
                 throw new Export\Exception\AlbumArtExportException(
                     sprintf(T_('Unable to write to `%s`'), $file)
                 );
             }
-
-            fclose($file_handle);
 
             $fileName = $album->get_fullname(true);
 

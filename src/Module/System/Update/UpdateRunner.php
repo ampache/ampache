@@ -87,6 +87,88 @@ final class UpdateRunner implements UpdateRunnerInterface
         // Prevent the script from timing out, which could be bad
         set_time_limit(0);
 
+        if ($currentVersion >= 800020) {
+            // Migration\V8\Migration800020 (restore the preference deleted by the migration)
+            // Ampache7's web player is gated on this preference; without it jPlayer gets no solution at all
+            if (!Preference::insert('webplayer_html5', 'Authorize HTML5 Web Player', '1', AccessLevelEnum::USER->value, 'boolean', 'streaming', 'player')) {
+                throw new UpdateFailedException();
+            }
+        }
+
+        if ($currentVersion >= 800019) {
+            // Migration\V8\Migration800019 (Ampache7 has no per-format bitrate overrides)
+            if (!Preference::delete('transcode_bitrate_formats')) {
+                throw new UpdateFailedException();
+            }
+        }
+
+        if ($currentVersion >= 800018) {
+            // Migration\V8\Migration800018 (Ampache7 stores `transcode_bitrate` in kilobits, not bits)
+            if (
+                !Dba::write("UPDATE `user_preference` SET `value` = GREATEST(CAST(`value` AS UNSIGNED) DIV 1000, 1) WHERE `name` = 'transcode_bitrate' AND CAST(`value` AS UNSIGNED) >= 1000;") ||
+                !Dba::write("UPDATE `preference` SET `value` = '128', `type` = 'string', `description` = 'Transcode Bitrate' WHERE `name` = 'transcode_bitrate';")
+            ) {
+                throw new UpdateFailedException();
+            }
+        }
+
+        if ($currentVersion >= 800017) {
+            // Migration\V8\Migration800017 (Ampache7 reads these from ampache.cfg.php, not preferences)
+            if (
+                !Preference::delete('max_bit_rate') ||
+                !Preference::delete('min_bit_rate')
+            ) {
+                throw new UpdateFailedException();
+            }
+        }
+
+        if ($currentVersion >= 800016) {
+            // Migration\V8\Migration800016 (Ampache7 reads these from ampache.cfg.php, not preferences)
+            if (
+                !Preference::delete('encode_target') ||
+                !Preference::delete('encode_video_target') ||
+                !Preference::delete('encode_player_webplayer_target') ||
+                !Preference::delete('encode_player_api_target')
+            ) {
+                throw new UpdateFailedException();
+            }
+        }
+
+        if ($currentVersion >= 800015) {
+            // Migration\V8\Migration800015 (put the consolidated play history back before dropping the archive)
+            // Ampache7 only reads `object_count`, so anything left in the archive would be invisible. The derived
+            // album/artist rows consolidation removed are rebuilt by Catalog::update_counts() on the next run.
+            if (
+                !Dba::write("INSERT IGNORE INTO `object_count` (`object_type`, `object_id`, `count_type`, `date`, `user`, `agent`, `geo_latitude`, `geo_longitude`, `geo_name`) SELECT `object_type`, `object_id`, `count_type`, `date`, `user`, `agent`, `geo_latitude`, `geo_longitude`, `geo_name` FROM `object_count_archive`;") ||
+                !Dba::write("DROP TABLE IF EXISTS `object_count_archive`;")
+            ) {
+                throw new UpdateFailedException();
+            }
+        }
+
+        if ($currentVersion >= 800014) {
+            // Migration\V8\Migration800014 (restore the indexes the migration dropped as redundant)
+            Dba::write("ALTER TABLE `object_count` ADD KEY `object_count_full_index` (`object_type`, `object_id`, `date`, `user`, `agent`, `count_type`) USING BTREE;", [], true);
+            Dba::write("ALTER TABLE `object_count` ADD KEY `object_type` (`object_type`);", [], true);
+            Dba::write("ALTER TABLE `object_count` ADD KEY `object_count_type_IDX` (`object_type`, `object_id`) USING BTREE;", [], true);
+            Dba::write("ALTER TABLE `object_count` ADD KEY `date` (`date`);", [], true);
+        }
+
+        if ($currentVersion >= 800013) {
+            // Migration\V8\Migration800013 (the detail was restored by the 800015 block above)
+            if (!Dba::write("DROP TABLE IF EXISTS `object_count_summary`;")) {
+                throw new UpdateFailedException();
+            }
+        }
+
+        if ($currentVersion >= 800012) {
+            // Migration\V8\Migration800012 (Ampache7 has no system user, hand the share.php plays back to user 0).
+            // The `user` columns are left signed: Ampache7's own schema already declares them int(11) signed
+            if (!Dba::write("UPDATE IGNORE `object_count` SET `user` = 0 WHERE `user` = -1 AND `agent` = 'share.php';")) {
+                throw new UpdateFailedException();
+            }
+        }
+
         if ($currentVersion >= 800011) {
             // Migration\V8\Migration800011 (restore the preferences deleted by the migration)
             if (

@@ -91,12 +91,7 @@ final class LastShouts6Method
             );
         }
 
-        if (empty($results)) {
-            Api6::empty('shout', $input['api_format']);
-
-            return false;
-        }
-
+        // no empty-envelope short circuit: the populated response is a bare `shout: []` too
         ob_end_clean();
         switch ($input['api_format']) {
             case 'json':

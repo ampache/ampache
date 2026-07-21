@@ -202,6 +202,8 @@ class Api
                         foreach ($value[1] as $key => $val) {
                             $filter .= "\t\t<$widget_type id=\"$key\"><![CDATA[" . $val . "]]></$widget_type>\n";
                         }
+                    } else {
+                        $filter = "\t\t<$widget_type><![CDATA[" . $value[1] . "]]></$widget_type>\n";
                     }
                 } elseif (($name === 'values' || $name === 'subtypes') && is_array($value)) {
                     $filter = '';
