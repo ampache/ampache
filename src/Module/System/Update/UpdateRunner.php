@@ -87,6 +87,21 @@ final class UpdateRunner implements UpdateRunnerInterface
         // Prevent the script from timing out, which could be bad
         set_time_limit(0);
 
+        // Migration\V8\Migration800023 needs no rollback. It corrected art mime types that had been
+        // built from the uploaded filename (`image/jpg`, which is not a registered type, and
+        // `image/JPG` for an upper case name) to the type read from the image data itself. Ampache7
+        // reads the stored value and serves it as the Content-Type, and `image/jpeg` is exactly what
+        // its own art gathering writes, so restoring the old values would only reintroduce the bug.
+
+        if ($currentVersion >= 800022) {
+            // Migration\V8\Migration800022 (restore the preference deleted by the migration)
+            // Ampache7 still gates the embedded web player on this preference -- without it playback
+            // falls back to the popup window -- along with autoplay next/append and the SSE catalog worker
+            if (!Preference::insert('ajax_load', 'Ajax page load', '1', AccessLevelEnum::USER->value, 'boolean', 'interface')) {
+                throw new UpdateFailedException();
+            }
+        }
+
         if ($currentVersion >= 800021) {
             // Migration\V8\Migration800021 (Ampache7 has no mini player interface)
             if (!Preference::delete('mini_player')) {
