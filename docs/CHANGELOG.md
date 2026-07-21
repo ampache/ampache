@@ -69,6 +69,10 @@
 * Theme
   * Home Dashboard (`homedash`) rows stay on a single line and clip at the edge instead of wrapping to new lines
   * Personal Favorites (`personalfav`) list scrolls horizontally instead of wrapping
+* Plugins
+  * New installs enable the `Home Dashboard`, `Catalog Favorites` and `Personal Favorites` plugins
+  * New installs disable `home_moment_albums` and `home_moment_videos`; the home plugins cover the same ground
+  * Existing installs keep whichever plugins and home settings they already have
 * `composer syntax` now runs a cross-platform PHP linter (`resources/scripts/tests/syntax.php`) so the check works on Windows (replaces `syntax.sh`)
 * Transcoding
   * Bitrate preferences (`transcode_bitrate`, `max_bit_rate`, `min_bit_rate`) are stored and shown in bits per second (bps); existing `transcode_bitrate` values are migrated on database update 800018
