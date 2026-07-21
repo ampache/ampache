@@ -40,6 +40,7 @@ we will keep on 6.9.x and resume build number versioning until Ampache 8
   * Version and docstring inconsistencies between API versions
   * Empty object lookups now report the parameter that failed instead of `empty`
   * A `version` lower than 3 (e.g. `version=2`) rolled up to no version at all instead of the oldest enabled one
+  * democratic: `vote` returns the real vote count for each song. It was counted from the item's position in the response instead of its `track_id`, so the number was meaningless
 * REST
   * `preferences/{preference_name}` returned the whole preference list and ignored the name
   * `POST {type}/{id}/share` resolved to `share` (fetch a share) instead of `share_create`
