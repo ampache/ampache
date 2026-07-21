@@ -74,22 +74,25 @@ if (!isset($_SESSION['login']) || !$_SESSION['login']) {
             // every screen size: click the trigger to open/close, click elsewhere or
             // pick an item to close. (Hover-only menus vanish on mouse-out and are
             // unreliable on touch.) Delegated on document because the rightbar is
-            // re-rendered by AJAX.
-            $(document).on('click', '#rightbar li', function (e) {
-                if (!$(this).children('.submenu').length) return;
-                if ($(e.target).closest('.submenu').length) return; // taps inside = selections
-                var wasOpen = $(this).hasClass('submenu-open');
-                $('#rightbar li.submenu-open').removeClass('submenu-open');
-                if (!wasOpen) $(this).addClass('submenu-open');
-            });
-            $(document).on('click', '#rightbar .submenu a', function () {
-                $('#rightbar li.submenu-open').removeClass('submenu-open');
-            });
-            $(document).on('click', function (e) {
-                if (!$(e.target).closest('#rightbar').length) {
+            // re-rendered by AJAX. Guarded because pages without a rightbar (the login
+            // form) render this footer without ever loading jQuery.
+            if (typeof jQuery !== 'undefined') {
+                $(document).on('click', '#rightbar li', function (e) {
+                    if (!$(this).children('.submenu').length) return;
+                    if ($(e.target).closest('.submenu').length) return; // taps inside = selections
+                    var wasOpen = $(this).hasClass('submenu-open');
                     $('#rightbar li.submenu-open').removeClass('submenu-open');
-                }
-            });
+                    if (!wasOpen) $(this).addClass('submenu-open');
+                });
+                $(document).on('click', '#rightbar .submenu a', function () {
+                    $('#rightbar li.submenu-open').removeClass('submenu-open');
+                });
+                $(document).on('click', function (e) {
+                    if (!$(e.target).closest('#rightbar').length) {
+                        $('#rightbar li.submenu-open').removeClass('submenu-open');
+                    }
+                });
+            }
         </script>
     </body>
 </html>

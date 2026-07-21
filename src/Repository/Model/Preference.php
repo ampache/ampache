@@ -212,6 +212,7 @@ class Preference extends database_object
         'localplay_controller',
         'localplay_level',
         'lock_songs',
+        'mini_player',
         'notify_email',
         'now_playing_per_user',
         'of_the_moment',
@@ -944,6 +945,7 @@ class Preference extends database_object
             'mail_enable',
             'mb_overwrite_name',
             'memory_cache',
+            'mini_player',
             'no_symlinks',
             'notify_email',
             'now_playing_per_user',
@@ -1473,6 +1475,9 @@ class Preference extends database_object
                     break;
                 case 'show_wrapped':
                     Dba::write($pref_sql, ['show_wrapped', '1', 'Enable access to your personal "Spotify Wrapped" from your user page', AccessLevelEnum::USER->value, 'bool', 'interface', 'privacy']);
+                    break;
+                case 'mini_player':
+                    Dba::write($pref_sql, ['mini_player', '0', 'Lock this user into the mini player interface', AccessLevelEnum::ADMIN->value, 'boolean', 'interface', 'theme']);
                     break;
                 case 'sidebar_hide_switcher':
                     Dba::write($pref_sql, ['sidebar_hide_switcher', '0', 'Hide sidebar switcher arrows', AccessLevelEnum::USER->value, 'boolean', 'interface', 'sidebar']);
@@ -2023,6 +2028,7 @@ class Preference extends database_object
             'matomo_site_id' => 'Matomo Site ID',
             'matomo_url' => 'Matomo URL',
             'mb_overwrite_name' => 'Overwrite Artist names that match an mbid',
+            'mini_player' => 'Lock this user into the mini player interface',
             'mpd_active' => 'MPD Active Instance',
             'notify_email' => 'Allow E-mail notifications',
             'now_playing_per_user' => 'Now Playing filtered per user',

@@ -336,6 +336,7 @@ return [
     WebPlayer\ShowAction::class => autowire(WebPlayer\ShowAction::class),
     ShowEmbeddedAction::class => autowire(ShowEmbeddedAction::class),
     Index\ShowAction::class => autowire(Index\ShowAction::class),
+    MiniPlayer\ShowAction::class => autowire(MiniPlayer\ShowAction::class),
     Utility\ShowAction::class => autowire(Utility\ShowAction::class),
     ClearAction::class => autowire(ClearAction::class),
     Update\ShowAction::class => autowire(Update\ShowAction::class),

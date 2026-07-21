@@ -28,6 +28,9 @@ namespace Ampache\Module\Util;
 use Ampache\Config\AmpConfig;
 use Ampache\Config\ConfigContainerInterface;
 use Ampache\Module\Api\Api;
+use Ampache\Module\Authorization\Access;
+use Ampache\Module\Authorization\AccessLevelEnum;
+use Ampache\Module\Authorization\AccessTypeEnum;
 use Ampache\Module\Playback\Localplay\LocalPlay;
 use Ampache\Module\Playback\Localplay\LocalPlayTypeEnum;
 use Ampache\Module\Playback\Stream;
@@ -830,6 +833,7 @@ class Ui implements UiInterface
             case 'libitem_contextmenu':
             case 'lock_songs':
             case 'mb_overwrite_name':
+            case 'mini_player':
             case 'no_symlinks':
             case 'notify_email':
             case 'now_playing_per_user':
@@ -1486,6 +1490,24 @@ class Ui implements UiInterface
 
     public function showHeader(): void
     {
+        // Users locked into the mini player never see the full interface. This is the only caller of
+        // header.inc.php so it covers every full page; ajax, stream, play, util, image and the API
+        // don't come through here, so playback and artwork are untouched. m.php builds its own header
+        // so there is no redirect loop. NOTE: this hides the interface, it does not replace access
+        // levels; they remain the thing that actually gates data.
+        $user = Core::get_global('user');
+        if (
+            $user instanceof User
+            && $user->getId() > 0
+            && !headers_sent()
+            && !Access::check(AccessTypeEnum::INTERFACE, AccessLevelEnum::ADMIN)
+            && Preference::get_by_user($user->getId(), 'mini_player')
+        ) {
+            header('Location: ' . AmpConfig::get_web_path() . '/m.php');
+
+            exit;
+        }
+
         require_once self::find_template('header.inc.php');
     }
 

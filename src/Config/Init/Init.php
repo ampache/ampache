@@ -92,6 +92,25 @@ final readonly class Init
             );
         }
 
+        // Hand the requested page to the login form so it can send you back there afterwards.
+        // Without this a pasted or bookmarked deep link always lands on index.php after logging in.
+        if (
+            $destination === 'login.php'
+            && Core::get_server('REQUEST_METHOD') === 'GET'
+            && !empty($_SERVER['REQUEST_URI'])
+            && isset($_SERVER['HTTP_HOST'])
+        ) {
+            // REQUEST_URI is used raw here; Core::get_server() would htmlspecialchars the query
+            // separators and break the url. It gets urlencoded now and validated against web_path
+            // before it's used or displayed.
+            $destination .= '?referrer=' . urlencode(sprintf(
+                '%s://%s%s',
+                $protocol,
+                Core::get_server('HTTP_HOST'),
+                (string) $_SERVER['REQUEST_URI']
+            ));
+        }
+
         header(sprintf(
             'Location: %s/%s',
             $path,

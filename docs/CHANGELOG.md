@@ -28,6 +28,11 @@
   * Nothing is discarded: media rows keep their exact `date`, `agent` and location for streams, skips and downloads, so a consolidate/restore cycle is lossless
   * Play counts, `played` flags and streamed data size stay exact while consolidated; period-based statistics (trending, recent, graphs, Last.fm export), smart playlist play-history rules and play count sorting only see the retained window
   * Example systemd unit and timer in `docs/examples`
+* Mini player
+  * New `m.php` page (`/m` where mod_rewrite is available) showing only the `home` category plugins and the web player, for small screens and simple accounts
+  * New `mini_player` preference locks a user into that page; it hides the rest of the interface but is not an access control, user access levels still decide what data is reachable
+  * Logging in returns you to the page you originally asked for, including `index.php#page.php?...` links
+  * New `Mini player` checkbox on the login form to land there on purpose; the choice is remembered
 * Database
   * New `api_enable_8` preference to enable/disable API v8 responses per user
   * New database tables `folder` and `folder_map`
