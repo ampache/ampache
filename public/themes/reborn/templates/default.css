@@ -575,8 +575,14 @@ div.registerfield.center {
 }
 
 #registerbutton,
-#lostpasswordbutton {
+#lostpasswordbutton,
+#miniplayerbutton {
     flex: 0 0 auto;
+}
+
+/* the mini player button only sets where you land after logging in, so show which one is active */
+#loginPage #miniplayerbutton.selected {
+    font-weight: bold;
 }
 
 /* Push the lost-password link to the right even when it is the only link on the row. */

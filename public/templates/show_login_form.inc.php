@@ -56,18 +56,28 @@ if (!$logo_url) {
 }
 
 // Init::redirect() hands us the page you actually asked for; fall back to the browser referrer.
+// $_POST comes first so a failed attempt re-renders the form with the destination still attached,
+// otherwise a wrong password would quietly drop you back to the index page after the retry.
 // Only ever emit our own urls, the login action validates this again before redirecting to it.
-$referrer = (string) ($_GET['referrer'] ?? Core::get_server('HTTP_REFERER'));
-if ($referrer !== '' && !str_starts_with($referrer, $web_path)) {
+$referrer = (string) ($_POST['referrer'] ?? $_GET['referrer'] ?? Core::get_server('HTTP_REFERER'));
+if (
+    $referrer !== ''
+    && (
+        !str_starts_with($referrer, $web_path)
+        // HTTP_REFERER is the login page itself on a retry; that isn't somewhere to send anyone
+        || str_contains($referrer, 'login.php')
+    )
+) {
     $referrer = '';
 }
 
-// Tick the box when you were on your way to the mini player (m.php or the /m rewrite) so logging
-// in doesn't drop you somewhere else, or when you asked for it last time.
-$mini_referrer = ($referrer !== '' && preg_match('~/m(\.php)?(\?|$)~', $referrer) === 1);
-$mini_checked  = ($mini_referrer || (isset($_COOKIE['ampache_mini']) && $_COOKIE['ampache_mini'] === '1'))
-    ? 'checked="checked"'
-    : '';
+// The mini player button just points the referrer at the mini player, so logging in lands there.
+// Flagged when that's already where you're headed, so the button shows it's the current choice.
+$mini_url      = $web_path . '/m/';
+$mini_referrer = (
+    $referrer !== ''
+    && (str_starts_with($referrer, $mini_url) || rtrim($referrer, '/') === rtrim($mini_url, '/'))
+);
 
 $auth_methods = AmpConfig::get('auth_methods', []);
 $oidc_enabled = is_array($auth_methods) && in_array('oidc', $auth_methods, true);
@@ -124,10 +134,6 @@ $_SESSION['login'] = true; ?>
                         <label for="rememberme"><?php echo T_('Remember Me'); ?></label>
                         <input type="checkbox" id="rememberme" name="rememberme" <?php echo $remember_disabled; ?> />
                     </div>
-                    <div id="miniplayerfield">
-                        <label for="mini"><?php echo T_('Mini player'); ?></label>
-                        <input type="checkbox" id="mini" name="mini" value="1" <?php echo $mini_checked; ?> />
-                    </div>
                     <div class="formValidation">
                         <input class="button" id="loginbutton" type="submit" value="<?php echo T_('Login'); ?>" />
                         <input type="hidden" id="referrer" name="referrer" value="<?php echo scrub_out($referrer); ?>" />
@@ -142,6 +148,7 @@ $_SESSION['login'] = true; ?>
                 <?php if (Mailer::is_mail_enabled()) { ?>
                         <a class="button nohtml" id="lostpasswordbutton" href="<?php echo $web_path; ?>/lostpassword.php"><?php echo T_('Lost Password'); ?></a>
                 <?php } ?>
+                        <a class="button nohtml<?php echo ($mini_referrer) ? ' selected' : ''; ?>" id="miniplayerbutton" href="<?php echo $web_path; ?>/login.php?referrer=<?php echo urlencode($mini_url); ?>"><?php echo T_('Mini player'); ?></a>
                 <?php if ($oidc_enabled) { ?>
                         <a class="button nohtml" id="oidcbutton" href="<?php echo $web_path; ?>/login.php?action=oidc"><?php echo scrub_out(AmpConfig::get('oidc_button_text', T_('Sign in with OpenID Connect'))); ?></a>
                 <?php } ?>
@@ -150,11 +157,10 @@ $_SESSION['login'] = true; ?>
             <script>
                 // The server never sees the '#browse.php?...' part of a url, but browsers carry the
                 // fragment across the redirect that sent us here, so recover it from the address bar
-                // and hand it back as the referrer. Also remember the mini player choice for next time.
+                // and hand it back as the referrer.
                 (function () {
                     var webPath  = "<?php echo addslashes($web_path); ?>";
                     var referrer = document.getElementById('referrer');
-                    var mini     = document.getElementById('mini');
 
                     function keepHash() {
                         var hash = window.location.hash;
@@ -164,12 +170,7 @@ $_SESSION['login'] = true; ?>
                     }
 
                     keepHash();
-                    document.forms.login.addEventListener('submit', function () {
-                        keepHash();
-                        if (mini) {
-                            document.cookie = 'ampache_mini=' + (mini.checked ? '1' : '0') + '; max-age=31536000; <?php echo (make_bool(AmpConfig::get('cookie_secure'))) ? "path=/; secure; samesite=Strict" : "path=/; samesite=Strict"; ?>';
-                        }
-                    });
+                    document.forms.login.addEventListener('submit', keepHash);
                 })();
             </script>
             <?php if ($mobile_session) {

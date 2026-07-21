@@ -36,14 +36,4 @@
     RewriteCond %{QUERY_STRING} (^|&)object_type=user(&|$) [NC]
     RewriteCond %{QUERY_STRING} !(^|&)action=show_user_avatar(&|$) [NC]
     RewriteRule ^image\.php$ /image.php?action=show_user_avatar&%{QUERY_STRING} [R=302,L]
-
-    # MINI PLAYER - Short URL for the mini player page
-    # m.php always works on its own; this is only the pretty form (nginx never reads this file)
-    RewriteRule ^m$ m.php [L]
-</IfModule>
-
-# MultiViews content negotiation runs before mod_rewrite and answers /m with a 404 before the rule
-# above is ever reached. It's off in a stock Apache, so this is usually a no-op.
-<IfModule mod_negotiation.c>
-    Options -MultiViews
 </IfModule>
