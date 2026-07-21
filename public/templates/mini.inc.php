@@ -43,7 +43,12 @@ $logo_url   = Ui::get_logo_url();
 
 $_SESSION['login'] = false;
 
-$t_logout = T_('Log out'); ?>
+$t_logout   = T_('Log out');
+$t_playlist = T_('Show/Hide Playlist');
+
+// The theme swaps the loading spinner per colour, the same test show_html5_player_headers.inc.php makes
+$ajax_loader = $web_path . AmpConfig::get('theme_path', '/themes/reborn') . '/images/ajax-loader'
+    . ((AmpConfig::get('theme_color', 'dark') == 'light') ? '-light' : '') . '.gif'; ?>
 <!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="<?php echo $htmllang; ?>" lang="<?php echo $htmllang; ?>" dir="<?php echo is_rtl($site_lang) ? 'rtl' : 'ltr'; ?>">
     <head>
@@ -144,16 +149,35 @@ require_once Ui::find_template('show_html5_player_headers.inc.php'); ?>
         cursor: default;
     }
 
-    /* Loading indicator sits at the right of the header, padded clear of the logout button so it
-       never lands on top of it. It's display:none until an ajax call runs. */
+    /* Loading indicator sits at the right of the header, padded clear of the two action buttons
+       (which occupy the rightmost ~76px) so it never lands on top of them. Position only, so the
+       width, centring, colour and spinner all still come from the theme and it looks the same as
+       the one in the main interface. display:none until an ajax call runs. */
     #mini-page #ajax-loading {
         position: fixed;
         top: 14px;
-        right: 60px;
+        right: 92px;
         left: auto;
         transform: none;
         z-index: 10006;
-        text-align: right;
+    }
+
+    /* The temporary playlist drops out of the header button. The theme pins it under the main
+       interface header (top:66px, and 116px on mobile), which this page doesn't have, so tie it
+       to the mini header instead. .fixedrightbar is the scroll-pinned variant base.js adds; it
+       only engages on .rightbar-float, but neutralise it here so it can never ride up to -20px. */
+    #mini-page #rightbar,
+    #mini-page #rightbar.fixedrightbar {
+        top: 60px !important;
+        right: 10px !important;
+        left: auto !important;
+        max-height: calc(100vh - 180px);
+    }
+
+    #mini-page #rightbar .submenu,
+    #mini-page #rightbar .fixedrightbarsubmenu {
+        top: 96px !important;
+        right: 15px !important;
     }
 
     /* Keep the now playing art inside the player bar. On short viewports the skin's art is taller
@@ -190,6 +214,34 @@ require_once Ui::find_template('show_html5_player_headers.inc.php'); ?>
             padding: 5px;
         }
 
+        /* The theme restyles the loading indicator into a padded grey pill without a spinner below
+           768px. Put the desktop treatment back so it reads the same at every width; only the
+           background image needs !important, the theme kills that one outright. Scoped to the
+           media query so the desktop rule, which is already right, is left alone. The colour is
+           inherited from the body rather than left transparent because the header title fills the
+           row at these widths and would otherwise show through the text. */
+        #mini-page #ajax-loading {
+            top: 8px;
+            width: 120px;
+            padding: 0;
+            border-radius: 0;
+            background-color: inherit;
+            background-image: url('<?php echo $ajax_loader; ?>') !important;
+        }
+
+        /* the mini header is ~40px here, not the ~114px the theme's mobile rules assume */
+        #mini-page #rightbar,
+        #mini-page #rightbar.fixedrightbar {
+            top: 48px !important;
+            right: 5px !important;
+            max-height: calc(100vh - 165px);
+        }
+
+        #mini-page #rightbar .submenu,
+        #mini-page #rightbar .fixedrightbarsubmenu {
+            top: 84px !important;
+            right: 10px !important;
+        }
     }
 
     @media (max-width: 600px) {
@@ -215,7 +267,12 @@ require_once Ui::find_template('show_html5_player_headers.inc.php'); ?>
                 <img src="<?php echo $logo_url; ?>" title="<?php echo $site_title; ?>" alt="<?php echo $site_title; ?>">
             </span>
             <span id="mini-title"><?php echo $site_title; ?></span>
+            <a class="mini-action nohtml" href="javascript:ToggleRightbarVisibility();" title="<?php echo $t_playlist; ?>"><?php echo Ui::get_material_symbol('dock_to_left', $t_playlist); ?></a>
             <a class="mini-action nohtml" target="_top" href="<?php echo $web_path; ?>/logout.php?session=<?php echo Session::get(); ?>" title="<?php echo $t_logout; ?>"><?php echo Ui::get_material_symbol('logout', $t_logout); ?></a>
+        </div>
+
+        <div id="rightbar" class="rightbar-fixed">
+            <?php require_once Ui::find_template('rightbar.inc.php'); ?>
         </div>
 
         <div id="mini-content">
@@ -242,9 +299,10 @@ require_once Ui::find_template('show_html5_player_headers.inc.php'); ?>
         <script>
             // The mini player is a dead end: tiles play, they don't navigate. src/js/ajax.js delegates
             // link clicks on <body> and turns any in-site href into a hash page load, so catch them
-            // first on #mini-content (a descendant fires before body) and stop them there. Play and
-            // add buttons carry an onclick and are left alone, matching the ajax.js skip rules.
-            $('#mini-content').on('click', 'a', function (e) {
+            // first on #mini-content and #rightbar (a descendant fires before body) and stop them
+            // there. Play and add buttons carry an onclick and are left alone, matching the ajax.js
+            // skip rules; the queued item names in the playlist are plain links and get locked.
+            $('#mini-content, #rightbar').on('click', 'a', function (e) {
                 var link = $(this).attr('href');
                 if (typeof $(this).attr('onclick') !== 'undefined' || $(this).hasClass('nohtml')) {
                     return;
@@ -254,6 +312,25 @@ require_once Ui::find_template('show_html5_player_headers.inc.php'); ?>
                 }
                 e.preventDefault();
                 e.stopPropagation();
+            });
+
+            // Rightbar submenus (add-to-playlist / random items) are click-toggled, same as the main
+            // interface. These handlers live in footer.inc.php, which this page doesn't load, so they
+            // are repeated here. Delegated on document because the rightbar is re-rendered by ajax.
+            $(document).on('click', '#rightbar li', function (e) {
+                if (!$(this).children('.submenu').length) return;
+                if ($(e.target).closest('.submenu').length) return; // taps inside = selections
+                var wasOpen = $(this).hasClass('submenu-open');
+                $('#rightbar li.submenu-open').removeClass('submenu-open');
+                if (!wasOpen) $(this).addClass('submenu-open');
+            });
+            $(document).on('click', '#rightbar .submenu a', function () {
+                $('#rightbar li.submenu-open').removeClass('submenu-open');
+            });
+            $(document).on('click', function (e) {
+                if (!$(e.target).closest('#rightbar').length) {
+                    $('#rightbar li.submenu-open').removeClass('submenu-open');
+                }
             });
 
             // The player builds its own album, album disk, artist, title, lyrics and shout links as
