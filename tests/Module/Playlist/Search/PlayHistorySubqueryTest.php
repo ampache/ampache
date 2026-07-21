@@ -30,16 +30,6 @@ use Ampache\MockeryTestCase;
 
 class PlayHistorySubqueryTest extends MockeryTestCase
 {
-    private function off(): void
-    {
-        AmpConfig::set('stats_consolidate_threshold', 0, true);
-    }
-
-    private function on(): void
-    {
-        AmpConfig::set('stats_consolidate_threshold', 30, true);
-    }
-
     public function testCountWithConsolidationOffMatchesLegacySingleTableQuery(): void
     {
         $this->off();
@@ -58,13 +48,11 @@ class PlayHistorySubqueryTest extends MockeryTestCase
         $this->assertStringContainsString('`object_count_summary`.`user` = 5', $sql);
     }
 
-    public function testLastDateOnUsesSummaryDateTo(): void
+    public function testExistsOffIsLegacyGlobalQuery(): void
     {
-        $this->on();
-        $sql = PlayHistorySubquery::lastDate('song', ['stream', 'skip'], 7);
-        $this->assertStringContainsString('MAX(`date_to`) AS `date`', $sql);
-        $this->assertStringContainsString("`count_type` IN ('stream', 'skip')", $sql);
-        $this->assertStringContainsString('UNION ALL', $sql);
+        $this->off();
+        $expected = "(SELECT `object_id`, `object_type`, `user` FROM `object_count` WHERE `object_count`.`object_type` = 'album' AND `object_count`.`count_type` = 'stream' GROUP BY `object_id`, `object_type`, `user`)";
+        $this->assertSame($expected, PlayHistorySubquery::exists('album', ['stream'], null));
     }
 
     public function testExistsWithoutUserOmitsUserClause(): void
@@ -75,11 +63,13 @@ class PlayHistorySubqueryTest extends MockeryTestCase
         $this->assertStringContainsString('FROM `object_count_summary`', $sql);
     }
 
-    public function testExistsOffIsLegacyGlobalQuery(): void
+    public function testLastDateOnUsesSummaryDateTo(): void
     {
-        $this->off();
-        $expected = "(SELECT `object_id`, `object_type`, `user` FROM `object_count` WHERE `object_count`.`object_type` = 'album' AND `object_count`.`count_type` = 'stream' GROUP BY `object_id`, `object_type`, `user`)";
-        $this->assertSame($expected, PlayHistorySubquery::exists('album', ['stream'], null));
+        $this->on();
+        $sql = PlayHistorySubquery::lastDate('song', ['stream', 'skip'], 7);
+        $this->assertStringContainsString('MAX(`date_to`) AS `date`', $sql);
+        $this->assertStringContainsString("`count_type` IN ('stream', 'skip')", $sql);
+        $this->assertStringContainsString('UNION ALL', $sql);
     }
 
     public function testMultipleCountTypesRenderInList(): void
@@ -87,5 +77,15 @@ class PlayHistorySubqueryTest extends MockeryTestCase
         $this->off();
         $sql = PlayHistorySubquery::count('song', ['stream', 'skip'], 1);
         $this->assertStringContainsString("`object_count`.`count_type` IN ('stream', 'skip')", $sql);
+    }
+
+    private function off(): void
+    {
+        AmpConfig::set('stats_consolidate_threshold', 0, true);
+    }
+
+    private function on(): void
+    {
+        AmpConfig::set('stats_consolidate_threshold', 30, true);
     }
 }

@@ -144,16 +144,16 @@ require_once Ui::find_template('show_html5_player_headers.inc.php'); ?>
         cursor: default;
     }
 
-    /* Loading indicator sits in the middle of the header rather than off in a corner. It's
-       display:none until an ajax call runs, so it never fights the title for space. */
+    /* Loading indicator sits at the right of the header, padded clear of the logout button so it
+       never lands on top of it. It's display:none until an ajax call runs. */
     #mini-page #ajax-loading {
         position: fixed;
         top: 14px;
-        left: 50%;
-        right: auto;
-        transform: translateX(-50%);
+        right: 60px;
+        left: auto;
+        transform: none;
         z-index: 10006;
-        text-align: center;
+        text-align: right;
     }
 
     /* Keep the now playing art inside the player bar. On short viewports the skin's art is taller
