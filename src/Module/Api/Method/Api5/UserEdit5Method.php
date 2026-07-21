@@ -61,7 +61,7 @@ final class UserEdit5Method implements MethodInterface
      * city = (string) $city //optional
      * disable = (integer) 0,1 true to disable, false to enable //optional
      * group = (integer) Catalog filter group for the new user //optional, default = 0
-     * maxbitrate = (integer) $maxbitrate //optional
+     * maxbitrate = (integer) $maxbitrate in kbps //optional
      * fullname_public = (integer) 0,1 true to enable, false to disable using fullname in public display //optional
      * reset_apikey = (integer) 0,1 true to reset a user Api Key //optional
      * reset_streamtoken = (integer) 0,1 true to reset a user Stream Token //optional

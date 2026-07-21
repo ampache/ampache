@@ -169,7 +169,7 @@ final class GetExternalMetadataMethod implements MethodInterface
         }
 
         $results = [
-            'object_id' => $objectId,
+            'object_id' => ($apiVersion >= 8) ? (string) $objectId : $objectId,
             'object_type' => $type,
             'plugin' => [],
         ];

@@ -389,6 +389,12 @@ class Playlist extends playlist_object
 
         $sql = "DELETE FROM `object_count` WHERE `object_type`='playlist' AND `object_id` = ?";
         Dba::write($sql, [$this->id]);
+
+        $sql = "DELETE FROM `object_count_summary` WHERE `object_type`='playlist' AND `object_id` = ?";
+        Dba::write($sql, [$this->id]);
+
+        $sql = "DELETE FROM `object_count_archive` WHERE `object_type`='playlist' AND `object_id` = ?";
+        Dba::write($sql, [$this->id]);
         Catalog::count_table('playlist');
 
         return true;
@@ -478,9 +484,8 @@ class Playlist extends playlist_object
         $user    = Core::get_global('user');
         $user_id = $user->id ?? -1;
 
-        // Iterate over the object types
-        $sql             = 'SELECT DISTINCT `object_type` FROM `playlist_data`';
-        $db_object_types = Dba::read($sql);
+        $sql             = 'SELECT DISTINCT `object_type` FROM `playlist_data` WHERE `playlist` = ?';
+        $db_object_types = Dba::read($sql, [$this->id]);
 
         while ($row = Dba::fetch_assoc($db_object_types)) {
             $object_type = LibraryItemEnum::from($row['object_type']);
@@ -489,7 +494,7 @@ class Playlist extends playlist_object
 
             switch ($object_type) {
                 case LibraryItemEnum::SONG:
-                    $sql = 'SELECT `playlist_data`.`id`, `object_id`, `object_type`, `playlist_data`.`track`, `song`.`time` FROM `playlist_data` INNER JOIN `song` ON `playlist_data`.`object_id` = `song`.`id` WHERE `playlist_data`.`playlist` = ? AND `object_id` IS NOT NULL ';
+                    $sql = 'SELECT `playlist_data`.`id`, `object_id`, `object_type`, `playlist_data`.`track`, `song`.`time` FROM `playlist_data` INNER JOIN `song` ON `playlist_data`.`object_id` = `song`.`id` WHERE `playlist_data`.`playlist` = ? AND `playlist_data`.`object_type`="song" AND `object_id` IS NOT NULL ';
                     if (AmpConfig::get('catalog_filter')) {
                         if ($system) {
                             $sql .= 'AND `playlist_data`.`object_type`="song" AND `song`.`catalog` IN (SELECT `catalog_id` FROM `catalog_filter_group_map` WHERE `catalog_filter_group_map`.`group_id` = 0 AND `catalog_filter_group_map`.`enabled`=1) ';
@@ -502,7 +507,7 @@ class Playlist extends playlist_object
                     $sql .= 'ORDER BY `playlist_data`.`track`';
                     break;
                 case LibraryItemEnum::PODCAST_EPISODE:
-                    $sql = 'SELECT `playlist_data`.`id`, `object_id`, `object_type`, `playlist_data`.`track`, `podcast_episode`.`time` FROM `playlist_data` INNER JOIN `podcast_episode` ON `playlist_data`.`object_id` = `podcast_episode`.`id` WHERE `playlist_data`.`playlist` = ? AND `object_id` IS NOT NULL ';
+                    $sql = 'SELECT `playlist_data`.`id`, `object_id`, `object_type`, `playlist_data`.`track`, `podcast_episode`.`time` FROM `playlist_data` INNER JOIN `podcast_episode` ON `playlist_data`.`object_id` = `podcast_episode`.`id` WHERE `playlist_data`.`playlist` = ? AND `playlist_data`.`object_type`="podcast_episode" AND `object_id` IS NOT NULL ';
                     if (AmpConfig::get('catalog_filter')) {
                         if ($system) {
                             $sql .= 'AND `playlist_data`.`object_type`="podcast_episode" AND `podcast_episode`.`catalog` IN (SELECT `catalog_id` FROM `catalog_filter_group_map` WHERE `catalog_filter_group_map`.`group_id` = 0 AND `catalog_filter_group_map`.`enabled`=1) ';
@@ -515,7 +520,7 @@ class Playlist extends playlist_object
                     $sql .= 'ORDER BY `playlist_data`.`track`';
                     break;
                 case LibraryItemEnum::VIDEO:
-                    $sql = 'SELECT `playlist_data`.`id`, `object_id`, `object_type`, `playlist_data`.`track`, `video`.`time` FROM `playlist_data` INNER JOIN `video` ON `playlist_data`.`object_id` = `video`.`id` WHERE `playlist_data`.`playlist` = ? AND `object_id` IS NOT NULL ';
+                    $sql = 'SELECT `playlist_data`.`id`, `object_id`, `object_type`, `playlist_data`.`track`, `video`.`time` FROM `playlist_data` INNER JOIN `video` ON `playlist_data`.`object_id` = `video`.`id` WHERE `playlist_data`.`playlist` = ? AND `playlist_data`.`object_type`="video" AND `object_id` IS NOT NULL ';
                     if (AmpConfig::get('catalog_filter')) {
                         if ($system) {
                             $sql .= 'AND `playlist_data`.`object_type`="video" AND `video`.`catalog` IN (SELECT `catalog_id` FROM `catalog_filter_group_map` WHERE `catalog_filter_group_map`.`group_id` = 0 AND `catalog_filter_group_map`.`enabled`=1) ';
@@ -528,7 +533,8 @@ class Playlist extends playlist_object
                     $sql .= 'ORDER BY `playlist_data`.`track`';
                     break;
                 default:
-                    $sql = "SELECT `id`, `object_id`, `object_type`, `track`, 0 AS `time` FROM `playlist_data` WHERE `playlist` = ? AND `playlist_data`.`object_type` != 'song' AND `playlist_data`.`object_type` != 'podcast_episode' ORDER BY `track`";
+                    $sql      = "SELECT `id`, `object_id`, `object_type`, `track`, 0 AS `time` FROM `playlist_data` WHERE `playlist` = ? AND `object_type` = ? ORDER BY `track`";
+                    $params[] = $object_type->value;
                     debug_event(self::class, sprintf('get_items(): %s not handled', $object_type->value), 5);
             }
 
@@ -578,7 +584,7 @@ class Playlist extends playlist_object
                 . "WHERE `playlist_data`.`playlist` = ?  AND `playlist_data`.`object_type` IS NOT NULL ";
         } else {
             // check for a specific type of object
-            $sql = 'SELECT COUNT(`playlist_data`.`id`) AS `list_count` FROM `playlist_data` INNER JOIN `' . $type . '` ON `playlist_data`.`object_id` = `' . $type . '`.`id` WHERE `playlist_data`.`playlist` = ? AND `object_id` IS NOT NULL ';
+            $sql = 'SELECT COUNT(`playlist_data`.`id`) AS `list_count` FROM `playlist_data` INNER JOIN `' . $type . '` ON `playlist_data`.`object_id` = `' . $type . '`.`id` WHERE `playlist_data`.`playlist` = ? AND `playlist_data`.`object_type` = \'' . $type . '\' AND `object_id` IS NOT NULL ';
         }
 
         if (AmpConfig::get('catalog_filter')) {
@@ -627,9 +633,8 @@ class Playlist extends playlist_object
         $user    = Core::get_global('user');
         $user_id = $user->id ?? -1;
 
-        // Iterate over the object types
-        $sql             = 'SELECT DISTINCT `object_type` FROM `playlist_data`';
-        $db_object_types = Dba::read($sql);
+        $sql             = 'SELECT DISTINCT `object_type` FROM `playlist_data` WHERE `playlist` = ?';
+        $db_object_types = Dba::read($sql, [$this->id]);
 
         while ($row = Dba::fetch_assoc($db_object_types)) {
             $object_type = $row['object_type'];
@@ -653,8 +658,9 @@ class Playlist extends playlist_object
                     $sql .= 'ORDER BY RAND()';
                     break;
                 default:
-                    $sql = "SELECT `id`, `object_id`, `object_type`, `track` FROM `playlist_data` WHERE `playlist` = ? AND `playlist_data`.`object_type` != 'song' AND `playlist_data`.`object_type` != 'podcast_episode' AND `playlist_data`.`object_type` != 'live_stream' ORDER BY RAND()";
-                    debug_event(self::class, sprintf('get_items(): %s not handled', $object_type), 5);
+                    $sql      = "SELECT `id`, `object_id`, `object_type`, `track` FROM `playlist_data` WHERE `playlist` = ? AND `object_type` = ? ORDER BY RAND()";
+                    $params[] = $object_type;
+                    debug_event(self::class, sprintf('get_random_items(): %s not handled', $object_type), 5);
             }
 
             $sql .= (empty($limit))

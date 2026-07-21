@@ -84,8 +84,8 @@ class FriendsTimelineMethodTest extends MockeryTestCase
             ->once()
             ->andReturn([]);
 
-        $output->shouldReceive('writeEmpty')
-            ->with($apiVersion, 'activity')
+        $output->shouldReceive('timeline')
+            ->with($apiVersion, [])
             ->once()
             ->andReturn($result);
 

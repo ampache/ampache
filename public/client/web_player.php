@@ -24,7 +24,7 @@ declare(strict_types=1);
  */
 
 use Ampache\Module\Application\ApplicationRunner;
-use Ampache\Module\Application\WebPlayer\ShowAction;
+use Ampache\Module\Application\MiniPlayer\ShowAction;
 use Nyholm\Psr7Server\ServerRequestCreatorInterface;
 use Psr\Container\ContainerInterface;
 

@@ -324,6 +324,18 @@ final readonly class DefaultAction implements ApplicationActionInterface
             $referrer = (string) ($_POST['referrer'] ?? $_SESSION[OidcAuthenticationService::SESSION_REFERRER_KEY] ?? '');
             unset($_SESSION[OidcAuthenticationService::SESSION_REFERRER_KEY]);
 
+            // Users an admin has locked into the mini player go there whatever they asked for; a deep
+            // link would only be bounced back by the interface anyway.
+            $miniPath = sprintf('%s/m/', $web_path);
+            if (Preference::get_by_user($user->getId(), 'mini_player')) {
+                return $this->responseFactory
+                    ->createResponse(RFC7231::FOUND)
+                    ->withHeader(
+                        'Location',
+                        $miniPath
+                    );
+            }
+
             if (
                 $referrer !== ''
                 && str_starts_with($referrer, $web_path)

@@ -403,21 +403,21 @@ class User extends database_object
      */
     public static function get_play_size(int $user_id): int
     {
-        $params = [$user_id];
+        $params = [$user_id, $user_id];
         $total  = 0;
-        $sql_s  = "SELECT IFNULL(SUM(`size`)/1024/1024, 0) AS `size` FROM `object_count` LEFT JOIN `song` ON `song`.`id`=`object_count`.`object_id` AND `object_count`.`object_type` = 'song' AND `object_count`.`count_type` = 'stream' AND `object_count`.`user` = ?;";
+        $sql_s  = "SELECT (IFNULL(SUM(`size`)/1024/1024, 0) + (SELECT IFNULL(SUM(`song`.`size` * `object_count_summary`.`count`)/1024/1024, 0) FROM `object_count_summary` LEFT JOIN `song` ON `song`.`id` = `object_count_summary`.`object_id` WHERE `object_count_summary`.`object_type` = 'song' AND `object_count_summary`.`count_type` = 'stream' AND `object_count_summary`.`user` = ?)) AS `size` FROM `object_count` LEFT JOIN `song` ON `song`.`id`=`object_count`.`object_id` AND `object_count`.`object_type` = 'song' AND `object_count`.`count_type` = 'stream' AND `object_count`.`user` = ?;";
         $db_s   = Dba::read($sql_s, $params);
         while ($results = Dba::fetch_assoc($db_s)) {
             $total += (int) $results['size'];
         }
 
-        $sql_v = "SELECT IFNULL(SUM(`size`)/1024/1024, 0) AS `size` FROM `object_count` LEFT JOIN `video` ON `video`.`id`=`object_count`.`object_id` AND `object_count`.`count_type` = 'stream' AND `object_count`.`object_type` = 'video' AND `object_count`.`user` = ?;";
+        $sql_v = "SELECT (IFNULL(SUM(`size`)/1024/1024, 0) + (SELECT IFNULL(SUM(`video`.`size` * `object_count_summary`.`count`)/1024/1024, 0) FROM `object_count_summary` LEFT JOIN `video` ON `video`.`id` = `object_count_summary`.`object_id` WHERE `object_count_summary`.`object_type` = 'video' AND `object_count_summary`.`count_type` = 'stream' AND `object_count_summary`.`user` = ?)) AS `size` FROM `object_count` LEFT JOIN `video` ON `video`.`id`=`object_count`.`object_id` AND `object_count`.`count_type` = 'stream' AND `object_count`.`object_type` = 'video' AND `object_count`.`user` = ?;";
         $db_v  = Dba::read($sql_v, $params);
         while ($results = Dba::fetch_assoc($db_v)) {
             $total += (int) $results['size'];
         }
 
-        $sql_p = "SELECT IFNULL(SUM(`size`)/1024/1024, 0) AS `size` FROM `object_count`LEFT JOIN `podcast_episode` ON `podcast_episode`.`id`=`object_count`.`object_id` AND `object_count`.`count_type` = 'stream' AND `object_count`.`object_type` = 'podcast_episode' AND `object_count`.`user` = ?;";
+        $sql_p = "SELECT (IFNULL(SUM(`size`)/1024/1024, 0) + (SELECT IFNULL(SUM(`podcast_episode`.`size` * `object_count_summary`.`count`)/1024/1024, 0) FROM `object_count_summary` LEFT JOIN `podcast_episode` ON `podcast_episode`.`id` = `object_count_summary`.`object_id` WHERE `object_count_summary`.`object_type` = 'podcast_episode' AND `object_count_summary`.`count_type` = 'stream' AND `object_count_summary`.`user` = ?)) AS `size` FROM `object_count`LEFT JOIN `podcast_episode` ON `podcast_episode`.`id`=`object_count`.`object_id` AND `object_count`.`count_type` = 'stream' AND `object_count`.`object_type` = 'podcast_episode' AND `object_count`.`user` = ?;";
         $db_p  = Dba::read($sql_p, $params);
         while ($results = Dba::fetch_assoc($db_p)) {
             $total += (int) $results['size'];
@@ -1009,7 +1009,7 @@ class User extends database_object
             }
         }
 
-        $sql        = "SELECT `preference`.`name`, `preference`.`description`, `preference`.`category`, `preference`.`subcategory`, preference.level, user_preference.value FROM `preference` INNER JOIN `user_preference` ON `user_preference`.`preference` = `preference`.`id` WHERE `user_preference`.`user` = ? " . $user_limit . " ORDER BY `preference`.`category`, `preference`.`subcategory`, `preference`.`description`";
+        $sql        = "SELECT `preference`.`name`, `preference`.`description`, `preference`.`category`, `preference`.`subcategory`, `preference`.`type`, preference.level, user_preference.value FROM `preference` INNER JOIN `user_preference` ON `user_preference`.`preference` = `preference`.`id` WHERE `user_preference`.`user` = ? " . $user_limit . " ORDER BY `preference`.`category`, `preference`.`subcategory`, `preference`.`description`";
         $db_results = Dba::read($sql, [$user_id]);
         $results    = [];
         $type_array = [];
@@ -1027,6 +1027,7 @@ class User extends database_object
                 'description' => T_($row['description']),
                 'value' => $row['value'],
                 'subcategory' => $row['subcategory'],
+                'type' => $row['type'],
             ];
             $results[$type] = [
                 'title' => ucwords((string) $type),

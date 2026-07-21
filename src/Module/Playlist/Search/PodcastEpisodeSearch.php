@@ -221,7 +221,7 @@ final class PodcastEpisodeSearch implements SearchInterface
 
                     $table['last_play'] .= (strpos($table['last_play'], "last_play_" . $my_type . "_" . $search_user_id))
                         ? ""
-                        : "LEFT JOIN (SELECT `object_id`, `object_type`, `user`, MAX(`date`) AS `date` FROM `object_count` WHERE `object_count`.`object_type` = '" . $my_type . "' AND `object_count`.`count_type` = 'stream' AND `object_count`.`user` = " . $search_user_id . " GROUP BY `object_id`, `object_type`, `user`) AS `last_play_" . $my_type . "_" . $search_user_id . "` ON `podcast_episode`.`id` = `last_play_" . $my_type . "_" . $search_user_id . "`.`object_id` AND `last_play_" . $my_type . "_" . $search_user_id . "`.`object_type` = '" . $my_type . "'";
+                        : "LEFT JOIN " . PlayHistorySubquery::lastDate($my_type, ['stream'], $search_user_id) . " AS `last_play_" . $my_type . "_" . $search_user_id . "` ON `podcast_episode`.`id` = `last_play_" . $my_type . "_" . $search_user_id . "`.`object_id` AND `last_play_" . $my_type . "_" . $search_user_id . "`.`object_type` = '" . $my_type . "'";
                     $where[] = "`last_play_" . $my_type . "_" . $search_user_id . sprintf('`.`date` %s (UNIX_TIMESTAMP() - (', $operator_sql) . (int) $input . " * 86400))";
                     break;
                 case 'last_skip':
@@ -232,7 +232,7 @@ final class PodcastEpisodeSearch implements SearchInterface
 
                     $table['last_skip'] .= (strpos($table['last_skip'], "last_skip_" . $my_type . "_" . $search_user_id))
                         ? ""
-                        : "LEFT JOIN (SELECT `object_id`, `object_type`, `user`, MAX(`date`) AS `date` FROM `object_count` WHERE `object_count`.`object_type` = '" . $my_type . "' AND `object_count`.`count_type` = 'skip' AND `object_count`.`user` = " . $search_user_id . " GROUP BY `object_id`, `object_type`, `user`) AS `last_skip_" . $my_type . "_" . $search_user_id . "` ON `podcast_episode`.`id` = `last_skip_" . $my_type . "_" . $search_user_id . "`.`object_id` AND `last_skip_" . $my_type . "_" . $search_user_id . "`.`object_type` = '" . $my_type . "' ";
+                        : "LEFT JOIN " . PlayHistorySubquery::lastDate($my_type, ['skip'], $search_user_id) . " AS `last_skip_" . $my_type . "_" . $search_user_id . "` ON `podcast_episode`.`id` = `last_skip_" . $my_type . "_" . $search_user_id . "`.`object_id` AND `last_skip_" . $my_type . "_" . $search_user_id . "`.`object_type` = '" . $my_type . "' ";
                     $where[] = "`last_skip_" . $my_type . "_" . $search_user_id . sprintf('`.`date` %s (UNIX_TIMESTAMP() - (', $operator_sql) . (int) $input . " * 86400))";
                     break;
                 case 'last_play_or_skip':
@@ -243,7 +243,7 @@ final class PodcastEpisodeSearch implements SearchInterface
 
                     $table['last_play_or_skip'] .= (strpos($table['last_play_or_skip'], "last_play_or_skip_" . $my_type . "_" . $search_user_id))
                         ? ""
-                        : "LEFT JOIN (SELECT `object_id`, `object_type`, `user`, MAX(`date`) AS `date` FROM `object_count` WHERE `object_count`.`object_type` = '" . $my_type . "' AND `object_count`.`count_type` IN ('stream', 'skip') AND `object_count`.`user` = " . $search_user_id . " GROUP BY `object_id`, `object_type`, `user`) AS `last_play_or_skip_" . $my_type . "_" . $search_user_id . "` ON `podcast_episode`.`id` = `last_play_or_skip_" . $my_type . "_" . $search_user_id . "`.`object_id` AND `last_play_or_skip_" . $my_type . "_" . $search_user_id . "`.`object_type` = '" . $my_type . "'";
+                        : "LEFT JOIN " . PlayHistorySubquery::lastDate($my_type, ['stream', 'skip'], $search_user_id) . " AS `last_play_or_skip_" . $my_type . "_" . $search_user_id . "` ON `podcast_episode`.`id` = `last_play_or_skip_" . $my_type . "_" . $search_user_id . "`.`object_id` AND `last_play_or_skip_" . $my_type . "_" . $search_user_id . "`.`object_type` = '" . $my_type . "'";
                     $where[] = "`last_play_or_skip_" . $my_type . "_" . $search_user_id . sprintf('`.`date` %s (UNIX_TIMESTAMP() - (', $operator_sql) . (int) $input . " * 86400))";
                     break;
                 case 'days_added':
@@ -272,7 +272,7 @@ final class PodcastEpisodeSearch implements SearchInterface
 
                     $table['myplayed'] .= (strpos($table['myplayed'], "myplayed_" . $my_type . "_" . $search_user_id))
                         ? ""
-                        : "LEFT JOIN (SELECT `object_id`, `object_type`, `user`, COUNT(`object_id`) AS `total` FROM `object_count` WHERE `object_count`.`object_type` = '" . $my_type . "' AND `object_count`.`count_type` = 'stream' AND `object_count`.`user` = " . $search_user_id . " GROUP BY `object_id`, `object_type`, `user`) AS `myplayed_" . $my_type . "_" . $search_user_id . "` ON `podcast_episode`.`id` = `myplayed_" . $my_type . "_" . $search_user_id . "`.`object_id` AND `myplayed_" . $my_type . "_" . $search_user_id . "`.`object_type` = '" . $my_type . "'";
+                        : "LEFT JOIN " . PlayHistorySubquery::count($my_type, ['stream'], $search_user_id) . " AS `myplayed_" . $my_type . "_" . $search_user_id . "` ON `podcast_episode`.`id` = `myplayed_" . $my_type . "_" . $search_user_id . "`.`object_id` AND `myplayed_" . $my_type . "_" . $search_user_id . "`.`object_type` = '" . $my_type . "'";
                     $where[]      = "`myplayed_" . $my_type . "_" . $search_user_id . sprintf('`.`total` %s ?', $operator_sql);
                     $parameters[] = $input;
                     break;
@@ -284,7 +284,7 @@ final class PodcastEpisodeSearch implements SearchInterface
 
                     $table['myskipped'] .= (strpos($table['myskipped'], "myskipped_" . $my_type . "_" . $search_user_id))
                         ? ""
-                        : "LEFT JOIN (SELECT `object_id`, `object_type`, `user`, COUNT(`object_id`) AS `total` FROM `object_count` WHERE `object_count`.`object_type` = '" . $my_type . "' AND `object_count`.`count_type` = 'skip' AND `object_count`.`user` = " . $search_user_id . " GROUP BY `object_id`, `object_type`, `user`) AS `myskipped_" . $my_type . "_" . $search_user_id . "` ON `podcast_episode`.`id` = `myskipped_" . $my_type . "_" . $search_user_id . "`.`object_id` AND `myskipped_" . $my_type . "_" . $search_user_id . "`.`object_type` = '" . $my_type . "' ";
+                        : "LEFT JOIN " . PlayHistorySubquery::count($my_type, ['skip'], $search_user_id) . " AS `myskipped_" . $my_type . "_" . $search_user_id . "` ON `podcast_episode`.`id` = `myskipped_" . $my_type . "_" . $search_user_id . "`.`object_id` AND `myskipped_" . $my_type . "_" . $search_user_id . "`.`object_type` = '" . $my_type . "' ";
                     $where[]      = "`myskipped_" . $my_type . "_" . $search_user_id . sprintf('`.`total` %s ?', $operator_sql);
                     $parameters[] = $input;
                     break;
@@ -296,7 +296,7 @@ final class PodcastEpisodeSearch implements SearchInterface
 
                     $table['myplayed_or_skip'] .= (strpos($table['myplayed_or_skip'], "myplayed_or_skip_" . $my_type . "_" . $search_user_id))
                         ? ""
-                        : "LEFT JOIN (SELECT `object_id`, `object_type`, `user`, COUNT(`object_id`) AS `total` FROM `object_count` WHERE `object_count`.`object_type` = '" . $my_type . "' AND `object_count`.`count_type` IN ('stream', 'skip') AND `object_count`.`user` = " . $search_user_id . " GROUP BY `object_id`, `object_type`, `user`) AS `myplayed_or_skip_" . $my_type . "_" . $search_user_id . "` ON `podcast_episode`.`id` = `myplayed_or_skip_" . $my_type . "_" . $search_user_id . "`.`object_id` AND `myplayed_or_skip_" . $my_type . "_" . $search_user_id . "`.`object_type` = '" . $my_type . "'";
+                        : "LEFT JOIN " . PlayHistorySubquery::count($my_type, ['stream', 'skip'], $search_user_id) . " AS `myplayed_or_skip_" . $my_type . "_" . $search_user_id . "` ON `podcast_episode`.`id` = `myplayed_or_skip_" . $my_type . "_" . $search_user_id . "`.`object_id` AND `myplayed_or_skip_" . $my_type . "_" . $search_user_id . "`.`object_type` = '" . $my_type . "'";
                     $where[]      = "`myplayed_or_skip_" . $my_type . "_" . $search_user_id . sprintf('`.`total` %s ?', $operator_sql);
                     $parameters[] = $input;
                     break;
@@ -342,7 +342,7 @@ final class PodcastEpisodeSearch implements SearchInterface
 
                     $table['myplayed'] .= (strpos($table['myplayed'], "myplayed_" . $my_type . "_" . $search_user_id))
                         ? ""
-                        : "LEFT JOIN (SELECT `object_id`, `object_type`, `user` FROM `object_count` WHERE `object_count`.`object_type` = '" . $my_type . "' AND `object_count`.`count_type` = 'stream' AND `object_count`.`user` = " . $search_user_id . " GROUP BY `object_id`, `object_type`, `user`) AS `myplayed_" . $my_type . "_" . $search_user_id . "` ON `podcast_episode`.`id` = `myplayed_" . $my_type . "_" . $search_user_id . "`.`object_id` AND `myplayed_" . $my_type . "_" . $search_user_id . "`.`object_type` = '" . $my_type . "'";
+                        : "LEFT JOIN " . PlayHistorySubquery::exists($my_type, ['stream'], $search_user_id) . " AS `myplayed_" . $my_type . "_" . $search_user_id . "` ON `podcast_episode`.`id` = `myplayed_" . $my_type . "_" . $search_user_id . "`.`object_id` AND `myplayed_" . $my_type . "_" . $search_user_id . "`.`object_type` = '" . $my_type . "'";
                     $where[] = "`myplayed_" . $my_type . "_" . $search_user_id . ('`.`object_id` ' . $operator_sql);
                     break;
                 case 'added':

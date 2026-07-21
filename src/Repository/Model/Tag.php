@@ -470,7 +470,7 @@ class Tag extends database_object implements library_item, displayable_item, con
      * This gets the objects from a specified tag and returns an array of object ids, nothing more
      * @return int[]
      */
-    public static function get_tag_objects(string $type, int $tag_id, int $count = 0, int $offset = 0): array
+    public static function get_tag_objects(string $type, int $tag_id, int $count = 0, int $offset = 0, int $catalog_id = 0): array
     {
         if (!InterfaceImplementationChecker::is_library_item($type)) {
             return [];
@@ -491,6 +491,11 @@ class Tag extends database_object implements library_item, displayable_item, con
         $sql = sprintf('SELECT DISTINCT `tag_map`.`object_id` FROM `tag_map` WHERE %s `tag_map`.`object_type` = ?', $tag_sql);
         if (AmpConfig::get('catalog_disable') && in_array($type, ['artist', 'album', 'album_disk', 'song', 'video'])) {
             $sql .= "AND " . Catalog::get_enable_filter($type, '`tag_map`.`object_id`');
+        }
+
+        $catalog_sql = Catalog::get_catalog_id_filter($type, '`tag_map`.`object_id`', $catalog_id);
+        if ($catalog_sql !== '') {
+            $sql .= " AND " . $catalog_sql;
         }
 
         $sql .= $limit_sql;

@@ -139,6 +139,9 @@ final class PreferenceEditMethod implements MethodInterface
         }
 
         $results = Preference::get($prefName, $userId);
+        if ($apiVersion >= 8 && $results !== []) {
+            $results[0]['id'] = (string) $results[0]['id'];
+        }
 
         $response->getBody()->write(
             $output->objectArray($apiVersion, $results[0], $results, 'preference')

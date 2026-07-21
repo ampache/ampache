@@ -33,6 +33,8 @@ use Slim\ResponseEmitter;
 
 final class JsonRestApiApplication implements ApiApplicationInterface
 {
+    use RequestParserTrait;
+
     private ApiHandlerInterface $apiHandler;
     private ApiOutputFactoryInterface $apiOutputFactory;
     private ConfigContainerInterface $configContainer;
@@ -112,9 +114,7 @@ final class JsonRestApiApplication implements ApiApplicationInterface
             $parameters['task'] = $task;
         }
 
-        $post = (in_array($method, ['POST', 'PATCH', 'PUT', 'DELETE']))
-            ? (array) $request->getParsedBody()
-            : [];
+        $post = $this->parseRequestBody($request);
 
         $request = $request->withQueryParams(
             array_merge(

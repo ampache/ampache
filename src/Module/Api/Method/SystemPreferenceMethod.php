@@ -104,6 +104,9 @@ final class SystemPreferenceMethod implements MethodInterface
         }
 
         $item = $this->preferenceItemBuilder->build($preference, $user);
+        if ($apiVersion >= 8) {
+            $item['id'] = (string) $item['id'];
+        }
 
         $response->getBody()->write(
             $output->objectArray($apiVersion, $item, [$item], 'preference')

@@ -175,7 +175,7 @@ $replaygain = (AmpConfig::get('theme_color', 'dark') == 'light')
             smoothPlayBar: true,
             toggleDuration: true,
             keyEnabled: true,
-            solution: "<?php echo (AmpConfig::get('webplayer_html5')) ? 'html' : ''; ?>",
+            solution: "html",
             nativeSupport: true,
             oggSupport: false,
             supplied: "mp3, flac, m4a, oga, ogg, wav, m3u, m3u8, m4v, m3u8v, m3uv, ogv, webmv, flv, rtmpv",
@@ -561,7 +561,7 @@ if ($isVideo === false) {
                         <div id="playlistshowbtn" class="action_button">
                             <a href="javascript:TogglePlaylistShow();"><?php echo Ui::get_material_symbol('playlist_play', addslashes(T_('Show/Hide Playlist'))); ?></a>
                         </div>
-                        <?php if (AmpConfig::get('webplayer_html5') && $isVideo === false) { ?>
+                        <?php if ($isVideo === false) { ?>
                         <div class="action_button">
                             <a href="javascript:ShowVisualizer();"><?php echo Ui::get_material_symbol('bubble_chart', addslashes(T_('Visualizer'))); ?></a>
                         </div>
@@ -596,7 +596,7 @@ if ($isVideo === false) {
                         </div>
                         <?php } ?>
                         <?php // ReplayGain and the Equalizer tap the <audio> element, so they do not apply to video
-                        if (AmpConfig::get('webplayer_html5') && $isVideo === false) { ?>
+                        if ($isVideo === false) { ?>
                             <div id="replaygainbtn" class="action_button">
                                 <a href="javascript:ToggleReplayGain();"><?php echo Ui::get_material_symbol('graphic_eq', addslashes(T_('ReplayGain'))); ?></a>
                             </div>

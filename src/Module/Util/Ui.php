@@ -28,8 +28,12 @@ namespace Ampache\Module\Util;
 use Ampache\Config\AmpConfig;
 use Ampache\Config\ConfigContainerInterface;
 use Ampache\Module\Api\Api;
+use Ampache\Module\Authorization\Access;
+use Ampache\Module\Authorization\AccessLevelEnum;
+use Ampache\Module\Authorization\AccessTypeEnum;
 use Ampache\Module\Playback\Localplay\LocalPlay;
 use Ampache\Module\Playback\Localplay\LocalPlayTypeEnum;
+use Ampache\Module\Playback\Stream;
 use Ampache\Module\System\Core;
 use Ampache\Module\System\Dba;
 use Ampache\Module\System\Plugin\PluginTypeEnum;
@@ -689,6 +693,7 @@ class Ui implements UiInterface
     public function createPreferenceInput(
         string $name,
         $value,
+        ?string $type = null,
     ): void {
         if (!Preference::has_access($name)) {
             if ($value == '1') {
@@ -704,10 +709,57 @@ class Ui implements UiInterface
             return;
         } // if we don't have access to it
 
+        // Transcoding-format preferences render as a capability-driven output-format picker.
+        // The available formats come from the configured `encode_args_<format>` keys.
+        if ($type === 'transcoding') {
+            $kind    = (str_contains($name, 'video')) ? 'video' : 'audio';
+            $formats = Stream::get_available_encode_formats($kind);
+            echo '<select name="' . $name . '">' . "\n";
+            $is_selected = (in_array($value, [null, '', '0'], true)) ? ' selected="selected"' : '';
+            echo '<option value=""' . $is_selected . '>' . T_('None (stream source format)') . "</option>\n";
+            foreach ($formats as $format) {
+                $is_selected = ((string) $value === $format) ? ' selected="selected"' : '';
+                echo '<option value="' . $format . '"' . $is_selected . '>' . $format . "</option>\n";
+            }
+            echo "</select>\n";
+
+            return;
+        }
+
+        // Per-format bitrate overrides render one input per format the server can actually encode,
+        // so the list follows the configured `encode_args_<format>` keys without a migration.
+        if ($type === 'bitrate_map') {
+            $overrides = Stream::get_format_bitrate_map();
+            $formats   = array_merge(
+                Stream::get_available_encode_formats('audio'),
+                Stream::get_available_encode_formats('video')
+            );
+            if ($formats === []) {
+                echo T_('No transcode output formats are configured');
+
+                return;
+            }
+
+            $default = (int) AmpConfig::get('transcode_bitrate', 128000);
+            echo '<table class="tabledata">' . "\n";
+            foreach ($formats as $format) {
+                $current = $overrides[$format] ?? 0;
+                echo '<tr><td>' . $format . '</td><td><input type="number" name="' . $name . '[' . $format . ']" value="' . (($current > 0) ? $current : '') . '" min="0" step="1000" placeholder="' . $default . '" /> ' . T_('bps') . "</td></tr>\n";
+            }
+            echo "</table>\n";
+
+            return;
+        }
+
         switch ($name) {
+            case 'transcode_bitrate':
+            case 'max_bit_rate':
+            case 'min_bit_rate':
+                // Bitrate preferences are stored in bits per second (bps)
+                echo '<input type="number" name="' . $name . '" value="' . (int) $value . '" min="0" step="1000" /> ' . T_('bps');
+                break;
             case 'access_control':
             case 'access_list':
-            case 'ajax_load':
             case 'album_group':
             case 'album_release_type':
             case 'allow_democratic_playback':
@@ -780,6 +832,7 @@ class Ui implements UiInterface
             case 'libitem_contextmenu':
             case 'lock_songs':
             case 'mb_overwrite_name':
+            case 'mini_player':
             case 'no_symlinks':
             case 'notify_email':
             case 'now_playing_per_user':
@@ -836,7 +889,6 @@ class Ui implements UiInterface
             case 'use_original_year':
             case 'webdav_backend':
             case 'webplayer_confirmclose':
-            case 'webplayer_html5':
             case 'webplayer_pausetabs':
             case 'xml_rpc':
                 $is_true  = '';
@@ -1418,7 +1470,8 @@ class Ui implements UiInterface
     ): void {
         $webPath = $this->configContainer->getWebPath('/client');
 
-        $path = substr_count($next_url, $webPath) !== 0 ? $next_url : sprintf('%s/%s', $webPath, $next_url);
+        // callers pass both absolute urls and bare page paths; only prefix the relative ones
+        $path = str_starts_with($next_url, $webPath) ? $next_url : sprintf('%s/%s', $webPath, $next_url);
 
         $this->show(
             'show_continue.inc.php',
@@ -1437,6 +1490,24 @@ class Ui implements UiInterface
 
     public function showHeader(): void
     {
+        // Users locked into the mini player never see the full interface. This is the only caller of
+        // header.inc.php so it covers every full page; ajax, stream, play, util, image and the API
+        // don't come through here, so playback and artwork are untouched. m.php builds its own header
+        // so there is no redirect loop. NOTE: this hides the interface, it does not replace access
+        // levels; they remain the thing that actually gates data.
+        $user = Core::get_global('user');
+        if (
+            $user instanceof User
+            && $user->getId() > 0
+            && !headers_sent()
+            && !Access::check(AccessTypeEnum::INTERFACE, AccessLevelEnum::ADMIN)
+            && Preference::get_by_user($user->getId(), 'mini_player')
+        ) {
+            header('Location: ' . AmpConfig::get_web_path() . '/m/');
+
+            exit;
+        }
+
         require_once self::find_template('header.inc.php');
     }
 

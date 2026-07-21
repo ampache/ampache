@@ -320,12 +320,11 @@ class Art extends database_object
                     )
                 )
             ) {
-                $ajax_str = ((AmpConfig::get('ajax_load')) ? '#' : '');
-                echo "<a href=\"javascript:NavigateTo('" . $web_path . "/" . $ajax_str . "arts.php?action=show_art_dlg&object_type=" . $object_type . "&object_id=" . $object_id . "&burl=' + getCurrentPage());\">";
+                echo "<a href=\"javascript:NavigateTo('" . $web_path . "/arts.php?action=show_art_dlg&object_type=" . $object_type . "&object_id=" . $object_id . "&burl=' + getCurrentPage());\">";
                 echo Ui::get_material_symbol('edit', T_('Edit/Find Art'));
                 echo "</a>";
                 if ($has_db) {
-                    echo "<a href=\"javascript:NavigateTo('" . $web_path . "/" . $ajax_str . "arts.php?action=clear_art&object_type=" . $object_type . "&object_id=" . $object_id . '&kind=' . $kind . "&burl=' + getCurrentPage());\" onclick=\"return confirm('" . T_('Do you really want to reset art?') . "');\">";
+                    echo "<a href=\"javascript:NavigateTo('" . $web_path . "/arts.php?action=clear_art&object_type=" . $object_type . "&object_id=" . $object_id . '&kind=' . $kind . "&burl=' + getCurrentPage());\" onclick=\"return confirm('" . T_('Do you really want to reset art?') . "');\">";
                     echo Ui::get_material_symbol('close', T_('Reset Art'));
                     echo "</a>";
                 }
@@ -1369,10 +1368,8 @@ class Art extends database_object
             return 'check_dimensions';
         }
 
-        // Default to image/jpeg if they don't pass anything
-        $mime = (empty($mime))
-            ? 'image/jpeg'
-            : $mime;
+        // Trust the image data over the caller
+        $mime = Core::image_mime($source) ?? ((empty($mime)) ? 'image/jpeg' : $mime);
         // Blow it away!
         $this->reset();
         $picturetypeid = ($this->object_type == 'album') ? 3 : 8;

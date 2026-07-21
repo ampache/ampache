@@ -228,6 +228,7 @@ final readonly class PlayAction implements ApplicationActionInterface
                 for ($i = 0; $i < $v_count; $i += 2) {
                     switch ($vparts[$i]) {
                         case 'maxbitrate':
+                            // bps, matching the `bitrate` argument (it was previously read as kbps)
                             $maxbitrate = (int) ($vparts[$i + 1]);
                             break;
                         case 'resolution':
@@ -645,7 +646,8 @@ final readonly class PlayAction implements ApplicationActionInterface
             $catalog      = Catalog::create_from_id($mediaCatalogId);
             $cache_path   = (string) AmpConfig::get('cache_path', '');
             $cache_target = AmpConfig::get('cache_target', '');
-            $file_target  = (!empty($cache_target) && $cache_target === $transcode_to)
+            // ReplayGain (_rg/_car) output is normalised per-source and must never be cached
+            $file_target  = (!empty($cache_target) && $cache_target === $transcode_to && !in_array($transcode_to, Stream::NON_CACHEABLE_FORMATS, true))
                 ? Catalog::get_cache_path($media->id, $mediaCatalogId, $cache_path, $cache_target)
                 : null;
 
@@ -683,7 +685,7 @@ final readonly class PlayAction implements ApplicationActionInterface
             if (
                 $transcode_cfg != 'never'
                 && $transcode_to
-                && ($bitrate === 0 || $bitrate === (int) AmpConfig::get('transcode_bitrate', 128) * 1000)
+                && ($bitrate === 0 || $bitrate === Stream::get_format_bitrate($transcode_to))
                 && $has_cache
             ) {
                 $this->logger->debug(
@@ -878,11 +880,9 @@ final readonly class PlayAction implements ApplicationActionInterface
                     );
                 } else {
                     /** @var Song|Video $media */
-                    // $bitrate is bps (the stream URL/API convention); $maxbitrate and $media->bitrate
-                    // (scaled down) are kbps, so compare $bitrate against the real bps media bitrate directly.
-                    $media_bitrate = floor($media->bitrate / 1024);
+                    // $bitrate, $maxbitrate and $media->bitrate are all bps (the stream URL convention)
                     //$this->logger->debug("requested bitrate $bitrate <=> {$media->bitrate} media bitrate", [LegacyLogger::CONTEXT_TYPE => self::class]);
-                    if (($bitrate > 0 && $bitrate < $media->bitrate) || ($maxbitrate > 0 && $maxbitrate < $media_bitrate)) {
+                    if (($bitrate > 0 && $bitrate < $media->bitrate) || ($maxbitrate > 0 && $maxbitrate < $media->bitrate)) {
                         $transcode = true;
                         $this->logger->debug(
                             'Transcoding because explicit bitrate request',
@@ -920,6 +920,7 @@ final readonly class PlayAction implements ApplicationActionInterface
         if ($transcode) {
             $transcode_settings = $media->get_transcode_settings($transcode_to, $player, $troptions);
             if ($bitrate !== 0) {
+                // both are bps, so the ceiling can be applied directly
                 $troptions['bitrate'] = ($maxbitrate > 0 && $maxbitrate < $bitrate)
                     ? $maxbitrate
                     : $bitrate;
@@ -994,7 +995,8 @@ final readonly class PlayAction implements ApplicationActionInterface
                     // note that the bitrate transcode option is stored as metric bits i.e. kilobits*1000 instead of kilobits*1024
                     $stream_rate = $troptions['bitrate'] / 1024;
                 } elseif ($transcode_settings !== []) {
-                    $stream_rate = Stream::get_max_bitrate($media, $transcode_settings, $troptions);
+                    // get_max_bitrate() returns bps; scale to match the /1024 used by the bitrate branch above
+                    $stream_rate = Stream::get_max_bitrate($media, $transcode_settings, $troptions) / 1024;
                 }
 
                 // We always guess MP3 content length even when not required, since that codec calculates properly

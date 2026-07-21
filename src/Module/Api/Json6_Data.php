@@ -647,7 +647,7 @@ class Json6_Data
         $democratic = Democratic::get_current_playlist($user);
 
         $JSON = [];
-        foreach ($object_ids as $row_id => $data) {
+        foreach ($object_ids as $data) {
             $className = ObjectTypeToClassNameMapper::map($data['object_type']->value);
             /** @var Song $song */
             $song = new $className($data['object_id']);
@@ -694,7 +694,7 @@ class Json6_Data
                 "rating" => $user_rating,
                 "averagerating" => ($rating->get_average_rating() ?? null),
                 "playcount" => $song->total_count,
-                "vote" => $democratic->get_vote($row_id)
+                "vote" => $democratic->get_vote($data['track_id'])
             ];
         }
         $output = ($object) ? ["song" => $JSON] : $JSON[0] ?? [];
@@ -1971,8 +1971,78 @@ class Json6_Data
     /**
      * songs_array
      *
+     * Unlike API8 this returns `catalog` as an int and writes each metadata field as a top-level
+     * key rather than nesting them under `metadata`, so the shape carries extra dynamic keys.
+     *
      * @param array<int|string> $objects
-     * @return array<int, array<string, mixed>>
+     * @return array<int, array{
+     *     id: string,
+     *     title: string|null,
+     *     name: string|null,
+     *     artist: array{
+     *         id: string,
+     *         name: string,
+     *         prefix: string,
+     *         basename: string
+     *     },
+     *     artists: array<int, array{
+     *         id: string,
+     *         name: string,
+     *         prefix: string,
+     *         basename: string
+     *     }>,
+     *     album: array{
+     *         id: string,
+     *         name: string,
+     *         prefix: string,
+     *         basename: string
+     *     },
+     *     albumartist?: array{
+     *         id: string,
+     *         name: string,
+     *         prefix: string,
+     *         basename: string
+     *     },
+     *     disk: int,
+     *     disksubtitle: string|null,
+     *     track: int,
+     *     filename: string|null,
+     *     genre: array<int, array{id: string, name: string}>,
+     *     playlisttrack: int,
+     *     time: int,
+     *     year: int,
+     *     format: string,
+     *     stream_format: string,
+     *     bitrate: int,
+     *     stream_bitrate: int,
+     *     rate: int,
+     *     mode: string|null,
+     *     mime: string|null,
+     *     stream_mime: string|null,
+     *     url: string,
+     *     size: int,
+     *     mbid: string|null,
+     *     art: string|null,
+     *     has_art: bool,
+     *     flag: bool,
+     *     rating: int|null,
+     *     averagerating: float|null,
+     *     playcount: int,
+     *     catalog: int,
+     *     composer: string|null,
+     *     channels: int|null,
+     *     comment: string|null,
+     *     license: string|null,
+     *     publisher: string|null,
+     *     language: string|null,
+     *     lyrics: string|null,
+     *     replaygain_album_gain: float|null,
+     *     replaygain_album_peak: float|null,
+     *     replaygain_track_gain: float|null,
+     *     replaygain_track_peak: float|null,
+     *     r128_album_gain: float|null,
+     *     r128_track_gain: float|null
+     * }>
      */
     public static function songs_array(array $objects, User $user, string $auth, bool $encode = true): array
     {
@@ -2106,6 +2176,9 @@ class Json6_Data
             $JSON[] = $objArray;
         }
 
+        // the documented shape is accurate, but metadata adds arbitrary extra top-level keys and
+        // PHPStan array shapes cannot express "these keys plus others"
+        // @phpstan-ignore-next-line return.type
         return $JSON;
     }
 
