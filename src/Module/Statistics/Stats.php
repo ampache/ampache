@@ -1284,10 +1284,13 @@ class Stats
      */
     private static function derivedSources(string $table, string $alias): array
     {
-        // the fan-out only ever writes 'stream' rows, and Stats::skip_last_play filters on `object_type` so a later
-        // skip flips the media row alone: a skipped play still left its album/artist rows behind as 'stream'
-        $columns = "'stream' AS `count_type`, `" . $alias . "`.`date`, `" . $alias . "`.`user`, `" . $alias . "`.`agent`, `" . $alias . "`.`geo_latitude`, `" . $alias . "`.`geo_longitude`, `" . $alias . "`.`geo_name`";
-        $played  = "`" . $alias . "`.`count_type` IN ('stream', 'skip')";
+        // the fan-out writes 'stream' rows for the parents. Stats::skip_last_play then DELETES the album/artist/podcast
+        // rows when a play is skipped, so those three must be rebuilt from 'stream' media only or a restore resurrects
+        // parent plays that were deliberately removed. album_disk is left in place by a skip, so it is rebuilt from
+        // both 'stream' and 'skip' media to match what actually survives.
+        $columns  = "'stream' AS `count_type`, `" . $alias . "`.`date`, `" . $alias . "`.`user`, `" . $alias . "`.`agent`, `" . $alias . "`.`geo_latitude`, `" . $alias . "`.`geo_longitude`, `" . $alias . "`.`geo_name`";
+        $streamed = "`" . $alias . "`.`count_type` = 'stream'";
+        $or_skip  = "`" . $alias . "`.`count_type` IN ('stream', 'skip')";
         // resolve the parent through the joins rather than a stored id: merges and re-tagging move a media item
         // between parents, so only a lookup at restore time gives the parent that is true now
         $song    = "FROM `" . $table . "` AS `" . $alias . "` INNER JOIN `song` ON `song`.`id` = `" . $alias . "`.`object_id`";
@@ -1295,10 +1298,10 @@ class Stats
         $is_song = "`" . $alias . "`.`object_type` = 'song'";
 
         return [
-            'album' => "SELECT DISTINCT `song`.`album` AS `derived_id`, " . $columns . " " . $song . " WHERE " . $is_song . " AND `song`.`album` > 0 AND " . $played,
-            'album_disk' => "SELECT DISTINCT `album_disk`.`id` AS `derived_id`, " . $columns . " " . $song . " INNER JOIN `album_disk` ON `album_disk`.`album_id` = `song`.`album` AND `album_disk`.`disk` = `song`.`disk` WHERE " . $is_song . " AND `song`.`album` > 0 AND " . $played,
-            'artist' => "SELECT DISTINCT `artist_map`.`artist_id` AS `derived_id`, " . $columns . " " . $song . " INNER JOIN `artist_map` ON (`artist_map`.`object_type` = 'song' AND `artist_map`.`object_id` = `song`.`id`) OR (`artist_map`.`object_type` = 'album' AND `artist_map`.`object_id` = `song`.`album`) WHERE " . $is_song . " AND `artist_map`.`artist_id` > 0 AND " . $played,
-            'podcast' => "SELECT DISTINCT `podcast_episode`.`podcast` AS `derived_id`, " . $columns . " " . $episode . " WHERE `" . $alias . "`.`object_type` = 'podcast_episode' AND `podcast_episode`.`podcast` > 0 AND " . $played,
+            'album' => "SELECT DISTINCT `song`.`album` AS `derived_id`, " . $columns . " " . $song . " WHERE " . $is_song . " AND `song`.`album` > 0 AND " . $streamed,
+            'album_disk' => "SELECT DISTINCT `album_disk`.`id` AS `derived_id`, " . $columns . " " . $song . " INNER JOIN `album_disk` ON `album_disk`.`album_id` = `song`.`album` AND `album_disk`.`disk` = `song`.`disk` WHERE " . $is_song . " AND `song`.`album` > 0 AND " . $or_skip,
+            'artist' => "SELECT DISTINCT `artist_map`.`artist_id` AS `derived_id`, " . $columns . " " . $song . " INNER JOIN `artist_map` ON (`artist_map`.`object_type` = 'song' AND `artist_map`.`object_id` = `song`.`id`) OR (`artist_map`.`object_type` = 'album' AND `artist_map`.`object_id` = `song`.`album`) WHERE " . $is_song . " AND `artist_map`.`artist_id` > 0 AND " . $streamed,
+            'podcast' => "SELECT DISTINCT `podcast_episode`.`podcast` AS `derived_id`, " . $columns . " " . $episode . " WHERE `" . $alias . "`.`object_type` = 'podcast_episode' AND `podcast_episode`.`podcast` > 0 AND " . $streamed,
         ];
     }
 
