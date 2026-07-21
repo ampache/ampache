@@ -508,7 +508,7 @@ class Json5_Data
         $democratic = Democratic::get_current_playlist($user);
 
         $JSON = [];
-        foreach ($object_ids as $row_id => $data) {
+        foreach ($object_ids as $data) {
             $className = ObjectTypeToClassNameMapper::map($data['object_type']->value);
             /** @var Song $song */
             $song = new $className($data['object_id']);
@@ -545,7 +545,7 @@ class Json5_Data
                 "rating" => $user_rating,
                 "averagerating" => ($rating->get_average_rating() ?? null),
                 "playcount" => $song->total_count,
-                "vote" => $democratic->get_vote($row_id)
+                "vote" => $democratic->get_vote($data['track_id'])
             ];
         }
         $output = ($object) ? ["song" => $JSON] : $JSON[0] ?? [];

@@ -186,7 +186,7 @@ echo implode(',', $solutions); ?>",
                             NotifyOfNewArtist();
                         }
                         <?php } ?>
-                        <?php if (AmpConfig::get('browser_notify')) { ?>
+                        <?php if ($iframed && AmpConfig::get('browser_notify')) { ?>
                         NotifyOfNewSong(obj.title, obj.artist, currentjpitem.attr("data-poster"));
                         <?php } ?>
                         if ("mediaSession" in navigator) {

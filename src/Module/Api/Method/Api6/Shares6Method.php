@@ -90,7 +90,7 @@ final class Shares6Method
 
         $results = $browse->get_objects();
         if (empty($results)) {
-            Api6::empty('shares', $input['api_format']);
+            Api6::empty('share', $input['api_format']);
 
             return false;
         }

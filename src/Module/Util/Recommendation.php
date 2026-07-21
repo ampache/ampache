@@ -421,6 +421,10 @@ class Recommendation
             return $results;
         }
 
+        if (!isset($xml->artist->bio)) {
+            return $results;
+        }
+
         $results['summary'] = strip_tags(
             (string)preg_replace(
                 "#<a href=([^<]*)Last\.fm</a>.#",
