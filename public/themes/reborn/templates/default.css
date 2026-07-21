@@ -1341,13 +1341,62 @@ table.gridview td.cel_cover {
     height: auto !important;
 }
 
-table.gridview td.cel_play,
-table.gridview td.cel_add,
-table.gridview td.cel_add_list,
 table.gridview td.cel_action,
 table.gridview td.cel_year,
 table.gridview td.cel_drag {
     display: none !important;
+}
+
+table.gridview tbody tr {
+    display: flex;
+    flex-flow: row wrap;
+    align-content: flex-start;
+    justify-content: center;
+}
+
+table.gridview tbody td {
+    flex: 0 0 92%;
+    box-sizing: border-box;
+}
+
+table.gridview td.cel_play {
+    order: 1;
+}
+
+table.gridview td.cel_add,
+table.gridview td.cel_add_list {
+    order: 2;
+}
+
+table.gridview td.cel_ratings {
+    order: 3;
+}
+
+table.gridview td.cel_play,
+table.gridview td.cel_add,
+table.gridview td.cel_add_list {
+    display: flex !important;
+    flex: 0 0 auto;
+    width: auto !important;
+    min-width: initial !important;
+    max-width: initial !important;
+    height: auto;
+    margin: 2px 0 0 !important;
+    justify-content: center;
+    text-align: center;
+}
+
+table.gridview td.cel_play .cel_play_content {
+    display: none !important;
+}
+
+table.gridview td.cel_play .cel_play_hover,
+table.gridview td.cel_add .cel_item_add,
+table.gridview td.cel_add_list .cel_item_add {
+    display: flex !important;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 4px;
 }
 
 table.gridview td.cel_ratings {
@@ -1413,6 +1462,7 @@ table.gridview td.cel_ratings {
 }
 
 .personalfav table.gridview tbody td {
+    flex: 0 0 auto;
     width: 100%;
     height: auto !important;
     margin: 0 !important;
