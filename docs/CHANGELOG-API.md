@@ -30,6 +30,10 @@ API version **8** joins the concurrent live surfaces (3/4/5/6 — version 7 rema
   * New `docs/openapi-6.json`, a spec pinned to API6 for contract testing a single version. It documents only the surface Ampache7 and Ampache8 both serve: no API8-only paths (`/folder`, `/folders`, `/playlists/{playlist_id}/remove`), no `/random` (API8 only), no error status codes (API3-6 always return HTTP 200 with the error in the body), response schemas from the `Json6_Data` builders, and `maxbitrate` documented as kbps
   * New `tests/Module/Api/Api6SpecConformanceTest.php` locks that contract: it fails if a documented path leaves `Api6::METHOD_LIST`, if an error status code appears, if a `$ref` dangles, or if an object's fields drift from the matching `Json6_Data` builder. This is what stops API6 changing between Ampache7 and Ampache8
   * `Json6_Data::songs_array()` gains the `@return` array-shape docblock the other builders already carry. It records the two real differences from API8: `catalog` is an int (a string in API8) and metadata fields are top-level keys (nested under `metadata` in API8)
+  * Response schemas for `democratic`, `handshake`, `ping`, `playlist_generate`, the preference endpoints (`user_preference`, `user_preferences`, `system_preference`, `system_preferences`), `url_to_song` and `system_update`
+  * `stream` and `download` are documented as the `302` redirect they actually return (`download` also documents the `zip=1` archive body), and `get_art` as an image body, instead of an undescribed `200`. Each names the headers it sets: `Location` for the redirects, `Content-Type`/`Content-Disposition` for the zip, and `Content-Type`/`Content-Length`/`Access-Control-Allow-Origin` for art
+  * Response schemas for `search`, `stats`, `get_similar`, `followers`, `following`, `localplay`, `get_lyrics`, `get_external_metadata`, `playlist_hash`, `player`, `register` and every create endpoint (`bookmark_create`, `catalog_create`, `live_stream_create`, `playlist_create`, `podcast_create`, `share_create`) - 145 operations now carry a schema, leaving only the binary media endpoints undocumented
+  * New `resources/scripts/api-docs/check_openapi_examples.py`, which fails when an inline example in `docs/openapi.json` contradicts the schema its operation is wired to
 
 ### Changed (800000)
 
@@ -48,8 +52,13 @@ API version **8** joins the concurrent live surfaces (3/4/5/6 — version 7 rema
 * ALL (internal)
   * `JsonOutput`/`XmlOutput` no longer fall back to API8 formatting for an unrecognized API version/method/format combination (e.g. JSON for API3, which was never supported) — this now throws instead of silently rendering as API8. Some v3/v4 error paths that used ad-hoc numeric error codes now use the same `ErrorCodeEnum`-based codes API5/6/8 already use, for consistency
 * API8 (JSON/XML parity)
-  * v8 JSON and XML now return a matching field set for each object; several inconsistencies were unified: XML `bookmark`/`share` owner is now `<owner>` (was `<user>`), `video` no longer emits a duplicate `<name>` (use `<title>`), deleted podcast episodes use `<podcast>` (was a mislabeled `<played>`), and `song_tags` emits the full fixed field set in both formats
+  * v8 JSON and XML now return a matching field set for each object; several inconsistencies were unified: XML `bookmark`/`share` owner is now `<owner>` (was `<user>`), `video` and `democratic` no longer emit a duplicate `<name>` (use `<title>`), deleted podcast episodes use `<podcast>` (was a mislabeled `<played>`), and `song_tags` emits the full fixed field set in both formats
   * JSON `user` adds `link` (profile url, already present in XML) and returns `fullname` on your own `/me` request; JSON `song_tags` adds the song `id`; the `users` list uses a bare `{ "user": [...] }` envelope with no `total_count`/`md5`
+
+### Removed (800000)
+
+* REST
+  * `GET smartlists/search` is no longer documented. `smartlist` is not one of `Search::VALID_TYPES`, so the path could only ever return a `Bad Request` error. Use `playlists/search` (searches cover both playlists and smartlists)
 
 ## API 6.9.2 Build 2
 
@@ -88,6 +97,13 @@ we will keep on 6.9.x and resume build number versioning until Ampache 8
 * ALL
   * Version and docstring inconsistencies between API versions
   * Empty object lookups now report the parameter that failed instead of `empty`
+  * democratic: `vote` returns the real vote count for each song. It was counted from the item's position in the response instead of its `track_id`, so the number was meaningless
+  * friends_timeline: An empty result returned a `total_count`/`md5` envelope that neither the populated response nor `timeline` uses. It now returns `activity: []`
+* API5, API6 and API8
+  * labels, label: XML serialised each item as `<license>` instead of `<label>`
+  * search_rules: XML emitted an empty `<widget/>` for every rule that isn't a select, dropping the control type the JSON response carries
+* REST
+  * `POST {type}/{id}/share` was documented as resolving to `share` (fetch a share); it resolves to `share_create`, as the code has always done
 * API4
   * update_from_tags: Not found check was inverted so valid objects returned an error
   * XML list responses were not sliced by `offset` and `limit` (e.g. `users`)
@@ -98,6 +114,8 @@ we will keep on 6.9.x and resume build number versioning until Ampache 8
   * Version wasn't bumped
   * podcast_episode: JSON response was missing the full episode object
   * XML and JSON list responses were not sliced by `offset` and `limit`
+  * shares: An empty result was keyed `shares` instead of `share` like the populated response (API5 was already correct)
+  * last_shouts: An empty result returned a `total_count`/`md5` envelope the populated response does not use. It now returns `shout: []` (API5 was already correct)
 
 ## API 6.9.2 Build 1
 

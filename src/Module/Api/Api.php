@@ -464,12 +464,15 @@ class Api
             $string .= "\t<$item id=\"" . ($object['id'] ?? $object['name']) . "\">\n";
             foreach ($object as $name => $value) {
                 if ($name === 'widget') {
+                    // widget is [control, options]; options is a map for a select and a plain input type otherwise
                     $widget_type = $value[0];
                     $filter      = '';
                     if (is_array($value[1])) {
                         foreach ($value[1] as $key => $val) {
                             $filter .= "\t\t<$widget_type id=\"$key\"><![CDATA[" . $val . "]]></$widget_type>\n";
                         }
+                    } else {
+                        $filter = "\t\t<$widget_type><![CDATA[" . $value[1] . "]]></$widget_type>\n";
                     }
                 } elseif (($name === 'values' || $name === 'subtypes') && is_array($value)) {
                     $filter = '';
@@ -618,6 +621,7 @@ class Api
      *
      * @return array{
      *     auth?: ?string,
+     *     streamtoken?: ?string,
      *     api?: string,
      *     session_expire?: int|string,
      *     update?: string,

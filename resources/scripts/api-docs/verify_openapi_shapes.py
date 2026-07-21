@@ -58,12 +58,19 @@ PARAM_TYPE = {
     "bookmark_id": "bookmark", "user_id": "user",
 }
 
+# placeholders that name an object type rather than an id, so no lookup is needed
+PARAM_LITERAL = {"search_type": "song", "object_type": "song", "preference_name": "ajax_load"}
+
 # Extra params some actions require that x-rpc-mappings doesn't carry. Values may
 # contain {placeholders} resolved the same way as path params (e.g. {user_id}).
 DEFAULT_PARAMS = {
     "list": {"type": "album"},
     "index": {"type": "album"},
     "last_shouts": {"filter": "{user_id}"},
+    # search needs at least one rule to run; stats needs a filter to pick a chart
+    "search": {"rule_1": "title", "rule_1_operator": "0", "rule_1_input": "a"},
+    "search_group": {"rule_1": "title", "rule_1_operator": "0", "rule_1_input": "a"},
+    "stats": {"filter": "random"},
 }
 
 # object type -> (list action, envelope key) used to pull a sample id
@@ -255,6 +262,9 @@ class Discoverer:
         for k, v in params.items():
             hole = re.fullmatch(r"\{(\w+)\}", v)
             if hole:
+                if hole.group(1) in PARAM_LITERAL:
+                    out[k] = PARAM_LITERAL[hole.group(1)]
+                    continue
                 obj_type = PARAM_TYPE.get(hole.group(1))
                 if obj_type is None:
                     return None
@@ -316,7 +326,17 @@ def xml_field_set(text: str, target: str | None) -> set[str] | None:
     if target is not None:
         container = root.find(target)
     else:
-        container = next((c for c in root if c.tag not in _ENVELOPE_META), None)
+        body = [c for c in root if c.tag not in _ENVELOPE_META]
+        # A response whose only fields are named like envelope meta (playlist_hash returns
+        # just `md5`) filters down to nothing; fall back to every child.
+        if not body:
+            body = list(root)
+        # Flat responses (ping, handshake, playlist_hash) hang their fields straight off
+        # <root> with no wrapper element, so the "first child" is a field, not the data
+        # object. A leaf first child means flat: a real data object carries fields or an id.
+        if body and not len(body[0]) and not body[0].attrib:
+            return {c.tag for c in body}
+        container = body[0] if body else None
     if container is None:
         return set()
     fields = set(container.attrib)

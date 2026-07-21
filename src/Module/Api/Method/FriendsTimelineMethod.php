@@ -93,14 +93,7 @@ final class FriendsTimelineMethod implements MethodInterface
             (int) ($input['since'] ?? 0)
         );
 
-        if ($results === []) {
-            $response->getBody()->write(
-                $output->writeEmpty($apiVersion, 'activity')
-            );
-
-            return $response;
-        }
-
+        // no empty-envelope short circuit: an empty result renders as `activity: []`, matching `timeline`
         $response->getBody()->write(
             $output->timeline($apiVersion, $results)
         );

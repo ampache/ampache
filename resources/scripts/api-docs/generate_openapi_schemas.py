@@ -36,6 +36,15 @@ REPO_ROOT = Path(__file__).resolve().parents[3]
 JSON8_DATA = REPO_ROOT / "src" / "Module" / "Api" / "Json8_Data.php"
 OPENAPI = REPO_ROOT / "docs" / "openapi.json"
 
+# Most shapes live on the Json8_Data builders, but some payloads are assembled
+# elsewhere (e.g. preferences). A TYPES entry may name one of these instead.
+SOURCES: dict[str, Path] = {
+    "json8": JSON8_DATA,
+    "preference_builder": REPO_ROOT / "src" / "Module" / "Api" / "Method" / "PreferenceItemBuilder.php",
+    "api": REPO_ROOT / "src" / "Module" / "Api" / "Api.php",
+    "search_model": REPO_ROOT / "src" / "Repository" / "Model" / "Search.php",
+}
+
 # ---------------------------------------------------------------------------
 # Configuration: which object types to generate + how endpoints wire to them.
 # Extend these tables to fan the generator out to more types.
@@ -43,6 +52,7 @@ OPENAPI = REPO_ROOT / "docs" / "openapi.json"
 
 # type key -> builder method (carrying the @return shape), object schema name,
 # list-envelope schema name, and the JSON envelope key used by the list wrapper.
+# "source" selects a SOURCES file other than the default Json8_Data.
 TYPES: dict[str, dict[str, str]] = {
     "album": {"builder": "albums_array", "object": "AlbumObject", "list": "AlbumsResponse", "key": "album"},
     "song": {"builder": "songs_array", "object": "SongObject", "list": "SongsResponse", "key": "song"},
@@ -68,8 +78,40 @@ TYPES: dict[str, dict[str, str]] = {
     "browse": {"builder": "browses_array", "object": "BrowseObject", "list": "BrowseResponse", "key": "browse", "envelope": "browse"},
     "now_playing": {"builder": "now_playing_array", "object": "NowPlayingObject", "list": "NowPlayingResponse", "key": "now_playing", "envelope": "bare"},
     "activity": {"builder": "timeline_array", "object": "ActivityObject", "list": "TimelineResponse", "key": "activity", "envelope": "bare"},
-    "shout": {"builder": "shouts_array", "object": "ShoutObject", "list": "ShoutsResponse", "key": "shout"},
+    # last_shouts returns a bare {shout: [...]} (verified live); only the empty path adds total_count/md5.
+    "shout": {"builder": "shouts_array", "object": "ShoutObject", "list": "ShoutsResponse", "key": "shout", "envelope": "bare"},
+    # democratic playlist items: a reduced song shape plus the current vote count, in a bare envelope.
+    "democratic": {"builder": "democratic_array", "object": "DemocraticSongObject", "list": "DemocraticSongsResponse", "key": "song", "envelope": "bare"},
+    # preferences are assembled by PreferenceItemBuilder, not Json8_Data; single and list items share a shape.
+    "preference": {"builder": "buildList", "object": "PreferenceObject", "list": "PreferencesResponse", "key": "preference", "envelope": "bare", "source": "preference_builder"},
+    # handshake writes Api::server_details() straight out; ping wraps the same fields (see build_ping_schema).
+    "handshake": {"builder": "server_details", "object": "HandshakeResponse", "list": "", "key": "", "source": "api"},
+    # the advanced-search rule list a client needs to build a search, from Search::get_rule_types()
+    "search_rule": {"builder": "get_rule_types", "object": "SearchRuleObject", "list": "SearchRulesResponse", "key": "rule", "envelope": "bare", "source": "search_model"},
 }
+
+# ping returns the session/server counts of a handshake plus three fields it always
+# emits, even unauthenticated (verified live: an anonymous ping returns only these three).
+PING_ALWAYS = {
+    "server": {"type": "string"},
+    "version": {"type": "string"},
+    "compatible": {"type": "string"},
+}
+
+
+def build_ping_schema(handshake: dict) -> dict:
+    """PingResponse = the always-present ping fields + every (optional) handshake field."""
+    properties = {**PING_ALWAYS, **handshake.get("properties", {})}
+    return {
+        "type": "object",
+        "description": (
+            "`server`, `version` and `compatible` are always returned. Sending a valid `auth` "
+            "extends the session and adds the handshake fields (`session_expire`, server counts, ...)."
+        ),
+        "properties": properties,
+        "required": sorted(PING_ALWAYS),
+        "additionalProperties": False,
+    }
 
 # Within a generated object schema, replace a property's item/value subtree with
 # a $ref to an already-defined schema (DRY reuse, mirroring the Folder schemas).
@@ -163,32 +205,167 @@ WIRING: dict[str, str] = {
     "timeline": "TimelineResponse",
     "friends_timeline": "TimelineResponse",
     "last_shouts": "ShoutsResponse",
+    # Preferences (the single-item endpoints return a flat object, the list a bare envelope)
+    "user_preferences": "PreferencesResponse",
+    "system_preferences": "PreferencesResponse",
+    "user_preference": "PreferenceObject",
+    "system_preference": "PreferenceObject",
+    # Session / server info
+    "ping": "PingResponse",
+    # Follower lists reuse the users envelope
+    "followers": "UsersResponse",
+    "following": "UsersResponse",
+    # Advanced search metadata
+    "search_rules": "SearchRulesResponse",
+    "search_group": "SearchGroupResponse",
+    # Plugin-backed lookups and the playlist hash
+    "get_lyrics": "LyricsResponse",
+    "get_external_metadata": "ExternalMetadataResponse",
+    "playlist_hash": "PlaylistHashResponse",
+    # These reuse an existing shape rather than defining their own
+    "url_to_song": "SongsResponse",
+    "system_update": "SuccessResponse",
     # Polymorphic
     "index": "IndexResponse",
+    "playlist_generate": "PlaylistGenerateResponse",
     # Deleted (three distinct per-type responses)
     "deleted_songs": "DeletedSongsResponse",
     "deleted_podcast_episodes": "DeletedPodcastEpisodesResponse",
     "deleted_videos": "DeletedVideosResponse",
 }
 
-# Only rewire these HTTP methods (data reads). Mutations keep SuccessResponse.
-WIRED_HTTP_METHODS = ("get",)
+# Endpoints that never answer with JSON. `stream` and `download` hand back a 302 to the
+# play url (Download8Method/AbstractStreamMethod both `withStatus(302)`), `download` only
+# returns a body for the `zip=1` container case, and `get_art` writes the image itself.
+_REDIRECT_RESPONSE = {
+    "description": "Redirect to the media url; the stream itself is served from the `Location` header",
+    "headers": {
+        "Location": {
+            "description": "Absolute url of the media stream",
+            "schema": {"type": "string", "format": "uri"},
+        }
+    },
+}
+
+_ZIP_RESPONSE = {
+    "description": "Zip archive of the container's media files (only when `zip=1` is sent for a zipable type)",
+    "headers": {
+        "Content-Type": {
+            "description": "Always `application/zip`",
+            "schema": {"type": "string"},
+        },
+        "Content-Disposition": {
+            "description": "`attachment` with the archive name, RFC 5987 encoded",
+            "schema": {"type": "string"},
+        },
+    },
+    "content": {"application/zip": {"schema": {"type": "string", "format": "binary"}}},
+}
+
+_IMAGE_RESPONSE = {
+    "description": "The image itself, written straight to the response body",
+    "headers": {
+        "Content-Type": {
+            "description": "The stored art mime type (e.g. `image/jpeg`, `image/png`)",
+            "schema": {"type": "string"},
+        },
+        "Content-Length": {
+            "description": "Size of the image in bytes",
+            "schema": {"type": "integer"},
+        },
+        "Access-Control-Allow-Origin": {
+            "description": "Always `*`, so art can be loaded cross-origin",
+            "schema": {"type": "string"},
+        },
+    },
+    "content": {"image/*": {"schema": {"type": "string", "format": "binary"}}},
+}
+
+# action -> {"set": responses to install, "drop": status codes to remove}
+BINARY_RESPONSES: dict[str, dict] = {
+    "stream": {"set": {"302": _REDIRECT_RESPONSE}, "drop": ["200"]},
+    "download": {"set": {"302": _REDIRECT_RESPONSE, "200": _ZIP_RESPONSE}, "drop": []},
+    "get_art": {"set": {"200": _IMAGE_RESPONSE}, "drop": []},
+}
+
+# Actions whose shape depends on a request parameter that the REST path bakes into
+# x-rpc-mappings (`/albums/search` -> `action=search&type=album`). Keyed by
+# (action, parameter, value); a hit wins over the plain WIRING/WIRING_BY_METHOD entry.
+# The type mappings mirror JsonOutput::searchResult() and the StatsMethod/GetSimilarMethod matches.
+WIRING_BY_PARAM: dict[tuple[str, str, str], str] = {
+    ("search", "type", "album"): "AlbumsResponse",
+    ("search", "type", "artist"): "ArtistsResponse",
+    ("search", "type", "album_artist"): "ArtistsResponse",
+    ("search", "type", "song_artist"): "ArtistsResponse",
+    ("search", "type", "genre"): "GenresResponse",
+    ("search", "type", "tag"): "GenresResponse",
+    ("search", "type", "label"): "LabelsResponse",
+    ("search", "type", "playlist"): "PlaylistsResponse",
+    ("search", "type", "podcast"): "PodcastsResponse",
+    ("search", "type", "podcast_episode"): "PodcastEpisodesResponse",
+    ("search", "type", "song"): "SongsResponse",
+    ("search", "type", "user"): "UsersResponse",
+    ("search", "type", "video"): "VideosResponse",
+    ("stats", "type", "album"): "AlbumsResponse",
+    ("stats", "type", "artist"): "ArtistsResponse",
+    ("stats", "type", "playlist"): "PlaylistsResponse",
+    ("stats", "type", "podcast"): "PodcastsResponse",
+    ("stats", "type", "podcast_episode"): "PodcastEpisodesResponse",
+    ("stats", "type", "song"): "SongsResponse",
+    ("stats", "type", "video"): "VideosResponse",
+    ("get_similar", "type", "artist"): "ArtistsResponse",
+    ("get_similar", "type", "song"): "SongsResponse",
+    # every localplay command reports a boolean except `status`, which returns player state
+    ("localplay", "command", "status"): "LocalplayStatusResponse",
+}
+
+# Non-GET operations that answer with data rather than the success envelope, keyed by
+# (http method, action) because the same action can mix the two — `bookmark` PATCH returns
+# the edited bookmark while `bookmark` DELETE returns SuccessResponse.
+WIRING_BY_METHOD: dict[tuple[str, str], str] = {
+    ("post", "democratic"): "DemocraticResponse",
+    ("post", "handshake"): "HandshakeResponse",
+    # the bookmark writers all call `bookmarks(..., $object: false)`, i.e. one flat object
+    ("put", "bookmark_create"): "BookmarkObject",
+    ("patch", "bookmark_edit"): "BookmarkObject",
+    # the create endpoints answer with the object they just made (`$object: false`)
+    ("post", "share_create"): "ShareObject",
+    ("put", "share_create"): "ShareObject",
+    ("put", "live_stream_create"): "LiveStreamObject",
+    ("put", "playlist_create"): "PlaylistObject",
+    ("put", "podcast_create"): "PodcastObject",
+    ("put", "catalog_create"): "CatalogObject",
+    ("post", "register"): "SuccessResponse",
+    ("post", "player"): "NowPlayingResponse",
+    ("post", "localplay"): "LocalplayResponse",
+}
+
+# HTTP methods considered when wiring; GET reads WIRING/WIRING_BY_TYPE, the rest WIRING_BY_METHOD.
+WIRED_HTTP_METHODS = ("get", "post", "put", "patch")
 
 
 # ---------------------------------------------------------------------------
 # Docblock extraction
 # ---------------------------------------------------------------------------
 
-# Match a /** ... */ docblock immediately followed by a static method signature.
+# Match a /** ... */ docblock immediately followed by a public method signature.
 _METHOD_DOC_RE = re.compile(
-    r"(/\*\*.*?\*/)\s*public static function\s+([A-Za-z0-9_]+)\s*\(",
+    r"(/\*\*.*?\*/)\s*public\s+(?:static\s+)?function\s+([A-Za-z0-9_]+)\s*\(",
     re.DOTALL,
 )
 
 
 def extract_docblocks(php_source: str) -> dict[str, str]:
-    """Return {method_name: raw_docblock_text} for every static method."""
+    """Return {method_name: raw_docblock_text} for every public method."""
     return {m.group(2): m.group(1) for m in _METHOD_DOC_RE.finditer(php_source)}
+
+
+def load_sources() -> dict[str, dict[str, str]]:
+    """Return {source name: {method: docblock}} for every configured source file."""
+    return {
+        name: extract_docblocks(path.read_text(encoding="utf-8"))
+        for name, path in SOURCES.items()
+    }
 
 
 def return_shape_text(docblock: str) -> str:
@@ -211,7 +388,7 @@ def return_shape_text(docblock: str) -> str:
 _TOKEN_RE = re.compile(
     r"""\s+
       | (?P<str>"[^"]*")
-      | (?P<punct>[{}<>,:?|])
+      | (?P<punct>[{}<>,:?|\[\]])
       | (?P<ident>[A-Za-z_][A-Za-z0-9_\\-]*)
     """,
     re.VERBOSE,
@@ -272,7 +449,16 @@ class ShapeParser:
         atoms: list[dict] = []
         nullable = False
         while True:
+            # prefix nullable syntax: `?string` is the same as `string|null`
+            if self.peek() == "?":
+                self.next()
+                nullable = True
             atom = self.parse_atom()
+            # postfix list syntax: `string[]`, `array{...}[]` -> an array of that type
+            while atom is not None and self.peek() == "[" and self.tokens[self.pos + 1 : self.pos + 2] == ["]"]:
+                self.next()
+                self.next()
+                atom = {"type": "array", "items": atom}
             if atom is None:  # 'null'
                 nullable = True
             else:
@@ -431,6 +617,177 @@ MANUAL_SCHEMAS: dict[str, dict] = {
             ]
         },
     },
+    # democratic returns a different payload per `method` param (see DemocraticMethod).
+    "DemocraticPlayResponse": {
+        "type": "object",
+        "description": "Returned by `method=play`: the stream URL of the democratic playlist.",
+        "properties": {"url": {"type": "string"}},
+        "required": ["url"],
+        "additionalProperties": False,
+    },
+    "DemocraticVoteResponse": {
+        "type": "object",
+        "description": "Returned by `method=vote` and `method=devote`.",
+        "properties": {"method": {"type": "string"}, "result": {"type": "boolean"}},
+        "required": ["method", "result"],
+        "additionalProperties": False,
+    },
+    "DemocraticResponse": {
+        "description": (
+            "Depends on the `method` parameter: `play` returns the stream url, `vote`/`devote` return the "
+            "applied method and its result, and `playlist` returns the current democratic song list."
+        ),
+        "oneOf": [
+            {"$ref": "#/components/schemas/DemocraticPlayResponse"},
+            {"$ref": "#/components/schemas/DemocraticVoteResponse"},
+            {"$ref": "#/components/schemas/DemocraticSongsResponse"},
+        ],
+    },
+    # search_group runs one search per object type and returns them all under `search`,
+    # keyed by type, each holding that type's normal object list (JsonOutput::searchGroup).
+    "SearchGroupResponse": {
+        "type": "object",
+        "description": (
+            "`search` is keyed by object type (`album`, `artist`, `album_artist`, `song_artist`, `song`, "
+            "`playlist`, `podcast`, `podcast_episode`, `genre`, `label`, `user`, `video`); each value is "
+            "that type's usual object list. Types with no matches are omitted."
+        ),
+        "properties": {
+            "search": {
+                "type": "object",
+                "additionalProperties": {"type": "array", "items": {"type": "object"}},
+            }
+        },
+        "required": ["search"],
+        "additionalProperties": False,
+    },
+    # playlist_hash reports the md5 of the playlist's items, or null when the playlist is empty.
+    "PlaylistHashResponse": {
+        "type": "object",
+        "properties": {"md5": {"type": "string", "nullable": True}},
+        "required": ["md5"],
+        "additionalProperties": False,
+    },
+    # get_lyrics and get_external_metadata share a shape: the object they were asked about
+    # plus one entry per plugin that answered. Plugin payloads are plugin-defined.
+    # `plugin` is a PHP associative array, so an empty one serialises as `[]` rather than `{}`
+    "_PluginMap": {
+        "oneOf": [
+            {"type": "object", "additionalProperties": {}},
+            {"type": "array", "maxItems": 0},
+        ],
+    },
+    "LyricsResponse": {
+        "type": "object",
+        "description": (
+            "`plugin` is keyed by lyric source (`database` plus any lyric-retriever plugin that "
+            "answered). When nothing answered it is serialised as an empty array, not an empty object."
+        ),
+        "properties": {
+            "object_id": {"type": "string"},
+            "object_type": {"type": "string"},
+            "plugin": {"$ref": "#/components/schemas/_PluginMap"},
+        },
+        "required": ["object_id", "object_type", "plugin"],
+        "additionalProperties": False,
+    },
+    "ExternalMetadataObject": {
+        "type": "object",
+        "description": "`plugin` is keyed by metadata-retriever plugin name; each value is that plugin's payload.",
+        "properties": {
+            "object_id": {"type": "string"},
+            "object_type": {"type": "string"},
+            "plugin": {"$ref": "#/components/schemas/_PluginMap"},
+        },
+        "required": ["object_id", "object_type", "plugin"],
+        "additionalProperties": False,
+    },
+    # no plugin answered -> the method falls back to the empty list envelope of the requested type
+    "EmptyListResponse": {
+        "type": "object",
+        "description": "The standard empty envelope, with an empty list keyed by the requested type.",
+        "properties": {"total_count": {"type": "integer"}, "md5": {"type": "string"}},
+        "required": ["total_count", "md5"],
+    },
+    "ExternalMetadataResponse": {
+        "description": (
+            "Returns the plugin payloads when at least one metadata plugin answered, and the empty "
+            "list envelope for the requested type when none did."
+        ),
+        "oneOf": [
+            {"$ref": "#/components/schemas/ExternalMetadataObject"},
+            {"$ref": "#/components/schemas/EmptyListResponse"},
+        ],
+    },
+    # localplay wraps every reply as {localplay: {command: {<command>: result}}} (JsonOutput::localplayResult).
+    "LocalplayStatusObject": {
+        "type": "object",
+        "description": (
+            "Player state. The exact fields come from the configured Localplay controller "
+            "(MPD, VLC, XBMC, UPnP, HTTPQ), so only `repeat` and `random` are guaranteed - "
+            "the API coerces those two to booleans. The rest are what that controller reports."
+        ),
+        "properties": {
+            "state": {"type": "string"},
+            "volume": {"type": "integer"},
+            "repeat": {"type": "boolean"},
+            "random": {"type": "boolean"},
+            "track": {"type": "integer"},
+            "track_title": {"type": "string"},
+            "track_artist": {"type": "string"},
+            "track_album": {"type": "string"},
+        },
+        "required": ["repeat", "random"],
+    },
+    "LocalplayResponse": {
+        "type": "object",
+        "description": "The command name maps to `true` when the controller accepted it, `false` when it did not.",
+        "properties": {
+            "localplay": {
+                "type": "object",
+                "properties": {"command": {"type": "object", "additionalProperties": {"type": "boolean"}}},
+                "required": ["command"],
+                "additionalProperties": False,
+            }
+        },
+        "required": ["localplay"],
+        "additionalProperties": False,
+    },
+    "LocalplayStatusResponse": {
+        "type": "object",
+        "description": "The `status` command reports the player state instead of a boolean.",
+        "properties": {
+            "localplay": {
+                "type": "object",
+                "properties": {
+                    "command": {
+                        "type": "object",
+                        "additionalProperties": {"$ref": "#/components/schemas/LocalplayStatusObject"},
+                    }
+                },
+                "required": ["command"],
+                "additionalProperties": False,
+            }
+        },
+        "required": ["localplay"],
+        "additionalProperties": False,
+    },
+    # playlist_generate switches shape on `format`: song/index both emit the song envelope
+    # (index is Json8_Data::indexes() dispatching to songs()), id emits a bare id array.
+    "PlaylistGenerateResponse": {
+        "description": (
+            "Depends on the `format` parameter: `song` (default) and `index` return the song list envelope, "
+            "`id` returns a bare array of song ids."
+        ),
+        "oneOf": [
+            {"$ref": "#/components/schemas/SongsResponse"},
+            {
+                "type": "array",
+                "description": "Returned by `format=id`: song ids only, with no envelope.",
+                "items": {"type": "string"},
+            },
+        ],
+    },
 }
 
 # deleted_array returns a union of three shapes; split it into named schemas by a
@@ -464,10 +821,11 @@ def build_deleted_schemas(docblocks: dict[str, str]) -> dict[str, dict]:
     return schemas
 
 
-def build_schemas(docblocks: dict[str, str]) -> dict[str, dict]:
+def build_schemas(sources: dict[str, dict[str, str]]) -> dict[str, dict]:
+    docblocks = sources["json8"]
     schemas: dict[str, dict] = {}
     for cfg in TYPES.values():
-        doc = docblocks.get(cfg["builder"])
+        doc = sources[cfg.get("source", "json8")].get(cfg["builder"])
         if doc is None:
             raise SystemExit(f"builder method not found: {cfg['builder']}")
         obj = shape_to_object_schema(return_shape_text(doc))
@@ -480,6 +838,7 @@ def build_schemas(docblocks: dict[str, str]) -> dict[str, dict]:
                 cfg["key"], cfg["object"], cfg.get("envelope", "standard")
             )
     schemas.update(build_deleted_schemas(docblocks))
+    schemas["PingResponse"] = build_ping_schema(schemas["HandshakeResponse"])
     schemas.update(MANUAL_SCHEMAS)
     return schemas
 
@@ -489,37 +848,100 @@ def build_schemas(docblocks: dict[str, str]) -> dict[str, dict]:
 # ---------------------------------------------------------------------------
 
 _ACTION_RE = re.compile(r"action=([A-Za-z0-9_]+)")
+# `&name=value` pairs after the action; `{placeholder}` values deliberately do not match
+_PARAM_RE = re.compile(r"[&?]([a-z_]+)=([A-Za-z0-9_]+)")
+_MAPPING_KEY_RE = re.compile(r"^(?:(GET|POST|PUT|PATCH|DELETE)\s+)?(/\S*)$")
+
+
+def mapping_operations(spec: dict):
+    """Yield (path, http method, rpc string) for every x-rpc-mapping.
+
+    A key may carry an explicit method prefix (`PATCH /bookmarks/{id}`); the unprefixed
+    key for a path covers whichever operations no prefixed key already claims, so e.g.
+    `/songs/{id}/bookmark` maps GET/PATCH/DELETE explicitly and PUT by default."""
+    mappings = spec.get("x-rpc-mappings", {})
+    paths = spec.get("paths", {})
+    parsed: list[tuple[str, str | None, str]] = []
+    claimed: dict[str, set[str]] = {}
+    for key, rpc in mappings.items():
+        match = _MAPPING_KEY_RE.match(key)
+        if not match:
+            continue
+        method = match.group(1).lower() if match.group(1) else None
+        parsed.append((match.group(2), method, rpc))
+        if method:
+            claimed.setdefault(match.group(2), set()).add(method)
+    for path, method, rpc in parsed:
+        operations = paths.get(path, {})
+        if method is not None:
+            if method in operations:
+                yield path, method, rpc
+            continue
+        for candidate in WIRED_HTTP_METHODS:
+            if candidate in operations and candidate not in claimed.get(path, set()):
+                yield path, candidate, rpc
 
 
 def wire_responses(spec: dict) -> list[str]:
     """Point matching 200 responses at their schema $ref. Returns a log of
     every (path, method, action, schema) wired."""
-    mappings = spec.get("x-rpc-mappings", {})
     wired: list[str] = []
-    for path, rpc in mappings.items():
+    for path, method, rpc in mapping_operations(spec):
         match = _ACTION_RE.search(rpc)
         if not match:
             continue
-        action = match.group(1)
-        schema_name = WIRING.get(action)
+        action   = match.group(1)
+        override = next(
+            (
+                WIRING_BY_PARAM[(action, name, value)]
+                for name, value in _PARAM_RE.findall(rpc)
+                if (action, name, value) in WIRING_BY_PARAM
+            ),
+            None,
+        )
+        if override is not None:
+            schema_name = override
+        elif method == "get":
+            schema_name = WIRING.get(action)
+        else:
+            schema_name = WIRING_BY_METHOD.get((method, action))
         if schema_name is None:
             continue
-        path_item = spec.get("paths", {}).get(path, {})
-        for method in WIRED_HTTP_METHODS:
-            op = path_item.get(method)
-            if not op:
-                continue
-            content = (
-                op.get("responses", {})
-                .get("200", {})
-                .get("content", {})
-                .get("application/json")
-            )
-            if content is None:
-                continue
-            content["schema"] = {"$ref": f"#/components/schemas/{schema_name}"}
-            wired.append(f"{method.upper():6s} {path}  ({action}) -> {schema_name}")
+        content = (
+            spec["paths"][path][method]
+            .get("responses", {})
+            .get("200", {})
+            .get("content", {})
+            .get("application/json")
+        )
+        if content is None:
+            continue
+        content["schema"] = {"$ref": f"#/components/schemas/{schema_name}"}
+        wired.append(f"{method.upper():6s} {path}  ({action}) -> {schema_name}")
     return wired
+
+
+def document_binary_responses(spec: dict) -> list[str]:
+    """Install the non-JSON success responses (redirects, zip, image bodies) on the
+    endpoints that serve media rather than data. Returns a log of what was set."""
+    touched: list[str] = []
+    for path, method, rpc in mapping_operations(spec):
+        match = _ACTION_RE.search(rpc)
+        if not match or method != "get":
+            continue
+        cfg = BINARY_RESPONSES.get(match.group(1))
+        if cfg is None:
+            continue
+        op = spec["paths"][path][method]
+        responses = op.setdefault("responses", {})
+        for code in cfg["drop"]:
+            responses.pop(code, None)
+        for code, body in cfg["set"].items():
+            responses[code] = json.loads(json.dumps(body))
+        ordered = {code: responses[code] for code in sorted(responses)}
+        op["responses"] = ordered
+        touched.append(f"GET    {path}  ({match.group(1)}) -> {'/'.join(sorted(cfg['set']))}")
+    return touched
 
 
 def dumps_canonical(spec: dict) -> str:
@@ -531,8 +953,7 @@ def main() -> int:
     ap.add_argument("--check", action="store_true", help="exit 1 if file would change")
     args = ap.parse_args()
 
-    docblocks = extract_docblocks(JSON8_DATA.read_text(encoding="utf-8"))
-    schemas = build_schemas(docblocks)
+    schemas = build_schemas(load_sources())
 
     original = OPENAPI.read_text(encoding="utf-8")
     spec = json.loads(original)
@@ -542,6 +963,7 @@ def main() -> int:
         spec["components"]["schemas"][name] = schema
 
     wired = wire_responses(spec)
+    binary = document_binary_responses(spec)
 
     updated = dumps_canonical(spec)
     changed = updated != original
@@ -549,6 +971,9 @@ def main() -> int:
     print(f"schemas generated: {', '.join(schemas)}")
     print(f"responses wired: {len(wired)}")
     for line in wired:
+        print(f"  {line}")
+    print(f"non-JSON responses documented: {len(binary)}")
+    for line in binary:
         print(f"  {line}")
 
     if args.check:

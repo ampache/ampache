@@ -433,7 +433,7 @@ class Json4_Data
         $democratic = Democratic::get_current_playlist($user);
 
         $JSON = [];
-        foreach ($object_ids as $row_id => $data) {
+        foreach ($object_ids as $data) {
             $className = ObjectTypeToClassNameMapper::map($data['object_type']->value);
             /** @var Song $song */
             $song = new $className($data['object_id']);
@@ -469,7 +469,7 @@ class Json4_Data
                 "preciserating" => $user_rating,
                 "rating" => $user_rating,
                 "averagerating" => $rating->get_average_rating() ?? null,
-                "vote" => $democratic->get_vote($row_id),
+                "vote" => $democratic->get_vote($data['track_id']),
                 "genre" => self::_simple_genre_array($song->get_tags())
             ];
         }

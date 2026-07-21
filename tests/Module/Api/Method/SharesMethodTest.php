@@ -108,7 +108,7 @@ class SharesMethodTest extends MockeryTestCase
             ->andReturn([]);
 
         $output->shouldReceive('writeEmpty')
-            ->with($apiVersion, 'shares')
+            ->with($apiVersion, 'share')
             ->once()
             ->andReturn($result);
 

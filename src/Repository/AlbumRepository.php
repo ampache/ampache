@@ -309,9 +309,20 @@ final readonly class AlbumRepository implements AlbumRepositoryInterface
     public function getRandom(
         int $userId,
         ?int $count = 1,
+        int $catalogId = 0,
     ): array {
-        $results = [];
-        $sql     = "SELECT DISTINCT `album`.`id` FROM `album` WHERE `album`.`catalog` IN (" . implode(',', Catalog::get_catalogs('', $userId, true)) . ") ";
+        $results  = [];
+        $catalogs = Catalog::get_catalogs('', $userId, true);
+        if ($catalogId !== 0) {
+            // never let a requested catalog widen what the user is allowed to see
+            $catalogs = array_intersect($catalogs, [$catalogId]);
+        }
+
+        if ($catalogs === []) {
+            return $results;
+        }
+
+        $sql = "SELECT DISTINCT `album`.`id` FROM `album` WHERE `album`.`catalog` IN (" . implode(',', $catalogs) . ") ";
 
         $rating_filter = AmpConfig::get_rating_filter();
         if ($rating_filter > 0 && $rating_filter <= 5 && $userId > 0) {

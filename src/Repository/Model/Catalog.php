@@ -1439,6 +1439,27 @@ abstract class Catalog extends database_object
     }
 
     /**
+     * get_catalog_id_filter
+     *
+     * Return an SQL condition restricting $column to the objects found in a single catalog.
+     * Tables owning a `catalog` column are filtered directly, artists and playlists use the `catalog_map` table.
+     * A catalog_id of 0 means "don't filter"; a negative id matches nothing (used for a catalog the user can't browse).
+     * An empty string is returned when the type can't be filtered (the caller must not filter in that case).
+     */
+    public static function get_catalog_id_filter(string $type, string $column, int $catalog_id): string
+    {
+        if ($catalog_id === 0) {
+            return '';
+        }
+
+        return match ($type) {
+            'album', 'album_disk', 'live_stream', 'podcast', 'podcast_episode', 'song', 'video' => sprintf('%s IN (SELECT `id` FROM `%s` WHERE `catalog` = %d) ', $column, $type, $catalog_id),
+            'album_artist', 'artist', 'playlist', 'song_artist' => sprintf("%s IN (SELECT `object_id` FROM `catalog_map` WHERE `object_type` = '%s' AND `catalog_id` = %d) ", $column, $type, $catalog_id),
+            default => '',
+        };
+    }
+
+    /**
      * get_catalogs
      *
      * Pull all the current catalogs for your user and return an array of ids

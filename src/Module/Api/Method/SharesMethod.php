@@ -120,7 +120,7 @@ final class SharesMethod implements MethodInterface
         $results = $browse->get_objects();
         if ($results === []) {
             $response->getBody()->write(
-                $output->writeEmpty($apiVersion, 'shares')
+                $output->writeEmpty($apiVersion, 'share')
             );
 
             return $response;

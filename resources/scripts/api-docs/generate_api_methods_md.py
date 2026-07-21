@@ -41,6 +41,10 @@ END = "<!-- GENERATED:RESPONSE:END -->"
 
 _ACTION_RE = re.compile(r"action=([A-Za-z0-9_]+)")
 
+# Mutations answer with the generic success envelope; only POST responses carrying a
+# real payload (democratic) are worth a generated field table.
+POST_SCHEMA_SKIP = {"SuccessResponse"}
+
 # schema name -> MD method anchor (a `### <action>` heading, GitHub-slugged) that
 # documents that schema, so ref names in tables can link to it. Populated in main.
 SCHEMA_ANCHOR: dict[str, str] = {}
@@ -63,26 +67,32 @@ def resolve_ref(spec: dict, ref: str) -> dict:
 
 
 def action_to_schema_ref(spec: dict) -> dict[str, str]:
-    """Map RPC action -> the $ref set on its GET 200 response (only where one
-    exists and points into components/schemas)."""
+    """Map RPC action -> the $ref set on its 200 response (only where one exists
+    and points into components/schemas). GET wins; POST covers the few actions
+    that return data from a mutation (e.g. democratic)."""
     out: dict[str, str] = {}
-    for path, rpc in spec.get("x-rpc-mappings", {}).items():
-        match = _ACTION_RE.search(rpc)
-        if not match:
-            continue
-        op = spec.get("paths", {}).get(path, {}).get("get")
-        if not op:
-            continue
-        schema = (
-            op.get("responses", {})
-            .get("200", {})
-            .get("content", {})
-            .get("application/json", {})
-            .get("schema", {})
-        )
-        ref = schema.get("$ref", "")
-        if ref.startswith("#/components/schemas/"):
-            out[match.group(1)] = ref
+    for method in ("get", "post"):
+        for path, rpc in spec.get("x-rpc-mappings", {}).items():
+            match = _ACTION_RE.search(rpc)
+            if not match:
+                continue
+            op = spec.get("paths", {}).get(path, {}).get(method)
+            if not op:
+                continue
+            schema = (
+                op.get("responses", {})
+                .get("200", {})
+                .get("content", {})
+                .get("application/json", {})
+                .get("schema", {})
+            )
+            ref = schema.get("$ref", "")
+            if not ref.startswith("#/components/schemas/"):
+                continue
+            if method == "get":
+                out[match.group(1)] = ref
+            elif ref_name(ref) not in POST_SCHEMA_SKIP:
+                out.setdefault(match.group(1), ref)
     return out
 
 
@@ -192,17 +202,12 @@ XML_NOTE = [
 ]
 
 
-def render_body(spec: dict, ref: str, fmt: str) -> tuple[str, list[str]]:
-    """Return (marker, body_lines) for the response block. ``fmt`` is 'json' or
-    'xml' (controls the `* return` marker wording and adds an XML-structure note)."""
-    schema = resolve_ref(spec, ref)
+def describe_schema(spec: dict, schema: dict) -> tuple[str, list[str]]:
+    """Render one concrete schema. Returns (kind, lines) where kind is 'list',
+    'object' or 'other' (used to pick the `* return` marker wording)."""
     is_list, key = is_list_envelope(schema)
     lines: list[str] = []
-    if fmt == "xml":
-        lines.extend(XML_NOTE)
-        lines.append("")
     if is_list and key is not None:
-        marker = "* return array" if fmt == "json" else "* return"
         lines.append(f"Returns a `{key}` list.")
         lines.append("")
         lines.extend(object_table(schema))
@@ -214,14 +219,54 @@ def render_body(spec: dict, ref: str, fmt: str) -> tuple[str, list[str]]:
             lines.append(f"Each `{key}` entry ({link_ref(item_name)}):")
             lines.append("")
             lines.extend(object_table(item_schema))
-    elif schema.get("properties"):
-        marker = "* return object" if fmt == "json" else "* return"
-        lines.append("Returns a single object.")
+        return "list", lines
+    if schema.get("properties"):
+        lines.append(schema.get("description") or "Returns a single object.")
         lines.append("")
         lines.extend(object_table(schema))
-    else:
-        marker = "* return object" if fmt == "json" else "* return"
-        lines.extend(describe_freeform(schema))
+        return "object", lines
+    return "other", describe_freeform(schema)
+
+
+def render_variants(spec: dict, schema: dict) -> list[str]:
+    """Render a top-level `oneOf` response: the parent description followed by one
+    labelled block per alternative shape."""
+    blocks: list[list[str]] = []
+    if schema.get("description"):
+        blocks.append([schema["description"]])
+    for variant in schema["oneOf"]:
+        target = resolve_ref(spec, variant["$ref"]) if "$ref" in variant else variant
+        label = link_ref(ref_name(variant["$ref"])) if "$ref" in variant else type_str(variant)
+        block = [f"**{label}**"]
+        if target.get("description"):
+            block += ["", target["description"]]
+        # A bare array variant has no fields to tabulate; the label says it all.
+        if target.get("type") != "array":
+            block += ["", *describe_schema(spec, target)[1]]
+        blocks.append(block)
+    lines: list[str] = []
+    for block in blocks:
+        if lines:
+            lines.append("")
+        lines.extend(block)
+    return lines
+
+
+def render_body(spec: dict, ref: str, fmt: str) -> tuple[str, list[str]]:
+    """Return (marker, body_lines) for the response block. ``fmt`` is 'json' or
+    'xml' (controls the `* return` marker wording and adds an XML-structure note)."""
+    schema = resolve_ref(spec, ref)
+    lines: list[str] = []
+    if fmt == "xml":
+        lines.extend(XML_NOTE)
+        lines.append("")
+    if "oneOf" in schema:
+        marker = "* return object|array" if fmt == "json" else "* return"
+        lines.extend(render_variants(spec, schema))
+        return marker, lines
+    kind, body = describe_schema(spec, schema)
+    marker = ("* return array" if kind == "list" else "* return object") if fmt == "json" else "* return"
+    lines.extend(body)
     return marker, lines
 
 

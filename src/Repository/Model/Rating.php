@@ -172,7 +172,7 @@ class Rating extends database_object
      * Get objects with the highest average rating.
      * @return int[]
      */
-    public static function get_highest(string $input_type, int $count = 0, int $offset = 0, ?int $user_id = null, bool $by_user = false): array
+    public static function get_highest(string $input_type, int $count = 0, int $offset = 0, ?int $user_id = null, bool $by_user = false, int $catalog_id = 0): array
     {
         if ($count === 0) {
             $count = AmpConfig::get('popular_threshold', 10);
@@ -184,7 +184,7 @@ class Rating extends database_object
         }
 
         // Select Top objects counting by # of rows
-        $sql   = self::get_highest_sql($input_type, $user_id, $by_user);
+        $sql   = self::get_highest_sql($input_type, $user_id, $by_user, $catalog_id);
         $limit = ($offset < 1)
             ? $count
             : $offset . "," . $count;
@@ -205,7 +205,7 @@ class Rating extends database_object
     /**
      * get_highest_sql
      */
-    public static function get_highest_sql(string $input_type, ?int $user_id = null, bool $by_user = false): string
+    public static function get_highest_sql(string $input_type, ?int $user_id = null, bool $by_user = false, int $catalog_id = 0): string
     {
         $type    = Stats::validate_type($input_type);
         $user_id = $user_id ?? -1;
@@ -225,6 +225,11 @@ class Rating extends database_object
 
         if (AmpConfig::get('catalog_filter')) {
             $sql .= " AND" . Catalog::get_user_filter('rating_' . $type, $user_id);
+        }
+
+        $catalog_sql = Catalog::get_catalog_id_filter($input_type, '`rating`.`object_id`', $catalog_id);
+        if ($catalog_sql !== '') {
+            $sql .= " AND " . $catalog_sql;
         }
 
         if ($input_type == 'album_artist') {

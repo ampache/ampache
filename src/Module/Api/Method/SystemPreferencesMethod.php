@@ -42,15 +42,18 @@ final class SystemPreferencesMethod implements MethodInterface
 {
     public const string ACTION = 'system_preferences';
 
+    private PreferenceItemBuilder $preferenceItemBuilder;
     private PreferenceRepositoryInterface $preferenceRepository;
     private PrivilegeCheckerInterface $privilegeChecker;
 
     public function __construct(
         PreferenceRepositoryInterface $preferenceRepository,
         PrivilegeCheckerInterface $privilegeChecker,
+        PreferenceItemBuilder $preferenceItemBuilder,
     ) {
-        $this->preferenceRepository = $preferenceRepository;
-        $this->privilegeChecker     = $privilegeChecker;
+        $this->preferenceRepository  = $preferenceRepository;
+        $this->privilegeChecker      = $privilegeChecker;
+        $this->preferenceItemBuilder = $preferenceItemBuilder;
     }
 
     /**
@@ -86,9 +89,7 @@ final class SystemPreferencesMethod implements MethodInterface
 
         $preferences = $this->preferenceRepository->getAll(null, true);
         if ($apiVersion >= 8) {
-            foreach ($preferences as $index => $preference) {
-                $preferences[$index]['id'] = (string) $preference['id'];
-            }
+            $preferences = $this->preferenceItemBuilder->buildList($preferences);
         }
 
         $response->getBody()->write(

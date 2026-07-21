@@ -63,7 +63,7 @@ final class PreferenceRepository implements PreferenceRepositoryInterface
      *     level: int,
      *     type: string,
      *     category: string,
-     *     subcategory: string,
+     *     subcategory: ?string,
      *     has_access?: bool,
      *     values?: string[]|int[],
      * }>

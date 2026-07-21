@@ -114,6 +114,7 @@ interface AlbumRepositoryInterface
     public function getRandom(
         int $userId,
         ?int $count = 1,
+        int $catalogId = 0,
     ): array;
 
     /**

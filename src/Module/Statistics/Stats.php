@@ -453,7 +453,7 @@ class Stats
             ? "`album_disk`.`album_id`"
             : $sql_type;
         // join valid catalogs or a specific one
-        $sql .= ((int) $catalog_id > 0)
+        $sql .= ((int) $catalog_id !== 0)
             ? "LEFT JOIN `catalog_map` ON `catalog_map`.`object_id` = " . $join_type . " AND `catalog_map`.`object_type` = '" . $base_type . "' WHERE `catalog_map`.`catalog_id` = '" . $catalog_id . "' "
             : "LEFT JOIN `catalog_map` ON `catalog_map`.`object_id` = " . $join_type . " AND `catalog_map`.`object_type` = '" . $base_type . "' WHERE `catalog_map`.`catalog_id` IN (" . implode(',', Catalog::get_catalogs('', $user?->getId(), true)) . ") ";
 
@@ -566,6 +566,7 @@ class Stats
         int $offset = 0,
         ?User $user = null,
         bool $newest = true,
+        int $catalog_id = 0,
     ): array {
         if ($count === 0) {
             $count = AmpConfig::get('popular_threshold', 10);
@@ -576,7 +577,7 @@ class Stats
             $offset = 0;
         }
 
-        $sql   = self::get_recent_sql($input_type, $user, $newest);
+        $sql   = self::get_recent_sql($input_type, $user, $newest, $catalog_id);
         $limit = ($offset < 1)
             ? $count
             : $offset . "," . $count;
@@ -598,7 +599,7 @@ class Stats
      * get_recent_sql
      * This returns the get_recent sql
      */
-    public static function get_recent_sql(string $input_type, ?User $user = null, bool $newest = true): string
+    public static function get_recent_sql(string $input_type, ?User $user = null, bool $newest = true, int $catalog_id = 0): string
     {
         $type           = self::validate_type($input_type);
         $ordersql       = ($newest) ? 'DESC' : 'ASC';
@@ -621,6 +622,15 @@ class Stats
 
         if ($catalog_filter && in_array($type, ['video', 'artist', 'album_artist', 'album', 'album_disk', 'song'], true) && $filter_user !== null) {
             $sql .= " AND" . Catalog::get_user_filter('object_count_' . $type, $filter_user->getId());
+        }
+
+        // album_disk rows are keyed on the joined table, everything else filters the object_count id directly
+        $catalog_column = ($input_type === 'album_disk')
+            ? '`album_disk`.`id`'
+            : '`object_count`.`object_id`';
+        $catalog_sql = Catalog::get_catalog_id_filter($input_type, $catalog_column, $catalog_id);
+        if ($catalog_sql !== '') {
+            $sql .= " AND " . $catalog_sql;
         }
 
         $rating_filter = AmpConfig::get_rating_filter();
@@ -765,6 +775,7 @@ class Stats
         int $since = 0,
         int $before = 0,
         bool $by_user = false,
+        int $catalog_id = 0,
     ): array {
         if ($count === 0) {
             $count = AmpConfig::get('popular_threshold', 10);
@@ -775,7 +786,7 @@ class Stats
             $offset = 0;
         }
 
-        $sql   = self::get_top_sql($input_type, (int) $threshold, 'stream', $user, $random, $since, $before, false, $by_user);
+        $sql   = self::get_top_sql($input_type, (int) $threshold, 'stream', $user, $random, $since, $before, false, $by_user, $catalog_id);
         $limit = ($offset < 1)
             ? $count
             : $offset . "," . $count;
@@ -807,6 +818,7 @@ class Stats
         int $before = 0,
         bool $addAdditionalColumns = false,
         bool $by_user = false,
+        int $catalog_id = 0,
     ): string {
         $type           = self::validate_type($input_type);
         $date           = $since ?: time() - (86400 * $threshold);
@@ -845,6 +857,7 @@ class Stats
 
         if (
             $user === null
+            && $catalog_id === 0
             && AmpConfig::get('cron_cache')
             && !$addAdditionalColumns
             && in_array($type, ['album', 'album_disk', 'artist', 'song', 'genre', 'catalog', 'live_stream', 'video', 'podcast', 'podcast_episode', 'playlist'], true)
@@ -915,6 +928,15 @@ class Stats
 
             if ($catalog_filter && in_array($type, ['artist', 'album', 'album_disk', 'podcast_episode', 'song', 'video'], true) && $filter_user !== null) {
                 $sql .= " AND" . Catalog::get_user_filter('object_count_' . $type, $filter_user->getId());
+            }
+
+            // album_disk rows are keyed on the joined table, everything else filters the object_count id directly
+            $catalog_column = ($input_type === 'album_disk')
+                ? '`album_disk`.`id`'
+                : '`object_count`.`object_id`';
+            $catalog_sql = Catalog::get_catalog_id_filter($input_type, $catalog_column, $catalog_id);
+            if ($catalog_sql !== '') {
+                $sql .= " AND " . $catalog_sql;
             }
 
             $rating_filter = AmpConfig::get_rating_filter();

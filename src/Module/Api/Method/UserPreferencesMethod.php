@@ -40,12 +40,15 @@ final class UserPreferencesMethod implements MethodInterface
 
     public const string REST_ACTION = 'preferences';
 
+    private PreferenceItemBuilder $preferenceItemBuilder;
     private PreferenceRepositoryInterface $preferenceRepository;
 
     public function __construct(
         PreferenceRepositoryInterface $preferenceRepository,
+        PreferenceItemBuilder $preferenceItemBuilder,
     ) {
-        $this->preferenceRepository = $preferenceRepository;
+        $this->preferenceRepository  = $preferenceRepository;
+        $this->preferenceItemBuilder = $preferenceItemBuilder;
     }
 
     /**
@@ -72,9 +75,7 @@ final class UserPreferencesMethod implements MethodInterface
 
         $preferences = $this->preferenceRepository->getAll($user, true);
         if ($apiVersion >= 8) {
-            foreach ($preferences as $index => $preference) {
-                $preferences[$index]['id'] = (string) $preference['id'];
-            }
+            $preferences = $this->preferenceItemBuilder->buildList($preferences);
         }
 
         $response->getBody()->write(
