@@ -494,7 +494,7 @@ class Playlist extends playlist_object
 
             switch ($object_type) {
                 case LibraryItemEnum::SONG:
-                    $sql = 'SELECT `playlist_data`.`id`, `object_id`, `object_type`, `playlist_data`.`track`, `song`.`time` FROM `playlist_data` INNER JOIN `song` ON `playlist_data`.`object_id` = `song`.`id` WHERE `playlist_data`.`playlist` = ? AND `object_id` IS NOT NULL ';
+                    $sql = 'SELECT `playlist_data`.`id`, `object_id`, `object_type`, `playlist_data`.`track`, `song`.`time` FROM `playlist_data` INNER JOIN `song` ON `playlist_data`.`object_id` = `song`.`id` WHERE `playlist_data`.`playlist` = ? AND `playlist_data`.`object_type`="song" AND `object_id` IS NOT NULL ';
                     if (AmpConfig::get('catalog_filter')) {
                         if ($system) {
                             $sql .= 'AND `playlist_data`.`object_type`="song" AND `song`.`catalog` IN (SELECT `catalog_id` FROM `catalog_filter_group_map` WHERE `catalog_filter_group_map`.`group_id` = 0 AND `catalog_filter_group_map`.`enabled`=1) ';
@@ -507,7 +507,7 @@ class Playlist extends playlist_object
                     $sql .= 'ORDER BY `playlist_data`.`track`';
                     break;
                 case LibraryItemEnum::PODCAST_EPISODE:
-                    $sql = 'SELECT `playlist_data`.`id`, `object_id`, `object_type`, `playlist_data`.`track`, `podcast_episode`.`time` FROM `playlist_data` INNER JOIN `podcast_episode` ON `playlist_data`.`object_id` = `podcast_episode`.`id` WHERE `playlist_data`.`playlist` = ? AND `object_id` IS NOT NULL ';
+                    $sql = 'SELECT `playlist_data`.`id`, `object_id`, `object_type`, `playlist_data`.`track`, `podcast_episode`.`time` FROM `playlist_data` INNER JOIN `podcast_episode` ON `playlist_data`.`object_id` = `podcast_episode`.`id` WHERE `playlist_data`.`playlist` = ? AND `playlist_data`.`object_type`="podcast_episode" AND `object_id` IS NOT NULL ';
                     if (AmpConfig::get('catalog_filter')) {
                         if ($system) {
                             $sql .= 'AND `playlist_data`.`object_type`="podcast_episode" AND `podcast_episode`.`catalog` IN (SELECT `catalog_id` FROM `catalog_filter_group_map` WHERE `catalog_filter_group_map`.`group_id` = 0 AND `catalog_filter_group_map`.`enabled`=1) ';
@@ -520,7 +520,7 @@ class Playlist extends playlist_object
                     $sql .= 'ORDER BY `playlist_data`.`track`';
                     break;
                 case LibraryItemEnum::VIDEO:
-                    $sql = 'SELECT `playlist_data`.`id`, `object_id`, `object_type`, `playlist_data`.`track`, `video`.`time` FROM `playlist_data` INNER JOIN `video` ON `playlist_data`.`object_id` = `video`.`id` WHERE `playlist_data`.`playlist` = ? AND `object_id` IS NOT NULL ';
+                    $sql = 'SELECT `playlist_data`.`id`, `object_id`, `object_type`, `playlist_data`.`track`, `video`.`time` FROM `playlist_data` INNER JOIN `video` ON `playlist_data`.`object_id` = `video`.`id` WHERE `playlist_data`.`playlist` = ? AND `playlist_data`.`object_type`="video" AND `object_id` IS NOT NULL ';
                     if (AmpConfig::get('catalog_filter')) {
                         if ($system) {
                             $sql .= 'AND `playlist_data`.`object_type`="video" AND `video`.`catalog` IN (SELECT `catalog_id` FROM `catalog_filter_group_map` WHERE `catalog_filter_group_map`.`group_id` = 0 AND `catalog_filter_group_map`.`enabled`=1) ';
@@ -584,7 +584,7 @@ class Playlist extends playlist_object
                 . "WHERE `playlist_data`.`playlist` = ?  AND `playlist_data`.`object_type` IS NOT NULL ";
         } else {
             // check for a specific type of object
-            $sql = 'SELECT COUNT(`playlist_data`.`id`) AS `list_count` FROM `playlist_data` INNER JOIN `' . $type . '` ON `playlist_data`.`object_id` = `' . $type . '`.`id` WHERE `playlist_data`.`playlist` = ? AND `object_id` IS NOT NULL ';
+            $sql = 'SELECT COUNT(`playlist_data`.`id`) AS `list_count` FROM `playlist_data` INNER JOIN `' . $type . '` ON `playlist_data`.`object_id` = `' . $type . '`.`id` WHERE `playlist_data`.`playlist` = ? AND `playlist_data`.`object_type` = \'' . $type . '\' AND `object_id` IS NOT NULL ';
         }
 
         if (AmpConfig::get('catalog_filter')) {
