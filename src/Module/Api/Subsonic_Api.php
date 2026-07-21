@@ -179,6 +179,8 @@ class Subsonic_Api
         '_getAmpacheIdArrays',
         '_jsonOutput',
         '_jsonpOutput',
+        '_musicFolderId',
+        '_musicFolders',
         '_output_body',
         '_output_header',
         '_responseOutput',
@@ -1378,14 +1380,13 @@ class Subsonic_Api
      */
     public static function getartists(array $input, User $user): void
     {
-        $musicFolderId = (isset($input['musicFolderId'])) ? (int) self::getAmpacheId($input['musicFolderId']) : 0;
-        $catalogs      = [];
-        if ($musicFolderId) {
-            $catalogs[] = $musicFolderId;
-        }
+        $catalogs = self::_musicFolders($input, $user);
 
         $user_id = $user->id;
-        $artists = Artist::get_id_arrays($catalogs, ((bool) Preference::get_by_user($user_id, 'subsonic_force_album_artist') === true));
+        // an empty catalog list makes get_id_arrays return everything, so only ask when there is something to ask for
+        $artists = ($catalogs === [])
+            ? []
+            : Artist::get_id_arrays($catalogs, ((bool) Preference::get_by_user($user_id, 'subsonic_force_album_artist') === true));
         $format  = (string) ($input['f'] ?? 'xml');
         if ($format === 'xml') {
             $response = self::_addXmlResponse(__FUNCTION__);
@@ -1491,8 +1492,7 @@ class Subsonic_Api
 
     public static function getCatalogSubId(int|string $ampache_id): string
     {
-        // `musicFolder/@id` is an integer in both the Subsonic XSD and the OpenSubsonic spec
-        return (string) $ampache_id;
+        return self::SUBID_CATALOG . $ampache_id;
     }
 
     /**
@@ -1649,15 +1649,8 @@ class Subsonic_Api
     {
         set_time_limit(300);
 
-        $musicFolderId   = (isset($input['musicFolderId'])) ? (int) self::getAmpacheId($input['musicFolderId']) : 0;
         $ifModifiedSince = $input['ifModifiedSince'] ?? '';
-
-        $catalogs = [];
-        if ($musicFolderId) {
-            $catalogs[] = $musicFolderId;
-        } else {
-            $catalogs = $user->get_catalogs('music');
-        }
+        $catalogs        = self::_musicFolders($input, $user);
 
         $lastmodified = 0;
         $fcatalogs    = [];
@@ -2181,7 +2174,8 @@ class Subsonic_Api
                 $operator = 4;
                 $ftype    = "artist";
             } else {
-                $finput   = $musicFolderId;
+                // a real music folder must be one the user can browse
+                $finput   = self::_musicFolderId($input, $user);
                 $operator = 0;
                 $ftype    = "catalog";
             }
@@ -2405,20 +2399,20 @@ class Subsonic_Api
      */
     public static function getsongsbygenre(array $input, User $user): void
     {
-        unset($user);
         $genre = self::_check_parameter($input, 'genre', __FUNCTION__);
         if ($genre === false) {
             return;
         }
 
-        $count  = (int) ($input['count'] ?? 0);
-        $offset = (int) ($input['offset'] ?? 0);
+        $count         = (int) ($input['count'] ?? 0);
+        $offset        = (int) ($input['offset'] ?? 0);
+        $musicFolderId = self::_musicFolderId($input, $user);
 
         $tag = Tag::construct_from_name($genre);
         if ($tag->isNew()) {
             $songs = [];
         } else {
-            $songs = Tag::get_tag_objects("song", $tag->id, $count, $offset);
+            $songs = Tag::get_tag_objects("song", $tag->id, $count, $offset, $musicFolderId);
         }
 
         $format = (string) ($input['f'] ?? 'xml');
@@ -2452,47 +2446,22 @@ class Subsonic_Api
             ? $user
             : null;
 
+        $musicFolderId = self::_musicFolderId($input, $user);
+        $artists       = Userflag::get_latest('artist', $output_user, 10000, 0, 0, 0, $by_user, $musicFolderId);
+        $albums        = Userflag::get_latest('album', $output_user, 10000, 0, 0, 0, $by_user, $musicFolderId);
+        $songs         = Userflag::get_latest('song', $output_user, 10000, 0, 0, 0, $by_user, $musicFolderId);
+
         $format = (string) ($input['f'] ?? 'xml');
         if ($format === 'xml') {
             $response = self::_addXmlResponse(__FUNCTION__);
-            switch ($elementName) {
-                case 'starred':
-                    $response = Subsonic_Xml_Data::addStarred(
-                        $response,
-                        Userflag::get_latest('artist', $output_user, 10000, 0, 0, 0, $by_user),
-                        Userflag::get_latest('album', $output_user, 10000, 0, 0, 0, $by_user),
-                        Userflag::get_latest('song', $output_user, 10000, 0, 0, 0, $by_user)
-                    );
-                    break;
-                case 'starred2':
-                    $response = Subsonic_Xml_Data::addStarred2(
-                        $response,
-                        Userflag::get_latest('artist', $output_user, 10000, 0, 0, 0, $by_user),
-                        Userflag::get_latest('album', $output_user, 10000, 0, 0, 0, $by_user),
-                        Userflag::get_latest('song', $output_user, 10000, 0, 0, 0, $by_user)
-                    );
-                    break;
-            }
+            $response = ($elementName === 'starred2')
+                ? Subsonic_Xml_Data::addStarred2($response, $artists, $albums, $songs)
+                : Subsonic_Xml_Data::addStarred($response, $artists, $albums, $songs);
         } else {
             $response = self::_addJsonResponse(__FUNCTION__);
-            switch ($elementName) {
-                case 'starred':
-                    $response = Subsonic_Json_Data::addStarred(
-                        $response,
-                        Userflag::get_latest('artist', $output_user, 10000, 0, 0, 0, $by_user),
-                        Userflag::get_latest('album', $output_user, 10000, 0, 0, 0, $by_user),
-                        Userflag::get_latest('song', $output_user, 10000, 0, 0, 0, $by_user)
-                    );
-                    break;
-                case 'starred2':
-                    $response = Subsonic_Json_Data::addStarred2(
-                        $response,
-                        Userflag::get_latest('artist', $output_user, 10000, 0, 0, 0, $by_user),
-                        Userflag::get_latest('album', $output_user, 10000, 0, 0, 0, $by_user),
-                        Userflag::get_latest('song', $output_user, 10000, 0, 0, 0, $by_user)
-                    );
-                    break;
-            }
+            $response = ($elementName === 'starred2')
+                ? Subsonic_Json_Data::addStarred2($response, $artists, $albums, $songs)
+                : Subsonic_Json_Data::addStarred($response, $artists, $albums, $songs);
         }
         self::_responseOutput($input, __FUNCTION__, $response);
     }
@@ -3548,7 +3517,8 @@ class Subsonic_Api
                     Preference::update('share', $user_id, 1);
                 }
                 if ($maxbitrate > 0) {
-                    Preference::update('transcode_bitrate', $user_id, $maxbitrate);
+                    // Subsonic maxBitRate is kbps; transcode_bitrate is stored in bps
+                    Preference::update('transcode_bitrate', $user_id, $maxbitrate * 1000);
                 }
                 self::_responseOutput($input, __FUNCTION__);
             } else {
@@ -3589,7 +3559,7 @@ class Subsonic_Api
     {
         $size          = (int) ($input['size'] ?? 10);
         $offset        = (int) ($input['offset'] ?? 0);
-        $musicFolderId = (isset($input['musicFolderId'])) ? (int) self::getAmpacheId($input['musicFolderId']) : 0;
+        $musicFolderId = self::_musicFolderId($input, $user);
         $catalogFilter = (AmpConfig::get('catalog_disable') || AmpConfig::get('catalog_filter'));
 
         // hide ratings and flags for other users if single user data is enabled
@@ -3598,44 +3568,45 @@ class Subsonic_Api
             ? $user
             : null;
 
-        // Get albums from all catalogs by default Catalog filter is not supported for all request types for now.
+        // Get albums from all catalogs by default
         $catalogs = ($catalogFilter)
             ? $user->get_catalogs('music')
             : null;
-        if ($musicFolderId > 0) {
-            $catalogs   = [];
-            $catalogs[] = $musicFolderId;
+        if ($musicFolderId !== 0) {
+            $catalogs = self::_musicFolders($input, $user);
         }
         $albums = null;
         switch ($type) {
             case 'random':
                 $albums = self::getAlbumRepository()->getRandom(
                     $user->id,
-                    $size
+                    $size,
+                    $musicFolderId
                 );
                 break;
             case 'newest':
                 $albums = Stats::get_newest('album', $size, $offset, $musicFolderId, $user);
                 break;
             case 'highest':
-                $albums = Rating::get_highest('album', $size, $offset, $output_user?->id, $by_user);
+                $albums = Rating::get_highest('album', $size, $offset, $output_user?->id, $by_user, $musicFolderId);
                 break;
             case 'frequent':
-                $albums = Stats::get_top('album', $size, 0, $offset, $output_user, false, 0, 0, $by_user);
+                $albums = Stats::get_top('album', $size, 0, $offset, $output_user, false, 0, 0, $by_user, $musicFolderId);
                 break;
             case 'recent':
-                $albums = Stats::get_recent('album', $size, $offset, $output_user);
+                $albums = Stats::get_recent('album', $size, $offset, $output_user, true, $musicFolderId);
                 break;
             case 'starred':
-                $albums = Userflag::get_latest('album', $output_user, $size, $offset, 0, 0, $by_user);
+                $albums = Userflag::get_latest('album', $output_user, $size, $offset, 0, 0, $by_user, $musicFolderId);
                 break;
             case 'alphabeticalByName':
-                $albums = ($catalogFilter && empty($catalogs) && $musicFolderId == 0)
+                // an empty catalog list means everything to these calls, so a filtered request must bail out first
+                $albums = (empty($catalogs) && ($catalogFilter || $musicFolderId !== 0))
                     ? []
                     : Catalog::get_albums($size, $offset, $catalogs);
                 break;
             case 'alphabeticalByArtist':
-                $albums = ($catalogFilter && empty($catalogs) && $musicFolderId == 0)
+                $albums = (empty($catalogs) && ($catalogFilter || $musicFolderId !== 0))
                     ? []
                     : Catalog::get_albums_by_artist($size, $offset, $catalogs);
                 break;
@@ -3644,7 +3615,11 @@ class Subsonic_Api
                 $toYear   = (int) max(($input['fromYear'] ?? 0), ($input['toYear'] ?? 0));
 
                 if ($fromYear || $toYear) {
-                    $data   = Search::year_search($fromYear, $toYear, $size, $offset);
+                    $data = Search::year_search($fromYear, $toYear, $size, $offset);
+                    if ($musicFolderId !== 0) {
+                        $data['catalog_id'] = $musicFolderId;
+                    }
+
                     $albums = Search::run($data, $user);
                 }
                 break;
@@ -3652,7 +3627,7 @@ class Subsonic_Api
                 $genre  = $input['genre'];
                 $tag_id = Tag::tag_exists($genre);
                 if ($tag_id > 0) {
-                    $albums = Tag::get_tag_objects('album', $tag_id, $size, $offset);
+                    $albums = Tag::get_tag_objects('album', $tag_id, $size, $offset, $musicFolderId);
                 }
                 break;
         }
@@ -3823,6 +3798,43 @@ class Subsonic_Api
     }
 
     /**
+     * _musicFolderId
+     *
+     * Resolve a requested musicFolderId into a single catalog id to filter on.
+     * 0 means no folder was requested; -1 can never match a catalog so a folder the user can't browse returns
+     * nothing instead of everything.
+     * @param array<string, mixed> $input
+     */
+    private static function _musicFolderId(array $input, User $user): int
+    {
+        $sub_id = $input['musicFolderId'] ?? null;
+        if ($sub_id === null || $sub_id === '') {
+            return 0;
+        }
+
+        return self::_musicFolders($input, $user)[0] ?? -1;
+    }
+
+    /**
+     * _musicFolders
+     *
+     * Resolve the catalogs a browse request should be limited to.
+     * A requested musicFolderId is always intersected with the catalogs the user may browse.
+     * @param array<string, mixed> $input
+     * @return int[]
+     */
+    private static function _musicFolders(array $input, User $user): array
+    {
+        $catalogs = $user->get_catalogs('music');
+        $sub_id   = $input['musicFolderId'] ?? null;
+        if ($sub_id === null || $sub_id === '') {
+            return $catalogs;
+        }
+
+        return array_values(array_intersect($catalogs, [(int) self::getAmpacheId((string) $sub_id)]));
+    }
+
+    /**
      * _output_body
      */
     private static function _output_body(CurlHandle $curl, string $data): int
@@ -3904,7 +3916,7 @@ class Subsonic_Api
         $albumOffset   = $input['albumOffset'] ?? 0;
         $songCount     = $input['songCount'] ?? 20;
         $songOffset    = $input['songOffset'] ?? 0;
-        $musicFolderId = (isset($input['musicFolderId'])) ? (int) self::getAmpacheId($input['musicFolderId']) : 0;
+        $musicFolderId = self::_musicFolderId($input, $user);
 
         $original = unhtmlentities($query);
         $query    = SubsonicApiApplication::parseSearchQuery($original);
@@ -3920,7 +3932,7 @@ class Subsonic_Api
                 $data['rule_' . $ruleCount]               = 'title';
                 $ruleCount++;
             }
-            if ($musicFolderId > 0) {
+            if ($musicFolderId !== 0) {
                 $data['catalog_id'] = $musicFolderId;
             }
             $artists = Search::run($data, $user);
@@ -3938,7 +3950,7 @@ class Subsonic_Api
                 $data['rule_' . $ruleCount]               = 'title';
                 $ruleCount++;
             }
-            if ($musicFolderId > 0) {
+            if ($musicFolderId !== 0) {
                 $data['catalog_id'] = $musicFolderId;
             }
             $albums = Search::run($data, $user);
@@ -3956,7 +3968,7 @@ class Subsonic_Api
                 $data['rule_' . $ruleCount]               = 'title';
                 $ruleCount++;
             }
-            if ($musicFolderId > 0) {
+            if ($musicFolderId !== 0) {
                 $data['catalog_id'] = $musicFolderId;
             }
             $songs = Search::run($data, $user);

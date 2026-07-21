@@ -6,7 +6,7 @@
 ; This value is used to detect if this config file is up to date
 ; this is compared against a constant called CONFIG_VERSION
 ; that is located in src/Config/Init/InitializationHandlerConfig.php
-config_version = 90
+config_version = 91
 
 ; Defines the default timezone used by the date functions
 ; Uses the same strings as the default date.timezone (https://php.net/date.timezone)
@@ -736,6 +736,37 @@ playlist_art_mosaic = "true"
 ; DEFAULT: "false"
 ;statistical_graphs = "true"
 
+; Stats Consolidation Threshold
+; Number of days of detailed play history to keep in the object_count table.
+; When set to a value greater than 0, the cleanup:consolidateStats CLI command
+; will aggregate older rows into the object_count_summary table and move the
+; detail rows to the object_count_archive table, keeping object_count small on
+; long-running servers. Nothing is deleted: the archive keeps every media row
+; (song, video, podcast_episode, playlist, live_stream) with its exact date,
+; agent and location, for streams, skips and downloads alike. Parent rows
+; (album, album_disk, artist, podcast) are not archived because
+; cleanup:restoreStats regenerates them from the media rows, which resolves the
+; parent that is correct now rather than a stored id that a merge or a re-tag
+; may have moved. Run cleanup:restoreStats to put it all back.
+; Stored counters stay exact (total/skip counts, played flags, all-time
+; per-object and per-user counts, streamed data size, auto-rating plugin).
+; Smart playlist / search play-history rules (Played, Played by Me, My Last
+; Play/Skip, # Played/Skipped by Me, ...) also stay accurate: once consolidation
+; is enabled they read object_count_summary alongside object_count.
+; The following only evaluate the retained detail window after consolidation:
+; period-based statistics (trending, recent, graphs, Last.fm export) which are
+; windowed by design, live all-time "top" charts computed without cron_cache
+; (the cron cache merges consolidated counts into its 0 threshold entries),
+; browsing sorted by play count, and the "Recently Played" smart playlist rule.
+; "Recently Played" is the one exception that cannot be made exact: it orders by
+; individual play timestamps, and consolidation archives those older detail rows
+; (into object_count_archive) rather than keeping them in object_count, so it
+; only reaches back as far as your retained window until you run
+; cleanup:restoreStats.
+; When set to 0 (or unset) consolidation is disabled.
+; DEFAULT: 0
+;stats_consolidate_threshold = 730
+
 ; Art Gather Order
 ; Simply arrange the following in the order you would like
 ; Ampache to search. If you want to disable one of the search
@@ -1287,18 +1318,26 @@ registration_mandatory_fields = "fullname"
 ; *Note* Transcoding must be enabled and working         #
 ;#########################################################
 
+; NOTE: `max_bit_rate` and `min_bit_rate` have MOVED to per-user preferences
+; (Preferences -> Streaming -> Transcoding). The values below are only read once,
+; at upgrade time, to seed each user's default; once the preference exists the
+; config value is ignored. Leave them commented out. All bitrate values are now
+; expressed in bits per second (bps), NOT kilobits (e.g. 576000 = 576 kbps).
+
 ; Attempt to optimize bandwidth by dynamically lowering the bit rate of new
 ; streams. Since the bit rate is only adjusted at the beginning of a song, the
 ; actual cumulative bitrate for concurrent streams can be up to around
 ; double the configured value. It also only applies to streams that are
 ; transcoded.
+; UNIT: bits per second (bps)
 ; DEFAULT: none
-;max_bit_rate = 576
+;max_bit_rate = 576000
 
 ; New dynamically downsampled streams will be denied if they are forced below
 ; this value.
-; DEFAULT: 8
-;min_bit_rate = 48
+; UNIT: bits per second (bps)
+; DEFAULT: 8000
+;min_bit_rate = 48000
 
 ;#########################################################
 ; Transcode Settings                                     #
@@ -1350,6 +1389,12 @@ transcode_mp3 = "allowed"
 ;transcode_m2ts = "allowed"
 ;transcode_webm = "allowed"
 
+; NOTE: `encode_target`, `encode_video_target`, `encode_player_webplayer_target`
+; and `encode_player_api_target` have MOVED to per-user preferences
+; (Preferences -> Streaming -> Transcoding). The values below are only read once,
+; at upgrade time, to seed each user's default; once the preference exists the
+; config value is ignored. Leave them commented out.
+
 ; Default audio output format
 ; DEFAULT: none
 ;encode_target = "mp3"
@@ -1374,6 +1419,8 @@ transcode_mp3 = "allowed"
 ;transcode_player_webplayer_mpc = "required"
 
 ; Override the default output format on a per-player basis
+; MOVED to per-user preferences (Preferences -> Streaming -> Transcoding); the
+; values below only seed the default at upgrade time and are otherwise ignored.
 ; encode_player_PLAYER_target = TYPE
 ; Valid PLAYER is: webplayer, api
 ; DEFAULT: none
@@ -1386,8 +1433,10 @@ transcode_player_customize = "true"
 
 ; Command configuration. Substitutions will be made as follows:
 ; %FILE% => filename
-; %BITRATE% => target bit rate (as chosen by the admin or users in the
-; preferences, if transcode_player_customize = "true")
+; %BITRATE% => target bit rate in bits per second (as chosen by the admin or
+; users in the preferences, if transcode_player_customize = "true")
+; %MAXBITRATE% => ceiling bit rate in bits per second, from the `maxbitrate`
+; stream URL argument. Both are plain bps values, so do NOT add a `k` suffix.
 ; You can do fancy things like VBR, but consider whether the consequences are
 ; acceptable in your environment.
 
@@ -1419,12 +1468,24 @@ transcode_input = "-i %FILE%"
 encode_args_mp3 = "-vn -b:a %BITRATE% -c:a libmp3lame -f mp3 pipe:1"
 encode_args_ogg = "-vn -b:a %BITRATE% -c:a libvorbis -f ogg pipe:1"
 encode_args_opus = "-vn -b:a %BITRATE% -c:a libopus -compression_level 10 -f ogg pipe:1"
-encode_args_m4a = "-vn -b:a %BITRATE% -c:a libfdk_aac -f adts pipe:1"
+encode_args_m4a = "-vn -b:a %BITRATE% -c:a aac -movflags +frag_keyframe+empty_moov+default_base_moof -f mp4 pipe:1"
 encode_args_wav = "-vn -b:a %BITRATE% -c:a pcm_s16le -f wav pipe:1"
 encode_args_flv = "-b:a %BITRATE% -ar 44100 -ac 2 -v 0 -f flv -c:v libx264 -preset superfast -threads 0 pipe:1"
 encode_args_webm = "-b:a %BITRATE% -f webm -c:v libvpx -preset superfast -threads 0 pipe:1"
-encode_args_ts = "-q %QUALITY% -s %RESOLUTION% -f mpegts -c:v libx264 -c:a libmp3lame -maxrate %MAXBITRATE%k -preset superfast -threads 0 pipe:1"
+encode_args_ts = "-q %QUALITY% -s %RESOLUTION% -f mpegts -c:v libx264 -c:a libmp3lame -maxrate %MAXBITRATE% -preset superfast -threads 0 pipe:1"
 encode_args_ogv = "-codec:v libtheora -qscale:v 7 -codec:a libvorbis -qscale:a 5 -f ogg pipe:1"
+
+; ReplayGain / "car" output profiles (gonic-compatible).
+; These apply loudness normalisation from ReplayGain tags, so the SOURCE files
+; MUST be tagged with ReplayGain (use loudgain or rsgain) or the gain clauses are
+; a no-op. The `_car` variants additionally resample (heavier CPU) for in-car use.
+; These formats are intentionally NEVER cached (the normalisation is per-source),
+; so keep `cache_target` set to a plain format such as `mp3` or `opus`.
+; `opus_rg`/`opus_car` cannot play on iOS (Opus-in-Ogg); `mp3_rg`/`mp3_car` are cross-platform.
+encode_args_mp3_rg = "-map 0:a:0 -vn -b:a %BITRATE% -c:a libmp3lame -af \"volume=replaygain=track:replaygain_preamp=6dB:replaygain_noclip=0,alimiter=level=disabled,asidedata=mode=delete:type=REPLAYGAIN\" -metadata replaygain_album_gain= -metadata replaygain_album_peak= -metadata replaygain_track_gain= -metadata replaygain_track_peak= -metadata r128_album_gain= -metadata r128_track_gain= -ar 48000 -v 0 -f mp3 pipe:1"
+encode_args_mp3_car = "-map 0:a:0 -vn -b:a %BITRATE% -c:a libmp3lame -af \"aresample=96000:resampler=soxr,volume=replaygain=track:replaygain_preamp=15dB:replaygain_noclip=0,alimiter=level=disabled,asidedata=mode=delete:type=REPLAYGAIN,aresample=48000:resampler=soxr\" -metadata replaygain_album_gain= -metadata replaygain_album_peak= -metadata replaygain_track_gain= -metadata replaygain_track_peak= -metadata r128_album_gain= -metadata r128_track_gain= -v 0 -f mp3 pipe:1"
+encode_args_opus_rg = "-map 0:a:0 -vn -b:a %BITRATE% -c:a libopus -vbr on -af \"volume=replaygain=track:replaygain_preamp=6dB:replaygain_noclip=0,alimiter=level=disabled,asidedata=mode=delete:type=REPLAYGAIN\" -metadata replaygain_album_gain= -metadata replaygain_album_peak= -metadata replaygain_track_gain= -metadata replaygain_track_peak= -metadata r128_album_gain= -metadata r128_track_gain= -v 0 -f opus pipe:1"
+encode_args_opus_car = "-map 0:a:0 -vn -b:a %BITRATE% -c:a libopus -vbr on -af \"aresample=96000:resampler=soxr,volume=replaygain=track:replaygain_preamp=15dB:replaygain_noclip=0,alimiter=level=disabled,asidedata=mode=delete:type=REPLAYGAIN\" -metadata replaygain_album_gain= -metadata replaygain_album_peak= -metadata replaygain_track_gain= -metadata replaygain_track_peak= -metadata r128_album_gain= -metadata r128_track_gain= -v 0 -f opus pipe:1"
 
 ; Encoding arguments to retrieve an image from a single frame
 encode_get_image = "-ss %TIME% -f image2 -vframes 1 pipe:1"

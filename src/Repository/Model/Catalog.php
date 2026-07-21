@@ -250,6 +250,16 @@ abstract class Catalog extends database_object
                     );
                 }
             }
+            // ReplayGain (_rg/_car) output is normalised per-source and must never be cached
+            if ($cache_target && in_array($cache_target, Stream::NON_CACHEABLE_FORMATS, true)) {
+                debug_event(self::class, 'cache_catalogs: refusing to cache non-cacheable target ' . $cache_target, 3);
+                $interactor?->warn(
+                    sprintf('cache_catalogs: `cache_target` "%s" cannot be cached; skipping', $cache_target),
+                    true
+                );
+
+                return;
+            }
             if ($cache_target) {
                 foreach ($catalogs as $catalogid) {
                     $catalog = self::create_from_id($catalogid);
@@ -1426,6 +1436,27 @@ abstract class Catalog extends database_object
                 'name' => $row['name'],
             ];
         }
+    }
+
+    /**
+     * get_catalog_id_filter
+     *
+     * Return an SQL condition restricting $column to the objects found in a single catalog.
+     * Tables owning a `catalog` column are filtered directly, artists and playlists use the `catalog_map` table.
+     * A catalog_id of 0 means "don't filter"; a negative id matches nothing (used for a catalog the user can't browse).
+     * An empty string is returned when the type can't be filtered (the caller must not filter in that case).
+     */
+    public static function get_catalog_id_filter(string $type, string $column, int $catalog_id): string
+    {
+        if ($catalog_id === 0) {
+            return '';
+        }
+
+        return match ($type) {
+            'album', 'album_disk', 'live_stream', 'podcast', 'podcast_episode', 'song', 'video' => sprintf('%s IN (SELECT `id` FROM `%s` WHERE `catalog` = %d) ', $column, $type, $catalog_id),
+            'album_artist', 'artist', 'playlist', 'song_artist' => sprintf("%s IN (SELECT `object_id` FROM `catalog_map` WHERE `object_type` = '%s' AND `catalog_id` = %d) ", $column, $type, $catalog_id),
+            default => '',
+        };
     }
 
     /**
@@ -2682,14 +2713,14 @@ abstract class Catalog extends database_object
         //$sql = "UPDATE `artist`, (SELECT MIN(`song`.`addition_time`) AS `addition_time`, `artist_map`.`artist_id` FROM `song` LEFT JOIN `artist_map` ON `artist_map`.`object_id` = `song`.`id` AND `artist_map`.`object_type` = 'song' AND `artist_map`.`object_type` IS NOT NULL GROUP BY `artist_map`.`artist_id` UNION SELECT MIN(`album`.`addition_time`) AS `addition_time`, `artist_map`.`artist_id` FROM `album` LEFT JOIN `artist_map` ON `artist_map`.`object_id` = `album`.`id` AND `artist_map`.`object_type` = 'album' AND `artist_map`.`object_type` IS NOT NULL GROUP BY `artist_map`.`artist_id`) AS `addition` SET `artist`.`addition_time` = `addition`.`addition_time` WHERE (`artist`.`addition_time` > `addition`.`addition_time` OR `artist`.`addition_time` IS NULL OR `artist`.`addition_time` = 0) AND `addition`.`artist_id` = `artist`.`id`;";
         //Dba::write($sql);
         //// song.played might have had issues
-        //$sql = "UPDATE `song` SET `song`.`played` = 0 WHERE `song`.`played` = 1 AND `song`.`id` NOT IN (SELECT `object_id` FROM `object_count` WHERE `object_type` = 'song' AND `count_type` = 'stream');";
+        //$sql = "UPDATE `song` SET `song`.`played` = 0 WHERE `song`.`played` = 1 AND `song`.`id` NOT IN (SELECT `object_id` FROM `object_count` WHERE `object_type` = 'song' AND `count_type` = 'stream' UNION SELECT `object_id` FROM `object_count_summary` WHERE `object_type` = 'song' AND `count_type` = 'stream');";
         //Dba::write($sql);
-        //$sql = "UPDATE `song` SET `song`.`played` = 1 WHERE `song`.`played` = 0 AND `song`.`id` IN (SELECT `object_id` FROM `object_count` WHERE `object_type` = 'song' AND `count_type` = 'stream');";
+        //$sql = "UPDATE `song` SET `song`.`played` = 1 WHERE `song`.`played` = 0 AND `song`.`id` IN (SELECT `object_id` FROM `object_count` WHERE `object_type` = 'song' AND `count_type` = 'stream' UNION SELECT `object_id` FROM `object_count_summary` WHERE `object_type` = 'song' AND `count_type` = 'stream');";
         //Dba::write($sql);
         //// fix up incorrect total_count values too
-        //$sql = "UPDATE `song` SET `total_count` = 0 WHERE `total_count` > 0 AND `id` NOT IN (SELECT `object_id` FROM `object_count` WHERE `object_count`.`object_type` = 'song' AND `object_count`.`count_type` = 'stream');";
+        //$sql = "UPDATE `song` SET `total_count` = 0 WHERE `total_count` > 0 AND `id` NOT IN (SELECT `object_id` FROM `object_count` WHERE `object_count`.`object_type` = 'song' AND `object_count`.`count_type` = 'stream' UNION SELECT `object_id` FROM `object_count_summary` WHERE `object_type` = 'song' AND `count_type` = 'stream');";
         //Dba::write($sql);
-        //$sql = "UPDATE `song` SET `total_skip` = 0 WHERE `total_skip` > 0 AND `id` NOT IN (SELECT `object_id` FROM `object_count` WHERE `object_count`.`object_type` = 'song' AND `object_count`.`count_type` = 'stream');";
+        //$sql = "UPDATE `song` SET `total_skip` = 0 WHERE `total_skip` > 0 AND `id` NOT IN (SELECT `object_id` FROM `object_count` WHERE `object_count`.`object_type` = 'song' AND `object_count`.`count_type` = 'stream' UNION SELECT `object_id` FROM `object_count_summary` WHERE `object_type` = 'song' AND `count_type` = 'stream');";
         //Dba::write($sql);
         if (AmpConfig::get('podcast')) {
             debug_event(self::class, 'update_counts podcast_episode table', 5);
@@ -2701,16 +2732,16 @@ abstract class Catalog extends database_object
                 Dba::write($sql, ['podcast', $row['podcast'], $row['count_type'], $row['date'], $row['user'], $row['agent'], $row['geo_latitude'], $row['geo_longitude'], $row['geo_name']]);
             }
 
-            $sql = "UPDATE `podcast_episode` SET `total_count` = 0 WHERE `total_count` > 0 AND `id` NOT IN (SELECT `object_id` FROM `object_count` WHERE `object_count`.`object_type` = 'podcast_episode' AND `object_count`.`count_type` = 'stream');";
+            $sql = "UPDATE `podcast_episode` SET `total_count` = 0 WHERE `total_count` > 0 AND `id` NOT IN (SELECT `object_id` FROM `object_count` WHERE `object_count`.`object_type` = 'podcast_episode' AND `object_count`.`count_type` = 'stream' UNION SELECT `object_id` FROM `object_count_summary` WHERE `object_type` = 'podcast_episode' AND `count_type` = 'stream');";
             Dba::write($sql);
-            $sql = "UPDATE `podcast_episode` SET `total_skip` = 0 WHERE `total_skip` > 0 AND `id` NOT IN (SELECT `object_id` FROM `object_count` WHERE `object_count`.`object_type` = 'podcast_episode' AND `object_count`.`count_type` = 'stream');";
+            $sql = "UPDATE `podcast_episode` SET `total_skip` = 0 WHERE `total_skip` > 0 AND `id` NOT IN (SELECT `object_id` FROM `object_count` WHERE `object_count`.`object_type` = 'podcast_episode' AND `object_count`.`count_type` = 'stream' UNION SELECT `object_id` FROM `object_count_summary` WHERE `object_type` = 'podcast_episode' AND `count_type` = 'stream');";
             Dba::write($sql);
-            $sql = "UPDATE `podcast_episode` SET `podcast_episode`.`played` = 0 WHERE `podcast_episode`.`played` = 1 AND `podcast_episode`.`id` NOT IN (SELECT `object_id` FROM `object_count` WHERE `object_type` = 'podcast_episode' AND `count_type` = 'stream');";
+            $sql = "UPDATE `podcast_episode` SET `podcast_episode`.`played` = 0 WHERE `podcast_episode`.`played` = 1 AND `podcast_episode`.`id` NOT IN (SELECT `object_id` FROM `object_count` WHERE `object_type` = 'podcast_episode' AND `count_type` = 'stream' UNION SELECT `object_id` FROM `object_count_summary` WHERE `object_type` = 'podcast_episode' AND `count_type` = 'stream');";
             Dba::write($sql);
-            $sql = "UPDATE `podcast_episode` SET `podcast_episode`.`played` = 1 WHERE `podcast_episode`.`played` = 0 AND `podcast_episode`.`id` IN (SELECT `object_id` FROM `object_count` WHERE `object_type` = 'podcast_episode' AND `count_type` = 'stream');";
+            $sql = "UPDATE `podcast_episode` SET `podcast_episode`.`played` = 1 WHERE `podcast_episode`.`played` = 0 AND `podcast_episode`.`id` IN (SELECT `object_id` FROM `object_count` WHERE `object_type` = 'podcast_episode' AND `count_type` = 'stream' UNION SELECT `object_id` FROM `object_count_summary` WHERE `object_type` = 'podcast_episode' AND `count_type` = 'stream');";
             Dba::write($sql);
             // podcast_episode.total_count
-            $sql = "UPDATE `podcast_episode`, (SELECT COUNT(`object_count`.`object_id`) AS `total_count`, `object_id` FROM `object_count` WHERE `object_count`.`object_type` = 'podcast_episode' AND `object_count`.`count_type` = 'stream' GROUP BY `object_count`.`object_id`) AS `object_count` SET `podcast_episode`.`total_count` = `object_count`.`total_count` WHERE `podcast_episode`.`total_count` != `object_count`.`total_count` AND `podcast_episode`.`id` = `object_count`.`object_id`;";
+            $sql = "UPDATE `podcast_episode`, (SELECT SUM(`total`) AS `total_count`, `object_id` FROM (SELECT COUNT(`object_count`.`object_id`) AS `total`, `object_id` FROM `object_count` WHERE `object_count`.`object_type` = 'podcast_episode' AND `object_count`.`count_type` = 'stream' GROUP BY `object_count`.`object_id` UNION ALL SELECT `count` AS `total`, `object_id` FROM `object_count_summary` WHERE `object_type` = 'podcast_episode' AND `count_type` = 'stream') AS `combined_count` GROUP BY `object_id`) AS `object_count` SET `podcast_episode`.`total_count` = `object_count`.`total_count` WHERE `podcast_episode`.`total_count` != `object_count`.`total_count` AND `podcast_episode`.`id` = `object_count`.`object_id`;";
             Dba::write($sql);
             // podcast_episode.played
             $sql = "UPDATE `podcast_episode` SET `played` = 0 WHERE `total_count` = 0 and `played` = 1;";
@@ -2722,10 +2753,10 @@ abstract class Catalog extends database_object
             $sql = "UPDATE `podcast`, (SELECT SUM(`podcast_episode`.`total_skip`) AS `total_skip`, `podcast` FROM `podcast_episode` GROUP BY `podcast_episode`.`podcast`) AS `object_count` SET `podcast`.`total_skip` = `object_count`.`total_skip` WHERE `podcast`.`total_skip` != `object_count`.`total_skip` AND `podcast`.`id` = `object_count`.`podcast`;";
             Dba::write($sql);
             // song.total_count
-            $sql = "UPDATE `song`, (SELECT COUNT(`object_count`.`object_id`) AS `total_count`, `object_id` FROM `object_count` WHERE `object_count`.`object_type` = 'song' AND `object_count`.`count_type` = 'stream' GROUP BY `object_count`.`object_id`) AS `object_count` SET `song`.`total_count` = `object_count`.`total_count` WHERE `song`.`total_count` != `object_count`.`total_count` AND `song`.`id` = `object_count`.`object_id`;";
+            $sql = "UPDATE `song`, (SELECT SUM(`total`) AS `total_count`, `object_id` FROM (SELECT COUNT(`object_count`.`object_id`) AS `total`, `object_id` FROM `object_count` WHERE `object_count`.`object_type` = 'song' AND `object_count`.`count_type` = 'stream' GROUP BY `object_count`.`object_id` UNION ALL SELECT `count` AS `total`, `object_id` FROM `object_count_summary` WHERE `object_type` = 'song' AND `count_type` = 'stream') AS `combined_count` GROUP BY `object_id`) AS `object_count` SET `song`.`total_count` = `object_count`.`total_count` WHERE `song`.`total_count` != `object_count`.`total_count` AND `song`.`id` = `object_count`.`object_id`;";
             Dba::write($sql);
             // song.total_skip
-            $sql = "UPDATE `song`, (SELECT COUNT(`object_count`.`object_id`) AS `total_skip`, `object_id` FROM `object_count` WHERE `object_count`.`object_type` = 'song' AND `object_count`.`count_type` = 'skip' GROUP BY `object_count`.`object_id`) AS `object_count` SET `song`.`total_skip` = `object_count`.`total_skip` WHERE `song`.`total_skip` != `object_count`.`total_skip` AND `song`.`id` = `object_count`.`object_id`;";
+            $sql = "UPDATE `song`, (SELECT SUM(`total`) AS `total_skip`, `object_id` FROM (SELECT COUNT(`object_count`.`object_id`) AS `total`, `object_id` FROM `object_count` WHERE `object_count`.`object_type` = 'song' AND `object_count`.`count_type` = 'skip' GROUP BY `object_count`.`object_id` UNION ALL SELECT `count` AS `total`, `object_id` FROM `object_count_summary` WHERE `object_type` = 'song' AND `count_type` = 'skip') AS `combined_count` GROUP BY `object_id`) AS `object_count` SET `song`.`total_skip` = `object_count`.`total_skip` WHERE `song`.`total_skip` != `object_count`.`total_skip` AND `song`.`id` = `object_count`.`object_id`;";
             Dba::write($sql);
             // song.played
             $sql = "UPDATE `song` SET `played` = 0 WHERE `total_count` = 0 and `played` = 1;";
@@ -2735,21 +2766,21 @@ abstract class Catalog extends database_object
             // album_disk.total_skip
             Dba::write("UPDATE `album_disk`, (SELECT SUM(`song`.`total_skip`) AS `total_skip`, `album`, `disk` FROM `song` GROUP BY `song`.`album`, `song`.`disk`) AS `object_count` SET `album_disk`.`total_skip` = `object_count`.`total_skip` WHERE `album_disk`.`total_skip` != `object_count`.`total_skip` AND `album_disk`.`album_id` = `object_count`.`album` AND `album_disk`.`disk` = `object_count`.`disk`;");
             // artist.total_skip
-            Dba::write("UPDATE `artist`, (SELECT COUNT(`object_count`.`object_id`) AS `total_skip`, `artist_map`.`artist_id` FROM `object_count` LEFT JOIN `artist_map` ON `artist_map`.`object_type` = 'song' AND `artist_map`.`object_id` = `object_count`.`object_id` WHERE `object_count`.`object_type` = 'song' AND `object_count`.`count_type` = 'skip' GROUP BY `artist_map`.`artist_id`) AS `object_count` SET `artist`.`total_skip` = `object_count`.`total_skip` WHERE `artist`.`total_skip` != `object_count`.`total_skip` AND `artist`.`id` = `object_count`.`artist_id`;");
+            Dba::write("UPDATE `artist`, (SELECT SUM(`total`) AS `total_skip`, `artist_id` FROM (SELECT COUNT(`object_count`.`object_id`) AS `total`, `artist_map`.`artist_id` AS `artist_id` FROM `object_count` LEFT JOIN `artist_map` ON `artist_map`.`object_type` = 'song' AND `artist_map`.`object_id` = `object_count`.`object_id` WHERE `object_count`.`object_type` = 'song' AND `object_count`.`count_type` = 'skip' GROUP BY `artist_map`.`artist_id` UNION ALL SELECT `object_count_summary`.`count` AS `total`, `artist_map`.`artist_id` AS `artist_id` FROM `object_count_summary` LEFT JOIN `artist_map` ON `artist_map`.`object_type` = 'song' AND `artist_map`.`object_id` = `object_count_summary`.`object_id` WHERE `object_count_summary`.`object_type` = 'song' AND `object_count_summary`.`count_type` = 'skip') AS `combined_count` GROUP BY `artist_id`) AS `object_count` SET `artist`.`total_skip` = `object_count`.`total_skip` WHERE `artist`.`total_skip` != `object_count`.`total_skip` AND `artist`.`id` = `object_count`.`artist_id`;");
         }
 
         if (AmpConfig::get('allow_video')) {
             //debug_event(self::class, 'update_counts video table', 5);
-            $sql = "UPDATE `video` SET `total_count` = 0 WHERE `total_count` > 0 AND `id` NOT IN (SELECT `object_id` FROM `object_count` WHERE `object_count`.`object_type` = 'video' AND `object_count`.`count_type` = 'stream');";
+            $sql = "UPDATE `video` SET `total_count` = 0 WHERE `total_count` > 0 AND `id` NOT IN (SELECT `object_id` FROM `object_count` WHERE `object_count`.`object_type` = 'video' AND `object_count`.`count_type` = 'stream' UNION SELECT `object_id` FROM `object_count_summary` WHERE `object_type` = 'video' AND `count_type` = 'stream');";
             Dba::write($sql);
-            $sql = "UPDATE `video` SET `total_skip` = 0 WHERE `total_skip` > 0 AND `id` NOT IN (SELECT `object_id` FROM `object_count` WHERE `object_count`.`object_type` = 'video' AND `object_count`.`count_type` = 'stream');";
+            $sql = "UPDATE `video` SET `total_skip` = 0 WHERE `total_skip` > 0 AND `id` NOT IN (SELECT `object_id` FROM `object_count` WHERE `object_count`.`object_type` = 'video' AND `object_count`.`count_type` = 'stream' UNION SELECT `object_id` FROM `object_count_summary` WHERE `object_type` = 'video' AND `count_type` = 'stream');";
             Dba::write($sql);
-            $sql = "UPDATE `video` SET `video`.`played` = 0 WHERE `video`.`played` = 1 AND `video`.`id` NOT IN (SELECT `object_id` FROM `object_count` WHERE `object_type` = 'video' AND `count_type` = 'stream');";
+            $sql = "UPDATE `video` SET `video`.`played` = 0 WHERE `video`.`played` = 1 AND `video`.`id` NOT IN (SELECT `object_id` FROM `object_count` WHERE `object_type` = 'video' AND `count_type` = 'stream' UNION SELECT `object_id` FROM `object_count_summary` WHERE `object_type` = 'video' AND `count_type` = 'stream');";
             Dba::write($sql);
-            $sql = "UPDATE `video` SET `video`.`played` = 1 WHERE `video`.`played` = 0 AND `video`.`id` IN (SELECT `object_id` FROM `object_count` WHERE `object_type` = 'video' AND `count_type` = 'stream');";
+            $sql = "UPDATE `video` SET `video`.`played` = 1 WHERE `video`.`played` = 0 AND `video`.`id` IN (SELECT `object_id` FROM `object_count` WHERE `object_type` = 'video' AND `count_type` = 'stream' UNION SELECT `object_id` FROM `object_count_summary` WHERE `object_type` = 'video' AND `count_type` = 'stream');";
             Dba::write($sql);
             // video.total_count
-            $sql = "UPDATE `video`, (SELECT COUNT(`object_count`.`object_id`) AS `total_count`, `object_id` FROM `object_count` WHERE `object_count`.`object_type` = 'video' AND `object_count`.`count_type` = 'stream' GROUP BY `object_count`.`object_id`) AS `object_count` SET `video`.`total_count` = `object_count`.`total_count` WHERE `video`.`total_count` != `object_count`.`total_count` AND `video`.`id` = `object_count`.`object_id`;";
+            $sql = "UPDATE `video`, (SELECT SUM(`total`) AS `total_count`, `object_id` FROM (SELECT COUNT(`object_count`.`object_id`) AS `total`, `object_id` FROM `object_count` WHERE `object_count`.`object_type` = 'video' AND `object_count`.`count_type` = 'stream' GROUP BY `object_count`.`object_id` UNION ALL SELECT `count` AS `total`, `object_id` FROM `object_count_summary` WHERE `object_type` = 'video' AND `count_type` = 'stream') AS `combined_count` GROUP BY `object_id`) AS `object_count` SET `video`.`total_count` = `object_count`.`total_count` WHERE `video`.`total_count` != `object_count`.`total_count` AND `video`.`id` = `object_count`.`object_id`;";
             Dba::write($sql);
             // video.played
             $sql = "UPDATE `video` SET `played` = 0 WHERE `total_count` = 0 and `played` = 1;";

@@ -25,6 +25,7 @@ declare(strict_types=1);
 
 namespace Ampache\Config\Init;
 
+use Ampache\Config\AmpConfig;
 use Ampache\Config\Init\Exception\ConfigFileNotFoundException;
 use Ampache\Config\Init\Exception\ConfigFileNotParsableException;
 use Ampache\Config\Init\Exception\DatabaseOutdatedException;
@@ -81,15 +82,40 @@ final readonly class Init
     {
         $protocol = $this->environment->isSsl() ? 'https' : 'http';
 
-        // Set up for redirection on important error cases
-        $path = get_web_path();
-        if (isset($_SERVER['HTTP_HOST'])) {
-            $path = sprintf(
+        // Set up for redirection on important error cases. Prefer the configured web path:
+        // get_web_path() is derived from the running script, so an entry point in a subdirectory
+        // (public/m/index.php) would send you to <web_path>/m/login.php. It's empty when the config
+        // hasn't loaded yet, which is exactly the install.php case, so fall back to the script path.
+        $path = (string) AmpConfig::get('web_path', '');
+        if ($path === '') {
+            $path = get_web_path();
+            if (isset($_SERVER['HTTP_HOST'])) {
+                $path = sprintf(
+                    '%s://%s%s',
+                    $protocol,
+                    Core::get_server('HTTP_HOST'),
+                    $path
+                );
+            }
+        }
+
+        // Hand the requested page to the login form so it can send you back there afterwards.
+        // Without this a pasted or bookmarked deep link always lands on index.php after logging in.
+        if (
+            $destination === 'login.php'
+            && Core::get_server('REQUEST_METHOD') === 'GET'
+            && !empty($_SERVER['REQUEST_URI'])
+            && isset($_SERVER['HTTP_HOST'])
+        ) {
+            // REQUEST_URI is used raw here; Core::get_server() would htmlspecialchars the query
+            // separators and break the url. It gets urlencoded now and validated against web_path
+            // before it's used or displayed.
+            $destination .= '?referrer=' . urlencode(sprintf(
                 '%s://%s%s',
                 $protocol,
                 Core::get_server('HTTP_HOST'),
-                $path
-            );
+                (string) $_SERVER['REQUEST_URI']
+            ));
         }
 
         header(sprintf(

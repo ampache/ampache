@@ -28,6 +28,7 @@ namespace Ampache\Module\System;
 use Ampache\Config\AmpConfig;
 use Ampache\Module\Authorization\AccessLevelEnum;
 use Ampache\Module\Util\Horde_Browser;
+use Ampache\Repository\Model\Plugin;
 use Ampache\Repository\Model\Preference;
 use Ampache\Repository\Model\User;
 use Exception;
@@ -35,6 +36,16 @@ use PDOStatement;
 
 final class InstallationHelper implements InstallationHelperInterface
 {
+    /**
+     * Plugins installed on a new install so the home page isn't empty out of the box.
+     * Keys come from PluginEnum::LIST.
+     */
+    private const array DEFAULT_PLUGINS = [
+        'homedashboard',
+        'catalogfavorites',
+        'personalfav_display',
+    ];
+
     /**
      * This takes an array of results and re-generates the config file
      * this is used by the installer and by the admin/system page
@@ -268,6 +279,9 @@ final class InstallationHelper implements InstallationHelperInterface
             'allow_video' => '0',
             'home_now_playing' => '1',
             'home_recently_played' => '1',
+            // the home plugins cover this ground better, so keep the moment blocks off by default
+            'home_moment_albums' => '0',
+            'home_moment_videos' => '0',
         ];
 
         switch ($case) {
@@ -350,6 +364,14 @@ final class InstallationHelper implements InstallationHelperInterface
             AmpError::add('general', sprintf(T_('Administrative user creation failed: %s'), Dba::error()));
 
             return false;
+        }
+
+        // Give a new install a home page with something on it instead of an empty one
+        foreach (self::DEFAULT_PLUGINS as $plugin_name) {
+            $plugin = new Plugin($plugin_name);
+            if ($plugin->_plugin !== null && Plugin::is_installed($plugin->_plugin->name) === 0) {
+                $plugin->install();
+            }
         }
 
         // Fix the system user preferences

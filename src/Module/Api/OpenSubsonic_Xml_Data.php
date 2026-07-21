@@ -1494,7 +1494,7 @@ class OpenSubsonic_Xml_Data
         $sub_id = OpenSubsonic_Api::getArtistSubId($child['id']);
         $xchild = self::_addChildToResultXml($xml, 'child');
         $xchild->addAttribute('id', $sub_id);
-        $xchild->addAttribute('parent', (string) $child['catalog_id']);
+        $xchild->addAttribute('parent', OpenSubsonic_Api::getCatalogSubId($child['catalog_id']));
         $xchild->addAttribute('isDir', 'true');
         $xchild->addAttribute('title', $child['f_name']);
         $xchild->addAttribute('artist', $child['f_name']);
@@ -1611,7 +1611,7 @@ class OpenSubsonic_Xml_Data
         if ($album_artist) {
             $xdir->addAttribute('parent', OpenSubsonic_Api::getArtistSubId($album_artist));
         } else {
-            $xdir->addAttribute('parent', (string) $album->catalog);
+            $xdir->addAttribute('parent', OpenSubsonic_Api::getCatalogSubId($album->catalog));
         }
         $xdir->addAttribute('name', $album->get_fullname());
         self::_setIfStarred($xdir, 'album', $album->id);
@@ -1637,7 +1637,7 @@ class OpenSubsonic_Xml_Data
         $xdir      = self::_addChildToResultXml($xml, 'directory');
         $xdir->addAttribute('id', OpenSubsonic_Api::getArtistSubId($artist_id));
         if ($data['catalog_id']) {
-            $xdir->addAttribute('parent', (string) $data['catalog_id']);
+            $xdir->addAttribute('parent', OpenSubsonic_Api::getCatalogSubId($data['catalog_id']));
         }
         $xdir->addAttribute('name', (string) $data['f_name']);
         self::_setIfStarred($xdir, 'artist', $artist_id);

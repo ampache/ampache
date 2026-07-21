@@ -63,7 +63,7 @@ final class PreferenceRepository implements PreferenceRepositoryInterface
      *     level: int,
      *     type: string,
      *     category: string,
-     *     subcategory: string,
+     *     subcategory: ?string,
      *     has_access?: bool,
      *     values?: string[]|int[],
      * }>
@@ -135,7 +135,7 @@ final class PreferenceRepository implements PreferenceRepositoryInterface
                 $result['has_access'] = (((int) $row['level']) <= $accessLevel);
             }
 
-            if ($row['type'] == 'special') {
+            if ($row['type'] == 'special' || $row['type'] == 'transcoding') {
                 $values = Preference::get_special_values($row['name'], $user);
                 if ($values) {
                     $result['values'] = $values;

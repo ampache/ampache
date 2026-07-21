@@ -68,6 +68,15 @@ use DateMalformedStringException;
  */
 class Json8_Data
 {
+    // Types whose populated response is a bare {type: []} with no total_count/md5, so their
+    // empty response must not invent one either (users, timeline, last_shouts, now_playing)
+    private const array BARE_ENVELOPE_TYPES = [
+        'activity',
+        'now_playing',
+        'shout',
+        'user',
+    ];
+
     private static int $count  = 0;
     private static ?int $limit = 5000;
     private static int $offset = 0;
@@ -980,10 +989,60 @@ class Json8_Data
      */
     public static function democratic(array $object_ids, User $user, string $auth, bool $object = true): string
     {
+        $JSON   = self::democratic_array($object_ids, $user, $auth);
+        $output = ($object) ? ["song" => $JSON] : $JSON[0] ?? [];
+
+        return json_encode($output, JSON_PRETTY_PRINT) ?: '';
+    }
+
+    /**
+     * democratic_array
+     *
+     * This builds the democratic playlist items; a reduced song shape carrying the current vote count
+     *
+     * @param array<int, array{
+     *    object_type: LibraryItemEnum,
+     *    object_id: int,
+     *    track_id: int,
+     *    track: int
+     * }> $object_ids Object IDs
+     * @return array<int, array{
+     *     id: string,
+     *     title: string|null,
+     *     artist: array{
+     *         id: string,
+     *         name: string|null,
+     *         prefix: string|null,
+     *         basename: string|null
+     *     },
+     *     album: array{
+     *         id: string,
+     *         name: string|null,
+     *         prefix: string|null,
+     *         basename: string|null
+     *     },
+     *     genre: array<int, array{id: string, name: string}>,
+     *     track: int,
+     *     time: int,
+     *     format: string|null,
+     *     bitrate: int|null,
+     *     mime: string|null,
+     *     url: string,
+     *     size: int,
+     *     art: string|null,
+     *     has_art: bool,
+     *     rating: int|null,
+     *     averagerating: float|null,
+     *     playcount: int,
+     *     vote: int
+     * }>
+     */
+    public static function democratic_array(array $object_ids, User $user, string $auth): array
+    {
         $democratic = Democratic::get_current_playlist($user);
 
         $JSON = [];
-        foreach ($object_ids as $row_id => $data) {
+        foreach ($object_ids as $data) {
             $className = ObjectTypeToClassNameMapper::map($data['object_type']->value);
             /** @var Song $song */
             $song = new $className($data['object_id']);
@@ -1030,12 +1089,11 @@ class Json8_Data
                 "rating" => $user_rating,
                 "averagerating" => ($rating->get_average_rating() ?? null),
                 "playcount" => $song->total_count,
-                "vote" => $democratic->get_vote($row_id)
+                "vote" => $democratic->get_vote($data['track_id'])
             ];
         }
-        $output = ($object) ? ["song" => $JSON] : $JSON[0] ?? [];
 
-        return json_encode($output, JSON_PRETTY_PRINT) ?: '';
+        return $JSON;
     }
 
     /**
@@ -1052,6 +1110,10 @@ class Json8_Data
 
         if (empty($type)) {
             return json_encode([], JSON_PRETTY_PRINT) ?: '';
+        }
+
+        if (in_array($type, self::BARE_ENVELOPE_TYPES, true)) {
+            return json_encode([$type => []], JSON_PRETTY_PRINT) ?: '';
         }
 
         return json_encode(
@@ -1401,10 +1463,14 @@ class Json8_Data
      *
      * This takes an array of object_ids and return JSON based on the type of object
      *
+     * Each type is handed to that type's own list method, so the response is the full object envelope
+     * ({total_count, md5, <key>: [...]}) you would get from calling that method directly.
+     * 'album_artist' and 'song_artist' are both returned under the "artist" key.
+     *
      * @param array<int|string> $objects Array of object_ids (Mixed string|int)
      * @param string $type 'album_artist'|'album'|'artist'|'catalog'|'live_stream'|'playlist'|'podcast_episode'|'podcast'|'share'|'song_artist'|'song'|'video'
      * @param bool $include (add the extra songs details if a playlist or podcast_episodes if a podcast)
-     * @return string JSON Object "artist"|"album"|"song"|"playlist"|"share"|"podcast"|"podcast_episode"|"video"|"live_stream"
+     * @return string JSON Object "catalog"|"song"|"album"|"artist"|"playlist"|"share"|"podcast"|"podcast_episode"|"video"|"live_stream"
      * @throws DateMalformedStringException
      */
     public static function indexes(array $objects, string $type, User $user, string $auth, bool $include = false): string
@@ -1861,7 +1927,12 @@ class Json8_Data
 
             if ($songs) {
                 $items          = [];
-                $playlisttracks = $playlist->get_items();
+                $playlisttracks = array_values(
+                    array_filter(
+                        $playlist->get_items(),
+                        static fn(array $track): bool => $track['object_type'] === LibraryItemEnum::SONG
+                    )
+                );
                 foreach ($playlisttracks as $track) {
                     $duration += (int) $track['time'];
 

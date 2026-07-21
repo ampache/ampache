@@ -81,7 +81,7 @@ class DeletedPodcastEpisodesMethodTest extends MockeryTestCase
             ->andReturn(new ArrayIterator([]));
 
         $output->shouldReceive('writeEmpty')
-            ->with($apiVersion, 'deleted_podcast_episodes')
+            ->with($apiVersion, 'deleted_podcast_episode')
             ->once()
             ->andReturn($result);
 

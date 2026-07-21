@@ -211,7 +211,7 @@ class Core
     {
         $play_type = AmpConfig::get('play_type');
 
-        return ($play_type == "stream" || $play_type == "democratic" || !AmpConfig::get('ajax_load'))
+        return ($play_type == "stream" || $play_type == "democratic")
             ? "reloadUtil"
             : "reloadDivUtil";
     }
@@ -328,6 +328,27 @@ class Core
         }
 
         return $empty;
+    }
+
+    /**
+     * image_mime
+     * Read the real mime type out of the image data itself. Callers otherwise build one by pasting
+     * a filename extension onto "image/", which produces types that don't exist (`image/jpg`, and
+     * `image/JPG` for an upper case name) and believes a .jpg name over png bytes.
+     * Returns null when the data isn't a recognisable image, so callers can keep their own default.
+     */
+    public static function image_mime(string $image_data): ?string
+    {
+        if ($image_data === '') {
+            return null;
+        }
+
+        $info = @getimagesizefromstring($image_data);
+        if ($info === false || empty($info['mime'])) {
+            return null;
+        }
+
+        return (string) $info['mime'];
     }
 
     /**

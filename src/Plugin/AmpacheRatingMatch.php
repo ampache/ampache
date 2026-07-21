@@ -225,15 +225,15 @@ class AmpacheRatingMatch extends AmpachePlugin implements PluginSaveMediaplayInt
             return false;
         }
 
-        $sql = "SELECT COUNT(*) AS `counting` FROM `object_count` WHERE `object_type` = 'song' AND `count_type` = ? AND `object_id` = ? AND `user` = ?;";
+        $sql = "SELECT ((SELECT COUNT(*) FROM `object_count` WHERE `object_type` = 'song' AND `count_type` = ? AND `object_id` = ? AND `user` = ?) + (SELECT IFNULL(SUM(`count`), 0) FROM `object_count_summary` WHERE `object_type` = 'song' AND `count_type` = ? AND `object_id` = ? AND `user` = ?)) AS `counting`;";
 
         // get the plays for your user
-        $db_results  = Dba::read($sql, ['stream', $song->id, $this->user->id]);
+        $db_results  = Dba::read($sql, ['stream', $song->id, $this->user->id, 'stream', $song->id, $this->user->id]);
         $play_result = Dba::fetch_assoc($db_results);
         $play_count  = (int) $play_result['counting'];
 
         // get the skips for your user
-        $db_results  = Dba::read($sql, ['skip', $song->id, $this->user->id]);
+        $db_results  = Dba::read($sql, ['skip', $song->id, $this->user->id, 'skip', $song->id, $this->user->id]);
         $skip_result = Dba::fetch_assoc($db_results);
         $skip_count  = (int) $skip_result['counting'];
 

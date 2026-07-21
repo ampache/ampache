@@ -20,32 +20,23 @@ declare(strict_types=1);
  *
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
- *
  */
 
-// create_web_player.inc.php
+namespace Ampache\Module\System\Update\Migration\V8;
 
-use Ampache\Config\AmpConfig;
-use Ampache\Module\Playback\Stream_Playlist;
-use Ampache\Module\Playback\WebPlayer;
+use Ampache\Module\Authorization\AccessLevelEnum;
+use Ampache\Module\System\Update\Migration\AbstractMigration;
 
-/** @var Stream_Playlist $this */
-$width = (WebPlayer::is_playlist_video($this)) ? 880 : 730; ?>
-<!DOCTYPE html>
-<html>
-<head>
-<title><?php echo scrub_out(AmpConfig::get('site_title')); ?></title>
-<script>
-<!-- begin
-function PlayerPopUp(URL)
+/**
+ * Add the `mini_player` preference used to lock a user into the mini player page (m.php).
+ * It's an admin level preference so a locked user can't turn it off from a page they can't reach.
+ */
+final class Migration800021 extends AbstractMigration
 {
-    window.open(URL, 'Web_player', 'width=<?php echo $width; ?>,height=285,scrollbars=0,toolbar=0,location=0,directories=0,status=0,resizable=0');
-    window.location = '<?php echo return_referer(); ?>';
-    return false;
+    protected array $changelog = ['Add the `mini_player` preference to lock a user into the mini player interface'];
+
+    public function migrate(): void
+    {
+        $this->updatePreferences('mini_player', 'Lock this user into the mini player interface', '0', AccessLevelEnum::ADMIN->value, 'boolean', 'interface', 'theme');
+    }
 }
-// end -->
-</script>
-</head>
-<body onLoad="javascript:PlayerPopUp('<?php echo AmpConfig::get_web_path(); ?>/web_player.php<?php echo '?playlist_id=' . $this->id; ?>')">
-</body>
-</html>

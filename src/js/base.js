@@ -190,27 +190,69 @@ export function reloadRedirect(target) {
     window.location = target;
 }
 
-export function NavigateTo(url) {
-    if (jsAmpConfigAjaxLoad) {
-        window.location.hash = url.substring(jsWebPath.length + 1);
-    } else {
-        window.location.href = url;
+// ampacheUrl
+// Resolve a link against the current document and return it as a URL when it points inside this
+// Ampache install, otherwise null. The trailing "/" on the base normalises both install shapes:
+// https://host -> base pathname "/", https://host/music -> "/music/". A real origin comparison and
+// a real prefix test, rather than a substring search and positional math on jsWebPath.length.
+export function ampacheUrl(link) {
+    var target, base;
+    try {
+        target = new URL(link, window.location.href);
+        base   = new URL(jsWebPath + "/", window.location.href);
+    } catch (e) {
+        return null;
     }
+    if (target.origin !== base.origin) {
+        return null;
+    }
+    if (target.pathname.indexOf(base.pathname) !== 0) {
+        return null;
+    }
+
+    return target;
+}
+
+// ampachePagePath
+// The page part of an internal url relative to the Ampache web root, e.g. "browse.php?action=album".
+// This is the value the old code read out of location.hash, so consumers keep working unchanged.
+export function ampachePagePath(link) {
+    var target = ampacheUrl(link || window.location.href);
+    if (!target) {
+        return "";
+    }
+    var base = new URL(jsWebPath + "/", window.location.href);
+
+    return target.pathname.substring(base.pathname.length) + target.search;
+}
+
+// navigateToUrl
+// Client side navigation. Swaps the page content and puts the real, server routable url in the
+// address bar, so links can be read, shared and debugged. External urls are handed to the browser.
+export function navigateToUrl(url) {
+    var target = ampacheUrl(url);
+    if (!target) {
+        window.location.href = url;
+
+        return;
+    }
+    // already here; re-fetching would throw away the page we are looking at for an identical one
+    if (target.href === window.location.href) {
+        return;
+    }
+    history.pushState(null, "", target.href);
+    loadContentPage(target.href);
+}
+
+export function NavigateTo(url) {
+    navigateToUrl(url);
 }
 
 export function getCurrentPage() {
-    if (jsAmpConfigAjaxLoad) {
-        if (window.location.hash.length > 0) {
-            var wpage = window.location.hash.substring(1);
-            if (wpage !== 'prettyPhoto') {
-                return btoa(wpage);
-            } else {
-                return "";
-            }
-        }
-
-        return btoa(window.location.href.substring(jsWebPath.length + 1));
-    } else {
-        return btoa(window.location.href);
+    // the lightbox writes #prettyPhoto into the hash; that is not a page to come back to
+    if (window.location.hash === "#prettyPhoto") {
+        return "";
     }
+
+    return btoa(window.location.href);
 }
