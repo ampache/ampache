@@ -27,6 +27,7 @@ namespace Ampache\Module\Catalog;
 
 use Ahc\Cli\IO\Interactor;
 use Ampache\Config\AmpConfig;
+use Ampache\Module\Playback\Stream;
 use Ampache\Module\System\AmpError;
 use Ampache\Module\System\Core;
 use Ampache\Module\System\Dba;
@@ -212,8 +213,9 @@ class Catalog_remote extends Catalog
             return false;
         }
 
-        $max_bitrate   = (int) AmpConfig::get('max_bit_rate', 128);
-        $user_bit_rate = (int) AmpConfig::get('transcode_bitrate', 128);
+        // These preferences are stored in bps
+        $max_bitrate   = (int) AmpConfig::get('max_bit_rate', 0);
+        $user_bit_rate = Stream::get_format_bitrate($cache_target);
 
         // If the user's crazy, that's no skin off our back
         if ($user_bit_rate > $max_bitrate) {

@@ -30,6 +30,7 @@ use Ampache\Config\ConfigContainerInterface;
 use Ampache\Module\Api\Api;
 use Ampache\Module\Playback\Localplay\LocalPlay;
 use Ampache\Module\Playback\Localplay\LocalPlayTypeEnum;
+use Ampache\Module\Playback\Stream;
 use Ampache\Module\System\Core;
 use Ampache\Module\System\Dba;
 use Ampache\Module\System\Plugin\PluginTypeEnum;
@@ -689,6 +690,7 @@ class Ui implements UiInterface
     public function createPreferenceInput(
         string $name,
         $value,
+        ?string $type = null,
     ): void {
         if (!Preference::has_access($name)) {
             if ($value == '1') {
@@ -704,7 +706,55 @@ class Ui implements UiInterface
             return;
         } // if we don't have access to it
 
+        // Transcoding-format preferences render as a capability-driven output-format picker.
+        // The available formats come from the configured `encode_args_<format>` keys.
+        if ($type === 'transcoding') {
+            $kind    = (str_contains($name, 'video')) ? 'video' : 'audio';
+            $formats = Stream::get_available_encode_formats($kind);
+            echo '<select name="' . $name . '">' . "\n";
+            $is_selected = (in_array($value, [null, '', '0'], true)) ? ' selected="selected"' : '';
+            echo '<option value=""' . $is_selected . '>' . T_('None (stream source format)') . "</option>\n";
+            foreach ($formats as $format) {
+                $is_selected = ((string) $value === $format) ? ' selected="selected"' : '';
+                echo '<option value="' . $format . '"' . $is_selected . '>' . $format . "</option>\n";
+            }
+            echo "</select>\n";
+
+            return;
+        }
+
+        // Per-format bitrate overrides render one input per format the server can actually encode,
+        // so the list follows the configured `encode_args_<format>` keys without a migration.
+        if ($type === 'bitrate_map') {
+            $overrides = Stream::get_format_bitrate_map();
+            $formats   = array_merge(
+                Stream::get_available_encode_formats('audio'),
+                Stream::get_available_encode_formats('video')
+            );
+            if ($formats === []) {
+                echo T_('No transcode output formats are configured');
+
+                return;
+            }
+
+            $default = (int) AmpConfig::get('transcode_bitrate', 128000);
+            echo '<table class="tabledata">' . "\n";
+            foreach ($formats as $format) {
+                $current = $overrides[$format] ?? 0;
+                echo '<tr><td>' . $format . '</td><td><input type="number" name="' . $name . '[' . $format . ']" value="' . (($current > 0) ? $current : '') . '" min="0" step="1000" placeholder="' . $default . '" /> ' . T_('bps') . "</td></tr>\n";
+            }
+            echo "</table>\n";
+
+            return;
+        }
+
         switch ($name) {
+            case 'transcode_bitrate':
+            case 'max_bit_rate':
+            case 'min_bit_rate':
+                // Bitrate preferences are stored in bits per second (bps)
+                echo '<input type="number" name="' . $name . '" value="' . (int) $value . '" min="0" step="1000" /> ' . T_('bps');
+                break;
             case 'access_control':
             case 'access_list':
             case 'ajax_load':
@@ -836,7 +886,6 @@ class Ui implements UiInterface
             case 'use_original_year':
             case 'webdav_backend':
             case 'webplayer_confirmclose':
-            case 'webplayer_html5':
             case 'webplayer_pausetabs':
             case 'xml_rpc':
                 $is_true  = '';

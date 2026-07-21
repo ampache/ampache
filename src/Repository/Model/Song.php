@@ -984,7 +984,8 @@ class Song extends database_object implements
         // to make it a human-friendly type.
         return match ($type) {
             'spx', 'ogg' => 'application/ogg',
-            'opus' => 'audio/ogg; codecs=opus',
+            'opus', 'opus_rg', 'opus_car' => 'audio/ogg; codecs=opus',
+            'mp3_rg', 'mp3_car' => 'audio/mpeg',
             'wma', 'asf' => 'audio/x-ms-wma',
             'rm', 'ra' => 'audio/x-realaudio',
             'flac' => 'audio/flac',
@@ -2142,10 +2143,11 @@ class Song extends database_object implements
             $cache_path     = (string) AmpConfig::get('cache_path', '');
             $cache_target   = (string) AmpConfig::get('cache_target', '');
             $file_target    = Catalog::get_cache_path($this->id, $this->catalog, $cache_path, $cache_target);
-            $bitrate        = (int) AmpConfig::get('transcode_bitrate', 128) * 1000;
             $transcode_type = ($file_target !== null && is_file($file_target))
                 ? $cache_target
                 : Stream::get_transcode_format($this->type, null, $player);
+            // the bitrate depends on the format we settled on
+            $bitrate = Stream::get_format_bitrate($transcode_type);
             if (
                 $transcode_type !== null
                 && $transcode_type !== ''

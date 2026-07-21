@@ -27,6 +27,7 @@ namespace Ampache\Module\Catalog;
 
 use Ahc\Cli\IO\Interactor;
 use Ampache\Config\AmpConfig;
+use Ampache\Module\Playback\Stream;
 use Ampache\Module\System\AmpError;
 use Ampache\Module\System\Core;
 use Ampache\Module\System\Dba;
@@ -192,8 +193,9 @@ class Catalog_subsonic extends Catalog
                     rename($old_target_file, $file_target);
                     debug_event('subsonic.catalog', 'Moved: ' . $row['id'] . ' from: {' . $old_target_file . '}' . ' to: {' . $file_target . '}', 5);
                 } else {
-                    $max_bitrate   = (int) AmpConfig::get('max_bit_rate', 128);
-                    $user_bit_rate = (int) AmpConfig::get('transcode_bitrate', 128);
+                    // These preferences are stored in bps
+                    $max_bitrate   = (int) AmpConfig::get('max_bit_rate', 0);
+                    $user_bit_rate = Stream::get_format_bitrate($cache_target);
 
                     // If the user's crazy, that's no skin off our back
                     if ($user_bit_rate > $max_bitrate) {
@@ -202,7 +204,8 @@ class Catalog_subsonic extends Catalog
 
                     $options = [
                         'format' => $cache_target,
-                        'maxBitRate' => $max_bitrate,
+                        // Subsonic maxBitRate is expressed in kbps
+                        'maxBitRate' => (int) ($max_bitrate / 1000),
                     ];
 
                     $remote_url = $this->subsonic->parameterize($row['file'] . '&', $options);

@@ -250,6 +250,16 @@ abstract class Catalog extends database_object
                     );
                 }
             }
+            // ReplayGain (_rg/_car) output is normalised per-source and must never be cached
+            if ($cache_target && in_array($cache_target, Stream::NON_CACHEABLE_FORMATS, true)) {
+                debug_event(self::class, 'cache_catalogs: refusing to cache non-cacheable target ' . $cache_target, 3);
+                $interactor?->warn(
+                    sprintf('cache_catalogs: `cache_target` "%s" cannot be cached; skipping', $cache_target),
+                    true
+                );
+
+                return;
+            }
             if ($cache_target) {
                 foreach ($catalogs as $catalogid) {
                     $catalog = self::create_from_id($catalogid);

@@ -92,7 +92,46 @@ final readonly class PreferencesFromRequestUpdater implements PreferencesFromReq
                     $value = filter_var(urldecode($value), FILTER_VALIDATE_URL) ?: null;
                     break;
                 case 'transcode_bitrate':
+                case 'max_bit_rate':
+                case 'min_bit_rate':
+                    // Bitrate preferences are stored in bits per second (bps)
                     $value = (string) Stream::validate_bitrate((int) $value);
+                    break;
+                case 'encode_target':
+                case 'encode_player_webplayer_target':
+                case 'encode_player_api_target':
+                    if ($value !== '' && !in_array($value, Stream::get_available_encode_formats('audio'), true)) {
+                        $value = '';
+                    }
+
+                    break;
+                case 'encode_video_target':
+                    if ($value !== '' && !in_array($value, Stream::get_available_encode_formats('video'), true)) {
+                        $value = '';
+                    }
+
+                    break;
+                case 'transcode_bitrate_formats':
+                    // Collapse the per-format inputs back into a `format=bps` map, dropping anything
+                    // the server can't actually encode and any blank or zero override
+                    $submitted = (isset($_REQUEST[$name]) && is_array($_REQUEST[$name]))
+                        ? $_REQUEST[$name]
+                        : [];
+                    $available = array_merge(
+                        Stream::get_available_encode_formats('audio'),
+                        Stream::get_available_encode_formats('video')
+                    );
+
+                    $pairs = [];
+                    foreach ($submitted as $format => $bitrate) {
+                        $format  = (string) $format;
+                        $bitrate = Stream::validate_bitrate((int) $bitrate);
+                        if ($bitrate > 0 && in_array($format, $available, true)) {
+                            $pairs[] = $format . '=' . $bitrate;
+                        }
+                    }
+
+                    $value = implode(',', $pairs);
                     break;
                 case 'custom_timezone':
                     $listIdentifiers = DateTimeZone::listIdentifiers() ?: [];

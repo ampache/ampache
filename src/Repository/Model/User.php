@@ -1009,7 +1009,7 @@ class User extends database_object
             }
         }
 
-        $sql        = "SELECT `preference`.`name`, `preference`.`description`, `preference`.`category`, `preference`.`subcategory`, preference.level, user_preference.value FROM `preference` INNER JOIN `user_preference` ON `user_preference`.`preference` = `preference`.`id` WHERE `user_preference`.`user` = ? " . $user_limit . " ORDER BY `preference`.`category`, `preference`.`subcategory`, `preference`.`description`";
+        $sql        = "SELECT `preference`.`name`, `preference`.`description`, `preference`.`category`, `preference`.`subcategory`, `preference`.`type`, preference.level, user_preference.value FROM `preference` INNER JOIN `user_preference` ON `user_preference`.`preference` = `preference`.`id` WHERE `user_preference`.`user` = ? " . $user_limit . " ORDER BY `preference`.`category`, `preference`.`subcategory`, `preference`.`description`";
         $db_results = Dba::read($sql, [$user_id]);
         $results    = [];
         $type_array = [];
@@ -1027,6 +1027,7 @@ class User extends database_object
                 'description' => T_($row['description']),
                 'value' => $row['value'],
                 'subcategory' => $row['subcategory'],
+                'type' => $row['type'],
             ];
             $results[$type] = [
                 'title' => ucwords((string) $type),

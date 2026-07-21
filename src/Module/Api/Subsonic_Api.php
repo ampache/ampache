@@ -3548,7 +3548,8 @@ class Subsonic_Api
                     Preference::update('share', $user_id, 1);
                 }
                 if ($maxbitrate > 0) {
-                    Preference::update('transcode_bitrate', $user_id, $maxbitrate);
+                    // Subsonic maxBitRate is kbps; transcode_bitrate is stored in bps
+                    Preference::update('transcode_bitrate', $user_id, $maxbitrate * 1000);
                 }
                 self::_responseOutput($input, __FUNCTION__);
             } else {

@@ -30,6 +30,7 @@ use Ampache\Module\Authorization\Access;
 use Ampache\Module\Authorization\AccessLevelEnum;
 use Ampache\Module\Authorization\AccessTypeEnum;
 use Ampache\Module\Playback\Localplay\LocalPlayTypeEnum;
+use Ampache\Module\Playback\Stream;
 use Ampache\Module\System\Core;
 use Ampache\Module\System\Dba;
 
@@ -282,7 +283,6 @@ class Preference extends database_object
         'use_original_year',
         'webdav_backend',
         'webplayer_confirmclose',
-        'webplayer_html5',
         'webplayer_pausetabs',
         'webplayer_removeplayed',
     ];
@@ -595,6 +595,12 @@ class Preference extends database_object
                     'name_asc',
                     'name_desc',
                 ];
+            case 'encode_target':
+            case 'encode_player_webplayer_target':
+            case 'encode_player_api_target':
+                return array_merge([''], Stream::get_available_encode_formats('audio'));
+            case 'encode_video_target':
+                return array_merge([''], Stream::get_available_encode_formats('video'));
         }
 
         return null;
@@ -1026,7 +1032,6 @@ class Preference extends database_object
             'webdav_backend',
             'webplayer_confirmclose',
             'webplayer_debug',
-            'webplayer_html5',
             'webplayer_pausetabs',
             'write_tags',
             'xml_rpc',
@@ -1189,9 +1194,6 @@ class Preference extends database_object
                     break;
                 case 'subsonic_backend':
                     Dba::write($pref_sql, ['subsonic_backend', '1', 'Use Subsonic backend', AccessLevelEnum::ADMIN->value, 'boolean', 'system', 'backend']);
-                    break;
-                case 'webplayer_html5':
-                    Dba::write($pref_sql, ['webplayer_html5', '1', 'Authorize HTML5 Web Player', AccessLevelEnum::USER->value, 'boolean', 'streaming', 'player']);
                     break;
                 case 'allow_personal_info_now':
                     Dba::write($pref_sql, ['allow_personal_info_now', '1', 'Share Now Playing information', AccessLevelEnum::USER->value, 'boolean', 'interface', 'privacy']);
@@ -1647,7 +1649,7 @@ class Preference extends database_object
                         . " 'sidebar_order_playlist', 'sidebar_order_search', 'sidebar_order_video', 'slideshow_time'"
                         . " 'song_page_title', 'subsonic_always_download', 'topmenu', 'transcode_bitrate', 'transcode'"
                         . " 'ui_fixed', 'unique_playlist', 'use_original_year'"
-                        . " 'webplayer_confirmclose', 'webplayer_html5', 'webplayer_pausetabs'"
+                        . " 'webplayer_confirmclose', 'webplayer_pausetabs'"
                         . " 'webplayer_removeplayed', 'subsonic_force_album_artist', 'subsonic_single_user_data'"
                         . ");",
                         [AccessLevelEnum::USER->value]
@@ -1744,7 +1746,7 @@ class Preference extends database_object
                         . " 'home_now_playing', 'home_recently_played_all', 'home_recently_played', 'libitem_contextmenu', 'now_playing_per_user',"
                         . " 'podcast_new_download', 'show_artist', 'show_donate', 'show_folder', 'show_header_login', 'show_license', 'show_original_year',"
                         . " 'show_subtitle', 'show_wrapped', 'song_page_title', 'subsonic_backend', 'upload_allow_edit', 'upload_allow_remove', 'upload_subdir',"
-                        . " 'webplayer_html5', 'webplayer_pausetabs') AND `user` = ?;",
+                        . " 'webplayer_pausetabs') AND `user` = ?;",
                         [$user->getId()]
                     ) !== null
                     && Dba::write("UPDATE `user_preference` SET `value` = '10' WHERE `name` IN ('browser_notify_timeout', 'podcast_keep', 'popular_threshold', 'sidebar_order_browse') AND `user` = ?;", [$user->getId()]) !== null
@@ -1803,7 +1805,7 @@ class Preference extends database_object
                         . " 'home_moment_albums', 'home_now_playing', 'home_recently_played_all', 'home_recently_played',"
                         . " 'libitem_contextmenu', 'now_playing_per_user', 'podcast_new_download', 'show_artist', 'show_donate', 'show_folder', 'show_header_login',"
                         . " 'show_license', 'show_original_year', 'show_subtitle', 'song_page_title', 'subsonic_backend', 'upload_allow_edit', 'upload_allow_remove',"
-                        . " 'upload_subdir', 'webplayer_html5', 'webplayer_pausetabs') AND `user` = ?;",
+                        . " 'upload_subdir', 'webplayer_pausetabs') AND `user` = ?;",
                         [$user->getId()]
                     ) !== null
                     && Dba::write("UPDATE `user_preference` SET `value` = '10' WHERE `name` IN ('browser_notify_timeout', 'podcast_keep', 'popular_threshold', 'sidebar_order_browse') AND `user` = ?;", [$user->getId()]) !== null
@@ -1860,7 +1862,7 @@ class Preference extends database_object
                         . " 'api_enable_5', 'api_enable_6', 'autoupdate', 'browser_notify', 'home_moment_albums',"
                         . " 'libitem_contextmenu', 'now_playing_per_user', 'podcast_new_download', 'share', 'show_artist', 'show_donate', 'show_folder',"
                         . " 'show_header_login', 'show_license', 'show_original_year', 'show_subtitle', 'song_page_title', 'subsonic_backend', 'upload_allow_edit',"
-                        . " 'upload_allow_remove', 'upload_subdir', 'webplayer_html5', 'webplayer_pausetabs') AND `user` = ?;",
+                        . " 'upload_allow_remove', 'upload_subdir', 'webplayer_pausetabs') AND `user` = ?;",
                         [$user->getId()]
                     ) !== null
                     && Dba::write("UPDATE `user_preference` SET `value` = '10' WHERE `name` IN ('browser_notify_timeout', 'podcast_keep', 'popular_threshold', 'sidebar_order_browse') AND `user` = ?;", [$user->getId()]) !== null
@@ -2122,7 +2124,6 @@ class Preference extends database_object
             'vlc_active' => 'VLC Active Instance',
             'webdav_backend' => 'Use WebDAV backend',
             'webplayer_confirmclose' => 'Confirmation when closing current playing window',
-            'webplayer_html5' => 'Authorize HTML5 Web Player',
             'webplayer_pausetabs' => 'Auto-pause between tabs',
             'webplayer_removeplayed' => 'Remove tracks before the current playlist item in the webplayer when played',
             'xbmc_active' => 'XBMC Active Instance',

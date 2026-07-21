@@ -85,6 +85,8 @@ abstract class AbstractUserEditMethod implements MethodInterface
      * Update an existing user.
      * Takes the username with optional parameters.
      *
+     * maxbitrate is bits per second from API8 onwards, matching every other rate argument. API6 sends kbps.
+     *
      * @param array{
      *     filter?: int|string,
      *     username?: string,
@@ -203,7 +205,11 @@ abstract class AbstractUserEditMethod implements MethodInterface
         }
 
         if ($maxBitrate > 0) {
-            Preference::update('transcode_bitrate', $userId, $maxBitrate);
+            // API8 takes bps to match every other rate argument; API6 and older sent kbps
+            $bitrate = ($apiVersion >= 8)
+                ? $maxBitrate
+                : $maxBitrate * 1000;
+            Preference::update('transcode_bitrate', $userId, $bitrate);
         }
 
         if ($fullnamePublic !== null) {

@@ -4909,7 +4909,7 @@ Update an existing user.
 | 'city'              | string  |                                          |      YES |
 | 'disable'           | boolean | `0`, `1`                                 |      YES |
 | 'group'             | integer | Catalog filter group, default = 0        |      YES |
-| 'maxbitrate'        | string  |                                          |      YES |
+| 'maxbitrate'        | string  | Transcode bitrate in bps, e.g. `320000`  |      YES |
 | 'fullname_public'   | integer | `0`, `1` show fullname in public display |      YES |
 | 'reset_apikey'      | integer | `0`, `1` reset user Api Key              |      YES |
 | 'reset_streamtoken' | integer | `0`, `1` reset user Stream Token         |      YES |

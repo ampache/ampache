@@ -51,7 +51,10 @@ final class RandomMethod implements MethodInterface
     ) {}
 
     /**
-     * MINIMUM_API_VERSION=6.9.2 Build 2
+     * MINIMUM_API_VERSION=800000
+     *
+     * API8 only. API6 is shared with Ampache7, which does not serve this action, so adding it there
+     * would make the two servers disagree about the API6 surface.
      *
      * Picks a random song, podcast episode or video from the whole library and redirects (302) to its stream url.
      *
