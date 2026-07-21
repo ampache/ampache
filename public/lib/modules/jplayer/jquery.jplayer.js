@@ -3009,12 +3009,10 @@
             }
         },
         _html_load: function() {
-            // This function remains to allow the early HTML5 browsers to work, such as Firefox 3.6
-            // A change in the W3C spec for the media.load() command means that this is no longer necessary.
-            // This command should be removed and actually causes minor undesirable effects on some browsers. Such as loading the whole file and not only the metadata.
+            // The media.load() call this used to make is obsolete under the current W3C spec and made some browsers
+            // download the whole file instead of just metadata. Only the state transition is still needed here.
             if(this.status.waitForLoad) {
                 this.status.waitForLoad = false;
-                this.htmlElement.media.load();
             }
             clearTimeout(this.internal.htmlDlyCmdId);
         },

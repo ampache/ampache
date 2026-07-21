@@ -846,7 +846,17 @@ class Search extends playlist_object
      * get_rule_types
      *
      * Return rule list for the current search type, This is used for display purposes only so it's still translated
-     * @return array<int, array<string, mixed>>
+     *
+     * `widget` is a two-element list: the control name followed by either its input type or,
+     * for a select, the map of option value to label
+     *
+     * @return array<int, array{
+     *     name: string,
+     *     label: string,
+     *     type: string,
+     *     widget: array<int, string|array<array-key, string>>,
+     *     title: string
+     * }>
      */
     public function get_rule_types(): array
     {
@@ -1353,7 +1363,13 @@ class Search extends playlist_object
      * _get_types_album
      *
      * this is where all the available rules for albums are defined
-     * @return array<int, array<string, mixed>>
+     * @return array<int, array{
+     *     name: string,
+     *     label: string,
+     *     type: string,
+     *     widget: array<int, string|array<array-key, string>>,
+     *     title: string
+     * }>
      */
     private function _get_types_album(): array
     {
@@ -1474,7 +1490,13 @@ class Search extends playlist_object
      * _get_types_artist
      *
      * this is where all the available rules for artists are defined
-     * @return array<int, array<string, mixed>>
+     * @return array<int, array{
+     *     name: string,
+     *     label: string,
+     *     type: string,
+     *     widget: array<int, string|array<array-key, string>>,
+     *     title: string
+     * }>
      */
     private function _get_types_artist(): array
     {
@@ -1580,7 +1602,13 @@ class Search extends playlist_object
      * _get_types_label
      *
      * this is where all the available rules for labels are defined
-     * @return array<int, array<string, mixed>>
+     * @return array<int, array{
+     *     name: string,
+     *     label: string,
+     *     type: string,
+     *     widget: array<int, string|array<array-key, string>>,
+     *     title: string
+     * }>
      */
     private function _get_types_label(): array
     {
@@ -1598,7 +1626,13 @@ class Search extends playlist_object
      * _get_types_playlist
      *
      * this is where all the available rules for playlists are defined
-     * @return array<int, array<string, mixed>>
+     * @return array<int, array{
+     *     name: string,
+     *     label: string,
+     *     type: string,
+     *     widget: array<int, string|array<array-key, string>>,
+     *     title: string
+     * }>
      */
     private function _get_types_playlist(): array
     {
@@ -1623,7 +1657,13 @@ class Search extends playlist_object
      * _get_types_podcast
      *
      * this is where all the available rules for podcasts are defined
-     * @return array<int, array<string, mixed>>
+     * @return array<int, array{
+     *     name: string,
+     *     label: string,
+     *     type: string,
+     *     widget: array<int, string|array<array-key, string>>,
+     *     title: string
+     * }>
      */
     private function _get_types_podcast(): array
     {
@@ -1694,7 +1734,13 @@ class Search extends playlist_object
      * _get_types_podcast_episode
      *
      * this is where all the available rules for podcast_episodes are defined
-     * @return array<int, array<string, mixed>>
+     * @return array<int, array{
+     *     name: string,
+     *     label: string,
+     *     type: string,
+     *     widget: array<int, string|array<array-key, string>>,
+     *     title: string
+     * }>
      */
     private function _get_types_podcast_episode(): array
     {
@@ -1762,7 +1808,13 @@ class Search extends playlist_object
      * _get_types_song
      *
      * this is where all the available rules for songs are defined
-     * @return array<int, array<string, mixed>>
+     * @return array<int, array{
+     *     name: string,
+     *     label: string,
+     *     type: string,
+     *     widget: array<int, string|array<array-key, string>>,
+     *     title: string
+     * }>
      */
     private function _get_types_song(): array
     {
@@ -1941,7 +1993,13 @@ class Search extends playlist_object
      * _get_types_tag
      *
      * this is where all the available rules for Genres are defined
-     * @return array<int, array<string, mixed>>
+     * @return array<int, array{
+     *     name: string,
+     *     label: string,
+     *     type: string,
+     *     widget: array<int, string|array<array-key, string>>,
+     *     title: string
+     * }>
      */
     private function _get_types_tag(): array
     {
@@ -1962,7 +2020,13 @@ class Search extends playlist_object
      * _get_types_user
      *
      * this is where all the available rules for users are defined
-     * @return array<int, array<string, mixed>>
+     * @return array<int, array{
+     *     name: string,
+     *     label: string,
+     *     type: string,
+     *     widget: array<int, string|array<array-key, string>>,
+     *     title: string
+     * }>
      */
     private function _get_types_user(): array
     {
@@ -1977,7 +2041,13 @@ class Search extends playlist_object
      * _get_types_video
      *
      * this is where all the available rules for videos are defined
-     * @return array<int, array<string, mixed>>
+     * @return array<int, array{
+     *     name: string,
+     *     label: string,
+     *     type: string,
+     *     widget: array<int, string|array<array-key, string>>,
+     *     title: string
+     * }>
      */
     private function _get_types_video(): array
     {

@@ -23,21 +23,44 @@ declare(strict_types=1);
  *
  */
 
-namespace Ampache\Module\Application\WebPlayer;
+namespace Ampache\Module\Application\MiniPlayer;
 
+use Ampache\Config\AmpConfig;
 use Ampache\Module\Application\ApplicationActionInterface;
 use Ampache\Module\Authorization\GuiGatekeeperInterface;
+use Ampache\Module\System\Core;
 use Ampache\Module\Util\Ui;
+use Ampache\Repository\Model\Preference;
+use Ampache\Repository\Model\User;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 
-final class ShowAction implements ApplicationActionInterface
+/**
+ * Show the mini player; a standalone page with the home plugins and the web player only.
+ */
+final readonly class ShowAction implements ApplicationActionInterface
 {
     public const string REQUEST_KEY = 'show';
 
     public function run(ServerRequestInterface $request, GuiGatekeeperInterface $gatekeeper): ?ResponseInterface
     {
-        require_once Ui::find_template('show_web_player.inc.php');
+        $user = Core::get_global('user');
+
+        // Users locked into this page can't reach their preferences to fix a play type that doesn't
+        // load the web player, so make sure it is set. Core::get_reloadutil() only returns the
+        // in-page loader for the web player play type.
+        if (
+            $user instanceof User
+            && $user->getId() > 0
+            && Preference::get_by_user($user->getId(), 'mini_player')
+        ) {
+            if (AmpConfig::get('play_type') !== 'web_player') {
+                Preference::update('play_type', $user->getId(), 'web_player');
+                AmpConfig::set('play_type', 'web_player', true);
+            }
+        }
+
+        require_once Ui::find_template('mini.inc.php');
 
         return null;
     }

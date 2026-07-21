@@ -76,7 +76,7 @@ foreach ($preferences['prefs'] as $pref) {
         <tr>
             <td class="cel_preference"><?php echo T_($pref['description']); ?></td>
             <td class="cel_value">
-                <?php $ui->createPreferenceInput($pref['name'], $pref['value']); ?>
+                <?php $ui->createPreferenceInput($pref['name'], $pref['value'], $pref['type'] ?? null); ?>
             </td>
             <?php if ($is_admin) {
                 if (!$is_system) { ?>

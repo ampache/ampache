@@ -55,6 +55,30 @@ if (!$logo_url) {
     $logo_url = Ui::get_logo_url();
 }
 
+// Init::redirect() hands us the page you actually asked for; fall back to the browser referrer.
+// $_POST comes first so a failed attempt re-renders the form with the destination still attached,
+// otherwise a wrong password would quietly drop you back to the index page after the retry.
+// Only ever emit our own urls, the login action validates this again before redirecting to it.
+$referrer = (string) ($_POST['referrer'] ?? $_GET['referrer'] ?? Core::get_server('HTTP_REFERER'));
+if (
+    $referrer !== ''
+    && (
+        !str_starts_with($referrer, $web_path)
+        // HTTP_REFERER is the login page itself on a retry; that isn't somewhere to send anyone
+        || str_contains($referrer, 'login.php')
+    )
+) {
+    $referrer = '';
+}
+
+// The mini player button just points the referrer at the mini player, so logging in lands there.
+// Flagged when that's already where you're headed, so the button shows it's the current choice.
+$mini_url      = $web_path . '/m/';
+$mini_referrer = (
+    $referrer !== ''
+    && (str_starts_with($referrer, $mini_url) || rtrim($referrer, '/') === rtrim($mini_url, '/'))
+);
+
 $auth_methods = AmpConfig::get('auth_methods', []);
 $oidc_enabled = is_array($auth_methods) && in_array('oidc', $auth_methods, true);
 
@@ -112,7 +136,7 @@ $_SESSION['login'] = true; ?>
                     </div>
                     <div class="formValidation">
                         <input class="button" id="loginbutton" type="submit" value="<?php echo T_('Login'); ?>" />
-                        <input type="hidden" name="referrer" value="<?php echo scrub_out(Core::get_server('HTTP_REFERER')); ?>" />
+                        <input type="hidden" id="referrer" name="referrer" value="<?php echo scrub_out($referrer); ?>" />
                         <input type="hidden" name="action" value="login" />
                     </div>
                 </div>
@@ -124,11 +148,31 @@ $_SESSION['login'] = true; ?>
                 <?php if (Mailer::is_mail_enabled()) { ?>
                         <a class="button nohtml" id="lostpasswordbutton" href="<?php echo $web_path; ?>/lostpassword.php"><?php echo T_('Lost Password'); ?></a>
                 <?php } ?>
+                        <a class="button nohtml<?php echo ($mini_referrer) ? ' selected' : ''; ?>" id="miniplayerbutton" href="<?php echo $web_path; ?>/login.php?referrer=<?php echo urlencode($mini_url); ?>"><?php echo T_('Mini player'); ?></a>
                 <?php if ($oidc_enabled) { ?>
                         <a class="button nohtml" id="oidcbutton" href="<?php echo $web_path; ?>/login.php?action=oidc"><?php echo scrub_out(AmpConfig::get('oidc_button_text', T_('Sign in with OpenID Connect'))); ?></a>
                 <?php } ?>
                 </div>
             </form>
+            <script>
+                // The server never sees the '#browse.php?...' part of a url, but browsers carry the
+                // fragment across the redirect that sent us here, so recover it from the address bar
+                // and hand it back as the referrer.
+                (function () {
+                    var webPath  = "<?php echo addslashes($web_path); ?>";
+                    var referrer = document.getElementById('referrer');
+
+                    function keepHash() {
+                        var hash = window.location.hash;
+                        if (referrer && hash.length > 1 && hash.indexOf('.php') > -1) {
+                            referrer.value = webPath + '/index.php' + hash;
+                        }
+                    }
+
+                    keepHash();
+                    document.forms.login.addEventListener('submit', keepHash);
+                })();
+            </script>
             <?php if ($mobile_session) {
                 echo '<div id="mobileheader"><!-- This is the header -->';
                 echo "<h1 id=\"logo\"><img src=\"" . $logo_url . "\" title=\"" . $t_ampache . "\" alt=\"" . $t_ampache . "\"></h1>";

@@ -39,6 +39,7 @@ use Ampache\Repository\Model\User;
 use Ampache\Repository\Model\Video;
 use Ampache\Repository\UserActivityRepositoryInterface;
 use PDOStatement;
+use RuntimeException;
 
 /**
  * Stats Class
@@ -50,6 +51,13 @@ use PDOStatement;
  */
 class Stats
 {
+    /**
+     * Types written by the Song/Podcast_Episode::set_played fan-out. They duplicate the date, user, agent and
+     * location of the media row that triggered them, so consolidation drops them instead of archiving them and
+     * Stats::restore() rebuilds them from the archived media rows.
+     */
+    private const array DERIVED_TYPES = ['album', 'album_disk', 'artist', 'podcast'];
+
     public ?string $agent = null;
     public int $date;
 
@@ -66,21 +74,91 @@ class Stats
      */
     public static function clear(int $user_id = 0): void
     {
+        // the archive goes too, or Stats::restore() would resurrect history that was deliberately cleared
         if ($user_id > 0) {
             Dba::write("DELETE FROM `object_count` WHERE `user` = ?;", [$user_id]);
+            Dba::write("DELETE FROM `object_count_summary` WHERE `user` = ?;", [$user_id]);
+            Dba::write("DELETE FROM `object_count_archive` WHERE `user` = ?;", [$user_id]);
         } else {
             Dba::write("TRUNCATE `object_count`;");
+            Dba::write("TRUNCATE `object_count_summary`;");
+            Dba::write("TRUNCATE `object_count_archive`;");
         }
 
         // song.total_count
-        $sql = "UPDATE `song`, (SELECT COUNT(`object_count`.`object_id`) AS `total_count`, `object_id` FROM `object_count` WHERE `object_count`.`object_type` = 'song' AND `object_count`.`count_type` = 'stream' GROUP BY `object_count`.`object_id`) AS `object_count` SET `song`.`total_count` = `object_count`.`total_count` WHERE `song`.`total_count` != `object_count`.`total_count` AND `song`.`id` = `object_count`.`object_id`;";
+        $sql = "UPDATE `song`, (SELECT SUM(`total`) AS `total_count`, `object_id` FROM (SELECT COUNT(`object_count`.`object_id`) AS `total`, `object_id` FROM `object_count` WHERE `object_count`.`object_type` = 'song' AND `object_count`.`count_type` = 'stream' GROUP BY `object_count`.`object_id` UNION ALL SELECT `count` AS `total`, `object_id` FROM `object_count_summary` WHERE `object_type` = 'song' AND `count_type` = 'stream') AS `combined_count` GROUP BY `object_id`) AS `object_count` SET `song`.`total_count` = `object_count`.`total_count` WHERE `song`.`total_count` != `object_count`.`total_count` AND `song`.`id` = `object_count`.`object_id`;";
         Dba::write($sql);
         // song.total_skip
-        $sql = "UPDATE `song`, (SELECT COUNT(`object_count`.`object_id`) AS `total_skip`, `object_id` FROM `object_count` WHERE `object_count`.`object_type` = 'song' AND `object_count`.`count_type` = 'skip' GROUP BY `object_count`.`object_id`) AS `object_count` SET `song`.`total_skip` = `object_count`.`total_skip` WHERE `song`.`total_skip` != `object_count`.`total_skip` AND `song`.`id` = `object_count`.`object_id`;";
+        $sql = "UPDATE `song`, (SELECT SUM(`total`) AS `total_skip`, `object_id` FROM (SELECT COUNT(`object_count`.`object_id`) AS `total`, `object_id` FROM `object_count` WHERE `object_count`.`object_type` = 'song' AND `object_count`.`count_type` = 'skip' GROUP BY `object_count`.`object_id` UNION ALL SELECT `count` AS `total`, `object_id` FROM `object_count_summary` WHERE `object_type` = 'song' AND `count_type` = 'skip') AS `combined_count` GROUP BY `object_id`) AS `object_count` SET `song`.`total_skip` = `object_count`.`total_skip` WHERE `song`.`total_skip` != `object_count`.`total_skip` AND `song`.`id` = `object_count`.`object_id`;";
         Dba::write($sql);
         // song.played
         $sql = "UPDATE `song` SET `played` = 0 WHERE `total_count` = 0 and `played` = 1;";
         Dba::write($sql);
+    }
+
+    /**
+     * consolidate
+     *
+     * Consolidate play history older than $older_than days into `object_count_summary` and delete the detail rows,
+     * inside a transaction.
+     *
+     * Stored counters stay exact: the rebuild queries (Catalog::update_counts, Album/Artist::update_table_counts,
+     * Video::update_video_counts, Stats::clear) combine both tables, all-time readers (Stats::get_object_count,
+     * User::get_play_size, rating match plugin) include the summary table, and the cron cache (ObjectCache) merges
+     * consolidated counts into its threshold 0 entries.
+     *
+     * Readers that inspect individual plays only evaluate the retained window: period-based statistics (trending,
+     * recent, graphs, Last.fm export), live all-time top charts (Stats::get_top_sql with a 0 threshold without
+     * cron_cache), smart playlist play-history rules and play count sorting.
+     *
+     * Nothing is lost: every detail row except the DERIVED_TYPES is copied to `object_count_archive` first, and the
+     * derived rows are rebuilt from the archived media rows by Stats::restore().
+     *
+     * @return array{rows: int, groups: int, executed: bool}
+     */
+    public static function consolidate(int $older_than, ?string $count_type = null, bool $dry_run = true): array
+    {
+        $threshold = time() - ($older_than * 86400);
+        $where     = "`date` < ? AND `count_type` IS NOT NULL";
+        $params    = [$threshold];
+        if ($count_type !== null) {
+            $where .= " AND `count_type` = ?";
+            $params[] = $count_type;
+        }
+
+        $db_results = Dba::read("SELECT COUNT(*) AS `rows`, COUNT(DISTINCT CONCAT_WS('|', `object_type`, `object_id`, `user`, `count_type`)) AS `groups` FROM `object_count` WHERE " . $where . ";", $params);
+        $row        = Dba::fetch_assoc($db_results);
+        $rows       = (int) ($row['rows'] ?? 0);
+        $groups     = (int) ($row['groups'] ?? 0);
+
+        if ($dry_run || $rows === 0) {
+            return ['rows' => $rows, 'groups' => $groups, 'executed' => false];
+        }
+
+        // archive, aggregate then purge inside a transaction so an interruption cannot double count rows on the
+        // next run. VALUES() is deprecated on MySQL 8 but its replacement isn't in MariaDB (as in Playlist::update_map)
+        $dbh            = Dba::dbh();
+        $in_transaction = ($dbh !== null && $dbh->beginTransaction());
+        $archive        = Dba::write("INSERT INTO `object_count_archive` (`object_type`, `object_id`, `date`, `user`, `agent`, `geo_latitude`, `geo_longitude`, `geo_name`, `count_type`) SELECT `object_type`, `object_id`, `date`, `user`, `agent`, `geo_latitude`, `geo_longitude`, `geo_name`, `count_type` FROM `object_count` WHERE " . $where . " AND `object_type` NOT IN (" . self::derivedTypeList() . ");", $params);
+        $insert         = ($archive !== null)
+            ? Dba::write("INSERT INTO `object_count_summary` (`object_type`, `object_id`, `user`, `count_type`, `count`, `date_from`, `date_to`) SELECT `object_type`, `object_id`, `user`, `count_type`, COUNT(*), MIN(`date`), MAX(`date`) FROM `object_count` WHERE " . $where . " GROUP BY `object_type`, `object_id`, `user`, `count_type` ON DUPLICATE KEY UPDATE `count` = `object_count_summary`.`count` + VALUES(`count`), `date_from` = LEAST(`object_count_summary`.`date_from`, VALUES(`date_from`)), `date_to` = GREATEST(`object_count_summary`.`date_to`, VALUES(`date_to`));", $params)
+            : null;
+        $delete = ($insert !== null)
+            ? Dba::write("DELETE FROM `object_count` WHERE " . $where . ";", $params)
+            : null;
+        if ($archive === null || $insert === null || $delete === null) {
+            if ($in_transaction && $dbh->inTransaction()) {
+                $dbh->rollBack();
+            }
+
+            throw new RuntimeException('Stats consolidation failed and was rolled back');
+        }
+
+        if ($in_transaction && $dbh->inTransaction()) {
+            $dbh->commit();
+        }
+
+        return ['rows' => $rows, 'groups' => $groups, 'executed' => true];
     }
 
     /**
@@ -189,10 +267,13 @@ class Stats
     {
         foreach (['album', 'artist', 'song', 'playlist', 'tag', 'live_stream', 'video', 'podcast', 'podcast_episode'] as $object_type) {
             Dba::write(sprintf("DELETE FROM `object_count` WHERE `object_type` = '%s' AND `object_count`.`object_id` NOT IN (SELECT `%s`.`id` FROM `%s`);", $object_type, $object_type, $object_type));
+            Dba::write(sprintf("DELETE FROM `object_count_summary` WHERE `object_type` = '%s' AND `object_count_summary`.`object_id` NOT IN (SELECT `%s`.`id` FROM `%s`);", $object_type, $object_type, $object_type));
+            Dba::write(sprintf("DELETE FROM `object_count_archive` WHERE `object_type` = '%s' AND `object_count_archive`.`object_id` NOT IN (SELECT `%s`.`id` FROM `%s`);", $object_type, $object_type, $object_type));
         }
 
         // if deletes are copmleted you can have left over stuff
         Dba::write("DELETE FROM `object_count` WHERE `object_type` IN ('album', 'artist', 'podcast') AND `count_type` = ('skip');");
+        Dba::write("DELETE FROM `object_count_summary` WHERE `object_type` IN ('album', 'artist', 'podcast') AND `count_type` = 'skip';");
     }
 
     /**
@@ -372,7 +453,7 @@ class Stats
             ? "`album_disk`.`album_id`"
             : $sql_type;
         // join valid catalogs or a specific one
-        $sql .= ((int) $catalog_id > 0)
+        $sql .= ((int) $catalog_id !== 0)
             ? "LEFT JOIN `catalog_map` ON `catalog_map`.`object_id` = " . $join_type . " AND `catalog_map`.`object_type` = '" . $base_type . "' WHERE `catalog_map`.`catalog_id` = '" . $catalog_id . "' "
             : "LEFT JOIN `catalog_map` ON `catalog_map`.`object_id` = " . $join_type . " AND `catalog_map`.`object_type` = '" . $base_type . "' WHERE `catalog_map`.`catalog_id` IN (" . implode(',', Catalog::get_catalogs('', $user?->getId(), true)) . ") ";
 
@@ -415,8 +496,16 @@ class Stats
 
         $db_results = Dba::read($sql, [$object_type, $object_id, $count_type]);
         $results    = Dba::fetch_assoc($db_results);
+        $total      = (int) ($results['total_count'] ?? 0);
 
-        return (int) ($results['total_count'] ?? 0);
+        // all-time counts must include consolidated history
+        if (!AmpConfig::get('cron_cache') && (int) $threshold === 0) {
+            $db_results = Dba::read("SELECT COALESCE(SUM(`count`), 0) AS `total_count` FROM `object_count_summary` WHERE `object_type` = ? AND `object_id` = ? AND `count_type` = ?;", [$object_type, $object_id, $count_type]);
+            $results    = Dba::fetch_assoc($db_results);
+            $total += (int) ($results['total_count'] ?? 0);
+        }
+
+        return $total;
     }
 
     /**
@@ -477,6 +566,7 @@ class Stats
         int $offset = 0,
         ?User $user = null,
         bool $newest = true,
+        int $catalog_id = 0,
     ): array {
         if ($count === 0) {
             $count = AmpConfig::get('popular_threshold', 10);
@@ -487,7 +577,7 @@ class Stats
             $offset = 0;
         }
 
-        $sql   = self::get_recent_sql($input_type, $user, $newest);
+        $sql   = self::get_recent_sql($input_type, $user, $newest, $catalog_id);
         $limit = ($offset < 1)
             ? $count
             : $offset . "," . $count;
@@ -509,7 +599,7 @@ class Stats
      * get_recent_sql
      * This returns the get_recent sql
      */
-    public static function get_recent_sql(string $input_type, ?User $user = null, bool $newest = true): string
+    public static function get_recent_sql(string $input_type, ?User $user = null, bool $newest = true, int $catalog_id = 0): string
     {
         $type           = self::validate_type($input_type);
         $ordersql       = ($newest) ? 'DESC' : 'ASC';
@@ -532,6 +622,15 @@ class Stats
 
         if ($catalog_filter && in_array($type, ['video', 'artist', 'album_artist', 'album', 'album_disk', 'song'], true) && $filter_user !== null) {
             $sql .= " AND" . Catalog::get_user_filter('object_count_' . $type, $filter_user->getId());
+        }
+
+        // album_disk rows are keyed on the joined table, everything else filters the object_count id directly
+        $catalog_column = ($input_type === 'album_disk')
+            ? '`album_disk`.`id`'
+            : '`object_count`.`object_id`';
+        $catalog_sql = Catalog::get_catalog_id_filter($input_type, $catalog_column, $catalog_id);
+        if ($catalog_sql !== '') {
+            $sql .= " AND " . $catalog_sql;
         }
 
         $rating_filter = AmpConfig::get_rating_filter();
@@ -676,6 +775,7 @@ class Stats
         int $since = 0,
         int $before = 0,
         bool $by_user = false,
+        int $catalog_id = 0,
     ): array {
         if ($count === 0) {
             $count = AmpConfig::get('popular_threshold', 10);
@@ -686,7 +786,7 @@ class Stats
             $offset = 0;
         }
 
-        $sql   = self::get_top_sql($input_type, (int) $threshold, 'stream', $user, $random, $since, $before, false, $by_user);
+        $sql   = self::get_top_sql($input_type, (int) $threshold, 'stream', $user, $random, $since, $before, false, $by_user, $catalog_id);
         $limit = ($offset < 1)
             ? $count
             : $offset . "," . $count;
@@ -718,6 +818,7 @@ class Stats
         int $before = 0,
         bool $addAdditionalColumns = false,
         bool $by_user = false,
+        int $catalog_id = 0,
     ): string {
         $type           = self::validate_type($input_type);
         $date           = $since ?: time() - (86400 * $threshold);
@@ -756,6 +857,7 @@ class Stats
 
         if (
             $user === null
+            && $catalog_id === 0
             && AmpConfig::get('cron_cache')
             && !$addAdditionalColumns
             && in_array($type, ['album', 'album_disk', 'artist', 'song', 'genre', 'catalog', 'live_stream', 'video', 'podcast', 'podcast_episode', 'playlist'], true)
@@ -828,6 +930,15 @@ class Stats
                 $sql .= " AND" . Catalog::get_user_filter('object_count_' . $type, $filter_user->getId());
             }
 
+            // album_disk rows are keyed on the joined table, everything else filters the object_count id directly
+            $catalog_column = ($input_type === 'album_disk')
+                ? '`album_disk`.`id`'
+                : '`object_count`.`object_id`';
+            $catalog_sql = Catalog::get_catalog_id_filter($input_type, $catalog_column, $catalog_id);
+            if ($catalog_sql !== '') {
+                $sql .= " AND " . $catalog_sql;
+            }
+
             $rating_filter = AmpConfig::get_rating_filter();
             if ($rating_filter > 0 && $rating_filter <= 5 && $user !== null) {
                 $sql .= " AND `object_id` NOT IN (SELECT `object_id` FROM `rating` WHERE `rating`.`object_type` = '" . $type . "' AND `rating`.`rating` <=" . $rating_filter . " AND `rating`.`user` = " . $user->getId() . ")";
@@ -853,10 +964,6 @@ class Stats
      */
     public static function has_played_history(string $object_type, Podcast_Episode|Video|Song $object, int $user_id, string $agent, int $date): bool
     {
-        if (AmpConfig::get('use_auth') && $user_id === -1) {
-            return false;
-        }
-
         // if it's already recorded (but from a different agent), don't do it again
         if (self::is_already_inserted($object_type, $object->id, $user_id, '', $date, true)) {
             return false;
@@ -911,7 +1018,7 @@ class Stats
         string $count_type = 'stream',
         ?int $date = null,
     ): bool {
-        if (AmpConfig::get('use_auth') && $user_id < 0) {
+        if (AmpConfig::get('use_auth') && $user_id < User::INTERNAL_SYSTEM_USER_ID) {
             debug_event(self::class, 'Invalid user given ' . $user_id, 3);
 
             return false;
@@ -936,7 +1043,7 @@ class Stats
         if ($db_results instanceof PDOStatement) {
             if (
                 in_array($type, ['song', 'album', 'album_disk', 'artist', 'video', 'podcast', 'podcast_episode'], true)
-                && $count_type === 'stream' && $user_id > 0
+                && $count_type === 'stream' && $user_id !== 0
                 && $agent !== 'debug'
             ) {
                 self::count($type, $object_id, 'up');
@@ -1007,6 +1114,82 @@ class Stats
         }
 
         Dba::write($sql, $params);
+
+        if ((int) $child_id === 0) {
+            // move consolidated history as well (merge counts on conflict)
+            Dba::write("INSERT INTO `object_count_summary` (`object_type`, `object_id`, `user`, `count_type`, `count`, `date_from`, `date_to`) SELECT `old_summary`.`object_type`, ?, `old_summary`.`user`, `old_summary`.`count_type`, `old_summary`.`count`, `old_summary`.`date_from`, `old_summary`.`date_to` FROM `object_count_summary` AS `old_summary` WHERE `old_summary`.`object_type` = ? AND `old_summary`.`object_id` = ? ON DUPLICATE KEY UPDATE `count` = `object_count_summary`.`count` + VALUES(`count`), `date_from` = LEAST(`object_count_summary`.`date_from`, VALUES(`date_from`)), `date_to` = GREATEST(`object_count_summary`.`date_to`, VALUES(`date_to`));", [$new_object_id, $object_type, $old_object_id]);
+            Dba::write("DELETE FROM `object_count_summary` WHERE `object_type` = ? AND `object_id` = ?;", [$object_type, $old_object_id]);
+            // the archive has no unique key, so the detail rows just move across
+            Dba::write("UPDATE `object_count_archive` SET `object_id` = ? WHERE `object_type` = ? AND `object_id` = ?;", [$new_object_id, $object_type, $old_object_id]);
+        }
+    }
+
+    /**
+     * restore
+     *
+     * Put every archived detail row back into `object_count`, rebuild the DERIVED_TYPES rows that consolidation
+     * dropped, and subtract what was restored from `object_count_summary`.
+     *
+     * The subtraction is exact rather than a truncate: a summary row can hold counts from a consolidation run that
+     * predates the archive, and those have no detail to restore, so they have to survive.
+     * Counters are not rebuilt here, the caller runs Catalog::update_counts afterwards.
+     * @return array{rows: int, derived: int, executed: bool}
+     */
+    public static function restore(bool $dry_run = true): array
+    {
+        $db_results = Dba::read("SELECT COUNT(*) AS `rows` FROM `object_count_archive`;");
+        $row        = Dba::fetch_assoc($db_results);
+        $rows       = (int) ($row['rows'] ?? 0);
+
+        if ($dry_run || $rows === 0) {
+            return ['rows' => $rows, 'derived' => 0, 'executed' => false];
+        }
+
+        $columns = "(`object_type`, `object_id`, `count_type`, `date`, `user`, `agent`, `geo_latitude`, `geo_longitude`, `geo_name`)";
+        $dbh     = Dba::dbh();
+
+        $in_transaction = ($dbh !== null && $dbh->beginTransaction());
+        // INSERT IGNORE throughout: the unique key makes a repeated restore a no-op instead of a duplicate
+        $restore = Dba::write("INSERT IGNORE INTO `object_count` " . $columns . " SELECT `object_type`, `object_id`, `count_type`, `date`, `user`, `agent`, `geo_latitude`, `geo_longitude`, `geo_name` FROM `object_count_archive`;");
+        $derived = 0;
+        foreach (self::derivedSelects() as $select) {
+            $result = ($restore !== null)
+                ? Dba::write("INSERT IGNORE INTO `object_count` " . $columns . " " . $select . ";")
+                : null;
+            if ($result === null) {
+                $restore = null;
+                break;
+            }
+
+            $derived += $result->rowCount();
+        }
+
+        // subtract the restored detail from the summary, then drop any row that is fully accounted for
+        $subtract = ($restore !== null)
+            ? Dba::write("UPDATE `object_count_summary` AS `summary` INNER JOIN (SELECT `object_type`, `object_id`, `user`, `count_type`, COUNT(*) AS `restored` FROM `object_count_archive` GROUP BY `object_type`, `object_id`, `user`, `count_type` UNION ALL " . self::derivedAggregateSelect() . ") AS `restored` ON `restored`.`object_type` = `summary`.`object_type` AND `restored`.`object_id` = `summary`.`object_id` AND `restored`.`user` = `summary`.`user` AND `restored`.`count_type` = `summary`.`count_type` SET `summary`.`count` = GREATEST(0, CAST(`summary`.`count` AS SIGNED) - CAST(`restored`.`restored` AS SIGNED));")
+            : null;
+        $cleanup = ($subtract !== null)
+            ? Dba::write("DELETE FROM `object_count_summary` WHERE `count` <= 0;")
+            : null;
+        // the archive only holds rows that are currently consolidated out, so empty it once they are back.
+        // DELETE not TRUNCATE: TRUNCATE is DDL and would implicitly commit the transaction
+        $purge = ($cleanup !== null)
+            ? Dba::write("DELETE FROM `object_count_archive`;")
+            : null;
+
+        if ($purge === null) {
+            if ($in_transaction && $dbh->inTransaction()) {
+                $dbh->rollBack();
+            }
+
+            throw new RuntimeException('Stats restore failed and was rolled back');
+        }
+
+        if ($in_transaction && $dbh->inTransaction()) {
+            $dbh->commit();
+        }
+
+        return ['rows' => $rows, 'derived' => $derived, 'executed' => true];
     }
 
     /**
@@ -1082,6 +1265,74 @@ class Stats
             'genre' => 'tag',
             default => 'song',
         };
+    }
+
+    /**
+     * Per-type aggregate shaped for the summary subtraction. Deliberately archive-based, not object_count-based:
+     * the summary must only lose what consolidation put into it, never the extra rows the repair pass creates.
+     */
+    private static function derivedAggregateSelect(): string
+    {
+        $selects = [];
+        foreach (self::derivedSources('object_count_archive', 'archive') as $type => $source) {
+            $selects[] = "SELECT '" . $type . "', `derived`.`derived_id`, `derived`.`user`, `derived`.`count_type`, COUNT(*) FROM (" . $source . ") AS `derived` GROUP BY `derived`.`derived_id`, `derived`.`user`, `derived`.`count_type`";
+        }
+
+        return implode(' UNION ALL ', $selects);
+    }
+
+    /**
+     * SELECT statements rebuilding the DERIVED_TYPES rows. These read `object_count` itself, so a restore also
+     * repairs parent rows that went missing for any other reason, not only the ones consolidation removed.
+     * The NOT EXISTS guard keeps that idempotent: INSERT IGNORE alone would not dedupe rows with a NULL `agent`,
+     * because a unique index treats NULLs as distinct. Column order matches the insert list in Stats::restore().
+     * @return string[]
+     */
+    private static function derivedSelects(): array
+    {
+        $selects = [];
+        foreach (self::derivedSources('object_count', 'media') as $type => $source) {
+            $selects[] = "SELECT '" . $type . "', `derived`.`derived_id`, `derived`.`count_type`, `derived`.`date`, `derived`.`user`, `derived`.`agent`, `derived`.`geo_latitude`, `derived`.`geo_longitude`, `derived`.`geo_name` FROM (" . $source . ") AS `derived` WHERE NOT EXISTS (SELECT 1 FROM `object_count` AS `existing` WHERE `existing`.`object_type` = '" . $type . "' AND `existing`.`object_id` = `derived`.`derived_id` AND `existing`.`date` = `derived`.`date` AND `existing`.`user` = `derived`.`user` AND `existing`.`agent` <=> `derived`.`agent` AND `existing`.`count_type` = `derived`.`count_type`)";
+        }
+
+        return $selects;
+    }
+
+    /**
+     * Maps each derived type to the media rows that produced it, mirroring the Song/Podcast_Episode set_played
+     * fan-out. DISTINCT because a song artist can also be the album artist, and because two songs from one album
+     * can share a second, so the original insert collapsed them too.
+     * @return array<string, string>
+     */
+    private static function derivedSources(string $table, string $alias): array
+    {
+        // the fan-out writes 'stream' rows for the parents. Stats::skip_last_play then DELETES the album/artist/podcast
+        // rows when a play is skipped, so those three must be rebuilt from 'stream' media only or a restore resurrects
+        // parent plays that were deliberately removed. album_disk is left in place by a skip, so it is rebuilt from
+        // both 'stream' and 'skip' media to match what actually survives.
+        $columns  = "'stream' AS `count_type`, `" . $alias . "`.`date`, `" . $alias . "`.`user`, `" . $alias . "`.`agent`, `" . $alias . "`.`geo_latitude`, `" . $alias . "`.`geo_longitude`, `" . $alias . "`.`geo_name`";
+        $streamed = "`" . $alias . "`.`count_type` = 'stream'";
+        $or_skip  = "`" . $alias . "`.`count_type` IN ('stream', 'skip')";
+        // resolve the parent through the joins rather than a stored id: merges and re-tagging move a media item
+        // between parents, so only a lookup at restore time gives the parent that is true now
+        $song    = "FROM `" . $table . "` AS `" . $alias . "` INNER JOIN `song` ON `song`.`id` = `" . $alias . "`.`object_id`";
+        $episode = "FROM `" . $table . "` AS `" . $alias . "` INNER JOIN `podcast_episode` ON `podcast_episode`.`id` = `" . $alias . "`.`object_id`";
+        $is_song = "`" . $alias . "`.`object_type` = 'song'";
+
+        return [
+            'album' => "SELECT DISTINCT `song`.`album` AS `derived_id`, " . $columns . " " . $song . " WHERE " . $is_song . " AND `song`.`album` > 0 AND " . $streamed,
+            'album_disk' => "SELECT DISTINCT `album_disk`.`id` AS `derived_id`, " . $columns . " " . $song . " INNER JOIN `album_disk` ON `album_disk`.`album_id` = `song`.`album` AND `album_disk`.`disk` = `song`.`disk` WHERE " . $is_song . " AND `song`.`album` > 0 AND " . $or_skip,
+            'artist' => "SELECT DISTINCT `artist_map`.`artist_id` AS `derived_id`, " . $columns . " " . $song . " INNER JOIN `artist_map` ON (`artist_map`.`object_type` = 'song' AND `artist_map`.`object_id` = `song`.`id`) OR (`artist_map`.`object_type` = 'album' AND `artist_map`.`object_id` = `song`.`album`) WHERE " . $is_song . " AND `artist_map`.`artist_id` > 0 AND " . $streamed,
+            'podcast' => "SELECT DISTINCT `podcast_episode`.`podcast` AS `derived_id`, " . $columns . " " . $episode . " WHERE `" . $alias . "`.`object_type` = 'podcast_episode' AND `podcast_episode`.`podcast` > 0 AND " . $streamed,
+        ];
+    }
+
+    /**
+     * DERIVED_TYPES as a quoted SQL list
+     */
+    private static function derivedTypeList(): string
+    {
+        return "'" . implode("', '", self::DERIVED_TYPES) . "'";
     }
 
     private static function getUserActivityPoster(): UserActivityPosterInterface

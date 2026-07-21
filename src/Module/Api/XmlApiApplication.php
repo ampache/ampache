@@ -33,6 +33,8 @@ use Slim\ResponseEmitter;
 
 final class XmlApiApplication implements ApiApplicationInterface
 {
+    use RequestParserTrait;
+
     private ApiHandlerInterface $apiHandler;
     private ApiOutputFactoryInterface $apiOutputFactory;
     private ConfigContainerInterface $configContainer;
@@ -66,9 +68,7 @@ final class XmlApiApplication implements ApiApplicationInterface
         header('Content-Disposition: attachment; filename=information.xml');
 
         $request = $this->serverRequestCreator->fromGlobals();
-        $post    = (in_array(strtoupper($request->getMethod()), ['POST', 'PATCH', 'PUT', 'DELETE']))
-            ? (array) $request->getParsedBody()
-            : [];
+        $post    = $this->parseRequestBody($request);
         $request = $request->withQueryParams(
             array_merge(
                 ['api_format' => 'xml'],

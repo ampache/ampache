@@ -6,6 +6,8 @@
 
 **NOTE** AI Contribution standards are documented in `CLAUDE.md` (repository structures, branch model, architecture and coding rules); read and follow it before submitting changes that are AI-assisted ones
 
+You can downgrade to Ampache7 if you try this out and have issues, using the cli (`bin/cli admin:updateDatabase -e`).
+
 * Ampache 8 requires **PHP 8.5+**
 * This version adds a new **Folder** domain which functions as a virtual filesystem browsing layer over catalog files.
 * A very major PHPStan level 8 / Rector / PER-CS3x0 hardening pass across the code.
@@ -21,22 +23,51 @@
 * Folder Browsing
   * `Folder` domain/model for browsing the catalog as a virtual folder tree
   * New `show_folder` preference to show/hide the "Folders" link in the sidebar
+* Play history consolidation
+  * New `stats_consolidate_threshold` config option; the number of days of detailed play history to keep in `object_count` (`0`, the default, disables consolidation)
+  * New `cleanup:consolidateStats` CLI command aggregates older plays into `object_count_summary` and moves the detail rows to `object_count_archive`; dry-run unless `-e` is given
+  * New `cleanup:restoreStats` CLI command puts the archived detail back and regenerates the `album`, `album_disk`, `artist` and `podcast` rows from it
+  * Nothing is discarded: media rows keep their exact `date`, `agent` and location for streams, skips and downloads, so a consolidate/restore cycle is lossless
+  * Play counts, `played` flags and streamed data size stay exact while consolidated; period-based statistics (trending, recent, graphs, Last.fm export), smart playlist play-history rules and play count sorting only see the retained window
+  * Example systemd unit and timer in `docs/examples`
+* Mini player
+  * New `/m/` page showing only the `home` category plugins and the web player, for small screens and simple accounts
+  * New `mini_player` preference locks a user into that page; it hides the rest of the interface but is not an access control, user access levels still decide what data is reachable
+  * Logging in returns you to the page you originally asked for, including `index.php#page.php?...` links
+  * New `Mini player` button on the login form, next to `Register` and `Lost Password`, to land there after logging in
 * Database
   * New `api_enable_8` preference to enable/disable API v8 responses per user
   * New database tables `folder` and `folder_map`
+  * New database tables `object_count_summary` and `object_count_archive`
   * `folder` added to the `object_type` enum on several tables (`cache_object_count`, `cache_object_count_run`, `image`, `object_count`, and others)
 * API
   * v8 API responses are now fully documented: `docs/openapi.json` carries response schemas for every data type, and `docs/API-JSON-methods.md`/`docs/API-XML-methods.md` show per-method response field tables (type, nullable, optional)
 * Testing
   * Test suite significantly expanded with dozens of new test files under `tests/Module` and `tests/Repository`
+* Transcoding
+  * Per-user output-format preferences under Streaming -> Transcoding: `encode_target`, `encode_video_target`, `encode_player_webplayer_target` and `encode_player_api_target` (explicit `format=` requests always take priority)
+  * Per-user dynamic downsampling with new `max_bit_rate`/`min_bit_rate` preferences
+  * Per-format bitrate overrides with the new `transcode_bitrate_formats` preference, so a user can set (for example) a lower bitrate for `opus` than for `mp3`; formats without an override use `transcode_bitrate`
+  * New ReplayGain output profiles `mp3_rg`, `mp3_car`, `opus_rg` and `opus_car`, plus a fragmented-MP4 `m4a` profile; `_rg`/`_car` output is never written to the transcode cache
+* Config version 91
+  * New `encode_args_mp3_rg`, `encode_args_mp3_car`, `encode_args_opus_rg` and `encode_args_opus_car` transcode commands; `encode_args_m4a` now produces a fragmented MP4
+  * `%MAXBITRATE%` is documented alongside `%BITRATE%` and both are substituted as plain bits per second
 
 ### Changed 8.0.0
 
+* Database 800014
+  * Dropped four redundant `object_count` indexes: `object_count_full_index` (an exact duplicate of `object_count_UNIQUE_IDX`), `object_type` and `object_count_type_IDX` (leading-column prefixes of that key), and `date` (a prefix of `object_count_date_IDX`)
 * Requires PHP 8.5+ (was 8.2+); `ext-fileinfo` added as a required extension
 * CI now tests PHP 8.5 only (dropped the 8.2/8.3/8.4 matrix); branch triggers repointed to `patch8`/`release8`
 * `phpstan/phpstan` and `phpstan/phpstan-mockery` ^1 → ^2; `rector/rector` ^1 → ^2, retargeted to the PHP 8.5 rule set and now also covering `src/Config/Init` and `src/Module` (skip list gained `src/Module/Api` and `src/Module/System/Update/Migration`, alongside the existing `src/Repository/Model` skip)
 * Subsonic
   * OpenSubsonic is now used by default — any user with `subsonic_legacy` enabled has it disabled for them
+  * Catalog ids carry the `mf-` prefix used by every other object id, everywhere they appear (`musicFolder.id`, and the `parent` of a directory or child); unprefixed ids are still accepted on input
+  * JSON `getMusicFolders` sent `musicFolder.id` as an integer while XML sent a string; both now send the prefixed string
+* Page navigation uses the History API and real URLs
+  * The address bar now shows the page you are on (`/browse.php?action=album`) instead of a stale path with the real page in the fragment (`/index.php#browse.php?action=album`), so links can be read, shared and bookmarked
+  * Existing `#` bookmarks still work and upgrade themselves to the real url on load
+  * Clicking the page you are already on no longer re-fetches it
 * `direct_play_limit`: any existing "unlimited" (`0`) value is reset to a default cap of `500` tracks
 * `playable_item` interface split into `displayable_item` and `container_item` as part of a large interface cleanup
 * API version 8 has been added to the list of API versions
@@ -44,24 +75,50 @@
 * Theme
   * Home Dashboard (`homedash`) rows stay on a single line and clip at the edge instead of wrapping to new lines
   * Personal Favorites (`personalfav`) list scrolls horizontally instead of wrapping
+* Plugins
+  * New installs enable the `Home Dashboard`, `Catalog Favorites` and `Personal Favorites` plugins
+  * New installs disable `home_moment_albums` and `home_moment_videos`; the home plugins cover the same ground
+  * Existing installs keep whichever plugins and home settings they already have
 * `composer syntax` now runs a cross-platform PHP linter (`resources/scripts/tests/syntax.php`) so the check works on Windows (replaces `syntax.sh`)
+* Transcoding
+  * Bitrate preferences (`transcode_bitrate`, `max_bit_rate`, `min_bit_rate`) are stored and shown in bits per second (bps); existing `transcode_bitrate` values are migrated on database update 800018
+  * Every rate value is now bits per second. The `maxbitrate` stream URL argument and the API8 `user_edit` `maxbitrate` parameter were previously kbps while everything around them was bps; API6 and older keep kbps, and Subsonic `maxBitRate` stays kbps as its specification requires
+  * `encode_args_ts` drops the `k` suffix from `-maxrate %MAXBITRATE%` to suit. **NOTE** update `encode_args_ts` if you have overridden it in your own `ampache.cfg.php`
+  * Bitrate units are now documented in `docs/openapi.json` and the API method tables; none of the `bitrate`/`maxbitrate` arguments previously stated a unit
+  * `encode_target`, `encode_video_target` and the per-player `encode_player_*_target` settings moved from `ampache.cfg.php` to per-user preferences (config values now only seed the default on upgrade)
 
 ### Removed 8.0.0
 
 * `api_debug_handler` configuration option and its handling removed entirely
 * Unused legacy OAuth implementation deleted (`OAuthDataStore`, `OAuthServer`, `OAuthSignatureMethod_PLAINTEXT`, `OAuthSignatureMethod_RSA_SHA1`)
 * `docker/Dockerfilephp82`, `Dockerfilephp83`, `Dockerfilephp84` removed (replaced by `Dockerfilephp85`)
+* The popup web player is removed (`web_player.php`, `create_web_player.inc.php`). Playback is always the embedded player at the bottom of the page. **NOTE** if you used the popup to keep the player in a separate window, there is no replacement for it
+* Database 800020
+  * The `webplayer_html5` preference is removed; HTML5 is the only remaining web player
+* Database 800022
+  * The `ajax_load` preference is removed. It never controlled page loading (links have always been intercepted regardless of it) and no longer affects navigation at all; what it did was select the popup web player above and silently switch off play-next and append
+  * Rolling back to Ampache7 restores the preference, the same as any other removed one
 
 ### Fixed 8.0.0
 
+* Uploading art, an avatar, a playlist or a podcast import file stopped the web player, because a form carrying a file fell back to a full page load
+* Database 800023
+  * Uploaded art took its mime type from the filename, storing `image/jpg` (not a real type) for a `.jpg` upload and `image/JPG` for `.JPG`; the type is now read from the image data and existing rows are corrected
 * Light sidebar can scroll to reach its bottom entries on short screens
-* Beets catalog clean removed the first song in the catalog even when its file still existed
 * AJAX actions returned a server error instead of updating the page
   * Setting a favorite
   * Selecting a catalog in the browse filter box
   * Deleting a genre
   * Removing a track from a playlist, and adding items to an existing playlist
   * Enabling or disabling a song
+* Database 800012
+  * `user` on `object_count`, `user_activity`, `user_data` and `now_playing` could still be `UNSIGNED` on upgraded databases, so the system user (`-1`) was stored as `0`
+  * Plays from a share recorded against user `0` are moved to the system user (`-1`) so they appear in Recently Played
+* Subsonic
+  * `getArtists` ignored the user's catalogs entirely and returned every artist on the server
+  * `musicFolderId` was ignored by `getStarred`, `getStarred2` and `getSongsByGenre`
+  * `musicFolderId` was ignored by `getAlbumList`/`getAlbumList2` for the `random`, `highest`, `frequent`, `recent`, `starred`, `byYear` and `byGenre` types
+  * A `musicFolderId` naming a catalog the user can't browse returned everything instead of nothing
 
 ## Ampache 7.10.0
 

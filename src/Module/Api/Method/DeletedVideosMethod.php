@@ -87,7 +87,7 @@ final class DeletedVideosMethod implements MethodInterface
         $results = Video::get_deleted();
         if ($results === []) {
             $response->getBody()->write(
-                $output->writeEmpty($apiVersion, 'deleted_videos')
+                $output->writeEmpty($apiVersion, 'deleted_video')
             );
 
             return $response;

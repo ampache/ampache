@@ -170,6 +170,7 @@ class Userflag extends database_object
         int $since = 0,
         int $before = 0,
         bool $by_user = false,
+        int $catalog_id = 0,
     ): array {
         if ($count === 0) {
             $count = AmpConfig::get('popular_threshold', 10);
@@ -181,7 +182,7 @@ class Userflag extends database_object
         }
 
         // Select Top objects counting by # of rows
-        $sql   = self::get_latest_sql($type, $user, $since, $before, $by_user);
+        $sql   = self::get_latest_sql($type, $user, $since, $before, $by_user, $catalog_id);
         $limit = ($offset < 1)
             ? $count
             : $offset . "," . $count;
@@ -208,6 +209,7 @@ class Userflag extends database_object
         int $since = 0,
         int $before = 0,
         bool $by_user = false,
+        int $catalog_id = 0,
     ): string {
         $type = Stats::validate_type($input_type);
         $sql  = "SELECT DISTINCT(`user_flag`.`object_id`) AS `id`, COUNT(DISTINCT(`user_flag`.`user`)) AS `count`, `user_flag`.`object_type` AS `type`, MAX(`user_flag`.`user`) AS `user`, MAX(`user_flag`.`date`) AS `date` FROM `user_flag`";
@@ -226,6 +228,11 @@ class Userflag extends database_object
 
         if (AmpConfig::get('catalog_filter')) {
             $sql .= " AND" . Catalog::get_user_filter('user_flag_' . $type, $user?->getId() ?? -1);
+        }
+
+        $catalog_sql = Catalog::get_catalog_id_filter($input_type, '`user_flag`.`object_id`', $catalog_id);
+        if ($catalog_sql !== '') {
+            $sql .= " AND " . $catalog_sql;
         }
 
         if ($input_type == 'album_artist') {

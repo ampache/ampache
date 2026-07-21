@@ -33,6 +33,8 @@ use Slim\ResponseEmitter;
 
 final class JsonApiApplication implements ApiApplicationInterface
 {
+    use RequestParserTrait;
+
     private ApiHandlerInterface $apiHandler;
     private ApiOutputFactoryInterface $apiOutputFactory;
     private ConfigContainerInterface $configContainer;
@@ -65,9 +67,7 @@ final class JsonApiApplication implements ApiApplicationInterface
         header(sprintf('Content-type: application/json; charset=%s', $this->configContainer->get('site_charset')));
 
         $request = $this->serverRequestCreator->fromGlobals();
-        $post    = (in_array(strtoupper($request->getMethod()), ['POST', 'PATCH', 'PUT', 'DELETE']))
-            ? (array) $request->getParsedBody()
-            : [];
+        $post    = $this->parseRequestBody($request);
         $request = $request->withQueryParams(
             array_merge(
                 ['api_format' => 'json'],
