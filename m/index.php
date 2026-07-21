@@ -29,11 +29,7 @@ use Nyholm\Psr7Server\ServerRequestCreatorInterface;
 use Psr\Container\ContainerInterface;
 
 /** @var ContainerInterface $dic */
-<<<<<<<< HEAD:web_player.php
-$dic = require __DIR__ . '/src/Config/Init.php';
-========
-$dic = require __DIR__ . '/../../src/Config/Init.php';
->>>>>>>> origin/develop8:public/m/index.php
+$dic = require __DIR__ . '/../src/Config/Init.php';
 
 $dic->get(ApplicationRunner::class)->run(
     $dic->get(ServerRequestCreatorInterface::class)->fromGlobals(),
