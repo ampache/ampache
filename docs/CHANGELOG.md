@@ -6,6 +6,8 @@
 
 **NOTE** AI Contribution standards are documented in `CLAUDE.md` (repository structures, branch model, architecture and coding rules); read and follow it before submitting changes that are AI-assisted ones
 
+You can downgrade to Ampache7 if you try this out and have issues, using the cli (`bin/cli admin:updateDatabase -e`).
+
 * Ampache 8 requires **PHP 8.5+**
 * This version adds a new **Folder** domain which functions as a virtual filesystem browsing layer over catalog files.
 * A very major PHPStan level 8 / Rector / PER-CS3x0 hardening pass across the code.
@@ -62,6 +64,10 @@
   * OpenSubsonic is now used by default — any user with `subsonic_legacy` enabled has it disabled for them
   * Catalog ids carry the `mf-` prefix used by every other object id, everywhere they appear (`musicFolder.id`, and the `parent` of a directory or child); unprefixed ids are still accepted on input
   * JSON `getMusicFolders` sent `musicFolder.id` as an integer while XML sent a string; both now send the prefixed string
+* Page navigation uses the History API and real URLs
+  * The address bar now shows the page you are on (`/browse.php?action=album`) instead of a stale path with the real page in the fragment (`/index.php#browse.php?action=album`), so links can be read, shared and bookmarked
+  * Existing `#` bookmarks still work and upgrade themselves to the real url on load
+  * Clicking the page you are already on no longer re-fetches it
 * `direct_play_limit`: any existing "unlimited" (`0`) value is reset to a default cap of `500` tracks
 * `playable_item` interface split into `displayable_item` and `container_item` as part of a large interface cleanup
 * API version 8 has been added to the list of API versions
@@ -86,11 +92,18 @@
 * `api_debug_handler` configuration option and its handling removed entirely
 * Unused legacy OAuth implementation deleted (`OAuthDataStore`, `OAuthServer`, `OAuthSignatureMethod_PLAINTEXT`, `OAuthSignatureMethod_RSA_SHA1`)
 * `docker/Dockerfilephp82`, `Dockerfilephp83`, `Dockerfilephp84` removed (replaced by `Dockerfilephp85`)
+* The popup web player is removed (`web_player.php`, `create_web_player.inc.php`). Playback is always the embedded player at the bottom of the page. **NOTE** if you used the popup to keep the player in a separate window, there is no replacement for it
 * Database 800020
   * The `webplayer_html5` preference is removed; HTML5 is the only remaining web player
+* Database 800022
+  * The `ajax_load` preference is removed. It never controlled page loading (links have always been intercepted regardless of it) and no longer affects navigation at all; what it did was select the popup web player above and silently switch off play-next and append
+  * Rolling back to Ampache7 restores the preference, the same as any other removed one
 
 ### Fixed 8.0.0
 
+* Uploading art, an avatar, a playlist or a podcast import file stopped the web player, because a form carrying a file fell back to a full page load
+* Database 800023
+  * Uploaded art took its mime type from the filename, storing `image/jpg` (not a real type) for a `.jpg` upload and `image/JPG` for `.JPG`; the type is now read from the image data and existing rows are corrected
 * Light sidebar can scroll to reach its bottom entries on short screens
 * AJAX actions returned a server error instead of updating the page
   * Setting a favorite
