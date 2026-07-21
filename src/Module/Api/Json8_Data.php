@@ -1926,7 +1926,7 @@ class Json8_Data
             $duration          = 0;
 
             if ($songs) {
-                $items = [];
+                $items          = [];
                 $playlisttracks = array_values(
                     array_filter(
                         $playlist->get_items(),
