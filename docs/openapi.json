@@ -1214,21 +1214,25 @@
             "additionalProperties": false
           },
           "items": {
+            "description": "The expanded song list when songs are included, otherwise the total song count. Playlists are song lists here: a playlist may physically hold other media types, but this method reports only songs so that real playlists and song smartlists share one shape.",
             "oneOf": [
               {
                 "type": "array",
                 "items": {
                   "type": "object",
-                  "additionalProperties": {
-                    "oneOf": [
-                      {
-                        "type": "integer"
-                      },
-                      {
-                        "type": "string"
-                      }
-                    ]
-                  }
+                  "properties": {
+                    "id": {
+                      "type": "string"
+                    },
+                    "playlisttrack": {
+                      "type": "integer"
+                    }
+                  },
+                  "required": [
+                    "id",
+                    "playlisttrack"
+                  ],
+                  "additionalProperties": false
                 }
               },
               {

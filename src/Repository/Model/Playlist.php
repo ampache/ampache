@@ -484,9 +484,8 @@ class Playlist extends playlist_object
         $user    = Core::get_global('user');
         $user_id = $user->id ?? -1;
 
-        // Iterate over the object types
-        $sql             = 'SELECT DISTINCT `object_type` FROM `playlist_data`';
-        $db_object_types = Dba::read($sql);
+        $sql             = 'SELECT DISTINCT `object_type` FROM `playlist_data` WHERE `playlist` = ?';
+        $db_object_types = Dba::read($sql, [$this->id]);
 
         while ($row = Dba::fetch_assoc($db_object_types)) {
             $object_type = LibraryItemEnum::from($row['object_type']);
@@ -534,7 +533,8 @@ class Playlist extends playlist_object
                     $sql .= 'ORDER BY `playlist_data`.`track`';
                     break;
                 default:
-                    $sql = "SELECT `id`, `object_id`, `object_type`, `track`, 0 AS `time` FROM `playlist_data` WHERE `playlist` = ? AND `playlist_data`.`object_type` != 'song' AND `playlist_data`.`object_type` != 'podcast_episode' ORDER BY `track`";
+                    $sql      = "SELECT `id`, `object_id`, `object_type`, `track`, 0 AS `time` FROM `playlist_data` WHERE `playlist` = ? AND `object_type` = ? ORDER BY `track`";
+                    $params[] = $object_type->value;
                     debug_event(self::class, sprintf('get_items(): %s not handled', $object_type->value), 5);
             }
 
@@ -633,9 +633,8 @@ class Playlist extends playlist_object
         $user    = Core::get_global('user');
         $user_id = $user->id ?? -1;
 
-        // Iterate over the object types
-        $sql             = 'SELECT DISTINCT `object_type` FROM `playlist_data`';
-        $db_object_types = Dba::read($sql);
+        $sql             = 'SELECT DISTINCT `object_type` FROM `playlist_data` WHERE `playlist` = ?';
+        $db_object_types = Dba::read($sql, [$this->id]);
 
         while ($row = Dba::fetch_assoc($db_object_types)) {
             $object_type = $row['object_type'];
@@ -659,8 +658,9 @@ class Playlist extends playlist_object
                     $sql .= 'ORDER BY RAND()';
                     break;
                 default:
-                    $sql = "SELECT `id`, `object_id`, `object_type`, `track` FROM `playlist_data` WHERE `playlist` = ? AND `playlist_data`.`object_type` != 'song' AND `playlist_data`.`object_type` != 'podcast_episode' AND `playlist_data`.`object_type` != 'live_stream' ORDER BY RAND()";
-                    debug_event(self::class, sprintf('get_items(): %s not handled', $object_type), 5);
+                    $sql      = "SELECT `id`, `object_id`, `object_type`, `track` FROM `playlist_data` WHERE `playlist` = ? AND `object_type` = ? ORDER BY RAND()";
+                    $params[] = $object_type;
+                    debug_event(self::class, sprintf('get_random_items(): %s not handled', $object_type), 5);
             }
 
             $sql .= (empty($limit))

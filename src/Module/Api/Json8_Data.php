@@ -1926,8 +1926,13 @@ class Json8_Data
             $duration          = 0;
 
             if ($songs) {
-                $items          = [];
-                $playlisttracks = $playlist->get_items();
+                $items = [];
+                $playlisttracks = array_values(
+                    array_filter(
+                        $playlist->get_items(),
+                        static fn(array $track): bool => $track['object_type'] === LibraryItemEnum::SONG
+                    )
+                );
                 foreach ($playlisttracks as $track) {
                     $duration += (int) $track['time'];
 

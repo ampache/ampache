@@ -1009,14 +1009,17 @@ class Xml8_Data
 
             $duration = 0;
             if ($songs) {
-                $items          = '';
-                $playlisttracks = $playlist->get_items();
+                $items = '';
+                $playlisttracks = array_values(
+                    array_filter(
+                        $playlist->get_items(),
+                        static fn(array $track): bool => $track['object_type'] === LibraryItemEnum::SONG
+                    )
+                );
                 foreach ($playlisttracks as $track) {
                     $duration += $track['time'];
 
-                    if ($track['object_type'] === LibraryItemEnum::SONG) {
-                        $items .= "\t\t<playlisttrack id=\"" . $track['object_id'] . "\">" . $track['track'] . "</playlisttrack>\n";
-                    }
+                    $items .= "\t\t<playlisttrack id=\"" . $track['object_id'] . "\">" . $track['track'] . "</playlisttrack>\n";
                 }
 
                 // hash the results
