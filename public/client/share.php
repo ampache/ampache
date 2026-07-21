@@ -40,7 +40,7 @@ if (empty($action) || $action == 'stream' || $action == 'download') {
     define('OUTDATED_DATABASE_OK', 1);
 
     /** @var ContainerInterface $dic */
-    $dic = require __DIR__ . '/../../../../src/Config/Init.php';
+    $dic = require __DIR__ . '/../../../src/Config/Init.php';
 
     $dic->get(ApplicationRunner::class)->run(
         $dic->get(ServerRequestCreatorInterface::class)->fromGlobals(),
@@ -49,7 +49,7 @@ if (empty($action) || $action == 'stream' || $action == 'download') {
     );
 } else {
     /** @var ContainerInterface $dic */
-    $dic = require __DIR__ . '/../../../../src/Config/Init.php';
+    $dic = require __DIR__ . '/../../../src/Config/Init.php';
 
     $dic->get(ApplicationRunner::class)->run(
         $dic->get(ServerRequestCreatorInterface::class)->fromGlobals(),

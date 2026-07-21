@@ -52,7 +52,7 @@ final readonly class ConfigAction implements ApplicationActionInterface
         $configfile = __DIR__ . '/../../../../config/ampache.cfg.php';
 
         if ((parse_ini_file($configfile) ?: []) === []) {
-            require_once __DIR__ . '/../../../../public/client/client/templates/show_test_config.inc.php';
+            require_once __DIR__ . '/../../../../public/client/templates/show_test_config.inc.php';
 
             return null;
         }
@@ -71,7 +71,7 @@ final readonly class ConfigAction implements ApplicationActionInterface
             ? parse_ini_file($configfile)
             : false;
         if (!$results) {
-            $link = __DIR__ . '/../../../../public/client/client/test.php?action=config';
+            $link = __DIR__ . '/../../../../public/client/test.php?action=config';
         }
 
         if ($results !== [] && $results !== false) {
@@ -89,13 +89,13 @@ final readonly class ConfigAction implements ApplicationActionInterface
         }
 
         if (!class_exists(Translations::class)) {
-            require_once __DIR__ . '/../../../../public/client/client/templates/test_error_page.inc.php';
+            require_once __DIR__ . '/../../../../public/client/templates/test_error_page.inc.php';
             throw new Exception('load_gettext()');
         }
 
         load_gettext();
         // Load template
-        require_once __DIR__ . '/../../../../public/client/client/templates/show_test.inc.php';
+        require_once __DIR__ . '/../../../../public/client/templates/show_test.inc.php';
 
         return null;
     }

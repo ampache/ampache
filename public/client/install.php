@@ -27,7 +27,7 @@ use Ampache\Module\Application\ApplicationRunner;
 use Ampache\Module\Application\Installation\DefaultAction;
 use Nyholm\Psr7Server\ServerRequestCreatorInterface;
 
-$dic = require_once __DIR__ . '/../../../../src/Config/Bootstrap.php';
+$dic = require_once __DIR__ . '/../../../src/Config/Bootstrap.php';
 
 $dic->get(ApplicationRunner::class)->run(
     $dic->get(ServerRequestCreatorInterface::class)->fromGlobals(),

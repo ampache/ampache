@@ -61,7 +61,7 @@ $cssBust     = static fn(string $fsPath): string => is_file($fsPath) ? (string) 
 <?php
 if (
     is_rtl(AmpConfig::get('lang', 'en_US'))
-    && is_file(__DIR__ . '/../../../../public/client/client/' . $theme_path . '/rtl.css')
+    && is_file(__DIR__ . '/../../../public/client/' . $theme_path . '/rtl.css')
 ) { ?>
     <link rel="stylesheet" href="<?php echo $web_path . $theme_path; ?>/rtl.css" type="text/css" media="screen">
 <?php } ?>

@@ -148,7 +148,7 @@ class Ui implements UiInterface
     public static function find_template(string $template, bool $extern = false): string
     {
         $path      = AmpConfig::get('theme_path', '/themes/reborn') . '/templates/' . $template;
-        $realpath  = __DIR__ . '/../../../public/client/client/' . $path;
+        $realpath  = __DIR__ . '/../../../public/client/' . $path;
         $extension = strtolower(pathinfo($path, PATHINFO_EXTENSION));
         if (($extension !== 'php' || AmpConfig::get('allow_php_themes')) && file_exists($realpath) && is_file($realpath)) {
             return $path;
@@ -158,7 +158,7 @@ class Ui implements UiInterface
             return '/templates/' . $template;
         }
 
-        return __DIR__ . '/../../../public/client/client/templates/' . $template;
+        return __DIR__ . '/../../../public/client/templates/' . $template;
     }
 
     /**
@@ -580,8 +580,8 @@ class Ui implements UiInterface
         $path = 'themes/' . AmpConfig::get('theme_name', 'reborn') . '/images/icons/';
         // Can't use GLOB_BRACE for Alpine compatibility https://github.com/ampache/ampache/issues/4008
         $filesearch = array_merge(
-            glob(__DIR__ . '/../../../public/client/client/' . $path . 'icon_' . $name . '.svg') ?: [],
-            glob(__DIR__ . '/../../../public/client/client/' . $path . 'icon_' . $name . '.png') ?: []
+            glob(__DIR__ . '/../../../public/client/' . $path . 'icon_' . $name . '.svg') ?: [],
+            glob(__DIR__ . '/../../../public/client/' . $path . 'icon_' . $name . '.png') ?: []
         );
 
         if ($filesearch === []) {
@@ -593,8 +593,8 @@ class Ui implements UiInterface
                 // finally fall back to the public images folder
                 // Can't use GLOB_BRACE for Alpine compatibility https://github.com/ampache/ampache/issues/4008
                 $filesearch = array_merge(
-                    glob(__DIR__ . '/../../../public/client/client/' . $path . 'icon_' . $name . '.svg') ?: [],
-                    glob(__DIR__ . '/../../../public/client/client/' . $path . 'icon_' . $name . '.png') ?: []
+                    glob(__DIR__ . '/../../../public/client/' . $path . 'icon_' . $name . '.svg') ?: [],
+                    glob(__DIR__ . '/../../../public/client/' . $path . 'icon_' . $name . '.png') ?: []
                 );
             }
         }
@@ -635,8 +635,8 @@ class Ui implements UiInterface
         $path = 'themes/' . AmpConfig::get('theme_name', 'reborn') . '/images/';
         // Can't use GLOB_BRACE for Alpine compatibility https://github.com/ampache/ampache/issues/4008
         $filesearch = array_merge(
-            glob(__DIR__ . '/../../../public/client/client/' . $path . $name . '.svg') ?: [],
-            glob(__DIR__ . '/../../../public/client/client/' . $path . $name . '.png') ?: []
+            glob(__DIR__ . '/../../../public/client/' . $path . $name . '.svg') ?: [],
+            glob(__DIR__ . '/../../../public/client/' . $path . $name . '.png') ?: []
         );
 
         if ($filesearch === []) {
@@ -647,8 +647,8 @@ class Ui implements UiInterface
                 // finally fall back to the public images folder
                 // Can't use GLOB_BRACE for Alpine compatibility https://github.com/ampache/ampache/issues/4008
                 $filesearch = array_merge(
-                    glob(__DIR__ . '/../../../public/client/client/' . $path . $name . '.svg') ?: [],
-                    glob(__DIR__ . '/../../../public/client/client/' . $path . $name . '.png') ?: []
+                    glob(__DIR__ . '/../../../public/client/' . $path . $name . '.svg') ?: [],
+                    glob(__DIR__ . '/../../../public/client/' . $path . $name . '.png') ?: []
                 );
             }
         }
@@ -1503,7 +1503,7 @@ class Ui implements UiInterface
             && !Access::check(AccessTypeEnum::INTERFACE, AccessLevelEnum::ADMIN)
             && Preference::get_by_user($user->getId(), 'mini_player')
         ) {
-            header('Location: ' . AmpConfig::get_web_path('/client') . '/m/');
+            header('Location: ' . AmpConfig::get_web_path() . '/m/');
 
             exit;
         }

@@ -73,7 +73,7 @@ final readonly class PlayerAjaxHandler implements AjaxHandlerInterface
                     /** @var Song|Video $media */
                     $media = new $className($current['object_id']);
                     if (!$media->isNew() && $media instanceof Song) {
-                        $web_path   = (string) AmpConfig::get_web_path('/client');
+                        $web_path   = (string) AmpConfig::get_web_path();
                         $artistId   = (int) $media->artist;
                         $albumId    = (int) $media->album;
                         $titleText  = scrub_out((string) $media->get_fullname());

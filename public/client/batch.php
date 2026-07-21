@@ -31,14 +31,14 @@ use Psr\Container\ContainerInterface;
 if (array_key_exists('ssid', $_REQUEST)) {
     define('NO_SESSION', 1);
     /** @var ContainerInterface $dic */
-    $dic = require_once __DIR__ . '/../../../../src/Config/Init.php';
+    $dic = require_once __DIR__ . '/../../../src/Config/Init.php';
     if (!Session::exists('stream', $_REQUEST['ssid'])) {
         $dic->get(UiInterface::class)->accessDenied();
 
         return false;
     }
 } else {
-    $dic = require_once __DIR__ . '/../../../../src/Config/Init.php';
+    $dic = require_once __DIR__ . '/../../../src/Config/Init.php';
 }
 $dic->get(ApplicationRunner::class)->run(
     $dic->get(ServerRequestCreatorInterface::class)->fromGlobals(),
