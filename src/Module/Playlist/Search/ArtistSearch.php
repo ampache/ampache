@@ -307,7 +307,7 @@ final readonly class ArtistSearch implements SearchInterface
 
                     $table['myplayed'] .= (strpos($table['myplayed'], "myplayed_" . $my_type . "_" . $search_user_id))
                         ? ""
-                        : "LEFT JOIN (SELECT DISTINCT `artist_map`.`artist_id`, `object_count`.`user` FROM `object_count` LEFT JOIN `artist_map` ON `object_count`.`object_type` = `artist_map`.`object_type` AND `artist_map`.`object_id` = `object_count`.`object_id` WHERE `object_count`.`count_type` = 'stream' AND `object_count`.`user` = " . $search_user_id . " GROUP BY `artist_map`.`artist_id`, `user`) AS `myplayed_" . $my_type . "_" . $search_user_id . sprintf('` ON `artist`.`%s` = `myplayed_', $column) . $my_type . "_" . $search_user_id . "`.`artist_id`";
+                        : "LEFT JOIN " . PlayHistorySubquery::existsViaArtistMap($search_user_id, false) . " AS `myplayed_" . $my_type . "_" . $search_user_id . sprintf('` ON `artist`.`%s` = `myplayed_', $column) . $my_type . "_" . $search_user_id . "`.`artist_id`";
                     $where[] = "`myplayed_" . $my_type . "_" . $search_user_id . ('`.`artist_id` ' . $operator_sql);
                     break;
                 case 'weight_album':
@@ -336,7 +336,7 @@ final readonly class ArtistSearch implements SearchInterface
 
                     $table['played'] .= (strpos($table['played'], "played_" . $my_type))
                         ? ""
-                        : "LEFT JOIN (SELECT DISTINCT `artist_map`.`artist_id`, `object_count`.`user` FROM `object_count` LEFT JOIN `artist_map` ON `object_count`.`object_type` = `artist_map`.`object_type` AND `artist_map`.`object_id` = `object_count`.`object_id` WHERE `object_count`.`object_type` = 'song' AND `object_count`.`count_type` = 'stream' GROUP BY `artist_map`.`artist_id`, `user`) AS `played_" . $my_type . sprintf('` ON `artist`.`%s` = `played_', $column) . $my_type . "`.`artist_id`";
+                        : "LEFT JOIN " . PlayHistorySubquery::existsViaArtistMap(null, true) . " AS `played_" . $my_type . sprintf('` ON `artist`.`%s` = `played_', $column) . $my_type . "`.`artist_id`";
                     $where[] = "`played_" . $my_type . ('`.`artist_id` ' . $operator_sql);
                     break;
                 case 'last_play':
@@ -347,7 +347,7 @@ final readonly class ArtistSearch implements SearchInterface
 
                     $table['last_play'] .= (strpos($table['last_play'], "last_play_" . $my_type . "_" . $search_user_id))
                         ? ""
-                        : "LEFT JOIN (SELECT `object_id`, `object_type`, `user`, MAX(`date`) AS `date` FROM `object_count` WHERE `object_count`.`object_type` = '" . $my_type . "' AND `object_count`.`count_type` = 'stream' AND `object_count`.`user` = " . $search_user_id . " GROUP BY `object_id`, `object_type`, `user`) AS `last_play_" . $my_type . "_" . $search_user_id . "` ON `artist`.`id` = `last_play_" . $my_type . "_" . $search_user_id . "`.`object_id` AND `last_play_" . $my_type . "_" . $search_user_id . "`.`object_type` = '" . $my_type . "'";
+                        : "LEFT JOIN " . PlayHistorySubquery::lastDate($my_type, ['stream'], $search_user_id) . " AS `last_play_" . $my_type . "_" . $search_user_id . "` ON `artist`.`id` = `last_play_" . $my_type . "_" . $search_user_id . "`.`object_id` AND `last_play_" . $my_type . "_" . $search_user_id . "`.`object_type` = '" . $my_type . "'";
                     $where[]      = "`last_play_" . $my_type . "_" . $search_user_id . sprintf('`.`date` %s (UNIX_TIMESTAMP() - (? * 86400))', $operator_sql);
                     $parameters[] = $input;
                     break;
@@ -359,7 +359,7 @@ final readonly class ArtistSearch implements SearchInterface
 
                     $table['last_skip'] .= (strpos($table['last_skip'], "last_skip_" . $my_type . "_" . $search_user_id))
                         ? ""
-                        : "LEFT JOIN (SELECT `object_id`, `object_type`, `user`, MAX(`date`) AS `date` FROM `object_count` WHERE `object_count`.`object_type` = 'song' AND `object_count`.`count_type` = 'skip' AND `object_count`.`user` = " . $search_user_id . " GROUP BY `object_id`, `object_type`, `user`) AS `last_skip_" . $my_type . "_" . $search_user_id . "` ON `song`.`id` = `last_skip_" . $my_type . "_" . $search_user_id . "`.`object_id` AND `last_skip_" . $my_type . "_" . $search_user_id . "`.`object_type` = 'song'";
+                        : "LEFT JOIN " . PlayHistorySubquery::lastDate('song', ['skip'], $search_user_id) . " AS `last_skip_" . $my_type . "_" . $search_user_id . "` ON `song`.`id` = `last_skip_" . $my_type . "_" . $search_user_id . "`.`object_id` AND `last_skip_" . $my_type . "_" . $search_user_id . "`.`object_type` = 'song'";
                     $where[]      = "`last_skip_" . $my_type . "_" . $search_user_id . sprintf('`.`date` %s (UNIX_TIMESTAMP() - (? * 86400))', $operator_sql);
                     $parameters[] = $input;
                     $join['song'] = true;
@@ -372,7 +372,7 @@ final readonly class ArtistSearch implements SearchInterface
 
                     $table['last_play_or_skip'] .= (strpos($table['last_play_or_skip'], "last_play_or_skip_" . $my_type . "_" . $search_user_id))
                         ? ""
-                        : "LEFT JOIN (SELECT `object_id`, `object_type`, `user`, MAX(`date`) AS `date` FROM `object_count` WHERE `object_count`.`object_type` = 'song' AND `object_count`.`count_type` IN ('stream', 'skip') AND `object_count`.`user` = " . $search_user_id . " GROUP BY `object_id`, `object_type`, `user`) AS `last_play_or_skip_" . $my_type . "_" . $search_user_id . "` ON `song`.`id` = `last_play_or_skip_" . $my_type . "_" . $search_user_id . "`.`object_id` AND `last_play_or_skip_" . $my_type . "_" . $search_user_id . "`.`object_type` = 'song'";
+                        : "LEFT JOIN " . PlayHistorySubquery::lastDate('song', ['stream', 'skip'], $search_user_id) . " AS `last_play_or_skip_" . $my_type . "_" . $search_user_id . "` ON `song`.`id` = `last_play_or_skip_" . $my_type . "_" . $search_user_id . "`.`object_id` AND `last_play_or_skip_" . $my_type . "_" . $search_user_id . "`.`object_type` = 'song'";
                     $where[]      = "`last_play_or_skip_" . $my_type . "_" . $search_user_id . sprintf('`.`date` %s (UNIX_TIMESTAMP() - (? * 86400))', $operator_sql);
                     $parameters[] = $input;
                     $join['song'] = true;
@@ -400,7 +400,7 @@ final readonly class ArtistSearch implements SearchInterface
 
                     $table['myplayed'] .= (strpos($table['myplayed'], "myplayed_" . $my_type . "_" . $search_user_id))
                         ? ""
-                        : "LEFT JOIN (SELECT `object_id`, `object_type`, `user`, COUNT(`object_id`) AS `total` FROM `object_count` WHERE `object_count`.`object_type` = '" . $my_type . "' AND `object_count`.`count_type` = 'stream' AND `object_count`.`user` = " . $search_user_id . " GROUP BY `object_id`, `object_type`, `user`) AS `myplayed_" . $my_type . "_" . $search_user_id . "` ON `artist`.`id` = `myplayed_" . $my_type . "_" . $search_user_id . "`.`object_id` AND `myplayed_" . $my_type . "_" . $search_user_id . "`.`object_type` = '" . $my_type . "'";
+                        : "LEFT JOIN " . PlayHistorySubquery::count($my_type, ['stream'], $search_user_id) . " AS `myplayed_" . $my_type . "_" . $search_user_id . "` ON `artist`.`id` = `myplayed_" . $my_type . "_" . $search_user_id . "`.`object_id` AND `myplayed_" . $my_type . "_" . $search_user_id . "`.`object_type` = '" . $my_type . "'";
                     $where[]      = "`myplayed_" . $my_type . "_" . $search_user_id . sprintf('`.`total` %s ?', $operator_sql);
                     $parameters[] = $input;
                     break;
@@ -412,7 +412,7 @@ final readonly class ArtistSearch implements SearchInterface
 
                     $table['last_skip'] .= (strpos($table['last_skip'], "last_skip_" . $my_type . "_" . $search_user_id))
                         ? ""
-                        : "LEFT JOIN (SELECT `object_id`, `object_type`, `user`, COUNT(`object_id`) AS `total` FROM `object_count` WHERE `object_count`.`object_type` = 'song' AND `object_count`.`count_type` = 'skip' AND `object_count`.`user` = " . $search_user_id . " GROUP BY `object_id`, `object_type`, `user`) AS `last_skip_" . $my_type . "_" . $search_user_id . "` ON `song`.`id` = `last_skip_" . $my_type . "_" . $search_user_id . "`.`object_id` AND `last_skip_" . $my_type . "_" . $search_user_id . "`.`object_type` = 'song'";
+                        : "LEFT JOIN " . PlayHistorySubquery::count('song', ['skip'], $search_user_id) . " AS `last_skip_" . $my_type . "_" . $search_user_id . "` ON `song`.`id` = `last_skip_" . $my_type . "_" . $search_user_id . "`.`object_id` AND `last_skip_" . $my_type . "_" . $search_user_id . "`.`object_type` = 'song'";
                     $where[]      = "`last_skip_" . $my_type . "_" . $search_user_id . sprintf('`.`total` %s ?', $operator_sql);
                     $parameters[] = $input;
                     $join['song'] = true;
@@ -425,7 +425,7 @@ final readonly class ArtistSearch implements SearchInterface
 
                     $table['myplayed_or_skip'] .= (strpos($table['myplayed_or_skip'], "myplayed_or_skip_" . $my_type . "_" . $search_user_id))
                         ? ""
-                        : "LEFT JOIN (SELECT `object_id`, `object_type`, `user`, COUNT(`object_id`) AS `total` FROM `object_count` WHERE `object_count`.`object_type` = 'song' AND `object_count`.`count_type` IN ('stream', 'skip') AND `object_count`.`user` = " . $search_user_id . " GROUP BY `object_id`, `object_type`, `user`) AS `myplayed_or_skip_" . $my_type . "_" . $search_user_id . "` ON `song`.`id` = `myplayed_or_skip_" . $my_type . "_" . $search_user_id . "`.`object_id` AND `myplayed_or_skip_" . $my_type . "_" . $search_user_id . "`.`object_type` = 'song'";
+                        : "LEFT JOIN " . PlayHistorySubquery::count('song', ['stream', 'skip'], $search_user_id) . " AS `myplayed_or_skip_" . $my_type . "_" . $search_user_id . "` ON `song`.`id` = `myplayed_or_skip_" . $my_type . "_" . $search_user_id . "`.`object_id` AND `myplayed_or_skip_" . $my_type . "_" . $search_user_id . "`.`object_type` = 'song'";
                     $where[]      = "`myplayed_or_skip_" . $my_type . "_" . $search_user_id . sprintf('`.`total` %s ?', $operator_sql);
                     $parameters[] = $input;
                     $join['song'] = true;
