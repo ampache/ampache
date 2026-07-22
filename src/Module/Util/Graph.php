@@ -270,6 +270,28 @@ class Graph
     }
 
     /**
+     * Read a per-bucket total, with a zero for every bucket the query returned nothing for.
+     *
+     * A quiet day is a real zero rather than a gap, and without one a library that was only
+     * listened to on a single day drew a single point no matter how wide the range was.
+     *
+     * @param int[] $buckets
+     * @return array<int, int>
+     */
+    protected function get_bucketed_pts(string $sql, array $buckets): array
+    {
+        $values     = array_fill_keys($buckets, 0);
+        $db_results = Dba::read($sql);
+        while ($results = Dba::fetch_assoc($db_results)) {
+            // the database groups in its own timezone, so snap the bucket it reports onto ours
+            // rather than assuming the two line up
+            $values[$this->find_bucket($buckets, (int) $results['zoom_date'])] += (int) $results['value'];
+        }
+
+        return $values;
+    }
+
+    /**
      * @param array<string, array<int, int|float>> $series series name => [unix timestamp => value]
      */
     protected function get_catalog_all_pts(
@@ -318,19 +340,53 @@ class Graph
         $start_date ??= $end_date - 864000;
 
         $buckets = $this->get_zoom_buckets($start_date, $end_date, $zoom);
-        if ($buckets === []) {
+        $source  = $this->get_catalog_media_source($object_type, $object_id);
+        if ($buckets === [] || $source === null) {
             return [];
         }
 
-        $start_date = $buckets[0];
-        $dateformat = $this->get_sql_date_format("`" . $object_type . "`.`addition_time`", $zoom);
-        $where      = $this->get_catalog_sql_where($object_type, $object_id, $catalog_id, $start_date, $end_date);
-        $filter     = $this->get_catalog_sql_filter($object_type, $object_id, $catalog_id);
+        [$table, $restrict] = $source;
 
-        $sql      = "SELECT " . $dateformat . " AS `zoom_date`, COUNT(`" . $object_type . "`.`id`) AS `value` FROM `" . $object_type . "` " . $where . " GROUP BY " . $dateformat;
-        $baseline = "SELECT COUNT(`" . $object_type . "`.`id`) FROM `" . $object_type . "` WHERE `" . $object_type . "`.`addition_time` < " . $start_date . $filter;
+        $start_date = $buckets[0];
+        $dateformat = $this->get_sql_date_format("`" . $table . "`.`addition_time`", $zoom);
+        $filter     = $restrict . $this->get_catalog_sql_filter($table, $catalog_id);
+        $where      = $this->get_catalog_sql_where($table, $start_date, $end_date) . $filter;
+
+        $sql      = "SELECT " . $dateformat . " AS `zoom_date`, COUNT(`" . $table . "`.`id`) AS `value` FROM `" . $table . "` " . $where . " GROUP BY " . $dateformat;
+        $baseline = "SELECT COUNT(`" . $table . "`.`id`) FROM `" . $table . "` WHERE `" . $table . "`.`addition_time` < " . $start_date . $filter;
 
         return $this->get_running_total_pts($sql, $baseline, $buckets);
+    }
+
+    /**
+     * Resolve the requested object type to the media table the catalog graphs can measure.
+     *
+     * Only song, video and podcast_episode are files on disk with a size and an addition time of
+     * their own. Everything else a library item can be is a container, so an album or an artist is
+     * measured through the songs it holds. Reading `size` off those tables was a fatal query and
+     * counting their rows by their own `addition_time` reported zero, because an artist row is
+     * created with `addition_time` 0.
+     *
+     * @return array{0: string, 1: string}|null media table and the restriction for it, null when
+     *                                          the type holds no media the graphs can measure
+     */
+    protected function get_catalog_media_source(?string $object_type, int $object_id): ?array
+    {
+        if (in_array($object_type, ['song', 'video', 'podcast_episode'], true)) {
+            return [$object_type, ($object_id > 0) ? " AND `" . $object_type . "`.`id` = " . $object_id : ''];
+        }
+
+        // without an id the container is just "everything", which is every song
+        if ($object_id < 1) {
+            return ['song', ''];
+        }
+
+        return match ($object_type) {
+            'album' => ['song', " AND `song`.`album` = " . $object_id],
+            'album_disk' => ['song', " AND `song`.`album_disk` = " . $object_id],
+            'artist' => ['song', " AND `song`.`id` IN (SELECT `object_id` FROM `artist_map` WHERE `object_type` = 'song' AND `artist_id` = " . $object_id . ")"],
+            default => null,
+        };
     }
 
     /**
@@ -347,56 +403,41 @@ class Graph
         $start_date ??= $end_date - 864000;
 
         $buckets = $this->get_zoom_buckets($start_date, $end_date, $zoom);
-        if ($buckets === []) {
+        $source  = $this->get_catalog_media_source($object_type, $object_id);
+        if ($buckets === [] || $source === null) {
             return [];
         }
 
-        $start_date = $buckets[0];
-        $dateformat = $this->get_sql_date_format("`" . $object_type . "`.`addition_time`", $zoom);
-        $where      = $this->get_catalog_sql_where($object_type, $object_id, $catalog_id, $start_date, $end_date);
-        $filter     = $this->get_catalog_sql_filter($object_type, $object_id, $catalog_id);
+        [$table, $restrict] = $source;
 
-        // An album has no size of its own, so its storage is the size of the songs that belong to it.
-        [$sql, $baseline] = ($object_type === 'album')
-            ? [
-                "SELECT " . $dateformat . " AS `zoom_date`, IFNULL(SUM(`song`.`size`), 0) AS `value` FROM `album` LEFT JOIN `song` ON `song`.`album` = `album`.`id` " . $where . " GROUP BY " . $dateformat,
-                "SELECT IFNULL(SUM(`song`.`size`), 0) FROM `album` LEFT JOIN `song` ON `song`.`album` = `album`.`id` WHERE `album`.`addition_time` < " . $start_date . $filter,
-            ]
-            : [
-                "SELECT " . $dateformat . " AS `zoom_date`, IFNULL(SUM(`" . $object_type . "`.`size`), 0) AS `value` FROM `" . $object_type . "` " . $where . " GROUP BY " . $dateformat,
-                "SELECT IFNULL(SUM(`" . $object_type . "`.`size`), 0) FROM `" . $object_type . "` WHERE `" . $object_type . "`.`addition_time` < " . $start_date . $filter,
-            ];
+        $start_date = $buckets[0];
+        $dateformat = $this->get_sql_date_format("`" . $table . "`.`addition_time`", $zoom);
+        $filter     = $restrict . $this->get_catalog_sql_filter($table, $catalog_id);
+        $where      = $this->get_catalog_sql_where($table, $start_date, $end_date) . $filter;
+
+        $sql      = "SELECT " . $dateformat . " AS `zoom_date`, IFNULL(SUM(`" . $table . "`.`size`), 0) AS `value` FROM `" . $table . "` " . $where . " GROUP BY " . $dateformat;
+        $baseline = "SELECT IFNULL(SUM(`" . $table . "`.`size`), 0) FROM `" . $table . "` WHERE `" . $table . "`.`addition_time` < " . $start_date . $filter;
 
         return $this->get_running_total_pts($sql, $baseline, $buckets);
     }
 
     /**
-     * The catalog/object part of the where clause on its own, so the running total that seeds a
-     * catalog graph is restricted the same way the buckets inside the window are.
+     * The catalog part of the where clause on its own, so the running total that seeds a catalog
+     * graph is restricted the same way the buckets inside the window are.
      */
     protected function get_catalog_sql_filter(
         string $object_type = 'song',
-        int    $object_id = 0,
         int    $catalog_id = 0,
     ): string {
-        $sql = '';
-        if ($catalog_id > 0) {
-            $sql .= " AND `" . $object_type . "`.`catalog` = " . $catalog_id;
-        }
-
-        if ($object_id > 0) {
-            $sql .= " AND `" . $object_type . "`.`id` = '" . $object_id . "'";
-        }
-
-        return $sql;
+        return ($catalog_id > 0)
+            ? " AND `" . $object_type . "`.`catalog` = " . $catalog_id
+            : '';
     }
 
     /**
      */
     protected function get_catalog_sql_where(
         string $object_type = 'song',
-        int    $object_id = 0,
-        int    $catalog_id = 0,
         ?int   $start_date = null,
         ?int   $end_date = null,
     ): string {
@@ -410,7 +451,7 @@ class Graph
             $start_date = $end_date - 864000;
         }
 
-        return "WHERE `" . $object_type . "`.`addition_time` >= " . $start_date . " AND `" . $object_type . "`.`addition_time` <= " . $end_date . $this->get_catalog_sql_filter($object_type, $object_id, $catalog_id);
+        return "WHERE `" . $object_type . "`.`addition_time` >= " . $start_date . " AND `" . $object_type . "`.`addition_time` <= " . $end_date;
     }
 
     /**
@@ -552,17 +593,20 @@ class Graph
         ?int   $end_date = null,
         string $zoom = 'day',
     ): array {
-        $dateformat = $this->get_sql_date_format("`object_count`.`date`", $zoom);
-        $where      = $this->get_user_sql_where($user_id, $object_type, $object_id, $start_date, $end_date);
-        $sql        = "SELECT " . $dateformat . " AS `zoom_date`, COUNT(`object_count`.`id`) AS `hits` FROM `object_count` " . $where . " GROUP BY " . $dateformat;
-        $db_results = Dba::read($sql);
+        $end_date ??= time();
+        $start_date ??= $end_date - 864000;
 
-        $values = [];
-        while ($results = Dba::fetch_assoc($db_results)) {
-            $values[$results['zoom_date']] = $results['hits'];
+        $buckets = $this->get_zoom_buckets($start_date, $end_date, $zoom);
+        if ($buckets === []) {
+            return [];
         }
 
-        return $values;
+        $start_date = $buckets[0];
+        $dateformat = $this->get_sql_date_format("`object_count`.`date`", $zoom);
+        $where      = $this->get_user_sql_where($user_id, $object_type, $object_id, $start_date, $end_date);
+        $sql        = "SELECT " . $dateformat . " AS `zoom_date`, COUNT(`object_count`.`id`) AS `value` FROM `object_count` " . $where . " GROUP BY " . $dateformat;
+
+        return $this->get_bucketed_pts($sql, $buckets);
     }
 
     /**
@@ -576,17 +620,20 @@ class Graph
         string $zoom = 'day',
         string $column = 'size',
     ): array {
-        $dateformat = $this->get_sql_date_format("`object_count`.`date`", $zoom);
-        $where      = $this->get_user_sql_where($user_id, $object_type, $object_id, $start_date, $end_date);
-        $sql        = "SELECT " . $dateformat . " AS `zoom_date`, SUM(`" . $object_type . "`.`" . $column . "`) AS `total` FROM `object_count` JOIN `" . $object_type . "` ON `" . $object_type . "`.`id` = `object_count`.`object_id` " . $where . " GROUP BY " . $dateformat;
-        $db_results = Dba::read($sql);
+        $end_date ??= time();
+        $start_date ??= $end_date - 864000;
 
-        $values = [];
-        while ($results = Dba::fetch_assoc($db_results)) {
-            $values[$results['zoom_date']] = $results['total'];
+        $buckets = $this->get_zoom_buckets($start_date, $end_date, $zoom);
+        if ($buckets === []) {
+            return [];
         }
 
-        return $values;
+        $start_date = $buckets[0];
+        $dateformat = $this->get_sql_date_format("`object_count`.`date`", $zoom);
+        $where      = $this->get_user_sql_where($user_id, $object_type, $object_id, $start_date, $end_date);
+        $sql        = "SELECT " . $dateformat . " AS `zoom_date`, IFNULL(SUM(`" . $object_type . "`.`" . $column . "`), 0) AS `value` FROM `object_count` JOIN `" . $object_type . "` ON `" . $object_type . "`.`id` = `object_count`.`object_id` " . $where . " GROUP BY " . $dateformat;
+
+        return $this->get_bucketed_pts($sql, $buckets);
     }
 
     /**
