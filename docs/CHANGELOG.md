@@ -44,6 +44,9 @@ You can downgrade to Ampache7 if you try this out and have issues, using the cli
   * v8 API responses are now fully documented: `docs/openapi.json` carries response schemas for every data type, and `docs/API-JSON-methods.md`/`docs/API-XML-methods.md` show per-method response field tables (type, nullable, optional)
 * Testing
   * Test suite significantly expanded with dozens of new test files under `tests/Module` and `tests/Repository`
+* Playlist art mosaic
+  * Automatically generated playlist cover art can now be a mosaic of up to nine covers from the playlist instead of a single random cover
+  * Playlists with fewer than four distinct covers keep the single-cover behaviour
 * Transcoding
   * Per-user output-format preferences under Streaming -> Transcoding: `encode_target`, `encode_video_target`, `encode_player_webplayer_target` and `encode_player_api_target` (explicit `format=` requests always take priority)
   * Per-user dynamic downsampling with new `max_bit_rate`/`min_bit_rate` preferences
@@ -94,6 +97,9 @@ You can downgrade to Ampache7 if you try this out and have issues, using the cli
   * Charts are drawn by `goat1000/svggraph` (LGPL-3.0) instead of `szymach/c-pchart`, which is a normal requirement rather than a dev one, so graphs work in a release download with nothing extra to install
   * Graphs are SVG instead of PNG and no longer need `ext-gd`; they scale to the page and stay sharp on a high-dpi screen
   * Charts are grouped bars rather than lines, and each bar is a time bucket labelled at the zoom level you asked for
+* Config version 94
+  * New `playlist_art_mosaic` option; set it to `false` to keep a single random cover for playlist art
+  * New `playlist_art_mosaic_fallback` option (default `false`); when on, a playlist with no art of its own gets a generated mosaic instead of the blank placeholder, stored as that playlist's art so it is only built once
 * Config version 93
   * `statistical_graphs` now defaults to `"true"`; it was only off because of the c-pchart licence. Set it to `"false"` to skip the graph queries entirely on a large catalog
 

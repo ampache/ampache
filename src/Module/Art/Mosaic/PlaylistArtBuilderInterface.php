@@ -23,22 +23,21 @@ declare(strict_types=1);
  *
  */
 
-namespace Ampache\Module\Art;
+namespace Ampache\Module\Art\Mosaic;
 
-use Ampache\Module\Art\Collector\ArtCollector;
-use Ampache\Module\Art\Collector\ArtCollectorInterface;
-use Ampache\Module\Art\Export\ArtExporter;
-use Ampache\Module\Art\Export\ArtExporterInterface;
-use Ampache\Module\Art\Export\Writer\MetadataWriter;
-use Ampache\Module\Art\Mosaic\PlaylistArtBuilder;
-use Ampache\Module\Art\Mosaic\PlaylistArtBuilderInterface;
+interface PlaylistArtBuilderInterface
+{
+    // Largest number of tiles a mosaic lays out (3x3). Callers use this to stop collecting covers.
+    public const int MAX_TILES = 9;
 
-use function DI\autowire;
+    // Fewest tiles a mosaic needs (2x2). Below this the caller keeps its single cover.
+    public const int MIN_TILES = 4;
 
-return [
-    ArtCleanupInterface::class => autowire(ArtCleanup::class),
-    ArtCollectorInterface::class => autowire(ArtCollector::class),
-    ArtExporterInterface::class => autowire(ArtExporter::class),
-    MetadataWriter::class => autowire(),
-    PlaylistArtBuilderInterface::class => autowire(PlaylistArtBuilder::class),
-];
+    /**
+     * Composite cover images into a square grid mosaic (2x2 or 3x3).
+     *
+     * @param list<string> $images raw image byte-strings, ordered by preference
+     * @return string|null raw PNG bytes, or null when a mosaic can't be built
+     */
+    public function build(array $images): ?string;
+}
