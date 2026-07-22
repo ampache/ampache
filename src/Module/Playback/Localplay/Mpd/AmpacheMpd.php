@@ -132,6 +132,8 @@ class AmpacheMpd extends localplay_controller
         // Look at the current instance and pull the options for said instance
         $options = self::get_instance();
         if ($options === [] || !isset($options['host'], $options['port'])) {
+            debug_event(self::class, 'connect: no localplay instance is configured', 3);
+
             return false;
         }
 
@@ -312,7 +314,13 @@ class AmpacheMpd extends localplay_controller
         $sql        = ($instance > 0) ? "SELECT * FROM `localplay_mpd` WHERE `id` = ?" : "SELECT * FROM `localplay_mpd`";
         $db_results = ($instance > 0) ? Dba::query($sql, [$instance]) : Dba::query($sql);
 
-        if ($row = Dba::fetch_assoc($db_results)) {
+        $row = Dba::fetch_assoc($db_results);
+        // the active preference can point at an instance that has since been deleted; fall back to any available one
+        if (!$row && $instance > 0) {
+            $row = Dba::fetch_assoc(Dba::query("SELECT * FROM `localplay_mpd`"));
+        }
+
+        if ($row) {
             return [
                 'id' => (int) $row['id'],
                 'name' => $row['name'],
