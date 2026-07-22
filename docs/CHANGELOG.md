@@ -89,10 +89,19 @@ You can downgrade to Ampache7 if you try this out and have issues, using the cli
   * `encode_args_ts` drops the `k` suffix from `-maxrate %MAXBITRATE%` to suit. **NOTE** update `encode_args_ts` if you have overridden it in your own `ampache.cfg.php`
   * Bitrate units are now documented in `docs/openapi.json` and the API method tables; none of the `bitrate`/`maxbitrate` arguments previously stated a unit
   * `encode_target`, `encode_video_target` and the per-player `encode_player_*_target` settings moved from `ampache.cfg.php` to per-user preferences (config values now only seed the default on upgrade)
+* Official release downloads are built with `composer install --no-dev`, so they contain no dev package. Anything optional that lives in `require-dev` has to be installed yourself
+* Statistical Graphs
+  * Charts are drawn by `goat1000/svggraph` (LGPL-3.0) instead of `szymach/c-pchart`, which is a normal requirement rather than a dev one, so graphs work in a release download with nothing extra to install
+  * Graphs are SVG instead of PNG and no longer need `ext-gd`; they scale to the page and stay sharp on a high-dpi screen
+  * Charts are grouped bars rather than lines, and each bar is a time bucket labelled at the zoom level you asked for
+* Config version 93
+  * `statistical_graphs` now defaults to `"true"`; it was only off because of the c-pchart licence. Set it to `"false"` to skip the graph queries entirely on a large catalog
 
 ### Removed 8.0.0
 
 * `api_debug_handler` configuration option and its handling removed entirely
+* `szymach/c-pchart` dependency dropped, along with the `pGraph_Yformat_bytes()` helper it needed
+* `resources/fonts/FreeMono.ttf`, left behind when `easy_captcha` was removed; `gregwar/captcha` ships its own fonts
 * Unused legacy OAuth implementation deleted (`OAuthDataStore`, `OAuthServer`, `OAuthSignatureMethod_PLAINTEXT`, `OAuthSignatureMethod_RSA_SHA1`)
 * `docker/Dockerfilephp82`, `Dockerfilephp83`, `Dockerfilephp84` removed (replaced by `Dockerfilephp85`)
 * The popup web player is removed (`web_player.php`, `create_web_player.inc.php`). Playback is always the embedded player at the bottom of the page. **NOTE** if you used the popup to keep the player in a separate window, there is no replacement for it
@@ -104,6 +113,9 @@ You can downgrade to Ampache7 if you try this out and have issues, using the cli
 
 ### Fixed 8.0.0
 
+* `stats.php?action=graph` rendered graphs without checking `statistical_graphs` first, so it ignored the setting and was a fatal error whenever the charting library was absent
+* The catalog size graph was empty until a second time bucket existed, because the running total it adds to is `NULL` when nothing was added before the bucket and `NULL + SUM()` is `NULL`
+* The catalog size graph read zero for `object_type=album`; it joined `album`.`id` to `song`.`id` instead of `song`.`album`, and only counted buckets before the current one instead of including it
 * Uploading art, an avatar, a playlist or a podcast import file stopped the web player, because a form carrying a file fell back to a full page load
 * Database 800023
   * Uploaded art took its mime type from the filename, storing `image/jpg` (not a real type) for a `.jpg` upload and `image/JPG` for `.JPG`; the type is now read from the image data and existing rows are corrected

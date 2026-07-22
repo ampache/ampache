@@ -111,7 +111,7 @@ class AmpacheStreamHits extends AmpachePlugin implements PluginStreamControlInte
         }
 
         // if using free software only you can't use this plugin
-        if (AmpConfig::get('statistical_graphs') && is_dir(__DIR__ . '/../../../vendor/szymach/c-pchart/src/Chart/')) {
+        if (AmpConfig::get('statistical_graphs')) {
             $next_total    = count($media_ids);
             $graph         = new Graph();
             $end_date      = time();

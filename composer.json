@@ -61,6 +61,7 @@
         "doctrine/cache": "^2",
         "gettext/gettext": "^5",
         "gettext/translator": "^1.2",
+        "goat1000/svggraph": "^3.20",
         "gregwar/captcha": "^2.0",
         "idleberg/vite-manifest": "^1.0",
         "james-heinrich/getid3": "dev-master",
@@ -93,8 +94,7 @@
         "phpstan/phpstan-mockery": "^2",
         "phpunit/phpunit": "^11",
         "rector/rector": "^2",
-        "seec/phpunit-consecutive-params": "^1.1",
-        "szymach/c-pchart": "3.0.17"
+        "seec/phpunit-consecutive-params": "^1.1"
     },
     "repositories":
     [
@@ -154,8 +154,7 @@
         "rector:fix": "Applies pending rector code-migrations"
     },
     "suggest": {
-        "szymach/c-pchart": "Enable graphical statistics",
-        "ext-gd": "Needed for graphical statistics",
+        "ext-gd": "Needed for image resizing and waveforms",
         "ext-http": "Yourls plugin",
         "ext-ldap": "Needed to support ldap authentication",
         "ext-pthreads": "Needed to support async functions",

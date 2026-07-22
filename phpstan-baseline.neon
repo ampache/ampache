@@ -7,12 +7,6 @@ parameters:
 			path: src/Config/ConfigContainerInterface.php
 
 		-
-			message: '#^Function pGraph_Yformat_bytes\(\) has parameter \$value with no type specified\.$#'
-			identifier: missingType.parameter
-			count: 1
-			path: src/Config/functions.php
-
-		-
 			message: '#^Method Ampache\\Gui\\Playlist\\NewPlaylistDialogAdapterInterface\:\:getPlaylists\(\) return type has no value type specified in iterable type array\.$#'
 			identifier: missingType.iterableValue
 			count: 1
@@ -1315,18 +1309,6 @@ parameters:
 			path: src/Module/Util/AmazonSearch.php
 
 		-
-			message: '#^Method Ampache\\Module\\Util\\Graph\:\:get_all_pts\(\) return type has no value type specified in iterable type array\.$#'
-			identifier: missingType.iterableValue
-			count: 1
-			path: src/Module/Util/Graph.php
-
-		-
-			message: '#^Method Ampache\\Module\\Util\\Graph\:\:get_all_type_pts\(\) return type has no value type specified in iterable type array\.$#'
-			identifier: missingType.iterableValue
-			count: 1
-			path: src/Module/Util/Graph.php
-
-		-
 			message: '#^Method Ampache\\Module\\Util\\Graph\:\:get_catalog_files_pts\(\) return type has no value type specified in iterable type array\.$#'
 			identifier: missingType.iterableValue
 			count: 1
@@ -1365,18 +1347,6 @@ parameters:
 		-
 			message: '#^Method Ampache\\Module\\Util\\Graph\:\:get_user_time_pts\(\) return type has no value type specified in iterable type array\.$#'
 			identifier: missingType.iterableValue
-			count: 1
-			path: src/Module/Util/Graph.php
-
-		-
-			message: '#^Parameter \#2 \$Format of method CpChart\\Data\:\:setXAxisDisplay\(\) expects array\|null, string given\.$#'
-			identifier: argument.type
-			count: 4
-			path: src/Module/Util/Graph.php
-
-		-
-			message: '#^Parameter \#3 \$Format of method CpChart\\Data\:\:setAxisDisplay\(\) expects array\|null, string given\.$#'
-			identifier: argument.type
 			count: 1
 			path: src/Module/Util/Graph.php
 
