@@ -203,7 +203,7 @@ class AmpacheMpd extends localplay_controller
             $data = [];
 
             /* Required Elements */
-            $data['id']  = $entry['Pos'];
+            $data['id']  = (int) $entry['Pos'];
             $data['raw'] = $entry['file'];
 
             $url_data = $this->parse_url($entry['file']);
