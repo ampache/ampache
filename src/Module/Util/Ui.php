@@ -59,6 +59,15 @@ class Ui implements UiInterface
     /** @var array<string, string> $_image_cache */
     private static array $_image_cache = [];
 
+    /** @var array<string, array{attrs: string, viewbox: string, inner: string}|null> parsed material symbol source files */
+    private static array $_symbol_cache = [];
+
+    /** @var array<string, bool> material symbols referenced on the current page (sprite content) */
+    private static array $_used_symbols = [];
+
+    /** @var array<string, bool> material symbols already emitted in a sprite for the current page */
+    private static array $_emitted_symbols = [];
+
     private static int $_ticker = 0;
 
     public function __construct(
@@ -334,14 +343,121 @@ class Ui implements UiInterface
      */
     public static function get_material_symbol(string $name, ?string $title = null, ?string $id_attrib = null, ?string $class_attrib = null): string
     {
-        $title ??= T_(ucfirst($name));
-        $filepath = __DIR__ . '/../../../resources/images/material-symbols/' . $name . '.svg';
+        $title      = $title ?? T_(ucfirst($name));
+        $symbol_key = $name;
+        $filepath   = __DIR__ . '/../../../resources/images/material-symbols/' . $name . '.svg';
         if (!is_file($filepath)) {
             // fall back to error icon if icon is missing
             debug_event(self::class, 'Runtime Error: icon ' . $name . ' not found.', 1);
-            $filepath = __DIR__ . '/../../../resources/images/icon_error.svg';
+            $symbol_key = 'icon_error';
+            $filepath   = __DIR__ . '/../../../resources/images/icon_error.svg';
         }
 
+        if (defined('AJAX_INCLUDE')) {
+            return self::_inline_material_symbol($name, $filepath, $title, $id_attrib, $class_attrib);
+        }
+
+        $symbol = self::_load_symbol_parts($symbol_key, $filepath);
+        if ($symbol === null) {
+            return '';
+        }
+
+        self::$_used_symbols[$symbol_key] = true;
+
+        $tag = '<svg' . $symbol['attrs'];
+        if (!empty($id_attrib)) {
+            $tag .= ' id="' . scrub_out($id_attrib) . '"';
+        }
+        $tag .= ' class="material-symbol material-symbol-' . scrub_out($name) . ' ' . scrub_out((string)$class_attrib) . '">';
+        $tag .= '<title>' . scrub_out($title) . '</title>';
+        $tag .= '<desc>' . scrub_out($title) . '</desc>';
+        $tag .= '<use href="#ms-' . scrub_out($symbol_key) . '" xlink:href="#ms-' . scrub_out($symbol_key) . '"></use>';
+
+        return $tag . '</svg>';
+    }
+
+    /**
+     * material_symbol_sprite
+     *
+     * Returns a single hidden <svg> sprite containing one <symbol> per
+     * material symbol rendered on the current page. Must be echoed once,
+     * right before </body>. Returns an empty string when no icon was used.
+     */
+    public static function material_symbol_sprite(): string
+    {
+        // Incremental: only emit symbols that were not part of a previous
+        // sprite. The main layout may call this more than once (e.g. at the
+        // end of the content block and again before </body>) to catch icons
+        // rendered after the first call (footer, web player controls).
+        $pending = array_diff_key(self::$_used_symbols, self::$_emitted_symbols);
+        if ($pending === []) {
+            return '';
+        }
+
+        $sprite = '<svg xmlns="http://www.w3.org/2000/svg" width="0" height="0" style="position:absolute" aria-hidden="true">';
+        foreach (array_keys($pending) as $symbol_key) {
+            self::$_emitted_symbols[$symbol_key] = true;
+            $symbol                              = self::$_symbol_cache[$symbol_key] ?? null;
+            if ($symbol === null) {
+                continue;
+            }
+            // The viewBox of the source file is carried by the <symbol>
+            // (see _load_symbol_parts for why it must not stay on the
+            // per-icon <svg> tag).
+            $viewbox = ($symbol['viewbox'] !== '')
+                ? ' viewBox="' . $symbol['viewbox'] . '"'
+                : '';
+            $sprite .= '<symbol id="ms-' . scrub_out((string)$symbol_key) . '"' . $viewbox . '>' . $symbol['inner'] . '</symbol>';
+        }
+
+        return $sprite . '</svg>';
+    }
+
+    /**
+     * _load_symbol_parts
+     *
+     * Splits an svg icon file into: its root attributes without viewBox
+     * (kept on the per-icon <svg> tag), its viewBox (moved onto the
+     * <symbol> in the page sprite) and its inner content (moved once into
+     * the sprite).
+     *
+     * The viewBox MUST be on the <symbol> and MUST NOT be on the outer
+     * <svg>: material symbols draw in "0 -960 960 960" (negative Y) and
+     * the nested viewport created by <use> lands in the 0..960 region of
+     * the outer coordinate system - with the original viewBox kept on the
+     * outer <svg>, the whole drawing sits outside the visible area.
+     *
+     * @return array{attrs: string, viewbox: string, inner: string}|null
+     */
+    private static function _load_symbol_parts(string $symbol_key, string $filepath): ?array
+    {
+        if (!array_key_exists($symbol_key, self::$_symbol_cache)) {
+            $content = file_get_contents($filepath);
+            if ($content !== false && preg_match('/<svg([^>]*)>(.*)<\/svg>/s', $content, $matches)) {
+                $viewbox = (preg_match('/\sviewBox="([^"]*)"/', $matches[1], $vb_match))
+                    ? $vb_match[1]
+                    : '';
+                self::$_symbol_cache[$symbol_key] = [
+                    'attrs' => rtrim((string)preg_replace('/\sviewBox="[^"]*"/', '', $matches[1])),
+                    'viewbox' => $viewbox,
+                    'inner' => trim($matches[2]),
+                ];
+            } else {
+                self::$_symbol_cache[$symbol_key] = null;
+            }
+        }
+
+        return self::$_symbol_cache[$symbol_key];
+    }
+
+    /**
+     * _inline_material_symbol
+     *
+     * Legacy rendering: the full icon body is inlined in the returned tag.
+     * Still used for AJAX fragments, which cannot rely on the page sprite.
+     */
+    private static function _inline_material_symbol(string $name, string $filepath, string $title, ?string $id_attrib, ?string $class_attrib): string
+    {
         $tag = '';
         // load svg file
         $svgicon = simplexml_load_file($filepath);

@@ -30,6 +30,7 @@ use Ampache\Module\System\Core;
 use Ampache\Module\Util\Ui;
 
 ?>
+                <?php echo Ui::material_symbol_sprite(); ?>
                 </div>
                 <div style="clear:both;">
                 </div>
@@ -94,5 +95,6 @@ if (!isset($_SESSION['login']) || !$_SESSION['login']) {
                 });
             }
         </script>
+        <?php echo Ui::material_symbol_sprite(); ?>
     </body>
 </html>
