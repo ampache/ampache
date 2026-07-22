@@ -576,7 +576,7 @@ class AmpacheMpd extends localplay_controller
         debug_event(self::class, 'Status result. Current song (' . $track . ') info: ' . json_encode($playlist_item), 5);
 
         if ($url_data !== [] && array_key_exists('oid', $url_data) && !empty($url_data['oid'])) {
-            $song = new Song($url_data['oid']);
+            $song = new Song((int) $url_data['oid']);
             if ($song->isNew()) {
                 $array['track_title']  = T_('Unknown');
                 $array['track_artist'] = T_('Unknown');
