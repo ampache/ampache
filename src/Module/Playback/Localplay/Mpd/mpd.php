@@ -336,7 +336,12 @@ class mpd
             return false;
         }
 
-        $this->RefreshInfo();
+        if (!$this->RefreshInfo() || !isset($this->status['volume'])) {
+            $this->_error('AdjustVolume', 'unable to read the current volume');
+
+            return false;
+        }
+
         $value    = $this->status['volume'] + $value;
         $response = $this->SetVolume($value);
 
@@ -358,6 +363,7 @@ class mpd
         $this->_debug(self::class, "host: " . $this->host . ", port: " . $this->port, 5);
         $this->_mpd_sock = fsockopen($this->host, $this->port, $err, $err_str, 6);
         // suppressed because an unreachable host is expected and reported through _error() below, not as a php warning
+        $this->_mpd_sock = @fsockopen($this->host, $this->port, $err, $err_str, 6);
 
         if (!$this->_mpd_sock) {
             $this->_error('Connect', sprintf('Socket Error: %s (%d)', $err_str, $err));
@@ -1024,8 +1030,8 @@ class mpd
         if ($this->_checkCompatibility(self::COMMAND_SETVOL, $this->mpd_version)) {
             $command = self::COMMAND_SETVOL;
         } else {
-            $this->RefreshInfo(); // Get the latest volume
-            if ($this->status['volume'] === null) {
+            // Get the latest volume
+            if (!$this->RefreshInfo() || !isset($this->status['volume'])) {
                 return false;
             }
 
