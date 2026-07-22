@@ -1214,7 +1214,6 @@
             "additionalProperties": false
           },
           "items": {
-            "description": "The expanded song list when songs are included, otherwise the total song count. Playlists are song lists here: a playlist may physically hold other media types, but this method reports only songs so that real playlists and song smartlists share one shape.",
             "oneOf": [
               {
                 "type": "array",
@@ -1238,7 +1237,8 @@
               {
                 "type": "integer"
               }
-            ]
+            ],
+            "description": "The expanded song list when songs are included, otherwise the total song count. Playlists are song lists here: a playlist may physically hold other media types, but this method reports only songs so that real playlists and song smartlists share one shape."
           },
           "type": {
             "type": "string",
@@ -3704,6 +3704,298 @@
           "search"
         ],
         "additionalProperties": false
+      },
+      "AlbumDiskObject": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "name": {
+            "type": "string"
+          },
+          "prefix": {
+            "type": "string",
+            "nullable": true
+          },
+          "basename": {
+            "type": "string",
+            "nullable": true
+          },
+          "album": {
+            "type": "object",
+            "properties": {
+              "id": {
+                "type": "string"
+              },
+              "name": {
+                "type": "string"
+              },
+              "prefix": {
+                "type": "string",
+                "nullable": true
+              },
+              "basename": {
+                "type": "string",
+                "nullable": true
+              }
+            },
+            "required": [
+              "id",
+              "name",
+              "prefix",
+              "basename"
+            ],
+            "additionalProperties": false
+          },
+          "artist": {
+            "type": "object",
+            "properties": {
+              "id": {
+                "type": "string"
+              },
+              "name": {
+                "type": "string"
+              },
+              "prefix": {
+                "type": "string",
+                "nullable": true
+              },
+              "basename": {
+                "type": "string"
+              }
+            },
+            "required": [
+              "id",
+              "name",
+              "prefix",
+              "basename"
+            ],
+            "additionalProperties": false
+          },
+          "artists": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "id": {
+                  "type": "string"
+                },
+                "name": {
+                  "type": "string"
+                },
+                "prefix": {
+                  "type": "string",
+                  "nullable": true
+                },
+                "basename": {
+                  "type": "string"
+                }
+              },
+              "required": [
+                "id",
+                "name",
+                "prefix",
+                "basename"
+              ],
+              "additionalProperties": false
+            }
+          },
+          "songartists": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "id": {
+                  "type": "string"
+                },
+                "name": {
+                  "type": "string"
+                },
+                "prefix": {
+                  "type": "string",
+                  "nullable": true
+                },
+                "basename": {
+                  "type": "string"
+                }
+              },
+              "required": [
+                "id",
+                "name",
+                "prefix",
+                "basename"
+              ],
+              "additionalProperties": false
+            }
+          },
+          "disk": {
+            "type": "integer"
+          },
+          "disksubtitle": {
+            "type": "string",
+            "nullable": true
+          },
+          "time": {
+            "type": "integer"
+          },
+          "year": {
+            "type": "integer"
+          },
+          "tracks": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/SongObject"
+            }
+          },
+          "songcount": {
+            "type": "integer"
+          },
+          "type": {
+            "type": "string",
+            "nullable": true
+          },
+          "genre": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "id": {
+                  "type": "string"
+                },
+                "name": {
+                  "type": "string"
+                }
+              },
+              "required": [
+                "id",
+                "name"
+              ],
+              "additionalProperties": false
+            }
+          },
+          "art": {
+            "type": "string",
+            "nullable": true
+          },
+          "has_art": {
+            "type": "boolean"
+          },
+          "flag": {
+            "type": "boolean"
+          },
+          "rating": {
+            "type": "integer",
+            "nullable": true
+          },
+          "averagerating": {
+            "type": "number",
+            "nullable": true
+          },
+          "mbid": {
+            "type": "string",
+            "nullable": true
+          },
+          "mbid_group": {
+            "type": "string",
+            "nullable": true
+          }
+        },
+        "required": [
+          "id",
+          "name",
+          "prefix",
+          "basename",
+          "album",
+          "disk",
+          "disksubtitle",
+          "time",
+          "year",
+          "tracks",
+          "songcount",
+          "type",
+          "genre",
+          "art",
+          "has_art",
+          "flag",
+          "rating",
+          "averagerating",
+          "mbid",
+          "mbid_group"
+        ],
+        "additionalProperties": false
+      },
+      "AlbumDisksResponse": {
+        "type": "object",
+        "properties": {
+          "total_count": {
+            "type": "integer"
+          },
+          "md5": {
+            "type": "string"
+          },
+          "album_disk": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/AlbumDiskObject"
+            }
+          }
+        },
+        "required": [
+          "total_count",
+          "md5",
+          "album_disk"
+        ],
+        "additionalProperties": false
+      },
+      "LocalplaySongObject": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer"
+          },
+          "raw": {
+            "type": "string"
+          },
+          "vlid": {
+            "type": "integer"
+          },
+          "oid": {
+            "type": "integer"
+          },
+          "name": {
+            "type": "string",
+            "nullable": true
+          },
+          "link": {
+            "type": "string",
+            "nullable": true
+          },
+          "track": {
+            "type": "integer"
+          }
+        },
+        "required": [
+          "id",
+          "raw",
+          "track"
+        ],
+        "additionalProperties": false
+      },
+      "LocalplaySongsResponse": {
+        "type": "object",
+        "properties": {
+          "localplay_songs": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/LocalplaySongObject"
+            }
+          }
+        },
+        "required": [
+          "localplay_songs"
+        ],
+        "additionalProperties": false
       }
     },
     "responses": {
@@ -3919,9 +4211,17 @@
     }
   ],
   "x-rpc-mappings": {
+    "/album-disks/{album_disk_id}": "action=album_disk&filter={album_disk_id}",
+    "/album-disks/{album_disk_id}/art": "action=get_art&filter={album_disk_id}&type=album_disk",
+    "/album-disks/{album_disk_id}/flag": "action=flag&filter={album_disk_id}&type=album_disk",
+    "/album-disks/{album_disk_id}/rate": "action=rate&filter={album_disk_id}&type=album_disk",
+    "/album-disks/{album_disk_id}/songs": "action=album_disk_songs&filter={album_disk_id}&type=album_disk",
+    "/album-disks/search": "action=search&type=album_disk",
+    "/album-disks/stats": "action=stats&type=album_disk",
     "/albums": "action=albums",
     "/albums/{album_id}": "action=album&filter={album_id}",
     "/albums/{album_id}/art": "action=get_art&filter={album_id}&type=album",
+    "/albums/{album_id}/disks": "action=album_disks&filter={album_id}&type=album",
     "/albums/{album_id}/fetch-metadata": "action=get_external_metadata&filter={album_id}&type=album",
     "/albums/{album_id}/flag": "action=flag&filter={album_id}&type=album",
     "/albums/{album_id}/rate": "action=rate&filter={album_id}&type=album",
@@ -4002,6 +4302,7 @@
     "/localplay/play": "action=localplay&command=play",
     "/localplay/prev": "action=localplay&command=prev",
     "/localplay/skip": "action=localplay&command=skip",
+    "/localplay/songs": "action=localplay_songs",
     "/localplay/status": "action=localplay&command=status",
     "/localplay/stop": "action=localplay&command=stop",
     "/localplay/volume-down": "action=localplay&command=volume_down",
@@ -4070,6 +4371,7 @@
     "DELETE /preferences/{preference_name}": "action=preference_delete&filter={preference_name}",
     "/register": "action=register",
     "/scrobble": "action=scrobble",
+    "/random": "action=random&type={type}",
     "/search/{search_type}/groups": "action=search_group&filter={search_type}",
     "/search/{search_type}/rules": "action=search_rules&filter={search_type}",
     "/shares": "action=shares",
@@ -4142,6 +4444,613 @@
     "/videos/stats": "action=stats&type=video"
   },
   "paths": {
+    "/album-disks/{album_disk_id}": {
+      "get": {
+        "parameters": [
+          {
+            "in": "path",
+            "name": "album_disk_id",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "in": "query",
+            "name": "include",
+            "required": false,
+            "schema": {
+              "enum": [
+                "songs"
+              ],
+              "type": "string"
+            },
+            "description": "songs (include child objects in the response)"
+          }
+        ],
+        "summary": "Get album disk by ID",
+        "tags": [
+          "Albums"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AlbumDiskObject"
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/BadRequestErrorResponse"
+          },
+          "403": {
+            "$ref": "#/components/responses/ForbiddenErrorResponse"
+          },
+          "404": {
+            "$ref": "#/components/responses/NotFoundErrorResponse"
+          },
+          "410": {
+            "$ref": "#/components/responses/GoneErrorResponse"
+          },
+          "500": {
+            "$ref": "#/components/responses/InternalServerErrorResponse"
+          }
+        }
+      }
+    },
+    "/album-disks/{album_disk_id}/art": {
+      "get": {
+        "parameters": [
+          {
+            "in": "path",
+            "name": "album_disk_id",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "in": "query",
+            "name": "size",
+            "required": false,
+            "schema": {
+              "type": "string"
+            },
+            "description": "widthxheight, e.g. 640x480"
+          }
+        ],
+        "summary": "Get art image (binary)",
+        "tags": [
+          "Artwork"
+        ],
+        "responses": {
+          "200": {
+            "description": "The image itself, written straight to the response body",
+            "headers": {
+              "Content-Type": {
+                "description": "The stored art mime type (e.g. `image/jpeg`, `image/png`)",
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "Content-Length": {
+                "description": "Size of the image in bytes",
+                "schema": {
+                  "type": "integer"
+                }
+              },
+              "Access-Control-Allow-Origin": {
+                "description": "Always `*`, so art can be loaded cross-origin",
+                "schema": {
+                  "type": "string"
+                }
+              }
+            },
+            "content": {
+              "image/*": {
+                "schema": {
+                  "type": "string",
+                  "format": "binary"
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/BadRequestErrorResponse"
+          },
+          "403": {
+            "$ref": "#/components/responses/ForbiddenErrorResponse"
+          },
+          "404": {
+            "$ref": "#/components/responses/NotFoundErrorResponse"
+          },
+          "410": {
+            "$ref": "#/components/responses/GoneErrorResponse"
+          },
+          "500": {
+            "$ref": "#/components/responses/InternalServerErrorResponse"
+          }
+        }
+      }
+    },
+    "/album-disks/{album_disk_id}/flag": {
+      "post": {
+        "parameters": [
+          {
+            "in": "path",
+            "name": "album_disk_id",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "in": "query",
+            "name": "flag",
+            "required": true,
+            "schema": {
+              "enum": [
+                0,
+                1
+              ],
+              "type": "integer"
+            }
+          }
+        ],
+        "summary": "Flag a library item",
+        "tags": [
+          "Ratings and Flags"
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SuccessResponse"
+                },
+                "examples": {
+                  "success": {
+                    "summary": "flag",
+                    "value": {
+                      "success": "flag ADDED to 12"
+                    }
+                  }
+                }
+              }
+            },
+            "description": "Updated"
+          },
+          "400": {
+            "$ref": "#/components/responses/BadRequestErrorResponse"
+          },
+          "403": {
+            "$ref": "#/components/responses/ForbiddenErrorResponse"
+          },
+          "404": {
+            "$ref": "#/components/responses/NotFoundErrorResponse"
+          },
+          "410": {
+            "$ref": "#/components/responses/GoneErrorResponse"
+          },
+          "500": {
+            "$ref": "#/components/responses/InternalServerErrorResponse"
+          }
+        }
+      }
+    },
+    "/album-disks/{album_disk_id}/rate": {
+      "post": {
+        "parameters": [
+          {
+            "in": "path",
+            "name": "album_disk_id",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "in": "query",
+            "name": "rating",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            }
+          }
+        ],
+        "summary": "Rate a library item",
+        "tags": [
+          "Ratings and Flags"
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SuccessResponse"
+                },
+                "examples": {
+                  "success": {
+                    "summary": "rate",
+                    "value": {
+                      "success": "rating set to 5 for 12"
+                    }
+                  }
+                }
+              }
+            },
+            "description": "Success"
+          },
+          "400": {
+            "$ref": "#/components/responses/BadRequestErrorResponse"
+          },
+          "403": {
+            "$ref": "#/components/responses/ForbiddenErrorResponse"
+          },
+          "404": {
+            "$ref": "#/components/responses/NotFoundErrorResponse"
+          },
+          "410": {
+            "$ref": "#/components/responses/GoneErrorResponse"
+          },
+          "500": {
+            "$ref": "#/components/responses/InternalServerErrorResponse"
+          }
+        }
+      }
+    },
+    "/album-disks/{album_disk_id}/songs": {
+      "get": {
+        "parameters": [
+          {
+            "in": "path",
+            "name": "album_disk_id",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "in": "query",
+            "name": "offset",
+            "required": false,
+            "schema": {
+              "type": "integer"
+            }
+          },
+          {
+            "in": "query",
+            "name": "limit",
+            "required": false,
+            "schema": {
+              "type": "integer"
+            }
+          },
+          {
+            "in": "query",
+            "name": "cond",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "in": "query",
+            "name": "sort",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "summary": "Get songs for an album disk",
+        "tags": [
+          "Albums",
+          "Songs"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SongsResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/BadRequestErrorResponse"
+          },
+          "403": {
+            "$ref": "#/components/responses/ForbiddenErrorResponse"
+          },
+          "404": {
+            "$ref": "#/components/responses/NotFoundErrorResponse"
+          },
+          "410": {
+            "$ref": "#/components/responses/GoneErrorResponse"
+          },
+          "500": {
+            "$ref": "#/components/responses/InternalServerErrorResponse"
+          }
+        }
+      }
+    },
+    "/album-disks/search": {
+      "get": {
+        "description": "Provide operator plus one or more rule triplets. At minimum, rule_1, rule_1_operator, rule_1_input are required. Additional rules may be supplied as rule_2, rule_2_operator, rule_2_input, etc.",
+        "operationId": "album-disk-search",
+        "parameters": [
+          {
+            "description": "and, or (whether to match one rule or all)",
+            "in": "query",
+            "name": "operator",
+            "required": true,
+            "schema": {
+              "enum": [
+                "and",
+                "or"
+              ],
+              "type": "string"
+            }
+          },
+          {
+            "description": "0, 1 (random order of results; default to 0)",
+            "in": "query",
+            "name": "random",
+            "required": false,
+            "schema": {
+              "default": false,
+              "type": "boolean"
+            }
+          },
+          {
+            "description": "Return results starting from this index position",
+            "in": "query",
+            "name": "offset",
+            "required": false,
+            "schema": {
+              "default": 0,
+              "minimum": 0,
+              "type": "integer"
+            }
+          },
+          {
+            "description": "Maximum number of results to return",
+            "in": "query",
+            "name": "limit",
+            "required": false,
+            "schema": {
+              "default": 50,
+              "maximum": 500,
+              "minimum": 1,
+              "type": "integer"
+            }
+          },
+          {
+            "description": "Rule field/key for rule 1",
+            "in": "query",
+            "name": "rule_1",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "description": "Operator for rule 1",
+            "in": "query",
+            "name": "rule_1_operator",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "description": "Input value for rule 1",
+            "in": "query",
+            "name": "rule_1_input",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "description": "Rule field/key for rule 2",
+            "in": "query",
+            "name": "rule_2",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "description": "Operator for rule 2",
+            "in": "query",
+            "name": "rule_2_operator",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "description": "Input value for rule 2",
+            "in": "query",
+            "name": "rule_2_input",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "description": "Rule field/key for rule 3",
+            "in": "query",
+            "name": "rule_3",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "description": "Operator for rule 3",
+            "in": "query",
+            "name": "rule_3_operator",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "description": "Input value for rule 3",
+            "in": "query",
+            "name": "rule_3_input",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AlbumDisksResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/BadRequestErrorResponse"
+          },
+          "403": {
+            "$ref": "#/components/responses/ForbiddenErrorResponse"
+          },
+          "404": {
+            "$ref": "#/components/responses/NotFoundErrorResponse"
+          },
+          "410": {
+            "$ref": "#/components/responses/GoneErrorResponse"
+          },
+          "500": {
+            "$ref": "#/components/responses/InternalServerErrorResponse"
+          }
+        },
+        "summary": "Advanced search for album disks",
+        "tags": [
+          "Albums",
+          "Search"
+        ]
+      }
+    },
+    "/album-disks/stats": {
+      "get": {
+        "parameters": [
+          {
+            "description": "newest, highest, frequent, recent, forgotten, flagged, random",
+            "in": "query",
+            "name": "filter",
+            "required": true,
+            "schema": {
+              "default": "random",
+              "enum": [
+                "newest",
+                "highest",
+                "frequent",
+                "recent",
+                "forgotten",
+                "flagged",
+                "random"
+              ],
+              "type": "string"
+            }
+          },
+          {
+            "in": "query",
+            "name": "user_id",
+            "required": false,
+            "schema": {
+              "type": "integer"
+            }
+          },
+          {
+            "in": "query",
+            "name": "username",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "in": "query",
+            "name": "offset",
+            "required": false,
+            "schema": {
+              "type": "integer"
+            }
+          },
+          {
+            "in": "query",
+            "name": "limit",
+            "required": false,
+            "schema": {
+              "type": "integer"
+            }
+          },
+          {
+            "in": "query",
+            "name": "cond",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "in": "query",
+            "name": "sort",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AlbumDisksResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/BadRequestErrorResponse"
+          },
+          "403": {
+            "$ref": "#/components/responses/ForbiddenErrorResponse"
+          },
+          "404": {
+            "$ref": "#/components/responses/NotFoundErrorResponse"
+          },
+          "410": {
+            "$ref": "#/components/responses/GoneErrorResponse"
+          },
+          "500": {
+            "$ref": "#/components/responses/InternalServerErrorResponse"
+          }
+        },
+        "summary": "Get album disk stats",
+        "tags": [
+          "Browsing, Indexes and Lists"
+        ]
+      }
+    },
     "/albums": {
       "get": {
         "parameters": [
@@ -4513,6 +5422,95 @@
         "tags": [
           "Artwork"
         ]
+      }
+    },
+    "/albums/{album_id}/disks": {
+      "get": {
+        "parameters": [
+          {
+            "in": "path",
+            "name": "album_id",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "in": "query",
+            "name": "include",
+            "required": false,
+            "schema": {
+              "enum": [
+                "songs"
+              ],
+              "type": "string"
+            },
+            "description": "songs (include child objects in the response)"
+          },
+          {
+            "in": "query",
+            "name": "offset",
+            "required": false,
+            "schema": {
+              "type": "integer"
+            }
+          },
+          {
+            "in": "query",
+            "name": "limit",
+            "required": false,
+            "schema": {
+              "type": "integer"
+            }
+          },
+          {
+            "in": "query",
+            "name": "cond",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "in": "query",
+            "name": "sort",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "summary": "Get the disks of an album",
+        "tags": [
+          "Albums"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AlbumDisksResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/BadRequestErrorResponse"
+          },
+          "403": {
+            "$ref": "#/components/responses/ForbiddenErrorResponse"
+          },
+          "404": {
+            "$ref": "#/components/responses/NotFoundErrorResponse"
+          },
+          "410": {
+            "$ref": "#/components/responses/GoneErrorResponse"
+          },
+          "500": {
+            "$ref": "#/components/responses/InternalServerErrorResponse"
+          }
+        }
       }
     },
     "/albums/{album_id}/fetch-metadata": {
@@ -16702,6 +17700,48 @@
         "summary": "Send skip command to localplay",
         "tags": [
           "Playback Control"
+        ]
+      }
+    },
+    "/localplay/songs": {
+      "get": {
+        "parameters": [],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/LocalplaySongsResponse"
+                },
+                "examples": {
+                  "localplay_songs": {
+                    "summary": "localplay songs",
+                    "value": {
+                      "localplay_songs": [
+                        {
+                          "id": 3,
+                          "raw": "http://music.example.com/play/index.php?ssid=...&oid=3",
+                          "vlid": 1,
+                          "oid": 3,
+                          "name": "Iron Maiden - The Trooper",
+                          "link": "http://music.example.com/song.php?action=show_song&song_id=3",
+                          "track": 1
+                        }
+                      ]
+                    }
+                  }
+                }
+              }
+            },
+            "description": "The current localplay playlist"
+          },
+          "400": {
+            "$ref": "#/components/responses/ErrorResponse"
+          }
+        },
+        "summary": "Get the songs in the localplay instance",
+        "tags": [
+          "Localplay"
         ]
       }
     },
@@ -82394,10 +83434,23 @@
             "schema": {
               "default": "song",
               "enum": [
-                "song",
+                "artist",
+                "album",
+                "playlist",
                 "podcast_episode",
+                "search",
+                "song",
                 "video"
               ],
+              "type": "string"
+            }
+          },
+          {
+            "description": "Optional parent object id to pick from (e.g. an artist, album or playlist); a `smart_` prefixed id selects a smartlist",
+            "in": "query",
+            "name": "filter",
+            "required": false,
+            "schema": {
               "type": "string"
             }
           },

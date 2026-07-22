@@ -65,6 +65,7 @@ abstract class AbstractGetArtMethod implements MethodInterface
         'podcast',
         'search',
         'smartlist',
+        'album_disk',
         'user',
         'video',
     ];
@@ -130,8 +131,11 @@ abstract class AbstractGetArtMethod implements MethodInterface
         $size     = (string) ($input['size'] ?? 'original');
         $fallback = (array_key_exists('fallback', $input) && (int) $input['fallback'] === 1);
 
-        // confirm the correct data
-        if (!in_array(strtolower($type), self::TYPES)) {
+        // confirm the correct data (album_disk is api version 8 only)
+        if (
+            !in_array(strtolower($type), self::TYPES)
+            || ($apiVersion < 8 && strtolower($type) === 'album_disk')
+        ) {
             $response->getBody()->write(
                 $output->error(
                     $apiVersion,
@@ -211,6 +215,13 @@ abstract class AbstractGetArtMethod implements MethodInterface
             }
 
             return new Art($item['object_id'], $item['object_type']->value);
+        }
+
+        if ($type === 'album_disk' && !Art::has_db($objectId, $type)) {
+            // a disk usually inherits the album artwork rather than carrying its own
+            $albumDisk = $this->modelFactory->createAlbumDisk($objectId);
+
+            return new Art($albumDisk->album_id, 'album');
         }
 
         if ($type === 'playlist' && !Art::has_db($objectId, $type)) {

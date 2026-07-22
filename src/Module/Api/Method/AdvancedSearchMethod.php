@@ -134,6 +134,16 @@ final class AdvancedSearchMethod implements MethodInterface
             return $response;
         }
 
+        // older versions have no album_disk formatter, so they get an empty result rather than
+        // album disks rendered as songs
+        if ($apiVersion < 8 && strtolower($type) === 'album_disk') {
+            $response->getBody()->write(
+                $output->writeEmpty($apiVersion, $type)
+            );
+
+            return $response;
+        }
+
         $data           = $input;
         $data['offset'] = 0;
         $data['limit']  = 0;

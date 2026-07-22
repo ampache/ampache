@@ -43,6 +43,7 @@ SOURCES: dict[str, Path] = {
     "preference_builder": REPO_ROOT / "src" / "Module" / "Api" / "Method" / "PreferenceItemBuilder.php",
     "api": REPO_ROOT / "src" / "Module" / "Api" / "Api.php",
     "search_model": REPO_ROOT / "src" / "Repository" / "Model" / "Search.php",
+    "localplay": REPO_ROOT / "src" / "Module" / "Playback" / "Localplay" / "LocalPlay.php",
 }
 
 # ---------------------------------------------------------------------------
@@ -55,6 +56,7 @@ SOURCES: dict[str, Path] = {
 # "source" selects a SOURCES file other than the default Json8_Data.
 TYPES: dict[str, dict[str, str]] = {
     "album": {"builder": "albums_array", "object": "AlbumObject", "list": "AlbumsResponse", "key": "album"},
+    "album_disk": {"builder": "album_disks_array", "object": "AlbumDiskObject", "list": "AlbumDisksResponse", "key": "album_disk"},
     "song": {"builder": "songs_array", "object": "SongObject", "list": "SongsResponse", "key": "song"},
     "artist": {"builder": "artists_array", "object": "ArtistObject", "list": "ArtistsResponse", "key": "artist"},
     "genre": {"builder": "genres_array", "object": "GenreObject", "list": "GenresResponse", "key": "genre"},
@@ -87,6 +89,8 @@ TYPES: dict[str, dict[str, str]] = {
     # handshake writes Api::server_details() straight out; ping wraps the same fields (see build_ping_schema).
     "handshake": {"builder": "server_details", "object": "HandshakeResponse", "list": "", "key": "", "source": "api"},
     # the advanced-search rule list a client needs to build a search, from Search::get_rule_types()
+    # localplay_songs writes LocalPlay::get() straight out via objectArray(), in a bare envelope
+    "localplay_song": {"builder": "get", "object": "LocalplaySongObject", "list": "LocalplaySongsResponse", "key": "localplay_songs", "envelope": "bare", "source": "localplay"},
     "search_rule": {"builder": "get_rule_types", "object": "SearchRuleObject", "list": "SearchRulesResponse", "key": "rule", "envelope": "bare", "source": "search_model"},
 }
 
@@ -117,11 +121,23 @@ def build_ping_schema(handshake: dict) -> dict:
 # a $ref to an already-defined schema (DRY reuse, mirroring the Folder schemas).
 # (object schema name, property name) -> referenced schema name.
 # Only applied when the property is an array; its items become the $ref.
+# Prose for a property whose meaning is not obvious from its type alone. Keyed the same way as
+# REF_REUSE; applied after the shape is built so it survives regeneration (these used to be
+# hand-edits in openapi.json, which the generator then silently reverted).
+PROPERTY_DESCRIPTIONS: dict[tuple[str, str], str] = {
+    ("PlaylistObject", "items"): (
+        "The expanded song list when songs are included, otherwise the total song count. Playlists "
+        "are song lists here: a playlist may physically hold other media types, but this method "
+        "reports only songs so that real playlists and song smartlists share one shape."
+    ),
+}
+
 REF_REUSE: dict[tuple[str, str], str] = {
     # These properties embed another object's full shape inline (verified
     # field-for-field identical to the target builder), so reference the shared
     # schema instead of duplicating it, mirroring the Folder schemas.
     ("AlbumObject", "tracks"): "SongObject",
+    ("AlbumDiskObject", "tracks"): "SongObject",
     ("ArtistObject", "albums"): "AlbumObject",
     ("ArtistObject", "songs"): "SongObject",
     ("PodcastObject", "podcast_episode"): "PodcastEpisodeObject",
@@ -138,9 +154,13 @@ WIRING: dict[str, str] = {
     "artist_albums": "AlbumsResponse",
     "genre_albums": "AlbumsResponse",
     "album": "AlbumObject",
+    "album_disks": "AlbumDisksResponse",
+    "album_disk": "AlbumDiskObject",
     # Songs
     "songs": "SongsResponse",
     "album_songs": "SongsResponse",
+    "album_disk_songs": "SongsResponse",
+    "localplay_songs": "LocalplaySongsResponse",
     "artist_songs": "SongsResponse",
     "genre_songs": "SongsResponse",
     "license_songs": "SongsResponse",
@@ -294,6 +314,7 @@ BINARY_RESPONSES: dict[str, dict] = {
 # The type mappings mirror JsonOutput::searchResult() and the StatsMethod/GetSimilarMethod matches.
 WIRING_BY_PARAM: dict[tuple[str, str, str], str] = {
     ("search", "type", "album"): "AlbumsResponse",
+    ("search", "type", "album_disk"): "AlbumDisksResponse",
     ("search", "type", "artist"): "ArtistsResponse",
     ("search", "type", "album_artist"): "ArtistsResponse",
     ("search", "type", "song_artist"): "ArtistsResponse",
@@ -307,6 +328,7 @@ WIRING_BY_PARAM: dict[tuple[str, str, str], str] = {
     ("search", "type", "user"): "UsersResponse",
     ("search", "type", "video"): "VideosResponse",
     ("stats", "type", "album"): "AlbumsResponse",
+    ("stats", "type", "album_disk"): "AlbumDisksResponse",
     ("stats", "type", "artist"): "ArtistsResponse",
     ("stats", "type", "playlist"): "PlaylistsResponse",
     ("stats", "type", "podcast"): "PodcastsResponse",
@@ -559,6 +581,15 @@ def apply_ref_reuse(object_name: str, schema: dict) -> None:
         node = schema.get("properties", {}).get(prop)
         if isinstance(node, dict) and node.get("type") == "array":
             node["items"] = {"$ref": f"#/components/schemas/{target}"}
+
+
+def apply_property_descriptions(object_name: str, schema: dict) -> None:
+    for (owner, prop), description in PROPERTY_DESCRIPTIONS.items():
+        if owner != object_name:
+            continue
+        node = schema.get("properties", {}).get(prop)
+        if isinstance(node, dict):
+            node["description"] = description
 
 
 def build_list_response(key: str, object_name: str, envelope: str = "standard") -> dict:
@@ -832,6 +863,7 @@ def build_schemas(sources: dict[str, dict[str, str]]) -> dict[str, dict]:
         schemas[cfg["object"]] = obj
     for name, schema in schemas.items():
         apply_ref_reuse(name, schema)
+        apply_property_descriptions(name, schema)
     for cfg in TYPES.values():
         if cfg.get("list"):
             schemas[cfg["list"]] = build_list_response(

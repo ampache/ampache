@@ -14,6 +14,7 @@ This is passed as a type argument and will only return this object in results
 
 * [song](https://ampache.org/api/advanced-search/song-advanced-search)
 * [album](https://ampache.org/api/advanced-search/album-advanced-search)
+* album_disk (**NOTE** API8 only; earlier versions have no album disk formatter and return an empty result)
 * [artist](https://ampache.org/api/advanced-search/artist-advanced-search)
 * song_artist (**NOTE** same rules as artist but only returns song artists)
 * album_artist (**NOTE** same rules as artist but only returns album artists)

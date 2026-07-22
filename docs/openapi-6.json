@@ -3,7 +3,7 @@
   "info": {
     "title": "Ampache REST API (v6)",
     "version": "6.9.2",
-    "description": "OpenAPI 3.0 specification for the Ampache REST API, pinned to API version 6. API6 is served by both Ampache7 and Ampache8 and describes only the surface both honour: the API8-only paths (/folder, /folders, /playlists/{playlist_id}/remove) are absent, as is /random (served by API6 on Ampache8 but not Ampache7). Unlike API version 8, API versions 3-6 always return HTTP 200 and carry any error in the response body, so only success responses are documented. Response schemas come from the Json6_Data builders. Maintained by hand and guarded by tests/Module/Api/Api6SpecConformanceTest.php, which fails if the running code drifts from this document.",
+    "description": "OpenAPI 3.0 specification for the Ampache REST API, pinned to API version 6. API6 is served by both Ampache7 and Ampache8 and describes only the surface both honour: the API8-only paths (/folder, /folders, /playlists/{playlist_id}/remove) are absent, as is /random (served by API6 on Ampache8 but not Ampache7). Unlike API version 8, API versions 3-6 always return HTTP 200 and carry any error in the response body, so only success responses are documented. Response schemas come from the Json6_Data builders. Maintained by hand and guarded by tests/Module/Api/Api6SpecConformanceTest.php, which fails if the running code drifts from this document. advanced_search/search with type=album_disk is not documented here: album disks have no API6 formatter, so API6 returns an empty result for that type rather than the song-shaped rows it used to emit. Album disks are API8 only.",
     "license": {
       "name": "AGPL-3.0",
       "url": "https://www.gnu.org/licenses/agpl-3.0.html"

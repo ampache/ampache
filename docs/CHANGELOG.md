@@ -42,6 +42,7 @@ You can downgrade to Ampache7 if you try this out and have issues, using the cli
   * `folder` added to the `object_type` enum on several tables (`cache_object_count`, `cache_object_count_run`, `image`, `object_count`, and others)
 * API
   * v8 API responses are now fully documented: `docs/openapi.json` carries response schemas for every data type, and `docs/API-JSON-methods.md`/`docs/API-XML-methods.md` show per-method response field tables (type, nullable, optional)
+  * Album disks are available to API8 clients (`album_disks`, `album_disk`, `album_disk_songs`, plus `index`, `list`, `browse`, `stats` and `get_art` support). With the `album_group` preference disabled the web interface browses album disks, and until now the API had no way to reach them
 * Testing
   * Test suite significantly expanded with dozens of new test files under `tests/Module` and `tests/Repository`
 * Playlist art mosaic

@@ -34,6 +34,17 @@ API version **8** joins the concurrent live surfaces (3/4/5/6 — version 7 rema
   * `stream` and `download` are documented as the `302` redirect they actually return (`download` also documents the `zip=1` archive body), and `get_art` as an image body, instead of an undescribed `200`. Each names the headers it sets: `Location` for the redirects, `Content-Type`/`Content-Disposition` for the zip, and `Content-Type`/`Content-Length`/`Access-Control-Allow-Origin` for art
   * Response schemas for `search`, `stats`, `get_similar`, `followers`, `following`, `localplay`, `get_lyrics`, `get_external_metadata`, `playlist_hash`, `player`, `register` and every create endpoint (`bookmark_create`, `catalog_create`, `live_stream_create`, `playlist_create`, `podcast_create`, `share_create`) - 145 operations now carry a schema, leaving only the binary media endpoints undocumented
   * New `resources/scripts/api-docs/check_openapi_examples.py`, which fails when an inline example in `docs/openapi.json` contradicts the schema its operation is wired to
+  * Response schemas for `album_disks`/`album_disk`/`album_disk_songs` and `localplay_songs`, generated from the `Json8_Data::album_disks_array()` and `LocalPlay::get()` docblocks; every documented path now carries an `x-rpc-mappings` entry
+  * `random` documents the `filter` parameter and all seven `type` values it accepts (`artist`, `album`, `playlist`, `podcast_episode`, `search`, `song`, `video`); only three were listed
+* `album_disk` (API8 only)
+  * New `album_disks` action returning the disks of an album (`filter` is the album id, the counterpart of `album_songs`)
+  * New `album_disk` action returning a single album disk, and `album_disk_songs` returning the songs on one disk
+  * `album_disk` accepted by `index`, `list`, `browse`, `stats` and `get_art`. `rate` and `flag` already accepted it
+  * Album disks are the browsing unit whenever the per-user `album_group` preference is off, so a client can now reach the same objects the web interface shows. `albums` and `album` are unchanged and never vary with that preference
+* REST
+  * Multi-word resources and actions may be spelled with a dash anywhere in a path (`album-disks/{id}/songs`); the dashed form is folded onto the canonical snake_case action by a single rule rather than a per-name alias list
+  * New `albums/{album_id}/disks`, `album-disks/{album_disk_id}`, `album-disks/{album_disk_id}/songs`, plus `art`/`flag`/`rate`/`search`/`stats` on `album-disks`
+  * New `localplay/songs` path for the existing `localplay_songs` action
 
 ### Changed (800000)
 
@@ -59,6 +70,11 @@ API version **8** joins the concurrent live surfaces (3/4/5/6 — version 7 rema
 
 * REST
   * `GET smartlists/search` is no longer documented. `smartlist` is not one of `Search::VALID_TYPES`, so the path could only ever return a `Bad Request` error. Use `playlists/search` (searches cover both playlists and smartlists)
+
+### Fixed (800000)
+
+* API3, API4, API5, API6
+  * advanced_search: `type=album_disk` returned album disk ids rendered as songs, so a client read a disk id as a song id. Those versions have no album disk formatter, so they now return an empty result instead. API8 returns the album disks. **NOTE** this also applies to Ampache7, which serves the same API6
 
 ## API 6.9.2 Build 2
 

@@ -255,6 +255,9 @@ All Data methods return HTTP 200 responses
 * albums
 * album
 * album_songs
+* album_disks **Ampache 8.0.0+**
+* album_disk **Ampache 8.0.0+**
+* album_disk_songs **Ampache 8.0.0+**
 * artists
 * artist
 * artist_albums
