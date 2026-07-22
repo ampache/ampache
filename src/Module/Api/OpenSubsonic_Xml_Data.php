@@ -319,6 +319,15 @@ class OpenSubsonic_Xml_Data
         $xartist->addAttribute('albumCount', (string) $artist->album_count);
 
         self::_setIfStarred($xartist, 'artist', $artist->id);
+
+        // [OPENSUBSONIC] roles: repeated <role> children (see _addArtistArray).
+        if ($artist->album_count > 0) {
+            $xartist->addChild('role', 'albumartist');
+        }
+        if ($artist->song_count > 0) {
+            $xartist->addChild('role', 'artist');
+        }
+
         if ($albums) {
             $allalbums = self::getAlbumRepository()->getAlbumByArtist($artist->id);
             foreach ($allalbums as $album_id) {
@@ -1451,6 +1460,17 @@ class OpenSubsonic_Xml_Data
             $xartist->addAttribute('albumCount', (string) $artist['album_count']);
         }
         self::_setIfStarred($xartist, 'artist', $artist['id']);
+
+        // [OPENSUBSONIC] roles: repeated <role> children so clients can tell an
+        // album artist apart from a song-only artist regardless of the
+        // `subsonic_force_album_artist` server preference. Always emitted (may be
+        // empty) as required for OpenSubsonic-supported fields.
+        if ((int) ($artist['album_count'] ?? 0) > 0) {
+            $xartist->addChild('role', 'albumartist');
+        }
+        if ((int) ($artist['song_count'] ?? 0) > 0) {
+            $xartist->addChild('role', 'artist');
+        }
     }
 
     /**

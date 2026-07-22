@@ -1937,6 +1937,15 @@ class OpenSubsonic_Json_Data
             $json['starred'] = date("Y-m-d\TH:i:s\Z", $result[1]);
         }
 
+        // [OPENSUBSONIC] roles is an `ArtistID3` field (see _getArtistRoles);
+        // always returned for that type, may be empty.
+        if ($AlbumID3) {
+            $json['roles'] = self::_getArtistRoles([
+                'album_count' => $artist->album_count,
+                'song_count' => $artist->song_count,
+            ]);
+        }
+
         if (!$AlbumID3) {
             $rating      = new Rating($artist->id, 'artist');
             $user_rating = ($rating->get_user_rating() ?? 0);
@@ -2013,9 +2022,39 @@ class OpenSubsonic_Json_Data
             $json['starred'] = date("Y-m-d\TH:i:s\Z", $result[1]);
         }
 
+        // [OPENSUBSONIC] roles: expose which roles this artist has so clients can
+        // decide whether to show it in an album-artist oriented view. This lets a
+        // client tell an album artist apart from a song-only artist regardless of
+        // the `subsonic_force_album_artist` server preference.
+        $json['roles'] = self::_getArtistRoles($artist);
+
         $artist_list[] = $json;
 
         return $artist_list;
+    }
+
+    /**
+     * _getArtistRoles
+     *
+     * Build the OpenSubsonic `roles` list for an artist row from get_id_arrays().
+     * `albumartist` when the artist is credited on at least one album, `artist`
+     * when it is credited on at least one song. The field is always returned
+     * (possibly empty) as required for OpenSubsonic-supported fields.
+     *
+     * @param array{album_count?: int, song_count?: int} $artist
+     * @return list<string>
+     */
+    private static function _getArtistRoles(array $artist): array
+    {
+        $roles = [];
+        if ((int) ($artist['album_count'] ?? 0) > 0) {
+            $roles[] = 'albumartist';
+        }
+        if ((int) ($artist['song_count'] ?? 0) > 0) {
+            $roles[] = 'artist';
+        }
+
+        return $roles;
     }
 
     /**
@@ -2051,6 +2090,12 @@ class OpenSubsonic_Json_Data
         if (is_array($result)) {
             $json['starred'] = date("Y-m-d\TH:i:s\Z", $result[1]);
         }
+
+        // [OPENSUBSONIC] roles (see _getArtistRoles); always returned, may be empty.
+        $json['roles'] = self::_getArtistRoles([
+            'album_count' => $artist->album_count,
+            'song_count' => $artist->song_count,
+        ]);
 
         return $json;
     }
