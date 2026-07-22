@@ -23,7 +23,7 @@ declare(strict_types=1);
  *
  */
 
-namespace Ampache\Module\Api\Method;
+namespace Ampache\Module\Api\Method\Api5;
 
 use Ampache\Config\ConfigContainerInterface;
 use Ampache\MockeryTestCase;
@@ -33,27 +33,15 @@ use Ampache\Module\Api\Output\ApiOutputInterface;
 use Ampache\Repository\Model\User;
 use Mockery\MockInterface;
 use Override;
-use PHPUnit\Framework\Attributes\DataProvider;
 use Psr\Http\Message\ResponseInterface;
+use Psr\Http\Message\StreamFactoryInterface;
 use Psr\Http\Message\StreamInterface;
 
-class AdvancedSearchMethodTest extends MockeryTestCase
+class AdvancedSearch5MethodTest extends MockeryTestCase
 {
     private ConfigContainerInterface|MockInterface|null $configContainer;
-    private ?AdvancedSearchMethod $subject;
-
-    /**
-     * This method is registered for api versions 6 and 8 only; the older versions keep their own
-     * `AdvancedSearch{3,4,5}Method`
-     *
-     * @return array<string, array{0: int}>
-     */
-    public static function olderApiVersionProvider(): array
-    {
-        return [
-            'api6' => [6],
-        ];
-    }
+    private StreamFactoryInterface|MockInterface|null $streamFactory;
+    private ?AdvancedSearch5Method $subject;
 
     public function testCheckRulesThrowsExceptionIfRuleIsMissing(): void
     {
@@ -64,11 +52,10 @@ class AdvancedSearchMethodTest extends MockeryTestCase
     }
 
     /**
-     * album_disk is searchable but only api8 can render it. Older versions used to fall through to the
-     * song formatter, so a client read album_disk ids as song ids.
+     * album_disk is searchable but api version 5 has no formatter for it, so it used to fall through
+     * to the song output and hand back album disk ids as song ids
      */
-    #[DataProvider(methodName: 'olderApiVersionProvider')]
-    public function testHandleReturnsEmptyResultForAlbumDiskBelowApi8(int $apiVersion): void
+    public function testHandleReturnsEmptyResultForAlbumDisk(): void
     {
         $gatekeeper = $this->mock(GatekeeperInterface::class);
         $response   = $this->mock(ResponseInterface::class);
@@ -78,18 +65,23 @@ class AdvancedSearchMethodTest extends MockeryTestCase
 
         $result = 'empty-result';
 
+        $this->configContainer->shouldReceive('get')
+            ->andReturnTrue();
+
         $output->shouldReceive('writeEmpty')
-            ->with($apiVersion, 'album_disk')
+            ->with(5, 'album_disk')
             ->once()
             ->andReturn($result);
 
-        $response->shouldReceive('getBody')
-            ->withNoArgs()
+        $this->streamFactory->shouldReceive('createStream')
+            ->with($result)
             ->once()
             ->andReturn($stream);
-        $stream->shouldReceive('write')
-            ->with($result)
-            ->once();
+
+        $response->shouldReceive('withBody')
+            ->with($stream)
+            ->once()
+            ->andReturnSelf();
 
         $this->assertSame(
             $response,
@@ -106,28 +98,20 @@ class AdvancedSearchMethodTest extends MockeryTestCase
                     'auth' => 'some-auth',
                 ],
                 $user,
-                $apiVersion
+                5
             )
         );
-    }
-
-    public function testIsSearchableTypeAllowsAlbumDisk(): void
-    {
-        $this->assertTrue($this->subject->isSearchableType('album_disk'));
-    }
-
-    public function testIsSearchableTypeReturnsFalseForUnknownType(): void
-    {
-        $this->assertFalse($this->subject->isSearchableType('not-a-type'));
     }
 
     #[Override]
     protected function setUp(): void
     {
         $this->configContainer = $this->mock(ConfigContainerInterface::class);
+        $this->streamFactory   = $this->mock(StreamFactoryInterface::class);
 
-        $this->subject = new AdvancedSearchMethod(
-            $this->configContainer
+        $this->subject = new AdvancedSearch5Method(
+            $this->configContainer,
+            $this->streamFactory
         );
     }
 }
