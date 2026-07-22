@@ -113,7 +113,7 @@ class AmpacheStreamTime extends AmpachePlugin implements PluginStreamControlInte
         }
 
         // if using free software only you can't use this plugin
-        if (AmpConfig::get('statistical_graphs') && is_dir(__DIR__ . '/../../../vendor/szymach/c-pchart/src/Chart/')) {
+        if (AmpConfig::get('statistical_graphs')) {
             // Calculate all media time
             $next_total = 0;
             foreach ($media_ids as $media_id) {

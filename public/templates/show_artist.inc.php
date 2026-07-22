@@ -254,7 +254,7 @@ if (Access::check_function(AccessFunctionEnum::FUNCTION_BATCH_DOWNLOAD) && $zipH
         </li>
 <?php }
 if ((!empty($owner_id) && $owner_id == $current_user?->getId()) || Access::check(AccessTypeEnum::INTERFACE, AccessLevelEnum::CONTENT_MANAGER)) { ?>
-            <?php if (AmpConfig::get('statistical_graphs') && is_dir(__DIR__ . '/../../vendor/szymach/c-pchart/src/Chart/')) { ?>
+            <?php if (AmpConfig::get('statistical_graphs')) { ?>
                 <li>
                     <a href="<?php echo $web_path; ?>/stats.php?action=graph&object_type=artist&object_id=<?php echo $artist->id; ?>">
                         <?php echo Ui::get_material_symbol('bar_chart', T_('Graphs')); ?>

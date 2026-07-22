@@ -6,7 +6,7 @@
 ; This value is used to detect if this config file is up to date
 ; this is compared against a constant called CONFIG_VERSION
 ; that is located in src/Config/Init/InitializationHandlerConfig.php
-config_version = 91
+config_version = 94
 
 ; Defines the default timezone used by the date functions
 ; Uses the same strings as the default date.timezone (https://php.net/date.timezone)
@@ -723,18 +723,13 @@ playlist_art = "true"
 ; DEFAULT: "true"
 playlist_art_mosaic = "true"
 
-; Statistical Graphs * Requires PHP-GD *
-; Set this to true if you want Ampache to generate statistical graphs on usages / users.
-; This is false by default due to issues around the licensing of c-pchart.
-;  https://github.com/ampache/ampache/issues/1515
-;  http://www.pchart.net/license
-; REFERENCE: https://ampache.org/docs/help/troubleshooting/chart-faq
-; You can enable c-chart with the following command:
-;  composer install --dev
-; Or add it as a non-dev requirement with:
-;  composer require szymach/c-pchart "3.*"
-; DEFAULT: "false"
-;statistical_graphs = "true"
+; Statistical Graphs
+; Set this to false if you don't want Ampache to generate statistical graphs on usages / users.
+; The graph queries read the whole object_count table, so turning this off is worth doing on a
+; large catalog if you never look at the charts.
+; Charts are drawn by goat1000/svggraph, a normal (non-dev) requirement, so nothing extra to install.
+; DEFAULT: "true"
+statistical_graphs = "true"
 
 ; Stats Consolidation Threshold
 ; Number of days of detailed play history to keep in the object_count table.
@@ -1250,6 +1245,19 @@ site_charset = "UTF-8"
 ; If you don't have an email server, make sure to enable user_no_email_confirm below
 ; DEFAULT: "false"
 ;allow_public_registration = "true"
+
+; Allow users to reset a forgotten password by email.
+; Turning this off hides the "Lost Password" link AND rejects lostpassword.php,
+; so a stranger can't trigger reset mail to your users by posting to it directly.
+; Only relevant on a server with mail enabled; without mail the feature is already off.
+; DEFAULT: "true"
+;allow_lost_password = "false"
+
+; Show the "Mini player" button on the login form, which sends you to the
+; cut down player at /m/ after logging in instead of the full interface.
+; This only hides the button; /m/ stays reachable by url either way.
+; DEFAULT: "true"
+;show_mini_player = "false"
 
 ; Require Captcha Text on Image confirmation
 ; Turning this on requires the user to correctly

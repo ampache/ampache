@@ -34,19 +34,13 @@ use Ampache\Repository\Model\Catalog;
 use Ampache\Repository\Model\Plugin;
 use Ampache\Repository\Model\User;
 use Ampache\Repository\UserRepositoryInterface;
-use CpChart\Data;
-use CpChart\Image;
+use Goat1000\SVGGraph\SVGGraph;
 
 class Graph
 {
-    public function __construct()
-    {
-        if (AmpConfig::get('statistical_graphs') && is_dir(__DIR__ . '/../../../vendor/szymach/c-pchart/src/Chart/')) {
-            return;
-        }
-
-        debug_event(self::class, 'Access denied, statistical graph disabled.', 1);
-    }
+    // y-axis label formats
+    private const string FORMAT_BYTES  = 'bytes';
+    private const string FORMAT_METRIC = 'metric';
 
     /**
      */
@@ -84,7 +78,7 @@ class Graph
             $total += $value;
         }
 
-        return $total;
+        return (int) $total;
     }
 
     /**
@@ -97,7 +91,7 @@ class Graph
             $total += $value;
         }
 
-        return $total;
+        return (int) $total;
     }
 
     /**
@@ -110,7 +104,7 @@ class Graph
             $total += $value;
         }
 
-        return $total;
+        return (int) $total;
     }
 
     /**
@@ -125,10 +119,10 @@ class Graph
         int     $width = 0,
         int     $height = 0,
     ): void {
-        $MyData = new Data();
+        $series = [];
         $this->get_catalog_all_pts(
             'get_catalog_files_pts',
-            $MyData,
+            $series,
             $catalog_id,
             $object_type,
             $object_id,
@@ -137,10 +131,7 @@ class Graph
             $zoom
         );
 
-        $MyData->setAxisName(0, "Files");
-        $MyData->setAxisDisplay(0, AXIS_FORMAT_METRIC);
-
-        $this->render_graph('Files', $MyData, $zoom, $width, $height);
+        $this->render_graph('Files', $series, self::FORMAT_METRIC, '', $zoom, $width, $height);
     }
 
     /**
@@ -155,10 +146,10 @@ class Graph
         int     $width = 0,
         int     $height = 0,
     ): void {
-        $MyData = new Data();
+        $series = [];
         $this->get_catalog_all_pts(
             'get_catalog_size_pts',
-            $MyData,
+            $series,
             $catalog_id,
             $object_type,
             $object_id,
@@ -167,11 +158,7 @@ class Graph
             $zoom
         );
 
-        $MyData->setAxisName(0, "Size");
-        $MyData->setAxisUnit(0, "B");
-        $MyData->setAxisDisplay(0, AXIS_FORMAT_CUSTOM, "pGraph_Yformat_bytes");
-
-        $this->render_graph('Size', $MyData, $zoom, $width, $height);
+        $this->render_graph('Size', $series, self::FORMAT_BYTES, 'Size', $zoom, $width, $height);
     }
 
     /**
@@ -186,13 +173,10 @@ class Graph
         int     $width = 0,
         int     $height = 0,
     ): void {
-        $MyData = new Data();
-        $this->get_user_all_pts('get_user_bandwidth_pts', $MyData, $user_id, $object_type, $object_id, $start_date, $end_date, $zoom);
+        $series = [];
+        $this->get_user_all_pts('get_user_bandwidth_pts', $series, $user_id, $object_type, $object_id, $start_date, $end_date, $zoom);
 
-        $MyData->setAxisName(0, "Bandwidth");
-        $MyData->setAxisDisplay(0, AXIS_FORMAT_TRAFFIC);
-
-        $this->render_graph('Bandwidth', $MyData, $zoom, $width, $height);
+        $this->render_graph('Bandwidth', $series, self::FORMAT_BYTES, 'Bandwidth', $zoom, $width, $height);
     }
 
     /**
@@ -207,10 +191,10 @@ class Graph
         int     $width = 0,
         int     $height = 0,
     ): void {
-        $MyData = new Data();
+        $series = [];
         $this->get_user_all_pts(
             'get_user_hits_pts',
-            $MyData,
+            $series,
             $user_id,
             $object_type,
             $object_id,
@@ -219,17 +203,16 @@ class Graph
             $zoom
         );
 
-        $MyData->setAxisName(0, "Hits");
-        $MyData->setAxisDisplay(0, AXIS_FORMAT_METRIC);
-
-        $this->render_graph('Hits', $MyData, $zoom, $width, $height);
+        $this->render_graph('Hits', $series, self::FORMAT_METRIC, 'Hits', $zoom, $width, $height);
     }
 
     /**
+     * @param array<string, array<int, int|float>> $series series name => [unix timestamp => value]
+     * @return array<int, int|float>
      */
     protected function get_all_pts(
         string  $fct,
-        Data    $MyData,
+        array   &$series,
         int     $user_id = 0,
         ?string $object_type = null,
         int     $object_id = 0,
@@ -239,18 +222,15 @@ class Graph
         bool    $show_total = true,
     ): array {
         $values = $this->get_all_type_pts($fct, $user_id, $object_type, $object_id, $start_date, $end_date, $zoom);
-        foreach ($values as $date => $value) {
-            if ($show_total) {
-                $MyData->addPoints($value, "Total");
-            }
-
-            $MyData->addPoints($date, "TimeStamp");
+        if ($show_total) {
+            $series['Total'] = $values;
         }
 
         return $values;
     }
 
     /**
+     * @return array<int, int|float> unix timestamp => value
      */
     protected function get_all_type_pts(
         string  $fct,
@@ -287,10 +267,11 @@ class Graph
     }
 
     /**
+     * @param array<string, array<int, int|float>> $series series name => [unix timestamp => value]
      */
     protected function get_catalog_all_pts(
         string  $fct,
-        Data    $MyData,
+        array   &$series,
         int     $catalog_id = 0,
         ?string $object_type = null,
         int     $object_id = 0,
@@ -298,7 +279,7 @@ class Graph
         ?int    $end_date = null,
         string  $zoom = 'day',
     ): void {
-        $values = $this->get_all_pts($fct, $MyData, $catalog_id, $object_type, $object_id, $start_date, $end_date, $zoom, false);
+        $values = $this->get_all_pts($fct, $series, $catalog_id, $object_type, $object_id, $start_date, $end_date, $zoom, false);
 
         // Only display other users if the graph is not for a specific catalog
         if ($catalog_id === 0) {
@@ -310,11 +291,12 @@ class Graph
                 }
 
                 $catalog_values = $this->get_all_type_pts($fct, $catalog_id, $object_type, $object_id, $start_date, $end_date, $zoom);
-                foreach ($values as $date => $value) {
-                    $value = array_key_exists($date, $catalog_values) ? $catalog_values[$date] : 0;
-
-                    $MyData->addPoints($value, (string) $catalog->name);
+                $points         = [];
+                foreach (array_keys($values) as $date) {
+                    $points[$date] = $catalog_values[$date] ?? 0;
                 }
+
+                $series[(string) $catalog->name] = $points;
             }
         }
     }
@@ -356,9 +338,13 @@ class Graph
         $start_date ??= ($end_date ?? time()) - 864000;
         $dateformat = $this->get_sql_date_format("`" . $object_type . "`.`addition_time`", $zoom);
         $where      = $this->get_catalog_sql_where($object_type, $object_id, $catalog_id, $start_date, $end_date);
-        $sql        = ($object_type === 'album')
-            ? "SELECT " . $dateformat . " AS `zoom_date`, ((SELECT SUM(`song`.`size`) AS `size` FROM `album` `t2` LEFT JOIN `song` ON `t2`.`id` = `song`.`id` WHERE `t2`.`addition_time` < `zoom_date`)) AS `storage` FROM `album` " . $where . " GROUP BY " . $dateformat
-            : "SELECT " . $dateformat . " AS `zoom_date`, ((SELECT SUM(`t2`.`size`) FROM `" . $object_type . "` `t2` WHERE `t2`.`addition_time` < `zoom_date`) + SUM(`" . $object_type . "`.`size`)) AS `storage` FROM `" . $object_type . "` " . $where . " GROUP BY " . $dateformat;
+        // Both branches are a running total: everything added before the bucket, plus the bucket itself.
+        // The IFNULLs matter because the running total is NULL until something was added earlier, and
+        // NULL + SUM() is NULL, which would read as an empty series for the first (often only) bucket.
+        // An album has no size of its own, so its storage is the size of the songs that belong to it.
+        $sql = ($object_type === 'album')
+            ? "SELECT " . $dateformat . " AS `zoom_date`, (IFNULL((SELECT SUM(`s2`.`size`) FROM `album` `t2` LEFT JOIN `song` `s2` ON `s2`.`album` = `t2`.`id` WHERE `t2`.`addition_time` < `zoom_date`), 0) + IFNULL(SUM(`song`.`size`), 0)) AS `storage` FROM `album` LEFT JOIN `song` ON `song`.`album` = `album`.`id` " . $where . " GROUP BY " . $dateformat
+            : "SELECT " . $dateformat . " AS `zoom_date`, (IFNULL((SELECT SUM(`t2`.`size`) FROM `" . $object_type . "` `t2` WHERE `t2`.`addition_time` < `zoom_date`), 0) + SUM(`" . $object_type . "`.`size`)) AS `storage` FROM `" . $object_type . "` " . $where . " GROUP BY " . $dateformat;
         $db_results = Dba::read($sql);
 
         $values = [];
@@ -448,10 +434,12 @@ class Graph
 
     /**
      * get_user_all_pts
+     *
+     * @param array<string, array<int, int|float>> $series series name => [unix timestamp => value]
      */
     protected function get_user_all_pts(
         string  $fct,
-        Data    $MyData,
+        array   &$series,
         int     $user_id = 0,
         ?string $object_type = null,
         int     $object_id = 0,
@@ -461,7 +449,7 @@ class Graph
     ): void {
         $userRepository = $this->getUserRepository();
 
-        $values = $this->get_all_pts($fct, $MyData, $user_id, $object_type, $object_id, $start_date, $end_date, $zoom);
+        $values = $this->get_all_pts($fct, $series, $user_id, $object_type, $object_id, $start_date, $end_date, $zoom);
         $ustats = $userRepository->getStatistics();
         // Only display other users if the graph is not for a specific user and user count is small
         if ($user_id < 1 && $ustats['users'] < 10) {
@@ -476,11 +464,12 @@ class Graph
                     $end_date,
                     $zoom
                 );
-                foreach ($values as $date => $value) {
-                    $value = array_key_exists($date, $user_values) ? $user_values[$date] : 0;
-
-                    $MyData->addPoints($value, $userName);
+                $points = [];
+                foreach (array_keys($values) as $date) {
+                    $points[$date] = $user_values[$date] ?? 0;
                 }
+
+                $series[$userName] = $points;
             }
         }
     }
@@ -593,9 +582,19 @@ class Graph
     }
 
     /**
+     * Render a multi-series time chart as SVG.
+     *
+     * @param array<string, array<int, int|float>> $series series name => [unix timestamp => value]
      */
-    protected function render_graph(string $title, Data $MyData, string $zoom, int $width = 0, int $height = 0): void
-    {
+    protected function render_graph(
+        string $title,
+        array  $series,
+        string $format,
+        string $label_y,
+        string $zoom = 'day',
+        int    $width = 0,
+        int    $height = 0,
+    ): void {
         if ($width <= 50 || $width > 4096) {
             $width = 700;
         }
@@ -604,91 +603,95 @@ class Graph
             $height = 260;
         }
 
-        $MyData->setSerieDescription("TimeStamp", "time");
-        $MyData->setAbscissa("TimeStamp");
-        switch ($zoom) {
-            case 'hour':
-                $MyData->setXAxisDisplay(AXIS_FORMAT_TIME, "H:00");
-                break;
-            case 'year':
-                $MyData->setXAxisDisplay(AXIS_FORMAT_DATE, "Y");
-                break;
-            case 'month':
-                $MyData->setXAxisDisplay(AXIS_FORMAT_DATE, "Y-m");
-                break;
-            case 'day':
-                $MyData->setXAxisDisplay(AXIS_FORMAT_DATE, "Y-m-d");
-                break;
+        // Each point is a time bucket the SQL already grouped, so the x axis is a list of labelled
+        // buckets rather than a continuous scale. Labelling the keys here instead of using a datetime
+        // axis keeps one bucket and fifty behaving the same way, and sidesteps the empty range a
+        // datetime axis produces when everything falls in the same bucket.
+        $series = array_map(
+            fn(array $set): array => $this->format_series_keys($set, $zoom),
+            $series
+        );
+
+        // a line needs two points to join. With a single bucket draw just the markers, so the chart still
+        // shows the value and looks like the same chart waiting for its second point rather than a bar.
+        $points = 0;
+        foreach ($series as $set) {
+            $points = max($points, count($set));
         }
 
-        /* Create the pChart object */
-        $myPicture = new Image($width, $height, $MyData);
+        $type = ($points > 1)
+            ? 'MultiLineGraph'
+            : 'MultiScatterGraph';
 
-        /* Turn of Antialiasing */
-        $myPicture->Antialias = false;
-
-        /* Draw a background */
-        $Settings = ["R" => 90, "G" => 90, "B" => 90, "Dash" => 1, "DashR" => 120, "DashG" => 120, "DashB" => 120];
-        $myPicture->drawFilledRectangle(0, 0, $width, $height, $Settings);
-
-        /* Overlay with a gradient */
-        $Settings = [
-            "StartR" => 200,
-            "StartG" => 200,
-            "StartB" => 200,
-            "EndR" => 50,
-            "EndG" => 50,
-            "EndB" => 50,
-            "Alpha" => 50,
+        $settings = [
+            'graph_title' => $title,
+            'label_y' => $label_y,
+            // php casts a numeric-looking key like "2026" to an int, which would otherwise be read as a
+            // position on a numeric axis instead of a bucket label
+            'force_assoc' => true,
+            'axis_text_callback_y' => fn($value): string => $this->format_axis_value($value, $format),
+            'minimum_grid_spacing_h' => 80,
+            'show_legend' => count($series) > 1,
+            'legend_entries' => array_keys($series),
+            // every 'outside' position draws past the edge of the canvas, SVGGraph does not grow it to fit
+            'legend_position' => 'top right',
+            'legend_columns' => 2,
+            'back_colour' => '#f8f8f8',
+            'back_stroke_width' => 1,
+            'back_stroke_colour' => '#000',
+            'grid_colour' => '#ccc',
+            // a lone point sits on the y axis with nothing to give it scale, so draw it bigger
+            'marker_size' => ($points > 1) ? 3 : 6,
+            'line_stroke_width' => 2,
+            'pad_right' => 10,
+            // leave the javascript features off, they are the only part of SVGGraph that still emits
+            // php deprecations and nothing here needs interactivity
+            'show_tooltips' => false,
         ];
-        $myPicture->drawGradientArea(0, 0, $width, $height, DIRECTION_VERTICAL, $Settings);
-        $myPicture->drawGradientArea(0, 0, $width, $height, DIRECTION_HORIZONTAL, $Settings);
 
-        /* Add a border to the picture */
-        $myPicture->drawRectangle(0, 0, $width - 1, $height - 1, ["R" => 0, "G" => 0, "B" => 0]);
+        $graph = new SVGGraph($width, $height, $settings);
+        $graph->values(array_values($series));
 
-        /* Write the chart title */
-        $myPicture->setFontProperties(["FontName" => "Forgotte.ttf", "FontSize" => 11]);
-        $myPicture->drawText(150, 35, $title, ["FontSize" => 20, "Align" => TEXT_ALIGN_BOTTOMMIDDLE]);
+        header('Content-Disposition: filename="ampache-graph.svg"');
+        $graph->render($type);
+    }
 
-        /* Set the default font */
-        $myPicture->setFontProperties(["FontName" => "pf_arma_five.ttf", "FontSize" => 6]);
+    /**
+     * Format a y-axis value for display
+     */
+    private function format_axis_value(int|float $value, string $format): string
+    {
+        if ($format === self::FORMAT_BYTES) {
+            // Ui::format_bytes() returns an empty string for zero, but the axis still needs a label
+            return ($value == 0)
+                ? '0'
+                : Ui::format_bytes($value);
+        }
 
-        /* Define the chart area */
-        $myPicture->setGraphArea(60, 40, $width - 20, $height - 50);
+        return (string) $value;
+    }
 
-        /* Draw the scale */
-        $scaleSettings = [
-            "XMargin" => 10,
-            "YMargin" => 10,
-            "Floating" => true,
-            "GridR" => 200,
-            "GridG" => 200,
-            "GridB" => 200,
-            "RemoveSkippedAxis" => true,
-            "DrawSubTicks" => false,
-            "Mode" => SCALE_MODE_START0,
-            "LabelRotation" => 45,
-            "LabelingMethod" => LABELING_DIFFERENT,
-        ];
-        $myPicture->drawScale($scaleSettings);
+    /**
+     * Replace unix timestamp keys with a readable bucket label at the requested zoom level
+     *
+     * @param array<int, int|float> $set
+     * @return array<int|string, int|float> php casts a numeric label like "2026" back to an int key
+     */
+    private function format_series_keys(array $set, string $zoom): array
+    {
+        $format = match ($zoom) {
+            'hour' => 'Y-m-d H:i',
+            'year' => 'Y',
+            'month' => 'Y-m',
+            default => 'Y-m-d',
+        };
 
-        /* Turn on Antialiasing */
-        $myPicture->Antialias = true;
+        $labelled = [];
+        foreach ($set as $date => $value) {
+            $labelled[date($format, $date)] = $value;
+        }
 
-        /* Draw the line chart */
-        $myPicture->setShadow(true, ["X" => 1, "Y" => 1, "R" => 0, "G" => 0, "B" => 0, "Alpha" => 10]);
-        $myPicture->drawLineChart();
-
-        /* Write a label over the chart */
-        $myPicture->writeLabel("Inbound", [720]);
-
-        /* Write the chart legend */
-        $myPicture->drawLegend(280, 20, ["Style" => LEGEND_NOBORDER, "Mode" => LEGEND_HORIZONTAL]);
-
-        header('Content-Disposition: filename="ampache-graph.png"');
-        /* Render the picture (choose the best way) */
-        $myPicture->autoOutput();
+        return $labelled;
     }
 
     private function getUserRepository(): UserRepositoryInterface

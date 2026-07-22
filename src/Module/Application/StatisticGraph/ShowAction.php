@@ -68,10 +68,7 @@ final readonly class ShowAction implements ApplicationActionInterface
             return null;
         }
 
-        if (
-            !$this->configContainer->isFeatureEnabled(ConfigurationKeyEnum::STATISTICAL_GRAPHS)
-            || !is_dir(__DIR__ . '/../../../../vendor/szymach/c-pchart/src/Chart/')
-        ) {
+        if (!$this->configContainer->isFeatureEnabled(ConfigurationKeyEnum::STATISTICAL_GRAPHS)) {
             $this->logger->warning(
                 'Access denied, statistical graph disabled.',
                 [LegacyLogger::CONTEXT_TYPE => self::class]

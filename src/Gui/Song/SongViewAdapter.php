@@ -78,7 +78,6 @@ final readonly class SongViewAdapter implements SongViewAdapterInterface
 
         return (
             $this->configContainer->isFeatureEnabled(ConfigurationKeyEnum::STATISTICAL_GRAPHS)
-            && is_dir(__DIR__ . '/../../../vendor/szymach/c-pchart/src/Chart/')
             && (
                 (
                     $owner_id !== null
