@@ -63,36 +63,36 @@ Returns a single object.
 
 | Field               | Type              | Nullable | Optional | Notes |
 |---------------------|-------------------|:--------:|:--------:|-------|
-| auth                | string            |   YES    |   YES    |       |
-| streamtoken         | string            |   YES    |   YES    |       |
-| api                 | string            |    NO    |   YES    |       |
-| session_expire      | integer \| string |    NO    |   YES    |       |
-| update              | string            |    NO    |   YES    |       |
-| add                 | string            |    NO    |   YES    |       |
-| clean               | string            |    NO    |   YES    |       |
-| max_song            | integer           |    NO    |   YES    |       |
-| max_album           | integer           |    NO    |   YES    |       |
-| max_artist          | integer           |    NO    |   YES    |       |
-| max_video           | integer           |    NO    |   YES    |       |
-| max_podcast         | integer           |    NO    |   YES    |       |
-| max_podcast_episode | integer           |    NO    |   YES    |       |
-| songs               | integer           |    NO    |   YES    |       |
-| albums              | integer           |    NO    |   YES    |       |
-| artists             | integer           |    NO    |   YES    |       |
-| genres              | integer           |    NO    |   YES    |       |
-| playlists           | integer           |    NO    |   YES    |       |
-| searches            | integer           |    NO    |   YES    |       |
-| playlists_searches  | integer           |    NO    |   YES    |       |
-| users               | integer           |    NO    |   YES    |       |
-| catalogs            | integer           |    NO    |   YES    |       |
-| videos              | integer           |    NO    |   YES    |       |
-| podcasts            | integer           |    NO    |   YES    |       |
-| podcast_episodes    | integer           |    NO    |   YES    |       |
-| shares              | integer           |    NO    |   YES    |       |
-| licenses            | integer           |    NO    |   YES    |       |
-| live_streams        | integer           |    NO    |   YES    |       |
-| labels              | integer           |    NO    |   YES    |       |
-| username            | string            |    NO    |   YES    |       |
+| auth                | string            |   YES    |    NO    |       |
+| streamtoken         | string            |   YES    |    NO    |       |
+| api                 | string            |    NO    |    NO    |       |
+| session_expire      | integer \| string |    NO    |    NO    |       |
+| update              | string            |    NO    |    NO    |       |
+| add                 | string            |    NO    |    NO    |       |
+| clean               | string            |    NO    |    NO    |       |
+| max_song            | integer           |    NO    |    NO    |       |
+| max_album           | integer           |    NO    |    NO    |       |
+| max_artist          | integer           |    NO    |    NO    |       |
+| max_video           | integer           |    NO    |    NO    |       |
+| max_podcast         | integer           |    NO    |    NO    |       |
+| max_podcast_episode | integer           |    NO    |    NO    |       |
+| songs               | integer           |    NO    |    NO    |       |
+| albums              | integer           |    NO    |    NO    |       |
+| artists             | integer           |    NO    |    NO    |       |
+| genres              | integer           |    NO    |    NO    |       |
+| playlists           | integer           |    NO    |    NO    |       |
+| searches            | integer           |    NO    |    NO    |       |
+| playlists_searches  | integer           |    NO    |    NO    |       |
+| users               | integer           |    NO    |    NO    |       |
+| catalogs            | integer           |    NO    |    NO    |       |
+| videos              | integer           |    NO    |    NO    |       |
+| podcasts            | integer           |    NO    |    NO    |       |
+| podcast_episodes    | integer           |    NO    |    NO    |       |
+| shares              | integer           |    NO    |    NO    |       |
+| licenses            | integer           |    NO    |    NO    |       |
+| live_streams        | integer           |    NO    |    NO    |       |
+| labels              | integer           |    NO    |    NO    |       |
+| username            | string            |    NO    |    NO    |       |
 <!-- GENERATED:RESPONSE:END -->
 
 * throws object
@@ -4922,66 +4922,66 @@ This is used to get tags for remote catalogs to allow maximum data to be returne
 <!-- GENERATED:RESPONSE:BEGIN -->
 Returns a single object.
 
-| Field                  | Type   | Nullable | Optional | Notes |
-|------------------------|--------|:--------:|:--------:|-------|
-| id                     | string |    NO    |    NO    |       |
-| albumartist            | mixed  |    NO    |    NO    |       |
-| album                  | mixed  |    NO    |    NO    |       |
-| artist                 | mixed  |    NO    |    NO    |       |
-| artists                | mixed  |    NO    |    NO    |       |
-| art                    | mixed  |    NO    |    NO    |       |
-| audio_codec            | mixed  |    NO    |    NO    |       |
-| barcode                | mixed  |    NO    |    NO    |       |
-| bitrate                | mixed  |    NO    |    NO    |       |
-| catalog                | mixed  |    NO    |    NO    |       |
-| catalog_number         | mixed  |    NO    |    NO    |       |
-| channels               | mixed  |    NO    |    NO    |       |
-| comment                | mixed  |    NO    |    NO    |       |
-| composer               | mixed  |    NO    |    NO    |       |
-| description            | mixed  |    NO    |    NO    |       |
-| disk                   | mixed  |    NO    |    NO    |       |
-| disksubtitle           | mixed  |    NO    |    NO    |       |
-| display_x              | mixed  |    NO    |    NO    |       |
-| display_y              | mixed  |    NO    |    NO    |       |
-| encoding               | mixed  |    NO    |    NO    |       |
-| file                   | mixed  |    NO    |    NO    |       |
-| frame_rate             | mixed  |    NO    |    NO    |       |
-| genre                  | mixed  |    NO    |    NO    |       |
-| isrc                   | mixed  |    NO    |    NO    |       |
-| language               | mixed  |    NO    |    NO    |       |
-| lyrics                 | mixed  |    NO    |    NO    |       |
-| mb_albumartistid       | mixed  |    NO    |    NO    |       |
-| mb_albumartistid_array | mixed  |    NO    |    NO    |       |
-| mb_albumid_group       | mixed  |    NO    |    NO    |       |
-| mb_albumid             | mixed  |    NO    |    NO    |       |
-| mb_artistid            | mixed  |    NO    |    NO    |       |
-| mb_artistid_array      | mixed  |    NO    |    NO    |       |
-| mb_trackid             | mixed  |    NO    |    NO    |       |
-| mime                   | mixed  |    NO    |    NO    |       |
-| mode                   | mixed  |    NO    |    NO    |       |
-| original_name          | mixed  |    NO    |    NO    |       |
-| original_year          | mixed  |    NO    |    NO    |       |
-| publisher              | mixed  |    NO    |    NO    |       |
-| r128_album_gain        | mixed  |    NO    |    NO    |       |
-| r128_track_gain        | mixed  |    NO    |    NO    |       |
-| rate                   | mixed  |    NO    |    NO    |       |
-| rating                 | mixed  |    NO    |    NO    |       |
-| release_date           | mixed  |    NO    |    NO    |       |
-| release_status         | mixed  |    NO    |    NO    |       |
-| release_type           | mixed  |    NO    |    NO    |       |
-| replaygain_album_gain  | mixed  |    NO    |    NO    |       |
-| replaygain_album_peak  | mixed  |    NO    |    NO    |       |
-| replaygain_track_gain  | mixed  |    NO    |    NO    |       |
-| replaygain_track_peak  | mixed  |    NO    |    NO    |       |
-| size                   | mixed  |    NO    |    NO    |       |
-| version                | mixed  |    NO    |    NO    |       |
-| summary                | mixed  |    NO    |    NO    |       |
-| time                   | mixed  |    NO    |    NO    |       |
-| title                  | mixed  |    NO    |    NO    |       |
-| totaldisks             | mixed  |    NO    |    NO    |       |
-| totaltracks            | mixed  |    NO    |    NO    |       |
-| track                  | mixed  |    NO    |    NO    |       |
-| year                   | mixed  |    NO    |    NO    |       |
+| Field                  | Type                | Nullable | Optional | Notes |
+|------------------------|---------------------|:--------:|:--------:|-------|
+| id                     | string              |    NO    |    NO    |       |
+| albumartist            | string              |   YES    |    NO    |       |
+| album                  | string              |   YES    |    NO    |       |
+| artist                 | string              |   YES    |    NO    |       |
+| artists                | array&lt;string&gt; |   YES    |    NO    |       |
+| art                    | string              |   YES    |    NO    |       |
+| audio_codec            | string              |   YES    |    NO    |       |
+| barcode                | string              |   YES    |    NO    |       |
+| bitrate                | integer             |   YES    |    NO    |       |
+| catalog                | integer             |   YES    |    NO    |       |
+| catalog_number         | string              |   YES    |    NO    |       |
+| channels               | integer             |   YES    |    NO    |       |
+| comment                | string              |   YES    |    NO    |       |
+| composer               | string              |   YES    |    NO    |       |
+| description            | string              |   YES    |    NO    |       |
+| disk                   | integer             |   YES    |    NO    |       |
+| disksubtitle           | string              |   YES    |    NO    |       |
+| display_x              | integer             |   YES    |    NO    |       |
+| display_y              | integer             |   YES    |    NO    |       |
+| encoding               | string              |   YES    |    NO    |       |
+| file                   | string              |   YES    |    NO    |       |
+| frame_rate             | number              |   YES    |    NO    |       |
+| genre                  | array&lt;string&gt; |   YES    |    NO    |       |
+| isrc                   | string              |   YES    |    NO    |       |
+| language               | string              |   YES    |    NO    |       |
+| lyrics                 | string              |   YES    |    NO    |       |
+| mb_albumartistid       | string              |   YES    |    NO    |       |
+| mb_albumartistid_array | array&lt;string&gt; |   YES    |    NO    |       |
+| mb_albumid_group       | string              |   YES    |    NO    |       |
+| mb_albumid             | string              |   YES    |    NO    |       |
+| mb_artistid            | string              |   YES    |    NO    |       |
+| mb_artistid_array      | array&lt;string&gt; |   YES    |    NO    |       |
+| mb_trackid             | string              |   YES    |    NO    |       |
+| mime                   | string              |   YES    |    NO    |       |
+| mode                   | string              |   YES    |    NO    |       |
+| original_name          | string              |   YES    |    NO    |       |
+| original_year          | string              |   YES    |    NO    |       |
+| publisher              | string              |   YES    |    NO    |       |
+| r128_album_gain        | integer             |   YES    |    NO    |       |
+| r128_track_gain        | integer             |   YES    |    NO    |       |
+| rate                   | integer             |   YES    |    NO    |       |
+| rating                 | number              |   YES    |    NO    |       |
+| release_date           | string              |   YES    |    NO    |       |
+| release_status         | string              |   YES    |    NO    |       |
+| release_type           | string              |   YES    |    NO    |       |
+| replaygain_album_gain  | number              |   YES    |    NO    |       |
+| replaygain_album_peak  | number              |   YES    |    NO    |       |
+| replaygain_track_gain  | number              |   YES    |    NO    |       |
+| replaygain_track_peak  | number              |   YES    |    NO    |       |
+| size                   | integer             |   YES    |    NO    |       |
+| version                | string              |   YES    |    NO    |       |
+| summary                | string              |   YES    |    NO    |       |
+| time                   | integer             |   YES    |    NO    |       |
+| title                  | string              |   YES    |    NO    |       |
+| totaldisks             | integer             |   YES    |    NO    |       |
+| totaltracks            | integer             |   YES    |    NO    |       |
+| track                  | integer             |   YES    |    NO    |       |
+| year                   | integer             |   YES    |    NO    |       |
 <!-- GENERATED:RESPONSE:END -->
 
 * throws object

@@ -27,9 +27,11 @@ Usage:
 from __future__ import annotations
 
 import argparse
+import copy
 import json
 import re
 import sys
+from collections import Counter
 from pathlib import Path
 
 REPO_ROOT = Path(__file__).resolve().parents[3]
@@ -114,7 +116,7 @@ def build_ping_schema(handshake: dict) -> dict:
         ),
         "properties": properties,
         "required": sorted(PING_ALWAYS),
-        "additionalProperties": False,
+        "additionalProperties": True,
     }
 
 # Within a generated object schema, replace a property's item/value subtree with
@@ -124,12 +126,24 @@ def build_ping_schema(handshake: dict) -> dict:
 # Prose for a property whose meaning is not obvious from its type alone. Keyed the same way as
 # REF_REUSE; applied after the shape is built so it survives regeneration (these used to be
 # hand-edits in openapi.json, which the generator then silently reverted).
+# object_type is left an open string on purpose: pinning an enum would make every new media type a
+# breaking spec change. The description records the values seen today without closing the set.
+_OBJECT_TYPE_DESCRIPTION = (
+    "The kind of object referenced, as a bare string. The set is intentionally open so a new media "
+    "type is not a breaking change; values seen today include `song`, `album`, `artist`, `playlist`, "
+    "`podcast`, `podcast_episode` and `video`."
+)
+
 PROPERTY_DESCRIPTIONS: dict[tuple[str, str], str] = {
     ("PlaylistObject", "items"): (
         "The expanded song list when songs are included, otherwise the total song count. Playlists "
         "are song lists here: a playlist may physically hold other media types, but this method "
         "reports only songs so that real playlists and song smartlists share one shape."
     ),
+    ("ShareObject", "object_type"): _OBJECT_TYPE_DESCRIPTION,
+    ("BookmarkObject", "object_type"): _OBJECT_TYPE_DESCRIPTION,
+    ("ActivityObject", "object_type"): _OBJECT_TYPE_DESCRIPTION,
+    ("ShoutObject", "object_type"): _OBJECT_TYPE_DESCRIPTION,
 }
 
 REF_REUSE: dict[tuple[str, str], str] = {
@@ -362,8 +376,90 @@ WIRING_BY_METHOD: dict[tuple[str, str], str] = {
     ("post", "localplay"): "LocalplayResponse",
 }
 
+# The mutation and command endpoints all answer with {"success": "..."}. They are listed by verb
+# rather than spelled out in WIRING_BY_METHOD purely for readability; folding them in below keeps
+# their wiring generated instead of hand-maintained inside docs/openapi.json.
+SUCCESS_ACTIONS: dict[str, tuple[str, ...]] = {
+    "delete": (
+        "bookmark_delete",
+        "catalog_delete",
+        "live_stream_delete",
+        "playlist_delete",
+        "podcast_delete",
+        "podcast_episode_delete",
+        "preference_delete",
+        "share_delete",
+        "smartlist_delete",
+        "song_delete",
+        "user_delete",
+    ),
+    # both verbs of catalog_folder run the same code path and end in success(); lost_password
+    # answers with a plain success as well
+    "get": (
+        "catalog_folder",
+        "lost_password",
+    ),
+    "patch": (
+        "live_stream_edit",
+        "playlist_edit",
+        "podcast_edit",
+        "preference_edit",
+        "share_edit",
+        "user_edit",
+    ),
+    "post": (
+        "catalog_action",
+        "catalog_file",
+        "catalog_folder",
+        "flag",
+        "goodbye",
+        "playlist_add",
+        "playlist_remove",
+        "playlist_remove_song",
+        "rate",
+        "record_play",
+        "scrobble",
+        "toggle_follow",
+        "update_art",
+        "update_artist_info",
+        "update_from_tags",
+        "update_podcast",
+    ),
+    "put": (
+        "preference_create",
+        "user_create",
+    ),
+}
+
+for _method, _actions in SUCCESS_ACTIONS.items():
+    for _action in _actions:
+        # an explicit entry always wins, so a success action can still be overridden above
+        if _method == "get":
+            WIRING.setdefault(_action, "SuccessResponse")
+        else:
+            WIRING_BY_METHOD.setdefault((_method, _action), "SuccessResponse")
+
 # HTTP methods considered when wiring; GET reads WIRING/WIRING_BY_TYPE, the rest WIRING_BY_METHOD.
-WIRED_HTTP_METHODS = ("get", "post", "put", "patch")
+WIRED_HTTP_METHODS = ("get", "post", "put", "patch", "delete")
+
+# Methods that may carry a request body (D5); GET/HEAD never do.
+WRITE_HTTP_METHODS = ("post", "put", "patch", "delete")
+
+# Error responses, keyed by the http status Api::getHttpCode() produces for the api error code.
+ERROR_RESPONSE_REFS: dict[str, str] = {
+    "400": "BadRequestErrorResponse",           # 4705 MISSING, 4710 BAD_REQUEST
+    "401": "UnauthorizedErrorResponse",         # 4701 INVALID_HANDSHAKE
+    "403": "ForbiddenErrorResponse",            # 4700, 4703 ACCESS_DENIED, 4742
+    "404": "NotFoundErrorResponse",             # 4704 NOT_FOUND
+    "410": "GoneErrorResponse",                 # 4706 DEPRECATED
+    "500": "InternalServerErrorResponse",       # 4702 GENERIC_ERROR
+}
+
+# Reachable on every operation: a bad request, an invalid session, a denied action, an internal error
+ALWAYS_ERRORS = ("400", "401", "403", "500")
+
+# ApiHandler::$deprecated8 -- these answer 4706, which getHttpCode() maps to 410
+DEPRECATED_ACTIONS = ("get_indexes", "playlist_add_song", "user_update")
 
 
 # ---------------------------------------------------------------------------
@@ -540,7 +636,7 @@ class ShapeParser:
         schema: dict = {"type": "object", "properties": properties}
         if required:
             schema["required"] = required
-        schema["additionalProperties"] = False
+        schema["additionalProperties"] = True
         return schema
 
     def parse_generic(self) -> dict:
@@ -612,7 +708,7 @@ def build_list_response(key: str, object_name: str, envelope: str = "standard") 
     else:  # standard
         props = {"total_count": {"type": "integer"}, "md5": {"type": "string"}, key: items}
         required = ["total_count", "md5", key]
-    return {"type": "object", "properties": props, "required": required, "additionalProperties": False}
+    return {"type": "object", "properties": props, "required": required, "additionalProperties": True}
 
 
 # Hand-written schemas for endpoints whose output cannot be derived from a single
@@ -622,7 +718,7 @@ MANUAL_SCHEMAS: dict[str, dict] = {
         "type": "object",
         "properties": {"id": {"type": "string"}, "type": {"type": "string"}},
         "required": ["id", "type"],
-        "additionalProperties": False,
+        "additionalProperties": True,
     },
     # index returns { <type>: <value> } where <value> varies with the `include`
     # flag and object type — a plain id list, a list of {id,type} references, or
@@ -654,14 +750,14 @@ MANUAL_SCHEMAS: dict[str, dict] = {
         "description": "Returned by `method=play`: the stream URL of the democratic playlist.",
         "properties": {"url": {"type": "string"}},
         "required": ["url"],
-        "additionalProperties": False,
+        "additionalProperties": True,
     },
     "DemocraticVoteResponse": {
         "type": "object",
         "description": "Returned by `method=vote` and `method=devote`.",
         "properties": {"method": {"type": "string"}, "result": {"type": "boolean"}},
         "required": ["method", "result"],
-        "additionalProperties": False,
+        "additionalProperties": True,
     },
     "DemocraticResponse": {
         "description": (
@@ -690,14 +786,14 @@ MANUAL_SCHEMAS: dict[str, dict] = {
             }
         },
         "required": ["search"],
-        "additionalProperties": False,
+        "additionalProperties": True,
     },
     # playlist_hash reports the md5 of the playlist's items, or null when the playlist is empty.
     "PlaylistHashResponse": {
         "type": "object",
         "properties": {"md5": {"type": "string", "nullable": True}},
         "required": ["md5"],
-        "additionalProperties": False,
+        "additionalProperties": True,
     },
     # get_lyrics and get_external_metadata share a shape: the object they were asked about
     # plus one entry per plugin that answered. Plugin payloads are plugin-defined.
@@ -716,22 +812,22 @@ MANUAL_SCHEMAS: dict[str, dict] = {
         ),
         "properties": {
             "object_id": {"type": "string"},
-            "object_type": {"type": "string"},
+            "object_type": {"type": "string", "description": _OBJECT_TYPE_DESCRIPTION},
             "plugin": {"$ref": "#/components/schemas/_PluginMap"},
         },
         "required": ["object_id", "object_type", "plugin"],
-        "additionalProperties": False,
+        "additionalProperties": True,
     },
     "ExternalMetadataObject": {
         "type": "object",
         "description": "`plugin` is keyed by metadata-retriever plugin name; each value is that plugin's payload.",
         "properties": {
             "object_id": {"type": "string"},
-            "object_type": {"type": "string"},
+            "object_type": {"type": "string", "description": _OBJECT_TYPE_DESCRIPTION},
             "plugin": {"$ref": "#/components/schemas/_PluginMap"},
         },
         "required": ["object_id", "object_type", "plugin"],
-        "additionalProperties": False,
+        "additionalProperties": True,
     },
     # no plugin answered -> the method falls back to the empty list envelope of the requested type
     "EmptyListResponse": {
@@ -760,7 +856,10 @@ MANUAL_SCHEMAS: dict[str, dict] = {
         ),
         "properties": {
             "state": {"type": "string"},
-            "volume": {"type": "integer"},
+            "volume": {
+                "type": "string",
+                "description": "Controller-reported volume, passed through as-is. MPD reports it as a numeric string (e.g. \"41\").",
+            },
             "repeat": {"type": "boolean"},
             "random": {"type": "boolean"},
             "track": {"type": "integer"},
@@ -778,11 +877,11 @@ MANUAL_SCHEMAS: dict[str, dict] = {
                 "type": "object",
                 "properties": {"command": {"type": "object", "additionalProperties": {"type": "boolean"}}},
                 "required": ["command"],
-                "additionalProperties": False,
+                "additionalProperties": True,
             }
         },
         "required": ["localplay"],
-        "additionalProperties": False,
+        "additionalProperties": True,
     },
     "LocalplayStatusResponse": {
         "type": "object",
@@ -797,11 +896,11 @@ MANUAL_SCHEMAS: dict[str, dict] = {
                     }
                 },
                 "required": ["command"],
-                "additionalProperties": False,
+                "additionalProperties": True,
             }
         },
         "required": ["localplay"],
-        "additionalProperties": False,
+        "additionalProperties": True,
     },
     # playlist_generate switches shape on `format`: song/index both emit the song envelope
     # (index is Json8_Data::indexes() dispatching to songs()), id emits a bare id array.
@@ -870,6 +969,15 @@ def build_schemas(sources: dict[str, dict[str, str]]) -> dict[str, dict]:
                 cfg["key"], cfg["object"], cfg.get("envelope", "standard")
             )
     schemas.update(build_deleted_schemas(docblocks))
+
+    # Api::server_details() marks every field optional because `ping` shares it: an unauthenticated
+    # ping returns almost nothing. A handshake is different -- it only reaches a 200 once a session
+    # exists, and AbstractHandshakeMethod always passes that token, so the success payload carries
+    # every field including `auth`/`streamtoken`. Without this an empty object would validate as a
+    # successful handshake.
+    handshake = schemas["HandshakeResponse"]
+    handshake["required"] = sorted(handshake.get("properties", {}))
+
     schemas["PingResponse"] = build_ping_schema(schemas["HandshakeResponse"])
     schemas.update(MANUAL_SCHEMAS)
     return schemas
@@ -976,6 +1084,337 @@ def document_binary_responses(spec: dict) -> list[str]:
     return touched
 
 
+def _q(name: str, description: str, schema: dict, required: bool = False) -> dict:
+    return {"in": "query", "name": name, "required": required, "description": description, "schema": schema}
+
+
+def _path_id(name: str, noun: str) -> dict:
+    return {
+        "in": "path",
+        "name": name,
+        "required": True,
+        "description": f"Unique identifier of the {noun}.",
+        "schema": {"type": "string"},
+    }
+
+
+# Parameters repeated verbatim across many operations, lifted into components.parameters and $ref'd.
+# Only names with one consistent meaning are here; per-endpoint ones (`type`, `filter`, `include`,
+# `exact`, `random`) keep their inline declarations because their schema varies by operation.
+SHARED_PARAMETERS: dict[str, dict] = {
+    # paging / browse (query)
+    "Offset": _q("offset", "Return results starting from this index position", {"type": "integer"}),
+    "Limit": _q("limit", "Maximum number of results to return", {"type": "integer"}),
+    "Cond": _q("cond", "Apply additional browse filters using ';' separated key,value pairs.", {"type": "string"}),
+    "Sort": _q("sort", "Sort key or key,order pair. Example: name or name,ASC.", {"type": "string"}),
+    "AddFilter": _q("add", "Filter to items added on this ISO 8601 date.", {"type": "string", "format": "date"}),
+    "UpdateFilter": _q("update", "Filter to items updated on this ISO 8601 date.", {"type": "string", "format": "date"}),
+    "Client": _q("client", "Client/agent name recorded with the request.", {"type": "string"}),
+    # advanced_search rule grammar (query). rule_1 and operator are required; rule_2/rule_3 optional.
+    "Operator": _q("operator", "and, or (whether to match one rule or all)", {"enum": ["and", "or"], "type": "string"}, required=True),
+    "Rule1": _q("rule_1", "Rule field/key for rule 1", {"type": "string"}, required=True),
+    "Rule1Operator": _q("rule_1_operator", "Operator for rule 1", {"type": "string"}, required=True),
+    "Rule1Input": _q("rule_1_input", "Input value for rule 1", {"type": "string"}, required=True),
+    "Rule2": _q("rule_2", "Rule field/key for rule 2", {"type": "string"}),
+    "Rule2Operator": _q("rule_2_operator", "Operator for rule 2", {"type": "string"}),
+    "Rule2Input": _q("rule_2_input", "Input value for rule 2", {"type": "string"}),
+    "Rule3": _q("rule_3", "Rule field/key for rule 3", {"type": "string"}),
+    "Rule3Operator": _q("rule_3_operator", "Operator for rule 3", {"type": "string"}),
+    "Rule3Input": _q("rule_3_input", "Input value for rule 3", {"type": "string"}),
+    # object identifiers (path)
+    "AlbumId": _path_id("album_id", "album"),
+    "AlbumDiskId": _path_id("album_disk_id", "album disk"),
+    "ArtistId": _path_id("artist_id", "artist"),
+    "BookmarkId": _path_id("bookmark_id", "bookmark"),
+    "CatalogId": _path_id("catalog_id", "catalog"),
+    "EpisodeId": _path_id("episode_id", "podcast episode"),
+    "GenreId": _path_id("genre_id", "genre"),
+    "LabelId": _path_id("label_id", "label"),
+    "LicenseId": _path_id("license_id", "license"),
+    "LiveStreamId": _path_id("live_stream_id", "live stream"),
+    "ObjectId": _path_id("object_id", "object"),
+    "PlaylistId": _path_id("playlist_id", "playlist"),
+    "PodcastId": _path_id("podcast_id", "podcast"),
+    "ShareId": _path_id("share_id", "share"),
+    "SmartlistId": _path_id("smartlist_id", "smartlist"),
+    "SongId": _path_id("song_id", "song"),
+    "UserId": _path_id("user_id", "user"),
+    "VideoId": _path_id("video_id", "video"),
+}
+
+# (name, in) -> component name, so an inline parameter can be matched and replaced by its $ref
+_SHARED_PARAMETER_INDEX = {(definition["name"], definition["in"]): key for key, definition in SHARED_PARAMETERS.items()}
+
+
+def resolved_parameters(spec: dict, operation: dict) -> list[dict]:
+    """Yield each parameter of an operation with any component $ref expanded.
+
+    The generator reads parameters after they may already have been lifted into components.parameters
+    (S7), so every reader has to resolve refs or it would miss them and stop being idempotent.
+    """
+    components = spec.get("components", {}).get("parameters", {})
+    out = []
+    for parameter in operation.get("parameters", []):
+        if "$ref" in parameter:
+            out.append(components[parameter["$ref"].rsplit("/", 1)[-1]])
+        else:
+            out.append(parameter)
+    return out
+
+
+def apply_parameter_components(spec: dict) -> list[str]:
+    """Lift the shared parameters into components.parameters and $ref them from every operation."""
+    components = spec.setdefault("components", {}).setdefault("parameters", {})
+    for key, definition in SHARED_PARAMETERS.items():
+        components[key] = definition
+
+    applied: list[str] = []
+    for path, operations in spec["paths"].items():
+        for method, operation in operations.items():
+            rebuilt = []
+            for parameter in operation.get("parameters", []):
+                if "$ref" in parameter:
+                    rebuilt.append(parameter)
+                    continue
+                component = _SHARED_PARAMETER_INDEX.get((parameter.get("name"), parameter.get("in")))
+                if component is not None:
+                    rebuilt.append({"$ref": f"#/components/parameters/{component}"})
+                    applied.append(f"{method.upper():6s} {path}  {parameter['name']} -> {component}")
+                else:
+                    rebuilt.append(parameter)
+            if "parameters" in operation:
+                operation["parameters"] = rebuilt
+
+    return applied
+
+
+def apply_error_responses(spec: dict) -> list[str]:
+    """Give every operation the error responses it can actually return.
+
+    `Api::getHttpCode()` (src/Module/Api/Api.php) is the authority on the mapping:
+    4705/4710 -> 400, 4701 -> 401, 4700/4703/4742 -> 403, 4704 -> 404, 4706 -> 410, 4702 -> 500.
+
+    Every endpoint sits behind the document's global `security`, so the four always-possible codes
+    apply everywhere. 404 is added where the operation addresses one object (a path parameter or a
+    `filter`), and 410 to the actions ApiHandler::$deprecated8 rejects. Codes outside the managed
+    set (e.g. the 302 redirects and the 416 range errors) are left untouched.
+    """
+    actions: dict[tuple[str, str], str] = {}
+    for path, method, rpc in mapping_operations(spec):
+        match = _ACTION_RE.search(rpc)
+        if match:
+            actions[(path, method)] = match.group(1)
+
+    applied: list[str] = []
+    for path, operations in spec.get("paths", {}).items():
+        for method, operation in operations.items():
+            action = actions.get((path, method), "")
+            codes = set(ALWAYS_ERRORS)
+            takes_filter = any(
+                parameter.get("name") == "filter" for parameter in resolved_parameters(spec, operation)
+            )
+            if "{" in path or takes_filter:
+                codes.add("404")
+            if action in DEPRECATED_ACTIONS:
+                codes.add("410")
+
+            responses = operation.setdefault("responses", {})
+            before = set(responses)
+            for code in codes:
+                responses[code] = {"$ref": f"#/components/responses/{ERROR_RESPONSE_REFS[code]}"}
+            # a managed code that no longer applies must not linger from a previous run
+            for code in set(ERROR_RESPONSE_REFS) - codes:
+                responses.pop(code, None)
+
+            operation["responses"] = dict(sorted(responses.items()))
+            if set(operation["responses"]) != before:
+                applied.append(f"{method.upper():6s} {path}  -> {','.join(sorted(codes))}")
+
+    return applied
+
+
+def _camel(text: str) -> str:
+    return "".join(part.capitalize() for part in re.split(r"[^A-Za-z0-9]+", text) if part)
+
+
+def _path_slug(path: str) -> str:
+    """`/catalogs/{catalog_id}/action` -> `CatalogsAction` (path parameters dropped)."""
+    return _camel(" ".join(seg for seg in path.strip("/").split("/") if not seg.startswith("{")))
+
+
+_ID_WORDS_RE = re.compile(r"[-_]")
+
+
+def _id_words(text: str) -> list[str]:
+    return [w for w in _ID_WORDS_RE.split(text) if w]
+
+
+def _camel_id(words: list[str]) -> str:
+    return words[0].lower() + "".join(w.capitalize() for w in words[1:]) if words else ""
+
+
+def _nonparam_segments(path: str) -> list[str]:
+    return [s for s in path.strip("/").split("/") if s and not s.startswith("{")]
+
+
+def apply_operation_ids(spec: dict) -> list[str]:
+    """Give every operation a stable operationId derived from its RPC action.
+
+    Codegen names methods from operationId; without one every generator invents its own scheme. The
+    id is `camelCase(action)` plus any path segment that adds meaning the action does not already
+    carry, so `album_songs` -> `albumSongs` and `/catalogs/{id}/clean` -> `catalogActionClean`. The
+    23 actions that map to several operations are disambiguated by those extra segments; the handful
+    that still collide fall back to the full path and then the http method.
+    """
+    actions: dict[tuple[str, str], str] = {}
+    for path, method, rpc in mapping_operations(spec):
+        match = _ACTION_RE.search(rpc)
+        if match:
+            actions[(path, method)] = match.group(1)
+
+    def singular(word: str) -> str:
+        return word[:-1] if word.endswith("s") and len(word) > 3 else word
+
+    def base_id(path: str, method: str) -> str:
+        action = actions.get((path, method)) or "_".join([method, *_nonparam_segments(path)])
+        action_words = {singular(w) for w in _id_words(action)}
+        extra = [
+            word
+            for segment in _nonparam_segments(path)
+            for word in _id_words(segment)
+            if not all(singular(w) in action_words for w in _id_words(segment))
+        ]
+        return _camel_id(_id_words(action) + extra)
+
+    def full_id(path: str, method: str) -> str:
+        action = actions.get((path, method)) or method
+        return _camel_id(_id_words(action) + [w for s in _nonparam_segments(path) for w in _id_words(s)])
+
+    ids = {(m, p): base_id(p, m) for p, o in spec["paths"].items() for m in o}
+
+    clashing = {v for v, n in Counter(ids.values()).items() if n > 1}
+    for (method, path), value in list(ids.items()):
+        if value in clashing:
+            ids[(method, path)] = full_id(path, method)
+
+    clashing = {v for v, n in Counter(ids.values()).items() if n > 1}
+    for (method, path), value in list(ids.items()):
+        if value in clashing:
+            ids[(method, path)] = value + method.capitalize()
+
+    applied: list[str] = []
+    for path, operations in spec["paths"].items():
+        for method, operation in operations.items():
+            operation["operationId"] = ids[(method, path)]
+            applied.append(f"{method.upper():6s} {path}  -> {ids[(method, path)]}")
+
+    return applied
+
+
+def apply_request_bodies(spec: dict) -> list[str]:
+    """Give every write operation a requestBody mirroring its query parameters.
+
+    `info.description` promises that write parameters may arrive as a query string, a form body or a
+    JSON body. Only the query form was ever declared, so generated clients were query-only and the
+    documented precedence was unverifiable. One schema per operation is referenced by both body
+    content types, so the three transports cannot drift apart.
+
+    The query parameters stay for RPC compatibility, but a parameter that can now arrive in the body
+    is no longer marked required on the query side -- otherwise a body-only request, which the server
+    accepts, would not satisfy the spec. Which values are mandatory is carried by the body schema.
+    """
+    actions: dict[tuple[str, str], str] = {}
+    for path, method, rpc in mapping_operations(spec):
+        match = _ACTION_RE.search(rpc)
+        if match:
+            actions[(path, method)] = match.group(1)
+
+    schemas = spec.setdefault("components", {}).setdefault("schemas", {})
+    signatures: dict[str, tuple[str, ...]] = {}
+    applied: list[str] = []
+
+    for path, operations in sorted(spec.get("paths", {}).items()):
+        for method, operation in operations.items():
+            if method not in WRITE_HTTP_METHODS:
+                continue
+
+            # `auth` is supplied by a security scheme, never a body field. Parameters lifted into
+            # components (S7) are resolved so the body still mirrors them.
+            body_params = [
+                parameter
+                for parameter in resolved_parameters(spec, operation)
+                if parameter.get("in") == "query" and parameter.get("name") != "auth"
+            ]
+            if not body_params:
+                continue
+
+            properties = {}
+            required = []
+            for parameter in body_params:
+                name = parameter["name"]
+                schema = copy.deepcopy(parameter.get("schema", {"type": "string"}))
+                if parameter.get("description"):
+                    schema["description"] = parameter["description"]
+                properties[name] = schema
+                if parameter.get("required"):
+                    required.append(name)
+
+            signature = tuple(sorted(properties))
+            action = actions.get((path, method), "")
+            name = f"{_camel(action) or _path_slug(path)}Request"
+            if signatures.get(name, signature) != signature:
+                # same action, different parameters (share_create, bookmark_create, localplay, ...)
+                name = f"{_camel(action)}{_path_slug(path)}Request"
+            signatures[name] = signature
+
+            # Clearing the query parameter's `required` below removes what this list is derived from,
+            # so a second run would emit an empty one. Fall back to the requirement already recorded
+            # in the schema; re-marking a query parameter required still takes precedence.
+            if not required:
+                required = [
+                    field
+                    for field in schemas.get(name, {}).get("required", [])
+                    if field in properties
+                ]
+
+            schema: dict = {"type": "object", "properties": properties}
+            if required:
+                schema["required"] = sorted(required)
+            # Ampache ignores parameters it does not use, so a strict body would document a rejection
+            # that never happens
+            schema["additionalProperties"] = True
+            schemas[name] = schema
+
+            body_ref = {"$ref": f"#/components/schemas/{name}"}
+            operation["requestBody"] = {
+                "required": False,
+                "description": (
+                    "Parameters may be sent here instead of in the query string; body values win on "
+                    "conflict. Values listed as required must be supplied by one transport or the other."
+                ),
+                "content": {
+                    "application/json": {"schema": body_ref},
+                    "application/x-www-form-urlencoded": {"schema": body_ref},
+                },
+            }
+
+            # a required value may now arrive in the body, so the query copy cannot demand it. Only
+            # inline parameters are touched -- a shared component is $ref'd from many operations and
+            # none of the required-marked query parameters are among the shared set anyway.
+            for parameter in operation.get("parameters", []):
+                if (
+                    "$ref" not in parameter
+                    and parameter.get("in") == "query"
+                    and parameter.get("required")
+                    and parameter.get("name") in properties
+                ):
+                    parameter["required"] = False
+
+            applied.append(f"{method.upper():6s} {path}  -> {name}")
+
+    return applied
+
+
 def dumps_canonical(spec: dict) -> str:
     return json.dumps(spec, indent=2, ensure_ascii=False) + "\n"
 
@@ -996,6 +1435,10 @@ def main() -> int:
 
     wired = wire_responses(spec)
     binary = document_binary_responses(spec)
+    errors = apply_error_responses(spec)
+    bodies = apply_request_bodies(spec)
+    op_ids = apply_operation_ids(spec)
+    shared_params = apply_parameter_components(spec)
 
     updated = dumps_canonical(spec)
     changed = updated != original
@@ -1007,6 +1450,14 @@ def main() -> int:
     print(f"non-JSON responses documented: {len(binary)}")
     for line in binary:
         print(f"  {line}")
+    print(f"error responses changed: {len(errors)}")
+    for line in errors:
+        print(f"  {line}")
+    print(f"request bodies: {len(bodies)}")
+    for line in bodies:
+        print(f"  {line}")
+    print(f"operation ids: {len(op_ids)}")
+    print(f"parameters shared: {len(shared_params)}")
 
     if args.check:
         print("CHANGED" if changed else "up to date")
