@@ -500,10 +500,12 @@ class Stats
 
         if (AmpConfig::get('cron_cache')) {
             // The cache is only refreshed by the cron task, so all-time counts
-            // would lag behind until the next run (see issue #2587 and PR2589 ). 
-            // Add the plays recorded since the cache was generated.
-            // That delta is small, it's still fast
-            if ((int) $threshold === 0) {
+            // would lag behind until the next run (see issue #2587 and PR2589).
+            // When cron_cache_live_count is enabled, add the plays recorded
+            // since the cache was generated. That delta is small so it stays
+            // fast; it is opt-in to preserve the existing behaviour on large
+            // instances where the extra per-count query is not wanted.
+            if ((int) $threshold === 0 && AmpConfig::get('cron_cache_live_count')) {
                 $last_cache = Catalog::get_update_info('cache_object_count', 0);
                 $sql        = "SELECT COUNT(*) AS `total_count` FROM `object_count` WHERE `object_type` = ? AND `object_id` = ? AND `count_type` = ? AND `date` > ?";
                 $db_results = Dba::read($sql, [$object_type, $object_id, $count_type, $last_cache]);
