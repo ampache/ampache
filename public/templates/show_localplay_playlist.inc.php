@@ -57,7 +57,7 @@ $status = $localplay->status(); ?>
                 } ?>
         <tr id="localplay_playlist_<?php echo $object['id']; ?>">
             <td class="cel_track">
-                <?php echo scrub_out($object['track']); ?>
+                <?php echo scrub_out((string) $object['track']); ?>
             </td>
             <td<?php echo $class; ?>>
                 <?php echo $localplay->format_name($object['name'], $object['id']); ?>
