@@ -172,6 +172,8 @@ final class ConfigurationKeyEnum
     public const string OIDC_WEBSITE_CLAIM                    = 'oidc_website_claim';
     public const string PERPETUAL_API_SESSION                 = 'perpetual_api_session';
     public const string PLAY_TYPE                             = 'play_type';
+    public const string PLAYLIST_ART_MOSAIC                   = 'playlist_art_mosaic';
+    public const string PLAYLIST_ART_MOSAIC_FALLBACK          = 'playlist_art_mosaic_fallback';
     public const string PLAYLIST_METHOD                       = 'playlist_method';
     public const string PLAYLIST_TYPE                         = 'playlist_type';
     public const string PODCAST                               = 'podcast';

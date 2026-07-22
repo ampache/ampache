@@ -723,6 +723,14 @@ playlist_art = "true"
 ; DEFAULT: "true"
 playlist_art_mosaic = "true"
 
+; Playlist Cover Art Mosaic Fallback * Requires PHP-GD *
+; Show a generated mosaic for a playlist that has no art of its own, instead of the
+; blank placeholder image. The covers are picked using the playlist contents as a seed,
+; so the same playlist always gets the same mosaic until its items change.
+; The generated image is then stored as that playlist's art, so it is only built once.
+; DEFAULT: "false"
+;playlist_art_mosaic_fallback = "true"
+
 ; Statistical Graphs
 ; Set this to false if you don't want Ampache to generate statistical graphs on usages / users.
 ; The graph queries read the whole object_count table, so turning this off is worth doing on a

@@ -27,6 +27,12 @@ namespace Ampache\Module\Art\Mosaic;
 
 interface PlaylistArtBuilderInterface
 {
+    // Largest number of tiles a mosaic lays out (3x3). Callers use this to stop collecting covers.
+    public const int MAX_TILES = 9;
+
+    // Fewest tiles a mosaic needs (2x2). Below this the caller keeps its single cover.
+    public const int MIN_TILES = 4;
+
     /**
      * Composite cover images into a square grid mosaic (2x2 or 3x3).
      *

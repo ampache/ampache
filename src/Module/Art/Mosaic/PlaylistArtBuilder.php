@@ -34,10 +34,9 @@ final readonly class PlaylistArtBuilder implements PlaylistArtBuilderInterface
 {
     // Edge length of the generated mosaic in pixels; each tile is a whole fraction of this.
     private const int CANVAS_SIZE = 600;
-    // Largest number of tiles we lay out (3x3); at least MIN_TILES are needed for a mosaic (2x2).
-    private const int MAX_TILES = 9;
 
-    private const int MIN_TILES = 4;
+    // Biggest tile any supported grid asks for, which is the 2x2 one.
+    private const int TILE_MAX = 300;
 
     public function build(array $images): ?string
     {
@@ -45,23 +44,26 @@ final readonly class PlaylistArtBuilder implements PlaylistArtBuilderInterface
             return null;
         }
 
-        // Decode as many usable sources as we're willing to place, keeping the caller's order.
-        $sources = [];
+        // Decode as many usable sources as we're willing to place, keeping the caller's order. Each is
+        // reduced to its final tile immediately so only one full size cover is ever held: GD allocates
+        // outside the php memory_limit, so nine untouched 4000px covers can walk the process past its
+        // limit and get it killed without ever raising a php error.
+        $tiles = [];
         foreach ($images as $raw) {
-            if (count($sources) >= self::MAX_TILES) {
+            if (count($tiles) >= self::MAX_TILES) {
                 break;
             }
 
-            $image = @imagecreatefromstring($raw);
-            if ($image instanceof GdImage) {
-                $sources[] = $image;
+            $tile = $this->toTile($raw);
+            if ($tile instanceof GdImage) {
+                $tiles[] = $tile;
             }
         }
 
         // Pick the largest square grid we can completely fill.
         $grid = match (true) {
-            count($sources) >= self::MAX_TILES => 3,
-            count($sources) >= self::MIN_TILES => 2,
+            count($tiles) >= self::MAX_TILES => 3,
+            count($tiles) >= self::MIN_TILES => 2,
             default => 0,
         };
         if ($grid === 0) {
@@ -69,29 +71,34 @@ final readonly class PlaylistArtBuilder implements PlaylistArtBuilderInterface
         }
 
         // CANVAS_SIZE divides evenly by every supported grid, so tiles fill the canvas exactly.
-        $tile   = intdiv(self::CANVAS_SIZE, $grid);
+        $size   = intdiv(self::CANVAS_SIZE, $grid);
         $canvas = imagecreatetruecolor(self::CANVAS_SIZE, self::CANVAS_SIZE);
         if (!$canvas instanceof GdImage) {
             return null;
         }
 
+        // A truecolor canvas starts opaque black, which is what a transparent cover would be flattened
+        // onto. Start transparent and copy alpha through instead.
+        imagealphablending($canvas, false);
+        imagesavealpha($canvas, true);
+        $transparent = imagecolorallocatealpha($canvas, 0, 0, 0, 127);
+        if ($transparent !== false) {
+            imagefilledrectangle($canvas, 0, 0, self::CANVAS_SIZE - 1, self::CANVAS_SIZE - 1, $transparent);
+        }
+
         for ($index = 0; $index < $grid * $grid; $index++) {
-            $source = $sources[$index];
-            $width  = imagesx($source);
-            $height = imagesy($source);
-            $side   = min($width, $height);
-            // Center-crop each source to a square so tiles keep their aspect ratio.
+            $tile = $tiles[$index];
             imagecopyresampled(
                 $canvas,
-                $source,
-                ($index % $grid) * $tile,
-                intdiv($index, $grid) * $tile,
-                intdiv($width - $side, 2),
-                intdiv($height - $side, 2),
                 $tile,
-                $tile,
-                $side,
-                $side
+                ($index % $grid) * $size,
+                intdiv($index, $grid) * $size,
+                0,
+                0,
+                $size,
+                $size,
+                imagesx($tile),
+                imagesy($tile)
             );
         }
 
@@ -100,5 +107,46 @@ final readonly class PlaylistArtBuilder implements PlaylistArtBuilderInterface
         $result = (string) ob_get_clean();
 
         return ($result === '') ? null : $result;
+    }
+
+    /**
+     * Decode one cover into a square tile, centre cropped and no bigger than a tile ever needs to be.
+     */
+    private function toTile(string $raw): ?GdImage
+    {
+        $source = @imagecreatefromstring($raw);
+        if (!$source instanceof GdImage) {
+            return null;
+        }
+
+        $width  = imagesx($source);
+        $height = imagesy($source);
+        // Center-crop to a square so tiles keep their aspect ratio.
+        $side   = min($width, $height);
+        $target = min($side, self::TILE_MAX);
+
+        $tile = imagecreatetruecolor($target, $target);
+        if (!$tile instanceof GdImage) {
+            return null;
+        }
+
+        imagealphablending($tile, false);
+        imagesavealpha($tile, true);
+        imagecopyresampled(
+            $tile,
+            $source,
+            0,
+            0,
+            intdiv($width - $side, 2),
+            intdiv($height - $side, 2),
+            $target,
+            $target,
+            $side,
+            $side
+        );
+
+        // $source drops out of scope here, so its full size buffer is released before the next decode
+
+        return $tile;
     }
 }

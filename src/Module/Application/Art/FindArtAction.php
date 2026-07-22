@@ -141,11 +141,23 @@ final class FindArtAction extends AbstractArtAction
 
         // If we've found anything then go for it!
         if ($images !== []) {
-            // We don't want to store raw's in here so we need to strip them out into a separate array
+            // The session is a utf8mb4 text column, so raw image bytes can't go in it as they are; the
+            // whole session write fails on the first non-utf8 byte. Anything that can be read back from
+            // somewhere else (a url, an image row) keeps only that reference, and the rest, like a
+            // generated mosaic or an id3 tag picture, is encoded so it stays selectable.
             foreach ($images as $index => $image) {
-                if (array_key_exists('raw', $image)) {
-                    unset($images[$index]['raw']);
+                if (!array_key_exists('raw', $image)) {
+                    continue;
                 }
+
+                if (
+                    empty($image['url'])
+                    && empty($image['db'])
+                ) {
+                    $images[$index]['raw_base64'] = base64_encode($image['raw']);
+                }
+
+                unset($images[$index]['raw']);
             }
 
             // Store the results for further use
