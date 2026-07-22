@@ -361,7 +361,6 @@ class mpd
     public function connect(): ?string
     {
         $this->_debug(self::class, "host: " . $this->host . ", port: " . $this->port, 5);
-        $this->_mpd_sock = fsockopen($this->host, $this->port, $err, $err_str, 6);
         // suppressed because an unreachable host is expected and reported through _error() below, not as a php warning
         $this->_mpd_sock = @fsockopen($this->host, $this->port, $err, $err_str, 6);
 
@@ -810,7 +809,7 @@ class mpd
         $status = $this->_parseResponse($status);
 
         $this->stats  = $stats;
-        $this->status = $status;
+        $this->status = $status ?: [];
 
         // Get the Playlist
         $playlist       = $this->SendCommand(self::COMMAND_PLINFO, null, false);
