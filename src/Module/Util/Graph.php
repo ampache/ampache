@@ -34,6 +34,7 @@ use Ampache\Repository\Model\Catalog;
 use Ampache\Repository\Model\Plugin;
 use Ampache\Repository\Model\User;
 use Ampache\Repository\UserRepositoryInterface;
+use DateTimeImmutable;
 use Goat1000\SVGGraph\SVGGraph;
 
 class Graph
@@ -41,6 +42,8 @@ class Graph
     // y-axis label formats
     private const string FORMAT_BYTES  = 'bytes';
     private const string FORMAT_METRIC = 'metric';
+
+    private const int MAX_POINTS = 3000;
 
     /**
      */
@@ -311,18 +314,23 @@ class Graph
         ?int   $end_date = null,
         string $zoom = 'day',
     ): array {
-        $start_date ??= ($end_date ?? time()) - 864000;
-        $dateformat = $this->get_sql_date_format("`" . $object_type . "`.`addition_time`", $zoom);
-        $where      = $this->get_catalog_sql_where($object_type, $object_id, $catalog_id, $start_date, $end_date);
-        $sql        = "SELECT " . $dateformat . " AS `zoom_date`, ((SELECT COUNT(`t2`.`id`) FROM `" . $object_type . "` `t2` WHERE `t2`.`addition_time` < `zoom_date`) + COUNT(`" . $object_type . "`.`id`)) AS `files` FROM `" . $object_type . "` " . $where . " GROUP BY " . $dateformat;
-        $db_results = Dba::read($sql);
+        $end_date ??= time();
+        $start_date ??= $end_date - 864000;
 
-        $values = [];
-        while ($results = Dba::fetch_assoc($db_results)) {
-            $values[$results['zoom_date']] = $results['files'];
+        $buckets = $this->get_zoom_buckets($start_date, $end_date, $zoom);
+        if ($buckets === []) {
+            return [];
         }
 
-        return $values;
+        $start_date = $buckets[0];
+        $dateformat = $this->get_sql_date_format("`" . $object_type . "`.`addition_time`", $zoom);
+        $where      = $this->get_catalog_sql_where($object_type, $object_id, $catalog_id, $start_date, $end_date);
+        $filter     = $this->get_catalog_sql_filter($object_type, $object_id, $catalog_id);
+
+        $sql      = "SELECT " . $dateformat . " AS `zoom_date`, COUNT(`" . $object_type . "`.`id`) AS `value` FROM `" . $object_type . "` " . $where . " GROUP BY " . $dateformat;
+        $baseline = "SELECT COUNT(`" . $object_type . "`.`id`) FROM `" . $object_type . "` WHERE `" . $object_type . "`.`addition_time` < " . $start_date . $filter;
+
+        return $this->get_running_total_pts($sql, $baseline, $buckets);
     }
 
     /**
@@ -335,24 +343,52 @@ class Graph
         ?int   $end_date = null,
         string $zoom = 'day',
     ): array {
-        $start_date ??= ($end_date ?? time()) - 864000;
-        $dateformat = $this->get_sql_date_format("`" . $object_type . "`.`addition_time`", $zoom);
-        $where      = $this->get_catalog_sql_where($object_type, $object_id, $catalog_id, $start_date, $end_date);
-        // Both branches are a running total: everything added before the bucket, plus the bucket itself.
-        // The IFNULLs matter because the running total is NULL until something was added earlier, and
-        // NULL + SUM() is NULL, which would read as an empty series for the first (often only) bucket.
-        // An album has no size of its own, so its storage is the size of the songs that belong to it.
-        $sql = ($object_type === 'album')
-            ? "SELECT " . $dateformat . " AS `zoom_date`, (IFNULL((SELECT SUM(`s2`.`size`) FROM `album` `t2` LEFT JOIN `song` `s2` ON `s2`.`album` = `t2`.`id` WHERE `t2`.`addition_time` < `zoom_date`), 0) + IFNULL(SUM(`song`.`size`), 0)) AS `storage` FROM `album` LEFT JOIN `song` ON `song`.`album` = `album`.`id` " . $where . " GROUP BY " . $dateformat
-            : "SELECT " . $dateformat . " AS `zoom_date`, (IFNULL((SELECT SUM(`t2`.`size`) FROM `" . $object_type . "` `t2` WHERE `t2`.`addition_time` < `zoom_date`), 0) + SUM(`" . $object_type . "`.`size`)) AS `storage` FROM `" . $object_type . "` " . $where . " GROUP BY " . $dateformat;
-        $db_results = Dba::read($sql);
+        $end_date ??= time();
+        $start_date ??= $end_date - 864000;
 
-        $values = [];
-        while ($results = Dba::fetch_assoc($db_results)) {
-            $values[$results['zoom_date']] = $results['storage'];
+        $buckets = $this->get_zoom_buckets($start_date, $end_date, $zoom);
+        if ($buckets === []) {
+            return [];
         }
 
-        return $values;
+        $start_date = $buckets[0];
+        $dateformat = $this->get_sql_date_format("`" . $object_type . "`.`addition_time`", $zoom);
+        $where      = $this->get_catalog_sql_where($object_type, $object_id, $catalog_id, $start_date, $end_date);
+        $filter     = $this->get_catalog_sql_filter($object_type, $object_id, $catalog_id);
+
+        // An album has no size of its own, so its storage is the size of the songs that belong to it.
+        [$sql, $baseline] = ($object_type === 'album')
+            ? [
+                "SELECT " . $dateformat . " AS `zoom_date`, IFNULL(SUM(`song`.`size`), 0) AS `value` FROM `album` LEFT JOIN `song` ON `song`.`album` = `album`.`id` " . $where . " GROUP BY " . $dateformat,
+                "SELECT IFNULL(SUM(`song`.`size`), 0) FROM `album` LEFT JOIN `song` ON `song`.`album` = `album`.`id` WHERE `album`.`addition_time` < " . $start_date . $filter,
+            ]
+            : [
+                "SELECT " . $dateformat . " AS `zoom_date`, IFNULL(SUM(`" . $object_type . "`.`size`), 0) AS `value` FROM `" . $object_type . "` " . $where . " GROUP BY " . $dateformat,
+                "SELECT IFNULL(SUM(`" . $object_type . "`.`size`), 0) FROM `" . $object_type . "` WHERE `" . $object_type . "`.`addition_time` < " . $start_date . $filter,
+            ];
+
+        return $this->get_running_total_pts($sql, $baseline, $buckets);
+    }
+
+    /**
+     * The catalog/object part of the where clause on its own, so the running total that seeds a
+     * catalog graph is restricted the same way the buckets inside the window are.
+     */
+    protected function get_catalog_sql_filter(
+        string $object_type = 'song',
+        int    $object_id = 0,
+        int    $catalog_id = 0,
+    ): string {
+        $sql = '';
+        if ($catalog_id > 0) {
+            $sql .= " AND `" . $object_type . "`.`catalog` = " . $catalog_id;
+        }
+
+        if ($object_id > 0) {
+            $sql .= " AND `" . $object_type . "`.`id` = '" . $object_id . "'";
+        }
+
+        return $sql;
     }
 
     /**
@@ -374,16 +410,7 @@ class Graph
             $start_date = $end_date - 864000;
         }
 
-        $sql = "WHERE `" . $object_type . "`.`addition_time` >= " . $start_date . " AND `" . $object_type . "`.`addition_time` <= " . $end_date;
-        if ($catalog_id > 0) {
-            $sql .= " AND `" . $object_type . "`.`catalog` = " . $catalog_id;
-        }
-
-        if ($object_id > 0) {
-            $sql .= " AND `" . $object_type . "`.`id` = '" . $object_id . "'";
-        }
-
-        return $sql;
+        return "WHERE `" . $object_type . "`.`addition_time` >= " . $start_date . " AND `" . $object_type . "`.`addition_time` <= " . $end_date . $this->get_catalog_sql_filter($object_type, $object_id, $catalog_id);
     }
 
     /**
@@ -416,6 +443,34 @@ class Graph
         }
 
         return $pts;
+    }
+
+    /**
+     * Turn per-bucket additions into a running total across every bucket.
+     *
+     * @param int[] $buckets
+     * @return array<int, int>
+     */
+    protected function get_running_total_pts(string $sql, string $baseline, array $buckets): array
+    {
+        $deltas     = array_fill_keys($buckets, 0);
+        $db_results = Dba::read($sql);
+        while ($results = Dba::fetch_assoc($db_results)) {
+            // the database groups in its own timezone, so snap the bucket it reports onto ours
+            // rather than assuming the two line up
+            $deltas[$this->find_bucket($buckets, (int) $results['zoom_date'])] += (int) $results['value'];
+        }
+
+        $row     = Dba::fetch_row(Dba::read($baseline));
+        $running = (int) ($row[0] ?? 0);
+
+        $values = [];
+        foreach ($buckets as $bucket) {
+            $running += $deltas[$bucket];
+            $values[$bucket] = $running;
+        }
+
+        return $values;
     }
 
     /**
@@ -582,6 +637,37 @@ class Graph
     }
 
     /**
+     * Every time bucket between the two dates, oldest first.
+     *
+     * The catalog graphs are cumulative, so they need a point for every bucket in the range and not
+     * just the buckets that happened to gain a file. A library added in one scan is a single bucket,
+     * which is why those graphs used to draw a lone point no matter how wide the range was.
+     *
+     * @return int[]
+     */
+    protected function get_zoom_buckets(int $start_date, int $end_date, string $zoom): array
+    {
+        [$truncate, $step] = match ($zoom) {
+            'hour' => ['Y-m-d H:00:00', '-1 hour'],
+            'year' => ['Y-01-01 00:00:00', '-1 year'],
+            'month' => ['Y-m-01 00:00:00', '-1 month'],
+            default => ['Y-m-d 00:00:00', '-1 day'],
+        };
+
+        $first  = new DateTimeImmutable(date($truncate, $start_date));
+        $cursor = new DateTimeImmutable(date($truncate, $end_date));
+
+        // walk back from the end so an oversized range keeps the most recent buckets
+        $buckets = [];
+        while ($cursor >= $first && count($buckets) < self::MAX_POINTS) {
+            $buckets[] = $cursor->getTimestamp();
+            $cursor    = $cursor->modify($step);
+        }
+
+        return array_reverse($buckets);
+    }
+
+    /**
      * Render a multi-series time chart as SVG.
      *
      * @param array<string, array<int, int|float>> $series series name => [unix timestamp => value]
@@ -654,6 +740,27 @@ class Graph
 
         header('Content-Disposition: filename="ampache-graph.svg"');
         $graph->render($type);
+    }
+
+    /**
+     * The last bucket that starts at or before the given date, clamped to the first bucket.
+     *
+     * @param int[] $buckets
+     */
+    private function find_bucket(array $buckets, int $date): int
+    {
+        $low  = 0;
+        $high = count($buckets) - 1;
+        while ($low < $high) {
+            $mid = intdiv($low + $high + 1, 2);
+            if ($buckets[$mid] <= $date) {
+                $low = $mid;
+            } else {
+                $high = $mid - 1;
+            }
+        }
+
+        return $buckets[$low];
     }
 
     /**

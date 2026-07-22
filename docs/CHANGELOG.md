@@ -120,6 +120,8 @@ You can downgrade to Ampache7 if you try this out and have issues, using the cli
 ### Fixed 8.0.0
 
 * Url shortener plugins (`bitly`, `yourls`) were never applied to share links, because `PluginTypeEnum::URL_SHORTENER` looked for a `shorten()` method and plugins implement `shortener()`
+* The catalog files and catalog size graphs only drew the time buckets that gained a file, so a library added in a single scan was one point no matter how wide the date range was; they now carry the running total across every bucket in the range
+* The running total those graphs start from ignored the catalog and object filters, so a graph for one catalog counted every earlier file on the server
 * `stats.php?action=graph` rendered graphs without checking `statistical_graphs` first, so it ignored the setting and was a fatal error whenever the charting library was absent
 * The catalog size graph was empty until a second time bucket existed, because the running total it adds to is `NULL` when nothing was added before the bucket and `NULL + SUM()` is `NULL`
 * The catalog size graph read zero for `object_type=album`; it joined `album`.`id` to `song`.`id` instead of `song`.`album`, and only counted buckets before the current one instead of including it
