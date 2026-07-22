@@ -8,7 +8,9 @@ AMPACHEDIR="/var/www/ampache"
 
 BRANCH='develop'
 #BRANCH='patch8'
+#BRANCH='patch7'
 #BRANCH='release8'
+#BRANCH='release7'
 
 ### What's the folder being updated
 echo $AMPACHEDIR
@@ -42,6 +44,9 @@ if [ "$OLD_HASH" != "$NEW_HASH" ]; then
 
   ### Clean up your garbage data
   php bin/cli run:updateCatalog -t
+
+  ### Ampache8 browses local catalogs by folder; scan to fill the folder tables after upgrading
+  #php bin/cli run:updateCatalog -s
 
   ### Run a public site? you can forcibly set all preferences to admin and stop users changing things
   #php bin/cli admin:updatePreferenceAccessLevel -e -l admin

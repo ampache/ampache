@@ -45,7 +45,7 @@ enum PluginTypeEnum: string
     case SONG_PREVIEW_PROVIDER        = 'get_song_preview';
     case SONG_PREVIEW_STREAM_PROVIDER = 'stream_song_preview';
     case STREAM_CONTROLLER            = 'stream_control';
-    case URL_SHORTENER                = 'shorten';
+    case URL_SHORTENER                = 'shortener';
     case USER_FIELD_WIDGET            = 'display_user_field';
     case USER_FLAG_MANAGER            = 'set_flag';
     case WANTED_LOOKUP                = 'process_wanted';
