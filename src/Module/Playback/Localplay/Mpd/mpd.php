@@ -357,6 +357,7 @@ class mpd
     {
         $this->_debug(self::class, "host: " . $this->host . ", port: " . $this->port, 5);
         $this->_mpd_sock = fsockopen($this->host, $this->port, $err, $err_str, 6);
+        // suppressed because an unreachable host is expected and reported through _error() below, not as a php warning
 
         if (!$this->_mpd_sock) {
             $this->_error('Connect', sprintf('Socket Error: %s (%d)', $err_str, $err));
