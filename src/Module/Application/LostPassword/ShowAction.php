@@ -46,9 +46,11 @@ final readonly class ShowAction implements ApplicationActionInterface
 
     public function run(ServerRequestInterface $request, GuiGatekeeperInterface $gatekeeper): ?ResponseInterface
     {
+        $allowLostPassword = $this->configContainer->get(ConfigurationKeyEnum::ALLOW_LOST_PASSWORD);
         if (
             !Mailer::is_mail_enabled()
             || $this->configContainer->isFeatureEnabled(ConfigurationKeyEnum::DEMO_MODE)
+            || ($allowLostPassword !== null && !make_bool($allowLostPassword))
         ) {
             throw new AccessDeniedException();
         }

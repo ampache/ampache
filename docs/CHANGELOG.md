@@ -52,6 +52,9 @@ You can downgrade to Ampache7 if you try this out and have issues, using the cli
 * Config version 91
   * New `encode_args_mp3_rg`, `encode_args_mp3_car`, `encode_args_opus_rg` and `encode_args_opus_car` transcode commands; `encode_args_m4a` now produces a fragmented MP4
   * `%MAXBITRATE%` is documented alongside `%BITRATE%` and both are substituted as plain bits per second
+* Config version 92
+  * New `allow_lost_password` option. Setting it to `false` hides the `Lost Password` link and rejects `lostpassword.php`, so nobody can trigger reset mail to your users by posting to it directly
+  * New `show_mini_player` option to hide the `Mini player` button on the login form; `/m/` stays reachable by url either way
 
 ### Changed 8.0.0
 
@@ -104,6 +107,7 @@ You can downgrade to Ampache7 if you try this out and have issues, using the cli
 * Uploading art, an avatar, a playlist or a podcast import file stopped the web player, because a form carrying a file fell back to a full page load
 * Database 800023
   * Uploaded art took its mime type from the filename, storing `image/jpg` (not a real type) for a `.jpg` upload and `image/JPG` for `.JPG`; the type is now read from the image data and existing rows are corrected
+  * Where the same artwork was stored twice under both spellings the `image/jpg` row is left as it is, because `unique_image` includes `mime` and no art is deleted during an upgrade
 * Light sidebar can scroll to reach its bottom entries on short screens
 * AJAX actions returned a server error instead of updating the page
   * Setting a favorite

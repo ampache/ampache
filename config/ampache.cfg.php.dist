@@ -6,7 +6,7 @@
 ; This value is used to detect if this config file is up to date
 ; this is compared against a constant called CONFIG_VERSION
 ; that is located in src/Config/Init/InitializationHandlerConfig.php
-config_version = 91
+config_version = 92
 
 ; Defines the default timezone used by the date functions
 ; Uses the same strings as the default date.timezone (https://php.net/date.timezone)
@@ -1243,6 +1243,19 @@ site_charset = "UTF-8"
 ; If you don't have an email server, make sure to enable user_no_email_confirm below
 ; DEFAULT: "false"
 ;allow_public_registration = "true"
+
+; Allow users to reset a forgotten password by email.
+; Turning this off hides the "Lost Password" link AND rejects lostpassword.php,
+; so a stranger can't trigger reset mail to your users by posting to it directly.
+; Only relevant on a server with mail enabled; without mail the feature is already off.
+; DEFAULT: "true"
+;allow_lost_password = "false"
+
+; Show the "Mini player" button on the login form, which sends you to the
+; cut down player at /m/ after logging in instead of the full interface.
+; This only hides the button; /m/ stays reachable by url either way.
+; DEFAULT: "true"
+;show_mini_player = "false"
 
 ; Require Captcha Text on Image confirmation
 ; Turning this on requires the user to correctly
