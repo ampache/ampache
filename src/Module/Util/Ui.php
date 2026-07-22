@@ -353,10 +353,6 @@ class Ui implements UiInterface
             $filepath   = __DIR__ . '/../../../resources/images/icon_error.svg';
         }
 
-        if (defined('AJAX_INCLUDE')) {
-            return self::_inline_material_symbol($name, $filepath, $title, $id_attrib, $class_attrib);
-        }
-
         $symbol = self::_load_symbol_parts($symbol_key, $filepath);
         if ($symbol === null) {
             return '';
@@ -364,7 +360,23 @@ class Ui implements UiInterface
 
         self::$_used_symbols[$symbol_key] = true;
 
-        $tag = '<svg' . $symbol['attrs'];
+        // In AJAX fragments there is no page sprite emitted before </body>,
+        // and each fragment is injected into its own DOM node via innerHTML,
+        // so it must be self-contained. Emit the hidden <symbol> inline the
+        // first time an icon appears in this response; every later occurrence
+        // is just a <use>. Duplicate ids are ignored by the browser, so this
+        // is safe even when the page sprite already holds the same symbol.
+        $prefix = '';
+        if (defined('AJAX_INCLUDE') && !isset(self::$_emitted_symbols[$symbol_key])) {
+            self::$_emitted_symbols[$symbol_key] = true;
+            $viewbox                             = ($symbol['viewbox'] !== '')
+                ? ' viewBox="' . $symbol['viewbox'] . '"'
+                : '';
+            $prefix = '<svg xmlns="http://www.w3.org/2000/svg" width="0" height="0" style="position:absolute" aria-hidden="true">' .
+                '<symbol id="ms-' . scrub_out($symbol_key) . '"' . $viewbox . '>' . $symbol['inner'] . '</symbol></svg>';
+        }
+
+        $tag = $prefix . '<svg' . $symbol['attrs'];
         if (!empty($id_attrib)) {
             $tag .= ' id="' . scrub_out($id_attrib) . '"';
         }
@@ -448,46 +460,6 @@ class Ui implements UiInterface
         }
 
         return self::$_symbol_cache[$symbol_key];
-    }
-
-    /**
-     * _inline_material_symbol
-     *
-     * Legacy rendering: the full icon body is inlined in the returned tag.
-     * Still used for AJAX fragments, which cannot rely on the page sprite.
-     */
-    private static function _inline_material_symbol(string $name, string $filepath, string $title, ?string $id_attrib, ?string $class_attrib): string
-    {
-        $tag = '';
-        // load svg file
-        $svgicon = simplexml_load_file($filepath);
-        if ($svgicon !== false) {
-            if (empty($svgicon->title)) {
-                $svgicon->addChild('title', $title);
-            } else {
-                $svgicon->title = $title;
-            }
-
-            if (empty($svgicon->desc)) {
-                $svgicon->addChild('desc', $title);
-            } else {
-                $svgicon->desc = $title;
-            }
-
-            if (!in_array($id_attrib, [null, '', '0'], true)) {
-                $svgicon->addAttribute('id', $id_attrib);
-            }
-
-            if (in_array($class_attrib, [null, '', '0'], true)) {
-                $class_attrib = '';
-            }
-
-            $svgicon->addAttribute('class', 'material-symbol material-symbol-' . $name . " " . $class_attrib);
-
-            $tag = explode("\n", (string) $svgicon->asXML(), 3)[1];
-        }
-
-        return $tag;
     }
 
     /**
