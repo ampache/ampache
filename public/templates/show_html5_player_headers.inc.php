@@ -78,6 +78,7 @@ if ($iframed) { ?>
         jpmedia['r128_track_gain'] = media['r128_track_gain'];
         jpmedia['r128_album_gain'] = media['r128_album_gain'];
         jpmedia['duration'] = media['duration'];
+        jpmedia['remote'] = media['remote'];
 
         return jpmedia;
     }
