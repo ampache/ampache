@@ -1352,7 +1352,7 @@ class Preference extends database_object
                     Dba::write($pref_sql, ['disabled_custom_metadata_fields', '', 'Custom metadata - Disable these fields', AccessLevelEnum::ADMIN->value, 'string', 'system', 'metadata']);
                     break;
                 case 'disabled_custom_metadata_fields_input':
-                    Dba::write($pref_sql, ['disabled_custom_metadata_fields_input', '', 'Custom metadata - Define field list', AccessLevelEnum::ADMIN->value, 'string', 'system', 'metadata']);
+                    Dba::write($pref_sql, ['disabled_custom_metadata_fields_input', '', 'Custom metadata - Additional fields to disable', AccessLevelEnum::ADMIN->value, 'string', 'system', 'metadata']);
                     break;
                 case 'podcast_keep':
                     Dba::write($pref_sql, ['podcast_keep', '0', '# latest episodes to keep', AccessLevelEnum::ADMIN->value, 'integer', 'system', 'podcast']);
@@ -2007,7 +2007,7 @@ class Preference extends database_object
             'demo_clear_sessions' => 'Democratic - Clear votes for expired user sessions',
             'demo_use_search' => 'Democratic - Use smartlists for base playlist',
             'direct_play_limit' => 'Limit direct play to maximum media count',
-            'disabled_custom_metadata_fields_input' => 'Custom metadata - Define field list',
+            'disabled_custom_metadata_fields_input' => 'Custom metadata - Additional fields to disable',
             'disabled_custom_metadata_fields' => 'Custom metadata - Disable these fields',
             'discogs_api_key' => 'Discogs consumer key',
             'discogs_secret_api_key' => 'Discogs secret',
