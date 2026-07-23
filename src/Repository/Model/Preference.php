@@ -166,6 +166,7 @@ class Preference extends database_object
         'browser_notify',
         'catalog_check_duplicate',
         'cron_cache',
+        'cron_cache_live_count',
         'custom_blankalbum',
         'custom_datetime',
         'custom_favicon',
@@ -183,6 +184,10 @@ class Preference extends database_object
         'disabled_custom_metadata_fields_input',
         'disabled_custom_metadata_fields',
         'download',
+        'encode_player_api_target',
+        'encode_player_webplayer_target',
+        'encode_target',
+        'encode_video_target',
         'extended_playlist_links',
         'external_links_bandcamp',
         'external_links_discogs',
@@ -211,6 +216,8 @@ class Preference extends database_object
         'localplay_controller',
         'localplay_level',
         'lock_songs',
+        'max_bit_rate',
+        'min_bit_rate',
         'mini_player',
         'notify_email',
         'now_playing_per_user',
@@ -267,6 +274,7 @@ class Preference extends database_object
         'theme_color',
         'theme_name',
         'topmenu',
+        'transcode_bitrate_formats',
         'transcode_bitrate',
         'transcode',
         'ui_fixed',
@@ -887,6 +895,7 @@ class Preference extends database_object
             'cookie_disclaimer',
             'cookie_secure',
             'cron_cache',
+            'cron_cache_live_count',
             'custom_logo_user',
             'daap_backend',
             'debug',
@@ -1591,6 +1600,33 @@ class Preference extends database_object
                 case 'show_folder':
                     Dba::write($pref_sql, ['show_folder', '1', 'Show \'Folders\' link in the main sidebar', AccessLevelEnum::USER->value, 'boolean', 'interface', 'sidebar']);
                     break;
+                case 'encode_target':
+                    Dba::write($pref_sql, ['encode_target', '', 'Transcode output format - Audio Default', AccessLevelEnum::USER->value, 'transcoding', 'streaming', 'transcoding']);
+                    break;
+                case 'encode_video_target':
+                    Dba::write($pref_sql, ['encode_video_target', '', 'Transcode output format - Video Default', AccessLevelEnum::USER->value, 'transcoding', 'streaming', 'transcoding']);
+                    break;
+                case 'encode_player_webplayer_target':
+                    Dba::write($pref_sql, ['encode_player_webplayer_target', '', 'Transcode output format - Web Player (overrides default)', AccessLevelEnum::USER->value, 'transcoding', 'streaming', 'transcoding']);
+                    break;
+                case 'encode_player_api_target':
+                    Dba::write($pref_sql, ['encode_player_api_target', '', 'Transcode output format - API (overrides default)', AccessLevelEnum::USER->value, 'transcoding', 'streaming', 'transcoding']);
+                    break;
+                case 'max_bit_rate':
+                    Dba::write($pref_sql, ['max_bit_rate', '0', 'Maximum transcode bitrate for dynamic downsampling in bps (0 = disabled)', AccessLevelEnum::USER->value, 'integer', 'streaming', 'transcoding']);
+                    break;
+                case 'min_bit_rate':
+                    Dba::write($pref_sql, ['min_bit_rate', '8000', 'Minimum transcode bitrate for dynamic downsampling in bps', AccessLevelEnum::USER->value, 'integer', 'streaming', 'transcoding']);
+                    break;
+                case 'transcode_bitrate_formats':
+                    Dba::write($pref_sql, ['transcode_bitrate_formats', '', 'Per-format transcode bitrate overrides in bps (falls back to Transcode Bitrate)', AccessLevelEnum::USER->value, 'bitrate_map', 'streaming', 'transcoding']);
+                    break;
+                case 'cron_cache_live_count':
+                    Dba::write($pref_sql, ['cron_cache_live_count', '0', 'Add live plays to the cached count for accurate stats (Require: Cron Cache)', AccessLevelEnum::ADMIN->value, 'boolean', 'system', 'catalog']);
+                    break;
+                case 'httpq_active':
+                    Dba::write($pref_sql, ['httpq_active', '0', 'HTTPQ Active Instance', AccessLevelEnum::USER->value, 'integer', 'internal', 'httpq']);
+                    break;
                 default:
                     debug_event(self::class, 'ERROR: missing preference insert code for: ' . $row['item'], 1);
             }
@@ -1956,6 +1992,7 @@ class Preference extends database_object
             'catalogfav_compact' => 'Catalog favorites media row display',
             'catalogfav_order' => 'Plugin CSS order',
             'cron_cache' => 'Cache computed SQL data (eg. media hits stats) using a cron',
+            'cron_cache_live_count' => 'Add live plays to the cached count for accurate stats (Require: Cron Cache)',
             'custom_blankalbum' => 'Custom blank album default image',
             'custom_datetime' => 'Custom datetime',
             'custom_favicon' => 'Custom URL - Favicon',
@@ -1975,6 +2012,10 @@ class Preference extends database_object
             'discogs_api_key' => 'Discogs consumer key',
             'discogs_secret_api_key' => 'Discogs secret',
             'download' => 'Allow Downloads',
+            'encode_target' => 'Transcode output format - Audio Default',
+            'encode_video_target' => 'Transcode output format - Video Default',
+            'encode_player_webplayer_target' => 'Transcode output format - Web Player (overrides default)',
+            'encode_player_api_target' => 'Transcode output format - API (overrides default)',
             'extended_playlist_links' => 'Show extended links for playlist media',
             'external_links_google' => 'Show Google search icon on library items',
             'external_links_discogs' => 'Show Discogs search icon on library items',
@@ -2021,6 +2062,8 @@ class Preference extends database_object
             'lock_songs' => 'Lock Songs',
             'matomo_site_id' => 'Matomo Site ID',
             'matomo_url' => 'Matomo URL',
+            'max_bit_rate' => 'Maximum transcode bitrate for dynamic downsampling in bps (0 = disabled)',
+            'min_bit_rate' => 'Minimum transcode bitrate for dynamic downsampling in bps',
             'mb_overwrite_name' => 'Overwrite Artist names that match an mbid',
             'mini_player' => 'Lock this user into the mini player interface',
             'mpd_active' => 'MPD Active Instance',
@@ -2062,6 +2105,7 @@ class Preference extends database_object
             'show_album_artist' => "Show 'Album Artists' link in the main sidebar",
             'show_artist' => "Show 'Artists' link in the main sidebar",
             'show_donate' => 'Show donate button in footer',
+            'show_folder' => "Show 'Folders' link in the main sidebar",
             'show_header_login' => 'Show the login / registration links in the site header',
             'show_license' => 'Show License',
             'show_lyrics' => 'Show lyrics',
@@ -2100,12 +2144,14 @@ class Preference extends database_object
             'subsonic_always_download' => 'Force Subsonic streams to download. (Enable scrobble in your client to record stats)',
             'subsonic_backend' => 'Use Subsonic backend',
             'subsonic_force_album_artist' => 'Force Album Artist for Subsonic API responses',
+            'subsonic_legacy' => 'Enable legacy Subsonic API responses for compatibility issues',
             'subsonic_single_user_data' => 'Use single user data for Subsonic API responses',
             'tadb_api_key' => 'TheAudioDb API key',
             'tadb_overwrite_name' => 'Overwrite Artist names that match an mbid',
             'theme_color' => 'Theme color',
             'theme_name' => 'Theme',
             'topmenu' => 'Top menu',
+            'transcode_bitrate_formats' => 'Per-format transcode bitrate overrides in bps (falls back to Transcode Bitrate)',
             'transcode_bitrate' => 'Transcode Bitrate',
             'transcode' => 'Allow Transcoding',
             'ui_fixed' => 'Fix header position on compatible themes',

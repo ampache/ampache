@@ -71,6 +71,7 @@ You can downgrade to Ampache7 if you try this out and have issues, using the cli
   * OpenSubsonic is now used by default — any user with `subsonic_legacy` enabled has it disabled for them
   * Catalog ids carry the `mf-` prefix used by every other object id, everywhere they appear (`musicFolder.id`, and the `parent` of a directory or child); unprefixed ids are still accepted on input
   * JSON `getMusicFolders` sent `musicFolder.id` as an integer while XML sent a string; both now send the prefixed string
+  * OpenSubsonic artist responses (`getArtists`, `getIndexes`, `getArtist`) carry the `roles` list (`albumartist`/`artist`) so a client can tell an album artist from a song-only artist regardless of the `subsonic_force_album_artist` preference
 * Page navigation uses the History API and real URLs
   * The address bar now shows the page you are on (`/browse.php?action=album`) instead of a stale path with the real page in the fragment (`/index.php#browse.php?action=album`), so links can be read, shared and bookmarked
   * Existing `#` bookmarks still work and upgrade themselves to the real url on load
