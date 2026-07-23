@@ -94,9 +94,6 @@ class Ajax
         string $class = '',
         string $confirm = '',
     ): string {
-        // Get the correct action
-        $ajax_string = self::action($action, $source, $post);
-
         // If they passed a span class
         if ($class) {
             $class = ' class="' . $class . '"';
@@ -104,14 +101,23 @@ class Ajax
 
         $string = Ui::get_material_symbol($icon, $alt);
 
+        // Instead of emitting one inline <script> observer per button,
+        // carry the action in data-* attributes. A single delegated click
+        // handler (see src/js/ajax.js) replays the exact same logic
+        // (update_action() + ajaxPut/ajaxPost with the element id as source),
+        // including for buttons injected dynamically through AJAX.
+        $attributes = ' data-ajax="1" data-ajax-url="' . scrub_out(self::url($action)) . '"';
+        if ($post !== '') {
+            $attributes .= ' data-ajax-post="' . scrub_out($post) . '"';
+        }
+        if ($confirm !== '') {
+            $attributes .= ' data-ajax-confirm="' . scrub_out($confirm) . '"';
+        }
+
         // Generate an <a> so that it's more compliant with older
         // browsers (ie :hover actions) and also to unify linkbuttons
         // (w/o ajax) display
-        $string = "<a href=\"javascript:void(0);\" id=\"$source\" $class>" . $string . "</a>\n";
-
-        $string .= self::observe($source, 'click', $ajax_string, $confirm);
-
-        return $string;
+        return "<a href=\"javascript:void(0);\" id=\"" . scrub_out($source) . "\"$attributes $class>" . $string . "</a>\n";
     }
 
     /**

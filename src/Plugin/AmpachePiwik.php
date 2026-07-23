@@ -78,6 +78,9 @@ class AmpachePiwik extends AmpachePlugin implements PluginDisplayOnFooterInterfa
         echo "<!-- Piwik -->\n";
         echo "<script>\n";
         echo "var _paq = _paq || [];\n";
+        // Defer all tracking work until after the page has fully loaded so the
+        // beacon and piwik.js fetch stay off the critical rendering path.
+        echo "window.addEventListener('load', function() {\n";
         echo "_paq.push(['trackLink', '" . $currentUrl . "', 'link']);\n";
         echo "_paq.push(['enableLinkTracking']);\n";
         echo "(function() {\n";
@@ -91,6 +94,7 @@ class AmpachePiwik extends AmpachePlugin implements PluginDisplayOnFooterInterfa
         echo "var d=document, g=d.createElement('script'), s=d.getElementsByTagName('script')[0];\n";
         echo "g.async=true; g.defer=true; g.src=u+'piwik.js'; s.parentNode.insertBefore(g,s);\n";
         echo "})();\n";
+        echo "});\n";
         echo "</script>\n";
         echo "<noscript><p><img src='" . scrub_out($this->piwik_url) . "piwik.php?idsite=" . scrub_out($this->site_id) . "' style='border:0;' alt= '' /></p></noscript>\n";
         echo "<!-- End Piwik Code -->\n";
