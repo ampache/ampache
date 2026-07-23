@@ -290,7 +290,7 @@ class Art extends database_object
             }
         }
 
-        echo "<img src=\"" . $imgurl . "\" alt=\"" . $name . "\" height=\"" . $size['height'] . "\" width=\"" . $size['width'] . "\" />";
+        echo "<img src=\"" . $imgurl . "\" alt=\"" . $name . "\" height=\"" . $size['height'] . "\" width=\"" . $size['width'] . "\" loading=\"lazy\" decoding=\"async\" />";
 
         $item_art_play = ($size['height'] == 150)
             ? "<div class=\"item_art_play_150\">"

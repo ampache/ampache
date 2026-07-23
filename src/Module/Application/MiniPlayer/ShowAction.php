@@ -25,13 +25,9 @@ declare(strict_types=1);
 
 namespace Ampache\Module\Application\MiniPlayer;
 
-use Ampache\Config\AmpConfig;
 use Ampache\Module\Application\ApplicationActionInterface;
 use Ampache\Module\Authorization\GuiGatekeeperInterface;
-use Ampache\Module\System\Core;
 use Ampache\Module\Util\Ui;
-use Ampache\Repository\Model\Preference;
-use Ampache\Repository\Model\User;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 
@@ -44,22 +40,11 @@ final readonly class ShowAction implements ApplicationActionInterface
 
     public function run(ServerRequestInterface $request, GuiGatekeeperInterface $gatekeeper): ?ResponseInterface
     {
-        $user = Core::get_global('user');
-
-        // Users locked into this page can't reach their preferences to fix a play type that doesn't
-        // load the web player, so make sure it is set. Core::get_reloadutil() only returns the
-        // in-page loader for the web player play type.
-        if (
-            $user instanceof User
-            && $user->getId() > 0
-            && Preference::get_by_user($user->getId(), 'mini_player')
-        ) {
-            if (AmpConfig::get('play_type') !== 'web_player') {
-                Preference::update('play_type', $user->getId(), 'web_player');
-                AmpConfig::set('play_type', 'web_player', true);
-            }
-        }
-
+        // The mini header carries the play type switcher (show_playtype_switch.inc.php) so a user
+        // locked into this page can move between web player, stream, localplay and democratic
+        // without reaching their preferences. The page ships everything each type needs: #webplayer,
+        // the util_iframe for stream/democratic and the rightbar for localplay. Don't force a type
+        // here or the switcher can't stick.
         require_once Ui::find_template('mini.inc.php');
 
         return null;

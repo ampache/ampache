@@ -1333,13 +1333,14 @@ abstract class Catalog extends database_object
     /**
      * get_artist_arrays
      *
-     * Get each array of [id, f_name, name, album_count, catalog_id, has_art] for artists in an array of catalog id's
+     * Get each array of [id, f_name, name, album_count, song_count, catalog_id, has_art] for artists in an array of catalog id's
      * @param int[]|string[] $catalogs
      * @return array<int, array{
      *     id: int,
      *     f_name: string,
      *     name: string,
      *     album_count: int,
+     *     song_count: int,
      *     catalog_id: int,
      *     has_art: int
      * }>
@@ -1347,8 +1348,8 @@ abstract class Catalog extends database_object
     public static function get_artist_arrays(array $catalogs): array
     {
         $sql = (count($catalogs) == 1)
-            ? "SELECT DISTINCT `artist`.`id`, LTRIM(CONCAT(COALESCE(`artist`.`prefix`, ''), ' ', `artist`.`name`)) AS `f_name`, `artist`.`name`, `artist`.`album_count` AS `album_count`, `catalog_map`.`catalog_id` AS `catalog_id`, `image`.`object_id` AS `has_art` FROM `artist` LEFT JOIN `catalog_map` ON `catalog_map`.`object_type` = 'artist' AND `catalog_map`.`object_id` = `artist`.`id` AND `catalog_map`.`catalog_id` = " . (int) $catalogs[0] . " LEFT JOIN `image` ON `image`.`object_type` = 'artist' AND `image`.`object_id` = `artist`.`id` AND `image`.`size` = 'original' WHERE `catalog_map`.`catalog_id` IS NOT NULL ORDER BY `f_name`;"
-            : "SELECT DISTINCT `artist`.`id`, LTRIM(CONCAT(COALESCE(`artist`.`prefix`, ''), ' ', `artist`.`name`)) AS `f_name`, `artist`.`name`, `artist`.`album_count` AS `album_count`, MIN(`catalog_map`.`catalog_id`) AS `catalog_id`, `image`.`object_id` AS `has_art` FROM `artist` LEFT JOIN `catalog_map` ON `catalog_map`.`object_type` = 'artist' AND `catalog_map`.`object_id` = `artist`.`id` AND `catalog_map`.`catalog_id` IN (" . Dba::escape(implode(',', $catalogs)) . ") LEFT JOIN `image` ON `image`.`object_type` = 'artist' AND `image`.`object_id` = `artist`.`id` AND `image`.`size` = 'original' WHERE `catalog_map`.`catalog_id` IS NOT NULL GROUP BY `artist`.`id`, `f_name`, `artist`.`name`, `artist`.`album_count`, `image`.`object_id` ORDER BY `f_name`;";
+            ? "SELECT DISTINCT `artist`.`id`, LTRIM(CONCAT(COALESCE(`artist`.`prefix`, ''), ' ', `artist`.`name`)) AS `f_name`, `artist`.`name`, `artist`.`album_count` AS `album_count`, `artist`.`song_count`, `catalog_map`.`catalog_id` AS `catalog_id`, `image`.`object_id` AS `has_art` FROM `artist` LEFT JOIN `catalog_map` ON `catalog_map`.`object_type` = 'artist' AND `catalog_map`.`object_id` = `artist`.`id` AND `catalog_map`.`catalog_id` = " . (int) $catalogs[0] . " LEFT JOIN `image` ON `image`.`object_type` = 'artist' AND `image`.`object_id` = `artist`.`id` AND `image`.`size` = 'original' WHERE `catalog_map`.`catalog_id` IS NOT NULL ORDER BY `f_name`;"
+            : "SELECT DISTINCT `artist`.`id`, LTRIM(CONCAT(COALESCE(`artist`.`prefix`, ''), ' ', `artist`.`name`)) AS `f_name`, `artist`.`name`, `artist`.`album_count` AS `album_count`, `artist`.`song_count`, MIN(`catalog_map`.`catalog_id`) AS `catalog_id`, `image`.`object_id` AS `has_art` FROM `artist` LEFT JOIN `catalog_map` ON `catalog_map`.`object_type` = 'artist' AND `catalog_map`.`object_id` = `artist`.`id` AND `catalog_map`.`catalog_id` IN (" . Dba::escape(implode(',', $catalogs)) . ") LEFT JOIN `image` ON `image`.`object_type` = 'artist' AND `image`.`object_id` = `artist`.`id` AND `image`.`size` = 'original' WHERE `catalog_map`.`catalog_id` IS NOT NULL GROUP BY `artist`.`id`, `f_name`, `artist`.`name`, `artist`.`album_count`, `artist`.`song_count`, `image`.`object_id` ORDER BY `f_name`;";
 
         $db_results = Dba::read($sql);
         $results    = [];
@@ -1358,6 +1359,7 @@ abstract class Catalog extends database_object
                 'f_name' => $row['f_name'],
                 'name' => $row['name'],
                 'album_count' => (int) $row['album_count'],
+                'song_count' => (int) $row['song_count'],
                 'catalog_id' => (int) $row['catalog_id'],
                 'has_art' => (int) $row['has_art']
             ];

@@ -40,40 +40,9 @@ v7 siblings (`develop`, `client7`, `squashed7`) mirror the same three structures
 
 ## Commands
 
-Composer scripts (see `composer.json`):
-
-```shell
-composer qa            # syntax check + cs:check + tests — run this before submitting a PR
-composer tests         # vendor/bin/phpunit -c phpunit.xml
-composer stan          # vendor/bin/phpstan analyse (level 8, phpstan v2, see phpstan.neon)
-composer stan-baseline # vendor/bin/phpstan --generate-baseline
-composer cs:check      # php-cs-fixer dry-run (PSR-12 + PER-CS3x0, see .php-cs-fixer.php)
-composer cs:fix        # php-cs-fixer, applies fixes
-composer syntax        # resources/scripts/tests/syntax.sh (php -l across the codebase)
-composer coverage      # phpunit with HTML coverage report in build/coverage
-composer rector:dry    # rector process -n (dry-run codemods, rector v2, see rector.php)
-composer rector:fix    # rector process
-```
-
-Run a single test file or method directly with phpunit:
-
-```shell
-vendor/bin/phpunit tests/Module/Album/Deletion/AlbumDeleterTest.php
-vendor/bin/phpunit --filter testDeleteDeletesExpectedEntities tests/Module/Album/Deletion/AlbumDeleterTest.php
-```
+Task scripts live in `composer.json` and `package.json` — read those for the current list. `composer qa` is the pre-PR gate (syntax + cs:check + tests).
 
 Test structure mirrors `src/` 1:1 (e.g. `src/Module/Album/Deletion/AlbumDeleter.php` -> `tests/Module/Album/Deletion/AlbumDeleterTest.php`).
-
-Frontend assets (bootstrap, jquery, etc. — vendored into `public/lib/components`, plus Vite build):
-
-```shell
-npm run dev      # vite dev server on port 5177
-npm run build    # vite build --minify false
-```
-
-Local dev via Docker: `docker-compose.yml` builds `docker/Dockerfilephp85`, maps the repo into `/var/www/html`, serves on port 8084.
-
-CI (`.github/workflows/qa.yml`) runs `composer validate`, `composer update`, `composer run-script qa`, and `npm audit --production`.
 
 ## Architecture
 
@@ -101,12 +70,15 @@ When adding a new startup concern, add an `InitializationHandler*` implementing 
 - New API methods should implement `MethodInterface` and live under `src/Module/Api/Method/Api8/`; `ApiHandler::_executeHandler()` checks whether the resolved handler class implements `MethodInterface` via the DI container and, if so, calls it the "new" way — otherwise it falls back to a legacy `call_user_func_array` static-method call. Both paths must keep working until the legacy methods are fully migrated (marked `@todo cleanup` in the source).
 - `ApiHandler::normalizeAction()`/`normalizeType()` translate REST-style resource/action pairs (e.g. `albums_songs`, `fetch-info`) into the canonical snake_case action names used by the method lists — REST routing lives in `XmlRestApiApplication`/`JsonRestApiApplication`, plain XML/JSON in `XmlApiApplication`/`JsonApiApplication`, plus dedicated `Daap`, `Subsonic`/`OpenSubsonic`, `Upnp`, and `Sse` application classes, all under `src/Module/Api`.
 - When changing API behavior, check whether it needs to apply (or explicitly not apply) across all live versions — a fix in `Api8` alone will silently not apply to clients pinned to v6 via `api_force_version`.
+- Several type lists are **shared by every version** — `ObjectTypeGate::INDEX_TYPES` (used by `IndexMethod`, `ListMethod` *and* `GetIndexes6Method`), `AbstractGetArtMethod::TYPES`, `AdvancedSearchMethod::isSearchableType()`. Appending a type to one of these exposes it on v5/v6 too, where no formatter can render it; add a v8-only list instead.
+- **`album_disk` has no API representation at all** despite being a full browse/search/rating/art/stats type, and it is the browsing unit whenever the per-user `album_group` preference is off. Read `docs/PLAN-album-disk-api.md` before adding it anywhere — including the live bug where `advanced_search type=album_disk` renders album_disk ids as songs.
 
 ### REST API
 
 The REST surface (`{ampacheURL}/rest/{version}/{format}/{resource}...`, versions `3`/`4`/`5`/`6`/`8`, formats `json`/`xml`) is documented in **`docs/openapi.json`** (a full OpenAPI 3.0.3 spec — 176 paths, tagged by resource, with `ApiKeyAuthQuery`/`ApiKeyAuthHeader`/`BearerAuth` security schemes) and **`docs/REST-to-RPC.md`** (a human-readable table mapping each REST path + HTTP verb to the equivalent legacy RPC `action=` call). Consult both when adding or changing a REST endpoint:
 
-- Add/update the path, verb, params, and schema in `docs/openapi.json`.
+- Add/update the path, verb and params in `docs/openapi.json`, then run `composer api:docs` (needs python). **Response schemas and error responses are generated** — from the `@return` array-shape docblocks on the `Json8_Data` `*_array()` builders and from `Api::getHttpCode()` — so a hand-edit inside a generated region is reverted on the next run. Read `resources/scripts/api-docs/README.md` before editing the spec by hand; `composer api:docs:check` (run by its own CI job) fails when the committed documents drift.
+- `docs/openapi.json` describes **API version 8**. `docs/openapi-6.json` is a separate, hand-maintained spec pinned to **API version 6** for contract-testing a single version. API6 is served by both Ampache7 and Ampache8, so it documents only the surface both honour: no `/folder`, `/folders`, `/playlists/{playlist_id}/remove` (API8-only) and no `/random` (API8 only); errors are not mapped onto HTTP status codes (API3–6 always return 200 with the error in the body); response schemas come from the `Json6_Data` builders. `tests/Module/Api/Api6SpecConformanceTest.php` fails if the code drifts from it — **update the spec and that test together when API6 changes**, and never let an API6 response gain or lose a field without checking `ampache-develop` (Ampache7) still matches.
 - Add/update the corresponding row in the `docs/REST-to-RPC.md` table (REST path -> RPC action -> alternative action, if any).
 
 REST requests are **not** routed by Slim; they go through `mod_rewrite` rules in `public/rest/.htaccess.dist`, which pattern-match the URL (resource/id/nested-child/verb-suffix shapes) and rewrite to `public/server/{xml,json}.rest.php?version=..&action=..&type=..&filter=..`. Those entry scripts instantiate `Ampache\Module\Api\XmlRestApiApplication`/`JsonRestApiApplication` (`src/Module/Api`), which:
@@ -117,6 +89,25 @@ REST requests are **not** routed by Slim; they go through `mod_rewrite` rules in
 4. Delegate to the same `ApiHandler::handle()` used by the plain RPC API — so REST is a thin routing/naming adapter in front of the versioned RPC engine described above, not a separate implementation. A REST-specific bug is often actually in `normalizeAction()`/`normalizeType()` rather than in the method handler itself.
 
 `public/rest/index.php` itself runs `SubsonicApiApplication` (Subsonic clients hitting `/rest/*.view`); the OpenAPI/REST-to-RPC docs above describe the Ampache-native REST paths handled via `public/server/{format}.rest.php`, not the Subsonic protocol (see `docs/API-subsonic.md` for that).
+
+### Subsonic / OpenSubsonic protocol (separate engine — the `api_version` machinery does NOT apply)
+
+The Subsonic surface is served by `SubsonicApiApplication` (legacy) and `OpenSubsonic_Api`, formatted by **two pairs** of output classes under `src/Module/Api`: `Subsonic_{Xml,Json}_Data` (plain Subsonic 1.16.1) and `OpenSubsonic_{Xml,Json}_Data` (its OpenSubsonic extension). None of the versioned RPC/REST engine above (`Api8`, `api_force_version`, `*8_Data`) is involved.
+
+- **OpenSubsonic-only response fields (e.g. artist `roles`) go ONLY in the `OpenSubsonic_*_Data` classes — never the plain `Subsonic_*_Data` ones.** `tests/Module/Api/SubsonicSpecConformanceTest.php` validates the legacy-Subsonic XML corpus against the strict Subsonic **1.16.1 XSD** (an unknown element/attribute fails) and the OpenSubsonic JSON corpus against `docs/openapi-opensubsonic.json`; the other two corpora (OpenSubsonic XML, Subsonic JSON) have no schema and are unchecked. So a field added to a `Subsonic_*` class, or an OpenSubsonic JSON field the OpenAPI spec doesn't document, breaks conformance — add the field to that spec too (its schemas set no `additionalProperties`, so documented-or-not is what matters).
+- The artist index builders (`_addArtistArray`/`_getArtistArray`, `_addIndex`/`_getIndex` in both `*_Data` classes) are fed by **two different SQL sources** — `Artist::get_id_arrays()` for `getArtists` and `Catalog::get_artist_arrays()` for `getIndexes`. A column added to one query but not the other makes the same builder emit different output per endpoint (this is how `getIndexes` once silently dropped the `artist` role). Keep the two row shapes in sync, and thread any added key through **every** `@param`/`@return` array-shape docblock in the call chain or PHPStan level 8 fails (`argument.type`, `nullCoalesce.offset`).
+- OpenSubsonic *extensions* (named capabilities like `songLyrics`, `formPost`) are a different concept, hardcoded in `OpenSubsonic_Api::getopensubsonicextensions()`; a standard optional field is NOT an extension and does not go there.
+- **Changelog:** Subsonic/OpenSubsonic changes are logged in `docs/CHANGELOG.md` under the `* Subsonic` header — **not** `docs/CHANGELOG-API.md`, which covers only the native API (versions 3–8).
+
+### Lists: playlists, searches and collections
+
+Ampache has two list primitives and both are shaped for media. `playlist` is static and ordered but `playlist_data.object_type` is a media-only enum; `search` is dynamic and rule-driven but its `Search::VALID_TYPES` already spans `user`/`label`/`genre`/`playlist`/`podcast`. Curating a list of non-media objects is not possible today.
+
+**Collections** — a third primitive for exactly that — is designed and agreed but not implemented. Read `docs/PLAN-collections.md` before adding anything that curates a list of objects (it is gated on `docs/PLAN-album-disk-api.md` landing first). In particular: do **not** widen `playlist_data.object_type`. `Playlist::get_items()`, `get_media_count()`, `get_total_duration()`, `get_random_items()` and `Stream_Playlist` all assume streamable rows, so a non-media type in that table breaks them.
+
+**Playlists are song lists at the API boundary, deliberately** — not because the data says so. `playlist_data` really does hold seven media types, but `playlists`/`playlist_songs`/`list`/`index` all merge playlists with smartlists (ids prefixed `smart_`), and a smartlist there is always a *song* search. Making the playlist half polymorphic would give one response shape two meanings. So API8 filters items to songs, counts with `get_media_count('song')`, and sums song time only. Mixed playlist contents get their own method path (`playlist_items`, a follow-on in the plan doc) — do not widen the `playlists` response to carry them.
+
+Anything reading `Playlist::get_items()` directly still gets mixed `object_type` values and must honour them.
 
 ### Dependency injection
 
@@ -132,9 +123,15 @@ REST requests are **not** routed by Slim; they go through `mod_rewrite` rules in
 - `Config/` — DI container bootstrap (`Bootstrap.php`, `DicBuilder.php`, `Init.php` + `Init/`), `AmpConfig`/`ConfigContainer` for reading `config/ampache.cfg.php`.
 - `Plugin/` — third-party integration plugins (`AmpacheLastfm.php`, `AmpacheDiscogs.php`, etc.), each implementing `AmpachePluginInterface`.
 
+### Database migrations
+
+- A migration that throws **aborts the whole update and does not record its version**, so every install on that version is stuck until the migration itself is fixed. When one is reported broken, **fix that migration in place — never add a follow-up migration to repair it**; the failed one never recorded, so the corrected version re-runs everywhere.
+- There is no transaction around a migration, so a partial failure stays committed and the re-run replays earlier statements: every statement must be idempotent.
+- Before writing or reviewing one, use the `database-migrations` skill (`.claude/skills/database-migrations/SKILL.md`) — unique-key collisions, nullable-column joins, the case-insensitive collation, the Ampache7 downgrade obligation and how to prove it against real data.
+
 ### Coding conventions
 
-- PHP 8.5+ syntax, `declare(strict_types=1)`, PSR-12 + `@PER-CS3x0` style (enforced by php-cs-fixer, see `.php-cs-fixer.php`) — notably: aligned `=` operators, alpha-sorted imports, short array syntax, trailing commas in multiline parameter lists, and a fixed `ordered_class_elements` layout (traits, cases, constants, static properties, properties, constructor, then methods by visibility, magic methods last — all alpha-sorted within each group).
+- PHP 8.5+ syntax, `declare(strict_types=1)`, PSR-12 + `@PER-CS3x0` style — all mechanically enforced by `composer cs:fix` (see `.php-cs-fixer.php`), so let the fixer settle formatting rather than hand-matching it.
 - Every new PHP file needs the AGPL-3.0 license header — see `CONTRIBUTING.md` for the exact template.
 - Prefer interface + final implementation class pairs (`FooInterface` / `final class Foo implements FooInterface`) with constructor-injected dependencies assigned to typed private properties, matching the existing `Module`/`Repository` pattern (see `AlbumDeleter.php` for a representative example). `readonly` classes/properties are used for immutable services (e.g. `Config\Init\Init`).
 - Don't reformat or reorder unrelated/unchanged lines in a diff (explicitly called out in `CONTRIBUTING.md`).
@@ -144,50 +141,26 @@ REST requests are **not** routed by Slim; they go through `mod_rewrite` rules in
 
 ### Testing
 
-- PHPUnit 11, tests extend `Ampache\MockeryTestCase` (wraps `Mockery\Adapter\Phpunit\MockeryTestCase`) and mock dependencies via its `mock(FooInterface::class)` helper rather than instantiating real collaborators.
-- Test suite root is `tests/`, bootstrapped by `tests/bootstrap.php` (just loads `src/Config/functions.php`).
+- Tests extend `Ampache\MockeryTestCase` and mock dependencies via its `mock(FooInterface::class)` helper rather than instantiating real collaborators.
 
 ### Frontend: reborn theme & mobile layout
 
-The `reborn` theme (`public/themes/reborn/templates/`) is **desktop-only** by design. Mobile support was added as one `@media (max-width: 768px)` block at the END of `default.css`, plus small matching `@media` blocks in `dark.css`/`light.css` for drawer/toast backgrounds only. Everything is scoped to ≤768px so the desktop layout is untouched.
+The `reborn` theme is desktop-only by design; mobile is one `@media (max-width: 768px)` block at the end of `default.css`. Before touching theme CSS or responsive layout, use the `reborn-mobile` skill (`.claude/skills/reborn-mobile/SKILL.md`) — it holds the zoom trap, off-canvas nav and stacking-context gotchas.
 
-- `default.css` holds all layout geometry; `dark.css`/`light.css` carry ONLY colors (safe place for theme-specific mobile backgrounds).
-- **The `body#main-page { min-width: 1024px }` trap**: on a phone the page is wider than the viewport, so mobile browsers shrink-to-fit *zoom*, and a zoomed page pins `position: fixed` (the webplayer) to the zoomed document, not the screen. The fix is to give content full width so there is NO horizontal overflow (→ no zoom). Detect regressions with `document.documentElement.scrollWidth > window.innerWidth` at 360px — NOT by eyeballing headless screenshots (headless browsers don't reproduce shrink-to-fit zoom).
-- **Off-canvas nav**: `#sidebar` is a fixed left drawer (`transform: translateX(-100%)`; `body.sidebar-open` reveals it); content is full-width. Chrome added: hamburger `#mobile-menu-toggle` (first child of `#header`), backdrop `#mobile-nav-backdrop`, close `#mobile-drawer-close`. The toggle JS (`ToggleMobileSidebar`/`CloseMobileNav`) is **inline in `footer.inc.php`** — `src/js/*.js` is Vite-bundled (`src/js/main.js`), so inline avoids a rebuild.
-- Non-obvious gotchas: (1) `#maincontainer { position: relative; z-index: 1 }` traps the fixed drawer below the body-level backdrop — set it `position: static; z-index: auto` on mobile. (2) The menu panel `#sidebar-page.sidebar-page-float` MUST stay `position: absolute`; making it static inflates its floated tab `<li>` and shoves the other tab icons below the menu. (3) The `<<< / >>>` collapse (`src/js/sidebar.js` + `sidebar_state` cookie) only works if you DON'T `!important`-force `#sidebar-content`/`#sidebar-content-light` display. (4) Hide the hamburger on desktop with `#header #mobile-menu-toggle { display: none }` — scoped to `#header` to outrank `#header a { display: inline-block }`.
-- `#header` becomes a sticky flex top bar. The temp-playlist `#rightbar` drops down from the header button via the original `ToggleRightbarVisibility()` slideDown — NOT off-canvas, because `RightbarInit()` sets it `display: none` when the basket is empty. The AJAX `#ajax-loading` indicator is pinned top-right.
-- Detail pages (album/artist/song) use `.item_right_info` (`float: right; max-width: 60%`) holding a floated `Art::display` image; on mobile it overlaps the Actions — fix with `float: none; display: flow-root` and pull the art left via `#content .info-box .box-content .item_art { float: left }`.
+### Frontend: page navigation & AJAX URLs
+
+Two unrelated things are both called "ajax URLs"; don't confuse them.
+
+- **The RPC endpoint** — `jsAjaxUrl` / `Ajax::url()` -> `<web_path>/server/ajax.server.php?page=X&action=Y`, built by `src/Module/Util/AjaxUriRetriever.php` and exposed in `public/templates/js_globals.php`. Consistent, no fragment, fine as-is.
+- **Page navigation** — `src/js/ajax.js` intercepts link clicks and navigates with the History API, so the URL bar always shows the real, server-routable page (`/browse.php?action=album`). Two helpers in `src/js/base.js` do the work: `ampacheUrl()` decides whether a link is internal (real origin + pathname prefix test — never substring matching on `jsWebPath`), and `navigateToUrl()` pushes state and swaps `#guts`. `NavigateTo()` delegates to it, which is why the ~25 template call sites need no changes.
+- Navigation gotchas: `popstate` handles back/forward but must ignore fragment-only moves (the prettyPhoto lightbox writes `#prettyPhoto`), which is what `loadedPage` in `ajax.js` tracks. Old `/index.php#browse.php?…` bookmarks still resolve via a one-shot shim that upgrades them to the real URL. Never re-introduce a hand-injected `#` in PHP — templates emit plain hrefs and the click delegate handles them.
+- The `ajax_load` preference is **gone** (`Migration800022`), along with the popup web player it selected. Playback is always the embedded `#webplayer`, and `check_autoplay_append()`/`check_autoplay_next()` depend only on `play_type`. Don't reintroduce a preference to gate navigation: link interception was never conditional on it.
+- **`web_path` is an absolute URL at runtime** (`src/Config/Init/InitializationHandlerConfig.php` rewrites it to `https://host[:port][/subdir]`), NOT the path from the config file. `raw_web_path` holds the path-only form. This trips up anything doing string math on link prefixes.
 
 ### Local dev & UI testing
 
-- Docker dev instance on `localhost:8084` (`docker-compose.yml` → `docker/Dockerfilephp85`); log in as the local admin (`admin` / `demodemo`).
-- Windows + Git-Bash: prefix `docker exec` with `MSYS_NO_PATHCONV=1` when passing unix paths (e.g. `MSYS_NO_PATHCONV=1 docker exec ampache php -l /var/www/html/...`).
-- Dev cache: CSS/JS are cache-busted with a STATIC `?v=<version>`, so edits don't change the URL. `docker/data/sites-enabled/001-ampache.conf` sends `Cache-Control: no-cache` for `.css/.js/.map` (needs `mod_headers`, enabled in the Dockerfile) so a normal reload picks up edits; a browser may still need one hard-refresh (Ctrl+Shift+R) to drop an already-cached file.
-- Drive/verify the real UI headlessly with Playwright: log in via `document.querySelector('form').submit()`, then `ajaxPut(jsAjaxUrl + '?page=stream&action=directplay&object_type=song&object_id=1&playtype=web_player')` to play into the webplayer. Test both Chromium and a mobile-UA Firefox for responsive checks.
+Running or verifying the app in the real UI? Use the `reborn-mobile` skill (`.claude/skills/reborn-mobile/SKILL.md`) — Docker dev instance, credentials, cache behaviour and Playwright driving.
 
 ## Changelog rules
 
-Rules for writing `docs/CHANGELOG.md` and `docs/CHANGELOG-API.md`. Follow the existing entries — these files are append-at-top, newest release first.
-
-### Shared rules (both files)
-
-1. Release header is `## <Product> X.Y.Z` (`## Ampache 8.0.0` / `## API 6.9.2 Build 2`). Newest release at the top of the file.
-2. After the header comes an optional **blurb**: one sentence per line, each on its own paragraph line. Use it only for large/ongoing themes, upgrade warnings, or versioning notes — not to restate bullets. Keep it short and plain: 1–4 lines, no marketing language, no multi-clause sentences. Prefix warnings with `**NOTE**`.
-3. Sections appear in this fixed order and ONLY when non-empty: `### Added`, `### Changed`, `### Removed`, `### Fixed`. Every section title carries the version in parens to keep markdown anchors unique — the release string in CHANGELOG.md 7.x entries (`### Added (7.10.0)`), the int build/database version in CHANGELOG-API.md and Ampache8 entries (`### Added (800000)`, `### Added (692001)`).
-4. One change per bullet. Short declarative line, no trailing period needed. Backtick every identifier: config keys, preference names, methods, parameters, columns, tables, file names, CLI commands.
-5. Group related changes under a **category header bullet** with two-space-indented sub-items. Use a header when 2+ items share the category; a single one-off change stays a plain top-level bullet.
-6. Log only what matters to someone upgrading **between released versions**, not the churn of building the current one. While the top release is a work-in-progress (e.g. `## Ampache 8.0.0`, marked WIP), do NOT log incremental fixes to a feature that was itself introduced in that same unreleased version — a fix to something that never shipped is invisible to users. Also skip trivial cosmetic tweaks ("moved a few pixels", "adjusted a colour"). Log the notable feature or behavior once, not each refinement to it. When unsure whether a change clears this bar, ask before adding it.
-
-### CHANGELOG.md specifics
-
-7. Established category headers (reuse these, don't invent synonyms): `Database` (suffix the update version when there is one, e.g. `Database 794004`), `Subsonic`, `Search`, `CLI`, `API`, `Browse`, `Plugins`, `Ampache Remote Catalogs`, `Config version NN`, `Translations YYYY-MM-DD`, `Upload`, `User`. Use `Theme` (not `Reborn theme` or a specific theme name) for theme/interface CSS changes.
-8. Database sub-items name the exact tables/columns/preferences added or changed (e.g. "New `api_enable_8` preference ...", "New database tables `folder` and `folder_map`").
-9. New config options get their own header (`Config version NN` or a "New Config Options" doc link) and each key is named exactly as it appears in `ampache.cfg.php.dist`.
-
-### CHANGELOG-API.md specifics
-
-10. Top-level bullets are **scope headers, not changes**: an API version (`API3`…`API8`), `ALL` (every live version: 3/4/5/6/8), `REST`, or a method-scoped header like `` `random` (API6 and API8)``. The actual changes are the indented sub-items.
-11. Method-level sub-items use the `method: description` form (e.g. "flag: Use the `UserFlag::is_valid()` function for object type validation").
-12. Never leave scope implicit. A fix that only applies to one version goes under that version header; a change under `ALL` is asserted to apply to every live API version.
-13. Deprecations must name the removal version in bold: "deprecated and will be removed in **API9** (Use playlist_remove)". Parameter deprecations list each method + old parameter + replacement.
-14. The blurb states which Ampache release ships the API version ("This version is being released for Ampache7 **only**") plus any client-facing version-number caveats.
+Writing `docs/CHANGELOG.md` or `docs/CHANGELOG-API.md`? Use the `changelog` skill (`.claude/skills/changelog/SKILL.md`) — it carries the section order, category headers and scope rules.

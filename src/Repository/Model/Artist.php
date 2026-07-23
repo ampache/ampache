@@ -486,6 +486,7 @@ class Artist extends database_object implements
      *     f_name: string,
      *     name: string,
      *     album_count: int,
+     *     song_count: int,
      *     catalog_id: int,
      *     has_art: int
      * }>

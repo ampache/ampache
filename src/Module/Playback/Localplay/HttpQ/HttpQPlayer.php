@@ -388,7 +388,8 @@ class HttpQPlayer
      */
     private function sendCommand(string $cmd, array $args): bool|string
     {
-        $fsock = fsockopen(($this->host ?? 'localhost'), ($this->port ?? 4800), $errno, $errstr);
+        // suppressed because an unreachable host is expected and logged below, not raised as a php warning
+        $fsock = @fsockopen(($this->host ?? 'localhost'), ($this->port ?? 4800), $errno, $errstr);
 
         if (!$fsock) {
             debug_event(self::class, sprintf('HttpQPlayer: %s (%d)', $errstr, $errno), 1);

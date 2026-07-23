@@ -134,6 +134,16 @@
         "syntax": "@php resources/scripts/tests/syntax.php",
         "cs:fix": "vendor/bin/php-cs-fixer fix",
         "cs:check": "vendor/bin/php-cs-fixer fix --dry-run -vv",
+        "api:docs": [
+            "python resources/scripts/api-docs/generate_openapi_schemas.py",
+            "python resources/scripts/api-docs/generate_api_methods_md.py"
+        ],
+        "api:docs:check": [
+            "python resources/scripts/api-docs/generate_openapi_schemas.py --check",
+            "python resources/scripts/api-docs/generate_api_methods_md.py --check",
+            "python resources/scripts/api-docs/check_openapi_examples.py --strict",
+            "python resources/scripts/api-docs/lint_openapi.py"
+        ],
         "post-autoload-dump": [
             "@php resources/scripts/composer/check_tag_tools.php"
         ],
@@ -150,6 +160,8 @@
         "syntax": "Performs php syntax checks",
         "cs:fix": "Performs code-style corrections on the whole codebase",
         "cs:check": "Performs a code-style dry-run on the whole codebase",
+        "api:docs": "Regenerates docs/openapi.json and the API method reference documents (needs python)",
+        "api:docs:check": "Fails if the generated API documents are out of date with the code (needs python)",
         "rector:dry": "Performs rector code-migrations dry-run",
         "rector:fix": "Applies pending rector code-migrations"
     },

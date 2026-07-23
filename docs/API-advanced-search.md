@@ -36,7 +36,7 @@ This is passed as a type argument and will only return this object in results
 | operator | string  | and, or (whether to match one rule or all)                                                             |       NO |
 | rule_*   | array   | [`rule_1`, `rule_1_operator`, `rule_1_input`]                                                          |       NO |
 | rule_*   | array   | [`rule_2`, `rule_2_operator`, `rule_2_input`], [etc]                                                   |      YES |
-| type     | string  | `song`, `album`, `artist`, `label`, `playlist`, `podcast`, `podcast_episode`, `genre`, `user`, `video` |       NO |
+| type     | string  | `song` (default), `album`, `album_disk`, `artist`, `album_artist`, `song_artist`, `label`, `playlist`, `podcast`, `podcast_episode`, `genre`, `tag`, `user`, `video` |      YES |
 | random   | boolean | `0`, `1` (random order of results; default to 0)                                                       |      YES |
 | offset   | integer |                                                                                                        |      YES |
 | limit'   | integer |                                                                                                        |      YES |
@@ -98,7 +98,7 @@ Searching 'anywhere' searches song title, song filename, song genre, album title
 | release_comment       | (*Alias of version)                     |                   |                                                                       |
 | subtitle              | (*Alias of version)                     |                   |                                                                       |
 | album_count           | Album Count                             | numeric           |                             artist, genre                             |
-| artist_count          | Artist Count                            | numeric           |                             artist, genre                             |
+| artist_count          | Artist Count                            | numeric           |                                 genre                                 |
 | song_count            | Song Count                              | numeric           |                         album, artist, genre                          |
 | disk_count            | Disk Count                              | numeric           |                                 album                                 |
 | episode_count         | Episode Count                           | numeric           |                               podcasts                                |
@@ -113,18 +113,18 @@ Searching 'anywhere' searches song title, song filename, song genre, album title
 
 | Rating Rules      | Title                 | Operator Type     |                              Valid Types                              |
 |-------------------|-----------------------|-------------------|:---------------------------------------------------------------------:|
-| myrating          | My Rating             | numeric           |                          song, album, artist                          |
-| rating            | Rating (Average)      | numeric           |                          song, album, artist                          |
+| myrating          | My Rating             | numeric           |             song, album, artist, podcast, podcast_episode             |
+| rating            | Rating (Average)      | numeric           |             song, album, artist, podcast, podcast_episode             |
 | albumrating       | My Rating (Album)     | numeric           |                             song, artist                              |
 | artistrating      | My Rating (Artist)    | numeric           |                              song, album                              |
 | songrating        | My Rating (Song)      | numeric           |                             album, artist                             |
-| my_flagged_song   | My Favorite Songs     | boolean           |         song, album, artist, podcast, podcast_episode, video          |
-| my_flagged_album  | My Favorite Albums    | boolean           |         song, album, artist, podcast, podcast_episode, video          |
-| my_flagged_artist | My Favorite Artists   | boolean           |         song, album, artist, podcast, podcast_episode, video          |
-| favorite          | Favorites             | text              |                          song, album, artist                          |
+| my_flagged_song   | My Favorite Songs     | boolean           |                          song, album, artist                          |
+| my_flagged_album  | My Favorite Albums    | boolean           |                          song, album, artist                          |
+| my_flagged_artist | My Favorite Artists   | boolean           |                          song, album, artist                          |
+| favorite          | Favorites             | text              |             song, album, artist, podcast, podcast_episode             |
 | favorite_album    | Favorites (Album)     | text              |                                 song                                  |
 | favorite_artist   | Favorites (Artist)    | text              |                                 song                                  |
-| other_user        | Another User          | user_numeric      |                          song, album, artist                          |
+| other_user        | Another User          | user_numeric      |             song, album, artist, podcast, podcast_episode             |
 | other_user_album  | Another User (Album)  | user_numeric      |                                 song                                  |
 | other_user_artist | Another User (Artist) | user_numeric      |                                 song                                  |
 
@@ -133,7 +133,7 @@ Searching 'anywhere' searches song title, song filename, song genre, album title
 | played_times              | # Played                  | numeric           | song, album, artist, podcast, podcast_episode |
 | skipped_times             | # Skipped                 | numeric           | song, album, artist, podcast, podcast_episode |
 | played_or_skipped_times   | # Skipped                 | numeric           | song, album, artist, podcast, podcast_episode |
-| play_skip_ratio           | Played/Skipped ratio      | numeric           |        song, podcast, podcast_episode         |
+| play_skip_ratio           | Played/Skipped ratio      | numeric           |                      song                     |
 | last_play                 | My Last Play              | days              | song, album, artist, podcast, podcast_episode |
 | last_skip                 | My Last Skip              | days              | song, album, artist, podcast, podcast_episode |
 | last_play_or_skip         | My Last Play OR skip      | days              | song, album, artist, podcast, podcast_episode |
@@ -164,7 +164,7 @@ Searching 'anywhere' searches song title, song filename, song genre, album title
 
 | Playlist Rules | Title          | Operator Type     |     Valid Types     |
 |----------------|----------------|-------------------|:-------------------:|
-| playlist       | Playlist       | boolean_numeric   | song, album, artist |
+| playlist       | Playlist       | boolean_subsearch | song, album, artist |
 | smartplaylist  | Smart Playlist | boolean_subsearch |     song, album     |
 | playlist_name  | Playlist Name  | text              | song, album, artist |
 
@@ -172,15 +172,15 @@ Searching 'anywhere' searches song title, song filename, song genre, album title
 |--------------------------|-------------------------------------|------------------|:----------------------------------------------------:|
 | file                     | Filename                            | text             | song, album, artist, video, podcast, podcast_episode |
 | bitrate                  | Bitrate                             | numeric          |                         song                         |
-| added                    | Added                               | date             |            song, podcast, podcast_episode            |
-| updated                  | Updated                             | date             |                         song                         |
+| added                    | Added                               | date             |        song, album, podcast, podcast_episode         |
+| updated                  | Updated                             | date             |        song, album, podcast, podcast_episode         |
 | pubdate                  | Publication Date                    | date             |               podcast, podcast_episode               |
 | license                  | Music License                       | boolean_numeric  |                         song                         |
 | no_license               | No License                          | is_true          |                         song                         |
 | recent_added             | Recently Added                      | numeric_limit    |                     song, album                      |
 | recent_updated           | Recently Updated                    | numeric_limit    |                         song                         |
 | days_added               | Added                               | days             |    song, album, artist, podcast, podcast_episode     |
-| days_updated             | Updated                             | days             |    song, album, artist, podcast, podcast_episode     |
+| days_updated             | Updated                             | days             |            song, podcast, podcast_episode            |
 | possible_duplicate       | Possible Duplicate                  | is_true          |                 song, album, artist                  |
 | duplicate_tracks         | Duplicate Album Tracks              | is_true          |                     song, album                      |
 | duplicate_mbid_group     | Duplicate MusicBrainz Release Group | is_true          |                        album                         |

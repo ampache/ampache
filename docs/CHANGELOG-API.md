@@ -73,8 +73,9 @@ API version **8** joins the concurrent live surfaces (3/4/5/6 — version 7 rema
 
 ### Fixed (800000)
 
-* API3, API4, API5, API6
-  * advanced_search: `type=album_disk` returned album disk ids rendered as songs, so a client read a disk id as a song id. Those versions have no album disk formatter, so they now return an empty result instead. API8 returns the album disks. **NOTE** this also applies to Ampache7, which serves the same API6
+* API5, API6
+  * advanced_search: `type=album_disk` returned album disk ids rendered as songs, so a client read a disk id as a song id. Neither version has an album disk formatter, so both now return an empty result instead. `search` is affected too, being an alias. API8 returns the album disks. **NOTE** the same fix landed in Ampache7, which serves these versions as well
+  * API3 and API4 are unchanged: neither validates the search `type` at all, so every unsupported type there already falls through to the song output
 
 ## API 6.9.2 Build 2
 
