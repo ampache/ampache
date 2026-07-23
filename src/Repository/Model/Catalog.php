@@ -142,6 +142,13 @@ abstract class Catalog extends database_object
         'video' => 0,
     ];
 
+    /**
+     * Request-scoped cache of update_info values (user_id 0), kept in sync by
+     * set_update_info(), so repeated reads of the same key avoid extra queries.
+     * @var array<string, int> $update_info_cache
+     */
+    private static array $update_info_cache = [];
+
     /* Used in functions */
 
     public ?string $catalog_type = null;
@@ -1806,13 +1813,23 @@ abstract class Catalog extends database_object
      */
     public static function get_update_info(string $key, int $user_id): int
     {
-        $sql = ($user_id > 0)
-            ? "SELECT `key`, `value` FROM `user_data` WHERE `key` = ? AND `user` = " . $user_id
-            : "SELECT `key`, `value` FROM `update_info` WHERE `key` = ?";
-        $db_results = Dba::read($sql, [$key]);
-        $results    = Dba::fetch_assoc($db_results);
+        if ($user_id > 0) {
+            // user_data is written outside this class, so it is not cached here
+            $db_results = Dba::read("SELECT `key`, `value` FROM `user_data` WHERE `key` = ? AND `user` = ?", [$key, $user_id]);
+            $results    = Dba::fetch_assoc($db_results);
 
-        return (int) ($results['value'] ?? 0);
+            return (int) ($results['value'] ?? 0);
+        }
+
+        // Callers that read the same key repeatedly don't hit the database every time.
+        // update_info is only written through set_update_info()
+        if (!array_key_exists($key, self::$update_info_cache)) {
+            $db_results                    = Dba::read("SELECT `key`, `value` FROM `update_info` WHERE `key` = ?", [$key]);
+            $results                       = Dba::fetch_assoc($db_results);
+            self::$update_info_cache[$key] = (int) ($results['value'] ?? 0);
+        }
+
+        return self::$update_info_cache[$key];
     }
 
     /**
@@ -2549,6 +2566,8 @@ abstract class Catalog extends database_object
     public static function set_update_info(string $key, float|int $value): void
     {
         Dba::write("REPLACE INTO `update_info` SET `key` = ?, `value` = ?;", [$key, $value]);
+        // keep the read cache in sync with the value we just stored
+        self::$update_info_cache[$key] = (int) $value;
     }
 
     /**

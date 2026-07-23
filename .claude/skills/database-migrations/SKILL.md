@@ -134,11 +134,30 @@ For each new migration, decide one of:
 Ampache7 is a separate line, not downstream of develop8: its changes are made directly in that tree
 and logged in its own changelog.
 
+## `MAXIMUM_UPDATABLE_VERSION` must equal the newest migration
+
+Registering a migration in `Versions::$versions` is only half the job — you must also bump
+`Versions::MAXIMUM_UPDATABLE_VERSION` (the `// AMPACHE_VERSION (db_version)` line) to that same
+version, in the same commit. Forgetting is a silent trap, because the two are read by different code:
+
+- `Updater::hasPendingUpdates()` uses `Versions::getPendingMigrations()`, which yields every migration
+  above the current `db_version` and is **not** capped by the constant — so the new migration *does*
+  run, and `UpdateRunner` sets `db_version` to its version.
+- `Updater::hasOverUpdated()` then compares `MAXIMUM_UPDATABLE_VERSION < db_version`. If the constant
+  is stale this is true, so `AdminUpdateDatabaseCommand` treats the database as *over-updated* and
+  calls `rollback()` down to the constant — undoing the migration (and running its Ampache7-style down
+  block). The next web request sees it pending again and re-runs it: the version **ping-pongs and
+  never settles**, and a preference the migration adds is repeatedly added and removed.
+
+No test asserts the two agree, so `composer qa` stays green — this only surfaces on a live
+`admin:updateDatabase`. When reviewing a migration PR, check the constant was bumped to match.
+
 ## Checklist
 
 1. New file `src/Module/System/Update/Migration/V8/Migration<N>.php`, one-line `$changelog`, a
    docblock saying *why*.
-2. Register in `Versions::$versions` **and** bump `Versions::MAXIMUM_UPDATABLE_VERSION`.
+2. Register in `Versions::$versions` **and** bump `Versions::MAXIMUM_UPDATABLE_VERSION` to that
+   version (see above — forgetting makes the update ping-pong).
 3. Every statement idempotent (the migration may re-run after a partial failure).
 4. `SHOW CREATE TABLE` for any table you UPDATE — check unique keys and column nullability.
 5. Add the Ampache7 rollback block, or the comment explaining why none is needed.
