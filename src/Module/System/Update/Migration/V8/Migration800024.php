@@ -45,7 +45,7 @@ final class Migration800024 extends AbstractMigration
     {
         $this->updatePreferences(
             'cron_cache_live_count',
-            'Add live plays to the cached count for accurate stats (only used when Cron Cache is enabled)',
+            'Add live plays to the cached count for accurate stats (Require: Cron Cache)',
             '0',
             AccessLevelEnum::ADMIN->value,
             'boolean',

@@ -142,6 +142,13 @@ abstract class Catalog extends database_object
         'video' => 0,
     ];
 
+    /**
+     * Request-scoped cache of update_info values (user_id 0), kept in sync by
+     * set_update_info(), so repeated reads of the same key avoid extra queries.
+     * @var array<string, int> $update_info_cache
+     */
+    private static array $update_info_cache = [];
+
     /* Used in functions */
 
     public ?string $catalog_type = null;
@@ -161,13 +168,6 @@ abstract class Catalog extends database_object
      * @var array<string, int|string> $_filecache
      */
     protected array $_filecache = [];
-
-    /**
-     * Request-scoped cache of update_info values (user_id 0), kept in sync by
-     * set_update_info(), so repeated reads of the same key avoid extra queries.
-     * @var array<string, int> $update_info_cache
-     */
-    private static array $update_info_cache = [];
 
     /**
      * This is a private var that's used during catalog builds
@@ -1824,8 +1824,8 @@ abstract class Catalog extends database_object
         // Callers that read the same key repeatedly don't hit the database every time.
         // update_info is only written through set_update_info()
         if (!array_key_exists($key, self::$update_info_cache)) {
-            $db_results                  = Dba::read("SELECT `key`, `value` FROM `update_info` WHERE `key` = ?", [$key]);
-            $results                     = Dba::fetch_assoc($db_results);
+            $db_results                    = Dba::read("SELECT `key`, `value` FROM `update_info` WHERE `key` = ?", [$key]);
+            $results                       = Dba::fetch_assoc($db_results);
             self::$update_info_cache[$key] = (int) ($results['value'] ?? 0);
         }
 
