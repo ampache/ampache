@@ -57,7 +57,7 @@ $admin_path = AmpConfig::get_web_path('/admin'); ?>
             <a class="option-list" href="<?php echo $admin_path; ?>/catalog.php?action=full_service"><?php echo T_('Update All'); ?></a>
         </li>
         <li>
-            <a class="option-list" href="javascript:NavigateTo('<?php echo $admin_path; ?>/catalog.php?action=clear_stats');" onclick="return confirm('<?php echo T_('Are you sure?'); ?>');"><?php echo T_('Clear Stats'); ?></a>
+            <a class="option-list" href="javascript:NavigateTo('<?php echo $admin_path; ?>/catalog.php?action=clear_stats');" data-confirm="<?php echo T_('Are you sure?'); ?>"><?php echo T_('Clear Stats'); ?></a>
         </li>
     </ul>
     <form style="padding-left: 250px;" method="post" action="<?php echo $admin_path; ?>/catalog.php?action=update_from">

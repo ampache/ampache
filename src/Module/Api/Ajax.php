@@ -190,7 +190,8 @@ class Ajax
             $source_txt = "$(" . $source_txt . ").on('" . $method . "', ";
         }
         if (!empty($confirm)) {
-            $observe .= $source_txt . "function(){ " . $methodact . " if (confirm(\"" . $confirm . "\")) { " . $action . " }});";
+            // Non-blocking confirm (ampacheConfirm) so the web player is not paused while it is open
+            $observe .= $source_txt . "function(){ " . $methodact . " window.ampacheConfirm(\"" . $confirm . "\").then(function(c){ if (c) { " . $action . " } });});";
         } else {
             $observe .= $source_txt . "function(){ " . $methodact . " " . $action . ";});";
         }

@@ -326,7 +326,7 @@ class Art extends database_object
                 echo Ui::get_material_symbol('edit', T_('Edit/Find Art'));
                 echo "</a>";
                 if ($has_db) {
-                    echo "<a href=\"javascript:NavigateTo('" . $web_path . "/arts.php?action=clear_art&object_type=" . $object_type . "&object_id=" . $object_id . '&kind=' . $kind . "&burl=' + getCurrentPage());\" onclick=\"return confirm('" . T_('Do you really want to reset art?') . "');\">";
+                    echo "<a href=\"javascript:NavigateTo('" . $web_path . "/arts.php?action=clear_art&object_type=" . $object_type . "&object_id=" . $object_id . '&kind=' . $kind . "&burl=' + getCurrentPage());\" data-confirm=\"" . T_('Do you really want to reset art?') . "\">";
                     echo Ui::get_material_symbol('close', T_('Reset Art'));
                     echo "</a>";
                 }

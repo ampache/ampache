@@ -78,6 +78,7 @@ if ($iframed) { ?>
         jpmedia['r128_track_gain'] = media['r128_track_gain'];
         jpmedia['r128_album_gain'] = media['r128_album_gain'];
         jpmedia['duration'] = media['duration'];
+        jpmedia['remote'] = media['remote'];
 
         return jpmedia;
     }
@@ -382,6 +383,10 @@ if ($iframed) { ?>
                 return;
             }
 
+            if (currentTrackIsRemote()) {
+                alert("<?php echo addslashes(T_('The visualizer and equalizer are not available for remote catalog streams.')); ?>");
+                return;
+            }
             if (!ensureAudioGraph()) {
                 alert("<?php echo addslashes(T_("Your browser doesn't support this feature.")); ?>");
                 return;
@@ -453,6 +458,17 @@ if ($iframed) { ?>
         var eqBands = [80, 240, 750, 2200, 6000];
         initAudioContext();
 
+        function currentTrackIsRemote()
+        {
+            try {
+                if (typeof jplaylist !== 'undefined' && jplaylist && jplaylist.playlist) {
+                    var track = jplaylist.playlist[jplaylist.current];
+                    return !!(track && track.remote);
+                }
+            } catch (e) {}
+            return false;
+        }
+
         // Build the shared Web Audio graph once. Only ONE MediaElementSourceNode
         // may exist per media element, so ReplayGain and the visualizer share it:
         //   mediaSource -> replaygainNode -> destination
@@ -461,6 +477,10 @@ if ($iframed) { ?>
         {
             if (mediaSource !== null) {
                 return true;
+            }
+            // Never route a remote (cross-origin) stream through Web Audio, or it plays silent.
+            if (currentTrackIsRemote()) {
+                return false;
             }
             var mediaElement = $('.jp-jplayer').find('audio').get(0);
             if (!mediaElement || audioContext === null) {
@@ -518,6 +538,10 @@ if ($iframed) { ?>
 
         function ShowEqualizer()
         {
+            if (currentTrackIsRemote()) {
+                alert("<?php echo addslashes(T_('The visualizer and equalizer are not available for remote catalog streams.')); ?>");
+                return;
+            }
             ensureAudioGraph();
             if (audioContext && audioContext.state === 'suspended') {
                 audioContext.resume();

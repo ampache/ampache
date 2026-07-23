@@ -207,14 +207,14 @@ if (AmpConfig::get('sociable') && $owner_id > 0) {
 <?php } ?>
 <?php if (Access::check(AccessTypeEnum::INTERFACE, AccessLevelEnum::CONTENT_MANAGER)) { ?>
         <li>
-            <a href="javascript:NavigateTo('<?php echo $web_path; ?>/artists.php?action=update_from_tags&artist=<?php echo $artist->id; ?>');" onclick="return confirm('<?php echo T_('Do you really want to update from tags?'); ?>');">
+            <a href="javascript:NavigateTo('<?php echo $web_path; ?>/artists.php?action=update_from_tags&artist=<?php echo $artist->id; ?>');" data-confirm="<?php echo T_('Do you really want to update from tags?'); ?>">
                 <?php echo Ui::get_material_symbol('sync_alt', T_('Update from tags'));
     echo "&nbsp;" . T_('Update from tags'); ?>
             </a>
         </li>
     <?php if (!empty($artist->mbid) && $current_user && Preference::get_by_user($current_user->id, 'mb_overwrite_name')) { ?>
         <li>
-            <a href="javascript:NavigateTo('<?php echo $web_path; ?>/artists.php?action=update_from_musicbrainz&artist=<?php echo $artist->id; ?>');" onclick="return confirm('<?php echo T_('Are you sure? This will overwrite Artist details using MusicBrainz data'); ?>');">
+            <a href="javascript:NavigateTo('<?php echo $web_path; ?>/artists.php?action=update_from_musicbrainz&artist=<?php echo $artist->id; ?>');" data-confirm="<?php echo T_('Are you sure? This will overwrite Artist details using MusicBrainz data'); ?>">
                 <?php echo Ui::get_icon('musicbrainz', T_('Update details from MusicBrainz')); ?>
                 <?php echo T_('Update details from MusicBrainz'); ?>
             </a>

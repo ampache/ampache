@@ -27,6 +27,7 @@ namespace Ampache\Module\System;
 
 use Ampache\Config\AmpConfig;
 use Ampache\Module\Authorization\AccessLevelEnum;
+use Ampache\Module\System\Update\Versions;
 use Ampache\Module\Util\Horde_Browser;
 use Ampache\Repository\Model\Plugin;
 use Ampache\Repository\Model\Preference;
@@ -605,6 +606,18 @@ final class InstallationHelper implements InstallationHelperInterface
                 Dba::write($sql);
             }
         }
+
+        // Apply the default preferences from the application rather than the SQL dump so a fresh and rebuild the user_preference rows
+        // (including the -1 system defaults new users inherit);
+        Preference::set_defaults();
+        Preference::translate_db();
+
+        // Stamp the schema at the current migration version.
+        // An old db_version and the updater would try to replay every migration on top of it.
+        Dba::write(
+            "REPLACE INTO `update_info` SET `key` = 'db_version', `value` = ?;",
+            [(string) Versions::MAXIMUM_UPDATABLE_VERSION]
+        );
 
         // If they've picked something other than English update default preferences
         if (AmpConfig::get('lang', 'en_US') != 'en_US') {

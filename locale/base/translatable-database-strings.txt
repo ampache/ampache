@@ -3,7 +3,7 @@
  # This file lists all translatable strings from the Ampache preference table
  # (descriptions and subcategories). It is generated from the source code by
  # './gather-messages.sh [-gu|--getutds]' - descriptions come from
- # Preference::translate_db() and subcategories from resources/sql/ampache.sql,
+ # Preference::translate_db() and subcategories from Preference::set_defaults(),
  # so a live database is NOT required. Do not edit it by hand; re-run the script.
 
  #######################################################################
@@ -693,10 +693,6 @@ msgid "Feature"
 msgstr ""
 
 #: Ampache preference subcategory
-msgid "Home Dashboard"
-msgstr ""
-
-#: Ampache preference subcategory
 msgid "Httpq"
 msgstr ""
 
@@ -714,10 +710,6 @@ msgstr ""
 
 #: Ampache preference subcategory
 msgid "Metadata"
-msgstr ""
-
-#: Ampache preference subcategory
-msgid "Mpd"
 msgstr ""
 
 #: Ampache preference subcategory

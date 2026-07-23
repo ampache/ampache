@@ -237,7 +237,7 @@ if ((!empty($owner_id) && $owner_id == $current_user?->getId()) || Access::check
             </a>
         </li>
         <li>
-            <a href="javascript:NavigateTo('<?php echo $web_path; ?>/albums.php?action=update_from_tags&album_id=<?php echo $album->id; ?>');" onclick="return confirm('<?php echo T_('Do you really want to update from tags?'); ?>');">
+            <a href="javascript:NavigateTo('<?php echo $web_path; ?>/albums.php?action=update_from_tags&album_id=<?php echo $album->id; ?>');" data-confirm="<?php echo T_('Do you really want to update from tags?'); ?>">
                 <?php echo Ui::get_material_symbol('sync_alt', T_('Update from tags'));
     echo "&nbsp;" . T_('Update from tags'); ?>
             </a>

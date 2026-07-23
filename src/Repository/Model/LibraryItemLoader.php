@@ -68,6 +68,7 @@ final readonly class LibraryItemLoader implements LibraryItemLoaderInterface
             LibraryItemEnum::ART => new Art($objectId),
             LibraryItemEnum::ARTIST => new Artist($objectId),
             LibraryItemEnum::BROADCAST => new Broadcast($objectId),
+            LibraryItemEnum::DEMOCRATIC => new Democratic($objectId),
             LibraryItemEnum::FOLDER => $this->dic->get(FolderRepositoryInterface::class)->findById($objectId),
             LibraryItemEnum::LABEL => $this->dic->get(LabelRepositoryInterface::class)->findById($objectId),
             LibraryItemEnum::LIVE_STREAM => $this->dic->get(LiveStreamRepositoryInterface::class)->findById($objectId),
