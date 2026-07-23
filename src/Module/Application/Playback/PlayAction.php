@@ -959,6 +959,8 @@ final readonly class PlayAction implements ApplicationActionInterface
                 $troptions['duration'] = ($troptions['frame'] + $ssize <= $media->time)
                     ? $ssize
                     : ($media->time - $troptions['frame']);
+            } elseif (!($media instanceof Video) && $media->time > 0) {
+                $troptions['duration'] = (float) $media->time;
             }
 
             $transcoder  = Stream::start_transcode($media, $transcode_settings, $troptions);
