@@ -28,9 +28,28 @@ namespace Ampache\Module\Playback;
 use Ampache\Config\AmpConfig;
 use Ampache\MockeryTestCase;
 use PHPUnit\Framework\Attributes\DataProvider;
+use ReflectionMethod;
 
 class StreamTest extends MockeryTestCase
 {
+    /**
+     * @return list<array{string, string}>
+     */
+    public static function bitratePlaceholderProvider(): array
+    {
+        return [
+            // the current config syntax; rates are plain bps
+            ['-vn -b:a %BITRATE% -c:a libmp3lame -f mp3 pipe:1', '-vn -b:a 256000 -c:a libmp3lame -f mp3 pipe:1'],
+            // a pre-8.0.0 config keeps the kilobit suffix, in either case
+            ['-vn -b:a %BITRATE%k -c:a libmp3lame -f mp3 pipe:1', '-vn -b:a 256000 -c:a libmp3lame -f mp3 pipe:1'],
+            ['-vn -b:a %BITRATE%K -c:a libmp3lame -f mp3 pipe:1', '-vn -b:a 256000 -c:a libmp3lame -f mp3 pipe:1'],
+            ['-maxrate %MAXBITRATE%K -preset superfast pipe:1', '-maxrate 8000000 -preset superfast pipe:1'],
+            ['-ar %SAMPLE%k pipe:1', '-ar 256000 pipe:1'],
+            // %BITRATE% must not be found inside %MAXBITRATE%
+            ['-b:a %BITRATE% -maxrate %MAXBITRATE% pipe:1', '-b:a 256000 -maxrate 8000000 pipe:1'],
+        ];
+    }
+
     /**
      * @return list<array{int, int}>
      */
@@ -125,6 +144,20 @@ class StreamTest extends MockeryTestCase
 
         // with no explicit request, the per-player override beats the default target
         $this->assertSame('opus', Stream::get_transcode_format('wav', null, 'api', 'song'));
+    }
+
+    /**
+     * an untouched `%BITRATE%K` from an old config sent ffmpeg `-b:a 256000K` (256 gigabit) and killed the transcode
+     */
+    #[DataProvider('bitratePlaceholderProvider')]
+    public function testReplaceBitratesConsumesLegacyKilobitSuffix(string $command, string $expected): void
+    {
+        $method = new ReflectionMethod(Stream::class, '_replace_bitrates');
+
+        $this->assertSame(
+            $expected,
+            $method->invoke(null, $command, ['%SAMPLE%' => 256000, '%BITRATE%' => 256000, '%MAXBITRATE%' => 8000000])
+        );
     }
 
     #[DataProvider('bitrateProvider')]

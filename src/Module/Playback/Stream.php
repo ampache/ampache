@@ -845,18 +845,14 @@ class Stream
             }
         }
 
-        $bitrate_map = [
-            '%SAMPLE%' => $bit_rate,
-            '%BITRATE%' => $bit_rate,
-            '%MAXBITRATE%' => $max_bit_rate,
-        ];
-        foreach ($bitrate_map as $search => $replace) {
-            $command = str_replace($search . 'k', (string) $replace, $command, $retK);
-            $command = str_replace($search, (string) $replace, $command, $ret);
-            if ($retK === 0 && $ret === 0) {
-                debug_event(self::class, $search . ' not in transcode command', 5);
-            }
-        }
+        $command = self::_replace_bitrates(
+            (string) $command,
+            [
+                '%SAMPLE%' => $bit_rate,
+                '%BITRATE%' => $bit_rate,
+                '%MAXBITRATE%' => $max_bit_rate,
+            ]
+        );
 
         if ($out_file) {
             // when running cache_catalog_proc redirect to the file path instead of piping
@@ -881,6 +877,25 @@ class Stream
     {
         /* Round to standard bitrates (values are bps, round to 1 kbps steps) */
         return (int) (1000 * (floor($bitrate / 1000)));
+    }
+
+    /**
+     * _replace_bitrates
+     * Substitute the rate placeholders in a transcode command. Rates are plain bits per second now, so a
+     * trailing `k` or `K` left over from a pre-8.0.0 config (`%BITRATE%k`) is consumed with the placeholder.
+     * @param array<string, int> $bitrate_map
+     */
+    private static function _replace_bitrates(string $command, array $bitrate_map): string
+    {
+        foreach ($bitrate_map as $search => $replace) {
+            $count   = 0;
+            $command = (string) preg_replace('/' . preg_quote($search, '/') . '[kK]?/', (string) $replace, $command, -1, $count);
+            if ($count === 0) {
+                debug_event(self::class, $search . ' not in transcode command', 5);
+            }
+        }
+
+        return $command;
     }
 
     /**
