@@ -1,7 +1,17 @@
 /* --------------------------
       jQuery edit dialog
    -------------------------- */
+
+/* The modal backdrop only gets z-index 100 from .ui-front, but app chrome sits well above it
+   (#rightbar is 10000, the mobile loading pill 9997), so it punches through the dim cover. Lift the
+   backdrop above the chrome; jQuery UI then stacks the dialog itself at backdrop+1 automatically.
+   Higher specificity than .ui-front is required because this file loads before jquery-ui.min.css. */
+.ui-widget-overlay.ui-front {
+    z-index: 10001;
+}
+
 .editdialogstyle.ui-dialog {
+    z-index: 10002;
     background-image: url('../images/background.png');
     background-repeat: repeat;
     -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
