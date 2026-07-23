@@ -918,7 +918,6 @@ final readonly class PlayAction implements ApplicationActionInterface
         $troptions  = [];
         $transcoder = [];
         if ($transcode) {
-            $transcode_settings = $media->get_transcode_settings($transcode_to, $player, $troptions);
             if ($bitrate !== 0) {
                 // both are bps, so the ceiling can be applied directly
                 $troptions['bitrate'] = ($maxbitrate > 0 && $maxbitrate < $bitrate)
@@ -959,7 +958,12 @@ final readonly class PlayAction implements ApplicationActionInterface
                 $troptions['duration'] = ($troptions['frame'] + $ssize <= $media->time)
                     ? $ssize
                     : ($media->time - $troptions['frame']);
+            } elseif (!($media instanceof Video) && $media->time > 0) {
+                $troptions['duration'] = (float) $media->time;
             }
+
+            // Build the transcode settings only after $troptions is fully populated, otherwise args never reach the command.
+            $transcode_settings = $media->get_transcode_settings($transcode_to, $player, $troptions);
 
             $transcoder  = Stream::start_transcode($media, $transcode_settings, $troptions);
             $filepointer = $transcoder['handle'] ?? null;

@@ -393,7 +393,6 @@ class Song extends database_object implements
             'lyrics',
             'publisher',
             'tags',
-            'time',
             'title',
         ];
 
