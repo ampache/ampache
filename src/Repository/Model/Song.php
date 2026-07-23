@@ -1272,14 +1272,15 @@ class Song extends database_object implements
 
     /**
      * clean_string_field_value
+     * Accepts anything the compare loop lets through (string, numeric or bool) so let it through too if it gets here
      */
-    private static function _clean_string_field_value(?string $value = null): string
+    private static function _clean_string_field_value(string|int|float|bool|null $value = null): string
     {
         if (!$value) {
             return '';
         }
 
-        $value = trim(stripslashes((string) preg_replace('/\s+/', ' ', $value)));
+        $value = trim(stripslashes((string) preg_replace('/\s+/', ' ', (string) $value)));
 
         // Strings containing only UTF-8 BOM = empty string
         if (strlen($value) == 2 && (ord($value[0]) == 0xFF || ord($value[0]) == 0xFE)) {
