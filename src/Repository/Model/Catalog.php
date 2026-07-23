@@ -977,10 +977,10 @@ abstract class Catalog extends database_object
         if (!in_array($results['mode'], ['vbr', 'cbr', 'abr'])) {
             debug_event(self::class, 'Error analyzing: ' . $results['file'] . ' unknown file bitrate mode: ' . $results['mode'], 2);
         }
-        $results['mode'] = (in_array($results['mode'], ['vbr', 'cbr', 'abr'])) ? $results['mode'] : 'vbr';
-        //$results['channels'] = $results['channels'];
-        //$results['size'] = $results['size'];
-        $results['time'] = (strlen((string) $results['time']) > 5)
+        $results['mode']     = (in_array($results['mode'], ['vbr', 'cbr', 'abr'])) ? $results['mode'] : 'vbr';
+        $results['channels'] = (!empty($results['channels'])) ? (int) $results['channels'] : 0;
+        $results['size']     = (!empty($results['size'])) ? (int) $results['size'] : 0;
+        $results['time']     = (strlen((string) $results['time']) > 5)
             ? (int) substr((string) $results['time'], -5, 5)
             : (int) ($results['time']);
         if ($results['time'] < 0) {
