@@ -717,6 +717,37 @@ final readonly class PlayAction implements ApplicationActionInterface
                         ]
                     );
 
+                    // The browser follows this 302 to the source server, so the stats/now-playing block further down is never reached for remote catalogs.
+                    // Register the play here so now-playing, play history and scrobble plugins still fire for the local user and song.
+                    if (!$is_download && $record_stats) {
+                        Stream::insert_now_playing($media->getId(), $user_id, (int) $media->time, $session_id, $media->getMediaType()->value);
+                    }
+
+                    if (Core::get_server('REQUEST_METHOD') !== 'HEAD') {
+                        $sessionkey = ($session_id === '')
+                            ? Stream::get_session()
+                            : $session_id;
+                        $agent = ($client === '' || $client === '0')
+                            ? Session::agent($sessionkey)
+                            : $client;
+                        $location = Session::get_geolocation($sessionkey);
+                        if ($is_download) {
+                            if ($share_id === 0) {
+                                Stats::insert($type, $media->id, $user_id, $agent, $location, 'download', $time);
+                            } else {
+                                Stats::insert($type, $media->id, $user_id, 'share.php', [], 'download', $time);
+                            }
+                        } elseif (!$share_id && $record_stats) {
+                            // internal scrobbling (user_activity and object_count tables)
+                            if ($media->set_played($user_id, $agent, $location, $time) && $user->id && $media::class == Song::class) {
+                                // scrobble plugins
+                                User::save_mediaplay($user, $media);
+                            }
+                        } elseif ($share_id > 0) {
+                            $media->set_played($user_id, 'share.php', [], $time);
+                        }
+                    }
+
                     header('Location: ' . $remoteStreamingUrl);
 
                     return null;
