@@ -1184,10 +1184,10 @@ class Preference extends database_object
                     Dba::write($pref_sql, ['show_lyrics', '0', 'Show lyrics', AccessLevelEnum::DEFAULT->value, 'boolean', 'interface', 'player']);
                     break;
                 case 'lastfm_grant_link':
-                    Dba::write($pref_sql, ['lastfm_grant_link', '', 'Last.FM Grant URL', AccessLevelEnum::USER->value, 'string', 'internal', 'lastfm']);
+                    Dba::write($pref_sql, ['lastfm_grant_link', '', 'Last.FM Grant URL', AccessLevelEnum::USER->value, 'string', 'plugins', 'last.fm']);
                     break;
                 case 'lastfm_challenge':
-                    Dba::write($pref_sql, ['lastfm_challenge', '', 'Last.FM Submit Challenge', AccessLevelEnum::USER->value, 'string', 'internal', 'lastfm']);
+                    Dba::write($pref_sql, ['lastfm_challenge', '', 'Last.FM Submit Challenge', AccessLevelEnum::USER->value, 'string', 'internal', 'last.fm']);
                     break;
                 case 'now_playing_per_user':
                     Dba::write($pref_sql, ['now_playing_per_user', '1', 'Now Playing filtered per user', AccessLevelEnum::CONTENT_MANAGER->value, 'boolean', 'interface', 'home']);
