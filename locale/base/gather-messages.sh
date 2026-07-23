@@ -38,7 +38,7 @@ usage() {
     echo -e "\033[32m usage: $0 [-h|--help][-g|--get][-gu|--getutds][-i|--init][-m|--merge][-f|--format][-a|--all][-au|--allutds]\033[0m"
     echo ""
     echo -e "[-g|--get]\t\t Creates the messages.pot file from translation strings within the source code."
-    echo -e "[-gu|--getutds]\t\t Generates the Pot file from translation strings within the source code\n\t\t\t and (re)generates 'translatable-database-strings.txt' from the preference strings in\n\t\t\t the source code (Preference::translate_db() and resources/sql/ampache.sql). No database needed."
+    echo -e "[-gu|--getutds]\t\t Generates the Pot file from translation strings within the source code\n\t\t\t and (re)generates 'translatable-database-strings.txt' from the preference strings in\n\t\t\t the source code (Preference::translate_db() and Preference::set_defaults()). No database needed."
     echo -e "[-i|--init]\t\t Creates a new language catalog and its directory structure."
     echo -e "[-m|--merge]\t\t Merges the messages.pot into the language catalogs and shows obsolet translations."
     echo -e "[-ma|--mergeall]\t Same as -m but for all translations."
@@ -114,7 +114,6 @@ generate_pot_utds() {
     fi
 
     preffile='../../src/Repository/Model/Preference.php'
-    seedfile='../../resources/sql/ampache.sql'
     tmpdir=$(mktemp -d)
 
     echo -e "\033[32m Pot creation/update successful\033[0m\n"
@@ -129,12 +128,12 @@ generate_pot_utds() {
       | sed 's/^.\(.*\).$/\1/' \
       | awk '!seen[$0]++' > "$tmpdir/desc.txt"
 
-    # Subcategories: the last quoted column of each row in the seed SQL `preference` INSERT block.
-    # Title-case them to match how they are rendered - the template calls T_(ucwords($subcategory)).
-    awk '/INSERT INTO `preference`/{f=1} f{print} f && /;[[:space:]]*$/{exit}' "$seedfile" \
-      | grep -oE "^\([0-9]+, .*\)," \
-      | sed -E "s/.*, ('[^']*'|NULL)\),\$/\1/" \
-      | grep -v NULL | tr -d "'" \
+    # Subcategories: the 7th argument of each Preference::set_defaults() row (the source of truth for
+    # system preferences). Title-case them to match rendering - the template calls T_(ucwords($subcategory)).
+    awk '/public static function set_defaults/,/public static function set_level/' "$preffile" \
+      | grep -F 'Dba::write($pref_sql, [' \
+      | sed -E "s/.*, ('[^']*'|null)\]\);.*/\1/" \
+      | grep -v '^null$' | tr -d "'" \
       | perl -pe 's/(?:^|(?<=\s))([a-z])/\u$1/g' | sort -u > "$tmpdir/subcat.txt"
 
     echo "Deleting old $tdstxt"
@@ -144,7 +143,7 @@ generate_pot_utds() {
         printf ' # This file lists all translatable strings from the Ampache preference table\n'
         printf ' # (descriptions and subcategories). It is generated from the source code by\n'
         printf " # './gather-messages.sh [-gu|--getutds]' - descriptions come from\n"
-        printf ' # Preference::translate_db() and subcategories from resources/sql/ampache.sql,\n'
+        printf ' # Preference::translate_db() and subcategories from Preference::set_defaults(),\n'
         printf ' # so a live database is NOT required. Do not edit it by hand; re-run the script.\n\n'
         printf ' #######################################################################\n'
     } > $tdstxt

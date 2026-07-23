@@ -44,15 +44,51 @@ $(document).on("click", "a[data-ajax='1']", function (event) {
     // Use the window function so template overrides (html5 player) apply.
     window.update_action();
 
-    if (confirmText && !window.confirm(confirmText)) {
+    function run() {
+        if (post) {
+            ajaxPost(url, post, source);
+        } else {
+            ajaxPut(url, source);
+        }
+    }
+
+    // Non-blocking confirm so playback is not paused while the dialog is open.
+    if (confirmText) {
+        window.ampacheConfirm(confirmText).then(function (ok) {
+            if (ok) {
+                run();
+            }
+        });
+
         return;
     }
 
-    if (post) {
-        ajaxPost(url, post, source);
-    } else {
-        ajaxPut(url, source);
+    run();
+});
+
+// Delegated confirm for plain links carrying data-confirm (replacing the old inline
+// onclick="return confirm(...)"). We keep the link's original href untouched: on accept we replay
+// a native click so whatever the href does (NavigateTo(...), a real navigation, ...) runs exactly
+// as before, just without the blocking native confirm() that pauses the web player.
+$(document).on("click", "a[data-confirm]", function (event) {
+    var element = this;
+    var $link = $(element);
+
+    // Second pass: our own replayed click. Let it proceed to the browser default untouched.
+    if ($link.data("ampConfirmed")) {
+        $link.removeData("ampConfirmed");
+
+        return;
     }
+
+    event.preventDefault();
+    window.ampacheConfirm($link.attr("data-confirm")).then(function (ok) {
+        if (!ok) {
+            return;
+        }
+        $link.data("ampConfirmed", true);
+        element.click();
+    });
 });
 
 // Some cutesy flashing thing while we run
@@ -72,7 +108,7 @@ $(function() {
 
     $("body").delegate("a", "click", function() {
         var link = $(this).attr("href");
-        if (typeof link !== "undefined" && link !== "" && !hasScriptableUrlScheme(link) && link !== "#" && typeof link !== "undefined" && typeof $(this).attr("onclick") === "undefined" && !$(this).hasClass("nohtml") && $(this).attr("target") !== "_blank") {
+        if (typeof link !== "undefined" && link !== "" && !hasScriptableUrlScheme(link) && link !== "#" && typeof link !== "undefined" && typeof $(this).attr("onclick") === "undefined" && typeof $(this).attr("data-confirm") === "undefined" && !$(this).hasClass("nohtml") && $(this).attr("target") !== "_blank") {
             if ($(this).attr("rel") !== "prettyPhoto") {
                 // Ajax load Ampache pages only
                 if (ampacheUrl(link)) {

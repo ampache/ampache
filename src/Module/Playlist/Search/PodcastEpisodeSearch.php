@@ -420,7 +420,7 @@ final class PodcastEpisodeSearch implements SearchInterface
         $having_sql = implode(sprintf(' %s ', $sql_logic_operator), $having);
 
         return [
-            'base' => 'SELECT DISTINCT(`podcast_episode`.`id`), `podcast_episode`.`pubdate`, `podcast_episode`.`time` FROM `podcast_episode`',
+            'base' => 'SELECT DISTINCT(`podcast_episode`.`id`), `podcast_episode`.`pubdate`, `podcast_episode`.`time`, `podcast_episode`.`weight` FROM `podcast_episode`',
             'join' => $join,
             'where' => $where,
             'where_sql' => $where_sql,
