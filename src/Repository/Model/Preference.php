@@ -1418,10 +1418,10 @@ class Preference extends database_object
                     Dba::write($pref_sql, ['api_enable_3', '1', 'Allow Ampache API3 responses', AccessLevelEnum::USER->value, 'boolean', 'options', 'ampache']);
                     break;
                 case 'api_enable_4':
-                    Dba::write($pref_sql, ['api_enable_4', '1', 'Allow Ampache API3 responses', AccessLevelEnum::USER->value, 'boolean', 'options', 'ampache']);
+                    Dba::write($pref_sql, ['api_enable_4', '1', 'Allow Ampache API4 responses', AccessLevelEnum::USER->value, 'boolean', 'options', 'ampache']);
                     break;
                 case 'api_enable_5':
-                    Dba::write($pref_sql, ['api_enable_5', '1', 'Allow Ampache API3 responses', AccessLevelEnum::USER->value, 'boolean', 'options', 'ampache']);
+                    Dba::write($pref_sql, ['api_enable_5', '1', 'Allow Ampache API5 responses', AccessLevelEnum::USER->value, 'boolean', 'options', 'ampache']);
                     break;
                 case 'api_force_version':
                     Dba::write($pref_sql, ['api_force_version', '0', 'Force a specific API response no matter what version you send', AccessLevelEnum::USER->value, 'special', 'options', 'ampache']);
