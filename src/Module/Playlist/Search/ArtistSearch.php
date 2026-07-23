@@ -643,7 +643,7 @@ final readonly class ArtistSearch implements SearchInterface
         $having_sql = implode(sprintf(' %s ', $sql_logic_operator), $having);
 
         return [
-            'base' => "SELECT DISTINCT(`artist`.`id`), `artist`.`name` FROM `artist`",
+            'base' => "SELECT DISTINCT(`artist`.`id`), `artist`.`name`, `artist`.`weight` FROM `artist`",
             'join' => $join,
             'where' => $where,
             'where_sql' => $where_sql,
