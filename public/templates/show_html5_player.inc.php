@@ -362,6 +362,45 @@ if (AmpConfig::get('song_page_title') && $isShare === false) {
             }
         });
 
+        function jpKnownDuration() {
+            if (typeof jplaylist === 'undefined' || !jplaylist.playlist) {
+                return 0;
+            }
+            var item = jplaylist.playlist[jplaylist.current];
+            var known = (item && item.duration) ? parseFloat(item.duration) : 0;
+            return (isFinite(known) && known > 0) ? known : 0;
+        }
+
+        function jpFormatDuration(seconds) {
+            var jp = $("#jquery_jplayer_1").data('jPlayer');
+            if (jp && typeof jp._convertTime === 'function') {
+                return jp._convertTime(seconds);
+            }
+            var s = Math.round(seconds), h = Math.floor(s / 3600), m = Math.floor((s % 3600) / 60), sec = s % 60;
+            return (h > 0 ? h + ':' + (m < 10 ? '0' : '') : '') + m + ':' + (sec < 10 ? '0' : '') + sec;
+        }
+
+        function correctPlayerTimeline(event) {
+            var known = jpKnownDuration();
+            if (known <= 0) {
+                return;
+            }
+            var status = event.jPlayer.status, mediaDuration = status.duration;
+            // Leave a correctly-reported native duration alone (keeps the buffer indicator for direct streams).
+            if (isFinite(mediaDuration) && mediaDuration > 0 && Math.abs(mediaDuration - known) <= 1.5) {
+                return;
+            }
+            var percent = Math.max(0, Math.min(100, ((status.currentTime || 0) / known) * 100));
+            var container = $("#jp_container_1");
+            container.find('.jp-seek-bar').css('width', '100%');
+            container.find('.jp-play-bar').stop(true, true).css('width', percent + '%');
+            container.find('.jp-duration').text(jpFormatDuration(known));
+        }
+
+        $("#jquery_jplayer_1").bind($.jPlayer.event.timeupdate, correctPlayerTimeline);
+        $("#jquery_jplayer_1").bind($.jPlayer.event.progress, correctPlayerTimeline);
+        $("#jquery_jplayer_1").bind($.jPlayer.event.durationchange, correctPlayerTimeline);
+
         $("#jquery_jplayer_1").bind($.jPlayer.event.pause, function (event) {
             <?php if ($isRandom || $isDemocratic) { ?>
             stopNowPlayingPoll();
