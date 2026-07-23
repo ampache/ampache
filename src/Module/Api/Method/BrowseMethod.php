@@ -118,8 +118,11 @@ final class BrowseMethod implements MethodInterface
             );
         }
 
-        // confirm the correct data
-        if (!in_array(strtolower((string) $objectType), ['root', 'catalog', 'album_artist', 'artist', 'album', 'podcast'])) {
+        // confirm the correct data (album_disk is api version 8 only)
+        if (
+            !in_array(strtolower((string) $objectType), ['root', 'catalog', 'album_artist', 'artist', 'album', 'album_disk', 'podcast'])
+            || ($apiVersion < 8 && strtolower((string) $objectType) === 'album_disk')
+        ) {
             return $this->writeTypeError($response, $output, $apiVersion, (string) $objectType);
         }
 
@@ -304,6 +307,10 @@ final class BrowseMethod implements MethodInterface
                 $browse->set_type('song');
 
                 return ['album', 'song', 'album', 'album', 'ASC'];
+            case 'album_disk':
+                $browse->set_type('song');
+
+                return ['album_disk', 'song', 'album_disk', 'track', 'ASC'];
             case 'podcast':
                 $browse->set_type('podcast_episode');
 

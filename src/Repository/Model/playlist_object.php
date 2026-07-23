@@ -26,6 +26,8 @@ declare(strict_types=1);
 namespace Ampache\Repository\Model;
 
 use Ampache\Config\AmpConfig;
+use Ampache\Config\ConfigurationKeyEnum;
+use Ampache\Module\Art\Mosaic\PlaylistArtBuilderInterface;
 use Ampache\Module\Authorization\Access;
 use Ampache\Module\Authorization\AccessLevelEnum;
 use Ampache\Module\Authorization\AccessTypeEnum;
@@ -34,6 +36,8 @@ use Ampache\Module\System\Dba;
 use Ampache\Module\Util\InterfaceImplementationChecker;
 use Ampache\Module\Util\ObjectTypeToClassNameMapper;
 use Ampache\Module\Util\Ui;
+use Random\Engine\Mt19937;
+use Random\Randomizer;
 
 /**
  * playlist_object
@@ -88,11 +92,20 @@ abstract class playlist_object extends database_object implements
         $medias = $this->get_medias();
         $count  = 0;
         $images = [];
+        $tiles  = [];
+        $seen   = [];
         $title  = T_('Playlist Items');
-        shuffle($medias);
+        $mosaic = make_bool(AmpConfig::get(ConfigurationKeyEnum::PLAYLIST_ART_MOSAIC, true));
+        // Shuffle so the covers picked aren't just the first few, but seed it from the playlist and its
+        // contents so the same playlist keeps producing the same art. Re-running an art gather would
+        // otherwise hand the user a different mosaic every time for a playlist that never changed.
+        $seed    = crc32($this->id . ':' . implode(',', array_column($medias, 'object_id')));
+        $medias  = (new Randomizer(new Mt19937($seed)))->shuffleArray($medias);
         foreach ($medias as $media) {
+            // Only the mosaic is capped, so the caller still gets the full list of covers to choose from
+            // when it falls back to picking one.
             if ($count >= $limit) {
-                return $images;
+                break;
             }
 
             if (InterfaceImplementationChecker::is_library_item($media['object_type']->value)) {
@@ -106,17 +119,49 @@ abstract class playlist_object extends database_object implements
                     }
                 }
 
+                // Skip covers we've already taken so a single-album playlist doesn't repeat one tile.
+                $key = $media['object_type']->value . '-' . $media['object_id'];
+                if (isset($seen[$key])) {
+                    continue;
+                }
+
                 $art = new Art($media['object_id'], $media['object_type']->value);
                 if ($art->has_db_info()) {
-                    $link     = $web_path . "/image.php?object_id=" . $media['object_id'] . "&object_type=" . $media['object_type']->value;
-                    $images[] = [
+                    $seen[$key] = true;
+                    $link       = $web_path . "/image.php?object_id=" . $media['object_id'] . "&object_type=" . $media['object_type']->value;
+                    // The row id matters as well as the link: `url` is relative, so anything reading these
+                    // back (the art picker, image.php) can't fetch it and would show the cover as invalid.
+                    $images[]   = [
+                        'db' => $art->id,
                         'url' => $link,
                         'mime' => $art->raw_mime,
                         'title' => $title
                     ];
+                    if (
+                        $mosaic
+                        && count($tiles) < PlaylistArtBuilderInterface::MAX_TILES
+                        && $art->raw !== null
+                        && $art->raw !== ''
+                    ) {
+                        $tiles[] = $art->raw;
+                    }
 
                     ++$count;
                 }
+            }
+        }
+
+        if ($mosaic && count($tiles) >= PlaylistArtBuilderInterface::MIN_TILES) {
+            $stitched = $this->getPlaylistArtBuilder()->build($tiles);
+            if ($stitched !== null) {
+                // First choice for whoever is gathering art automatically, but the individual covers stay
+                // in the list: the art picker can't offer a mosaic (raw bytes can't survive the session)
+                // and would have nothing to show if this were the only result.
+                array_unshift($images, [
+                    'raw' => $stitched,
+                    'mime' => 'image/png',
+                    'title' => $title,
+                ]);
             }
         }
 
@@ -475,5 +520,12 @@ abstract class playlist_object extends database_object implements
                 Dba::write($sql, [$playlist_id, $user_id]);
             }
         }
+    }
+
+    private function getPlaylistArtBuilder(): PlaylistArtBuilderInterface
+    {
+        global $dic;
+
+        return $dic->get(PlaylistArtBuilderInterface::class);
     }
 }

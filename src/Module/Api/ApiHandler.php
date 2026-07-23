@@ -95,6 +95,17 @@ final class ApiHandler implements ApiHandlerInterface
         $this->userRepository  = $userRepository;
     }
 
+    /**
+     * Fold the dashed REST spelling of a resource or action onto its canonical snake_case name
+     *
+     * This is the single rule that lets every REST path use dashes (`album-disks/{id}/songs`) without
+     * each name needing its own alias in the maps above.
+     */
+    private static function dashesToUnderscores(string $value): string
+    {
+        return str_replace('-', '_', $value);
+    }
+
     public function handle(
         ServerRequestInterface $request,
         ResponseInterface $response,
@@ -658,62 +669,50 @@ final class ApiHandler implements ApiHandlerInterface
         ?string $type,
         bool $hasFilter,
     ): string {
+        // REST paths spell multi-word names with a dash (`podcast-episodes`, `now-playing`,
+        // `album-disks`); RPC actions are snake_case. Converting first means only genuine renames
+        // need an entry below -- a new dashed path never needs an alias adding here.
+        $action = self::dashesToUnderscores($action);
+
         $action = match ($action) {
-            'add-song' => 'add_song',
             'albums_songs' => 'album_songs',
             'artists_albums' => 'artist_albums',
             'artists_songs' => 'artist_songs',
-            'bookmark-create' => 'bookmark_create',
-            'delete-all' => 'delete_all',
-            'deleted-podcast-episodes' => 'deleted_podcast_episodes',
-            'deleted-songs' => 'deleted_songs',
-            'deleted-videos' => 'deleted_videos',
-            'fetch-info' => 'update_artist_info',
-            'fetch-metadata' => 'get_external_metadata',
+            'fetch_info' => 'update_artist_info',
+            'fetch_metadata' => 'get_external_metadata',
             'follow' => 'toggle_follow',
-            'friends-timeline' => 'friends_timeline',
             'genres_albums' => 'genre_albums',
             'genres_artists' => 'genre_artists',
             'genres_songs' => 'genre_songs',
-            'get-art', 'art' => 'get_art',
+            'art' => 'get_art',
             'groups' => 'search_group',
             'labels_artists' => 'label_artists',
-            'last-shouts' => 'last_shouts',
             'licenses_songs' => 'license_songs',
-            'live-streams' => 'live_streams',
             'me' => 'user',
-            'now-playing' => 'now_playing',
-            'playlist-create' => 'playlist_create',
             'playlists_add' => 'playlist_add',
             'playlists_delete' => 'playlist_delete',
             'playlists_edit' => 'playlist_edit',
-            'playlists_generate', 'playlists-generate', 'playlist-generate' => 'playlist_generate',
+            'playlists_generate' => 'playlist_generate',
             'playlists_hash', 'hash' => 'playlist_hash',
             'playlists_songs' => 'playlist_songs',
-            'podcast-episodes' => 'podcast_episodes',
-            'record-play' => 'record_play',
-            'remove-song' => 'remove_song',
-            'search-songs' => 'search_songs',
-            'similar', 'get_similar_artists', 'get-similar_artists', 'similar_artists', 'get_similar_songs', 'get-similar_songs', 'similar_songs' => 'get_similar',
+            'similar', 'get_similar_artists', 'similar_artists', 'get_similar_songs', 'similar_songs' => 'get_similar',
             'smartlists_delete' => 'smartlist_delete',
             'smartlists_songs' => 'smartlist_songs',
             'songs_delete' => 'song_delete',
-            'system-preferences' => 'system_preferences',
-            'update-art' => 'update_art',
-            'update-tags' => 'update_from_tags',
-            'url-to-song' => 'url_to_song',
+            'update_tags' => 'update_from_tags',
             'users_playlists' => 'user_playlists',
             'users_smartlists' => 'user_smartlists',
-            'volume-down' => 'volume_down',
-            'volume-mute' => 'volume_mute',
-            'volume-up' => 'volume_up',
             default => $action,
         };
 
         if ($hasFilter) {
             $action = match ($action) {
+                // `album-disks/{album_disk_id}` addresses one disk; `album-disks` alone is the
+                // album-scoped listing, so the singular form only applies when an id is present
+                'album_disks' => 'album_disk',
                 'albums' => 'album',
                 'artists' => 'artist',
+                'disks' => 'disk',
                 'bookmarks' => 'bookmark',
                 'catalogs' => 'catalog',
                 'genres' => 'genre',
@@ -775,9 +774,10 @@ final class ApiHandler implements ApiHandlerInterface
             }
 
             if (
-                $action === 'song' && ($type === 'playlist' || $type === 'smartlist' || $type === 'album' || $type === 'artist' || $type === 'genre' || $type === 'license' || $type === 'get_similar')
+                $action === 'song' && ($type === 'playlist' || $type === 'smartlist' || $type === 'album' || $type === 'album_disk' || $type === 'artist' || $type === 'genre' || $type === 'license' || $type === 'get_similar')
                 || $action === 'album' && ($type === 'artist' || $type === 'genre')
                 || $action === 'artist' && ($type === 'genre' || $type === 'get_similar' || $type === 'label')
+                || $action === 'disk' && $type === 'album'
             ) {
                 $action = $type . '_' . $action . 's';
             }
@@ -804,26 +804,29 @@ final class ApiHandler implements ApiHandlerInterface
      */
     public function normalizeType(string $type): string
     {
-        return match ($type) {
-            'album_artists', 'album-artists', 'album-artist' => 'album_artist',
+        // see normalizeAction(): the dashed REST spelling is folded first, so only the plural forms
+        // need an entry here
+        return match (self::dashesToUnderscores($type)) {
+            'album_artists' => 'album_artist',
+            'album_disks' => 'album_disk',
             'albums' => 'album',
             'artists' => 'artist',
             'bookmarks' => 'bookmark',
             'catalogs' => 'catalog',
             'genres', 'tags' => 'genre',
             'labels' => 'label',
-            'live_streams', 'live-streams', 'live-stream' => 'live_stream',
+            'live_streams' => 'live_stream',
             'playlists' => 'playlist',
-            'podcast_episodes', 'podcast-episodes', 'podcast-episode' => 'podcast_episode',
+            'podcast_episodes' => 'podcast_episode',
             'podcasts' => 'podcast',
             'searches' => 'search',
             'shares' => 'share',
             'smartlists' => 'smartlist',
-            'song_artists', 'song-artists', 'song-artist' => 'song_artist',
+            'song_artists' => 'song_artist',
             'songs' => 'song',
             'users' => 'user',
             'videos' => 'video',
-            default => $type,
+            default => self::dashesToUnderscores($type),
         };
     }
 

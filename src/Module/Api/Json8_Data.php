@@ -34,6 +34,7 @@ use Ampache\Repository\BookmarkRepositoryInterface;
 use Ampache\Repository\LabelRepositoryInterface;
 use Ampache\Repository\LicenseRepositoryInterface;
 use Ampache\Repository\Model\Album;
+use Ampache\Repository\Model\AlbumDisk;
 use Ampache\Repository\Model\Art;
 use Ampache\Repository\Model\Artist;
 use Ampache\Repository\Model\Catalog;
@@ -80,6 +81,155 @@ class Json8_Data
     private static int $count  = 0;
     private static ?int $limit = 5000;
     private static int $offset = 0;
+
+    /**
+     * @param array<int|string> $objects AlbumDisk id's to include
+     * @param string[] $include
+     * @param bool $object (whether to return as a named object array or regular array)
+     * @return string JSON Object "album_disk"
+     */
+    public static function album_disks(array $objects, array $include, User $user, string $auth, bool $encode = true, bool $object = true): string
+    {
+        self::$count = self::$count ?: count($objects);
+        $md5         = md5(serialize($objects));
+        $JSON        = self::album_disks_array($objects, $include, $user, $auth, $encode);
+
+        if ($object) {
+            $output = [
+                "total_count" => self::$count,
+                "md5" => $md5,
+                "album_disk" => $JSON
+            ];
+        } else {
+            $output = $JSON[0] ?? [];
+        }
+
+        return json_encode($output, JSON_PRETTY_PRINT) ?: '';
+    }
+
+    /**
+     * album_disks_array
+     *
+     * A disk is a child of an album, so it carries the album reference and its own disk identity
+     * instead of the album-level `diskcount`.
+     *
+     * @param array<int|string> $objects AlbumDisk id's to include
+     * @param string[] $include
+     * @return array<int, array{
+     *     "id": string,
+     *     "name": string,
+     *     "prefix": string|null,
+     *     "basename": string|null,
+     *     "album": array{
+     *         id: string,
+     *         name: string,
+     *         prefix: string|null,
+     *         basename: string|null
+     *     },
+     *     "artist"?: array{
+     *         id: string,
+     *         name: string,
+     *         prefix: string|null,
+     *         basename: string
+     *     },
+     *     "artists"?: array<int, array{id: string, name: string, prefix: string|null, basename: string}>,
+     *     "songartists"?: array<int, array{id: string, name: string, prefix: string|null, basename: string}>,
+     *     "disk": int,
+     *     "disksubtitle": string|null,
+     *     "time": int,
+     *     "year": int,
+     *     "tracks": array<int, mixed>,
+     *     "songcount": int,
+     *     "type": null|string,
+     *     "genre": array<int, array{id: string, name: string}>,
+     *     "art": null|string,
+     *     "has_art": bool,
+     *     "flag": bool,
+     *     "rating": int|null,
+     *     "averagerating": float|null,
+     *     "mbid": null|string,
+     *     "mbid_group": null|string,
+     * }> JSON Object "album_disk"
+     */
+    public static function album_disks_array(array $objects, array $include, User $user, string $auth, bool $encode = true): array
+    {
+        self::$count = self::$count ?: count($objects);
+        $objects     = Api::filter_objects($objects, self::$count, self::$offset, self::$limit, $encode);
+
+        // original year (fall back to regular year)
+        $original_year = AmpConfig::get('use_original_year');
+
+        Rating::build_cache('album_disk', $objects);
+        $JSON = [];
+        foreach ($objects as $album_disk_id) {
+            $album_disk = new AlbumDisk((int) $album_disk_id);
+            if ($album_disk->isNew()) {
+                continue;
+            }
+
+            $rating      = new Rating($album_disk->id, 'album_disk');
+            $user_rating = $rating->get_user_rating($user->getId());
+            $flag        = new Userflag($album_disk->id, 'album_disk');
+            $year        = ($original_year && $album_disk->original_year)
+                ? $album_disk->original_year
+                : $album_disk->year;
+
+            // Build the Art URL, include session
+            $art_url = Art::url($album_disk->id, 'album_disk', $auth);
+
+            $objArray = [];
+
+            $objArray['id']       = (string) $album_disk->id;
+            $objArray['name']     = $album_disk->get_fullname();
+            $objArray['prefix']   = $album_disk->prefix;
+            $objArray['basename'] = $album_disk->name;
+            // the simple fullname is the album name without the disk suffix, so the parent needs no extra lookup
+            $objArray['album'] = [
+                "id" => (string) $album_disk->album_id,
+                "name" => $album_disk->get_fullname(true),
+                "prefix" => $album_disk->prefix,
+                "basename" => $album_disk->name
+            ];
+            if ($album_disk->get_parent_fullname() != "") {
+                $objArray['artist'] = Artist::get_name_array_by_id((int) $album_disk->album_artist);
+                $album_artists      = [];
+                foreach ($album_disk->get_artists() as $artist_id) {
+                    $album_artists[] = Artist::get_name_array_by_id($artist_id);
+                }
+                $objArray['artists'] = $album_artists;
+                $song_artists        = [];
+                foreach ($album_disk->get_song_artists() as $artist_id) {
+                    $song_artists[] = Artist::get_name_array_by_id($artist_id);
+                }
+                $objArray['songartists'] = $song_artists;
+            }
+
+            // Handle includes (get_songs() is already scoped to the disk and honours catalog_disable)
+            $songs = (in_array("songs", $include))
+                ? self::songs_array($album_disk->get_songs(), $user, $auth)
+                : [];
+
+            $objArray['disk']          = $album_disk->disk;
+            $objArray['disksubtitle']  = $album_disk->disksubtitle;
+            $objArray['time']          = (int) $album_disk->time;
+            $objArray['year']          = (int) $year;
+            $objArray['tracks']        = $songs;
+            $objArray['songcount']     = $album_disk->song_count;
+            $objArray['type']          = $album_disk->release_type;
+            $objArray['genre']         = self::_genre_array($album_disk->get_tags());
+            $objArray['art']           = $art_url;
+            $objArray['has_art']       = $album_disk->has_art();
+            $objArray['flag']          = (bool) $flag->get_flag($user->getId());
+            $objArray['rating']        = $user_rating;
+            $objArray['averagerating'] = $rating->get_average_rating();
+            $objArray['mbid']          = $album_disk->mbid;
+            $objArray['mbid_group']    = $album_disk->mbid_group;
+
+            $JSON[] = $objArray;
+        }
+
+        return $JSON;
+    }
 
     /**
      * albums
@@ -1394,6 +1544,20 @@ class Json8_Data
                         }
                     }
                     break;
+                case 'album_disk':
+                    foreach ($objects as $object_id) {
+                        $output[$object_id] = [];
+
+                        $sql        = "SELECT DISTINCT `song`.`id` FROM `song` INNER JOIN `album_disk` ON `album_disk`.`album_id` = `song`.`album` AND `album_disk`.`disk` = `song`.`disk` WHERE `album_disk`.`id` = ?;";
+                        $db_results = Dba::read($sql, [$object_id]);
+                        while ($row = Dba::fetch_assoc($db_results)) {
+                            $output[$object_id][] = [
+                                "id" => (string) $row['id'],
+                                "type" => 'song'
+                            ];
+                        }
+                    }
+                    break;
                 case 'playlist':
                     foreach ($objects as $object_id) {
                         $output[$object_id] = [];
@@ -1875,7 +2039,7 @@ class Json8_Data
      *     "name": null|string,
      *     "owner": null|string,
      *     "user": array{"id": string, "username": null|string},
-     *     "items": array<int, array<string, int|string>>|int,
+     *     "items": array<int, array{"id": string, "playlisttrack": int}>|int,
      *     "type": null|string,
      *     "art": null|string,
      *     "has_access": bool,
@@ -2464,70 +2628,71 @@ class Json8_Data
     /**
      * song_tags_array
      *
-     * Raw file tag metadata read from the catalog for each song. Values come
-     * from the untyped catalog tag reader (`Catalog::get_media_tags()`), so each
-     * field is `mixed` and may be null when the tag is absent.
+     * Raw file tag (vainfo) metadata read from the catalog for each song via
+     * `Catalog::get_media_tags()`. Every key is always present, but any value may
+     * be null when the tag is absent from the file (the builder reads each with
+     * `?? null`), so every field except `id` is nullable.
      *
      * @param array<int|string> $objects
      * @return array<int, array{
      *     id: string,
-     *     albumartist: mixed,
-     *     album: mixed,
-     *     artist: mixed,
-     *     artists: mixed,
-     *     art: mixed,
-     *     audio_codec: mixed,
-     *     barcode: mixed,
-     *     bitrate: mixed,
-     *     catalog: mixed,
-     *     catalog_number: mixed,
-     *     channels: mixed,
-     *     comment: mixed,
-     *     composer: mixed,
-     *     description: mixed,
-     *     disk: mixed,
-     *     disksubtitle: mixed,
-     *     display_x: mixed,
-     *     display_y: mixed,
-     *     encoding: mixed,
-     *     file: mixed,
-     *     frame_rate: mixed,
-     *     genre: mixed,
-     *     isrc: mixed,
-     *     language: mixed,
-     *     lyrics: mixed,
-     *     mb_albumartistid: mixed,
-     *     mb_albumartistid_array: mixed,
-     *     mb_albumid_group: mixed,
-     *     mb_albumid: mixed,
-     *     mb_artistid: mixed,
-     *     mb_artistid_array: mixed,
-     *     mb_trackid: mixed,
-     *     mime: mixed,
-     *     mode: mixed,
-     *     original_name: mixed,
-     *     original_year: mixed,
-     *     publisher: mixed,
-     *     r128_album_gain: mixed,
-     *     r128_track_gain: mixed,
-     *     rate: mixed,
-     *     rating: mixed,
-     *     release_date: mixed,
-     *     release_status: mixed,
-     *     release_type: mixed,
-     *     replaygain_album_gain: mixed,
-     *     replaygain_album_peak: mixed,
-     *     replaygain_track_gain: mixed,
-     *     replaygain_track_peak: mixed,
-     *     size: mixed,
-     *     version: mixed,
-     *     summary: mixed,
-     *     time: mixed,
-     *     title: mixed,
-     *     totaldisks: mixed,
-     *     totaltracks: mixed,
-     *     track: mixed,
-     *     year: mixed
+     *     albumartist: null|string,
+     *     album: null|string,
+     *     artist: null|string,
+     *     artists: null|array<string>,
+     *     art: null|string,
+     *     audio_codec: null|string,
+     *     barcode: null|string,
+     *     bitrate: null|int,
+     *     catalog: null|int,
+     *     catalog_number: null|string,
+     *     channels: null|int,
+     *     comment: null|string,
+     *     composer: null|string,
+     *     description: null|string,
+     *     disk: null|int,
+     *     disksubtitle: null|string,
+     *     display_x: null|int,
+     *     display_y: null|int,
+     *     encoding: null|string,
+     *     file: null|string,
+     *     frame_rate: null|float,
+     *     genre: null|array<string>,
+     *     isrc: null|string,
+     *     language: null|string,
+     *     lyrics: null|string,
+     *     mb_albumartistid: null|string,
+     *     mb_albumartistid_array: null|array<string>,
+     *     mb_albumid_group: null|string,
+     *     mb_albumid: null|string,
+     *     mb_artistid: null|string,
+     *     mb_artistid_array: null|array<string>,
+     *     mb_trackid: null|string,
+     *     mime: null|string,
+     *     mode: null|string,
+     *     original_name: null|string,
+     *     original_year: null|string,
+     *     publisher: null|string,
+     *     r128_album_gain: null|int,
+     *     r128_track_gain: null|int,
+     *     rate: null|int,
+     *     rating: null|float,
+     *     release_date: null|string,
+     *     release_status: null|string,
+     *     release_type: null|string,
+     *     replaygain_album_gain: null|float,
+     *     replaygain_album_peak: null|float,
+     *     replaygain_track_gain: null|float,
+     *     replaygain_track_peak: null|float,
+     *     size: null|int,
+     *     version: null|string,
+     *     summary: null|string,
+     *     time: null|int,
+     *     title: null|string,
+     *     totaldisks: null|int,
+     *     totaltracks: null|int,
+     *     track: null|int,
+     *     year: null|int
      * }>
      */
     public static function song_tags_array(array $objects, string $auth): array

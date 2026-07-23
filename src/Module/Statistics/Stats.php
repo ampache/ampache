@@ -174,11 +174,16 @@ class Stats
                     ? "UPDATE `$type` SET `weight` = `weight` - 1, `total_count` = CASE WHEN `total_count` > 0 THEN `total_count` - 1 ELSE `total_count` END, `total_skip` = `total_skip` + 1 WHERE `id` = ?;"
                     : "UPDATE `$type` SET `total_count` = `total_count` + 1, `weight` = `weight` + 1 WHERE `id` = ?;";
                 Dba::write($sql, [$object_id]);
-                // update the folder the object lives in AND every ancestor folder (via `folder`.`path`, the comma-separated chain of parent ids).
-                $sql = ($count_type == 'down')
-                    ? "UPDATE `folder` INNER JOIN (SELECT DISTINCT `folder`.`id`, `folder`.`path` FROM `folder_map` INNER JOIN `folder` ON `folder`.`id` = `folder_map`.`folder_id` WHERE `folder_map`.`object_id` = ? AND `folder_map`.`object_type` = ?) AS `mapped` ON `folder`.`id` = `mapped`.`id` OR FIND_IN_SET(`folder`.`id`, `mapped`.`path`) SET `folder`.`total_count` = CASE WHEN `folder`.`total_count` > 0 THEN `folder`.`total_count` - 1 ELSE `folder`.`total_count` END, `folder`.`total_skip` = `folder`.`total_skip` + 1;"
-                    : "UPDATE `folder` INNER JOIN (SELECT DISTINCT `folder`.`id`, `folder`.`path` FROM `folder_map` INNER JOIN `folder` ON `folder`.`id` = `folder_map`.`folder_id` WHERE `folder_map`.`object_id` = ? AND `folder_map`.`object_type` = ?) AS `mapped` ON `folder`.`id` = `mapped`.`id` OR FIND_IN_SET(`folder`.`id`, `mapped`.`path`) SET `folder`.`total_count` = `folder`.`total_count` + 1;";
-                Dba::write($sql, [$object_id, $type]);
+                // update the folder the object lives in AND every ancestor folder
+                $folder_ids = self::getFolderTree($type, $object_id);
+                if ($folder_ids !== []) {
+                    $idlist = implode(', ', $folder_ids);
+                    $sql    = ($count_type == 'down')
+                        ? "UPDATE `folder` SET `total_count` = CASE WHEN `total_count` > 0 THEN `total_count` - 1 ELSE `total_count` END, `total_skip` = `total_skip` + 1 WHERE `id` IN ($idlist);"
+                        : "UPDATE `folder` SET `total_count` = `total_count` + 1 WHERE `id` IN ($idlist);";
+                    Dba::write($sql);
+                }
+
                 break;
             case 'album_disk':
             case 'album':
@@ -1333,6 +1338,30 @@ class Stats
     private static function derivedTypeList(): string
     {
         return "'" . implode("', '", self::DERIVED_TYPES) . "'";
+    }
+
+    /**
+     * Collect the folder an object lives in as well as every ancestor folder above it.
+     * `folder`.`path` is the comma separated chain of parent ids, so the tree is resolved without recursing.
+     *
+     * @return list<int>
+     */
+    private static function getFolderTree(string $type, int $object_id): array
+    {
+        $sql        = "SELECT DISTINCT `folder`.`id`, `folder`.`path` FROM `folder_map` INNER JOIN `folder` ON `folder`.`id` = `folder_map`.`folder_id` WHERE `folder_map`.`object_id` = ? AND `folder_map`.`object_type` = ?;";
+        $db_results = Dba::read($sql, [$object_id, $type]);
+
+        $results = [];
+        while ($row = Dba::fetch_assoc($db_results)) {
+            $results[] = (int) $row['id'];
+            foreach (explode(',', (string) $row['path']) as $parent_id) {
+                if (ctype_digit($parent_id)) {
+                    $results[] = (int) $parent_id;
+                }
+            }
+        }
+
+        return array_values(array_unique($results));
     }
 
     private static function getUserActivityPoster(): UserActivityPosterInterface

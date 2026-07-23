@@ -61,6 +61,7 @@
         "doctrine/cache": "^2",
         "gettext/gettext": "^5",
         "gettext/translator": "^1.2",
+        "goat1000/svggraph": "^3.20",
         "gregwar/captcha": "^2.0",
         "idleberg/vite-manifest": "^1.0",
         "james-heinrich/getid3": "dev-master",
@@ -93,8 +94,7 @@
         "phpstan/phpstan-mockery": "^2",
         "phpunit/phpunit": "^11",
         "rector/rector": "^2",
-        "seec/phpunit-consecutive-params": "^1.1",
-        "szymach/c-pchart": "3.0.17"
+        "seec/phpunit-consecutive-params": "^1.1"
     },
     "repositories":
     [
@@ -134,6 +134,16 @@
         "syntax": "@php resources/scripts/tests/syntax.php",
         "cs:fix": "vendor/bin/php-cs-fixer fix",
         "cs:check": "vendor/bin/php-cs-fixer fix --dry-run -vv",
+        "api:docs": [
+            "python resources/scripts/api-docs/generate_openapi_schemas.py",
+            "python resources/scripts/api-docs/generate_api_methods_md.py"
+        ],
+        "api:docs:check": [
+            "python resources/scripts/api-docs/generate_openapi_schemas.py --check",
+            "python resources/scripts/api-docs/generate_api_methods_md.py --check",
+            "python resources/scripts/api-docs/check_openapi_examples.py --strict",
+            "python resources/scripts/api-docs/lint_openapi.py"
+        ],
         "post-autoload-dump": [
             "@php resources/scripts/composer/check_tag_tools.php"
         ],
@@ -150,12 +160,13 @@
         "syntax": "Performs php syntax checks",
         "cs:fix": "Performs code-style corrections on the whole codebase",
         "cs:check": "Performs a code-style dry-run on the whole codebase",
+        "api:docs": "Regenerates docs/openapi.json and the API method reference documents (needs python)",
+        "api:docs:check": "Fails if the generated API documents are out of date with the code (needs python)",
         "rector:dry": "Performs rector code-migrations dry-run",
         "rector:fix": "Applies pending rector code-migrations"
     },
     "suggest": {
-        "szymach/c-pchart": "Enable graphical statistics",
-        "ext-gd": "Needed for graphical statistics",
+        "ext-gd": "Needed for image resizing and waveforms",
         "ext-http": "Yourls plugin",
         "ext-ldap": "Needed to support ldap authentication",
         "ext-pthreads": "Needed to support async functions",

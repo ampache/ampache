@@ -162,6 +162,14 @@ final class AdvancedSearch5Method implements MethodInterface
             );
         }
 
+        if (strtolower($type) === 'album_disk') {
+            return $response->withBody(
+                $this->streamFactory->createStream(
+                    $output->writeEmpty($apiVersion, $type)
+                )
+            );
+        }
+
         $data           = $input;
         $data['offset'] = 0;
         $data['limit']  = 0;

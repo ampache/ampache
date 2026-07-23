@@ -626,6 +626,7 @@ if ($isVideo === false) {
     require_once Ui::find_template('uberviz.inc.php');
 } ?>
 <?php if ($isShare === false) { ?>
+<?php echo Ui::material_symbol_sprite(); ?>
 </body>
     </html>
 <?php } ?>

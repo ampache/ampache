@@ -1034,16 +1034,6 @@ function get_theme(string $name): ?array
 }
 
 /**
- * Used in graph class also format string
- *
- * @see \Ampache\Module\Util\Graph
- */
-function pGraph_Yformat_bytes($value): string
-{
-    return Ui::format_bytes($value);
-}
-
-/**
  * @deprecated Will be removed
  */
 function canEditArtist(

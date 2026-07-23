@@ -26,6 +26,7 @@ declare(strict_types=1);
 // show_graphs.inc.php
 
 use Ampache\Config\AmpConfig;
+use Ampache\Module\System\Core;
 use Ampache\Module\Util\Graph;
 use Ampache\Module\Util\Ui;
 
@@ -99,7 +100,7 @@ foreach ($date_formats as $dtype => $dname) {
     <input type="hidden" name="user_id" value="<?php echo $user_id; ?>" />
     <input type="hidden" name="object_type" value="<?php echo $object_type; ?>" />
     <input type="hidden" name="object_id" value="<?php echo $object_id; ?>" />
-    <input type="hidden" name="action" value="<?php echo filter_input(INPUT_GET, 'action', FILTER_SANITIZE_SPECIAL_CHARS); ?>" />
+    <input type="hidden" name="action" value="<?php echo scrub_out(Core::get_request('action')); ?>" />
     <input type="hidden" name="type" value="<?php echo $type ?? ''; ?>" />
 </form>
 <script>

@@ -84,7 +84,7 @@ final class LocalplayMethod implements MethodInterface
      * command = (string) 'next', 'prev', 'stop', 'play', 'pause', 'add', 'volume_up', 'volume_down',
      *                    'volume_mute', 'delete_all', 'skip', 'status'
      * oid     = (string) object_id //optional
-     * type    = (string) 'Song', 'Video', 'Podcast_Episode', 'Broadcast', 'Democratic', 'Live_Stream' //optional
+     * type    = (string) 'Song', 'Video', 'Podcast_Episode', 'Broadcast', 'Live_Stream', 'Democratic' //optional
      * clear   = (integer) 0,1 Clear the current playlist before adding //optional
      * track   = (integer) used with skip to skip to the track id //optional
      *
@@ -136,7 +136,16 @@ final class LocalplayMethod implements MethodInterface
 
         // Load their Localplay instance
         $localplay = new LocalPlay((string) ($this->configContainer->get('localplay_controller') ?? ''));
-        if (empty($localplay->type) || !$localplay->connect()) {
+        if (empty($localplay->type)) {
+            return $this->writeNoController(
+                $response,
+                $output,
+                $apiVersion,
+                'No localplay controller is configured'
+            );
+        }
+
+        if (!$localplay->connect()) {
             return $this->writeNoController($response, $output, $apiVersion);
         }
 
@@ -249,12 +258,13 @@ final class LocalplayMethod implements MethodInterface
         ResponseInterface $response,
         ApiOutputInterface $output,
         int $apiVersion,
+        string $message = 'Unable to connect to localplay controller',
     ): ResponseInterface {
         $response->getBody()->write(
             $output->error(
                 $apiVersion,
                 ErrorCodeEnum::BAD_REQUEST,
-                'Unable to connect to localplay controller',
+                $message,
                 self::ACTION,
                 'account'
             )

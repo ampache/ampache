@@ -110,6 +110,20 @@ require_once Ui::find_template('show_html5_player_headers.inc.php'); ?>
         text-decoration: none;
     }
 
+    /* The play type switcher borrows the theme's #play_type_switch, which is spaced for the wide
+       desktop header (margin-left:50px). Drop that here so it tucks between the title and the two
+       action buttons; the title's flex:1 already pushes it to the right. */
+    #mini-header #play_type_switch {
+        flex: 0 0 auto;
+        margin: 0;
+    }
+
+    #mini-header #play_type_switch form,
+    #mini-header #play_type_switch select {
+        margin: 0;
+        max-width: 130px;
+    }
+
     #mini-content {
         box-sizing: border-box;
         padding: 10px;
@@ -267,6 +281,7 @@ require_once Ui::find_template('show_html5_player_headers.inc.php'); ?>
                 <img src="<?php echo $logo_url; ?>" title="<?php echo $site_title; ?>" alt="<?php echo $site_title; ?>">
             </span>
             <span id="mini-title"><?php echo $site_title; ?></span>
+            <?php require_once Ui::find_template('show_playtype_switch.inc.php'); ?>
             <a class="mini-action nohtml" href="javascript:ToggleRightbarVisibility();" title="<?php echo $t_playlist; ?>"><?php echo Ui::get_material_symbol('dock_to_left', $t_playlist); ?></a>
             <a class="mini-action nohtml" target="_top" href="<?php echo $web_path; ?>/logout.php?session=<?php echo Session::get(); ?>" title="<?php echo $t_logout; ?>"><?php echo Ui::get_material_symbol('logout', $t_logout); ?></a>
         </div>

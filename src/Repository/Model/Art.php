@@ -26,9 +26,11 @@ declare(strict_types=1);
 namespace Ampache\Repository\Model;
 
 use Ampache\Config\AmpConfig;
+use Ampache\Config\ConfigurationKeyEnum;
 use Ampache\Module\Api\Ajax;
 use Ampache\Module\Art\ArtCleanupInterface;
 use Ampache\Module\Art\Collector\MetaTagCollectorModule;
+use Ampache\Module\Art\Mosaic\PlaylistArtBuilderInterface;
 use Ampache\Module\Authorization\AccessLevelEnum;
 use Ampache\Module\System\Core;
 use Ampache\Module\System\Dba;
@@ -288,7 +290,7 @@ class Art extends database_object
             }
         }
 
-        echo "<img src=\"" . $imgurl . "\" alt=\"" . $name . "\" height=\"" . $size['height'] . "\" width=\"" . $size['width'] . "\" />";
+        echo "<img src=\"" . $imgurl . "\" alt=\"" . $name . "\" height=\"" . $size['height'] . "\" width=\"" . $size['width'] . "\" loading=\"lazy\" decoding=\"async\" />";
 
         $item_art_play = ($size['height'] == 150)
             ? "<div class=\"item_art_play_150\">"
@@ -506,10 +508,12 @@ class Art extends database_object
      * ['url'] = URL *** OPTIONAL ***
      * ['file'] = FILENAME *** OPTIONAL ***
      * ['raw'] = Actual Image data, already captured
+     * ['raw_base64'] = The same, encoded so it can be held in the session
      * @param array{
      *     url?: string,
      *     file?: string,
      *     raw?: string,
+     *     raw_base64?: string,
      *     title?: string,
      *     db?: int,
      *     song?: string,
@@ -524,6 +528,11 @@ class Art extends database_object
         // Already have the data, this often comes from id3tags
         if (isset($data['raw'])) {
             return $data['raw'];
+        }
+
+        // The session is a text column, so image bytes can only be held there encoded
+        if (isset($data['raw_base64'])) {
+            return (string) base64_decode($data['raw_base64'], true);
         }
 
         // If it came from the database
@@ -1137,9 +1146,19 @@ class Art extends database_object
 
         // return a default image if fallback is requested
         if (!$this->raw && $fallback) {
-            $this->raw      = $this->get_blankalbum($size);
-            $this->raw_mime = 'image/png';
-            $this->fallback = true;
+            // A playlist can stand in a mosaic of its own covers rather than the blank placeholder.
+            // Keep it once it is built: it becomes the playlist's art, so it is served from the image
+            // table from here on instead of being stitched together again on every render.
+            $mosaic = $this->get_playlist_mosaic();
+            if ($mosaic !== null) {
+                $this->insert($mosaic, 'image/png');
+                $this->raw      = $mosaic;
+                $this->raw_mime = 'image/png';
+            } else {
+                $this->raw      = $this->get_blankalbum($size);
+                $this->raw_mime = 'image/png';
+                $this->fallback = true;
+            }
         }
 
         // If we get nothing return false
@@ -1696,6 +1715,36 @@ class Art extends database_object
         }
 
         return $image;
+    }
+
+    /**
+     * Build a mosaic of the playlist's own covers to stand in for missing art.
+     *
+     * The tiles are picked with a seed taken from the playlist contents, so this returns the same
+     * image every time until the playlist itself changes.
+     */
+    private function get_playlist_mosaic(): ?string
+    {
+        if (
+            !in_array($this->object_type, ['playlist', 'search'], true)
+            || !make_bool(AmpConfig::get(ConfigurationKeyEnum::PLAYLIST_ART_MOSAIC_FALLBACK, false))
+        ) {
+            return null;
+        }
+
+        $className = ObjectTypeToClassNameMapper::map($this->object_type);
+        $playlist  = new $className($this->object_id);
+        if (!$playlist instanceof playlist_object) {
+            return null;
+        }
+
+        foreach ($playlist->gather_art(PlaylistArtBuilderInterface::MAX_TILES) as $image) {
+            if (isset($image['raw'])) {
+                return $image['raw'];
+            }
+        }
+
+        return null;
     }
 
     /**

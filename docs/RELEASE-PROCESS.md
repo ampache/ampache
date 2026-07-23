@@ -29,9 +29,6 @@ It's easy to use a program like github desktop to compare between branches.
   * add new ampache.sql
 * Commit merge for new version (e.g. 5.x.x) but **do not push!**
 * Browse changes to check for things you've missed in the changelog
-* ~~Add pchart to composer~~ (part of the dev requirements so it's included in releases)
-  * ~~composer require --update-no-dev szymach/c-pchart "3.*"~~
-* ~~Run composer install~~ (adding pchart updates everything)
 * Get missing map files
 
 * Reset the vendor folder completely and pull it all down
