@@ -27,6 +27,7 @@ namespace Ampache\Module\Cache;
 
 use Ampache\Module\Statistics\Stats;
 use Ampache\Module\System\Dba;
+use Ampache\Repository\Model\Catalog;
 
 final class ObjectCache implements ObjectCacheInterface
 {
@@ -98,6 +99,10 @@ final class ObjectCache implements ObjectCacheInterface
         Dba::write($sql);
         $sql = "TRUNCATE `cache_object_count_run`";
         Dba::write($sql);
+
+        // record when the cache was generated so live counters can add only the
+        // plays that arrived since, keeping cron_cache fast but always accurate
+        Catalog::set_update_info('cache_object_count', time());
 
         debug_event('compute_cache', 'Completed cache process', 5);
     }

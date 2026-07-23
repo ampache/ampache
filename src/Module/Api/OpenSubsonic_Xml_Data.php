@@ -319,6 +319,10 @@ class OpenSubsonic_Xml_Data
         $xartist->addAttribute('albumCount', (string) $artist->album_count);
 
         self::_setIfStarred($xartist, 'artist', $artist->id);
+
+        // [OPENSUBSONIC] roles: repeated <role> children (see _addArtistRoles).
+        self::_addArtistRoles($xartist, $artist->album_count, $artist->song_count);
+
         if ($albums) {
             $allalbums = self::getAlbumRepository()->getAlbumByArtist($artist->id);
             foreach ($allalbums as $album_id) {
@@ -409,6 +413,7 @@ class OpenSubsonic_Xml_Data
      *     f_name: string,
      *     name: string,
      *     album_count: int,
+     *     song_count: int,
      *     catalog_id: int,
      *     has_art: int
      * }> $artists
@@ -560,6 +565,7 @@ class OpenSubsonic_Xml_Data
      *     f_name: string,
      *     name: string,
      *     album_count: int,
+     *     song_count: int,
      *     catalog_id: int,
      *     has_art: int
      * }> $artists
@@ -1433,6 +1439,7 @@ class OpenSubsonic_Xml_Data
      *     f_name: string,
      *     name: string,
      *     album_count: int,
+     *     song_count: int,
      *     catalog_id: int,
      *     has_art: int
      * } $artist
@@ -1451,6 +1458,26 @@ class OpenSubsonic_Xml_Data
             $xartist->addAttribute('albumCount', (string) $artist['album_count']);
         }
         self::_setIfStarred($xartist, 'artist', $artist['id']);
+
+        // [OPENSUBSONIC] roles: tell an album artist apart from a song-only artist regardless of the
+        // `subsonic_force_album_artist` server preference (see _addArtistRoles).
+        self::_addArtistRoles($xartist, $artist['album_count'], $artist['song_count']);
+    }
+
+    /**
+     * _addArtistRoles
+     *
+     * Add the OpenSubsonic `roles` list as repeated <role> children: `albumartist` when the artist is
+     * credited on at least one album, `artist` when credited on at least one song.
+     */
+    private static function _addArtistRoles(SimpleXMLElement $xartist, int $album_count, int $song_count): void
+    {
+        if ($album_count > 0) {
+            $xartist->addChild('role', 'albumartist');
+        }
+        if ($song_count > 0) {
+            $xartist->addChild('role', 'artist');
+        }
     }
 
     /**
@@ -1685,6 +1712,7 @@ class OpenSubsonic_Xml_Data
      *     f_name: string,
      *     name: string,
      *     album_count: int,
+     *     song_count: int,
      *     catalog_id: int,
      *     has_art: int
      * }> $artists

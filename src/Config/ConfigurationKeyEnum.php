@@ -87,6 +87,7 @@ final class ConfigurationKeyEnum
     public const string COMPOSER_BINARY_PATH                  = 'composer_binary_path';
     public const string COMPOSER_NO_DEV                       = 'composer_no_dev';
     public const string CRON_CACHE                            = 'cron_cache';
+    public const string CRON_CACHE_LIVE_COUNT                 = 'cron_cache_live_count';
     public const string CUSTOM_BLANKALBUM                     = 'custom_blankalbum';
     public const string CUSTOM_DATETIME                       = 'custom_datetime';
     public const string CUSTOM_FAVICON                        = 'custom_favicon';
