@@ -141,7 +141,8 @@
         "api:docs:check": [
             "python resources/scripts/api-docs/generate_openapi_schemas.py --check",
             "python resources/scripts/api-docs/generate_api_methods_md.py --check",
-            "python resources/scripts/api-docs/check_openapi_examples.py --strict"
+            "python resources/scripts/api-docs/check_openapi_examples.py --strict",
+            "python resources/scripts/api-docs/lint_openapi.py"
         ],
         "post-autoload-dump": [
             "@php resources/scripts/composer/check_tag_tools.php"
