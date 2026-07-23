@@ -83,7 +83,7 @@ $playlist->display_art($size, false, false); ?>
             </a>
         </li>
         <li>
-            <a href="javascript:NavigateTo('<?php echo $web_path; ?>/playlist.php?action=sort_tracks&playlist_id=<?php echo $playlist->id; ?>');" onclick="return confirm('<?php echo T_('Are you sure? This will replace the current track order'); ?>');">
+            <a href="javascript:NavigateTo('<?php echo $web_path; ?>/playlist.php?action=sort_tracks&playlist_id=<?php echo $playlist->id; ?>');" data-confirm="<?php echo T_('Are you sure? This will replace the current track order'); ?>">
                 <?php echo Ui::get_material_symbol('sort_by_alpha', T_('Sort Tracks by Artist, Album, Song')); ?>
                 <?php echo T_('Sort Tracks by Artist, Album, Song'); ?>
             </a>
@@ -158,7 +158,7 @@ if (Access::check_function(AccessFunctionEnum::FUNCTION_BATCH_DOWNLOAD) && $zipH
             </a>
         </li>
         <li>
-            <a href="javascript:NavigateTo('<?php echo $web_path; ?>/playlist.php?action=delete_playlist&playlist_id=<?php echo $playlist->id; ?>');" onclick="return confirm('<?php echo T_('Do you really want to delete this Playlist?'); ?>');">
+            <a href="javascript:NavigateTo('<?php echo $web_path; ?>/playlist.php?action=delete_playlist&playlist_id=<?php echo $playlist->id; ?>');" data-confirm="<?php echo T_('Do you really want to delete this Playlist?'); ?>">
                 <?php echo Ui::get_material_symbol('close'); ?>
                 <?php echo T_('Delete'); ?>
             </a>

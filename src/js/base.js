@@ -256,3 +256,56 @@ export function getCurrentPage() {
 
     return btoa(window.location.href);
 }
+
+// ampacheConfirm
+// Non-blocking replacement for window.confirm(). The native confirm() freezes the event loop while
+// it is open and, in some browsers (notably Firefox), pauses <audio>/<video> playback for the
+// duration of the dialog, interrupting the web player. This shows a themed jQuery UI dialog instead
+// and returns a Promise that resolves true (accepted) or false (cancelled/dismissed).
+export function ampacheConfirm(message) {
+    return new Promise(function (resolve) {
+        var $dialog = $("#ampache-confirm-dialog");
+        if ($dialog.length === 0) {
+            $dialog = $("<div id='ampache-confirm-dialog'></div>").appendTo(document.body);
+        }
+        $dialog.text((message === null || typeof message === "undefined") ? "" : String(message));
+
+        var settled = false;
+        function settle(result) {
+            if (settled) {
+                return;
+            }
+            settled = true;
+            resolve(result);
+            if ($dialog.hasClass("ui-dialog-content")) {
+                $dialog.dialog("close");
+            }
+        }
+
+        var okLabel     = (typeof jsConfirmOkTitle !== "undefined") ? jsConfirmOkTitle : "OK";
+        var cancelLabel = (typeof jsCancelTitle !== "undefined") ? jsCancelTitle : "Cancel";
+        var titleLabel  = (typeof jsConfirmTitle !== "undefined") ? jsConfirmTitle : "Confirm";
+
+        // Object form keeps the button order (accept first, then cancel).
+        var buttons = {};
+        buttons[okLabel] = function () {
+            settle(true);
+        };
+        buttons[cancelLabel] = function () {
+            settle(false);
+        };
+
+        $dialog.dialog({
+            title: titleLabel,
+            modal: true,
+            resizable: false,
+            draggable: false,
+            width: 400,
+            close: function () {
+                // fires for the X, the Escape key and our own close() call; the guard stops a double resolve
+                settle(false);
+            },
+            buttons: buttons
+        });
+    });
+}

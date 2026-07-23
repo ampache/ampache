@@ -26,8 +26,11 @@ declare(strict_types=1);
 namespace Ampache\Module\Playback;
 
 use Ampache\Config\AmpConfig;
+use Ampache\Module\Catalog\Catalog_remote;
+use Ampache\Module\Catalog\Catalog_subsonic;
 use Ampache\Module\Util\InterfaceImplementationChecker;
 use Ampache\Module\Util\ObjectTypeToClassNameMapper;
+use Ampache\Repository\Model\Catalog;
 use Ampache\Repository\Model\Live_Stream;
 use Ampache\Repository\Model\Media;
 use Ampache\Repository\Model\Podcast_Episode;
@@ -148,6 +151,12 @@ class WebPlayer
 
             $json['media_id']   = $media->id;
             $json['media_type'] = $url_data['type'];
+            // Remote-catalog media streams from another origin: play/index.php 302-redirects to the source server.
+            // Cross-origin media routed through Web Audio (createMediaElementSource) is silenced by the browser, so flag it and skip the audio graph.
+            if ($media instanceof Song || $media instanceof Video || $media instanceof Podcast_Episode) {
+                $mediaCatalog   = Catalog::create_from_id($media->catalog);
+                $json['remote'] = ($mediaCatalog instanceof Catalog_remote || $mediaCatalog instanceof Catalog_subsonic);
+            }
         } else {
             // items like live streams need to keep an id for us as well
             switch ($item->type) {
