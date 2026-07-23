@@ -164,6 +164,24 @@ REF_REUSE: dict[tuple[str, str], str] = {
     # now_playing/shout keep their own inline stub: their username is a non-null string, not nullable.
     ("PlaylistObject", "user"): "UserSummaryObject",
     ("ActivityObject", "user"): "UserSummaryObject",
+    # the {id, name} genre stub (an array on each taggable object), all seven copies identical (S4).
+    # PodcastEpisodeObject.podcast shares the shape but is a different concept, so it stays inline.
+    ("AlbumObject", "genre"): "GenreReference",
+    ("AlbumDiskObject", "genre"): "GenreReference",
+    ("SongObject", "genre"): "GenreReference",
+    ("ArtistObject", "genre"): "GenreReference",
+    ("VideoObject", "genre"): "GenreReference",
+    ("DemocraticSongObject", "genre"): "GenreReference",
+    ("GenreObject", "merge"): "GenreReference",
+    # the {id, name, prefix, basename} artist/album stub, variant with all text fields nullable (S3).
+    ("AlbumObject", "artists"): "NamedReference",
+    ("AlbumObject", "songartists"): "NamedReference",
+    ("SongObject", "artist"): "NamedReference",
+    ("SongObject", "artists"): "NamedReference",
+    ("SongObject", "album"): "NamedReference",
+    ("SongObject", "albumartist"): "NamedReference",
+    ("DemocraticSongObject", "artist"): "NamedReference",
+    ("DemocraticSongObject", "album"): "NamedReference",
 }
 
 # RPC action name (from x-rpc-mappings) -> schema to $ref on its 200 response.
@@ -730,6 +748,29 @@ MANUAL_SCHEMAS: dict[str, dict] = {
         "type": "object",
         "properties": {"id": {"type": "string"}, "type": {"type": "string"}},
         "required": ["id", "type"],
+        "additionalProperties": True,
+    },
+    # the {id, name} genre stub embedded (as an array) on every taggable media object. Extracted so
+    # the seven identical inline copies reference one schema; wired via REF_REUSE (S4).
+    "GenreReference": {
+        "type": "object",
+        "properties": {"id": {"type": "string"}, "name": {"type": "string"}},
+        "required": ["id", "name"],
+        "additionalProperties": True,
+    },
+    # the {id, name, prefix, basename} artist/album reference, all text fields nullable. This is the
+    # largest of the four nullability variants of that stub (8 copies on Album/Song/DemocraticSong);
+    # wired via REF_REUSE (S3). The AlbumDisk stubs use a different variant (name/basename required)
+    # and stay inline, as does AlbumObject.artist (a nullable node).
+    "NamedReference": {
+        "type": "object",
+        "properties": {
+            "id": {"type": "string"},
+            "name": {"type": "string", "nullable": True},
+            "prefix": {"type": "string", "nullable": True},
+            "basename": {"type": "string", "nullable": True},
+        },
+        "required": ["id", "name", "prefix", "basename"],
         "additionalProperties": True,
     },
     # index returns { <type>: <value> } where <value> varies with the `include`

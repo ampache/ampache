@@ -124,3 +124,38 @@ though it only issues GET requests.
 `capture_rest_fixtures.php` refreshes the fixtures under `tests/Fixtures/Api/rest/` that
 `RestSpecConformanceTest` validates. Fixture coverage is partial, so a documented path without a
 fixture is not response-validated by the test suite.
+
+## Structural lint
+
+`lint_openapi.py` (run by `composer api:docs:check`) asserts the invariants the spec cleanup
+established, so a hand edit or a future generator change cannot silently undo them: every operation has
+an `operationId` and the universal `400/401/403/500` error set, no schema uses
+`additionalProperties: false`, the shared parameters are always `$ref`'d (never re-declared inline),
+every `$ref` resolves, and no two named schemas are byte-identical (bar the generated `*Request` bodies
+and an explicit allowlist). `generate_api_methods_md.py` also fails fast if it resolves zero response
+schemas — the signature of the bug where a change to the `x-rpc-mappings` key format froze the response
+tables.
+
+## Design notes (decisions deliberately taken, so they are not re-adopted)
+
+These were considered during the cleanup and rejected on purpose. Do not "fix" them without new
+information.
+
+- **XML is not documented byte-for-byte.** The spec describes the JSON serialisation; `info.description`
+  states XML mirrors it structurally (attributes/element nesting differ). `Xml8_Data` builds XML by
+  string concatenation with no array intermediate to derive a schema from, so a second XML spec would be
+  hand-maintained and drift. One spec, JSON, with an XML structure note.
+- **`object_type` stays an open string, never an enum.** Pinning today's media types would make every new
+  type a breaking spec change; the field carries a description listing current values instead.
+- **`now_playing` / `shout` keep an inline `{id, username}` user stub** rather than `$ref`-ing
+  `UserSummaryObject`. Their builders return a non-null `username` (`getUsername()` / `?? ''`), so the
+  nullable `UserSummaryObject` would misdocument them. Only `playlist` and `activity` (nullable username)
+  were wired to it.
+- **`ListObject` and `BrowseObject` are kept as separate names** though identical today, so either can
+  gain a field without disturbing the other. The lint allowlists the pair.
+- **No `allOf` base extraction** (list envelope, server-status fields, media attributes, deleted-media
+  base, plugin-payload). `openapi.json` is generated and its *source* is already DRY (one
+  `build_list_response()`, one `build_deleted_schemas()`, ping built from handshake), so `allOf` would
+  remove no real duplication while adding composition many 3.0.3 codegen/validator tools handle poorly.
+  Only `$ref` extraction of genuinely inline stubs (`NamedReference`, `GenreReference`) was done, which
+  gives codegen named types with no downside.
