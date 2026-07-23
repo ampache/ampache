@@ -232,10 +232,12 @@ class WebPlayer
             : $file_type;
 
         if ($urlinfo['type'] == 'song' || $urlinfo['type'] == 'podcast_episode') {
-            if ($types['real'] == "ogg" || $types['real'] == "opus") {
+            if ($types['real'] == "ogg" || $types['real'] == "opus" || $types['real'] == "opus_rg" || $types['real'] == "opus_car") {
                 $types['player'] = "oga";
             } elseif ($types['real'] == "mp4") {
                 $types['player'] = "m4a";
+            } elseif ($types['real'] == "mp3_rg" || $types['real'] == "mp3_car") {
+                $types['player'] = "mp3";
             }
         }
 
