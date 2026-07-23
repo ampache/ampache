@@ -881,6 +881,9 @@ final readonly class PlayAction implements ApplicationActionInterface
             );
         }
 
+        // the format a transcode would actually output; get_transcode_format() falls back to the source format
+        $output_format = $transcode_to;
+
         // transcode_to should only have an effect if the media is the wrong format
         $transcode_to = ($transcode_cfg == 'never' || $transcode_to == $streamConfiguration['file_type'])
             ? null
@@ -893,6 +896,15 @@ final readonly class PlayAction implements ApplicationActionInterface
             );
         }
 
+        // re-encoding the source format at (or above) its own rate only costs quality and cpu, so send the original
+        $skip_transcode = Stream::skip_transcode(
+            $output_format,
+            $streamConfiguration['file_type'],
+            (isset($media->bitrate)) ? (int) $media->bitrate : 0,
+            $bitrate,
+            $maxbitrate
+        );
+
         // If custom play action or already cached, do not try to transcode
         if (!$cpaction && !$original && !$cache_file) {
             $valid_types = $media->get_stream_types($player);
@@ -903,7 +915,7 @@ final readonly class PlayAction implements ApplicationActionInterface
                         'Transcoding due to explicit request for ' . $transcode_to,
                         [LegacyLogger::CONTEXT_TYPE => self::class]
                     );
-                } elseif ($transcode_cfg == 'always') {
+                } elseif ($transcode_cfg == 'always' && !$skip_transcode) {
                     $transcode = true;
                     $this->logger->debug(
                         'Transcoding due to always',

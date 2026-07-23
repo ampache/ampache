@@ -771,6 +771,39 @@ class Stream
     }
 
     /**
+     * skip_transcode
+     * True when a transcode would hand back the source format at (or above) the rate it already has, which can only
+     * lose quality, so the original file is the better stream. Rates are bps and 0 means "not requested"; an unknown
+     * source rate or a different output format never skips because that conversion is the point of the transcode.
+     */
+    public static function skip_transcode(
+        ?string $output_format,
+        string $source_format,
+        int $source_rate,
+        int $requested_rate = 0,
+        int $max_rate = 0,
+    ): bool {
+        if ($output_format !== $source_format || $source_rate <= 0) {
+            return false;
+        }
+
+        $target_rate = ($requested_rate > 0)
+            ? $requested_rate
+            : self::get_allowed_bitrate($output_format);
+        if ($max_rate > 0 && $max_rate < $target_rate) {
+            $target_rate = $max_rate;
+        }
+
+        if ($target_rate < $source_rate) {
+            return false;
+        }
+
+        debug_event(self::class, 'Not transcoding ' . $source_format . ' to itself; target ' . $target_rate . ' is not below the source bitrate ' . $source_rate, 4);
+
+        return true;
+    }
+
+    /**
      * start_transcode
      *
      * This is a rather complex function that starts the transcoding or

@@ -33,19 +33,19 @@ use ReflectionMethod;
 class StreamTest extends MockeryTestCase
 {
     /**
+     * The current config syntax has no suffix, a pre-8.0.0 one keeps a lower or upper case `k`, and the last row
+     * covers `%BITRATE%` not matching inside `%MAXBITRATE%`
+     *
      * @return list<array{string, string}>
      */
     public static function bitratePlaceholderProvider(): array
     {
         return [
-            // the current config syntax; rates are plain bps
             ['-vn -b:a %BITRATE% -c:a libmp3lame -f mp3 pipe:1', '-vn -b:a 256000 -c:a libmp3lame -f mp3 pipe:1'],
-            // a pre-8.0.0 config keeps the kilobit suffix, in either case
             ['-vn -b:a %BITRATE%k -c:a libmp3lame -f mp3 pipe:1', '-vn -b:a 256000 -c:a libmp3lame -f mp3 pipe:1'],
             ['-vn -b:a %BITRATE%K -c:a libmp3lame -f mp3 pipe:1', '-vn -b:a 256000 -c:a libmp3lame -f mp3 pipe:1'],
             ['-maxrate %MAXBITRATE%K -preset superfast pipe:1', '-maxrate 8000000 -preset superfast pipe:1'],
             ['-ar %SAMPLE%k pipe:1', '-ar 256000 pipe:1'],
-            // %BITRATE% must not be found inside %MAXBITRATE%
             ['-b:a %BITRATE% -maxrate %MAXBITRATE% pipe:1', '-b:a 256000 -maxrate 8000000 pipe:1'],
         ];
     }
@@ -158,6 +158,57 @@ class StreamTest extends MockeryTestCase
             $expected,
             $method->invoke(null, $command, ['%SAMPLE%' => 256000, '%BITRATE%' => 256000, '%MAXBITRATE%' => 8000000])
         );
+    }
+
+    public function testSkipTranscodeIgnoresADifferentOutputFormat(): void
+    {
+        AmpConfig::set('max_bit_rate', 0, true);
+        AmpConfig::set('transcode_bitrate', 320000, true);
+
+        // converting flac to mp3 is the point of the transcode, so the rates on either side of it never matter
+        $this->assertFalse(Stream::skip_transcode('mp3', 'flac', 128000));
+    }
+
+    public function testSkipTranscodeKeepsARealDownsample(): void
+    {
+        AmpConfig::set('max_bit_rate', 0, true);
+        AmpConfig::set('transcode_bitrate', 128000, true);
+
+        // the configured rate, an explicit request and a maxbitrate all save bandwidth when they land under the source
+        $this->assertFalse(Stream::skip_transcode('mp3', 'mp3', 320000));
+        $this->assertFalse(Stream::skip_transcode('mp3', 'mp3', 320000, 192000));
+        $this->assertFalse(Stream::skip_transcode('mp3', 'mp3', 320000, 320000, 256000));
+    }
+
+    public function testSkipTranscodeNeverSkipsOnAnUnknownSourceBitrate(): void
+    {
+        AmpConfig::set('max_bit_rate', 0, true);
+        AmpConfig::set('transcode_bitrate', 128000, true);
+
+        $this->assertFalse(Stream::skip_transcode('mp3', 'mp3', 0));
+    }
+
+    public function testSkipTranscodeSkipsASameFormatUpsample(): void
+    {
+        AmpConfig::set('max_bit_rate', 0, true);
+        AmpConfig::set('transcode_bitrate', 256000, true);
+
+        // the configured 256000, an explicit request at or above the source, and a maxbitrate over it are all pointless
+        $this->assertTrue(Stream::skip_transcode('mp3', 'mp3', 192000));
+        $this->assertTrue(Stream::skip_transcode('mp3', 'mp3', 192000, 320000));
+        $this->assertTrue(Stream::skip_transcode('mp3', 'mp3', 192000, 192000));
+        $this->assertTrue(Stream::skip_transcode('mp3', 'mp3', 192000, 320000, 256000));
+    }
+
+    public function testSkipTranscodeUsesThePerFormatBitrateOverride(): void
+    {
+        AmpConfig::set('max_bit_rate', 0, true);
+        AmpConfig::set('transcode_bitrate', 320000, true);
+        AmpConfig::set('transcode_bitrate_formats', 'opus=96000', true);
+
+        // opus is capped at 96000 by the override so a 128000 source still downsamples; mp3 has none and uses 320000
+        $this->assertFalse(Stream::skip_transcode('opus', 'opus', 128000));
+        $this->assertTrue(Stream::skip_transcode('mp3', 'mp3', 128000));
     }
 
     #[DataProvider('bitrateProvider')]
