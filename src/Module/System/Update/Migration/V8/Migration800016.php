@@ -42,9 +42,9 @@ final class Migration800016 extends AbstractMigration
     {
         $level = AccessLevelEnum::USER->value;
 
-        $this->updatePreferences('encode_target', 'Default audio transcode output format', (string) AmpConfig::get('encode_target', ''), $level, 'transcoding', 'streaming', 'transcoding');
-        $this->updatePreferences('encode_video_target', 'Default video transcode output format', (string) AmpConfig::get('encode_video_target', ''), $level, 'transcoding', 'streaming', 'transcoding');
-        $this->updatePreferences('encode_player_webplayer_target', 'Web player transcode output format (overrides default)', (string) AmpConfig::get('encode_player_webplayer_target', ''), $level, 'transcoding', 'streaming', 'transcoding');
-        $this->updatePreferences('encode_player_api_target', 'API transcode output format (overrides default)', (string) AmpConfig::get('encode_player_api_target', ''), $level, 'transcoding', 'streaming', 'transcoding');
+        $this->updatePreferences('encode_target', 'Transcode output format - Audio Default', (string) AmpConfig::get('encode_target', ''), $level, 'transcoding', 'streaming', 'transcoding');
+        $this->updatePreferences('encode_video_target', 'Transcode output format - Video Default', (string) AmpConfig::get('encode_video_target', ''), $level, 'transcoding', 'streaming', 'transcoding');
+        $this->updatePreferences('encode_player_webplayer_target', 'Transcode output format - Web Player (overrides default)', (string) AmpConfig::get('encode_player_webplayer_target', ''), $level, 'transcoding', 'streaming', 'transcoding');
+        $this->updatePreferences('encode_player_api_target', 'Transcode output format - API (overrides default)', (string) AmpConfig::get('encode_player_api_target', ''), $level, 'transcoding', 'streaming', 'transcoding');
     }
 }

@@ -116,6 +116,9 @@ final readonly class UpdateRunner implements UpdateRunnerInterface
         // translate preferences on DB update
         Preference::translate_db();
 
+        // insert any preferences that are missing from the database
+        Preference::set_defaults();
+
         $this->logger->notice(
             'Migration complete',
             [LegacyLogger::CONTEXT_TYPE => self::class]
@@ -163,6 +166,9 @@ final readonly class UpdateRunner implements UpdateRunnerInterface
 
         // translate preferences on DB update
         Preference::translate_db();
+
+        // insert any preferences that are missing from the database
+        Preference::set_defaults();
 
         $this->logger->notice(
             'Migration complete',

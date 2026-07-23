@@ -69,6 +69,7 @@ final readonly class UpdateAction implements ApplicationActionInterface
             AutoUpdate::update_files();
             AutoUpdate::update_dependencies($this->configContainer);
             Preference::translate_db();
+            Preference::set_defaults();
 
             return $this->responseFactory
                 ->createResponse(RFC7231::FOUND)

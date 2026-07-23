@@ -30,7 +30,6 @@ fi
 potfile='messages.pot'
 tdstxt='translatable-database-strings.txt'
 xhtmltxt='untranslated-strings.txt'
-ampconf='../../config/ampache.cfg.php'
 
 ##############################################################
 
@@ -39,7 +38,7 @@ usage() {
     echo -e "\033[32m usage: $0 [-h|--help][-g|--get][-gu|--getutds][-i|--init][-m|--merge][-f|--format][-a|--all][-au|--allutds]\033[0m"
     echo ""
     echo -e "[-g|--get]\t\t Creates the messages.pot file from translation strings within the source code."
-    echo -e "[-gu|--getutds]\t\t Generates the Pot file from translation strings within the source code\n\t\t\t and creates or updates the 'translatable-database-strings.txt' from the database-preference-table strings.\n\t\t\t Ampache needs to be fully setup for this to work."
+    echo -e "[-gu|--getutds]\t\t Generates the Pot file from translation strings within the source code\n\t\t\t and (re)generates 'translatable-database-strings.txt' from the preference strings in\n\t\t\t the source code (Preference::translate_db() and resources/sql/ampache.sql). No database needed."
     echo -e "[-i|--init]\t\t Creates a new language catalog and its directory structure."
     echo -e "[-m|--merge]\t\t Merges the messages.pot into the language catalogs and shows obsolet translations."
     echo -e "[-ma|--mergeall]\t Same as -m but for all translations."
@@ -81,7 +80,22 @@ generate_pot() {
     fi
 }
 
-# Generate/overwrite messages.pot file from Source- and Database-Strings
+# Add preference msgid blocks to the tds file, skipping strings already extracted into the pot
+# (from a literal T_() in the source) so the final catalog has no duplicate msgids.
+# $1 = reference comment, remaining input read from stdin (one raw string per line).
+add_db_entries() {
+    comment="$1"
+    while IFS= read -r line; do
+        [ -z "$line" ] && continue
+        escaped=$(printf '%s' "$line" | sed 's/\\/\\\\/g; s/"/\\"/g')
+        if ! grep -qF "msgid \"$escaped\"" $potfile $tdstxt; then
+            printf '\n#: %s\nmsgid "%s"\nmsgstr ""\n' "$comment" "$escaped" >> $tdstxt
+        fi
+    done
+}
+
+# Generate/overwrite messages.pot from Source-Strings and preference strings read from the source code.
+# Descriptions come from Preference::translate_db(); subcategories from the seed SQL. No database required.
 generate_pot_utds() {
     echo ""
     echo "Generating/updating pot-file"
@@ -94,137 +108,59 @@ generate_pot_utds() {
                 --keyword=T_ --keyword=nT_:1,2 \
                 -o $potfile \
                 $(find ../../ -type f \( -name "*.php" -o -name "*.inc" \) -not -path "../../config/*" -not -path "../../docs/*" -not -path "../../public/lib/components/*" -not -path "../../vendor/*" -not -path "../../tests/*" | sort)
-    if [[ $? -eq 0 ]]; then
-
-        ampconf='../../config/ampache.cfg.php'
-
-        echo -e "\033[32m Pot creation/update successful\033[0m\n"
-        echo -e "Reading database login information from Ampache config file\n"
-
-        dbhost=$(grep -oP "(?<=database_hostname = \")[^\"\n]+" $ampconf)
-        if [ ! $dbhost ]; then
-            echo -e "\n\033[31m Error\033[0m: No or false database host setting detected!"
-            read -r -p "Type in a host or simply press enter to use localhost instead: " dbhost
-                if [ ! $dbhost ]; then
-                    dbhost=localhost
-                else
-                    continue
-                fi
-        fi
-        echo "Temporary saved '$dbhost' as your database host"
-
-        dbport=$(grep -oP "(?<=database_port = \")[^\"\n]+" $ampconf)
-        if [ ! $dbport ]; then
-            echo ""
-            echo -e "\033[31m Error\033[0m: No or false database_port setting detected!"
-            read -r -p "Type in a port or simply press enter to use default port 3306 instead: " dbport
-                if [ ! $dbport ]; then
-                    dbport=3306
-                fi
-        fi
-        echo "Temporary saved '$dbport' as your database port"
-
-        dbname=$(grep -oP "(?<=database_name = \")[^\"\n]+" $ampconf)
-        if [ ! $dbname ]; then
-            echo ""
-            echo -e "\033[31m Error\033[0m: No datatabase name detected, please check your 'database_name' setting"
-            read -r -p "or type in the right database name here for temporary use: " dbname
-                if [ ! $dbname ]; then
-                    echo ""
-                    echo -e "\033[31m Error\033[0m: You didn't type in a database name, Sorry but I have to exit :("
-                    exit
-                fi
-        fi
-        echo "Temporary saved '$dbname' as your database name"
-
-        dbuser=$(grep -oP "(?<=database_username = \")[^\"\n]+" $ampconf)
-        if [ ! $dbuser ]; then
-            echo -e "\n\033[31m Error\033[0m: You need to set a valid database user in you Ampache config file"
-            read -r -p "Or type it in here for temporary use: " dbuser
-                if [ ! $dbuser ]; then
-                    echo -e "\n\033[31m Error\033[0m: You didn't type in a database user! Sorry but I have to exit :("
-                    exit
-                fi
-        fi
-        echo "Temporary saved '$dbuser' as your database user"
-
-            dbpass=$(grep -oP "(?<=database_password = \")[^\"\n]+" $ampconf)
-        if [ ! $dbpass ]; then
-            echo -e "\n\033[32m Info\033[0m: You haven't set a database password in your Ampache config."
-            echo "If this is OK, simply press enter to continue."
-            read -r -p "Otherwise type one in for temporary use: " dbpass
-            if [ ! $dbpass ]; then
-                echo "Okay, you've selected to use no password, proceeding."
-            else
-                echo "Temporary saved '$dbpass' as your database password"
-            fi
-        else
-            echo "Temporary saved '$dbpass' as your database password"
-        fi
-
-        echo ""
-        echo "Deleting old translatable-database-strings.txt"
-        echo ""
-        rm $tdstxt
-
-        echo -e "Creating new 'translatable-database-strings.txt' from database\n"
-
-        echo -e " #######################################################################\n\n"\
-                "# This file lists all description strings from your Ampache-database -> preference-table.\n"\
-                "# Please do not delete or modify the content by yourself. It will be automatically (re)generated\n"\
-                "# if you run './gather-messages.sh [-gu|--getutds].\n"\
-                "# Last Update: $(date "+%d.%m.%Y %H:%M:%S %Z")"\
-                "\n\n"\
-                "#######################################################################" >> $tdstxt
-
-        mysql --skip-ssl -N --database=$dbname --host=$dbhost --user=$dbuser --password=$dbpass -se "SELECT id FROM preference" |
-        while read dbprefid; do
-            dbprefdesc=$(mysql --skip-ssl -N --database=$dbname --host=$dbhost --user=$dbuser --password=$dbpass -se "SELECT description FROM preference where id=$dbprefid")
-            dbprefdescchk=$(grep "\"$dbprefdesc\"" $potfile)
-            if [ ! -z "$dbprefdesc" ]; then
-                if [ ! "$dbprefdescchk" ]; then
-                    echo -e "\n#: Database preference table id $dbprefid" >> $tdstxt
-                    echo -e "msgid \"$dbprefdesc\"" >> $tdstxt
-                    echo -e "msgstr \"\"" >> $tdstxt
-                # else
-                    # echo -e "\n# Database preference table id $dbprefid" >> $tdstxt
-                    # echo -e "# is already in the source code\n# but to avoid confusion, it's added and commented" >> $tdstxt
-                    # echo -e "# msgid \"$dbprefdesc\"" >> $tdstxt
-                    # echo -e "# msgstr \"\"" >> $tdstxt
-                fi
-            fi
-        done
-
-        echo "Done for preference description"
-
-        mysql --skip-ssl -N --database=$dbname --host=$dbhost --user=$dbuser --password=$dbpass -se "SELECT id FROM preference" |
-        while read dbprefid; do
-            dbprefdesc=$(mysql --skip-ssl -N --database=$dbname --host=$dbhost --user=$dbuser --password=$dbpass -se "SELECT subcategory FROM preference where id=$dbprefid AND subcategory IS NOT NULL")
-            dbprefdescchk=$(grep "\"$dbprefdesc\"" $potfile $tdstxt)
-            if [ ! -z "$dbprefdesc" ]; then
-                if [ ! "$dbprefdescchk" ]; then
-                    echo -e "\n#: Database preference subcategory table id $dbprefid" >> $tdstxt
-                    echo -e "msgid \"$dbprefdesc\"" >> $tdstxt
-                    echo -e "msgstr \"\"" >> $tdstxt
-                # else
-                    # echo -e "\n# Database preference subcategory table id $dbprefid" >> $tdstxt
-                    # echo -e "# is already in the source code\n# but to avoid confusion, it's added and commented" >> $tdstxt
-                    # echo -e "# msgid \"$dbprefdesc\"" >> $tdstxt
-                    # echo -e "# msgstr \"\"" >> $tdstxt
-                fi
-            fi
-        done
-
-        echo "Done for subcategory"
-
-        echo -e "\033[32m Pot file creation succeeded. Adding 'untranslated-strings.txt\033[0m"
-        cat $xhtmltxt >> $potfile
-        echo -e "\033[32m Pot file creation succeeded. Adding 'translatable-database-strings.txt\033[0m"
-        cat $tdstxt >> $potfile
-        echo -e "\n\033[32m Done, you are able now to use the messages.pot for further translation tasks.\033[0m"
-    else
+    if [[ $? -ne 0 ]]; then
         echo -e "\033[31m Error\033[0m: Pot file creation has failed!"
+        return 1
     fi
+
+    preffile='../../src/Repository/Model/Preference.php'
+    seedfile='../../resources/sql/ampache.sql'
+    tmpdir=$(mktemp -d)
+
+    echo -e "\033[32m Pot creation/update successful\033[0m\n"
+    echo -e "Gathering preference strings from the source code (no database required)\n"
+
+    # Descriptions: the values of the $pref_array map inside Preference::translate_db()
+    awk '/public static function translate_db/{f=1}
+         f && /\$pref_array = \[/{g=1; next}
+         g && /^[[:space:]]*\];/{exit}
+         g' "$preffile" \
+      | sed -n "s/^[[:space:]]*'[a-z0-9_]*' => \(.*\),[[:space:]]*\$/\1/p" \
+      | sed 's/^.\(.*\).$/\1/' \
+      | awk '!seen[$0]++' > "$tmpdir/desc.txt"
+
+    # Subcategories: the last quoted column of each row in the seed SQL `preference` INSERT block.
+    # Title-case them to match how they are rendered - the template calls T_(ucwords($subcategory)).
+    awk '/INSERT INTO `preference`/{f=1} f{print} f && /;[[:space:]]*$/{exit}' "$seedfile" \
+      | grep -oE "^\([0-9]+, .*\)," \
+      | sed -E "s/.*, ('[^']*'|NULL)\),\$/\1/" \
+      | grep -v NULL | tr -d "'" \
+      | perl -pe 's/(?:^|(?<=\s))([a-z])/\u$1/g' | sort -u > "$tmpdir/subcat.txt"
+
+    echo "Deleting old $tdstxt"
+    rm -f $tdstxt
+    {
+        printf ' #######################################################################\n\n'
+        printf ' # This file lists all translatable strings from the Ampache preference table\n'
+        printf ' # (descriptions and subcategories). It is generated from the source code by\n'
+        printf " # './gather-messages.sh [-gu|--getutds]' - descriptions come from\n"
+        printf ' # Preference::translate_db() and subcategories from resources/sql/ampache.sql,\n'
+        printf ' # so a live database is NOT required. Do not edit it by hand; re-run the script.\n\n'
+        printf ' #######################################################################\n'
+    } > $tdstxt
+
+    add_db_entries "Ampache preference description" < "$tmpdir/desc.txt"
+    echo "Done for preference description"
+    add_db_entries "Ampache preference subcategory" < "$tmpdir/subcat.txt"
+    echo "Done for subcategory"
+
+    rm -rf "$tmpdir"
+
+    echo -e "\033[32m Pot file creation succeeded. Adding 'untranslated-strings.txt\033[0m"
+    cat $xhtmltxt >> $potfile
+    echo -e "\033[32m Pot file creation succeeded. Adding 'translatable-database-strings.txt\033[0m"
+    cat $tdstxt >> $potfile
+    echo -e "\n\033[32m Done, you are able now to use the messages.pot for further translation tasks.\033[0m"
 }
 
 # Merge old and new gathered translations
