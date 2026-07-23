@@ -51,7 +51,7 @@ final class StatsMethod implements MethodInterface
     public const string ACTION = 'stats';
 
     /** @var string[] */
-    private const array TYPES = ['song', 'album', 'artist', 'video', 'playlist', 'podcast', 'podcast_episode'];
+    private const array TYPES = ['song', 'album', 'album_disk', 'artist', 'video', 'playlist', 'podcast', 'podcast_episode'];
 
     private AlbumRepositoryInterface $albumRepository;
     private ArtistRepositoryInterface $artistRepository;
@@ -139,8 +139,11 @@ final class StatsMethod implements MethodInterface
             );
         }
 
-        // confirm the correct data
-        if (!in_array(strtolower($type), self::TYPES)) {
+        // confirm the correct data (album_disk is api version 8 only)
+        if (
+            !in_array(strtolower($type), self::TYPES)
+            || ($apiVersion < 8 && strtolower($type) === 'album_disk')
+        ) {
             $response->getBody()->write(
                 $output->error(
                     $apiVersion,
@@ -257,6 +260,7 @@ final class StatsMethod implements MethodInterface
                 'song' => $output->songs($apiVersion, $results, $user, $auth),
                 'artist' => $output->artists($apiVersion, $results, [], $user, $auth),
                 'album' => $output->albums($apiVersion, $results, [], $user, $auth),
+                'album_disk' => $output->albumDisks($apiVersion, $results, [], $user, $auth),
                 'playlist' => $output->playlists($apiVersion, $results, $user, $auth),
                 'video' => $output->videos($apiVersion, $results, $user, $auth),
                 'podcast' => $output->podcasts($apiVersion, $results, $user, $auth),
@@ -282,6 +286,8 @@ final class StatsMethod implements MethodInterface
                 return $this->artistRepository->getRandom($userId, $limit);
             case 'album':
                 return $this->albumRepository->getRandom($userId, $limit);
+            case 'album_disk':
+                return $this->albumRepository->getRandomAlbumDisk($userId, $limit);
             case 'playlist':
                 $browse = $this->modelFactory->createBrowse(null, false);
                 $browse->set_user_id($user);

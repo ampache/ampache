@@ -71,5 +71,6 @@ use Ampache\Module\Util\Ui;
                 <?php require __DIR__ . '/show_test_table.inc.php'; ?>
             </table>
         </div>
+    <?php echo Ui::material_symbol_sprite(); ?>
     </body>
 </html>

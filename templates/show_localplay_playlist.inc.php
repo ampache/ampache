@@ -57,10 +57,10 @@ $status = $localplay->status(); ?>
                 } ?>
         <tr id="localplay_playlist_<?php echo $object['id']; ?>">
             <td class="cel_track">
-                <?php echo scrub_out($object['track']); ?>
+                <?php echo scrub_out((string) $object['track']); ?>
             </td>
             <td<?php echo $class; ?>>
-                <?php echo $localplay->format_name($object['name'], $object['id']); ?>
+                <?php echo $localplay->format_name($object['name'], (int) $object['id']); ?>
             </td>
             <td class="cel_action">
             <?php echo Ajax::button('?page=localplay&action=delete_track&browse_id=' . $browse->getId() . '&id=' . (int) ($object['id']), 'close', T_('Delete'), 'localplay_delete_' . (int) ($object['id'])); ?>

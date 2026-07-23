@@ -36,6 +36,7 @@ final class AlbumDiskQuery implements QueryInterface
         'add_gt',
         'add_lt',
         'album_artist',
+        'album',
         'alpha_match',
         'artist',
         'catalog_enabled',
@@ -202,6 +203,9 @@ final class AlbumDiskQuery implements QueryInterface
                     $filter_sql .= "`song`.`catalog` = '" . $query->catalog . "' AND ";
                 }
 
+                break;
+            case 'album':
+                $filter_sql = " `album_disk`.`album_id` = '" . Dba::escape($value) . "' AND ";
                 break;
             case 'artist':
                 $filter_sql = " `album`.`id` IN (SELECT `album_id` FROM `album_map` WHERE `album_map`.`object_id` = '" . Dba::escape($value) . "') AND ";

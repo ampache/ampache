@@ -25,6 +25,7 @@ declare(strict_types=1);
 
 namespace Ampache\Module\Application\Stats;
 
+use Ampache\Config\AmpConfig;
 use Ampache\Module\Application\ApplicationActionInterface;
 use Ampache\Module\Application\Exception\AccessDeniedException;
 use Ampache\Module\Application\Exception\ApplicationException;
@@ -50,8 +51,14 @@ abstract readonly class AbstractGraphRendererAction implements ApplicationAction
     protected function renderGraph(
         GuiGatekeeperInterface $gatekeeper,
     ): void {
+        if (!AmpConfig::get('statistical_graphs')) {
+            return;
+        }
+
+        // the date/zoom form posts back, so these have to come from the request and not the query
+        // string; reading the query alone dropped the object the graphs were scoped to
         $object_type = Core::get_request('object_type');
-        $object_id   = (int) filter_input(INPUT_GET, 'object_id', FILTER_SANITIZE_NUMBER_INT);
+        $object_id   = (int) Core::get_request('object_id');
 
         $libitem  = null;
         $owner_id = 0;

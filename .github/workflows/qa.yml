@@ -45,3 +45,23 @@ jobs:
 
       - name: Run NPM audit (production)
         run: npm audit --production
+
+  api-docs:
+    # docs/openapi.json and the API method references are generated; this fails if they drift from
+    # the code. Kept out of the `qa` job so `composer qa` stays pure php for contributors.
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+
+      - name: Setup PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.5'
+
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.x'
+
+      - name: Check the generated API documents are up to date
+        run: composer run-script api:docs:check

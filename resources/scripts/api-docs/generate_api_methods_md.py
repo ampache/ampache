@@ -39,6 +39,9 @@ XML_MD = REPO_ROOT / "docs" / "API-XML-methods.md"
 BEGIN = "<!-- GENERATED:RESPONSE:BEGIN -->"
 END = "<!-- GENERATED:RESPONSE:END -->"
 
+SHARED_BEGIN = "<!-- GENERATED:SHARED-REFS:BEGIN -->"
+SHARED_END = "<!-- GENERATED:SHARED-REFS:END -->"
+
 _ACTION_RE = re.compile(r"action=([A-Za-z0-9_]+)")
 
 # Mutations answer with the generic success envelope; only POST responses carrying a
@@ -69,12 +72,18 @@ def resolve_ref(spec: dict, ref: str) -> dict:
 def action_to_schema_ref(spec: dict) -> dict[str, str]:
     """Map RPC action -> the $ref set on its 200 response (only where one exists
     and points into components/schemas). GET wins; POST covers the few actions
-    that return data from a mutation (e.g. democratic)."""
+    that return data from a mutation (e.g. democratic).
+
+    x-rpc-mapping keys are `VERB /path` (verb-prefixed since the key-format
+    normalisation); the verb selects the operation and the rest is the path."""
     out: dict[str, str] = {}
     for method in ("get", "post"):
-        for path, rpc in spec.get("x-rpc-mappings", {}).items():
+        for key, rpc in spec.get("x-rpc-mappings", {}).items():
             match = _ACTION_RE.search(rpc)
             if not match:
+                continue
+            verb, _, path = key.partition(" ")
+            if verb.lower() != method:
                 continue
             op = spec.get("paths", {}).get(path, {}).get(method)
             if not op:
@@ -314,20 +323,118 @@ def enrich(text: str, spec: dict, action_ref: dict[str, str], fmt: str) -> tuple
     return "".join(out), touched
 
 
-def build_schema_anchors(action_ref: dict[str, str]) -> dict[str, str]:
-    """First action that returns a given schema wins as its documentation anchor
-    (e.g. AlbumObject -> album, SongObject -> song). GitHub slugs a `### album`
-    heading to `#album`, and actions are already lowercase snake_case."""
+def _rendered_sub_schemas(spec: dict, name: str) -> set[str]:
+    """Schema names whose field tables actually render inside the section for a
+    top-level response schema: a list envelope's item, and any oneOf variant
+    (plus a variant's own list item). Mirrors describe_schema/render_variants, so
+    an anchor is only claimed for a schema the section really documents."""
+    schema = spec.get("components", {}).get("schemas", {}).get(name, {})
+    out: set[str] = set()
+    for variant in schema.get("oneOf", []):
+        if "$ref" in variant:
+            vname = ref_name(variant["$ref"])
+            out.add(vname)
+            out |= _rendered_sub_schemas(spec, vname)
+    is_list, key = is_list_envelope(schema)
+    if is_list and key is not None:
+        item = schema["properties"][key].get("items", {})
+        if "$ref" in item:
+            out.add(ref_name(item["$ref"]))
+    return out
+
+
+def build_schema_anchors(spec: dict, action_ref: dict[str, str]) -> dict[str, str]:
+    """Map each documented schema to the method section that shows its fields.
+
+    First action that returns a given schema as its top-level payload wins
+    (AlbumObject -> album, SongObject -> song); GitHub slugs a `### album` heading
+    to `#album`. A second pass claims the schemas rendered *inside* a section — a
+    list envelope's item (NowPlayingObject -> now_playing) and oneOf variants
+    (DemocraticSongObject -> democratic) — without overriding a top-level owner."""
     anchors: dict[str, str] = {}
     for action, ref in action_ref.items():
-        name = ref_name(ref)
-        anchors.setdefault(name, action)
+        anchors.setdefault(ref_name(ref), action)
+    for action, ref in action_ref.items():
+        for name in _rendered_sub_schemas(spec, ref_name(ref)):
+            anchors.setdefault(name, action)
     return anchors
 
 
-def process_file(path: Path, spec: dict, action_ref: dict[str, str], fmt: str, check: bool) -> bool:
+def _all_referenced_schemas(spec: dict) -> set[str]:
+    """Every schema name reached by a $ref from within another schema."""
+    names: set[str] = set()
+
+    def walk(node: object) -> None:
+        if isinstance(node, list):
+            for item in node:
+                walk(item)
+        elif isinstance(node, dict):
+            ref = node.get("$ref")
+            if isinstance(ref, str) and ref.startswith("#/components/schemas/"):
+                names.add(ref_name(ref))
+            for value in node.values():
+                walk(value)
+
+    for schema in spec.get("components", {}).get("schemas", {}).values():
+        walk(schema)
+    return names
+
+
+def shared_reference_schemas(spec: dict, anchors: dict[str, str]) -> list[str]:
+    """The small stubs referenced by other schemas that no method section documents
+    (e.g. NamedReference, GenreReference). These get the shared-reference section."""
+    referenced = _all_referenced_schemas(spec)
+    return sorted(
+        name
+        for name in referenced
+        if name not in anchors and not name.startswith("_")
+    )
+
+
+def render_shared_section(spec: dict, names: list[str]) -> list[str]:
+    """Field tables for the shared reference stubs, each under its own `###` anchor
+    so the `see <name> fields` links from the method tables resolve."""
+    lines = [
+        "Objects referenced by the field tables above (as `see <name> fields`) that no single "
+        "method response documents on its own — the shared reference shapes and a few payloads "
+        "carried inside another response.",
+        "",
+    ]
+    schemas = spec.get("components", {}).get("schemas", {})
+    for name in names:
+        schema = schemas[name]
+        lines.append(f"### {name}")
+        lines.append("")
+        if schema.get("description"):
+            lines.append(schema["description"])
+            lines.append("")
+        lines.extend(object_table(schema))
+        lines.append("")
+    return lines
+
+
+def replace_shared_section(text: str, body: list[str]) -> str:
+    """Fill the block between the shared-reference markers. If the skeleton (the
+    `## Shared reference objects` heading and markers) is absent, the file is left
+    unchanged."""
+    if SHARED_BEGIN not in text or SHARED_END not in text:
+        return text
+    pre, rest = text.split(SHARED_BEGIN, 1)
+    _, post = rest.split(SHARED_END, 1)
+    return f"{pre}{SHARED_BEGIN}\n" + "\n".join(body).rstrip("\n") + f"\n{SHARED_END}{post}"
+
+
+def process_file(
+    path: Path,
+    spec: dict,
+    action_ref: dict[str, str],
+    shared: list[str],
+    fmt: str,
+    check: bool,
+) -> bool:
     original = path.read_text(encoding="utf-8")
     updated, touched = enrich(original, spec, action_ref, fmt)
+    updated = replace_shared_section(updated, render_shared_section(spec, shared))
     # Lint/align all GFM tables so the generated tables match the hand-written style.
     updated = format_md_tables.format_tables(updated)
     changed = updated != original
@@ -345,13 +452,28 @@ def main() -> int:
 
     spec = load_spec()
     action_ref = action_to_schema_ref(spec)
+    # Guard against the regression this generator once had: when the x-rpc-mapping key format changed
+    # to `VERB /path`, action_to_schema_ref silently matched nothing and the response tables froze.
+    # The spec always wires many GET responses to schemas, so an empty map means the mapping is broken.
+    if not action_ref:
+        print(
+            "ERROR: no actions resolved to a response schema — the x-rpc-mappings key format likely "
+            "changed and action_to_schema_ref no longer matches it. The response tables would freeze.",
+            file=sys.stderr,
+        )
+        return 2
     SCHEMA_ANCHOR.clear()
-    SCHEMA_ANCHOR.update(build_schema_anchors(action_ref))
+    SCHEMA_ANCHOR.update(build_schema_anchors(spec, action_ref))
+    shared = shared_reference_schemas(spec, SCHEMA_ANCHOR)
+    # the shared stubs are documented under `### <Name>` in the shared section, which GitHub slugs
+    # to the lowercased name; register those anchors so `see <name> fields` links resolve to them.
+    SCHEMA_ANCHOR.update({name: name.lower() for name in shared})
     print(f"actions with response schemas: {', '.join(sorted(action_ref)) or '-'}")
+    print(f"shared reference objects: {', '.join(shared) or '-'}")
 
     changed = False
-    changed |= process_file(JSON_MD, spec, action_ref, "json", args.check)
-    changed |= process_file(XML_MD, spec, action_ref, "xml", args.check)
+    changed |= process_file(JSON_MD, spec, action_ref, shared, "json", args.check)
+    changed |= process_file(XML_MD, spec, action_ref, shared, "xml", args.check)
 
     if args.check:
         return 1 if changed else 0

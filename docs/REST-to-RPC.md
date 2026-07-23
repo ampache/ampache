@@ -62,6 +62,7 @@ e.g. To make a REST call for 10 random albums your URL would be `https://demo.am
 | POST   | `albums/{album_id}/flag`                             | `?action=flag&filter={album_id}&type=album`                                      |                    |
 | POST   | `albums/{album_id}/rate`                             | `?action=rate&filter={album_id}&type=album`                                      |                    |
 | POST   | `albums/{album_id}/share`                            | `?action=share_create&filter={album_id}&type=album`                                     |                    |
+| GET    | `albums/{album_id}/disks`                            | `?action=album_disks&filter={album_id}&type=album`                               |                    |
 | GET    | `albums/{album_id}/songs`                            | `?action=album_songs&filter={album_id}&type=album`                               |                    |
 | POST   | `albums/{album_id}/update-art`                       | `?action=update_art&filter={album_id}&type=album`                                |                    |
 | POST   | `albums/{album_id}/update-tags`                      | `?action=update_from_tags&filter={album_id}&type=album`                          |                    |
@@ -69,6 +70,13 @@ e.g. To make a REST call for 10 random albums your URL would be `https://demo.am
 | GET    | `albums/search`                                      | `?action=search&type=album`                                                      | `advanced_search`  |
 | GET    | `albums/stats`                                       | `?action=stats&type=album`                                                       |                    |
 | GET    | `albums`                                             | `?action=albums`                                                                 |                    |
+| GET    | `album-disks/{album_disk_id}/art`                    | `?action=get_art&filter={album_disk_id}&type=album_disk`                         |                    |
+| POST   | `album-disks/{album_disk_id}/flag`                   | `?action=flag&filter={album_disk_id}&type=album_disk`                            |                    |
+| POST   | `album-disks/{album_disk_id}/rate`                   | `?action=rate&filter={album_disk_id}&type=album_disk`                            |                    |
+| GET    | `album-disks/{album_disk_id}/songs`                  | `?action=album_disk_songs&filter={album_disk_id}&type=album_disk`                |                    |
+| GET    | `album-disks/{album_disk_id}`                        | `?action=album_disk&filter={album_disk_id}`                                      |                    |
+| GET    | `album-disks/search`                                 | `?action=search&type=album_disk`                                                 | `advanced_search`  |
+| GET    | `album-disks/stats`                                  | `?action=stats&type=album_disk`                                                  |                    |
 | GET    | `artists/{artist_id}/albums`                         | `?action=artist_albums&filter={artist_id}`                                       |                    |
 | GET    | `artists/{artist_id}/art`                            | `?action=get_art&filter={artist_id}&type=artist`                                 |                    |
 | POST   | `artists/{artist_id}/fetch-info`                     | `?action=update_artist_info&filter={artist_id}&type=artist`                      |                    |
@@ -84,7 +92,7 @@ e.g. To make a REST call for 10 random albums your URL would be `https://demo.am
 | GET    | `artists/search`                                     | `?action=search&type=artist`                                                     | `advanced_search`  |
 | GET    | `artists/stats`                                      | `?action=stats&type=artist`                                                      |                    |
 | GET    | `artists`                                            | `?action=artists`                                                                |                    |
-| GET    | `bookmarks/{bookmark_id}`                            | `?action=bookmark&filter={bookmark_id}`                                          |                    |
+| GET    | `bookmarks/{bookmark_id}`                            | `?action=bookmark&filter={bookmark_id}`                                          | `get_bookmark`     |
 | PATCH  | `bookmarks/{bookmark_id}`                            | `?action=bookmark_edit&filter={bookmark_id}`                                     |                    |
 | DELETE | `bookmarks/{bookmark_id}`                            | `?action=bookmark_delete&filter={bookmark_id}`                                   |                    |
 | GET    | `bookmarks`                                          | `?action=bookmarks`                                                              |                    |
@@ -141,6 +149,7 @@ e.g. To make a REST call for 10 random albums your URL would be `https://demo.am
 | POST   | `localplay/play`                                     | `?action=localplay&command=play`                                                 |                    |
 | POST   | `localplay/prev`                                     | `?action=localplay&command=prev`                                                 |                    |
 | POST   | `localplay/skip`                                     | `?action=localplay&command=skip`                                                 |                    |
+| GET    | `localplay/songs`                                    | `?action=localplay_songs`                                                        |                    |
 | GET    | `localplay/status`                                   | `?action=localplay&command=status`                                               |                    |
 | POST   | `localplay/stop`                                     | `?action=localplay&command=stop`                                                 |                    |
 | POST   | `localplay/volume-down`                              | `?action=localplay&command=volume_down`                                          |                    |
@@ -172,7 +181,7 @@ e.g. To make a REST call for 10 random albums your URL would be `https://demo.am
 | GET    | `playlists/stats`                                    | `?action=stats&type=playlist`                                                    |                    |
 | GET    | `playlists`                                          | `?action=playlists`                                                              |                    |
 | PUT    | `playlists`                                          | `?action=playlist_create`                                                        |                    |
-| GET    | `podcast-episodes/{episode_id}/bookmark`             | `?action=bookmark&filter={episode_id}&type=podcast_episode`                      |                    |
+| GET    | `podcast-episodes/{episode_id}/bookmark`             | `?action=bookmark&filter={episode_id}&type=podcast_episode`                      | `get_bookmark`     |
 | PATCH  | `podcast-episodes/{episode_id}/bookmark`             | `?action=bookmark_edit&filter={episode_id}&type=podcast_episode`                 |                    |
 | DELETE | `podcast-episodes/{episode_id}/bookmark`             | `?action=bookmark_delete&filter={episode_id}&type=podcast_episode`               |                    |
 | PUT    | `podcast-episodes/{episode_id}/bookmark`             | `?action=bookmark_create&filter={episode_id}&type=podcast_episode`               |                    |
@@ -228,7 +237,7 @@ e.g. To make a REST call for 10 random albums your URL would be `https://demo.am
 | DELETE | `smartlists/{smartlist_id}`                          | `?action=smartlist_delete&filter={smartlist_id}`                                 |                    |
 | GET    | `smartlists`                                         | `?action=smartlists`                                                             |                    |
 | GET    | `songs/{song_id}/art`                                | `?action=get_art&filter={song_id}&type=song`                                     |                    |
-| GET    | `songs/{song_id}/bookmark`                           | `?action=bookmark&filter={song_id}&type=song`                                    |                    |
+| GET    | `songs/{song_id}/bookmark`                           | `?action=bookmark&filter={song_id}&type=song`                                    | `get_bookmark`     |
 | PATCH  | `songs/{song_id}/bookmark`                           | `?action=bookmark_edit&filter={song_id}&type=song`                               |                    |
 | DELETE | `songs/{song_id}/bookmark`                           | `?action=bookmark_delete&filter={song_id}&type=song`                             |                    |
 | PUT    | `songs/{song_id}/bookmark`                           | `?action=bookmark_create&filter={song_id}&type=song`                             |                    |
@@ -252,7 +261,7 @@ e.g. To make a REST call for 10 random albums your URL would be `https://demo.am
 | GET    | `songs/playlist-generate`                            | `?action=playlist_generate`                                                      |                    |
 | GET    | `songs/search`                                       | `?action=search&type=song`                                                       | `advanced_search`  |
 | GET    | `songs/stats`                                        | `?action=stats&type=song`                                                        |                    |
-| GET    | `songs`                                              | `?action=songs`                                                                  |                    |
+| GET    | `songs`                                              | `?action=songs`                                                                  | `search_songs`     |
 | GET    | `system-preferences/{preference_name}`               | `?action=system_preference&filter={preference_name}`                             |                    |
 | GET    | `system-preferences`                                 | `?action=system_preferences`                                                     |                    |
 | GET    | `update`                                             | `?action=system_update`                                                          |                    |
@@ -266,7 +275,7 @@ e.g. To make a REST call for 10 random albums your URL would be `https://demo.am
 | GET    | `users/search`                                       | `?action=search&type=user`                                                       | `advanced_search`  |
 | GET    | `users`                                              | `?action=users`                                                                  |                    |
 | PUT    | `users`                                              | `?action=user_create`                                                            |                    |
-| GET    | `videos/{video_id}/bookmark`                         | `?action=bookmark&filter={video_id}&type=video`                                  |                    |
+| GET    | `videos/{video_id}/bookmark`                         | `?action=bookmark&filter={video_id}&type=video`                                  | `get_bookmark`     |
 | PATCH  | `videos/{video_id}/bookmark`                         | `?action=bookmark_edit&filter={video_id}&type=video`                             |                    |
 | DELETE | `videos/{video_id}/bookmark`                         | `?action=bookmark_delete&filter={video_id}&type=video`                           |                    |
 | PUT    | `videos/{video_id}/bookmark`                         | `?action=bookmark_create&filter={video_id}&type=video`                           |                    |

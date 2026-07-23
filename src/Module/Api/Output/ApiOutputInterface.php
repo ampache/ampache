@@ -34,6 +34,24 @@ use Ampache\Repository\Model\User;
 interface ApiOutputInterface
 {
     /**
+     * Generate an album disk listing
+     *
+     * Only api version 8 knows about album disks.
+     *
+     * @param array<int|string> $albumDisks
+     * @param string[] $include
+     */
+    public function albumDisks(
+        int $apiVersion,
+        array $albumDisks,
+        array $include,
+        User $user,
+        string $auth,
+        bool $encode = true,
+        bool $asObject = true,
+    ): string;
+
+    /**
      * @param array<int|string> $albums
      * @param string[] $include
      *

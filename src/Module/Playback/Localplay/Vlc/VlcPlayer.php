@@ -318,7 +318,8 @@ class VlcPlayer
      */
     private function sendCommand(string $cmd, array $args): ?array
     {
-        $fsock = fsockopen($this->host, $this->port, $errno, $errstr);
+        // suppressed because an unreachable host is expected and logged below, not raised as a php warning
+        $fsock = @fsockopen($this->host, $this->port, $errno, $errstr);
 
         if (!$fsock) {
             debug_event(self::class, sprintf('VLCPlayer: %s (%d)', $errstr, $errno), 1);

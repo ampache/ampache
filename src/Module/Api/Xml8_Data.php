@@ -35,6 +35,7 @@ use Ampache\Repository\BookmarkRepositoryInterface;
 use Ampache\Repository\LabelRepositoryInterface;
 use Ampache\Repository\LicenseRepositoryInterface;
 use Ampache\Repository\Model\Album;
+use Ampache\Repository\Model\AlbumDisk;
 use Ampache\Repository\Model\Art;
 use Ampache\Repository\Model\Artist;
 use Ampache\Repository\Model\Catalog;
@@ -72,6 +73,75 @@ class Xml8_Data
     private static int $count  = 0;
     private static ?int $limit = 5000;
     private static int $offset = 0;
+
+    /**
+     * album_disks
+     *
+     * This echos out a standard album_disks XML document, it pays attention to the limit
+     *
+     * A disk is a child of an album, so it carries the album reference and its own disk identity
+     * instead of the album-level `diskcount`.
+     *
+     * @param array<int|string> $objects AlbumDisk id's to include
+     * @param string[] $include Array of other items to include.
+     * @param bool $full_xml whether to return a full XML document or just the node.
+     */
+    public static function album_disks(array $objects, array $include, User $user, string $auth, bool $full_xml = true): string
+    {
+        self::$count = self::$count ?: count($objects);
+        $md5         = md5(serialize($objects));
+        $objects     = Api::filter_objects($objects, self::$count, self::$offset, self::$limit, $full_xml);
+
+        $string = ($full_xml) ? "<total_count>" . Catalog::get_update_info('album_disk', $user->id) . "</total_count>\n<md5>" . $md5 . "</md5>\n" : '';
+        // original year (fall back to regular year)
+        $original_year = AmpConfig::get('use_original_year');
+
+        Rating::build_cache('album_disk', $objects);
+
+        foreach ($objects as $album_disk_id) {
+            $album_disk = new AlbumDisk((int) $album_disk_id);
+            if ($album_disk->isNew()) {
+                continue;
+            }
+
+            $album_artists = [];
+            foreach ($album_disk->get_artists() as $artist_id) {
+                $album_artists[] = Artist::get_name_array_by_id($artist_id);
+            }
+            $song_artists = [];
+            foreach ($album_disk->get_song_artists() as $artist_id) {
+                $song_artists[] = Artist::get_name_array_by_id($artist_id);
+            }
+
+            $rating      = new Rating($album_disk->id, 'album_disk');
+            $user_rating = $rating->get_user_rating($user->getId());
+            $flag        = new Userflag($album_disk->id, 'album_disk');
+            $year        = ($original_year && $album_disk->original_year)
+                ? $album_disk->original_year
+                : $album_disk->year;
+
+            $string .= "<album_disk id=\"" . $album_disk->id . "\">\n\t<name><![CDATA[" . $album_disk->get_fullname() . "]]></name>\n\t<prefix><![CDATA[" . $album_disk->prefix . "]]></prefix>\n\t<basename><![CDATA[" . $album_disk->name . "]]></basename>\n";
+            // the simple fullname is the album name without the disk suffix, so the parent needs no extra lookup
+            $string .= "\t<album id=\"" . $album_disk->album_id . "\"><name><![CDATA[" . $album_disk->get_fullname(true) . "]]></name>\n\t<prefix><![CDATA[" . $album_disk->prefix . "]]></prefix>\n\t<basename><![CDATA[" . $album_disk->name . "]]></basename>\n</album>\n";
+            if ($album_disk->get_parent_fullname() != "") {
+                foreach ($album_artists as $album_artist) {
+                    $string .= "\t<artist id=\"" . $album_artist['id'] . "\"><name><![CDATA[" . $album_artist['name'] . "]]></name>\n\t<prefix><![CDATA[" . $album_artist['prefix'] . "]]></prefix>\n\t<basename><![CDATA[" . $album_artist['basename'] . "]]></basename>\n</artist>\n";
+                }
+            }
+            foreach ($song_artists as $song_artist) {
+                $string .= "\t<songartist id=\"" . $song_artist['id'] . "\"><name><![CDATA[" . $song_artist['name'] . "]]></name>\n\t<prefix><![CDATA[" . $song_artist['prefix'] . "]]></prefix>\n\t<basename><![CDATA[" . $song_artist['basename'] . "]]></basename>\n</songartist>\n";
+            }
+
+            // Handle includes (get_songs() is already scoped to the disk and honours catalog_disable)
+            $songs = (in_array("songs", $include)) ? self::songs($album_disk->get_songs(), $user, $auth, false) : '';
+
+            // Build the Art URL, include session
+            $art_url = Art::url($album_disk->id, 'album_disk', $auth);
+            $string .= "\t<disk>" . $album_disk->disk . "</disk>\n\t<disksubtitle><![CDATA[" . $album_disk->disksubtitle . "]]></disksubtitle>\n\t<time>" . $album_disk->time . "</time>\n\t<year>" . $year . "</year>\n\t<tracks>" . $songs . "</tracks>\n\t<songcount>" . $album_disk->song_count . "</songcount>\n\t<type>" . $album_disk->release_type . "</type>\n" . self::_genre_string($album_disk->get_tags()) . "\t<art><![CDATA[" . $art_url . "]]></art>\n\t<has_art>" . ($album_disk->has_art() ? 1 : 0) . "</has_art>\n\t<flag>" . (!$flag->get_flag($user->getId()) ? 0 : 1) . "</flag>\n\t<rating>" . $user_rating . "</rating>\n\t<averagerating>" . $rating->get_average_rating() . "</averagerating>\n\t<mbid><![CDATA[" . $album_disk->mbid . "]]></mbid>\n\t<mbid_group><![CDATA[" . $album_disk->mbid_group . "]]></mbid_group>\n</album_disk>\n";
+        }
+
+        return Api::output_xml($string, $full_xml);
+    }
 
     /**
      * albums
@@ -623,6 +693,21 @@ class Xml8_Data
                         $string .= "</album>\n";
                     } else {
                         $string .= "<album id=\"" . $object_id . "\"/>\n";
+                    }
+                }
+                break;
+            case 'album_disk':
+                foreach ($objects as $object_id) {
+                    if ($include) {
+                        $string .= "<album_disk id=\"" . $object_id . "\">\n";
+                        $sql        = "SELECT DISTINCT `song`.`id` FROM `song` INNER JOIN `album_disk` ON `album_disk`.`album_id` = `song`.`album` AND `album_disk`.`disk` = `song`.`disk` WHERE `album_disk`.`id` = ?;";
+                        $db_results = Dba::read($sql, [$object_id]);
+                        while ($row = Dba::fetch_assoc($db_results)) {
+                            $string .= "<song id=\"" . $row['id'] . "\"/>\n";
+                        }
+                        $string .= "</album_disk>\n";
+                    } else {
+                        $string .= "<album_disk id=\"" . $object_id . "\"/>\n";
                     }
                 }
                 break;

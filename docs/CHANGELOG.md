@@ -42,8 +42,12 @@ You can downgrade to Ampache7 if you try this out and have issues, using the cli
   * `folder` added to the `object_type` enum on several tables (`cache_object_count`, `cache_object_count_run`, `image`, `object_count`, and others)
 * API
   * v8 API responses are now fully documented: `docs/openapi.json` carries response schemas for every data type, and `docs/API-JSON-methods.md`/`docs/API-XML-methods.md` show per-method response field tables (type, nullable, optional)
+  * Album disks are available to API8 clients (`album_disks`, `album_disk`, `album_disk_songs`, plus `index`, `list`, `browse`, `stats` and `get_art` support). With the `album_group` preference disabled the web interface browses album disks, and until now the API had no way to reach them
 * Testing
   * Test suite significantly expanded with dozens of new test files under `tests/Module` and `tests/Repository`
+* Playlist art mosaic
+  * Automatically generated playlist cover art can now be a mosaic of up to nine covers from the playlist instead of a single random cover
+  * Playlists with fewer than four distinct covers keep the single-cover behaviour
 * Transcoding
   * Per-user output-format preferences under Streaming -> Transcoding: `encode_target`, `encode_video_target`, `encode_player_webplayer_target` and `encode_player_api_target` (explicit `format=` requests always take priority)
   * Per-user dynamic downsampling with new `max_bit_rate`/`min_bit_rate` preferences
@@ -52,6 +56,9 @@ You can downgrade to Ampache7 if you try this out and have issues, using the cli
 * Config version 91
   * New `encode_args_mp3_rg`, `encode_args_mp3_car`, `encode_args_opus_rg` and `encode_args_opus_car` transcode commands; `encode_args_m4a` now produces a fragmented MP4
   * `%MAXBITRATE%` is documented alongside `%BITRATE%` and both are substituted as plain bits per second
+* Config version 92
+  * New `allow_lost_password` option. Setting it to `false` hides the `Lost Password` link and rejects `lostpassword.php`, so nobody can trigger reset mail to your users by posting to it directly
+  * New `show_mini_player` option to hide the `Mini player` button on the login form; `/m/` stays reachable by url either way
 
 ### Changed 8.0.0
 
@@ -86,10 +93,22 @@ You can downgrade to Ampache7 if you try this out and have issues, using the cli
   * `encode_args_ts` drops the `k` suffix from `-maxrate %MAXBITRATE%` to suit. **NOTE** update `encode_args_ts` if you have overridden it in your own `ampache.cfg.php`
   * Bitrate units are now documented in `docs/openapi.json` and the API method tables; none of the `bitrate`/`maxbitrate` arguments previously stated a unit
   * `encode_target`, `encode_video_target` and the per-player `encode_player_*_target` settings moved from `ampache.cfg.php` to per-user preferences (config values now only seed the default on upgrade)
+* Official release downloads are built with `composer install --no-dev`, so they contain no dev package. Anything optional that lives in `require-dev` has to be installed yourself
+* Statistical Graphs
+  * Charts are drawn by `goat1000/svggraph` (LGPL-3.0) instead of `szymach/c-pchart`, which is a normal requirement rather than a dev one, so graphs work in a release download with nothing extra to install
+  * Graphs are SVG instead of PNG and no longer need `ext-gd`; they scale to the page and stay sharp on a high-dpi screen
+  * Charts are grouped bars rather than lines, and each bar is a time bucket labelled at the zoom level you asked for
+* Config version 94
+  * New `playlist_art_mosaic` option; set it to `false` to keep a single random cover for playlist art
+  * New `playlist_art_mosaic_fallback` option (default `false`); when on, a playlist with no art of its own gets a generated mosaic instead of the blank placeholder, stored as that playlist's art so it is only built once
+* Config version 93
+  * `statistical_graphs` now defaults to `"true"`; it was only off because of the c-pchart licence. Set it to `"false"` to skip the graph queries entirely on a large catalog
 
 ### Removed 8.0.0
 
 * `api_debug_handler` configuration option and its handling removed entirely
+* `szymach/c-pchart` dependency dropped, along with the `pGraph_Yformat_bytes()` helper it needed
+* `resources/fonts/FreeMono.ttf`, left behind when `easy_captcha` was removed; `gregwar/captcha` ships its own fonts
 * Unused legacy OAuth implementation deleted (`OAuthDataStore`, `OAuthServer`, `OAuthSignatureMethod_PLAINTEXT`, `OAuthSignatureMethod_RSA_SHA1`)
 * `docker/Dockerfilephp82`, `Dockerfilephp83`, `Dockerfilephp84` removed (replaced by `Dockerfilephp85`)
 * The popup web player is removed (`web_player.php`, `create_web_player.inc.php`). Playback is always the embedded player at the bottom of the page. **NOTE** if you used the popup to keep the player in a separate window, there is no replacement for it
@@ -101,9 +120,22 @@ You can downgrade to Ampache7 if you try this out and have issues, using the cli
 
 ### Fixed 8.0.0
 
+* Url shortener plugins (`bitly`, `yourls`) were never applied to share links, because `PluginTypeEnum::URL_SHORTENER` looked for a `shorten()` method and plugins implement `shortener()`
+* The catalog files and catalog size graphs only drew the time buckets that gained a file, so a library added in a single scan was one point no matter how wide the date range was; they now carry the running total across every bucket in the range
+* The running total those graphs start from ignored the catalog and object filters, so a graph for one catalog counted every earlier file on the server
+* `stats.php?action=graph` rendered graphs without checking `statistical_graphs` first, so it ignored the setting and was a fatal error whenever the charting library was absent
+* The catalog size graph was empty until a second time bucket existed, because the running total it adds to is `NULL` when nothing was added before the bucket and `NULL + SUM()` is `NULL`
+* The catalog size graph read zero for `object_type=album`; it joined `album`.`id` to `song`.`id` instead of `song`.`album`, and only counted buckets before the current one instead of including it
 * Uploading art, an avatar, a playlist or a podcast import file stopped the web player, because a form carrying a file fell back to a full page load
 * Database 800023
   * Uploaded art took its mime type from the filename, storing `image/jpg` (not a real type) for a `.jpg` upload and `image/JPG` for `.JPG`; the type is now read from the image data and existing rows are corrected
+  * Where the same artwork was stored twice under both spellings the `image/jpg` row is left as it is, because `unique_image` includes `mime` and no art is deleted during an upgrade
+* Localplay
+  * MPD `status` no longer throws a runtime error when the controller is unreachable or returns no status
+  * An unreachable controller (MPD, VLC, httpQ) no longer surfaces a raw `fsockopen()` connection warning
+  * An active-instance preference pointing at a deleted instance falls back to an available one instead of failing to connect
+  * The control panel updates the reported volume, playback state and track after every command, not just mute/repeat/random
+  * Playlist items resolve the song from its stream url even when `stream_beautiful_url` is off, so they show the real title/artist/album instead of the raw play url
 * Light sidebar can scroll to reach its bottom entries on short screens
 * AJAX actions returned a server error instead of updating the page
   * Setting a favorite

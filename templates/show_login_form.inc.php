@@ -145,10 +145,12 @@ $_SESSION['login'] = true; ?>
                 <?php if (AmpConfig::get('allow_public_registration') && (Mailer::is_mail_enabled() || AmpConfig::get('user_no_email_confirm', false))) { ?>
                             <a class="button nohtml" id="registerbutton" href="<?php echo $web_path; ?>/register.php"><?php echo T_('Register'); ?></a>
                 <?php } ?>
-                <?php if (Mailer::is_mail_enabled()) { ?>
+                <?php if (Mailer::is_mail_enabled() && AmpConfig::get('allow_lost_password', true)) { ?>
                         <a class="button nohtml" id="lostpasswordbutton" href="<?php echo $web_path; ?>/lostpassword.php"><?php echo T_('Lost Password'); ?></a>
                 <?php } ?>
+                <?php if (AmpConfig::get('show_mini_player', true)) { ?>
                         <a class="button nohtml<?php echo ($mini_referrer) ? ' selected' : ''; ?>" id="miniplayerbutton" href="<?php echo $web_path; ?>/login.php?referrer=<?php echo urlencode($mini_url); ?>"><?php echo T_('Mini player'); ?></a>
+                <?php } ?>
                 <?php if ($oidc_enabled) { ?>
                         <a class="button nohtml" id="oidcbutton" href="<?php echo $web_path; ?>/login.php?action=oidc"><?php echo scrub_out(AmpConfig::get('oidc_button_text', T_('Sign in with OpenID Connect'))); ?></a>
                 <?php } ?>

@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "abc8443f331ff6ef4c72d94fb20daf9a",
+    "content-hash": "452f9f0a2c265a6147ef03e9a91bf35d",
     "packages": [
         {
             "name": "adhocore/cli",
@@ -675,6 +675,46 @@
                 }
             ],
             "time": "2026-06-18T22:49:04+00:00"
+        },
+        {
+            "name": "goat1000/svggraph",
+            "version": "3.20.3",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/goat1000/SVGGraph.git",
+                "reference": "8c5e750542143dbd11790b3b565ff87b37f76ee2"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/goat1000/SVGGraph/zipball/8c5e750542143dbd11790b3b565ff87b37f76ee2",
+                "reference": "8c5e750542143dbd11790b3b565ff87b37f76ee2",
+                "shasum": ""
+            },
+            "require": {
+                "ext-json": "*",
+                "lib-pcre": "*",
+                "php": ">=5.4.0"
+            },
+            "suggest": {
+                "ext-iconv": "For non-ASCII text measurement support"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "Goat1000\\SVGGraph\\": ""
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "LGPL-3.0-only"
+            ],
+            "description": "Generates SVG graphs",
+            "homepage": "http://www.goat1000.com/svggraph.php",
+            "support": {
+                "issues": "https://github.com/goat1000/SVGGraph/issues",
+                "source": "https://github.com/goat1000/SVGGraph/tree/3.20.3"
+            },
+            "time": "2026-01-06T13:42:48+00:00"
         },
         {
             "name": "gregwar/captcha",
@@ -9373,77 +9413,6 @@
             "time": "2026-05-29T05:06:50+00:00"
         },
         {
-            "name": "szymach/c-pchart",
-            "version": "v3.0.17",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/szymach/c-pchart.git",
-                "reference": "c022568da78f73bb7acf7db7a974934a434d47d7"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/szymach/c-pchart/zipball/c022568da78f73bb7acf7db7a974934a434d47d7",
-                "reference": "c022568da78f73bb7acf7db7a974934a434d47d7",
-                "shasum": ""
-            },
-            "require": {
-                "ext-gd": "*",
-                "php": "^5.4|^7.0|^8.0"
-            },
-            "require-dev": {
-                "codeception/codeception": "^4.1.22",
-                "codeception/module-asserts": "^1.3",
-                "codeception/module-filesystem": "^1.0",
-                "phpunit/phpunit": "^5.7|^9.5",
-                "squizlabs/php_codesniffer": "^3.4"
-            },
-            "type": "library",
-            "extra": {
-                "branch-alias": {
-                    "2.0": "2.0.x-dev",
-                    "dev-master": "3.0.x-dev"
-                }
-            },
-            "autoload": {
-                "files": [
-                    "constants.php"
-                ],
-                "psr-4": {
-                    "CpChart\\": "src/"
-                }
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "GPL-3.0-only"
-            ],
-            "authors": [
-                {
-                    "name": "Jean-Damien Pogolotti",
-                    "homepage": "http://www.pchart.net",
-                    "role": "Creator of the original pChart library"
-                },
-                {
-                    "name": "Piotr Szymaszek",
-                    "homepage": "https://github.com/szymach",
-                    "role": "Developer of the CpChart wrapper package"
-                }
-            ],
-            "description": "Port of \"pChart\" library into PHP 5+",
-            "homepage": "https://github.com/szymach/c-pchart",
-            "keywords": [
-                "CpChart",
-                "c-pChart",
-                "charts",
-                "pchart",
-                "statistics"
-            ],
-            "support": {
-                "issues": "https://github.com/szymach/c-pchart/issues",
-                "source": "https://github.com/szymach/c-pchart/tree/v3.0.17"
-            },
-            "time": "2023-05-27T11:12:02+00:00"
-        },
-        {
             "name": "theseer/tokenizer",
             "version": "1.3.1",
             "source": {
@@ -9544,5 +9513,5 @@
         "ext-xmlwriter": "1.0",
         "lib-libxml": "2.7.0"
     },
-    "plugin-api-version": "2.9.0"
+    "plugin-api-version": "2.6.0"
 }

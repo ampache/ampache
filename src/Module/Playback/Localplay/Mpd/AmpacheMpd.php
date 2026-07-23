@@ -86,8 +86,9 @@ class AmpacheMpd extends localplay_controller
 
         // If we haven't added anything then maybe we should clear the playlist.
         if ($this->_add_count < 1) {
-            $this->_mpd->RefreshInfo();
+            $refreshed = $this->_mpd->RefreshInfo();
             if ($this->block_clear === false
+                && $refreshed
                 && $this->_mpd->status['state'] == mpd::STATE_STOPPED
             ) {
                 $this->clear_playlist();
@@ -131,6 +132,8 @@ class AmpacheMpd extends localplay_controller
         // Look at the current instance and pull the options for said instance
         $options = self::get_instance();
         if ($options === [] || !isset($options['host'], $options['port'])) {
+            debug_event(self::class, 'connect: no localplay instance is configured', 3);
+
             return false;
         }
 
@@ -200,7 +203,7 @@ class AmpacheMpd extends localplay_controller
             $data = [];
 
             /* Required Elements */
-            $data['id']  = $entry['Pos'];
+            $data['id']  = (int) $entry['Pos'];
             $data['raw'] = $entry['file'];
 
             $url_data = $this->parse_url($entry['file']);
@@ -311,7 +314,13 @@ class AmpacheMpd extends localplay_controller
         $sql        = ($instance > 0) ? "SELECT * FROM `localplay_mpd` WHERE `id` = ?" : "SELECT * FROM `localplay_mpd`";
         $db_results = ($instance > 0) ? Dba::query($sql, [$instance]) : Dba::query($sql);
 
-        if ($row = Dba::fetch_assoc($db_results)) {
+        $row = Dba::fetch_assoc($db_results);
+        // the active preference can point at an instance that has since been deleted; fall back to any available one
+        if (!$row && $instance > 0) {
+            $row = Dba::fetch_assoc(Dba::query("SELECT * FROM `localplay_mpd`"));
+        }
+
+        if ($row) {
             return [
                 'id' => (int) $row['id'],
                 'name' => $row['name'],
@@ -552,15 +561,20 @@ class AmpacheMpd extends localplay_controller
             return $array;
         }
 
-        $this->_mpd->RefreshInfo();
+        // a failed refresh leaves `status` null, so there is nothing to report
+        if (!$this->_mpd->RefreshInfo()) {
+            debug_event(self::class, 'status failed to refresh the mpd state', 3);
+
+            return $array;
+        }
 
         $track = $this->_mpd->status['song'] ?? 0;
 
-        /* Construct the Array */
-        $array['state']        = $this->_mpd->status['state'];
-        $array['volume']       = $this->_mpd->status['volume'];
-        $array['repeat']       = $this->_mpd->status['repeat'];
-        $array['random']       = $this->_mpd->status['random'];
+        // mpd omits keys it has no value for (e.g. `volume` when the server has no mixer) so don't assume they exist
+        $array['state']        = $this->_mpd->status['state'] ?? mpd::STATE_STOPPED;
+        $array['volume']       = $this->_mpd->status['volume'] ?? 0;
+        $array['repeat']       = $this->_mpd->status['repeat'] ?? false;
+        $array['random']       = $this->_mpd->status['random'] ?? false;
         $array['track']        = $track + 1;
         $array['track_title']  = '';
         $array['track_artist'] = '';
@@ -576,7 +590,7 @@ class AmpacheMpd extends localplay_controller
         debug_event(self::class, 'Status result. Current song (' . $track . ') info: ' . json_encode($playlist_item), 5);
 
         if ($url_data !== [] && array_key_exists('oid', $url_data) && !empty($url_data['oid'])) {
-            $song = new Song($url_data['oid']);
+            $song = new Song((int) $url_data['oid']);
             if ($song->isNew()) {
                 $array['track_title']  = T_('Unknown');
                 $array['track_artist'] = T_('Unknown');

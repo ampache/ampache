@@ -51,6 +51,19 @@ final class ObjectTypeGate
     ];
 
     /**
+     * Types api version 8 can index on top of the shared list
+     *
+     * Older versions have no formatter for these, so they must never reach `INDEX_TYPES` itself --
+     * that list is also read by `GetIndexes6Method`.
+     *
+     * @var string[]
+     */
+    public const array INDEX_TYPES_8 = [
+        ...self::INDEX_TYPES,
+        'album_disk',
+    ];
+
+    /**
      * Returns the error message of the config gate blocking this type, or null when it is allowed
      */
     public static function check(ConfigContainerInterface $configContainer, string $type): ?string
@@ -75,5 +88,17 @@ final class ObjectTypeGate
         }
 
         return null;
+    }
+
+    /**
+     * The indexable types for a given api version
+     *
+     * @return string[]
+     */
+    public static function indexTypes(int $apiVersion): array
+    {
+        return ($apiVersion >= 8)
+            ? self::INDEX_TYPES_8
+            : self::INDEX_TYPES;
     }
 }
