@@ -364,11 +364,11 @@ Get ids and usernames for your site
 
 Returns a `user` list.
 
-| Field | Type                             | Nullable | Optional | Notes                          |
-|-------|----------------------------------|:--------:|:--------:|--------------------------------|
-| user  | array&lt;`UserSummaryObject`&gt; |    NO    |    NO    | see `UserSummaryObject` fields |
+| Field | Type                                     | Nullable | Optional | Notes                                  |
+|-------|------------------------------------------|:--------:|:--------:|----------------------------------------|
+| user  | array&lt;[UserSummaryObject](#users)&gt; |    NO    |    NO    | see [UserSummaryObject](#users) fields |
 
-Each `user` entry (`UserSummaryObject`):
+Each `user` entry ([UserSummaryObject](#users)):
 
 | Field    | Type   | Nullable | Optional | Notes |
 |----------|--------|:--------:|:--------:|-------|
@@ -496,29 +496,29 @@ Returns a `album` list.
 
 Each `album` entry ([AlbumObject](#album)):
 
-| Field         | Type                             | Nullable | Optional | Notes                          |
-|---------------|----------------------------------|:--------:|:--------:|--------------------------------|
-| id            | string                           |    NO    |    NO    |                                |
-| name          | string                           |   YES    |    NO    |                                |
-| prefix        | string                           |   YES    |    NO    |                                |
-| basename      | string                           |   YES    |    NO    |                                |
-| artist        | object                           |   YES    |   YES    | `{id, name, prefix, basename}` |
-| artists       | array&lt;object&gt;              |    NO    |   YES    | `{id, name, prefix, basename}` |
-| songartists   | array&lt;object&gt;              |    NO    |   YES    | `{id, name, prefix, basename}` |
-| time          | integer                          |    NO    |    NO    |                                |
-| year          | integer                          |    NO    |    NO    |                                |
-| tracks        | array&lt;[SongObject](#song)&gt; |    NO    |    NO    | see [SongObject](#song) fields |
-| songcount     | integer                          |    NO    |    NO    |                                |
-| diskcount     | integer                          |    NO    |    NO    |                                |
-| type          | string                           |   YES    |    NO    |                                |
-| genre         | array&lt;object&gt;              |    NO    |    NO    | `{id, name}`                   |
-| art           | string                           |   YES    |    NO    |                                |
-| has_art       | boolean                          |    NO    |    NO    |                                |
-| flag          | boolean                          |    NO    |    NO    |                                |
-| rating        | integer                          |   YES    |    NO    |                                |
-| averagerating | number                           |   YES    |    NO    |                                |
-| mbid          | string                           |   YES    |    NO    |                                |
-| mbid_group    | string                           |   YES    |    NO    |                                |
+| Field         | Type                                           | Nullable | Optional | Notes                                        |
+|---------------|------------------------------------------------|:--------:|:--------:|----------------------------------------------|
+| id            | string                                         |    NO    |    NO    |                                              |
+| name          | string                                         |   YES    |    NO    |                                              |
+| prefix        | string                                         |   YES    |    NO    |                                              |
+| basename      | string                                         |   YES    |    NO    |                                              |
+| artist        | object                                         |   YES    |   YES    | `{id, name, prefix, basename}`               |
+| artists       | array&lt;[NamedReference](#namedreference)&gt; |    NO    |   YES    | see [NamedReference](#namedreference) fields |
+| songartists   | array&lt;[NamedReference](#namedreference)&gt; |    NO    |   YES    | see [NamedReference](#namedreference) fields |
+| time          | integer                                        |    NO    |    NO    |                                              |
+| year          | integer                                        |    NO    |    NO    |                                              |
+| tracks        | array&lt;[SongObject](#song)&gt;               |    NO    |    NO    | see [SongObject](#song) fields               |
+| songcount     | integer                                        |    NO    |    NO    |                                              |
+| diskcount     | integer                                        |    NO    |    NO    |                                              |
+| type          | string                                         |   YES    |    NO    |                                              |
+| genre         | array&lt;[GenreReference](#genrereference)&gt; |    NO    |    NO    | see [GenreReference](#genrereference) fields |
+| art           | string                                         |   YES    |    NO    |                                              |
+| has_art       | boolean                                        |    NO    |    NO    |                                              |
+| flag          | boolean                                        |    NO    |    NO    |                                              |
+| rating        | integer                                        |   YES    |    NO    |                                              |
+| averagerating | number                                         |   YES    |    NO    |                                              |
+| mbid          | string                                         |   YES    |    NO    |                                              |
+| mbid_group    | string                                         |   YES    |    NO    |                                              |
 <!-- GENERATED:RESPONSE:END -->
 
 * throws
@@ -549,29 +549,29 @@ This returns a single album based on the UID provided
 
 Returns a single object.
 
-| Field         | Type                             | Nullable | Optional | Notes                          |
-|---------------|----------------------------------|:--------:|:--------:|--------------------------------|
-| id            | string                           |    NO    |    NO    |                                |
-| name          | string                           |   YES    |    NO    |                                |
-| prefix        | string                           |   YES    |    NO    |                                |
-| basename      | string                           |   YES    |    NO    |                                |
-| artist        | object                           |   YES    |   YES    | `{id, name, prefix, basename}` |
-| artists       | array&lt;object&gt;              |    NO    |   YES    | `{id, name, prefix, basename}` |
-| songartists   | array&lt;object&gt;              |    NO    |   YES    | `{id, name, prefix, basename}` |
-| time          | integer                          |    NO    |    NO    |                                |
-| year          | integer                          |    NO    |    NO    |                                |
-| tracks        | array&lt;[SongObject](#song)&gt; |    NO    |    NO    | see [SongObject](#song) fields |
-| songcount     | integer                          |    NO    |    NO    |                                |
-| diskcount     | integer                          |    NO    |    NO    |                                |
-| type          | string                           |   YES    |    NO    |                                |
-| genre         | array&lt;object&gt;              |    NO    |    NO    | `{id, name}`                   |
-| art           | string                           |   YES    |    NO    |                                |
-| has_art       | boolean                          |    NO    |    NO    |                                |
-| flag          | boolean                          |    NO    |    NO    |                                |
-| rating        | integer                          |   YES    |    NO    |                                |
-| averagerating | number                           |   YES    |    NO    |                                |
-| mbid          | string                           |   YES    |    NO    |                                |
-| mbid_group    | string                           |   YES    |    NO    |                                |
+| Field         | Type                                           | Nullable | Optional | Notes                                        |
+|---------------|------------------------------------------------|:--------:|:--------:|----------------------------------------------|
+| id            | string                                         |    NO    |    NO    |                                              |
+| name          | string                                         |   YES    |    NO    |                                              |
+| prefix        | string                                         |   YES    |    NO    |                                              |
+| basename      | string                                         |   YES    |    NO    |                                              |
+| artist        | object                                         |   YES    |   YES    | `{id, name, prefix, basename}`               |
+| artists       | array&lt;[NamedReference](#namedreference)&gt; |    NO    |   YES    | see [NamedReference](#namedreference) fields |
+| songartists   | array&lt;[NamedReference](#namedreference)&gt; |    NO    |   YES    | see [NamedReference](#namedreference) fields |
+| time          | integer                                        |    NO    |    NO    |                                              |
+| year          | integer                                        |    NO    |    NO    |                                              |
+| tracks        | array&lt;[SongObject](#song)&gt;               |    NO    |    NO    | see [SongObject](#song) fields               |
+| songcount     | integer                                        |    NO    |    NO    |                                              |
+| diskcount     | integer                                        |    NO    |    NO    |                                              |
+| type          | string                                         |   YES    |    NO    |                                              |
+| genre         | array&lt;[GenreReference](#genrereference)&gt; |    NO    |    NO    | see [GenreReference](#genrereference) fields |
+| art           | string                                         |   YES    |    NO    |                                              |
+| has_art       | boolean                                        |    NO    |    NO    |                                              |
+| flag          | boolean                                        |    NO    |    NO    |                                              |
+| rating        | integer                                        |   YES    |    NO    |                                              |
+| averagerating | number                                         |   YES    |    NO    |                                              |
+| mbid          | string                                         |   YES    |    NO    |                                              |
+| mbid_group    | string                                         |   YES    |    NO    |                                              |
 <!-- GENERATED:RESPONSE:END -->
 
 * throws
@@ -615,55 +615,55 @@ Returns a `song` list.
 
 Each `song` entry ([SongObject](#song)):
 
-| Field                 | Type                         | Nullable | Optional | Notes                          |
-|-----------------------|------------------------------|:--------:|:--------:|--------------------------------|
-| id                    | string                       |    NO    |    NO    |                                |
-| title                 | string                       |   YES    |    NO    |                                |
-| name                  | string                       |   YES    |    NO    |                                |
-| artist                | object                       |    NO    |    NO    | `{id, name, prefix, basename}` |
-| artists               | array&lt;object&gt;          |    NO    |    NO    | `{id, name, prefix, basename}` |
-| album                 | object                       |    NO    |    NO    | `{id, name, prefix, basename}` |
-| albumartist           | object                       |    NO    |   YES    | `{id, name, prefix, basename}` |
-| disk                  | integer                      |    NO    |    NO    |                                |
-| disksubtitle          | string                       |   YES    |    NO    |                                |
-| track                 | integer                      |    NO    |    NO    |                                |
-| filename              | string                       |   YES    |    NO    |                                |
-| genre                 | array&lt;object&gt;          |    NO    |    NO    | `{id, name}`                   |
-| playlisttrack         | integer                      |    NO    |    NO    |                                |
-| time                  | integer                      |    NO    |    NO    |                                |
-| year                  | integer                      |    NO    |    NO    |                                |
-| format                | string                       |   YES    |    NO    |                                |
-| stream_format         | string                       |   YES    |    NO    |                                |
-| bitrate               | integer                      |   YES    |    NO    |                                |
-| stream_bitrate        | integer                      |   YES    |    NO    |                                |
-| rate                  | integer                      |    NO    |    NO    |                                |
-| mode                  | string                       |   YES    |    NO    |                                |
-| mime                  | string                       |   YES    |    NO    |                                |
-| stream_mime           | string                       |   YES    |    NO    |                                |
-| url                   | string                       |    NO    |    NO    |                                |
-| size                  | integer                      |    NO    |    NO    |                                |
-| mbid                  | string                       |   YES    |    NO    |                                |
-| art                   | string                       |   YES    |    NO    |                                |
-| has_art               | boolean                      |    NO    |    NO    |                                |
-| flag                  | boolean                      |    NO    |    NO    |                                |
-| rating                | integer                      |   YES    |    NO    |                                |
-| averagerating         | number                       |   YES    |    NO    |                                |
-| playcount             | integer                      |    NO    |    NO    |                                |
-| catalog               | string                       |    NO    |    NO    |                                |
-| composer              | string                       |   YES    |    NO    |                                |
-| channels              | integer                      |   YES    |    NO    |                                |
-| comment               | string                       |   YES    |    NO    |                                |
-| license               | string                       |   YES    |    NO    |                                |
-| publisher             | string                       |   YES    |    NO    |                                |
-| language              | string                       |   YES    |    NO    |                                |
-| lyrics                | string                       |   YES    |    NO    |                                |
-| replaygain_album_gain | number                       |   YES    |    NO    |                                |
-| replaygain_album_peak | number                       |   YES    |    NO    |                                |
-| replaygain_track_gain | number                       |   YES    |    NO    |                                |
-| replaygain_track_peak | number                       |   YES    |    NO    |                                |
-| r128_album_gain       | number                       |   YES    |    NO    |                                |
-| r128_track_gain       | number                       |   YES    |    NO    |                                |
-| metadata              | object&lt;string, string&gt; |    NO    |   YES    |                                |
+| Field                 | Type                                           | Nullable | Optional | Notes                                        |
+|-----------------------|------------------------------------------------|:--------:|:--------:|----------------------------------------------|
+| id                    | string                                         |    NO    |    NO    |                                              |
+| title                 | string                                         |   YES    |    NO    |                                              |
+| name                  | string                                         |   YES    |    NO    |                                              |
+| artist                | [NamedReference](#namedreference)              |    NO    |    NO    | see [NamedReference](#namedreference) fields |
+| artists               | array&lt;[NamedReference](#namedreference)&gt; |    NO    |    NO    | see [NamedReference](#namedreference) fields |
+| album                 | [NamedReference](#namedreference)              |    NO    |    NO    | see [NamedReference](#namedreference) fields |
+| albumartist           | [NamedReference](#namedreference)              |    NO    |   YES    | see [NamedReference](#namedreference) fields |
+| disk                  | integer                                        |    NO    |    NO    |                                              |
+| disksubtitle          | string                                         |   YES    |    NO    |                                              |
+| track                 | integer                                        |    NO    |    NO    |                                              |
+| filename              | string                                         |   YES    |    NO    |                                              |
+| genre                 | array&lt;[GenreReference](#genrereference)&gt; |    NO    |    NO    | see [GenreReference](#genrereference) fields |
+| playlisttrack         | integer                                        |    NO    |    NO    |                                              |
+| time                  | integer                                        |    NO    |    NO    |                                              |
+| year                  | integer                                        |    NO    |    NO    |                                              |
+| format                | string                                         |   YES    |    NO    |                                              |
+| stream_format         | string                                         |   YES    |    NO    |                                              |
+| bitrate               | integer                                        |   YES    |    NO    |                                              |
+| stream_bitrate        | integer                                        |   YES    |    NO    |                                              |
+| rate                  | integer                                        |    NO    |    NO    |                                              |
+| mode                  | string                                         |   YES    |    NO    |                                              |
+| mime                  | string                                         |   YES    |    NO    |                                              |
+| stream_mime           | string                                         |   YES    |    NO    |                                              |
+| url                   | string                                         |    NO    |    NO    |                                              |
+| size                  | integer                                        |    NO    |    NO    |                                              |
+| mbid                  | string                                         |   YES    |    NO    |                                              |
+| art                   | string                                         |   YES    |    NO    |                                              |
+| has_art               | boolean                                        |    NO    |    NO    |                                              |
+| flag                  | boolean                                        |    NO    |    NO    |                                              |
+| rating                | integer                                        |   YES    |    NO    |                                              |
+| averagerating         | number                                         |   YES    |    NO    |                                              |
+| playcount             | integer                                        |    NO    |    NO    |                                              |
+| catalog               | string                                         |    NO    |    NO    |                                              |
+| composer              | string                                         |   YES    |    NO    |                                              |
+| channels              | integer                                        |   YES    |    NO    |                                              |
+| comment               | string                                         |   YES    |    NO    |                                              |
+| license               | string                                         |   YES    |    NO    |                                              |
+| publisher             | string                                         |   YES    |    NO    |                                              |
+| language              | string                                         |   YES    |    NO    |                                              |
+| lyrics                | string                                         |   YES    |    NO    |                                              |
+| replaygain_album_gain | number                                         |   YES    |    NO    |                                              |
+| replaygain_album_peak | number                                         |   YES    |    NO    |                                              |
+| replaygain_track_gain | number                                         |   YES    |    NO    |                                              |
+| replaygain_track_peak | number                                         |   YES    |    NO    |                                              |
+| r128_album_gain       | number                                         |   YES    |    NO    |                                              |
+| r128_track_gain       | number                                         |   YES    |    NO    |                                              |
+| metadata              | object&lt;string, string&gt;                   |    NO    |   YES    |                                              |
 <!-- GENERATED:RESPONSE:END -->
 
 * throws
@@ -711,31 +711,31 @@ Returns a `album_disk` list.
 
 Each `album_disk` entry ([AlbumDiskObject](#album_disk)):
 
-| Field         | Type                             | Nullable | Optional | Notes                          |
-|---------------|----------------------------------|:--------:|:--------:|--------------------------------|
-| id            | string                           |    NO    |    NO    |                                |
-| name          | string                           |    NO    |    NO    |                                |
-| prefix        | string                           |   YES    |    NO    |                                |
-| basename      | string                           |   YES    |    NO    |                                |
-| album         | object                           |    NO    |    NO    | `{id, name, prefix, basename}` |
-| artist        | object                           |    NO    |   YES    | `{id, name, prefix, basename}` |
-| artists       | array&lt;object&gt;              |    NO    |   YES    | `{id, name, prefix, basename}` |
-| songartists   | array&lt;object&gt;              |    NO    |   YES    | `{id, name, prefix, basename}` |
-| disk          | integer                          |    NO    |    NO    |                                |
-| disksubtitle  | string                           |   YES    |    NO    |                                |
-| time          | integer                          |    NO    |    NO    |                                |
-| year          | integer                          |    NO    |    NO    |                                |
-| tracks        | array&lt;[SongObject](#song)&gt; |    NO    |    NO    | see [SongObject](#song) fields |
-| songcount     | integer                          |    NO    |    NO    |                                |
-| type          | string                           |   YES    |    NO    |                                |
-| genre         | array&lt;object&gt;              |    NO    |    NO    | `{id, name}`                   |
-| art           | string                           |   YES    |    NO    |                                |
-| has_art       | boolean                          |    NO    |    NO    |                                |
-| flag          | boolean                          |    NO    |    NO    |                                |
-| rating        | integer                          |   YES    |    NO    |                                |
-| averagerating | number                           |   YES    |    NO    |                                |
-| mbid          | string                           |   YES    |    NO    |                                |
-| mbid_group    | string                           |   YES    |    NO    |                                |
+| Field         | Type                                           | Nullable | Optional | Notes                                        |
+|---------------|------------------------------------------------|:--------:|:--------:|----------------------------------------------|
+| id            | string                                         |    NO    |    NO    |                                              |
+| name          | string                                         |    NO    |    NO    |                                              |
+| prefix        | string                                         |   YES    |    NO    |                                              |
+| basename      | string                                         |   YES    |    NO    |                                              |
+| album         | object                                         |    NO    |    NO    | `{id, name, prefix, basename}`               |
+| artist        | object                                         |    NO    |   YES    | `{id, name, prefix, basename}`               |
+| artists       | array&lt;object&gt;                            |    NO    |   YES    | `{id, name, prefix, basename}`               |
+| songartists   | array&lt;object&gt;                            |    NO    |   YES    | `{id, name, prefix, basename}`               |
+| disk          | integer                                        |    NO    |    NO    |                                              |
+| disksubtitle  | string                                         |   YES    |    NO    |                                              |
+| time          | integer                                        |    NO    |    NO    |                                              |
+| year          | integer                                        |    NO    |    NO    |                                              |
+| tracks        | array&lt;[SongObject](#song)&gt;               |    NO    |    NO    | see [SongObject](#song) fields               |
+| songcount     | integer                                        |    NO    |    NO    |                                              |
+| type          | string                                         |   YES    |    NO    |                                              |
+| genre         | array&lt;[GenreReference](#genrereference)&gt; |    NO    |    NO    | see [GenreReference](#genrereference) fields |
+| art           | string                                         |   YES    |    NO    |                                              |
+| has_art       | boolean                                        |    NO    |    NO    |                                              |
+| flag          | boolean                                        |    NO    |    NO    |                                              |
+| rating        | integer                                        |   YES    |    NO    |                                              |
+| averagerating | number                                         |   YES    |    NO    |                                              |
+| mbid          | string                                         |   YES    |    NO    |                                              |
+| mbid_group    | string                                         |   YES    |    NO    |                                              |
 <!-- GENERATED:RESPONSE:END -->
 
 * throws object
@@ -764,31 +764,31 @@ This returns a single album disk based on the UID provided
 
 Returns a single object.
 
-| Field         | Type                             | Nullable | Optional | Notes                          |
-|---------------|----------------------------------|:--------:|:--------:|--------------------------------|
-| id            | string                           |    NO    |    NO    |                                |
-| name          | string                           |    NO    |    NO    |                                |
-| prefix        | string                           |   YES    |    NO    |                                |
-| basename      | string                           |   YES    |    NO    |                                |
-| album         | object                           |    NO    |    NO    | `{id, name, prefix, basename}` |
-| artist        | object                           |    NO    |   YES    | `{id, name, prefix, basename}` |
-| artists       | array&lt;object&gt;              |    NO    |   YES    | `{id, name, prefix, basename}` |
-| songartists   | array&lt;object&gt;              |    NO    |   YES    | `{id, name, prefix, basename}` |
-| disk          | integer                          |    NO    |    NO    |                                |
-| disksubtitle  | string                           |   YES    |    NO    |                                |
-| time          | integer                          |    NO    |    NO    |                                |
-| year          | integer                          |    NO    |    NO    |                                |
-| tracks        | array&lt;[SongObject](#song)&gt; |    NO    |    NO    | see [SongObject](#song) fields |
-| songcount     | integer                          |    NO    |    NO    |                                |
-| type          | string                           |   YES    |    NO    |                                |
-| genre         | array&lt;object&gt;              |    NO    |    NO    | `{id, name}`                   |
-| art           | string                           |   YES    |    NO    |                                |
-| has_art       | boolean                          |    NO    |    NO    |                                |
-| flag          | boolean                          |    NO    |    NO    |                                |
-| rating        | integer                          |   YES    |    NO    |                                |
-| averagerating | number                           |   YES    |    NO    |                                |
-| mbid          | string                           |   YES    |    NO    |                                |
-| mbid_group    | string                           |   YES    |    NO    |                                |
+| Field         | Type                                           | Nullable | Optional | Notes                                        |
+|---------------|------------------------------------------------|:--------:|:--------:|----------------------------------------------|
+| id            | string                                         |    NO    |    NO    |                                              |
+| name          | string                                         |    NO    |    NO    |                                              |
+| prefix        | string                                         |   YES    |    NO    |                                              |
+| basename      | string                                         |   YES    |    NO    |                                              |
+| album         | object                                         |    NO    |    NO    | `{id, name, prefix, basename}`               |
+| artist        | object                                         |    NO    |   YES    | `{id, name, prefix, basename}`               |
+| artists       | array&lt;object&gt;                            |    NO    |   YES    | `{id, name, prefix, basename}`               |
+| songartists   | array&lt;object&gt;                            |    NO    |   YES    | `{id, name, prefix, basename}`               |
+| disk          | integer                                        |    NO    |    NO    |                                              |
+| disksubtitle  | string                                         |   YES    |    NO    |                                              |
+| time          | integer                                        |    NO    |    NO    |                                              |
+| year          | integer                                        |    NO    |    NO    |                                              |
+| tracks        | array&lt;[SongObject](#song)&gt;               |    NO    |    NO    | see [SongObject](#song) fields               |
+| songcount     | integer                                        |    NO    |    NO    |                                              |
+| type          | string                                         |   YES    |    NO    |                                              |
+| genre         | array&lt;[GenreReference](#genrereference)&gt; |    NO    |    NO    | see [GenreReference](#genrereference) fields |
+| art           | string                                         |   YES    |    NO    |                                              |
+| has_art       | boolean                                        |    NO    |    NO    |                                              |
+| flag          | boolean                                        |    NO    |    NO    |                                              |
+| rating        | integer                                        |   YES    |    NO    |                                              |
+| averagerating | number                                         |   YES    |    NO    |                                              |
+| mbid          | string                                         |   YES    |    NO    |                                              |
+| mbid_group    | string                                         |   YES    |    NO    |                                              |
 <!-- GENERATED:RESPONSE:END -->
 
 * throws object
@@ -830,55 +830,55 @@ Returns a `song` list.
 
 Each `song` entry ([SongObject](#song)):
 
-| Field                 | Type                         | Nullable | Optional | Notes                          |
-|-----------------------|------------------------------|:--------:|:--------:|--------------------------------|
-| id                    | string                       |    NO    |    NO    |                                |
-| title                 | string                       |   YES    |    NO    |                                |
-| name                  | string                       |   YES    |    NO    |                                |
-| artist                | object                       |    NO    |    NO    | `{id, name, prefix, basename}` |
-| artists               | array&lt;object&gt;          |    NO    |    NO    | `{id, name, prefix, basename}` |
-| album                 | object                       |    NO    |    NO    | `{id, name, prefix, basename}` |
-| albumartist           | object                       |    NO    |   YES    | `{id, name, prefix, basename}` |
-| disk                  | integer                      |    NO    |    NO    |                                |
-| disksubtitle          | string                       |   YES    |    NO    |                                |
-| track                 | integer                      |    NO    |    NO    |                                |
-| filename              | string                       |   YES    |    NO    |                                |
-| genre                 | array&lt;object&gt;          |    NO    |    NO    | `{id, name}`                   |
-| playlisttrack         | integer                      |    NO    |    NO    |                                |
-| time                  | integer                      |    NO    |    NO    |                                |
-| year                  | integer                      |    NO    |    NO    |                                |
-| format                | string                       |   YES    |    NO    |                                |
-| stream_format         | string                       |   YES    |    NO    |                                |
-| bitrate               | integer                      |   YES    |    NO    |                                |
-| stream_bitrate        | integer                      |   YES    |    NO    |                                |
-| rate                  | integer                      |    NO    |    NO    |                                |
-| mode                  | string                       |   YES    |    NO    |                                |
-| mime                  | string                       |   YES    |    NO    |                                |
-| stream_mime           | string                       |   YES    |    NO    |                                |
-| url                   | string                       |    NO    |    NO    |                                |
-| size                  | integer                      |    NO    |    NO    |                                |
-| mbid                  | string                       |   YES    |    NO    |                                |
-| art                   | string                       |   YES    |    NO    |                                |
-| has_art               | boolean                      |    NO    |    NO    |                                |
-| flag                  | boolean                      |    NO    |    NO    |                                |
-| rating                | integer                      |   YES    |    NO    |                                |
-| averagerating         | number                       |   YES    |    NO    |                                |
-| playcount             | integer                      |    NO    |    NO    |                                |
-| catalog               | string                       |    NO    |    NO    |                                |
-| composer              | string                       |   YES    |    NO    |                                |
-| channels              | integer                      |   YES    |    NO    |                                |
-| comment               | string                       |   YES    |    NO    |                                |
-| license               | string                       |   YES    |    NO    |                                |
-| publisher             | string                       |   YES    |    NO    |                                |
-| language              | string                       |   YES    |    NO    |                                |
-| lyrics                | string                       |   YES    |    NO    |                                |
-| replaygain_album_gain | number                       |   YES    |    NO    |                                |
-| replaygain_album_peak | number                       |   YES    |    NO    |                                |
-| replaygain_track_gain | number                       |   YES    |    NO    |                                |
-| replaygain_track_peak | number                       |   YES    |    NO    |                                |
-| r128_album_gain       | number                       |   YES    |    NO    |                                |
-| r128_track_gain       | number                       |   YES    |    NO    |                                |
-| metadata              | object&lt;string, string&gt; |    NO    |   YES    |                                |
+| Field                 | Type                                           | Nullable | Optional | Notes                                        |
+|-----------------------|------------------------------------------------|:--------:|:--------:|----------------------------------------------|
+| id                    | string                                         |    NO    |    NO    |                                              |
+| title                 | string                                         |   YES    |    NO    |                                              |
+| name                  | string                                         |   YES    |    NO    |                                              |
+| artist                | [NamedReference](#namedreference)              |    NO    |    NO    | see [NamedReference](#namedreference) fields |
+| artists               | array&lt;[NamedReference](#namedreference)&gt; |    NO    |    NO    | see [NamedReference](#namedreference) fields |
+| album                 | [NamedReference](#namedreference)              |    NO    |    NO    | see [NamedReference](#namedreference) fields |
+| albumartist           | [NamedReference](#namedreference)              |    NO    |   YES    | see [NamedReference](#namedreference) fields |
+| disk                  | integer                                        |    NO    |    NO    |                                              |
+| disksubtitle          | string                                         |   YES    |    NO    |                                              |
+| track                 | integer                                        |    NO    |    NO    |                                              |
+| filename              | string                                         |   YES    |    NO    |                                              |
+| genre                 | array&lt;[GenreReference](#genrereference)&gt; |    NO    |    NO    | see [GenreReference](#genrereference) fields |
+| playlisttrack         | integer                                        |    NO    |    NO    |                                              |
+| time                  | integer                                        |    NO    |    NO    |                                              |
+| year                  | integer                                        |    NO    |    NO    |                                              |
+| format                | string                                         |   YES    |    NO    |                                              |
+| stream_format         | string                                         |   YES    |    NO    |                                              |
+| bitrate               | integer                                        |   YES    |    NO    |                                              |
+| stream_bitrate        | integer                                        |   YES    |    NO    |                                              |
+| rate                  | integer                                        |    NO    |    NO    |                                              |
+| mode                  | string                                         |   YES    |    NO    |                                              |
+| mime                  | string                                         |   YES    |    NO    |                                              |
+| stream_mime           | string                                         |   YES    |    NO    |                                              |
+| url                   | string                                         |    NO    |    NO    |                                              |
+| size                  | integer                                        |    NO    |    NO    |                                              |
+| mbid                  | string                                         |   YES    |    NO    |                                              |
+| art                   | string                                         |   YES    |    NO    |                                              |
+| has_art               | boolean                                        |    NO    |    NO    |                                              |
+| flag                  | boolean                                        |    NO    |    NO    |                                              |
+| rating                | integer                                        |   YES    |    NO    |                                              |
+| averagerating         | number                                         |   YES    |    NO    |                                              |
+| playcount             | integer                                        |    NO    |    NO    |                                              |
+| catalog               | string                                         |    NO    |    NO    |                                              |
+| composer              | string                                         |   YES    |    NO    |                                              |
+| channels              | integer                                        |   YES    |    NO    |                                              |
+| comment               | string                                         |   YES    |    NO    |                                              |
+| license               | string                                         |   YES    |    NO    |                                              |
+| publisher             | string                                         |   YES    |    NO    |                                              |
+| language              | string                                         |   YES    |    NO    |                                              |
+| lyrics                | string                                         |   YES    |    NO    |                                              |
+| replaygain_album_gain | number                                         |   YES    |    NO    |                                              |
+| replaygain_album_peak | number                                         |   YES    |    NO    |                                              |
+| replaygain_track_gain | number                                         |   YES    |    NO    |                                              |
+| replaygain_track_peak | number                                         |   YES    |    NO    |                                              |
+| r128_album_gain       | number                                         |   YES    |    NO    |                                              |
+| r128_track_gain       | number                                         |   YES    |    NO    |                                              |
+| metadata              | object&lt;string, string&gt;                   |    NO    |   YES    |                                              |
 <!-- GENERATED:RESPONSE:END -->
 
 * throws object
@@ -925,27 +925,27 @@ Returns a `artist` list.
 
 Each `artist` entry ([ArtistObject](#artist)):
 
-| Field         | Type                               | Nullable | Optional | Notes                            |
-|---------------|------------------------------------|:--------:|:--------:|----------------------------------|
-| id            | string                             |    NO    |    NO    |                                  |
-| name          | string                             |   YES    |    NO    |                                  |
-| prefix        | string                             |   YES    |    NO    |                                  |
-| basename      | string                             |   YES    |    NO    |                                  |
-| albums        | array&lt;[AlbumObject](#album)&gt; |    NO    |    NO    | see [AlbumObject](#album) fields |
-| albumcount    | integer                            |    NO    |    NO    |                                  |
-| songs         | array&lt;[SongObject](#song)&gt;   |    NO    |    NO    | see [SongObject](#song) fields   |
-| songcount     | integer                            |    NO    |    NO    |                                  |
-| genre         | array&lt;object&gt;                |    NO    |    NO    | `{id, name}`                     |
-| art           | string                             |   YES    |    NO    |                                  |
-| has_art       | boolean                            |    NO    |    NO    |                                  |
-| flag          | boolean                            |    NO    |    NO    |                                  |
-| rating        | integer                            |   YES    |    NO    |                                  |
-| averagerating | number                             |   YES    |    NO    |                                  |
-| mbid          | string                             |   YES    |    NO    |                                  |
-| summary       | string                             |   YES    |    NO    |                                  |
-| time          | integer                            |    NO    |    NO    |                                  |
-| yearformed    | integer                            |    NO    |    NO    |                                  |
-| placeformed   | string                             |   YES    |    NO    |                                  |
+| Field         | Type                                           | Nullable | Optional | Notes                                        |
+|---------------|------------------------------------------------|:--------:|:--------:|----------------------------------------------|
+| id            | string                                         |    NO    |    NO    |                                              |
+| name          | string                                         |   YES    |    NO    |                                              |
+| prefix        | string                                         |   YES    |    NO    |                                              |
+| basename      | string                                         |   YES    |    NO    |                                              |
+| albums        | array&lt;[AlbumObject](#album)&gt;             |    NO    |    NO    | see [AlbumObject](#album) fields             |
+| albumcount    | integer                                        |    NO    |    NO    |                                              |
+| songs         | array&lt;[SongObject](#song)&gt;               |    NO    |    NO    | see [SongObject](#song) fields               |
+| songcount     | integer                                        |    NO    |    NO    |                                              |
+| genre         | array&lt;[GenreReference](#genrereference)&gt; |    NO    |    NO    | see [GenreReference](#genrereference) fields |
+| art           | string                                         |   YES    |    NO    |                                              |
+| has_art       | boolean                                        |    NO    |    NO    |                                              |
+| flag          | boolean                                        |    NO    |    NO    |                                              |
+| rating        | integer                                        |   YES    |    NO    |                                              |
+| averagerating | number                                         |   YES    |    NO    |                                              |
+| mbid          | string                                         |   YES    |    NO    |                                              |
+| summary       | string                                         |   YES    |    NO    |                                              |
+| time          | integer                                        |    NO    |    NO    |                                              |
+| yearformed    | integer                                        |    NO    |    NO    |                                              |
+| placeformed   | string                                         |   YES    |    NO    |                                              |
 <!-- GENERATED:RESPONSE:END -->
 
 * throws
@@ -976,27 +976,27 @@ This returns a single artist based on the UID of said artist
 
 Returns a single object.
 
-| Field         | Type                               | Nullable | Optional | Notes                            |
-|---------------|------------------------------------|:--------:|:--------:|----------------------------------|
-| id            | string                             |    NO    |    NO    |                                  |
-| name          | string                             |   YES    |    NO    |                                  |
-| prefix        | string                             |   YES    |    NO    |                                  |
-| basename      | string                             |   YES    |    NO    |                                  |
-| albums        | array&lt;[AlbumObject](#album)&gt; |    NO    |    NO    | see [AlbumObject](#album) fields |
-| albumcount    | integer                            |    NO    |    NO    |                                  |
-| songs         | array&lt;[SongObject](#song)&gt;   |    NO    |    NO    | see [SongObject](#song) fields   |
-| songcount     | integer                            |    NO    |    NO    |                                  |
-| genre         | array&lt;object&gt;                |    NO    |    NO    | `{id, name}`                     |
-| art           | string                             |   YES    |    NO    |                                  |
-| has_art       | boolean                            |    NO    |    NO    |                                  |
-| flag          | boolean                            |    NO    |    NO    |                                  |
-| rating        | integer                            |   YES    |    NO    |                                  |
-| averagerating | number                             |   YES    |    NO    |                                  |
-| mbid          | string                             |   YES    |    NO    |                                  |
-| summary       | string                             |   YES    |    NO    |                                  |
-| time          | integer                            |    NO    |    NO    |                                  |
-| yearformed    | integer                            |    NO    |    NO    |                                  |
-| placeformed   | string                             |   YES    |    NO    |                                  |
+| Field         | Type                                           | Nullable | Optional | Notes                                        |
+|---------------|------------------------------------------------|:--------:|:--------:|----------------------------------------------|
+| id            | string                                         |    NO    |    NO    |                                              |
+| name          | string                                         |   YES    |    NO    |                                              |
+| prefix        | string                                         |   YES    |    NO    |                                              |
+| basename      | string                                         |   YES    |    NO    |                                              |
+| albums        | array&lt;[AlbumObject](#album)&gt;             |    NO    |    NO    | see [AlbumObject](#album) fields             |
+| albumcount    | integer                                        |    NO    |    NO    |                                              |
+| songs         | array&lt;[SongObject](#song)&gt;               |    NO    |    NO    | see [SongObject](#song) fields               |
+| songcount     | integer                                        |    NO    |    NO    |                                              |
+| genre         | array&lt;[GenreReference](#genrereference)&gt; |    NO    |    NO    | see [GenreReference](#genrereference) fields |
+| art           | string                                         |   YES    |    NO    |                                              |
+| has_art       | boolean                                        |    NO    |    NO    |                                              |
+| flag          | boolean                                        |    NO    |    NO    |                                              |
+| rating        | integer                                        |   YES    |    NO    |                                              |
+| averagerating | number                                         |   YES    |    NO    |                                              |
+| mbid          | string                                         |   YES    |    NO    |                                              |
+| summary       | string                                         |   YES    |    NO    |                                              |
+| time          | integer                                        |    NO    |    NO    |                                              |
+| yearformed    | integer                                        |    NO    |    NO    |                                              |
+| placeformed   | string                                         |   YES    |    NO    |                                              |
 <!-- GENERATED:RESPONSE:END -->
 
 * throws
@@ -1041,29 +1041,29 @@ Returns a `album` list.
 
 Each `album` entry ([AlbumObject](#album)):
 
-| Field         | Type                             | Nullable | Optional | Notes                          |
-|---------------|----------------------------------|:--------:|:--------:|--------------------------------|
-| id            | string                           |    NO    |    NO    |                                |
-| name          | string                           |   YES    |    NO    |                                |
-| prefix        | string                           |   YES    |    NO    |                                |
-| basename      | string                           |   YES    |    NO    |                                |
-| artist        | object                           |   YES    |   YES    | `{id, name, prefix, basename}` |
-| artists       | array&lt;object&gt;              |    NO    |   YES    | `{id, name, prefix, basename}` |
-| songartists   | array&lt;object&gt;              |    NO    |   YES    | `{id, name, prefix, basename}` |
-| time          | integer                          |    NO    |    NO    |                                |
-| year          | integer                          |    NO    |    NO    |                                |
-| tracks        | array&lt;[SongObject](#song)&gt; |    NO    |    NO    | see [SongObject](#song) fields |
-| songcount     | integer                          |    NO    |    NO    |                                |
-| diskcount     | integer                          |    NO    |    NO    |                                |
-| type          | string                           |   YES    |    NO    |                                |
-| genre         | array&lt;object&gt;              |    NO    |    NO    | `{id, name}`                   |
-| art           | string                           |   YES    |    NO    |                                |
-| has_art       | boolean                          |    NO    |    NO    |                                |
-| flag          | boolean                          |    NO    |    NO    |                                |
-| rating        | integer                          |   YES    |    NO    |                                |
-| averagerating | number                           |   YES    |    NO    |                                |
-| mbid          | string                           |   YES    |    NO    |                                |
-| mbid_group    | string                           |   YES    |    NO    |                                |
+| Field         | Type                                           | Nullable | Optional | Notes                                        |
+|---------------|------------------------------------------------|:--------:|:--------:|----------------------------------------------|
+| id            | string                                         |    NO    |    NO    |                                              |
+| name          | string                                         |   YES    |    NO    |                                              |
+| prefix        | string                                         |   YES    |    NO    |                                              |
+| basename      | string                                         |   YES    |    NO    |                                              |
+| artist        | object                                         |   YES    |   YES    | `{id, name, prefix, basename}`               |
+| artists       | array&lt;[NamedReference](#namedreference)&gt; |    NO    |   YES    | see [NamedReference](#namedreference) fields |
+| songartists   | array&lt;[NamedReference](#namedreference)&gt; |    NO    |   YES    | see [NamedReference](#namedreference) fields |
+| time          | integer                                        |    NO    |    NO    |                                              |
+| year          | integer                                        |    NO    |    NO    |                                              |
+| tracks        | array&lt;[SongObject](#song)&gt;               |    NO    |    NO    | see [SongObject](#song) fields               |
+| songcount     | integer                                        |    NO    |    NO    |                                              |
+| diskcount     | integer                                        |    NO    |    NO    |                                              |
+| type          | string                                         |   YES    |    NO    |                                              |
+| genre         | array&lt;[GenreReference](#genrereference)&gt; |    NO    |    NO    | see [GenreReference](#genrereference) fields |
+| art           | string                                         |   YES    |    NO    |                                              |
+| has_art       | boolean                                        |    NO    |    NO    |                                              |
+| flag          | boolean                                        |    NO    |    NO    |                                              |
+| rating        | integer                                        |   YES    |    NO    |                                              |
+| averagerating | number                                         |   YES    |    NO    |                                              |
+| mbid          | string                                         |   YES    |    NO    |                                              |
+| mbid_group    | string                                         |   YES    |    NO    |                                              |
 <!-- GENERATED:RESPONSE:END -->
 
 * throws
@@ -1108,55 +1108,55 @@ Returns a `song` list.
 
 Each `song` entry ([SongObject](#song)):
 
-| Field                 | Type                         | Nullable | Optional | Notes                          |
-|-----------------------|------------------------------|:--------:|:--------:|--------------------------------|
-| id                    | string                       |    NO    |    NO    |                                |
-| title                 | string                       |   YES    |    NO    |                                |
-| name                  | string                       |   YES    |    NO    |                                |
-| artist                | object                       |    NO    |    NO    | `{id, name, prefix, basename}` |
-| artists               | array&lt;object&gt;          |    NO    |    NO    | `{id, name, prefix, basename}` |
-| album                 | object                       |    NO    |    NO    | `{id, name, prefix, basename}` |
-| albumartist           | object                       |    NO    |   YES    | `{id, name, prefix, basename}` |
-| disk                  | integer                      |    NO    |    NO    |                                |
-| disksubtitle          | string                       |   YES    |    NO    |                                |
-| track                 | integer                      |    NO    |    NO    |                                |
-| filename              | string                       |   YES    |    NO    |                                |
-| genre                 | array&lt;object&gt;          |    NO    |    NO    | `{id, name}`                   |
-| playlisttrack         | integer                      |    NO    |    NO    |                                |
-| time                  | integer                      |    NO    |    NO    |                                |
-| year                  | integer                      |    NO    |    NO    |                                |
-| format                | string                       |   YES    |    NO    |                                |
-| stream_format         | string                       |   YES    |    NO    |                                |
-| bitrate               | integer                      |   YES    |    NO    |                                |
-| stream_bitrate        | integer                      |   YES    |    NO    |                                |
-| rate                  | integer                      |    NO    |    NO    |                                |
-| mode                  | string                       |   YES    |    NO    |                                |
-| mime                  | string                       |   YES    |    NO    |                                |
-| stream_mime           | string                       |   YES    |    NO    |                                |
-| url                   | string                       |    NO    |    NO    |                                |
-| size                  | integer                      |    NO    |    NO    |                                |
-| mbid                  | string                       |   YES    |    NO    |                                |
-| art                   | string                       |   YES    |    NO    |                                |
-| has_art               | boolean                      |    NO    |    NO    |                                |
-| flag                  | boolean                      |    NO    |    NO    |                                |
-| rating                | integer                      |   YES    |    NO    |                                |
-| averagerating         | number                       |   YES    |    NO    |                                |
-| playcount             | integer                      |    NO    |    NO    |                                |
-| catalog               | string                       |    NO    |    NO    |                                |
-| composer              | string                       |   YES    |    NO    |                                |
-| channels              | integer                      |   YES    |    NO    |                                |
-| comment               | string                       |   YES    |    NO    |                                |
-| license               | string                       |   YES    |    NO    |                                |
-| publisher             | string                       |   YES    |    NO    |                                |
-| language              | string                       |   YES    |    NO    |                                |
-| lyrics                | string                       |   YES    |    NO    |                                |
-| replaygain_album_gain | number                       |   YES    |    NO    |                                |
-| replaygain_album_peak | number                       |   YES    |    NO    |                                |
-| replaygain_track_gain | number                       |   YES    |    NO    |                                |
-| replaygain_track_peak | number                       |   YES    |    NO    |                                |
-| r128_album_gain       | number                       |   YES    |    NO    |                                |
-| r128_track_gain       | number                       |   YES    |    NO    |                                |
-| metadata              | object&lt;string, string&gt; |    NO    |   YES    |                                |
+| Field                 | Type                                           | Nullable | Optional | Notes                                        |
+|-----------------------|------------------------------------------------|:--------:|:--------:|----------------------------------------------|
+| id                    | string                                         |    NO    |    NO    |                                              |
+| title                 | string                                         |   YES    |    NO    |                                              |
+| name                  | string                                         |   YES    |    NO    |                                              |
+| artist                | [NamedReference](#namedreference)              |    NO    |    NO    | see [NamedReference](#namedreference) fields |
+| artists               | array&lt;[NamedReference](#namedreference)&gt; |    NO    |    NO    | see [NamedReference](#namedreference) fields |
+| album                 | [NamedReference](#namedreference)              |    NO    |    NO    | see [NamedReference](#namedreference) fields |
+| albumartist           | [NamedReference](#namedreference)              |    NO    |   YES    | see [NamedReference](#namedreference) fields |
+| disk                  | integer                                        |    NO    |    NO    |                                              |
+| disksubtitle          | string                                         |   YES    |    NO    |                                              |
+| track                 | integer                                        |    NO    |    NO    |                                              |
+| filename              | string                                         |   YES    |    NO    |                                              |
+| genre                 | array&lt;[GenreReference](#genrereference)&gt; |    NO    |    NO    | see [GenreReference](#genrereference) fields |
+| playlisttrack         | integer                                        |    NO    |    NO    |                                              |
+| time                  | integer                                        |    NO    |    NO    |                                              |
+| year                  | integer                                        |    NO    |    NO    |                                              |
+| format                | string                                         |   YES    |    NO    |                                              |
+| stream_format         | string                                         |   YES    |    NO    |                                              |
+| bitrate               | integer                                        |   YES    |    NO    |                                              |
+| stream_bitrate        | integer                                        |   YES    |    NO    |                                              |
+| rate                  | integer                                        |    NO    |    NO    |                                              |
+| mode                  | string                                         |   YES    |    NO    |                                              |
+| mime                  | string                                         |   YES    |    NO    |                                              |
+| stream_mime           | string                                         |   YES    |    NO    |                                              |
+| url                   | string                                         |    NO    |    NO    |                                              |
+| size                  | integer                                        |    NO    |    NO    |                                              |
+| mbid                  | string                                         |   YES    |    NO    |                                              |
+| art                   | string                                         |   YES    |    NO    |                                              |
+| has_art               | boolean                                        |    NO    |    NO    |                                              |
+| flag                  | boolean                                        |    NO    |    NO    |                                              |
+| rating                | integer                                        |   YES    |    NO    |                                              |
+| averagerating         | number                                         |   YES    |    NO    |                                              |
+| playcount             | integer                                        |    NO    |    NO    |                                              |
+| catalog               | string                                         |    NO    |    NO    |                                              |
+| composer              | string                                         |   YES    |    NO    |                                              |
+| channels              | integer                                        |   YES    |    NO    |                                              |
+| comment               | string                                         |   YES    |    NO    |                                              |
+| license               | string                                         |   YES    |    NO    |                                              |
+| publisher             | string                                         |   YES    |    NO    |                                              |
+| language              | string                                         |   YES    |    NO    |                                              |
+| lyrics                | string                                         |   YES    |    NO    |                                              |
+| replaygain_album_gain | number                                         |   YES    |    NO    |                                              |
+| replaygain_album_peak | number                                         |   YES    |    NO    |                                              |
+| replaygain_track_gain | number                                         |   YES    |    NO    |                                              |
+| replaygain_track_peak | number                                         |   YES    |    NO    |                                              |
+| r128_album_gain       | number                                         |   YES    |    NO    |                                              |
+| r128_track_gain       | number                                         |   YES    |    NO    |                                              |
+| metadata              | object&lt;string, string&gt;                   |    NO    |   YES    |                                              |
 <!-- GENERATED:RESPONSE:END -->
 
 * throws
@@ -1396,17 +1396,17 @@ Return children of a parent object in a folder traversal/browse style. If you do
 
 Returns a `browse` list.
 
-| Field       | Type                        | Nullable | Optional | Notes                     |
-|-------------|-----------------------------|:--------:|:--------:|---------------------------|
-| total_count | integer                     |    NO    |    NO    |                           |
-| md5         | string                      |    NO    |    NO    |                           |
-| catalog_id  | string                      |    NO    |    NO    |                           |
-| parent_id   | string                      |    NO    |    NO    |                           |
-| parent_type | string                      |    NO    |    NO    |                           |
-| child_type  | string                      |    NO    |    NO    |                           |
-| browse      | array&lt;`BrowseObject`&gt; |    NO    |    NO    | see `BrowseObject` fields |
+| Field       | Type                                 | Nullable | Optional | Notes                              |
+|-------------|--------------------------------------|:--------:|:--------:|------------------------------------|
+| total_count | integer                              |    NO    |    NO    |                                    |
+| md5         | string                               |    NO    |    NO    |                                    |
+| catalog_id  | string                               |    NO    |    NO    |                                    |
+| parent_id   | string                               |    NO    |    NO    |                                    |
+| parent_type | string                               |    NO    |    NO    |                                    |
+| child_type  | string                               |    NO    |    NO    |                                    |
+| browse      | array&lt;[BrowseObject](#browse)&gt; |    NO    |    NO    | see [BrowseObject](#browse) fields |
 
-Each `browse` entry (`BrowseObject`):
+Each `browse` entry ([BrowseObject](#browse)):
 
 | Field    | Type   | Nullable | Optional | Notes |
 |----------|--------|:--------:|:--------:|-------|
@@ -1719,13 +1719,13 @@ This returns the episodes for a podcast that have been deleted
 
 Returns a `deleted_podcast_episode` list.
 
-| Field                   | Type                                       | Nullable | Optional | Notes                                    |
-|-------------------------|--------------------------------------------|:--------:|:--------:|------------------------------------------|
-| total_count             | integer                                    |    NO    |    NO    |                                          |
-| md5                     | string                                     |    NO    |    NO    |                                          |
-| deleted_podcast_episode | array&lt;`DeletedPodcastEpisodeObject`&gt; |    NO    |    NO    | see `DeletedPodcastEpisodeObject` fields |
+| Field                   | Type                                                                  | Nullable | Optional | Notes                                                               |
+|-------------------------|-----------------------------------------------------------------------|:--------:|:--------:|---------------------------------------------------------------------|
+| total_count             | integer                                                               |    NO    |    NO    |                                                                     |
+| md5                     | string                                                                |    NO    |    NO    |                                                                     |
+| deleted_podcast_episode | array&lt;[DeletedPodcastEpisodeObject](#deleted_podcast_episodes)&gt; |    NO    |    NO    | see [DeletedPodcastEpisodeObject](#deleted_podcast_episodes) fields |
 
-Each `deleted_podcast_episode` entry (`DeletedPodcastEpisodeObject`):
+Each `deleted_podcast_episode` entry ([DeletedPodcastEpisodeObject](#deleted_podcast_episodes)):
 
 | Field         | Type    | Nullable | Optional | Notes |
 |---------------|---------|:--------:|:--------:|-------|
@@ -1768,13 +1768,13 @@ Returns songs that have been deleted from the server
 
 Returns a `deleted_song` list.
 
-| Field        | Type                             | Nullable | Optional | Notes                          |
-|--------------|----------------------------------|:--------:|:--------:|--------------------------------|
-| total_count  | integer                          |    NO    |    NO    |                                |
-| md5          | string                           |    NO    |    NO    |                                |
-| deleted_song | array&lt;`DeletedSongObject`&gt; |    NO    |    NO    | see `DeletedSongObject` fields |
+| Field        | Type                                             | Nullable | Optional | Notes                                          |
+|--------------|--------------------------------------------------|:--------:|:--------:|------------------------------------------------|
+| total_count  | integer                                          |    NO    |    NO    |                                                |
+| md5          | string                                           |    NO    |    NO    |                                                |
+| deleted_song | array&lt;[DeletedSongObject](#deleted_songs)&gt; |    NO    |    NO    | see [DeletedSongObject](#deleted_songs) fields |
 
-Each `deleted_song` entry (`DeletedSongObject`):
+Each `deleted_song` entry ([DeletedSongObject](#deleted_songs)):
 
 | Field         | Type    | Nullable | Optional | Notes |
 |---------------|---------|:--------:|:--------:|-------|
@@ -1819,13 +1819,13 @@ This returns video objects that have been deleted
 
 Returns a `deleted_video` list.
 
-| Field         | Type                              | Nullable | Optional | Notes                           |
-|---------------|-----------------------------------|:--------:|:--------:|---------------------------------|
-| total_count   | integer                           |    NO    |    NO    |                                 |
-| md5           | string                            |    NO    |    NO    |                                 |
-| deleted_video | array&lt;`DeletedVideoObject`&gt; |    NO    |    NO    | see `DeletedVideoObject` fields |
+| Field         | Type                                               | Nullable | Optional | Notes                                            |
+|---------------|----------------------------------------------------|:--------:|:--------:|--------------------------------------------------|
+| total_count   | integer                                            |    NO    |    NO    |                                                  |
+| md5           | string                                             |    NO    |    NO    |                                                  |
+| deleted_video | array&lt;[DeletedVideoObject](#deleted_videos)&gt; |    NO    |    NO    | see [DeletedVideoObject](#deleted_videos) fields |
 
-Each `deleted_video` entry (`DeletedVideoObject`):
+Each `deleted_video` entry ([DeletedVideoObject](#deleted_videos)):
 
 | Field         | Type    | Nullable | Optional | Notes |
 |---------------|---------|:--------:|:--------:|-------|
@@ -1907,14 +1907,14 @@ Return children of a parent folder object by ID **Ampache 8.0.0+**
 
 Returns a single object.
 
-| Field   | Type                            | Nullable | Optional | Notes                         |
-|---------|---------------------------------|:--------:|:--------:|-------------------------------|
-| id      | string                          |    NO    |    NO    |                               |
-| title   | string                          |   YES    |    NO    |                               |
-| parent  | integer                         |   YES    |    NO    |                               |
-| path    | string                          |   YES    |    NO    |                               |
-| catalog | integer                         |    NO    |    NO    |                               |
-| items   | array&lt;`FolderBrowseItem`&gt; |    NO    |    NO    | see `FolderBrowseItem` fields |
+| Field   | Type                                               | Nullable | Optional | Notes                                            |
+|---------|----------------------------------------------------|:--------:|:--------:|--------------------------------------------------|
+| id      | string                                             |    NO    |    NO    |                                                  |
+| title   | string                                             |   YES    |    NO    |                                                  |
+| parent  | integer                                            |   YES    |    NO    |                                                  |
+| path    | string                                             |   YES    |    NO    |                                                  |
+| catalog | integer                                            |    NO    |    NO    |                                                  |
+| items   | array&lt;[FolderBrowseItem](#folderbrowseitem)&gt; |    NO    |    NO    | see [FolderBrowseItem](#folderbrowseitem) fields |
 <!-- GENERATED:RESPONSE:END -->
 
 * throws
@@ -1989,11 +1989,11 @@ This gets the followers for the requested username
 
 Returns a `user` list.
 
-| Field | Type                             | Nullable | Optional | Notes                          |
-|-------|----------------------------------|:--------:|:--------:|--------------------------------|
-| user  | array&lt;`UserSummaryObject`&gt; |    NO    |    NO    | see `UserSummaryObject` fields |
+| Field | Type                                     | Nullable | Optional | Notes                                  |
+|-------|------------------------------------------|:--------:|:--------:|----------------------------------------|
+| user  | array&lt;[UserSummaryObject](#users)&gt; |    NO    |    NO    | see [UserSummaryObject](#users) fields |
 
-Each `user` entry (`UserSummaryObject`):
+Each `user` entry ([UserSummaryObject](#users)):
 
 | Field    | Type   | Nullable | Optional | Notes |
 |----------|--------|:--------:|:--------:|-------|
@@ -2028,11 +2028,11 @@ Get a list of people that this user follows
 
 Returns a `user` list.
 
-| Field | Type                             | Nullable | Optional | Notes                          |
-|-------|----------------------------------|:--------:|:--------:|--------------------------------|
-| user  | array&lt;`UserSummaryObject`&gt; |    NO    |    NO    | see `UserSummaryObject` fields |
+| Field | Type                                     | Nullable | Optional | Notes                                  |
+|-------|------------------------------------------|:--------:|:--------:|----------------------------------------|
+| user  | array&lt;[UserSummaryObject](#users)&gt; |    NO    |    NO    | see [UserSummaryObject](#users) fields |
 
-Each `user` entry (`UserSummaryObject`):
+Each `user` entry ([UserSummaryObject](#users)):
 
 | Field    | Type   | Nullable | Optional | Notes |
 |----------|--------|:--------:|:--------:|-------|
@@ -2068,20 +2068,20 @@ This get current user friends timeline
 
 Returns a `activity` list.
 
-| Field    | Type                          | Nullable | Optional | Notes                       |
-|----------|-------------------------------|:--------:|:--------:|-----------------------------|
-| activity | array&lt;`ActivityObject`&gt; |    NO    |    NO    | see `ActivityObject` fields |
+| Field    | Type                                             | Nullable | Optional | Notes                                          |
+|----------|--------------------------------------------------|:--------:|:--------:|------------------------------------------------|
+| activity | array&lt;[ActivityObject](#friends_timeline)&gt; |    NO    |    NO    | see [ActivityObject](#friends_timeline) fields |
 
-Each `activity` entry (`ActivityObject`):
+Each `activity` entry ([ActivityObject](#friends_timeline)):
 
-| Field       | Type    | Nullable | Optional | Notes            |
-|-------------|---------|:--------:|:--------:|------------------|
-| id          | string  |    NO    |    NO    |                  |
-| date        | integer |    NO    |    NO    |                  |
-| object_type | string  |   YES    |    NO    |                  |
-| object_id   | string  |    NO    |    NO    |                  |
-| action      | string  |    NO    |    NO    |                  |
-| user        | object  |    NO    |    NO    | `{id, username}` |
+| Field       | Type                        | Nullable | Optional | Notes                                  |
+|-------------|-----------------------------|:--------:|:--------:|----------------------------------------|
+| id          | string                      |    NO    |    NO    |                                        |
+| date        | integer                     |    NO    |    NO    |                                        |
+| object_type | string                      |   YES    |    NO    |                                        |
+| object_id   | string                      |    NO    |    NO    |                                        |
+| action      | string                      |    NO    |    NO    |                                        |
+| user        | [UserSummaryObject](#users) |    NO    |    NO    | see [UserSummaryObject](#users) fields |
 <!-- GENERATED:RESPONSE:END -->
 
 * throws
@@ -2126,18 +2126,18 @@ Returns a `genre` list.
 
 Each `genre` entry ([GenreObject](#genre)):
 
-| Field        | Type                | Nullable | Optional | Notes        |
-|--------------|---------------------|:--------:|:--------:|--------------|
-| id           | string              |    NO    |    NO    |              |
-| name         | string              |   YES    |    NO    |              |
-| albums       | integer             |    NO    |    NO    |              |
-| artists      | integer             |    NO    |    NO    |              |
-| songs        | integer             |    NO    |    NO    |              |
-| videos       | integer             |    NO    |    NO    |              |
-| playlists    | integer             |    NO    |    NO    |              |
-| live_streams | integer             |    NO    |    NO    |              |
-| is_hidden    | boolean             |    NO    |    NO    |              |
-| merge        | array&lt;object&gt; |    NO    |    NO    | `{id, name}` |
+| Field        | Type                                           | Nullable | Optional | Notes                                        |
+|--------------|------------------------------------------------|:--------:|:--------:|----------------------------------------------|
+| id           | string                                         |    NO    |    NO    |                                              |
+| name         | string                                         |   YES    |    NO    |                                              |
+| albums       | integer                                        |    NO    |    NO    |                                              |
+| artists      | integer                                        |    NO    |    NO    |                                              |
+| songs        | integer                                        |    NO    |    NO    |                                              |
+| videos       | integer                                        |    NO    |    NO    |                                              |
+| playlists    | integer                                        |    NO    |    NO    |                                              |
+| live_streams | integer                                        |    NO    |    NO    |                                              |
+| is_hidden    | boolean                                        |    NO    |    NO    |                                              |
+| merge        | array&lt;[GenreReference](#genrereference)&gt; |    NO    |    NO    | see [GenreReference](#genrereference) fields |
 <!-- GENERATED:RESPONSE:END -->
 
 * throws
@@ -2169,18 +2169,18 @@ Each genre element has an attribute "count" that indicates the number of people 
 
 Returns a single object.
 
-| Field        | Type                | Nullable | Optional | Notes        |
-|--------------|---------------------|:--------:|:--------:|--------------|
-| id           | string              |    NO    |    NO    |              |
-| name         | string              |   YES    |    NO    |              |
-| albums       | integer             |    NO    |    NO    |              |
-| artists      | integer             |    NO    |    NO    |              |
-| songs        | integer             |    NO    |    NO    |              |
-| videos       | integer             |    NO    |    NO    |              |
-| playlists    | integer             |    NO    |    NO    |              |
-| live_streams | integer             |    NO    |    NO    |              |
-| is_hidden    | boolean             |    NO    |    NO    |              |
-| merge        | array&lt;object&gt; |    NO    |    NO    | `{id, name}` |
+| Field        | Type                                           | Nullable | Optional | Notes                                        |
+|--------------|------------------------------------------------|:--------:|:--------:|----------------------------------------------|
+| id           | string                                         |    NO    |    NO    |                                              |
+| name         | string                                         |   YES    |    NO    |                                              |
+| albums       | integer                                        |    NO    |    NO    |                                              |
+| artists      | integer                                        |    NO    |    NO    |                                              |
+| songs        | integer                                        |    NO    |    NO    |                                              |
+| videos       | integer                                        |    NO    |    NO    |                                              |
+| playlists    | integer                                        |    NO    |    NO    |                                              |
+| live_streams | integer                                        |    NO    |    NO    |                                              |
+| is_hidden    | boolean                                        |    NO    |    NO    |                                              |
+| merge        | array&lt;[GenreReference](#genrereference)&gt; |    NO    |    NO    | see [GenreReference](#genrereference) fields |
 <!-- GENERATED:RESPONSE:END -->
 
 * throws
@@ -2224,29 +2224,29 @@ Returns a `album` list.
 
 Each `album` entry ([AlbumObject](#album)):
 
-| Field         | Type                             | Nullable | Optional | Notes                          |
-|---------------|----------------------------------|:--------:|:--------:|--------------------------------|
-| id            | string                           |    NO    |    NO    |                                |
-| name          | string                           |   YES    |    NO    |                                |
-| prefix        | string                           |   YES    |    NO    |                                |
-| basename      | string                           |   YES    |    NO    |                                |
-| artist        | object                           |   YES    |   YES    | `{id, name, prefix, basename}` |
-| artists       | array&lt;object&gt;              |    NO    |   YES    | `{id, name, prefix, basename}` |
-| songartists   | array&lt;object&gt;              |    NO    |   YES    | `{id, name, prefix, basename}` |
-| time          | integer                          |    NO    |    NO    |                                |
-| year          | integer                          |    NO    |    NO    |                                |
-| tracks        | array&lt;[SongObject](#song)&gt; |    NO    |    NO    | see [SongObject](#song) fields |
-| songcount     | integer                          |    NO    |    NO    |                                |
-| diskcount     | integer                          |    NO    |    NO    |                                |
-| type          | string                           |   YES    |    NO    |                                |
-| genre         | array&lt;object&gt;              |    NO    |    NO    | `{id, name}`                   |
-| art           | string                           |   YES    |    NO    |                                |
-| has_art       | boolean                          |    NO    |    NO    |                                |
-| flag          | boolean                          |    NO    |    NO    |                                |
-| rating        | integer                          |   YES    |    NO    |                                |
-| averagerating | number                           |   YES    |    NO    |                                |
-| mbid          | string                           |   YES    |    NO    |                                |
-| mbid_group    | string                           |   YES    |    NO    |                                |
+| Field         | Type                                           | Nullable | Optional | Notes                                        |
+|---------------|------------------------------------------------|:--------:|:--------:|----------------------------------------------|
+| id            | string                                         |    NO    |    NO    |                                              |
+| name          | string                                         |   YES    |    NO    |                                              |
+| prefix        | string                                         |   YES    |    NO    |                                              |
+| basename      | string                                         |   YES    |    NO    |                                              |
+| artist        | object                                         |   YES    |   YES    | `{id, name, prefix, basename}`               |
+| artists       | array&lt;[NamedReference](#namedreference)&gt; |    NO    |   YES    | see [NamedReference](#namedreference) fields |
+| songartists   | array&lt;[NamedReference](#namedreference)&gt; |    NO    |   YES    | see [NamedReference](#namedreference) fields |
+| time          | integer                                        |    NO    |    NO    |                                              |
+| year          | integer                                        |    NO    |    NO    |                                              |
+| tracks        | array&lt;[SongObject](#song)&gt;               |    NO    |    NO    | see [SongObject](#song) fields               |
+| songcount     | integer                                        |    NO    |    NO    |                                              |
+| diskcount     | integer                                        |    NO    |    NO    |                                              |
+| type          | string                                         |   YES    |    NO    |                                              |
+| genre         | array&lt;[GenreReference](#genrereference)&gt; |    NO    |    NO    | see [GenreReference](#genrereference) fields |
+| art           | string                                         |   YES    |    NO    |                                              |
+| has_art       | boolean                                        |    NO    |    NO    |                                              |
+| flag          | boolean                                        |    NO    |    NO    |                                              |
+| rating        | integer                                        |   YES    |    NO    |                                              |
+| averagerating | number                                         |   YES    |    NO    |                                              |
+| mbid          | string                                         |   YES    |    NO    |                                              |
+| mbid_group    | string                                         |   YES    |    NO    |                                              |
 <!-- GENERATED:RESPONSE:END -->
 
 * throws
@@ -2290,27 +2290,27 @@ Returns a `artist` list.
 
 Each `artist` entry ([ArtistObject](#artist)):
 
-| Field         | Type                               | Nullable | Optional | Notes                            |
-|---------------|------------------------------------|:--------:|:--------:|----------------------------------|
-| id            | string                             |    NO    |    NO    |                                  |
-| name          | string                             |   YES    |    NO    |                                  |
-| prefix        | string                             |   YES    |    NO    |                                  |
-| basename      | string                             |   YES    |    NO    |                                  |
-| albums        | array&lt;[AlbumObject](#album)&gt; |    NO    |    NO    | see [AlbumObject](#album) fields |
-| albumcount    | integer                            |    NO    |    NO    |                                  |
-| songs         | array&lt;[SongObject](#song)&gt;   |    NO    |    NO    | see [SongObject](#song) fields   |
-| songcount     | integer                            |    NO    |    NO    |                                  |
-| genre         | array&lt;object&gt;                |    NO    |    NO    | `{id, name}`                     |
-| art           | string                             |   YES    |    NO    |                                  |
-| has_art       | boolean                            |    NO    |    NO    |                                  |
-| flag          | boolean                            |    NO    |    NO    |                                  |
-| rating        | integer                            |   YES    |    NO    |                                  |
-| averagerating | number                             |   YES    |    NO    |                                  |
-| mbid          | string                             |   YES    |    NO    |                                  |
-| summary       | string                             |   YES    |    NO    |                                  |
-| time          | integer                            |    NO    |    NO    |                                  |
-| yearformed    | integer                            |    NO    |    NO    |                                  |
-| placeformed   | string                             |   YES    |    NO    |                                  |
+| Field         | Type                                           | Nullable | Optional | Notes                                        |
+|---------------|------------------------------------------------|:--------:|:--------:|----------------------------------------------|
+| id            | string                                         |    NO    |    NO    |                                              |
+| name          | string                                         |   YES    |    NO    |                                              |
+| prefix        | string                                         |   YES    |    NO    |                                              |
+| basename      | string                                         |   YES    |    NO    |                                              |
+| albums        | array&lt;[AlbumObject](#album)&gt;             |    NO    |    NO    | see [AlbumObject](#album) fields             |
+| albumcount    | integer                                        |    NO    |    NO    |                                              |
+| songs         | array&lt;[SongObject](#song)&gt;               |    NO    |    NO    | see [SongObject](#song) fields               |
+| songcount     | integer                                        |    NO    |    NO    |                                              |
+| genre         | array&lt;[GenreReference](#genrereference)&gt; |    NO    |    NO    | see [GenreReference](#genrereference) fields |
+| art           | string                                         |   YES    |    NO    |                                              |
+| has_art       | boolean                                        |    NO    |    NO    |                                              |
+| flag          | boolean                                        |    NO    |    NO    |                                              |
+| rating        | integer                                        |   YES    |    NO    |                                              |
+| averagerating | number                                         |   YES    |    NO    |                                              |
+| mbid          | string                                         |   YES    |    NO    |                                              |
+| summary       | string                                         |   YES    |    NO    |                                              |
+| time          | integer                                        |    NO    |    NO    |                                              |
+| yearformed    | integer                                        |    NO    |    NO    |                                              |
+| placeformed   | string                                         |   YES    |    NO    |                                              |
 <!-- GENERATED:RESPONSE:END -->
 
 * throws
@@ -2354,55 +2354,55 @@ Returns a `song` list.
 
 Each `song` entry ([SongObject](#song)):
 
-| Field                 | Type                         | Nullable | Optional | Notes                          |
-|-----------------------|------------------------------|:--------:|:--------:|--------------------------------|
-| id                    | string                       |    NO    |    NO    |                                |
-| title                 | string                       |   YES    |    NO    |                                |
-| name                  | string                       |   YES    |    NO    |                                |
-| artist                | object                       |    NO    |    NO    | `{id, name, prefix, basename}` |
-| artists               | array&lt;object&gt;          |    NO    |    NO    | `{id, name, prefix, basename}` |
-| album                 | object                       |    NO    |    NO    | `{id, name, prefix, basename}` |
-| albumartist           | object                       |    NO    |   YES    | `{id, name, prefix, basename}` |
-| disk                  | integer                      |    NO    |    NO    |                                |
-| disksubtitle          | string                       |   YES    |    NO    |                                |
-| track                 | integer                      |    NO    |    NO    |                                |
-| filename              | string                       |   YES    |    NO    |                                |
-| genre                 | array&lt;object&gt;          |    NO    |    NO    | `{id, name}`                   |
-| playlisttrack         | integer                      |    NO    |    NO    |                                |
-| time                  | integer                      |    NO    |    NO    |                                |
-| year                  | integer                      |    NO    |    NO    |                                |
-| format                | string                       |   YES    |    NO    |                                |
-| stream_format         | string                       |   YES    |    NO    |                                |
-| bitrate               | integer                      |   YES    |    NO    |                                |
-| stream_bitrate        | integer                      |   YES    |    NO    |                                |
-| rate                  | integer                      |    NO    |    NO    |                                |
-| mode                  | string                       |   YES    |    NO    |                                |
-| mime                  | string                       |   YES    |    NO    |                                |
-| stream_mime           | string                       |   YES    |    NO    |                                |
-| url                   | string                       |    NO    |    NO    |                                |
-| size                  | integer                      |    NO    |    NO    |                                |
-| mbid                  | string                       |   YES    |    NO    |                                |
-| art                   | string                       |   YES    |    NO    |                                |
-| has_art               | boolean                      |    NO    |    NO    |                                |
-| flag                  | boolean                      |    NO    |    NO    |                                |
-| rating                | integer                      |   YES    |    NO    |                                |
-| averagerating         | number                       |   YES    |    NO    |                                |
-| playcount             | integer                      |    NO    |    NO    |                                |
-| catalog               | string                       |    NO    |    NO    |                                |
-| composer              | string                       |   YES    |    NO    |                                |
-| channels              | integer                      |   YES    |    NO    |                                |
-| comment               | string                       |   YES    |    NO    |                                |
-| license               | string                       |   YES    |    NO    |                                |
-| publisher             | string                       |   YES    |    NO    |                                |
-| language              | string                       |   YES    |    NO    |                                |
-| lyrics                | string                       |   YES    |    NO    |                                |
-| replaygain_album_gain | number                       |   YES    |    NO    |                                |
-| replaygain_album_peak | number                       |   YES    |    NO    |                                |
-| replaygain_track_gain | number                       |   YES    |    NO    |                                |
-| replaygain_track_peak | number                       |   YES    |    NO    |                                |
-| r128_album_gain       | number                       |   YES    |    NO    |                                |
-| r128_track_gain       | number                       |   YES    |    NO    |                                |
-| metadata              | object&lt;string, string&gt; |    NO    |   YES    |                                |
+| Field                 | Type                                           | Nullable | Optional | Notes                                        |
+|-----------------------|------------------------------------------------|:--------:|:--------:|----------------------------------------------|
+| id                    | string                                         |    NO    |    NO    |                                              |
+| title                 | string                                         |   YES    |    NO    |                                              |
+| name                  | string                                         |   YES    |    NO    |                                              |
+| artist                | [NamedReference](#namedreference)              |    NO    |    NO    | see [NamedReference](#namedreference) fields |
+| artists               | array&lt;[NamedReference](#namedreference)&gt; |    NO    |    NO    | see [NamedReference](#namedreference) fields |
+| album                 | [NamedReference](#namedreference)              |    NO    |    NO    | see [NamedReference](#namedreference) fields |
+| albumartist           | [NamedReference](#namedreference)              |    NO    |   YES    | see [NamedReference](#namedreference) fields |
+| disk                  | integer                                        |    NO    |    NO    |                                              |
+| disksubtitle          | string                                         |   YES    |    NO    |                                              |
+| track                 | integer                                        |    NO    |    NO    |                                              |
+| filename              | string                                         |   YES    |    NO    |                                              |
+| genre                 | array&lt;[GenreReference](#genrereference)&gt; |    NO    |    NO    | see [GenreReference](#genrereference) fields |
+| playlisttrack         | integer                                        |    NO    |    NO    |                                              |
+| time                  | integer                                        |    NO    |    NO    |                                              |
+| year                  | integer                                        |    NO    |    NO    |                                              |
+| format                | string                                         |   YES    |    NO    |                                              |
+| stream_format         | string                                         |   YES    |    NO    |                                              |
+| bitrate               | integer                                        |   YES    |    NO    |                                              |
+| stream_bitrate        | integer                                        |   YES    |    NO    |                                              |
+| rate                  | integer                                        |    NO    |    NO    |                                              |
+| mode                  | string                                         |   YES    |    NO    |                                              |
+| mime                  | string                                         |   YES    |    NO    |                                              |
+| stream_mime           | string                                         |   YES    |    NO    |                                              |
+| url                   | string                                         |    NO    |    NO    |                                              |
+| size                  | integer                                        |    NO    |    NO    |                                              |
+| mbid                  | string                                         |   YES    |    NO    |                                              |
+| art                   | string                                         |   YES    |    NO    |                                              |
+| has_art               | boolean                                        |    NO    |    NO    |                                              |
+| flag                  | boolean                                        |    NO    |    NO    |                                              |
+| rating                | integer                                        |   YES    |    NO    |                                              |
+| averagerating         | number                                         |   YES    |    NO    |                                              |
+| playcount             | integer                                        |    NO    |    NO    |                                              |
+| catalog               | string                                         |    NO    |    NO    |                                              |
+| composer              | string                                         |   YES    |    NO    |                                              |
+| channels              | integer                                        |   YES    |    NO    |                                              |
+| comment               | string                                         |   YES    |    NO    |                                              |
+| license               | string                                         |   YES    |    NO    |                                              |
+| publisher             | string                                         |   YES    |    NO    |                                              |
+| language              | string                                         |   YES    |    NO    |                                              |
+| lyrics                | string                                         |   YES    |    NO    |                                              |
+| replaygain_album_gain | number                                         |   YES    |    NO    |                                              |
+| replaygain_album_peak | number                                         |   YES    |    NO    |                                              |
+| replaygain_track_gain | number                                         |   YES    |    NO    |                                              |
+| replaygain_track_peak | number                                         |   YES    |    NO    |                                              |
+| r128_album_gain       | number                                         |   YES    |    NO    |                                              |
+| r128_track_gain       | number                                         |   YES    |    NO    |                                              |
+| metadata              | object&lt;string, string&gt;                   |    NO    |   YES    |                                              |
 <!-- GENERATED:RESPONSE:END -->
 
 * throws
@@ -2462,7 +2462,7 @@ Return External plugin metadata searching by object id and type
 
 Returns the plugin payloads when at least one metadata plugin answered, and the empty list envelope for the requested type when none did.
 
-**`ExternalMetadataObject`**
+**[ExternalMetadataObject](#get_external_metadata)**
 
 `plugin` is keyed by metadata-retriever plugin name; each value is that plugin's payload.
 
@@ -2474,7 +2474,7 @@ Returns the plugin payloads when at least one metadata plugin answered, and the 
 | object_type | string       |    NO    |    NO    |                         |
 | plugin      | `_PluginMap` |    NO    |    NO    | see `_PluginMap` fields |
 
-**`EmptyListResponse`**
+**[EmptyListResponse](#get_external_metadata)**
 
 The standard empty envelope, with an empty list keyed by the requested type.
 
@@ -2605,55 +2605,55 @@ Returns a `song` list.
 
 Each `song` entry ([SongObject](#song)):
 
-| Field                 | Type                         | Nullable | Optional | Notes                          |
-|-----------------------|------------------------------|:--------:|:--------:|--------------------------------|
-| id                    | string                       |    NO    |    NO    |                                |
-| title                 | string                       |   YES    |    NO    |                                |
-| name                  | string                       |   YES    |    NO    |                                |
-| artist                | object                       |    NO    |    NO    | `{id, name, prefix, basename}` |
-| artists               | array&lt;object&gt;          |    NO    |    NO    | `{id, name, prefix, basename}` |
-| album                 | object                       |    NO    |    NO    | `{id, name, prefix, basename}` |
-| albumartist           | object                       |    NO    |   YES    | `{id, name, prefix, basename}` |
-| disk                  | integer                      |    NO    |    NO    |                                |
-| disksubtitle          | string                       |   YES    |    NO    |                                |
-| track                 | integer                      |    NO    |    NO    |                                |
-| filename              | string                       |   YES    |    NO    |                                |
-| genre                 | array&lt;object&gt;          |    NO    |    NO    | `{id, name}`                   |
-| playlisttrack         | integer                      |    NO    |    NO    |                                |
-| time                  | integer                      |    NO    |    NO    |                                |
-| year                  | integer                      |    NO    |    NO    |                                |
-| format                | string                       |   YES    |    NO    |                                |
-| stream_format         | string                       |   YES    |    NO    |                                |
-| bitrate               | integer                      |   YES    |    NO    |                                |
-| stream_bitrate        | integer                      |   YES    |    NO    |                                |
-| rate                  | integer                      |    NO    |    NO    |                                |
-| mode                  | string                       |   YES    |    NO    |                                |
-| mime                  | string                       |   YES    |    NO    |                                |
-| stream_mime           | string                       |   YES    |    NO    |                                |
-| url                   | string                       |    NO    |    NO    |                                |
-| size                  | integer                      |    NO    |    NO    |                                |
-| mbid                  | string                       |   YES    |    NO    |                                |
-| art                   | string                       |   YES    |    NO    |                                |
-| has_art               | boolean                      |    NO    |    NO    |                                |
-| flag                  | boolean                      |    NO    |    NO    |                                |
-| rating                | integer                      |   YES    |    NO    |                                |
-| averagerating         | number                       |   YES    |    NO    |                                |
-| playcount             | integer                      |    NO    |    NO    |                                |
-| catalog               | string                       |    NO    |    NO    |                                |
-| composer              | string                       |   YES    |    NO    |                                |
-| channels              | integer                      |   YES    |    NO    |                                |
-| comment               | string                       |   YES    |    NO    |                                |
-| license               | string                       |   YES    |    NO    |                                |
-| publisher             | string                       |   YES    |    NO    |                                |
-| language              | string                       |   YES    |    NO    |                                |
-| lyrics                | string                       |   YES    |    NO    |                                |
-| replaygain_album_gain | number                       |   YES    |    NO    |                                |
-| replaygain_album_peak | number                       |   YES    |    NO    |                                |
-| replaygain_track_gain | number                       |   YES    |    NO    |                                |
-| replaygain_track_peak | number                       |   YES    |    NO    |                                |
-| r128_album_gain       | number                       |   YES    |    NO    |                                |
-| r128_track_gain       | number                       |   YES    |    NO    |                                |
-| metadata              | object&lt;string, string&gt; |    NO    |   YES    |                                |
+| Field                 | Type                                           | Nullable | Optional | Notes                                        |
+|-----------------------|------------------------------------------------|:--------:|:--------:|----------------------------------------------|
+| id                    | string                                         |    NO    |    NO    |                                              |
+| title                 | string                                         |   YES    |    NO    |                                              |
+| name                  | string                                         |   YES    |    NO    |                                              |
+| artist                | [NamedReference](#namedreference)              |    NO    |    NO    | see [NamedReference](#namedreference) fields |
+| artists               | array&lt;[NamedReference](#namedreference)&gt; |    NO    |    NO    | see [NamedReference](#namedreference) fields |
+| album                 | [NamedReference](#namedreference)              |    NO    |    NO    | see [NamedReference](#namedreference) fields |
+| albumartist           | [NamedReference](#namedreference)              |    NO    |   YES    | see [NamedReference](#namedreference) fields |
+| disk                  | integer                                        |    NO    |    NO    |                                              |
+| disksubtitle          | string                                         |   YES    |    NO    |                                              |
+| track                 | integer                                        |    NO    |    NO    |                                              |
+| filename              | string                                         |   YES    |    NO    |                                              |
+| genre                 | array&lt;[GenreReference](#genrereference)&gt; |    NO    |    NO    | see [GenreReference](#genrereference) fields |
+| playlisttrack         | integer                                        |    NO    |    NO    |                                              |
+| time                  | integer                                        |    NO    |    NO    |                                              |
+| year                  | integer                                        |    NO    |    NO    |                                              |
+| format                | string                                         |   YES    |    NO    |                                              |
+| stream_format         | string                                         |   YES    |    NO    |                                              |
+| bitrate               | integer                                        |   YES    |    NO    |                                              |
+| stream_bitrate        | integer                                        |   YES    |    NO    |                                              |
+| rate                  | integer                                        |    NO    |    NO    |                                              |
+| mode                  | string                                         |   YES    |    NO    |                                              |
+| mime                  | string                                         |   YES    |    NO    |                                              |
+| stream_mime           | string                                         |   YES    |    NO    |                                              |
+| url                   | string                                         |    NO    |    NO    |                                              |
+| size                  | integer                                        |    NO    |    NO    |                                              |
+| mbid                  | string                                         |   YES    |    NO    |                                              |
+| art                   | string                                         |   YES    |    NO    |                                              |
+| has_art               | boolean                                        |    NO    |    NO    |                                              |
+| flag                  | boolean                                        |    NO    |    NO    |                                              |
+| rating                | integer                                        |   YES    |    NO    |                                              |
+| averagerating         | number                                         |   YES    |    NO    |                                              |
+| playcount             | integer                                        |    NO    |    NO    |                                              |
+| catalog               | string                                         |    NO    |    NO    |                                              |
+| composer              | string                                         |   YES    |    NO    |                                              |
+| channels              | integer                                        |   YES    |    NO    |                                              |
+| comment               | string                                         |   YES    |    NO    |                                              |
+| license               | string                                         |   YES    |    NO    |                                              |
+| publisher             | string                                         |   YES    |    NO    |                                              |
+| language              | string                                         |   YES    |    NO    |                                              |
+| lyrics                | string                                         |   YES    |    NO    |                                              |
+| replaygain_album_gain | number                                         |   YES    |    NO    |                                              |
+| replaygain_album_peak | number                                         |   YES    |    NO    |                                              |
+| replaygain_track_gain | number                                         |   YES    |    NO    |                                              |
+| replaygain_track_peak | number                                         |   YES    |    NO    |                                              |
+| r128_album_gain       | number                                         |   YES    |    NO    |                                              |
+| r128_track_gain       | number                                         |   YES    |    NO    |                                              |
+| metadata              | object&lt;string, string&gt;                   |    NO    |   YES    |                                              |
 <!-- GENERATED:RESPONSE:END -->
 
 * throws
@@ -2696,7 +2696,7 @@ This takes a collection of inputs and returns ID + name for the object type
 
 Keyed by the requested `type` (e.g. `album`, `artist`, `song`). Without `include` the value is an array of object ids; with `include` it is an array of `{id, type}` references, or a map of parent id -> reference array for parent types such as playlists.
 
-Open map — each value is: array&lt;string&gt; \| array&lt;`IndexReferenceObject`&gt; \| object&lt;string, array&lt;`IndexReferenceObject`&gt;&gt;.
+Open map — each value is: array&lt;string&gt; \| array&lt;[IndexReferenceObject](#indexreferenceobject)&gt; \| object&lt;string, array&lt;[IndexReferenceObject](#indexreferenceobject)&gt;&gt;.
 <!-- GENERATED:RESPONSE:END -->
 
 * throws
@@ -2853,27 +2853,27 @@ Returns a `artist` list.
 
 Each `artist` entry ([ArtistObject](#artist)):
 
-| Field         | Type                               | Nullable | Optional | Notes                            |
-|---------------|------------------------------------|:--------:|:--------:|----------------------------------|
-| id            | string                             |    NO    |    NO    |                                  |
-| name          | string                             |   YES    |    NO    |                                  |
-| prefix        | string                             |   YES    |    NO    |                                  |
-| basename      | string                             |   YES    |    NO    |                                  |
-| albums        | array&lt;[AlbumObject](#album)&gt; |    NO    |    NO    | see [AlbumObject](#album) fields |
-| albumcount    | integer                            |    NO    |    NO    |                                  |
-| songs         | array&lt;[SongObject](#song)&gt;   |    NO    |    NO    | see [SongObject](#song) fields   |
-| songcount     | integer                            |    NO    |    NO    |                                  |
-| genre         | array&lt;object&gt;                |    NO    |    NO    | `{id, name}`                     |
-| art           | string                             |   YES    |    NO    |                                  |
-| has_art       | boolean                            |    NO    |    NO    |                                  |
-| flag          | boolean                            |    NO    |    NO    |                                  |
-| rating        | integer                            |   YES    |    NO    |                                  |
-| averagerating | number                             |   YES    |    NO    |                                  |
-| mbid          | string                             |   YES    |    NO    |                                  |
-| summary       | string                             |   YES    |    NO    |                                  |
-| time          | integer                            |    NO    |    NO    |                                  |
-| yearformed    | integer                            |    NO    |    NO    |                                  |
-| placeformed   | string                             |   YES    |    NO    |                                  |
+| Field         | Type                                           | Nullable | Optional | Notes                                        |
+|---------------|------------------------------------------------|:--------:|:--------:|----------------------------------------------|
+| id            | string                                         |    NO    |    NO    |                                              |
+| name          | string                                         |   YES    |    NO    |                                              |
+| prefix        | string                                         |   YES    |    NO    |                                              |
+| basename      | string                                         |   YES    |    NO    |                                              |
+| albums        | array&lt;[AlbumObject](#album)&gt;             |    NO    |    NO    | see [AlbumObject](#album) fields             |
+| albumcount    | integer                                        |    NO    |    NO    |                                              |
+| songs         | array&lt;[SongObject](#song)&gt;               |    NO    |    NO    | see [SongObject](#song) fields               |
+| songcount     | integer                                        |    NO    |    NO    |                                              |
+| genre         | array&lt;[GenreReference](#genrereference)&gt; |    NO    |    NO    | see [GenreReference](#genrereference) fields |
+| art           | string                                         |   YES    |    NO    |                                              |
+| has_art       | boolean                                        |    NO    |    NO    |                                              |
+| flag          | boolean                                        |    NO    |    NO    |                                              |
+| rating        | integer                                        |   YES    |    NO    |                                              |
+| averagerating | number                                         |   YES    |    NO    |                                              |
+| mbid          | string                                         |   YES    |    NO    |                                              |
+| summary       | string                                         |   YES    |    NO    |                                              |
+| time          | integer                                        |    NO    |    NO    |                                              |
+| yearformed    | integer                                        |    NO    |    NO    |                                              |
+| placeformed   | string                                         |   YES    |    NO    |                                              |
 <!-- GENERATED:RESPONSE:END -->
 
 * throws
@@ -2906,11 +2906,11 @@ This gets the latest posted shouts
 
 Returns a `shout` list.
 
-| Field | Type                       | Nullable | Optional | Notes                    |
-|-------|----------------------------|:--------:|:--------:|--------------------------|
-| shout | array&lt;`ShoutObject`&gt; |    NO    |    NO    | see `ShoutObject` fields |
+| Field | Type                                     | Nullable | Optional | Notes                                  |
+|-------|------------------------------------------|:--------:|:--------:|----------------------------------------|
+| shout | array&lt;[ShoutObject](#last_shouts)&gt; |    NO    |    NO    | see [ShoutObject](#last_shouts) fields |
 
-Each `shout` entry (`ShoutObject`):
+Each `shout` entry ([ShoutObject](#last_shouts)):
 
 | Field       | Type    | Nullable | Optional | Notes            |
 |-------------|---------|:--------:|:--------:|------------------|
@@ -2998,55 +2998,55 @@ Returns a `song` list.
 
 Each `song` entry ([SongObject](#song)):
 
-| Field                 | Type                         | Nullable | Optional | Notes                          |
-|-----------------------|------------------------------|:--------:|:--------:|--------------------------------|
-| id                    | string                       |    NO    |    NO    |                                |
-| title                 | string                       |   YES    |    NO    |                                |
-| name                  | string                       |   YES    |    NO    |                                |
-| artist                | object                       |    NO    |    NO    | `{id, name, prefix, basename}` |
-| artists               | array&lt;object&gt;          |    NO    |    NO    | `{id, name, prefix, basename}` |
-| album                 | object                       |    NO    |    NO    | `{id, name, prefix, basename}` |
-| albumartist           | object                       |    NO    |   YES    | `{id, name, prefix, basename}` |
-| disk                  | integer                      |    NO    |    NO    |                                |
-| disksubtitle          | string                       |   YES    |    NO    |                                |
-| track                 | integer                      |    NO    |    NO    |                                |
-| filename              | string                       |   YES    |    NO    |                                |
-| genre                 | array&lt;object&gt;          |    NO    |    NO    | `{id, name}`                   |
-| playlisttrack         | integer                      |    NO    |    NO    |                                |
-| time                  | integer                      |    NO    |    NO    |                                |
-| year                  | integer                      |    NO    |    NO    |                                |
-| format                | string                       |   YES    |    NO    |                                |
-| stream_format         | string                       |   YES    |    NO    |                                |
-| bitrate               | integer                      |   YES    |    NO    |                                |
-| stream_bitrate        | integer                      |   YES    |    NO    |                                |
-| rate                  | integer                      |    NO    |    NO    |                                |
-| mode                  | string                       |   YES    |    NO    |                                |
-| mime                  | string                       |   YES    |    NO    |                                |
-| stream_mime           | string                       |   YES    |    NO    |                                |
-| url                   | string                       |    NO    |    NO    |                                |
-| size                  | integer                      |    NO    |    NO    |                                |
-| mbid                  | string                       |   YES    |    NO    |                                |
-| art                   | string                       |   YES    |    NO    |                                |
-| has_art               | boolean                      |    NO    |    NO    |                                |
-| flag                  | boolean                      |    NO    |    NO    |                                |
-| rating                | integer                      |   YES    |    NO    |                                |
-| averagerating         | number                       |   YES    |    NO    |                                |
-| playcount             | integer                      |    NO    |    NO    |                                |
-| catalog               | string                       |    NO    |    NO    |                                |
-| composer              | string                       |   YES    |    NO    |                                |
-| channels              | integer                      |   YES    |    NO    |                                |
-| comment               | string                       |   YES    |    NO    |                                |
-| license               | string                       |   YES    |    NO    |                                |
-| publisher             | string                       |   YES    |    NO    |                                |
-| language              | string                       |   YES    |    NO    |                                |
-| lyrics                | string                       |   YES    |    NO    |                                |
-| replaygain_album_gain | number                       |   YES    |    NO    |                                |
-| replaygain_album_peak | number                       |   YES    |    NO    |                                |
-| replaygain_track_gain | number                       |   YES    |    NO    |                                |
-| replaygain_track_peak | number                       |   YES    |    NO    |                                |
-| r128_album_gain       | number                       |   YES    |    NO    |                                |
-| r128_track_gain       | number                       |   YES    |    NO    |                                |
-| metadata              | object&lt;string, string&gt; |    NO    |   YES    |                                |
+| Field                 | Type                                           | Nullable | Optional | Notes                                        |
+|-----------------------|------------------------------------------------|:--------:|:--------:|----------------------------------------------|
+| id                    | string                                         |    NO    |    NO    |                                              |
+| title                 | string                                         |   YES    |    NO    |                                              |
+| name                  | string                                         |   YES    |    NO    |                                              |
+| artist                | [NamedReference](#namedreference)              |    NO    |    NO    | see [NamedReference](#namedreference) fields |
+| artists               | array&lt;[NamedReference](#namedreference)&gt; |    NO    |    NO    | see [NamedReference](#namedreference) fields |
+| album                 | [NamedReference](#namedreference)              |    NO    |    NO    | see [NamedReference](#namedreference) fields |
+| albumartist           | [NamedReference](#namedreference)              |    NO    |   YES    | see [NamedReference](#namedreference) fields |
+| disk                  | integer                                        |    NO    |    NO    |                                              |
+| disksubtitle          | string                                         |   YES    |    NO    |                                              |
+| track                 | integer                                        |    NO    |    NO    |                                              |
+| filename              | string                                         |   YES    |    NO    |                                              |
+| genre                 | array&lt;[GenreReference](#genrereference)&gt; |    NO    |    NO    | see [GenreReference](#genrereference) fields |
+| playlisttrack         | integer                                        |    NO    |    NO    |                                              |
+| time                  | integer                                        |    NO    |    NO    |                                              |
+| year                  | integer                                        |    NO    |    NO    |                                              |
+| format                | string                                         |   YES    |    NO    |                                              |
+| stream_format         | string                                         |   YES    |    NO    |                                              |
+| bitrate               | integer                                        |   YES    |    NO    |                                              |
+| stream_bitrate        | integer                                        |   YES    |    NO    |                                              |
+| rate                  | integer                                        |    NO    |    NO    |                                              |
+| mode                  | string                                         |   YES    |    NO    |                                              |
+| mime                  | string                                         |   YES    |    NO    |                                              |
+| stream_mime           | string                                         |   YES    |    NO    |                                              |
+| url                   | string                                         |    NO    |    NO    |                                              |
+| size                  | integer                                        |    NO    |    NO    |                                              |
+| mbid                  | string                                         |   YES    |    NO    |                                              |
+| art                   | string                                         |   YES    |    NO    |                                              |
+| has_art               | boolean                                        |    NO    |    NO    |                                              |
+| flag                  | boolean                                        |    NO    |    NO    |                                              |
+| rating                | integer                                        |   YES    |    NO    |                                              |
+| averagerating         | number                                         |   YES    |    NO    |                                              |
+| playcount             | integer                                        |    NO    |    NO    |                                              |
+| catalog               | string                                         |    NO    |    NO    |                                              |
+| composer              | string                                         |   YES    |    NO    |                                              |
+| channels              | integer                                        |   YES    |    NO    |                                              |
+| comment               | string                                         |   YES    |    NO    |                                              |
+| license               | string                                         |   YES    |    NO    |                                              |
+| publisher             | string                                         |   YES    |    NO    |                                              |
+| language              | string                                         |   YES    |    NO    |                                              |
+| lyrics                | string                                         |   YES    |    NO    |                                              |
+| replaygain_album_gain | number                                         |   YES    |    NO    |                                              |
+| replaygain_album_peak | number                                         |   YES    |    NO    |                                              |
+| replaygain_track_gain | number                                         |   YES    |    NO    |                                              |
+| replaygain_track_peak | number                                         |   YES    |    NO    |                                              |
+| r128_album_gain       | number                                         |   YES    |    NO    |                                              |
+| r128_track_gain       | number                                         |   YES    |    NO    |                                              |
+| metadata              | object&lt;string, string&gt;                   |    NO    |   YES    |                                              |
 <!-- GENERATED:RESPONSE:END -->
 
 * throws
@@ -3138,13 +3138,13 @@ This takes a named array of objects and returning `id`, `name`, `prefix` and `ba
 
 Returns a `list` list.
 
-| Field       | Type                      | Nullable | Optional | Notes                   |
-|-------------|---------------------------|:--------:|:--------:|-------------------------|
-| total_count | integer                   |    NO    |    NO    |                         |
-| md5         | string                    |    NO    |    NO    |                         |
-| list        | array&lt;`ListObject`&gt; |    NO    |    NO    | see `ListObject` fields |
+| Field       | Type                             | Nullable | Optional | Notes                          |
+|-------------|----------------------------------|:--------:|:--------:|--------------------------------|
+| total_count | integer                          |    NO    |    NO    |                                |
+| md5         | string                           |    NO    |    NO    |                                |
+| list        | array&lt;[ListObject](#list)&gt; |    NO    |    NO    | see [ListObject](#list) fields |
 
-Each `list` entry (`ListObject`):
+Each `list` entry ([ListObject](#list)):
 
 | Field    | Type   | Nullable | Optional | Notes |
 |----------|--------|:--------:|:--------:|-------|
@@ -3354,11 +3354,11 @@ Get what is currently being played by all users.
 
 Returns a `now_playing` list.
 
-| Field       | Type                            | Nullable | Optional | Notes                         |
-|-------------|---------------------------------|:--------:|:--------:|-------------------------------|
-| now_playing | array&lt;`NowPlayingObject`&gt; |    NO    |    NO    | see `NowPlayingObject` fields |
+| Field       | Type                                          | Nullable | Optional | Notes                                       |
+|-------------|-----------------------------------------------|:--------:|:--------:|---------------------------------------------|
+| now_playing | array&lt;[NowPlayingObject](#now_playing)&gt; |    NO    |    NO    | see [NowPlayingObject](#now_playing) fields |
 
-Each `now_playing` entry (`NowPlayingObject`):
+Each `now_playing` entry ([NowPlayingObject](#now_playing)):
 
 | Field  | Type    | Nullable | Optional | Notes            |
 |--------|---------|:--------:|:--------:|------------------|
@@ -3402,11 +3402,11 @@ Return the `now_playing` state when completed
 
 Returns a `now_playing` list.
 
-| Field       | Type                            | Nullable | Optional | Notes                         |
-|-------------|---------------------------------|:--------:|:--------:|-------------------------------|
-| now_playing | array&lt;`NowPlayingObject`&gt; |    NO    |    NO    | see `NowPlayingObject` fields |
+| Field       | Type                                          | Nullable | Optional | Notes                                       |
+|-------------|-----------------------------------------------|:--------:|:--------:|---------------------------------------------|
+| now_playing | array&lt;[NowPlayingObject](#now_playing)&gt; |    NO    |    NO    | see [NowPlayingObject](#now_playing) fields |
 
-Each `now_playing` entry (`NowPlayingObject`):
+Each `now_playing` entry ([NowPlayingObject](#now_playing)):
 
 | Field  | Type    | Nullable | Optional | Notes            |
 |--------|---------|:--------:|:--------:|------------------|
@@ -3463,24 +3463,24 @@ Returns a `playlist` list.
 
 Each `playlist` entry ([PlaylistObject](#playlist)):
 
-| Field           | Type                           | Nullable | Optional | Notes            |
-|-----------------|--------------------------------|:--------:|:--------:|------------------|
-| id              | string                         |    NO    |    NO    |                  |
-| name            | string                         |   YES    |    NO    |                  |
-| owner           | string                         |   YES    |    NO    |                  |
-| user            | object                         |    NO    |    NO    | `{id, username}` |
-| items           | array&lt;object&gt; \| integer |    NO    |    NO    |                  |
-| type            | string                         |   YES    |    NO    |                  |
-| art             | string                         |   YES    |    NO    |                  |
-| has_access      | boolean                        |    NO    |    NO    |                  |
-| has_collaborate | boolean                        |    NO    |    NO    |                  |
-| has_art         | boolean                        |    NO    |    NO    |                  |
-| flag            | boolean                        |    NO    |    NO    |                  |
-| rating          | integer                        |   YES    |    NO    |                  |
-| averagerating   | number                         |   YES    |    NO    |                  |
-| md5             | string                         |   YES    |    NO    |                  |
-| last_update     | integer                        |   YES    |    NO    |                  |
-| time            | integer                        |    NO    |    NO    |                  |
+| Field           | Type                           | Nullable | Optional | Notes                                  |
+|-----------------|--------------------------------|:--------:|:--------:|----------------------------------------|
+| id              | string                         |    NO    |    NO    |                                        |
+| name            | string                         |   YES    |    NO    |                                        |
+| owner           | string                         |   YES    |    NO    |                                        |
+| user            | [UserSummaryObject](#users)    |    NO    |    NO    | see [UserSummaryObject](#users) fields |
+| items           | array&lt;object&gt; \| integer |    NO    |    NO    |                                        |
+| type            | string                         |   YES    |    NO    |                                        |
+| art             | string                         |   YES    |    NO    |                                        |
+| has_access      | boolean                        |    NO    |    NO    |                                        |
+| has_collaborate | boolean                        |    NO    |    NO    |                                        |
+| has_art         | boolean                        |    NO    |    NO    |                                        |
+| flag            | boolean                        |    NO    |    NO    |                                        |
+| rating          | integer                        |   YES    |    NO    |                                        |
+| averagerating   | number                         |   YES    |    NO    |                                        |
+| md5             | string                         |   YES    |    NO    |                                        |
+| last_update     | integer                        |   YES    |    NO    |                                        |
+| time            | integer                        |    NO    |    NO    |                                        |
 <!-- GENERATED:RESPONSE:END -->
 
 * throws
@@ -3510,24 +3510,24 @@ This returns a single playlist
 
 Returns a single object.
 
-| Field           | Type                           | Nullable | Optional | Notes            |
-|-----------------|--------------------------------|:--------:|:--------:|------------------|
-| id              | string                         |    NO    |    NO    |                  |
-| name            | string                         |   YES    |    NO    |                  |
-| owner           | string                         |   YES    |    NO    |                  |
-| user            | object                         |    NO    |    NO    | `{id, username}` |
-| items           | array&lt;object&gt; \| integer |    NO    |    NO    |                  |
-| type            | string                         |   YES    |    NO    |                  |
-| art             | string                         |   YES    |    NO    |                  |
-| has_access      | boolean                        |    NO    |    NO    |                  |
-| has_collaborate | boolean                        |    NO    |    NO    |                  |
-| has_art         | boolean                        |    NO    |    NO    |                  |
-| flag            | boolean                        |    NO    |    NO    |                  |
-| rating          | integer                        |   YES    |    NO    |                  |
-| averagerating   | number                         |   YES    |    NO    |                  |
-| md5             | string                         |   YES    |    NO    |                  |
-| last_update     | integer                        |   YES    |    NO    |                  |
-| time            | integer                        |    NO    |    NO    |                  |
+| Field           | Type                           | Nullable | Optional | Notes                                  |
+|-----------------|--------------------------------|:--------:|:--------:|----------------------------------------|
+| id              | string                         |    NO    |    NO    |                                        |
+| name            | string                         |   YES    |    NO    |                                        |
+| owner           | string                         |   YES    |    NO    |                                        |
+| user            | [UserSummaryObject](#users)    |    NO    |    NO    | see [UserSummaryObject](#users) fields |
+| items           | array&lt;object&gt; \| integer |    NO    |    NO    |                                        |
+| type            | string                         |   YES    |    NO    |                                        |
+| art             | string                         |   YES    |    NO    |                                        |
+| has_access      | boolean                        |    NO    |    NO    |                                        |
+| has_collaborate | boolean                        |    NO    |    NO    |                                        |
+| has_art         | boolean                        |    NO    |    NO    |                                        |
+| flag            | boolean                        |    NO    |    NO    |                                        |
+| rating          | integer                        |   YES    |    NO    |                                        |
+| averagerating   | number                         |   YES    |    NO    |                                        |
+| md5             | string                         |   YES    |    NO    |                                        |
+| last_update     | integer                        |   YES    |    NO    |                                        |
+| time            | integer                        |    NO    |    NO    |                                        |
 <!-- GENERATED:RESPONSE:END -->
 
 * throws
@@ -3719,55 +3719,55 @@ Returns a `song` list.
 
 Each `song` entry ([SongObject](#song)):
 
-| Field                 | Type                         | Nullable | Optional | Notes                          |
-|-----------------------|------------------------------|:--------:|:--------:|--------------------------------|
-| id                    | string                       |    NO    |    NO    |                                |
-| title                 | string                       |   YES    |    NO    |                                |
-| name                  | string                       |   YES    |    NO    |                                |
-| artist                | object                       |    NO    |    NO    | `{id, name, prefix, basename}` |
-| artists               | array&lt;object&gt;          |    NO    |    NO    | `{id, name, prefix, basename}` |
-| album                 | object                       |    NO    |    NO    | `{id, name, prefix, basename}` |
-| albumartist           | object                       |    NO    |   YES    | `{id, name, prefix, basename}` |
-| disk                  | integer                      |    NO    |    NO    |                                |
-| disksubtitle          | string                       |   YES    |    NO    |                                |
-| track                 | integer                      |    NO    |    NO    |                                |
-| filename              | string                       |   YES    |    NO    |                                |
-| genre                 | array&lt;object&gt;          |    NO    |    NO    | `{id, name}`                   |
-| playlisttrack         | integer                      |    NO    |    NO    |                                |
-| time                  | integer                      |    NO    |    NO    |                                |
-| year                  | integer                      |    NO    |    NO    |                                |
-| format                | string                       |   YES    |    NO    |                                |
-| stream_format         | string                       |   YES    |    NO    |                                |
-| bitrate               | integer                      |   YES    |    NO    |                                |
-| stream_bitrate        | integer                      |   YES    |    NO    |                                |
-| rate                  | integer                      |    NO    |    NO    |                                |
-| mode                  | string                       |   YES    |    NO    |                                |
-| mime                  | string                       |   YES    |    NO    |                                |
-| stream_mime           | string                       |   YES    |    NO    |                                |
-| url                   | string                       |    NO    |    NO    |                                |
-| size                  | integer                      |    NO    |    NO    |                                |
-| mbid                  | string                       |   YES    |    NO    |                                |
-| art                   | string                       |   YES    |    NO    |                                |
-| has_art               | boolean                      |    NO    |    NO    |                                |
-| flag                  | boolean                      |    NO    |    NO    |                                |
-| rating                | integer                      |   YES    |    NO    |                                |
-| averagerating         | number                       |   YES    |    NO    |                                |
-| playcount             | integer                      |    NO    |    NO    |                                |
-| catalog               | string                       |    NO    |    NO    |                                |
-| composer              | string                       |   YES    |    NO    |                                |
-| channels              | integer                      |   YES    |    NO    |                                |
-| comment               | string                       |   YES    |    NO    |                                |
-| license               | string                       |   YES    |    NO    |                                |
-| publisher             | string                       |   YES    |    NO    |                                |
-| language              | string                       |   YES    |    NO    |                                |
-| lyrics                | string                       |   YES    |    NO    |                                |
-| replaygain_album_gain | number                       |   YES    |    NO    |                                |
-| replaygain_album_peak | number                       |   YES    |    NO    |                                |
-| replaygain_track_gain | number                       |   YES    |    NO    |                                |
-| replaygain_track_peak | number                       |   YES    |    NO    |                                |
-| r128_album_gain       | number                       |   YES    |    NO    |                                |
-| r128_track_gain       | number                       |   YES    |    NO    |                                |
-| metadata              | object&lt;string, string&gt; |    NO    |   YES    |                                |
+| Field                 | Type                                           | Nullable | Optional | Notes                                        |
+|-----------------------|------------------------------------------------|:--------:|:--------:|----------------------------------------------|
+| id                    | string                                         |    NO    |    NO    |                                              |
+| title                 | string                                         |   YES    |    NO    |                                              |
+| name                  | string                                         |   YES    |    NO    |                                              |
+| artist                | [NamedReference](#namedreference)              |    NO    |    NO    | see [NamedReference](#namedreference) fields |
+| artists               | array&lt;[NamedReference](#namedreference)&gt; |    NO    |    NO    | see [NamedReference](#namedreference) fields |
+| album                 | [NamedReference](#namedreference)              |    NO    |    NO    | see [NamedReference](#namedreference) fields |
+| albumartist           | [NamedReference](#namedreference)              |    NO    |   YES    | see [NamedReference](#namedreference) fields |
+| disk                  | integer                                        |    NO    |    NO    |                                              |
+| disksubtitle          | string                                         |   YES    |    NO    |                                              |
+| track                 | integer                                        |    NO    |    NO    |                                              |
+| filename              | string                                         |   YES    |    NO    |                                              |
+| genre                 | array&lt;[GenreReference](#genrereference)&gt; |    NO    |    NO    | see [GenreReference](#genrereference) fields |
+| playlisttrack         | integer                                        |    NO    |    NO    |                                              |
+| time                  | integer                                        |    NO    |    NO    |                                              |
+| year                  | integer                                        |    NO    |    NO    |                                              |
+| format                | string                                         |   YES    |    NO    |                                              |
+| stream_format         | string                                         |   YES    |    NO    |                                              |
+| bitrate               | integer                                        |   YES    |    NO    |                                              |
+| stream_bitrate        | integer                                        |   YES    |    NO    |                                              |
+| rate                  | integer                                        |    NO    |    NO    |                                              |
+| mode                  | string                                         |   YES    |    NO    |                                              |
+| mime                  | string                                         |   YES    |    NO    |                                              |
+| stream_mime           | string                                         |   YES    |    NO    |                                              |
+| url                   | string                                         |    NO    |    NO    |                                              |
+| size                  | integer                                        |    NO    |    NO    |                                              |
+| mbid                  | string                                         |   YES    |    NO    |                                              |
+| art                   | string                                         |   YES    |    NO    |                                              |
+| has_art               | boolean                                        |    NO    |    NO    |                                              |
+| flag                  | boolean                                        |    NO    |    NO    |                                              |
+| rating                | integer                                        |   YES    |    NO    |                                              |
+| averagerating         | number                                         |   YES    |    NO    |                                              |
+| playcount             | integer                                        |    NO    |    NO    |                                              |
+| catalog               | string                                         |    NO    |    NO    |                                              |
+| composer              | string                                         |   YES    |    NO    |                                              |
+| channels              | integer                                        |   YES    |    NO    |                                              |
+| comment               | string                                         |   YES    |    NO    |                                              |
+| license               | string                                         |   YES    |    NO    |                                              |
+| publisher             | string                                         |   YES    |    NO    |                                              |
+| language              | string                                         |   YES    |    NO    |                                              |
+| lyrics                | string                                         |   YES    |    NO    |                                              |
+| replaygain_album_gain | number                                         |   YES    |    NO    |                                              |
+| replaygain_album_peak | number                                         |   YES    |    NO    |                                              |
+| replaygain_track_gain | number                                         |   YES    |    NO    |                                              |
+| replaygain_track_peak | number                                         |   YES    |    NO    |                                              |
+| r128_album_gain       | number                                         |   YES    |    NO    |                                              |
+| r128_track_gain       | number                                         |   YES    |    NO    |                                              |
+| metadata              | object&lt;string, string&gt;                   |    NO    |   YES    |                                              |
 
 **array&lt;string&gt;**
 
@@ -3879,55 +3879,55 @@ Returns a `song` list.
 
 Each `song` entry ([SongObject](#song)):
 
-| Field                 | Type                         | Nullable | Optional | Notes                          |
-|-----------------------|------------------------------|:--------:|:--------:|--------------------------------|
-| id                    | string                       |    NO    |    NO    |                                |
-| title                 | string                       |   YES    |    NO    |                                |
-| name                  | string                       |   YES    |    NO    |                                |
-| artist                | object                       |    NO    |    NO    | `{id, name, prefix, basename}` |
-| artists               | array&lt;object&gt;          |    NO    |    NO    | `{id, name, prefix, basename}` |
-| album                 | object                       |    NO    |    NO    | `{id, name, prefix, basename}` |
-| albumartist           | object                       |    NO    |   YES    | `{id, name, prefix, basename}` |
-| disk                  | integer                      |    NO    |    NO    |                                |
-| disksubtitle          | string                       |   YES    |    NO    |                                |
-| track                 | integer                      |    NO    |    NO    |                                |
-| filename              | string                       |   YES    |    NO    |                                |
-| genre                 | array&lt;object&gt;          |    NO    |    NO    | `{id, name}`                   |
-| playlisttrack         | integer                      |    NO    |    NO    |                                |
-| time                  | integer                      |    NO    |    NO    |                                |
-| year                  | integer                      |    NO    |    NO    |                                |
-| format                | string                       |   YES    |    NO    |                                |
-| stream_format         | string                       |   YES    |    NO    |                                |
-| bitrate               | integer                      |   YES    |    NO    |                                |
-| stream_bitrate        | integer                      |   YES    |    NO    |                                |
-| rate                  | integer                      |    NO    |    NO    |                                |
-| mode                  | string                       |   YES    |    NO    |                                |
-| mime                  | string                       |   YES    |    NO    |                                |
-| stream_mime           | string                       |   YES    |    NO    |                                |
-| url                   | string                       |    NO    |    NO    |                                |
-| size                  | integer                      |    NO    |    NO    |                                |
-| mbid                  | string                       |   YES    |    NO    |                                |
-| art                   | string                       |   YES    |    NO    |                                |
-| has_art               | boolean                      |    NO    |    NO    |                                |
-| flag                  | boolean                      |    NO    |    NO    |                                |
-| rating                | integer                      |   YES    |    NO    |                                |
-| averagerating         | number                       |   YES    |    NO    |                                |
-| playcount             | integer                      |    NO    |    NO    |                                |
-| catalog               | string                       |    NO    |    NO    |                                |
-| composer              | string                       |   YES    |    NO    |                                |
-| channels              | integer                      |   YES    |    NO    |                                |
-| comment               | string                       |   YES    |    NO    |                                |
-| license               | string                       |   YES    |    NO    |                                |
-| publisher             | string                       |   YES    |    NO    |                                |
-| language              | string                       |   YES    |    NO    |                                |
-| lyrics                | string                       |   YES    |    NO    |                                |
-| replaygain_album_gain | number                       |   YES    |    NO    |                                |
-| replaygain_album_peak | number                       |   YES    |    NO    |                                |
-| replaygain_track_gain | number                       |   YES    |    NO    |                                |
-| replaygain_track_peak | number                       |   YES    |    NO    |                                |
-| r128_album_gain       | number                       |   YES    |    NO    |                                |
-| r128_track_gain       | number                       |   YES    |    NO    |                                |
-| metadata              | object&lt;string, string&gt; |    NO    |   YES    |                                |
+| Field                 | Type                                           | Nullable | Optional | Notes                                        |
+|-----------------------|------------------------------------------------|:--------:|:--------:|----------------------------------------------|
+| id                    | string                                         |    NO    |    NO    |                                              |
+| title                 | string                                         |   YES    |    NO    |                                              |
+| name                  | string                                         |   YES    |    NO    |                                              |
+| artist                | [NamedReference](#namedreference)              |    NO    |    NO    | see [NamedReference](#namedreference) fields |
+| artists               | array&lt;[NamedReference](#namedreference)&gt; |    NO    |    NO    | see [NamedReference](#namedreference) fields |
+| album                 | [NamedReference](#namedreference)              |    NO    |    NO    | see [NamedReference](#namedreference) fields |
+| albumartist           | [NamedReference](#namedreference)              |    NO    |   YES    | see [NamedReference](#namedreference) fields |
+| disk                  | integer                                        |    NO    |    NO    |                                              |
+| disksubtitle          | string                                         |   YES    |    NO    |                                              |
+| track                 | integer                                        |    NO    |    NO    |                                              |
+| filename              | string                                         |   YES    |    NO    |                                              |
+| genre                 | array&lt;[GenreReference](#genrereference)&gt; |    NO    |    NO    | see [GenreReference](#genrereference) fields |
+| playlisttrack         | integer                                        |    NO    |    NO    |                                              |
+| time                  | integer                                        |    NO    |    NO    |                                              |
+| year                  | integer                                        |    NO    |    NO    |                                              |
+| format                | string                                         |   YES    |    NO    |                                              |
+| stream_format         | string                                         |   YES    |    NO    |                                              |
+| bitrate               | integer                                        |   YES    |    NO    |                                              |
+| stream_bitrate        | integer                                        |   YES    |    NO    |                                              |
+| rate                  | integer                                        |    NO    |    NO    |                                              |
+| mode                  | string                                         |   YES    |    NO    |                                              |
+| mime                  | string                                         |   YES    |    NO    |                                              |
+| stream_mime           | string                                         |   YES    |    NO    |                                              |
+| url                   | string                                         |    NO    |    NO    |                                              |
+| size                  | integer                                        |    NO    |    NO    |                                              |
+| mbid                  | string                                         |   YES    |    NO    |                                              |
+| art                   | string                                         |   YES    |    NO    |                                              |
+| has_art               | boolean                                        |    NO    |    NO    |                                              |
+| flag                  | boolean                                        |    NO    |    NO    |                                              |
+| rating                | integer                                        |   YES    |    NO    |                                              |
+| averagerating         | number                                         |   YES    |    NO    |                                              |
+| playcount             | integer                                        |    NO    |    NO    |                                              |
+| catalog               | string                                         |    NO    |    NO    |                                              |
+| composer              | string                                         |   YES    |    NO    |                                              |
+| channels              | integer                                        |   YES    |    NO    |                                              |
+| comment               | string                                         |   YES    |    NO    |                                              |
+| license               | string                                         |   YES    |    NO    |                                              |
+| publisher             | string                                         |   YES    |    NO    |                                              |
+| language              | string                                         |   YES    |    NO    |                                              |
+| lyrics                | string                                         |   YES    |    NO    |                                              |
+| replaygain_album_gain | number                                         |   YES    |    NO    |                                              |
+| replaygain_album_peak | number                                         |   YES    |    NO    |                                              |
+| replaygain_track_gain | number                                         |   YES    |    NO    |                                              |
+| replaygain_track_peak | number                                         |   YES    |    NO    |                                              |
+| r128_album_gain       | number                                         |   YES    |    NO    |                                              |
+| r128_track_gain       | number                                         |   YES    |    NO    |                                              |
+| metadata              | object&lt;string, string&gt;                   |    NO    |   YES    |                                              |
 <!-- GENERATED:RESPONSE:END -->
 
 * throws
@@ -4518,22 +4518,22 @@ Returns a `video` list.
 
 Each `video` entry ([VideoObject](#video)):
 
-| Field         | Type                | Nullable | Optional | Notes        |
-|---------------|---------------------|:--------:|:--------:|--------------|
-| id            | string              |    NO    |    NO    |              |
-| title         | string              |   YES    |    NO    |              |
-| mime          | string              |   YES    |    NO    |              |
-| resolution    | string              |   YES    |    NO    |              |
-| size          | integer             |    NO    |    NO    |              |
-| genre         | array&lt;object&gt; |    NO    |    NO    | `{id, name}` |
-| time          | integer             |    NO    |    NO    |              |
-| url           | string              |    NO    |    NO    |              |
-| art           | string              |   YES    |    NO    |              |
-| has_art       | boolean             |    NO    |    NO    |              |
-| flag          | boolean             |    NO    |    NO    |              |
-| rating        | integer             |   YES    |    NO    |              |
-| averagerating | number              |   YES    |    NO    |              |
-| playcount     | integer             |    NO    |    NO    |              |
+| Field         | Type                                           | Nullable | Optional | Notes                                        |
+|---------------|------------------------------------------------|:--------:|:--------:|----------------------------------------------|
+| id            | string                                         |    NO    |    NO    |                                              |
+| title         | string                                         |   YES    |    NO    |                                              |
+| mime          | string                                         |   YES    |    NO    |                                              |
+| resolution    | string                                         |   YES    |    NO    |                                              |
+| size          | integer                                        |    NO    |    NO    |                                              |
+| genre         | array&lt;[GenreReference](#genrereference)&gt; |    NO    |    NO    | see [GenreReference](#genrereference) fields |
+| time          | integer                                        |    NO    |    NO    |                                              |
+| url           | string                                         |    NO    |    NO    |                                              |
+| art           | string                                         |   YES    |    NO    |                                              |
+| has_art       | boolean                                        |    NO    |    NO    |                                              |
+| flag          | boolean                                        |    NO    |    NO    |                                              |
+| rating        | integer                                        |   YES    |    NO    |                                              |
+| averagerating | number                                         |   YES    |    NO    |                                              |
+| playcount     | integer                                        |    NO    |    NO    |                                              |
 <!-- GENERATED:RESPONSE:END -->
 
 * throws
@@ -4667,11 +4667,11 @@ Print a list of valid search rules for your search type
 
 Returns a `rule` list.
 
-| Field | Type                            | Nullable | Optional | Notes                         |
-|-------|---------------------------------|:--------:|:--------:|-------------------------------|
-| rule  | array&lt;`SearchRuleObject`&gt; |    NO    |    NO    | see `SearchRuleObject` fields |
+| Field | Type                                           | Nullable | Optional | Notes                                        |
+|-------|------------------------------------------------|:--------:|:--------:|----------------------------------------------|
+| rule  | array&lt;[SearchRuleObject](#search_rules)&gt; |    NO    |    NO    | see [SearchRuleObject](#search_rules) fields |
 
-Each `rule` entry (`SearchRuleObject`):
+Each `rule` entry ([SearchRuleObject](#search_rules)):
 
 | Field  | Type                                                | Nullable | Optional | Notes |
 |--------|-----------------------------------------------------|:--------:|:--------:|-------|
@@ -4969,24 +4969,24 @@ Returns a `playlist` list.
 
 Each `playlist` entry ([PlaylistObject](#playlist)):
 
-| Field           | Type                           | Nullable | Optional | Notes            |
-|-----------------|--------------------------------|:--------:|:--------:|------------------|
-| id              | string                         |    NO    |    NO    |                  |
-| name            | string                         |   YES    |    NO    |                  |
-| owner           | string                         |   YES    |    NO    |                  |
-| user            | object                         |    NO    |    NO    | `{id, username}` |
-| items           | array&lt;object&gt; \| integer |    NO    |    NO    |                  |
-| type            | string                         |   YES    |    NO    |                  |
-| art             | string                         |   YES    |    NO    |                  |
-| has_access      | boolean                        |    NO    |    NO    |                  |
-| has_collaborate | boolean                        |    NO    |    NO    |                  |
-| has_art         | boolean                        |    NO    |    NO    |                  |
-| flag            | boolean                        |    NO    |    NO    |                  |
-| rating          | integer                        |   YES    |    NO    |                  |
-| averagerating   | number                         |   YES    |    NO    |                  |
-| md5             | string                         |   YES    |    NO    |                  |
-| last_update     | integer                        |   YES    |    NO    |                  |
-| time            | integer                        |    NO    |    NO    |                  |
+| Field           | Type                           | Nullable | Optional | Notes                                  |
+|-----------------|--------------------------------|:--------:|:--------:|----------------------------------------|
+| id              | string                         |    NO    |    NO    |                                        |
+| name            | string                         |   YES    |    NO    |                                        |
+| owner           | string                         |   YES    |    NO    |                                        |
+| user            | [UserSummaryObject](#users)    |    NO    |    NO    | see [UserSummaryObject](#users) fields |
+| items           | array&lt;object&gt; \| integer |    NO    |    NO    |                                        |
+| type            | string                         |   YES    |    NO    |                                        |
+| art             | string                         |   YES    |    NO    |                                        |
+| has_access      | boolean                        |    NO    |    NO    |                                        |
+| has_collaborate | boolean                        |    NO    |    NO    |                                        |
+| has_art         | boolean                        |    NO    |    NO    |                                        |
+| flag            | boolean                        |    NO    |    NO    |                                        |
+| rating          | integer                        |   YES    |    NO    |                                        |
+| averagerating   | number                         |   YES    |    NO    |                                        |
+| md5             | string                         |   YES    |    NO    |                                        |
+| last_update     | integer                        |   YES    |    NO    |                                        |
+| time            | integer                        |    NO    |    NO    |                                        |
 <!-- GENERATED:RESPONSE:END -->
 
 * throws
@@ -5016,24 +5016,24 @@ This returns a single smartlist
 
 Returns a single object.
 
-| Field           | Type                           | Nullable | Optional | Notes            |
-|-----------------|--------------------------------|:--------:|:--------:|------------------|
-| id              | string                         |    NO    |    NO    |                  |
-| name            | string                         |   YES    |    NO    |                  |
-| owner           | string                         |   YES    |    NO    |                  |
-| user            | object                         |    NO    |    NO    | `{id, username}` |
-| items           | array&lt;object&gt; \| integer |    NO    |    NO    |                  |
-| type            | string                         |   YES    |    NO    |                  |
-| art             | string                         |   YES    |    NO    |                  |
-| has_access      | boolean                        |    NO    |    NO    |                  |
-| has_collaborate | boolean                        |    NO    |    NO    |                  |
-| has_art         | boolean                        |    NO    |    NO    |                  |
-| flag            | boolean                        |    NO    |    NO    |                  |
-| rating          | integer                        |   YES    |    NO    |                  |
-| averagerating   | number                         |   YES    |    NO    |                  |
-| md5             | string                         |   YES    |    NO    |                  |
-| last_update     | integer                        |   YES    |    NO    |                  |
-| time            | integer                        |    NO    |    NO    |                  |
+| Field           | Type                           | Nullable | Optional | Notes                                  |
+|-----------------|--------------------------------|:--------:|:--------:|----------------------------------------|
+| id              | string                         |    NO    |    NO    |                                        |
+| name            | string                         |   YES    |    NO    |                                        |
+| owner           | string                         |   YES    |    NO    |                                        |
+| user            | [UserSummaryObject](#users)    |    NO    |    NO    | see [UserSummaryObject](#users) fields |
+| items           | array&lt;object&gt; \| integer |    NO    |    NO    |                                        |
+| type            | string                         |   YES    |    NO    |                                        |
+| art             | string                         |   YES    |    NO    |                                        |
+| has_access      | boolean                        |    NO    |    NO    |                                        |
+| has_collaborate | boolean                        |    NO    |    NO    |                                        |
+| has_art         | boolean                        |    NO    |    NO    |                                        |
+| flag            | boolean                        |    NO    |    NO    |                                        |
+| rating          | integer                        |   YES    |    NO    |                                        |
+| averagerating   | number                         |   YES    |    NO    |                                        |
+| md5             | string                         |   YES    |    NO    |                                        |
+| last_update     | integer                        |   YES    |    NO    |                                        |
+| time            | integer                        |    NO    |    NO    |                                        |
 <!-- GENERATED:RESPONSE:END -->
 
 * throws
@@ -5074,55 +5074,55 @@ Returns a `song` list.
 
 Each `song` entry ([SongObject](#song)):
 
-| Field                 | Type                         | Nullable | Optional | Notes                          |
-|-----------------------|------------------------------|:--------:|:--------:|--------------------------------|
-| id                    | string                       |    NO    |    NO    |                                |
-| title                 | string                       |   YES    |    NO    |                                |
-| name                  | string                       |   YES    |    NO    |                                |
-| artist                | object                       |    NO    |    NO    | `{id, name, prefix, basename}` |
-| artists               | array&lt;object&gt;          |    NO    |    NO    | `{id, name, prefix, basename}` |
-| album                 | object                       |    NO    |    NO    | `{id, name, prefix, basename}` |
-| albumartist           | object                       |    NO    |   YES    | `{id, name, prefix, basename}` |
-| disk                  | integer                      |    NO    |    NO    |                                |
-| disksubtitle          | string                       |   YES    |    NO    |                                |
-| track                 | integer                      |    NO    |    NO    |                                |
-| filename              | string                       |   YES    |    NO    |                                |
-| genre                 | array&lt;object&gt;          |    NO    |    NO    | `{id, name}`                   |
-| playlisttrack         | integer                      |    NO    |    NO    |                                |
-| time                  | integer                      |    NO    |    NO    |                                |
-| year                  | integer                      |    NO    |    NO    |                                |
-| format                | string                       |   YES    |    NO    |                                |
-| stream_format         | string                       |   YES    |    NO    |                                |
-| bitrate               | integer                      |   YES    |    NO    |                                |
-| stream_bitrate        | integer                      |   YES    |    NO    |                                |
-| rate                  | integer                      |    NO    |    NO    |                                |
-| mode                  | string                       |   YES    |    NO    |                                |
-| mime                  | string                       |   YES    |    NO    |                                |
-| stream_mime           | string                       |   YES    |    NO    |                                |
-| url                   | string                       |    NO    |    NO    |                                |
-| size                  | integer                      |    NO    |    NO    |                                |
-| mbid                  | string                       |   YES    |    NO    |                                |
-| art                   | string                       |   YES    |    NO    |                                |
-| has_art               | boolean                      |    NO    |    NO    |                                |
-| flag                  | boolean                      |    NO    |    NO    |                                |
-| rating                | integer                      |   YES    |    NO    |                                |
-| averagerating         | number                       |   YES    |    NO    |                                |
-| playcount             | integer                      |    NO    |    NO    |                                |
-| catalog               | string                       |    NO    |    NO    |                                |
-| composer              | string                       |   YES    |    NO    |                                |
-| channels              | integer                      |   YES    |    NO    |                                |
-| comment               | string                       |   YES    |    NO    |                                |
-| license               | string                       |   YES    |    NO    |                                |
-| publisher             | string                       |   YES    |    NO    |                                |
-| language              | string                       |   YES    |    NO    |                                |
-| lyrics                | string                       |   YES    |    NO    |                                |
-| replaygain_album_gain | number                       |   YES    |    NO    |                                |
-| replaygain_album_peak | number                       |   YES    |    NO    |                                |
-| replaygain_track_gain | number                       |   YES    |    NO    |                                |
-| replaygain_track_peak | number                       |   YES    |    NO    |                                |
-| r128_album_gain       | number                       |   YES    |    NO    |                                |
-| r128_track_gain       | number                       |   YES    |    NO    |                                |
-| metadata              | object&lt;string, string&gt; |    NO    |   YES    |                                |
+| Field                 | Type                                           | Nullable | Optional | Notes                                        |
+|-----------------------|------------------------------------------------|:--------:|:--------:|----------------------------------------------|
+| id                    | string                                         |    NO    |    NO    |                                              |
+| title                 | string                                         |   YES    |    NO    |                                              |
+| name                  | string                                         |   YES    |    NO    |                                              |
+| artist                | [NamedReference](#namedreference)              |    NO    |    NO    | see [NamedReference](#namedreference) fields |
+| artists               | array&lt;[NamedReference](#namedreference)&gt; |    NO    |    NO    | see [NamedReference](#namedreference) fields |
+| album                 | [NamedReference](#namedreference)              |    NO    |    NO    | see [NamedReference](#namedreference) fields |
+| albumartist           | [NamedReference](#namedreference)              |    NO    |   YES    | see [NamedReference](#namedreference) fields |
+| disk                  | integer                                        |    NO    |    NO    |                                              |
+| disksubtitle          | string                                         |   YES    |    NO    |                                              |
+| track                 | integer                                        |    NO    |    NO    |                                              |
+| filename              | string                                         |   YES    |    NO    |                                              |
+| genre                 | array&lt;[GenreReference](#genrereference)&gt; |    NO    |    NO    | see [GenreReference](#genrereference) fields |
+| playlisttrack         | integer                                        |    NO    |    NO    |                                              |
+| time                  | integer                                        |    NO    |    NO    |                                              |
+| year                  | integer                                        |    NO    |    NO    |                                              |
+| format                | string                                         |   YES    |    NO    |                                              |
+| stream_format         | string                                         |   YES    |    NO    |                                              |
+| bitrate               | integer                                        |   YES    |    NO    |                                              |
+| stream_bitrate        | integer                                        |   YES    |    NO    |                                              |
+| rate                  | integer                                        |    NO    |    NO    |                                              |
+| mode                  | string                                         |   YES    |    NO    |                                              |
+| mime                  | string                                         |   YES    |    NO    |                                              |
+| stream_mime           | string                                         |   YES    |    NO    |                                              |
+| url                   | string                                         |    NO    |    NO    |                                              |
+| size                  | integer                                        |    NO    |    NO    |                                              |
+| mbid                  | string                                         |   YES    |    NO    |                                              |
+| art                   | string                                         |   YES    |    NO    |                                              |
+| has_art               | boolean                                        |    NO    |    NO    |                                              |
+| flag                  | boolean                                        |    NO    |    NO    |                                              |
+| rating                | integer                                        |   YES    |    NO    |                                              |
+| averagerating         | number                                         |   YES    |    NO    |                                              |
+| playcount             | integer                                        |    NO    |    NO    |                                              |
+| catalog               | string                                         |    NO    |    NO    |                                              |
+| composer              | string                                         |   YES    |    NO    |                                              |
+| channels              | integer                                        |   YES    |    NO    |                                              |
+| comment               | string                                         |   YES    |    NO    |                                              |
+| license               | string                                         |   YES    |    NO    |                                              |
+| publisher             | string                                         |   YES    |    NO    |                                              |
+| language              | string                                         |   YES    |    NO    |                                              |
+| lyrics                | string                                         |   YES    |    NO    |                                              |
+| replaygain_album_gain | number                                         |   YES    |    NO    |                                              |
+| replaygain_album_peak | number                                         |   YES    |    NO    |                                              |
+| replaygain_track_gain | number                                         |   YES    |    NO    |                                              |
+| replaygain_track_peak | number                                         |   YES    |    NO    |                                              |
+| r128_album_gain       | number                                         |   YES    |    NO    |                                              |
+| r128_track_gain       | number                                         |   YES    |    NO    |                                              |
+| metadata              | object&lt;string, string&gt;                   |    NO    |   YES    |                                              |
 <!-- GENERATED:RESPONSE:END -->
 
 * throws
@@ -5193,55 +5193,55 @@ Returns a `song` list.
 
 Each `song` entry ([SongObject](#song)):
 
-| Field                 | Type                         | Nullable | Optional | Notes                          |
-|-----------------------|------------------------------|:--------:|:--------:|--------------------------------|
-| id                    | string                       |    NO    |    NO    |                                |
-| title                 | string                       |   YES    |    NO    |                                |
-| name                  | string                       |   YES    |    NO    |                                |
-| artist                | object                       |    NO    |    NO    | `{id, name, prefix, basename}` |
-| artists               | array&lt;object&gt;          |    NO    |    NO    | `{id, name, prefix, basename}` |
-| album                 | object                       |    NO    |    NO    | `{id, name, prefix, basename}` |
-| albumartist           | object                       |    NO    |   YES    | `{id, name, prefix, basename}` |
-| disk                  | integer                      |    NO    |    NO    |                                |
-| disksubtitle          | string                       |   YES    |    NO    |                                |
-| track                 | integer                      |    NO    |    NO    |                                |
-| filename              | string                       |   YES    |    NO    |                                |
-| genre                 | array&lt;object&gt;          |    NO    |    NO    | `{id, name}`                   |
-| playlisttrack         | integer                      |    NO    |    NO    |                                |
-| time                  | integer                      |    NO    |    NO    |                                |
-| year                  | integer                      |    NO    |    NO    |                                |
-| format                | string                       |   YES    |    NO    |                                |
-| stream_format         | string                       |   YES    |    NO    |                                |
-| bitrate               | integer                      |   YES    |    NO    |                                |
-| stream_bitrate        | integer                      |   YES    |    NO    |                                |
-| rate                  | integer                      |    NO    |    NO    |                                |
-| mode                  | string                       |   YES    |    NO    |                                |
-| mime                  | string                       |   YES    |    NO    |                                |
-| stream_mime           | string                       |   YES    |    NO    |                                |
-| url                   | string                       |    NO    |    NO    |                                |
-| size                  | integer                      |    NO    |    NO    |                                |
-| mbid                  | string                       |   YES    |    NO    |                                |
-| art                   | string                       |   YES    |    NO    |                                |
-| has_art               | boolean                      |    NO    |    NO    |                                |
-| flag                  | boolean                      |    NO    |    NO    |                                |
-| rating                | integer                      |   YES    |    NO    |                                |
-| averagerating         | number                       |   YES    |    NO    |                                |
-| playcount             | integer                      |    NO    |    NO    |                                |
-| catalog               | string                       |    NO    |    NO    |                                |
-| composer              | string                       |   YES    |    NO    |                                |
-| channels              | integer                      |   YES    |    NO    |                                |
-| comment               | string                       |   YES    |    NO    |                                |
-| license               | string                       |   YES    |    NO    |                                |
-| publisher             | string                       |   YES    |    NO    |                                |
-| language              | string                       |   YES    |    NO    |                                |
-| lyrics                | string                       |   YES    |    NO    |                                |
-| replaygain_album_gain | number                       |   YES    |    NO    |                                |
-| replaygain_album_peak | number                       |   YES    |    NO    |                                |
-| replaygain_track_gain | number                       |   YES    |    NO    |                                |
-| replaygain_track_peak | number                       |   YES    |    NO    |                                |
-| r128_album_gain       | number                       |   YES    |    NO    |                                |
-| r128_track_gain       | number                       |   YES    |    NO    |                                |
-| metadata              | object&lt;string, string&gt; |    NO    |   YES    |                                |
+| Field                 | Type                                           | Nullable | Optional | Notes                                        |
+|-----------------------|------------------------------------------------|:--------:|:--------:|----------------------------------------------|
+| id                    | string                                         |    NO    |    NO    |                                              |
+| title                 | string                                         |   YES    |    NO    |                                              |
+| name                  | string                                         |   YES    |    NO    |                                              |
+| artist                | [NamedReference](#namedreference)              |    NO    |    NO    | see [NamedReference](#namedreference) fields |
+| artists               | array&lt;[NamedReference](#namedreference)&gt; |    NO    |    NO    | see [NamedReference](#namedreference) fields |
+| album                 | [NamedReference](#namedreference)              |    NO    |    NO    | see [NamedReference](#namedreference) fields |
+| albumartist           | [NamedReference](#namedreference)              |    NO    |   YES    | see [NamedReference](#namedreference) fields |
+| disk                  | integer                                        |    NO    |    NO    |                                              |
+| disksubtitle          | string                                         |   YES    |    NO    |                                              |
+| track                 | integer                                        |    NO    |    NO    |                                              |
+| filename              | string                                         |   YES    |    NO    |                                              |
+| genre                 | array&lt;[GenreReference](#genrereference)&gt; |    NO    |    NO    | see [GenreReference](#genrereference) fields |
+| playlisttrack         | integer                                        |    NO    |    NO    |                                              |
+| time                  | integer                                        |    NO    |    NO    |                                              |
+| year                  | integer                                        |    NO    |    NO    |                                              |
+| format                | string                                         |   YES    |    NO    |                                              |
+| stream_format         | string                                         |   YES    |    NO    |                                              |
+| bitrate               | integer                                        |   YES    |    NO    |                                              |
+| stream_bitrate        | integer                                        |   YES    |    NO    |                                              |
+| rate                  | integer                                        |    NO    |    NO    |                                              |
+| mode                  | string                                         |   YES    |    NO    |                                              |
+| mime                  | string                                         |   YES    |    NO    |                                              |
+| stream_mime           | string                                         |   YES    |    NO    |                                              |
+| url                   | string                                         |    NO    |    NO    |                                              |
+| size                  | integer                                        |    NO    |    NO    |                                              |
+| mbid                  | string                                         |   YES    |    NO    |                                              |
+| art                   | string                                         |   YES    |    NO    |                                              |
+| has_art               | boolean                                        |    NO    |    NO    |                                              |
+| flag                  | boolean                                        |    NO    |    NO    |                                              |
+| rating                | integer                                        |   YES    |    NO    |                                              |
+| averagerating         | number                                         |   YES    |    NO    |                                              |
+| playcount             | integer                                        |    NO    |    NO    |                                              |
+| catalog               | string                                         |    NO    |    NO    |                                              |
+| composer              | string                                         |   YES    |    NO    |                                              |
+| channels              | integer                                        |   YES    |    NO    |                                              |
+| comment               | string                                         |   YES    |    NO    |                                              |
+| license               | string                                         |   YES    |    NO    |                                              |
+| publisher             | string                                         |   YES    |    NO    |                                              |
+| language              | string                                         |   YES    |    NO    |                                              |
+| lyrics                | string                                         |   YES    |    NO    |                                              |
+| replaygain_album_gain | number                                         |   YES    |    NO    |                                              |
+| replaygain_album_peak | number                                         |   YES    |    NO    |                                              |
+| replaygain_track_gain | number                                         |   YES    |    NO    |                                              |
+| replaygain_track_peak | number                                         |   YES    |    NO    |                                              |
+| r128_album_gain       | number                                         |   YES    |    NO    |                                              |
+| r128_track_gain       | number                                         |   YES    |    NO    |                                              |
+| metadata              | object&lt;string, string&gt;                   |    NO    |   YES    |                                              |
 <!-- GENERATED:RESPONSE:END -->
 
 * throws
@@ -5271,55 +5271,55 @@ returns a single song
 
 Returns a single object.
 
-| Field                 | Type                         | Nullable | Optional | Notes                          |
-|-----------------------|------------------------------|:--------:|:--------:|--------------------------------|
-| id                    | string                       |    NO    |    NO    |                                |
-| title                 | string                       |   YES    |    NO    |                                |
-| name                  | string                       |   YES    |    NO    |                                |
-| artist                | object                       |    NO    |    NO    | `{id, name, prefix, basename}` |
-| artists               | array&lt;object&gt;          |    NO    |    NO    | `{id, name, prefix, basename}` |
-| album                 | object                       |    NO    |    NO    | `{id, name, prefix, basename}` |
-| albumartist           | object                       |    NO    |   YES    | `{id, name, prefix, basename}` |
-| disk                  | integer                      |    NO    |    NO    |                                |
-| disksubtitle          | string                       |   YES    |    NO    |                                |
-| track                 | integer                      |    NO    |    NO    |                                |
-| filename              | string                       |   YES    |    NO    |                                |
-| genre                 | array&lt;object&gt;          |    NO    |    NO    | `{id, name}`                   |
-| playlisttrack         | integer                      |    NO    |    NO    |                                |
-| time                  | integer                      |    NO    |    NO    |                                |
-| year                  | integer                      |    NO    |    NO    |                                |
-| format                | string                       |   YES    |    NO    |                                |
-| stream_format         | string                       |   YES    |    NO    |                                |
-| bitrate               | integer                      |   YES    |    NO    |                                |
-| stream_bitrate        | integer                      |   YES    |    NO    |                                |
-| rate                  | integer                      |    NO    |    NO    |                                |
-| mode                  | string                       |   YES    |    NO    |                                |
-| mime                  | string                       |   YES    |    NO    |                                |
-| stream_mime           | string                       |   YES    |    NO    |                                |
-| url                   | string                       |    NO    |    NO    |                                |
-| size                  | integer                      |    NO    |    NO    |                                |
-| mbid                  | string                       |   YES    |    NO    |                                |
-| art                   | string                       |   YES    |    NO    |                                |
-| has_art               | boolean                      |    NO    |    NO    |                                |
-| flag                  | boolean                      |    NO    |    NO    |                                |
-| rating                | integer                      |   YES    |    NO    |                                |
-| averagerating         | number                       |   YES    |    NO    |                                |
-| playcount             | integer                      |    NO    |    NO    |                                |
-| catalog               | string                       |    NO    |    NO    |                                |
-| composer              | string                       |   YES    |    NO    |                                |
-| channels              | integer                      |   YES    |    NO    |                                |
-| comment               | string                       |   YES    |    NO    |                                |
-| license               | string                       |   YES    |    NO    |                                |
-| publisher             | string                       |   YES    |    NO    |                                |
-| language              | string                       |   YES    |    NO    |                                |
-| lyrics                | string                       |   YES    |    NO    |                                |
-| replaygain_album_gain | number                       |   YES    |    NO    |                                |
-| replaygain_album_peak | number                       |   YES    |    NO    |                                |
-| replaygain_track_gain | number                       |   YES    |    NO    |                                |
-| replaygain_track_peak | number                       |   YES    |    NO    |                                |
-| r128_album_gain       | number                       |   YES    |    NO    |                                |
-| r128_track_gain       | number                       |   YES    |    NO    |                                |
-| metadata              | object&lt;string, string&gt; |    NO    |   YES    |                                |
+| Field                 | Type                                           | Nullable | Optional | Notes                                        |
+|-----------------------|------------------------------------------------|:--------:|:--------:|----------------------------------------------|
+| id                    | string                                         |    NO    |    NO    |                                              |
+| title                 | string                                         |   YES    |    NO    |                                              |
+| name                  | string                                         |   YES    |    NO    |                                              |
+| artist                | [NamedReference](#namedreference)              |    NO    |    NO    | see [NamedReference](#namedreference) fields |
+| artists               | array&lt;[NamedReference](#namedreference)&gt; |    NO    |    NO    | see [NamedReference](#namedreference) fields |
+| album                 | [NamedReference](#namedreference)              |    NO    |    NO    | see [NamedReference](#namedreference) fields |
+| albumartist           | [NamedReference](#namedreference)              |    NO    |   YES    | see [NamedReference](#namedreference) fields |
+| disk                  | integer                                        |    NO    |    NO    |                                              |
+| disksubtitle          | string                                         |   YES    |    NO    |                                              |
+| track                 | integer                                        |    NO    |    NO    |                                              |
+| filename              | string                                         |   YES    |    NO    |                                              |
+| genre                 | array&lt;[GenreReference](#genrereference)&gt; |    NO    |    NO    | see [GenreReference](#genrereference) fields |
+| playlisttrack         | integer                                        |    NO    |    NO    |                                              |
+| time                  | integer                                        |    NO    |    NO    |                                              |
+| year                  | integer                                        |    NO    |    NO    |                                              |
+| format                | string                                         |   YES    |    NO    |                                              |
+| stream_format         | string                                         |   YES    |    NO    |                                              |
+| bitrate               | integer                                        |   YES    |    NO    |                                              |
+| stream_bitrate        | integer                                        |   YES    |    NO    |                                              |
+| rate                  | integer                                        |    NO    |    NO    |                                              |
+| mode                  | string                                         |   YES    |    NO    |                                              |
+| mime                  | string                                         |   YES    |    NO    |                                              |
+| stream_mime           | string                                         |   YES    |    NO    |                                              |
+| url                   | string                                         |    NO    |    NO    |                                              |
+| size                  | integer                                        |    NO    |    NO    |                                              |
+| mbid                  | string                                         |   YES    |    NO    |                                              |
+| art                   | string                                         |   YES    |    NO    |                                              |
+| has_art               | boolean                                        |    NO    |    NO    |                                              |
+| flag                  | boolean                                        |    NO    |    NO    |                                              |
+| rating                | integer                                        |   YES    |    NO    |                                              |
+| averagerating         | number                                         |   YES    |    NO    |                                              |
+| playcount             | integer                                        |    NO    |    NO    |                                              |
+| catalog               | string                                         |    NO    |    NO    |                                              |
+| composer              | string                                         |   YES    |    NO    |                                              |
+| channels              | integer                                        |   YES    |    NO    |                                              |
+| comment               | string                                         |   YES    |    NO    |                                              |
+| license               | string                                         |   YES    |    NO    |                                              |
+| publisher             | string                                         |   YES    |    NO    |                                              |
+| language              | string                                         |   YES    |    NO    |                                              |
+| lyrics                | string                                         |   YES    |    NO    |                                              |
+| replaygain_album_gain | number                                         |   YES    |    NO    |                                              |
+| replaygain_album_peak | number                                         |   YES    |    NO    |                                              |
+| replaygain_track_gain | number                                         |   YES    |    NO    |                                              |
+| replaygain_track_peak | number                                         |   YES    |    NO    |                                              |
+| r128_album_gain       | number                                         |   YES    |    NO    |                                              |
+| r128_track_gain       | number                                         |   YES    |    NO    |                                              |
+| metadata              | object&lt;string, string&gt;                   |    NO    |   YES    |                                              |
 <!-- GENERATED:RESPONSE:END -->
 
 * throws
@@ -5479,22 +5479,22 @@ Returns a `video` list.
 
 Each `video` entry ([VideoObject](#video)):
 
-| Field         | Type                | Nullable | Optional | Notes        |
-|---------------|---------------------|:--------:|:--------:|--------------|
-| id            | string              |    NO    |    NO    |              |
-| title         | string              |   YES    |    NO    |              |
-| mime          | string              |   YES    |    NO    |              |
-| resolution    | string              |   YES    |    NO    |              |
-| size          | integer             |    NO    |    NO    |              |
-| genre         | array&lt;object&gt; |    NO    |    NO    | `{id, name}` |
-| time          | integer             |    NO    |    NO    |              |
-| url           | string              |    NO    |    NO    |              |
-| art           | string              |   YES    |    NO    |              |
-| has_art       | boolean             |    NO    |    NO    |              |
-| flag          | boolean             |    NO    |    NO    |              |
-| rating        | integer             |   YES    |    NO    |              |
-| averagerating | number              |   YES    |    NO    |              |
-| playcount     | integer             |    NO    |    NO    |              |
+| Field         | Type                                           | Nullable | Optional | Notes                                        |
+|---------------|------------------------------------------------|:--------:|:--------:|----------------------------------------------|
+| id            | string                                         |    NO    |    NO    |                                              |
+| title         | string                                         |   YES    |    NO    |                                              |
+| mime          | string                                         |   YES    |    NO    |                                              |
+| resolution    | string                                         |   YES    |    NO    |                                              |
+| size          | integer                                        |    NO    |    NO    |                                              |
+| genre         | array&lt;[GenreReference](#genrereference)&gt; |    NO    |    NO    | see [GenreReference](#genrereference) fields |
+| time          | integer                                        |    NO    |    NO    |                                              |
+| url           | string                                         |    NO    |    NO    |                                              |
+| art           | string                                         |   YES    |    NO    |                                              |
+| has_art       | boolean                                        |    NO    |    NO    |                                              |
+| flag          | boolean                                        |    NO    |    NO    |                                              |
+| rating        | integer                                        |   YES    |    NO    |                                              |
+| averagerating | number                                         |   YES    |    NO    |                                              |
+| playcount     | integer                                        |    NO    |    NO    |                                              |
 <!-- GENERATED:RESPONSE:END -->
 
 * throws
@@ -5575,20 +5575,20 @@ This gets a user's timeline
 
 Returns a `activity` list.
 
-| Field    | Type                          | Nullable | Optional | Notes                       |
-|----------|-------------------------------|:--------:|:--------:|-----------------------------|
-| activity | array&lt;`ActivityObject`&gt; |    NO    |    NO    | see `ActivityObject` fields |
+| Field    | Type                                             | Nullable | Optional | Notes                                          |
+|----------|--------------------------------------------------|:--------:|:--------:|------------------------------------------------|
+| activity | array&lt;[ActivityObject](#friends_timeline)&gt; |    NO    |    NO    | see [ActivityObject](#friends_timeline) fields |
 
-Each `activity` entry (`ActivityObject`):
+Each `activity` entry ([ActivityObject](#friends_timeline)):
 
-| Field       | Type    | Nullable | Optional | Notes            |
-|-------------|---------|:--------:|:--------:|------------------|
-| id          | string  |    NO    |    NO    |                  |
-| date        | integer |    NO    |    NO    |                  |
-| object_type | string  |   YES    |    NO    |                  |
-| object_id   | string  |    NO    |    NO    |                  |
-| action      | string  |    NO    |    NO    |                  |
-| user        | object  |    NO    |    NO    | `{id, username}` |
+| Field       | Type                        | Nullable | Optional | Notes                                  |
+|-------------|-----------------------------|:--------:|:--------:|----------------------------------------|
+| id          | string                      |    NO    |    NO    |                                        |
+| date        | integer                     |    NO    |    NO    |                                        |
+| object_type | string                      |   YES    |    NO    |                                        |
+| object_id   | string                      |    NO    |    NO    |                                        |
+| action      | string                      |    NO    |    NO    |                                        |
+| user        | [UserSummaryObject](#users) |    NO    |    NO    | see [UserSummaryObject](#users) fields |
 <!-- GENERATED:RESPONSE:END -->
 
 * throws
@@ -5771,55 +5771,55 @@ Returns a `song` list.
 
 Each `song` entry ([SongObject](#song)):
 
-| Field                 | Type                         | Nullable | Optional | Notes                          |
-|-----------------------|------------------------------|:--------:|:--------:|--------------------------------|
-| id                    | string                       |    NO    |    NO    |                                |
-| title                 | string                       |   YES    |    NO    |                                |
-| name                  | string                       |   YES    |    NO    |                                |
-| artist                | object                       |    NO    |    NO    | `{id, name, prefix, basename}` |
-| artists               | array&lt;object&gt;          |    NO    |    NO    | `{id, name, prefix, basename}` |
-| album                 | object                       |    NO    |    NO    | `{id, name, prefix, basename}` |
-| albumartist           | object                       |    NO    |   YES    | `{id, name, prefix, basename}` |
-| disk                  | integer                      |    NO    |    NO    |                                |
-| disksubtitle          | string                       |   YES    |    NO    |                                |
-| track                 | integer                      |    NO    |    NO    |                                |
-| filename              | string                       |   YES    |    NO    |                                |
-| genre                 | array&lt;object&gt;          |    NO    |    NO    | `{id, name}`                   |
-| playlisttrack         | integer                      |    NO    |    NO    |                                |
-| time                  | integer                      |    NO    |    NO    |                                |
-| year                  | integer                      |    NO    |    NO    |                                |
-| format                | string                       |   YES    |    NO    |                                |
-| stream_format         | string                       |   YES    |    NO    |                                |
-| bitrate               | integer                      |   YES    |    NO    |                                |
-| stream_bitrate        | integer                      |   YES    |    NO    |                                |
-| rate                  | integer                      |    NO    |    NO    |                                |
-| mode                  | string                       |   YES    |    NO    |                                |
-| mime                  | string                       |   YES    |    NO    |                                |
-| stream_mime           | string                       |   YES    |    NO    |                                |
-| url                   | string                       |    NO    |    NO    |                                |
-| size                  | integer                      |    NO    |    NO    |                                |
-| mbid                  | string                       |   YES    |    NO    |                                |
-| art                   | string                       |   YES    |    NO    |                                |
-| has_art               | boolean                      |    NO    |    NO    |                                |
-| flag                  | boolean                      |    NO    |    NO    |                                |
-| rating                | integer                      |   YES    |    NO    |                                |
-| averagerating         | number                       |   YES    |    NO    |                                |
-| playcount             | integer                      |    NO    |    NO    |                                |
-| catalog               | string                       |    NO    |    NO    |                                |
-| composer              | string                       |   YES    |    NO    |                                |
-| channels              | integer                      |   YES    |    NO    |                                |
-| comment               | string                       |   YES    |    NO    |                                |
-| license               | string                       |   YES    |    NO    |                                |
-| publisher             | string                       |   YES    |    NO    |                                |
-| language              | string                       |   YES    |    NO    |                                |
-| lyrics                | string                       |   YES    |    NO    |                                |
-| replaygain_album_gain | number                       |   YES    |    NO    |                                |
-| replaygain_album_peak | number                       |   YES    |    NO    |                                |
-| replaygain_track_gain | number                       |   YES    |    NO    |                                |
-| replaygain_track_peak | number                       |   YES    |    NO    |                                |
-| r128_album_gain       | number                       |   YES    |    NO    |                                |
-| r128_track_gain       | number                       |   YES    |    NO    |                                |
-| metadata              | object&lt;string, string&gt; |    NO    |   YES    |                                |
+| Field                 | Type                                           | Nullable | Optional | Notes                                        |
+|-----------------------|------------------------------------------------|:--------:|:--------:|----------------------------------------------|
+| id                    | string                                         |    NO    |    NO    |                                              |
+| title                 | string                                         |   YES    |    NO    |                                              |
+| name                  | string                                         |   YES    |    NO    |                                              |
+| artist                | [NamedReference](#namedreference)              |    NO    |    NO    | see [NamedReference](#namedreference) fields |
+| artists               | array&lt;[NamedReference](#namedreference)&gt; |    NO    |    NO    | see [NamedReference](#namedreference) fields |
+| album                 | [NamedReference](#namedreference)              |    NO    |    NO    | see [NamedReference](#namedreference) fields |
+| albumartist           | [NamedReference](#namedreference)              |    NO    |   YES    | see [NamedReference](#namedreference) fields |
+| disk                  | integer                                        |    NO    |    NO    |                                              |
+| disksubtitle          | string                                         |   YES    |    NO    |                                              |
+| track                 | integer                                        |    NO    |    NO    |                                              |
+| filename              | string                                         |   YES    |    NO    |                                              |
+| genre                 | array&lt;[GenreReference](#genrereference)&gt; |    NO    |    NO    | see [GenreReference](#genrereference) fields |
+| playlisttrack         | integer                                        |    NO    |    NO    |                                              |
+| time                  | integer                                        |    NO    |    NO    |                                              |
+| year                  | integer                                        |    NO    |    NO    |                                              |
+| format                | string                                         |   YES    |    NO    |                                              |
+| stream_format         | string                                         |   YES    |    NO    |                                              |
+| bitrate               | integer                                        |   YES    |    NO    |                                              |
+| stream_bitrate        | integer                                        |   YES    |    NO    |                                              |
+| rate                  | integer                                        |    NO    |    NO    |                                              |
+| mode                  | string                                         |   YES    |    NO    |                                              |
+| mime                  | string                                         |   YES    |    NO    |                                              |
+| stream_mime           | string                                         |   YES    |    NO    |                                              |
+| url                   | string                                         |    NO    |    NO    |                                              |
+| size                  | integer                                        |    NO    |    NO    |                                              |
+| mbid                  | string                                         |   YES    |    NO    |                                              |
+| art                   | string                                         |   YES    |    NO    |                                              |
+| has_art               | boolean                                        |    NO    |    NO    |                                              |
+| flag                  | boolean                                        |    NO    |    NO    |                                              |
+| rating                | integer                                        |   YES    |    NO    |                                              |
+| averagerating         | number                                         |   YES    |    NO    |                                              |
+| playcount             | integer                                        |    NO    |    NO    |                                              |
+| catalog               | string                                         |    NO    |    NO    |                                              |
+| composer              | string                                         |   YES    |    NO    |                                              |
+| channels              | integer                                        |   YES    |    NO    |                                              |
+| comment               | string                                         |   YES    |    NO    |                                              |
+| license               | string                                         |   YES    |    NO    |                                              |
+| publisher             | string                                         |   YES    |    NO    |                                              |
+| language              | string                                         |   YES    |    NO    |                                              |
+| lyrics                | string                                         |   YES    |    NO    |                                              |
+| replaygain_album_gain | number                                         |   YES    |    NO    |                                              |
+| replaygain_album_peak | number                                         |   YES    |    NO    |                                              |
+| replaygain_track_gain | number                                         |   YES    |    NO    |                                              |
+| replaygain_track_peak | number                                         |   YES    |    NO    |                                              |
+| r128_album_gain       | number                                         |   YES    |    NO    |                                              |
+| r128_track_gain       | number                                         |   YES    |    NO    |                                              |
+| metadata              | object&lt;string, string&gt;                   |    NO    |   YES    |                                              |
 <!-- GENERATED:RESPONSE:END -->
 
 * throws
@@ -6026,24 +6026,24 @@ Returns a `playlist` list.
 
 Each `playlist` entry ([PlaylistObject](#playlist)):
 
-| Field           | Type                           | Nullable | Optional | Notes            |
-|-----------------|--------------------------------|:--------:|:--------:|------------------|
-| id              | string                         |    NO    |    NO    |                  |
-| name            | string                         |   YES    |    NO    |                  |
-| owner           | string                         |   YES    |    NO    |                  |
-| user            | object                         |    NO    |    NO    | `{id, username}` |
-| items           | array&lt;object&gt; \| integer |    NO    |    NO    |                  |
-| type            | string                         |   YES    |    NO    |                  |
-| art             | string                         |   YES    |    NO    |                  |
-| has_access      | boolean                        |    NO    |    NO    |                  |
-| has_collaborate | boolean                        |    NO    |    NO    |                  |
-| has_art         | boolean                        |    NO    |    NO    |                  |
-| flag            | boolean                        |    NO    |    NO    |                  |
-| rating          | integer                        |   YES    |    NO    |                  |
-| averagerating   | number                         |   YES    |    NO    |                  |
-| md5             | string                         |   YES    |    NO    |                  |
-| last_update     | integer                        |   YES    |    NO    |                  |
-| time            | integer                        |    NO    |    NO    |                  |
+| Field           | Type                           | Nullable | Optional | Notes                                  |
+|-----------------|--------------------------------|:--------:|:--------:|----------------------------------------|
+| id              | string                         |    NO    |    NO    |                                        |
+| name            | string                         |   YES    |    NO    |                                        |
+| owner           | string                         |   YES    |    NO    |                                        |
+| user            | [UserSummaryObject](#users)    |    NO    |    NO    | see [UserSummaryObject](#users) fields |
+| items           | array&lt;object&gt; \| integer |    NO    |    NO    |                                        |
+| type            | string                         |   YES    |    NO    |                                        |
+| art             | string                         |   YES    |    NO    |                                        |
+| has_access      | boolean                        |    NO    |    NO    |                                        |
+| has_collaborate | boolean                        |    NO    |    NO    |                                        |
+| has_art         | boolean                        |    NO    |    NO    |                                        |
+| flag            | boolean                        |    NO    |    NO    |                                        |
+| rating          | integer                        |   YES    |    NO    |                                        |
+| averagerating   | number                         |   YES    |    NO    |                                        |
+| md5             | string                         |   YES    |    NO    |                                        |
+| last_update     | integer                        |   YES    |    NO    |                                        |
+| time            | integer                        |    NO    |    NO    |                                        |
 <!-- GENERATED:RESPONSE:END -->
 
 * throws
@@ -6134,24 +6134,24 @@ Returns a `playlist` list.
 
 Each `playlist` entry ([PlaylistObject](#playlist)):
 
-| Field           | Type                           | Nullable | Optional | Notes            |
-|-----------------|--------------------------------|:--------:|:--------:|------------------|
-| id              | string                         |    NO    |    NO    |                  |
-| name            | string                         |   YES    |    NO    |                  |
-| owner           | string                         |   YES    |    NO    |                  |
-| user            | object                         |    NO    |    NO    | `{id, username}` |
-| items           | array&lt;object&gt; \| integer |    NO    |    NO    |                  |
-| type            | string                         |   YES    |    NO    |                  |
-| art             | string                         |   YES    |    NO    |                  |
-| has_access      | boolean                        |    NO    |    NO    |                  |
-| has_collaborate | boolean                        |    NO    |    NO    |                  |
-| has_art         | boolean                        |    NO    |    NO    |                  |
-| flag            | boolean                        |    NO    |    NO    |                  |
-| rating          | integer                        |   YES    |    NO    |                  |
-| averagerating   | number                         |   YES    |    NO    |                  |
-| md5             | string                         |   YES    |    NO    |                  |
-| last_update     | integer                        |   YES    |    NO    |                  |
-| time            | integer                        |    NO    |    NO    |                  |
+| Field           | Type                           | Nullable | Optional | Notes                                  |
+|-----------------|--------------------------------|:--------:|:--------:|----------------------------------------|
+| id              | string                         |    NO    |    NO    |                                        |
+| name            | string                         |   YES    |    NO    |                                        |
+| owner           | string                         |   YES    |    NO    |                                        |
+| user            | [UserSummaryObject](#users)    |    NO    |    NO    | see [UserSummaryObject](#users) fields |
+| items           | array&lt;object&gt; \| integer |    NO    |    NO    |                                        |
+| type            | string                         |   YES    |    NO    |                                        |
+| art             | string                         |   YES    |    NO    |                                        |
+| has_access      | boolean                        |    NO    |    NO    |                                        |
+| has_collaborate | boolean                        |    NO    |    NO    |                                        |
+| has_art         | boolean                        |    NO    |    NO    |                                        |
+| flag            | boolean                        |    NO    |    NO    |                                        |
+| rating          | integer                        |   YES    |    NO    |                                        |
+| averagerating   | number                         |   YES    |    NO    |                                        |
+| md5             | string                         |   YES    |    NO    |                                        |
+| last_update     | integer                        |   YES    |    NO    |                                        |
+| time            | integer                        |    NO    |    NO    |                                        |
 <!-- GENERATED:RESPONSE:END -->
 
 * throws
@@ -6192,22 +6192,22 @@ Returns a `video` list.
 
 Each `video` entry ([VideoObject](#video)):
 
-| Field         | Type                | Nullable | Optional | Notes        |
-|---------------|---------------------|:--------:|:--------:|--------------|
-| id            | string              |    NO    |    NO    |              |
-| title         | string              |   YES    |    NO    |              |
-| mime          | string              |   YES    |    NO    |              |
-| resolution    | string              |   YES    |    NO    |              |
-| size          | integer             |    NO    |    NO    |              |
-| genre         | array&lt;object&gt; |    NO    |    NO    | `{id, name}` |
-| time          | integer             |    NO    |    NO    |              |
-| url           | string              |    NO    |    NO    |              |
-| art           | string              |   YES    |    NO    |              |
-| has_art       | boolean             |    NO    |    NO    |              |
-| flag          | boolean             |    NO    |    NO    |              |
-| rating        | integer             |   YES    |    NO    |              |
-| averagerating | number              |   YES    |    NO    |              |
-| playcount     | integer             |    NO    |    NO    |              |
+| Field         | Type                                           | Nullable | Optional | Notes                                        |
+|---------------|------------------------------------------------|:--------:|:--------:|----------------------------------------------|
+| id            | string                                         |    NO    |    NO    |                                              |
+| title         | string                                         |   YES    |    NO    |                                              |
+| mime          | string                                         |   YES    |    NO    |                                              |
+| resolution    | string                                         |   YES    |    NO    |                                              |
+| size          | integer                                        |    NO    |    NO    |                                              |
+| genre         | array&lt;[GenreReference](#genrereference)&gt; |    NO    |    NO    | see [GenreReference](#genrereference) fields |
+| time          | integer                                        |    NO    |    NO    |                                              |
+| url           | string                                         |    NO    |    NO    |                                              |
+| art           | string                                         |   YES    |    NO    |                                              |
+| has_art       | boolean                                        |    NO    |    NO    |                                              |
+| flag          | boolean                                        |    NO    |    NO    |                                              |
+| rating        | integer                                        |   YES    |    NO    |                                              |
+| averagerating | number                                         |   YES    |    NO    |                                              |
+| playcount     | integer                                        |    NO    |    NO    |                                              |
 <!-- GENERATED:RESPONSE:END -->
 
 * throws
@@ -6237,22 +6237,22 @@ This returns a single video
 
 Returns a single object.
 
-| Field         | Type                | Nullable | Optional | Notes        |
-|---------------|---------------------|:--------:|:--------:|--------------|
-| id            | string              |    NO    |    NO    |              |
-| title         | string              |   YES    |    NO    |              |
-| mime          | string              |   YES    |    NO    |              |
-| resolution    | string              |   YES    |    NO    |              |
-| size          | integer             |    NO    |    NO    |              |
-| genre         | array&lt;object&gt; |    NO    |    NO    | `{id, name}` |
-| time          | integer             |    NO    |    NO    |              |
-| url           | string              |    NO    |    NO    |              |
-| art           | string              |   YES    |    NO    |              |
-| has_art       | boolean             |    NO    |    NO    |              |
-| flag          | boolean             |    NO    |    NO    |              |
-| rating        | integer             |   YES    |    NO    |              |
-| averagerating | number              |   YES    |    NO    |              |
-| playcount     | integer             |    NO    |    NO    |              |
+| Field         | Type                                           | Nullable | Optional | Notes                                        |
+|---------------|------------------------------------------------|:--------:|:--------:|----------------------------------------------|
+| id            | string                                         |    NO    |    NO    |                                              |
+| title         | string                                         |   YES    |    NO    |                                              |
+| mime          | string                                         |   YES    |    NO    |                                              |
+| resolution    | string                                         |   YES    |    NO    |                                              |
+| size          | integer                                        |    NO    |    NO    |                                              |
+| genre         | array&lt;[GenreReference](#genrereference)&gt; |    NO    |    NO    | see [GenreReference](#genrereference) fields |
+| time          | integer                                        |    NO    |    NO    |                                              |
+| url           | string                                         |    NO    |    NO    |                                              |
+| art           | string                                         |   YES    |    NO    |                                              |
+| has_art       | boolean                                        |    NO    |    NO    |                                              |
+| flag          | boolean                                        |    NO    |    NO    |                                              |
+| rating        | integer                                        |   YES    |    NO    |                                              |
+| averagerating | number                                         |   YES    |    NO    |                                              |
+| playcount     | integer                                        |    NO    |    NO    |                                              |
 <!-- GENERATED:RESPONSE:END -->
 
 * throws
@@ -6427,11 +6427,11 @@ This method takes no additional parameters.
 
 Returns a `localplay_songs` list.
 
-| Field           | Type                               | Nullable | Optional | Notes                            |
-|-----------------|------------------------------------|:--------:|:--------:|----------------------------------|
-| localplay_songs | array&lt;`LocalplaySongObject`&gt; |    NO    |    NO    | see `LocalplaySongObject` fields |
+| Field           | Type                                                 | Nullable | Optional | Notes                                              |
+|-----------------|------------------------------------------------------|:--------:|:--------:|----------------------------------------------------|
+| localplay_songs | array&lt;[LocalplaySongObject](#localplay_songs)&gt; |    NO    |    NO    | see [LocalplaySongObject](#localplay_songs) fields |
 
-Each `localplay_songs` entry (`LocalplaySongObject`):
+Each `localplay_songs` entry ([LocalplaySongObject](#localplay_songs)):
 
 | Field | Type    | Nullable | Optional | Notes |
 |-------|---------|:--------:|:--------:|-------|
@@ -6478,7 +6478,7 @@ This is for controlling democratic play (Songs only)
 
 Depends on the `method` parameter: `play` returns the stream url, `vote`/`devote` return the applied method and its result, and `playlist` returns the current democratic song list.
 
-**`DemocraticPlayResponse`**
+**[DemocraticPlayResponse](#democratic)**
 
 Returned by `method=play`: the stream URL of the democratic playlist.
 
@@ -6488,7 +6488,7 @@ Returned by `method=play`: the stream URL of the democratic playlist.
 |-------|--------|:--------:|:--------:|-------|
 | url   | string |    NO    |    NO    |       |
 
-**`DemocraticVoteResponse`**
+**[DemocraticVoteResponse](#democratic)**
 
 Returned by `method=vote` and `method=devote`.
 
@@ -6499,36 +6499,36 @@ Returned by `method=vote` and `method=devote`.
 | method | string  |    NO    |    NO    |       |
 | result | boolean |    NO    |    NO    |       |
 
-**`DemocraticSongsResponse`**
+**[DemocraticSongsResponse](#democratic)**
 
 Returns a `song` list.
 
-| Field | Type                                | Nullable | Optional | Notes                             |
-|-------|-------------------------------------|:--------:|:--------:|-----------------------------------|
-| song  | array&lt;`DemocraticSongObject`&gt; |    NO    |    NO    | see `DemocraticSongObject` fields |
+| Field | Type                                             | Nullable | Optional | Notes                                          |
+|-------|--------------------------------------------------|:--------:|:--------:|------------------------------------------------|
+| song  | array&lt;[DemocraticSongObject](#democratic)&gt; |    NO    |    NO    | see [DemocraticSongObject](#democratic) fields |
 
-Each `song` entry (`DemocraticSongObject`):
+Each `song` entry ([DemocraticSongObject](#democratic)):
 
-| Field         | Type                | Nullable | Optional | Notes                          |
-|---------------|---------------------|:--------:|:--------:|--------------------------------|
-| id            | string              |    NO    |    NO    |                                |
-| title         | string              |   YES    |    NO    |                                |
-| artist        | object              |    NO    |    NO    | `{id, name, prefix, basename}` |
-| album         | object              |    NO    |    NO    | `{id, name, prefix, basename}` |
-| genre         | array&lt;object&gt; |    NO    |    NO    | `{id, name}`                   |
-| track         | integer             |    NO    |    NO    |                                |
-| time          | integer             |    NO    |    NO    |                                |
-| format        | string              |   YES    |    NO    |                                |
-| bitrate       | integer             |   YES    |    NO    |                                |
-| mime          | string              |   YES    |    NO    |                                |
-| url           | string              |    NO    |    NO    |                                |
-| size          | integer             |    NO    |    NO    |                                |
-| art           | string              |   YES    |    NO    |                                |
-| has_art       | boolean             |    NO    |    NO    |                                |
-| rating        | integer             |   YES    |    NO    |                                |
-| averagerating | number              |   YES    |    NO    |                                |
-| playcount     | integer             |    NO    |    NO    |                                |
-| vote          | integer             |    NO    |    NO    |                                |
+| Field         | Type                                           | Nullable | Optional | Notes                                        |
+|---------------|------------------------------------------------|:--------:|:--------:|----------------------------------------------|
+| id            | string                                         |    NO    |    NO    |                                              |
+| title         | string                                         |   YES    |    NO    |                                              |
+| artist        | [NamedReference](#namedreference)              |    NO    |    NO    | see [NamedReference](#namedreference) fields |
+| album         | [NamedReference](#namedreference)              |    NO    |    NO    | see [NamedReference](#namedreference) fields |
+| genre         | array&lt;[GenreReference](#genrereference)&gt; |    NO    |    NO    | see [GenreReference](#genrereference) fields |
+| track         | integer                                        |    NO    |    NO    |                                              |
+| time          | integer                                        |    NO    |    NO    |                                              |
+| format        | string                                         |   YES    |    NO    |                                              |
+| bitrate       | integer                                        |   YES    |    NO    |                                              |
+| mime          | string                                         |   YES    |    NO    |                                              |
+| url           | string                                         |    NO    |    NO    |                                              |
+| size          | integer                                        |    NO    |    NO    |                                              |
+| art           | string                                         |   YES    |    NO    |                                              |
+| has_art       | boolean                                        |    NO    |    NO    |                                              |
+| rating        | integer                                        |   YES    |    NO    |                                              |
+| averagerating | number                                         |   YES    |    NO    |                                              |
+| playcount     | integer                                        |    NO    |    NO    |                                              |
+| vote          | integer                                        |    NO    |    NO    |                                              |
 <!-- GENERATED:RESPONSE:END -->
 
 * throws
@@ -6542,3 +6542,62 @@ Each `song` entry (`DemocraticSongObject`):
 [Example](https://raw.githubusercontent.com/ampache/python3-ampache/api6/docs/xml-responses/democratic%20\(vote\).xml)
 
 [Example](https://raw.githubusercontent.com/ampache/python3-ampache/api6/docs/xml-responses/democratic%20\(playlist\).xml)
+
+## Shared reference objects
+
+<!-- GENERATED:SHARED-REFS:BEGIN -->
+Objects referenced by the field tables above (as `see <name> fields`) that no single method response documents on its own — the shared reference shapes and a few payloads carried inside another response.
+
+### FolderBrowseItem
+
+| Field         | Type    | Nullable | Optional | Notes |
+|---------------|---------|:--------:|:--------:|-------|
+| id            | string  |    NO    |    NO    |       |
+| object_type   | string  |    NO    |    NO    |       |
+| title         | string  |   YES    |    NO    |       |
+| parent        | integer |    NO    |    NO    |       |
+| path          | string  |   YES    |    NO    |       |
+| art           | string  |   YES    |    NO    |       |
+| has_art       | boolean |    NO    |    NO    |       |
+| play_url      | string  |    NO    |    NO    |       |
+| rating        | integer |   YES    |    NO    |       |
+| averagerating | integer |   YES    |    NO    |       |
+
+### GenreReference
+
+| Field | Type   | Nullable | Optional | Notes |
+|-------|--------|:--------:|:--------:|-------|
+| id    | string |    NO    |    NO    |       |
+| name  | string |    NO    |    NO    |       |
+
+### IndexReferenceObject
+
+| Field | Type   | Nullable | Optional | Notes |
+|-------|--------|:--------:|:--------:|-------|
+| id    | string |    NO    |    NO    |       |
+| type  | string |    NO    |    NO    |       |
+
+### LocalplayStatusObject
+
+Player state. The exact fields come from the configured Localplay controller (MPD, VLC, XBMC, UPnP, HTTPQ), so only `repeat` and `random` are guaranteed - the API coerces those two to booleans. The rest are what that controller reports.
+
+| Field        | Type    | Nullable | Optional | Notes |
+|--------------|---------|:--------:|:--------:|-------|
+| state        | string  |    NO    |   YES    |       |
+| volume       | string  |    NO    |   YES    |       |
+| repeat       | boolean |    NO    |    NO    |       |
+| random       | boolean |    NO    |    NO    |       |
+| track        | integer |    NO    |   YES    |       |
+| track_title  | string  |    NO    |   YES    |       |
+| track_artist | string  |    NO    |   YES    |       |
+| track_album  | string  |    NO    |   YES    |       |
+
+### NamedReference
+
+| Field    | Type   | Nullable | Optional | Notes |
+|----------|--------|:--------:|:--------:|-------|
+| id       | string |    NO    |    NO    |       |
+| name     | string |   YES    |    NO    |       |
+| prefix   | string |   YES    |    NO    |       |
+| basename | string |   YES    |    NO    |       |
+<!-- GENERATED:SHARED-REFS:END -->

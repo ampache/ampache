@@ -379,61 +379,13 @@
           "artists": {
             "type": "array",
             "items": {
-              "type": "object",
-              "properties": {
-                "id": {
-                  "type": "string"
-                },
-                "name": {
-                  "type": "string",
-                  "nullable": true
-                },
-                "prefix": {
-                  "type": "string",
-                  "nullable": true
-                },
-                "basename": {
-                  "type": "string",
-                  "nullable": true
-                }
-              },
-              "required": [
-                "id",
-                "name",
-                "prefix",
-                "basename"
-              ],
-              "additionalProperties": true
+              "$ref": "#/components/schemas/NamedReference"
             }
           },
           "songartists": {
             "type": "array",
             "items": {
-              "type": "object",
-              "properties": {
-                "id": {
-                  "type": "string"
-                },
-                "name": {
-                  "type": "string",
-                  "nullable": true
-                },
-                "prefix": {
-                  "type": "string",
-                  "nullable": true
-                },
-                "basename": {
-                  "type": "string",
-                  "nullable": true
-                }
-              },
-              "required": [
-                "id",
-                "name",
-                "prefix",
-                "basename"
-              ],
-              "additionalProperties": true
+              "$ref": "#/components/schemas/NamedReference"
             }
           },
           "time": {
@@ -461,20 +413,7 @@
           "genre": {
             "type": "array",
             "items": {
-              "type": "object",
-              "properties": {
-                "id": {
-                  "type": "string"
-                },
-                "name": {
-                  "type": "string"
-                }
-              },
-              "required": [
-                "id",
-                "name"
-              ],
-              "additionalProperties": true
+              "$ref": "#/components/schemas/GenreReference"
             }
           },
           "art": {
@@ -541,115 +480,19 @@
             "nullable": true
           },
           "artist": {
-            "type": "object",
-            "properties": {
-              "id": {
-                "type": "string"
-              },
-              "name": {
-                "type": "string",
-                "nullable": true
-              },
-              "prefix": {
-                "type": "string",
-                "nullable": true
-              },
-              "basename": {
-                "type": "string",
-                "nullable": true
-              }
-            },
-            "required": [
-              "id",
-              "name",
-              "prefix",
-              "basename"
-            ],
-            "additionalProperties": true
+            "$ref": "#/components/schemas/NamedReference"
           },
           "artists": {
             "type": "array",
             "items": {
-              "type": "object",
-              "properties": {
-                "id": {
-                  "type": "string"
-                },
-                "name": {
-                  "type": "string",
-                  "nullable": true
-                },
-                "prefix": {
-                  "type": "string",
-                  "nullable": true
-                },
-                "basename": {
-                  "type": "string",
-                  "nullable": true
-                }
-              },
-              "required": [
-                "id",
-                "name",
-                "prefix",
-                "basename"
-              ],
-              "additionalProperties": true
+              "$ref": "#/components/schemas/NamedReference"
             }
           },
           "album": {
-            "type": "object",
-            "properties": {
-              "id": {
-                "type": "string"
-              },
-              "name": {
-                "type": "string",
-                "nullable": true
-              },
-              "prefix": {
-                "type": "string",
-                "nullable": true
-              },
-              "basename": {
-                "type": "string",
-                "nullable": true
-              }
-            },
-            "required": [
-              "id",
-              "name",
-              "prefix",
-              "basename"
-            ],
-            "additionalProperties": true
+            "$ref": "#/components/schemas/NamedReference"
           },
           "albumartist": {
-            "type": "object",
-            "properties": {
-              "id": {
-                "type": "string"
-              },
-              "name": {
-                "type": "string",
-                "nullable": true
-              },
-              "prefix": {
-                "type": "string",
-                "nullable": true
-              },
-              "basename": {
-                "type": "string",
-                "nullable": true
-              }
-            },
-            "required": [
-              "id",
-              "name",
-              "prefix",
-              "basename"
-            ],
-            "additionalProperties": true
+            "$ref": "#/components/schemas/NamedReference"
           },
           "disk": {
             "type": "integer"
@@ -668,20 +511,7 @@
           "genre": {
             "type": "array",
             "items": {
-              "type": "object",
-              "properties": {
-                "id": {
-                  "type": "string"
-                },
-                "name": {
-                  "type": "string"
-                }
-              },
-              "required": [
-                "id",
-                "name"
-              ],
-              "additionalProperties": true
+              "$ref": "#/components/schemas/GenreReference"
             }
           },
           "playlisttrack": {
@@ -951,20 +781,7 @@
           "genre": {
             "type": "array",
             "items": {
-              "type": "object",
-              "properties": {
-                "id": {
-                  "type": "string"
-                },
-                "name": {
-                  "type": "string"
-                }
-              },
-              "required": [
-                "id",
-                "name"
-              ],
-              "additionalProperties": true
+              "$ref": "#/components/schemas/GenreReference"
             }
           },
           "art": {
@@ -1061,20 +878,7 @@
           "merge": {
             "type": "array",
             "items": {
-              "type": "object",
-              "properties": {
-                "id": {
-                  "type": "string"
-                },
-                "name": {
-                  "type": "string"
-                }
-              },
-              "required": [
-                "id",
-                "name"
-              ],
-              "additionalProperties": true
+              "$ref": "#/components/schemas/GenreReference"
             }
           }
         },
@@ -1554,20 +1358,7 @@
           "genre": {
             "type": "array",
             "items": {
-              "type": "object",
-              "properties": {
-                "id": {
-                  "type": "string"
-                },
-                "name": {
-                  "type": "string"
-                }
-              },
-              "required": [
-                "id",
-                "name"
-              ],
-              "additionalProperties": true
+              "$ref": "#/components/schemas/GenreReference"
             }
           },
           "time": {
@@ -3097,76 +2888,15 @@
             "nullable": true
           },
           "artist": {
-            "type": "object",
-            "properties": {
-              "id": {
-                "type": "string"
-              },
-              "name": {
-                "type": "string",
-                "nullable": true
-              },
-              "prefix": {
-                "type": "string",
-                "nullable": true
-              },
-              "basename": {
-                "type": "string",
-                "nullable": true
-              }
-            },
-            "required": [
-              "id",
-              "name",
-              "prefix",
-              "basename"
-            ],
-            "additionalProperties": true
+            "$ref": "#/components/schemas/NamedReference"
           },
           "album": {
-            "type": "object",
-            "properties": {
-              "id": {
-                "type": "string"
-              },
-              "name": {
-                "type": "string",
-                "nullable": true
-              },
-              "prefix": {
-                "type": "string",
-                "nullable": true
-              },
-              "basename": {
-                "type": "string",
-                "nullable": true
-              }
-            },
-            "required": [
-              "id",
-              "name",
-              "prefix",
-              "basename"
-            ],
-            "additionalProperties": true
+            "$ref": "#/components/schemas/NamedReference"
           },
           "genre": {
             "type": "array",
             "items": {
-              "type": "object",
-              "properties": {
-                "id": {
-                  "type": "string"
-                },
-                "name": {
-                  "type": "string"
-                }
-              },
-              "required": [
-                "id",
-                "name"
-              ],
-              "additionalProperties": true
+              "$ref": "#/components/schemas/GenreReference"
             }
           },
           "track": {
@@ -4052,20 +3782,7 @@
           "genre": {
             "type": "array",
             "items": {
-              "type": "object",
-              "properties": {
-                "id": {
-                  "type": "string"
-                },
-                "name": {
-                  "type": "string"
-                }
-              },
-              "required": [
-                "id",
-                "name"
-              ],
-              "additionalProperties": true
+              "$ref": "#/components/schemas/GenreReference"
             }
           },
           "art": {
@@ -5141,6 +4858,49 @@
         },
         "required": [
           "track"
+        ],
+        "additionalProperties": true
+      },
+      "GenreReference": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "name": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "id",
+          "name"
+        ],
+        "additionalProperties": true
+      },
+      "NamedReference": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "name": {
+            "type": "string",
+            "nullable": true
+          },
+          "prefix": {
+            "type": "string",
+            "nullable": true
+          },
+          "basename": {
+            "type": "string",
+            "nullable": true
+          }
+        },
+        "required": [
+          "id",
+          "name",
+          "prefix",
+          "basename"
         ],
         "additionalProperties": true
       }
