@@ -1197,21 +1197,7 @@
             "nullable": true
           },
           "user": {
-            "type": "object",
-            "properties": {
-              "id": {
-                "type": "string"
-              },
-              "username": {
-                "type": "string",
-                "nullable": true
-              }
-            },
-            "required": [
-              "id",
-              "username"
-            ],
-            "additionalProperties": true
+            "$ref": "#/components/schemas/UserSummaryObject"
           },
           "items": {
             "oneOf": [
@@ -2681,21 +2667,7 @@
             "type": "string"
           },
           "user": {
-            "type": "object",
-            "properties": {
-              "id": {
-                "type": "string"
-              },
-              "username": {
-                "type": "string",
-                "nullable": true
-              }
-            },
-            "required": [
-              "id",
-              "username"
-            ],
-            "additionalProperties": true
+            "$ref": "#/components/schemas/UserSummaryObject"
           }
         },
         "required": [
@@ -4481,10 +4453,9 @@
               "song",
               "video",
               "podcast_episode",
-              "channel",
               "broadcast",
-              "democratic",
-              "live_stream"
+              "live_stream",
+              "democratic"
             ],
             "type": "string"
           },
@@ -4572,7 +4543,10 @@
             "enum": [
               "song",
               "video",
-              "podcast_episode"
+              "podcast_episode",
+              "broadcast",
+              "live_stream",
+              "democratic"
             ],
             "type": "string",
             "default": "song"
@@ -5154,6 +5128,19 @@
         },
         "required": [
           "position"
+        ],
+        "additionalProperties": true
+      },
+      "LocalplayLocalplaySkipRequest": {
+        "type": "object",
+        "properties": {
+          "track": {
+            "type": "integer",
+            "description": "Song number to skip to, starting at 1 (as returned by localplay/songs)"
+          }
+        },
+        "required": [
+          "track"
         ],
         "additionalProperties": true
       }
@@ -6019,7 +6006,8 @@
             "$ref": "#/components/responses/InternalServerErrorResponse"
           }
         },
-        "operationId": "albumDisk"
+        "operationId": "albumDisk",
+        "description": "This returns a single album disk based on the UID provided"
       }
     },
     "/album-disks/{album_disk_id}/art": {
@@ -6090,7 +6078,8 @@
             "$ref": "#/components/responses/InternalServerErrorResponse"
           }
         },
-        "operationId": "getArtAlbumDisks"
+        "operationId": "getArtAlbumDisks",
+        "description": "Get an art image."
       }
     },
     "/album-disks/{album_disk_id}/flag": {
@@ -6167,7 +6156,8 @@
             }
           }
         },
-        "operationId": "flagAlbumDisks"
+        "operationId": "flagAlbumDisks",
+        "description": "This flags a library item as a favorite"
       }
     },
     "/album-disks/{album_disk_id}/rate": {
@@ -6240,7 +6230,8 @@
             }
           }
         },
-        "operationId": "rateAlbumDisks"
+        "operationId": "rateAlbumDisks",
+        "description": "This rates a library item"
       }
     },
     "/album-disks/{album_disk_id}/songs": {
@@ -6294,7 +6285,8 @@
             "$ref": "#/components/responses/InternalServerErrorResponse"
           }
         },
-        "operationId": "albumDiskSongs"
+        "operationId": "albumDiskSongs",
+        "description": "This returns the songs of a specified album disk"
       }
     },
     "/album-disks/search": {
@@ -6462,7 +6454,8 @@
         "tags": [
           "Browsing, Indexes and Lists"
         ],
-        "operationId": "statsAlbumDisks"
+        "operationId": "statsAlbumDisks",
+        "description": "Get some items based on some simple search types and filters. (Random by default) This method **HAD** partial backwards compatibility with older api versions but it has now been removed Pass -1 limit to get all results. (0 will fall back to the `popular_threshold` value)"
       }
     },
     "/albums": {
@@ -6600,7 +6593,8 @@
         "tags": [
           "Albums"
         ],
-        "operationId": "albums"
+        "operationId": "albums",
+        "description": "This returns albums based on the provided search filters"
       }
     },
     "/albums/{album_id}": {
@@ -6701,7 +6695,8 @@
         "tags": [
           "Albums"
         ],
-        "operationId": "album"
+        "operationId": "album",
+        "description": "This returns a single album based on the UID provided"
       }
     },
     "/albums/{album_id}/art": {
@@ -6772,7 +6767,8 @@
         "tags": [
           "Artwork"
         ],
-        "operationId": "getArtAlbums"
+        "operationId": "getArtAlbums",
+        "description": "Get an art image."
       }
     },
     "/albums/{album_id}/disks": {
@@ -6837,7 +6833,8 @@
             "$ref": "#/components/responses/InternalServerErrorResponse"
           }
         },
-        "operationId": "albumDisks"
+        "operationId": "albumDisks",
+        "description": "This returns the disks of a specified album"
       }
     },
     "/albums/{album_id}/fetch-metadata": {
@@ -6889,7 +6886,8 @@
           "Albums",
           "Utilities"
         ],
-        "operationId": "getExternalMetadataAlbumsFetchMetadata"
+        "operationId": "getExternalMetadataAlbumsFetchMetadata",
+        "description": "Return External plugin metadata searching by object id and type"
       }
     },
     "/albums/{album_id}/flag": {
@@ -6966,7 +6964,8 @@
             }
           }
         },
-        "operationId": "flagAlbums"
+        "operationId": "flagAlbums",
+        "description": "This flags a library item as a favorite"
       }
     },
     "/albums/{album_id}/rate": {
@@ -7039,7 +7038,8 @@
             }
           }
         },
-        "operationId": "rateAlbums"
+        "operationId": "rateAlbums",
+        "description": "This rates a library item"
       }
     },
     "/albums/{album_id}/share": {
@@ -7135,7 +7135,8 @@
             }
           }
         },
-        "operationId": "shareCreateAlbums"
+        "operationId": "shareCreateAlbums",
+        "description": "Create a public url that can be used by anyone to stream media. Takes the file id with optional description and expires parameters."
       }
     },
     "/albums/{album_id}/songs": {
@@ -7512,7 +7513,8 @@
           "Albums",
           "Songs"
         ],
-        "operationId": "albumSongs"
+        "operationId": "albumSongs",
+        "description": "This returns the songs of a specified album"
       }
     },
     "/albums/{album_id}/update-art": {
@@ -7590,7 +7592,8 @@
             }
           }
         },
-        "operationId": "updateArtAlbums"
+        "operationId": "updateArtAlbums",
+        "description": "Updates a single album, artist, song running the gather_art process Existing art is replaced unless you send overwrite=0, which keeps whatever is already there."
       }
     },
     "/albums/{album_id}/update-tags": {
@@ -7639,7 +7642,8 @@
         "tags": [
           "Utilities"
         ],
-        "operationId": "updateFromTagsAlbums"
+        "operationId": "updateFromTagsAlbums",
+        "description": "Update a single album, artist, song from the tag data"
       }
     },
     "/albums/search": {
@@ -8018,7 +8022,8 @@
         "tags": [
           "Browsing, Indexes and Lists"
         ],
-        "operationId": "statsAlbums"
+        "operationId": "statsAlbums",
+        "description": "Get some items based on some simple search types and filters. (Random by default) This method **HAD** partial backwards compatibility with older api versions but it has now been removed Pass -1 limit to get all results. (0 will fall back to the `popular_threshold` value)"
       }
     },
     "/artists": {
@@ -8215,7 +8220,8 @@
         "tags": [
           "Artists"
         ],
-        "operationId": "artists"
+        "operationId": "artists",
+        "description": "This takes a collection of inputs and returns artist objects."
       }
     },
     "/artists/{artist_id}": {
@@ -8300,7 +8306,8 @@
         "tags": [
           "Artists"
         ],
-        "operationId": "artist"
+        "operationId": "artist",
+        "description": "This returns a single artist based on the UID of said artist"
       }
     },
     "/artists/{artist_id}/albums": {
@@ -8428,7 +8435,8 @@
           "Albums",
           "Artists"
         ],
-        "operationId": "artistAlbums"
+        "operationId": "artistAlbums",
+        "description": "This returns the albums of an artist"
       }
     },
     "/artists/{artist_id}/art": {
@@ -8499,7 +8507,8 @@
         "tags": [
           "Artwork"
         ],
-        "operationId": "getArtArtists"
+        "operationId": "getArtArtists",
+        "description": "Get an art image."
       }
     },
     "/artists/{artist_id}/fetch-info": {
@@ -8548,7 +8557,8 @@
         "tags": [
           "Utilities"
         ],
-        "operationId": "updateArtistInfoFetchInfo"
+        "operationId": "updateArtistInfoFetchInfo",
+        "description": "Update artist information and fetch similar artists from last.fm Make sure lastfm_API_key is set in your configuration file"
       }
     },
     "/artists/{artist_id}/fetch-metadata": {
@@ -8600,7 +8610,8 @@
           "Artists",
           "Utilities"
         ],
-        "operationId": "getExternalMetadataArtistsFetchMetadata"
+        "operationId": "getExternalMetadataArtistsFetchMetadata",
+        "description": "Return External plugin metadata searching by object id and type"
       }
     },
     "/artists/{artist_id}/flag": {
@@ -8677,7 +8688,8 @@
             }
           }
         },
-        "operationId": "flagArtists"
+        "operationId": "flagArtists",
+        "description": "This flags a library item as a favorite"
       }
     },
     "/artists/{artist_id}/rate": {
@@ -8750,7 +8762,8 @@
             }
           }
         },
-        "operationId": "rateArtists"
+        "operationId": "rateArtists",
+        "description": "This rates a library item"
       }
     },
     "/artists/{artist_id}/share": {
@@ -8846,7 +8859,8 @@
             }
           }
         },
-        "operationId": "shareCreateArtists"
+        "operationId": "shareCreateArtists",
+        "description": "Create a public url that can be used by anyone to stream media. Takes the file id with optional description and expires parameters."
       }
     },
     "/artists/{artist_id}/similar": {
@@ -8993,7 +9007,8 @@
         "tags": [
           "Artists"
         ],
-        "operationId": "getSimilarArtists"
+        "operationId": "getSimilarArtists",
+        "description": "Return similar artist id's or similar song ids compared to the input filter"
       }
     },
     "/artists/{artist_id}/songs": {
@@ -9140,7 +9155,8 @@
           "Artists",
           "Songs"
         ],
-        "operationId": "artistSongs"
+        "operationId": "artistSongs",
+        "description": "This returns the songs of the specified artist"
       }
     },
     "/artists/{artist_id}/update-art": {
@@ -9218,7 +9234,8 @@
             }
           }
         },
-        "operationId": "updateArtArtists"
+        "operationId": "updateArtArtists",
+        "description": "Updates a single album, artist, song running the gather_art process Existing art is replaced unless you send overwrite=0, which keeps whatever is already there."
       }
     },
     "/artists/{artist_id}/update-tags": {
@@ -9267,7 +9284,8 @@
         "tags": [
           "Utilities"
         ],
-        "operationId": "updateFromTagsArtists"
+        "operationId": "updateFromTagsArtists",
+        "description": "Update a single album, artist, song from the tag data"
       }
     },
     "/artists/search": {
@@ -9606,7 +9624,8 @@
         "tags": [
           "Browsing, Indexes and Lists"
         ],
-        "operationId": "statsArtists"
+        "operationId": "statsArtists",
+        "description": "Get some items based on some simple search types and filters. (Random by default) This method **HAD** partial backwards compatibility with older api versions but it has now been removed Pass -1 limit to get all results. (0 will fall back to the `popular_threshold` value)"
       }
     },
     "/bookmarks": {
@@ -9727,7 +9746,8 @@
         "tags": [
           "Bookmarks"
         ],
-        "operationId": "bookmarks"
+        "operationId": "bookmarks",
+        "description": "Get information about bookmarked media this user is allowed to manage."
       },
       "put": {
         "parameters": [
@@ -9849,7 +9869,8 @@
             }
           }
         },
-        "operationId": "bookmarkCreate"
+        "operationId": "bookmarkCreate",
+        "description": "Create a placeholder for the current media that you can return to later."
       }
     },
     "/bookmarks/{bookmark_id}": {
@@ -10009,7 +10030,8 @@
             }
           }
         },
-        "operationId": "bookmarkDelete"
+        "operationId": "bookmarkDelete",
+        "description": "Delete an existing bookmark. (if it exists)"
       },
       "get": {
         "parameters": [
@@ -10160,7 +10182,8 @@
         "tags": [
           "Bookmarks"
         ],
-        "operationId": "bookmark"
+        "operationId": "bookmark",
+        "description": "Get a single bookmark by bookmark_id"
       },
       "patch": {
         "parameters": [
@@ -10346,7 +10369,8 @@
             }
           }
         },
-        "operationId": "bookmarkEdit"
+        "operationId": "bookmarkEdit",
+        "description": "Edit a placeholder for the current media that you can return to later."
       }
     },
     "/browse": {
@@ -10726,7 +10750,8 @@
         "tags": [
           "Browsing, Indexes and Lists"
         ],
-        "operationId": "browse"
+        "operationId": "browse",
+        "description": "Return children of a parent object in a folder traversal/browse style. If you don't send any parameters you'll get a catalog list (the 'root' path)"
       }
     },
     "/folder": {
@@ -10985,7 +11010,8 @@
         "tags": [
           "Browsing, Indexes and Lists"
         ],
-        "operationId": "folder"
+        "operationId": "folder",
+        "description": "Return children of a parent folder object by ID **Ampache 8.0.0+**"
       }
     },
     "/folders": {
@@ -11118,7 +11144,8 @@
         "tags": [
           "Browsing, Indexes and Lists"
         ],
-        "operationId": "folders"
+        "operationId": "folders",
+        "description": "Return children of a parent object in a folder traversal style **Ampache 8.0.0+**"
       }
     },
     "/catalogs": {
@@ -11240,7 +11267,8 @@
         "tags": [
           "Catalogs"
         ],
-        "operationId": "catalogs"
+        "operationId": "catalogs",
+        "description": "This searches the catalogs and returns... catalogs"
       },
       "put": {
         "parameters": [
@@ -11381,7 +11409,8 @@
             }
           }
         },
-        "operationId": "catalogCreate"
+        "operationId": "catalogCreate",
+        "description": "Create a new catalog."
       }
     },
     "/catalogs/{catalog_id}": {
@@ -11440,7 +11469,8 @@
         "tags": [
           "Catalogs"
         ],
-        "operationId": "catalogDelete"
+        "operationId": "catalogDelete",
+        "description": "Delete an existing catalog."
       },
       "get": {
         "parameters": [
@@ -11497,7 +11527,8 @@
         "tags": [
           "Catalogs"
         ],
-        "operationId": "catalog"
+        "operationId": "catalog",
+        "description": "Return catalog by UID"
       }
     },
     "/catalogs/{catalog_id}/action": {
@@ -11579,7 +11610,8 @@
             }
           }
         },
-        "operationId": "catalogAction"
+        "operationId": "catalogAction",
+        "description": "Kick off a catalog update or clean for the selected catalog"
       }
     },
     "/catalogs/{catalog_id}/add": {
@@ -11877,7 +11909,8 @@
         "tags": [
           "Catalogs"
         ],
-        "operationId": "browseCatalogs"
+        "operationId": "browseCatalogs",
+        "description": "Return children of a parent object in a folder traversal/browse style. If you don't send any parameters you'll get a catalog list (the 'root' path)"
       }
     },
     "/catalogs/{catalog_id}/browse/albums/{album_id}": {
@@ -11978,7 +12011,8 @@
         "tags": [
           "Catalogs"
         ],
-        "operationId": "browseCatalogsAlbums"
+        "operationId": "browseCatalogsAlbums",
+        "description": "Return children of a parent object in a folder traversal/browse style. If you don't send any parameters you'll get a catalog list (the 'root' path)"
       }
     },
     "/catalogs/{catalog_id}/browse/artists/{artist_id}": {
@@ -12061,7 +12095,8 @@
         "tags": [
           "Catalogs"
         ],
-        "operationId": "browseCatalogsArtists"
+        "operationId": "browseCatalogsArtists",
+        "description": "Return children of a parent object in a folder traversal/browse style. If you don't send any parameters you'll get a catalog list (the 'root' path)"
       }
     },
     "/catalogs/{catalog_id}/browse/podcasts/{podcast_id}": {
@@ -12162,7 +12197,8 @@
         "tags": [
           "Catalogs"
         ],
-        "operationId": "browseCatalogsPodcasts"
+        "operationId": "browseCatalogsPodcasts",
+        "description": "Return children of a parent object in a folder traversal/browse style. If you don't send any parameters you'll get a catalog list (the 'root' path)"
       }
     },
     "/catalogs/{catalog_id}/file": {
@@ -12244,7 +12280,8 @@
             }
           }
         },
-        "operationId": "catalogFile"
+        "operationId": "catalogFile",
+        "description": "Perform actions on local catalog files. Single file versions of catalog add, clean, verify and remove (delete) Make sure you remember to urlencode those file names!"
       }
     },
     "/catalogs/{catalog_id}/folder": {
@@ -12391,7 +12428,8 @@
             }
           }
         },
-        "operationId": "catalogFolderCatalogsFolderPost"
+        "operationId": "catalogFolderCatalogsFolderPost",
+        "description": "Perform actions on local catalog folders. Single folder versions of catalog add, clean, verify and remove (delete) Make sure you remember to urlencode those folder names!"
       }
     },
     "/democratic/{object_id}": {
@@ -13009,7 +13047,8 @@
             }
           }
         },
-        "operationId": "democratic"
+        "operationId": "democratic",
+        "description": "This is for controlling democratic play (Songs only)"
       }
     },
     "/democratic/{object_id}/localplay": {
@@ -13038,10 +13077,9 @@
                 "song",
                 "video",
                 "podcast_episode",
-                "channel",
                 "broadcast",
-                "democratic",
-                "live_stream"
+                "live_stream",
+                "democratic"
               ],
               "type": "string"
             }
@@ -13137,7 +13175,8 @@
             }
           }
         },
-        "operationId": "localplayDemocratic"
+        "operationId": "localplayDemocratic",
+        "description": "This is for controlling localplay"
       }
     },
     "/genres": {
@@ -13242,7 +13281,8 @@
         "tags": [
           "Genres"
         ],
-        "operationId": "genres"
+        "operationId": "genres",
+        "description": "This returns the genres (Tags) based on the specified filter"
       }
     },
     "/genres/{genre_id}": {
@@ -13300,7 +13340,8 @@
         "tags": [
           "Genres"
         ],
-        "operationId": "genre"
+        "operationId": "genre",
+        "description": "This returns a single genre based on UID"
       }
     },
     "/genres/{genre_id}/albums": {
@@ -13416,7 +13457,8 @@
           "Genres",
           "Albums"
         ],
-        "operationId": "genreAlbums"
+        "operationId": "genreAlbums",
+        "description": "This returns the albums associated with the genre in question"
       }
     },
     "/genres/{genre_id}/artists": {
@@ -13511,7 +13553,8 @@
           "Genres",
           "Artists"
         ],
-        "operationId": "genreArtists"
+        "operationId": "genreArtists",
+        "description": "This returns the artists associated with the genre in question as defined by the UID"
       }
     },
     "/genres/{genre_id}/songs": {
@@ -13655,7 +13698,8 @@
           "Genres",
           "Songs"
         ],
-        "operationId": "genreSongs"
+        "operationId": "genreSongs",
+        "description": "returns the songs for this genre"
       }
     },
     "/genres/search": {
@@ -16449,7 +16493,8 @@
         "tags": [
           "Browsing, Indexes and Lists"
         ],
-        "operationId": "index"
+        "operationId": "index",
+        "description": "This takes a collection of inputs and return ID's for the object type. Add 'include' to include child objects"
       }
     },
     "/labels": {
@@ -16584,7 +16629,8 @@
         "tags": [
           "Labels"
         ],
-        "operationId": "labels"
+        "operationId": "labels",
+        "description": "This returns labels based on the specified filter"
       }
     },
     "/labels/{label_id}": {
@@ -16642,7 +16688,8 @@
         "tags": [
           "Labels"
         ],
-        "operationId": "label"
+        "operationId": "label",
+        "description": "This returns a single label"
       }
     },
     "/labels/{label_id}/artists": {
@@ -16733,7 +16780,8 @@
           "Labels",
           "Artists"
         ],
-        "operationId": "labelArtists"
+        "operationId": "labelArtists",
+        "description": "This returns the artists for a label"
       }
     },
     "/labels/{label_id}/fetch-metadata": {
@@ -16785,7 +16833,8 @@
           "Labels",
           "Utilities"
         ],
-        "operationId": "getExternalMetadataLabelsFetchMetadata"
+        "operationId": "getExternalMetadataLabelsFetchMetadata",
+        "description": "Return External plugin metadata searching by object id and type"
       }
     },
     "/labels/search": {
@@ -17098,7 +17147,8 @@
         "tags": [
           "Licenses"
         ],
-        "operationId": "licenses"
+        "operationId": "licenses",
+        "description": "This returns licenses based on the specified filter"
       }
     },
     "/licenses/{license_id}": {
@@ -17150,7 +17200,8 @@
         "tags": [
           "Licenses"
         ],
-        "operationId": "license"
+        "operationId": "license",
+        "description": "This returns a single license"
       }
     },
     "/licenses/{license_id}/songs": {
@@ -17214,7 +17265,8 @@
           "Licenses",
           "Songs"
         ],
-        "operationId": "licenseSongs"
+        "operationId": "licenseSongs",
+        "description": "This returns the songs for a license"
       }
     },
     "/list": {
@@ -17693,7 +17745,8 @@
         "tags": [
           "Browsing, Indexes and Lists"
         ],
-        "operationId": "list"
+        "operationId": "list",
+        "description": "This takes a named array of objects and returning `id`, `name`, `prefix` and `basename`"
       }
     },
     "/live-streams": {
@@ -17796,7 +17849,8 @@
         "tags": [
           "Live Streams"
         ],
-        "operationId": "liveStreams"
+        "operationId": "liveStreams",
+        "description": "This returns live_streams based on the specified filter"
       },
       "put": {
         "parameters": [
@@ -17898,7 +17952,8 @@
             }
           }
         },
-        "operationId": "liveStreamCreate"
+        "operationId": "liveStreamCreate",
+        "description": "Create a live_stream (radio station) object."
       }
     },
     "/live-streams/{live_stream_id}": {
@@ -17952,7 +18007,8 @@
         "tags": [
           "Live Streams"
         ],
-        "operationId": "liveStreamDelete"
+        "operationId": "liveStreamDelete",
+        "description": "Delete an existing live_stream (radio station). (if it exists)"
       },
       "get": {
         "parameters": [
@@ -18004,7 +18060,8 @@
         "tags": [
           "Live Streams"
         ],
-        "operationId": "liveStream"
+        "operationId": "liveStream",
+        "description": "This returns a single live_stream"
       },
       "patch": {
         "parameters": [
@@ -18112,7 +18169,8 @@
             }
           }
         },
-        "operationId": "liveStreamEdit"
+        "operationId": "liveStreamEdit",
+        "description": "Edit a live_stream (radio station) object."
       }
     },
     "/live-streams/{live_stream_id}/localplay": {
@@ -18141,10 +18199,9 @@
                 "song",
                 "video",
                 "podcast_episode",
-                "channel",
                 "broadcast",
-                "democratic",
-                "live_stream"
+                "live_stream",
+                "democratic"
               ],
               "type": "string"
             }
@@ -18240,7 +18297,8 @@
             }
           }
         },
-        "operationId": "localplayLiveStreams"
+        "operationId": "localplayLiveStreams",
+        "description": "This is for controlling localplay"
       }
     },
     "/localplay/add": {
@@ -18263,7 +18321,10 @@
               "enum": [
                 "song",
                 "video",
-                "podcast_episode"
+                "podcast_episode",
+                "broadcast",
+                "live_stream",
+                "democratic"
               ],
               "type": "string",
               "default": "song"
@@ -18342,7 +18403,8 @@
             }
           }
         },
-        "operationId": "localplayAdd"
+        "operationId": "localplayAdd",
+        "description": "This is for controlling localplay"
       }
     },
     "/localplay/next": {
@@ -18407,7 +18469,8 @@
         "tags": [
           "Playback Control"
         ],
-        "operationId": "localplayNext"
+        "operationId": "localplayNext",
+        "description": "This is for controlling localplay"
       }
     },
     "/localplay/prev": {
@@ -18472,7 +18535,8 @@
         "tags": [
           "Playback Control"
         ],
-        "operationId": "localplayPrev"
+        "operationId": "localplayPrev",
+        "description": "This is for controlling localplay"
       }
     },
     "/localplay/stop": {
@@ -18537,7 +18601,8 @@
         "tags": [
           "Playback Control"
         ],
-        "operationId": "localplayStop"
+        "operationId": "localplayStop",
+        "description": "This is for controlling localplay"
       }
     },
     "/localplay/play": {
@@ -18602,7 +18667,8 @@
         "tags": [
           "Playback Control"
         ],
-        "operationId": "localplayPlay"
+        "operationId": "localplayPlay",
+        "description": "This is for controlling localplay"
       }
     },
     "/localplay/pause": {
@@ -18667,7 +18733,8 @@
         "tags": [
           "Playback Control"
         ],
-        "operationId": "localplayPause"
+        "operationId": "localplayPause",
+        "description": "This is for controlling localplay"
       }
     },
     "/localplay/volume-up": {
@@ -18732,7 +18799,8 @@
         "tags": [
           "Playback Control"
         ],
-        "operationId": "localplayVolumeUp"
+        "operationId": "localplayVolumeUp",
+        "description": "This is for controlling localplay"
       }
     },
     "/localplay/volume-down": {
@@ -18797,7 +18865,8 @@
         "tags": [
           "Playback Control"
         ],
-        "operationId": "localplayVolumeDown"
+        "operationId": "localplayVolumeDown",
+        "description": "This is for controlling localplay"
       }
     },
     "/localplay/volume-mute": {
@@ -18862,7 +18931,8 @@
         "tags": [
           "Playback Control"
         ],
-        "operationId": "localplayVolumeMute"
+        "operationId": "localplayVolumeMute",
+        "description": "This is for controlling localplay"
       }
     },
     "/localplay/delete-all": {
@@ -18927,12 +18997,23 @@
         "tags": [
           "Playback Control"
         ],
-        "operationId": "localplayDeleteAll"
+        "operationId": "localplayDeleteAll",
+        "description": "This is for controlling localplay"
       }
     },
     "/localplay/skip": {
       "post": {
-        "parameters": [],
+        "parameters": [
+          {
+            "in": "query",
+            "name": "track",
+            "description": "Song number to skip to, starting at 1 (as returned by localplay/songs)",
+            "required": false,
+            "schema": {
+              "type": "integer"
+            }
+          }
+        ],
         "responses": {
           "200": {
             "content": {
@@ -18992,7 +19073,24 @@
         "tags": [
           "Playback Control"
         ],
-        "operationId": "localplaySkip"
+        "operationId": "localplaySkip",
+        "requestBody": {
+          "required": false,
+          "description": "Parameters may be sent here instead of in the query string; body values win on conflict. Values listed as required must be supplied by one transport or the other.",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/LocalplayLocalplaySkipRequest"
+              }
+            },
+            "application/x-www-form-urlencoded": {
+              "schema": {
+                "$ref": "#/components/schemas/LocalplayLocalplaySkipRequest"
+              }
+            }
+          }
+        },
+        "description": "This is for controlling localplay"
       }
     },
     "/localplay/songs": {
@@ -19044,7 +19142,8 @@
         "tags": [
           "Localplay"
         ],
-        "operationId": "localplaySongsLocalplaySongs"
+        "operationId": "localplaySongsLocalplaySongs",
+        "description": "Get the list of songs in your localplay instance"
       }
     },
     "/localplay/status": {
@@ -19109,7 +19208,8 @@
         "tags": [
           "Playback Control"
         ],
-        "operationId": "localplayStatus"
+        "operationId": "localplayStatus",
+        "description": "This is for controlling localplay"
       }
     },
     "/me": {
@@ -19168,7 +19268,8 @@
         "tags": [
           "Users"
         ],
-        "operationId": "userMe"
+        "operationId": "userMe",
+        "description": "This gets a user's public information."
       }
     },
     "/me/friends-timeline": {
@@ -19267,7 +19368,8 @@
         "tags": [
           "Social"
         ],
-        "operationId": "friendsTimelineMe"
+        "operationId": "friendsTimelineMe",
+        "description": "This get current user friends timeline"
       }
     },
     "/me/last-shouts": {
@@ -19347,7 +19449,8 @@
         "tags": [
           "Social"
         ],
-        "operationId": "lastShoutsMe"
+        "operationId": "lastShoutsMe",
+        "description": "This gets the latest posted shouts"
       }
     },
     "/me/lost-password": {
@@ -19441,7 +19544,8 @@
         "tags": [
           "Now Playing"
         ],
-        "operationId": "nowPlayingMe"
+        "operationId": "nowPlayingMe",
+        "description": "Get what is currently being played by all users."
       }
     },
     "/me/playlists": {
@@ -19582,7 +19686,8 @@
         "tags": [
           "Playlists"
         ],
-        "operationId": "userPlaylistsMe"
+        "operationId": "userPlaylistsMe",
+        "description": "This returns playlists based on the specified filter"
       }
     },
     "/me/smartlists": {
@@ -19702,7 +19807,8 @@
         "tags": [
           "Playlists"
         ],
-        "operationId": "userSmartlistsMe"
+        "operationId": "userSmartlistsMe",
+        "description": "This returns smartlists based on the specified filter"
       }
     },
     "/ping": {
@@ -19924,7 +20030,8 @@
         "tags": [
           "Playlists"
         ],
-        "operationId": "playlists"
+        "operationId": "playlists",
+        "description": "This returns playlists based on the specified filter"
       },
       "put": {
         "parameters": [
@@ -20019,7 +20126,8 @@
             }
           }
         },
-        "operationId": "playlistCreate"
+        "operationId": "playlistCreate",
+        "description": "This create a new playlist and return it"
       }
     },
     "/playlists/{playlist_id}": {
@@ -20086,7 +20194,8 @@
         "tags": [
           "Playlists"
         ],
-        "operationId": "playlistDelete"
+        "operationId": "playlistDelete",
+        "description": "This deletes a playlist"
       },
       "get": {
         "parameters": [
@@ -20151,7 +20260,8 @@
         "tags": [
           "Playlists"
         ],
-        "operationId": "playlist"
+        "operationId": "playlist",
+        "description": "This returns a single playlist"
       },
       "patch": {
         "parameters": [
@@ -20279,7 +20389,8 @@
             }
           }
         },
-        "operationId": "playlistEdit"
+        "operationId": "playlistEdit",
+        "description": "This modifies name and type of a playlist Previously name and type were mandatory while filter wasn't. this has been reversed."
       }
     },
     "/playlists/{playlist_id}/add": {
@@ -20367,7 +20478,8 @@
             }
           }
         },
-        "operationId": "playlistAdd"
+        "operationId": "playlistAdd",
+        "description": "This adds a song to a playlist. setting check=1 will not add duplicates to the playlist"
       }
     },
     "/playlists/{playlist_id}/art": {
@@ -20438,7 +20550,8 @@
         "tags": [
           "Artwork"
         ],
-        "operationId": "getArtPlaylists"
+        "operationId": "getArtPlaylists",
+        "description": "Get an art image."
       }
     },
     "/playlists/{playlist_id}/download": {
@@ -20550,7 +20663,8 @@
         "tags": [
           "Streaming and Downloads"
         ],
-        "operationId": "downloadPlaylists"
+        "operationId": "downloadPlaylists",
+        "description": "Downloads a given media file. set format=raw to download the full file"
       }
     },
     "/playlists/{playlist_id}/flag": {
@@ -20627,7 +20741,8 @@
             }
           }
         },
-        "operationId": "flagPlaylists"
+        "operationId": "flagPlaylists",
+        "description": "This flags a library item as a favorite"
       }
     },
     "/playlists/{playlist_id}/hash": {
@@ -20676,7 +20791,8 @@
         "tags": [
           "Playlists"
         ],
-        "operationId": "playlistHash"
+        "operationId": "playlistHash",
+        "description": "This returns the md5 hash for the songs in a playlist"
       }
     },
     "/playlists/{playlist_id}/rate": {
@@ -20749,7 +20865,8 @@
             }
           }
         },
-        "operationId": "ratePlaylists"
+        "operationId": "ratePlaylists",
+        "description": "This rates a library item"
       }
     },
     "/playlists/{playlist_id}/remove-song": {
@@ -20830,7 +20947,8 @@
             }
           }
         },
-        "operationId": "playlistRemoveSong"
+        "operationId": "playlistRemoveSong",
+        "description": "Remove objects from a playlist using track number in the list or object id and type. Using clear will empty the entire list."
       }
     },
     "/playlists/{playlist_id}/remove": {
@@ -20941,7 +21059,8 @@
             }
           }
         },
-        "operationId": "playlistRemove"
+        "operationId": "playlistRemove",
+        "description": "Remove objects from a playlist using track number in the list or object id and type. Using clear will empty the entire list."
       }
     },
     "/playlists/{playlist_id}/share": {
@@ -21037,7 +21156,8 @@
             }
           }
         },
-        "operationId": "shareCreatePlaylists"
+        "operationId": "shareCreatePlaylists",
+        "description": "Create a public url that can be used by anyone to stream media. Takes the file id with optional description and expires parameters."
       }
     },
     "/playlists/{playlist_id}/songs": {
@@ -21411,7 +21531,8 @@
           "Playlists",
           "Songs"
         ],
-        "operationId": "playlistSongs"
+        "operationId": "playlistSongs",
+        "description": "This returns the songs for a playlist"
       }
     },
     "/playlists/{playlist_id}/stream": {
@@ -21513,7 +21634,8 @@
         "tags": [
           "Streaming and Downloads"
         ],
-        "operationId": "streamPlaylists"
+        "operationId": "streamPlaylists",
+        "description": "Streams a given media file. Takes the file id in parameter with optional max bit rate, file format, time offset, size and estimate content length option."
       }
     },
     "/playlists/search": {
@@ -21745,7 +21867,8 @@
         "tags": [
           "Browsing, Indexes and Lists"
         ],
-        "operationId": "statsPlaylists"
+        "operationId": "statsPlaylists",
+        "description": "Get some items based on some simple search types and filters. (Random by default) This method **HAD** partial backwards compatibility with older api versions but it has now been removed Pass -1 limit to get all results. (0 will fall back to the `popular_threshold` value)"
       }
     },
     "/podcast-episodes": {
@@ -21962,7 +22085,8 @@
         "tags": [
           "Podcasts"
         ],
-        "operationId": "podcastEpisodesPodcastEpisodes"
+        "operationId": "podcastEpisodesPodcastEpisodes",
+        "description": "This returns the episodes for a podcast"
       }
     },
     "/podcast-episodes/{episode_id}": {
@@ -22045,7 +22169,8 @@
         "tags": [
           "Podcasts"
         ],
-        "operationId": "podcastEpisodeDelete"
+        "operationId": "podcastEpisodeDelete",
+        "description": "Delete an existing podcast_episode."
       },
       "get": {
         "parameters": [
@@ -22126,7 +22251,8 @@
         "tags": [
           "Podcasts"
         ],
-        "operationId": "podcastEpisode"
+        "operationId": "podcastEpisode",
+        "description": "Get the podcast_episode from it's id."
       }
     },
     "/podcast-episodes/{episode_id}/bookmark": {
@@ -22201,7 +22327,8 @@
             }
           }
         },
-        "operationId": "bookmarkDeletePodcastEpisodes"
+        "operationId": "bookmarkDeletePodcastEpisodes",
+        "description": "Delete an existing bookmark. (if it exists)"
       },
       "get": {
         "parameters": [
@@ -22267,7 +22394,8 @@
         "tags": [
           "Bookmarks"
         ],
-        "operationId": "bookmarkPodcastEpisodes"
+        "operationId": "bookmarkPodcastEpisodes",
+        "description": "Get a single bookmark by bookmark_id"
       },
       "patch": {
         "parameters": [
@@ -22368,7 +22496,8 @@
             }
           }
         },
-        "operationId": "bookmarkEditPodcastEpisodes"
+        "operationId": "bookmarkEditPodcastEpisodes",
+        "description": "Edit a placeholder for the current media that you can return to later."
       },
       "put": {
         "parameters": [
@@ -22469,7 +22598,8 @@
             }
           }
         },
-        "operationId": "bookmarkCreatePodcastEpisodes"
+        "operationId": "bookmarkCreatePodcastEpisodes",
+        "description": "Create a placeholder for the current media that you can return to later."
       }
     },
     "/podcast-episodes/{episode_id}/download": {
@@ -22581,7 +22711,8 @@
         "tags": [
           "Streaming and Downloads"
         ],
-        "operationId": "downloadPodcastEpisodes"
+        "operationId": "downloadPodcastEpisodes",
+        "description": "Downloads a given media file. set format=raw to download the full file"
       }
     },
     "/podcast-episodes/{episode_id}/flag": {
@@ -22658,7 +22789,8 @@
             }
           }
         },
-        "operationId": "flagPodcastEpisodes"
+        "operationId": "flagPodcastEpisodes",
+        "description": "This flags a library item as a favorite"
       }
     },
     "/podcast-episodes/{episode_id}/localplay": {
@@ -22687,10 +22819,9 @@
                 "song",
                 "video",
                 "podcast_episode",
-                "channel",
                 "broadcast",
-                "democratic",
-                "live_stream"
+                "live_stream",
+                "democratic"
               ],
               "type": "string"
             }
@@ -22786,7 +22917,8 @@
             }
           }
         },
-        "operationId": "localplayPodcastEpisodes"
+        "operationId": "localplayPodcastEpisodes",
+        "description": "This is for controlling localplay"
       }
     },
     "/podcast-episodes/{episode_id}/playback": {
@@ -22887,7 +23019,8 @@
             }
           }
         },
-        "operationId": "playerPodcastEpisodesPlayback"
+        "operationId": "playerPodcastEpisodesPlayback",
+        "description": "Inform the server about the state of your client. (Song you are playing, Play/Pause state, etc.)"
       }
     },
     "/podcast-episodes/{episode_id}/rate": {
@@ -22960,7 +23093,8 @@
             }
           }
         },
-        "operationId": "ratePodcastEpisodes"
+        "operationId": "ratePodcastEpisodes",
+        "description": "This rates a library item"
       }
     },
     "/podcast-episodes/{episode_id}/share": {
@@ -23056,7 +23190,8 @@
             }
           }
         },
-        "operationId": "shareCreatePodcastEpisodes"
+        "operationId": "shareCreatePodcastEpisodes",
+        "description": "Create a public url that can be used by anyone to stream media. Takes the file id with optional description and expires parameters."
       }
     },
     "/podcast-episodes/{episode_id}/stream": {
@@ -23158,7 +23293,8 @@
         "tags": [
           "Streaming and Downloads"
         ],
-        "operationId": "streamPodcastEpisodes"
+        "operationId": "streamPodcastEpisodes",
+        "description": "Streams a given media file. Takes the file id in parameter with optional max bit rate, file format, time offset, size and estimate content length option."
       }
     },
     "/podcast-episodes/deleted": {
@@ -78210,7 +78346,8 @@
         "tags": [
           "Maintenance"
         ],
-        "operationId": "deletedPodcastEpisodes"
+        "operationId": "deletedPodcastEpisodes",
+        "description": "This returns the episodes for a podcast that have been deleted"
       }
     },
     "/podcast-episodes/search": {
@@ -78696,7 +78833,8 @@
         "tags": [
           "Browsing, Indexes and Lists"
         ],
-        "operationId": "statsPodcastEpisodes"
+        "operationId": "statsPodcastEpisodes",
+        "description": "Get some items based on some simple search types and filters. (Random by default) This method **HAD** partial backwards compatibility with older api versions but it has now been removed Pass -1 limit to get all results. (0 will fall back to the `popular_threshold` value)"
       }
     },
     "/podcasts": {
@@ -78814,7 +78952,8 @@
         "tags": [
           "Podcasts"
         ],
-        "operationId": "podcasts"
+        "operationId": "podcasts",
+        "description": "Get information about podcasts"
       },
       "put": {
         "parameters": [
@@ -78905,7 +79044,8 @@
             }
           }
         },
-        "operationId": "podcastCreate"
+        "operationId": "podcastCreate",
+        "description": "Create a podcast that can be used by anyone to stream media. Takes the url and catalog parameters."
       }
     },
     "/podcasts/{podcast_id}": {
@@ -78970,7 +79110,8 @@
         "tags": [
           "Podcasts"
         ],
-        "operationId": "podcastDelete"
+        "operationId": "podcastDelete",
+        "description": "Delete an existing podcast."
       },
       "get": {
         "parameters": [
@@ -79044,7 +79185,8 @@
         "tags": [
           "Podcasts"
         ],
-        "operationId": "podcast"
+        "operationId": "podcast",
+        "description": "Get the podcast from it's id."
       },
       "patch": {
         "parameters": [
@@ -79171,7 +79313,8 @@
             }
           }
         },
-        "operationId": "podcastEdit"
+        "operationId": "podcastEdit",
+        "description": "Update the description and/or expiration date for an existing podcast. Takes the podcast id to update with optional description and expires parameters."
       }
     },
     "/podcasts/{podcast_id}/art": {
@@ -79242,7 +79385,8 @@
         "tags": [
           "Artwork"
         ],
-        "operationId": "getArtPodcasts"
+        "operationId": "getArtPodcasts",
+        "description": "Get an art image."
       }
     },
     "/podcasts/{podcast_id}/flag": {
@@ -79319,7 +79463,8 @@
             }
           }
         },
-        "operationId": "flagPodcasts"
+        "operationId": "flagPodcasts",
+        "description": "This flags a library item as a favorite"
       }
     },
     "/podcasts/{podcast_id}/podcast-episodes": {
@@ -79531,7 +79676,8 @@
         "tags": [
           "Podcasts"
         ],
-        "operationId": "podcastEpisodesPodcastsPodcastEpisodes"
+        "operationId": "podcastEpisodesPodcastsPodcastEpisodes",
+        "description": "This returns the episodes for a podcast"
       }
     },
     "/podcasts/{podcast_id}/rate": {
@@ -79604,7 +79750,8 @@
             }
           }
         },
-        "operationId": "ratePodcasts"
+        "operationId": "ratePodcasts",
+        "description": "This rates a library item"
       }
     },
     "/podcasts/{podcast_id}/share": {
@@ -79700,7 +79847,8 @@
             }
           }
         },
-        "operationId": "shareCreatePodcasts"
+        "operationId": "shareCreatePodcasts",
+        "description": "Create a public url that can be used by anyone to stream media. Takes the file id with optional description and expires parameters."
       }
     },
     "/podcasts/{podcast_id}/sync": {
@@ -79746,7 +79894,8 @@
         "tags": [
           "Podcasts"
         ],
-        "operationId": "updatePodcastSync"
+        "operationId": "updatePodcastSync",
+        "description": "Sync and download new podcast episodes"
       }
     },
     "/podcasts/search": {
@@ -80012,7 +80161,8 @@
         "tags": [
           "Browsing, Indexes and Lists"
         ],
-        "operationId": "statsPodcasts"
+        "operationId": "statsPodcasts",
+        "description": "Get some items based on some simple search types and filters. (Random by default) This method **HAD** partial backwards compatibility with older api versions but it has now been removed Pass -1 limit to get all results. (0 will fall back to the `popular_threshold` value)"
       }
     },
     "/preferences": {
@@ -81432,7 +81582,8 @@
         "tags": [
           "Preferences"
         ],
-        "operationId": "userPreferences"
+        "operationId": "userPreferences",
+        "description": "Get your user preferences"
       },
       "put": {
         "parameters": [
@@ -82927,7 +83078,8 @@
             }
           }
         },
-        "operationId": "preferenceCreate"
+        "operationId": "preferenceCreate",
+        "description": "Add a new preference to your server"
       }
     },
     "/preferences/{preference_name}": {
@@ -82989,7 +83141,8 @@
         "tags": [
           "Preferences"
         ],
-        "operationId": "userPreference"
+        "operationId": "userPreference",
+        "description": "Get your user preference by name"
       },
       "delete": {
         "parameters": [
@@ -83049,7 +83202,8 @@
         "tags": [
           "Preferences"
         ],
-        "operationId": "preferenceDelete"
+        "operationId": "preferenceDelete",
+        "description": "Delete a non-system preference by name"
       },
       "patch": {
         "parameters": [
@@ -83159,7 +83313,8 @@
             }
           }
         },
-        "operationId": "preferenceEdit"
+        "operationId": "preferenceEdit",
+        "description": "Edit a preference value and apply to all users if allowed"
       }
     },
     "/system-preferences": {
@@ -84906,7 +85061,8 @@
         "tags": [
           "Preferences"
         ],
-        "operationId": "systemPreferences"
+        "operationId": "systemPreferences",
+        "description": "Get your server preferences"
       }
     },
     "/system-preferences/{preference_name}": {
@@ -84968,7 +85124,8 @@
         "tags": [
           "Preferences"
         ],
-        "operationId": "systemPreference"
+        "operationId": "systemPreference",
+        "description": "Get your server preference by name"
       }
     },
     "/random": {
@@ -85069,7 +85226,8 @@
         "tags": [
           "Streaming and Downloads"
         ],
-        "operationId": "random"
+        "operationId": "random",
+        "description": "Picks a random song, podcast episode or video from the whole library and redirects (302) to its stream url. **Ampache 8.0.0+**"
       }
     },
     "/register": {
@@ -85289,7 +85447,8 @@
             }
           }
         },
-        "operationId": "scrobble"
+        "operationId": "scrobble",
+        "description": "Search for a song using text info and then record a play if found. This allows other sources to record play history to ampache"
       }
     },
     "/search/{search_type}/groups": {
@@ -87191,7 +87350,8 @@
         "tags": [
           "Search"
         ],
-        "operationId": "searchGroup"
+        "operationId": "searchGroup",
+        "description": "Perform a group search given passed rules. This function will return multiple object types if the rule names match the object type. You can pass multiple rules as well as joins to create in depth search results."
       }
     },
     "/search/{search_type}/rules": {
@@ -90248,7 +90408,8 @@
           "Search",
           "Utilities"
         ],
-        "operationId": "searchRules"
+        "operationId": "searchRules",
+        "description": "Print a list of valid search rules for your search type"
       }
     },
     "/shares": {
@@ -90380,7 +90541,8 @@
         "tags": [
           "Shares"
         ],
-        "operationId": "shares"
+        "operationId": "shares",
+        "description": "This searches the shares and returns... shares"
       },
       "put": {
         "parameters": [
@@ -90498,7 +90660,8 @@
             }
           }
         },
-        "operationId": "shareCreate"
+        "operationId": "shareCreate",
+        "description": "Create a public url that can be used by anyone to stream media. Takes the file id with optional description and expires parameters."
       }
     },
     "/shares/{share_id}": {
@@ -90561,7 +90724,8 @@
         "tags": [
           "Shares"
         ],
-        "operationId": "shareDelete"
+        "operationId": "shareDelete",
+        "description": "Delete an existing share."
       },
       "get": {
         "parameters": [
@@ -90622,7 +90786,8 @@
         "tags": [
           "Shares"
         ],
-        "operationId": "share"
+        "operationId": "share",
+        "description": "Return shares by UID"
       },
       "patch": {
         "parameters": [
@@ -90739,7 +90904,8 @@
             }
           }
         },
-        "operationId": "shareEdit"
+        "operationId": "shareEdit",
+        "description": "Update the description and/or expiration date for an existing share. Takes the share id to update with optional description and expires parameters."
       }
     },
     "/smartlists": {
@@ -90906,7 +91072,8 @@
         "tags": [
           "Playlists"
         ],
-        "operationId": "smartlists"
+        "operationId": "smartlists",
+        "description": "This returns smartlists based on the specified filter"
       }
     },
     "/smartlists/{smartlist_id}": {
@@ -90973,7 +91140,8 @@
         "tags": [
           "Playlists"
         ],
-        "operationId": "smartlistDelete"
+        "operationId": "smartlistDelete",
+        "description": "This deletes a smartlist"
       },
       "get": {
         "parameters": [
@@ -91038,7 +91206,8 @@
         "tags": [
           "Playlists"
         ],
-        "operationId": "smartlist"
+        "operationId": "smartlist",
+        "description": "This returns a single smartlist"
       }
     },
     "/smartlists/{smartlist_id}/art": {
@@ -91109,7 +91278,8 @@
         "tags": [
           "Artwork"
         ],
-        "operationId": "getArtSmartlists"
+        "operationId": "getArtSmartlists",
+        "description": "Get an art image."
       }
     },
     "/smartlists/{smartlist_id}/download": {
@@ -91221,7 +91391,8 @@
         "tags": [
           "Streaming and Downloads"
         ],
-        "operationId": "downloadSmartlists"
+        "operationId": "downloadSmartlists",
+        "description": "Downloads a given media file. set format=raw to download the full file"
       }
     },
     "/smartlists/{smartlist_id}/flag": {
@@ -91298,7 +91469,8 @@
             }
           }
         },
-        "operationId": "flagSmartlists"
+        "operationId": "flagSmartlists",
+        "description": "This flags a library item as a favorite"
       }
     },
     "/smartlists/{smartlist_id}/rate": {
@@ -91371,7 +91543,8 @@
             }
           }
         },
-        "operationId": "rateSmartlists"
+        "operationId": "rateSmartlists",
+        "description": "This rates a library item"
       }
     },
     "/smartlists/{smartlist_id}/share": {
@@ -91467,7 +91640,8 @@
             }
           }
         },
-        "operationId": "shareCreateSmartlists"
+        "operationId": "shareCreateSmartlists",
+        "description": "Create a public url that can be used by anyone to stream media. Takes the file id with optional description and expires parameters."
       }
     },
     "/smartlists/{smartlist_id}/songs": {
@@ -91823,7 +91997,8 @@
           "Playlists",
           "Songs"
         ],
-        "operationId": "smartlistSongs"
+        "operationId": "smartlistSongs",
+        "description": "This returns the songs for a smartlist"
       }
     },
     "/smartlists/{smartlist_id}/stream": {
@@ -91925,7 +92100,8 @@
         "tags": [
           "Streaming and Downloads"
         ],
-        "operationId": "streamSmartlists"
+        "operationId": "streamSmartlists",
+        "description": "Streams a given media file. Takes the file id in parameter with optional max bit rate, file format, time offset, size and estimate content length option."
       }
     },
     "/songs": {
@@ -92307,7 +92483,8 @@
         "tags": [
           "Songs"
         ],
-        "operationId": "songs"
+        "operationId": "songs",
+        "description": "Returns songs based on the specified filter"
       }
     },
     "/songs/{song_id}": {
@@ -92423,7 +92600,8 @@
         "tags": [
           "Songs"
         ],
-        "operationId": "songDelete"
+        "operationId": "songDelete",
+        "description": "Delete an existing song. (if you are allowed to)"
       },
       "get": {
         "parameters": [
@@ -92537,7 +92715,8 @@
         "tags": [
           "Songs"
         ],
-        "operationId": "song"
+        "operationId": "song",
+        "description": "returns a single song"
       }
     },
     "/songs/{song_id}/art": {
@@ -92608,7 +92787,8 @@
         "tags": [
           "Artwork"
         ],
-        "operationId": "getArtSongs"
+        "operationId": "getArtSongs",
+        "description": "Get an art image."
       }
     },
     "/songs/{song_id}/bookmark": {
@@ -92683,7 +92863,8 @@
             }
           }
         },
-        "operationId": "bookmarkDeleteSongs"
+        "operationId": "bookmarkDeleteSongs",
+        "description": "Delete an existing bookmark. (if it exists)"
       },
       "get": {
         "parameters": [
@@ -92749,7 +92930,8 @@
         "tags": [
           "Bookmarks"
         ],
-        "operationId": "bookmarkSongs"
+        "operationId": "bookmarkSongs",
+        "description": "Get a single bookmark by bookmark_id"
       },
       "patch": {
         "parameters": [
@@ -92850,7 +93032,8 @@
             }
           }
         },
-        "operationId": "bookmarkEditSongs"
+        "operationId": "bookmarkEditSongs",
+        "description": "Edit a placeholder for the current media that you can return to later."
       },
       "put": {
         "parameters": [
@@ -92951,7 +93134,8 @@
             }
           }
         },
-        "operationId": "bookmarkCreateSongs"
+        "operationId": "bookmarkCreateSongs",
+        "description": "Create a placeholder for the current media that you can return to later."
       }
     },
     "/songs/{song_id}/download": {
@@ -93063,7 +93247,8 @@
         "tags": [
           "Streaming and Downloads"
         ],
-        "operationId": "downloadSongs"
+        "operationId": "downloadSongs",
+        "description": "Downloads a given media file. set format=raw to download the full file"
       }
     },
     "/songs/{song_id}/fetch-metadata": {
@@ -93115,7 +93300,8 @@
           "Songs",
           "Utilities"
         ],
-        "operationId": "getExternalMetadataSongsFetchMetadata"
+        "operationId": "getExternalMetadataSongsFetchMetadata",
+        "description": "Return External plugin metadata searching by object id and type"
       }
     },
     "/songs/{song_id}/flag": {
@@ -93192,7 +93378,8 @@
             }
           }
         },
-        "operationId": "flagSongs"
+        "operationId": "flagSongs",
+        "description": "This flags a library item as a favorite"
       }
     },
     "/songs/{song_id}/localplay": {
@@ -93221,10 +93408,9 @@
                 "song",
                 "video",
                 "podcast_episode",
-                "channel",
                 "broadcast",
-                "democratic",
-                "live_stream"
+                "live_stream",
+                "democratic"
               ],
               "type": "string"
             }
@@ -93320,7 +93506,8 @@
             }
           }
         },
-        "operationId": "localplaySongsLocalplay"
+        "operationId": "localplaySongsLocalplay",
+        "description": "This is for controlling localplay"
       }
     },
     "/songs/{song_id}/lyrics": {
@@ -93385,7 +93572,8 @@
           "Songs",
           "Utilities"
         ],
-        "operationId": "getLyricsSongs"
+        "operationId": "getLyricsSongs",
+        "description": "Return Database lyrics or search with plugins by Song id"
       }
     },
     "/songs/{song_id}/playback": {
@@ -93486,7 +93674,8 @@
             }
           }
         },
-        "operationId": "playerSongsPlayback"
+        "operationId": "playerSongsPlayback",
+        "description": "Inform the server about the state of your client. (Song you are playing, Play/Pause state, etc.)"
       }
     },
     "/songs/{song_id}/rate": {
@@ -93559,7 +93748,8 @@
             }
           }
         },
-        "operationId": "rateSongs"
+        "operationId": "rateSongs",
+        "description": "This rates a library item"
       }
     },
     "/songs/{song_id}/record-play": {
@@ -93643,7 +93833,8 @@
             }
           }
         },
-        "operationId": "recordPlaySongs"
+        "operationId": "recordPlaySongs",
+        "description": "Take a song_id and update the object_count and user_activity table with a play. This allows other sources to record play history to Ampache."
       }
     },
     "/songs/{song_id}/share": {
@@ -93739,7 +93930,8 @@
             }
           }
         },
-        "operationId": "shareCreateSongs"
+        "operationId": "shareCreateSongs",
+        "description": "Create a public url that can be used by anyone to stream media. Takes the file id with optional description and expires parameters."
       }
     },
     "/songs/{song_id}/similar": {
@@ -93796,7 +93988,8 @@
         "tags": [
           "Songs"
         ],
-        "operationId": "getSimilarSongs"
+        "operationId": "getSimilarSongs",
+        "description": "Return similar artist id's or similar song ids compared to the input filter"
       }
     },
     "/songs/{song_id}/stream": {
@@ -93898,7 +94091,8 @@
         "tags": [
           "Streaming and Downloads"
         ],
-        "operationId": "streamSongs"
+        "operationId": "streamSongs",
+        "description": "Streams a given media file. Takes the file id in parameter with optional max bit rate, file format, time offset, size and estimate content length option."
       }
     },
     "/songs/{song_id}/tags": {
@@ -94005,7 +94199,8 @@
           "Songs",
           "Utilities"
         ],
-        "operationId": "songTags"
+        "operationId": "songTags",
+        "description": "Get the full song file tags using VaInfo"
       }
     },
     "/songs/{song_id}/update-tags": {
@@ -94059,7 +94254,8 @@
         "tags": [
           "Utilities"
         ],
-        "operationId": "updateFromTagsSongs"
+        "operationId": "updateFromTagsSongs",
+        "description": "Update a single album, artist, song from the tag data"
       }
     },
     "/songs/deleted": {
@@ -94110,7 +94306,8 @@
         "tags": [
           "Maintenance"
         ],
-        "operationId": "deletedSongs"
+        "operationId": "deletedSongs",
+        "description": "Returns songs that have been deleted from the server"
       }
     },
     "/songs/lookup/url-to-song": {
@@ -94466,7 +94663,8 @@
         "tags": [
           "Utilities"
         ],
-        "operationId": "urlToSongLookup"
+        "operationId": "urlToSongLookup",
+        "description": "This takes a url and returns the song object in question"
       }
     },
     "/songs/playlist-generate": {
@@ -95262,7 +95460,8 @@
         "tags": [
           "Playlists"
         ],
-        "operationId": "playlistGenerateSongs"
+        "operationId": "playlistGenerateSongs",
+        "description": "Get a list of song JSON, indexes or id's based on some simple search criteria 'recent' will search for tracks played after 'Popular Threshold' days 'forgotten' will search for tracks played before 'Popular Threshold' days 'unplayed' added in 400002 for searching unplayed tracks"
       }
     },
     "/songs/search": {
@@ -95901,7 +96100,8 @@
         "tags": [
           "Browsing, Indexes and Lists"
         ],
-        "operationId": "statsSongs"
+        "operationId": "statsSongs",
+        "description": "Get some items based on some simple search types and filters. (Random by default) This method **HAD** partial backwards compatibility with older api versions but it has now been removed Pass -1 limit to get all results. (0 will fall back to the `popular_threshold` value)"
       }
     },
     "/update": {
@@ -95943,7 +96143,8 @@
         "tags": [
           "Maintenance"
         ],
-        "operationId": "systemUpdate"
+        "operationId": "systemUpdate",
+        "description": "Check Ampache for updates and run the update if there is one."
       }
     },
     "/users": {
@@ -96011,7 +96212,8 @@
         "tags": [
           "Users"
         ],
-        "operationId": "users"
+        "operationId": "users",
+        "description": "Get ids and usernames for your site"
       },
       "put": {
         "parameters": [
@@ -96135,7 +96337,8 @@
             }
           }
         },
-        "operationId": "userCreate"
+        "operationId": "userCreate",
+        "description": "Create a new user. (Requires the username, password and email.)"
       }
     },
     "/users/{user_id}": {
@@ -96201,7 +96404,8 @@
         "tags": [
           "Users"
         ],
-        "operationId": "userDelete"
+        "operationId": "userDelete",
+        "description": "Delete an existing user."
       },
       "get": {
         "parameters": [
@@ -96265,7 +96469,8 @@
         "tags": [
           "Users"
         ],
-        "operationId": "user"
+        "operationId": "user",
+        "description": "This gets a user's public information."
       },
       "patch": {
         "parameters": [
@@ -96472,7 +96677,8 @@
             }
           }
         },
-        "operationId": "userEdit"
+        "operationId": "userEdit",
+        "description": "Update an existing user."
       }
     },
     "/users/{user_id}/follow": {
@@ -96521,7 +96727,8 @@
         "tags": [
           "Social"
         ],
-        "operationId": "toggleFollowUsers"
+        "operationId": "toggleFollowUsers",
+        "description": "This follow/unfollow a user"
       }
     },
     "/users/{user_id}/followers": {
@@ -96587,7 +96794,8 @@
         "tags": [
           "Social"
         ],
-        "operationId": "followersUsers"
+        "operationId": "followersUsers",
+        "description": "This gets the followers for the requested username"
       }
     },
     "/users/{user_id}/following": {
@@ -96645,7 +96853,8 @@
         "tags": [
           "Social"
         ],
-        "operationId": "followingUsers"
+        "operationId": "followingUsers",
+        "description": "Get a list of people that this user follows"
       }
     },
     "/users/{user_id}/timeline": {
@@ -96816,7 +97025,8 @@
         "tags": [
           "Social"
         ],
-        "operationId": "timelineUsers"
+        "operationId": "timelineUsers",
+        "description": "This gets a user's timeline"
       }
     },
     "/users/search": {
@@ -97049,7 +97259,8 @@
         "tags": [
           "Videos"
         ],
-        "operationId": "videos"
+        "operationId": "videos",
+        "description": "This returns video objects!"
       }
     },
     "/videos/{video_id}": {
@@ -97111,7 +97322,8 @@
         "tags": [
           "Videos"
         ],
-        "operationId": "video"
+        "operationId": "video",
+        "description": "This returns a single video"
       }
     },
     "/videos/{video_id}/bookmark": {
@@ -97186,7 +97398,8 @@
             }
           }
         },
-        "operationId": "bookmarkDeleteVideos"
+        "operationId": "bookmarkDeleteVideos",
+        "description": "Delete an existing bookmark. (if it exists)"
       },
       "get": {
         "parameters": [
@@ -97252,7 +97465,8 @@
         "tags": [
           "Bookmarks"
         ],
-        "operationId": "bookmarkVideos"
+        "operationId": "bookmarkVideos",
+        "description": "Get a single bookmark by bookmark_id"
       },
       "patch": {
         "parameters": [
@@ -97353,7 +97567,8 @@
             }
           }
         },
-        "operationId": "bookmarkEditVideos"
+        "operationId": "bookmarkEditVideos",
+        "description": "Edit a placeholder for the current media that you can return to later."
       },
       "put": {
         "parameters": [
@@ -97454,7 +97669,8 @@
             }
           }
         },
-        "operationId": "bookmarkCreateVideos"
+        "operationId": "bookmarkCreateVideos",
+        "description": "Create a placeholder for the current media that you can return to later."
       }
     },
     "/videos/{video_id}/flag": {
@@ -97531,7 +97747,8 @@
             }
           }
         },
-        "operationId": "flagVideos"
+        "operationId": "flagVideos",
+        "description": "This flags a library item as a favorite"
       }
     },
     "/videos/{video_id}/localplay": {
@@ -97560,10 +97777,9 @@
                 "song",
                 "video",
                 "podcast_episode",
-                "channel",
                 "broadcast",
-                "democratic",
-                "live_stream"
+                "live_stream",
+                "democratic"
               ],
               "type": "string"
             }
@@ -97659,7 +97875,8 @@
             }
           }
         },
-        "operationId": "localplayVideos"
+        "operationId": "localplayVideos",
+        "description": "This is for controlling localplay"
       }
     },
     "/videos/{video_id}/playback": {
@@ -97760,7 +97977,8 @@
             }
           }
         },
-        "operationId": "playerVideosPlayback"
+        "operationId": "playerVideosPlayback",
+        "description": "Inform the server about the state of your client. (Song you are playing, Play/Pause state, etc.)"
       }
     },
     "/videos/{video_id}/rate": {
@@ -97833,7 +98051,8 @@
             }
           }
         },
-        "operationId": "rateVideos"
+        "operationId": "rateVideos",
+        "description": "This rates a library item"
       }
     },
     "/videos/{video_id}/share": {
@@ -97929,7 +98148,8 @@
             }
           }
         },
-        "operationId": "shareCreateVideos"
+        "operationId": "shareCreateVideos",
+        "description": "Create a public url that can be used by anyone to stream media. Takes the file id with optional description and expires parameters."
       }
     },
     "/videos/deleted": {
@@ -97991,7 +98211,8 @@
         "tags": [
           "Maintenance"
         ],
-        "operationId": "deletedVideos"
+        "operationId": "deletedVideos",
+        "description": "This returns video objects that have been deleted"
       }
     },
     "/videos/search": {
@@ -98277,7 +98498,8 @@
         "tags": [
           "Browsing, Indexes and Lists"
         ],
-        "operationId": "statsVideos"
+        "operationId": "statsVideos",
+        "description": "Get some items based on some simple search types and filters. (Random by default) This method **HAD** partial backwards compatibility with older api versions but it has now been removed Pass -1 limit to get all results. (0 will fall back to the `popular_threshold` value)"
       }
     }
   }

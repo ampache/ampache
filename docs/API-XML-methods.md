@@ -1567,8 +1567,7 @@ Kick off a catalog update or clean for the selected catalog
 
 ### catalog_add
 
-Create a public url that can be used by anyone to stream media.
-Takes the file id with optional description and expires parameters.
+Create a new catalog.
 
 **ACCESS REQUIRED:** 75 (Catalog Manager)
 

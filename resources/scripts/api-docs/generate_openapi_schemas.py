@@ -37,6 +37,7 @@ from pathlib import Path
 REPO_ROOT = Path(__file__).resolve().parents[3]
 JSON8_DATA = REPO_ROOT / "src" / "Module" / "Api" / "Json8_Data.php"
 OPENAPI = REPO_ROOT / "docs" / "openapi.json"
+METHODS_MD = REPO_ROOT / "docs" / "API-JSON-methods.md"
 
 # Most shapes live on the Json8_Data builders, but some payloads are assembled
 # elsewhere (e.g. preferences). A TYPES entry may name one of these instead.
@@ -159,6 +160,10 @@ REF_REUSE: dict[tuple[str, str], str] = {
     ("BookmarkObject", "song"): "SongObject",
     ("BookmarkObject", "podcast_episode"): "PodcastEpisodeObject",
     ("BookmarkObject", "video"): "VideoObject",
+    # the {id, username} user stub, identical to UserSummaryObject where username is nullable.
+    # now_playing/shout keep their own inline stub: their username is a non-null string, not nullable.
+    ("PlaylistObject", "user"): "UserSummaryObject",
+    ("ActivityObject", "user"): "UserSummaryObject",
 }
 
 # RPC action name (from x-rpc-mappings) -> schema to $ref on its 200 response.
@@ -671,12 +676,19 @@ def shape_to_object_schema(shape_text: str) -> dict:
 
 
 def apply_ref_reuse(object_name: str, schema: dict) -> None:
+    properties = schema.get("properties", {})
     for (owner, prop), target in REF_REUSE.items():
         if owner != object_name:
             continue
-        node = schema.get("properties", {}).get(prop)
-        if isinstance(node, dict) and node.get("type") == "array":
-            node["items"] = {"$ref": f"#/components/schemas/{target}"}
+        node = properties.get(prop)
+        if not isinstance(node, dict):
+            continue
+        ref = {"$ref": f"#/components/schemas/{target}"}
+        if node.get("type") == "array":
+            node["items"] = ref
+        else:
+            # an embedded object shape: replace the whole node with the shared reference
+            properties[prop] = ref
 
 
 def apply_property_descriptions(object_name: str, schema: dict) -> None:
@@ -1257,6 +1269,63 @@ def _nonparam_segments(path: str) -> list[str]:
     return [s for s in path.strip("/").split("/") if s and not s.startswith("{")]
 
 
+# Some RPC action names differ from the `### <action>` heading that documents them in the method
+# reference (a rename, or a create/add alias), so borrow the other heading's prose.
+DESCRIPTION_ALIASES: dict[str, str] = {
+    "playlist_remove_song": "playlist_remove",
+    "catalog_create": "catalog_add",
+}
+
+
+def load_method_descriptions() -> dict[str, str]:
+    """action -> the first prose paragraph under its `### <action>` heading in the JSON method
+    reference. That prose is hand-written (the response tables are the only generated part), so it is
+    a stable, curated one-line summary of each method."""
+    text = METHODS_MD.read_text(encoding="utf-8")
+    parts = re.split(r"(?m)^### (\S+)\s*$", text)
+    out: dict[str, str] = {}
+    for index in range(1, len(parts), 2):
+        action = parts[index].strip()
+        paragraph: list[str] = []
+        for line in parts[index + 1].splitlines():
+            stripped = line.strip()
+            if not stripped:
+                if paragraph:
+                    break
+                continue
+            # stop at the first table row, marker (`* return`/`**NOTE**`), comment or fence
+            if stripped[0] in "|*" or stripped.startswith(("<!--", "###", "```")):
+                break
+            paragraph.append(stripped)
+        if paragraph:
+            out[action] = " ".join(paragraph)
+    return out
+
+
+def apply_operation_descriptions(spec: dict) -> list[str]:
+    """Fill each operation's `description` from the curated method-reference prose (D11).
+
+    Only operations that lack a description are touched, so the hand-written per-operation notes
+    (version precedence, the lost-password hazard, the search-rule grammar, the catalog task aliases)
+    are preserved. Idempotent: once filled, a description is present and left alone on re-runs.
+    """
+    descriptions = load_method_descriptions()
+    touched: list[str] = []
+    for path, method, rpc in mapping_operations(spec):
+        operation = spec["paths"][path][method]
+        if "description" in operation:
+            continue
+        match = _ACTION_RE.search(rpc)
+        if not match:
+            continue
+        action = match.group(1)
+        description = descriptions.get(DESCRIPTION_ALIASES.get(action, action)) or descriptions.get(action)
+        if description:
+            operation["description"] = description
+            touched.append(f"{method.upper()} {path}")
+    return touched
+
+
 def apply_operation_ids(spec: dict) -> list[str]:
     """Give every operation a stable operationId derived from its RPC action.
 
@@ -1438,6 +1507,7 @@ def main() -> int:
     errors = apply_error_responses(spec)
     bodies = apply_request_bodies(spec)
     op_ids = apply_operation_ids(spec)
+    descriptions = apply_operation_descriptions(spec)
     shared_params = apply_parameter_components(spec)
 
     updated = dumps_canonical(spec)
@@ -1457,6 +1527,7 @@ def main() -> int:
     for line in bodies:
         print(f"  {line}")
     print(f"operation ids: {len(op_ids)}")
+    print(f"operation descriptions: {len(descriptions)}")
     print(f"parameters shared: {len(shared_params)}")
 
     if args.check:

@@ -130,6 +130,12 @@ You can downgrade to Ampache7 if you try this out and have issues, using the cli
 * Database 800023
   * Uploaded art took its mime type from the filename, storing `image/jpg` (not a real type) for a `.jpg` upload and `image/JPG` for `.JPG`; the type is now read from the image data and existing rows are corrected
   * Where the same artwork was stored twice under both spellings the `image/jpg` row is left as it is, because `unique_image` includes `mime` and no art is deleted during an upgrade
+* Localplay
+  * MPD `status` no longer throws a runtime error when the controller is unreachable or returns no status
+  * An unreachable controller (MPD, VLC, httpQ) no longer surfaces a raw `fsockopen()` connection warning
+  * An active-instance preference pointing at a deleted instance falls back to an available one instead of failing to connect
+  * The control panel updates the reported volume, playback state and track after every command, not just mute/repeat/random
+  * Playlist items resolve the song from its stream url even when `stream_beautiful_url` is off, so they show the real title/artist/album instead of the raw play url
 * Light sidebar can scroll to reach its bottom entries on short screens
 * AJAX actions returned a server error instead of updating the page
   * Setting a favorite
