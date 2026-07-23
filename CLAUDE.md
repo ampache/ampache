@@ -135,7 +135,10 @@ Anything reading `Playlist::get_items()` directly still gets mixed `object_type`
 - Every new PHP file needs the AGPL-3.0 license header — see `CONTRIBUTING.md` for the exact template.
 - Prefer interface + final implementation class pairs (`FooInterface` / `final class Foo implements FooInterface`) with constructor-injected dependencies assigned to typed private properties, matching the existing `Module`/`Repository` pattern (see `AlbumDeleter.php` for a representative example). `readonly` classes/properties are used for immutable services (e.g. `Config\Init\Init`).
 - Don't reformat or reorder unrelated/unchanged lines in a diff (explicitly called out in `CONTRIBUTING.md`).
-- Comments: don't fragment into many short lines — use up to 120 chars of width per line; prefer single-line `//` comments over `/* */` blocks; keep any comment inside a function body to under 2 lines.
+- **Comments (hard rule — check the diff before you finish):** every comment line you write must be filled to **100-120 characters** before it wraps; the only line allowed to be shorter is the last one of a wrapped block, a `@param`/`@return` tag, or the method-name line of a docblock. Never end a comment line early because the phrase ended — keep filling to the margin.
+  - One comment per idea, not one per statement. If consecutive lines of code each carry their own short `//`, that is the fragmentation this rule forbids: delete them and write one wide comment above the block.
+  - A comment inside a function body is at most 2 lines. Prefer `//` over `/* */`.
+  - Verify, don't assume: run `git diff -U0 -- '*.php' | grep -E '^\+\s*(//|\*\s)' | awk '{ print length($0)-1, $0 }' | sort -n` and rewrite every added line under 100 chars that is not one of the exceptions above.
 - PHPStan v2 runs at level 8 (`phpstan.neon`) against `src` and `public`, with `phpstan-baseline.neon` grandfathering existing violations — don't add new baseline entries; fix or annotate types instead.
 - Rector v2 (`rector.php`) now covers `src/Module` in addition to `tests`, `src/Application`, `src/Config/Init`, `src/Gui`, `src/Plugin`, `src/Repository` — but explicitly **skips** `src/Module/Api`, `src/Module/System/Update/Migration`, and `src/Repository/Model`, targeting the PHP 8.5 rule set plus dead-code/code-quality/coding-style prepared sets.
 
