@@ -46,6 +46,7 @@ final class ConfigurationKeyEnum
     public const string ALBUM_SORT                            = 'album_sort';
     public const string ALLOW_DEMOCRATIC_PLAYBACK             = 'allow_democratic_playback';
     public const string ALLOW_LOCALPLAY_PLAYBACK              = 'allow_localplay_playback';
+    public const string ALLOW_LOST_PASSWORD                   = 'allow_lost_password';
     public const string ALLOW_PERSONAL_INFO_AGENT             = 'allow_personal_info_agent';
     public const string ALLOW_PERSONAL_INFO_NOW               = 'allow_personal_info_now';
     public const string ALLOW_PERSONAL_INFO_RECENT            = 'allow_personal_info_recent';
@@ -171,6 +172,8 @@ final class ConfigurationKeyEnum
     public const string OIDC_WEBSITE_CLAIM                    = 'oidc_website_claim';
     public const string PERPETUAL_API_SESSION                 = 'perpetual_api_session';
     public const string PLAY_TYPE                             = 'play_type';
+    public const string PLAYLIST_ART_MOSAIC                   = 'playlist_art_mosaic';
+    public const string PLAYLIST_ART_MOSAIC_FALLBACK          = 'playlist_art_mosaic_fallback';
     public const string PLAYLIST_METHOD                       = 'playlist_method';
     public const string PLAYLIST_TYPE                         = 'playlist_type';
     public const string PODCAST                               = 'podcast';
@@ -198,6 +201,7 @@ final class ConfigurationKeyEnum
     public const string SHOW_FOLDER                           = 'show_folder';
     public const string SHOW_LICENSE                          = 'show_license';
     public const string SHOW_LYRICS                           = 'show_lyrics';
+    public const string SHOW_MINI_PLAYER                      = 'show_mini_player';
     public const string SHOW_PLAYED_TIMES                     = 'show_played_times';
     public const string SHOW_PLAYLIST_USERNAME                = 'show_playlist_username';
     public const string SHOW_SKIPPED_TIMES                    = 'show_skipped_times';

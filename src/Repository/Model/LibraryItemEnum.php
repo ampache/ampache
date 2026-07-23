@@ -32,6 +32,7 @@ enum LibraryItemEnum: string
     case ART             = 'art';
     case ARTIST          = 'artist';
     case BROADCAST       = 'broadcast';
+    case DEMOCRATIC      = 'democratic';
     case FOLDER          = 'folder';
     case LABEL           = 'label';
     case LIVE_STREAM     = 'live_stream';

@@ -25,6 +25,36 @@ function hasScriptableUrlScheme(url) {
     return /^(?:javascript|data|vbscript):/i.test(scheme);
 }
 
+// Delegated click handler for Ajax buttons rendered by Ajax::button()
+// with data-* attributes. This replaces the per-button inline <script>
+// observers and replays exactly the same logic: update_action() first,
+// then optional confirm(), then ajaxPost()/ajaxPut() with the element
+// id as source. Delegating on document also covers buttons injected
+// dynamically through AJAX content updates.
+$(document).on("click", "a[data-ajax='1']", function (event) {
+    event.preventDefault();
+
+    var $link = $(this);
+    var url = $link.attr("data-ajax-url");
+    var post = $link.attr("data-ajax-post");
+    var confirmText = $link.attr("data-ajax-confirm");
+    var source = this.id || "";
+
+    // Keep the historical order: update_action() runs before confirm().
+    // Use the window function so template overrides (html5 player) apply.
+    window.update_action();
+
+    if (confirmText && !window.confirm(confirmText)) {
+        return;
+    }
+
+    if (post) {
+        ajaxPost(url, post, source);
+    } else {
+        ajaxPut(url, source);
+    }
+});
+
 // Some cutesy flashing thing while we run
 $(document).ajaxSend(function () {
     $("#ajax-loading").show();

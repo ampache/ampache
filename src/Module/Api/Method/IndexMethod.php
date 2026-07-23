@@ -114,7 +114,7 @@ final class IndexMethod implements MethodInterface
             return $response;
         }
 
-        if (!in_array($type, ObjectTypeGate::INDEX_TYPES)) {
+        if (!in_array($type, ObjectTypeGate::indexTypes($apiVersion))) {
             $response->getBody()->write(
                 $output->error(
                     $apiVersion,

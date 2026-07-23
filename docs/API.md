@@ -13,9 +13,9 @@ All dates in the API calls should be passed as [ISO 8601](http://en.wikipedia.or
 
 ## News
 
-Ampache8 will release with a new API (API8) based on API6. Changes will be kept to a minimum to allow using API8 as a drop in replacement for API6
+Ampache8 ships a new API (API8) based on API6. Changes are kept to a minimum so API8 can be used as a drop in replacement for API6.
 
-Ampache8 will introduce a fully compatible [RESTful](/rest) API implementation supporting all formats and versions.
+Ampache8 introduces a fully compatible [RESTful](/rest) API implementation supporting all formats and versions.
 
 As of 7.7.1 (API 6.9.0) Ampache fully supports POST data requests for all API methods.
 
@@ -39,12 +39,14 @@ curl -X POST "https://music.com.au/server/json.server.php" -H "Content-Type: app
 
 After each release, a documentation page will be created to allow pruning old features from the current version.
 
+API8 is the current version and is documented in this repository (`docs/openapi.json` plus the `API-JSON-methods.md` / `API-XML-methods.md` references). The pages below document the last major release of the older versions:
+
 * [API 6.9 Documentation](https://ampache.org/api/api-6)
 * [API 5.6 Documentation](https://ampache.org/api/api-5)
 * [API 4.4 Documentation](https://ampache.org/api/api-4)
 * [API 3.9 Documentation](https://ampache.org/api/api-3)
 
-Ampache supports the last major release of each API version. You can also check out the [past releases](https://ampache.org/api/versions/) page for some historical detail but **DO NOT** use these pages as a guide for API development.
+Ampache serves API versions 3, 4, 5, 6 and 8 (version 7 was skipped). You can also check out the [past releases](https://ampache.org/api/versions/) page for some historical detail but **DO NOT** use these pages as a guide for API development.
 
 ## API Changelog
 
@@ -52,7 +54,7 @@ Take a look at the [API Changelog](https://ampache.org/api/api-changelog) to kee
 
 ## Before you begin
 
-Ampache 5.2.0+ supports multiple API versions. This means that you can send your handshake with a specific version (e.g. 390001, 440001, 5.2.0 or 6.0.0) you will be sent API3, API4, API5 and API6 responses in return.
+Ampache 5.2.0+ supports multiple API versions. This means that you can send your handshake with a specific version (e.g. 390001, 440001, 5.2.0, 6.0.0 or 8.0.0) and you will be sent API3, API4, API5, API6 or API8 responses in return. Version 7 was skipped; the default version is 8.
 
 To change from API3 to API5 you can send a ping with a new version parameter to update your session (or send goodbye to log off and start again.)
 
@@ -83,7 +85,7 @@ $passphrase = hash('sha256', $time . $key);
 Once you've generated the encoded passphrase, you can call the following URL (localhost/ampache is the location of your Ampache installation)
 
 ```URL
-http://localhost/ampache/server/xml.server.php?action=handshake&auth=PASSPHRASE&timestamp=TIME&version=6.0.0&user=USER
+http://localhost/ampache/server/xml.server.php?action=handshake&auth=PASSPHRASE&timestamp=TIME&version=8.0.0&user=USER
 ```
 
 ### Api Key
@@ -91,7 +93,7 @@ http://localhost/ampache/server/xml.server.php?action=handshake&auth=PASSPHRASE&
 The key that must be passed to Ampache is the API Key generated for a specific user (none by default, only the administrator can generate one). Then call the following URL (localhost/ampache is the location of your Ampache installation):
 
 ```URL
-http://localhost/ampache/server/xml.server.php?action=handshake&auth=API_KEY&version=6.0.0
+http://localhost/ampache/server/xml.server.php?action=handshake&auth=API_KEY&version=8.0.0
 ```
 
 If you are using Ampache 4.0.0 and higher; the key can be passed to Ampache using `SHA256(USER+KEY)` where `KEY` is `SHA256('APIKEY')`. Below is a PHP example
@@ -109,7 +111,7 @@ Ampache supports sending your auth parameter to the server using a Bearer Token.
 The `auth` parameter does not need to be sent with your URL. We will check your header for a token first
 
 ```text
-GET https://demo.ampache.dev/server/json.server.php?action=handshake&version=6.0.0 HTTP/1.1
+GET https://demo.ampache.dev/server/json.server.php?action=handshake&version=8.0.0 HTTP/1.1
 Authorization: Bearer 000111112233334444455556667777788888899aaaaabbbbcccccdddeeeeeeff
 ```
 
@@ -162,7 +164,7 @@ For XML
 <?xml version="1.0" encoding="UTF-8" ?>
 <root>
   <auth><![CDATA[cfj3f237d563f479f5223k23189dbb34]]></auth>
-  <api><![CDATA[6.0.0]]></api>
+  <api><![CDATA[8.0.0]]></api>
   <session_expire><![CDATA[2022-08-17T04:34:55+00:00]]></session_expire>
   <update><![CDATA[2021-07-21T02:51:36+00:00]]></update>
   <add><![CDATA[2021-08-03T00:04:14+00:00]]></add>
@@ -191,7 +193,7 @@ For JSON
 ```JSON
 {
     "auth": "cfj3f237d563f479f5223k23189dbb34",
-    "api": "6.0.0",
+    "api": "8.0.0",
     "session_expire": "2022-08-17T06:21:00+00:00",
     "update": "2021-07-21T02:51:36+00:00",
     "add": "2021-08-03T00:04:14+00:00",
@@ -215,7 +217,7 @@ For JSON
 }
 ```
 
-All future interactions with the Ampache API must include the `AUTHENTICATION_TOKEN` as a `GET` variable named `auth`.
+All future interactions with the Ampache API must include the `AUTHENTICATION_TOKEN`. Send it as an `Authorization: Bearer <token>` header (an `Authorization: ApiKey <token>` or a plain `auth` header are also accepted), or as an `auth` parameter in the query string or a POST/JSON body. The header forms are preferred; the query-string `auth` is a legacy fallback and is deprecated for privacy.
 
 ## Methods
 
@@ -255,6 +257,9 @@ All Data methods return HTTP 200 responses
 * albums
 * album
 * album_songs
+* album_disks **Ampache 8.0.0+**
+* album_disk **Ampache 8.0.0+**
+* album_disk_songs **Ampache 8.0.0+**
 * artists
 * artist
 * artist_albums

@@ -43,6 +43,25 @@ final class XmlOutput implements ApiOutputInterface
     /**
      * At the moment, this method just acts as a proxy
      *
+     * @param 8 $apiVersion only api version 8 knows about album disks
+     * @param array<int|string> $albumDisks
+     * @param string[] $include
+     */
+    public function albumDisks(
+        int $apiVersion,
+        array $albumDisks,
+        array $include,
+        User $user,
+        string $auth,
+        bool $encode = true,
+        bool $asObject = true,
+    ): string {
+        return Xml8_Data::album_disks($albumDisks, $include, $user, $auth, $encode);
+    }
+
+    /**
+     * At the moment, this method just acts as a proxy
+     *
      * @param 3|4|5|6|8 $apiVersion
      * @param array<int|string> $albums
      * @param string[] $include
@@ -487,6 +506,14 @@ final class XmlOutput implements ApiOutputInterface
         $this->setOffset($apiVersion, $offset);
         $this->setLimit($apiVersion, $limit);
         $this->setCount($apiVersion, $count);
+
+        // only api version 8 has an album_disk formatter; older versions are turned away by
+        // AdvancedSearchMethod before they reach this point
+        if ($type === 'album_disk') {
+            return ($apiVersion === 8)
+                ? $this->albumDisks($apiVersion, $results, [], $user, $auth)
+                : $this->writeEmpty($apiVersion, $type);
+        }
 
         return match ($type) {
             'album' => $this->albums($apiVersion, $results, [], $user, $auth),

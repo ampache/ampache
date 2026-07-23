@@ -122,7 +122,18 @@ final readonly class ArtCollector implements ArtCollectorInterface
             );
             $playlist = new Playlist($art->object_id);
 
-            return $playlist->gather_art($limit);
+            // This returns before the configured methods run, so the art it already has would never be
+            // offered back. Keep it at the front of the list the way the `db` method would.
+            $results = [];
+            if ($art->has_db_info() && $art->id) {
+                $results[] = [
+                    'db' => $art->id,
+                    'title' => T_('Current Art'),
+                    'mime' => $art->raw_mime,
+                ];
+            }
+
+            return array_merge($results, $playlist->gather_art($limit));
         }
 
         $user = (Core::get_global('user') instanceof User)

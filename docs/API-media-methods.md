@@ -1,6 +1,6 @@
 ---
-title: "API6 Media Methods"
-metaTitle: "API6 Media Methods"
+title: "Media Methods"
+metaTitle: "Media Methods"
 description: "API documentation"
 ---
 
@@ -89,7 +89,7 @@ The `skip_timer` setting is what the server uses to decide whether the new play 
 Example, when using the default settings:
 
 * You stream TRACK1
-* You start to stream TRACK2 within the 10 seconds after TRACK1 started
+* You start to stream TRACK2 within the 20 seconds after TRACK1 started
 * TRACK1 will change to a skip
 * TRACK2 will be marked as your current `now_playing` track.
 

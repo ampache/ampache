@@ -268,5 +268,6 @@ if (!$embed) { ?>
     <?php } ?>
 </div>
 <?php } ?>
+<?php echo Ui::material_symbol_sprite(); ?>
 </body>
 </html>

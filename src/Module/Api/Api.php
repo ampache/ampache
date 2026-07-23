@@ -62,6 +62,9 @@ class Api
      */
     public const array METHOD_LIST = [
         Method\AdvancedSearchMethod::ACTION => Method\AdvancedSearchMethod::class,
+        Method\Api8\AlbumDisk8Method::ACTION => Method\Api8\AlbumDisk8Method::class,
+        Method\Api8\AlbumDisks8Method::ACTION => Method\Api8\AlbumDisks8Method::class,
+        Method\Api8\AlbumDiskSongs8Method::ACTION => Method\Api8\AlbumDiskSongs8Method::class,
         Method\AlbumMethod::ACTION => Method\AlbumMethod::class,
         Method\AlbumsMethod::ACTION => Method\AlbumsMethod::class,
         Method\AlbumSongsMethod::ACTION => Method\AlbumSongsMethod::class,

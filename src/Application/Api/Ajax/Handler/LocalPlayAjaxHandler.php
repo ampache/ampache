@@ -80,14 +80,14 @@ final readonly class LocalPlayAjaxHandler implements AjaxHandlerInterface
                 $localplay = new LocalPlay(AmpConfig::get('localplay_controller', ''));
                 $localplay->connect();
 
+                // Player-state commands re-render the status panel (#information_actions) below so the
+                // displayed volume/state/track reflect what the controller now reports.
+                $command          = (string) ($_REQUEST['command'] ?? '');
+                $refresh_commands = ['refresh', 'prev', 'next', 'stop', 'play', 'pause', 'volume_up', 'volume_down', 'volume_mute'];
+
                 // Switch on valid commands
-                switch ($_REQUEST['command'] ?? '') {
+                switch ($command) {
                     case 'refresh':
-                        ob_start();
-                        $objects = $localplay->get();
-                        require_once Ui::find_template('show_localplay_status.inc.php');
-                        $results['localplay_status'] = ob_get_contents();
-                        ob_end_clean();
                         break;
                     case 'prev':
                         $localplay->prev();
@@ -102,8 +102,7 @@ final readonly class LocalPlayAjaxHandler implements AjaxHandlerInterface
                         $localplay->play();
                         break;
                     case 'pause':
-                        $command = scrub_in((string) $_REQUEST['command']);
-                        $localplay->$command();
+                        $localplay->pause();
                         break;
                     case 'volume_up':
                         $localplay->volume_up();
@@ -112,15 +111,7 @@ final readonly class LocalPlayAjaxHandler implements AjaxHandlerInterface
                         $localplay->volume_down();
                         break;
                     case 'volume_mute':
-                        $command = scrub_in((string) $_REQUEST['command']);
-                        $localplay->$command();
-
-                        // We actually want to refresh something here
-                        ob_start();
-                        $objects = $localplay->get();
-                        require_once Ui::find_template('show_localplay_status.inc.php');
-                        $results['localplay_status'] = ob_get_contents();
-                        ob_end_clean();
+                        $localplay->volume_mute();
                         break;
                     case 'delete_all':
                         $localplay->delete_all();
@@ -147,6 +138,14 @@ final readonly class LocalPlayAjaxHandler implements AjaxHandlerInterface
                         $results[$browse->get_content_div()] = ob_get_contents();
                         ob_end_clean();
                         break;
+                }
+
+                if (in_array($command, $refresh_commands, true)) {
+                    ob_start();
+                    $objects = $localplay->get();
+                    require Ui::find_template('show_localplay_status.inc.php');
+                    $results['localplay_status'] = (string) ob_get_contents();
+                    ob_end_clean();
                 }
 
                 break;

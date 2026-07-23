@@ -12,9 +12,9 @@ echo $AMPACHEDIR
 ### cd to the folder
 cd $AMPACHEDIR
 
-# Command run:updateCatalog, version 7.3.1
+# Command run:updateCatalog, version 8.0.0
 #
-# Perform catalog actions for all files of a catalog. If no options are given, the defaults actions -ceag are assumed
+# Perform catalog actions for all files of a catalog. If no options are given, the defaults actions -ceagt are assumed
 #
 # Usage: run:updateCatalog [OPTIONS...] [ARGUMENTS...]
 #
@@ -32,7 +32,8 @@ cd $AMPACHEDIR
 #   [-i|--import]         Adds new media files and imports playlist files [default: false]
 #   [-l|--limit]          Item Limit (Verify) [default: 0]
 #   [-m|--memorylimit]    Temporarily deactivates PHP memory limit [default: false]
-#   [-o|--optimize]       Optimises database tables [default: false]
+#   [-o|--optimize]       Optimizes database tables [default: false]
+#   [-s|--scan]           Scan Local Catalog folders for folder browsing [default: false]
 #   [-u|--update]         Update local object metadata using external plugins [default: false]
 #   [-e|--verify]         Reads your files and updates the database to match changes [default: false]
 #
@@ -59,5 +60,12 @@ php bin/cli run:cacheProcess
 ### Update table mapping, counts and delete garbage data
 php bin/cli run:updateCatalog -t
 
+### Scan the catalog folders so they can be browsed by folder
+#php bin/cli run:updateCatalog -s
+
 ### Alternativey you can run them all from one command
 #php bin/cli run:updateCatalog -caget
+
+### Consolidate old play history into summary counts (dry-run without -e)
+### Requires stats_consolidate_threshold to be set in ampache.cfg.php
+#php bin/cli cleanup:consolidateStats -e

@@ -91,7 +91,7 @@ Art::display('podcast', $podcast->getId(), (string) $podcast->get_fullname(), $s
         </li>
         <?php } ?>
         <?php if ($access50) { ?>
-        <?php if (AmpConfig::get('statistical_graphs') && is_dir(__DIR__ . '/../../vendor/szymach/c-pchart/src/Chart/')) { ?>
+        <?php if (AmpConfig::get('statistical_graphs')) { ?>
             <li>
                 <a href="<?php echo $web_path; ?>/stats.php?action=graph&object_type=podcast&object_id=<?php echo $podcast->getId(); ?>">
                     <?php echo Ui::get_material_symbol('bar_chart', T_('Graphs')); ?>
