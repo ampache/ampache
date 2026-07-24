@@ -16,6 +16,20 @@ Users who want to use a pure Subsonic implementation can enable the `Enable lega
 * Ampache4 => Subsonic [1.13.0](http://www.subsonic.org/pages/inc/api/schema/subsonic-rest-api-1.13.0.xsd)
 * Ampache3 => Subsonic [1.11.0](http://www.subsonic.org/pages/inc/api/schema/subsonic-rest-api-1.11.0.xsd)
 
+## Authentication
+
+Subsonic clients authenticate with either token auth (`u`, `t`, `s`) or a plaintext password (`u`, `p`). Both need a credential the server can read back, and your Ampache login password is stored as a one-way sha256 hash, so it can not be used.
+
+Set a **Subsonic Password** on your account page (`preferences.php?tab=account`) and use that as the password in your client. Administrators can set it for another user from the user edit page, or from the cli:
+
+```shell
+bin/cli admin:updateUser some-user --subsonic 'some-password'
+```
+
+It is stored encrypted with the `secret_key` from your Ampache config rather than hashed, because token auth requires the server to recompute `md5(password + salt)`. Changing `secret_key` invalidates every stored Subsonic Password and they have to be set again.
+
+Your API key also still works as the Subsonic password with either auth method, so clients configured before this existed keep working.
+
 ## OpenSubsonic API extension
 
 [OpenSubsonic API](https://opensubsonic.netlify.app/docs/) is an open source initiative to create backward-compatible extensions for the original Subsonic API.

@@ -25,6 +25,7 @@ declare(strict_types=1);
 
 namespace Ampache\Module\Authentication\Authenticator;
 
+use Ampache\Module\Database\DatabaseConnectionInterface;
 use Ampache\Module\System\Crypto\SymmetricEncrypterInterface;
 use Ampache\Module\System\Dba;
 use Ampache\Repository\Model\User;
@@ -33,6 +34,7 @@ final class DatabaseAuthenticator implements AuthenticatorInterface
 {
     public function __construct(
         private readonly SymmetricEncrypterInterface $symmetricEncrypter,
+        private readonly DatabaseConnectionInterface $databaseConnection,
     ) {}
 
     /**
@@ -46,10 +48,12 @@ final class DatabaseAuthenticator implements AuthenticatorInterface
     public function auth(string $username, string $password): array
     {
         if (strlen($password) && strlen($username)) {
-            $sql        = 'SELECT `password` FROM `user` WHERE `username` = ?';
-            $db_results = Dba::read($sql, [$username]);
+            $row = $this->databaseConnection->fetchRow(
+                'SELECT `password` FROM `user` WHERE `username` = ?',
+                [$username]
+            );
 
-            if ($row = Dba::fetch_assoc($db_results)) {
+            if (is_array($row) && $row !== []) {
                 // Use SHA2 now... cooking with fire.
                 // For backwards compatibility we hash a couple of different
                 // variations of the password. Increases collision chances, but
@@ -81,9 +85,13 @@ final class DatabaseAuthenticator implements AuthenticatorInterface
 
             // Subsonic sends the credential as a plaintext `p=` password when the client does not do token auth, so the
             // dedicated Subsonic secret and the legacy api key are both accepted here as well.
-            $sub_sql = 'SELECT `apikey`, `subsonic_secret` FROM `user` WHERE `username` = ?';
-            $results = Dba::read($sub_sql, [$username]);
-            $row     = Dba::fetch_assoc($results);
+            $row = $this->databaseConnection->fetchRow(
+                'SELECT `apikey`, `subsonic_secret` FROM `user` WHERE `username` = ?',
+                [$username]
+            );
+            if (!is_array($row)) {
+                $row = [];
+            }
 
             $secret = (empty($row['subsonic_secret']))
                 ? null

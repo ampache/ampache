@@ -27,8 +27,8 @@ namespace Ampache\Module\Authentication;
 
 use Ampache\Config\ConfigContainerInterface;
 use Ampache\Module\Authentication\Authenticator\AuthenticatorInterface;
+use Ampache\Module\Database\DatabaseConnectionInterface;
 use Ampache\Module\System\Crypto\SymmetricEncrypterInterface;
-use Ampache\Module\System\Dba;
 use Ampache\Module\System\Session;
 
 final class AuthenticationManager implements AuthenticationManagerInterface
@@ -38,6 +38,7 @@ final class AuthenticationManager implements AuthenticationManagerInterface
         /** @var AuthenticatorInterface[] $authenticatorList */
         private array $authenticatorList,
         private readonly SymmetricEncrypterInterface $symmetricEncrypter,
+        private readonly DatabaseConnectionInterface $databaseConnection,
     ) {}
 
     /**
@@ -142,10 +143,11 @@ final class AuthenticationManager implements AuthenticationManagerInterface
             return [];
         }
 
-        $sql        = 'SELECT `apikey`, `subsonic_secret`, `username` FROM `user` WHERE `username` = ?';
-        $db_results = Dba::read($sql, [$username]);
-        $row        = Dba::fetch_assoc($db_results);
-        if ($row === [] || $row['username'] !== $username) {
+        $row = $this->databaseConnection->fetchRow(
+            'SELECT `apikey`, `subsonic_secret`, `username` FROM `user` WHERE `username` = ?',
+            [$username]
+        );
+        if (!is_array($row) || ($row['username'] ?? null) !== $username) {
             return [];
         }
 
