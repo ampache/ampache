@@ -28,6 +28,7 @@ namespace Ampache\Repository\Model;
 use Ampache\Config\AmpConfig;
 use Ampache\Module\Api\Ajax;
 use Ampache\Module\Shout\ShoutObjectLoaderInterface;
+use Ampache\Module\System\AmpError;
 use Ampache\Module\System\Core;
 use Ampache\Module\Util\AjaxUriRetrieverInterface;
 use Ampache\Module\Util\Ui;
@@ -562,6 +563,21 @@ class Browse extends Query
             $object_ids = array_slice($object_ids, $this->get_start(), $this->get_offset(), true);
         } elseif ($object_ids === []) {
             $this->set_total(0);
+        } elseif (!$this->is_simple() && $this->get_offset() === 0) {
+            // No-limit == php memory exhausts and silent fail
+            // silent fail == user sad (#4276)
+            // Hard code a arbitrary limit to prevent those silent fails
+            // 5000 as a limit allow to stay under 256M of PHP
+            $limit = 5000;
+            $count = count($object_ids);
+            if ($count > $limit) {
+                debug_event(self::class, sprintf('show_objects refused: un-paged %s browse of %d objects exceeds the %d render limit', $type, $count, $limit), 1);
+                AmpError::add('browse', sprintf(nT_('This view has %d item and is too large to show all at once (limit %d). Enable paging or narrow your filters.', 'This view has %d items and is too large to show all at once (limit %d). Enable paging or narrow your filters.', $count), $count, $limit));
+
+                echo '<div class="error browse-too-large">' . scrub_out(sprintf(nT_('This view has %d item and is too large to show all at once (limit %d). Enable paging or narrow your filters.', 'This view has %d items and is too large to show all at once (limit %d). Enable paging or narrow your filters.', $count), $count, $limit)) . '</div>';
+
+                return;
+            }
         }
 
         // Load any additional object we need for this
