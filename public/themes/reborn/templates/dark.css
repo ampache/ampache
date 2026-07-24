@@ -521,7 +521,10 @@ span.fatalerror {
 
 .item_art .item_art_play .item_art_play_icon,
 .item_art .item_art_play_150 .item_art_play_icon {
-    background-image: url('../images/videoplay.png');
+    background-image: url('../images/videoplay.svg');
+    background-repeat: no-repeat;
+    background-position: center;
+    background-size: contain;
 }
 
 .item_art .item_art_actions {
