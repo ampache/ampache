@@ -39,7 +39,7 @@ $confirmation = Core::form_register($form_name); ?>
 <?php Ui::show_box_top(scrub_out($title), 'box box_confirmation'); ?>
 <?php echo $text; ?>
     <br />
-    <form method="post" action="<?php echo $path; ?>" style="display:inline;">
+    <form method="post" action="<?php echo htmlspecialchars($path, ENT_QUOTES); ?>" style="display:inline;">
         <input type="submit" value="<?php echo T_('Continue'); ?>" />
         <?php echo $confirmation; ?>
     </form>

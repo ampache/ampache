@@ -39,6 +39,7 @@ return [
     FileNameConverterInterface::class => autowire(FileNameConverter::class),
     RequestParserInterface::class => autowire(RequestParser::class),
     AjaxUriRetrieverInterface::class => autowire(AjaxUriRetriever::class),
+    DeletionUrlResolverInterface::class => autowire(DeletionUrlResolver::class),
     EnvironmentInterface::class => autowire(Environment::class),
     ZipHandlerInterface::class => autowire(ZipHandler::class),
     SlideshowInterface::class => autowire(Slideshow::class),

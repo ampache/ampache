@@ -23,13 +23,11 @@ declare(strict_types=1);
  *
  */
 
-namespace Ampache\Module\Application\Label;
+namespace Ampache\Module\Application\PodcastEpisode;
 
 use Ampache\Config\ConfigContainerInterface;
 use Ampache\Config\ConfigurationKeyEnum;
 use Ampache\MockeryTestCase;
-use Ampache\Module\Authorization\AccessLevelEnum;
-use Ampache\Module\Authorization\AccessTypeEnum;
 use Ampache\Module\Authorization\GuiGatekeeperInterface;
 use Ampache\Module\Util\DeletionUrlResolverInterface;
 use Ampache\Module\Util\UiInterface;
@@ -39,144 +37,109 @@ use Psr\Http\Message\ServerRequestInterface;
 
 class DeleteActionTest extends MockeryTestCase
 {
-    private ConfigContainerInterface|MockInterface|null $configContainer;
-    private DeletionUrlResolverInterface|MockInterface|null $deletionUrlResolver;
-    private ?DeleteAction $subject;
-    private UiInterface|MockInterface|null $ui;
+    private ConfigContainerInterface&MockInterface $configContainer;
+    private DeletionUrlResolverInterface&MockInterface $deletionUrlResolver;
+    private DeleteAction $subject;
+    private UiInterface&MockInterface $ui;
 
-    public function testDoesNothingAndReturnsNullInDemoMode(): void
+    public function testRunCancelsToTheEpisodeItselfWithoutAnOriginPage(): void
     {
         $request    = $this->mock(ServerRequestInterface::class);
         $gatekeeper = $this->mock(GuiGatekeeperInterface::class);
 
-        $this->configContainer->shouldReceive('isFeatureEnabled')
-            ->with(ConfigurationKeyEnum::DEMO_MODE)
-            ->once()
-            ->andReturnTrue();
-
-        $this->ui->shouldReceive('showHeader')
-            ->withNoArgs()
-            ->once();
-        $this->ui->shouldReceive('showQueryStats')
-            ->withNoArgs()
-            ->once();
-        $this->ui->shouldReceive('showFooter')
-            ->withNoArgs()
-            ->once();
-
-        $this->assertNull(
-            $this->subject->run($request, $gatekeeper)
-        );
-    }
-
-    public function testShowConfirmationAndReturnsNull(): void
-    {
-        $request    = $this->mock(ServerRequestInterface::class);
-        $gatekeeper = $this->mock(GuiGatekeeperInterface::class);
-
-        $labelId    = 666;
-        $webPath    = 'some-web-path';
-        $burlParam  = 'aA+b/c=';
-        $originPage = 'some-web-path/browse.php?action=label';
-
-        $request->shouldReceive('getQueryParams')
-            ->withNoArgs()
-            ->once()
-            ->andReturn(['label_id' => $labelId, 'burl' => $burlParam]);
-
-        $this->deletionUrlResolver->shouldReceive('resolveBurl')
-            ->with($burlParam)
-            ->once()
-            ->andReturn($originPage);
+        $episodeId = 666;
+        $webPath   = 'some-path';
 
         $this->configContainer->shouldReceive('isFeatureEnabled')
             ->with(ConfigurationKeyEnum::DEMO_MODE)
             ->once()
             ->andReturnFalse();
-
-        $gatekeeper->shouldReceive('mayAccess')
-            ->with(
-                AccessTypeEnum::INTERFACE,
-                AccessLevelEnum::CONTENT_MANAGER
-            )
-            ->once()
-            ->andReturnTrue();
-        $this->configContainer->shouldReceive('isFeatureEnabled')
-            ->with(ConfigurationKeyEnum::LABEL)
-            ->once()
-            ->andReturnTrue();
-
         $this->configContainer->shouldReceive('getWebPath')
             ->withNoArgs()
             ->once()
             ->andReturn($webPath);
 
-        $this->ui->shouldReceive('showHeader')
-            ->withNoArgs()
-            ->once();
-        $this->ui->shouldReceive('showQueryStats')
-            ->withNoArgs()
-            ->once();
-        $this->ui->shouldReceive('showFooter')
-            ->withNoArgs()
-            ->once();
-        $this->ui->shouldReceive('showConfirmationWithReturn')
-            ->with(
-                'Are You Sure?',
-                'This Label will be deleted',
-                sprintf(
-                    '%s/labels.php?action=confirm_delete&label_id=%s&burl=aA%%2Bb%%2Fc%%3D',
-                    $webPath,
-                    $labelId
-                ),
-                $originPage,
-                'delete_label'
-            )
-            ->once();
-
-        $this->assertNull(
-            $this->subject->run($request, $gatekeeper)
-        );
-    }
-
-    public function testShowConfirmationCancelsToTheLabelItselfWithoutAnOriginPage(): void
-    {
-        $request    = $this->mock(ServerRequestInterface::class);
-        $gatekeeper = $this->mock(GuiGatekeeperInterface::class);
-
-        $labelId = 666;
-        $webPath = 'some-web-path';
-
         $request->shouldReceive('getQueryParams')
             ->withNoArgs()
             ->once()
-            ->andReturn(['label_id' => $labelId]);
+            ->andReturn(['podcast_episode_id' => (string) $episodeId]);
 
         $this->deletionUrlResolver->shouldReceive('resolveBurl')
             ->with('')
             ->once()
             ->andReturn('');
 
+        $this->ui->shouldReceive('showHeader')
+            ->withNoArgs()
+            ->once();
+        $this->ui->shouldReceive('showQueryStats')
+            ->withNoArgs()
+            ->once();
+        $this->ui->shouldReceive('showFooter')
+            ->withNoArgs()
+            ->once();
+        $this->ui->shouldReceive('showConfirmationWithReturn')
+            ->with(
+                'Are You Sure?',
+                'The Podcast Episode will be deleted',
+                sprintf(
+                    '%s/podcast_episode.php?action=confirm_delete&podcast_episode_id=%d&burl=',
+                    $webPath,
+                    $episodeId
+                ),
+                sprintf('%s/podcast_episode.php?action=show&podcast_episode=%d', $webPath, $episodeId),
+                'delete_podcast_episode'
+            )
+            ->once();
+
+        $this->assertNull(
+            $this->subject->run($request, $gatekeeper)
+        );
+    }
+
+    public function testRunReturnsNullInDemoMode(): void
+    {
+        $request    = $this->mock(ServerRequestInterface::class);
+        $gatekeeper = $this->mock(GuiGatekeeperInterface::class);
+
+        $this->configContainer->shouldReceive('isFeatureEnabled')
+            ->with(ConfigurationKeyEnum::DEMO_MODE)
+            ->once()
+            ->andReturnTrue();
+
+        $this->assertNull(
+            $this->subject->run($request, $gatekeeper)
+        );
+    }
+
+    public function testRunShowsConfirmationWithTheOriginPage(): void
+    {
+        $request    = $this->mock(ServerRequestInterface::class);
+        $gatekeeper = $this->mock(GuiGatekeeperInterface::class);
+
+        $episodeId  = 666;
+        $webPath    = 'some-path';
+        $burlParam  = 'aA+b/c=';
+        $originPage = 'some-path/podcast.php?action=show&podcast=7';
+
         $this->configContainer->shouldReceive('isFeatureEnabled')
             ->with(ConfigurationKeyEnum::DEMO_MODE)
             ->once()
             ->andReturnFalse();
-        $this->configContainer->shouldReceive('isFeatureEnabled')
-            ->with(ConfigurationKeyEnum::LABEL)
-            ->once()
-            ->andReturnTrue();
         $this->configContainer->shouldReceive('getWebPath')
             ->withNoArgs()
             ->once()
             ->andReturn($webPath);
 
-        $gatekeeper->shouldReceive('mayAccess')
-            ->with(
-                AccessTypeEnum::INTERFACE,
-                AccessLevelEnum::CONTENT_MANAGER
-            )
+        $request->shouldReceive('getQueryParams')
+            ->withNoArgs()
             ->once()
-            ->andReturnTrue();
+            ->andReturn(['podcast_episode_id' => (string) $episodeId, 'burl' => $burlParam]);
+
+        $this->deletionUrlResolver->shouldReceive('resolveBurl')
+            ->with($burlParam)
+            ->once()
+            ->andReturn($originPage);
 
         $this->ui->shouldReceive('showHeader')
             ->withNoArgs()
@@ -190,14 +153,14 @@ class DeleteActionTest extends MockeryTestCase
         $this->ui->shouldReceive('showConfirmationWithReturn')
             ->with(
                 'Are You Sure?',
-                'This Label will be deleted',
+                'The Podcast Episode will be deleted',
                 sprintf(
-                    '%s/labels.php?action=confirm_delete&label_id=%s&burl=',
+                    '%s/podcast_episode.php?action=confirm_delete&podcast_episode_id=%d&burl=aA%%2Bb%%2Fc%%3D',
                     $webPath,
-                    $labelId
+                    $episodeId
                 ),
-                sprintf('%s/labels.php?action=show&label=%d', $webPath, $labelId),
-                'delete_label'
+                $originPage,
+                'delete_podcast_episode'
             )
             ->once();
 

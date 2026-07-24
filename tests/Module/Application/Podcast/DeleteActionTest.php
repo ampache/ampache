@@ -31,6 +31,7 @@ use Ampache\Module\Application\Exception\AccessDeniedException;
 use Ampache\Module\Authorization\AccessLevelEnum;
 use Ampache\Module\Authorization\AccessTypeEnum;
 use Ampache\Module\Authorization\GuiGatekeeperInterface;
+use Ampache\Module\Util\DeletionUrlResolverInterface;
 use Ampache\Module\Util\UiInterface;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
@@ -42,6 +43,7 @@ class DeleteActionTest extends TestCase
     use ConsecutiveParams;
 
     private ConfigContainerInterface&MockObject $configContainer;
+    private DeletionUrlResolverInterface&MockObject $deletionUrlResolver;
     private GuiGatekeeperInterface&MockObject $gatekeeper;
     private ServerRequestInterface&MockObject $request;
     private DeleteAction $subject;
@@ -49,11 +51,18 @@ class DeleteActionTest extends TestCase
 
     public function testRunRendersConfirmation(): void
     {
-        $podcastId = 666;
+        $podcastId  = 666;
+        $burlParam  = 'aA+b/c=';
+        $originPage = '/browse.php?action=podcast';
 
         $this->request->expects(static::once())
             ->method('getQueryParams')
-            ->willReturn(['podcast_id' => (string) $podcastId]);
+            ->willReturn(['podcast_id' => (string) $podcastId, 'burl' => $burlParam]);
+
+        $this->deletionUrlResolver->expects(static::once())
+            ->method('resolveBurl')
+            ->with($burlParam)
+            ->willReturn($originPage);
 
         $this->configContainer->expects(static::exactly(2))
             ->method('isFeatureEnabled')
@@ -71,15 +80,15 @@ class DeleteActionTest extends TestCase
         $this->ui->expects(static::once())
             ->method('showHeader');
         $this->ui->expects(static::once())
-            ->method('showConfirmation')
+            ->method('showConfirmationWithReturn')
             ->with(
                 'Are You Sure?',
                 'The Podcast will be removed from the database',
                 sprintf(
-                    '/podcast.php?action=confirm_delete&podcast_id=%d',
+                    '/podcast.php?action=confirm_delete&podcast_id=%d&burl=aA%%2Bb%%2Fc%%3D',
                     $podcastId
                 ),
-                1,
+                $originPage,
                 'delete_podcast'
             );
         $this->ui->expects(static::once())
@@ -143,15 +152,17 @@ class DeleteActionTest extends TestCase
 
     protected function setUp(): void
     {
-        $this->configContainer = $this->createMock(ConfigContainerInterface::class);
-        $this->ui              = $this->createMock(UiInterface::class);
+        $this->configContainer     = $this->createMock(ConfigContainerInterface::class);
+        $this->ui                  = $this->createMock(UiInterface::class);
+        $this->deletionUrlResolver = $this->createMock(DeletionUrlResolverInterface::class);
 
         $this->request    = $this->createMock(ServerRequestInterface::class);
         $this->gatekeeper = $this->createMock(GuiGatekeeperInterface::class);
 
         $this->subject = new DeleteAction(
             $this->configContainer,
-            $this->ui
+            $this->ui,
+            $this->deletionUrlResolver
         );
     }
 }

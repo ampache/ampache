@@ -38,12 +38,12 @@ $confirmation = Core::form_register($form_name); ?>
 <?php Ui::show_box_top(scrub_out($title), 'box box_confirmation'); ?>
 <?php echo $text; ?>
     <br />
-    <form method="post" action="<?php echo $return; ?>" style="display:inline;">
+    <form method="post" action="<?php echo htmlspecialchars($return, ENT_QUOTES); ?>" style="display:inline;">
         <input type="submit" value="<?php echo T_('Continue'); ?>" />
         <?php echo $confirmation; ?>
     </form>
 <?php if ($cancel !== null) { ?>
-    <form method="post" action="<?php echo $cancel; ?>" style="display:inline;">
+    <form method="post" action="<?php echo htmlspecialchars($cancel, ENT_QUOTES); ?>" style="display:inline;">
         <input type="submit" value="<?php echo T_('Cancel'); ?>" />
         <?php echo $confirmation; ?>
     </form>
