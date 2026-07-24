@@ -769,6 +769,9 @@ class Graph
             // every 'outside' position draws past the edge of the canvas, SVGGraph does not grow it to fit
             'legend_position' => 'top right',
             'legend_columns' => 2,
+            'legend_font_size' => 9,
+            'legend_entry_height' => 11,
+            'legend_padding' => 4,
             'back_colour' => '#f8f8f8',
             'back_stroke_width' => 1,
             'back_stroke_colour' => '#000',
