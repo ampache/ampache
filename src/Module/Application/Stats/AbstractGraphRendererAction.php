@@ -97,12 +97,14 @@ abstract readonly class AbstractGraphRendererAction implements ApplicationAction
             'year' => 315360000,
             default => 864000,
         };
-        $start_date = (isset($_REQUEST['start_date']))
+        $zoom_changed = (($_REQUEST['rendered_zoom'] ?? $zoom) !== $zoom);
+        $start_date   = (isset($_REQUEST['start_date']) && !$zoom_changed)
             ? (int) strtotime((string) $_REQUEST['start_date'])
             : ($end_date - $default_span);
 
-        $f_end_date   = get_datetime($end_date);
-        $f_start_date = get_datetime($start_date);
+        // format for the datetimepicker inputs (Y-m-d H:i) so the field, the picker and strtotime all round-trip
+        $f_end_date   = date('Y-m-d H:i', $end_date);
+        $f_start_date = date('Y-m-d H:i', $start_date);
 
         $gtypes   = [];
         $gtypes[] = 'user_hits';

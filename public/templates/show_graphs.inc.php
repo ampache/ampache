@@ -102,6 +102,7 @@ foreach ($date_formats as $dtype => $dname) {
     <input type="hidden" name="object_id" value="<?php echo $object_id; ?>" />
     <input type="hidden" name="action" value="<?php echo scrub_out(Core::get_request('action')); ?>" />
     <input type="hidden" name="type" value="<?php echo $type ?? ''; ?>" />
+    <input type="hidden" name="rendered_zoom" value="<?php echo $zoom; ?>" />
 </form>
 <script>
     $('#start_date').datetimepicker({
@@ -109,18 +110,8 @@ foreach ($date_formats as $dtype => $dname) {
         theme: 'dark'
     });
     $('#end_date').datetimepicker({
-        format:'Y-m-d H:i',
+        format: 'Y-m-d H:i',
         theme: 'dark'
-    });
-    $('select[name="zoom"]').on('change', function () {
-        var spans = {hour: 86400, day: 864000, month: 31536000, year: 315360000};
-        var span = spans[this.value] || 864000;
-        var pad = function (n) { return (n < 10 ? '0' : '') + n; };
-        var endVal = $('#end_date').val();
-        var end = endVal ? new Date(endVal.replace(' ', 'T')) : new Date();
-        if (isNaN(end.getTime())) { end = new Date(); }
-        var start = new Date(end.getTime() - (span * 1000));
-        $('#start_date').val(start.getFullYear() + '-' + pad(start.getMonth() + 1) + '-' + pad(start.getDate()) + ' ' + pad(start.getHours()) + ':' + pad(start.getMinutes()));
     });
 </script>
 <?php Ui::show_box_bottom(); ?>
