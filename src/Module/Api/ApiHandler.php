@@ -120,7 +120,18 @@ final class ApiHandler implements ApiHandlerInterface
         define('API', true);
 
         $input  = $request->getQueryParams();
-        $action = $input['action'];
+        $action = (string) ($input['action'] ?? '');
+        if ($action === '') {
+            // hitting the server without an action (e.g. opening the url in a browser) is treated as
+            // a ping rather than failing with a missing handler error
+            $this->logger->debug(
+                'Empty action parameter; using ping instead',
+                [LegacyLogger::CONTEXT_TYPE => self::class]
+            );
+
+            $action          = PingMethod::ACTION;
+            $input['action'] = $action;
+        }
         if ($action == 'bad_request') {
             $this->logger->warning(
                 'Bad API request, check your HTTP Method is correct for your action',
