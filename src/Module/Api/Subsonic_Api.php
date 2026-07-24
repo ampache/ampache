@@ -3043,11 +3043,13 @@ class Subsonic_Api
                 // long pauses might cause your now_playing to hide
                 Stream::garbage_collection();
                 Stream::insert_now_playing((int) $media->id, $user->id, $media->time, (string) $user->username, $type, $time);
-                // submission is true: go to scrobble plugins (Plugin::get_plugins(PluginTypeEnum::SAVE_MEDIAPLAY))
-                if ($submission && get_class($media) == Song::class && ($prev_obj != $media->id) && (($time - $prev_date) > 5)) {
-                    // stream has finished
+                // submission is true: stream finished. Record the play locally
+                // (set_played is dedup-guarded) and notify scrobble plugins.
+                if ($submission && $media->id && ($prev_obj != $media->id) && (($time - $prev_date) > 5)) {
                     debug_event(self::class, $user->username . ' scrobbled: {' . $media->id . '} at ' . $time, 5);
-                    User::save_mediaplay($user, $media);
+                    if ($media->set_played($user->id, $client, [], $time) && get_class($media) == Song::class) {
+                        User::save_mediaplay($user, $media);
+                    }
                 }
                 // Submission is false and not a repeat. let repeats go through to saveplayqueue
                 if ((!$submission) && $media->id && ($prev_obj != $media->id) && (($time - $prev_date) > 5)) {
