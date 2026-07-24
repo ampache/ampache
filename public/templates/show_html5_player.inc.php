@@ -317,7 +317,7 @@ $replaygain = (AmpConfig::get('theme_color', 'dark') == 'light')
                     ) {
                         if ($iframed) {
                             if (AmpConfig::get('sociable')) {
-                                echo "ajaxPut(jsAjaxUrl + '?page=' + currenttype + '&action=shouts&object_type=' + currenttype + '&object_id=' + currentjpitem.attr('data-media_id'), 'shouts_data');";
+                                echo "if (currenttype === 'song') { ajaxPut(jsAjaxUrl + '?page=' + currenttype + '&action=shouts&object_type=' + currenttype + '&object_id=' + currentjpitem.attr('data-media_id'), 'shouts_data'); }";
                             }
                             echo "ajaxPut(jsAjaxUrl + '?action=action_buttons&object_type=' + actiontype + '&object_id=' + currentjpitem.attr('data-media_id'));";
                             echo "var titleobj = (typeof actiontype !== 'undefined') ? '<a href=\"javascript:NavigateTo(\'" . $web_path . "/' + currenttype + '.php?action=show_' + currenttype + '&' + currentobject + '=' + currentjpitem.attr('data-media_id') + '\');\" title=\"' + obj.title + '\">' + obj.title + '</a>' : obj.title;";
