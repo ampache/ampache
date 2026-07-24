@@ -25,11 +25,16 @@ declare(strict_types=1);
 
 namespace Ampache\Module\Authentication\Authenticator;
 
+use Ampache\Module\System\Crypto\SymmetricEncrypterInterface;
 use Ampache\Module\System\Dba;
 use Ampache\Repository\Model\User;
 
 final class DatabaseAuthenticator implements AuthenticatorInterface
 {
+    public function __construct(
+        private readonly SymmetricEncrypterInterface $symmetricEncrypter,
+    ) {}
+
     /**
      * @return array{
      *     success: bool,
@@ -74,12 +79,21 @@ final class DatabaseAuthenticator implements AuthenticatorInterface
                 }
             }
 
-            // subsonic password fallback for auth with apikey
-            $sub_sql = 'SELECT `apikey` FROM `user` WHERE `username` = ?';
+            // Subsonic sends the credential as a plaintext `p=` password when the client does not do token auth, so the
+            // dedicated Subsonic secret and the legacy api key are both accepted here as well.
+            $sub_sql = 'SELECT `apikey`, `subsonic_secret` FROM `user` WHERE `username` = ?';
             $results = Dba::read($sub_sql, [$username]);
             $row     = Dba::fetch_assoc($results);
-            $api_key = $row['apikey'] ?? '';
-            if ($password == $api_key) {
+
+            $secret = (empty($row['subsonic_secret']))
+                ? null
+                : $this->symmetricEncrypter->decrypt((string) $row['subsonic_secret']);
+
+            $api_key = (string) ($row['apikey'] ?? '');
+            if (
+                ($secret !== null && hash_equals($secret, $password))
+                || ($api_key !== '' && hash_equals($api_key, $password))
+            ) {
                 return [
                     'success' => true,
                     'type' => 'mysql',

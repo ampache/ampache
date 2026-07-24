@@ -152,4 +152,9 @@ interface UserRepositoryInterface
      * Updates a users Stream token
      */
     public function updateStreamToken(int $userId, string $userName, string $streamToken): void;
+
+    /**
+     * Stores the encrypted Subsonic secret for a user, or clears it when `null` is given
+     */
+    public function updateSubsonicSecret(int $userId, ?string $secret): void;
 }

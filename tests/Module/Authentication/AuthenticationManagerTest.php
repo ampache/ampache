@@ -27,6 +27,7 @@ namespace Ampache\Module\Authentication;
 
 use Ampache\Config\ConfigContainerInterface;
 use Ampache\Module\Authentication\Authenticator\AuthenticatorInterface;
+use Ampache\Module\System\Crypto\SymmetricEncrypterInterface;
 use Mockery;
 use Mockery\Adapter\Phpunit\MockeryTestCase;
 use Mockery\MockInterface;
@@ -38,6 +39,7 @@ class AuthenticationManagerTest extends MockeryTestCase
     private string $authenticatorName = 'some-authenticator';
     private MockInterface|ConfigContainerInterface|null $configContainer;
     private ?AuthenticationManager $subject;
+    private MockInterface|SymmetricEncrypterInterface|null $symmetricEncrypter;
 
     public function testLoginFailsIfAuthenticatorNotAvailable(): void
     {
@@ -171,12 +173,14 @@ class AuthenticationManagerTest extends MockeryTestCase
     #[Override]
     protected function setUp(): void
     {
-        $this->configContainer = Mockery::mock(ConfigContainerInterface::class);
-        $this->authenticator   = Mockery::mock(AuthenticatorInterface::class);
+        $this->configContainer    = Mockery::mock(ConfigContainerInterface::class);
+        $this->authenticator      = Mockery::mock(AuthenticatorInterface::class);
+        $this->symmetricEncrypter = Mockery::mock(SymmetricEncrypterInterface::class);
 
         $this->subject = new AuthenticationManager(
             $this->configContainer,
-            [$this->authenticatorName => $this->authenticator]
+            [$this->authenticatorName => $this->authenticator],
+            $this->symmetricEncrypter
         );
     }
 }

@@ -104,6 +104,14 @@ $display_fields = (array) AmpConfig::get('registration_display_fields'); ?>
         </tr>
         <tr>
             <td>
+                <?php echo T_('Subsonic Password'); ?>
+            </td>
+            <td>
+                <span><?php echo ($client->subsonic_secret) ? T_('Currently set') : T_('Not set'); ?></span>
+            </td>
+        </tr>
+        <tr>
+            <td>
                 <?php echo T_('Stream Token'); ?>
                 <?php if (Access::check(AccessTypeEnum::INTERFACE, AccessLevelEnum::ADMIN)) { ?>
                     <a href="<?php echo $admin_path; ?>/users.php?action=show_generate_streamtoken&user_id=<?php echo $client->id; ?>"><?php echo Ui::get_material_symbol('cycle', T_('Generate new Stream token')); ?></a>

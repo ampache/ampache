@@ -82,6 +82,10 @@ class User extends database_object
     public ?string $rsstoken    = null;
     public ?string $state       = null;
     public ?string $streamtoken = null;
+
+    /** @var ?string Encrypted Subsonic password; never the plaintext, decrypt it with the SymmetricEncrypter */
+    public ?string $subsonic_secret = null;
+
     public ?string $username    = null;
     public ?string $validation  = null;
     public ?string $website     = null;
@@ -771,6 +775,14 @@ class User extends database_object
     {
         $sql = "UPDATE `user` SET `streamtoken` = NULL WHERE `id` = ?;";
         Dba::write($sql, [$this->id]);
+    }
+
+    public function deleteSubsonicSecret(): void
+    {
+        $sql = "UPDATE `user` SET `subsonic_secret` = NULL WHERE `id` = ?;";
+        Dba::write($sql, [$this->id]);
+
+        $this->subsonic_secret = null;
     }
 
     /**
@@ -1470,6 +1482,7 @@ class User extends database_object
                 'apikey' => null,
                 'rsstoken' => null,
                 'streamtoken' => null,
+                'subsonic_secret' => null,
                 'last_seen' => null,
                 'create_date' => null,
                 'validation' => null,
@@ -1477,7 +1490,7 @@ class User extends database_object
                 'city' => null
             ];
         } else {
-            $sql        = "SELECT `id`, `username`, `fullname`, `email`, `website`, `apikey`, `access`, `disabled`, `last_seen`, `create_date`, `validation`, `state`, `city`, `fullname_public`, `rsstoken`, `streamtoken`, `catalog_filter_group` FROM `user` WHERE `id` = ?;";
+            $sql        = "SELECT `id`, `username`, `fullname`, `email`, `website`, `apikey`, `access`, `disabled`, `last_seen`, `create_date`, `validation`, `state`, `city`, `fullname_public`, `rsstoken`, `streamtoken`, `subsonic_secret`, `catalog_filter_group` FROM `user` WHERE `id` = ?;";
             $db_results = Dba::read($sql, [$user_id]);
 
             $data = Dba::fetch_assoc($db_results);
@@ -1504,6 +1517,7 @@ class User extends database_object
         $this->fullname_public      = (bool) $data['fullname_public'];
         $this->rsstoken             = $data['rsstoken'];
         $this->streamtoken          = $data['streamtoken'];
+        $this->subsonic_secret      = $data['subsonic_secret'];
         $this->catalog_filter_group = (int) $data['catalog_filter_group'];
 
         return true;
