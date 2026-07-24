@@ -112,5 +112,15 @@ foreach ($date_formats as $dtype => $dname) {
         format:'Y-m-d H:i',
         theme: 'dark'
     });
+    $('select[name="zoom"]').on('change', function () {
+        var spans = {hour: 86400, day: 864000, month: 31536000, year: 315360000};
+        var span = spans[this.value] || 864000;
+        var pad = function (n) { return (n < 10 ? '0' : '') + n; };
+        var endVal = $('#end_date').val();
+        var end = endVal ? new Date(endVal.replace(' ', 'T')) : new Date();
+        if (isNaN(end.getTime())) { end = new Date(); }
+        var start = new Date(end.getTime() - (span * 1000));
+        $('#start_date').val(start.getFullYear() + '-' + pad(start.getMonth() + 1) + '-' + pad(start.getDate()) + ' ' + pad(start.getHours()) + ':' + pad(start.getMinutes()));
+    });
 </script>
 <?php Ui::show_box_bottom(); ?>

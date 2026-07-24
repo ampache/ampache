@@ -90,9 +90,16 @@ abstract readonly class AbstractGraphRendererAction implements ApplicationAction
         $end_date = (isset($_REQUEST['end_date']))
             ? (int) strtotime((string) $_REQUEST['end_date'])
             : time();
+        // scale the default window to the zoom bucket so a fresh year/month graph spans enough buckets to be readable
+        $default_span = match ($zoom) {
+            'hour' => 86400,
+            'month' => 31536000,
+            'year' => 315360000,
+            default => 864000,
+        };
         $start_date = (isset($_REQUEST['start_date']))
             ? (int) strtotime((string) $_REQUEST['start_date'])
-            : ($end_date - 864000);
+            : ($end_date - $default_span);
 
         $f_end_date   = get_datetime($end_date);
         $f_start_date = get_datetime($start_date);
