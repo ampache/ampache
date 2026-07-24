@@ -339,7 +339,18 @@ a.jp-next:hover {
 
 /* The seeking class is added/removed inside jPlayer */
 .jp-seeking-bg {
-    background: url("../lib/modules/jquery-jplayer-midnight-black/jplayer.midnight.black.seeking.gif");
+    /* Animated diagonal stripes (barber-pole), pure CSS — replaces seeking.gif.
+       Crisp at any DPI, no bitmap. Theme blue tones from the old gif. */
+    background-image: repeating-linear-gradient(
+        -45deg,
+        #5fa9ce 0, #5fa9ce 22px,
+        #4b9ec8 22px, #4b9ec8 44px);
+    background-size: 62px 100%;
+    animation: jp-seeking-stripes 1.4s linear infinite;
+}
+@keyframes jp-seeking-stripes {
+    from { background-position: 0 0; }
+    to   { background-position: 62px 0; }
 }
 
 /* @end */
