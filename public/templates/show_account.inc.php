@@ -83,6 +83,23 @@ $access100      = Access::check(AccessTypeEnum::INTERFACE, AccessLevelEnum::ADMI
             <td><input id="password2" type="password" name="password2" maxlength="64" autocomplete="new-password" /></td>
         </tr>
         <tr>
+            <td>
+                <?php echo T_('Subsonic Password'); ?>
+                <?php if ($client->subsonic_secret) { ?>
+                    <a href="<?php echo $admin_path; ?>/users.php?action=show_delete_subsonic_secret&user_id=<?php echo $client->id; ?>"><?php echo Ui::get_material_symbol('close', T_('Delete')); ?></a>
+                <?php } ?>
+            </td>
+            <td>
+                <?php echo AmpError::display('subsonic_password'); ?>
+                <input id="subsonic_password1" type="password" name="subsonic_password1" maxlength="64" autocomplete="new-password" />
+                <span><?php echo ($client->subsonic_secret) ? T_('Currently set') : T_('Not set'); ?></span>
+            </td>
+        </tr>
+        <tr>
+            <td><?php echo T_('Confirm Subsonic Password'); ?>:</td>
+            <td><input id="subsonic_password2" type="password" name="subsonic_password2" maxlength="64" autocomplete="new-password" /></td>
+        </tr>
+        <tr>
             <td><?php echo T_('Avatar'); ?> (&lt; <?php echo Ui::format_bytes(AmpConfig::get('max_upload_size')); ?>)</td>
             <td><input type="file" id="avatar" name="avatar" value="" />
         </tr>

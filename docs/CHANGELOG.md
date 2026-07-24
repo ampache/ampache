@@ -152,6 +152,7 @@ You can downgrade to Ampache7 if you try this out and have issues, using the cli
   * `musicFolderId` was ignored by `getStarred`, `getStarred2` and `getSongsByGenre`
   * `musicFolderId` was ignored by `getAlbumList`/`getAlbumList2` for the `random`, `highest`, `frequent`, `recent`, `starred`, `byYear` and `byGenre` types
   * A `musicFolderId` naming a catalog the user can't browse returned everything instead of nothing
+* User avatars requested through a `/play/art/{sid}/user/{id}/...` url were always denied when `public_images` is disabled, because the `user` rewrite rules dropped the `auth` parameter that the other art rules pass on
 
 ## Ampache 7.10.0
 

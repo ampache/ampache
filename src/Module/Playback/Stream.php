@@ -771,6 +771,39 @@ class Stream
     }
 
     /**
+     * skip_transcode
+     * True when a transcode would hand back the source format at (or above) the rate it already has, which can only
+     * lose quality, so the original file is the better stream. Rates are bps and 0 means "not requested"; an unknown
+     * source rate or a different output format never skips because that conversion is the point of the transcode.
+     */
+    public static function skip_transcode(
+        ?string $output_format,
+        string $source_format,
+        int $source_rate,
+        int $requested_rate = 0,
+        int $max_rate = 0,
+    ): bool {
+        if ($output_format !== $source_format || $source_rate <= 0) {
+            return false;
+        }
+
+        $target_rate = ($requested_rate > 0)
+            ? $requested_rate
+            : self::get_allowed_bitrate($output_format);
+        if ($max_rate > 0 && $max_rate < $target_rate) {
+            $target_rate = $max_rate;
+        }
+
+        if ($target_rate < $source_rate) {
+            return false;
+        }
+
+        debug_event(self::class, 'Not transcoding ' . $source_format . ' to itself; target ' . $target_rate . ' is not below the source bitrate ' . $source_rate, 4);
+
+        return true;
+    }
+
+    /**
      * start_transcode
      *
      * This is a rather complex function that starts the transcoding or
@@ -845,18 +878,14 @@ class Stream
             }
         }
 
-        $bitrate_map = [
-            '%SAMPLE%' => $bit_rate,
-            '%BITRATE%' => $bit_rate,
-            '%MAXBITRATE%' => $max_bit_rate,
-        ];
-        foreach ($bitrate_map as $search => $replace) {
-            $command = str_replace($search . 'k', (string) $replace, $command, $retK);
-            $command = str_replace($search, (string) $replace, $command, $ret);
-            if ($retK === 0 && $ret === 0) {
-                debug_event(self::class, $search . ' not in transcode command', 5);
-            }
-        }
+        $command = self::_replace_bitrates(
+            (string) $command,
+            [
+                '%SAMPLE%' => $bit_rate,
+                '%BITRATE%' => $bit_rate,
+                '%MAXBITRATE%' => $max_bit_rate,
+            ]
+        );
 
         if ($out_file) {
             // when running cache_catalog_proc redirect to the file path instead of piping
@@ -881,6 +910,25 @@ class Stream
     {
         /* Round to standard bitrates (values are bps, round to 1 kbps steps) */
         return (int) (1000 * (floor($bitrate / 1000)));
+    }
+
+    /**
+     * _replace_bitrates
+     * Substitute the rate placeholders in a transcode command. Rates are plain bits per second now, so a
+     * trailing `k` or `K` left over from a pre-8.0.0 config (`%BITRATE%k`) is consumed with the placeholder.
+     * @param array<string, int> $bitrate_map
+     */
+    private static function _replace_bitrates(string $command, array $bitrate_map): string
+    {
+        foreach ($bitrate_map as $search => $replace) {
+            $count   = 0;
+            $command = (string) preg_replace('/' . preg_quote($search, '/') . '[kK]?/', (string) $replace, $command, -1, $count);
+            if ($count === 0) {
+                debug_event(self::class, $search . ' not in transcode command', 5);
+            }
+        }
+
+        return $command;
     }
 
     /**

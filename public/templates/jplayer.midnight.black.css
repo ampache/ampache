@@ -926,3 +926,50 @@ a.jp-shuffle-off:hover {
 }
 
 /* @end */
+
+/*
+ * Crisp SVG transport icons (Bootstrap Icons, MIT — https://icons.getbootstrap.com/).
+ * Transport buttons: recreate the light circular button in CSS and lay a vector glyph
+ * on top (background-image). Volume buttons: bare light-grey glyph, no circle, enlarged
+ * box so the whole icon stays visible (background-size: contain, no clipping).
+ * Sharp at any DPI. background-* use !important to override the sprite.
+ */
+a.jp-play, a.jp-pause, a.jp-stop, a.jp-previous, a.jp-next,
+a.jp-shuffle, a.jp-shuffle-off, a.jp-repeat, a.jp-repeat-off {
+    background-color: #cfcfcf;
+    border-radius: 50%;
+    background-repeat: no-repeat !important;
+    background-position: center !important;
+    background-size: 58% !important;
+    transition: background-color .15s ease;
+}
+a.jp-play:hover, a.jp-pause:hover, a.jp-stop:hover, a.jp-previous:hover, a.jp-next:hover,
+a.jp-shuffle:hover, a.jp-shuffle-off:hover, a.jp-repeat:hover, a.jp-repeat-off:hover {
+    background-color: #fff;
+}
+a.jp-shuffle-off, a.jp-repeat-off { opacity: .45; }
+
+/* Volume buttons: bare light-grey glyph, no circle, enlarged box (no clipping). */
+a.jp-mute, a.jp-unmute, a.jp-volume-max {
+    width: 22px !important;
+    height: 22px !important;
+    background-color: transparent !important;
+    border-radius: 0 !important;
+    background-repeat: no-repeat !important;
+    background-position: center !important;
+    background-size: contain !important;
+    overflow: visible !important;
+    transition: opacity .15s ease;
+}
+a.jp-mute:hover, a.jp-unmute:hover, a.jp-volume-max:hover { opacity: .7; }
+
+a.jp-play       { background-image: url("../lib/modules/jquery-jplayer-midnight-black/svg/play.svg") !important; }
+a.jp-pause      { background-image: url("../lib/modules/jquery-jplayer-midnight-black/svg/pause.svg") !important; }
+a.jp-stop       { background-image: url("../lib/modules/jquery-jplayer-midnight-black/svg/stop.svg") !important; }
+a.jp-previous   { background-image: url("../lib/modules/jquery-jplayer-midnight-black/svg/previous.svg") !important; }
+a.jp-next       { background-image: url("../lib/modules/jquery-jplayer-midnight-black/svg/next.svg") !important; }
+a.jp-mute       { background-image: url("../lib/modules/jquery-jplayer-midnight-black/svg/volume-min.svg") !important; }
+a.jp-volume-max { background-image: url("../lib/modules/jquery-jplayer-midnight-black/svg/volume-max.svg") !important; }
+a.jp-unmute     { background-image: url("../lib/modules/jquery-jplayer-midnight-black/svg/unmute.svg") !important; }
+a.jp-shuffle, a.jp-shuffle-off { background-image: url("../lib/modules/jquery-jplayer-midnight-black/svg/shuffle.svg") !important; }
+a.jp-repeat, a.jp-repeat-off   { background-image: url("../lib/modules/jquery-jplayer-midnight-black/svg/repeat.svg") !important; }

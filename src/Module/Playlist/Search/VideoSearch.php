@@ -129,7 +129,7 @@ final class VideoSearch implements SearchInterface
         $having_sql = implode(sprintf(' %s ', $sql_logic_operator), $having);
 
         return [
-            'base' => 'SELECT DISTINCT(`video`.`id`), `video`.`file`, `video`.`time` FROM `video`',
+            'base' => 'SELECT DISTINCT(`video`.`id`), `video`.`file`, `video`.`time`, `video`.`weight` FROM `video`',
             'join' => $join,
             'where' => $where,
             'where_sql' => $where_sql,

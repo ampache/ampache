@@ -57,6 +57,7 @@ $app->add($dic->get(Cli\AdminUpdateConfigFileCommand::class));
 $app->add($dic->get(Cli\AdminUpdatePluginsCommand::class));
 $app->add($dic->get(Cli\AdminUpdatePreferenceAccessLevelCommand::class));
 $app->add($dic->get(Cli\AdminUpdateDatabaseCommand::class));
+$app->add($dic->get(Cli\AdminExportSchemaCommand::class));
 $app->add($dic->get(Cli\AddCatalogCommand::class));
 $app->add($dic->get(Cli\ArtCleanupCommand::class));
 $app->add($dic->get(Cli\ArtSizeCalculationCommand::class));

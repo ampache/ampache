@@ -453,14 +453,14 @@ abstract class playlist_object extends database_object implements
         }
 
         if ($this instanceof Search) {
-            $random = $data['random'] ?? $this->random;
-            if ($random != $this->random) {
-                $this->update_item('random', $random);
+            // set_rules() has already applied random/limit onto the object,
+            // so persist them unconditionally (a self-comparison never fires).
+            if (array_key_exists('random', $data)) {
+                $this->update_item('random', (int) $data['random']);
             }
 
-            $limit = $data['limit'] ?? $this->limit;
-            if ($limit != $this->limit) {
-                $this->update_item('limit', $limit);
+            if (array_key_exists('limit', $data)) {
+                $this->update_item('limit', (int) $data['limit']);
             }
 
             if (!empty($data['operator'])) {

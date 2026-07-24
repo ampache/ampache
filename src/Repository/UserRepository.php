@@ -496,4 +496,14 @@ final readonly class UserRepository implements UserRepositoryInterface
         $sql = "UPDATE `user` SET `streamtoken` = ? WHERE `id` = ?";
         Dba::write($sql, [$streamToken, $userId]);
     }
+
+    /**
+     * Stores the encrypted Subsonic secret for a user, or clears it when `null` is given
+     */
+    public function updateSubsonicSecret(int $userId, ?string $secret): void
+    {
+        $sql = "UPDATE `user` SET `subsonic_secret` = ? WHERE `id` = ?";
+
+        Dba::write($sql, [$secret, $userId]);
+    }
 }

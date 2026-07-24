@@ -90,6 +90,7 @@ use Ampache\Module\Application\Admin\User\DeleteApiKeyAction;
 use Ampache\Module\Application\Admin\User\DeleteAvatarAction;
 use Ampache\Module\Application\Admin\User\DeleteRssTokenAction;
 use Ampache\Module\Application\Admin\User\DeleteStreamTokenAction;
+use Ampache\Module\Application\Admin\User\DeleteSubsonicSecretAction;
 use Ampache\Module\Application\Admin\User\DisableAction;
 use Ampache\Module\Application\Admin\User\EnableAction;
 use Ampache\Module\Application\Admin\User\GenerateApiKeyAction;
@@ -99,6 +100,7 @@ use Ampache\Module\Application\Admin\User\ShowDeleteApiKeyAction;
 use Ampache\Module\Application\Admin\User\ShowDeleteAvatarAction;
 use Ampache\Module\Application\Admin\User\ShowDeleteRssTokenAction;
 use Ampache\Module\Application\Admin\User\ShowDeleteStreamTokenAction;
+use Ampache\Module\Application\Admin\User\ShowDeleteSubsonicSecretAction;
 use Ampache\Module\Application\Admin\User\ShowGenerateApiKeyAction;
 use Ampache\Module\Application\Admin\User\ShowGenerateRssTokenAction;
 use Ampache\Module\Application\Admin\User\ShowGenerateStreamTokenAction;
@@ -548,6 +550,8 @@ return [
     ShowGenerateApiKeyAction::class => autowire(ShowGenerateApiKeyAction::class),
     DeleteApiKeyAction::class => autowire(DeleteApiKeyAction::class),
     ShowDeleteApiKeyAction::class => autowire(ShowDeleteApiKeyAction::class),
+    DeleteSubsonicSecretAction::class => autowire(DeleteSubsonicSecretAction::class),
+    ShowDeleteSubsonicSecretAction::class => autowire(ShowDeleteSubsonicSecretAction::class),
     DeleteAvatarAction::class => autowire(DeleteAvatarAction::class),
     ShowDeleteAvatarAction::class => autowire(ShowDeleteAvatarAction::class),
     Admin\User\ShowDeleteAction::class => autowire(Admin\User\ShowDeleteAction::class),

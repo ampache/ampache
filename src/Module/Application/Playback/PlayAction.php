@@ -717,6 +717,37 @@ final readonly class PlayAction implements ApplicationActionInterface
                         ]
                     );
 
+                    // The browser follows this 302 to the source server, so the stats/now-playing block further down is never reached for remote catalogs.
+                    // Register the play here so now-playing, play history and scrobble plugins still fire for the local user and song.
+                    if (!$is_download && $record_stats) {
+                        Stream::insert_now_playing($media->getId(), $user_id, (int) $media->time, $session_id, $media->getMediaType()->value);
+                    }
+
+                    if (Core::get_server('REQUEST_METHOD') !== 'HEAD') {
+                        $sessionkey = ($session_id === '')
+                            ? Stream::get_session()
+                            : $session_id;
+                        $agent = ($client === '' || $client === '0')
+                            ? Session::agent($sessionkey)
+                            : $client;
+                        $location = Session::get_geolocation($sessionkey);
+                        if ($is_download) {
+                            if ($share_id === 0) {
+                                Stats::insert($type, $media->id, $user_id, $agent, $location, 'download', $time);
+                            } else {
+                                Stats::insert($type, $media->id, $user_id, 'share.php', [], 'download', $time);
+                            }
+                        } elseif (!$share_id && $record_stats) {
+                            // internal scrobbling (user_activity and object_count tables)
+                            if ($media->set_played($user_id, $agent, $location, $time) && $user->id && $media::class == Song::class) {
+                                // scrobble plugins
+                                User::save_mediaplay($user, $media);
+                            }
+                        } elseif ($share_id > 0) {
+                            $media->set_played($user_id, 'share.php', [], $time);
+                        }
+                    }
+
                     header('Location: ' . $remoteStreamingUrl);
 
                     return null;
@@ -850,6 +881,9 @@ final readonly class PlayAction implements ApplicationActionInterface
             );
         }
 
+        // the format a transcode would actually output; get_transcode_format() falls back to the source format
+        $output_format = $transcode_to;
+
         // transcode_to should only have an effect if the media is the wrong format
         $transcode_to = ($transcode_cfg == 'never' || $transcode_to == $streamConfiguration['file_type'])
             ? null
@@ -862,6 +896,15 @@ final readonly class PlayAction implements ApplicationActionInterface
             );
         }
 
+        // re-encoding the source format at (or above) its own rate only costs quality and cpu, so send the original
+        $skip_transcode = Stream::skip_transcode(
+            $output_format,
+            $streamConfiguration['file_type'],
+            (isset($media->bitrate)) ? (int) $media->bitrate : 0,
+            $bitrate,
+            $maxbitrate
+        );
+
         // If custom play action or already cached, do not try to transcode
         if (!$cpaction && !$original && !$cache_file) {
             $valid_types = $media->get_stream_types($player);
@@ -872,7 +915,7 @@ final readonly class PlayAction implements ApplicationActionInterface
                         'Transcoding due to explicit request for ' . $transcode_to,
                         [LegacyLogger::CONTEXT_TYPE => self::class]
                     );
-                } elseif ($transcode_cfg == 'always') {
+                } elseif ($transcode_cfg == 'always' && !$skip_transcode) {
                     $transcode = true;
                     $this->logger->debug(
                         'Transcoding due to always',
@@ -918,7 +961,6 @@ final readonly class PlayAction implements ApplicationActionInterface
         $troptions  = [];
         $transcoder = [];
         if ($transcode) {
-            $transcode_settings = $media->get_transcode_settings($transcode_to, $player, $troptions);
             if ($bitrate !== 0) {
                 // both are bps, so the ceiling can be applied directly
                 $troptions['bitrate'] = ($maxbitrate > 0 && $maxbitrate < $bitrate)
@@ -959,7 +1001,12 @@ final readonly class PlayAction implements ApplicationActionInterface
                 $troptions['duration'] = ($troptions['frame'] + $ssize <= $media->time)
                     ? $ssize
                     : ($media->time - $troptions['frame']);
+            } elseif (!($media instanceof Video) && $media->time > 0) {
+                $troptions['duration'] = (float) $media->time;
             }
+
+            // Build the transcode settings only after $troptions is fully populated, otherwise args never reach the command.
+            $transcode_settings = $media->get_transcode_settings($transcode_to, $player, $troptions);
 
             $transcoder  = Stream::start_transcode($media, $transcode_settings, $troptions);
             $filepointer = $transcoder['handle'] ?? null;
