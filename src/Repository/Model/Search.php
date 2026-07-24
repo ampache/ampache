@@ -662,7 +662,7 @@ class Search extends playlist_object
             $data = preg_replace($operator['preg_match'], $operator['preg_replace'], $data);
         }
 
-        if ($type == 'numeric' || $type == 'days') {
+        if ($type == 'numeric' || $type == 'days' || $type == 'user_numeric') {
             return (int) ($data);
         }
 
