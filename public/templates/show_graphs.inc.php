@@ -55,7 +55,7 @@ foreach ($gtypes as $gtype) {
     $graph_link = $web_path . "/graph.php?type=" . $gtype . "&start_date=" . $start_date . "&end_date=" . $end_date . "&zoom=" . $zoom . "&user_id=" . $user_id . "&object_type=" . $object_type . "&object_id=" . $object_id; ?>
     <object type="image/svg+xml" data="<?php echo $graph_link; ?>" width="700" height="260"></object>
     <br />
-    <a href="<?php echo $graph_link; ?>&width=1400&height=690" target="_blank"><?php echo Ui::get_material_symbol('open_in_new', T_('Open in new window')); ?> <?php echo T_('Open in new window'); ?></a>
+    <a href="<?php echo $graph_link; ?>&width=1400&height=690" target="_blank"><?php echo Ui::get_material_symbol('open_in_new', T_('Link')); ?> <?php echo T_('Link'); ?></a>
         <br /><br />
     <?php
 } ?>
