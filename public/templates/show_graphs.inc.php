@@ -50,9 +50,12 @@ if ($blink) {
 <?php Ui::show_box_top($boxtitle, 'box box_graph'); ?>
 <div class="stats_graph">
 <?php
+// embed as <object> not <img> so the svg keeps its scripting context and its legend stays draggable in place;
 foreach ($gtypes as $gtype) {
     $graph_link = $web_path . "/graph.php?type=" . $gtype . "&start_date=" . $start_date . "&end_date=" . $end_date . "&zoom=" . $zoom . "&user_id=" . $user_id . "&object_type=" . $object_type . "&object_id=" . $object_id; ?>
-    <a href="<?php echo $graph_link; ?>&width=1400&height=690" target="_blank" title="<?php echo T_('Show large'); ?>"><img src="<?php echo $graph_link; ?>" /></a>
+    <object type="image/svg+xml" data="<?php echo $graph_link; ?>" width="700" height="260"></object>
+    <br />
+    <a href="<?php echo $graph_link; ?>&width=1400&height=690" target="_blank"><?php echo T_('Show large'); ?></a>
         <br /><br />
     <?php
 } ?>
