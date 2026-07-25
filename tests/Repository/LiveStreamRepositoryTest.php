@@ -77,6 +77,76 @@ class LiveStreamRepositoryTest extends TestCase
         );
     }
 
+    public function testPersistInsertsANewItemAndReturnsTheId(): void
+    {
+        $item = new Live_Stream();
+
+        $item->name     = 'some-name';
+        $item->site_url = 'https://some-site';
+        $item->url      = 'https://some-url';
+        $item->catalog  = 42;
+        $item->codec    = 'mp3';
+
+        $this->connection->expects(static::once())
+            ->method('query')
+            ->with(
+                'INSERT INTO `live_stream` (`name`, `site_url`, `url`, `catalog`, `codec`) VALUES (?, ?, ?, ?, ?)',
+                ['some-name', 'https://some-site', 'https://some-url', 42, 'mp3']
+            );
+
+        $this->connection->expects(static::once())
+            ->method('getLastInsertedId')
+            ->willReturn(666);
+
+        self::assertSame(
+            666,
+            $this->subject->persist($item)
+        );
+    }
+
+    public function testPersistReturnsNullIfTheInsertYieldedNoId(): void
+    {
+        $item = new Live_Stream();
+
+        $item->catalog = 42;
+
+        $this->connection->expects(static::once())
+            ->method('query');
+
+        $this->connection->expects(static::once())
+            ->method('getLastInsertedId')
+            ->willReturn(0);
+
+        self::assertNull(
+            $this->subject->persist($item)
+        );
+    }
+
+    public function testPersistUpdatesAnExistingItemAndReturnsNull(): void
+    {
+        $item = new Live_Stream();
+
+        $item->id       = 666;
+        $item->name     = 'some-name';
+        $item->site_url = 'https://some-site';
+        $item->url      = 'https://some-url';
+        $item->codec    = 'mp3';
+
+        $this->connection->expects(static::once())
+            ->method('query')
+            ->with(
+                'UPDATE `live_stream` SET `name` = ?, `site_url` = ?, `url` = ?, `codec` = ? WHERE `id` = ?',
+                ['some-name', 'https://some-site', 'https://some-url', 'mp3', 666]
+            );
+
+        $this->connection->expects(static::never())
+            ->method('getLastInsertedId');
+
+        self::assertNull(
+            $this->subject->persist($item)
+        );
+    }
+
     protected function setUp(): void
     {
         $this->modelFactory = $this->createMock(ModelFactoryInterface::class);

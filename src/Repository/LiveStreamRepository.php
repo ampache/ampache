@@ -93,4 +93,40 @@ final readonly class LiveStreamRepository implements LiveStreamRepositoryInterfa
 
         return $result;
     }
+
+    /**
+     * Saves the item, inserting it when it is new
+     *
+     * Returns the id of a newly created item, null when an existing one was updated
+     */
+    public function persist(Live_Stream $liveStream): ?int
+    {
+        if (!$liveStream->isNew()) {
+            $this->connection->query(
+                'UPDATE `live_stream` SET `name` = ?, `site_url` = ?, `url` = ?, `codec` = ? WHERE `id` = ?',
+                [
+                    $liveStream->name,
+                    $liveStream->site_url,
+                    $liveStream->url,
+                    $liveStream->codec,
+                    $liveStream->getId(),
+                ]
+            );
+
+            return null;
+        }
+
+        $this->connection->query(
+            'INSERT INTO `live_stream` (`name`, `site_url`, `url`, `catalog`, `codec`) VALUES (?, ?, ?, ?, ?)',
+            [
+                $liveStream->name,
+                $liveStream->site_url,
+                $liveStream->url,
+                $liveStream->catalog,
+                $liveStream->codec,
+            ]
+        );
+
+        return $this->connection->getLastInsertedId() ?: null;
+    }
 }

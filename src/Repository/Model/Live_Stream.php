@@ -27,7 +27,7 @@ namespace Ampache\Repository\Model;
 
 use Ampache\Config\AmpConfig;
 use Ampache\Module\System\AmpError;
-use Ampache\Module\System\Dba;
+use Ampache\Repository\LiveStreamRepositoryInterface;
 
 /**
  * Radio Class
@@ -125,16 +125,31 @@ class Live_Stream extends database_object implements Media, displayable_item, co
         }
 
         // If we've made it this far everything must be ok... I hope
-        $sql = "INSERT INTO `live_stream` (`name`, `site_url`, `url`, `catalog`, `codec`) VALUES (?, ?, ?, ?, ?)";
-        Dba::write($sql, [$data['name'], $data['site_url'], $data['url'], $catalog->id, strtolower((string) $data['codec'])]);
-        $insert_id = Dba::insert_id();
+        $liveStream           = new Live_Stream();
+        $liveStream->name     = $data['name'];
+        $liveStream->site_url = $data['site_url'];
+        $liveStream->url      = $data['url'];
+        $liveStream->catalog  = $catalog->id;
+        $liveStream->codec    = strtolower((string) $data['codec']);
+
+        $insert_id = self::getLiveStreamRepository()->persist($liveStream);
         if (!$insert_id) {
             return null;
         }
 
         Catalog::count_table('live_stream');
 
-        return $insert_id;
+        return (string) $insert_id;
+    }
+
+    /**
+     * @deprecated inject dependency
+     */
+    private static function getLiveStreamRepository(): LiveStreamRepositoryInterface
+    {
+        global $dic;
+
+        return $dic->get(LiveStreamRepositoryInterface::class);
     }
 
     public function check_play_history(int $user, string $agent, int $date): bool
@@ -364,6 +379,18 @@ class Live_Stream extends database_object implements Media, displayable_item, co
     }
 
     /**
+     * Persists the current state, inserting the item when it is new
+     */
+    public function save(): void
+    {
+        $insert_id = $this->getLiveStreamRepository()->persist($this);
+
+        if ($insert_id !== null) {
+            $this->id = $insert_id;
+        }
+    }
+
+    /**
      * @param array{
      *     latitude?: float,
      *     longitude?: float,
@@ -418,11 +445,12 @@ class Live_Stream extends database_object implements Media, displayable_item, co
             return null;
         }
 
-        $sql = "UPDATE `live_stream` SET `name` = ?, `site_url` = ?, `url` = ?, codec = ? WHERE `id` = ?";
-        Dba::write(
-            $sql,
-            [$data['name'] ?? $this->name, $data['site_url'] ?? null, $data['url'] ?? $this->url, strtolower((string) $data['codec']), $this->id]
-        );
+        $this->name     = $data['name'] ?? $this->name;
+        $this->site_url = $data['site_url'] ?? null;
+        $this->url      = $data['url'] ?? $this->url;
+        $this->codec    = strtolower((string) $data['codec']);
+
+        $this->save();
 
         return $this->id;
     }
