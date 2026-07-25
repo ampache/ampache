@@ -520,7 +520,7 @@ class AlbumDisk extends database_object implements
         //debug_event(self::class, "update: " . print_r($data, true), 4);
         $album_id     = $this->album->update($data);
         $disk         = (int) ($data['disk'] ?? $this->disk);
-        $catalog      = $data['catalog'] ?? $this->catalog;
+        $catalog      = (int) ($data['catalog'] ?? $this->catalog);
         $disksubtitle = $data['disksubtitle'] ?? $this->disksubtitle;
 
         return self::check($album_id, $disk, $catalog, $disksubtitle, $this->id);

@@ -339,7 +339,7 @@ class Broadcast extends database_object implements library_item, displayable_ite
             Tag::update_tag_list($data['edit_tags'], 'broadcast', $this->id, true);
         }
 
-        $this->name        = $data['title'] ?? $this->name;
+        $this->name        = $data['name'] ?? $this->name;
         $this->description = $data['description'] ?? '';
         $this->is_private  = (!empty($data['private']) && (int) $data['private'] === 1);
 

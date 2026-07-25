@@ -1160,14 +1160,14 @@ class Album extends database_object implements
             // AlbumDisk update
             if ($this->disk_count === 1) {
                 $disk = $this->getAlbumDiskRepository()->getByAlbum($this);
-                if (!empty($disk)) {
+                if (count($disk) === 1) {
                     $disk_id    = $disk[0]->getId();
                     $disk_check = AlbumDisk::check(
-                        $album_id,
-                        $data['disk'] ?? $disk[0]->disk,
+                        $this->id,
+                        (int) ($data['disk'] ?? $disk[0]->disk),
                         $this->catalog,
                         $data['disksubtitle'] ?? $disk[0]->disksubtitle,
-                        $disk[0]->getId()
+                        $disk_id
                     );
 
                     if ($disk_check !== $disk_id) {

@@ -78,7 +78,7 @@ class BroadcastTest extends TestCase
         static::assertSame(
             666,
             $subject->update([
-                'title' => 'some-name',
+                'name' => 'some-name',
                 'description' => 'some-description',
                 'private' => '1',
             ])
@@ -100,10 +100,25 @@ class BroadcastTest extends TestCase
         $this->broadcastRepository->expects(static::once())
             ->method('update');
 
-        $subject->update(['title' => 'some-name']);
+        $subject->update(['name' => 'some-name']);
 
         static::assertSame('', $subject->description);
         static::assertFalse($subject->is_private);
+    }
+
+    public function testUpdateKeepsTheCurrentNameWhenNoneIsSupplied(): void
+    {
+        $subject = new Broadcast();
+
+        $subject->id   = 666;
+        $subject->name = 'old-name';
+
+        $this->broadcastRepository->expects(static::once())
+            ->method('update');
+
+        $subject->update(['description' => 'some-description']);
+
+        static::assertSame('old-name', $subject->name);
     }
 
     public function testUpdateListenersStoresTheCountOnTheObject(): void
