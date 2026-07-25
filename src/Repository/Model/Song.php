@@ -1061,7 +1061,7 @@ class Song extends database_object implements
      */
     public static function update_composer(string $new_composer, int $song_id): void
     {
-        self::_update_item('composer', $new_composer, $song_id, AccessLevelEnum::CONTENT_MANAGER, true);
+        self::_update_item('composer', $new_composer, $song_id, AccessLevelEnum::CONTENT_MANAGER, true, true);
     }
 
     /**
@@ -1317,7 +1317,7 @@ class Song extends database_object implements
      * against Core::get_global('user') to make sure they are allowed to update this record
      * it then updates it and sets $this->{$field} to the new value
      */
-    private static function _update_item(string $field, int|string|null $value, int $song_id, AccessLevelEnum $level, bool $check_owner = false): bool
+    private static function _update_item(string $field, int|string|null $value, int $song_id, AccessLevelEnum $level, bool $check_owner = false, bool $allow_null = false): bool
     {
         if ($check_owner && Core::get_global('user') instanceof User) {
             $item = new Song($song_id);
@@ -1335,7 +1335,7 @@ class Song extends database_object implements
         }
 
         /* Can't update to blank */
-        if (!strlen(trim((string) $value)) && $field != 'comment') {
+        if (!$allow_null && !strlen(trim((string) $value))) {
             return false;
         }
 
