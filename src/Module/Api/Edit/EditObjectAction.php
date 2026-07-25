@@ -100,7 +100,7 @@ final class EditObjectAction extends AbstractEditAction
         );
         $className = ObjectTypeToClassNameMapper::map((string) $object_type);
         /** @var library_item|Share $libitem */
-        $libitem = new $className($_POST['id']);
+        $libitem = new $className((int) $_POST['id']);
         if (
             $libitem->get_user_owner() === $userId
             && AmpConfig::get('upload_allow_edit')
