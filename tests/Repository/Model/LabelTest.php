@@ -34,6 +34,35 @@ class LabelTest extends TestCase
     private ContainerInterface&MockObject $dic;
     private LabelRepositoryInterface&MockObject $labelRepository;
 
+    public function testANewLabelIsActiveLikeTheColumnDefault(): void
+    {
+        static::assertTrue((new Label())->active);
+    }
+
+    public function testCreateDefaultsToActiveWhenTheCallerOmitsIt(): void
+    {
+        $this->labelRepository->method('lookup')
+            ->willReturn(0);
+
+        $this->labelRepository->expects(static::once())
+            ->method('persist')
+            ->with(static::callback(static fn(Label $label): bool => $label->active === true));
+
+        Label::create(['name' => 'some-name']);
+    }
+
+    public function testCreateHonoursAnExplicitlyInactiveLabel(): void
+    {
+        $this->labelRepository->method('lookup')
+            ->willReturn(0);
+
+        $this->labelRepository->expects(static::once())
+            ->method('persist')
+            ->with(static::callback(static fn(Label $label): bool => $label->active === false));
+
+        Label::create(['name' => 'some-name', 'active' => '0']);
+    }
+
     public function testCreateRefusesAnExistingName(): void
     {
         $this->labelRepository->expects(static::once())

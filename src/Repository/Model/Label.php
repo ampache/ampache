@@ -41,7 +41,7 @@ class Label extends database_object implements
 {
     protected const string DB_TABLENAME = 'label';
 
-    public bool $active;
+    public bool $active     = true;
     public ?string $address = null;
 
     /** @var int[] $artists */
@@ -80,7 +80,7 @@ class Label extends database_object implements
         $this->country       = $info['country'] ?? null;
         $this->email         = $info['email'] ?? null;
         $this->website       = $info['website'] ?? null;
-        $this->active        = (bool) ($info['active'] ?? false);
+        $this->active        = (bool) ($info['active'] ?? true);
         $this->user          = isset($info['user']) ? (int) $info['user'] : null;
         $this->creation_date = isset($info['creation_date']) ? (int) $info['creation_date'] : null;
     }
@@ -105,7 +105,7 @@ class Label extends database_object implements
         $label->email         = $data['email'] ?? null;
         $label->website       = $data['website'] ?? null;
         $label->user          = $data['user'] ?? Core::get_global('user')?->getId();
-        $label->active        = (bool) ($data['active'] ?? false);
+        $label->active        = (bool) ($data['active'] ?? true);
         $label->creation_date = $data['creation_date'] ?? time();
 
         return self::getLabelRepository()->persist($label);
