@@ -30,7 +30,6 @@ use Ampache\Module\Api\Method\Exception\AccessFailedException;
 use Ampache\Module\Api\Method\Exception\RequestParamMissingException;
 use Ampache\Module\Api\Output\ApiOutputInterface;
 use Ampache\Module\Authorization\AccessLevelEnum;
-use Ampache\Repository\Model\Catalog;
 use Ampache\Repository\Model\ModelFactoryInterface;
 use Ampache\Repository\Model\User;
 use Psr\Http\Message\ResponseInterface;
@@ -92,8 +91,6 @@ final class SmartlistDeleteMethod implements MethodInterface
         }
 
         $smartlist->delete();
-
-        Catalog::count_table('smartlist');
 
         $response->getBody()->write(
             $output->success($apiVersion, 'smartlist deleted')
