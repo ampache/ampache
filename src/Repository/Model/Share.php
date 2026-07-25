@@ -27,10 +27,11 @@ namespace Ampache\Repository\Model;
 
 use Ampache\Config\AmpConfig;
 use Ampache\Module\Authorization\AccessLevelEnum;
+use Ampache\Module\Database\Exception\DatabaseException;
 use Ampache\Module\Playback\Stream_Playlist;
 use Ampache\Module\System\Core;
-use Ampache\Module\System\Dba;
 use Ampache\Module\Util\Ui;
+use Ampache\Repository\ShareRepositoryInterface;
 
 class Share extends database_object
 {
@@ -369,21 +370,13 @@ class Share extends database_object
         $this->allow_download = ($data['allow_download'] == '1');
         $this->description    = $data['description'] ?? $this->description;
 
-        $sql    = "UPDATE `share` SET `max_counter` = ?, `expire_days` = ?, `allow_stream` = ?, `allow_download` = ?, `description` = ? WHERE `id` = ?";
-        $params = [
-            $this->max_counter,
-            $this->expire_days,
-            ($this->allow_stream) ? 1 : 0,
-            ($this->allow_download) ? 1 : 0,
-            $this->description,
-            $this->id,
-        ];
-        if (!$user->has_access(AccessLevelEnum::MANAGER)) {
-            $sql .= " AND `user` = ?";
-            $params[] = $user->id;
+        try {
+            $this->getShareRepository()->update($this, $user);
+        } catch (DatabaseException) {
+            return false;
         }
 
-        return (Dba::write($sql, $params) !== null);
+        return true;
     }
 
     /**
@@ -409,5 +402,15 @@ class Share extends database_object
         }
 
         return $this->object ?? null;
+    }
+
+    /**
+     * @deprecated Inject by constructor
+     */
+    private function getShareRepository(): ShareRepositoryInterface
+    {
+        global $dic;
+
+        return $dic->get(ShareRepositoryInterface::class);
     }
 }
