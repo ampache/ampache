@@ -43,6 +43,14 @@ use Ampache\Repository\Model\Video;
 class Stream
 {
     /**
+     * Players that get a `transcode_bitrate_<player>` preference of their own, matching the players that
+     * already have an `encode_player_<player>_target` format override. Anything else uses the default rate.
+     *
+     * @var list<string>
+     */
+    public const array BITRATE_OVERRIDE_PLAYERS = ['webplayer', 'api'];
+
+    /**
      * Output formats that must never be served from or written to the transcode cache.
      * Their loudness normalisation is applied per-source at stream time, so a cached copy
      * (keyed only by object + target extension) would be wrong for every other request.
@@ -125,16 +133,16 @@ class Stream
     /**
      * get_allowed_bitrate
      *
-     * Work out the bitrate this user is allowed for the given output format. Passing null (or a
-     * format with no override) falls back to the user's default `transcode_bitrate`.
+     * Work out the bitrate this user is allowed for the given player, after the site-wide dynamic downsampling
+     * constraints. Passing null, or a player with no override of its own, uses the default `transcode_bitrate`.
      */
-    public static function get_allowed_bitrate(?string $format = null): int
+    public static function get_allowed_bitrate(?string $player = null): int
     {
         // All bitrate values (transcode_bitrate, max_bit_rate, min_bit_rate) are stored and
         // handled in bits per second (bps). max_bit_rate/min_bit_rate are per-user preferences.
         $max_bitrate   = (int) AmpConfig::get('max_bit_rate', 0);
         $min_bitrate   = (int) AmpConfig::get('min_bit_rate', 8000);
-        $user_bit_rate = self::get_format_bitrate($format);
+        $user_bit_rate = self::get_player_bitrate($player);
 
         // If the user's crazy, that's no skin off our back
         if ($user_bit_rate < $min_bitrate) {
@@ -236,54 +244,6 @@ class Stream
     }
 
     /**
-     * get_format_bitrate
-     *
-     * Return the bitrate (bps) this user wants for a given transcode output format, falling back to
-     * their default `transcode_bitrate` when the format has no override.
-     */
-    public static function get_format_bitrate(?string $format = null): int
-    {
-        $default = (int) AmpConfig::get('transcode_bitrate', 128000);
-        if ($format === null || $format === '') {
-            return $default;
-        }
-
-        return self::get_format_bitrate_map()[$format] ?? $default;
-    }
-
-    /**
-     * get_format_bitrate_map
-     *
-     * Parse the `transcode_bitrate_formats` preference (`mp3=192000,opus=96000`) into a map of
-     * output format to bitrate in bps. Malformed or non-positive entries are ignored.
-     *
-     * @return array<string, int>
-     */
-    public static function get_format_bitrate_map(): array
-    {
-        $raw = trim((string) AmpConfig::get('transcode_bitrate_formats', ''));
-        if ($raw === '') {
-            return [];
-        }
-
-        $map = [];
-        foreach (explode(',', $raw) as $pair) {
-            if (!str_contains($pair, '=')) {
-                continue;
-            }
-
-            [$format, $bitrate] = explode('=', $pair, 2);
-            $format             = trim($format);
-            $bitrate            = (int) trim($bitrate);
-            if ($format !== '' && $bitrate > 0) {
-                $map[$format] = $bitrate;
-            }
-        }
-
-        return $map;
-    }
-
-    /**
      * get_image_preview
      */
     public static function get_image_preview(Video $media): ?string
@@ -364,9 +324,10 @@ class Stream
         Podcast_Episode|Video|Song $media,
         array $transcode_settings,
         array $options,
+        ?string $player = null,
     ): int {
         // don't ignore user bitrates
-        $bit_rate = self::get_allowed_bitrate($transcode_settings['format'] ?? null);
+        $bit_rate = self::get_allowed_bitrate($player);
         if (!array_key_exists('bitrate', $options)) {
             // Validate the bitrate
             $bit_rate = self::validate_bitrate($bit_rate);
@@ -466,6 +427,25 @@ class Stream
         }
 
         return '';
+    }
+
+    /**
+     * get_player_bitrate
+     *
+     * Return the bitrate (bps) this user wants for a given player, falling back to their default rate whenever
+     * that player carries no override of its own; an override stored as 0 counts as unset. Only the web player
+     * and the API can be overridden, so every other caller takes `transcode_bitrate` as it stands.
+     */
+    public static function get_player_bitrate(?string $player = null): int
+    {
+        if ($player !== null && in_array($player, self::BITRATE_OVERRIDE_PLAYERS, true)) {
+            $override = (int) AmpConfig::get('transcode_bitrate_' . $player, 0);
+            if ($override > 0) {
+                return $override;
+            }
+        }
+
+        return (int) AmpConfig::get('transcode_bitrate', 128000);
     }
 
     /**
@@ -782,6 +762,7 @@ class Stream
         int $source_rate,
         int $requested_rate = 0,
         int $max_rate = 0,
+        ?string $player = null,
     ): bool {
         if ($output_format !== $source_format || $source_rate <= 0) {
             return false;
@@ -789,7 +770,7 @@ class Stream
 
         $target_rate = ($requested_rate > 0)
             ? $requested_rate
-            : self::get_allowed_bitrate($output_format);
+            : self::get_allowed_bitrate($player);
         if ($max_rate > 0 && $max_rate < $target_rate) {
             $target_rate = $max_rate;
         }
@@ -821,6 +802,7 @@ class Stream
         Podcast_Episode|Video|Song $media,
         array $transcode_settings,
         array|string $options = [],
+        ?string $player = null,
     ): array {
         $out_file = false;
         if (is_string($options)) {
@@ -838,7 +820,7 @@ class Stream
         $song_file = self::_scrub_arg($media->file);
         $bit_rate  = isset($options['bitrate'])
             ? (int) $options['bitrate']
-            : self::get_max_bitrate($media, $transcode_settings, $options);
+            : self::get_max_bitrate($media, $transcode_settings, $options, $player);
         debug_event(self::class, 'Final transcode bitrate is ' . $bit_rate, 4);
 
         // Both %BITRATE% and %MAXBITRATE% are substituted as plain bps values

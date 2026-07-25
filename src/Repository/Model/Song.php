@@ -2146,8 +2146,8 @@ class Song extends database_object implements
             $transcode_type = ($file_target !== null && is_file($file_target))
                 ? $cache_target
                 : Stream::get_transcode_format($this->type, null, $player);
-            // the bitrate depends on the format we settled on
-            $bitrate = Stream::get_format_bitrate($transcode_type);
+            // the rate advertised here follows the player, which may carry an override of the user's default rate
+            $bitrate = Stream::get_player_bitrate($player);
             if (
                 $transcode_type !== null
                 && $transcode_type !== ''

@@ -685,7 +685,7 @@ final readonly class PlayAction implements ApplicationActionInterface
             if (
                 $transcode_cfg != 'never'
                 && $transcode_to
-                && ($bitrate === 0 || $bitrate === Stream::get_format_bitrate($transcode_to))
+                && ($bitrate === 0 || $bitrate === Stream::get_player_bitrate($player))
                 && $has_cache
             ) {
                 $this->logger->debug(
@@ -902,7 +902,8 @@ final readonly class PlayAction implements ApplicationActionInterface
             $streamConfiguration['file_type'],
             (isset($media->bitrate)) ? (int) $media->bitrate : 0,
             $bitrate,
-            $maxbitrate
+            $maxbitrate,
+            $player
         );
 
         // If custom play action or already cached, do not try to transcode
@@ -1008,7 +1009,7 @@ final readonly class PlayAction implements ApplicationActionInterface
             // Build the transcode settings only after $troptions is fully populated, otherwise args never reach the command.
             $transcode_settings = $media->get_transcode_settings($transcode_to, $player, $troptions);
 
-            $transcoder  = Stream::start_transcode($media, $transcode_settings, $troptions);
+            $transcoder  = Stream::start_transcode($media, $transcode_settings, $troptions, $player);
             $filepointer = $transcoder['handle'] ?? null;
             $media_name  = $media->get_parent_fullname() . " - " . $media->title . "." . ($transcoder['format'] ?? '');
         } elseif ($cpaction && $media instanceof Song) {
@@ -1043,7 +1044,7 @@ final readonly class PlayAction implements ApplicationActionInterface
                     $stream_rate = $troptions['bitrate'] / 1024;
                 } elseif ($transcode_settings !== []) {
                     // get_max_bitrate() returns bps; scale to match the /1024 used by the bitrate branch above
-                    $stream_rate = Stream::get_max_bitrate($media, $transcode_settings, $troptions) / 1024;
+                    $stream_rate = Stream::get_max_bitrate($media, $transcode_settings, $troptions, $player) / 1024;
                 }
 
                 // We always guess MP3 content length even when not required, since that codec calculates properly

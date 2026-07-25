@@ -347,7 +347,6 @@ use Ampache\Module\System\Update\Migration\V8\Migration800015;
 use Ampache\Module\System\Update\Migration\V8\Migration800016;
 use Ampache\Module\System\Update\Migration\V8\Migration800017;
 use Ampache\Module\System\Update\Migration\V8\Migration800018;
-use Ampache\Module\System\Update\Migration\V8\Migration800019;
 use Ampache\Module\System\Update\Migration\V8\Migration800020;
 use Ampache\Module\System\Update\Migration\V8\Migration800021;
 use Ampache\Module\System\Update\Migration\V8\Migration800022;
@@ -355,6 +354,7 @@ use Ampache\Module\System\Update\Migration\V8\Migration800023;
 use Ampache\Module\System\Update\Migration\V8\Migration800024;
 use Ampache\Module\System\Update\Migration\V8\Migration800025;
 use Ampache\Module\System\Update\Migration\V8\Migration800026;
+use Ampache\Module\System\Update\Migration\V8\Migration800027;
 use Generator;
 
 /**
@@ -362,7 +362,7 @@ use Generator;
  */
 final class Versions
 {
-    public const int MAXIMUM_UPDATABLE_VERSION = 800026; // AMPACHE_VERSION (db_version)
+    public const int MAXIMUM_UPDATABLE_VERSION = 800027; // AMPACHE_VERSION (db_version)
 
     /** @var array<int, class-string<MigrationInterface>> List of available migrations */
     private static array $versions = [
@@ -688,7 +688,6 @@ final class Versions
         800016 => Migration800016::class,
         800017 => Migration800017::class,
         800018 => Migration800018::class,
-        800019 => Migration800019::class,
         800020 => Migration800020::class,
         800021 => Migration800021::class,
         800022 => Migration800022::class,
@@ -696,6 +695,7 @@ final class Versions
         800024 => Migration800024::class,
         800025 => Migration800025::class,
         800026 => Migration800026::class,
+        800027 => Migration800027::class,
     ];
 
     /**
