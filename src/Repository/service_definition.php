@@ -35,6 +35,7 @@ use function DI\autowire;
 return [
     AccessRepositoryInterface::class => autowire(AccessRepository::class),
     AlbumRepositoryInterface::class => autowire(AlbumRepository::class),
+    BroadcastRepositoryInterface::class => autowire(BroadcastRepository::class),
     SongRepositoryInterface::class => autowire(SongRepository::class),
     LabelRepositoryInterface::class => autowire(LabelRepository::class),
     ArtistRepositoryInterface::class => autowire(ArtistRepository::class),
