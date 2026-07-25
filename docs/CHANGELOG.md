@@ -48,6 +48,15 @@ You can downgrade to Ampache7 if you try this out and have issues, using the cli
 * API
   * v8 API responses are now fully documented: `docs/openapi.json` carries response schemas for every data type, and `docs/API-JSON-methods.md`/`docs/API-XML-methods.md` show per-method response field tables (type, nullable, optional)
   * Album disks are available to API8 clients (`album_disks`, `album_disk`, `album_disk_songs`, plus `index`, `list`, `browse`, `stats` and `get_art` support). With the `album_group` preference disabled the web interface browses album disks, and until now the API had no way to reach them
+* CLI
+  * New `admin:exportSchema` command regenerates `resources/sql/ampache.sql` from a clean install; it refuses to run against a database with pending updates
+  * New user commands `admin:deleteUser`, `admin:enableUser` and `admin:disableUser`
+  * New catalog commands `run:deleteCatalog`, `run:enableCatalog` and `run:disableCatalog`
+  * New `cleanup:enableDisabled` command re-enables all disabled songs
+  * New `export:catalog` command writes iTunes/CSV catalog metadata to a file
+  * New module commands `admin:listModules`, `admin:installPlugin`, `admin:uninstallPlugin`, `admin:upgradePlugin`, `admin:installCatalogType`, `admin:uninstallCatalogType`, `admin:installLocalplay` and `admin:uninstallLocalplay`, backed by a shared `PluginManager` service the web module pages now use too
+  * New `admin:mailUsers` command sends an e-mail to a user group (`all`, `users`, `admins`, `inactive`) via a shared `BulkMailer` service
+  * New `admin:clearCache` command clears the perpetual API sessions (and per-process object caches), and `show:debug` prints a headless system/environment status report
 * Testing
   * Test suite significantly expanded with dozens of new test files under `tests/Module` and `tests/Repository`
 * Playlist art mosaic

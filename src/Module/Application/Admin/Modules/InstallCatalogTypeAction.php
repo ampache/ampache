@@ -32,6 +32,7 @@ use Ampache\Module\Authorization\AccessLevelEnum;
 use Ampache\Module\Authorization\AccessTypeEnum;
 use Ampache\Module\Authorization\GuiGatekeeperInterface;
 use Ampache\Module\System\AmpError;
+use Ampache\Module\System\Plugin\PluginManagerInterface;
 use Ampache\Module\Util\RequestParserInterface;
 use Ampache\Module\Util\UiInterface;
 use Ampache\Repository\Model\Catalog;
@@ -46,6 +47,7 @@ final readonly class InstallCatalogTypeAction implements ApplicationActionInterf
         private UiInterface $ui,
         private ConfigContainerInterface $configContainer,
         private RequestParserInterface $requestParser,
+        private PluginManagerInterface $pluginManager,
     ) {}
 
     public function run(ServerRequestInterface $request, GuiGatekeeperInterface $gatekeeper): ?ResponseInterface
@@ -71,7 +73,7 @@ final readonly class InstallCatalogTypeAction implements ApplicationActionInterf
             return null;
         }
 
-        $catalog->install();
+        $this->pluginManager->installCatalogType($type);
 
         /* Show Confirmation */
         $url   = sprintf('%s/modules.php?action=show_catalog_types', $this->configContainer->getWebPath('/admin'));

@@ -32,10 +32,10 @@ use Ampache\Module\Authorization\AccessLevelEnum;
 use Ampache\Module\Authorization\AccessTypeEnum;
 use Ampache\Module\Authorization\GuiGatekeeperInterface;
 use Ampache\Module\System\LegacyLogger;
+use Ampache\Module\System\Plugin\PluginManagerInterface;
 use Ampache\Module\Util\RequestParserInterface;
 use Ampache\Module\Util\UiInterface;
 use Ampache\Repository\Model\Plugin;
-use Ampache\Repository\Model\User;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Log\LoggerInterface;
@@ -49,6 +49,7 @@ final readonly class UpgradePluginAction implements ApplicationActionInterface
         private UiInterface $ui,
         private ConfigContainerInterface $configContainer,
         private LoggerInterface $logger,
+        private PluginManagerInterface $pluginManager,
     ) {}
 
     public function run(ServerRequestInterface $request, GuiGatekeeperInterface $gatekeeper): ?ResponseInterface
@@ -75,9 +76,8 @@ final readonly class UpgradePluginAction implements ApplicationActionInterface
             return null;
         }
 
-        $plugin = new Plugin($this->requestParser->getFromRequest('plugin'));
-        $plugin->upgrade();
-        User::rebuild_all_preferences();
+        // The manager upgrades the plugin and runs the shared preference rebuild so every surface behaves alike
+        $this->pluginManager->upgradePlugin($plugin_name);
         $url   = sprintf('%s/modules.php?action=show_plugins', $this->configContainer->getWebPath('/admin'));
         $title = T_('No Problem');
         $body  = T_('The Plugin has been upgraded');

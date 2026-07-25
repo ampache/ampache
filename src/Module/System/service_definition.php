@@ -27,6 +27,8 @@ namespace Ampache\Module\System;
 
 use Ampache\Module\System\Crypto\SymmetricEncrypter;
 use Ampache\Module\System\Crypto\SymmetricEncrypterInterface;
+use Ampache\Module\System\Plugin\PluginManager;
+use Ampache\Module\System\Plugin\PluginManagerInterface;
 use Ampache\Module\System\Plugin\PluginRetriever;
 use Ampache\Module\System\Plugin\PluginRetrieverInterface;
 use Ampache\Module\System\Update\UpdateHelper;
@@ -51,5 +53,6 @@ return [
             autowire(UpdateRunner::class)
         ),
     PluginRetrieverInterface::class => autowire(PluginRetriever::class),
+    PluginManagerInterface::class => autowire(PluginManager::class),
     SymmetricEncrypterInterface::class => autowire(SymmetricEncrypter::class),
 ];

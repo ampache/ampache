@@ -31,7 +31,7 @@ use Ampache\Module\Application\Exception\AccessDeniedException;
 use Ampache\Module\Authorization\AccessLevelEnum;
 use Ampache\Module\Authorization\AccessTypeEnum;
 use Ampache\Module\Authorization\GuiGatekeeperInterface;
-use Ampache\Module\Playback\Localplay\LocalPlay;
+use Ampache\Module\System\Plugin\PluginManagerInterface;
 use Ampache\Module\Util\RequestParserInterface;
 use Ampache\Module\Util\UiInterface;
 use Psr\Http\Message\ResponseInterface;
@@ -45,6 +45,7 @@ final readonly class UninstallLocalplayAction implements ApplicationActionInterf
         private UiInterface $ui,
         private ConfigContainerInterface $configContainer,
         private RequestParserInterface $requestParser,
+        private PluginManagerInterface $pluginManager,
     ) {}
 
     public function run(ServerRequestInterface $request, GuiGatekeeperInterface $gatekeeper): ?ResponseInterface
@@ -60,8 +61,7 @@ final readonly class UninstallLocalplayAction implements ApplicationActionInterf
 
         $type = scrub_in((string) filter_input(INPUT_GET, 'type', FILTER_SANITIZE_SPECIAL_CHARS));
 
-        $localplay = new LocalPlay($type);
-        $localplay->uninstall();
+        $this->pluginManager->uninstallLocalplay($type);
 
         /* Show Confirmation */
         $url   = sprintf('%s/modules.php?action=show_localplay', $this->configContainer->getWebPath('/admin'));
