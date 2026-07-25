@@ -2287,6 +2287,8 @@ class Song extends database_object implements
      * update
      * This takes a key'd array of data does any cleaning it needs to
      * do and then calls the helper functions as needed.
+     *
+     * Values arriving from a request are all strings, so each one is cast to the type its own setter declares.
      */
     public function update(array $data): int
     {
@@ -2296,7 +2298,7 @@ class Song extends database_object implements
                 case 'artist_name':
                     // Create new artist name and id
                     $old_artist_id = $this->artist;
-                    $new_artist_id = (int) Artist::check($value);
+                    $new_artist_id = (int) Artist::check((string) $value);
                     if ($new_artist_id > 0) {
                         $this->artist = $new_artist_id;
                         self::update_artist($new_artist_id, $this->id, $old_artist_id);
@@ -2305,7 +2307,7 @@ class Song extends database_object implements
                 case 'album_name':
                     // Create new album name and id
                     $old_album_id = $this->album;
-                    $new_album_id = Album::check($this->catalog, $value);
+                    $new_album_id = Album::check($this->catalog, (string) $value);
                     $this->album  = $new_album_id;
                     self::update_album($new_album_id, $this->id, $old_album_id);
                     break;
@@ -2313,7 +2315,7 @@ class Song extends database_object implements
                     // Change artist the song is assigned to
                     if ($value != $this->$key) {
                         $old_artist_id = $this->artist;
-                        $new_artist_id = $value;
+                        $new_artist_id = (int) $value;
                         self::update_artist($new_artist_id, $this->id, $old_artist_id);
                     }
                     break;
@@ -2321,7 +2323,7 @@ class Song extends database_object implements
                     // Change album the song is assigned to
                     if ($value != $this->$key) {
                         $old_album_id = $this->$key;
-                        $new_album_id = $value;
+                        $new_album_id = (int) $value;
                         self::update_album($new_album_id, $this->id, $old_album_id);
                     }
                     break;
@@ -2329,51 +2331,99 @@ class Song extends database_object implements
                     // Check to see if it needs to be updated
                     if ($value != $this->disk) {
                         // create the album_disk (if missing)
-                        AlbumDisk::check($this->album, $value, $this->catalog, $this->get_album_disk_subtitle());
+                        $new_disk = (int) $value;
+                        AlbumDisk::check($this->album, $new_disk, $this->catalog, $this->get_album_disk_subtitle());
 
-                        self::update_disk($value, $this->id);
-                        $this->disk = $value;
+                        self::update_disk($new_disk, $this->id);
+                        $this->disk = $new_disk;
                     }
                     break;
                 case 'bitrate':
+                    if ($value != $this->bitrate) {
+                        self::update_bitrate((int) $value, $this->id);
+                        $this->setUpdatedFieldValue($key, $value);
+                    }
+                    break;
                 case 'comment':
+                    if ($value != $this->comment) {
+                        self::update_comment((string) $value, $this->id);
+                        $this->setUpdatedFieldValue($key, $value);
+                    }
+                    break;
                 case 'composer':
+                    if ($value != $this->composer) {
+                        self::update_composer((string) $value, $this->id);
+                        $this->setUpdatedFieldValue($key, $value);
+                    }
+                    break;
                 case 'label':
+                    if ($value != $this->label) {
+                        self::update_label((string) $value, $this->id);
+                        $this->setUpdatedFieldValue($key, $value);
+                    }
+                    break;
                 case 'language':
+                    if ($value != $this->language) {
+                        self::update_language((string) $value, $this->id);
+                        $this->setUpdatedFieldValue($key, $value);
+                    }
+                    break;
                 case 'license':
+                    if ($value != $this->license) {
+                        self::update_license((int) $value, $this->id);
+                        $this->setUpdatedFieldValue($key, $value);
+                    }
+                    break;
                 case 'mbid':
+                    if ($value != $this->mbid) {
+                        self::update_mbid((string) $value, $this->id);
+                        $this->setUpdatedFieldValue($key, $value);
+                    }
+                    break;
                 case 'mode':
+                    if ($value != $this->mode) {
+                        self::update_mode((string) $value, $this->id);
+                        $this->setUpdatedFieldValue($key, $value);
+                    }
+                    break;
                 case 'rate':
+                    if ($value != $this->rate) {
+                        self::update_rate((int) $value, $this->id);
+                        $this->setUpdatedFieldValue($key, $value);
+                    }
+                    break;
                 case 'size':
+                    if ($value != $this->size) {
+                        self::update_size((int) $value, $this->id);
+                        $this->setUpdatedFieldValue($key, $value);
+                    }
+                    break;
                 case 'title':
+                    if ($value != $this->title) {
+                        self::update_title((string) $value, $this->id);
+                        $this->setUpdatedFieldValue($key, $value);
+                    }
+                    break;
                 case 'track':
+                    if ($value != $this->track) {
+                        self::update_track((int) $value, $this->id);
+                        $this->setUpdatedFieldValue($key, $value);
+                    }
+                    break;
                 case 'user_upload':
+                    if ($value != $this->user_upload) {
+                        self::update_user_upload((int) $value, $this->id);
+                        $this->setUpdatedFieldValue($key, $value);
+                    }
+                    break;
                 case 'year':
-                    // Check to see if it needs to be updated
-                    if ($value != $this->$key) {
-                        /**
-                         * @see self::update_year()
-                         * @see self::update_title()
-                         * @see self::update_track()
-                         * @see self::update_user_upload()
-                         * @see self::update_mbid()
-                         * @see self::update_license()
-                         * @see self::update_composer()
-                         * @see self::update_label()
-                         * @see self::update_language()
-                         * @see self::update_comment()
-                         * @see self::update_bitrate()
-                         * @see self::update_rate()
-                         * @see self::update_mode()
-                         * @see self::update_size()
-                         */
-                        $function = 'update_' . $key;
-                        self::$function($value, $this->id);
+                    if ($value != $this->year) {
+                        self::update_year((int) $value, $this->id);
                         $this->setUpdatedFieldValue($key, $value);
                     }
                     break;
                 case 'edit_tags':
-                    Tag::update_tag_list($value, 'song', $this->id, true);
+                    Tag::update_tag_list((string) $value, 'song', $this->id, true);
                     $this->tags = Tag::get_top_tags('song', $this->id);
                     break;
                 case 'metadata':
