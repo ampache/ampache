@@ -26,7 +26,7 @@ declare(strict_types=1);
 namespace Ampache\Repository\Model;
 
 use Ampache\Config\AmpConfig;
-use Ampache\Module\System\Dba;
+use Ampache\Repository\AlbumDiskRepositoryInterface;
 use Ampache\Repository\SongRepositoryInterface;
 
 /**
@@ -152,59 +152,17 @@ class AlbumDisk extends database_object implements
      */
     public static function check(int $album_id, int $disk, int $catalog_id, ?string $disksubtitle = null, ?int $current_id = null): int
     {
-        // check if the album_disk exists
-        $db_results = (!empty($disksubtitle))
-            ? Dba::read("SELECT `album_disk`.* FROM `album_disk` INNER JOIN `album` ON `album`.`id` = `album_disk`.`album_id` WHERE `album_disk`.`album_id` = ? AND `album_disk`.`disk` = ? AND `album_disk`.`catalog` = CASE WHEN `album`.`catalog` = 0 THEN 0 ELSE ? END AND album_disk.`disksubtitle` = ?;", [$album_id, $disk, $catalog_id, $disksubtitle])
-            : Dba::read("SELECT `album_disk`.* FROM `album_disk` INNER JOIN `album` ON `album`.`id` = `album_disk`.`album_id` WHERE `album_disk`.`album_id` = ? AND `album_disk`.`disk` = ? AND `album_disk`.`catalog` = CASE WHEN `album`.`catalog` = 0 THEN 0 ELSE ? END AND (`album_disk`.`disksubtitle` = '' OR `album_disk`.`disksubtitle` IS NULL);", [$album_id, $disk, $catalog_id]);
-        $row = Dba::fetch_assoc($db_results);
-        if (isset($row['id'])) {
-            return (int) $row['id'];
-        }
+        return self::getAlbumDiskRepository()->check($album_id, $disk, $catalog_id, $disksubtitle, $current_id);
+    }
 
-        // update existing ID
-        if (is_int($current_id) && $current_id > 0) {
-            $db_results = Dba::read("SELECT * FROM `album_disk` WHERE `id` = ?;", [$current_id]);
-            $row        = Dba::fetch_assoc($db_results);
-            if (isset($row['id'])) {
-                // remember the current disk before a collision re-fetch can clobber $row
-                $old_disk = (int) $row['disk'];
-                // alter the existing disk after editing. Derive catalog the way the lookup and create paths do
-                // (album_disk.catalog is 0 for a catalog=0 album) or later lookups miss the row
-                if (!Dba::write("UPDATE `album_disk` SET `album_id` = ?, `disk` = ?, `catalog` = CASE WHEN (SELECT `catalog` FROM `album` WHERE `id` = ?) = 0 THEN 0 ELSE ? END, `disksubtitle` = ? WHERE `id` = ?;", [$album_id, $disk, $album_id, $catalog_id, $disksubtitle, $current_id])) {
-                    // Duplicates might collide here. Match the unique key (album_id, disk, catalog) alone
-                    $db_results = Dba::read("SELECT `album_disk`.`id` FROM `album_disk` INNER JOIN `album` ON `album`.`id` = `album_disk`.`album_id` WHERE `album_disk`.`album_id` = ? AND `album_disk`.`disk` = ? AND `album_disk`.`catalog` = CASE WHEN `album`.`catalog` = 0 THEN 0 ELSE ? END;", [$album_id, $disk, $catalog_id]);
-                    if ($row = Dba::fetch_assoc($db_results)) {
-                        $current_id = (int) $row['id'];
-                    }
-                }
+    /**
+     * @deprecated inject dependency
+     */
+    private static function getAlbumDiskRepository(): AlbumDiskRepositoryInterface
+    {
+        global $dic;
 
-                // Update songs when you edit an album_disk object
-                if ($old_disk !== $disk) {
-                    Dba::write("UPDATE `song` SET `disk` = ? WHERE `album` = ? AND `disk` = ?;", [$disk, $album_id, $old_disk]);
-                }
-
-                return $current_id;
-            }
-        }
-
-        // create the album_disk (if missing)
-        $db_results = Dba::write("REPLACE INTO `album_disk` (`album_id`, `disk`, `catalog`, `disksubtitle`) SELECT `album`.`id`, ?, CASE WHEN `album`.`catalog` = 0 THEN 0 ELSE ? END, ? FROM `album` WHERE `album`.`id` = ?;", [$disk, $catalog_id, $disksubtitle ?: null, $album_id]);
-        if (!$db_results) {
-            return 0;
-        }
-
-        $album_disk_id = (int) Dba::insert_id();
-
-        // count a new song on the new disk right away
-        $sql = "UPDATE `album_disk` SET `song_count` = `song_count` + 1 WHERE `id` = ?;";
-        Dba::write($sql, [$album_disk_id]);
-        if (!empty($disksubtitle)) {
-            // set the subtitle on insert too
-            $sql = "UPDATE `album_disk` SET `disksubtitle` = ? WHERE `id` = ?;";
-            Dba::write($sql, [$disksubtitle, $album_disk_id]);
-        }
-
-        return $album_disk_id;
+        return $dic->get(AlbumDiskRepositoryInterface::class);
     }
 
     /**
@@ -239,14 +197,7 @@ class AlbumDisk extends database_object implements
      */
     public function get_artist_count(): int
     {
-        $sql        = "SELECT COUNT(DISTINCT(`object_id`)) AS `artist_count` FROM `album_map` WHERE `album_id` = ?;";
-        $db_results = Dba::read($sql, [$this->id]);
-        $row        = Dba::fetch_assoc($db_results);
-        if ($row !== []) {
-            return (int) $row['artist_count'];
-        }
-
-        return 0;
+        return $this->getAlbumDiskRepository()->getArtistCount($this);
     }
 
     /**
@@ -481,18 +432,7 @@ class AlbumDisk extends database_object implements
      */
     public function get_songs(): array
     {
-        $results = [];
-        $params  = [$this->album_id, $this->disk];
-        $sql     = (AmpConfig::get('catalog_disable'))
-            ? "SELECT DISTINCT `song`.`id` FROM `song` LEFT JOIN `catalog` ON `catalog`.`id` = `song`.`catalog` WHERE `song`.`album` = ? AND `song`.`disk` = ? AND `catalog`.`enabled` = '1'"
-            : "SELECT DISTINCT `song`.`id` FROM `song` WHERE `song`.`album` = ? AND `song`.`disk` = ?";
-        $db_results = Dba::read($sql, $params);
-
-        while ($row = Dba::fetch_assoc($db_results, false)) {
-            $results[] = (int) $row['id'];
-        }
-
-        return $results;
+        return $this->getAlbumDiskRepository()->getSongs($this);
     }
 
     /**
