@@ -93,6 +93,26 @@ final readonly class LabelRepository implements LabelRepositoryInterface
     }
 
     /**
+     * Returns the ids of every artist associated with the label
+     *
+     * @return int[]
+     */
+    public function getArtists(Label $label): array
+    {
+        $result = $this->connection->query(
+            'SELECT `artist` FROM `label_asso` WHERE `label` = ?',
+            [$label->getId()]
+        );
+
+        $results = [];
+        while ($rowId = $result->fetchColumn()) {
+            $results[] = (int) $rowId;
+        }
+
+        return $results;
+    }
+
+    /**
      * @return string[]
      */
     public function getByArtist(int $artistId): array
@@ -133,6 +153,64 @@ final readonly class LabelRepository implements LabelRepositoryInterface
         }
 
         return $ret;
+    }
+
+    /**
+     * Moves every artist association from one artist onto another
+     */
+    public function migrateArtist(int $oldArtistId, int $newArtistId): void
+    {
+        $this->connection->query(
+            'UPDATE `label_asso` SET `artist` = ? WHERE `artist` = ?',
+            [$newArtistId, $oldArtistId]
+        );
+    }
+
+    /**
+     * Saves the label, inserting it when it is new
+     *
+     * Returns the id of a newly created label, null when an existing one was updated
+     */
+    public function persist(Label $label): ?int
+    {
+        if (!$label->isNew()) {
+            $this->connection->query(
+                'UPDATE `label` SET `name` = ?, `mbid` = ?, `category` = ?, `summary` = ?, `address` = ?, `country` = ?, `email` = ?, `website` = ?, `active` = ? WHERE `id` = ?',
+                [
+                    $label->name,
+                    $label->mbid,
+                    $label->category,
+                    $label->summary,
+                    $label->address,
+                    $label->country,
+                    $label->email,
+                    $label->website,
+                    ($label->active) ? 1 : 0,
+                    $label->getId(),
+                ]
+            );
+
+            return null;
+        }
+
+        $this->connection->query(
+            'INSERT INTO `label` (`name`, `mbid`, `category`, `summary`, `address`, `country`, `email`, `website`, `user`, `active`, `creation_date`) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)',
+            [
+                $label->name,
+                $label->mbid,
+                $label->category,
+                $label->summary,
+                $label->address,
+                $label->country,
+                $label->email,
+                $label->website,
+                $label->user,
+                ($label->active) ? 1 : 0,
+                $label->creation_date,
+            ]
+        );
+
+        return $this->connection->getLastInsertedId() ?: null;
     }
 
     public function removeArtistAssoc(int $labelId, int $artistId): void
