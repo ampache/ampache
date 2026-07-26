@@ -634,6 +634,9 @@ class Search extends playlist_object
     {
         $sql = "DELETE FROM `search` WHERE `id` = ?";
         Dba::write($sql, [$this->id]);
+
+        $this->getPlaylistObjectRepository()->deleteCollaborators($this);
+
         Catalog::count_table('search');
 
         return true;

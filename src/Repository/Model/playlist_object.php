@@ -36,6 +36,9 @@ use Ampache\Module\System\Dba;
 use Ampache\Module\Util\InterfaceImplementationChecker;
 use Ampache\Module\Util\ObjectTypeToClassNameMapper;
 use Ampache\Module\Util\Ui;
+use Ampache\Repository\PlaylistObjectRepositoryInterface;
+use Ampache\Repository\PlaylistRepositoryInterface;
+use Ampache\Repository\SearchRepositoryInterface;
 use Random\Engine\Mt19937;
 use Random\Randomizer;
 
@@ -420,14 +423,11 @@ abstract class playlist_object extends database_object implements
      */
     public function set_last(int $count, string $column): void
     {
-        if (
-            $this->id
-            && in_array($column, ['last_count', 'last_duration'])
-            && $count >= 0
-        ) {
-            $sql = sprintf('UPDATE `%s` SET `%s` = ? WHERE `id` = ?', static::DB_TABLENAME, $column);
-            Dba::write($sql, [$count, $this->id]);
-        }
+        match ($column) {
+            'last_count' => $this->getPlaylistObjectRepository()->setLastCount($this, $count),
+            'last_duration' => $this->getPlaylistObjectRepository()->setLastDuration($this, $count),
+            default => null,
+        };
     }
 
     /**
@@ -487,10 +487,7 @@ abstract class playlist_object extends database_object implements
         $new_list    = (!empty($data['collaborate'])) ? $data['collaborate'] : [];
         $collaborate = (!empty($new_list)) ? implode(',', $new_list) : '';
         if ($collaborate != $this->collaborate) {
-            $playlist_id = ($this instanceof Search)
-                ? 'smart_' . $this->id
-                : $this->id;
-            $this->_update_collaborate($new_list, $playlist_id);
+            $this->_update_collaborate($new_list);
         }
 
         if (isset($data['last_count']) && $data['last_count'] != $this->last_count) {
@@ -523,28 +520,36 @@ abstract class playlist_object extends database_object implements
     }
 
     /**
+     * The repository for whichever of the two tables this item lives in
+     *
+     * @deprecated inject dependency
+     */
+    protected function getPlaylistObjectRepository(): PlaylistObjectRepositoryInterface
+    {
+        global $dic;
+
+        return $dic->get(
+            ($this instanceof Search)
+                ? SearchRepositoryInterface::class
+                : PlaylistRepositoryInterface::class
+        );
+    }
+
+    /**
      * _update_collaborate
      * This updates playlist collaborators, it calls the generic update_item function
      * @param string[] $new_list
      */
-    private function _update_collaborate(array $new_list, int|string $playlist_id): void
+    private function _update_collaborate(array $new_list): void
     {
         /** @var int[] $ids */
         $ids = array_filter(
             array_map('intval', $new_list)
         );
 
-        $collaborate = implode(',', $ids);
-        if ($this->update_item('collaborate', $collaborate)) {
-            $sql = (empty($collaborate))
-                ? "DELETE FROM `user_playlist_map` WHERE `playlist_id` = ?;"
-                : "DELETE FROM `user_playlist_map` WHERE `playlist_id` = ? AND `user_id` NOT IN (" . $collaborate . ");";
-            Dba::write($sql, [$playlist_id]);
-
-            foreach ($new_list as $user_id) {
-                $sql = "INSERT IGNORE INTO `user_playlist_map` (`playlist_id`, `user_id`) VALUES (?, ?);";
-                Dba::write($sql, [$playlist_id, $user_id]);
-            }
+        // the map is only touched when the column write was allowed, so a rejected edit cannot leave the two disagreeing
+        if ($this->update_item('collaborate', implode(',', $ids))) {
+            $this->getPlaylistObjectRepository()->updateCollaborators($this, $ids);
         }
     }
 

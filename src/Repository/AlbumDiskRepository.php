@@ -45,8 +45,7 @@ final readonly class AlbumDiskRepository implements AlbumDiskRepositoryInterface
     /**
      * Returns the id of the matching disk, creating or moving it when needed
      *
-     * Pass $currentId to move an existing row instead of creating a second one. Returns 0 when the
-     * row could not be written.
+     * Pass $currentId to move an existing row rather than create a second; 0 means nothing was written.
      */
     public function check(
         int $albumId,

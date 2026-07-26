@@ -395,6 +395,9 @@ class Playlist extends playlist_object
 
         $sql = "DELETE FROM `object_count_archive` WHERE `object_type`='playlist' AND `object_id` = ?";
         Dba::write($sql, [$this->id]);
+
+        $this->getPlaylistObjectRepository()->deleteCollaborators($this);
+
         Catalog::count_table('playlist');
 
         return true;

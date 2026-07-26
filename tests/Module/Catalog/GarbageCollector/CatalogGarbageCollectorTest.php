@@ -29,7 +29,9 @@ use Ampache\Repository\ArtistRepositoryInterface;
 use Ampache\Repository\BookmarkRepositoryInterface;
 use Ampache\Repository\FolderRepositoryInterface;
 use Ampache\Repository\LabelRepositoryInterface;
+use Ampache\Repository\PlaylistRepositoryInterface;
 use Ampache\Repository\PodcastEpisodeRepositoryInterface;
+use Ampache\Repository\SearchRepositoryInterface;
 use Ampache\Repository\ShoutRepositoryInterface;
 use Ampache\Repository\UserActivityRepositoryInterface;
 use Ampache\Repository\UserRepositoryInterface;
@@ -47,7 +49,9 @@ class CatalogGarbageCollectorTest extends TestCase
     private FolderRepositoryInterface&MockObject $folderRepository;
     private LabelRepositoryInterface&MockObject $labelRepository;
     private MetadataManagerInterface&MockObject $metadataManager;
+    private PlaylistRepositoryInterface&MockObject $playlistRepository;
     private PodcastEpisodeRepositoryInterface&MockObject $podcastEpisodeRepository;
+    private SearchRepositoryInterface&MockObject $searchRepository;
     private ShoutRepositoryInterface&MockObject $shoutRepository;
     private CatalogGarbageCollector $subject;
     private UserActivityRepositoryInterface&MockObject $userActivityRepository;
@@ -70,6 +74,8 @@ class CatalogGarbageCollectorTest extends TestCase
         $this->artistRepository->expects(static::once())->method('collectGarbage');
         $this->folderRepository->expects(static::once())->method('collectGarbage');
         $this->videoRepository->expects(static::once())->method('collectGarbage');
+        $this->playlistRepository->expects(static::once())->method('collectGarbage');
+        $this->searchRepository->expects(static::once())->method('collectGarbage');
 
         $this->subject->collect();
     }
@@ -89,6 +95,8 @@ class CatalogGarbageCollectorTest extends TestCase
         $this->artistRepository         = $this->createMock(ArtistRepositoryInterface::class);
         $this->folderRepository         = $this->createMock(FolderRepositoryInterface::class);
         $this->videoRepository          = $this->createMock(VideoRepositoryInterface::class);
+        $this->playlistRepository       = $this->createMock(PlaylistRepositoryInterface::class);
+        $this->searchRepository         = $this->createMock(SearchRepositoryInterface::class);
 
         $this->subject = new CatalogGarbageCollector(
             $this->albumRepository,
@@ -104,6 +112,8 @@ class CatalogGarbageCollectorTest extends TestCase
             $this->artistRepository,
             $this->folderRepository,
             $this->videoRepository,
+            $this->playlistRepository,
+            $this->searchRepository,
         );
     }
 }

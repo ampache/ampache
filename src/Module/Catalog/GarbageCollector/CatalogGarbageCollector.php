@@ -41,7 +41,9 @@ use Ampache\Repository\Model\Song;
 use Ampache\Repository\Model\Tag;
 use Ampache\Repository\Model\User;
 use Ampache\Repository\Model\Userflag;
+use Ampache\Repository\PlaylistRepositoryInterface;
 use Ampache\Repository\PodcastEpisodeRepositoryInterface;
+use Ampache\Repository\SearchRepositoryInterface;
 use Ampache\Repository\ShoutRepositoryInterface;
 use Ampache\Repository\UserActivityRepositoryInterface;
 use Ampache\Repository\UserRepositoryInterface;
@@ -68,6 +70,8 @@ final readonly class CatalogGarbageCollector implements CatalogGarbageCollectorI
         private ArtistRepositoryInterface $artistRepository,
         private FolderRepositoryInterface $folderRepository,
         private VideoRepositoryInterface $videoRepository,
+        private PlaylistRepositoryInterface $playlistRepository,
+        private SearchRepositoryInterface $searchRepository,
     ) {}
 
     public function collect(): void
@@ -87,6 +91,9 @@ final readonly class CatalogGarbageCollector implements CatalogGarbageCollectorI
         $this->userActivityRepository->collectGarbage();
         $this->userRepository->collectGarbage();
         Playlist::garbage_collection();
+        // collaborator rows outlive their list, and a later list given the freed id inherits them
+        $this->playlistRepository->collectGarbage();
+        $this->searchRepository->collectGarbage();
         $this->shoutRepository->collectGarbage();
         Tag::garbage_collection();
         Catalog::clear_catalog_cache();

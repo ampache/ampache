@@ -25,40 +25,37 @@ declare(strict_types=1);
 
 namespace Ampache\Repository;
 
-use Ampache\Repository\Model\Album;
-use Ampache\Repository\Model\AlbumDisk;
+use Ampache\Repository\Model\playlist_object;
 
-interface AlbumDiskRepositoryInterface
+/**
+ * The writes `playlist` and `search` share.
+ */
+interface PlaylistObjectRepositoryInterface
 {
     /**
-     * Returns the id of the matching disk, creating or moving it when needed
-     *
-     * Pass $currentId to move an existing row rather than create a second; 0 means nothing was written.
+     * Removes collaborator rows whose list no longer exists
      */
-    public function check(
-        int $albumId,
-        int $disk,
-        int $catalogId,
-        ?string $disksubtitle = null,
-        ?int $currentId = null,
-    ): int;
+    public function collectGarbage(): void;
 
     /**
-     * Returns the number of distinct artists mapped to the disk's album
+     * Drops every collaborator of the list, for use when the list itself is deleted
      */
-    public function getArtistCount(AlbumDisk $albumDisk): int;
+    public function deleteCollaborators(playlist_object $item): void;
 
     /**
-     * Returns the disks for an album
-     *
-     * @return list<AlbumDisk>
+     * Stores the cached item count
      */
-    public function getByAlbum(Album $album): array;
+    public function setLastCount(playlist_object $item, int $count): void;
 
     /**
-     * Returns the ids of every song on the disk
-     *
-     * @return int[]
+     * Stores the cached total duration
      */
-    public function getSongs(AlbumDisk $albumDisk): array;
+    public function setLastDuration(playlist_object $item, int $duration): void;
+
+    /**
+     * Replaces the set of users allowed to collaborate on the list
+     *
+     * @param int[] $userIds
+     */
+    public function updateCollaborators(playlist_object $item, array $userIds): void;
 }
