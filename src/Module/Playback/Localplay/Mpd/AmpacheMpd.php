@@ -310,13 +310,14 @@ class AmpacheMpd extends localplay_controller
      */
     public function get_instance(?string $instance = ''): array
     {
-        $instance   = (is_numeric($instance)) ? (int) $instance : (int) AmpConfig::get(self::ACTIVE_PREF, 0);
-        $sql        = ($instance > 0) ? "SELECT * FROM `localplay_mpd` WHERE `id` = ?" : "SELECT * FROM `localplay_mpd`";
-        $db_results = ($instance > 0) ? Dba::query($sql, [$instance]) : Dba::query($sql);
+        $instance = (is_numeric($instance)) ? (int) $instance : (int) AmpConfig::get(self::ACTIVE_PREF, 0);
+        if ($instance <= 0) {
+            return [];
+        }
 
-        $row = Dba::fetch_assoc($db_results);
+        $row = Dba::fetch_assoc(Dba::query("SELECT * FROM `localplay_mpd` WHERE `id` = ?", [$instance]));
         // the active preference can point at an instance that has since been deleted; fall back to any available one
-        if (!$row && $instance > 0) {
+        if (!$row) {
             $row = Dba::fetch_assoc(Dba::query("SELECT * FROM `localplay_mpd`"));
         }
 
