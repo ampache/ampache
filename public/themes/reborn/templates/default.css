@@ -1183,6 +1183,45 @@ table.tabledata td.cel_ratings {
     min-width: 140px;
 }
 
+/* the generic td rule sets a 50px floor that would leave a checkbox swimming in its own column */
+table.tabledata .cel_select {
+    width: 24px !important;
+    min-width: 24px;
+    text-align: center;
+    padding-right: 4px;
+}
+
+.multiselect-actions {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 10px;
+    margin: 5px 0;
+    padding: 5px 8px;
+    border-radius: 4px;
+    font-size: 12px;
+}
+
+/* nothing checked means nothing to act on, so the bar stays out of the way until a row is selected */
+.multiselect-actions.multiselect-empty {
+    display: none;
+}
+
+.multiselect-actions a {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+}
+
+.multiselect-actions a[aria-disabled="true"] {
+    opacity: 0.4;
+    cursor: default;
+}
+
+.multiselect-summary {
+    font-weight: bold;
+}
+
 table.tabledata tbody .cel_cover {
     overflow: visible;
     padding-top: 10px;

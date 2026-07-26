@@ -79,14 +79,25 @@ final readonly class DefaultAjaxHandler implements AjaxHandlerInterface
                     : $request_type;
 
                 if (InterfaceImplementationChecker::is_library_item($object_type)) {
-                    $object_id = ($request_id === 0)
-                        ? (int) $this->requestParser->getFromRequest('object_id')
-                        : $request_id;
-                    if ($object_id > 0) {
+                    // A multi-select bar sends a comma separated list, so gather the medias behind every id and
+                    // hand the basket a single batch rather than one request (and one rightbar render) per row.
+                    $request_ids = $this->requestParser->getFromRequest('id');
+                    if ($request_ids === '' || $request_ids === '0') {
+                        $request_ids = $this->requestParser->getFromRequest('object_id');
+                    }
+
+                    $object_ids = array_filter(
+                        array_map('intval', explode(',', $request_ids)),
+                        static fn(int $object_id): bool => $object_id > 0
+                    );
+                    if ($object_ids !== []) {
                         $className = ObjectTypeToClassNameMapper::map($object_type);
-                        /** @var container_item $object */
-                        $object = new $className($object_id);
-                        $medias = $object->get_medias();
+                        $medias    = [];
+                        foreach ($object_ids as $object_id) {
+                            /** @var container_item $object */
+                            $object = new $className($object_id);
+                            $medias = array_merge($medias, $object->get_medias());
+                        }
 
                         $user->load_playlist();
                         $user->playlist?->add_medias($medias);

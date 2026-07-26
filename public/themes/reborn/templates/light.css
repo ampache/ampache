@@ -547,6 +547,15 @@ span.fatalerror {
     color: #000;
 }
 
+.multiselect-actions {
+    background-color: #e4e4e4;
+    color: #333;
+}
+
+.multiselect-actions a:hover {
+    color: #000;
+}
+
 /* ------------------------
     Styles for ratings / user flags
    ------------------------ */

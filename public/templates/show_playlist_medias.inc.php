@@ -26,6 +26,11 @@ declare(strict_types=1);
 // show_playlist_medias.inc.php
 
 use Ampache\Config\AmpConfig;
+use Ampache\Module\Api\Ajax;
+use Ampache\Module\Authorization\Access;
+use Ampache\Module\Authorization\AccessLevelEnum;
+use Ampache\Module\Authorization\AccessTypeEnum;
+use Ampache\Module\Playback\Stream_Playlist;
 use Ampache\Module\Util\Ui;
 use Ampache\Repository\Model\Browse;
 use Ampache\Repository\Model\LibraryItemEnum;
@@ -77,14 +82,77 @@ $t_add_to_list = T_('Add to playlist');
 $t_download    = T_('Download');
 $t_delete      = T_('Delete');
 $t_reorder     = T_('Reorder');
+// Multi select. Only a real playlist can have tracks removed, a smartlist is rule driven, and the bar is
+// pointless without rows or in grid view where there is no room for a checkbox column.
+$can_remove       = ($playlist instanceof Playlist) && $playlist->has_collaborate();
+$can_add          = Access::check(AccessTypeEnum::INTERFACE, AccessLevelEnum::USER);
+$directplay       = (bool) AmpConfig::get('directplay');
+$show_multiselect = $is_table && $object_ids !== [] && ($can_remove || $can_add || $directplay);
+
+$multiselect_actions = [];
+if ($directplay) {
+    $multiselect_actions[] = [
+        'action' => 'ajax',
+        'url' => Ajax::url('?page=stream&action=directplay&object_type={type}&object_id={ids}'),
+        'icon' => 'play_circle',
+        'text' => $t_play,
+    ];
+    if (Stream_Playlist::check_autoplay_next()) {
+        $multiselect_actions[] = [
+            'action' => 'ajax',
+            'url' => Ajax::url('?page=stream&action=directplay&object_type={type}&object_id={ids}&playnext=true'),
+            'icon' => 'menu_open',
+            'text' => $t_play_next,
+        ];
+    }
+    if (Stream_Playlist::check_autoplay_append()) {
+        $multiselect_actions[] = [
+            'action' => 'ajax',
+            'url' => Ajax::url('?page=stream&action=directplay&object_type={type}&object_id={ids}&append=true'),
+            'icon' => 'low_priority',
+            'text' => $t_play_last,
+        ];
+    }
+}
+
+$multiselect_actions[] = [
+    'action' => 'ajax',
+    'url' => Ajax::url('?action=basket&type={type}&id={ids}'),
+    'icon' => 'new_window',
+    'text' => $t_add_to_temp,
+];
+if ($can_add) {
+    $multiselect_actions[] = [
+        'action' => 'playlist',
+        'url' => '',
+        'icon' => 'playlist_add',
+        'text' => $t_add_to_list,
+    ];
+}
+if ($can_remove) {
+    $multiselect_actions[] = [
+        'action' => 'ajax',
+        'url' => Ajax::url('?page=playlist&action=delete_track&playlist_id=' . $playlist->id . '&browse_id=' . $browse->getId() . '&track_id={track_ids}'),
+        'icon' => 'playlist_remove',
+        'text' => T_('Remove from playlist'),
+        'confirm' => T_('Remove {count} selected items from this playlist?'),
+    ];
+}
 if ($browse->is_show_header()) {
     require Ui::find_template('list_header.inc.php');
     echo '<span class="item-duration">' . '| ' . $t_duration . ': ' . $duration . '</span>';
 } ?>
+    <div<?php echo ($show_multiselect) ? ' data-multiselect-scope' : ''; ?>>
+    <?php if ($show_multiselect) {
+        require Ui::find_template('show_multiselect_actions.inc.php');
+    } ?>
     <form method="post" id="reorder_playlist_<?php echo $playlist_id; ?>">
         <table id="reorder_playlist_table" class="tabledata striped-rows <?php echo $css_class; ?>" data-objecttype="media" data-offset="<?php echo $browse->get_start(); ?>">
             <thead>
             <tr class="th-top">
+                <?php if ($show_multiselect) { ?>
+                <th class="cel_select essential persist"><input type="checkbox" class="multiselect-all" title="<?php echo T_('Select all'); ?>" /></th>
+                <?php } ?>
                 <th class="cel_play essential"></th>
                 <th class="<?php echo $cel_cover; ?> optional"><?php echo $t_art; ?></th>
                 <th class="cel_title essential persist"><?php echo $t_title; ?></th>
@@ -130,6 +198,9 @@ if ($browse->is_show_header()) {
             </tbody>
             <tfoot>
             <tr class="th-bottom">
+                <?php if ($show_multiselect) { ?>
+                <th class="cel_select"></th>
+                <?php } ?>
                 <th class="cel_play"><?php echo T_('Play'); ?></th>
                 <th class="<?php echo $cel_cover; ?>"><?php echo $t_art; ?></th>
                 <th class="cel_title"><?php echo $t_title; ?></th>
@@ -147,6 +218,7 @@ if ($browse->is_show_header()) {
             </tfoot>
         </table>
     </form>
+    </div>
 <?php show_table_render($argument); ?>
 <?php if ($browse->is_show_header()) {
     require Ui::find_template('list_header.inc.php');

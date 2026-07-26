@@ -35,6 +35,10 @@ You can downgrade to Ampache7 if you try this out and have issues, using the cli
   * New `mini_player` preference locks a user into that page; it hides the rest of the interface but is not an access control, user access levels still decide what data is reachable
   * Logging in returns you to the page you originally asked for, including `index.php#page.php?...` links
   * New `Mini player` button on the login form, next to `Register` and `Lost Password`, to land there after logging in
+* Multi select
+  * Checkboxes on the playlist items list select several tracks at once; `Shift`+click selects a range and the header checkbox selects the whole page
+  * A selection can be played, played next, played last, added to the temporary playlist, added to another playlist, or removed from the playlist in a single action
+  * Removing a selection sends one request and renumbers the playlist once, instead of one request and one full renumber for every track
 * Database
   * New `api_enable_8` preference to enable/disable API v8 responses per user
   * New database tables `folder` and `folder_map`
@@ -142,6 +146,7 @@ You can downgrade to Ampache7 if you try this out and have issues, using the cli
 * The catalog size graph was empty until a second time bucket existed, because the running total it adds to is `NULL` when nothing was added before the bucket and `NULL + SUM()` is `NULL`
 * The catalog size graph read zero for `object_type=album`; it joined `album`.`id` to `song`.`id` instead of `song`.`album`, and only counted buckets before the current one instead of including it
 * Uploading art, an avatar, a playlist or a podcast import file stopped the web player, because a form carrying a file fell back to a full page load
+* The `Select` toggle on the admin Disabled Songs list called a `check_select()` function that was defined nowhere, so it silently did nothing
 * Database 800023
   * Uploaded art took its mime type from the filename, storing `image/jpg` (not a real type) for a `.jpg` upload and `image/JPG` for `.JPG`; the type is now read from the image data and existing rows are corrected
   * Where the same artwork was stored twice under both spellings the `image/jpg` row is left as it is, because `unique_image` includes `mime` and no art is deleted during an upgrade
