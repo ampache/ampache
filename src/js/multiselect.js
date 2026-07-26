@@ -77,6 +77,11 @@ function multiSelectRefresh($scope) {
     var count = $items.filter(":checked").length;
     var mixed = multiSelectGroupByType(multiSelectSelection($scope)).length > 1;
 
+    // A row-wide click target needs row-wide feedback, so the whole row carries the state, not just the checkbox.
+    $items.each(function () {
+        $(this).closest("tr").toggleClass("selected", $(this).prop("checked"));
+    });
+
     $scope.find("[data-multiselect-count]").text(count);
     $scope.find("[data-multiselect-bar]").toggleClass("multiselect-empty", count === 0);
     $scope.find("[data-multiselect-action]").attr("aria-disabled", count === 0 ? "true" : "false");
@@ -112,25 +117,57 @@ function multiSelectRequests(template, selection) {
     });
 }
 
-// Clicking a row checkbox with shift held selects every row between the anchor and this one, matching the
-// range behaviour of a file manager. The anchor then moves here so that ranges can be chained.
+// Applies one click to the selection. Extending fills every row between the anchor and this one, matching the range
+// behaviour of a file manager, and the anchor then moves here so that ranges can be chained.
+function multiSelectClick($scope, position, checked, extend) {
+    var $items = multiSelectItems($scope);
+    var anchor = multiSelectAnchor.get($scope[0]);
+
+    $items.eq(position).prop("checked", checked);
+    if (extend && anchor !== undefined && anchor !== position) {
+        $items.slice(Math.min(anchor, position), Math.max(anchor, position) + 1).prop("checked", checked);
+    }
+
+    multiSelectAnchor.set($scope[0], position);
+    multiSelectRefresh($scope);
+}
+
 $(document).on("click", "input.multiselect-item", function (event) {
     var $scope = multiSelectScope(this);
     if ($scope.length === 0) {
         return;
     }
 
-    var $items = multiSelectItems($scope);
-    var anchor = multiSelectAnchor.get($scope[0]);
-    var position = $items.index(this);
+    multiSelectClick($scope, multiSelectItems($scope).index(this), $(this).prop("checked"), event.shiftKey);
+});
 
-    if (event.shiftKey && anchor !== undefined && anchor !== position) {
-        var checked = $(this).prop("checked");
-        $items.slice(Math.min(anchor, position), Math.max(anchor, position) + 1).prop("checked", checked);
+// The same range and toggle gestures anywhere on the row, so a selection does not depend on hitting a small checkbox.
+// Ctrl (Cmd on a Mac, where Ctrl+click is a right-click) toggles this row alone and Shift extends from the anchor.
+$(document).on("click", "[data-multiselect-scope] tbody tr", function (event) {
+    if (!event.ctrlKey && !event.metaKey && !event.shiftKey) {
+        return;
     }
 
-    multiSelectAnchor.set($scope[0], position);
-    multiSelectRefresh($scope);
+    // Rows are dense with links, buttons and the drag grip, so anything inside a control keeps its own behaviour.
+    if ($(event.target).closest("a, input, button, label, select, textarea, [data-ajax], .cel_drag").length > 0) {
+        return;
+    }
+
+    var $scope = multiSelectScope(this);
+    var $box = $(this).find("input.multiselect-item");
+    if ($scope.length === 0 || $box.length === 0) {
+        return;
+    }
+
+    // Shift held down natively drags a text selection across the rows, which looks like a rendering fault.
+    if (event.shiftKey) {
+        window.getSelection().removeAllRanges();
+    }
+
+    var extend = event.shiftKey && multiSelectAnchor.get($scope[0]) !== undefined;
+    var checked = (extend) ? true : !$box.prop("checked");
+
+    multiSelectClick($scope, multiSelectItems($scope).index($box), checked, extend);
 });
 
 $(document).on("click", "input.multiselect-all", function () {
