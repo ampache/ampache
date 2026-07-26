@@ -26,6 +26,7 @@ declare(strict_types=1);
 namespace Ampache\Repository\Model;
 
 use Ampache\Config\AmpConfig;
+use Ampache\Config\ConfigContainerInterface;
 use Ampache\Config\ConfigurationKeyEnum;
 use Ampache\Module\Api\Ajax;
 use Ampache\Module\Art\ArtCleanupInterface;
@@ -34,7 +35,6 @@ use Ampache\Module\Art\Mosaic\PlaylistArtBuilderInterface;
 use Ampache\Module\Authorization\AccessLevelEnum;
 use Ampache\Module\System\Core;
 use Ampache\Module\System\Dba;
-use Ampache\Module\System\Session;
 use Ampache\Module\Util\InterfaceImplementationChecker;
 use Ampache\Module\Util\ObjectTypeToClassNameMapper;
 use Ampache\Module\Util\Ui;
@@ -250,7 +250,7 @@ class Art extends database_object
             : $size['width'] . 'x' . $size['height'];
 
         $web_path = AmpConfig::get_web_path();
-        $use_auth = ((!AmpConfig::get('public_images')) && AmpConfig::get('use_auth') && AmpConfig::get('require_session'));
+        $use_auth = !self::isPublic();
 
         $prettyPhoto = ($link === null);
         if ($link === null) {
@@ -736,6 +736,24 @@ class Art extends database_object
     }
 
     /**
+     * isPublic
+     * Whether image.php will serve art to a caller that has no session, which decides both if an art url needs an
+     * `auth` token and if a sessionless caller may link art at all. It reads the three keys through the same
+     * ConfigContainer the check in AbstractShowAction uses, because a generator that disagreed with the enforcer
+     * would hand out urls that are then refused: these are ini strings, so a raw `"false"` reads as true.
+     */
+    public static function isPublic(): bool
+    {
+        $config = self::getConfigContainer();
+
+        return (
+            $config->isFeatureEnabled(ConfigurationKeyEnum::PUBLIC_IMAGES)
+            || !$config->isFeatureEnabled(ConfigurationKeyEnum::USE_AUTH)
+            || !$config->isFeatureEnabled(ConfigurationKeyEnum::REQUIRE_SESSION)
+        );
+    }
+
+    /**
      * url
      * This returns the constructed URL for the art in question
      */
@@ -745,15 +763,14 @@ class Art extends database_object
             return null;
         }
 
-        if ((!AmpConfig::get('public_images')) && AmpConfig::get('use_auth') && AmpConfig::get('require_session')) {
+        if (self::isPublic()) {
+            $sid = 'none';
+        } else {
+            // Falls back to `none` (so no token is appended) when the caller has no session of its own; callers that
+            // cannot supply one must check isPublic() and skip the art entirely rather than emit a url image.php denies.
             $sid = ($sid)
                 ? scrub_out($sid)
                 : scrub_out(session_id() ?: 'none');
-            if ($sid == null) {
-                $sid = Session::create(['type' => 'api']);
-            }
-        } else {
-            $sid = 'none';
         }
 
         $has_gd = self::_hasGD();
@@ -970,6 +987,16 @@ class Art extends database_object
         }
 
         return true;
+    }
+
+    /**
+     * @deprecated Inject dependency
+     */
+    private static function getConfigContainer(): ConfigContainerInterface
+    {
+        global $dic;
+
+        return $dic->get(ConfigContainerInterface::class);
     }
 
     /**

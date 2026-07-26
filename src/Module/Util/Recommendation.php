@@ -87,7 +87,7 @@ class Recommendation
             'megaphoto' => null,
         ];
 
-        if ($album->isNew() === false) {
+        if ($album->isNew() === false && Art::isPublic()) {
             $results['largephoto']  = Art::url($album->id, 'album', null, 174);
             $results['smallphoto']  = Art::url($album->id, 'album', null, 34);
             $results['mediumphoto'] = Art::url($album->id, 'album', null, 64);
@@ -138,11 +138,6 @@ class Recommendation
             ? 'mbid=' . rawurlencode($artist->mbid)
             : 'artist=' . rawurlencode((string) $artist->get_fullname());
 
-        // Data newer than 6 months, use it
-        if (($artist->last_update + 15768000) > time() || $artist->manual_update) {
-            return ['id' => $artist_id, 'summary' => $artist->summary, 'placeformed' => $artist->placeformed, 'yearformed' => (int) $artist->yearformed, 'largephoto' => Art::url($artist->id, 'artist', null, 174), 'smallphoto' => Art::url($artist->id, 'artist', null, 34), 'mediumphoto' => Art::url($artist->id, 'artist', null, 64), 'megaphoto' => Art::url($artist->id, 'artist', null, 300)];
-        }
-
         $results = [
             'id' => $artist_id,
             'summary' => null,
@@ -153,11 +148,21 @@ class Recommendation
             'mediumphoto' => null,
             'megaphoto' => null,
         ];
-        if ($artist->isNew() === false) {
+
+        if ($artist->isNew() === false && Art::isPublic()) {
             $results['largephoto']  = Art::url($artist->id, 'artist', null, 174);
             $results['smallphoto']  = Art::url($artist->id, 'artist', null, 34);
             $results['mediumphoto'] = Art::url($artist->id, 'artist', null, 64);
             $results['megaphoto']   = Art::url($artist->id, 'artist', null, 300);
+        }
+
+        // Data newer than 6 months, use it
+        if (($artist->last_update + 15768000) > time() || $artist->manual_update) {
+            $results['summary']     = $artist->summary;
+            $results['placeformed'] = $artist->placeformed;
+            $results['yearformed']  = (int) $artist->yearformed;
+
+            return $results;
         }
 
         try {

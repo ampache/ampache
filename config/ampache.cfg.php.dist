@@ -689,7 +689,12 @@ album_art_min_height = 30
 ; Disable this option to require a valid user session for viewing images.
 ; When enabled, images can be displayed without checking for an active session,
 ; bypassing `use_auth` and `require_session` settings.
-; If disabled, image links will require a valid session to be accessed.
+; If disabled, image links will require a valid session to be accessed. A session
+; cookie, an `auth` parameter, an `apiKey` or a Subsonic token all satisfy this.
+; Disabling only takes effect when `use_auth` and `require_session` are both on;
+; with either of them off images stay public whatever this is set to.
+; Clients that cannot present a session are not sent image links at all, so the
+; Subsonic albumInfo/artistInfo image urls are empty while this is disabled.
 ; DEFAULT: "true"
 public_images = "true"
 
