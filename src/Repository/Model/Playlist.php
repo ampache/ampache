@@ -864,14 +864,13 @@ class Playlist extends playlist_object
 
     /**
      * _update_last
-     * This updates the playlist last update, it calls the generic update_item function
+     * This updates the playlist last update along with the cached totals
      */
     private function _update_last(): void
     {
-        $last_update = time();
-        if ($this->update_item('last_update', $last_update)) {
-            $this->last_update = $last_update;
-        }
+        $this->last_update = time();
+
+        self::getPlaylistRepository()->setLastUpdate($this, $this->last_update);
 
         $this->set_last($this->get_total_duration(), 'last_duration');
         $this->set_last($this->get_media_count(), 'last_count');

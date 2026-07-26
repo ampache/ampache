@@ -100,6 +100,26 @@ final readonly class SearchRepository extends AbstractPlaylistObjectRepository i
         return 'smart_' . $item->getId();
     }
 
+    /**
+     * The four columns `search` has and `playlist` does not. `random` is a `tinyint(1)`, so it has to
+     * reach the driver as an int rather than a bool.
+     *
+     * @return array<string, mixed>
+     */
+    protected function editableColumns(playlist_object $item): array
+    {
+        if (!$item instanceof Search) {
+            return [];
+        }
+
+        return [
+            'random' => ($item->random > 0) ? 1 : 0,
+            'limit' => $item->limit,
+            'logic_operator' => strtolower((string) $item->logic_operator),
+            'rules' => json_encode($item->rules) ?: null,
+        ];
+    }
+
     protected function tableName(): string
     {
         return 'search';

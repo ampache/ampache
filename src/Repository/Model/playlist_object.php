@@ -32,7 +32,6 @@ use Ampache\Module\Authorization\Access;
 use Ampache\Module\Authorization\AccessLevelEnum;
 use Ampache\Module\Authorization\AccessTypeEnum;
 use Ampache\Module\System\Core;
-use Ampache\Module\System\Dba;
 use Ampache\Module\Util\InterfaceImplementationChecker;
 use Ampache\Module\Util\ObjectTypeToClassNameMapper;
 use Ampache\Module\Util\Ui;
@@ -451,38 +450,40 @@ abstract class playlist_object extends database_object implements
             return 0;
         }
 
-        if (isset($data['name']) && $data['name'] != $this->name) {
-            $this->update_item('name', $data['name']);
+        if (!$this->canWrite()) {
+            return $this->id;
         }
 
-        if (isset($data['playlist_type']) && $data['playlist_type'] != $this->type) {
-            $this->update_item('type', $data['playlist_type']);
+        if (isset($data['name'])) {
+            $this->name = (string) $data['name'];
+        }
+
+        if (isset($data['playlist_type'])) {
+            $this->type = (string) $data['playlist_type'];
         }
 
         if (isset($data['playlist_user']) && $data['playlist_user'] != $this->user) {
             $this->user     = (int) $data['playlist_user'];
             $this->username = User::get_username($this->user);
-            $this->update_item('user', $data['playlist_user']);
-            $this->update_item('username', $this->username);
         }
 
         if ($this instanceof Search) {
-            // set_rules() has already applied random/limit onto the object,
-            // so persist them unconditionally (a self-comparison never fires).
+            // set_rules() has already applied random/limit onto the object, so they are written back
+            // unconditionally — comparing them against themselves would never fire
             if (array_key_exists('random', $data)) {
-                $this->update_item('random', (int) $data['random']);
+                $this->random = (int) $data['random'];
             }
 
             if (array_key_exists('limit', $data)) {
-                $this->update_item('limit', (int) $data['limit']);
+                $this->limit = (int) $data['limit'];
             }
 
             if (!empty($data['operator'])) {
-                $this->update_item('logic_operator', $data['operator']);
+                $this->logic_operator = (string) $data['operator'];
             }
-
-            $this->update_item('rules', json_encode($this->rules) ?: null);
         }
+
+        $this->getPlaylistObjectRepository()->persist($this);
 
         $new_list    = (!empty($data['collaborate'])) ? $data['collaborate'] : [];
         $collaborate = (!empty($new_list)) ? implode(',', $new_list) : '';
@@ -502,21 +503,16 @@ abstract class playlist_object extends database_object implements
     }
 
     /**
-     * update_item
-     * This is the generic update function, it does the escaping and error checking
+     * Whether the current user may write to this list at all
+     *
+     * Checked once per save rather than once per column, so an edit either applies whole or not at all.
      */
-    public function update_item(string $field, int|string|null $value): bool
+    protected function canWrite(): bool
     {
-        if (
-            Core::get_global('user')?->getId() != $this->user
-            && !Access::check(AccessTypeEnum::INTERFACE, AccessLevelEnum::CONTENT_MANAGER)
-        ) {
-            return false;
-        }
-
-        $sql = sprintf('UPDATE `%s` SET `%s` = ? WHERE `id` = ?', static::DB_TABLENAME, $field);
-
-        return (Dba::write($sql, [$value, $this->id]) !== null);
+        return (
+            Core::get_global('user')?->getId() == $this->user
+            || Access::check(AccessTypeEnum::INTERFACE, AccessLevelEnum::CONTENT_MANAGER)
+        );
     }
 
     /**
@@ -537,7 +533,7 @@ abstract class playlist_object extends database_object implements
 
     /**
      * _update_collaborate
-     * This updates playlist collaborators, it calls the generic update_item function
+     * This updates playlist collaborators, both the column and the map
      * @param string[] $new_list
      */
     private function _update_collaborate(array $new_list): void
@@ -547,10 +543,9 @@ abstract class playlist_object extends database_object implements
             array_map('intval', $new_list)
         );
 
-        // the map is only touched when the column write was allowed, so a rejected edit cannot leave the two disagreeing
-        if ($this->update_item('collaborate', implode(',', $ids))) {
-            $this->getPlaylistObjectRepository()->updateCollaborators($this, $ids);
-        }
+        $this->collaborate = implode(',', $ids);
+
+        $this->getPlaylistObjectRepository()->updateCollaborators($this, $ids);
     }
 
     private function getPlaylistArtBuilder(): PlaylistArtBuilderInterface

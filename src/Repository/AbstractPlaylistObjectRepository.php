@@ -54,6 +54,35 @@ abstract readonly class AbstractPlaylistObjectRepository implements PlaylistObje
     }
 
     /**
+     * Writes the fields the edit form owns, in one statement
+     *
+     * Deliberately not every column: `date` is the creation time, and `last_update`, `last_count`,
+     * `last_duration` and `collaborate` each have their own writer above.
+     */
+    public function persist(playlist_object $item): void
+    {
+        $columns = array_merge(
+            [
+                'name' => $item->name,
+                'type' => $item->type,
+                'user' => $item->user,
+                'username' => $item->username,
+            ],
+            $this->editableColumns($item)
+        );
+
+        $assignments = implode(
+            ', ',
+            array_map(static fn(string $column): string => sprintf('`%s` = ?', $column), array_keys($columns))
+        );
+
+        $this->connection->query(
+            sprintf('UPDATE `%s` SET %s WHERE `id` = ?', $this->tableName(), $assignments),
+            [...array_values($columns), $item->getId()]
+        );
+    }
+
+    /**
      * Stores the cached item count
      */
     public function setLastCount(playlist_object $item, int $count): void
@@ -70,6 +99,17 @@ abstract readonly class AbstractPlaylistObjectRepository implements PlaylistObje
     }
 
     /**
+     * Stores the time the list last changed
+     */
+    public function setLastUpdate(playlist_object $item, int $time): void
+    {
+        $this->connection->query(
+            sprintf('UPDATE `%s` SET `last_update` = ? WHERE `id` = ?', $this->tableName()),
+            [$time, $item->getId()]
+        );
+    }
+
+    /**
      * Replaces the set of users allowed to collaborate on the list
      *
      * @param int[] $userIds
@@ -79,6 +119,13 @@ abstract readonly class AbstractPlaylistObjectRepository implements PlaylistObje
         $mapKey = $this->collaborateKey($item);
 
         $collaborate = implode(',', $userIds);
+
+        // the column and the map are the same fact stored twice, so they are written together
+        $this->connection->query(
+            sprintf('UPDATE `%s` SET `collaborate` = ? WHERE `id` = ?', $this->tableName()),
+            [$collaborate, $item->getId()]
+        );
+
         $sql         = ($collaborate === '')
             ? 'DELETE FROM `user_playlist_map` WHERE `playlist_id` = ?;'
             : 'DELETE FROM `user_playlist_map` WHERE `playlist_id` = ? AND `user_id` NOT IN (' . $collaborate . ');';
@@ -97,6 +144,16 @@ abstract readonly class AbstractPlaylistObjectRepository implements PlaylistObje
      * The value `user_playlist_map` stores for this item. A smartlist is keyed by its prefixed id so both list kinds can share the one table.
      */
     abstract protected function collaborateKey(playlist_object $item): int|string;
+
+    /**
+     * Columns `persist()` should write beyond the four both tables share
+     *
+     * @return array<string, mixed>
+     */
+    protected function editableColumns(playlist_object $item): array
+    {
+        return [];
+    }
 
     /**
      * The table the shared columns live in

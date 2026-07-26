@@ -129,6 +129,44 @@ class SearchRepositoryTest extends TestCase
         static::assertFalse($this->subject->nameExists('some-name', 1, 'public'));
     }
 
+    public function testPersistBindsRandomAsAnIntForTheTinyintColumn(): void
+    {
+        $smartlist         = $this->smartlist(666);
+        $smartlist->random = 0;
+
+        $this->connection->expects(static::once())
+            ->method('query')
+            ->willReturnCallback(function (string $sql, array $params): PDOStatement {
+                static::assertSame(0, $params[4]);
+
+                return $this->createMock(PDOStatement::class);
+            });
+
+        $this->subject->persist($smartlist);
+    }
+
+    public function testPersistWritesTheSearchOnlyColumnsToo(): void
+    {
+        $smartlist                 = $this->smartlist(666);
+        $smartlist->name           = 'Recent';
+        $smartlist->type           = 'public';
+        $smartlist->user           = 4;
+        $smartlist->username       = 'admin';
+        $smartlist->random         = 1;
+        $smartlist->limit          = 50;
+        $smartlist->logic_operator = 'AND';
+        $smartlist->rules          = [['title', 'contains', 'a', null]];
+
+        $this->connection->expects(static::once())
+            ->method('query')
+            ->with(
+                'UPDATE `search` SET `name` = ?, `type` = ?, `user` = ?, `username` = ?, `random` = ?, `limit` = ?, `logic_operator` = ?, `rules` = ? WHERE `id` = ?',
+                ['Recent', 'public', 4, 'admin', 1, 50, 'and', '[["title","contains","a",null]]', 666]
+            );
+
+        $this->subject->persist($smartlist);
+    }
+
     public function testSetLastCountSkipsAnUnsavedItem(): void
     {
         $this->connection->expects(static::never())
@@ -155,11 +193,35 @@ class SearchRepositoryTest extends TestCase
         $this->subject->setLastDuration($this->smartlist(666), 300);
     }
 
-    public function testUpdateCollaboratorsClearsTheMapWhenTheListIsEmpty(): void
+    public function testSetLastUpdateWritesToTheSearchTable(): void
     {
         $this->connection->expects(static::once())
             ->method('query')
-            ->with('DELETE FROM `user_playlist_map` WHERE `playlist_id` = ?;', ['smart_666']);
+            ->with('UPDATE `search` SET `last_update` = ? WHERE `id` = ?', [1234, 666]);
+
+        $this->subject->setLastUpdate($this->smartlist(666), 1234);
+    }
+
+    public function testUpdateCollaboratorsClearsTheColumnAndTheMapWhenTheListIsEmpty(): void
+    {
+        $matcher = static::exactly(2);
+
+        $this->connection->expects($matcher)
+            ->method('query')
+            ->willReturnCallback(function (string $sql, array $params) use ($matcher): PDOStatement {
+                match ($matcher->numberOfInvocations()) {
+                    1 => static::assertSame(
+                        ['UPDATE `search` SET `collaborate` = ? WHERE `id` = ?', ['', 666]],
+                        [$sql, $params]
+                    ),
+                    default => static::assertSame(
+                        ['DELETE FROM `user_playlist_map` WHERE `playlist_id` = ?;', ['smart_666']],
+                        [$sql, $params]
+                    ),
+                };
+
+                return $this->createMock(PDOStatement::class);
+            });
 
         $this->subject->updateCollaborators($this->smartlist(666), []);
     }
@@ -167,15 +229,19 @@ class SearchRepositoryTest extends TestCase
     public function testUpdateCollaboratorsKeysTheMapByThePrefixedId(): void
     {
         // the shared map holds `smart_666` for a saved search, against a bare id for a playlist
-        $matcher = static::exactly(2);
+        $matcher = static::exactly(3);
 
         $this->connection->expects($matcher)
             ->method('query')
             ->willReturnCallback(function (string $sql, array $params) use ($matcher): PDOStatement {
-                static::assertSame(['smart_666'], array_slice($params, 0, 1));
-                if ($matcher->numberOfInvocations() === 2) {
-                    static::assertSame(['smart_666', 2], $params);
-                }
+                match ($matcher->numberOfInvocations()) {
+                    1 => static::assertSame(
+                        ['UPDATE `search` SET `collaborate` = ? WHERE `id` = ?', ['2', 666]],
+                        [$sql, $params]
+                    ),
+                    2 => static::assertSame(['smart_666'], $params),
+                    default => static::assertSame(['smart_666', 2], $params),
+                };
 
                 return $this->createMock(PDOStatement::class);
             });

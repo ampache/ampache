@@ -43,6 +43,11 @@ interface PlaylistObjectRepositoryInterface
     public function deleteCollaborators(playlist_object $item): void;
 
     /**
+     * Writes the fields the edit form owns, in one statement
+     */
+    public function persist(playlist_object $item): void;
+
+    /**
      * Stores the cached item count
      */
     public function setLastCount(playlist_object $item, int $count): void;
@@ -51,6 +56,11 @@ interface PlaylistObjectRepositoryInterface
      * Stores the cached total duration
      */
     public function setLastDuration(playlist_object $item, int $duration): void;
+
+    /**
+     * Stores the time the list last changed
+     */
+    public function setLastUpdate(playlist_object $item, int $time): void;
 
     /**
      * Replaces the set of users allowed to collaborate on the list

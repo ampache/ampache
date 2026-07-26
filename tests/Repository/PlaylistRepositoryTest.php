@@ -124,6 +124,24 @@ class PlaylistRepositoryTest extends TestCase
         static::assertSame(4, $this->subject->getLastTrackNumber($this->playlist(666)));
     }
 
+    public function testPersistWritesTheSharedColumnsInOneStatement(): void
+    {
+        $playlist           = $this->playlist(666);
+        $playlist->name     = 'Mixed Test';
+        $playlist->type     = 'private';
+        $playlist->user     = 4;
+        $playlist->username = 'admin';
+
+        $this->connection->expects(static::once())
+            ->method('query')
+            ->with(
+                'UPDATE `playlist` SET `name` = ?, `type` = ?, `user` = ?, `username` = ? WHERE `id` = ?',
+                ['Mixed Test', 'private', 4, 'admin', 666]
+            );
+
+        $this->subject->persist($playlist);
+    }
+
     public function testReplaceTrackAtNumberClearsThePositionFirst(): void
     {
         $matcher = static::exactly(2);
@@ -177,6 +195,15 @@ class PlaylistRepositoryTest extends TestCase
         $this->subject->setLastDuration($this->playlist(666), 300);
     }
 
+    public function testSetLastUpdateWritesToThePlaylistTable(): void
+    {
+        $this->connection->expects(static::once())
+            ->method('query')
+            ->with('UPDATE `playlist` SET `last_update` = ? WHERE `id` = ?', [1234, 666]);
+
+        $this->subject->setLastUpdate($this->playlist(666), 1234);
+    }
+
     public function testSetTrackNumbersDoesNothingForAnEmptySet(): void
     {
         $this->connection->expects(static::never())
@@ -197,29 +224,48 @@ class PlaylistRepositoryTest extends TestCase
         $this->subject->setTrackNumbers([7 => 1, 9 => 2]);
     }
 
-    public function testUpdateCollaboratorsClearsTheMapWhenTheListIsEmpty(): void
+    public function testUpdateCollaboratorsClearsTheColumnAndTheMapWhenTheListIsEmpty(): void
     {
-        $this->connection->expects(static::once())
-            ->method('query')
-            ->with('DELETE FROM `user_playlist_map` WHERE `playlist_id` = ?;', [666]);
-
-        $this->subject->updateCollaborators($this->playlist(666), []);
-    }
-
-    public function testUpdateCollaboratorsKeysTheMapByThePlainId(): void
-    {
-        // one delete that spares the users being kept, then one insert per user
-        $matcher = static::exactly(3);
+        $matcher = static::exactly(2);
 
         $this->connection->expects($matcher)
             ->method('query')
             ->willReturnCallback(function (string $sql, array $params) use ($matcher): PDOStatement {
                 match ($matcher->numberOfInvocations()) {
                     1 => static::assertSame(
-                        ['DELETE FROM `user_playlist_map` WHERE `playlist_id` = ? AND `user_id` NOT IN (2,3);', [666]],
+                        ['UPDATE `playlist` SET `collaborate` = ? WHERE `id` = ?', ['', 666]],
+                        [$sql, $params]
+                    ),
+                    default => static::assertSame(
+                        ['DELETE FROM `user_playlist_map` WHERE `playlist_id` = ?;', [666]],
+                        [$sql, $params]
+                    ),
+                };
+
+                return $this->createMock(PDOStatement::class);
+            });
+
+        $this->subject->updateCollaborators($this->playlist(666), []);
+    }
+
+    public function testUpdateCollaboratorsKeysTheMapByThePlainId(): void
+    {
+        // the column, a delete that spares the users being kept, then one insert per user
+        $matcher = static::exactly(4);
+
+        $this->connection->expects($matcher)
+            ->method('query')
+            ->willReturnCallback(function (string $sql, array $params) use ($matcher): PDOStatement {
+                match ($matcher->numberOfInvocations()) {
+                    1 => static::assertSame(
+                        ['UPDATE `playlist` SET `collaborate` = ? WHERE `id` = ?', ['2,3', 666]],
                         [$sql, $params]
                     ),
                     2 => static::assertSame(
+                        ['DELETE FROM `user_playlist_map` WHERE `playlist_id` = ? AND `user_id` NOT IN (2,3);', [666]],
+                        [$sql, $params]
+                    ),
+                    3 => static::assertSame(
                         ['INSERT IGNORE INTO `user_playlist_map` (`playlist_id`, `user_id`) VALUES (?, ?);', [666, 2]],
                         [$sql, $params]
                     ),
