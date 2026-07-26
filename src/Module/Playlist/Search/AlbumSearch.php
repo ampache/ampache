@@ -384,7 +384,7 @@ final class AlbumSearch implements SearchInterface
                     $parameters[] = $input;
                     break;
                 case 'other_user':
-                    $other_userid = $input;
+                    $other_userid = (int) $input;
                     if ($operator_sql == 'userflag') {
                         $where[] = sprintf("`favorite_album_%s`.`user` = %s AND `favorite_album_%s`.`object_type` = 'album'", $other_userid, $other_userid, $other_userid);
                         // flag once per user

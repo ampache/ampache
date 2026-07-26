@@ -112,7 +112,7 @@ $(function() {
             if ($(this).attr("rel") !== "prettyPhoto") {
                 // Ajax load Ampache pages only
                 if (ampacheUrl(link)) {
-                    navigateToUrl(link);
+                    navigateToUrl(appendDeleteBurl(link));
                     return false;
                 }
             } else {

@@ -26,6 +26,7 @@ declare(strict_types=1);
 namespace Ampache\Repository;
 
 use Ampache\Module\Database\DatabaseConnectionInterface;
+use Ampache\Repository\Model\Label;
 use DateTime;
 use PDO;
 use PDOStatement;
@@ -105,6 +106,26 @@ class LabelRepositoryTest extends TestCase
         );
     }
 
+    public function testGetArtistsReturnsTheAssociatedIds(): void
+    {
+        $label  = $this->createMock(Label::class);
+        $result = $this->createMock(PDOStatement::class);
+
+        $label->method('getId')
+            ->willReturn(666);
+
+        $this->connection->expects(static::once())
+            ->method('query')
+            ->with('SELECT `artist` FROM `label_asso` WHERE `label` = ?', [666])
+            ->willReturn($result);
+
+        $result->expects(static::exactly(3))
+            ->method('fetchColumn')
+            ->willReturnOnConsecutiveCalls(1, 2, false);
+
+        static::assertSame([1, 2], $this->subject->getArtists($label));
+    }
+
     public function testGetByArtistReturnsData(): void
     {
         $artistId  = 666;
@@ -170,6 +191,95 @@ class LabelRepositoryTest extends TestCase
             0,
             $this->subject->lookup($labelName, $labelId)
         );
+    }
+
+    public function testMigrateArtistMovesTheAssociations(): void
+    {
+        $this->connection->expects(static::once())
+            ->method('query')
+            ->with('UPDATE `label_asso` SET `artist` = ? WHERE `artist` = ?', [33, 21]);
+
+        $this->subject->migrateArtist(21, 33);
+    }
+
+    public function testPersistBindsAnInactiveLabelAsZeroRatherThanFalse(): void
+    {
+        $label = new Label();
+
+        $label->id     = 666;
+        $label->active = false;
+
+        // PDO binds a bool false as '' and MySQL rejects that for the tinyint column, taking the
+        // whole statement with it, so the flag has to reach the driver as an int
+        $this->connection->expects(static::once())
+            ->method('query')
+            ->with(
+                static::anything(),
+                static::callback(static fn(array $params): bool => $params[8] === 0)
+            );
+
+        $this->subject->persist($label);
+    }
+
+    public function testPersistInsertsANewLabelAndReturnsTheId(): void
+    {
+        $label = new Label();
+
+        $label->name          = 'some-name';
+        $label->user          = 42;
+        $label->active        = true;
+        $label->creation_date = 1234;
+
+        $this->connection->expects(static::once())
+            ->method('query')
+            ->with(
+                static::stringContains('INSERT INTO `label`'),
+                ['some-name', null, null, null, null, null, null, null, 42, 1, 1234]
+            );
+
+        $this->connection->expects(static::once())
+            ->method('getLastInsertedId')
+            ->willReturn(666);
+
+        static::assertSame(666, $this->subject->persist($label));
+    }
+
+    public function testPersistReturnsNullIfTheInsertYieldedNoId(): void
+    {
+        $label = new Label();
+
+        $label->active = false;
+
+        $this->connection->expects(static::once())
+            ->method('query');
+
+        $this->connection->expects(static::once())
+            ->method('getLastInsertedId')
+            ->willReturn(0);
+
+        static::assertNull($this->subject->persist($label));
+    }
+
+    public function testPersistUpdatesAnExistingLabelAndReturnsNull(): void
+    {
+        $label = new Label();
+
+        $label->id       = 666;
+        $label->name     = 'some-name';
+        $label->category = 'some-category';
+        $label->active   = true;
+
+        $this->connection->expects(static::once())
+            ->method('query')
+            ->with(
+                static::stringContains('UPDATE `label` SET `name` = ?'),
+                ['some-name', null, 'some-category', null, null, null, null, null, 1, 666]
+            );
+
+        $this->connection->expects(static::never())
+            ->method('getLastInsertedId');
+
+        static::assertNull($this->subject->persist($label));
     }
 
     public function testRemoveArtistAssocDeletes(): void

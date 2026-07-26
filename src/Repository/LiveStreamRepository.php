@@ -25,6 +25,8 @@ declare(strict_types=1);
 
 namespace Ampache\Repository;
 
+use Ampache\Module\Catalog\CatalogCounterInterface;
+use Ampache\Module\Catalog\CountableTableEnum;
 use Ampache\Module\Database\DatabaseConnectionInterface;
 use Ampache\Repository\Model\Catalog;
 use Ampache\Repository\Model\Live_Stream;
@@ -41,6 +43,7 @@ final readonly class LiveStreamRepository implements LiveStreamRepositoryInterfa
     public function __construct(
         private ModelFactoryInterface $modelFactory,
         private DatabaseConnectionInterface $connection,
+        private CatalogCounterInterface $catalogCounter,
     ) {}
 
     /**
@@ -53,7 +56,7 @@ final readonly class LiveStreamRepository implements LiveStreamRepositoryInterfa
             [$liveStream->getId()]
         );
 
-        Catalog::count_table('live_stream');
+        $this->catalogCounter->count(CountableTableEnum::LIVE_STREAM);
     }
 
     /**
@@ -92,5 +95,46 @@ final readonly class LiveStreamRepository implements LiveStreamRepositoryInterfa
         }
 
         return $result;
+    }
+
+    /**
+     * Saves the item, inserting it when it is new
+     *
+     * Returns the id of a newly created item, null when an existing one was updated
+     */
+    public function persist(Live_Stream $liveStream): ?int
+    {
+        if (!$liveStream->isNew()) {
+            $this->connection->query(
+                'UPDATE `live_stream` SET `name` = ?, `site_url` = ?, `url` = ?, `codec` = ? WHERE `id` = ?',
+                [
+                    $liveStream->name,
+                    $liveStream->site_url,
+                    $liveStream->url,
+                    $liveStream->codec,
+                    $liveStream->getId(),
+                ]
+            );
+
+            return null;
+        }
+
+        $this->connection->query(
+            'INSERT INTO `live_stream` (`name`, `site_url`, `url`, `catalog`, `codec`) VALUES (?, ?, ?, ?, ?)',
+            [
+                $liveStream->name,
+                $liveStream->site_url,
+                $liveStream->url,
+                $liveStream->catalog,
+                $liveStream->codec,
+            ]
+        );
+
+        $insertedId = $this->connection->getLastInsertedId() ?: null;
+
+        // the count is maintained here for both writes, so the model's create() no longer repeats it
+        $this->catalogCounter->count(CountableTableEnum::LIVE_STREAM);
+
+        return $insertedId;
     }
 }

@@ -49,8 +49,8 @@ class SearchTest extends MockeryTestCase
     }
 
     /**
-     * MySQL rejects an ORDER BY column that is missing from a DISTINCT select list (error 3065), which broke
-     * every header bar artist search once weight sorting was added
+     * MySQL rejects an ORDER BY column missing from a DISTINCT select list (error 3065), which broke every header
+     * bar artist search once weight sorting was added
      */
     #[DataProvider('weightTypeProvider')]
     public function testWeightSortedSearchSelectsEveryOrderedColumn(string $type): void
@@ -64,7 +64,7 @@ class SearchTest extends MockeryTestCase
         $this->assertNotEmpty($select);
         $this->assertNotEmpty($order);
 
-        // only DISTINCT queries are affected; a plain select can order by anything it joins
+        // only DISTINCT queries are affected here, a plain select is free to order by any column of a joined table
         if (!str_starts_with($select[1], 'DISTINCT')) {
             return;
         }

@@ -87,9 +87,8 @@ final class SmartlistSongsMethod implements MethodInterface
         $objectId = (string) $input['filter'];
         $random   = (array_key_exists('random', $input) && (int) $input['random'] == 1);
 
-        $smartlist = $this->modelFactory->createSearch(
+        $smartlist = $this->modelFactory->createSmartlist(
             (int) str_replace('smart_', '', $objectId),
-            'song',
             $user
         );
 

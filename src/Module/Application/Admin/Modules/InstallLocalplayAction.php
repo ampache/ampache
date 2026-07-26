@@ -31,12 +31,11 @@ use Ampache\Module\Application\Exception\AccessDeniedException;
 use Ampache\Module\Authorization\AccessLevelEnum;
 use Ampache\Module\Authorization\AccessTypeEnum;
 use Ampache\Module\Authorization\GuiGatekeeperInterface;
-use Ampache\Module\Playback\Localplay\LocalPlay;
 use Ampache\Module\System\AmpError;
 use Ampache\Module\System\Core;
+use Ampache\Module\System\Plugin\PluginManagerInterface;
 use Ampache\Module\Util\RequestParserInterface;
 use Ampache\Module\Util\UiInterface;
-use Ampache\Repository\Model\Preference;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 
@@ -48,6 +47,7 @@ final readonly class InstallLocalplayAction implements ApplicationActionInterfac
         private UiInterface $ui,
         private ConfigContainerInterface $configContainer,
         private RequestParserInterface $requestParser,
+        private PluginManagerInterface $pluginManager,
     ) {}
 
     public function run(ServerRequestInterface $request, GuiGatekeeperInterface $gatekeeper): ?ResponseInterface
@@ -69,8 +69,9 @@ final readonly class InstallLocalplayAction implements ApplicationActionInterfac
             return null;
         }
 
-        $localplay = new LocalPlay((string) filter_input(INPUT_GET, 'type', FILTER_SANITIZE_SPECIAL_CHARS));
-        if (!$localplay->player_loaded()) {
+        // The manager loads the controller, installs it and applies the localplay enable/level/controller preferences
+        $type = (string) filter_input(INPUT_GET, 'type', FILTER_SANITIZE_SPECIAL_CHARS);
+        if (!$this->pluginManager->installLocalplay($type, $user->getId())) {
             AmpError::add('general', T_('Failed to enable the Localplay module'));
             echo AmpError::display('general');
 
@@ -79,15 +80,6 @@ final readonly class InstallLocalplayAction implements ApplicationActionInterfac
 
             return null;
         }
-
-        // Install it!
-        $localplay->install();
-
-        // Go ahead and enable Localplay (Admin->System) as we assume they want to do that
-        // if they are enabling this
-        Preference::update('allow_localplay_playback', -1, '1');
-        Preference::update('localplay_level', $user->getId(), AccessLevelEnum::ADMIN->value);
-        Preference::update('localplay_controller', $user->getId(), $localplay->type);
 
         /* Show Confirmation */
         $url   = sprintf('%s/modules.php?action=show_localplay', $this->configContainer->getWebPath('/admin'));

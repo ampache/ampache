@@ -188,6 +188,68 @@ class ShareRepositoryTest extends TestCase
         $this->subject->registerAccess($share, $date);
     }
 
+    public function testUpdateScopesTheStatementToTheOwnerForANonManager(): void
+    {
+        $userId = 33;
+
+        $user = $this->createMock(User::class);
+
+        $share = new Share();
+
+        $share->id             = 666;
+        $share->max_counter    = 42;
+        $share->expire_days    = 7;
+        $share->allow_stream   = false;
+        $share->allow_download = true;
+        $share->description    = 'some-description';
+
+        $user->expects(static::once())
+            ->method('has_access')
+            ->with(AccessLevelEnum::MANAGER)
+            ->willReturn(false);
+
+        $user->expects(static::once())
+            ->method('getId')
+            ->willReturn($userId);
+
+        $this->connection->expects(static::once())
+            ->method('query')
+            ->with(
+                'UPDATE `share` SET `max_counter` = ?, `expire_days` = ?, `allow_stream` = ?, `allow_download` = ?, `description` = ? WHERE `id` = ? AND `user` = ?',
+                [42, 7, 0, 1, 'some-description', 666, $userId]
+            );
+
+        $this->subject->update($share, $user);
+    }
+
+    public function testUpdateWritesTheEditablePropertiesForAManager(): void
+    {
+        $user = $this->createMock(User::class);
+
+        $share = new Share();
+
+        $share->id             = 666;
+        $share->max_counter    = 42;
+        $share->expire_days    = 7;
+        $share->allow_stream   = true;
+        $share->allow_download = false;
+        $share->description    = 'some-description';
+
+        $user->expects(static::once())
+            ->method('has_access')
+            ->with(AccessLevelEnum::MANAGER)
+            ->willReturn(true);
+
+        $this->connection->expects(static::once())
+            ->method('query')
+            ->with(
+                'UPDATE `share` SET `max_counter` = ?, `expire_days` = ?, `allow_stream` = ?, `allow_download` = ?, `description` = ? WHERE `id` = ?',
+                [42, 7, 1, 0, 'some-description', 666]
+            );
+
+        $this->subject->update($share, $user);
+    }
+
     protected function setUp(): void
     {
         $this->connection      = $this->createMock(DatabaseConnectionInterface::class);

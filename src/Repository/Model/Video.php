@@ -34,9 +34,9 @@ use Ampache\Module\Playback\Stream;
 use Ampache\Module\Playback\Stream_Url;
 use Ampache\Module\Statistics\Stats;
 use Ampache\Module\System\Core;
-use Ampache\Module\System\Dba;
 use Ampache\Repository\ShoutRepositoryInterface;
 use Ampache\Repository\UserActivityRepositoryInterface;
+use Ampache\Repository\VideoRepositoryInterface;
 
 class Video extends database_object implements
     Media,
@@ -138,11 +138,12 @@ class Video extends database_object implements
             return false;
         }
 
-        $idlist     = '(' . implode(',', $ids) . ')';
-        $sql        = 'SELECT * FROM `video` WHERE `video`.`id` IN ' . $idlist;
-        $db_results = Dba::read($sql);
+        // with the cache off these rows are discarded and the per-object queries still run, so this is a net loss
+        if (!database_object::isCacheEnabled()) {
+            return false;
+        }
 
-        while ($row = Dba::fetch_assoc($db_results)) {
+        foreach (self::getVideoRepository()->getRowsByIds($ids) as $row) {
             parent::add_to_cache('video', $row['id'], $row);
         }
 
@@ -194,14 +195,7 @@ class Video extends database_object implements
      */
     public static function garbage_collection(): void
     {
-        // delete files matching catalog_ignore_pattern
-        $ignore_pattern = AmpConfig::get('catalog_ignore_pattern');
-        if ($ignore_pattern) {
-            Dba::write("DELETE FROM `video` WHERE `file` REGEXP ?;", [$ignore_pattern]);
-        }
-
-        // clean up missing catalogs
-        Dba::write("DELETE FROM `video` WHERE `video`.`catalog` NOT IN (SELECT `id` FROM `catalog`);");
+        self::getVideoRepository()->collectGarbage();
     }
 
     /**
@@ -236,10 +230,8 @@ class Video extends database_object implements
      */
     public static function get_deleted(): array
     {
-        $deleted    = [];
-        $sql        = "SELECT * FROM `deleted_video`";
-        $db_results = Dba::read($sql);
-        while ($row = Dba::fetch_assoc($db_results)) {
+        $deleted = [];
+        foreach (self::getVideoRepository()->getDeletedRows() as $row) {
             $deleted[] = [
                 'id' => (int) $row['id'],
                 'addition_time' => (int) $row['addition_time'],
@@ -284,7 +276,6 @@ class Video extends database_object implements
         $frame_rate    = (float) $data['frame_rate'];
         $video_bitrate = Catalog::check_int($data['video_bitrate'], PHP_INT_MAX, 0);
 
-        $sql    = "INSERT INTO `video` (`file`, `catalog`, `title`, `video_codec`, `audio_codec`, `resolution_x`, `resolution_y`, `size`, `time`, `mime`, `release_date`, `addition_time`, `bitrate`, `mode`, `channels`, `display_x`, `display_y`, `frame_rate`, `video_bitrate`) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
         $params = [
             $data['file'],
             $data['catalog'],
@@ -306,8 +297,7 @@ class Video extends database_object implements
             $frame_rate,
             $video_bitrate,
         ];
-        Dba::write($sql, $params);
-        $video_id = (int) Dba::insert_id();
+        $video_id = self::getVideoRepository()->insert($params);
 
         Catalog::update_map((int) $data['catalog'], 'video', $video_id);
 
@@ -364,7 +354,11 @@ class Video extends database_object implements
      */
     public static function update_played(bool $new_played, int $video_id): void
     {
-        self::_update_item('played', (($new_played) ? 1 : 0), $video_id, AccessLevelEnum::USER);
+        if (!Access::check(AccessTypeEnum::INTERFACE, AccessLevelEnum::USER)) {
+            return;
+        }
+
+        self::getVideoRepository()->setPlayed($video_id, $new_played);
     }
 
     /**
@@ -377,37 +371,12 @@ class Video extends database_object implements
             $time = time();
         }
 
-        $sql = "UPDATE `video` SET `update_time` = ? WHERE `id` = ?;";
-        Dba::write($sql, [$time, $video_id]);
+        self::getVideoRepository()->setUpdateTime($video_id, $time);
     }
 
     public static function update_video(int $video_id, Video $new_video): void
     {
-        $update_time  = time();
-        $release_date = (is_numeric($new_video->release_date))
-            ? $new_video->release_date
-            : null;
-
-        $sql = "UPDATE `video` SET `title` = ?, `bitrate` = ?, `size` = ?, `time` = ?, `video_codec` = ?, `audio_codec` = ?, `resolution_x` = ?, `resolution_y` = ?, `release_date` = ?, `channels` = ?, `display_x` = ?, `display_y` = ?, `frame_rate` = ?, `video_bitrate` = ?, `update_time` = ? WHERE `id` = ?";
-
-        Dba::write($sql, [
-            $new_video->title,
-            $new_video->bitrate,
-            $new_video->size,
-            $new_video->time,
-            $new_video->video_codec,
-            $new_video->audio_codec,
-            $new_video->resolution_x,
-            $new_video->resolution_y,
-            $release_date,
-            $new_video->channels,
-            $new_video->display_x,
-            $new_video->display_y,
-            $new_video->frame_rate,
-            $new_video->video_bitrate,
-            $update_time,
-            $video_id,
-        ]);
+        self::getVideoRepository()->updateFromTags($video_id, $new_video, time());
     }
 
     /**
@@ -416,39 +385,18 @@ class Video extends database_object implements
     public static function update_video_counts(int $video_id): void
     {
         if ($video_id > 0) {
-            $params = [$video_id, $video_id];
-            $sql    = "UPDATE `video` SET `total_count` = 0 WHERE `total_count` > 0 AND `id` NOT IN (SELECT `object_id` FROM `object_count` WHERE `object_count`.`object_id` = ? AND `object_count`.`object_type` = 'video' AND `object_count`.`count_type` = 'stream' UNION SELECT `object_id` FROM `object_count_summary` WHERE `object_id` = ? AND `object_type` = 'video' AND `count_type` = 'stream');";
-            Dba::write($sql, $params);
-            $sql = "UPDATE `video` SET `total_skip` = 0 WHERE `total_skip` > 0 AND `id` NOT IN (SELECT `object_id` FROM `object_count` WHERE `object_count`.`object_id` = ? AND `object_count`.`object_type` = 'video' AND `object_count`.`count_type` = 'stream' UNION SELECT `object_id` FROM `object_count_summary` WHERE `object_id` = ? AND `object_type` = 'video' AND `count_type` = 'stream');";
-            Dba::write($sql, $params);
-            $sql = "UPDATE `video` SET `video`.`played` = 0 WHERE `video`.`played` = 1 AND `video`.`id` NOT IN (SELECT `object_id` FROM `object_count` WHERE `object_count`.`object_id` = ? AND `object_type` = 'video' AND `count_type` = 'stream' UNION SELECT `object_id` FROM `object_count_summary` WHERE `object_id` = ? AND `object_type` = 'video' AND `count_type` = 'stream');";
-            Dba::write($sql, $params);
-            $sql = "UPDATE `video` SET `video`.`played` = 1 WHERE `video`.`played` = 0 AND `video`.`id` IN (SELECT `object_id` FROM `object_count` WHERE `object_count`.`object_id` = ? AND `object_type` = 'video' AND `count_type` = 'stream' UNION SELECT `object_id` FROM `object_count_summary` WHERE `object_id` = ? AND `object_type` = 'video' AND `count_type` = 'stream');";
-            Dba::write($sql, $params);
+            self::getVideoRepository()->updateCounts($video_id);
         }
     }
 
     /**
-     * _update_item
-     * This is a private function that should only be called from within the video class.
-     * It takes a field, value video id and level. first and foremost it checks the level
-     * against Core::get_global('user') to make sure they are allowed to update this record
-     * it then updates it and sets $this->{$field} to the new value
+     * @deprecated inject dependency
      */
-    private static function _update_item(string $field, int|string $value, int $video_id, AccessLevelEnum $level): void
+    private static function getVideoRepository(): VideoRepositoryInterface
     {
-        /* Check them Rights! */
-        if (!Access::check(AccessTypeEnum::INTERFACE, $level)) {
-            return;
-        }
+        global $dic;
 
-        /* Can't update to blank */
-        if (trim((string) $value) === '') {
-            return;
-        }
-
-        $sql = sprintf('UPDATE `video` SET `%s` = ? WHERE `id` = ?', $field);
-        Dba::write($sql, [$value, $video_id]);
+        return $dic->get(VideoRepositoryInterface::class);
     }
 
     public function check_play_history(int $user, string $agent, int $date): bool
@@ -840,12 +788,7 @@ class Video extends database_object implements
         $deleted = !$this->file || !file_exists($this->file) || unlink($this->file);
         if ($deleted) {
             // keep details about deletions
-            $params = [$this->id];
-            $sql    = "REPLACE INTO `deleted_video` (`id`, `addition_time`, `delete_time`, `title`, `file`, `catalog`, `total_count`, `total_skip`) SELECT `id`, `addition_time`, UNIX_TIMESTAMP(), `title`, `file`, `catalog`, `total_count`, `total_skip` FROM `video` WHERE `id` = ?;";
-            Dba::write($sql, $params);
-
-            $sql     = "DELETE FROM `video` WHERE `id` = ?";
-            $deleted = (Dba::write($sql, $params) !== null);
+            $deleted = self::getVideoRepository()->delete($this);
             if ($deleted) {
                 $this->getArtCleanup()->collectGarbageForObject('video', $this->id);
                 Userflag::garbage_collection('video', $this->id);
@@ -895,28 +838,19 @@ class Video extends database_object implements
      */
     public function update(array $data): int
     {
-        $sql    = "UPDATE `video` SET `title` = ?";
-        $title  = $data['title'] ?? $this->title;
-        $params = [$title];
+        $this->title = $data['title'] ?? $this->title;
+
         // don't require a release date when updating a video
-        if (isset($data['release_date'])) {
-            $f_release_date     = (string) $data['release_date'];
-            $release_date       = strtotime($f_release_date);
-            $this->release_date = $release_date ?: null;
-            $sql .= ", `release_date` = ?";
-            $params[] = $release_date;
+        $with_release_date = isset($data['release_date']);
+        if ($with_release_date) {
+            $this->release_date = strtotime((string) $data['release_date']) ?: null;
         }
 
-        $sql .= " WHERE `id` = ?";
-        $params[] = $this->id;
-
-        Dba::write($sql, $params);
+        self::getVideoRepository()->update($this, $with_release_date);
 
         if (isset($data['edit_tags'])) {
-            Tag::update_tag_list($data['edit_tags'], 'video', $this->id, true);
+            Tag::update_tag_list((string) $data['edit_tags'], 'video', $this->id, true);
         }
-
-        $this->title = $title;
 
         return $this->id;
     }

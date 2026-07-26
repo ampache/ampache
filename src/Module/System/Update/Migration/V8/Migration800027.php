@@ -28,27 +28,24 @@ use Ampache\Module\Authorization\AccessLevelEnum;
 use Ampache\Module\System\Update\Migration\AbstractMigration;
 
 /**
- * Add the per-user, per-format transcode bitrate overrides. A single preference holds a
- * `format=bps` map (e.g. `mp3=192000,opus=96000`) so the set of formats can follow the server's
- * configured `encode_args_<format>` keys without needing a migration whenever one is added.
- * An empty map means every format falls back to `transcode_bitrate`.
+ * Give the transcode bitrate a single override per player, matching the `encode_player_webplayer_target` and
+ * `encode_player_api_target` output-format preferences that already exist. A rate of 0 means the player carries
+ * no override of its own and takes the default `transcode_bitrate`.
  */
-final class Migration800019 extends AbstractMigration
+final class Migration800027 extends AbstractMigration
 {
     protected array $changelog = [
-        'Add the per-user `transcode_bitrate_formats` preference holding per-format bitrate overrides',
+        'Add the per-player `transcode_bitrate_webplayer` and `transcode_bitrate_api` bitrate overrides',
     ];
 
     public function migrate(): void
     {
-        $this->updatePreferences(
-            'transcode_bitrate_formats',
-            'Per-format transcode bitrate overrides in bps (falls back to Transcode Bitrate)',
-            '',
-            AccessLevelEnum::USER->value,
-            'bitrate_map',
-            'streaming',
-            'transcoding'
-        );
+        $level = AccessLevelEnum::USER->value;
+
+        $this->updatePreferences('transcode_bitrate_webplayer', 'Transcode bitrate - Web Player (overrides default)', 0, $level, 'integer', 'streaming', 'transcoding');
+        $this->updatePreferences('transcode_bitrate_api', 'Transcode bitrate - API (overrides default)', 0, $level, 'integer', 'streaming', 'transcoding');
+
+        $this->updateDatabase("DELETE FROM `user_preference` WHERE `preference` IN (SELECT `id` FROM `preference` WHERE `name` = 'transcode_bitrate_formats');");
+        $this->updateDatabase("DELETE FROM `preference` WHERE `name` = 'transcode_bitrate_formats';");
     }
 }

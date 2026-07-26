@@ -46,6 +46,7 @@ return [
     UpdateSingleCatalogFolderInterface::class => autowire(UpdateSingleCatalogFolder::class),
     UpdateCatalogInterface::class => autowire(UpdateCatalog::class),
     CatalogGarbageCollectorInterface::class => autowire(CatalogGarbageCollector::class),
+    CatalogCounterInterface::class => autowire(CatalogCounter::class),
     CatalogExportFactoryInterface::class => autowire(CatalogExportFactory::class),
     CatalogLoaderInterface::class => autowire(CatalogLoader::class),
 ];

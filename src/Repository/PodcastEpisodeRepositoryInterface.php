@@ -100,8 +100,25 @@ interface PodcastEpisodeRepositoryInterface
     public function getRandomByPodcast(int $podcastId, int $userId, ?int $count = 1): array;
 
     /**
-     * Updates the state of an episode
+     * Stores the path the episode was downloaded to
      */
+    public function setFile(int $episodeId, string $file): void;
+
+    /**
+     * Flags the episode as played
+     */
+    public function setPlayed(int $episodeId): void;
+
+    /**
+     * Stamps the episode as updated
+     */
+    public function setUpdateTime(int $episodeId, int $time): void;
+
+    /**
+     * Writes the editable properties of an existing episode
+     */
+    public function update(Podcast_Episode $episode): void;
+
     public function updateState(
         Podcast_Episode $episode,
         PodcastEpisodeStateEnum $state,

@@ -27,11 +27,16 @@ namespace Ampache\Module\System;
 
 use Ampache\Config\AmpConfig;
 use Ampache\Module\Authorization\AccessLevelEnum;
+use Ampache\Module\System\Update\Exception\UpdateFailedException;
+use Ampache\Module\System\Update\Exception\VersionNotUpdatableException;
+use Ampache\Module\System\Update\UpdaterInterface;
 use Ampache\Module\System\Update\Versions;
 use Ampache\Module\Util\Horde_Browser;
 use Ampache\Repository\Model\Plugin;
 use Ampache\Repository\Model\Preference;
+use Ampache\Repository\Model\UpdateInfoEnum;
 use Ampache\Repository\Model\User;
+use Ampache\Repository\UpdateInfoRepositoryInterface;
 use Exception;
 use PDOStatement;
 
@@ -46,6 +51,11 @@ final class InstallationHelper implements InstallationHelperInterface
         'catalogfavorites',
         'personalfav_display',
     ];
+
+    public function __construct(
+        private readonly UpdaterInterface $updater,
+        private readonly UpdateInfoRepositoryInterface $updateInfoRepository,
+    ) {}
 
     /**
      * This takes an array of results and re-generates the config file
@@ -607,17 +617,14 @@ final class InstallationHelper implements InstallationHelperInterface
             }
         }
 
+        if (!$this->migrateSeedSchema()) {
+            return false;
+        }
+
         // Apply the default preferences from the application rather than the SQL dump so a fresh and rebuild the user_preference rows
         // (including the -1 system defaults new users inherit);
         Preference::set_defaults();
         Preference::translate_db();
-
-        // Stamp the schema at the current migration version.
-        // An old db_version and the updater would try to replay every migration on top of it.
-        Dba::write(
-            "REPLACE INTO `update_info` SET `key` = 'db_version', `value` = ?;",
-            [(string) Versions::MAXIMUM_UPDATABLE_VERSION]
-        );
 
         // If they've picked something other than English update default preferences
         if (AmpConfig::get('lang', 'en_US') != 'en_US') {
@@ -730,6 +737,48 @@ final class InstallationHelper implements InstallationHelperInterface
     private function escape_ini(string $str): string
     {
         return str_replace('"', '\"', $str);
+    }
+
+    /**
+     * Brings a freshly loaded `ampache.sql` up to the current migration version.
+     *
+     * The dump is a hand-maintained snapshot that declares the version it was taken at in `update_info`, so anything
+     * added after that snapshot is applied here as a normal migration. Stamping the schema at
+     * `Versions::MAXIMUM_UPDATABLE_VERSION` instead would assert a version the file does not actually contain, and any
+     * migration newer than the dump would be skipped forever because the updater would see nothing pending.
+     */
+    private function migrateSeedSchema(): bool
+    {
+        $seedVersion = (int) $this->updateInfoRepository->getValueByKey(UpdateInfoEnum::DB_VERSION);
+
+        // Tables were not created from the dump, so there is no snapshot to migrate and the schema in place is assumed
+        // to already match the code; record the current version rather than replaying every migration against it.
+        if ($seedVersion === 0) {
+            $this->updateInfoRepository->setValue(
+                UpdateInfoEnum::DB_VERSION,
+                (string) Versions::MAXIMUM_UPDATABLE_VERSION
+            );
+
+            return true;
+        }
+
+        if ($seedVersion >= Versions::MAXIMUM_UPDATABLE_VERSION) {
+            return true;
+        }
+
+        try {
+            $this->updater->update();
+        } catch (UpdateFailedException|VersionNotUpdatableException) {
+            AmpError::add(
+                'general',
+                /* HINT: Database version number */
+                sprintf(T_('Unable to update the database schema from version %s'), $seedVersion)
+            );
+
+            return false;
+        }
+
+        return true;
     }
 
     /**

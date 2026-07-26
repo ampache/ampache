@@ -50,4 +50,11 @@ interface LiveStreamRepositoryInterface
      * Finds a single item by its id
      */
     public function findById(int $objectId): ?Live_Stream;
+
+    /**
+     * Saves the item, inserting it when it is new
+     *
+     * Returns the id of a newly created item, null when an existing one was updated
+     */
+    public function persist(Live_Stream $liveStream): ?int;
 }

@@ -33,6 +33,16 @@ use Ampache\Plugin\PluginEnum;
 
 class Plugin
 {
+    /**
+     * Installed plugin versions, keyed `Plugin_<name>`, or null when not yet loaded
+     *
+     * A plain static rather than `database_object`'s cache, which is a no-op unless `memory_cache` is
+     * enabled — and it is commented out by default, so this read ran once per plugin per page.
+     *
+     * @var array<string, string>|null
+     */
+    private static ?array $_version_cache = null;
+
     public ?AmpachePlugin $_plugin = null;
     public ?string $name           = null;
 
@@ -62,23 +72,19 @@ class Plugin
      */
     public static function get_plugin_version(string $plugin_name): int
     {
-        $name = 'Plugin_' . $plugin_name;
-        if (database_object::is_cached('plugin_version_update_info', 1)) {
-            $cache = database_object::get_from_cache('plugin_version_update_info', 1);
+        if (self::$_version_cache === null) {
+            // only `Plugin_` keys are ever looked up here, so the rest of update_info stays on the server
+            $db_results = Dba::read("SELECT `key`, `value` FROM `update_info` WHERE `key` LIKE 'Plugin\_%';");
 
-            return (int) ($cache[$name] ?? 0);
-        }
-        $sql        = "SELECT `key`, `value` FROM `update_info`;";
-        $db_results = Dba::read($sql, [$name]);
+            $results = [];
+            while ($row = Dba::fetch_assoc($db_results)) {
+                $results[$row['key']] = $row['value'];
+            }
 
-        $results=[];
-        while ($row = Dba::fetch_assoc($db_results)) {
-            $results[$row['key']] = $row['value'];
+            self::$_version_cache = $results;
         }
 
-        database_object::add_to_cache('plugin_version_update_info', 1, $results);
-
-        return (int) ($results[$name] ?? 0);
+        return (int) (self::$_version_cache['Plugin_' . $plugin_name] ?? 0);
     }
 
     /**
@@ -311,7 +317,7 @@ class Plugin
         $name = Dba::escape('Plugin_' . $this->_plugin->name);
         $sql  = sprintf('DELETE FROM `update_info` WHERE `key`=\'%s\'', $name);
         Dba::write($sql);
-        database_object::remove_from_cache('plugin_version_update_info', 1);
+        self::$_version_cache = null;
     }
 
     /**
@@ -329,7 +335,7 @@ class Plugin
 
         $sql = "REPLACE INTO `update_info` SET `key` = ?, `value` = ?";
         Dba::write($sql, [$name, $version]);
-        database_object::remove_from_cache('plugin_version_update_info', 1);
+        self::$_version_cache = null;
     }
 
     /**

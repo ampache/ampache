@@ -248,6 +248,18 @@ export function NavigateTo(url) {
     navigateToUrl(url);
 }
 
+export function appendDeleteBurl(link) {
+    if (!/\/(song|albums|artists|video|labels|podcast_episode|podcast)\.php\?[^#]*\baction=delete\b/.test(link) || /[?&]burl=/.test(link)) {
+        return link;
+    }
+    var origin = getCurrentPage();
+    if (!origin) {
+        return link;
+    }
+
+    return link + "&burl=" + encodeURIComponent(origin);
+}
+
 export function getCurrentPage() {
     // the lightbox writes #prettyPhoto into the hash; that is not a page to come back to
     if (window.location.hash === "#prettyPhoto") {

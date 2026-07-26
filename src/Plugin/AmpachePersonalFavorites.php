@@ -33,6 +33,7 @@ use Ampache\Repository\Model\Playlist;
 use Ampache\Repository\Model\Plugin;
 use Ampache\Repository\Model\Preference;
 use Ampache\Repository\Model\Search;
+use Ampache\Repository\Model\Smartlist;
 use Ampache\Repository\Model\User;
 use Override;
 
@@ -90,7 +91,7 @@ class AmpachePersonalFavorites extends AmpachePlugin implements PluginDisplayHom
             }
 
             foreach (explode(',', $this->smartlist) as $list_id) {
-                $smartlist = new Search((int) $list_id);
+                $smartlist = new Smartlist((int) $list_id);
                 if ($smartlist->isNew() === false) {
                     $list_array[] = [$smartlist, 'search'];
                 }

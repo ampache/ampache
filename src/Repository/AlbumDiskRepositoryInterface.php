@@ -31,9 +31,39 @@ use Ampache\Repository\Model\AlbumDisk;
 interface AlbumDiskRepositoryInterface
 {
     /**
+     * Returns the id of the matching disk, creating or moving it when needed
+     *
+     * Pass $currentId to move an existing row rather than create a second; 0 means nothing was written.
+     */
+    public function check(
+        int $albumId,
+        int $disk,
+        int $catalogId,
+        ?string $disksubtitle = null,
+        ?int $currentId = null,
+    ): int;
+
+    /**
+     * Loads a single album-disk, or null when the id matches nothing
+     */
+    public function findById(int $objectId): ?AlbumDisk;
+
+    /**
+     * Returns the number of distinct artists mapped to the disk's album
+     */
+    public function getArtistCount(AlbumDisk $albumDisk): int;
+
+    /**
      * Returns the disks for an album
      *
      * @return list<AlbumDisk>
      */
     public function getByAlbum(Album $album): array;
+
+    /**
+     * Returns the ids of every song on the disk
+     *
+     * @return int[]
+     */
+    public function getSongs(AlbumDisk $albumDisk): array;
 }

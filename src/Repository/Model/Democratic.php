@@ -409,7 +409,7 @@ class Democratic extends Tmp_Playlist
         // If nothing was found and this is a voting playlist then get from base_playlist
         if ($this->base_playlist !== 0) {
             $base_playlist = ($use_search)
-                ? new Search($this->base_playlist)
+                ? new Smartlist($this->base_playlist)
                 : new Playlist($this->base_playlist);
             $data = $base_playlist->get_random_items('1');
 

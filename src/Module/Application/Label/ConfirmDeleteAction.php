@@ -31,6 +31,7 @@ use Ampache\Module\Application\ApplicationActionInterface;
 use Ampache\Module\Application\Exception\AccessDeniedException;
 use Ampache\Module\Authorization\GuiGatekeeperInterface;
 use Ampache\Module\Label\Deletion\LabelDeleterInterface;
+use Ampache\Module\Util\DeletionUrlResolverInterface;
 use Ampache\Module\Util\UiInterface;
 use Ampache\Repository\LabelRepositoryInterface;
 use Ampache\Repository\Model\Catalog;
@@ -46,6 +47,7 @@ final readonly class ConfirmDeleteAction implements ApplicationActionInterface
         private UiInterface $ui,
         private LabelDeleterInterface $labelDeleter,
         private LabelRepositoryInterface $labelRepository,
+        private DeletionUrlResolverInterface $deletionUrlResolver,
     ) {}
 
     public function run(ServerRequestInterface $request, GuiGatekeeperInterface $gatekeeper): ?ResponseInterface
@@ -75,13 +77,24 @@ final readonly class ConfirmDeleteAction implements ApplicationActionInterface
             );
         }
 
+        // A label has no parent object, so leaving its own page can only fall back to the label browser.
+        $webPath     = $this->configContainer->getWebPath();
+        $burlParam   = (string) ($body['burl'] ?? '');
+        $continueUrl = $this->deletionUrlResolver->resolveContinueUrl(
+            $this->deletionUrlResolver->resolveBurl($burlParam),
+            'label',
+            $labelId,
+            '',
+            sprintf('%s/browse.php?action=label', $webPath)
+        );
+
         $this->labelDeleter->delete($label);
 
         $this->ui->showHeader();
         $this->ui->showConfirmation(
             T_('No Problem'),
             T_('The Label has been deleted'),
-            $this->configContainer->getWebPath()
+            $continueUrl
         );
         $this->ui->showQueryStats();
         $this->ui->showFooter();

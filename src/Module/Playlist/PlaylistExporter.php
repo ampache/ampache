@@ -32,6 +32,7 @@ use Ampache\Repository\Model\Browse;
 use Ampache\Repository\Model\Catalog;
 use Ampache\Repository\Model\Playlist;
 use Ampache\Repository\Model\Search;
+use Ampache\Repository\Model\Smartlist;
 use Ampache\Repository\Model\User;
 
 final class PlaylistExporter implements PlaylistExporterInterface
@@ -91,7 +92,7 @@ final class PlaylistExporter implements PlaylistExporterInterface
                 foreach ($ids as $playlist_id) {
                     $playlist = ($user->id !== 0)
                         ? new Search((int) $playlist_id, 'song', $user)
-                        : new Search((int) $playlist_id);
+                        : new Smartlist((int) $playlist_id);
                     if ($playlist->isNew() === false) {
                         $items[] = $playlist;
                     }

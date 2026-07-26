@@ -40,9 +40,23 @@ You can downgrade to Ampache7 if you try this out and have issues, using the cli
   * New database tables `folder` and `folder_map`
   * New database tables `object_count_summary` and `object_count_archive`
   * `folder` added to the `object_type` enum on several tables (`cache_object_count`, `cache_object_count_run`, `image`, `object_count`, and others)
+  * New `user`.`subsonic_secret` column holding the per-user Subsonic password
+* Subsonic
+  * New per-user **Subsonic Password** set from the account page, the admin user edit page, or `bin/cli admin:updateUser <username> --subsonic <password>`, so Subsonic token auth works without pasting your API key into a music player
+  * It is stored encrypted with `secret_key` instead of hashed, because Subsonic token auth requires the server to recompute `md5(password + salt)`; changing `secret_key` invalidates every stored Subsonic Password
+  * The API key keeps working as the Subsonic password for both token and plaintext auth, so existing clients do not need reconfiguring
 * API
   * v8 API responses are now fully documented: `docs/openapi.json` carries response schemas for every data type, and `docs/API-JSON-methods.md`/`docs/API-XML-methods.md` show per-method response field tables (type, nullable, optional)
   * Album disks are available to API8 clients (`album_disks`, `album_disk`, `album_disk_songs`, plus `index`, `list`, `browse`, `stats` and `get_art` support). With the `album_group` preference disabled the web interface browses album disks, and until now the API had no way to reach them
+* CLI
+  * New `admin:exportSchema` command regenerates `resources/sql/ampache.sql` from a clean install; it refuses to run against a database with pending updates
+  * New user commands `admin:deleteUser`, `admin:enableUser` and `admin:disableUser`
+  * New catalog commands `run:deleteCatalog`, `run:enableCatalog` and `run:disableCatalog`
+  * New `cleanup:enableDisabled` command re-enables all disabled songs
+  * New `export:catalog` command writes iTunes/CSV catalog metadata to a file
+  * New module commands `admin:listModules`, `admin:installPlugin`, `admin:uninstallPlugin`, `admin:upgradePlugin`, `admin:installCatalogType`, `admin:uninstallCatalogType`, `admin:installLocalplay` and `admin:uninstallLocalplay`, backed by a shared `PluginManager` service the web module pages now use too
+  * New `admin:mailUsers` command sends an e-mail to a user group (`all`, `users`, `admins`, `inactive`) via a shared `BulkMailer` service
+  * New `admin:clearCache` command clears the perpetual API sessions (and per-process object caches), and `show:debug` prints a headless system/environment status report
 * Testing
   * Test suite significantly expanded with dozens of new test files under `tests/Module` and `tests/Repository`
 * Playlist art mosaic
@@ -51,7 +65,7 @@ You can downgrade to Ampache7 if you try this out and have issues, using the cli
 * Transcoding
   * Per-user output-format preferences under Streaming -> Transcoding: `encode_target`, `encode_video_target`, `encode_player_webplayer_target` and `encode_player_api_target` (explicit `format=` requests always take priority)
   * Per-user dynamic downsampling with new `max_bit_rate`/`min_bit_rate` preferences
-  * Per-format bitrate overrides with the new `transcode_bitrate_formats` preference, so a user can set (for example) a lower bitrate for `opus` than for `mp3`; formats without an override use `transcode_bitrate`
+  * Per-player bitrate overrides with the new `transcode_bitrate_webplayer` and `transcode_bitrate_api` preferences; either left at `0` uses the default `transcode_bitrate`
   * New ReplayGain output profiles `mp3_rg`, `mp3_car`, `opus_rg` and `opus_car`, plus a fragmented-MP4 `m4a` profile; `_rg`/`_car` output is never written to the transcode cache
 * Config version 91
   * New `encode_args_mp3_rg`, `encode_args_mp3_car`, `encode_args_opus_rg` and `encode_args_opus_car` transcode commands; `encode_args_m4a` now produces a fragmented MP4
@@ -152,6 +166,7 @@ You can downgrade to Ampache7 if you try this out and have issues, using the cli
   * `musicFolderId` was ignored by `getStarred`, `getStarred2` and `getSongsByGenre`
   * `musicFolderId` was ignored by `getAlbumList`/`getAlbumList2` for the `random`, `highest`, `frequent`, `recent`, `starred`, `byYear` and `byGenre` types
   * A `musicFolderId` naming a catalog the user can't browse returned everything instead of nothing
+* User avatars requested through a `/play/art/{sid}/user/{id}/...` url were always denied when `public_images` is disabled, because the `user` rewrite rules dropped the `auth` parameter that the other art rules pass on
 
 ## Ampache 7.10.0
 

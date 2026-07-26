@@ -53,7 +53,7 @@ final readonly class RefreshPlaylistAction implements ApplicationActionInterface
             // Check rights
             $user     = $this->modelFactory->createUser((int) $userId);
             $playlist = $this->modelFactory->createPlaylist((int) $playlistId);
-            $search   = $this->modelFactory->createSearch((int) $searchId, 'song', $user);
+            $search   = $this->modelFactory->createSmartlist((int) $searchId, $user);
             $objects  = $search->get_items();
             if ($playlist->has_access() && $objects !== []) {
                 $playlist->delete_all();

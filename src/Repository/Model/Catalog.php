@@ -4713,9 +4713,7 @@ abstract class Catalog extends database_object
             $songs[] = (int) $row['id'];
         }
 
-        if (AmpConfig::get('memory_cache', false)) {
-            Song::build_cache($songs);
-        }
+        Song::build_cache($songs);
 
         foreach ($songs as $song_id) {
             $results[] = new Song($song_id);

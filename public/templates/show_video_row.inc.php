@@ -139,7 +139,7 @@ if (Access::check(AccessTypeEnum::INTERFACE, AccessLevelEnum::CONTENT_MANAGER)) 
 <?php
 }
 if (Catalog::can_remove($libitem)) { ?>
-    <a id="<?php echo 'delete_video_' . $libitem->id; ?>" href="<?php echo $web_path; ?> /video.php?action=delete&video_id=<?php echo $libitem->id; ?>">
+    <a id="<?php echo 'delete_video_' . $libitem->id; ?>" href="<?php echo $web_path; ?>/video.php?action=delete&video_id=<?php echo $libitem->id; ?>">
         <?php echo Ui::get_material_symbol('close', T_('Delete')); ?>
     </a>
 <?php } ?>

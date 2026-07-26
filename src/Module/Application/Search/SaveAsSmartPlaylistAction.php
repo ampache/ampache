@@ -54,7 +54,7 @@ final readonly class SaveAsSmartPlaylistAction implements ApplicationActionInter
 
         $this->ui->showHeader();
 
-        $playlist = $this->modelFactory->createSearch();
+        $playlist = $this->modelFactory->createSmartlist();
         $playlist->set_rules($_REQUEST);
         $playlist->create();
 

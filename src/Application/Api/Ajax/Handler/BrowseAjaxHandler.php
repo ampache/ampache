@@ -168,7 +168,7 @@ final readonly class BrowseAjaxHandler implements AjaxHandlerInterface
                         $key = 'playlist_row_' . $playlist->id;
                         break;
                     case 'smartplaylist':
-                        $playlist = $this->modelFactory->createSearch((int) Core::get_request('id'));
+                        $playlist = $this->modelFactory->createSmartlist((int) Core::get_request('id'));
                         if (!$playlist->has_access()) {
                             return;
                         }

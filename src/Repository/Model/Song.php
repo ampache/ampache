@@ -49,6 +49,7 @@ use Ampache\Repository\LicenseRepositoryInterface;
 use Ampache\Repository\MetadataRepositoryInterface;
 use Ampache\Repository\ShareRepositoryInterface;
 use Ampache\Repository\ShoutRepositoryInterface;
+use Ampache\Repository\SongRepositoryInterface;
 use Ampache\Repository\WantedRepositoryInterface;
 use DateTime;
 use DateTimeInterface;
@@ -63,6 +64,13 @@ class Song extends database_object implements
     MetadataEnabledInterface
 {
     protected const string DB_TABLENAME = 'song';
+
+    /**
+     * Uploader per song id, so a multi-column save resolves ownership once instead of per column
+     *
+     * @var array<int, int|false|null>
+     */
+    private static array $_owner_cache = [];
 
     public ?int $addition_time       = null;
     public int $album                = 0;
@@ -175,6 +183,11 @@ class Song extends database_object implements
     public static function build_cache(array $song_ids, string $limit_threshold = ''): bool
     {
         if (empty($song_ids)) {
+            return false;
+        }
+
+        // with the cache off these rows are discarded and the per-object queries still run, so this is a net loss
+        if (!database_object::isCacheEnabled()) {
             return false;
         }
 
@@ -1061,7 +1074,7 @@ class Song extends database_object implements
      */
     public static function update_composer(string $new_composer, int $song_id): void
     {
-        self::_update_item('composer', $new_composer, $song_id, AccessLevelEnum::CONTENT_MANAGER, true);
+        self::_update_item('composer', $new_composer, $song_id, AccessLevelEnum::CONTENT_MANAGER, true, true);
     }
 
     /**
@@ -1291,22 +1304,43 @@ class Song extends database_object implements
     }
 
     /**
+     * Downgrades the required access level to USER when the current user uploaded the song
+     *
+     * The owner is resolved once per song per request: this used to build a whole `Song`, whose
+     * `get_info()` is a three-way join, for every single column a save touched.
+     */
+    private static function _ownerLevel(int $song_id, AccessLevelEnum $level): AccessLevelEnum
+    {
+        if (!array_key_exists($song_id, self::$_owner_cache)) {
+            self::$_owner_cache[$song_id] = self::getSongRepository()->findOwnerId($song_id);
+        }
+
+        $ownerId = self::$_owner_cache[$song_id];
+
+        // false is "no such song", which is what the old `$item->id` guard tested before comparing
+        return ($ownerId !== false && $ownerId == Core::get_global('user')?->id)
+            ? AccessLevelEnum::USER
+            : $level;
+    }
+
+    /**
      * _update_ext_item
      * This updates a song record that is housed in the song_ext_info table
      * These are items that aren't used normally, and often large/informational only
      */
     private static function _update_ext_item(string $field, string $value, int $song_id, AccessLevelEnum $level, bool $check_owner = false): void
     {
-        if ($check_owner) {
-            $item = new Song($song_id);
-            if ($item->id && Core::get_global('user') instanceof User && $item->get_user_owner() == Core::get_global('user')->id) {
-                $level = AccessLevelEnum::USER;
-            }
+        if ($check_owner && Core::get_global('user') instanceof User) {
+            $level = self::_ownerLevel($song_id, $level);
         }
 
-        if (Access::check(AccessTypeEnum::INTERFACE, $level)) {
-            $sql = sprintf('UPDATE `song_data` SET `%s` = ? WHERE `song_id` = ?', $field);
-            Dba::write($sql, [$value, $song_id]) !== null;
+        if (!Access::check(AccessTypeEnum::INTERFACE, $level)) {
+            return;
+        }
+
+        $column = SongDataFieldEnum::tryFrom($field);
+        if ($column !== null) {
+            self::getSongRepository()->setDataField($song_id, $column, $value);
         }
     }
 
@@ -1317,16 +1351,10 @@ class Song extends database_object implements
      * against Core::get_global('user') to make sure they are allowed to update this record
      * it then updates it and sets $this->{$field} to the new value
      */
-    private static function _update_item(string $field, int|string|null $value, int $song_id, AccessLevelEnum $level, bool $check_owner = false): bool
+    private static function _update_item(string $field, int|string|null $value, int $song_id, AccessLevelEnum $level, bool $check_owner = false, bool $allow_null = false): bool
     {
         if ($check_owner && Core::get_global('user') instanceof User) {
-            $item = new Song($song_id);
-            if (
-                $item->id
-                && $item->get_user_owner() == Core::get_global('user')->id
-            ) {
-                $level = AccessLevelEnum::USER;
-            }
+            $level = self::_ownerLevel($song_id, $level);
         }
 
         /* Check them Rights! */
@@ -1335,13 +1363,20 @@ class Song extends database_object implements
         }
 
         /* Can't update to blank */
-        if (!strlen(trim((string) $value)) && $field != 'comment') {
+        if (!$allow_null && !strlen(trim((string) $value))) {
             return false;
         }
 
-        $sql = sprintf('UPDATE `song` SET `%s` = ? WHERE `id` = ?', $field);
+        $column = SongFieldEnum::tryFrom($field);
+        if ($column === null) {
+            return false;
+        }
 
-        return (Dba::write($sql, [$value, $song_id]) !== null);
+        if ($column === SongFieldEnum::USER_UPLOAD) {
+            unset(self::$_owner_cache[$song_id]);
+        }
+
+        return self::getSongRepository()->setField($song_id, $column, $value);
     }
 
     /**
@@ -1362,6 +1397,16 @@ class Song extends database_object implements
         global $dic;
 
         return $dic->get(ShoutRepositoryInterface::class);
+    }
+
+    /**
+     * @deprecated inject dependency
+     */
+    private static function getSongRepository(): SongRepositoryInterface
+    {
+        global $dic;
+
+        return $dic->get(SongRepositoryInterface::class);
     }
 
     /**
@@ -2146,8 +2191,8 @@ class Song extends database_object implements
             $transcode_type = ($file_target !== null && is_file($file_target))
                 ? $cache_target
                 : Stream::get_transcode_format($this->type, null, $player);
-            // the bitrate depends on the format we settled on
-            $bitrate = Stream::get_format_bitrate($transcode_type);
+            // the rate advertised here follows the player, which may carry an override of the user's default rate
+            $bitrate = Stream::get_player_bitrate($player);
             if (
                 $transcode_type !== null
                 && $transcode_type !== ''
@@ -2287,6 +2332,8 @@ class Song extends database_object implements
      * update
      * This takes a key'd array of data does any cleaning it needs to
      * do and then calls the helper functions as needed.
+     *
+     * Values arriving from a request are all strings, so each one is cast to the type its own setter declares.
      */
     public function update(array $data): int
     {
@@ -2296,7 +2343,7 @@ class Song extends database_object implements
                 case 'artist_name':
                     // Create new artist name and id
                     $old_artist_id = $this->artist;
-                    $new_artist_id = (int) Artist::check($value);
+                    $new_artist_id = (int) Artist::check((string) $value);
                     if ($new_artist_id > 0) {
                         $this->artist = $new_artist_id;
                         self::update_artist($new_artist_id, $this->id, $old_artist_id);
@@ -2305,7 +2352,7 @@ class Song extends database_object implements
                 case 'album_name':
                     // Create new album name and id
                     $old_album_id = $this->album;
-                    $new_album_id = Album::check($this->catalog, $value);
+                    $new_album_id = Album::check($this->catalog, (string) $value);
                     $this->album  = $new_album_id;
                     self::update_album($new_album_id, $this->id, $old_album_id);
                     break;
@@ -2313,7 +2360,7 @@ class Song extends database_object implements
                     // Change artist the song is assigned to
                     if ($value != $this->$key) {
                         $old_artist_id = $this->artist;
-                        $new_artist_id = $value;
+                        $new_artist_id = (int) $value;
                         self::update_artist($new_artist_id, $this->id, $old_artist_id);
                     }
                     break;
@@ -2321,7 +2368,7 @@ class Song extends database_object implements
                     // Change album the song is assigned to
                     if ($value != $this->$key) {
                         $old_album_id = $this->$key;
-                        $new_album_id = $value;
+                        $new_album_id = (int) $value;
                         self::update_album($new_album_id, $this->id, $old_album_id);
                     }
                     break;
@@ -2329,51 +2376,99 @@ class Song extends database_object implements
                     // Check to see if it needs to be updated
                     if ($value != $this->disk) {
                         // create the album_disk (if missing)
-                        AlbumDisk::check($this->album, $value, $this->catalog, $this->get_album_disk_subtitle());
+                        $new_disk = (int) $value;
+                        AlbumDisk::check($this->album, $new_disk, $this->catalog, $this->get_album_disk_subtitle());
 
-                        self::update_disk($value, $this->id);
-                        $this->disk = $value;
+                        self::update_disk($new_disk, $this->id);
+                        $this->disk = $new_disk;
                     }
                     break;
                 case 'bitrate':
+                    if ($value != $this->bitrate) {
+                        self::update_bitrate((int) $value, $this->id);
+                        $this->setUpdatedFieldValue($key, $value);
+                    }
+                    break;
                 case 'comment':
+                    if ($value != $this->comment) {
+                        self::update_comment((string) $value, $this->id);
+                        $this->setUpdatedFieldValue($key, $value);
+                    }
+                    break;
                 case 'composer':
+                    if ($value != $this->composer) {
+                        self::update_composer((string) $value, $this->id);
+                        $this->setUpdatedFieldValue($key, $value);
+                    }
+                    break;
                 case 'label':
+                    if ($value != $this->label) {
+                        self::update_label((string) $value, $this->id);
+                        $this->setUpdatedFieldValue($key, $value);
+                    }
+                    break;
                 case 'language':
+                    if ($value != $this->language) {
+                        self::update_language((string) $value, $this->id);
+                        $this->setUpdatedFieldValue($key, $value);
+                    }
+                    break;
                 case 'license':
+                    if ($value != $this->license) {
+                        self::update_license((int) $value, $this->id);
+                        $this->setUpdatedFieldValue($key, $value);
+                    }
+                    break;
                 case 'mbid':
+                    if ($value != $this->mbid) {
+                        self::update_mbid((string) $value, $this->id);
+                        $this->setUpdatedFieldValue($key, $value);
+                    }
+                    break;
                 case 'mode':
+                    if ($value != $this->mode) {
+                        self::update_mode((string) $value, $this->id);
+                        $this->setUpdatedFieldValue($key, $value);
+                    }
+                    break;
                 case 'rate':
+                    if ($value != $this->rate) {
+                        self::update_rate((int) $value, $this->id);
+                        $this->setUpdatedFieldValue($key, $value);
+                    }
+                    break;
                 case 'size':
+                    if ($value != $this->size) {
+                        self::update_size((int) $value, $this->id);
+                        $this->setUpdatedFieldValue($key, $value);
+                    }
+                    break;
                 case 'title':
+                    if ($value != $this->title) {
+                        self::update_title((string) $value, $this->id);
+                        $this->setUpdatedFieldValue($key, $value);
+                    }
+                    break;
                 case 'track':
+                    if ($value != $this->track) {
+                        self::update_track((int) $value, $this->id);
+                        $this->setUpdatedFieldValue($key, $value);
+                    }
+                    break;
                 case 'user_upload':
+                    if ($value != $this->user_upload) {
+                        self::update_user_upload((int) $value, $this->id);
+                        $this->setUpdatedFieldValue($key, $value);
+                    }
+                    break;
                 case 'year':
-                    // Check to see if it needs to be updated
-                    if ($value != $this->$key) {
-                        /**
-                         * @see self::update_year()
-                         * @see self::update_title()
-                         * @see self::update_track()
-                         * @see self::update_user_upload()
-                         * @see self::update_mbid()
-                         * @see self::update_license()
-                         * @see self::update_composer()
-                         * @see self::update_label()
-                         * @see self::update_language()
-                         * @see self::update_comment()
-                         * @see self::update_bitrate()
-                         * @see self::update_rate()
-                         * @see self::update_mode()
-                         * @see self::update_size()
-                         */
-                        $function = 'update_' . $key;
-                        self::$function($value, $this->id);
+                    if ($value != $this->year) {
+                        self::update_year((int) $value, $this->id);
                         $this->setUpdatedFieldValue($key, $value);
                     }
                     break;
                 case 'edit_tags':
-                    Tag::update_tag_list($value, 'song', $this->id, true);
+                    Tag::update_tag_list((string) $value, 'song', $this->id, true);
                     $this->tags = Tag::get_top_tags('song', $this->id);
                     break;
                 case 'metadata':

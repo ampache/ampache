@@ -26,6 +26,7 @@ declare(strict_types=1);
 namespace Ampache\Repository;
 
 use Ampache\Repository\Model\Folder;
+use Ampache\Repository\Model\LibraryItemEnum;
 use Ampache\Repository\Model\Podcast_Episode;
 use Ampache\Repository\Model\Song;
 use Ampache\Repository\Model\Video;
@@ -55,13 +56,56 @@ interface FolderRepositoryInterface
     public function getByPathName(string $folderPath, int $catalogId = 0, ?string $parentPath = null): ?Folder;
 
     /**
+     * Returns the direct children of a folder. Pass null for the virtual root.
+     *
+     * @return array<int, array{object_type: LibraryItemEnum, object_id: int}>
+     */
+    public function getChildren(?int $folderId): array;
+
+    /**
      * Return the number of entries in the database...
      */
     public function getItemCount(): int;
 
+    /**
+     * Returns everything below a folder, optionally narrowed to a single type
+     *
+     * @return array<int, array{object_type: LibraryItemEnum, object_id: int}>
+     */
+    public function getMedias(Folder $folder, ?string $filterType = null): array;
+
+    /**
+     * Returns a folder's own name, null when there is no such folder
+     */
+    public function getNameById(int $folderId): ?string;
+
+    /**
+     * Returns the contents of a folder. Pass null for the virtual root.
+     *
+     * @return array<int, array{object_type: LibraryItemEnum, object_id: int}>
+     */
+    public function getObjects(?int $folderId): array;
+
+    /**
+     * Whether the folder has any mapped children
+     */
+    public function hasChildren(int $folderId): bool;
+
     public function lookup(string $folderName, int $catalogId = 0, ?int $parent_id = null): int;
 
     public function lookupByPathName(string $folderPath, int $catalogId = 0): int;
+
+    /**
+     * Moves every folder_map row of the given type from one object onto another
+     */
+    public function migrateObject(string $objectType, int $oldObjectId, int $newObjectId): void;
+
+    /**
+     * Saves the folder, inserting it when it is new
+     *
+     * Returns the id of a newly created folder, null when an existing one was updated
+     */
+    public function persist(Folder $folder): ?int;
 
     /**
      * Update folder counts columns after large actions

@@ -141,6 +141,8 @@ $talFactory = $dic->get(TalFactoryInterface::class);
 $guiFactory = $dic->get(GuiFactoryInterface::class);
 $gatekeeper = $dic->get(GatekeeperFactoryInterface::class)->createGuiGatekeeper();
 
+Song::build_cache($object_ids);
+
 foreach ($object_ids as $song_id) {
     $libitem = new Song($song_id);
     if ($libitem->isNew()) {

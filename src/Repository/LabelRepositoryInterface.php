@@ -49,11 +49,30 @@ interface LabelRepositoryInterface
     public function getAll(): array;
 
     /**
+     * Returns the ids of every artist associated with the label
+     *
+     * @return int[]
+     */
+    public function getArtists(Label $label): array;
+
+    /**
      * @return string[]
      */
     public function getByArtist(int $artistId): array;
 
     public function lookup(string $labelName, int $labelId = 0): int;
+
+    /**
+     * Moves every artist association from one artist onto another
+     */
+    public function migrateArtist(int $oldArtistId, int $newArtistId): void;
+
+    /**
+     * Saves the label, inserting it when it is new
+     *
+     * Returns the id of a newly created label, null when an existing one was updated
+     */
+    public function persist(Label $label): ?int;
 
     public function removeArtistAssoc(int $labelId, int $artistId): void;
 }

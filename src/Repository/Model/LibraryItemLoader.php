@@ -25,11 +25,14 @@ declare(strict_types=1);
 
 namespace Ampache\Repository\Model;
 
+use Ampache\Repository\AlbumDiskRepositoryInterface;
+use Ampache\Repository\BroadcastRepositoryInterface;
 use Ampache\Repository\FolderRepositoryInterface;
 use Ampache\Repository\LabelRepositoryInterface;
 use Ampache\Repository\LiveStreamRepositoryInterface;
 use Ampache\Repository\PodcastEpisodeRepositoryInterface;
 use Ampache\Repository\PodcastRepositoryInterface;
+use Ampache\Repository\VideoRepositoryInterface;
 use Psr\Container\ContainerInterface;
 
 /**
@@ -64,10 +67,10 @@ final readonly class LibraryItemLoader implements LibraryItemLoaderInterface
     ): ?library_item {
         $object = match ($objectType) {
             LibraryItemEnum::ALBUM => new Album($objectId),
-            LibraryItemEnum::ALBUM_DISK => new AlbumDisk($objectId),
+            LibraryItemEnum::ALBUM_DISK => $this->dic->get(AlbumDiskRepositoryInterface::class)->findById($objectId),
             LibraryItemEnum::ART => new Art($objectId),
             LibraryItemEnum::ARTIST => new Artist($objectId),
-            LibraryItemEnum::BROADCAST => new Broadcast($objectId),
+            LibraryItemEnum::BROADCAST => $this->dic->get(BroadcastRepositoryInterface::class)->findById($objectId),
             LibraryItemEnum::DEMOCRATIC => new Democratic($objectId),
             LibraryItemEnum::FOLDER => $this->dic->get(FolderRepositoryInterface::class)->findById($objectId),
             LibraryItemEnum::LABEL => $this->dic->get(LabelRepositoryInterface::class)->findById($objectId),
@@ -75,11 +78,11 @@ final readonly class LibraryItemLoader implements LibraryItemLoaderInterface
             LibraryItemEnum::PLAYLIST => new Playlist($objectId),
             LibraryItemEnum::PODCAST => $this->dic->get(PodcastRepositoryInterface::class)->findById($objectId),
             LibraryItemEnum::PODCAST_EPISODE => $this->dic->get(PodcastEpisodeRepositoryInterface::class)->findById($objectId),
-            LibraryItemEnum::SEARCH => new Search($objectId),
+            LibraryItemEnum::SEARCH => new Smartlist($objectId),
             LibraryItemEnum::SONG => new Song($objectId),
             LibraryItemEnum::SONG_PREVIEW => new Song_Preview($objectId),
             LibraryItemEnum::TAG_HIDDEN, LibraryItemEnum::TAG => new Tag($objectId),
-            LibraryItemEnum::VIDEO => new Video($objectId),
+            LibraryItemEnum::VIDEO => $this->dic->get(VideoRepositoryInterface::class)->findById($objectId),
         };
 
         if (!($object?->isNew())) {

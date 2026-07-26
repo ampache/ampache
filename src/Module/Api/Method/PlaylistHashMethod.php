@@ -82,7 +82,7 @@ final class PlaylistHashMethod implements MethodInterface
 
         // a zero id means it is a smartlist, which lives in the search table
         $playlist = ((int) $objectId === 0)
-            ? $this->modelFactory->createSearch((int) str_replace('smart_', '', $objectId), 'song', $user)
+            ? $this->modelFactory->createSmartlist((int) str_replace('smart_', '', $objectId), $user)
             : $this->modelFactory->createPlaylist((int) $objectId);
 
         if ($playlist->isNew()) {

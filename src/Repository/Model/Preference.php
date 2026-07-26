@@ -274,7 +274,8 @@ class Preference extends database_object
         'theme_color',
         'theme_name',
         'topmenu',
-        'transcode_bitrate_formats',
+        'transcode_bitrate_api',
+        'transcode_bitrate_webplayer',
         'transcode_bitrate',
         'transcode',
         'ui_fixed',
@@ -1127,7 +1128,7 @@ class Preference extends database_object
                     Dba::write($pref_sql, ['popular_threshold', '10', 'Popular Threshold', AccessLevelEnum::USER->value, 'integer', 'interface', 'query']);
                     break;
                 case 'transcode_bitrate':
-                    Dba::write($pref_sql, ['transcode_bitrate', '128', 'Transcode Bitrate', AccessLevelEnum::USER->value, 'string', 'streaming', 'transcoding']);
+                    Dba::write($pref_sql, ['transcode_bitrate', '128000', 'Transcode bitrate - Default', AccessLevelEnum::USER->value, 'integer', 'streaming', 'transcoding']);
                     break;
                 case 'site_title':
                     Dba::write($pref_sql, ['site_title', 'Ampache :: For the Love of Music', 'Website Title', AccessLevelEnum::ADMIN->value, 'string', 'interface', 'custom']);
@@ -1352,7 +1353,7 @@ class Preference extends database_object
                     Dba::write($pref_sql, ['disabled_custom_metadata_fields', '', 'Custom metadata - Disable these fields', AccessLevelEnum::ADMIN->value, 'string', 'system', 'metadata']);
                     break;
                 case 'disabled_custom_metadata_fields_input':
-                    Dba::write($pref_sql, ['disabled_custom_metadata_fields_input', '', 'Custom metadata - Define field list', AccessLevelEnum::ADMIN->value, 'string', 'system', 'metadata']);
+                    Dba::write($pref_sql, ['disabled_custom_metadata_fields_input', '', 'Custom metadata - Additional fields to disable', AccessLevelEnum::ADMIN->value, 'string', 'system', 'metadata']);
                     break;
                 case 'podcast_keep':
                     Dba::write($pref_sql, ['podcast_keep', '0', '# latest episodes to keep', AccessLevelEnum::ADMIN->value, 'integer', 'system', 'podcast']);
@@ -1529,7 +1530,7 @@ class Preference extends database_object
                     Dba::write($pref_sql, ['sidebar_order_information', '60', 'Custom CSS Order - Information', AccessLevelEnum::USER->value, 'integer', 'interface', 'sidebar']);
                     break;
                 case 'api_always_download':
-                    Dba::write($pref_sql, ['api_always_download', 'Force API streams to download. (Enable scrobble in your client to record stats)', '0', AccessLevelEnum::USER->value, 'boolean', 'options', 'api']);
+                    Dba::write($pref_sql, ['api_always_download', '0', 'Force API streams to download. (Enable scrobble in your client to record stats)', AccessLevelEnum::USER->value, 'boolean', 'options', 'api']);
                     break;
                 case 'external_links_google':
                     Dba::write($pref_sql, ['external_links_google', '1', 'Show Google search icon on library items', AccessLevelEnum::USER->value, 'boolean', 'interface', 'library']);
@@ -1618,8 +1619,11 @@ class Preference extends database_object
                 case 'min_bit_rate':
                     Dba::write($pref_sql, ['min_bit_rate', '8000', 'Minimum transcode bitrate for dynamic downsampling in bps', AccessLevelEnum::USER->value, 'integer', 'streaming', 'transcoding']);
                     break;
-                case 'transcode_bitrate_formats':
-                    Dba::write($pref_sql, ['transcode_bitrate_formats', '', 'Per-format transcode bitrate overrides in bps (falls back to Transcode Bitrate)', AccessLevelEnum::USER->value, 'bitrate_map', 'streaming', 'transcoding']);
+                case 'transcode_bitrate_webplayer':
+                    Dba::write($pref_sql, ['transcode_bitrate_webplayer', '0', 'Transcode bitrate - Web Player (overrides default)', AccessLevelEnum::USER->value, 'integer', 'streaming', 'transcoding']);
+                    break;
+                case 'transcode_bitrate_api':
+                    Dba::write($pref_sql, ['transcode_bitrate_api', '0', 'Transcode bitrate - API (overrides default)', AccessLevelEnum::USER->value, 'integer', 'streaming', 'transcoding']);
                     break;
                 case 'cron_cache_live_count':
                     Dba::write($pref_sql, ['cron_cache_live_count', '0', 'Add live plays to the cached count for accurate stats (Require: Cron Cache)', AccessLevelEnum::ADMIN->value, 'boolean', 'system', 'catalog']);
@@ -2007,7 +2011,7 @@ class Preference extends database_object
             'demo_clear_sessions' => 'Democratic - Clear votes for expired user sessions',
             'demo_use_search' => 'Democratic - Use smartlists for base playlist',
             'direct_play_limit' => 'Limit direct play to maximum media count',
-            'disabled_custom_metadata_fields_input' => 'Custom metadata - Define field list',
+            'disabled_custom_metadata_fields_input' => 'Custom metadata - Additional fields to disable',
             'disabled_custom_metadata_fields' => 'Custom metadata - Disable these fields',
             'discogs_api_key' => 'Discogs consumer key',
             'discogs_secret_api_key' => 'Discogs secret',
@@ -2151,8 +2155,9 @@ class Preference extends database_object
             'theme_color' => 'Theme color',
             'theme_name' => 'Theme',
             'topmenu' => 'Top menu',
-            'transcode_bitrate_formats' => 'Per-format transcode bitrate overrides in bps (falls back to Transcode Bitrate)',
-            'transcode_bitrate' => 'Transcode Bitrate',
+            'transcode_bitrate_api' => 'Transcode bitrate - API (overrides default)',
+            'transcode_bitrate_webplayer' => 'Transcode bitrate - Web Player (overrides default)',
+            'transcode_bitrate' => 'Transcode bitrate - Default',
             'transcode' => 'Allow Transcoding',
             'ui_fixed' => 'Fix header position on compatible themes',
             'unique_playlist' => 'Only add unique items to playlists',

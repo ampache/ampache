@@ -26,7 +26,6 @@ declare(strict_types=1);
 namespace Ampache\Repository\Model;
 
 use Ampache\Config\AmpConfig;
-use Ampache\Module\System\Dba;
 use Ampache\Module\WebDav\WebDavDirectoryInterface;
 use Ampache\Repository\FolderRepositoryInterface;
 
@@ -147,15 +146,17 @@ class Folder extends database_object implements
             $parent = self::getFolderRepository()->lookup(str_replace(DIRECTORY_SEPARATOR . $name, '', $path_name), $catalog) ?: null;
         }
 
-        $sql = "INSERT INTO `folder` (`name`, `catalog`, `parent`, `user`, `addition_time`, `update_time`, `path`, `path_name`) VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
-        Dba::write($sql, [$name, $catalog, $parent, $user, $addition_time, $update_time, $path, $path_name]);
+        $folder                = new Folder();
+        $folder->name          = $name;
+        $folder->catalog       = $catalog;
+        $folder->parent        = $parent;
+        $folder->user          = $user;
+        $folder->addition_time = $addition_time;
+        $folder->update_time   = $update_time;
+        $folder->path          = $path;
+        $folder->path_name     = $path_name;
 
-        $folder_id = Dba::insert_id();
-        if (!$folder_id) {
-            return null;
-        }
-
-        return (int) $folder_id;
+        return self::getFolderRepository()->persist($folder);
     }
 
     /**
@@ -202,12 +203,11 @@ class Folder extends database_object implements
             return database_object::get_from_cache('folder_name_by_id', $folder_id)[0];
         }
 
-        $sql        = "SELECT `folder`.`name` AS `f_name` FROM `folder` WHERE `id` = ?;";
-        $db_results = Dba::read($sql, [$folder_id]);
-        if ($row = Dba::fetch_assoc($db_results)) {
-            database_object::add_to_cache('folder_name_by_id', $folder_id, [$row['f_name']]);
+        $name = self::getFolderRepository()->getNameById($folder_id);
+        if ($name !== null) {
+            database_object::add_to_cache('folder_name_by_id', $folder_id, [$name]);
 
-            return $row['f_name'];
+            return $name;
         }
 
         return '';
@@ -218,10 +218,7 @@ class Folder extends database_object implements
      */
     public static function migrate(string $object_type, int $old_object_id, int $new_object_id): void
     {
-        $sql    = "UPDATE `folder_map` SET `object_id` = ? WHERE `object_id` = ? AND `object_type` = ?;";
-        $params = [$new_object_id, $old_object_id, $object_type];
-
-        Dba::write($sql, $params);
+        self::getFolderRepository()->migrateObject($object_type, $old_object_id, $new_object_id);
     }
 
     /**
@@ -252,25 +249,10 @@ class Folder extends database_object implements
     public function get_children(string $name): array
     {
         debug_event(self::class, 'get_children ' . $name, 5);
-        if ($this->getId() === -1) {
-            $sql        = "SELECT `object_id`, `object_type` FROM `folder_map` WHERE `folder_id` IS NULL ORDER BY `name`;";
-            $db_results = Dba::read($sql);
-        } else {
-            $sql        = "SELECT `object_id`, `object_type` FROM `folder_map` WHERE `folder_id` = ? ORDER BY `name`;";
-            $db_results = Dba::read($sql, [$this->id]);
-        }
-        $results = [];
-        while ($row = Dba::fetch_assoc($db_results)) {
-            $object_type = LibraryItemEnum::tryFrom($row['object_type']);
-            if ($object_type !== null) {
-                $results[] = [
-                    'object_type' => $object_type,
-                    'object_id' => (int) $row['object_id']
-                ];
-            }
-        }
 
-        return $results;
+        return self::getFolderRepository()->getChildren(
+            ($this->getId() === -1) ? null : $this->id
+        );
     }
 
     /**
@@ -370,12 +352,11 @@ class Folder extends database_object implements
             return database_object::get_from_cache('folder_fullname_by_id', $folder_id)[0];
         }
 
-        $sql        = "SELECT `folder`.`name` AS `f_name` FROM `folder` WHERE `id` = ?;";
-        $db_results = Dba::read($sql, [$folder_id]);
-        if ($row = Dba::fetch_assoc($db_results)) {
-            database_object::add_to_cache('folder_fullname_by_id', $folder_id, [$row['f_name']]);
+        $name = self::getFolderRepository()->getNameById($folder_id);
+        if ($name !== null) {
+            database_object::add_to_cache('folder_fullname_by_id', $folder_id, [$name]);
 
-            return $row['f_name'];
+            return $name;
         }
 
         return '';
@@ -424,26 +405,7 @@ class Folder extends database_object implements
      */
     public function get_medias(?string $filter_type = null): array
     {
-        if ($filter_type === null) {
-            $sql    = "SELECT `folder_map`.`object_id`, `folder_map`.`object_type` FROM `folder_map` WHERE `folder_map`.`object_type` != 'folder' AND (`folder_map`.`folder_id` = ? OR `folder_map`.`path_name` LIKE ?) ORDER BY `folder_map`.`name`;";
-            $params = [$this->id, $this->path_name . '/%'];
-        } else {
-            $sql    = "SELECT `folder_map`.`object_id`, `folder_map`.`object_type` FROM `folder_map` WHERE `folder_map`.`object_type` = ? AND (`folder_map`.`folder_id` = ? OR `folder_map`.`path_name` LIKE ?) ORDER BY `folder_map`.`name`;";
-            $params = [$filter_type, $this->id, $this->path_name . '/%'];
-        }
-        $db_results = Dba::read($sql, $params);
-        $results    = [];
-        while ($row = Dba::fetch_assoc($db_results)) {
-            $object_type = LibraryItemEnum::tryFrom($row['object_type']);
-            if ($object_type !== null) {
-                $results[] = [
-                    'object_type' => $object_type,
-                    'object_id' => (int) $row['object_id']
-                ];
-            }
-        }
-
-        return $results;
+        return self::getFolderRepository()->getMedias($this, $filter_type);
     }
 
     /**
@@ -456,26 +418,9 @@ class Folder extends database_object implements
     public function get_objects(): array
     {
         if (empty($this->children)) {
-            if ($this->getId() === -1) {
-                $sql        = "SELECT `id` AS `object_id`, 'folder' AS `object_type` FROM `folder` WHERE `parent` IS NULL;";
-                $db_results = Dba::read($sql);
-            } else {
-                $sql        = "SELECT `object_id`, `object_type` FROM `folder_map` WHERE `folder_id` = ?;";
-                $db_results = Dba::read($sql, [$this->getId()]);
-            }
-
-            $results = [];
-            while ($row = Dba::fetch_assoc($db_results)) {
-                $object_type = LibraryItemEnum::tryFrom($row['object_type']);
-                if ($object_type !== null) {
-                    $results[] = [
-                        'object_type' => $object_type,
-                        'object_id' => (int) $row['object_id']
-                    ];
-                }
-            }
-
-            $this->children = $results;
+            $this->children = self::getFolderRepository()->getObjects(
+                ($this->getId() === -1) ? null : $this->getId()
+            );
         }
 
         return $this->children;
@@ -557,10 +502,8 @@ class Folder extends database_object implements
     public function has_children(string $name): bool
     {
         debug_event(self::class, 'has_children ' . $name, 5);
-        $sql        = "SELECT `object_id`, `object_type` FROM `folder_map` WHERE `folder_id` = ?;";
-        $db_results = Dba::read($sql, [$this->id]);
 
-        return (Dba::num_rows($db_results) > 0);
+        return self::getFolderRepository()->hasChildren($this->id);
     }
 
     public function isNew(): bool
@@ -573,13 +516,14 @@ class Folder extends database_object implements
      */
     public function update(array $data): ?int
     {
-        $name        = $data['name'] ?? $this->name;
-        $catalog     = $data['catalog'] ?? $this->catalog;
-        $parent      = $data['parent'] ?? $this->parent;
-        $update_time = filemtime($data['path_name'] ?? $this->path_name);
+        $this->name    = $data['name'] ?? $this->name;
+        $this->catalog = (int) ($data['catalog'] ?? $this->catalog);
+        $this->parent  = isset($data['parent'])
+            ? (int) $data['parent']
+            : $this->parent;
+        $this->update_time = filemtime($data['path_name'] ?? $this->path_name) ?: null;
 
-        $sql = "UPDATE `folder` SET `name` = ?, `catalog` = ?, `parent` = ?, `update_time` = ? WHERE `id` = ?";
-        Dba::write($sql, [$name, $catalog, $parent, $update_time, $this->id]);
+        self::getFolderRepository()->persist($this);
 
         return $this->id;
     }

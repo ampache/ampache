@@ -146,7 +146,12 @@ class Podcast_Episode extends database_object implements
      */
     public static function update_file(string $path, int $id): void
     {
-        self::_update_item('file', $path, $id);
+        // a blank path would clear the stored file, so a failed move leaves the old value in place
+        if (!Access::check(AccessTypeEnum::INTERFACE, AccessLevelEnum::USER) || trim($path) === '') {
+            return;
+        }
+
+        self::getPodcastEpisodeRepository()->setFile($id, $path);
     }
 
     /**
@@ -159,31 +164,17 @@ class Podcast_Episode extends database_object implements
             $time = time();
         }
 
-        $sql = "UPDATE `podcast_episode` SET `update_time` = ? WHERE `id` = ?;";
-        Dba::write($sql, [$time, $episode_id]);
+        self::getPodcastEpisodeRepository()->setUpdateTime($episode_id, $time);
     }
 
     /**
-     * _update_item
-     * This is a private function that should only be called from within the podcast episode class.
-     * It takes a field, value podcast_episode_id and level. first and foremost it checks the level
-     * against Core::get_global('user') to make sure they are allowed to update this record
-     * it then updates it and sets $this->{$field} to the new value
+     * @deprecated Inject by constructor
      */
-    private static function _update_item(string $field, int|string $value, int $episode_id): void
+    private static function getPodcastEpisodeRepository(): PodcastEpisodeRepositoryInterface
     {
-        /* Check them Rights! */
-        if (!Access::check(AccessTypeEnum::INTERFACE, AccessLevelEnum::USER)) {
-            return;
-        }
+        global $dic;
 
-        /* Can't update to blank */
-        if (trim((string) $value) === '') {
-            return;
-        }
-
-        $sql = sprintf('UPDATE `podcast_episode` SET `%s` = ? WHERE `id` = ?', $field);
-        Dba::write($sql, [$value, $episode_id]);
+        return $dic->get(PodcastEpisodeRepositoryInterface::class);
     }
 
     /**
@@ -579,8 +570,8 @@ class Podcast_Episode extends database_object implements
             Stats::insert('podcast', $this->podcast, $user_id, $agent, $location, 'stream', $date);
         }
 
-        if (!$this->played) {
-            self::_update_item('played', 1, $this->id);
+        if (!$this->played && Access::check(AccessTypeEnum::INTERFACE, AccessLevelEnum::USER)) {
+            self::getPodcastEpisodeRepository()->setPlayed($this->id);
         }
 
         return true;
@@ -609,14 +600,13 @@ class Podcast_Episode extends database_object implements
         /** @var string $author */
         $author = (isset($data['author'])) ? scrub_in(Dba::check_length((string) $data['author'], 64)) : null;
 
-        $sql = 'UPDATE `podcast_episode` SET `title` = ?, `website` = ?, `description` = ?, `author` = ?, `category` = ? WHERE `id` = ?';
-        Dba::write($sql, [$title, $website, $description, $author, $category, $this->id]);
-
         $this->title       = $title;
         $this->website     = $website;
         $this->description = $description;
         $this->author      = $author;
         $this->category    = $category;
+
+        $this->getPodcastEpisodeRepository()->update($this);
 
         return $this->id;
     }
@@ -629,16 +619,6 @@ class Podcast_Episode extends database_object implements
         global $dic;
 
         return $dic->get(PodcastDeleterInterface::class);
-    }
-
-    /**
-     * @deprecated Inject by constructor
-     */
-    private function getPodcastEpisodeRepository(): PodcastEpisodeRepositoryInterface
-    {
-        global $dic;
-
-        return $dic->get(PodcastEpisodeRepositoryInterface::class);
     }
 
     /**

@@ -769,6 +769,9 @@ class Graph
             // every 'outside' position draws past the edge of the canvas, SVGGraph does not grow it to fit
             'legend_position' => 'top right',
             'legend_columns' => 2,
+            'legend_font_size' => 9,
+            'legend_entry_height' => 11,
+            'legend_padding' => 4,
             'back_colour' => '#f8f8f8',
             'back_stroke_width' => 1,
             'back_stroke_colour' => '#000',
@@ -822,7 +825,28 @@ class Graph
                 : Ui::format_bytes($value);
         }
 
-        return (string) $value;
+        return $this->format_metric_value($value);
+    }
+
+    /**
+     * Format a count for a y-axis label with a short K/M/B/T suffix, so a busy axis reads as a clear
+     * "65M" rather than the "6.5E+7" scientific notation SVGGraph falls back to for large numbers
+     */
+    private function format_metric_value(int|float $value): string
+    {
+        $abs = abs($value);
+        if ($abs < 1000) {
+            return (string) (int) round($value);
+        }
+
+        $units  = ['K', 'M', 'B', 'T'];
+        $power  = min((int) floor(log($abs, 1000)), count($units));
+        $scaled = $value / (1000 ** $power);
+
+        // keep one decimal only when it carries information, so 65M stays 65M while 1.5M keeps its half
+        return (fmod($scaled, 1.0) === 0.0)
+            ? number_format($scaled) . $units[$power - 1]
+            : number_format($scaled, 1) . $units[$power - 1];
     }
 
     /**
