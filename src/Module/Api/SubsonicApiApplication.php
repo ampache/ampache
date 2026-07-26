@@ -377,10 +377,10 @@ final class SubsonicApiApplication implements ApiApplicationInterface
         ) {
             ob_end_clean();
             $this->logger->warning(
-                'Requested client version is not supported',
+                sprintf('Requested client version %s is newer than the supported %s', $version, Subsonic_Api::API_VERSION),
                 [LegacyLogger::CONTEXT_TYPE => self::class]
             );
-            Subsonic_Api::error($query, Subsonic_Api::SSERROR_APIVERSION_CLIENT, $action);
+            Subsonic_Api::error($query, Subsonic_Api::SSERROR_APIVERSION_SERVER, $action);
 
             return;
         }
@@ -489,9 +489,9 @@ final class SubsonicApiApplication implements ApiApplicationInterface
             [LegacyLogger::CONTEXT_TYPE => self::class]
         );
         if ($subsonic_legacy) {
-            Subsonic_Api::error($input, Subsonic_Api::SSERROR_APIVERSION_SERVER, $action);
+            Subsonic_Api::error($input, Subsonic_Api::SSERROR_GENERIC, $action);
         } else {
-            OpenSubsonic_Api::error($input, OpenSubsonic_Api::SSERROR_APIVERSION_SERVER, $action);
+            OpenSubsonic_Api::error($input, OpenSubsonic_Api::SSERROR_GENERIC, $action);
         }
     }
 }
