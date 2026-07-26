@@ -26,9 +26,15 @@ declare(strict_types=1);
 namespace Ampache\Repository;
 
 use Ampache\Repository\Model\Album;
+use Ampache\Repository\Model\AlbumFieldEnum;
 
 interface AlbumRepositoryInterface
 {
+    /**
+     * Maps an artist onto an album, as either its album-artist (`album`) or one of its track artists (`song`)
+     */
+    public function addAlbumMap(int $albumId, string $objectType, int $objectId): void;
+
     /**
      * Cleans out unused albums
      */
@@ -40,11 +46,32 @@ interface AlbumRepositoryInterface
     public function collectGarbageForAlbums(array $albumIds): void;
 
     /**
+     * Inserts a new album row and returns its id, or 0 when the write failed
+     *
+     * @param array{name: string, prefix: ?string, year: int, mbid: ?string, mbid_group: ?string, release_type: ?string, release_status: ?string, album_artist: ?int, original_year: ?string, barcode: ?string, catalog_number: ?string, version: ?string, catalog: int} $properties
+     */
+    public function create(array $properties, int $additionTime): int;
+
+    /**
      * Deletes the album entry
      */
     public function delete(
         Album $album,
     ): void;
+
+    /**
+     * Finds the album that already carries exactly these properties, matching what create() would write
+     *
+     * @param array{name: string, prefix: ?string, year: int, mbid: ?string, mbid_group: ?string, release_type: ?string, release_status: ?string, album_artist: ?int, original_year: ?string, barcode: ?string, catalog_number: ?string, version: ?string, catalog: int} $properties
+     */
+    public function findByProperties(array $properties): ?int;
+
+    /**
+     * Reads the artist an album should be credited to when it has no album_artist but only one distinct song artist
+     *
+     * @return array{artist_name: string, artist_prefix: ?string, album_artist: int}|null
+     */
+    public function findSoleSongArtist(int $albumId): ?array;
 
     /**
      * Get the primary album_artist
@@ -60,6 +87,11 @@ interface AlbumRepositoryInterface
     public function getAlbumByArtist(
         int $artistId,
     ): array;
+
+    /**
+     * Counts the distinct artists mapped onto an album, across both the album and song mappings
+     */
+    public function getArtistCount(int $albumId): int;
 
     /**
      * This returns the ids of artists that have songs/albums mapped
@@ -98,6 +130,20 @@ interface AlbumRepositoryInterface
         string $name,
         int $artistId,
     ): array;
+
+    /**
+     * Reads the albums that carry no album_artist, which the scanner then tries to fill in
+     *
+     * @return list<int>
+     */
+    public function getIdsMissingAlbumArtist(): array;
+
+    /**
+     * This returns the ids of artists mapped onto an album, by album id rather than by object
+     *
+     * @return list<int>
+     */
+    public function getMappedObjectIds(int $albumId, string $objectType): array;
 
     /**
      * Get item prefix, basename and name by the album id
@@ -146,6 +192,27 @@ interface AlbumRepositoryInterface
     ): array;
 
     /**
+     * Reads whole album rows for the in-process cache, in one statement instead of one per object
+     *
+     * @param array<int|string> $albumIds
+     *
+     * @return list<array<string, mixed>>
+     */
+    public function getRowsByIds(array $albumIds): array;
+
+    /**
+     * Reads the sole artist shared by every song on an album, or null when the album has more than one
+     */
+    public function getSoleSongArtistId(int $albumId): ?int;
+
+    /**
+     * Reads every song row on an album, unordered and not scoped to the user's catalogs unlike getSongs()
+     *
+     * @return list<int>
+     */
+    public function getSongIds(int $albumId): array;
+
+    /**
      * gets songs from this album
      *
      * @return list<int> Album ids
@@ -162,4 +229,34 @@ interface AlbumRepositoryInterface
     public function getSongsByAlbumDisk(
         int $albumDiskId,
     ): array;
+
+    /**
+     * Whether the album is one of the placeholders the scanner parks songs on when their real album is unknown
+     */
+    public function isOrphan(int $albumId): bool;
+
+    /**
+     * Drops the album_map row, undoing addAlbumMap()
+     */
+    public function removeAlbumMap(int $albumId, string $objectType, int $objectId): void;
+
+    /**
+     * Drops the album_map row only once the artist_map no longer backs it, and reports whether it did
+     */
+    public function removeUnusedAlbumMap(int $albumId, string $objectType, int $objectId): bool;
+
+    /**
+     * Writes a single album column, bounded by the enum because the column name goes into the statement
+     */
+    public function setField(int $albumId, AlbumFieldEnum $field, int|string|null $value): bool;
+
+    /**
+     * Recomputes the cached totals on every album and disk, and backfills any album_disk the scanner missed
+     */
+    public function updateAllCounts(): void;
+
+    /**
+     * Recomputes the cached totals on one album and its disks, after a song on it changed
+     */
+    public function updateCounts(int $albumId): void;
 }

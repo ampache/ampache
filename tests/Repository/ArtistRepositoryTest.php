@@ -26,7 +26,9 @@ declare(strict_types=1);
 namespace Ampache\Repository;
 
 use Ampache\Module\Database\DatabaseConnectionInterface;
+use Ampache\Module\Database\Exception\QueryFailedException;
 use Ampache\Repository\Model\Artist;
+use Ampache\Repository\Model\ArtistFieldEnum;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 use SEEC\PhpUnit\Helper\ConsecutiveParams;
@@ -37,6 +39,18 @@ class ArtistRepositoryTest extends TestCase
 
     private DatabaseConnectionInterface&MockObject $connection;
     private ArtistRepository $subject;
+
+    public function testAddArtistMapInsertsIgnoringDuplicates(): void
+    {
+        $this->connection->expects(static::once())
+            ->method('query')
+            ->with(
+                'INSERT IGNORE INTO `artist_map` (`artist_id`, `object_type`, `object_id`) VALUES (?, ?, ?);',
+                [666, 'song', 42]
+            );
+
+        $this->subject->addArtistMap(666, 'song', 42);
+    }
 
     public function testCollectGarbageCleansUp(): void
     {
@@ -53,6 +67,32 @@ class ArtistRepositoryTest extends TestCase
             );
 
         $this->subject->collectGarbage();
+    }
+
+    public function testCreateReturnsNullWhenTheInsertFailed(): void
+    {
+        // the caller reads null as "no artist" and gives up, so the exception must not escape
+        $this->connection->expects(static::once())
+            ->method('query')
+            ->willThrowException(new QueryFailedException('some-error'));
+
+        static::assertNull($this->subject->create('some-artist', null, null, null));
+    }
+
+    public function testCreateReturnsTheNewId(): void
+    {
+        $this->connection->expects(static::once())
+            ->method('query')
+            ->with(
+                'INSERT INTO `artist` (`name`, `prefix`, `mbid`, `user`) VALUES(?, ?, ?, ?)',
+                ['some-artist', 'The', 'some-mbid', 42]
+            );
+
+        $this->connection->expects(static::once())
+            ->method('getLastInsertedId')
+            ->willReturn(666);
+
+        static::assertSame(666, $this->subject->create('some-artist', 'The', 'some-mbid', 42));
     }
 
     public function testDeleteDeletes(): void
@@ -90,6 +130,83 @@ class ArtistRepositoryTest extends TestCase
         self::assertNull(
             $this->subject->findByName($value)
         );
+    }
+
+    public function testFindIdByNamePicksTheStatementFromTheMbidFlag(): void
+    {
+        // the two statements differ only in the mbid predicate, and the caller tries them in that order
+        $this->connection->expects(static::once())
+            ->method('fetchOne')
+            ->with(
+                "SELECT `id` FROM `artist` WHERE `mbid` IS NOT NULL AND (`artist`.`name` = ? OR LTRIM(CONCAT(COALESCE(`artist`.`prefix`, ''), ' ', `artist`.`name`)) = ?) ORDER BY `id` LIMIT 1;",
+                ['some-artist', 'some-artist feat. someone']
+            )
+            ->willReturn('666');
+
+        static::assertSame(666, $this->subject->findIdByName('some-artist', 'some-artist feat. someone', true));
+    }
+
+    public function testGetUploaderIdReturnsZeroWhenTheArtistWasNotUploaded(): void
+    {
+        $this->connection->method('fetchOne')->willReturn(false);
+
+        static::assertSame(0, $this->subject->getUploaderId(666));
+    }
+
+    public function testMigrateClearsTheCreditWhenThereIsNoReplacement(): void
+    {
+        $this->connection->expects(static::exactly(4))
+            ->method('query')
+            ->with(
+                ...self::withConsecutive(
+                    ['UPDATE `song` SET `artist` = NULL WHERE `artist` = ?;', [666]],
+                    ['UPDATE `album` SET `album_artist` = NULL WHERE `album_artist` = ?;', [666]],
+                    ['DELETE FROM `artist_map` WHERE `artist_id` = ?;', [666]],
+                    ["DELETE FROM `album_map` WHERE `object_id` = ? AND `object_type` = 'album';", [666]],
+                )
+            );
+
+        $this->subject->migrate(666, 0);
+    }
+
+    public function testMigrateMovesEverythingOntoTheNewArtist(): void
+    {
+        $this->connection->expects(static::exactly(6))
+            ->method('query')
+            ->with(
+                ...self::withConsecutive(
+                    ['UPDATE `song` SET `artist` = ? WHERE `artist` = ?;', [42, 666]],
+                    ['UPDATE `album` SET `album_artist` = ? WHERE `album_artist` = ?;', [42, 666]],
+                    ['UPDATE IGNORE `artist_map` SET `artist_id` = ? WHERE `artist_id` = ?;', [42, 666]],
+                    ["UPDATE IGNORE `album_map` SET `object_id` = ? WHERE `object_id` = ? AND `object_type` = 'album';", [42, 666]],
+                    ['DELETE FROM `artist_map` WHERE `artist_id` = ?;', [666]],
+                    ["DELETE FROM `album_map` WHERE `object_id` = ? AND `object_type` = 'album';", [666]],
+                )
+            );
+
+        $this->subject->migrate(666, 42);
+    }
+
+    public function testSetFieldWritesTheColumnFromTheEnum(): void
+    {
+        $this->connection->expects(static::once())
+            ->method('query')
+            ->with('UPDATE `artist` SET `mbid` = ? WHERE `id` = ?', ['some-mbid', 666]);
+
+        static::assertTrue($this->subject->setField(666, ArtistFieldEnum::MBID, 'some-mbid'));
+    }
+
+    public function testUpdateInfoStampsTheManualFlagAsAnInt(): void
+    {
+        // `manual_update` is a tinyint and PDO binds false as an empty string, which MySQL rejects for the column
+        $this->connection->expects(static::once())
+            ->method('query')
+            ->with(
+                'UPDATE `artist` SET `summary` = ?, `placeformed` = ?, `yearformed` = ?, `last_update` = ?, `manual_update` = ? WHERE `id` = ?',
+                ['some-summary', 'some-place', 1999, 123456, 0, 666]
+            );
+
+        $this->subject->updateInfo(666, 'some-summary', 'some-place', 1999, 123456, false);
     }
 
     protected function setUp(): void
