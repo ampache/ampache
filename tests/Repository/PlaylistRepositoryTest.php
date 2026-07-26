@@ -24,6 +24,8 @@ declare(strict_types=1);
 
 namespace Ampache\Repository;
 
+use Ampache\Module\Catalog\CatalogCounterInterface;
+use Ampache\Module\Catalog\CountableTableEnum;
 use Ampache\Module\Database\DatabaseConnectionInterface;
 use Ampache\Repository\Model\Playlist;
 use PDOStatement;
@@ -32,6 +34,7 @@ use PHPUnit\Framework\TestCase;
 
 class PlaylistRepositoryTest extends TestCase
 {
+    private CatalogCounterInterface&MockObject $catalogCounter;
     private DatabaseConnectionInterface&MockObject $connection;
     private PlaylistRepository $subject;
 
@@ -93,6 +96,15 @@ class PlaylistRepositoryTest extends TestCase
             ->with('DELETE FROM `user_playlist_map` WHERE `playlist_id` = ?;', [666]);
 
         $this->subject->deleteCollaborators($this->playlist(666));
+    }
+
+    public function testDeleteRefreshesTheCachedTotal(): void
+    {
+        $this->catalogCounter->expects(static::once())
+            ->method('count')
+            ->with(CountableTableEnum::PLAYLIST);
+
+        $this->subject->delete($this->playlist(666));
     }
 
     public function testDeleteRemovesTheListItsEntriesAndItsStats(): void
@@ -280,9 +292,10 @@ class PlaylistRepositoryTest extends TestCase
 
     protected function setUp(): void
     {
-        $this->connection = $this->createMock(DatabaseConnectionInterface::class);
+        $this->connection     = $this->createMock(DatabaseConnectionInterface::class);
+        $this->catalogCounter = $this->createMock(CatalogCounterInterface::class);
 
-        $this->subject = new PlaylistRepository($this->connection);
+        $this->subject = new PlaylistRepository($this->connection, $this->catalogCounter);
     }
 
     private function playlist(int $playlistId): Playlist

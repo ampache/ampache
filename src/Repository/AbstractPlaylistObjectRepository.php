@@ -25,6 +25,7 @@ declare(strict_types=1);
 
 namespace Ampache\Repository;
 
+use Ampache\Module\Catalog\CatalogCounterInterface;
 use Ampache\Module\Database\DatabaseConnectionInterface;
 use Ampache\Repository\Model\playlist_object;
 
@@ -37,6 +38,7 @@ abstract readonly class AbstractPlaylistObjectRepository implements PlaylistObje
 {
     public function __construct(
         protected DatabaseConnectionInterface $connection,
+        protected CatalogCounterInterface $catalogCounter,
     ) {}
 
     /**

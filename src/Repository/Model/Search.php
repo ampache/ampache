@@ -626,7 +626,6 @@ class Search extends playlist_object
         }
 
         $this->id = $insert_id;
-        Catalog::count_table('search');
 
         return (string) $insert_id;
     }
@@ -641,8 +640,6 @@ class Search extends playlist_object
         self::getSearchRepository()->delete($this);
 
         $this->getPlaylistObjectRepository()->deleteCollaborators($this);
-
-        Catalog::count_table('search');
 
         return true;
     }

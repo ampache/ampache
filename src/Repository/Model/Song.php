@@ -65,6 +65,13 @@ class Song extends database_object implements
 {
     protected const string DB_TABLENAME = 'song';
 
+    /**
+     * Uploader per song id, so a multi-column save resolves ownership once instead of per column
+     *
+     * @var array<int, int|false|null>
+     */
+    private static array $_owner_cache = [];
+
     public ?int $addition_time       = null;
     public int $album                = 0;
     public int $album_disk           = 0;
@@ -1292,17 +1299,34 @@ class Song extends database_object implements
     }
 
     /**
+     * Downgrades the required access level to USER when the current user uploaded the song
+     *
+     * The owner is resolved once per song per request: this used to build a whole `Song`, whose
+     * `get_info()` is a three-way join, for every single column a save touched.
+     */
+    private static function _ownerLevel(int $song_id, AccessLevelEnum $level): AccessLevelEnum
+    {
+        if (!array_key_exists($song_id, self::$_owner_cache)) {
+            self::$_owner_cache[$song_id] = self::getSongRepository()->findOwnerId($song_id);
+        }
+
+        $ownerId = self::$_owner_cache[$song_id];
+
+        // false is "no such song", which is what the old `$item->id` guard tested before comparing
+        return ($ownerId !== false && $ownerId == Core::get_global('user')?->id)
+            ? AccessLevelEnum::USER
+            : $level;
+    }
+
+    /**
      * _update_ext_item
      * This updates a song record that is housed in the song_ext_info table
      * These are items that aren't used normally, and often large/informational only
      */
     private static function _update_ext_item(string $field, string $value, int $song_id, AccessLevelEnum $level, bool $check_owner = false): void
     {
-        if ($check_owner) {
-            $item = new Song($song_id);
-            if ($item->id && Core::get_global('user') instanceof User && $item->get_user_owner() == Core::get_global('user')->id) {
-                $level = AccessLevelEnum::USER;
-            }
+        if ($check_owner && Core::get_global('user') instanceof User) {
+            $level = self::_ownerLevel($song_id, $level);
         }
 
         if (!Access::check(AccessTypeEnum::INTERFACE, $level)) {
@@ -1325,13 +1349,7 @@ class Song extends database_object implements
     private static function _update_item(string $field, int|string|null $value, int $song_id, AccessLevelEnum $level, bool $check_owner = false, bool $allow_null = false): bool
     {
         if ($check_owner && Core::get_global('user') instanceof User) {
-            $item = new Song($song_id);
-            if (
-                $item->id
-                && $item->get_user_owner() == Core::get_global('user')->id
-            ) {
-                $level = AccessLevelEnum::USER;
-            }
+            $level = self::_ownerLevel($song_id, $level);
         }
 
         /* Check them Rights! */
@@ -1347,6 +1365,10 @@ class Song extends database_object implements
         $column = SongFieldEnum::tryFrom($field);
         if ($column === null) {
             return false;
+        }
+
+        if ($column === SongFieldEnum::USER_UPLOAD) {
+            unset(self::$_owner_cache[$song_id]);
         }
 
         return self::getSongRepository()->setField($song_id, $column, $value);

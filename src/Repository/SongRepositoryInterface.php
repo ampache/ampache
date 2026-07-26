@@ -46,6 +46,12 @@ interface SongRepositoryInterface
     public function delete(int $songId): bool;
 
     /**
+     * The uploader of the song: an id, null when it was not user-uploaded, false when there is no
+     * such song
+     */
+    public function findOwnerId(int $songId): int|false|null;
+
+    /**
      * gets the songs (including songs where they are the album artist) for this artist
      *
      * @return list<int>

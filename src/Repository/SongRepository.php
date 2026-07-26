@@ -83,6 +83,26 @@ final readonly class SongRepository implements SongRepositoryInterface
     }
 
     /**
+     * The uploader of the song
+     *
+     * Three distinct states: an id, `null` when the song exists but was not user-uploaded, and `false`
+     * when there is no such song. The caller only downgrades an access level for a real row, so it has
+     * to be able to tell the last two apart.
+     */
+    public function findOwnerId(int $songId): int|false|null
+    {
+        $row = $this->connection->fetchRow('SELECT `user_upload` FROM `song` WHERE `id` = ?', [$songId]);
+
+        if (!is_array($row) || !array_key_exists('user_upload', $row)) {
+            return false;
+        }
+
+        return ($row['user_upload'] === null)
+            ? null
+            : (int) $row['user_upload'];
+    }
+
+    /**
      * gets the songs (including songs where they are the album artist) for this artist
      *
      * @return int[]

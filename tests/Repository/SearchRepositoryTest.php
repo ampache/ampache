@@ -24,6 +24,8 @@ declare(strict_types=1);
 
 namespace Ampache\Repository;
 
+use Ampache\Module\Catalog\CatalogCounterInterface;
+use Ampache\Module\Catalog\CountableTableEnum;
 use Ampache\Module\Database\DatabaseConnectionInterface;
 use Ampache\Repository\Model\Smartlist;
 use Ampache\Repository\Model\User;
@@ -33,6 +35,7 @@ use PHPUnit\Framework\TestCase;
 
 class SearchRepositoryTest extends TestCase
 {
+    private CatalogCounterInterface&MockObject $catalogCounter;
     private DatabaseConnectionInterface&MockObject $connection;
     private SearchRepository $subject;
 
@@ -58,6 +61,15 @@ class SearchRepositoryTest extends TestCase
             ->with('DELETE FROM `user_playlist_map` WHERE `playlist_id` = ?;', ['smart_666']);
 
         $this->subject->deleteCollaborators($this->smartlist(666));
+    }
+
+    public function testDeleteRefreshesTheCachedTotal(): void
+    {
+        $this->catalogCounter->expects(static::once())
+            ->method('count')
+            ->with(CountableTableEnum::SEARCH);
+
+        $this->subject->delete($this->smartlist(666));
     }
 
     public function testDeleteRemovesTheSavedSearch(): void
@@ -251,9 +263,10 @@ class SearchRepositoryTest extends TestCase
 
     protected function setUp(): void
     {
-        $this->connection = $this->createMock(DatabaseConnectionInterface::class);
+        $this->connection     = $this->createMock(DatabaseConnectionInterface::class);
+        $this->catalogCounter = $this->createMock(CatalogCounterInterface::class);
 
-        $this->subject = new SearchRepository($this->connection);
+        $this->subject = new SearchRepository($this->connection, $this->catalogCounter);
     }
 
     private function smartlist(int $searchId): Smartlist

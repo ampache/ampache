@@ -137,8 +137,6 @@ class Live_Stream extends database_object implements Media, displayable_item, co
             return null;
         }
 
-        Catalog::count_table('live_stream');
-
         return (string) $insert_id;
     }
 

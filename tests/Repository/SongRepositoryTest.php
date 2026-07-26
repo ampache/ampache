@@ -39,6 +39,31 @@ class SongRepositoryTest extends TestCase
     private DatabaseConnectionInterface&MockObject $connection;
     private SongRepository $subject;
 
+    public function testFindOwnerIdReturnsFalseWhenTheSongDoesNotExist(): void
+    {
+        $this->connection->method('fetchRow')->willReturn(false);
+
+        static::assertFalse($this->subject->findOwnerId(666));
+    }
+
+    public function testFindOwnerIdReturnsNullWhenTheSongWasNotUploaded(): void
+    {
+        // distinct from the missing-song case below: this row exists, so an owner check may still downgrade
+        $this->connection->method('fetchRow')->willReturn(['user_upload' => null]);
+
+        static::assertNull($this->subject->findOwnerId(666));
+    }
+
+    public function testFindOwnerIdReturnsTheUploader(): void
+    {
+        $this->connection->expects(static::once())
+            ->method('fetchRow')
+            ->with('SELECT `user_upload` FROM `song` WHERE `id` = ?', [666])
+            ->willReturn(['user_upload' => '42']);
+
+        static::assertSame(42, $this->subject->findOwnerId(666));
+    }
+
     public function testGetByCatalogReturnsAllItems(): void
     {
         $songId = 666;

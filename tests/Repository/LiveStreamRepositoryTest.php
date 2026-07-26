@@ -24,6 +24,8 @@ declare(strict_types=1);
 
 namespace Ampache\Repository;
 
+use Ampache\Module\Catalog\CatalogCounterInterface;
+use Ampache\Module\Catalog\CountableTableEnum;
 use Ampache\Module\Database\DatabaseConnectionInterface;
 use Ampache\Repository\Model\Live_Stream;
 use Ampache\Repository\Model\ModelFactoryInterface;
@@ -32,9 +34,23 @@ use PHPUnit\Framework\TestCase;
 
 class LiveStreamRepositoryTest extends TestCase
 {
+    private CatalogCounterInterface&MockObject $catalogCounter;
     private DatabaseConnectionInterface&MockObject $connection;
     private ModelFactoryInterface&MockObject $modelFactory;
     private LiveStreamRepository $subject;
+
+    public function testDeleteRefreshesTheCachedTotal(): void
+    {
+        $liveStream = $this->createMock(Live_Stream::class);
+        $liveStream->method('getId')->willReturn(666);
+
+        // this is the assertion the static made impossible - it needed a real database to run at all
+        $this->catalogCounter->expects(static::once())
+            ->method('count')
+            ->with(CountableTableEnum::LIVE_STREAM);
+
+        $this->subject->delete($liveStream);
+    }
 
     public function testFindByIdReturnsFoundObject(): void
     {
@@ -149,12 +165,14 @@ class LiveStreamRepositoryTest extends TestCase
 
     protected function setUp(): void
     {
-        $this->modelFactory = $this->createMock(ModelFactoryInterface::class);
-        $this->connection   = $this->createMock(DatabaseConnectionInterface::class);
+        $this->modelFactory   = $this->createMock(ModelFactoryInterface::class);
+        $this->connection     = $this->createMock(DatabaseConnectionInterface::class);
+        $this->catalogCounter = $this->createMock(CatalogCounterInterface::class);
 
         $this->subject = new LiveStreamRepository(
             $this->modelFactory,
-            $this->connection
+            $this->connection,
+            $this->catalogCounter
         );
     }
 }

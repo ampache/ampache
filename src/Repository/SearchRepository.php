@@ -25,6 +25,7 @@ declare(strict_types=1);
 
 namespace Ampache\Repository;
 
+use Ampache\Module\Catalog\CountableTableEnum;
 use Ampache\Repository\Model\playlist_object;
 use Ampache\Repository\Model\Search;
 use Ampache\Repository\Model\User;
@@ -54,6 +55,8 @@ final readonly class SearchRepository extends AbstractPlaylistObjectRepository i
     public function delete(Search $search): void
     {
         $this->connection->query('DELETE FROM `search` WHERE `id` = ?', [$search->getId()]);
+
+        $this->catalogCounter->count(CountableTableEnum::SEARCH);
     }
 
     /**
@@ -77,7 +80,11 @@ final readonly class SearchRepository extends AbstractPlaylistObjectRepository i
             ]
         );
 
-        return $this->connection->getLastInsertedId() ?: null;
+        $insertedId = $this->connection->getLastInsertedId() ?: null;
+
+        $this->catalogCounter->count(CountableTableEnum::SEARCH);
+
+        return $insertedId;
     }
 
     /**

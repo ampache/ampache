@@ -29,6 +29,8 @@ use Ampache\Config\AmpConfig;
 use Ampache\Module\Authorization\Access;
 use Ampache\Module\Authorization\AccessLevelEnum;
 use Ampache\Module\Authorization\AccessTypeEnum;
+use Ampache\Module\Catalog\CatalogCounterInterface;
+use Ampache\Module\Catalog\CountableTableEnum;
 use Ampache\Module\System\Core;
 use Ampache\Module\System\Dba;
 use Ampache\Repository\PlaylistRepositoryInterface;
@@ -156,7 +158,7 @@ class Playlist extends playlist_object
             return null;
         }
 
-        Catalog::count_table('playlist');
+        self::getCatalogCounter()->count(CountableTableEnum::PLAYLIST);
 
         return (int) $insert_id;
     }
@@ -298,6 +300,16 @@ class Playlist extends playlist_object
     /**
      * @deprecated inject dependency
      */
+    private static function getCatalogCounter(): CatalogCounterInterface
+    {
+        global $dic;
+
+        return $dic->get(CatalogCounterInterface::class);
+    }
+
+    /**
+     * @deprecated inject dependency
+     */
     private static function getPlaylistRepository(): PlaylistRepositoryInterface
     {
         global $dic;
@@ -378,8 +390,6 @@ class Playlist extends playlist_object
         self::getPlaylistRepository()->delete($this);
 
         $this->getPlaylistObjectRepository()->deleteCollaborators($this);
-
-        Catalog::count_table('playlist');
 
         return true;
     }

@@ -23,39 +23,27 @@ declare(strict_types=1);
  *
  */
 
-namespace Ampache\Module\Api\Method\Api3;
+namespace Ampache\Module\Catalog;
 
-use Ampache\Module\Api\Xml3_Data;
-use Ampache\Repository\Model\Playlist;
-use Ampache\Repository\Model\User;
+use Ampache\Repository\Model\Catalog;
 
 /**
- * Class PlaylistCreate3Method
+ * Counts the rows of a table and maintains the cached total in `update_info`
  */
-final class PlaylistCreate3Method
+final readonly class CatalogCounter implements CatalogCounterInterface
 {
-    public const string ACTION = 'playlist_create';
-
-    /**
-     * playlist_create
-     * Create a new playlist and return it
-     *
-     * @param array{
-     *     name: string,
-     *     type?: string,
-     *     api_format: string,
-     *     auth: string,
-     * } $input
-     */
-    public static function playlist_create(array $input, User $user): void
+    public function count(CountableTableEnum $table): int
     {
-        $name = $input['name'];
-        $type = $input['type'] ?? 'public';
-        if ($type !== 'private' && $type !== 'public') {
-            $type = 'public';
-        }
+        // a catalog id of 0 is what makes count_table() refresh `update_info` rather than just count
+        return Catalog::count_table($table->value);
+    }
 
-        $uid = Playlist::create($name, $type, $user->id);
-        echo Xml3_Data::playlists([(int) $uid]);
+    public function countForCatalog(
+        CountableTableEnum $table,
+        int $catalogId,
+        int $updateTime = 0,
+        int $limit = 0,
+    ): int {
+        return Catalog::count_table($table->value, $catalogId, $updateTime, $limit);
     }
 }

@@ -25,6 +25,8 @@ declare(strict_types=1);
 
 namespace Ampache\Repository;
 
+use Ampache\Module\Catalog\CatalogCounterInterface;
+use Ampache\Module\Catalog\CountableTableEnum;
 use Ampache\Module\Database\DatabaseConnectionInterface;
 use Ampache\Repository\Model\Catalog;
 use Ampache\Repository\Model\Live_Stream;
@@ -41,6 +43,7 @@ final readonly class LiveStreamRepository implements LiveStreamRepositoryInterfa
     public function __construct(
         private ModelFactoryInterface $modelFactory,
         private DatabaseConnectionInterface $connection,
+        private CatalogCounterInterface $catalogCounter,
     ) {}
 
     /**
@@ -53,7 +56,7 @@ final readonly class LiveStreamRepository implements LiveStreamRepositoryInterfa
             [$liveStream->getId()]
         );
 
-        Catalog::count_table('live_stream');
+        $this->catalogCounter->count(CountableTableEnum::LIVE_STREAM);
     }
 
     /**
@@ -127,6 +130,11 @@ final readonly class LiveStreamRepository implements LiveStreamRepositoryInterfa
             ]
         );
 
-        return $this->connection->getLastInsertedId() ?: null;
+        $insertedId = $this->connection->getLastInsertedId() ?: null;
+
+        // the count is maintained here for both writes, so the model's create() no longer repeats it
+        $this->catalogCounter->count(CountableTableEnum::LIVE_STREAM);
+
+        return $insertedId;
     }
 }

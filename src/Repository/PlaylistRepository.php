@@ -25,6 +25,7 @@ declare(strict_types=1);
 
 namespace Ampache\Repository;
 
+use Ampache\Module\Catalog\CountableTableEnum;
 use Ampache\Repository\Model\Playlist;
 use Ampache\Repository\Model\playlist_object;
 
@@ -98,6 +99,8 @@ final readonly class PlaylistRepository extends AbstractPlaylistObjectRepository
                 $params
             );
         }
+
+        $this->catalogCounter->count(CountableTableEnum::PLAYLIST);
     }
 
     /**
