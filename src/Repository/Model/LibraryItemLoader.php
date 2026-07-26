@@ -75,7 +75,7 @@ final readonly class LibraryItemLoader implements LibraryItemLoaderInterface
             LibraryItemEnum::PLAYLIST => new Playlist($objectId),
             LibraryItemEnum::PODCAST => $this->dic->get(PodcastRepositoryInterface::class)->findById($objectId),
             LibraryItemEnum::PODCAST_EPISODE => $this->dic->get(PodcastEpisodeRepositoryInterface::class)->findById($objectId),
-            LibraryItemEnum::SEARCH => new Search($objectId),
+            LibraryItemEnum::SEARCH => new Smartlist($objectId),
             LibraryItemEnum::SONG => new Song($objectId),
             LibraryItemEnum::SONG_PREVIEW => new Song_Preview($objectId),
             LibraryItemEnum::TAG_HIDDEN, LibraryItemEnum::TAG => new Tag($objectId),

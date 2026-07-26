@@ -859,18 +859,6 @@ class Playlist extends playlist_object
         $this->items = $this->get_items();
     }
 
-    public function set_last(int $count, string $column): void
-    {
-        if (
-            $this->id
-            && in_array($column, ['last_count', 'last_duration'])
-            && $count >= 0
-        ) {
-            $sql = "UPDATE `playlist` SET `" . Dba::escape($column) . "` = " . $count . " WHERE `id` = ?;";
-            Dba::write($sql, [$this->id]);
-        }
-    }
-
     /**
      * Sort the tracks and save the new position
      */
@@ -908,21 +896,6 @@ class Playlist extends playlist_object
         $this->_update_last();
 
         return true;
-    }
-
-    /**
-     * update_item
-     * This is the generic update function, it does the escaping and error checking
-     */
-    public function update_item(string $field, int|string|null $value): bool
-    {
-        if (Core::get_global('user')?->getId() != $this->user && !Access::check(AccessTypeEnum::INTERFACE, AccessLevelEnum::CONTENT_MANAGER)) {
-            return false;
-        }
-
-        $sql = sprintf('UPDATE `playlist` SET `%s` = ? WHERE `id` = ?', $field);
-
-        return (Dba::write($sql, [$value, $this->id]) !== null);
     }
 
     /**

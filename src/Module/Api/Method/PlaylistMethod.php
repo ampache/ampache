@@ -81,7 +81,7 @@ final class PlaylistMethod implements MethodInterface
 
         // a non numeric filter is a smartlist, which is backed by a search
         $playlist = ((int) $objectId === 0)
-            ? $this->modelFactory->createSearch((int) str_replace('smart_', '', $objectId), 'song', $user)
+            ? $this->modelFactory->createSmartlist((int) str_replace('smart_', '', $objectId), $user)
             : $this->modelFactory->createPlaylist((int) $objectId);
 
         if ($playlist->isNew()) {

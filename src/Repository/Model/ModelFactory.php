@@ -134,6 +134,13 @@ final class ModelFactory implements ModelFactoryInterface
         return new Search((int) $searchId, $searchType, $user);
     }
 
+    public function createSmartlist(
+        ?int $searchId = 0,
+        ?User $user = null,
+    ): Smartlist {
+        return new Smartlist((int) $searchId, $user);
+    }
+
     public function createSong(
         ?int $songId = null,
     ): Song {

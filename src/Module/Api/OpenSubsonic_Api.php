@@ -68,6 +68,7 @@ use Ampache\Repository\Model\Random;
 use Ampache\Repository\Model\Rating;
 use Ampache\Repository\Model\Search;
 use Ampache\Repository\Model\Share;
+use Ampache\Repository\Model\Smartlist;
 use Ampache\Repository\Model\Song;
 use Ampache\Repository\Model\Tag;
 use Ampache\Repository\Model\User;
@@ -1145,7 +1146,7 @@ class OpenSubsonic_Api
                 return new Song($int_id - self::OLD_SUBID_SONG);
             }
             if ($int_id >= self::OLD_SUBID_SMARTPL && $int_id < self::OLD_SUBID_VIDEO) {
-                return new Search($int_id - self::OLD_SUBID_SMARTPL);
+                return new Smartlist($int_id - self::OLD_SUBID_SMARTPL);
             }
             if ($int_id >= self::OLD_SUBID_VIDEO && $int_id < self::OLD_SUBID_PODCAST) {
                 return new Video($int_id - self::OLD_SUBID_VIDEO);
@@ -1194,7 +1195,7 @@ class OpenSubsonic_Api
             case self::SUBID_SHARE:
                 return new Share($ampache_id);
             case self::SUBID_SMARTPL:
-                return new Search($ampache_id);
+                return new Smartlist($ampache_id);
             case self::SUBID_SONG:
                 return new Song($ampache_id);
             case self::SUBID_USER:

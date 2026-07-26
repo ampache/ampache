@@ -93,6 +93,15 @@ interface ModelFactoryInterface
         ?User $user = null,
     ): Search;
 
+    /**
+     * Loads a *saved* search. Use this instead of `createSearch()` whenever the id comes from the
+     * database — the stored row has no object type to restore, so a smartlist is always songs.
+     */
+    public function createSmartlist(
+        ?int $searchId = 0,
+        ?User $user = null,
+    ): Smartlist;
+
     public function createSong(
         ?int $songId = null,
     ): Song;

@@ -50,7 +50,7 @@ final readonly class DeletePlaylistAction implements ApplicationActionInterface
         if (check_http_referer()) {
             $playlistId = $request->getQueryParams()['playlist_id'] ?? null;
             if ($playlistId !== null) {
-                $playlist = $this->modelFactory->createSearch((int) $playlistId);
+                $playlist = $this->modelFactory->createSmartlist((int) $playlistId);
                 // Check rights
                 if ($playlist->has_access()) {
                     $playlist->delete();

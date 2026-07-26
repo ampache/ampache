@@ -414,7 +414,21 @@ abstract class playlist_object extends database_object implements
         return $this->getId() === 0;
     }
 
-    abstract public function set_last(int $count, string $column): void;
+    /**
+     * set_last
+     * Stores one of the cached totals.
+     */
+    public function set_last(int $count, string $column): void
+    {
+        if (
+            $this->id
+            && in_array($column, ['last_count', 'last_duration'])
+            && $count >= 0
+        ) {
+            $sql = sprintf('UPDATE `%s` SET `%s` = ? WHERE `id` = ?', static::DB_TABLENAME, $column);
+            Dba::write($sql, [$count, $this->id]);
+        }
+    }
 
     /**
      * update
@@ -494,7 +508,19 @@ abstract class playlist_object extends database_object implements
      * update_item
      * This is the generic update function, it does the escaping and error checking
      */
-    abstract public function update_item(string $field, int|string $value): bool;
+    public function update_item(string $field, int|string|null $value): bool
+    {
+        if (
+            Core::get_global('user')?->getId() != $this->user
+            && !Access::check(AccessTypeEnum::INTERFACE, AccessLevelEnum::CONTENT_MANAGER)
+        ) {
+            return false;
+        }
+
+        $sql = sprintf('UPDATE `%s` SET `%s` = ? WHERE `id` = ?', static::DB_TABLENAME, $field);
+
+        return (Dba::write($sql, [$value, $this->id]) !== null);
+    }
 
     /**
      * _update_collaborate

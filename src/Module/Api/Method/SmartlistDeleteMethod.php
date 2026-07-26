@@ -79,9 +79,8 @@ final class SmartlistDeleteMethod implements MethodInterface
             );
         }
 
-        $smartlist = $this->modelFactory->createSearch(
+        $smartlist = $this->modelFactory->createSmartlist(
             (int) str_replace('smart_', '', $input['filter']),
-            'song',
             $user
         );
         if (!$smartlist->has_access($user)) {

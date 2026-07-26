@@ -983,14 +983,6 @@ class Search extends playlist_object
         return LibraryItemEnum::SEARCH;
     }
 
-    public function set_last(int $count, string $column): void
-    {
-        if (in_array($column, ['last_count', 'last_duration'])) {
-            $sql = "UPDATE `search` SET `" . Dba::escape($column) . "` = ? WHERE `id` = ?";
-            Dba::write($sql, [$count, $this->id]);
-        }
-    }
-
     /**
      * set_order_by
      * Allow some display flexibility
@@ -1140,21 +1132,6 @@ class Search extends playlist_object
     public function to_sql(): array
     {
         return $this->searchType->getSql($this);
-    }
-
-    /**
-     * update_item
-     * This is the generic update function, it does the escaping and error checking
-     */
-    public function update_item(string $field, int|string|null $value): bool
-    {
-        if (Core::get_global('user')?->getId() != $this->user && !Access::check(AccessTypeEnum::INTERFACE, AccessLevelEnum::CONTENT_MANAGER)) {
-            return false;
-        }
-
-        $sql = sprintf('UPDATE `search` SET `%s` = ? WHERE `id` = ?', $field);
-
-        return (Dba::write($sql, [$value, $this->id]) !== null);
     }
 
     /**
