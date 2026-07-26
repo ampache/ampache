@@ -24,6 +24,7 @@ declare(strict_types=1);
 
 namespace Ampache\Repository\Model;
 
+use Ampache\Module\Database\Exception\QueryFailedException;
 use Ampache\Repository\BroadcastRepositoryInterface;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
@@ -53,6 +54,19 @@ class BroadcastTest extends TestCase
             ->with($subject);
 
         static::assertTrue($subject->delete());
+    }
+
+    public function testDeleteReturnsFalseIfTheWriteFailed(): void
+    {
+        $subject = new Broadcast();
+
+        $subject->id = 666;
+
+        $this->broadcastRepository->expects(static::once())
+            ->method('delete')
+            ->willThrowException(new QueryFailedException('some-error'));
+
+        static::assertFalse($subject->delete());
     }
 
     public function testGetBroadcastsDelegatesToTheRepository(): void

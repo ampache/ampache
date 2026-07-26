@@ -28,6 +28,7 @@ namespace Ampache\Repository\Model;
 use Ampache\Config\AmpConfig;
 use Ampache\Module\Api\Ajax;
 use Ampache\Module\Authorization\AccessLevelEnum;
+use Ampache\Module\Database\Exception\DatabaseException;
 use Ampache\Module\System\Core;
 use Ampache\Module\Util\Ui;
 use Ampache\Repository\BroadcastRepositoryInterface;
@@ -147,7 +148,11 @@ class Broadcast extends database_object implements library_item, displayable_ite
      */
     public function delete(): bool
     {
-        $this->getBroadcastRepository()->delete($this);
+        try {
+            $this->getBroadcastRepository()->delete($this);
+        } catch (DatabaseException) {
+            return false;
+        }
 
         return true;
     }
