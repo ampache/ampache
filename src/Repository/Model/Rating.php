@@ -85,6 +85,11 @@ class Rating extends database_object
             return false;
         }
 
+        // with the cache off these rows are discarded and the per-object queries still run, so this is a net loss
+        if (!database_object::isCacheEnabled()) {
+            return false;
+        }
+
         if ($user_id === null) {
             $user    = Core::get_global('user');
             $user_id = $user->id ?? 0;

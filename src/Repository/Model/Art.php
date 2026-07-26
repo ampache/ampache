@@ -111,6 +111,11 @@ class Art extends database_object
             return false;
         }
 
+        // with the cache off these rows are discarded and the per-object queries still run, so this is a net loss
+        if (!database_object::isCacheEnabled()) {
+            return false;
+        }
+
         $idlist = '(' . implode(',', $object_ids) . ')';
         $sql    = 'SELECT `object_type`, `object_id`, `mime`, `size` FROM `image` WHERE `object_id` IN ' . $idlist;
         if ($type !== null) {

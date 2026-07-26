@@ -88,6 +88,11 @@ class Playlist extends playlist_object
             return false;
         }
 
+        // with the cache off these rows are discarded and the per-object queries still run, so this is a net loss
+        if (!database_object::isCacheEnabled()) {
+            return false;
+        }
+
         $idlist     = '(' . implode(',', $ids) . ')';
         $sql        = 'SELECT * FROM `playlist` WHERE `id` IN ' . $idlist;
         $db_results = Dba::read($sql);
