@@ -609,13 +609,12 @@ sociable = "true"
 ;simple_user_mode = "true"
 
 ; Caching
-; This turns the caching mechanisms on or off, due to a large number of
-; problems with people with very large catalogs and low memory settings
-; this is off by default as it does significantly increase the memory
-; requirements on larger catalogs. If you have the memory this can create
-; a 2-3x speed improvement.
-; DEFAULT: "false"
-;memory_cache = "true"
+; This turns the caching mechanisms on or off. It batches the per-object lookups
+; a page would otherwise repeat, which roughly halves the query count on a large
+; browse, at the cost of higher memory use on very large catalogs. Set this to
+; "false" if you have a big catalog and a low PHP memory limit.
+; DEFAULT: "true"
+;memory_cache = "false"
 
 ; Memory Limit
 ; This defines the "Min" memory limit for PHP if your php.ini
