@@ -26,7 +26,10 @@ declare(strict_types=1);
 namespace Ampache\Repository;
 
 use Ampache\Module\Database\DatabaseConnectionInterface;
+use Ampache\Module\Database\Exception\QueryFailedException;
 use Ampache\Repository\Model\Catalog;
+use Ampache\Repository\Model\SongDataFieldEnum;
+use Ampache\Repository\Model\SongFieldEnum;
 use PDOStatement;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
@@ -87,6 +90,52 @@ class SongRepositoryTest extends TestCase
             [$songId],
             iterator_to_array($this->subject->getByCatalog($catalog))
         );
+    }
+
+    public function testSetDataFieldReturnsFalseWhenTheWriteFailed(): void
+    {
+        $this->connection->expects(static::once())
+            ->method('query')
+            ->willThrowException(new QueryFailedException('some-error'));
+
+        static::assertFalse($this->subject->setDataField(666, SongDataFieldEnum::LYRICS, 'some-lyrics'));
+    }
+
+    public function testSetDataFieldWritesToSongDataKeyedBySongId(): void
+    {
+        $this->connection->expects(static::once())
+            ->method('query')
+            ->with('UPDATE `song_data` SET `comment` = ? WHERE `song_id` = ?', ['some-comment', 666]);
+
+        static::assertTrue($this->subject->setDataField(666, SongDataFieldEnum::COMMENT, 'some-comment'));
+    }
+
+    public function testSetFieldAcceptsANullValue(): void
+    {
+        $this->connection->expects(static::once())
+            ->method('query')
+            ->with('UPDATE `song` SET `license` = ? WHERE `id` = ?', [null, 666]);
+
+        static::assertTrue($this->subject->setField(666, SongFieldEnum::LICENSE, null));
+    }
+
+    public function testSetFieldReturnsFalseWhenTheWriteFailed(): void
+    {
+        // the model's callers branch on this, so the exception must not escape as a fatal
+        $this->connection->expects(static::once())
+            ->method('query')
+            ->willThrowException(new QueryFailedException('some-error'));
+
+        static::assertFalse($this->subject->setField(666, SongFieldEnum::TITLE, 'some-title'));
+    }
+
+    public function testSetFieldWritesTheColumnFromTheEnum(): void
+    {
+        $this->connection->expects(static::once())
+            ->method('query')
+            ->with('UPDATE `song` SET `title` = ? WHERE `id` = ?', ['some-title', 666]);
+
+        static::assertTrue($this->subject->setField(666, SongFieldEnum::TITLE, 'some-title'));
     }
 
     protected function setUp(): void

@@ -49,6 +49,7 @@ use Ampache\Repository\LicenseRepositoryInterface;
 use Ampache\Repository\MetadataRepositoryInterface;
 use Ampache\Repository\ShareRepositoryInterface;
 use Ampache\Repository\ShoutRepositoryInterface;
+use Ampache\Repository\SongRepositoryInterface;
 use Ampache\Repository\WantedRepositoryInterface;
 use DateTime;
 use DateTimeInterface;
@@ -1304,9 +1305,13 @@ class Song extends database_object implements
             }
         }
 
-        if (Access::check(AccessTypeEnum::INTERFACE, $level)) {
-            $sql = sprintf('UPDATE `song_data` SET `%s` = ? WHERE `song_id` = ?', $field);
-            Dba::write($sql, [$value, $song_id]) !== null;
+        if (!Access::check(AccessTypeEnum::INTERFACE, $level)) {
+            return;
+        }
+
+        $column = SongDataFieldEnum::tryFrom($field);
+        if ($column !== null) {
+            self::getSongRepository()->setDataField($song_id, $column, $value);
         }
     }
 
@@ -1339,9 +1344,12 @@ class Song extends database_object implements
             return false;
         }
 
-        $sql = sprintf('UPDATE `song` SET `%s` = ? WHERE `id` = ?', $field);
+        $column = SongFieldEnum::tryFrom($field);
+        if ($column === null) {
+            return false;
+        }
 
-        return (Dba::write($sql, [$value, $song_id]) !== null);
+        return self::getSongRepository()->setField($song_id, $column, $value);
     }
 
     /**
@@ -1362,6 +1370,16 @@ class Song extends database_object implements
         global $dic;
 
         return $dic->get(ShoutRepositoryInterface::class);
+    }
+
+    /**
+     * @deprecated inject dependency
+     */
+    private static function getSongRepository(): SongRepositoryInterface
+    {
+        global $dic;
+
+        return $dic->get(SongRepositoryInterface::class);
     }
 
     /**

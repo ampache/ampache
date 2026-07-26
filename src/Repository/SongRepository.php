@@ -27,12 +27,15 @@ namespace Ampache\Repository;
 
 use Ampache\Config\AmpConfig;
 use Ampache\Module\Database\DatabaseConnectionInterface;
+use Ampache\Module\Database\Exception\DatabaseException;
 use Ampache\Module\System\Core;
 use Ampache\Module\System\Dba;
 use Ampache\Repository\Model\Album;
 use Ampache\Repository\Model\Artist;
 use Ampache\Repository\Model\Catalog;
 use Ampache\Repository\Model\Song;
+use Ampache\Repository\Model\SongDataFieldEnum;
+use Ampache\Repository\Model\SongFieldEnum;
 use Ampache\Repository\Model\Tag;
 use Generator;
 
@@ -341,5 +344,42 @@ final readonly class SongRepository implements SongRepositoryInterface
         }
 
         return $results;
+    }
+
+    /**
+     * Writes a single `song_data` column
+     */
+    public function setDataField(int $songId, SongDataFieldEnum $field, string $value): bool
+    {
+        try {
+            $this->connection->query(
+                sprintf('UPDATE `song_data` SET `%s` = ? WHERE `song_id` = ?', $field->value),
+                [$value, $songId]
+            );
+        } catch (DatabaseException) {
+            return false;
+        }
+
+        return true;
+    }
+
+    /**
+     * Writes a single `song` column
+     *
+     * Returns false when the write failed, matching what the model's callers already expect. Callers own
+     * the authorization and the blank-value guard; this only performs the statement.
+     */
+    public function setField(int $songId, SongFieldEnum $field, int|string|null $value): bool
+    {
+        try {
+            $this->connection->query(
+                sprintf('UPDATE `song` SET `%s` = ? WHERE `id` = ?', $field->value),
+                [$value, $songId]
+            );
+        } catch (DatabaseException) {
+            return false;
+        }
+
+        return true;
     }
 }
