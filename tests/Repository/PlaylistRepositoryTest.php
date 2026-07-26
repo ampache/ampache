@@ -35,19 +35,55 @@ class PlaylistRepositoryTest extends TestCase
     private DatabaseConnectionInterface&MockObject $connection;
     private PlaylistRepository $subject;
 
-    public function testCollectGarbageOnlyTouchesUnprefixedKeys(): void
+    public function testAddTracksBindsOnePlaceholderGroupPerRow(): void
     {
         $this->connection->expects(static::once())
             ->method('query')
-            ->willReturnCallback(function (string $sql): PDOStatement {
-                // it must leave the smartlist rows for SearchRepository, and drop only orphans
-                static::assertStringContainsString("NOT LIKE 'smart\_%'", $sql);
-                static::assertStringContainsString('NOT IN (SELECT `id` FROM `playlist`)', $sql);
+            ->with(
+                'REPLACE INTO `playlist_data` (`playlist`, `object_id`, `object_type`, `track`) VALUES (?, ?, ?, ?), (?, ?, ?, ?)',
+                [666, 21, 'song', 1, 666, 33, 'video', 2]
+            );
+
+        $this->subject->addTracks($this->playlist(666), [[21, 'song', 1], [33, 'video', 2]]);
+    }
+
+    public function testAddTracksDoesNothingForAnEmptyList(): void
+    {
+        $this->connection->expects(static::never())
+            ->method('query');
+
+        $this->subject->addTracks($this->playlist(666), []);
+    }
+
+    public function testCollectGarbageClearsDeadEntriesThenOrphanedCollaborators(): void
+    {
+        $statements = [];
+
+        $this->connection->method('query')
+            ->willReturnCallback(function (string $sql) use (&$statements): PDOStatement {
+                $statements[] = $sql;
 
                 return $this->createMock(PDOStatement::class);
             });
 
         $this->subject->collectGarbage();
+
+        $map = array_values(array_filter($statements, static fn(string $sql): bool => str_contains($sql, 'user_playlist_map')));
+
+        // the smartlist rows are SearchRepository's to clean, so this sweep has to skip them
+        static::assertCount(1, $map);
+        static::assertStringContainsString("NOT LIKE 'smart\_%'", $map[0]);
+        static::assertStringContainsString('NOT IN (SELECT `id` FROM `playlist`)', $map[0]);
+        static::assertNotEmpty(array_filter($statements, static fn(string $sql): bool => str_contains($sql, 'playlist_data')));
+    }
+
+    public function testDeleteAllTracksEmptiesTheList(): void
+    {
+        $this->connection->expects(static::once())
+            ->method('query')
+            ->with('DELETE FROM `playlist_data` WHERE `playlist_data`.`playlist` = ?', [666]);
+
+        $this->subject->deleteAllTracks($this->playlist(666));
     }
 
     public function testDeleteCollaboratorsClearsTheMapByThePlainId(): void
@@ -57,6 +93,54 @@ class PlaylistRepositoryTest extends TestCase
             ->with('DELETE FROM `user_playlist_map` WHERE `playlist_id` = ?;', [666]);
 
         $this->subject->deleteCollaborators($this->playlist(666));
+    }
+
+    public function testDeleteRemovesTheListItsEntriesAndItsStats(): void
+    {
+        // playlist_data, playlist, then the three object_count tables
+        $this->connection->expects(static::exactly(5))
+            ->method('query')
+            ->with(static::anything(), [666]);
+
+        $this->subject->delete($this->playlist(666));
+    }
+
+    public function testDeleteTrackByNumberLimitsToOneRow(): void
+    {
+        $this->connection->expects(static::once())
+            ->method('query')
+            ->with(static::stringContains('`playlist_data`.`track` = ? LIMIT 1'), [666, 3]);
+
+        $this->subject->deleteTrackByNumber($this->playlist(666), 3);
+    }
+
+    public function testGetLastTrackNumberReadsTheMaximum(): void
+    {
+        $this->connection->expects(static::once())
+            ->method('fetchOne')
+            ->with('SELECT MAX(`track`) AS `track` FROM `playlist_data` WHERE `playlist` = ?', [666])
+            ->willReturn('4');
+
+        static::assertSame(4, $this->subject->getLastTrackNumber($this->playlist(666)));
+    }
+
+    public function testReplaceTrackAtNumberClearsThePositionFirst(): void
+    {
+        $matcher = static::exactly(2);
+
+        $this->connection->expects($matcher)
+            ->method('query')
+            ->willReturnCallback(function (string $sql) use ($matcher): PDOStatement {
+                if ($matcher->numberOfInvocations() === 1) {
+                    static::assertStringContainsString('DELETE FROM `playlist_data`', $sql);
+                } else {
+                    static::assertStringContainsString('INSERT INTO `playlist_data`', $sql);
+                }
+
+                return $this->createMock(PDOStatement::class);
+            });
+
+        $this->subject->replaceTrackAtNumber($this->playlist(666), 21, 3);
     }
 
     public function testSetLastCountSkipsANegativeTotal(): void
@@ -91,6 +175,26 @@ class PlaylistRepositoryTest extends TestCase
             ->with('UPDATE `playlist` SET `last_duration` = ? WHERE `id` = ?', [300, 666]);
 
         $this->subject->setLastDuration($this->playlist(666), 300);
+    }
+
+    public function testSetTrackNumbersDoesNothingForAnEmptySet(): void
+    {
+        $this->connection->expects(static::never())
+            ->method('query');
+
+        $this->subject->setTrackNumbers([]);
+    }
+
+    public function testSetTrackNumbersWritesOneUpsertForTheWholeSet(): void
+    {
+        $this->connection->expects(static::once())
+            ->method('query')
+            ->with(
+                'INSERT INTO `playlist_data` (`id`, `track`) VALUES (?, ?), (?, ?) ON DUPLICATE KEY UPDATE `track`=VALUES(`track`)',
+                [7, 1, 9, 2]
+            );
+
+        $this->subject->setTrackNumbers([7 => 1, 9 => 2]);
     }
 
     public function testUpdateCollaboratorsClearsTheMapWhenTheListIsEmpty(): void

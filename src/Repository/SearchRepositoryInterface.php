@@ -25,9 +25,28 @@ declare(strict_types=1);
 
 namespace Ampache\Repository;
 
+use Ampache\Repository\Model\Search;
+use Ampache\Repository\Model\User;
+
 /**
  * Manages search related database access
  *
  * Tables: `search`
  */
-interface SearchRepositoryInterface extends PlaylistObjectRepositoryInterface {}
+interface SearchRepositoryInterface extends PlaylistObjectRepositoryInterface
+{
+    /**
+     * Removes the saved search
+     */
+    public function delete(Search $search): void;
+
+    /**
+     * Stores a new saved search and returns its id, or null when nothing was written
+     */
+    public function insert(Search $search, User $user, int $time): ?int;
+
+    /**
+     * Whether the user already has a saved search of this name and type
+     */
+    public function nameExists(string $name, int $userId, ?string $type): bool;
+}

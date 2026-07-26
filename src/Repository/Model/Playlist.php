@@ -31,6 +31,7 @@ use Ampache\Module\Authorization\AccessLevelEnum;
 use Ampache\Module\Authorization\AccessTypeEnum;
 use Ampache\Module\System\Core;
 use Ampache\Module\System\Dba;
+use Ampache\Repository\PlaylistRepositoryInterface;
 
 /**
  * This class handles playlists in ampache. it references the playlist* tables
@@ -167,12 +168,7 @@ class Playlist extends playlist_object
      */
     public static function garbage_collection(): void
     {
-        foreach (['song', 'podcast_episode', 'video'] as $object_type) {
-            Dba::write("DELETE FROM `playlist_data` USING `playlist_data` LEFT JOIN `" . $object_type . "` ON `" . $object_type . "`.`id` = `playlist_data`.`object_id` WHERE `" . $object_type . "`.`file` IS NULL AND `playlist_data`.`object_type`='" . $object_type . "';");
-        }
-
-        Dba::write("DELETE FROM `playlist_data` USING `playlist_data` LEFT JOIN `live_stream` ON `live_stream`.`id` = `playlist_data`.`object_id` WHERE `live_stream`.`id` IS NULL AND `playlist_data`.`object_type`='live_stream';");
-        Dba::write("DELETE FROM `playlist` USING `playlist` LEFT JOIN `playlist_data` ON `playlist_data`.`playlist` = `playlist`.`id` WHERE `playlist_data`.`object_id` IS NULL;");
+        self::getPlaylistRepository()->collectGarbage();
     }
 
     /**
@@ -296,10 +292,17 @@ class Playlist extends playlist_object
      */
     public static function migrate(string $object_type, int $old_object_id, int $new_object_id): void
     {
-        $sql    = "UPDATE `playlist_data` SET `object_id` = ? WHERE `object_id` = ? AND `object_type` = ?;";
-        $params = [$new_object_id, $old_object_id, $object_type];
+        self::getPlaylistRepository()->migrateObject($object_type, $old_object_id, $new_object_id);
+    }
 
-        Dba::write($sql, $params);
+    /**
+     * @deprecated inject dependency
+     */
+    private static function getPlaylistRepository(): PlaylistRepositoryInterface
+    {
+        global $dic;
+
+        return $dic->get(PlaylistRepositoryInterface::class);
     }
 
     /**
@@ -317,13 +320,9 @@ class Playlist extends playlist_object
         $track_data = ($unique)
             ? $this->get_songs()
             : [];
-        $sql        = "SELECT MAX(`track`) AS `track` FROM `playlist_data` WHERE `playlist` = ? ";
-        $db_results = Dba::read($sql, [$this->id]);
-        $row        = Dba::fetch_assoc($db_results);
-        $base_track = (int) ($row['track'] ?? 0);
+        $base_track = self::getPlaylistRepository()->getLastTrackNumber($this);
         $count      = 0;
-        $sql        = "REPLACE INTO `playlist_data` (`playlist`, `object_id`, `object_type`, `track`) VALUES ";
-        $values     = [];
+        $rows       = [];
         foreach ($medias as $data) {
             $object_type = (is_string($data['object_type']))
                 ? LibraryItemEnum::tryFrom((string) $data['object_type'])
@@ -332,17 +331,12 @@ class Playlist extends playlist_object
                 debug_event(self::class, "Can't add a duplicate " . $object_type?->value . " (" . $data['object_id'] . ") when unique_playlist is enabled", 3);
             } else {
                 ++$count;
-                $track = $base_track + $count;
-                $sql .= "(?, ?, ?, ?), ";
-                $values[] = $this->id;
-                $values[] = $data['object_id'];
-                $values[] = $object_type?->value;
-                $values[] = $track;
+                $rows[] = [(int) $data['object_id'], $object_type?->value, $base_track + $count];
             } // if valid id
         }
 
-        if ($count !== 0 || $values !== []) {
-            Dba::write(rtrim($sql, ', '), $values);
+        if ($rows !== []) {
+            self::getPlaylistRepository()->addTracks($this, $rows);
             debug_event(self::class, sprintf('Added %d tracks to playlist: ', $count) . $this->id, 5);
             $this->_update_last();
 
@@ -381,20 +375,7 @@ class Playlist extends playlist_object
      */
     public function delete(): bool
     {
-        $sql = "DELETE FROM `playlist_data` WHERE `playlist` = ?";
-        Dba::write($sql, [$this->id]);
-
-        $sql = "DELETE FROM `playlist` WHERE `id` = ?";
-        Dba::write($sql, [$this->id]);
-
-        $sql = "DELETE FROM `object_count` WHERE `object_type`='playlist' AND `object_id` = ?";
-        Dba::write($sql, [$this->id]);
-
-        $sql = "DELETE FROM `object_count_summary` WHERE `object_type`='playlist' AND `object_id` = ?";
-        Dba::write($sql, [$this->id]);
-
-        $sql = "DELETE FROM `object_count_archive` WHERE `object_type`='playlist' AND `object_id` = ?";
-        Dba::write($sql, [$this->id]);
+        self::getPlaylistRepository()->delete($this);
 
         $this->getPlaylistObjectRepository()->deleteCollaborators($this);
 
@@ -410,8 +391,7 @@ class Playlist extends playlist_object
      */
     public function delete_all(): bool
     {
-        $sql = "DELETE FROM `playlist_data` WHERE `playlist_data`.`playlist` = ?";
-        Dba::write($sql, [$this->id]);
+        self::getPlaylistRepository()->deleteAllTracks($this);
         debug_event(self::class, 'Delete all tracks from: ' . $this->id, 5);
 
         $this->_update_last();
@@ -425,8 +405,7 @@ class Playlist extends playlist_object
      */
     public function delete_song(int $object_id): bool
     {
-        $sql = "DELETE FROM `playlist_data` WHERE `playlist_data`.`playlist` = ? AND `playlist_data`.`object_id` = ? LIMIT 1";
-        Dba::write($sql, [$this->id, $object_id]);
+        self::getPlaylistRepository()->deleteTrackByObjectId($this, $object_id);
         debug_event(self::class, 'Delete object_id: ' . $object_id . ' from ' . $this->id, 5);
 
         $this->_update_last();
@@ -440,8 +419,7 @@ class Playlist extends playlist_object
      */
     public function delete_track(int $object_id): bool
     {
-        $sql = "DELETE FROM `playlist_data` WHERE `playlist_data`.`playlist` = ? AND `playlist_data`.`id` = ? LIMIT 1";
-        Dba::write($sql, [$this->id, $object_id]);
+        self::getPlaylistRepository()->deleteTrackById($this, $object_id);
         debug_event(self::class, 'Delete item_id: ' . $object_id . ' from ' . $this->id, 5);
 
         $this->_update_last();
@@ -455,8 +433,7 @@ class Playlist extends playlist_object
      */
     public function delete_track_number(int $track): bool
     {
-        $sql = "DELETE FROM `playlist_data` WHERE `playlist_data`.`playlist` = ? AND `playlist_data`.`track` = ? LIMIT 1";
-        Dba::write($sql, [$this->id, $track]);
+        self::getPlaylistRepository()->deleteTrackByNumber($this, $track);
         debug_event(self::class, 'Delete track: ' . $track . ' from ' . $this->id, 5);
 
         $this->_update_last();
@@ -818,12 +795,9 @@ class Playlist extends playlist_object
      */
     public function regenerate_track_numbers(): void
     {
-        $index  = 1;
-        $sql    = 'SELECT `id` FROM `playlist_data` WHERE `playlist_data`.`playlist` = ? ORDER BY `track`, `id`;';
-        $tracks = Dba::read($sql, [$this->id]);
-
-        while ($row = Dba::fetch_assoc($tracks)) {
-            $this->update_track_number((int) $row['id'], $index);
+        $index = 1;
+        foreach (self::getPlaylistRepository()->getTrackIdsInOrder($this) as $trackId) {
+            $this->update_track_number($trackId, $index);
             ++$index;
         }
 
@@ -840,11 +814,7 @@ class Playlist extends playlist_object
             return false;
         }
 
-        $sql = "DELETE FROM `playlist_data` WHERE `playlist` = ? AND `track` = ?;";
-        Dba::write($sql, [$this->id, $track]);
-
-        $sql = "INSERT INTO `playlist_data` (`playlist`, `object_type`, `object_id`, `track`) VALUES (?, ?, ?, ?);";
-        Dba::write($sql, [$this->id, 'song', $object_id, $track]);
+        self::getPlaylistRepository()->replaceTrackAtNumber($this, $object_id, $track);
 
         debug_event(self::class, $this->id . ' set track: ' . $track . ' to ' . $object_id, 5);
 
@@ -867,34 +837,16 @@ class Playlist extends playlist_object
      */
     public function sort_tracks(): bool
     {
-        /* First get all of the songs in order of their tracks */
-        $sql = "SELECT `list`.`id` FROM `playlist_data` AS `list` LEFT JOIN `song` ON `list`.`object_id` = `song`.`id` LEFT JOIN `album` ON `song`.`album` = `album`.`id` LEFT JOIN `artist` ON `album`.`album_artist` = `artist`.`id` WHERE `list`.`playlist` = ? ORDER BY `artist`.`name`, `album`.`name`, `album`.`year`, `song`.`disk`, `song`.`track`, `song`.`title`";
+        $repository = self::getPlaylistRepository();
 
-        $count      = 1;
-        $db_results = Dba::query($sql, [$this->id]);
-        $results    = [];
-
-        while ($row = Dba::fetch_assoc($db_results)) {
-            $results[] = [
-                'id' => $row['id'],
-                'track' => $count
-            ];
-            ++$count;
+        $track  = 1;
+        $tracks = [];
+        foreach ($repository->getTrackIdsSorted($this) as $trackId) {
+            $tracks[$trackId] = $track;
+            ++$track;
         }
 
-        if ($results !== []) {
-            $sql = "INSERT INTO `playlist_data` (`id`, `track`) VALUES ";
-            foreach ($results as $data) {
-                $sql .= "(" . Dba::escape($data['id']) . ", " . Dba::escape($data['track']) . "), ";
-            } // foreach re-ordered results
-
-            //replace the last comma
-            $sql = substr_replace($sql, "", -2);
-            $sql .= "ON DUPLICATE KEY UPDATE `track`=VALUES(`track`)";
-
-            // do this in one go
-            Dba::write($sql);
-        }
+        $repository->setTrackNumbers($tracks);
 
         $this->_update_last();
 
@@ -907,8 +859,7 @@ class Playlist extends playlist_object
      */
     public function update_track_number(int $track_id, int $index): void
     {
-        $sql = "UPDATE `playlist_data` SET `track` = ? WHERE `id` = ?";
-        Dba::write($sql, [$index, $track_id]);
+        self::getPlaylistRepository()->setTrackNumber($track_id, $index);
     }
 
     /**

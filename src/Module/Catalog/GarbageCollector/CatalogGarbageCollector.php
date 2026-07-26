@@ -35,7 +35,6 @@ use Ampache\Repository\BookmarkRepositoryInterface;
 use Ampache\Repository\FolderRepositoryInterface;
 use Ampache\Repository\LabelRepositoryInterface;
 use Ampache\Repository\Model\Catalog;
-use Ampache\Repository\Model\Playlist;
 use Ampache\Repository\Model\Rating;
 use Ampache\Repository\Model\Song;
 use Ampache\Repository\Model\Tag;
@@ -90,8 +89,8 @@ final readonly class CatalogGarbageCollector implements CatalogGarbageCollectorI
         Recommendation::garbage_collection();
         $this->userActivityRepository->collectGarbage();
         $this->userRepository->collectGarbage();
-        Playlist::garbage_collection();
-        // collaborator rows outlive their list, and a later list given the freed id inherits them
+        // dead playlist entries, plus collaborator rows that outlived their list and would otherwise
+        // be inherited by a later list handed the freed id
         $this->playlistRepository->collectGarbage();
         $this->searchRepository->collectGarbage();
         $this->shoutRepository->collectGarbage();

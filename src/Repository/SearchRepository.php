@@ -26,6 +26,8 @@ declare(strict_types=1);
 namespace Ampache\Repository;
 
 use Ampache\Repository\Model\playlist_object;
+use Ampache\Repository\Model\Search;
+use Ampache\Repository\Model\User;
 
 /**
  * Manages search related database access
@@ -44,6 +46,49 @@ final readonly class SearchRepository extends AbstractPlaylistObjectRepository i
         $this->connection->query(
             "DELETE FROM `user_playlist_map` WHERE `playlist_id` LIKE 'smart\\_%' AND `playlist_id` NOT IN (SELECT CONCAT('smart_', `id`) FROM `search`);"
         );
+    }
+
+    /**
+     * Removes the saved search
+     */
+    public function delete(Search $search): void
+    {
+        $this->connection->query('DELETE FROM `search` WHERE `id` = ?', [$search->getId()]);
+    }
+
+    /**
+     * Stores a new saved search and returns its id, or null when nothing was written
+     */
+    public function insert(Search $search, User $user, int $time): ?int
+    {
+        $this->connection->query(
+            'INSERT INTO `search` (`name`, `type`, `user`, `username`, `rules`, `logic_operator`, `random`, `limit`, `date`, `last_update`) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)',
+            [
+                $search->name,
+                $search->type,
+                $user->getId(),
+                $user->username,
+                json_encode($search->rules),
+                strtolower((string) $search->logic_operator),
+                ($search->random > 0) ? 1 : 0,
+                $search->limit,
+                $time,
+                $time,
+            ]
+        );
+
+        return $this->connection->getLastInsertedId() ?: null;
+    }
+
+    /**
+     * Whether the user already has a saved search of this name and type
+     */
+    public function nameExists(string $name, int $userId, ?string $type): bool
+    {
+        return $this->connection->fetchOne(
+            'SELECT `id` FROM `search` WHERE `name` = ? AND `user` = ? AND `type` = ?;',
+            [$name, $userId, $type]
+        ) !== false;
     }
 
     /**

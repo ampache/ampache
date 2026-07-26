@@ -26,6 +26,7 @@ namespace Ampache\Repository;
 
 use Ampache\Module\Database\DatabaseConnectionInterface;
 use Ampache\Repository\Model\Smartlist;
+use Ampache\Repository\Model\User;
 use PDOStatement;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
@@ -57,6 +58,75 @@ class SearchRepositoryTest extends TestCase
             ->with('DELETE FROM `user_playlist_map` WHERE `playlist_id` = ?;', ['smart_666']);
 
         $this->subject->deleteCollaborators($this->smartlist(666));
+    }
+
+    public function testDeleteRemovesTheSavedSearch(): void
+    {
+        $this->connection->expects(static::once())
+            ->method('query')
+            ->with('DELETE FROM `search` WHERE `id` = ?', [666]);
+
+        $this->subject->delete($this->smartlist(666));
+    }
+
+    public function testInsertBindsTheRandomFlagAsAnIntAndReturnsTheId(): void
+    {
+        $user = $this->createMock(User::class);
+        $user->method('getId')->willReturn(1);
+        $user->username = 'admin';
+
+        $smartlist                 = $this->smartlist(0);
+        $smartlist->name           = 'some-name';
+        $smartlist->type           = 'public';
+        $smartlist->logic_operator = 'AND';
+        $smartlist->random         = 2;
+        $smartlist->limit          = 25;
+
+        $this->connection->expects(static::once())
+            ->method('query')
+            ->with(
+                static::stringContains('INSERT INTO `search`'),
+                static::callback(static fn(array $params): bool => $params[5] === 'and' && $params[6] === 1)
+            );
+
+        $this->connection->expects(static::once())
+            ->method('getLastInsertedId')
+            ->willReturn(666);
+
+        static::assertSame(666, $this->subject->insert($smartlist, $user, 1234));
+    }
+
+    public function testInsertReturnsNullWhenNoIdCameBack(): void
+    {
+        $user = $this->createMock(User::class);
+        $user->method('getId')->willReturn(1);
+        $user->username = 'admin';
+
+        $this->connection->expects(static::once())->method('query');
+        $this->connection->expects(static::once())
+            ->method('getLastInsertedId')
+            ->willReturn(0);
+
+        static::assertNull($this->subject->insert($this->smartlist(0), $user, 1234));
+    }
+
+    public function testNameExistsReportsAMatch(): void
+    {
+        $this->connection->expects(static::once())
+            ->method('fetchOne')
+            ->with(static::stringContains('WHERE `name` = ? AND `user` = ? AND `type` = ?'), ['some-name', 1, 'public'])
+            ->willReturn('5');
+
+        static::assertTrue($this->subject->nameExists('some-name', 1, 'public'));
+    }
+
+    public function testNameExistsReportsNoMatch(): void
+    {
+        $this->connection->expects(static::once())
+            ->method('fetchOne')
+            ->willReturn(false);
+
+        static::assertFalse($this->subject->nameExists('some-name', 1, 'public'));
     }
 
     public function testSetLastCountSkipsAnUnsavedItem(): void

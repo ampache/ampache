@@ -45,6 +45,7 @@ use Ampache\Module\System\Core;
 use Ampache\Module\System\Dba;
 use Ampache\Repository\LicenseRepositoryInterface;
 use Ampache\Repository\MetadataFieldRepositoryInterface;
+use Ampache\Repository\SearchRepositoryInterface;
 use Ampache\Repository\UserRepositoryInterface;
 use JsonException;
 
@@ -580,6 +581,16 @@ class Search extends playlist_object
     }
 
     /**
+     * @deprecated inject dependency
+     */
+    private static function getSearchRepository(): SearchRepositoryInterface
+    {
+        global $dic;
+
+        return $dic->get(SearchRepositoryInterface::class);
+    }
+
+    /**
      * create
      *
      * Save this search to the database for use as a smart playlist
@@ -600,9 +611,8 @@ class Search extends playlist_object
             $this->name = $user->username . ' - ' . get_datetime(time());
         }
 
-        $sql        = "SELECT `id` FROM `search` WHERE `name` = ? AND `user` = ? AND `type` = ?;";
-        $db_results = Dba::read($sql, [$this->name, $user->id, $this->type]);
-        if (Dba::num_rows($db_results) !== 0) {
+        $repository = self::getSearchRepository();
+        if ($repository->nameExists((string) $this->name, $user->getId(), $this->type)) {
             $this->name .= uniqid('', true);
         }
 
@@ -610,19 +620,15 @@ class Search extends playlist_object
             $this->logic_operator = 'and';
         }
 
-        $time = time();
-
-        $sql = "INSERT INTO `search` (`name`, `type`, `user`, `username`, `rules`, `logic_operator`, `random`, `limit`, `date`, `last_update`) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
-        Dba::write($sql, [$this->name, $this->type, $user->id, $user->username, json_encode($this->rules), strtolower($this->logic_operator), ($this->random > 0) ? 1 : 0, $this->limit, $time, $time]);
-        $insert_id = Dba::insert_id();
-        if (!$insert_id) {
+        $insert_id = $repository->insert($this, $user, time());
+        if ($insert_id === null) {
             return null;
         }
 
-        $this->id = (int) $insert_id;
+        $this->id = $insert_id;
         Catalog::count_table('search');
 
-        return $insert_id;
+        return (string) $insert_id;
     }
 
     /**
@@ -632,8 +638,7 @@ class Search extends playlist_object
      */
     public function delete(): bool
     {
-        $sql = "DELETE FROM `search` WHERE `id` = ?";
-        Dba::write($sql, [$this->id]);
+        self::getSearchRepository()->delete($this);
 
         $this->getPlaylistObjectRepository()->deleteCollaborators($this);
 
