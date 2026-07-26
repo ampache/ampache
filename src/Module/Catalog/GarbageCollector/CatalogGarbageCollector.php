@@ -41,11 +41,11 @@ use Ampache\Repository\Model\Song;
 use Ampache\Repository\Model\Tag;
 use Ampache\Repository\Model\User;
 use Ampache\Repository\Model\Userflag;
-use Ampache\Repository\Model\Video;
 use Ampache\Repository\PodcastEpisodeRepositoryInterface;
 use Ampache\Repository\ShoutRepositoryInterface;
 use Ampache\Repository\UserActivityRepositoryInterface;
 use Ampache\Repository\UserRepositoryInterface;
+use Ampache\Repository\VideoRepositoryInterface;
 use Ampache\Repository\WantedRepositoryInterface;
 
 /**
@@ -67,6 +67,7 @@ final readonly class CatalogGarbageCollector implements CatalogGarbageCollectorI
         private ArtCleanupInterface $artCleanup,
         private ArtistRepositoryInterface $artistRepository,
         private FolderRepositoryInterface $folderRepository,
+        private VideoRepositoryInterface $videoRepository,
     ) {}
 
     public function collect(): void
@@ -74,7 +75,7 @@ final readonly class CatalogGarbageCollector implements CatalogGarbageCollectorI
         Song::garbage_collection();
         $this->artistRepository->collectGarbage();
         $this->albumRepository->collectGarbage();
-        Video::garbage_collection();
+        $this->videoRepository->collectGarbage();
         $this->bookmarkRepository->collectGarbage();
         $this->wantedRepository->collectGarbage();
         $this->artCleanup->collectGarbage();

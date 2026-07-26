@@ -83,6 +83,7 @@ final class ConfigurationKeyEnum
     public const string CATALOG_CHECK_DUPLICATE               = 'catalog_check_duplicate';
     public const string CATALOG_DISABLE                       = 'catalog_disable';
     public const string CATALOG_FILTER                        = 'catalog_filter';
+    public const string CATALOG_IGNORE_PATTERN                = 'catalog_ignore_pattern';
     public const string COMMON_ABBR                           = 'common_abbr';
     public const string COMPOSER_BINARY_PATH                  = 'composer_binary_path';
     public const string COMPOSER_NO_DEV                       = 'composer_no_dev';
