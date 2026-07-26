@@ -112,7 +112,7 @@ final readonly class ArtCollector implements ArtCollectorInterface
 
         if ($limit === 0) {
             $search_limit = $this->configContainer->get('art_search_limit');
-            $limit        = $search_limit ?? self::ART_SEARCH_LIMIT;
+            $limit        = ($search_limit === null) ? self::ART_SEARCH_LIMIT : (int) $search_limit;
         }
 
         if ($type == 'playlist') {
