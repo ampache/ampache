@@ -212,6 +212,9 @@ final readonly class UserRepository implements UserRepositoryInterface
             Dba::write($sql, [], true);
         }
 
+        // the collaborator map names its column `user_id`, so the loop above steps over it entirely
+        Dba::write("DELETE FROM `user_playlist_map` WHERE `user_id` NOT IN (SELECT `id` FROM `user`);", [], true);
+
         // reset their data to null if they've made custom changes
         $user_tables = [
             'artist',

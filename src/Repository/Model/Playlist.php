@@ -79,6 +79,10 @@ class Playlist extends playlist_object
 
         Dba::write("DELETE FROM `playlist_data` USING `playlist_data` LEFT JOIN `live_stream` ON `live_stream`.`id` = `playlist_data`.`object_id` WHERE `live_stream`.`id` IS NULL AND `playlist_data`.`object_type`='live_stream';");
         Dba::write("DELETE FROM `playlist` USING `playlist` LEFT JOIN `playlist_data` ON `playlist_data`.`playlist` = `playlist`.`id` WHERE `playlist_data`.`object_id` IS NULL;");
+
+        // collaborator rows outlive their list, and a later list given the freed id would inherit them
+        Dba::write("DELETE FROM `user_playlist_map` WHERE `playlist_id` NOT LIKE 'smart\\_%' AND `playlist_id` NOT IN (SELECT `id` FROM `playlist`);");
+        Dba::write("DELETE FROM `user_playlist_map` WHERE `playlist_id` LIKE 'smart\\_%' AND `playlist_id` NOT IN (SELECT CONCAT('smart_', `id`) FROM `search`);");
     }
 
     /**
@@ -876,6 +880,11 @@ class Playlist extends playlist_object
 
         $sql = "DELETE FROM `object_count` WHERE `object_type`='playlist' AND `object_id` = ?";
         Dba::write($sql, [$this->id]);
+
+        // leaving these behind lets a later playlist given this id inherit the collaborators
+        $sql = "DELETE FROM `user_playlist_map` WHERE `playlist_id` = ?";
+        Dba::write($sql, [$this->id]);
+
         Catalog::count_table('playlist');
 
         return true;
