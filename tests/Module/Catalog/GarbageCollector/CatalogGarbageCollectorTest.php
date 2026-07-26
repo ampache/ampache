@@ -33,12 +33,15 @@ use Ampache\Repository\PlaylistRepositoryInterface;
 use Ampache\Repository\PodcastEpisodeRepositoryInterface;
 use Ampache\Repository\SearchRepositoryInterface;
 use Ampache\Repository\ShoutRepositoryInterface;
+use Ampache\Repository\TagRepositoryInterface;
 use Ampache\Repository\UserActivityRepositoryInterface;
 use Ampache\Repository\UserRepositoryInterface;
 use Ampache\Repository\VideoRepositoryInterface;
 use Ampache\Repository\WantedRepositoryInterface;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
+use Psr\Container\ContainerInterface;
+use Psr\Log\LoggerInterface;
 
 class CatalogGarbageCollectorTest extends TestCase
 {
@@ -46,6 +49,7 @@ class CatalogGarbageCollectorTest extends TestCase
     private ArtCleanupInterface&MockObject $artCleanup;
     private ArtistRepositoryInterface&MockObject $artistRepository;
     private BookmarkRepositoryInterface&MockObject $bookmarkRepository;
+    private ContainerInterface&MockObject $dic;
     private FolderRepositoryInterface&MockObject $folderRepository;
     private LabelRepositoryInterface&MockObject $labelRepository;
     private MetadataManagerInterface&MockObject $metadataManager;
@@ -54,6 +58,7 @@ class CatalogGarbageCollectorTest extends TestCase
     private SearchRepositoryInterface&MockObject $searchRepository;
     private ShoutRepositoryInterface&MockObject $shoutRepository;
     private CatalogGarbageCollector $subject;
+    private TagRepositoryInterface&MockObject $tagRepository;
     private UserActivityRepositoryInterface&MockObject $userActivityRepository;
     private UserRepositoryInterface&MockObject $userRepository;
     private VideoRepositoryInterface&MockObject $videoRepository;
@@ -97,6 +102,18 @@ class CatalogGarbageCollectorTest extends TestCase
         $this->videoRepository          = $this->createMock(VideoRepositoryInterface::class);
         $this->playlistRepository       = $this->createMock(PlaylistRepositoryInterface::class);
         $this->searchRepository         = $this->createMock(SearchRepositoryInterface::class);
+        $this->tagRepository            = $this->createMock(TagRepositoryInterface::class);
+        $this->dic                      = $this->createMock(ContainerInterface::class);
+
+        // debug_event() pulls the logger off the same container, so this cannot be a single-service stub
+        $this->dic->method('get')->willReturnCallback(fn(string $id): object => match ($id) {
+            TagRepositoryInterface::class => $this->tagRepository,
+            default => $this->createMock(LoggerInterface::class),
+        });
+
+        // `Tag` reaches its repository through the `global $dic` bridge; phpunit.xml sets backupGlobals
+        // so the real container is restored after every test
+        $GLOBALS['dic'] = $this->dic;
 
         $this->subject = new CatalogGarbageCollector(
             $this->albumRepository,

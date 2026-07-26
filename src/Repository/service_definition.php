@@ -64,5 +64,6 @@ return [
     PodcastEpisodeRepositoryInterface::class => autowire(PodcastEpisodeRepository::class),
     ImageRepositoryInterface::class => autowire(ImageRepository::class),
     AlbumDiskRepositoryInterface::class => autowire(AlbumDiskRepository::class),
+    TagRepositoryInterface::class => autowire(TagRepository::class),
     LibraryItemLoaderInterface::class => autowire(LibraryItemLoader::class),
 ];
