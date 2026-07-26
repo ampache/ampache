@@ -87,6 +87,13 @@ class Recommendation
             'megaphoto' => null,
         ];
 
+        if ($album->isNew() === false) {
+            $results['largephoto']  = Art::url($album->id, 'album', null, 174);
+            $results['smallphoto']  = Art::url($album->id, 'album', null, 34);
+            $results['mediumphoto'] = Art::url($album->id, 'album', null, 64);
+            $results['megaphoto']   = Art::url($album->id, 'album', null, 300);
+        }
+
         try {
             $xml = self::get_lastfm_results('album.getinfo', $query);
         } catch (LastFmQueryFailedException) {
@@ -106,14 +113,6 @@ class Recommendation
             )
         );
         $results['summary'] = str_replace("Read more on Last.fm", "", $results['summary']);
-
-        if ($album->isNew() === false) {
-            $results['id']          = $album->id;
-            $results['largephoto']  = Art::url($album->id, 'album', null, 174);
-            $results['smallphoto']  = Art::url($album->id, 'album', null, 34);
-            $results['mediumphoto'] = Art::url($album->id, 'album', null, 64);
-            $results['megaphoto']   = Art::url($album->id, 'album', null, 300);
-        }
 
         return $results;
     }
@@ -144,41 +143,33 @@ class Recommendation
             return ['id' => $artist_id, 'summary' => $artist->summary, 'placeformed' => $artist->placeformed, 'yearformed' => (int) $artist->yearformed, 'largephoto' => Art::url($artist->id, 'artist', null, 174), 'smallphoto' => Art::url($artist->id, 'artist', null, 34), 'mediumphoto' => Art::url($artist->id, 'artist', null, 64), 'megaphoto' => Art::url($artist->id, 'artist', null, 300)];
         }
 
-        try {
-            $xml = self::get_lastfm_results('artist.getinfo', $query);
-        } catch (LastFmQueryFailedException) {
-            return [
-                'id' => $artist_id,
-                'summary' => null,
-                'placeformed' => null,
-                'yearformed' => null,
-                'largephoto' => null,
-                'smallphoto' => null,
-                'mediumphoto' => null,
-                'megaphoto' => null,
-            ];
-        }
-
-        if (!isset($xml->artist->bio)) {
-            return [
-                'id' => $artist_id,
-                'summary' => null,
-                'placeformed' => null,
-                'yearformed' => null,
-                'largephoto' => null,
-                'smallphoto' => null,
-                'mediumphoto' => null,
-                'megaphoto' => null,
-            ];
-        }
-
         $results = [
-            'id' => null,
+            'id' => $artist_id,
+            'summary' => null,
+            'placeformed' => null,
+            'yearformed' => null,
             'largephoto' => null,
             'smallphoto' => null,
             'mediumphoto' => null,
             'megaphoto' => null,
         ];
+        if ($artist->isNew() === false) {
+            $results['largephoto']  = Art::url($artist->id, 'artist', null, 174);
+            $results['smallphoto']  = Art::url($artist->id, 'artist', null, 34);
+            $results['mediumphoto'] = Art::url($artist->id, 'artist', null, 64);
+            $results['megaphoto']   = Art::url($artist->id, 'artist', null, 300);
+        }
+
+        try {
+            $xml = self::get_lastfm_results('artist.getinfo', $query);
+        } catch (LastFmQueryFailedException) {
+            return $results;
+        }
+
+        if (!isset($xml->artist->bio)) {
+            return $results;
+        }
+
         $results['summary'] = strip_tags(
             (string) preg_replace(
                 "#<a href=([^<]*)Last\.fm</a>.#",
@@ -194,16 +185,12 @@ class Recommendation
             ? (int) $xml->artist->bio->yearformed
             : null;
 
-        if ($artist->isNew() === false) {
-            $results['id'] = $artist->id;
-            if (($results['summary'] !== '' && $results['summary'] !== '0')) {
-                $artist->update_artist_info($results['summary'], $results['placeformed'], $results['yearformed']);
-            }
-
-            $results['largephoto']  = Art::url($artist->id, 'artist', null, 174);
-            $results['smallphoto']  = Art::url($artist->id, 'artist', null, 34);
-            $results['mediumphoto'] = Art::url($artist->id, 'artist', null, 64);
-            $results['megaphoto']   = Art::url($artist->id, 'artist', null, 300);
+        if (
+            $artist->isNew() === false
+            && $results['summary'] !== ''
+            && $results['summary'] !== '0'
+        ) {
+            $artist->update_artist_info($results['summary'], $results['placeformed'], $results['yearformed']);
         }
 
         return $results;
