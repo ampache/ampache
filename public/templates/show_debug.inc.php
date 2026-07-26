@@ -196,7 +196,7 @@ echo ini_get('max_execution_time') ? T_('Failed') : T_('Succeeded'); ?></td>
         $value = $string;
     }
     if (Preference::is_boolean($key)) {
-        $value = Ui::printBool($value);
+        $value = Ui::printBool((bool) $value);
     }
 
     // Be sure to print only scalar values
