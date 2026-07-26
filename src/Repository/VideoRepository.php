@@ -30,6 +30,7 @@ use Ampache\Config\ConfigurationKeyEnum;
 use Ampache\Module\Database\DatabaseConnectionInterface;
 use Ampache\Module\Database\Exception\DatabaseException;
 use Ampache\Repository\Model\Catalog;
+use Ampache\Repository\Model\ModelFactoryInterface;
 use Ampache\Repository\Model\Video;
 use PDO;
 
@@ -38,6 +39,7 @@ final readonly class VideoRepository implements VideoRepositoryInterface
     public function __construct(
         private DatabaseConnectionInterface $connection,
         private ConfigContainerInterface $configContainer,
+        private ModelFactoryInterface $modelFactory,
     ) {}
 
     /**
@@ -76,6 +78,20 @@ final readonly class VideoRepository implements VideoRepositoryInterface
         }
 
         return true;
+    }
+
+    /**
+     * Loads a single video, or null when the id matches nothing
+     */
+    public function findById(int $objectId): ?Video
+    {
+        $video = $this->modelFactory->createVideo($objectId);
+
+        if ($video->isNew()) {
+            return null;
+        }
+
+        return $video;
     }
 
     /**

@@ -28,6 +28,7 @@ use Ampache\Module\Database\DatabaseConnectionInterface;
 use Ampache\Module\Database\Exception\QueryFailedException;
 use Ampache\Repository\Model\Album;
 use Ampache\Repository\Model\AlbumDisk;
+use Ampache\Repository\Model\ModelFactoryInterface;
 use PDOStatement;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
@@ -36,6 +37,7 @@ class AlbumDiskRepositoryTest extends TestCase
 {
     private ConfigContainerInterface&MockObject $configContainer;
     private DatabaseConnectionInterface&MockObject $connection;
+    private ModelFactoryInterface&MockObject $modelFactory;
     private AlbumDiskRepository $subject;
 
     public function testCheckAdoptsTheCollidingRowWhenTheMoveHitTheUniqueKey(): void
@@ -160,6 +162,29 @@ class AlbumDiskRepositoryTest extends TestCase
             ->willThrowException(new QueryFailedException());
 
         static::assertSame(0, $this->subject->check(21, 2, 7));
+    }
+
+    public function testFindByIdReturnsNullWhenTheDiskDoesNotExist(): void
+    {
+        $albumDisk = $this->createMock(AlbumDisk::class);
+        $albumDisk->method('isNew')->willReturn(true);
+
+        $this->modelFactory->method('createAlbumDisk')->willReturn($albumDisk);
+
+        static::assertNull($this->subject->findById(666));
+    }
+
+    public function testFindByIdReturnsTheLoadedDisk(): void
+    {
+        $albumDisk = $this->createMock(AlbumDisk::class);
+        $albumDisk->method('isNew')->willReturn(false);
+
+        $this->modelFactory->expects(static::once())
+            ->method('createAlbumDisk')
+            ->with(666)
+            ->willReturn($albumDisk);
+
+        static::assertSame($albumDisk, $this->subject->findById(666));
     }
 
     public function testGetArtistCountReturnsTheMappedArtistCount(): void
@@ -289,10 +314,12 @@ class AlbumDiskRepositoryTest extends TestCase
     {
         $this->connection      = $this->createMock(DatabaseConnectionInterface::class);
         $this->configContainer = $this->createMock(ConfigContainerInterface::class);
+        $this->modelFactory    = $this->createMock(ModelFactoryInterface::class);
 
         $this->subject = new AlbumDiskRepository(
             $this->connection,
-            $this->configContainer
+            $this->configContainer,
+            $this->modelFactory
         );
     }
 }

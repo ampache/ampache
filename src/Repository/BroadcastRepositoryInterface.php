@@ -45,6 +45,11 @@ interface BroadcastRepositoryInterface
     public function delete(Broadcast $broadcast): void;
 
     /**
+     * Loads a single broadcast, or null when the id matches nothing
+     */
+    public function findById(int $objectId): ?Broadcast;
+
+    /**
      * Finds the broadcast currently published under the given key
      */
     public function findByKey(string $key): ?Broadcast;

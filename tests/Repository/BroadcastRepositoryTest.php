@@ -70,6 +70,29 @@ class BroadcastRepositoryTest extends TestCase
         $this->subject->delete($broadcast);
     }
 
+    public function testFindByIdReturnsNullWhenTheBroadcastDoesNotExist(): void
+    {
+        $broadcast = $this->createMock(Broadcast::class);
+        $broadcast->method('isNew')->willReturn(true);
+
+        $this->modelFactory->method('createBroadcast')->willReturn($broadcast);
+
+        static::assertNull($this->subject->findById(666));
+    }
+
+    public function testFindByIdReturnsTheLoadedBroadcast(): void
+    {
+        $broadcast = $this->createMock(Broadcast::class);
+        $broadcast->method('isNew')->willReturn(false);
+
+        $this->modelFactory->expects(static::once())
+            ->method('createBroadcast')
+            ->with(666)
+            ->willReturn($broadcast);
+
+        static::assertSame($broadcast, $this->subject->findById(666));
+    }
+
     public function testFindByKeyReturnsNullIfTheKeyIsUnknown(): void
     {
         $this->connection->expects(static::once())

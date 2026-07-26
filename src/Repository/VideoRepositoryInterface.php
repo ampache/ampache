@@ -40,6 +40,11 @@ interface VideoRepositoryInterface
     public function delete(Video $video): bool;
 
     /**
+     * Loads a single video, or null when the id matches nothing
+     */
+    public function findById(int $objectId): ?Video;
+
+    /**
      * Returns the recorded details of every deleted video
      *
      * @return list<array<string, mixed>>

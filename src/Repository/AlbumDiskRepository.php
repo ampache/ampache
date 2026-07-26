@@ -31,6 +31,7 @@ use Ampache\Module\Database\DatabaseConnectionInterface;
 use Ampache\Module\Database\Exception\DatabaseException;
 use Ampache\Repository\Model\Album;
 use Ampache\Repository\Model\AlbumDisk;
+use Ampache\Repository\Model\ModelFactoryInterface;
 
 /**
  * Provides database access to album-disks
@@ -40,6 +41,7 @@ final readonly class AlbumDiskRepository implements AlbumDiskRepositoryInterface
     public function __construct(
         private DatabaseConnectionInterface $connection,
         private ConfigContainerInterface $configContainer,
+        private ModelFactoryInterface $modelFactory,
     ) {}
 
     /**
@@ -67,6 +69,22 @@ final readonly class AlbumDiskRepository implements AlbumDiskRepositoryInterface
         }
 
         return $this->create($albumId, $disk, $catalogId, $disksubtitle);
+    }
+
+    /**
+     * Loads a single album-disk, or null when the id matches nothing
+     *
+     * A disk whose parent album is missing also reports as new, so it is filtered out here too.
+     */
+    public function findById(int $objectId): ?AlbumDisk
+    {
+        $albumDisk = $this->modelFactory->createAlbumDisk($objectId);
+
+        if ($albumDisk->isNew()) {
+            return null;
+        }
+
+        return $albumDisk;
     }
 
     /**

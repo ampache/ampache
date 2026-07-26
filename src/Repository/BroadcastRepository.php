@@ -66,6 +66,20 @@ final readonly class BroadcastRepository implements BroadcastRepositoryInterface
     }
 
     /**
+     * Loads a single broadcast, or null when the id matches nothing
+     */
+    public function findById(int $objectId): ?Broadcast
+    {
+        $broadcast = $this->modelFactory->createBroadcast($objectId);
+
+        if ($broadcast->isNew()) {
+            return null;
+        }
+
+        return $broadcast;
+    }
+
+    /**
      * Finds the broadcast currently published under the given key
      */
     public function findByKey(string $key): ?Broadcast

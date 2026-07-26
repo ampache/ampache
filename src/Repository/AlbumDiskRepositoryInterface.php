@@ -44,6 +44,11 @@ interface AlbumDiskRepositoryInterface
     ): int;
 
     /**
+     * Loads a single album-disk, or null when the id matches nothing
+     */
+    public function findById(int $objectId): ?AlbumDisk;
+
+    /**
      * Returns the number of distinct artists mapped to the disk's album
      */
     public function getArtistCount(AlbumDisk $albumDisk): int;

@@ -28,6 +28,7 @@ use Ampache\Config\ConfigContainerInterface;
 use Ampache\Config\ConfigurationKeyEnum;
 use Ampache\Module\Database\DatabaseConnectionInterface;
 use Ampache\Module\Database\Exception\QueryFailedException;
+use Ampache\Repository\Model\ModelFactoryInterface;
 use Ampache\Repository\Model\Video;
 use PDOStatement;
 use PHPUnit\Framework\MockObject\MockObject;
@@ -37,6 +38,7 @@ class VideoRepositoryTest extends TestCase
 {
     private ConfigContainerInterface&MockObject $configContainer;
     private DatabaseConnectionInterface&MockObject $connection;
+    private ModelFactoryInterface&MockObject $modelFactory;
     private VideoRepository $subject;
 
     public function testCollectGarbageAppliesTheIgnorePattern(): void
@@ -113,6 +115,29 @@ class VideoRepositoryTest extends TestCase
             ->willThrowException(new QueryFailedException('some-error'));
 
         static::assertFalse($this->subject->delete($video));
+    }
+
+    public function testFindByIdReturnsNullWhenTheVideoDoesNotExist(): void
+    {
+        $video = $this->createMock(Video::class);
+        $video->method('isNew')->willReturn(true);
+
+        $this->modelFactory->method('createVideo')->willReturn($video);
+
+        static::assertNull($this->subject->findById(666));
+    }
+
+    public function testFindByIdReturnsTheLoadedVideo(): void
+    {
+        $video = $this->createMock(Video::class);
+        $video->method('isNew')->willReturn(false);
+
+        $this->modelFactory->expects(static::once())
+            ->method('createVideo')
+            ->with(666)
+            ->willReturn($video);
+
+        static::assertSame($video, $this->subject->findById(666));
     }
 
     public function testGetItemCountReturnsTheCount(): void
@@ -228,10 +253,12 @@ class VideoRepositoryTest extends TestCase
     {
         $this->connection      = $this->createMock(DatabaseConnectionInterface::class);
         $this->configContainer = $this->createMock(ConfigContainerInterface::class);
+        $this->modelFactory    = $this->createMock(ModelFactoryInterface::class);
 
         $this->subject = new VideoRepository(
             $this->connection,
-            $this->configContainer
+            $this->configContainer,
+            $this->modelFactory
         );
     }
 }
