@@ -63,9 +63,10 @@ final class SystemUpdate5Method
 
         $has_update = AutoUpdate::is_update_available(true);
         if ($has_update) {
-            // run the update
-            AutoUpdate::update_files(true);
-            AutoUpdate::update_dependencies(self::getConfigContainer(), true);
+            // run the update; dependencies are pointless when the sources they belong to never arrived
+            if (AutoUpdate::update_files(true)) {
+                AutoUpdate::update_dependencies(self::getConfigContainer(), true);
+            }
             Preference::translate_db();
             // check that the update completed or failed.
             $has_update = AutoUpdate::is_update_available(true);
