@@ -87,6 +87,45 @@ final class UpdateRunner implements UpdateRunnerInterface
         // Prevent the script from timing out, which could be bad
         set_time_limit(0);
 
+        // Migration\V8\Migration800029 needs no rollback. It added a maintained `last_played` column to the
+        // tables carrying a play counter. Ampache7 never reads it, so a downgraded database keeps an unused
+        // nullable column, and dropping it would only throw away a value the migration rebuilds from
+        // `object_count` when the database is upgraded again.
+
+        // Migration\V8\Migration800028 needs no rollback. It created the `collection` and `collection_map`
+        // tables, which Ampache7 never reads; dropping them would destroy hand-curated lists to undo a change
+        // that costs the older version nothing, and the Ampache8 migration re-creates them with IF NOT EXISTS
+        // so the contents survive a downgrade/upgrade cycle. Its other half widened the `object_type` enums to
+        // accept `collection`, and the `>= 800004` block below already narrows every one of those enums back
+        // to the Ampache7 spelling and deletes the rows that no longer fit.
+
+        if ($currentVersion >= 800027) {
+            // Migration\V8\Migration800027 (Ampache7 has no per-player bitrate overrides)
+            // `transcode_bitrate_formats`, which that migration deleted, was itself Ampache8-only, so there is
+            // nothing to put back -- the `>= 800019` block below deletes it for databases that still carry it
+            if (
+                !Preference::delete('transcode_bitrate_webplayer') ||
+                !Preference::delete('transcode_bitrate_api')
+            ) {
+                throw new UpdateFailedException();
+            }
+        }
+
+        // Migration\V8\Migration800026 needs no rollback. It only relabelled the preference
+        // `disabled_custom_metadata_fields_input`, and Preference::translate_db() -- which this method runs
+        // unconditionally at the end -- puts Ampache7's own wording back without any help from here.
+
+        // Migration\V8\Migration800025 needs no rollback. It added the `user`.`subsonic_secret` column, which
+        // Ampache7 never reads; dropping it would discard every Subsonic password the user had set, and they
+        // cannot be regenerated because the column holds a secret of the user's own choosing.
+
+        if ($currentVersion >= 800024) {
+            // Migration\V8\Migration800024 (Ampache7's cached play counts have no live-count option)
+            if (!Preference::delete('cron_cache_live_count')) {
+                throw new UpdateFailedException();
+            }
+        }
+
         // Migration\V8\Migration800023 needs no rollback. It corrected art mime types that had been
         // built from the uploaded filename (`image/jpg`, which is not a registered type, and
         // `image/JPG` for an upper case name) to the type read from the image data itself. Ampache7
@@ -202,6 +241,9 @@ final class UpdateRunner implements UpdateRunnerInterface
             }
         }
 
+        // Migration\V8\Migration800009 needs no rollback of its own. It added `folder`.`weight`, and the
+        // `>= 800007` block below drops the whole `folder` table, taking the column with it.
+
         if ($currentVersion >= 800008) {
             // Migration\V8\Migration800010 (`folder_map` was created by Migration800008 in older develop8 builds)
             if (
@@ -250,6 +292,15 @@ final class UpdateRunner implements UpdateRunnerInterface
                 throw new UpdateFailedException();
             }
         }
+
+        // Migration\V8\Migration800005 needs no rollback. It replaced a `direct_play_limit` of 0 (unlimited)
+        // with 500. Ampache7 reads the same preference and honours the same meaning, the per-user values it
+        // overwrote are not recoverable, and restoring 0 would only reintroduce the multi-thousand-track
+        // direct play the migration exists to stop.
+
+        // Migration\V8\Migration800001 needs no rollback. It switched every user off `subsonic_legacy`, which
+        // Ampache7 also serves both sides of, so the value stays meaningful there. The individual values it
+        // overwrote are gone either way -- the migration recorded no before-state to restore.
 
         if ($currentVersion >= 800000) {
             // Migration\V8\Migration800000
