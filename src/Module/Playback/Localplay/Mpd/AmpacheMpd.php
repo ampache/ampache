@@ -536,19 +536,15 @@ class AmpacheMpd extends localplay_controller
      */
     public function skip(int $track_id): bool
     {
-        if (
-            !$this->_mpd
-            || !$this->_mpd->SkipTo($track_id)
-        ) {
+        if (!$this->_mpd instanceof mpd) {
             return false;
         }
 
-        sleep(2);
-        $this->stop();
-        sleep(2);
-        $this->play();
-
-        return true;
+        // SkipTo sends `play <pos>`, which already starts the track. Stopping and starting again around it made the
+        // player drop its buffer and fetch the whole song a second time -- a remote player has no cache to resume
+        // from, so every restart is a fresh download of the whole stream and another registered play. The position
+        // is returned rather than a status, so only a null (no command sent) counts as a failure here.
+        return $this->_mpd->SkipTo($track_id) !== null;
     }
 
     /**

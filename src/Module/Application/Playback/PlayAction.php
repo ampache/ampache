@@ -1037,14 +1037,21 @@ final readonly class PlayAction implements ApplicationActionInterface
             } else {
                 // Content-length guessing if required by the player.
                 // Otherwise it shouldn't be used as we are not really sure about final length when transcoding
+                // The fourth argument is the media type, not the codec. Passing the codec sends get_transcode_format()
+                // looking up `encode_<codec>_target` keys that don't exist, so it resolves a different output format
+                // than Song::get_transcode_settings() did for the transcoder that is actually running.
                 $transcode_settings = Stream::get_transcode_settings_for_media(
                     $streamConfiguration['file_type'],
                     $transcode_to,
                     $player,
-                    $streamConfiguration['file_type'],
+                    $type,
                     $troptions
                 );
-                $transcode_to = $transcode_settings['format'] ?? $format;
+
+                // The running transcoder is the authority on what is being sent; this lookup only supplies a bitrate
+                // for the guess below. `$format` is the request's `format` parameter, so falling back to it left the
+                // output type empty on every normal stream url and the mp3 branch below could never fire.
+                $output_type = $transcoder['format'] ?? $transcode_settings['format'] ?? $transcode_to;
 
                 // At this point, the bitrate has already been decided inside Stream::start_transcode
                 // so we just try to emulate that logic here
@@ -1058,12 +1065,18 @@ final readonly class PlayAction implements ApplicationActionInterface
                 }
 
                 // We always guess MP3 content length even when not required, since that codec calculates properly
-                if ($this->requestParser->getFromRequest('content_length') === 'required' || $transcode_to == 'mp3') {
+                if ($this->requestParser->getFromRequest('content_length') === 'required' || $output_type == 'mp3') {
                     if ($media->time > 0 && $stream_rate > 0) {
                         $stream_size = (int) (($media->time * $stream_rate * 1024) / 8);
                     } else {
+                        // Name the value that failed. Either one alone leaves the response with no Content-Length,
+                        // and a duration of zero points at the catalog while a rate of zero points at the config.
                         $this->logger->debug(
-                            'Bad media duration / stream bitrate. Content-length calculation skipped.',
+                            sprintf(
+                                'Bad media duration (%d) / stream bitrate (%d). Content-length calculation skipped.',
+                                $media->time,
+                                (int) $stream_rate
+                            ),
                             [LegacyLogger::CONTEXT_TYPE => self::class]
                         );
                         $stream_size = 0;
