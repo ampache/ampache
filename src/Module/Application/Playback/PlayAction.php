@@ -1053,16 +1053,10 @@ final readonly class PlayAction implements ApplicationActionInterface
                 // output type empty on every normal stream url and the mp3 branch below could never fire.
                 $output_type = $transcoder['format'] ?? $transcode_settings['format'] ?? $transcode_to;
 
-                // At this point, the bitrate has already been decided inside Stream::start_transcode
-                // so we just try to emulate that logic here
-                $stream_rate = 0;
-                if (isset($troptions['bitrate'])) {
-                    // note that the bitrate transcode option is stored as metric bits i.e. kilobits*1000 instead of kilobits*1024
-                    $stream_rate = $troptions['bitrate'] / 1024;
-                } elseif ($transcode_settings !== []) {
-                    // get_max_bitrate() returns bps; scale to match the /1024 used by the bitrate branch above
-                    $stream_rate = Stream::get_max_bitrate($media, $transcode_settings, $troptions, $player) / 1024;
-                }
+                // Ask the same resolver start_transcode uses instead of re-deriving a rate here, so the length we
+                // advertise cannot drift from the rate the encoder was actually handed. Rates are metric bits
+                // (kilobits*1000), so the /1024 keeps them in step with the size maths below.
+                $stream_rate = Stream::get_transcode_bitrate($media, $transcode_settings, $troptions, $player) / 1024;
 
                 // We always guess MP3 content length even when not required, since that codec calculates properly
                 if ($this->requestParser->getFromRequest('content_length') === 'required' || $output_type == 'mp3') {

@@ -567,6 +567,36 @@ class Stream
     }
 
     /**
+     * get_transcode_bitrate
+     *
+     * The rate a transcode will actually be encoded at. A rate asked for by name takes precedence over the user's
+     * allowance, but the target format's ceiling applies either way, so callers that only want to describe the
+     * stream (a content length, say) resolve the same number the encoder is handed.
+     *
+     * @param array{format?: string, command?: string} $transcode_settings
+     * @param array{bitrate?: float|int, maxbitrate?: int, subtitle?: string, resolution?: string, quality?: int, frame?: float, duration?: float} $options
+     */
+    public static function get_transcode_bitrate(
+        Podcast_Episode|Video|Song $media,
+        array $transcode_settings,
+        array $options = [],
+        ?string $player = null,
+    ): int {
+        $bit_rate = isset($options['bitrate'])
+            ? (int) $options['bitrate']
+            : self::get_max_bitrate($media, $transcode_settings, $options, $player);
+
+        // A named rate never reaches get_max_bitrate, so its ceiling check has to be repeated here.
+        $format_max = self::get_format_max_bitrate($transcode_settings['format'] ?? null);
+        if ($format_max > 0 && $bit_rate > $format_max) {
+            debug_event(self::class, 'Clamping requested bitrate to the format maximum of ' . $format_max, 5);
+            $bit_rate = $format_max;
+        }
+
+        return $bit_rate;
+    }
+
+    /**
      * Get transcode format for media based on config settings
      */
     public static function get_transcode_format(
@@ -872,9 +902,7 @@ class Stream
         }
 
         $song_file = self::_scrub_arg($media->file);
-        $bit_rate  = isset($options['bitrate'])
-            ? (int) $options['bitrate']
-            : self::get_max_bitrate($media, $transcode_settings, $options, $player);
+        $bit_rate  = self::get_transcode_bitrate($media, $transcode_settings, $options, $player);
         debug_event(self::class, 'Final transcode bitrate is ' . $bit_rate, 4);
 
         // Both %BITRATE% and %MAXBITRATE% are substituted as plain bps values

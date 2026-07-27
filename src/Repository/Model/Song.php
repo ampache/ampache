@@ -2193,15 +2193,21 @@ class Song extends database_object implements
                 : Stream::get_transcode_format($this->type, null, $player);
             // the rate advertised here follows the player, which may carry an override of the user's default rate
             $bitrate = Stream::get_player_bitrate($player);
+
+            // No cap configured means the file's own rate is the target. Comparing a raw zero against the source
+            // instead reads as a rate below every file, which forces a transcode of everything it is asked for.
+            $target_rate = ($bitrate > 0)
+                ? $bitrate
+                : (int) $this->bitrate;
             if (
                 $transcode_type !== null
                 && $transcode_type !== ''
                 && $transcode_type !== '0'
-                && ($this->type !== $transcode_type || $bitrate < $this->bitrate)
+                && ($this->type !== $transcode_type || $target_rate < $this->bitrate)
             ) {
                 $this->type    = $transcode_type;
                 $this->mime    = self::type_to_mime($transcode_type);
-                $this->bitrate = $bitrate;
+                $this->bitrate = $target_rate;
 
                 // replace duplicate/incorrect parameters on the additional params
                 $patterns = [
@@ -2210,7 +2216,13 @@ class Song extends database_object implements
                     '/&bitrate=[0-9]+/',
                 ];
                 $additional_params = preg_replace($patterns, '', $additional_params);
-                $additional_params .= '&transcode_to=' . $transcode_type . '&bitrate=' . $bitrate;
+                $additional_params .= '&transcode_to=' . $transcode_type;
+
+                // Only a real cap belongs in the url. Pinning the source rate here would hand the stream side a
+                // number it resolves better itself, and a zero is just noise the play action has to ignore.
+                if ($bitrate > 0) {
+                    $additional_params .= '&bitrate=' . $bitrate;
+                }
             }
         }
 
