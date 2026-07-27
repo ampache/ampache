@@ -2634,6 +2634,101 @@ class OpenSubsonic_Api
     }
 
     /**
+     * getTranscodeDecision [OS]
+     *
+     * OpenSubsonic extension `transcoding`. Reports whether a client can play a media item as it stands, and what it
+     * would be given instead. POST only, because the client capabilities arrive as a JSON body.
+     * https://opensubsonic.netlify.app/docs/endpoints/gettranscodedecision/
+     * @param array<string, mixed> $input
+     */
+    public static function getTranscodeDecision(array $input, User $user): void
+    {
+        unset($user);
+        $sub_id = self::_check_parameter($input, 'mediaId', __FUNCTION__);
+        if ($sub_id === false) {
+            return;
+        }
+
+        $media = self::getAmpacheObject($sub_id);
+        if (
+            (!($media instanceof Song || $media instanceof Podcast_Episode))
+            || $media->isNew()
+        ) {
+            self::_errorOutput($input, self::SSERROR_DATA_NOTFOUND, __FUNCTION__);
+
+            return;
+        }
+
+        // SubsonicApiApplication decodes the JSON body into this key; an empty one means the client declared no
+        // limits, which the spec reads as "anything goes" rather than as a malformed request.
+        $clientInfo = (is_array($input['_body'] ?? null)) ? $input['_body'] : [];
+        $decision   = OpenSubsonic_Transcode::decide($media, $clientInfo);
+
+        $format = (string) ($input['f'] ?? 'xml');
+        if ($format === 'xml') {
+            $response = self::_addXmlResponse(__FUNCTION__);
+            $response = OpenSubsonic_Xml_Data::addTranscodeDecision($response, $decision);
+        } else {
+            $response = self::_addJsonResponse(__FUNCTION__);
+            $response = OpenSubsonic_Json_Data::addTranscodeDecision($response, $decision);
+        }
+        self::_responseOutput($input, __FUNCTION__, $response);
+    }
+
+    /**
+     * getTranscodeStream [OS]
+     *
+     * OpenSubsonic extension `transcoding`. Streams a media item using the settings getTranscodeDecision resolved,
+     * carried in the opaque `transcodeParams` token.
+     * https://opensubsonic.netlify.app/docs/endpoints/gettranscodestream/
+     * @param array<string, mixed> $input
+     */
+    public static function getTranscodeStream(array $input, User $user): void
+    {
+        $sub_id = self::_check_parameter($input, 'mediaId', __FUNCTION__);
+        if ($sub_id === false) {
+            return;
+        }
+
+        $token = self::_check_parameter($input, 'transcodeParams', __FUNCTION__);
+        if ($token === false) {
+            return;
+        }
+
+        $media = self::getAmpacheObject($sub_id);
+        if (
+            (!($media instanceof Song || $media instanceof Podcast_Episode))
+            || $media->isNew()
+        ) {
+            self::_errorOutput($input, self::SSERROR_DATA_NOTFOUND, __FUNCTION__);
+
+            return;
+        }
+
+        // A token that fails its signature is refused outright; falling back to a default transcode would let a
+        // client pick its own output by sending rubbish here.
+        $settings = OpenSubsonic_Transcode::decodeParams((string) $token);
+        if ($settings === null) {
+            self::_errorOutput($input, self::SSERROR_MISSINGPARAM, __FUNCTION__);
+
+            return;
+        }
+
+        $client = scrub_in((string) ($input['c'] ?? 'Subsonic'));
+        $params = '&client=' . rawurlencode($client)
+            . '&transcode_to=' . $settings['format']
+            . '&bitrate=' . $settings['bitrate']
+            . '&cache=1';
+
+        $offset = (int) ($input['offset'] ?? 0);
+        if ($offset > 0) {
+            $params .= '&frame=' . $offset;
+        }
+
+        self::_follow_stream($media->play_url($params, 'api', function_exists('curl_version'), $user->id, $user->streamtoken));
+    }
+
+    /**
      * getUser
      *
      * Get details about all users, including which authorization roles and folder access they have.

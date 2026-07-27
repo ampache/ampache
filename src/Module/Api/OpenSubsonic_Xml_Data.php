@@ -1408,6 +1408,44 @@ class OpenSubsonic_Xml_Data
     }
 
     /**
+     * addTranscodeDecision
+     *
+     * https://opensubsonic.netlify.app/docs/responses/transcodedecision/
+     * @param array<string, mixed> $decision
+     */
+    public static function addTranscodeDecision(SimpleXMLElement $xml, array $decision): SimpleXMLElement
+    {
+        $xdecision = self::_addChildToResultXml($xml, 'transcodeDecision');
+        foreach (['canDirectPlay', 'canTranscode'] as $key) {
+            $xdecision->addAttribute($key, ($decision[$key] ?? false) ? 'true' : 'false');
+        }
+
+        foreach (['errorReason', 'transcodeParams'] as $key) {
+            if (isset($decision[$key])) {
+                $xdecision->addAttribute($key, (string) $decision[$key]);
+            }
+        }
+
+        foreach ((array) ($decision['transcodeReason'] ?? []) as $reason) {
+            self::_addChildToResultXml($xdecision, 'transcodeReason', (string) $reason);
+        }
+
+        // Both stream blocks are flat scalar maps, so each becomes one element carrying the values as attributes.
+        foreach (['sourceStream', 'transcodeStream'] as $key) {
+            if (!is_array($decision[$key] ?? null)) {
+                continue;
+            }
+
+            $xstream = self::_addChildToResultXml($xdecision, $key);
+            foreach ($decision[$key] as $name => $value) {
+                $xstream->addAttribute((string) $name, (string) $value);
+            }
+        }
+
+        return $xml;
+    }
+
+    /**
      * addUser
      *
      * https://opensubsonic.netlify.app/docs/responses/user/

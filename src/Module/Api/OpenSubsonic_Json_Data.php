@@ -1591,6 +1591,22 @@ class OpenSubsonic_Json_Data
     }
 
     /**
+     * addTranscodeDecision
+     *
+     * A transcode decision for a media item.
+     * https://opensubsonic.netlify.app/docs/responses/transcodedecision/
+     * @param array{'subsonic-response': array<string, mixed>} $response
+     * @param array<string, mixed> $decision
+     * @return array{'subsonic-response': array<string, mixed>}
+     */
+    public static function addTranscodeDecision(array $response, array $decision): array
+    {
+        $response['subsonic-response']['transcodeDecision'] = $decision;
+
+        return $response;
+    }
+
+    /**
      * addUser
      *
      * user.
