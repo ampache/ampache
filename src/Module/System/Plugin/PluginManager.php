@@ -143,7 +143,7 @@ final class PluginManager implements PluginManagerInterface
 
         // Newly-installed preferences only surface once the per-user tables are rebuilt from the fresh definitions
         Preference::clear_from_session();
-        User::rebuild_all_preferences();
+        Preference::rebuild_all_preferences();
 
         return true;
     }
@@ -174,7 +174,7 @@ final class PluginManager implements PluginManagerInterface
         }
 
         $result = (new Plugin($name))->uninstall();
-        User::rebuild_all_preferences();
+        Preference::rebuild_all_preferences();
 
         return $result;
     }
@@ -186,7 +186,7 @@ final class PluginManager implements PluginManagerInterface
         }
 
         $result = (new Plugin($name))->upgrade();
-        User::rebuild_all_preferences();
+        Preference::rebuild_all_preferences();
 
         return $result;
     }

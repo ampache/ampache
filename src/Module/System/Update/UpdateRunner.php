@@ -33,7 +33,6 @@ use Ampache\Module\System\Update\Exception\UpdateFailedException;
 use Ampache\Module\System\Update\Migration\MigrationInterface;
 use Ampache\Repository\Model\Preference;
 use Ampache\Repository\Model\UpdateInfoEnum;
-use Ampache\Repository\Model\User;
 use Ampache\Repository\UpdateInfoRepositoryInterface;
 use Generator;
 use Psr\Log\LoggerInterface;
@@ -111,7 +110,7 @@ final readonly class UpdateRunner implements UpdateRunnerInterface
             [LegacyLogger::CONTEXT_TYPE => self::class]
         );
 
-        User::rebuild_all_preferences();
+        Preference::rebuild_all_preferences();
 
         // translate preferences on DB update
         Preference::translate_db();
@@ -162,7 +161,7 @@ final readonly class UpdateRunner implements UpdateRunnerInterface
             [LegacyLogger::CONTEXT_TYPE => self::class]
         );
 
-        User::rebuild_all_preferences();
+        Preference::rebuild_all_preferences();
 
         // translate preferences on DB update
         Preference::translate_db();

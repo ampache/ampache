@@ -33,6 +33,7 @@ use Ampache\Module\Playback\Localplay\LocalPlayTypeEnum;
 use Ampache\Module\Playback\Stream;
 use Ampache\Module\System\Core;
 use Ampache\Module\System\Dba;
+use Ampache\Repository\PreferenceRepositoryInterface;
 
 /**
  * This handles all of the preference stuff for Ampache
@@ -377,7 +378,7 @@ class Preference extends database_object
     /**
      * fix_preferences
      * This takes the preferences, explodes what needs to
-     * become an array and boolean everything
+     * become an array and boolean everything. Nothing to do with fix_user_preferences(), which repairs rows.
      * @param array<string, mixed> $results
      */
     public static function fix_preferences(array $results): array
@@ -413,6 +414,67 @@ class Preference extends database_object
         }
 
         return $results;
+    }
+
+    /**
+     * fix_user_preferences
+     * Removes duplicate rows for one user and inserts whatever they are missing, seeded from the system user.
+     * Pass -1 to repair the system user itself. Not to be confused with fix_preferences(), which coerces values.
+     */
+    public static function fix_user_preferences(int $user_id): void
+    {
+        $repository = self::getPreferenceRepository();
+
+        // Check default group (autoincrement starts at 1 so force it to be 0)
+        if ($repository->repairDefaultFilterGroup()) {
+            debug_event(self::class, 'fix_preferences restore DEFAULT catalog_filter_group', 2);
+        }
+
+        // Make sure the language a user has is valid
+        $repository->repairLanguagePreferences();
+
+        // Make sure all current catalogs are in the default group map
+        $repository->addMissingCatalogsToDefaultFilterGroup();
+
+        /* Get All Preferences for the current user */
+        $results      = [];
+        $zero_results = [];
+
+        foreach ($repository->getStoredPreferences($user_id) as $row) {
+            $pref_id = $row['preference'];
+            // Check for duplicates
+            if (isset($results[$pref_id])) {
+                $repository->deleteDuplicatePreference($user_id, $pref_id, $row['value']);
+            } else {
+                // if its set
+                $results[$pref_id] = 1;
+            }
+        }
+
+        // If your user is missing preferences we copy the value from system (Except for plugins and system prefs)
+        if ($user_id != -1) {
+            foreach ($repository->getSystemDefaultPreferences() as $row) {
+                $zero_results[$row['preference']] = [
+                    'name' => $row['name'],
+                    'value' => $row['value']
+                ];
+            }
+        } // if not user -1
+
+        // get me _EVERYTHING_, minus the system-only rows when this is a real user
+        foreach ($repository->getAllPreferences($user_id == -1) as $row) {
+            $key = $row['id'];
+
+            // Check if this preference is set
+            if (!isset($results[$key])) {
+                if (isset($zero_results[$key])) {
+                    $row['value'] = $zero_results[$key]['value'];
+                    $row['name']  = $zero_results[$key]['name'];
+                }
+
+                $repository->addUserPreference($user_id, $key, $row['name'], $row['value']);
+            }
+        } // while preferences
     }
 
     /**
@@ -1093,6 +1155,26 @@ class Preference extends database_object
     }
 
     /**
+     * rebuild_all_preferences
+     * This rebuilds the user preferences for all installed users, called by the plugin functions
+     */
+    public static function rebuild_all_preferences(): void
+    {
+        $repository = self::getPreferenceRepository();
+
+        // Garbage collection, then drop the system prefs that leaked onto users and resync the stored names
+        $repository->collectPreferenceGarbage();
+
+        // Fix the system user preferences first
+        self::fix_user_preferences(-1);
+
+        // only repair users holding fewer preferences than exist, which matters on a large user database
+        foreach ($repository->getIdsMissingPreferences() as $missing_user_id) {
+            self::fix_user_preferences($missing_user_id);
+        }
+    }
+
+    /**
      * rename
      * This renames a preference in the database
      */
@@ -1637,7 +1719,7 @@ class Preference extends database_object
         }
 
         // Ensure valid prefs are set
-        User::rebuild_all_preferences();
+        self::rebuild_all_preferences();
     }
 
     /**
@@ -2306,5 +2388,15 @@ class Preference extends database_object
         Dba::write($sql, [$level, $preference_id]);
 
         return true;
+    }
+
+    /**
+     * @deprecated inject dependency
+     */
+    private static function getPreferenceRepository(): PreferenceRepositoryInterface
+    {
+        global $dic;
+
+        return $dic->get(PreferenceRepositoryInterface::class);
     }
 }

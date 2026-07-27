@@ -31,7 +31,6 @@ use Ampache\Module\Authorization\AccessLevelEnum;
 use Ampache\Module\Statistics\Stats;
 use Ampache\Module\System\AmpError;
 use Ampache\Module\System\Core;
-use Ampache\Module\System\Dba;
 use Ampache\Module\System\Plugin\PluginTypeEnum;
 use Ampache\Module\User\Authorization\UserKeyGeneratorInterface;
 use Ampache\Module\Util\Ui;
@@ -171,189 +170,49 @@ class User extends database_object
         $catalog_filter_group ??= 0;
 
         /* Now Insert this new user */
-        $sql    = "INSERT INTO `user` (`username`, `disabled`, `fullname`, `email`, `password`, `access`, `catalog_filter_group`, `create_date`";
-        $params = [
-            $username,
-            $disabled,
-            $fullname,
-            $email,
-            $password,
-            $access->value,
-            $catalog_filter_group,
-            time(),
+        $columns = [
+            'username' => $username,
+            'disabled' => $disabled,
+            'fullname' => $fullname,
+            'email' => $email,
+            'password' => $password,
+            'access' => $access->value,
+            'catalog_filter_group' => $catalog_filter_group,
+            'create_date' => time(),
         ];
 
+        // an omitted optional column is left out of the statement entirely, so the schema default applies
         if ($website !== '' && $website !== '0') {
-            $sql .= ", `website`";
-            $params[] = $website;
+            $columns['website'] = $website;
         }
 
         if (!empty($state)) {
-            $sql .= ", `state`";
-            $params[] = $state;
+            $columns['state'] = $state;
         }
 
         if (!empty($city)) {
-            $sql .= ", `city`";
-            $params[] = $city;
+            $columns['city'] = $city;
         }
 
-        $user_create_streamtoken = AmpConfig::get('user_create_streamtoken', false);
-        if ($user_create_streamtoken) {
-            $sql .= ", `streamtoken`";
-            $params[] = bin2hex(random_bytes(20));
+        if (AmpConfig::get('user_create_streamtoken', false)) {
+            $columns['streamtoken'] = bin2hex(random_bytes(20));
         }
 
-        $user_create_apikey = AmpConfig::get('user_create_apikey', false);
-        if ($user_create_apikey) {
-            $sql .= ", `apikey`";
-            $params[] = hash(
-                'md5',
-                time() . $username . bin2hex(random_bytes(20))
-            );
+        if (AmpConfig::get('user_create_apikey', false)) {
+            $columns['apikey'] = hash('md5', time() . $username . bin2hex(random_bytes(20)));
         }
 
-        $sql .= ") VALUES(?, ?, ?, ?, ?, ?, ?, ?";
-
-        if ($website !== '' && $website !== '0') {
-            $sql .= ", ?";
-        }
-
-        if (!empty($state)) {
-            $sql .= ", ?";
-        }
-
-        if (!empty($city)) {
-            $sql .= ", ?";
-        }
-
-        if ($user_create_streamtoken) {
-            $sql .= ", ?";
-        }
-
-        if ($user_create_apikey) {
-            $sql .= ", ?";
-        }
-
-        $sql .= ")";
-        $db_results = Dba::write($sql, $params);
-
-        if (!$db_results) {
+        $insert_id = self::getUserRepository()->create($columns);
+        if ($insert_id === 0) {
             return 0;
         }
 
-        // Get the insert_id
-        $insert_id = (int) Dba::insert_id();
-
         // Populates any missing preferences, in this case all of them
-        self::fix_preferences($insert_id);
+        Preference::fix_user_preferences($insert_id);
 
         Catalog::count_table('user');
 
         return $insert_id;
-    }
-
-    /**
-     * fix_preferences
-     * This is the new fix_preferences function, it does the following
-     * Remove Duplicates from user, add in missing
-     * If -1 is passed it also removes duplicates from the `preferences`
-     * table.
-     */
-    public static function fix_preferences(int $user_id): void
-    {
-        // Check default group (autoincrement starts at 1 so force it to be 0)
-        $sql        = "SELECT `id`, `name` FROM `catalog_filter_group` WHERE `name` = 'DEFAULT';";
-        $db_results = Dba::read($sql);
-        $row        = Dba::fetch_assoc($db_results);
-        if (!array_key_exists('id', $row) || ($row['id'] ?? '') != 0) {
-            debug_event(self::class, 'fix_preferences restore DEFAULT catalog_filter_group', 2);
-            // reinsert missing default group
-            $sql = "INSERT IGNORE INTO `catalog_filter_group` (`name`) VALUES ('DEFAULT');";
-            Dba::write($sql);
-            $sql = "UPDATE `catalog_filter_group` SET `id` = 0 WHERE `name` = 'DEFAULT';";
-            Dba::write($sql);
-            $sql        = "SELECT MAX(`id`) AS `filter_count` FROM `catalog_filter_group`;";
-            $db_results = Dba::read($sql);
-            $row        = Dba::fetch_assoc($db_results);
-            $increment  = (int) ($row['filter_count'] ?? 0) + 1;
-            $sql        = sprintf('ALTER TABLE `catalog_filter_group` AUTO_INCREMENT = %d;', $increment);
-            Dba::write($sql);
-        }
-
-        // Make sure the language a user has is valid
-        $sql = "UPDATE `user_preference` SET `value` = 'en_US' WHERE `user` = -1 AND `name` = 'lang' AND `value` NOT IN ('af_ZA', 'bg_BG', 'ca_ES', 'cs_CZ', 'da_DK', 'de_CH', 'de_DE', 'el_GR', 'en_AU', 'en_GB', 'en_US', 'es_AR', 'es_ES', 'es_MX', 'et_EE', 'eu_ES', 'fi_FI', 'fr_BE', 'fr_FR', 'ga_IE', 'gl_ES', 'hi_IN', 'hu_HU', 'id_ID', 'is_IS', 'it_IT', 'ja_JP', 'ko_KR', 'lt_LT', 'lv_LV', 'nb_NO', 'nl_NL', 'no_NO', 'pl_PL', 'pt_BR', 'pt_PT', 'ro_RO', 'ru_RU', 'sk_SK', 'sl_SI', 'sr_CS', 'sv_SE', 'tr_TR', 'uk_UA', 'vi_VN', 'zh_CN', 'zh_TW', 'zh-Hant', 'zh_SG', 'ar_SA', 'he_IL', 'fa_IR');";
-        Dba::write($sql);
-
-        $sql          = "SELECT `value` FROM `user_preference` WHERE `user` = -1 AND `name` = 'lang';";
-        $db_results   = Dba::read($sql);
-        $row          = Dba::fetch_assoc($db_results);
-        $default_lang = $row['value'] ?? 'en_US';
-
-        // Set the default system user value if your user is bad
-        $sql = "UPDATE `user_preference` SET `value` = ? WHERE `name` = 'lang' AND `value` NOT IN ('af_ZA', 'bg_BG', 'ca_ES', 'cs_CZ', 'da_DK', 'de_CH', 'de_DE', 'el_GR', 'en_AU', 'en_GB', 'en_US', 'es_AR', 'es_ES', 'es_MX', 'et_EE', 'eu_ES', 'fi_FI', 'fr_BE', 'fr_FR', 'ga_IE', 'gl_ES', 'hi_IN', 'hu_HU', 'id_ID', 'is_IS', 'it_IT', 'ja_JP', 'ko_KR', 'lt_LT', 'lv_LV', 'nb_NO', 'nl_NL', 'no_NO', 'pl_PL', 'pt_BR', 'pt_PT', 'ro_RO', 'ru_RU', 'sk_SK', 'sl_SI', 'sr_CS', 'sv_SE', 'tr_TR', 'uk_UA', 'vi_VN', 'zh_CN', 'zh_TW', 'zh-Hant', 'zh_SG', 'ar_SA', 'he_IL', 'fa_IR');";
-        Dba::write($sql, [$default_lang]);
-
-        // Make sure all current catalogs are in the default group map
-        $sql = "INSERT IGNORE INTO `catalog_filter_group_map` (`group_id`, `catalog_id`, `enabled`) SELECT 0, `catalog`.`id`, `catalog`.`enabled` FROM `catalog` WHERE `catalog`.`id` NOT IN (SELECT `catalog_id` AS `id` FROM `catalog_filter_group_map` WHERE `group_id` = 0);";
-        Dba::write($sql);
-
-        /* Get All Preferences for the current user */
-        $sql          = "SELECT * FROM `user_preference` WHERE `user` = ?";
-        $db_results   = Dba::read($sql, [$user_id]);
-        $results      = [];
-        $zero_results = [];
-
-        while ($row = Dba::fetch_assoc($db_results)) {
-            $pref_id = $row['preference'];
-            // Check for duplicates
-            if (isset($results[$pref_id])) {
-                $sql = "DELETE FROM `user_preference` WHERE `user` = ? AND `preference` = ? AND `value` = ?;";
-                Dba::write($sql, [$user_id, $row['preference'], $row['value']]);
-            } else {
-                // if its set
-                $results[$pref_id] = 1;
-            }
-        }
-
-        // If your user is missing preferences we copy the value from system (Except for plugins and system prefs)
-        if ($user_id != '-1') {
-            $sql        = "SELECT `user_preference`.`preference`, `user_preference`.`name`, `user_preference`.`value` FROM `user_preference`, `preference` WHERE `user_preference`.`preference` = `preference`.`id` AND `user_preference`.`user`='-1' AND `preference`.`category` NOT IN ('plugins', 'system');";
-            $db_results = Dba::read($sql);
-            /* While through our base stuff */
-            while ($row = Dba::fetch_assoc($db_results)) {
-                $key                = $row['preference'];
-                $zero_results[$key] = [
-                    'name' => $row['name'],
-                    'value' => $row['value']
-                ];
-            }
-        } // if not user -1
-
-        // get me _EVERYTHING_
-        $sql = "SELECT * FROM `preference`";
-
-        // If not system, exclude system... *gasp*
-        if ($user_id != '-1') {
-            $sql .= " WHERE `category` !='system';";
-        }
-
-        $db_results = Dba::read($sql);
-
-        while ($row = Dba::fetch_assoc($db_results)) {
-            $key = $row['id'];
-
-            // Check if this preference is set
-            if (!isset($results[$key])) {
-                if (isset($zero_results[$key])) {
-                    $row['value'] = $zero_results[$key]['value'];
-                    $row['name']  = $zero_results[$key]['name'];
-                }
-
-                $sql = "INSERT IGNORE INTO user_preference (`user`, `preference`, `name`, `value`) VALUES (?, ?, ?, ?)";
-                Dba::write($sql, [$user_id, $key, $row['name'], $row['value']]);
-            }
-        } // while preferences
     }
 
     /**
@@ -363,10 +222,7 @@ class User extends database_object
      */
     public static function garbage_collection(): void
     {
-        // activated accounts can log in but might not have cleared validation
-        Dba::write("UPDATE `user` SET `validation` = NULL WHERE `last_seen` > 0;");
-        // delete accounts not activated after 30 days
-        Dba::write("DELETE FROM `user` WHERE (`last_seen` = 0 OR `validation` IS NOT NULL) AND `create_date` < UNIX_TIMESTAMP(DATE_ADD(NOW(), INTERVAL -1 MONTH));");
+        self::getUserRepository()->garbageCollectUnvalidated();
     }
 
     /**
@@ -407,27 +263,7 @@ class User extends database_object
      */
     public static function get_play_size(int $user_id): int
     {
-        $params = [$user_id, $user_id];
-        $total  = 0;
-        $sql_s  = "SELECT (IFNULL(SUM(`size`)/1024/1024, 0) + (SELECT IFNULL(SUM(`song`.`size` * `object_count_summary`.`count`)/1024/1024, 0) FROM `object_count_summary` LEFT JOIN `song` ON `song`.`id` = `object_count_summary`.`object_id` WHERE `object_count_summary`.`object_type` = 'song' AND `object_count_summary`.`count_type` = 'stream' AND `object_count_summary`.`user` = ?)) AS `size` FROM `object_count` LEFT JOIN `song` ON `song`.`id`=`object_count`.`object_id` AND `object_count`.`object_type` = 'song' AND `object_count`.`count_type` = 'stream' AND `object_count`.`user` = ?;";
-        $db_s   = Dba::read($sql_s, $params);
-        while ($results = Dba::fetch_assoc($db_s)) {
-            $total += (int) $results['size'];
-        }
-
-        $sql_v = "SELECT (IFNULL(SUM(`size`)/1024/1024, 0) + (SELECT IFNULL(SUM(`video`.`size` * `object_count_summary`.`count`)/1024/1024, 0) FROM `object_count_summary` LEFT JOIN `video` ON `video`.`id` = `object_count_summary`.`object_id` WHERE `object_count_summary`.`object_type` = 'video' AND `object_count_summary`.`count_type` = 'stream' AND `object_count_summary`.`user` = ?)) AS `size` FROM `object_count` LEFT JOIN `video` ON `video`.`id`=`object_count`.`object_id` AND `object_count`.`count_type` = 'stream' AND `object_count`.`object_type` = 'video' AND `object_count`.`user` = ?;";
-        $db_v  = Dba::read($sql_v, $params);
-        while ($results = Dba::fetch_assoc($db_v)) {
-            $total += (int) $results['size'];
-        }
-
-        $sql_p = "SELECT (IFNULL(SUM(`size`)/1024/1024, 0) + (SELECT IFNULL(SUM(`podcast_episode`.`size` * `object_count_summary`.`count`)/1024/1024, 0) FROM `object_count_summary` LEFT JOIN `podcast_episode` ON `podcast_episode`.`id` = `object_count_summary`.`object_id` WHERE `object_count_summary`.`object_type` = 'podcast_episode' AND `object_count_summary`.`count_type` = 'stream' AND `object_count_summary`.`user` = ?)) AS `size` FROM `object_count`LEFT JOIN `podcast_episode` ON `podcast_episode`.`id`=`object_count`.`object_id` AND `object_count`.`count_type` = 'stream' AND `object_count`.`object_type` = 'podcast_episode' AND `object_count`.`user` = ?;";
-        $db_p  = Dba::read($sql_p, $params);
-        while ($results = Dba::fetch_assoc($db_p)) {
-            $total += (int) $results['size'];
-        }
-
-        return $total;
+        return self::getUserRepository()->getPlaySize($user_id);
     }
 
     /**
@@ -454,22 +290,11 @@ class User extends database_object
      */
     public static function get_user_data(int $user_id, ?string $key = null, int|string|null $default = null): array
     {
-        $sql    = "SELECT `key`, `value` FROM `user_data` WHERE `user` = ?";
-        $params = [$user_id];
-        if ($key) {
-            $sql .= " AND `key` = ?";
-            $params[] = $key;
-        }
-
-        $db_results = Dba::read($sql, $params);
-        $results    = ($key !== null && $default !== null)
+        $results = ($key !== null && $default !== null)
             ? [$key => $default]
             : [];
-        while ($row = Dba::fetch_assoc($db_results)) {
-            $results[$row['key']] = $row['value'];
-        }
 
-        return $results;
+        return array_merge($results, self::getUserRepository()->getUserData($user_id, ($key) ?: null));
     }
 
     /**
@@ -509,38 +334,6 @@ class User extends database_object
     }
 
     /**
-     * rebuild_all_preferences
-     * This rebuilds the user preferences for all installed users, called by the plugin functions
-     */
-    public static function rebuild_all_preferences(): void
-    {
-        // Garbage collection
-        $sql = "DELETE `user_preference`.* FROM `user_preference` LEFT JOIN `user` ON `user_preference`.`user` = `user`.`id` WHERE (`user_preference`.`user` != -1 AND `user`.`id` IS NULL) OR `preference` = 0;";
-        Dba::write($sql);
-        // delete system prefs from users
-        $sql = "DELETE `user_preference`.* FROM `user_preference` LEFT JOIN `preference` ON `user_preference`.`preference` = `preference`.`id` WHERE `user_preference`.`user` != -1 AND `preference`.`category` = 'system';";
-        Dba::write($sql);
-        // ensure preference names are updated
-        $sql = "UPDATE `user_preference`, (SELECT `preference`.`name`, `preference`.`id` FROM `preference`) AS `preference` SET `user_preference`.`name` = `preference`.`name` WHERE `preference`.`id` = `user_preference`.`preference`;";
-        Dba::write($sql);
-
-        // Fix the system user preferences first
-        self::fix_preferences(-1);
-
-        // How many preferences should we have?
-        $sql        = "SELECT COUNT(`id`) AS `pref_count` FROM `preference` WHERE `category` != 'system';";
-        $db_results = Dba::read($sql);
-        $row        = Dba::fetch_assoc($db_results);
-        $pref_count = (int) $row['pref_count'];
-        // Get only users who have less preferences than excepted otherwise it would have significant performance issue with large user database
-        $sql        = 'SELECT `user` FROM `user_preference` GROUP BY `user` HAVING COUNT(*) < ' . $pref_count;
-        $db_results = Dba::read($sql);
-        while ($row = Dba::fetch_assoc($db_results)) {
-            self::fix_preferences((int) $row['user']);
-        }
-    }
-
-    /**
      * save_mediaplay
      */
     public static function save_mediaplay(User $user, Song $media): void
@@ -564,7 +357,7 @@ class User extends database_object
      */
     public static function set_user_data(int $user_id, string $key, float|int|string $value): void
     {
-        Dba::write("REPLACE INTO `user_data` SET `user` = ?, `key` = ?, `value` = ?;", [$user_id, $key, $value]);
+        self::getUserRepository()->setUserData($user_id, $key, $value);
     }
 
     /**
@@ -597,12 +390,8 @@ class User extends database_object
     {
         $catalog_disable = AmpConfig::get('catalog_disable');
         $catalog_filter  = AmpConfig::get('catalog_filter');
-        $sql             = "SELECT `id` FROM `user`";
-        $db_results      = Dba::read($sql);
-        $user_list       = [];
-        while ($results = Dba::fetch_assoc($db_results)) {
-            $user_list[] = (int) $results['id'];
-        }
+        $userRepository  = self::getUserRepository();
+        $user_list       = $userRepository->getAllIds();
 
         // TODO $user_list[] = -1; // make sure the System / Guest user gets a count as well
         if (!$catalog_filter) {
@@ -663,13 +452,10 @@ class User extends database_object
             debug_event(self::class, 'Update counts for ' . $user_id, 5);
             // get counts per user (filtered catalogs aren't counted)
             foreach ($count_array as $table) {
-                $sql = (in_array($table, ['search', 'user', 'license']))
-                    ? sprintf('SELECT COUNT(`id`) FROM `%s`', $table)
-                    : sprintf('SELECT COUNT(`id`) FROM `%s` WHERE', $table) . Catalog::get_user_filter($table, $user_id);
-                $db_results = Dba::read($sql);
-                $row        = Dba::fetch_row($db_results);
+                // `search`, `user` and `license` carry no catalog, so the filter cannot narrow them
+                $filtered = !in_array($table, ['search', 'user', 'license']);
 
-                self::set_user_data($user_id, $table, (int) ($row[0] ?? 0));
+                self::set_user_data($user_id, $table, $userRepository->countForUser($table, $user_id, $filtered));
             }
 
             // tables with media items to count, song-related tables and the rest
@@ -686,26 +472,20 @@ class User extends database_object
                     continue;
                 }
 
-                $sql = ($catalog_disable)
-                    ? sprintf('SELECT COUNT(`id`), IFNULL(SUM(`time`), 0), IFNULL(SUM(`size`)/1024/1024, 0) FROM `%s` WHERE `catalog` IN (', $table) . implode(',', $catalog_array) . sprintf(') AND `%s`.`enabled`=\'1\';', $table)
-                    : sprintf('SELECT COUNT(`id`), IFNULL(SUM(`time`), 0), IFNULL(SUM(`size`)/1024/1024, 0) FROM `%s` WHERE `catalog` IN (', $table) . implode(',', $catalog_array) . ");";
-                $db_results = Dba::read($sql);
-                $row        = Dba::fetch_row($db_results);
+                $totals = $userRepository->getMediaTotals($table, $catalog_array, (bool) $catalog_disable);
                 // save the object and add to the current size
-                $items += (int) ($row[0] ?? 0);
-                $time += (int) ($row[1] ?? 0);
-                $size += (int) ($row[2] ?? 0);
-                self::set_user_data($user_id, $table, (int) ($row[0] ?? 0));
+                $items += $totals['count'];
+                $time += $totals['time'];
+                $size += $totals['size'];
+                self::set_user_data($user_id, $table, $totals['count']);
             }
 
             self::set_user_data($user_id, 'items', $items);
             self::set_user_data($user_id, 'time', $time);
             self::set_user_data($user_id, 'size', $size);
             // album_disk counts
-            $sql        = "SELECT COUNT(DISTINCT `album_disk`.`id`) AS `count` FROM `album_disk` LEFT JOIN `album` ON `album_disk`.`album_id` = `album`.`id` LEFT JOIN `artist_map` ON `artist_map`.`object_id` = `album`.`id` WHERE `artist_map`.`object_type` = 'album' AND `album`.`catalog` IN (" . implode(',', Catalog::get_catalogs('', $user_id, true)) . ")";
-            $db_results = Dba::read($sql);
-            $row        = Dba::fetch_row($db_results);
-            self::set_user_data($user_id, 'album_disk', (int) ($row[0] ?? 0));
+            $album_disks = $userRepository->countAlbumDisksForCatalogs(Catalog::get_catalogs('', $user_id, true));
+            self::set_user_data($user_id, 'album_disk', $album_disks);
         }
     }
 
@@ -727,36 +507,28 @@ class User extends database_object
     public function delete(): bool
     {
         // Before we do anything make sure that they aren't the last admin
-        if ($this->has_access(AccessLevelEnum::ADMIN)) {
-            $sql        = "SELECT `id` FROM `user` WHERE `access`= ? AND `id` != ?";
-            $params     = [AccessLevelEnum::ADMIN->value, $this->id];
-            $db_results = Dba::read($sql, $params);
-            if (Dba::num_rows($db_results) === 0) {
-                return false;
-            }
+        $userRepository = self::getUserRepository();
+        if (
+            $this->has_access(AccessLevelEnum::ADMIN)
+            && !$userRepository->hasOtherAdmin($this->id, false)
+        ) {
+            return false;
         } // if this is an admin check for others
 
-        // Delete the user itself
-        $sql = "DELETE FROM `user` WHERE `id` = ?";
-        Dba::write($sql, [$this->id]);
-
-        // Delete custom access settings
-        $sql = "DELETE FROM `access_list` WHERE `user` = ?";
-        Dba::write($sql, [$this->id]);
-
-        $sql = "DELETE FROM `session` WHERE `username` = ?";
-        Dba::write($sql, [$this->username]);
+        // the user itself, its custom access settings and any session it left behind
+        $userRepository->delete($this->id, (string) $this->username);
+        self::remove_from_cache('user', $this->id);
 
         Catalog::count_table('user');
-        self::getUserRepository()->collectGarbage();
+        $userRepository->collectGarbage();
 
         return true;
     }
 
     public function deleteApiKey(): void
     {
-        $sql = "UPDATE `user` SET `apikey` = NULL WHERE `id` = ?;";
-        Dba::write($sql, [$this->id]);
+        $this->apikey = null;
+        $this->store(UserFieldEnum::APIKEY, null);
     }
 
     public function deleteAvatar(): void
@@ -767,22 +539,20 @@ class User extends database_object
 
     public function deleteRssToken(): void
     {
-        $sql = "UPDATE `user` SET `rsstoken` = NULL WHERE `id` = ?;";
-        Dba::write($sql, [$this->id]);
+        $this->rsstoken = null;
+        $this->store(UserFieldEnum::RSSTOKEN, null);
     }
 
     public function deleteStreamToken(): void
     {
-        $sql = "UPDATE `user` SET `streamtoken` = NULL WHERE `id` = ?;";
-        Dba::write($sql, [$this->id]);
+        $this->streamtoken = null;
+        $this->store(UserFieldEnum::STREAMTOKEN, null);
     }
 
     public function deleteSubsonicSecret(): void
     {
-        $sql = "UPDATE `user` SET `subsonic_secret` = NULL WHERE `id` = ?;";
-        Dba::write($sql, [$this->id]);
-
         $this->subsonic_secret = null;
+        $this->store(UserFieldEnum::SUBSONIC_SECRET, null);
     }
 
     /**
@@ -791,21 +561,19 @@ class User extends database_object
      */
     public function disable(): bool
     {
-        // Make sure we aren't disabling the last admin
-        $sql        = "SELECT `id` FROM `user` WHERE `disabled` = '0' AND `access` = ? AND `id` != ? ";
-        $params     = [AccessLevelEnum::ADMIN->value, $this->id];
-        $db_results = Dba::read($sql, $params);
+        $userRepository = self::getUserRepository();
 
-        if (Dba::num_rows($db_results) === 0) {
+        // Make sure we aren't disabling the last admin, which would lock everybody out of the admin pages
+        if (!$userRepository->hasOtherAdmin($this->id, true)) {
             return false;
         }
 
-        $sql = "UPDATE `user` SET `disabled`='1' WHERE `id`='" . $this->id . "'";
-        Dba::write($sql);
+        $userRepository->disableUser($this->id);
+        $this->disabled = true;
+        self::remove_from_cache('user', $this->id);
 
         // Delete any sessions they may have
-        $sql = "DELETE FROM `session` WHERE `username`='" . Dba::escape($this->username) . "'";
-        Dba::write($sql);
+        $userRepository->deleteSessions((string) $this->username);
 
         return true;
     }
@@ -985,18 +753,7 @@ class User extends database_object
      */
     public function get_playlists(bool $show_all): array
     {
-        $results = [];
-        $sql     = ($show_all)
-            ? "SELECT `id` FROM `playlist` WHERE `user` = ? ORDER BY `name`;"
-            : "SELECT `id` FROM `playlist` WHERE `user` = ? AND `type` = 'public' ORDER BY `name`;";
-
-        $params     = [$this->id];
-        $db_results = Dba::read($sql, $params);
-        while ($row = Dba::fetch_assoc($db_results)) {
-            $results[] = (int) $row['id'];
-        }
-
-        return $results;
+        return self::getUserRepository()->getPlaylistIds($this->id, $show_all);
     }
 
     /**
@@ -1010,23 +767,13 @@ class User extends database_object
      */
     public function get_preferences(int|string $type = 0, bool $system = false): array
     {
-        $user_limit = "";
-        if (!$system) {
-            $user_id    = $this->id;
-            $user_limit = "AND `preference`.`category` != 'system'";
-        } else {
-            $user_id = -1;
-            if ($type != '0') {
-                $user_limit = "AND `preference`.`category` = '" . Dba::escape($type) . "'";
-            }
-        }
+        $user_id  = ($system) ? -1 : $this->id;
+        $category = ($system && $type != '0') ? (string) $type : null;
 
-        $sql        = "SELECT `preference`.`name`, `preference`.`description`, `preference`.`category`, `preference`.`subcategory`, `preference`.`type`, preference.level, user_preference.value FROM `preference` INNER JOIN `user_preference` ON `user_preference`.`preference` = `preference`.`id` WHERE `user_preference`.`user` = ? " . $user_limit . " ORDER BY `preference`.`category`, `preference`.`subcategory`, `preference`.`description`";
-        $db_results = Dba::read($sql, [$user_id]);
         $results    = [];
         $type_array = [];
         /* Ok this is crappy, need to clean this up or improve the code FIXME */
-        while ($row = Dba::fetch_assoc($db_results)) {
+        foreach (self::getUserRepository()->getPreferenceRows($user_id, $category, !$system) as $row) {
             $type  = $row['category'];
             $admin = false;
             if ($type == 'system') {
@@ -1064,18 +811,7 @@ class User extends database_object
         bool $newest = true,
         string $count_type = 'stream',
     ): array {
-        $ordersql = ($newest === true) ? 'DESC' : 'ASC';
-        $limit    = ($offset < 1) ? $count : $offset . "," . $count;
-
-        $sql        = "SELECT `object_id`, MAX(`date`) AS `date` FROM `object_count` WHERE `object_type` = ? AND `user` = ? AND `count_type` = ? GROUP BY `object_id` ORDER BY `date` " . $ordersql . " LIMIT " . $limit . " ";
-        $db_results = Dba::read($sql, [$type, $this->id, $count_type]);
-
-        $results = [];
-        while ($row = Dba::fetch_assoc($db_results)) {
-            $results[] = (int) $row['object_id'];
-        }
-
-        return $results;
+        return self::getUserRepository()->getRecentlyPlayed($this->id, $type, $count_type, $count, $offset, $newest);
     }
 
     /**
@@ -1151,16 +887,11 @@ class User extends database_object
      */
     public function is_logged_in(): ?string
     {
-        $sql = (AmpConfig::get('perpetual_api_session'))
-            ? "SELECT `id`, `ip` FROM `session` WHERE `username` = ? AND ((`expire` = 0 AND `type` = 'api') OR `expire` > ?);"
-            : "SELECT `id`, `ip` FROM `session` WHERE `username` = ? AND `expire` > ?;";
-        $db_results = Dba::read($sql, [$this->username, time()]);
-
-        if ($row = Dba::fetch_assoc($db_results)) {
-            return $row['ip'] ?? null;
-        }
-
-        return null;
+        return self::getUserRepository()->findActiveSessionIp(
+            (string) $this->username,
+            time(),
+            (bool) AmpConfig::get('perpetual_api_session')
+        );
     }
 
     /**
@@ -1198,13 +929,8 @@ class User extends database_object
      */
     public function set_preferences(): void
     {
-        $user_id    = Dba::escape($this->id);
-        $sql        = "SELECT `preference`.`name`, `user_preference`.`value` FROM `preference`, `user_preference` WHERE `user_preference`.`user` = ? AND `user_preference`.`preference` = `preference`.`id` AND `preference`.`type` != 'system';";
-        $db_results = Dba::read($sql, [$user_id]);
-
-        while ($row = Dba::fetch_assoc($db_results)) {
-            $key               = $row['name'];
-            $this->prefs[$key] = $row['value'];
+        foreach (self::getUserRepository()->getPreferenceValues($this->id) as $row) {
+            $this->prefs[$row['name']] = $row['value'];
         }
     }
 
@@ -1273,22 +999,17 @@ class User extends database_object
      */
     public function update_access(int $new_access): bool
     {
-        // There must always be at least one admin left if you're reducing access
-        if ($new_access < 100) {
-            $sql        = "SELECT `id` FROM `user` WHERE `access`= ? AND `id` != ?";
-            $params     = [AccessLevelEnum::ADMIN->value, $this->id];
-            $db_results = Dba::read($sql, $params);
-            if (Dba::num_rows($db_results) === 0) {
-                return false;
-            }
-        }
+        $userRepository = self::getUserRepository();
 
-        $new_access = Dba::escape($new_access);
-        $sql        = "UPDATE `user` SET `access` = ? WHERE `id` = ?;";
+        // There must always be at least one admin left if you're reducing access
+        if ($new_access < 100 && !$userRepository->hasOtherAdmin($this->id, false)) {
+            return false;
+        }
 
         debug_event(self::class, 'Updating access level for ' . $this->id, 4);
 
-        Dba::write($sql, [$new_access, $this->id]);
+        $this->access = $new_access;
+        $this->store(UserFieldEnum::ACCESS, $new_access);
 
         return true;
     }
@@ -1308,47 +1029,42 @@ class User extends database_object
      */
     public function update_catalog_filter_group(int $new_filter): void
     {
-        $sql = "UPDATE `user` SET `catalog_filter_group` = ? WHERE `id` = ?";
-
         debug_event(self::class, 'Updating catalog access group', 4);
 
-        Dba::write($sql, [$new_filter, $this->id]);
+        $this->catalog_filter_group = $new_filter;
+        $this->store(UserFieldEnum::CATALOG_FILTER_GROUP, $new_filter);
     }
 
     public function update_city(string $new_city): void
     {
-        $sql = "UPDATE `user` SET `city` = ? WHERE `id` = ?";
-
         debug_event(self::class, 'Updating city', 4);
 
-        Dba::write($sql, [$new_city, $this->id]);
+        $this->city = $new_city;
+        $this->store(UserFieldEnum::CITY, $new_city);
     }
 
     public function update_email(string $new_email): void
     {
-        $sql = "UPDATE `user` SET `email` = ? WHERE `id` = ?";
-
         debug_event(self::class, 'Updating email', 4);
 
-        Dba::write($sql, [$new_email, $this->id]);
+        $this->email = $new_email;
+        $this->store(UserFieldEnum::EMAIL, $new_email);
     }
 
     public function update_fullname(string $new_fullname): void
     {
-        $sql = "UPDATE `user` SET `fullname` = ? WHERE `id` = ?";
-
         debug_event(self::class, 'Updating fullname', 4);
 
-        Dba::write($sql, [$new_fullname, $this->id]);
+        $this->fullname = $new_fullname;
+        $this->store(UserFieldEnum::FULLNAME, $new_fullname);
     }
 
     public function update_fullname_public(bool|string $new_fullname_public): void
     {
-        $sql = "UPDATE `user` SET `fullname_public` = ? WHERE `id` = ?";
-
         debug_event(self::class, 'Updating fullname public', 4);
 
-        Dba::write($sql, [($new_fullname_public) ? '1' : '0', $this->id]);
+        $this->fullname_public = (bool) $new_fullname_public;
+        $this->store(UserFieldEnum::FULLNAME_PUBLIC, ($new_fullname_public) ? '1' : '0');
     }
 
     public function update_password(string $new_password, ?string $hashed_password = null): void
@@ -1358,33 +1074,27 @@ class User extends database_object
             $hashed_password = hash('sha256', $new_password);
         }
 
-        $escaped_password = Dba::escape($hashed_password);
-        $sql              = "UPDATE `user` SET `password` = ? WHERE `id` = ?";
-        $db_results       = Dba::write($sql, [$escaped_password, $this->id]);
-
         // Clear this (temp fix)
-        if ($db_results) {
+        if ($this->store(UserFieldEnum::PASSWORD, $hashed_password)) {
             unset($_SESSION['userdata']['password']);
         }
     }
 
     public function update_state(string $new_state): void
     {
-        $sql = "UPDATE `user` SET `state` = ? WHERE `id` = ?";
-
         debug_event(self::class, 'Updating state', 4);
 
-        Dba::write($sql, [$new_state, $this->id]);
+        $this->state = $new_state;
+        $this->store(UserFieldEnum::STATE, $new_state);
     }
 
     public function update_username(string $new_username): void
     {
-        $sql            = "UPDATE `user` SET `username` = ? WHERE `id` = ?";
         $this->username = $new_username;
 
         debug_event(self::class, 'Updating username', 4);
 
-        Dba::write($sql, [$new_username, $this->id]);
+        $this->store(UserFieldEnum::USERNAME, $new_username);
     }
 
     /**
@@ -1395,9 +1105,10 @@ class User extends database_object
      */
     public function update_validation(string $new_validation): bool
     {
-        $sql              = "UPDATE `user` SET `validation` = ?, `disabled`='1' WHERE `id` = ?";
-        $db_results       = (Dba::write($sql, [$new_validation, $this->id]) !== null);
+        $db_results       = self::getUserRepository()->setValidation($this->id, $new_validation);
         $this->validation = $new_validation;
+        $this->disabled   = true;
+        self::remove_from_cache('user', $this->id);
 
         return $db_results;
     }
@@ -1408,11 +1119,10 @@ class User extends database_object
         $new_website = (is_string($new_website))
             ? rtrim($new_website, "/")
             : null;
-        $sql = "UPDATE `user` SET `website` = ? WHERE `id` = ?";
-
         debug_event(self::class, 'Updating website', 4);
 
-        Dba::write($sql, [$new_website, $this->id]);
+        $this->website = $new_website;
+        $this->store(UserFieldEnum::WEBSITE, $new_website);
     }
 
     /**
@@ -1490,10 +1200,7 @@ class User extends database_object
                 'city' => null
             ];
         } else {
-            $sql        = "SELECT `id`, `username`, `fullname`, `email`, `website`, `apikey`, `access`, `disabled`, `last_seen`, `create_date`, `validation`, `state`, `city`, `fullname_public`, `rsstoken`, `streamtoken`, `subsonic_secret`, `catalog_filter_group` FROM `user` WHERE `id` = ?;";
-            $db_results = Dba::read($sql, [$user_id]);
-
-            $data = Dba::fetch_assoc($db_results);
+            $data = self::getUserRepository()->getRow($user_id) ?? [];
         }
 
         if (empty($data)) {
@@ -1521,5 +1228,16 @@ class User extends database_object
         $this->catalog_filter_group = (int) $data['catalog_filter_group'];
 
         return true;
+    }
+
+    /**
+     * Writes one column and drops the cached row, so a later `new User($id)` in this request is not stale
+     */
+    private function store(UserFieldEnum $field, int|string|null $value): bool
+    {
+        $result = self::getUserRepository()->setField($this->id, $field, $value);
+        self::remove_from_cache('user', $this->id);
+
+        return $result;
     }
 }

@@ -108,6 +108,7 @@ class CatalogGarbageCollectorTest extends TestCase
         // debug_event() pulls the logger off the same container, so this cannot be a single-service stub
         $this->dic->method('get')->willReturnCallback(fn(string $id): object => match ($id) {
             TagRepositoryInterface::class => $this->tagRepository,
+            UserRepositoryInterface::class => $this->userRepository,
             default => $this->createMock(LoggerInterface::class),
         });
 
