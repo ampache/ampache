@@ -947,7 +947,7 @@ a.jp-play:hover, a.jp-pause:hover, a.jp-stop:hover, a.jp-previous:hover, a.jp-ne
 a.jp-shuffle:hover, a.jp-shuffle-off:hover, a.jp-repeat:hover, a.jp-repeat-off:hover {
     background-color: #fff;
 }
-a.jp-shuffle-off, a.jp-repeat-off { opacity: .45; }
+a.jp-shuffle, a.jp-repeat { opacity: .45; }
 
 /* Volume buttons: bare light-grey glyph, no circle, enlarged box (no clipping). */
 a.jp-mute, a.jp-unmute, a.jp-volume-max {
