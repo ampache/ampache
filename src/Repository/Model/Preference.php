@@ -1255,7 +1255,7 @@ class Preference extends database_object
                     Dba::write($pref_sql, ['offset_limit', '50', 'Offset Limit', AccessLevelEnum::DEFAULT->value, 'integer', 'interface', 'query']);
                     break;
                 case 'rate_limit':
-                    Dba::write($pref_sql, ['rate_limit', '8192', 'Rate Limit', AccessLevelEnum::ADMIN->value, 'integer', 'streaming', 'transcoding']);
+                    Dba::write($pref_sql, ['rate_limit', '8192', 'Download Rate Limit', AccessLevelEnum::ADMIN->value, 'integer', 'streaming', 'transcoding']);
                     break;
                 case 'playlist_method':
                     Dba::write($pref_sql, ['playlist_method', 'default', 'Playlist Method', AccessLevelEnum::DEFAULT->value, 'string', 'playlist', null]);
@@ -2172,7 +2172,7 @@ class Preference extends database_object
             'podcast_keep' => '# latest episodes to keep',
             'podcast_new_download' => '# episodes to download when new episodes are available',
             'popular_threshold' => 'Popular Threshold',
-            'rate_limit' => 'Rate Limit',
+            'rate_limit' => 'Download Rate Limit',
             'ratingmatch_flag_rule' => 'Match rule for Flags',
             'ratingmatch_flags' => 'When you love a track, flag the album and artist',
             'ratingmatch_star1_rule' => 'Match rule for 1 Star ($play,$skip)',

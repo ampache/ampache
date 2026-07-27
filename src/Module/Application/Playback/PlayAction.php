@@ -64,6 +64,12 @@ final readonly class PlayAction implements ApplicationActionInterface
 {
     public const string REQUEST_KEY = 'play';
 
+    /** Read size for an unthrottled download; a throttled one uses its own per-slice size instead. */
+    private const int DOWNLOAD_BUFFER_SIZE = 65536;
+
+    /** How many reads a rate limited second is split into. More slices means smoother pacing and more syscalls. */
+    private const int THROTTLE_SLICES_PER_SECOND = 10;
+
     public function __construct(
         private RequestParserInterface $requestParser,
         private Horde_Browser $browser,
@@ -825,14 +831,6 @@ final readonly class PlayAction implements ApplicationActionInterface
                 'Downloading raw file...',
                 [LegacyLogger::CONTEXT_TYPE => self::class]
             );
-            // STUPID IE
-            $media_name = str_replace(['?', '/', '\\'], "_", $streamConfiguration['file_name']);
-            $headers    = $this->browser->getDownloadHeaders($media_name, $media->mime, false, (string) Core::get_filesize($stream_file));
-
-            foreach ($headers as $headerName => $value) {
-                header(sprintf('%s: %s', $headerName, $value));
-            }
-
             $filepointer = fopen(Core::conv_lc_file($stream_file), 'rb');
             if (!is_resource($filepointer)) {
                 $this->logger->error(
@@ -841,6 +839,41 @@ final readonly class PlayAction implements ApplicationActionInterface
                 );
 
                 return null;
+            }
+
+            // A rate limited download runs long enough to be worth resuming, so honour a byte range instead of
+            // restarting from zero and re-sending everything the client already holds.
+            $file_size    = Core::get_filesize($stream_file);
+            $start        = 0;
+            $end          = 0;
+            $range_values = sscanf(Core::get_server('HTTP_RANGE'), "bytes=%d-%d", $start, $end);
+            $stream_size  = $file_size;
+            if ($range_values > 0 && ($start > 0 || $end > 0)) {
+                $end = ($range_values >= 2)
+                    ? (int) min($end, $file_size - 1)
+                    : $file_size - 1;
+
+                $stream_size = ($end - (int) $start) + 1;
+                if ($stream_size <= 0 || $start > $file_size - 1) {
+                    fclose($filepointer);
+                    header('HTTP/1.1 416 Range Not Satisfiable');
+                    header('Content-Range: bytes */' . $file_size);
+
+                    return null;
+                }
+
+                fseek($filepointer, (int) $start);
+                header('HTTP/1.1 206 Partial Content');
+                header('Content-Range: bytes ' . $start . '-' . $end . '/' . $file_size);
+            }
+
+            // STUPID IE
+            $media_name = str_replace(['?', '/', '\\'], "_", $streamConfiguration['file_name']);
+            $headers    = $this->browser->getDownloadHeaders($media_name, $media->mime, false, (string) $stream_size);
+            header('Accept-Ranges: bytes');
+
+            foreach ($headers as $headerName => $value) {
+                header(sprintf('%s: %s', $headerName, $value));
             }
 
             if (Core::get_server('REQUEST_METHOD') !== 'HEAD') {
@@ -857,14 +890,35 @@ final readonly class PlayAction implements ApplicationActionInterface
 
             // Check to see if we should be throttling because we can get away with it
             $rate_limit = (AmpConfig::get('rate_limit', 0)) ? (int) (round(AmpConfig::get('rate_limit') * 1024)) : 0;
-            if ($rate_limit > 0) {
-                while (!feof($filepointer)) {
-                    echo fread($filepointer, $rate_limit);
-                    flush();
-                    sleep(1);
+
+            // Read a fraction of the allowance at a time rather than a whole second's worth, so the client sees a
+            // steady trickle instead of a burst followed by an idle second it has to buffer around.
+            $read_size = ($rate_limit > 0)
+                ? (int) max(1024, intdiv($rate_limit, self::THROTTLE_SLICES_PER_SECOND))
+                : self::DOWNLOAD_BUFFER_SIZE;
+
+            // The range, if one was asked for, is what bounds this loop; feof alone would run past the end of it.
+            $started = microtime(true);
+            $sent    = 0;
+            while ($sent < $stream_size && !feof($filepointer) && connection_status() === 0) {
+                $buffer = fread($filepointer, (int) max(1, min($read_size, $stream_size - $sent)));
+                if ($buffer === false || $buffer === '') {
+                    break;
                 }
-            } else {
-                fpassthru($filepointer);
+
+                echo $buffer;
+                $sent += strlen($buffer);
+                flush();
+
+                // Pace against the elapsed clock instead of sleeping a fixed slice each pass. A sleep that overruns
+                // is otherwise lost for good, and the transfer settles well under the rate that was asked for; this
+                // way an overrun just means the next pass is already behind schedule and does not wait at all.
+                if ($rate_limit > 0) {
+                    $ahead = ($sent / $rate_limit) - (microtime(true) - $started);
+                    if ($ahead > 0) {
+                        usleep((int) ($ahead * 1000000));
+                    }
+                }
             }
 
             fclose($filepointer);

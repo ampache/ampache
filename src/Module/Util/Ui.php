@@ -828,6 +828,9 @@ class Ui implements UiInterface
                 // Bitrate preferences are stored in bits per second (bps)
                 echo '<input type="number" name="' . $name . '" value="' . (int) $value . '" min="0" step="1000" /> ' . T_('bps');
                 break;
+            case 'rate_limit':
+                echo '<input type="number" name="' . $name . '" value="' . (int) $value . '" min="0" step="1024" /> ' . T_('KB/s') . ' (' . T_('0 = no limit') . ')';
+                break;
             case 'access_control':
             case 'access_list':
             case 'album_group':
