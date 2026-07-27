@@ -531,11 +531,20 @@ final readonly class PlayAction implements ApplicationActionInterface
         if ($random === 1) {
             $last_id   = (int) User::get_user_data($user_id, 'random_song', 0)['random_song'];
             $last_time = (int) User::get_user_data($user_id, 'random_time', 0)['random_time'];
-            if ($last_id > 0 && $last_time >= $time) {
+            $repeat    = false;
+            if ($last_id > 0) {
+                $last_play = Stats::get_last_play($user_id);
+                $started   = ($last_play['object_type'] === 'song' && (int) $last_play['object_id'] === $last_id)
+                    ? (int) $last_play['date']
+                    : $last_time;
+                $repeat = (($time - $started) < AmpConfig::get_skip_timer((new Song($last_id))->time));
+            }
+
+            if ($repeat) {
                 // continue the current object
                 $object_id = $last_id;
                 $this->logger->debug(
-                    'Called random again too quickly sending last song id: {' . $object_id . '}',
+                    'Called random again inside the skip timer, sending last song id: {' . $object_id . '}',
                     [LegacyLogger::CONTEXT_TYPE => self::class]
                 );
             } else {
@@ -567,9 +576,10 @@ final readonly class PlayAction implements ApplicationActionInterface
                     return null;
                 }
 
-                // Save this for a short time in case there are issues loading the url
-                User::set_user_data($user_id, 'random_song', $object_id);
-                User::set_user_data($user_id, 'random_time', ($time + (min(10, ($media->time)))));
+                if ($object_id !== $last_id) {
+                    User::set_user_data($user_id, 'random_song', $object_id);
+                    User::set_user_data($user_id, 'random_time', $time);
+                }
 
                 // play the song instead of going through all the crap
                 header('Location: ' . $media->play_url('', $player, false, $user->id, $user->streamtoken), true, 303);
