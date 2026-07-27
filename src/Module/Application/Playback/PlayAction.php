@@ -1048,18 +1048,15 @@ final readonly class PlayAction implements ApplicationActionInterface
                     $troptions
                 );
 
-                // The running transcoder is the authority on what is being sent; this lookup only supplies a bitrate
-                // for the guess below. `$format` is the request's `format` parameter, so falling back to it left the
-                // output type empty on every normal stream url and the mp3 branch below could never fire.
-                $output_type = $transcoder['format'] ?? $transcode_settings['format'] ?? $transcode_to;
-
                 // Ask the same resolver start_transcode uses instead of re-deriving a rate here, so the length we
                 // advertise cannot drift from the rate the encoder was actually handed. Rates are metric bits
                 // (kilobits*1000), so the /1024 keeps them in step with the size maths below.
                 $stream_rate = Stream::get_transcode_bitrate($media, $transcode_settings, $troptions, $player) / 1024;
 
-                // We always guess MP3 content length even when not required, since that codec calculates properly
-                if ($this->requestParser->getFromRequest('content_length') === 'required' || $output_type == 'mp3') {
+                // Only guess a length when the client says it needs one. The estimate is duration x bitrate, which
+                // no encoder lands on exactly (mp3 ran 0.1% over here, opus 3.2%), and a body longer than the
+                // advertised length is truncated to it in transit, so an unasked-for guess can cost real audio.
+                if ($this->requestParser->getFromRequest('content_length') === 'required') {
                     if ($media->time > 0 && $stream_rate > 0) {
                         $stream_size = (int) (($media->time * $stream_rate * 1024) / 8);
                     } else {
