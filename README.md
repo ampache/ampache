@@ -8,11 +8,13 @@
 
 ## News
 
-Ampache8 is now a work in progress!
+Ampache8 is now a work in progress and has become the mainline.
+
+The `develop` branch is Ampache8; the Ampache7 line continues on [release7](https://github.com/ampache/ampache/tree/release7).
 
 There are a lot of structural changes happening but not a lot of visible changes so far.
 
-You can check out the changes and progress in the [develop8 branch](https://github.com/ampache/ampache/tree/develop8)
+You can check out the changes and progress in the [develop branch](https://github.com/ampache/ampache/tree/develop)
 
 ## Basics
 
@@ -27,15 +29,16 @@ presents an already organised collection in a useful way. It assumes
 that you know best how to manage your files and are capable of
 choosing a suitable method for doing so.
 
-* Check out [Ampache 7 for Admins](https://ampache.org/docs/help/troubleshooting/ampache7-for-admins)
-* As well as [Ampache 7 for Users](https://ampache.org/docs/help/troubleshooting/ampache7-for-users)
+* Check out [Ampache 8 for Admins](https://ampache.org/docs/help/troubleshooting/ampache8-for-admins)
+* As well as [Ampache 8 for Users](https://ampache.org/docs/help/troubleshooting/ampache8-for-users)
+* Running the Ampache 7 line? [Ampache 7 for Admins](https://ampache.org/docs/help/troubleshooting/ampache7-for-admins) still applies there
 * The Ampache API is documented with examples [here](https://ampache.org/api/)
 
 ## Recommended Version
 
 The recommended and most stable version is the current stable [release7 branch](https://github.com/ampache/ampache/archive/release7.tar.gz).
 
-You get the latest version with recent changes and fixes but maybe in an unstable state from our [develop branch](https://github.com/ampache/ampache/archive/develop.tar.gz).
+The [develop branch](https://github.com/ampache/ampache/archive/develop.tar.gz) is the in-progress Ampache8. It carries the newest changes and fixes but may be unstable, and it requires PHP 8.5+.
 
 If you want to run the last stable version [release6](https://github.com/ampache/ampache/archive/release6.tar.gz) is still available
 

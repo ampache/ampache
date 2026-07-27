@@ -199,16 +199,29 @@ final class OpenSubsonic_Transcode
         $profiles = (is_array($clientInfo['directPlayProfiles'] ?? null)) ? $clientInfo['directPlayProfiles'] : [];
 
         if ($profiles !== []) {
-            $matched = false;
+            $matched     = false;
+            $containerOk = false;
             foreach ($profiles as $profile) {
-                if (is_array($profile) && self::profileAccepts($profile, $source, $media)) {
+                if (!is_array($profile)) {
+                    continue;
+                }
+
+                if (!self::profileCarriesFormat($profile, $source)) {
+                    continue;
+                }
+
+                // The format is covered, so any remaining mismatch is a limit rather than an unsupported container.
+                $containerOk = true;
+                if (self::profileAllowsChannels($profile, $media)) {
                     $matched = true;
                     break;
                 }
             }
 
             if (!$matched) {
-                $reasons[] = 'The client does not support the ' . $source . ' container';
+                $reasons[] = ($containerOk)
+                    ? 'The channel count exceeds what the client supports for ' . $source
+                    : 'The client does not support the ' . $source . ' container';
             }
         }
 
@@ -221,22 +234,15 @@ final class OpenSubsonic_Transcode
     }
 
     /**
-     * profileAccepts
+     * profileAllowsChannels
      *
-     * Whether one DirectPlayProfile covers this media. Per the spec an empty container/codec list means "any", so
-     * only a non-empty list that excludes the value counts as a mismatch.
+     * Whether the media fits within a profile's channel limit. Kept apart from the format check so a rejection can
+     * say which constraint was actually missed.
      *
      * @param array<string, mixed> $profile
      */
-    private static function profileAccepts(array $profile, string $source, Song|Podcast_Episode $media): bool
+    private static function profileAllowsChannels(array $profile, Song|Podcast_Episode $media): bool
     {
-        foreach (['containers', 'audioCodecs'] as $key) {
-            $values = (is_array($profile[$key] ?? null)) ? array_map('strtolower', $profile[$key]) : [];
-            if ($values !== [] && !in_array($source, $values, true)) {
-                return false;
-            }
-        }
-
         $maxChannels = (int) ($profile['maxAudioChannels'] ?? 0);
 
         return !(
@@ -245,6 +251,26 @@ final class OpenSubsonic_Transcode
             && $media->channels !== null
             && $media->channels > $maxChannels
         );
+    }
+
+    /**
+     * profileCarriesFormat
+     *
+     * Whether one DirectPlayProfile covers this container and codec. Per the spec an empty list means "any", so only
+     * a non-empty list that excludes the value counts as a mismatch.
+     *
+     * @param array<string, mixed> $profile
+     */
+    private static function profileCarriesFormat(array $profile, string $source): bool
+    {
+        foreach (['containers', 'audioCodecs'] as $key) {
+            $values = (is_array($profile[$key] ?? null)) ? array_map('strtolower', $profile[$key]) : [];
+            if ($values !== [] && !in_array($source, $values, true)) {
+                return false;
+            }
+        }
+
+        return true;
     }
 
     private static function sign(string $payload): string

@@ -17,7 +17,7 @@ public const array LIST = [
 
 Copying an existing plugin is the easiest way to write a new one.
 
-There is an empty example template available [here.](https://github.com/ampache/ampache/blob/develop8/docs/examples/AmpacheExample.php)
+There is an empty example template available [here.](https://github.com/ampache/ampache/blob/develop/docs/examples/AmpacheExample.php)
 
 This should let you expand and develop your own plugin quickly.
 

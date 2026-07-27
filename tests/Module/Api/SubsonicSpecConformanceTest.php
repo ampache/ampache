@@ -60,10 +60,15 @@ class SubsonicSpecConformanceTest extends TestCase
      * Endpoints the OpenSubsonic spec declares no response schema for, so there is nothing to validate against and
      * no value in generating a case. Drop an entry once the spec documents that endpoint.
      *
+     * `ping` answers with the shared `EmptySubsonicResponse`, which every mutating endpoint also returns, so the
+     * envelope is still covered by the rest of the corpus. `getTranscodeDecision` declares its schema inline rather
+     * than as a `$ref`, which self::resolveSchemaName() cannot name for the validator.
+     *
      * @var string[]
      */
     private const array UNSCHEMAED_JSON_ACTIONS = [
         'ping',
+        'getTranscodeDecision',
     ];
 
     private static string $fixtureRoot = __DIR__ . '/../../Fixtures/Api';
@@ -103,6 +108,50 @@ class SubsonicSpecConformanceTest extends TestCase
         return $cases;
     }
 
+    /**
+     * Find the response schema the spec actually declares for an endpoint.
+     *
+     * The name cannot be derived from the action: 38 of the 87 documented endpoints have no `<Action>Response`
+     * schema at all — `tokenInfo` is `GetTokenInfoResponse`, `getAlbumInfo2` reuses the `getAlbumInfo` schema, and
+     * every void or binary endpoint `$ref`s a shared base response. Reading the `$ref` off the path is what lets
+     * those endpoints be covered instead of silently skipped.
+     *
+     * @param array<string, mixed> $spec
+     */
+    private static function resolveSchemaName(array $spec, string $action): ?string
+    {
+        foreach ($spec['paths'] ?? [] as $path => $operations) {
+            if (strcasecmp(str_replace(['/rest/', '.view'], '', (string) $path), $action) !== 0) {
+                continue;
+            }
+
+            foreach (['get', 'post'] as $verb) {
+                $response = $operations[$verb]['responses']['200'] ?? null;
+                if (!is_array($response)) {
+                    continue;
+                }
+
+                // Void and binary endpoints ref components/responses, so follow one hop before looking for the body.
+                if (is_string($response['$ref'] ?? null)) {
+                    $shared   = substr($response['$ref'], (int) strrpos($response['$ref'], '/') + 1);
+                    $response = $spec['components']['responses'][$shared] ?? [];
+                }
+
+                $ref = $response['content']['application/json']['schema']['$ref'] ?? null;
+                if (is_string($ref)) {
+                    $name = substr($ref, (int) strrpos($ref, '/') + 1);
+
+                    return isset($spec['components']['schemas'][$name]) ? $name : null;
+                }
+            }
+        }
+
+        // Fall back to the naming convention for anything the paths section does not pin down.
+        $name = ucfirst($action) . 'Response';
+
+        return isset($spec['components']['schemas'][$name]) ? $name : null;
+    }
+
     private static function specPath(string $file): string
     {
         return __DIR__ . '/../../../docs/' . $file;
@@ -119,8 +168,8 @@ class SubsonicSpecConformanceTest extends TestCase
 
         self::assertIsArray(json_decode($body, true), sprintf('%s is not valid JSON', basename($path)));
 
-        $schemaName = ucfirst($action) . 'Response';
-        if (!isset($spec['components']['schemas'][$schemaName])) {
+        $schemaName = self::resolveSchemaName($spec, $action);
+        if ($schemaName === null) {
             self::markTestSkipped(sprintf('the OpenSubsonic spec declares no schema for %s', $action));
         }
 

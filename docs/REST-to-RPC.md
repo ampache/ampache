@@ -251,6 +251,7 @@ e.g. To make a REST call for 10 random albums your URL would be `https://demo.am
 | POST   | `songs/{song_id}/record-play`                        | `?action=record_play&filter={song_id}`                                           |                    |
 | POST   | `songs/{song_id}/share`                              | `?action=share_create&filter={song_id}`                                                 |                    |
 | GET    | `songs/{song_id}/similar`                            | `?action=get_similar&filter={song_id}&type=song`                                 |                    |
+| GET    | `songs/{song_id}/sonic-match`                        | `?action=sonic_match&filter={song_id}`                                           |                    |
 | GET    | `songs/{song_id}/stream`                             | `?action=stream&filter={song_id}&type=song`                                      |                    |
 | GET    | `songs/{song_id}/tags`                               | `?action=song_tags&filter={song_id}`                                             |                    |
 | POST   | `songs/{song_id}/update-tags`                        | `?action=update_from_tags&filter={song_id}&type=song`                            |                    |

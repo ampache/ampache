@@ -1306,9 +1306,10 @@ class Json8_Data
     /**
      * folders
      *
-     * This returns folders to the user in a JSON document.
-     *
-     * @param array<int|string> $objects Folder children id's in object_type-Object_id format.
+     * This returns an array of folders and their contents.
+     * @param array<int|string> $objects
+     * @param bool $object (whether to return as a named object array or regular array)
+     * @return string JSON Object "folder"
      */
     public static function folders(array $objects, Folder $folder, User $user, string $auth, bool $object = true): string
     {
@@ -3019,6 +3020,39 @@ class Json8_Data
         }
 
         return $JSON;
+    }
+
+    /**
+     * sonic_matches
+     *
+     * Songs that sound like a query song, each carrying its similarity score.
+     *
+     * The score shares the OpenSubsonic `sonicMatch` scale so a client sees the same number from either API: 1.0 is
+     * the same recording, 0.0 the most different, and -1 when the analysis backend gives no comparable score.
+     *
+     * @param list<array{'id': int, 'similarity': float}> $matches
+     */
+    public static function sonic_matches(array $matches, User $user, string $auth, bool $object = true): string
+    {
+        $similarity = [];
+        foreach ($matches as $match) {
+            $similarity[(int) $match['id']] = (float) $match['similarity'];
+        }
+
+        $ids = array_keys($similarity);
+
+        self::$count = self::$count ?: count($ids);
+
+        // songs_array() already applies the offset/limit window, so the scores are attached to whatever it returns
+        // rather than to the full id list.
+        $songs = self::songs_array($ids, $user, $auth);
+        foreach ($songs as $index => $song) {
+            $songs[$index]['similarity'] = $similarity[(int) $song['id']] ?? -1.0;
+        }
+
+        $output = ($object) ? ["sonic_match" => $songs] : $songs;
+
+        return json_encode($output, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE) ?: '';
     }
 
     /**

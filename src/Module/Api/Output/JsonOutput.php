@@ -221,7 +221,7 @@ final class JsonOutput implements ApiOutputInterface
     /**
      * At the moment, this method just acts as a proxy
      *
-     * @param 8 $apiVersion only api version 8 knows about folders
+     * @param 5|6|8 $apiVersion
      * @param array<int|string> $objects
      */
     public function folders(
@@ -659,6 +659,22 @@ final class JsonOutput implements ApiOutputInterface
             6 => Json6_Data::song_tags($objects, $auth, $asObject),
             8 => Json8_Data::song_tags($objects, $auth, $asObject),
         };
+    }
+
+    /**
+     * At the moment, this method just acts as a proxy
+     *
+     * @param 5|6|8 $apiVersion
+     * @param list<array{'id': int, 'similarity': float}> $matches
+     */
+    public function sonicMatches(
+        int $apiVersion,
+        array $matches,
+        User $user,
+        string $auth,
+        bool $asObject = true,
+    ): string {
+        return Json8_Data::sonic_matches($matches, $user, $auth, $asObject);
     }
 
     /**

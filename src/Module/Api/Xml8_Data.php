@@ -1595,6 +1595,41 @@ class Xml8_Data
     }
 
     /**
+     * sonic_matches
+     *
+     * Songs that sound like a query song, each carrying its similarity score.
+     *
+     * The score shares the OpenSubsonic `sonicMatch` scale so a client sees the same number from either API: 1.0 is
+     * the same recording, 0.0 the most different, and -1 when the analysis backend gives no comparable score.
+     *
+     * @param list<array{'id': int, 'similarity': float}> $matches
+     */
+    public static function sonic_matches(array $matches, User $user, string $auth): string
+    {
+        $similarity = [];
+        foreach ($matches as $match) {
+            $similarity[(int) $match['id']] = (float) $match['similarity'];
+        }
+
+        // songs() skips its own windowing when asked for a fragment, so the window is applied to the id list here
+        // instead; without it the xml form would ignore an offset the json form honours.
+        self::$count = self::$count ?: count($similarity);
+        $windowed    = Api::filter_objects(array_keys($similarity), self::$count, self::$offset, self::$limit);
+
+        // Each match wraps the shared song builder rather than patching its output, so the song body stays whatever
+        // `songs()` says it is and only the score is added around it.
+        $string = '';
+        foreach ($windowed as $song_id) {
+            $score = $similarity[$song_id] ?? -1;
+            $string .= "<sonic_match similarity=\"" . $score . "\">\n";
+            $string .= self::songs([$song_id], $user, $auth, false);
+            $string .= "</sonic_match>\n";
+        }
+
+        return Api::output_xml($string);
+    }
+
+    /**
      * success
      *
      * This generates a standard XML Success message

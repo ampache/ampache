@@ -199,8 +199,7 @@ class OpenSubsonic_Xml_Data
 
         self::_setIfStarred($xalbum, 'album', $album->id);
 
-        // The OpenSubsonic-only fields below mirror OpenSubsonic_Json_Data::_getAlbumID3(), sharing its derivation
-        // through OpenSubsonic_Fields so an album cannot describe itself differently per response format.
+        // These mirror OpenSubsonic_Json_Data::_getAlbumID3() through OpenSubsonic_Fields, so the formats cannot drift.
         $artist_names = [];
         foreach ($album->get_artists() as $artist_id) {
             $array          = Artist::get_name_array_by_id($artist_id);
@@ -749,60 +748,42 @@ class OpenSubsonic_Xml_Data
      *
      * https://opensubsonic.netlify.app/docs/responses/lyricslist/
      */
-    public static function addLyricsList(SimpleXMLElement $xml, Song $song): SimpleXMLElement
+    public static function addLyricsList(SimpleXMLElement $xml, Song $song, bool $enhanced = false): SimpleXMLElement
     {
         if ($song->isNew() || !$song->enabled) {
             return $xml;
         }
 
         $xlist  = self::_addChildToResultXml($xml, 'lyricsList');
-        $lyrics = $song->get_lyrics();
+        $lyrics = OpenSubsonic_Fields::structuredLyrics($song, $enhanced);
+        if ($lyrics === []) {
+            return $xml;
+        }
 
-        if (!empty($lyrics) && $lyrics['text']) {
-            $xlyrics = self::_addChildToResultXml($xlist, 'structuredLyrics');
-            $xlyrics->addAttribute('displayArtist', $song->get_parent_fullname());
-            $xlyrics->addAttribute('displayTitle', (string) $song->title);
-            $xlyrics->addAttribute('lang', 'xxx');
+        $xlyrics = self::_addChildToResultXml($xlist, 'structuredLyrics');
+        $xlyrics->addAttribute('displayArtist', $lyrics['displayArtist']);
+        $xlyrics->addAttribute('displayTitle', $lyrics['displayTitle']);
+        $xlyrics->addAttribute('lang', $lyrics['lang']);
+        $xlyrics->addAttribute('synced', ($lyrics['synced']) ? 'true' : 'false');
 
-            $text = preg_replace('/\<br(\s*)?\/?\>/i', "\n", $lyrics['text']);
-            $text = preg_replace('/\\n\\n/i', "\n", (string) $text);
-            $text = str_replace("\r", '', (string) $text);
-
-            $synced = [];
-            $lines  = [];
-            foreach (explode("\n", html_entity_decode($text)) as $line) {
-                if (!empty($line)) {
-                    if (preg_match('/^\[(\d{2}):(\d{2})\.(\d{2})\]\s*(.*)$/', $line, $matches)) {
-                        $minutes      = (int) $matches[1];
-                        $seconds      = (int) $matches[2];
-                        $centiseconds = (int) $matches[3];
-                        $milliseconds = ($minutes * 60 * 1000) + ($seconds * 1000) + ($centiseconds * 10);
-
-                        // Lyrics text
-                        $lyricLine = trim($matches[4]);
-                        $synced[]  = [
-                            'start' => (string) $milliseconds,
-                            'value' => $lyricLine,
-                        ];
-                    } else {
-                        $lines[] = ['value' => $line];
-                    }
-                }
+        foreach ($lyrics['line'] as $line) {
+            $xline = self::_addChildToResultXml($xlyrics, 'line');
+            if (isset($line['start'])) {
+                $xline->addAttribute('start', (string) $line['start']);
             }
+            $xline->addAttribute('value', $line['value']);
+        }
 
-            if ($synced !== []) {
-                $xlyrics->addAttribute('synced', 'true');
-                foreach ($synced as $line) {
-                    $xline = self::_addChildToResultXml($xlyrics, 'line');
-                    $xline->addAttribute('start', $line['start']);
-                    $xline->addAttribute('value', $line['value']);
-                }
-            } elseif ($lines !== []) {
-                $xlyrics->addAttribute('synced', 'false');
-                foreach ($lines as $line) {
-                    $xline = self::_addChildToResultXml($xlyrics, 'line');
-                    $xline->addAttribute('value', $line['value']);
-                }
+        foreach ($lyrics['cueLine'] ?? [] as $cueLine) {
+            $xcueline = self::_addChildToResultXml($xlyrics, 'cueLine');
+            $xcueline->addAttribute('index', (string) $cueLine['index']);
+            $xcueline->addAttribute('start', (string) $cueLine['start']);
+            $xcueline->addAttribute('value', $cueLine['value']);
+            foreach ($cueLine['cue'] as $cue) {
+                $xcue = self::_addChildToResultXml($xcueline, 'cue');
+                $xcue->addAttribute('start', (string) $cue['start']);
+                $xcue->addAttribute('byteStart', (string) $cue['byteStart']);
+                $xcue->addAttribute('byteEnd', (string) $cue['byteEnd']);
             }
         }
 
@@ -1307,6 +1288,31 @@ class OpenSubsonic_Xml_Data
     }
 
     /**
+     * addSonicMatches
+     *
+     * The ordered sonicMatch list shared by getSonicSimilarTracks and findSonicPath. It sits directly on the
+     * response rather than under a wrapper element, and a song that has since gone is dropped from the list.
+     *
+     * https://opensubsonic.netlify.app/docs/responses/sonicmatch/
+     * @param list<array{'id': int, 'similarity': float}> $matches
+     */
+    public static function addSonicMatches(SimpleXMLElement $xml, array $matches): SimpleXMLElement
+    {
+        foreach ($matches as $match) {
+            $song = new Song($match['id']);
+            if ($song->isNew() || !$song->enabled) {
+                continue;
+            }
+
+            $xmatch = self::_addChildToResultXml($xml, 'sonicMatch');
+            $xmatch->addAttribute('similarity', (string) $match['similarity']);
+            self::addSong($xmatch, $song, 'entry');
+        }
+
+        return $xml;
+    }
+
+    /**
      * addStarred
      *
      * https://opensubsonic.netlify.app/docs/responses/starred/
@@ -1686,8 +1692,7 @@ class OpenSubsonic_Xml_Data
         // Always return the original filename, not the transcoded one
         $xsong->addAttribute('path', (string) $song->file);
 
-        // The OpenSubsonic-only fields below mirror OpenSubsonic_Json_Data::_getChildSong(); both read their values
-        // from OpenSubsonic_Fields so the two serializers cannot describe the same song differently.
+        // These mirror OpenSubsonic_Json_Data::_getChildSong() through OpenSubsonic_Fields, so the formats cannot drift.
         $artists = [];
         foreach ($song->get_artists() as $artist_id) {
             $array     = Artist::get_name_array_by_id($artist_id);

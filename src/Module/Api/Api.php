@@ -205,6 +205,7 @@ class Api
         Method\SongMethod::ACTION => Method\SongMethod::class,
         Method\SongTagsMethod::ACTION => Method\SongTagsMethod::class,
         Method\SongsMethod::ACTION => Method\SongsMethod::class,
+        Method\Api8\SonicMatch8Method::ACTION => Method\Api8\SonicMatch8Method::class,
         Method\StatsMethod::ACTION => Method\StatsMethod::class,
         Method\Api8\Stream8Method::ACTION => Method\Api8\Stream8Method::class,
         Method\SystemPreferenceMethod::ACTION => Method\SystemPreferenceMethod::class,

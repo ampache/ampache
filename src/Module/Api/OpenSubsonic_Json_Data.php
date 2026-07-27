@@ -710,7 +710,7 @@ class OpenSubsonic_Json_Data
      * @param array{'subsonic-response': array<string, mixed>} $response
      * @return array{'subsonic-response': array<string, mixed>}
      */
-    public static function addLyricsList(array $response, Song $song): array
+    public static function addLyricsList(array $response, Song $song, bool $enhanced = false): array
     {
         if ($song->isNew() || !$song->enabled) {
             return $response;
@@ -718,7 +718,7 @@ class OpenSubsonic_Json_Data
 
         $json = ['structuredLyrics' => []];
 
-        $lyrics = self::_getStructuredLyrics($song);
+        $lyrics = OpenSubsonic_Fields::structuredLyrics($song, $enhanced);
 
         if ($lyrics !== []) {
             $json['structuredLyrics'][] = $lyrics;
@@ -1448,6 +1448,37 @@ class OpenSubsonic_Json_Data
         }
 
         $response['subsonic-response']['songsByGenre'] = (empty($json['song'])) ? (object) [] : $json;
+
+        return $response;
+    }
+
+    /**
+     * addSonicMatches
+     *
+     * The ordered sonicMatch list shared by getSonicSimilarTracks and findSonicPath. It sits directly on the
+     * response rather than under a wrapper element, and a song that has since gone is dropped from the list.
+     *
+     * https://opensubsonic.netlify.app/docs/responses/sonicmatch/
+     * @param array{'subsonic-response': array<string, mixed>} $response
+     * @param list<array{'id': int, 'similarity': float}> $matches
+     * @return array{'subsonic-response': array<string, mixed>}
+     */
+    public static function addSonicMatches(array $response, array $matches): array
+    {
+        $json = [];
+        foreach ($matches as $match) {
+            $song = new Song($match['id']);
+            if ($song->isNew() || !$song->enabled) {
+                continue;
+            }
+
+            $json[] = [
+                'entry' => self::_getChildSong($song),
+                'similarity' => $match['similarity'],
+            ];
+        }
+
+        $response['subsonic-response']['sonicMatch'] = $json;
 
         return $response;
     }
@@ -2899,8 +2930,7 @@ class OpenSubsonic_Json_Data
         }
         $json['albumArtists'] = $album_artists;
 
-        // The display* fields are the single-value form of the multi-value artist lists above, for clients that
-        // render one string rather than a list; they carry Ampache's already-formatted names verbatim.
+        // The display* fields are the single-string form of the artist lists above, for clients that render one name.
         $json['displayArtist'] = $song->get_parent_fullname();
         if ($album_artists !== []) {
             $json['displayAlbumArtist'] = implode(', ', array_column($album_artists, 'name'));
@@ -2916,8 +2946,7 @@ class OpenSubsonic_Json_Data
             $json['contributors'] = $contributors;
         }
 
-        // musicBrainzId is only meaningful once the client knows which entity it identifies, which is what the spec
-        // uses mediaType for, so the two are emitted together.
+        // musicBrainzId only means something once mediaType says which entity it identifies, so both are emitted.
         $json['mediaType'] = 'song';
 
         if ($song->rate > 0) {
@@ -3738,71 +3767,6 @@ class OpenSubsonic_Json_Data
         }
 
         return $json;
-    }
-
-    /**
-     * addStructuredLyrics
-     *
-     * Structured lyrics
-     * https://opensubsonic.netlify.app/docs/responses/structuredlyrics/
-     * @return array{
-     *     'displayArtist'?: string,
-     *     'displayTitle'?: string,
-     *     'lang'?: string,
-     *     'synced'?: bool,
-     *     'line'?: array<array{'value': string}>
-     * }
-     */
-    private static function _getStructuredLyrics(Song $song): array
-    {
-        $lyrics = $song->get_lyrics();
-
-        if (!empty($lyrics) && $lyrics['text']) {
-            $text = preg_replace('/\<br(\s*)?\/?\>/i', "\n", $lyrics['text']);
-            $text = preg_replace('/\\n\\n/i', "\n", (string) $text);
-            $text = str_replace("\r", '', (string) $text);
-
-            $json = [
-                'displayArtist' => $song->get_parent_fullname(),
-                'displayTitle' => (string) $song->title,
-                'lang' => 'xxx',
-                'synced' => false,
-                'line' => [],
-            ];
-
-            $synced = [];
-            $lines  = [];
-            foreach (explode("\n", html_entity_decode($text)) as $line) {
-                if (!empty($line)) {
-                    if (preg_match('/^\[(\d{2}):(\d{2})\.(\d{2})\]\s*(.*)$/', $line, $matches)) {
-                        $json['synced'] = true;
-                        $minutes        = (int) $matches[1];
-                        $seconds        = (int) $matches[2];
-                        $centiseconds   = (int) $matches[3];
-                        $milliseconds   = ($minutes * 60 * 1000) + ($seconds * 1000) + ($centiseconds * 10);
-
-                        // Lyrics text
-                        $lyricLine = trim($matches[4]);
-                        $synced[]  = [
-                            'start' => (string) $milliseconds,
-                            'value' => $lyricLine,
-                        ];
-                    } else {
-                        $lines[] = ['value' => $line];
-                    }
-                }
-            }
-
-            if ($synced !== [] || $lines !== []) {
-                $json['line'] = ($json['synced'])
-                    ? $synced
-                    : $lines;
-            }
-
-            return $json;
-        }
-
-        return [];
     }
 
     /**

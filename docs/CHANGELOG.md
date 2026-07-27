@@ -42,10 +42,21 @@ You can downgrade to Ampache7 if you try this out and have issues, using the cli
   * `folder` added to the `object_type` enum on several tables (`cache_object_count`, `cache_object_count_run`, `image`, `object_count`, and others)
   * New `user`.`subsonic_secret` column holding the per-user Subsonic password
 * Subsonic
+  * OpenSubsonic implementation audited against the published specification on 2026-07-27; the audited build is committed as `docs/openapi-opensubsonic.json` and pinned by a test so a refreshed copy prompts a re-audit instead of drifting silently
+  * New `transcoding` extension: `getTranscodeDecision` (POST, with the client's playback capabilities as a JSON body) reports whether a file can be played as-is, and `getTranscodeStream` serves the result. The decision is derived from the same transcode settings that serve the bytes, and its `transcodeParams` token is signed with `secret_key` so a client cannot choose its own output format or bitrate
+  * New `playbackReport` extension: `reportPlayback` updates now-playing from a client's playback timeline, with `ignoreScrobble=true` refreshing the display without touching play counts
+  * New `topSongsByArtistId` extension: `getTopSongs` accepts an artist `id` as well as a name
+  * New `sonicSimilarity` extension serving `getSonicSimilarTracks` and `findSonicPath`, backed by a sonic-analysis plugin; the extension is only advertised while such a plugin is enabled, so a server without one reports it unsupported rather than substituting metadata similarity
+  * New **AudioMuse** plugin providing that sonic analysis from an [AudioMuse-AI](https://github.com/NeptuneHub/AudioMuse-AI) server; set its URL in the plugin preferences
+  * `getLyricsBySongId` supports `enhanced=true`, returning word-level `cueLine` timing when the stored lyrics carry Enhanced LRC timings
+  * OpenSubsonic responses now carry the documented extra fields in **both** JSON and XML — the XML serializer previously emitted little more than plain Subsonic. Songs gain `artists`, `albumArtists`, `displayArtist`, `displayAlbumArtist`, `displayComposer`, `contributors`, `mediaType`, `samplingRate`, `channelCount`, `isrc`, `replayGain` and `bookmarkPosition`; albums gain `artists`, `displayArtist`, `sortName`, `releaseDate`, `originalReleaseDate`, `releaseTypes` and `discTitles`; artists gain `sortName` and `artistImageUrl`; playlists gain `allowedUser`; users gain `maxBitRate`; videos gain `originalWidth`/`originalHeight`
+  * Fixed the internet radio station response field, which was emitted as `homepageUrl` instead of the specified `homePageUrl`. This also affected the pure Subsonic API, where it did not match the 1.16.1 schema
+  * Fixed OpenSubsonic action routing: handler names in camelCase were compared against a lowercased action and never matched, so `reportPlayback`, `findSonicPath` and `getSonicSimilarTracks` were unreachable
   * New per-user **Subsonic Password** set from the account page, the admin user edit page, or `bin/cli admin:updateUser <username> --subsonic <password>`, so Subsonic token auth works without pasting your API key into a music player
   * It is stored encrypted with `secret_key` instead of hashed, because Subsonic token auth requires the server to recompute `md5(password + salt)`; changing `secret_key` invalidates every stored Subsonic Password
   * The API key keeps working as the Subsonic password for both token and plaintext auth, so existing clients do not need reconfiguring
 * API
+  * New `sonic_match` method (REST `songs/{song_id}/sonic-match`) returning songs that sound like a given song, each with a `similarity` score. It shares the OpenSubsonic `sonicMatch` scale (0.0-1.0, 1.0 being the same recording) so a client sees the same number from either API, and needs a sonic-analysis plugin — with none enabled it refuses the request rather than returning an empty list
   * v8 API responses are now fully documented: `docs/openapi.json` carries response schemas for every data type, and `docs/API-JSON-methods.md`/`docs/API-XML-methods.md` show per-method response field tables (type, nullable, optional)
   * Album disks are available to API8 clients (`album_disks`, `album_disk`, `album_disk_songs`, plus `index`, `list`, `browse`, `stats` and `get_art` support). With the `album_group` preference disabled the web interface browses album disks, and until now the API had no way to reach them
 * CLI
@@ -78,6 +89,10 @@ You can downgrade to Ampache7 if you try this out and have issues, using the cli
 
 * Database 800014
   * Dropped four redundant `object_count` indexes: `object_count_full_index` (an exact duplicate of `object_count_UNIQUE_IDX`), `object_type` and `object_count_type_IDX` (leading-column prefixes of that key), and `date` (a prefix of `object_count_date_IDX`)
+* Caching
+  * `memory_cache` now defaults to `true` (was `false`); it batches the per-object lookups a page would otherwise repeat, roughly halving the query count on a large browse
+  * Set `memory_cache = "false"` in `ampache.cfg.php` if you have a very large catalog and a low PHP memory limit — the cache trades memory for queries
+  * Song browse lists prefetch their rows in one query instead of loading each song individually
 * Requires PHP 8.5+ (was 8.2+); `ext-fileinfo` added as a required extension
 * CI now tests PHP 8.5 only (dropped the 8.2/8.3/8.4 matrix); branch triggers repointed to `patch8`/`release8`
 * `phpstan/phpstan` and `phpstan/phpstan-mockery` ^1 → ^2; `rector/rector` ^1 → ^2, retargeted to the PHP 8.5 rule set and now also covering `src/Config/Init` and `src/Module` (skip list gained `src/Module/Api` and `src/Module/System/Update/Migration`, alongside the existing `src/Repository/Model` skip)
@@ -135,6 +150,11 @@ You can downgrade to Ampache7 if you try this out and have issues, using the cli
 
 ### Fixed 8.0.0
 
+* Repeated queries on every page
+  * The installed-plugin version lookup re-read the whole `update_info` table on each call, and the module list calls it once per plugin, so a single page ran it dozens of times; it is read once per request and only for the `Plugin_` keys
+  * Editing a song rebuilt the entire `Song` object — a three table join — once per field changed, only to re-check who uploaded it; the uploader is read once per save
+  * Every model's `build_cache()` ran its batch query and then discarded the rows whenever `memory_cache` was off, leaving the per-object queries to run anyway; it now returns before querying
+* `playlist_create` on API3 recorded the server playlist count before inserting the row, so the stored total was one short until the next playlist create or delete corrected it
 * Url shortener plugins (`bitly`, `yourls`) were never applied to share links, because `PluginTypeEnum::URL_SHORTENER` looked for a `shorten()` method and plugins implement `shortener()`
 * The catalog files and catalog size graphs only drew the time buckets that gained a file, so a library added in a single scan was one point no matter how wide the date range was; they now carry the running total across every bucket in the range
 * The running total those graphs start from ignored the catalog and object filters, so a graph for one catalog counted every earlier file on the server

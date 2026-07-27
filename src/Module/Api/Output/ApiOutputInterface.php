@@ -441,6 +441,19 @@ interface ApiOutputInterface
     ): string;
 
     /**
+     * Songs that sound like a query song, each with its similarity score. API8 only.
+     *
+     * @param list<array{'id': int, 'similarity': float}> $matches
+     */
+    public function sonicMatches(
+        int $apiVersion,
+        array $matches,
+        User $user,
+        string $auth,
+        bool $asObject = true,
+    ): string;
+
+    /**
      * This generates a standard JSON Success message
      * nothing fancy here...
      *

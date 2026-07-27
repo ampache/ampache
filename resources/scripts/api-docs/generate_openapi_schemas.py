@@ -744,6 +744,39 @@ def build_list_response(key: str, object_name: str, envelope: str = "standard") 
 # Hand-written schemas for endpoints whose output cannot be derived from a single
 # builder shape (genuinely polymorphic). Merged verbatim into components.schemas.
 MANUAL_SCHEMAS: dict[str, dict] = {
+    # sonic_match has no *_array() builder behind it: Json8_Data::sonic_matches() decorates songs_array()
+    # rows with a per-row score, so the shape is a SongObject plus `similarity` and has to be stated here.
+    "SonicMatchObject": {
+        "allOf": [
+            {"$ref": "#/components/schemas/SongObject"},
+            {
+                "type": "object",
+                "properties": {
+                    "similarity": {
+                        "type": "number",
+                        "description": (
+                            "0.0-1.0 where 1.0 is the same recording, matching the OpenSubsonic "
+                            "`sonicMatch` scale. -1 when the analysis backend gives no comparable score."
+                        ),
+                        "minimum": -1,
+                        "maximum": 1,
+                    }
+                },
+                "required": ["similarity"],
+            },
+        ]
+    },
+    "SonicMatchResponse": {
+        "type": "object",
+        "properties": {
+            "sonic_match": {
+                "type": "array",
+                "items": {"$ref": "#/components/schemas/SonicMatchObject"},
+            }
+        },
+        "required": ["sonic_match"],
+        "additionalProperties": True,
+    },
     "IndexReferenceObject": {
         "type": "object",
         "properties": {"id": {"type": "string"}, "type": {"type": "string"}},

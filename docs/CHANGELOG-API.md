@@ -2,7 +2,7 @@
 
 ## API 8.0.0
 
-This version is being developed for Ampache8 (`develop8` branch) **only** and is not yet released.
+This version is being developed for Ampache8 (`develop` branch) **only** and is not yet released.
 
 API version **8** joins the concurrent live surfaces (3/4/5/6 — version 7 remains unused/unsupported), built on the `MethodInterface`/DI method pattern.
 
@@ -18,6 +18,8 @@ API version **8** joins the concurrent live surfaces (3/4/5/6 — version 7 rema
 * REST
   * New `folder`/`folders` actions (`Folder8Method`/`Folders8Method`) for browsing the catalog's virtual folder tree
   * New `playlist_remove` action (`PlaylistRemove8Method`)
+* `sonic_match` (API8 only)
+  * New action (`SonicMatch8Method`) returning songs that sound like the song in `filter`, each carrying a `similarity` score. Similarity comes from analysing the audio, which needs a sonic-analysis plugin, so with none enabled the request is refused (`4703`) rather than answered with an empty list. The score shares the OpenSubsonic `sonicMatch` scale — 0.0-1.0 where 1.0 is the same recording, and -1 when the backend gives no comparable score — so a client reads the same number from either API. REST path `songs/{song_id}/sonic-match`
 * `random` (API8 only)
   * New action (`RandomMethod`) that picks a random `song`, `podcast_episode`, or `video` from the whole library and redirects (302) to its stream url — mirrors `stream`'s params (`bitrate`/`format`/`offset`/`stats`, song only) but takes no `filter`/`id`. API8 only: API6 is shared with Ampache7, which does not serve it
 * `download` (API8 only)

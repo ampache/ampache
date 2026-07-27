@@ -4903,6 +4903,42 @@
           "basename"
         ],
         "additionalProperties": true
+      },
+      "SonicMatchObject": {
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/SongObject"
+          },
+          {
+            "type": "object",
+            "properties": {
+              "similarity": {
+                "type": "number",
+                "description": "0.0-1.0 where 1.0 is the same recording, matching the OpenSubsonic `sonicMatch` scale. -1 when the analysis backend gives no comparable score.",
+                "minimum": -1,
+                "maximum": 1
+              }
+            },
+            "required": [
+              "similarity"
+            ]
+          }
+        ]
+      },
+      "SonicMatchResponse": {
+        "type": "object",
+        "properties": {
+          "sonic_match": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/SonicMatchObject"
+            }
+          }
+        },
+        "required": [
+          "sonic_match"
+        ],
+        "additionalProperties": true
       }
     },
     "responses": {
@@ -5679,6 +5715,7 @@
     "POST /songs/{song_id}/record-play": "action=record_play&filter={song_id}",
     "POST /songs/{song_id}/share": "action=share_create&filter={song_id}",
     "GET /songs/{song_id}/similar": "action=get_similar&filter={song_id}&type=song",
+    "GET /songs/{song_id}/sonic-match": "action=sonic_match&filter={song_id}",
     "GET /songs/{song_id}/stream": "action=stream&filter={song_id}&type=song",
     "GET /songs/{song_id}/tags": "action=song_tags&filter={song_id}",
     "POST /songs/{song_id}/update-tags": "action=update_from_tags&filter={song_id}&type=song",
@@ -93750,6 +93787,54 @@
         ],
         "operationId": "getSimilarSongs",
         "description": "Return similar artist id's or similar song ids compared to the input filter"
+      }
+    },
+    "/songs/{song_id}/sonic-match": {
+      "get": {
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/SongId"
+          },
+          {
+            "$ref": "#/components/parameters/Limit"
+          },
+          {
+            "$ref": "#/components/parameters/Offset"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Songs that sound like this one, most similar first, each with its similarity score",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SonicMatchResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/BadRequestErrorResponse"
+          },
+          "401": {
+            "$ref": "#/components/responses/UnauthorizedErrorResponse"
+          },
+          "403": {
+            "$ref": "#/components/responses/ForbiddenErrorResponse"
+          },
+          "404": {
+            "$ref": "#/components/responses/NotFoundErrorResponse"
+          },
+          "500": {
+            "$ref": "#/components/responses/InternalServerErrorResponse"
+          }
+        },
+        "summary": "Songs that sound like this song",
+        "tags": [
+          "Song"
+        ],
+        "operationId": "sonicMatchSongs",
+        "description": "Similarity is derived from analysing the audio, which Ampache does not do itself, so this needs a sonic-analysis plugin (see the AudioMuse plugin). With none enabled the request is refused with 403 rather than answered with an empty list. `similarity` runs 0.0-1.0 where 1.0 is the same recording, matching the OpenSubsonic `sonicMatch` scale, and is -1 when the backend gives no comparable score."
       }
     },
     "/songs/{song_id}/stream": {
