@@ -1,5 +1,28 @@
 # API CHANGELOG
 
+## API 6.9.2 Build 3
+
+To ensure that there are no issues with clients checking for single int versions
+we will keep on 6.9.x and resume build number versioning until Ampache 8
+
+**NOTE** API8 has been removed from the codebase for Ampache 7.
+
+### Changed (692003)
+
+* ALL
+  * A request without an `action` is treated as a `ping` instead of failing with a session error (e.g. opening the API url in a browser)
+
+### Removed (692003)
+
+* API8
+  * Leftover version constants in the base `Api` class (`$version` and `$version_numeric` were still set to `8.0.0`/`800000`). They are commented out to keep backports simple
+  * `Api::server_details()`; the API8 copy of the handshake and ping counts. API3-6 call their own version of this function
+
+### Fixed (692003)
+
+* API5 and API6
+  * advanced_search: `album_disk` is not a searchable type and returns an empty result instead of an error
+
 ## API 6.9.2 Build 2
 
 This version is being released for Ampache7 **only**
