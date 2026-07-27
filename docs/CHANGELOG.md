@@ -1,5 +1,21 @@
 # CHANGELOG
 
+## Ampache 7.10.1
+
+### Changed (7.10.1)
+
+* Warn develop users that Ampache Develop is about to go through a major change
+
+### Fixed (7.10.1)
+
+* Deleting a Playlist or Smartlist left its `user_playlist_map` rows behind, so a later list given the freed id inherited the collaborators
+* User deletion and garbage collection stepped over `user_playlist_map` because it names its column `user_id`
+* Update sources
+  * Updating from the web interface reported success when it had not worked; `composer install`, `npm install` and `npm run build` discarded their exit status and kept only the last line of output, then redirected away. The status is checked, the output is logged and shown, and a failure keeps you on the update page
+  * `npm` failed outright when the web server user's home directory was not writable, because it could not create its cache directory; it is pointed at a writable one
+  * `npm install` installs the dev packages explicitly, so a server with `NODE_ENV=production` no longer builds nothing
+  * The update is refused before the sources are pulled when `exec()` is disabled or the checkout, `node_modules` or `vendor` cannot be written
+
 ## Ampache 7.10.0
 
 This release replaces the old captcha implementation (including OCR/image testing behavior) with the new `gregwar/captcha` library.

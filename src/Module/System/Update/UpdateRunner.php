@@ -87,6 +87,13 @@ final class UpdateRunner implements UpdateRunnerInterface
         // Prevent the script from timing out, which could be bad
         set_time_limit(0);
 
+        if ($currentVersion >= 800030) {
+            // Migration\V8\Migration800030 (Ampache7 has no Collections sidebar link for the preference to gate)
+            if (!Preference::delete('show_collection')) {
+                throw new UpdateFailedException();
+            }
+        }
+
         // Migration\V8\Migration800029 needs no rollback. It added a maintained `last_played` column to the
         // tables carrying a play counter. Ampache7 never reads it, so a downgraded database keeps an unused
         // nullable column, and dropping it would only throw away a value the migration rebuilds from
