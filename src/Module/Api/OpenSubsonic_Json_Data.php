@@ -1807,11 +1807,10 @@ class OpenSubsonic_Json_Data
      *     },
      *     'isCompilation'?: bool,
      *     'explicitStatus'?: string,
-     *     'discTitles'?: array{
+     *     'discTitles'?: array<int, array{
      *         'disc': int,
-     *         'title': string,
-     *         'coverArt'?: string,
-     *     },
+     *         'title': string
+     *     }>,
      *     'song'?: array<array<string, mixed>>
      * }
      */
@@ -1885,6 +1884,38 @@ class OpenSubsonic_Json_Data
             ];
         }
         $json['artists'] = $album_artists;
+
+        if ($album_artists !== []) {
+            $json['displayArtist'] = implode(', ', array_column($album_artists, 'name'));
+        }
+
+        $json['musicBrainzId'] = (string) $album->mbid;
+
+        $sort_name = OpenSubsonic_Fields::sortName($album->name, $f_name);
+        if ($sort_name !== null) {
+            $json['sortName'] = $sort_name;
+        }
+
+        // Ampache records only the year of a release, so both dates come back as a year-only ItemDate.
+        $release_date = OpenSubsonic_Fields::itemDate($album->year);
+        if ($release_date !== []) {
+            $json['releaseDate'] = $release_date;
+        }
+
+        $original_release_date = OpenSubsonic_Fields::itemDate($album->original_year);
+        if ($original_release_date !== []) {
+            $json['originalReleaseDate'] = $original_release_date;
+        }
+
+        $release_types = OpenSubsonic_Fields::albumReleaseTypes($album);
+        if ($release_types !== []) {
+            $json['releaseTypes'] = $release_types;
+        }
+
+        $disc_titles = OpenSubsonic_Fields::albumDiscTitles($album);
+        if ($disc_titles !== []) {
+            $json['discTitles'] = $disc_titles;
+        }
 
         if ($songs) {
             $allsongs = self::getAlbumRepository()->getSongs($album->getId());
@@ -2071,6 +2102,18 @@ class OpenSubsonic_Json_Data
         // [OPENSUBSONIC] roles (see _getArtistRoles); always returned, may be empty.
         $json['roles'] = self::_getArtistRoles($artist->album_count, $artist->song_count);
 
+        $json['musicBrainzId'] = (string) $artist->mbid;
+
+        $sort_name = OpenSubsonic_Fields::sortName($artist->name, $artist->get_fullname());
+        if ($sort_name !== null) {
+            $json['sortName'] = $sort_name;
+        }
+
+        $image_url = OpenSubsonic_Fields::artistImageUrl($artist);
+        if ($image_url !== null) {
+            $json['artistImageUrl'] = $image_url;
+        }
+
         return $json;
     }
 
@@ -2245,31 +2288,18 @@ class OpenSubsonic_Json_Data
      *             'roles'?: string[]
      *         }>,
      *         'displayAlbumArtist'?: string,
-     *         'contributors'?: array{
-     *             'contributor', array{
-     *                 'role': string,
-     *                 'subRole': string,
-     *                 'artist': array<int, array{
-     *                     'id': string,
-     *                     'name': string,
-     *                     'coverArt'?: string,
-     *                     'artistImageUrl'?: string,
-     *                     'albumCount'?: int,
-     *                     'starred'?: string,
-     *                     'musicBrainzId'?: string,
-     *                     'sortName'?: string,
-     *                     'roles'?: string[]
-     *                 }>
-     *             }
-     *         },
+     *         'contributors'?: array<int, array{
+     *             'role': string,
+     *             'artist': array{'id': string, 'name': string}
+     *         }>,
      *         'displayComposer'?: string,
      *         'moods'?: string[],
      *         'replayGain'?: array{
-     *             'trackGain': float,
-     *             'albumGain': float,
-     *             'trackPeak': float,
-     *             'albumPeak': float,
-     *             'baseGain': float
+     *             'trackGain'?: float,
+     *             'albumGain'?: float,
+     *             'trackPeak'?: float,
+     *             'albumPeak'?: float,
+     *             'baseGain'?: float
      *         },
      *         'explicitStatus'?: string
      *     }
@@ -2398,31 +2428,18 @@ class OpenSubsonic_Json_Data
      *         'roles'?: string[]
      *     }>,
      *     'displayAlbumArtist'?: string,
-     *     'contributors'?: array{
-     *         'contributor', array{
-     *             'role': string,
-     *             'subRole': string,
-     *             'artist': array<int, array{
-     *                 'id': string,
-     *                 'name': string,
-     *                 'coverArt'?: string,
-     *                 'artistImageUrl'?: string,
-     *                 'albumCount'?: int,
-     *                 'starred'?: string,
-     *                 'musicBrainzId'?: string,
-     *                 'sortName'?: string,
-     *                 'roles'?: string[]
-     *             }>
-     *         }
-     *     },
+     *     'contributors'?: array<int, array{
+     *         'role': string,
+     *         'artist': array{'id': string, 'name': string}
+     *     }>,
      *     'displayComposer'?: string,
      *     'moods'?: string[],
      *     'replayGain'?: array{
-     *         'trackGain': float,
-     *         'albumGain': float,
-     *         'trackPeak': float,
-     *         'albumPeak': float,
-     *         'baseGain': float
+     *         'trackGain'?: float,
+     *         'albumGain'?: float,
+     *         'trackPeak'?: float,
+     *         'albumPeak'?: float,
+     *         'baseGain'?: float
      *     },
      *     'explicitStatus'?: string
      * }
@@ -2596,31 +2613,18 @@ class OpenSubsonic_Json_Data
      *         'roles'?: string[]
      *     }>,
      *     'displayAlbumArtist'?: string,
-     *     'contributors'?: array{
-     *         'contributor', array{
-     *             'role': string,
-     *             'subRole': string,
-     *             'artist': array<int, array{
-     *                 'id': string,
-     *                 'name': string,
-     *                 'coverArt'?: string,
-     *                 'artistImageUrl'?: string,
-     *                 'albumCount'?: int,
-     *                 'starred'?: string,
-     *                 'musicBrainzId'?: string,
-     *                 'sortName'?: string,
-     *                 'roles'?: string[]
-     *             }>
-     *         }
-     *     },
+     *     'contributors'?: array<int, array{
+     *         'role': string,
+     *         'artist': array{'id': string, 'name': string}
+     *     }>,
      *     'displayComposer'?: string,
      *     'moods'?: string[],
      *     'replayGain'?: array{
-     *         'trackGain': float,
-     *         'albumGain': float,
-     *         'trackPeak': float,
-     *         'albumPeak': float,
-     *         'baseGain': float
+     *         'trackGain'?: float,
+     *         'albumGain'?: float,
+     *         'trackPeak'?: float,
+     *         'albumPeak'?: float,
+     *         'baseGain'?: float
      *     },
      *     'explicitStatus'?: string
      * }
@@ -2764,31 +2768,18 @@ class OpenSubsonic_Json_Data
      *         'roles'?: string[]
      *     }>,
      *     'displayAlbumArtist'?: string,
-     *     'contributors'?: array{
-     *         'contributor', array{
-     *             'role': string,
-     *             'subRole': string,
-     *             'artist': array<int, array{
-     *                 'id': string,
-     *                 'name': string,
-     *                 'coverArt'?: string,
-     *                 'artistImageUrl'?: string,
-     *                 'albumCount'?: int,
-     *                 'starred'?: string,
-     *                 'musicBrainzId'?: string,
-     *                 'sortName'?: string,
-     *                 'roles'?: string[]
-     *             }>
-     *         }
-     *     },
+     *     'contributors'?: array<int, array{
+     *         'role': string,
+     *         'artist': array{'id': string, 'name': string}
+     *     }>,
      *     'displayComposer'?: string,
      *     'moods'?: string[],
-     *     'replayGain'?: array{
-     *         'trackGain': float,
-     *         'albumGain': float,
-     *         'trackPeak': float,
-     *         'albumPeak': float,
-     *         'baseGain': float
+     *     'replayGain': array{
+     *         'trackGain'?: float,
+     *         'albumGain'?: float,
+     *         'trackPeak'?: float,
+     *         'albumPeak'?: float,
+     *         'baseGain'?: float
      *     },
      *     'explicitStatus'?: string
      * }
@@ -2892,6 +2883,48 @@ class OpenSubsonic_Json_Data
         }
         $json['albumArtists'] = $album_artists;
 
+        // The display* fields are the single-value form of the multi-value artist lists above, for clients that
+        // render one string rather than a list; they carry Ampache's already-formatted names verbatim.
+        $json['displayArtist'] = $song->get_parent_fullname();
+        if ($album_artists !== []) {
+            $json['displayAlbumArtist'] = implode(', ', array_column($album_artists, 'name'));
+        }
+
+        $composer = trim((string) $song->composer);
+        if ($composer !== '') {
+            $json['displayComposer'] = $composer;
+        }
+
+        $contributors = OpenSubsonic_Fields::songContributors($song);
+        if ($contributors !== []) {
+            $json['contributors'] = $contributors;
+        }
+
+        // musicBrainzId is only meaningful once the client knows which entity it identifies, which is what the spec
+        // uses mediaType for, so the two are emitted together.
+        $json['mediaType'] = 'song';
+
+        if ($song->rate > 0) {
+            $json['samplingRate'] = $song->rate;
+        }
+
+        if ($song->channels !== null && $song->channels > 0) {
+            $json['channelCount'] = $song->channels;
+        }
+
+        $isrc = OpenSubsonic_Fields::songIsrc($song);
+        if ($isrc !== []) {
+            $json['isrc'] = $isrc;
+        }
+
+        $bookmark_position = OpenSubsonic_Fields::songBookmarkPosition($song);
+        if ($bookmark_position !== null) {
+            $json['bookmarkPosition'] = $bookmark_position;
+        }
+
+        // Unlike every other optional field here, replayGain must always be present on a Child even when empty.
+        $json['replayGain'] = OpenSubsonic_Fields::songReplayGain($song);
+
         if (AmpConfig::get('transcode', 'default') != 'never') {
             $cache_path     = (string) AmpConfig::get('cache_path', '');
             $cache_target   = (string) AmpConfig::get('cache_target', '');
@@ -2980,31 +3013,18 @@ class OpenSubsonic_Json_Data
      *         'roles'?: string[]
      *     }>,
      *     'displayAlbumArtist'?: string,
-     *     'contributors'?: array{
-     *         'contributor', array{
-     *             'role': string,
-     *             'subRole': string,
-     *             'artist': array<int, array{
-     *                 'id': string,
-     *                 'name': string,
-     *                 'coverArt'?: string,
-     *                 'artistImageUrl'?: string,
-     *                 'albumCount'?: int,
-     *                 'starred'?: string,
-     *                 'musicBrainzId'?: string,
-     *                 'sortName'?: string,
-     *                 'roles'?: string[]
-     *             }>
-     *         }
-     *     },
+     *     'contributors'?: array<int, array{
+     *         'role': string,
+     *         'artist': array{'id': string, 'name': string}
+     *     }>,
      *     'displayComposer'?: string,
      *     'moods'?: string[],
      *     'replayGain'?: array{
-     *         'trackGain': float,
-     *         'albumGain': float,
-     *         'trackPeak': float,
-     *         'albumPeak': float,
-     *         'baseGain': float
+     *         'trackGain'?: float,
+     *         'albumGain'?: float,
+     *         'trackPeak'?: float,
+     *         'albumPeak'?: float,
+     *         'baseGain'?: float
      *     },
      *     'explicitStatus'?: string
      * }
@@ -3071,6 +3091,12 @@ class OpenSubsonic_Json_Data
 
         // Create a clean fake path instead of real file path to have better offline mode storage on Subsonic clients
         $json['path'] = basename($video->file ?? '');
+
+        // The source dimensions, so a client can decide for itself whether a transcode would downscale the video.
+        if ($video->resolution_x > 0 && $video->resolution_y > 0) {
+            $json['originalWidth']  = $video->resolution_x;
+            $json['originalHeight'] = $video->resolution_y;
+        }
 
         // Set transcoding information if required
         $transcode_cfg = AmpConfig::get('transcode', 'default');
@@ -3317,7 +3343,7 @@ class OpenSubsonic_Json_Data
      *     'id': string,
      *     'name': string,
      *     'streamUrl': string,
-     *     'homepageUrl': string,
+     *     'homePageUrl': string,
      *     'coverArt'?: string,
      * }
      */
@@ -3328,7 +3354,7 @@ class OpenSubsonic_Json_Data
             'id' => $sub_id,
             'name' => (string) $radio->name,
             'streamUrl' => (string) $radio->url,
-            'homepageUrl' => (string) $radio->site_url,
+            'homePageUrl' => (string) $radio->site_url,
         ];
 
         if ($radio->has_art()) {
@@ -3415,6 +3441,11 @@ class OpenSubsonic_Json_Data
         }
 
         $json['readonly'] = $playlist->has_access($user);
+
+        $allowed_users = OpenSubsonic_Fields::allowedUsers($playlist);
+        if ($allowed_users !== []) {
+            $json['allowedUser'] = $allowed_users;
+        }
 
         try {
             $date = new DateTime(date("Y-m-d H:i:s", time() + 300));
@@ -3787,6 +3818,7 @@ class OpenSubsonic_Json_Data
         $isAdmin   = ($user->access === 100);
 
         return [
+            'maxBitRate' => OpenSubsonic_Fields::userMaxBitRate($user),
             'username' => (string) $user->username,
             'email' => (string) $user->email,
             'scrobblingEnabled' => true,

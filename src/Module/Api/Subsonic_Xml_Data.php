@@ -1578,7 +1578,7 @@ class Subsonic_Xml_Data
         $xradio->addAttribute('id', Subsonic_Api::getLiveStreamSubId($radio->id));
         $xradio->addAttribute('name', (string) $radio->name);
         $xradio->addAttribute('streamUrl', (string) $radio->url);
-        $xradio->addAttribute('homepageUrl', (string) $radio->site_url);
+        $xradio->addAttribute('homePageUrl', (string) $radio->site_url);
     }
 
     /**

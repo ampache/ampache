@@ -2707,7 +2707,7 @@ class Subsonic_Json_Data
      *     'id': string,
      *     'name': string,
      *     'streamUrl': string,
-     *     'homepageUrl': string
+     *     'homePageUrl': string
      * }
      */
     private static function _getInternetRadioStation(Live_Stream $radio): array
@@ -2716,7 +2716,7 @@ class Subsonic_Json_Data
             'id' => Subsonic_Api::getLiveStreamSubId($radio->id),
             'name' => (string) $radio->name,
             'streamUrl' => (string) $radio->url,
-            'homepageUrl' => (string) $radio->site_url,
+            'homePageUrl' => (string) $radio->site_url,
         ];
     }
 
