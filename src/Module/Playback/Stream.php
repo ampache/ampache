@@ -218,6 +218,21 @@ class Stream
     }
 
     /**
+     * get_base_format
+     *
+     * The container behind a transcode target. The ReplayGain and car profiles are the same encoder with extra
+     * loudness filters, so `mp3_rg` still produces an mp3 and must be named, typed and measured as one.
+     */
+    public static function get_base_format(?string $format): string
+    {
+        if (in_array($format, [null, '', '0'], true)) {
+            return '';
+        }
+
+        return (string) preg_replace('/_(rg|car)$/', '', $format);
+    }
+
+    /**
      * get_base_url
      * This returns the base requirements for a stream URL this does not include anything after the index.php?sid=????
      */
@@ -264,14 +279,7 @@ class Stream
      */
     public static function get_format_max_bitrate(?string $format): int
     {
-        if (in_array($format, [null, '', '0'], true)) {
-            return 0;
-        }
-
-        // The ReplayGain and car profiles run the same encoder with extra filters, so they share its ceiling.
-        $codec = (string) preg_replace('/_(rg|car)$/', '', $format);
-
-        return self::FORMAT_MAX_BITRATE[$codec] ?? 0;
+        return self::FORMAT_MAX_BITRATE[self::get_base_format($format)] ?? 0;
     }
 
     /**
