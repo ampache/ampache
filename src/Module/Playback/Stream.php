@@ -51,6 +51,20 @@ class Stream
     public const array BITRATE_OVERRIDE_PLAYERS = ['webplayer', 'api'];
 
     /**
+     * The highest bitrate each lossy target can actually encode, in bps. A rate above the ceiling is meaningless to
+     * the encoder and libmp3lame simply refuses it, so a lossless source rate has to be clamped before it reaches a
+     * lossy target. Lossless outputs are absent because their rate follows the sample format rather than a setting.
+     *
+     * @var array<string, int>
+     */
+    public const array FORMAT_MAX_BITRATE = [
+        'mp3' => 320000,
+        'ogg' => 500000,
+        'opus' => 512000,
+        'm4a' => 512000,
+    ];
+
+    /**
      * Output formats that must never be served from or written to the transcode cache.
      * Their loudness normalisation is applied per-source at stream time, so a cached copy
      * (keyed only by object + target extension) would be wrong for every other request.
@@ -244,6 +258,23 @@ class Stream
     }
 
     /**
+     * get_format_max_bitrate
+     *
+     * The ceiling a transcode target can encode at, or 0 when the format has no meaningful limit.
+     */
+    public static function get_format_max_bitrate(?string $format): int
+    {
+        if (in_array($format, [null, '', '0'], true)) {
+            return 0;
+        }
+
+        // The ReplayGain and car profiles run the same encoder with extra filters, so they share its ceiling.
+        $codec = (string) preg_replace('/_(rg|car)$/', '', $format);
+
+        return self::FORMAT_MAX_BITRATE[$codec] ?? 0;
+    }
+
+    /**
      * get_image_preview
      */
     public static function get_image_preview(Video $media): ?string
@@ -336,6 +367,13 @@ class Stream
             $bit_rate = $options['bitrate'];
         }
 
+        // No limit set means stream at whatever the file already carries. Left at zero it reads as an unknown rate
+        // everywhere downstream, so the transcoder gets no target and the content-length guess is dropped entirely.
+        if ($bit_rate <= 0 && isset($media->bitrate) && $media->bitrate > 0) {
+            $bit_rate = self::validate_bitrate((int) $media->bitrate);
+            debug_event(self::class, 'No bitrate limit configured, using the source rate ' . $bit_rate, 5);
+        }
+
         debug_event(self::class, 'Configured bitrate is ' . $bit_rate, 5);
 
         // Never upsample a media ($media->bitrate and $bit_rate are both bps)
@@ -348,6 +386,15 @@ class Stream
         ) {
             debug_event(self::class, 'Clamping bitrate to avoid upsampling to ' . $media->bitrate, 5);
             $bit_rate = self::validate_bitrate((int) $media->bitrate);
+        }
+
+        // Whatever the rate came from, the target format has to be able to carry it. Without this a lossless source
+        // rate reaches a lossy encoder unchanged, which is how a flac at ~1000 kbps ends up asking mp3 for 1000 kbps.
+        $target_format = $transcode_settings['format'] ?? null;
+        $format_max    = self::get_format_max_bitrate($target_format);
+        if ($format_max > 0 && $bit_rate > $format_max) {
+            debug_event(self::class, 'Clamping bitrate to the ' . $target_format . ' maximum of ' . $format_max, 5);
+            $bit_rate = $format_max;
         }
 
         return (int) $bit_rate;
@@ -771,6 +818,13 @@ class Stream
         $target_rate = ($requested_rate > 0)
             ? $requested_rate
             : self::get_allowed_bitrate($player);
+
+        // With no limit configured the target is the source rate, so there is nothing to downsample towards and
+        // re-encoding the file into its own format would only cost quality.
+        if ($target_rate <= 0) {
+            $target_rate = $source_rate;
+        }
+
         if ($max_rate > 0 && $max_rate < $target_rate) {
             $target_rate = $max_rate;
         }
