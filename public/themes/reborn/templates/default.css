@@ -1183,6 +1183,51 @@ table.tabledata td.cel_ratings {
     min-width: 140px;
 }
 
+/* the generic td rule sets a 50px floor that would leave a checkbox swimming in its own column */
+table.tabledata .cel_select {
+    width: 24px !important;
+    min-width: 24px;
+    text-align: center;
+    padding-right: 4px;
+}
+
+/* sticky, not fixed: it stays in flow so it never fights the stacking context #maincontainer creates, and the
+   z-index sits below the mobile #header (100) and the fixed webplayer so neither is ever covered */
+.multiselect-actions {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 10px;
+    position: sticky;
+    top: 0;
+    z-index: 90;
+    margin: 5px 0;
+    padding: 5px 8px;
+    border-radius: 4px;
+    font-size: 12px;
+}
+
+/* Nothing checked means nothing to act on, so the bar hides until a row is selected. visibility rather than
+   display, so it keeps its box and the table does not jump down the moment the first row is picked. */
+.multiselect-actions.multiselect-empty {
+    visibility: hidden;
+}
+
+.multiselect-actions a {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+}
+
+.multiselect-actions a[aria-disabled="true"] {
+    opacity: 0.4;
+    cursor: default;
+}
+
+.multiselect-summary {
+    font-weight: bold;
+}
+
 table.tabledata tbody .cel_cover {
     overflow: visible;
     padding-top: 10px;
@@ -2619,5 +2664,11 @@ a.option-list:hover {
 
     .home_plugin td {
         overflow-wrap: anywhere;
+    }
+
+    /* #header already owns top: 0 here and is 120px of auto height, so a second sticky strip would either hide
+       behind it or need an offset that breaks whenever the header rewraps. The bar scrolls with the list instead. */
+    .multiselect-actions {
+        position: static;
     }
 }

@@ -37,6 +37,12 @@ You can downgrade to Ampache7 if you try this out and have issues, using the cli
   * New `mini_player` preference locks a user into that page; it hides the rest of the interface but is not an access control, user access levels still decide what data is reachable
   * Logging in returns you to the page you originally asked for, including `index.php#page.php?...` links
   * New `Mini player` button on the login form, next to `Register` and `Lost Password`, to land there after logging in
+* Multi select
+  * New `Multi-Select` browse option in the `View` menu turns the checkboxes on; they stay hidden until you ask for them
+  * Checkboxes on the playlist items list select several tracks at once, and the header checkbox selects the whole page
+  * `Ctrl`/`Cmd`+click toggles a row and `Shift`+click selects a range, anywhere on the row that is not itself a button or a link
+  * A selection can be played, played next, played last, added to the temporary playlist, added to another playlist, or removed from the playlist in a single action, from a bar that stays in view while you scroll the list
+  * Removing a selection sends one request and renumbers the playlist once, instead of one request and one full renumber for every track
 * Database
   * New `api_enable_8` preference to enable/disable API v8 responses per user
   * New database tables `folder` and `folder_map`
@@ -185,6 +191,7 @@ You can downgrade to Ampache7 if you try this out and have issues, using the cli
 * The catalog size graph was empty until a second time bucket existed, because the running total it adds to is `NULL` when nothing was added before the bucket and `NULL + SUM()` is `NULL`
 * The catalog size graph read zero for `object_type=album`; it joined `album`.`id` to `song`.`id` instead of `song`.`album`, and only counted buckets before the current one instead of including it
 * Uploading art, an avatar, a playlist or a podcast import file stopped the web player, because a form carrying a file fell back to a full page load
+* The `Select` toggle on the admin Disabled Songs list called a `check_select()` function that was defined nowhere, so it silently did nothing
 * Updating the sources from the web interface reported success when it had not worked
   * `composer install`, `npm install` and `npm run build` were run with their exit status discarded and only the last line of output kept, then the page redirected to the home page, so a failed dependency install left a pulled-but-unbuilt install with no error anywhere. The status is now checked, the output is logged in full and shown, and a failure keeps you on the update page
   * `npm` failed outright whenever the web server user's home directory was not writable, because it could not create its cache directory; it is now pointed at a writable one

@@ -253,6 +253,9 @@ final readonly class BrowseAjaxHandler implements AjaxHandlerInterface
                         $value = ($value == 'true');
                         $browse->set_grid_view($value);
                         break;
+                    case 'use_select':
+                        $browse->set_use_select($value == 'true');
+                        break;
                     case 'limit':
                         $value = (int) $value;
                         if ($value > 0) {

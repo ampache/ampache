@@ -550,6 +550,22 @@ span.fatalerror {
     color: #000;
 }
 
+.multiselect-actions {
+    background-color: #e4e4e4;
+    color: #333;
+}
+
+/* outranks both the striped-row background and the tr:hover gradient, so a selected row always reads as selected */
+table.tabledata tbody tr.selected,
+table.tabledata tbody tr.selected:hover {
+    background-color: rgba(25, 144, 219, 0.22);
+    background-image: none;
+}
+
+.multiselect-actions a:hover {
+    color: #000;
+}
+
 /* ------------------------
     Styles for ratings / user flags
    ------------------------ */

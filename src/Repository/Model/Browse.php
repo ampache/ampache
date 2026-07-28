@@ -46,6 +46,13 @@ use Ampache\Repository\ShoutRepositoryInterface;
  */
 class Browse extends Query
 {
+    /**
+     * Browse types that lay out a multi-select checkbox column. Only these screens offer the option in the
+     * view menu, and only these save a cookie for it.
+     */
+    public const array MULTISELECT_TYPES = [
+        'playlist_media',
+    ];
     private const array BROWSE_TYPES = [
         'album_disk',
         'album',
@@ -231,6 +238,17 @@ class Browse extends Query
     public function is_use_pages(): bool
     {
         return make_bool($this->_state['use_pages'] ?? false);
+    }
+
+    /**
+     * is_use_select
+     *
+     * Whether the checkboxes and the action bar of a multi-select browse are shown. Off unless the user asked
+     * for them in the view menu; batch actions are not something everyone wants in the way of a track list.
+     */
+    public function is_use_select(): bool
+    {
+        return make_bool($this->_state['use_select'] ?? false);
     }
 
     /**
@@ -445,6 +463,11 @@ class Browse extends Query
             //    $this->set_grid_view(Core::get_cookie($name) == 'true', false);
             //}
 
+            $name = 'browse_' . $type . '_select';
+            if ((isset($_COOKIE[$name]))) {
+                $this->set_use_select(Core::get_cookie($name) == 'true', false);
+            }
+
             parent::set_type($type, $custom_base, $parameters);
         } else {
             debug_event(self::class, 'set_type invalid type: ' . $type, 5);
@@ -493,6 +516,18 @@ class Browse extends Query
         }
 
         $this->_state['use_pages'] = $use_pages;
+    }
+
+    /**
+     * set_use_select
+     */
+    public function set_use_select(bool $use_select, bool $savecookie = true): void
+    {
+        if ($savecookie && in_array($this->get_type(), self::MULTISELECT_TYPES)) {
+            $this->save_cookie_params('select', ($use_select) ? 'true' : 'false');
+        }
+
+        $this->_state['use_select'] = $use_select;
     }
 
     /**
@@ -649,6 +684,10 @@ class Browse extends Query
 
             if ($this->is_use_filters() && array_key_exists('browse_' . $type . '_alpha', $_COOKIE)) {
                 $browse->set_use_alpha(Core::get_cookie('browse_' . $type . '_alpha') == 'true', false);
+            }
+
+            if (in_array($type, self::MULTISELECT_TYPES) && array_key_exists('browse_' . $type . '_select', $_COOKIE)) {
+                $browse->set_use_select(Core::get_cookie('browse_' . $type . '_select') == 'true', false);
             }
         }
 
