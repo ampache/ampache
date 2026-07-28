@@ -15,6 +15,9 @@
   * `npm` failed outright when the web server user's home directory was not writable, because it could not create its cache directory; it is pointed at a writable one
   * `npm install` installs the dev packages explicitly, so a server with `NODE_ENV=production` no longer builds nothing
   * The update is refused before the sources are pulled when `exec()` is disabled or the checkout, `node_modules` or `vendor` cannot be written
+* Upload
+  * An artist created while uploading was never mapped to the upload catalog, so it was missing from an artist browse filtered to that catalog until the next catalog update; the artists of an uploaded song are now mapped as the song is added
+* Rating or favouriting a playlist, search or live stream logged an SQL error on every click, because only the media tables carry the `weight` column those writes adjust
 
 ## Ampache 7.10.0
 
