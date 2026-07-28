@@ -521,7 +521,10 @@ span.fatalerror {
 
 .item_art .item_art_play .item_art_play_icon,
 .item_art .item_art_play_150 .item_art_play_icon {
-    background-image: url('../images/videoplay.png');
+    background-image: url('../images/videoplay.svg');
+    background-repeat: no-repeat;
+    background-position: center;
+    background-size: contain;
 }
 
 .item_art .item_art_actions {
@@ -591,7 +594,7 @@ div.jp-playlist {
 }
 
 .jp-no-solution {
-    background: #121112 url("../../../lib/modules/jquery-jplayer-midnight-black/jplayer.midnight.black.interface.png") repeat-x;
+    background: linear-gradient(to bottom, #3b3b3b, #111212);
     border-top: 1px solid #191919;
 }
 
