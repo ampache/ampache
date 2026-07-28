@@ -75,7 +75,7 @@ You can downgrade to Ampache7 if you try this out and have issues, using the cli
   * Collections have their own art, including the mosaic built from their members when no art is set
   * `public`/`private` visibility and a collaborator list, matching playlists: a collaborator curates the contents, only the owner or an admin can delete the list
   * New `show_collection` preference to show/hide the "Collections" link in the sidebar
-  * Collections in the web interface: a `collection.php` page listing the members grouped by type, a `browse.php?action=collection` browse with the usual sorting and filtering, the standard edit dialog for name, visibility, pinned type and collaborators, and the art picker
+  * Collections in the web interface: a `collection.php` page listing the members grouped by type, a `browse.php?action=collection` browse with the usual sorting and filtering, the standard edit dialog for name, visibility, pinned type and collaborators, and the art picker. Creating a collection and adding or removing its members is API-only in this release
   * Collections can be rated and flagged like any other library item
 * API
   * New collection methods `collections`, `collection`, `collection_items`, `collection_create`, `collection_edit`, `collection_delete`, `collection_add` and `collection_remove`, with REST paths under `collections/`
