@@ -38,6 +38,7 @@ You can downgrade to Ampache7 if you try this out and have issues, using the cli
   * Logging in returns you to the page you originally asked for, including `index.php#page.php?...` links
   * New `Mini player` button on the login form, next to `Register` and `Lost Password`, to land there after logging in
 * Multi select
+  * New `Multi-Select` browse option in the `View` menu turns the checkboxes on; they stay hidden until you ask for them
   * Checkboxes on the playlist items list select several tracks at once, and the header checkbox selects the whole page
   * `Ctrl`/`Cmd`+click toggles a row and `Shift`+click selects a range, anywhere on the row that is not itself a button or a link
   * A selection can be played, played next, played last, added to the temporary playlist, added to another playlist, or removed from the playlist in a single action, from a bar that stays in view while you scroll the list

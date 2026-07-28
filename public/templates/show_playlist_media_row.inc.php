@@ -51,6 +51,7 @@ use Ampache\Repository\Model\Userflag;
 /** @var bool $show_ratings */
 /** @var bool $extended_links */
 /** @var bool $show_parent */
+/** @var bool $can_multiselect */
 /** @var bool $show_multiselect */
 /** @var string $t_play */
 /** @var string $t_play_next */
@@ -69,12 +70,14 @@ if ((!isset($libitem->enabled) || $libitem->enabled || Access::check(AccessTypeE
     $link = ($extended_links && !empty($libitem->get_f_parent_link()))
         ? $libitem->get_f_link() . '&nbsp;-&nbsp;' . $libitem->get_f_parent_link()
         : $libitem->get_f_link(); ?>
-<?php if (!empty($show_multiselect)) { ?>
+<?php if (!empty($can_multiselect)) { ?>
 <td class="cel_select">
+    <?php if (!empty($show_multiselect)) { ?>
     <input type="checkbox" class="multiselect-item" title="<?php echo T_('Select'); ?>"
            data-id="<?php echo $libitem->getId(); ?>"
            data-type="<?php echo $object_type; ?>"
            data-track-id="<?php echo $object['track_id']; ?>" />
+    <?php } ?>
 </td>
 <?php } ?>
 <td class="cel_play">

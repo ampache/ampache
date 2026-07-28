@@ -84,10 +84,14 @@ $t_delete      = T_('Delete');
 $t_reorder     = T_('Reorder');
 // Multi select. Only a real playlist can have tracks removed, a smartlist is rule driven, and the bar is
 // pointless without rows or in grid view where there is no room for a checkbox column.
-$can_remove       = ($playlist instanceof Playlist) && $playlist->has_collaborate();
-$can_add          = Access::check(AccessTypeEnum::INTERFACE, AccessLevelEnum::USER);
-$directplay       = (bool) AmpConfig::get('directplay');
-$show_multiselect = $is_table && $object_ids !== [] && ($can_remove || $can_add || $directplay);
+$can_remove = ($playlist instanceof Playlist) && $playlist->has_collaborate();
+$can_add    = Access::check(AccessTypeEnum::INTERFACE, AccessLevelEnum::USER);
+$directplay = (bool) AmpConfig::get('directplay');
+// The column is laid out wherever the actions would work, so toggling the option in the view menu shows and
+// hides the checkboxes without every other column shifting sideways. Batch actions are not for everyone
+// though, so the checkboxes and the bar wait until 'Multi-Select' is picked.
+$can_multiselect  = $is_table && $object_ids !== [] && ($can_remove || $can_add || $directplay);
+$show_multiselect = $can_multiselect && $browse->is_use_select();
 
 $multiselect_actions = [];
 if ($directplay) {
@@ -150,8 +154,8 @@ if ($browse->is_show_header()) {
         <table id="reorder_playlist_table" class="tabledata striped-rows <?php echo $css_class; ?>" data-objecttype="media" data-offset="<?php echo $browse->get_start(); ?>">
             <thead>
             <tr class="th-top">
-                <?php if ($show_multiselect) { ?>
-                <th class="cel_select essential persist"><input type="checkbox" class="multiselect-all" title="<?php echo T_('Select all'); ?>" /></th>
+                <?php if ($can_multiselect) { ?>
+                <th class="cel_select essential persist"><?php if ($show_multiselect) { ?><input type="checkbox" class="multiselect-all" title="<?php echo T_('Select all'); ?>" /><?php } ?></th>
                 <?php } ?>
                 <th class="cel_play essential"></th>
                 <th class="<?php echo $cel_cover; ?> optional"><?php echo $t_art; ?></th>
@@ -198,7 +202,7 @@ if ($browse->is_show_header()) {
             </tbody>
             <tfoot>
             <tr class="th-bottom">
-                <?php if ($show_multiselect) { ?>
+                <?php if ($can_multiselect) { ?>
                 <th class="cel_select"></th>
                 <?php } ?>
                 <th class="cel_play"><?php echo T_('Play'); ?></th>
