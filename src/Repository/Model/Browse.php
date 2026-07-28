@@ -52,6 +52,7 @@ class Browse extends Query
      */
     public const array MULTISELECT_TYPES = [
         'playlist_media',
+        'song',
     ];
     private const array BROWSE_TYPES = [
         'album_disk',

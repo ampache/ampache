@@ -44,6 +44,9 @@ You can downgrade to Ampache7 if you try this out and have issues, using the cli
   * A selection can be played, played next, played last, added to the temporary playlist, added to another playlist, or removed from the playlist in a single action, from a bar that stays in view while you scroll the list
   * Removing a selection sends one request and renumbers the list once, instead of one request and one full renumber for every entry
   * A mixed collection groups the selection by type before acting on it, so playing a selection of albums and songs together works from one bar
+  * The same checkboxes, gestures and action bar on the song lists, which covers the songs browse as well as the song lists on album, artist and search pages
+  * A selection of songs can be downloaded as a single zip, when `allow_zip_types` includes `song` and batch download is permitted
+  * `batch.php` accepts a comma separated `id` list, so one zip can hold the medias of several items instead of only one
 * A "Create Playlist" button on the playlists browse. Until now a playlist could only come into existence as a side effect of adding something to one
 * Database
   * New `api_enable_8` preference to enable/disable API v8 responses per user

@@ -70,10 +70,11 @@ function multiSelectGroupByType(selection) {
 }
 
 // Reflects the current count into the bar: the summary updates and the actions disable at zero so the bar can
-// never fire a request with an empty id list.
+// never fire a request with an empty id list. The batch zip takes one type, so a mixed selection disables it.
 function multiSelectRefresh($scope) {
     var $items = multiSelectItems($scope);
     var count = $items.filter(":checked").length;
+    var mixed = multiSelectGroupByType(multiSelectSelection($scope)).length > 1;
 
     // A row-wide click target needs row-wide feedback, so the whole row carries the state, not just the checkbox.
     $items.each(function () {
@@ -83,6 +84,7 @@ function multiSelectRefresh($scope) {
     $scope.find("[data-multiselect-count]").text(count);
     $scope.find("[data-multiselect-bar]").toggleClass("multiselect-empty", count === 0);
     $scope.find("[data-multiselect-action]").attr("aria-disabled", count === 0 ? "true" : "false");
+    $scope.find("[data-multiselect-action='link']").attr("aria-disabled", (count === 0 || mixed) ? "true" : "false");
 
     var $all = $scope.find("input.multiselect-all");
     $all.prop("checked", count > 0 && count === $items.length);
@@ -209,6 +211,15 @@ $(document).on("click", "a[data-multiselect-action]", function (event) {
                 return group.type + ":" + group.ids.join(",");
             }).join(";")
         );
+
+        return;
+    }
+
+    // A zip arrives as one response for one type, so it leaves through an ordinary navigation, not an ajaxPut.
+    if (action === "link") {
+        var group = multiSelectGroupByType(selection)[0];
+
+        window.location = multiSelectFill(template, {type: group.type, ids: group.ids.join(",")});
 
         return;
     }
