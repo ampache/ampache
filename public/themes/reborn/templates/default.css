@@ -1207,9 +1207,10 @@ table.tabledata .cel_select {
     font-size: 12px;
 }
 
-/* nothing checked means nothing to act on, so the bar stays out of the way until a row is selected */
+/* Nothing checked means nothing to act on, so the bar hides until a row is selected. visibility rather than
+   display, so it keeps its box and the table does not jump down the moment the first row is picked. */
 .multiselect-actions.multiselect-empty {
-    display: none;
+    visibility: hidden;
 }
 
 .multiselect-actions a {
