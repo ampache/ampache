@@ -87,6 +87,32 @@ final class UpdateRunner implements UpdateRunnerInterface
         // Prevent the script from timing out, which could be bad
         set_time_limit(0);
 
+        if ($currentVersion >= 800034) {
+            // Migration\V8\Migration800034 (Ampache7's `label_asso` links a label to an artist only)
+            // Its `artist` column is NOT NULL here, so the album-only rows Ampache8 writes have to go before the
+            // column can be narrowed again; the labels themselves are kept, only the album association is lost
+            if (
+                !Dba::write('DELETE FROM `label_asso` WHERE `artist` IS NULL;') ||
+                !Dba::write('ALTER TABLE `label_asso` MODIFY COLUMN `artist` int(11) UNSIGNED NOT NULL;') ||
+                !Dba::write('ALTER TABLE `label_asso` DROP COLUMN `album`;')
+            ) {
+                throw new UpdateFailedException();
+            }
+        }
+
+        // Migration\V8\Migration800033 needs no rollback. It added `artist`.`lastfm_url`, which Ampache7 never
+        // reads, so a downgraded database keeps an unused nullable column. Dropping it would discard cached
+        // last.fm data that only another round of API calls could rebuild.
+
+        // Migration\V8\Migration800032 needs no rollback. It added `position_ms`, `playback_rate` and `state` to
+        // `now_playing`; Ampache7 inserts that row with an explicit column list, so the extra nullable columns are
+        // ignored, and the table holds only ephemeral session state that expires on its own anyway.
+
+        // Migration\V8\Migration800031 needs no rollback block of its own. It added `collection` to the
+        // `object_type` enum on `rating` and `user_flag`, and the `>= 800004` block below already narrows both
+        // back to the Ampache7 spelling and deletes the rows that no longer fit -- the same way that block
+        // covers the enums Migration800028 widened.
+
         if ($currentVersion >= 800030) {
             // Migration\V8\Migration800030 (Ampache7 has no Collections sidebar link for the preference to gate)
             if (!Preference::delete('show_collection')) {

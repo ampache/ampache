@@ -49,6 +49,13 @@ use Ampache\Repository\UserActivityRepositoryInterface;
  */
 class Stats
 {
+    /**
+     * The tables carrying a `weight` column (Migration794001/Migration794002). Playing, rating and flagging an
+     * object all bump it, so those writers must check this list first: a playlist, search or live stream can be
+     * rated and flagged but has no such column, and the update would fail on a missing column.
+     */
+    public const WEIGHT_TYPES = ['album', 'album_disk', 'artist', 'podcast', 'podcast_episode', 'song', 'video'];
+
     /* Base vars */
     public int $id = 0;
     public ?string $object_type;
