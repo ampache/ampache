@@ -48,7 +48,7 @@ $show_direct_play = AmpConfig::get('directplay');
 $show_ratings     = User::is_registered() && AmpConfig::get('ratings');
 
 // translate once
-$name_text   = T_('Collection Name');
+$name_text   = T_('Name');
 $items_text  = T_('# Items');
 $type_text   = T_('Type');
 $holds_text  = T_('Holds');

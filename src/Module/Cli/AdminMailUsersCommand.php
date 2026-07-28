@@ -39,7 +39,7 @@ final class AdminMailUsersCommand extends Command
         $this
             ->option('-s|--subject', T_('Subject'), 'strval', '')
             ->option('-m|--message', T_('Message'), 'strval', '')
-            ->argument('[group]', T_('User group') . " ('all', 'users', 'admins', 'inactive')", 'all')
+            ->argument('[group]', T_('Users') . " ('all', 'users', 'admins', 'inactive')", 'all')
             ->usage('<bold>  admin:mailUsers users --subject "Hi" --message "Server maintenance tonight"</end> <comment> ## ' . T_('Mail all standard users') . '</end><eol/>');
     }
 

@@ -128,7 +128,7 @@ final readonly class ArtCollector implements ArtCollectorInterface
             if ($art->has_db_info() && $art->id) {
                 $results[] = [
                     'db' => $art->id,
-                    'title' => T_('Current Art'),
+                    'title' => T_('Art'),
                     'mime' => $art->raw_mime,
                 ];
             }

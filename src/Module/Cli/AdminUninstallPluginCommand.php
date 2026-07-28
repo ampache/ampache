@@ -37,7 +37,7 @@ final class AdminUninstallPluginCommand extends Command
         parent::__construct('admin:uninstallPlugin', T_('Uninstall a plugin'));
 
         $this
-            ->argument('<name>', T_('Plugin name'))
+            ->argument('<name>', T_('Name'))
             ->usage('<bold>  admin:uninstallPlugin Last.FM</end> <comment> ## ' . T_('Uninstall the Last.FM plugin') . '</end><eol/>');
     }
 

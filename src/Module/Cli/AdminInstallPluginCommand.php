@@ -37,7 +37,7 @@ final class AdminInstallPluginCommand extends Command
         parent::__construct('admin:installPlugin', T_('Install a plugin'));
 
         $this
-            ->argument('<name>', T_('Plugin name'))
+            ->argument('<name>', T_('Name'))
             ->usage('<bold>  admin:installPlugin Last.FM</end> <comment> ## ' . T_('Install the Last.FM plugin') . '</end><eol/>');
     }
 

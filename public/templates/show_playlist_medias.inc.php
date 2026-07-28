@@ -155,7 +155,7 @@ if ($browse->is_show_header()) {
             <thead>
             <tr class="th-top">
                 <?php if ($can_multiselect) { ?>
-                <th class="cel_select essential persist"><?php if ($show_multiselect) { ?><input type="checkbox" class="multiselect-all" title="<?php echo T_('Select all'); ?>" /><?php } ?></th>
+                <th class="cel_select essential persist"><?php if ($show_multiselect) { ?><input type="checkbox" class="multiselect-all" title="<?php echo T_('Select'); ?>" /><?php } ?></th>
                 <?php } ?>
                 <th class="cel_play essential"></th>
                 <th class="<?php echo $cel_cover; ?> optional"><?php echo $t_art; ?></th>

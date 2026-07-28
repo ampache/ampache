@@ -37,7 +37,7 @@ final class AdminUpgradePluginCommand extends Command
         parent::__construct('admin:upgradePlugin', T_('Upgrade a plugin'));
 
         $this
-            ->argument('<name>', T_('Plugin name'))
+            ->argument('<name>', T_('Name'))
             ->usage('<bold>  admin:upgradePlugin Last.FM</end> <comment> ## ' . T_('Upgrade the Last.FM plugin') . '</end><eol/>');
     }
 
