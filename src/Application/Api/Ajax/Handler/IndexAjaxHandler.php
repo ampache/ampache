@@ -513,6 +513,33 @@ final readonly class IndexAjaxHandler implements AjaxHandlerInterface
 
                 $results['fslider_script'] = ob_get_clean();
                 break;
+            case 'albums':
+                $label_id = (int) ($_REQUEST['label'] ?? 0);
+
+                ob_start();
+                if ($label_id > 0) {
+                    $label = $this->labelRepository->findById($label_id);
+
+                    // the label tag describes the release, so the albums come from `label_asso` rather than a text match
+                    $object_ids = ($label === null)
+                        ? []
+                        : $label->get_albums();
+
+                    $browse = new Browse();
+                    $browse->set_type('album');
+                    $browse->set_simple_browse(false);
+                    $browse->set_use_filters(false);
+
+                    Ui::show_box_top(T_('Albums'), 'info-box');
+                    $browse->show_objects($object_ids, true);
+                    $browse->set_use_alpha(false, false);
+                    $browse->store();
+                    Ui::show_box_bottom();
+                }
+
+                $results['albums'] = ob_get_contents();
+                ob_end_clean();
+                break;
             case 'songs':
                 $label_id = (int) ($_REQUEST['label'] ?? 0);
 

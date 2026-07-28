@@ -47,6 +47,13 @@ interface LabelRepositoryInterface
     public function findById(int $labelId): ?Label;
 
     /**
+     * Returns the ids of every album associated with the label
+     *
+     * @return int[]
+     */
+    public function getAlbums(Label $label): array;
+
+    /**
      * Return the list of all available labels
      *
      * @return string[]
@@ -71,6 +78,11 @@ interface LabelRepositoryInterface
     public function getByArtist(int $artistId): array;
 
     public function lookup(string $labelName, int $labelId = 0): int;
+
+    /**
+     * Moves every album association from one album onto another
+     */
+    public function migrateAlbum(int $oldAlbumId, int $newAlbumId): void;
 
     /**
      * Moves every artist association from one artist onto another

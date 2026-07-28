@@ -3249,12 +3249,7 @@ abstract class Catalog extends database_object
         $new_song->lyrics  = $filtered_results['lyrics'];
         $new_song->license = $filtered_results['license_id'];
         $new_song->label   = $filtered_results['label'];
-        if ($song->label !== null && $song->label !== '' && $song->label !== '0' && AmpConfig::get('label')) {
-            // create the label if missing
-            foreach (array_map('trim', explode(';', (string) $new_song->label)) as $label_name) {
-                Label::helper($label_name);
-            }
-        }
+        // the labels themselves are created (and associated) further down, once the album id is known
 
         $new_song->language              = $filtered_results['language'];
         $new_song->replaygain_track_gain = $filtered_results['replaygain_track_gain'];
@@ -3613,18 +3608,28 @@ abstract class Catalog extends database_object
             Art::duplicate('album', $song->album, $new_song->album);
         }
 
-        if ($song->label && AmpConfig::get('label')) {
+        // read the label from the file tags, not the database, or a label added to a file is never picked up
+        $label_names = ($new_song->label && AmpConfig::get('label'))
+            ? array_filter(array_map('trim', explode(';', $new_song->label)))
+            : [];
+        if ($label_names !== []) {
             $labelRepository = self::getLabelRepository();
+            $now             = new DateTime();
 
-            foreach (array_map('trim', explode(';', $song->label)) as $label_name) {
+            foreach ($label_names as $label_name) {
                 $label_id = Label::helper($label_name) ?? $labelRepository->lookup($label_name);
                 if ($label_id > 0) {
                     $label = $labelRepository->findById($label_id);
                     if ($label !== null) {
+                        // the tag is read per song but describes the release, so it is recorded against the album
+                        if ($new_song->album > 0) {
+                            $labelRepository->addAlbumAssoc($label->id, $new_song->album, $now);
+                        }
+
                         $artists = $label->get_artists();
                         if ($song->artist && !in_array($song->artist, $artists)) {
                             debug_event(self::class, sprintf('%s: adding association to %s', $song->artist, $label->name), 4);
-                            $labelRepository->addArtistAssoc($label->id, $song->artist, new DateTime());
+                            $labelRepository->addArtistAssoc($label->id, $song->artist, $now);
                         }
                     }
                 }

@@ -97,6 +97,26 @@ final readonly class LabelRepository implements LabelRepositoryInterface
     }
 
     /**
+     * Returns the ids of every album associated with the label
+     *
+     * @return int[]
+     */
+    public function getAlbums(Label $label): array
+    {
+        $result = $this->connection->query(
+            'SELECT `album` FROM `label_asso` WHERE `label` = ? AND `album` IS NOT NULL',
+            [$label->getId()]
+        );
+
+        $results = [];
+        while ($rowId = $result->fetchColumn()) {
+            $results[] = (int) $rowId;
+        }
+
+        return $results;
+    }
+
+    /**
      * Return the list of all available labels
      *
      * @return string[]
@@ -121,8 +141,9 @@ final readonly class LabelRepository implements LabelRepositoryInterface
      */
     public function getArtists(Label $label): array
     {
+        // an artist row is only one side of the table, and a null column would end the fetch loop early
         $result = $this->connection->query(
-            'SELECT `artist` FROM `label_asso` WHERE `label` = ?',
+            'SELECT `artist` FROM `label_asso` WHERE `label` = ? AND `artist` IS NOT NULL',
             [$label->getId()]
         );
 
@@ -196,6 +217,23 @@ final readonly class LabelRepository implements LabelRepositoryInterface
         }
 
         return $ret;
+    }
+
+    /**
+     * Moves every album association from one album onto another
+     */
+    public function migrateAlbum(int $oldAlbumId, int $newAlbumId): void
+    {
+        // the target album may already carry the label, and moving the row on top of it would duplicate the pairing
+        $this->connection->query(
+            'DELETE FROM `label_asso` WHERE `album` = ? AND `label` IN (SELECT `label` FROM (SELECT `label` FROM `label_asso` WHERE `album` = ?) AS `existing`)',
+            [$oldAlbumId, $newAlbumId]
+        );
+
+        $this->connection->query(
+            'UPDATE `label_asso` SET `album` = ? WHERE `album` = ?',
+            [$newAlbumId, $oldAlbumId]
+        );
     }
 
     /**
