@@ -163,6 +163,8 @@ class WebPlayer
                 case 'live_stream':
                     $regex           = "/radio=(\\d*)/";
                     $types['player'] = $item->codec;
+                    // The station url is handed to the browser unproxied, so the audio graph would silence it.
+                    $json['remote'] = true;
                     break;
                 case 'democratic':
                     $regex           = "/demo_id=(\\d*)/";
