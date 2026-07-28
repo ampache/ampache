@@ -379,6 +379,7 @@ You can downgrade to Ampache7 if you try this out and have issues, using the cli
   * Artist searches on `Image Width` and `Image Height` returned nothing
   * The genre search offered two rules both labelled `Album Count`; the second is the artist count and now says `Artist Count`
   * The genre rules counting a genre's own contents shared their labels with the object's own counts, so an artist search offered two `Song Count` rules. They are now `Song Count (Genre)`, `Album Count (Genre)` and `Artist Count (Genre)`
+* A stream that could not be opened answered `200` with an empty body instead of setting a status, so a player reported an unsupported content type rather than a server error; every other failure in that method already sets one. A transcode requested with no `transcode_cmd` configured is the usual way to reach it, and that misconfiguration is now logged as an error instead of at the most verbose level
 
 ## Ampache 7.10.1
 
