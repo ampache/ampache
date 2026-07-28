@@ -23,6 +23,7 @@ declare(strict_types=1);
 namespace Ampache\Module\Catalog\GarbageCollector;
 
 use Ampache\Module\Art\ArtCleanupInterface;
+use Ampache\Module\Label\LabelGarbageCollectorInterface;
 use Ampache\Module\Metadata\MetadataManagerInterface;
 use Ampache\Repository\AlbumRepositoryInterface;
 use Ampache\Repository\ArtistRepositoryInterface;
@@ -51,6 +52,7 @@ class CatalogGarbageCollectorTest extends TestCase
     private BookmarkRepositoryInterface&MockObject $bookmarkRepository;
     private ContainerInterface&MockObject $dic;
     private FolderRepositoryInterface&MockObject $folderRepository;
+    private LabelGarbageCollectorInterface&MockObject $labelGarbageCollector;
     private LabelRepositoryInterface&MockObject $labelRepository;
     private MetadataManagerInterface&MockObject $metadataManager;
     private PlaylistRepositoryInterface&MockObject $playlistRepository;
@@ -81,6 +83,7 @@ class CatalogGarbageCollectorTest extends TestCase
         $this->videoRepository->expects(static::once())->method('collectGarbage');
         $this->playlistRepository->expects(static::once())->method('collectGarbage');
         $this->searchRepository->expects(static::once())->method('collectGarbage');
+        $this->labelGarbageCollector->expects(static::once())->method('collect');
 
         $this->subject->collect();
     }
@@ -102,6 +105,7 @@ class CatalogGarbageCollectorTest extends TestCase
         $this->videoRepository          = $this->createMock(VideoRepositoryInterface::class);
         $this->playlistRepository       = $this->createMock(PlaylistRepositoryInterface::class);
         $this->searchRepository         = $this->createMock(SearchRepositoryInterface::class);
+        $this->labelGarbageCollector    = $this->createMock(LabelGarbageCollectorInterface::class);
         $this->tagRepository            = $this->createMock(TagRepositoryInterface::class);
         $this->dic                      = $this->createMock(ContainerInterface::class);
 
@@ -132,6 +136,7 @@ class CatalogGarbageCollectorTest extends TestCase
             $this->videoRepository,
             $this->playlistRepository,
             $this->searchRepository,
+            $this->labelGarbageCollector,
         );
     }
 }

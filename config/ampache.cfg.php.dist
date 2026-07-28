@@ -6,7 +6,7 @@
 ; This value is used to detect if this config file is up to date
 ; this is compared against a constant called CONFIG_VERSION
 ; that is located in src/Config/Init/InitializationHandlerConfig.php
-config_version = 94
+config_version = 95
 
 ; Defines the default timezone used by the date functions
 ; Uses the same strings as the default date.timezone (https://php.net/date.timezone)
@@ -896,6 +896,16 @@ wanted_types = "album,official"
 ; Use labels to browse artists per label membership.
 ; DEFAULT: "false"
 ;label = "true"
+
+; Label Ignore Pattern
+; Publisher tags often hold placeholder text instead of a real label, and these are neither
+; created during a scan nor kept by the catalog clean up. The value is a regex, matched
+; case-insensitively against the whole name, and replaces the default shown below rather than
+; adding to it. Set it to a pattern that cannot match (for example "(?!)") to keep every name.
+; The last branch of the default drops names holding fewer than two letters or digits, such as
+; "/<" or "/v/", while leaving short real labels like "XL" and "4AD" alone.
+; DEFAULT: "^\[no label\]|^not on label\b|^\[fwd:|^self[\s-]*released?\b|\(self[\s-]*released?\)|^[^\p{L}\p{N}]*[\p{L}\p{N}]?[^\p{L}\p{N}]*$"
+;label_ignore_pattern = "^\[no label\]|^not on label\b"
 
 ; Broadcasts
 ; Allow users to broadcast music.

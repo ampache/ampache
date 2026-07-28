@@ -157,6 +157,11 @@ You can downgrade to Ampache7 if you try this out and have issues, using the cli
   * Charts are drawn by `goat1000/svggraph` (LGPL-3.0) instead of `szymach/c-pchart`, which is a normal requirement rather than a dev one, so graphs work in a release download with nothing extra to install
   * Graphs are SVG instead of PNG and no longer need `ext-gd`; they scale to the page and stay sharp on a high-dpi screen
   * Charts are grouped bars rather than lines, and each bar is a time bucket labelled at the zoom level you asked for
+* Labels
+  * Label pages gain an **Albums** tab listing the releases associated with the label, alongside the existing artists and songs
+  * Placeholder publishers read from tags are no longer imported, and the catalog clean up removes the ones earlier scans created; a label a user entered by hand is never removed
+* Config version 95
+  * New `label_ignore_pattern` option; a regex matched against label names read from tags, so `[no label]`, `Not On Label (Artist Self-released)`, `Self-Released` and fragments holding fewer than two letters or digits never become labels. It replaces the shipped default rather than adding to it, and `(?!)` keeps every name
 * Config version 94
   * New `playlist_art_mosaic` option; set it to `false` to keep a single random cover for playlist art
   * New `playlist_art_mosaic_fallback` option (default `false`); when on, a playlist with no art of its own gets a generated mosaic instead of the blank placeholder, stored as that playlist's art so it is only built once
@@ -184,6 +189,7 @@ You can downgrade to Ampache7 if you try this out and have issues, using the cli
   * Editing a song rebuilt the entire `Song` object — a three table join — once per field changed, only to re-check who uploaded it; the uploader is read once per save
   * Every model's `build_cache()` ran its batch query and then discarded the rows whenever `memory_cache` was off, leaving the per-object queries to run anyway; it now returns before querying
 * `playlist_create` on API3 recorded the server playlist count before inserting the row, so the stored total was one short until the next playlist create or delete corrected it
+* Deleting a label left its `label_asso` rows behind, so a later label created with the freed id inherited that label's artists; the clean up now sweeps associations whose label is gone
 * Url shortener plugins (`bitly`, `yourls`) were never applied to share links, because `PluginTypeEnum::URL_SHORTENER` looked for a `shorten()` method and plugins implement `shortener()`
 * The catalog files and catalog size graphs only drew the time buckets that gained a file, so a library added in a single scan was one point no matter how wide the date range was; they now carry the running total across every bucket in the range
 * The running total those graphs start from ignored the catalog and object filters, so a graph for one catalog counted every earlier file on the server

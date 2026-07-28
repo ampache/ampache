@@ -57,7 +57,6 @@ final readonly class LibraryItemLoader implements LibraryItemLoaderInterface
      * @template TITemType of library_item
      *
      * @param list<class-string<TITemType>> $allowedItems List of all possible class-/interface-names
-     *
      * @return null|TITemType
      */
     public function load(

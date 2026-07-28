@@ -78,7 +78,6 @@ final class ArrayCacheDriver implements CacheInterface
 
     /**
      * @param iterable<string> $keys
-     *
      * @return Generator<string, scalar>
      */
     public function getMultiple(iterable $keys, mixed $default = null): Generator

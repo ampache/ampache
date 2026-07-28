@@ -206,7 +206,6 @@ final class EditObjectAction extends AbstractEditAction
      * Recursively strips markup out of a posted value tree, leaving what the models are willing to store.
      *
      * @param array<array-key, mixed> $data
-     *
      * @return array<array-key, mixed>
      */
     private function scrub(array $data): array

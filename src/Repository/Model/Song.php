@@ -31,6 +31,7 @@ use Ampache\Module\Authorization\AccessLevelEnum;
 use Ampache\Module\Authorization\AccessTypeEnum;
 use Ampache\Module\Authorization\Check\NetworkCheckerInterface;
 use Ampache\Module\Database\Exception\DatabaseException;
+use Ampache\Module\Label\LabelNameFilterInterface;
 use Ampache\Module\Metadata\MetadataEnabledInterface;
 use Ampache\Module\Metadata\MetadataManagerInterface;
 use Ampache\Module\Playback\Stream;
@@ -706,7 +707,7 @@ class Song extends database_object implements
         $composer         = $filtered_results['composer'];
         $label            = $filtered_results['label'];
         $label_names      = ($label && AmpConfig::get('label'))
-            ? array_filter(array_map('trim', explode(';', $label)))
+            ? self::getLabelNameFilter()->filter(array_filter(array_map('trim', explode(';', $label))))
             : [];
         foreach ($label_names as $label_name) {
             // create the label if missing; the album association is made below, once the album id is known
@@ -1399,6 +1400,16 @@ class Song extends database_object implements
         }
 
         return self::getSongRepository()->setField($song_id, $column, $value);
+    }
+
+    /**
+     * @deprecated inject dependency
+     */
+    private static function getLabelNameFilter(): LabelNameFilterInterface
+    {
+        global $dic;
+
+        return $dic->get(LabelNameFilterInterface::class);
     }
 
     /**

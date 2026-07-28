@@ -43,6 +43,7 @@ use Ampache\Module\Catalog\Catalog_subsonic;
 use Ampache\Module\Catalog\CatalogLoader;
 use Ampache\Module\Catalog\GarbageCollector\CatalogGarbageCollectorInterface;
 use Ampache\Module\Database\Exception\DatabaseException;
+use Ampache\Module\Label\LabelNameFilterInterface;
 use Ampache\Module\Metadata\MetadataEnabledInterface;
 use Ampache\Module\Metadata\MetadataManagerInterface;
 use Ampache\Module\Playback\Stream;
@@ -3610,7 +3611,7 @@ abstract class Catalog extends database_object
 
         // read the label from the file tags, not the database, or a label added to a file is never picked up
         $label_names = ($new_song->label && AmpConfig::get('label'))
-            ? array_filter(array_map('trim', explode(';', $new_song->label)))
+            ? self::getLabelNameFilter()->filter(array_filter(array_map('trim', explode(';', $new_song->label))))
             : [];
         if ($label_names !== []) {
             $labelRepository = self::getLabelRepository();
@@ -3986,6 +3987,16 @@ abstract class Catalog extends database_object
         global $dic;
 
         return $dic->get(ConfigContainerInterface::class);
+    }
+
+    /**
+     * @deprecated inject dependency
+     */
+    private static function getLabelNameFilter(): LabelNameFilterInterface
+    {
+        global $dic;
+
+        return $dic->get(LabelNameFilterInterface::class);
     }
 
     /**

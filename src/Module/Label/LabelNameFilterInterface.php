@@ -25,14 +25,18 @@ declare(strict_types=1);
 
 namespace Ampache\Module\Label;
 
-use Ampache\Module\Label\Deletion\LabelDeleter;
-use Ampache\Module\Label\Deletion\LabelDeleterInterface;
+interface LabelNameFilterInterface
+{
+    /**
+     * Drops every placeholder name from a list of label names read from tags
+     *
+     * @param string[] $labelNames
+     * @return string[] re-indexed, keeping the original order
+     */
+    public function filter(array $labelNames): array;
 
-use function DI\autowire;
-
-return [
-    LabelListUpdaterInterface::class => autowire(LabelListUpdater::class),
-    LabelDeleterInterface::class => autowire(LabelDeleter::class),
-    LabelNameFilterInterface::class => autowire(LabelNameFilter::class),
-    LabelGarbageCollectorInterface::class => autowire(LabelGarbageCollector::class),
-];
+    /**
+     * Whether a label name is placeholder text rather than a real publisher
+     */
+    public function isIgnored(string $labelName): bool;
+}

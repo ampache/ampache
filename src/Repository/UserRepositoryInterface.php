@@ -139,7 +139,6 @@ interface UserRepositoryInterface
      * Sums the count, playtime and megabytes of one media table across a set of catalogs
      *
      * @param array<int> $catalogIds
-     *
      * @return array{count: int, time: int, size: int}
      */
     public function getMediaTotals(string $table, array $catalogIds, bool $enabledOnly): array;
@@ -188,7 +187,6 @@ interface UserRepositoryInterface
      * Returns statistical data related to user accounts and active users
      *
      * @param int $timePeriod Time period to consider sessions `active` (in seconds)
-     *
      * @return array{users: int, connected: int}
      */
     public function getStatistics(int $timePeriod = 1200): array;

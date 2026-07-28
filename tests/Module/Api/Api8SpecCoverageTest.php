@@ -66,7 +66,6 @@ class Api8SpecCoverageTest extends TestCase
      * Every `action=` named by a mapping, whether or not the key carries a verb.
      *
      * @param array<string, mixed> $spec
-     *
      * @return list<string>
      */
     private static function mappedActions(array $spec): array

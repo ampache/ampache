@@ -602,7 +602,6 @@ final readonly class AlbumRepository implements AlbumRepositoryInterface
      * Reads whole album rows for the in-process cache, in one statement instead of one per object
      *
      * @param array<int|string> $albumIds
-     *
      * @return list<array<string, mixed>>
      */
     public function getRowsByIds(array $albumIds): array

@@ -63,7 +63,6 @@ interface TagRepositoryInterface
      * Reads the tag map rows for a set of objects, for the prefetch that feeds the browse display
      *
      * @param array<int|string> $objectIds
-     *
      * @return list<array{id: int, tag_id: int, name: string, object_id: int, user: int}>
      */
     public function getMapRows(string $objectType, array $objectIds): array;
@@ -98,7 +97,6 @@ interface TagRepositoryInterface
      * Reads whole tag rows for the in-process cache, in one statement instead of one per object
      *
      * @param array<int|string> $tagIds
-     *
      * @return list<array<string, mixed>>
      */
     public function getRowsByIds(array $tagIds): array;

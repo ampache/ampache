@@ -72,6 +72,7 @@ final readonly class LabelRepository implements LabelRepositoryInterface
             // A row links a label to one side only, so each side is swept against its own table
             $this->connection->query('DELETE FROM `label_asso` WHERE `label_asso`.`artist` IS NOT NULL AND `label_asso`.`artist` NOT IN (SELECT `artist`.`id` FROM `artist`)');
             $this->connection->query('DELETE FROM `label_asso` WHERE `label_asso`.`album` IS NOT NULL AND `label_asso`.`album` NOT IN (SELECT `album`.`id` FROM `album`)');
+            $this->connection->query('DELETE FROM `label_asso` WHERE `label_asso`.`label` NOT IN (SELECT `label`.`id` FROM `label`)');
             $this->connection->query('DELETE FROM `label` WHERE `id` NOT IN (SELECT `label` FROM `label_asso`) AND `user` IS NULL');
         } catch (DatabaseException) {
             debug_event(self::class, 'collectGarbage error', 5);

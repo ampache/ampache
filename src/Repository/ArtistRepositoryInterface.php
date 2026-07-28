@@ -120,7 +120,6 @@ interface ArtistRepositoryInterface
      * Reads the summed play counts of a set of artists, for the prefetch that feeds the browse display
      *
      * @param array<int|string> $artistIds
-     *
      * @return list<array{artist: int, total_count: int}>
      */
     public function getPlayCountsByIds(array $artistIds): array;
@@ -139,7 +138,6 @@ interface ArtistRepositoryInterface
      * Reads whole artist rows for the in-process cache, in one statement instead of one per object
      *
      * @param array<int|string> $artistIds
-     *
      * @return list<array<string, mixed>>
      */
     public function getRowsByIds(array $artistIds): array;

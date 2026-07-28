@@ -26,6 +26,7 @@ declare(strict_types=1);
 namespace Ampache\Repository\Model;
 
 use Ampache\Config\AmpConfig;
+use Ampache\Module\Label\LabelNameFilterInterface;
 use Ampache\Module\System\Core;
 use Ampache\Repository\LabelRepositoryInterface;
 use Ampache\Repository\SongRepositoryInterface;
@@ -151,6 +152,11 @@ class Label extends database_object implements
      */
     public static function helper(string $name): ?int
     {
+        // tags carry placeholders like `[no label]` for releases that never had a publisher
+        if (self::getLabelNameFilter()->isIgnored($name)) {
+            return null;
+        }
+
         $label_data = [
             'name' => $name,
             'mbid' => null,
@@ -178,6 +184,16 @@ class Label extends database_object implements
         } elseif ($object_type == 'album') {
             self::getLabelRepository()->migrateAlbum($old_object_id, $new_object_id);
         }
+    }
+
+    /**
+     * @deprecated inject dependency
+     */
+    private static function getLabelNameFilter(): LabelNameFilterInterface
+    {
+        global $dic;
+
+        return $dic->get(LabelNameFilterInterface::class);
     }
 
     /**

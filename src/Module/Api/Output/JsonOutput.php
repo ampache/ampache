@@ -803,7 +803,6 @@ final class JsonOutput implements ApiOutputInterface
     /**
      * @param 6|8 $apiVersion
      * @param array<int|string> $objects
-     *
      * @return array<mixed>
      */
     private function albumsArray(int $apiVersion, array $objects, User $user, string $auth): array
@@ -817,7 +816,6 @@ final class JsonOutput implements ApiOutputInterface
     /**
      * @param 6|8 $apiVersion
      * @param array<int|string> $objects
-     *
      * @return array<mixed>
      */
     private function artistsArray(int $apiVersion, array $objects, User $user, string $auth): array
@@ -831,7 +829,6 @@ final class JsonOutput implements ApiOutputInterface
     /**
      * @param 6|8 $apiVersion
      * @param array<int|string> $objects
-     *
      * @return array<mixed>
      */
     private function genresArray(int $apiVersion, array $objects): array
@@ -845,7 +842,6 @@ final class JsonOutput implements ApiOutputInterface
     /**
      * @param 6|8 $apiVersion
      * @param array<int|string> $objects
-     *
      * @return array<mixed>
      */
     private function labelsArray(int $apiVersion, array $objects): array
@@ -859,7 +855,6 @@ final class JsonOutput implements ApiOutputInterface
     /**
      * @param 6|8 $apiVersion
      * @param array<int|string> $objects
-     *
      * @return array<mixed>
      */
     private function playlistsArray(int $apiVersion, array $objects, User $user, string $auth): array
@@ -873,7 +868,6 @@ final class JsonOutput implements ApiOutputInterface
     /**
      * @param 6|8 $apiVersion
      * @param array<int|string> $objects
-     *
      * @return array<mixed>
      */
     private function podcastEpisodesArray(int $apiVersion, array $objects, User $user, string $auth): array
@@ -887,7 +881,6 @@ final class JsonOutput implements ApiOutputInterface
     /**
      * @param 6|8 $apiVersion
      * @param array<int|string> $objects
-     *
      * @return array<mixed>
      */
     private function podcastsArray(int $apiVersion, array $objects, User $user, string $auth): array
@@ -901,7 +894,6 @@ final class JsonOutput implements ApiOutputInterface
     /**
      * @param 6|8 $apiVersion
      * @param array<int|string> $objects
-     *
      * @return array<mixed>
      */
     private function songsArray(int $apiVersion, array $objects, User $user, string $auth): array
@@ -915,7 +907,6 @@ final class JsonOutput implements ApiOutputInterface
     /**
      * @param 6|8 $apiVersion
      * @param array<int|string> $objects
-     *
      * @return array<mixed>
      */
     private function usersArray(int $apiVersion, array $objects): array
@@ -929,7 +920,6 @@ final class JsonOutput implements ApiOutputInterface
     /**
      * @param 6|8 $apiVersion
      * @param array<int|string> $objects
-     *
      * @return array<mixed>
      */
     private function videosArray(int $apiVersion, array $objects, User $user, string $auth): array

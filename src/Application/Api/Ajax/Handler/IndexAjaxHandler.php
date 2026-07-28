@@ -529,12 +529,9 @@ final readonly class IndexAjaxHandler implements AjaxHandlerInterface
                     $browse->set_type('album');
                     $browse->set_simple_browse(false);
                     $browse->set_use_filters(false);
-
-                    Ui::show_box_top(T_('Albums'), 'info-box');
                     $browse->show_objects($object_ids, true);
                     $browse->set_use_alpha(false, false);
                     $browse->store();
-                    Ui::show_box_bottom();
                 }
 
                 $results['albums'] = ob_get_contents();

@@ -260,7 +260,6 @@ class Podcast extends database_object implements
      * Returns the ids of all available episodes
      *
      * @param null|PodcastEpisodeStateEnum $stateFilter Return only items with this state
-     *
      * @return list<int>
      */
     public function getEpisodeIds(

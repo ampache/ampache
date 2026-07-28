@@ -33,7 +33,6 @@ interface MissingArtistRetrieverInterface
      * Get missing artist data
      *
      * @param string $musicBrainzId mbid of the artist
-     *
      * @return null|array{
      *     mbid: string,
      *     name: string,

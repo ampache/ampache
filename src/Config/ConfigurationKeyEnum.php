@@ -130,6 +130,7 @@ final class ConfigurationKeyEnum
     public const string HOME_RECENTLY_PLAYED                  = 'home_recently_played';
     public const string HTTPQ_ACTIVE                          = 'httpq_active';
     public const string LABEL                                 = 'label';
+    public const string LABEL_IGNORE_PATTERN                  = 'label_ignore_pattern';
     public const string LANG                                  = 'lang';
     public const string LASTFM_CHALLENGE                      = 'lastfm_challenge';
     public const string LASTFM_GRANT_LINK                     = 'lastfm_grant_link';
