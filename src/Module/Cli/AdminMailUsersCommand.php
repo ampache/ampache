@@ -55,8 +55,14 @@ final class AdminMailUsersCommand extends Command
         $subject    = (string) $values['subject'];
         $message    = (string) $values['message'];
 
-        if ($subject === '' || $message === '') {
-            $interactor->error(T_('A subject and message are required'), true);
+        if ($subject === '') {
+            $interactor->error(T_('Subject is required'), true);
+
+            return;
+        }
+
+        if ($message === '') {
+            $interactor->error(sprintf('%s: %s', T_('Message'), T_('required')), true);
 
             return;
         }
@@ -69,7 +75,7 @@ final class AdminMailUsersCommand extends Command
         }
 
         if ($this->bulkMailer->sendToGroup($group, $subject, $message)) {
-            $interactor->ok(sprintf(T_('Your e-mail has been sent to the %s group'), $group), true);
+            $interactor->ok(sprintf('%s: %s', T_('Your e-mail has been sent'), $group), true);
         } else {
             $interactor->error(T_('Your e-mail has not been sent'), true);
         }

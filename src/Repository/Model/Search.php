@@ -1572,7 +1572,7 @@ class Search extends playlist_object
             $rule_type[] = $this->_get_rule_select('catalog', T_('Catalog'), 'boolean_numeric', $catalogs, $t_file_data);
         }
 
-        $t_musicbrainz = T_('Musicbrainz');
+        $t_musicbrainz = T_('MusicBrainz');
         $rule_type[]   = $this->_get_rule_text('mbid', T_('MusicBrainz ID'), $t_musicbrainz);
         $rule_type[]   = $this->_get_rule_text('mbid_album', T_('MusicBrainz ID (Album)'), $t_musicbrainz);
         $rule_type[]   = $this->_get_rule_text('mbid_song', T_('MusicBrainz ID (Song)'), $t_musicbrainz);
@@ -1947,7 +1947,7 @@ class Search extends playlist_object
             $rule_type[] = $this->_get_rule_boolean('waveform', T_('Waveform'), 'boolean', $t_file_data);
         }
 
-        $t_musicbrainz = T_('Musicbrainz');
+        $t_musicbrainz = T_('MusicBrainz');
         $rule_type[]   = $this->_get_rule_text('mbid', T_('MusicBrainz ID'), $t_musicbrainz);
         $rule_type[]   = $this->_get_rule_text('mbid_album', T_('MusicBrainz ID (Album)'), $t_musicbrainz);
         $rule_type[]   = $this->_get_rule_text('mbid_artist', T_('MusicBrainz ID (Artist)'), $t_musicbrainz);

@@ -51,9 +51,9 @@ final class AdminInstallPluginCommand extends Command
         $interactor = $this->io();
 
         if ($this->pluginManager->installPlugin($name)) {
-            $interactor->ok(sprintf(T_('Installed plugin %s'), $name), true);
+            $interactor->ok(sprintf(T_('%s has been enabled'), $name), true);
         } else {
-            $interactor->error(sprintf(T_('Could not install plugin %s'), $name), true);
+            $interactor->error(sprintf('%s: %s', T_('Unable to install this Plugin'), $name), true);
         }
     }
 

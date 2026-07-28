@@ -69,7 +69,7 @@ final readonly class RemoveObjectAction implements ApplicationActionInterface
 
         $this->ui->showHeader();
         $this->ui->showConfirmation(
-            T_('Removed'),
+            T_('No Problem'),
             T_('Object removed from collection'),
             $collection->get_link()
         );

@@ -51,9 +51,9 @@ final class AdminUninstallPluginCommand extends Command
         $interactor = $this->io();
 
         if ($this->pluginManager->uninstallPlugin($name)) {
-            $interactor->ok(sprintf(T_('Uninstalled plugin %s'), $name), true);
+            $interactor->ok(sprintf(T_('%s has been disabled'), $name), true);
         } else {
-            $interactor->error(sprintf(T_('Could not uninstall plugin %s'), $name), true);
+            $interactor->error(sprintf('%s: %s', T_('Failed'), $name), true);
         }
     }
 

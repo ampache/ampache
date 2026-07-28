@@ -36,7 +36,7 @@ final class DeleteCatalogCommand extends Command
         parent::__construct('run:deleteCatalog', T_('Delete a media catalog'));
 
         $this
-            ->argument('<catalogId>', T_('Catalog ID'))
+            ->argument('<catalogId>', T_('Catalog'))
             ->usage('<bold>  run:deleteCatalog 3</end> <comment> ## ' . T_('Delete the catalog with ID 3') . '</end><eol/>');
     }
 
@@ -51,7 +51,7 @@ final class DeleteCatalogCommand extends Command
 
         if (Catalog::delete((int) $catalogId)) {
             $interactor->ok(
-                sprintf(T_('Deleted catalog %s'), $catalogId),
+                sprintf(T_('%s has been deleted'), $catalogId),
                 true
             );
         } else {

@@ -37,7 +37,7 @@ final class AdminUninstallCatalogTypeCommand extends Command
         parent::__construct('admin:uninstallCatalogType', T_('Uninstall a catalog type'));
 
         $this
-            ->argument('<type>', T_('Catalog type'))
+            ->argument('<type>', T_('Catalog Type'))
             ->usage('<bold>  admin:uninstallCatalogType subsonic</end> <comment> ## ' . T_('Disable the subsonic catalog type') . '</end><eol/>');
     }
 
@@ -51,9 +51,9 @@ final class AdminUninstallCatalogTypeCommand extends Command
         $interactor = $this->io();
 
         if ($this->pluginManager->uninstallCatalogType($type)) {
-            $interactor->ok(sprintf(T_('Uninstalled catalog type %s'), $type), true);
+            $interactor->ok(sprintf(T_('%s has been disabled'), $type), true);
         } else {
-            $interactor->error(sprintf(T_('Could not uninstall catalog type %s'), $type), true);
+            $interactor->error(sprintf('%s: %s', T_('Unable to disable the Catalog module.'), $type), true);
         }
     }
 

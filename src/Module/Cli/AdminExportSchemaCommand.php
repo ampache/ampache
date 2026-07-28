@@ -54,12 +54,13 @@ final class AdminExportSchemaCommand extends Command
         private readonly UpdaterInterface $updater,
         private readonly UpdateInfoRepositoryInterface $updateInfoRepository,
     ) {
-        parent::__construct('admin:exportSchema', T_('Regenerate the ampache.sql seed dump from this database'));
+        // Release-engineering tool: the output is not translated, it is only ever read by a maintainer refreshing the dump.
+        parent::__construct('admin:exportSchema', 'Regenerate the ampache.sql seed dump from this database');
 
         $this
-            ->option('-e|--execute', T_('Write the file'), 'boolval', false)
-            ->option('-f|--file', T_('Output file'), 'strval', '')
-            ->usage('<bold>  admin:exportSchema</end> <comment> ## ' . T_('Show what would be written') . '</end><eol/>');
+            ->option('-e|--execute', 'Write the file', 'boolval', false)
+            ->option('-f|--file', 'Output file', 'strval', '')
+            ->usage('<bold>  admin:exportSchema</end> <comment> ## Show what would be written</end><eol/>');
     }
 
     public function execute(): void
@@ -80,7 +81,7 @@ final class AdminExportSchemaCommand extends Command
         // the file, which is the exact drift this dump exists to avoid.
         if ($this->updater->hasPendingUpdates()) {
             $interactor->error(
-                T_('This database has pending updates. Run admin:updateDatabase -e first'),
+                'This database has pending updates. Run admin:updateDatabase -e first',
                 true
             );
 
@@ -91,33 +92,33 @@ final class AdminExportSchemaCommand extends Command
         $tables  = $this->getTables();
 
         $interactor->info(sprintf(T_('Database version: %s'), $version), true);
-        $interactor->info(sprintf(T_('Tables: %s'), count($tables)), true);
+        $interactor->info(sprintf('Tables: %s', count($tables)), true);
 
         foreach (self::DATA_TABLES as $table) {
             $interactor->info(
-                sprintf(T_('Dumping %s rows from `%s`'), $this->countRows($table), $table),
+                sprintf('Dumping %s rows from `%s`', $this->countRows($table), $table),
                 true
             );
         }
 
         $interactor->warn(
-            T_('Row data is taken from this database. Export from a clean install so no local rows are shipped'),
+            'Row data is taken from this database. Export from a clean install so no local rows are shipped',
             true
         );
 
         if (!$execute) {
-            $interactor->info(T_('Use -e|--execute to write the file'), true);
+            $interactor->info('Use -e|--execute to write the file', true);
 
             return;
         }
 
         if (file_put_contents($path, $this->buildDump($tables, $version)) === false) {
-            $interactor->error(sprintf(T_('Failed to write %s'), $path), true);
+            $interactor->error(sprintf(T_('Unable to write to `%s`'), $path), true);
 
             return;
         }
 
-        $interactor->ok(sprintf(T_('Wrote %s'), $path), true);
+        $interactor->ok(sprintf('Wrote %s', $path), true);
     }
 
     #[Override]

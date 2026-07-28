@@ -51,9 +51,9 @@ final class AdminUpgradePluginCommand extends Command
         $interactor = $this->io();
 
         if ($this->pluginManager->upgradePlugin($name)) {
-            $interactor->ok(sprintf(T_('Upgraded plugin %s'), $name), true);
+            $interactor->ok(sprintf(T_('%1$s has been updated'), $name), true);
         } else {
-            $interactor->error(sprintf(T_('Could not upgrade plugin %s'), $name), true);
+            $interactor->error(sprintf('%s: %s', T_('Update failed'), $name), true);
         }
     }
 

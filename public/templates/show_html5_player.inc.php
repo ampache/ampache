@@ -631,7 +631,7 @@ if ($isVideo === false) {
                         <?php } ?>
                         <?php if ($isVideo === false) { ?>
                         <div id="nowplayingbtn" class="action_button">
-                            <a href="javascript:ToggleNowPlaying();"><?php echo Ui::get_material_symbol('info', addslashes(T_('Show/Hide Now Playing'))); ?></a>
+                            <a href="javascript:ToggleNowPlaying();"><?php echo Ui::get_material_symbol('info', addslashes(T_('Show Now Playing'))); ?></a>
                         </div>
                         <?php } ?>
                         <?php // ReplayGain and the Equalizer tap the <audio> element, so they do not apply to video

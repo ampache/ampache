@@ -39,7 +39,7 @@ final class EnableCatalogCommand extends Command
         parent::__construct('run:enableCatalog', T_('Enable a media catalog'));
 
         $this
-            ->argument('<catalogId>', T_('Catalog ID'))
+            ->argument('<catalogId>', T_('Catalog'))
             ->usage('<bold>  run:enableCatalog 3</end> <comment> ## ' . T_('Enable the catalog with ID 3') . '</end><eol/>');
     }
 
@@ -71,7 +71,7 @@ final class EnableCatalogCommand extends Command
         Catalog::update_enabled(true, (int) $catalogId);
 
         $interactor->ok(
-            sprintf(T_('Enabled catalog %s'), $catalogId),
+            sprintf(T_('%s has been enabled'), $catalogId),
             true
         );
     }

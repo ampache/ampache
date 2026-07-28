@@ -42,9 +42,9 @@ final class ExportCatalogCommand extends Command
         parent::__construct('export:catalog', T_('Export catalog metadata to a file'));
 
         $this
-            ->option('-c|--catalog', T_('Catalog ID') . ' (0 = ' . T_('All') . ')', 'intval', 0)
-            ->argument('<file>', T_('Output file'))
-            ->argument('[format]', T_('Export Format') . " ('csv', 'itunes')", 'csv')
+            ->option('-c|--catalog', T_('Catalog') . ' (0 = ' . T_('All') . ')', 'intval', 0)
+            ->argument('<file>', T_('Filename'))
+            ->argument('[format]', T_('Format') . " ('csv', 'itunes')", 'csv')
             ->usage('<bold>  export:catalog /tmp/library.csv csv</end> <comment> ## ' . T_('Export all catalogs as CSV') . '</end><eol/>');
     }
 
@@ -67,7 +67,7 @@ final class ExportCatalogCommand extends Command
             } catch (CatalogLoadingException) {
                 /* HINT: Requested object string/id/type ("album", "myusername", "some song title", 1298376) */
                 $interactor->error(
-                    sprintf(T_('Missing: %d'), $catalogId),
+                    sprintf(T_('Missing: %s'), $catalogId),
                     true
                 );
 
@@ -84,7 +84,7 @@ final class ExportCatalogCommand extends Command
 
         if (file_put_contents($file, $data) === false) {
             $interactor->error(
-                sprintf(T_('Could not write to %s'), $file),
+                sprintf(T_('Unable to write to `%s`'), $file),
                 true
             );
 

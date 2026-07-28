@@ -74,7 +74,7 @@ final class DeleteSubsonicSecretAction extends AbstractUserAction
         $this->ui->showHeader();
         $this->ui->showConfirmation(
             T_('No Problem'),
-            T_('Subsonic password has been deleted'),
+            sprintf(T_('%s has been deleted'), T_('Subsonic Password')),
             sprintf(
                 '%s/users.php',
                 $this->configContainer->getWebPath('/admin')

@@ -804,7 +804,7 @@ class Ui implements UiInterface
             $formats = Stream::get_available_encode_formats($kind);
             echo '<select name="' . $name . '">' . "\n";
             $is_selected = (in_array($value, [null, '', '0'], true)) ? ' selected="selected"' : '';
-            echo '<option value=""' . $is_selected . '>' . T_('None (stream source format)') . "</option>\n";
+            echo '<option value=""' . $is_selected . '>' . T_('None') . "</option>\n";
             foreach ($formats as $format) {
                 $is_selected = ((string) $value === $format) ? ' selected="selected"' : '';
                 echo '<option value="' . $format . '"' . $is_selected . '>' . $format . "</option>\n";
@@ -829,7 +829,7 @@ class Ui implements UiInterface
                 echo '<input type="number" name="' . $name . '" value="' . (int) $value . '" min="0" step="1000" /> ' . T_('bps');
                 break;
             case 'rate_limit':
-                echo '<input type="number" name="' . $name . '" value="' . (int) $value . '" min="0" step="1024" /> ' . T_('KB/s') . ' (' . T_('0 = no limit') . ')';
+                echo '<input type="number" name="' . $name . '" value="' . (int) $value . '" min="0" step="1024" /> ' . T_('KB/s') . ' (0 = ' . T_('Unlimited') . ')';
                 break;
             case 'access_control':
             case 'access_list':
