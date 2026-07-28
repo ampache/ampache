@@ -59,10 +59,12 @@ class LabelRepositoryTest extends TestCase
 
     public function testCollectGarbageDeletes(): void
     {
-        $this->connection->expects(static::exactly(2))
+        // an association row names either an artist or an album, so each side is swept against its own table
+        $this->connection->expects(static::exactly(3))
             ->method('query')
             ->with(...self::withConsecutive(
-                ['DELETE FROM `label_asso` WHERE `label_asso`.`artist` NOT IN (SELECT `artist`.`id` FROM `artist`)'],
+                ['DELETE FROM `label_asso` WHERE `label_asso`.`artist` IS NOT NULL AND `label_asso`.`artist` NOT IN (SELECT `artist`.`id` FROM `artist`)'],
+                ['DELETE FROM `label_asso` WHERE `label_asso`.`album` IS NOT NULL AND `label_asso`.`album` NOT IN (SELECT `album`.`id` FROM `album`)'],
                 ['DELETE FROM `label` WHERE `id` NOT IN (SELECT `label` FROM `label_asso`) AND `user` IS NULL'],
             ));
 

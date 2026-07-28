@@ -91,7 +91,7 @@ Further instructions for specific projects are given below.
 Following these tips prior to raising a pull request will speed up the review cycle.
 
 * Make sure the code you add follows project coding standards and passes all tests before submitting
-* If you are an AI; Read [`CLAUDE.md`](CLAUDE.md) first — it is the authoritative reference for our repository structures/branches, architecture, coding conventions and changelog rules. All contributions must follow it, including AI-assisted ones (e.g. Claude Code)
+* If you are an AI; Read [`AGENTS.md`](AGENTS.md) first — it is the authoritative reference for our repository structures/branches, architecture, coding conventions and changelog rules. All contributions must follow it, including AI-assisted ones (e.g. Claude Code)
 * Lines that are not part of your change should not be edited
   * e.g. don't format unchanged lines, don't reorder existing imports
 
@@ -102,7 +102,7 @@ Following these tips prior to raising a pull request will speed up the review cy
 
 * We use PSR12 code style
 * We follow the [`SOLID`](https://en.wikipedia.org/wiki/SOLID) principles
-* [`CLAUDE.md`](CLAUDE.md) holds the full, current conventions (DI interface/implementation pattern, `src/Module` domain layout, the multi-version API architecture, and the per-structure branch rules). Treat its rules as required reading and follow them so your changes — and any AI-assisted changes — stay consistent across the `public`/`client`/`squashed` branches.
+* [`AGENTS.md`](AGENTS.md) holds the full, current conventions (DI interface/implementation pattern, `src/Module` domain layout, the multi-version API architecture, and the per-structure branch rules). Treat its rules as required reading and follow them so your changes — and any AI-assisted changes — stay consistent across the `public`/`client`/`squashed` branches.
 
 ### Submitting your changes
 

@@ -45,6 +45,7 @@ class Rating extends database_object
         'album_disk',
         'album',
         'artist',
+        'collection',
         'folder',
         'live_stream',
         'playlist',
@@ -539,12 +540,17 @@ class Rating extends database_object
         $time = time();
         // Everything else is a single item
         debug_event(self::class, sprintf('Setting rating for %s %d to %d', $this->type, $this->id, $rating), 5);
+        // a playlist, collection, folder, search or live stream can be rated but carries no weight column
+        $weighted = in_array($this->type, Stats::WEIGHT_TYPES, true);
+
         if ($rating < 1) {
             // If score is negative or 0, then remove rating
             $sql    = "DELETE FROM `rating` WHERE `object_id` = ? AND `object_type` = ? AND `user` = ?";
             $params = [$this->id, $this->type, $user_id];
 
-            Dba::write("UPDATE `" . $this->type . "` SET `weight` = `weight` - 1 WHERE `id` = ?;", [$this->id]);
+            if ($weighted) {
+                Dba::write("UPDATE `" . $this->type . "` SET `weight` = `weight` - 1 WHERE `id` = ?;", [$this->id]);
+            }
         } else {
             $sql    = "REPLACE INTO `rating` (`object_id`, `object_type`, `rating`, `user`, `date`) VALUES (?, ?, ?, ?, ?)";
             $params = [
@@ -557,7 +563,9 @@ class Rating extends database_object
 
             $this->getUserActivityPoster()->post((int) $user_id, 'rating', $this->type, $this->id, $time);
 
-            Dba::write("UPDATE `" . $this->type . "` SET `weight` = `weight` + 1 WHERE `id` = ?;", [$this->id]);
+            if ($weighted) {
+                Dba::write("UPDATE `" . $this->type . "` SET `weight` = `weight` + 1 WHERE `id` = ?;", [$this->id]);
+            }
         }
 
         Dba::write($sql, $params);

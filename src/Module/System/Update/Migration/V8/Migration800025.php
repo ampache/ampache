@@ -47,19 +47,10 @@ final class Migration800025 extends AbstractMigration
 
     public function migrate(): void
     {
-        if ($this->hasColumn()) {
+        if (Dba::has_column('user', 'subsonic_secret')) {
             return;
         }
 
         $this->updateDatabase("ALTER TABLE `user` ADD COLUMN `subsonic_secret` varchar(255) DEFAULT NULL;");
-    }
-
-    private function hasColumn(): bool
-    {
-        $db_results = Dba::read(
-            'SELECT `COLUMN_NAME` FROM `information_schema`.`COLUMNS` WHERE `TABLE_SCHEMA` = DATABASE() AND `TABLE_NAME` = \'user\' AND `COLUMN_NAME` = \'subsonic_secret\';'
-        );
-
-        return Dba::fetch_assoc($db_results) !== [];
     }
 }

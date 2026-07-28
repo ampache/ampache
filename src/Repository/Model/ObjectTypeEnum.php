@@ -37,6 +37,7 @@ enum ObjectTypeEnum: string
     case ARTIST          = 'artist';
     case BOOKMARK        = 'bookmark';
     case BROADCAST       = 'broadcast';
+    case COLLECTION      = 'collection';
     case FOLDER          = 'folder';
     case GENRE           = 'genre';
     case LABEL           = 'label';

@@ -50,7 +50,8 @@ if (!in_array($mode, ['subsonic', 'opensubsonic'], true)) {
     exit(1);
 }
 
-// endpoint => extra query parameters. Ids are resolved from the server before capture.
+// endpoint => extra query parameters. Ids are resolved before capture. Mutating endpoints are left out (they answer
+// with the `EmptySubsonicResponse` that `ping` captures) and so are binary ones, which have no schema to validate.
 $endpoints = [
     'ping' => '',
     'getLicense' => '',
@@ -87,6 +88,21 @@ $endpoints = [
     'getSimilarSongs' => 'id={artist}',
     'getSimilarSongs2' => 'id={artist}',
     'getNewestPodcasts' => '',
+    // The rest of the documented read surface. Nothing here writes, so a capture run stays idempotent when repeated.
+    'getAlbumInfo2' => 'id={album}',
+    'getSongsByGenre' => 'genre={genre}&count=3',
+    'getTopSongs' => 'artist={artistName}&count=3',
+    'getLyrics' => 'artist={artistName}&title={songName}',
+    'getLyricsBySongId' => 'id={song}',
+    'getPodcastEpisode' => 'id={song}',
+    'getPlayQueueByIndex' => '',
+    'getOpenSubsonicExtensions' => '',
+    'tokenInfo' => '',
+    'getVideoInfo' => 'id={song}',
+    'jukeboxControl' => 'action=status',
+    'getSonicSimilarTracks' => 'id={song}&count=3',
+    'findSonicPath' => 'startSongId={song}&endSongId={song}&count=3',
+    'reportPlayback' => 'mediaId={song}&mediaType=song&positionMs=0&state=paused&ignoreScrobble=true',
 ];
 
 $auth = http_build_query(['u' => $user, 'p' => $pass, 'v' => '1.16.1', 'c' => 'fixture-capture']);
@@ -140,6 +156,13 @@ $ids['{album}'] = (string) ($albums['subsonic-response']['albumList2']['album'][
 
 $songs         = json_decode(fetch($baseUrl, $auth, 'getRandomSongs', 'size=1', 'json'), true);
 $ids['{song}'] = (string) ($songs['subsonic-response']['randomSongs']['song'][0]['id'] ?? '');
+
+// Some endpoints key off a name rather than an id, so they are read back off the same rows the ids came from.
+$ids['{songName}']   = (string) ($songs['subsonic-response']['randomSongs']['song'][0]['title'] ?? '');
+$ids['{artistName}'] = (string) ($artists['subsonic-response']['artists']['index'][0]['artist'][0]['name'] ?? '');
+
+$genres         = json_decode(fetch($baseUrl, $auth, 'getGenres', '', 'json'), true);
+$ids['{genre}'] = (string) ($genres['subsonic-response']['genres']['genre'][0]['value'] ?? '');
 
 foreach (['{artist}', '{album}', '{song}'] as $key) {
     if ($ids[$key] === '') {

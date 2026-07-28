@@ -27,6 +27,7 @@ namespace Ampache\Module\Api\Method;
 
 use Ampache\Module\Api\Authentication\GatekeeperInterface;
 use Ampache\Module\Api\Output\ApiOutputInterface;
+use Ampache\Repository\Model\Preference;
 use Ampache\Repository\Model\User;
 use Ampache\Repository\PreferenceRepositoryInterface;
 use Psr\Http\Message\ResponseInterface;
@@ -70,7 +71,7 @@ final class UserPreferencesMethod implements MethodInterface
         int $apiVersion,
     ): ResponseInterface {
         // fix preferences that are missing for user
-        User::fix_preferences($user->getId());
+        Preference::fix_user_preferences($user->getId());
         $user->get_preferences();
 
         $preferences = $this->preferenceRepository->getAll($user, true);

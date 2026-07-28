@@ -821,10 +821,15 @@ class Ui implements UiInterface
                 echo '<input type="number" name="' . $name . '" value="' . (((int) $value > 0) ? (int) $value : '') . '" min="0" step="1000" placeholder="' . (int) AmpConfig::get('transcode_bitrate', 128000) . '" /> ' . T_('bps');
                 break;
             case 'transcode_bitrate':
+                echo '<input type="number" name="' . $name . '" value="' . (int) $value . '" min="0" step="1000" /> ' . T_('bps') . ' (' . T_('0 = use the source file rate') . ')';
+                break;
             case 'max_bit_rate':
             case 'min_bit_rate':
                 // Bitrate preferences are stored in bits per second (bps)
                 echo '<input type="number" name="' . $name . '" value="' . (int) $value . '" min="0" step="1000" /> ' . T_('bps');
+                break;
+            case 'rate_limit':
+                echo '<input type="number" name="' . $name . '" value="' . (int) $value . '" min="0" step="1024" /> ' . T_('KB/s') . ' (' . T_('0 = no limit') . ')';
                 break;
             case 'access_control':
             case 'access_list':
@@ -915,6 +920,7 @@ class Ui implements UiInterface
             case 'share':
             case 'show_album_artist':
             case 'show_artist':
+            case 'show_collection':
             case 'show_donate':
             case 'show_header_login':
             case 'show_folder':

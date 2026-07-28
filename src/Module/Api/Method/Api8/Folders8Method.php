@@ -25,84 +25,159 @@ declare(strict_types=1);
 
 namespace Ampache\Module\Api\Method\Api8;
 
-use Ampache\Module\Api\Method\AbstractFolderMethod;
+use Ampache\Module\Api\Authentication\GatekeeperInterface;
+use Ampache\Module\Api\Method\Exception\ResultEmptyException;
+use Ampache\Module\Api\Method\MethodInterface;
+use Ampache\Module\Api\Output\ApiOutputInterface;
 use Ampache\Repository\FolderRepositoryInterface;
 use Ampache\Repository\Model\Browse;
 use Ampache\Repository\Model\Folder;
 use Ampache\Repository\Model\ModelFactoryInterface;
-use Override;
+use Ampache\Repository\Model\User;
+use Psr\Http\Message\ResponseInterface;
 
 /**
- * Returns the children of a folder, found by its path name
+ * Returns the children of a folder, found by its id or by its path name
  *
  * Only api version 8 knows about folders.
  */
-final class Folders8Method extends AbstractFolderMethod
+final class Folders8Method implements MethodInterface
 {
     public const string ACTION = 'folders';
 
     private FolderRepositoryInterface $folderRepository;
+    private ModelFactoryInterface $modelFactory;
 
     public function __construct(
         FolderRepositoryInterface $folderRepository,
         ModelFactoryInterface $modelFactory,
     ) {
-        parent::__construct($modelFactory);
-
         $this->folderRepository = $folderRepository;
+        $this->modelFactory     = $modelFactory;
     }
 
     /**
-     * An inexact match narrows on the path itself; anything else narrows on the resolved folder
+     * MINIMUM_API_VERSION=8.0.0
+     *
+     * Return the children of a folder
+     *
+     * filter = (string) the folder, as an id or a path name //optional
+     * exact  = (integer) 0,1 match a path name loosely when 0 //optional
+     * add    = $browse->set_api_filter(date) //optional
+     * update = $browse->set_api_filter(date) //optional
+     * offset = (integer) //optional
+     * limit  = (integer) //optional
+     * cond   = (string) Apply additional filters to the browse //optional
+     * sort   = (string) sort name or comma separated key pair //optional
+     *
+     * @param array{
+     *     filter?: int|string,
+     *     exact?: int,
+     *     add?: string,
+     *     update?: string,
+     *     offset?: int,
+     *     limit?: int,
+     *     cond?: string,
+     *     sort?: string,
+     *     api_format: string,
+     *     auth: string,
+     * } $input
+     * @throws ResultEmptyException
+     */
+    public function handle(
+        GatekeeperInterface $gatekeeper,
+        ResponseInterface $response,
+        ApiOutputInterface $output,
+        array $input,
+        User $user,
+        int $apiVersion,
+    ): ResponseInterface {
+        $folder = $this->resolveFolder($input);
+        if ($folder === null || $folder->isNew()) {
+            throw new ResultEmptyException(
+                $this->requestedFolder($input)
+            );
+        }
+
+        $browse = $this->modelFactory->createBrowse(null, false);
+        $browse->set_user_id($user);
+        $browse->set_type('folder');
+
+        $this->narrowBrowse($browse, $folder, $input);
+
+        $browse->set_filter('catalog', User::get_user_catalogs($user->getId()));
+        $browse->set_api_filter('add', $input['add'] ?? '');
+        $browse->set_api_filter('update', $input['update'] ?? '');
+        $browse->set_conditions(html_entity_decode((string) ($input['cond'] ?? '')));
+
+        $results = $browse->get_objects();
+        if (empty($results)) {
+            $response->getBody()->write(
+                $output->writeEmpty($apiVersion, 'folder')
+            );
+
+            return $response;
+        }
+
+        $output->setOffset($apiVersion, (int) ($input['offset'] ?? 0));
+        $output->setLimit($apiVersion, (int) ($input['limit'] ?? 0));
+
+        $response->getBody()->write(
+            $output->folders($apiVersion, $results, $folder, $user, $input['auth'])
+        );
+
+        return $response;
+    }
+
+    /**
+     * A filter made up of digits alone is a folder id; a path name always carries its directory separators
+     */
+    private function isObjectId(string $filter): bool
+    {
+        return (bool) preg_match('/^-?[0-9]+$/', $filter);
+    }
+
+    /**
+     * An inexact path name narrows on the path itself; an id, the root and an exact path name narrow on the folder
      *
      * @param array<string, mixed> $input
      */
-    #[Override]
-    protected function narrowBrowse(Browse $browse, Folder $folder, array $input): void
+    private function narrowBrowse(Browse $browse, Folder $folder, array $input): void
     {
-        $pathName = $this->pathName($input);
+        $filter = $this->requestedFolder($input);
+        $loose  = !$this->isObjectId($filter) && array_key_exists('exact', $input) && (int) $input['exact'] === 0;
 
-        $method = (array_key_exists('exact', $input) && (int) $input['exact'] === 0)
-            ? 'alpha_match'
-            : 'exact_match';
-
-        // the root folder only ever matches on its id
-        if ($method === 'exact_match') {
+        if (!$loose) {
             $browse->set_filter('int_id', $folder->getId());
-        } elseif ($pathName !== '/') {
-            $browse->set_api_filter($method, $pathName);
+        } elseif ($filter !== '/') {
+            $browse->set_api_filter('alpha_match', $filter);
         }
     }
 
     /**
-     * @param array<string, mixed> $input
-     */
-    #[Override]
-    protected function requestedFolder(array $input): string
-    {
-        return $this->pathName($input);
-    }
-
-    /**
-     * @param array<string, mixed> $input
-     */
-    #[Override]
-    protected function resolveFolder(array $input): ?Folder
-    {
-        $pathName = $this->pathName($input);
-
-        return ($pathName === '/')
-            ? new Folder(-1)
-            : $this->folderRepository->getByPathName(rtrim($pathName, '/'));
-    }
-
-    /**
-     * The root folder is '/'
+     * How the request named the folder; the root is '/' (or the id -1) when nothing was sent
      *
      * @param array<string, mixed> $input
      */
-    private function pathName(array $input): string
+    private function requestedFolder(array $input): string
     {
         return (string) ($input['filter'] ?? '/');
+    }
+
+    /**
+     * Finds the folder the request asked for, or null when there is none
+     *
+     * @param array<string, mixed> $input
+     */
+    private function resolveFolder(array $input): ?Folder
+    {
+        $filter = $this->requestedFolder($input);
+        if ($this->isObjectId($filter)) {
+            return new Folder((int) $filter);
+        }
+
+        return ($filter === '/')
+            ? new Folder(-1)
+            : $this->folderRepository->getByPathName(rtrim($filter, '/'));
     }
 }

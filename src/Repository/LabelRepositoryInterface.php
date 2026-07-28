@@ -30,6 +30,11 @@ use DateTimeInterface;
 
 interface LabelRepositoryInterface
 {
+    /**
+     * Associate a label with an album, ignoring a pairing that is already recorded
+     */
+    public function addAlbumAssoc(int $labelId, int $albumId, DateTimeInterface $date): void;
+
     public function addArtistAssoc(int $labelId, int $artistId, DateTimeInterface $date): void;
 
     /**
@@ -54,6 +59,11 @@ interface LabelRepositoryInterface
      * @return int[]
      */
     public function getArtists(Label $label): array;
+
+    /**
+     * @return array<int, string>
+     */
+    public function getByAlbum(int $albumId): array;
 
     /**
      * @return string[]

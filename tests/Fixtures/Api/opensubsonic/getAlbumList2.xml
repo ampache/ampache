@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <subsonic-response xmlns="http://subsonic.org/restapi" status="ok" version="1.16.1" type="ampache" serverVersion="8.0.0" openSubsonic="1">
   <albumList2>
-    <album id="al-2" name="CC Affiliates Mixtape #1" coverArt="al-2" songCount="1" created="2026-07-15T06:35:01+00:00" duration="266" artistId="ar-2" artist="Various Artists" year="2015" userRating="5" playCount="71"/>
+    <album id="al-2" name="CC Affiliates Mixtape #1" coverArt="al-2" songCount="1" created="2026-07-15T06:35:01+00:00" duration="266" artistId="ar-2" artist="Various Artists" year="2015" userRating="5" playCount="71" played="2026-07-26T19:42:17Z"/>
   </albumList2>
 </subsonic-response>

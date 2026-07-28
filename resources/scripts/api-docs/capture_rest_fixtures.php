@@ -237,7 +237,6 @@ $paths = [
     '/users' => '',
     '/videos' => 'limit=2',
     '/catalogs' => 'limit=2',
-    '/folder' => 'limit=2',
     '/folders' => 'limit=2',
     '/songs/deleted' => 'limit=2',
     '/podcast-episodes/deleted' => 'limit=2',

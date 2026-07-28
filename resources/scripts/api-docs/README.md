@@ -35,11 +35,37 @@ last command, which will mask a failure.
 | `docs/openapi.json` | `generate_openapi_schemas.py` |
 | `docs/API-JSON-methods.md`, `docs/API-XML-methods.md` | `generate_api_methods_md.py` (response tables only) |
 | `docs/openapi-6.json` | **hand-maintained**, guarded by `Api6SpecConformanceTest` |
+| `docs/openapi-opensubsonic.json` | **upstream's artefact**, copied verbatim — never hand-edit (see below) |
 | `docs/REST-to-RPC.md` | hand-maintained; its "Alternative action" column is the source of truth for aliases |
 
 In the markdown documents only the block between `<!-- GENERATED:RESPONSE:BEGIN -->` and
 `<!-- GENERATED:RESPONSE:END -->` is generated. The prose, the input-parameter tables, the `* throws`
 blocks and the `[Example]` links are hand-written and are left alone.
+
+## Refreshing the OpenSubsonic spec
+
+`docs/openapi-opensubsonic.json` is built by the OpenSubsonic project, not by us. It is committed verbatim so the
+conformance tests can run offline, and it is **never hand-edited** — an edit would make Ampache validate against a
+spec nobody else has.
+
+Upstream rebuilds it continuously, so it is pinned rather than tracked: `tests/Module/Api/OpenSubsonicSpecVersionTest.php`
+records the checksum and endpoint count of the build the implementation was last audited against, and
+`docs/API-subsonic.md` records the date of that audit.
+
+To take a newer build:
+
+```shell
+curl -o docs/openapi-opensubsonic.json https://opensubsonic.netlify.app/docs/openapi/openapi.json
+composer qa
+```
+
+`OpenSubsonicSpecVersionTest` will fail, which is the point — it means the surface moved. Re-audit the
+implementation against the new build, then update `SPEC_SHA256` (and `SPEC_PATH_COUNT` if endpoints were added or
+removed) in that test and the compliance date in `docs/API-subsonic.md`. `testEveryDocumentedEndpointHasAHandler`
+names any endpoint the new build documents that Ampache does not serve.
+
+Response fixtures are captured separately with `capture_subsonic_fixtures.php`; see its header for what it covers
+and why the mutating and binary endpoints are excluded.
 
 ## Response schemas come from docblocks
 

@@ -29,6 +29,7 @@ use Ampache\Module\Api\Json4_Data;
 use Ampache\Module\Api\Json5_Data;
 use Ampache\Module\Api\Json6_Data;
 use Ampache\Module\Api\Json8_Data;
+use Ampache\Repository\Model\Collection;
 use Ampache\Repository\Model\Folder;
 use Ampache\Repository\Model\library_item;
 use Ampache\Repository\Model\LibraryItemEnum;
@@ -153,6 +154,37 @@ final class JsonOutput implements ApiOutputInterface
      * At the moment, this method just acts as a proxy
      *
      * @param 5|6|8 $apiVersion
+     */
+    public function collectionItems(
+        int $apiVersion,
+        Collection $collection,
+        User $user,
+        string $auth,
+        bool $asObject = true,
+    ): string {
+        return Json8_Data::collection_items($collection, $user, $auth, $asObject);
+    }
+
+    /**
+     * At the moment, this method just acts as a proxy
+     *
+     * @param 5|6|8 $apiVersion
+     * @param list<int> $objects
+     */
+    public function collections(
+        int $apiVersion,
+        array $objects,
+        User $user,
+        string $auth,
+        bool $asObject = true,
+    ): string {
+        return Json8_Data::collections($objects, $user, $auth, $asObject);
+    }
+
+    /**
+     * At the moment, this method just acts as a proxy
+     *
+     * @param 5|6|8 $apiVersion
      * @param array<int, array{
      *     id: int,
      *     addition_time: int,
@@ -221,7 +253,7 @@ final class JsonOutput implements ApiOutputInterface
     /**
      * At the moment, this method just acts as a proxy
      *
-     * @param 8 $apiVersion only api version 8 knows about folders
+     * @param 5|6|8 $apiVersion
      * @param array<int|string> $objects
      */
     public function folders(
@@ -230,9 +262,8 @@ final class JsonOutput implements ApiOutputInterface
         Folder $folder,
         User $user,
         string $auth,
-        bool $asObject = true,
     ): string {
-        return Json8_Data::folders($objects, $folder, $user, $auth, $asObject);
+        return Json8_Data::folders($objects, $folder, $user, $auth);
     }
 
     /**
@@ -659,6 +690,22 @@ final class JsonOutput implements ApiOutputInterface
             6 => Json6_Data::song_tags($objects, $auth, $asObject),
             8 => Json8_Data::song_tags($objects, $auth, $asObject),
         };
+    }
+
+    /**
+     * At the moment, this method just acts as a proxy
+     *
+     * @param 5|6|8 $apiVersion
+     * @param list<array{'id': int, 'similarity': float}> $matches
+     */
+    public function sonicMatches(
+        int $apiVersion,
+        array $matches,
+        User $user,
+        string $auth,
+        bool $asObject = true,
+    ): string {
+        return Json8_Data::sonic_matches($matches, $user, $auth, $asObject);
     }
 
     /**

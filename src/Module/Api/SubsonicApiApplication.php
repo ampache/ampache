@@ -377,10 +377,10 @@ final class SubsonicApiApplication implements ApiApplicationInterface
         ) {
             ob_end_clean();
             $this->logger->warning(
-                'Requested client version is not supported',
+                sprintf('Requested client version %s is newer than the supported %s', $version, Subsonic_Api::API_VERSION),
                 [LegacyLogger::CONTEXT_TYPE => self::class]
             );
-            Subsonic_Api::error($query, Subsonic_Api::SSERROR_APIVERSION_CLIENT, $action);
+            Subsonic_Api::error($query, Subsonic_Api::SSERROR_APIVERSION_SERVER, $action);
 
             return;
         }
@@ -390,24 +390,36 @@ final class SubsonicApiApplication implements ApiApplicationInterface
         // get the user preference in case the server is different
         $subsonic_legacy = Preference::get_by_user($user->getId(), 'subsonic_legacy');
 
-        // Get the list of possible methods for the Ampache API
+        // Get the list of possible methods for the Ampache API. The action has already been lowercased, so the
+        // handler names are folded to match: a camelCase method is otherwise unreachable through this gate.
         $os_methods = ($subsonic_legacy)
             ? []
-            : array_diff(get_class_methods(OpenSubsonic_Api::class), OpenSubsonic_Api::SYSTEM_LIST);
+            : array_map('strtolower', array_diff(get_class_methods(OpenSubsonic_Api::class), OpenSubsonic_Api::SYSTEM_LIST));
         // allow fallback to a pure Subsonic 1.16.1 API
         $methods = ($subsonic_legacy)
-            ? array_diff(get_class_methods(Subsonic_Api::class), Subsonic_Api::SYSTEM_LIST)
+            ? array_map('strtolower', array_diff(get_class_methods(Subsonic_Api::class), Subsonic_Api::SYSTEM_LIST))
             : [];
 
         // We do not use $_GET because of multiple parameters with the same name
         $query_string = (string) ($_SERVER['QUERY_STRING'] ?? '');
         // Trick to avoid $HTTP_RAW_POST_DATA
         $postdata = file_get_contents("php://input");
+        $body     = null;
         if (!empty($postdata)) {
-            $query_string .= '&' . $postdata;
+            // A JSON body carries a whole object rather than form pairs, so it is decoded aside instead of being
+            // appended to the query string, which would split it on every `&` and `=` it happens to contain.
+            if (str_contains(strtolower((string) ($_SERVER['CONTENT_TYPE'] ?? '')), 'application/json')) {
+                $decoded = json_decode($postdata, true);
+                $body    = (is_array($decoded)) ? $decoded : null;
+            } else {
+                $query_string .= '&' . $postdata;
+            }
         }
         $query = explode('&', $query_string);
         $input = [];
+        if ($body !== null) {
+            $input['_body'] = $body;
+        }
         foreach ($query as $param) {
             $decname  = false;
             $decvalue = false;
@@ -489,9 +501,9 @@ final class SubsonicApiApplication implements ApiApplicationInterface
             [LegacyLogger::CONTEXT_TYPE => self::class]
         );
         if ($subsonic_legacy) {
-            Subsonic_Api::error($input, Subsonic_Api::SSERROR_APIVERSION_SERVER, $action);
+            Subsonic_Api::error($input, Subsonic_Api::SSERROR_GENERIC, $action);
         } else {
-            OpenSubsonic_Api::error($input, OpenSubsonic_Api::SSERROR_APIVERSION_SERVER, $action);
+            OpenSubsonic_Api::error($input, OpenSubsonic_Api::SSERROR_GENERIC, $action);
         }
     }
 }

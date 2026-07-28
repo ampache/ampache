@@ -66,10 +66,18 @@ final readonly class UpdateAction implements ApplicationActionInterface
             }
 
             set_time_limit(300);
-            AutoUpdate::update_files();
-            AutoUpdate::update_dependencies($this->configContainer);
+            $success = AutoUpdate::update_files();
+            if ($success) {
+                $success = AutoUpdate::update_dependencies($this->configContainer);
+            }
+
             Preference::translate_db();
             Preference::set_defaults();
+
+            // a failed update has already printed the command output, so stay on the page rather than redirect
+            if (!$success) {
+                return $this->responseFactory->createResponse();
+            }
 
             return $this->responseFactory
                 ->createResponse(RFC7231::FOUND)

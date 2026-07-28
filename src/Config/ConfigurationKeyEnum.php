@@ -200,6 +200,7 @@ final class ConfigurationKeyEnum
     public const string SESSION_NAME                          = 'session_name';
     public const string SHARE                                 = 'share';
     public const string SHARE_EXPIRE                          = 'share_expire';
+    public const string SHOW_COLLECTION                       = 'show_collection';
     public const string SHOW_DONATE                           = 'show_donate';
     public const string SHOW_FOLDER                           = 'show_folder';
     public const string SHOW_LICENSE                          = 'show_license';
