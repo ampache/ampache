@@ -920,6 +920,7 @@ class Ui implements UiInterface
             case 'share':
             case 'show_album_artist':
             case 'show_artist':
+            case 'show_collection':
             case 'show_donate':
             case 'show_header_login':
             case 'show_folder':

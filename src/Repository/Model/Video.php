@@ -58,6 +58,7 @@ class Video extends database_object implements
     public ?string $file      = null;
     public ?float $frame_rate = null;
     public int $id            = 0;
+    public ?int $last_played  = null; // When this was last streamed, as a unix timestamp; null until it has been played.
     public ?string $link      = null;
     public ?string $mime      = null;
     public ?string $mode      = null;
@@ -121,6 +122,7 @@ class Video extends database_object implements
         $this->frame_rate    = isset($info['frame_rate']) ? (float) $info['frame_rate'] : null;
         $this->video_bitrate = isset($info['video_bitrate']) ? (float) $info['video_bitrate'] : null;
         $this->release_date  = isset($info['release_date']) ? (int) $info['release_date'] : null;
+        $this->last_played   = isset($info['last_played']) ? (int) $info['last_played'] : null;
         $this->total_count   = (int) ($info['total_count'] ?? 0);
         $this->total_skip    = (int) ($info['total_skip'] ?? 0);
 

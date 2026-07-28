@@ -8,11 +8,13 @@
 
 You can downgrade to Ampache7 if you try this out and have issues, using the cli (`bin/cli admin:updateDatabase -e`).
 
+**NOTE** The `/rest` rewrite rules changed a lot in this release. Use `php bin/installer htaccess -e` to update your htaccess files (or the Write buttons on the install/update page). The *rest/.htaccess configured?* check only tests the web path prefix, so an out of date file is not reported as a problem.
+
 * Ampache 8 requires **PHP 8.5+**
 * This version adds a new **Folder** domain which functions as a virtual filesystem browsing layer over catalog files.
 * A very major PHPStan level 8 / Rector / PER-CS3x0 hardening pass across the code.
 
-### Added 8.0.0
+### Added (8.0.0)
 
 * OpenID Connect (OIDC) login
   * New `oidc` auth method; add it to `auth_methods` to enable it (keep `mysql` so local accounts can still log in)
@@ -41,6 +43,13 @@ You can downgrade to Ampache7 if you try this out and have issues, using the cli
   * New database tables `object_count_summary` and `object_count_archive`
   * `folder` added to the `object_type` enum on several tables (`cache_object_count`, `cache_object_count_run`, `image`, `object_count`, and others)
   * New `user`.`subsonic_secret` column holding the per-user Subsonic password
+  * New database tables `collection` and `collection_map`
+  * New maintained `last_played` column on `album`, `album_disk`, `artist`, `podcast`, `podcast_episode`, `song` and `video`, written on the same statement that increments the play counter and backfilled from the existing play history (live counts, archived detail and consolidated summaries)
+  * `collection` added to the `object_type` enum on `image`, `object_count`, `cache_object_count`, `cache_object_count_run`, `object_count_summary` and `object_count_archive`, so a collection carries its own art and play statistics
+  * `collection` added to the `object_type` enum on `rating` and `user_flag`, so a collection can be rated and flagged
+  * New `position_ms`, `playback_rate` and `state` columns on `now_playing`, holding what an OpenSubsonic client reports through `reportPlayback`
+  * New `artist`.`lastfm_url` column keeping the last.fm page url with the rest of the cached artist info
+  * `label_asso` gains a nullable `album` column and its `artist` column becomes nullable, so a label can be associated with an album as well as an artist
 * Subsonic
   * OpenSubsonic implementation audited against the published specification on 2026-07-27; the audited build is committed as `docs/openapi-opensubsonic.json` and pinned by a test so a refreshed copy prompts a re-audit instead of drifting silently
   * New `transcoding` extension: `getTranscodeDecision` (POST, with the client's playback capabilities as a JSON body) reports whether a file can be played as-is, and `getTranscodeStream` serves the result. The decision is derived from the same transcode settings that serve the bytes, and its `transcodeParams` token is signed with `secret_key` so a client cannot choose its own output format or bitrate
@@ -48,6 +57,10 @@ You can downgrade to Ampache7 if you try this out and have issues, using the cli
   * New `topSongsByArtistId` extension: `getTopSongs` accepts an artist `id` as well as a name
   * New `sonicSimilarity` extension serving `getSonicSimilarTracks` and `findSonicPath`, backed by a sonic-analysis plugin; the extension is only advertised while such a plugin is enabled, so a server without one reports it unsupported rather than substituting metadata similarity
   * New **AudioMuse** plugin providing that sonic analysis from an [AudioMuse-AI](https://github.com/NeptuneHub/AudioMuse-AI) server; set its URL in the plugin preferences
+  * `NowPlayingEntry` reports `positionMs`, `playbackRate` and `state` for a client that uses `reportPlayback`. The position is stored as reported rather than derived from elapsed time, which the spec requires and which is the only answer that survives a pause or a seek; ordinary playback reports none of them and the fields stay absent
+  * `AlbumInfo`, `ArtistInfo` and `ArtistInfo2` report `lastFmUrl`. last.fm always returned the url and Ampache discarded it; for artists it is cached with the summary, because an artist refreshed within six months never calls last.fm again
+  * `AlbumID3` reports `recordLabels`, from a new album-to-label association the scanner writes off the release's label tag. The label text already reached `song_data`, but reading it back per album meant a query over a free-text column for every album of every list response
+  * Songs, albums, videos and podcast episodes now report `played`, the moment they were last streamed. Ampache's own `played` column is a boolean and the date lived in the play-history tables, which cannot be queried once per song of every list response — so the date is now stored on the object and kept current when the play is recorded
   * `getLyricsBySongId` supports `enhanced=true`, returning word-level `cueLine` timing when the stored lyrics carry Enhanced LRC timings
   * OpenSubsonic responses now carry the documented extra fields in **both** JSON and XML — the XML serializer previously emitted little more than plain Subsonic. Songs gain `artists`, `albumArtists`, `displayArtist`, `displayAlbumArtist`, `displayComposer`, `contributors`, `mediaType`, `samplingRate`, `channelCount`, `isrc`, `replayGain` and `bookmarkPosition`; albums gain `artists`, `displayArtist`, `sortName`, `releaseDate`, `originalReleaseDate`, `releaseTypes` and `discTitles`; artists gain `sortName` and `artistImageUrl`; playlists gain `allowedUser`; users gain `maxBitRate`; videos gain `originalWidth`/`originalHeight`
   * Fixed the internet radio station response field, which was emitted as `homepageUrl` instead of the specified `homePageUrl`. This also affected the pure Subsonic API, where it did not match the 1.16.1 schema
@@ -55,7 +68,17 @@ You can downgrade to Ampache7 if you try this out and have issues, using the cli
   * New per-user **Subsonic Password** set from the account page, the admin user edit page, or `bin/cli admin:updateUser <username> --subsonic <password>`, so Subsonic token auth works without pasting your API key into a music player
   * It is stored encrypted with `secret_key` instead of hashed, because Subsonic token auth requires the server to recompute `md5(password + salt)`; changing `secret_key` invalidates every stored Subsonic Password
   * The API key keeps working as the Subsonic password for both token and plaintext auth, so existing clients do not need reconfiguring
+* Collections
+  * A **collection** is a hand-curated list of objects of any type: the static counterpart to a search, and the non-media counterpart to a playlist. Albums, artists, genres, labels, live streams, playlists, podcasts, episodes, songs and videos can all sit in the same list
+  * A collection may be left mixed or pinned to a single `object_type`, in which case anything else is refused when it is added
+  * Playing one expands its members, so an album contributes its songs and anything that cannot be streamed is skipped; duplicates reached by two different routes are played once
+  * Collections have their own art, including the mosaic built from their members when no art is set
+  * `public`/`private` visibility and a collaborator list, matching playlists: a collaborator curates the contents, only the owner or an admin can delete the list
+  * New `show_collection` preference to show/hide the "Collections" link in the sidebar
+  * Collections in the web interface: a `collection.php` page listing the members grouped by type, a `browse.php?action=collection` browse with the usual sorting and filtering, the standard edit dialog for name, visibility, pinned type and collaborators, and the art picker
+  * Collections can be rated and flagged like any other library item
 * API
+  * New collection methods `collections`, `collection`, `collection_items`, `collection_create`, `collection_edit`, `collection_delete`, `collection_add` and `collection_remove`, with REST paths under `collections/`
   * New `sonic_match` method (REST `songs/{song_id}/sonic-match`) returning songs that sound like a given song, each with a `similarity` score. It shares the OpenSubsonic `sonicMatch` scale (0.0-1.0, 1.0 being the same recording) so a client sees the same number from either API, and needs a sonic-analysis plugin — with none enabled it refuses the request rather than returning an empty list
   * v8 API responses are now fully documented: `docs/openapi.json` carries response schemas for every data type, and `docs/API-JSON-methods.md`/`docs/API-XML-methods.md` show per-method response field tables (type, nullable, optional)
   * Album disks are available to API8 clients (`album_disks`, `album_disk`, `album_disk_songs`, plus `index`, `list`, `browse`, `stats` and `get_art` support). With the `album_group` preference disabled the web interface browses album disks, and until now the API had no way to reach them
@@ -85,7 +108,7 @@ You can downgrade to Ampache7 if you try this out and have issues, using the cli
   * New `allow_lost_password` option. Setting it to `false` hides the `Lost Password` link and rejects `lostpassword.php`, so nobody can trigger reset mail to your users by posting to it directly
   * New `show_mini_player` option to hide the `Mini player` button on the login form; `/m/` stays reachable by url either way
 
-### Changed 8.0.0
+### Changed (8.0.0)
 
 * Database 800014
   * Dropped four redundant `object_count` indexes: `object_count_full_index` (an exact duplicate of `object_count_UNIQUE_IDX`), `object_type` and `object_count_type_IDX` (leading-column prefixes of that key), and `date` (a prefix of `object_count_date_IDX`)
@@ -134,7 +157,7 @@ You can downgrade to Ampache7 if you try this out and have issues, using the cli
 * Config version 93
   * `statistical_graphs` now defaults to `"true"`; it was only off because of the c-pchart licence. Set it to `"false"` to skip the graph queries entirely on a large catalog
 
-### Removed 8.0.0
+### Removed (8.0.0)
 
 * `api_debug_handler` configuration option and its handling removed entirely
 * `szymach/c-pchart` dependency dropped, along with the `pGraph_Yformat_bytes()` helper it needed
@@ -148,7 +171,7 @@ You can downgrade to Ampache7 if you try this out and have issues, using the cli
   * The `ajax_load` preference is removed. It never controlled page loading (links have always been intercepted regardless of it) and no longer affects navigation at all; what it did was select the popup web player above and silently switch off play-next and append
   * Rolling back to Ampache7 restores the preference, the same as any other removed one
 
-### Fixed 8.0.0
+### Fixed (8.0.0)
 
 * Repeated queries on every page
   * The installed-plugin version lookup re-read the whole `update_info` table on each call, and the module list calls it once per plugin, so a single page ran it dozens of times; it is read once per request and only for the `Plugin_` keys
@@ -162,6 +185,11 @@ You can downgrade to Ampache7 if you try this out and have issues, using the cli
 * The catalog size graph was empty until a second time bucket existed, because the running total it adds to is `NULL` when nothing was added before the bucket and `NULL + SUM()` is `NULL`
 * The catalog size graph read zero for `object_type=album`; it joined `album`.`id` to `song`.`id` instead of `song`.`album`, and only counted buckets before the current one instead of including it
 * Uploading art, an avatar, a playlist or a podcast import file stopped the web player, because a form carrying a file fell back to a full page load
+* Updating the sources from the web interface reported success when it had not worked
+  * `composer install`, `npm install` and `npm run build` were run with their exit status discarded and only the last line of output kept, then the page redirected to the home page, so a failed dependency install left a pulled-but-unbuilt install with no error anywhere. The status is now checked, the output is logged in full and shown, and a failure keeps you on the update page
+  * `npm` failed outright whenever the web server user's home directory was not writable, because it could not create its cache directory; it is now pointed at a writable one
+  * `npm install` now installs the dev packages explicitly — the `postinstall` and `build` scripts that produce every shipped asset live there, so a server with `NODE_ENV=production` built nothing
+  * The update is refused up front, before the sources are pulled, when `exec()` is disabled or when the checkout, `node_modules` or `vendor` cannot be written by the web server user
 * Database 800023
   * Uploaded art took its mime type from the filename, storing `image/jpg` (not a real type) for a `.jpg` upload and `image/JPG` for `.JPG`; the type is now read from the image data and existing rows are corrected
   * Where the same artwork was stored twice under both spellings the `image/jpg` row is left as it is, because `unique_image` includes `mime` and no art is deleted during an upgrade
@@ -187,6 +215,25 @@ You can downgrade to Ampache7 if you try this out and have issues, using the cli
   * `musicFolderId` was ignored by `getAlbumList`/`getAlbumList2` for the `random`, `highest`, `frequent`, `recent`, `starred`, `byYear` and `byGenre` types
   * A `musicFolderId` naming a catalog the user can't browse returned everything instead of nothing
 * User avatars requested through a `/play/art/{sid}/user/{id}/...` url were always denied when `public_images` is disabled, because the `user` rewrite rules dropped the `auth` parameter that the other art rules pass on
+* Upload
+  * An artist created while uploading was never mapped to the upload catalog, so it was missing from an artist browse filtered to that catalog until the next catalog update; the artists of an uploaded song are now mapped as the song is added
+* Rating or favouriting a playlist, collection, folder, search or live stream logged an SQL error on every click, because only the media tables carry the `weight` column those writes adjust
+
+## Ampache 7.10.1
+
+### Changed (7.10.1)
+
+* Warn develop users that Ampache Develop is about to go through a major change
+
+### Fixed (7.10.1)
+
+* Deleting a Playlist or Smartlist left its `user_playlist_map` rows behind, so a later list given the freed id inherited the collaborators
+* User deletion and garbage collection stepped over `user_playlist_map` because it names its column `user_id`
+* Update sources
+  * Updating from the web interface reported success when it had not worked; `composer install`, `npm install` and `npm run build` discarded their exit status and kept only the last line of output, then redirected away. The status is checked, the output is logged and shown, and a failure keeps you on the update page
+  * `npm` failed outright when the web server user's home directory was not writable, because it could not create its cache directory; it is pointed at a writable one
+  * `npm install` installs the dev packages explicitly, so a server with `NODE_ENV=production` no longer builds nothing
+  * The update is refused before the sources are pulled when `exec()` is disabled or the checkout, `node_modules` or `vendor` cannot be written
 
 ## Ampache 7.10.0
 
@@ -236,6 +283,18 @@ See: [Gregwar/Captcha](https://github.com/Gregwar/Captcha)
 
 ### Fixed (7.10.0)
 
+* `AlbumDisk::check()` returned the album id instead of the new album_disk id, so new songs stored the wrong `song`.`album_disk`
+* `AlbumDisk::check()` read `disk` from a collision lookup that never selected it, so songs kept the old disk number when edited
+* `AlbumDisk::check()` matched `disksubtitle` in the collision lookup, which never matches a null and returned the wrong id
+* Beets catalog clean deleted the first song of the list even though the file still existed
+* Art export truncated art files that had already been exported
+* Album art export left an empty art file in the album folder when there was no image to write
+* Skips were not counted on media that had never been fully played
+* Debug page printed `secret_key`, api secrets and additional passwords in plain text
+* Last.fm error responses were treated as a success, causing a runtime error when reading artist or album info
+* Web player controls were clipped out of view and unclickable outside the embedded player
+* Browser notifications stopped the play handler outside the embedded player, skipping media session and ReplayGain
+* Share `Public URL` column was empty for shares that only allow streaming
 * Broadcasts could not play because broadcasts are not `Media`
 * Throw login exception on missing auth when authentication is required
 * Potential error during filesystem scan
@@ -263,6 +322,7 @@ See: [Gregwar/Captcha](https://github.com/Gregwar/Captcha)
   * API6: Correct version bump handling
   * List responses were not sliced by `offset` and `limit` in some XML/JSON methods
   * Version and response inconsistencies between API versions
+  * Backport API3-6 fixes from Ampache8 (REST path resolution, `user_preference`, `localplay` and version rollover)
 
 ## Ampache 7.9.8
 

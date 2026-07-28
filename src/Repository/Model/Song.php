@@ -45,6 +45,7 @@ use Ampache\Module\User\Activity\UserActivityPosterInterface;
 use Ampache\Module\Util\Recommendation;
 use Ampache\Plugin\PluginGetLyricsInterface;
 use Ampache\Repository\AlbumRepositoryInterface;
+use Ampache\Repository\LabelRepositoryInterface;
 use Ampache\Repository\LicenseRepositoryInterface;
 use Ampache\Repository\MetadataRepositoryInterface;
 use Ampache\Repository\ShareRepositoryInterface;
@@ -109,6 +110,7 @@ class Song extends database_object implements
 
     public ?string $label    = null;
     public ?string $language = null;
+    public ?int $last_played = null; // When this song was last streamed, as a unix timestamp; null until it has been played.
     public ?int $license     = null;
     public ?string $link     = null;
     public ?string $lyrics   = null;
@@ -201,8 +203,8 @@ class Song extends database_object implements
 
         // Song data cache
         $sql = (AmpConfig::get('catalog_disable'))
-            ? "SELECT `song`.`id`, `song`.`file`, `song`.`catalog`, `song`.`album`, `song`.`album_disk`, `song`.`disk`, `song`.`year`, `song`.`artist`, `song`.`title`, `song`.`bitrate`, `song`.`rate`, `song`.`mode`, `song`.`size`, `song`.`time`, `song`.`track`, `song`.`mbid`, `song`.`played`, `song`.`enabled`, `song`.`update_time`, `song`.`addition_time`, `song`.`user_upload`, `song`.`license`, `song`.`composer`, `song`.`channels`, `song`.`total_count`, `song`.`total_skip` FROM `song` LEFT JOIN `catalog` ON `catalog`.`id` = `song`.`catalog` WHERE `song`.`id` IN $idlist AND `catalog`.`enabled` = '1' "
-            : "SELECT `song`.`id`, `song`.`file`, `song`.`catalog`, `song`.`album`, `song`.`album_disk`, `song`.`disk`, `song`.`year`, `song`.`artist`, `song`.`title`, `song`.`bitrate`, `song`.`rate`, `song`.`mode`, `song`.`size`, `song`.`time`, `song`.`track`, `song`.`mbid`, `song`.`played`, `song`.`enabled`, `song`.`update_time`, `song`.`addition_time`, `song`.`user_upload`, `song`.`license`, `song`.`composer`, `song`.`channels`, `song`.`total_count`, `song`.`total_skip` FROM `song` WHERE `song`.`id` IN $idlist";
+            ? "SELECT `song`.`id`, `song`.`file`, `song`.`catalog`, `song`.`album`, `song`.`album_disk`, `song`.`disk`, `song`.`year`, `song`.`artist`, `song`.`title`, `song`.`bitrate`, `song`.`rate`, `song`.`mode`, `song`.`size`, `song`.`time`, `song`.`track`, `song`.`mbid`, `song`.`played`, `song`.`enabled`, `song`.`update_time`, `song`.`addition_time`, `song`.`user_upload`, `song`.`license`, `song`.`composer`, `song`.`channels`, `song`.`total_count`, `song`.`total_skip`, `song`.`last_played` FROM `song` LEFT JOIN `catalog` ON `catalog`.`id` = `song`.`catalog` WHERE `song`.`id` IN $idlist AND `catalog`.`enabled` = '1' "
+            : "SELECT `song`.`id`, `song`.`file`, `song`.`catalog`, `song`.`album`, `song`.`album_disk`, `song`.`disk`, `song`.`year`, `song`.`artist`, `song`.`title`, `song`.`bitrate`, `song`.`rate`, `song`.`mode`, `song`.`size`, `song`.`time`, `song`.`track`, `song`.`mbid`, `song`.`played`, `song`.`enabled`, `song`.`update_time`, `song`.`addition_time`, `song`.`user_upload`, `song`.`license`, `song`.`composer`, `song`.`channels`, `song`.`total_count`, `song`.`total_skip`, `song`.`last_played` FROM `song` WHERE `song`.`id` IN $idlist";
 
         $db_results = Dba::read($sql);
         while ($row = Dba::fetch_assoc($db_results)) {
@@ -703,11 +705,12 @@ class Song extends database_object implements
         $user_upload      = $filtered_results['user_upload'];
         $composer         = $filtered_results['composer'];
         $label            = $filtered_results['label'];
-        if ($label && AmpConfig::get('label')) {
-            // create the label if missing
-            foreach (array_map('trim', explode(';', $label)) as $label_name) {
-                Label::helper($label_name);
-            }
+        $label_names      = ($label && AmpConfig::get('label'))
+            ? array_filter(array_map('trim', explode(';', $label)))
+            : [];
+        foreach ($label_names as $label_name) {
+            // create the label if missing; the album association is made below, once the album id is known
+            Label::helper($label_name);
         }
 
         // info for the artist_map table.
@@ -782,6 +785,18 @@ class Song extends database_object implements
                 : Album::check($catalog, $album, $year, $album_mbid, $album_mbid_group, $albumartist_id, $release_type, $release_status, $original_year, $barcode, $catalog_number, $version);
         }
 
+        // The label tag is read per song but describes the release, so it is recorded against the album
+        if ($label_names !== [] && $album_id > 0) {
+            $labelRepository = self::getLabelRepository();
+            $now             = new DateTime();
+            foreach ($label_names as $label_name) {
+                $label_id = $labelRepository->lookup($label_name);
+                if ($label_id > 0) {
+                    $labelRepository->addAlbumAssoc($label_id, $album_id, $now);
+                }
+            }
+        }
+
         // create the album_disk (if missing)
         $album_disk_id = AlbumDisk::check($album_id, $disk, $catalog, $disksubtitle);
 
@@ -852,6 +867,13 @@ class Song extends database_object implements
         Album::update_album_count($album_id);
 
         if ($user_upload) {
+            // A scan maps artists to their catalog when it finishes; an upload has no such pass
+            foreach (array_unique($artists) as $mapped_artist_id) {
+                if ($mapped_artist_id > 0) {
+                    Catalog::update_map((int) $catalog, 'artist', (int) $mapped_artist_id);
+                }
+            }
+
             self::getUserActivityPoster()->post((int) $user_upload, 'upload', 'song', $song_id, time());
         }
 
@@ -1377,6 +1399,16 @@ class Song extends database_object implements
         }
 
         return self::getSongRepository()->setField($song_id, $column, $value);
+    }
+
+    /**
+     * @deprecated inject dependency
+     */
+    private static function getLabelRepository(): LabelRepositoryInterface
+    {
+        global $dic;
+
+        return $dic->get(LabelRepositoryInterface::class);
     }
 
     /**
@@ -2319,7 +2351,7 @@ class Song extends database_object implements
             // followup on some stats too
             Stats::insert('album', $this->album, $user_id, $agent, $location, 'stream', $date);
             if ($this->album_disk) {
-                Stats::count('album_disk', $this->album_disk, 'up');
+                Stats::count('album_disk', $this->album_disk, 'up', $date);
             }
             // insert plays for song and album artists
             $artists = array_unique(array_merge(self::get_parent_array($this->id), self::get_parent_array($this->album, 'album')));
@@ -2628,7 +2660,7 @@ class Song extends database_object implements
             return true;
         }
 
-        $sql        = "SELECT `song`.`id`, `song`.`file`, `song`.`catalog`, `song`.`album`, `song`.`album_disk`, `song`.`disk`, `song`.`year`, `song`.`artist`, `song`.`title`, `song`.`bitrate`, `song`.`rate`, `song`.`mode`, `song`.`size`, `song`.`time`, `song`.`track`, `song`.`mbid`, `song`.`played`, `song`.`enabled`, `song`.`update_time`, `song`.`addition_time`, `song`.`user_upload`, `song`.`license`, `song`.`composer`, `song`.`channels`, `song`.`total_count`, `song`.`total_skip`, `album`.`album_artist` AS `albumartist`, `album`.`mbid` AS `album_mbid`, `artist`.`mbid` AS `artist_mbid`, `album_artist`.`mbid` AS `albumartist_mbid` FROM `song` LEFT JOIN `album` ON `album`.`id` = `song`.`album` LEFT JOIN `artist` ON `artist`.`id` = `song`.`artist` LEFT JOIN `artist` AS `album_artist` ON `album_artist`.`id` = `album`.`album_artist` WHERE `song`.`id` = ?";
+        $sql        = "SELECT `song`.`id`, `song`.`file`, `song`.`catalog`, `song`.`album`, `song`.`album_disk`, `song`.`disk`, `song`.`year`, `song`.`artist`, `song`.`title`, `song`.`bitrate`, `song`.`rate`, `song`.`mode`, `song`.`size`, `song`.`time`, `song`.`track`, `song`.`mbid`, `song`.`played`, `song`.`enabled`, `song`.`update_time`, `song`.`addition_time`, `song`.`user_upload`, `song`.`license`, `song`.`composer`, `song`.`channels`, `song`.`total_count`, `song`.`total_skip`, `song`.`last_played`, `album`.`album_artist` AS `albumartist`, `album`.`mbid` AS `album_mbid`, `artist`.`mbid` AS `artist_mbid`, `album_artist`.`mbid` AS `albumartist_mbid` FROM `song` LEFT JOIN `album` ON `album`.`id` = `song`.`album` LEFT JOIN `artist` ON `artist`.`id` = `song`.`artist` LEFT JOIN `artist` AS `album_artist` ON `album_artist`.`id` = `album`.`album_artist` WHERE `song`.`id` = ?";
         $db_results = Dba::read($sql, [$song_id]);
         $results    = Dba::fetch_assoc($db_results);
         if (isset($results['id'])) {
@@ -2765,6 +2797,9 @@ class Song extends database_object implements
         }
         if (array_key_exists('total_skip', $results)) {
             $this->total_skip = (int) $results['total_skip'];
+        }
+        if (array_key_exists('last_played', $results)) {
+            $this->last_played = $results['last_played'] === null ? null : (int) $results['last_played'];
         }
         if (array_key_exists('albumartist', $results)) {
             $this->albumartist = $results['albumartist'] === null ? null : (int) $results['albumartist'];

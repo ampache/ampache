@@ -416,7 +416,10 @@ class Stream
      *     media: library_item,
      *     client: User,
      *     agent: string,
-     *     expire: int
+     *     expire: int,
+     *     position_ms: ?int,
+     *     playback_rate: ?float,
+     *     state: ?string
      * }>
      */
     public static function get_now_playing(int $user_id = 0): array
@@ -460,7 +463,10 @@ class Stream
                     'media' => $media,
                     'client' => $client,
                     'agent' => $row['agent'],
-                    'expire' => (int) $row['expire']
+                    'expire' => (int) $row['expire'],
+                    'position_ms' => (isset($row['position_ms'])) ? (int) $row['position_ms'] : null,
+                    'playback_rate' => (isset($row['playback_rate'])) ? (float) $row['playback_rate'] : null,
+                    'state' => (isset($row['state'])) ? (string) $row['state'] : null,
                 ];
             }
         }
@@ -742,14 +748,17 @@ class Stream
         string $sid,
         string $type,
         ?int $previous = null,
+        ?int $position_ms = null,
+        ?float $playback_rate = null,
+        ?string $state = null,
     ): void {
         if (!$previous) {
             $previous = time();
         }
 
-        // Ensure that this client only has a single row
-        $sql = "REPLACE INTO `now_playing` (`id`, `object_id`, `object_type`, `user`, `expire`, `insertion`) VALUES (?, ?, ?, ?, ?, ?)";
-        Dba::write($sql, [$sid, $object_id, strtolower($type), $uid, time() + $length, $previous]);
+        // Ensure that this client only has a single row; the last three are null unless `reportPlayback` sent them
+        $sql = "REPLACE INTO `now_playing` (`id`, `object_id`, `object_type`, `user`, `expire`, `insertion`, `position_ms`, `playback_rate`, `state`) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
+        Dba::write($sql, [$sid, $object_id, strtolower($type), $uid, time() + $length, $previous, $position_ms, $playback_rate, $state]);
     }
 
     /**

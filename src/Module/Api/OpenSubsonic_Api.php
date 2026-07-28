@@ -3253,10 +3253,12 @@ class OpenSubsonic_Api
             return;
         }
 
-        // now_playing has no position, rate or state column, so the reported position only places the play in time.
-        $position = (int) round(((int) ($input['positionMs'] ?? 0)) / 1000);
-        $started  = time() - $position;
-        Stream::insert_now_playing((int) $media->id, $user->id, $media->time, (string) $user->username, $object_type, $started);
+        // The reported position is stored verbatim: the spec derives `positionMs` from the last report received
+        $position_ms = (array_key_exists('positionMs', $input)) ? (int) $input['positionMs'] : null;
+        $position    = (int) round(($position_ms ?? 0) / 1000);
+        $started     = time() - $position;
+        $rate        = (array_key_exists('playbackRate', $input)) ? (float) $input['playbackRate'] : null;
+        Stream::insert_now_playing((int) $media->id, $user->id, $media->time, (string) $user->username, $object_type, $started, $position_ms, $rate, $state);
 
         // ignoreScrobble asks for display state only, so the play count and scrobble plugins are left alone.
         $ignoreScrobble = (

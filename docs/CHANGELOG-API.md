@@ -16,8 +16,16 @@ API version **8** joins the concurrent live surfaces (3/4/5/6 — version 7 rema
 * `album`/`albums`/`podcast_delete`/`podcast_episodes` (API3, API4, API5)
   * Converted from legacy static methods to the `MethodInterface` pattern (matching the API6/API8 conversion above); the existing `filter` presence and object-exists checks are preserved, only the error codes changed (see `ALL (internal)` under Changed)
 * REST
-  * New `folder`/`folders` actions (`Folder8Method`/`Folders8Method`) for browsing the catalog's virtual folder tree
+  * New `folders` action (`Folders8Method`) for browsing the catalog's virtual folder tree; `filter` takes either a folder id or a path name, so REST paths `folders`, `folders/{folder_id}` and `folders{path}` all reach it
   * New `playlist_remove` action (`PlaylistRemove8Method`)
+* `collection` (API8 only)
+  * New actions `collections`, `collection`, `collection_items`, `collection_create`, `collection_edit`, `collection_delete`, `collection_add` and `collection_remove`. A collection is a hand-curated list of objects of any type, so it is the way to curate anything a playlist cannot hold; the members are not restricted to media
+  * `collection_create` takes an optional `object_type` that pins the collection to one type, after which `collection_add` refuses anything else. Leave it out for a mixed collection
+  * `collection_items` returns the members grouped by type under `contents`, each group built by that type's own builder, because a flat list of ids would not say what each id is. The scalar `items` remains the member count
+  * A collection you cannot see reports *not found* rather than *access denied*, so a private collection's existence is not confirmed to a stranger
+  * `collection_add` is idempotent: adding the same object twice is a no-op, not a duplicate. `collection_remove` likewise does not error on a non-member
+  * Both name the member's type `object_type` rather than `type`, because the REST path already spends `type` on the resource name and the two would collide in the same query string
+  * REST paths `collections`, `collections/{collection_id}` and `collections/{collection_id}/items`
 * `sonic_match` (API8 only)
   * New action (`SonicMatch8Method`) returning songs that sound like the song in `filter`, each carrying a `similarity` score. Similarity comes from analysing the audio, which needs a sonic-analysis plugin, so with none enabled the request is refused (`4703`) rather than answered with an empty list. The score shares the OpenSubsonic `sonicMatch` scale — 0.0-1.0 where 1.0 is the same recording, and -1 when the backend gives no comparable score — so a client reads the same number from either API. REST path `songs/{song_id}/sonic-match`
 * `random` (API8 only)
@@ -79,6 +87,29 @@ API version **8** joins the concurrent live surfaces (3/4/5/6 — version 7 rema
   * advanced_search: `type=album_disk` returned album disk ids rendered as songs, so a client read a disk id as a song id. Neither version has an album disk formatter, so both now return an empty result instead. `search` is affected too, being an alias. API8 returns the album disks. **NOTE** the same fix landed in Ampache7, which serves these versions as well
   * API3 and API4 are unchanged: neither validates the search `type` at all, so every unsupported type there already falls through to the song output
 
+## API 6.9.2 Build 3
+
+To ensure that there are no issues with clients checking for single int versions
+we will keep on 6.9.x and resume build number versioning until Ampache 8
+
+**NOTE** API8 has been removed from the codebase for Ampache 7.
+
+### Changed (692003)
+
+* ALL
+  * A request without an `action` is treated as a `ping` instead of failing with a session error (e.g. opening the API url in a browser)
+
+### Removed (692003)
+
+* API8
+  * Leftover version constants in the base `Api` class (`$version` and `$version_numeric` were still set to `8.0.0`/`800000`). They are commented out to keep backports simple
+  * `Api::server_details()`; the API8 copy of the handshake and ping counts. API3-6 call their own version of this function
+
+### Fixed (692003)
+
+* API5 and API6
+  * advanced_search: `album_disk` is not a searchable type and returns an empty result instead of an error
+
 ## API 6.9.2 Build 2
 
 This version is being released for Ampache7 **only**
@@ -93,6 +124,8 @@ we will keep on 6.9.x and resume build number versioning until Ampache 8
 * ALL
   * Allow APIKey Authorization header
   * REST command and path changes
+* REST
+  * `catalogs/{catalog_id}/add`, `clean`, `update` and `verify` as aliases of `catalog_action` with the matching `task`
 * API6
   * Add `time` to all Playlist and Smartlist responses
 
@@ -116,12 +149,14 @@ we will keep on 6.9.x and resume build number versioning until Ampache 8
 * ALL
   * Version and docstring inconsistencies between API versions
   * Empty object lookups now report the parameter that failed instead of `empty`
+  * A `version` lower than 3 (e.g. `version=2`) rolled up to no version at all instead of the oldest enabled one
   * democratic: `vote` returns the real vote count for each song. It was counted from the item's position in the response instead of its `track_id`, so the number was meaningless
   * friends_timeline: An empty result returned a `total_count`/`md5` envelope that neither the populated response nor `timeline` uses. It now returns `activity: []`
 * API5, API6 and API8
   * labels, label: XML serialised each item as `<license>` instead of `<label>`
   * search_rules: XML emitted an empty `<widget/>` for every rule that isn't a select, dropping the control type the JSON response carries
 * REST
+  * `preferences/{preference_name}` returned the whole preference list and ignored the name
   * `POST {type}/{id}/share` was documented as resolving to `share` (fetch a share); it resolves to `share_create`, as the code has always done
 * API4
   * update_from_tags: Not found check was inverted so valid objects returned an error
@@ -129,10 +164,16 @@ we will keep on 6.9.x and resume build number versioning until Ampache 8
 * API5
   * get_bookmark: Not found check was inverted so valid objects returned an error
   * XML list responses were not sliced by `offset` and `limit` (e.g. `bookmarks`, `users`)
+  * album: A missing or empty `filter` reported an empty `Bad Request:` message with the wrong error type
 * API6
   * Version wasn't bumped
   * podcast_episode: JSON response was missing the full episode object
   * XML and JSON list responses were not sliced by `offset` and `limit`
+  * user_preference: Returned the system value instead of the calling user's preference
+  * catalog_action: Not found error didn't name the catalog id
+  * localplay: `status` could fail on controllers that don't report `repeat` and `random`
+  * playlists, smartlists: `api_hidden_playlists` was ignored when set to `0`
+  * playlists: JSON `time` could be a string instead of an integer
   * shares: An empty result was keyed `shares` instead of `share` like the populated response (API5 was already correct)
   * last_shouts: An empty result returned a `total_count`/`md5` envelope the populated response does not use. It now returns `shout: []` (API5 was already correct)
 

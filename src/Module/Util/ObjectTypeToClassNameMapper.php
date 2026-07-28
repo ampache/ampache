@@ -31,6 +31,7 @@ use Ampache\Repository\Model\Art;
 use Ampache\Repository\Model\Artist;
 use Ampache\Repository\Model\Bookmark;
 use Ampache\Repository\Model\Broadcast;
+use Ampache\Repository\Model\Collection;
 use Ampache\Repository\Model\database_object;
 use Ampache\Repository\Model\Folder;
 use Ampache\Repository\Model\Label;
@@ -72,6 +73,7 @@ final class ObjectTypeToClassNameMapper
         ObjectTypeEnum::GENRE->value => Tag::class,
         ObjectTypeEnum::LABEL->value => Label::class,
         ObjectTypeEnum::LIVE_STREAM->value => Live_Stream::class,
+        ObjectTypeEnum::COLLECTION->value => Collection::class,
         ObjectTypeEnum::PLAYLIST->value => Playlist::class,
         ObjectTypeEnum::PODCAST->value => Podcast::class,
         ObjectTypeEnum::PODCAST_EPISODE->value => Podcast_Episode::class,

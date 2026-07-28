@@ -726,6 +726,7 @@ final class ApiHandler implements ApiHandlerInterface
                 'disks' => 'disk',
                 'bookmarks' => 'bookmark',
                 'catalogs' => 'catalog',
+                'collections' => 'collection',
                 'genres' => 'genre',
                 'labels' => 'label',
                 'live_streams' => 'live_stream',
@@ -763,6 +764,10 @@ final class ApiHandler implements ApiHandlerInterface
 
             if ($type === 'song' && $action === 'lyrics') {
                 $action = 'get_lyrics';
+            }
+            // `collections/{id}/items` is the contents sub-resource; the verb suffix makes it add or remove
+            if ($type === 'collection' && $action === 'items') {
+                $action = 'collection_items';
             }
             if ($type === 'podcast' && $action === 'podcast_episode') {
                 $action = 'podcast_episodes';
@@ -824,6 +829,7 @@ final class ApiHandler implements ApiHandlerInterface
             'artists' => 'artist',
             'bookmarks' => 'bookmark',
             'catalogs' => 'catalog',
+            'collections' => 'collection',
             'genres', 'tags' => 'genre',
             'labels' => 'label',
             'live_streams' => 'live_stream',

@@ -649,6 +649,7 @@ Each `song` entry ([SongObject](#song)):
 | rating                | integer                                        |   YES    |    NO    |                                              |
 | averagerating         | number                                         |   YES    |    NO    |                                              |
 | playcount             | integer                                        |    NO    |    NO    |                                              |
+| last_played           | string                                         |   YES    |    NO    |                                              |
 | catalog               | string                                         |    NO    |    NO    |                                              |
 | composer              | string                                         |   YES    |    NO    |                                              |
 | channels              | integer                                        |   YES    |    NO    |                                              |
@@ -864,6 +865,7 @@ Each `song` entry ([SongObject](#song)):
 | rating                | integer                                        |   YES    |    NO    |                                              |
 | averagerating         | number                                         |   YES    |    NO    |                                              |
 | playcount             | integer                                        |    NO    |    NO    |                                              |
+| last_played           | string                                         |   YES    |    NO    |                                              |
 | catalog               | string                                         |    NO    |    NO    |                                              |
 | composer              | string                                         |   YES    |    NO    |                                              |
 | channels              | integer                                        |   YES    |    NO    |                                              |
@@ -1142,6 +1144,7 @@ Each `song` entry ([SongObject](#song)):
 | rating                | integer                                        |   YES    |    NO    |                                              |
 | averagerating         | number                                         |   YES    |    NO    |                                              |
 | playcount             | integer                                        |    NO    |    NO    |                                              |
+| last_played           | string                                         |   YES    |    NO    |                                              |
 | catalog               | string                                         |    NO    |    NO    |                                              |
 | composer              | string                                         |   YES    |    NO    |                                              |
 | channels              | integer                                        |   YES    |    NO    |                                              |
@@ -1699,6 +1702,245 @@ Returns a single object.
 
 [Example](https://raw.githubusercontent.com/ampache/python3-ampache/api6/docs/xml-responses/catalog_folder.xml)
 
+### collections
+
+A collection is a hand-curated list of objects of any type: the static counterpart to a search, and the non-media counterpart to a playlist. Playing one expands its members, so an album contributes its songs and anything that cannot be streamed is skipped.
+
+This returns every collection you own, plus every public collection on the server.
+
+| Input    | Type    | Description                                        | Optional |
+|----------|---------|----------------------------------------------------|---------:|
+| 'type'   | string  | Only return collections pinned to this object_type |      YES |
+| 'offset' | integer | Return results starting from this index position   |      YES |
+| 'limit'  | integer | Maximum number of results to return                |      YES |
+
+* return
+
+<!-- GENERATED:RESPONSE:BEGIN -->
+> **XML structure:** serialised inside a `<root>` element. Each object is an element
+> (e.g. `<song>`) with `id` as an *attribute*; nested objects are child elements (also
+> carrying an `id` attribute), array/list fields are emitted as *repeated* elements,
+> booleans are `0`/`1`, and text values are wrapped in CDATA. Field names match the JSON
+> model below, but element nesting/repetition differs from the JSON representation.
+
+Returns a `collection` list.
+
+| Field      | Type                                          | Nullable | Optional | Notes                                       |
+|------------|-----------------------------------------------|:--------:|:--------:|---------------------------------------------|
+| collection | array&lt;[CollectionObject](#collections)&gt; |    NO    |    NO    | see [CollectionObject](#collections) fields |
+
+Each `collection` entry ([CollectionObject](#collections)):
+
+| Field       | Type    | Nullable | Optional | Notes |
+|-------------|---------|:--------:|:--------:|-------|
+| id          | string  |    NO    |    NO    |       |
+| name        | string  |    NO    |    NO    |       |
+| owner       | string  |   YES    |    NO    |       |
+| type        | string  |   YES    |    NO    |       |
+| object_type | string  |   YES    |    NO    |       |
+| items       | integer |    NO    |    NO    |       |
+| has_art     | boolean |    NO    |    NO    |       |
+<!-- GENERATED:RESPONSE:END -->
+
+* throws
+
+```XML
+<root><error></root>
+```
+
+### collection
+
+Return a collection by UID, without its contents.
+
+| Input    | Type   | Description       | Optional |
+|----------|--------|-------------------|---------:|
+| 'filter' | string | UID of Collection |       NO |
+
+* return
+
+<!-- GENERATED:RESPONSE:BEGIN -->
+> **XML structure:** serialised inside a `<root>` element. Each object is an element
+> (e.g. `<song>`) with `id` as an *attribute*; nested objects are child elements (also
+> carrying an `id` attribute), array/list fields are emitted as *repeated* elements,
+> booleans are `0`/`1`, and text values are wrapped in CDATA. Field names match the JSON
+> model below, but element nesting/repetition differs from the JSON representation.
+
+Returns a `collection` list.
+
+| Field      | Type                                          | Nullable | Optional | Notes                                       |
+|------------|-----------------------------------------------|:--------:|:--------:|---------------------------------------------|
+| collection | array&lt;[CollectionObject](#collections)&gt; |    NO    |    NO    | see [CollectionObject](#collections) fields |
+
+Each `collection` entry ([CollectionObject](#collections)):
+
+| Field       | Type    | Nullable | Optional | Notes |
+|-------------|---------|:--------:|:--------:|-------|
+| id          | string  |    NO    |    NO    |       |
+| name        | string  |    NO    |    NO    |       |
+| owner       | string  |   YES    |    NO    |       |
+| type        | string  |   YES    |    NO    |       |
+| object_type | string  |   YES    |    NO    |       |
+| items       | integer |    NO    |    NO    |       |
+| has_art     | boolean |    NO    |    NO    |       |
+<!-- GENERATED:RESPONSE:END -->
+
+* throws
+
+```XML
+<root><error></root>
+```
+
+### collection_items
+
+A collection's members, grouped by object_type.
+
+A collection is heterogeneous by design, so a flat list would leave you guessing what each id is. The members arrive under `contents` as one group per type ([CollectionGroupObject](#collectiongroupobject)), each built by the same builder that type's own methods use. The scalar `items` stays the member count.
+
+| Input    | Type    | Description                                      | Optional |
+|----------|---------|--------------------------------------------------|---------:|
+| 'filter' | string  | UID of Collection                                |       NO |
+| 'offset' | integer | Return results starting from this index position |      YES |
+| 'limit'  | integer | Maximum number of results to return              |      YES |
+
+* return
+
+<!-- GENERATED:RESPONSE:BEGIN -->
+> **XML structure:** serialised inside a `<root>` element. Each object is an element
+> (e.g. `<song>`) with `id` as an *attribute*; nested objects are child elements (also
+> carrying an `id` attribute), array/list fields are emitted as *repeated* elements,
+> booleans are `0`/`1`, and text values are wrapped in CDATA. Field names match the JSON
+> model below, but element nesting/repetition differs from the JSON representation.
+
+Returns a single object.
+
+| Field      | Type   | Nullable | Optional | Notes                                                            |
+|------------|--------|:--------:|:--------:|------------------------------------------------------------------|
+| collection | object |    NO    |    NO    | `{id, name, owner, type, object_type, items, has_art, contents}` |
+<!-- GENERATED:RESPONSE:END -->
+
+* throws
+
+```XML
+<root><error></root>
+```
+
+### collection_create
+
+Create a new, empty collection.
+
+Leave `object_type` out for a mixed collection, or set it to pin the collection to a single type so anything else is refused when it is added.
+
+| Input         | Type   | Description                                | Optional |
+|---------------|--------|--------------------------------------------|---------:|
+| 'name'        | string | Collection name                            |       NO |
+| 'type'        | string | `public`, `private` (Default: `private`)   |      YES |
+| 'object_type' | string | Pin the collection to a single object_type |      YES |
+
+* return array
+
+<!-- GENERATED:RESPONSE:BEGIN -->
+<!-- GENERATED:RESPONSE:END -->
+
+* throws
+
+```XML
+<root><error></root>
+```
+
+### collection_edit
+
+Change a collection's name, visibility, pinned type or collaborators.
+
+Only the values you send are changed. Send an empty `object_type` to un-pin a collection back to mixed; pinning is refused while the collection still holds a different type.
+
+| Input         | Type   | Description                                                     | Optional |
+|---------------|--------|-----------------------------------------------------------------|---------:|
+| 'filter'      | string | UID of Collection                                               |       NO |
+| 'name'        | string | Collection name                                                 |      YES |
+| 'type'        | string | `public`, `private`                                             |      YES |
+| 'object_type' | string | Pinned object_type, or an empty string to un-pin                |      YES |
+| 'collaborate' | string | Comma separated list of user ids allowed to curate the contents |      YES |
+
+* return array
+
+<!-- GENERATED:RESPONSE:BEGIN -->
+<!-- GENERATED:RESPONSE:END -->
+
+* throws
+
+```XML
+<root><error></root>
+```
+
+### collection_delete
+
+Delete a collection and its membership rows. The objects it referenced are untouched.
+
+**ACCESS REQUIRED:** collection owner or admin. A collaborator may curate the contents but not destroy the list.
+
+| Input    | Type   | Description       | Optional |
+|----------|--------|-------------------|---------:|
+| 'filter' | string | UID of Collection |       NO |
+
+* return object
+
+```XML
+<root><success></root>
+```
+
+* throws
+
+```XML
+<root><error></root>
+```
+
+### collection_add
+
+Add one object to a collection.
+
+Adding the same object twice is a no-op rather than a duplicate. A pinned collection refuses anything but its own type, and an object that does not exist is refused rather than stored as a dangling id.
+
+| Input         | Type   | Description               | Optional |
+|---------------|--------|---------------------------|---------:|
+| 'filter'      | string | UID of Collection         |       NO |
+| 'id'          | string | UID of the object to add  |       NO |
+| 'object_type' | string | type of the object to add |       NO |
+
+* return object
+
+```XML
+<root><success></root>
+```
+
+* throws
+
+```XML
+<root><error></root>
+```
+
+### collection_remove
+
+Remove one object from a collection. The object itself is untouched, and removing something that was never a member is not an error.
+
+| Input         | Type   | Description                  | Optional |
+|---------------|--------|------------------------------|---------:|
+| 'filter'      | string | UID of Collection            |       NO |
+| 'id'          | string | UID of the object to remove  |       NO |
+| 'object_type' | string | type of the object to remove |       NO |
+
+* return object
+
+```XML
+<root><success></root>
+```
+
+* throws
+
+```XML
+<root><error></root>
+```
+
+
 ### deleted_podcast_episodes
 
 This returns the episodes for a podcast that have been deleted
@@ -1880,56 +2122,13 @@ This flags a library item as a favorite
 
 [Example](https://raw.githubusercontent.com/ampache/python3-ampache/api6/docs/xml-responses/flag.xml)
 
-### folder
-
-Return children of a parent folder object by ID **Ampache 8.0.0+**
-
-| Input    | Type       | Description                                                                                        | Optional |
-|----------|------------|----------------------------------------------------------------------------------------------------|---------:|
-| 'filter' | integer    | UID of the folder object (Default: -1, the root folder)                                            |      YES |
-| 'add'    | set_filter | ISO 8601 Date Format (2020-09-16) Find objects with an 'add' date newer than the specified date    |      YES |
-| 'update' | set_filter | ISO 8601 Date Format (2020-09-16) Find objects with an 'update' time newer than the specified date |      YES |
-| 'offset' | integer    | Return results starting from this index position                                                   |      YES |
-| 'limit'  | integer    | Maximum number of results to return                                                                |      YES |
-| 'cond'   | string     | Apply additional filters to the browse using `;` separated comma string pairs                      |      YES |
-|          |            | (e.g. 'filter1,value1;filter2,value2')                                                             |          |
-| 'sort'   | string     | Sort name or comma-separated key pair. (e.g. 'name,order')                                         |      YES |
-|          |            | Default order 'ASC' (e.g. 'name,ASC' == 'name')                                                    |          |
-
-* return
-
-<!-- GENERATED:RESPONSE:BEGIN -->
-> **XML structure:** serialised inside a `<root>` element. Each object is an element
-> (e.g. `<song>`) with `id` as an *attribute*; nested objects are child elements (also
-> carrying an `id` attribute), array/list fields are emitted as *repeated* elements,
-> booleans are `0`/`1`, and text values are wrapped in CDATA. Field names match the JSON
-> model below, but element nesting/repetition differs from the JSON representation.
-
-Returns a single object.
-
-| Field   | Type                                               | Nullable | Optional | Notes                                            |
-|---------|----------------------------------------------------|:--------:|:--------:|--------------------------------------------------|
-| id      | string                                             |    NO    |    NO    |                                                  |
-| title   | string                                             |   YES    |    NO    |                                                  |
-| parent  | integer                                            |   YES    |    NO    |                                                  |
-| path    | string                                             |   YES    |    NO    |                                                  |
-| catalog | integer                                            |    NO    |    NO    |                                                  |
-| items   | array&lt;[FolderBrowseItem](#folderbrowseitem)&gt; |    NO    |    NO    | see [FolderBrowseItem](#folderbrowseitem) fields |
-<!-- GENERATED:RESPONSE:END -->
-
-* throws
-
-```XML
-<root><error></root>
-```
-
 ### folders
 
 Return children of a parent object in a folder traversal style **Ampache 8.0.0+**
 
 | Input    | Type       | Description                                                                                        | Optional |
 |----------|------------|----------------------------------------------------------------------------------------------------|---------:|
-| 'filter' | string     | Path name filter (Default: '/', the root folder)                                                   |      YES |
+| 'filter' | string     | Path name or folder UID filter (Default: '/', the root folder; -1 is also the root)                |      YES |
 | 'exact'  | boolean    | `0`, `1` (if true filter is exact rather than fuzzy; default: 1)                                   |      YES |
 | 'add'    | set_filter | ISO 8601 Date Format (2020-09-16) Find objects with an 'add' date newer than the specified date    |      YES |
 | 'update' | set_filter | ISO 8601 Date Format (2020-09-16) Find objects with an 'update' time newer than the specified date |      YES |
@@ -1951,11 +2150,11 @@ Return children of a parent object in a folder traversal style **Ampache 8.0.0+*
 
 Returns a single object.
 
-| Field       | Type                        | Nullable | Optional | Notes                                  |
-|-------------|-----------------------------|:--------:|:--------:|----------------------------------------|
-| total_count | integer                     |    NO    |    NO    |                                        |
-| md5         | string                      |    NO    |    NO    |                                        |
-| folder      | [FolderBrowseNode](#folder) |    NO    |    NO    | see [FolderBrowseNode](#folder) fields |
+| Field       | Type                                  | Nullable | Optional | Notes                                            |
+|-------------|---------------------------------------|:--------:|:--------:|--------------------------------------------------|
+| total_count | integer                               |    NO    |    NO    |                                                  |
+| md5         | string                                |    NO    |    NO    |                                                  |
+| folder      | [FolderBrowseNode](#folderbrowsenode) |    NO    |    NO    | see [FolderBrowseNode](#folderbrowsenode) fields |
 <!-- GENERATED:RESPONSE:END -->
 
 * throws
@@ -2388,6 +2587,7 @@ Each `song` entry ([SongObject](#song)):
 | rating                | integer                                        |   YES    |    NO    |                                              |
 | averagerating         | number                                         |   YES    |    NO    |                                              |
 | playcount             | integer                                        |    NO    |    NO    |                                              |
+| last_played           | string                                         |   YES    |    NO    |                                              |
 | catalog               | string                                         |    NO    |    NO    |                                              |
 | composer              | string                                         |   YES    |    NO    |                                              |
 | channels              | integer                                        |   YES    |    NO    |                                              |
@@ -2639,6 +2839,7 @@ Each `song` entry ([SongObject](#song)):
 | rating                | integer                                        |   YES    |    NO    |                                              |
 | averagerating         | number                                         |   YES    |    NO    |                                              |
 | playcount             | integer                                        |    NO    |    NO    |                                              |
+| last_played           | string                                         |   YES    |    NO    |                                              |
 | catalog               | string                                         |    NO    |    NO    |                                              |
 | composer              | string                                         |   YES    |    NO    |                                              |
 | channels              | integer                                        |   YES    |    NO    |                                              |
@@ -3032,6 +3233,7 @@ Each `song` entry ([SongObject](#song)):
 | rating                | integer                                        |   YES    |    NO    |                                              |
 | averagerating         | number                                         |   YES    |    NO    |                                              |
 | playcount             | integer                                        |    NO    |    NO    |                                              |
+| last_played           | string                                         |   YES    |    NO    |                                              |
 | catalog               | string                                         |    NO    |    NO    |                                              |
 | composer              | string                                         |   YES    |    NO    |                                              |
 | channels              | integer                                        |   YES    |    NO    |                                              |
@@ -3753,6 +3955,7 @@ Each `song` entry ([SongObject](#song)):
 | rating                | integer                                        |   YES    |    NO    |                                              |
 | averagerating         | number                                         |   YES    |    NO    |                                              |
 | playcount             | integer                                        |    NO    |    NO    |                                              |
+| last_played           | string                                         |   YES    |    NO    |                                              |
 | catalog               | string                                         |    NO    |    NO    |                                              |
 | composer              | string                                         |   YES    |    NO    |                                              |
 | channels              | integer                                        |   YES    |    NO    |                                              |
@@ -3913,6 +4116,7 @@ Each `song` entry ([SongObject](#song)):
 | rating                | integer                                        |   YES    |    NO    |                                              |
 | averagerating         | number                                         |   YES    |    NO    |                                              |
 | playcount             | integer                                        |    NO    |    NO    |                                              |
+| last_played           | string                                         |   YES    |    NO    |                                              |
 | catalog               | string                                         |    NO    |    NO    |                                              |
 | composer              | string                                         |   YES    |    NO    |                                              |
 | channels              | integer                                        |   YES    |    NO    |                                              |
@@ -4204,6 +4408,7 @@ Each `podcast_episode` entry ([PodcastEpisodeObject](#podcast_episode)):
 | rating         | integer |   YES    |    NO    |              |
 | averagerating  | number  |   YES    |    NO    |              |
 | playcount      | integer |    NO    |    NO    |              |
+| last_played    | string  |   YES    |    NO    |              |
 | played         | string  |    NO    |    NO    |              |
 <!-- GENERATED:RESPONSE:END -->
 
@@ -4267,6 +4472,7 @@ Returns a single object.
 | rating         | integer |   YES    |    NO    |              |
 | averagerating  | number  |   YES    |    NO    |              |
 | playcount      | integer |    NO    |    NO    |              |
+| last_played    | string  |   YES    |    NO    |              |
 | played         | string  |    NO    |    NO    |              |
 <!-- GENERATED:RESPONSE:END -->
 
@@ -4534,6 +4740,7 @@ Each `video` entry ([VideoObject](#video)):
 | rating        | integer                                        |   YES    |    NO    |                                              |
 | averagerating | number                                         |   YES    |    NO    |                                              |
 | playcount     | integer                                        |    NO    |    NO    |                                              |
+| last_played   | string                                         |   YES    |    NO    |                                              |
 <!-- GENERATED:RESPONSE:END -->
 
 * throws
@@ -5108,6 +5315,7 @@ Each `song` entry ([SongObject](#song)):
 | rating                | integer                                        |   YES    |    NO    |                                              |
 | averagerating         | number                                         |   YES    |    NO    |                                              |
 | playcount             | integer                                        |    NO    |    NO    |                                              |
+| last_played           | string                                         |   YES    |    NO    |                                              |
 | catalog               | string                                         |    NO    |    NO    |                                              |
 | composer              | string                                         |   YES    |    NO    |                                              |
 | channels              | integer                                        |   YES    |    NO    |                                              |
@@ -5227,6 +5435,7 @@ Each `song` entry ([SongObject](#song)):
 | rating                | integer                                        |   YES    |    NO    |                                              |
 | averagerating         | number                                         |   YES    |    NO    |                                              |
 | playcount             | integer                                        |    NO    |    NO    |                                              |
+| last_played           | string                                         |   YES    |    NO    |                                              |
 | catalog               | string                                         |    NO    |    NO    |                                              |
 | composer              | string                                         |   YES    |    NO    |                                              |
 | channels              | integer                                        |   YES    |    NO    |                                              |
@@ -5305,6 +5514,7 @@ Returns a single object.
 | rating                | integer                                        |   YES    |    NO    |                                              |
 | averagerating         | number                                         |   YES    |    NO    |                                              |
 | playcount             | integer                                        |    NO    |    NO    |                                              |
+| last_played           | string                                         |   YES    |    NO    |                                              |
 | catalog               | string                                         |    NO    |    NO    |                                              |
 | composer              | string                                         |   YES    |    NO    |                                              |
 | channels              | integer                                        |   YES    |    NO    |                                              |
@@ -5445,6 +5655,47 @@ Returns a single object.
 
 [Example](https://raw.githubusercontent.com/ampache/python3-ampache/api6/docs/xml-responses/song_tags.xml)
 
+### sonic_match
+
+Songs that sound like the given song, most similar first.
+
+Similarity is derived from analysing the audio, which Ampache does not do itself, so this needs a sonic analysis plugin (e.g. AudioMuse) enabled for the user. With no plugin to ask, the method reports the feature as unavailable rather than returning an empty list.
+
+Each entry carries the full song plus `similarity`, a `0.0`-`1.0` score where `1.0` is the same recording. A backend that gives no comparable score reports `-1`.
+
+| Input    | Type    | Description                                      | Optional |
+|----------|---------|--------------------------------------------------|---------:|
+| 'filter' | string  | UID of Song                                      |       NO |
+| 'offset' | integer | Return results starting from this index position |      YES |
+| 'limit'  | integer | Maximum number of results to return              |      YES |
+
+* return
+
+<!-- GENERATED:RESPONSE:BEGIN -->
+> **XML structure:** serialised inside a `<root>` element. Each object is an element
+> (e.g. `<song>`) with `id` as an *attribute*; nested objects are child elements (also
+> carrying an `id` attribute), array/list fields are emitted as *repeated* elements,
+> booleans are `0`/`1`, and text values are wrapped in CDATA. Field names match the JSON
+> model below, but element nesting/repetition differs from the JSON representation.
+
+Returns a `sonic_match` list.
+
+| Field       | Type                                          | Nullable | Optional | Notes                                       |
+|-------------|-----------------------------------------------|:--------:|:--------:|---------------------------------------------|
+| sonic_match | array&lt;[SonicMatchObject](#sonic_match)&gt; |    NO    |    NO    | see [SonicMatchObject](#sonic_match) fields |
+
+Each `sonic_match` entry ([SonicMatchObject](#sonic_match)):
+
+| Field | Type | Nullable | Optional | Notes |
+|-------|------|:--------:|:--------:|-------|
+<!-- GENERATED:RESPONSE:END -->
+
+* throws
+
+```XML
+<root><error></root>
+```
+
 ### stats
 
 Get some items based on some simple search types and filters. (Random by default)
@@ -5495,6 +5746,7 @@ Each `video` entry ([VideoObject](#video)):
 | rating        | integer                                        |   YES    |    NO    |                                              |
 | averagerating | number                                         |   YES    |    NO    |                                              |
 | playcount     | integer                                        |    NO    |    NO    |                                              |
+| last_played   | string                                         |   YES    |    NO    |                                              |
 <!-- GENERATED:RESPONSE:END -->
 
 * throws
@@ -5805,6 +6057,7 @@ Each `song` entry ([SongObject](#song)):
 | rating                | integer                                        |   YES    |    NO    |                                              |
 | averagerating         | number                                         |   YES    |    NO    |                                              |
 | playcount             | integer                                        |    NO    |    NO    |                                              |
+| last_played           | string                                         |   YES    |    NO    |                                              |
 | catalog               | string                                         |    NO    |    NO    |                                              |
 | composer              | string                                         |   YES    |    NO    |                                              |
 | channels              | integer                                        |   YES    |    NO    |                                              |
@@ -6208,6 +6461,7 @@ Each `video` entry ([VideoObject](#video)):
 | rating        | integer                                        |   YES    |    NO    |                                              |
 | averagerating | number                                         |   YES    |    NO    |                                              |
 | playcount     | integer                                        |    NO    |    NO    |                                              |
+| last_played   | string                                         |   YES    |    NO    |                                              |
 <!-- GENERATED:RESPONSE:END -->
 
 * throws
@@ -6253,6 +6507,7 @@ Returns a single object.
 | rating        | integer                                        |   YES    |    NO    |                                              |
 | averagerating | number                                         |   YES    |    NO    |                                              |
 | playcount     | integer                                        |    NO    |    NO    |                                              |
+| last_played   | string                                         |   YES    |    NO    |                                              |
 <!-- GENERATED:RESPONSE:END -->
 
 * throws
@@ -6548,6 +6803,14 @@ Each `song` entry ([DemocraticSongObject](#democratic)):
 <!-- GENERATED:SHARED-REFS:BEGIN -->
 Objects referenced by the field tables above (as `see <name> fields`) that no single method response documents on its own — the shared reference shapes and a few payloads carried inside another response.
 
+### CollectionGroupObject
+
+One group of collection members. `object_type` names the type and the property of the same name carries that type's own objects, e.g. `{"object_type": "album", "album": [...]}`.
+
+| Field       | Type   | Nullable | Optional | Notes |
+|-------------|--------|:--------:|:--------:|-------|
+| object_type | string |    NO    |    NO    |       |
+
 ### FolderBrowseItem
 
 | Field         | Type    | Nullable | Optional | Notes |
@@ -6562,6 +6825,17 @@ Objects referenced by the field tables above (as `see <name> fields`) that no si
 | play_url      | string  |    NO    |    NO    |       |
 | rating        | integer |   YES    |    NO    |       |
 | averagerating | integer |   YES    |    NO    |       |
+
+### FolderBrowseNode
+
+| Field   | Type                                               | Nullable | Optional | Notes                                            |
+|---------|----------------------------------------------------|:--------:|:--------:|--------------------------------------------------|
+| id      | string                                             |    NO    |    NO    |                                                  |
+| title   | string                                             |   YES    |    NO    |                                                  |
+| parent  | integer                                            |   YES    |    NO    |                                                  |
+| path    | string                                             |   YES    |    NO    |                                                  |
+| catalog | integer                                            |    NO    |    NO    |                                                  |
+| items   | array&lt;[FolderBrowseItem](#folderbrowseitem)&gt; |    NO    |    NO    | see [FolderBrowseItem](#folderbrowseitem) fields |
 
 ### GenreReference
 

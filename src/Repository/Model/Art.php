@@ -1758,7 +1758,7 @@ class Art extends database_object
     private function get_playlist_mosaic(): ?string
     {
         if (
-            !in_array($this->object_type, ['playlist', 'search'], true)
+            !in_array($this->object_type, ['playlist', 'search', 'collection'], true)
             || !make_bool(AmpConfig::get(ConfigurationKeyEnum::PLAYLIST_ART_MOSAIC_FALLBACK, false))
         ) {
             return null;

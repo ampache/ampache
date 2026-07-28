@@ -94,6 +94,7 @@ class OpenSubsonic_Json_Data
      * @param array{
      *     id: int,
      *     summary: ?string,
+     *     lastfm_url: ?string,
      *     largephoto: ?string,
      *     smallphoto: ?string,
      *     mediumphoto: ?string,
@@ -103,13 +104,21 @@ class OpenSubsonic_Json_Data
      */
     public static function addAlbumInfo(array $response, array $info, Album $album): array
     {
-        $response['subsonic-response']['albumInfo'] = [
+        $json = [
             'notes' => htmlspecialchars(trim((string) $info['summary'])),
             'musicBrainzId' => $album->mbid,
-            'smallImageUrl' => html_entity_decode((string) $info['smallphoto']),
-            'mediumImageUrl' => html_entity_decode((string) $info['mediumphoto']),
-            'largeImageUrl' => html_entity_decode((string) $info['largephoto']),
         ];
+
+        // Only present once last.fm has answered for this album; the field is optional so an unknown one is omitted
+        if (!empty($info['lastfm_url'])) {
+            $json['lastFmUrl'] = (string) $info['lastfm_url'];
+        }
+
+        $json['smallImageUrl']  = html_entity_decode((string) $info['smallphoto']);
+        $json['mediumImageUrl'] = html_entity_decode((string) $info['mediumphoto']);
+        $json['largeImageUrl']  = html_entity_decode((string) $info['largephoto']);
+
+        $response['subsonic-response']['albumInfo'] = $json;
 
         return $response;
     }
@@ -231,6 +240,7 @@ class OpenSubsonic_Json_Data
      *     summary: ?string,
      *     placeformed: ?string,
      *     yearformed: ?int,
+     *     lastfm_url: ?string,
      *     largephoto: ?string,
      *     smallphoto: ?string,
      *     mediumphoto: ?string,
@@ -262,6 +272,7 @@ class OpenSubsonic_Json_Data
      *     summary: ?string,
      *     placeformed: ?string,
      *     yearformed: ?int,
+     *     lastfm_url: ?string,
      *     largephoto: ?string,
      *     smallphoto: ?string,
      *     mediumphoto: ?string,
@@ -795,7 +806,10 @@ class OpenSubsonic_Json_Data
      *     media: library_item,
      *     client: User,
      *     agent: string,
-     *     expire: int
+     *     expire: int,
+     *     position_ms?: ?int,
+     *     playback_rate?: ?float,
+     *     state?: ?string
      * }> $data
      * @return array{'subsonic-response': array<string, mixed>}
      */
@@ -813,6 +827,19 @@ class OpenSubsonic_Json_Data
                 $track['minutesAgo'] = (int) abs((time() - ($row['expire'] - $row['media']->time)) / 60);
                 $track['playerId']   = 0;
                 $track['playerName'] = (string) $row['agent'];
+
+                // Only a client that called `reportPlayback` has these; an unreported one is omitted, not guessed
+                if (isset($row['position_ms'])) {
+                    $track['positionMs'] = $row['position_ms'];
+                }
+
+                if (isset($row['playback_rate'])) {
+                    $track['playbackRate'] = $row['playback_rate'];
+                }
+
+                if (isset($row['state'])) {
+                    $track['state'] = $row['state'];
+                }
 
                 $json['entry'][] = $track;
             }
@@ -1858,6 +1885,9 @@ class OpenSubsonic_Json_Data
      *         'disc': int,
      *         'title': string
      *     }>,
+     *     'recordLabels'?: array<int, array{
+     *         'name': string
+     *     }>,
      *     'song'?: array<array<string, mixed>>
      * }
      */
@@ -1883,6 +1913,11 @@ class OpenSubsonic_Json_Data
         $json['created']   = date('c', (int) $album->addition_time);
         $json['duration']  = (int) $album->time;
         $json['playCount'] = $album->total_count;
+
+        $played = OpenSubsonic_Fields::lastPlayed($album->last_played);
+        if ($played !== null) {
+            $json['played'] = $played;
+        }
         if ($subParent) {
             $json['artistId'] = $subParent;
         }
@@ -1962,6 +1997,11 @@ class OpenSubsonic_Json_Data
         $disc_titles = OpenSubsonic_Fields::albumDiscTitles($album);
         if ($disc_titles !== []) {
             $json['discTitles'] = $disc_titles;
+        }
+
+        $record_labels = OpenSubsonic_Fields::albumRecordLabels($album);
+        if ($record_labels !== []) {
+            $json['recordLabels'] = $record_labels;
         }
 
         if ($songs) {
@@ -2174,6 +2214,7 @@ class OpenSubsonic_Json_Data
      *     summary: ?string,
      *     placeformed: ?string,
      *     yearformed: ?int,
+     *     lastfm_url: ?string,
      *     largephoto: ?string,
      *     smallphoto: ?string,
      *     mediumphoto: ?string,
@@ -2207,7 +2248,12 @@ class OpenSubsonic_Json_Data
             $json['biography'] = htmlspecialchars($biography);
         }
 
-        $json['musicBrainzId']  = (string) $artist->mbid;
+        $json['musicBrainzId'] = (string) $artist->mbid;
+        // Only present once last.fm has answered for this artist; the field is optional so an unknown one is omitted
+        if (!empty($info['lastfm_url'])) {
+            $json['lastFmUrl'] = (string) $info['lastfm_url'];
+        }
+
         $json['smallImageUrl']  = html_entity_decode((string) $info['smallphoto']);
         $json['mediumImageUrl'] = html_entity_decode((string) $info['mediumphoto']);
         $json['largeImageUrl']  = html_entity_decode((string) $info['largephoto']);
@@ -2376,7 +2422,7 @@ class OpenSubsonic_Json_Data
         } elseif ($bookmark->object_type == "podcast_episode") {
             $object = new Podcast_Episode($bookmark->object_id);
             if ($object->isNew() === false && $object->enabled) {
-                $json['entry'] = self::_getChildPodcastEpisode($object);
+                $json['entry'] = self::_getPodcastEpisode($object);
             }
         }
 
@@ -2529,6 +2575,11 @@ class OpenSubsonic_Json_Data
         }
 
         $json['playCount'] = $album->total_count;
+
+        $played = OpenSubsonic_Fields::lastPlayed($album->last_played);
+        if ($played !== null) {
+            $json['played'] = $played;
+        }
         $json['created']   = date("Y-m-d\TH:i:s\Z", (int) $album->addition_time);
 
         $starred = new Userflag($album->id, 'album');
@@ -2585,159 +2636,6 @@ class OpenSubsonic_Json_Data
         $json['artist'] = (string) $child['f_name'];
         if ($child['has_art']) {
             $json['coverArt'] = $sub_id;
-        }
-
-        return $json;
-    }
-
-    /**
-     * _getChildPodcastEpisode
-     * https://opensubsonic.netlify.app/docs/responses/child/
-     * @return array{
-     *     'id': string,
-     *     'parent'?: string,
-     *     'isDir': bool,
-     *     'title': string,
-     *     'album'?: string,
-     *     'artist'?: string,
-     *     'track'?: int,
-     *     'year'?: int,
-     *     'genre'?: string,
-     *     'coverArt'?: string,
-     *     'size'?: int,
-     *     'contentType'?: string,
-     *     'suffix'?: string,
-     *     'transcodedContentType'?: string,
-     *     'transcodedSuffix'?: string,
-     *     'duration'?: int,
-     *     'bitRate'?: int,
-     *     'bitDepth'?: int,
-     *     'samplingRate'?: int,
-     *     'channelCount'?: int,
-     *     'path'?: string,
-     *     'isVideo'?: bool,
-     *     'userRating'?: int,
-     *     'averageRating'?: float,
-     *     'playCount'?: int,
-     *     'discNumber'?: int,
-     *     'created': string,
-     *     'starred'?: string,
-     *     'albumId'?: string,
-     *     'artistId'?: string,
-     *     'type'?: string,
-     *     'mediaType'?: string,
-     *     'bookmarkPosition'?: int,
-     *     'originalWidth'?: int,
-     *     'originalHeight'?: int,
-     *     'played'?: string,
-     *     'bpm'?: int,
-     *     'comment'?: string,
-     *     'sortName'?: string,
-     *     'musicBrainzId'?: string,
-     *     'isrc'?: string[],
-     *     'genres'?: array<int, array{'name': string}>,
-     *     'artists'?: array<int, array{
-     *         'id': string,
-     *         'name': string,
-     *         'coverArt'?: string,
-     *         'artistImageUrl'?: string,
-     *         'albumCount'?: int,
-     *         'starred'?: string,
-     *         'musicBrainzId'?: string,
-     *         'sortName'?: string,
-     *         'roles'?: string[]
-     *     }>,
-     *     'displayArtist'?: string,
-     *     'albumArtists'?: array<int, array{
-     *         'id': string,
-     *         'name': string,
-     *         'coverArt'?: string,
-     *         'artistImageUrl'?: string,
-     *         'albumCount'?: int,
-     *         'starred'?: string,
-     *         'musicBrainzId'?: string,
-     *         'sortName'?: string,
-     *         'roles'?: string[]
-     *     }>,
-     *     'displayAlbumArtist'?: string,
-     *     'contributors'?: array<int, array{
-     *         'role': string,
-     *         'artist': array{'id': string, 'name': string}
-     *     }>,
-     *     'displayComposer'?: string,
-     *     'moods'?: string[],
-     *     'replayGain'?: array{
-     *         'trackGain'?: float,
-     *         'albumGain'?: float,
-     *         'trackPeak'?: float,
-     *         'albumPeak'?: float,
-     *         'baseGain'?: float
-     *     },
-     *     'explicitStatus'?: string
-     * }
-     */
-    private static function _getChildPodcastEpisode(Podcast_Episode $episode): array
-    {
-        $sub_id    = OpenSubsonic_Api::getPodcastEpisodeSubId($episode->id);
-        $subParent = OpenSubsonic_Api::getPodcastSubId($episode->podcast);
-
-        $json = [
-            'id' => $sub_id,
-            'parent' => $subParent,
-            'title' => (string) $episode->get_fullname(),
-            'isDir' => false,
-            'isVideo' => true,
-            'type' => 'podcast',
-        ];
-
-        if ($episode->has_art()) {
-            $json['coverArt'] = $subParent;
-        }
-
-        $json['duration'] = $episode->time;
-        $json['bitRate']  = ((int) ($episode->bitrate / 1024));
-
-        $rating      = new Rating($episode->id, 'podcast_episode');
-        $user_rating = ($rating->get_user_rating() ?? 0);
-        if ($user_rating > 0) {
-            $json['userRating'] = (int) ceil($user_rating);
-        }
-
-        $avg_rating = $rating->get_average_rating();
-        if ($avg_rating > 0) {
-            $json['averageRating'] = $avg_rating;
-        }
-
-        $json['playCount'] = $episode->total_count;
-        $json['created']   = date("Y-m-d\TH:i:s\Z", $episode->addition_time);
-
-        $starred = new Userflag($episode->id, 'podcast_episode');
-        $result  = $starred->get_flag(null, true);
-        if (is_array($result)) {
-            $json['starred'] = date("Y-m-d\TH:i:s\Z", $result[1]);
-        }
-
-        if (isset($episode->year) && $episode->year > 0) {
-            $json['year'] = $episode->year;
-        }
-
-        $tags = Tag::get_object_tags('podcast_episode', $episode->id);
-        if (!empty($tags)) {
-            $json['genre'] = implode(',', array_column($tags, 'name'));
-            foreach ($tags as $tag) {
-                if (!isset($json['genres'])) {
-                    $json['genres'] = [];
-                }
-                $json['genres'][] = ['name' => (string) $tag['name']];
-            }
-        }
-
-        $json['size'        ] = $episode->size;
-        $json['suffix'      ] = $episode->type;
-        $json['contentType' ] = (string) $episode->mime;
-
-        if (isset($episode->file)) {
-            $json['path'] = basename($episode->file);
         }
 
         return $json;
@@ -2869,6 +2767,11 @@ class OpenSubsonic_Json_Data
         }
 
         $json['playCount'] = $song->total_count;
+
+        $played = OpenSubsonic_Fields::lastPlayed($song->last_played);
+        if ($played !== null) {
+            $json['played'] = $played;
+        }
         $json['created']   = date("Y-m-d\TH:i:s\Z", (int) $song->addition_time);
 
         $starred = new Userflag($song->id, 'song');
@@ -2947,7 +2850,8 @@ class OpenSubsonic_Json_Data
         }
 
         // musicBrainzId only means something once mediaType says which entity it identifies, so both are emitted.
-        $json['mediaType'] = 'song';
+        $json['musicBrainzId'] = (string) $song->mbid;
+        $json['mediaType']     = 'song';
 
         if ($song->rate > 0) {
             $json['samplingRate'] = $song->rate;
@@ -3107,6 +3011,11 @@ class OpenSubsonic_Json_Data
         }
 
         $json['playCount']  = $video->total_count;
+
+        $played = OpenSubsonic_Fields::lastPlayed($video->last_played);
+        if ($played !== null) {
+            $json['played'] = $played;
+        }
         $json['created'   ] = date("Y-m-d\TH:i:s\Z", (int) $video->addition_time);
 
         $starred = new Userflag($video->id, 'video');
@@ -3633,9 +3542,10 @@ class OpenSubsonic_Json_Data
     /**
      * _getPodcastEpisode
      *
-     * A Podcast episode
+     * A Child plus `channelId`, `description`, `publishDate`, `status` and `streamId`.
+     *
      * https://opensubsonic.netlify.app/docs/responses/podcastepisode/
-     * @see self::_getChildPodcastEpisode()
+     *
      * @return array{
      *     'id': string,
      *     'parent': string,
@@ -3643,8 +3553,16 @@ class OpenSubsonic_Json_Data
      *     'album': string,
      *     'duration': int,
      *     'genre': string,
+     *     'genres'?: array<int, array{'name': string}>,
      *     'isDir': bool,
-     *     'parent': string,
+     *     'isVideo': bool,
+     *     'type': string,
+     *     'bitRate': int,
+     *     'userRating'?: int,
+     *     'averageRating'?: float,
+     *     'playCount': int,
+     *     'played'?: string,
+     *     'created': string,
      *     'coverArt'?: string,
      *     'starred'?: string,
      *     'size'?: int,
@@ -3670,8 +3588,9 @@ class OpenSubsonic_Json_Data
             'album' => $episode->getPodcastName(),
             'description' => $episode->get_description(),
             'duration' => $episode->time,
-            'genre' => "Podcast",
             'isDir' => false,
+            'isVideo' => false,
+            'type' => 'podcast',
             'publishDate' => $episode->getPubDate()->format(DATE_ATOM),
             'status' => (string) $episode->state,
             'parent' => $subParent,
@@ -3680,6 +3599,42 @@ class OpenSubsonic_Json_Data
         if ($episode->has_art()) {
             $json['coverArt'] = $subParent;
         }
+
+        $json['bitRate'] = ((int) ($episode->bitrate / 1024));
+
+        // Episodes are rarely tagged, so the long standing "Podcast" genre remains the fallback when none are set.
+        $tags = Tag::get_object_tags('podcast_episode', $episode->id);
+        if (!empty($tags)) {
+            $json['genre'] = implode(',', array_column($tags, 'name'));
+            foreach ($tags as $tag) {
+                if (!isset($json['genres'])) {
+                    $json['genres'] = [];
+                }
+                $json['genres'][] = ['name' => (string) $tag['name']];
+            }
+        } else {
+            $json['genre'] = "Podcast";
+        }
+
+        $rating      = new Rating($episode->id, 'podcast_episode');
+        $user_rating = ($rating->get_user_rating() ?? 0);
+        if ($user_rating > 0) {
+            $json['userRating'] = (int) ceil($user_rating);
+        }
+
+        $avg_rating = $rating->get_average_rating();
+        if ($avg_rating > 0) {
+            $json['averageRating'] = $avg_rating;
+        }
+
+        $json['playCount'] = $episode->total_count;
+
+        $played = OpenSubsonic_Fields::lastPlayed($episode->last_played);
+        if ($played !== null) {
+            $json['played'] = $played;
+        }
+
+        $json['created'] = date("Y-m-d\TH:i:s\Z", $episode->addition_time);
 
         $starred = new Userflag($episode->id, 'podcast_episode');
         $result  = $starred->get_flag(null, true);

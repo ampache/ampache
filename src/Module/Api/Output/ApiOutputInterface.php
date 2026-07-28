@@ -25,6 +25,7 @@ declare(strict_types=1);
 
 namespace Ampache\Module\Api\Output;
 
+use Ampache\Repository\Model\Collection;
 use Ampache\Repository\Model\Folder;
 use Ampache\Repository\Model\library_item;
 use Ampache\Repository\Model\LibraryItemEnum;
@@ -115,6 +116,30 @@ interface ApiOutputInterface
     ): string;
 
     /**
+     * One collection's contents, grouped by object type. API8 only.
+     */
+    public function collectionItems(
+        int $apiVersion,
+        Collection $collection,
+        User $user,
+        string $auth,
+        bool $asObject = true,
+    ): string;
+
+    /**
+     * A list of collections, without their contents. API8 only.
+     *
+     * @param list<int> $objects
+     */
+    public function collections(
+        int $apiVersion,
+        array $objects,
+        User $user,
+        string $auth,
+        bool $asObject = true,
+    ): string;
+
+    /**
      * Generate a list of deleted objects
      *
      * @param array<int, array{
@@ -180,7 +205,6 @@ interface ApiOutputInterface
         Folder $folder,
         User $user,
         string $auth,
-        bool $asObject = true,
     ): string;
 
     /**

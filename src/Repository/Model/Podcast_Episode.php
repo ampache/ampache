@@ -61,6 +61,7 @@ class Podcast_Episode extends database_object implements
     public ?string $file        = null;
     public ?string $guid        = null;
     public int $id              = 0;
+    public ?int $last_played    = null; // When this was last streamed, as a unix timestamp; null until it has been played.
     public ?string $mime        = null;
     public ?string $mode        = null;
     public bool $played;
@@ -122,6 +123,7 @@ class Podcast_Episode extends database_object implements
         $this->state         = $info['state'] ?? null;
         $this->time          = (int) ($info['time'] ?? 0);
         $this->title         = $info['title'] ?? null;
+        $this->last_played   = isset($info['last_played']) ? (int) $info['last_played'] : null;
         $this->total_count   = (int) ($info['total_count'] ?? 0);
         $this->total_skip    = (int) ($info['total_skip'] ?? 0);
         $this->type          = $info['type'] ?? '';

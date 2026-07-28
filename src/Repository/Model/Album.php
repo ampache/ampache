@@ -61,6 +61,7 @@ class Album extends database_object implements
     public ?string $catalog_number    = null;
     public int $disk_count            = 0;
     public int $id                    = 0;
+    public ?int $last_played          = null; // When this was last streamed, as a unix timestamp; null until it has been played.
     public ?string $link              = null;
     public ?string $mbid              = null; // MusicBrainz ID
     public ?string $mbid_group        = null; // MusicBrainz Release Group ID
@@ -137,6 +138,7 @@ class Album extends database_object implements
         $this->song_artist_count = (int) ($info['song_artist_count'] ?? 0);
         $this->song_count        = (int) ($info['song_count'] ?? 0);
         $this->time              = isset($info['time']) ? (int) $info['time'] : null;
+        $this->last_played       = isset($info['last_played']) ? (int) $info['last_played'] : null;
         $this->total_count       = (int) ($info['total_count'] ?? 0);
         $this->total_skip        = (int) ($info['total_skip'] ?? 0);
         $this->version           = $info['version'] ?? null;

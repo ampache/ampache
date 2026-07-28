@@ -549,10 +549,11 @@ final readonly class ArtistRepository implements ArtistRepositoryInterface
         ?int $yearformed,
         int $lastUpdate,
         bool $manual,
+        ?string $lastfmUrl = null,
     ): void {
         $this->connection->query(
-            'UPDATE `artist` SET `summary` = ?, `placeformed` = ?, `yearformed` = ?, `last_update` = ?, `manual_update` = ? WHERE `id` = ?',
-            [$summary, $placeformed, $yearformed, $lastUpdate, (int) $manual, $artistId]
+            'UPDATE `artist` SET `summary` = ?, `placeformed` = ?, `yearformed` = ?, `last_update` = ?, `manual_update` = ?, `lastfm_url` = ? WHERE `id` = ?',
+            [$summary, $placeformed, $yearformed, $lastUpdate, (int) $manual, $lastfmUrl, $artistId]
         );
     }
 

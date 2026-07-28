@@ -202,11 +202,24 @@ class ArtistRepositoryTest extends TestCase
         $this->connection->expects(static::once())
             ->method('query')
             ->with(
-                'UPDATE `artist` SET `summary` = ?, `placeformed` = ?, `yearformed` = ?, `last_update` = ?, `manual_update` = ? WHERE `id` = ?',
-                ['some-summary', 'some-place', 1999, 123456, 0, 666]
+                'UPDATE `artist` SET `summary` = ?, `placeformed` = ?, `yearformed` = ?, `last_update` = ?, `manual_update` = ?, `lastfm_url` = ? WHERE `id` = ?',
+                ['some-summary', 'some-place', 1999, 123456, 0, null, 666]
             );
 
         $this->subject->updateInfo(666, 'some-summary', 'some-place', 1999, 123456, false);
+    }
+
+    public function testUpdateInfoStoresTheLastFmUrl(): void
+    {
+        // the url is cached with the rest of the info, so a refresh inside six months still has one to serve
+        $this->connection->expects(static::once())
+            ->method('query')
+            ->with(
+                'UPDATE `artist` SET `summary` = ?, `placeformed` = ?, `yearformed` = ?, `last_update` = ?, `manual_update` = ?, `lastfm_url` = ? WHERE `id` = ?',
+                ['some-summary', 'some-place', 1999, 123456, 0, 'https://www.last.fm/music/Some+Artist', 666]
+            );
+
+        $this->subject->updateInfo(666, 'some-summary', 'some-place', 1999, 123456, false, 'https://www.last.fm/music/Some+Artist');
     }
 
     protected function setUp(): void

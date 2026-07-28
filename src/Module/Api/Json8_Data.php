@@ -38,6 +38,7 @@ use Ampache\Repository\Model\AlbumDisk;
 use Ampache\Repository\Model\Art;
 use Ampache\Repository\Model\Artist;
 use Ampache\Repository\Model\Catalog;
+use Ampache\Repository\Model\Collection;
 use Ampache\Repository\Model\Democratic;
 use Ampache\Repository\Model\Folder;
 use Ampache\Repository\Model\library_item;
@@ -343,6 +344,7 @@ class Json8_Data
      *         rating: int|null,
      *         averagerating: float|null,
      *         playcount: int,
+     *         last_played: string|null,
      *         catalog: string,
      *         composer: string|null,
      *         channels: int|null,
@@ -562,6 +564,7 @@ class Json8_Data
      *             rating: int|null,
      *             averagerating: float|null,
      *             playcount: int,
+     *             last_played: string|null,
      *             catalog: string,
      *             composer: string|null,
      *             channels: int|null,
@@ -644,6 +647,7 @@ class Json8_Data
      *         rating: int|null,
      *         averagerating: float|null,
      *         playcount: int,
+     *         last_played: string|null,
      *         catalog: string,
      *         composer: string|null,
      *         channels: int|null,
@@ -967,6 +971,90 @@ class Json8_Data
                 "rename_pattern" => $catalog->rename_pattern,
                 "sort_pattern" => $catalog->sort_pattern
             ];
+        }
+
+        return $JSON;
+    }
+
+    /**
+     * collection_items
+     *
+     * One collection's contents, grouped by object type.
+     *
+     * @return string JSON Object "collection"
+     */
+    public static function collection_items(Collection $collection, User $user, string $auth, bool $object = true): string
+    {
+        $grouped = $collection->get_items_by_type();
+
+        self::$count = self::$count ?: $collection->get_item_count();
+
+        $contents = [];
+        foreach ($grouped as $objectType => $ids) {
+            $rendered = self::collection_group($objectType, $ids, $user, $auth);
+            if ($rendered === null) {
+                continue;
+            }
+
+            $contents[] = [
+                'object_type' => $objectType,
+                $objectType => $rendered,
+            ];
+        }
+
+        // `contents` rather than `items`, which the collection row already uses for the member count
+        $JSON = self::collection_row($collection) + ['contents' => $contents];
+
+        $output = ($object) ? ["collection" => $JSON] : $JSON;
+
+        return json_encode($output, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE) ?: '';
+    }
+
+    /**
+     * collections
+     *
+     * A list of collections, without their contents.
+     *
+     * @param list<int> $objects
+     * @return string JSON Object "collection"
+     */
+    public static function collections(array $objects, User $user, string $auth, bool $object = true): string
+    {
+        unset($auth);
+        $JSON = self::collections_array($objects, $user);
+
+        $output = ($object) ? ["collection" => $JSON] : $JSON;
+
+        return json_encode($output, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE) ?: '';
+    }
+
+    /**
+     * collections_array
+     *
+     * @param list<int> $objects
+     * @return array<int, array{
+     *     id: string,
+     *     name: string,
+     *     owner: null|string,
+     *     type: null|string,
+     *     object_type: null|string,
+     *     items: int,
+     *     has_art: bool
+     * }>
+     */
+    public static function collections_array(array $objects, User $user): array
+    {
+        self::$count = self::$count ?: count($objects);
+        $objects     = Api::filter_objects($objects, self::$count, self::$offset, self::$limit);
+
+        $JSON = [];
+        foreach ($objects as $collectionId) {
+            $collection = new Collection((int) $collectionId);
+            if ($collection->isNew() || !$collection->isVisible($user)) {
+                continue;
+            }
+
+            $JSON[] = self::collection_row($collection);
         }
 
         return $JSON;
@@ -1308,10 +1396,9 @@ class Json8_Data
      *
      * This returns an array of folders and their contents.
      * @param array<int|string> $objects
-     * @param bool $object (whether to return as a named object array or regular array)
      * @return string JSON Object "folder"
      */
-    public static function folders(array $objects, Folder $folder, User $user, string $auth, bool $object = true): string
+    public static function folders(array $objects, Folder $folder, User $user, string $auth): string
     {
         self::$count = self::$count ?: count($objects);
         $objects     = Api::filter_objects($objects, self::$count, self::$offset, self::$limit);
@@ -1376,15 +1463,11 @@ class Json8_Data
             ];
         }
 
-        if ($object) {
-            $output = [
-                "total_count" => self::$count,
-                "md5" => md5(serialize($objects)),
-                "folder" => $JSON
-            ];
-        } else {
-            $output = $JSON;
-        }
+        $output = [
+            "total_count" => self::$count,
+            "md5" => md5(serialize($objects)),
+            "folder" => $JSON
+        ];
 
         return json_encode($output, JSON_PRETTY_PRINT) ?: '';
     }
@@ -2211,6 +2294,7 @@ class Json8_Data
      *     "rating": int|null,
      *     "averagerating": float|null,
      *     "playcount": int,
+     *     "last_played": string|null,
      *     "played": string
      * }>
      */
@@ -2265,6 +2349,7 @@ class Json8_Data
                 "rating" => $user_rating,
                 "averagerating" => $rating->get_average_rating(),
                 "playcount" => $episode->total_count,
+                "last_played" => ($episode->last_played) ? date(DATE_ATOM, $episode->last_played) : null,
                 "played" => (string) $episode->played
             ];
         }
@@ -2356,6 +2441,7 @@ class Json8_Data
      *         "rating": int|null,
      *         "averagerating": float|null,
      *         "playcount": int,
+     *         "last_played": string|null,
      *         "played": string
      *     }>
      * }>
@@ -2867,6 +2953,7 @@ class Json8_Data
      *     rating: int|null,
      *     averagerating: float|null,
      *     playcount: int,
+     *     last_played: string|null,
      *     catalog: string,
      *     composer: string|null,
      *     channels: int|null,
@@ -2985,6 +3072,7 @@ class Json8_Data
             $objArray['rating']                = $user_rating;
             $objArray['averagerating']         = $rating->get_average_rating();
             $objArray['playcount']             = $song->total_count;
+            $objArray['last_played']           = ($song->last_played) ? date(DATE_ATOM, $song->last_played) : null;
             $objArray['catalog']               = (string) $song->getCatalogId();
             $objArray['composer']              = $song->composer;
             $objArray['channels']              = $song->channels;
@@ -3305,7 +3393,8 @@ class Json8_Data
      *     "flag": bool,
      *     "rating": int|null,
      *     "averagerating": float|null,
-     *     "playcount": int
+     *     "playcount": int,
+     *     "last_played": string|null
      * }>
      */
     public static function videos_array(array $objects, User $user, string $auth): array
@@ -3337,7 +3426,8 @@ class Json8_Data
                 "flag" => (bool) $flag->get_flag($user->getId()),
                 "rating" => $user_rating,
                 "averagerating" => $rating->get_average_rating(),
-                "playcount" => $video->total_count
+                "playcount" => $video->total_count,
+                "last_played" => ($video->last_played) ? date(DATE_ATOM, $video->last_played) : null
             ];
         }
 
@@ -3376,6 +3466,57 @@ class Json8_Data
         }
 
         return $JSON;
+    }
+
+    /**
+     * Render one type group through that type's own builder. Null when the type has no builder.
+     *
+     * @param list<int> $ids
+     * @return array<mixed>|null
+     */
+    private static function collection_group(string $objectType, array $ids, User $user, string $auth): ?array
+    {
+        // Each group hands to that type's existing array builder; the key is the API spelling, so `genre` stays here.
+        return match ($objectType) {
+            'album' => self::albums_array($ids, [], $user, $auth),
+            'album_disk' => self::album_disks_array($ids, [], $user, $auth),
+            'artist' => self::artists_array($ids, [], $user, $auth),
+            'genre' => self::genres_array($ids),
+            'label' => self::labels_array($ids),
+            'live_stream' => self::live_streams_array($ids),
+            'playlist' => self::playlists_array($ids, $user, $auth),
+            'podcast' => self::podcasts_array($ids, $user, $auth),
+            'podcast_episode' => self::podcast_episodes_array($ids, $user, $auth),
+            'song' => self::songs_array($ids, $user, $auth),
+            'video' => self::videos_array($ids, $user, $auth),
+            default => null,
+        };
+    }
+
+    /**
+     * The scalar fields of a collection, shared by the list and the single-collection responses.
+     *
+     * @return array{
+     *     id: string,
+     *     name: string,
+     *     owner: null|string,
+     *     type: null|string,
+     *     object_type: null|string,
+     *     items: int,
+     *     has_art: bool
+     * }
+     */
+    private static function collection_row(Collection $collection): array
+    {
+        return [
+            'id' => (string) $collection->getId(),
+            'name' => (string) $collection->get_fullname(),
+            'owner' => $collection->username,
+            'type' => $collection->type,
+            'object_type' => $collection->object_type,
+            'items' => $collection->get_item_count(),
+            'has_art' => $collection->has_art(),
+        ];
     }
 
     /**

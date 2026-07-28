@@ -31,6 +31,7 @@ use Ampache\Module\Database\Query\AlbumQuery;
 use Ampache\Module\Database\Query\ArtistQuery;
 use Ampache\Module\Database\Query\BroadcastQuery;
 use Ampache\Module\Database\Query\CatalogQuery;
+use Ampache\Module\Database\Query\CollectionQuery;
 use Ampache\Module\Database\Query\DemocraticQuery;
 use Ampache\Module\Database\Query\FolderQuery;
 use Ampache\Module\Database\Query\FollowerQuery;
@@ -211,6 +212,8 @@ class Query
                 return BroadcastQuery::FILTERS;
             case 'catalog':
                 return CatalogQuery::FILTERS;
+            case 'collection':
+                return CollectionQuery::FILTERS;
             case 'democratic':
                 return DemocraticQuery::FILTERS;
             case 'folder':
@@ -525,6 +528,9 @@ class Query
             case 'artist':
             case 'catalog_enabled':
             case 'catalog':
+            case 'collection_open':
+            case 'collection_type':
+            case 'collection_user':
             case 'disabled':
             case 'disk':
             case 'enabled':
@@ -663,7 +669,8 @@ class Query
      */
     public function set_join(string $type, string $table, string $source, string $dest, int $priority): void
     {
-        $this->_state['join'][$priority][$table] = sprintf('%s JOIN %s ON %s = %s', $type, $table, $source, $dest);
+        // An operand is empty when a caller interpolates a null, as the rating and flag joins do with no user
+        $this->_state['join'][$priority][$table] = sprintf('%s JOIN %s ON %s = %s', $type, $table, $source, ($dest === '') ? 'NULL' : $dest);
     }
 
     /**
@@ -679,7 +686,8 @@ class Query
         string $dest2,
         int $priority,
     ): void {
-        $this->_state['join'][$priority][$table] = strtoupper($type) . sprintf(' JOIN %s ON %s = %s AND %s = %s', $table, $source1, $dest1, $source2, $dest2);
+        // Empty operands become NULL for the reason given on set_join()
+        $this->_state['join'][$priority][$table] = strtoupper($type) . sprintf(' JOIN %s ON %s = %s AND %s = %s', $table, $source1, ($dest1 === '') ? 'NULL' : $dest1, $source2, ($dest2 === '') ? 'NULL' : $dest2);
     }
 
     /**
@@ -697,7 +705,8 @@ class Query
         string $dest3,
         int $priority,
     ): void {
-        $this->_state['join'][$priority][$table] = strtoupper($type) . sprintf(' JOIN %s ON %s = %s AND %s = %s AND %s = %s', $table, $source1, $dest1, $source2, $dest2, $source3, $dest3);
+        // Empty operands become NULL for the reason given on set_join()
+        $this->_state['join'][$priority][$table] = strtoupper($type) . sprintf(' JOIN %s ON %s = %s AND %s = %s AND %s = %s', $table, $source1, ($dest1 === '') ? 'NULL' : $dest1, $source2, ($dest2 === '') ? 'NULL' : $dest2, $source3, ($dest3 === '') ? 'NULL' : $dest3);
     }
 
     /**
@@ -841,6 +850,9 @@ class Query
                 break;
             case 'catalog':
                 $this->queryType = new CatalogQuery();
+                break;
+            case 'collection':
+                $this->queryType = new CollectionQuery();
                 break;
             case 'democratic':
                 $this->queryType = new DemocraticQuery();

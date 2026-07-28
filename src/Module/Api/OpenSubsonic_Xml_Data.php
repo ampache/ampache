@@ -89,7 +89,8 @@ class OpenSubsonic_Xml_Data
         $xalbum->addAttribute('album', $f_name);
         $xalbum->addAttribute('title', $f_name);
         $xalbum->addAttribute('isDir', 'true');
-        //$xalbum->addAttribute('discNumber', (string)$album->disk);
+        $xalbum->addAttribute('isVideo', 'false');
+        $xalbum->addAttribute('type', 'music');
         if ($album->has_art()) {
             $xalbum->addAttribute('coverArt', $sub_id);
         }
@@ -128,6 +129,11 @@ class OpenSubsonic_Xml_Data
 
         $xalbum->addAttribute('playCount', (string) $album->total_count);
 
+        $played = OpenSubsonic_Fields::lastPlayed($album->last_played);
+        if ($played !== null) {
+            $xalbum->addAttribute('played', $played);
+        }
+
         self::_setIfStarred($xalbum, 'album', $album->id);
 
         if ($songs) {
@@ -161,6 +167,7 @@ class OpenSubsonic_Xml_Data
         $album_artist = $album->findAlbumArtist();
         $f_name       = $album->get_fullname();
         $xalbum->addAttribute('name', $f_name);
+        $xalbum->addAttribute('version', (string) $album->version);
         if ($album->has_art()) {
             $xalbum->addAttribute('coverArt', $sub_id);
         }
@@ -196,6 +203,11 @@ class OpenSubsonic_Xml_Data
         // `averageRating` is not part of the `AlbumID3` response, unlike `Child`.
 
         $xalbum->addAttribute('playCount', (string) $album->total_count);
+
+        $played = OpenSubsonic_Fields::lastPlayed($album->last_played);
+        if ($played !== null) {
+            $xalbum->addAttribute('played', $played);
+        }
 
         self::_setIfStarred($xalbum, 'album', $album->id);
 
@@ -238,6 +250,11 @@ class OpenSubsonic_Xml_Data
             $xdisc->addAttribute('title', $disc_title['title']);
         }
 
+        foreach (OpenSubsonic_Fields::albumRecordLabels($album) as $record_label) {
+            $xlabel = self::_addChildToResultXml($xalbum, 'recordLabels');
+            $xlabel->addAttribute('name', $record_label['name']);
+        }
+
         if ($songs) {
             $media_ids = self::getAlbumRepository()->getSongs($album->id);
             foreach ($media_ids as $song_id) {
@@ -259,6 +276,7 @@ class OpenSubsonic_Xml_Data
      * @param array{
      *     id: int,
      *     summary: ?string,
+     *     lastfm_url: ?string,
      *     largephoto: ?string,
      *     smallphoto: ?string,
      *     mediumphoto: ?string,
@@ -270,7 +288,11 @@ class OpenSubsonic_Xml_Data
         $xartist = self::_addChildToResultXml($xml, htmlspecialchars('albumInfo'));
         $xartist->addChild('notes', htmlspecialchars(trim((string) $info['summary'])));
         $xartist->addChild('musicBrainzId', $album->mbid);
-        //$xartist->addChild('lastFmUrl', "");
+        // Only present once last.fm has answered for this album; the field is optional so an unknown one is omitted
+        if (!empty($info['lastfm_url'])) {
+            $xartist->addChild('lastFmUrl', htmlspecialchars((string) $info['lastfm_url']));
+        }
+
         $xartist->addChild('smallImageUrl', html_entity_decode((string) $info['smallphoto']));
         $xartist->addChild('mediumImageUrl', html_entity_decode((string) $info['mediumphoto']));
         $xartist->addChild('largeImageUrl', html_entity_decode((string) $info['largephoto']));
@@ -394,6 +416,7 @@ class OpenSubsonic_Xml_Data
      *     summary: ?string,
      *     placeformed: ?string,
      *     yearformed: ?int,
+     *     lastfm_url: ?string,
      *     largephoto: ?string,
      *     smallphoto: ?string,
      *     mediumphoto: ?string,
@@ -414,7 +437,11 @@ class OpenSubsonic_Xml_Data
             $xartist->addChild('biography', htmlspecialchars($biography));
         }
         $xartist->addChild('musicBrainzId', (string) $artist->mbid);
-        //$xartist->addChild('lastFmUrl', "");
+        // Only present once last.fm has answered for this artist; the field is optional so an unknown one is omitted
+        if (!empty($info['lastfm_url'])) {
+            $xartist->addChild('lastFmUrl', htmlspecialchars((string) $info['lastfm_url']));
+        }
+
         $xartist->addChild('smallImageUrl', html_entity_decode((string) $info['smallphoto']));
         $xartist->addChild('mediumImageUrl', html_entity_decode((string) $info['mediumphoto']));
         $xartist->addChild('largeImageUrl', html_entity_decode((string) $info['largephoto']));
@@ -438,6 +465,7 @@ class OpenSubsonic_Xml_Data
           *     summary: ?string,
           *     placeformed: ?string,
           *     yearformed: ?int,
+          *     lastfm_url: ?string,
           *     largephoto: ?string,
           *     smallphoto: ?string,
           *     mediumphoto: ?string,
@@ -836,7 +864,10 @@ class OpenSubsonic_Xml_Data
      *     media: library_item,
      *     client: User,
      *     agent: string,
-     *     expire: int
+     *     expire: int,
+     *     position_ms?: ?int,
+     *     playback_rate?: ?float,
+     *     state?: ?string
      * }> $data
      */
     public static function addNowPlaying(SimpleXMLElement $xml, array $data): SimpleXMLElement
@@ -854,6 +885,19 @@ class OpenSubsonic_Xml_Data
                     'playerId' => '0',
                     'playerName' => (string) $row['agent'],
                 ];
+
+                // Only a client that called `reportPlayback` has these; an unreported one is omitted, not guessed
+                if (isset($row['position_ms'])) {
+                    $attributes['positionMs'] = (string) $row['position_ms'];
+                }
+
+                if (isset($row['playback_rate'])) {
+                    $attributes['playbackRate'] = (string) $row['playback_rate'];
+                }
+
+                if (isset($row['state'])) {
+                    $attributes['state'] = $row['state'];
+                }
 
                 self::addSong($xplaynow, $row['media'], 'entry', $attributes);
             }
@@ -1667,6 +1711,11 @@ class OpenSubsonic_Xml_Data
 
         $xsong->addAttribute('playCount', (string) $song->total_count);
 
+        $played = OpenSubsonic_Fields::lastPlayed($song->last_played);
+        if ($played !== null) {
+            $xsong->addAttribute('played', $played);
+        }
+
         self::_setIfStarred($xsong, 'song', $song->id);
         if ($song->track > 0) {
             $xsong->addAttribute('track', (string) $song->track);
@@ -2057,6 +2106,8 @@ class OpenSubsonic_Xml_Data
     /**
      * addPodcastEpisode
      *
+     * A Child plus `channelId`, `description`, `publishDate`, `status` and `streamId`.
+     *
      * https://opensubsonic.netlify.app/docs/responses/podcastepisode/
      */
     private static function _addPodcastEpisode(SimpleXMLElement $xml, Podcast_Episode $episode, string $elementName = 'episode'): void
@@ -2074,14 +2125,47 @@ class OpenSubsonic_Xml_Data
         $xepisode->addAttribute('album', $episode->getPodcastName());
         $xepisode->addAttribute('description', $episode->get_description());
         $xepisode->addAttribute('duration', (string) $episode->time);
-        $xepisode->addAttribute('genre', "Podcast");
         $xepisode->addAttribute('isDir', "false");
+        $xepisode->addAttribute('isVideo', "false");
+        $xepisode->addAttribute('type', 'podcast');
         $xepisode->addAttribute('publishDate', $episode->getPubDate()->format(DATE_ATOM));
         $xepisode->addAttribute('status', (string) $episode->state);
         $xepisode->addAttribute('parent', $subParent);
         if ($episode->has_art()) {
             $xepisode->addAttribute('coverArt', $subParent);
         }
+        $xepisode->addAttribute('bitRate', (string) ((int) ($episode->bitrate / 1024)));
+
+        // Episodes are rarely tagged, so the long standing "Podcast" genre remains the fallback when none are set.
+        $tags = Tag::get_object_tags('podcast_episode', $episode->id);
+        if (!empty($tags)) {
+            $xepisode->addAttribute('genre', implode(',', array_column($tags, 'name')));
+            foreach ($tags as $tag) {
+                $xlastcat = self::_addChildToResultXml($xepisode, 'genres');
+                $xlastcat->addAttribute('name', (string) $tag['name']);
+            }
+        } else {
+            $xepisode->addAttribute('genre', "Podcast");
+        }
+
+        $rating      = new Rating($episode->id, 'podcast_episode');
+        $user_rating = ($rating->get_user_rating() ?? 0);
+        if ($user_rating > 0) {
+            $xepisode->addAttribute('userRating', (string) ceil($user_rating));
+        }
+        $avg_rating = $rating->get_average_rating();
+        if ($avg_rating > 0) {
+            $xepisode->addAttribute('averageRating', (string) $avg_rating);
+        }
+
+        $xepisode->addAttribute('playCount', (string) $episode->total_count);
+
+        $played = OpenSubsonic_Fields::lastPlayed($episode->last_played);
+        if ($played !== null) {
+            $xepisode->addAttribute('played', $played);
+        }
+
+        $xepisode->addAttribute('created', date("Y-m-d\TH:i:s\Z", $episode->addition_time));
 
         self::_setIfStarred($xepisode, 'podcast_episode', $episode->id);
 
@@ -2156,9 +2240,11 @@ class OpenSubsonic_Xml_Data
             return;
         }
 
-        $sub_id = OpenSubsonic_Api::getVideoSubId($video->id);
-        $xvideo = self::_addChildToResultXml($xml, htmlspecialchars($elementName));
+        $sub_id    = OpenSubsonic_Api::getVideoSubId($video->id);
+        $subParent = OpenSubsonic_Api::getCatalogSubId($video->catalog);
+        $xvideo    = self::_addChildToResultXml($xml, htmlspecialchars($elementName));
         $xvideo->addAttribute('id', $sub_id);
+        $xvideo->addAttribute('parent', $subParent);
         $xvideo->addAttribute('title', $video->getFileName());
         $xvideo->addAttribute('isDir', 'false');
         if ($video->has_art()) {
@@ -2167,6 +2253,7 @@ class OpenSubsonic_Xml_Data
         $xvideo->addAttribute('isVideo', 'true');
         $xvideo->addAttribute('type', 'video');
         $xvideo->addAttribute('duration', (string) $video->time);
+        $xvideo->addAttribute('bitRate', (string) ((int) ($video->bitrate / 1024)));
         if (isset($video->year) && $video->year > 0) {
             $xvideo->addAttribute('year', (string) $video->year);
         }
@@ -2190,6 +2277,25 @@ class OpenSubsonic_Xml_Data
             $xvideo->addAttribute('originalWidth', (string) $video->resolution_x);
             $xvideo->addAttribute('originalHeight', (string) $video->resolution_y);
         }
+
+        $rating      = new Rating($video->id, 'video');
+        $user_rating = ($rating->get_user_rating() ?? 0);
+        if ($user_rating > 0) {
+            $xvideo->addAttribute('userRating', (string) ceil($user_rating));
+        }
+        $avg_rating = $rating->get_average_rating();
+        if ($avg_rating > 0) {
+            $xvideo->addAttribute('averageRating', (string) $avg_rating);
+        }
+
+        $xvideo->addAttribute('playCount', (string) $video->total_count);
+
+        $played = OpenSubsonic_Fields::lastPlayed($video->last_played);
+        if ($played !== null) {
+            $xvideo->addAttribute('played', $played);
+        }
+
+        $xvideo->addAttribute('created', date("Y-m-d\TH:i:s\Z", (int) $video->addition_time));
 
         self::_setIfStarred($xvideo, 'video', $video->id);
         // Set transcoding information if required

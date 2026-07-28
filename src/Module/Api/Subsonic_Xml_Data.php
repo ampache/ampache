@@ -201,6 +201,7 @@ class Subsonic_Xml_Data
      * @param array{
      *     id: int,
      *     summary: ?string,
+     *     lastfm_url: ?string,
      *     largephoto: ?string,
      *     smallphoto: ?string,
      *     mediumphoto: ?string,
@@ -311,6 +312,7 @@ class Subsonic_Xml_Data
      *     summary: ?string,
      *     placeformed: ?string,
      *     yearformed: ?int,
+     *     lastfm_url: ?string,
      *     largephoto: ?string,
      *     smallphoto: ?string,
      *     mediumphoto: ?string,
@@ -352,6 +354,7 @@ class Subsonic_Xml_Data
           *     summary: ?string,
           *     placeformed: ?string,
           *     yearformed: ?int,
+          *     lastfm_url: ?string,
           *     largephoto: ?string,
           *     smallphoto: ?string,
           *     mediumphoto: ?string,

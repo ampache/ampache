@@ -65,6 +65,7 @@ class Recommendation
      * @return array{
      *     id: int,
      *     summary: ?string,
+     *     lastfm_url: ?string,
      *     largephoto: ?string,
      *     smallphoto: ?string,
      *     mediumphoto: ?string,
@@ -81,6 +82,7 @@ class Recommendation
         $results = [
             'id' => $album_id,
             'summary' => null,
+            'lastfm_url' => null,
             'largephoto' => null,
             'smallphoto' => null,
             'mediumphoto' => null,
@@ -98,6 +100,11 @@ class Recommendation
             $xml = self::get_lastfm_results('album.getinfo', $query);
         } catch (LastFmQueryFailedException) {
             return $results;
+        }
+
+        // Read before the wiki check: an album with no description still has a last.fm page to link to
+        if (isset($xml->album->url)) {
+            $results['lastfm_url'] = (string) $xml->album->url;
         }
 
         // last.fm omits the wiki element entirely for albums without a description
@@ -125,6 +132,7 @@ class Recommendation
      *     summary: ?string,
      *     placeformed: ?string,
      *     yearformed: ?int,
+     *     lastfm_url: ?string,
      *     largephoto: ?string,
      *     smallphoto: ?string,
      *     mediumphoto: ?string,
@@ -143,6 +151,7 @@ class Recommendation
             'summary' => null,
             'placeformed' => null,
             'yearformed' => null,
+            'lastfm_url' => null,
             'largephoto' => null,
             'smallphoto' => null,
             'mediumphoto' => null,
@@ -161,6 +170,7 @@ class Recommendation
             $results['summary']     = $artist->summary;
             $results['placeformed'] = $artist->placeformed;
             $results['yearformed']  = (int) $artist->yearformed;
+            $results['lastfm_url']  = $artist->lastfm_url;
 
             return $results;
         }
@@ -169,6 +179,11 @@ class Recommendation
             $xml = self::get_lastfm_results('artist.getinfo', $query);
         } catch (LastFmQueryFailedException) {
             return $results;
+        }
+
+        // Read before the bio check: an artist with no biography still has a last.fm page to link to
+        if (isset($xml->artist->url)) {
+            $results['lastfm_url'] = (string) $xml->artist->url;
         }
 
         if (!isset($xml->artist->bio)) {
@@ -195,7 +210,7 @@ class Recommendation
             && $results['summary'] !== ''
             && $results['summary'] !== '0'
         ) {
-            $artist->update_artist_info($results['summary'], $results['placeformed'], $results['yearformed']);
+            $artist->update_artist_info($results['summary'], $results['placeformed'], $results['yearformed'], false, $results['lastfm_url']);
         }
 
         return $results;

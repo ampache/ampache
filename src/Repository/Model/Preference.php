@@ -236,6 +236,7 @@ class Preference extends database_object
         'share',
         'show_album_artist',
         'show_artist',
+        'show_collection',
         'show_donate',
         'show_folder',
         'show_header_login',
@@ -1683,6 +1684,9 @@ class Preference extends database_object
                 case 'show_folder':
                     Dba::write($pref_sql, ['show_folder', '1', 'Show \'Folders\' link in the main sidebar', AccessLevelEnum::USER->value, 'boolean', 'interface', 'sidebar']);
                     break;
+                case 'show_collection':
+                    Dba::write($pref_sql, ['show_collection', '1', 'Show \'Collections\' link in the main sidebar', AccessLevelEnum::USER->value, 'boolean', 'interface', 'sidebar']);
+                    break;
                 case 'encode_target':
                     Dba::write($pref_sql, ['encode_target', '', 'Transcode output format - Audio Default', AccessLevelEnum::USER->value, 'transcoding', 'streaming', 'transcoding']);
                     break;
@@ -1763,7 +1767,7 @@ class Preference extends database_object
                         . " 'home_now_playing', 'home_recently_played_all', 'home_recently_played', 'httpq_active'"
                         . " 'index_dashboard_form', 'jp_volume', 'lastfm_challenge', 'lastfm_grant_link', 'mpd_active'"
                         . " 'notify_email', 'of_the_moment', 'play_type', 'popular_threshold', 'show_album_artist'"
-                        . " 'show_artist', 'show_donate', 'show_folder', 'show_license', 'show_original_year', 'show_played_times'"
+                        . " 'show_artist', 'show_collection', 'show_donate', 'show_folder', 'show_license', 'show_original_year', 'show_played_times'"
                         . " 'show_playlist_media_parent', 'show_playlist_username', 'show_skipped_times', 'show_subtitle', 'show_wrapped'"
                         . " 'sidebar_hide_browse', 'sidebar_hide_dashboard', 'sidebar_hide_information'"
                         . " 'sidebar_hide_playlist', 'sidebar_hide_search', 'sidebar_hide_switcher', 'sidebar_hide_video'"
@@ -1866,7 +1870,7 @@ class Preference extends database_object
                         . " 'allow_stream_playback', 'api_enable_3', 'api_enable_4', 'api_enable_5', 'api_enable_6',"
                         . " 'autoupdate', 'browser_notify', 'download', 'home_moment_albums',"
                         . " 'home_now_playing', 'home_recently_played_all', 'home_recently_played', 'libitem_contextmenu', 'now_playing_per_user',"
-                        . " 'podcast_new_download', 'show_artist', 'show_donate', 'show_folder', 'show_header_login', 'show_license', 'show_original_year',"
+                        . " 'podcast_new_download', 'show_artist', 'show_collection', 'show_donate', 'show_folder', 'show_header_login', 'show_license', 'show_original_year',"
                         . " 'show_subtitle', 'show_wrapped', 'song_page_title', 'subsonic_backend', 'upload_allow_edit', 'upload_allow_remove', 'upload_subdir',"
                         . " 'webplayer_pausetabs') AND `user` = ?;",
                         [$user->getId()]
@@ -1925,7 +1929,7 @@ class Preference extends database_object
                         . " 'allow_personal_info_now', 'allow_personal_info_recent', 'allow_personal_info_time', 'allow_stream_playback', 'api_enable_3',"
                         . " 'api_enable_4', 'api_enable_5', 'api_enable_6', 'autoupdate', 'browser_notify',"
                         . " 'home_moment_albums', 'home_now_playing', 'home_recently_played_all', 'home_recently_played',"
-                        . " 'libitem_contextmenu', 'now_playing_per_user', 'podcast_new_download', 'show_artist', 'show_donate', 'show_folder', 'show_header_login',"
+                        . " 'libitem_contextmenu', 'now_playing_per_user', 'podcast_new_download', 'show_artist', 'show_collection', 'show_donate', 'show_folder', 'show_header_login',"
                         . " 'show_license', 'show_original_year', 'show_subtitle', 'song_page_title', 'subsonic_backend', 'upload_allow_edit', 'upload_allow_remove',"
                         . " 'upload_subdir', 'webplayer_pausetabs') AND `user` = ?;",
                         [$user->getId()]
@@ -1982,7 +1986,7 @@ class Preference extends database_object
                         . "'album_group', 'album_release_type', 'allow_democratic_playback', 'allow_localplay_playback', 'allow_personal_info_agent',"
                         . " 'allow_personal_info_now', 'allow_personal_info_recent', 'allow_personal_info_time', 'allow_stream_playback', 'api_enable_3', 'api_enable_4',"
                         . " 'api_enable_5', 'api_enable_6', 'autoupdate', 'browser_notify', 'home_moment_albums',"
-                        . " 'libitem_contextmenu', 'now_playing_per_user', 'podcast_new_download', 'share', 'show_artist', 'show_donate', 'show_folder',"
+                        . " 'libitem_contextmenu', 'now_playing_per_user', 'podcast_new_download', 'share', 'show_artist', 'show_collection', 'show_donate', 'show_folder',"
                         . " 'show_header_login', 'show_license', 'show_original_year', 'show_subtitle', 'song_page_title', 'subsonic_backend', 'upload_allow_edit',"
                         . " 'upload_allow_remove', 'upload_subdir', 'webplayer_pausetabs') AND `user` = ?;",
                         [$user->getId()]
@@ -2190,6 +2194,7 @@ class Preference extends database_object
             'shouthome_order' => 'Plugin CSS order',
             'show_album_artist' => "Show 'Album Artists' link in the main sidebar",
             'show_artist' => "Show 'Artists' link in the main sidebar",
+            'show_collection' => "Show 'Collections' link in the main sidebar",
             'show_donate' => 'Show donate button in footer',
             'show_folder' => "Show 'Folders' link in the main sidebar",
             'show_header_login' => 'Show the login / registration links in the site header',

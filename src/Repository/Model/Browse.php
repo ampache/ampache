@@ -52,6 +52,7 @@ class Browse extends Query
         'artist',
         'broadcast',
         'catalog',
+        'collection',
         'democratic',
         'folder',
         'follower',
@@ -719,6 +720,10 @@ class Browse extends Query
             case 'folder':
                 $box_title = $this->get_title(T_('Folders'));
                 $box_req   = Ui::find_template('show_folders.inc.php');
+                break;
+            case 'collection':
+                $box_title = $this->get_title(T_('Collections') . $match);
+                $box_req   = Ui::find_template('show_collections.inc.php');
                 break;
             case 'playlist_localplay':
                 $browse->set_grid_view(false);

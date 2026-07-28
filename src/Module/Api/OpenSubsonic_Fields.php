@@ -27,6 +27,7 @@ namespace Ampache\Module\Api;
 
 use Ampache\Module\System\Core;
 use Ampache\Repository\BookmarkRepositoryInterface;
+use Ampache\Repository\LabelRepositoryInterface;
 use Ampache\Repository\Model\Album;
 use Ampache\Repository\Model\Art;
 use Ampache\Repository\Model\Artist;
@@ -81,6 +82,28 @@ final class OpenSubsonic_Fields
         }
 
         return $titles;
+    }
+
+    /**
+     * albumRecordLabels
+     *
+     * The record labels of an album. `name` is required by the spec, so a blank one is left out.
+     *
+     * https://opensubsonic.netlify.app/docs/responses/recordlabel/
+     *
+     * @return array<int, array{'name': string}>
+     */
+    public static function albumRecordLabels(Album $album): array
+    {
+        $labels = [];
+        foreach (self::getLabelRepository()->getByAlbum($album->getId()) as $name) {
+            $name = trim($name);
+            if ($name !== '') {
+                $labels[] = ['name' => $name];
+            }
+        }
+
+        return $labels;
     }
 
     /**
@@ -159,6 +182,20 @@ final class OpenSubsonic_Fields
         return ($year !== null && $year > 0)
             ? ['year' => $year]
             : [];
+    }
+
+    /**
+     * lastPlayed
+     *
+     * The `played` field: an ISO 8601 instant, or null when never streamed. Server-wide, like `playCount`.
+     *
+     * https://opensubsonic.netlify.app/docs/responses/child/
+     */
+    public static function lastPlayed(?int $timestamp): ?string
+    {
+        return ($timestamp !== null && $timestamp > 0)
+            ? date("Y-m-d\TH:i:s\Z", $timestamp)
+            : null;
     }
 
     /**
@@ -430,6 +467,16 @@ final class OpenSubsonic_Fields
         global $dic;
 
         return $dic->get(BookmarkRepositoryInterface::class);
+    }
+
+    /**
+     * @deprecated inject dependency
+     */
+    private static function getLabelRepository(): LabelRepositoryInterface
+    {
+        global $dic;
+
+        return $dic->get(LabelRepositoryInterface::class);
     }
 
     private static function lrcTimeToMilliseconds(string $minutes, string $seconds, string $hundredths): int

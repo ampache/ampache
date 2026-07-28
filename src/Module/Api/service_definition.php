@@ -194,7 +194,6 @@ return [
     Method\Api8\ShareCreate8Method::class => autowire(),
     Method\Api6\Download6Method::class => autowire(),
     Method\Api6\GetIndexes6Method::class => autowire(),
-    Method\Api8\Folder8Method::class => autowire(),
     Method\Api8\Folders8Method::class => autowire(),
     Method\Api6\Stream6Method::class => autowire(),
     Method\Api8\Stream8Method::class => autowire(),

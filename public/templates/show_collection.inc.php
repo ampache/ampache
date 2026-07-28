@@ -1,0 +1,128 @@
+<?php
+
+declare(strict_types=1);
+
+/**
+ * vim:set softtabstop=4 shiftwidth=4 expandtab:
+ *
+ * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
+ * Copyright Ampache.org, 2001-2026
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Affero General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU Affero General Public License for more details.
+ *
+ * You should have received a copy of the GNU Affero General Public License
+ * along with this program.  If not, see <https://www.gnu.org/licenses/>.
+ *
+ */
+
+// show_collection.inc.php
+
+use Ampache\Config\AmpConfig;
+use Ampache\Module\Api\Ajax;
+use Ampache\Module\Playback\Stream_Playlist;
+use Ampache\Module\Util\Ui;
+use Ampache\Repository\Model\Browse;
+use Ampache\Repository\Model\Collection;
+use Ampache\Repository\Model\Rating;
+use Ampache\Repository\Model\User;
+use Ampache\Repository\Model\Userflag;
+
+/** @var Collection $collection */
+/** @var array<string, list<int>> $grouped_ids */
+
+$web_path = AmpConfig::get_web_path();
+
+ob_start();
+echo $collection->getFullname();
+$title = ob_get_contents();
+ob_end_clean();
+
+// The play buttons queue the expansion of the members; a collection of labels expands to nothing
+$playable = $collection->get_medias() !== [];
+
+Ui::show_box_top('<div id="collection_row_' . $collection->getId() . '">' . $title . '</div>', 'info-box'); ?>
+<div class="item_right_info">
+<?php $size = Ui::is_grid_view('collection')
+    ? ['width' => 150, 'height' => 150]
+    : ['width' => 384, 'height' => 384];
+$collection->display_art($size, false, false); ?>
+</div>
+<?php if (User::is_registered() && AmpConfig::get('ratings')) { ?>
+<span id="rating_<?php echo $collection->getId(); ?>_collection">
+    <?php echo Rating::show($collection->getId(), 'collection'); ?>
+</span>
+<span id="userflag_<?php echo $collection->getId(); ?>_collection">
+    <?php echo Userflag::show($collection->getId(), 'collection'); ?>
+</span>
+<?php } ?>
+<div id="information_actions">
+    <ul>
+        <li>
+            <?php echo T_('Owner'); ?>: <?php echo scrub_out($collection->username ?? ''); ?>
+        </li>
+        <li>
+            <?php echo T_('Type'); ?>:
+            <?php echo ($collection->object_type === null || $collection->object_type === '')
+                ? T_('Mixed')
+                : scrub_out($collection->object_type); ?>
+        </li>
+<?php if ($playable && AmpConfig::get('directplay')) { ?>
+        <li>
+            <?php echo Ajax::button_with_text('?page=stream&action=directplay&object_type=collection&object_id=' . $collection->getId(), 'play_circle', T_('Play All'), 'directplay_full_' . $collection->getId()); ?>
+        </li>
+<?php }
+if ($playable && Stream_Playlist::check_autoplay_next()) { ?>
+        <li>
+            <?php echo Ajax::button_with_text('?page=stream&action=directplay&object_type=collection&object_id=' . $collection->getId() . '&playnext=true', 'menu_open', T_('Play All Next'), 'nextplay_collection_' . $collection->getId()); ?>
+        </li>
+<?php }
+if ($playable && Stream_Playlist::check_autoplay_append()) { ?>
+        <li>
+            <?php echo Ajax::button_with_text('?page=stream&action=directplay&object_type=collection&object_id=' . $collection->getId() . '&append=true', 'low_priority', T_('Play All Last'), 'addplay_collection_' . $collection->getId()); ?>
+        </li>
+<?php }
+if ($collection->has_collaborate()) { ?>
+        <li>
+            <a id="<?php echo 'edit_collection_' . $collection->getId(); ?>" onclick="showEditDialog('collection_row', '<?php echo $collection->getId(); ?>', '<?php echo 'edit_collection_' . $collection->getId(); ?>', '<?php echo addslashes(T_('Collection Edit')); ?>', '')">
+                <?php echo Ui::get_material_symbol('edit', T_('Edit')); ?>
+                <?php echo T_('Edit'); ?>
+            </a>
+        </li>
+<?php }
+if ($collection->has_access()) { ?>
+        <li>
+            <a href="javascript:NavigateTo('<?php echo $web_path; ?>/collection.php?action=delete_collection&collection=<?php echo $collection->getId(); ?>');" data-confirm="<?php echo T_('Do you really want to delete this Collection?'); ?>">
+                <?php echo Ui::get_material_symbol('close'); ?>
+                <?php echo T_('Delete'); ?>
+            </a>
+        </li>
+<?php } ?>
+    </ul>
+</div>
+<?php Ui::show_box_bottom(); ?>
+<?php if ($grouped_ids === []) { ?>
+    <p><?php echo T_('This Collection is empty'); ?></p>
+<?php } else {
+    // One browse per type, the way the API groups a heterogeneous collection rather than mixing rows
+    foreach ($grouped_ids as $objectType => $objectIds) {
+        $browseType = Collection::normalizeType((string) $objectType);
+        if (!Browse::is_valid_type($browseType)) {
+            continue;
+        }
+
+        $browse = new Browse();
+        $browse->set_type($browseType);
+        $browse->set_use_filters(false);
+        $browse->set_static_content(true);
+        $browse->show_objects($objectIds, true);
+        $browse->store();
+    }
+} ?>

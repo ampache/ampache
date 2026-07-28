@@ -50,7 +50,8 @@ class Artist extends database_object implements
     public int $album_disk_count    = 0;
     public int $id                  = 0;
     public int $last_update;
-    public ?string $link = null;
+    public ?string $lastfm_url  = null;
+    public ?string $link        = null;
     public bool $manual_update;
     public ?string $mbid        = null; // MusicBrainz ID
     public ?string $name        = null;
@@ -103,6 +104,7 @@ class Artist extends database_object implements
         $this->addition_time    = isset($info['addition_time']) ? (int) $info['addition_time'] : null;
         $this->last_update      = (int) ($info['last_update'] ?? 0);
         $this->manual_update    = (bool) ($info['manual_update'] ?? false);
+        $this->lastfm_url       = $info['lastfm_url'] ?? null;
 
         $this->time = (int) $this->time;
     }
@@ -924,18 +926,20 @@ class Artist extends database_object implements
     /**
      * Update artist information.
      */
-    public function update_artist_info(?string $summary, ?string $placeformed = null, ?int $yearformed = null, bool $manual = false): void
+    public function update_artist_info(?string $summary, ?string $placeformed = null, ?int $yearformed = null, bool $manual = false, ?string $lastfm_url = null): void
     {
         // set null values if missing
         $summary     = (empty($summary)) ? null : $summary;
         $placeformed = (empty($placeformed)) ? null : $placeformed;
         $yearformed  = ((int) $yearformed == 0) ? null : Catalog::normalize_year($yearformed);
+        $lastfm_url  = (empty($lastfm_url)) ? null : $lastfm_url;
 
-        self::getArtistRepository()->updateInfo($this->id, $summary, $placeformed, $yearformed, time(), $manual);
+        self::getArtistRepository()->updateInfo($this->id, $summary, $placeformed, $yearformed, time(), $manual, $lastfm_url);
 
         $this->summary     = $summary;
         $this->placeformed = $placeformed;
         $this->yearformed  = $yearformed;
+        $this->lastfm_url  = $lastfm_url;
     }
 
     /**

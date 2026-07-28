@@ -100,6 +100,8 @@ class AmpacheAudioMuse extends AmpachePlugin implements PluginSonicAnalysisInter
                 . '&max_steps=' . $limit
             );
 
+            $this->_logRefusal('find_path', $start_id, $response);
+
             // find_path wraps its hops in `path`, each carrying the `distance` key the similarity endpoint returns.
             $matches = (is_array($response['path'] ?? null))
                 ? $this->_toMatches($response['path'])
@@ -124,6 +126,8 @@ class AmpacheAudioMuse extends AmpachePlugin implements PluginSonicAnalysisInter
                 '/api/similar_tracks',
                 'item_id=' . urlencode($item_id) . '&n=' . $limit
             );
+
+            $this->_logRefusal('similar_tracks', $item_id, $response);
 
             $matches = ($response === null) ? [] : $this->_toMatches($response);
             if ($matches !== []) {
@@ -206,6 +210,21 @@ class AmpacheAudioMuse extends AmpachePlugin implements PluginSonicAnalysisInter
     }
 
     /**
+     * _logRefusal
+     *
+     * AudioMuse answers a request it cannot serve with an `error` string, which is only visible in the log
+     *
+     * @param array<mixed>|null $response
+     */
+    private function _logRefusal(string $endpoint, string $item_id, ?array $response): void
+    {
+        $error = $response['error'] ?? null;
+        if (is_string($error) && trim($error) !== '') {
+            debug_event(self::class, $endpoint . ' refused ' . $item_id . ': ' . trim($error), 3);
+        }
+    }
+
+    /**
      * @return array<mixed>|null
      */
     private function _query_server(string $path_str, string $query_str = ''): ?array
@@ -226,8 +245,12 @@ class AmpacheAudioMuse extends AmpachePlugin implements PluginSonicAnalysisInter
         debug_event(self::class, 'Querying AudioMuse-AI: ' . $url, 5);
         $request  = Requests::get($url, $headers);
         $response = json_decode($request->body, true);
+        if (!$request->success) {
+            debug_event(self::class, 'AudioMuse-AI answered ' . $request->status_code . ': ' . $request->body, 3);
+        }
 
-        return ($request->success && is_array($response))
+        // A refused request is answered with an `error` body, kept either way so the caller can log the reason
+        return (is_array($response))
             ? $response
             : null;
     }

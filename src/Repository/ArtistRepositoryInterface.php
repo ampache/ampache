@@ -194,5 +194,6 @@ interface ArtistRepositoryInterface
         ?int $yearformed,
         int $lastUpdate,
         bool $manual,
+        ?string $lastfmUrl = null,
     ): void;
 }

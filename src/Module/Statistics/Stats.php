@@ -52,6 +52,10 @@ use RuntimeException;
 class Stats
 {
     /**
+     * Tables carrying a `weight` column; playing, rating and flagging bump it, other types must not be handed to it.
+     */
+    public const array WEIGHT_TYPES = ['album', 'album_disk', 'artist', 'podcast', 'podcast_episode', 'song', 'video'];
+    /**
      * Types written by the Song/Podcast_Episode::set_played fan-out. They duplicate the date, user, agent and
      * location of the media row that triggered them, so consolidation drops them instead of archiving them and
      * Stats::restore() rebuilds them from the archived media rows.
@@ -163,16 +167,22 @@ class Stats
 
     /**
      * update the play_count for an object
+     *
+     * `$date` rides along so `last_played` stays current; it is ignored when a play is taken back.
      */
-    public static function count(string $type, int $object_id, string $count_type): void
+    public static function count(string $type, int $object_id, string $count_type, ?int $date = null): void
     {
+        $played = ($count_type === 'down')
+            ? ''
+            : sprintf(', `last_played` = GREATEST(COALESCE(`last_played`, 0), %d)', $date ?? time());
+
         switch ($type) {
             case 'podcast_episode':
             case 'song':
             case 'video':
                 $sql = ($count_type == 'down')
                     ? "UPDATE `$type` SET `weight` = `weight` - 1, `total_count` = CASE WHEN `total_count` > 0 THEN `total_count` - 1 ELSE `total_count` END, `total_skip` = `total_skip` + 1 WHERE `id` = ?;"
-                    : "UPDATE `$type` SET `total_count` = `total_count` + 1, `weight` = `weight` + 1 WHERE `id` = ?;";
+                    : "UPDATE `$type` SET `total_count` = `total_count` + 1, `weight` = `weight` + 1" . $played . " WHERE `id` = ?;";
                 Dba::write($sql, [$object_id]);
                 // update the folder the object lives in AND every ancestor folder
                 $folder_ids = self::getFolderTree($type, $object_id);
@@ -191,7 +201,7 @@ class Stats
             case 'podcast':
                 $sql = ($count_type === 'down')
                     ? sprintf('UPDATE `%s` SET `weight` = `weight` - 1, `total_count` = CASE WHEN `total_count` > 0 THEN `total_count` - 1 ELSE `total_count` END, `total_skip` = `total_skip` + 1 WHERE `id` = ?;', $type)
-                    : sprintf('UPDATE `%s` SET `total_count` = `total_count` + 1, `weight` = `weight` + 1 WHERE `id` = ?;', $type);
+                    : sprintf('UPDATE `%s` SET `total_count` = `total_count` + 1, `weight` = `weight` + 1%s WHERE `id` = ?;', $type, $played);
                 Dba::write($sql, [$object_id]);
                 break;
         }
@@ -1065,7 +1075,7 @@ class Stats
                 && $count_type === 'stream' && $user_id !== 0
                 && $agent !== 'debug'
             ) {
-                self::count($type, $object_id, 'up');
+                self::count($type, $object_id, 'up', $date);
                 // don't register activity for album or artist plays
                 if (!in_array($type, ['album', 'album_disk', 'artist', 'podcast'], true)) {
                     self::getUserActivityPoster()->post($user_id, 'play', $type, $object_id, (int) $date);
@@ -1279,7 +1289,7 @@ class Stats
     public static function validate_type(string $type): string
     {
         return match ($type) {
-            'artist', 'album', 'album_disk', 'tag', 'song', 'video', 'playlist', 'podcast', 'podcast_episode', 'live_stream' => $type,
+            'artist', 'album', 'album_disk', 'tag', 'song', 'video', 'playlist', 'podcast', 'podcast_episode', 'live_stream', 'collection' => $type,
             'album_artist', 'song_artist' => 'artist',
             'genre' => 'tag',
             default => 'song',

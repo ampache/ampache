@@ -51,8 +51,16 @@ then update the checksum in that test and the date above.
 
 At the audit date Ampache implements all 87 documented endpoints. Known gaps, all optional response fields with no
 column in the Ampache schema: `bpm`, `moods`, `works`, `movements`, `groupings`, `bitDepth`, `explicitStatus`,
-`isCompilation`, `disambiguation`, `fallbackGain`, `subRole`, `shortcut`. Awaiting a schema change: `played`,
-`recordLabels`, `lastFmUrl`, and `positionMs`/`playbackRate`/`state` on `nowPlaying`.
+`isCompilation`, `disambiguation`, `fallbackGain`, `subRole`, `shortcut`. Nothing is awaiting a schema change any
+more: `played` (`800029`), `positionMs`/`playbackRate`/`state` on `nowPlaying` (`800032`) and `recordLabels`
+(`800034`) each got the column they needed, and `lastFmUrl` is threaded through the cached last.fm results.
+
+`played` is the one worth spelling out: database version `800029` added a maintained `last_played` column to every
+table carrying a play counter, written on the same statement that increments it. Songs, albums, videos and podcast
+episodes therefore report `played` as an ISO 8601 instant, in both json and xml. It is
+**server-wide, with no user predicate** — the same scoping as `playCount` and `averageRating`, where `starred`
+and `userRating` are the per-user pair. A database upgraded to `800029` backfills the column from the existing
+play history, so the field is populated for plays recorded before the upgrade as well.
 
 #### Where the schema and the documentation disagree
 
@@ -112,6 +120,9 @@ thing entirely.
 [AudioMuse-AI](https://github.com/NeptuneHub/AudioMuse-AI) is supported out of the box: install the **AudioMuse**
 plugin and set its server URL. It indexes by the music server's own item id, so Ampache song ids pass straight
 through; its distance scores are inverted into the normalised `[0,1]` similarity the spec asks for.
+
+A backend that has not analysed the requested track answers with a message of its own; it is written to the Ampache
+log and both endpoints answer with an empty list.
 
 #### Api Key authentication
 

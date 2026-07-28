@@ -35,6 +35,26 @@ final readonly class LabelRepository implements LabelRepositoryInterface
 {
     public function __construct(private DatabaseConnectionInterface $connection) {}
 
+    /**
+     * Associate a label with an album, ignoring a pairing already recorded (the scanner runs this per song).
+     */
+    public function addAlbumAssoc(int $labelId, int $albumId, DateTimeInterface $date): void
+    {
+        $existing = $this->connection->fetchOne(
+            'SELECT `id` FROM `label_asso` WHERE `label` = ? AND `album` = ?',
+            [$labelId, $albumId]
+        );
+
+        if ($existing) {
+            return;
+        }
+
+        $this->connection->query(
+            'INSERT INTO `label_asso` (`label`, `album`, `creation_date`) VALUES (?, ?, ?)',
+            [$labelId, $albumId, $date->getTimestamp()]
+        );
+    }
+
     public function addArtistAssoc(int $labelId, int $artistId, DateTimeInterface $date): void
     {
         $this->connection->query(
@@ -49,7 +69,9 @@ final readonly class LabelRepository implements LabelRepositoryInterface
     public function collectGarbage(): void
     {
         try {
-            $this->connection->query('DELETE FROM `label_asso` WHERE `label_asso`.`artist` NOT IN (SELECT `artist`.`id` FROM `artist`)');
+            // A row links a label to one side only, so each side is swept against its own table
+            $this->connection->query('DELETE FROM `label_asso` WHERE `label_asso`.`artist` IS NOT NULL AND `label_asso`.`artist` NOT IN (SELECT `artist`.`id` FROM `artist`)');
+            $this->connection->query('DELETE FROM `label_asso` WHERE `label_asso`.`album` IS NOT NULL AND `label_asso`.`album` NOT IN (SELECT `album`.`id` FROM `album`)');
             $this->connection->query('DELETE FROM `label` WHERE `id` NOT IN (SELECT `label` FROM `label_asso`) AND `user` IS NULL');
         } catch (DatabaseException) {
             debug_event(self::class, 'collectGarbage error', 5);
@@ -110,6 +132,27 @@ final readonly class LabelRepository implements LabelRepositoryInterface
         }
 
         return $results;
+    }
+
+    /**
+     * The labels associated with an album, keyed by label id
+     *
+     * @return array<int, string>
+     */
+    public function getByAlbum(int $albumId): array
+    {
+        $labels = [];
+
+        $result = $this->connection->query(
+            'SELECT `label`.`id`, `label`.`name` FROM `label` LEFT JOIN `label_asso` ON `label_asso`.`label` = `label`.`id` WHERE `label_asso`.`album` = ?',
+            [$albumId]
+        );
+
+        while ($row = $result->fetch(PDO::FETCH_ASSOC)) {
+            $labels[(int) $row['id']] = $row['name'];
+        }
+
+        return $labels;
     }
 
     /**
