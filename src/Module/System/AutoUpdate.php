@@ -618,13 +618,7 @@ class AutoUpdate
     }
 
     /**
-     * Restore vendor git checkouts that were dirtied by install time code generation.
-     *
-     * Composer refuses to remove or update a package installed from source when its working tree has local
-     * modifications, and packages writing into their own directory during install (phpstan/extension-installer
-     * regenerates src/GeneratedConfig.php) leave that state behind. Installs made before the switch to
-     * --prefer-dist still hold those checkouts, so a --no-dev run would abort partway through removing the dev
-     * packages and leave vendor in a broken state.
+     * Restore vendor git checkouts dirtied by install time code generation, which composer refuses to remove.
      *
      * @return string[] the packages that were restored
      */
@@ -641,7 +635,7 @@ class AutoUpdate
             $output = [];
             $status = 0;
 
-            // composer only inspects tracked files here, so untracked leftovers are not worth touching
+            // composer only inspects tracked files
             exec(sprintf('git -C %s status --porcelain --untracked-files=no 2>&1', escapeshellarg($path)), $output, $status);
             if ($status !== 0 || $output === []) {
                 continue;

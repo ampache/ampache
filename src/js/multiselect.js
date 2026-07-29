@@ -226,8 +226,7 @@ $(document).on("click", "a[data-multiselect-action]", function (event) {
     run();
 });
 
-// Applies the starting state to every scope inside (or equal to) a node: the count, the disabled actions and the
-// tri-state header box all live in markup the server does not render, so they have to be set from here.
+// Applies the starting state to every scope inside (or equal to) a node.
 function multiSelectRefreshAll(node) {
     var $node = $(node);
 
@@ -236,8 +235,7 @@ function multiSelectRefreshAll(node) {
     });
 }
 
-// Toggling an option in the view menu replaces the browse through updateText(), so a bar that arrives after load
-// never saw the ready handler and would sit there uninitialised until the next full page load.
+// A browse replaced after load never saw the ready handler, so watch for scopes arriving later.
 $(function () {
     multiSelectRefreshAll(document.body);
 

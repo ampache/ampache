@@ -46,8 +46,6 @@ $libraryItemLoader = $dic->get(LibraryItemLoaderInterface::class);
 /** @var Browse $browse */
 /** @var Playlist|Search $playlist */
 /** @var array<int|string>|array<int, array{object_type: LibraryItemEnum|string, object_id: int, track_id: int, track: int}>|array<Song_Preview>|array<int, array{name?: string|null, id: int, track: int, raw: string, link?: string|null, track: int, oid?: int, vlid?: int}>|null $object_ids */
-// show_objects() takes bool|array|string: the page render passes a real bool, but every browse option link
-// carries it back through the url as the string '1', so it arrives typed differently on the ajax refresh
 /** @var bool|string|array<string, mixed> $argument */
 
 $web_path = AmpConfig::get_web_path();
