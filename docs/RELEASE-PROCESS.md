@@ -24,7 +24,7 @@ It's easy to use a program like github desktop to compare between branches.
 * Go to Branch Menu -> Update from develop
 * Fix merge issues
   * src/Config/Init/InitializationHandlerConfig.php (Search for "// AMPACHE_VERSION" to find the lines that need updating)
-  * src/Module/Api/Api6.php (Set $version and $version_numeric)
+  * src/Module/Api/Api.php (Set $version and $version_numeric)
   * docs/CHANGELOG.md (Update for release)
   * add new ampache.sql
 * Commit merge for new version (e.g. 5.x.x) but **do not push!**
