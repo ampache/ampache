@@ -27,6 +27,7 @@ declare(strict_types=1);
 
 use Ampache\Config\AmpConfig;
 use Ampache\Module\Api\Ajax;
+use Ampache\Module\Api\RefreshReordered\RefreshCollectionItemsAction;
 use Ampache\Module\Playback\Stream_Playlist;
 use Ampache\Module\Util\Ui;
 use Ampache\Repository\Model\Browse;
@@ -97,7 +98,19 @@ if ($collection->has_collaborate()) { ?>
                 <?php echo T_('Edit'); ?>
             </a>
         </li>
+<?php
+    // Only a mixed collection is dragged here; a pinned one is shown through its own type's browse, which has
+    // no drag handle and no order of its own to save
+    if ($collection->object_type === null || $collection->object_type === '') { ?>
+        <li>
+            <a onclick="submitNewItemsOrder('<?php echo $collection->getId(); ?>', 'reorder_collection_table', 'track_',
+                                            '<?php echo $web_path; ?>/collection.php?action=set_track_numbers&collection=<?php echo $collection->getId(); ?>', '<?php echo RefreshCollectionItemsAction::REQUEST_KEY; ?>')">
+                <?php echo Ui::get_material_symbol('save', T_('Save Track Order'));
+        echo "&nbsp;" . T_('Save Track Order'); ?>
+            </a>
+        </li>
 <?php }
+    }
 if ($collection->has_access()) { ?>
         <li>
             <a href="<?php echo $web_path; ?>/collection.php?action=delete_collection&amp;collection=<?php echo $collection->getId(); ?>" data-confirm="<?php echo T_('Do you really want to delete this Collection?'); ?>">
@@ -124,11 +137,16 @@ if ($collection->has_access()) { ?>
         // Every member shares one type, so that type's own browse can render it the way it always does
         $browse->set_type($pinnedType);
         $browse->show_objects(array_column($object_ids, 'object_id'));
-    } else {
-        // Mixed, so the members stay in one list in curated order and each row names its own type
+        $browse->store();
+    } else { ?>
+<div id="reordered_list_<?php echo $collection->getId(); ?>">
+<?php
+        // Mixed, so the members stay in one list in curated order and each row names its own type. The second
+        // argument turns the drag handling on, the same flag a playlist passes.
         $browse->set_type('collection_items');
-        $browse->show_objects($object_ids);
-    }
-
-    $browse->store();
-} ?>
+        $browse->add_supplemental_object('collection', $collection);
+        $browse->show_objects($object_ids, true);
+        $browse->store(); ?>
+</div>
+<?php }
+    } ?>

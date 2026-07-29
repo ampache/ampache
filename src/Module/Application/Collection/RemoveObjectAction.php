@@ -66,6 +66,7 @@ final readonly class RemoveObjectAction implements ApplicationActionInterface
         }
 
         $this->collectionRepository->removeItem($collection->getId(), $objectId, $objectType);
+        $collection->regenerate_track_numbers();
 
         $this->ui->showHeader();
         $this->ui->showConfirmation(

@@ -415,6 +415,7 @@ return [
     Collection\AddObjectAction::class => autowire(Collection\AddObjectAction::class),
     Collection\RemoveObjectAction::class => autowire(Collection\RemoveObjectAction::class),
     Collection\DeleteCollectionAction::class => autowire(Collection\DeleteCollectionAction::class),
+    Collection\SetTrackNumbersAction::class => autowire(Collection\SetTrackNumbersAction::class),
     SortTrackAction::class => autowire(SortTrackAction::class),
     RemoveDuplicatesAction::class => autowire(RemoveDuplicatesAction::class),
     AddSongAction::class => autowire(AddSongAction::class),

@@ -29,35 +29,36 @@ use Ampache\Module\Application\ApplicationActionInterface;
 use Ampache\Module\Application\Exception\AccessDeniedException;
 use Ampache\Module\Authorization\GuiGatekeeperInterface;
 use Ampache\Module\System\Core;
+use Ampache\Module\Util\RequestParserInterface;
 use Ampache\Module\Util\UiInterface;
 use Ampache\Repository\CollectionRepositoryInterface;
 use Ampache\Repository\Model\User;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 
-final readonly class AddObjectAction implements ApplicationActionInterface
+/**
+ * Writes a whole new member order, as dragged in the interface
+ *
+ * The counterpart of `Playlist\SetTrackNumbersAction`. `order` is the `collection_map` row ids in their new
+ * order, which is what identifies a member when a collection holds the same object twice.
+ */
+final readonly class SetTrackNumbersAction implements ApplicationActionInterface
 {
-    public const string REQUEST_KEY = 'add_object';
+    public const string REQUEST_KEY = 'set_track_numbers';
 
     public function __construct(
+        private RequestParserInterface $requestParser,
         private CollectionRepositoryInterface $collectionRepository,
         private UiInterface $ui,
     ) {}
 
     public function run(ServerRequestInterface $request, GuiGatekeeperInterface $gatekeeper): ?ResponseInterface
     {
-        if (!check_http_referer()) {
-            throw new AccessDeniedException();
-        }
-
-        $params = $request->getQueryParams();
-        // Named `object_type` rather than `type` so the same call works through the REST rewrite, which spends
-        // `type` on the resource name and would otherwise overwrite whichever copy PHP keeps.
-        $objectType = (string) ($params['object_type'] ?? '');
-        $objectId   = (int) ($params['object_id'] ?? 0);
-
         $user       = Core::get_global('user');
-        $collection = $this->collectionRepository->findById((int) ($params['collection'] ?? 0));
+        $collection = $this->collectionRepository->findById(
+            (int) $this->requestParser->getFromRequest('collection')
+        );
+        // A collaborator curates the contents, matching who may drag a playlist about
         if (
             $collection === null
             || !$collection->has_collaborate($user instanceof User ? $user : null)
@@ -65,28 +66,28 @@ final readonly class AddObjectAction implements ApplicationActionInterface
             throw new AccessDeniedException();
         }
 
-        // `acceptsType()` is the only authority on what a pinned collection takes, so the interface asks it rather
-        // than deciding for itself and drifting from the rule the API enforces.
-        if (!$collection->acceptsType($objectType)) {
-            $this->ui->showHeader();
-            echo T_('This collection does not accept items of that type');
-            $this->ui->showFooter();
-
-            return null;
-        }
-
-        // Curating an id that is not in its own table would leave the collection holding a dangling member.
-        // `add_item()` rather than the repository directly, so the interface honours `unique_playlist` too.
-        if ($this->collectionRepository->objectExists($objectType, $objectId)) {
-            $collection->add_item($objectId, $objectType);
-        }
-
         $this->ui->showHeader();
-        $this->ui->showConfirmation(
-            T_('Added'),
-            T_('Object added to collection'),
-            $collection->get_link()
-        );
+
+        $order = $this->requestParser->getFromRequest('order');
+        if ($order !== '') {
+            // The list only covers the page that was dragged, so it starts numbering where that page starts
+            $track = (int) $this->requestParser->getFromRequest('offset') + 1;
+            if ($track < 1) {
+                $track = 1;
+            }
+
+            foreach (explode(';', $order) as $mapId) {
+                if ($mapId !== '') {
+                    $collection->update_track_number((int) $mapId, $track);
+                    ++$track;
+                }
+            }
+        }
+
+        // Renumber the whole collection: dragging one page can leave it holding positions from another
+        $collection->regenerate_track_numbers();
+
+        $this->ui->showQueryStats();
         $this->ui->showFooter();
 
         return null;

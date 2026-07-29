@@ -32,6 +32,7 @@ use Ampache\Module\Authorization\AccessLevelEnum;
 use Ampache\Module\Authorization\AccessTypeEnum;
 use Ampache\Module\Playback\Stream_Playlist;
 use Ampache\Module\Util\Ui;
+use Ampache\Repository\Model\Collection;
 use Ampache\Repository\Model\container_item;
 use Ampache\Repository\Model\displayable_item;
 use Ampache\Repository\Model\LibraryItemEnum;
@@ -41,11 +42,17 @@ use Ampache\Repository\Model\Userflag;
 
 /** @var Ampache\Repository\Model\library_item $libitem */
 /** @var Ampache\Repository\Model\Browse|null $browse */
+/** @var Collection|null $collection */
 /** @var int $collection_track */
 /** @var array{object_type: LibraryItemEnum|string, object_id: int, track_id: int, track: int} $object */
 /** @var string $object_type */
 /** @var string $type_label */
 /** @var bool $show_ratings */
+/** @var bool $can_multiselect */
+/** @var bool $show_multiselect */
+/** @var bool $can_remove */
+/** @var string $t_delete */
+/** @var string $t_reorder */
 /** @var string $t_play */
 /** @var string $t_play_next */
 /** @var string $t_play_last */
@@ -56,6 +63,16 @@ use Ampache\Repository\Model\Userflag;
 // Don't show disabled medias to normal users
 if ((!isset($libitem->enabled) || $libitem->enabled || Access::check(AccessTypeEnum::INTERFACE, AccessLevelEnum::CONTENT_MANAGER)) && $libitem instanceof displayable_item) {
     $thumb = ['width' => 80, 'height' => 80]; ?>
+<?php if (!empty($can_multiselect)) { ?>
+<td class="cel_select">
+    <?php if (!empty($show_multiselect)) { ?>
+    <input type="checkbox" class="multiselect-item" title="<?php echo T_('Select'); ?>"
+           data-id="<?php echo $libitem->getId(); ?>"
+           data-type="<?php echo $object_type; ?>"
+           data-track-id="<?php echo $object['track_id']; ?>" />
+    <?php } ?>
+</td>
+<?php } ?>
 <td class="cel_play">
     <span class="cel_play_content"><?php echo '<b>' . $collection_track . '</b>'; ?></span>
     <div class="cel_play_hover">
@@ -112,6 +129,16 @@ if ((!isset($libitem->enabled) || $libitem->enabled || Access::check(AccessTypeE
     }
     if (Access::check(AccessTypeEnum::INTERFACE, AccessLevelEnum::USER) && AmpConfig::get('share')) {
         echo Share::display_ui($object_type, $libitem->getId(), false);
+    }
+
+    // The member is named by its `collection_map` row, so removing one of two copies removes the right one
+    if (!empty($can_remove) && isset($browse, $collection)) {
+        echo Ajax::button('?page=collection&action=delete_track&collection_id=' . $collection->getId() . '&browse_id=' . $browse->getId() . '&track_id=' . $object['track_id'], 'close', $t_delete, 'track_del_' . $object['track_id']);
     } ?>
 </td>
-<?php } ?>
+<?php if (!empty($can_remove)) { ?>
+<td class="cel_drag">
+    <?php echo Ui::get_material_symbol('drag_indicator', $t_reorder); ?>
+</td>
+<?php }
+} ?>

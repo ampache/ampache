@@ -114,6 +114,11 @@ interface CollectionRepositoryInterface
     public function removeItem(int $collectionId, int $objectId, string $objectType): void;
 
     /**
+     * Remove one member by the id of its `collection_map` row
+     */
+    public function removeItemById(int $collectionId, int $mapId): void;
+
+    /**
      * Remove the single member holding one position
      */
     public function removeItemByTrack(int $collectionId, int $track): void;
@@ -122,6 +127,11 @@ interface CollectionRepositoryInterface
      * Drop whatever sits at $track and put this object there instead
      */
     public function replaceTrackAtNumber(int $collectionId, int $objectId, string $objectType, int $track): void;
+
+    /**
+     * Store the position of one member, addressed by its `collection_map` row
+     */
+    public function setTrackNumber(int $mapId, int $track): void;
 
     public function update(
         int $collectionId,

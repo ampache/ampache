@@ -283,6 +283,22 @@ final readonly class CollectionRepository implements CollectionRepositoryInterfa
     }
 
     /**
+     * Remove one member by the id of its `collection_map` row
+     *
+     * This is what a row in the interface names, because it is the only address that stays unambiguous when a
+     * collection holds the same object twice.
+     */
+    public function removeItemById(int $collectionId, int $mapId): void
+    {
+        $this->connection->query(
+            'DELETE FROM `collection_map` WHERE `collection` = ? AND `id` = ? LIMIT 1;',
+            [$collectionId, $mapId]
+        );
+
+        $this->touch($collectionId);
+    }
+
+    /**
      * Remove the single member holding one position, whatever object it points at
      */
     public function removeItemByTrack(int $collectionId, int $track): void
@@ -312,6 +328,17 @@ final readonly class CollectionRepository implements CollectionRepositoryInterfa
         );
 
         $this->touch($collectionId);
+    }
+
+    /**
+     * Store the position of one member, addressed by its `collection_map` row
+     */
+    public function setTrackNumber(int $mapId, int $track): void
+    {
+        $this->connection->query(
+            'UPDATE `collection_map` SET `track` = ? WHERE `id` = ?;',
+            [$track, $mapId]
+        );
     }
 
     public function update(

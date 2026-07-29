@@ -155,6 +155,18 @@ class Collection extends playlist_object
     }
 
     /**
+     * Remove one member by its `collection_map` row, the address a row in the interface carries
+     *
+     * The caller renumbers, so a multi-select can drop several members and pay for one renumber.
+     */
+    public function delete_track(int $mapId): bool
+    {
+        $this->getCollectionRepository()->removeItemById($this->getId(), $mapId);
+
+        return true;
+    }
+
+    /**
      * Remove the member holding one position, then close the gap it left
      */
     public function delete_track_number(int $track): bool
@@ -426,6 +438,14 @@ class Collection extends playlist_object
         $this->collaborate = $collaborate;
 
         return $this->id;
+    }
+
+    /**
+     * Store the position of one member without renumbering, for a caller writing a whole new order
+     */
+    public function update_track_number(int $mapId, int $track): void
+    {
+        $this->getCollectionRepository()->setTrackNumber($mapId, $track);
     }
 
     /**

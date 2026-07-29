@@ -39,10 +39,11 @@ You can downgrade to Ampache7 if you try this out and have issues, using the cli
   * New `Mini player` button on the login form, next to `Register` and `Lost Password`, to land there after logging in
 * Multi select
   * New `Multi-Select` browse option in the `View` menu turns the checkboxes on; they stay hidden until you ask for them
-  * Checkboxes on the playlist items list select several tracks at once, and the header checkbox selects the whole page
+  * Checkboxes on the playlist items and collection items lists select several entries at once, and the header checkbox selects the whole page
   * `Ctrl`/`Cmd`+click toggles a row and `Shift`+click selects a range, anywhere on the row that is not itself a button or a link
   * A selection can be played, played next, played last, added to the temporary playlist, added to another playlist, or removed from the playlist in a single action, from a bar that stays in view while you scroll the list
-  * Removing a selection sends one request and renumbers the playlist once, instead of one request and one full renumber for every track
+  * Removing a selection sends one request and renumbers the list once, instead of one request and one full renumber for every entry
+  * A mixed collection groups the selection by type before acting on it, so playing a selection of albums and songs together works from one bar
 * Database
   * New `api_enable_8` preference to enable/disable API v8 responses per user
   * New database tables `folder` and `folder_map`
@@ -83,8 +84,10 @@ You can downgrade to Ampache7 if you try this out and have issues, using the cli
   * Collections have their own art, including the mosaic built from their members when no art is set
   * `public`/`private` visibility and a collaborator list, matching playlists: a collaborator curates the contents, only the owner or an admin can delete the list
   * New `show_collection` preference to show/hide the "Collections" link in the sidebar
-  * Collections in the web interface: a `collection.php` page listing the members, a `browse.php?action=collection` browse with the usual sorting and filtering, the standard edit dialog for name, visibility, pinned type and collaborators, and the art picker. Creating a collection and adding, removing or reordering its members is API-only in this release
+  * Collections in the web interface: a `collection.php` page listing the members, a `browse.php?action=collection` browse with the usual sorting and filtering, the standard edit dialog for name, visibility, pinned type and collaborators, and the art picker. Creating a collection is still API-only in this release
   * The collection page renders a mixed collection as one ordered list through a new `collection_items` browse type, each row naming its own type. A collection pinned to a single type is handed to that type's own browse instead, so a collection of albums looks like any other album view
+  * Members can be dragged into a new order and saved with `Save Track Order`, exactly like playlist tracks. Only a mixed collection offers this — a pinned one is shown through its own type's browse, which has no drag handle
+  * A member can be removed from its row, or several at once through `Multi-Select`. Members are addressed by their membership row rather than by the object they point at, so removing one of two identical members removes the one you picked
   * Collections can be rated and flagged like any other library item
 * API
   * New collection methods `collections`, `collection`, `collection_items`, `collection_create`, `collection_edit`, `collection_delete`, `collection_add` and `collection_remove`, with REST paths under `collections/`
@@ -262,6 +265,7 @@ You can downgrade to Ampache7 if you try this out and have issues, using the cli
 
 ### Fixed (7.10.1)
 
+* Podcast feed urls beginning `https://` were silently discarded, so editing a podcast's feed appeared to do nothing and a podcast created from an https feed was stored with an empty one. The check meant to keep http and https urls was inverted, and also let through schemes like `ftp://` that it was there to refuse
 * Deleting a Playlist or Smartlist left its `user_playlist_map` rows behind, so a later list given the freed id inherited the collaborators
 * User deletion and garbage collection stepped over `user_playlist_map` because it names its column `user_id`
 * Update sources

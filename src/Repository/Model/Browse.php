@@ -115,7 +115,7 @@ class Browse extends Query
      * add_supplemental_object
      * Legacy function, need to find a better way to do that
      */
-    public function add_supplemental_object(string $name, Playlist|Search|Folder $object): bool
+    public function add_supplemental_object(string $name, Playlist|Search|Folder|Collection $object): bool
     {
         $_SESSION['browse']['supplemental'][$this->id][$name] = $object;
 
@@ -135,7 +135,7 @@ class Browse extends Query
     /**
      * get_supplemental_objects
      * This returns an object so we can reuse it again.
-     * @return array<string, Playlist|Search|Folder>
+     * @return array<string, Playlist|Search|Folder|Collection>
      */
     public function get_supplemental_objects(): array
     {
