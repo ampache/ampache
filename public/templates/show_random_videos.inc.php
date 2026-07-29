@@ -48,7 +48,7 @@ if (!empty($videos)) {
     foreach ($videos as $video_id) {
         $video = new Video($video_id); ?>
     <div class="random_video">
-        <div id="video_<?php echo $video_id; ?>" class="art_album libitem_menu">
+        <div id="video_<?php echo $video_id; ?>" class="art_album libitem_menu" data-object-type="video" data-object-id="<?php echo $video_id; ?>">
             <?php $art_showed = false;
         if ($video->get_default_art_kind() == 'preview') {
             $art_showed = Art::display('video', $video->id, $video->getFileName(), ['width' => 150, 'height' => 84], $video->get_link(), false, true, 'preview');

@@ -87,10 +87,8 @@ if ($browse->is_show_header()) {
 <table class="tabledata striped-rows<?php echo $css_class; ?>" data-objecttype="album">
     <thead>
         <tr class="th-top">
-            <div class="libitem_menu">
-                <th class="cel_play essential"></th>
-                <th class="<?php echo $cel_cover; ?> optional"><?php echo T_('Art'); ?></th>
-            </div>
+            <th class="cel_play essential"></th>
+            <th class="<?php echo $cel_cover; ?> optional"><?php echo T_('Art'); ?></th>
             <th class="<?php echo $cel_album; ?> essential persist"><?php echo $album_link; ?></th>
             <th class="cel_add essential"></th>
             <th class="<?php echo $cel_artist; ?> essential"><?php echo $artist_link; ?></th>
@@ -132,7 +130,7 @@ foreach ($object_ids as $album_disk_id) {
     if ($directplay_limit > 0) {
         $show_playlist_add = $access25 && ($libitem->song_count <= $directplay_limit);
     } ?>
-        <tr id="album_<?php echo $libitem->id; ?>" class="libitem_menu">
+        <tr id="album_disk_<?php echo $libitem->id; ?>" class="libitem_menu" data-object-type="album_disk" data-object-id="<?php echo $libitem->id; ?>">
             <?php $content = $talFactory->createTalView()
                     ->setContext('USER_IS_REGISTERED', User::is_registered())
                     ->setContext('USING_RATINGS', User::is_registered() && (AmpConfig::get('ratings')))

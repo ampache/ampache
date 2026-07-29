@@ -92,10 +92,10 @@ Art::display('podcast', $podcast->getId(), (string) $podcast->get_fullname(), $s
         <?php } ?>
         <?php if (Access::check(AccessTypeEnum::INTERFACE, AccessLevelEnum::USER)) { ?>
         <li>
-            <?php echo Ajax::button_with_text('?action=basket&type=podcast&id=' . $podcast->getId(), 'new_window', T_('Add All to Temporary Playlist'), 'add_' . $podcast->getId()); ?>
+            <?php echo Ajax::button_with_text('?action=basket&type=podcast&id=' . $podcast->getId(), 'new_window', T_('Add All to Temporary Playlist'), 'add_podcast_' . $podcast->getId()); ?>
         </li>
         <li>
-            <a id="<?php echo 'add_to_playlist_' . $podcast->getId(); ?>" onclick="showPlaylistDialog(event, 'podcast', '<?php echo $podcast->getId(); ?>')">
+            <a id="<?php echo 'add_to_playlist_podcast_' . $podcast->getId(); ?>" onclick="showPlaylistDialog(event, 'podcast', '<?php echo $podcast->getId(); ?>')">
                 <?php echo Ui::get_material_symbol('playlist_add', T_('Add to playlist')); ?>
                 <?php echo T_('Add to playlist'); ?>
             </a>

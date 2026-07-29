@@ -187,6 +187,16 @@ You can downgrade to Ampache7 if you try this out and have issues, using the cli
 
 ### Fixed (8.0.0)
 
+* Right click (`libitem_contextmenu`) actions on a browse row
+  * The menu worked out what it was acting on by cutting the row id at the first underscore, so it read `podcast_episode_5` as podcast #episode and a collection row as collection #row; rows now state their identity with `data-object-type` and `data-object-id`
+  * Album disk rows, in both the browse and "Albums of the Moment", were labelled as albums, so the menu (and the inline refresh after an edit) went after the album that happened to share that id
+  * Favorite Lists on the home page labelled a smartlist as a playlist, so the menu played whichever playlist shared its id
+  * Podcast and podcast episode rows had no menu at all
+  * Stray empty menu wrappers in the album, album disk and folder browse headers opened a menu that could do nothing (and were invalid HTML inside a `<tr>`)
+* Collections
+  * The song list carried the playlist reorder (drag) column, although a collection cannot be reordered from the web interface
+  * The delete action ran through a `javascript:` url; it is a plain link now, so the confirmation and the following navigation behave like every other delete
+* On a podcast page the "Add All to Temporary Playlist" and "Add to playlist" buttons shared their element ids with the episode row of the same number, so clicking one could fire the other's action
 * Repeated queries on every page
   * The installed-plugin version lookup re-read the whole `update_info` table on each call, and the module list calls it once per plugin, so a single page ran it dozens of times; it is read once per request and only for the `Plugin_` keys
   * Editing a song rebuilt the entire `Song` object — a three table join — once per field changed, only to re-check who uploaded it; the uploader is read once per save

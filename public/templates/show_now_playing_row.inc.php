@@ -88,7 +88,7 @@ echo '<div>' . $np_user->get_f_avatar('f_avatar_medium') . '</div>'; ?>
 </div>
 
 <div class="np_group" id="np_group_3">
-  <div id="album_<?php echo $media->album; ?>" class="np_cell cel_albumart libitem_menu">
+  <div id="album_<?php echo $media->album; ?>" class="np_cell cel_albumart libitem_menu" data-object-type="album" data-object-id="<?php echo $media->album; ?>">
       <?php
       if (AmpConfig::get('show_song_art') && Art::has_db($media->id, 'song')) {
           $playing = $media;

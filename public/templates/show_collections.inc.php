@@ -94,7 +94,7 @@ if ($browse->is_show_header()) {
     }
 
     $item_count = $libitem->get_item_count(); ?>
-        <tr id="collection_row_<?php echo $libitem->getId(); ?>" class="libitem_menu">
+        <tr id="collection_row_<?php echo $libitem->getId(); ?>" class="libitem_menu" data-object-type="collection" data-object-id="<?php echo $libitem->getId(); ?>">
             <td class="cel_play">
 <?php if ($show_direct_play && $item_count > 0) {
     echo Ajax::button('?page=stream&action=directplay&object_type=collection&object_id=' . $libitem->getId(), 'play_circle', T_('Play'), 'play_collection_' . $libitem->getId());
@@ -127,7 +127,7 @@ if ($browse->is_show_header()) {
                 </a>
 <?php }
 if ($libitem->has_access()) { ?>
-                <a href="javascript:NavigateTo('<?php echo $web_path; ?>/collection.php?action=delete_collection&collection=<?php echo $libitem->getId(); ?>');" data-confirm="<?php echo T_('Do you really want to delete this Collection?'); ?>">
+                <a href="<?php echo $web_path; ?>/collection.php?action=delete_collection&amp;collection=<?php echo $libitem->getId(); ?>" data-confirm="<?php echo T_('Do you really want to delete this Collection?'); ?>">
                     <?php echo Ui::get_material_symbol('close', T_('Delete')); ?>
                 </a>
 <?php } ?>

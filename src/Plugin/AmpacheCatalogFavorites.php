@@ -227,7 +227,7 @@ class AmpacheCatalogFavorites extends AmpachePlugin implements PluginDisplayHome
     foreach ($userflags as $userflag) {
         $item = new Song($userflag);
         if ($item->isNew() === false) {
-            echo '<tr id="song_' . $userflag . '" class="libitem_menu">';
+            echo '<tr id="song_' . $userflag . '" class="libitem_menu" data-object-type="song" data-object-id="' . $userflag . '">';
             if (!$this->gridview) {
                 echo '<td class="grid_song"><span style="font-weight: bold;">' . $item->get_f_link() . '</span><br> ';
                 echo '<span style="margin-right: 10px;">';

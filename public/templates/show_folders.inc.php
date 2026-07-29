@@ -73,8 +73,6 @@ if ($browse->is_show_header()) {
     require Ui::find_template('list_header.inc.php');
 } ?>
 <form method="post" id="reorder_folder_<?php echo $folder->id; ?>">
-    <div class="libitem_menu">
-    </div>
     <table class="tabledata striped-rows<?php echo $css_class; ?>" data-objecttype="folder">
         <thead>
             <tr class="th-top">
@@ -127,7 +125,7 @@ foreach ($object_ids as $object) {
     if ($directplay_limit > 0 && property_exists($libitem, 'object_count')) {
         $show_playlist_add = $access25 && $libitem->playable && ($libitem->object_count > 0 && $libitem->object_count <= $directplay_limit);
     } ?>
-            <tr id="<?php echo $object_type . '_' . $libitem->getId(); ?>" class="libitem_menu">
+            <tr id="<?php echo $object_type . '_' . $libitem->getId(); ?>" class="libitem_menu" data-object-type="<?php echo $object_type; ?>" data-object-id="<?php echo $libitem->getId(); ?>">
     <?php $content = $talFactory->createTalView()
             ->setContext('USER_IS_REGISTERED', User::is_registered())
             ->setContext('USING_RATINGS', User::is_registered() && (AmpConfig::get('ratings')))

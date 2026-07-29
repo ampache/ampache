@@ -99,7 +99,7 @@ if ($collection->has_collaborate()) { ?>
 <?php }
 if ($collection->has_access()) { ?>
         <li>
-            <a href="javascript:NavigateTo('<?php echo $web_path; ?>/collection.php?action=delete_collection&collection=<?php echo $collection->getId(); ?>');" data-confirm="<?php echo T_('Do you really want to delete this Collection?'); ?>">
+            <a href="<?php echo $web_path; ?>/collection.php?action=delete_collection&amp;collection=<?php echo $collection->getId(); ?>" data-confirm="<?php echo T_('Do you really want to delete this Collection?'); ?>">
                 <?php echo Ui::get_material_symbol('close'); ?>
                 <?php echo T_('Delete'); ?>
             </a>
@@ -122,7 +122,8 @@ if ($collection->has_access()) { ?>
         $browse->set_type($browseType);
         $browse->set_use_filters(false);
         $browse->set_static_content(true);
-        $browse->show_objects($objectIds, true);
+        // no second argument: that is the playlist reorder flag, and a collection has no drag handle
+        $browse->show_objects($objectIds);
         $browse->store();
     }
 } ?>
