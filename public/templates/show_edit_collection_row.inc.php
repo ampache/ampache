@@ -62,7 +62,9 @@ foreach (Collection::VALID_TYPES as $objectType) {
     $options[] = '<option value="' . $objectType . '"' . $selected . '>' . scrub_out($objectType) . '</option>';
 }
 
-echo '<select name="object_type">' . implode("\n", $options) . '</select>'; ?>
+$disabled = (count($options) === 1) ? ' disabled="disabled"' : '';
+
+echo '<select name="object_type"' . $disabled . '>' . implode("\n", $options) . '</select>'; ?>
                 </td>
             </tr>
             <tr>
