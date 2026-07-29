@@ -83,8 +83,9 @@ You can downgrade to Ampache7 if you try this out and have issues, using the cli
   * Playing one expands its members, so an album contributes its songs and anything that cannot be streamed is skipped; duplicates reached by two different routes are played once
   * Collections have their own art, including the mosaic built from their members when no art is set
   * `public`/`private` visibility and a collaborator list, matching playlists: a collaborator curates the contents, only the owner or an admin can delete the list
-  * New `show_collection` preference to show/hide the "Collections" link in the sidebar
-  * Collections in the web interface: a `collection.php` page listing the members, a `browse.php?action=collection` browse with the usual sorting and filtering, the standard edit dialog for name, visibility, pinned type and collaborators, and the art picker. Creating a collection is still API-only in this release
+  * New `show_collection` preference to show/hide the "Collections" and "New Collection" links in the sidebar
+  * Collections in the web interface: a `collection.php` page listing the members, a `browse.php?action=collection` browse with the usual sorting and filtering, the standard edit dialog for name, visibility, pinned type and collaborators, and the art picker
+  * A "New Collection" link in the sidebar creates one, choosing its name, whether it is public or private, and whether it is pinned to a single item type or left mixed
   * The collection page renders a mixed collection as one ordered list through a new `collection_items` browse type, each row naming its own type. A collection pinned to a single type is handed to that type's own browse instead, so a collection of albums looks like any other album view
   * Members can be dragged into a new order and saved with `Save Track Order`, exactly like playlist tracks. Only a mixed collection offers this — a pinned one is shown through its own type's browse, which has no drag handle
   * A member can be removed from its row, or several at once through `Multi-Select`. Members are addressed by their membership row rather than by the object they point at, so removing one of two identical members removes the one you picked

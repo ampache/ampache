@@ -34,7 +34,6 @@ use Ampache\Module\Playback\Localplay\LocalPlay;
 use Ampache\Module\System\Core;
 use Ampache\Module\Util\Ui;
 use Ampache\Module\Util\Upload;
-use Ampache\Repository\CollectionRepositoryInterface;
 use Ampache\Repository\FolderRepositoryInterface;
 use Ampache\Repository\Model\User;
 use Ampache\Repository\VideoRepositoryInterface;
@@ -74,6 +73,7 @@ global $dic;
 /** @var string $t_wanted */
 /** @var string $t_folders */
 /** @var string $t_collections */
+/** @var string $t_newCollection */
 $server_allow     = AmpConfig::get('allow_localplay_playback');
 $controller       = AmpConfig::get('localplay_controller');
 $videoRepository  = $dic->get(VideoRepositoryInterface::class);
@@ -82,7 +82,7 @@ $allowVideo       = AmpConfig::get('allow_video') && $videoRepository->getItemCo
 $allowDemocratic  = AmpConfig::get('allow_democratic_playback');
 $showAlbumArtist  = AmpConfig::get('show_album_artist');
 $showFolder       = AmpConfig::get('show_folder') && $folderRepository->getItemCount();
-$showCollection   = AmpConfig::get('show_collection') && $dic->get(CollectionRepositoryInterface::class)->countByUser(Core::get_global('user') instanceof User ? Core::get_global('user') : null);
+$showCollection   = (bool) AmpConfig::get('show_collection');
 $showArtist       = AmpConfig::get('show_artist');
 $allowLabel       = AmpConfig::get('label');
 $allowPodcast     = AmpConfig::get('podcast');
@@ -238,6 +238,9 @@ if (
             <li id="sb_home_playlist_smartPlaylist"><a href="<?php echo $web_path; ?>/browse.php?action=smartplaylist"><?php echo $t_smartPlaylists; ?></a></li>
         <?php if ($showCollection) { ?>
             <li id="sb_home_playlist_collection"><a href="<?php echo $web_path; ?>/browse.php?action=collection"><?php echo $t_collections; ?></a></li>
+            <?php // Collections have no other entry point, so a fresh install needs this to make its first one.
+            // The whole block already requires `$access25`, which is the level creating one asks for.?>
+            <li id="sb_home_playlist_collectionAdd"><a href="<?php echo $web_path; ?>/collection.php?action=show_create"><?php echo $t_newCollection; ?></a></li>
         <?php } ?>
         <?php if ($allowDemocratic) { ?>
               <li id="sb_home_playlist_playlist"><a href="<?php echo $web_path; ?>/democratic.php?action=show_playlist"><?php echo $t_democratic; ?></a></li>

@@ -25,10 +25,12 @@ declare(strict_types=1);
 
 use Ampache\Module\Application\ApplicationRunner;
 use Ampache\Module\Application\Collection\AddObjectAction;
+use Ampache\Module\Application\Collection\CreateAction;
 use Ampache\Module\Application\Collection\DeleteCollectionAction;
 use Ampache\Module\Application\Collection\RemoveObjectAction;
 use Ampache\Module\Application\Collection\SetTrackNumbersAction;
 use Ampache\Module\Application\Collection\ShowAction;
+use Ampache\Module\Application\Collection\ShowCreateAction;
 use Nyholm\Psr7Server\ServerRequestCreatorInterface;
 use Psr\Container\ContainerInterface;
 
@@ -43,6 +45,8 @@ $dic->get(ApplicationRunner::class)->run(
         RemoveObjectAction::REQUEST_KEY => RemoveObjectAction::class,
         DeleteCollectionAction::REQUEST_KEY => DeleteCollectionAction::class,
         SetTrackNumbersAction::REQUEST_KEY => SetTrackNumbersAction::class,
+        ShowCreateAction::REQUEST_KEY => ShowCreateAction::class,
+        CreateAction::REQUEST_KEY => CreateAction::class,
     ],
     ShowAction::REQUEST_KEY
 );

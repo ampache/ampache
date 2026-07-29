@@ -103,8 +103,10 @@ if ($collection->has_collaborate()) { ?>
     // no drag handle and no order of its own to save
     if ($collection->object_type === null || $collection->object_type === '') { ?>
         <li>
-            <a onclick="submitNewItemsOrder('<?php echo $collection->getId(); ?>', 'reorder_collection_table', 'track_',
-                                            '<?php echo $web_path; ?>/collection.php?action=set_track_numbers&collection=<?php echo $collection->getId(); ?>', '<?php echo RefreshCollectionItemsAction::REQUEST_KEY; ?>')">
+            <?php // Confirmed first: the link sits next to Edit and Delete, and a stray click would overwrite the
+            // stored order with whatever the page happens to be showing. `data-confirm` is no use here because an
+            // inline onclick fires before the delegated handler can intercept it.?>
+            <a onclick="window.ampacheConfirm('<?php echo addslashes(T_('Save the current order of this collection?')); ?>').then(function (ok) { if (ok) { submitNewItemsOrder('<?php echo $collection->getId(); ?>', 'reorder_collection_table', 'track_', '<?php echo $web_path; ?>/collection.php?action=set_track_numbers&collection=<?php echo $collection->getId(); ?>', '<?php echo RefreshCollectionItemsAction::REQUEST_KEY; ?>'); } })">
                 <?php echo Ui::get_material_symbol('save', T_('Save Track Order'));
         echo "&nbsp;" . T_('Save Track Order'); ?>
             </a>
