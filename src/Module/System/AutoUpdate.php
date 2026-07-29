@@ -504,6 +504,20 @@ class AutoUpdate
         }
 
         self::_redirect_npm_home();
+
+        $restored = self::_reset_dirty_vendor_checkouts();
+        if (!empty($restored)) {
+            $message = sprintf(
+                /* HINT: comma separated list of composer package names */
+                T_('Restored modified dependency sources before installing: %s'),
+                implode(', ', $restored)
+            );
+            debug_event(self::class, $message, 3);
+            if (!$api) {
+                echo scrub_out($message) . '<br />';
+            }
+        }
+
         self::_flush_output();
 
         $success = self::_run_command($cmdComposer, $api);
@@ -572,6 +586,50 @@ class AutoUpdate
 
         putenv('HOME=' . $cache);
         putenv('npm_config_cache=' . $cache);
+    }
+
+    /**
+     * Restore vendor git checkouts that were dirtied by install time code generation.
+     *
+     * Composer refuses to remove or update a package installed from source when its working tree has local
+     * modifications, and packages writing into their own directory during install (phpstan/extension-installer
+     * regenerates src/GeneratedConfig.php) leave that state behind. Installs made before the switch to
+     * --prefer-dist still hold those checkouts, so a --no-dev run would abort partway through removing the dev
+     * packages and leave vendor in a broken state.
+     *
+     * @return string[] the packages that were restored
+     */
+    private static function _reset_dirty_vendor_checkouts(): array
+    {
+        $vendor = realpath(__DIR__ . '/../../../vendor');
+        if ($vendor === false) {
+            return [];
+        }
+
+        $restored = [];
+        foreach (glob($vendor . '/*/*/.git', GLOB_ONLYDIR) ?: [] as $gitDir) {
+            $path   = dirname($gitDir);
+            $output = [];
+            $status = 0;
+
+            // composer only inspects tracked files here, so untracked leftovers are not worth touching
+            exec(sprintf('git -C %s status --porcelain --untracked-files=no 2>&1', escapeshellarg($path)), $output, $status);
+            if ($status !== 0 || empty($output)) {
+                continue;
+            }
+
+            $discard = [];
+            exec(sprintf('git -C %s checkout -- . 2>&1', escapeshellarg($path)), $discard, $status);
+            if ($status !== 0) {
+                debug_event(self::class, 'Unable to restore the modified dependency sources at ' . $path, 1);
+
+                continue;
+            }
+
+            $restored[] = str_replace(DIRECTORY_SEPARATOR, '/', substr($path, strlen($vendor) + 1));
+        }
+
+        return $restored;
     }
 
     /**
