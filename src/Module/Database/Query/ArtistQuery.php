@@ -66,6 +66,7 @@ final class ArtistQuery implements QueryInterface
 
     /** @var string[] $sorts */
     protected array $sorts = [
+        'addition_time',
         'album_count',
         'id',
         'name',
@@ -293,6 +294,7 @@ final class ArtistQuery implements QueryInterface
             case 'title':
                 $sql = "`artist`.`name`";
                 break;
+            case 'addition_time':
             case 'album_count':
             case 'id':
             case 'placeformed':
