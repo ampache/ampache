@@ -226,10 +226,30 @@ $(document).on("click", "a[data-multiselect-action]", function (event) {
     run();
 });
 
-$(function () {
-    $("[data-multiselect-scope]").each(function () {
+// Applies the starting state to every scope inside (or equal to) a node: the count, the disabled actions and the
+// tri-state header box all live in markup the server does not render, so they have to be set from here.
+function multiSelectRefreshAll(node) {
+    var $node = $(node);
+
+    $node.filter("[data-multiselect-scope]").add($node.find("[data-multiselect-scope]")).each(function () {
         multiSelectRefresh($(this));
     });
+}
+
+// Toggling an option in the view menu replaces the browse through updateText(), so a bar that arrives after load
+// never saw the ready handler and would sit there uninitialised until the next full page load.
+$(function () {
+    multiSelectRefreshAll(document.body);
+
+    new MutationObserver(function (records) {
+        records.forEach(function (record) {
+            Array.prototype.forEach.call(record.addedNodes, function (node) {
+                if (node.nodeType === 1) {
+                    multiSelectRefreshAll(node);
+                }
+            });
+        });
+    }).observe(document.body, {childList: true, subtree: true});
 });
 
 // Legacy helper for the checkbox lists that predate the scoped bar above, where the only interaction is one

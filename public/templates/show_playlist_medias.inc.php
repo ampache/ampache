@@ -46,7 +46,9 @@ $libraryItemLoader = $dic->get(LibraryItemLoaderInterface::class);
 /** @var Browse $browse */
 /** @var Playlist|Search $playlist */
 /** @var array<int|string>|array<int, array{object_type: LibraryItemEnum|string, object_id: int, track_id: int, track: int}>|array<Song_Preview>|array<int, array{name?: string|null, id: int, track: int, raw: string, link?: string|null, track: int, oid?: int, vlid?: int}>|null $object_ids */
-/** @var bool $argument */
+// show_objects() takes bool|array|string: the page render passes a real bool, but every browse option link
+// carries it back through the url as the string '1', so it arrives typed differently on the ajax refresh
+/** @var bool|string|array<string, mixed> $argument */
 
 $web_path = AmpConfig::get_web_path();
 
@@ -223,7 +225,7 @@ if ($browse->is_show_header()) {
         </table>
     </form>
     </div>
-<?php show_table_render($argument); ?>
+<?php show_table_render(!is_array($argument) && (bool) $argument); ?>
 <?php if ($browse->is_show_header()) {
     require Ui::find_template('list_header.inc.php');
     echo '<span class="item-duration">' . '| ' . $t_duration . ': ' . $duration . '</span>';
