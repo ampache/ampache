@@ -5068,9 +5068,8 @@
               "contents": {
                 "type": "array",
                 "items": {
-                  "$ref": "#/components/schemas/CollectionItemObject"
-                },
-                "description": "The members in curated order. Render them in the order given; `offset` and `limit` page this list without disturbing the order, while the scalar `items` stays the total member count."
+                  "$ref": "#/components/schemas/CollectionGroupObject"
+                }
               }
             },
             "required": [
@@ -5131,26 +5130,13 @@
           },
           "collaborate": {
             "type": "string"
-          },
-          "items": {
-            "type": "string",
-            "description": "Comma separated `object_type:object_id` pairs, e.g. `album:21,song:60`. Each carries its type because a collection is heterogeneous. Must name the same number of entries as `tracks`."
-          },
-          "tracks": {
-            "type": "string",
-            "description": "Comma separated 1-based positions, matched to `items` in order."
           }
         },
-        "additionalProperties": true,
-        "description": "Only the values supplied are changed. `items` and `tracks` are paired in order to reorder members, the same way `playlist_edit` works; send only the pairs you want to change for a partial reorder."
+        "additionalProperties": true
       },
       "CollectionRemoveRequest": {
         "type": "object",
         "properties": {
-          "track": {
-            "type": "integer",
-            "description": "Position of the member to remove."
-          },
           "id": {
             "type": "string"
           },
@@ -5159,8 +5145,7 @@
             "description": "Type of the object"
           }
         },
-        "additionalProperties": true,
-        "description": "Name either a position or an object. `track` removes the single member at that position; `id` with `object_type` removes every member pointing at that object. `track` takes precedence, and without it both `id` and `object_type` are required. Remaining positions close up either way."
+        "additionalProperties": true
       },
       "CollectionAddRequest": {
         "type": "object",
@@ -5176,8 +5161,26 @@
         "required": [
           "id"
         ],
-        "additionalProperties": true,
-        "description": "Appends to the end of the collection, so the order of existing members is untouched. Whether the same object may appear twice is the user's `unique_playlist` preference, which is off by default."
+        "additionalProperties": true
+      },
+      "CollectionGroupObject": {
+        "type": "object",
+        "description": "One group of collection members. `object_type` names the type and the property of the same name carries that type's own objects, e.g. `{\"object_type\": \"album\", \"album\": [...]}`.",
+        "properties": {
+          "object_type": {
+            "type": "string",
+            "description": "The kind of object referenced, as a bare string. The set is intentionally open so a new media type is not a breaking change; values seen today include `song`, `album`, `artist`, `playlist`, `podcast`, `podcast_episode` and `video`."
+          }
+        },
+        "required": [
+          "object_type"
+        ],
+        "additionalProperties": {
+          "type": "array",
+          "items": {
+            "type": "object"
+          }
+        }
       }
     },
     "responses": {

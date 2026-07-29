@@ -1963,12 +1963,12 @@ Name either a position or an object:
 
 Either way the remaining positions close up, so the order stays dense and 1-based. Positions you read before the call are stale afterwards.
 
-| Input         | Type    | Description                                | Optional |
-|---------------|---------|--------------------------------------------|---------:|
-| 'filter'      | string  | UID of Collection                          |       NO |
-| 'track'       | integer | position of the member to remove           |      YES |
-| 'id'          | string  | UID of the object to remove                |      YES |
-| 'object_type' | string  | type of the object to remove               |      YES |
+| Input         | Type    | Description                      | Optional |
+|---------------|---------|----------------------------------|---------:|
+| 'filter'      | string  | UID of Collection                |       NO |
+| 'track'       | integer | position of the member to remove |      YES |
+| 'id'          | string  | UID of the object to remove      |      YES |
+| 'object_type' | string  | type of the object to remove     |      YES |
 
 `track` takes precedence. Without it, both `id` and `object_type` are required.
 
@@ -6847,17 +6847,13 @@ Each `song` entry ([DemocraticSongObject](#democratic)):
 <!-- GENERATED:SHARED-REFS:BEGIN -->
 Objects referenced by the field tables above (as `see <name> fields`) that no single method response documents on its own — the shared reference shapes and a few payloads carried inside another response.
 
-### CollectionItemObject
+### CollectionGroupObject
 
-One member of a collection, at the position it was curated into. In XML this is an `<item>` element carrying `track`, `track_id` and `object_type` as attributes, with that type's own element nested inside.
+One group of collection members. `object_type` names the type and the property of the same name carries that type's own objects, e.g. `{"object_type": "album", "album": [...]}`.
 
-`track_id` is the id of the membership row, not of the object. It is the only stable way to tell two members apart when a collection holds the same object twice.
-
-| Field       | Type    | Nullable | Optional | Notes                                            |
-|-------------|---------|:--------:|:--------:|--------------------------------------------------|
-| track       | integer |    NO    |    NO    | 1-based position in the collection               |
-| track_id    | integer |    NO    |    NO    | id of the membership row                         |
-| object_type | string  |    NO    |    NO    | the element of the same name is nested inside    |
+| Field       | Type   | Nullable | Optional | Notes |
+|-------------|--------|:--------:|:--------:|-------|
+| object_type | string |    NO    |    NO    |       |
 
 ### FolderBrowseItem
 
