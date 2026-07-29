@@ -211,6 +211,7 @@ You can downgrade to Ampache7 if you try this out and have issues, using the cli
   * A finished update never went anywhere: the commands flush their output as they run, so the redirect header could no longer be sent and was dropped. It now returns you to the page the update was started from instead of the home page
 * The `View` menu on a playlist's items did nothing until the page was reloaded, so `Pages`, `Infinite Scroll`, `Alphabet` and `Multi-Select` all looked broken. The `argument` flag comes back from the url as a string and `show_table_render()` only accepts a bool, so it threw a `TypeError` that aborted the response part way through rendering
 * Smartlist art was never gathered from the songs it matches; only a playlist took that path, so a smartlist fell through to the configured art providers and found nothing
+* With `album_art_store_disk` enabled, the art picker could not read any cover a playlist offered from one of its members: the file was looked for under the type being gathered for rather than the type the image row belongs to, so it read `metadata/playlist/<album_id>/` and found nothing
 * Database 800023
   * Uploaded art took its mime type from the filename, storing `image/jpg` (not a real type) for a `.jpg` upload and `image/JPG` for `.JPG`; the type is now read from the image data and existing rows are corrected
   * Where the same artwork was stored twice under both spellings the `image/jpg` row is left as it is, because `unique_image` includes `mime` and no art is deleted during an upgrade
