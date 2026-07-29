@@ -2,10 +2,6 @@
 
 ## Ampache 7.10.1
 
-### Changed (7.10.1)
-
-* Warn develop users that Ampache Develop is about to go through a major change
-
 ### Fixed (7.10.1)
 
 * Deleting a Playlist or Smartlist left its `user_playlist_map` rows behind, so a later list given the freed id inherited the collaborators

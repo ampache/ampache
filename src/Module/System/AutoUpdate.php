@@ -325,13 +325,13 @@ class AutoUpdate
      */
     public static function show_ampache_message(): void
     {
-        if (self::_is_develop()) {
-            echo '<div id="autoupdate">';
-            echo '<span>' . T_("WARNING") . '</span>';
-            echo ' (Ampache Develop is about to go through a major change!)<br />';
-            echo '<a href="https://github.com/ampache/ampache/pull/4387" target="_blank">' . T_('View changes') . '</a><br /> ';
-            echo '</div>';
-        }
+        //if (self::_is_develop()) {
+        //    echo '<div id="autoupdate">';
+        //    echo '<span>' . T_("WARNING") . '</span>';
+        //    echo ' (Ampache Develop is about to go through a major change!)<br />';
+        //    echo '<a href="https://github.com/ampache/ampache/pull/4387" target="_blank">' . T_('View changes') . '</a><br /> ';
+        //    echo '</div>';
+        //}
     }
 
     protected static function _set_lastcheck(int $time): void
