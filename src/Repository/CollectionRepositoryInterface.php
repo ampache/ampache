@@ -31,9 +31,14 @@ use Ampache\Repository\Model\User;
 interface CollectionRepositoryInterface
 {
     /**
-     * Add one object, ignoring a member that is already there
+     * Append one object to the end of the collection
+     *
+     * Pass $unique to refuse an object that is already a member; without it a collection may hold duplicates,
+     * matching how the `unique_playlist` preference governs playlists.
+     *
+     * @return bool false when $unique refused the add
      */
-    public function addItem(int $collectionId, int $objectId, string $objectType): void;
+    public function addItem(int $collectionId, int $objectId, string $objectType, bool $unique = false): bool;
 
     /**
      * Remove members whose object no longer exists, and collections whose owner is gone
@@ -80,11 +85,43 @@ interface CollectionRepositoryInterface
     public function getItemTypes(int $collectionId): array;
 
     /**
+     * The highest position currently used, so an appended member carries on from there
+     */
+    public function getLastTrackNumber(int $collectionId): int;
+
+    /**
+     * Entry ids in their stored order, for renumbering
+     *
+     * @return list<int>
+     */
+    public function getTrackIdsInOrder(int $collectionId): array;
+
+    /**
+     * Whether this exact object is already a member
+     */
+    public function hasItem(int $collectionId, int $objectId, string $objectType): bool;
+
+    /**
      * Whether the object a caller wants to curate is really in its own table
      */
     public function objectExists(string $objectType, int $objectId): bool;
 
+    /**
+     * Renumber every member from 1 so positions stay dense
+     */
+    public function regenerateTrackNumbers(int $collectionId): void;
+
     public function removeItem(int $collectionId, int $objectId, string $objectType): void;
+
+    /**
+     * Remove the single member holding one position
+     */
+    public function removeItemByTrack(int $collectionId, int $track): void;
+
+    /**
+     * Drop whatever sits at $track and put this object there instead
+     */
+    public function replaceTrackAtNumber(int $collectionId, int $objectId, string $objectType, int $track): void;
 
     public function update(
         int $collectionId,

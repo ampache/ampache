@@ -59,7 +59,10 @@ final class CollectionAdd8Method implements MethodInterface
      * collection_add
      * MINIMUM_API_VERSION=800000
      *
-     * Add one object to a collection. Adding the same object twice is a no-op, not a duplicate.
+     * Add one object to the end of a collection.
+     *
+     * A collection may hold the same object more than once unless the user's `unique_playlist` preference is on,
+     * the same preference that governs duplicates in their playlists.
      *
      * filter      = (string) UID of Collection
      * id          = (string) UID of the object to add
@@ -118,7 +121,19 @@ final class CollectionAdd8Method implements MethodInterface
             throw new ResultEmptyException((string) $objectId);
         }
 
-        $this->collectionRepository->addItem($collection->getId(), $objectId, $objectType);
+        if (!$collection->add_item($objectId, $objectType)) {
+            $response->getBody()->write(
+                $output->error(
+                    $apiVersion,
+                    ErrorCodeEnum::BAD_REQUEST,
+                    'Bad Request: collection already holds this object and unique_playlist is enabled',
+                    self::ACTION,
+                    'id'
+                )
+            );
+
+            return $response;
+        }
 
         $response->getBody()->write(
             $output->success($apiVersion, 'added to collection')

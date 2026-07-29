@@ -123,6 +123,24 @@ class Collection extends playlist_object
     }
 
     /**
+     * Append one object to the end of the collection.
+     *
+     * Duplicates follow the user's `unique_playlist` preference rather than a rule of their own, so a
+     * collection behaves the way that user's playlists already do.
+     *
+     * @return bool false when the preference refused a duplicate
+     */
+    public function add_item(int $objectId, string $objectType): bool
+    {
+        return $this->getCollectionRepository()->addItem(
+            $this->getId(),
+            $objectId,
+            $objectType,
+            (bool) AmpConfig::get('unique_playlist', false)
+        );
+    }
+
+    /**
      * The member type that stops this collection being pinned to $objectType, or null when the change is allowed.
      */
     public function conflictingType(string $objectType): ?string
@@ -134,6 +152,18 @@ class Collection extends playlist_object
         }
 
         return null;
+    }
+
+    /**
+     * Remove the member holding one position, then close the gap it left
+     */
+    public function delete_track_number(int $track): bool
+    {
+        $repository = $this->getCollectionRepository();
+        $repository->removeItemByTrack($this->getId(), $track);
+        $repository->regenerateTrackNumbers($this->getId());
+
+        return true;
     }
 
     /**
@@ -254,6 +284,33 @@ class Collection extends playlist_object
         return $medias;
     }
 
+    /**
+     * The members in curated order, keeping the API spelling of each type
+     *
+     * `get_items()` resolves the type to a `LibraryItemEnum`, which turns `genre` into `tag`; the API output
+     * needs the spelling the member was stored under, and the position it holds.
+     *
+     * @return list<array{object_type: string, object_id: int, track: int, track_id: int}>
+     */
+    public function get_ordered_items(): array
+    {
+        $items = [];
+        foreach ($this->getCollectionRepository()->getItems($this->getId()) as $item) {
+            if (!self::isValidType($item['object_type']) || !self::isEnabledType($item['object_type'])) {
+                continue;
+            }
+
+            $items[] = [
+                'object_type' => $item['object_type'],
+                'object_id' => $item['object_id'],
+                'track' => $item['track'],
+                'track_id' => $item['id'],
+            ];
+        }
+
+        return $items;
+    }
+
     public function getMediaType(): LibraryItemEnum
     {
         return LibraryItemEnum::COLLECTION;
@@ -264,12 +321,48 @@ class Collection extends playlist_object
         return Art::has_db($this->id, 'collection');
     }
 
+    public function has_item(int $objectId, string $objectType): bool
+    {
+        return $this->getCollectionRepository()->hasItem($this->getId(), $objectId, $objectType);
+    }
+
     /**
      * Whether the user may see this collection at all; a collaborator counts, they are invited to curate it.
      */
     public function isVisible(?User $user = null): bool
     {
         return ($this->type === 'public' || $this->has_collaborate($user));
+    }
+
+    /**
+     * Renumber the members from 1 so the positions stay dense
+     */
+    public function regenerate_track_numbers(): void
+    {
+        $this->getCollectionRepository()->regenerateTrackNumbers($this->getId());
+    }
+
+    /**
+     * Put one object at one position, dropping whatever held that position before.
+     *
+     * This is how a partial reorder is expressed: the caller sends only the positions it wants to change.
+     */
+    public function set_by_track_number(int $objectId, string $objectType, int $track): bool
+    {
+        if (!$this->acceptsType($objectType)) {
+            return false;
+        }
+
+        if (
+            AmpConfig::get('unique_playlist', false)
+            && $this->has_item($objectId, $objectType)
+        ) {
+            return false;
+        }
+
+        $this->getCollectionRepository()->replaceTrackAtNumber($this->getId(), $objectId, $objectType, $track);
+
+        return true;
     }
 
     /**

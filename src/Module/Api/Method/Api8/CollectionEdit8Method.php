@@ -58,13 +58,21 @@ final class CollectionEdit8Method implements MethodInterface
      * collection_edit
      * MINIMUM_API_VERSION=800000
      *
-     * Change a collection's name, visibility, pinned type or collaborators. Only the fields supplied change.
+     * Change a collection's name, visibility, pinned type, collaborators or member order. Only the fields
+     * supplied change.
+     *
+     * `items` and `tracks` reorder the collection the way `playlist_edit` does: the two lists are paired in
+     * order, and each pair puts one member at one position, replacing whatever held it. Send only the pairs
+     * you want to change for a partial reorder, or every pair for a whole one. Because a collection is
+     * heterogeneous each entry in `items` carries its type, as `object_type:object_id`.
      *
      * filter      = (string) UID of Collection
      * name        = (string) //optional
      * type        = (string) 'public'|'private' //optional
      * object_type = (string) pinned type, or empty string to un-pin back to mixed //optional
      * collaborate = (string) comma separated user ids //optional
+     * items       = (string) comma separated `object_type:object_id` pairs //optional
+     * tracks      = (string) comma separated track numbers matched to items in order //optional
      *
      * @param array{
      *     filter?: string,
@@ -72,6 +80,8 @@ final class CollectionEdit8Method implements MethodInterface
      *     type?: string,
      *     object_type?: string,
      *     collaborate?: string,
+     *     items?: string,
+     *     tracks?: string,
      *     api_format: string,
      *     auth: string,
      * } $input
@@ -113,6 +123,46 @@ final class CollectionEdit8Method implements MethodInterface
 
                 return $response;
             }
+        }
+
+        // Before the pin is written, because `set_by_track_number()` checks each member against the type the
+        // collection is pinned to now
+        if (isset($input['items']) || isset($input['tracks'])) {
+            $items  = explode(',', html_entity_decode((string) ($input['items'] ?? '')));
+            $tracks = explode(',', html_entity_decode((string) ($input['tracks'] ?? '')));
+
+            if (count($items) !== count($tracks)) {
+                $response->getBody()->write(
+                    $output->error(
+                        $apiVersion,
+                        ErrorCodeEnum::BAD_REQUEST,
+                        'Bad Request: items and tracks must name the same number of entries',
+                        self::ACTION,
+                        'items'
+                    )
+                );
+
+                return $response;
+            }
+
+            foreach ($items as $index => $item) {
+                $parts = explode(':', trim($item));
+                if (count($parts) !== 2) {
+                    continue;
+                }
+
+                $memberType = $parts[0];
+                $memberId   = (int) $parts[1];
+                $track      = (int) $tracks[$index];
+                // One unusable pair is skipped rather than failing the whole reorder
+                if ($memberId < 1 || $track < 1 || !Collection::isValidType($memberType)) {
+                    continue;
+                }
+
+                $collection->set_by_track_number($memberId, $memberType, $track);
+            }
+
+            $collection->regenerate_track_numbers();
         }
 
         $type = (isset($input['type']))

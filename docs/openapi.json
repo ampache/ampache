@@ -5009,23 +5009,30 @@
         ],
         "additionalProperties": true
       },
-      "CollectionGroupObject": {
+      "CollectionItemObject": {
         "type": "object",
-        "description": "One group of collection members. `object_type` names the type and the property of the same name carries that type's own objects, e.g. `{\"object_type\": \"album\", \"album\": [...]}`.",
+        "description": "One member of a collection, at the position it was curated into. `object_type` names the type and the property of the same name carries that type's own object, e.g. `{\"track\": 1, \"track_id\": 7, \"object_type\": \"album\", \"album\": {...}}`. `track_id` is the id of the membership row rather than of the object, and is the only stable way to tell two members apart when a collection holds the same object twice.",
         "properties": {
+          "track": {
+            "type": "integer",
+            "description": "The 1-based position this member holds in the collection."
+          },
+          "track_id": {
+            "type": "integer",
+            "description": "Id of the membership row, not of the object it points at."
+          },
           "object_type": {
             "type": "string",
-            "description": "The kind of object referenced, as a bare string. The set is intentionally open so a new media type is not a breaking change; values seen today include `song`, `album`, `artist`, `playlist`, `podcast`, `podcast_episode` and `video`."
+            "description": "The kind of object referenced, as a bare string. The set is intentionally open so a new media type is not a breaking change; values seen today include `song`, `album`, `album_disk`, `artist`, `genre`, `label`, `live_stream`, `playlist`, `podcast`, `podcast_episode` and `video`."
           }
         },
         "required": [
+          "track",
+          "track_id",
           "object_type"
         ],
         "additionalProperties": {
-          "type": "array",
-          "items": {
-            "type": "object"
-          }
+          "type": "object"
         }
       },
       "CollectionItemsResponse": {
@@ -5061,8 +5068,9 @@
               "contents": {
                 "type": "array",
                 "items": {
-                  "$ref": "#/components/schemas/CollectionGroupObject"
-                }
+                  "$ref": "#/components/schemas/CollectionItemObject"
+                },
+                "description": "The members in curated order. Render them in the order given; `offset` and `limit` page this list without disturbing the order, while the scalar `items` stays the total member count."
               }
             },
             "required": [
@@ -5123,13 +5131,26 @@
           },
           "collaborate": {
             "type": "string"
+          },
+          "items": {
+            "type": "string",
+            "description": "Comma separated `object_type:object_id` pairs, e.g. `album:21,song:60`. Each carries its type because a collection is heterogeneous. Must name the same number of entries as `tracks`."
+          },
+          "tracks": {
+            "type": "string",
+            "description": "Comma separated 1-based positions, matched to `items` in order."
           }
         },
-        "additionalProperties": true
+        "additionalProperties": true,
+        "description": "Only the values supplied are changed. `items` and `tracks` are paired in order to reorder members, the same way `playlist_edit` works; send only the pairs you want to change for a partial reorder."
       },
       "CollectionRemoveRequest": {
         "type": "object",
         "properties": {
+          "track": {
+            "type": "integer",
+            "description": "Position of the member to remove."
+          },
           "id": {
             "type": "string"
           },
@@ -5138,10 +5159,8 @@
             "description": "Type of the object"
           }
         },
-        "required": [
-          "id"
-        ],
-        "additionalProperties": true
+        "additionalProperties": true,
+        "description": "Name either a position or an object. `track` removes the single member at that position; `id` with `object_type` removes every member pointing at that object. `track` takes precedence, and without it both `id` and `object_type` are required. Remaining positions close up either way."
       },
       "CollectionAddRequest": {
         "type": "object",
@@ -5157,7 +5176,8 @@
         "required": [
           "id"
         ],
-        "additionalProperties": true
+        "additionalProperties": true,
+        "description": "Appends to the end of the collection, so the order of existing members is untouched. Whether the same object may appear twice is the user's `unique_playlist` preference, which is off by default."
       }
     },
     "responses": {

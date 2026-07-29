@@ -359,26 +359,45 @@ class Xml8_Data
     /**
      * collection_items
      *
-     * One collection's contents, grouped by object type.
+     * One collection's contents, in curated order.
+     *
+     * Every entry names its own position and type, so a client renders the list in the order it arrives.
+     *
+     * The type builders return XML as one blob per call, which cannot be split back apart into the curated
+     * order, so this renders a member at a time. That is one call per distinct member, where the JSON side
+     * manages one per type -- the memo below is what keeps a repeated member from paying twice.
      */
     public static function collection_items(Collection $collection, User $user, string $auth): string
     {
-        self::$count = self::$count ?: $collection->get_item_count();
+        $ordered = $collection->get_ordered_items();
 
-        $string = self::collection_row($collection);
-        foreach ($collection->get_items_by_type() as $objectType => $ids) {
-            $rendered = self::collection_group($objectType, $ids, $user, $auth);
-            if ($rendered === null) {
+        self::$count = self::$count ?: count($ordered);
+        $ordered     = Api::filter_objects($ordered, self::$count, self::$offset, self::$limit);
+
+        // `contents` rather than `items`, which the collection row already uses for the member count
+        $string = self::collection_row($collection) . "	<contents>
+";
+
+        $rendered = [];
+        foreach ($ordered as $item) {
+            $objectType = $item['object_type'];
+            $key        = $objectType . '-' . $item['object_id'];
+            if (!array_key_exists($key, $rendered)) {
+                $rendered[$key] = self::collection_group($objectType, [$item['object_id']], $user, $auth);
+            }
+
+            // A member the builder had nothing for drops out rather than leaving an empty `<item>`
+            if ($rendered[$key] === null || $rendered[$key] === '') {
                 continue;
             }
 
-            // `contents` rather than `items`, which the collection row already uses for the member count
-            $string .= "	<contents object_type=\"" . $objectType . "\">
-" . $rendered . "	</contents>
+            $string .= "		<item track=\"" . $item['track'] . "\" track_id=\"" . $item['track_id'] . "\" object_type=\"" . $objectType . "\">
+" . $rendered[$key] . "		</item>
 ";
         }
 
-        $string .= "</collection>
+        $string .= "	</contents>
+</collection>
 ";
 
         return Api::output_xml($string);

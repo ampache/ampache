@@ -1653,9 +1653,13 @@ Each `collection` entry ([CollectionObject](#collections)):
 
 ### collection_items
 
-A collection's members, grouped by object_type.
+A collection's members, in curated order.
 
-A collection is heterogeneous by design, so a flat list would leave you guessing what each id is. The members arrive under `contents` as one group per type ([CollectionGroupObject](#collectiongroupobject)), each built by the same builder that type's own methods use. The scalar `items` stays the member count.
+**The order is the data.** A collection records the order its members were curated into, so `contents` is one flat list in that order and a client should render it exactly as it arrives. Every entry carries its `track` (the 1-based position), its `track_id` (the membership row, which is what identifies one member when the same object appears more than once) and its `object_type`, and nests that type's own object under a property of the same name — see [CollectionItemObject](#collectionitemobject).
+
+Positions are dense and 1-based. They are renumbered whenever a member is added, removed or moved, so a position is only meaningful against the collection as it was when you read it.
+
+`offset` and `limit` page the list without disturbing the order. The scalar `items` on the collection stays the **total** member count, so it is not reduced by paging.
 
 | Input    | Type    | Description                                      | Optional |
 |----------|---------|--------------------------------------------------|---------:|
@@ -1671,6 +1675,8 @@ Returns a single object.
 | Field      | Type   | Nullable | Optional | Notes                                                            |
 |------------|--------|:--------:|:--------:|------------------------------------------------------------------|
 | collection | object |    NO    |    NO    | `{id, name, owner, type, object_type, items, has_art, contents}` |
+
+`contents` is an ordered array of [CollectionItemObject](#collectionitemobject).
 <!-- GENERATED:RESPONSE:END -->
 
 * throws object
@@ -1704,9 +1710,22 @@ Leave `object_type` out for a mixed collection, or set it to pin the collection 
 
 ### collection_edit
 
-Change a collection's name, visibility, pinned type or collaborators.
+Change a collection's name, visibility, pinned type, collaborators or member order.
 
 Only the values you send are changed. Send an empty `object_type` to un-pin a collection back to mixed; pinning is refused while the collection still holds a different type.
+
+#### Reordering
+
+`items` and `tracks` reorder the members the same way [playlist_edit](#playlist_edit) does: the two lists are paired in order, and each pair puts one member at one position, replacing whatever held that position before. Send only the pairs you want to change for a partial reorder, or every pair for a whole one.
+
+Because a collection is heterogeneous, each entry in `items` carries its type as `object_type:object_id`:
+
+```text
+items=album:21,song:60,album:44
+tracks=1,2,3
+```
+
+The two lists must name the same number of entries or the call is refused. Pairs naming an unknown type, a non-positive id or a non-positive position are skipped rather than failing the whole request. Positions are renumbered afterwards so the order stays dense.
 
 | Input         | Type   | Description                                                     | Optional |
 |---------------|--------|-----------------------------------------------------------------|---------:|
@@ -1715,6 +1734,8 @@ Only the values you send are changed. Send an empty `object_type` to un-pin a co
 | 'type'        | string | `public`, `private`                                             |      YES |
 | 'object_type' | string | Pinned object_type, or an empty string to un-pin                |      YES |
 | 'collaborate' | string | Comma separated list of user ids allowed to curate the contents |      YES |
+| 'items'       | string | Comma separated `object_type:object_id` pairs                   |      YES |
+| 'tracks'      | string | Comma separated positions matched to `items` in order           |      YES |
 
 * return array
 
@@ -1751,9 +1772,13 @@ Delete a collection and its membership rows. The objects it referenced are untou
 
 ### collection_add
 
-Add one object to a collection.
+Add one object to the end of a collection.
 
-Adding the same object twice is a no-op rather than a duplicate. A pinned collection refuses anything but its own type, and an object that does not exist is refused rather than stored as a dangling id.
+The new member takes the next free position, so an add never disturbs the order of what is already there.
+
+Whether a collection may hold the same object twice is the user's `unique_playlist` preference, the same one that governs duplicates in their playlists. It is off by default, so **duplicates are allowed by default**; with it on, adding an object that is already a member is refused with an error rather than silently doing nothing.
+
+A pinned collection refuses anything but its own type, and an object that does not exist is refused rather than stored as a dangling id.
 
 | Input         | Type   | Description               | Optional |
 |---------------|--------|---------------------------|---------:|
@@ -1775,13 +1800,23 @@ Adding the same object twice is a no-op rather than a duplicate. A pinned collec
 
 ### collection_remove
 
-Remove one object from a collection. The object itself is untouched, and removing something that was never a member is not an error.
+Remove members from a collection. The objects themselves are untouched, and removing something that was never a member is not an error.
 
-| Input         | Type   | Description                  | Optional |
-|---------------|--------|------------------------------|---------:|
-| 'filter'      | string | UID of Collection            |       NO |
-| 'id'          | string | UID of the object to remove  |       NO |
-| 'object_type' | string | type of the object to remove |       NO |
+Name either a position or an object:
+
+* `track` removes exactly the one member holding that position.
+* `id` with `object_type` removes **every** member pointing at that object. With duplicates allowed that can be more than one, which is what naming an object rather than a position means.
+
+Either way the remaining positions close up, so the order stays dense and 1-based. Positions you read before the call are stale afterwards.
+
+| Input         | Type    | Description                                | Optional |
+|---------------|---------|--------------------------------------------|---------:|
+| 'filter'      | string  | UID of Collection                          |       NO |
+| 'track'       | integer | position of the member to remove           |      YES |
+| 'id'          | string  | UID of the object to remove                |      YES |
+| 'object_type' | string  | type of the object to remove               |      YES |
+
+`track` takes precedence. Without it, both `id` and `object_type` are required.
 
 * return object
 
@@ -6233,13 +6268,17 @@ Each `localplay_songs` entry ([LocalplaySongObject](#localplay_songs)):
 <!-- GENERATED:SHARED-REFS:BEGIN -->
 Objects referenced by the field tables above (as `see <name> fields`) that no single method response documents on its own — the shared reference shapes and a few payloads carried inside another response.
 
-### CollectionGroupObject
+### CollectionItemObject
 
-One group of collection members. `object_type` names the type and the property of the same name carries that type's own objects, e.g. `{"object_type": "album", "album": [...]}`.
+One member of a collection, at the position it was curated into. `object_type` names the type and the property of the same name carries that type's own object, e.g. `{"track": 1, "track_id": 7, "object_type": "album", "album": {...}}`.
 
-| Field       | Type   | Nullable | Optional | Notes |
-|-------------|--------|:--------:|:--------:|-------|
-| object_type | string |    NO    |    NO    |       |
+`track_id` is the id of the membership row, not of the object. It is the only stable way to tell two members apart when a collection holds the same object twice.
+
+| Field       | Type    | Nullable | Optional | Notes                                                  |
+|-------------|---------|:--------:|:--------:|--------------------------------------------------------|
+| track       | integer |    NO    |    NO    | 1-based position in the collection                     |
+| track_id    | integer |    NO    |    NO    | id of the membership row                               |
+| object_type | string  |    NO    |    NO    | the property of the same name carries the object       |
 
 ### FolderBrowseItem
 

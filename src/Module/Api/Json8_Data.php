@@ -844,7 +844,7 @@ class Json8_Data
      *
      * This takes a name array of objects and return the data in JSON browse object
      *
-     * @param array<int|string>|array<int, array{id: int|string, name: string}> $objects Array of object_ids ["id" => 1, "name" => 'Artist Name']
+     * @param array<int, array{id: int|string, name: string}> $objects Name array from `Catalog::get_name_array()`
      * @return string JSON Object "browse"
      */
     public static function browses(array $objects, string $parent_type, string $child_type, ?int $parent_id = null, ?int $catalog_id = null): string
@@ -869,7 +869,7 @@ class Json8_Data
     /**
      * browses_array
      *
-     * @param array<int|string>|array<int, array{id: int|string, name: string}> $objects Array of object_ids ["id" => 1, "name" => 'Artist Name']
+     * @param array<int, array{id: int|string, name: string}> $objects Name array from `Catalog::get_name_array()`
      * @return array<int, array{
      *     id: string,
      *     name: string,
@@ -985,25 +985,15 @@ class Json8_Data
      */
     public static function collection_items(Collection $collection, User $user, string $auth, bool $object = true): string
     {
-        $grouped = $collection->get_items_by_type();
+        $ordered = $collection->get_ordered_items();
 
-        self::$count = self::$count ?: $collection->get_item_count();
-
-        $contents = [];
-        foreach ($grouped as $objectType => $ids) {
-            $rendered = self::collection_group($objectType, $ids, $user, $auth);
-            if ($rendered === null) {
-                continue;
-            }
-
-            $contents[] = [
-                'object_type' => $objectType,
-                $objectType => $rendered,
-            ];
-        }
+        self::$count = self::$count ?: count($ordered);
+        $ordered     = Api::filter_objects($ordered, self::$count, self::$offset, self::$limit);
 
         // `contents` rather than `items`, which the collection row already uses for the member count
-        $JSON = self::collection_row($collection) + ['contents' => $contents];
+        $JSON = self::collection_row($collection) + [
+            'contents' => self::collection_contents($ordered, $user, $auth),
+        ];
 
         $output = ($object) ? ["collection" => $JSON] : $JSON;
 
@@ -3469,10 +3459,58 @@ class Json8_Data
     }
 
     /**
-     * Render one type group through that type's own builder. Null when the type has no builder.
+     * The members of a collection as one ordered list, each entry tagged with its position and type.
+     *
+     * A collection is heterogeneous, so every entry names its own type and nests the object under that key --
+     * a client walks the list in the order it is given and never has to re-sort. Objects are still built one
+     * batch per type, then looked back up by id, so the curated order costs no extra queries.
+     *
+     * @param array<int, array{object_type: string, object_id: int, track: int, track_id: int}> $items
+     * @return list<array<string, mixed>>
+     */
+    private static function collection_contents(array $items, User $user, string $auth): array
+    {
+        // Keyed by id rather than appended, so a repeated member asks its builder for one row, not two
+        $idsByType = [];
+        foreach ($items as $item) {
+            $idsByType[$item['object_type']][$item['object_id']] = $item['object_id'];
+        }
+
+        // Indexed by type and id, so the walk below can pick each member out in curated order
+        $rendered = [];
+        foreach ($idsByType as $objectType => $ids) {
+            foreach (self::collection_group($objectType, array_values($ids), $user, $auth) ?? [] as $row) {
+                if (array_key_exists('id', $row)) {
+                    $rendered[$objectType][(int) $row['id']] = $row;
+                }
+            }
+        }
+
+        $contents = [];
+        foreach ($items as $item) {
+            $objectType = $item['object_type'];
+            // A member the builder skipped (unreadable, or filtered for this user) drops out rather than
+            // leaving a hole the client has to guess at
+            if (!isset($rendered[$objectType][$item['object_id']])) {
+                continue;
+            }
+
+            $contents[] = [
+                'track' => $item['track'],
+                'track_id' => $item['track_id'],
+                'object_type' => $objectType,
+                $objectType => $rendered[$objectType][$item['object_id']],
+            ];
+        }
+
+        return $contents;
+    }
+
+    /**
+     * Render every member of one type through that type's own builder. Null when the type has no builder.
      *
      * @param list<int> $ids
-     * @return array<mixed>|null
+     * @return array<int, array<string, mixed>>|null
      */
     private static function collection_group(string $objectType, array $ids, User $user, string $auth): ?array
     {

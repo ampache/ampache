@@ -325,8 +325,12 @@ class Api
      * filter_objects
      *
      * This filters the objects based on the limit and offset
-     * @param array<int, mixed> $objects
-     * @return array<int, mixed>
+     *
+     * Generic so a caller keeps whatever element type it passed in; slicing a list never changes its shape.
+     *
+     * @template TValue
+     * @param array<int, TValue> $objects
+     * @return array<int, TValue>
      */
     public static function filter_objects(array $objects, int $count = 0, int $offset = 0, ?int $limit = null, ?bool $encode = null): array
     {

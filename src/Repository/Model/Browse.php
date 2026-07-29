@@ -60,6 +60,7 @@ class Browse extends Query
         'broadcast',
         'catalog',
         'collection',
+        'collection_items',
         'democratic',
         'folder',
         'follower',
@@ -763,6 +764,12 @@ class Browse extends Query
             case 'collection':
                 $box_title = $this->get_title(T_('Collections') . $match);
                 $box_req   = Ui::find_template('show_collections.inc.php');
+                break;
+            case 'collection_items':
+                // Rows, not tiles: the members are of mixed types and each one has to show which type it is
+                $browse->set_grid_view(false);
+                $box_title = $this->get_title(T_('Collection Items') . $match);
+                $box_req   = Ui::find_template('show_collection_items.inc.php');
                 break;
             case 'playlist_localplay':
                 $browse->set_grid_view(false);

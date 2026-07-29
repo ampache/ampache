@@ -77,11 +77,14 @@ You can downgrade to Ampache7 if you try this out and have issues, using the cli
 * Collections
   * A **collection** is a hand-curated list of objects of any type: the static counterpart to a search, and the non-media counterpart to a playlist. Albums, artists, genres, labels, live streams, playlists, podcasts, episodes, songs and videos can all sit in the same list
   * A collection may be left mixed or pinned to a single `object_type`, in which case anything else is refused when it is added
+  * A collection is **ordered**. Members keep the order they were curated into, new ones are appended to the end, and the API can move them a few at a time or all at once. Positions stay dense and 1-based, so they are renumbered after anything is added, removed or moved
+  * A collection may hold the same object twice. This follows the existing `unique_playlist` preference rather than a rule of its own, so it behaves the way that user's playlists already do — off by default, meaning duplicates are allowed
   * Playing one expands its members, so an album contributes its songs and anything that cannot be streamed is skipped; duplicates reached by two different routes are played once
   * Collections have their own art, including the mosaic built from their members when no art is set
   * `public`/`private` visibility and a collaborator list, matching playlists: a collaborator curates the contents, only the owner or an admin can delete the list
   * New `show_collection` preference to show/hide the "Collections" link in the sidebar
-  * Collections in the web interface: a `collection.php` page listing the members grouped by type, a `browse.php?action=collection` browse with the usual sorting and filtering, the standard edit dialog for name, visibility, pinned type and collaborators, and the art picker. Creating a collection and adding or removing its members is API-only in this release
+  * Collections in the web interface: a `collection.php` page listing the members, a `browse.php?action=collection` browse with the usual sorting and filtering, the standard edit dialog for name, visibility, pinned type and collaborators, and the art picker. Creating a collection and adding, removing or reordering its members is API-only in this release
+  * The collection page renders a mixed collection as one ordered list through a new `collection_items` browse type, each row naming its own type. A collection pinned to a single type is handed to that type's own browse instead, so a collection of albums looks like any other album view
   * Collections can be rated and flagged like any other library item
 * API
   * New collection methods `collections`, `collection`, `collection_items`, `collection_create`, `collection_edit`, `collection_delete`, `collection_add` and `collection_remove`, with REST paths under `collections/`

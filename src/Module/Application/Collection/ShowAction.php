@@ -67,11 +67,13 @@ final readonly class ShowAction implements ApplicationActionInterface
             );
             echo T_('You have requested an object that does not exist');
         } else {
+            // `get_items()` is the shape every other ordered browse is fed, so `show_objects()` needs no
+            // special case; the template decides how to lay the members out
             $this->ui->show(
                 'show_collection.inc.php',
                 [
                     'collection' => $collection,
-                    'grouped_ids' => $collection->get_items_by_type(),
+                    'object_ids' => $collection->get_items(),
                 ]
             );
         }

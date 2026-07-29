@@ -58,14 +58,20 @@ final class CollectionRemove8Method implements MethodInterface
      * collection_remove
      * MINIMUM_API_VERSION=800000
      *
-     * Remove one object from a collection. The object itself is untouched.
+     * Remove members from a collection. The objects themselves are untouched.
+     *
+     * Name either a `track` position or an `id`/`object_type` pair. A collection may hold the same object twice,
+     * so naming the object removes every copy of it while naming the position removes exactly one member.
+     * The remaining positions close up so the order stays dense.
      *
      * filter      = (string) UID of Collection
-     * id          = (string) UID of the object to remove
-     * object_type = (string) type of the object to remove
+     * track       = (integer) position of the member to remove //optional
+     * id          = (string) UID of the object to remove //optional
+     * object_type = (string) type of the object to remove //optional
      *
      * @param array{
      *     filter?: string,
+     *     track?: int|string,
      *     id?: string,
      *     object_type?: string,
      *     api_format: string,
@@ -86,6 +92,17 @@ final class CollectionRemove8Method implements MethodInterface
     ): ResponseInterface {
         $collection = $this->loadEditableCollection($input, $user);
 
+        // Removing something that is not a member is not an error: the caller asked for it gone, and it is.
+        if (array_key_exists('track', $input)) {
+            $collection->delete_track_number((int) $input['track']);
+
+            $response->getBody()->write(
+                $output->success($apiVersion, 'removed from collection')
+            );
+
+            return $response;
+        }
+
         foreach (['id', 'object_type'] as $param) {
             if (!array_key_exists($param, $input)) {
                 throw new RequestParamMissingException(
@@ -94,12 +111,14 @@ final class CollectionRemove8Method implements MethodInterface
             }
         }
 
-        // Removing something that is not a member is not an error: the caller asked for it gone, and it is.
         $this->collectionRepository->removeItem(
             $collection->getId(),
             (int) $input['id'],
             (string) $input['object_type']
         );
+
+        // Naming an object can drop several members at once, so the positions are closed up afterwards
+        $collection->regenerate_track_numbers();
 
         $response->getBody()->write(
             $output->success($apiVersion, 'removed from collection')

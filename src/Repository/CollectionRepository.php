@@ -35,15 +35,23 @@ final readonly class CollectionRepository implements CollectionRepositoryInterfa
 {
     public function __construct(private DatabaseConnectionInterface $connection) {}
 
-    public function addItem(int $collectionId, int $objectId, string $objectType): void
+    public function addItem(int $collectionId, int $objectId, string $objectType, bool $unique = false): bool
     {
-        // INSERT IGNORE against the unique key makes adding the same object twice a no-op
+        // `collection_map` has no unique key, so a caller wanting uniqueness has to ask for the check
+        if ($unique && $this->hasItem($collectionId, $objectId, $objectType)) {
+            return false;
+        }
+
+        // Read the tail position first: MySQL rejects a sub-select reading the table being inserted into (1093),
+        // and the derived table that works around it cannot use the index
         $this->connection->query(
-            'INSERT IGNORE INTO `collection_map` (`collection`, `object_id`, `object_type`, `track`) VALUES (?, ?, ?, (SELECT COALESCE(MAX(`track`), 0) + 1 FROM `collection_map` AS `existing` WHERE `existing`.`collection` = ?));',
-            [$collectionId, $objectId, $objectType, $collectionId]
+            'INSERT INTO `collection_map` (`collection`, `object_id`, `object_type`, `track`) VALUES (?, ?, ?, ?);',
+            [$collectionId, $objectId, $objectType, $this->getLastTrackNumber($collectionId) + 1]
         );
 
         $this->touch($collectionId);
+
+        return true;
     }
 
     public function collectGarbage(): void
@@ -187,6 +195,48 @@ final readonly class CollectionRepository implements CollectionRepositoryInterfa
         return $types;
     }
 
+    /**
+     * The highest position currently used, so an appended member carries on from there
+     */
+    public function getLastTrackNumber(int $collectionId): int
+    {
+        return (int) $this->connection->fetchOne(
+            'SELECT MAX(`track`) FROM `collection_map` WHERE `collection` = ?;',
+            [$collectionId]
+        );
+    }
+
+    /**
+     * Entry ids in their stored order, for renumbering after a removal or a move
+     *
+     * @return list<int>
+     */
+    public function getTrackIdsInOrder(int $collectionId): array
+    {
+        $result = $this->connection->query(
+            'SELECT `id` FROM `collection_map` WHERE `collection` = ? ORDER BY `track`, `id`;',
+            [$collectionId]
+        );
+
+        $ids = [];
+        while ($rowId = $result->fetchColumn()) {
+            $ids[] = (int) $rowId;
+        }
+
+        return $ids;
+    }
+
+    /**
+     * Whether this exact object is already a member; only asked when the caller wants uniqueness
+     */
+    public function hasItem(int $collectionId, int $objectId, string $objectType): bool
+    {
+        return (bool) $this->connection->fetchOne(
+            'SELECT `id` FROM `collection_map` WHERE `collection` = ? AND `object_type` = ? AND `object_id` = ?;',
+            [$collectionId, $objectType, $objectId]
+        );
+    }
+
     public function objectExists(string $objectType, int $objectId): bool
     {
         // Asked of the type's own table: several models set their id from the constructor, so `isNew()` lies
@@ -200,11 +250,65 @@ final readonly class CollectionRepository implements CollectionRepositoryInterfa
         );
     }
 
+    /**
+     * Renumber every member from 1 so the positions stay dense after a removal
+     */
+    public function regenerateTrackNumbers(int $collectionId): void
+    {
+        $track = 0;
+        foreach ($this->getTrackIdsInOrder($collectionId) as $mapId) {
+            ++$track;
+            $this->connection->query(
+                'UPDATE `collection_map` SET `track` = ? WHERE `id` = ?;',
+                [$track, $mapId]
+            );
+        }
+
+        $this->touch($collectionId);
+    }
+
+    /**
+     * Remove every member pointing at one object
+     *
+     * With duplicates allowed this can drop more than one row, which is what a caller naming an object means.
+     */
     public function removeItem(int $collectionId, int $objectId, string $objectType): void
     {
         $this->connection->query(
             'DELETE FROM `collection_map` WHERE `collection` = ? AND `object_id` = ? AND `object_type` = ?;',
             [$collectionId, $objectId, $objectType]
+        );
+
+        $this->touch($collectionId);
+    }
+
+    /**
+     * Remove the single member holding one position, whatever object it points at
+     */
+    public function removeItemByTrack(int $collectionId, int $track): void
+    {
+        $this->connection->query(
+            'DELETE FROM `collection_map` WHERE `collection` = ? AND `track` = ? LIMIT 1;',
+            [$collectionId, $track]
+        );
+
+        $this->touch($collectionId);
+    }
+
+    /**
+     * Drop whatever sits at $track and put this object there instead
+     *
+     * Mirrors `PlaylistRepository::replaceTrackAtNumber()`, but a collection member needs its type too.
+     */
+    public function replaceTrackAtNumber(int $collectionId, int $objectId, string $objectType, int $track): void
+    {
+        $this->connection->query(
+            'DELETE FROM `collection_map` WHERE `collection` = ? AND `track` = ?;',
+            [$collectionId, $track]
+        );
+        $this->connection->query(
+            'INSERT INTO `collection_map` (`collection`, `object_type`, `object_id`, `track`) VALUES (?, ?, ?, ?);',
+            [$collectionId, $objectType, $objectId, $track]
         );
 
         $this->touch($collectionId);

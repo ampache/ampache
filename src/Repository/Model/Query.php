@@ -31,6 +31,7 @@ use Ampache\Module\Database\Query\AlbumQuery;
 use Ampache\Module\Database\Query\ArtistQuery;
 use Ampache\Module\Database\Query\BroadcastQuery;
 use Ampache\Module\Database\Query\CatalogQuery;
+use Ampache\Module\Database\Query\CollectionItemsQuery;
 use Ampache\Module\Database\Query\CollectionQuery;
 use Ampache\Module\Database\Query\DemocraticQuery;
 use Ampache\Module\Database\Query\FolderQuery;
@@ -214,6 +215,8 @@ class Query
                 return CatalogQuery::FILTERS;
             case 'collection':
                 return CollectionQuery::FILTERS;
+            case 'collection_items':
+                return CollectionItemsQuery::FILTERS;
             case 'democratic':
                 return DemocraticQuery::FILTERS;
             case 'folder':
@@ -853,6 +856,9 @@ class Query
                 break;
             case 'collection':
                 $this->queryType = new CollectionQuery();
+                break;
+            case 'collection_items':
+                $this->queryType = new CollectionItemsQuery();
                 break;
             case 'democratic':
                 $this->queryType = new DemocraticQuery();

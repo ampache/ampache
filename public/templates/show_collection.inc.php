@@ -31,12 +31,13 @@ use Ampache\Module\Playback\Stream_Playlist;
 use Ampache\Module\Util\Ui;
 use Ampache\Repository\Model\Browse;
 use Ampache\Repository\Model\Collection;
+use Ampache\Repository\Model\LibraryItemEnum;
 use Ampache\Repository\Model\Rating;
 use Ampache\Repository\Model\User;
 use Ampache\Repository\Model\Userflag;
 
 /** @var Collection $collection */
-/** @var array<string, list<int>> $grouped_ids */
+/** @var array<int, array{object_type: LibraryItemEnum, object_id: int, track_id: int, track: int, time: int}> $object_ids */
 
 $web_path = AmpConfig::get_web_path();
 
@@ -108,22 +109,26 @@ if ($collection->has_access()) { ?>
     </ul>
 </div>
 <?php Ui::show_box_bottom(); ?>
-<?php if ($grouped_ids === []) { ?>
+<?php if ($object_ids === []) { ?>
     <p><?php echo T_('This Collection is empty'); ?></p>
 <?php } else {
-    // One browse per type, the way the API groups a heterogeneous collection rather than mixing rows
-    foreach ($grouped_ids as $objectType => $objectIds) {
-        $browseType = Collection::normalizeType((string) $objectType);
-        if (!Browse::is_valid_type($browseType)) {
-            continue;
-        }
+    $pinnedType = ($collection->object_type === null || $collection->object_type === '')
+        ? null
+        : Collection::normalizeType($collection->object_type);
 
-        $browse = new Browse();
-        $browse->set_type($browseType);
-        $browse->set_use_filters(false);
-        $browse->set_static_content(true);
-        // no second argument: that is the playlist reorder flag, and a collection has no drag handle
-        $browse->show_objects($objectIds);
-        $browse->store();
+    $browse = new Browse();
+    $browse->set_use_filters(false);
+    $browse->set_static_content(true);
+
+    if ($pinnedType !== null && Browse::is_valid_type($pinnedType)) {
+        // Every member shares one type, so that type's own browse can render it the way it always does
+        $browse->set_type($pinnedType);
+        $browse->show_objects(array_column($object_ids, 'object_id'));
+    } else {
+        // Mixed, so the members stay in one list in curated order and each row names its own type
+        $browse->set_type('collection_items');
+        $browse->show_objects($object_ids);
     }
+
+    $browse->store();
 } ?>
