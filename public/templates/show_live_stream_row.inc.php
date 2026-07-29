@@ -97,6 +97,6 @@ if (Access::check(AccessTypeEnum::INTERFACE, AccessLevelEnum::CONTENT_MANAGER)) 
         <?php
 }
 if (Access::check(AccessTypeEnum::INTERFACE, AccessLevelEnum::MANAGER)) {
-    echo Ajax::button('?page=browse&action=delete_object&type=live_stream&id=' . $libitem->id, 'close', T_('Delete'), 'delete_live_stream_' . $libitem->id);
+    echo Ajax::button('?page=browse&action=delete_object&type=live_stream&id=' . $libitem->id, 'close', T_('Delete'), 'delete_live_stream_' . $libitem->id, '', '', T_('Are you sure?'));
 } ?>
 </td>

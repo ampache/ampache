@@ -94,6 +94,6 @@ if ($libitem->has_access()) { ?>
                 <a id="<?php echo 'edit_playlist_' . $libitem->id; ?>" onclick="showEditDialog('search_row', '<?php echo $libitem->id; ?>', '<?php echo 'edit_playlist_' . $libitem->id; ?>', '<?php echo addslashes(T_('Smart Playlist Edit')); ?>', 'smartplaylist_row_')">
                     <?php echo Ui::get_material_symbol('edit', T_('Edit')); ?>
                 </a>
-    <?php echo Ajax::button('?page=browse&action=delete_object&type=smartplaylist&id=' . $libitem->id, 'close', T_('Delete'), 'delete_playlist_' . $libitem->id);
+    <?php echo Ajax::button('?page=browse&action=delete_object&type=smartplaylist&id=' . $libitem->id, 'close', T_('Delete'), 'delete_playlist_' . $libitem->id, '', '', T_('Are you sure?'));
 } ?>
 </td>
