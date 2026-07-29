@@ -508,8 +508,7 @@ class AutoUpdate
         $restored = self::_reset_dirty_vendor_checkouts();
         if (!empty($restored)) {
             $message = sprintf(
-                /* HINT: comma separated list of composer package names */
-                T_('Restored modified dependency sources before installing: %s'),
+                'Restored: %s',
                 implode(', ', $restored)
             );
             debug_event(self::class, $message, 3);
