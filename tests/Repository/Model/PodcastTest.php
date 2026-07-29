@@ -35,6 +35,21 @@ class PodcastTest extends TestCase
 {
     private Podcast $subject;
 
+    /**
+     * @return Generator<array{0: string, 1: string}>
+     */
+    public static function feedUrlDataProvider(): Generator
+    {
+        // Kept, because the feed has to be fetchable over http
+        yield ['http://some-server.com/feed.xml', 'http://some-server.com/feed.xml'];
+        yield ['https://some-server.com/feed.xml', 'https://some-server.com/feed.xml'];
+        // Refused, leaving the previous value in place rather than storing something unfetchable
+        yield ['ftp://some-server.com/feed.xml', ''];
+        yield ['javascript:alert(1)', ''];
+        yield ['some-value', ''];
+        yield ['', ''];
+    }
+
     public static function getterSetterDataProvider(): Generator
     {
         yield ['EpisodeCount', 0, 666];
@@ -44,7 +59,6 @@ class PodcastTest extends TestCase
         yield ['Website', '', 'some-value',];
         yield ['Copyright', '', 'some-value',];
         yield ['Language', '', 'chars',];
-        yield ['FeedUrl', '', 'some-value',];
         yield ['Title', '', 'some-value',];
         yield ['Description', '', 'some-value',];
     }
@@ -148,6 +162,33 @@ class PodcastTest extends TestCase
     {
         self::assertTrue(
             $this->subject->isNew()
+        );
+    }
+
+    /**
+     * Unlike the other setters this one validates, so it gets its own case
+     */
+    #[DataProvider(methodName: 'feedUrlDataProvider')]
+    public function testSetFeedUrlKeepsOnlyHttpUrls(string $value, string $expectation): void
+    {
+        $this->subject->setFeedUrl($value);
+
+        self::assertSame(
+            $expectation,
+            $this->subject->getFeedUrl()
+        );
+    }
+
+    public function testSetFeedUrlKeepsThePreviousValueWhenRefused(): void
+    {
+        $feedUrl = 'https://some-server.com/feed.xml';
+
+        $this->subject->setFeedUrl($feedUrl);
+        $this->subject->setFeedUrl('not-a-url');
+
+        self::assertSame(
+            $feedUrl,
+            $this->subject->getFeedUrl()
         );
     }
 
