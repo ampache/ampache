@@ -48,7 +48,7 @@ $current_type = (string) ($libitem->object_type ?? ''); ?>
                 </td>
             </tr>
             <tr>
-                <td class="edit_dialog_content_header"><?php echo T_('Holds'); ?></td>
+                <td class="edit_dialog_content_header"><?php echo T_('Object Type'); ?></td>
                 <td>
 <?php // Only types the current contents allow are offered, so a refused re-pin cannot be chosen in the first
 // place; `Collection::update()` still checks, because the API shares the same rule.
