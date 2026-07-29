@@ -4,6 +4,7 @@
 
 ### Fixed (7.10.1)
 
+* Podcast feed urls beginning `https://` were silently discarded, so editing a podcast's feed appeared to do nothing and a podcast created from an https feed was stored with an empty one. The check meant to keep http and https urls was inverted, and also let through schemes like `ftp://` that it was there to refuse
 * Deleting a Playlist or Smartlist left its `user_playlist_map` rows behind, so a later list given the freed id inherited the collaborators
 * User deletion and garbage collection stepped over `user_playlist_map` because it names its column `user_id`
 * Update sources
