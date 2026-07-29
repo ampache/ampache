@@ -42,7 +42,7 @@ trait RequestParserTrait
      * Read the plain fields out of a multipart body. Uploads do not belong on these routes, so parts carrying
      * a filename are skipped rather than handled.
      *
-     * @return array<string, mixed>
+     * @return array<array-key, mixed>
      */
     private function parseMultipartBody(string $body, string $contentType): array
     {
@@ -50,8 +50,10 @@ trait RequestParserTrait
             return [];
         }
 
+        $boundary = ($matches[1] !== '') ? $matches[1] : $matches[2];
+
         $result = [];
-        foreach (explode('--' . ($matches[1] ?: $matches[2]), $body) as $part) {
+        foreach (explode('--' . $boundary, $body) as $part) {
             $segments = explode("\r\n\r\n", ltrim($part, "\r\n"), 2);
             if (
                 count($segments) !== 2
@@ -61,17 +63,24 @@ trait RequestParserTrait
                 continue;
             }
 
-            $name  = trim($nameMatch[1] ?: $nameMatch[2]);
+            $name  = trim(($nameMatch[1] !== '') ? $nameMatch[1] : ($nameMatch[2] ?? ''));
             $value = rtrim($segments[1], "\r\n");
             if ($name === '') {
                 continue;
             }
 
-            if (str_ends_with($name, '[]')) {
-                $result[substr($name, 0, -2)][] = $value;
-            } else {
+            if (!str_ends_with($name, '[]')) {
                 $result[$name] = $value;
+
+                continue;
             }
+
+            $key = substr($name, 0, -2);
+            if (!isset($result[$key]) || !is_array($result[$key])) {
+                $result[$key] = [];
+            }
+
+            $result[$key][] = $value;
         }
 
         return $result;
@@ -80,7 +89,7 @@ trait RequestParserTrait
     /**
      * Extract request parameters carried in the body (form-encoded or application/json).
      *
-     * @return array<string, mixed>
+     * @return array<array-key, mixed>
      */
     private function parseRequestBody(ServerRequestInterface $request): array
     {
