@@ -546,7 +546,13 @@ class Art extends database_object
             $db_results = Dba::read($sql, [$data['db']]);
             if ($row = Dba::fetch_assoc($db_results)) {
                 if (AmpConfig::get('album_art_store_disk')) {
-                    return (string) self::_read_from_dir('original', $type, $row['object_id'], 'default', $row['mime']);
+                    return (string) self::_read_from_dir(
+                        'original',
+                        (string) $row['object_type'],
+                        (int) $row['object_id'],
+                        (empty($row['kind'])) ? 'default' : (string) $row['kind'],
+                        $row['mime']
+                    );
                 }
 
                 return $row['image'];
