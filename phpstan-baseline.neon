@@ -157,12 +157,6 @@ parameters:
 			path: src/Module/Api/Method/MethodInterface.php
 
 		-
-			message: '#^Strict comparison using \=\=\= between false and false will always evaluate to true\.$#'
-			identifier: identical.alwaysTrue
-			count: 1
-			path: src/Module/Api/SubsonicApiApplication.php
-
-		-
 			message: '#^Method Ampache\\Module\\Api\\Upnp_Api\:\:_callSearch\(\) has parameter \$count with no type specified\.$#'
 			identifier: missingType.parameter
 			count: 1
