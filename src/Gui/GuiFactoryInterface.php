@@ -83,6 +83,7 @@ interface GuiFactoryInterface
         GuiGatekeeperInterface $gatekeeper,
         string $object_type,
         string $object_id,
+        string $object_groups = '',
     ): NewPlaylistDialogAdapterInterface;
 
     public function createPlaylistViewAdapter(

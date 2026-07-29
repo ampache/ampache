@@ -5,7 +5,7 @@
         <a
             href="javascript:void(0);"
             id="rb_append_dplaylist_new"
-            onclick="createNewPlaylist('${ADAPTER/getNewPlaylistTitle}', '${ADAPTER/getAjaxUri}?page=playlist&action=append_item&item_type=${ADAPTER/getObjectType}&item_id=${ADAPTER/getObjectIds}', 'rb_append_dplaylist_new');"
+            onclick="createNewPlaylist('${ADAPTER/getNewPlaylistTitle}', '${ADAPTER/getAjaxUri}?page=playlist&action=append_item&item_type=${ADAPTER/getObjectType}&item_id=${ADAPTER/getObjectIds}', 'rb_append_dplaylist_new', '${ADAPTER/getObjectGroups}');"
             tal:content="ADAPTER/getNewPlaylistTitle"
         >TITLE</a>
     </li>
@@ -13,7 +13,7 @@
         <a
             href="javascript:void(0);"
             id="rb_append_dplaylist_${playlist/id}"
-            onclick="handlePlaylistAction('${ADAPTER/getAjaxUri}?page=playlist&action=append_item&playlist_id=${playlist/id}&item_type=${ADAPTER/getObjectType}&item_id=${ADAPTER/getObjectIds}', 'rb_append_dplaylist_${playlist/id}');"
+            onclick="handlePlaylistAction('${ADAPTER/getAjaxUri}?page=playlist&action=append_item&playlist_id=${playlist/id}&item_type=${ADAPTER/getObjectType}&item_id=${ADAPTER/getObjectIds}', 'rb_append_dplaylist_${playlist/id}', '${ADAPTER/getObjectGroups}');"
             tal:content="playlist/get_fullname"
         >NAME</a>
     </li>

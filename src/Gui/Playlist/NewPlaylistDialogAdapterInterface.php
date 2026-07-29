@@ -31,6 +31,8 @@ interface NewPlaylistDialogAdapterInterface
 
     public function getNewPlaylistTitle(): string;
 
+    public function getObjectGroups(): string;
+
     public function getObjectIds(): string;
 
     public function getObjectType(): string;

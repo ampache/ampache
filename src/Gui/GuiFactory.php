@@ -161,13 +161,15 @@ final readonly class GuiFactory implements GuiFactoryInterface
         GuiGatekeeperInterface $gatekeeper,
         string $object_type,
         string $object_id,
+        string $object_groups = '',
     ): NewPlaylistDialogAdapterInterface {
         return new NewPlaylistDialogAdapter(
             $this->playlistLoader,
             $this->ajaxUriRetriever,
             $gatekeeper,
             $object_type,
-            $object_id
+            $object_id,
+            $object_groups
         );
     }
 

@@ -88,7 +88,10 @@ final class ShowEditPlaylistAction extends AbstractEditAction
                 $this->guiFactory->createNewPlaylistDialogAdapter(
                     $gatekeeper,
                     $object_type,
-                    $request->getQueryParams()['id']
+                    $request->getQueryParams()['id'],
+                    // a multi-select spanning types sends every group; the access check above still runs
+                    // against `object_type`, which carries the first of them
+                    (string) ($request->getQueryParams()['groups'] ?? '')
                 )
             )
             ->render();

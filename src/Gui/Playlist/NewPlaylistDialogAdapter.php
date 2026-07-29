@@ -38,6 +38,7 @@ final readonly class NewPlaylistDialogAdapter implements NewPlaylistDialogAdapte
         private GuiGatekeeperInterface $gatekeeper,
         private string $object_type,
         private string $object_ids,
+        private string $object_groups = '',
     ) {}
 
     /**
@@ -51,6 +52,14 @@ final readonly class NewPlaylistDialogAdapter implements NewPlaylistDialogAdapte
     public function getNewPlaylistTitle(): string
     {
         return T_('Playlist Name');
+    }
+
+    /**
+     * A multi-select spanning types, as `type:id,id;type:id,id`. Empty for a single object.
+     */
+    public function getObjectGroups(): string
+    {
+        return $this->object_groups;
     }
 
     public function getObjectIds(): string

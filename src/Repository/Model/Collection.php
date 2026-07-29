@@ -336,6 +336,14 @@ class Collection extends playlist_object
     }
 
     /**
+     * @return array<int, array{object_type: LibraryItemEnum, object_id: int}>
+     */
+    protected function get_art_items(): array
+    {
+        return $this->get_items();
+    }
+
+    /**
      * @deprecated inject dependency
      */
     private function getCollectionRepository(): CollectionRepositoryInterface

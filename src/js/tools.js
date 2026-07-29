@@ -67,12 +67,15 @@ export function overlayclickclose() {
     closeplaylist = 1;
 }
 
-export function showPlaylistDialog(e, item_type, item_ids) {
+export function showPlaylistDialog(e, item_type, item_ids, item_groups) {
     $("#playlistdialog").dialog("close");
 
     var parent = window;
     parent.itemType = item_type;
     parent.contentUrl = jsAjaxServer + "/edit.server.php?action=show_edit_playlist&object_type=" + item_type + "&id=" + item_ids;
+    if (item_groups) {
+        parent.contentUrl += "&groups=" + encodeURIComponent(item_groups);
+    }
     parent.editDialogId = "<div id=\"playlistdialog\"></div>";
 
     $(parent.editDialogId).dialog({
@@ -108,16 +111,63 @@ export function showPlaylistDialog(e, item_type, item_ids) {
     closeplaylist = 0;
 }
 
-export function handlePlaylistAction(url, id) {
-    ajaxPut(url, id);
+// append_item takes one type per call, so a selection spanning types is sent group by group. The first call
+// carries any new-playlist name and reports the id it created, which the rest are then appended to.
+function appendPlaylistGroups(url, groups, id) {
+    var pending = String(groups).split(";").filter(Boolean).map(function (group) {
+        var parts = group.split(":");
+
+        return {type: parts[0], ids: parts.slice(1).join(":")};
+    });
+
+    if (pending.length === 0) {
+        ajaxPut(url, id);
+
+        return;
+    }
+
+    // the url already carries the first group, so send it as-is and swap the type/ids in for the others
+    var base = url.replace(/&item_type=[^&]*/, "").replace(/&item_id=[^&]*/, "");
+
+    (function step(index, target) {
+        if (index >= pending.length) {
+            return;
+        }
+
+        var group = pending[index];
+        // the id list stays a bare `1,2`: an encoded comma is refused with a 400 before it reaches php
+        var call = target +
+            "&item_type=" + group.type.replace(/[^a-z_]/g, "") +
+            "&item_id=" + group.ids.replace(/[^0-9,]/g, "");
+
+        $.ajax(call, {type: "post", dataType: "xml", success: function (data) {
+            processContents(data);
+
+            var created = $(data).find("content[div='playlist_id']").text();
+            if (created && target.indexOf("playlist_id=") === -1) {
+                target += "&playlist_id=" + created;
+            }
+
+            step(index + 1, target);
+        }});
+    }(0, base));
+}
+
+export function handlePlaylistAction(url, id, groups) {
+    if (groups) {
+        appendPlaylistGroups(url, groups, id);
+    } else {
+        ajaxPut(url, id);
+    }
+
     $("#playlistdialog").dialog("close");
 }
 
-export function createNewPlaylist(title, url, id) {
+export function createNewPlaylist(title, url, id, groups) {
     var plname = window.prompt(title, "");
     if (plname !== null) {
-        url += "&name=" + plname;
-        handlePlaylistAction(url, id);
+        url += "&name=" + encodeURIComponent(plname);
+        handlePlaylistAction(url, id, groups);
     }
 }
 

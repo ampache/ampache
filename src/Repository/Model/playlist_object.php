@@ -91,11 +91,12 @@ abstract class playlist_object extends database_object implements
     {
         $web_path = AmpConfig::get_web_path();
 
-        $medias = $this->get_medias();
+        $medias = $this->get_art_items();
         $count  = 0;
         $images = [];
         $tiles  = [];
         $seen   = [];
+        $hashes = [];
         $title  = T_('Playlist Items');
         $mosaic = make_bool(AmpConfig::get(ConfigurationKeyEnum::PLAYLIST_ART_MOSAIC, true));
         // Shuffle so the covers picked aren't just the first few, but seed it from the playlist and its
@@ -129,8 +130,16 @@ abstract class playlist_object extends database_object implements
 
                 $art = new Art($media['object_id'], $media['object_type']->value);
                 if ($art->has_db_info()) {
-                    $seen[$key] = true;
-                    $link       = $web_path . "/image.php?object_id=" . $media['object_id'] . "&object_type=" . $media['object_type']->value;
+                    // Several songs off one album each carry their own copy of the album cover, so the same
+                    // picture arrives under different ids; hash the bytes to keep one tile per cover.
+                    $hash = ($art->raw === null || $art->raw === '') ? '' : md5($art->raw);
+                    if ($hash !== '' && isset($hashes[$hash])) {
+                        continue;
+                    }
+
+                    $hashes[$hash] = true;
+                    $seen[$key]    = true;
+                    $link          = $web_path . "/image.php?object_id=" . $media['object_id'] . "&object_type=" . $media['object_type']->value;
                     // The row id matters as well as the link: `url` is relative, so anything reading these
                     // back (the art picker, image.php) can't fetch it and would show the cover as invalid.
                     $images[]   = [
@@ -513,6 +522,16 @@ abstract class playlist_object extends database_object implements
             Core::get_global('user')?->getId() == $this->user
             || Access::check(AccessTypeEnum::INTERFACE, AccessLevelEnum::CONTENT_MANAGER)
         );
+    }
+
+    /**
+     * The items art is gathered from. A playlist has only what it plays; a collection holds its members.
+     *
+     * @return array<int, array{object_type: LibraryItemEnum, object_id: int}>
+     */
+    protected function get_art_items(): array
+    {
+        return $this->get_medias();
     }
 
     /**

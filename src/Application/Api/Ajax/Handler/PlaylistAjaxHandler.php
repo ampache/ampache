@@ -144,7 +144,8 @@ final readonly class PlaylistAjaxHandler implements AjaxHandlerInterface
                     debug_event('playlist.ajax', 'Items added successfully!', 5);
                     ob_start();
                     display_notification(T_('Added to playlist'));
-                    $results['reloader'] = ob_get_clean();
+                    $results['reloader']    = ob_get_clean();
+                    $results['playlist_id'] = (string) $playlist->id;
                 } else {
                     debug_event('playlist.ajax', 'No item to add. Aborting...', 5);
                 }

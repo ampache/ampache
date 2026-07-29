@@ -95,9 +95,13 @@ class OpenSubsonicSpecVersionTest extends TestCase
 
     public function testCommittedSpecIsTheAuditedBuild(): void
     {
+        // the spec is `text=auto`, so a windows checkout holds CRLF while the commit holds LF; hash the
+        // normalised content or the guard fires on the line endings rather than on a changed spec
+        $spec = str_replace("\r\n", "\n", (string) file_get_contents(self::specPath()));
+
         self::assertSame(
             self::SPEC_SHA256,
-            hash_file('sha256', self::specPath()),
+            hash('sha256', $spec),
             'docs/openapi-opensubsonic.json changed. Re-audit the implementation against the new build, then update '
             . 'SPEC_SHA256 here and the compliance date in docs/API-subsonic.md.'
         );

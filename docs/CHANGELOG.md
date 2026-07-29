@@ -113,6 +113,9 @@ You can downgrade to Ampache7 if you try this out and have issues, using the cli
 * Config version 92
   * New `allow_lost_password` option. Setting it to `false` hides the `Lost Password` link and rejects `lostpassword.php`, so nobody can trigger reset mail to your users by posting to it directly
   * New `show_mini_player` option to hide the `Mini player` button on the login form; `/m/` stays reachable by url either way
+* Add to playlist
+  * The action is on the artist, smartlist, podcast, podcast episode, radio station and video pages, which only offered the temporary playlist before
+  * Podcast rows carry it as well, so a whole podcast can be added from a browse the way an album already could
 
 ### Changed (8.0.0)
 
@@ -205,6 +208,9 @@ You can downgrade to Ampache7 if you try this out and have issues, using the cli
   * The update is refused up front, before the sources are pulled, when `exec()` is disabled or when the checkout, `node_modules` or `vendor` cannot be written by the web server user
   * Dependencies were installed with `--prefer-source`, which checks out every package as a git working tree; `--prefer-dist` is used instead
   * A package that rewrites one of its own tracked files during install (`phpstan/extension-installer` and its `src/GeneratedConfig.php`) left that checkout dirty, and composer refuses to remove a modified source install, so a `composer_no_dev` update aborted while stripping the dev packages and left `vendor` incomplete. Dirty vendor checkouts are restored before the install runs
+  * A finished update never went anywhere: the commands flush their output as they run, so the redirect header could no longer be sent and was dropped. It now returns you to the page the update was started from instead of the home page
+* The `View` menu on a playlist's items did nothing until the page was reloaded, so `Pages`, `Infinite Scroll`, `Alphabet` and `Multi-Select` all looked broken. The `argument` flag comes back from the url as a string and `show_table_render()` only accepts a bool, so it threw a `TypeError` that aborted the response part way through rendering
+* Smartlist art was never gathered from the songs it matches; only a playlist took that path, so a smartlist fell through to the configured art providers and found nothing
 * Database 800023
   * Uploaded art took its mime type from the filename, storing `image/jpg` (not a real type) for a `.jpg` upload and `image/JPG` for `.JPG`; the type is now read from the image data and existing rows are corrected
   * Where the same artwork was stored twice under both spellings the `image/jpg` row is left as it is, because `unique_image` includes `mime` and no art is deleted during an upgrade
