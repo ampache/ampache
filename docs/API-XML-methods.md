@@ -519,6 +519,7 @@ Each `album` entry ([AlbumObject](#album)):
 | averagerating | number                                         |   YES    |    NO    |                                              |
 | mbid          | string                                         |   YES    |    NO    |                                              |
 | mbid_group    | string                                         |   YES    |    NO    |                                              |
+| catalog       | string                                         |    NO    |    NO    |                                              |
 <!-- GENERATED:RESPONSE:END -->
 
 * throws
@@ -572,6 +573,7 @@ Returns a single object.
 | averagerating | number                                         |   YES    |    NO    |                                              |
 | mbid          | string                                         |   YES    |    NO    |                                              |
 | mbid_group    | string                                         |   YES    |    NO    |                                              |
+| catalog       | string                                         |    NO    |    NO    |                                              |
 <!-- GENERATED:RESPONSE:END -->
 
 * throws
@@ -737,6 +739,7 @@ Each `album_disk` entry ([AlbumDiskObject](#album_disk)):
 | averagerating | number                                         |   YES    |    NO    |                                              |
 | mbid          | string                                         |   YES    |    NO    |                                              |
 | mbid_group    | string                                         |   YES    |    NO    |                                              |
+| catalog       | string                                         |    NO    |    NO    |                                              |
 <!-- GENERATED:RESPONSE:END -->
 
 * throws object
@@ -790,6 +793,7 @@ Returns a single object.
 | averagerating | number                                         |   YES    |    NO    |                                              |
 | mbid          | string                                         |   YES    |    NO    |                                              |
 | mbid_group    | string                                         |   YES    |    NO    |                                              |
+| catalog       | string                                         |    NO    |    NO    |                                              |
 <!-- GENERATED:RESPONSE:END -->
 
 * throws object
@@ -1066,6 +1070,7 @@ Each `album` entry ([AlbumObject](#album)):
 | averagerating | number                                         |   YES    |    NO    |                                              |
 | mbid          | string                                         |   YES    |    NO    |                                              |
 | mbid_group    | string                                         |   YES    |    NO    |                                              |
+| catalog       | string                                         |    NO    |    NO    |                                              |
 <!-- GENERATED:RESPONSE:END -->
 
 * throws
@@ -2490,6 +2495,7 @@ Each `album` entry ([AlbumObject](#album)):
 | averagerating | number                                         |   YES    |    NO    |                                              |
 | mbid          | string                                         |   YES    |    NO    |                                              |
 | mbid_group    | string                                         |   YES    |    NO    |                                              |
+| catalog       | string                                         |    NO    |    NO    |                                              |
 <!-- GENERATED:RESPONSE:END -->
 
 * throws
@@ -4224,6 +4230,7 @@ Returns a single object.
 | flag            | boolean                                               |    NO    |    NO    |                                                     |
 | rating          | integer                                               |   YES    |    NO    |                                                     |
 | averagerating   | number                                                |   YES    |    NO    |                                                     |
+| catalog         | string                                                |    NO    |    NO    |                                                     |
 | podcast_episode | array&lt;[PodcastEpisodeObject](#podcast_episode)&gt; |    NO    |    NO    | see [PodcastEpisodeObject](#podcast_episode) fields |
 <!-- GENERATED:RESPONSE:END -->
 
@@ -4287,6 +4294,7 @@ Each `podcast` entry ([PodcastObject](#podcast)):
 | flag            | boolean                                               |    NO    |    NO    |                                                     |
 | rating          | integer                                               |   YES    |    NO    |                                                     |
 | averagerating   | number                                                |   YES    |    NO    |                                                     |
+| catalog         | string                                                |    NO    |    NO    |                                                     |
 | podcast_episode | array&lt;[PodcastEpisodeObject](#podcast_episode)&gt; |    NO    |    NO    | see [PodcastEpisodeObject](#podcast_episode) fields |
 <!-- GENERATED:RESPONSE:END -->
 
@@ -4785,6 +4793,7 @@ Each `video` entry ([VideoObject](#video)):
 | averagerating | number                                         |   YES    |    NO    |                                              |
 | playcount     | integer                                        |    NO    |    NO    |                                              |
 | last_played   | string                                         |   YES    |    NO    |                                              |
+| catalog       | string                                         |    NO    |    NO    |                                              |
 <!-- GENERATED:RESPONSE:END -->
 
 * throws
@@ -5791,6 +5800,7 @@ Each `video` entry ([VideoObject](#video)):
 | averagerating | number                                         |   YES    |    NO    |                                              |
 | playcount     | integer                                        |    NO    |    NO    |                                              |
 | last_played   | string                                         |   YES    |    NO    |                                              |
+| catalog       | string                                         |    NO    |    NO    |                                              |
 <!-- GENERATED:RESPONSE:END -->
 
 * throws
@@ -6506,6 +6516,7 @@ Each `video` entry ([VideoObject](#video)):
 | averagerating | number                                         |   YES    |    NO    |                                              |
 | playcount     | integer                                        |    NO    |    NO    |                                              |
 | last_played   | string                                         |   YES    |    NO    |                                              |
+| catalog       | string                                         |    NO    |    NO    |                                              |
 <!-- GENERATED:RESPONSE:END -->
 
 * throws
@@ -6552,6 +6563,7 @@ Returns a single object.
 | averagerating | number                                         |   YES    |    NO    |                                              |
 | playcount     | integer                                        |    NO    |    NO    |                                              |
 | last_played   | string                                         |   YES    |    NO    |                                              |
+| catalog       | string                                         |    NO    |    NO    |                                              |
 <!-- GENERATED:RESPONSE:END -->
 
 * throws

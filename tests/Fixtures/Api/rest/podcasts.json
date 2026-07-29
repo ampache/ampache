@@ -19,6 +19,7 @@
             "flag": false,
             "rating": null,
             "averagerating": null,
+            "catalog": "7",
             "podcast_episode": []
         },
         {
@@ -38,6 +39,7 @@
             "flag": false,
             "rating": null,
             "averagerating": null,
+            "catalog": "7",
             "podcast_episode": []
         }
     ]

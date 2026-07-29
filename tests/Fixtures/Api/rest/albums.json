@@ -42,7 +42,8 @@
             "rating": null,
             "averagerating": null,
             "mbid": null,
-            "mbid_group": null
+            "mbid_group": null,
+            "catalog": "32"
         },
         {
             "id": "214905",
@@ -115,7 +116,8 @@
             "rating": null,
             "averagerating": null,
             "mbid": "3e936196-8a88-4501-a9ae-5311c5efc25e",
-            "mbid_group": "5f1e3561-ca6a-4546-8aa5-2f547852edd7"
+            "mbid_group": "5f1e3561-ca6a-4546-8aa5-2f547852edd7",
+            "catalog": "2"
         }
     ]
 }

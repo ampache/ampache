@@ -150,6 +150,7 @@ class Json8_Data
      *     "averagerating": float|null,
      *     "mbid": null|string,
      *     "mbid_group": null|string,
+     *     "catalog": string,
      * }> JSON Object "album_disk"
      */
     public static function album_disks_array(array $objects, array $include, User $user, string $auth, bool $encode = true): array
@@ -225,6 +226,7 @@ class Json8_Data
             $objArray['averagerating'] = $rating->get_average_rating();
             $objArray['mbid']          = $album_disk->mbid;
             $objArray['mbid_group']    = $album_disk->mbid_group;
+            $objArray['catalog']       = (string) $album_disk->getCatalogId();
 
             $JSON[] = $objArray;
         }
@@ -372,6 +374,7 @@ class Json8_Data
      *     "averagerating": float|null,
      *     "mbid": null|string,
      *     "mbid_group": null|string,
+     *     "catalog": string,
      * }> JSON Object "album"
      */
     public static function albums_array(array $objects, array $include, User $user, string $auth, bool $encode = true): array
@@ -444,6 +447,7 @@ class Json8_Data
             $objArray['averagerating'] = $rating->get_average_rating();
             $objArray['mbid']          = $album->mbid;
             $objArray['mbid_group']    = $album->mbid_group;
+            $objArray['catalog']       = (string) $album->getCatalogId();
 
             $JSON[] = $objArray;
         }
@@ -592,6 +596,7 @@ class Json8_Data
      *         "averagerating": float|null,
      *         "mbid": null|string,
      *         "mbid_group": null|string,
+     *         "catalog": string,
      *     }>,
      *     "albumcount": int,
      *     "songs": array<int, array{
@@ -2399,6 +2404,7 @@ class Json8_Data
      *     "flag": bool,
      *     "rating": int|null,
      *     "averagerating": float|null,
+     *     "catalog": string,
      *     "podcast_episode": array<int, array{
      *         "id": string,
      *         "title": null|string,
@@ -2489,6 +2495,7 @@ class Json8_Data
                 "flag" => (bool) $flag->get_flag($user->getId()),
                 "rating" => $user_rating,
                 "averagerating" => $rating->get_average_rating(),
+                "catalog" => (string) $podcast->getCatalogId(),
                 "podcast_episode" => $podcast_episodes
             ];
         }
@@ -3384,7 +3391,8 @@ class Json8_Data
      *     "rating": int|null,
      *     "averagerating": float|null,
      *     "playcount": int,
-     *     "last_played": string|null
+     *     "last_played": string|null,
+     *     "catalog": string
      * }>
      */
     public static function videos_array(array $objects, User $user, string $auth): array
@@ -3417,7 +3425,8 @@ class Json8_Data
                 "rating" => $user_rating,
                 "averagerating" => $rating->get_average_rating(),
                 "playcount" => $video->total_count,
-                "last_played" => ($video->last_played) ? date(DATE_ATOM, $video->last_played) : null
+                "last_played" => ($video->last_played) ? date(DATE_ATOM, $video->last_played) : null,
+                "catalog" => (string) $video->getCatalogId()
             ];
         }
 

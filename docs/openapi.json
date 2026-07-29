@@ -441,6 +441,9 @@
           "mbid_group": {
             "type": "string",
             "nullable": true
+          },
+          "catalog": {
+            "type": "string"
           }
         },
         "required": [
@@ -461,7 +464,8 @@
           "rating",
           "averagerating",
           "mbid",
-          "mbid_group"
+          "mbid_group",
+          "catalog"
         ],
         "additionalProperties": true
       },
@@ -1316,6 +1320,9 @@
             "type": "number",
             "nullable": true
           },
+          "catalog": {
+            "type": "string"
+          },
           "podcast_episode": {
             "type": "array",
             "items": {
@@ -1340,6 +1347,7 @@
           "flag",
           "rating",
           "averagerating",
+          "catalog",
           "podcast_episode"
         ],
         "additionalProperties": true
@@ -1401,6 +1409,9 @@
           "last_played": {
             "type": "string",
             "nullable": true
+          },
+          "catalog": {
+            "type": "string"
           }
         },
         "required": [
@@ -1418,7 +1429,8 @@
           "rating",
           "averagerating",
           "playcount",
-          "last_played"
+          "last_played",
+          "catalog"
         ],
         "additionalProperties": true
       },
@@ -3825,6 +3837,9 @@
           "mbid_group": {
             "type": "string",
             "nullable": true
+          },
+          "catalog": {
+            "type": "string"
           }
         },
         "required": [
@@ -3847,7 +3862,8 @@
           "rating",
           "averagerating",
           "mbid",
-          "mbid_group"
+          "mbid_group",
+          "catalog"
         ],
         "additionalProperties": true
       },
@@ -6619,7 +6635,8 @@
                           "rating": null,
                           "averagerating": null,
                           "mbid": "6e1d48f7-717c-416e-af35-5d2454a13af2",
-                          "mbid_group": "1501fe8a-f060-3b6f-8cb0-7babfc65192a"
+                          "mbid_group": "1501fe8a-f060-3b6f-8cb0-7babfc65192a",
+                          "catalog": "4"
                         }
                       ]
                     }
@@ -6723,7 +6740,8 @@
                       "rating": 4,
                       "averagerating": 3.67,
                       "mbid": null,
-                      "mbid_group": null
+                      "mbid_group": null,
+                      "catalog": "1"
                     }
                   }
                 }
@@ -7813,7 +7831,8 @@
                           "rating": null,
                           "averagerating": null,
                           "mbid": "6e1d48f7-717c-416e-af35-5d2454a13af2",
-                          "mbid_group": "1501fe8a-f060-3b6f-8cb0-7babfc65192a"
+                          "mbid_group": "1501fe8a-f060-3b6f-8cb0-7babfc65192a",
+                          "catalog": "4"
                         }
                       ]
                     }
@@ -7953,7 +7972,8 @@
                           "rating": null,
                           "averagerating": null,
                           "mbid": "6e1d48f7-717c-416e-af35-5d2454a13af2",
-                          "mbid_group": "1501fe8a-f060-3b6f-8cb0-7babfc65192a"
+                          "mbid_group": "1501fe8a-f060-3b6f-8cb0-7babfc65192a",
+                          "catalog": "4"
                         },
                         {
                           "id": "12",
@@ -8048,7 +8068,8 @@
                           "rating": null,
                           "averagerating": null,
                           "mbid": null,
-                          "mbid_group": null
+                          "mbid_group": null,
+                          "catalog": "1"
                         }
                       ]
                     }
@@ -8460,7 +8481,8 @@
                           "rating": 2,
                           "averagerating": null,
                           "mbid": null,
-                          "mbid_group": null
+                          "mbid_group": null,
+                          "catalog": "1"
                         }
                       ]
                     }
@@ -13335,7 +13357,8 @@
                           "rating": 2,
                           "averagerating": null,
                           "mbid": null,
-                          "mbid_group": null
+                          "mbid_group": null,
+                          "catalog": "1"
                         }
                       ]
                     }
@@ -78813,6 +78836,7 @@
                           "flag": false,
                           "rating": null,
                           "averagerating": null,
+                          "catalog": "3",
                           "podcast_episode": []
                         },
                         {
@@ -78832,6 +78856,7 @@
                           "flag": false,
                           "rating": null,
                           "averagerating": null,
+                          "catalog": "3",
                           "podcast_episode": []
                         }
                       ]
@@ -78913,6 +78938,7 @@
                       "flag": false,
                       "rating": null,
                       "averagerating": null,
+                      "catalog": "3",
                       "podcast_episode": []
                     }
                   }
@@ -78992,6 +79018,7 @@
                       "flag": false,
                       "rating": null,
                       "averagerating": null,
+                      "catalog": "3",
                       "podcast_episode": []
                     }
                   }
@@ -79067,6 +79094,7 @@
                       "flag": false,
                       "rating": null,
                       "averagerating": null,
+                      "catalog": "3",
                       "podcast_episode": []
                     }
                   }
@@ -79179,6 +79207,7 @@
                       "flag": false,
                       "rating": null,
                       "averagerating": null,
+                      "catalog": "3",
                       "podcast_episode": []
                     }
                   }
@@ -79891,6 +79920,7 @@
                           "flag": false,
                           "rating": null,
                           "averagerating": null,
+                          "catalog": "3",
                           "podcast_episode": []
                         },
                         {
@@ -79910,6 +79940,7 @@
                           "flag": false,
                           "rating": null,
                           "averagerating": null,
+                          "catalog": "3",
                           "podcast_episode": []
                         }
                       ]
@@ -80022,6 +80053,7 @@
                           "flag": false,
                           "rating": null,
                           "averagerating": null,
+                          "catalog": "3",
                           "podcast_episode": []
                         },
                         {
@@ -80041,6 +80073,7 @@
                           "flag": false,
                           "rating": null,
                           "averagerating": null,
+                          "catalog": "3",
                           "podcast_episode": []
                         }
                       ]
@@ -85558,7 +85591,8 @@
                             "rating": null,
                             "averagerating": null,
                             "mbid": null,
-                            "mbid_group": null
+                            "mbid_group": null,
+                            "catalog": "1"
                           },
                           {
                             "id": "10",
@@ -85600,7 +85634,8 @@
                             "rating": null,
                             "averagerating": null,
                             "mbid": null,
-                            "mbid_group": null
+                            "mbid_group": null,
+                            "catalog": "1"
                           },
                           {
                             "id": "21",
@@ -85647,7 +85682,8 @@
                             "rating": null,
                             "averagerating": null,
                             "mbid": "6e1d48f7-717c-416e-af35-5d2454a13af2",
-                            "mbid_group": "1501fe8a-f060-3b6f-8cb0-7babfc65192a"
+                            "mbid_group": "1501fe8a-f060-3b6f-8cb0-7babfc65192a",
+                            "catalog": "4"
                           },
                           {
                             "id": "8",
@@ -85698,7 +85734,8 @@
                             "rating": 2,
                             "averagerating": null,
                             "mbid": null,
-                            "mbid_group": null
+                            "mbid_group": null,
+                            "catalog": "1"
                           }
                         ],
                         "artist": [
@@ -86081,6 +86118,7 @@
                             "flag": false,
                             "rating": null,
                             "averagerating": null,
+                            "catalog": "3",
                             "podcast_episode": []
                           }
                         ],
@@ -86555,7 +86593,8 @@
                             "rating": null,
                             "averagerating": null,
                             "mbid": null,
-                            "mbid_group": null
+                            "mbid_group": null,
+                            "catalog": "1"
                           },
                           {
                             "id": "10",
@@ -86597,7 +86636,8 @@
                             "rating": null,
                             "averagerating": null,
                             "mbid": null,
-                            "mbid_group": null
+                            "mbid_group": null,
+                            "catalog": "1"
                           },
                           {
                             "id": "21",
@@ -86644,7 +86684,8 @@
                             "rating": null,
                             "averagerating": null,
                             "mbid": "6e1d48f7-717c-416e-af35-5d2454a13af2",
-                            "mbid_group": "1501fe8a-f060-3b6f-8cb0-7babfc65192a"
+                            "mbid_group": "1501fe8a-f060-3b6f-8cb0-7babfc65192a",
+                            "catalog": "4"
                           },
                           {
                             "id": "8",
@@ -86695,7 +86736,8 @@
                             "rating": 2,
                             "averagerating": null,
                             "mbid": null,
-                            "mbid_group": null
+                            "mbid_group": null,
+                            "catalog": "1"
                           }
                         ],
                         "artist": [
@@ -87079,6 +87121,7 @@
                             "flag": false,
                             "rating": null,
                             "averagerating": null,
+                            "catalog": "3",
                             "podcast_episode": []
                           }
                         ],
@@ -97254,7 +97297,8 @@
                       "rating": null,
                       "averagerating": null,
                       "playcount": 0,
-                      "last_played": "2026-07-27T08:19:12+00:00"
+                      "last_played": "2026-07-27T08:19:12+00:00",
+                      "catalog": "2"
                     }
                   }
                 }
