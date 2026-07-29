@@ -203,6 +203,8 @@ You can downgrade to Ampache7 if you try this out and have issues, using the cli
   * `npm` failed outright whenever the web server user's home directory was not writable, because it could not create its cache directory; it is now pointed at a writable one
   * `npm install` now installs the dev packages explicitly — the `postinstall` and `build` scripts that produce every shipped asset live there, so a server with `NODE_ENV=production` built nothing
   * The update is refused up front, before the sources are pulled, when `exec()` is disabled or when the checkout, `node_modules` or `vendor` cannot be written by the web server user
+  * Dependencies were installed with `--prefer-source`, which checks out every package as a git working tree; `--prefer-dist` is used instead
+  * A package that rewrites one of its own tracked files during install (`phpstan/extension-installer` and its `src/GeneratedConfig.php`) left that checkout dirty, and composer refuses to remove a modified source install, so a `composer_no_dev` update aborted while stripping the dev packages and left `vendor` incomplete. Dirty vendor checkouts are restored before the install runs
 * Database 800023
   * Uploaded art took its mime type from the filename, storing `image/jpg` (not a real type) for a `.jpg` upload and `image/JPG` for `.JPG`; the type is now read from the image data and existing rows are corrected
   * Where the same artwork was stored twice under both spellings the `image/jpg` row is left as it is, because `unique_image` includes `mime` and no art is deleted during an upgrade
@@ -247,6 +249,8 @@ You can downgrade to Ampache7 if you try this out and have issues, using the cli
   * `npm` failed outright when the web server user's home directory was not writable, because it could not create its cache directory; it is pointed at a writable one
   * `npm install` installs the dev packages explicitly, so a server with `NODE_ENV=production` no longer builds nothing
   * The update is refused before the sources are pulled when `exec()` is disabled or the checkout, `node_modules` or `vendor` cannot be written
+  * Dependencies were installed with `--prefer-source`, which checks out every package as a git working tree; `--prefer-dist` is used instead
+  * A package that rewrites one of its own tracked files during install (`phpstan/extension-installer` and its `src/GeneratedConfig.php`) left that checkout dirty, and composer refuses to remove a modified source install, so a `composer_no_dev` update aborted while stripping the dev packages and left `vendor` incomplete. Dirty vendor checkouts are restored before the install runs
 
 ## Ampache 7.10.0
 

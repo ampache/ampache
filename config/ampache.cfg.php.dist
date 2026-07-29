@@ -37,7 +37,7 @@ config_version = 95
 ;composer_binary_path = "composer"
 
 ; By default Ampache doesn't install dev packages using the --no-dev parameter
-; disable this setting to install dev packages (e.g. composer install --prefer-source --no-interaction)
+; disable this setting to install dev packages (e.g. composer install --prefer-dist --no-interaction)
 ; DEFAULT: "true"
 composer_no_dev = "true"
 
