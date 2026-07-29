@@ -27,6 +27,9 @@ declare(strict_types=1);
 
 use Ampache\Config\AmpConfig;
 use Ampache\Module\Api\Ajax;
+use Ampache\Module\Authorization\Access;
+use Ampache\Module\Authorization\AccessLevelEnum;
+use Ampache\Module\Authorization\AccessTypeEnum;
 use Ampache\Module\Playback\Stream_Playlist;
 use Ampache\Module\Util\Ui;
 use Ampache\Repository\Model\Art;
@@ -55,6 +58,11 @@ Art::display('live_stream', $radio->id, (string) $radio->get_fullname(), $size, 
             <?php } ?>
         <?php } ?>
         <?php echo Ajax::button('?action=basket&type=live_stream&id=' . $radio->id, 'new_window', T_('Add to Temporary Playlist'), 'add_live_stream_' . $radio->id); ?>
+        <?php if (Access::check(AccessTypeEnum::INTERFACE, AccessLevelEnum::USER)) { ?>
+            <a id="<?php echo 'add_to_playlist_' . $radio->id; ?>" onclick="showPlaylistDialog(event, 'live_stream', '<?php echo $radio->id; ?>')">
+                <?php echo Ui::get_material_symbol('playlist_add', T_('Add to playlist')); ?>
+            </a>
+        <?php } ?>
     </dd>
 <?php $itemprops[T_('Name')] = (string) $radio->get_fullname();
 $itemprops[T_('Website')]    = scrub_out($radio->site_url);
