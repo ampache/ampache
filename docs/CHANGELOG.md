@@ -15,6 +15,7 @@
   * `npm` failed outright when the web server user's home directory was not writable, because it could not create its cache directory; it is pointed at a writable one
   * `npm install` installs the dev packages explicitly, so a server with `NODE_ENV=production` no longer builds nothing
   * The update is refused before the sources are pulled when `exec()` is disabled or the checkout, `node_modules` or `vendor` cannot be written
+  * A package that rewrites one of its own tracked files during install (`phpstan/extension-installer` and its `src/GeneratedConfig.php`) left that checkout dirty, and composer refuses to remove a modified source install, so a `composer_no_dev` update aborted while stripping the dev packages and left `vendor` incomplete. Dirty vendor checkouts are restored before the install runs
 * Upload
   * An artist created while uploading was never mapped to the upload catalog, so it was missing from an artist browse filtered to that catalog until the next catalog update; the artists of an uploaded song are now mapped as the song is added
 * Rating or favouriting a playlist, search or live stream logged an SQL error on every click, because only the media tables carry the `weight` column those writes adjust
