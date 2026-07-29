@@ -4,7 +4,7 @@
 
 **NOTE** Work in progress
 
-**NOTE** AI Contribution standards are documented in `CLAUDE.md` (repository structures, branch model, architecture and coding rules); read and follow it before submitting changes that are AI-assisted ones
+**NOTE** AI Contribution standards are documented in `AGENTS.md` (repository structures, branch model, architecture and coding rules); read and follow it before submitting changes that are AI-assisted ones
 
 You can downgrade to Ampache7 if you try this out and have issues, using the cli (`bin/cli admin:updateDatabase -e`).
 
