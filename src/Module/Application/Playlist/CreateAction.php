@@ -23,7 +23,7 @@ declare(strict_types=1);
  *
  */
 
-namespace Ampache\Module\Application\Collection;
+namespace Ampache\Module\Application\Playlist;
 
 use Ampache\Config\ConfigContainerInterface;
 use Ampache\Config\ConfigurationKeyEnum;
@@ -35,16 +35,12 @@ use Ampache\Module\Authorization\GuiGatekeeperInterface;
 use Ampache\Module\System\AmpError;
 use Ampache\Module\Util\RequestParserInterface;
 use Ampache\Module\Util\UiInterface;
-use Ampache\Repository\CollectionRepositoryInterface;
-use Ampache\Repository\Model\Collection;
+use Ampache\Repository\Model\Playlist;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 
 /**
- * Creates an empty collection owned by the current user
- *
- * Members are added afterwards, so this only has to settle the name, who can see it, and whether it is pinned
- * to a single type.
+ * Creates an empty playlist owned by the current user
  */
 final readonly class CreateAction implements ApplicationActionInterface
 {
@@ -52,7 +48,6 @@ final readonly class CreateAction implements ApplicationActionInterface
 
     public function __construct(
         private ConfigContainerInterface $configContainer,
-        private CollectionRepositoryInterface $collectionRepository,
         private RequestParserInterface $requestParser,
         private UiInterface $ui,
     ) {}
@@ -61,11 +56,10 @@ final readonly class CreateAction implements ApplicationActionInterface
     {
         $user = $gatekeeper->getUser();
         if (
-            $this->configContainer->isFeatureEnabled(ConfigurationKeyEnum::SHOW_COLLECTION) === false
-            || $gatekeeper->mayAccess(AccessTypeEnum::INTERFACE, AccessLevelEnum::USER) === false
+            $gatekeeper->mayAccess(AccessTypeEnum::INTERFACE, AccessLevelEnum::USER) === false
             || $this->configContainer->isFeatureEnabled(ConfigurationKeyEnum::DEMO_MODE)
             || $user === null
-            || !$this->requestParser->verifyForm('add_collection')
+            || !$this->requestParser->verifyForm('add_playlist')
         ) {
             throw new AccessDeniedException();
         }
@@ -73,42 +67,34 @@ final readonly class CreateAction implements ApplicationActionInterface
         $this->ui->showHeader();
 
         $name = $this->requestParser->getFromRequest('name');
-        // A nameless collection cannot be told apart from any other in a list, so it is refused
         if ($name === '') {
             AmpError::add('name', T_('Name is required'));
         }
 
-        // Empty leaves the collection mixed; anything else must be a type a collection can actually hold
-        $objectType = $this->requestParser->getFromRequest('object_type');
-        if ($objectType !== '' && !Collection::isValidType($objectType)) {
-            AmpError::add('object_type', T_('Not a valid item type'));
-            $objectType = '';
-        }
-
         if (AmpError::occurred()) {
-            $this->ui->show('show_add_collection.inc.php');
+            $this->ui->show('show_add_playlist.inc.php');
             $this->ui->showQueryStats();
             $this->ui->showFooter();
 
             return null;
         }
 
-        $collectionId = $this->collectionRepository->create(
+        // `existing: false` so a name already in use is reported rather than silently handing back that list
+        $playlistId = Playlist::create(
             $name,
-            $user,
             ($this->requestParser->getFromRequest('type') === 'public') ? 'public' : 'private',
-            ($objectType === '') ? null : $objectType
+            $user->getId(),
+            false
         );
 
-        if ($collectionId === null) {
-            AmpError::add('name', T_('Failed to create collection'));
-            $this->ui->show('show_add_collection.inc.php');
+        if ($playlistId === null) {
+            AmpError::add('name', T_('That name already exists'));
+            $this->ui->show('show_add_playlist.inc.php');
         } else {
-            // Straight to the new collection, because the next thing to do is put something in it
             $this->ui->showConfirmation(
-                T_('Collection created'),
+                T_('Playlist created'),
                 $name,
-                sprintf('%s/collection.php?action=show&collection=%d', $this->configContainer->getWebPath(), $collectionId)
+                sprintf('%s/playlist.php?action=show&playlist_id=%d', $this->configContainer->getWebPath(), $playlistId)
             );
         }
 

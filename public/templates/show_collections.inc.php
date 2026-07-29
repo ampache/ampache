@@ -27,6 +27,9 @@ declare(strict_types=1);
 
 use Ampache\Config\AmpConfig;
 use Ampache\Module\Api\Ajax;
+use Ampache\Module\Authorization\Access;
+use Ampache\Module\Authorization\AccessLevelEnum;
+use Ampache\Module\Authorization\AccessTypeEnum;
 use Ampache\Module\System\Core;
 use Ampache\Module\Util\Ui;
 use Ampache\Repository\CollectionRepositoryInterface;
@@ -62,6 +65,19 @@ global $dic;
 $collectionRepository = $dic->get(CollectionRepositoryInterface::class);
 $user                 = Core::get_global('user');
 $user                 = ($user instanceof User) ? $user : null;
+
+if (Access::check(AccessTypeEnum::INTERFACE, AccessLevelEnum::USER)) { ?>
+<div id="information_actions">
+    <ul>
+        <li>
+            <a href="<?php echo $web_path; ?>/collection.php?action=show_create">
+                <?php echo Ui::get_material_symbol('add_circle', T_('Create Collection')); ?>
+                <?php echo T_('Create Collection'); ?>
+            </a>
+        </li>
+    </ul>
+</div>
+<?php }
 
 if ($browse->is_show_header()) {
     require Ui::find_template('list_header.inc.php');

@@ -29,6 +29,7 @@ use Ampache\MockeryTestCase;
 use Ampache\Module\Authorization\GuiGatekeeperInterface;
 use Ampache\Module\Playlist\PlaylistLoaderInterface;
 use Ampache\Module\Util\AjaxUriRetrieverInterface;
+use Ampache\Repository\CollectionRepositoryInterface;
 use Ampache\Repository\Model\Playlist;
 use Mockery\MockInterface;
 use Override;
@@ -36,6 +37,7 @@ use Override;
 class NewPlaylistDialogAdapterTest extends MockeryTestCase
 {
     private MockInterface|AjaxUriRetrieverInterface|null $ajaxUriRetriever;
+    private MockInterface|CollectionRepositoryInterface|null $collectionRepository;
     private MockInterface|GuiGatekeeperInterface|null $gatekeeper;
     private string $objectIds  = '666';
     private string $objectType = 'some-object-type';
@@ -106,13 +108,15 @@ class NewPlaylistDialogAdapterTest extends MockeryTestCase
     #[Override]
     protected function setUp(): void
     {
-        $this->playlistLoader   = $this->mock(PlaylistLoaderInterface::class);
-        $this->ajaxUriRetriever = $this->mock(AjaxUriRetrieverInterface::class);
-        $this->gatekeeper       = $this->mock(GuiGatekeeperInterface::class);
+        $this->playlistLoader       = $this->mock(PlaylistLoaderInterface::class);
+        $this->ajaxUriRetriever     = $this->mock(AjaxUriRetrieverInterface::class);
+        $this->gatekeeper           = $this->mock(GuiGatekeeperInterface::class);
+        $this->collectionRepository = $this->mock(CollectionRepositoryInterface::class);
 
         $this->subject = new NewPlaylistDialogAdapter(
             $this->playlistLoader,
             $this->ajaxUriRetriever,
+            $this->collectionRepository,
             $this->gatekeeper,
             $this->objectType,
             $this->objectIds

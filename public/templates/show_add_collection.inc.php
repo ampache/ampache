@@ -50,7 +50,7 @@ Ui::show_box_top(T_('Create Collection'), 'box box_add_collection'); ?>
     </td>
 </tr>
 <tr>
-    <td><?php echo T_('Item Type'); ?></td>
+    <td><?php echo T_('Object Type'); ?></td>
     <td>
         <?php // Empty pins nothing: a mixed collection takes any of the types listed here?>
         <select name="object_type">

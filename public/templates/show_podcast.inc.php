@@ -96,8 +96,8 @@ Art::display('podcast', $podcast->getId(), (string) $podcast->get_fullname(), $s
         </li>
         <li>
             <a id="<?php echo 'add_to_playlist_podcast_' . $podcast->getId(); ?>" onclick="showPlaylistDialog(event, 'podcast', '<?php echo $podcast->getId(); ?>')">
-                <?php echo Ui::get_material_symbol('playlist_add', T_('Add to playlist')); ?>
-                <?php echo T_('Add to playlist'); ?>
+                <?php echo Ui::get_material_symbol('playlist_add', Ui::get_add_to_list_label()); ?>
+                <?php echo Ui::get_add_to_list_label(); ?>
             </a>
         </li>
         <?php } ?>

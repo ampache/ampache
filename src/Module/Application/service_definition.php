@@ -422,6 +422,8 @@ return [
     RemoveDuplicatesAction::class => autowire(RemoveDuplicatesAction::class),
     AddSongAction::class => autowire(AddSongAction::class),
     Playlist\SetTrackNumbersAction::class => autowire(Playlist\SetTrackNumbersAction::class),
+    Playlist\ShowCreateAction::class => autowire(Playlist\ShowCreateAction::class),
+    Playlist\CreateAction::class => autowire(Playlist\CreateAction::class),
     ImportPlaylistAction::class => autowire(ImportPlaylistAction::class),
     ShowImportPlaylistAction::class => autowire(ShowImportPlaylistAction::class),
     Playlist\DeletePlaylistAction::class => autowire(Playlist\DeletePlaylistAction::class),

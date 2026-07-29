@@ -206,8 +206,8 @@ if (AmpConfig::get('sociable') && $owner_id > 0) {
         </li>
         <li>
             <a id="<?php echo 'add_to_playlist_' . $artist->id; ?>" onclick="showPlaylistDialog(event, 'artist', '<?php echo $artist->id; ?>')">
-                <?php echo Ui::get_material_symbol('playlist_add', T_('Add to playlist')); ?>
-                <?php echo T_('Add to playlist'); ?>
+                <?php echo Ui::get_material_symbol('playlist_add', Ui::get_add_to_list_label()); ?>
+                <?php echo Ui::get_add_to_list_label(); ?>
             </a>
         </li>
 <?php } ?>

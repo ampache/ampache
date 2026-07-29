@@ -82,7 +82,7 @@ Ui::show_box_top($episode->get_fullname() . ' - ' . $episode->getPodcastLink(), 
         <?php echo Ajax::button('?action=basket&type=podcast_episode&id=' . $episode->id, 'new_window', T_('Add to Temporary Playlist'), 'add_podcast_episode_' . $episode->id); ?>
             <?php if (Access::check(AccessTypeEnum::INTERFACE, AccessLevelEnum::USER)) { ?>
             <a id="<?php echo 'add_to_playlist_' . $episode->id; ?>" onclick="showPlaylistDialog(event, 'podcast_episode', '<?php echo $episode->id; ?>')">
-                <?php echo Ui::get_material_symbol('playlist_add', T_('Add to playlist')); ?>
+                <?php echo Ui::get_material_symbol('playlist_add', Ui::get_add_to_list_label()); ?>
             </a>
             <?php } ?>
         <?php } ?>

@@ -60,7 +60,7 @@ use Ampache\Repository\Model\Userflag;
         <?php echo Ajax::button('?page=random&action=send_playlist&random_type=search&random_id=' . $libitem->id, 'autorenew', T_('Random Play'), 'play_random_' . $libitem->id); ?>
         <?php echo Ajax::button('?action=basket&type=search&id=' . $libitem->id, 'new_window', T_('Add to Temporary Playlist'), 'add_playlist_' . $libitem->id); ?>
         <a id="<?php echo 'add_to_playlist_' . $libitem->id; ?>" onclick="showPlaylistDialog(event, 'search', '<?php echo $libitem->id; ?>')">
-            <?php echo Ui::get_material_symbol('playlist_add', T_('Add to playlist')); ?>
+            <?php echo Ui::get_material_symbol('playlist_add', Ui::get_add_to_list_label()); ?>
         </a>
     </span>
 </td>

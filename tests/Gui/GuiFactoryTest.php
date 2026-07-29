@@ -42,6 +42,7 @@ use Ampache\Module\System\Update\UpdateHelperInterface;
 use Ampache\Module\System\Update\UpdaterInterface;
 use Ampache\Module\Util\AjaxUriRetrieverInterface;
 use Ampache\Module\Util\ZipHandlerInterface;
+use Ampache\Repository\CollectionRepositoryInterface;
 use Ampache\Repository\Model\Album;
 use Ampache\Repository\Model\Browse;
 use Ampache\Repository\Model\Catalog;
@@ -153,6 +154,7 @@ class GuiFactoryTest extends TestCase
             $this->createMock(FunctionCheckerInterface::class),
             $this->createMock(AjaxUriRetrieverInterface::class),
             $this->createMock(PlaylistLoaderInterface::class),
+            $this->createMock(CollectionRepositoryInterface::class),
             $this->createMock(VideoRepositoryInterface::class),
             $this->createMock(UpdateInfoRepositoryInterface::class),
             $this->createMock(UpdateHelperInterface::class),

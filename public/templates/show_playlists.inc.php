@@ -49,6 +49,19 @@ $hide_genres       = AmpConfig::get('hide_genres');
 //mashup and grid view need different css
 $cel_cover = ($is_table) ? "cel_cover" : 'grid_cover';
 $css_class = ($is_table) ? '' : ' gridview';
+if ($show_playlist_add) { ?>
+<div id="information_actions">
+    <ul>
+        <li>
+            <a href="<?php echo AmpConfig::get_web_path(); ?>/playlist.php?action=show_create">
+                <?php echo Ui::get_material_symbol('add_circle', T_('Create Playlist')); ?>
+                <?php echo T_('Create Playlist'); ?>
+            </a>
+        </li>
+    </ul>
+</div>
+<?php }
+
 if ($browse->is_show_header()) {
     require Ui::find_template('list_header.inc.php');
 } ?>

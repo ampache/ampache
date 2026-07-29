@@ -44,6 +44,7 @@ You can downgrade to Ampache7 if you try this out and have issues, using the cli
   * A selection can be played, played next, played last, added to the temporary playlist, added to another playlist, or removed from the playlist in a single action, from a bar that stays in view while you scroll the list
   * Removing a selection sends one request and renumbers the list once, instead of one request and one full renumber for every entry
   * A mixed collection groups the selection by type before acting on it, so playing a selection of albums and songs together works from one bar
+* A "Create Playlist" button on the playlists browse. Until now a playlist could only come into existence as a side effect of adding something to one
 * Database
   * New `api_enable_8` preference to enable/disable API v8 responses per user
   * New database tables `folder` and `folder_map`
@@ -83,9 +84,12 @@ You can downgrade to Ampache7 if you try this out and have issues, using the cli
   * Playing one expands its members, so an album contributes its songs and anything that cannot be streamed is skipped; duplicates reached by two different routes are played once
   * Collections have their own art, including the mosaic built from their members when no art is set
   * `public`/`private` visibility and a collaborator list, matching playlists: a collaborator curates the contents, only the owner or an admin can delete the list
-  * New `show_collection` preference to show/hide the "Collections" and "New Collection" links in the sidebar
+  * New `show_collection` preference to show/hide the "Collections" link in the sidebar, and with it the collection half of the add-to-list dialog. The link no longer waits for a collection to exist before it appears, so there is a way in from a fresh install
   * Collections in the web interface: a `collection.php` page listing the members, a `browse.php?action=collection` browse with the usual sorting and filtering, the standard edit dialog for name, visibility, pinned type and collaborators, and the art picker
-  * A "New Collection" link in the sidebar creates one, choosing its name, whether it is public or private, and whether it is pinned to a single item type or left mixed
+  * A "Create Collection" button on the collections browse creates one, choosing its name, whether it is public or private, and whether it is pinned to a single item type or left mixed
+  * The add-to-list dialog offers collections as well as playlists, under a "Playlists" and a "Collections" heading so the two kinds of destination are told apart. Only the halves that can take what you are adding are shown, and a collection pinned to another type is left out: a genre offers collections alone, because a playlist stores the media an item expands to and a genre expands to nothing on its own
+  * Genres and labels gained the add-to-list control they never had, since both can be collected even though only one of them can go in a playlist
+  * The label reads "Add to playlist / collection" once collections are switched on, and "Add to list" where there is no room for it; a server with collections off still just says "Add to playlist"
   * The collection page renders a mixed collection as one ordered list through a new `collection_items` browse type, each row naming its own type. A collection pinned to a single type is handed to that type's own browse instead, so a collection of albums looks like any other album view
   * Members can be dragged into a new order and saved with `Save Track Order`, exactly like playlist tracks. Only a mixed collection offers this — a pinned one is shown through its own type's browse, which has no drag handle
   * A member can be removed from its row, or several at once through `Multi-Select`. Members are addressed by their membership row rather than by the object they point at, so removing one of two identical members removes the one you picked

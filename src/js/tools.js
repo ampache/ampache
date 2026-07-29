@@ -84,7 +84,9 @@ export function showPlaylistDialog(e, item_type, item_ids, item_groups) {
         resizable: false,
         draggable: false,
         width: 300,
-        height: 100,
+        // auto, because the dialog now holds a playlist group and possibly a collection group
+        height: "auto",
+        maxHeight: 400,
         autoOpen: false,
         position: {
             my: "left+10 top",
@@ -112,8 +114,11 @@ export function showPlaylistDialog(e, item_type, item_ids, item_groups) {
 }
 
 // append_item takes one type per call, so a selection spanning types is sent group by group. The first call
-// carries any new-playlist name and reports the id it created, which the rest are then appended to.
-function appendPlaylistGroups(url, groups, id) {
+// carries any new-list name and reports the id it created, which the rest are then appended to.
+// `idParam` names the key that id travels under, so the same stepping drives playlists and collections.
+function appendPlaylistGroups(url, groups, id, idParam) {
+    var idKey = idParam || "playlist_id";
+
     var pending = String(groups).split(";").filter(Boolean).map(function (group) {
         var parts = group.split(":");
 
@@ -143,9 +148,9 @@ function appendPlaylistGroups(url, groups, id) {
         $.ajax(call, {type: "post", dataType: "xml", success: function (data) {
             processContents(data);
 
-            var created = $(data).find("content[div='playlist_id']").text();
-            if (created && target.indexOf("playlist_id=") === -1) {
-                target += "&playlist_id=" + created;
+            var created = $(data).find("content[div='" + idKey + "']").text();
+            if (created && target.indexOf(idKey + "=") === -1) {
+                target += "&" + idKey + "=" + created;
             }
 
             step(index + 1, target);
@@ -153,9 +158,9 @@ function appendPlaylistGroups(url, groups, id) {
     }(0, base));
 }
 
-export function handlePlaylistAction(url, id, groups) {
+export function handlePlaylistAction(url, id, groups, idParam) {
     if (groups) {
-        appendPlaylistGroups(url, groups, id);
+        appendPlaylistGroups(url, groups, id, idParam);
     } else {
         ajaxPut(url, id);
     }
@@ -163,11 +168,11 @@ export function handlePlaylistAction(url, id, groups) {
     $("#playlistdialog").dialog("close");
 }
 
-export function createNewPlaylist(title, url, id, groups) {
+export function createNewPlaylist(title, url, id, groups, idParam) {
     var plname = window.prompt(title, "");
     if (plname !== null) {
         url += "&name=" + encodeURIComponent(plname);
-        handlePlaylistAction(url, id, groups);
+        handlePlaylistAction(url, id, groups, idParam);
     }
 }
 

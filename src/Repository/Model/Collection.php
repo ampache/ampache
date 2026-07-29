@@ -80,6 +80,14 @@ class Collection extends playlist_object
         $this->id = (int) $collectionId;
     }
 
+    /**
+     * The inverse: the spelling a collection stores and `VALID_TYPES` lists.
+     */
+    public static function denormalizeType(string $objectType): string
+    {
+        return ($objectType === 'tag') ? 'genre' : $objectType;
+    }
+
     public static function isValidType(string $objectType): bool
     {
         return in_array($objectType, self::VALID_TYPES, true);

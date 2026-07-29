@@ -96,7 +96,7 @@ $gart = Art::display('video', $video->id, $fullname, ['width' => 200, 'height' =
         <?php echo Ajax::button('?action=basket&type=video&id=' . $video->id, 'new_window', T_('Add to Temporary Playlist'), 'add_video_' . $video->id); ?>
         <?php if (Access::check(AccessTypeEnum::INTERFACE, AccessLevelEnum::USER)) { ?>
             <a id="<?php echo 'add_to_playlist_' . $video->id; ?>" onclick="showPlaylistDialog(event, 'video', '<?php echo $video->id; ?>')">
-                <?php echo Ui::get_material_symbol('playlist_add', T_('Add to playlist')); ?>
+                <?php echo Ui::get_material_symbol('playlist_add', Ui::get_add_to_list_label()); ?>
             </a>
         <?php } ?>
         <?php if (!AmpConfig::get('use_auth') || Access::check(AccessTypeEnum::INTERFACE, AccessLevelEnum::USER)) { ?>

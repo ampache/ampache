@@ -152,6 +152,30 @@
     padding: 0.4em;
 }
 
+/* Playlists and collections are separate destinations, so each gets its own labelled group rather than one
+   run-on list where the two kinds of name look identical. */
+.playlistdialog_group + .playlistdialog_group {
+    border-top: 1px solid rgba(128, 128, 128, 0.35);
+    margin-top: 0.4em;
+    padding-top: 0.2em;
+}
+
+.playlistdialog_heading {
+    margin: 0;
+    padding: 0.4em 0.4em 0.2em;
+    font-size: 1em;
+    font-weight: bold;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    opacity: 0.7;
+}
+
+.playlistdialog_group ul {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+}
+
 .playlistdialogstyle.ui-widget-content a:hover {
     cursor: pointer;
 }

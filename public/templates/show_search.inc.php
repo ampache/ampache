@@ -83,8 +83,8 @@ if (Access::check_function(AccessFunctionEnum::FUNCTION_BATCH_DOWNLOAD) && $zipH
         </li>
         <li>
             <a id="<?php echo 'add_to_playlist_' . $playlist->id; ?>" onclick="showPlaylistDialog(event, 'search', '<?php echo $playlist->id; ?>')">
-                <?php echo Ui::get_material_symbol('playlist_add', T_('Add to playlist')); ?>
-                <?php echo T_('Add to playlist'); ?>
+                <?php echo Ui::get_material_symbol('playlist_add', Ui::get_add_to_list_label()); ?>
+                <?php echo Ui::get_add_to_list_label(); ?>
             </a>
         </li>
 <?php } ?>

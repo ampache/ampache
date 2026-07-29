@@ -53,7 +53,7 @@ $user_id = (Core::get_global('user') instanceof User) ? Core::get_global('user')
     </li>
 <?php if (Access::check(AccessTypeEnum::INTERFACE, AccessLevelEnum::USER)) { ?>
         <li id="pl_add">
-            <?php echo Ui::get_material_symbol('playlist_add', T_('Add to playlist')); ?>
+            <?php echo Ui::get_material_symbol('playlist_add', Ui::get_add_to_list_label(true)); ?>
             <ul id="pl_action_additems" class="submenu">
                 <li>
                     <?php echo Ajax::text('?page=playlist&action=append_item', T_('Add to New Playlist'), 'rb_create_playlist'); ?>

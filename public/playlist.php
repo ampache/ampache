@@ -25,12 +25,14 @@ declare(strict_types=1);
 
 use Ampache\Module\Application\ApplicationRunner;
 use Ampache\Module\Application\Playlist\AddSongAction;
+use Ampache\Module\Application\Playlist\CreateAction;
 use Ampache\Module\Application\Playlist\DeletePlaylistAction;
 use Ampache\Module\Application\Playlist\ImportPlaylistAction;
 use Ampache\Module\Application\Playlist\RefreshPlaylistAction;
 use Ampache\Module\Application\Playlist\RemoveDuplicatesAction;
 use Ampache\Module\Application\Playlist\SetTrackNumbersAction;
 use Ampache\Module\Application\Playlist\ShowAction;
+use Ampache\Module\Application\Playlist\ShowCreateAction;
 use Ampache\Module\Application\Playlist\ShowImportPlaylistAction;
 use Ampache\Module\Application\Playlist\SortTrackAction;
 use Nyholm\Psr7Server\ServerRequestCreatorInterface;
@@ -51,6 +53,8 @@ $dic->get(ApplicationRunner::class)->run(
         ShowImportPlaylistAction::REQUEST_KEY => ShowImportPlaylistAction::class,
         DeletePlaylistAction::REQUEST_KEY => DeletePlaylistAction::class,
         RefreshPlaylistAction::REQUEST_KEY => RefreshPlaylistAction::class,
+        ShowCreateAction::REQUEST_KEY => ShowCreateAction::class,
+        CreateAction::REQUEST_KEY => CreateAction::class,
     ],
     ShowAction::REQUEST_KEY
 );

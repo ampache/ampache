@@ -102,7 +102,7 @@ final readonly class AlbumViewAdapter implements AlbumViewAdapterInterface
 
     public function getAddToPlaylistIcon(): string
     {
-        return Ui::get_material_symbol('playlist_add', T_('Add to playlist'));
+        return Ui::get_material_symbol('playlist_add', Ui::get_add_to_list_label());
     }
 
     public function getAddToTemporaryPlaylistButton(): string

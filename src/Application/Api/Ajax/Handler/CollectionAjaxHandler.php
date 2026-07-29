@@ -25,9 +25,14 @@ declare(strict_types=1);
 
 namespace Ampache\Application\Api\Ajax\Handler;
 
+use Ampache\Module\Api\Ajax;
+use Ampache\Module\Authorization\Access;
+use Ampache\Module\Authorization\AccessLevelEnum;
+use Ampache\Module\Authorization\AccessTypeEnum;
 use Ampache\Module\Util\RequestParserInterface;
 use Ampache\Repository\CollectionRepositoryInterface;
 use Ampache\Repository\Model\Browse;
+use Ampache\Repository\Model\Collection;
 use Ampache\Repository\Model\User;
 
 /**
@@ -48,6 +53,71 @@ final readonly class CollectionAjaxHandler implements AjaxHandlerInterface
         $action  = $this->requestParser->getFromRequest('action');
 
         switch ($action) {
+            case 'append_item':
+                // Unlike a playlist, a collection stores the object itself rather than the media it expands to,
+                // so an album added here stays one row and keeps looking like an album.
+                if ($this->requestParser->getFromRequest('collection_id') === '') {
+                    if (!Access::check(AccessTypeEnum::INTERFACE, AccessLevelEnum::USER)) {
+                        debug_event('collection.ajax', 'Error:' . $user->username . ' does not have user access, unable to create collection', 1);
+                        break;
+                    }
+
+                    $name = $this->requestParser->getFromRequest('name');
+                    if ($name === '') {
+                        $name = $user->username . ' - ' . get_datetime(time());
+                    }
+
+                    // Private by default, matching `collection_create`; the owner can publish it from the edit dialog
+                    $collectionId = $this->collectionRepository->create($name, $user);
+                    if ($collectionId === null) {
+                        break;
+                    }
+
+                    $collection = $this->collectionRepository->findById($collectionId);
+                } else {
+                    $collection = $this->collectionRepository->findById(
+                        (int) $this->requestParser->getFromRequest('collection_id')
+                    );
+                }
+
+                if (
+                    $collection === null
+                    || !$collection->has_collaborate($user)
+                ) {
+                    break;
+                }
+
+                // The interface sends a genre as `tag`, after its table; a collection stores it as `genre`
+                $itemType = Collection::denormalizeType($this->requestParser->getFromRequest('item_type'));
+                $added    = 0;
+                foreach (explode(',', $this->requestParser->getFromRequest('item_id')) as $itemId) {
+                    $objectId = (int) $itemId;
+                    // A pinned collection refuses anything but its own type, and an id that is not in its own
+                    // table would leave the collection holding a dangling member
+                    if (
+                        $objectId < 1
+                        || !$collection->acceptsType($itemType)
+                        || !$this->collectionRepository->objectExists($itemType, $objectId)
+                    ) {
+                        continue;
+                    }
+
+                    if ($collection->add_item($objectId, $itemType)) {
+                        ++$added;
+                    }
+                }
+
+                if ($added > 0) {
+                    Ajax::set_include_override(true);
+
+                    ob_start();
+                    display_notification(T_('Added to collection'));
+                    $results['reloader']      = ob_get_clean();
+                    $results['collection_id'] = (string) $collection->getId();
+                } else {
+                    debug_event('collection.ajax', 'No item to add. Aborting...', 5);
+                }
+                break;
             case 'delete_track':
                 $collection = $this->collectionRepository->findById(
                     (int) $this->requestParser->getFromRequest('collection_id')

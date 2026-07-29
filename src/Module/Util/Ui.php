@@ -206,6 +206,21 @@ class Ui implements UiInterface
     }
 
     /**
+     * The label for the control that opens the add-to-list dialog.
+     * @param bool $short for a control with no room for the full label, such as a multi-select action bar
+     */
+    public static function get_add_to_list_label(bool $short = false): string
+    {
+        if (!AmpConfig::get('show_collection')) {
+            return T_('Add to playlist');
+        }
+
+        return ($short)
+            ? T_('Add to list')
+            : T_('Add to playlist / collection');
+    }
+
+    /**
      * get_icon
      *
      * Returns an <img> or <svg> tag for the specified icon
