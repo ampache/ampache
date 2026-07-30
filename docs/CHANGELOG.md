@@ -151,6 +151,7 @@ You can downgrade to Ampache7 if you try this out and have issues, using the cli
   * The address bar now shows the page you are on (`/browse.php?action=album`) instead of a stale path with the real page in the fragment (`/index.php#browse.php?action=album`), so links can be read, shared and bookmarked
   * Existing `#` bookmarks still work and upgrade themselves to the real url on load
   * Clicking the page you are already on no longer re-fetches it
+* The optional top menu (`topmenu`) carries the same entries as the light sidebar, adding `Albums`, `Smartlists`, `Radio` and `Log out` alongside the existing links; `Smartlists` follows `sidebar_hide_search` and `Radio` only appears when `live_stream` is on
 * `direct_play_limit`: any existing "unlimited" (`0`) value is reset to a default cap of `500` tracks
 * `playable_item` interface split into `displayable_item` and `container_item` as part of a large interface cleanup
 * API version 8 has been added to the list of API versions
@@ -201,6 +202,13 @@ You can downgrade to Ampache7 if you try this out and have issues, using the cli
 
 ### Fixed (8.0.0)
 
+* Pages that stopped part way through and returned a blank or half-written page, because an uncaught error is logged and swallowed rather than shown
+  * The embedded web player (`web_player_embedded.php`) and the video page, when opened without a `playlist_id`; the player template was handed an undefined `$playlist` and now gets an empty one
+  * Generating a video preview image read `$time` before it was set, because a `Video` built from an id that is not in the database leaves its typed properties unset
+  * `random.php?action=get_advanced` with an empty `type`, which threw on `LibraryItemEnum::from('')`; an empty or unknown type falls back to `song`
+  * `albums.php?action=show_missing`, which trusted a MusicBrainz release-group lookup to carry `title`, `first-release-date` and `releases`; an unknown or incomplete response is now read defensively
+  * A missing artist page with no musicbrainz id, which passed `null` into `Ui::show_box_top()`
+  * Selecting cover art once the session's candidate list had expired; the choice is checked and you are returned to the previous page instead
 * Right click (`libitem_contextmenu`) actions on a browse row
   * The menu worked out what it was acting on by cutting the row id at the first underscore, so it read `podcast_episode_5` as podcast #episode and a collection row as collection #row; rows now state their identity with `data-object-type` and `data-object-id`
   * Album disk rows, in both the browse and "Albums of the Moment", were labelled as albums, so the menu (and the inline refresh after an edit) went after the album that happened to share that id
