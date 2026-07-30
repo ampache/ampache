@@ -29,10 +29,12 @@ use Ampache\Config\AmpConfig;
 use Ampache\Module\Api\OpenSubsonic_Api;
 use Ampache\Module\Authorization\AccessLevelEnum;
 use Ampache\Module\Playback\Stream;
+use Ampache\Module\System\Core;
 use Ampache\Repository\Model\Preference;
 use Ampache\Repository\Model\Song;
 use Ampache\Repository\Model\User;
 use Override;
+use Throwable;
 use WpOrg\Requests\Requests;
 
 /**
@@ -51,6 +53,10 @@ use WpOrg\Requests\Requests;
  */
 class AmpacheAudioMuse extends AmpachePlugin implements PluginSonicAnalysisInterface
 {
+    private const CONNECT_TIMEOUT = 3;
+
+    private const REQUEST_TIMEOUT = 7;
+
     #[Override]
     public string $categories = 'sonic_analysis';
 
@@ -243,7 +249,19 @@ class AmpacheAudioMuse extends AmpachePlugin implements PluginSonicAnalysisInter
         ];
 
         debug_event(self::class, 'Querying AudioMuse-AI: ' . $url, 5);
-        $request  = Requests::get($url, $headers);
+        $options = Core::requests_options([
+            'timeout' => self::REQUEST_TIMEOUT,
+            'connect_timeout' => self::CONNECT_TIMEOUT,
+        ]);
+
+        try {
+            $request = Requests::get($url, $headers, $options);
+        } catch (Throwable $error) {
+            debug_event(self::class, 'Request error: ' . $error->getMessage(), 1);
+
+            return null;
+        }
+
         $response = json_decode($request->body, true);
         if (!$request->success) {
             debug_event(self::class, 'AudioMuse-AI answered ' . $request->status_code . ': ' . $request->body, 3);

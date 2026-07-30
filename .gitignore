@@ -61,6 +61,7 @@ web.config
 *.phpproj
 *.pyc
 *.save
+crawl-report.json
 *.sln
 *.suo
 *.swp
