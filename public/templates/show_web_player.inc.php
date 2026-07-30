@@ -58,9 +58,12 @@ if (!$isShare) {
     }
 }
 
-if (isset($playlist)) {
-    $isVideo      = WebPlayer::is_playlist_video($playlist);
-    $isDemocratic = WebPlayer::is_playlist_democratic($playlist);
-    $isRandom     = WebPlayer::is_playlist_random($playlist);
+// show_html5_player.inc.php requires a Stream_Playlist unconditionally
+if (!isset($playlist)) {
+    $playlist = new Stream_Playlist(-1);
 }
+
+$isVideo      = WebPlayer::is_playlist_video($playlist);
+$isDemocratic = WebPlayer::is_playlist_democratic($playlist);
+$isRandom     = WebPlayer::is_playlist_random($playlist);
 require_once Ui::find_template('show_html5_player.inc.php'); ?>

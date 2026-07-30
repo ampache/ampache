@@ -396,17 +396,19 @@ class Wanted extends database_object
                  * } $group
                  */
                 $group = $brainz->lookup('release-group', $this->mbid, ['releases']);
+                $releaseDate = $group->{'first-release-date'} ?? null;
+                $releases    = (is_array($group->releases ?? null)) ? $group->releases : [];
                 // Set fresh data
-                $this->name = $group->title;
-                $this->year = (strtotime((string) $group->{'first-release-date'}))
-                    ? (int) date("Y", strtotime((string) $group->{'first-release-date'}) ?: null)
+                $this->name = $group->title ?? $this->name;
+                $this->year = (strtotime((string) $releaseDate))
+                    ? (int) date("Y", strtotime((string) $releaseDate) ?: null)
                     : null;
 
                 // Load from database if already cached
                 $this->songs = Song_Preview::get_song_previews($this->mbid);
-                if (count($group->releases) > 0) {
+                if (count($releases) > 0) {
                     // Use the first release as reference for track content
-                    $release_mbid = $group->releases[0]->id;
+                    $release_mbid = $releases[0]->id;
                     if (count($this->songs) == 0) {
                         /**
                          * https://musicbrainz.org/ws/2/release/d8de198d-2162-4264-9cfe-926d92c4c7ad?inc=recordings&fmt=json
