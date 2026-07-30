@@ -16,6 +16,10 @@
 * Upload
   * An artist created while uploading was never mapped to the upload catalog, so it was missing from an artist browse filtered to that catalog until the next catalog update; the artists of an uploaded song are now mapped as the song is added
 * Rating or favouriting a playlist, search or live stream logged an SQL error on every click, because only the media tables carry the `weight` column those writes adjust
+* Aggregated counts fetched from the database are php ints, not strings, so returning one from a `string` typed method raised a `TypeError`
+  * The Wrapped page (`show_wrapped`) failed on `Stats::get_object_data()`, so the songs played and minutes played figures were blank
+  * `scrobble` failed on `Song::can_scrobble()` whenever it did match a song, so a scrobble from a client that sends names rather than an id was never recorded
+* A browse `cond` string whose condition had no comma (`cond=hidden` rather than `cond=hidden,1`) raised an `Undefined array key 1` runtime error on every request; a valueless condition now applies the filter with no argument, exactly as the trailing-comma form already did
 
 ## Ampache 7.10.0
 
