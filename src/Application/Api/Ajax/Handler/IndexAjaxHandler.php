@@ -31,6 +31,7 @@ use Ampache\Module\Authorization\Access;
 use Ampache\Module\Authorization\AccessLevelEnum;
 use Ampache\Module\Authorization\AccessTypeEnum;
 use Ampache\Module\Statistics\Stats;
+use Ampache\Module\System\AutoUpdate;
 use Ampache\Module\Util\Recommendation;
 use Ampache\Module\Util\RequestParserInterface;
 use Ampache\Module\Util\SlideshowInterface;
@@ -347,6 +348,14 @@ final readonly class IndexAjaxHandler implements AjaxHandlerInterface
                 }
 
                 $results['recently_played'] = ob_get_clean();
+                break;
+            case 'ignore_update':
+                // The ajax entry point has no gatekeeper, so repeat the admin gate update.php's clear action applies
+                if (Access::check(AccessTypeEnum::INTERFACE, AccessLevelEnum::ADMIN)) {
+                    AutoUpdate::clear_status();
+                    $results['autoupdate'] = '';
+                }
+
                 break;
             case 'refresh_now_playing':
                 ob_start();

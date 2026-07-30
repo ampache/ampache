@@ -27,6 +27,7 @@ namespace Ampache\Module\System;
 
 use Ampache\Config\AmpConfig;
 use Ampache\Config\ConfigContainerInterface;
+use Ampache\Module\Api\Ajax;
 use Ampache\Repository\Model\Preference;
 use Exception;
 use WpOrg\Requests\Requests;
@@ -361,9 +362,10 @@ class AutoUpdate
 
         if (self::_is_git_repository()) {
             echo ' | <a class="nohtml" href="' . AmpConfig::get_web_path() . '/update.php?type=sources&action=update"> <b>' . T_('Update') . '</b></a>';
-            echo ' | <a class="nohtml" href="' . AmpConfig::get_web_path() . '/update.php?type=sources&action=clear">' . T_('Ignore') . '</a>';
+            echo ' | ' . Ajax::text('?page=index&action=ignore_update', T_('Ignore'), 'autoupdate_ignore');
         }
 
+        echo '<br />';
         echo '</div>';
     }
 

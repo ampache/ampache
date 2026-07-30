@@ -224,6 +224,7 @@ You can downgrade to Ampache7 if you try this out and have issues, using the cli
 * The catalog size graph was empty until a second time bucket existed, because the running total it adds to is `NULL` when nothing was added before the bucket and `NULL + SUM()` is `NULL`
 * The catalog size graph read zero for `object_type=album`; it joined `album`.`id` to `song`.`id` instead of `song`.`album`, and only counted buckets before the current one instead of including it
 * Uploading art, an avatar, a playlist or a podcast import file stopped the web player, because a form carrying a file fell back to a full page load
+* The `Ignore` link on the update available notice stopped the web player; dismissing the notice only clears the stored version, so it no longer reloads the whole page to do it
 * The `Select` toggle on the admin Disabled Songs list called a `check_select()` function that was defined nowhere, so it silently did nothing
 * Updating the sources from the web interface reported success when it had not worked
   * `composer install`, `npm install` and `npm run build` were run with their exit status discarded and only the last line of output kept, then the page redirected to the home page, so a failed dependency install left a pulled-but-unbuilt install with no error anywhere. The status is now checked, the output is logged in full and shown, and a failure keeps you on the update page

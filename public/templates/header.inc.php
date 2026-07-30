@@ -248,7 +248,6 @@ echo ($isCollapsed) ? ' content-left-wild' : ''; ?>">
                             || AutoUpdate::is_update_available()
                         ) {
                             AutoUpdate::show_new_version();
-                            echo '<br />';
                         }
                     }
 

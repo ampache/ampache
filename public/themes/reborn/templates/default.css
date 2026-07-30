@@ -246,7 +246,8 @@ label {
     color: #c33;
 }
 
-div#autoupdate > span {
+div#autoupdate > span,
+div#autoupdate_plugins > span {
     color: #f00;
 }
 
