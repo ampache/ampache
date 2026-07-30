@@ -58,6 +58,7 @@ e.g. To make a REST call for 10 random albums your URL would be `https://demo.am
 | HTTP   | REST                                                 | RPC action                                                                       | Alternative action |
 |--------|------------------------------------------------------|----------------------------------------------------------------------------------|--------------------|
 | GET    | `albums/{album_id}/art`                              | `?action=get_art&filter={album_id}&type=album`                                   |                    |
+| GET    | `albums/{album_id}/browse`                           | `?action=browse&filter={album_id}&type=album`                                    |                    |
 | GET    | `albums/{album_id}/fetch-metadata`                   | `?action=get_external_metadata&filter={album_id}&type=album`                     |                    |
 | POST   | `albums/{album_id}/flag`                             | `?action=flag&filter={album_id}&type=album`                                      |                    |
 | POST   | `albums/{album_id}/rate`                             | `?action=rate&filter={album_id}&type=album`                                      |                    |
@@ -71,6 +72,7 @@ e.g. To make a REST call for 10 random albums your URL would be `https://demo.am
 | GET    | `albums/stats`                                       | `?action=stats&type=album`                                                       |                    |
 | GET    | `albums`                                             | `?action=albums`                                                                 |                    |
 | GET    | `album-disks/{album_disk_id}/art`                    | `?action=get_art&filter={album_disk_id}&type=album_disk`                         |                    |
+| GET    | `album-disks/{album_disk_id}/browse`                 | `?action=browse&filter={album_disk_id}&type=album_disk`                          |                    |
 | POST   | `album-disks/{album_disk_id}/flag`                   | `?action=flag&filter={album_disk_id}&type=album_disk`                            |                    |
 | POST   | `album-disks/{album_disk_id}/rate`                   | `?action=rate&filter={album_disk_id}&type=album_disk`                            |                    |
 | GET    | `album-disks/{album_disk_id}/songs`                  | `?action=album_disk_songs&filter={album_disk_id}&type=album_disk`                |                    |
@@ -79,6 +81,7 @@ e.g. To make a REST call for 10 random albums your URL would be `https://demo.am
 | GET    | `album-disks/stats`                                  | `?action=stats&type=album_disk`                                                  |                    |
 | GET    | `artists/{artist_id}/albums`                         | `?action=artist_albums&filter={artist_id}`                                       |                    |
 | GET    | `artists/{artist_id}/art`                            | `?action=get_art&filter={artist_id}&type=artist`                                 |                    |
+| GET    | `artists/{artist_id}/browse`                         | `?action=browse&filter={artist_id}&type=artist`                                  |                    |
 | POST   | `artists/{artist_id}/fetch-info`                     | `?action=update_artist_info&filter={artist_id}&type=artist`                      |                    |
 | GET    | `artists/{artist_id}/fetch-metadata`                 | `?action=get_external_metadata&filter={artist_id}&type=artist`                   |                    |
 | POST   | `artists/{artist_id}/flag`                           | `?action=flag&filter={artist_id}&type=artist`                                    |                    |
@@ -208,6 +211,7 @@ e.g. To make a REST call for 10 random albums your URL would be `https://demo.am
 | GET    | `podcast-episodes/stats`                             | `?action=stats&type=podcast_episode`                                             |                    |
 | GET    | `podcast-episodes`                                   | `?action=podcast_episodes`                                                       |                    |
 | GET    | `podcasts/{podcast_id}/art`                          | `?action=get_art&filter={podcast_id}&type=podcast`                               |                    |
+| GET    | `podcasts/{podcast_id}/browse`                       | `?action=browse&filter={podcast_id}&type=podcast`                                |                    |
 | POST   | `podcasts/{podcast_id}/flag`                         | `?action=flag&filter={podcast_id}`                                               |                    |
 | GET    | `podcasts/{podcast_id}/podcast-episodes`             | `?action=podcast_episodes&filter={podcast_id}`                                   |                    |
 | POST   | `podcasts/{podcast_id}/rate`                         | `?action=rate&filter={podcast_id}`                                               |                    |

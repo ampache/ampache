@@ -58,6 +58,7 @@ API version **8** joins the concurrent live surfaces (3/4/5/6 — version 7 rema
   * Multi-word resources and actions may be spelled with a dash anywhere in a path (`album-disks/{id}/songs`); the dashed form is folded onto the canonical snake_case action by a single rule rather than a per-name alias list
   * New `albums/{album_id}/disks`, `album-disks/{album_disk_id}`, `album-disks/{album_disk_id}/songs`, plus `art`/`flag`/`rate`/`search`/`stats` on `album-disks`
   * New `localplay/songs` path for the existing `localplay_songs` action
+  * New object-scoped `browse` paths that need no catalog: `albums/{album_id}/browse`, `album-disks/{album_disk_id}/browse`, `artists/{artist_id}/browse` and `podcasts/{podcast_id}/browse`. The existing `catalogs/{catalog_id}/browse/...` paths still work and keep the catalog restriction
   * Each object gains `catalog`, the id of the catalog it belongs to, in both JSON and XML. `song`, `podcast_episode`, `live_stream`, `folder` and the `deleted_*` items already carried it, so every response object backed by a table with a catalog now reports one
   * `artist` is deliberately left out: an artist reaches its catalogs through `catalog_map` and has no single one to report, so `Artist::getCatalogId()` returns `0`
 
@@ -68,6 +69,8 @@ API version **8** joins the concurrent live surfaces (3/4/5/6 — version 7 rema
   * Version rollover logic reworked for the new 5-version lineup: requests pinned to a disabled API6 now roll forward to API8 (version 7 is explicitly rejected as unsupported)
   * API8 JSON/XML output now sets real HTTP status codes for errors and empty results (`404` for empty, `Api::getHttpCode()`-mapped codes for errors) — API3–6 always returned HTTP 200 with the error embedded in the response body
   * API8 uses updated action names for a few methods present under legacy naming in API3/4: `index`/`list` (not `get_indexes`), `playlist_add` (not `playlist_add_song`), `user_edit` (not `user_update`)
+* `browse` (API8 only)
+  * browse: `catalog` is now an optional filter on `album_artist`, `artist`, `album`, `album_disk` and `podcast` instead of a required parameter. Send it to restrict the children to one catalog, omit it to get them from every catalog you can see. An album, disk or podcast belongs to a single catalog and an artist reaches its catalogs through `catalog_map`, so the parent object never needed a catalog to be addressed. API6 keeps the parameter mandatory, because Ampache7 serves that version too
 * `download` (API8 only)
   * Converted from a legacy static method to the `MethodInterface` pattern to support the new zip response; existing `song`/`podcast_episode`/`search`/`playlist` single-item redirect behavior is unchanged
 * `user_edit` (API8 only)

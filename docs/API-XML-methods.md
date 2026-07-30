@@ -1377,12 +1377,14 @@ Edit a placeholder for the current media that you can return to later.
 
 Return children of a parent object in a folder traversal/browse style. If you don't send any parameters you'll get a catalog list (the 'root' path)
 
-**NOTE** Catalog ID is required on 'artist', 'album', 'podcast' so you can filter the browse correctly
+**NOTE** From API version 8 the catalog ID is optional on 'album_artist', 'artist', 'album', 'album_disk'
+and 'podcast'. Send it to restrict the children to a single catalog; omit it to get the children from every
+catalog you can see. API version 6 still requires it on those types.
 
 | Input     | Type       | Description                                                                                        | Optional |
 |-----------|------------|----------------------------------------------------------------------------------------------------|---------:|
 | 'filter'  | string     | object_id                                                                                          |      YES |
-| 'type'    | string     | 'root', 'catalog', 'artist', 'album', 'podcast'                                                    |      YES |
+| 'type'    | string     | 'root', 'catalog', 'album_artist', 'artist', 'album', 'album_disk', 'podcast'                      |      YES |
 | 'catalog' | string     | catalog ID you are browsing                                                                        |      YES |
 | 'add'     | set_filter | ISO 8601 Date Format (2020-09-16) Find objects with an 'add' date newer than the specified date    |      YES |
 | 'update'  | set_filter | ISO 8601 Date Format (2020-09-16) Find objects with an 'update' time newer than the specified date |      YES |

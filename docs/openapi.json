@@ -5787,6 +5787,7 @@
   "x-rpc-mappings": {
     "GET /album-disks/{album_disk_id}": "action=album_disk&filter={album_disk_id}",
     "GET /album-disks/{album_disk_id}/art": "action=get_art&filter={album_disk_id}&type=album_disk",
+    "GET /album-disks/{album_disk_id}/browse": "action=browse&filter={album_disk_id}&type=album_disk",
     "POST /album-disks/{album_disk_id}/flag": "action=flag&filter={album_disk_id}&type=album_disk",
     "POST /album-disks/{album_disk_id}/rate": "action=rate&filter={album_disk_id}&type=album_disk",
     "GET /album-disks/{album_disk_id}/songs": "action=album_disk_songs&filter={album_disk_id}&type=album_disk",
@@ -5795,6 +5796,7 @@
     "GET /albums": "action=albums",
     "GET /albums/{album_id}": "action=album&filter={album_id}",
     "GET /albums/{album_id}/art": "action=get_art&filter={album_id}&type=album",
+    "GET /albums/{album_id}/browse": "action=browse&filter={album_id}&type=album",
     "GET /albums/{album_id}/disks": "action=album_disks&filter={album_id}&type=album",
     "GET /albums/{album_id}/fetch-metadata": "action=get_external_metadata&filter={album_id}&type=album",
     "POST /albums/{album_id}/flag": "action=flag&filter={album_id}&type=album",
@@ -5809,6 +5811,7 @@
     "GET /artists/{artist_id}": "action=artist&filter={artist_id}",
     "GET /artists/{artist_id}/albums": "action=artist_albums&filter={artist_id}",
     "GET /artists/{artist_id}/art": "action=get_art&filter={artist_id}&type=artist",
+    "GET /artists/{artist_id}/browse": "action=browse&filter={artist_id}&type=artist",
     "POST /artists/{artist_id}/fetch-info": "action=update_artist_info&filter={artist_id}&type=artist",
     "GET /artists/{artist_id}/fetch-metadata": "action=get_external_metadata&filter={artist_id}&type=artist",
     "POST /artists/{artist_id}/flag": "action=flag&filter={artist_id}&type=artist",
@@ -5932,6 +5935,7 @@
     "PATCH /podcasts/{podcast_id}": "action=podcast_edit&filter={podcast_id}",
     "DELETE /podcasts/{podcast_id}": "action=podcast_delete&filter={podcast_id}",
     "GET /podcasts/{podcast_id}/art": "action=get_art&filter={podcast_id}&type=podcast",
+    "GET /podcasts/{podcast_id}/browse": "action=browse&filter={podcast_id}&type=podcast",
     "POST /podcasts/{podcast_id}/flag": "action=flag&filter={podcast_id}",
     "GET /podcasts/{podcast_id}/podcast-episodes": "action=podcast_episodes&filter={podcast_id}",
     "POST /podcasts/{podcast_id}/rate": "action=rate&filter={podcast_id}",
@@ -6152,6 +6156,76 @@
         },
         "operationId": "getArtAlbumDisks",
         "description": "Get an art image."
+      }
+    },
+    "/album-disks/{album_disk_id}/browse": {
+      "get": {
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/AlbumDiskId"
+          },
+          {
+            "in": "query",
+            "name": "catalog",
+            "required": false,
+            "description": "Restrict the children to a single catalog. Omit it to browse every catalog you can see.",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "$ref": "#/components/parameters/AddFilter"
+          },
+          {
+            "$ref": "#/components/parameters/UpdateFilter"
+          },
+          {
+            "$ref": "#/components/parameters/Offset"
+          },
+          {
+            "$ref": "#/components/parameters/Limit"
+          },
+          {
+            "$ref": "#/components/parameters/Cond"
+          },
+          {
+            "$ref": "#/components/parameters/Sort"
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/BrowseResponse"
+                }
+              }
+            },
+            "description": "Browse results"
+          },
+          "400": {
+            "$ref": "#/components/responses/BadRequestErrorResponse"
+          },
+          "401": {
+            "$ref": "#/components/responses/UnauthorizedErrorResponse"
+          },
+          "403": {
+            "$ref": "#/components/responses/ForbiddenErrorResponse"
+          },
+          "404": {
+            "$ref": "#/components/responses/NotFoundErrorResponse"
+          },
+          "500": {
+            "$ref": "#/components/responses/InternalServerErrorResponse"
+          }
+        },
+        "summary": "Browse songs of an album disk",
+        "tags": [
+          "Albums",
+          "Browsing, Indexes and Lists"
+        ],
+        "description": "Return children of a parent object in a folder traversal/browse style. The catalog is an optional filter from API version 8; omit it to browse the children in every catalog you can see.",
+        "operationId": "browseAlbumDisks"
       }
     },
     "/album-disks/{album_disk_id}/flag": {
@@ -6843,6 +6917,76 @@
         ],
         "operationId": "getArtAlbums",
         "description": "Get an art image."
+      }
+    },
+    "/albums/{album_id}/browse": {
+      "get": {
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/AlbumId"
+          },
+          {
+            "in": "query",
+            "name": "catalog",
+            "required": false,
+            "description": "Restrict the children to a single catalog. Omit it to browse every catalog you can see.",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "$ref": "#/components/parameters/AddFilter"
+          },
+          {
+            "$ref": "#/components/parameters/UpdateFilter"
+          },
+          {
+            "$ref": "#/components/parameters/Offset"
+          },
+          {
+            "$ref": "#/components/parameters/Limit"
+          },
+          {
+            "$ref": "#/components/parameters/Cond"
+          },
+          {
+            "$ref": "#/components/parameters/Sort"
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/BrowseResponse"
+                }
+              }
+            },
+            "description": "Browse results"
+          },
+          "400": {
+            "$ref": "#/components/responses/BadRequestErrorResponse"
+          },
+          "401": {
+            "$ref": "#/components/responses/UnauthorizedErrorResponse"
+          },
+          "403": {
+            "$ref": "#/components/responses/ForbiddenErrorResponse"
+          },
+          "404": {
+            "$ref": "#/components/responses/NotFoundErrorResponse"
+          },
+          "500": {
+            "$ref": "#/components/responses/InternalServerErrorResponse"
+          }
+        },
+        "summary": "Browse songs of an album",
+        "tags": [
+          "Albums",
+          "Browsing, Indexes and Lists"
+        ],
+        "description": "Return children of a parent object in a folder traversal/browse style. The catalog is an optional filter from API version 8; omit it to browse the children in every catalog you can see.",
+        "operationId": "browseAlbums"
       }
     },
     "/albums/{album_id}/disks": {
@@ -8587,6 +8731,76 @@
         ],
         "operationId": "getArtArtists",
         "description": "Get an art image."
+      }
+    },
+    "/artists/{artist_id}/browse": {
+      "get": {
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/ArtistId"
+          },
+          {
+            "in": "query",
+            "name": "catalog",
+            "required": false,
+            "description": "Restrict the children to a single catalog. Omit it to browse every catalog you can see.",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "$ref": "#/components/parameters/AddFilter"
+          },
+          {
+            "$ref": "#/components/parameters/UpdateFilter"
+          },
+          {
+            "$ref": "#/components/parameters/Offset"
+          },
+          {
+            "$ref": "#/components/parameters/Limit"
+          },
+          {
+            "$ref": "#/components/parameters/Cond"
+          },
+          {
+            "$ref": "#/components/parameters/Sort"
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/BrowseResponse"
+                }
+              }
+            },
+            "description": "Browse results"
+          },
+          "400": {
+            "$ref": "#/components/responses/BadRequestErrorResponse"
+          },
+          "401": {
+            "$ref": "#/components/responses/UnauthorizedErrorResponse"
+          },
+          "403": {
+            "$ref": "#/components/responses/ForbiddenErrorResponse"
+          },
+          "404": {
+            "$ref": "#/components/responses/NotFoundErrorResponse"
+          },
+          "500": {
+            "$ref": "#/components/responses/InternalServerErrorResponse"
+          }
+        },
+        "summary": "Browse albums of an artist",
+        "tags": [
+          "Artists",
+          "Browsing, Indexes and Lists"
+        ],
+        "description": "Return children of a parent object in a folder traversal/browse style. The catalog is an optional filter from API version 8; omit it to browse the children in every catalog you can see.",
+        "operationId": "browseArtists"
       }
     },
     "/artists/{artist_id}/fetch-info": {
@@ -10470,8 +10684,10 @@
               "enum": [
                 "root",
                 "catalog",
+                "album_artist",
                 "artist",
                 "album",
+                "album_disk",
                 "podcast"
               ],
               "type": "string"
@@ -79326,6 +79542,76 @@
         ],
         "operationId": "getArtPodcasts",
         "description": "Get an art image."
+      }
+    },
+    "/podcasts/{podcast_id}/browse": {
+      "get": {
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/PodcastId"
+          },
+          {
+            "in": "query",
+            "name": "catalog",
+            "required": false,
+            "description": "Restrict the children to a single catalog. Omit it to browse every catalog you can see.",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "$ref": "#/components/parameters/AddFilter"
+          },
+          {
+            "$ref": "#/components/parameters/UpdateFilter"
+          },
+          {
+            "$ref": "#/components/parameters/Offset"
+          },
+          {
+            "$ref": "#/components/parameters/Limit"
+          },
+          {
+            "$ref": "#/components/parameters/Cond"
+          },
+          {
+            "$ref": "#/components/parameters/Sort"
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/BrowseResponse"
+                }
+              }
+            },
+            "description": "Browse results"
+          },
+          "400": {
+            "$ref": "#/components/responses/BadRequestErrorResponse"
+          },
+          "401": {
+            "$ref": "#/components/responses/UnauthorizedErrorResponse"
+          },
+          "403": {
+            "$ref": "#/components/responses/ForbiddenErrorResponse"
+          },
+          "404": {
+            "$ref": "#/components/responses/NotFoundErrorResponse"
+          },
+          "500": {
+            "$ref": "#/components/responses/InternalServerErrorResponse"
+          }
+        },
+        "summary": "Browse episodes of a podcast",
+        "tags": [
+          "Podcasts",
+          "Browsing, Indexes and Lists"
+        ],
+        "description": "Return children of a parent object in a folder traversal/browse style. The catalog is an optional filter from API version 8; omit it to browse the children in every catalog you can see.",
+        "operationId": "browsePodcasts"
       }
     },
     "/podcasts/{podcast_id}/flag": {
