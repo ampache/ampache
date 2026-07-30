@@ -223,9 +223,16 @@ final readonly class NewPlaylistDialogAdapter implements NewPlaylistDialogAdapte
             $types[] = $this->object_type;
         }
 
-        // The interface names a genre after its table, so it arrives as `tag` and has to be spelled the way a
-        // collection stores it before anything is checked against `VALID_TYPES`
+        // The interface names a genre after its table, so it arrives as `tag` and has to be spelled the way a collection stores it before anything is checked against `VALID_TYPES`
         $types = array_map(Collection::denormalizeType(...), $types);
+
+        // A smartlist is never stored as itself; take the songs it resolves to so it's offered wherever a song can go
+        $types = array_map(
+            static fn(string $objectType): string => ($objectType === 'search')
+                ? 'song'
+                : $objectType,
+            $types
+        );
 
         return array_values(array_unique($types));
     }

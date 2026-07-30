@@ -33,6 +33,7 @@ use Ampache\Module\Util\RequestParserInterface;
 use Ampache\Repository\CollectionRepositoryInterface;
 use Ampache\Repository\Model\Browse;
 use Ampache\Repository\Model\Collection;
+use Ampache\Repository\Model\Smartlist;
 use Ampache\Repository\Model\User;
 
 /**
@@ -89,8 +90,28 @@ final readonly class CollectionAjaxHandler implements AjaxHandlerInterface
 
                 // The interface sends a genre as `tag`, after its table; a collection stores it as `genre`
                 $itemType = Collection::denormalizeType($this->requestParser->getFromRequest('item_type'));
-                $added    = 0;
-                foreach (explode(',', $this->requestParser->getFromRequest('item_id')) as $itemId) {
+                $itemIds  = explode(',', $this->requestParser->getFromRequest('item_id'));
+
+                // A smartlist is not a storable type, so it add the songs it resolves to instead
+                if ($itemType === 'search') {
+                    $songIds = [];
+                    foreach ($itemIds as $itemId) {
+                        $smartlist = new Smartlist((int) $itemId);
+                        if ($smartlist->isNew()) {
+                            continue;
+                        }
+
+                        foreach ($smartlist->get_medias('song') as $media) {
+                            $songIds[] = (string) $media['object_id'];
+                        }
+                    }
+
+                    $itemType = 'song';
+                    $itemIds  = array_values(array_unique($songIds));
+                }
+
+                $added = 0;
+                foreach ($itemIds as $itemId) {
                     $objectId = (int) $itemId;
                     // A pinned collection refuses anything but its own type, and an id that is not in its own
                     // table would leave the collection holding a dangling member
