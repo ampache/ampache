@@ -284,6 +284,10 @@ You can downgrade to Ampache7 if you try this out and have issues, using the cli
   * The update is refused before the sources are pulled when `exec()` is disabled or the checkout, `node_modules` or `vendor` cannot be written
   * Dependencies were installed with `--prefer-source`, which checks out every package as a git working tree; `--prefer-dist` is used instead
   * A package that rewrites one of its own tracked files during install (`phpstan/extension-installer` and its `src/GeneratedConfig.php`) left that checkout dirty, and composer refuses to remove a modified source install, so a `composer_no_dev` update aborted while stripping the dev packages and left `vendor` incomplete. Dirty vendor checkouts are restored before the install runs
+* Aggregated counts fetched from the database are php ints, not strings, so returning one from a `string` typed method raised a `TypeError`
+  * The Wrapped page (`show_wrapped`) failed on `Stats::get_object_data()`, so the songs played and minutes played figures were blank
+  * `scrobble` failed on `Song::can_scrobble()` whenever it did match a song, so a scrobble from a client that sends names rather than an id was never recorded
+* A browse `cond` string whose condition had no comma (`cond=hidden` rather than `cond=hidden,1`) raised an `Undefined array key 1` runtime error on every request; a valueless condition now applies the filter with no argument, exactly as the trailing-comma form already did
 
 ## Ampache 7.10.0
 
