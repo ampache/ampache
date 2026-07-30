@@ -395,7 +395,7 @@ class Wanted extends database_object
                  *     primary-type: string
                  * } $group
                  */
-                $group = $brainz->lookup('release-group', $this->mbid, ['releases']);
+                $group       = $brainz->lookup('release-group', $this->mbid, ['releases']);
                 $releaseDate = $group->{'first-release-date'} ?? null;
                 $releases    = (is_array($group->releases ?? null)) ? $group->releases : [];
                 // Set fresh data
