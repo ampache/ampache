@@ -99,6 +99,9 @@ You can downgrade to Ampache7 if you try this out and have issues, using the cli
   * New `sonic_match` method (REST `songs/{song_id}/sonic-match`) returning songs that sound like a given song, each with a `similarity` score. It shares the OpenSubsonic `sonicMatch` scale (0.0-1.0, 1.0 being the same recording) so a client sees the same number from either API, and needs a sonic-analysis plugin — with none enabled it refuses the request rather than returning an empty list
   * v8 API responses are now fully documented: `docs/openapi.json` carries response schemas for every data type, and `docs/API-JSON-methods.md`/`docs/API-XML-methods.md` show per-method response field tables (type, nullable, optional)
   * Album disks are available to API8 clients (`album_disks`, `album_disk`, `album_disk_songs`, plus `index`, `list`, `browse`, `stats` and `get_art` support). With the `album_group` preference disabled the web interface browses album disks, and until now the API had no way to reach them
+* Browse
+  * Add `addition_time` sort to album, album_disk and artist. (A disk has no time of its own, so it sorts on its album's)
+  * Add `update_time` sort to podcast_episode. (The column has existed since `750001` but was never a sort)
 * CLI
   * New `admin:exportSchema` command regenerates `resources/sql/ampache.sql` from a clean install; it refuses to run against a database with pending updates
   * New user commands `admin:deleteUser`, `admin:enableUser` and `admin:disableUser`

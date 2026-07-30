@@ -58,6 +58,8 @@ API version **8** joins the concurrent live surfaces (3/4/5/6 — version 7 rema
   * Multi-word resources and actions may be spelled with a dash anywhere in a path (`album-disks/{id}/songs`); the dashed form is folded onto the canonical snake_case action by a single rule rather than a per-name alias list
   * New `albums/{album_id}/disks`, `album-disks/{album_disk_id}`, `album-disks/{album_disk_id}/songs`, plus `art`/`flag`/`rate`/`search`/`stats` on `album-disks`
   * New `localplay/songs` path for the existing `localplay_songs` action
+  * Each object gains `catalog`, the id of the catalog it belongs to, in both JSON and XML. `song`, `podcast_episode`, `live_stream`, `folder` and the `deleted_*` items already carried it, so every response object backed by a table with a catalog now reports one
+  * `artist` is deliberately left out: an artist reaches its catalogs through `catalog_map` and has no single one to report, so `Artist::getCatalogId()` returns `0`
 
 ### Changed (800000)
 
