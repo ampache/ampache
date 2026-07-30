@@ -330,7 +330,7 @@ class Browse extends Query
         foreach ((explode(';', $cond)) as $condition) {
             $filter = (explode(',', $condition));
             if (!empty($filter[0])) {
-                $this->set_filter(strtolower($filter[0]), ($filter[1] ?: null));
+                $this->set_filter(strtolower($filter[0]), (($filter[1] ?? '') ?: null));
             }
         }
     }

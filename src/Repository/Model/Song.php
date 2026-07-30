@@ -296,7 +296,7 @@ class Song extends database_object implements
             return '';
         }
 
-        return $row['id'];
+        return (string) $row['id'];
     }
 
     /**
