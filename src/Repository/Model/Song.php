@@ -1944,7 +1944,15 @@ class Song extends database_object implements
                     $plugin->_plugin instanceof PluginGetLyricsInterface
                     && $plugin->load($user)
                 ) {
-                    $lyrics = $plugin->_plugin->get_lyrics($this);
+                    // a plugin talking to an unreachable service must not take the request down with it; skip to the next
+                    try {
+                        $lyrics = $plugin->_plugin->get_lyrics($this);
+                    } catch (\Throwable $error) {
+                        debug_event(self::class, 'get_lyrics error in ' . $plugin_name . ': ' . $error->getMessage(), 1);
+
+                        continue;
+                    }
+
                     if (!empty($lyrics)) {
                         // save the lyrics if not set before
                         if (!empty($lyrics['text'])) {
