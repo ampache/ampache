@@ -857,6 +857,9 @@ final readonly class Session implements SessionInterface
         // enforce strict cookies. you don't need these elsewhere
         ini_set('session.cookie_samesite', 'Lax');
 
+        ini_set('session.gc_probability', '1');
+        ini_set('session.gc_divisor', '1000');
+
         $handler = new AmpacheSessionHandler();
         session_set_save_handler($handler, true);
 

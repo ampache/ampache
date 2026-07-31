@@ -77,31 +77,43 @@ $replaygain = (AmpConfig::get('theme_color', 'dark') == 'light')
     // has to be asked for. It can only change when the track does, so it is resolved once per track and held
     // until the next one starts rather than polled on a timer.
     var nowPlayingObjectId = null;
+    var nowPlayingSeenId = null;
     var nowPlayingPending = false;
+    var nowPlayingActive = false;
     var nowPlayingRetry = null;
     var nowPlayingAttempts = 0;
-    var nowPlayingMaxAttempts = 3;
-    var nowPlayingRetryMs = 1500;
+    var nowPlayingMaxAttempts = 8;
+    var nowPlayingRetryMs = 2000;
 
     function pollNowPlaying()
     {
         if (typeof jsAjaxUrl === 'undefined') {
             return;
         }
+        nowPlayingActive = true;
         nowPlayingAttempts++;
         $.getJSON(jsAjaxUrl + '?page=player&action=now_playing', function (data) {
+            if (window.jpDebug && window.console && window.console.log) {
+                window.console.log('now_playing attempt ' + nowPlayingAttempts + ', holding ' + nowPlayingObjectId, data);
+            }
             if (!data || !data.found || !data.object_id || data.object_id === nowPlayingObjectId) {
+                if (data && data.object_id) {
+                    nowPlayingSeenId = data.object_id;
+                }
                 scheduleNowPlayingRetry();
 
                 return;
             }
 
             nowPlayingPending = false;
+            nowPlayingActive = false;
             nowPlayingObjectId = data.object_id;
             $('.playing_title').html(data.title);
             $('.playing_artist').html(data.artist);
             if (data.art) {
                 $('.playing_art').attr('src', data.art).show();
+            } else {
+                clearNowPlayingArt();
             }
             if (data.actions) {
                 $('.playing_actions').html(data.actions);
@@ -110,38 +122,66 @@ $replaygain = (AmpConfig::get('theme_color', 'dark') == 'light')
         }).fail(scheduleNowPlayingRetry);
     }
 
+    function clearNowPlayingArt()
+    {
+        $('.playing_art').removeAttr('src').hide();
+    }
+
+    // jPlayer builds the playlist markup by concatenation, so a value the item doesn't carry lands in the dom as
+    // the text "undefined" and reads back as a non-empty string that the browser then fetches as a relative url.
+    function jpItemAttr(item, name)
+    {
+        var value = (item) ? item.attr(name) : '';
+
+        return (value === undefined || value === 'undefined' || value === 'null' || value === 'NaN') ? '' : value;
+    }
+
     function scheduleNowPlayingRetry()
     {
+        cancelNowPlayingRetry();
         if (nowPlayingAttempts >= nowPlayingMaxAttempts) {
             nowPlayingPending = false;
+            // The row kept being rejected because it belongs to the track that just finished, so retiring it as the
+            // baseline stops the next track from accepting it and settling permanently one song behind.
+            if (nowPlayingSeenId !== null) {
+                nowPlayingObjectId = nowPlayingSeenId;
+            }
 
             return;
         }
-        cancelNowPlayingRetry();
+        nowPlayingActive = true;
         nowPlayingRetry = setTimeout(pollNowPlaying, nowPlayingRetryMs);
     }
 
     function cancelNowPlayingRetry()
     {
+        nowPlayingActive = false;
         if (nowPlayingRetry !== null) {
             clearTimeout(nowPlayingRetry);
             nowPlayingRetry = null;
         }
     }
 
+    // The placeholder item never changes, so the previous song has to be dropped the moment a new stream is
+    // requested or a slow or failed lookup leaves its title and cover sitting over the track that replaced it.
     function nowPlayingTrackChanged()
     {
         cancelNowPlayingRetry();
+        nowPlayingSeenId = null;
         nowPlayingPending = true;
         nowPlayingAttempts = 0;
+        clearNowPlayingArt();
     }
 
-    // Resuming from a pause reuses the held song; only a track change clears it
+    // now_playing is only written once the stream request reaches the server, well after `play` fires, so the first
+    // read of a track is expected to be stale and the retries are what actually resolve it.
     function refreshNowPlaying()
     {
-        if (nowPlayingPending) {
-            pollNowPlaying();
+        if (!nowPlayingPending || nowPlayingActive) {
+            return;
         }
+        nowPlayingAttempts = 0;
+        pollNowPlaying();
     }
 
     $(document).ready(function(){
@@ -272,28 +312,33 @@ $replaygain = (AmpConfig::get('theme_color', 'dark') == 'light')
                         }
                         <?php } ?>
                         <?php if ($iframed && AmpConfig::get('browser_notify')) { ?>
-                        NotifyOfNewSong(obj.title, obj.artist, currentjpitem.attr("data-poster"));
+                        NotifyOfNewSong(obj.title, obj.artist, jpItemAttr(currentjpitem, "data-poster"));
                         <?php } ?>
                         if ("mediaSession" in navigator) {
-                            // Allow the browser to expose what's playing the the OS via e.g. MPRIS on Linux
-                            navigator.mediaSession.metadata = new MediaMetadata({
-                                title: obj.title,
-                                artist: obj.artist,
-                                artwork: [
+                            // Random/democratic placeholders carry no poster, and an empty artwork list beats a bad src
+                            var mediaPoster = jpItemAttr(currentjpitem, "data-poster");
+                            var mediaArtwork = (mediaPoster === '')
+                                ? []
+                                : [
                                     {
-                                        src: currentjpitem.attr("data-poster"),
+                                        src: mediaPoster,
                                         sizes: "96x96",
                                         type: "image/png"
                                     },
                                     {
                                         // Not the right size, but 256x256 is necessary for
                                         // Android device to display the artwork
-                                        src: currentjpitem.attr("data-poster"),
+                                        src: mediaPoster,
                                         sizes: "256x256",
                                         type: "image/png"
                                     }
-                                ],
-                                album: currentjpitem.attr("data-album_name"),
+                                ];
+                            // Allow the browser to expose what's playing the the OS via e.g. MPRIS on Linux
+                            navigator.mediaSession.metadata = new MediaMetadata({
+                                title: obj.title,
+                                artist: obj.artist,
+                                artwork: mediaArtwork,
+                                album: jpItemAttr(currentjpitem, "data-album_name"),
                             });
                             navigator.mediaSession.playbackState = "playing";
                         }
@@ -345,7 +390,8 @@ $replaygain = (AmpConfig::get('theme_color', 'dark') == 'light')
                             if (AmpConfig::get('sociable')) {
                                 echo "if (currenttype === 'song') { ajaxPut(jsAjaxUrl + '?page=' + currenttype + '&action=shouts&object_type=' + currenttype + '&object_id=' + currentjpitem.attr('data-media_id'), 'shouts_data'); }";
                             }
-                            echo "ajaxPut(jsAjaxUrl + '?action=action_buttons&object_type=' + actiontype + '&object_id=' + currentjpitem.attr('data-media_id'));";
+                            // random/democratic placeholders have no type or id of their own, so the buttons are left for the resolved song
+                            echo "if (typeof actiontype !== 'undefined') { ajaxPut(jsAjaxUrl + '?action=action_buttons&object_type=' + actiontype + '&object_id=' + currentjpitem.attr('data-media_id')); }";
                             echo "var titleobj = (typeof actiontype !== 'undefined') ? '<a href=\"javascript:NavigateTo(\'" . $web_path . "/' + currenttype + '.php?action=show_' + currenttype + '&' + currentobject + '=' + currentjpitem.attr('data-media_id') + '\');\" title=\"' + obj.title + '\">' + obj.title + '</a>' : obj.title;";
                             echo "var artistobj = (currentjpitem.attr('data-artist_id') !== 'undefined') ? '<a href=\"javascript:NavigateTo(\'" . $web_path . "/artists.php?action=show&artist=' + currentjpitem.attr('data-artist_id') + '\');\" title=\"' + obj.artist + '\">' + obj.artist + '</a>' : obj.artist;";
                             echo "var lyricsobj = (typeof actiontype !== 'undefined' && currenttype === 'song') ? '<a href=\"javascript:NavigateTo(\'" . $web_path . "/' + currenttype + '.php?action=show_lyrics&' + currentobject + '=' + currentjpitem.attr('data-media_id') + '\');\">" . addslashes(T_('Show Lyrics')) . "</a>' : '';";
@@ -429,6 +475,8 @@ if (AmpConfig::get('song_page_title') && $isShare === false) {
 
 <?php if ($isRandom || $isDemocratic) { ?>
         $("#jquery_jplayer_1").bind($.jPlayer.event.loadstart, nowPlayingTrackChanged);
+        $("#jquery_jplayer_1").bind($.jPlayer.event.loadeddata, refreshNowPlaying);
+        $("#jquery_jplayer_1").bind($.jPlayer.event.playing, refreshNowPlaying);
 <?php } ?>
 
         $("#jquery_jplayer_1").bind($.jPlayer.event.pause, function (event) {

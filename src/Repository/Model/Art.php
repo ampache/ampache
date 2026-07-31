@@ -514,11 +514,13 @@ class Art extends database_object
      * ['file'] = FILENAME *** OPTIONAL ***
      * ['raw'] = Actual Image data, already captured
      * ['raw_base64'] = The same, encoded so it can be held in the session
+     * ['mosaic'] = The list whose covers are stitched together on demand
      * @param array{
      *     url?: string,
      *     file?: string,
      *     raw?: string,
      *     raw_base64?: string,
+     *     mosaic?: array{object_id: int, limit: int},
      *     title?: string,
      *     db?: int,
      *     song?: string,
@@ -538,6 +540,16 @@ class Art extends database_object
         // The session is a text column, so image bytes can only be held there encoded
         if (isset($data['raw_base64'])) {
             return (string) base64_decode($data['raw_base64'], true);
+        }
+
+        // Stitched from the list's own covers each time it's asked for, so nothing has to carry the bytes
+        if (isset($data['mosaic']) && in_array($type, ['playlist', 'search', 'collection'], true)) {
+            $className = ObjectTypeToClassNameMapper::map($type);
+            $libitem   = new $className($data['mosaic']['object_id']);
+
+            return ($libitem instanceof playlist_object)
+                ? (string) $libitem->get_mosaic_art($data['mosaic']['limit'])
+                : '';
         }
 
         // If it came from the database
@@ -1772,17 +1784,10 @@ class Art extends database_object
 
         $className = ObjectTypeToClassNameMapper::map($this->object_type);
         $playlist  = new $className($this->object_id);
-        if (!$playlist instanceof playlist_object) {
-            return null;
-        }
 
-        foreach ($playlist->gather_art(PlaylistArtBuilderInterface::MAX_TILES) as $image) {
-            if (isset($image['raw'])) {
-                return $image['raw'];
-            }
-        }
-
-        return null;
+        return ($playlist instanceof playlist_object)
+            ? $playlist->get_mosaic_art(PlaylistArtBuilderInterface::MAX_TILES)
+            : null;
     }
 
     /**

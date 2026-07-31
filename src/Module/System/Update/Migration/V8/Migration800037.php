@@ -23,23 +23,31 @@ declare(strict_types=1);
  *
  */
 
-namespace Ampache\Module\Art\Collector;
+namespace Ampache\Module\System\Update\Migration\V8;
 
-use Ampache\Repository\Model\Art;
+use Ampache\Module\System\Dba;
+use Ampache\Module\System\Update\Migration\AbstractMigration;
 
-interface ArtCollectorInterface
+/**
+ * Index the columns the newest lists are sorted by.
+ */
+final class Migration800037 extends AbstractMigration
 {
-    /**
-     * This tries to get the art in question
-     * @param array<string, mixed> $options
-     * @return array<int, array{
-     *     'raw'?: string,
-     *     'db'?: int,
-     *     'url'?: string,
-     *     'mosaic'?: array{object_id: int, limit: int},
-     *     'title'?: string,
-     *     'mime'?: string
-     * }>
-     */
-    public function collect(Art $art, array $options = [], int $limit = 0): array;
+    protected array $changelog = [
+        'Add an index on `album`.`addition_time` and `artist`.`addition_time` so the newest lists can stop at the rows they show',
+    ];
+
+    public function migrate(): void
+    {
+        $indexes = [
+            ['album', 'addition_time'],
+            ['artist', 'addition_time'],
+        ];
+
+        foreach ($indexes as [$table, $column]) {
+            if (!Dba::has_index($table, $column)) {
+                $this->updateDatabase(sprintf('ALTER TABLE `%s` ADD KEY `%s` (`%s`);', $table, $column, $column));
+            }
+        }
+    }
 }
