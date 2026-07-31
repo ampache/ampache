@@ -420,9 +420,9 @@ class Stats
                 : "SELECT `playlist`.`id`, MAX(`playlist`.`last_update`) AS `real_atime` FROM `playlist` GROUP BY `playlist`.`id` ORDER BY `real_atime` DESC ";
         }
 
-        $base_type = 'song';
-        $group_by  = '';
-        $where     = [];
+        $base_type      = 'song';
+        $group_by       = '';
+        $where          = [];
         $catalog_column = null;
         // everything else
         if ($type === 'song') {

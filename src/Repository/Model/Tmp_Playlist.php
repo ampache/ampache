@@ -218,8 +218,9 @@ class Tmp_Playlist extends database_object
      */
     public function count_items(): int
     {
-        $sql        = "SELECT COUNT(`id`) FROM `tmp_playlist_data` WHERE `tmp_playlist` = ?;";
-        $db_results = Dba::read($sql, [$this->id]);
+        [$filter, $params] = $this->_row_filter();
+
+        $db_results = Dba::read("SELECT COUNT(`tmp_playlist_data`.`id`) FROM `tmp_playlist_data` " . $filter, $params);
         $row        = Dba::fetch_row($db_results);
 
         return (int) ($row[0] ?? 0);
@@ -250,22 +251,14 @@ class Tmp_Playlist extends database_object
      */
     public function get_items(int $limit = 0): array
     {
-        $session_name = AmpConfig::get('session_name', 'ampache');
-        $sql          = "SELECT `tmp_playlist_data`.`object_type`, `tmp_playlist_data`.`id`, `tmp_playlist_data`.`object_id` FROM `tmp_playlist_data` ";
-        $order        = ($limit > 0)
-            ? "ORDER BY `id` LIMIT " . $limit
-            : "ORDER BY `id`";
-        if (isset($_COOKIE[$session_name])) {
-            // Select all objects for this session
-            $params = [$_COOKIE[$session_name]];
-            $sql .= "LEFT JOIN `tmp_playlist` ON `tmp_playlist`.`id` = `tmp_playlist_data`.`tmp_playlist` WHERE `tmp_playlist`.`session` = ? " . $order;
-            $db_results = Dba::read($sql, $params);
-        } else {
-            // try to guess
-            $params = [$this->id];
-            $sql .= "WHERE `tmp_playlist` = ? " . $order;
-            $db_results = Dba::read($sql, $params);
+        [$filter, $params] = $this->_row_filter();
+
+        $sql = "SELECT `tmp_playlist_data`.`object_type`, `tmp_playlist_data`.`id`, `tmp_playlist_data`.`object_id` FROM `tmp_playlist_data` " . $filter . "ORDER BY `id`";
+        if ($limit > 0) {
+            $sql .= " LIMIT " . $limit;
         }
+
+        $db_results = Dba::read($sql, $params);
         //debug_event(self::class, 'get_items ' . $sql . ' ' . print_r($params, true), 5);
 
         // Define the array
@@ -305,9 +298,36 @@ class Tmp_Playlist extends database_object
         return $this->id;
     }
 
+    /**
+     * has_items
+     * Whether this tmp playlist holds anything at all, for the callers that only need to know that
+     */
+    public function has_items(): bool
+    {
+        [$filter, $params] = $this->_row_filter();
+
+        $db_results = Dba::read("SELECT 1 FROM `tmp_playlist_data` " . $filter . "LIMIT 1", $params);
+
+        return Dba::fetch_row($db_results) !== [];
+    }
+
     public function isNew(): bool
     {
         return $this->getId() === 0;
+    }
+
+    /**
+     * The rows this playlist covers, as a join and a where for `tmp_playlist_data`
+     *
+     * @return array{0: string, 1: array<int, int|string>}
+     */
+    private function _row_filter(): array
+    {
+        $session_name = AmpConfig::get('session_name', 'ampache');
+
+        return (isset($_COOKIE[$session_name]))
+            ? ["LEFT JOIN `tmp_playlist` ON `tmp_playlist`.`id` = `tmp_playlist_data`.`tmp_playlist` WHERE `tmp_playlist`.`session` = ? ", [(string) $_COOKIE[$session_name]]]
+            : ["WHERE `tmp_playlist_data`.`tmp_playlist` = ? ", [$this->id]];
     }
 
     /**
