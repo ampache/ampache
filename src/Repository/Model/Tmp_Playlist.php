@@ -50,6 +50,8 @@ class Tmp_Playlist extends database_object
     public ?string $session     = null;
     public ?string $type        = null;
 
+    private ?int $_row_playlist = null;
+
     /**
      * Constructor
      * This takes a playlist_id as an optional argument and gathers the
@@ -317,17 +319,27 @@ class Tmp_Playlist extends database_object
     }
 
     /**
-     * The rows this playlist covers, as a join and a where for `tmp_playlist_data`
+     * The rows this playlist covers, as a where for `tmp_playlist_data`
      *
+     * The session is resolved to a playlist id rather than joined: `tmp_playlist` is the key the rows are
+     * already ordered by, and reaching it through a join costs a sort of the whole queue before a LIMIT cuts it
      * @return array{0: string, 1: array<int, int|string>}
      */
     private function _row_filter(): array
     {
-        $session_name = AmpConfig::get('session_name', 'ampache');
+        if ($this->_row_playlist === null) {
+            $this->_row_playlist = $this->id;
+            $session_name        = AmpConfig::get('session_name', 'ampache');
+            if (isset($_COOKIE[$session_name])) {
+                $db_results = Dba::read("SELECT `id` FROM `tmp_playlist` WHERE `session` = ?", [(string) $_COOKIE[$session_name]]);
+                $row        = Dba::fetch_row($db_results);
+                if ($row !== []) {
+                    $this->_row_playlist = (int) $row[0];
+                }
+            }
+        }
 
-        return (isset($_COOKIE[$session_name]))
-            ? ["LEFT JOIN `tmp_playlist` ON `tmp_playlist`.`id` = `tmp_playlist_data`.`tmp_playlist` WHERE `tmp_playlist`.`session` = ? ", [(string) $_COOKIE[$session_name]]]
-            : ["WHERE `tmp_playlist_data`.`tmp_playlist` = ? ", [$this->id]];
+        return ["WHERE `tmp_playlist_data`.`tmp_playlist` = ? ", [$this->_row_playlist]];
     }
 
     /**
