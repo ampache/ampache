@@ -992,8 +992,14 @@ final class ApiHandler implements ApiHandlerInterface
                         );
             }
         } catch (Throwable $error) {
+            // `LegacyLogger` drops every context key but `event_type`, so the origin travels in the message
             $this->logger->error(
-                $error->getMessage(),
+                sprintf(
+                    '%s in %s:%d',
+                    $error->getMessage(),
+                    $error->getFile(),
+                    $error->getLine()
+                ),
                 [
                     LegacyLogger::CONTEXT_TYPE => self::class,
                     'method' => $action
