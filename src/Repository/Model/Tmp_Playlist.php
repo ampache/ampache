@@ -49,7 +49,6 @@ class Tmp_Playlist extends database_object
     public ?string $object_type = null;
     public ?string $session     = null;
     public ?string $type        = null;
-
     private ?int $_row_playlist = null;
 
     /**
